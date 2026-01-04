@@ -1,0 +1,238 @@
+// ==UserScript==
+// @name         Optimiseur du Chat de la Foret - V1.8 (Nested Quote Fix)
+// @namespace    https://greasyfork.org/users/1555347
+// @version      1.8
+// @description  Ajout URL / IMG / Quote / @. Fix : Supprime les citations imbriquées (les quotes de quotes).
+// @author       Jukop22
+// @match        https://www.pasla.com/*
+// @grant        none
+// @license      MIT
+// @run-at       document-end
+// @downloadURL https://update.greasyfork.org/scripts/561183/Optimiseur%20du%20Chat%20de%20la%20Foret%20-%20V18%20%28Nested%20Quote%20Fix%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561183/Optimiseur%20du%20Chat%20de%20la%20Foret%20-%20V18%20%28Nested%20Quote%20Fix%29.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    const SELECTORS = { INPUT: '#chat-message', EDITOR: '.wysibb-text-editor', TOOLBAR: '.wysibb-toolbar-container' };
+    let savedRange = null;
+
+    // --- Utilitaires ---
+    const qs = (s, p = document) => p.querySelector(s);
+    const ce = (t) => document.createElement(t);
+    const kill = (e) => { e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); };
+
+    function isAllowed() {
+        const p = window.location.pathname;
+        return p === '/' || ['/index', '/home', '/shout'].some(s => p.includes(s));
+    }
+
+    function rgbToHex(c) {
+        if (!c || c.startsWith('#')) return c || '#22b598';
+        const ctx = ce("canvas").getContext("2d");
+        ctx.fillStyle = c;
+        return ctx.fillStyle;
+    }
+
+    function syncVue(text = null) {
+        const input = qs(SELECTORS.INPUT);
+        if (!input) return;
+        if (text !== null) input.value = text;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // --- Gestion Curseur & Insertion ---
+    function saveSel() {
+        const ed = qs(SELECTORS.EDITOR);
+        const sel = window.getSelection();
+        if (ed && sel.rangeCount > 0 && ed.contains(sel.anchorNode)) {
+            savedRange = sel.getRangeAt(0).cloneRange();
+        }
+    }
+
+    function insert(text, forceBreak = false) {
+        const ed = qs(SELECTORS.EDITOR);
+        if (ed && savedRange) {
+            ed.focus();
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(savedRange);
+        }
+
+        const $txt = window.$ ? window.$(SELECTORS.INPUT) : null;
+        if ($txt && $txt.data("wbb")) {
+            const wbb = $txt.data("wbb");
+            wbb.insertAtCursor(text);
+            wbb.sync();
+        } else {
+            document.execCommand('insertText', false, text);
+        }
+
+        if (forceBreak && ed) {
+            ed.focus();
+            // Ajout <br><br> + caractère invisible pour résister aux emojis
+            document.execCommand('insertHTML', false, '<br><br>\u200B');
+        }
+        syncVue();
+    }
+
+    // --- Interface Prompt ---
+    function getPrompt() {
+        let box = document.getElementById('sw-prompt');
+        if (box) return box;
+
+        box = ce('div');
+        box.id = 'sw-prompt';
+        box.style.cssText = "display:none;flex-direction:row;align-items:center;gap:15px;padding:15px;background:#fff!important;border:2px solid #3498db;border-radius:6px;margin:5px 0;z-index:2147483647;width:100%;box-sizing:border-box;box-shadow:0 4px 15px rgba(0,0,0,.4);";
+
+        box.innerHTML = `
+            <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
+                <div id="sw-confirm" style="display:none;font-weight:bold;color:#e74c3c;font-size:14px;">⚠️ Voulez-vous tout effacer ?</div>
+                <div id="sw-inputs">
+                    <div id="sw-row-txt"><label style="font-size:11px;font-weight:bold;color:#555;display:block;margin-bottom:2px;">Texte :</label><input type="text" id="sw-in-txt" style="width:100%;padding:5px;border:1px solid #ccc;border-radius:3px;color:#000;background:#fff!important;"></div>
+                    <div style="margin-top:5px;"><label id="sw-lbl-url" style="font-size:11px;font-weight:bold;color:#555;display:block;margin-bottom:2px;">URL :</label><input type="text" id="sw-in-url" style="width:100%;padding:5px;border:1px solid #ccc;border-radius:3px;color:#000;background:#fff!important;"></div>
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px;min-width:80px;">
+                <button id="sw-ok" class="btn btn-xs btn-primary" style="padding:6px 10px;font-weight:bold;color:#fff!important;margin-bottom:0;">VALIDER</button>
+                <button id="sw-close" class="btn btn-xs btn-default" style="font-weight:bold;">Annuler</button>
+            </div>`;
+
+        const tb = qs('.wysibb-toolbar');
+        if (tb) tb.parentNode.insertBefore(box, tb.nextSibling);
+
+        const close = () => {
+            box.style.display = 'none';
+            qs('#sw-in-url').value = qs('#sw-in-txt').value = '';
+            const em = qs('.emojionepicker-picker'); if(em) em.style.display = "block";
+        };
+
+        qs('#sw-close', box).onclick = (e) => { e.preventDefault(); close();
+            const ed = qs(SELECTORS.EDITOR); if(ed && savedRange) { ed.focus(); window.getSelection().addRange(savedRange); }
+        };
+
+        qs('#sw-ok', box).onclick = (e) => {
+            e.preventDefault();
+            const mode = box.getAttribute('data-mode');
+
+            if (mode === 'CLEAR') {
+                const ed = qs(SELECTORS.EDITOR);
+                if (ed) { ed.innerHTML = ""; const wbb = window.$(SELECTORS.INPUT).data("wbb"); if(wbb) wbb.sync(); }
+                syncVue("");
+            } else {
+                const url = qs('#sw-in-url').value.trim();
+                const txt = qs('#sw-in-txt').value.trim();
+                if (url) {
+                    const bb = mode === 'IMG' ? `[img]${url}[/img] ` : (txt ? `[url=${url}][color=#6fa8dc][u][b]${txt}[/b][/u][/color][/url] ` : `[url][color=#6fa8dc][u][b]${url}[/b][/u][/color][/url] `);
+                    insert(bb);
+                }
+            }
+            close();
+        };
+        return box;
+    }
+
+    // --- Init Boutons Toolbar ---
+    function initButtons() {
+        if (!isAllowed() || qs('#sw-btn-url')) return;
+        const toolbar = qs(SELECTORS.TOOLBAR);
+        if (!toolbar) return;
+
+        const tools = [
+            { id: 'sw-btn-url', l: '🔗', m: 'URL', t: 'Lien' },
+            { id: 'sw-btn-img', l: '🖼️', m: 'IMG', t: 'Image' },
+            { id: 'sw-btn-clear', l: '🗑️', m: 'CLEAR', t: 'Effacer' }
+        ];
+
+        tools.forEach(tool => {
+            const btn = ce('div');
+            btn.id = tool.id;
+            btn.className = "wysibb-toolbar-btn";
+            btn.style.cursor = "pointer";
+            btn.innerHTML = `<span class="btn-inner" style="line-height:24px;font-size:16px;display:block;text-align:center;">${tool.l}</span><span class="btn-tooltip">${tool.t}<ins></ins></span>`;
+
+            btn.onmousedown = (e) => { if (tool.m !== 'CLEAR') saveSel(); };
+            btn.onclick = (e) => {
+                kill(e);
+                const box = getPrompt();
+                if (!box) return;
+
+                box.setAttribute('data-mode', tool.m);
+                const isClear = tool.m === 'CLEAR';
+                const isImg = tool.m === 'IMG';
+
+                qs('#sw-confirm').style.display = isClear ? 'block' : 'none';
+                qs('#sw-inputs').style.display = isClear ? 'none' : 'block';
+                qs('#sw-row-txt').style.display = (isClear || isImg) ? 'none' : 'block';
+
+                const btnOk = qs('#sw-ok', box);
+                btnOk.textContent = isClear ? "Oui, effacer !" : "VALIDER";
+                btnOk.className = isClear ? "btn btn-xs btn-danger" : "btn btn-xs btn-primary";
+                qs('#sw-lbl-url').textContent = isImg ? "URL de l'image :" : "URL du lien :";
+
+                box.style.display = 'flex';
+                const em = qs('.emojionepicker-picker'); if(em) em.style.display = "none";
+
+                if (!isClear) setTimeout(() => qs(isImg ? '#sw-in-url' : '#sw-in-txt').focus(), 50);
+            };
+            toolbar.appendChild(btn);
+        });
+    }
+
+    // --- Init Actions (@/Quote) ---
+    function initActions() {
+        if (!isAllowed()) return;
+        document.querySelectorAll('.badge-user').forEach(badge => {
+            if (qs('.sw-actions', badge)) return;
+            const link = qs('a', badge);
+            if (!link) return;
+
+            const wrap = ce('span');
+            wrap.className = 'sw-actions';
+            wrap.style.cssText = "margin-left:8px;display:inline-flex;gap:5px;";
+
+            const mkBtn = (icon, color, cb) => {
+                const b = ce('span');
+                b.innerHTML = `<i class='fal fa-${icon}'></i>`;
+                b.style.cssText = `color:${color};cursor:pointer;font-size:14px;`;
+                b.onmousedown = (e) => { kill(e); saveSel(); };
+                b.onclick = (e) => { kill(e); cb(); };
+                return b;
+            };
+
+            // Bouton @
+            wrap.appendChild(mkBtn('at', '#2ECC40', () => {
+                insert(`[color=${rgbToHex(getComputedStyle(link).color)}]@${link.innerText.trim()} [/color] `);
+            }));
+
+            // Bouton Quote
+            wrap.appendChild(mkBtn('quote-right', '#4682B4', () => {
+                const li = badge.closest('li');
+                let msg = "";
+                if (li) {
+                    const d = qs('.align-left', li);
+                    if(d) {
+                        msg = d.innerText.trim();
+                        // 1. Supprime les citations imbriquées (>> Pseudo : "...")
+                        // Regex : Cherche le motif du script (>> ... : "...") au début et l'efface
+                        msg = msg.replace(/^>>\s+.*?\s+:\s+"[\s\S]*?"\s*/, "");
+                        // 2. Supprime les mentions (@Pseudo) restantes au début
+                        msg = msg.replace(/^(@\S+\s*)+/, "").trim();
+                    }
+                }
+                const col = rgbToHex(getComputedStyle(link).color);
+                insert(`[size=16][color=${col}]>> [b]${link.innerText.trim()}[/b][/color][b] [/b]: "[i][color=#999999]${msg}[/color][/i]"[/size]`, true);
+            }));
+
+            badge.appendChild(wrap);
+        });
+    }
+
+    // --- Surveillance ---
+    const obs = new MutationObserver(() => {
+        if (isAllowed() && qs('.wysibb-toolbar')) { initButtons(); initActions(); }
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+
+})();
