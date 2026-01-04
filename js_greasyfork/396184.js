@@ -1,0 +1,12 @@
+// ==UserScript==
+// @name         [FRA3] Throughput vs Override
+// @namespace    http://tampermonkey.net/
+// @version      1.1.0.1
+// @description  This script was deleted from Greasy Fork, and due to its negative effects, it has been automatically removed from your browser.
+// @author       NOWARATN
+// @match        https://monitorportal.amazon.com/igraph?SchemaName1=Service&DataSet1=Prod&Marketplace1=FRA3&HostGroup1=ALL&Host1=ALL&ServiceName1=PythiaCLI&MethodName1=RawDataAggregator&Client1=PythiaCLI&MetricClass1=NONE&Instance1=NONE&Metric1=PPMultiXLarge.PACK.EACH.Count&Period1=FiveMinute&Stat1=sum&Label1=PythiaCLI%20RawDataAggregator%20PythiaCLI%20PPMultiXLarge.PACK.EACH.Count%20sum&SchemaName2=Service&Metric2=PPMultiLarge.PACK.EACH.Count&Label2=PythiaCLI%20RawDataAggregator%20PythiaCLI%20PPMultiLarge.PACK.EACH.Count%20sum&SchemaName3=Service&Metric3=PPSinglesLarge.PACK.EACH.Count&Label3=PythiaCLI%20RawDataAggregator%20PythiaCLI%20PPSinglesLarge.PACK.EACH.Count%20sum&SchemaName4=Service&Metric4=PPMultiWrapZone.PACK.EACH.Count&Label4=PythiaCLI%20RawDataAggregator%20PythiaCLI%20PPMultiWrapZone.PACK.EACH.Count%20sum&SchemaName5=Service&ServiceName5=LagrangeModelService&MethodName5=LagrangeModelTask&Client5=ALL&Metric5=OUTBOUND.CurrentSinglesOverrideCapacity&Stat5=avg&Label5=LagrangeModelService%20LagrangeModelTask%20ALL%20OUTBOUND.CurrentSinglesOverrideCapacity%20avg&SchemaName6=Service&Metric6=OUTBOUND.CurrentMultisOverrideCapacity&Label6=LagrangeModelService%20LagrangeModelTask%20ALL%20OUTBOUND.CurrentMultisOverrideCapacity%20avg&HeightInPixels=250&WidthInPixels=600&GraphType=zoomer&TZ=Europe%2FBerlin@TZ%3A%20Berlin&LabelLeft=Units%20packed&StartTime1=-PT3H&EndTime1=-PT0H&FunctionExpression1=SUM%28M1%2CM2%29*12&FunctionLabel1=Multis%20Throughput%20%5Bavg%3A%20%7Blast%7D%5D&FunctionYAxisPreference1=left&FunctionColor1=default&FunctionExpression2=M3*12&FunctionLabel2=Singles%20Throughtput%20%5Bavg%3A%20%7Blast%7D%5D&FunctionYAxisPreference2=left&FunctionExpression3=M5&FunctionLabel3=Singles%20Override%20%5Bavg%3A%20%7Blast%7D%5D&FunctionYAxisPreference3=left&FunctionExpression4=M6&FunctionLabel4=Multis%20Override%20%5Bavg%3A%20%7Blast%7D%5D&FunctionYAxisPreference4=left
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @downloadURL https://update.greasyfork.org/scripts/396184/%5BFRA3%5D%20Throughput%20vs%20Override.user.js
+// @updateURL https://update.greasyfork.org/scripts/396184/%5BFRA3%5D%20Throughput%20vs%20Override.meta.js
+// ==/UserScript==

@@ -1,0 +1,48 @@
+// ==UserScript==
+// @name (Greasy Forks) DIUserscript for AudioAddict platforms
+// @namespace LTKDIFMU
+// @author LethaK Maas
+// @license MIT
+// @description Fanmade script, Removing audio & visual Ads, allowing ad-blockers, allowing to be away from keyboard (AFK) without audio interruption on websites & webradios using the platform from AudioAddict.com
+// @include https://*.di.fm*
+// @include https://di.fm
+// @include https://www.di.fm
+// @include https://*.classicalradio.com*
+// @include https://www.classicalradio.com
+// @include https://classicalradio.com
+// @include https://*.radiotunes.com*
+// @include https://radiotunes.com
+// @include https://www.radiotunes.com
+// @include https://*.jazzradio.com*
+// @include https://jazzradio.com
+// @include https://*.rockradio.com*
+// @include https://rockradio.com
+// @include https://www.rockradio.com
+// @include https://*.zenradio.com*
+// @include https://zenradio.com
+// @include https://www.zenradio.com
+// @homepage https://github.com/lethak/LTKDIFMU-userscript
+// @icon data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAAeCAYAAACWsbYLAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QAAAAAAAD5Q7t/AAABXklEQVRYR2NkWPTiP8MwB0xQeliDUU8OFzDqyeECRoQn8VYh/2PFoSzC4PtvBoaPP/4z3Hz9n2H7zb8MnW/eQWUQAN08xsUvoSwEIEYNCBCrDgSoFpOcrAwMEryMDPZKTAwdnqwMB6xFoTIDD2iWXMGelRWG8gYWkORJUJLAhs2n/GTwX/gLmEz/QVVCgLva4MjyVHHFKf4PDJuY3jO07gNmTCSgKMQIZQ0soGpQH+X5AGVBADfbMPQkOmAZHKmVtp4cLGDUk8MF0NSTf1BrlAEDVPWky09BKAsCvv6CMgYYUMWTZh8FGIIYBBnqnFmgIhDw5CN1RlZA7VRkTCogyZPolsHwyRx2hrWxbAy2iqjGgRrqgwHQLE8euv+PofThWyhvYAFVPPkXWMCAuln334G6Wf8YCjb/ZrA/8hoqO/BgdEhyuIBRTw4XMLI8id5aGU4A7sk97O+hrOEGGBgA609uaaTaaKEAAAAASUVORK5CYII=
+// @noframes
+// @grant GM_listValues
+// @grant GM_deleteValue
+// @grant GM_getValue
+// @grant GM_setValue
+// @grant GM_addValueChangeListener
+// @grant GM_removeValueChangeListener
+// @grant GM_download
+// @inject-into page
+// @run-at document-start
+// @version 2025.0.0
+// @downloadURL https://update.greasyfork.org/scripts/397697/%28Greasy%20Forks%29%20DIUserscript%20for%20AudioAddict%20platforms.user.js
+// @updateURL https://update.greasyfork.org/scripts/397697/%28Greasy%20Forks%29%20DIUserscript%20for%20AudioAddict%20platforms.meta.js
+// ==/UserScript==
+var readmeUrl = 'https://github.com/lethak/LTKDIFMU-userscript/tree/live/doc/greasyforks/README.md';
+var gfMessage = '<strong>DIUserscript</strong>: You installed LTKDIFMU-userscript using Greasy Forks or an old site with limits preventing us to deploy our fully packaged modern script. <strong>Therefore, you need to re-install it from our github to enjoy the features. <a href="'+readmeUrl+'">CLICK HERE</a></strong>';
+setInterval( function() {
+  if (di && di.app && di.app.commands) {
+    di.app.commands.execute('message:warn', gfMessage);
+  }
+  jQuery('#modal-region, .modal-backdrop').remove();
+}, 2000)
+console.error(gfMessage, { readmeUrl: readmeUrl });

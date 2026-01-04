@@ -1,0 +1,131 @@
+// ==UserScript==
+// @name         Starve.io Client_503
+// @namespace    http://tampermonkey.net/
+// @version      0.0.5
+// @description  try to take over the world!
+// @author       SoOwYt
+// @match        *://starve.io/*
+// @grant        none
+// @include      http://stackoverflow.com/*
+// @require      https://code.jquery.com/jquery-3.4.1.min.js
+
+
+// @downloadURL https://update.greasyfork.org/scripts/400404/Starveio%20Client_503.user.js
+// @updateURL https://update.greasyfork.org/scripts/400404/Starveio%20Client_503.meta.js
+// ==/UserScript==
+
+var version = ("just press ok");
+
+alert('' + " " + version);;
+
+function pretty_time_string(num) {
+    return ( num < 10 ? "0" : "" ) + num;
+  }
+
+var start = new Date;
+
+setInterval(function() {
+    var total_seconds = (new Date - start) / 1000;
+
+    var days = Math.floor(total_seconds / 12960000);
+    total_seconds = total_seconds % 12960000;
+
+    var hours = Math.floor(total_seconds / 3600);
+    total_seconds = total_seconds % 3600;
+
+    var minutes = Math.floor(total_seconds / 60);
+    total_seconds = total_seconds % 60;
+
+    var seconds = Math.floor(total_seconds);
+    days = pretty_time_string(days);
+    hours = pretty_time_string(hours);
+    minutes = pretty_time_string(minutes);
+    seconds = pretty_time_string(seconds);
+
+  var currentTimeString = days + ":" + hours + ":" + minutes + ":" + seconds;
+
+    jQuery('#ratata').text(currentTimeString);
+}, 1000);
+
+    jQuery(document).ready(function(){
+    document.title = ('' + " " + version);
+    jQuery("a[href='https://iogames.space']").hide();
+
+    jQuery('#nickname_input').css({"color": "","font-size":"25","background-color":""});
+    jQuery('#chat_input').css({"color": "","font-size":"20","background-color":""});
+    jQuery('#game_canvas').css("image-rendering","initial");
+    jQuery('#trevda').css("visibility","hidden");
+    jQuery("link[rel='shortcut icon']").attr("href", "https://cdn.discordapp.com/attachments/611633766833717248/691041054538858570/favicon.png");
+    jQuery("#loading").css({"background-color": "","color":""});
+    jQuery("body").on("contextmenu",function(e){
+    return false;
+});
+
+    jQuery("body").append ('<img draggable="false" id="myNewImage" border="0" src="https://cdn.discordapp.com/attachments/691584212288929854/692082785493712926/mapv2.png">')
+    jQuery("body").append ('<p id="hrs"></p>')
+    jQuery('body').append('<p id="ratata">Loading..</p>');
+    jQuery('body').append('<p id="author"><a target="_blank" href=""></a></p>');
+
+    jQuery("#author").animate({right: '55px'}).css({
+        cursor: "url(http://starve.io/img/cursor1.png), pointer",
+        boxSizing: "border-box",
+        borderRadius: "8px",
+        backgroundColor: "#9b2a2d",
+        boxShadow: "0px 5px #5f2a2d",
+        paddingLeft: "10px",
+        paddingRight: "10px",
+        webkitTouchCallout: "none",
+        webkitUserSelect: "none",
+        khtmlUserSelect: "none",
+        mozUserSelect: "none",
+        msUserSelect: "none",
+        userSelect: "none",
+        position: "absolute",
+        color:"#FFFFFF",
+        fontFamily:"Baloo Paaji",
+        position: "absolute",
+        right:"55px",
+        bottom:"30px",
+
+    });
+
+    jQuery("#myNewImage").animate({right: '10px'}).css({
+        cursor: "url(http://starve.io/img/cursor0.png), default",
+        opacity: "90%",
+        imageRendering: "initial",
+        webkitTouchCallout: "none",
+        webkitUserSelect: "none",
+        khtmlUserSelect: "none",
+        mozUserSelect: "none",
+        msUserSelect: "none",
+        userSelect: "none",
+        position: "absolute",
+        right:"10px",
+        bottom:"130px",
+        width: "180px",
+        height: "180px",
+    });
+
+    jQuery("#ratata").animate({right: '43px'}).css({
+        cursor: "url(http://starve.io/img/cursor0.png), default",
+        boxSizing: "border-box",
+        borderRadius: "8px",
+        backgroundColor: "#9e4e12",
+        boxShadow: "0px 5px #593109",
+        paddingLeft: "10px",
+        paddingRight: "10px",
+        webkitTouchCallout: "none",
+        webkitUserSelect: "none",
+        khtmlUserSelect: "none",
+        mozUserSelect: "none",
+        msUserSelect: "none",
+        userSelect: "none",
+        position: "absolute",
+        color:"#FFFFFF",
+        fontFamily:"Baloo Paaji",
+        position: "absolute",
+        right:"45px",
+        bottom:"80px",
+
+    });
+});
