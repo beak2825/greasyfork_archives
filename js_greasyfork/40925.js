@@ -1,0 +1,21 @@
+// ==UserScript==
+// @name         self test code
+// @namespace    http://mytesttampermonkey.net/
+// @version      0.1
+// @description  self test code dont download
+// @include      http*://issue.cpic.com.cn/*
+// @include      http*://2.taobao.com/*
+// @author       mmyy
+
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/40925/self%20test%20code.user.js
+// @updateURL https://update.greasyfork.org/scripts/40925/self%20test%20code.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    console.log(1123);
+   var cusName =  document.querySelector("input[name='name']").value;
+   console.log(cusName);
+    console.log(112223);
+})();
