@@ -1,0 +1,22 @@
+// ==UserScript==
+// @name         DanTheMan Theme
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  DanTheMan theme, made with EZTHEME
+// @author       You
+// @match        https://shellshock.io/
+// @icon         https://cdn.discordapp.com/attachments/811268272418062359/901263906515857458/unknown.png
+// @grant        none
+// @license MIT
+// @downloadURL https://update.greasyfork.org/scripts/447425/DanTheMan%20Theme.user.js
+// @updateURL https://update.greasyfork.org/scripts/447425/DanTheMan%20Theme.meta.js
+// ==/UserScript==
+
+let stylesheet = document.createElement('link');
+stylesheet.rel = 'stylesheet';
+stylesheet.href = 'https://shellthemes.jayvan229.repl.co/ezthemedefault.css';
+document.head.appendChild(stylesheet);
+
+let css =
+    `#ss_background, #gameDescription, .load_screen, #progress-container { background: url('https://cdn.discordapp.com/attachments/918998543329554482/929482072677032007/The.gif') !important; position: absolute !important; background-size: cover !important; background-repeat: no-repeat !important; background-position: center !important; width: 100% !important; height: 100% !important; } div.media-tabs-content.front_panel.roundme_sm { background: linear-gradient(#FF1616,#5CE1E6,#000)!important; background-size: cover !important;} #equip_sidebox { border: var(--ss-space-sm) solid } .front_panel, #equip_sidebox { background: linear-gradient(#FF1616,#5CE1E6,#000); background-size: cover !important;} .front_panel { border: var(--ss-space-sm) solid ; } .ss_field, .ss_select { background: #D9D9D9; border: 1px solid #5CE1E6; color: maroon;} .btn_blue, .btn_green, .ss_bigtab, .ss_bigtab.selected, .button_blue { background: linear-gradient(#5CE1E6,#FF1616) !important; border: 0.2em solid #5CE1E6 !important; color: #D9D9D9 !important; } .btn_yolk, .btn_red, .btn_blue1 { background: linear-gradient(#5CE1E6,#FFDE59,#FF1616) !important; border: 0.2em solid #000 !important; color: #fff !important; } .morestuff { background-color: linear-gradient(#5CE1E6,#FFDE59,#FF1616) !important; border: 0.2em solid #000 !important; } .ss_bigtab:hover { color: #D9D9D9 !important; } #stat_item { background: #5CE1E6; } #stat_item h4, .stat_stat { color: #FC7878; } .news_item:nth-child(odd), .stream_item:nth-child(odd) { background: linear-gradient(#FF1616,#000); } .news_item:nth-child(even), .stream_item:nth-child(even) { background: linear-gradient(#5CE1E6,#000); } .stream_item:hover, .news_item.clickme:hover { background: linear-gradient(#FFDE59,#5CE1E6,#FF1616) !important; } #weapon_select:nth-child(1n+0) .weapon_img { background: radial-gradient(#FF1616,#5CE1E6)!important; border: 3px solid #fff!important; } #popupTipDay #weapon_select:nth-child(1n+0) .weapon_img { background: radial-gradient(#FF1616,#5CE1E6)!important; border: 3px solid #fff!important; } h3, h1, h2, h4, h5, h6, .front_panel h3, #equip.equipped_slots h3, #item_grid h3 { color: #fff !important; } label, .label { color: #fff !important; } .egg_count { color: #fff; } .account_eggs { background: radial-gradient(#FF1616,#5CE1E6); } #equip_equippedslots .equip_item, #equip_itemtype .selected, #equip_equippedslots .equip_item:hover { background: radial-gradient(#FF1616,#5CE1E6); background-color: radial-gradient(#FF1616,#5CE1E6); border: 0.33em solid #fff; } #equip_grid .store_item, #equip_grid .highlight, #equip_grid .store_item:hover { background: radial-gradient(#FFDE59,#5CE1E6); border: 0.33em solid #5CE1E6; color: #5CE1E6; } .popup_lg, .popup_sm { background: linear-gradient(#FF1616,#FFDE59,#5CE1E6); border: 0.33em solid #fff; } .box_blue2 { background-color: #000; } .pause-bg { background: #000 !important; } #maskmiddle { background: url('https://cdn.discordapp.com/attachments/918998543329554482/930093400223531078/scope_1.png') center center no-repeat !important; background-size: contain !important; width: 100vh !important; height: 100vh !important; } .crosshair.normal { background: linear-gradient(#FF1616,#FFDE59,#5CE1E6); } .crosshair { border: 0.05em solid #000; } .crosshair.powerfull { background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet, red); } #createPrivateGame .roundme_sm, #settingsPopup .roundme_sm, #pickServerPopup .roundme_sm, #adBlockerVideo .roundme_sm { background: #000 !important }`
+    document.head.insertAdjacentHTML("beforeend", `<style>${css}</style>`)
