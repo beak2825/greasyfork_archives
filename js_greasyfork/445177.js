@@ -1,0 +1,22 @@
+// ==UserScript==
+// @name         My Theme
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  My theme, made with EZTHEME
+// @author       You
+// @match        https://shellshock.io/
+// @icon         https://cdn.discordapp.com/attachments/811268272418062359/901263906515857458/unknown.png
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/445177/My%20Theme.user.js
+// @updateURL https://update.greasyfork.org/scripts/445177/My%20Theme.meta.js
+// ==/UserScript==
+
+let stylesheet = document.createElement('link');
+stylesheet.rel = 'stylesheet';
+stylesheet.href = 'https://shellthemes.jayvan229.repl.co/ezthemedefault.css';
+document.head.appendChild(stylesheet);
+
+let css = `#ss_background, #gameDescription, .load_screen, #progress-container { background: #39FF14 !important; position: absolute !important; background-size: cover !important; background-repeat: no-repeat !important; background-position: center !important; width: 100% !important; height: 100% !important; } div.media-tabs-content.front_panel.roundme_sm { background: #FF0000	!important; background-size: cover !important;} #equip_sidebox { border: var(--ss-space-sm) solid #009933} .front_panel, #equip_sidebox { background: #FF0000	; background-size: cover !important;} .front_panel { border: var(--ss-space-sm) solid #009933; } .ss_field, .ss_select { background: ; border: 1px solid ; color: ;} .btn_blue, .btn_green, .ss_bigtab, .ss_bigtab.selected, .button_blue { background:  !important; border: 0.2em solid  !important; color:  !important; } .btn_yolk, .btn_red, .btn_blue1 { background:  !important; border: 0.2em solid  !important; color:  !important; } .morestuff { background-color:  !important; border: 0.2em solid  !important; } .ss_bigtab:hover { color:  !important; } #stat_item { background: #FF0000	; } #stat_item h4, .stat_stat { color: #0000FF; } .news_item:nth-child(odd), .stream_item:nth-child(odd) { background: ; } .news_item:nth-child(even), .stream_item:nth-child(even) { background: ; } .stream_item:hover, .news_item.clickme:hover { background:  !important; } #weapon_select:nth-child(1n+0) .weapon_img { background: #7d12ff	!important; border: 3px solid #FFFFFF!important; } #popupTipDay #weapon_select:nth-child(1n+0) .weapon_img { background: #7d12ff	!important; border: 3px solid #FFFFFF!important; } h3, h1, h2, h4, h5, h6, .front_panel h3, #equip.equipped_slots h3, #item_grid h3 { color: #000000 !important; } label, .label { color: #000000 !important; } .egg_count { color: ; } .account_eggs { background: #ffcc00; } #equip_equippedslots .equip_item, #equip_itemtype .selected, #equip_equippedslots .equip_item:hover { background: #660066; background-color: #660066; border: 0.33em solid #000066; } #equip_grid .store_item, #equip_grid .highlight, #equip_grid .store_item:hover { background: ; border: 0.33em solid ; color: ; } .popup_lg, .popup_sm { background: ; border: 0.33em solid ; } .box_blue2 { background-color: #ff0000; } .pause-bg { background: #ffffff !important; } #maskmiddle { background: url('https://www.google.com/imgres?imgurl=https%3A%2F%2Ftoppng.com%2Fuploads%2Fpreview%2Ffree-fire-png-logo-11569068081ezy973wyyo.png&imgrefurl=https%3A%2F%2Ftoppng.com%2Ffree-fire-png-logo-fire-flame-clipart-PNG-free-PNG-Images_444604&tbnid=mgHgXzFUA-tJ4M&vet=12ahUKEwju6si7uOn3AhV9HjQIHXmADlcQMygDegUIARDhAQ..i&docid=H7picvrmoG8mQM&w=840&h=859&q=flame&safe=active&ved=2ahUKEwju6si7uOn3AhV9HjQIHXmADlcQMygDegUIARDhAQ') center center no-repeat !important; background-size: contain !important; width: 100vh !important; height: 100vh !important; } #createPrivateGame .roundme_sm, #settingsPopup .roundme_sm, #pickServerPopup .roundme_sm, #adBlockerVideo .roundme_sm { background: #ff0000 !important }`
+    document.head.insertAdjacentHTML("beforeend", `<style>${css}</style>`)
+    let crosshaircss = `.crosshair { opacity: ; border: solid 0.05em ; } .crosshair.normal:nth-child(even) { left: calc(50% - 0em); width: em; } .crosshair.normal:nth-child(odd) { left: calc(50% - 0em); width: em; } .crosshair:nth-child(odd) { height: em !important; } .crosshair:nth-child(even) { height: em !important; } #crosshair0 { background: #fbf8fd	; } #crosshair1 { background: #ab20fd	; } #crosshair2 { background: #FFFF33; } #crosshair3 { background: #FD1C03; }`
+    document.head.insertAdjacentHTML("beforeend", `<style>${crosshaircss}</style>`)

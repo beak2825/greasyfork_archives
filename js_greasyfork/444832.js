@@ -1,0 +1,280 @@
+// ==UserScript==
+// @name         问卷星脚本
+// @namespace    https://www.baidu.com/
+// @version      2.4
+// @description  定制问卷脚本，可自己调选项比例，支持多种题型，可教更改ip、提高信度分析方法，价格优惠，有意联系Q：3054212998
+// @author       XY
+// @match        https://www.wjx.cn/vj/PXr3FKF.aspx
+// @grant        none
+// @license MIT
+// @include     https://www.wjx.cn/*
+// @downloadURL https://update.greasyfork.org/scripts/444832/%E9%97%AE%E5%8D%B7%E6%98%9F%E8%84%9A%E6%9C%AC.user.js
+// @updateURL https://update.greasyfork.org/scripts/444832/%E9%97%AE%E5%8D%B7%E6%98%9F%E8%84%9A%E6%9C%AC.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    //===========================开始==============================
+    clearCookie();
+//测试问卷：https://www.wjx.cn/vj/PXr3FKF.aspx
+    var wenjuan_url = 'https://www.wjx.cn/vj/PXr3FKF.aspx';
+
+    if(window.location.href.indexOf('https://www.wjx.cn/wjx/join/complete.aspx')!=-1){
+        window.location.href=wenjuan_url;
+    }else if(window.location.href==wenjuan_url){
+    }else{
+        return
+    }
+
+
+    window.scrollTo(0,document.body.scrollHeight)
+
+
+    var lists = document.querySelectorAll('.ulradiocheck')
+    var ccc=0;
+    var liangbiao_index=0;
+    var xiala_index=0;
+    var ops;
+    var bili;
+    var temp_flag;
+    var tiankong_list;
+    var liangbiao_lists;
+    var min_options;
+
+    //1
+    ops = lists[ccc].querySelectorAll('li')
+    ccc+=1
+    bili = [50,50];
+    ops[danxuan(bili)].click()
+    //2
+        ops = lists[ccc].querySelectorAll('li')
+    ccc+=1
+    bili = [25,25,25,25];
+    temp_flag = false
+
+    while(!temp_flag){
+        for(let count = 0;count<bili.length;count++){
+            if(duoxuan(bili[count])){
+                ops[count].click();
+                temp_flag = true;
+            }
+        }
+    }
+            //3
+     ops =document.querySelectorAll('#div3 li')
+     ccc+=1
+     let array = new Array(3)
+        .fill(0)
+        .map((v,i)=>i+1)
+        .sort(()=>0.5 - Math.random())
+        .filter((v,i)=>i<6);//题目数
+    for(let count = 0;count<array.length;count++){
+        ops[array[count]-1].click();
+    }
+    //4
+    liangbiao_lists = document.querySelectorAll('#div4 tbody tr')
+    liangbiao_index=0
+    //4.1
+     ops = liangbiao_lists[liangbiao_index].querySelectorAll('td')
+    liangbiao_index+=1
+    bili = [25,25,15,25,10];
+    ops[danxuan(bili)].click()
+
+    //4.2
+     ops = liangbiao_lists[liangbiao_index].querySelectorAll('td')
+    liangbiao_index+=1
+    bili = [25,25,15,25,10];
+    ops[danxuan(bili)].click()
+
+    //4.3
+     ops = liangbiao_lists[liangbiao_index].querySelectorAll('td')
+    liangbiao_index+=1
+    bili = [25,25,15,25,10];
+    ops[danxuan(bili)].click()
+     //4.4
+    ops = liangbiao_lists[liangbiao_index].querySelectorAll('td')
+    liangbiao_index+=1
+    bili = [25,25,15,25,10];
+    ops[danxuan(bili)].click()
+
+    //4.5
+     ops = liangbiao_lists[liangbiao_index].querySelectorAll('td')
+    liangbiao_index+=1
+    bili = [25,25,15,25,10];
+    ops[danxuan(bili)].click()
+    //5
+    tiankong_list = ['1','2','3','4','5','6','7','8','9','10'];
+    bili = [40,4,3,2,15,16,14,2,3,1];
+    document.querySelector('#q5').value=tiankong_list[danxuan(bili)]
+//6
+     xiala_click(document.querySelectorAll('.select2-selection.select2-selection--single')[xiala_index])
+    xiala_index+=1
+    ops = document.querySelectorAll('#select2-q6-results li')
+    ops = Array.prototype.slice.call(ops); //非ie浏览器正常
+    ops = ops.slice(1,ops.length);
+    bili = [100,0,0];//默认所有选项平均分配
+    xialaElement_click(ops[danxuan(bili)])
+
+    let count = 0
+    //提交函数
+    setTimeout( function(){
+        document.querySelector('#submit_button').click()
+        setTimeout( function(){
+            document.querySelector('#SM_BTN_1').click()
+            setInterval( function(){
+                try{
+                    //点击刷新验证框
+                    //noCaptcha.reset(1)
+                    yanzhen();
+                    count+=1;
+                }
+                catch(err){
+                    if(count>=6){
+                        location.reload()
+                    }
+                }
+            }, 500 );
+        }, 0.1 * 100 );
+    }, 0.1 * 100 );
+
+    (function() {
+    'use strict';
+    //time以毫秒为单位
+    let time=5000;
+    setTimeout(() => {
+        location.reload()
+    },time);
+    // Your code here...
+})();
+
+
+    //返回随机bili 参数为随机个数
+    function randomBili(num){
+        let a = Math.floor(100/num);
+        let yu = 100 - a*num;
+        let list = [];
+        for(let i=0;i<num;i++){
+            list.push(a)
+        }
+        for(let i=0;i<yu;i++){
+            list[i]=list[i]+1
+        }
+        return list;
+    }
+    //累加list前num数的和
+    function leijia(list,num){
+        var sum = 0
+        for(var i=0;i<num;i++){
+            sum+=list[i];
+        }
+        return sum;
+    }
+
+    //生成从minNum到maxNum的随机数
+    function randomNum(minNum,maxNum){
+        switch(arguments.length){
+            case 1:
+                return parseInt(Math.random()*minNum+1,10);
+                break;
+            case 2:
+                return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
+                break;
+            default:
+                return 0;
+                break;
+        }
+    }
+    //判断num是否在指定区间内
+    function isInRange(num,start,end){
+        if(num>=start && num<=end){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    //单选题执行函数
+    function danxuan(bili){
+        var pp = randomNum(1,100)
+        for(var i=1;i<=bili.length;i++){
+            var start = 0;
+            if(i!=1){
+                start = leijia(bili,i-1)
+            }
+            var end = leijia(bili,i);
+            if(isInRange(pp,start,end)){
+                return i-1;
+                break;
+            }
+        }
+    }
+    //多选题执行函数
+    function duoxuan(probability){
+        var flag = false;
+        var i = randomNum(1,100);
+        if(isInRange(i,1,probability)){
+            flag = true;
+        }
+        return flag;
+    }
+
+    //清楚cookie
+    function clearCookie() {
+        var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+        if (keys) {
+            for (var i = keys.length; i--;) {
+                document.cookie = keys[i] + '=0;path=/;expires=' + new Date(0).toUTCString();//清除当前域名下的,例如：m.kevis.com
+                document.cookie = keys[i] + '=0;path=/;domain=' + document.domain + ';expires=' + new Date(0).toUTCString();//清除当前域名下的，例如 .m.kevis.com
+                document.cookie = keys[i] + '=0;path=/;domain=kevis.com;expires=' + new Date(0).toUTCString();//清除一级域名下的或指定的，例如 .kevis.com
+            }
+        }
+    }
+    //滑动验证函数
+    function yanzhen(){
+        var event = document.createEvent('MouseEvents');
+        event.initEvent('mousedown', true, false);
+        document.querySelector("#nc_1_n1z").dispatchEvent(event);
+        event = document.createEvent('MouseEvents');
+        event.initEvent('mousemove', true, false);
+        Object.defineProperty(event,'clientX',{get(){return 260;}})
+        document.querySelector("#nc_1_n1z").dispatchEvent(event);
+    }
+
+    //滚动到末尾函数
+    function scrollToBottom(){
+        (function () {
+            var y = document.body.scrollTop;
+            var step = 500;
+            window.scroll(0, y);
+            function f() {
+                if (y < document.body.scrollHeight) {
+                    y += step;
+                    window.scroll(0, y);
+                    setTimeout(f, 50);
+                }
+                else {
+                    window.scroll(0, y);
+                    document.title += "scroll-done";
+                }
+            }
+            setTimeout(f, 1000);
+        })();
+    }
+
+    //点击下拉框方法
+    function xiala_click(e){
+        let fireOnThis = e
+        let evObj = document.createEvent('MouseEvents');
+        evObj.initMouseEvent( 'mousedown', true, true, this, 1, 12, 345, 7, 220, false, false, true, false, 0, null );
+        fireOnThis.dispatchEvent(evObj);
+
+    }
+
+    //点击下拉框中的选项方法
+    function xialaElement_click(e){
+        let fireOnThis = e
+        let evObj = document.createEvent('MouseEvents');
+        evObj.initMouseEvent( 'mouseup', true, true, this, 1, 12, 345, 7, 220, false, false, true, false, 0, null );
+        fireOnThis.dispatchEvent(evObj);
+    }
+})();
