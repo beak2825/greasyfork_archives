@@ -1,0 +1,66 @@
+// ==UserScript==
+// @name Alarme risorse ed attacchi!
+// @namespace liberstudio.com
+// @version 0.01
+// @source *esm5.tentlan.*
+// @description Questo è un sempilice script che controlla ogni 15 secondi se ci sono attacchi(Spiate) in vista, e se le risorse sono pronte...
+// @include *esm5.tentlan.*
+// @downloadURL https://update.greasyfork.org/scripts/35061/Alarme%20risorse%20ed%20attacchi%21.user.js
+// @updateURL https://update.greasyfork.org/scripts/35061/Alarme%20risorse%20ed%20attacchi%21.meta.js
+// ==/UserScript==
+(function (window, undefined) {
+  var w;
+  if (typeof unsafeWindow !== undefined) {
+    w = unsafeWindow
+  } else {
+    w = window;
+  }
+  if (w.self != w.top) {
+    return;
+  }
+  var nascondi =  function(){};
+  
+  if (/http:\/\/esm5.tentlan.com/.test(w.location.href)) {
+    nascondi = function (msg) {
+      document.getElementById('avatarFrameContainer').style.display = 'none';
+    }
+    var repetari = 999 // Quante volte ripetere il controllo
+    var SoundAlarm = true; // Attivre l'alarme o no (true or false)
+    var CheckTime = 30 // secondi (0 : senza aspettare)
+    var MsgTxt = [
+      'Risorse pronte',
+      'Unu',
+      'Attacco in vista!'
+    ];
+    var AlarmUrl = 'data:audio/ogg;base64,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'; // boing.wav
+    // Primu Script incercarea
+    setInterval(function (Check) {
+      // Alarm, sound, bip
+      var play = null;
+      play = document.createElement('embed');
+      play.src = AlarmUrl;
+      play.setAttribute('autostart', SoundAlarm);
+      play.setAttribute('loop', 'false'); 
+      
+      // Controlla gli attacchi  
+      if ((document.documentElement.textContent || document.documentElement.innerText).indexOf('Truppe estranee') > - 1)
+      {
+        document.title = ' ' + MsgTxt[2] + ' !';
+        document.body.appendChild(play).style.visibility = 'hidden';
+      } 
+      
+      
+    }, CheckTime * 1000);
+// Al doilea script incercarea
+    setInterval(function (Check2) {
+      // Alarm, sound, bip
+      var play = null;
+      play = document.createElement('embed');
+      play.src = AlarmUrl;
+      play.setAttribute('autostart', SoundAlarm);
+      play.setAttribute('loop', 'false');  
+      var resources = document.getElementById("productionColoIconsContainer").getElementsByClassName('productionColoIcon')[0].innerHTML;
+       if( resources > - 1 ) {document.title = ' '+MsgTxt[0]+' !'; document.body.appendChild(play).style.visibility="hidden";} 
+    }, CheckTime * 1000);
+  }
+}) (window);
