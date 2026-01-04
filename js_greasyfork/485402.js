@@ -1,0 +1,24 @@
+// Commonly used library CDN address
+ljs.addAliases({
+    jQuery:'https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js',
+    copy:'https://cdn.jsdelivr.net/gh/zenorocha/clipboard.js@master/dist/clipboard.min.js',
+    juicer:'https://cdnjs.cloudflare.com/ajax/libs/juicer/0.6.14/juicer-min.js',
+    timeago:'https://cdnjs.cloudflare.com/ajax/libs/timeago.js/2.0.3/timeago.min.js',
+    iframe:'https://cdn.jsdelivr.net/gh/jae-jae/iframe-sandbox@main/iframe-sandbox.js',
+    vue:'https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.js',
+    psl:'https://cdn.jsdelivr.net/gh/wrangr/psl@master/dist/psl.min.js',
+    hotkeys:[
+        'jQuery',
+        'https://cdn.jsdelivr.net/gh/jeresig/jquery.hotkeys@master/jquery.hotkeys.js'
+    ],
+    layer:[
+        'jQuery',
+        'https://cdnjs.cloudflare.com/ajax/libs/layer/2.3/layer.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/layer/2.3/skin/layer.css'
+    ],
+    iview:[
+        'vue',
+        'https://cdnjs.cloudflare.com/ajax/libs/iview/2.2.0/iview.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/iview/2.2.0/styles/iview.css'
+    ]
+});
