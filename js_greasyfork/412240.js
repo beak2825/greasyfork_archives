@@ -1,0 +1,24 @@
+// ==UserScript==
+// @name         wangda
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       You
+// @match        https://wangda.chinamobile.com/
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/412240/wangda.user.js
+// @updateURL https://update.greasyfork.org/scripts/412240/wangda.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    setInterval(()=>{
+        document.querySelector(".videojs-referse-btn").click();
+        let video = document.querySelector("video");
+        if (video && !video.name){
+            video.muted = 'true';
+            video.name = 'silence';
+        }
+    },3000)
+})();

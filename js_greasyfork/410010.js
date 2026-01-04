@@ -1,0 +1,36 @@
+// ==UserScript==
+// @icon            data:image/vnd.microsoft.icon;base64,AAABAAEAICAAAAEAIACoEAAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAABAAABILAAASCwAAAAAAAAAAAAAAAAAASWTtHEhh5qZIYObmSGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDm5khh5qZJZO0cAAAAAElk7RxIYeXtSGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hh5e1JZO0cSGHmpkhg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hh5qZIYObmSGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDm5khg5f9IYOX/SGDl/0hg5f9IYOX/ipnu/5qn8P9qfen/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/TWTl/5qn8P+grfH/nKnx/3iJ6/9JYeX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f/Cyvb///////T2/f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f99juz//////////////////////8vS9/9LY+X/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/8LK9v///////f3+/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/2l96f+hrfH/o6/x/9HX+P///////////5Gg7/9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/wsr2///////9/f7/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/Vmzn////////////usP1/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f/Cyvb///////39/v9IYOX/SGDl/46d7v/+/v7//v7+//7+/v/+/v7//v7+//7+/v/+/v7/8fP9/8LK9v9keOn/SGDl/0hg5f9JYeX///////////+9xvX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/8LK9v///////f3+/0hg5f9IYOX/j53v////////////ydD3/6ax8v+msfL/prHy/6248//t8Pz//////+/x/P9dcuj/SGDl/0lh5f///////////73G9f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/wsr2///////9/f7/SGDl/0hg5f+Pne////////////+RoO//SGDl/0hg5f9IYOX/SGDl/5Kg7////////////56q8f9IYOX/SWHl////////////vcb1/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f/Cyvb///////39/v9IYOX/SGDl/4+d7////////////5Oh7/9JYeX/SWHl/0lh5f9JYeX/h5fu////////////ucL1/0hg5f9JYeX///////////+9xvX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/8LK9v///////f3+/0hg5f9IYOX/j53v//////////////////////////////////////////////////////+4wfX/SGDl/0lh5f///////////73G9f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/wsr2///////9/f7/SGDl/0hg5f+Pne/////////////g5Pr/xs32/8bN9v/Gzfb/xs32/9jd+f///////////7fB9P9IYOX/SWHl////////////vcb1/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f/Cyvb///////39/v9IYOX/SGDl/4+d7////////////5uo8P9IYOX/SGDl/0hg5f9IYOX/gZHt////////////t8D0/0hg5f9JYeX///////////+9xvX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/8LK9v///////f3+/0hg5f9IYOX/j53v////////////m6jw/0hg5f9IYOX/SGDl/0hg5f+Bke3///////////+2wPT/SGDl/0lh5f///////////73G9f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/wsr2///////9/f7/SGDl/0hg5f+Pne///////////////////////////////////////////////////////7W/9P9IYOX/SWHl////////////vcb1/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f/Cyvb///////39/v9IYOX/SGDl/4WV7f/l6Pv/5ej7/+Xo+//l6Pv/5ej7/+Xo+//l6Pv/5ej7/+Xo+//l6Pv/pbHy/0hg5f9JYeX///////////+9xvX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/2h86f96i+z/eozs/7S+9P/K0ff/p7Ly/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0lh5f///////////73G9f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9gdej///////////+8xfX/bYDq/5il8P+YpfD/mKXw/5il8P+YpfD/mKXw/5il8P+YpfD/mKXw/5il8P+YpfD/mafw////////////vcb1/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/7zF9f//////9fb9/1906P/P1fj///////////////////////////////////////////////////////////////////////////+9xvX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/oK3x/1Rq5v9/kOz///////z9/v99juz/SGDl/6u28//AyPb/wMj2/8DI9v/K0ff/4eX6/8DI9v/AyPb/wMj2/8DI9v/AyPb/wMj2/8DI9v/AyPb/wMj2/5Wj8P9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f/8/f7/9fb9/6248/9Uaub/TWTl/0hg5f9/kOz/6Ov7/+Hl+v9ccuf/SGDl/3WH6///////vMX1/1Fo5v9IYOX/SGDl/0hg5f/L0vf/9/j9/8TL9v9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/6Ov8f/6+/7//////87U+P9PZub/SGDl/7rD9f//////9fb9/05l5f9IYOX/YXXo/+7w/P//////3eL6/1lu5/9IYOX/TWTl//f4/f//////rbjz/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/22A6v/09v3//////9fc+f+Zp/D/9vf9///////Y3fn/j53v/5Si7/+Wo/D/Znrp/93i+v//////3uL6/5mn8P+yvPT///////////+yvPT/mafw/5mn8P96i+z/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/32O7P////////////////////////////////////////////////+cqfH/X3To//r7/v////////////////////////////////////////////Hz/f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/8zT9////////////2l86f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/usP1////////////iJju/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/jJvu////////////kZ/v/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9/kOz///////////+eqvH/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5uZIYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9KYeX/SmHl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYObmSGHmpkhg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hh5qZJZO0cSGHl7Uhg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYeXtSWTtHAAAAABJZO0cSGHmpkhg5uZIYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYOX/SGDl/0hg5f9IYObmSGHmpklk7RwAAAAAgAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAE=
+// @name            简书优化小助手
+// @namespace       [url=mailto:1002615704@qq.com]1002615704@qq.com[/url]
+// @author          炒饭包子
+// @description     移除简书header标题
+// @match           *://www.jianshu.com/p/*
+// @require         http://cdn.bootcss.com/jquery/1.8.3/jquery.min.js
+// @version         0.0.1
+// @grant           GM_addStyle
+// @downloadURL https://update.greasyfork.org/scripts/410010/%E7%AE%80%E4%B9%A6%E4%BC%98%E5%8C%96%E5%B0%8F%E5%8A%A9%E6%89%8B.user.js
+// @updateURL https://update.greasyfork.org/scripts/410010/%E7%AE%80%E4%B9%A6%E4%BC%98%E5%8C%96%E5%B0%8F%E5%8A%A9%E6%89%8B.meta.js
+// ==/UserScript==
+(function () {
+    'use strict';
+    $(function(){
+        // 移除头部
+        $("._1CSgtu").hide();
+        $(".VYwngI").hide();
+        // 移除尾部
+        $("footer").hide();
+        // 移除左侧
+        $("._3Pnjry").hide();
+        // 关闭推荐阅读
+        $(".ouvJEz:last").hide();
+        // 移除右侧
+        $("._2OwGUo").hide();
+        // 调整宽度
+        $("._gp-ck").width("1200");
+        // 移除打赏
+        $("._1kCBjS").hide();
+        $("._19DgIp").hide();
+        $("._13lIbp").hide();
+        $(".d0hShY").hide();
+    });
+})();

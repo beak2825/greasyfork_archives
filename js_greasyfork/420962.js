@@ -1,0 +1,32 @@
+// ==UserScript==
+// @name         插件自播
+// @namespace    http://go.newday.me/s/pan-home
+// @version      0.4.8
+// @icon         http://cdn.newday.me/addon/pan/favicon.ico
+// @author       哩呵
+// @description  插件主要功能有
+// @match        *://pan.baidu.com/*
+// @match        *://yun.baidu.com/*
+// @match        *://*.weiyun.com/*
+// @match        *://*.lanzous.com/*
+// @match        *://*.lanzoux.com/*
+// @match        *://cloud.189.cn/*
+// @match        *://*.newday.me/*
+// @match        *://*.likestyle.cn/*
+// @connect      newday.me
+// @connect      likestyle.cn
+// @require      https://cdn.staticfile.org/jquery/3.5.0/jquery.min.js
+// @require      https://cdn.staticfile.org/dompurify/2.0.10/purify.min.js
+// @require      https://cdn.staticfile.org/snap.svg/0.5.1/snap.svg-min.js
+// @run-at       document-start
+// @grant        unsafeWindow
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_deleteValue
+// @grant        GM_listValues
+// @grant        GM_openInTab
+// @grant        GM_notification
+// @grant        GM_xmlhttpRequest
+// @downloadURL https://update.greasyfork.org/scripts/420962/%E6%8F%92%E4%BB%B6%E8%87%AA%E6%92%AD.user.js
+// @updateURL https://update.greasyfork.org/scripts/420962/%E6%8F%92%E4%BB%B6%E8%87%AA%E6%92%AD.meta.js
+// ==/UserScript==

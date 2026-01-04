@@ -1,0 +1,54 @@
+// ==UserScript==
+// @name         MonaKit Raindrop.io
+// @name:zh      MonaKit Raindrop.io
+// @namespace    https://github.com/scris/monakit.git
+// @homepageURL  https://ds.scris.top/
+// @version      1.0.0
+// @description  Add this page to Raindrop.io Bookmark
+// @description:zh  用 Raindrop.io 将此页面保存为书签
+// @icon         data:image/png;base64,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CxPG2PkcQwEghPrMji+/bnuw5w2r4zU4FZ/Jib1v2Lrvx1sdx/kO/Z3+g2i0YbrJzJIR/lQIatpQzXNuzTTb5QJ42lEJ0GhBJ6AxOMANU/BBYyhkmr9IUnY58x3erB3ylH/j3nJ22qITfF62YQPe1PCb1j0Y1/ftGT+/XC5PHZ7ddWCght3xDHcvX8x3hcCzln2OIpMLMI89qiJcF8ol7Nce4J52wPlBxC8GPW52FPlRNCYH29BpZsNuQLPRpNNq2yRJGkKIZy1jbtoiMBZWL8M6iv1KMuYoMji6aP/TcFQWcNMWwWV3WM49FQtMQ3+mB/Mfd12/NJPEvfenvfDWAwemNgvXRWfZv2zftu39mzZtmhkbG3vWOws5qhyTAAvRmDxL6HY7o0sWL50UQlAolamUipPf27p1VCrV39r6OWLBV4PPh7norpSS9uBmjMVaKyqVihRCHDEC/DzwonwsnaQp5VKJWq1GtVan4Dqk8/mc49+DAGma4nueDXs9Op0O3U4bUyzieZ7NXgQRfl4uIObS7bffThj2jqjXWkuapvK22247PO+/aQHmSEj6R/AO4AE+UNy5c2ex4BdUrVajVqvj+746MDVVEEIUZvM5s0kebzGOhwvMEZ8jPUfcA1xATkxMVFvtVrHT6dDpdDB5Vux0u6uBLpAD6WxKZq85/RniAoz8x1eAOfIuUADKQGX2WpoVwgmCoNBsNIKVq1bG3U6HiX3jQRzHK4AekAExEALBbIpmxTh05vuvVIDDzn2Z/TiOlEPmbAAnSZL00R8+cne703rA9X2eGR0dz7XuzOafEyCdvT8uPT+H4+VfkkP+73LIp53Z3+bqPWxT7VnCzYkxZ/4L3vvHU4D/tw7xHPeHE5+DPex6XAi/hJfwEl7C4fi/PBn9Ykw/X5oAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjAtMDctMTlUMDM6Mzk6MjArMDA6MDCGZw5cAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE5LTAxLTA4VDE4OjU4OjA4KzAwOjAwl90qbgAAACB0RVh0c29mdHdhcmUAaHR0cHM6Ly9pbWFnZW1hZ2ljay5vcme8zx2dAAAAGHRFWHRUaHVtYjo6RG9jdW1lbnQ6OlBhZ2VzADGn/7svAAAAGHRFWHRUaHVtYjo6SW1hZ2U6OkhlaWdodAAxMjhDfEGAAAAAF3RFWHRUaHVtYjo6SW1hZ2U6OldpZHRoADEyONCNEd0AAAAZdEVYdFRodW1iOjpNaW1ldHlwZQBpbWFnZS9wbmc/slZOAAAAF3RFWHRUaHVtYjo6TVRpbWUAMTU0Njk3Mzg4OJOTCdIAAAARdEVYdFRodW1iOjpTaXplADk2MzlCWFvdzQAAAFp0RVh0VGh1bWI6OlVSSQBmaWxlOi8vL2RhdGEvd3d3cm9vdC93d3cuZWFzeWljb24ubmV0L2Nkbi1pbWcuZWFzeWljb24uY24vZmlsZXMvMTEzLzExMzUxNjMucG5nhDXrxQAAAABJRU5ErkJggg==
+// @author       Tianze Ds Qiu <https://ds.scris.top/>
+// @match        *://*/*
+// @grant        none
+// @run-at       document-end
+// @require      http://libs.baidu.com/jquery/2.1.4/jquery.min.js
+// @downloadURL https://update.greasyfork.org/scripts/421917/MonaKit%20Raindropio.user.js
+// @updateURL https://update.greasyfork.org/scripts/421917/MonaKit%20Raindropio.meta.js
+// ==/UserScript==
+
+const style = document.createElement('style');
+style.innerText = `
+      .monakit-raindrop {
+        position: fixed;
+        left: 8px;
+        bottom: 7px;
+        width: 90px;
+        height: 30px;
+      }
+      `;
+document.body.appendChild(style)
+this.alt = document.createElement('button');
+this.alt.className = 'monakit-raindrop';
+this.alt.innerText = "Raindrop";
+document.body.appendChild(this.alt);
+$(".monakit-raindrop").click(function () {
+  var rspW = 450,
+    rspH = 600,
+    rspL = parseInt(screen.width / 2 - rspW / 2),
+    rspT = parseInt(screen.height / 2 - rspH / 2);
+  window.open(
+    "https://app.raindrop.io/add?link=" +
+    encodeURIComponent(window.location.href) +
+    "&title=" +
+    encodeURIComponent(document.title),
+    "raindrop-save",
+    "width=" +
+    rspW +
+    ",height=" +
+    rspH +
+    ",resizable=yes,scrollbars=yes,status=false,location=false,toolbar=false,left=" +
+    rspL +
+    ",top=" +
+    rspT
+  );
+});

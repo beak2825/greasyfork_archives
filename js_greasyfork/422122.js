@@ -1,0 +1,16 @@
+// ==UserScript==
+// @name         Slover pinter on this ondows
+// @namespace    https://slover.com/riger
+// @version      2.0
+// @description  Except the contest title from "Joined Contests" and set the six checkboxes.
+// @author       G4NP0N
+// @match        https://kenkoooo.com/atcoder/*
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/422122/Slover%20pinter%20on%20this%20ondows.user.js
+// @updateURL https://update.greasyfork.org/scripts/422122/Slover%20pinter%20on%20this%20ondows.meta.js
+// ==/UserScript==
+ 
+var script = document.createElement("script");
+script.setAttribute("type","text/javascript");
+script.innerText='function RemoveHead(thead) {    console.log("thead remove");    thead.remove();}function ReWrite(table) {    contests = table.children;    for (var i = 0; i < contests.length; i++) {        for (var j = 0; j < 5; j++) {            contests[i].children[1].remove();        }        var contestid = contests[i].getElementsByTagName("a")[0].getAttribute("href");        for (var j = 1; j <= 6; j++) {            td = document.createElement("td");            html = "<input> " + String(j);            td.innerHTML = html;            problemid = contestid + "_" + String(j);            var cb = td.children[0];            cb.setAttribute("type", "checkbox");            cb.setAttribute("id", problemid);            cb.setAttribute("onchange", "Check(this.id)");            if (!localStorage.getItem(problemid)) {                localStorage.setItem(problemid, "false");            } else {                if (localStorage.getItem(problemid) === "true") {                    cb.setAttribute("checked", "checked");                    td.setAttribute("style", "background-color:#c3e6cb");                }            }            contests[i].appendChild(td);        }    }    contests[0].getElementsByTagName("td")[0].setAttribute("style", "width:50%;");    contests[0].setAttribute("class", "rewrited");    console.log("rewrited!");}function Check(id) {    var parent = document.getElementById(id).parentElement;    if (localStorage.getItem(id) === "true") {        localStorage.setItem(id, "false");        parent.setAttribute("style", "background-color:" + window.getComputedStyle(parent.children[0]).backgroundColor);    } else {        localStorage.setItem(id, "true");        parent.setAttribute("style", "background-color:#c3e6cb");    }}var observer = new MutationObserver(function (mutations) {    if (location.href === "https://kenkoooo.com/atcoder/#/login/user/contests") {        console.log("rewrite check");        theads = document.getElementsByTagName("thead");        if (theads.length > 1) {            RemoveHead(theads[1]);        }        if (document.getElementsByTagName("tbody").length < 2) return;        var table = document.getElementsByTagName("tbody")[1];        if (table.children[0].childElementCount == 1) {            return;        }        if (table.children[0].getAttribute("class") === "rewrited") return;        ReWrite(table);    }});observer.observe(document, { childList: true, subtree: true });';
+document.getElementsByTagName("body")[0].appendChild(script);

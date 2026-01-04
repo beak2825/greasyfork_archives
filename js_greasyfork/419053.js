@@ -1,0 +1,31 @@
+// ==UserScript==
+// @name         关注公众号“狗崽崽1”获取更多学习内容11
+// @namespace    关注公众号“狗崽崽1”获取更多学习内容
+// @version      1.1.6
+// @description  关注公众号“狗崽崽1”获取更多学习内容
+// @author       关注公众号“狗崽崽1”获取更多学习内容
+// @match        *://*.chaoxing.com/*
+// @match        *://*.edu.cn/*
+// @match        *://*.hnsyu.net/*
+// @match        *://*.zhihuishu.com/*
+// @match        *://*.bsnc.cn/*
+// @match        *://*.xuetangx.com/*
+// @match        *://*.yuketang.cn/*
+// @match        *://*.icve.com.cn/*
+// @run-at       document-end
+// @connect      lyck6.cn
+// @grant        unsafeWindow
+// @grant        GM_xmlhttpRequest
+// @grant        GM_setClipboard
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @compatible   chrome
+// @contributionURL   http://lyck6.cn/pay
+// @require      https://unpkg.com/vue/dist/vue.js
+// @require      https://cdn.bootcdn.net/ajax/libs/jquery/2.0.0/jquery.js
+// @require      https://unpkg.com/element-ui/lib/index.js
+// @require      https://cdn.bootcdn.net/ajax/libs/jsencrypt/2.1.0/jsencrypt.js
+// @require      http://cdn.bootcss.com/blueimp-md5/1.1.0/js/md5.js
+// @downloadURL https://update.greasyfork.org/scripts/419053/%E5%85%B3%E6%B3%A8%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%8B%97%E5%B4%BD%E5%B4%BD1%E2%80%9D%E8%8E%B7%E5%8F%96%E6%9B%B4%E5%A4%9A%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B911.user.js
+// @updateURL https://update.greasyfork.org/scripts/419053/%E5%85%B3%E6%B3%A8%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%8B%97%E5%B4%BD%E5%B4%BD1%E2%80%9D%E8%8E%B7%E5%8F%96%E6%9B%B4%E5%A4%9A%E5%AD%A6%E4%B9%A0%E5%86%85%E5%AE%B911.meta.js
+// ==/UserScript==

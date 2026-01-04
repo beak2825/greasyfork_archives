@@ -1,0 +1,27 @@
+// ==UserScript==
+// @name         Award_Fix
+// @namespace    https://blog.chrxw.com
+// @version      1.1
+// @description  Steam打赏修复
+// @author       Chr_
+// @include      /https://steamcommunity\.com/(id|profiles)/[^\/]+/recommended\/?(\?p=\d+)?$/
+// @connect      steamcommunity.com
+// @connect      steampowered.com
+// @license      AGPL-3.0
+// @icon         https://blog.chrxw.com/favicon.ico
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_xmlhttpRequest
+// @downloadURL https://update.greasyfork.org/scripts/420897/Award_Fix.user.js
+// @updateURL https://update.greasyfork.org/scripts/420897/Award_Fix.meta.js
+// ==/UserScript==
+
+(function () {
+    'use strict';
+    let ts = document.querySelectorAll('.review_award_ctn');
+    if (ts) {
+        for (let t of ts) {
+            t.style.flexWrap = 'wrap';
+        }
+    }
+})();

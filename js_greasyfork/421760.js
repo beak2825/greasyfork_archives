@@ -1,0 +1,13 @@
+// ==UserScript==
+// @name         TE31 Blocked User Manager
+// @namespace    https://te31.com/
+// @version      1.0
+// @description  sex
+// @author       ada
+// @match        https://te31.com/rgr/member_modify.php?group_no=1
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/421760/TE31%20Blocked%20User%20Manager.user.js
+// @updateURL https://update.greasyfork.org/scripts/421760/TE31%20Blocked%20User%20Manager.meta.js
+// ==/UserScript==
+
+!function(){"use strict";let e=document.querySelector("body > div > table > tbody > tr:nth-child(19) > td > br"),t=document.createElement("select"),n=document.querySelector("input[name=office_address]").value.split(","),r="https://te31.com/rgr/view_info.php?member_no=";window._unblockUserCount=0,window.unblockUser=function(){let e=document.querySelector("#unblock_list");Array.from(e.selectedOptions).forEach(e=>{console.log(e),e.remove()})},window.applyUnblockUser=function(){let e=document.querySelector("#unblock_list"),t=document.querySelector("body > div > table > tbody > tr:nth-child(6) > td").innerText.replaceAll(",","").match(/\d+/)[0],n=new FormData;n.append("member_no",t),fetch("../rgr/banclear.php",{method:"POST",body:n}).then(t=>{e.childNodes.length||(e.remove(),document.getElementById("banclear").innerText="0",alert("적용 완료!")),window._unblockUserCount=e.childNodes.length,e.childNodes.forEach(t=>{fetch("https://te31.com/rgr/ban.php?member_no="+t.value).then(t=>{--window._unblockUserCount||(document.getElementById("banclear").innerText=e.childNodes.length,alert("적용 완료!"))})})})},window.ban_clear=function(e){if(1==confirm("차단목록을 초기화 하시겠습니까?")){$.post("../rgr/banclear.php",{member_no:e}),document.getElementById("banclear").innerHTML="0",t.remove()}},t.setAttribute("id","unblock_list"),t.setAttribute("size",10),t.setAttribute("multiple",!0),n.forEach(e=>{!function(e){fetch(r+e,{contentType:"text/html;charset=UTF-8"}).then(e=>e.arrayBuffer()).then(n=>{let r=new TextDecoder("euc-kr").decode(n),o=(new DOMParser).parseFromString(r,"text/html").querySelector("body > center > div > table > tbody > tr > td > span");if(o){let n=document.createElement("option"),r=o.innerText.trim();n.innerText=r,n.value=e,console.log(o.innerText.trim()),t.appendChild(n)}})}(e)}),e.after(t),t.insertAdjacentHTML("afterend",'<span id="unblock_apply" class="butt_green" style="margin-left:16px;" onclick="applyUnblockUser()">변경사항적용</span>'),t.insertAdjacentHTML("afterend",'<br><br><span id="unblock_indv" class="butt_white" onclick="unblockUser()">목록에서 제거</span>')}();

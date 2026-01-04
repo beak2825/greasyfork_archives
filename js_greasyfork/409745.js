@@ -1,0 +1,26 @@
+// ==UserScript==
+// @name         Anarchy Haxball Userscript v0.5
+// @version      0.6
+// @description  Makes haxball fancier :)
+// @author       Luks
+// @match        https://www.haxball.com/*
+// @match        https://html5.haxball.com/*
+// @resource   IMPORTED_CSS http://haxballplanet.com/game.css
+// @grant      GM_getResourceText
+// @grant      GM_addStyle
+// @namespace https://greasyfork.org/users/396618
+// @downloadURL https://update.greasyfork.org/scripts/409745/Anarchy%20Haxball%20Userscript%20v05.user.js
+// @updateURL https://update.greasyfork.org/scripts/409745/Anarchy%20Haxball%20Userscript%20v05.meta.js
+// ==/UserScript==
+
+window.addEventListener('load', function() {
+    document.querySelectorAll("[class='rightbar']")[0].remove()
+}, false);
+document.querySelectorAll("[href='game.css']")[0].remove();
+
+
+var cssTxt  = GM_getResourceText ("IMPORTED_CSS");
+console.log(cssTxt);
+GM_addStyle (cssTxt);
+localStorage.geo = '{"lat":49.8,"lon":6.1296,"code":"EU"}';
+localStorage.geo_override = '{"lat":49.8,"lon":6.1296,"code":"EU"}';

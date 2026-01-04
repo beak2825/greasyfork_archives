@@ -1,0 +1,13 @@
+// ==UserScript==
+// @name         Omegle-bot _Gab 0.5
+// @namespace    http://tampermonkey.net/
+// @version      0.5
+// @description  none
+// @author       atym-cash
+// @match        https://www.omegle.com/*
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/421025/Omegle-bot%20_Gab%2005.user.js
+// @updateURL https://update.greasyfork.org/scripts/421025/Omegle-bot%20_Gab%2005.meta.js
+// ==/UserScript==
+
+var bot={username:["chasloi "],greetings1:["hello ","hi ","hey "],greetings2:["how are you ","hru ","how are u ","how r u "],greetings3:["whats up ","sup "],greetings4:["how you doing ","how u doing ","how u doin ","wyd "],greetings5:["where you from ","where are you from ","where r u from "],gender:["female ","f "],age:[18,19,20,21,22,23],social_network:["snapchat ","snap ","SC "],non1:["my "],non2:["me "],non3:["on "],keywords1:["add ","check ","look ","see ","got "]};let _r=e=>{return e[Math.floor(Math.random()*e.length)]},_structure=()=>{let e=e=>r.push(e),t=_r(["A","B","C","D"]),r=[];return"A"==t&&(e(_r(bot.greetings1)),e(_r(bot.gender)+_r(bot.age)),e(_r(bot.keywords1)+_r(bot.non1)+_r(bot.social_network)+_r(bot.username))),"B"==t&&(e(_r(bot.greetings1)+_r(bot.gender)),e(_r(bot.greetings2)),e(_r(bot.keywords1)+_r(bot.non1)+_r(bot.social_network)+_r(bot.username))),"C"==t&&(e(_r(bot.greetings4)),e(_r(bot.gender)+_r(bot.age)),e(_r(bot.keywords1)+_r(bot.non2)+_r(bot.non3)+_r(bot.social_network)+_r(bot.username))),"D"==t&&(e(_r(bot.greetings5)),e(_r(bot.gender)+_r(bot.age)),e(_r(bot.keywords1)+_r(bot.non2)+_r(bot.non3)+_r(bot.social_network)+_r(bot.username))),r},getMessage=()=>{let e=[],t=["","​","​​","​​​","​​​​","​​​​​","​​​​​​"];return _structure().map(r=>{let o="";for(let e in r)"string"==typeof r[e]&&(o+=r[e]+_r(t));e.push(o)}),e},message=getMessage();console.log(message);let i=0;var g=(e,t)=>"id"==e?document.getElementById(t):"class"==e?document.getElementsByClassName(t)[0]:void 0,start=()=>{g("id","textbtn")&&textbtn.click(),"New"==g("class","disconnectbtn").innerText.substr(0,3)&&(g("class","disconnectbtn").click(),i=1)},talk=()=>{_connected()&&_send()},_connected=()=>!g("class","disabled"),_send=()=>{g("class","chatmsg").value=message[i],g("class","sendbtn").click(),i++},exit=()=>{i>message.length-1&&"New"!=g("class","disconnectbtn").innerText.substr(0,3)&&(g("class","disconnectbtn").click(),g("class","disconnectbtn").click(),message=getMessage(),i=1)},main=setInterval(()=>{start(),talk(),exit()},2e3);

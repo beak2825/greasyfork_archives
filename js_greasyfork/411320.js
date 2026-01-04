@@ -1,0 +1,20 @@
+// ==UserScript==
+// @author       鹅鹅鹅
+// @version      1.0.0
+// @name         什么值得买
+// @namespace    什么值得买
+// @description  什么值得买自动签到
+// @icon         https://www.smzdm.com/favicon.ico
+// @match        http*://*.smzdm.com/*
+// @downloadURL https://update.greasyfork.org/scripts/411320/%E4%BB%80%E4%B9%88%E5%80%BC%E5%BE%97%E4%B9%B0.user.js
+// @updateURL https://update.greasyfork.org/scripts/411320/%E4%BB%80%E4%B9%88%E5%80%BC%E5%BE%97%E4%B9%B0.meta.js
+// ==/UserScript==
+
+//什么值得买签到
+(function() {
+    var sign =document.querySelector('.J_punch');//获取签到按钮
+    var text =sign.innerText;//获取签到文字
+    if(text.indexOf('签到领奖')!=-1){//签 = 0
+        sign.click();
+    }
+})();

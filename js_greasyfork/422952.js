@@ -1,0 +1,165 @@
+// ==UserScript==
+// @name         [NEW 2021] Shell Shockers Aimbot 
+// @version      1
+// @description  working aimbot 2021
+// @author       Andrew Labash
+// @match        violentegg.club
+// @namespace    https://5514modding.com
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/422952/%5BNEW%202021%5D%20Shell%20Shockers%20Aimbot.user.js
+// @updateURL https://update.greasyfork.org/scripts/422952/%5BNEW%202021%5D%20Shell%20Shockers%20Aimbot.meta.js
+// ==/UserScript==
+ 
+/*
+  Created By : TDStuart
+  You can find a better version of this with more advanced aimbot, esp, free skins, and more at : https://5514modding.com
+  Get more and better mods at : https://5514modding.com
+  Download CrackWare V5 (the worlds most advanced shellshock mod) at : https://5514modding.com
+*/
+ 
+let currentPlayerList = [];
+let myPlayerId = 0;
+window.hackData = {
+    get currentPlayerList(){return currentPlayerList;},
+    get myPlayerId(){return myPlayerId;}
+};
+ 
+// Aimbot Settings
+const fov = 20;
+const toggleKey = "KeyV";
+const aimCheckDelay = 1; // In milliseconds
+ 
+// Aimbot Code
+let aimToggled = false;
+function doAimbot(){
+    let myPlayer = currentPlayerList[myPlayerId]; // Get my player object
+    let players = currentPlayerList.filter(e=>{return (e.id != myPlayerId)}); // Filter the array
+    if (!myPlayer || !players){return;} // Make sure these both exist!
+    let aimPlayer = {}; // Aim player will be best calculated target so far
+    let aimPlayerAngle = 999; // Will be used to store the closest player angle to our crosshair so far
+    let aimPlayerYawPitch = {yaw: 0, pitch: 0}; // Store the yaw and pitch to aim at the aim player
+    //
+    const adjustedYaw = Math.radRange(Math.PI / 2 - myPlayer.yaw); // Correct my yaw for calcs
+    const adjustedPitch = -myPlayer.pitch; // Correct my pitch for calcs
+    const cosPitch = Math.cos(adjustedPitch); // Get cosPitch
+    const lookVec = new window.BABYLON.Vector3(cosPitch * Math.cos(adjustedYaw), Math.sin(adjustedPitch), cosPitch * Math.sin(adjustedYaw)).normalize(); // Get my look vec
+    const posVec = new window.BABYLON.Vector3(myPlayer.x, myPlayer.y + 0.3, myPlayer.z); // Get my position vec
+ 
+    for (let player of players){
+        if (player == null || player.id == null){continue;} // Check if player object exists
+        if (player.isDead()){continue;} // Check if player is dead
+ 
+        const otherVec = new window.BABYLON.Vector3(player.x, player.y + 0.3 - 0.072, player.z); // Calculate their position vec
+        const diffVec = otherVec.subtract(posVec).normalize(); // Calculate the difference and normalize
+        const angle = Math.acos(window.BABYLON.Vector3.Dot(lookVec, diffVec)); // Get the angle (in radians)
+        const angleDeg = angle * 180 / Math.PI; // Get the angle in degrees (for fov)
+        console.log(player.name, angleDeg);
+ 
+        if (angleDeg <= fov && angleDeg < aimPlayerAngle){
+            aimPlayer = player;
+            aimPlayerAngle = angleDeg;
+            const targetVectorNormalized = diffVec; // Set targetVectorNormalized
+            const newYaw = Math.radRange(-Math.atan2(targetVectorNormalized.z, targetVectorNormalized.x) + Math.PI / 2); // Get my new yaw
+            const newPitch = Math.clamp(-Math.asin(targetVectorNormalized.y), -1.5, 1.5); // Get my new pitch
+            aimPlayerYawPitch.yaw = newYaw;
+            aimPlayerYawPitch.pitch = newPitch;
+        }
+    }
+    //
+    if (aimPlayer.id != null){ // If the aimPlayer was set it should have an id!
+        // Ok we can set our yaw and pitch now!
+        myPlayer.yaw = aimPlayerYawPitch.yaw;
+        myPlayer.pitch = aimPlayerYawPitch.pitch;
+    }
+}
+let aimLoop; // Define our aimloop variable
+document.addEventListener("keydown", (e)=>{
+    if (e.code == toggleKey){ // Check if this key pressed is our aim toggle
+        aimToggled = !aimToggled;
+        if (aimToggled){ // If aimbot enabled set a loop to do the aimbot
+            aimLoop = setInterval(doAimbot, aimCheckDelay);
+        }else { // If aimbot is disabled clear the loop
+            clearInterval(aimLoop);
+        }
+    }
+});
+ 
+// Hooks
+let packetDecryptClone = {
+    init: function(e) {
+        this.buffer = new Uint8Array(e),
+            this.idx = 0;
+    },
+    unPackInt8U: function() {
+        var e = this.idx;
+        return this.idx++,
+            this.buffer[e];
+    }
+};
+function doHook(){
+    const oldCloneMesh = window.BABYLON.Scene.prototype.cloneMesh;
+    window.BABYLON.Scene.prototype.cloneMesh = function(){
+        if (arguments[0] == "egg"){
+            // We Are Cloning the Egg Mesh in player constructor!
+            // Grab the player object by getting the arguments passed to function Io!
+            let playerObj = arguments.callee.caller.arguments[0];
+            // Make sure this is a player
+            if (playerObj.id == null || playerObj.id == -1){return oldCloneMesh.apply(this, arguments);}
+            // Add the player to our list
+            currentPlayerList[playerObj.id] = playerObj;
+ 
+            // The function Si to remove the player calls playerObj.actor.remove (aka Io.prototype.remove)
+            // We are going to hook that function call!
+            // Note : arguments.callee.caller references the Io function.
+            let oldRemove = arguments.callee.caller.prototype.remove;
+            arguments.callee.caller.prototype.remove = function(){
+                // Make sure this is a player
+                if (this.player.id === null || this.player.id === undefined){return oldRemove.apply(this, arguments);}
+ 
+                // Remove the player from our list
+                delete currentPlayerList[this.player.id];
+                // Apply to original
+                return oldRemove.apply(this, arguments);
+            };
+        }
+        return oldCloneMesh.apply(this, arguments);
+    };
+    function messageHook(){
+        if (arguments[0].data instanceof ArrayBuffer){
+            // Lets use our packetDecryptClone
+            let decrypt = packetDecryptClone;
+            decrypt.init(arguments[0].data);
+            let packetType = decrypt.unPackInt8U();
+            if (packetType == 0){ // Check if gameJoined Packet
+                myPlayerId = decrypt.unPackInt8U(); // Get my player id
+                currentPlayerList = []; // Clear the player list
+            }
+        }
+    }
+    let oldOnMessageSetter = Object.getOwnPropertyDescriptors(WebSocket.prototype).onmessage.set;
+    Object.defineProperty(WebSocket.prototype, 'onmessage', {
+        set: function(){
+            let originalFunc = ()=>{};
+            if (typeof arguments[0] == "function"){
+                originalFunc = arguments[0];
+                arguments[0] = function(){
+                    messageHook.apply(this, arguments); // Send a copy of the values to our message hook
+                    originalFunc.apply(this, arguments);
+                };
+            }
+            oldOnMessageSetter.apply(this, arguments);
+        }
+    });
+}
+let checkForBabylon = setInterval(()=>{
+    if (window.BABYLON && window.BABYLON.Scene && window.BABYLON.Scene.prototype.cloneMesh){
+        clearInterval(checkForBabylon);
+        doHook();
+    }
+}, 100);
+ 
+setTimeout(()=>{
+    // Inject some text to let people know the script is working
+    let htmlCode = `<p id="aimbotScreenText">Download more mods for shellshockers including free skins, better aimbot, esp, and more at : <a href="https://5514modding.com">5514Modding.com</a></p>`;
+    document.getElementById('mainHead').insertAdjacentHTML('beforeend', htmlCode);
+}, 3000)

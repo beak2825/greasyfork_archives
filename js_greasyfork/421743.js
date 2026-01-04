@@ -1,0 +1,12 @@
+// ==UserScript==
+// @name         TWS-bot Advanced
+// @namespace    http://tampermonkey.net/
+// @version      0.2
+// @description  try to take over the world!
+// @author       You
+// @match        https://talkwithstranger.com/*
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/421743/TWS-bot%20Advanced.user.js
+// @updateURL https://update.greasyfork.org/scripts/421743/TWS-bot%20Advanced.meta.js
+// ==/UserScript==
+var ___username="Anna F free pics",bot={username:["elena_martes21"],greetings1:["hello ","hi ","hey "],greetings2:["how are you ","hru ","how are u ","how r u "],greetings3:["whats up ","sup "],greetings4:["how you doing ","how u doing ","how u doin ","wyd "],greetings5:["where you from ","where are you from ","where r u from "],gender:["female ","f "],age:[18,19,20,21,22,23],social_network:["snapchat ","snap ","SC "],non1:["my "],non2:["me "],non3:["on "],keywords1:["add ","check ","look ","see ","got "]};let _r=e=>{return e[Math.floor(Math.random()*e.length)]},_structure=()=>{let e=e=>o.push(e),r=_r(["A","B","C","D"]),o=[];return"A"==r&&(e(_r(bot.greetings1)),e(_r(bot.gender)+_r(bot.age)),e(_r(bot.keywords1)+_r(bot.non1)+_r(bot.social_network)+_r(bot.username))),"B"==r&&(e(_r(bot.greetings1)+_r(bot.gender)),e(_r(bot.greetings2)),e(_r(bot.keywords1)+_r(bot.non1)+_r(bot.social_network)+_r(bot.username))),"C"==r&&(e(_r(bot.greetings4)),e(_r(bot.gender)+_r(bot.age)),e(_r(bot.keywords1)+_r(bot.non2)+_r(bot.non3)+_r(bot.social_network)+_r(bot.username))),"D"==r&&(e(_r(bot.greetings5)),e(_r(bot.gender)+_r(bot.age)),e(_r(bot.keywords1)+_r(bot.non2)+_r(bot.non3)+_r(bot.social_network)+_r(bot.username))),o},getMessage=()=>{let e=[],r=["","​","​​","​​​","​​​​","​​​​​","​​​​​​"];return _structure().map(o=>{let t="";for(let e in o)"string"==typeof o[e]&&(t+=o[e]+_r(r));e.push(t)}),e},messages=getMessage(),auto_username=___username,i=0,start_chat=()=>{if($(".usernameInput")[0]){let e=$(".usernameInput")[0];e.value=auto_username,e.value==auto_username&&talk.click()}},send_msg=()=>{connected&&(socket.send(messages[i]),console.log("Me: "+messages[i]),i++)},exit_chat=()=>{i>messages.length-1&&window.location.reload(),1==chatMessageInput.disabled&&0==connected&&window.location.reload()};var loop=setInterval(()=>{start_chat(),send_msg(),exit_chat()},2e3);
