@@ -1,0 +1,45 @@
+// ==UserScript==
+// @name        informo.ty (BoT)
+// @version      0.1.1
+// @description  informo.tv Bot
+// @author       Dekpiano 
+// @include      *
+// @match       ://www.informo.tv/
+// @run-at      document-end
+// @grant        none
+// @namespace https://greasyfork.org/users/172683
+// @downloadURL https://update.greasyfork.org/scripts/40220/informoty%20%28BoT%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/40220/informoty%20%28BoT%29.meta.js
+// ==/UserScript==
+var min = 50000;
+var max = 65909;
+ if (location.href.indexOf('informo') > -1) {
+        document.title='Bot..Working';
+        if(window.top.location.href.indexOf('page')  > 1){
+              document.title='Bot..Reading';
+        }else{
+             num =  getRndInteger(min,max);
+             window.top.location.href='https://www.informo.tv/?page=article&id_article='+num;
+        }
+
+ //
+            var sucCheck = setInterval(function(){
+                 num =  getRndInteger(min,max);
+                         if ( document.getElementById('s').getAttribute('style').indexOf('block') > -1){
+                              clearInterval(sucCheck);
+                              document.title='Reading complete';
+                             window.top.location.href='https://www.informo.tv/?page=article&id_article='+num;
+
+                          }else if(!document.getElementById('e').getAttribute('style')){
+                              window.top.location.href='https://www.informo.tv/?page=article&id_article='+num;
+                          }else if(document.getElementById('e').getAttribute('style').indexOf('block') > -1){
+                              window.top.location.href='https://www.informo.tv/?page=article&id_article='+num;
+                          }else{
+                              document.title='Reading...';
+                         }
+                       },5000);
+     //
+ }
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min) ) + min;
+}
