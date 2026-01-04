@@ -1,0 +1,1408 @@
+// ==UserScript==
+// @name         Curators Forum Arzamas
+// @namespace    https://forum.blackrussia.online
+// @version      0.2.9
+// @description  Для упрощения работы кураторам форумных разделов
+// @author       t.me/arefuer
+// @match        https://forum.blackrussia.online/threads/*
+// @include      https://forum.blackrussia.online/threads/
+// @grant        t.me/arefuer
+// @license      MIT
+// @collaborator t.me/arefuer
+// @icon         https://i.yapx.ru/ViO6c.png
+// @downloadURL https://update.greasyfork.org/scripts/480271/Curators%20Forum%20Arzamas.user.js
+// @updateURL https://update.greasyfork.org/scripts/480271/Curators%20Forum%20Arzamas.meta.js
+// ==/UserScript==
+ 
+(function () {
+    'use strict';
+    const UNACCСEPT_PREFIX = 4; // Prefix that will be set when thread closes
+    const ACCСEPT_PREFIX = 8; // Prefix that will be set when thread accepted
+    const RESHENO_PREFIX = 6; // Prefix that will be set when solving the problem
+    const PINN_PREFIX = 2; // Prefix that will be set when thread pins
+    const GA_PREFIX = 12; // Prefix that will be set when thread send to ga
+    const COMMAND_PREFIX = 10; // Prefix that will be set when thread send to project team
+    const WATCHED_PREFIX = 9;
+    const CLOSE_PREFIX = 7;
+    const SPECY_PREFIX = 11;
+    const TEXY_PREFIX = 13;
+    const OJIDANIE_PREFIX = 14;
+    const OTKAZBIO_PREFIX = 4;
+    const ODOBRENOBIO_PREFIX = 8;
+    const NARASSMOTRENIIBIO_PREFIX = 2;
+    const REALIZOVANO_PREFIX = 5;
+    const VAJNO_PREFIX = 1;
+    const PREFIKS = 0;
+    const KACHESTVO = 15;
+    const RASSMOTRENO_PREFIX = 9;
+    const OTKAZRP_PREFIX = 4;
+    const ODOBRENORP_PREFIX = 8;
+    const NARASSMOTRENIIRP_PREFIX = 2;
+    const OTKAZORG_PREFIX = 4;
+    const ODOBRENOORG_PREFIX = 8;
+    const NARASSMOTRENIIORG_PREFIX = 2;
+    const buttons = [
+        {
+            title: 'Приветствие',
+            content:
+            '[SIZE=4][FONT=Veranda][CENTER]Доброго времени суток, уважаемый[B] {{ user.mention }}[/B]![/CENTER]<br><br>' +
+            '[CENTER] текст [/CENTER][/FONT][/SIZE]',
+            style: 'flex-grow: 1',
+        },
+        {
+            title: 'Рассмотрение',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            '[CENTER]Ваша тема взята на рассмотрение, ожидайте ответ в ближайшее время<br>Часто рассмотрение темы может занять определенное время.<br>[CENTER][COLOR=rgb(255, 255, 0)]На рассмотрении[/COLOR][/CENTER][/FONT]',
+            prefix: PINN_PREFIX,
+            status: true,
+            style: 'flex-grow: 1',
+        },
+        {
+            title: 'Дублирование',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Данная тема является <u>дубликатом вашей предыдущей темы</u>.<br>Пожалуйста, <u><b>прекратите создавать идентичные или похожие темы - иначе Ваш форумный аккаунт может быть заблокирован</b></u>.<br><br>" +
+            '[CENTER][I][COLOR=rgb(255, 0, 0)]Закрыто[/COLOR][/I].[/CENTER][/FONT][/SIZE]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+            style: 'flex-grow: 1',
+        },
+        {
+            title: 'Правила сервера (Жб на игроков)',
+            style: 'width: 97%; background: #ff3300; box-shadow: 0px 0px 5px #fff',
+        },
+        {
+            title: 'Нонрп поведение',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][FONT=georgia][I][B]Нарушитель будет наказан по пункту правил: [Color=Red]2.01[/COLOR]. Запрещено поведение, нарушающее нормы процессов Role Play режима игры | [Color=Red]Jail 30 минут [/color][/FONT][/I][/B][/CENTER] " +
+            '[Color=Lime][CENTER]Одобрено, закрыто[/color].<br> ' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Уход от РП',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил:[Color=Red]2.02[/COLOR]. Запрещено целенаправленно уходить от Role Play процесса всеразличными способами | [Color=Red]Jail 30 минут / Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Нонрп вождение',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.03[/color]. Запрещен NonRP Drive — вождение любого транспортного средства в невозможных для него условиях, а также вождение в неправдоподобной манере | [Color=Red]Jail 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'NonRP Обман',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.05[/color]. Запрещены любые OOC обманы и их попытки, а также любые IC обманы с нарушением Role Play правил и логики | [Color=Red]PermBan[/color].[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Аморал действия',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.08[/color]. Запрещена любая форма аморальных действий сексуального характера в сторону игроков | [Color=Red]Jail 30 минут / Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Слив склада',
+            content:
+            '[Color=rgb(213, 171, 255][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.09[/color]. Запрещено сливать склад фракции / семьи путем взятия большого количестве ресурсов, или же брать больше, чем разрешили на самом деле | [Color=Red]Ban 15 - 30 дней / PermBan[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color]<br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'ДБ',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.13[/color]. Запрещен DB (DriveBy) — намеренное убийство / нанесение урона без веской IC причины на любом виде транспорта | [Color=Red]Jail 60 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'РК',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.14[/color]. Запрещен RK (Revenge Kill) — убийство игрока с целью мести, возвращение на место смерти в течение 15-ти минут, а также использование в дальнейшем информации, которая привела Вас к смерти | [Color=Red]Jail 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'ТК',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.15[/color]. Запрещен TK (Team Kill) — убийство члена своей или союзной фракции, организации без наличия какой-либо IC причины | [Color=Red]Jail 60 минут / Warn[/color] ([Color=Orange]за два и более убийства[/color])[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'СК',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.16[/color]. Запрещен SK (Spawn Kill) — убийство или нанесение урона на титульной территории любой фракции / организации, на месте появления игрока, а также на выходе из закрытых интерьеров и около них | [Color=Red]Jail 60 минут / Warn[/color] ([Color=Orange]за два и более убийства[/color]).[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'ПГ',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.17[/color]. Запрещен PG (PowerGaming) — присвоение свойств персонажу, не соответствующих реальности, отсутствие страха за свою жизнь | [Color=Red]Jail 30 минут[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'MG',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.18[/color]. Запрещен MG (MetaGaming) — использование ООС информации, которую Ваш персонаж никак не мог получить в IC процессе | [Color=Red]Mute 30 минут[/color].[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'ДМ',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.19[/color]. Запрещен DM (DeathMatch) — убийство или нанесение урона без веской IC причины | [Color=Red]Jail 60 минут[/color].[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Масс ДМ',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.20[/color]. Запрещен Mass DM (Mass DeathMatch) — убийство или нанесение урона без веской IC причины трем игрокам и более | [Color=Red]Warn / Ban 3 - 7 дней[/color].[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color]<br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Сторонне ПО',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][FONT=georgia][B][I]Нарушитель будет наказан по пункту правил: [Color=Red]2.22[/color]. Запрещено хранить / использовать / распространять стороннее программное обеспечение или любые другие средства, позволяющие получить преимущество над другими игроками | [Color=Red] Ban 15 - 30 дней / PermBan[/color] <br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Реклама сторонних ресурсов',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.31[/color]. Запрещено рекламировать на серверах любые проекты, серверы, сайты, сторонние Discord-серверы, YouTube каналы и тому подобное | [Color=Red]Ban 7 дней / PermBan[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Оск адм',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.32[/color]. Запрещено введение в заблуждение, обман администрации на всех ресурсах проекта | [Color=Red]Ban 7 - 15 дней[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Уяз.правил',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.33[/color]. Запрещено пользоваться уязвимостью правил | [Color=Red]Ban 15 дней[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Уход от наказания',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.34[/color]. Запрещен уход от наказания | [Color=Red]Ban 15 - 30 дней[/color]([Color=Orange]суммируется к общему наказанию дополнительно[/color])[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'IC и OCC угрозы',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.35[/color]. На игровых серверах запрещено устраивать IC и OOC конфликты на почве разногласия о национальности и / или религии совершенно в любом формате | [Color=Red]Mute 120 минут / Ban 7 дней[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'IC конфликты в OOC',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.36[/color]. Запрещено переносить конфликты из IC в OOC и наоборот | [Color=Red]Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Угрозы OOC',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]2.37[/color]. Запрещены OOC угрозы, в том числе и завуалированные | [Color=Red]Mute 120 минут / Ban 7 дней [/color]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER]Приятной игры на сервере [COLOR=rgb(222, 12, 98)]CHERRY.[/COLOR][/FONT][/B]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Злоуп наказаниями',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]Нарушитель будет наказан по пункту правил: [Color=Red]2.39[/color]. Злоупотребление нарушениями правил сервера | [Color=Red]Ban 7 - 30 дней [/color][/CENTER]" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Оск проекта',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.40[/color]. Запрещены совершенно любые деструктивные действия по отношению к проекту: неконструктивная критика, призывы покинуть проект, попытки нарушить развитие проекта или любые другие действия, способные привести к помехам в игровом процессе | [Color=Red]Mute 300 минут / Ban 30 дней[/color] ([Color=Cyan]Ban выдается по согласованию с главным администратором[/color])[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Продажа промо',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.43[/color]. Запрещена продажа / обмен / покупка поощрительной составляющей от лица проекта, будь то бонус-код, либо промокод, который выдается безвозмездно игрокам в целях промоакций | [Color=Red]Mute 120 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'ЕПП Фура',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.47[/color]. Запрещено ездить по полям на грузовом транспорте, инкассаторских машинах (работа дальнобойщика, инкассатора) | [Color=Red]Jail 60 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Покупка фам.репы',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.48[/color]. Продажа или покупка репутации семьи любыми способами, скрытие нарушителей, читеров лидером семьи. | [Color=Red]Обнуление рейтинга семьи / Обнуление игрового аккаунта лидера семьи[/color]<br>" +
+            "[CENTER][Color=Orange]Примечание[/color]: скрытие информации о продаже репутации семьи приравнивается к [Color=Red]пункту правил 2.24.[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Помеха РП процессу',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.51[/color]. Запрещено вмешательство в Role Play процесс с целью помехи и препятствования дальнейшего развития Role Play процесса | [Color=Red]Jail 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Нонрп акс',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.52[/color]. Запрещено располагать аксессуары на теле персонажа, нарушая нормы морали и этики, увеличивать аксессуары до слишком большого размера. | [Color=Red]При первом нарушении - обнуление аксессуаров, при повторном нарушении - обнуление аксессуаров + JAIL 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: '2.53(Названия маты)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.53[/color]. Запрещено устанавливать названия для внутриигровых ценностей с использованием нецензурной лексики, оскорблений, слов политической или религиозной наклонности | [Color=Red]Ban 1 день / При повторном нарушении обнуление бизнеса[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Баг аним',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.55[/color]. Запрещается багоюз связанный с анимацией в любых проявлениях. | [Color=Red]Jail 60 / 120 минут [/color]<br>" +
+            "[Color=Orange]Пример[/color]: если Нарушитель, используя баг, убирает ограничение на использование оружия в зеленой зоне, сбивает темп стрельбы, либо быстро перемещается во время войны за бизнес или во время перестрелки на мероприятии с семейными контейнерами, последует наказание в виде [Color=Red]Jail на 120 минут[/COLOR]. <br>" +
+            "Данное наказание используется в случаях, когда, используя ошибку, было получено преимущество перед другими игроками. <br>" +
+            "[Color=Orange]Пример[/color]: если Нарушитель использует баги, связанные с анимацией, и при этом не влияет на игровой процесс других игроков, а также не получает преимущество перед другими игроками, последует наказание в виде [Color=Red]Jail на 60 минут[/color].[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Игровые чаты',
+            style: 'width: 97%; background: #ff3300; box-shadow: 0px 0px 5px #fff',
+        },
+        {
+            title: 'Транслит',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.01[/color]. Общепризнанный язык сервера — русский. Общение в IC чатах во всех Role Play ситуациях обязательно должно проходить исключительно на русском языке | [Color=Red]Устное замечание / Mute 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER]<br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Капс',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.02[/color]. Запрещено использование верхнего регистра (CapsLock) при написании любого текста в любом чате | [Color=Red]Mute 30 минут[/color].[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color]<br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Оск в ООС',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.03[/color]. Любые формы оскорблений, издевательств, расизма, дискриминации, религиозной враждебности, сексизма в OOC чате запрещены | [Color=Red]Mute 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br> '+
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Оск/Упом родни',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил:[Color=Red] 3.04. |[/color] Запрещено оскорбление или косвенное упоминание родных вне зависимости от чата (IC или OOC) | [Color=Red]Mute 120 минут / Ban 7 - 15 дней[/color].[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Флуд',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.05[/color]. Запрещен флуд — 3 и более повторяющихся сообщений от одного и того же игрока | [Color=Red]Mute 30 минут[/color].[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Злоуп знаками',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.06[/color]. Запрещено злоупотребление знаков препинания и прочих символов | [Color=Red]Mute 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br> '+
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Оскорбление',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.07[/color]. Запрещены совершенно любые оскорбления или действия, порочащие честь и достоинства, несущие в себе подтекст сексуального характера вне зависимости от чата | [Color=Red]Mute 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Редактирование в л/ц',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]4.04[/color]. Запрещено редактировать поданные объявления в личных целях заменяя текст обьявления на несоответствующий отправленному игроком | [Color=Red]Ban 7 дней + Чс Организации[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Слив СМИ',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.08[/color]. Запрещены любые формы «слива» посредством использования глобальных чатов | [Color=Red]PermBan[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Угрозы о наказании со стороны адм',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]Нарушитель будет наказан по пункту правил: [Color=Red]3.09[/color]. Запрещены любые угрозы о наказании игрока со стороны администрации | [Color=Red]Mute 30 минут[/color]. <br>" +
+            "[CENTER][Color=Lime]Одобрено, закрыто[/I][/B][/CENTER] <br>" +
+            "[CENTER][DON'T=georgia]Приятной игры на сервере [COLOR=rgb(222, 12, 98)]CHERRY.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Выдача себя за адм ',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.10[/color]. Запрещена выдача себя за администратора, если таковым не являетесь | [Color=Red]Ban 7 - 15 + ЧС администрации[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Ввод в заблуждение',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил [Color=Red]3.11[/color]. Запрещено введение игроков проекта в заблуждение путем злоупотребления командами | [Color=Red]Ban 15 - 30 дней / PermBan[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Репорт: Капс/Оффтоп/Транслит',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.12[/color]. Запрещено подавать репорт написанный транслитом, с сообщением не по теме (Offtop), с включенным Caps Lock и повторять обращение (если ответ был уже дан ранее) | [Color=Red]Report Mute 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Музыка в voice',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.14[/color]. Запрещено включать музыку в Voice Chat | [Color=Red]Mute 60 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Оск/Упом род в voice',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.15[/color]. Запрещено оскорблять игроков или родных в Voice Chat | [Color=Red]Mute 120 минут / Ban 7 - 15 дней[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br> '+
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Шум в voice',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.16[/color]. Запрещено создавать посторонние шумы или звуки | [Color=Red]Mute 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Реклама в voice',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.17[/color]. Запрещена реклама в Voice Chat не связанная с игровым процессом | [Color=Red]Ban 7 - 15 дней[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Религиозное и политическая пропаганда',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.18[/color]. Запрещено политическое и религиозное пропагандирование | [Color=Red]Mute 120 минут / Ban 10 дней[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br> '+
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Реклама промо',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.21[/color]. Запрещается реклама промокодов в игре, а также их упоминание в любом виде во всех чатах. | [Color=Red]Ban 30 дней[/color].[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Торговля на тт госс',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]3.22[/color]. Запрещено публиковать любые объявления в помещениях государственных организаций вне зависимости от чата (IC или OOC) | [Color=Red]Mute 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br> '+
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Положение об игровых аккаунтах',
+            style: 'width: 97%; background: #ff3300; box-shadow: 0px 0px 5px #fff',
+        },
+        {
+            title: 'Мультиаккаунт (3+)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]4.04[/color]. Разрешается зарегистрировать максимально только три игровых аккаунта на сервере | [Color=Red]PermBan[/color].<br>" +
+            "[Color=Orange]Примечание[/color]: блокировке подлежат все аккаунты созданные после третьего твинка.[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Фейк аккаунт',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]4.10[/color]. Запрещено создавать никнейм, повторяющий или похожий на существующие никнеймы игроков или администраторов по их написанию | [Color=Red]Устное замечание + смена игрового никнейма / PermBan[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Активность ТК',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил:<br>[COLOR=Red]4.14. |[/color] Запрещено, имея транспортную или строительную компанию не проявлять активность в игре. | [Color=Red]Обнуление компании без компенсации[/color][/CENTER]<br>" +
+            "[Color=Orange]Примечание[/color]: минимальный онлайн для владельцев строительных и транспортных компаний — 7 часов в неделю активной игры (нахождение в nRP сне не считается за активную игру).<br>" +
+            "[Color=Orange]Примечание[/color]: если не заходить в игру в течении 5-ти дней, не чинить транспорт в ТК, не проявлять активность в СК - компания обнуляется автоматически.<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Правила ГОСС',
+            style: 'width: 97%; background: #ff3300; box-shadow: 0px 0px 5px #fff',
+        },
+        {
+            title: 'Прогул Р/Д',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]1.07[/color]. Всем сотрудникам государственных организаций запрещено выполнять работы где-либо в форме, принадлежащей своей фракции | [Color=Red]Jail 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Исп. фрак т/с в личных целях',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]1.08[/color]. Запрещено использование фракционного транспорта в личных целях | [Color=Red]Jail 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'ДМ/Масс дм от МО',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]2.02[/color]. Наносить урон игрокам, которые находятся вне территории воинской части, запрещено | [Color=Red]Jail 30 минут / Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Н/П/Р/О (Объявы)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]4.01[/color]. Запрещено редактирование объявлений, не соответствующих ПРО | [Color=Red]Mute 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Н/П/П/Э (Эфиры)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]4.02[/color]. Запрещено проведение эфиров, не соответствующих Role Play правилам и логике | [Color=Red]Mute 30 минут[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Задержание в интерьере',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]2.50[/color]. Запрещены задержания, аресты, а также любые действия со стороны игроков, состоящих во фракциях в интерьере аукциона, казино, а также во время системных мероприятий  | [Color=Red]Ban 7 - 15 дней + увольнение из организации[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
+            "[CENTER] Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]",
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'ДМ/Масс от УМВД',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]6.01[/color]. Запрещено наносить урон игрокам без Role Play причины на территории УМВД | [Color=Red]Jail 30 минут / Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Розыск без причины(УМВД)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]6.02[/color]. Запрещено выдавать розыск без Role Play причины | [Color=Red]Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Задержание без РП(Нонрп коп)(УМВД)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]6.03[/color]. Запрещено оказывать задержание без Role Play отыгровки | [Color=Red]Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Нонрп поведение(УМВД)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]6.04[/color]. Запрещено nRP поведение | [Color=Red]Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'ДМ/Масс от ГИБДД',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]7.01[/color]. Запрещено наносить урон игрокам без Role Play причины на территории ГИБДД | [Color=Red]Jail 30[/color] минут / Warn[/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Штраф без RP (ГИБДД)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]7.02[/color]. Запрещено выдавать розыск, штраф без Role Play причины | [Color=Red]Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Розыск без причины (ГИБДД)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]6.02[/color]. Запрещено выдавать розыск без Role Play причины | [Color=Red]Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Задержание без РП (Нонрп коп) (ГИБДД)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]7.03[/color]. Запрещено оказывать задержание без Role Play отыгровки | [Color=Red]Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Забирание В/У во время погони(ГИБДД)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]7.05[/color]. Запрещено отбирать водительские права во время погони за нарушителем | [Color=Red]Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'ДМ/Масс от ФСБ',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]8.01[/color]. Запрещено наносить урон игрокам без Role Play причины на территории ФСБ | [Color=Red]Jail 30 минут / Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Розыск без причины (ФСБ)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]8.02[/color]. Запрещено выдавать розыск без Role Play причины | [Color=Red]Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Задержание без РП (Нонрп коп) (УФСБ)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]8.03[/color]. Запрещено оказывать задержание без Role Play отыгровки | [Color=Red]Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Урон на территории ФСИН без причины',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]9.01[/color]. Запрещено наносить урон игрокам без Role Play причины на территории ФСИН | [Color=Red]Jail 30 минут / Warn[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Правила ОПГ',
+            style: 'width: 97%; background: #ff3300; box-shadow: 0px 0px 5px #fff',
+        },
+        {
+            title: 'Нарушение правил В/Ч',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: За нарушение правил нападения на [Color=Orange]Войсковую Часть[/color] выдаётся предупреждение | [Color=Red]Jail 30 минут (NonRP нападение) / Warn (Для сотрудников ОПГ)[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Нападение на В/Ч через стену',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан по пунтку правил: Нападение на [Color=Orange]военную часть[/color] разрешено только через блокпост КПП с последовательностью взлома | [Color=Red]Warn NonRP В/Ч[/color][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Похищение/Ограбления нарушение правил',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушитель будет наказан за Нонрп Ограбление\Похищениее в соответствии с этими правилами [URL='https://forum.blackrussia.online/index.php?threads/%D0%9F%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0-%D0%BE%D0%B3%D1%80%D0%B0%D0%B1%D0%BB%D0%B5%D0%BD%D0%B8%D0%B9-%D0%B8-%D0%BF%D0%BE%D1%85%D0%B8%D1%89%D0%B5%D0%BD%D0%B8%D0%B9.29/']Кликабельно[/URL][/CENTER]<br>" +
+            '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: ACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Отсутствие пунка жалоб (отказы)',
+            style: 'width: 97%; background: #ff3300; box-shadow: 0px 0px 5px #fff',
+        },
+        {
+            title: 'Неадекватная жалоба',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]В Вашей жалобе содержатся неадекватные высказывание и/или неадекватное отношение к игрокам проекта и/или политические и религиозные высказывания.[/CENTER]<br>" +
+            '[CENTER]По крайней мере Ваши действия и слова нарушают правила данной площадки, а так же провила подачи жалоб.[/CENTER]<br>' +
+            "[CENTER]К нашему большому сожалению, но увы, мы не можем продолжить рассмотрение Вашей жалобы.[/CENTER]<br><br>" +
+            '[CENTER]Приятной игры на сервере [COLOR=rgb(247, 244, 22)]ARZAMAS.[/COLOR][/FONT]',
+            prefix: CLOSE_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Нарушений не найдено',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Нарушений со стороны данного игрока не было найдено.[/CENTER]<br>" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Сборка на док-вах',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]' +
+            "[CENTER]Вы используете не оригинальные файлы игры (сборку), поэтому ваша жалоба не подлежит рассмотрению.[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Недостаточно доказательств',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Недостаточно доказательств на нарушение от данного игрока. Доказательства должны быть предоставлены в хорошем качестве и с полным процессом сделки или нарушения от какого-либо игрока.[/CENTER]<br>" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Дублирование темы',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Дублирование темы. Если вы дальше будете заниматься данной деятельностью (дублированием тем), то ваш форумный аккаунт будет заблокирован на 3 дня и более.[/CENTER]<br>" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'В жалобы на админов',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Вы ошиблись разделом. Обратитесь в раздел [Color=Red]Жалобы на администрацию[/color].[/CENTER]<br>" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'В обжалования',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Вы ошиблись разделом. Обратитесь в раздел [Color=Red]Обжалование наказаний[/color].[/CENTER]<br>" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Форма подачи',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша жалоба составлена не по форме. Убедительная просьба ознакомиться [Color=Red]с правилами подачи жалоб на игроков[/color].[/CENTER]<br>" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Нету /time',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]На ваших доказательствах отсутствует /time.[/CENTER]<br>" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Требуются TimeCode',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша жалоба отказана, т.к в ней нету таймкодов. Если видео длится больше 3-ех минут - Вы должны указать таймкоды нарушений.[/CENTER]<br>" +
+            '[Color=Red][CENTER]Отказано[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Жалоба на рассмотрении',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша жалоба взята на рассмотрение.<br>Просьба ожидать ответа и не создавать дубликаты данной темы.[/CENTER]<br>" +
+            '[Color=Flame][CENTER]Ожидайте ответа.[/I][/CENTER][/color][/FONT]',
+            prefix: PINN_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Заголовок не по форме',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][FONT=Verdana][I]Заголовок вашей жалобы составлен не по форме. Убедительная просьба ознакомиться [Color=Red]с правилами подачи жалоб на игроков[/color].[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Более 72 часов',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]С момента получения наказания прошло более 72 часов[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Доква через запрет соц сети',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]3.6. Прикрепление доказательств обязательно. <br>" +
+            "[Color=Orange]Примечание[/color]: загрузка доказательств в соц. сети (ВКонтакте, instagram) запрещается, доказательства должны быть загружены на фото/видео хостинги (YouTube, Япикс, imgur).[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Нет условий сделки',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]На данных доказательствах нет условий сделки между игроками[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Нет /time',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]На доказательствах отсутствует /time[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Нужен фрапс',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]В таких случаях нужен фрапс[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Сомнения в подлинности док-в',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]У администрации появились сомнения в подлинности доказательств, которые Вы предоставили в данной жалобе![/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Нужен фрапс + промотка чата',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]В таких случаях нужен фрапс + промотка чата.[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Нужна промотка чата',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]В таких случаях нужна промотка чата.[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Неполный фрапс',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]Фрапс обрывается. Загрузите полный фрапс на YouTube.[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Не работают док-ва',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Предоставленные доказательства не работают.[/CENTER]<br>" +
+            '[Color=Flame][CENTER]Закрыто[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Док-ва отредактированы',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]На Ваших доказательствах видно, что они отредакторованны.[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'От 3-го лица',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]Жалобы от 3-их лиц не принимаются.[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Ответный ДМ (запись)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]В случае ответного ДМ нужен видеозапись. Пересоздайте тему и прикрепите видеозапись.[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Ответный ДМ (от игрока)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER][B][I][FONT=georgia]В данном случае было видно, что ДМ был ответным.[/CENTER]" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Ошиблись разделом',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Вы ошиблись сервером/разделом, переподайте жалобу в нужный раздел.[/CENTER]<br>",
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Обратитесь в жб на сотруд.',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Вы ошиблись разделом, переподайте свою жалобу в раздел жалоб на сотрудников организации.[/CENTER]<br>",
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Док-ва не рабочие',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваши доказательства не рабочие/обрезанные, перезалейте их правильно и без обрезаний.[/CENTER]<br>" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'Фотохостинги',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Доказательства должны быть загружены на Yapx/Imgur/YouTube.[/CENTER]<br>" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
+            prefix: UNACCСEPT_PREFIX,
+            status: false,
+        },
+        {
+            title: 'RP Биографии',
+            style: 'width: 97%; background: #ff3300; box-shadow: 0px 0px 5px #fff',
+        },
+        {
+            title: 'Биография одобрена',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша РП биография получает статус: [Color=Lime]Одобрено.[/I][/CENTER][/color][/FONT]",
+            prefix: ODOBRENOBIO_PREFIX,
+            status: false,
+            may_lens: true,
+        },
+        {
+            title: 'Уже есть одна на доработке',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]У вас уже имеется RolePlay биография на рассмотрении, работайте там.[/CENTER]<br>" +
+            '[Color=Red][CENTER] Отказано, закрыто.[/I][CENTER][/color][/FONT]',
+            prefix: OTKAZBIO_PREFIX,
+            status:false,
+            may_lens: true,
+        },
+        {
+            title: 'Биография скопирована',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша РП биография скопирована/украдена.[/CENTER]<br>" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][CENTER][/color][/FONT]',
+            prefix: OTKAZBIO_PREFIX,
+            status: false,
+            may_lens: true,
+        },
+        {
+            title: 'Биография пуста',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша RolePlay биография практически пуста. Рекомендую подумать над новым сценарием вашего игрового персонажа. Не забудьте ознакомиться с правилами подачи биографии в этом разделе.[/CENTER]<br>" +
+            '[Color=Red][CENTER]Отказано, закрыто.[/I][CENTER][/color][/FONT]',
+            prefix: OTKAZBIO_PREFIX,
+            status: false,
+            may_lens: true,
+        },
+        {
+            title: 'Биография от 3-его лица (отказ)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша РП биография получает статус: [Color=Red]Отказано.[/color]<br>Причиной отказа могло послужить создание биографии от 3го лица.[/CENTER][/FONT]",
+            prefix: OTKAZBIO_PREFIX,
+            status: false,
+            may_lens: true,
+        },
+        {
+            title: 'Много ошибок в биографии (отказ)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша РП биография получает статус: [Color=Red]Отказано.[/color]<br>Причиной отказа могло послужить большое количество грамматических ошибок.[/CENTER][/FONT]",
+            prefix: OTKAZBIO_PREFIX,
+            status: false,
+            may_lens: true,
+        },
+        {
+            title: 'Ошибка в возрасте/дате (отказ)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша РП биография получает статус: [Color=Red]Отказано.[/color]<br>Причиной отказа могло послужить несовпадение возраста и даты рождения.[/CENTER][/FONT]",
+            prefix: OTKAZBIO_PREFIX,
+            status: false,
+            may_lens: true,
+        },
+        {
+            title: 'В биографии возраст меньше 18 (отказ)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша РП биография получает статус: [Color=Red]Отказано.[/color]<br>Причина отказа: минимальный возраст для составления биографии: 18 лет.[/CENTER][/FONT]",
+            prefix: OTKAZBIO_PREFIX,
+            status: false,
+            may_lens: true,
+        },
+        {
+            title: 'Мало инфы (отказ)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша РП биография получает статус: [Color=Red]Отказано.[/color]<br>Добавьте больше информации о себе в новой биографии.[/CENTER][/FONT]",
+            prefix: OTKAZBIO_PREFIX,
+            status: false,
+            may_lens: true,
+        },
+        {
+            title: 'Неправильный заголовок (отказ)',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша РП биография получает статус: [Color=Red]Отказано.[/color]<br>Ваш заголовок составлен не по форме RP биографий.<br>Составьте заголовок по форме, напромер: 'РП Биография гражданина Рубина Калашникова'[/CENTER][/FONT]",
+            prefix: OTKAZBIO_PREFIX,
+            status: false,
+            may_lens: true,
+        },
+        {
+            title: 'Передача жалоб',
+            style: 'width: 97%; background: #ff3300; box-shadow: 0px 0px 5px #fff',
+        },
+        {
+            title: 'Техническому специалисту',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша жалоба была передана на рассмотрение техническому специалисту[/CENTER]<br>" +
+            '[Color=Flame][CENTER]Пожалуйста, ожидайте ответа и не создавайте подобных тем.[/I][/CENTER][/color][/FONT]',
+            prefix: TEXY_PREFIX,
+            status: true,
+        },
+        {
+            title: 'Передано ГА',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша жалоба была передана на рассмотрение [Color=Red]Главному Администратору[/color] - @Rage_Exett[/CENTER]<br>" +
+            '[Color=Flame][CENTER]Пожалуйста, ожидайте ответа и не создавайте подобных тем.[/I][/CENTER][/color][/FONT]',
+            prefix: GA_PREFIX,
+            status: true,
+        },
+        {
+            title: 'Спец.администратору',
+            content:
+            '[Color=rgb(213, 171, 255)][FONT=Verdana][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
+            "[CENTER]Ваша жалоба была передана на рассмотрение Специальному администратору и/или его заместителю.[/CENTER]<br>" +
+            '[Color=Flame][CENTER]Пожалуйста, ожидайте ответа и не создавайте подобных тем.[/I][/CENTER][/color][/FONT]',
+            prefix: SPECY_PREFIX,
+            status: true,
+        },
+    ];
+ 
+    $(document).ready(() => {
+        // Загрузка скрипта для обработки шаблонов
+        $('body').append('<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>');
+ 
+        // Добавление кнопок при загрузке страницы
+        addButton('На рассмотрении', 'pin', 'background: #420; border: 2px solid #a50; border-radius: 10px');
+        addButton('Важно', 'Vajno', 'background: #400; border: 2px solid #a00; border-radius: 10px');
+        addButton('Команде Проекта', 'teamProject', 'background: #004; border: 2px solid #00a; border-radius: 10px');
+        addButton('ГА', 'Ga', 'background: #400; border: 2px solid #a00; border-radius: 10px');
+        addButton('Спецу', 'Spec', 'background: #400; border: 2px solid #a00; border-radius: 10px');
+        addButton('Одобрено', 'accepted', 'background: #040; border: 2px solid #0a0; border-radius: 10px');
+        addButton('Отказано', 'unaccept', 'background: #400; border: 2px solid #a00; border-radius: 10px');
+        addButton('Теху', 'Texy', 'background: #400; border: 2px solid #a00; border-radius: 10px');
+        addButton('Закрыто', 'Zakrito', 'background: #400; border: 2px solid #a00; border-radius: 10px');
+        addButton('Ожидание', 'Ojidanie', 'background: #444; border: 2px solid #aaa; border-radius: 10px');
+        addAnswers();
+ 
+        // Поиск информации о теме
+        const threadData = getThreadData();
+ 
+        $('button#pin').click(() => editThreadData(PINN_PREFIX, true, false));
+        $('button#accepted').click(() => editThreadData(ACCСEPT_PREFIX, false, false));
+        $('button#Ga').click(() => editThreadData(GA_PREFIX, true, false));
+        $('button#Spec').click(() => editThreadData(SPECY_PREFIX, true, false));
+        $('button#teamProject').click(() => editThreadData(COMMAND_PREFIX, true, false));
+        $('button#unaccept').click(() => editThreadData(UNACCСEPT_PREFIX, false, false));
+        $('button#Texy').click(() => editThreadData(TEXY_PREFIX, false, false));
+        $('button#Resheno').click(() => editThreadData(RESHENO_PREFIX, false, false));
+        $('button#Zakrito').click(() => editThreadData(CLOSE_PREFIX, false, false));
+        $('button#Realizovano').click(() => editThreadData(REALIZOVANO_PREFIX, false, false));
+        $('button#Vajno').click(() => editThreadData(VAJNO_PREFIX, false, false));
+        $('button#Rassmotreno').click(() => editThreadData(RASSMOTRENO_PREFIX, false, false));
+        $('button#Ojidanie').click(() => editThreadData(OJIDANIE_PREFIX, false, false));
+ 
+        $(`button#selectAnswer`).click(() => {
+            XF.alert(buttonsMarkup(buttons), null, 'Выберите ответ:');
+            buttons.forEach((btn, id) => {
+                if (id > 0) {
+                    $(`button#answers-${id}`).click(() => pasteContent(id, threadData, true));
+                }
+            });
+        });
+    });
+ 
+    function addButton(name, id, style) {
+        $('.button--icon--reply').before(
+            `<button type="button" class="button rippleButton" id="${id}" style="margin: 3px; ${style}">${name}</button>`,
+        );
+    }
+    function addAnswers() {
+        $('.button--icon--reply').after(`<button type="button" class="button--cta uix_quickReply--button button button--icon button--icon--write rippleButton" id="selectAnswer" style="oswald: 3px; margin-left: 5px; border-radius: 13px;">ОТВЕТЫ</button>`,
+                                       );
+    }
+ 
+    function buttonsMarkup(buttons) {
+        return `<div class="select_answer" style="display:flex; flex-direction:row; flex-wrap:wrap">${buttons
+            .map(
+            (btn, i) =>
+            `<button id="answers-${i}" class="button--primary button ` +
+            `rippleButton" style="margin:5px; ${btn.style}"><span class="button-text">${btn.title}</span></button>`,
+        )
+            .join('')}</div>`;
+    }
+ 
+    function pasteContent(id, data = {}, send = false) {
+        const template = Handlebars.compile(buttons[id].content);
+        if ($('.fr-element.fr-view p').text() === '') $('.fr-element.fr-view p').empty();
+ 
+        $('span.fr-placeholder').empty();
+        $('div.fr-element.fr-view p').append(template(data));
+        $('a.overlay-titleCloser').trigger('click');
+ 
+        if (send == true) {
+            editThreadData(buttons[id].prefix, buttons[id].status, buttons[id].may_lens);
+            $('.button--icon.button--icon--reply.rippleButton').trigger('click');
+        }
+    }
+ 
+    function getThreadData() {
+        const authorID = $('a.username')[0].attributes['data-user-id'].nodeValue;
+        const authorName = $('a.username').html();
+        const hours = new Date().getHours();
+        return {
+            user: {
+                id: authorID,
+                name: authorName,
+                mention: `[USER=${authorID}]${authorName}[/USER]`,
+            },
+            greeting: () =>
+            6 < hours && hours <= 11 ?
+            'Доброе утро' :
+            12 < hours && hours <= 17 ?
+            'Добрый день' :
+            18 < hours && hours <= 23 ?
+            'Добрый вечер' :
+            0 < hours && hours <= 5 ?
+            'Доброй ночи' :
+            'Доброй ночи',
+        };
+    }
+ 
+    function editThreadData(prefix, pin = false, may_lens = false) {
+        // Получаем заголовок темы, так как он необходим при запросе
+        const threadTitle = $('.p-title-value')[0].lastChild.textContent;
+ 
+        if(pin == false) {
+            fetch(`${document.URL}edit`, {
+                method: 'POST',
+                body: getFormData({
+                    prefix_id: prefix,
+                    title: threadTitle,
+                    _xfToken: XF.config.csrf,
+                    _xfRequestUri: document.URL.split(XF.config.url.fullBase)[1],
+                    _xfWithData: 1,
+                    _xfResponseType: 'json',
+                }),
+            }).then(() => location.reload());
+        }
+        if (pin == true) {
+            fetch(`${document.URL}edit`, {
+                method: 'POST',
+                body: getFormData({
+                    prefix_id: prefix,
+                    title: threadTitle,
+                    discussion_open: 1,
+                    sticky: 1,
+                    _xfToken: XF.config.csrf,
+                    _xfRequestUri: document.URL.split(XF.config.url.fullBase)[1],
+                    _xfWithData: 1,
+                    _xfResponseType: 'json',
+                }),
+            }).then(() => location.reload());
+        }
+        if (may_lens == true) {
+            if (prefix == ODOBRENOBIO_PREFIX) {
+                moveThread(prefix, 1535); }
+            if (prefix == OTKAZBIO_PREFIX) {
+                moveThread(prefix, 1537); }
+        }
+    }
+ 
+ 
+    function moveThread(prefix, type) {
+        // Получаем заголовок темы, так как он необходим при запросе
+        const threadTitle = $('.p-title-value')[0].lastChild.textContent;
+ 
+        fetch(`${document.URL}move`, {
+            method: 'POST',
+            body: getFormData({
+                prefix_id: prefix,
+                title: threadTitle,
+                target_node_id: type,
+                redirect_type: 'none',
+                notify_watchers: 1,
+                starter_alert: 1,
+                starter_alert_reason: "",
+                _xfToken: XF.config.csrf,
+                _xfRequestUri: document.URL.split(XF.config.url.fullBase)[1],
+                _xfWithData: 1,
+                _xfResponseType: 'json',
+            }),
+        }).then(() => location.reload());
+    }
+ 
+    function getFormData(data) {
+        const formData = new FormData();
+        Object.entries(data).forEach(i => formData.append(i[0], i[1]));
+        return formData;
+    }
+ 
+})();

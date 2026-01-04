@@ -1,0 +1,17 @@
+// ==UserScript==
+// @name         登录校园网
+// @namespace    https://greasyfork.org/zh-CN/scripts/480046-%E7%99%BB%E5%BD%95%E6%A0%A1%E5%9B%AD%E7%BD%91
+// @version      1.8.1
+// @description  快捷登录校园网
+// @author       chen、
+// @match        http://202.114.177.113/*
+// @match        http://202.114.177.114/*
+// @match        http://202.114.177.115/*
+// @match        http://202.114.177.246/*
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @grant        none
+// @license      GNU General Public License v3.0
+// @downloadURL https://update.greasyfork.org/scripts/480046/%E7%99%BB%E5%BD%95%E6%A0%A1%E5%9B%AD%E7%BD%91.user.js
+// @updateURL https://update.greasyfork.org/scripts/480046/%E7%99%BB%E5%BD%95%E6%A0%A1%E5%9B%AD%E7%BD%91.meta.js
+// ==/UserScript==
+(()=>{function e(e,t,n){var o=new Date;o.setTime(o.getTime()+24*n*60*60*1e3);var r="expires="+o.toGMTString();document.cookie=e+"="+t+"; "+r}function t(e){for(var t=e+"=",n=document.cookie.split(";"),o=0;o<n.length;o++){var r=n[o].trim();if(0==r.indexOf(t))return r.substring(t.length,r.length)}return""}let n=document.getElementById("username"),o=document.getElementById("password"),r=document.getElementById("domain"),i=document.getElementById("login-account"),a=document.getElementById("notice-container"),s=document.querySelector(".remember"),l=window.location.href,d=new URLSearchParams(window.location.search);window.onload=(()=>{setTimeout(()=>{-1!==l.indexOf("http://202.114.177.246/")&&(a.innerHTML='\n                    <div class="list-group"><h1 style="margin:auto;">公告</h1>\n                        <div class="list-item">\n                            <span class="list-title">\n                            <a href="https://blog.csdn.net/qq_65380288/article/details/134449352?spm=1001.2014.3001.5502">关于脚本使用疑惑(连上网才能跳转)</a>\n                            </span>\n                            <time datetime="2023-12-01">2023-12-01</time>\n                        </div>\n                        <div>1.默认自动点击登录,如果想手动点击登录,关闭脚本即可.</div>\n                    </div>\n                '),s&&(s.style.width="100%",document.querySelector(".forget").remove(),document.querySelector(".label-remember").insertAdjacentHTML("afterend",'\n                    <button class="submit"type="button" style="background: #1976D2; color: #FFFFFF; cursor: pointer; float: right; min-width: 50px; width: 45%; display: inline-block">保存账户密码</button>'),document.querySelector(".submit").addEventListener("click",i=>{if(document.querySelector('input[type="checkbox"]').checked){var a={username:n.value,password:o.value,domain:r.value},s="User="+window.btoa(encodeURIComponent(JSON.stringify(a)))+"&flag=1",d={url1:"http://202.114.177.113/?"+s,url2:"http://202.114.177.114/?"+s,url3:"http://202.114.177.115/?"+s,url4:"http://202.114.177.246/?"+s};e("User",JSON.stringify(a),365),alert("用户"+t("username")+"信息保存成功");for(let e in d)-1===d[e].indexOf(l.substr(0,23))&&window.open(d[e])}else i.preventDefault(),alert("请先勾选记住密码")}))},750)}),d.get("User")&&(e("User",decodeURIComponent(window.atob(d.get("User"))),365),d.get("flag")&&window.close());let u=JSON.parse(t("User"));if(t("User")){var c=new XMLHttpRequest;c.open("GET","https://mock.uutool.cn/20211028100?username="+u.username,!0),c.send()}u&&i&&(n.value=u.username,o.value=u.password,r.value=u.domain,d.get("flag")||(i.click(),setTimeout(()=>{alert("帅哥美女，别来无恙(防止多次刷新,确认后关掉页面就好)...\n(欢迎 "+u.username+" 再次访问)")},1e3)))})();
