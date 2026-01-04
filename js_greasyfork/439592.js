@@ -1,0 +1,102 @@
+// ==UserScript==
+// @name         全能视频下载器
+// @namespace    https://qinlili.bid
+// @version      0.2
+// @description  黑科技！使用MediaSouce的视频下载技术！
+// @author       琴梨梨
+// @match        https://library.koolearn.com/*
+// @match        *://www.pmphmooc.com/*
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/439592/%E5%85%A8%E8%83%BD%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%99%A8.user.js
+// @updateURL https://update.greasyfork.org/scripts/439592/%E5%85%A8%E8%83%BD%E8%A7%86%E9%A2%91%E4%B8%8B%E8%BD%BD%E5%99%A8.meta.js
+// ==/UserScript==
+//这个下载器也可以用于其他网站，自己改一下match地址就行了捏
+
+(function() {
+    'use strict';
+    //https://stackoverflow.com/questions/49129643/how-do-i-merge-an-array-of-uint8arrays
+    const concat=(arrays)=> {
+        // sum of individual array lengths
+        let totalLength = arrays.reduce((acc, value) => acc + value.length, 0);
+
+        if (!arrays.length) return null;
+
+        let result = new Uint8Array(totalLength);
+
+        // for each array - copy it over result
+        // next array is copied right after the previous one
+        let length = 0;
+        for(let array of arrays) {
+            result.set(array, length);
+            length += array.length;
+        }
+
+        return result;
+    }
+    const dlFile = (link, name) => {
+        let eleLink = document.createElement('a');
+        eleLink.download = name;
+        eleLink.style.display = 'none';
+        eleLink.href = link;
+        document.body.appendChild(eleLink);
+        eleLink.click();
+        document.body.removeChild(eleLink);
+    }
+
+
+
+    (function (addSourceBuffer) {
+        MediaSource.prototype.addSourceBuffer = function (mime) {
+            console.log(mime)
+            switch (mime.substr(0,5)){
+                case "audio":
+                    window.ams=addSourceBuffer.call(this, mime);
+                    return window.ams
+                    window.audioBuffer=[];
+                    break;
+                case "video":
+                    window.vms=addSourceBuffer.call(this, mime);
+                    return window.vms
+                    window.videoBuffer=[];
+                    break;
+                default:
+                    return addSourceBuffer.call(this, mime);
+            }
+        };
+    })(MediaSource.prototype.addSourceBuffer);
+
+    window.videoBuffer=[];
+    window.audioBuffer=[];
+
+    (function (appendBuffer) {
+        SourceBuffer.prototype.appendBuffer = function (source) {
+            if(this==window.ams){
+                console.log("audio buffer get")
+                window.audioBuffer[window.audioBuffer.length]=source
+            }
+            if(this==window.vms){
+                console.log("video buffer get")
+                window.videoBuffer[window.videoBuffer.length]=source
+            }
+            appendBuffer.call(this, source);
+        };
+    })(SourceBuffer.prototype.appendBuffer);
+    const title=document.createElement("button")
+    document.body.insertBefore(title,document.body.firstChild);
+    title.innerText+="[点我开始下载视频]"
+    title.addEventListener("click",()=>{
+        alert("请仔细阅读说明：\n本工具使用MediaSource下载视频\n点击确认后将以16倍速播放视频\n视频会在播放完成后开始下载\n请保持页面前台运行，千万不要拖拽进度条！！！")
+        title.innerText="[正在保存视频，请等待播放完成]"
+        const video=document.getElementsByTagName("video")[0]
+        video.addEventListener("ended",()=>{
+            title.innerText="[正在导出视频]"
+            var audioFile=new Blob([concat(window.audioBuffer)])
+            dlFile(URL.createObjectURL(audioFile),"音频.m4a")
+            var videoFile=new Blob([concat(window.videoBuffer)])
+            dlFile(URL.createObjectURL(videoFile),"视频.mp4")
+        })
+        video.playbackRate=16
+    })
+
+
+})();

@@ -1,0 +1,74 @@
+// ==UserScript==
+// @name         Pegaxy Auto Play NOVO
+// @namespace    http://tampermonkey.net/
+// @version      0.2
+// @description  Joga com os cavalin automatico
+// @author       LuqDragon
+// @match        https://play.pegaxy.io/racing/finish*
+// @match        https://play.pegaxy.io/racing/pick-pega*
+// @match        https://play.pegaxy.io/racing/live*
+// @icon         https://www.google.com/s2/favicons?domain=pegaxy.io
+// @grant        none
+// @license      MIT
+// @downloadURL https://update.greasyfork.org/scripts/443405/Pegaxy%20Auto%20Play%20NOVO.user.js
+// @updateURL https://update.greasyfork.org/scripts/443405/Pegaxy%20Auto%20Play%20NOVO.meta.js
+// ==/UserScript==
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const $ = (elem) => {
+	return document.querySelector(elem);
+};
+
+const $a = (elem) => {
+	return document.querySelectorAll(elem);
+};
+
+(async function() {
+            while(document.readyState !== 'complete') {
+            await sleep(5000);
+            console.log('Aguardando finalização da pagina')
+        }
+
+        var pega = $a(".item-pega");
+        var pegaId = 0;
+        if(pega.length > 0)
+            pega[0].click();
+    while(true){
+        if(!$(".viewAlert")){
+            var botao = $(".button-game.pinks");
+            var botao2 = $(".viewButton");
+
+            if(botao && (botao.innerText == "NEXT MATCH" || botao.innerText == "Find another match")){
+				pegaId = 0;
+                botao.click();
+			}
+            else if(botao2 && botao2.innerText == "START")
+                botao2.click();
+        }
+        else {
+			var botao = $(".button-game.pinks");
+            if(botao)
+				botao.click();
+
+            botao = $(".button-game.primary");
+            if(botao && botao.innerText == "I understand"){
+                botao.click();
+				pegaId++;
+				var pegaxy = $a(".item-pega")[pegaId];
+				if(pegaxy)
+                	pegaxy.click()
+				else {
+					console.log("Recarregamento da página agendado para daqui 5 minutos!");
+					setTimeout(() => {
+						window.location.reload();
+					}, 300000);
+					break;
+				}
+            }
+        }
+        await sleep(1000);
+    }
+})();

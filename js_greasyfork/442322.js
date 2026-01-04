@@ -1,0 +1,27 @@
+// ==UserScript==
+// @name         水源点赞脚本
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  自动对足迹到达的全部帖子进行点赞，省去了手动点赞的麻烦。原作者CCCC_David，代发。
+// @author       danyang685
+// @match        https://shuiyuan.sjtu.edu.cn/t/topic/*
+// @license      MIT
+// @icon         data:image/png;base64,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
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/442322/%E6%B0%B4%E6%BA%90%E7%82%B9%E8%B5%9E%E8%84%9A%E6%9C%AC.user.js
+// @updateURL https://update.greasyfork.org/scripts/442322/%E6%B0%B4%E6%BA%90%E7%82%B9%E8%B5%9E%E8%84%9A%E6%9C%AC.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    const likeAll = () => {
+        for (const el of document.getElementsByClassName('toggle-like')) {
+            if (!el.classList.contains('has-like')) {
+                el.click(); // 点赞已加载的全部未点赞的帖子
+            }
+        }
+    };
+
+    likeAll(); // 首先点一遍
+    new MutationObserver(likeAll).observe(document.body, {subtree: true, childList: true}); // 检测到页面变更时重新全部点赞
+})();

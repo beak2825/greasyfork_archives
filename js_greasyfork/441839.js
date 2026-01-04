@@ -1,0 +1,78 @@
+// ==UserScript==
+// @name         91tvg辅助插件
+// @namespace    xhbuding.cf
+// @version      1.2.2
+// @description  辅助论坛功能
+// @author       xhbuding
+// @match        *://*.tekqart.com/*
+// @icon         data:image/ico;base64,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
+// @license      GPLv3
+// @downloadURL https://update.greasyfork.org/scripts/441839/91tvg%E8%BE%85%E5%8A%A9%E6%8F%92%E4%BB%B6.user.js
+// @updateURL https://update.greasyfork.org/scripts/441839/91tvg%E8%BE%85%E5%8A%A9%E6%8F%92%E4%BB%B6.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // 追加 论坛管理
+    var span = document.createElement('span');
+    span.className = 'pipe';
+    span.innerHTML = '|';
+
+    var a = document.createElement('a');
+    a.setAttribute('href', '/forum.php?mod=modcp');
+    a.innerHTML = '论坛管理 ';
+
+    var um = document.getElementById('um');
+    if(um != null) {
+        um.children[1].insertBefore(a, um.children[1].children[10]);
+        um.children[1].insertBefore(span, um.children[1].children[10]);
+    }
+
+    if(document.getElementById("modmenu") != null) document.getElementById("modmenu").style.marginTop='-24px';
+
+    //getDataByPage();
+
+    // 保留筛选到搜索查询
+    var fontsearch = document.getElementById("fontsearch");
+    if(fontsearch != null) {
+        var fontsearch_a = fontsearch.getElementsByClassName('a');
+        if(fontsearch_a.length != 0) {
+            var url = fontsearch_a[0].children[0].href.toString();
+            var arrUrl = url.split("//");
+            var start = arrUrl[1].indexOf("/");
+            var relUrl = arrUrl[1].substring(start);
+            document.getElementById("searhsort").action = relUrl;
+        }
+    }
+
+    // 数据采集
+    function getDataByPage(){
+        var moderate = document.getElementById("moderate");
+        if(moderate!=null&&moderate!=""){
+            var th = moderate.getElementsByClassName("new");
+            var name,url,total = "";
+            for(var i=0;i<th.length;i++){
+                name = th[i].children[0].children[0].innerHTML;
+                total+=name+'\n';
+            }
+            th = moderate.getElementsByClassName("common");
+            for(i=0;i<th.length;i++){
+                name = th[i].children[0].children[0].innerHTML;
+                total+=name+'\n';
+            }
+            th = moderate.getElementsByClassName("new");
+            for(i=0;i<th.length;i++){
+                url = th[i].children[0].children[0].href;
+                total+=url+'\n';
+            }
+            th = moderate.getElementsByClassName("common");
+            for(i=0;i<th.length;i++){
+                url = th[i].children[0].children[0].href;
+                total+=url+'\n';
+            }
+            console.log(total);
+        }
+    }
+
+})();

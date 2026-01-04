@@ -1,0 +1,29 @@
+// ==UserScript==
+// @name         Hostloc 轻聊版
+// @namespace    http://tampermonkey.net/
+// @version      0.3
+// @description  ui精简、紧凑化
+// @author       You
+// @match        https://hostloc.com/*
+// @icon         https://hostloc.com/favicon.ico
+// @grant        none
+// @license MIT
+// @downloadURL https://update.greasyfork.org/scripts/438142/Hostloc%20%E8%BD%BB%E8%81%8A%E7%89%88.user.js
+// @updateURL https://update.greasyfork.org/scripts/438142/Hostloc%20%E8%BD%BB%E8%81%8A%E7%89%88.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    let code = 'document.title="Hostloc轻聊版";let fixsignBtn=function(){let signBtnList=document.querySelectorAll("#hiddenposts .signBtn");for(let i=signBtnList.length-1;i>=0;i--){signBtnList[i].addEventListener("click",function(){let table=this.closest("table");let sign=table.querySelector(".sign");sign.style.display=(sign.style.display=="none"&&"block"||"none");this.textContent=(sign.style.display=="none"&&"显示签名"||"隐藏签名")})}};let showHiddenBtn=document.querySelector("#hiddenpoststip a");if(showHiddenBtn){showHiddenBtn.href=showHiddenBtn.href+"fixsignBtn();"}let authlinkList=document.querySelectorAll("table.plhin .pi a.xw1");if(authlinkList&&authlinkList.length){for(var i=authlinkList.length-1;i>=0;i--){let pipe=document.createElement("span");pipe.className="pipe";pipe.appendChild(document.createTextNode("|"));let table=authlinkList[i].closest("table");let sendMsg=table.querySelector(".pm2 .xi2");let authi=table.querySelector(".pti .authi");let level=table.querySelector("p em a");let sign=table.querySelector(".sign");authlinkList[i].title=level.textContent;if(sendMsg){authi.insertAdjacentElement("afterbegin",pipe);authi.insertAdjacentElement("afterbegin",sendMsg)}authi.insertAdjacentElement("afterbegin",pipe.cloneNode(true));authi.insertAdjacentElement("afterbegin",authlinkList[i]);if(sign){sign.style.display="none";table.querySelector(".plc").insertAdjacentElement("beforeend",sign);authi.appendChild(pipe.cloneNode(true));let signLink=document.createElement("a");signLink.className="signBtn";signLink.href="javascript:void(this);";signLink.addEventListener("click",()=>{sign.style.display=(sign.style.display=="none"&&"block"||"none");signLink.textContent=(sign.style.display=="none"&&"显示签名"||"隐藏签名")});signLink.appendChild(document.createTextNode("显示签名"));authi.appendChild(signLink)}let rightContainer=table.querySelector(".plc .pi");let moreBtnList=table.querySelectorAll(".pob em a");let fjContainer=table.querySelector("#fj");if(fjContainer){for(var j=moreBtnList.length-1;j>=0;j--){fjContainer.insertAdjacentElement("afterbegin",moreBtnList[j]);fjContainer.insertAdjacentElement("afterbegin",pipe.cloneNode(true))}}else{let rightContent=document.createElement("div");rightContent.className="y";for(let j=0;j<moreBtnList.length;j++){rightContent.appendChild(moreBtnList[j]);if(j<moreBtnList.length-1){rightContent.appendChild(pipe.cloneNode(true))}}rightContainer.insertAdjacentElement("afterbegin",rightContent)}}}let replyBtn=document.querySelector("#post_replytmp");if(replyBtn){replyBtn.textContent="回复"}let postBtn=document.querySelector("#newspecialtmp");if(postBtn){postBtn.textContent="发帖"}';
+    var js = document.createElement('script');
+    js.type = 'text/javascript';
+    js.appendChild(document.createTextNode(code));
+
+    let cssCode = "#toptb,.a_h,#hd .wp >:not(:first-child),#hd .fastlg_fm,#pt,.a_t,#ct > .mn > .pbn,#ct > .mn > .drag,#pgt,#thread_types,#f_pst,#ft,#threadlisttableid > tbody:nth-child(-n+6),table.plhin  > tbody > tr:not(:first-child),td.pls,td.icn,.authicn,.pi strong,.fl_icn_g,.fl_icn,.lk,.fl .cl:not(:first-child),.qq_bind,#loginstatus + .pipe,#post_replytmp img,#newspecialtmp img,#newspecial img{display:none}#nv_forum{margin:1rem auto}#post_replytmp,#newspecialtmp,#newspecial{border:1px solid #ebebeb;padding:.25rem 1rem}#fj{margin-left:0}.tl #forumnewshow{background:#FFFFE9}.pn{box-shadow:none;border:1px solid #ebebeb}.tl table{table-layout:auto !important}.tl .th{border-bottom:1px solid #ebebeb;background:none}.tl tr:hover th,.tl tr:hover td{background:none}#postlist{margin-top:1rem}.plugin .bm_h{border:none;border-bottom:1px solid #ebebeb}#ip_notice .bbda{padding:.5rem 1rem 0 1rem}#ip_notice .bm{border:1px solid #ebebeb}#extcreditmenu_menu .bbda{border-bottom:none}.ptn{padding-right:1rem;padding-bottom:.25rem}.fl{border:none}.fl .bm_h{margin-top:1rem;border:1px solid #ebebeb}.fl .bm_c{border-bottom:1px solid #ebebeb;border-left:1px solid #ebebeb;border-right:1px solid #ebebeb}#hd .wp{padding-top:0}#um{line-height:2rem}.psth{margin:.5rem 0 0 -.5rem}.psta{max-height:24px;word-break:break-all}.tl th,.tl td{border-bottom:1px solid #ebebeb}th.new,td.new,th.common,th.lock{padding-left:1rem}#postlist,#threadlist{border:1px solid #ebebeb}.bm_h{border:1px solid #ebebeb;background:none !important}#autopbn,.pgbtn .bm_h{border:1px solid #ebebeb;border-radius:0}.pgbtn a{box-shadow:none}.pgbtn a:hover{border:1px solid #ebebeb}.tl #forumnewshow a{border-top:none;border-bottom:none}.tdpre{display:none !important}.bm_c{padding:0}#scrolltop{left:inherit !important;right:calc(((100% - 960px)/2) - 45px);background:#fff;border-radius:0;border:1px solid #ebebeb}#scrolltop a{border-top:none}body{background:none}.t_fsz{min-height:inherit}.pi,.pi a,.pi label{color:#999}.pi{border-bottom:none;margin-bottom:0}.pl .quote,.pl .blockcode{margin:0}.pl .quote{margin-bottom:-1rem}#postlist .plhin{border-top:1px dashed #ebebeb}.pg a,.pg strong,.pgb a,.pg label{border:1px solid #ebebeb}.px{background:none;border:1px solid #ebebeb;outline:none}.p_pop,.p_pof,.sllt{border:1px solid #ebebeb;box-shadow:none}.cmmnt,.fastre,.replyadd,.replysubtract,.editp{background:none}";
+
+    var style = document.createElement('style');
+    style.type = 'text/css';
+
+    style.appendChild(document.createTextNode(cssCode));
+    document.getElementsByTagName('head')[0].appendChild(js).appendChild(style)
+})();

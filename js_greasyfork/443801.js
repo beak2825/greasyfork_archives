@@ -1,0 +1,15 @@
+// ==UserScript==
+// @name        b站倍速
+// @namespace   bilibili
+// @require     https://code.jquery.com/jquery-3.1.1.min.js
+// @match       https://www.bilibili.com/*
+// @grant        none
+// @version     2.1
+// @author      zeroscc
+// @description 通过按键实现b站2.5/3倍速
+// @license MIT
+// @downloadURL https://update.greasyfork.org/scripts/443801/b%E7%AB%99%E5%80%8D%E9%80%9F.user.js
+// @updateURL https://update.greasyfork.org/scripts/443801/b%E7%AB%99%E5%80%8D%E9%80%9F.meta.js
+// ==/UserScript==
+
+$(function(){var flag=false;var normalRate=1;$(document).keyup(function(event){if(event.keyCode==73&&!flag){if(document.querySelector("bwp-video")==null){normalRate=document.querySelector("video").playbackRate;document.querySelector("video").playbackRate=2.5;console.log(document.querySelector("video").playbackRate);$(".bilibili-player-video-btn-speed-name").html(document.querySelector("video").playbackRate+"x")}if(document.querySelector("video")==null){normalRate=document.querySelector("bwp-video").playbackRate;document.querySelector("bwp-video").playbackRate=2.5;console.log(document.querySelector("bwp-video").playbackRate);$(".bilibili-player-video-btn-speed-name").html(document.querySelector("bwp-video").playbackRate+"x")}flag=true}else if(event.keyCode==73&&flag){if(document.querySelector("bwp-video")==null){document.querySelector("video").playbackRate=normalRate;console.log(document.querySelector("video").playbackRate);$(".bilibili-player-video-btn-speed-name").html(document.querySelector("video").playbackRate+"x")}if(document.querySelector("video")==null){document.querySelector("bwp-video").playbackRate=normalRate;console.log(document.querySelector("bwp-video").playbackRate);$(".bilibili-player-video-btn-speed-name").html(document.querySelector("bwp-video").playbackRate+"x")}flag=false}else if(event.keyCode==79&&!flag){if(document.querySelector("bwp-video")==null){normalRate=document.querySelector("video").playbackRate;document.querySelector("video").playbackRate=3;console.log(document.querySelector("video").playbackRate);$(".bilibili-player-video-btn-speed-name").html(document.querySelector("video").playbackRate+"x")}if(document.querySelector("video")==null){normalRate=document.querySelector("bwp-video").playbackRate;document.querySelector("bwp-video").playbackRate=3;console.log(document.querySelector("bwp-video").playbackRate);$(".bilibili-player-video-btn-speed-name").html(document.querySelector("bwp-video").playbackRate+"x")}flag=true}else if(event.keyCode==79&&flag){if(document.querySelector("bwp-video")==null){document.querySelector("video").playbackRate=normalRate;console.log(document.querySelector("video").playbackRate);$(".bilibili-player-video-btn-speed-name").html(document.querySelector("video").playbackRate+"x")}if(document.querySelector("video")==null){document.querySelector("bwp-video").playbackRate=normalRate;console.log(document.querySelector("bwp-video").playbackRate);$(".bilibili-player-video-btn-speed-name").html(document.querySelector("bwp-video").playbackRate+"x")}flag=false}})});
