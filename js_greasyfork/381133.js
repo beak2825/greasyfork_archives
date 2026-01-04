@@ -1,0 +1,66 @@
+// ==UserScript==
+// @name        GitHub HTML Preview
+// @version     1.0.6
+// @description A userscript that adds preview links to HTML files
+// @license     MIT
+// @author      Rob Garrison
+// @namespace   https://github.com/Mottie
+// @match       https://github.com/*
+// @run-at      document-idle
+// @grant       none
+// @require     https://greasyfork.org/scripts/28721-mutations/code/mutations.js?version=1108163
+// @require     https://greasyfork.org/scripts/398877-utils-js/code/utilsjs.js?version=1079637
+// @icon        https://github.githubassets.com/pinned-octocat.svg
+// @supportURL  https://github.com/Mottie/GitHub-userscripts/issues
+// @downloadURL https://update.greasyfork.org/scripts/381133/GitHub%20HTML%20Preview.user.js
+// @updateURL https://update.greasyfork.org/scripts/381133/GitHub%20HTML%20Preview.meta.js
+// ==/UserScript==
+
+/* global $ $$ on */
+(() => {
+	"use strict";
+	// Example page: https://github.com/codrops/DecorativeLetterAnimations
+	// Source: https://github.com/htmlpreview/htmlpreview.github.com
+	const prefix = "https://htmlpreview.github.io/?";
+	// html & htm extensions
+	const regex = /\.html?$/;
+
+	const link = document.createElement("a");
+	link.className = "ghhp-btn py-0 v-align-baseline tooltipped tooltipped-e";
+	link.setAttribute("aria-label", "Open in new tab");
+	link.target = "_blank";
+	link.innerHTML = `
+		<svg class="octicon v-align-text-bottom" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+			<path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+		</svg>`;
+	link.style.marginRight = ".25rem";
+
+	function addLink(el) {
+		const cell = el.closest(".js-navigation-item div[role='rowheader'] span");
+		if (cell && !$(".ghhp-btn", cell)) {
+			const preview = link.cloneNode(true);
+			preview.href = prefix + el.href;
+			cell.prepend(preview);
+		}
+	}
+
+	function init() {
+		if ($("#files")) {
+			const files = $("#files").parentElement;
+			$$(".js-navigation-item div[role='rowheader'] .js-navigation-open", files).forEach(el => {
+				if (regex.test(el.title)) {
+					addLink(el);
+				}
+			});
+		}
+	}
+
+	on(document, "ghmo:container", () => {
+		// init after a short delay to allow rendering of file list
+		setTimeout(() => {
+			init();
+		}, 200);
+	});
+	init();
+
+})();

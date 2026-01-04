@@ -1,0 +1,75 @@
+// ==UserScript==
+// @name         JD_book_voucher
+// @namespace    niu541412
+// @version      1.0
+// @description  京东图书促销满减价格凑额度工具。
+// @author       niu541412
+// @match        *://cart.jd.com/*
+// @grant        none
+// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAADxxpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IlhNUCBDb3JlIDUuNC4wIj4KICAgPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICAgICAgPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIKICAgICAgICAgICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyIKICAgICAgICAgICAgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iCiAgICAgICAgICAgIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIgogICAgICAgICAgICB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIgogICAgICAgICAgICB4bWxuczpleGlmPSJodHRwOi8vbnMuYWRvYmUuY29tL2V4aWYvMS4wLyIKICAgICAgICAgICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICAgICAgICAgICB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iPgogICAgICAgICA8eG1wOk1vZGlmeURhdGU+MjAxOS0wNC0yNFQxMzowMDoxMCswODowMDwveG1wOk1vZGlmeURhdGU+CiAgICAgICAgIDx4bXA6Q3JlYXRlRGF0ZT4yMDE5LTA0LTI0VDEyOjU1OjA1KzA4OjAwPC94bXA6Q3JlYXRlRGF0ZT4KICAgICAgICAgPHhtcDpNZXRhZGF0YURhdGU+MjAxOS0wNC0yNFQxMzowMDoxMCswODowMDwveG1wOk1ldGFkYXRhRGF0ZT4KICAgICAgICAgPHRpZmY6U2FtcGxlc1BlclBpeGVsPjM8L3RpZmY6U2FtcGxlc1BlclBpeGVsPgogICAgICAgICA8dGlmZjpJbWFnZVdpZHRoPjEwMDA8L3RpZmY6SW1hZ2VXaWR0aD4KICAgICAgICAgPHRpZmY6Qml0c1BlclNhbXBsZT4KICAgICAgICAgICAgPHJkZjpTZXE+CiAgICAgICAgICAgICAgIDxyZGY6bGk+ODwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpPjg8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaT44PC9yZGY6bGk+CiAgICAgICAgICAgIDwvcmRmOlNlcT4KICAgICAgICAgPC90aWZmOkJpdHNQZXJTYW1wbGU+CiAgICAgICAgIDx0aWZmOlJlc29sdXRpb25Vbml0PjI8L3RpZmY6UmVzb2x1dGlvblVuaXQ+CiAgICAgICAgIDx0aWZmOlBob3RvbWV0cmljSW50ZXJwcmV0YXRpb24+MjwvdGlmZjpQaG90b21ldHJpY0ludGVycHJldGF0aW9uPgogICAgICAgICA8dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPgogICAgICAgICA8dGlmZjpJbWFnZUxlbmd0aD4xMDAwPC90aWZmOkltYWdlTGVuZ3RoPgogICAgICAgICA8eG1wTU06RGVyaXZlZEZyb20gcmRmOnBhcnNlVHlwZT0iUmVzb3VyY2UiPgogICAgICAgICAgICA8c3RSZWY6b3JpZ2luYWxEb2N1bWVudElEPjRFNTcxQzMxRjczOUQ5QUJCRkY0REQzNjU1OEREMUUxPC9zdFJlZjpvcmlnaW5hbERvY3VtZW50SUQ+CiAgICAgICAgICAgIDxzdFJlZjppbnN0YW5jZUlEPnhtcC5paWQ6NDZjZWZjYmItMTY5ZC00YThjLTk3YjctNGZlOGI4MWM4ZjU4PC9zdFJlZjppbnN0YW5jZUlEPgogICAgICAgICAgICA8c3RSZWY6ZG9jdW1lbnRJRD40RTU3MUMzMUY3MzlEOUFCQkZGNEREMzY1NThERDFFMTwvc3RSZWY6ZG9jdW1lbnRJRD4KICAgICAgICAgPC94bXBNTTpEZXJpdmVkRnJvbT4KICAgICAgICAgPHhtcE1NOkluc3RhbmNlSUQ+eG1wLmlpZDo0NDQ5Nzc1Mi1jNDY1LTQ1NDMtYjkzYS03OGNlZTg2NWUwMjU8L3htcE1NOkluc3RhbmNlSUQ+CiAgICAgICAgIDx4bXBNTTpIaXN0b3J5PgogICAgICAgICAgICA8cmRmOlNlcT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChNYWNpbnRvc2gpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICAgICA8c3RFdnQ6Y2hhbmdlZD4vPC9zdEV2dDpjaGFuZ2VkPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE5LTA0LTI0VDEzOjAwOjEwKzA4OjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOjQ2Y2VmY2JiLTE2OWQtNGE4Yy05N2I3LTRmZThiODFjOGY1ODwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5zYXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDphY3Rpb24+Y29udmVydGVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpwYXJhbWV0ZXJzPmZyb20gaW1hZ2UvanBlZyB0byBpbWFnZS9wbmc8L3N0RXZ0OnBhcmFtZXRlcnM+CiAgICAgICAgICAgICAgIDwvcmRmOmxpPgogICAgICAgICAgICAgICA8cmRmOmxpIHJkZjpwYXJzZVR5cGU9IlJlc291cmNlIj4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5kZXJpdmVkPC9zdEV2dDphY3Rpb24+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpwYXJhbWV0ZXJzPmNvbnZlcnRlZCBmcm9tIGltYWdlL2pwZWcgdG8gaW1hZ2UvcG5nPC9zdEV2dDpwYXJhbWV0ZXJzPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgICAgPHJkZjpsaSByZGY6cGFyc2VUeXBlPSJSZXNvdXJjZSI+CiAgICAgICAgICAgICAgICAgIDxzdEV2dDpzb2Z0d2FyZUFnZW50PkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChNYWNpbnRvc2gpPC9zdEV2dDpzb2Z0d2FyZUFnZW50PgogICAgICAgICAgICAgICAgICA8c3RFdnQ6Y2hhbmdlZD4vPC9zdEV2dDpjaGFuZ2VkPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6d2hlbj4yMDE5LTA0LTI0VDEzOjAwOjEwKzA4OjAwPC9zdEV2dDp3aGVuPgogICAgICAgICAgICAgICAgICA8c3RFdnQ6aW5zdGFuY2VJRD54bXAuaWlkOjQ0NDk3NzUyLWM0NjUtNDU0My1iOTNhLTc4Y2VlODY1ZTAyNTwvc3RFdnQ6aW5zdGFuY2VJRD4KICAgICAgICAgICAgICAgICAgPHN0RXZ0OmFjdGlvbj5zYXZlZDwvc3RFdnQ6YWN0aW9uPgogICAgICAgICAgICAgICA8L3JkZjpsaT4KICAgICAgICAgICAgPC9yZGY6U2VxPgogICAgICAgICA8L3htcE1NOkhpc3Rvcnk+CiAgICAgICAgIDx4bXBNTTpEb2N1bWVudElEPmFkb2JlOmRvY2lkOnBob3Rvc2hvcDozMjQ2ZGZkNC1jMGJiLTg2NDgtOTkwMy02OTU2YjhmMmYwNDA8L3htcE1NOkRvY3VtZW50SUQ+CiAgICAgICAgIDx4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ+NEU1NzFDMzFGNzM5RDlBQkJGRjRERDM2NTU4REQxRTE8L3htcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD4KICAgICAgICAgPGV4aWY6UGl4ZWxYRGlt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
+// @author       niu541412@gmail.com
+// @license      MIT License
+// @run-at       document-end
+// @downloadURL https://update.greasyfork.org/scripts/382167/JD_book_voucher.user.js
+// @updateURL https://update.greasyfork.org/scripts/382167/JD_book_voucher.meta.js
+// ==/UserScript==
+
+function jd_book(PromoName, ExpectedSum, Tolerance) {
+  var promo = document.getElementById(PromoName);
+  var list = promo.getElementsByClassName("plus-switch");
+  var stock = promo.getElementsByClassName("ftx-03 ac");
+  var NoStock = 0;
+  var price = new Array(list.length);
+  var book = new Array(list.length);
+  for (var i = 0; i < list.length; i++) {
+    if (stock[i].textContent == "无货") {
+      NoStock++;
+      continue;
+    }
+    price[i - NoStock] = parseFloat(list[i].textContent.match(/\d+\.\d+/g));
+    book[i - NoStock] = promo.getElementsByClassName("p-name")[i].innerText;
+  }
+  price = price.splice(0, list.length - NoStock);
+  book = book.splice(0, list.length - NoStock);
+  var NotEND = 1;
+  var n = 10 * 2 ** price.length;
+
+  var pool = price;
+  var backup = new Array(list.length);
+  backup.fill(0);
+
+  var sum = (accumulator, currentValue) => accumulator + currentValue; //数组求和
+  price.reduce(sum);
+
+  while (NotEND && n) {
+    n--;
+    var t = pool.reduce(sum);
+    t = Math.round(t * 100) / 100.00;
+    if (t > ExpectedSum + Tolerance || t < ExpectedSum - Tolerance) {
+      i = Math.floor(Math.random() * price.length);
+      var temp1 = pool[i];
+      var temp2 = backup[i];
+      pool[i] = temp2;
+      backup[i] = temp1;
+    } else {
+      NotEND = 0;
+    }
+  };
+
+  if (n == 0) {
+    console.log("组合失败!\n");
+  } else {
+    var j = 0;
+    for (i = 0; i < pool.length; i++) {
+      if (pool[i] > 0) {
+        console.log(pool[i] + "元:" + book[i]);
+        j++;
+      }
+    }
+    console.log("总共" + j + "本书：" + t + "元。\n");
+  }
+}
+
+var script = document.createElement('script');
+script.appendChild(document.createTextNode(jd_book));
+(document.body || document.head || document.documentElement).appendChild(script);

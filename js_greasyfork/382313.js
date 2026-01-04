@@ -1,0 +1,120 @@
+// ==UserScript==
+// @name         AtCoderLinkCompletionForJOI
+// @namespace    https://github.com/Morifo
+// @version      1.0.0
+// @description  This script adds a links to JOI problems to Atcoder pages.
+// @author       Morifo
+// @match        https://atcoder.jp/contests/joi*
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/382313/AtCoderLinkCompletionForJOI.user.js
+// @updateURL https://update.greasyfork.org/scripts/382313/AtCoderLinkCompletionForJOI.meta.js
+// ==/UserScript==
+
+(function() {
+    var urls = {'https://atcoder.jp/contests/joisc2007/tasks/joisc2007_score' : 'https://www.ioi-jp.org/camp/2007/2007-sp-tasks/2007-sp-day1_20.pdf',
+                'https://atcoder.jp/contests/joisc2007/tasks/joisc2007_factor' : 'https://www.ioi-jp.org/camp/2007/2007-sp-tasks/2007-sp-day1_20.pdf',
+                'https://atcoder.jp/contests/joisc2007/tasks/joisc2007_buildi': 'https://www.ioi-jp.org/camp/2007/2007-sp-tasks/2007-sp-day2_21.pdf',
+                'https://atcoder.jp/contests/joisc2007/tasks/joisc2007_fiber' : 'https://www.ioi-jp.org/camp/2007/2007-sp-tasks/2007-sp-day4_24.pdf',
+                'https://atcoder.jp/contests/joisc2010/tasks/joisc2010_poster' : 'https://www.ioi-jp.org/camp/2010/2010-sp-tasks/2010-sp-day1_20.pdf',
+                'https://atcoder.jp/contests/joisc2010/tasks/joisc2010_contest' : 'https://www.ioi-jp.org/camp/2010/2010-sp-tasks/2010-sp-day4_23.pdf',
+                'https://atcoder.jp/contests/joisc2007/tasks/joisc2007_mall' : 'https://www.ioi-jp.org/camp/2007/2007-sp-tasks/2007-sp-day1_20.pdf',
+                'https://atcoder.jp/contests/joisc2008/tasks/joisc2008_nile' : 'https://www.ioi-jp.org/camp/2008/2008-sp-tasks/2008-sp_tr-day2_21.pdf',
+                'https://atcoder.jp/contests/joisc2008/tasks/joisc2008_origami' : 'https://www.ioi-jp.org/camp/2008/2008-sp-tasks/2008-sp_tr-day3_22.pdf',
+                'https://atcoder.jp/contests/joisc2010/tasks/joisc2010_stairs' : 'https://www.ioi-jp.org/camp/2010/2010-sp-tasks/2010-sp-day1_20.pdf',
+                'https://atcoder.jp/contests/joisc2011/tasks/joisc2011_banner' : 'https://www.ioi-jp.org/camp/2011/2011-sp-tasks/2011-sp-day1.pdf',
+                'https://atcoder.jp/contests/joisc2011/tasks/joisc2011_ioi' : 'https://www.ioi-jp.org/camp/2011/2011-sp-tasks/2011-sp-day4.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_h' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d3.pdf',
+                'https://atcoder.jp/contests/joisc2007/tasks/joisc2007_fermat' : 'https://www.ioi-jp.org/camp/2007/2007-sp-tasks/2007-sp-day2_21.pdf',
+                'https://atcoder.jp/contests/joisc2007/tasks/joisc2007_anagra' : 'https://www.ioi-jp.org/camp/2007/2007-sp-tasks/2007-sp-day3_23.pdf',
+                'https://atcoder.jp/contests/joisc2007/tasks/joisc2007_route' : 'https://www.ioi-jp.org/camp/2007/2007-sp-tasks/2007-sp-day3_23.pdf',
+                'https://atcoder.jp/contests/joisc2008/tasks/joisc2008_committee' : 'https://www.ioi-jp.org/camp/2008/2008-sp-tasks/2008-sp_tr-day1_20.pdf',
+                'https://atcoder.jp/contests/joisc2008/tasks/joisc2008_sheet' : 'https://www.ioi-jp.org/camp/2008/2008-sp-tasks/2008-sp_tr-day1_20.pdf',
+                'https://atcoder.jp/contests/joisc2008/tasks/joisc2008_cheating' : 'https://www.ioi-jp.org/camp/2008/2008-sp-tasks/2008-sp_tr-day2_21.pdf',
+                'https://atcoder.jp/contests/joisc2008/tasks/joisc2008_fraction' : 'https://www.ioi-jp.org/camp/2008/2008-sp-tasks/2008-sp_tr-day3_22.pdf',
+                'https://atcoder.jp/contests/joisc2010/tasks/joisc2010_finals' : 'https://www.ioi-jp.org/camp/2010/2010-sp-tasks/2010-sp-day3_22.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_d' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d1.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_m' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d4.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_b' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d1.pdf',
+                'https://atcoder.jp/contests/joisc2008/tasks/joisc2008_flu' : 'https://www.ioi-jp.org/camp/2008/2008-sp-tasks/2008-sp_tr-day1_20.pdf',
+                'https://atcoder.jp/contests/joisc2009/tasks/joisc2009_sequence' : 'https://www.ioi-jp.org/camp/2009/2009-sp-tasks/2009-sp_tr-day1_20.pdf',
+                'https://atcoder.jp/contests/joisc2009/tasks/joisc2009_pyramid' : 'https://www.ioi-jp.org/camp/2009/2009-sp-tasks/2009-sp_tr-day1_20.pdf',
+                'https://atcoder.jp/contests/joisc2009/tasks/joisc2009_advertisement' : 'https://www.ioi-jp.org/camp/2009/2009-sp-tasks/2009-sp_tr-day2_21.pdf',
+                'https://atcoder.jp/contests/joisc2009/tasks/joisc2009_distribution' : 'https://www.ioi-jp.org/camp/2009/2009-sp-tasks/2009-sp_tr-day4_23.pdf',
+                'https://atcoder.jp/contests/joisc2010/tasks/joisc2010_sengoku' : 'https://www.ioi-jp.org/camp/2010/2010-sp-tasks/2010-sp-day1_20.pdf',
+                'https://atcoder.jp/contests/joisc2010/tasks/joisc2010_aplusb' : 'https://www.ioi-jp.org/camp/2010/2010-sp-tasks/2010-sp-day2_21.pdf',
+                'https://atcoder.jp/contests/joisc2010/tasks/joisc2010_dna' : 'https://www.ioi-jp.org/camp/2010/2010-sp-tasks/2010-sp-day2_21.pdf',
+                'https://atcoder.jp/contests/joisc2011/tasks/joisc2011_deciphering' : 'https://www.ioi-jp.org/camp/2011/2011-sp-tasks/2011-sp-day3.pdf',
+                'https://atcoder.jp/contests/joisc2012/tasks/joisc2012_joi_flag' : 'https://www.ioi-jp.org/camp/2012/2012-sp-tasks/2012-sp-day1.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_a' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d1.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_e' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d2.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_k' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d4.pdf',
+                'https://atcoder.jp/contests/joisc2008/tasks/joisc2008_typhoon' : 'https://www.ioi-jp.org/camp/2008/2008-sp-tasks/2008-sp_tr-day4_24.pdf',
+                'https://atcoder.jp/contests/joisc2009/tasks/joisc2009_stamps' : 'https://www.ioi-jp.org/camp/2009/2009-sp-tasks/2009-sp_tr-day1_20.pdf',
+                'https://atcoder.jp/contests/joisc2009/tasks/joisc2009_abduction' : 'https://www.ioi-jp.org/camp/2009/2009-sp-tasks/2009-sp_tr-day2_21.pdf',
+                'https://atcoder.jp/contests/joisc2009/tasks/joisc2009_ski' : 'https://www.ioi-jp.org/camp/2009/2009-sp-tasks/2009-sp_tr-day3_22.pdf',
+                'https://atcoder.jp/contests/joisc2009/tasks/joisc2009_chopsticks' : 'https://www.ioi-jp.org/camp/2009/2009-sp-tasks/2009-sp_tr-day4_23.pdf',
+                'https://atcoder.jp/contests/joisc2010/tasks/joisc2010_regions' : 'https://www.ioi-jp.org/camp/2010/2010-sp-tasks/2010-sp-day2_21.pdf',
+                'https://atcoder.jp/contests/joisc2010/tasks/joisc2010_hideseek' : 'https://www.ioi-jp.org/camp/2010/2010-sp-tasks/2010-sp-day3_22.pdf',
+                'https://atcoder.jp/contests/joisc2010/tasks/joisc2010_lake' : 'https://www.ioi-jp.org/camp/2010/2010-sp-tasks/2010-sp-day4_23.pdf',
+                'https://atcoder.jp/contests/joisc2010/tasks/joisc2010_plugs' : 'https://www.ioi-jp.org/camp/2010/2010-sp-tasks/2010-sp-day4_23.pdf',
+                'https://atcoder.jp/contests/joisc2011/tasks/joisc2011_joitter' : 'https://www.ioi-jp.org/camp/2011/2011-sp-tasks/2011-sp-day1.pdf',
+                'https://atcoder.jp/contests/joisc2011/tasks/joisc2011_guess' : 'https://www.ioi-jp.org/camp/2011/2011-sp-tasks/2011-sp-day2.pdf',
+                'https://atcoder.jp/contests/joisc2011/tasks/joisc2011_keycards' : 'https://www.ioi-jp.org/camp/2011/2011-sp-tasks/2011-sp-day2.pdf',
+                'https://atcoder.jp/contests/joisc2011/tasks/joisc2011_bookshelf' : 'https://www.ioi-jp.org/camp/2011/2011-sp-tasks/2011-sp-day4.pdf',
+                'https://atcoder.jp/contests/joisc2011/tasks/joisc2011_orienteering' : 'https://www.ioi-jp.org/camp/2011/2011-sp-tasks/2011-sp-day4.pdf',
+                'https://atcoder.jp/contests/joisc2012/tasks/joisc2012_fortune_telling' : 'https://www.ioi-jp.org/camp/2012/2012-sp-tasks/2012-sp-day3.pdf',
+                'https://atcoder.jp/contests/joisc2012/tasks/joisc2012_chinese' : 'https://www.ioi-jp.org/camp/2012/2012-sp-tasks/2012-sp-day4.pdf',
+                'https://atcoder.jp/contests/joisc2013-day1/tasks/joisc2013_bustour' : 'https://www.ioi-jp.org/camp/2013/2013-sp-tasks/2013-sp-day1.pdf',
+                'https://atcoder.jp/contests/joisc2013-day1/tasks/joisc2013_collecting' : 'https://www.ioi-jp.org/camp/2013/2013-sp-tasks/2013-sp-day1.pdf',
+                'https://atcoder.jp/contests/joisc2013-day2/tasks/joisc2013_spy' : 'https://www.ioi-jp.org/camp/2013/2013-sp-tasks/2013-sp-day2.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_a' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d1.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_b' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d1.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_f' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d2.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_c' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d1.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_i' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d3.pdf',
+                'https://atcoder.jp/contests/joisc2007/tasks/joisc2007_salt' : 'https://www.ioi-jp.org/camp/2007/2007-sp-tasks/2007-sp-day2_21.pdf',
+                'https://atcoder.jp/contests/joisc2007/tasks/joisc2007_circui' : 'https://www.ioi-jp.org/camp/2007/2007-sp-tasks/2007-sp-day3_23.pdf',
+                'https://atcoder.jp/contests/joisc2007/tasks/joisc2007_lines' : 'https://www.ioi-jp.org/camp/2007/2007-sp-tasks/2007-sp-day4_24.pdf',
+                'https://atcoder.jp/contests/joisc2008/tasks/joisc2008_belt' : 'https://www.ioi-jp.org/camp/2008/2008-sp-tasks/2008-sp_tr-day2_21.pdf',
+                'https://atcoder.jp/contests/joisc2008/tasks/joisc2008_nightman' : 'https://www.ioi-jp.org/camp/2008/2008-sp-tasks/2008-sp_tr-day3_22.pdf',
+                'https://atcoder.jp/contests/joisc2008/tasks/joisc2008_ruins' : 'https://www.ioi-jp.org/camp/2008/2008-sp-tasks/2008-sp_tr-day4_24.pdf',
+                'https://atcoder.jp/contests/joisc2009/tasks/joisc2009_contest' : 'https://www.ioi-jp.org/camp/2009/2009-sp-tasks/2009-sp_tr-day2_21.pdf',
+                'https://atcoder.jp/contests/joisc2010/tasks/joisc2010_highway' : 'https://www.ioi-jp.org/camp/2010/2010-sp-tasks/2010-sp-day4_23.pdf',
+                'https://atcoder.jp/contests/joisc2011/tasks/joisc2011_dragon' : 'https://www.ioi-jp.org/camp/2011/2011-sp-tasks/2011-sp-day1.pdf',
+                'https://atcoder.jp/contests/joisc2011/tasks/joisc2011_report' : 'https://www.ioi-jp.org/camp/2011/2011-sp-tasks/2011-sp-day3.pdf',
+                'https://atcoder.jp/contests/joisc2012/tasks/joisc2012_fish' : 'https://www.ioi-jp.org/camp/2012/2012-sp-tasks/2012-sp-day1.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_c' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d1.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_e' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d2.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_g' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d2.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_j' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d3.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_d' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d1.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_f' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d2.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_g' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d2.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_j' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d3.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_l' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d4.pdf',
+                'https://atcoder.jp/contests/joisc2009/tasks/joisc2009_territory' : 'https://www.ioi-jp.org/camp/2009/2009-sp-tasks/2009-sp_tr-day3_22.pdf',
+                'https://atcoder.jp/contests/joisc2009/tasks/joisc2009_starry_sky' : 'https://www.ioi-jp.org/camp/2009/2009-sp-tasks/2009-sp_tr-day4_23.pdf',
+                'https://atcoder.jp/contests/joisc2011/tasks/joisc2011_shiritori' : 'https://www.ioi-jp.org/camp/2011/2011-sp-tasks/2011-sp-day2.pdf',
+                'https://atcoder.jp/contests/joisc2011/tasks/joisc2011_apples' : 'https://www.ioi-jp.org/camp/2011/2011-sp-tasks/2011-sp-day4.pdf',
+                'https://atcoder.jp/contests/joisc2012/tasks/joisc2012_constellation' : 'https://www.ioi-jp.org/camp/2012/2012-sp-tasks/2012-sp-day2.pdf',
+                'https://atcoder.jp/contests/joisc2012/tasks/joisc2012_rotate' : 'https://www.ioi-jp.org/camp/2012/2012-sp-tasks/2012-sp-day2.pdf',
+                'https://atcoder.jp/contests/joisc2012/tasks/joisc2012_kangaroo' : 'https://www.ioi-jp.org/camp/2012/2012-sp-tasks/2012-sp-day3.pdf',
+                'https://atcoder.jp/contests/joisc2012/tasks/joisc2012_invitation' : 'https://www.ioi-jp.org/camp/2012/2012-sp-tasks/2012-sp-day4.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_i' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d3.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_k' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d4.pdf',
+                'https://atcoder.jp/contests/joisc2009/tasks/joisc2009_logo' : 'https://www.ioi-jp.org/camp/2009/2009-sp-tasks/2009-sp_tr-day3_22.pdf',
+                'https://atcoder.jp/contests/joisc2012/tasks/joisc2012_building2' : 'https://www.ioi-jp.org/camp/2012/2012-sp-tasks/2012-sp-day1.pdf',
+                'https://atcoder.jp/contests/joisc2012/tasks/joisc2012_sokoban' : 'https://www.ioi-jp.org/camp/2012/2012-sp-tasks/2012-sp-day3.pdf',
+                'https://atcoder.jp/contests/joisc2012/tasks/joisc2012_copypaste' : 'https://www.ioi-jp.org/camp/2012/2012-sp-tasks/2012-sp-day4.pdf',
+                'https://atcoder.jp/contests/joisc2014/tasks/joisc2014_l' : 'https://www.ioi-jp.org/camp/2014/2014-sp-tasks/2014-sp-d4.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_h' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d3.pdf',
+                'https://atcoder.jp/contests/joisc2015/tasks/joisc2015_m' : 'https://www.ioi-jp.org/camp/2015/2015-sp-tasks/2015-sp-d4.pdf'}
+    var crt_url = window.location.href;
+    if (urls[crt_url]) {
+        var element = document.createElement("a");
+        element.innerText = 'PDFリンク(UserScriptにより作成)';
+        element.href = urls[crt_url];
+        var child = document.querySelector("#task-statement");
+        document.querySelector("#main-container > div.row > div:nth-child(2)").insertBefore(element, child);
+    }
+})();

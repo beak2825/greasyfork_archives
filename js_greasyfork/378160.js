@@ -1,0 +1,54 @@
+// ==UserScript==
+// @name                this is a test 22feb2019 excl_5
+// @author              test00122feb2019
+// @version             52.28
+// @description         test22feb2019
+// @include             https://worker.mturk.com/?*
+
+
+// @namespace           jhakjfh
+// @downloadURL https://update.greasyfork.org/scripts/378160/this%20is%20a%20test%2022feb2019%20excl_5.user.js
+// @updateURL https://update.greasyfork.org/scripts/378160/this%20is%20a%20test%2022feb2019%20excl_5.meta.js
+// ==/UserScript==
+
+
+var previewLinkEls = document.querySelectorAll('span.accept-qualify-container a');
+
+for (var i = 0; i < previewLinkEls.length; i++) {
+  
+   
+    var previewLink = previewLinkEls[i].getAttribute('href');
+    
+    var previewLinkArray = previewLink.split('/', 3);
+   var previewAndAcceptLink = previewLinkArray[2];
+ 
+     
+
+  
+    previewLinkEls[i].innerHTML = previewAndAcceptLink;
+    
+    
+    
+     var test1 = ["A3F5UZADAOZUUG", "3PHLPV04I188XACT1R9AU2QAPR87PD", "3HDDSJH829U3MG6HITAQAG3NFSTWPK", "3095904802M0NL6IW8XUB3RMUAQACE", "3PLXPMD6XWGX0VVCUGY9Q2FVI9BKBI", "37CCAM3CR18Z9X3889438COITTZIDJ", "3OR6S1RACKMNFZU1YBDYXZ3WS65GA3", "3WAI7IWAXALGA0NI8GU41MLDURBKCD", "3PRC41PE4J45NG4IKSL65BK9V97YRO", "3GGBYIXIIDJFNZM4ZEMHKLTMJQEJ7H", "36FIWAXJI6J4G16WOD9I6AHWLNWA37", "30E2X49V63X6SXSGSUMW1UNVHGV3NE", "369VX4MEP43WM4TYAXPHSDVZHIBGID", "3S8DC08I236UX1HDMKKT4BPNHIMEJ9", "AC2WJV494VQVP", "3VEZ0UF9MDMUH7USU5EXBQT8H5BB4M", "31H4HIBPAM61XP0MULM8N9AO3065HZ", "3PHLPV04I188XACT1R9AU2QAPR87PD", "3HRZ3G9ETMYNDQ0YQPTR8XJ737QG9B", "3HDDSJH829U3MG6HITAQAG3NFSTWPK", "31H4HIBPAM61XP0MULM8N9AO3065HZ", "3PHLPV04I188XACT1R9AU2QAPR87PD", "3OQEO5BIM1SPR61Y6VCPUB7VPKXU9J", "36N0GER6VYSPXLFR6Z39FJS6ZKPGJO", "3OYVDJNTGK0SY9ZT4PDUSAN25QOGBV", "3WAI7IWAXALGA0NI8GU41MLDURBKCD", "3PRC41PE4J45NG4IKSL65BK9V97YRO", "3GGBYIXIIDJFNZM4ZEMHKLTMJQEJ7H", "3OR6S1RACKMNFZU1YBDYXZ3WS65GA3", "37CCAM3CR18Z9X3889438COITTZIDJ", "3PLXPMD6XWGX0VVCUGY9Q2FVI9BKBI", "37CCAM3CR18Z9X3889438COITTZIDJ", "3HDDSJH829U3MG6HITAQAG3NFSTWPK", "31H4HIBPAM61XP0MULM8N9AO3065HZ", "3OQEO5BIM1SPR61Y6VCPUB7VPKXU9J", "36N0GER6VYSPXLFR6Z39FJS6ZKPGJO", "3OYVDJNTGK0SY9ZT4PDUSAN25QOGBV", "3WAI7IWAXALGA0NI8GU41MLDURBKCD", "309BW2QQ629H1XX5DEF7VUJQDRLNVL", "3PRC41PE4J45NG4IKSL65BK9V97YRO", "3GGBYIXIIDJFNZM4ZEMHKLTMJQEJ7H", "3OR6S1RACKMNFZU1YBDYXZ3WS65GA3", "3PLXPMD6XWGX0VVCUGY9Q2FVI9BKBI", "309BW2QQ629H1XX5DEF7VUJQDRLNVL"];    
+
+          var test3 = test1.indexOf(previewAndAcceptLink);
+          if(test3 === -1){
+          var winOpen =  window.open(previewLink, width=100, height=100);
+          //var winOpen1 =  window.open(previewLink, width=50, height=50);
+
+
+                //break;
+}
+    
+}
+
+var myt4 = setTimeout( function() {
+            location.reload( true );
+       }, 300 );
+      ///}, 1000 ); 
+    
+        
+
+if (test3 === -1){
+  clearTimeout(myt4); 
+}

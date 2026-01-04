@@ -1,0 +1,418 @@
+// ==UserScript==
+// @name         PriceOutput
+// @namespace    http://tampermonkey.net/
+// @version      1.5
+// @description  just for myself
+// @author       pealpool
+// @include      *://detail.tmall.*
+// @include      *://item.taobao.*
+// @require      https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js
+// @grant        none
+// @run-at       document-end
+// @downloadURL https://update.greasyfork.org/scripts/375451/PriceOutput.user.js
+// @updateURL https://update.greasyfork.org/scripts/375451/PriceOutput.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    //my:天猫有折扣，mn:天猫无折扣，by:淘宝有折扣，bn:淘宝无折扣。
+    var myTorC = 'my';
+    if($('.J_TSaleProp').length!=0){
+        $('.tm-fcs-panel').append('<div id="myOPB">$</div>');
+        $('.tb-meta').append('<div id="myOPB">$</div>');
+    }
+    //tmall
+    $('#myOPB').hover(function(){
+        var mytcssname = $('#J_PromoPrice').attr('class');
+        switch(mytcssname){
+            case "tb-detail-price tb-promo-price tb-clear tb-hidden":
+                myTorC = 'bn';
+                break;
+            case "tb-detail-price tb-promo-price tb-clear":
+                myTorC = 'by';
+                break;
+            case "tm-promo-panel":
+                myTorC = 'mn';
+                break;
+            case "tm-promo-panel tm-promo-cur":
+                myTorC = 'my';
+                break;
+        }
+    },function(){
+    });
+    $("body").on("click","#myOPB",function(){
+        myOutputTable();
+        if($('#myTableK_b').html()==''){
+            myCatchDate();
+        }
+    });
+    //---------
+
+    function myCatchDate(){
+        var a = $('.J_TSaleProp').length;
+        var myPrice = new Array();
+        var i = new Array();
+        var z = 0;
+        var m1,m2,m3,m4;
+        var $trTemp0 = $("<tr></tr>");
+        switch(a){
+            case 1:
+                for(var k=0;k<a;k++){
+                    var $mythisaa = $('.J_TSaleProp').eq(k);
+                    i[k] = $mythisaa.find('li').length;
+                    console.log(i[k]);
+                    $trTemp0.append('<td>'+ $mythisaa.attr('data-property') +'</td>');
+                }
+                //取消默认选中
+                if($mythisaa.find('li').attr('class')=='tb-selected'){
+                    $(this).click();
+                }
+                $trTemp0.append('<td>价格</td>');
+                $trTemp0.appendTo("#myTableK_h");
+                for(m1=0;m1<i[0];m1++){
+                    var $trTemp1 = $("<tr></tr>");
+                    $('.J_TSaleProp').eq(0).find('li a span').eq(m1).click();
+                    myPrice[z] = $('.J_TSaleProp').eq(0).find('li a span').eq(m1).text();
+                    $trTemp1.append('<td>'+ myPrice[z] +'</td>');
+                    z++;
+                    switch(myTorC){
+                        case 'my':
+                            myPrice[z] = $('.tm-promo-price .tm-price').text();
+                            break;
+                        case 'mn':
+                            myPrice[z] = $('.tm-price').text();
+                            break;
+                        case 'by':
+                            myPrice[z] = $('#J_PromoPriceNum').text();
+                            break;
+                        case 'bn':
+                            myPrice[z] = $('.tb-rmb-num').text();
+                            break;
+                    }
+                    $trTemp1.append('<td>'+ myPrice[z] +'</td>');
+                    z++;
+                    $trTemp1.appendTo("#myTableK_b");
+                }
+                break;
+            case 2:
+                for(k=0;k<a;k++){
+                    $mythisaa = $('.J_TSaleProp').eq(k);
+                    i[k] = $mythisaa.find('li').length;
+                    console.log(i[k]);
+                }
+                $trTemp0.append('<td></td>');
+                for(m1=0;m1<i[0];m1++){
+                    myPrice[z] = $('.J_TSaleProp').eq(0).find('li a span').eq(m1).text();
+                    $trTemp0.append('<td>'+ myPrice[z] +'</td>');
+                    console.log(myPrice[z]);
+                    z++;
+                }
+                $trTemp0.appendTo("#myTableK_h");
+                for(m2=0;m2<i[1];m2++){
+                    $trTemp1 = $("<tr></tr>");
+                    myPrice[z] = $('.J_TSaleProp').eq(1).find('li a span').eq(m2).text();
+                    $trTemp1.append('<td>'+ myPrice[z] +'</td>');
+                    z++;
+                    for(m1=0;m1<i[0];m1++){
+                        $trTemp1.append('<td></td>');
+                    }
+                    $trTemp1.appendTo("#myTableK_b");
+                }
+
+                var myoj = 1;
+                var ttd = 1;//行列指针
+                for(m1=0;m1<i[0];m1++){
+                    var myRowspan01 = 0;
+                    var ttr = 0;//行列指针
+                    $('.J_TSaleProp').eq(0).find('li a span').eq(m1).click();
+                    for(m2=0;m2<i[1];m2++){
+                        if($('.J_TSaleProp').eq(1).find('li').eq(m2).hasClass('tb-out-of-stock')){
+                            //$('#myTableK_b tr').eq(ttr).find('td').eq(ttd).attr('text','');
+                            ttr++;
+                        }else{
+                            $('.J_TSaleProp').eq(1).find('li a span').eq(m2).click();
+                            switch(myTorC){
+                                case 'my':
+                                    myPrice[z] = $('.tm-promo-price .tm-price').text();
+                                    break;
+                                case 'mn':
+                                    myPrice[z] = $('.tm-price').text();
+                                    break;
+                                case 'by':
+                                    myPrice[z] = $('#J_PromoPriceNum').text();
+                                    break;
+                                case 'bn':
+                                    myPrice[z] = $('.tb-rmb-num').text();
+                                    break;
+                            }
+                            $('#myTableK_b tr').eq(ttr).find('td').eq(ttd).text(myPrice[z]);
+                            z++;
+                            ttr++;
+                            myoj++;
+                        }
+                        if(m2+1==i[1]){
+                            $('.J_TSaleProp').eq(1).find('li a span').eq(m2).click();
+                        }
+                    }
+                    ttd++;
+                    $('.J_TSaleProp').eq(1).find('li.tb-selected a span').click();
+                    //$('#myRp'+ m1).attr('rowspan',myoj-1);
+                    myoj = 1;
+                }
+/*
+                var myoj = 1;
+                for(m1=0;m1<i[0];m1++){
+                    var myRowspan01 = 0;
+                    $('.J_TSaleProp').eq(0).find('li a span').eq(m1).click();
+                    myPrice[z] = $('.J_TSaleProp').eq(0).find('li a span').eq(m1).text();
+                    z++;
+                    for(m2=0;m2<i[1];m2++){
+                        $trTemp1 = $("<tr></tr>");
+                        if($('.J_TSaleProp').eq(1).find('li').eq(m2).hasClass('tb-out-of-stock')){
+                        }else{
+                            if(myRowspan01 == 0){
+                                $trTemp1.append('<td id="myRp'+ m1 +'">'+ myPrice[z-1] +'</td>');
+                                myRowspan01 = 1;
+                            }
+                            $('.J_TSaleProp').eq(1).find('li a span').eq(m2).click();
+                            myPrice[z] = $('.J_TSaleProp').eq(1).find('li a span').eq(m2).text();
+                            $trTemp1.append('<td>'+ myPrice[z] +'</td>');
+                            z++;
+                            switch(myTorC){
+                                case 'my':
+                                    myPrice[z] = $('.tm-promo-price .tm-price').text();
+                                    break;
+                                case 'mn':
+                                    myPrice[z] = $('.tm-price').text();
+                                    break;
+                                case 'by':
+                                    myPrice[z] = $('#J_PromoPriceNum').text();
+                                    break;
+                                case 'bn':
+                                    myPrice[z] = $('.tb-rmb-num').text();
+                                    break;
+                            }
+                            $trTemp1.append('<td>'+ myPrice[z] +'</td>');
+                            z++;
+                            $trTemp1.appendTo("#myTableK_b");
+                            myoj++;
+                        }
+                        if(m2+1==i[1]){
+                            $('.J_TSaleProp').eq(1).find('li a span').eq(m2).click();
+                        }
+                    }
+                    $('.J_TSaleProp').eq(1).find('li.tb-selected a span').click();
+                    $('#myRp'+ m1).attr('rowspan',myoj-1);
+                    myoj = 1;
+                }
+*/
+                break;
+            case 3:
+                for(k=0;k<a;k++){
+                    $mythisaa = $('.J_TSaleProp').eq(k);
+                    i[k] = $mythisaa.find('li').length;
+                    console.log(i[k]);
+                    $trTemp0.append('<td>'+ $mythisaa.attr('data-property') +'</td>');
+                }
+                //取消默认选中
+                if($mythisaa.find('li').attr('class')=='tb-selected'){
+                    $(this).click();
+                }
+                $trTemp0.append('<td>价格</td>');
+                $trTemp0.appendTo("#myTableK_h");
+                myoj = 1;
+                for(m1=0;m1<i[0];m1++){
+                    myRowspan01 = 0;
+                    $('.J_TSaleProp').eq(0).find('li a span').eq(m1).click();
+                    myPrice[z] = $('.J_TSaleProp').eq(0).find('li a span').eq(m1).text();
+                    z++;
+                    for(m2=0;m2<i[1];m2++){
+                        $trTemp1 = $("<tr></tr>");
+                        var myRowspan02 = 0;
+                        if(myRowspan01 == 0){
+                            $trTemp1.append('<td id="myRp1'+ m1 +'">'+ myPrice[z-1] +'</td>');
+                            myRowspan01 = 1;
+                        }
+                        if($('.J_TSaleProp').eq(1).find('li').eq(m2).hasClass('tb-out-of-stock')){
+                        }else{
+                            $('.J_TSaleProp').eq(1).find('li a span').eq(m2).click();
+                            myPrice[z] = $('.J_TSaleProp').eq(1).find('li a span').eq(m2).text();
+                            z++;
+                            for(m3=0;m3<i[2];m3++){
+                                if($('.J_TSaleProp').eq(2).find('li').eq(m3).hasClass('tb-out-of-stock')){
+                                }else{
+                                    if(myRowspan02 == 0){
+                                        $trTemp1.append('<td id="myRp2'+ m2 +'">'+ myPrice[z-1] +'</td>');
+                                        myRowspan02 = 1;
+                                    }
+                                    $('.J_TSaleProp').eq(2).find('li a span').eq(m3).click();
+                                    myPrice[z] = $('.J_TSaleProp').eq(2).find('li a span').eq(m3).text();
+                                    $trTemp1.append('<td>'+ myPrice[z] +'</td>');
+                                    z++;
+                                    switch(myTorC){
+                                        case 'my':
+                                            myPrice[z] = $('.tm-promo-price .tm-price').text();
+                                            break;
+                                        case 'mn':
+                                            myPrice[z] = $('.tm-price').text();
+                                            break;
+                                        case 'by':
+                                            myPrice[z] = $('#J_PromoPriceNum').text();
+                                            break;
+                                        case 'bn':
+                                            myPrice[z] = $('.tb-rmb-num').text();
+                                            break;
+                                    }
+                                    $trTemp1.append('<td>'+ myPrice[z] +'</td>');
+                                    z++;
+                                    $trTemp1.appendTo("#myTableK_b");
+                                    myoj++;
+                                    $trTemp1 = $("<tr></tr>");
+                                }
+                                if(m3+1==i[2]){
+                                    $('.J_TSaleProp').eq(2).find('li a span').eq(m3).click();
+                                }
+                            }
+                            $('.J_TSaleProp').eq(2).find('li.tb-selected a span').click();
+                            $('#myRp2'+ m2).attr('rowspan',myoj-1);
+                            myoj = 1;
+                        }
+                    }
+                    $('#myRp1'+ m1).attr('rowspan',myoj-1);
+                    myoj = 1;
+                }
+                break;
+            case 4:
+                for(k=0;k<a;k++){
+                    $mythisaa = $('.J_TSaleProp').eq(k);
+                    i[k] = $mythisaa.find('li').length;
+                    console.log(i[k]);
+                    $trTemp0.append('<td>'+ $mythisaa.attr('data-property') +'</td>');
+                }
+                //取消默认选中
+                if($mythisaa.find('li').attr('class')=='tb-selected'){
+                    $(this).click();
+                }
+                $trTemp0.append('<td>价格</td>');
+                $trTemp0.appendTo("#myTableK_h");
+                myoj = 1;
+                for(m1=0;m1<i[0];m1++){
+                    myRowspan01 = 0;
+                    $('.J_TSaleProp').eq(0).find('li a span').eq(m1).click();
+                    myPrice[z] = $('.J_TSaleProp').eq(0).find('li a span').eq(m1).text();
+                    z++;
+                    for(m2=0;m2<i[1];m2++){
+                        if($('.J_TSaleProp').eq(1).find('li').eq(m2).hasClass('tb-out-of-stock')){
+                        }else{
+                            $('.J_TSaleProp').eq(1).find('li a span').eq(m2).click();
+                            myPrice[z] = $('.J_TSaleProp').eq(1).find('li a span').eq(m2).text();
+                            z++;
+                            for(m3=0;m3<i[2];m3++){
+                                if($('.J_TSaleProp').eq(2).find('li').eq(m3).hasClass('tb-out-of-stock')){
+                                }else{
+                                    $('.J_TSaleProp').eq(2).find('li a span').eq(m3).click();
+                                    myPrice[z] = $('.J_TSaleProp').eq(2).find('li a span').eq(m3).text();
+                                    z++;
+                                    for(m4=0;m4<i[3];m4++){
+                                        $trTemp1 = $("<tr></tr>");
+                                        if($('.J_TSaleProp').eq(3).find('li').eq(m4).hasClass('tb-out-of-stock')){
+                                        }else{
+                                            $('.J_TSaleProp').eq(3).find('li a span').eq(m4).click();
+                                            myPrice[z] = $('.J_TSaleProp').eq(3).find('li a span').eq(m4).text();
+                                            z++;
+                                            switch(myTorC){
+                                                case 'my':
+                                                    myPrice[z] = $('.tm-promo-price .tm-price').text();
+                                                    break;
+                                                case 'mn':
+                                                    myPrice[z] = $('.tm-price').text();
+                                                    break;
+                                                case 'by':
+                                                    myPrice[z] = $('#J_PromoPriceNum').text();
+                                                    break;
+                                                case 'bn':
+                                                    myPrice[z] = $('.tb-rmb-num').text();
+                                                    break;
+                                            }
+                                            z++;
+                                        }
+                                        if(m4+1==i[3]){
+                                            $('.J_TSaleProp').eq(3).find('li a span').eq(m4).click();
+                                        }
+                                    }
+                                    $('.J_TSaleProp').eq(3).find('li.tb-selected a span').click();
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+        }
+        console.log(myPrice);
+        var myminminaaa = parseInt($('#myTableK').css('width'))+1;
+        $('#myTableK').css('min-width',myminminaaa);
+        //console.log($('#myTableK').css('min-width'));
+    }
+    function myOutputTable(){
+        if($('#mybigtable00').length == 0){
+            $('#J_StrPriceModBox').after('<div id="mybigtable00"><div id="mybigtable01"><div class="mygege01"></div><div class="mygege02"></div><div class="mygege03"></div><div class="mygege04"></div><div class="mygege00">Price List</div><div id="myclose"></div></div><div id="mybigtable02"><table id="myTableK"><thead id="myTableK_h"></thead><tbody id="myTableK_b"></tbody></table></div></div>');
+        }else{
+            mycloseTable();
+        }
+    }
+    function mycloseTable(){
+        if($('#mybigtable00').css('display')=='block'){
+            //console.log('block');
+            $('#mybigtable00').css('display','none');
+            $('#mybigtable00').css('top','90px');
+            $('#mybigtable00').css('left','0px');
+        }else if($('#mybigtable00').css('display')=='none'){
+            //console.log('display');
+            $('#mybigtable00').css('display','block');
+        }
+    }
+    $("body").on("click","#myclose",function(){
+        mycloseTable();
+    });
+//--------------------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------------
+    $("body").on("mousedown","#mybigtable01",function(e){
+        var positionDiv = $(this).parent().offset();
+        var distenceX = e.pageX - positionDiv.left;
+        var distenceY = e.pageY - positionDiv.top;
+        document.body.classList.add('no-select');
+        $('#mybigtable00').css('opacity','0.98');
+        $(document).mousemove(function(e) {
+            var myoX,myoY;
+            if(myTorC == 'by' || myTorC == 'bn'){
+                myoX = $('.tb-meta').offset().left;
+                myoY = $('.tb-meta').offset().top;
+            }else if(myTorC == 'my' || myTorC == 'mn'){
+                myoX = $('.tm-fcs-panel').offset().left;
+                myoY = $('.tm-fcs-panel').offset().top;
+            }
+            var x = e.pageX - distenceX - myoX;
+            var y = e.pageY - distenceY - myoY;
+            if (x < - myoX) {
+                x = - myoX;
+            } else if (x > $(document).width() - $("#mybigtable00").outerWidth(true)) {
+                x = $(document).width() - $("#mybigtable00").outerWidth(true);
+            }
+            if (y < - myoY + 263) {
+                y = - myoY + 263;
+            } else if (y > $(document).height() - $("#mybigtable00").outerHeight(true)) {
+                y = $(document).height() - $("#mybigtable00").outerHeight(true);
+            }
+            $("#mybigtable00").css({
+                left: x + "px",
+                top: y + "px"
+            });
+            //console.log('m:mybigtable00:',x,y);
+        });
+        $(document).mouseup(function() {
+            $(document).off("mousemove");
+            document.body.classList.remove('no-select');
+            $('#mybigtable00').css('opacity','1');
+        });
+  });
+})();

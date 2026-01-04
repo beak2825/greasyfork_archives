@@ -1,0 +1,197 @@
+// ==UserScript==
+// @name        tagDuplicator
+// @namespace   tagDuplicator
+// @description   Duplicate tags for translated galleries from original galleries
+// @include     https://exhentai.org/g/*
+// @include     https://e-hentai.org/g/*
+// @version     alpha
+// @grant       none
+// @run-at      document-end
+// @downloadURL https://update.greasyfork.org/scripts/381149/tagDuplicator.user.js
+// @updateURL https://update.greasyfork.org/scripts/381149/tagDuplicator.meta.js
+// ==/UserScript==
+/**
+ * Created by atashiyuki on 2017/2/27.
+ */
+
+var exclude_namespaces=[
+    "language",
+    "reclass",
+];
+
+var prompt_map={
+    "zh-CN":"请输入要导入tag的画廊地址",
+    "en-US":"please input the link of the gallery you want to import tags from",
+    "default":"please input the link of the gallery you want to import tags from",
+};
+
+var confirm_map={
+    "zh-CN":"两个画廊看起来并不像同一个作品的说...即使如此仍然想要导入tag吗？",
+    "en-US":"the two galleries are not likely to be the same piece, still want to import tags?",
+    "default":"the two galleries are not likely to be the same piece, still want to import tags?",
+}
+
+var wrong_url_map={
+    "zh-CN":"请输入从\"https\"开始的完整的画廊链接",
+    "en-US":"please input the complete gallery link, from \"https\"",
+    "default":"please input the complete gallery link, from \"https\"",
+}
+
+function get_text_in_local_language(map){
+    var user_language = navigator.language || navigator.userLanguage;
+    var text=map[user_language];
+    if(text==undefined)
+        text=map.default;
+    return text;
+}
+
+function get_source_sync(url){
+    var req=new XMLHttpRequest();
+    req.open('GET',url,false);
+    req.send();
+    return req.response;
+}
+
+function get_source_async(url,call_back){
+    var req=new XMLHttpRequest();
+    req.open('GET',url,true);
+    req.onreadystatechange=function(){
+        if(req.readyState === XMLHttpRequest.DONE && req.status === 200)
+            call_back(req.response);
+    };
+    req.send();
+}
+
+function check_gallery(current_source, target_source) {
+    var regexp="<h1 id=\"gj\">(.+?)\\[(.+?)\\](.+?)\\[.+?</h1>";
+    var result_current=current_source.match(regexp);
+    var result_target=target_source.match(regexp);
+    var diff=0;
+
+    if(result_current==result_target)
+        return false;
+    for(let i=1;i<4;++i){
+        if((""+result_current[i]).trim()!=(""+result_target[i]).trim())
+            diff+=1;
+    }
+
+    return diff<=1;
+}
+
+function parse_tags(source_text) {
+    var ret={};
+    var regexp=/return toggle_tagmenu\('(.+?)',/g;
+    var result;
+    while(result=regexp.exec(source_text)){
+        var namespace_tag=result[1].split(':');
+        if(namespace_tag.length==1){
+            namespace_tag=["misc",namespace_tag[0]];
+        }
+        // do not add excluded namespaces
+        if(exclude_namespaces.includes(namespace_tag[0]))
+            continue;
+
+        if(ret[namespace_tag[0]]==undefined)
+            ret[namespace_tag[0]]=[];
+        ret[namespace_tag[0]].push(namespace_tag[1]);
+    }
+    return ret;
+}
+
+function fill_tag_field(tags){
+    var field=document.getElementById('newtagfield');
+    var text="";
+    for(let namespace in tags){
+        for(let tag of tags[namespace]){
+            text+=namespace+':'+tag+',';
+        }
+    }
+    field.value=text;
+
+    if(text.length==0)
+        field.placeholder="no tags to add...";
+}
+
+// this tool is to add tag to a translated gallery, not to farm tagging MP
+// please do not abuse this
+function subtract_tags(current_tags, tags_to_add){
+    var ret={};
+    for(let namespace in tags_to_add){
+        if(current_tags[namespace]==undefined){
+            ret[namespace]=tags_to_add[namespace];
+            continue;
+        }
+        for(let tag of tags_to_add[namespace]){
+            if(current_tags[namespace].includes(tag))
+                continue;
+            if(ret[namespace]==undefined)
+                ret[namespace]=[];
+            ret[namespace].push(tag);
+        }
+    }
+    return ret;
+}
+
+function make_callbacks(parse,subtract,fill) {
+    var current_finished_getting=false;
+    var current_source="";
+    var target_finished_getting=false;
+    var target_source="";
+
+    var action=function() {
+        if(current_finished_getting&&target_finished_getting){
+            if(!check_gallery(current_source,target_source)){
+                var confirm_text=get_text_in_local_language(confirm_map);
+                var keep=confirm(confirm_text);
+                if(!keep)
+                    return;
+            }
+            var tags_current=parse(current_source);
+            var tags_target=parse(target_source);
+            var tags_to_add=subtract(tags_current,tags_target);
+            fill(tags_to_add);
+        }
+    }
+
+    return {
+        current_callback:function(text) {
+            current_finished_getting=true;
+            current_source=text;
+            action();
+        },
+        target_callback:function(text) {
+            target_finished_getting=true;
+            target_source=text;
+            action();
+        }
+    }
+}
+
+function start() {
+    var prompt_text=get_text_in_local_language(prompt_map);
+
+    var url=prompt(prompt_text);
+    if(url.substr(0,23)!=location.href.substr(0,23))
+        alert(get_text_in_local_language(wrong_url_map));
+
+    var callbacks=make_callbacks(parse_tags,subtract_tags,fill_tag_field);
+    get_source_async(window.location.href,callbacks.current_callback);
+    get_source_async(url,callbacks.target_callback);
+}
+
+function init() {
+    var div=document.getElementById("tagmenu_new");
+    var btn=document.createElement('input'); // use input rather than button to inherit some style
+    btn.type="submit";
+    btn.name="submit";
+    btn.value="duplicate tags from another gallery";
+    btn.style.position="relative";
+    btn.style.bottom="55px";
+    btn.style.margin="0px";
+    btn.style.cursor="pointer";
+    btn.onclick=start;
+    div.appendChild(btn);
+}
+
+
+init();

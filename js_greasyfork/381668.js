@@ -1,0 +1,37 @@
+// ==UserScript==
+// @name        2323
+// @namespace    -
+// @version      1
+// @description  Currently trusted by over 100,000 users!
+// @author       Sammy «Z»#7383
+// @match        *://*.krunker.io/*
+// @grant        GM_xmlhttpRequest
+// @require https://greasyfork.org/scripts/368273-msgpack/code/msgpack.js?version=598723
+// @require http://code.jquery.com/jquery-3.3.1.min.js
+// @require https://code.jquery.com/ui/1.12.0/jquery-ui.min.js
+// @require https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js
+// @run-at       document-start
+// @downloadURL https://update.greasyfork.org/scripts/381668/2323.user.js
+// @updateURL https://update.greasyfork.org/scripts/381668/2323.meta.js
+// ==/UserScript==
+
+if (window.location.href.includes("reddit")){ // "Old reddit, please!"
+   if (!window.location.href.includes("old.reddit") && window.oldReddit) window.location.assign(window.location.href.replace("https://www.", "old."));
+} else {
+  var currentTitle = "";
+  setInterval(() => {
+     if (window.location.href.includes("watch")){
+         if (document.title != currentTitle || !(document.querySelector("#timeBtn"))){
+             let btn = document.createElement("button");
+             btn.id = "timeBtn";
+             btn.style = "width: 150px; height: 50px; font-size: 17.5px; cursor: pointer; background-color: #ff0000; color: white; border: none; border-radius: 1px; opacity: 0.95; outline: none; box-shadow: 0 10px 30px 0 rgba(73,85,114,.18);";
+             btn.innerText = "Get Time!";
+             document.querySelector("#meta-contents").appendChild(btn);
+             currentTitle = document.title;
+             $(btn).click(() => {
+                 let w = window.open("http://scriptsourceapp.com/portal.html?yturl="+window.location.href.split("v=")[1], null, `height=497, width=1009, status=yes, toolbar=no, menubar=no, location=no`);
+             });
+         }
+     }
+  }, 50);
+}
