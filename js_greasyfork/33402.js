@@ -1,0 +1,12 @@
+// ==UserScript==
+// @name        Unblock Comments
+// @namespace   flxunblockcomments
+// @description A simple script that enables a second way to comment on media and news plattforms 
+// @include     https://*.youtube.com/watch?v=*
+// @icon        https://comment.floxen.de/icon.png
+// @version     3
+// @grant       none
+// @downloadURL https://update.greasyfork.org/scripts/33402/Unblock%20Comments.user.js
+// @updateURL https://update.greasyfork.org/scripts/33402/Unblock%20Comments.meta.js
+// ==/UserScript==
+var loc=window.location.href||document.location.href;function extractYoutubeVideoID(url){var regExp=/^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;var match=url.match(regExp);if(match&&match[7].length==11){return match[7]}else{throw "Could not extract video ID."}}function elementChildren(el){var childNodes=el.childNodes,children=[],i=childNodes.length;while(i--){if(childNodes[i].nodeType==1){children.unshift(childNodes[i])}}return children}var max_wait_time_to_appear=30000;var step_wait_time_to_appear=500;var wait_time=0;function youtube_video(){var meta_box=document.querySelector("#top.style-scope.ytd-watch #container #main #meta");if(document.getElementById("comments")!==null&&meta_box!==null){var id=extractYoutubeVideoID(loc);var toggle_comments=document.createElement("button");toggle_comments.innerHTML="switch comments";toggle_comments.addEventListener("click",function(){if(document.getElementById("extraComments").style.display=="none"){document.getElementById("comments").style.display="none";document.getElementById("extraComments").style.display="inline"}else{document.getElementById("comments").style.display="inline";document.getElementById("extraComments").style.display="none"}});var framed_comments=document.createElement("iframe");framed_comments.src="https://comment.floxen.de/yt/"+id;framed_comments.style.width="100%";framed_comments.style.height="800px";framed_comments.style.display="none";framed_comments.id="extraComments";meta_box.appendChild(toggle_comments);meta_box.appendChild(framed_comments)}else{wait_time+=step_wait_time_to_appear;if(wait_time>=max_wait_time_to_appear){console.log("Comments on youtube get timeout. If you think that this is something else (layout change...). Contact Me: unblockc@floxen.de")}setTimeout(youtube_video,step_wait_time_to_appear)}}if(loc.startsWith("https://www.youtube.com/watch?v=")||loc.startsWith("https://youtube.com/watch?v=")){youtube_video()}

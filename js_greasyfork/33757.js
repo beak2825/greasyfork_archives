@@ -1,0 +1,45 @@
+// ==UserScript==
+// @name         strikedrop自动签到
+// @match        https://strikedrop.com/*
+// @grant        none
+// @version	 0.2
+// @description	 zzzkky的挂机薅羊毛脚本系列
+// @namespace	 strikedrop自动签到
+// @downloadURL https://update.greasyfork.org/scripts/33757/strikedrop%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0.user.js
+// @updateURL https://update.greasyfork.org/scripts/33757/strikedrop%E8%87%AA%E5%8A%A8%E7%AD%BE%E5%88%B0.meta.js
+// ==/UserScript==
+
+(function() {
+    var count = 0;
+    var interval = 5*60*1000;  //多少毫秒执行一次
+    var need_refresh = true;  //是否需要自动刷新
+    var refresh_count = 10;   //自动刷新周期
+    var openning = 0;
+    var timerVar = setInterval (function() {DoMeEverySecond (); }, interval);
+
+    function DoMeEverySecond ()
+    {
+        //24小时签到
+        if (window.location.href.match("https://strikedrop.com/en/dailybonus")){
+            x = document.getElementsByClassName("btn-warning");
+            if(x[0]){
+                x[0].click();
+            }
+        }
+
+        //不定期参与免费墙
+        if (window.location.href.match("https://strikedrop.com/en/freecase")){
+            x = document.getElementsByClassName("popup-button");
+            if(x[0]){
+                x[0].click();
+            }
+        }
+
+        //刷新页面以免卡住(该网站可能需要)
+        if(need_refresh && ++count > refresh_count){
+            count = 0;
+            window.location.reload();
+        }
+    }
+
+})();
