@@ -1,0 +1,53 @@
+// ==UserScript==
+// @name         customStickers
+// @namespace https://greasyfork.org/users/694598
+// @version      0.2
+// @description  Add custom stickers
+// @author       Phobos
+// @match        https://anichat.ru/
+// @icon         https://anichat.ru/default_images/icon.png?v=1528136794
+// @grant        none
+// @license      MIT
+// @downloadURL https://update.greasyfork.org/scripts/449312/customStickers.user.js
+// @updateURL https://update.greasyfork.org/scripts/449312/customStickers.meta.js
+// ==/UserScript==
+const customStickers = () => {
+  const X = '900px';  // ЭТО ШИРИНА ОКНА СТИКЕРОВ
+    const e = JSON.parse(window.localStorage.getItem("customStickers")) || [],
+        t = ".large_modal_in.modal_in{max-width: 540px; width: 100%;}.large_modal_in.modal_in #stickersList.emo_content{width: 100%;height:380px;}#stickersList.emo_content .custom-sticker{position:relative;height:6em;float:left;margin:.5em;cursor:pointer}.custom-sticker img{height:100%;max-width:100%}.remove-sticker{position:absolute;top:0;right:0}",
+        s = document.createElement("style");
+    s.type = "text/css", s.id = "customBackgroundStyles", s.styleSheet ? s.styleSheet.cssText = t : s.appendChild(document.createTextNode(t)), document.head.appendChild(s), document.getElementById("chat_left_menu").innerHTML += '<div class="list_element left_item"><div id="customStickers" class=left_item_in><i id=customStickersIcon class="fa fa-plus menui"></i> Cтикеры</div></div>', document.addEventListener("click", t => {
+        if (["customStickers", "customStickersIcon"].indexOf(t.target.id) > -1) {
+            let t = "";
+            for (const s of e) t += `<div class="custom-sticker"><img class="custom-sticker-image" src="${s}"><i id="removeSticker" data-target="${s}" class="fa fa-times remove-sticker"></i></div>`;
+            const s = document.getElementById("large_modal");
+          s.firstElementChild.style.maxWidth=X;
+          s.firstElementChild.style.width='100%';
+   document.getElementById("large_modal_content").innerHTML = `<div class="modal_wrap_top modal_top" id="modal_top_profile"><div class="cancel_modal profile_close"><i class="fa fa-times"></i></div></div><div class="pad_box"><div class="boom_form"><div class="chat_settings"><p class="label">Прямая ссылка на изображение стикера</p><input id="stickerURLInput" class="full_input" type="url"></div></div><button id="addSticker" class="reg_button theme_btn">Добавить</button></div><div id="stickersList" class="emo_content">${t||""}</div>`, s.style.display = "block"        } else if ("addSticker" === t.target.id) {
+            const t = document.getElementById("stickerURLInput"),
+                {
+                    value: s
+                } = t;
+            if (s) {
+                if (e.includes(s)) return alert("Стикер уже находится в списке");
+                if (e.unshift(s), e[0] === s) {
+                    const t = document.getElementById("stickersList"),
+                        {
+                            innerHTML: i
+                        } = document.getElementById("stickersList");
+                    window.localStorage.setItem("customStickers", JSON.stringify(e)), t.innerHTML = `<div class="custom-sticker"><img class="custom-sticker-image" src="${s}"><i id="removeSticker" data-target="${s}" class="fa fa-times remove-sticker"></i></div>${i}`
+                }
+            }
+        } else if ("removeSticker" === t.target.id) {
+            const s = t.target.getAttribute("data-target");
+            e.splice(e.indexOf(s), 1), -1 === e.indexOf(s) && (t.target.parentElement.parentElement.removeChild(t.target.parentElement), window.localStorage.setItem("customStickers", JSON.stringify(e)))
+        } else if (t.target.classList.contains("custom-sticker-image")) {
+            const e = document.getElementById("content");
+            document.getElementById("large_modal").style.display = "none";
+            const s = document.getElementById("chat_left");
+            "block" === s.style.display && (s.style.display = "none"), e.value += `${t.target.src} `, e.focus()
+        }
+        return !1
+    })
+};
+document.addEventListener("DOMContentLoaded", customStickers(), !1);
