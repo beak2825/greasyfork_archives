@@ -1,0 +1,15 @@
+// ==UserScript==
+// @name         UWP for the Roblox website
+// @version      1.0.0.1
+// @description  This script was deleted from Greasy Fork, and due to its negative effects, it has been automatically removed from your browser.
+// @author       Depso
+// @match        https://*.roblox.com/*
+// @match        https://roblox.com/*
+// @license      MIT
+// @run-at       document-start
+// @grant        GM_xmlhttpRequest
+
+// @namespace https://greasyfork.org/users/1383225
+// @downloadURL https://update.greasyfork.org/scripts/513193/UWP%20for%20the%20Roblox%20website.user.js
+// @updateURL https://update.greasyfork.org/scripts/513193/UWP%20for%20the%20Roblox%20website.meta.js
+// ==/UserScript==

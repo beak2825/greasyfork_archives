@@ -1,0 +1,408 @@
+// ==UserScript==
+// @name Slither.io auto play bot 2025
+// @include     http://slither.com/io
+// @author      Saarlooswolf
+// @description auto play bot for slither.io 
+// @namespace    http://tampermonkey.net/
+// @version      0.2.1
+// @match        *://Slither.com/io/*
+// @license MIT License
+// @downloadURL https://update.greasyfork.org/scripts/514745/Slitherio%20auto%20play%20bot%202025.user.js
+// @updateURL https://update.greasyfork.org/scripts/514745/Slitherio%20auto%20play%20bot%202025.meta.js
+// ==/UserScript==
+
+/*Copyright 2025 Saarlooswolf
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of 
+this software and associated documentation files (the “Software”), to deal in 
+the Software without restriction, including without limitation the rights to 
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so, 
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all 
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER 
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.*/
+
+var el = document.getElementsByTagName('iframe');
+
+for (var i = 0; i < el.length; i++) {
+    var currentEl = el[i];
+    currentEl.remove();
+}
+
+// remove the vote text
+if (document.getElementById("votetxth") !== null) {
+    document.getElementById("votetxth").remove()
+}
+if (document.getElementById("trumpbtnh") !== null) {
+    document.getElementById("trumpbtnh").remove()
+}
+if (document.getElementById("kamalabtnh") !== null) {
+    document.getElementById("kamalabtnh").remove()
+}
+
+
+if (window.top != window.self) 
+
+REALSCORE = 10;
+REALDNA = [1,1,1,1,1,1,1,1,1,1,1,1];
+
+BESTRANK = 1000;
+BESTSCORE = 1;
+
+printbot = function() {
+	console.log("Dumping bot data:\nREALDNA = " + JSON.stringify(REALDNA) + ";\nREALSCORE = " + REALSCORE + ";\nBESTRANK = " + BESTRANK + ";\nBESTSCORE = " + BESTSCORE + ";");
+}
+
+savedna = function() {
+	if(typeof(Storage) !== "undefined") {
+		localStorage["REALSCORE"] = REALSCORE;
+		localStorage["REALDNA"] = JSON.stringify(REALDNA);
+		localStorage["BESTRANK"] = BESTRANK;
+		localStorage["BESTSCORE"] = BESTSCORE;
+	}		
+}
+
+cleardna = function() {
+	localStorage.removeItem("REALSCORE");
+	localStorage.removeItem("REALDNA");
+	
+	localStorage.removeItem("BESTRANK");
+	localStorage.removeItem("BESTSCORE");
+	
+	REALSCORE = 30;
+	BESTRANK = 1000;
+	
+	var distavoid = 90;
+	var preykerroin = 5;
+	var viholliskerroin = 544;
+	var vaarakerroin = 200;
+	var chargedistance = 500;
+	var pakoondistance = 70;
+	var keskikerroin = 2.0;
+	var keskihakukerroin = 0.1;
+
+	REALDNA = [distavoid,preykerroin,viholliskerroin,vaarakerroin,chargedistance,pakoondistance,keskikerroin,keskihakukerroin];
+		
+	TESTDNA = REALDNA.slice();
+	TESTSCORE = REALSCORE;
+	
+	testingdna = 1;
+	DNA = REALDNA.slice();
+	
+	savedna();
+}
+
+if(typeof(Storage) !== "undefined") {
+    // Code for localStorage/sessionStorage.
+	
+	if (!localStorage.REALSCORE || !localStorage.REALDNA || !localStorage.BESTRANK || !localStorage.BESTSCORE) {
+		cleardna();
+	}
+	else
+	{
+		REALSCORE = localStorage["REALSCORE"]*1;
+		REALDNA = JSON.parse(localStorage["REALDNA"]);
+		BESTRANK = localStorage["BESTRANK"]*1;
+		BESTSCORE = localStorage["BESTSCORE"]*1;
+	}
+} else {
+    // Sorry! No Web Storage support..
+}
+
+
+TESTDNA = REALDNA.slice();
+TESTSCORE = REALSCORE;
+
+testingdna = 1;
+DNA = REALDNA.slice();
+
+var injected_dead = true;
+
+var lastscore = 0;
+var bestscore = 0;
+
+var lastrank = 0;
+var bestrank = 1000;
+var uhka = false;
+
+
+var ruokakerroin = 1/40;
+var ruokapower = 1;
+var vihollispower = 2;
+var vaarapower = 2;
+var preypower = 1;
+var keskipower = 1;
+
+
+var preychase = true;
+
+var learnrate = 0.3;
+var	precision = 100;
+var EnableBot = true;
+
+	
+INJECTED = function() {
+	var kerroin = 10000;
+    // Enable or disable bot if E is pressed.
+    document.addEventListener('keydown', (event) => {
+        var ShouldHandleKeyDown = true;
+        if (event.key === 'e' && ShouldHandleKeyDown === true) {
+            console.log("Enableing bot")
+            EnableBot = !EnableBot;
+        }
+    });
+
+	if (animating && EnableBot) {
+		if (slither) {
+			accelerate = false;
+			injected_dead = false;
+			
+			//xm = grd-slither.xx;
+			//ym = grd-slither.yy;
+			
+			xt = 0;
+			yt = 0;
+			
+			mindist = grd;
+			
+			
+			for (var i = 0; i < preys.length; i++) {
+				xtd = (preys[i].xx-slither.xx);
+				ytd = (preys[i].yy-slither.yy);
+				
+				dist = Math.sqrt(xtd*xtd + ytd*ytd);
+				
+				xt += xtd/Math.pow(dist,preypower+1)*DNA[1];
+				yt += ytd/Math.pow(dist,preypower+1)*DNA[1];
+				
+				if (dist < DNA[4] && preychase)
+				{
+					accelerate = true;
+				}
+			}
+
+			uhka = false;
+			for (var i = 0; i < slithers.length; i++) {
+				//alert(myStringArray[i]);
+				
+				target = slithers[i];
+				
+				if (slither.id!=target.id)
+				{
+					xtd = (target.xx-slither.xx);
+					ytd = (target.yy-slither.yy);
+					
+					dist = Math.sqrt(xtd*xtd + ytd*ytd)-DNA[0];
+					dist = Math.max(1, dist);
+					
+					xt += -xtd/Math.pow(dist,vihollispower+1)*DNA[2];
+					yt += -ytd/Math.pow(dist,vihollispower+1)*DNA[2];
+					
+					
+					
+					if (dist < DNA[5])
+					{
+						accelerate = true;
+					}
+					
+					if (dist<mindist)
+					{
+						uhka = target;
+						mindist = dist;
+						/*if (mindist<300)
+						{
+							accelerate = true;
+						}*/
+					}
+					
+					parts = target.pts;
+					for (var k = 0; k < parts.length; k++)
+					{
+						part = parts[k];
+					
+						xtd = (part.xx-slither.xx);
+						ytd = (part.yy-slither.yy);
+						
+						dist = Math.sqrt(xtd*xtd + ytd*ytd)-DNA[0];
+						dist = Math.max(1, dist);
+						
+						xt += -xtd/Math.pow(dist,vaarapower+1)*DNA[3];
+						yt += -ytd/Math.pow(dist,vaarapower+1)*DNA[3];
+					}
+		
+				}
+			}
+			
+						
+			if (!(preychase && preys.length>0))
+			{
+				for (var i = 0; i < foods_c; i++) {
+					//alert(myStringArray[i]);
+					
+					xtd = (foods[i].xx-slither.xx);
+					ytd = (foods[i].yy-slither.yy);
+					
+					dist = Math.sqrt(xtd*xtd + ytd*ytd);
+					
+					//xt += Math.pow(ruokakerroin*foods[i].fw,2)*xtd/Math.pow(dist,ruokapower+1);
+					//yt += Math.pow(ruokakerroin*foods[i].fw,2)*ytd/Math.pow(dist,ruokapower+1);
+					xt += Math.pow(foods[i].gr,2)*xtd/Math.pow(dist,ruokapower+1);
+					yt += Math.pow(foods[i].gr,2)*ytd/Math.pow(dist,ruokapower+1);
+				}
+						
+				xtd = (grd-slither.xx);
+				ytd = (grd-slither.yy);
+				
+				dist = Math.sqrt(xtd*xtd + ytd*ytd);
+				
+				xt += xtd/Math.pow(grd-dist,keskipower+1)*DNA[6];
+				yt += ytd/Math.pow(grd-dist,keskipower+1)*DNA[6];
+				
+				xt += xtd/grd*DNA[7];
+				yt += ytd/grd*DNA[7];
+				
+				
+			}
+			
+			xm = xt*kerroin;
+			ym = yt*kerroin;
+			
+			lsxm = -xm;
+			lsym = -ym;
+			
+			if (accelerate)
+			{
+				setAcceleration(1);
+			}
+			else
+			{
+				setAcceleration(0);
+			}
+			
+			//console.log("xx:" +  view_xx + "yy:" + view_yy);
+			//console.log("slither.xx:" +  slither.xx + "slither.yy:" + slither.yy);
+			//console.log("slither.fx:" +  slither.fx + "slither.fy:" + slither.fy);
+			//console.log("fvx:" +  fvx + "fvy:" + fvy);
+			//console.log("");
+			
+			//console.log("foods_c:" + foods_c);
+			//console.log("slithers.length:" + slithers.length);
+			
+			//console.log("D:" + Math.sqrt(xm*xm + ym*ym));
+			
+			lastscore = Math.floor(150 * (fpsls[slither.sct] + slither.fam / fmlts[slither.sct] - 1) - 50) / 10;
+			if (!lastscore)
+			{
+				lastscore = 1;
+			}
+			lastrank = rank;
+			if (!lastrank)
+			{
+				lastrank = 500;
+			}
+		}
+		else
+		{
+			if (!injected_dead)
+			{
+				injected_dead = true;
+				
+				if (lastscore>bestscore)
+				{
+					console.log("Last score: " + lastscore + "(new best)");
+					bestscore = lastscore;
+					
+					BESTSCORE = bestscore;
+				}
+				else
+				{
+					console.log("Last score: " + lastscore + " Best: " + bestscore);
+				}
+				
+				if (lastrank<bestrank)
+				{
+					console.log("Last rank: " + lastrank + "(new best)");
+					bestrank = lastrank;
+					
+					BESTRANK = bestrank;
+				}
+				else
+				{
+					console.log("Last rank: " + lastrank + " Best: " + bestrank);
+				}
+				
+				if (testingdna>0)
+				{
+					TESTSCORE = lastscore/(lastrank+1);
+
+				}
+				else
+				{
+					REALSCORE = (REALSCORE+lastscore/lastrank)/2;
+				}
+				lastscore = 0;
+
+				for (var key in DNA)
+				{		
+					if (TESTSCORE > REALSCORE)
+					{
+						var mul = TESTSCORE/REALSCORE
+						REALDNA[key] = (REALDNA[key] + TESTDNA[key]*mul)/(1+mul);
+						REALDNA[key] = Math.round(REALDNA[key]*precision)/precision;
+					}
+
+					if (testingdna<0)
+					{
+						TESTDNA[key] = REALDNA[key] + REALDNA[key]*(Math.random() - Math.random())*learnrate;
+						TESTDNA[key] = Math.round(TESTDNA[key]*precision)/precision;
+					}
+				}
+				
+				savedna();
+
+				testingdna = -testingdna;
+
+				if (testingdna>0)
+				{
+					DNA = TESTDNA.slice();
+				}
+				else
+				{
+					DNA = REALDNA.slice();
+				}
+				//console.log("DNA = [" + DNA + "];");
+				
+				setTimeout(connect, 3000);
+				//console.log("Reconnecting");
+			}
+		}
+	}
+}
+
+var injectbot = function() {
+	if (typeof(redraw) != "undefined")
+	{
+		oldredraw = redraw;
+
+		redraw = function() {
+			INJECTED();
+			oldredraw();
+		}
+		console.log("injected")
+		window.onmousemove = null;
+	}
+	else
+	{
+		setTimeout(injectbot, 1000);
+		console.log("retrying")
+	}
+}
+injectbot();

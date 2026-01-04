@@ -1,0 +1,14 @@
+// ==UserScript==
+// @name         山海|安全微伴刷课脚本|大学生新生入学安全教育刷课脚本
+// @namespace    http://tampermonkey.net/
+// @version      1.1
+// @license      GPL-3.0
+// @description  2024新生入学必备，安全微伴刷课脚本，纯前模式点击实现，100%安全，进入课程后，右上角会提示倒计时十五秒，等待倒计时结束后，点击按钮即可完成当前的学习任务。
+// @author       山海
+// @match        https://mcwk.mycourse.cn/*
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/505924/%E5%B1%B1%E6%B5%B7%7C%E5%AE%89%E5%85%A8%E5%BE%AE%E4%BC%B4%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC%7C%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%96%B0%E7%94%9F%E5%85%A5%E5%AD%A6%E5%AE%89%E5%85%A8%E6%95%99%E8%82%B2%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC.user.js
+// @updateURL https://update.greasyfork.org/scripts/505924/%E5%B1%B1%E6%B5%B7%7C%E5%AE%89%E5%85%A8%E5%BE%AE%E4%BC%B4%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC%7C%E5%A4%A7%E5%AD%A6%E7%94%9F%E6%96%B0%E7%94%9F%E5%85%A5%E5%AD%A6%E5%AE%89%E5%85%A8%E6%95%99%E8%82%B2%E5%88%B7%E8%AF%BE%E8%84%9A%E6%9C%AC.meta.js
+// ==/UserScript==
+
+(function() {var 𝛼 = function() {var 𝛽 = document.createElement('button');𝛽.style.cssText = 'font-size:30px;position:fixed;top:10px;right:10px;z-index:9999;padding:5px 10px;cursor:pointer;';return 𝛽;}; var 𝛾 = function(𝛽, 𝛿) {𝛽.textContent = 𝛿;};var 𝜀 = function(𝛽, 𝛿) {𝛾(𝛽, '\u5f53\u524d\u65f6\u95f4\uff1a' + 𝛿 + '\u79d2');if (𝛿 <= 0) {𝛾(𝛽, '\u5012\u8ba1\u65f6\u7ed3\u675f\uff0c\u8bf7\u70b9\u6211\u5b8c\u6210\u4efb\u52a1\uff0c\u9a8c\u8bc1\u7801\u968f\u4fbf\u8f93\u5165\u5373\u53ef');𝛽.disabled = false;}};var 𝜁 = function(𝛽) {𝛽.disabled = false;𝛾(𝛽, '\u5012\u8ba1\u65f6\u7ed3\u675f\uff0c\u8bf7\u70b9\u6211\u5b8c\u6210\u4efb\u52a1\uff0c\u9a8c\u8bc1\u7801\u968f\u4fbf\u8f93\u5165\u5373\u53ef');};var 𝜂 = function(𝛽, 𝛿) {var 𝜃 = setInterval(function() {𝛿--;𝜀(𝛽, 𝛿);if (𝛿 <= 0) {clearInterval(𝜃);𝜁(𝛽);}}, 1000);};var 𝜄 = function() {var 𝜅 = document.querySelector('iframe');if (𝜅) {window.location.href = 𝜅.src;} else {if (typeof finishWxCourse === "function") {finishWxCourse();}}};var 𝜇 = function() {var 𝜈 = document.createElement('div');𝜈.textContent = '\u5168\u81ea\u52a8\u8fc7\u5b89\u5168\u5fae\u4f34\uff0c\u5305\u8003\u8bd5\uff0c1\u5c0f\u65f6\u5b8c\u6210\uff0c2.5\u5143\uff0c\u5fae\u4fe1\uff1aTOSKEE';𝜈.style.cssText = 'background-color:red;color:white;text-align:center;position:fixed;bottom:0px;width:100%;padding:10px 0px;z-index:9998;height:3%;font-size:medium;';document.body.appendChild(𝜈);};var 𝜆 = 𝛼();𝛾(𝜆, '\u5012\u8ba1\u65f6\uff1a15\u79d2');𝜆.disabled = true;𝜆.onclick = 𝜄;document.body.appendChild(𝜆);𝜇();𝜂(𝜆, 15);})();

@@ -1,0 +1,4032 @@
+// ==UserScript==
+// @name            DOmestres
+// @namespace       DOmestres
+// @description     DOmestres v1.0.7
+// @include         http*dugout-online.com/players/details*playerID*
+// @include         http*dugout-online.com*competitions*none*
+// @version         1.0.7
+// @downloadURL https://update.greasyfork.org/scripts/508681/DOmestres.user.js
+// @updateURL https://update.greasyfork.org/scripts/508681/DOmestres.meta.js
+// ==/UserScript==
+/*
+versions
+1.0.0 - initial draft
+1.0.1 - fixing Dugtool's enabled "Player OPS ID" bug
+1.0.2.* - updating empty stars/adding players
+1.0.3.* - adding watchClubs button
+1.0.4.* - adding matchday
+1.0.5.* - testing version
+1.0.7.* - adding players' talents
+*/
+
+
+var page = document.URL;
+let linksJson = localStorage.getItem('DOGenieAssistant.links');
+let links = linksJson ? JSON.parse(linksJson) : {};
+console.log(page);
+
+var APPNAME = "DOmestres";
+if (page.includes('/competitions/none')){
+var matchday = document.createElement("div");
+    matchday.style.position = "fixed";
+    matchday.style.top = "200px";
+    matchday.style.right = "10px";
+    //document.body.appendChild(matchday);
+
+    // begin display box
+
+    matchday.innerHTML =
+    ''
+}
+
+if (page.includes('/playerID/')){
+const urlClube = $(".tabbed_pane a")[0].href.trim();
+  if (links[urlClube]) {
+        $(".tabbed_pane a").after('<button id="btnWatchClub" style="background: none;border: none;margin-left: 0px;margin-top: 0px;font-size: 14px;cursor:pointer;color: black;"><i class="fa fa-star"></i></button>');
+  }
+
+var idPlayer
+idPlayer = $('.player_id_txt')[0].innerText.replace('(ID ','').replace(')','').replace(/ \@.*/,'');
+//console.log(idPlayer);
+
+function replaceFullStars(){
+    var emptyStars = document.getElementsByClassName('fa fa-star-o coach_star')[0];
+    emptyStars.setAttribute('class','fa fa-star coach_star');
+    emptyStars.setAttribute('style','font-size: 18px;');
+}
+
+function replaceHalfStars(){
+    var emptyStars = document.getElementsByClassName('fa fa-star-o coach_star')[0];
+    emptyStars.setAttribute('class','fa fa-star-half-o coach_star');
+    emptyStars.setAttribute('style','font-size: 18px;');
+}
+
+function replaceEmptyStars(){
+    var emptyStars = document.getElementsByClassName('fa fa-star-o coach_star');
+    for (var i=0; i < emptyStars.length; i++) {
+        emptyStars[i].setAttribute('style','font-size: 18px;');
+    }
+}
+
+function removeFullStars(){
+    var emptyStars = document.getElementsByClassName('fa fa-star coach_star')[0];
+    emptyStars.setAttribute('class','fa fa-star-o coach_star');
+    emptyStars.setAttribute('style','font-size: 18px;');
+}
+
+function removeHalfStars(){
+    var emptyStars = document.getElementsByClassName('fa fa-star-half-o coach_star')[0];
+    emptyStars.setAttribute('class','fa fa-star-o coach_star');
+    emptyStars.setAttribute('style','font-size: 18px;');
+}
+
+var openLock = document.getElementsByClassName('fa fa-unlock');
+var openReport = document.getElementsByClassName('fa fa-lock');
+
+if (openLock.length <1 && openReport.length<1){
+    switch (idPlayer){
+            //0.5*
+        case '77777777777777':
+        case '13188983':
+        case '13185797':
+            case '13663587':
+case '13722022':
+            replaceHalfStars();replaceEmptyStars();replaceEmptyStars();replaceEmptyStars();replaceEmptyStars();
+            break;
+            //1.0*
+        case '13454456':
+        case '13456678':
+        case '13231912':
+        case '13276339':
+        case '13276268':
+        case '13179117':
+        case '13188810':
+        case '13179060':
+        case '13276292':
+            case '13370727':
+case '13715527':
+case '13575423':
+case '13454456':
+case '13449731':
+case '13456678':
+            replaceFullStars();replaceEmptyStars();replaceEmptyStars();replaceEmptyStars();replaceEmptyStars();
+            break;
+            //1.5*
+        case '13362902':
+        case '13276303':
+        case '13176759':
+        case '13178593':
+        case '13456725':
+        case '13282813':
+        case '13276312':
+            case '13727651':
+case '13640006':
+case '13362902':
+case '13146143':
+        case '13146143':
+            replaceFullStars();replaceHalfStars();replaceEmptyStars();replaceEmptyStars();replaceEmptyStars();
+            break;
+            //2.0*
+            case '13083282':
+case '13067975':
+case '13287249':
+case '13043130':
+case '13059949':
+case '13067396':
+case '13449852':
+case '13639999':
+case '13380451':
+case '13361722':
+case '13359515':
+case '13449072':
+case '13366899':
+case '13359611':
+case '13367630':
+case '13175981':
+case '13186501':
+case '13246425':
+case '13083308':
+case '13124927':
+case '13070769':
+        case '13366899':
+        case '13359611':
+        case '13359515':
+        case '13449072':
+        case '13367630':
+        case '13361722':
+        case '13175981':
+        case '13186501':
+        case '13246425':
+        case '13083308':
+        case '13203736':
+        case '13276356':
+        case '13279005':
+        case '13030743':
+        case '13050816':
+        case '13276264':
+        case '13124927':
+        case '13070769':
+        case '13067396':
+        case '13176687':
+        case '13179062':
+        case '13176686':
+        case '13176706':
+        case '13203734':
+        case '13188961':
+        case '13183441':
+        case '13179125':
+            replaceFullStars();replaceFullStars();replaceEmptyStars();replaceEmptyStars();replaceEmptyStars();
+            break;
+            //2.5*
+            case '13449810':
+case '13449046':
+case '13454435':
+case '13643716':
+case '13715533':
+case '13727649':
+case '13640018':
+case '13623469':
+case '13627639':
+case '13627641':
+case '13630985':
+case '13644783':
+case '13359574':
+case '13403118':
+case '13451046':
+case '13473334':
+case '13085590':
+case '13359612':
+case '13454428':
+case '13367053':
+case '13369867':
+case '13283716':
+case '13374789':
+case '13351198':
+case '13454448':
+case '13454464':
+case '13058309':
+case '13369853':
+case '13144030':
+case '13186500':
+        case '13451046':
+        case '13636006':
+        case '13374789':
+        case '13351198':
+        case '13367053':
+        case '13189082':
+        case '13369859':
+        case '13188890':
+        case '13189269':
+        case '13088251':
+        case '12555409':
+        case '13070254':
+        case '13175900':
+        case '13454448':
+        case '13369867':
+        case '13359612':
+        case '13454428':
+        case '13454464':
+        case '13058309':
+        case '13369853':
+        case '13402352':
+        case '12923027':
+        case '13283716':
+        case '13144030':
+        case '13186500':
+        case '13067975':
+        case '13287249':
+        case '13043130':
+        case '13059949':
+            replaceFullStars();replaceFullStars();replaceHalfStars();replaceEmptyStars();replaceEmptyStars();
+            break;
+            //3.0*
+            case '13233564':
+case '13176834':
+case '12742045':
+case '13188783':
+case '13232775':
+case '13579169':
+case '13630083':
+case '13449812':
+case '13644987':
+case '13714832':
+case '13714895':
+case '13725148':
+case '13714983':
+case '13727992':
+case '13643785':
+case '13709037':
+case '13709335':
+case '13727611':
+case '13709190':
+case '13719392':
+case '13795285':
+case '13717951':
+case '13717937':
+case '13717919':
+case '13717976':
+case '13685251':
+case '13886632':
+case '13673641':
+case '13690128':
+case '13685802':
+case '13717746':
+case '13716776':
+case '13714736':
+case '13600477':
+case '13640514':
+case '13570444':
+case '13642935':
+case '13630534':
+case '13372602':
+case '13640166':
+case '13640725':
+case '13643637':
+case '13714718':
+case '13630362':
+case '13630471':
+case '13630062':
+case '13570069':
+case '13575417':
+case '13725377':
+case '13620756':
+case '13589238':
+case '13643572':
+case '13642991':
+case '13630246':
+case '13674069':
+case '13640728':
+case '13444595':
+case '13288352':
+case '13371094':
+case '13392744':
+case '13447055':
+case '13454389':
+case '13444618':
+case '13562555':
+case '13456944':
+case '13377706':
+case '13552895':
+case '13401539':
+case '13451035':
+case '13456679':
+case '13563219':
+case '13450975':
+case '13444681':
+case '13376430':
+case '13376426':
+case '13543376':
+case '13283013':
+case '13413852':
+case '13418815':
+case '13457025':
+case '13447072':
+case '13509026':
+case '13447032':
+case '13353599':
+case '12920888':
+case '13364156':
+case '13288800':
+case '13332697':
+case '13360232':
+case '13333063':
+case '13370076':
+case '13294920':
+case '13289054':
+case '13345671':
+case '13292000':
+case '13357875':
+case '13392860':
+case '13043595':
+case '13362887':
+case '13058249':
+case '13453867':
+case '13453879':
+case '13349900':
+case '13275685':
+case '13454443':
+case '13088929':
+case '13124194':
+case '13088603':
+        case '13332697':
+        case '13360232':
+        case '13333063':
+        case '13370076':
+        case '13294920':
+        case '13289054':
+        case '13345671':
+        case '13292000':
+        case '13357875':
+        case '13392860':
+        case '13043595':
+        case '13362887':
+        case '13058249':
+        case '13353599':
+        case '13453867':
+        case '13453879':
+        case '13364156':
+        case '13349900':
+        case '13275685':
+        case '13454443':
+        case '13088929':
+        case '13124194':
+        case '12920888':
+        case '13288800':
+        case '13088603':
+        case '13376430':
+        case '13376426':
+        case '13401539':
+        case '13377706':
+        case '13509026':
+        case '13450975':
+        case '13418815':
+        case '13451035':
+        case '13456944':
+        case '13454389':
+        case '13457025':
+        case '13414980':
+        case '13563219':
+        case '13444618':
+        case '13562555':
+        case '13543376':
+        case '13392744':
+        case '13456679':
+        case '13447032':
+        case '13552895':
+        case '13447055':
+        case '13447072':
+        case '13064641':
+        case '13058921':
+        case '13444681':
+        case '13402321':
+        case '13402615':
+        case '13402343':
+        case '13285897':
+        case '13285928':
+        case '13205524':
+        case '13283570':
+        case '13273958':
+        case '13233564':
+        case '13283231':
+        case '13278973':
+        case '13276329':
+        case '13273945':
+        case '13283376':
+        case '13278532':
+        case '13282990':
+        case '13273928':
+        case '13048785':
+        case '13176649':
+        case '13285979':
+        case '13280296':
+        case '13189238':
+        case '13132877':
+        case '13183439':
+        case '13179145':
+        case '12739687':
+        case '13285829':
+        case '12906676':
+        case '13164148':
+        case '13183146':
+        case '12925050':
+        case '13203722':
+        case '13176705':
+        case '13178779':
+        case '13367623':
+        case '13285984':
+        case '12923008':
+        case '13630471':
+        case '13630534':
+        case '13589238':
+        case '13176834':
+        case '12742045':
+        case '13188783':
+        case '13176742':
+        case '13083282':
+            replaceFullStars();replaceFullStars();replaceFullStars();replaceEmptyStars();replaceEmptyStars();
+            break;
+            //3.5*
+        case '13005659':
+        case '13289631':
+        case '13151675':
+        case '13414398':
+        case '13444379':
+        case '13417235':
+        case '13382116':
+        case '13457933':
+        case '13383263':
+        case '13446988':
+        case '13445192':
+        case '13383262':
+        case '13419712':
+        case '13390106':
+        case '13287055':
+        case '13274297':
+        case '13231756':
+        case '13273148':
+        case '13231870':
+        case '13231785':
+        case '13178514':
+        case '13231481':
+        case '13364241':
+        case '13374204':
+        case '13381469':
+        case '13403157':
+        case '13449763':
+        case '13642998':
+        case '13401117':
+        case '13630943':
+        case '13392841':
+        case '13446990':
+        case '13392156':
+        case '13445243':
+        case '13383127':
+        case '13392813':
+        case '13488218':
+        case '13488213':
+        case '13483568':
+        case '13423207':
+        case '13417238':
+        case '13449718':
+        case '13411810':
+        case '13640172':
+        case '13419683':
+        case '13418979':
+        case '13414139':
+        case '13488224':
+        case '13444869':
+        case '13453883':
+        case '13419593':
+        case '13444857':
+        case '13418393':
+        case '13444652':
+        case '13445103':
+        case '13453866':
+        case '13444917':
+        case '13457072':
+        case '13418450':
+        case '13543460':
+        case '13419673':
+        case '13401399':
+        case '13432125':
+        case '13451008':
+        case '13414982':
+        case '13419606':
+        case '13419646':
+        case '13543378':
+        case '13456907':
+        case '13418676':
+        case '13456722':
+        case '13562411':
+        case '13528087':
+        case '13443797':
+        case '13437616':
+        case '13438111':
+        case '13420698':
+        case '13444662':
+        case '13437693':
+        case '13456964':
+        case '13563220':
+        case '13562493':
+        case '13441414':
+        case '13419894':
+        case '13414621':
+        case '13419602':
+        case '13419636':
+        case '13543477':
+        case '13420680':
+        case '13562458':
+        case '13491257':
+        case '13421989':
+        case '13423596':
+        case '13423538':
+        case '13423599':
+        case '13423756':
+        case '13456594':
+        case '13456610':
+        case '13456596':
+        case '13456608':
+        case '13456577':
+        case '13414268':
+        case '13414452':
+        case '13414126':
+        case '13414221':
+        case '13414261':
+        case '13447082':
+        case '13447069':
+        case '13447000':
+        case '13447075':
+        case '13447013':
+        case '13447024':
+        case '13447042':
+        case '13429279':
+        case '13555120':
+        case '13563173':
+        case '13630171':
+        case '13535488':
+        case '13457228':
+        case '13444713':
+        case '13552953':
+        case '13562460':
+        case '13498662':
+        case '13643005':
+        case '13444680':
+        case '13520607':
+        case '13550670':
+        case '13562562':
+        case '13555397':
+        case '13550981':
+        case '13550913':
+        case '13550947':
+        case '13550705':
+        case '13550893':
+        case '13550843':
+        case '13550659':
+        case '13472314':
+        case '13490185':
+        case '13467024':
+        case '13465134':
+        case '13469588':
+        case '13508906':
+        case '13508940':
+        case '13562560':
+        case '13541858':
+        case '13509032':
+        case '13630408':
+        case '13630779':
+        case '13589485':
+        case '13589391':
+        case '13642967':
+        case '13631198':
+        case '13315425':
+        case '13315545':
+        case '13315636':
+        case '13315717':
+        case '13315385':
+        case '13135239':
+        case '13332711':
+        case '13331856':
+        case '13288896':
+        case '13289532':
+        case '13289546':
+        case '13367387':
+        case '13333023':
+        case '13305345':
+        case '13356143':
+        case '13333765':
+        case '13327678':
+        case '13351042':
+        case '13360159':
+        case '13366892':
+        case '13360196':
+        case '13366891':
+        case '13332812':
+        case '13333051':
+        case '13356519':
+        case '13332863':
+        case '13367167':
+        case '13364013':
+        case '13360182':
+        case '13357804':
+        case '13363817':
+        case '13367218':
+        case '13266681':
+        case '13451005':
+        case '13327589':
+        case '13363832':
+        case '13363978':
+        case '13549761':
+        case '13351505':
+        case '13369719':
+        case '13456623':
+        case '13369820':
+        case '13357895':
+        case '13357829':
+        case '13334831':
+        case '13417257':
+        case '13340298':
+        case '13357747':
+        case '13357397':
+        case '13362862':
+        case '12778426':
+        case '13363981':
+        case '13359974':
+        case '13414474':
+        case '13357896':
+        case '13358367':
+        case '13370533':
+        case '13327968':
+        case '13360166':
+        case '13350789':
+        case '13364152':
+        case '13456549':
+        case '13363924':
+        case '13360207':
+        case '13364248':
+        case '13369801':
+        case '13367065':
+        case '13360263':
+        case '13535217':
+        case '13447036':
+        case '13456697':
+        case '13364072':
+        case '13362237':
+        case '13288262':
+        case '13197683':
+        case '13351290':
+        case '13357804':
+        case '13296694':
+        case '13327562':
+        case '13360250':
+        case '13456609':
+        case '13369810':
+        case '13294056':
+        case '13364186':
+        case '13371735':
+        case '13349932':
+        case '13364227':
+        case '13417202':
+        case '13360205':
+        case '13357918':
+        case '13363641':
+        case '13447098':
+        case '13200762':
+        case '13563184':
+        case '13369830':
+        case '13369781':
+        case '13352518':
+        case '13244381':
+        case '13350669':
+        case '13367592':
+        case '13498638':
+        case '13358222':
+        case '12879363':
+        case '13374208':
+        case '13221893':
+        case '13357894':
+        case '13370395':
+        case '13456553':
+        case '13351359':
+        case '13560326':
+        case '13351229':
+        case '13357932':
+        case '13563237':
+        case '13454446':
+        case '13560338':
+        case '13364263':
+        case '13248970':
+        case '13033337':
+        case '13273818':
+        case '13268427':
+        case '13198589':
+        case '13273672':
+        case '13283042':
+        case '13285896':
+        case '13124163':
+        case '13283161':
+        case '13273984':
+        case '13278998':
+        case '13283300':
+        case '13283005':
+        case '13283162':
+        case '13244163':
+        case '13285825':
+        case '13285826':
+        case '13250421':
+        case '13276351':
+        case '13276379':
+        case '13273967':
+        case '13278500':
+        case '13178367':
+        case '13249141':
+        case '13364257':
+        case '13285887':
+        case '13273961':
+        case '13273092':
+        case '13279187':
+        case '13248737':
+        case '13244369':
+        case '13456676':
+        case '13267798':
+        case '13280288':
+        case '13192557':
+        case '13283230':
+        case '13285862':
+        case '13244215':
+        case '13243828':
+        case '13369789':
+        case '13311403':
+        case '13275729':
+        case '13200006':
+        case '13276278':
+        case '13240903':
+        case '13279153':
+        case '13285901':
+        case '13280355':
+        case '13364201':
+        case '13437905':
+        case '13267267':
+        case '13178511':
+        case '13244242':
+        case '13369770':
+        case '13330473':
+        case '13267199':
+        case '13257450':
+        case '13385276':
+        case '13004794':
+        case '13226259':
+        case '13267313':
+        case '13275145':
+        case '13369765':
+        case '12726396':
+        case '13280293':
+        case '13051507':
+        case '13170611':
+        case '13176783':
+        case '13188821':
+        case '13189176':
+        case '13205526':
+        case '13188675':
+        case '13183442':
+        case '13170623':
+        case '13128944':
+        case '13098451':
+        case '13243955':
+        case '13188659':
+        case '13157738':
+        case '13088618':
+        case '13280323':
+        case '13183066':
+        case '13152940':
+        case '13176528':
+        case '13188729':
+        case '13181775':
+        case '13178412':
+        case '13059336':
+        case '13244284':
+        case '13059899':
+        case '13088267':
+        case '13188603':
+        case '13285835':
+        case '13240082':
+        case '13092828':
+        case '13244329':
+        case '13176676':
+        case '13285962':
+        case '13313191':
+        case '13183648':
+        case '13143659':
+        case '13139778':
+        case '13170554':
+        case '13153490':
+        case '13188713':
+        case '13244325':
+        case '13176778':
+        case '13087902':
+        case '13273929':
+        case '13132324':
+        case '12779362':
+        case '13188651':
+        case '13188624':
+        case '13086110':
+        case '13176178':
+        case '13087961':
+        case '13244249':
+        case '13188661':
+        case '13183148':
+        case '13189423':
+        case '13366889':
+        case '13177199':
+        case '13183038':
+        case '13169723':
+        case '12763644':
+        case '13188618':
+        case '12591439':
+        case '13185950':
+        case '13244240':
+        case '13266790':
+        case '13006770':
+        case '13107492':
+        case '13456690':
+        case '13240897':
+        case '13232453':
+        case '13287617':
+        case '13456682':
+        case '13064506':
+        case '13509024':
+        case '13348070':
+        case '12914240':
+        case '13451103':
+        case '13305968':
+        case '13015994':
+        case '13191505':
+        case '12887107':
+        case '13369713':
+        case '13008311':
+        case '13246498':
+        case '13062997':
+        case '13278747':
+        case '12544950':
+        case '13051175':
+        case '12893138':
+        case '12624080':
+        case '12903170':
+        case '13006416':
+        case '13080594':
+        case '13013674':
+        case '13227565':
+        case '13010672':
+        case '13111292':
+        case '13287094':
+        case '13201706':
+        case '13088627':
+        case '13014114':
+        case '13372004':
+        case '13289177':
+        case '13458122':
+        case '13458157':
+        case '13458035':
+        case '13473297':
+        case '13481051':
+        case '13397958':
+        case '13583732':
+        case '12918761':
+        case '13010580':
+        case '13129335':
+        case '13132776':
+        case '13079894':
+        case '13113536':
+        case '13227959':
+        case '13130938':
+        case '13129722':
+        case '13226304':
+        case '13130512':
+        case '13370703':
+        case '13310310':
+        case '13130363':
+        case '13314487':
+        case '13563996':
+        case '13563548':
+        case '13503555':
+        case '13583419':
+        case '13014183':
+        case '13196730':
+        case '13200045':
+        case '13130422':
+        case '13290419':
+        case '13312288':
+        case '13130365':
+        case '13312860':
+        case '13230752':
+        case '13397558':
+        case '13563355':
+        case '13503989':
+        case '13563612':
+        case '13729485':
+        case '13012225':
+        case '13011069':
+        case '13130715':
+        case '13129784':
+        case '12922948':
+        case '12921920':
+        case '13131719':
+        case '13133176':
+        case '13129767':
+        case '13080431':
+        case '12980956':
+        case '13197932':
+        case '13197015':
+        case '13226390':
+        case '12984041':
+        case '13087192':
+        case '13287187':
+        case '13092771':
+        case '13085990':
+        case '13227758':
+        case '13228201':
+        case '13131127':
+        case '13227612':
+        case '13085948':
+        case '13226307':
+        case '13312050':
+        case '13314124':
+        case '13370954':
+        case '13079884':
+        case '13397591':
+        case '13226852':
+        case '13371642':
+        case '13371536':
+        case '13230962':
+        case '13311159':
+        case '13227461':
+        case '13227025':
+        case '13311535':
+        case '13399156':
+        case '13399805':
+        case '13398260':
+        case '13397959':
+        case '13458336':
+        case '13469588':
+        case '13472314':
+        case '13503182':
+        case '13503877':
+        case '13398379':
+        case '13014113':
+        case '13226890':
+        case '13076870':
+        case '13014556':
+        case '12921152':
+        case '13130325':
+        case '13131795':
+        case '13076862':
+        case '13228716':
+        case '13230020':
+        case '13192039':
+        case '13228567':
+        case '13310884':
+        case '12961844':
+        case '13402118':
+        case '13457748':
+        case '13390788':
+        case '13076860':
+        case '13228200':
+        case '12973550':
+        case '12983229':
+        case '13130412':
+        case '13105233':
+        case '13131804':
+        case '13231020':
+        case '13288938':
+        case '13311964':
+        case '13397607':
+        case '13310567':
+        case '13391153':
+        case '13398262':
+        case '13503180':
+        case '13644016':
+        case '13371846':
+        case '13015116':
+        case '13012448':
+        case '13130591':
+        case '13287980':
+        case '13087208':
+        case '13130609':
+        case '13226891':
+        case '13010936':
+        case '13130542':
+        case '13131265':
+        case '13131843':
+        case '13078520':
+        case '13096258':
+        case '13228631':
+        case '13311767':
+        case '13371815':
+        case '13310202':
+        case '13312890':
+        case '13371548':
+        case '13227836':
+        case '13194713':
+        case '13370943':
+        case '13310426':
+        case '13312064':
+        case '13286768':
+        case '13310727':
+        case '13313374':
+        case '13457771':
+        case '13287403':
+        case '13132907':
+        case '13228181':
+        case '13398677':
+        case '13372915':
+        case '13476245':
+        case '13382529':
+        case '13503181':
+        case '13504111':
+        case '13563985':
+        case '13563508':
+        case '13584464':
+        case '13643981':
+        case '13668062':
+        case '13190284':
+        case '13080400':
+        case '13080371':
+        case '13011871':
+        case '12996164':
+        case '13129217':
+        case '13083089':
+        case '13114794':
+        case '13130486':
+        case '12990757':
+        case '13130900':
+        case '13190726':
+        case '13129843':
+        case '13100286':
+        case '13226430':
+        case '13112811':
+        case '13226855':
+        case '13013744':
+        case '13131263':
+        case '13228566':
+        case '13310934':
+        case '13195309':
+        case '13130881':
+        case '13286900':
+        case '13190226':
+        case '13286931':
+        case '13287237':
+        case '13012382':
+        case '13371228':
+        case '13085293':
+        case '13192038':
+        case '13191285':
+        case '13383262':
+        case '13196892':
+        case '13313127':
+        case '13391348':
+        case '13228114':
+        case '13226857':
+        case '13397442':
+        case '13503006':
+        case '13563268':
+        case '13563668':
+        case '13584389':
+        case '13585597':
+        case '13583811':
+        case '13583325':
+        case '13643700':
+        case '13583788':
+        case '13383263':
+        case '13278606':
+        case '13012497':
+        case '12732167':
+        case '12756259':
+        case '12886817':
+        case '13051491':
+        case '13057624':
+        case '13134311':
+            case '13402615':
+case '13402343':
+case '13315425':
+case '13315717':
+case '13315385':
+case '13315636':
+case '13315545':
+case '12896365':
+case '13057466':
+case '13005659':
+case '13289631':
+case '13151675':
+case '13637198':
+case '13444680':
+case '13643005':
+case '13645303':
+case '13678949':
+case '13637055':
+case '13637034':
+case '13579123':
+case '13444596':
+case '13135239':
+case '13438003':
+case '13559693':
+case '13414261':
+case '13520213':
+case '13727567':
+case '13727593':
+case '13727615':
+case '13727610':
+case '13714782':
+case '13728228':
+case '13693895':
+case '13722326':
+case '13685077':
+case '13663071':
+case '13685402':
+case '13689118':
+case '13717164':
+case '13663098':
+case '13717979':
+case '13726632':
+case '13690670':
+case '13690721':
+case '13718250':
+case '13719872':
+case '13645904':
+case '13727085':
+case '13808098':
+case '13700206':
+case '13687747':
+case '13720820':
+case '13674523':
+case '13728115':
+case '13725380':
+case '13663175':
+case '13689256':
+case '13714795':
+case '13716772':
+case '13716770':
+case '13689343':
+case '13716239':
+case '13709355':
+case '13728143':
+case '13728284':
+case '13727564':
+case '13708524':
+case '13709052':
+case '13685405':
+case '13685179':
+case '13685670':
+case '13685698':
+case '13721469':
+case '13719988':
+case '13651294':
+case '13700283':
+case '13859040':
+case '13721878':
+case '13727623':
+case '13727652':
+case '13721480':
+case '13721570':
+case '13721753':
+case '13721607':
+case '13721588':
+case '13721774':
+case '13721662':
+case '13721446':
+case '13721529':
+case '13685419':
+case '13685366':
+case '13673269':
+case '13673308':
+case '13673496':
+case '13662478':
+case '13678665':
+case '13679868':
+case '13682461':
+case '13682458':
+case '13692394':
+case '13693330':
+case '13718356':
+case '13714757':
+case '13690100':
+case '13719473':
+case '13670677':
+case '13671201':
+case '13688189':
+case '13688185':
+case '13688164':
+case '13720292':
+case '13798480':
+case '13683487':
+case '13690424':
+case '13693867':
+case '13716293':
+case '13717804':
+case '13718041':
+case '13717798':
+case '13686114':
+case '13718023':
+case '13727542':
+case '13690124':
+case '13798529':
+case '13717935':
+case '13798498':
+case '13688197':
+case '13714813':
+case '13700494':
+case '13688531':
+case '13719023':
+case '13728267':
+case '13685130':
+case '13683475':
+case '13691338':
+case '13728287':
+case '13714901':
+case '13716904':
+case '13690672':
+case '13719829':
+case '13720675':
+case '13685272':
+case '13683488':
+case '13675128':
+case '13663314':
+case '13714799':
+case '13645007':
+case '13673854':
+case '13673934':
+case '13674063':
+case '13673662':
+case '13673687':
+case '13673765':
+case '13699463':
+case '13699724':
+case '13697095':
+case '13697996':
+case '13697907':
+case '13717977':
+case '13722238':
+case '13683402':
+case '13674750':
+case '13687225':
+case '13725399':
+case '13690273':
+case '13716689':
+case '13689574':
+case '13727592':
+case '13728199':
+case '13716064':
+case '13716157':
+case '13714731':
+case '13683494':
+case '13683478':
+case '13717442':
+case '13690504':
+case '13727471':
+case '13808127':
+case '13715657':
+case '13716623':
+case '13663295':
+case '13700126':
+case '13716161':
+case '13715987':
+case '13708998':
+case '13685137':
+case '13717867':
+case '13686579':
+case '13690686':
+case '13720271':
+case '13643543':
+case '13642868':
+case '13638637':
+case '13601534':
+case '13603531':
+case '13630074':
+case '13637032':
+case '13640011':
+case '13602804':
+case '13605904':
+case '13633344':
+case '13640515':
+case '13598550':
+case '13480146':
+case '13606027':
+case '13639993':
+case '13606048':
+case '13642967':
+case '13573329':
+case '13584402':
+case '13638641':
+case '13630133':
+case '13605945':
+case '13578265':
+case '13605702':
+case '13630145':
+case '13643603':
+case '13633291':
+case '13633150':
+case '13618438':
+case '13624428':
+case '13638634':
+case '13642878':
+case '13602711':
+case '13633387':
+case '13606169':
+case '13605758':
+case '13642944':
+case '13624899':
+case '13624451':
+case '13605983':
+case '13575414':
+case '13564256':
+case '13476074':
+case '13637186':
+case '13633286':
+case '13636797':
+case '13589485':
+case '13631797':
+case '13642430':
+case '13603739':
+case '13630957':
+case '13633376':
+case '13570432':
+case '13588817':
+case '13588804':
+case '13606258':
+case '13630779':
+case '13643009':
+case '13718025':
+case '13638187':
+case '13615789':
+case '13615857':
+case '13564677':
+case '13643669':
+case '13598479':
+case '13636957':
+case '13566352':
+case '13605855':
+case '13727555':
+case '13643548':
+case '13637057':
+case '13718044':
+case '13594018':
+case '13718044':
+case '13632722':
+case '13627320':
+case '13565117':
+case '13632727':
+case '13630289':
+case '13718000':
+case '13631746':
+case '13637990':
+case '13630303':
+case '13631198':
+case '13636968':
+case '13688107':
+case '13630184':
+case '13624304':
+case '13578497':
+case '13640152':
+case '13642428':
+case '13630155':
+case '13632662':
+case '13429858':
+case '13600747':
+case '13605688':
+case '13615527':
+case '13635584':
+case '13600488':
+case '13637046':
+case '13643595':
+case '13633095':
+case '13808043':
+case '13766417':
+case '13642943':
+case '13637333':
+case '13601240':
+case '13603522':
+case '13727582':
+case '13605963':
+case '13598342':
+case '13642949':
+case '13582217':
+case '13633394':
+case '13578760':
+case '13635809':
+case '13632887':
+case '13774946':
+case '13722019':
+case '13627539':
+case '13688173':
+case '13635932':
+case '13642875':
+case '13798557':
+case '13601286':
+case '13631701':
+case '13578267':
+case '13718024':
+case '13359974':
+case '13637338':
+case '13598391':
+case '13603583':
+case '13437881':
+case '13685234':
+case '13589391':
+case '13642917':
+case '13611004':
+case '13601215':
+case '13588850':
+case '13586843':
+case '13720209':
+case '13608698':
+case '13630198':
+case '13801121':
+case '13630227':
+case '13727605':
+case '13589225':
+case '13371871':
+case '13559576':
+case '13766294':
+case '13655465':
+case '13725369':
+case '13483419':
+case '13449764':
+case '13559693':
+case '13630197':
+case '13800739':
+case '13417235':
+case '13392156':
+case '13414621':
+case '13414221':
+case '13419683':
+case '13390106':
+case '13381469':
+case '13287682':
+case '13447075':
+case '13449718':
+case '13488213':
+case '13382116':
+case '13411810':
+case '13456907':
+case '13438111':
+case '13406486':
+case '13437616':
+case '13420698':
+case '13392841':
+case '13443797':
+case '13414268':
+case '13444869':
+case '13403157':
+case '13630943':
+case '13414452':
+case '13447082':
+case '13562411':
+case '13444713':
+case '13420680':
+case '13447013':
+case '13437693':
+case '13444857':
+case '13419606':
+case '13414126':
+case '13453866':
+case '13563220':
+case '13423599':
+case '13401117':
+case '13419673':
+case '13383263':
+case '13417238':
+case '13444379':
+case '13419712':
+case '13444917':
+case '13383262':
+case '13392813':
+case '13441414':
+case '13429279':
+case '13401399':
+case '13421989':
+case '13483568':
+case '13423596':
+case '13498754':
+case '13447000':
+case '13488224':
+case '13447069':
+case '13562493':
+case '13630171':
+case '13562460':
+case '13392865':
+case '13543460':
+case '13447024':
+case '13444652':
+case '13423756':
+case '13446990':
+case '13456610':
+case '13552953':
+case '13447042':
+case '13453883':
+case '13374204':
+case '13418393':
+case '13419636':
+case '13445192':
+case '13535488':
+case '13419593':
+case '13457072':
+case '13456964':
+case '13495568':
+case '13457228':
+case '13373919':
+case '13642998':
+case '13419602':
+case '13419894':
+case '13414139':
+case '13418979':
+case '13414398':
+case '13414261':
+case '13451008':
+case '13456596':
+case '13488218':
+case '13418450':
+case '13456594':
+case '13543477':
+case '13446988':
+case '13562458':
+case '13445103':
+case '13423538':
+case '13449763':
+case '13419646':
+case '13457933':
+case '13418676':
+case '13456577':
+case '13383127':
+case '13456608':
+case '13491257':
+case '13444662':
+case '13456722':
+case '13528087':
+case '13498662':
+case '13445243':
+case '13543378':
+case '13640172':
+case '13414982':
+case '13423207':
+case '13409003':
+case '13432125':
+case '13273877':
+case '13563173':
+case '13479415':
+case '13288896':
+case '13289532':
+case '13360196':
+case '13352518':
+case '13451005':
+case '13296694':
+case '13363832':
+case '13369810':
+case '13362862':
+case '13360205':
+case '13360250':
+case '13357804':
+case '13294056':
+case '13374208':
+case '13360159':
+case '13351229':
+case '13357829':
+case '13367592':
+case '13289546':
+case '13358367':
+case '13367065':
+case '13357918':
+case '13363981':
+case '13357804':
+case '13288262':
+case '13357397':
+case '12778426':
+case '13367218':
+case '13456549':
+case '13351359':
+case '13414474':
+case '13456609':
+case '13197683':
+case '13244381':
+case '13369820':
+case '13369830':
+case '13357932':
+case '13364013':
+case '13535217':
+case '13357895':
+case '13332863':
+case '13364263':
+case '13221893':
+case '13456697':
+case '13371735':
+case '13357896':
+case '13369781':
+case '13183246':
+case '13447098':
+case '13369801':
+case '13364186':
+case '13563237':
+case '13349932':
+case '13200762':
+case '13359974':
+case '13331856':
+case '13367387':
+case '13333023':
+case '13305345':
+case '13356143':
+case '13333765':
+case '13327678':
+case '13351042':
+case '13366892':
+case '13366891':
+case '13332812':
+case '13333051':
+case '13356519':
+case '13367167':
+case '13360182':
+case '13363817':
+case '13266681':
+case '13327589':
+case '13363978':
+case '13549761':
+case '13351505':
+case '13369719':
+case '13456623':
+case '13334831':
+case '13417257':
+case '13340298':
+case '13357747':
+case '13370533':
+case '13327968':
+case '13360166':
+case '13350789':
+case '13364152':
+case '13363924':
+case '13360207':
+case '13364248':
+case '13360263':
+case '13447036':
+case '13364072':
+case '13362237':
+case '13351290':
+case '13327562':
+case '13364227':
+case '13417202':
+case '13363641':
+case '13563184':
+case '13350669':
+case '13498638':
+case '13358222':
+case '12879363':
+case '13357894':
+case '13370395':
+case '13456553':
+case '13560326':
+case '13454446':
+case '13560338':
+case '13232453':
+case '13287617':
+case '13456682':
+case '13064506':
+case '13509024':
+case '13348070':
+case '12914240':
+case '13451103':
+case '13305968':
+            replaceFullStars();replaceFullStars();replaceFullStars();replaceHalfStars();replaceEmptyStars();
+            break;
+            //4.0*
+        case '12896365':
+        case '13360180':
+        case '13362888':
+        case '13315028':
+        case '13405871':
+        case '13385998':
+        case '13579039':
+        case '13491242':
+        case '13444594':
+        case '13389855':
+        case '13372908':
+        case '13414343':
+        case '13454905':
+        case '13392270':
+        case '13449822':
+        case '13438103':
+        case '13392845':
+        case '13249644':
+        case '13222167':
+        case '13060120':
+        case '13405584':
+        case '13406334':
+        case '13409068':
+        case '13405305':
+        case '13414530':
+        case '13444586':
+        case '13406257':
+        case '13392811':
+        case '13633275':
+        case '13406154':
+        case '13517453':
+        case '13406432':
+        case '13406269':
+        case '13603552':
+        case '13574999':
+        case '13529126':
+        case '13438951':
+        case '13392114':
+        case '13454375':
+        case '13550661':
+        case '13438144':
+        case '13438119':
+        case '13445239':
+        case '13456554':
+        case '13419490':
+        case '13454067':
+        case '13409109':
+        case '13414201':
+        case '13411844':
+        case '13426971':
+        case '13543733':
+        case '13408882':
+        case '13411619':
+        case '13414801':
+        case '13414877':
+        case '13444730':
+        case '13444976':
+        case '13445010':
+        case '13438279':
+        case '13443914':
+        case '13419754':
+        case '13438357':
+        case '13528552':
+        case '13563227':
+        case '13444752':
+        case '13450994':
+        case '13419464':
+        case '13420229':
+        case '13451095':
+        case '13440653':
+        case '13551806':
+        case '13456939':
+        case '13523097':
+        case '13421482':
+        case '13418811':
+        case '13438029':
+        case '13420404':
+        case '13543695':
+        case '13392854':
+        case '13443971':
+        case '13563190':
+        case '13428678':
+        case '13424676':
+        case '13425757':
+        case '13428680':
+        case '13443812':
+        case '13429460':
+        case '13401855':
+        case '13444503':
+        case '13456998':
+        case '13418066':
+        case '13562441':
+        case '13414741':
+        case '13421206':
+        case '13419442':
+        case '13438143':
+        case '13454291':
+        case '13445258':
+        case '13563161':
+        case '13437674':
+        case '13643004':
+        case '13399266':
+        case '13446444':
+        case '13421763':
+        case '13444080':
+        case '13444643':
+        case '13417653':
+        case '13444567':
+        case '13444115':
+        case '13422543':
+        case '13423592':
+        case '13422325':
+        case '13422292':
+        case '13456640':
+        case '13456580':
+        case '13414614':
+        case '13414850':
+        case '13414997':
+        case '13407455':
+        case '13408996':
+        case '13408138':
+        case '13384982':
+        case '13407730':
+        case '13408908':
+        case '13409003':
+        case '13407907':
+        case '13408980':
+        case '13409309':
+        case '13408370':
+        case '13408010':
+        case '13411882':
+        case '13411754':
+        case '13411708':
+        case '13517662':
+        case '13411768':
+        case '13411656':
+        case '13407190':
+        case '13406298':
+        case '13405711':
+        case '13406486':
+        case '13414414':
+        case '13414469':
+        case '13414085':
+        case '13414273':
+        case '13414321':
+        case '13414058':
+        case '13414062':
+        case '13447116':
+        case '13447099':
+        case '13418352':
+        case '13447071':
+        case '13446996':
+        case '13555582':
+        case '13443936':
+        case '13444716':
+        case '13453985':
+        case '13428057':
+        case '13543737':
+        case '13444325':
+        case '13446324':
+        case '13559694':
+        case '13457239':
+        case '13456962':
+        case '13397956':
+        case '13437575':
+        case '13437915':
+        case '13557160':
+        case '13456832':
+        case '13456746':
+        case '13630093':
+        case '13419497':
+        case '13417650':
+        case '13417783':
+        case '13456724':
+        case '13419701':
+        case '13454329':
+        case '13418355':
+        case '13420589':
+        case '13419757':
+        case '13632491':
+        case '13498625':
+        case '13422297':
+        case '13408702':
+        case '13555117':
+        case '13550599':
+        case '13550631':
+        case '13483546':
+        case '13550861':
+        case '13551052':
+        case '13478614':
+        case '13490060':
+        case '13476153':
+        case '13474829':
+        case '13464368':
+        case '13472132':
+        case '13483913':
+        case '13517375':
+        case '13481595':
+        case '13630407':
+        case '13642982':
+        case '13466508':
+        case '13458442':
+        case '13463482':
+        case '13598442':
+        case '13523102':
+        case '13551047':
+        case '13598075':
+        case '13598138':
+        case '13550842':
+        case '13568919':
+        case '13631527':
+        case '13631056':
+        case '13631375':
+        case '13631402':
+        case '13631381':
+        case '13631492':
+        case '13586970':
+        case '13584366':
+        case '13585894':
+        case '13588997':
+        case '13491654':
+        case '13420714':
+        case '13334262':
+        case '13359587':
+        case '13310141':
+        case '13359731':
+        case '13328271':
+        case '13327337':
+        case '13324684':
+        case '13325030':
+        case '13370498':
+        case '13358671':
+        case '13332774':
+        case '13320145':
+        case '13364170':
+        case '13370077':
+        case '13332790':
+        case '13351622':
+        case '13364101':
+        case '13358362':
+        case '13428881':
+        case '13354001':
+        case '13417191':
+        case '13288000':
+        case '13357830':
+        case '13319206':
+        case '13364102':
+        case '13295982':
+        case '13332989':
+        case '13364342':
+        case '13353028':
+        case '13328038':
+        case '13318687':
+        case '13445230':
+        case '13321600':
+        case '13357626':
+        case '13456540':
+        case '13362927':
+        case '13025563':
+        case '13320576':
+        case '13367569':
+        case '13321169':
+        case '13320206':
+        case '13357846':
+        case '13320749':
+        case '13357762':
+        case '13367256':
+        case '13328098':
+        case '13370257':
+        case '13358413':
+        case '13242747':
+        case '13320373':
+        case '13333066':
+        case '13322153':
+        case '13320859':
+        case '13327433':
+        case '13363676':
+        case '13305777':
+        case '13325188':
+        case '13321110':
+        case '13335342':
+        case '13362415':
+        case '13319870':
+        case '13336730':
+        case '13332944':
+        case '13419589':
+        case '13305911':
+        case '13445225':
+        case '13319638':
+        case '13362511':
+        case '13327744':
+        case '13318810':
+        case '13370428':
+        case '13332898':
+        case '13334402':
+        case '13335607':
+        case '13357905':
+        case '13320605':
+        case '13563256':
+        case '13321836':
+        case '13398625':
+        case '13318753':
+        case '13333295':
+        case '13327358':
+        case '13327344':
+        case '13383125':
+        case '13336597':
+        case '13360238':
+        case '13327517':
+        case '13319804':
+        case '13552499':
+        case '13335651':
+        case '13330425':
+        case '13334469':
+        case '13437475':
+        case '13328184':
+        case '13359726':
+        case '13555615':
+        case '13320971':
+        case '13377692':
+        case '13549899':
+        case '13360194':
+        case '13318931':
+        case '13319005':
+        case '13327911':
+        case '13327545':
+        case '13300669':
+        case '13327497':
+        case '13328126':
+        case '13417192':
+        case '13327483':
+        case '13305946':
+        case '13367608':
+        case '13357769':
+        case '13444013':
+        case '13456595':
+        case '13335476':
+        case '13337283':
+        case '13486269':
+        case '13429085':
+        case '13337033':
+        case '13371080':
+        case '13308451':
+        case '13320670':
+        case '13333942':
+        case '13305977':
+        case '13498618':
+        case '13358398':
+        case '13327490':
+        case '13319370':
+        case '13350817':
+        case '13338699':
+        case '13357796':
+        case '13444829':
+        case '13334922':
+        case '13411657':
+        case '13437692':
+        case '13240814':
+        case '13350921':
+        case '13358366':
+        case '13350804':
+        case '13443860':
+        case '13324944':
+        case '13328053':
+        case '13350919':
+        case '13305413':
+        case '13551827':
+        case '13559750':
+        case '13057327':
+        case '13324975':
+        case '13341116':
+        case '13447101':
+        case '13369874':
+        case '13295992':
+        case '13369885':
+        case '13562415':
+        case '13241130':
+        case '13354317':
+        case '13392757':
+        case '13330403':
+        case '13456684':
+        case '13243775':
+        case '13273345':
+        case '13240985':
+        case '13249376':
+        case '13248838':
+        case '13252320':
+        case '13237523':
+        case '13236024':
+        case '13248696':
+        case '13251584':
+        case '13201291':
+        case '13222105':
+        case '13450723':
+        case '13191857':
+        case '13275585':
+        case '13257247':
+        case '13238458':
+        case '13243666':
+        case '13333540':
+        case '13194321':
+        case '13273089':
+        case '13195828':
+        case '13249621':
+        case '13362932':
+        case '13253414':
+        case '13357820':
+        case '13209477':
+        case '13273879':
+        case '13243598':
+        case '13240900':
+        case '13273898':
+        case '13255194':
+        case '13234968':
+        case '13257348':
+        case '13249116':
+        case '13240968':
+        case '13243449':
+        case '13241004':
+        case '13248963':
+        case '13369828':
+        case '13243411':
+        case '13273115':
+        case '13285886':
+        case '13228302':
+        case '13237211':
+        case '12857380':
+        case '13236750':
+        case '13234760':
+        case '13267038':
+        case '13253503':
+        case '13249461':
+        case '13334301':
+        case '13250705':
+        case '13192027':
+        case '13240912':
+        case '13235294':
+        case '13278522':
+        case '13251187':
+        case '13273982':
+        case '13251135':
+        case '13126248':
+        case '13240921':
+        case '13273866':
+        case '13244267':
+        case '13351086':
+        case '13436630':
+        case '13256212':
+        case '13250812':
+        case '13250138':
+        case '13280829':
+        case '13279017':
+        case '13241107':
+        case '13357204':
+        case '13251395':
+        case '13252096':
+        case '13279164':
+        case '13370477':
+        case '13258326':
+        case '13237862':
+        case '13255373':
+        case '13251416':
+        case '13254584':
+        case '13294923':
+        case '13258327':
+        case '13305778':
+        case '13243665':
+        case '13234725':
+        case '13210651':
+        case '13244194':
+        case '13300411':
+        case '13279031':
+        case '13359493':
+        case '13279133':
+        case '13257173':
+        case '13257249':
+        case '13234945':
+        case '13243624':
+        case '13354748':
+        case '13417224':
+        case '13234959':
+        case '13244010':
+        case '13350627':
+        case '13273061':
+        case '13390062':
+        case '13246509':
+        case '13222026':
+        case '13437715':
+        case '13310031':
+        case '13362884':
+        case '13273325':
+        case '13244333':
+        case '13318853':
+        case '13255399':
+        case '13244107':
+        case '13411650':
+        case '13274237':
+        case '13253412':
+        case '13274319':
+        case '13369826':
+        case '13199570':
+        case '13196954':
+        case '13251960':
+        case '13258818':
+        case '13251328':
+        case '13367045':
+        case '13253279':
+        case '13161147':
+        case '13257358':
+        case '13258054':
+        case '13350824':
+        case '13392348':
+        case '13411885':
+        case '13364238':
+        case '13456598':
+        case '13267264':
+        case '13274306':
+        case '13246595':
+        case '13251490':
+        case '13134617':
+        case '13255317':
+        case '13267202':
+        case '13393804':
+        case '13143653':
+        case '13143652':
+        case '13143700':
+        case '13181824':
+        case '13134481':
+        case '13367057':
+        case '13188761':
+        case '13456693':
+        case '13411859':
+        case '13188640':
+        case '13146288':
+        case '13129339':
+        case '13278487':
+        case '13155671':
+        case '13179124':
+        case '13124179':
+        case '13116210':
+        case '13183440':
+        case '13177438':
+        case '13181281':
+        case '13182417':
+        case '13129749':
+        case '13146217':
+        case '13133949':
+        case '13133064':
+        case '13058543':
+        case '13367625':
+        case '13125154':
+        case '13181778':
+        case '12893437':
+        case '13223973':
+        case '13176295':
+        case '13367006':
+        case '13081228':
+        case '13146957':
+        case '13189032':
+        case '13132656':
+        case '13086760':
+        case '13081330':
+        case '13151609':
+        case '13156010':
+        case '13188708':
+        case '13275997':
+        case '13151716':
+        case '13188676':
+        case '13140876':
+        case '13181990':
+        case '13186527':
+        case '13131552':
+        case '13087708':
+        case '13132420':
+        case '12899926':
+        case '13182294':
+        case '13176784':
+        case '13152885':
+        case '13146929':
+        case '13188604':
+        case '13182405':
+        case '13146411':
+        case '13155275':
+        case '13152797':
+        case '13154426':
+        case '13111017':
+        case '13146974':
+        case '13279016':
+        case '13072054':
+        case '13139828':
+        case '13153255':
+        case '13188664':
+        case '13280383':
+        case '13177398':
+        case '13146752':
+        case '13146519':
+        case '13133705':
+        case '13188775':
+        case '13369860':
+        case '13146875':
+        case '13252001':
+        case '13283713':
+        case '13183047':
+        case '13183144':
+        case '13147032':
+        case '13181647':
+        case '13182488':
+        case '13143830':
+        case '13176692':
+        case '13181282':
+        case '13324854':
+        case '13143580':
+        case '13285834':
+        case '13059988':
+        case '13089056':
+        case '13155490':
+        case '13285872':
+        case '13155380':
+        case '13283711':
+        case '13241066':
+        case '13154486':
+        case '13088217':
+        case '13279023':
+        case '13309120':
+        case '13367596':
+        case '13324774':
+        case '13324885':
+        case '13181797':
+        case '13267768':
+        case '13279025':
+        case '12887158':
+        case '12887250':
+        case '13278920':
+        case '13104729':
+        case '12903755':
+        case '13177019':
+        case '13176179':
+        case '13266788':
+        case '13176758':
+        case '12893480':
+        case '13268609':
+        case '12614913':
+        case '12887267':
+        case '12860734':
+        case '12558678':
+        case '12619911':
+        case '13283101':
+        case '13364197':
+        case '12859059':
+        case '13222080':
+        case '13190223':
+        case '13129981':
+        case '12749797':
+        case '13181778':
+        case '13060000':
+        case '13143533':
+        case '13241096':
+        case '12922486':
+        case '12914177':
+        case '13190223':
+        case '12921896':
+        case '13071252':
+        case '13131290':
+        case '13010704':
+        case '13133196':
+        case '13011406':
+        case '13286906':
+        case '13129982':
+        case '13288457':
+        case '13089056':
+        case '13227462':
+        case '13314671':
+        case '13227367':
+        case '13288978':
+        case '13458214':
+        case '13371353':
+        case '13401028':
+        case '13458154':
+        case '13457854':
+        case '13564607':
+        case '13586970':
+        case '13584366':
+        case '13504210':
+        case '13644370':
+        case '13644706':
+        case '13585695':
+        case '13584662':
+        case '13484406':
+        case '13644660':
+        case '13463482':
+        case '13466508':
+        case '13458442':
+        case '13728330':
+        case '13131743':
+        case '13191857':
+        case '13206997':
+        case '13129774':
+        case '13286860':
+        case '13227196':
+        case '13133949':
+        case '13229210':
+        case '13312232':
+        case '13311284':
+        case '13397405':
+        case '13481595':
+        case '13464368':
+        case '13563318':
+        case '13504068':
+        case '13504658':
+        case '13011007':
+        case '13129184':
+        case '13310361':
+        case '13227613':
+        case '13227364':
+        case '13311428':
+        case '13483696':
+        case '13644840':
+        case '13585038':
+        case '13668314':
+        case '13012720':
+        case '13190254':
+        case '13011335':
+        case '13088647':
+        case '13194321':
+        case '13013397':
+        case '13227117':
+        case '13191302':
+        case '13013673':
+        case '13129784':
+        case '13010740':
+        case '13129602':
+        case '13286730':
+        case '13227289':
+        case '13130592':
+        case '13311654':
+        case '13312889':
+        case '13310522':
+        case '13013539':
+        case '13226858':
+        case '13227110':
+        case '13371805':
+        case '13227302':
+        case '13371825':
+        case '13228116':
+        case '13310415':
+        case '13371089':
+        case '13311160':
+        case '13310980':
+        case '13312481':
+        case '13010786':
+        case '13397754':
+        case '13458156':
+        case '13476052':
+        case '13503308':
+        case '13397268':
+        case '13504223':
+        case '13564570':
+        case '13504421':
+        case '13397861':
+        case '13504176':
+        case '13503372':
+        case '13584740':
+        case '13644859':
+        case '13643691':
+        case '13583627':
+        case '13089133':
+        case '13228625':
+        case '13130513':
+        case '13310705':
+        case '13372551':
+        case '13398509':
+        case '13310425':
+        case '13457490':
+        case '13490060':
+        case '13478614':
+        case '13583394':
+        case '13584709':
+        case '13668305':
+        case '13080399':
+        case '13011547':
+        case '13130366':
+        case '13129786':
+        case '13226318':
+        case '13201291':
+        case '13227955':
+        case '13130167':
+        case '13228200':
+        case '13287678':
+        case '13288938':
+        case '13310728':
+        case '13503323':
+        case '13585894':
+        case '13585984':
+        case '13667971':
+        case '13012721':
+        case '13196867':
+        case '13131135':
+        case '13133673':
+        case '13013307':
+        case '13130935':
+        case '13190230':
+        case '13010709':
+        case '13129339':
+        case '13228161':
+        case '13226306':
+        case '13287475':
+        case '13133064':
+        case '13195828':
+        case '13131721':
+        case '13131844':
+        case '13132420':
+        case '13287036':
+        case '13226459':
+        case '13130936':
+        case '13231209':
+        case '13227509':
+        case '13191210':
+        case '13226693':
+        case '13226546':
+        case '13226825':
+        case '13372046':
+        case '13311519':
+        case '13290432':
+        case '13310355':
+        case '13371124':
+        case '13287257':
+        case '12956987':
+        case '13199554':
+        case '13311372':
+        case '13287478':
+        case '13371916':
+        case '13295831':
+        case '13226859':
+        case '13397194':
+        case '13311585':
+        case '13480619':
+        case '13398389':
+        case '13397037':
+        case '13398482':
+        case '13310345':
+        case '13398175':
+        case '13397023':
+        case '13481075':
+        case '13564259':
+        case '13503707':
+        case '13481081':
+        case '13503639':
+        case '13503203':
+        case '13504269':
+        case '13584956':
+        case '13584739':
+        case '13643896':
+        case '13503553':
+        case '13728350':
+        case '13010586':
+        case '13080362':
+        case '12922020':
+        case '13192249':
+        case '13013396':
+        case '13078543':
+        case '13078653':
+        case '13131393':
+        case '13011292':
+        case '13190738':
+        case '13190229':
+        case '13111017':
+        case '13287880':
+        case '13131552':
+        case '13227588':
+        case '13012312':
+        case '13111273':
+        case '13286947':
+        case '13287234':
+        case '13131514':
+        case '13130420':
+        case '13287683':
+        case '13311454':
+        case '13080633':
+        case '13192067':
+        case '13083252':
+        case '13228628':
+        case '13227510':
+        case '13371022':
+        case '13191312':
+        case '13227291':
+        case '13228218':
+        case '13130238':
+        case '13192027':
+        case '13313197':
+        case '13227116':
+        case '13012243':
+        case '13311477':
+        case '13371080':
+        case '13313420':
+        case '13397756':
+        case '13457779':
+        case '13287892':
+        case '13228115':
+        case '13310699':
+        case '13310979':
+        case '13397207':
+        case '13458087':
+        case '13458071':
+        case '13397511':
+        case '13476153':
+        case '13391347':
+        case '13377134':
+        case '13480091':
+        case '13564316':
+        case '13503686':
+        case '13503787':
+        case '13583701':
+        case '13643793':
+        case '13645261':
+        case '13586182':
+        case '13669017':
+        case '13057863':
+        case '12847379':
+        case '12878996':
+        case '13057796':
+        case '13129982':
+        case '13143532':
+        case '13143752':
+        case '13025386':
+        case '13085588':
+            case '13688169':
+case '13688017':
+case '13688118':
+case '13637123':
+case '13585894':
+case '13636883':
+case '13491654':
+case '13327029':
+case '13691360':
+case '13332711':
+case '13408702':
+case '13697448':
+case '13334262':
+case '13420714':
+case '13615671':
+case '13550599':
+case '13414469':
+case '13727520':
+case '13694709':
+case '13722415':
+case '13722306':
+case '13727712':
+case '13855872':
+case '13850397':
+case '13886714':
+case '13688562':
+case '13855334':
+case '13800714':
+case '13886634':
+case '13781371':
+case '13727835':
+case '13671863':
+case '13671337':
+case '13716771':
+case '13689676':
+case '13690703':
+case '13708696':
+case '13685838':
+case '13690452':
+case '13690592':
+case '13722056':
+case '13728240':
+case '13685635':
+case '13690276':
+case '13690545':
+case '13720805':
+case '13685133':
+case '13683709':
+case '13717611':
+case '13687520':
+case '13689055':
+case '13709286':
+case '13688708':
+case '13709453':
+case '13720193':
+case '13801232':
+case '13727991':
+case '13686366':
+case '13688972':
+case '13722365':
+case '13700125':
+case '13716286':
+case '13689872':
+case '13789094':
+case '13685226':
+case '13663574':
+case '13720726':
+case '13675582':
+case '13724811':
+case '13717541':
+case '13687939':
+case '13701998':
+case '13701370':
+case '13718213':
+case '13683442':
+case '13683678':
+case '13728026':
+case '13686226':
+case '13720208':
+case '13683434':
+case '13700313':
+case '13687413':
+case '13765969':
+case '13725758':
+case '13683280':
+case '13717542':
+case '13808066':
+case '13722201':
+case '13710701':
+case '13884850':
+case '13721464':
+case '13808211':
+case '13721846':
+case '13808194':
+case '13721778':
+case '13808210':
+case '13685146':
+case '13673413':
+case '13673429':
+case '13673797':
+case '13673767':
+case '13673995':
+case '13673892':
+case '13673751':
+case '13673703':
+case '13673819':
+case '13673794':
+case '13678998':
+case '13679117':
+case '13679991':
+case '13678451':
+case '13678728':
+case '13678510':
+case '13678811':
+case '13680131':
+case '13679803':
+case '13679178':
+case '13682558':
+case '13682551':
+case '13682787':
+case '13682632':
+case '13763009':
+case '13763244':
+case '13823854':
+case '13682754':
+case '13682752':
+case '13685986':
+case '13690952':
+case '13773432':
+case '13772965':
+case '13692125':
+case '13691824':
+case '13693646':
+case '13694830':
+case '13694794':
+case '13693444':
+case '13739202':
+case '13692925':
+case '13693842':
+case '13695901':
+case '13697337':
+case '13697325':
+case '13697892':
+case '13697463':
+case '13697629':
+case '13714926':
+case '13721992':
+case '13709230':
+case '13668618':
+case '13670866':
+case '13668858':
+case '13671698':
+case '13672572':
+case '13717172':
+case '13672583':
+case '13688128':
+case '13688198':
+case '13688113':
+case '13688171':
+case '13718028':
+case '13798591':
+case '13717971':
+case '13717696':
+case '13686980':
+case '13808081':
+case '13808139':
+case '13708506':
+case '13717970':
+case '13882674':
+case '13717973':
+case '13688528':
+case '13690436':
+case '13672332':
+case '13672438':
+case '13798525':
+case '13694360':
+case '13683454':
+case '13728056':
+case '13717500':
+case '13687932':
+case '13689341':
+case '13667790':
+case '13685477':
+case '13721693':
+case '13721912':
+case '13718764':
+case '13647754':
+case '13687887':
+case '13718185':
+case '13725617':
+case '13722340':
+case '13685374':
+case '13685182':
+case '13700241':
+case '13722446':
+case '13720605':
+case '13700174':
+case '13720537':
+case '13663519':
+case '13685375':
+case '13727966':
+case '13711054':
+case '13683079':
+case '13675081':
+case '13808067':
+case '13727479':
+case '13722136':
+case '13675268':
+case '13687119':
+case '13683483':
+case '13675415':
+case '13690645':
+case '13718446':
+case '13686015':
+case '13702455':
+case '13720747':
+case '13687629':
+case '13715899':
+case '13715877':
+case '13714875':
+case '13689822':
+case '13690503':
+case '13683414':
+case '13728262':
+case '13685817':
+case '13687902':
+case '13716058':
+case '13708791':
+case '13663201':
+case '13686237':
+case '13690708':
+case '13720799':
+case '13728313':
+case '13714943':
+case '13718214':
+case '13672188':
+case '13670150':
+case '13672540':
+case '13671771':
+case '13838948':
+case '13359587':
+case '13594740':
+case '13598269':
+case '13583549':
+case '13602520':
+case '13624889':
+case '13606149':
+case '13607841':
+case '13779802':
+case '13603037':
+case '13566166':
+case '13573293':
+case '13564307':
+case '13600790':
+case '13600766':
+case '13631375':
+case '13601176':
+case '13632899':
+case '13605692':
+case '13602694':
+case '13607527':
+case '13593882':
+case '13595578':
+case '13594101':
+case '13598382':
+case '13601527':
+case '13642823':
+case '13631402':
+case '13633068':
+case '13606697':
+case '13570961':
+case '13642865':
+case '13631527':
+case '13663380':
+case '13616560':
+case '13576176':
+case '13600795':
+case '13584366':
+case '13600685':
+case '13624814':
+case '13371776':
+case '13632849':
+case '13639994':
+case '13625202':
+case '13586970':
+case '13632992':
+case '13624870':
+case '13624337':
+case '13631056':
+case '13565709':
+case '13601334':
+case '13642918':
+case '13585695':
+case '13643588':
+case '13633334':
+case '13642953':
+case '13602631':
+case '13595138':
+case '13607362':
+case '13605801':
+case '13594094':
+case '13578430':
+case '13615666':
+case '13250138':
+case '13633377':
+case '13615672':
+case '13585116':
+case '13632993':
+case '13605727':
+case '13602113':
+case '13600412':
+case '13594945':
+case '13586031':
+case '13620772':
+case '13605312':
+case '13602085':
+case '13636805':
+case '13637309':
+case '13624029':
+case '13630912':
+case '13593737':
+case '13642434':
+case '13605968':
+case '13615604':
+case '13601071':
+case '13631868':
+case '13605746':
+case '13597951':
+case '13624306':
+case '13595359':
+case '13690832':
+case '13597941':
+case '13615921':
+case '13604069':
+case '13595194':
+case '13631797':
+case '13571246':
+case '13535730':
+case '13594035':
+case '13628491':
+case '13642828':
+case '13608098':
+case '13630928':
+case '13602089':
+case '13588997':
+case '13632704':
+case '13624901':
+case '13714796':
+case '13690683':
+case '13631492':
+case '13642883':
+case '13631381':
+case '13630929':
+case '13631600':
+case '13568919':
+case '13624811':
+case '13602394':
+case '13581274':
+case '13603548':
+case '13663789':
+case '13632129':
+case '13641174':
+case '13629942':
+case '13624380':
+case '13717928':
+case '13643585':
+case '13688121':
+case '13602945':
+case '13595460':
+case '13603535':
+case '13615564':
+case '13481959':
+case '13585984':
+case '13598121':
+case '13637325':
+case '13640752':
+case '13587260':
+case '13573232':
+case '13600689':
+case '13598502':
+case '13694604':
+case '13597854':
+case '13800740':
+case '13602015':
+case '13607190':
+case '13717996':
+case '13445239':
+case '13526057':
+case '13663150':
+case '13631340':
+case '13601278':
+case '13595457':
+case '13635692':
+case '13643616':
+case '13682755':
+case '13581145':
+case '13727519':
+case '13588484':
+case '13597974':
+case '13724695':
+case '13685727':
+case '13603549':
+case '13631261':
+case '13631072':
+case '13579122':
+case '13642896':
+case '13682488':
+case '13663382':
+case '13631359':
+case '13688210':
+case '13624448':
+case '13743607':
+case '13631497':
+case '13808138':
+case '13478283':
+case '13688108':
+case '13635787':
+case '13588832':
+case '13624391':
+case '13724809':
+case '13636036':
+case '13635786':
+case '13607257':
+case '13543741':
+case '13810041':
+case '13635549':
+case '13594568':
+case '13633279':
+case '13401321':
+case '13720186':
+case '13444586':
+case '13409109':
+case '13411768':
+case '13444730':
+case '13419754':
+case '13444716':
+case '13419490':
+case '13414058':
+case '13633275':
+case '13414997':
+case '13445258':
+case '13419442':
+case '13421763':
+case '13414062':
+case '13414469':
+case '13420640':
+case '13443914':
+case '13454375':
+case '13444080':
+case '13438357':
+case '13444752':
+case '13406154':
+case '13418355':
+case '13417783':
+case '13437674':
+case '13563227':
+case '13443936':
+case '13579039':
+case '13222166':
+case '13438144':
+case '13422297':
+case '13444594':
+case '13422292':
+case '13405584':
+case '13418066':
+case '13421206':
+case '13408138':
+case '13411619':
+case '13286444':
+case '13562441':
+case '13456939':
+case '13438951':
+case '13563161':
+case '13414980':
+case '13438119':
+case '13456998':
+case '13447071':
+case '13438103':
+case '13414741':
+case '13405871':
+case '13372908':
+case '13409309':
+case '13437575':
+case '13420404':
+case '13426971':
+case '13389855':
+case '13444976':
+case '13454291':
+case '13555582':
+case '13523097':
+case '13406432':
+case '13405305':
+case '13456580':
+case '13411754':
+case '13543695':
+case '13384982':
+case '13402321':
+case '13408010':
+case '13408980':
+case '13414850':
+case '13406269':
+case '13453985':
+case '13414321':
+case '13408882':
+case '13420229':
+case '13420589':
+case '13438279':
+case '13456640':
+case '13451095':
+case '13451095':
+case '13411882':
+case '13419701':
+case '13422325':
+case '13414877':
+case '13425757':
+case '13456832':
+case '13447099':
+case '13456746':
+case '13419497':
+case '13456724':
+case '13498736':
+case '13423592':
+case '13443812':
+case '13417650':
+case '13457239':
+case '13450994':
+case '13636004':
+case '13456554':
+case '13222045':
+case '13447116':
+case '13445010':
+case '13630093':
+case '13438029':
+case '13428057':
+case '13440653':
+case '13180621':
+case '13392854':
+case '13424676':
+case '13456962':
+case '13446444':
+case '13411844':
+case '13643004':
+case '13414414':
+case '13557160':
+case '13446996':
+case '13406257':
+case '13414801':
+case '13392270':
+case '13399266':
+case '13408996':
+case '13428678':
+case '13414273':
+case '13408908':
+case '13407190':
+case '13446324':
+case '13491242':
+case '13392798':
+case '13397956':
+case '13417653':
+case '13444643':
+case '13444115':
+case '13414343':
+case '13407907':
+case '13559694':
+case '13443971':
+case '13449822':
+case '13392845':
+case '13407455':
+case '13406334':
+case '13407730':
+case '13408370':
+case '13392811':
+case '13422543':
+case '13454329':
+case '13444325':
+case '13418811':
+case '13414530':
+case '13392114':
+case '13419464':
+case '13428680':
+case '13411708':
+case '13520016':
+case '13437915':
+case '13550695':
+case '13632491':
+case '13454905':
+case '13550661':
+case '13306037':
+case '13409068':
+case '13414201':
+case '13429460':
+case '13414614':
+case '13438143':
+case '13517453':
+case '13444503':
+case '13411656':
+case '13454067':
+case '13517662':
+case '13543733':
+case '13401855':
+case '13563190':
+case '13551806':
+case '13603552':
+case '13574999':
+case '13411859':
+case '13419757':
+case '13385998':
+case '13405711':
+case '13444567':
+case '13414085':
+case '13529126':
+case '13528552':
+case '13445239':
+case '13406298':
+case '13418352':
+case '13498625':
+case '13543737':
+case '13321169':
+case '13359731':
+case '13364342':
+case '13364170':
+case '13327337':
+case '13288000':
+case '13357830':
+case '13320859':
+case '13351622':
+case '13320373':
+case '13357905':
+case '13358398':
+case '13357796':
+case '13320971':
+case '13320576':
+case '13354001':
+case '13320749':
+case '13552499':
+case '13367569':
+case '13357626':
+case '13370428':
+case '13321600':
+case '13360194':
+case '13327344':
+case '13325188':
+case '13335342':
+case '13327433':
+case '13305777':
+case '13308451':
+case '13295992':
+case '13411657':
+case '13360238':
+case '13338699':
+case '13367608':
+case '13333066':
+case '13371080':
+case '13322153':
+case '13437692':
+case '13362888':
+case '13318753':
+case '13328126':
+case '13318810':
+case '13350919':
+case '13392757':
+case '13335651':
+case '13328098':
+case '13328053':
+case '13370077':
+case '13456693':
+case '13330425':
+case '13360180':
+case '13327358':
+case '13327545':
+case '13562415':
+case '13241130':
+case '13320670':
+case '13411859':
+case '13456684':
+case '13315028':
+case '13559750':
+case '13327490':
+case '13358366':
+case '13369874':
+case '13369885':
+case '13359587':
+case '13310141':
+case '13328271':
+case '13324684':
+case '13325030':
+case '13370498':
+case '13358671':
+case '13332774':
+case '13320145':
+case '13332790':
+case '13364101':
+case '13358362':
+case '13428881':
+case '13417191':
+case '13319206':
+case '13364102':
+case '13295982':
+case '13332989':
+case '13353028':
+case '13328038':
+case '13318687':
+case '13445230':
+case '13456540':
+case '13362927':
+case '13025563':
+case '13320206':
+case '13357846':
+case '13357762':
+case '13367256':
+case '13370257':
+case '13358413':
+case '13242747':
+case '13363676':
+case '13321110':
+case '13362415':
+case '13319870':
+case '13336730':
+case '13332944':
+case '13419589':
+case '13305911':
+case '13445225':
+case '13319638':
+case '13362511':
+case '13327744':
+case '13332898':
+case '13334402':
+case '13335607':
+case '13320605':
+case '13563256':
+case '13321836':
+case '13398625':
+case '13333295':
+case '13383125':
+case '13336597':
+case '13327517':
+case '13319804':
+case '13334469':
+case '13437475':
+case '13328184':
+case '13359726':
+case '13555615':
+case '13377692':
+case '13549899':
+case '13318931':
+case '13319005':
+case '13327911':
+case '13300669':
+case '13327497':
+case '13417192':
+case '13327483':
+case '13305946':
+case '13305778':
+case '13357769':
+case '13444013':
+case '13456595':
+case '13335476':
+case '13337283':
+case '13486269':
+case '13429085':
+case '13337033':
+case '13333942':
+case '13305977':
+case '13498618':
+case '13319370':
+case '13350817':
+case '13444829':
+case '13334922':
+case '13240814':
+case '13350921':
+case '13350804':
+case '13443860':
+case '13324944':
+case '13305413':
+case '13551827':
+case '13057327':
+case '13324975':
+case '13341116':
+case '13447101':
+case '13155981':
+case '13354317':
+case '13330403':
+            replaceFullStars();replaceFullStars();replaceFullStars();replaceFullStars();replaceEmptyStars();
+            break;
+            //4.5*
+        case '13333322':
+        case '13134692':
+        case '12519168':
+        case '13131091':
+        case '13275211':
+        case '13107298':
+        case '13152190':
+        case '12920713':
+        case '13237004':
+        case '13310744':
+        case '13353716':
+        case '13334833':
+        case '13402199':
+        case '13421890':
+        case '13402371':
+        case '13421283':
+        case '13420855':
+        case '13445662':
+        case '13632723':
+        case '13643383':
+        case '13445418':
+        case '13414306':
+        case '13560756':
+        case '13444462':
+        case '13380627':
+        case '13391273':
+        case '13392166':
+        case '13633276':
+        case '13446358':
+        case '13445830':
+        case '13437502':
+        case '13517618':
+        case '13624644':
+        case '13633395':
+        case '13425875':
+        case '13605704':
+        case '13444890':
+        case '13550303':
+        case '13444074':
+        case '13443904':
+        case '13420640':
+        case '13427021':
+        case '13526671':
+        case '13527316':
+        case '13550389':
+        case '13441980':
+        case '13445274':
+        case '13528413':
+        case '13418803':
+        case '13528746':
+        case '13408834':
+        case '13411858':
+        case '13405967':
+        case '13447030':
+        case '13444602':
+        case '13446502':
+        case '13419902':
+        case '13420891':
+        case '13449365':
+        case '13444218':
+        case '13420492':
+        case '13457226':
+        case '13442811':
+        case '13551105':
+        case '13458414':
+        case '13469822':
+        case '13631363':
+        case '13618627':
+        case '13512416':
+        case '13334876':
+        case '13356216':
+        case '13520661':
+        case '13420959':
+        case '13333543':
+        case '13225846':
+        case '13332611':
+        case '13358838':
+        case '13305688':
+        case '13299299':
+        case '13437512':
+        case '13332632':
+        case '13341907':
+        case '13339694':
+        case '13437819':
+        case '13327883':
+        case '13359757':
+        case '13367374':
+        case '13362467':
+        case '13312261':
+        case '13357424':
+        case '13300187':
+        case '13305630':
+        case '13342504':
+        case '13342795':
+        case '13359613':
+        case '13357100':
+        case '13335236':
+        case '13340063':
+        case '13364467':
+        case '13362683':
+        case '13359308':
+        case '13358547':
+        case '13321968':
+        case '13286109':
+        case '13556659':
+        case '13320004':
+        case '13360281':
+        case '13358624':
+        case '13392181':
+        case '13557257':
+        case '13338166':
+        case '13550351':
+        case '13334746':
+        case '13281708':
+        case '13363391':
+        case '13241110':
+        case '13240992':
+        case '13333510':
+        case '13251032':
+        case '13290387':
+        case '13273486':
+        case '13191096':
+        case '13254839':
+        case '13454156':
+        case '13279882':
+        case '13285975':
+        case '13222076':
+        case '13419663':
+        case '12681881':
+        case '13227853':
+        case '13255759':
+        case '13249933':
+        case '13053298':
+        case '13195986':
+        case '13232283':
+        case '13232376':
+        case '13196172':
+        case '13254218':
+        case '13286303':
+        case '13274826':
+        case '13450916':
+        case '13250906':
+        case '13200172':
+        case '13227852':
+        case '13301545':
+        case '13275990':
+        case '13450816':
+        case '13359043':
+        case '13250453':
+        case '13358574':
+        case '13243547':
+        case '13274248':
+        case '13340152':
+        case '13335023':
+        case '13456922':
+        case '13242035':
+        case '13451588':
+        case '13357660':
+        case '13241108':
+        case '13453790':
+        case '13414576':
+        case '13255901':
+        case '13176103':
+        case '13324755':
+        case '13231790':
+        case '13525509':
+        case '13151483':
+        case '13152611':
+        case '12760161':
+        case '13176828':
+        case '13364098':
+        case '13315771':
+        case '13280230':
+        case '13178673':
+        case '13182574':
+        case '13074222':
+        case '13134562':
+        case '13359651':
+        case '12686278':
+        case '12842564':
+        case '12899936':
+        case '13154067':
+        case '13182449':
+        case '13176433':
+        case '13359856':
+        case '13189205':
+        case '13140839':
+        case '13279903':
+        case '13146786':
+        case '13105880':
+        case '13151501':
+        case '13124304':
+        case '13286246':
+        case '13280696':
+        case '13152662':
+        case '13178306':
+        case '13169541':
+        case '13124596':
+        case '13153152':
+        case '13152367':
+        case '13327536':
+        case '13153071':
+        case '13186228':
+        case '13231627':
+        case '13332823':
+        case '13282466':
+        case '13363959':
+        case '13364563':
+        case '13134588':
+        case '13312462':
+        case '13313520':
+        case '13071672':
+        case '13231704':
+        case '13370433':
+        case '13254731':
+        case '13067722':
+        case '13122418':
+        case '13186398':
+        case '13353602':
+        case '13189069':
+        case '13364031':
+        case '12796436':
+        case '12785946':
+        case '13335085':
+        case '13557361':
+        case '13370131':
+        case '13232455':
+        case '13367158':
+        case '13057424':
+        case '13274082':
+        case '13124925':
+        case '13057798':
+        case '13279968':
+        case '12958086':
+        case '13057368':
+        case '12735285':
+        case '13221701':
+        case '13064287':
+        case '13273197':
+        case '13274141':
+        case '13189161':
+        case '13587526':
+        case '13057401':
+        case '13275325':
+        case '13196879':
+        case '13013304':
+        case '13085952':
+        case '13371254':
+        case '13372884':
+        case '13310827':
+        case '13497710':
+        case '13469822':
+        case '13476108':
+        case '13399980':
+        case '13587065':
+        case '13728437':
+        case '13458414':
+        case '13586312':
+        case '13190186':
+        case '12990745':
+        case '13226977':
+        case '13200861':
+        case '13132656':
+        case '13129166':
+        case '12918125':
+        case '13310481':
+        case '13294923':
+        case '13312462':
+        case '13480186':
+        case '13587415':
+        case '13669185':
+        case '13228163':
+        case '13668450':
+        case '13226844':
+        case '13728407':
+        case '13130901':
+        case '13105880':
+        case '13195986':
+        case '13079354':
+        case '13226888':
+        case '13227853':
+        case '13229558':
+        case '13312473':
+        case '13228750':
+        case '13310399':
+        case '13227046':
+        case '13398062':
+        case '13503917':
+        case '13563947':
+        case '13503177':
+        case '13583323':
+        case '13643755':
+        case '13669180':
+        case '13286688':
+        case '13201612':
+        case '13196172':
+        case '13107298':
+        case '13226671':
+        case '13227852':
+        case '13290387':
+        case '13310744':
+        case '13310883':
+        case '13310921':
+        case '13380627':
+        case '13392057':
+        case '13397145':
+        case '13503000':
+        case '13587277':
+        case '13668622':
+        case '13324941':
+        case '13334669':
+        case '13359286':
+        case '13525536':
+        case '12818011':
+            case '13671472':
+case '13721998':
+case '13334833':
+case '13353716':
+case '13594008':
+case '13550186':
+case '13637308':
+case '13587526':
+case '13310744':
+case '13520136':
+case '13724458':
+case '13856271':
+case '13688764':
+case '13684940':
+case '13687497':
+case '13705488':
+case '13663484':
+case '13728093':
+case '13683498':
+case '13728096':
+case '13708855':
+case '13686157':
+case '13711918':
+case '13682839':
+case '13682430':
+case '13856175':
+case '13691231':
+case '13691435':
+case '13691236':
+case '13691195':
+case '13692017':
+case '13774449':
+case '13686943':
+case '13790103':
+case '13798484':
+case '13690667':
+case '13670645':
+case '13685455':
+case '13683367':
+case '13685292':
+case '13709383':
+case '13782955':
+case '13673815':
+case '13696534':
+case '13736163':
+case '13695724':
+case '13697337':
+case '13697016':
+case '13697656':
+case '13704137':
+case '13674516':
+case '13705038':
+case '13722345':
+case '13645017':
+case '13706708':
+case '13722342':
+case '13372097':
+case '13372913':
+case '13631363':
+case '13631274':
+case '13637178':
+case '13587277':
+case '13606987':
+case '13607217':
+case '13692877':
+case '13691855':
+case '13525338':
+case '13635930':
+case '13640106':
+case '13636780':
+case '13607346':
+case '13593736':
+case '13603361':
+case '13587415':
+case '13602472':
+case '13594441':
+case '13594547':
+case '13600588':
+case '13587065':
+case '13607258':
+case '13603087':
+case '13627358':
+case '13603423':
+case '13692300':
+case '13594507':
+case '13586312':
+case '13607826':
+case '13714897':
+case '13779841':
+case '13414437':
+case '13770951':
+case '13395596':
+case '13576932':
+case '13618627':
+case '13699427':
+case '13675165':
+case '13510822':
+case '13691010':
+case '13640049':
+case '13771057':
+case '13445830':
+case '13446358':
+case '13442811':
+case '13550303':
+case '13444602':
+case '13444074':
+case '13441980':
+case '13445274':
+case '13446502':
+case '13421283':
+case '13408834':
+case '13420891':
+case '13631403':
+case '13447030':
+case '13420492':
+case '13550389':
+case '13322881':
+case '13420855':
+case '13391273':
+case '13419902':
+case '13420430':
+case '13411858':
+case '13528746':
+case '13421482':
+case '13527316':
+case '13380627':
+case '13291344':
+case '13457226':
+case '13418803':
+case '13444462':
+case '13445662':
+case '13427021':
+case '13528413':
+case '13560756':
+case '13633276':
+case '13643383':
+case '13404850':
+case '13402199':
+case '13402371':
+case '13632723':
+case '13633395':
+case '13624644':
+case '13421890':
+case '13526671':
+case '13405967':
+case '13517618':
+case '13445418':
+case '13425875':
+case '13392166':
+case '13449365':
+case '13605704':
+case '13414306':
+case '13444890':
+case '13437502':
+case '13444218':
+case '13403421':
+case '13443904':
+case '12661777':
+case '13357100':
+case '13358547':
+case '13342795':
+case '13332632':
+case '13299299':
+case '13358838':
+case '13420959':
+case '13557361':
+case '13360281':
+case '13321968':
+case '13338166':
+case '13334669':
+case '13324941':
+case '13225846':
+case '13363391':
+case '13332611':
+case '13305688':
+case '13437512':
+case '13334876':
+case '13341907':
+case '13339694':
+case '13437819':
+case '13327883':
+case '13359757':
+case '13367374':
+case '13362467':
+case '13312261':
+case '13357424':
+case '13300187':
+case '13305630':
+case '13342504':
+case '13359613':
+case '13335236':
+case '13340063':
+case '13356216':
+case '13364467':
+case '13362683':
+case '13359308':
+case '13520661':
+case '13286109':
+case '13556659':
+case '13320004':
+case '13358624':
+case '13392181':
+case '13557257':
+case '13550351':
+case '13333543':
+case '13334746':
+case '13525509':
+case '13335085':
+case '13370131':
+case '13557132':
+case '13232455':
+case '13367158':
+case '13275325':
+case '13359286':
+case '13525536':
+case '12818011':
+            replaceFullStars();replaceFullStars();replaceFullStars();replaceFullStars();replaceHalfStars();
+            break;
+            //5.0*
+        case '13478612':
+        case '13555584':
+        case '13587141':
+        case '13372229':
+        case '13473279':
+        case '13383090':
+        case '13420430':
+        case '13644564':
+        case '13514456':
+        case '13385092':
+        case '13303128':
+        case '13319552':
+        case '13368534':
+        case '13287542':
+        case '13334725':
+        case '13216287':
+        case '13392185':
+        case '13367396':
+        case '13325031':
+        case '13342801':
+        case '13339929':
+        case '13384129':
+        case '13369237':
+        case '13370125':
+        case '13205106':
+        case '13218998':
+        case '13365755':
+        case '13299847':
+        case '13327400':
+        case '13227540':
+        case '13356146':
+        case '13281471':
+        case '13450780':
+        case '13281338':
+        case '13256636':
+        case '13451488':
+        case '13276069':
+        case '13178799':
+        case '13092490':
+        case '13135194':
+        case '13094240':
+        case '13275384':
+        case '13221696':
+        case '13364307':
+        case '13279751':
+        case '13359507':
+        case '13311167':
+        case '13275623':
+        case '13382262':
+        case '12924485':
+        case '13221616':
+        case '13186046':
+        case '13280205':
+        case '12492815':
+        case '13190804':
+        case '13113211':
+        case '12933783':
+        case '13371230':
+        case '13473265':
+        case '13457814':
+        case '13287542':
+        case '13371774':
+        case '13495475':
+        case '13563347':
+        case '13644921':
+        case '12922083':
+        case '13372229':
+        case '13286729':
+        case '13090562':
+        case '13478612':
+        case '13564446':
+        case '13729356':
+        case '13078732':
+        case '13286792':
+        case '13289792':
+        case '13131091':
+        case '13226391':
+        case '13372097':
+        case '13564582':
+        case '13563980':
+        case '13587141':
+        case '13644306':
+            case '13564593': case '13700538': case '13772610': case '13772673': case '13659089': case '13699204': case '13695658': case '13696067': 
+case '13685629': case '13190804': case '13078732': case '13572593': case '13587141': case '13600451': case '13502573': case '13601685': 
+case '13692256': case '13644564': case '13383090': case '13473279': case '13514456': case '13388286': case '13372229': case '13303128': 
+case '13334725': case '13384129': case '13392185': case '13385092': case '13319552': case '13368534': case '13287542': case '13216287': 
+case '13367396': case '13325031': case '13342801': case '13339929': case '13369237': case '13370125':
+            replaceFullStars();replaceFullStars();replaceFullStars();replaceFullStars();replaceFullStars();
+            break;
+        default:
+            //do nothing
+    }
+}
+}

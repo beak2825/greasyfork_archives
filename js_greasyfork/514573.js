@@ -1,0 +1,503 @@
+// ==UserScript==
+// @name         Github å¢žå¼º - é«˜é€Ÿä¸‹è½½
+// @name:zh-CN   Github å¢žå¼º - é«˜é€Ÿä¸‹è½½
+// @name:zh-TW   Github å¢žå¼· - é«˜é€Ÿä¸‹è¼‰
+// @name:en      Github Enhancement - High Speed Download
+// @version      2.6.9
+// @author       X.I.U
+// @description  é«˜é€Ÿä¸‹è½½ Git Clone/SSHã€Releaseã€Rawã€Code(ZIP) ç­‰æ–‡ä»¶ (å…¬ç›ŠåŠ é€Ÿ)ã€é¡¹ç›®åˆ—è¡¨å•æ–‡ä»¶å¿«æ·ä¸‹è½½ (â˜)ã€æ·»åŠ  git clone å‘½ä»¤
+// @description:zh-CN  é«˜é€Ÿä¸‹è½½ Git Clone/SSHã€Releaseã€Rawã€Code(ZIP) ç­‰æ–‡ä»¶ (å…¬ç›ŠåŠ é€Ÿ)ã€é¡¹ç›®åˆ—è¡¨å•æ–‡ä»¶å¿«æ·ä¸‹è½½ (â˜)
+// @description:zh-TW  é«˜é€Ÿä¸‹è¼‰ Git Clone/SSHã€Releaseã€Rawã€Code(ZIP) ç­‰æ–‡ä»¶ (å…¬ç›ŠåŠ é€Ÿ)ã€é …ç›®åˆ—è¡¨å–®æ–‡ä»¶å¿«æ·ä¸‹è¼‰ (â˜)
+// @description:en  High-speed download of Git Clone/SSH, Release, Raw, Code(ZIP) and other files (Based on public welfare), project list file quick download (â˜)
+// @match        *://github.com/*
+// @match        *://hub.incept.pw/*
+// @match        *://hub.nuaa.cf/*
+// @match        *://hub.yzuu.cf/*
+// @match        *://hub.scholar.rr.nu/*
+// @match        *://hub.whtrys.space/*
+// @match        *://dgithub.xyz/*
+// @match        *://kkgithub.com/*
+// @match        *://github.site/*
+// @match        *://github.store/*
+// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAACEUExURUxpcRgWFhsYGBgWFhcWFh8WFhoYGBgWFiUlJRcVFRkWFhgVFRgWFhgVFRsWFhgWFigeHhkWFv////////////r6+h4eHv///xcVFfLx8SMhIUNCQpSTk/r6+jY0NCknJ97e3ru7u+fn51BOTsPCwqGgoISDg6empmpoaK2srNDQ0FhXV3eXcCcAAAAXdFJOUwCBIZXMGP70BuRH2Ze/LpIMUunHkpQR34sfygAAAVpJREFUOMt1U+magjAMDAVb5BDU3W25b9T1/d9vaYpQKDs/rF9nSNJkArDA9ezQZ8wPbc8FE6eAiQUsOO1o19JolFibKCdHGHC0IJezOMD5snx/yE+KOYYr42fPSufSZyazqDoseTPw4lGJNOu6LBXVUPBG3lqYAOv/5ZwnNUfUifzBt8gkgfgINmjxOpgqUA147QWNaocLniqq3QsSVbQHNp45N/BAwoYQz9oUJEiE4GMGfoBSMj5gjeWRIMMqleD/CAzUHFqTLyjOA5zjNnwa4UCEZ2YK3khEcBXHjVBtEFeIZ6+NxYbPqWp1DLKV42t6Ujn2ydyiPi9nX0TTNAkVVZ/gozsl6FbrktkwaVvL2TRK0C8Ca7Hck7f5OBT6FFbLATkL2ugV0tm0RLM9fedDvhWstl8Wp9AFDjFX7yOY/lJrv8AkYuz7fuP8dv9izCYH+x3/LBnj9fYPBTpJDNzX+7cAAAAASUVORK5CYII=
+// @grant        GM_registerMenuCommand
+// @grant        GM_unregisterMenuCommand
+// @grant        GM_openInTab
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_notification
+// @grant        GM_setClipboard
+// @grant        window.onurlchange
+// @sandbox      JavaScript
+// @license      GPL-3.0 License
+// @run-at       document-end
+// @namespace    https://greasyfork.org/scripts/412245
+// @supportURL   https://github.com/XIU2/UserScript
+// @homepageURL  https://github.com/XIU2/UserScript
+// @downloadURL https://update.greasyfork.org/scripts/514573/Github%20%C3%A5%C2%A2%C5%BE%C3%A5%C2%BC%C2%BA%20-%20%C3%A9%C2%AB%CB%9C%C3%A9%E2%82%AC%C5%B8%C3%A4%C2%B8%E2%80%B9%C3%A8%C2%BD%C2%BD.user.js
+// @updateURL https://update.greasyfork.org/scripts/514573/Github%20%C3%A5%C2%A2%C5%BE%C3%A5%C2%BC%C2%BA%20-%20%C3%A9%C2%AB%CB%9C%C3%A9%E2%82%AC%C5%B8%C3%A4%C2%B8%E2%80%B9%C3%A8%C2%BD%C2%BD.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    var backColor = '#ffffff', fontColor = '#888888', menu_rawFast = GM_getValue('xiu2_menu_raw_fast'), menu_rawFast_ID, menu_rawDownLink_ID, menu_gitClone_ID, menu_feedBack_ID;
+    const download_url_us = [
+        ['https://gh.h233.eu.org/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@X.I.U/XIU2] æä¾›'],
+        ['https://gh.xiu2.us.kg/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@X.I.U/XIU2] æä¾›'],
+        //['https://gh.api.99988866.xyz/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [hunshcn/gh-proxy] æä¾›'], // å®˜æ–¹æ¼”ç¤ºç«™ç”¨çš„äººå¤ªå¤šäº†
+        ['https://gh.ddlc.top/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@mtr-static-official] æä¾›'],
+        //['https://gh2.yanqishui.work/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@HongjieCN] æä¾›'], // é”™è¯¯
+        ['https://dl.ghpig.top/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [feizhuqwq.com] æä¾›'],
+        //['https://gh.flyinbug.top/gh/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [Mintimate] æä¾›'], // é”™è¯¯
+        ['https://slink.ltd/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [çŸ¥äº†å°ç«™] æä¾›'],
+        ['https://gh.con.sh/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [ä½šå] æä¾›'],
+        //['https://ghps.cc/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [ä½šå] æä¾›'], // æç¤º blocked
+        ['https://gh-proxy.com/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [ä½šå] æä¾›'],
+        ['https://cors.isteed.cc/github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@Lufs\'s] æä¾›'],
+        ['https://hub.gitmirror.com/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [GitMirror] æä¾›'],
+        ['https://sciproxy.com/github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [sciproxy.com] æä¾›'],
+        ['https://ghproxy.cc/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ æ´›æ‰çŸ¶] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        ['https://cf.ghproxy.cc/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        ['https://www.ghproxy.cc/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        ['https://ghproxy.cn/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        ['https://www.ghproxy.cn/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        ['https://github.site', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        ['https://github.store', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://gh.jiasu.in/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@0-RTT] æä¾›'], // 404
+        ['https://github.tmby.shop/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [blog.tmby.shop] æä¾›'],
+        ['https://github.moeyy.xyz/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@Moeyy] æä¾›'],
+        ['https://hub.whtrys.space', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [FastGit ç¾¤ç»„æˆå‘˜] æä¾›'],
+        ['https://dgithub.xyz', 'ç¾Žå›½', '[ç¾Žå›½ è¥¿é›…å›¾] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [dgithub.xyz] æä¾›'],
+        ['https://gh-proxy.ygxz.in/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ æ´›æ‰çŸ¶] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@ä¸€ä¸ªå°ç«™ www.ygxz.in] æä¾›'],
+        ['https://download.ixnic.net', 'ç¾Žå›½', '[ç¾Žå›½ æ´›æ‰çŸ¶] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@é»ƒåŸ”èˆˆåœ‹] æä¾›'],
+    //], download_url = [ // ä¸ºäº†ç¼“è§£éžç¾Žå›½å…¬ç›ŠèŠ‚ç‚¹åŽ‹åŠ›ï¼ˆè€ƒè™‘åˆ°å¾ˆå¤šäººæ— è§†å‰é¢éšæœºçš„ç¾Žå›½èŠ‚ç‚¹ï¼‰ï¼Œå¹²è„†ä¹Ÿå°†å…¶åŠ å…¥éšæœº
+        ['https://ghproxy.net/https://github.com', 'è‹±å›½', '[è‹±å›½ä¼¦æ•¦] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [ghproxy] æä¾›&#10;&#10;æç¤ºï¼šå¸Œæœ›å¤§å®¶å°½é‡å¤šä½¿ç”¨ç¾Žå›½èŠ‚ç‚¹ï¼ˆæ¯æ¬¡éšæœº è´Ÿè½½å‡è¡¡ï¼‰ï¼Œ&#10;é¿å…æµé‡éƒ½é›†ä¸­åˆ°äºšæ´²å…¬ç›ŠèŠ‚ç‚¹ï¼Œå‡å°‘æˆæœ¬åŽ‹åŠ›ï¼Œå…¬ç›Šæ‰èƒ½æ›´æŒä¹…~'],
+        ['https://ghp.ci/https://github.com', 'å…¶ä»–', '[æ—¥æœ¬ã€éŸ©å›½ã€æ–°åŠ å¡ã€ç¾Žå›½ã€å¾·å›½ç­‰]ï¼ˆCDN ä¸å›ºå®šï¼‰ - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [ghproxy] æä¾›&#10;&#10;æç¤ºï¼šå¸Œæœ›å¤§å®¶å°½é‡å¤šä½¿ç”¨ç¾Žå›½èŠ‚ç‚¹ï¼ˆæ¯æ¬¡éšæœº è´Ÿè½½å‡è¡¡ï¼‰ï¼Œ&#10;é¿å…æµé‡éƒ½é›†ä¸­åˆ°äºšæ´²å…¬ç›ŠèŠ‚ç‚¹ï¼Œå‡å°‘æˆæœ¬åŽ‹åŠ›ï¼Œå…¬ç›Šæ‰èƒ½æ›´æŒä¹…~'],
+        ['https://kkgithub.com', 'å…¶ä»–', '[ä¸­å›½é¦™æ¸¯ã€æ—¥æœ¬ã€éŸ©å›½ã€æ–°åŠ å¡ç­‰] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [help.kkgithub.com] æä¾›&#10;&#10;æç¤ºï¼šå¸Œæœ›å¤§å®¶å°½é‡å¤šä½¿ç”¨ç¾Žå›½èŠ‚ç‚¹ï¼ˆæ¯æ¬¡éšæœº è´Ÿè½½å‡è¡¡ï¼‰ï¼Œ&#10;é¿å…æµé‡éƒ½é›†ä¸­åˆ°äºšæ´²å…¬ç›ŠèŠ‚ç‚¹ï¼Œå‡å°‘æˆæœ¬åŽ‹åŠ›ï¼Œå…¬ç›Šæ‰èƒ½æ›´æŒä¹…~'],
+        //['https://download.incept.pw', 'é¦™æ¸¯', '[ä¸­å›½é¦™æ¸¯] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [FastGit ç¾¤ç»„æˆå‘˜] æä¾›&#10;&#10;æç¤ºï¼šå¸Œæœ›å¤§å®¶å°½é‡å¤šä½¿ç”¨å‰é¢çš„ç¾Žå›½èŠ‚ç‚¹ï¼ˆæ¯æ¬¡éšæœº 4 ä¸ªæ¥è´Ÿè½½å‡è¡¡ï¼‰ï¼Œ&#10;é¿å…æµé‡éƒ½é›†ä¸­åˆ°äºšæ´²å…¬ç›ŠèŠ‚ç‚¹ï¼Œå‡å°‘æˆæœ¬åŽ‹åŠ›ï¼Œå…¬ç›Šæ‰èƒ½æ›´æŒä¹…~'], // ERR_SSL_PROTOCOL_ERROR
+    ], clone_url = [
+        ['https://gitclone.com', 'å›½å†…', '[ä¸­å›½ å›½å†…] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [GitClone] æä¾›&#10;&#10; - ç¼“å­˜ï¼šæœ‰&#10; - é¦–æ¬¡æ¯”è¾ƒæ…¢ï¼Œç¼“å­˜åŽè¾ƒå¿«'],
+        ['https://kkgithub.com', 'é¦™æ¸¯', '[ä¸­å›½é¦™æ¸¯ã€æ—¥æœ¬ã€æ–°åŠ å¡ç­‰] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [help.kkgithub.com] æä¾›'],
+        //['https://hub.incept.pw', 'é¦™æ¸¯', '[ä¸­å›½é¦™æ¸¯ã€ç¾Žå›½] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [FastGit ç¾¤ç»„æˆå‘˜] æä¾›'], // é”™è¯¯
+        ['https://gitdl.cn/https://github.com', 'é¦™æ¸¯', '[ä¸­å›½é¦™æ¸¯] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [gitdl] æä¾›'],
+        ['https://ghp.ci/https://github.com', 'éŸ©å›½', '[æ—¥æœ¬ã€éŸ©å›½ã€æ–°åŠ å¡ã€ç¾Žå›½ã€å¾·å›½ç­‰]ï¼ˆCDN ä¸å›ºå®šï¼‰ - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [ghproxy] æä¾›'],
+        ['https://githubfast.com', 'éŸ©å›½', '[éŸ©å›½] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [Github Fast] æä¾›'],
+        ['https://ghproxy.net/https://github.com', 'æ—¥æœ¬', '[æ—¥æœ¬ å¤§é˜ª] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [ghproxy] æä¾›'],
+        //['https://github.moeyy.xyz/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@Moeyy] æä¾›'],
+        //['https://slink.ltd/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [çŸ¥äº†å°ç«™] æä¾›'],
+        //['https://hub.gitmirror.com/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [GitMirror] æä¾›'],
+        //['https://gh-proxy.com/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [ghproxy] æä¾›'],
+        //['https://sciproxy.com/github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [sciproxy.com] æä¾›'],
+        //['https://ghproxy.cc/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ æ´›æ‰çŸ¶] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://cf.ghproxy.cc/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://www.ghproxy.cc/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://ghproxy.cn/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://www.ghproxy.cn/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://github.site', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://github.store', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://gh.jiasu.in/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@0-RTT] æä¾›'], // 404
+        //['https://github.tmby.shop/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [blog.tmby.shop] æä¾›'],
+        //['https://dgithub.xyz', 'ç¾Žå›½', '[ç¾Žå›½ è¥¿é›…å›¾] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [dgithub.xyz] æä¾›'],
+        //['https://gh-proxy.ygxz.in/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ æ´›æ‰çŸ¶] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@ä¸€ä¸ªå°ç«™ www.ygxz.in] æä¾›'],
+        //['https://hub.nuaa.cf', 'ç¾Žå›½', '[ç¾Žå›½ æ´›æ‰çŸ¶] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [FastGit ç¾¤ç»„æˆå‘˜] æä¾›'], // è¯ä¹¦åˆ°æœŸ
+        //['https://hub.yzuu.cf', 'ç¾Žå›½', '[ç¾Žå›½ çº½çº¦] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [FastGit ç¾¤ç»„æˆå‘˜] æä¾›'], // è¯ä¹¦åˆ°æœŸ
+        //['https://hub.scholar.rr.nu', 'ç¾Žå›½', '[ç¾Žå›½ çº½çº¦] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [FastGit ç¾¤ç»„æˆå‘˜] æä¾›'], // è¯ä¹¦åˆ°æœŸ
+        //['https://hub.whtrys.space', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [FastGit ç¾¤ç»„æˆå‘˜] æä¾›'],
+    ], clone_ssh_url = [
+        ['ssh://git@ssh.github.com:443/', 'Github åŽŸç”Ÿ', '[æ—¥æœ¬ã€æ–°åŠ å¡ç­‰] - Github å®˜æ–¹æä¾›çš„ 443 ç«¯å£çš„ SSHï¼ˆä¾ç„¶æ˜¯ SSH åè®®ï¼‰ï¼Œé€‚ç”¨äºŽé™åˆ¶è®¿é—® 22 ç«¯å£çš„ç½‘ç»œçŽ¯å¢ƒ'],
+        //['git@ssh.fastgit.org:', 'é¦™æ¸¯', '[ä¸­å›½ é¦™æ¸¯] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [FastGit] æä¾›'], // æŒ‚äº†
+        //['git@git.zhlh6.cn:', 'ç¾Žå›½', '[ç¾Žå›½ æ´›æ‰çŸ¶]'] // æŒ‚äº†
+    ], raw_url = [
+        ['https://raw.githubusercontent.com', 'Github åŽŸç”Ÿ', '[æ—¥æœ¬ ä¸œäº¬]'],
+        ['https://raw.kkgithub.com', 'é¦™æ¸¯ 1', '[ä¸­å›½é¦™æ¸¯ã€æ—¥æœ¬ã€æ–°åŠ å¡ç­‰] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [help.kkgithub.com] æä¾›'],
+        ['https://jsd.proxy.aks.moe/gh', 'é¦™æ¸¯ 2', '[ä¸­å›½ é¦™æ¸¯] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [cdn.akass.cn] æä¾›&#10;&#10; - ç¼“å­˜ï¼šæœ‰ï¼ˆå®˜æ–¹æ ‡æ³¨ 2 å°æ—¶ï¼‰'],
+        ['https://gitdl.cn/https://raw.githubusercontent.com', 'é¦™æ¸¯ 4', '[ä¸­å›½é¦™æ¸¯] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [gitdl] æä¾›'],
+        ['https://ghp.ci/https://raw.githubusercontent.com', 'éŸ©å›½', '[æ—¥æœ¬ã€éŸ©å›½ã€æ–°åŠ å¡ã€ç¾Žå›½ã€å¾·å›½ç­‰]ï¼ˆCDN ä¸å›ºå®šï¼‰ - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [ghproxy] æä¾›'],
+        ['https://ghproxy.net/https://raw.githubusercontent.com', 'æ—¥æœ¬ 1', '[æ—¥æœ¬ å¤§é˜ª] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [ghproxy] æä¾›'],
+        ['https://fastly.jsdelivr.net/gh', 'æ—¥æœ¬ 2', '[æ—¥æœ¬ ä¸œäº¬] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [JSDelivr CDN] æä¾›&#10;&#10; - ç¼“å­˜ï¼šæœ‰&#10; - ä¸æ”¯æŒå¤§å°è¶…è¿‡ 50 MB çš„æ–‡ä»¶&#10; - ä¸æ”¯æŒç‰ˆæœ¬å·æ ¼å¼çš„åˆ†æ”¯åï¼ˆå¦‚ v1.2.3ï¼‰'],
+        ['https://jsdelivr.pai233.top/gh', 'æ—¥æœ¬ 3', '[æ—¥æœ¬ ä¸œäº¬]ï¼ˆVercel Anycastï¼‰ - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [blog.pai233.top] æä¾›&#10;&#10; - ç¼“å­˜ï¼šæœ‰'],
+        //['https://gcore.jsdelivr.net/gh', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [JSDelivr CDN] æä¾›&#10;&#10; - ç¼“å­˜ï¼šæœ‰&#10; - ä¸æ”¯æŒå¤§å°è¶…è¿‡ 50 MB çš„æ–‡ä»¶&#10; - ä¸æ”¯æŒç‰ˆæœ¬å·æ ¼å¼çš„åˆ†æ”¯åï¼ˆå¦‚ v1.2.3ï¼‰'], // å˜æˆ ç¾Žå›½ Cloudflare CDN äº†
+        //['https://jsdelivr.b-cdn.net/gh', 'å…¶ä»–', '[ä¸­å›½é¦™æ¸¯ã€å°æ¹¾ã€æ—¥æœ¬ã€æ–°åŠ å¡ç­‰]ï¼ˆCDN ä¸å›ºå®šï¼‰ - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@rttwyjz] æä¾›&#10;&#10; - ç¼“å­˜ï¼šæœ‰'], // ç–‘ä¼¼ SNI é˜»æ–­
+        //['https://github.moeyy.xyz/https://raw.githubusercontent.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@Moeyy] æä¾›'],
+        //['https://raw.cachefly.998111.xyz', 'å…¶ä»– 4', '[æ–°åŠ å¡ã€æ—¥æœ¬ã€å°åº¦ç­‰]ï¼ˆAnycast CDN ä¸å›ºå®šï¼‰ - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@XxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxXxX0] æä¾›&#10;&#10; - ç¼“å­˜ï¼šæœ‰ï¼ˆçº¦ 12 å°æ—¶ï¼‰'], // è¯ä¹¦åˆ°æœŸ
+        ['https://raw.incept.pw', 'æ–°åŠ å¡', '[æ–°åŠ å¡] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [FastGit ç¾¤ç»„æˆå‘˜] æä¾›'],
+        //['https://ghproxy.cc/https://raw.githubusercontent.com', 'ç¾Žå›½', '[ç¾Žå›½ æ´›æ‰çŸ¶] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://cf.ghproxy.cc/https://raw.githubusercontent.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://www.ghproxy.cc/https://raw.githubusercontent.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://ghproxy.cn/https://raw.githubusercontent.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://www.ghproxy.cn/https://raw.githubusercontent.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://github.site', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://github.store', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@yionchiii] æä¾›'],
+        //['https://gh.jiasu.in/https://raw.githubusercontent.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@0-RTT] æä¾›'], // 404
+        //['https://github.tmby.shop/https://raw.githubusercontent.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [blog.tmby.shop] æä¾›'],
+        //['https://gh-proxy.com/https://raw.githubusercontent.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [ghproxy] æä¾›'],
+        //['https://dgithub.xyz', 'ç¾Žå›½', '[ç¾Žå›½ è¥¿é›…å›¾] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [dgithub.xyz] æä¾›'],
+        //['https://gh-proxy.ygxz.in/https://github.com', 'ç¾Žå›½', '[ç¾Žå›½ æ´›æ‰çŸ¶] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@ä¸€ä¸ªå°ç«™ www.ygxz.in] æä¾›'],
+        //['https://raw.ixnic.net', 'ç¾Žå›½', '[ç¾Žå›½ æ´›æ‰çŸ¶] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [@é»ƒåŸ”èˆˆåœ‹] æä¾›'],
+        //['https://raw.nuaa.cf', 'ç¾Žå›½', '[ç¾Žå›½ æ´›æ‰çŸ¶] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [FastGit ç¾¤ç»„æˆå‘˜] æä¾›'], // è¯ä¹¦åˆ°æœŸ
+        //['https://raw.yzuu.cf', 'ç¾Žå›½', '[ç¾Žå›½ çº½çº¦] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [FastGit ç¾¤ç»„æˆå‘˜] æä¾›'], // è¯ä¹¦åˆ°æœŸ
+        //['https://raw.scholar.rr.nu', 'ç¾Žå›½', '[ç¾Žå›½ çº½çº¦] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [FastGit ç¾¤ç»„æˆå‘˜] æä¾›'], // è¯ä¹¦åˆ°æœŸ
+        //['https://raw.gitmirror.com', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [GitMirror] æä¾›&#10;&#10; - ç¼“å­˜ï¼šæœ‰'],
+        //['https://cdn.54188.cf/gh', 'ç¾Žå›½', '[ç¾Žå›½ Cloudflare CDN] - è¯¥å…¬ç›ŠåŠ é€Ÿæºç”± [PencilNavigator] æä¾›&#10;&#10; - ç¼“å­˜ï¼šæœ‰'],
+        //['https://git.yumenaka.net/https://raw.githubusercontent.com', 'ç¾Žå›½', '[ç¾Žå›½ åœ£ä½•å¡ž]'], // è¿žæŽ¥è¶…æ—¶
+    ], svg = [
+        '<svg class="octicon octicon-cloud-download" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path d="M9 12h2l-3 3-3-3h2V7h2v5zm3-8c0-.44-.91-3-4.5-3C5.08 1 3 2.92 3 5 1.02 5 0 6.52 0 8c0 1.53 1 3 3 3h3V9.7H3C1.38 9.7 1.3 8.28 1.3 8c0-.17.05-1.7 1.7-1.7h1.3V5c0-1.39 1.56-2.7 3.2-2.7 2.55 0 3.13 1.55 3.2 1.8v1.2H12c.81 0 2.7.22 2.7 2.2 0 2.09-2.25 2.2-2.7 2.2h-2V11h2c2.08 0 4-1.16 4-3.5C16 5.06 14.08 4 12 4z"></path></svg>'
+    ], style = ['padding:0 6px; margin-right: -1px; border-radius: 2px; background-color: var(--XIU2-back-Color); border-color: rgba(27, 31, 35, 0.1); font-size: 11px; color: var(--XIU2-font-Color);'];
+
+    if (menu_rawFast == null){menu_rawFast = 1; GM_setValue('xiu2_menu_raw_fast', 1)};
+    if (GM_getValue('menu_rawDownLink') == null){GM_setValue('menu_rawDownLink', true)};
+    if (GM_getValue('menu_gitClone') == null){GM_setValue('menu_gitClone', true)};
+    registerMenuCommand();
+    // æ³¨å†Œè„šæœ¬èœå•
+    function registerMenuCommand() {
+        // å¦‚æžœåé¦ˆèœå•IDä¸æ˜¯ nullï¼Œåˆ™åˆ é™¤æ‰€æœ‰è„šæœ¬èœå•
+        if (menu_feedBack_ID) {GM_unregisterMenuCommand(menu_rawFast_ID); GM_unregisterMenuCommand(menu_rawDownLink_ID); GM_unregisterMenuCommand(menu_gitClone_ID); GM_unregisterMenuCommand(menu_feedBack_ID); menu_rawFast = GM_getValue('xiu2_menu_raw_fast');}
+        // é¿å…åœ¨å‡å°‘ raw æ•°ç»„åŽï¼Œç”¨æˆ·å‚¨å­˜çš„æ•°æ®å¤§äºŽæ•°ç»„è€ŒæŠ¥é”™
+        if (menu_rawFast > raw_url.length - 1) menu_rawFast = 0
+        if (GM_getValue('menu_rawDownLink')) menu_rawFast_ID = GM_registerMenuCommand(`${['0ï¸âƒ£','1ï¸âƒ£','2ï¸âƒ£','3ï¸âƒ£','4ï¸âƒ£','5ï¸âƒ£','6ï¸âƒ£','7ï¸âƒ£','8ï¸âƒ£','9ï¸âƒ£','ðŸ”Ÿ'][menu_rawFast]} [ ${raw_url[menu_rawFast][1]} ] åŠ é€Ÿæº (â˜) - ç‚¹å‡»åˆ‡æ¢`, menu_toggle_raw_fast);
+        menu_rawDownLink_ID = GM_registerMenuCommand(`${GM_getValue('menu_rawDownLink')?'âœ…':'âŒ'} é¡¹ç›®åˆ—è¡¨å•æ–‡ä»¶å¿«æ·ä¸‹è½½ (â˜)`, function(){if (GM_getValue('menu_rawDownLink') == true) {GM_setValue('menu_rawDownLink', false); GM_notification({text: `å·²å…³é—­ [é¡¹ç›®åˆ—è¡¨å•æ–‡ä»¶å¿«æ·ä¸‹è½½ (â˜)] åŠŸèƒ½\nï¼ˆç‚¹å‡»åˆ·æ–°ç½‘é¡µåŽç”Ÿæ•ˆï¼‰`, timeout: 3500, onclick: function(){location.reload();}});} else {GM_setValue('menu_rawDownLink', true); GM_notification({text: `å·²å¼€å¯ [é¡¹ç›®åˆ—è¡¨å•æ–‡ä»¶å¿«æ·ä¸‹è½½ (â˜)] åŠŸèƒ½\nï¼ˆç‚¹å‡»åˆ·æ–°ç½‘é¡µåŽç”Ÿæ•ˆï¼‰`, timeout: 3500, onclick: function(){location.reload();}});}registerMenuCommand();});
+        menu_gitClone_ID = GM_registerMenuCommand(`${GM_getValue('menu_gitClone')?'âœ…':'âŒ'} æ·»åŠ  git clone å‘½ä»¤`, function(){if (GM_getValue('menu_gitClone') == true) {GM_setValue('menu_gitClone', false); GM_notification({text: `å·²å…³é—­ [æ·»åŠ  git clone å‘½ä»¤] åŠŸèƒ½\nï¼ˆç‚¹å‡»åˆ·æ–°ç½‘é¡µåŽç”Ÿæ•ˆï¼‰`, timeout: 3500, onclick: function(){location.reload();}});} else {GM_setValue('menu_gitClone', true); GM_notification({text: `å·²å¼€å¯ [æ·»åŠ  git clone å‘½ä»¤] åŠŸèƒ½\nï¼ˆç‚¹å‡»åˆ·æ–°ç½‘é¡µåŽç”Ÿæ•ˆï¼‰`, timeout: 3500, onclick: function(){location.reload();}});}registerMenuCommand();});
+        menu_feedBack_ID = GM_registerMenuCommand('ðŸ’¬ åé¦ˆ & å»ºè®® [Github]', function () {window.GM_openInTab('https://github.com/XIU2/UserScript', {active: true,insert: true,setParent: true});window.GM_openInTab('https://greasyfork.org/zh-CN/scripts/412245/feedback', {active: true,insert: true,setParent: true});});
+    }
+
+    // åˆ‡æ¢åŠ é€Ÿæº
+    function menu_toggle_raw_fast() {
+        // å¦‚æžœå½“å‰åŠ é€Ÿæºä½ç½®å¤§äºŽç­‰äºŽåŠ é€Ÿæºæ€»æ•°ï¼Œåˆ™æ”¹ä¸ºç¬¬ä¸€ä¸ªåŠ é€Ÿæºï¼Œåä¹‹é€’å¢žä¸‹ä¸€ä¸ªåŠ é€Ÿæº
+        if (menu_rawFast >= raw_url.length - 1) {menu_rawFast = 0;} else {menu_rawFast += 1;}
+        GM_setValue('xiu2_menu_raw_fast', menu_rawFast);
+        delRawDownLink(); // åˆ é™¤æ—§åŠ é€Ÿæº
+        addRawDownLink(); // æ·»åŠ æ–°åŠ é€Ÿæº
+        GM_notification({text: "å·²åˆ‡æ¢åŠ é€Ÿæºä¸ºï¼š" + raw_url[menu_rawFast][1], timeout: 3000}); // æç¤ºæ¶ˆæ¯
+        registerMenuCommand(); // é‡æ–°æ³¨å†Œè„šæœ¬èœå•
+    };
+
+    colorMode(); // é€‚é…ç™½å¤©/å¤œé—´ä¸»é¢˜æ¨¡å¼
+    setTimeout(addRawFile, 1000); // Raw åŠ é€Ÿ
+    setTimeout(addRawDownLink, 2000); // Raw å•æ–‡ä»¶å¿«æ·ä¸‹è½½ï¼ˆâ˜ï¼‰ï¼Œå»¶è¿Ÿ 2 ç§’æ‰§è¡Œï¼Œé¿å…è¢« pjax åˆ·æŽ‰
+
+    // Tampermonkey v4.11 ç‰ˆæœ¬æ·»åŠ çš„ onurlchange äº‹ä»¶ grantï¼Œå¯ä»¥ç›‘æŽ§ pjax ç­‰ç½‘é¡µçš„ URL å˜åŒ–
+    if (window.onurlchange === undefined) addUrlChangeEvent();
+    window.addEventListener('urlchange', function() {
+        colorMode(); // é€‚é…ç™½å¤©/å¤œé—´ä¸»é¢˜æ¨¡å¼
+        if (location.pathname.indexOf('/releases')) addRelease(); // Release åŠ é€Ÿ
+        setTimeout(addRawFile, 1000); // Raw åŠ é€Ÿ
+        setTimeout(addRawDownLink, 2000); // Raw å•æ–‡ä»¶å¿«æ·ä¸‹è½½ï¼ˆâ˜ï¼‰ï¼Œå»¶è¿Ÿ 2 ç§’æ‰§è¡Œï¼Œé¿å…è¢« pjax åˆ·æŽ‰
+        setTimeout(addRawDownLink_, 1000); // åœ¨æµè§ˆå™¨è¿”å›ž/å‰è¿›æ—¶é‡æ–°æ·»åŠ  Raw ä¸‹è½½é“¾æŽ¥ï¼ˆâ˜ï¼‰é¼ æ ‡äº‹ä»¶
+    });
+
+
+    // Github Git Clone/SSHã€Releaseã€Download ZIP æ”¹ç‰ˆä¸ºåŠ¨æ€åŠ è½½æ–‡ä»¶åˆ—è¡¨ï¼Œå› æ­¤éœ€è¦ç›‘æŽ§ç½‘é¡µå…ƒç´ å˜åŒ–
+    const callback = (mutationsList, observer) => {
+        if (location.pathname.indexOf('/releases') > -1) { // Release
+            for (const mutation of mutationsList) {
+                for (const target of mutation.addedNodes) {
+                    if (target.nodeType !== 1) return
+                    if (target.tagName === 'DIV' && target.dataset.viewComponent === 'true' && target.classList[0] === 'Box') addRelease();
+                }
+            }
+        } else if (document.querySelector('#repository-container-header:not([hidden])')) { // é¡¹ç›®é¦–é¡µ
+            for (const mutation of mutationsList) {
+                for (const target of mutation.addedNodes) {
+                    if (target.nodeType !== 1) return
+                    if (target.tagName === 'DIV' && target.parentElement.id === '__primerPortalRoot__') {
+                        addDownloadZIP(target);
+                        addGitClone(target);
+                        addGitCloneSSH(target);
+                    } else if (target.tagName === 'DIV' && target.className.indexOf('Box-sc-') != -1) {
+                        if (target.querySelector('input[value^="https:"]')) {
+                            addGitCloneClear('.XIU2-GCS'); addGitClone(target);
+                        } else if (target.querySelector('input[value^="git@"]')) {
+                            addGitCloneClear('.XIU2-GC'); addGitCloneSSH(target);
+                        } else if (target.querySelector('input[value^="gh "]')) {
+                            addGitCloneClear('.XIU2-GC, .XIU2-GCS');
+                        }
+                    }
+                }
+            }
+        }
+    };
+    const observer = new MutationObserver(callback);
+    observer.observe(document, { childList: true, subtree: true });
+
+
+    // download_url éšæœºå‡ ä¸ªç¾Žå›½åŠ é€Ÿæº
+    function get_New_download_url() {
+        //return download_url_us // å…¨è¾“å‡ºè°ƒè¯•ç”¨
+        let shuffled = download_url_us.slice(0), i = download_url_us.length, min = i - 6, temp, index;
+        while (i-- > min) {index = Math.floor((i + 1) * Math.random()); temp = shuffled[index]; shuffled[index] = shuffled[i]; shuffled[i] = temp;}
+        return shuffled.slice(min)//.concat(download_url); // éšæœºæ´—ç‰Œ download_url_us æ•°ç»„å¹¶å–å‰å‡ ä¸ªï¼Œç„¶åŽå°†å…¶åˆå¹¶è‡³ download_url æ•°ç»„
+        // ä¸ºäº†ç¼“è§£éžç¾Žå›½å…¬ç›ŠèŠ‚ç‚¹åŽ‹åŠ›ï¼ˆè€ƒè™‘åˆ°å¾ˆå¤šäººæ— è§†å‰é¢éšæœºçš„ç¾Žå›½èŠ‚ç‚¹ï¼‰ï¼Œå¹²è„†ä¹Ÿå°†å…¶åŠ å…¥éšæœº
+    }
+
+    // Release
+    function addRelease() {
+        let html = document.querySelectorAll('.Box-footer'); if (html.length == 0 || location.pathname.indexOf('/releases') == -1) return
+        let divDisplay = 'margin-left: -90px;', new_download_url = get_New_download_url();
+        if (document.documentElement.clientWidth > 755) {divDisplay = 'margin-top: -3px;margin-left: 8px;display: inherit;';}; // è°ƒæ•´å°å±å¹•æ—¶çš„æ ·å¼
+        for (const current of html) {
+            if (current.querySelector('.XIU2-RS')) continue
+            current.querySelectorAll('li.Box-row a').forEach(function (_this) {
+                let href = _this.href.split(location.host),
+                    url = '', _html = `<div class="XIU2-RS" style="${divDisplay}">`;
+
+                for (let i=0;i<new_download_url.length;i++) {
+                    if (new_download_url[i][3] !== undefined && url.indexOf('/archive/') !== -1) {
+                        url = new_download_url[i][3] + href[1]
+                    } else {
+                        url = new_download_url[i][0] + href[1]
+                    }
+                    _html += `<a style="${style[0]}" class="btn" href="${url}" title="${new_download_url[i][2]}" rel="noreferrer noopener nofollow">${new_download_url[i][1]}</a>`
+                }
+                _this.parentElement.nextElementSibling.insertAdjacentHTML('beforeend', _html + '</div>');
+            });
+        }
+    }
+
+
+    // Download ZIP
+    function addDownloadZIP(target) {
+        let html = target.querySelector('ul[class^=List__ListBox-sc-] ul[class^=List__ListBox-sc-]>li:last-child');if (!html) return
+        let href_script = document.querySelector('react-partial[partial-name=repos-overview]>script[data-target="react-partial.embeddedData"]'),
+            href_slice = href_script.textContent.slice(href_script.textContent.indexOf('"zipballUrl":"')+14),
+            href = href_slice.slice(0, href_slice.indexOf('"')),
+            url = '', _html = '', new_download_url = get_New_download_url();
+
+        // å…‹éš†åŽŸ Download ZIP å…ƒç´ ï¼Œå¹¶å®šä½ <a> <span> æ ‡ç­¾
+        let html_clone = html.cloneNode(true),
+            html_clone_a = html_clone.querySelector('a[href$=".zip"]'),
+            html_clone_span = html_clone.querySelector('span[id]');
+
+        for (let i=0;i<new_download_url.length;i++) {
+            if (new_download_url[i][3] === '') continue
+
+            if (new_download_url[i][3] !== undefined) {
+                url = new_download_url[i][3] + href
+            } else {
+                url = new_download_url[i][0] + href
+            }
+            html_clone_a.href = url
+            html_clone_a.setAttribute('title', new_download_url[i][2].replaceAll('&#10;','\n'))
+            html_clone_span.textContent = 'Download ZIP ' + new_download_url[i][1]
+            _html += html_clone.outerHTML
+        }
+        html.insertAdjacentHTML('afterend', _html);
+    }
+
+    // Git Clone åˆ‡æ¢æ¸…ç†
+    function addGitCloneClear(css) {
+        document.querySelectorAll(css).forEach((e)=>{e.remove()})
+    }
+
+    // Git Clone
+    function addGitClone(target) {
+        let html = target.querySelector('input[value^="https:"]');if (!html) return
+        let href_split = html.value.split(location.host)[1],
+            html_parent = '<div style="margin-top: 4px;" class="XIU2-GC ' + html.parentElement.className + '">',
+            url = '', _html = '', _gitClone = '';
+        html.nextElementSibling.hidden = true; // éšè—å³ä¾§å¤åˆ¶æŒ‰é’®ï¼ˆè€ƒè™‘åˆ°èƒ½ç›´æŽ¥ç‚¹å‡»å¤åˆ¶ï¼Œå°±ä¸å†é‡å¤å®žçŽ°å¤åˆ¶æŒ‰é’®äº‹ä»¶äº†ï¼‰
+        if (html.parentElement.nextElementSibling.tagName === 'SPAN'){
+            html.parentElement.nextElementSibling.textContent += ' (â†‘ç‚¹å‡»ä¸Šé¢æ–‡å­—å¯å¤åˆ¶)'
+        }
+        if (GM_getValue('menu_gitClone')) {_gitClone='git clone '; html.value = _gitClone + html.value; html.setAttribute('value', html.value);}
+        // å…‹éš†åŽŸ Git Clone å…ƒç´ 
+        let html_clone = html.cloneNode(true);
+        for (let i=0;i<clone_url.length;i++) {
+            if (clone_url[i][0] === 'https://gitclone.com') {
+                url = clone_url[i][0] + '/github.com' + href_split
+            } else {
+                url = clone_url[i][0] + href_split
+            }
+            html_clone.title = `${url}\n\n${clone_url[i][2].replaceAll('&#10;','\n')}\n\næç¤ºï¼šç‚¹å‡»æ–‡å­—å¯ç›´æŽ¥å¤åˆ¶`
+            html_clone.setAttribute('value', _gitClone + url)
+            _html += html_parent + html_clone.outerHTML + '</div>'
+        }
+        html.parentElement.insertAdjacentHTML('afterend', _html);
+        if (html.parentElement.parentElement.className.indexOf('XIU2-GCP') === -1){
+            html.parentElement.parentElement.classList.add('XIU2-GCP')
+            html.parentElement.parentElement.addEventListener('click', (e)=>{if (e.target.tagName === 'INPUT') {GM_setClipboard(e.target.value);}})
+        }
+    }
+
+
+    // Git Clone SSH
+    function addGitCloneSSH(target) {
+        let html = target.querySelector('input[value^="git@"]');if (!html) return
+        let href_split = html.value.split(':')[1],
+            html_parent = '<div style="margin-top: 4px;" class="XIU2-GCS ' + html.parentElement.className + '">',
+            url = '', _html = '', _gitClone = '';
+        html.nextElementSibling.hidden = true; // éšè—å³ä¾§å¤åˆ¶æŒ‰é’®ï¼ˆè€ƒè™‘åˆ°èƒ½ç›´æŽ¥ç‚¹å‡»å¤åˆ¶ï¼Œå°±ä¸å†é‡å¤å®žçŽ°å¤åˆ¶æŒ‰é’®äº‹ä»¶äº†ï¼‰
+        if (html.parentElement.nextElementSibling.tagName === 'SPAN'){
+            html.parentElement.nextElementSibling.textContent += ' (â†‘ç‚¹å‡»æ–‡å­—å¯å¤åˆ¶)'
+        }
+        if (GM_getValue('menu_gitClone')) {_gitClone='git clone '; html.value = _gitClone + html.value; html.setAttribute('value', html.value);}
+        // å…‹éš†åŽŸ Git Clone SSH å…ƒç´ 
+        let html_clone = html.cloneNode(true);
+        for (let i=0;i<clone_ssh_url.length;i++) {
+            url = clone_ssh_url[i][0] + href_split
+            html_clone.title = `${url}\n\n${clone_ssh_url[i][2].replaceAll('&#10;','\n')}\n\næç¤ºï¼šç‚¹å‡»æ–‡å­—å¯ç›´æŽ¥å¤åˆ¶`
+            html_clone.setAttribute('value', _gitClone + url)
+            _html += html_parent + html_clone.outerHTML + '</div>'
+        }
+        html.parentElement.insertAdjacentHTML('afterend', _html);
+        if (html.parentElement.parentElement.className.indexOf('XIU2-GCP') === -1){
+            html.parentElement.parentElement.classList.add('XIU2-GCP')
+            html.parentElement.parentElement.addEventListener('click', (e)=>{if (e.target.tagName === 'INPUT') {GM_setClipboard(e.target.value);}})
+        }
+    }
+
+
+    // Raw
+    function addRawFile() {
+        let html = document.querySelector('a[data-testid="raw-button"]');if (!html) return
+        let href = location.href.replace(`https://${location.host}`,''),
+            href2 = href.replace('/blob/','/'),
+            url = '', _html = '';
+
+        for (let i=1;i<raw_url.length;i++) {
+            if ((raw_url[i][0].indexOf('/gh') + 3 === raw_url[i][0].length) && raw_url[i][0].indexOf('cdn.staticaly.com') === -1) {
+                url = raw_url[i][0] + href.replace('/blob/','@');
+            } else {
+                url = raw_url[i][0] + href2;
+            }
+            _html += `<a href="${url}" title="${raw_url[i][2]}" target="_blank" role="button" rel="noreferrer noopener nofollow" data-size="small" class="${html.className} XIU2-RF">${raw_url[i][1].replace(/ \d/,'')}</a>`
+        }
+        if (document.querySelector('.XIU2-RF')) document.querySelectorAll('.XIU2-RF').forEach((e)=>{e.remove()})
+        html.insertAdjacentHTML('afterend', _html);
+    }
+
+
+    // Raw å•æ–‡ä»¶å¿«æ·ä¸‹è½½ï¼ˆâ˜ï¼‰
+    function addRawDownLink() {
+        if (!GM_getValue('menu_rawDownLink')) return
+        // å¦‚æžœä¸æ˜¯é¡¹ç›®æ–‡ä»¶é¡µé¢ï¼Œå°±è¿”å›žï¼Œå¦‚æžœç½‘é¡µæœ‰ Raw ä¸‹è½½é“¾æŽ¥ï¼ˆâ˜ï¼‰å°±è¿”å›ž
+        let files = document.querySelectorAll('div.Box-row svg.octicon.octicon-file, .react-directory-filename-column>svg.color-fg-muted');if(files.length === 0) return;if (location.pathname.indexOf('/tags') > -1) return
+        let files1 = document.querySelectorAll('a.fileDownLink');if(files1.length > 0) return;
+
+        // é¼ æ ‡æŒ‡å‘åˆ™æ˜¾ç¤º
+        var mouseOverHandler = function(evt) {
+            let elem = evt.currentTarget,
+                aElm_new = elem.querySelectorAll('.fileDownLink'),
+                aElm_now = elem.querySelectorAll('svg.octicon.octicon-file, svg.color-fg-muted');
+            aElm_new.forEach(el=>{el.style.cssText = 'display: inline'});
+            aElm_now.forEach(el=>{el.style.cssText = 'display: none'});
+        };
+
+        // é¼ æ ‡ç¦»å¼€åˆ™éšè—
+        var mouseOutHandler = function(evt) {
+            let elem = evt.currentTarget,
+                aElm_new = elem.querySelectorAll('.fileDownLink'),
+                aElm_now = elem.querySelectorAll('svg.octicon.octicon-file, svg.color-fg-muted');
+            aElm_new.forEach(el=>{el.style.cssText = 'display: none'});
+            aElm_now.forEach(el=>{el.style.cssText = 'display: inline'});
+        };
+
+        // å¾ªçŽ¯æ·»åŠ 
+        files.forEach(function(fileElm) {
+            let trElm = fileElm.parentNode.parentNode,
+                cntElm_a = trElm.querySelector('[role="rowheader"] > .css-truncate.css-truncate-target.d-block.width-fit > a, .react-directory-truncate>a'),
+                Name = cntElm_a.innerText,
+                href = cntElm_a.getAttribute('href'),
+                href2 = href.replace('/blob/','/'), url = '';
+            if ((raw_url[menu_rawFast][0].indexOf('/gh') + 3 === raw_url[menu_rawFast][0].length) && raw_url[menu_rawFast][0].indexOf('cdn.staticaly.com') === -1) {
+                url = raw_url[menu_rawFast][0] + href.replace('/blob/','@');
+            } else {
+                url = raw_url[menu_rawFast][0] + href2;
+            }
+
+            fileElm.insertAdjacentHTML('afterend', `<a href="${url}" download="${Name}" target="_blank" rel="noreferrer noopener nofollow" class="fileDownLink" style="display: none;" title="ã€Œ${raw_url[menu_rawFast][1]}ã€&#10;&#10;[Alt + å·¦é”®] æˆ– [å³é”® - å¦å­˜ä¸º...] ä¸‹è½½æ–‡ä»¶ã€‚&#10;æ³¨æ„ï¼šé¼ æ ‡ç‚¹å‡» [â˜] å›¾æ ‡ï¼Œè€Œä¸æ˜¯å·¦ä¾§çš„æ–‡ä»¶åï¼&#10;&#10;${raw_url[menu_rawFast][2]}&#10;&#10;æç¤ºï¼šç‚¹å‡»æµè§ˆå™¨å³ä¸Šè§’ Tampermonkey æ‰©å±•å›¾æ ‡ - [ ${raw_url[menu_rawFast][1]} ] åŠ é€Ÿæº (â˜) å³å¯åˆ‡æ¢ã€‚">${svg[0]}</a>`);
+            // ç»‘å®šé¼ æ ‡äº‹ä»¶
+            trElm.onmouseover = mouseOverHandler;
+            trElm.onmouseout = mouseOutHandler;
+        });
+    }
+
+
+    // ç§»é™¤ Raw å•æ–‡ä»¶å¿«æ·ä¸‹è½½ï¼ˆâ˜ï¼‰
+    function delRawDownLink() {
+        if (!GM_getValue('menu_rawDownLink')) return
+        let aElm = document.querySelectorAll('.fileDownLink');if(aElm.length === 0) return;
+        aElm.forEach(function(fileElm) {fileElm.remove();})
+    }
+
+
+    // åœ¨æµè§ˆå™¨è¿”å›ž/å‰è¿›æ—¶é‡æ–°æ·»åŠ  Raw å•æ–‡ä»¶å¿«æ·ä¸‹è½½ï¼ˆâ˜ï¼‰é¼ æ ‡äº‹ä»¶
+    function addRawDownLink_() {
+        if (!GM_getValue('menu_rawDownLink')) return
+        // å¦‚æžœä¸æ˜¯é¡¹ç›®æ–‡ä»¶é¡µé¢ï¼Œå°±è¿”å›žï¼Œå¦‚æžœç½‘é¡µæ²¡æœ‰ Raw ä¸‹è½½é“¾æŽ¥ï¼ˆâ˜ï¼‰å°±è¿”å›ž
+        let files = document.querySelectorAll('div.Box-row svg.octicon.octicon-file, .react-directory-filename-column>svg.color-fg-muted');if(files.length === 0) return;
+        let files1 = document.querySelectorAll('a.fileDownLink');if(files1.length === 0) return;
+
+        // é¼ æ ‡æŒ‡å‘åˆ™æ˜¾ç¤º
+        var mouseOverHandler = function(evt) {
+            let elem = evt.currentTarget,
+                aElm_new = elem.querySelectorAll('.fileDownLink'),
+                aElm_now = elem.querySelectorAll('svg.octicon.octicon-file, svg.color-fg-muted');
+            aElm_new.forEach(el=>{el.style.cssText = 'display: inline'});
+            aElm_now.forEach(el=>{el.style.cssText = 'display: none'});
+        };
+
+        // é¼ æ ‡ç¦»å¼€åˆ™éšè—
+        var mouseOutHandler = function(evt) {
+            let elem = evt.currentTarget,
+                aElm_new = elem.querySelectorAll('.fileDownLink'),
+                aElm_now = elem.querySelectorAll('svg.octicon.octicon-file, svg.color-fg-muted');
+            aElm_new.forEach(el=>{el.style.cssText = 'display: none'});
+            aElm_now.forEach(el=>{el.style.cssText = 'display: inline'});
+        };
+        // å¾ªçŽ¯æ·»åŠ 
+        files.forEach(function(fileElm) {
+            let trElm = fileElm.parentNode.parentNode;
+            // ç»‘å®šé¼ æ ‡äº‹ä»¶
+            trElm.onmouseover = mouseOverHandler;
+            trElm.onmouseout = mouseOutHandler;
+        });
+    }
+
+
+    // é€‚é…ç™½å¤©/å¤œé—´ä¸»é¢˜æ¨¡å¼
+    function colorMode() {
+        let style_Add;
+        if (document.getElementById('XIU2-Github')) {style_Add = document.getElementById('XIU2-Github')} else {style_Add = document.createElement('style'); style_Add.id = 'XIU2-Github'; style_Add.type = 'text/css';}
+        backColor = '#ffffff'; fontColor = '#888888';
+
+        if (document.lastElementChild.dataset.colorMode === 'dark') { // å¦‚æžœæ˜¯å¤œé—´æ¨¡å¼
+            if (document.lastElementChild.dataset.darkTheme === 'dark_dimmed') {
+                backColor = '#272e37'; fontColor = '#768390';
+            } else {
+                backColor = '#161a21'; fontColor = '#97a0aa';
+            }
+        } else if (document.lastElementChild.dataset.colorMode === 'auto') { // å¦‚æžœæ˜¯è‡ªåŠ¨æ¨¡å¼
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches || document.lastElementChild.dataset.lightTheme.indexOf('dark') > -1) { // å¦‚æžœæµè§ˆå™¨æ˜¯å¤œé—´æ¨¡å¼ æˆ– ç™½å¤©æ¨¡å¼æ˜¯ dark çš„æƒ…å†µ
+                if (document.lastElementChild.dataset.darkTheme === 'dark_dimmed') {
+                    backColor = '#272e37'; fontColor = '#768390';
+                } else if (document.lastElementChild.dataset.darkTheme.indexOf('light') == -1) { // æŽ’é™¤å¤œé—´æ¨¡å¼æ˜¯ light çš„æƒ…å†µ
+                    backColor = '#161a21'; fontColor = '#97a0aa';
+                }
+            }
+        }
+
+        document.lastElementChild.appendChild(style_Add).textContent = `.XIU2-RS a {--XIU2-back-Color: ${backColor}; --XIU2-font-Color: ${fontColor};}`;
+    }
+
+
+    // è‡ªå®šä¹‰ urlchange äº‹ä»¶ï¼ˆç”¨æ¥ç›‘å¬ URL å˜åŒ–ï¼‰ï¼Œé’ˆå¯¹éž Tampermonkey æ²¹çŒ´ç®¡ç†å™¨
+    function addUrlChangeEvent() {
+        history.pushState = ( f => function pushState(){
+            var ret = f.apply(this, arguments);
+            window.dispatchEvent(new Event('pushstate'));
+            window.dispatchEvent(new Event('urlchange'));
+            return ret;
+        })(history.pushState);
+
+        history.replaceState = ( f => function replaceState(){
+            var ret = f.apply(this, arguments);
+            window.dispatchEvent(new Event('replacestate'));
+            window.dispatchEvent(new Event('urlchange'));
+            return ret;
+        })(history.replaceState);
+
+        window.addEventListener('popstate',()=>{ // ç‚¹å‡»æµè§ˆå™¨çš„å‰è¿›/åŽé€€æŒ‰é’®æ—¶è§¦å‘ urlchange äº‹ä»¶
+            window.dispatchEvent(new Event('urlchange'))
+        });
+    }
+})();
