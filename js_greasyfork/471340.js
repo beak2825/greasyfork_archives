@@ -1,0 +1,34 @@
+// ==UserScript==
+// @name         百度GPT优化体验·文言一心烦人弹窗优化
+// @namespace    http://tampermonkey.net/
+// @version      0.12
+// @description  推荐使用Edge浏览器拆分屏幕功能，文心一言在移动端模式下（拆分屏幕宽度调窄）可自动点击刷新弹窗并回到最新提问状态，无需繁琐点击。
+// @author       fxalll
+// @match        *://yiyan.baidu.com/*
+// @icon         data:image/png;base64,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
+
+// @grant        none
+// @license      GPL-3.0 License
+// @require      https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js
+// @downloadURL https://update.greasyfork.org/scripts/471340/%E7%99%BE%E5%BA%A6GPT%E4%BC%98%E5%8C%96%E4%BD%93%E9%AA%8C%C2%B7%E6%96%87%E8%A8%80%E4%B8%80%E5%BF%83%E7%83%A6%E4%BA%BA%E5%BC%B9%E7%AA%97%E4%BC%98%E5%8C%96.user.js
+// @updateURL https://update.greasyfork.org/scripts/471340/%E7%99%BE%E5%BA%A6GPT%E4%BC%98%E5%8C%96%E4%BD%93%E9%AA%8C%C2%B7%E6%96%87%E8%A8%80%E4%B8%80%E5%BF%83%E7%83%A6%E4%BA%BA%E5%BC%B9%E7%AA%97%E4%BC%98%E5%8C%96.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+    let isOpen = false
+    setInterval(()=>{
+        if (!isOpen && document.querySelector(".rhHpqJcg") != null){
+            document.querySelectorAll(".HIipvMZh")[1].click()
+            document.querySelector(".ry5xreor").click()
+            isOpen = true
+        }
+        if (document.querySelectorAll(".maWbaKkY").length > 0) {
+            document.querySelector(".maWbaKkY").click()
+            document.querySelectorAll(".HIipvMZh")[1].click()
+            document.querySelector(".ry5xreor").click()
+        }
+    },1000)
+
+
+})();

