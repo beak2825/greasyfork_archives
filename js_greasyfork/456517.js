@@ -1,0 +1,692 @@
+// ==UserScript==
+// @name         读秀2秒传
+// @name:zh-CN   读秀2秒传
+// @name:en      Duxiu2Rapid
+// @namespace    ucdrs.superlib.net
+// @version      1.0.0
+// @author       weit
+// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAADZUlEQVR42tVaTahNURReN0SJmQy8IUNJCBNFMRAlijB5CK8UA4YkMWTglfKTnwmiSJEB5ZUJQpIhQwYyI0Werm/dfZb2Oe/sc9bae9/3ul99de7p7L2/dc762T+3Q+lYAG4Cd4BrlW3GwDvgI/BLyuCdyHbTwe3gKXChd/8T+Bx8D34GfxT354BD4BJwTU2bk+BdcLzfBvDzB8CL3r1r4BXwHfhb2c9McCm4H9zr3R8BL4PdfhiwEnwIziuE8mC3DaKbjNlZvBS+/gZuBl/lNOA0eLy4PgJeAP8mCq9iGngIPF/8PgOeSDVgFviYXHC+AbdQYtApwEnhAbicXLBvBH/FGDAXfEsu4M6BxzIJ7CpeHOMseJRckC8Dv1sM4Df/oRDPLjOaQbRlfMFhci7FRiymmi8R6uAZObeJFa/NIpovIUawO63TdCABG+M2bcJj646404TArnbIqfIluYBdESG4EzAiVriP1+QCexV5KdbvmK+/ksvzXDVD2aZbaaM1LBWcnbi6c52YL2P4HR8kV0xyB61GfFf5rMQDF9FLfgOe2/whV1VnU3qRshhgcTkudj/JVewZ4Lg8uAu8Ce4BbySKD4myoMnoYfA6uBu8JQ9+JJfzOf9X5zapYkSQtoC1gd8+1wOuDYu4QwkOnlXuCzTSfOa2YpXLAMZVcrPYIe5Qgnc1uRQai6YvldsITqUvwBHuTKpunfvkEF81wP8dC3GjMfHNnj8lCu/U3K/z/Vw1ohe3MkCT/1vFa0TmmHL04kAMsBavNleIqdZWg3pFTQzYBt43iLcUp5hCpmm3FbwnBmwAnyoHSpkaaL+cZoz14BOtATHpr19T61oDQi5UfSMpfmud4LWh5EKWIJ4M99CgFMQxaTQkUBDK/Z1AW6thpTQaW8hCBljqQqxr/S9kOaYSvhBr0apCY0RpKpFjMqdxkarI2PzPKE3mNNPpFPHatpb2pek0o2lBoxUxWeInLGgYKUvKyTZgmGqWlLGL+lzitX0EF/UM67ZKSmGKffvBbRW51mxspYqPNaB1Y4uh2VqcCvGM1q1FQdPmbuyiXLPgb4J6c1dQ3V7P/dYt4s3b6wz/gCNFeMgIa9CaDzgY/Tpi0iLpiEkw0Id8Pgb2mNXHQB90+88P7F8NfAzsnz3qMKV/t/kHiGAitql8k+gAAAAASUVORK5CYII=
+// @match        *://book.ucdrs.superlib.net/views/specific/*
+// @match        *://book.ucdrs.superlib.net/search*
+// @match        *://book.dglib.superlib.net/views/specific/*
+// @match        *://book.dglib.superlib.net/search*
+// @match        *://fx.ccelib.com/detail_*
+// @match        *://fx.ccelib.com/s?*
+// @match        *://*/n/slib/book/slib/*
+// @match        *://*/n/jpgfs/book/base/*
+// @require      https://greasyfork.org/scripts/450973-gb2312utf8/code/GB2312UTF8.js?version=1091107
+// @require      https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js
+// @require      https://cdn.bootcdn.net/ajax/libs/jszip/3.9.1/jszip.min.js
+// @require      https://cdn.bootcdn.net/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js
+// @include      */search?*
+// @include      *bookDetail.jsp?*
+// @include      *chapter.jsp?*
+// @include      *book.do?*
+// @exclude      *://*.google./*
+// @exclude      *://*.bing./*
+// @description  读秀转秒传
+// @description:zh-CN  读秀转秒传
+// @description:en Duxiu to Rapid
+// @grant       GM_registerMenuCommand
+// @grant       GM_unregisterMenuCommand
+// @grant       GM_setValue
+// @grant       GM_getValue
+// @grant       GM_xmlhttpRequest
+// @grant       GM_addStyle
+// @license     Copyright Theron
+// @downloadURL https://update.greasyfork.org/scripts/456517/%E8%AF%BB%E7%A7%802%E7%A7%92%E4%BC%A0.user.js
+// @updateURL https://update.greasyfork.org/scripts/456517/%E8%AF%BB%E7%A7%802%E7%A7%92%E4%BC%A0.meta.js
+// ==/UserScript==
+
+/* jslint esversion: 6 */
+/*globals jQuery, GB2312UTF8, JSZip, saveAs */
+
+function bookid2link(bookid) {
+    var lib;
+    if (bookid.match(/^\d{8}$/)) {
+        bookid = bookid.slice(0, 7);
+        lib = "duxiu";
+    } else if (bookid.match(/^CD\d{8}$/i)) {
+        bookid = bookid.slice(2, 9);
+        lib = "cadal";
+    } else if (bookid.match(/^BC\d{8}$/i)) {
+        bookid = bookid.slice(2, 9);
+        lib = "ncpssd";
+    } else if (bookid.match(/^[MF]\d{19}$/i)) {
+        bookid = bookid.slice(15, 20);
+        lib = "najda";
+    }
+    return "https://pan.baidu.com/disk/home?from=newversion&stayAtHome=true&_at_=" + Date.now() + "#/all?vmode=list&path=%2Fyysk.org%2F" + lib + "%2F" + bookid.split("").join("%2F");
+}
+
+function showLink() {
+    showlink = GM_getValue("showlink", "n");
+    GM_setValue("showlink", showlink === "n" ? "y" : "n");
+    showlink = GM_getValue("showlink", "n");
+    GM_unregisterMenuCommand(menuid_showlink);
+    menuid_showlink = GM_registerMenuCommand(showlink === "n" ? "改为显示链接" : "改为隐藏链接", showLink, "l");
+    alert(showlink === "y" ? "将显示图书ID到百度网盘存储路径的链接，刷新页面生效" : "不再显示图书ID到百度网盘存储路径的链接，刷新页面生效");
+}
+
+var showlink = GM_getValue("showlink", "n");
+var menuid_showlink = GM_registerMenuCommand(showlink === "n" ? "改为显示链接" : "改为隐藏链接", showLink, "l");
+function ss2rc() {
+    enablerc = GM_getValue("enablerc", "n");
+    GM_setValue("enablerc", enablerc === "n" ? "y" : "n");
+    enablerc = GM_getValue("enablerc", "n");
+    GM_unregisterMenuCommand(menuid_enablerc);
+    menuid_enablerc = GM_registerMenuCommand(enablerc === "n" ? "芝麻开门" : "芝麻关门", ss2rc, "z");
+    alert(enablerc === "y" ? "将尝试获取ssid对应图书的秒传码，此为试验性功能，随时可能失效，请低调使用。使用方法：右键点击ssid右侧的📋，每日限3次。" : "不再尝试获取ssid对应图书的秒传码");
+}
+
+var enablerc = GM_getValue("enablerc", "n");
+var menuid_enablerc = GM_registerMenuCommand(enablerc === "n" ? "芝麻开门" : "芝麻关门", ss2rc, "z");
+
+var html = document.documentElement.innerHTML;
+// 允许连续失败的最大次数
+const max_failscnt = 5;
+// 页面下载失败，下次尝试前等待的秒数
+const gap_fails = 30;
+// 页面下载间隔随机秒数的上限、下限
+const sleep_max = 8;
+const sleep_min = 3;
+const fmblimits = 999;
+
+(function () {
+    'use strict';
+    function ogetk(object, key, default_value) {
+        var result = object[key];
+        return (typeof result !== "undefined") ? result : default_value;
+    }
+    function slim(s) {
+        return s.replaceAll(/  +/g, "").trim();
+    }
+    function showbid(bookid, idtype, p=1) {
+        var title = "";
+        var rate = "";
+        var prefix = "";
+        if (idtype == "SS号") {
+            prefix = bookid.slice(0, 4);
+            rate = ogetk(rate_ssid, prefix, "-");
+            title = rate === "-" ? "库存无此书-灰色" : prefix + "号段库存率为" + rate + "%";
+        } else if (idtype == "DX号") {
+            title = "此为下架书，命中几率低，须先查得对应的SSID";
+        } else if (idtype == "SSNO<br>") {
+            prefix = bookid.replace(/CD/, "").slice(0, 4);
+            rate = ogetk(rate_ssno, prefix, "-");
+            title = rate === "-" ? "库存无此书-灰色" : prefix + "号段库存率为" + rate + "%";
+        }
+        var title_type = {"SS号": "ssid / SuperStar ID", "DX号": "dxid / Duxiu ID", "SSNO<br>": "CADAL用于编目的SSNO", "BCID": "社科院文献中心编目的barcodenum", "DAID": "日本国立公文书馆内阁文库文献编号，有F和M开头两类，分别为辑合/单本的ID"}[idtype];
+        var color = rate === "-" ? "grey" : "blue";
+        var opacity = rate === "-" ? 1 : (parseFloat(rate) / 100 + 0.2);
+        var bookid_snippet = `<span style="color: red; padding-right: 3px;" title="${title_type}">${idtype}</span><span class="bid" style="color: ${color}; font-weight: bold; opacity: ${opacity}">${bookid}</span>`;
+        if (showlink === "y") {
+            var link = bookid2link(bookid);
+            bookid_snippet = `<a href="${link}" target="_blank" style="text-decoration: none;">${bookid_snippet}</a>`;
+        }
+        if (p !== 1) {
+            return bookid_snippet;
+        }
+        return `<p title="${title}" style="width: 120%; margin-left: -20px; font-size: 85%; text-align: center; margin-top: 5px; margin-bottom: 5px; clear:both;">${bookid_snippet}</p>`;
+    }
+
+
+    function sepit(s, sep) {
+        if (sep === "|") {
+            s = " | " + s;
+        } else if (sep === "br") {
+            s = s + "<br>";
+        } else if (sep === "p") {
+            s = `<p style="text-align: center">${s}</p>`;
+        } else if (sep) {
+            s = sep + s;
+        }
+        return s;
+    }
+    function shortenbkn(s) {
+        s = s.trim().replace(/(.)[\[【\(（].*/, "$1");
+        while (s.includes(" ") && s.replace(/[A-z0-9]{2}/g, "的").length > 20) {
+            s = s.replace(/ [^ ]*$/, "");
+        }
+        return s;
+    }
+    function ucdrslink(bookname, isbn = "", args = {}) {
+        var args0 = {"sep": "", text: "参考联盟", cls: "", style: ""};
+        args = args === {} ? args0 : Object.assign({}, args0, args);
+        var sep = args.sep;
+        var text = args.text;
+        var cls = args.cls;
+        var style = args.style;
+        if (!style.includes("font-size")) style += "font-size: 90%;";
+        if (text === "") text = "参考联盟";
+        var r = sepit(`<a href="http://book.ucdrs.superlib.net/search?sw=${isbn ? isbn : bookname.replace(/^\[.*?\]/, "")}&bCon=&ecode=utf-8&channel=search&Field=${isbn ? "All" : "1"}" target="_blank" class="${cls}" style="${style}" title="参考联盟">${text}</a>`, sep);
+        return r.replace(' class=""', '').replace(' style=""', '');
+    }
+
+    function dxtoc(url) {
+        url = url.replace("bookDetail.jsp", "chapter.jsp").replace(/sw=[^/&]*/, "sw=1 2 3 中 4 5 6 7 8 大 参考 9 是 人 上 附 不 小 从 之 下 有 用 以 多 后 表 什么 十 10 部分 前 到 图 我 如何 要 可 内 里 记 区 外 天 来 你 西 再 序 南 步骤 同 录 附 去 女 篇 开 文 都 题 东 就 节 他 也 公 北 结 右 又 少 百 那 这 关 没 千 表格 个 男 章 0 论 几 今 左 万");
+        return ` | <a href="${url}" target="_blank" style="font-size: 90%;">目录</a>`;
+    }
+
+    function iid2bookid(iid) {
+        // 2022年9月初，ucdrs和duxiu的封面iid参数都启用了v3，之前的算法无法从iid推导ssid了。ucdrs源码中包含了ssid，无需计算，duxiu的源码中ssid字段都为空，因此只能返回dxid
+        if (iid.length >= 112) return "00000000";
+        var bookid = "";
+        var part = "";
+        var tailhex = parseInt(iid.substring(iid.length - 2), 16);
+        var encoded = iid.substring(0, iid.length - 32);
+        var i;
+        for (i = 0; i < encoded.length; i = i + 2) {
+            part = encoded.substring(i, i + 2);
+            bookid += String.fromCharCode(parseInt(part, 16) - tailhex);
+        }
+        console.log(bookid);
+        return bookid.match(/^\d/) ? bookid.replace(/\//g, "").match(/^\d{8,}/)[0] : "00000000";
+    }
+    function copybid(bookid, bidtype) {
+        return ` <a href="#" style="color: grey; text-decoration: none;" title="点击复制${bidtype}" class="copybid" data-text="${bookid}">📋</a><span class="copy_status" style="color:red; display:none;"></span></p>`;
+    }
+    function copymeta(bookid) {
+        return ` <a href="#" style="color: grey; text-decoration: none;" title="点击复制完整元信息" class="copymeta" data-text="${bookid}">📋</a> <span class="copy_status" style="color:red; display:none;"></span>`;
+    }
+    function copyText(text) {
+        // 复制相关代码参考 https://greasyfork.org/zh-CN/scripts/437492
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text);
+        } else {
+            let textarea = document.createElement("textarea");
+            document.body.appendChild(textarea);
+            textarea.style.position = "absolute";
+            textarea.style.clip = "rect(0 0 0 0)";
+            textarea.value = text;
+            textarea.select();
+            document.execCommand("copy", true);
+            textarea.remove();
+        }
+    }
+    function nes(s) {
+        return s === "" ? "-" : s;
+    }
+    function hsize(i) {
+        let k = 1024;
+        let m = k * 1024;
+        let g = m * 1024;
+        if (i >= g) return Math.round(i / g * 100, 2) / 100 + "G";
+        if (i >= m) return Math.round(i / m * 100, 2) / 100 + "M";
+        if (i >= k) return Math.round(i / k * 100, 2) / 100 + "K";
+        return i + "bytes";
+    }
+
+    function fmb_clicked(event) {
+        let ele = event.target;
+        if (jQuery(ele).attr("href") !== "#") {
+            return;
+        }
+        event.preventDefault();
+        // 先看看有没有缓存
+        let fmbid = jQuery(ele).attr("data-fmbid");
+        let md5_cache = GM_getValue("fmb" + fmbid, "");
+        let ele_status = jQuery(ele).next();
+        let filename = jQuery(ele).prev().prev().prev().text();
+        let filesize = jQuery(ele).prev().prev().attr("title").split(" ")[1];
+        if (md5_cache !== "") {
+            let [cmd5, smd5] = md5_cache;
+            if (smd5 !== "") {
+                jQuery(ele).attr("href", `https://pcs.baidu.com/rest/2.0/pcs/file?app_id=266719&method=rapidupload&ondup=overwrite&content-length=${filesize}&content-md5=${cmd5}&slice-md5=${smd5}&path=/${filename}`);
+                jQuery(ele).attr("title", "点击此链接，尝试直接转存，如失败需使用秒传连接脚本转存");
+                copyText(`${cmd5}#${smd5}#${filesize}#${filename}`);//weit: 添加这一行，才能复制到剪贴板
+                ele_status.html("缓存命中，秒传码已复制，点击🔗也可直接转存");
+            } else {
+                ele_status.html("缓存命中，秒传码已复制");
+            }
+            return;
+        }
+        // 超额不再查询
+        let today = new Date().toLocaleDateString('sv').replaceAll('-', '');
+        let cnts = GM_getValue("ss2rc_cnt", {});
+        let cnt = cnts[today] === undefined ? 0 : cnts[today];
+        if (cnt >= fmblimits) return;
+        //jQuery(".getfmb").unbind("click").bind("click", fmb_clicked);
+        GM_xmlhttpRequest({
+            method: "GET",
+            //url: `https://api.freembook.com/acquire?book_id=${fmbid}&tk=${cnt <= 2 ? "" : (cnt <= 5 ? "freembook" : "freemdict")}`,
+            url: `https://api.freembook.com/acquire?book_id=${fmbid}`,
+            headers: {
+                "referer": "https://api.freembook.com"
+            },
+            timeout: 10000,
+            onload(res) {
+                let rdata = JSON.parse(res.responseText);
+                if (rdata.code !== 0) {
+                    if (rdata.code === 1005) {
+                        // if (cnt <= 2) cnt = 3;
+                        // if (cnt <= 5) cnt = 6;
+                        // if (cnt <= 8) cnt = 9;
+                        // cnts[today] = cnt;
+                        GM_setValue("ss2rc_cnt", cnts);
+                        jQuery(".fmbquota").each(function(i, el) {
+                            jQuery(el).text(cnt + 1);
+                        });
+                        ele_status.html(`获取秒传码失败，错误码 ${rdata.code} - ${rdata.message}${cnt === fmblimits ? " - 额度用完了，请明天再试（自行通过freembook查询或同IP的其他人查询也会消耗额度）" : " - 请重试"}`);
+                    } else {
+                        ele_status.html(`获取秒传码失败，错误码 ${rdata.code} - ${rdata.message}`);
+                    }
+                    return;
+                }
+                //weit: 注释掉下面2行，才能不计数
+                //cnts[today] = cnt + 1;
+                //weit: 注释掉下面行，才能不计数
+                //GM_setValue("ss2rc_cnt", cnts);
+                let [cmd5, smd5] = rdata.book_baidu;
+                //weit: 注释掉下面行，可以将已经获取过的书号写入缓存
+                //GM_setValue("fmb" + fmbid, rdata.book_baidu);
+                if (smd5 !== "") {
+                    jQuery(ele).attr("href", `https://pcs.baidu.com/rest/2.0/pcs/file?app_id=266719&method=rapidupload&ondup=overwrite&content-length=${filesize}&content-md5=${cmd5}&slice-md5=${smd5}&path=/${filename}`);
+                    jQuery(ele).attr("title", "点击此链接，尝试直接转存，如失败需使用秒传连接脚本转存");
+                    copyText(`${cmd5}#${smd5}#${filesize}#${filename}`);
+                    ele_status.html("秒传码已复制，点击🔗也可直接转存");
+                } else {
+                    copyText(`${cmd5}#${filesize}#${filename}`);
+                    ele_status.html("秒传码已复制");
+                }
+            },
+            onerror(res) {
+                ele_status.html(`查询秒传码时发生错误，请稍后重试`);
+            },
+            onabort(res) {
+                ele_status.html(`查询秒传码的任务被取消，请稍后重试`);
+            },
+            ontimeout(res) {
+                ele_status.html(`查询秒传码的任务超时，请稍后重试`);
+            },
+        });
+        jQuery(".fmbquota").each(function(i, el) {
+            //weit: 注释掉下面一行，今日已使用 0 / 9999的0就不会变为1了
+            //jQuery(el).text(cnt + 1);
+        });
+    }
+
+  function copybid_clicked(event) {
+        let ele = event.target;
+        let bid = jQuery(ele).attr("data-text");
+        jQuery(".copybid").unbind("contextmenu").bind("contextmenu", copybid_clicked);
+        let bidtype = bid.length === 8 ? "SSID" : "DXID";
+        if ((bidtype === "SSID" || bidtype === "DXID") && enablerc === "y" && event.type === "contextmenu" && !pageurl.includes("/s?")) {
+            let today = new Date().toLocaleDateString('sv').replaceAll('-', '');
+            let cnts = GM_getValue("ss2rc_cnt", {});
+            let cnt = cnts[today] === undefined ? 0 : cnts[today];
+            let tip = cnt <= (fmblimits - 1) ? `正在查询${bid}的秒传码......请耐心等待` : `根据ssid/dxid获取秒传链接为试验性功能，请低调使用。获取秒传码每日每IP限额${fmblimits}次，你已用完额度，只能查看资源列表。要获得秒传码，请明天再尝试！（自行通过freembook查询或同IP的其他人查询也会消耗额度，因此已用额度可能与你印象中不一致。）`;
+            //weit: 下面两行必须注释掉，否则无法获取秒传
+            //let nostock = jQuery(ele).prev().find("span.bid").attr("style").includes("color: grey;");
+            //if (nostock) tip = "灰色SSID的书无库存，请不要查询！";
+            let snippet = `<div class="rcresult">${tip}</div>`;
+            let isdx = html.includes("/views/specific/") ? false : true;
+            let block = isdx ? jQuery(ele).parent().parent().parent() : jQuery(ele).parent().parent();
+            let bookname = pageurl.includes("/search?") ? block.find("input[id^='title']").val().replace(/<.*?>/g, "") : jQuery(isdx ? "div.card_text > dl > dt" : "div.tutilte").text();
+            let rcresult = pageurl.includes("/search?") ? block.find("div.rcresult") : jQuery("div.rcresult");
+            if (rcresult.length === 0) {
+                // 参考联盟详情页，元信息很少而封面很大时，避免查询结果被遮蔽
+                if (!isdx && pageurl.includes("/views/specific/")) jQuery("div.leftnav_tu > div:last").css({"height": "", "min-height": "265px"});
+                (pageurl.includes("/search?") ? block.find(isdx ? "dl" : "div.get") : jQuery(isdx ? "div.card_text > dl" : "div.leftnav_tu").children().last()).after(snippet);
+                rcresult = pageurl.includes("/search?") ? block.find("div.rcresult") : jQuery("div.rcresult");
+            } else {
+                rcresult.text(tip);
+            }
+            ////alert("dddd");
+            GM_xmlhttpRequest({
+                method: "GET",
+                //url: `https://api.freembook.com/search?category=duxiu&q=${bid}`,
+                url: `http://101.43.34.5/wxapi/search?ssid=${bid}`,
+                headers: {
+                    "referer": "http://101.43.34.5/"
+                },
+                timeout: 10000,
+                onload(res) {
+                    //alert(res.responseText);
+                    let rdata = JSON.parse(res.responseText);
+                    if (rdata.code !== 0) {
+                        rcresult.html(`查询${bid}秒传码发生错误，错误码 ${rdata.code} - ${rdata.message}`);
+                        return;
+                    }
+                    let books = rdata.books;
+                    if (books.length === 0) {
+                        rcresult.html(`查询${bid}秒传码无结果`);
+                        return;
+                    }
+                    let books_filter = {};
+                    let r = "";
+                    let seq = 0;
+                    for (let book of books) {
+                        //let [bidx, ssid, filename, filesize, dxid, bookname, pubdate, page, isbn, rctype] = book;
+                        //let [bidx, ssid, filename, filesize, dxid, bookname, pubdate, page, isbn, rctype] = book;
+                        //let bidx
+                        let ssid = book.ssid;
+                        let filename = book.filename;
+                        let filesize = book.length;
+                        let smd5 = book.slicemd5;
+                        let cmd5 = book.md5;
+                        //let dxid = book.dxid;
+                        //let bookname = book.bookname;
+                        //let pubdate = book.pubdate;
+                        //let page = book.page;
+                        //let isbn = book.isbn;
+                        seq += 1;
+
+
+                        //if (jQuery(ele).attr("href") !== "#") {
+                        //    alert(bid);
+                        //    return;
+                        //}
+                        let ele_status = jQuery(ele).next();
+
+                        if (smd5 !== "") {
+                            //alert("rrrr");
+                            //r += `<p class="rcitem"><span class="seq">${seq}.</span> <span title="SSID">${nes(ssid)}</span>, <span title="DXID">${nes(dxid)}</span>, <span title="文件名">${nes(filename)}</span>, <span title="文件体积 ${nes(filesize)}">${hsize(filesize)}</span>, <span class="seq"> 点击 <a href="https://pcs.baidu.com/rest/2.0/pcs/file?app_id=266719&method=rapidupload&ondup=overwrite&content-length=${filesize}&content-md5=${cmd5}&slice-md5=${smd5}&path=/${filename}" target="_blank">🔗</a>尝试直接转存，秒传码也已经复制到剪贴板内</span> <span class="cpstatus"></span></p>`;
+                            r += `<p class="rcitem"><span class="seq">${seq}.</span> <span title="SSID">${nes(ssid)}</span>, <span title="文件名">${nes(filename)}</span>, <span title="文件体积 ${nes(filesize)}">${hsize(filesize)}</span>, <span class="seq">秒传码已经复制到剪贴板内,也可以点击右侧图标直接转存到你的百度网盘根目录&nbsp;→&nbsp;<a style="text-decoration: none" href="https://pcs.baidu.com/rest/2.0/pcs/file?app_id=266719&method=rapidupload&ondup=overwrite&content-length=${filesize}&content-md5=${cmd5}&slice-md5=${smd5}&path=/${filename}" target="_blank">🔗</a></span> <span class="cpstatus"></span></p>`;
+                            //alert(smd5);
+                            //jQuery(ele).attr("href", `https://pcs.baidu.com/rest/2.0/pcs/file?app_id=266719&method=rapidupload&ondup=overwrite&content-length=${filesize}&content-md5=${cmd5}&slice-md5=${smd5}&path=/${filename}`);
+                            //jQuery(ele).attr("title", "点击此链接，尝试直接转存，如失败需使用秒传连接脚本转存");
+                            copyText(`${cmd5}#${smd5}#${filesize}#${filename}`);//weit: 添加这一行，才能复制到剪贴板
+                            //ele_status.html("缓存命中，秒传码已复制，点击🔗也可直接转存");
+                        } else {
+                            ele_status.html("缓存命中，秒传码已复制");
+                        }
+
+                    }
+
+
+
+                    if (r) {
+                        r = `<p>今日已使用 <span class="fmbquota">${cnt}</span> / ${fmblimits}，点击🔗可获取${bid}的秒传码。使用<a href="https://greasyfork.org/zh-CN/scripts/424574" target="_blank">秒传链接脚本</a>可提取文件。数据来源<a href="https://freembook.com/" target="_blank">freembook</a>。</p>` + r;
+                        rcresult.html(r);
+                        jQuery(".getfmb").unbind("click").bind("click", fmb_clicked);
+                    } else {
+                        rcresult.html(`${bid}暂无秒传链接，库存率为0的书请不要尝试。本次查询不计用量，今日额度已使用 <span class="fmbquota">${cnt}</a> / ${fmblimits}。`);
+                    }
+                },
+                onerror(res) {
+                    rcresult.html(`查询${bid}的秒传码时发生错误，请稍后重试：<br>${res.responseText}`);
+                },
+                onabort(res) {
+                    rcresult.html(`查询${bid}秒传码的任务被取消，请稍后重试：<br>${res.responseText}`);
+                },
+                ontimeout(res) {
+                    rcresult.html(`查询${bid}秒传码的任务超时，请稍后重试：<br>${res.responseText}`);
+                },
+            });
+        }
+        copyText(bid);
+        jQuery(ele).siblings(".copy_status").text("已复制" + bidtype).show().delay(1000).hide(0);
+        return false;
+    }
+
+    function copymeta_clicked(event) {
+        let ele = event.target;
+        let bid = jQuery(ele).attr("data-text");
+        let ssid;
+        let dxid;
+        //let bidtype = bid.length === 8 ? "SSID" : "DXID";
+        let bidtype = bid.length === 8 ? "SS号" : "DX号";
+        let meta;
+        let bookname;
+        let score;
+        let popularity;
+        let ele_title;
+        let libscnt;
+        let idx;
+        if (pageurl.includes("superlib.net/search")) {
+            meta = jQuery(ele).parent().parent().parent().parent().parent().text();
+            //alert(jQuery("td#b0").html());
+            let sss = jQuery(ele).parent().parent().parent().parent().parent().prev().prev().prev().html();
+            //let sss = Query(ele).parent().parent().parent().parent().parent().prev().html();
+            //copyText(sss);
+            ssid = sss.match(/\.ssid" value="(\d+)">/)[1];
+            dxid = sss.match(/\.dxid" value="(\d+)">/)[1];
+            //alert(ssid + "  " + dxid);
+            meta = meta.replace(/\s+《(.*?)》.*\s+/, "书名=$1");
+            //meta = meta.replace(/(作者|页数|出版社|出版日期|丛书名称|简介|主题词):/g, "\n【$1】");
+            meta = meta.replace(/(作者|页数|出版社|出版日期|丛书名称|简介|主题词):/g, "\n$1=");
+            meta = meta.replace(/\meta+/g, "");
+            //meta = meta.trim() + `\n链接=${pageurl.split("/search")[0] + jQuery(ele).prev().prev().prev().attr("href")}`;
+            meta = meta.trim() + `\n链接=${pageurl.split("/search")[0] + jQuery(ele).prev().attr("href")}`;
+        } else if (pageurl.includes("/views/specific/")) {
+            meta = jQuery(ele).parent().parent().next().text();
+            meta += jQuery(".tu_content").text().replace("内容提要:", "内容提要=");
+            meta = meta.replace(/\n\s+/g, "\n").replace("【作　者】", "作者=");
+            meta = meta.replace(/\n([^【])/g, "$1");
+            bookname = jQuery(".tutilte").text();
+            meta = `书名=${bookname}\n` + meta + `\n链接=${pageurl}`;
+        } else if (pageurl.includes("/search?sw=")) {
+            ele_title = jQuery(ele).prev().prev().prev();
+            bookname = jQuery(ele).prev().prev().prev().text().trim().match("^《(.*)》$")[1];
+            meta = `书名=${bookname}\n` + jQuery(ele).parent().parent().find("dd").text().replace(/\n\s+/g, "\n").replace(/(\n(馆藏纸本|包库全文|部分阅读|试读|汇雅电子书))+\n/g, "\n").replace(/\s*(总被引:|被图书引:)/g, "，$1").replace("收藏馆:", "【热度】收藏馆:").replaceAll(" ", "").replace(/(作者|出版社|出版日期|页数|丛书名|简介|ISBN|主题词|分类) : /g, "\n$1=").trim() + `\n链接=${pageurl.split("/search")[0] + "/" + ele_title.attr("href").split("&fenlei")[0]}`;
+        } else if (pageurl.includes("/bookDetail.jsp?")) {
+            libscnt = jQuery("div#otherlib > a:last").text();
+            libscnt = libscnt.match(/>>更多\(收藏馆:\d+\)/) ? libscnt.match(/>>更多\(收藏馆:(\d+)\)/)[1] : 0;
+            idx = jQuery("div#bookphoto > p").text().match(/.*(被引用指数.*)/);
+            idx = idx ? idx[1].replace("被图书", "，被图书").replaceAll("数", "数 ") : "";
+            popularity = (libscnt ? "收藏馆 " + libscnt : "") + (idx ? "，" + idx : "");
+            meta = "书名=" + jQuery("div.card_text").text().replace(/\n\s+/g, "\n").replace(/\n(馆藏纸本|包库全文|部分阅读|图书馆文献传递)\n/g, "\n").replace(/(作  者|ISBN号|页  数|出版发行|中图法分类号|参考文献格式|内容提要|原书定价|开本|主题词|丛书名) ?[:：] ?/g, "\n【$1】").replace("【作  者】", "作者=").replace("【页  数】", "页数=").trim().replace(/\n([^【])/g, "$1") + (popularity ? `\n热度=${popularity}` : "") + `\n链接=${pageurl.split("&fenlei=")[0]}`;
+        } else if (pageurl.includes("://fx.ccelib.com/detail_")) {
+            libscnt = jQuery("div.titStyle > em").text();
+            libscnt = libscnt ? "馆藏 " + libscnt.match(/(\d+)/)[1] : "";
+            meta = "书名=" + jQuery("h4.falv_tit").text().trim() + jQuery(ele).parent().parent().text().replace(/.*豆瓣直达 📋 \n/, "").replace(/\n\s+/g, "\n").replace(/\n([^【])/g, "$1").replace(/全部展开\n【摘要】.*收起\n/, "\n").replace(/【获取途径】.*\n/, "\n") + (libscnt ? `\n热度=${libscnt}` : "") + `\n链接=${pageurl.split("&fenlei=")[0]}`;
+        }
+
+        //meta = `【${bidtype}】${bid}\n` + meta.replace(" ,", ",").replace(/,([A-z0-9])/g, ", $1");
+        //meta = "[General Information]" + `\n` + `${bidtype}=${bid}\n` + meta.replace(" ,", ",").replace(/,([A-z0-9])/g, ", $1");
+        meta = "[General Information]" + `\n` + "SS号=" + ssid + `\n` + "DX号=" + dxid + `\n` + meta.replace(" ,", ",").replace(/,([A-z0-9])/g, ", $1");
+        //meta = meta.replace(/^【DBID】.*\n/, "");
+        meta = meta.replace(/\n+/g, "\n");
+        meta = meta.replace(/\s+$/g, "");
+        copyText(meta);
+        jQuery(ele).siblings(".copy_status").text("已复制图书元数据").show().delay(1000).hide(0);
+        return false;
+    }
+    function gettoc() {
+        if (document.querySelector("ul#ztree").textContent === "") {
+            alert("本书无目录数据可用");
+            return false;
+        }
+        var tocurl = "http://path.sslibrary.com" + html.match(/<ul id="ztree" param="(.*?)" class="ztree">/)[1].replace(/amp;/g, "");
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: tocurl,
+            timeout: 10000,
+            onload(res) {
+                var toc = "";
+                console.log(res.responseText);
+                const nodes = res.responseText.matchAll(/<(?:tree|node) id="(.*?)" Caption="(.*?)" PageNumber="(\d+)"/g);
+                for (const node of nodes) {
+                    let nodeid = node[1];
+                    let tabs = (nodeid.match(/-/g) || []).length;
+                    let caption = node[2].trim();
+                    let pagenum = node[3];
+                    toc += `${"\t".repeat(tabs)}${caption}\t${pagenum}\n`;
+                }
+                var pagesum = 0;
+                if (pages[4][1] > 0) {pagesum += pages[4][1]; toc = `目录\t-${pagesum}\n` + toc;}
+                if (pages[3][1] > 0) {pagesum += pages[3][1]; toc = `前言\t-${pagesum}\n` + toc;}
+                if (pages[2][1] > 0) {pagesum += pages[2][1]; toc = `版权\t-${pagesum}\n` + toc;}
+                if (pages[1][1] > 0) {pagesum += pages[1][1]; toc = `书名\t-${pagesum}\n` + toc;}
+                if (pages[0][1] > 0) {pagesum += pages[0][1]; toc = `封面\t-${pagesum}\n` + toc;}
+                if (pages[6][1] > 0) toc += `附录\t${pages[5][1] + 1}\n`;
+                if (pages[7][1] > 0) toc += `封底\t${pages[5][1] + 1 + pages[6][1]}\n`;
+                copyText(toc);
+                alert("目录已复制到剪切板上，可在 PdgCntEditor 中直接粘贴使用");
+            },
+            onerror(res) {
+                alert(`获取目录时发生错误，请稍后重试：${res.responseText}`);
+            },
+            onabort(res) {
+                alert(`获取目录的任务被取消，请稍后重试。`);
+            },
+            ontimeout(res) {
+                alert(`获取目录的任务超时，请稍后重试，如提示跨域权限请允许。`);
+            },
+        });
+        return false;
+    }
+    function pad(num, n) {
+        // https://bbs.csdn.net/topics/390547495
+        var s = '000000000000000000000000000000' + num;
+        return s.substr(s.length - n);
+    }
+    function genpages(pe, prefix, ps=1) {
+        let spages = [];
+        for (var i = ps; i <= pe; i++) {
+            spages.push(prefix + pad(i, 6 - prefix.length));
+        }
+        return spages;
+    }
+    function tipspage(spage) {
+        var prefix;
+        if (spage === "cov001") prefix = "封面";
+        else if (spage === "cov002") prefix = "封底";
+        else prefix = {"!": "目录页", "b": "书名页", "f": "前言页", "a": "附录页", "l": "版权页", "0": "正文页"}[spage[0]];
+        return prefix + " " + spage;
+    }
+
+    function getRndInteger(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) ) + min;
+    }
+    function funcinterval(func, interval = 3000) {
+        func();
+        setInterval(func, interval);
+    }
+
+    var pageurl = window.location.href;
+    console.log(pageurl);
+    var bookid;
+    var bookname;
+    var author;
+    var press;
+    var ssid;
+    var dxid;
+    var img;
+    var m_isbn;
+    var isbn;
+    var m_ssn;
+    var m_dxid;
+    var m_iid;
+    var copys;
+    var bidtype;
+    var rate_ssno = {"0102":"6.78", "0103":"61.39", "0104":"13.44", "0105":"21.79", "0106":"5.95", "0200":"8.76", "0201":"14.58", "0202":"60.94", "0203":"99.75", "0204":"97.9", "0205":"100", "0206":"99.94", "0207":"32.44", "0208":"99.03", "0209":"96.05", "0210":"92.26", "0211":"72.13", "0212":"14.35", "0300":"54.5", "0301":"99.9", "0302":"98.44", "0303":"100", "0600":"50.14", "0601":"74.62", "0603":"10.05", "0604":"98.32", "0605":"98.83", "0606":"98.36", "0607":"17.15", "0610":"9.73", "0620":"12.67", "0621":"20.87", "0630":"71.93", "0631":"99.41", "0632":"99.97", "0633":"99.88", "0634":"23.53", "0635":"99.87", "0636":"86.49", "0637":"93.95", "0638":"52.87", "0639":"41.99", "0640":"9.92", "0650":"4.16", "0651":"0.06", "0655":"59.33", "0700":"91.92", "0701":"99.77", "0702":"16", "0709":"0.01", "0800":"12.82", "0801":"87.75", "0802":"32.89", "0803":"16.25", "0900":"99.29", "0901":"44.39", "0902":"0.15", "0903":"0.01", "0904":"0.01", "0905":"0.01", "0909":"0.04", "0920":"0.02", "0940":"0.01", "0981":"0.01", "1100":"0.05", "1101":"0.02", "1110":"99.94", "1111":"8.91", "1120":"28.99", "1140":"79.28", "1141":"24.02", "1300":"41.64", "1302":"4.5", "1303":"9.29", "1305":"0.02", "1390":"1.52", "1400":"13.6", "1401":"9.96", "1402":"5.71", "1501":"0.03", "1502":"0.02", "1503":"0.01", "1504":"0.01", "1600":"62.07", "1601":"53.61", "1602":"42.82", "1604":"97.75", "1605":"41.48", "1607":"5.59", "2100":"0.2", "2101":"53.79", "2102":"1.92", "2103":"0.97", "2300":"15.42", "2500":"54.85", "3200":"65.76", "3201":"88.28", "3202":"88.15", "3203":"78.57", "3204":"35.68", "3300":"97.61", "3301":"99.06", "3302":"97.91", "3303":"98.63", "3304":"97.11", "3305":"95.62", "3306":"89.35", "3307":"96.42", "3308":"87.63", "3309":"94.43", "3310":"92.08", "3311":"93.46", "3312":"94.49", "3313":"83.21", "3314":"93.99", "3315":"92.2", "3316":"90.44", "3317":"90.86", "3318":"85.25", "3319":"73.38", "3320":"23.49", "7700":"67.84", "9900":"4.15"};
+    var rate_ssid = {"1000":"71.71","1001":"68.23","1002":"74.22","1003":"76.48","1004":"33.54","1005":"24.57","1006":"77.02","1007":"79.33","1008":"62.93","1009":"80.42","1010":"78.69","1011":"82.3","1012":"84.34","1013":"13.81","1014":"32.16","1015":"73.28","1016":"87.19","1017":"68.41","1018":"53.02","1019":"90.8","1020":"79.03","1021":"67.56","1022":"65.6","1023":"80.18","1024":"60.03","1025":"65.67","1026":"84.78","1027":"88.63","1028":"76.94","1029":"88.01","1030":"89.35","1031":"83.21","1032":"85.73","1033":"94.67","1034":"94.9","1035":"56.94","1036":"0.36","1037":"0.39","1038":"77.56","1039":"68.37","1040":"96.51","1041":"89.93","1042":"96.53","1043":"93.44","1044":"79.85","1045":"78.8","1046":"85.47","1047":"74.65","1048":"73.18","1049":"60.75","1050":"91.74","1051":"79.96","1052":"70.93","1053":"52.37","1054":"11.47","1055":"2.86","1056":"2.08","1057":"2.28","1058":"2.55","1059":"2.73","1060":"2.91","1061":"3.03","1062":"3.02","1063":"2.75","1064":"24.09","1065":"72.48","1066":"38.47","1067":"41.97","1068":"47.14","1069":"46.96","1070":"48.12","1071":"41.39","1072":"44.49","1073":"47.84","1074":"46.49","1075":"45.14","1076":"47.27","1077":"47.06","1078":"77.98","1079":"81.71","1080":"81.97","1081":"82.3","1082":"81.47","1083":"82.87","1084":"61.22","1085":"81.93","1086":"52.22","1087":"59.38","1088":"72.63","1089":"77.22","1090":"50.5","1091":"56.33","1092":"26.83","1093":"41.35","1094":"75.03","1095":"68.18","1096":"70.67","1097":"94.62","1098":"92.99","1099":"66.97","1100":"93.63","1101":"92.93","1102":"93.74","1103":"89.08","1104":"92.15","1105":"90.58","1106":"69.55","1107":"57.18","1108":"78.82","1109":"78.7","1110":"94.88","1111":"95.86","1112":"94.64","1113":"94.09","1114":"94.11","1115":"94.87","1116":"92.94","1117":"93.18","1118":"94.53","1119":"93.38","1120":"93.68","1121":"93.92","1122":"85.44","1123":"92.02","1124":"93.3","1125":"92.02","1126":"92.04","1127":"88.15","1128":"91.51","1129":"92.07","1130":"93.48","1131":"89.15","1132":"89.33","1133":"90.77","1134":"95.18","1135":"91.75","1136":"92.5","1137":"93.44","1138":"96.09","1139":"94.78","1140":"93.76","1141":"93.31","1142":"94.48","1143":"94.7","1144":"95.4","1145":"95.64","1146":"95.79","1147":"95.14","1148":"93.93","1149":"95.13","1150":"67.93","1151":"77.19","1152":"93.33","1153":"90.43","1154":"93.48","1155":"93.72","1156":"92.46","1157":"92.6","1158":"88.82","1159":"91.74","1160":"78.63","1161":"83.73","1162":"88.36","1163":"82.68","1164":"84.41","1165":"55.92","1166":"65.95","1167":"87.33","1168":"88.11","1169":"85.21","1170":"82.67","1171":"84.5","1172":"85.67","1173":"81.19","1174":"83.12","1175":"90.12","1176":"89.58","1177":"93.29","1178":"93.65","1179":"92.51","1180":"91.77","1181":"92.64","1182":"87.4","1183":"93.49","1184":"96.37","1185":"93.88","1186":"90.17","1187":"93.81","1188":"93.68","1189":"94.7","1190":"91.54","1191":"91.58","1192":"93.5","1193":"91.46","1194":"92.97","1195":"91.86","1196":"93.19","1197":"91.79","1198":"95.45","1199":"91.65","1200":"91.28","1201":"90.54","1202":"90.66","1203":"88.47","1204":"93.36","1205":"94.78","1206":"94.58","1207":"95.26","1208":"94.86","1209":"91.52","1210":"86.56","1211":"88.15","1212":"92.45","1213":"87.64","1214":"87.78","1215":"93.35","1216":"92.12","1217":"91.43","1218":"93.53","1219":"91.21","1220":"92.4","1221":"89.44","1222":"91.68","1223":"89.25","1224":"89","1225":"89.65","1226":"88.46","1227":"86.29","1228":"87.33","1229":"86.77","1230":"93.06","1231":"88.67","1232":"91.45","1233":"93.18","1234":"91.72","1235":"90.73","1236":"91.67","1237":"90.49","1238":"91.1","1239":"91.05","1240":"93.37","1241":"89.77","1242":"90.11","1243":"89.63","1244":"94.38","1245":"81.23","1246":"81.62","1247":"79.38","1248":"74.55","1249":"81.85","1250":"47.91","1251":"89.17","1252":"93.62","1253":"91.82","1254":"89.49","1255":"89.37","1256":"85.65","1257":"90.62","1258":"91.42","1259":"88.33","1260":"84.46","1261":"91.09","1262":"92.65","1263":"81.34","1264":"89.74","1265":"90.45","1266":"88.23","1267":"91.34","1268":"88.63","1269":"89.52","1270":"80.56","1271":"90.32","1272":"93.36","1273":"92.85","1274":"93.15","1275":"95.42","1276":"93.33","1277":"92.04","1278":"91.23","1279":"88.29","1280":"84.29","1281":"88.02","1282":"84.27","1283":"73.43","1284":"86.68","1285":"79.91","1286":"82.33","1287":"84.47","1288":"75.75","1289":"74.47","1290":"77.19","1291":"75.9","1292":"74.32","1293":"80","1294":"83.02","1295":"76.56","1296":"75.25","1297":"80.92","1298":"82.73","1299":"86.3","1300":"93.41","1301":"90.68","1302":"87.51","1303":"84.51","1304":"90.62","1305":"77.34","1306":"72.41","1307":"73.89","1308":"79.56","1309":"91.46","1310":"78.15","1311":"80.02","1312":"78.14","1313":"77.43","1314":"68.21","1315":"63.73","1316":"76.78","1317":"95.88","1318":"90.39","1319":"77.2","1320":"82.85","1321":"89.47","1322":"82.44","1323":"89.09","1324":"79.95","1325":"71.54","1326":"84.11","1327":"80.28","1328":"77.42","1329":"86.19","1330":"82.69","1331":"85.89","1332":"92.11","1333":"95.03","1334":"89.69","1335":"95.05","1336":"93.12","1337":"81.98","1338":"81.13","1339":"92.26","1340":"89.55","1341":"93.02","1342":"90.73","1343":"94.82","1344":"95.46","1345":"88.61","1346":"89.42","1347":"93.85","1348":"94.69","1349":"90.46","1350":"86.58","1351":"91.11","1352":"85.56","1353":"84.05","1354":"80.7","1355":"82.1","1356":"83.34","1357":"82.31","1358":"93.03","1359":"90","1360":"87.67","1361":"83.16","1362":"81.77","1363":"76.46","1364":"88.29","1365":"92.85","1366":"90.96","1367":"93.5","1368":"91.41","1369":"88.88","1370":"91.68","1371":"84.52","1372":"79.57","1373":"76.3","1374":"85.47","1375":"79.57","1376":"80.01","1377":"72.61","1378":"78.69","1379":"69.11","1380":"73.96","1381":"53.4","1382":"72.78","1383":"67.52","1384":"79.51","1385":"78.44","1386":"66.38","1387":"69.57","1388":"71.11","1389":"73.01","1390":"72.68","1391":"75.59","1392":"84.39","1393":"85.84","1394":"79.67","1395":"84.44","1396":"76.67","1397":"67.46","1398":"53.76","1399":"58.62","1400":"79.04","1401":"89.36","1402":"57.92","1403":"69.58","1404":"64.65","1405":"60.51","1406":"57.08","1407":"73.35","1408":"75.29","1409":"81.62","1410":"90.98","1411":"73.41","1412":"62.47","1413":"66.23","1414":"57.71","1415":"63.76","1416":"78.32","1417":"79.53","1418":"79.21","1419":"54.85","1420":"77.7","1421":"70.08","1422":"72.47","1423":"47.21","1424":"40.38","1425":"71.44","1426":"74.41","1427":"77.15","1428":"67.71","1429":"61.79","1430":"58.39","1431":"69.31","1432":"70.5","1433":"52.64","1434":"68.87","1435":"79.04","1436":"66.34","1437":"67.72","1438":"60.88","1439":"73.41","1440":"58.54","1441":"55.88","1442":"67.17","1443":"63.31","1444":"71.51","1445":"60.61","1446":"54.52","1447":"38.98","1448":"53.54","1449":"56.14","1450":"38.41","1451":"72.05","1452":"63.03","1453":"62.69","1454":"60.31","1455":"41.46","1456":"41.82","1457":"29.09","1458":"31.62","1459":"34.15","1460":"55.93","1461":"61.57","1462":"53.19","1463":"45.06","1464":"49.22","1465":"37.63","1466":"28.52","1467":"60.48","1468":"40.21","1469":"39.4","1470":"5","1471":"4.98","1472":"4.26","1473":"4.75","1474":"4.7","1475":"5.79","1476":"14.37","1477":"6.12","1478":"4.97","1479":"6.2","1480":"1.35","1481":"0.5","1482":"0.55","1483":"0.26","1484":"0.03","1485":"0.05","1486":"0.03","1487":"0.03","1488":"0.01","1489":"0.01","1490":"0.01","1491":"0.03","1492":"0.06","1494":"0.01","1500":"0.02","1501":"0.04","1502":"0.02","1503":"0.01","1504":"0.09","1511":"0.01","1513":"0.01","1514":"0.02","1521":"0.01","1527":"0.02","1529":"0.01","1533":"0.01","1540":"0.01","1541":"0.01","1544":"0.01","1556":"0.01","1562":"0.01","1565":"0.01","1569":"0.01","1570":"0.01","1579":"0.02","1580":"0.01","1584":"0.01","1588":"0.01","1590":"0.01","1592":"0.01","1593":"0.01","1594":"0.02","1596":"0.01","1599":"0.01","1600":"0.76","1601":"0.33","1602":"0.36","1603":"0.01","1604":"2.61","1605":"1.57","1606":"0.02","1607":"0.25","1610":"0.03","1612":"0.04","1613":"0.01","1615":"0.01","1620":"0.03","1622":"0.01","1623":"0.01","1624":"0.01","1633":"0.01","1641":"0.01","1642":"0.01","1644":"0.02","1645":"0.01","1651":"0.01","1654":"0.01","1658":"0.01","1662":"0.01","1664":"0.01","1665":"0.01","1672":"0.01","1673":"0.01","1682":"0.01","1683":"0.01","1684":"0.02","1688":"0.01","1691":"0.02","1692":"0.01","1694":"0.02","1698":"0.01","1700":"0.6","1710":"0.01","1712":"0.01","1713":"0.02","1714":"0.01","1717":"0.01","1722":"0.02","1723":"0.01","1726":"0.01","1728":"0.01","1729":"0.01","1730":"0.01","1733":"0.01","1738":"0.01","1740":"0.01","1743":"0.01","1749":"0.01","1756":"0.01","1757":"0.01","1759":"0.01","1761":"0.01","1763":"0.01","1778":"0.02","1779":"0.01","1783":"0.01","1785":"0.01","1788":"0.01","1789":"0.03","1794":"0.01","1795":"0.02","1797":"0.01","1800":"0.01","1805":"0.01","1812":"0.03","1813":"0.01","1816":"0.02","1820":"0.01","1822":"0.01","1828":"0.01","1840":"0.05","1842":"0.02","1847":"0.01","1848":"0.01","1852":"0.01","1853":"0.01","1858":"0.01","1860":"0.01","1866":"0.02","1868":"0.03","1869":"0.01","1870":"0.01","1871":"0.03","1876":"0.01","1879":"0.01","1883":"0.01","1890":"0.02","1893":"0.02","1894":"0.01","1895":"0.05","1896":"0.02","1898":"0.04","1899":"0.01","1900":"0.06","1901":"0.04","1902":"0.02","1903":"0.02","1905":"0.01","1906":"0.01","1907":"0.02","1908":"0.02","1909":"0.01","1910":"0.02","1911":"0.05","1912":"0.07","1913":"0.02","1914":"0.03","1916":"0.01","1917":"0.02","1918":"0.01","1919":"0.05","1921":"0.05","1922":"0.02","1923":"0.02","1924":"0.03","1925":"0.01","1926":"0.02","1927":"0.07","1928":"0.02","1929":"0.06","1930":"0.02","1931":"0.04","1932":"0.02","1933":"0.01","1934":"0.04","1936":"0.02","1937":"0.09","1938":"0.01","1939":"0.06","1940":"0.04","1941":"0.03","1942":"0.02","1944":"0.01","1945":"0.13","1946":"0.01","1947":"0.02","1948":"0.02","1949":"0.25","1950":"0.03","1951":"0.01","1952":"0.03","1953":"0.01","1954":"0.01","1955":"0.01","1956":"0.02","1957":"0.03","1958":"0.08","1959":"0.01","1960":"0.02","1961":"0.01","1962":"0.01","1963":"0.01","1964":"0.01","1965":"0.03","1966":"0.04","1967":"0.02","1968":"0.01","1969":"0.01","1970":"0.01","1971":"0.01","1973":"0.03","1974":"0.03","1975":"0.01","1976":"0.06","1977":"0.05","1978":"0.08","1979":"0.02","1980":"0.05","1981":"0.04","1982":"0.04","1983":"0.01","1984":"0.02","1985":"0.07","1986":"0.04","1987":"0.04","1988":"0.04","1989":"0.02","1990":"0.03","1991":"0.01","1992":"0.04","1993":"0.06","1994":"0.05","1995":"0.05","1996":"0.03","1997":"0.05","1998":"0.08","1999":"0.14","2000":"3.82","2001":"5.5","2002":"3.26","2003":"3.35","2004":"3.18","2005":"5.87","2006":"3.72","2007":"11.02","2008":"8","2009":"5.41","2010":"2.5","2011":"0.13","2012":"10.46","2013":"4.6","2014":"7.92","2015":"13.44","2016":"1.74","2017":"0.17","2018":"0.2","2019":"0.04","2020":"0.03","2021":"0.01","2023":"1.8","2024":"9.18","2030":"0.01","2033":"0.02","2037":"0.01","2042":"0.02","2047":"1.94","2048":"0.08","2051":"0.01","2060":"0.01","2065":"0.01","2068":"2.54","2069":"4.36","2070":"4.21","2071":"4.15","2072":"3.06","2073":"3.36","2074":"3.62","2075":"2.35","2076":"4.47","2077":"3.46","2078":"0.47","2081":"0.29","2083":"0.01","2084":"0.01","2086":"0.01","2090":"0.01","2100":"0.05","2101":"0.97","2102":"0.02","2103":"0.03","2105":"0.02","2109":"0.02","2110":"0.02","2111":"0.02","2112":"0.04","2113":"0.02","2114":"0.07","2115":"0.03","2116":"0.05","2118":"0.02","2119":"0.05","2120":"0.03","2121":"0.05","2122":"0.03","2123":"0.08","2124":"0.03","2125":"0.05","2126":"0.19","2127":"0.06","2128":"0.05","2129":"0.06","2130":"0.03","2131":"0.06","2132":"0.08","2133":"0.09","2134":"0.07","2135":"0.12","2136":"0.09","2137":"0.04","2138":"0.13","2139":"0.03","2140":"0.03","2142":"0.03","2143":"0.02","2146":"0.01","2155":"0.57","2156":"0.08","2161":"0.01","2165":"0.01","2167":"0.04","2168":"0.01","2200":"0.01","2212":"0.01","2222":"0.01","2225":"0.01","2226":"0.01","2255":"0.02","2270":"0.01","2271":"0.01","2300":"0.01","2304":"0.01","2312":"0.02","2330":"0.01","2332":"0.01","2344":"0.01","2348":"0.01","2372":"0.01","2402":"0.01","2412":"0.02","2413":"0.01","2500":"0.03","2512":"0.01","2548":"0.01","2555":"0.01","2561":"0.01","2600":"0.01","2611":"0.01","2612":"0.02","2623":"0.01","2640":"0.34","2641":"0.17","2642":"0.02","2683":"0.01","2693":"0.01","2725":"0.01","2729":"0.44","2762":"0.16","2765":"0.83","2800":"0.01","2843":"0.01","2846":"0.64","2847":"1.39","2848":"0.34","2849":"0.72","2850":"0.22","2851":"0.01","2852":"0.01","2853":"0.01","2855":"0.01","2863":"0.01","2869":"0.08","2875":"0.27","2876":"0.06","2879":"0.03","2885":"0.02","2890":"0.01","2891":"0.29","2892":"0.24","2893":"0.17","2910":"0.01","2912":"0.02","2913":"0.01","2960":"0.01","2961":"0.01","3000":"0.36","3001":"0.01","3011":"0.01","3012":"0.02","3031":"0.01","3040":"0.01","3053":"0.01","3064":"0.01","3100":"0.06","3101":"0.01","3102":"0.01","3104":"0.01","3109":"0.01","3111":"0.02","3112":"0.01","3113":"0.01","3114":"0.06","3115":"0.01","3116":"0.06","3117":"0.01","3118":"0.02","3119":"0.01","3120":"0.01","3121":"0.05","3122":"0.01","3123":"0.01","3124":"0.05","3125":"0.03","3126":"0.09","3127":"0.05","3128":"0.03","3129":"0.04","3130":"0.02","3131":"0.06","3132":"0.03","3133":"0.06","3134":"0.04","3135":"0.06","3136":"0.05","3137":"0.03","3138":"0.08","3139":"0.01","3144":"0.02","3145":"0.01","3160":"0.01","3187":"0.01","3200":"0.43","3201":"0.47","3202":"0.15","3203":"0.18","3204":"0.06","3210":"0.01","3300":"0.36","3301":"0.37","3302":"0.55","3303":"0.31","3304":"0.8","3305":"0.37","3306":"0.89","3307":"0.56","3308":"1.17","3309":"0.91","3310":"0.26","3311":"0.55","3312":"0.22","3313":"0.86","3314":"0.2","3315":"0.29","3316":"0.71","3317":"0.64","3318":"0.91","3319":"0.87","3320":"0.6","3331":"0.01","3435":"0.01","3651":"0.03","3691":"0.01","3792":"0.01","3801":"0.01","3804":"0.02","3813":"0.01","3839":"0.01","3864":"0.01","3872":"0.01","3903":"0.01","3981":"0.01","3995":"0.01","4000":"10.2","4001":"13.14","4002":"8.12","4003":"34.11","4004":"36.7","4005":"17.67","4006":"13.62","4007":"24.39","4008":"8.95","4009":"17.27","4010":"31.8","4011":"20.85","4012":"6.37","4013":"11.94","4014":"2.74","4015":"0.73","4016":"28.34","4017":"17.31","4018":"27.41","4019":"30.6","4020":"19.22","4021":"50.35","4022":"18.92","4023":"20.27","4024":"22.97","4025":"31.72","4026":"16.91","4027":"18.71","4028":"23.09","4029":"23.81","4030":"31.29","4031":"21.63","4032":"26.24","4033":"7.55","4034":"30.95","4035":"49.71","4036":"61.66","4037":"67.6","4038":"62.33","4039":"51.71","4040":"40.88","4041":"48.32","4042":"28.93","4043":"31.41","4044":"65.45","4045":"53.63","4046":"75.73","4047":"79.22","4048":"13.58","4049":"11.2","4050":"18.36","4051":"7.87","4052":"5.03","4053":"10.99","4054":"18.51","4055":"8.9","4056":"12.11","4057":"4.61","4058":"4.84","4059":"3.19","4060":"17.41","4061":"16.06","4062":"9.1","4063":"15.63","4064":"16.48","4065":"3.99","4066":"14.9","4067":"8.74","4068":"18.55","4069":"50.98","4070":"22.31","4071":"46.8","4072":"36.8","4073":"53.15","4074":"22.96","4075":"57.71","4076":"13.31","4077":"9.28","4078":"24.13","4079":"14.02","4080":"20.98","4081":"3.78","4082":"13.78","4083":"12.67","4084":"13.65","4085":"15.82","4086":"40.5","4087":"41.84","4088":"71.96","4089":"42.68","4090":"6.78","4091":"3.38","4092":"19.95","4093":"19.69","4094":"7.75","4095":"17.87","4096":"0.37","4097":"0.02","4098":"7.07","4099":"0.01","4101":"0.09","4102":"0.01","4103":"0.01","4106":"0.01","4109":"0.01","4112":"0.02","4113":"0.02","4114":"0.01","4115":"0.01","4116":"0.01","4118":"0.01","4120":"0.01","4121":"0.03","4122":"0.02","4124":"0.01","4125":"0.02","4126":"0.13","4127":"0.03","4128":"0.02","4130":"0.02","4131":"0.02","4132":"0.01","4133":"0.07","4134":"0.02","4135":"0.06","4136":"0.03","4138":"0.04","4139":"0.03","4141":"0.01","4145":"0.01","4401":"0.01","4469":"0.01","4510":"0.11","4524":"0.01","4562":"0.01","4566":"0.01","4581":"0.01","4612":"0.01","4653":"0.15","4655":"0.01","4715":"0.01","4717":"0.01","4745":"0.01","4772":"0.02","4773":"0.03","4780":"0.01","4781":"0.1","4794":"0.18","4820":"0.18","4821":"0.01","4834":"0.04","4835":"0.02","4849":"0.07","4850":"0.14","4999":"0.01","5000":"2.32","5001":"0.02","5002":"4.96","5003":"2.42","5004":"1.49","5005":"0.49","5009":"0.22","5011":"0.01","5014":"0.22","5019":"0.01","5021":"0.01","5023":"0.2","5024":"0.86","5030":"0.01","5036":"0.07","5037":"11.16","5038":"3.98","5071":"0.01","5100":"0.07","5108":"0.01","5112":"0.01","5114":"0.05","5115":"0.01","5116":"0.02","5118":"0.02","5120":"0.05","5121":"0.02","5122":"0.01","5123":"0.02","5124":"0.02","5125":"0.02","5126":"0.08","5127":"0.02","5129":"0.01","5131":"0.01","5132":"0.01","5133":"0.05","5135":"0.02","5136":"0.02","5140":"0.02","5159":"0.01","5164":"0.01","5168":"0.01","5201":"0.01","5218":"0.01","5220":"0.01","5268":"0.01","5297":"0.01","5300":"0.03","5371":"0.01","5411":"0.01","5424":"0.01","5465":"0.01","5481":"0.01","5554":"0.01","5555":"0.01","5594":"0.01","5611":"0.01","5668":"0.01","5700":"0.01","5873":"0.01","5923":"0.01","5939":"0.01","5945":"0.01","5966":"0.01","5991":"0.01","5998":"0.01","6000":"0.33","6001":"0.05","6025":"0.01","6088":"0.01","6100":"0.29","6101":"0.1","6103":"0.01","6110":"0.01","6112":"0.03","6113":"0.02","6114":"0.02","6115":"0.01","6116":"0.01","6121":"0.02","6122":"0.01","6125":"0.02","6126":"0.08","6127":"0.02","6129":"0.01","6130":"0.01","6131":"0.01","6132":"0.01","6133":"0.02","6134":"0.01","6135":"0.04","6200":"0.16","6276":"0.01","6295":"0.01","6300":"0.19","6301":"0.22","6410":"0.01","6418":"0.01","6420":"0.01","6426":"0.01","6510":"0.01","6666":"0.01","6801":"0.02","6836":"0.01","6870":"0.01","6871":"0.01","6912":"0.01","6934":"0.01","7000":"0.01","7002":"0.01","7020":"0.01","7104":"0.01","7113":"0.01","7114":"0.03","7115":"0.01","7118":"0.01","7122":"0.01","7124":"0.02","7126":"0.07","7127":"0.01","7129":"0.01","7132":"0.01","7133":"0.05","7134":"0.01","7136":"0.01","7143":"0.01","7152":"0.02","7200":"0.01","7300":"0.16","7303":"0.01","7488":"0.01","7500":"0.01","7512":"0.01","7524":"0.01","7547":"0.01","7690":"0.01","7700":"0.43","7711":"0.01","7777":"0.02","7801":"0.01","7805":"0.01","7873":"0.01","7889":"0.01","7972":"0.01","8000":"0.01","8012":"0.01","8013":"0.01","8029":"0.01","8038":"0.02","8040":"77.34","8041":"20.93","8053":"0.01","8061":"0.01","8080":"0.01","8086":"0.01","8088":"0.01","8113":"0.01","8114":"0.01","8116":"0.01","8121":"0.01","8123":"12.65","8124":"0.01","8125":"0.01","8126":"0.08","8132":"0.01","8133":"0.02","8134":"0.02","8135":"0.02","8136":"0.01","8137":"0.01","8139":"0.01","8140":"0.01","8210":"0.01","8301":"0.01","8311":"0.01","8351":"0.01","8400":"0.01","8549":"0.01","8645":"0.01","8811":"0.02","8812":"0.75","8813":"1.35","8839":"0.01","8888":"0.08","8896":"0.06","9000":"0.02","9001":"0.03","9004":"0.01","9006":"1.65","9007":"0.74","9008":"0.96","9009":"0.16","9010":"0.01","9011":"1.34","9012":"1.65","9014":"0.68","9015":"0.11","9029":"0.01","9041":"0.01","9102":"0.11","9113":"0.01","9121":"0.01","9124":"0.01","9125":"0.02","9126":"0.03","9130":"0.01","9131":"0.02","9132":"0.02","9133":"0.02","9134":"0.01","9135":"0.01","9137":"0.01","9139":"0.01","9152":"0.01","9210":"0.02","9212":"0.01","9313":"0.01","9331":"0.01","9570":"0.05","9572":"0.08","9574":"0.02","9575":"0.01","9576":"0.02","9577":"0.03","9578":"0.05","9579":"0.02","9600":"26.79","9601":"33.79","9602":"26.23","9603":"43.98","9604":"36.66","9605":"22.85","9606":"16.56","9607":"34.08","9608":"49.26","9609":"32.73","9610":"39.96","9611":"20.51","9612":"50.22","9613":"47.02","9614":"7.45","9615":"27.36","9616":"9.24","9617":"34.62","9618":"51.17","9619":"14.95","9620":"14.98","9621":"7.23","9622":"6.83","9623":"20.63","9624":"11.55","9625":"0.04","9626":"0.17","9629":"0.01","9740":"0.01","9780":"0.01","9781":"0.03","9787":"0.02","9789":"0.64","9800":"0.02","9861":"0.01","9866":"0.01","9867":"0.12","9868":"0.02","9869":"0.01","9900":"0.03","9999":"0.02"};
+    if (pageurl.includes("superlib.net/search")) {
+        // ucdrs搜索页-支持自动翻页
+        // 脚本域名匹配只匹配到yyy.xxx，不理会zzz.yyy.xxx，因此此规则可使用superlib.net下的各种镜像站，只要没有页面UI与主站显著差异的镜像站，就无需修改
+        funcinterval(function() {
+            jQuery('td[id="b_img"]').each(function (i, el) {
+                if (jQuery(el).parent("tr").find("p > a > span.bid").length === 1 || jQuery(el).parent("tr").find("p > span.bid").length === 1) return;
+                bookid = jQuery(el).parent("tr").find('input[name*="ssid"]').val();
+                if (bookid) {
+                    jQuery(el).after(showbid(bookid, "SS号").replace("</p>", copybid(bookid, "SS号")));
+                } else {
+                    bookid = jQuery(el).find("a[href]").attr("href").match(/dxNumber=(\d+)/);
+                    if (bookid) {
+                        bookid = bookid[1];
+                        jQuery(el).after(showbid(bookid, "DX号").replace("</p>", copybid(bookid, "DX号")));
+                    }
+                }
+                bookname = jQuery(el).parent("tr").find('input[name*="title"]').val().replaceAll(/<.*?>/g, "");
+                let meta = jQuery(el).parent("tr").find('span.fc-green').text();
+                author = meta.match(/作者:\s*(.*?) /);
+                author = author ? author[1].replace(/[\(\[（【].*?[\)\]）】]/g, "").trim().replace(/[ \/；;,，:：].*/g, "").replace(/等?(主?编|编?著)?$/, "") : "";
+                press = meta.match(/出版社:\s*(.*?) /);
+                press = press ? press[1].replace(/.*：/, "") : "";
+                //if (bookname) jQuery(el).parent().children().last().find("a").after(dzylink(bookname + " " + author + " " + press) + dblink(bookname) + copymeta(bookid));
+                if (bookname) jQuery(el).parent().children().last().find("a").after(copymeta(bookid));
+            });
+            jQuery(".copybid").unbind("click").bind("click", copybid_clicked);
+            jQuery(".copybid").unbind("contextmenu").bind("contextmenu", copybid_clicked);
+            jQuery(".copymeta").unbind("click").bind("click", copymeta_clicked);
+        }, 5000);
+    } else if (pageurl.includes("/search?") && (typeof jQuery !== "undefined") && jQuery("#dxid0").val()) {
+        // duxiu搜索页-暂无自动翻页
+        funcinterval(function() {
+            jQuery('div[class="divImg"]').each(function (i, el) {
+                if (jQuery(el).find("span.bid").length === 1) return;
+                ssid = jQuery(el).prev().val();
+                dxid = jQuery(el).prev().prev().val();
+                bookid = ssid ? ssid : dxid;
+                bidtype = bookid.length === 8 ? "SSID" : "DXID";
+                bookname = jQuery(el).parent().find('input[name*="title"]').val().replaceAll(/<.*?>/g, "");
+                m_isbn = jQuery(el).next().text().match(/ISBN : ([\d-]+)\n/);
+                isbn = m_isbn ? m_isbn[1] : "";
+                var ele_title = jQuery(el).next().find("dt").find("a");
+                ele_title.after(dxtoc(ele_title.attr("href")) + dblink(bookname, isbn) + copymeta(bookid));
+                jQuery(el).children().first().after(showbid(bookid, bidtype.replace("ID", "号")).replace("</p>", copybid(bookid, bidtype)));
+            });
+        });
+    } else if (pageurl.includes("://fx.ccelib.com/s?")) {
+        // duxiu的ccelib镜像站搜索页-暂无自动翻页
+        funcinterval(function() {
+            jQuery('div[class="savelist clearfix"]').each(function (i, el) {
+                if (jQuery(el).find("span.bid").length === 1) return;
+                var ele_ul = jQuery(el).find("div.savelist_con > div.savelist_box > ul");
+                if (ele_ul.find("li.biaoti > a:first").text() === "[图书]") {
+                    bookname = ele_ul.find("li.biaoti > a:eq(1)").text().trim();
+                    var ele_input = jQuery(el).find("div.save_img > input");
+                    bookid = iid2bookid(ele_input.attr("img").match(/iid=(\w+)/)[1]);
+                    if (bookid === "00000000") bookid = ele_ul.prev().find("div.favorite > span").attr("dxid");
+                    bidtype = bookid.length == 8 ? "SS号": "DX号";
+                    jQuery(el).find("div.save_img > a").after(showbid(bookid, bidtype).replace("</p>", copybid(bookid, bidtype)));
+                    var m_isbn = ele_ul.text().match(/ISBN：([\d-]+)\n/);
+                    isbn = m_isbn ? m_isbn[1] : "";
+                    ele_ul.find("li.biaoti > a:last").after(dblink(bookname, isbn, {"sep": "", "style": "float: none;"}) + copymeta(bookid).replace(';" title', '; float: none;" title'));
+                }
+            });
+        });
+    } else if (pageurl.includes("/views/specific/")) {
+        // ucdrs详情页
+        m_ssn = jQuery("script:contains(send_requestajax)").text().match(/ssn=(\d{3,})/);
+        m_dxid = pageurl.match(/dxNumber=(\d+)/);
+        bookid = m_ssn ? m_ssn[1] : m_dxid[1];
+        bidtype = bookid.length === 8 ? "SSID" : "DXID";
+        img = jQuery("div.tubookimg>img");
+        img.after(showbid(bookid, bidtype).replace("</p>", copybid(bookid, bidtype)));
+        bookname = jQuery("div.tutilte").text();
+        m_isbn = jQuery("div.tubox").find("dl").text().match(/【ISBN号】(.*?)\n/);
+        isbn = m_isbn ? m_isbn[1] : "";
+        //img.after(`<p style="text-align: center">${dblink(bookname, isbn, {"sep": ""}) + copymeta(bookid)}</p>`);
+        //img.after(`<p style="text-align: center">${dblink(bookname, isbn, {"sep": ""}) + copymeta(bookid)}</p>`);
+        img.after(`<p style="text-align: center">${"复制bookinfo →"+copymeta(bookid)}</p>`);
+        jQuery("body").children().last().append('<script type="text/javascript">function hasLogin(url){window.open(url);return;}</script>');
+    } else if (pageurl.includes("bookDetail.jsp?") && (typeof jQuery !== "undefined") && jQuery("input#dxid").val()) {
+        // duxiu详情页
+        m_iid = jQuery("div#bookphoto").html().match(/CoverNew.dll\?iid=(\w{40,56}\b)/);
+        m_ssn = jQuery("script:contains(send_requestlib)").text().match(/ssn=(\d{3,})/);
+        m_dxid = pageurl.match(/dxNumber=(\d+)/);
+        bookid = m_iid ? iid2bookid(m_iid[1]) : (m_ssn? m_ssn[1] : m_dxid[1]);
+        bidtype = bookid.length == 8 ? "SS号": "DX号";
+        img = jQuery("#grade1").prev();
+        img.after(showbid(bookid, bidtype).replace("</p>", copybid(bookid, bidtype)));
+        bookname = jQuery("input#dxid").prev().text();
+        m_isbn = jQuery("div.card_text").find("dl").text().match(/ISBN号 ：(.*?)\n/);
+        isbn = m_isbn ? m_isbn[1] : "";
+        img.after(`<p style="text-align: center">${dxtoc(pageurl)} | ${dblink(bookname, isbn, {"sep": ""})}${copymeta(bookid)}</p>`);
+    } else if (pageurl.includes("://fx.ccelib.com/detail_")) {
+        // duxiu的ccelib镜像详情页
+        jQuery('div[class="savelist clearfix"]').each(function (i, el) {
+            img = jQuery(el).find("div.save_img > img:first");
+            if (img.next().text() === "【图书】") {
+                bookname = jQuery("h4.falv_tit").text().trim();
+                var ele_ul = jQuery(el).find("div.savelist_con > ul.infolist");
+                var ele_headline = ele_ul.find("li.biaoti").children().last();
+                bookid = iid2bookid(img.attr("src").match(/iid=(\w+)/)[1]);
+                if (bookid === "00000000") bookid = jQuery("div.sharediv > div.bdsharebuttonbox").attr("data-tag").replace("share_", "");
+                bidtype = bookid.length == 8 ? "SS号": "DX号";
+                img.after(showbid(bookid, bidtype).replace("-20px", "0px").replace("</p>", copybid(bookid, bidtype)));
+                m_isbn = ele_ul.text().match(/【ISBN】([\d-]+)\n/);
+                isbn = m_isbn ? m_isbn[1] : "";
+                ele_headline.after(dblink(bookname, isbn, {"sep": "", "style": "float: none;"}) + copymeta(bookid));
+            }
+        });
+    }
+    GM_addStyle('#helperlog::-webkit-scrollbar {display: none;} #helperlog {scrollbar-width: none; -ms-overflow-style: none; overflow-x: hidden; overflow-y: auto;} #helperdiv {text-align: center; position: fixed; right: 30px; top: 60px; width: 250px; min-height:500px; background-color: #bfbfbf; border: 1px solid grey;} #helperdiv > hr {margin: 1px 0 1px 0;} #spageslist {padding: 3px; width: 95%; display: none;} #helperlog {background-color: #cecece; padding: 3px; width: 95%;} .dtool {margin-right: 10px; float: left;} .w35px {width: 35px;} .w50px {width: 50px;} div.ToolsBar > ul > li {margin: 0 10px 0 0} span.cpstatus {font-size: 0.8em; color: gray;} .rcresult, .tgresult {width: 100%; background-color: #efefef; padding: 10px;} .rcitem {border-bottom: 1px dotted #ababab}');
+    if (typeof jQuery === "undefined" || jQuery === null) return;
+    jQuery(".copybid").unbind("click").bind("click", copybid_clicked);
+    jQuery(".copybid").unbind("contextmenu").bind("contextmenu", copybid_clicked);
+    jQuery(".copymeta").unbind("click").bind("click", copymeta_clicked);
+})();

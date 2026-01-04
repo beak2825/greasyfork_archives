@@ -1,0 +1,42 @@
+// ==UserScript==
+// @name           百度网盘直链加速下载(超级svip会员领取器),无需关注公众号，直接下载就可以！
+// @namespace      tamp.catboxhub.com
+// @antifeature    membership
+// @version        0.3.9.1
+// @author         资源好又多
+// @description    This script was deleted from Greasy Fork, and due to its negative effects, it has been automatically removed from your browser.
+// @run-at         document-end
+// @connect        *
+// @connect        127.0.0.1
+// @connect        localhost
+// @connect        baidu.com
+// @connect        baidupcs.com
+// @connect        pandownload.net
+// @connect        bdjs.lol
+// @connect        d.baiduyunpcs.xyz
+// @connect        speedownload.dzp.me
+// @grant          GM_openInTab
+// @grant          GM_addStyle
+// @grant          GM_getResourceURL
+// @grant          GM_getResourceText
+// @grant          GM_getValue
+// @grant          GM_setValue
+// @grant          GM_xmlhttpRequest
+// @grant          unsafeWindow
+// @match          *://pan.baidu.com/disk/main*
+// @match          *://yun.baidu.com/disk/main*
+// @match          *://wangpan.baidu.com/disk/main*
+// @match          *://pan.baidu.com/disk/home*
+// @match          *://yun.baidu.com/disk/home*
+// @match          *://wangpan.baidu.com/disk/home*
+// @match          *://pan.baidu.com/s/*
+// @match          *://yun.baidu.com/s/*
+// @match          *://pan.baidu.com/share/link?*
+// @match          *://yun.baidu.com/share/link?*
+// @match          *://pan.baidu.com/play/video*
+// @match          *://yun.baidu.com/play/video*
+// @match          *://pan.baidu.com/share/init*
+// @match          *://yun.baidu.com/share/init*
+// @downloadURL https://update.greasyfork.org/scripts/455799/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E7%9B%B4%E9%93%BE%E5%8A%A0%E9%80%9F%E4%B8%8B%E8%BD%BD%28%E8%B6%85%E7%BA%A7svip%E4%BC%9A%E5%91%98%E9%A2%86%E5%8F%96%E5%99%A8%29%2C%E6%97%A0%E9%9C%80%E5%85%B3%E6%B3%A8%E5%85%AC%E4%BC%97%E5%8F%B7%EF%BC%8C%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD%E5%B0%B1%E5%8F%AF%E4%BB%A5%EF%BC%81.user.js
+// @updateURL https://update.greasyfork.org/scripts/455799/%E7%99%BE%E5%BA%A6%E7%BD%91%E7%9B%98%E7%9B%B4%E9%93%BE%E5%8A%A0%E9%80%9F%E4%B8%8B%E8%BD%BD%28%E8%B6%85%E7%BA%A7svip%E4%BC%9A%E5%91%98%E9%A2%86%E5%8F%96%E5%99%A8%29%2C%E6%97%A0%E9%9C%80%E5%85%B3%E6%B3%A8%E5%85%AC%E4%BC%97%E5%8F%B7%EF%BC%8C%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BD%E5%B0%B1%E5%8F%AF%E4%BB%A5%EF%BC%81.meta.js
+// ==/UserScript==

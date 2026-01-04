@@ -1,0 +1,113 @@
+// ==UserScript==
+// @name         DTF return like
+// @version      0.4
+// @description  Скрипт для замены иконки лайка (сердечка) на стрелку
+// @author       geuarg1y
+// @match        *://*.dtf.ru/*
+// @grant        none
+// @license      MIT
+// @namespace    https://greasyfork.org/users/998190
+// @downloadURL https://update.greasyfork.org/scripts/456631/DTF%20return%20like.user.js
+// @updateURL https://update.greasyfork.org/scripts/456631/DTF%20return%20like.meta.js
+// ==/UserScript==
+
+(function () {
+    injectStyles();
+})();
+
+function injectStyles() {
+    const styles = `
+        /* Лайки у постов */
+        .content-footer__item:first-child {
+            order: 2;
+            margin-right: 0px;
+            margin-left: 9px;
+        }
+
+        .content-footer__item:last-child {
+            order: 1;
+            margin-left: auto;
+        }
+
+        /* Лайки у комментов */
+        .comment .like-button.like-button--action-like {
+            order: -1;
+            margin-right: 0;
+        }
+
+        .comment .like-button.like-button--action-dislike {
+            order: -2;
+            margin-left: auto;
+            margin-right: 9px;
+        }
+
+        /* Количество рейтинга (и у постов, и у комментов) */
+        .like-button .like-button__count {
+            order: -1;
+            margin-right: 9px;
+            margin-left: 0px;
+        }
+
+        /* Кнопка раскрытия комментов */
+        .comment__inline-action {
+            order: 1;
+            width: 100%;
+        }
+
+        /* Цвета иконок лайка/дизлайка */
+        .like-button.like-button--action-like {
+            --like-color-text-hover: #2ea83a;
+            --like-color-background-hover: #2ea83a;
+            --like-color-active: #2ea83a;
+        }
+
+        .like-button.like-button--action-dislike {
+            --like-color-text-hover: #cf4c59;
+            --like-color-background-hover: #cf4c59;
+            --like-color-active: #cf4c59;
+        }
+
+        #v_dislike_active path {
+            fill: #cf4c59;
+        }
+
+        #v_like_active path {
+            fill: #2ea83a;
+        }
+
+        /* Отключаем анимацию */
+        .like-button--action-like .like-button__icon,
+        .like-button--action-dislike .like-button__icon {
+            visibility: visible !important;
+        }
+
+        .like-button--action-like .like-button__icon,
+        .like-button--action-dislike .like-button__icon {
+          background-size: 12px !important;
+          background-repeat: no-repeat !important;
+          background-position: center !important;
+        }
+
+        .like-button--action-like .like-button__icon {
+          background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAAfCAYAAACs5j4jAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABe0lEQVRYhd3XPW7CQBCG4W8nEkrJEXwAy+IIuEuXcgOXSU5jREmZCrgBlg8QlynTOWnYVIMUEmB/Zmwrb7le7fiRtlngn2b6GmStnRPRo3NuCmDnnNuv1+tWa14vsMVi8QLg+Wy5PR6PpRZOHXYBxanhVGE3UJwKTg3mieLEcSqwQBQnihOHRaI4MZwoLBHFieDEYEIoLhknAhNGcUk4Sp0egnLOHQDMAXx4bM+IaGutzWL+KwkWiuq6rlytVntjTAllXPRVjEFtNpsTZrlczpxzWwBTjyOCr2UULBXFaeKCYVIoTgsXBJNGcRo4b5gWipPGecG0UZwk7iasLxQnhbsK6xvFSeAuwoZCcam4P2FDo7gU3C/YWFBcLO4HbGwoLgZ3go0VxYXiDABYazMievMZMASKC8ERABDRzOfgIVEAUFXVwffJ4/0eGxrF+eIIACaTye7axrGgOB/cHQDUdf2Z5/mXMebhfMPYUFzTNO9FUbwCeAJwf/a5/QaHl/YZGwHdGgAAAABJRU5ErkJggg==");
+        }
+        .like-button--action-like.like-button--active .like-button__icon {
+          background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAAfCAYAAACs5j4jAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABlElEQVRYhd3YMU7DQBCF4TeLFJEuDRUNBwA5JYIi4QhISIQKuAE3IDlJRBUKpBwBpwtdEOEGVFTpQInwUKCJQIR47Z2xLf5yPfbq07qxgX8aFbVRNDhsMyXnYJqxSyZPp+Mby/3MYVG/1eD6Ygig/X2dwbF7qx0/Xo5mFvuawqJ+q5Fszu+JqLnqOjNP3HvtyAJnBktDSVY4E5gvSrLAqcOyoiRtnCosL0rSxKnBQlGSFk4FpoWSNHDBMG2UFIoLgmVFJUi6AODguj7zIbjcsDyoaWfcA4Dd2/1ra1wuWAhKssZlhmmgJEtcJpgmSrLCecMsUJIFzgtmiZK0camwIlCSJm4trEiUpIX7E1YGStLArYSViZJCcb9gVUBJIbgfsCqhpLy4JayKKCkPzi0X6othFVEAMO2Me/JlkBYRNZP6fLgBAHuDgwsiXPncWDRKer17GW2dbINA7bRZAu04ACCHyOfhZaGkLCf39SoyN9IGy0ZJvjgHAB+crP2PXhWU5INzAPB89hAzOF41UDWUtA7H4PgT/ibJhjjcmGEAAAAASUVORK5CYII=");
+        }
+        .like-button--action-dislike .like-button__icon {
+          color: var(--color-error);
+          background-position: 4px center;
+          background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAAfCAYAAACs5j4jAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABxUlEQVRYhd3YP04CQRTH8e9bEhKoKC3pCcSExpLSbrWaUHEFbyDcQG/BUnkD9ARKATWlpSUh2RkbVEKUnd19wxJ/zf7LTN4nb3aTHfinkf2LOI5bzWZz5Jy7FJEPa+1jkiTrimrzznA4vHHOxSLykabpy2w2e/qGGWPaURTNgfb+IGvtJEmS8Ylr9Uocx61GozEXkcuDRw+1r7Ner/fKAQpARAadTkeWy+Vz2DLz5QgK4KoGYIwZiMjdX5OcGy4DBUC0O7azJoui6N4YM1aqrXB8ULCDWWvffCatGueLAqgBrFar9263O8Cjc1Utyzwo+FmK1Ov1W+AsO5cX5Zwbf38VF4vFpt/vJ2maXgMXWYNP1bkiqOl0Oqnt3zw3XFEU7N6x/ZwLrgwKfoFB9biyKPgDBtXhNFBwBAanx2mhIAMGp8NposADBuFx2ijwhEE4XAgU5ICBPi4UCnLCQA8XEgUFYFAeFxoFB3seeTMajVrb7XYOeBVorZ1sNpuH0CgoCYP8OGCNx+8RFEeBAgwK4TJTBgVKMNDFlUWBIgx0cBooUIZBOZwWCgLAoBhOEwWBYJAPp42CgDDww4VAQWAYHMeFQgF8Ai9wuQOhyUU8AAAAAElFTkSuQmCC")
+        }
+        .like-button--action-dislike.like-button--active .like-button__icon {
+          background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAAfCAYAAACs5j4jAAAACXBIWXMAAA7DAAAOwwHHb6hkAAABjUlEQVRYhd3Wz1GDQBTH8e9SAXRAB3DXDHagVmApkg5iJ3agjhlnvEEFpgNy9896SAZjNGH37duEybvBLu/9PjADwImW2TzoiipNzMeNxZTA0tr3u6x9XRwnmnt1xfmVMVwCS2t5ytr5vflZrHJjvh6AfPMia5lm7XN92Khu1RVVus5c/l6xsx62LCdvbKH6bSPE7UatKlltOrtgBwrAGG67YlJHyCeqIRSsYZDkQ83GgnNBQQ/7bFyaHhvnioI1LGtfGuDRpfmxcD4o6J8YWJtcA6N8cr4osPWf75hPg0O8LSWotJlPzfbpMeGkKNj685A2jIELQcEOmKSxJi4UBXtgkgEaOA0UDMAkg0JwWihwgEkGSnCaKHCESQb74LRR4AGTBHDBxUCBJ0wSZB8uFgoEMEmg/3AxUSCEQRguNgoCYCDDQTKLjYJAGIju/gJM7rhXhAIFGEhwLiVHgRIMtHFhKFCEgRYuHAXKMAjF6aAgAgykOD0URIKBL04XBRFh4IrTR0FkGAzh4qAAvgEE4FOSVxu7QwAAAABJRU5ErkJggg==")
+        }
+
+        .like-button__icon>svg,
+        .like-button__lottie {
+          opacity: 0;
+        }
+    `;
+
+    document.head.insertAdjacentHTML("beforeend", `<style type="text/css" id="dtfChangeIconStyles">${styles}</style>`)
+}
