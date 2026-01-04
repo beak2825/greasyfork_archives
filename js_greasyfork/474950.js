@@ -1,0 +1,32 @@
+// ==UserScript==
+// @name         Scope Theme - Viking
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Same Scope That Viking Uses
+// @author       Stormii Cloud
+// @match        https://shellshock.io/
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/474950/Scope%20Theme%20-%20Viking.user.js
+// @updateURL https://update.greasyfork.org/scripts/474950/Scope%20Theme%20-%20Viking.meta.js
+// ==/UserScript==
+
+(function () {
+    const addScript = () => {
+        document.head.innerHTML += `<style>
+*{
+
+#maskmiddle {
+    background: url('https://cdn.discordapp.com/attachments/929836756717682748/941179460231786536/Viking_Scope.png') center center no-repeat;
+    background-size: contain;
+    width: 100vh;
+    height: 100vh;
+}
+
+#maskleft, #maskright {
+	background: black;
+	flex: 1;
+}
+</style>`
+    }
+    document.body ? addScript() : document.addEventListener("DOMContentLoaded", e => addScript());
+})();

@@ -1,0 +1,347 @@
+// ==UserScript==
+// @name         7.自动评论@（手机端）
+// @namespace   Violentmonkey Scripts
+// @match       *://www.douyin.com/*
+// @version     1.2.0
+// @license MIT
+// @grant       GM_info
+// @grant       GM_getValue
+// @grant       GM_setValue
+// @grant       GM_addStyle
+ 
+// @grant       GM_deleteValue
+// @grant       GM_xmlhttpRequest
+// @grant       GM_setClipboard
+// @grant       GM_registerMenuCommand
+// @grant       GM_unregisterMenuCommand
+// @grant       GM_getResourceText
+// @grant       GM_getResourceURL
+// @grant       GM_openInTab
+// @grant       unsafeWindow
+// @run-at      document-body
+// @author      zhizhu
+ 
+// @description 抖音控制
+// @downloadURL https://update.greasyfork.org/scripts/473666/7%E8%87%AA%E5%8A%A8%E8%AF%84%E8%AE%BA%40%EF%BC%88%E6%89%8B%E6%9C%BA%E7%AB%AF%EF%BC%89.user.js
+// @updateURL https://update.greasyfork.org/scripts/473666/7%E8%87%AA%E5%8A%A8%E8%AF%84%E8%AE%BA%40%EF%BC%88%E6%89%8B%E6%9C%BA%E7%AB%AF%EF%BC%89.meta.js
+// ==/UserScript==
+ 
+// eslint-disable-next-line no-undef
+ 
+(function () {
+  "use strict";
+  
+ 
+  GM_addStyle("body{transform: scale(0.5) translateX(-259px);}");
+  GM_addStyle("#videoSideBar{transform: scale(0.5) translateX(-428px); background: rgba(0,0,0,0.9);width: 412px;height: 492px; }");
+
+  
+
+ 
+  function findDomTimeOut(dom, method, time) {
+    if (!time) {
+      time = 1800;
+    }
+    setTimeout(() => {
+      if (document.querySelector(dom) !== null) {
+        switch (method) {
+          case "click":
+            document.querySelector(dom).click();
+            break;
+ 
+          default:
+            break;
+        }
+      } else {
+        console.log(1111);
+      }
+    }, time);
+  }
+ 
+  function fn() {
+    console.log(66666);
+ 
+    if (
+      document.querySelector(
+        "div[data-e2e='feed-active-video'] .xgplayer-playswitch-next.disabled"
+      )
+    ) {
+      clearInterval(interval);
+      interval = null;
+      nextDisabled();
+    }
+ 
+    if (
+      document.querySelectorAll("div[data-e2e='feed-active-video']")[0] ==
+        undefined ||
+      document.querySelectorAll(
+        "div[data-e2e='feed-active-video'] .RA5iG98_"
+      )[0] ||
+      document.querySelectorAll(
+        "div[data-e2e='feed-active-video'] .Lnsyat3L"
+      )[0]
+    ) {
+      if (new RegExp("search").test(window.location.href)) {
+        index++;
+        document
+          .querySelector(
+            "div[data-e2e='feed-active-video'] .xgplayer-playswitch-next"
+          )
+          .click();
+      } else {
+        document.querySelectorAll(".xgplayer-playswitch-next")[0].click();
+      }
+ 
+      clearInterval(interval);
+      interval = null;
+      if (interval == null) {
+        interval = setInterval(fn, 1800);
+      }
+    } else {
+      setTimeout(() => {
+        let currentDom = document.querySelectorAll(
+          "div[data-e2e='feed-active-video']"
+        )[0];
+ 
+        if (
+          Number(currentDom.querySelector(".hfgGrUTS.Y006Bsbt").innerText) <
+            20 ||
+          currentDom.querySelector(".hfgGrUTS.Y006Bsbt").innerText == "抢首评"
+        ) {
+          //评论
+          clearInterval(interval);
+          interval = null;
+ 
+          // @
+          if (
+            document.querySelector(
+              "div[data-e2e='feed-active-video'] #\\@嘉年华👑"
+            ) &&
+            document.querySelector("div.wx4oFjSc").innerHTML ==
+              document
+                .querySelector(
+                  "div[data-e2e='feed-active-video'] #\\@嘉年华👑"
+                )
+                .closest(".YzbzCgxU.Q7m2YYn9")
+                .querySelector(".Uvaas5kD").innerText
+          ) {
+            if (new RegExp("search").test(window.location.href)) {
+              index++;
+              document
+                .querySelector(
+                  "div[data-e2e='feed-active-video'] .xgplayer-playswitch-next"
+                )
+                .click();
+            } else {
+              document.querySelectorAll(".xgplayer-playswitch-next")[0].click();
+            }
+            setTimeout(() => {
+              if (interval == null) {
+                interval = setInterval(fn, 2000);
+              }
+            }, 2000);
+          } else {
+            setTimeout(() => {
+              currentDom
+                .querySelector(
+                  "#merge-all-comment-container > div > div.qdcce5kG.comment-input-container > div:nth-child(2) > div > div.ZYKj4kJN.commentInput-right-ct > div > span:nth-child(1)"
+                )
+                .click();
+ 
+              setTimeout(() => {
+                try {
+                  document.querySelectorAll(
+                    "div[data-e2e='feed-active-video'] span[data-text='true']"
+                  )[0].innerHTML = "@Ynsp";
+                  document
+                    .querySelectorAll(
+                      "div[data-e2e='feed-active-video'] span[data-text='true']"
+                    )[0]
+                    .dispatchEvent(
+                      new Event("input", { bubbles: !0, cancelable: !0 })
+                    );
+                } catch (error) {
+                  window.location.reload();
+                }
+ 
+                setTimeout(() => {
+                  try {
+                    for (const item of document.querySelectorAll(
+                      ".nA8iIE7L.atBox-inner-container"
+                    )[0].children) {
+                      if ( new RegExp("嘉年华").test(item.innerText)) {
+                        item.querySelector(".dyt4sciY").click();
+ 
+                        setTimeout(() => {
+                          if (
+                            document.querySelector(
+                              "#merge-all-comment-container > div > div.qdcce5kG.comment-input-container > div:nth-child(2) > div > div.pOcGUDMb > div > div.DraftEditor-root > div > div > div > div > div > span:nth-child(2) > span"
+                            )
+                          ) {
+                            let input = document.querySelector(
+                              "#merge-all-comment-container > div > div.qdcce5kG.comment-input-container > div:nth-child(2) > div > div.pOcGUDMb > div > div.DraftEditor-root > div > div > div > div > div > span:nth-child(2) > span"
+                            );
+                            // input.innerHTML =
+                            //   "\n阁下实力虽强，但比起我的操作，还是略逊一筹\n就算隐藏了视频，依然存在我的手机里，生生世世\n可能这就是长大的代价吧";
+ 
+
+                            var xhr = new XMLHttpRequest();
+                            xhr.open("get", "https://v1.hitokoto.cn");
+                            xhr.onreadystatechange = function () {
+                              if (xhr.readyState === 4) {
+                                var data = JSON.parse(xhr.responseText);
+                                console.log(data);
+                                input.innerHTML = data.hitokoto;
+                                // "\n阁下实力虽强，但比起我的操作，还是略逊一筹\n就算隐藏了视频，依然存在我的手机里，生生世世\n可能这就是长大的代价吧";
+
+                                input.dispatchEvent(
+                                  new Event("input", {
+                                    bubbles: !0,
+                                    cancelable: !0,
+                                  })
+                                );
+                              }
+                            };
+                            xhr.send();
+
+                              
+ 
+                            setTimeout(() => {
+                              findDomTimeOut(".OGIa7O6a.ZUkCSg5u", "click");
+ 
+                              setTimeout(() => {
+                                if (
+                                  new RegExp("search").test(
+                                    window.location.href
+                                  )
+                                ) {
+                                  index++;
+ 
+                                  document
+                                    .querySelector(
+                                      "div[data-e2e='feed-active-video'] .xgplayer-playswitch-next"
+                                    )
+                                    .click();
+                                } else {
+                                  findDomTimeOut(
+                                    ".xgplayer-playswitch-next",
+                                    "click",
+                                    2000
+                                  );
+                                }
+ 
+                                setTimeout(() => {
+                                  if (interval == null) {
+                                    interval = setInterval(fn, 1800);
+                                  }
+                                }, 2800);
+                              }, 3200);
+                            }, 2500);
+                          }
+                        }, 2000);
+                      }
+                    }
+                  
+                  } catch (error) {
+                    window.location.reload();
+                  }
+                }, 4000);
+              }, 2000);
+            }, 3000);
+          }
+        } else {
+          if (new RegExp("search").test(window.location.href)) {
+            index++;
+ 
+            document
+              .querySelector(
+                "div[data-e2e='feed-active-video'] .xgplayer-playswitch-next"
+              )
+              .click();
+          } else {
+            document.querySelectorAll(".xgplayer-playswitch-next")[0].click();
+          }
+        }
+      }, 1000);
+    }
+  }
+ 
+  function nextDisabled() {
+    document
+      .querySelector(
+        "#douyin-right-container > div:nth-child(5) > div.ZCHTRJzJ.isDark > div"
+      )
+      .click();
+    setTimeout(() => {
+      document.documentElement.scrollTop =
+        document.documentElement.scrollHeight + 1500;
+      setTimeout(() => {
+        document
+          .querySelectorAll(".TgJeUdJ2.B9KMVC9A .MgWTwktU a")
+          [index - 1].click();
+        findDomTimeOut(
+          "div[data-e2e='feed-active-video'] .hfgGrUTS.Y006Bsbt",
+          "click",
+          4000
+        );
+        setTimeout(() => {
+          interval = setInterval(fn, 2000);
+        }, 5000);
+      }, 5000);
+    }, 1200);
+  }
+ 
+  if (new RegExp("search").test(window.location.href)) {
+    setTimeout(() => {
+      if (
+        document.querySelector(".dC4GYZQ1").children[1].className !== "qwx22yjn"
+      ) {
+        document.querySelector(".dC4GYZQ1").children[1].click();
+      }
+    }, 1000);
+    var index = 0;
+  }
+ 
+  var interval;
+  setTimeout(() => {
+    findDomTimeOut(
+      "div[data-e2e='feed-active-video'] .hfgGrUTS.Y006Bsbt",
+      "click",
+      3000
+    );
+    if (new RegExp("search").test(window.location.href)) {
+      findDomTimeOut(".TgJeUdJ2.B9KMVC9A .MgWTwktU a", "click", 1000);
+    }
+ 
+    interval = setInterval(fn, 2000);
+ 
+    setInterval(() => {
+      if (interval == null) {
+        clearInterval(interval);
+        interval = null;
+        if (new RegExp("search").test(window.location.href)) {
+          index++;
+          document
+            .querySelector(
+              "div[data-e2e='feed-active-video'] .xgplayer-playswitch-next"
+            )
+            .click();
+        } else {
+          document.querySelectorAll(".xgplayer-playswitch-next")[0].click();
+        }
+ 
+        setTimeout(() => {
+          interval = setInterval(fn, 2000);
+        }, 3000);
+      }
+    }, 5 * 60 * 1000);
+  }, 4000);
+ 
+  if (!new RegExp("search").test(window.location.href)) {
+    setTimeout(() => {
+      window.location.href = "https://www.douyin.com/";
+    }, 30 * 60 * 1000);
+  }
+ 
+  // Your code here...
+})();

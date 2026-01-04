@@ -1,0 +1,174 @@
+// ==UserScript==
+// @name        济南专业技术人员继续教育—公需课
+// @namespace   Violentmonkey Scripts
+// @match       *://*.ghlearning.com/*
+// @match       http://221.214.69.254:9091/*
+// @grant       none
+// @version     0.1.10
+// @author      aliha
+// @description 公需科目辅助|自动答题|自动切换下一小节
+// @license      GPL-3.0
+// @run-at       document-end
+// @icon         data:image/png;base64,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
+// @downloadURL https://update.greasyfork.org/scripts/474645/%E6%B5%8E%E5%8D%97%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E2%80%94%E5%85%AC%E9%9C%80%E8%AF%BE.user.js
+// @updateURL https://update.greasyfork.org/scripts/474645/%E6%B5%8E%E5%8D%97%E4%B8%93%E4%B8%9A%E6%8A%80%E6%9C%AF%E4%BA%BA%E5%91%98%E7%BB%A7%E7%BB%AD%E6%95%99%E8%82%B2%E2%80%94%E5%85%AC%E9%9C%80%E8%AF%BE.meta.js
+// ==/UserScript==
+(function () {
+
+    // 定义一些设置变量
+    const NEXT_SUBMIT_DEALY = 6;    // 尝试错误后下一次提交间隔秒，目前测试6秒刚好，不然会在弹窗出现之前往下执行，跳过一些答案选项组合
+    const SUBMIT_DELAY = 1;         // 填写完成答案后，提交间隔
+    const FIRST_RUN_DELAY = 15;     // 首次运行延迟15秒，防止在player没加载前运行出错
+    const RUN_INTERVAL = 180;       // 脚本运行间隔，默认180秒
+    const PLAY_TYPE = 1;            // 播放方式，1-方式一；2-方式二
+
+
+    // 延迟s秒
+    function delay(s) {
+        return new Promise(resolve => setTimeout(resolve, s * 1000));
+    }
+
+    // 检测答题元素,获取选项
+    function getItems() {
+        if (document.querySelector(".pv-ask-modal")) {
+            let qusCard = document.querySelector(".pv-ask-modal")
+            let inputs = qusCard.querySelectorAll("input")
+            return inputs
+        }
+
+        return null
+    }
+
+    // 生成数组所有的穷举组合并剔除空数组
+    function generateCombinations(arr) {
+        const combinations = [
+            []
+        ];
+
+        // 遍历数组元素
+        for (let i = 0; i < arr.length; i++) {
+            const currentLength = combinations.length;
+
+            // 遍历当前已生成的组合
+            for (let j = 0; j < currentLength; j++) {
+                const currentCombination = combinations[j];
+
+                // 生成新的组合，包含当前数组元素
+                const newCombination = currentCombination.concat(arr[i]);
+
+                // 如果组合不为空，则将新组合添加到二维数组中
+                if (newCombination.length > 0) {
+                    combinations.push(newCombination);
+                }
+            }
+        }
+
+        // 剔除空数组
+        return combinations.filter(combination => combination.length > 1);
+    }
+
+    // 判断是否暂停
+    function isPuased() {
+        var elements = document.getElementsByClassName("pv-icon-btn-play");
+        for (var i = 0; i < elements.length; i++) {
+            var element = elements[i];
+            var computedStyle = window.getComputedStyle(element);
+            if (computedStyle.getPropertyValue("display") === "block") {
+                // console.log(element);
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    // 获取进度，自动播放
+    function getProcess() {
+        let jindu = document.querySelector("#a span[du-html=sumschedule]"); // 获取总进度
+        if (jindu) {
+
+            if (jindu.innerText === "100.00") {
+                console.info("本课程已完成");
+                return 0;
+            } else {
+                // 获取当前进度，如果播放完毕或者未开始，点击播放按钮开始播放，（因为系统播放完一节会自动切换下一节，所以光点击播放按钮就可以了，不用手动切换小节）
+                let dangqian = document.querySelector(".videoLi.active");
+                let ispaused = isPuased();
+                if (dangqian.innerText.match(/[0-9]+%/)[0] == "100%" || dangqian.innerText.match(/[0-9]+%/)[0] == "0%" || ispaused) {
+                    console.info("本课程未完成，继续播放");
+
+                    if (PLAY_TYPE === 1) {
+                        console.info("使用方式一自动播放")
+                        const pauseBtn = document.querySelector('button[type="button"].pv-playpause.pv-iconfont.pv-icon-btn-play');
+                        if (pauseBtn) {
+                            pauseBtn.click();
+                        }
+
+                    } else if (PLAY_TYPE === 2) {
+                        console.info("使用方式二自动播放")
+                        const video = document.getElementById('video');
+                        video.muted = true;
+                        video.play()
+                            .then(() => {
+                                console.info("自动播放成功");
+                            })
+                            .catch(error => {
+                                console.error('自动播放失败，请手动点击播放:', error);
+                            });
+                    }
+                }
+            }
+        }
+    }
+
+    // 挨个尝试，检测到回答错误继续，检测到回答正确跳出，同时清空答案
+    async function answer(res_ls) {
+
+        for (let i = res_ls.length - 1; i != 0; i--) {
+            await delay(NEXT_SUBMIT_DEALY)
+
+            let inputs = getItems()
+            if (inputs) {
+                console.log(`尝试第${res_ls.length - i}次作答`)
+                // console.log(...res_ls[i])
+                for (let j = 0; j < res_ls[i].length; j++) {
+                    inputs[res_ls[i][j]].checked = true;
+                }
+
+                // 提交答案
+                let button = document.querySelector('button.pv-ask-submit[data-type="pvSubmit"]');
+                await delay(SUBMIT_DELAY)
+                if (button) {
+                    button.click()
+                }
+            }else{
+                console.log("回答正确");
+                break;
+            }
+        }
+    }
+
+    // 主函数
+    async function main() {
+        console.info("开始答题")
+
+        await getProcess()
+
+        // 自动答题
+        if (getItems()) {
+            let inputs = getItems()
+            const array = Array.from({
+                length: inputs.length
+            }, (_, index) => index);
+            let num = generateCombinations(array)
+            await answer(num)
+            console.info("答题脚本执行完毕")
+        } else {
+            console.info(`未检测到答题卡，${RUN_INTERVAL}秒后再次运行`)
+        }
+    }
+
+
+    setTimeout(main, FIRST_RUN_DELAY*1000);
+    setInterval(main, RUN_INTERVAL*1000);
+})();
