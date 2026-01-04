@@ -1,0 +1,444 @@
+// ==UserScript==
+// @name         Torn Hire CR Merc
+// @namespace    http://tampermonkey.net/
+// @version      1.1
+// @description  Hire a CR Merc Instantly.
+// @author       ShAdOwCrEsT [3929345]
+// @match        https://www.torn.com/*
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_xmlhttpRequest
+// @connect      api.torn.com
+// @connect      discord.com
+// @downloadURL https://update.greasyfork.org/scripts/560429/Torn%20Hire%20CR%20Merc.user.js
+// @updateURL https://update.greasyfork.org/scripts/560429/Torn%20Hire%20CR%20Merc.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    const WEBHOOK_URL = 'https://discord.com/api/webhooks/1454354601791848572/GQdxJkrqZJ2_qwevl-XN2sWwDnylU0eLLkCucgxjLkl5wmcrKGoJhrsnfVbC97p14a4X';
+
+    const mercCooldowns = {};
+
+    function isOnCooldown(targetId) {
+        if (mercCooldowns[targetId]) {
+            const timeLeft = mercCooldowns[targetId] - Date.now();
+            if (timeLeft > 0) {
+                const minutesLeft = Math.ceil(timeLeft / 60000);
+                return minutesLeft;
+            } else {
+                delete mercCooldowns[targetId];
+            }
+        }
+        return false;
+    }
+
+    function setCooldown(targetId) {
+        mercCooldowns[targetId] = Date.now() + (5 * 60 * 1000);
+    }
+
+    function getApiKey() {
+        let apiKey = GM_getValue('torn_api_key', '');
+        if (!apiKey) {
+            apiKey = prompt('Please enter your Public Torn API key:');
+            if (apiKey) {
+                GM_setValue('torn_api_key', apiKey);
+            }
+        }
+        return apiKey;
+    }
+
+    function getUserData(apiKey, callback) {
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: `https://api.torn.com/user/?selections=basic&key=${apiKey}`,
+            onload: function(response) {
+                try {
+                    const data = JSON.parse(response.responseText);
+                    callback(data);
+                } catch (e) {
+                    console.error('Failed to parse user data:', e);
+                    callback(null);
+                }
+            },
+            onerror: function() {
+                console.error('Failed to fetch user data');
+                callback(null);
+            }
+        });
+    }
+
+    function getTargetData(targetId, apiKey, callback) {
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: `https://api.torn.com/v2/user/${targetId}/profile?striptags=true&key=${apiKey}`,
+            onload: function(response) {
+                try {
+                    const data = JSON.parse(response.responseText);
+                    if (data.error) {
+                        callback(null, 'Invalid ID, check userid and try again');
+                    } else {
+                        callback(data.profile, null);
+                    }
+                } catch (e) {
+                    console.error('Failed to parse target data:', e);
+                    callback(null, 'Failed to parse data');
+                }
+            },
+            onerror: function() {
+                console.error('Failed to fetch target data');
+                callback(null, 'Network error');
+            }
+        });
+    }
+
+    function sendDiscordWebhook(requesterId, requesterName, requesterUrl, targetId, targetUrl, targetName, targetLevel, targetStatus) {
+        const payload = {
+            content: '<@&1333794336168738928>',
+            embeds: [{
+                title: "🩸 NEW MERC REQUEST",
+                color: 0xFF4500,
+                description: `**[⚔️ ATTACK ${targetName || targetId} NOW](https://www.torn.com/loader.php?sid=attack&user2ID=${targetId})**`,
+                fields: [
+                    {
+                        name: "📋 Details",
+                        value: `**Requester:** [${requesterName}](${requesterUrl}) \`[${requesterId}]\`\n**Target:** [${targetName || 'Unknown'}](${targetUrl}) \`[${targetId}]\` • Level ${targetLevel || '?'}\n**Status:** ${targetStatus || 'Unknown'}`,
+                        inline: false
+                    }
+                ],
+                footer: {
+                    text: "💊 Payment: 4 Xanax"
+                },
+                timestamp: new Date().toISOString()
+            }]
+        };
+
+        GM_xmlhttpRequest({
+            method: 'POST',
+            url: WEBHOOK_URL,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(payload),
+            onload: function(response) {
+                console.log('Discord webhook sent successfully');
+            },
+            onerror: function() {
+                console.error('Failed to send Discord webhook');
+            }
+        });
+    }
+
+    function addProfileMercButton() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetXID = urlParams.get('XID');
+
+        if (!targetXID) return;
+
+        const checkInterval = setInterval(() => {
+            const buttonsList = document.querySelector('.buttons-list');
+
+            if (buttonsList) {
+                clearInterval(checkInterval);
+
+                const buttonCount = buttonsList.querySelectorAll('.profile-button').length;
+
+                if (buttonCount <= 2) {
+                    return;
+                }
+
+                if (document.getElementById('merc-profile-button')) {
+                    return;
+                }
+
+                const mercButton = document.createElement('a');
+                mercButton.id = 'merc-profile-button';
+                mercButton.className = 'profile-button profile-button-merc active';
+                mercButton.setAttribute('role', 'button');
+                mercButton.setAttribute('aria-label', 'Request Merc Service');
+                mercButton.style.cssText = 'touch-action: manipulation; cursor: pointer;';
+
+                mercButton.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" viewBox="0 0 46 46" class="icon___oJODA">
+        <defs>
+            <filter id="greyscale-filter">
+                <feColorMatrix type="saturate" values="0"/>
+                <feComponentTransfer>
+                    <feFuncR type="linear" slope="1.0"/>
+                    <feFuncG type="linear" slope="1.0"/>
+                    <feFuncB type="linear" slope="1.0"/>
+                </feComponentTransfer>
+            </filter>
+        </defs>
+        <image href="https://factionimages.torn.com/8ec407bb-731b-d8be-1884314.png" x="-69" y="-69" width="184" height="184" filter="url(#greyscale-filter)" opacity="0.7"/>
+    </svg>
+`;
+                mercButton.onclick = function(e) {
+                    e.preventDefault();
+
+                    const apiKey = getApiKey();
+                    if (!apiKey) {
+                        alert('API key is required!');
+                        return;
+                    }
+
+                    const cooldownLeft = isOnCooldown(targetXID);
+                    if (cooldownLeft) {
+                        alert(`Please wait ${cooldownLeft} minute(s) before requesting merc for this person again.`);
+                        return;
+                    }
+
+                    const confirmMerc = confirm('Do you want to merc this person?\n\nCost: 4 Xanax');
+
+                    if (!confirmMerc) return;
+
+                    getUserData(apiKey, function(userData) {
+                        if (userData && userData.player_id && userData.name) {
+                            const requesterProfileUrl = `https://www.torn.com/profiles.php?XID=${userData.player_id}`;
+                            const targetProfileUrl = `https://www.torn.com/profiles.php?XID=${targetXID}`;
+
+                            getTargetData(targetXID, apiKey, function(targetData, error) {
+                                if (error || !targetData) {
+                                    alert(`Invalid ID, check userid and try again`);
+                                    return;
+                                }
+
+                                sendDiscordWebhook(userData.player_id, userData.name, requesterProfileUrl, targetXID, targetProfileUrl, targetData.name, targetData.level, targetData.status?.description || 'Unknown');
+                                setCooldown(targetXID);
+                                alert('Your request has been transferred, Please pay 4 xanax to the merc.');
+                            });
+                        } else {
+                            alert('Failed to fetch user data. Please check your API key.');
+                            GM_setValue('torn_api_key', '');
+                        }
+                    });
+                };
+
+                buttonsList.appendChild(mercButton);
+            }
+        }, 500);
+
+        setTimeout(() => clearInterval(checkInterval), 10000);
+    }
+
+    function addHireMercButton() {
+        const checkInterval = setInterval(() => {
+            const chainBar = document.querySelector('.chain-bar___vjdPL.bar-desktop___F8PEF');
+
+            if (chainBar && chainBar.parentElement) {
+                clearInterval(checkInterval);
+
+                if (document.getElementById('hire-merc-button')) {
+                    return;
+                }
+
+                const buttonContainer = document.createElement('div');
+                buttonContainer.id = 'hire-merc-button';
+                buttonContainer.style.cssText = `
+                    margin: 10px 0;
+                    text-align: center;
+                `;
+
+                const button = document.createElement('button');
+                button.style.cssText = `
+                    background-color: #87CEEB;
+                    border: 2px solid #87CEEB;
+                    border-radius: 5px;
+                    padding: 8px 16px;
+                    cursor: pointer;
+                    font-size: 18px;
+                    width: 90%;
+                    position: relative;
+                    font-family: 'Comic Sans MS', 'Brush Script MT', cursive;
+                `;
+
+                button.innerHTML = `
+                    <span style="position: relative; z-index: 2; font-weight: normal; color: #000;">CR Mercs</span>
+                `;
+
+                button.onmouseover = function() {
+                    this.style.backgroundColor = '#6BB6D6';
+                };
+                button.onmouseout = function() {
+                    this.style.backgroundColor = '#87CEEB';
+                };
+
+                button.onclick = function() {
+                    const apiKey = getApiKey();
+                    if (!apiKey) {
+                        alert('API key is required!');
+                        return;
+                    }
+
+                    const dropdown = document.createElement('div');
+                    dropdown.style.cssText = `
+                        position: absolute;
+                        background: #2a2a2a;
+                        border: 2px solid #87CEEB;
+                        border-radius: 5px;
+                        padding: 5px;
+                        z-index: 9999;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+                    `;
+
+                    const selfMercOption = document.createElement('button');
+                    selfMercOption.textContent = 'Self Merc';
+                    selfMercOption.style.cssText = `
+                        display: block;
+                        width: 100%;
+                        padding: 10px 20px;
+                        margin: 5px 0;
+                        background: #87CEEB;
+                        border: none;
+                        border-radius: 3px;
+                        cursor: pointer;
+                        font-weight: bold;
+                        color: #000;
+                    `;
+
+                    const otherOption = document.createElement('button');
+                    otherOption.textContent = 'Merc Other';
+                    otherOption.style.cssText = `
+                        display: block;
+                        width: 100%;
+                        padding: 10px 20px;
+                        margin: 5px 0;
+                        background: #87CEEB;
+                        border: none;
+                        border-radius: 3px;
+                        cursor: pointer;
+                        font-weight: bold;
+                        color: #000;
+                    `;
+
+                    selfMercOption.onmouseover = function() { this.style.background = '#6BB6D6'; };
+                    selfMercOption.onmouseout = function() { this.style.background = '#87CEEB'; };
+                    otherOption.onmouseover = function() { this.style.background = '#6BB6D6'; };
+                    otherOption.onmouseout = function() { this.style.background = '#87CEEB'; };
+
+                    selfMercOption.onclick = function() {
+                        dropdown.remove();
+
+                        getUserData(apiKey, function(userData) {
+                            if (!userData || !userData.player_id) {
+                                alert('Failed to fetch user data. Please check your API key.');
+                                return;
+                            }
+
+                            const cooldownLeft = isOnCooldown(userData.player_id);
+                            if (cooldownLeft) {
+                                alert(`Please wait ${cooldownLeft} minute(s) before requesting self merc again.`);
+                                return;
+                            }
+                            if (userData && userData.player_id && userData.name) {
+                                const finalTargetId = userData.player_id;
+                                const requesterProfileUrl = `https://www.torn.com/profiles.php?XID=${userData.player_id}`;
+                                const targetProfileUrl = `https://www.torn.com/profiles.php?XID=${finalTargetId}`;
+
+                                sendDiscordWebhook(userData.player_id, userData.name, requesterProfileUrl, finalTargetId, targetProfileUrl, userData.name, userData.level, 'Self');
+                                setCooldown(finalTargetId);
+                                alert('Your request has been transferred, Please pay 4 xanax to the merc.');
+                            } else {
+                                alert('Failed to fetch user data. Please check your API key.');
+                                GM_setValue('torn_api_key', '');
+                            }
+                        });
+                    };
+                    otherOption.onclick = function() {
+                        dropdown.remove();
+                        const targetId = prompt('Enter the User ID of the person you want merc\'d:\n\nCost: 4 Xanax');
+
+                        if (!targetId || targetId.trim() === '') {
+                            return;
+                        }
+
+                        if (!/^\d+$/.test(targetId.trim())) {
+                            alert('Invalid User ID! Please enter numbers only.');
+                            return;
+                        }
+
+                        getUserData(apiKey, function(userData) {
+                            if (userData && userData.player_id && userData.name) {
+                                getTargetData(targetId.trim(), apiKey, function(targetData, error) {
+                                    if (error || !targetData) {
+                                        alert(`Invalid User ID: ${error || 'User not found'}`);
+                                        return;
+                                    }
+
+                                    const cooldownLeft = isOnCooldown(targetId.trim());
+                                    if (cooldownLeft) {
+                                        alert(`Please wait ${cooldownLeft} minute(s) before requesting merc for this person again.`);
+                                        return;
+                                    }
+
+                                    const finalTargetId = targetId.trim();
+                                    const requesterProfileUrl = `https://www.torn.com/profiles.php?XID=${userData.player_id}`;
+                                    const targetProfileUrl = `https://www.torn.com/profiles.php?XID=${finalTargetId}`;
+
+                                    const targetName = targetData.name;
+                                    const targetLevel = targetData.level;
+                                    const targetStatus = targetData.status?.description || 'Unknown';
+
+                                    sendDiscordWebhook(
+                                        userData.player_id,
+                                        userData.name,
+                                        requesterProfileUrl,
+                                        finalTargetId,
+                                        targetProfileUrl,
+                                        targetName,
+                                        targetLevel,
+                                        targetStatus
+                                    );
+                                    setCooldown(finalTargetId);
+                                    alert('Your request has been transferred, Please pay 4 xanax to the merc.');
+                                });
+                            } else {
+                                alert('Failed to fetch user data. Please check your API key.');
+                                GM_setValue('torn_api_key', '');
+                            }
+                        });
+                    };
+
+                    dropdown.appendChild(selfMercOption);
+                    dropdown.appendChild(otherOption);
+
+                    const rect = button.getBoundingClientRect();
+                    dropdown.style.position = 'fixed';
+                    dropdown.style.top = (rect.bottom + 5) + 'px';
+                    dropdown.style.left = rect.left + 'px';
+
+                    document.body.appendChild(dropdown);
+
+                    setTimeout(() => {
+                        document.addEventListener('click', function closeDropdown(e) {
+                            if (!dropdown.contains(e.target) && e.target !== button) {
+                                dropdown.remove();
+                                document.removeEventListener('click', closeDropdown);
+                            }
+                        });
+                    }, 100);
+                };
+
+                buttonContainer.appendChild(button);
+                chainBar.parentElement.insertBefore(buttonContainer, chainBar.nextSibling);
+            }
+        }, 500);
+
+        setTimeout(() => clearInterval(checkInterval), 10000);
+    }
+
+    addHireMercButton();
+    addProfileMercButton();
+
+    const observer = new MutationObserver(function(mutations) {
+        addHireMercButton();
+        addProfileMercButton();
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+})();
