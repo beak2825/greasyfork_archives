@@ -1,0 +1,1014 @@
+// ==UserScript==
+// @name Bandcamp Dark
+// @namespace https://github.com/jasuthemes/userstyles/tree/master/BandcampDark
+// @version 1.15.0
+// @description Dark theme for Bandcamp
+// @author jasu
+// @license GPL-3.0
+// @grant GM_addStyle
+// @run-at document-start
+// @match *://*.bandcamp.com/*
+// @downloadURL https://update.greasyfork.org/scripts/406919/Bandcamp%20Dark.user.js
+// @updateURL https://update.greasyfork.org/scripts/406919/Bandcamp%20Dark.meta.js
+// ==/UserScript==
+
+(function() {
+let css = `
+
+    /*------------------------*/
+    /*Original code by aricley*/
+    /*------------------------*/
+    #collection-container.collection-container,
+    .home {
+        background: #000 !important;
+    }
+
+    span,
+    .area_text,
+    .sort_controls,
+    .text {
+        color: white !important;
+    }
+
+    #pgBd.yui-skin-sam,
+    .collection-item-details-container,
+    #dlg0_h.hd,
+    .blogunit-details-section,
+    #propOpenWrapper {
+        background: #262626 !important;
+    }
+
+    .collection-item-artist,
+    h1 {
+        color: #949494 !important;
+    }
+
+    .collection-item-title,
+    h2,
+    .message,
+    .track_number.secondaryText {
+        color: #FFF !important;
+    }
+
+    h3 {
+        color: #FFED80 !important;
+    }
+
+    a,
+    .tralbumData.tralbum-credits {
+        color: #949494 !important;
+    }
+
+    li,
+    .tralbumData.tralbum-about,
+    #license.info,
+    .tralbumData.tralbum-feed {
+        color: #806300 !important;
+    }
+
+    button.sc-button.sc-button-small.sc-button-responsive.sc-button-addtoset {
+        color: black !important;
+    }
+
+    .collection-item-gallery-container,
+    #fan-suggestions.dotted-section.mine,
+    .collection-stats.dotted-section.mine,
+    .bcweekly-bd {
+        background: #222222 !important;
+    }
+
+    p {
+        color: #888888 !important;
+    }
+
+    .sound__soundActions {
+        background: transparent !important;
+    }
+
+    button.sc-button.sc-button-small.sc-button-responsive.sc-button-addtoset {
+        color: #111111 !important;
+    }
+
+    .ft.fakeFt {
+        background: #555555 !important;
+    }
+
+    .bd.footerless {
+        background: #999999 !important;
+    }
+
+    .walkthrough ol {
+        background-color: #373737;
+    }
+
+    .walkthrough .button {
+        background: #262626;
+        border: #262626;
+    }
+
+    .fan-banner.empty.owner {
+        background-color: #373737;
+    }
+
+    .menubar {
+        background-color: #000;
+        border-bottom: dotted #000 1px;
+    }
+
+    #menubar-wrapper {
+        background-color: #000;
+        border-bottom: dotted #000 1px;
+    }
+
+    .fan-bio .edit-profile a {
+        border: 1px solid #373737;
+        border-radius: 5px;
+        outline: none;
+        background: #373737;
+        color: #828282;
+        font-weight: 500;
+        padding: 5px 9px;
+        font-size: 11px;
+        line-height: 15px;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+
+    .menubar input#search-field {
+        margin: 0;
+        height: 21px;
+        line-height: 21px;
+        width: 222px;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        color: #fff;
+        font-size: 13px;
+        padding: 0 21px 0 3px;
+        -webkit-user-select: text;
+        text-align: center;
+        background-color: #282828;
+        border: 1px solid #282828;
+        outline: none;
+        border-radius: 3px;
+    }
+
+    .menubar input#search-field.focused {
+        background-color: #282828;
+        border: 1px solid #282828;
+    }
+
+    .grids {
+        color: #fff;
+        margin: 0 0 100px 0;
+    }
+
+    .recommendations-container {
+        background-color: #373737;
+        border-top: dotted #373737 1px;
+    }
+
+    .fan-container .top.editing {
+        border-bottom: 1px solid #2a2a2a;
+        background-color: rgb(25, 25, 25);
+    }
+
+    .ui-dialog.nu-dialog .ui-dialog-titlebar {
+        padding: 15px 20px 12px;
+        background-color: #282828;
+        border-bottom: 1px solid #282828;
+    }
+
+    .ui-widget-content {
+        border: 1px solid #373;
+        background: #373737;
+    }
+
+    .notable,
+    .bcdaily,
+    .email-intake,
+    .discover,
+    .app-promo-desktop {
+        background-color: #262626;
+    }
+
+    .bcdaily .bcdaily-story {
+        min-height: 280px;
+        background: #373737;
+    }
+
+    .notable-item {
+        background-color: #373737;
+    }
+
+    .item-page {
+        background: #373737;
+        border: 1px solid #373737;
+    }
+
+    .follow-fan-btn {
+        background-color: #373737;
+        border: 1px solid #373737;
+    }
+
+    .spotlight-name,
+    .spotlight-location,
+    .spotlight-button,
+    .spotlight-bio,
+    .spotlight-link {
+        color: #fff;
+    }
+
+    .aotd-large {
+        background: #373737;
+    }
+
+    .factoid-title {
+        color: #46C5D5;
+    }
+
+    #autocomplete-results.autocompleted {
+        background: #262626;
+        border: 1px solid #262626;
+        color: white;
+    }
+
+    .searchwidget.keyboard-focus input[type=text]:focus {
+        background: #262626;
+        box-shadow: 0 0;
+    }
+
+    .hd {
+        background-color: #262626;
+    }
+
+    .discover-detail-inner {
+        background-color: #373737;
+    }
+
+    body.wordpress {
+        background: #262626;
+    }
+
+    .wordpress .sidebar .textwidget {
+        color: #fff;
+    }
+
+    .wordpress h1 a {
+        display: block;
+        height: 60px;
+        background-size: 242px 28px;
+        background-position: 24.6% 50%;
+    }
+
+    p {
+        color: #ffffff !important;
+    }
+
+    .wordpress #content {
+        color: #ffffff;
+    }
+
+    #dash-container .follow-fan,
+    #dash-container .follow-band,
+    #dash-container .follow-discover {
+        border: 1px solid #373737;
+        background: linear-gradient(to bottom, #373737 0%, #373737 100%);
+    }
+
+    html {
+        background: #1E1E1E !important;
+    }
+
+    #stories-vm .story-innards {
+        background-color: #373737;
+    }
+
+    .pane {
+        color: #c7c7c7;
+    }
+
+    #settings-menubar {
+        border-right: 1px solid #383838;
+    }
+
+    #settings-menubar li {
+        border-left: 1px solid #383838;
+        border-bottom: 1px solid #383838;
+        border-top: 1px solid #383838;
+    }
+
+    .share_dialog.ui-dialog .ui-dialog-content {
+        background-color: #262626;
+    }
+
+    .share_dialog .section_head {
+        color: #fff;
+    }
+
+    .buy-dlg {
+        color: #ffffff;
+    }
+
+    .menubar > ul > li .logo {
+        background: url('https://www.dropbox.com/s/8s7km8r329l7qy7/bandcamp-logo-gray.png?dl=1') 0 0 no-repeat;
+        background-size: contain;
+        height: 20px;
+        margin-top: 15px;
+        width: 85px;
+    }
+
+    .hd-logo {
+        background: transparent url('https://www.dropbox.com/s/8s7km8r329l7qy7/bandcamp-logo-gray.png?dl=1') no-repeat;
+        background-size: 100%;
+        margin-top: 24px;
+        height: 25px;
+        width: 156px;
+    }
+
+    .wordpress h1 a {
+        display: block;
+        text-indent: -999em;
+        background: url('https://www.dropbox.com/s/mx80o2eenp43l0o/bandcamp-daily-retina-dark-theme.png?dl=1') no-repeat;
+        height: 25px;
+        background-size: 200px 24px;
+        background-position: 24.6% 50%;
+    }
+
+    .wordpress .sidebarlogo {
+        background: url(https://s4.bcbits.com/img/logo-gray.svg) no-repeat;
+        background-size: 100%;
+    }
+
+    #pgBd {
+        color: #fff;
+    }
+
+    .download-bottom-area {
+        border-top: none;
+        background: none;
+    }
+
+    .download .formats-container {
+        border: 1px solid #373737;
+        background-color: #373737;
+    }
+
+    .download .formats {
+        list-style: none;
+        color: #666;
+        padding: 0;
+        background-color: #373737;
+        width: 170px;
+        z-index: 2;
+        cursor: default;
+    }
+
+    .download .formats li:hover {
+        background-color: #262626;
+    }
+
+    ::-webkit-scrollbar,
+    ::-webkit-scrollbar-corner {
+        background: #000;
+        width: 14px;
+        height: 14px;
+    }
+
+    ::-webkit-scrollbar-button {
+        display: none;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #333;
+    }
+
+    ::-webkit-scrollbar-thumb:not(:active):hover {
+        background: #383838;
+    }
+
+    ::-webkit-scrollbar-thumb:active,
+    ::-webkit-scrollbar-thumb:hover:active {
+        background: #5c5c5c;
+    }
+
+
+
+    /*-------------*/
+    /*Added by jasu*/
+    /*-------------*/
+    
+    
+    
+    body {
+        background: #303030;
+    }
+
+    #hub .dig-deeper-item {
+        background: #FFF0
+    }
+
+    .checkout-order-vm .group,
+    .order-recap ul li,
+    .themed .label-band-selector .bands-menu,
+    .themed .label-band-selector .bands-menu .menu-artistpic {
+        background: #262626;
+    }
+
+    .content {
+        background-color: #262626;
+    }
+
+    #sidecart {
+        background: #262626;
+        color: #949494;
+    }
+
+    .tralbumData.tralbum-credits,
+    a, .tralbumData {
+        color: white !important;
+    }
+
+    .shipping-address-pane,
+    .shipping-address-pane .address-label,
+    .mixed-cart-title,
+    .download-titles .download-title strong,
+    .fan-bio{
+        color: white;
+    }
+
+    #grid-tabs-sticky.fixed,
+    #menubar-wrapper.header-rework-2018,
+    #menubar-wrapper.header-rework-2018 .menubar-outer,
+    .carousel-player-inner,
+    .carousel-player .progress-bar,
+    .menubar-2018,
+    .pager .pagenum,
+    .pager .nextprev {
+        background: #262626;
+    }
+
+    #pgFt,
+    .carousel-player .progress,
+    .carousel-player .playpause {
+        background: #5c5c5c;
+    }
+
+    .carousel-player .queue-icon,
+    .carousel-player .vol-icon {
+        fill: white;
+    }
+
+    .carousel-player .playpause .play {
+        border-left: 15px solid white;
+    }
+
+    .carousel-player .playpause .pause {
+        border-left: 5px solid white;
+        border-right: 5px solid white;
+    }
+
+    .menubar-2018 .user-menu {
+        background-color: #5c5c5c;
+        border: #5c5c5c 1px solid;
+    }
+
+    .menubar-2018 .user-menu .user-menu-wrapper {
+        overflow-y: hidden;
+    }
+
+
+    /* 03/11/19 */
+    
+    #nonartarea,
+    #band-navbar,
+    .wordpress .aod-embed,
+    .purchases-item,
+    .dig-deeper .filters-bar.fixed,
+    .wordpress #comments,
+    .wordpress #header,
+    .wordpress #footer,
+    .has-rec-footer #pgFt,
+    .sidebar li,
+    .hub-component:nth-child(2n),
+    ol.tabs.fixed {
+        background-color: #262626;
+    }
+
+    #settings-menubar li.highlighted,
+    #settings-menubar li.highlighted.active,
+    .back-to-label-link,
+    .item .info {
+        background-color: #303030;
+    }
+
+    .story-innards .story-footer {
+        background-color: #303030;
+        border-top: 1px solid #fff0;
+    }
+
+    a.custom-color,
+    #artist,
+    #album,
+    #trackInfo a:not(.notSkinnable),
+    #trackInfo .buy-link,
+    #tagArea a,
+    #rightColumn a,
+    #name-section a,
+    #indexpage a,
+    #band-navbar a,
+    #merch-item p a,
+    #merch-item .buy a,
+    #merch-item .buy button,
+    #merch-item .more-merch a,
+    .custom-link-color,
+    .editable-grid a,
+    .featured-grid a,
+    .share-collect-controls a,
+    .share-collect-controls button,
+    .follow-unfollow,
+    .follow-unfollow,
+    .collected-by a,
+    .subscribe a,
+    .sub a,
+    .video-list a,
+    .sub .main a,
+    .subwelcome a,
+    .artists-grid-name a,
+    .featured-grid-name,
+    .label-welcome .buttons a.new,
+    .themed .label-band-selector a.themeable,
+    .tralbum-tags a,
+    .nu-dialog .ui-widget-content {
+        color: #fff;
+    }
+
+    .salesfeed .item-inner:hover {
+        background: #5c5c5c;
+    }
+
+    #settings-menubar li.active {
+        background: #262626;
+        border-left: 2px solid #eaeaea;
+        border-bottom: 1px solid #eaeaea;
+        border-top: 1px solid #eaeaea;
+    }
+
+    .rounded-gutter,
+    .card-pane {
+        background: #262626;
+        color: #fff;
+    }
+
+
+    /* 09/11/19 */
+    .follow-unfollow,
+    .follow-unfollow-inactive {
+        background: #262626;
+    }
+
+    .nu-dialog .ui-widget-content {
+        color: white;
+    }
+
+
+    /* 07/12/19 */
+    #s-daily,
+    #s-daily input,
+    dailyfooter,
+    .footer-gradient {
+        background: #262626;
+    }
+
+    article > article-title {
+        color: #fff;
+    }
+
+    dailyfooter h2,
+    a.pagination-link,
+    .section-header .outline-text{
+        -webkit-text-stroke: 0;
+    }
+
+    a.pagination-link .back-text {
+        left: 0px;
+        top: 0px;
+        -webkit-text-stroke: 0;
+    }
+
+
+    /* 09/02/20 */
+    /* Bandcamp logo in white */
+    #b, #an, #d, #c, #am, #p {
+        fill: #fff;
+    }
+
+
+    /* 09/04/20 */
+    /* Feed and collection icons on menubar now white */
+    .menubar-2018 .svg-icon {
+        fill: #FFFFFF;
+    }
+
+    .menubar-2018 li.hoverable:hover {
+        background: rgba(225, 225, 225, 0.1);
+    }
+
+
+    /* 26/04/20 */
+    /* Background of element in tag browsing that I missed */
+    .hub-component:nth-child(2n) .item .info {
+        background: #303030;
+    }
+
+    /* Background of follow button in tag browsing that I missed */
+    .fan-reviews .follow-fan a {
+        background: #303030;
+    }
+
+    /* "View more items" now white */
+    .dig-deeper .view-more {
+        border: 1px solid #FFF;
+        color: #FFF;
+    }
+
+
+    /* 01/05/20 */
+    /* Menubar dropdown background on hover */
+    .menubar-2018 .submenu-item a:hover {
+        background: #303030;
+    }
+
+    /* Bottom of "album of the day" */
+    .moreingenre {
+        color: #fff;
+    }
+
+    /* "Features" sub-heading within bandcamp daily */
+    .franchise-description {
+        color: #fff;
+    }
+
+    /*  Bandcamp weekly player */
+    .bcweekly-tracks {
+        background: #222222;
+    }
+
+    /* Lower element */
+    .bcweekly.expanded ~ .bcweekly-info .bcweekly-player .bcweekly-player-fade {
+        background: rgba(255, 255, 255, 0) !important;
+    }
+
+    /* More elements on player */
+    .bcweekly.expanded ~ .bcweekly-info .bcweekly-player > .col + .col,
+    .bcweekly.busy ~ .bcweekly-info .bcweekly-player > .col + .col {
+        background-color: #303030;
+    }
+
+    /* Play position bar */
+    .bcweekly-player .scrubber,
+    .bcweekly-player .scrubber-buffer,
+    .bcweekly-player .scrubber-time {
+        background: #262626;
+        color: #fff;
+    }
+
+    /* Scrubber */
+    .bcweekly-player .scrubber-thumb {
+        background: #5c5c5c;
+    }
+
+
+    /* 05/06/20 */
+    /* Featured panel background on tag hub */
+    #hub .hub-component:nth-child(2n) {
+        background: #262626;
+    }
+
+    /* Individual backgrounds on tag hub */
+    #hub .item .info {
+        background: #303030;
+    }
+
+    /* Fan follow button background on tag hub*/
+    #hub .fan-reviews .follow-fan a {
+        background: #303030;
+    }
+
+
+    /* 26/07/20 */
+    /* Show more/less releases from followed artists on feed */
+    #new-releases-vm .more-releases,
+    #new-releases-vm .less-releases {
+        background-color: #262626;
+    }
+
+    #new-releases-vm .more-releases:hover,
+    #new-releases-vm .less-releases:hover {
+        background-color: #303030;
+    }
+
+    /* tags background on feed */
+    #stories-vm .story-innards .story-footer {
+        background-color: #303030;
+    }
+
+    /* 15/09/20 */
+    /* Community messages background */
+    .community-feed .story .lock-banner,
+    .community-feed .story .main-section,
+    .community-feed .story > .actions {
+        background: #262626;
+    }
+
+
+    /* 13/04/21 */
+    /* Background of new live stream panel and page */
+    .curated-shows,
+    .live-listings .live-listing {
+        background-color: #262626;
+    }
+
+    /* Live stream element background */
+    .live-listing {
+        background: #303030;
+    }
+
+    /* Live stream element text */
+    .live-listing .show-details .show-title,
+    .live-listing .show-details .show-artist,
+    .live-listing .show-details .show-footer-details .show-time-container .show-date,
+    .live-listing .show-details .show-footer-details .show-time-container .show-time,
+    .live-listings .live-listing .show-details .show-title,
+    .live-listings .live-listing .show-details .show-artist,
+    .live-listings .live-listing .show-details .show-description,
+    .live-listings .live-listing .show-details .show-time-container .show-date,
+    .live-listings .live-listing .show-details .show-time-container .show-time,
+    .section-title,
+    .secondaryText{
+        color: #fff;
+    }
+
+    /* Live stream calendar icon */
+    .show-time-container .calendar-icon,
+    .live-listings .live-listing .show-details .show-time-container .calendar-icon {
+        background: url(https://raw.githubusercontent.com/jasuthemes/userstyles/d41b199953d8296dd573ba4d7e56dc527b7a0a82/BandcampDark/Resources/calendar-12.svg);
+    }
+
+    /* Live stream clock icon */
+    .show-time-container .clock-icon,
+    .live-listings .live-listing .show-details .show-time-container .clock-icon {
+        background: url(https://raw.githubusercontent.com/jasuthemes/userstyles/9d0ef98682caa9b72229c689047b6621efa7a349/BandcampDark/Resources/clock-12.svg);
+    }
+    
+    /* "Show more" button on live stream page */
+    #live-listings .show-more {
+        color: #fff;
+        background: #262626;
+    }
+    
+    /* Fixed the bandcamp weekly player */
+    .bcweekly-player > .col+.col {
+        background: #303030;
+    }
+    
+     /* 15/04/21 */
+    /* Changed some elements on homepage */
+    .bd-section.factoid,
+    .salesfeed,
+    .carousel-bcweekly-container-container {
+        background: #1e1e1e;
+    }
+    
+    
+    /* 15/04/22 */
+    /* About us page */
+    main>section#testimonials {
+        background-color: #262626;
+    }
+    
+    main>section#testimonials section.filters button {
+        color: #878787;
+    }
+    
+
+    /* 31/01/23 */
+    /* Search bar tabs */
+   #main-search-container > form > ul.filter-list {
+        background-color: #262626;
+    }
+    
+    /* Search results */
+    form.menubar-search .search-autocomplete li a {
+        background-color: #303030;
+    }
+    
+    /* Search results hover */
+    form.menubar-search .search-autocomplete li a:hover {
+        background-color: #262626;
+    }
+    
+    /* "See all results" and "Music tagged with..." */
+    form.menubar-search .search-autocomplete li.results-see-all a, form.menubar-search .search-autocomplete li.results-tags a {
+        background-color: #262626;
+    }
+    
+    /* "See all results" hover */
+    form.menubar-search .search-autocomplete li.results-see-all a:hover {
+        background-color: #5c5c5c;
+    }
+
+
+    /* 31/08/23 */
+    /* Multiple Bandcamp Daily elements*/
+    /* Player ffwd and rrwd icons */
+    article .next .icon {
+        background: url(https://raw.githubusercontent.com/jasuthemes/userstyles/master/BandcampDark/Resources/icon-ffwd-w.svg) no-repeat;
+        background-size: contain;
+        background-position: 50%;
+    }
+
+    article .prev .icon {
+        background: url(https://raw.githubusercontent.com/jasuthemes/userstyles/master/BandcampDark/Resources/icon-rrwd-w.svg) no-repeat;
+        background-size: contain;
+        background-position: 50%;
+    }
+
+    /* Add to wishlist button */
+    .mpwl.wishlist-msg svg {
+        fill: #fff;
+    }
+
+    /* Player progress bar handle */
+    .progress-bar-handle {
+        background: #fff;
+    }
+
+    /* Merch text on right */
+    mpmerchformats {
+        color: white;
+    }
+
+    /* Terms of Use page bold */
+    .bd .conspicuous {
+        background: none repeat scroll 0 0 black;
+    }
+
+
+    /* 28/09/23 */
+    /* Bandcamp live elements */
+    .show-type-container .show-type, .show-time-container .show-date, .show-time-container .show-time {
+        color: #fff;
+    }
+
+    .show-type-container .headphone-icon {
+        background: url(https://raw.githubusercontent.com/jasuthemes/userstyles/master/BandcampDark/Resources/headphone-outline-w.svg);
+    }
+
+    
+    /* 14/11/23 */
+    /* Following popup */
+    .ui-dialog.nu-dialog.blank-title .ui-dialog-titlebar {
+        background-color: #373737;
+    }
+
+
+    /* 04/12/23 */
+    /* Pop-up music player on personal collection page*/
+    .carousel-player .queue.show {
+        background: #262626;
+        border: 1px solid #5c5c5c;
+    }
+   
+    .carousel-player .queue {
+        background: #303030;
+    }
+    
+    .carousel-player .queue li {
+        border-bottom: 1px solid #303030;
+    }
+    
+    .carousel-player .queue li.active {
+        background: #5c5c5c;
+    }
+    
+    .carousel-player .queue li.focus {
+        background: #282828;
+        border: 1px solid #282828;
+    }
+    
+    .carousel-player .queue li:hover {
+        background: #5c5c5c;
+    }
+
+    ::-webkit-scrollbar, ::-webkit-scrollbar-corner {
+        background: #282828;
+    }
+    
+    /*Hide original close icon */
+    .carousel-player .queue-header .close-icon use {
+        display: none; /* Hide the existing icon */
+    }
+    
+    /* Display white close icon */
+    .carousel-player .queue-header .close-icon {
+        background: url(https://raw.githubusercontent.com/jasuthemes/userstyles/master/BandcampDark/Resources/close-20.svg);
+    }
+    
+    /* Change prev/next icon */
+    .carousel-player .transport .icon {
+        background: url(https://raw.githubusercontent.com/jasuthemes/userstyles/master/BandcampDark/Resources/nextprev-w.png) 0px 0px / 40px 12px no-repeat transparent;
+    }
+
+
+    /* 31/12/24 */
+    /* Sales on homepage */
+    .bd-section.discover-categories {
+        background-color: #262626;
+    }
+
+    /* Start digging? */
+    .bd-section.discover-tags-title {
+        background-color: #262626;
+    }
+
+    /* Upsell section */
+    .discover-upsell-container .upsell-art {
+        background-color: #262626;
+    }
+    
+    .discover-upsell-container .upsell-text {
+        background-color: #ffffff00;
+    }
+
+
+
+    /* 11/09/25 */
+    /* New menubar */
+    .corp-app-wrapper.full-page-app-wrapper .menu-bar, .menu-bar[data-v-7547a183] {
+        background-color: var(--gray600);
+        --menubar-background-color: var(--gray700);
+    }
+
+    /* Collections icon */
+    button.g-button svg[data-v-6804b60c], button.g-button[data-v-6804b60c] svg, a.g-button svg[data-v-6804b60c], a.g-button[data-v-6804b60c] svg {
+        fill: var(--white);
+    }
+    
+    /* Header logo */
+    svg.bandcamp-logo[data-v-cf965d7c] {
+        fill: var(--white);
+    }
+
+    body.corp[data-theme=light]:has(.homepage) {
+        --corp-page-background-color: var(--gray600);
+    }
+
+    /* Bandcamp Clubs */
+    .corp-page-section[data-v-56e65e95] {
+        background-color: var(--gray700);
+    }
+
+    /* Discover page categories - selected */
+    .chip-group.filled[data-v-0f267c60] .radio-item.selected {
+        background-color: var(--gray500);
+        --g-chip-border-color: var(--gray100);
+    } 
+
+    /* Discover page genres - selected */
+    button.chip-button.g-button.dark-mode {
+        background-color: var(--gray500);
+        color: var(--white);
+        --g-chip-border-color: var(--gray100);
+    }
+
+    /* Discover page selected sub genre */
+    .filters-banner[data-v-ff4b9b6a] .subgenre-filter {
+        background: var(--gray600);
+    }
+
+    /* Blend sub-genres */
+    .genre-filter .list-box.chip-group.subgenres[data-v-19d4a465] {
+        --secondary-transparency-light: rgb(255 255 255 / 30%)
+    }
+
+    /* Beeg play button */
+    button.g-button svg[data-v-6804b60c], button.g-button[data-v-6804b60c] svg {
+        fill: var(--gray700);
+    }
+    
+    button.g-button.dark-mode[data-v-6804b60c], a.g-button.dark-mode[data-v-6804b60c]{
+        --g-button-primary-color: var(--gray400);
+    }
+
+    /* Beeg play button hover */
+    a.g-button.dark-mode[data-v-6804b60c], button.g-button.dark-mode[data-v-6804b60c] {
+        --g-button-hover-color: var(--gray500);
+    }
+`;
+if (typeof GM_addStyle !== "undefined") {
+  GM_addStyle(css);
+} else {
+  const styleNode = document.createElement("style");
+  styleNode.appendChild(document.createTextNode(css));
+  (document.querySelector("head") || document.documentElement).appendChild(styleNode);
+}
+})();

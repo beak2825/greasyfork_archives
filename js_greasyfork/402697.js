@@ -1,0 +1,27 @@
+// ==UserScript==
+// @name            2窓ツール(diep.io)
+// @name:ja         2窓ツール(diep.io)
+// @name:ko         2 창 도구(diep.io)
+// @name:en         Two window tool(diep.io)
+// @version      v1.1
+// @description  diep.ioでの2窓が出来ます(ベータバージョンであってこれからも更新していきます)
+// @description:ko diep.io에서 2 창문이 있습니다 (베타 버전이며 앞으로도 업데이트하고 있습니다)
+// @description:en 2 windows in diep.io can be made (beta version and will be updated in the future)
+// @author       Soso(51113)
+// @match        *://diep.io/*
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @namespace    https://discord.gg/YvpGWpa
+// @downloadURL https://update.greasyfork.org/scripts/402697/2%E7%AA%93%E3%83%84%E3%83%BC%E3%83%AB%28diepio%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/402697/2%E7%AA%93%E3%83%84%E3%83%BC%E3%83%AB%28diepio%29.meta.js
+// ==/UserScript==
+
+/*                                *
+ *       2window.user.js v1       *
+ * Copyright (c) 2020 soso(51113) *
+ *                                */
+console.log("Lording script");
+setTimeout((function(){
+function sendMouse(n,t){canvas.dispatchEvent(new MouseEvent("mousemove",{clientX:n+screenBoxCX,clientY:t+screenBoxCY}))}function sendClick(n,t,i,r){r==1?canvas.dispatchEvent(new MouseEvent("mousedown",{clientX:n+screenBoxCX,clientY:t+screenBoxCY,button:i})):r==0&&canvas.dispatchEvent(new MouseEvent("mouseup",{clientX:n+screenBoxCX,clientY:t+screenBoxCY,button:i}))}function sendKeys(n,t){var i;t==!0||t==1?(i=document.createEvent("Events"),i.initEvent("keydown",!0,!0),i.keyCode=n,window.dispatchEvent(i)):(i=document.createEvent("Events"),i.initEvent("keyup",!0,!0),i.keyCode=n,window.dispatchEvent(i))}function getMice(n){screenBoxCY=window.innerHeight/2;screenBoxCX=window.innerWidth/2;distCenterX=n.clientX-screenBoxCX;distCenterY=n.clientY-screenBoxCY;var t=0,i=0,r=0,u=0,f=0,e=0;t=distCenterX/Math.abs(screenBoxCX);i=distCenterY/Math.abs(screenBoxCY);r=distCenterY/distCenterX;u=distCenterX/distCenterY;e=distCenterY<0?-1:1;f=distCenterX<0?-1:1;GM_setValue("GM_mouseBoxSignX",f);GM_setValue("GM_mouseBoxSignY",e);GM_setValue("GM_mouseBoxRatioX",t);GM_setValue("GM_mouseBoxRatioY",i);GM_setValue("GM_mouseBoxRatioXtoY",u);GM_setValue("GM_mouseBoxRatioYtoX",r)}function getMDown(n){var t=n.button;switch(n.button){case 0:mouseClicks[0]=1;break;case 1:mouseClicks[1]=1;break;case 2:mouseClicks[2]=1}GM_setValue("GM_mouseBoxClicks",mouseClicks)}function getMUp(n){var t=n.button;switch(n.button){case 0:mouseClicks[0]=0;break;case 1:mouseClicks[1]=0;break;case 2:mouseClicks[2]=0}GM_setValue("GM_mouseBoxClicks",mouseClicks)}function getDown(n){if(n.keyCode==16){cancelK=cancelK^!0;GM_setValue("GM_cancelK",cancelK);return}if(n.keyCode==86){cancelK=cancelK^!0;GM_setValue("GM_cancelK",cancelK);return}if(n.keyCode==70){cancelM=cancelM^!0;GM_setValue("GM_cancelM",cancelM);return}n.keyCode==82&&(zz=zz^!0);press[n.keyCode]=1;GM_setValue("GM_pressArray",press)}function getUp(n){if(n.keyCode==16){cancelK=!1;GM_setValue("GM_cancelK",cancelK);return}press[n.keyCode]=0;GM_setValue("GM_pressArray",press)}function TAAH(n,t,i,r,u,f,e,o){var h,s;return screenBoxCY=window.innerHeight/2,screenBoxCX=window.innerWidth/2,h=0,n=screenBoxWidth/16,t=screenBoxHeight/9,n>t?h=1:n<t&&(h=2),s=[],h==1?(s[0]=Math.abs(screenBoxCX*i)*e,s[1]=Math.abs(s[0]*u)*o):h==2&&(s[1]=Math.abs(screenBoxCY*r)*o,s[0]=Math.abs(s[1]*f)*e),s}function BAAH(n,t,i,r,u,f){var o,s,e;(f==!0||f==1)&&(o=n,s=t,sendMouse(o,s),e=[],e[0]=i,e[1]=r,e[2]=u,e[0]==1?sendClick(o,s,0,1):e[0]==0&&sendClick(o,s,0,0),e[1]==1?sendClick(o,s,1,1):e[0]==0&&sendClick(o,s,1,0),e[2]==1?sendClick(o,s,2,1):e[0]==0&&sendClick(o,s,2,0))}function SyncKeys(n,t){var i=0;if(t==!0||t==1)while(i<90)n[i]==1&&sendKeys(i,1),n[i]==0&&sendKeys(i,0),i++}function syncTabs(){var o,s,n,t,e,i,u,f;documentFocus=document.hasFocus();screenBoxHeight=window.innerHeight;screenBoxWidth=window.innerWidth;var h=GM_getValue("GM_mouseBoxRatioX"),c=GM_getValue("GM_mouseBoxRatioY"),r=[];r[0]=Math.abs(GM_getValue("GM_mouseBoxRatioYtoX"));r[1]=Math.abs(GM_getValue("GM_mouseBoxRatioXtoY"));o=GM_getValue("GM_mouseBoxSignX");s=GM_getValue("GM_mouseBoxSignY");moveMouse=TAAH(screenBoxWidth,screenBoxHeight,h,c,r[0],r[1],o,s);n=[];n=GM_getValue("GM_mouseBoxClicks");t=!1;t=GM_getValue("GM_cancelM");e=[];e=GM_getValue("GM_pressArray");i=!1;i=GM_getValue("GM_cancelK");u="yes";f="no";t==!0?u="yes":t==!1&&(u="no");i==!0?f="yes":i==!1&&(f="no");overlay.innerHTML=zz==!0?`<p>2窓ツール[v1]</p><p>マウス同期:${u} [Fキーで切り替え]</p><p>キー同期:${f} [Vキーで切り替え]</p><p>この表示を消すにはRキーを押してください</p>`:"<p><\/p>";(documentFocus==!1||documentFocus==0)&&SyncKeys(e,i);BAAH(moveMouse[0],moveMouse[1],n[0],n[1],n[2],t)}var documentFocus=!1,zz=!0,distCenterX=0,distCenterY=0,ratio=0,screenBoxHeight=window.innerHeight,screenBoxWidth=window.innerWidth,screenBoxCY=window.innerHeight/2,screenBoxCX=window.innerWidth/2,moveMouse=[],mouseClicks=[],press=[],cancelK=!1,cancelM=!1,overlay,loop;document.addEventListener("mousemove",getMice);document.addEventListener("mousedown",getMDown);document.addEventListener("mouseup",getMUp);document.addEventListener("keydown",getDown);document.addEventListener("keyup",getUp);overlay=document.createElement("div");overlay.style="pointer-events: none; position: fixed; top:10px; left:10px; font-family: 'Comic Sans MS', cursive, sans-serif; color: #FFFFFF; font-style: normal; font-variant: normal;";document.body.appendChild(overlay);loop=setInterval(syncTabs,50)
+console.log("Lord script");
+}),5000);

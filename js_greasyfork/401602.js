@@ -1,0 +1,67 @@
+// ==UserScript==
+// @name         1688 HaveId No Image
+// @name:zh-CN   1688 HaveId No Image
+// @namespace    com.hct.contrast
+// @icon         https://lk-data-collection.oss-cn-qingdao.aliyuncs.com/winner/winnercoupang/Icon.png
+// @version      1.0
+// @description  get 1688 main_image and product name
+// @description:zh-cn   1688有goods_id但是没有主图信息
+// @author       hansel
+// @include      https://detail.1688.com/*
+// @grant        GM_xmlhttpRequest
+// @require      https://code.jquery.com/jquery-1.12.4.min.js
+// @downloadURL https://update.greasyfork.org/scripts/401602/1688%20HaveId%20No%20Image.user.js
+// @updateURL https://update.greasyfork.org/scripts/401602/1688%20HaveId%20No%20Image.meta.js
+// ==/UserScript==
+var api_url = "http://operate.hagoto.com/admin/api/";
+var sp_mbd_id = "";
+(function() {
+    'use strict';
+    var cur_url = document.location.href;
+    if(cur_url.indexOf("sp_mbd_id=")>0){
+        var keydatas = cur_url.split('sp_mbd_id=');
+        sp_mbd_id = keydatas[1];
+    }
+    if(sp_mbd_id == ""){
+        return;
+    }
+    var div = document.createElement("div");
+    div.setAttribute("style", "width: 100%;height: 30px;position: fixed;left: 84%;bottom: 50%;height: 35px;line-height: 35px;color: #333;font-size: 14px;");
+    var inner_html = '<button class="btn-confirm">mbd获取主图信息</button>';
+    div.innerHTML = inner_html;
+    document.body.appendChild(div);
+
+    $(".btn-confirm").attr("style","border: none;width: 120px;height: 33px;color: #fff;background: red;cursor: pointer;");
+
+    //选用
+    $('.btn-confirm').on('click', function (e) {
+        var main_image = $(".mod-detail-gallery").find(".tab-pane").find("a.box-img").find("img").attr("src");
+        var product_name = $("#mod-detail-title").find(".d-title").text();
+        main_image = main_image.trim();
+        product_name = product_name.trim();
+        var datajson = {
+            "sp_mbd_id":sp_mbd_id,
+            "main_image":main_image,
+            "product_name":product_name,
+        };
+        GM_xmlhttpRequest({
+            method: "POST",
+            url: api_url +"setBMDAlibabaInfo",
+            dataType: "json",
+            data: JSON.stringify(datajson),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            onload: function(result) {
+                console.log(result);
+                if(result.readyState==4&&result.status==200){
+                    var dataJson = JSON.parse(result.response);
+                    alert(dataJson.msg);
+                }
+            }
+        })
+    });
+
+
+
+})();
