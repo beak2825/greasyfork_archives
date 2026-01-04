@@ -1,0 +1,61 @@
+// ==UserScript==
+// @name               自研 - 通用 - 优化 GridMe 主题网格布局
+// @name:en_US         Self-made - General - Better posts grid for GridMe theme
+// @description        使用 Macy.js 对 WordPress 博客站框架得 GridMe 主题文章索引进行排版优化。
+// @description:en_US  Optimizing the article indexing layout for the GridMe theme in a WordPress blog using Macy.js.
+// @version            1.0.1
+// @author             CPlayerCHN
+// @license            MulanPSL-2.0
+// @namespace          https://www.gitlink.org.cn/CPlayerCHN
+// @match              *://*/*
+// @run-at             document-end
+// @noframes
+// @downloadURL https://update.greasyfork.org/scripts/496070/%E8%87%AA%E7%A0%94%20-%20%E9%80%9A%E7%94%A8%20-%20%E4%BC%98%E5%8C%96%20GridMe%20%E4%B8%BB%E9%A2%98%E7%BD%91%E6%A0%BC%E5%B8%83%E5%B1%80.user.js
+// @updateURL https://update.greasyfork.org/scripts/496070/%E8%87%AA%E7%A0%94%20-%20%E9%80%9A%E7%94%A8%20-%20%E4%BC%98%E5%8C%96%20GridMe%20%E4%B8%BB%E9%A2%98%E7%BD%91%E6%A0%BC%E5%B8%83%E5%B1%80.meta.js
+// ==/UserScript==
+
+!function(t,n){"object"==typeof exports&&"undefined"!=typeof module?module.exports=n():"function"==typeof define&&define.amd?define(n):t.Macy=n()}(this,function(){"use strict";function o(t,n,e){var r=2<arguments.length&&void 0!==e&&e;if(window.Promise)return function(t,n){var e=arguments.length>2&&void 0!==arguments[2]&&arguments[2];return Promise.all(v(t,n,e)).then(function(){t.emit(t.constants.EVENT_IMAGE_COMPLETE)})}(t,n,r);t.recalculate(!0,!0)}function n(t){var n=t.useContainerForBreakpoints?t.container.clientWidth:window.innerWidth,e={columns:t.columns};w(t.margin)?e.margin={x:t.margin.x,y:t.margin.y}:e.margin={x:t.margin,y:t.margin};var r=Object.keys(t.breakAt);return(t.mobileFirst?function(t){for(var n=t.options,e=t.responsiveOptions,r=t.keys,o=t.docWidth,i=void 0,s=0;s<r.length;s++){var a=parseInt(r[s],10);a<=o&&(i=n.breakAt[a],A(i,e))}return e}:function(t){for(var n=t.options,e=t.responsiveOptions,r=t.keys,o=t.docWidth,i=void 0,s=r.length-1;0<=s;s--){var a=parseInt(r[s],10);o<=a&&(i=n.breakAt[a],A(i,e))}return e})({options:t,responsiveOptions:e,keys:r,docWidth:n})}function c(t){return n(t).columns}function u(t){return n(t).margin}function l(t,n){var e=!(1<arguments.length&&void 0!==n)||n,r=c(t),o=u(t).x,i=100/r;if(!e)return i;if(1===r)return"100%";var s,a="px";return"string"==typeof o&&(s=parseFloat(o),a=o.replace(s,""),o=s),o=(r-1)*o/r,"%"===a?i-o+"%":"calc("+i+"% - "+o+a+")"}function i(t,n){var e,r=c(t.options),o=0,i=void 0;if(1==++n)return 0;var s,a="px";return"string"==typeof(i=u(t.options).x)&&(s=parseFloat(i,10),a=i.replace(s,""),i=s),e=(i-(r-1)*i/r)*(n-1),o+=l(t.options,!1)*(n-1),"%"===a?o+e+"%":"calc("+o+"% + "+e+a+")"}function p(t){var n=0,e=t.container,r=t.rows;h(r,function(t){n=n<t?t:n}),e.style.height=n+"px"}function s(o,t,n,e){var r=2<arguments.length&&void 0!==n&&n,i=!(3<arguments.length&&void 0!==e)||e,s=c(o.options),a=u(o.options).y;y(o,s,r),h(t,function(t){o.lastcol===s&&(o.lastcol=0);var n,e,r=(n=t,e="height",window.getComputedStyle(n,null).getPropertyValue(e)),r=parseInt(t.offsetHeight,10);isNaN(r)||(t.style.position="absolute",t.style.top=o.rows[o.lastcol]+"px",t.style.left=""+o.cols[o.lastcol],o.rows[o.lastcol]+=isNaN(r)?0:r+a,o.lastcol+=1,i&&(t.dataset.macyComplete=1))}),i&&(o.tmpRows=null),p(o)}function a(t,n){if(!(this instanceof a))return new a(t,n);if(t&&t.nodeName)return t;if(t=t.replace(/^\s*/,"").replace(/\s*$/,""),n)return this.byCss(t,n);for(var e in this.selectors)if(n=e.split("/"),new RegExp(n[1],n[2]).test(t))return this.selectors[e](t);return this.byCss(t)}a.prototype.byCss=function(t,n){return(n||document).querySelectorAll(t)},(a.prototype.selectors={})[/^\.[\w\-]+$/]=function(t){return document.getElementsByClassName(t.substring(1))},a.prototype.selectors[/^\w+$/]=function(t){return document.getElementsByTagName(t)},a.prototype.selectors[/^\#[\w\-]+$/]=function(t){return document.getElementById(t.substring(1))};function f(){var t=0<arguments.length&&void 0!==arguments[0]&&arguments[0];this.running=!1,this.events=[],this.add(t)}var h=function(t,n){for(var e=t.length,r=e;e--;)n(t[r-e-1])};f.prototype.run=function(){var t;!this.running&&0<this.events.length&&(t=this.events.shift(),this.running=!0,t(),this.running=!1,this.run())},f.prototype.add=function(){var n=this,t=0<arguments.length&&void 0!==arguments[0]&&arguments[0];return!!t&&(Array.isArray(t)?h(t,function(t){return n.add(t)}):(this.events.push(t),void this.run()))},f.prototype.clear=function(){this.events=[]};function r(t){var n=1<arguments.length&&void 0!==arguments[1]?arguments[1]:{};return this.instance=t,this.data=n,this}function m(){var t=0<arguments.length&&void 0!==arguments[0]&&arguments[0];this.events={},this.instance=t}m.prototype.on=function(){var t=0<arguments.length&&void 0!==arguments[0]&&arguments[0],n=1<arguments.length&&void 0!==arguments[1]&&arguments[1];return!(!t||!n)&&(Array.isArray(this.events[t])||(this.events[t]=[]),this.events[t].push(n))},m.prototype.emit=function(){var t=0<arguments.length&&void 0!==arguments[0]&&arguments[0],n=1<arguments.length&&void 0!==arguments[1]?arguments[1]:{};if(!t||!Array.isArray(this.events[t]))return!1;var e=new r(this.instance,n);h(this.events[t],function(t){return t(e)})};function d(t){return!("naturalHeight"in t&&t.naturalHeight+t.naturalWidth===0)||t.width+t.height!==0}function v(n,t){var e=2<arguments.length&&void 0!==arguments[2]&&arguments[2];return function(t,n){for(var e=t.length,r=e,o=[];e--;)o.push(n(t[r-e-1]));return o}(t,function(t){return function(n,e){var r=2<arguments.length&&void 0!==arguments[2]&&arguments[2];return new Promise(function(t,n){if(e.complete)return(d(e)?t:n)(e);e.addEventListener("load",function(){return(d(e)?t:n)(e)}),e.addEventListener("error",function(){return n(e)})}).then(function(t){r&&n.emit(n.constants.EVENT_IMAGE_LOAD,{img:t})}).catch(function(t){return n.emit(n.constants.EVENT_IMAGE_ERROR,{img:t})})}(n,t,e)})}function g(t){return n=function(){t.emit(t.constants.EVENT_RESIZE),t.queue.add(function(){return t.recalculate(!0,!0)})},e=100,r=void 0,function(){r&&clearTimeout(r),r=setTimeout(n,e)};var n,e,r}function e(t){var n,e,r;(function(t){if(t.container=a(t.options.container),t.container instanceof a||!t.container)return t.options.debug&&console.error("Error: Container not found");t.container.length&&(t.container=t.container[0]),t.options.container=t.container,t.container.style.position="relative"})(t),(r=t).queue=new f,r.events=new m(r),r.rows=[],r.resizer=g(r),e=a("img",(n=t).container),window.addEventListener("resize",n.resizer),n.on(n.constants.EVENT_IMAGE_LOAD,function(){return n.recalculate(!1,!1)}),n.on(n.constants.EVENT_IMAGE_COMPLETE,function(){return n.recalculate(!0,!0)}),n.options.useOwnImageLoader||o(n,e,!n.options.waitForImages),n.emit(n.constants.EVENT_INITIALIZED)}function y(t,n){var e=2<arguments.length&&void 0!==arguments[2]&&arguments[2];if(t.lastcol||(t.lastcol=0),t.rows.length<1&&(e=!0),e){t.rows=[],t.cols=[],t.lastcol=0;for(var r=n-1;0<=r;r--)t.rows[r]=0,t.cols[r]=i(t,r)}else if(t.tmpRows){t.rows=[];for(r=n-1;0<=r;r--)t.rows[r]=t.tmpRows[r]}else{t.tmpRows=[];for(r=n-1;0<=r;r--)t.tmpRows[r]=t.rows[r]}}function E(t){var n=1<arguments.length&&void 0!==arguments[1]&&arguments[1],e=!(2<arguments.length&&void 0!==arguments[2])||arguments[2],r=n?t.container.children:a(':scope > *:not([data-macy-complete="1"])',t.container),r=Array.from(r).filter(function(t){return null!==t.offsetParent}),o=l(t.options);return h(r,function(t){n&&(t.dataset.macyComplete=0),t.style.width=o}),(t.options.trueOrder?s:function(r,t,n,e){var o=2<arguments.length&&void 0!==n&&n,i=!(3<arguments.length&&void 0!==e)||e,s=c(r.options),a=u(r.options).y;y(r,s,o),h(t,function(t){var e=0,n=parseInt(t.offsetHeight,10);isNaN(n)||(r.rows.forEach(function(t,n){t<r.rows[e]&&(e=n)}),t.style.position="absolute",t.style.top=r.rows[e]+"px",t.style.left=""+r.cols[e],r.rows[e]+=isNaN(n)?0:n+a,i&&(t.dataset.macyComplete=1))}),i&&(r.tmpRows=null),p(r)})(t,r,n,e),t.emit(t.constants.EVENT_RECALCULATED)}var w=function(t){return t===Object(t)&&"[object Array]"!==Object.prototype.toString.call(t)},A=function(t,n){w(t)||(n.columns=t),w(t)&&t.columns&&(n.columns=t.columns),w(t)&&t.margin&&!w(t.margin)&&(n.margin={x:t.margin,y:t.margin}),w(t)&&t.margin&&w(t.margin)&&t.margin.x&&(n.margin.x=t.margin.x),w(t)&&t.margin&&w(t.margin)&&t.margin.y&&(n.margin.y=t.margin.y)},I=Object.assign||function(t){for(var n=1;n<arguments.length;n++){var e=arguments[n];for(var r in e)Object.prototype.hasOwnProperty.call(e,r)&&(t[r]=e[r])}return t};Array.from||(Array.from=function(t){for(var n=0,e=[];n<t.length;)e.push(t[n++]);return e});var N={columns:4,margin:2,trueOrder:!1,waitForImages:!1,useImageLoader:!0,breakAt:{},useOwnImageLoader:!1,onInit:!1,cancelLegacy:!1,useContainerForBreakpoints:!1};!function(){try{document.createElement("a").querySelector(":scope *")}catch(t){!function(){function t(r){return function(t){if(t&&o.test(t)){var n=this.getAttribute("id");n||(this.id="q"+Math.floor(9e6*Math.random())+1e6),arguments[0]=t.replace(o,"#"+this.id);var e=r.apply(this,arguments);return null===n?this.removeAttribute("id"):n||(this.id=n),e}return r.apply(this,arguments)}}var o=/:scope\b/gi,n=t(Element.prototype.querySelector);Element.prototype.querySelector=function(t){return n.apply(this,arguments)};var e=t(Element.prototype.querySelectorAll);Element.prototype.querySelectorAll=function(t){return e.apply(this,arguments)}}()}}();function T(){var t=0<arguments.length&&void 0!==arguments[0]?arguments[0]:N;if(!(this instanceof T))return new T(t);this.options={},I(this.options,N,t),this.options.cancelLegacy&&!window.Promise||e(this)}return T.init=function(t){return console.warn("Depreciated: Macy.init will be removed in v3.0.0 opt to use Macy directly like so Macy({ /*options here*/ }) "),new T(t)},T.prototype.recalculateOnImageLoad=function(){var t=0<arguments.length&&void 0!==arguments[0]&&arguments[0];return o(this,a("img",this.container),!t)},T.prototype.runOnImageLoad=function(t){var n=1<arguments.length&&void 0!==arguments[1]&&arguments[1],e=a("img",this.container);return this.on(this.constants.EVENT_IMAGE_COMPLETE,t),n&&this.on(this.constants.EVENT_IMAGE_LOAD,t),o(this,e,n)},T.prototype.recalculate=function(){var t=this,n=0<arguments.length&&void 0!==arguments[0]&&arguments[0],e=!(1<arguments.length&&void 0!==arguments[1])||arguments[1];return e&&this.queue.clear(),this.queue.add(function(){return E(t,n,e)})},T.prototype.remove=function(){window.removeEventListener("resize",this.resizer),h(this.container.children,function(t){t.removeAttribute("data-macy-complete"),t.removeAttribute("style")}),this.container.removeAttribute("style")},T.prototype.reInit=function(){this.recalculate(!0,!0),this.emit(this.constants.EVENT_INITIALIZED),window.addEventListener("resize",this.resizer),this.container.style.position="relative"},T.prototype.on=function(t,n){this.events.on(t,n)},T.prototype.emit=function(t,n){this.events.emit(t,n)},T.prototype.constants=T.constants={EVENT_INITIALIZED:"macy.initialized",EVENT_RECALCULATED:"macy.recalculated",EVENT_IMAGE_LOAD:"macy.image.load",EVENT_IMAGE_ERROR:"macy.image.error",EVENT_IMAGE_COMPLETE:"macy.images.complete",EVENT_RESIZE:"macy.resize"},T});
+
+(function() {
+    'use strict';
+
+    // 如果当前页面有文章索引元素存在就
+    if( document.querySelector(".gridme-posts-grid") ) {
+
+        // 定义参数
+        var macy = Macy({
+            "container": ".gridme-posts-grid",
+            "margin": {
+                "x": 12,
+                "y": 18
+            },
+            "columns": 4,
+            "trueOrder": true,
+            "useOwnImageLoader": true,
+            "breakAt": {
+                "319": {
+                    "margin": {
+                        "x": 0,
+                        "y": 8
+                    },
+                    "columns": 1
+                },
+                "379": 2,
+                "790": 3
+            }
+        });
+
+        // 开始优化优化排版
+        macy.recalculate();
+
+        // 遍历文章配图，在加载完成或失败时重新优化排版；有些站点使用异步加载图片，自带得回调函数似乎不会重新排版。
+        document.querySelectorAll(".gridme-posts-grid img").forEach((img) => {
+
+            img.onload = () => macy.reInit();
+            img.onerror = () => macy.reInit();
+
+        });
+
+    }
+
+})();

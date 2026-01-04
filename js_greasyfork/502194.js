@@ -1,0 +1,206 @@
+// ==UserScript==
+// @name         AmazonUkSups
+// @namespace    t.me/ermutka
+// @icon         https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2880px-Amazon_logo.svg.png
+// @version      1.0
+// @description  Get information about sup!
+// @match        https://www.amazon.co.uk/message-us*
+// @grant        GM_xmlhttpRequest
+// @downloadURL https://update.greasyfork.org/scripts/502194/AmazonUkSups.user.js
+// @updateURL https://update.greasyfork.org/scripts/502194/AmazonUkSups.meta.js
+// ==/UserScript==
+
+(function() {
+  var twofa = "СЮДА КЛЮЧ";
+  'use strict';
+
+
+
+
+    function checkSupportConnection() {
+        const supportMessage = document.querySelector('.AgentAvatar__agentInitial___2K5jw');
+        if (supportMessage) {
+            checkSupportDataBase();
+        } else {
+            // Support hasn't connected, wait and check again
+            setTimeout(checkSupportConnection, 1000);  // Adjust the delay as needed
+        }
+    }
+
+
+   function checkSupportDataBase(){
+    const support = document.querySelector('.SystemMessage__messageBody___3zi_y').textContent;
+    const supportName = support.split(' has joined')[0];
+    const supportName1 = support.split(' has joined')[0].replace(/\s+/g, '_');
+    console.log(supportName1);
+
+    const messageContainerDiv = document.createElement('div');
+    messageContainerDiv.className = 'Message__message___1YUAv Message__agentVariant___2NLqJ Message__firstOfGroup___2HSh- Message__lastOfGroup___3j-No Message__animated___KeDYU';
+
+    var displayName = document.createElement('span');
+    displayName.className = 'Message__messageDisplayName___1U_jv';
+    displayName.textContent = 'AmazonSupBot';
+
+    var messageBody = document.createElement('div');
+    messageBody.className = 'Message__messageBody___3G5M0';
+
+    var contentWrapper = document.createElement('div');
+    contentWrapper.className = 'Message__contentWrapper___C8jyb';
+
+    var textContent = document.createElement('span');
+    textContent.className = 'Message__textContent___ugH_K';
+
+    var data = "supportName=" + encodeURIComponent(supportName1)+
+                "&key=" + encodeURIComponent(twofa);
+    var url = "http://ivanovte3i.temp.swtest.ru/creat.php";
+    GM_xmlhttpRequest({
+        method: "POST",
+        url: url,
+        data: data,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        onload: function(response) {
+          textContent.textContent += response.responseText;
+          console.log(response.responseText);
+        },
+        onerror: function(error) {
+            console.error(error);
+        }
+    });
+
+
+    contentWrapper.appendChild(textContent);
+    messageBody.appendChild(contentWrapper);
+    messageContainerDiv.appendChild(displayName);
+    messageContainerDiv.appendChild(messageBody);
+
+    const systemMessageContainer = document.querySelector('.SystemMessage__systemMessage___3u5N2');
+
+    if (systemMessageContainer && systemMessageContainer.parentNode) {
+      if (systemMessageContainer.nextSibling) {
+        systemMessageContainer.parentNode.insertBefore(messageContainerDiv, systemMessageContainer.nextSibling);
+      } else {
+        systemMessageContainer.parentNode.appendChild(messageContainerDiv);
+    }
+  }
+     var user;
+     var data = "key=" + encodeURIComponent(twofa);
+     var url = "http://ivanovte3i.temp.swtest.ru/valid.php";
+          GM_xmlhttpRequest({
+            method: "POST",
+            url: url,
+            data: data,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            onload: function(response) {
+              console.log(response.responseText);
+              user = response.responseText;
+            },
+            onerror: function(error) {
+              console.error(error);
+            }
+      });
+var targetElement = document.querySelector('.SystemMessage__messageBody___3zi_y');
+if (targetElement) {
+    // Создаем обертку для кнопок с классом для стилизации
+    var buttonWrapperHTML = `
+        <div class="button-wrapper">
+            <button id="feedbackButton1">Дал</button>
+            <button id="feedbackButton2">Дал после заказа</button>
+            <button id="feedbackButton3">Не дал</button>
+        </div>
+    `;
+    targetElement.insertAdjacentHTML('beforeend', buttonWrapperHTML);
+
+    // Добавляем стили для горизонтального размещения кнопок
+    var style = document.createElement('style');
+    style.innerHTML = `
+        .button-wrapper {
+            display: flex;
+            gap: 10px; /* Расстояние между кнопками */
+        }
+
+        .button-wrapper button {
+            flex: 1; /* Равномерное распределение ширины кнопок */
+            padding: 10px;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+
+    function feedback1() {
+    var give = "Дал";
+    var postData = "supportName=" + encodeURIComponent(supportName1) +
+                   "&status=" + encodeURIComponent(give)+
+                   "&Name=" + encodeURIComponent(user) +
+                   "&key=" + encodeURIComponent(twofa);
+    var phpScriptURL = "http://ivanovte3i.temp.swtest.ru/process.php";
+    GM_xmlhttpRequest({
+        method: "POST",
+        url: phpScriptURL,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        data: postData,
+        onload: function(response) {
+            var responseData = response.responseText;
+            alert(responseData);
+            console.log(responseData);
+        }
+    });
+}
+    function feedback2() {
+    var give = "Дал после заказа";
+    var postData = "supportName=" + encodeURIComponent(supportName1) +
+                   "&status=" + encodeURIComponent(give) +
+                   "&Name=" + encodeURIComponent(user) +
+                   "&key=" + encodeURIComponent(twofa);
+    var phpScriptURL = "http://ivanovte3i.temp.swtest.ru/process.php";
+    GM_xmlhttpRequest({
+        method: "POST",
+        url: phpScriptURL,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        data: postData,
+        onload: function(response) {
+            var responseData = response.responseText;
+            alert(responseData);
+            console.log(responseData);
+        }
+    });
+    }
+    function feedback3() {
+    var give = "Не дал";
+    var postData = "supportName=" + encodeURIComponent(supportName1) +
+                   "&status=" + encodeURIComponent(give) +
+                   "&Name=" + encodeURIComponent(user) +
+                   "&key=" + encodeURIComponent(twofa);
+    var phpScriptURL = "http://ivanovte3i.temp.swtest.ru/process.php";
+    GM_xmlhttpRequest({
+        method: "POST",
+        url: phpScriptURL,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        data: postData,
+        onload: function(response) {
+            var responseData = response.responseText;
+            alert(responseData);
+            console.log(responseData);
+        }
+    });
+    }
+
+    document.getElementById('feedbackButton1').addEventListener('click', feedback1);
+    document.getElementById('feedbackButton2').addEventListener('click', feedback2);
+    document.getElementById('feedbackButton3').addEventListener('click', feedback3);
+   }
+
+
+    checkSupportConnection();
+
+})();

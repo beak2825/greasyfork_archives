@@ -1,0 +1,136 @@
+// ==UserScript==
+// @name         haojiegg连点巨量
+// @namespace    http://tampermonkey.net/
+// @license      No License
+// @version      0.4
+// @match        *://buyin.jinritemai.com/dashboard/live/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=juejin.cn
+// @grant        none
+// @description 独创
+// @downloadURL https://update.greasyfork.org/scripts/497224/haojiegg%E8%BF%9E%E7%82%B9%E5%B7%A8%E9%87%8F.user.js
+// @updateURL https://update.greasyfork.org/scripts/497224/haojiegg%E8%BF%9E%E7%82%B9%E5%B7%A8%E9%87%8F.meta.js
+// ==/UserScript==
+(function() {
+    'use strict';
+    var time = '';
+    var a = 1;
+    var t = 0;
+    var oldI = 1;
+    var bodys = document.querySelector('body');
+
+
+    //清除按钮
+    var dyBtn2 = document.createElement("input");
+    dyBtn2.id = "btn2";
+    dyBtn2.style = "font-size:18px;position: fixed;top: 70vh;right: 50px;z-index:9999;";
+    dyBtn2.type = 'button';
+    dyBtn2.value = "停止"
+    dyBtn2.className = 'dyBtn2';
+
+
+    //停止
+    dyBtn2.onclick = ()=>{
+        console.log('停止了')
+        clearInterval(time)
+    }
+
+    bodys.appendChild(dyBtn2);
+
+
+
+
+
+
+setTimeout(()=>{
+    main()
+
+    //滚动之后自动添加
+   document.querySelector('#live-control-goods-list-container>div').onscroll = debounce(()=>{
+       main()
+
+     },600)
+
+
+},5000)
+
+    //主方法
+
+function main(){
+
+//链接大div
+    var domarr = document.querySelectorAll('.goodsItem-KBGOY5');
+
+    domarr.forEach(function(item){
+        var autoBtn = document.createElement("input");
+        autoBtn.type = 'button';
+        autoBtn.style = "font-size:14px;position: absolute;top: 60px;right: 152px;";
+        autoBtn.value = "自动讲解"
+        autoBtn.className = 'autoBtn';
+
+      item.lastChild.lastChild.appendChild(autoBtn);
+
+        setTimeout(()=>{
+            autoBtn.onclick = function(){
+//console.log(this.previousSibling)
+                //auoClick(this.previousSibling.firstChild)
+                auoClick(this.previousSibling.firstChild.parentNode.parentNode.firstChild.firstChild)
+
+        }
+        },600)
+    }
+    )
+
+
+}
+
+    //自动点击方法
+    function auoClick(dom){
+        clearInterval(time);
+        var douc = () => {
+
+            if (dom.className.split(" ").indexOf("active") == -1) {
+                setTimeout(() => {
+                    dom.click();
+                });
+            } else {
+                dom.click();
+                t = 0;
+                setTimeout(function() {
+                    dom.click();
+                }, 2000);
+            }
+        };
+        douc();
+        time = setInterval(() => {
+            console.log('开始了')
+            t++;
+            if (t >= 17) {
+                    douc();
+                }
+        }, 1000);
+
+    }
+
+
+
+
+    function debounce(callback,delaytime){
+			// 定义计时器
+			let timer=null
+			return function(){
+				//如果定时器不是null 则需要重新计时
+				if (timer!=null) {
+					clearTimeout(timer)
+
+				}
+				//如果定时器还是空 ,则开始倒计时
+				timer=setTimeout(()=>{
+					callback&&callback()
+				}, delaytime)
+
+			}
+		}
+
+
+
+})();

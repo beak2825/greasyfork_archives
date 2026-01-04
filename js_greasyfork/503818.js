@@ -1,0 +1,49 @@
+// ==UserScript==
+// @name                 33win3
+// @description          Disables the 𝗚𝗼𝗼𝗴𝗹𝗲 𝗔𝗻𝗮𝗹𝘆𝘁𝗶𝗰𝘀 tracking counter.
+ 
+// @name:en              33win3
+// @description:en       Disables the 𝗚𝗼𝗼𝗴𝗹𝗲 𝗔𝗻𝗮𝗹𝘆𝘁𝗶𝗰𝘀 tracking counter.
+ 
+// @name:ru              33win3
+// @description:ru       Отключает счетчик отслеживания 𝗚𝗼𝗼𝗴𝗹𝗲 𝗔𝗻𝗮𝗹𝘆𝘁𝗶𝗰𝘀.
+ 
+// @name:uk              33win3
+// @description:uk       Відключає лічильник відстеження 𝗚𝗼𝗼𝗴𝗹𝗲 𝗔𝗻𝗮𝗹𝘆𝘁𝗶𝗰𝘀.
+ 
+// @name:bg              33win3
+// @description:bg       Деактивира брояча за проследяване на 𝗚𝗼𝗼𝗴𝗹𝗲 𝗔𝗻𝗮𝗹𝘆𝘁𝗶𝗰𝘀.
+ 
+// @name:zh-CN           33win3
+// @description:zh-CN    禁用跟踪计数器𝗚𝗼𝗼𝗴𝗹𝗲.
+ 
+// @iconURL              https://ssl.gstatic.com/analytics/20200422-01/app/static/analytics_standard_icon.png
+// @version              1.3
+// @match                http://*/*
+// @match                https://*/*
+// @run-at               document-start
+// @grant                unsafeWindow
+// @noframes
+// @namespace            https://stomaks.me
+// @supportURL           https://stomaks.me?feedback
+// @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=stomaks@gmail.com&item_name=Greasy+Fork+donation
+// @author               Maxim Stoyanov (stomaks)
+// @developer            Maxim Stoyanov (stomaks)
+// @license              MIT
+// @compatible           chrome
+// @compatible           firefox
+// @compatible           opera
+// @compatible           safari
+// @downloadURL https://update.greasyfork.org/scripts/503818/33win3.user.js
+// @updateURL https://update.greasyfork.org/scripts/503818/33win3.meta.js
+// ==/UserScript==
+ 
+(function() {
+  'use strict';
+ 
+  unsafeWindow._gaUserPrefs = {
+    "ioo": function() {
+      return true;
+    }
+  };
+})();

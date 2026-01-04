@@ -1,0 +1,28 @@
+// ==UserScript==
+// @name         No Fullscreen Dropdown
+// @namespace    https://github.com/tientq64/userscripts
+// @version      0.3.2
+// @description  Real fullscreen instead of fullscreen dropdown, very annoying when playing games. Useful for Microsoft Edge. Press Shift+F11 to toggle fullscreen.
+// @author       tientq64
+// @icon         https://cdn-icons-png.flaticon.com/64/4785/4785776.png
+// @match        *://*/*
+// @license      MIT
+// @grant        none
+// @compatible   edge
+// @noframes
+// @homepage     https://github.com/tientq64/userscripts/tree/main/scripts/No-Fullscreen-Dropdown
+// @downloadURL https://update.greasyfork.org/scripts/495945/No%20Fullscreen%20Dropdown.user.js
+// @updateURL https://update.greasyfork.org/scripts/495945/No%20Fullscreen%20Dropdown.meta.js
+// ==/UserScript==
+
+window.addEventListener('keydown', (event) => {
+    if (event.repeat || event.ctrlKey || event.altKey || event.metaKey) return
+
+    if (event.code === 'F11' && event.shiftKey) {
+        if (document.fullscreenElement) {
+            document.exitFullscreen()
+        } else {
+            document.documentElement.requestFullscreen()
+        }
+    }
+})

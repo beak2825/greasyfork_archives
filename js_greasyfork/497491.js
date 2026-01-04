@@ -1,0 +1,12 @@
+// ==UserScript==
+// @name         谷歌翻译小部件到网站底部
+// @namespace    google_translate_widget
+// @version      beta.114514.1
+// @description  有些网站不兼容(兼容任何支持安装js的浏览器)
+// @author       Liweifeng
+// @match        *://*/*
+// @downloadURL https://update.greasyfork.org/scripts/497491/%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E5%B0%8F%E9%83%A8%E4%BB%B6%E5%88%B0%E7%BD%91%E7%AB%99%E5%BA%95%E9%83%A8.user.js
+// @updateURL https://update.greasyfork.org/scripts/497491/%E8%B0%B7%E6%AD%8C%E7%BF%BB%E8%AF%91%E5%B0%8F%E9%83%A8%E4%BB%B6%E5%88%B0%E7%BD%91%E7%AB%99%E5%BA%95%E9%83%A8.meta.js
+// ==/UserScript==
+
+(function(){'use strict';var c=document.createElement('div');c.id='google_translate_element';var d=document.getElementsByTagName('body')[0];d.appendChild(c);var e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('src','https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit');d.appendChild(e);var f=document.createElement('style');f.innerHTML=`html,body{top:0!important}[id=":1.container"].skiptranslate{display:none}#undo-translate-button{margin-top:1rem;padding:0.5rem;background-color:#f0f0f0;border:1px solid#ccc;border-radius:5px;cursor:pointer}#undo-translate-button:hover{background-color:#dcdcdc}#goog-gt-,#goog-gt-tt{visibility:hidden!important;display:none!important}.goog-text-highlight{background-color:inherit!important;box-shadow:0 0 0 0 transparent!important}#undo-translate-button{margin-top:10px;padding:6px 8px;background-color:#f2f2f2;border:1px solid#ccc;border-radius:5px;cursor:pointer}#undo-translate-button:hover{background-color:#e6e6e6}`;d.appendChild(f);window.googleTranslateElementInit=function(){new google.translate.TranslateElement({includedLanguages:'zh-CN,zh-TW,en,ja,ru'},'google_translate_element');var a=document.createElement('button');a.id='undo-translate-button';a.textContent='撤销翻译';a.onclick=function(){const phoneRecoverIframe=document.getElementById(':1.container');const PCRecoverIframe=document.getElementById(':2.container');if(phoneRecoverIframe){const recoverDocument=phoneRecoverIframe.contentWindow.document;recoverDocument.getElementById(':1.restore').click()}else if(PCRecoverIframe){const recoverDocument=PCRecoverIframe.contentWindow.document;recoverDocument.getElementById(':2.restore').click()}};var b=document.getElementById('google_translate_element');b.parentNode.insertBefore(a,null)}})();

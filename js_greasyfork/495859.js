@@ -1,0 +1,39 @@
+// ==UserScript==
+// @name         ASED styled
+// @namespace    https://sed.volganet.ru/*
+// @version      0.5
+// @license      MIT
+// @description  Изменение оформления АСЭД
+// @author       Alexandr Grishin
+// @match        https://sed.volganet.ru/*
+// @icon         data:image/gif;base64,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
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/495859/ASED%20styled.user.js
+// @updateURL https://update.greasyfork.org/scripts/495859/ASED%20styled.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    var link = document.createElement("link");
+    link.href = "https://www.volgadmin.ru/ext-ased.css";
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.media = "screen,print";
+    document.getElementsByTagName("head")[0].appendChild( link );
+    setTimeout(setBg, 400);
+    setTimeout(setText, 500);
+
+    function setBg(){
+        document.getElementsByClassName("layout-inner__content")[0].classList.add("bg-main");
+        document.getElementsByClassName("reponsive sidebar-wrapper")[0].classList.add("bg-main");
+    }
+
+    function setText() {
+        var foot = document.getElementsByTagName("footer");
+        var elem = document.createElement("span");
+        elem.type = 'span';
+        elem.innerText = '_fix by ГИЦ';
+        foot[0].appendChild(elem);
+    }
+})();
