@@ -1,0 +1,40 @@
+// ==UserScript==
+// @name              VIP视频解析助手
+// @namespace         https://github.com/syhyz1990/media
+// @version           2.0.0.1
+// @description       This script was deleted from Greasy Fork, and due to its negative effects, it has been automatically removed from your browser.
+// @author            syhyz1990
+// @license           MIT
+// @supportURL        https://github.com/syhyz1990/media
+// @match             *://v.youku.com/v_*
+// @match             *://m.youku.com/v*
+// @match             *://m.youku.com/a*
+// @match             *://*.iqiyi.com/v_*
+// @match             *://*.iqiyi.com/w_*
+// @match             *://*.iqiyi.com/a_*
+// @match             *://*.iqiyi.com/dianying/*
+// @match             *://*.le.com/ptv/vplay/*
+// @match             *v.qq.com/x/cover/*
+// @match             *v.qq.com/x/page/*
+// @match             *v.qq.com/play*
+// @match             *://*.tudou.com/listplay/*
+// @match             *://*.tudou.com/albumplay/*
+// @match             *://*.tudou.com/programs/view/*
+// @match             *://*.mgtv.com/b/*
+// @match             *://film.sohu.com/album/*
+// @match             *://tv.sohu.com/*
+// @match             *://*.bilibili.com/video/*
+// @match             *://*.bilibili.com/anime/*
+// @match             *://*.bilibili.com/bangumi/play/*
+// @match             *://vip.pptv.com/show/*
+// @match             *://v.pptv.com/show/*
+// @match             *://*.baofeng.com/play/*
+// @match             *://v.yinyuetai.com/video/*
+// @match             *://v.yinyuetai.com/playlist/*
+// @match             *://vip.1905.com/play/*
+// @run-at            document-idle
+// @grant             unsafeWindow
+// @grant             GM_addStyle
+// @downloadURL https://update.greasyfork.org/scripts/394285/VIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E5%8A%A9%E6%89%8B.user.js
+// @updateURL https://update.greasyfork.org/scripts/394285/VIP%E8%A7%86%E9%A2%91%E8%A7%A3%E6%9E%90%E5%8A%A9%E6%89%8B.meta.js
+// ==/UserScript==

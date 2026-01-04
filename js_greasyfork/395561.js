@@ -1,0 +1,99 @@
+// ==UserScript==
+// @name wsmud_accessibility_color
+// @namespace https://greasyfork.org/zh-CN/scripts/395561-wsmud-accessibility-color
+// @version 1.0.2
+// @description 武神传说(wsmud)无障碍配色，适用于色弱色盲群体。正常视觉可使用 wsmud_flat_color
+// @author mapleo
+// @homepageURL https://greasyfork.org/zh-CN/scripts/395561-wsmud-accessibility-color
+// @grant GM_addStyle
+// @run-at document-start
+// @match *://*.wsmud.com/*
+// @downloadURL https://update.greasyfork.org/scripts/395561/wsmud_accessibility_color.user.js
+// @updateURL https://update.greasyfork.org/scripts/395561/wsmud_accessibility_color.meta.js
+// ==/UserScript==
+
+(function() {
+let css = `
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+        .item-status-bar > .status-item {
+            zoom: 1
+        }
+    }
+    pre{
+        font-size: 1em;
+    }
+    .container, .login-content, .left, .right{
+        color: rgb(0,178,0);
+        background-color: #000000;
+    }
+    .tool-bar > .tool-item {
+        color:#000000;
+        background-color:#ADADAD;
+    }
+    .room-item > .item-name {
+        margin-left: 1em;
+    }
+    .room-item > .item-name {
+        margin-left: 1em;
+    }
+    .room_items {
+        max-height: 120px;
+    }
+    .item-status-bar > .status-item {
+        font-size: 0.8em;
+        font-weight: lighter;
+    }
+    .state-bar {
+        overflow-x: auto;
+    }
+    .hp > .progress-bar {
+        background-color: #D55E00;
+    }
+    .mp > .progress-bar {
+        background-color: #56B4DF;
+    }
+    HIG {
+        color: #009E73;
+    }
+    HIC {
+        color: #56B4DF;
+    }
+    HIY {
+        color: #F0E442;
+    }
+    HIZ {
+        color: #CC79A7;
+    }
+    HIO {
+        color: #E69F00;
+    }
+    HIR {
+        color: #D55E00;
+    }
+    HIM {
+        color: #e84393;
+    }
+
+    /* left right */
+    .left, .right {
+        width: 350px;
+    }
+    .left-content {
+        font-size: 13px;
+    }
+    .span-btn {
+        font-size: 13px;
+    }
+    /* pluggis */
+    .layui-layer-content {
+        font-size: 13px;
+    }
+`;
+if (typeof GM_addStyle !== "undefined") {
+  GM_addStyle(css);
+} else {
+  const styleNode = document.createElement("style");
+  styleNode.appendChild(document.createTextNode(css));
+  (document.querySelector("head") || document.documentElement).appendChild(styleNode);
+}
+})();

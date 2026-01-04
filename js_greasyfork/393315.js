@@ -1,0 +1,18 @@
+// ==UserScript==
+// @name         Подсветка очереди ДКВУ 16 цветов
+// @version      0.01
+// @description  ...
+// @author       QC
+// @include      https://taximeter-admin.taxi.yandex-team.ru/qc?exam=dkvu*
+// @grant        none
+// @namespace https://greasyfork.org/users/191824
+// @downloadURL https://update.greasyfork.org/scripts/393315/%D0%9F%D0%BE%D0%B4%D1%81%D0%B2%D0%B5%D1%82%D0%BA%D0%B0%20%D0%BE%D1%87%D0%B5%D1%80%D0%B5%D0%B4%D0%B8%20%D0%94%D0%9A%D0%92%D0%A3%2016%20%D1%86%D0%B2%D0%B5%D1%82%D0%BE%D0%B2.user.js
+// @updateURL https://update.greasyfork.org/scripts/393315/%D0%9F%D0%BE%D0%B4%D1%81%D0%B2%D0%B5%D1%82%D0%BA%D0%B0%20%D0%BE%D1%87%D0%B5%D1%80%D0%B5%D0%B4%D0%B8%20%D0%94%D0%9A%D0%92%D0%A3%2016%20%D1%86%D0%B2%D0%B5%D1%82%D0%BE%D0%B2.meta.js
+// ==/UserScript==
+
+
+
+function flxfunc(){
+    var a=$("div.datagrid-content");a[0].style="background: red none repeat scroll 0% 0%;background: linear-gradient(to bottom, rgba(255, 0, 255, 1) 6.25%, rgba(0, 255, 255, 1) 6.25%, rgba(0, 255, 255, 1) 12.5%, rgba(255, 86, 64, 1) 12.5%, rgba(255, 86, 64, 1) 18.75%, rgba(255, 255, 0, 1) 18.75%, rgba(255, 255, 0, 1) 25%, rgba(255, 127, 80, 1) 25%, rgba(255, 127, 80, 1) 31.25%, rgba(155, 48, 255, 1) 31.25%, rgba(155, 48, 255, 1) 37.5%, rgba(53, 214, 153, 1) 37.5%, rgba(53, 214, 153, 1) 43.75%, rgba(246, 178, 107, 1) 43.75%, rgba(246, 178, 107, 1) 50%, rgba(60, 120, 216, 1) 50%, rgba(60, 120, 216, 1) 56.25%, rgba(224, 102, 102, 1) 56.25%, rgba(224, 102, 102, 1) 62.5%, rgba(241, 194, 50, 1) 62.5%, rgba(241, 194, 50, 1) 68.75%, rgba(118, 165, 175, 1) 68.75%, rgba(118, 165, 175, 1) 75%, rgba(194, 123, 160, 1) 75%, rgba(194, 123, 160, 1) 81.25%, rgba(106, 168, 79, 1) 81.25%, rgba(106, 168, 79, 1) 87.5%, rgba(230, 145, 56, 1) 87.5%, rgba(230, 145, 56, 1) 93.75%, rgba(224, 102, 102, 1) 93.75%, rgba(224, 102, 102, 1) 100%);"
+}
+var link=window.document.createElement("link");link.rel="stylesheet",link.type="text/css",link.href='data:text/css,.container-flex > [class*="vspan"], .container-flex > div{background-size:contain;background-repeat: no-repeat;}.padding-s-bottom > span.gray{ font-style: italic;font-weight: 700;color: %23666;}.modal-dialog{ width: 811px;margin: 5px auto;}.modal-body {position: relative;padding: 7px;padding-bottom:2px;}.form-control-static {padding-top: 0px;font-size: 10px;}%23msg {height: 75px;font-size: 11.7px;background-color: rgba(255,255,255,0.70);margin-top: -10px;}.scroll-panel {height: 437px; padding: 2px 0;margin-top: 2px;}.form-group {margin-bottom: 5px;font-size: 12.2px;}.modal-footer {padding: 4px;padding-top: 2px;}li.list-group-item > b {font-size: 10px;position: absolute;right: 11px;top: -2px;color: %23bdbdbd;}.list-group-item {padding: 7px 10px;}li.list-group-item > div.gray {color: %235E5E5E;}.container-app {margin: -20px -11px;}.navbar {margin-top: -7.5px;}%23content > div:nth-child(1) {margin-top: 40px;opacity: 0.52;}%23content {margin-top: -35px;}.car-images .content {background: rgba(0,0,0,0.77);}.navbar-default .navbar-nav > .active > a {border-width: 13px;padding-top: 4px;padding-bottom: 0px;}.container-flex-horizontal .separate-left {margin-top: 0px!important;}.container-filters {padding-bottom: 0px;z-index: 99999;}div.modal-dialog > .modal-content {background-color: rgba(255,255,255,0.67);}',document.getElementsByTagName("HEAD")[0].appendChild(link),$("select").change(flxfunc),document.addEventListener("DOMContentLoaded",setTimeout(flxfunc),350);

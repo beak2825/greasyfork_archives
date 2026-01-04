@@ -1,0 +1,41 @@
+// ==UserScript==
+// @namespace zyxubing
+// @name Aria2下载助手
+// @version 0.3.46.1
+// @include https://live.bilibili.com/*
+// @include https://search.bilibili.com/*
+// @include https://space.bilibili.com/*
+// @include https://www.bilibili.com/*
+// @include https://pan.baidu.com/*
+// @include https://yun.baidu.com/*
+// @include https://acg.rip/*
+// @include https://konachan.com/post*
+// @include https://konachan.net/post*
+// @include https://postimages.org/*
+// @include https://postimg.cc/*
+// @include https://wallhaven.cc/*
+// @include https://www.meitulu.com/*
+// @include https://nyaa.fun/*
+// @include https://nyaa.net/*
+// @include https://nyaa.si/*
+// @include https://sukebei.nyaa.net/*
+// @include https://sukebei.nyaa.si/*
+// @connect baidu.com
+// @connect baidupcs.com
+// @connect bilibili.com
+// @connect 111.229.137.150
+// @connect 127.0.0.1
+// @connect localhost
+// @connect self
+// @grant GM_cookie
+// @grant GM_getValue
+// @grant GM_setValue
+// @grant GM_setClipboard
+// @grant GM_openInTab
+// @grant GM_xmlhttpRequest
+// @grant unsafeWindow
+// @run-at document-idle
+// @description This script was deleted from Greasy Fork, and due to its negative effects, it has been automatically removed from your browser.
+// @downloadURL https://update.greasyfork.org/scripts/394319/Aria2%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B.user.js
+// @updateURL https://update.greasyfork.org/scripts/394319/Aria2%E4%B8%8B%E8%BD%BD%E5%8A%A9%E6%89%8B.meta.js
+// ==/UserScript==

@@ -1,0 +1,91 @@
+// ==UserScript==
+// @name         FGO Servant Planner Exporter
+// @version      0.1.1
+// @description  Formats servant planner materials to be copied into the Google sheet.
+// @author       Rukako
+// @namespace    rukako
+// @match        https://grandorder.gamepress.gg/servant-planner
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/387169/FGO%20Servant%20Planner%20Exporter.user.js
+// @updateURL https://update.greasyfork.org/scripts/387169/FGO%20Servant%20Planner%20Exporter.meta.js
+// ==/UserScript==
+
+/* globals $ */
+
+/*
+Material names from:
+https://grandorder.gamepress.gg/materials
+
+Code:
+const entries = Array.from($('.materials-row')).map(el => [el.querySelector('a[href]').getAttribute('href').replace('/item/', ''), el.querySelector('a[hreflang]').textContent]);
+const gpMatNames = Object.fromEntries(entries);
+*/
+
+(function() {
+    'use strict';
+    $('#final-results').append(`
+<label><a href="https://docs.google.com/spreadsheets/d/1JvQ2cM2F4_wuh1aYRUY0F-DzrTYHRH7bhof8lGpaaOg/view">FGO Materials Planner</a></label>
+<textarea id="materials-planner-export" readonly style="font-size: 10pt; white-space: pre" rows=10 onclick="javascript:this.select()"> </textarea>
+`);
+    const textArea = document.getElementById('materials-planner-export');
+    $('#calcButton').click(updateTextArea);
+
+    const classes = new Set(['saber', 'lancer', 'archer', 'rider', 'caster', 'assassin', 'berserker']);
+    const capitalise = (s) => s.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+    const gpMatNames = {"kotan-magatama":"Kotan Magatama","deadly-poisonous-needle":"Deadly Poisonous Needle","dragon-fang":"Dragon Fang","evil-bone":"Evil Bone","fools-chain":"Fool's Chain","iron-stake-evening-tears":"Iron Stake of Evening Tears","mystic-spinal-fluid":"Mystic Spinal Fluid","proof-hero":"Proof of Hero","reactive-gunpowder":"Reactive Gunpowder","voids-dust":"Void's Dust","ancient-bell":"Ancient Bell","arrowhead-atonement":"Arrowhead of Atonement","aurora-steel":"Aurora Steel","eternal-frost":"Eternal Frost","eternal-gear":"Eternal Gear","forbidden-page":"Forbidden Page","ghost-lantern":"Ghost Lantern","great-knight-medal":"Great Knight Medal","homunculus-baby":"Homunculus Baby","meteor-horseshoe":"Meteor Horseshoe","octuplet-crystals":"Octuplet Crystals","phoenix-feather":"Phoenix Feather","ring-giants":"Ring of Giants","seed-yggdrasil":"Seed of Yggdrasil","serpent-jewel":"Serpent Jewel","shell-reminiscence":"Shell of Reminiscence","black-beast-grease":"Black Beast Grease","claw-chaos":"Claw of Chaos","crystallized-lore":"Crystallized Lore","cursed-beast-gallstone":"Cursed Beast Gallstone","dawn-core":"Dawn Core","dragons-reverse-scale":"Dragon's Reverse Scale","egg-truth":"Egg of Truth","heart-foreign-god":"Heart of the Foreign God","lamp-evil-sealing":"Lamp of Evil-Sealing","mysterious-divine-wine":"Mysterious Divine Wine","primordial-lanugo":"Primordial Lanugo","scarab-wisdom":"Scarab of Wisdom","spirit-root":"Spirit Root","tearstone-blood":"Tearstone of Blood","tsukumo-mirror":"Tsukumo Mirror","warhorses-young-horn":"Warhorse's Young Horn","archer-piece":"Archer Piece","assassin-piece":"Assassin Piece","berserker-piece":"Berserker Piece","caster-piece":"Caster Piece","lancer-piece":"Lancer Piece","rider-piece":"Rider Piece","saber-piece":"Saber Piece","add-plush":"Add Plush","archer-monument":"Archer Monument","assassin-monument":"Assassin Monument","b-pellet":"B Pellet","bell-ringing-branch":"Bell-Ringing Branch","berserker-monument":"Berserker Monument","caster-monument":"Caster Monument","crystal-ball":"Crystal Ball","dragon-orb":"Dragon Orb","forgotten-leaf":"Forgotten Leaf","gilles-de-rais-doll":"Gilles de Rais Doll","gohous-cane":"Gohou's Cane","golden-bear-lighter":"Golden Bear Lighter","golden-reed":"Golden Reed","heart-bracelet":"Heart Bracelet","heavenly-dragon-ball":"Heavenly Dragon Ball","jet-black-quill":"Jet Black Quill","kaientai-flag":"Kaientai Flag","kukulcan-mask":"Kukulcan Mask","lancer-monument":"Lancer Monument","piece-ranjatai":"Piece of Ranjatai","ribbon-reminiscence":"Ribbon of Reminiscence​","rider-monument":"Rider Monument","saber-monument":"Saber Monument","santa-mustache":"Santa Mustache","sharp-knife":"Sharp Knife","gem-archer":"Gem of Archer","gem-assassin":"Gem of Assassin","gem-berserker":"Gem of Berserker","gem-caster":"Gem of Caster","gem-lancer":"Gem of Lancer","gem-rider":"Gem of Rider","gem-saber":"Gem of Saber","magic-gem-archer":"Magic Gem of Archer","magic-gem-assassin":"Magic Gem of Assassin","magic-gem-berserker":"Magic Gem of Berserker","magic-gem-caster":"Magic Gem of Caster","magic-gem-lancer":"Magic Gem of Lancer","magic-gem-rider":"Magic Gem of Rider","magic-gem-saber":"Magic Gem of Saber","secret-gem-archer":"Secret Gem of Archer","secret-gem-assassin":"Secret Gem of Assassin","secret-gem-berserker":"Secret Gem of Berserker","secret-gem-caster":"Secret Gem of Caster","secret-gem-lancer":"Secret Gem of Lancer","secret-gem-rider":"Secret Gem of Rider","secret-gem-saber":"Secret Gem of Saber","ember-wisdom-all":"Ember of Wisdom - All","ember-wisdom-bronze-archer":"Ember of Wisdom - Bronze Archer","ember-wisdom-bronze-assassin":"Ember of Wisdom - Bronze Assassin","ember-wisdom-bronze-berserker":"Ember of Wisdom - Bronze Berserker","ember-wisdom-bronze-caster":"Ember of Wisdom - Bronze Caster","ember-wisdom-bronze-lancer":"Ember of Wisdom - Bronze Lancer","ember-wisdom-bronze-rider":"Ember of Wisdom - Bronze Rider","ember-wisdom-bronze-saber":"Ember of Wisdom - Bronze Saber","light-wisdom-all":"Light of Wisdom - All","light-wisdom-bronze-archer":"Light of Wisdom - Bronze Archer","light-wisdom-bronze-assassin":"Light of Wisdom - Bronze Assassin","light-wisdom-bronze-berserker":"Light of Wisdom - Bronze Berserker","light-wisdom-bronze-caster":"Light of Wisdom - Bronze Caster","light-wisdom-bronze-lancer":"Light of Wisdom - Bronze Lancer","light-wisdom-bronze-rider":"Light of Wisdom - Bronze Rider","light-wisdom-bronze-saber":"Light of Wisdom - Bronze Saber","fire-wisdom-all":"Fire of Wisdom - All","fire-wisdom-silver-archer":"Fire of Wisdom - Silver Archer","fire-wisdom-silver-assassin":"Fire of Wisdom - Silver Assassin","fire-wisdom-silver-berserker":"Fire of Wisdom - Silver Berserker","fire-wisdom-silver-caster":"Fire of Wisdom - Silver Caster","fire-wisdom-silver-lancer":"Fire of Wisdom - Silver Lancer","fire-wisdom-silver-rider":"Fire of Wisdom - Silver Rider","fire-wisdom-silver-saber":"Fire of Wisdom - Silver Saber","blaze-wisdom-all":"Blaze of Wisdom - All","blaze-wisdom-gold-archer":"Blaze of Wisdom - Gold Archer","blaze-wisdom-gold-assassin":"Blaze of Wisdom - Gold Assassin","blaze-wisdom-gold-berserker":"Blaze of Wisdom - Gold Berserker","blaze-wisdom-gold-caster":"Blaze of Wisdom - Gold Caster","blaze-wisdom-gold-lancer":"Blaze of Wisdom - Gold Lancer","blaze-wisdom-gold-rider":"Blaze of Wisdom - Gold Rider","blaze-wisdom-gold-saber":"Blaze of Wisdom - Gold Saber","hero-crystal-dawn-fou-all":"Hero Crystal: Dawn Fou - All","hero-crystal-dawn-fou-bronze-archer":"Hero Crystal: Dawn Fou - Bronze Archer","hero-crystal-dawn-fou-bronze-assassin":"Hero Crystal: Dawn Fou - Bronze Assassin","hero-crystal-dawn-fou-bronze-berserker":"Hero Crystal: Dawn Fou - Bronze Berserker","hero-crystal-dawn-fou-bronze-caster":"Hero Crystal: Dawn Fou - Bronze Caster","hero-crystal-dawn-fou-bronze-lancer":"Hero Crystal: Dawn Fou - Bronze Lancer","hero-crystal-dawn-fou-bronze-rider":"Hero Crystal: Dawn Fou - Bronze Rider","hero-crystal-dawn-fou-bronze-saber":"Hero Crystal: Dawn Fou - Bronze Saber","hero-crystal-dusk-fou-all":"Hero Crystal: Dusk Fou - All","hero-crystal-dusk-fou-bronze-archer":"Hero Crystal: Dusk Fou - Bronze Archer","hero-crystal-dusk-fou-bronze-assassin":"Hero Crystal: Dusk Fou - Bronze Assassin","hero-crystal-dusk-fou-bronze-berserker":"Hero Crystal: Dusk Fou - Bronze Berserker","hero-crystal-dusk-fou-bronze-caster":"Hero Crystal: Dusk Fou - Bronze Caster","hero-crystal-dusk-fou-bronze-lancer":"Hero Crystal: Dusk Fou - Bronze Lancer","hero-crystal-dusk-fou-bronze-rider":"Hero Crystal: Dusk Fou - Bronze Rider","hero-crystal-dusk-fou-bronze-saber":"Hero Crystal: Dusk Fou - Bronze Saber","hero-crystal-glittering-fou-all":"Hero Crystal: Glittering Fou - All","hero-crystal-glittering-fou-bronze-archer":"Hero Crystal: Glittering Fou - Bronze Archer","hero-crystal-glittering-fou-bronze-assassin":"Hero Crystal: Glittering Fou - Bronze Assassin","hero-crystal-glittering-fou-bronze-berserker":"Hero Crystal: Glittering Fou - Bronze Berserker","hero-crystal-glittering-fou-bronze-caster":"Hero Crystal: Glittering Fou - Bronze Caster","hero-crystal-glittering-fou-bronze-lancer":"Hero Crystal: Glittering Fou - Bronze Lancer","hero-crystal-glittering-fou-bronze-rider":"Hero Crystal: Glittering Fou - Bronze Rider","hero-crystal-glittering-fou-bronze-saber":"Hero Crystal: Glittering Fou - Bronze Saber","hero-crystal-shining-fou-all":"Hero Crystal: Shining Fou - All","hero-crystal-shining-fou-bronze-archer":"Hero Crystal: Shining Fou - Bronze Archer","hero-crystal-shining-fou-bronze-assassin":"Hero Crystal: Shining Fou - Bronze Assassin","hero-crystal-shining-fou-bronze-berserker":"Hero Crystal: Shining Fou - Bronze Berserker","hero-crystal-shining-fou-bronze-caster":"Hero Crystal: Shining Fou - Bronze Caster","hero-crystal-shining-fou-bronze-lancer":"Hero Crystal: Shining Fou - Bronze Lancer","hero-crystal-shining-fou-bronze-rider":"Hero Crystal: Shining Fou - Bronze Rider","hero-crystal-shining-fou-bronze-saber":"Hero Crystal: Shining Fou - Bronze Saber","hero-crystal-star-fou-all":"Hero Crystal: Star Fou - All","hero-crystal-star-fou-silver-archer":"Hero Crystal: Star Fou - Silver Archer","hero-crystal-star-fou-silver-assassin":"Hero Crystal: Star Fou - Silver Assassin","hero-crystal-star-fou-silver-berserker":"Hero Crystal: Star Fou - Silver Berserker","hero-crystal-star-fou-silver-caster":"Hero Crystal: Star Fou - Silver Caster","hero-crystal-star-fou-silver-lancer":"Hero Crystal: Star Fou - Silver Lancer","hero-crystal-star-fou-silver-rider":"Hero Crystal: Star Fou - Silver Rider","hero-crystal-star-fou-silver-saber":"Hero Crystal: Star Fou - Silver Saber","hero-crystal-sun-fou-all":"Hero Crystal: Sun Fou - All","hero-crystal-sun-fou-silver-archer":"Hero Crystal: Sun Fou - Silver Archer","hero-crystal-sun-fou-silver-assassin":"Hero Crystal: Sun Fou - Silver Assassin","hero-crystal-sun-fou-silver-berserker":"Hero Crystal: Sun Fou - Silver Berserker","hero-crystal-sun-fou-silver-caster":"Hero Crystal: Sun Fou - Silver Caster","hero-crystal-sun-fou-silver-lancer":"Hero Crystal: Sun Fou - Silver Lancer","hero-crystal-sun-fou-silver-rider":"Hero Crystal: Sun Fou - Silver Rider","hero-crystal-sun-fou-silver-saber":"Hero Crystal: Sun Fou - Silver Saber","hero-crystal-meteor-fou-all":"Hero Crystal: Meteor Fou - All","hero-crystal-solar-fou-all":"Hero Crystal: Solar Fou - All","saint-quartz":"Saint Quartz","bronze-fruit":"Bronze Fruit","silver-fruit":"Silver Fruit","golden-fruit":"Golden Fruit","human-anatomy-false":"Human Anatomy (False)","cbc2018-special-invitation":"CBC2018 Special Invitation","cbc2019-special-invitation":"CBC2019 Special Invitation","mana-prism":"Mana Prism","manuscript-fake":"Manuscript (Fake)","manuscript-true":"Manuscript (True)","seal-archer":"Seal of Archer","seal-assassin":"Seal of Assassin","seal-berserker":"Seal of Berserker","seal-caster":"Seal of Caster","seal-lancer":"Seal of Lancer","seal-rider":"Seal of Rider","seal-saber":"Seal of Saber","self-portrait-false":"Self Portrait (False)","mona-lisa-false":"Mona Lisa (False)","rare-prism":"Rare Prism","summon-ticket":"Summon Ticket","unregistered-spirit-origin":"Unregistered Spirit Origin","altrium":"Altrium","golden-rice-ball":"Golden Rice Ball","kiara-punisher-pink":"Kiara Punisher (Pink)","kiara-punisher-yellow":"Kiara Punisher (Yellow)","kp-reset":"KP Reset","bag-copper":"Bag of Copper","baking-chocolate":"Baking Chocolate","cement":"Cement","cheesecake":"Cheesecake","dragon-palace-coral":"Dragon Palace Coral","eiraku-coins":"Eiraku Coins","expensive-pudding":"Expensive Pudding","food":"Food","fresh-water":"Fresh Water","mineral-water":"Mineral Water","mini-ribbon":"Mini Ribbon","nero-medal-bronze":"Nero Medal (Bronze)","oil":"Oil","pork-bun":"Pork Bun","sakura-chip":"Sakura Chip","transistor":"Transistor","tsukumo-nasu":"Tsukumo-nasu","all-purpose-lens":"All-Purpose Lens","bag-silver":"Bag of Silver","chocolate-mold-archer":"Chocolate Mold: Archer","chocolate-mold-assassin":"Chocolate Mold: Assassin","chocolate-mold-berserker":"Chocolate Mold: Berserker","chocolate-mold-caster":"Chocolate Mold: Caster","chocolate-mold-lancer":"Chocolate Mold: Lancer","chocolate-mold-rider":"Chocolate Mold: Rider","chocolate-mold-saber":"Chocolate Mold: Saber","dumpling":"Dumpling","dumpling-courage":"Dumpling of Courage","eadrom-alloy":"Eadrom Alloy","gold-dust":"Gold Dust","hidden-key":"Hidden Key","immortal-peach":"Immortal Peach","kp":"KP","letter-mash":"Letter from Mash","lumber":"Lumber","magicalbushido-musashi":"Magical☆Bushido Musashi","mischievous-bat":"Mischievous Bat","nero-medal-silver":"Nero Medal (Silver)","oni-gourd":"Oni Gourd","petit-cake":"Petit Cake","realta-alloy":"Realta Alloy","rice-ball-power":"Rice Ball of Power","roll-brocade":"Roll of Brocade","sakura-money":"Sakura Money","shortcake":"Shortcake","silver-bell":"Silver Bell","stone":"Stone","strawberry-ice-cream":"Strawberry Ice Cream","sweet-candle":"Sweet Candle","yohen-tenmoku-chawan":"Yohen-tenmoku-chawan","assassins-mask":"Assassin's Mask","bag-gold":"Bag of Gold","black-cat-figurine":"Black Cat Figurine","buche-de-noel":"Bûche de Noël","bucket-chicken":"Bucket of Chicken","choco-coin-all":"Choco Coin of All","choco-coin-archer":"Choco Coin of Archer","choco-coin-assassin":"Choco Coin of Assassin","choco-coin-berserker":"Choco Coin of Berserker","choco-coin-caster":"Choco Coin of Caster","choco-coin-lancer":"Choco Coin of Lancer","choco-coin-rider":"Choco Coin of Rider","choco-coin-saber":"Choco Coin of Saber","church-key":"Church Key","crimson-petal":"Crimson Petal","divine-pill":"Divine Pill","fgo-2019-2nd-anniversary-formal-portrait-exchange-ticket":"FGO 2019 - 2nd Anniversary Formal Portrait Exchange Ticket","fruitcake":"Fruitcake","gae-bolg-replica":"Gae Bolg Replica","gate-key-ankle":"Gate Key (Ankle)","gate-key-cat":"Gate Key (Cat)","gate-key-coaster":"Gate Key (Coaster)","gate-key-dark":"Gate Key (Dark)","gate-key-elbow":"Gate Key (Elbow)","gate-key-jail":"Gate Key (Jail)","gate-key-kind":"Gate Key (Kind)","gate-key-nape":"Gate Key (Nape)","gate-key-ray":"Gate Key (Ray)","gate-key-separator":"Gate Key (Separator)","gate-key-station":"Gate Key (Station)","gold-leaf-sun-fan":"Gold Leaf Sun Fan","gold-star":"Gold Star","golden-dumpling":"Golden Dumpling","golden-skull":"Golden Skull","grand-lotus":"Grand Lotus","heros-bow":"Hero's Bow","heros-lance":"Hero's Lance","heros-mantle":"Hero's Mantle","heros-shield":"Hero's Shield","heros-sword":"Hero's Sword","hira-gumo":"Hira-gumo","iron":"Iron","koban":"Koban","lips-key":"Lip's Key","magical-stocking":"Magical Stocking","melts-key":"Melt's Key","miracle-stockings":"Miracle Stockings","mr-lion-go-toy":"Mr. Lion-Go Toy","nero-medal-gold":"Nero Medal (Gold)","onis-wicker-basket":"Oni's Wicker Basket","orb-merits":"Orb of Merits","pumpkin-lantern":"Pumpkin Lantern","rare-dumpling":"Rare Dumpling","sea-fiends-appendage":"Sea Fiend's Appendage","sharp-knife-0":"Sharp Knife","silver-exchange-ticket":"Silver Exchange Ticket","sorcery-ore-fragment":"Sorcery Ore Fragment","special-exchange-ticket":"Special Exchange Ticket","suzukas-key":"Suzuka's Key","swift-dog-bean":"Swift Dog Bean","talisman-merits":"Talisman of Merits","tickle-tickle-hand":"Tickle Tickle Hand","tough-pheasant-bean":"Tough Pheasant Bean","treasure-chalice":"Treasure Chalice","twinkle-candy":"Twinkle Candy","uisce-alloy":"Uisce Alloy","vacuum-tube":"Vacuum Tube","wise-monkey-bean":"Wise Monkey Bean","friend-points":"Friend Points","qp":"QP","damage-points":"Damage Points","honnoji-points":"Honnoji Points","oda-bakufu-points":"Oda Bakufu Points","shinsengumi-points":"Shinsengumi Points","holy-grail":"Holy Grail"};
+    const matNames = {
+        ...gpMatNames,
+        'blaze-wisdom-all': 'Golden EXP Card',
+    };
+    classes.forEach(c => {
+        matNames['gem-'+c] = 'Blue '+capitalise(c)+' Gem';
+        matNames['magic-gem-'+c] = 'Red '+capitalise(c)+' Gem';
+        matNames['secret-gem-'+c] = 'Gold '+capitalise(c)+' Gem';
+    });
+
+    function mapMaterialName(item) {
+        if (matNames[item]) return matNames[item];
+        console.warn('[Userscript] Material name mapping for '+item+' not found.');
+        item = item.replace(/-/g, ' ');
+        return capitalise(item);
+    }
+
+    function updateTextArea() {
+        const servant = $('.iv-calc-hero-result #link').text();
+
+        const startLevel = parseInt($('#start-lvl').val());
+        const targetLevel = parseInt($('#target-lvl').val());
+
+        const mapSkills = (verb) => (i) => {
+            const el = $(`#skill${i}-${verb}`);
+            return el.is(':disabled') ? '-' : el.val()
+        };
+
+        const startSkills = [1, 2, 3].map(mapSkills('start')).join('/');
+        const targetSkills = [1, 2, 3].map(mapSkills('end')).join('/');
+
+        let desc = [];
+        let short = [];
+        if (startLevel != targetLevel) {
+            desc.push(`Level ${startLevel} → ${targetLevel}`);
+            short.push('Ascension');
+        }
+        if (startSkills != targetSkills) {
+            desc.push(`Skills ${startSkills} → ${targetSkills}`);
+            short.push('Skills');
+        }
+        desc = desc.join(', ');
+        short = short.join(', ');
+
+
+        const rows = Array.from($('#results-mats td > a[href^="/item/"]')).map(a =>
+            [a.href.replace('https://grandorder.gamepress.gg/item/', ''), parseInt($('div', a).text().split(' ')[0].replace(/[x,]/g, ''))]
+        ).map(([item, amount]) =>
+            [servant, short, mapMaterialName(item), amount, desc]
+        ).map(x => x.join('\t'));
+
+        textArea.textContent = rows.join('\n');
+
+    }
+
+})();
