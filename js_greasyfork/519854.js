@@ -1,0 +1,108 @@
+// ==UserScript==
+// @name         Fast link for forum BR
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Fast link for forum BR.
+// @author       XZ
+// @match        https://forum.blackrussia.online/*
+// @icon         https://cdn.icon-icons.com/icons2/4159/PNG/512/ui_app_application_computer_program_software_legacy_icon_261654.png
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/519854/Fast%20link%20for%20forum%20BR.user.js
+// @updateURL https://update.greasyfork.org/scripts/519854/Fast%20link%20for%20forum%20BR.meta.js
+// ==/UserScript==
+ 
+(function() {
+    'use strict';
+ 
+const bgButtons = document.querySelector(".pageContent");
+    const ButtonRep = document.createElement("button");
+    const ButtonWarning = document.createElement("button");
+    const ButtonNoActive = document.createElement("button");
+    const ButtonHappyHours = document.createElement("button");
+    const ButtonLobby = document.createElement("button");
+    ButtonRep.textContent = "Заявки на ЛД";
+    ButtonWarning.textContent = "Жалобы";
+    ButtonNoActive.textContent = "Форум 80";
+    ButtonHappyHours.textContent = "Адм раздел";
+    ButtonLobby.textContent = "Раздел ЛД";
+ 
+ 
+    bgButtons.append(ButtonRep);
+    bgButtons.append(ButtonWarning);
+    bgButtons.append(ButtonHappyHours)
+    bgButtons.append(ButtonNoActive);
+    bgButtons.append(ButtonLobby);
+ 
+    ButtonRep.style.marginLeft = "40px";
+    ButtonRep.style.background = "#b4b5b8"
+    ButtonRep.style.borderRadius = "15px"
+    ButtonRep.style.boreder = "1px solid #4a4b4d"
+ 
+    ButtonWarning.style.marginLeft = "10px";
+    ButtonWarning.style.background = "#b4b5b8"
+    ButtonWarning.style.borderRadius = "15px"
+    ButtonWarning.style.boreder = "2px solid #4a4b4d"
+ 
+    ButtonNoActive.style.marginLeft = "10px";
+    ButtonNoActive.style.background = "#b4b5b8"
+    ButtonNoActive.style.borderRadius = "15px"
+    ButtonNoActive.style.boreder = "1px solid #4a4b4d"
+ 
+    ButtonHappyHours.style.marginLeft = "10px";
+    ButtonHappyHours.style.background = "#b4b5b8"
+    ButtonHappyHours.style.borderRadius = "15px"
+    ButtonHappyHours.style.boreder = "1px solid #4a4b4d"
+ 
+    ButtonLobby.style.marginLeft = "10px";
+    ButtonLobby.style.background = "#b4b5b8"
+    ButtonLobby.style.borderRadius = "15px"
+    ButtonLobby.style.boreder = "1px solid #4a4b4d"
+ 
+    function BRep() {
+        window.location.href = 'https://forum.blackrussia.online/forums/%D0%9B%D0%B8%D0%B4%D0%B5%D1%80%D1%8B.3568/';
+    };
+ 
+    function BWarning() {
+        window.location.href = "https://forum.blackrussia.online/forums/%D0%96%D0%B0%D0%BB%D0%BE%D0%B1%D1%8B.3552/";
+    };
+ 
+    function BNoActive() {
+        window.location.href = 'https://forum.blackrussia.online/forums/%D0%A1%D0%B5%D1%80%D0%B2%D0%B5%D1%80-%E2%84%9680-novgorod.3536/';
+    };
+ 
+    function BHappyHours() {
+        window.location.href = "https://forum.blackrussia.online/forums/%D0%90%D0%B4%D0%BC%D0%B8%D0%BD-%D1%80%D0%B0%D0%B7%D0%B4%D0%B5%D0%BB.3537/";
+    };
+ 
+    function BLobby() {
+        window.location.href = "https://forum.blackrussia.online/forums/%D0%9B%D0%B8%D0%B4%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9-%D1%80%D0%B0%D0%B7%D0%B4%D0%B5%D0%BB.3559/";
+    };
+ 
+    ButtonRep.addEventListener("click", () => {
+        BRep();
+        ButtonRep.style.background = "#fff"
+ 
+    });
+ 
+    ButtonWarning.addEventListener("click", () => {
+        BWarning();
+        ButtonWarning.style.background = "#fff"
+ 
+    });
+ 
+    ButtonNoActive.addEventListener("click", () => {
+        BNoActive();
+        ButtonNoActive.style.background = "#fff"
+ 
+    });
+ 
+    ButtonHappyHours.addEventListener("click", () => {
+        BHappyHours();
+        ButtonHappyHours.style.background = "#fff"
+    });
+ 
+    ButtonLobby.addEventListener("click", () => {
+        BLobby();
+        ButtonLobby.style.background = "#fff"
+    });
+})();
