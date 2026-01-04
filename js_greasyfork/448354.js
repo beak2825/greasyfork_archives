@@ -1,0 +1,1 @@
+{"id":"RandomSendHelper","frame":"2.5.0","version":"1.7.2.2","url":"https://gcore.jsdelivr.net/gh/gamyou/bilibili-live-random-send@latest/prod/bilibili-live-random-send.js","dmInputArea":"chat-control-panel-vm","sendButtonArea":"right-action","msg":""}
