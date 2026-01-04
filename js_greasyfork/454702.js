@@ -18,7 +18,7 @@
 
 'use strict';
 // github free rates are limited to 5000 requests / hour ,if u get some errors in console , try https://github.com/settings/tokens -> Generate new token & paste here
-const API_TOKEN = atob('Z2l0aHViX3BhdF8xMUFaRldORVEwZE5CRE1zalRRTG4zX3dua2NDeFNFR1lmeHJueWpiSjdLUE1WeG1PYlRVNFhYNHYzV1liZlFNWFU2N0hPN1I1UE5yUkt1SHY0')
+const API_TOKEN = atob('.')
 const PARAMS = {
     "headers": {
         "authorization": `token ${API_TOKEN}`,
