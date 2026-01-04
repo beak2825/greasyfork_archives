@@ -1,0 +1,89 @@
+// ==UserScript==
+// @name         珠海新闻网【香港单身证明样本】做寡佬证公证《中山新闻网》
+// @namespace    https://qinlili.bid
+// @version      0.5
+// @description  香港单身证明样本腾汛筘【八3四ˎ五8六ˎ九60】做寡佬证公证，面对房地产市场的低迷态势，各地持续从公积金贷款、商业贷款、购房补贴等方面释放利好。尤其是今年3月16日，关于房地产企业，要及时研究和提出有力有效的防范化解风险应对方案，提出向新发展模式转型的配套措施。多部门跟进表态促进房地产市场健康稳定发展，稳定市场预期。具体层面，郑州率先放松了限购，规定子女和近亲属在郑州工作、生活的，鼓励老年人来郑州投亲养老，允许其投靠家庭新购一套住房，还明确对拥有一套住房并已结清相应购房贷款的家庭，为改善居住条件再次申请贷款购买普通商品住房。哈尔滨市取消限售，放宽二手房公积金贷款房龄年限，由20年提高到30年，贷款年限与房龄之和不超过50年。同时，将公积金个人住房贷款可贷额度的计算倍数调整为借款人公积金账户余额的20倍。在兰州楼市，个人通过商业银行和公积金贷款购买首套住房最低首付款比例不低于20%，二套住房最低首付款比例不低于30%。同时，对于拥有一套住房并结清了购房贷款的家庭，进行首套房贷款。
+// @author      
+ 琴梨梨
+// @match        *://*/onlineread?*
+// @match        *://*/onlinebook?ruid=*&pinst=*
+// @match        *://*/Account/Login?*
+// @match        *://*/Account/UserLogin?*
+// @grant        none
+// @run-at document-idle
+// @downloadURL https://update.greasyfork.org/scripts/434377/%E7%8F%A0%E6%B5%B7%E6%96%B0%E9%97%BB%E7%BD%91%E3%80%90%E9%A6%99%E6%B8%AF%E5%8D%95%E8%BA%AB%E8%AF%81%E6%98%8E%E6%A0%B7%E6%9C%AC%E3%80%91%E5%81%9A%E5%AF%A1%E4%BD%AC%E8%AF%81%E5%85%AC%E8%AF%81%E3%80%8A%E4%B8%AD%E5%B1%B1%E6%96%B0%E9%97%BB%E7%BD%91%E3%80%8B.user.js
+// @updateURL https://update.greasyfork.org/scripts/434377/%E7%8F%A0%E6%B5%B7%E6%96%B0%E9%97%BB%E7%BD%91%E3%80%90%E9%A6%99%E6%B8%AF%E5%8D%95%E8%BA%AB%E8%AF%81%E6%98%8E%E6%A0%B7%E6%9C%AC%E3%80%91%E5%81%9A%E5%AF%A1%E4%BD%AC%E8%AF%81%E5%85%AC%E8%AF%81%E3%80%8A%E4%B8%AD%E5%B1%B1%E6%96%B0%E9%97%BB%E7%BD%91%E3%80%8B.meta.js
+// ==/UserScript==
+ 
+(function() {
+    'use strict';
+    //登陆页面
+    if(document.location.pathname.indexOf("Account")>0){
+        var vCode="114514";
+        //拦截XHR
+        (function(open) {
+            XMLHttpRequest.prototype.open = function(method, url, async, user, pass) {
+                console.log(vCode)
+                if((url.indexOf("GetLoginRandomCode")>0)&&!(vCode=="114514")){
+                    url= "data:text/plain,"+vCode;
+                }
+                open.call(this, method, url, async, user, pass);
+            };
+        })(XMLHttpRequest.prototype.open);
+        //读取验证码
+        var xhr = new XMLHttpRequest();
+        xhr.onload = event => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                vCode= xhr.response;
+                console.log("验证码是"+vCode)
+                $("#codeCover").click();
+                setTimeout(function(){document.getElementById("vcode").value=vCode;$('#showInfor').html("琴梨梨为你自动填写验证码");},250)
+            }
+            xhr.onerror = function (e) {
+                logcat("验证码读取失败")
+            }
+        }
+        xhr.open('GET',document.location.origin+"/Account/GetLoginRandomCode");
+        xhr.send();
+    }
+    //EPUB开启右键复制
+    if(document.location.pathname.indexOf("onlineread")>0){
+        $(document).unbind("contextmenu", null);
+        $("#page_container").unbind("mouseup",null);
+    }
+    //图片爬虫
+    if(document.location.pathname.indexOf("onlinebook")>0){
+        document.body.oncontextmenu = ""
+        var pageTotal = 0;
+        var picUrl = ""
+        //从0开始，为实际页码减一
+        var pageCurrent = 0;
+        //下载指定页面图片
+        function downloadPic(page) {
+            picUrl = path + "&pageNo=" + page ;
+            fetch(picUrl).then(res => res.blob().then(blob => {
+                var a = document.createElement('a');
+                var url = window.URL.createObjectURL(blob);
+                var filename = page + '.jpg';
+                a.href = url;
+                a.download = filename;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                if(pageCurrent<pageTotal){
+                    pageCurrent++;
+                    downloadPic(pageCurrent);
+                }
+            }))
+        }
+        //批量下载
+        function batchDownload() {
+            pageTotal = document.getElementById("sumNumb").innerText - 1;
+            downloadPic(pageCurrent)
+        }
+        //创建下载按钮
+        var downloadBtn = document.createElement("a");
+        downloadBtn.innerText = "批量下载全书";
+        downloadBtn.onclick = function () { batchDownload() };
+        document.querySelector("body > div.divcenter > div.bq > div.bqmiddle > div.ml").appendChild(downloadBtn);
+    }
+})();

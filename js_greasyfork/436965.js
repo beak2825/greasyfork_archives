@@ -1,0 +1,18 @@
+// ==UserScript==
+// @name         New Reddit, Please!
+// @namespace    https://pindab0ter.nl/
+// @version      1.1.1
+// @description  Open links using the regular Reddit URL. Uses the redesigned UI if you haven't opted out.
+// @icon         data:image/png;base64,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
+// @author       pindab0ter
+// @website      https://greasyfork.org/en/scripts/436965-new-reddit-please
+// @match        https://old.reddit.com/*
+// @license      MIT
+// @run-at       document-start
+// @downloadURL https://update.greasyfork.org/scripts/436965/New%20Reddit%2C%20Please%21.user.js
+// @updateURL https://update.greasyfork.org/scripts/436965/New%20Reddit%2C%20Please%21.meta.js
+// ==/UserScript==
+
+(function () {
+    window.location.replace(window.location.href.replace("old.reddit.com", "www.reddit.com"));
+})();

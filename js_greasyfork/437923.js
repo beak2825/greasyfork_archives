@@ -1,0 +1,19 @@
+// ==UserScript==
+// @name         IQRPG Header + animation remover
+// @namespace    https://www.iqrpg.com/
+// @version      0.4
+// @description  remove the header graphic and the auto animation
+// @author       euphone
+// @match https://*.iqrpg.com/*
+// @require      https://code.jquery.com/jquery-latest.js
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/437923/IQRPG%20Header%20%2B%20animation%20remover.user.js
+// @updateURL https://update.greasyfork.org/scripts/437923/IQRPG%20Header%20%2B%20animation%20remover.meta.js
+// ==/UserScript==
+ 
+$(document).ready(() => {
+    setTimeout(() => {
+        $('.header').remove();
+        $('.action-timer__overlay').remove();
+    }, 200);
+});

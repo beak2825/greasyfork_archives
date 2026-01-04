@@ -1,0 +1,139 @@
+// ==UserScript==
+// @name GitHub Red Issues
+// @namespace github.com/openstyles/stylus
+// @version 10.6.0
+// @description Turns the issue color of closed issues from purple back to red - back reddish color icon for closed github issues.
+// @author Katsute
+// @license CC BY-NC-SA 4.0 https://creativecommons.org/licenses/by-nc-sa/4.0/
+// @grant GM_addStyle
+// @run-at document-start
+// @match *://*.github.com/*
+// @match *://*.github-com.translate.goog/*
+// @include /^(?:^https?:\/\/translated\.turbopages\.org\/proxy_u\/.*\/https\/github\.com\/.*)$/
+// @include /^(?:^https:\/\/web\.archive\.org\/web\/20(2[5-9]|3[0-5])[0-9]+\/https?:\/\/github\.com\/.*)$/
+// @include /^(?:^https:\/\/archive\.[a-z]{2,10}\/20(2[5-9]|3[0-5])[0-9.-]+\/https?:\/\/github.com\/.*)$/
+// @include /^(?:^https?:\/\/megalodon\.jp\/20(2[5-9]|3[0-5])[0-9-]+\/https:\/\/github.com:?.*)$/
+// @downloadURL https://update.greasyfork.org/scripts/434685/GitHub%20Red%20Issues.user.js
+// @updateURL https://update.greasyfork.org/scripts/434685/GitHub%20Red%20Issues.meta.js
+// ==/UserScript==
+
+(function() {
+let css = `
+/* powered on https://raw.githubusercontent.com/Katsute/GitHub-Red-Issues/main/src/style.css */
+/* Copyright (C) 2025 Katsute <https://github.com/Katsute> */
+
+:root {
+    --rissue-issue-closed    : var(--bgColor-closed-emphasis, #da3633);
+    --rissue-issue-closed-fg : var(--fgColor-closed, #f85149);
+    --rissue-issue-closed-bg : var(--bgColor-closed-muted, #f8514926);
+}
+
+:not(
+    react-app[app-name="repo-deployments"] div,
+    react-app[app-name="blackbird-search"] li,
+    button[data-testid="mark-as-action-menu-button"] *,
+    ul[data-testid="mark-as-action-menu-list"] *
+) > :not(
+    .State--merged,
+    span[class^="StateLabel__StateLabelBase"],
+    span[class^="prc-StateLabel-StateLabel"],
+    div:is([class^="prc-Timeline-TimelineBadge-"],[class*=" prc-Timeline-TimelineBadge-"]),
+    a[href*="/discussions"],
+    .hx_anim-fade-out,
+    a[href$="state=closed"] > span,
+    h2:has(> a[href$="/deployments"]) + ul > li,
+    button[data-testid="checks-status-badge-icon"]
+) > :is(
+    /* issue icon */
+    svg.octicon-issue-closed,
+    /* project icon */
+    svg:has(path[d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"] + path[d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"]),
+    /* search issue icon */
+    svg:has(path[d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm1.5 0a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l1.47 1.47 3.97-3.97a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042Z"]),
+    /* discussion icon */
+    svg.octicon-discussion-closed
+):not(.color-fg-muted){
+    color: var(--rissue-issue-closed-fg) !important;
+}
+
+/* closed projects */
+projects-v2 div:has(> span ~ h1) span[data-variant="done"] {
+    border-color: var(--rissue-issue-closed) !important;
+    background-color: var(--rissue-issue-closed-fg) !important;
+}
+
+:is(
+    span[class^="StateLabel__StateLabelBase"],
+    span[class^="prc-StateLabel-StateLabel"],
+):has(path[d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"] + path[d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"]),
+/* milestone badge */
+span[class*="RepositoryMilestone-module__milestoneStatus"][data-status="closed"],
+/* hovercards */
+.State--merged:has(svg.octicon-issue-closed)
+{
+    box-shadow: var(--boxShadow-thin, inset 0 0 0 max(1px, 0.0625rem)) var(--rissue-issue-closed) !important;
+}
+
+:is(
+    span[class^="StateLabel__StateLabelBase"],
+    span[class^="prc-StateLabel-StateLabel"],
+):has(path[d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"] + path[d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-1.5 0a6.5 6.5 0 1 0-13 0 6.5 6.5 0 0 0 13 0Z"]),
+/* timeline icon */
+div:is([class^="prc-Timeline-TimelineBadge-"],[class*=" prc-Timeline-TimelineBadge-"]):has(path[d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm1.5 0a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l1.47 1.47 3.97-3.97a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042Z"]),
+/* milestone badge */
+span[class*="RepositoryMilestone-module__milestoneStatus"][data-status="closed"],
+/* hovercards */
+.State--merged:has(svg.octicon-issue-closed)
+{
+    border-color: var(--rissue-issue-closed) !important;
+    background-color: var(--rissue-issue-closed) !important;
+}
+
+/* progress circle */
+:is(
+    #issue-viewer-side-panel,
+    react-app[app-name="issues-react"]
+) :is(
+    circle[class^="ProgressCircle-module__circleProgressShade"],
+    circle[class^="ProgressCircle-module__circleProgress"]
+),
+projects-v2 svg[data-target="tracked-issues-progress.progress"] circle[stroke-dashoffset],
+/* sub issue circle */
+svg[class^="ProgressCircle-module__completedIcon"] > circle,
+/* milestone circle */
+a[href*="/milestone/"] :is(
+    svg:has(path[d="M10.0206 11.1074C9.68518 11.3949 9.18014 11.3561 8.8926 11.0206L5.8926 7.52061C5.62055 7.20322 5.63873 6.72989 5.93432 6.4343L7.43432 4.9343C7.74674 4.62188 8.25327 4.62188 8.56569 4.9343C8.87811 5.24672 8.87811 5.75325 8.56569 6.06567L7.58953 7.04182L10.1074 9.97935C10.3949 10.3148 10.3561 10.8198 10.0206 11.1074Z"]),
+    svg[data-testid="issue-milestone-progress-bar"]
+) circle[stroke-linecap="round"]{
+    stroke: var(--rissue-issue-closed) !important;
+}
+
+/* progress check */
+svg[class^="ProgressCircle-module__completedIcon"] > path,
+/* milestone check */
+a[href*="/milestone/"] svg:has(path[d="M10.0206 11.1074C9.68518 11.3949 9.18014 11.3561 8.8926 11.0206L5.8926 7.52061C5.62055 7.20322 5.63873 6.72989 5.93432 6.4343L7.43432 4.9343C7.74674 4.62188 8.25327 4.62188 8.56569 4.9343C8.87811 5.24672 8.87811 5.75325 8.56569 6.06567L7.58953 7.04182L10.1074 9.97935C10.3949 10.3148 10.3561 10.8198 10.0206 11.1074Z"]) path{
+    fill: var(--rissue-issue-closed) !important;
+}
+
+svg:has(path[d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l3.5-3.5Z"]) path{
+    fill: unset !important;
+}
+/* powered on https://raw.githubusercontent.com/Katsute/GitHub-Red-Issues/main/src/style.css */
+/* Copyright (C) 2025 Katsute <https://github.com/Katsute> */
+/* ======================================================= */
+/* Copyright (C) 2025 Krystian3w <https://greasyfork.org/pl/users/167625-krystian3w> */
+/* Bottom Iimeline border hotfix 10.4+ */
+html body div[class*=" prc-Timeline-TimelineBadge-"]:has(path[d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm1.5 0a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l1.47 1.47 3.97-3.97a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042Z"]) {
+            border-color: var(--bgColor-default, var(--color-canvas-default)) !important;
+}
+/* Bottom Iimeline border hotfix 10.4+ */
+/* Copyright (C) 2025 Krystian3w <https://greasyfork.org/pl/users/167625-krystian3w> */
+`;
+if (typeof GM_addStyle !== "undefined") {
+  GM_addStyle(css);
+} else {
+  const styleNode = document.createElement("style");
+  styleNode.appendChild(document.createTextNode(css));
+  (document.querySelector("head") || document.documentElement).appendChild(styleNode);
+}
+})();

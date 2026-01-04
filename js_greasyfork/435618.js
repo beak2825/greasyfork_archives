@@ -1,0 +1,19 @@
+/*! For license information please see 抖音下载.user.js.LICENSE.txt */
+// ==UserScript==
+// @name         抖音下载
+// @namespace    http://tampermonkey.net/
+// @version      1.3.12816619
+// @description  下载抖音短视频
+// @author       抖音兔不迟到
+// @license      MIT License
+// @run-at       document-start
+// @grant        GM_invokeFn
+// @include      *://*.douyin.com/*
+// @icon         https://s3.bmp.ovh/imgs/2021/08/63899211b3595b11.png
+// @require      https://cdn.bootcdn.net/ajax/libs/blueimp-md5/2.18.0/js/md5.min.js
+// @require      https://cdn.bootcdn.net/ajax/libs/jquery/1.7.2/jquery.min.js
+// @dev          9999
+// @downloadURL https://update.greasyfork.org/scripts/435618/%E6%8A%96%E9%9F%B3%E4%B8%8B%E8%BD%BD.user.js
+// @updateURL https://update.greasyfork.org/scripts/435618/%E6%8A%96%E9%9F%B3%E4%B8%8B%E8%BD%BD.meta.js
+// ==/UserScript==
+const _META_URL_="https://www.douyin.com/web/api/v2/aweme/iteminfo/?item_ids=",_TAG_CLASS={user:"d517474cdaa572104bddc8637c4eeb3c-scss",list:"b388acfeaeef33f0122af9c4f71a93c9-scss"},itemCache={};var origOpen=XMLHttpRequest.prototype.open;XMLHttpRequest.prototype.open=function(e,t,...i){t.includes("mssdk.snssdk.com/web/report")||(this.addEventListener("load",(function(){if(t.includes("general/search/single")){const e=JSON.parse(this.responseText);if(!e?.data?.length)return;for(let t in e.data){const i=e.data[t].aweme_info?.video?.origin_cover?.uri;i&&(itemCache[i]=e.data[t].aweme_info,itemCache[i].video_id=itemCache[i].aweme_id,itemCache[i].title=itemCache[i].desc,itemCache[i].cover=itemCache[i].video?.origin_cover?.url_list[0],itemCache[i].url=itemCache[i].video?.play_addr?.url_list[0])}console.log({itemCache})}})),origOpen.call(this,e,t,...i))},function(){var e=async e=>{if(!(e.length<=0)){var t=await fetch(_META_URL_+e.map((e=>e.meta.video_id)).join(",")),i=await t.json();for(var a in metas={},i.item_list)metas[i.item_list[a].aweme_id]=i.item_list[a];for(var a in e)meta=metas[e[a].meta.video_id],meta&&(meta.title=meta.desc,meta.cover=meta.video.cover.url_list[0],e[a].url=meta.video.play_addr.url_list[0].replace("playwm","play"),e[a].meta=Object.assign(meta,e[a].meta))}},t=e=>{const t=new URL(e).pathname.slice("/video/".length),i=`mona-${md5(t)}`;if($(`#${i}`).length>0)return null;return{id:i,url:"",dom:$(`<div id='${i}'></div>`),meta:{video_id:t,filename:`${t}.mp4`}}},i=async i=>{var a=[],n=$(`.${i}`);if(!(n.length<=0)){for(var r=0;r<n.length;r++){const e=t(n[r].href);if(e&&(e.pdom=$(n[r]),a.push(e),a.length>=10))break}return a.length>0&&await e(a),a}},a=async()=>{const i=t(window.location.href);return i?(video=$("video"),video.length<=0?[]:(i.pdom=$(video[0]).parent(),await e([i]),[i])):[]},n=async()=>i(_TAG_CLASS.user),r=async()=>await i(_TAG_CLASS.list)||(async()=>{var e=[],t=$(".playerContainer");if(!(t.length<=0)){for(var i=0;i<t.length;i++){let a;const n=$(t[i]);try{const e=n.find(".imgBackground img")[0],t=new URL(e.src.startsWith("//")?"https:"+e.src:e.src);t&&t.pathname.includes("~")&&(a=t.pathname.substring(1,t.pathname.indexOf("~")))}catch(e){console.log("err",e);continue}if(!a||!itemCache[a])continue;const r=itemCache[a],o=`mona-${md5(r.video_id)}`;if($(`#${o}`).length>0)return null;const s=$(`<div id='${o}'></div>`),c=r.url;r.filename=`${r.video_id}.mp4`;const d={id:o,url:c,dom:s,pdom:n,meta:r};if(e.push(d),e.length>=10)break}return e}})();GM_invokeFn("regParser",{parseItems:async()=>{const e=(()=>{const e=new URL(window.location.href).pathname.split("/")[1];if("video"===e)return a;if("user"===e)return n;if(["discover","search","channel","hot"].includes(e))return r;throw 999})();return e?e():[]}})}();

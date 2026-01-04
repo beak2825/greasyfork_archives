@@ -1,0 +1,21 @@
+// ==UserScript==
+// @name         Carbon Fiber Shell Shockers Theme
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Shell Shockers Theme
+// @author       Jayvan
+// @match        https://shellshock.io/
+// @icon         https://cdn.discordapp.com/attachments/811268272418062359/901263906515857458/unknown.png
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/436821/Carbon%20Fiber%20Shell%20Shockers%20Theme.user.js
+// @updateURL https://update.greasyfork.org/scripts/436821/Carbon%20Fiber%20Shell%20Shockers%20Theme.meta.js
+// ==/UserScript==
+
+let stylesheet = document.createElement('link');
+stylesheet.rel = 'stylesheet';
+stylesheet.href = 'https://shellthemes.jayvan229.repl.co/ezthemedefault.css';
+document.head.appendChild(stylesheet);
+
+let css =
+    `#ss_background, #gameDescription, .load_screen, #progress-container { background: url('https://cdn.discordapp.com/attachments/811268272418062359/903410672954662952/938610.png') !important; position: absolute !important; background-size: cover !important; background-repeat: no-repeat !important; background-position: center !important; width: 100% !important; height: 100% !important; } div.media-tabs-content.front_panel.roundme_sm { background: url('https://cdn.discordapp.com/attachments/811268272418062359/903410672954662952/938610.png')!important; background-size: cover !important;} #equip_sidebox { border: var(--ss-space-sm) solid black} .front_panel, #equip_sidebox { background: url('https://cdn.discordapp.com/attachments/811268272418062359/903410672954662952/938610.png'); background-size: cover !important;} .front_panel { border: var(--ss-space-sm) solid black; } .ss_field, .ss_select { background: rgba(0,0,0,0.4); border: 1px solid black; color: white;} .btn_blue, .btn_green, .ss_bigtab, .ss_bigtab.selected, .button_blue { background: rgba(0,0,0,0.7) !important; border: 0.2em solid black !important; color: white !important; } .btn_yolk, .btn_red, .btn_blue1 { background: rgba(0,0,0,0.5) !important; border: 0.2em solid black !important; color: white !important; } .morestuff { background-color: rgba(0,0,0,0.5) !important; border: 0.2em solid black !important; } .ss_bigtab:hover { color: white !important; } #stat_item { background: black; } #stat_item h4, .stat_stat { color: white; } .news_item:nth-child(odd), .stream_item:nth-child(odd) { background: black; } .news_item:nth-child(even), .stream_item:nth-child(even) { background: black; } .stream_item:hover, .news_item.clickme:hover { background: black !important; } #weapon_select:nth-child(1n+0) .weapon_img { background: black!important; border: 3px solid white!important; } #popupTipDay #weapon_select:nth-child(1n+0) .weapon_img { background: black!important; border: 3px solid white!important; } h3, h1, h2, h4, h5, h6, .front_panel h3, #equip.equipped_slots h3, #item_grid h3 { color: white !important; } label, .label { color: white !important; } .egg_count { color: white; } .account_eggs { background: transparent; } #equip_equippedslots .equip_item, #equip_itemtype .selected, #equip_equippedslots .equip_item:hover { background: rgba(0,0,0,0.6); background-color: rgba(0,0,0,0.6); border: 0.33em solid black; } #equip_grid .store_item, #equip_grid .highlight, #equip_grid .store_item:hover { background: rgba(255,255,255,0.1); border: 0.33em solid black; color: black; } .popup_lg, .popup_sm { background: url('https://cdn.discordapp.com/attachments/811268272418062359/903410672954662952/938610.png'); border: 0.33em solid black; } .box_blue2 { background-color: transparent; } .pause-bg { background: rgba(255,255,255,0.2) !important; } #maskmiddle { background: url('../img/scope.png') center center no-repeat; background-size: contain; width: 100vh; height: 100vh; } .crosshair.normal { background: white; } .crosshair { border: 0.05em solid black; } .crosshair.powerfull { background: red; } #createPrivateGame .roundme_sm, #settingsPopup .roundme_sm, #pickServerPopup .roundme_sm, #adBlockerVideo .roundme_sm { background: transparent !important }`
+    document.head.insertAdjacentHTML("beforeend", `<style>${css}</style>`)

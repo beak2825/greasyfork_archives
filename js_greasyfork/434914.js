@@ -1,0 +1,1568 @@
+// ==UserScript==
+// @name         DLsite 標題自訂
+// @namespace    https://github.com/x94fujo6rpg/SomeTampermonkeyScripts
+// @version      9.92
+// @description  刪除標題連結 / 刪除多餘的文字 / 自定義標題格式 / 點選按鈕複製
+// @author       x94fujo6
+// @match        https://www.dlsite.com/*
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @downloadURL https://update.greasyfork.org/scripts/434914/DLsite%20%E6%A8%99%E9%A1%8C%E8%87%AA%E8%A8%82.user.js
+// @updateURL https://update.greasyfork.org/scripts/434914/DLsite%20%E6%A8%99%E9%A1%8C%E8%87%AA%E8%A8%82.meta.js
+// ==/UserScript==
+/* jshint esversion: 9 */
+
+(function () {
+    'use strict';
+    let debug = true;
+    let formatted_data = {
+        id: "",
+        title_original: "",
+        title_formatted: "",
+        circle: "",
+        Year: "",
+        year: "",
+        month: "",
+        day: "",
+        series: "",
+        author: "",
+        scenario: "",
+        illust: "",
+        cv: "",
+        age: "",
+        type: "",
+        tags: "",
+    };
+    let data_list = Object.keys(formatted_data);
+    let updateid;
+    const forbidden = `<>:"/|?*\\`;
+    const replacer = `＜＞：”／｜？＊＼`;
+    //-----------------------------------------------------
+    const key_format = "format_seting";
+    const key_adv = "format_adv";
+    const key_f2h = "format_f2h";
+    const key_half = "format_falf";
+    const key_full = "format_full";
+    const key_show_ot = "format_show_ot";
+    const key_show_ft = "format_show_ft";
+    const key_sep = "format_sep";
+    //-----------------------------------------------------
+    const default_format = "%id% %title_formatted%";
+    const default_adv = false;
+    const default_f2h = true;
+    const default_half = "1234567890()[]{}~!@#$%^&_+-=;':,.()~";
+    const default_full = "１２３４５６７８９０（）［］｛｝～！＠＃＄％︿＆＿＋－＝；’：，．（）〜";
+    const default_show_ot = true;
+    const default_show_ft = true;
+    const default_sep = "、";
+    //-----------------------------------------------------
+    let setting_format = GM_getValue(key_format, default_format);
+    let setting_adv = GM_getValue(key_adv, default_adv);
+    let setting_f2h = GM_getValue(key_f2h, default_f2h);
+    let setting_half = default_half;
+    let setting_full = default_full;
+    let setting_show_ot = GM_getValue(key_show_ot, default_show_ot);
+    let setting_show_ft = GM_getValue(key_show_ft, default_show_ft);
+    let setting_sep = GM_getValue(key_sep, default_sep);
+    //-----------------------------------------------------
+    debug_msg("load setting");
+    debug_msg(`${key_format}: ${setting_format}`);
+    debug_msg(`${key_adv}: ${setting_adv}`);
+    debug_msg(`${key_f2h}: ${setting_f2h}`);
+    debug_msg(`${key_show_ot}: ${setting_show_ot}`);
+    debug_msg(`${key_show_ft}: ${setting_show_ft}`);
+    debug_msg(`${key_sep}: ${setting_sep}`);
+    //-----------------------------------------------------
+    const container_list = [
+        "()", "[]", "{}", "（）", "<>",
+        "［］", "｛｝", "【】", "『』", "《》", "〈〉", "「」"
+    ];
+    const regesc = t => t.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+    const [container_start, container_end] = extracContainer();
+    const reg_container = containerRegexGenerator();
+    const reg_excess = new RegExp(`^\\s*${reg_container}\\s*|\\s*${reg_container}\\s*$`, "g");
+    const reg_blank = /[\s　]{2,}/g;
+    const reg_muti_blank = /[\s　\n\t]+/g;
+    const reg_ascii = /[\x00-\x7F]/g;
+    const reg_until_number = /[^\d]*[\d]+/;
+    const reg_time = new RegExp(`[${regesc(container_start)}]*(\\d+:\\d+|約\\d*時*間*\\d+分\\d*秒*|合*計*\\d+分\\d+秒|\\d+時間\\d+分\\d*秒*)[${regesc(container_end)}]*`, "g");
+    /*
+        \u0021-\u002f   !"#$%&'()*+,-./
+        \u003a-\u0040   :;<=>?@
+        \u005b-\u0060   [\]^_`
+        \u007b-\u007e   {|}~
+        \uff5f-\uff63   ｟｠｡｢｣
+    */
+    const reg_non_word_at_start = /^[\u0021-\u002f\u003a-\u0040\u005b-\u0060\u007b-\u007e\uff5f-\uff63　\s]/;
+    const reg_text_start = /^(トラック|track)/;
+    const reg_non_track = /(?<=[mM][pP]|[kK][uU])\d+|\d*\.*\d+(?=[kK][bB]|[kK][hH][zZ]|[bB][iI][tT]|[dD][iI][oO])/g;
+    const reg_non_track2 = /([mM][pP]|[kK][uU])\d+|\d*\.*\d+([kK][bB]|[kK][hH][zZ]|[bB][iI][tT]|[dD][iI][oO])/g;
+    const max_depth = 10;
+    debug_msg("container_start | ", container_start);
+    debug_msg("container_end | ", container_end);
+    debug_msg("reg_container | ", reg_container);
+    debug_msg("reg_excess | ", reg_excess);
+    debug_msg("reg_time | ", reg_time);
+
+    window.document.body.onload = main();
+
+    async function main() {
+        let
+            link = window.location.href,
+            match_list = [
+                "/circle/profile/",
+                "/fsr",
+                "/genres/works",
+            ];
+        await wait_tab();
+        if (link.includes("/product_id/")) {
+            myCss();
+            productHandler();
+            fix_switch_link();
+            return debug_msg(productHandler.name);
+        }
+        if (match_list.some(key => link.includes(key))) {
+            myCss();
+            waitHTML(".display_normal,.display_block", () => searchHandler());
+            fix_switch_link();
+            return debug_msg("match link");
+        }
+        if (link.includes("/announce/list")) {
+            debug_msg("announce list");
+            return wait_for_fav();
+        }
+        return debug_msg("not in support list");
+    }
+
+    function wait_tab() {
+        return new Promise(resolve => {
+            if (document.visibilityState === "visible") return resolve();
+            debug_msg("tab in background, script paused");
+            document.addEventListener("visibilitychange", () => {
+                if (document.visibilityState === "visible") { debug_msg("script unpaused"); return resolve(); }
+            });
+        });
+    }
+
+    function wait_for_fav(max_retry = 10) {
+        let
+            list = document.querySelector(".n_worklist"),
+            ck = [...list.children].every(item => item.querySelector(".work_sales_info") ? true : false);
+        if (max_retry <= 0) return debug_msg(`max retries exceeded, abort`);
+        if (!ck) return retry();
+        debug_msg(`found fav`);
+        return setTimeout(sort_ann_list, 1500);
+        function retry() {
+            debug_msg(`wait for ele, retry ${max_retry}`);
+            setTimeout(() => wait_for_fav(--max_retry), 1000);
+        }
+    }
+
+    function sort_ann_list() {
+        let
+            container = document.querySelector(".n_worklist"),
+            item = container.querySelectorAll("div.n_worklist_item"),
+            data = [], no_fav = item.length,
+            likes = 0,
+            type = "unknown";
+        data = [...item].map(i => {
+            likes = i.querySelector(".work_sales_info>div>span");
+            type = i.querySelector(".work_category");
+            if (!likes) no_fav++;
+            return {
+                item: i,
+                likes: likes ? parseInt(likes.textContent) : 0,
+                type: type ? [...type.classList].pop() : "_unknown",
+            };
+        });
+        data = sort_by(data, "likes");
+        data = sort_by(data, "type");
+        data.forEach(i => container.appendChild(i.item));
+    }
+
+    function sort_by(data, key = "", dec = true) {
+        if (dec) {
+            return data.sort((a, b) => s(b[key], a[key]));
+        } else {
+            return data.sort((a, b) => s(a[key], b[key]));
+        }
+        function s(a, b) {
+            if (a < b) return -1;
+            if (a > b) return 1;
+            return 0;
+        }
+    }
+
+    function extracContainer() {
+        let start = "", end = "";
+        container_list.forEach(c => {
+            start += c[0];
+            end += c[1];
+        });
+        return [start, end];
+    }
+
+    function containerRegexGenerator() {
+        let reg = [];
+        container_list.forEach(c => {
+            let esc = regesc(c);
+            let end = esc.slice(esc.length / 2);
+            let start = esc.replace(end, "");
+            reg.push(`${start}[^${esc}]*${end}`);
+        });
+        return `(${reg.join("|")})`;
+    }
+
+    function newCheckbox(id, onclick) {
+        let ck = document.createElement("input");
+        ck.type = "checkbox";
+        ck.id = id;
+        ck.onclick = onclick;
+        return ck;
+    }
+
+    function newLable(forid = "", text = "", className = "dtr_textsize05") {
+        let lable = document.createElement("label");
+        lable.className = className;
+        lable.htmlFor = forid;
+        lable.textContent = text;
+        return lable;
+    }
+
+    function waitHTML(css_selector, run) {
+        let id = setInterval(() => {
+            if (document.querySelectorAll(css_selector).length) {
+                clearInterval(id);
+                run();
+                console.log(`found [${css_selector}]`);
+            } else {
+                console.log(`[${css_selector}] not found`);
+            }
+        }, 1000);
+    }
+
+    function searchHandler() {
+        let display_list = document.querySelector(".display_normal.on"),
+            display_grid = document.querySelector(".display_block.on");
+        console.log(`[${searchHandler.name}] display_list:${Boolean(display_list)}, display_grid:${Boolean(display_grid)}`);
+        setRefreshPage();
+        if (display_list) {
+            listHandler();
+        } else if (display_grid) {
+            gridHandler();
+        }
+
+        function setRefreshPage() {
+            document.querySelectorAll(".display_normal,.display_block")
+                .forEach(ele => ele.addEventListener("click", () => {
+                    let href_o = document.location.href,
+                        timer_id = setInterval(() => {
+                            let href_new = document.location.href;
+                            if (href_new != href_o) {
+                                clearInterval(timer_id);
+                                document.location.reload();
+                            }
+                        }, 500);
+                }));
+        }
+    }
+
+    function getMutipleDataToList(pos, type = "a") {
+        let list = [];
+        let es = pos.querySelectorAll(type);
+        if (es) {
+            es.forEach(e => list.push(e.textContent));
+            list = stringFormatter(list.join(setting_sep));
+            return list;
+        } else {
+            return "";
+        }
+    }
+
+    function fix_switch_link() {
+        let links = document.querySelectorAll(".floorNavLink-item a");
+        if (!links || links.length == 0) return;
+        let current = window.location.href.replace(/.+www\.dlsite\.com\/\w+\/(.+)/, "$1");
+        links.forEach(link => link.href += current);
+    }
+
+    const to_full_size_image = url => url.replace(/(.*)resize(.*)_\d+x\d+(.*)/, "$1modpub$2$3");
+    const getCover = (id) => {
+        let ele = document.querySelector(`#_link_${id} img`);
+
+        if (ele) {
+            // grid / list
+            if (ele.src.includes("data:image")) {
+                return to_full_size_image(`https:${ele.getAttribute("data-src")}`);
+            } else {
+                return to_full_size_image(ele.src);
+            }
+        }
+
+        ele = document.querySelector(`img[src*="${id}_img_main"`);
+        if (ele) {
+            return to_full_size_image(ele.src);
+        } else {
+            return false;
+        }
+    };
+
+    function newCoverUrl(id, is_b = false) {
+        let url = getCover(id);
+        if (url) {
+            if (is_b) {
+                return newCopyButton(url, "封面連結");
+            } else {
+                return url;
+            }
+        } else {
+            url = "no cover";
+            if (is_b) {
+                return newCopyButton(url, url);
+            } else {
+                return url;
+            }
+        }
+    }
+
+    function newCoverDownload(id) {
+        let b = document.createElement("button");
+        b.id = "dtr_cover_dl";
+        b.textContent = "下載封面";
+        b.onclick = () => {
+            let url = getCover(id);
+            let rq = new XMLHttpRequest();
+            rq.open("GET", url, true);
+            rq.responseType = "blob";
+            rq.onload = () => dl(rq.response, url.match(/[Rr][Jj]\d+[^\/]*\.[a-zA-Z]+/)[0]);
+            rq.send();
+
+            function dl(blob, filename) {
+                let file_url = window.URL.createObjectURL(blob);
+                let a = document.querySelector("#dtr_img_dl_url");
+                if (!a) {
+                    a = document.createElement("a");
+                    a.id = "dtr_img_dl_url";
+                    document.body.insertAdjacentElement("afterbegin", a);
+                }
+                a.href = file_url;
+                a.download = filename;
+                a.click();
+                window.URL.revokeObjectURL(file_url);
+            }
+        };
+        return b;
+    }
+
+    function addSortButton() {
+        let classname = "reSortByID";
+        let ele = document.querySelector(`.${classname}`);
+        if (ele) return;
+
+        let pos = document.querySelector(".sort_box .status_select");
+        if (!pos) return;
+
+        ele = document.createElement("div");
+        ele.textContent = "作品:";
+        ele.style = "margin: 0.5rem;";
+        pos.appendChild(ele);
+
+        ele = document.createElement("button");
+        ele.textContent = "新";
+        ele.className = classname;
+        ele.onclick = () => sortByID(true);
+        pos.appendChild(ele);
+
+        ele = document.createElement("button");
+        ele.textContent = "舊";
+        ele.className = classname;
+        ele.onclick = () => sortByID();
+        pos.appendChild(ele);
+
+        ele = document.createElement("div");
+        ele.textContent = "類型:";
+        ele.style = "margin: 0.5rem;";
+        pos.appendChild(ele);
+
+        ele = document.createElement("button");
+        ele.textContent = "新";
+        ele.className = classname;
+        ele.onclick = () => sortByType(true);
+        pos.appendChild(ele);
+
+        ele = document.createElement("button");
+        ele.textContent = "舊";
+        ele.className = classname;
+        ele.onclick = () => sortByType();
+        pos.appendChild(ele);
+    }
+
+    function sortByType(descent = false) {
+        let grid_mode = document.querySelector(".display_block.on") ? true : false;
+        let eles = document.querySelectorAll(grid_mode ? ".search_result_img_box_inner" : "#search_result_list tr");
+        let pos = document.querySelector(grid_mode ? "#search_result_img_box" : "#search_result_list tbody");
+        let data = [], type = "";
+        data = [...eles].map(e => {
+            type = e.querySelector(".work_category");
+            return {
+                ele: e,
+                type: type ? [...type.classList].pop() : "_unknown",
+            };
+        });
+        data = sort_by(data, "type", descent);
+        data.forEach(item => pos.appendChild(item.ele));
+    }
+
+    async function sortByID(descent = false) {
+        console.time(sortByID.name);
+        let grid_mode = document.querySelector(".display_block.on") ? true : false;
+        let eles = document.querySelectorAll(grid_mode ? ".search_result_img_box_inner" : "#search_result_list tr");
+        let pos = document.querySelector(grid_mode ? "#search_result_img_box" : "#search_result_list tbody");
+        let attrname = "sort_id";
+        await new Promise(r => {
+            eles.forEach(e => {
+                let id = e.querySelector(grid_mode ? ".search_img" : ".work_thumb_inner")
+                    .id.replace("_link_", "");
+                e.setAttribute(attrname, id);
+            });
+            r();
+        });
+        let id_list = [...eles].map(e => e.getAttribute(attrname).replace("RJ", ""));
+        id_list = id_list.sort((a, b) => descent ? b - a : a - b);
+        console.log(id_list);
+        id_list.forEach(id => pos.appendChild(document.querySelector(`[${attrname}="RJ${id}"]`)));
+        console.timeEnd(sortByID.name);
+    }
+
+    function listHandler() {
+        console.time(listHandler.name);
+        let list = document.querySelectorAll("#search_result_list");
+        if (!list) {
+            debug_msg("list not found");
+        } else {
+            list = list[list.length - 1].querySelectorAll("tr");
+            list.forEach(tr => {
+                let id,
+                    title_o_text, title_f_text,
+                    circle_text,
+                    cv, tags,
+                    pos, newbox, node_list;
+                if (tr.querySelector(".page_no")) return;
+                pos = tr.querySelector("dl");
+                id = tr.querySelector(".work_thumb a[href*='/product_id/']").id.replace("_link_", "");
+                title_o_text = pos.querySelector(".work_name a[href*='/product_id/']").textContent;
+                title_f_text = stringFormatter(title_o_text);
+                circle_text = stringFormatter(pos.querySelector(".maker_name a").textContent);
+
+                node_list = [
+                    newLine(),
+                    newCopyButton(title_o_text), newLine(),
+                    newCopyButton(title_f_text), newLine(),
+                    newCopyButton(id), newSeparate(),
+                    newCoverDownload(id), newSeparate(),
+                    newCoverUrl(id, true), newSeparate(),
+                    newCopyButton(circle_text),
+                ];
+                if (title_o_text == title_f_text) node_list.splice(3, 2);
+                newbox = appendAll(document.createElement("dd"), node_list);
+
+                cv = pos.querySelector(".author");
+                cv = cv ? getMutipleDataToList(cv) : "";
+                tags = pos.querySelector(".search_tag");
+                tags = tags ? getMutipleDataToList(tags) : "";
+                if (cv != "") appendAll(newbox, [newSeparate(), newCopyButton(cv, "聲優")]);
+                if (tags != "") appendAll(newbox, [newSeparate(), newCopyButton(tags, "Tags")]);
+
+                pos.appendChild(newbox);
+            });
+        }
+        console.timeEnd(listHandler.name);
+        addSortButton();
+    }
+
+    function gridHandler() {
+        console.time(gridHandler.name);
+        let list = document.querySelectorAll(".search_result_img_box_inner");
+        if (!list) {
+            debug_msg("list not found");
+        } else {
+            let w = document.createElement("div");
+            w.appendChild(newSpan("Can't get full CV/Author list in grid view. If you need it, switch to list view.", "dtr_list_w_text"));
+            document.querySelector(".sort_box").insertAdjacentElement("afterend", w);
+
+            list.forEach(box => {
+                let id,
+                    title_o_text, title_f_text,
+                    circle_text,
+                    cv,
+                    pos, newbox, node_list;
+                pos = box.querySelector(".work_price_wrap");
+                id = box.querySelector(".search_img.work_thumb").id.replace("_link_", "");
+                title_o_text = box.querySelector(".work_name a").textContent;
+                title_f_text = stringFormatter(title_o_text);
+                circle_text = stringFormatter(box.querySelector(".maker_name a").textContent);
+                cv = box.querySelector(".author");
+                cv = cv ? getMutipleDataToList(cv) : "";
+
+                node_list = [
+                    newCopyButton(id), newLine(),
+                    newCoverDownload(id), newSeparate(), newCoverUrl(id, true), newLine(),
+                    newCopyButton(title_o_text, "Original"), newSeparate(),
+                    newCopyButton(title_f_text, "Formatted"), newLine(),
+                    newCopyButton(circle_text, "Circle"),
+                ];
+                if (title_o_text == title_f_text) node_list.splice(5, 2);
+                newbox = appendAll(document.createElement("dd"), node_list);
+
+                if (cv != "") appendAll(newbox, [newSeparate(), newCopyButton(cv, "聲優")]);
+
+                pos.insertAdjacentElement("beforebegin", newbox);
+            });
+        }
+        console.timeEnd(gridHandler.name);
+        addSortButton();
+    }
+
+    function appendAll(node, nodeList) {
+        nodeList.forEach(e => node.appendChild(e));
+        return node;
+    }
+
+    function saveSetting() {
+        debug_msg("[saveSetting]");
+
+        if (setting_format.length > 0) {
+            GM_setValue(key_format, setting_format);
+            debug_msg(`saved ${key_format}: ${setting_format}`);
+        } else {
+            debug_msg(`${key_format} not saved cus is empty`);
+        }
+
+        GM_setValue(key_adv, setting_adv);
+        debug_msg(`saved ${key_adv}: ${setting_adv}`);
+
+        GM_setValue(key_f2h, setting_f2h);
+        debug_msg(`saved ${key_f2h}: ${setting_f2h}`);
+
+        GM_setValue(key_show_ot, setting_show_ot);
+        debug_msg(`saved ${key_show_ot}: ${setting_show_ot}`);
+
+        GM_setValue(key_show_ft, setting_show_ft);
+        debug_msg(`saved ${key_show_ft}: ${setting_show_ft}`);
+
+        GM_setValue(key_sep, setting_sep);
+        debug_msg(`saved ${key_sep}: ${setting_sep}`);
+    }
+
+    function getData() {
+        console.time(getData.name);
+        //------------------------------------------------------
+        let sitedata = contents.detail[0];
+        let [Y, m, d] = sitedata.regist_date.split("/");
+        let y = Y.slice(2);
+        let circle = document.getElementById("work_maker").querySelector("span.maker_name[itemprop='brand']");
+        let circle_text = stringFormatter(circle.querySelector("a").textContent);
+        circle.insertAdjacentElement("afterbegin", newCopyButton(circle_text, "複製"));
+        Object.assign(formatted_data, {
+            id: sitedata.id,
+            title_original: sitedata.name,
+            title_formatted: stringFormatter(sitedata.name),
+            circle: circle_text,
+            Year: Y,
+            year: y,
+            month: m,
+            day: d,
+        });
+        //------------------------------------------------------
+        let datapart = document.getElementById("work_right_inner").querySelectorAll("th");
+        let parselist = {
+            series: ["Series name", "シリーズ名", "系列名", "系列名"],
+            author: ["Author", "作者", "作者", "作者"],
+            scenario: ["Scenario", "シナリオ", "剧情", "劇本"],
+            illust: ["Illustration", "イラスト", "插画", "插畫"],
+            cv: ["Voice Actor", "声優", "声优", "聲優"],
+            age: ["Age", "年齢指定", "年龄指定", "年齡指定"],
+            type: ["Product format", "作品形式", "作品类型", "作品形式"],
+        };
+        let release = ["Release date", "販売日", "贩卖日", "販賣日"];
+        let text;
+        let all = [];
+        datapart.forEach(th => {
+            for (let key in parselist) {
+                text = th.textContent;
+                if (isInList(text, parselist[key], formatted_data[key])) {
+                    all = [];
+                    if (key == ("age" || "type")) {
+                        th.parentNode.querySelectorAll("span").forEach(span => all.push(span.textContent));
+                    } else {
+                        th.parentNode.querySelectorAll("a").forEach(a => all.push(a.textContent));
+                    }
+                    formatted_data[key] = stringFormatter(all.join(setting_sep));
+                    insertCopyDataButton(th, formatted_data[key]);
+                    delete parselist[key];
+                    break;
+                } else if (release) {
+                    if (release.some(t => text.includes(t))) {
+                        let date = `${Y}${m}${d}`;
+                        insertCopyDataButton(th, date, date);
+                        date = `${y}${m}${d}`;
+                        insertCopyDataButton(th, date, date);
+                        release = false;
+                    }
+                }
+            }
+        });
+        //------------------------------------------------------
+        let tagpart = document.querySelector("#work_right_inner div.main_genre");
+        let insertpos = tagpart;
+        tagpart = tagpart.querySelectorAll("a");
+        let tags = [];
+        tagpart.forEach(a => tags.push(a.textContent));
+        formatted_data.tags = stringFormatter(tags.join(setting_sep));
+        insertCopyDataButton(insertpos, formatted_data.tags);
+        console.timeEnd(getData.name);
+    }
+
+    function insertCopyDataButton(ele, copytext = "", btext = "複製") {
+        ele = searchNodeNameInParents(ele, "TR");
+        if (!ele) return;
+        let pos = ele.querySelector("div");
+        if (!pos) pos = ele.querySelector("td");
+        if (!pos) return;
+        pos.insertAdjacentElement("afterbegin", newCopyButton(copytext, btext));
+    }
+
+    function searchNodeNameInParents(ele, nodename = "") {
+        if (!ele || !nodename) return false;
+        nodename = nodename.toUpperCase();
+        let count = 0;
+        while (true) {
+            ele = ele.parentNode;
+            count++;
+            if (!ele || count > 100) return false;
+            if (ele.nodeName == nodename) break;
+        }
+        return ele;
+    }
+
+    function isInList(text, list, data) {
+        if (!data) if (list.some(t => text.includes(t))) return true;
+        return false;
+    }
+
+    function stringFormatter(text) {
+        text = removeExcess(text);
+        if (setting_f2h) text = toHalfWidth(text);
+        text = repalceForbiddenChar(text);
+        return text;
+    }
+
+    function removeExcess(text) {
+        let o_text = text;
+        // remove excess text
+        let count = 0;
+        while (count < 100 && text.match(reg_excess)) {
+            text = text.replace(reg_excess, "");
+            count++;
+        }
+        if (text.length == 0) text = o_text;
+        // remove container if it at start or end
+        count = 0;
+        while (count < 100) {
+            let index_start = container_start.indexOf(text[0]);
+            if (index_start != -1) {
+                if (container_end[index_start] == text[text.length - 1]) {
+                    // found start & end
+                    text = text.slice(1, text.length - 1).trim();
+                    debug_msg(`[removeExcess] remove container:"${text}"`);
+                } else if (!text.includes(container_end[index_start])) {
+                    // found start but no end
+                    text = text.slice(1).trim();
+                    debug_msg(`[removeExcess] remove start:"${text}"`);
+                }
+            }
+            let index_end = container_end.indexOf(text[text.length - 1]);
+            if (index_end != -1) {
+                if (!text.includes(container_start[index_end])) {
+                    // found end but no start
+                    text = text.slice(0, text.length - 1).trim();
+                    debug_msg(`[removeExcess] remove end:"${text}"`);
+                }
+            }
+            if (index_start == -1 && index_end == -1) break;
+            count++;
+        }
+        text = text.replace(reg_blank, " ");
+        text = text.length > 0 ? text : o_text;
+        debug_data(`o:[${o_text}]\np:[${text}]`);
+        return text;
+    }
+
+    function toHalfWidth(text) {
+        for (let i in setting_full) {
+            text = text.replace(new RegExp(setting_full[i], "g"), setting_half[i]);
+        }
+        return text;
+    }
+
+    function repalceForbiddenChar(text) {
+        for (let index in forbidden) {
+            text = text.replace(new RegExp(regesc(forbidden[index]), "g"), replacer[index]);
+        }
+        return text;
+    }
+
+    function updateSetting() {
+        let s = document.getElementById("format_title_setting");
+        let p = document.getElementById("format_title_preview");
+        let cs = document.getElementById("format_title_custom_span");
+        let cb = document.getElementById("format_title_custom_button");
+        if (s.value.length > 0) {
+            if (setting_format != s.value) {
+                setting_format = s.value;
+                let formatted = parseFormatString(setting_format);
+                cs.textContent = p.value = formatted;
+                cb.onclick = () => navigator.clipboard.writeText(formatted);
+            }
+        }
+        let sep = document.getElementById(`dtr_${key_sep}`);
+        setting_sep = sep.value;
+    }
+
+    function parseFormatString(string = "") {
+        let formatted_text = string;
+        data_list.forEach(key => {
+            formatted_text = formatted_text.replace(new RegExp(`%${key}%`, "g"), formatted_data[key]);
+        });
+        formatted_text = repalceForbiddenChar(formatted_text);
+        return formatted_text;
+    }
+
+    function setting() {
+        console.time(setting.name);
+        //------------------------------------------------------
+        let pos = document.getElementById("work_name");
+        let button = document.createElement("button");
+        Object.assign(button, {
+            textContent: "打開設定",
+            value: "open",
+            onclick: function () {
+                let ele = document.getElementById("format_setting_ui");
+                if (this.value === "close") {
+                    ele.style.display = "none";
+                    this.value = "open";
+                    this.textContent = "打開設定";
+                    clearInterval(updateid);
+                } else {
+                    ele.style.display = "";
+                    this.value = "close";
+                    this.textContent = "關閉設定";
+                    updateid = setInterval(updateSetting, 100);
+                }
+            },
+        });
+        //------------------------------------------------------
+        let box = document.createElement("div");
+        box.id = "format_setting_ui";
+        box.className = "dtr_setting_box";
+        box.style.display = "none";
+        let textarea;
+        //------------------------------------------------------
+        pos.insertAdjacentElement("afterbegin", box);
+        pos.insertAdjacentElement("afterbegin", newLine());
+        pos.insertAdjacentElement("afterbegin", button);
+        //------------------------------------------------------
+        button = document.createElement("button");
+        let mode = setting_adv ? "on" : "off";
+        Object.assign(button, {
+            className: "dtr_textsize05",
+            id: "format_title_setting_advance_model",
+            textContent: `進階模式: ${mode}`,
+            value: mode,
+            onclick: function () {
+                let t = document.getElementById("format_title_setting");
+                if (this.value === "off") {
+                    Object.assign(this, {
+                        value: "on",
+                        textContent: "進階模式: on",
+                    });
+                    t.readOnly = false;
+                    setting_adv = true;
+                } else {
+                    Object.assign(this, {
+                        value: "off",
+                        textContent: "進階模式: off",
+                    });
+                    t.readOnly = true;
+                    setting_adv = false;
+                }
+            }
+        });
+        box.appendChild(button);
+        box.appendChild(newSpan(" 啟用此功能直接編輯格式設定",
+            "dtr_textsize05 dtr_setting_w_text"));
+        appendNewLine(box);
+        //------------------------------------------------------
+        // all data
+        data_list.forEach(s => box.appendChild(newDataButton(`+${s}`, `%${s}%`)));
+        appendNewLine(box);
+        //------------------------------------------------------
+        textarea = document.createElement("textarea");
+        textarea.className = "dtr_textsize05 dtr_max_width";
+        textarea.id = "format_title_setting";
+        textarea.rows = 1;
+        textarea.value = setting_format;
+        textarea.readOnly = !setting_adv;
+        box.appendChild(newSpan("格式設定:"));
+        appendNewLine(box);
+        box.appendChild(textarea);
+        appendNewLine(box);
+
+        textarea = document.createElement("textarea");
+        textarea.className = "dtr_textsize05 dtr_max_width";
+        textarea.id = "format_title_preview";
+        textarea.readOnly = true;
+        textarea.rows = 1;
+        textarea.value = parseFormatString(setting_format);
+
+        box.appendChild(newSpan("預覽:"));
+        appendNewLine(box);
+        box.appendChild(textarea);
+        appendNewLine(box);
+        //------------------------------------------------------
+        box.appendChild(newButton("儲存", saveSetting));
+        box.appendChild(newSeparate());
+
+        box.appendChild(newButton("預設", () => {
+            document.getElementById("format_title_setting").value = default_format;
+        }));
+        box.appendChild(newSeparate());
+
+        box.appendChild(newButton("清除", () => {
+            document.getElementById("format_title_setting").value = "";
+        }));
+        appendNewLine(box);
+        appendNewLine(box);
+        //------------------------------------------------------
+        let ck_area = document.createElement("div");
+        ck_area.className = "dtr_setting_ck_box";
+        appendAll(ck_area, [
+            newSpan(`儲存和重新整理讓設定生效`, ""),
+            newLine(),
+        ]);
+        let checkbox;
+        let lable;
+        checkbox = newCheckbox(`dtr_${key_f2h}`, function () {
+            setting_f2h = this.checked ? true : false;
+            debug_msg(`${key_f2h}: ${setting_f2h}`);
+        });
+        lable = newLable(`dtr_${key_f2h}`, "將部分半形符號替換為全形");
+        if (setting_f2h) checkbox.checked = true;
+        appendAll(ck_area, [checkbox, lable, newLine()]);
+
+        checkbox = newCheckbox(`dtr_${key_show_ot}`, function () {
+            setting_show_ot = this.checked ? true : false;
+            debug_msg(`${key_show_ot}: ${setting_show_ot}`);
+        });
+        lable = newLable(`dtr_${key_show_ot}`, "顯示原標題/ID+標題");
+        if (setting_show_ot) checkbox.checked = true;
+        appendAll(ck_area, [checkbox, lable, newLine()]);
+
+        checkbox = newCheckbox(`dtr_${key_show_ft}`, function () {
+            setting_show_ft = this.checked ? true : false;
+            debug_msg(`${key_show_ft}: ${setting_show_ft}`);
+        });
+        lable = newLable(`dtr_${key_show_ft}`, "顯示格式化 / ID+格式化");
+        if (setting_show_ft) checkbox.checked = true;
+        appendAll(ck_area, [checkbox, lable, newLine()]);
+
+        textarea = document.createElement("textarea");
+        textarea.className = "dtr_textsize05";
+        textarea.id = `dtr_${key_sep}`;
+        textarea.rows = 1;
+        textarea.cols = 1;
+        textarea.value = setting_sep;
+        textarea.style = "resize: none;";
+
+        lable = newLable(`dtr_${key_sep}`, "分隔符號: ");
+        appendAll(ck_area, [
+            lable, textarea, newLable(`dtr_${key_sep}`, " 用於具有多個數值的資料，例如標籤。"),
+            newLine(),
+        ]);
+        box.appendChild(ck_area);
+        appendNewLine(box);
+        //------------------------------------------------------
+        box.appendChild(newSpan("資料清單:"));
+        appendNewLine(box);
+        textarea = document.createElement("textarea");
+        textarea.className = "dtr_textsize05";
+        textarea.id = "format_title_all_data";
+        textarea.readOnly = true;
+
+        box.appendChild(textarea);
+
+        listAllData();
+
+        updateSetting();
+        console.timeEnd(setting.name);
+    }
+
+    function listAllData() {
+        let textbox = document.getElementById("format_title_all_data");
+        textbox.value = "";
+        let count = 0;
+        let maxlength = 0;
+        let s;
+        for (let key in formatted_data) {
+            s = `%${key}%: ${formatted_data[key]}\n`;
+            textbox.value += s;
+            count++;
+            if (formatted_data[key] && s.length > maxlength) maxlength = s.length;
+        }
+        textbox.rows = count + 1;
+        textbox.cols = maxlength << 1;
+    }
+
+    function updateSettingString(id, format_string) {
+        let textarea = document.getElementById(id);
+        let list = [
+            "year",
+            "Year",
+            "month",
+            "day",
+        ];
+        let o = textarea.value;
+        if (list.some(s => format_string.includes(s)) && list.some(s => o.endsWith(`%${s}%`))) {
+            textarea.value += format_string;
+        } else {
+            textarea.value += ` ${format_string}`;
+        }
+        textarea.value = textarea.value.trim();
+    }
+
+    function productHandler() {
+        getData();
+        console.time(productHandler.name);
+        //------------------------------------------------------
+        let pos = document.querySelector("#work_name");
+        pos.innerHTML = `<div style="${setting_show_ot ? '' : 'display:none;'} user-select: text;">${pos.innerText}</div>`;
+
+        let id = formatted_data.id;
+        let title_o = formatted_data.title_original;
+        let title_f = formatted_data.title_formatted;
+        let title_id_c = parseFormatString(setting_format);
+        let title_id_o = `${id} ${title_o}`;
+        let title_id_f = `${id} ${title_f}`;
+        let notSame_o_c = Boolean(title_id_o != title_id_c);
+        let notSame_f_c_o = Boolean(title_id_f != title_id_c && title_id_f != title_id_o);
+        //------------------------------------------------------
+        // Cover url
+        /* 不顯示標題的封面網址
+        let span_cover = newSpan(newCoverUrl(id), "");
+        span_cover.style = "user-select: text;";
+        pos.append(span_cover);
+        appendNewLine(pos);*/
+        //------------------------------------------------------
+        // ID + original title
+        if (notSame_o_c && setting_show_ot) {
+            let span = newSpan(title_id_o, "");
+            span.style = "user-select: text;";
+            pos.append(span);
+            appendNewLine(pos);
+        }
+        //------------------------------------------------------
+        // ID + formatted title
+        if (notSame_f_c_o && setting_show_ft) {
+            let span = newSpan(title_id_f, "");
+            span.style = "user-select: text;";
+            pos.append(span);
+            appendNewLine(pos);
+        }
+        //------------------------------------------------------
+        // custom title
+        let span = newSpan(title_id_c, "");
+        span.style = "user-select: text;";
+        span.id = "format_title_custom_span";
+        pos.append(span);
+        appendNewLine(pos);
+        //------------------------------------------------------
+        // add copy ID button
+        pos.append(newCopyButton(id));
+        pos.append(newSeparate());
+        //------------------------------------------------------
+        // add download cover
+        pos.append(newCoverDownload(id));
+        pos.append(newSeparate());
+        //------------------------------------------------------
+        // add copy cover url
+        pos.append(newCopyButton(newCoverUrl(id), "封面連結"));
+        pos.append(newSeparate());
+        //------------------------------------------------------
+        // add copy custom format button
+        let custom_button = newCopyButton(title_id_c, "自訂標題");
+        custom_button.id = "format_title_custom_button";
+        pos.append(custom_button);
+        //------------------------------------------------------
+        // add copy Original / ID+Original button
+        if (notSame_o_c && setting_show_ot) {
+            pos.append(newSeparate());
+            pos.append(newCopyButton(title_o, "原始標題"));
+            pos.append(newCopyButton(title_id_o, "ID+原始標題"));
+        }
+        //------------------------------------------------------
+        // add copy Formatted / ID+Formatted button
+        if (notSame_f_c_o && setting_show_ft) {
+            pos.append(newSeparate());
+            pos.append(newCopyButton(title_f, "DefaultFormat"));
+            pos.append(newCopyButton(title_id_f, "ID+DefaultFormat"));
+        }
+
+        setting();
+
+        //------------------------------------------------------
+        // creat track list if any
+        let list = gettracklist();
+        if (list) {
+            addTracklist(list, "Official");
+        } else {
+            list = extractTrackListFromText();
+            let spantext = "文章摘錄 (不太準確。無法找到沒有編號的曲目。)";
+            if (list) list.reverse().forEach((result, index) => addTracklist(result, spantext, index));
+        }
+        //------------------------------------------------------
+        console.timeEnd(productHandler.name);
+    }
+
+    function naturalSort(a, b) {
+        let setting = { numeric: false, ignorePunctuation: false };
+        return String(a).localeCompare(String(b), navigator.languages[0] || navigator.language, setting);
+    }
+
+    function extractTrackListFromText() {
+        let raw_text = document.querySelector(".work_parts_container");
+        if (!raw_text) return false;
+        if (debug) console.groupCollapsed();
+        //------------------------------------------------------
+        let extract_result = [];
+        let reg_number = /[\d１２３４５６７８９０]+/;
+
+        // pre process
+        raw_text = raw_text.textContent.split("\n").filter(line => line.replace(reg_muti_blank, "") != "");
+        let newtext = [];
+        raw_text.forEach(line => { newtext.push(shiftCode(line)); });
+        //debug_msg("newtext", newtext);
+
+        // get all line with number & remove excess text
+        let reg_prefix = /^\D+(?=\d+)/;
+        let reg_suffix = /(?<=\d)\D/;
+        let reg_exclude = /https*:\/\/|総再生|総時間|合計/;
+        let reg_age = /[rR]\-*\d+/g;
+        let extract = [];
+        newtext.forEach((line, index) => {
+            let text = line.replace(reg_age, "").replace(reg_non_track2, "").replace(reg_time, "");
+            if (!text.match(reg_exclude)) {
+                let number = text.match(reg_number);
+                let prefix = text.match(reg_prefix);
+                let suffix = text.match(reg_suffix);
+                if (number) {
+                    extract.push({
+                        number: parseInt(number[0], 10),
+                        text: text,
+                        o_index: index,
+                        prefix: prefix ? prefix[0] : "_no_prefix_",
+                        suffix: suffix ? suffix[0] : "_no_suffix_",
+                    });
+                }
+            }
+        });
+        debug_msg("extract", extract);
+
+        if (extract.length == 0) return false;
+        // ======================================================================
+        // old extractor
+        let track_list = [];
+        let offset = 1;
+        let not_add = 0;
+        let extract_copy = Object.assign([], extract);
+        let skip = 0;
+        for (let index = 1; index < extract_copy.length; index += offset) {
+            if (offset == -1) offset = 1;
+            debug_msg("");
+            let this_n = extract_copy[index].number;
+            let previous_n = extract_copy[index - offset].number;
+            debug_msg(`index:${index} | this_n:${this_n} | previous_n:${previous_n} | offset:${offset} | not_add:${not_add} | skip:${skip} | this:${extract[index].text}`);
+            if (skip != 0 && skip == index) {
+                skip = 0;
+                continue;
+            }
+            if (offset == 1) {
+                if (this_n == previous_n) {
+                    // see same number as previous, skip this one
+                    debug_msg(`skip | ${extract[index].text}`);
+                    continue;
+                } else if (this_n == previous_n + 1) {
+                    if (track_list.length == 0) {
+                        track_list.push(extract[index - 1].text);
+                        debug_msg(`add | ${extract[index - 1].text}`);
+                    }
+                    track_list.push(extract[index].text);
+                    debug_msg(`add | ${extract[index].text}`);
+                    not_add = 0;
+                    continue;
+                } else if (index >= 2) {
+                    if (this_n == extract[index - 2].number + 1) {
+                        offset = 2;
+                        if (track_list.length == 0) {
+                            track_list.push(extract[index - 2].text);
+                            debug_msg(`add | ${extract[index - 2].text}`);
+                        }
+                        track_list.push(extract[index].text);
+                        debug_msg(`add | ${extract[index].text}, offset: 2`);
+                        not_add = 0;
+                        continue;
+                    }
+                }
+            } else if (offset == 2) {
+                if (this_n == previous_n) {
+                    // see same number as previous, skip this one
+                    debug_msg(`skip | ${extract[index].text}`);
+                    continue;
+                } else if (this_n == previous_n + 1) {
+                    track_list.push(extract[index].text);
+                    debug_msg(`add | ${extract[index].text}`);
+                    not_add = 0;
+                    continue;
+                } else if (this_n == extract[index - 1].number + 1) {
+                    offset = -1;
+                    skip = index;
+                    track_list.push(extract[index].text);
+                    debug_msg(`add | ${extract[index].text}, offset: 1`);
+                    not_add = 0;
+                    continue;
+                }
+            }
+            not_add++;
+            if (not_add > 1 || this_n == 1) {
+                if (track_list.length > 0) extract_result.push(track_list);
+                track_list = [];
+                not_add = 0;
+                debug_msg("_____reset_____");
+            }
+        }
+        if (track_list.length > 0) extract_result.push(track_list);
+        debug_data("extractor 1\n" +
+            "======================================================================\n" +
+            "extractor 2");
+        function remove_non_track(list = []) {
+            let new_list = Object.assign([], list);
+            let reglist = [
+                reg_time,
+                reg_non_track,
+            ];
+            let reg_total = /総[^時間]*時間/;
+            new_list = new_list.filter(o => {
+                let clean_text = o.text;
+                reglist.forEach(reg => clean_text = clean_text.replace(reg, ""));
+                if (clean_text.match(reg_number) && !clean_text.match(reg_total)) {
+                    return true;
+                } else {
+                    debug_msg(`remove "${o.text}"`);
+                    return false;
+                }
+            });
+            debug_msg("remove_non_track", Object.assign([], new_list));
+            return new_list;
+        }
+
+        function remove_single_track(list = []) {
+            let new_list = Object.assign([], list);
+            let no_single = [];
+            let tmp = [];
+            while (new_list.length > 0) {
+                let o = new_list.shift();
+                if (tmp.length == 0 || tmp[0].number == o.number - 1) {
+                    tmp.unshift(o);
+                } else {
+                    if (tmp.length > 1) tmp.reverse().forEach(x => no_single.push(x));
+                    tmp = [o];
+                }
+            }
+            if (tmp.length > 1) tmp.reverse().forEach(x => no_single.push(x));
+            new_list = no_single.reverse();
+            debug_msg("remove_single_track", Object.assign([], new_list));
+            return new_list;
+        }
+
+        function match_index2title(list = []) {
+            let new_list = Object.assign([], list);
+            let match_list = {};
+            new_list.forEach(o => {
+                if (!match_list[o.number]) {
+                    match_list[o.number] = [o.text];
+                } else {
+                    match_list[o.number].push(o.text);
+                }
+            });
+            debug_msg("match_index2title", Object.assign({}, match_list));
+            return match_list;
+        }
+
+        function remove_non_continuous(obj = {}) {
+            let match_list = Object.assign({}, obj);
+            let pre_index = false;
+            for (let index in match_list) {
+                let i = parseInt(index, 10);
+                if (!pre_index || i == pre_index + 1) {
+                    pre_index = i;
+                } else {
+                    debug_msg(`remove "${match_list[index]}"`);
+                    delete match_list[index];
+                }
+            }
+            debug_msg("remove_non_continuous", Object.assign({}, match_list));
+            return match_list;
+        }
+
+        function regroup_by_index(obj = {}, start = 1) {
+            let match_list = Object.assign({}, obj);
+            let new_list = Array.from(match_list[start], x => []);
+            for (let index in new_list) {
+                for (let key in match_list) {
+                    new_list[index] = new_list[index].concat(match_list[key]);
+                }
+            }
+            debug_msg("re-group by index", Object.assign([], new_list));
+            return new_list.length > 0 ? new_list : false;
+        }
+
+        function group_by_key(list = [], key = "") {
+            let copy = Object.assign([], list);
+            let tmp = {};
+            copy.forEach(o => {
+                if (!tmp[o[key]]) {
+                    tmp[o[key]] = [o];
+                } else {
+                    tmp[o[key]].push(o);
+                }
+            });
+            copy = tmp;
+            for (let i in tmp) { // remove group that list.length < 2
+                if (tmp[i].length < 2) delete tmp[i];
+            }
+            debug_msg(`group by key[${key}]`, Object.assign({}, copy));
+            return copy;
+        }
+
+        extract_copy = Object.assign([], extract);
+        extract_copy = extract_copy.sort((a, b) => naturalSort(a.text, b.text));
+        debug_msg("pre-sort by text", Object.assign([], extract_copy));
+        //extract_copy = remove_non_track(extract_copy);
+        //extract_copy = remove_single_track(extract_copy);
+        let group_prefix = group_by_key(extract_copy, "prefix");
+        for (let prefix in group_prefix) {
+            debug_msg(`group [${prefix}]`);
+            let group = group_prefix[prefix];
+            let match_list = match_index2title(group);
+            //match_list = remove_non_continuous(match_list);
+            if (match_list[0]) {
+                match_list = regroup_by_index(match_list, 0);
+                if (match_list) match_list.forEach(list => extract_result.push(list));
+            } else if (match_list[1]) {
+                match_list = regroup_by_index(match_list, 1);
+                if (match_list) match_list.forEach(list => extract_result.push(list));
+            }
+        }
+
+        let group_suffix = group_by_key(extract_copy, "suffix");
+        for (let suffix in group_suffix) {
+            debug_msg(`group [${suffix}]`);
+            let group = group_suffix[suffix];
+            let match_list = match_index2title(group);
+            if (match_list[0]) {
+                match_list = regroup_by_index(match_list, 0);
+                if (match_list) match_list.forEach(list => extract_result.push(list));
+            } else if (match_list[1]) {
+                match_list = regroup_by_index(match_list, 1);
+                if (match_list) match_list.forEach(list => extract_result.push(list));
+            }
+        }
+        if (debug) console.groupEnd();
+        //------------------------------------------------------
+        if (debug) console.groupCollapsed();
+        debug_msg("extract_result | ", extract_result);
+        if (extract_result.length == 0) return false;
+        extract_result.forEach((result, result_index) => {
+            let check_list = removeExcessInTrackList(result, true);
+            debug_msg("====================");
+            debug_msg("check_list", check_list);
+            if (check_list.some(line => line == "")) {
+                debug_msg(`check_list is empty, try to extract from offset line`);
+                let extract_from = [];
+                result.forEach(track => {
+                    let original = extract.find(ex => ex.text == track);
+                    if (original) extract_from.push(original.o_index);
+                });
+                if (extract_from.length == result.length) {
+                    let search_title = [];
+                    let offset = 0;
+                    while (offset < max_depth) {
+                        offset++;
+                        extract_from.forEach(o_index => search_title.push(newtext[o_index + offset]));
+                        if (search_title.some(t => result.indexOf(t) != -1)) {
+                            debug_msg("some offset title already in original list, list overlapped, abort");
+                            break;
+                        } else if (search_title.length == extract_from.length) {
+                            let newlist = [];
+                            search_title.forEach((st, st_index) => { newlist.push(result[st_index] + st); });
+                            debug_msg("found newlist | ", search_title);
+                            extract_result[result_index] = newlist;
+                            break;
+                        } else if (search_title.length != extract_from.length) {
+                            debug_msg("2 list have different length, abort");
+                            break;
+                        }
+                    }
+                }
+            } else {
+                debug_msg("pass");
+            }
+        });
+        if (debug) console.groupEnd();
+        return extract_result.length > 0 ? extract_result.sort((a, b) => b.length - a.length) : false;
+    }
+
+    function shiftCode(string = "") {
+        let reg_fullwidth_code = /[\uFF01-\uFF63]/g;
+        return string.replace(reg_fullwidth_code, match => String.fromCharCode(match.charCodeAt(0) - 0xFEE0)).replace(reg_muti_blank, " ").trim();
+    }
+
+    function removeExcessInTrackList(list = [], no_index = false) {
+        if (!list) return false;
+        let reglist = [
+            reg_time,
+            reg_text_start,
+            reg_non_word_at_start,
+            reg_text_start,
+        ];
+        debug_msg(removeExcessInTrackList.name);
+        let new_list = doRegList(list, reglist, no_index);
+        let have2index = /\d+\D+(?=\d+)/;
+        if (new_list.every(line => line.match(have2index))) {
+            debug_data("\n<<<2nd pass>>>\n\n");
+            new_list = doRegList(new_list, [have2index], no_index);
+        }
+        return new_list;
+
+        function doRegList(_datalist, _reglist = [], _no_index = false) {
+            let _new_list = [];
+            let _reg_total = /総[^時間]*時間/;
+            //debug_msg("reglist", _reglist);
+            debug_msg("list", _datalist);
+            _datalist.forEach(_line => {
+                let _new_line = _line;
+                _reglist.forEach(reg => {
+                    _new_line = _new_line.replace(reg, "").trim();
+                    //debug_msg(`"${_new_line}" by reg [${reg}]`);
+                });
+                _new_line = removeBracket(_new_line);
+                _new_line = _new_line.replace(reg_muti_blank, " ").trim();
+                if (_no_index) {
+                    _new_line = _new_line.replace(reg_muti_blank, "").replace(/^\d+/, "").trim();
+                }
+                if (!_line.match(_reg_total)) _new_list.push(_new_line);
+            });
+            debug_msg("after reglist", _new_list);
+            return _new_list;
+        }
+
+        function removeBracket(t = "") {
+            let index = container_start.indexOf(t[0]);
+            if (index != -1) {
+                if (container_end[index] == t[t.length - 1]) {
+                    // found start & end
+                    t = t.slice(1, t.length - 1).trim();
+                    debug_msg(`remove container:"${t}"`);
+                } else if (!t.includes(container_end[index])) {
+                    // found start but no end
+                    t = t.slice(1).trim();
+                    debug_msg(`remove start:"${t}"`);
+                }
+            } else {
+                index = container_end.indexOf(t[t.length - 1]);
+                if (index != -1) {
+                    if (!t.includes(container_start[index])) {
+                        // found end but no start
+                        t = t.slice(0, t.length - 1).trim();
+                        debug_msg(`remove end:"${t}"`);
+                    }
+                }
+            }
+            return t;
+        }
+    }
+
+    async function SHA(text = "") {
+        const msgUint8 = new TextEncoder().encode(text);                              // encode as (utf-8) Uint8Array
+        const hashBuffer = await crypto.subtle.digest('SHA-1', msgUint8);             // hash the message SHA-1/256/384/512
+        const hashArray = Array.from(new Uint8Array(hashBuffer));                     // convert buffer to byte array
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+        return hashHex;
+    }
+
+    async function addTracklist(list, from, index = 0) {
+        debug_msg("====================");
+        let textlist = removeExcessInTrackList(list);
+        if (textlist.some(line => line == "")) return debug_msg("found empty line, abort");
+        if (textlist.every(line => line.match(/^\d+/))) {
+            textlist = textlist.sort((a, b) =>
+                a.localeCompare(b,
+                    navigator.languages[0] || navigator.language, {
+                    numeric: true,
+                })
+            );
+        }
+        textlist = textlist.map((line, index) => `${index + 1}. ${line}`);
+        debug_msg("final | ", textlist);
+
+        let row_count = textlist.length;
+        let maxlength = Math.max(...textlist.map(t => getTrueLength(t)));
+
+        textlist = textlist.join("\n");
+
+        let hash = await SHA(textlist);
+        let duplicate = document.querySelector(`[hash="${hash}"]`);
+
+        if (duplicate) return debug_msg(`found duplicate[${hash}], abort`);
+
+        let box = document.createElement("div");
+        box.className = "dtr_tracklist";
+        box.setAttribute("hash", hash);
+
+        let textbox = document.createElement("textarea");
+        textbox.id = `dtr_tracklist${index}`;
+        textbox.rows = row_count + 1;
+        textbox.cols = maxlength;
+        textbox.value = textlist;
+
+        let copyall = document.createElement("button");
+        copyall.textContent = "複製";
+        copyall.onclick = () => { navigator.clipboard.writeText(document.getElementById(`dtr_tracklist${index}`).value); };
+
+        let span = newSpan(from);
+        if (from != "Official") span.className = "dtr_setting_w_text";
+
+        let pos = document.querySelector("[itemprop='description']");
+        pos.insertAdjacentElement("afterbegin", box);
+        appendAll(box, [textbox, newLine(), copyall, newLine(), span,]);
+
+        function getTrueLength(string = "") {
+            let length = 0;
+            [...string].forEach(char => { length += char.match(/[\w\s_]/) ? 1 : 2; });
+            return length;
+        }
+    }
+
+    function gettracklist() {
+        let list = document.querySelector(".work_tracklist");
+        if (!list) return false;
+        list = list.querySelectorAll(".work_tracklist_item");
+        if (!list) return false;
+
+        let tracklist = [];
+        list.forEach(ele => {
+            let title = ele.querySelector(".title").textContent;
+            if (title) tracklist.push(title);
+        });
+
+        debug_msg("Official list | ", tracklist);
+        return tracklist;
+    }
+
+    function appendNewLine(ele) {
+        ele.appendChild(document.createElement("br"));
+    }
+
+    function newLine() {
+        return document.createElement("br");
+    }
+
+    function newSeparate() {
+        return newSpan(` / `);
+    }
+
+    function newButton(btext, onclick) {
+        let button = document.createElement("button");
+        button.innerHTML = btext;
+        button.onclick = onclick;
+        return button;
+    }
+
+    function newDataButton(btext, format_string) {
+        return newButton(btext, () => {
+            updateSettingString("format_title_setting", format_string);
+        });
+    }
+
+    function newCopyButton(copytext, btext = "") {
+        return newButton(btext === "" ? copytext : btext, async () => {
+            await navigator.clipboard.writeText(copytext);
+        });
+    }
+
+    function newSpan(text = "", className = "dtr_textsize05") {
+        let span = document.createElement("span");
+        span.className = className;
+        span.textContent = text;
+        return span;
+    }
+
+    function myCss() {
+        let s = document.createElement("style");
+        s.className = "myCssSheet";
+        document.head.appendChild(s);
+        s.textContent = `
+            .dtr_textsize05 {
+                font-size: 0.5rem;
+                vertical-align: middle;
+            }
+
+            .dtr_setting_box {
+                border: 0.2rem;
+                border-style: solid;
+                padding: 0.5rem;
+            }
+
+            .dtr_setting_w_text {
+                color: red;
+            }
+
+            .dtr_max_width {
+                width: 100%;
+            }
+
+            .dtr_list_w_text {
+                color: red;
+                float: right;
+            }
+
+            .dtr_setting_ck_box {
+                border: black 0.1rem solid;
+                width: max-content;
+                padding: 0.5rem;
+            }
+
+            .dtr_tracklist{
+                display: inline-grid;
+                margin: 1rem 1rem 2rem;
+            }
+        `;
+    }
+
+    function debug_msg(...any) {
+        if (debug) console.log(`[dlsite title reformat] `, ...any);
+    }
+
+    function debug_data(...any) {
+        if (debug) console.log(...any);
+    }
+})();
