@@ -1,0 +1,777 @@
+// ==UserScript==
+// @name        WpierdolMast X9000
+// @namespace   pr0game
+// @match       https://pr0game.com/uni5/game.php*
+// @grant       none
+// @version     1.0
+// @author      moh
+// @run-at      document-end
+// @license     GNU GPLv3
+// @description WIP
+// @downloadURL https://update.greasyfork.org/scripts/538950/WpierdolMast%20X9000.user.js
+// @updateURL https://update.greasyfork.org/scripts/538950/WpierdolMast%20X9000.meta.js
+// ==/UserScript==
+(function () {
+  "use strict";
+
+  /**
+   * todo
+   *
+   * - [ ] keep info about where fleets are going and display those fleets in the galaxy/fleet (+shortcuts) view?
+   * - [ ] one-click inactive players list
+   * - [x] galaxy browser from cache
+   * - [x] percentage of galaxy discovery
+   */
+
+  /**
+   * Retrieves a value from localStorage for a given key, parsing it as JSON, or returns the default value if not found.
+   * 
+   * @param {string} key - The key to look up in localStorage, prefixed with the universe (e.g., 'uni1').
+   * @param {T} def - The default value to return if the key is not found or the value is null.
+   * @returns {Record<string, unknown> | T} The parsed JSON object from localStorage or the default value.
+   * @template T - The type of the default value.
+   */
+  const getvalue = function (key, def) {
+    const uni = window.location.pathname.match("uni?.")?.[0] || "uni1";
+    const value = localStorage.getItem(`${uni}_${key}`);
+
+    if (value === null) {
+      return def;
+    }
+
+    return JSON.parse(value);
+  };
+
+  /**
+   * Saves value to localStorage for a given key, using JSON format.
+   * @param {String} key - The key to save up in localStorage, prefixed with the universe (e.g., 'uni1').
+   * @param {*} value - a JavaScript value, usually an object or array, to be converted.
+   */
+  const setvalue = function(key, value) {
+    const uni = window.location.pathname.match("uni?.")?.[0] || "uni1";
+
+    localStorage.setItem(`${uni}_${key}`, JSON.stringify(value))
+  }
+
+  /**
+   * @param {String} HTML representing a single node (which might be an Element, a text node, or a comment).
+   * @return {Node}
+   */
+  function htmlToNode(html) {
+    const template = document.createElement("template");
+    template.innerHTML = html;
+    const nNodes = template.content.childNodes.length;
+    if (nNodes !== 1) {
+      throw new Error(
+        `html parameter must represent a single node; got ${nNodes}. ` +
+          "Note that leading or trailing spaces around an element in your " +
+          'HTML, like " <img/> ", get parsed as text nodes neighbouring ' +
+          "the element; call .trim() on your input to avoid this.",
+      );
+    }
+    return template.content.firstChild;
+  }
+
+  /**
+   * @param {String} HTML representing any number of sibling nodes
+   * @return {NodeList}
+   */
+  function htmlToNodes(html) {
+    const template = document.createElement("template");
+    template.innerHTML = html;
+    return template.content.childNodes;
+  }
+
+  const index_stats_anchor = document.querySelector("#stats");
+
+  /**
+   * @typedef {Object} IndexStatsRow
+   * @property {number} playerRank - The rank of the player
+   * @property {string} playerName - The name of the player
+   * @property {number} playerId - The ID of the player
+   * @property {string} playerAllianceName - The name of the player's alliance
+   * @property {number} playerAllianceId - The ID of the player's alliance
+   * @property {number} playerPoints - The player's points
+   * @property {string} lastScan - The timestamp of the last scan
+   */
+
+  /**
+   * Generates HTML for a single index row
+   * @param {IndexStatsRow} indexRow - The index row data
+   * @returns {string} HTML string for the table row
+   */
+  const index_stats_row_template = function (indexRow) {
+    return `
+        <tr>
+            <td>
+                <a class="tooltip" data-tooltip-content="<span style='color:#87CEEB'>*</span>">${indexRow.playerRank}</a>
+            </td>
+            <td>
+                <a href="#" onclick="return Dialog.Playercard(${indexRow.playerId}, '${indexRow.playerName}');"><span class="">${indexRow.playerName}</span></a>
+            </td>
+            <td>
+                <a href="game.php?page=alliance&mode=info&id=${indexRow.playerAllianceId}">
+                    <span class="galaxy-alliance">${indexRow.playerAllianceName}</span>
+                </a>
+            </td>
+            <td>${indexRow.playerPoints}</td>
+            <td>${indexRow.lastScan}</td>
+        </tr>
+        `;
+  };
+
+  /**
+   * Renders HTML for multiple index rows
+   * @param {IndexStatsRow[]} data - An array of index row data
+   * @returns {string} HTML-ready rows
+   */
+  const render_index_stats_row_template = function (data) {
+    let row_data = "";
+    for (let i = 0; i < data.length; ++i) {
+      row_data += index_stats_row_template(data[i]);
+    }
+    return row_data;
+  };
+
+  /**
+   * Generates HTML for the index table
+   * @param {string} row_data - HTML rows generated by `render_index_row_template`
+   * @returns {string} HTML string for the full table
+   */
+  const index_stats_template = function (row_data) {
+    return `
+            <table class="table519">
+                <tr>
+                    <th>WpierdolMast X9000</th>
+                </tr>
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <th style="width:60px;">Rank</th>
+                                <th>Player</th>
+                                <th>Alliance</th>
+                                <th>Points</th>
+                                <th>Updated</th>
+                            </tr>
+                            ${row_data}
+                        </table>
+                    </td>
+            </table>
+        `;
+  };
+
+  /**
+   * Renders the full index template
+   * @param {IndexStatsRow[]} data - An array of index row data
+   * @returns {string} HTML string for the full table
+   */
+  const render_index_template = function (data) {
+    const row_data = render_index_stats_row_template(data);
+    const rendered_index_template = index_stats_template(row_data);
+    return rendered_index_template;
+  };
+
+  if (index_stats_anchor) {
+    let mock_data = [
+      {
+        playerAllianceId: 1,
+        playerAllianceName: "Unknown Alliance " + 1,
+        playerId: 1,
+        playerName: "Unknown Name " + 1,
+        playerRank: 1,
+        playerPoints: 123.123 - 1,
+        lastScan: "now",
+      },
+      {
+        playerAllianceId: 2,
+        playerAllianceName: "Unknown Alliance " + 2,
+        playerId: 2, // Fixed duplicate playerId
+        playerName: "Unknown Name " + 2,
+        playerRank: 2,
+        playerPoints: 123.123 - 2,
+        lastScan: "now",
+      },
+    ];
+
+    const inactiveplayers = getvalue("inactiveplayers", {})
+
+    const rendered_index_template = render_index_template(mock_data);
+    const node_index_template = htmlToNode(rendered_index_template.trim());
+
+    index_stats_anchor.before(node_index_template);
+  }
+
+  const index_galaxy_anchor = document.querySelector("#galaxy_form");
+
+  /**
+   * @typedef {Object} Planet_old
+   * @property {string} name
+   * @property {number} id
+   * @property {number} universe
+   * @property {number} galaxy
+   * @property {number} position
+   */
+  /**
+   * @typedef {Object} Alliance
+   * @property {string} name - Full name
+   * @property {string} tag - Short name
+   * @property {number} id
+   */
+  /**
+   * @typedef {Object} IndexGalaxyRow
+   * @property {number} playerRank - The rank of the player
+   * @property {string} playerName - The name of the player
+   * @property {number} playerId - The ID of the player
+   * @property {?Alliance} alliance - The name of the player's alliance
+   * @property {Planet_old} planet
+   * @property {string} lastScan - The timestamp of the last scan
+   */
+
+  /**
+   * @param {IndexGalaxyRow} indexGalaxyRow
+   * @returns {string}
+   */
+  const index_galaxy_row_template = function (indexGalaxyRow) {
+    return `
+<div class="galaxy-grid-row">
+  <div class="galaxy-grid-item position centered colorNegative">
+    ${indexGalaxyRow.planet.position}
+  </div>
+  <div class="galaxy-grid-item galaxy-planet">
+    <a>
+      <img
+        src="./styles/theme/pr0gress/planeten/trockenplanet01.jpg"
+        height="30"
+        width="30"
+      />
+      ${indexGalaxyRow.planet.name}
+    </a>
+  </div>
+  <div class="galaxy-grid-item galaxy-moon centered"></div>
+  <div class="galaxy-grid-item galaxy-debris centered"></div>
+  <div class="galaxy-grid-item galaxy-player">
+    <a>
+      <span
+        playerid="${indexGalaxyRow.playerId}"
+        class="galaxy-username"
+        >${indexGalaxyRow.playerName}</span
+      >
+    </a>
+    <a allyid="${indexGalaxyRow.alliance.id}">
+      <span class="galaxy-alliance">[${indexGalaxyRow.alliance.tag}]</span>
+    </a>
+  </div>
+  <div class="galaxy-grid-item galaxy-actions">
+    <a href='javascript:doit(6,${indexGalaxyRow.planet.id})'>
+      <img src="./styles/theme/pr0gress/img/e.gif" title="Spying" alt="" />
+    </a>
+    <a href="#" onclick="return Dialog.PM(${indexGalaxyRow.playerId})">
+      <img
+        src="./styles/theme/pr0gress/img/m.gif"
+        title="Write message"
+        alt=""
+      />
+    </a>
+    <a href="#" onclick="return Dialog.Buddy(${indexGalaxyRow.playerId})">
+      <img
+        src="./styles/theme/pr0gress/img/b.gif"
+        title="Friend request"
+        alt=""
+      />
+    </a>
+  </div>
+</div>
+
+`;
+  };
+
+  /**
+   * Renders HTML for multiple index rows
+   * @param {IndexGalaxyRow[]} data - An array of index row data
+   * @returns {string} HTML-ready rows
+   */
+  const render_index_galaxy_row_template = function (data) {
+    let row_data = "";
+    for (let i = 0; i < data.length; ++i) {
+      row_data += index_galaxy_row_template(data[i]);
+    }
+    return row_data;
+  };
+
+  /**
+   * Renders the full index template
+   * @param {IndexGalaxyRow[]} data - An array of index row data
+   * @param {PlanetarySystems} universe
+   * @returns {string} HTML string for the full table
+   */
+  const render_galaxy_template = function (data, universe) {
+    const universeDiscoveryProgress = Math.floor(
+      (Object.keys(universe).length / 400) * 100,
+    );
+    const row_data = render_index_galaxy_row_template(data);
+    const rendered_index_template = index_galaxy_template(
+      row_data,
+      universeDiscoveryProgress,
+    );
+
+    return rendered_index_template;
+  };
+
+  /**
+   * Generates HTML for the index table
+   * @param {string} row_data - HTML rows generated by `render_index_row_template`
+   * @param {number} universeDiscoveryProgress
+   * @returns {string} HTML string for the full table
+   */
+  const index_galaxy_template = function (row_data, universeDiscoveryProgress) {
+    return `
+      <div id="wpierdolmast-galaxy" class="infos">
+        <div class="planeto">WpierdolMast X9000</div>
+        <div class="galaxy-paginator planeto">
+          <button data-paginator-previous>⬅</button>
+          <input data-paginator-current-universe type="number" maxlength="1" size="1" value="1" disabled="disabled">
+          <input data-paginator-current-galaxy type="number" min="1" max="400" maxlength="3" size="3">
+          <button data-paginator-next>⮕</button>
+        </div>
+        <div class="galaxy-grid-container">
+          <div class="galaxy-grid-row header">
+            <div class="galaxy-grid-header position centered" data-small-text="Pos.">Pos.</div>
+            <div class="galaxy-grid-header galaxy-planet" data-small-text="Planet">Planet</div>
+            <div class="galaxy-grid-header galaxy-moon" data-small-text="M">Moon</div>
+            <div class="galaxy-grid-header galaxy-debris" data-small-text="D">Debris Field</div>
+            <div class="galaxy-grid-header galaxy-player" data-small-text="Player">Player (State) [Alliance]</div>
+            <div class="galaxy-grid-header galaxy-actions" data-small-text="Actions">Actions</div>
+          </div>
+          <div id="wpierdolmast-galaxy-rowset" class="galaxy-grid-row"></div>
+        </div>
+        <div class="planeto">
+          <div aria-valuemin="0" aria-valuemax="100" aria-valuenow="${universeDiscoveryProgress}" style="position: relative;margin: 0;" class="ui-progressbar ui-widget ui-widget-content ui-corner-all">
+            <div class="ui-progressbar-value ui-widget-header ui-corner-left ui-corner-right" style="width: ${universeDiscoveryProgress}%; overflow: hidden;"></div>
+            <p style="position: absolute;top: 0;left: 0;z-index: 1;bottom: 0;right: 0;align-content: center;padding: 0 8px;text-align: center;text-stroke: 2px black;text-stroke: 5px black;-webkit-text-stroke: 3px var(--tv-black);paint-order: stroke fill;color: var(--tv-white);">Discovery progress: ${universeDiscoveryProgress}%</p>
+          </div>
+        </div>
+      </div>
+      `;
+  };
+
+  /**
+   * @typedef {Object} Planet
+   * @property {string} planetname - Name of the planet (e.g., "Kolonie", "𓄳").
+   * @property {boolean} hasmoon - Whether the planet has a moon.
+   * @property {number} playerid - Unique ID of the player owning the planet.
+   * @property {string} name - Player's name (e.g., "ccTommi").
+   * @property {number} allianceid - Unique ID of the player's alliance.
+   * @property {string} alliancename - Name of the alliance (e.g., "Weiß Nich").
+   * @property {string} special - Special status flags (e.g., "VM", "S", "VMi").
+   */
+
+  /**
+   * @typedef {Object.<string, Planet|null>} PlanetPositions
+   * @property {Planet|null} 1 - Planet at position 1.
+   * @property {Planet|null} 2 - Planet at position 2.
+   * @property {Planet|null} 3 - Planet at position 3.
+   * @property {Planet|null} 4 - Planet at position 4.
+   * @property {Planet|null} 5 - Planet at position 5.
+   * @property {Planet|null} 6 - Planet at position 6.
+   * @property {Planet|null} 7 - Planet at position 7.
+   * @property {Planet|null} 8 - Planet at position 8.
+   * @property {Planet|null} 9 - Planet at position 9.
+   * @property {Planet|null} 10 - Planet at position 10.
+   * @property {Planet|null} 11 - Planet at position 11.
+   * @property {Planet|null} 12 - Planet at position 12.
+   * @property {Planet|null} 13 - Planet at position 13.
+   * @property {Planet|null} 14 - Planet at position 14.
+   * @property {Planet|null} 15 - Planet at position 15.
+   * @property {number} timepoint - Timestamp of the system data (milliseconds since epoch).
+   */
+
+  /**
+   * @typedef {Object.<string, PlanetPositions>} PlanetarySystems
+   * @description A collection of systems, keyed by system coordinates (e.g., "1:399").
+   */
+
+  /**
+   * @typedef {Object} PlayerInfo
+   * @property {string} name - The player's name (e.g., "Wurstfabrik").
+   * @property {number} timepoint - Timestamp associated with the player data (milliseconds since epoch).
+   */
+
+  /**
+   * @typedef {Object.<number, PlayerInfo>} PlayerIds
+   * @description A collection of player IDs, where each key is a player ID mapping to player information.
+   */
+
+  /**
+   * @typedef {Object} AllianceInfo
+   * @property {string} name - The alliance's name (e.g., "Sinnlos im Weltraum").
+   * @property {number} timepoint - Timestamp associated with the alliance data (milliseconds since epoch).
+   */
+
+  /**
+   * @typedef {Object.<number, AllianceInfo>} AllianceIds
+   * @description A collection of alliance IDs, where each key is an alliance ID mapping to alliance information.
+   */
+
+  if (index_galaxy_anchor) {
+    /**
+     * @type {PlanetarySystems}
+     */
+    const universe = getvalue("universe", {});
+    const universe_sorted = Object.entries(universe).sort((a, b) => {
+      const aNum = Number(a[0].split(":").pop());
+      const bNum = Number(b[0].split(":").pop());
+      return aNum - bNum;
+    });
+
+    /**
+     * Finds the indexes of the closest galaxy and its left/right neighbors with circular wrap-around.
+     * @param {[string, any][]} entries - Sorted array of [key, value] pairs (sorted by numeric suffix in keys).
+     * @param {number} target - The numeric value to compare against.
+     * @returns {{
+     *   indexClosest: number,
+     *   indexLeft: number,
+     *   indexRight: number,
+     *   closest: number,
+     *   left: number,
+     *   right: number
+     * }} - Indexes of the closest match, left sibling right sibling and closest galaxy number and it's siblings.
+     */
+    function find_closest_galaxy(entries, target) {
+      let left = 0;
+      let right = entries.length - 1;
+
+      const getNum = (entry) => Number(entry[0].split(":").pop());
+
+      if (target <= getNum(entries[0])) {
+        return {
+          indexClosest: 0,
+          indexLeft: entries.length - 1,
+          indexRight: 1 % entries.length,
+          closest: entries[0][0].split(":").pop(),
+          left: entries[entries.length - 1][0].split(":").pop(),
+          right: entries[1 % entries.length][0].split(":").pop(),
+        };
+      }
+
+      if (target >= getNum(entries[right])) {
+        return {
+          indexClosest: right,
+          indexLeft: (right - 1 + entries.length) % entries.length,
+          IndexRight: 0,
+          closest: entries[right][0].split(":").pop(),
+          left: entries[(right - 1 + entries.length) % entries.length][0]
+            .split(":")
+            .pop(),
+          right: entries[0][0].split(":").pop(),
+        };
+      }
+
+      while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        const midNum = getNum(entries[mid]);
+
+        if (midNum === target) {
+          return {
+            indexClosest: mid,
+            indexLeft: (mid - 1 + entries.length) % entries.length,
+            indexRight: (mid + 1) % entries.length,
+            closest: entries[mid][0].split(":").pop(),
+            left: entries[(mid - 1 + entries.length) % entries.length][0]
+              .split(":")
+              .pop(),
+            right: entries[(mid + 1) % entries.length][0].split(":").pop(),
+          };
+        }
+
+        if (midNum < target) {
+          left = mid + 1;
+        } else {
+          right = mid - 1;
+        }
+      }
+
+      const leftIdx = right;
+      const rightIdx = left;
+
+      const indexClosest =
+        Math.abs(getNum(entries[leftIdx]) - target) <=
+        Math.abs(getNum(entries[rightIdx]) - target)
+          ? leftIdx
+          : rightIdx;
+
+      return {
+        indexClosest,
+        indexLeft: (leftIdx + entries.length) % entries.length,
+        indexRight: rightIdx % entries.length,
+        closest: entries[indexClosest][0].split(":").pop(),
+        left: entries[(leftIdx + entries.length) % entries.length][0]
+          .split(":")
+          .pop(),
+        right: entries[rightIdx % entries.length][0].split(":").pop(),
+      };
+    }
+
+    /**
+     * @param {[string, PlanetPositions]} galaxy
+     */
+    function display_galaxy(galaxy) {
+      const anchor = document.querySelector("#wpierdolmast-galaxy-rowset");
+
+      if (!anchor) {
+        console.error("Anchor element for galaxy rowset was not found.");
+        return;
+      }
+
+      const planets = [];
+
+      for (const position in galaxy[1]) {
+        const planet = galaxy[1][position];
+        if (Number(planet) > 0) {
+          continue;
+        }
+
+        console.log(position, planet);
+
+        const oddEven = position % 2 ? "odd" : "even";
+
+        if (planet) {
+          planets.push(
+            htmlToNode(
+              `<div class="galaxy-grid-row ${oddEven}">
+                <div class="galaxy-grid-item position centered">
+                  ${position}
+                </div>
+                <div class="galaxy-grid-item galaxy-planet">
+                  <a>
+                    <img
+                      src="./styles/theme/pr0gress/planeten/trockenplanet01.jpg"
+                      height="30"
+                      width="30"
+                    />
+                    ${planet.planetname}
+                  </a>
+                </div>
+                <div class="galaxy-grid-item galaxy-moon centered">
+                  ${planet.hasmoon ? `<a class="tooltip_sticky">
+                    <img src="./styles/theme/pr0gress/planeten/mond03.jpg" height="22" width="22">
+                  </a>` : ""}
+                </div>
+                <div class="galaxy-grid-item galaxy-debris centered"></div>
+                <div class="galaxy-grid-item galaxy-player">
+                  <a>
+                    <span
+                      playerid="${planet.playerid}"
+                      class="galaxy-username"
+                      >${planet.name}</span
+                    >
+                  </a>
+                  <a allyid="${planet.allianceid ? planet.allianceid : ""}">
+                    <span class="galaxy-alliance">
+                      ${planet.alliancename !== "-" ? `[${planet.alliancename}]` : ""}
+                    </span>
+                  </a>
+                </div>
+                <div class="galaxy-grid-item galaxy-actions">
+                  <a href='javascript:doit()'>
+                    <img src="./styles/theme/pr0gress/img/e.gif" title="Spying" alt="" />
+                  </a>
+                  <a href="#" onclick="return Dialog.PM(${planet.playerid})">
+                    <img
+                      src="./styles/theme/pr0gress/img/m.gif"
+                      title="Write message"
+                      alt=""
+                    />
+                  </a>
+                  <a href="#" onclick="return Dialog.Buddy(${planet.playerid})">
+                    <img
+                      src="./styles/theme/pr0gress/img/b.gif"
+                      title="Friend request"
+                      alt=""
+                    />
+                  </a>
+                </div>
+              </div>`.trim(),
+            ),
+          );
+        } else {
+          planets.push(
+            htmlToNode(
+              `<div class="galaxy-grid-row empty ${oddEven}" data-info="p_3">
+                <div class="galaxy-grid-item position centered colorPositive tooltip_sticky">
+                  ${position}
+                </div>
+                <div class="galaxy-grid-item span2"></div>
+                <div class="galaxy-grid-item galaxy-debris span3"></div>
+              </div>`.trim(),
+            ),
+          );
+        }
+      }
+
+      anchor.replaceChildren(...planets);
+    }
+
+    /**
+     * @type {PlayerIds}
+     */
+    const playerids = getvalue("playerids", {});
+    /**
+     * @type {AllianceIds}
+     */
+    const allyids = getvalue("allyids", {});
+
+    const universeDiscoveryProgress = Math.floor(
+      (Object.keys(universe).length / 400) * 100,
+    );
+
+    /**
+     * the first part of coordinate system `[1:123:4]` - `1`
+     * @type {Number}
+     */
+    const galaxytool_galaxy = document.querySelector(
+      '#galaxy_form input[name="galaxy"]',
+    ).valueAsNumber;
+    /**
+     * the second part of coordinate system `[1:123:4]` - `123`
+     * @type {Number}
+     */
+    const galaxytool_system = document.querySelector(
+      '#galaxy_form input[name="system"]',
+    ).valueAsNumber;
+
+    let mock_data = [
+      {
+        playerId: 1,
+        playerName: "Unknown Name " + 1,
+        alliance: {
+          name: "Unknown Alliance " + 1,
+          id: 1,
+          tag: "FREN",
+        },
+        planet: {
+          name: "New World",
+          id: 1,
+          universe: 1,
+          galaxy: 337,
+          position: 1,
+        },
+        lastScan: "now",
+      },
+      {
+        playerId: 1,
+        playerName: "Unknown Name " + 1,
+        alliance: {
+          name: "Unknown Alliance " + 1,
+          id: 1,
+          tag: "FREN",
+        },
+        planet: {
+          name: "New World",
+          id: 1,
+          universe: 1,
+          galaxy: 337,
+          position: 2,
+        },
+        lastScan: "now",
+      },
+    ];
+
+    const rendered_index_template = render_galaxy_template(mock_data, universe);
+    const node_index_template = htmlToNode(rendered_index_template.trim());
+
+    /**
+     * @type {Element}
+     */
+    const button_previous_galaxy = node_index_template.querySelector(
+      "[data-paginator-previous]",
+    );
+    /**
+     * @type {Element}
+     */
+    const button_next_galaxy = node_index_template.querySelector(
+      "[data-paginator-next]",
+    );
+    /**
+     * @type {Element}
+     */
+    const input_current_galaxy = node_index_template.querySelector(
+      "[data-paginator-current-galaxy]",
+    );
+    input_current_galaxy.value = galaxytool_system;
+
+    const universe_lookup_key = galaxytool_galaxy + ":" + galaxytool_system;
+    const universe_key = universe_sorted.findIndex(
+      (element) => element[0] === universe_lookup_key,
+    );
+    input_current_galaxy.setAttribute(
+      "data-paginator-current-galaxy",
+      universe_key,
+    );
+    input_current_galaxy.setAttribute("data-old-value", galaxytool_system);
+
+    input_current_galaxy.addEventListener("focus", (event) => {
+      event.currentTarget.setAttribute(
+        "data-old-value",
+        event.currentTarget.value,
+      );
+    });
+    input_current_galaxy.addEventListener("change", (event) => {
+      const result = find_closest_galaxy(
+        universe_sorted,
+        Number(event.currentTarget.value),
+      );
+
+      console.log(event.currentTarget.getAttribute("data-old-value"));
+      console.log(event.currentTarget.valueAsNumber);
+
+      const previous = Number(
+        event.currentTarget.getAttribute("data-old-value"),
+      );
+      const current = Number(event.currentTarget.valueAsNumber);
+
+      if (previous === current) {
+        return;
+      }
+
+      event.currentTarget.value = result.closest;
+      event.currentTarget.setAttribute(
+        "data-old-value",
+        event.currentTarget.value,
+      );
+
+      display_galaxy(universe_sorted[result.indexClosest]);
+    });
+
+    button_previous_galaxy.addEventListener("click", (event) => {
+      const result = find_closest_galaxy(
+        universe_sorted,
+        Number(input_current_galaxy.value),
+      );
+
+      input_current_galaxy.value = result.left;
+      input_current_galaxy.setAttribute(
+        "data-old-value",
+        input_current_galaxy.value,
+      );
+
+      display_galaxy(universe_sorted[result.indexLeft]);
+    });
+    button_next_galaxy.addEventListener("click", (event) => {
+      const result = find_closest_galaxy(
+        universe_sorted,
+        Number(input_current_galaxy.value),
+      );
+
+      input_current_galaxy.value = result.right;
+      input_current_galaxy.setAttribute(
+        "data-old-value",
+        input_current_galaxy.value,
+      );
+
+      display_galaxy(universe_sorted[result.indexRight]);
+    });
+
+    index_galaxy_anchor.before(node_index_template);
+  }
+})();

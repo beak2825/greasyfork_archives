@@ -1,0 +1,95 @@
+// ==UserScript==
+// @name         Kour KP Script
+// @namespace    http://tampermonkey.net/
+// @version      1.2
+// @description  Unlimited 200 KP Daily Rewards
+// @author       Johnny-The
+// @match        *://kour.io/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=kour.io
+// @grant        none
+// @license      ISC <3
+// @run-at       document-start
+// @downloadURL https://update.greasyfork.org/scripts/533792/Kour%20KP%20Script.user.js
+// @updateURL https://update.greasyfork.org/scripts/533792/Kour%20KP%20Script.meta.js
+// ==/UserScript==
+
+const _fetch = window.fetch;
+window.fetch = function () {
+    if (arguments[0].includes('/api/track')) {
+        return Promise.reject();
+    }
+
+    return _fetch.apply(this, arguments);
+}
+
+function fixDailyRewards() {
+    try {
+        if (!window.firebase.auth()?.currentUser) return;
+
+        let shouldSet = false;
+
+        const rewardObj = { lastDailyReward: '5' };
+        const refKey = 'users/' + window.firebase.auth().currentUser.uid;
+
+        window.firebase.database().ref(refKey).once('value', e => {
+            const obj = e.val();
+
+            Object.keys(obj).forEach(key => {
+                if (key.startsWith('dailyReward_')) {
+                    rewardObj[key] = null;
+                    shouldSet = true;
+                }
+
+                if (key === 'lastDailyReward' && obj[key] !== '5') {
+                    shouldSet = true;
+                }
+            });
+
+            if (shouldSet) {
+                window.firebase.database().ref(refKey).update(rewardObj);
+                window.showUserDetails('', window.firebase.auth().currentUser);
+            }
+        });
+
+    } catch { }
+}
+
+
+function fakeSetDataNew(a) {
+    window.unityInstance.SendMessage('FirebasePlayerPrefs2023', 'OnSetData', '{"err":null}&' + [...a].pop());
+}
+
+Object.defineProperty(window, 'unityInstance', {
+    get() {
+        return this._unityInstance;
+    },
+    set(v) {
+        const _setDataNew = window.setDataNew;
+        window.setDataNew = function () {
+            if (arguments[1] === 'banned') {
+                fakeSetDataNew(arguments);
+                return;
+            }
+
+            if (arguments[1].includes("dailyReward_")) {
+                fakeSetDataNew(arguments);
+                window.showUserDetails('', window.firebase.auth().currentUser);
+                return;
+            }
+
+            if (arguments[1] === 'lastDailyReward') {
+                arguments[2] = '5';
+            }
+
+            return _setDataNew.apply(this, arguments);
+        }
+
+        this._unityInstance = v;
+
+        const _SendMessage = this._unityInstance.SendMessage;
+        this._unityInstance.SendMessage = function () {
+            if (arguments[1] === 'OnLoggedInGoogle') fixDailyRewards();
+            return _SendMessage.apply(this, arguments);
+        }
+    },
+});

@@ -1,0 +1,32 @@
+// ==UserScript==
+// @name         DLsite → Sukebei Nyaa 一键搜索助手
+// @name:en      DLsite → Sukebei Nyaa Quick Search Helper
+// @version      0.3
+// @description  在 DLsite 页面添加按钮，点击后自动使用作品名在 sukebei.nyaa.si 上搜索；免复制，轻松直达
+// @description:en Add a button to DLsite pages to quickly search the work title on sukebei.nyaa.si. No copying required, one click to search.
+// @match        *://www.dlsite.com/*
+// @icon         data:image/png;base64,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
+// @grant        none
+// @license      MIT
+// @namespace https://greasyfork.org/users/842776
+// @downloadURL https://update.greasyfork.org/scripts/535011/DLsite%20%E2%86%92%20Sukebei%20Nyaa%20%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%E5%8A%A9%E6%89%8B.user.js
+// @updateURL https://update.greasyfork.org/scripts/535011/DLsite%20%E2%86%92%20Sukebei%20Nyaa%20%E4%B8%80%E9%94%AE%E6%90%9C%E7%B4%A2%E5%8A%A9%E6%89%8B.meta.js
+// ==/UserScript==
+(function () {
+  'use strict';
+
+  const titleElem = document.querySelector("h1#work_name");
+  if (!titleElem) return;
+
+  const workName = titleElem.innerText.trim();
+  const searchUrl = 'https://sukebei.nyaa.si/?q=' + encodeURIComponent(workName);
+
+  const btn = document.createElement('button');
+  btn.textContent = '🔍 在 Sukebei 搜索';
+  btn.style.marginLeft = '10px';
+  btn.style.padding = '5px 10px';
+  btn.style.cursor = 'pointer';
+  btn.onclick = () => window.open(searchUrl, '_blank');
+
+  titleElem.appendChild(btn);
+})();
