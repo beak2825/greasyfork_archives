@@ -1,0 +1,127 @@
+// ==UserScript==
+// @name         CSDN文章阅读优化，过滤相关推荐中的下载模块&免登录查看所有评论&去广告
+// @namespace    https://greasyfork.org/zh-CN/scripts/425479
+// @version      6.0
+// @description  csdn文章阅读界面下侧的相关文章中会有下载模块，但是一般我们只是想看文章，不想跳到相关下载，因此想写个脚本过滤掉下载模块，同时还实现免登录查看所有评论的功能，评论保留翻页功能,页面实现去广告
+// @author       sweet
+// @include      *://blog.csdn.net/*/article/details/*
+// @include      *://*.blog.csdn.net/article/details/*
+// @run-at      document-idle
+// @icon        https://cdn.jsdelivr.net/gh/doublesweet01/BS_script@master/image/sweet.jpg
+// @note        v6.0去除免登录复制功能
+// @note        v5.1修复一个bug
+// @note        v5.0相关推荐模块进一步优化，去除课程列表
+// @note        v4.0实现免登录复制
+// @note        v3.0实现去广告
+// @note        v2.1完善免登录展开评论功能，评论可以自动翻页，现在不会弹登录窗口了
+// @note        v2.0实现免登录展开评论功能，评论可以自动翻页
+// @note        v1.0实现过滤下载模块功能
+// @require     https://cdn.staticfile.org/vue/2.6.11/vue.min.js
+// @require     https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js
+// @grant    GM_getValue
+// @grant    GM.getValue
+// @grant    GM_setValue
+// @grant    GM.setValue
+// @grant    GM_addStyle
+// @grant    GM_getResourceURL
+// @grant    GM_listValues
+// @grant    GM_getResourceUrl
+// @grant    GM.getResourceUrl
+// @grant    GM_xmlhttpRequest
+// @grant    GM_getResourceText
+// @grant    GM_registerMenuCommand
+// @grant    GM_setClipboard
+// @grant    unsafeWindow
+// @downloadURL https://update.greasyfork.org/scripts/425479/CSDN%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E4%BC%98%E5%8C%96%EF%BC%8C%E8%BF%87%E6%BB%A4%E7%9B%B8%E5%85%B3%E6%8E%A8%E8%8D%90%E4%B8%AD%E7%9A%84%E4%B8%8B%E8%BD%BD%E6%A8%A1%E5%9D%97%E5%85%8D%E7%99%BB%E5%BD%95%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E8%AF%84%E8%AE%BA%E5%8E%BB%E5%B9%BF%E5%91%8A.user.js
+// @updateURL https://update.greasyfork.org/scripts/425479/CSDN%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E4%BC%98%E5%8C%96%EF%BC%8C%E8%BF%87%E6%BB%A4%E7%9B%B8%E5%85%B3%E6%8E%A8%E8%8D%90%E4%B8%AD%E7%9A%84%E4%B8%8B%E8%BD%BD%E6%A8%A1%E5%9D%97%E5%85%8D%E7%99%BB%E5%BD%95%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89%E8%AF%84%E8%AE%BA%E5%8E%BB%E5%B9%BF%E5%91%8A.meta.js
+// ==/UserScript==
+(function () {
+    'use strict';
+    // 待隐藏的class名称集合
+    var classNameArray = ['type_download', 'comment-list-box', 'text-center', 'd-none', 'login-mark','type_course'];
+    var idNameArray = ['recommendAdBox'];
+    var addStyle = GM_addStyle;
+    var setClipboard = GM_setClipboard;
+
+    // 隐藏元素
+    function hideEle(className) {
+        switch (className) {
+            case 'type_download':
+                let hideElement = document.querySelectorAll('.' + className);
+                if (hideElement) {
+                    for (let i = 0; i < hideElement.length; i++) {
+                        hideElement[i].style.display = "none";
+                    }
+                }
+                break;
+            case 'comment-list-box':
+                let hideElement01 = document.querySelector('.' + className);
+                if (hideElement01) {
+                    hideElement01.style = "";
+                }
+                break;
+            case 'text-center':
+                addStyle(".text-center{display:none;}");
+                break;
+            case 'd-none':
+                addStyle(".d-none{display:block !important;}");
+                break;
+            case 'login-mark':
+                addStyle(".login-mark,#passportbox{display:none !important;}");
+                break;
+            case 'type_course':
+                let hideElement02 = document.querySelectorAll('.' + className);
+                if (hideElement02) {
+                    for (let i = 0; i < hideElement02.length; i++) {
+                        hideElement02[i].style.display = "none";
+                    }
+                }
+                break;
+        }
+    }
+
+    // 隐藏元素
+    function hideEleById(idName) {
+        switch (idName) {
+            case 'recommendAdBox':
+                let hideElement = document.querySelectorAll('#' + idName);
+                if (hideElement) {
+                    for (let i = 0; i < hideElement.length; i++) {
+                        hideElement[i].style.display = "none";
+                    }
+                }
+                break;
+        }
+    }
+
+    //对于不同类的元素，写个方法来一起修正css样式
+    function removeElements(classNameArray) {
+        for (let i = 0; i < classNameArray.length; i++) {//批量执行操作
+            hideEle(classNameArray[i]);
+        }
+    }
+
+    //对于不同类的元素，写个方法来一起修正css样式
+    function removeElementsById(idNameArray) {
+        for (let i = 0; i < idNameArray.length; i++) {//批量执行操作
+            hideEleById(idNameArray[i]);
+        }
+    }
+
+    function safeWaitFunc(classNameArray, callbackFunc, time) {
+        var times = time || 50;
+        var id = setInterval(function () {
+            clearInterval(id);
+            callbackFunc(classNameArray);
+        }, times);
+    }
+
+    //打印脚本信息
+    function printScript() {
+        console.log("sweet-CSDN文章阅读优化，过滤相关推荐模块的下载部分&免登录查看全部评论&免登录复制&去广告~")
+    }
+
+    safeWaitFunc(classNameArray, removeElements);
+    safeWaitFunc(idNameArray, removeElementsById);
+    printScript();
+})();
