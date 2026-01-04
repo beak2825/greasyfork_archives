@@ -1,0 +1,256 @@
+// ==UserScript==
+// @name         普宁人-2023年“暑期教师研修”专题|国家智慧教育公共服务平台|16倍速|自动答题
+// @namespace    http://tampermonkey.net/
+// @version      2023.7.16.5
+// @description  国家智慧教育公共服务平台（国家中小学智慧教育平台）自动刷视频，16倍速，自动选第一个选项答题，自动切换列表中的视频，后台播放，
+// @author       普宁人-根据HGGshiwo的脚本修改而来
+// @author       
+// @match        https://*.zxx.edu.cn/teacherTraining/courseDetail*
+// @match        https://www.smartedu.cn/*
+// @match        https://basic.smartedu.cn/*
+// @match        https://basic.smartedu.cn/teacherTraining/courseDetail*
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @grant        none
+// @license      MIT
+// @downloadURL https://update.greasyfork.org/scripts/470963/%E6%99%AE%E5%AE%81%E4%BA%BA-2023%E5%B9%B4%E2%80%9C%E6%9A%91%E6%9C%9F%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%E2%80%9D%E4%B8%93%E9%A2%98%7C%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%85%AC%E5%85%B1%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0%7C16%E5%80%8D%E9%80%9F%7C%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98.user.js
+// @updateURL https://update.greasyfork.org/scripts/470963/%E6%99%AE%E5%AE%81%E4%BA%BA-2023%E5%B9%B4%E2%80%9C%E6%9A%91%E6%9C%9F%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%E2%80%9D%E4%B8%93%E9%A2%98%7C%E5%9B%BD%E5%AE%B6%E6%99%BA%E6%85%A7%E6%95%99%E8%82%B2%E5%85%AC%E5%85%B1%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0%7C16%E5%80%8D%E9%80%9F%7C%E8%87%AA%E5%8A%A8%E7%AD%94%E9%A2%98.meta.js
+// ==/UserScript==
+ 
+(function () {
+  ("use strict");
+  const courses = [
+    { course_id: '58979766-6cb2-43f8-8b6c-68336f8824df', resNo: 2, groupNo: 0 },
+    { course_id: '10c4b18a-333a-48d2-a6ea-4a3524ea8e78', resNo: 1, groupNo: 1 },
+    { course_id: 'f47898b2-2138-4600-b08d-68856b1c7cb7', resNo: 0, groupNo: 1 },
+    { course_id: '785b41e5-aedb-4adc-9e64-7e1cee9b42b1', resNo: 0, groupNo: 2 },
+    { course_id: 'c016de39-7291-466d-be35-045f9c2ffe44', resNo: 2, groupNo: 0 },
+    { course_id: 'a326cae7-067b-44b6-910c-c9a4747bb02e', resNo: 2, groupNo: 0 },
+    { course_id: '5e2191f1-b7a2-4d46-b833-de939fc06696', resNo: 100, groupNo: 100 }
+  ]
+  // function
+  const changInputValue = (inputDom, newText) => {
+    if (!inputDom) {
+      return;
+    }
+    let lastValue = inputDom.value;
+    inputDom.value = newText;
+    let event = new Event("input", { bubbles: true });
+    event.simulated = true;
+    let tracker = inputDom._valueTracker;
+    if (tracker) {
+      tracker.setValue(lastValue);
+    }
+    inputDom.dispatchEvent(event);
+  };
+ 
+  function findLastIndex(array, predicate) {
+    // 先将数组反转
+    const reversedArray = array.slice().reverse();
+    // 使用findIndex找到满足条件的元素的索引
+    const index = reversedArray.findIndex(predicate);
+    if (index === -1) {
+      return -1; // 若未找到，则直接返回-1
+    }
+    // 计算满足条件的元素在原数组中的索引
+    const originalIndex = array.length - 1 - index;
+    return originalIndex;
+  }
+ 
+  const State = {
+    LoadPage: "loadPage",
+    GetActive: "getActive",
+    SwitchSource: "switchSource",
+    PlayVideo: "playVideo",
+    HandlePlayRes: "handlePlayRes",
+    WaitPlay: "waitPlay",
+    SwitchActive: "switchActive",
+    SwitchFirst: "switchFirst",
+    TaskEnd: "taskEnd",
+  }
+ 
+  var state = State.LoadPage;
+  var groups = undefined;
+  var groupNo = undefined;
+  var resItems = undefined;
+  var resNo = undefined;
+  var videoErr = undefined;
+ 
+  const func_table = {
+    loadPage: () => {
+      var video = document.querySelector("video");
+      var resItems = document.querySelector(".resource-item");
+      if (!!video && !!resItems) {
+        return State.GetActive
+      }
+      else {
+        console.log(666, "等待视频加载")
+        return State.LoadPage
+      }
+    },
+    getActive: () => {
+      groups = document.querySelector(".fish-collapse.fish-collapse-icon-position-right.tcourse-catalog.undefined").childNodes
+      //适配chrome版本低于97, firefox版本低于108的用户
+      groupNo = findLastIndex([...groups], group => {
+        resItems = [...group.querySelectorAll(".resource-item")]
+        resNo = resItems.findIndex(resItem => resItem.className.includes("active"))
+        return resNo !== -1
+      })
+      return State.SwitchSource
+    },
+    switchSource: () => {
+      //视频修改为标清 zxj663建议添加
+      let sped = document.querySelector(
+        "div.vjs-menu-button.vjs-menu-button-popup.vjs-control.vjs-button.vjs-resolution-button > span"
+      );
+      if (sped && sped.innerText != "标清") {
+        document
+          .querySelector(
+            "div.vjs-menu-button.vjs-menu-button-popup.vjs-control.vjs-button.vjs-resolution-button > div > ul > li:nth-child(2) > span.vjs-menu-item-text"
+          )
+          .click();
+      }
+      return State.PlayVideo
+    },
+    playVideo: () => {
+      let icons = resItems[resNo].getElementsByClassName("iconfont");
+      if (icons[1] && icons[1].className.includes("icon_checkbox_fill")) {
+        console.log(666, `第${groupNo + 1}组, 第${resNo + 1}个视频已经观看`);
+        return State.SwitchActive
+      }
+ 
+      console.log(666, `开始观看: 第${resNo + 1}个视频，第${groupNo + 1}组`);
+      var video = document.querySelector("video");
+      if (!!video) {
+        video.muted = true;
+        video.play().then(() => {
+          videoErr = false
+        }).catch((err) => {
+          console.log(666, err);
+          videoErr = true
+        });
+        renderMenu()
+        video.playbackRate = rateMenu[active].value;
+        video.addEventListener("pause", () => state = State.PlayVideo, false)
+        video.addEventListener("ended", () => state = State.SwitchActive, false)
+        return State.HandlePlayRes
+      }
+      else {//是pdf，直接跳下一个
+        return State.SwitchActive
+      }
+    },
+    handlePlayRes: () => {
+      //处理播放的结果
+      return videoErr === undefined ? State.HandlePlayRes : videoErr ? State.PlayVideo : State.WaitPlay
+    },
+    waitPlay: () => { return state },
+    switchActive: () => {
+      //从列表中查找当前的课程
+      const index = courses.findIndex(course => window.location.href.includes(course.course_id))
+      if (index !== -1 && (courses[index].groupNo < groupNo || (courses[index].groupNo == groupNo && courses[index].resNo <= resNo)) && index + 1 < courses.length) {
+        console.log(666, "进入下一个学习页面");
+        window.open(`https://basic.smartedu.cn/teacherTraining/courseDetail?courseId=${courses[index + 1].course_id}&tag=2023%E5%B9%B4%E2%80%9C%E6%9A%91%E6%9C%9F%E6%95%99%E5%B8%88%E7%A0%94%E4%BF%AE%E2%80%9D%E4%B8%93%E9%A2%98`, "_self");
+      }
+ 
+      //如果没看完当前组，则观看当前组的下一个视频
+      if (resNo + 1 != resItems.length) {
+        resNo += 1
+        resItems[resNo].click();
+        console.log(666, `点击当前组的下一个视频`);
+        return State.SwitchSource;
+      }
+ 
+      //如果看完了当前组，没看完当前页面，则看下一个页面
+      if (groupNo + 1 != groups.length) {
+        console.log(666, `点击下一组的第一个视频`);
+        groupNo += 1
+        let header = groups[groupNo].querySelector(".fish-collapse-header")
+        if (!!header) {
+          header.click()
+        }
+        return State.SwitchFirst
+      }
+      //如果都看完了
+      return State.TaskEnd
+    },
+    switchFirst: () => {
+      resItems = groups[groupNo].getElementsByClassName("resource-item");
+      resNo = 0
+      resItems[resNo].click();
+      return State.SwitchSource
+    },
+    taskEnd: () => {
+      return State.TaskEnd;
+    }
+  }
+ 
+  const setVideoHandler = () => {
+    setInterval(() => {
+      try {
+        var popup = false;
+        [".nqti-option", ".index-module_markerExercise_KM5bU .fish-btn", ".fish-modal-confirm-btns .fish-btn"].forEach(selector => {
+          let dom = document.querySelector(selector)
+          if (!!dom) {
+            popup = true
+            dom.click()
+          }
+        })
+        //增加填空题支持
+        var inputForm = document.querySelector(".index-module_box_blt8G");
+        if (!!inputForm) {
+          popup = true
+          changInputValue(inputForm.getElementsByTagName("input")[1], "&nbsp;");
+        }
+        if (!popup) {
+          state = func_table[state]()
+          console.log(666, `${state}已经完成!`)
+        }
+        else {
+          console.log(666, "处理弹窗")
+        }
+      }
+      catch (err) {
+        console.log(666, `${state}: ${err}`)
+      }
+    }, 1000)
+  }
+ 
+  //修改播放速度
+  const changeRate = (rate, index) => {
+    localStorage.setItem("active", `${index}`)
+    active = index
+    document.querySelector(".vjs-playback-rate-value").innerHTML = rateMenu[index].title
+    document.getElementsByTagName("video")[0].playbackRate = rate
+    return false
+  }
+ 
+  //修改速度菜单
+  const renderMenu = () => {
+    document.querySelector(".vjs-playback-rate .vjs-menu-content").innerHTML =
+      rateMenu.map((rate, index) =>
+        `<li class="vjs-menu-item" tabindex="-1" role="menuitemradio" aria-disabled="false" aria-checked="${index == active}">
+          <span class="vjs-menu-item-text">${rate.title}</span>
+          <span class="vjs-control-text" aria-live="polite"></span>
+        </li>`
+      ).join(" ")
+    const doms = document.querySelectorAll(".vjs-playback-rate .vjs-menu-content .vjs-menu-item")
+    rateMenu.forEach((rate, index) => {
+      doms[index].addEventListener("click", () => changeRate(rate.value, index), false)
+    })
+ 
+    //显示速度控制菜单
+    const rateButtons = document.getElementsByClassName("vjs-playback-rate vjs-menu-button vjs-menu-button-popup vjs-control vjs-button vjs-hidden")
+    if (rateButtons.length > 0) {
+      rateButtons[0].classList.remove("vjs-hidden")
+      document.querySelector(".vjs-playback-rate-value").innerHTML = rateMenu[active].title
+    }
+  }
+ 
+  //获取速度
+  let activeStr = localStorage.getItem("active")
+  const rateMenu = [{ title: "1x", value: 1 }, { title: "4x", value: 4 }, { title: "8x", value: 8 }, { title: "12x", value: 12 }, { title: "16x", value: 16 }]
+  let active = activeStr === null ? rateMenu.length - 1 : parseInt(activeStr)
+ 
+  //下面开始运行脚本
+  console.log(666, "开始执行脚本")
+  setVideoHandler();
+})();

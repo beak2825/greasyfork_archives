@@ -1,0 +1,219 @@
+// ==UserScript==
+// @name proxy_list
+// @description 用于显示proxy列表。
+// @match *
+// @version 0.0.1.20230513132440
+// @namespace https://greasyfork.org/users/420865
+// @downloadURL https://update.greasyfork.org/scripts/466200/proxy_list.user.js
+// @updateURL https://update.greasyfork.org/scripts/466200/proxy_list.meta.js
+// ==/UserScript==
+
+var host_country_Arr = [{
+    "host": "https://ppadsus01.bg221124.ga",
+    "country": "US"
+}, {
+    "host": "https://hvlnjp01.hv221222.ga",
+    "country": "JP"
+}, {
+    "host": "https://gsus11.gs1214.ga",
+    "country": "US"
+}, {
+    "host": "https://gsuk11.gs1214.ga",
+    "country": "UK"
+}, {
+    "host": "https://gsde11.gs1214.ga",
+    "country": "DE"
+}, {
+    "host": "https://gsch11.gs1214.ga",
+    "country": "CH"
+}, {
+    "host": "https://ppadsus01.bg221124.ga",
+    "country": "US"
+}, {
+    "host": "https://ppadsus02.bg221124.ga",
+    "country": "US"
+}, {
+    "host": "https://usonevps1.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://usonevps2.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://gsus11.gs1214.ga",
+    "country": "US"
+}, {
+    "host": "https://gsch11.gs1214.ga",
+    "country": "CH"
+}, {
+    "host": "https://us033103.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://bgus201.bg221124.ga",
+    "country": "US"
+}, {
+    "host": "https://bsus111.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://us033101.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://us033102.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://us033103.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://bgde201.bg221124.ga",
+    "country": "DE"
+}, {
+    "host": "https://us033103.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://bgus201.bg221124.ga",
+    "country": "US"
+}, {
+    "host": "https://bsus111.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://us033103.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://bgus201.bg221124.ga",
+    "country": "US"
+}, {
+    "host": "https://bsus111.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://iglnus02.hv221222.ga",
+    "country": "US"
+}, {
+    "host": "https://iglnsg01.hv221222.ga",
+    "country": "SG"
+}, {
+    "host": "https://usonevps1.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://usonevps2.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://gsus11.gs1214.ga",
+    "country": "US"
+}, {
+    "host": "https://gsuk11.gs1214.ga",
+    "country": "UK"
+}, {
+    "host": "https://hvlnus01.hv221222.ga",
+    "country": "US"
+}, {
+    "host": "https://hvlnjp01.hv221222.ga",
+    "country": "JP"
+}, {
+    "host": "https://bgus201.bg221124.ga",
+    "country": "US"
+}, {
+    "host": "https://bsus111.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://gsde11.gs1214.ga",
+    "country": "DE"
+}, {
+    "host": "https://iglnus01.ig221129.ga",
+    "country": "US"
+}, {
+    "host": "https://iglnjp01.ig221129.ga",
+    "country": "JP"
+}, {
+    "host": "https://hvlnus02.hv221222.ga",
+    "country": "US"
+}, {
+    "host": "https://hvlnsg01.hv221222.ga",
+    "country": "SG"
+}, {
+    "host": "https://us033101.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://us033102.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://us033103.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://bgde201.bg221124.ga",
+    "country": "DE"
+}, {
+    "host": "https://bgus201.bg221124.ga",
+    "country": "US"
+}, {
+    "host": "https://bsus111.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://gsde11.gs1214.ga",
+    "country": "DE"
+}, {
+    "host": "https://us033101.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://us033102.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://bguk201.bg221124.ga",
+    "country": "UK"
+}, {
+    "host": "https://bgde201.bg221124.ga",
+    "country": "DE"
+}, {
+    "host": "https://bgus201.bg221124.ga",
+    "country": "US"
+}, {
+    "host": "https://bsus111.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://gsde11.gs1214.ga",
+    "country": "DE"
+}, {
+    "host": "https://usonevps1.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://usonevps2.bs1102.ga",
+    "country": "US"
+}, {
+    "host": "https://gsus11.gs1214.ga",
+    "country": "US"
+}, {
+    "host": "https://gsuk11.gs1214.ga",
+    "country": "UK"
+}, {
+    "host": "https://ppadsus01.bg221124.ga",
+    "country": "US"
+}, {
+    "host": "https://ppadsus02.bg221124.ga",
+    "country": "US"
+}, {
+    "host": "https://hvlnus01.hv221222.ga",
+    "country": "US"
+}, {
+    "host": "https://hvlnus02.hv221222.ga",
+    "country": "SG"
+}, {
+    "host": "https://hvlnsg01.hv221222.ga",
+    "country": "US"
+}, {
+    "host": "https://hvlnjp01.hv221222.ga",
+    "country": "JP"
+}, {
+    "host": "https://iglnus02.ig221129.ga",
+    "country": "US"
+}, {
+    "host": "https://iglnsg01.ig221129.ga",
+    "country": "SG"
+}, {
+    "host": "https://iglnus01.ig221129.ga",
+    "country": "US"
+}];
+
+host_country_Arr.forEach((element,index)=>{
+    let opt = new Option((index + 1) + "：" + element.country + "服务器",element.host + '/ex/v2/connect')
+    document.getElementById('select_id').options.add(opt);
+}
+)
+des.innerText = "增加服务器";

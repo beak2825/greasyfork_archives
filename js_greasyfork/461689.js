@@ -1,0 +1,58 @@
+// ==UserScript==
+// @name         批量复制简单动漫bt链接
+// @namespace    http://pdkst.github.io/dm36
+// @version      0.0.3.beta
+// @description  批量复制简单动漫bt链接;没有附带磁链的头
+// @author       pdkst
+// @match        *://www.36dm.club
+// @match        *://www.36dm.club/search.php*
+// @grant        none
+// @license      LGPLv3
+// @supportURL   https://github.com/pdkst/MonkeyScript/issues
+// @downloadURL https://update.greasyfork.org/scripts/461689/%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6%E7%AE%80%E5%8D%95%E5%8A%A8%E6%BC%ABbt%E9%93%BE%E6%8E%A5.user.js
+// @updateURL https://update.greasyfork.org/scripts/461689/%E6%89%B9%E9%87%8F%E5%A4%8D%E5%88%B6%E7%AE%80%E5%8D%95%E5%8A%A8%E6%BC%ABbt%E9%93%BE%E6%8E%A5.meta.js
+// ==/UserScript==
+
+; (function () {
+    'use strict'
+    function linkes () {
+        linkes = document.querySelectorAll('#data_list > tr > td:nth-child(3) > a')
+        let array = []
+        for (let element of linkes) {
+            let reg = /[0-9a-zA-z]{10,}/ig
+            let link = element.href
+            // https://www.36dm.club/show-5202dfcbfc06b0ba9b5f345bc429b10234616ed5.html
+            let result = reg.exec(link)
+            if (result && result.length) {
+                array.push('magnet:?xt=urn:btih:' + result[0])
+            }
+        }
+        return array.join('\n')
+    }
+
+    function copy (text) {
+        if (!text) {
+            return;
+        }
+        navigator.clipboard.writeText(text).then(() => {
+            alert(' 复制成功')
+        }).catch(err => {
+            console.log(err, 'err')
+        })
+    }
+    function copyText () {
+        let text = linkes()
+        copy(text)
+    }
+    let tab = document.querySelector('#smenu > ul')
+    if (!tab) {
+        return;
+    }
+    let li = document.createElement("li");
+    tab.appendChild(li)
+    let a = document.createElement('a')
+    a.href = 'javascript:void(0);'
+    a.onclick = copyText
+    a.text = "复制"
+    li.appendChild(a)
+})()

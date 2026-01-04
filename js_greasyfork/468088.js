@@ -1,0 +1,48 @@
+// ==UserScript==
+// @name         带你回到2019年的B站
+// @version      1.1
+// @description  自动将B站B豆替换为流汗黄豆，并将评论时间改为19年
+// @author       chitoge
+// @match      *://*.bilibili.com/*
+// @grant        none
+// @license MIT
+// @namespace https://greasyfork.org/users/1092406
+// @downloadURL https://update.greasyfork.org/scripts/468088/%E5%B8%A6%E4%BD%A0%E5%9B%9E%E5%88%B02019%E5%B9%B4%E7%9A%84B%E7%AB%99.user.js
+// @updateURL https://update.greasyfork.org/scripts/468088/%E5%B8%A6%E4%BD%A0%E5%9B%9E%E5%88%B02019%E5%B9%B4%E7%9A%84B%E7%AB%99.meta.js
+// ==/UserScript==
+(function () {
+    setInterval(() => {
+        let imgList = document.querySelectorAll('img.emoji-small');
+        for (let img of imgList) {
+            img.src = 'data:image/png;base64,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';
+        }
+        imgList = document.querySelectorAll('img.small');
+        for (let img of imgList) {
+            img.src = 'data:image/png;base64,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';
+        }
+
+
+        const timeSpans = document.querySelectorAll('span.reply-time');
+        timeSpans.forEach(span => {
+            const dateStr = span.innerHTML;
+            const year = dateStr.split('-')[0]; // 提取年份
+            const newContent = dateStr.replace(year, '2019');
+            span.innerHTML = newContent;
+        }, 5000);
+        const rtimeSpans = document.querySelectorAll('span.sub-reply-time');
+        // 遍历每个元素
+        rtimeSpans.forEach(span => {
+            // 获取元素中的内容,比如2023-04-05 11:01
+            const content = span.innerHTML;
+
+            // 使用正则表达式提取年份,这里是2023
+            const year = content.match(/\d{4}/)[0];
+
+            // 将年份替换为2019
+            const newContent = content.replace(year, '2019');
+
+            // 将元素的innerHTML设置为新的内容
+            span.innerHTML = newContent;
+        });
+    });
+})();

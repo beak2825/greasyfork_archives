@@ -1,0 +1,75 @@
+// ==UserScript==
+// @name         Przegryw troll 2
+// @namespace    http://tampermonkey.net/
+// @version      1.4
+// @description  Szukamy
+// @author       You
+// @match        https://wykop.pl/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=wykop.pl
+// @grant        none
+// @license      MIT
+// @run-at       document-end
+// @downloadURL https://update.greasyfork.org/scripts/461913/Przegryw%20troll%202.user.js
+// @updateURL https://update.greasyfork.org/scripts/461913/Przegryw%20troll%202.meta.js
+// ==/UserScript==
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}
+(function () {
+    'use strict';
+    // Define a MutationObserver to listen for changes to the page content
+    const observer = new MutationObserver(function (mutations) {
+        changeText();
+    });
+
+    // Start the MutationObserver
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+})();
+
+
+const postReplacement = ['Jakiś cwel maso z lok na piątkowy wieczór?', 'Nas dwóch. Szukamy uległego zdrowego kolesia który wylize nam stopy po calym dniu jutro po godzinie 20 u nas w lokum . Stopy 43 i 44 zadbane. Będą po calym dniu więc niekoniecznie świeże. Ale też nie jakieś jebiace bo takie nie są. Mamy sobie walimy Ty lizesz. 34 i 36 lat. ', "Ktoś chętny na zabawę FF, może ktoś centrum??? Uwielbiam FF, szukam kogoś kto lubi jak bawią się jego dziura tylko to szukam nie interesuje mnie nic w moją stronę oral , anal it'd. Tylko ja zajmuję się tobą . Zainteresowany?napisz, konkretnie ze zdjęciem bez pisania w nieskończoność,zapewniam dyskrecję, reszta umówimy mailowo. Ja 36.174, 78. kogoś zwykłego nie szukam gwiazd, grup, trójkątów. Nie jestem pięknym modelem więc jak zależy tobie na wyglądzie to niestety nie zawracajmy sobie głowy...", 'Zaproszę dziś do siebie konkretnego samca na oral anal.Więcej info priv ', 'Szukam fajnego i otwartego faceta, który posiada buty wojskowe, glany lub kalosze i pozwoli się nimi zająć.', 'Dość specyficznie. Poszukiwany facet 45+, który ma swoje zabawki (dilda itp). Nie musisz być modelem, bo sam nie jestem. Chciałbym wpaść do takiego faceta i popatrzeć jak się bawi zabawkami. Może z moim udziałem, ale niekoniecznie.Ja:28/180/69/17', 'Jestem uległy i perwersyjny, szukam starszego dominującego z lokum. Oral z połykiem, anal, rimm, piss, co tylko chcesz.', 'Jakiś Aktywny Pan Przejazdem dk6 przez Lębork okolice..Może jakis Hotel wspólnie nocka..ja napalony ze sporym sprzętem ', 'Mlodzika który dalby się wylizac..wypiescić zmolestować..', 'Szukam aktywa ubranego w kombinezon roboczy..', 'Męskiego zdrowego kumpla z lokum zakręconego na punkcie długiego i głębokiego rimm. Faceta z owłosionym rowem:). 35 178/70/18 uni', 'Dres 40 186 75 21 -22cm aktyw poszukuje fajnego oddanego Prawnika z chata na układ . Szczegóły do ustalenia. Pisz smsa 6.9.8 .5.3.4 .5.0.2 . Pisz wyczerpującego sms-a', 'Cześć. Poznam płetwonurka z Warszawy lub bliskich okolic. Nie nurkuję (jeszcze) ale interesuje mnie fetysz nurkowy. Suchy czy mokry skafander, płetwy, pas balastowy, butla, maska a do tego ten niesamowity dźwięk oddechu nurka - fajnie byłoby regularnie spotykać się w takim klimacie! Lokum jest i pełna dyskrecja zapewniona. Dorosły, wysoki, dobrze zbudowany, krótko ścięte włosy, sport, towarzyski. Napisz jeśli nurkujesz i od dawna szukasz kogoś w takim klimacie. Widełek wiekowych nie ma. Pozdrowienia!', 'jestem miśkiem 59 lat szukam jakiegoś fajnego Miśka najlepiej z takimi fetysza mi gdzie będziemy mogli się uzupełniać mnie lubię obciągać kutasa z połykiem lubie lizać jaja , klapsy , wiązaniemusisz mieć lokal', 'Pragnę zostać przecwelony ale dotychczas nie udało mi się znaleźć Pana. Poznam Mastera który mnie przecweli i zrobi ze mnie swojego cwela, nie mam ograniczeń , Ja 184 81 17', 'Szukam konkreta realnego dojrzałego co obciąga niemytegoni i liże dupę nie myta ja 53a tylko konkret kontakt SMS ', 'Lubisz zabawy sutami? Jesteś w stanie dojść, jak ktoś ci się nimi zabawia? Spotkajmy się na obustronne pieszczenie, lizanie, ssanie, przygryzanie. Dla pakera z rozbudowaną klatą nagroda.', 'Witam. Opcji jest wiele, każda do rozważenia, CWL nie jestem, także MSTR nie pisać ale CWL także mile widziany. Nie pisać także pijani, po wspomagaczach. Szczegóły w mailu. Spotkanie nawet dzisiaj w nocy, lub późniejszymi wieczorami. Spotkanie plenerowe. Tylko Powiśle jak dojedziesz lub plener u Ciebie jak masz pewne miejsce. Bardziej klimaty fety', 'kto chce zobaczyć jak chłostam sobie jaja kabelkiem i męczę pena klamerkami?', '47/180/89 uległy lachociąg szukam na dyskretny układ . Tylko oral bez rewanżu. Szukam kogoś dominującego. Ja bez lokum. Mogę obciągać w Twoim aucie. Zdrowie i dyskrecja to priorytet. Kontakt na @.', 'Witam.Szukam Mastera, Aktywa męskiego dominującego Faceta który lubi ruchać i dawać do ust .Szukam osoby z Warszawy z lokum w wieku 40+Mam 40l, wysoki pasywny.Pozdrawiam', '47 177 77 16 bielany ulegly szukam na zabawe z elemetami dominacji', 'Siema jestem miśkiem z Wielkopolski szukam jakiegoś fajnego Miśka najlepiej mobilnego najlepiej z takimi fetysza mi gdzie będziemy mogli się uzupełniać mnie kręci męska bielizna męska zadbane stopy sportowe buty białe skarpetki lubię obciągać kutasa z połykiem lubie lizać jaja lubie lizać dziurę pieszczoty Całowanie lubię jak koleś się czasami na mnie odle je szukam jakiegoś dyskretnego fajnego faceta na dyskretne spotkania numer podaje w zakładce nie odpisuje na maila dzwońcie lub piszcie pozdrawiam', 'Na.co dzień jesteś osobą ambitną, dominującą, zarządzasz ludźmi, a nawet posiadasz rodzinę. I zawsze brakowało Ci tego jednego: zniewolenia i kontroli. Żeby choć raz, ktoś inny zdecydował za Ciebie, kontrolował Ciebie, zeszmacił, poniżył, wykorzystał. Jestem dominujący, męski, zdrowy i cenię dyskrecję. Także wal śmiało i pisz opisem o sobie. Jak mnie zainteresujesz, to odpiszę. Wykorzystam Cię jako seks zabawkę, szofera, sprzątacza, czy chłopca na posyłki. Do tego pokaże Ci, gdzie Twoje miejsce i ponizę gorzej niż psa.', 'Szukam umięśnionego młodego aktywa moze byc master. Wyliżę Tobie rowa, jaja, pałki, klatę pachy, Ślina/ sperma, sneak Ja pas uległy i wysportowany ', 'Ja Total perw.prosiak szukam aktywa który nasra do ryja', 'Xl lenis 20cm żylasty szukam na teraz mobilnego cwela chorego wenerycznie lub hiv na ryzykowny dla mnie lodzik bez gumy na koniec możesz przegryźć penisa żeby zwiëkszyć rysyko aktualne piszcie na whatsapp jestem w rrjonie grochów lub wesoła dzielnicy', 'Szukam młodych kolesi lubiących stopy (18+!). Dominujący z niską tolerancją na bullshit. Tylko realne spotkania. Więcej na priv.', 'Szukam faceta lubiącego zabawy z wiązaniem jaj, najlepiej w obie strony ale niekoniecznie, jak na załączonej fotce, na której widać moje związane i naciągane jaja. Najlepiej nieotyłych i nieżonatych, do częstych spotkań i zabawy. ', 'Possam pale, glebokie gardlo robie. Polykam sperme. Lubie dostawac pasem po dupie jak ssam kutasa. Plaskacze, plucie. Total szmata. Szczanie na twarz. Szukam pana z autem i z lokum. Czeste spotkania.', 'Ktoś w klimacie sneak chciałby ode mnie znoszone soxy lub boxy do niuchania? wysyłka paczkomatem, chętniej stały układ. Zapraszam na priv.', 'Męski aktyw. 186-100-18 poznam dziadka seniora. Często jeżdżę przez mop kamień. Może wieczorowa pora chce ktoś obciągnąć i dać dupska. TylkoDziadki mnie interesują, chetnie na roboczo', 'Uległy, atletycznie zbudowany chłopak pozna prawdziwego akta mastera może was być dwóch- Dziś mam lokum', '47 177 77 16 bielany ulegly szukam na zabawe z elemetami dominacji ', 'Chcesz podjechać i zerżnąć moją dziurkę i zalać spermą? To podjedź. Ja bardzo dobrze daję dziurki 38,180,85 szukam kolesia męskiego aktywa który rżnie ostro.', 'Pełen sprzeczności, zdrowy, krótko obcięty brunet, młody wygląd, szczupła budowa ciała (39/178/74/18), w seksie chętniej uległy, z nierozjebaną dziurą - pozna na stałe owłosionego dominującego lub uniwersalnego faceta (grubasy, tylko pasywni bądź z wygolonymi na łyso kroczem i rowem odpadają). Mniej jara mnie tradycyjny sex, bardziej ostre klimaty, perwy, rim, wulgar, szmacenie, gnojenie, plucie, szarpanie, plaskacze, klapsy, kopy, kręcenie wora itp. męskie zabawy. Ale też chętnie rozmowy przy płynach, spanie razem nago, książki, muzyka, filmy, spacery, teatr itp. W łóżku wyuzdany zbok bez tabu, poza nim kumpel, partner. Mam lokum przy metrze i wolne weekendy. Napisz jak wyglądasz, skąd jesteś, co jara, kogo lub czego szukasz.', '...Dominujacego tresera poszukuje na dzis......niewola słóżenie. Wyzwiska.tresura. tylko.real.', 'Na wieczór w klimacie skórzanym u mnie. Alko, cygaro, skóry, zabawki, porno... Chętny? Napisz co masz ze skór.', 'Kumpla na klimaty zapasnicze silowanie nago 36 174 69', 'Chcesz pieścić sexowne, męskie stopy? Lubisz sprawić facetowi rozkosz? Jesteś zdrowy, zadbany, masz lokum? Jesteś z Ursynowa lub Wilanowa? Napisz do mnie. Poszukuję fana męskich, zgrabnych zadbanych stóp, który lubi długo je pieścić.41 lat. Szczupły, wysoki, przystojny, sympatyczny chłopak. Zapewniam i oczekuję dyskrecji. ', 'Master z Łodzi 43 182 80, dyskretny, wyrozumiały, ale wymagający, przyjmie na służbę zadeklarowanego slave, który wie, co to szacunek dla Pana, zna swoje miejsce i akceptuje: spank, stopy, obroże, wulgar, piss, oral, gadżety analne, bondage – plus parę innych spraw do omówienia z wykluczeniem: scat, medical i duszenia.Nie szukam CD ani trans, ale zdecydowanego i posłusznego cwela.Osoby, które chcą „spróbować” bo ich to ciekawi i nie mają żadnego doświadczenia, niech sobie darują.Podkreślam: to jest propozycja dla zadeklarowanych niewolników, którzy chcą mieć swojego stałego Pana. Po prostu układ.', 'Wylize dupe po sraniu..', 'Poszukuję fana męskich, seksownych stóp. Ursynów, Wilanów i okolice. Jeśli lubisz pieścić stopy i chcesz mieć robiony footjob to zapraszam.Ja przystojny, szczupły brunet, 185/75. ', 'Poszukuję kolegi z ładnymi zadbanymi stopami które będę mógł lizac I się nimi dokładnie zająć. B.a.n.k.n.o.t dla Ciebie. Realnie', 'jestem otwartym uległym, nastawionym na tresurę chłopakiem. Wyliżę stopy dokładnie z wpychaniem głęboko do ryja, Ty z lokum do ok 50 l. Dodatkowo może być spank, cbt, tt, inne do uzgodnienia.', 'Obciągnę konkretnie, dyskretnie, bez gadania, tak jak lubisz, szybko lub powoli, może też być anonimowo (kominiarki, GH...), Ty siedzisz i oglądasz pornola a ja na kolanach, na poppku, lokum jest. Opisz się i napisz jak lubisz....', 'uległy koleś wyliże Twoje adole, stopy, spocone ciało. zniucha znoszone soxy i gacie. spije sperme i mocz prosto z kutasa.', 'Na jutro szukam chętnego na fisting mojej dziury ewentualnie może być w dwie strony. Brak lokum ewentualnie może być sauna ', 'Poszukuję wielbiciela, adoratora męskich, ładnych, zgrabnych i zadbanych stóp. Ja jestem szczupłym brunetem (185/75, 40 lat), podobno przystojnym. Z pewnością jestem spokojnym, kulturalnym, zdrowym i sympatycznym chłopakiem. Szukam kogoś, kto lubi lizać i całować męskie stopy. W zamian oferuję pieszczenie stopami i dłońmi. Preferuję mężczyzn dojrzałych, dysponujących czasem wieczorami. Szukam osoby z Wilanowa, Konstancina, Powsina, Imielina, Natolina, Kabat, Sadyby, Wawra, Gocławia.', 'Siema, porobiony cwel szuka na dziś na noc AKTA! Lubię być totalnie podporządkowany, posłuszny i dobrze dawać dupy. Mam ochotę na głęboki obciąg, rimm, piss, czyszczenie butów jęzorem, plaskacze, wulgary, kopniaki, okładanie pięściami itp. Lokal mam na woli, mogę też dojechać. Chem mam i mogę się podzielić.', 'Szukam męskiego dominującego kolesia na sneak i klimat dres/sport. Mam wielką chcicę na niuchanie soxów i lizanie tnów. Ja 32l 180 77 17, z lokum w Śródmieściu', 'Szukam na jutro chętnego na zabawę fistową mojej dziury ewentualnie może być wzajemnie. Brak lokum ewentualnie może być sauna ', 'Zaproszę dziś wieczorem do siebie 1-2 aktywów masterówmam lokum- mogę dać nieco kaskiLubię snaak/ spank, łykać ślinę, wącham was i liże, wielbię wasze Ciała, dajecie mi swoje buty jebiące do wąchania itp', 'Szukam młodzika na stały układ zaspokajanie moich fantazji związanych ze stopami', 'witam szukam na dzis ja bardziej ulegly z pozasrodowiska lubie ostro i hartkor na rózne sposoby higiena i dyskrecja oferowana i wymagana na co tylko ochota ', 'Poznam zdrowego dyskretnego kumpla z lokum, którego kręci scat, dirty itp. 35 178/70/18 uni', 'Szukam na jutro chętnego na zabawę i fist mojej dziury ewentualnie może być w dwie strony. Brak lokum ewentualnie może być sauna', 'Pasywny zbok szuka aktywa perwa.. klimat dirty..', 'Odstąpię boxy ze śladami śluzu i spermy oraz soxy noszone przez minimum tydzień. Wyraźny ostry zapach faceta. Możliwe inne opcje. Dyskretna wysyłka na paczkomat lub odbiór osobisty.', 'Zaproszę do siebie dominującego perwa na konkretne walenie gardła i dupy.']
+
+function changeText() {
+    // Array of texts
+    const searchFor = ["huop", "chłop", "oski"];
+
+    // Get all elements with class "entry-content"
+    const entryContents = document.querySelectorAll(".entry-content");
+
+    // Loop through each element
+    entryContents.forEach((entryContent) => {
+        // Get the text content of the element
+        const textContent = entryContent.textContent.toLowerCase();
+
+        // Check if the text content contains any of the texts from searchFor array
+        const containsText = searchFor.some((searchFor) => {
+            return textContent.includes(searchFor);
+        });
+
+        // If the text content contains a banned text, hide the element
+        if (containsText) {
+            var indeks = getRandomInt(postReplacement.length);
+            // Creates a new div element that will replace the old content
+            const wrapper = document.createElement('div');
+            wrapper.setAttribute('data-v-725caa02', '');
+            wrapper.classList.add('wrapper');
+            // Picks a random element from the postReplacement array and adds it to the wrapper
+            const postText = document.createTextNode(postReplacement[indeks]);
+            wrapper.appendChild(postText);
+            // Creates an anchor tag with href set to /tag/przegryw
+            const anchorTag = document.createElement('a');
+            anchorTag.setAttribute('href', '/tag/przegryw');
+            anchorTag.classList.add('current', 'active');
+            anchorTag.textContent = ' #przegryw';
+            wrapper.appendChild(anchorTag);
+
+            // Replace the contents of the .entry-content element with the new elements
+            entryContent.innerHTML = '';
+            entryContent.appendChild(wrapper);
+        }
+    });
+}

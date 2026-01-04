@@ -1,0 +1,1725 @@
+// ==UserScript==
+// @name         SteamCommunity Fix
+// @namespace    http://tampermonkey.net/
+// @version      0.12
+// @description  fix SCM for old browsers
+// @author       gortik
+// @run-at       document-start
+// @license      MIT
+// @match        https://steamcommunity.com/*
+// @exclude      https://steamcommunity.com/market/
+// @resource     https://community.akamai.steamstatic.com/public/javascript/prototype-1.7.js
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=steamcommunity.com
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/462337/SteamCommunity%20Fix.user.js
+// @updateURL https://update.greasyfork.org/scripts/462337/SteamCommunity%20Fix.meta.js
+// ==/UserScript==
+
+
+
+g_bLoadedUGCWithNoBlur = false;
+g_rgCurrencyData = {"USD":{"strCode":"USD","eCurrencyCode":1,"strSymbol":"$","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":""},"GBP":{"strCode":"GBP","eCurrencyCode":2,"strSymbol":"\u00a3","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":""},"EUR":{"strCode":"EUR","eCurrencyCode":3,"strSymbol":"\u20ac","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":",","strThousandsSeparator":" ","strSymbolAndNumberSeparator":""},"CHF":{"strCode":"CHF","eCurrencyCode":4,"strSymbol":"CHF","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":" ","strSymbolAndNumberSeparator":" "},"RUB":{"strCode":"RUB","eCurrencyCode":5,"strSymbol":"p\u0443\u0431.","bSymbolIsPrefix":false,"bWholeUnitsOnly":true,"strDecimalSymbol":",","strThousandsSeparator":"","strSymbolAndNumberSeparator":" "},"BRL":{"strCode":"BRL","eCurrencyCode":7,"strSymbol":"R$","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":",","strThousandsSeparator":".","strSymbolAndNumberSeparator":" "},"JPY":{"strCode":"JPY","eCurrencyCode":8,"strSymbol":"\u00a5","bSymbolIsPrefix":true,"bWholeUnitsOnly":true,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"NOK":{"strCode":"NOK","eCurrencyCode":9,"strSymbol":"kr","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":",","strThousandsSeparator":".","strSymbolAndNumberSeparator":" "},"IDR":{"strCode":"IDR","eCurrencyCode":10,"strSymbol":"Rp","bSymbolIsPrefix":true,"bWholeUnitsOnly":true,"strDecimalSymbol":".","strThousandsSeparator":" ","strSymbolAndNumberSeparator":" "},"MYR":{"strCode":"MYR","eCurrencyCode":11,"strSymbol":"RM","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":""},"PHP":{"strCode":"PHP","eCurrencyCode":12,"strSymbol":"P","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":""},"SGD":{"strCode":"SGD","eCurrencyCode":13,"strSymbol":"S$","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":""},"THB":{"strCode":"THB","eCurrencyCode":14,"strSymbol":"\u0e3f","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":""},"VND":{"strCode":"VND","eCurrencyCode":15,"strSymbol":"\u20ab","bSymbolIsPrefix":false,"bWholeUnitsOnly":true,"strDecimalSymbol":",","strThousandsSeparator":".","strSymbolAndNumberSeparator":""},"KRW":{"strCode":"KRW","eCurrencyCode":16,"strSymbol":"\u20a9","bSymbolIsPrefix":true,"bWholeUnitsOnly":true,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"TRY":{"strCode":"TRY","eCurrencyCode":17,"strSymbol":"TL","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":",","strThousandsSeparator":".","strSymbolAndNumberSeparator":" "},"UAH":{"strCode":"UAH","eCurrencyCode":18,"strSymbol":"\u20b4","bSymbolIsPrefix":false,"bWholeUnitsOnly":true,"strDecimalSymbol":",","strThousandsSeparator":" ","strSymbolAndNumberSeparator":""},"MXN":{"strCode":"MXN","eCurrencyCode":19,"strSymbol":"Mex$","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"CAD":{"strCode":"CAD","eCurrencyCode":20,"strSymbol":"CDN$","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"AUD":{"strCode":"AUD","eCurrencyCode":21,"strSymbol":"A$","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"NZD":{"strCode":"NZD","eCurrencyCode":22,"strSymbol":"NZ$","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"PLN":{"strCode":"PLN","eCurrencyCode":6,"strSymbol":"z\u0142","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":",","strThousandsSeparator":" ","strSymbolAndNumberSeparator":""},"CNY":{"strCode":"CNY","eCurrencyCode":23,"strSymbol":"\u00a5","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"INR":{"strCode":"INR","eCurrencyCode":24,"strSymbol":"\u20b9","bSymbolIsPrefix":true,"bWholeUnitsOnly":true,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"CLP":{"strCode":"CLP","eCurrencyCode":25,"strSymbol":"CLP$","bSymbolIsPrefix":true,"bWholeUnitsOnly":true,"strDecimalSymbol":",","strThousandsSeparator":".","strSymbolAndNumberSeparator":" "},"PEN":{"strCode":"PEN","eCurrencyCode":26,"strSymbol":"S\/.","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":""},"COP":{"strCode":"COP","eCurrencyCode":27,"strSymbol":"COL$","bSymbolIsPrefix":true,"bWholeUnitsOnly":true,"strDecimalSymbol":",","strThousandsSeparator":".","strSymbolAndNumberSeparator":" "},"ZAR":{"strCode":"ZAR","eCurrencyCode":28,"strSymbol":"R","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":" ","strSymbolAndNumberSeparator":" "},"HKD":{"strCode":"HKD","eCurrencyCode":29,"strSymbol":"HK$","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"TWD":{"strCode":"TWD","eCurrencyCode":30,"strSymbol":"NT$","bSymbolIsPrefix":true,"bWholeUnitsOnly":true,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"SAR":{"strCode":"SAR","eCurrencyCode":31,"strSymbol":"SR","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"AED":{"strCode":"AED","eCurrencyCode":32,"strSymbol":"AED","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"SEK":{"strCode":"SEK","eCurrencyCode":33,"strSymbol":"kr","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"ARS":{"strCode":"ARS","eCurrencyCode":34,"strSymbol":"ARS$","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":",","strThousandsSeparator":".","strSymbolAndNumberSeparator":" "},"ILS":{"strCode":"ILS","eCurrencyCode":35,"strSymbol":"\u20aa","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":""},"BYN":{"strCode":"BYN","eCurrencyCode":36,"strSymbol":"Br","bSymbolIsPrefix":true,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":""},"KZT":{"strCode":"KZT","eCurrencyCode":37,"strSymbol":"\u20b8","bSymbolIsPrefix":false,"bWholeUnitsOnly":true,"strDecimalSymbol":",","strThousandsSeparator":" ","strSymbolAndNumberSeparator":""},"KWD":{"strCode":"KWD","eCurrencyCode":38,"strSymbol":"KD","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"QAR":{"strCode":"QAR","eCurrencyCode":39,"strSymbol":"QR","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"CRC":{"strCode":"CRC","eCurrencyCode":40,"strSymbol":"\u20a1","bSymbolIsPrefix":true,"bWholeUnitsOnly":true,"strDecimalSymbol":",","strThousandsSeparator":".","strSymbolAndNumberSeparator":""},"UYU":{"strCode":"UYU","eCurrencyCode":41,"strSymbol":"$U","bSymbolIsPrefix":true,"bWholeUnitsOnly":true,"strDecimalSymbol":",","strThousandsSeparator":".","strSymbolAndNumberSeparator":""},"BGN":{"strCode":"BGN","eCurrencyCode":42,"strSymbol":"\u043b\u0432","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"HRK":{"strCode":"HRK","eCurrencyCode":43,"strSymbol":"kn","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"CZK":{"strCode":"CZK","eCurrencyCode":44,"strSymbol":"K\u010d","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"DKK":{"strCode":"DKK","eCurrencyCode":45,"strSymbol":"kr.","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"HUF":{"strCode":"HUF","eCurrencyCode":46,"strSymbol":"Ft","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"RON":{"strCode":"RON","eCurrencyCode":47,"strSymbol":"lei","bSymbolIsPrefix":false,"bWholeUnitsOnly":false,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":" "},"RMB":{"strCode":"RMB","eCurrencyCode":9000,"strSymbol":"\u5200\u5e01","bSymbolIsPrefix":false,"bWholeUnitsOnly":true,"strDecimalSymbol":".","strThousandsSeparator":"","strSymbolAndNumberSeparator":" "},"NXP":{"strCode":"NXP","eCurrencyCode":9001,"strSymbol":"\uc6d0","bSymbolIsPrefix":false,"bWholeUnitsOnly":true,"strDecimalSymbol":".","strThousandsSeparator":",","strSymbolAndNumberSeparator":""}};
+
+
+function addEvent2(el, ev, fn, useCapture)
+{
+	if(el.addEventListener)
+	{
+		el.addEventListener(ev, fn, useCapture);
+	}
+	else if(el.attachEvent)
+	{
+		var ret = el.attachEvent("on"+ev, fn);
+		return ret;
+	}
+	else
+	{
+		el["on"+ev] = fn;
+	}
+}
+addEvent = addEvent2
+
+function ApplyAdultContentPreferences2()
+{
+	LoadUGCWithNoBlur();
+
+	var elementsWithAdultContent = $J( '[data-descids]');
+	if ( elementsWithAdultContent.length == 0 )
+	{
+		return;
+	}
+
+	for ( var i = 0; i < elementsWithAdultContent.length; ++i )
+	{
+		var e = $J( elementsWithAdultContent[i] );
+		ApplyAdultContentPreferencesHelper( e, g_ContentDescriptorPreferences, false );
+	}
+}
+
+function ApplyAdultContentPreferencesHelper2( e, rgContentDescriptorsToExclude, bForce )
+{
+	if ( !bForce && e.data( 'processed_adult_content') )
+	{
+		return;
+	}
+
+	e.data( 'processed_adult_content', true );
+
+	var bIsAnchor = e.is('a');
+
+	var publishedFileID = e.data( 'publishedfileid' );
+	var rgContentDescriptorIDs = e.data( 'descids' ) || [];
+	var appid = e.data( 'appid' );
+	var bForceDeBlur = ( publishedFileID && g_UGCWithNoBlur.hasOwnProperty( publishedFileID ) ) || ( appid && g_UGCSkipAdultContentCheckForAppID == appid );
+
+	var filteredArray = rgContentDescriptorIDs.filter( function( descid ) { return rgContentDescriptorsToExclude.indexOf( descid ) !== -1; } );
+	var bHasExcludedContent = filteredArray.length != 0;
+
+	if ( bForceDeBlur || !bHasExcludedContent )
+	{
+		e.removeClass( 'has_adult_content' );
+	}
+	else if ( bHasExcludedContent )
+	{
+		e.addClass( 'has_adult_content' );
+	}
+
+	if ( e.data( 'ugclinktextonly' ) === 1 )
+	{
+
+	}
+	else
+	{
+		// widget
+		{
+			var $elMenu = $J( '<div></div>', { 'class': 'ugc_options' } ).append( $J( '<div>' ) );
+			$elMenu.v_tooltip( {
+				'tooltipClass': 'ugc_options_tooltip',
+				'location': 'bottom left',
+				'offsetY': -20,
+				'useClickEvent': true,
+				'useMouseEnterEvent': false,
+				'preventDefault': true,
+				'stopPropagation': true,
+				func: UGCAdultContentPreferencesMenu
+			} );
+			e.append( $elMenu );
+		}
+
+		if ( !e.hasClass( "modalContentLink" ) )
+		{
+			var appid = e.data('appid');
+			e.on( 'click', function( e ) {
+				var $Link = $J( e.currentTarget );
+				var bLinkHasAdultContent = $Link.hasClass( 'has_adult_content' );
+				if ( !bLinkHasAdultContent )
+				{
+					return;
+				}
+
+				e.preventDefault();
+				e.stopPropagation();
+				ShowAdultContentWarningDialog( $Link, appid, publishedFileID, function() {
+					if ( bIsAnchor )
+					{
+						top.location.href = $Link[0].href;
+					}
+				} );
+				return false;
+			} );
+		}
+
+		// warning
+		if ( e.width() > 100 && !e.hasClass( 'ugc_show_warning_image' ) && !e.hasClass( 'dynamiclink_box' ) )
+		{
+			var $elWarning = $J( '<div></div>', {
+				'class': 'ugc_warning'
+			} );
+			if ( e.width() > 350 )
+			{
+				$elWarning.addClass( "large" );
+			}
+
+			if ( e.height() > 125 )
+			{
+				e.addClass( "ugc_show_warning_image" );
+			}
+			else
+			{
+				$elWarning.append( $J( '<div>', { 'class': 'ugc_warning_image' } ) );
+			}
+
+			$elWarning.append( $J( '<span>', { 'text': 'Content may not be appropriate for all audiences'} ) );
+
+			var $elOptions = $J( '<div></div>' );
+			var $elViewOption = $J( '<div></div>', {
+				'class': 'ugc_inline_option',
+				'text': 'View Content'
+			} );
+			$elViewOption.click( function ( event ) {
+				event.preventDefault();
+				event.stopPropagation();
+				if ( bIsAnchor && !e.hasClass( "modalContentLink" ) )
+				{
+					top.location.href = e[0].href;
+				}
+				else
+				{
+					e.removeClass( 'has_adult_content' );
+					e.click();
+					e.addClass( 'has_adult_content' );
+				}
+				return false;
+			} );
+			$elOptions.append( $elViewOption );
+			$elOptions.append( "&nbsp;|&nbsp;" );
+			var $elPreferencesOption = $J( '<div></div>', {
+				'class': 'ugc_inline_option',
+				'text': 'Edit Preferences'
+			} );
+			$elPreferencesOption.click( function ( event )	{
+				event.stopPropagation();
+				top.location.href = 'https://store.steampowered.com//account/preferences/#CommunityContentPreferences';
+				return false;
+			} );
+			$elOptions.append( $elPreferencesOption );
+
+			$elWarning.append( $elOptions );
+
+			e.append( $elWarning );
+		}
+		else
+		{
+			e.addClass( "ugc_show_warning_image" );
+		}
+	}
+}
+
+function LoadUGCWithNoBlur2()
+{
+	if ( g_bLoadedUGCWithNoBlur )
+	{
+		return;
+	}
+
+	var strUGCNoBlur = WebStorage.GetLocal( 'rgUGCNoBlur', false );
+	if ( strUGCNoBlur != null )
+	{
+		g_UGCWithNoBlur = JSON.parse( strUGCNoBlur );
+	}
+}
+LoadUGCWithNoBlur = LoadUGCWithNoBlur2
+
+function SaveUGCWithNoBlur2()
+{
+	var keys = Object.keys( g_UGCWithNoBlur );
+	var maxKeys = 1000;
+	if ( keys.length >= maxKeys )
+	{
+		var rgTemp = [];
+		for ( var i = 0; i < keys.length; ++i )
+		{
+			var key = keys[i];
+			var value = g_UGCWithNoBlur[key];
+			rgTemp.push( { v: value['timestamp'], k: key } );
+		}
+		rgTemp.sort( function( a, b ) {
+			if ( a.v > b.v ) { return 1; }
+			if ( a.v < b.v ) { return -1; }
+			return 0;
+		});
+
+		var delta = rgTemp.length - maxKeys;
+		for ( var i = 0; i < rgTemp.length && i < delta; ++i )
+		{
+			var a = rgTemp[i];
+			delete g_UGCWithNoBlur[a.k];
+		}
+	}
+	WebStorage.SetLocal( 'rgUGCNoBlur', JSON.stringify( g_UGCWithNoBlur ), false );
+}
+SaveUGCWithNoBlur = SaveUGCWithNoBlur2
+
+function InitEconomyHovers2( strEconomyCSSURL, strEconomyCommonJSURL, strEconomyJSURL )
+{
+	var $Hover = $J('<div/>', {'class': 'economyitem_hover'} );
+	var $HoverContent = $J('<div/>', {'class': 'economyitem_hover_content'} );
+	$Hover.append( $HoverContent );
+	$Hover.hide();
+
+	var fnOneTimeEconomySetup = function() {
+		$J(document.body).append( $Hover );
+
+		if ( typeof UserYou == 'undefined' )
+		{
+						var css = document.createElement( "link" );
+			css.setAttribute( "rel", "stylesheet" );
+			css.setAttribute( "type", "text/css" );
+			css.setAttribute( "href", strEconomyCSSURL );
+			var js1 = document.createElement( "script" );
+			js1.setAttribute( "type", "text/javascript" );
+			js1.setAttribute( "src", strEconomyCommonJSURL );
+			var js2 = document.createElement( "script" );
+			js2.setAttribute( "type", "text/javascript" );
+			js2.setAttribute( "src", strEconomyJSURL );
+			var head = $J('head')[0];
+			head.appendChild( css );
+			head.appendChild( js1 );
+			head.appendChild( js2 );
+		}
+	};
+
+	var fnDataFactory = function( key ) {
+		var rgItemKey = key.split('/');
+		if ( rgItemKey.length >= 3 && rgItemKey.length <= 5 )
+		{
+			if ( fnOneTimeEconomySetup )
+			{
+				fnOneTimeEconomySetup();
+				fnOneTimeEconomySetup = null;
+			}
+
+			// pop amount off the end first if it's present
+			var nAmount;
+			var strLastEntry = rgItemKey[rgItemKey.length - 1];
+			if ( strLastEntry && strLastEntry.length > 2 && strLastEntry.substr( 0, 2 ) == 'a:' )
+			{
+				nAmount = strLastEntry.substr( 2 );
+				rgItemKey.pop();
+			}
+
+			var strURL = null;
+			var appid = rgItemKey[0];
+			if ( appid == 'classinfo' )
+			{
+				// class info style
+				appid = rgItemKey[1];
+				var classid = rgItemKey[2];
+				var instanceid = ( rgItemKey.length > 3 ? rgItemKey[3] : 0 );
+				strURL = 'economy/itemclasshover/' + appid + '/' + classid + '/' + instanceid;
+				strURL += '?content_only=1&l=english';
+			}
+			else
+			{
+				// real asset
+				var contextid = rgItemKey[1];
+				var assetid = rgItemKey[2];
+				var strURL = 'economy/itemhover/' + appid + '/' + contextid + '/' + assetid;
+				strURL += '?content_only=1&omit_owner=1&l=english';
+				if ( rgItemKey.length == 4 && rgItemKey[3] )
+				{
+					var strOwner = rgItemKey[3];
+					if ( strOwner.indexOf( 'id:' ) == 0 )
+						strURL += '&o_url=' + strOwner.substr( 3 );
+					else
+						strURL += '&o=' + strOwner;
+				}
+			}
+			if ( nAmount && nAmount > 1 )
+				strURL += '&amount=' + nAmount;
+			return new CDelayedAJAXData( strURL, 100 );
+		}
+		else
+			return null;
+	};
+
+	var rgCallbacks = BindAJAXHovers( $Hover, $HoverContent, {
+		fnDataFactory: fnDataFactory,
+		strDataName: 'economy-item',
+		strURLMatch: 'itemhover'
+	} );
+}
+InitEconomyHovers = InitEconomyHovers2
+
+var CAutoSizingTextArea2 = Class.create( {
+	m_elTextArea: null,
+	m_nMinHeight: 20,
+	m_nMaxHeight: 500,
+	m_cCurrentSize: Number.MAX_VALUE,
+	m_fnChangeCallback: null,
+	m_nTextAreaPadding: null,
+
+	initialize: function( elTextArea, nMinHeight, fnChangeCallback )
+	{
+		this.m_elTextArea = elTextArea;
+		var _this = this;
+		$J(this.m_elTextArea ).on( 'keyup blur click paste cut', function( e ) {
+			if ( e.type == 'paste' || e.type == 'blur' )
+				_this.OnPasteText();
+			else
+				_this.OnTextInput();
+		});
+		this.m_elTextArea.style.overflow = 'hidden';
+
+		this.m_cEntryLength = Number.MAX_VALUE;
+		this.m_nMinHeight = nMinHeight || 20;
+		this.m_fnChangeCallback = fnChangeCallback || null;
+
+		this.m_elTextArea.style.height = this.m_nMinHeight + 'px';
+
+		this.OnTextInput();
+	},
+
+	CalculatePadding: function()
+	{
+		// briefly empty the text area and set the height so we can see how much padding there is
+		var strContents = this.m_elTextArea.value;
+		this.m_elTextArea.value = '';
+		this.m_elTextArea.style.height = this.m_nMinHeight + 'px';
+		this.m_nTextAreaPadding = this.m_elTextArea.scrollHeight - this.m_nMinHeight;
+		this.m_elTextArea.value = strContents;
+	},
+
+	OnPasteText: function()
+	{
+		this.OnTextInput.bind( this ).defer();
+	},
+
+	OnTextInput: function()
+	{
+		var iScrollOffset = undefined;
+		var cNewLength = this.m_elTextArea.value.length;
+
+		// we delay this until first input as some values get reported incorrectly if the element isn't visible.
+		if ( this.m_nTextAreaPadding === null && $J(this.m_elTextArea ).is(':visible') )
+			this.CalculatePadding();
+
+		// force a resize
+		if ( cNewLength < this.m_cEntryLength )
+		{
+			// when we shrink this box, we might scroll the window.  Remember where we are so we can jump back
+			iScrollOffset = window.scrollY;
+			this.m_elTextArea.style.height = this.m_nMinHeight + 'px';
+		}
+
+		if ( this.m_elTextArea.scrollHeight > this.m_nMaxHeight )
+		{
+			this.m_elTextArea.style.height = this.m_nMaxHeight + 'px';
+			this.m_elTextArea.style.overflow = 'auto';
+		}
+		else if ( this.m_elTextArea.scrollHeight != this.m_elTextArea.getHeight() )
+		{
+			var nHeight = Math.max( this.m_elTextArea.scrollHeight, this.m_nMinHeight );
+			this.m_elTextArea.style.height = ( nHeight - this.m_nTextAreaPadding ) + 'px';
+
+			if ( this.m_elTextArea.style.overflow == 'auto' )
+				this.m_elTextArea.style.overflow = 'hidden';
+		}
+
+		if ( this.m_fnChangeCallback )
+			this.m_fnChangeCallback( this.m_elTextArea );
+
+		if ( iScrollOffset )
+			window.scrollTo( window.scrollX, iScrollOffset );
+
+		this.m_cEntryLength = cNewLength;
+	}
+});
+
+CAutoSizingTextArea = CAutoSizingTextArea2;
+
+function GetCookie2( strCookieName )
+{
+	var rgMatches = document.cookie.match( '(^|; )' + strCookieName + '=([^;]*)' );
+	if ( rgMatches && rgMatches[2] )
+		return rgMatches[2];
+	else
+		return null;
+}
+GetCookie = GetCookie2
+
+function SetCookie2( strCookieName, strValue, expiryInDays, path )
+{
+	if ( !expiryInDays )
+		expiryInDays = 0;
+	if ( !path )
+		path = '/';
+
+	var dateExpires = new Date();
+	dateExpires.setTime( dateExpires.getTime() + 1000 * 60 * 60 * 24 * expiryInDays );
+	document.cookie = strCookieName + '=' + strValue + '; expires=' + dateExpires.toGMTString() + ';path=' + path;
+}
+SetCookie = SetCookie2
+
+function GetCurrencyCode2( currencyId )
+{
+	for ( var code in g_rgCurrencyData )
+	{
+		if ( g_rgCurrencyData[code].eCurrencyCode == currencyId )
+			return code;
+	}
+	return 'Unknown';
+}
+GetCurrencyCode = GetCurrencyCode2
+
+function RegisterSteamOnWebPanelShownHandler2( f )
+{
+	g_OnWebPanelShownHandlers.push( f );
+}
+RegisterSteamOnWebPanelShownHandler = RegisterSteamOnWebPanelShownHandler2
+
+function v_currencyformat2( valueInCents, currencyCode, countryCode )
+{
+	var currencyFormat = (valueInCents / 100).toFixed(2);
+
+	if ( g_rgCurrencyData[currencyCode] )
+	{
+		var currencyData = g_rgCurrencyData[currencyCode];
+		if ( IsCurrencyWholeUnits( currencyCode ) )
+		{
+			currencyFormat = currencyFormat.replace( '.00', '' );
+		}
+
+		if ( currencyData.strDecimalSymbol != '.' )
+		{
+			currencyFormat = currencyFormat.replace( '.', currencyData.strDecimalSymbol );
+		}
+
+		var currencyReturn = IsCurrencySymbolBeforeValue( currencyCode ) ?
+			 GetCurrencySymbol( currencyCode ) + currencyData.strSymbolAndNumberSeparator + currencyFormat
+			 : currencyFormat + currencyData.strSymbolAndNumberSeparator + GetCurrencySymbol( currencyCode );
+
+		if ( currencyCode == 'USD' && typeof(countryCode) != 'undefined' && countryCode != 'US' )
+		{
+			return currencyReturn + ' USD';
+		}
+		else if ( currencyCode == 'EUR' )
+		{
+			return currencyReturn.replace( ',00', ',--' );
+		}
+		else
+		{
+			return currencyReturn;
+		}
+	}
+	else
+	{
+		return currencyFormat + ' ' + currencyCode;
+	}
+}
+v_currencyformat = v_currencyformat2
+
+function IsCurrencyWholeUnits2( currencyCode )
+{
+		return g_rgCurrencyData[currencyCode] && g_rgCurrencyData[currencyCode].bWholeUnitsOnly && currencyCode != 'RUB';
+}
+IsCurrencyWholeUnits = IsCurrencyWholeUnits2
+
+function IsCurrencySymbolBeforeValue2( currencyCode )
+{
+	return g_rgCurrencyData[currencyCode] && g_rgCurrencyData[currencyCode].bSymbolIsPrefix;
+}
+IsCurrencySymbolBeforeValue = IsCurrencySymbolBeforeValue2
+
+function GetCurrencySymbol2( currencyCode )
+{
+	return g_rgCurrencyData[currencyCode] ? g_rgCurrencyData[currencyCode].strSymbol : currencyCode + ' ';
+}
+GetCurrencySymbol = GetCurrencySymbol2
+
+function GetCurrencyCode2( currencyId )
+{
+	for ( var code in g_rgCurrencyData )
+	{
+		if ( g_rgCurrencyData[code].eCurrencyCode == currencyId )
+			return code;
+	}
+	return 'Unknown';
+}
+GetCurrencyCode = GetCurrencyCode2
+
+function ShowTradeOffer2( tradeOfferID, rgParams )
+{
+	var strParams = '';
+	if ( rgParams )
+		strParams = '?' + $J.param( rgParams );
+
+	var strKey = ( tradeOfferID == 'new' ? 'NewTradeOffer' + rgParams['partner'] : 'TradeOffer' + tradeOfferID );
+
+	var winHeight = 1120;
+	if ( Steam.BIsUserInSteamClient() && Steam.GetClientPackageVersion() < 1407800248 )
+	{
+		// workaround for client break when the popup window is too tall for the screen.  Try and pick a height that will fit here.
+		var nClientChromePX = 92;
+		if ( window.screen.availHeight && window.screen.availHeight - nClientChromePX < winHeight )
+			winHeight = window.screen.availHeight - nClientChromePX;
+	}
+
+	var strURL = 'https://steamcommunity.com/tradeoffer/' + tradeOfferID + '/' + strParams;
+	if ( Steam.BIsUserInSteamMobileApp() )
+	{
+		window.location = strURL;
+	}
+	else
+	{
+		var winOffer = window.open( strURL, strKey, 'height=' + winHeight + ',width=1028,resize=yes,scrollbars=yes' );
+
+		winOffer.focus();
+	}
+}
+ShowTradeOffer = ShowTradeOffer2
+
+function CEmoticonPopup2( $EmoticonButton, $Textarea, strBaseURL )
+{
+	this.m_$EmoticonButton = $EmoticonButton;
+	this.m_$TextArea = $Textarea;
+	this.m_strBaseURL = strBaseURL || 'https://steamcommunity.com';
+
+	if ( CEmoticonPopup.sm_deferEmoticonsLoaded == null )
+		CEmoticonPopup.sm_deferEmoticonsLoaded = new jQuery.Deferred();
+
+	this.m_bVisible = false;
+	this.m_$Popup = null;
+
+	var _this = this;
+	this.m_$EmoticonButton.one('mouseenter', function() { _this.LoadEmoticons(); } );
+	this.m_$EmoticonButton.click( function() { _this.LoadEmoticons(); CEmoticonPopup.sm_deferEmoticonsLoaded.done( function() { _this.OnButtonClick(); } ) } );
+	this.m_fnOnDocumentClick = function() { _this.DismissPopup(); };
+}
+CEmoticonPopup = CEmoticonPopup2;
+
+g_rgCommentThreads = {}
+function InitializeCommentThread2( type, name, rgCommentData, url, nQuoteBoxHeight )
+{
+	// see if we have a custom comment thread class for this type
+	var commentclass = CCommentThread2;
+	if ( window['CCommentThread2' + type] )
+		commentclass = window['CCommentThread2' + type];
+
+	g_rgCommentThreads[name] = new commentclass( type, name, rgCommentData, url, nQuoteBoxHeight );
+}
+InitializeCommentThread = InitializeCommentThread2
+
+var CCommentThread2 = Class.create( {
+
+	m_strName: null,
+	m_strCommentThreadType: null,
+	m_rgCommentData: null,
+	m_strActionURL: null,
+	m_elTextArea: null,
+	m_cPageSize: null,
+	m_nQuoteBoxHeight: 40,
+
+	m_cTotalCount: 0,
+	m_iCurrentPage: 0,
+	m_cMaxPages: 0,
+	m_cDropdownPages: 0,
+	m_bLoading: false,
+	m_bLoadingUserHasUpVoted : false,
+	m_cUpVotes: 0,
+
+	m_bIncludeRaw: false,
+	m_rgRawCommentCache: null,
+	m_bHasPaging: true,
+	m_bTrackNavigation: false,	// should we track navigation in the URL?
+
+	// these vars are id's we'll update when values change
+	m_votecountID: null,
+	m_voteupID: null,
+	m_commentcountID: null,
+
+	m_oTextAreaSizer: null,
+
+	m_bSubscribed: null,
+	m_$SubscribeCheckbox: null,
+
+	initialize: function( type, name, rgCommentData, url, nQuoteBoxHeight )
+	{
+		this.m_strName = name;
+		this.m_strCommentThreadType = type;
+		this.m_rgCommentData = rgCommentData;
+		this.m_strActionURL = url;
+		this.m_nQuoteBoxHeight = nQuoteBoxHeight;
+
+		var start = rgCommentData['start'] ? rgCommentData['start'] : 0;
+
+		this.m_cTotalCount = rgCommentData['total_count'];
+		this.m_cPageSize = rgCommentData['pagesize'];
+		this.m_iCurrentPage = Math.floor( start / this.m_cPageSize );
+		this.m_cMaxPages = Math.ceil( this.m_cTotalCount / this.m_cPageSize );
+		this.m_bLoadingUserHasUpVoted = rgCommentData['has_upvoted'];
+		this.m_cUpVotes = rgCommentData['upvotes'];
+		this.m_votecountID = rgCommentData['votecountid'];
+		this.m_voteupID = rgCommentData['voteupid'];
+		this.m_commentcountID = rgCommentData['commentcountid'];
+
+		this.m_bSubscribed = rgCommentData['subscribed'];
+
+		this.m_bHasPaging = !rgCommentData['no_paging'];
+		this.m_bTrackNavigation = !!rgCommentData['track_navigation'];
+
+
+		var strPrefix = 'commentthread_' + this.m_strName;
+		this.m_elTextArea = $( strPrefix + '_textarea');
+
+		if ( rgCommentData['comments_raw'] )
+		{
+			this.m_bIncludeRaw = true;
+			this.m_rgRawCommentCache = rgCommentData['comments_raw'];
+			rgCommentData['comments_raw'] = undefined;
+		}
+
+		if ( this.m_elTextArea )
+		{
+			var elSaveButton = $('commentthread_' + this.m_strName + '_submit_container');
+			var iMinHeight = this.m_nQuoteBoxHeight;
+			if ( this.m_strName.startsWith( 'Profile_' ) )
+				iMinHeight = 20;
+
+			this.m_oTextAreaSizer = new CAutoSizingTextArea( this.m_elTextArea, iMinHeight, this.OnTextInput.bind( this, elSaveButton ) );
+		}
+
+		var _this = this;
+
+		if ( this.m_bHasPaging )
+		{
+			$(strPrefix + '_pagebtn_prev').observe( 'click', this.OnPagingButtonClick.bindAsEventListener( this , this.PrevPage )  );
+			$(strPrefix + '_fpagebtn_prev').observe( 'click', this.OnPagingButtonClick.bindAsEventListener( this , this.PrevPage )  );
+			$(strPrefix + '_pagebtn_next').observe( 'click', this.OnPagingButtonClick.bindAsEventListener( this , this.NextPage ) );
+			$(strPrefix + '_fpagebtn_next').observe( 'click', this.OnPagingButtonClick.bindAsEventListener( this , this.NextPage ) );
+
+			if ( this.m_bTrackNavigation && window.history && window.history.pushState )
+			{
+				window.history.replaceState( {comment_thread_page: this.m_iCurrentPage }, '' );
+
+				$J(window).on('popstate', function( e ) {
+					var oState = e.originalEvent.state;
+
+					if ( oState && typeof oState.comment_thread_page != 'undefined' )
+						_this.GoToPage( oState.comment_thread_page );
+				});
+			}
+		}
+
+		var elForm = $( strPrefix + '_form');
+		if ( elForm )
+		{
+			elForm.observe( 'submit', this.OnSubmit.bind( this ) );
+		}
+
+		var elSubmit = $(strPrefix + '_submit');
+		if ( elSubmit )
+		{
+			elSubmit.observe( 'click', this.OnSubmit.bind( this ) );
+		}
+
+		var elAutosubscribe = $(strPrefix + '_autosubscribe' );
+		if ( elAutosubscribe )
+		{
+			// initialize check state based on preferences
+			elAutosubscribe.checked = this.m_bSubscribed || GetValueLocalStorage( 'forum_autosubscribe', false );
+			elAutosubscribe.observe( 'change', this.OnAutosubscribeToggle.bind( this ) );
+		}
+
+		var elSubscribe = $(strPrefix + '_subscribe');
+		var elUnsubscribe = $(strPrefix + '_unsubscribe' );
+		if ( elSubscribe && elUnsubscribe )
+		{
+			this.BindSubscribeButtons( elSubscribe, elUnsubscribe );
+		}
+
+		this.m_$SubscribeCheckbox = $J('#' + strPrefix + '_subscribe_checkbox');
+		this.m_$SubscribeCheckbox.click( function() {
+			if ( _this.m_$SubscribeCheckbox.hasClass( 'waiting' ) )
+				return;
+
+			if ( _this.m_bSubscribed )
+				_this.Unsubscribe( function() {},  function() {ShowAlertDialog('Subscribe to thread', 'There was a problem updating your subscription.  Please try again later.');});
+			else
+				_this.Subscribe( function() {},  function() {ShowAlertDialog('Subscribe to thread', 'There was a problem updating your subscription.  Please try again later.');});
+		});
+
+		this.UpdatePagingDisplay();
+		this.HighlightComment();
+	},
+
+	HighlightComment: function()
+	{
+		var urlParams = new URLSearchParams( window.location.search );
+		var gidComment = urlParams.get( 'gidcommenthighlight' );
+		if ( gidComment )
+		{
+			$J( "#comment_" + gidComment ).addClass( 'highlighted' );
+			setTimeout( function() { $J( "#comment_" + gidComment )[0].scrollIntoView(); },500 );
+		}
+	},
+
+	BMatches: function( strType, steamidOwner, gidFeature, gidFeature2 )
+	{
+		return this.m_strCommentThreadType == strType && this.m_rgCommentData['owner'] == steamidOwner &&
+			this.m_rgCommentData['feature'] == gidFeature && this.m_rgCommentData['feature2'] == gidFeature2;
+	},
+
+	CheckTextAreaSize: function()
+	{
+		this.m_oTextAreaSizer.OnTextInput();
+	},
+
+	OnTextInput: function( elSaveButton, elTextArea )
+	{
+		if ( elSaveButton )
+		{
+			var strPrepoulatedText = $J(this.m_elTextArea ).data('prepopulated-text');
+			var bEnteredText = elTextArea.value.length > 0;
+
+			if ( bEnteredText && strPrepoulatedText && !$J(this.m_elTextArea ).data('replaced-prepopulated-text') )
+			{
+				strPrepoulatedText = v_trim( strPrepoulatedText ).replace( /[\n\r]/g, '' );
+				var strEnteredText = v_trim( elTextArea.value ).replace( /[\n\r]/g, '' );
+
+				bEnteredText = strPrepoulatedText != strEnteredText;
+
+				// save so we don't have to keep doing this check as they enter more text.
+				if ( bEnteredText )
+					$J(this.m_elTextArea ).data('replaced-prepopulated-text', true );
+			}
+
+			if ( bEnteredText )
+				elSaveButton.show();
+			else
+				elSaveButton.hide();
+		}
+	},
+
+	GetActionURL: function( action )
+	{
+		var url = this.m_strActionURL + action + '/';
+		url += this.m_rgCommentData['owner'] + '/';
+		url += this.m_rgCommentData['feature'] + '/';
+		return url;
+	},
+
+	ParametersWithDefaults: function( params )
+	{
+		if ( !params )
+			params = {};
+
+		params['count'] = this.m_cPageSize;
+		params['sessionid'] = g_sessionID;
+
+		if ( this.m_rgCommentData['extended_data'] )
+			params['extended_data'] = this.m_rgCommentData['extended_data'];
+
+		if ( this.m_rgCommentData['feature2'] )
+			params['feature2'] = this.m_rgCommentData['feature2'];
+
+		if ( this.m_rgCommentData['oldestfirst'] )
+			params['oldestfirst'] = true;
+
+		if ( this.m_rgCommentData['newestfirstpagination'] )
+			params['newestfirstpagination'] = true;
+
+		if ( this.m_rgCommentData['lastvisit'] )
+			params['lastvisit'] = this.m_rgCommentData['lastvisit'];
+
+		if ( this.m_bIncludeRaw )
+			params['include_raw'] = true;
+
+
+		return params;
+	},
+
+	OnSubmit: function()
+	{
+		if ( this.m_bLoading )
+			return;
+
+		var strPrepoulatedText = $J(this.m_elTextArea ).data('prepopulated-text');
+		if ( strPrepoulatedText && v_trim( strPrepoulatedText ).replace( /[\n\r]/g, '' ) == v_trim( this.m_elTextArea.value ).replace( /[\n\r]/g, '' ) )
+		{
+			ShowAlertDialog( '', 'Please enter a comment to post.' );
+			return;
+		}
+
+		var params = this.ParametersWithDefaults( {
+			comment: this.m_elTextArea.value
+		} );
+
+		this.m_bLoading = true;
+		new Ajax.Request( this.GetActionURL( 'post' ), {
+			method: 'post',
+			parameters: params,
+			onSuccess: this.OnResponseAddComment.bind( this, ++this.m_nRenderAjaxSequenceNumber ),
+			onFailure: this.OnFailureDisplayError.bind( this ),
+			onComplete: this.OnAJAXComplete.bind( this )
+		} );
+
+		var elAutosubscribe = $( 'commentthread_' + this.m_strName + '_autosubscribe' );
+		if ( elAutosubscribe && elAutosubscribe.checked && !this.m_bSubscribed )
+			this.Subscribe();
+
+		return false;
+	},
+
+	DeleteComment: function( gidComment, bUndelete, fnOnSuccess )
+	{
+		if ( this.m_bLoading )
+			return;
+
+		var params = this.ParametersWithDefaults( {
+			gidcomment: gidComment,
+			start: this.m_cPageSize * this.m_iCurrentPage
+		} );
+
+		if ( bUndelete )
+			params.undelete = 1;
+
+		this.m_bLoading = true;
+		new Ajax.Request( this.GetActionURL( 'delete' ), {
+			method: 'post',
+			parameters: params,
+			onSuccess: fnOnSuccess ? fnOnSuccess : this.OnResponseDeleteComment.bind( this, ++this.m_nRenderAjaxSequenceNumber ),
+			onFailure: this.OnFailureDisplayError.bind( this ),
+			onComplete: this.OnAJAXComplete.bind( this )
+		} );
+	},
+
+	MarkSpam: function( gidComment, authorAccountID, fnOnSuccess )
+	{
+		if ( this.m_bLoading )
+			return;
+
+		var params = this.ParametersWithDefaults( {
+			gidcomment: gidComment,
+			author_accountid: authorAccountID,
+			start: this.m_cPageSize * this.m_iCurrentPage
+		} );
+
+		var thread = this;
+
+		var dialog = ShowConfirmDialog( 'Mark Spam', 'This will give a community ban to the author, add this comment as training data so we can flag these kinds of comments automatically, and clear out all the author\'s comments.  Are you sure this is what you want to do?', 'Mark Spam' );
+		dialog.done( function() {
+			thread.m_bLoading = true;
+			new Ajax.Request( thread.GetActionURL( 'markspam' ), {
+				method: 'post',
+				parameters: params,
+				onSuccess: fnOnSuccess ? fnOnSuccess : thread.OnResponseDeleteComment.bind( thread, ++thread.m_nRenderAjaxSequenceNumber ),
+				onFailure: thread.OnFailureDisplayError.bind( thread ),
+				onComplete: thread.OnAJAXComplete.bind( thread )
+			} );
+		} );
+	},
+
+	ClearContentCheckFlag: function( gidComment, fnOnSuccess )
+	{
+		if ( this.m_bLoading )
+			return;
+
+		var params = this.ParametersWithDefaults( {
+			gidcomment: gidComment,
+			start: this.m_cPageSize * this.m_iCurrentPage
+		} );
+
+		var thread = this;
+
+		var dialog = ShowConfirmDialog( 'Clear Bannable Content Flag', 'This will clear the bannable content check flag on this comment and cannot be undone. Are you sure this is what you want to do?', 'Clear Bannable Content Flag' );
+		dialog.done( function() {
+			thread.m_bLoading = true;
+			new Ajax.Request( thread.GetActionURL( 'clearcontentcheckflag' ), {
+				method: 'post',
+				parameters: params,
+				onSuccess: fnOnSuccess ? fnOnSuccess : thread.OnResponseDeleteComment.bind( thread, ++thread.m_nRenderAjaxSequenceNumber ),
+				onFailure: thread.OnFailureDisplayError.bind( thread ),
+				onComplete: thread.OnAJAXComplete.bind( thread )
+			} );
+		} );
+	},
+
+	HideAndReport: function( gidComment, bHide, fnOnSuccess )
+	{
+		if ( this.m_bLoading )
+			return;
+
+		var params = this.ParametersWithDefaults( {
+			gidcomment: gidComment,
+			hide: bHide,
+			start: this.m_cPageSize * this.m_iCurrentPage
+		} );
+
+		this.m_bLoading = true;
+		new Ajax.Request( this.GetActionURL( 'hideandreport' ), {
+			method: 'post',
+			parameters: params,
+			onSuccess: fnOnSuccess ? fnOnSuccess : this.OnResponseHideAndReportComment.bind( this, ++this.m_nRenderAjaxSequenceNumber ),
+			onFailure: this.OnFailureDisplayError.bind( this ),
+			onComplete: this.OnAJAXComplete.bind( this )
+		} );
+	},
+
+	OnResponseHideAndReportComment: function( nAjaxSequenceNumber, transport )
+	{
+		if ( transport.responseJSON && transport.responseJSON.success )
+			this.OnResponseRenderComments( CCommentThread2.RENDER_GOTOCOMMENT, nAjaxSequenceNumber, transport );
+		else
+			this.OnFailureDisplayError( transport );
+	},
+
+	DisplayEditComment: function( gidComment )
+	{
+		var elForm = $('editcommentform_' + gidComment);
+		var elTextarea = $('comment_edit_text_' + gidComment);
+
+		var elContent = $('comment_content_' + gidComment);
+		elContent.hide();
+
+		if ( elContent.next('.forum_audit') )
+			elContent.next('.forum_audit').hide();
+
+		$('comment_edit_' + gidComment).show();
+		$('comment_edit_' + gidComment + '_error').update('');
+
+		if ( !elTextarea.value || elTextarea.value.length == 0 )
+			elTextarea.value = this.m_rgRawCommentCache[ gidComment ].text;
+
+		if ( !elForm.m_bEventsBound )
+		{
+			new CAutoSizingTextArea( elTextarea, 40 );
+			elForm.observe( 'submit', this.SubmitEditComment.bind( this, elForm ) );
+			elForm.observe( 'reset', this.HideEditComment.bind( this, gidComment ) );
+			elForm.m_bEventsBound = true;
+		}
+	},
+
+	VoteUp: function()
+	{
+		if ( this.m_bLoading )
+			return;
+
+		var params = this.ParametersWithDefaults( {
+			vote: this.m_bLoadingUserHasUpVoted ? 0 : 1	// flip our vote
+		} );
+
+		this.m_bLoading = true;
+		new Ajax.Request( this.GetActionURL( 'voteup' ), {
+			method: 'post',
+			parameters: params,
+			onSuccess: this.OnResponseVoteUp.bind( this, ++this.m_nRenderAjaxSequenceNumber ),
+			onFailure: this.OnFailureDisplayError.bind( this ),
+			onComplete: this.OnAJAXComplete.bind( this )
+		} );
+	},
+
+	UpdateAnswer: function( gidComment, bExisting )
+	{
+		// see if it's on the current page
+		if ( this.m_bLoading )
+			return;
+
+		if ( !gidComment )
+		{
+			$modal = ShowConfirmDialog( 'Remove As Answer', 'Are you sure you want to unmark this post as the answer to this thread? You can update this at any time.', 'Remove As Answer' );
+		}
+		else
+		{
+			var strModalBody = 'You are about to mark this post as the answer to this thread. This will indicate that the original post has been answered and link to this specific post. You can remove this or indicate a different post as the answer at any time if you change your mind.';
+			if ( bExisting )
+				strModalBody = 'A different post is already selected as the answer to this thread. Would you like to choose this post as the new answer?';
+
+			$modal = ShowConfirmDialog( 'Mark As Answer', strModalBody, 'Choose Answer' );
+			$modal.SetMaxWidth(500);
+		}
+
+		var _$this = this;
+
+		$modal.done( function(){
+
+			var params = _$this.ParametersWithDefaults( {
+				gidcommentanswer: gidComment
+			} );
+
+			_$this.m_bLoading = true;
+			new Ajax.Request( _$this.GetActionURL( 'updateanswer' ), {
+				method: 'post',
+				parameters: params,
+				onSuccess: function() {
+										window.location.hash = 'c' + gidComment;
+					window.location.reload();
+				},
+				onFailure: function( transport ) {
+					if ( transport.responseJSON && transport.responseJSON.success )
+					{
+						var strError = 'There was an issue updating this topic answer. Error: ' + transport.responseJSON.success;
+						if ( transport.responseJSON.success == 15 )
+						{
+							strError = 'You do not have permission to update this topic\'s answer.'
+						}
+
+						ShowAlertDialog( 'Error', strError );
+					}
+				},
+				onComplete: _$this.OnAJAXComplete.bind( _$this )
+			});
+		} );
+
+	},
+
+	GetRawComment: function( gidComment )
+	{
+		return this.m_rgRawCommentCache[ gidComment ];
+	},
+
+	GetCommentTextEntryElement: function()
+	{
+		return this.m_elTextArea;
+	},
+
+	HideEditComment: function( gidComment )
+	{
+		$('comment_content_' + gidComment).show();
+		$('comment_edit_' + gidComment).hide();
+	},
+
+	OnResponseEditComment: function( gidComment, nAjaxSequenceNumber, transport )
+	{
+		if ( transport.responseJSON && transport.responseJSON.success)
+		{
+			// no need to hide because render will replace our whole element
+			this.OnResponseRenderComments( CCommentThread2.RENDER_DELETEDPOST, nAjaxSequenceNumber, transport );	//display the updated comment thread
+		}
+		else
+		{
+			this.OnEditFailureDisplayError( gidComment, transport );
+		}
+	},
+
+	OnEditFailureDisplayError: function( gidComment, transport )
+	{
+		this.DisplayError( $('comment_edit_' + gidComment + '_error'), transport );
+	},
+
+	SubmitEditComment: function( elForm )
+	{
+		if ( this.m_bLoading )
+			return false;
+
+		var gidComment = elForm.elements['gidcomment'].value;
+		var strComment = elForm.elements['comment'].value;
+
+		var params = this.ParametersWithDefaults( {
+			gidcomment: gidComment,
+			comment: strComment,
+			start: this.m_cPageSize * this.m_iCurrentPage
+		} );
+
+		this.m_bLoading = true;
+		new Ajax.Request( this.GetActionURL( 'edit' ), {
+			method: 'post',
+			parameters: params,
+			onSuccess: this.OnResponseEditComment.bind( this, gidComment, ++this.m_nRenderAjaxSequenceNumber ),
+			onFailure: this.OnEditFailureDisplayError.bind( this, gidComment ),
+			onComplete: this.OnAJAXComplete.bind( this )
+		} );
+		return false;
+	},
+
+	OnAJAXComplete: function()
+	{
+		this.m_bLoading = false;
+	},
+
+	OnPagingButtonClick: function( event, fnToExecute )
+	{
+		event.stop();
+		fnToExecute.call( this );
+	},
+
+	NextPage: function()
+	{
+		if ( this.m_iCurrentPage < this.m_cMaxPages - 1 )
+			this.GoToPage( this.m_iCurrentPage + 1 );
+	},
+
+	PrevPage: function()
+	{
+		if ( this.m_iCurrentPage > 0 )
+			this.GoToPage( this.m_iCurrentPage - 1 );
+	},
+
+	m_nRenderAjaxSequenceNumber: 0,
+	GoToPage: function( iPage, eRenderReason )
+	{
+		if (  iPage >= this.m_cMaxPages || iPage < 0 || ( iPage == this.m_iCurrentPage && !this.m_bLoading ) )
+			return;
+
+		var params = this.ParametersWithDefaults( {
+			start: this.m_cPageSize * iPage,
+			totalcount: this.m_cTotalCount
+		} );
+
+		this.m_bLoading = true;
+		new Ajax.Request( this.GetActionURL( 'render' ), {
+			method: 'post',
+			parameters: params,
+			onSuccess: this.OnResponseRenderComments.bind( this, eRenderReason || CCommentThread2.RENDER_GOTOPAGE, ++this.m_nRenderAjaxSequenceNumber ),
+			onComplete: this.OnAJAXComplete.bind( this )
+		});
+	},
+
+	GoToPageWithComment: function( gidComment, eRenderReason )
+	{
+		// see if it's on the current page
+		if ( this.m_bLoading || $('comment_' + gidComment ) )
+			return;
+
+		// nope, load
+		var params = this.ParametersWithDefaults( {
+			gidComment: gidComment
+		} );
+
+		new Ajax.Request( this.GetActionURL( 'render' ), {
+			method: 'post',
+			parameters: params,
+			onSuccess: this.OnResponseRenderComments.bind( this, eRenderReason || CCommentThread2.RENDER_GOTOCOMMENT, ++this.m_nRenderAjaxSequenceNumber ),
+			onComplete: this.OnAJAXComplete.bind( this )
+		});
+	},
+
+	OnResponseAddComment: function( nAjaxSequenceNumber, transport )
+	{
+		if ( transport.responseJSON && transport.responseJSON.success)
+		{
+			$('commentthread_' + this.m_strName + '_entry_error').hide();
+			this.m_elTextArea.value='';
+			this.CheckTextAreaSize();
+			this.OnResponseRenderComments( CCommentThread2.RENDER_NEWPOST, nAjaxSequenceNumber, transport );	//display the updated comment thread
+
+			if ( $('commentthread_' + this.m_strName + '_subscribeoptions') )
+				$('commentthread_' + this.m_strName + '_subscribeoptions').show();
+		}
+		else
+		{
+			this.OnFailureDisplayError( transport );
+		}
+	},
+
+	OnResponseDeleteComment: function( nAjaxSequenceNumber, transport )
+	{
+		if ( transport.responseJSON && transport.responseJSON.success )
+			this.OnResponseRenderComments( CCommentThread2.RENDER_DELETEDPOST, nAjaxSequenceNumber, transport );
+		else
+			this.OnFailureDisplayError( transport );
+	},
+
+	OnResponseVoteUp: function( nAjaxSequenceNumber, transport )
+	{
+		if ( transport.responseJSON && transport.responseJSON.success )
+		{
+			this.OnResponseRenderComments( CCommentThread2.RENDER_GOTOCOMMENT, nAjaxSequenceNumber, transport );
+			this.m_bLoadingUserHasUpVoted = !this.m_bLoadingUserHasUpVoted;	// we can switch this to getting from the response after 8/24/2012
+			this.m_cUpVotes = transport.responseJSON.upvotes;
+
+			if ( this.m_votecountID && $(this.m_votecountID) && transport.responseJSON.votetext )
+			{
+				$(this.m_votecountID).innerHTML = transport.responseJSON.votetext;
+			}
+
+			if ( this.m_voteupID && $(this.m_voteupID) )
+			{
+				if ( this.m_bLoadingUserHasUpVoted )
+					$(this.m_voteupID).addClassName('active');
+				else
+					$(this.m_voteupID).removeClassName('active');
+			}
+		}
+		else
+			this.OnFailureDisplayError( transport );
+	},
+
+	OnFailureDisplayError: function( transport )
+	{
+		this.DisplayError( $('commentthread_' + this.m_strName + '_entry_error'), transport );
+	},
+
+	DisplayError: function( elError, transport )
+	{
+		var strMessage = 'Sorry, some kind of error has occurred: ';
+		if ( transport.responseJSON && transport.responseJSON.error )
+			strMessage += transport.responseJSON.error;
+		else
+			strMessage += 'There was an error communicating with the network. Please try again later.';
+
+		elError.update( strMessage );
+		elError.show();
+	},
+
+	OnResponseRenderComments: function( eRenderReason, nAjaxSequenceNumber, transport )
+	{
+		if ( this.m_nRenderAjaxSequenceNumber != nAjaxSequenceNumber )
+			return;
+
+		if ( transport.responseJSON )
+		{
+			var response = transport.responseJSON;
+			this.m_cTotalCount = response.total_count;
+			this.m_cMaxPages = Math.ceil( response.total_count / response.pagesize );
+			this.m_iCurrentPage = Math.floor( response.start / response.pagesize );
+
+			if ( response.comments_raw )
+				this.m_rgRawCommentCache = response.comments_raw;
+
+			if ( this.m_commentcountID && $(this.m_commentcountID) )
+				$(this.m_commentcountID).innerHTML = this.m_cTotalCount;
+
+			if ( this.m_cTotalCount <= response.start && this.m_iCurrentPage > 0 )
+			{
+				// this page is no logner valid, flip back a page (deferred so that the AJAX handler exits and reset m_bLoading)
+				this.GoToPage.bind( this, this.m_iCurrentPage - 1 ).defer();
+				return;
+			}
+
+			if ( this.m_bTrackNavigation && window.history && window.history.pushState )
+			{
+				var params = window.location.search.length ? $J.deparam( window.location.search.substr(1) ) : {};
+				if ( ( !params['ctp'] && this.m_iCurrentPage != 0 ) || ( params['ctp'] && params['ctp'] != this.m_iCurrentPage + 1 ) )
+				{
+					var fnStateUpdate = window.history.pushState.bind( window.history );
+					var url = UpdateParameterInCurrentURL( 'ctp', this.m_iCurrentPage == 0 ? null : this.m_iCurrentPage + 1, ['tscn'] );
+					if ( eRenderReason == CCommentThread2.RENDER_GOTOPAGE_HASHCHANGE || eRenderReason == CCommentThread2.RENDER_GOTOCOMMENT_HASHCHANGE )
+					{
+						fnStateUpdate = window.history.replaceState.bind( window.history );
+						if ( eRenderReason == CCommentThread2.RENDER_GOTOCOMMENT_HASHCHANGE )
+							url += window.location.hash;
+					}
+					fnStateUpdate( { comment_thread_page: this.m_iCurrentPage }, '', url );
+				}
+			}
+
+			this.DoTransitionToNewPosts( response, eRenderReason );
+
+			// if we're viewing the most recent page of comments, refresh notifications
+			if ( ( !this.m_rgCommentData['oldestfirst'] && this.m_iCurrentPage == 0 ) ||
+					this.m_rgCommentData['oldestfirst'] && ( this.m_iCurrentPage + 1 ) * this.m_cPageSize > this.m_cTotalCount )
+			{
+				RefreshNotificationArea();
+			}
+
+			this.UpdatePagingDisplay();
+		}
+	},
+
+	DoTransitionToNewPosts: function( response, eRenderReason )
+	{
+		var strNewHTML = response.comments_html;
+
+		var elPosts = $('commentthread_' + this.m_strName + '_posts' );
+		var elContainer = $('commentthread_' + this.m_strName + '_postcontainer' );
+		elContainer.style.height = elContainer.getHeight() + 'px';
+		elContainer.style.overflow = 'hidden';
+
+		var bNewPost = ( eRenderReason == CCommentThread2.RENDER_NEWPOST );
+
+		if ( bNewPost && this.m_cTotalCount <= this.m_cPageSize && !this.m_rgCommentData['oldestfirst'] && !this.m_rgCommentData['newestfirstpagination'] )
+		{
+			elContainer.style.position = 'relative';
+			elPosts.style.position = 'absolute';
+			elPosts.style.left = '0px';
+			elPosts.style.right = '0px';
+			elPosts.style.bottom = '0px';
+		}
+		else
+		{
+			elPosts.style.position = 'static';
+		}
+
+		elPosts.update( strNewHTML );
+
+		ScrollToIfNotInView( $('commentthread_' + this.m_strName + '_area'), 40, 20 );
+
+		if ( elContainer.effect )
+			elContainer.effect.cancel();
+
+		( function() {
+			elContainer.effect = new Effect.Morph( elContainer, { style: 'height: ' + elPosts.getHeight() + 'px', duration: 0.25, afterFinish: function() { elPosts.style.position = 'static'; elContainer.style.height = 'auto'; elContainer.style.overflow = '';  } } );
+		}).defer();
+	},
+
+	UpdatePagingDisplay: function()
+	{
+		if ( !this.m_bHasPaging )
+			return;
+
+		var strPrefix = 'commentthread_' + this.m_strName;
+
+		// this element not displayed on the forum topic page
+		$(strPrefix + '_totalcount') && $(strPrefix + '_totalcount').update( v_numberformat( this.m_cTotalCount ) );
+
+		var rgPagingControls = [ strPrefix + '_page', strPrefix + '_fpage' ];
+		for ( var i = 0; i < rgPagingControls.length; i++ )
+		{
+			var strPagePrefix = rgPagingControls[i];
+
+			// these elements are displayed on the forum topic page
+			$(strPagePrefix + 'total') && $(strPagePrefix + 'total').update( v_numberformat( this.m_cTotalCount ) );
+			$(strPagePrefix + 'start') && $(strPagePrefix + 'start').update( v_numberformat( this.m_iCurrentPage * this.m_cPageSize + 1 ) );
+			$(strPagePrefix + 'end') && $(strPagePrefix + 'end').update( Math.min( ( this.m_iCurrentPage + 1 ) * this.m_cPageSize, this.m_cTotalCount ) );
+
+			if ( $(strPagePrefix + 'ctn' ) )
+			{
+				if ( this.m_cTotalCount > 0 )
+					$(strPagePrefix + 'ctn' ).show();
+				else
+					$(strPagePrefix + 'ctn' ).hide();
+			}
+
+
+			if ( this.m_cMaxPages <= 1 )
+			{
+				$(strPagePrefix + 'controls').hide();
+			}
+			else
+			{
+				$(strPagePrefix + 'controls').show();
+				if ( this.m_iCurrentPage > 0 )
+				{
+					$(strPagePrefix + 'btn_prev').removeClassName('disabled');
+					if ( this.m_bTrackNavigation )
+						$(strPagePrefix + 'btn_prev').href = UpdateParameterInCurrentURL( 'ctp', this.m_iCurrentPage == 1 ? null : this.m_iCurrentPage, ['tscn'] );
+				}
+				else
+				{
+					$(strPagePrefix + 'btn_prev').addClassName('disabled');
+					if ( this.m_bTrackNavigation )
+						$(strPagePrefix + 'btn_prev').href = 'javascript:void(0);';
+				}
+
+				if ( this.m_iCurrentPage < this.m_cMaxPages - 1 )
+				{
+					$(strPagePrefix + 'btn_next').removeClassName('disabled');
+					if ( this.m_bTrackNavigation )
+						$(strPagePrefix + 'btn_next').href = UpdateParameterInCurrentURL( 'ctp', this.m_iCurrentPage + 2, ['tscn'] );
+				}
+				else
+				{
+					$(strPagePrefix + 'btn_next').addClassName('disabled');
+					if ( this.m_bTrackNavigation )
+						$(strPagePrefix + 'btn_next').href = 'javascript:void(0);';
+				}
+
+				var elPageLinks = $(strPagePrefix + 'links');
+				elPageLinks.update('');
+				// we always show first, last, + 3 page links closest to current page
+				var cPageLinksAheadBehind = 2;
+				var firstPageLink = Math.max( this.m_iCurrentPage - cPageLinksAheadBehind, 1 );
+				var lastPageLink = Math.min( this.m_iCurrentPage + (cPageLinksAheadBehind*2) + ( firstPageLink - this.m_iCurrentPage ), this.m_cMaxPages - 2 );
+
+				if ( lastPageLink - this.m_iCurrentPage < cPageLinksAheadBehind )
+					firstPageLink = Math.max( this.m_iCurrentPage - (cPageLinksAheadBehind*2) + ( lastPageLink - this.m_iCurrentPage ), 1 );
+
+				this.AddPageLink( elPageLinks, 0 );
+				if ( firstPageLink != 1 )
+					elPageLinks.insert( ' ... ' );
+
+				for ( var iPage = firstPageLink; iPage <= lastPageLink; iPage++ )
+				{
+					this.AddPageLink( elPageLinks, iPage );
+				}
+
+				if ( lastPageLink != this.m_cMaxPages - 2 )
+					elPageLinks.insert( ' ... ' );
+				this.AddPageLink( elPageLinks, this.m_cMaxPages - 1 );
+			}
+
+			// update the dropdown list with the total.
+			var $DropdownCtn = $J( '#' + strPagePrefix + 'dropdown');
+			var $Select = $DropdownCtn.children( 'select' );
+
+			if ( true )
+			{
+				if ( !$Select.length )
+				{
+					$Select = $J('<select/>');
+					var _this = this;
+					$Select.change( function() {
+						var $Select = $J(this);
+						_this.GoToPage( $Select.val() );
+					});
+					$DropdownCtn.append( $Select );
+				}
+
+				$Select.empty();
+
+				// we always show first, last, + 3 page links closest to current page
+				var fnAddPageDropdown = function( iDropdownPage )
+				{
+					$Select.append( $J('<option/>', { 'value' : iDropdownPage } ).text( iDropdownPage >= 999 ? v_numberformat( iDropdownPage + 1 ) : iDropdownPage + 1) );
+				};
+
+				var cPageLinksAheadBehind = 10;
+				var firstPageLink = Math.max( this.m_iCurrentPage - cPageLinksAheadBehind, 1 );
+				var lastPageLink = Math.min( this.m_iCurrentPage + (cPageLinksAheadBehind*2) + ( firstPageLink - this.m_iCurrentPage ), this.m_cMaxPages - 2 );
+
+				if ( lastPageLink - this.m_iCurrentPage < cPageLinksAheadBehind )
+					firstPageLink = Math.max( this.m_iCurrentPage - (cPageLinksAheadBehind*2) + ( lastPageLink - this.m_iCurrentPage ), 1 );
+
+				fnAddPageDropdown( 0 );
+				if ( firstPageLink != 1 )
+					$Select.append( $J('<option/>', { 'value' : '', 'disabled':1 } ).text('...') );
+
+				for ( var iPage = firstPageLink; iPage <= lastPageLink; iPage++ )
+				{
+					fnAddPageDropdown( iPage );
+				}
+
+				if ( lastPageLink != this.m_cMaxPages - 2 )
+					$Select.append( $J('<option/>', { 'value' : '', 'disabled':1 } ).text('...') );
+				fnAddPageDropdown( this.m_cMaxPages - 1 );
+			}
+
+			$Select.val( this.m_iCurrentPage );
+		}
+
+		this.m_cDropdownPages = this.m_cMaxPages;
+	},
+
+	AddPageLink: function( elPageLinks, iPage )
+	{
+		var el;
+		if ( this.m_bTrackNavigation )
+			el = new Element( 'a', {'class': 'commentthread_pagelink', 'href': UpdateParameterInCurrentURL( 'ctp', iPage + 1, ['tscn'] ) } );
+		else
+			el = new Element( 'span', {'class': 'commentthread_pagelink' } );
+
+		el.update( (iPage + 1) );
+
+		var fnGoToPage = this.GoToPage.bind( this, iPage );
+
+		if ( iPage == this.m_iCurrentPage )
+			el.addClassName( 'active' );
+		else
+			el.observe( 'click',  function(e) { e.stop(); fnGoToPage(); } );
+
+		elPageLinks.insert( el );
+		elPageLinks.insert( ' ' );
+	},
+
+	Subscribe: function( fnOnSuccess, fnOnFail )
+	{
+		var params = this.ParametersWithDefaults();
+		this.m_$SubscribeCheckbox.addClass('waiting');
+
+		var _this = this;
+		$J.post( this.GetActionURL( 'subscribe' ), params )
+			.done( function() {
+				_this.OnSubscriptionChange( true, fnOnSuccess );
+			})
+			.fail( fnOnFail )
+			.always( function() { _this.m_$SubscribeCheckbox.removeClass('waiting' ) } );
+	},
+
+	Unsubscribe: function( fnOnSuccess, fnOnFail )
+	{
+		var params = this.ParametersWithDefaults();
+		this.m_$SubscribeCheckbox.addClass('waiting');
+
+		var _this = this;
+		$J.post( this.GetActionURL( 'unsubscribe' ), params )
+			.done( function() {
+				_this.OnSubscriptionChange( false, fnOnSuccess );
+			})
+			.fail( fnOnFail )
+			.always( function() { _this.m_$SubscribeCheckbox.removeClass('waiting' ) } );
+	},
+
+	m_rgSubscriptionUpdateHandlers: null,
+
+	BindSubscribeButtons: function( elBtnSubscribe, elBtnUnsubscribe )
+	{
+		var _this = this;
+
+		if ( !this.m_rgSubscriptionUpdateHandlers )
+			this.m_rgSubscriptionUpdateHandlers = [];
+
+		this.m_rgSubscriptionUpdateHandlers.push( function() {
+			if ( _this.m_bSubscribed )
+			{
+				$J(elBtnSubscribe).hide();
+				$J(elBtnUnsubscribe).show();
+			}
+			else
+			{
+				$J(elBtnSubscribe).show();
+				$J(elBtnUnsubscribe).hide();
+			}
+		} );
+
+		$J(elBtnSubscribe).click( function() {
+			_this.Subscribe( function() {
+				ShowAlertDialog('Subscribe to thread', 'You\'ll receive a comment notification whenever someone replies to this thread.');
+			}, function() {
+				ShowAlertDialog('Subscribe to thread', 'There was a problem updating your subscription.  Please try again later.');
+			});
+		});
+
+		$J(elBtnUnsubscribe).click( function() {
+			_this.Unsubscribe( function() {
+				ShowAlertDialog('Unsubscribe from thread', 'You\'ll no longer receive comment notifications from this thread.');
+			}, function() {
+				ShowAlertDialog('Unsubscribe from thread', 'There was a problem updating your subscription.  Please try again later.');
+			});
+		});
+
+		this.UpdateSubscriptionDisplay();
+	},
+
+	OnSubscriptionChange: function( bSubscribed, fnProxy, transport )
+	{
+		this.m_bSubscribed = bSubscribed;
+
+		if ( fnProxy )
+			fnProxy( transport );
+
+		this.UpdateSubscriptionDisplay();
+	},
+
+	UpdateSubscriptionDisplay: function()
+	{
+		if ( this.m_rgSubscriptionUpdateHandlers && this.m_rgSubscriptionUpdateHandlers.length )
+		{
+			for ( var i = 0; i < this.m_rgSubscriptionUpdateHandlers.length; i++ )
+				(this.m_rgSubscriptionUpdateHandlers[i])();
+		}
+
+		if ( this.m_bSubscribed )
+			this.m_$SubscribeCheckbox.addClass('checked');
+		else
+			this.m_$SubscribeCheckbox.removeClass('checked');
+
+		var elForumSubscribe = $('forum_subscribe_' + this.m_rgCommentData['feature2'] );
+		var elForumUnsubscribe = $('forum_unsubscribe_' + this.m_rgCommentData['feature2'] );
+		if ( elForumSubscribe && elForumUnsubscribe )
+		{
+			if ( this.m_bSubscribed )
+			{
+				elForumSubscribe.hide();
+				elForumUnsubscribe.show();
+			}
+			else
+			{
+				elForumSubscribe.show();
+				elForumUnsubscribe.hide();
+			}
+		}
+	},
+
+	OnAutosubscribeToggle: function()
+	{
+		var elAutosubscribe = $( 'commentthread_' + this.m_strName + '_autosubscribe' );
+		if ( elAutosubscribe )
+		{
+			if ( elAutosubscribe.checked )
+				SetValueLocalStorage( 'forum_autosubscribe', true );
+			else
+				UnsetValueLocalStorage( 'forum_autosubscribe' );
+		}
+	}
+
+} );
+CCommentThread2.RENDER_NEWPOST = 1;
+CCommentThread2.RENDER_GOTOPAGE = 2;
+CCommentThread2.RENDER_GOTOCOMMENT = 3;
+CCommentThread2.RENDER_DELETEDPOST = 4;
+CCommentThread2.RENDER_GOTOPAGE_HASHCHANGE = 5;
+CCommentThread2.RENDER_GOTOCOMMENT_HASHCHANGE = 6;
+
+// static accessor
+CCommentThread2.DeleteComment = function( id, gidcomment )
+{
+	if ( g_rgCommentThreads[id] )
+		g_rgCommentThreads[id].DeleteComment( gidcomment );
+};
+CCommentThread2.UnDeleteComment = function( id, gidcomment )
+{
+	if ( g_rgCommentThreads[id] )
+		g_rgCommentThreads[id].DeleteComment( gidcomment, true );
+};
+CCommentThread2.MarkSpam = function( id, gidcomment, authorAccountID )
+{
+	if ( g_rgCommentThreads[id] )
+		g_rgCommentThreads[id].MarkSpam( gidcomment, authorAccountID );
+};
+CCommentThread2.ClearContentCheckFlag = function( id, gidcomment )
+{
+	if ( g_rgCommentThreads[id] )
+		g_rgCommentThreads[id].ClearContentCheckFlag( gidcomment );
+};
+// static accessor
+CCommentThread2.EditComment = function( id, gidcomment )
+{
+	if ( g_rgCommentThreads[id] )
+		g_rgCommentThreads[id].DisplayEditComment( gidcomment );
+};
+// static accessor
+CCommentThread2.VoteUp = function( id )
+{
+	if ( g_rgCommentThreads[id] )
+		g_rgCommentThreads[id].VoteUp();
+};
+// static accessor
+CCommentThread2.UpdateAnswer = function( id, gidcomment, bExisting )
+{
+	if ( g_rgCommentThreads[id] )
+		g_rgCommentThreads[id].UpdateAnswer( gidcomment, bExisting );
+};
+CCommentThread2.FormattingHelpPopup = function( strCommentThreadType )
+{
+	$J.get( 'https://steamcommunity.com/comment/' + strCommentThreadType + '/formattinghelp', {ajax:1} ).done( function(data) {
+		ShowAlertDialog( 'Text Formatting', data );
+	});
+};
+CCommentThread2.ShowDeletedComment = function( id, gidcomment )
+{
+	var elComment = $('comment_' + gidcomment);
+	var elDeletedComment = $('deleted_comment_' + gidcomment );
+	elComment.show();
+	elDeletedComment.hide();
+};
+CCommentThread2.HideAndReport = function( id, gidcomment, bHide )
+{
+	if ( g_rgCommentThreads[id] )
+		g_rgCommentThreads[id].HideAndReport( gidcomment, bHide );
+};
+CCommentThread2.ShowHiddenComment = function( id, gidcomment )
+{
+	var elComment = $('comment_' + gidcomment);
+	var elHiddenComment = $('hidden_comment_' + gidcomment );
+	elComment.show();
+	elHiddenComment.hide();
+};
+
+CCommentThread = CCommentThread2
+
+function ShowTradeOffer2( tradeOfferID, rgParams )
+{
+	var strParams = '';
+	if ( rgParams )
+		strParams = '?' + $J.param( rgParams );
+
+	var strKey = ( tradeOfferID == 'new' ? 'NewTradeOffer' + rgParams['partner'] : 'TradeOffer' + tradeOfferID );
+
+	var winHeight = 1120;
+	if ( Steam.BIsUserInSteamClient() && Steam.GetClientPackageVersion() < 1407800248 )
+	{
+		// workaround for client break when the popup window is too tall for the screen.  Try and pick a height that will fit here.
+		var nClientChromePX = 92;
+		if ( window.screen.availHeight && window.screen.availHeight - nClientChromePX < winHeight )
+			winHeight = window.screen.availHeight - nClientChromePX;
+	}
+
+	var strURL = 'https://steamcommunity.com/tradeoffer/' + tradeOfferID + '/' + strParams;
+	if ( Steam.BIsUserInSteamMobileApp() )
+	{
+		window.location = strURL;
+	}
+	else
+	{
+		var winOffer = window.open( strURL, strKey, 'height=' + winHeight + ',width=1028,resize=yes,scrollbars=yes' );
+
+		winOffer.focus();
+	}
+}
+ShowTradeOffer = ShowTradeOffer2;
+
+ApplyAdultContentPreferencesHelper = ApplyAdultContentPreferencesHelper2
+ApplyAdultContentPreferences = ApplyAdultContentPreferences2
+
+//console.log(Class.create.toString())

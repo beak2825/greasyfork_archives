@@ -1,0 +1,50 @@
+// ==UserScript==
+// @name         Anti-curse Bypass
+// @version      1.0.1
+// @description  Anti-Curse Bypass script for MooMoo.io that allows you to bypass the anti-profanity chat filter in the game
+// @author       Nuro
+// @grant        none
+// @match        *://*.moomoo.io/*
+// @run-at       document-end
+// @require      https://greasyfork.org/scripts/456235-moomoo-js/code/MooMoojs.js?version=1159501
+// @namespace https://greasyfork.org/users/761829
+// @downloadURL https://update.greasyfork.org/scripts/458923/Anti-curse%20Bypass.user.js
+// @updateURL https://update.greasyfork.org/scripts/458923/Anti-curse%20Bypass.meta.js
+// ==/UserScript==
+
+/*
+Support us on social media (follow and leave a star)
+
+GitHub: https://moomooforge.github.io/MooMoo.js/
+Author: https://github.com/NuroC
+YouTube: https://www.youtube.com/@nuro9607
+Discord: https://discord.gg/NMS3YR9Q5R
+
+*/
+// bad words (encoded to prevent them from being visible)
+const badwords = JSON.parse(atob("WyJhaG9sZSIsImFudXMiLCJhc2gwbGUiLCJhc2gwbGVzIiwiYXNob2xlcyIsImFzcyIsIkFzcyBNb25rZXkiLCJBc3NmYWNlIiwiYXNzaDBsZSIsImFzc2gwbGV6IiwiYXNzaG9sZSIsImFzc2hvbGVzIiwiYXNzaG9seiIsImFzc3dpcGUiLCJhenpob2xlIiwiYmFzc3RlcmRzIiwiYmFzdGFyZCIsImJhc3RhcmRzIiwiYmFzdGFyZHoiLCJiYXN0ZXJkcyIsImJhc3RlcmR6IiwiQmlhdGNoIiwiYml0Y2giLCJiaXRjaGVzIiwiQmxvdyBKb2IiLCJib2ZmaW5nIiwiYnV0dGhvbGUiLCJidXR0d2lwZSIsImMwY2siLCJjMGNrcyIsImMwayIsIkNhcnBldCBNdW5jaGVyIiwiY2F3ayIsImNhd2tzIiwiQ2xpdCIsImNudHMiLCJjbnR6IiwiY29jayIsImNvY2toZWFkIiwiY29jay1oZWFkIiwiY29ja3MiLCJDb2NrU3Vja2VyIiwiY29jay1zdWNrZXIiLCJjcmFwIiwiY3VtIiwiY3VudCIsImN1bnRzIiwiY3VudHoiLCJkaWNrIiwiZGlsZDAiLCJkaWxkMHMiLCJkaWxkbyIsImRpbGRvcyIsImRpbGxkMCIsImRpbGxkMHMiLCJkb21pbmF0cmlja3MiLCJkb21pbmF0cmljcyIsImRvbWluYXRyaXgiLCJkeWtlIiwiZW5lbWEiLCJmIHUgYyBrIiwiZiB1IGMgayBlIHIiLCJmYWciLCJmYWcxdCIsImZhZ2V0IiwiZmFnZzF0IiwiZmFnZ2l0IiwiZmFnZ290IiwiZmFnZzB0IiwiZmFnaXQiLCJmYWdzIiwiZmFneiIsImZhaWciLCJmYWlncyIsImZhcnQiLCJmbGlwcGluZyB0aGUgYmlyZCIsImZ1Y2siLCJmdWNrZXIiLCJmdWNraW4iLCJmdWNraW5nIiwiZnVja3MiLCJGdWRnZSBQYWNrZXIiLCJmdWsiLCJGdWthaCIsIkZ1a2VuIiwiZnVrZXIiLCJGdWtpbiIsIkZ1a2siLCJGdWtrYWgiLCJGdWtrZW4iLCJGdWtrZXIiLCJGdWtraW4iLCJnMDBrIiwiR29kLWRhbW5lZCIsImgwMHIiLCJoMGFyIiwiaDByZSIsImhlbGxzIiwiaG9hciIsImhvb3IiLCJob29yZSIsImphY2tvZmYiLCJqYXAiLCJqYXBzIiwiamVyay1vZmYiLCJqaXNpbSIsImppc3MiLCJqaXptIiwiaml6eiIsImtub2IiLCJrbm9icyIsImtub2J6Iiwia3VudCIsImt1bnRzIiwia3VudHoiLCJMZXp6aWFuIiwiTGlwc2hpdHMiLCJMaXBzaGl0eiIsIm1hc29jaGlzdCIsIm1hc29raXN0IiwibWFzc3RlcmJhaXQiLCJtYXNzdHJiYWl0IiwibWFzc3RyYmF0ZSIsIm1hc3RlcmJhaXRlciIsIm1hc3RlcmJhdGUiLCJtYXN0ZXJiYXRlcyIsIk1vdGhhIEZ1Y2tlciIsIk1vdGhhIEZ1a2VyIiwiTW90aGEgRnVra2FoIiwiTW90aGEgRnVra2VyIiwiTW90aGVyIEZ1Y2tlciIsIk1vdGhlciBGdWthaCIsIk1vdGhlciBGdWtlciIsIk1vdGhlciBGdWtrYWgiLCJNb3RoZXIgRnVra2VyIiwibW90aGVyLWZ1Y2tlciIsIk11dGhhIEZ1Y2tlciIsIk11dGhhIEZ1a2FoIiwiTXV0aGEgRnVrZXIiLCJNdXRoYSBGdWtrYWgiLCJNdXRoYSBGdWtrZXIiLCJuMWdyIiwibmFzdHQiLCJuaWdnZXI7IiwibmlndXI7IiwibmlpZ2VyOyIsIm5paWdyOyIsIm9yYWZpcyIsIm9yZ2FzaW07Iiwib3JnYXNtIiwib3JnYXN1bSIsIm9yaWZhY2UiLCJvcmlmaWNlIiwib3JpZmlzcyIsInBhY2tpIiwicGFja2llIiwicGFja3kiLCJwYWtpIiwicGFraWUiLCJwYWt5IiwicGVja2VyIiwicGVlZW51cyIsInBlZWVudXNzcyIsInBlZW51cyIsInBlaW51cyIsInBlbjFzIiwicGVuYXMiLCJwZW5pcyIsInBlbmlzLWJyZWF0aCIsInBlbnVzIiwicGVudXVzIiwiUGh1YyIsIlBodWNrIiwiUGh1ayIsIlBodWtlciIsIlBodWtrZXIiLCJwb2xhYyIsInBvbGFjayIsInBvbGFrIiwiUG9vbmFuaSIsInByMWMiLCJwcjFjayIsInByMWsiLCJwdXNzZSIsInB1c3NlZSIsInB1c3N5IiwicHV1a2UiLCJwdXVrZXIiLCJxdWVlciIsInF1ZWVycyIsInF1ZWVyeiIsInF3ZWVycyIsInF3ZWVyeiIsInF3ZWlyIiwicmVja3R1bSIsInJlY3R1bSIsInJldGFyZCIsInNhZGlzdCIsInNjYW5rIiwic2NobG9uZyIsInNjcmV3aW5nIiwic2VtZW4iLCJzZXgiLCJzZXh5IiwiU2ghdCIsInNoMXQiLCJzaDF0ZXIiLCJzaDF0cyIsInNoMXR0ZXIiLCJzaDF0eiIsInNoaXQiLCJzaGl0cyIsInNoaXR0ZXIiLCJTaGl0dHkiLCJTaGl0eSIsInNoaXR6IiwiU2h5dCIsIlNoeXRlIiwiU2h5dHR5IiwiU2h5dHkiLCJza2FuY2siLCJza2FuayIsInNrYW5rZWUiLCJza2Fua2V5Iiwic2thbmtzIiwiU2thbmt5Iiwic2xhZyIsInNsdXQiLCJzbHV0cyIsIlNsdXR0eSIsInNsdXR6Iiwic29uLW9mLWEtYml0Y2giLCJ0aXQiLCJ0dXJkIiwidmExamluYSIsInZhZzFuYSIsInZhZ2lpbmEiLCJ2YWdpbmEiLCJ2YWoxbmEiLCJ2YWppbmEiLCJ2dWxsdmEiLCJ2dWx2YSIsIncwcCIsIndoMDByIiwid2gwcmUiLCJ3aG9yZSIsInhyYXRlZCIsInh4eCIsImIhK2NoIiwiYml0Y2giLCJibG93am9iIiwiY2xpdCIsImFyc2NobG9jaCIsImZ1Y2siLCJzaGl0IiwiYXNzIiwiYXNzaG9sZSIsImIhdGNoIiwiYjE3Y2giLCJiMXRjaCIsImJhc3RhcmQiLCJiaStjaCIsImJvaW9sYXMiLCJidWNldGEiLCJjMGNrIiwiY2F3ayIsImNoaW5rIiwiY2lwYSIsImNsaXRzIiwiY29jayIsImN1bSIsImN1bnQiLCJkaWxkbyIsImRpcnNhIiwiZWpha3VsYXRlIiwiZmF0YXNzIiwiZmN1ayIsImZ1ayIsImZ1eDByIiwiaG9lciIsImhvcmUiLCJqaXNtIiwia2F3ayIsImwzaXRjaCIsImwzaStjaCIsImxlc2JpYW4iLCJtYXN0dXJiYXRlIiwibWFzdGVyYmF0KiIsIm1hc3RlcmJhdDMiLCJtb3RoZXJmdWNrZXIiLCJzLm8uYi4iLCJtb2ZvIiwibmF6aSIsIm5pZ2dhIiwibmlnZ2VyIiwibnV0c2FjayIsInBodWNrIiwicGltcGlzIiwicHVzc2UiLCJwdXNzeSIsInNjcm90dW0iLCJzaCF0Iiwic2hlbWFsZSIsInNoaSsiLCJzaCErIiwic2x1dCIsInNtdXQiLCJ0ZWV0cyIsInRpdHMiLCJib29icyIsImIwMGJzIiwidGVleiIsInRlc3RpY2FsIiwidGVzdGljbGUiLCJ0aXR0IiwidzAwc2UiLCJqYWNrb2ZmIiwid2FuayIsIndob2FyIiwid2hvcmUiLCIqZGFtbiIsIipkeWtlIiwiKmZ1Y2sqIiwiKnNoaXQqIiwiQCQkIiwiYW1jaWsiLCJhbmRza290YSIsImFyc2UqIiwiYXNzcmFtbWVyIiwiYXlpciIsImJpN2NoIiwiYml0Y2gqIiwiYm9sbG9jayoiLCJicmVhc3RzIiwiYnV0dC1waXJhdGUiLCJjYWJyb24iLCJjYXp6byIsImNocmFhIiwiY2h1aiIsIkNvY2sqIiwiY3VudCoiLCJkNG1uIiwiZGF5Z28iLCJkZWdvIiwiZGljayoiLCJkaWtlKiIsImR1cGEiLCJkeml3a2EiLCJlamFja3VsYXRlIiwiRWtyZW0qIiwiRWt0byIsImVuY3VsZXIiLCJmYWVuIiwiZmFnKiIsImZhbmN1bG8iLCJmYW5ueSIsImZlY2VzIiwiZmVnIiwiRmVsY2hlciIsImZpY2tlbiIsImZpdHQqIiwiRmxpa2tlciIsImZvcmVza2luIiwiRm90emUiLCJGdSgqIiwiZnVrKiIsImZ1dGtyZXR6biIsImdvb2siLCJndWllbmEiLCJoMHIiLCJoNHgwciIsImhlbGwiLCJoZWx2ZXRlIiwiaG9lcioiLCJob25rZXkiLCJIdWV2b24iLCJodWkiLCJpbmp1biIsImppenoiLCJrYW5rZXIqIiwia2lrZSIsImtsb290emFrIiwia3JhdXQiLCJrbnVsbGUiLCJrdWsiLCJrdWtzdWdlciIsIkt1cmFjIiwia3Vyd2EiLCJrdXNpKiIsImt5cnBhKiIsImxlc2JvIiwibWFtaG9vbiIsIm1hc3R1cmJhdCoiLCJtZXJkKiIsIm1pYnVuIiwibW9ua2xlaWdoIiwibW91bGlld29wIiwibXVpZSIsIm11bGtrdSIsIm11c2NoaSIsIm5hemlzIiwibmVwZXNhdXJpbyIsIm5pZ2dlcioiLCJvcm9zcHUiLCJwYXNrYSoiLCJwZXJzZSIsInBpY2thIiwicGllcmRvbCoiLCJwaWxsdSoiLCJwaW1tZWwiLCJwaXNzKiIsInBpemRhIiwicG9vbnRzZWUiLCJwb29wIiwicG9ybiIsInAwcm4iLCJwcjBuIiwicHJldGVlbiIsInB1bGEiLCJwdWxlIiwicHV0YSIsInB1dG8iLCJxYWhiZWgiLCJxdWVlZioiLCJyYXV0ZW5iZXJnIiwic2NoYWZmZXIiLCJzY2hlaXNzKiIsInNjaGxhbXBlIiwic2NobXVjayIsInNjcmV3Iiwic2ghdCoiLCJzaGFybXV0YSIsInNoYXJtdXRlIiwic2hpcGFsIiwic2hpeiIsInNrcmlieiIsInNrdXJ3eXN5biIsInNwaGVuY3RlciIsInNwaWMiLCJzcGllcmRhbGFqIiwic3Bsb29nZSIsInN1a2EiLCJiMDBiKiIsInRlc3RpY2xlKiIsInRpdHQqIiwidHdhdCIsInZpdHR1Iiwid2FuayoiLCJ3ZXRiYWNrKiIsIndpY2hzZXIiLCJ3b3AqIiwieWVkIiwiemFib3VyYWgiXQ=="))
+
+const MooMoo = (function MooMooJS_beta() {})[69]
+
+const msgpack = MooMoo.msgpack;
+const PacketInterceptor = MooMoo.PacketInterceptor;
+
+const clientCallback = PacketInterceptor.addCallback("client", packet => {
+    let decoded = msgpack.decode(new Uint8Array(packet));
+    let [packetid, [...data]] = decoded;
+    if (packetid == "ch") {
+        let [msg] = data;
+        if (badwords.some(word => msg.includes(word))) {
+            badwords.forEach(badword => {
+                let index = msg.indexOf(badword);
+                while (index !== -1) {
+                    msg = msg.substring(0, index + 2) + String.fromCharCode(0) + msg.substring(index + 2);
+                    msg = msg.substring(0, 30);
+                    index = msg.indexOf(badword, index + 2);
+                }
+            });
+        }
+        packet = msgpack.encode(["ch", [msg]])
+    }
+    return packet;
+})

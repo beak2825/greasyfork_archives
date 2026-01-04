@@ -1,0 +1,30 @@
+// ==UserScript==
+// @name         Google Bard Geolocation Text Remover
+// @namespace    Google Bard Geolocation Text Remover
+// @match        *://*bard.google.com/*
+// @version      0.2
+// @description  Violentmonkey Scripts
+// @icon         data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTA4MCIgaGVpZ2h0PSIxMDgwIiB2aWV3Qm94PSIwIDAgMTA4MCAxMDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNNTE1LjA5IDcyNS44MjRMNDcyLjAwNiA4MjQuNTAzQzQ1NS40NDQgODYyLjQzNCA0MDIuOTU0IDg2Mi40MzQgMzg2LjM5MyA4MjQuNTAzTDM0My4zMDggNzI1LjgyNEMzMDQuOTY2IDYzOC4wMDYgMjM1Ljk1MyA1NjguMTA0IDE0OS44NjggNTI5Ljg5MkwzMS4yNzc5IDQ3Ny4yNTFDLTYuNDI2MDEgNDYwLjUxNSAtNi40MjU5NCA0MDUuNjY1IDMxLjI3NzkgMzg4LjkyOUwxNDYuMTY0IDMzNy45MzJDMjM0LjQ2MyAyOTguNzM3IDMwNC43MTQgMjI2LjI0NCAzNDIuNDAxIDEzNS40MzFMMzg2LjA0NCAzMC4yNjkzQzQwMi4yMzkgLTguNzU2MzcgNDU2LjE1OSAtOC43NTY0NiA0NzIuMzU1IDMwLjI2OTJMNTE1Ljk5OCAxMzUuNDMyQzU1My42ODUgMjI2LjI0NCA2MjMuOTM1IDI5OC43MzcgNzEyLjIzNCAzMzcuOTMyTDgyNy4xMjEgMzg4LjkyOUM4NjQuODI1IDQwNS42NjUgODY0LjgyNSA0NjAuNTE1IDgyNy4xMjEgNDc3LjI1MUw3MDguNTMgNTI5Ljg5MkM2MjIuNDQ2IDU2OC4xMDQgNTUzLjQzMyA2MzguMDA2IDUxNS4wOSA3MjUuODI0WiIgZmlsbD0idXJsKCNwYWludDBfcmFkaWFsXzI1MjVfNzc3KSIvPgo8cGF0aCBkPSJNOTE1LjQ4NSAxMDM2Ljk4TDkwMy4zNjcgMTA2NC43NUM4OTQuNDk5IDEwODUuMDggODY2LjM0OSAxMDg1LjA4IDg1Ny40ODEgMTA2NC43NUw4NDUuMzY0IDEwMzYuOThDODIzLjc2NSA5ODcuNDY1IDc4NC44NjIgOTQ4LjA0MiA3MzYuMzE4IDkyNi40NzVMNjk4Ljk4NyA5MDkuODg5QzY3OC44MDIgOTAwLjkyMSA2NzguODAyIDg3MS41NzggNjk4Ljk4NyA4NjIuNjFMNzM0LjIzMSA4NDYuOTUxQzc4NC4wMjMgODI0LjgyOSA4MjMuNjIzIDc4My45NDcgODQ0Ljg1MSA3MzIuNzVMODU3LjI5NCA3MDIuNzQxQzg2NS45NjYgNjgxLjgyNiA4OTQuODgyIDY4MS44MjYgOTAzLjU1NCA3MDIuNzQxTDkxNS45OTcgNzMyLjc1QzkzNy4yMjUgNzgzLjk0NyA5NzYuODI2IDgyNC44MjkgMTAyNi42MiA4NDYuOTUxTDEwNjEuODYgODYyLjYxQzEwODIuMDUgODcxLjU3OCAxMDgyLjA1IDkwMC45MjEgMTA2MS44NiA5MDkuODg5TDEwMjQuNTMgOTI2LjQ3NUM5NzUuOTg3IDk0OC4wNDIgOTM3LjA4MyA5ODcuNDY1IDkxNS40ODUgMTAzNi45OFoiIGZpbGw9InVybCgjcGFpbnQxX3JhZGlhbF8yNTI1Xzc3NykiLz4KPGRlZnM+CjxyYWRpYWxHcmFkaWVudCBpZD0icGFpbnQwX3JhZGlhbF8yNTI1Xzc3NyIgY3g9IjAiIGN5PSIwIiByPSIxIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgZ3JhZGllbnRUcmFuc2Zvcm09InRyYW5zbGF0ZSg2NzAuNDQ3IDQ3NC4wMDYpIHJvdGF0ZSg3OC44NTgpIHNjYWxlKDY2NS41IDY2NS44MjQpIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzFCQTFFMyIvPgo8c3RvcCBvZmZzZXQ9IjAuMDAwMSIgc3RvcC1jb2xvcj0iIzFCQTFFMyIvPgo8c3RvcCBvZmZzZXQ9IjAuMzAwMjIxIiBzdG9wLWNvbG9yPSIjNTQ4OUQ2Ii8+CjxzdG9wIG9mZnNldD0iMC41NDU1MjQiIHN0b3AtY29sb3I9IiM5QjcyQ0IiLz4KPHN0b3Agb2Zmc2V0PSIwLjgyNTM3MiIgc3RvcC1jb2xvcj0iI0Q5NjU3MCIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNGNDlDNDYiLz4KPC9yYWRpYWxHcmFkaWVudD4KPHJhZGlhbEdyYWRpZW50IGlkPSJwYWludDFfcmFkaWFsXzI1MjVfNzc3IiBjeD0iMCIgY3k9IjAiIHI9IjEiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBncmFkaWVudFRyYW5zZm9ybT0idHJhbnNsYXRlKDY3MC40NDcgNDc0LjAwNikgcm90YXRlKDc4Ljg1OCkgc2NhbGUoNjY1LjUgNjY1LjgyNCkiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMUJBMUUzIi8+CjxzdG9wIG9mZnNldD0iMC4wMDAxIiBzdG9wLWNvbG9yPSIjMUJBMUUzIi8+CjxzdG9wIG9mZnNldD0iMC4zMDAyMjEiIHN0b3AtY29sb3I9IiM1NDg5RDYiLz4KPHN0b3Agb2Zmc2V0PSIwLjU0NTUyNCIgc3RvcC1jb2xvcj0iIzlCNzJDQiIvPgo8c3RvcCBvZmZzZXQ9IjAuODI1MzcyIiBzdG9wLWNvbG9yPSIjRDk2NTcwIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0Y0OUM0NiIvPgo8L3JhZGlhbEdyYWRpZW50Pgo8L2RlZnM+Cjwvc3ZnPgo=
+// @author       mickey90427 <mickey90427@naver.com>
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/468039/Google%20Bard%20Geolocation%20Text%20Remover.user.js
+// @updateURL https://update.greasyfork.org/scripts/468039/Google%20Bard%20Geolocation%20Text%20Remover.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // location-footer-textual 요소의 존재를 감지하는 함수
+    function detectAndRemoveLocationFooter() {
+        var locationFooter = document.querySelector('.location-footer-textual');
+        if (locationFooter) {
+            locationFooter.remove();
+        } else {
+            // location-footer-textual 요소가 존재하지 않으면 0.1초 후에 다시 시도
+            setTimeout(detectAndRemoveLocationFooter, 100);
+        }
+    }
+
+    // 페이지 로드를 다 기다린 후 요소 감지 함수 호출
+    window.addEventListener('load', detectAndRemoveLocationFooter);
+})();
