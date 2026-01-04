@@ -1,0 +1,56 @@
+// ==UserScript==
+// @name       server:宜搭+
+// @namespace  npm/vite-plugin-monkey
+// @version    3.0.1
+// @author     Navcoo.Li
+// @license    MIT
+// @icon       https://www.google.com/s2/favicons?sz=64&domain=aliwork.com
+// @match      https://*.aliwork.com/alibaba/web/*/design/*
+// @match      https://*.aliwork.com/dingtalk/web/*/design/*
+// @grant      GM.addElement
+// @grant      GM.addStyle
+// @grant      GM.deleteValue
+// @grant      GM.getResourceUrl
+// @grant      GM.getValue
+// @grant      GM.info
+// @grant      GM.listValues
+// @grant      GM.notification
+// @grant      GM.openInTab
+// @grant      GM.registerMenuCommand
+// @grant      GM.setClipboard
+// @grant      GM.setValue
+// @grant      GM.xmlHttpRequest
+// @grant      GM_addElement
+// @grant      GM_addStyle
+// @grant      GM_addValueChangeListener
+// @grant      GM_cookie
+// @grant      GM_deleteValue
+// @grant      GM_download
+// @grant      GM_getResourceText
+// @grant      GM_getResourceURL
+// @grant      GM_getTab
+// @grant      GM_getTabs
+// @grant      GM_getValue
+// @grant      GM_info
+// @grant      GM_listValues
+// @grant      GM_log
+// @grant      GM_notification
+// @grant      GM_openInTab
+// @grant      GM_registerMenuCommand
+// @grant      GM_removeValueChangeListener
+// @grant      GM_saveTab
+// @grant      GM_setClipboard
+// @grant      GM_setValue
+// @grant      GM_unregisterMenuCommand
+// @grant      GM_webRequest
+// @grant      GM_xmlhttpRequest
+// @grant      unsafeWindow
+// @grant      window.close
+// @grant      window.focus
+// @grant      window.onurlchange
+// @description 宜搭插件升级工具
+// @downloadURL https://update.greasyfork.org/scripts/492902/server%3A%E5%AE%9C%E6%90%AD%2B.user.js
+// @updateURL https://update.greasyfork.org/scripts/492902/server%3A%E5%AE%9C%E6%90%AD%2B.meta.js
+// ==/UserScript==
+
+console.log("a")

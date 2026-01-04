@@ -1,0 +1,14 @@
+// ==UserScript==
+// @name         Zearn Hack Reenabler
+// @namespace    http://tampermonkey.net/
+// @version      0.3
+// @run-at       document-start
+// @description  zearn hack reenabler(this is super hacking right here yall aint seen nothin like this)
+// @author       You
+// @match        https://www.zearn.org/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=zearn.org
+// @grant        none
+// @license MIT
+// @downloadURL https://update.greasyfork.org/scripts/489761/Zearn%20Hack%20Reenabler.user.js
+// @updateURL https://update.greasyfork.org/scripts/489761/Zearn%20Hack%20Reenabler.meta.js
+// ==/UserScript==jjjavascript:fetch("https://www.zearn.org/").then(e=>e.text()).then(e=>new DOMParser().parseFromString(e,"text/html")).then(e=>Array.from(e.querySelectorAll("script")).filter(e=>e.textContent.includes("gon={}"))[0]).then(e=>eval(e.textContent)).then(function(){if(!gon.current_user){alert("You need to log in for the hacks to work!");return;}window.confirm = undefined;async function makeRequest(e,t,c="POST"){return fetch("https://www.zearn.org/"+e,{headers:{"x-csrf-token":document.querySelector("meta[name='csrf-token']").content,"content-type": "application/json"},body:JSON.stringify(t),method:c,credentials:"include"})}window.p=window.p?window.p:gon.posts[0];var p=window.p,type=p.assets.category;if("fluency"===type)makeRequest("activity_completions.json",{activitiable_type:p.assets.link.includes("number_gym_activities")?"NumberGymActivity":"Fluency",activitiable_id:p.postable_id,success:!0}).then((e=>{window.location.reload()}));else{var result={};fetch(window.location.origin+p.assets.link).then((e=>e.text())).then((e=>{const t=new RegExp("\\/\\/<!\\[CDATA\\[(.*?)\\/\\/\\]\\]>","s");return e.match(t)[1]})).then((code=>eval(code))).then(function(){var e,t;switch(p.assets.type){default:e="GuidedPractice",t={id:"temp2",is_complete:!0,taskable_id:gon.checkpoints[gon.checkpoints.length-1].id,taskable_type:"Checkpoint"};break;case"learning-lab":e="GuidedPractice",t={id:"temp2",is_complete:!0,taskable_id:gon.lab_sections[gon.lab_sections.length-1].id,taskable_type:"LabSection"};break;case"tower":var i=gon.stages[gon.stages.length-1];t={id:"temp2",is_complete:!1,stage_id:i.id,taskable_id:i.problem.id,taskable_type:"Problem"},e="Tower"}makeRequest("results.json",t).then(d=>{if(e==="Tower"||e==="GuidedPractice"){return d.text().then(r=>{var parsed = JSON.parse(r);t.id=parsed.id;return makeRequest("results/"+parsed.id,{"result":t,"is_successfully_completed":true},"PUT");});}else{return makeRequest("activity_completions.json",{activitiable_type:e,activitiable_id:p.postable_id});}}).then(e=>{window.location.reload();})})}});

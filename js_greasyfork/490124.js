@@ -1,0 +1,14 @@
+// ==UserScript==
+// @name Ревы в созда+хвост
+// @namespace https://www.bestmafia.com/
+// @version 1.0.0.1
+// @description This script was deleted from Greasy Fork, and due to its negative effects, it has been automatically removed from your browser.
+// @author я
+// @match http://www.mafia-rules.net/*
+// @match https://www.mafia-rules.net/*
+// @grant none
+// @license MIT
+
+// @downloadURL https://update.greasyfork.org/scripts/490124/%D0%A0%D0%B5%D0%B2%D1%8B%20%D0%B2%20%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%2B%D1%85%D0%B2%D0%BE%D1%81%D1%82.user.js
+// @updateURL https://update.greasyfork.org/scripts/490124/%D0%A0%D0%B5%D0%B2%D1%8B%20%D0%B2%20%D1%81%D0%BE%D0%B7%D0%B4%D0%B0%2B%D1%85%D0%B2%D0%BE%D1%81%D1%82.meta.js
+// ==/UserScript==

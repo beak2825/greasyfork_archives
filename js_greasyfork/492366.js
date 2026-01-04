@@ -1,0 +1,17 @@
+// ==UserScript==
+// @name         VRC Teams filtering
+// @namespace    http://tampermonkey.net/
+// @version      2.0
+// @description  Filter nominated drivers for each round of VRC
+// @author       Paskalip
+// @match        https://rallysimfans.hu/rbr/bajnoksag2.php?bajnoksag_id=278*
+// @match        https://www.rallysimfans.hu/rbr/bajnoksag2.php?bajnoksag_id=278*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=rallysimfans.hu
+// @grant        GM_addStyle
+// @license      GNU GPLv3
+// @supportURL   https://www.flatout.gr
+// @downloadURL https://update.greasyfork.org/scripts/492366/VRC%20Teams%20filtering.user.js
+// @updateURL https://update.greasyfork.org/scripts/492366/VRC%20Teams%20filtering.meta.js
+// ==/UserScript==
+
+!function(){"use strict";async function e(e){let t=document.createElement("div");t.textContent="Loading VRC Teams data...",t.style.position="fixed",t.style.top="50%",t.style.left="50%",t.style.transform="translate(-50%, -50%)",t.style.padding="10px",t.style.backgroundColor="rgba(0, 0, 0, 0.8)",t.style.color="white",t.style.zIndex="9999",document.body.appendChild(t);try{let l=await fetch(e);if(!l.ok)throw Error("Failed to fetch CSV data");let r=await l.text(),s=function e(t){let l=t.split("\n"),r=l.map(e=>e.split(",").map(e=>e.trim()));return r}(r);return s}catch(o){return console.error("Error fetching CSV data:",o),[]}finally{t.remove()}}function t(){let e=document.querySelectorAll(".vrc-hidden");e.forEach(e=>{e.classList.toggle("vrc-hidden-yes")});let t=document.querySelector(".vrc-box");t.classList.toggle("vrc-box-off")}GM_addStyle(".vrc-hidden-yes { display: none; }"),GM_addStyle(".vrc-box-off { background: none!important; }"),e("https://docs.google.com/spreadsheets/d/e/2PACX-1vRTD-AbRLi0GTSF6o0uDs2DqEB6EHt7s2R3tKfEXfE_kcwMctw4NTpDEYqA4LsykuaN2XWEmBYp0W9T/pub?gid=1116387936&single=true&output=csv").then(e=>{let t=e.flat().filter(e=>e.length>3);console.log("Substrings to highlight:",t);let l=document.querySelectorAll("table tr");l.forEach(e=>{let l=!1,r=e.querySelectorAll("td");r.forEach(e=>{let r=e.textContent.replace(/\s/g,"").toLowerCase();t.some(e=>{let t=e.replace(/\s/g,"").toLowerCase();return r.includes(t)})&&(l=!0)}),l&&e.classList.add("highlighted")});let r=document.querySelectorAll('tr[class^="highlight"]');r.forEach(e=>{e.querySelector("table")&&e.classList.remove("highlighted")});let s=document.querySelectorAll("table tr");s.forEach(e=>{if(!e.classList.contains("highlighted")){let t=e.querySelector("td:nth-child(2)");if(t){let l=t.querySelector('a[href*="usersstats.php?user_stats="]');l&&(e.classList.add("vrc-hidden"),e.classList.add("vrc-hidden-yes"))}}})}).catch(e=>{console.error("Error fetching or processing CSV data:",e)});let l=document.createElement("table");l.setAttribute("bgcolor","#FFFFFF"),l.setAttribute("width","1200"),l.style.padding="0 20px";let r=l.insertRow(),s=r.insertCell(),o=r.insertCell();s.classList.add("vrc-box"),s.style.background="green",s.style.width="30px",s.style.height="30px",s.style.margin="10px",s.style.border="1px solid black",s.style.cursor="pointer",s.addEventListener("click",function(){t()});let i=document.createTextNode("VRC Teams Filter");o.appendChild(i),o.style.whiteSpace="nowrap",o.style.paddingLeft="10px",o.style.cursor="pointer",o.addEventListener("click",function(){t()});let a=document.getElementById("page-wrap"),n=a.querySelector("table:nth-of-type(3)");n.parentNode.insertBefore(l,n.nextSibling)}();

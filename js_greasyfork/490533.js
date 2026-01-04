@@ -1,0 +1,1617 @@
+// ==UserScript==
+// @name 测试
+// @namespace franciszhao
+// @version 1.0.322-3
+// @description 一款使用 Adobe 品牌字体替换网页原有字体的用户样式表，为你呈现更统一美观的页面风格。
+// @author Francis Zhao <francis@n2o.io>
+// @homepageURL https://n2o.io/go?page=userstyles
+// @supportURL https://n2o.io/go?page=userstyles
+// @license MIT
+// @grant GM_addStyle
+// @run-at document-start
+// @match *://*/*
+// @downloadURL https://update.greasyfork.org/scripts/490533/%E6%B5%8B%E8%AF%95.user.js
+// @updateURL https://update.greasyfork.org/scripts/490533/%E6%B5%8B%E8%AF%95.meta.js
+// ==/UserScript==
+
+(function() {
+let css = "";
+css += `
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: 'Source Han Sans SC', 'Noto Sans CJK SC', 'HanHei SC',
+    '方正兰亭黑_GB18030', '方正兰亭黑_GBK', system-ui, ui-sans-serif, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+
+pre,
+code,
+kbd,
+samp {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+
+button,
+input,
+keygen,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+}
+
+::before,
+::after {
+  font-family: inherit;
+}
+
+html:lang(zh) body,
+html:lang(cmn) body,
+html:lang(zh-cmn) body {
+  font-family: 'Source Han Sans SC', 'Noto Sans CJK SC', 'HanHei SC',
+    '方正兰亭黑_GB18030', '方正兰亭黑_GBK', system-ui, ui-sans-serif, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+  quotes: '“' '”';
+}
+html:lang(zh) pre {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh) code {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh) kbd {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh) samp {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(cmn) pre {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(cmn) code {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(cmn) kbd {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(cmn) samp {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-cmn) pre {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-cmn) code {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-cmn) kbd {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-cmn) samp {
+  font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-TW) body,
+html:lang(zh-Hant) body,
+html:lang(cmn-Hant) body,
+html:lang(zh-cmn-Hant) body {
+  font-family: 'Source Han Sans TC', 'Noto Sans CJK TC', 'HanHei TC', system-ui,
+    ui-sans-serif, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+  quotes: '「' '」';
+}
+html:lang(zh-TW) pre {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-TW) code {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-TW) kbd {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-TW) samp {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-Hant) pre {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-Hant) code {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-Hant) kbd {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-Hant) samp {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(cmn-Hant) pre {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(cmn-Hant) code {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(cmn-Hant) kbd {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(cmn-Hant) samp {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-cmn-Hant) pre {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-cmn-Hant) code {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-cmn-Hant) kbd {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-cmn-Hant) samp {
+  font-family: 'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-HK) body,
+html:lang(zh-MO) body,
+html:lang(yue) body,
+html:lang(zh-yue-Hant) body {
+  font-family: 'Source Han Sans HC', 'Noto Sans CJK HC', 'Source Han Sans TC',
+    'Noto Sans CJK TC', 'HanHei TC', system-ui, ui-sans-serif, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+  quotes: '「' '」';
+}
+html:lang(zh-HK) pre {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-HK) code {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-HK) kbd {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-HK) samp {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-MO) pre {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-MO) code {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-MO) kbd {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-MO) samp {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(yue) pre {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(yue) code {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(yue) kbd {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(yue) samp {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-yue-Hant) pre {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-yue-Hant) code {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-yue-Hant) kbd {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-yue-Hant) samp {
+  font-family: 'Source Han Mono HC', 'Noto Sans Mono CJK HC',
+    'Source Han Mono TC', 'Noto Sans Mono CJK TC', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(ja) body {
+  font-family: 'Source Han Sans', 'Noto Sans CJK JP', 'Hiragino Kaku Gothic Pro',
+    system-ui, ui-sans-serif, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+  quotes: '「' '」';
+}
+html:lang(ja) pre {
+  font-family: 'Source Han Mono', 'Noto Sans Mono CJK JP', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(ja) code {
+  font-family: 'Source Han Mono', 'Noto Sans Mono CJK JP', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(ja) kbd {
+  font-family: 'Source Han Mono', 'Noto Sans Mono CJK JP', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(ja) samp {
+  font-family: 'Source Han Mono', 'Noto Sans Mono CJK JP', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(ko) body {
+  font-family: 'Source Han Sans K', 'Noto Sans CJK KR', 'Apple SD Gothic Neo',
+    system-ui, ui-sans-serif, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ko) pre {
+  font-family: 'Source Han Mono K', 'Noto Sans Mono CJK KR', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(ko) code {
+  font-family: 'Source Han Mono K', 'Noto Sans Mono CJK KR', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(ko) kbd {
+  font-family: 'Source Han Mono K', 'Noto Sans Mono CJK KR', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(ko) samp {
+  font-family: 'Source Han Mono K', 'Noto Sans Mono CJK KR', 'Source Code Pro',
+    'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(de) body,
+html:lang(nl) body,
+html:lang(en) body,
+html:lang(nb) body,
+html:lang(no) body,
+html:lang(is) body,
+html:lang(da) body,
+html:lang(sv) body,
+html:lang(pt) body,
+html:lang(es) body,
+html:lang(fr) body,
+html:lang(it) body,
+html:lang(ro) body,
+html:lang(lv) body,
+html:lang(lt) body,
+html:lang(pl) body,
+html:lang(cs) body,
+html:lang(sk) body,
+html:lang(bs) body,
+html:lang(hr) body,
+html:lang(sr) body,
+html:lang(bg) body,
+html:lang(sl) body,
+html:lang(ru) body,
+html:lang(uk) body,
+html:lang(be) body,
+html:lang(el) body,
+html:lang(hu) body,
+html:lang(et) body,
+html:lang(fi) body,
+html:lang(tr) body,
+html:lang(id) body,
+html:lang(ms) body {
+  font-family: 'Source Sans 3', 'Source Sans Pro', 'Noto Sans', 'Roboto',
+    ui-sans-serif, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(de) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(de) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(de) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(de) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(nl) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(nl) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(nl) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(nl) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(en) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(en) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(en) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(en) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(nb) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(nb) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(nb) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(nb) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(no) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(no) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(no) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(no) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(is) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(is) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(is) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(is) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(da) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(da) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(da) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(da) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sv) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sv) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sv) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sv) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(pt) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(pt) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(pt) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(pt) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(es) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(es) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(es) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(es) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(fr) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(fr) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(fr) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(fr) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(it) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(it) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(it) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(it) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ro) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ro) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ro) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ro) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(lv) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(lv) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(lv) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(lv) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(lt) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(lt) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(lt) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(lt) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(pl) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(pl) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(pl) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(pl) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(cs) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(cs) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(cs) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(cs) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sk) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sk) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sk) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sk) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(bs) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(bs) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(bs) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(bs) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(hr) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(hr) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(hr) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(hr) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sr) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sr) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sr) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sr) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(bg) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(bg) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(bg) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(bg) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sl) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sl) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sl) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(sl) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ru) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ru) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ru) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ru) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(uk) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(uk) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(uk) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(uk) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(be) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(be) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(be) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(be) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(el) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(el) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(el) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(el) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(hu) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(hu) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(hu) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(hu) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(et) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(et) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(et) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(et) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(fi) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(fi) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(fi) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(fi) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(tr) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(tr) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(tr) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(tr) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(id) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(id) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(id) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(id) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ms) pre {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ms) code {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ms) kbd {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ms) samp {
+  font-family: 'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono',
+    ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(de) body {
+  quotes: '„' '“';
+}
+html:lang(nb) body,
+html:lang(no) body,
+html:lang(es) body {
+  quotes: '«' '»';
+}
+html:lang(fr) body {
+  quotes: '« ' ' »';
+}
+html:lang(ar) body,
+html:lang(he) body,
+html:lang(th) body,
+html:lang(vi) body {
+  font-family: system-ui, ui-sans-serif, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ar) pre {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ar) code {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ar) kbd {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(ar) samp {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(he) pre {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(he) code {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(he) kbd {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(he) samp {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(th) pre {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(th) code {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(th) kbd {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(th) samp {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(vi) pre {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(vi) code {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(vi) kbd {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+html:lang(vi) samp {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+
+/* 字体替换 */
+@font-face {
+  font-family: 'Georgia';
+  src: local('Source Serif 4');
+}
+@font-face {
+  font-family: 'New York';
+  src: local('Source Serif 4');
+}
+@font-face {
+  font-family: 'Times';
+  src: local('Source Serif 4');
+}
+@font-face {
+  font-family: 'Time New Roman';
+  src: local('Source Serif 4');
+}
+@font-face {
+  font-family: 'Arial';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Calibri';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Helvetica';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Lucida Sans Unicode';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Microsoft Sans Serif';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'San Francisco';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Segoe UI';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Tahoma';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Trebuchet';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Trebuchet MS';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Ubuntu';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Verdana';
+  src: local('Source Sans 3');
+}
+@font-face {
+  font-family: 'Consolas';
+  src: local('Source Code Pro');
+}
+@font-face {
+  font-family: 'Courier';
+  src: local('Source Code Pro');
+}
+@font-face {
+  font-family: 'Courier New';
+  src: local('Source Code Pro');
+}
+@font-face {
+  font-family: 'DejaVu Sans Mono';
+  src: local('Source Code Pro');
+}
+@font-face {
+  font-family: 'Lucida Console';
+  src: local('Source Code Pro');
+}
+@font-face {
+  font-family: 'SF Mono';
+  src: local('Source Code Pro');
+}
+@font-face {
+  font-family: 'Ubuntu Mono';
+  src: local('Source Code Pro');
+}
+@font-face {
+  font-family: 'SimSun';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: 'SimSun-ExtB';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: '宋体';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: 'NSimSun';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: '新宋体';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: 'SimHei';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: '黑体';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: 'DengXian';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: '等线';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: 'Microsoft YaHei UI';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: 'Microsoft YaHei';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: '微软雅黑';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: 'STHeiti SC';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: 'PingFang SC';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: '苹方-简';
+  src: local('Source Han Sans SC');
+}
+@font-face {
+  font-family: 'MingLiU';
+  src: local('Source Han Sans TC');
+}
+@font-face {
+  font-family: 'MingLiU-ExtB';
+  src: local('Source Han Sans TC');
+}
+@font-face {
+  font-family: 'PMingLiU';
+  src: local('Source Han Sans TC');
+}
+@font-face {
+  font-family: 'PMingLiU-ExtB';
+  src: local('Source Han Sans TC');
+}
+@font-face {
+  font-family: 'Microsoft JhengHei UI';
+  src: local('Source Han Sans TC');
+}
+@font-face {
+  font-family: 'Microsoft JhengHei';
+  src: local('Source Han Sans TC');
+}
+@font-face {
+  font-family: '微軟正黑體';
+  src: local('Source Han Sans TC');
+}
+@font-face {
+  font-family: 'STHeiti TC';
+  src: local('Source Han Sans TC');
+}
+@font-face {
+  font-family: 'PingFang TC';
+  src: local('Source Han Sans TC');
+}
+@font-face {
+  font-family: '蘋方-繁';
+  src: local('Source Han Sans TC');
+}
+@font-face {
+  font-family: 'MingLiU_HKSCS';
+  src: local('Source Han Sans HC');
+}
+@font-face {
+  font-family: 'MingLiU_HKSCS-ExtB';
+  src: local('Source Han Sans HC');
+}
+@font-face {
+  font-family: 'PingFang HK';
+  src: local('Source Han Sans HC');
+}
+@font-face {
+  font-family: '蘋方-港';
+  src: local('Source Han Sans HC');
+}
+@font-face {
+  font-family: 'MS Mincho';
+  src: local('Source Han Sans');
+}
+@font-face {
+  font-family: 'MS PMincho';
+  src: local('Source Han Sans');
+}
+@font-face {
+  font-family: 'Yu Mincho';
+  src: local('Source Han Sans');
+}
+@font-face {
+  font-family: 'Meiryo';
+  src: local('Source Han Sans');
+}
+@font-face {
+  font-family: 'Meiryo UI';
+  src: local('Source Han Sans');
+}
+@font-face {
+  font-family: 'MS Gothic';
+  src: local('Source Han Sans');
+}
+@font-face {
+  font-family: 'MS PGothic';
+  src: local('Source Han Sans');
+}
+@font-face {
+  font-family: 'MS UI Gothic';
+  src: local('Source Han Sans');
+}
+@font-face {
+  font-family: 'Yu Gothic';
+  src: local('Source Han Sans');
+}
+@font-face {
+  font-family: 'Yu Gothic UI';
+  src: local('Source Han Sans');
+}
+@font-face {
+  font-family: 'Malgun Gothic';
+  src: local('Source Han Sans K');
+}
+/* 特定网站适配 */
+`;
+if ((location.hostname === "423down.com" || location.hostname.endsWith(".423down.com"))) {
+  css += `
+    .excerpt h2 {
+      height: unset;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  `;
+}
+if ((location.hostname === "baidu.com" || location.hostname.endsWith(".baidu.com")) || new RegExp("^(?:https://www\\.baidu\\.com/(s|#)?.*)\$").test(location.href)) {
+  css += `
+    * {
+      font-family: 'Source Han Sans SC', 'Noto Sans CJK SC', 'HanHei SC',
+        '方正兰亭黑_GB18030', '方正兰亭黑_GBK', system-ui, ui-sans-serif,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji;
+    }
+  `;
+}
+if (new RegExp("^(?:https://(\\w+\\.)?bing\\.com/(search)?.*)\$").test(location.href)) {
+  css += `
+    * {
+      font-family: 'Source Han Sans SC', 'Noto Sans CJK SC', 'HanHei SC',
+        '方正兰亭黑_GB18030', '方正兰亭黑_GBK', system-ui, ui-sans-serif,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji;
+    }
+  `;
+}
+if ((location.hostname === "github.com" || location.hostname.endsWith(".github.com"))) {
+  css += `
+    .text-mono {
+      font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC',
+        'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace,
+        monospace, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji !important;
+    }
+    .blob-num,
+    .blob-code-inner {
+      font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC',
+        'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace,
+        monospace, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji;
+    }
+  `;
+}
+if (new RegExp("^(?:https://www\\.google(\\.\\w+){1,2}/(search)?.*)\$").test(location.href)) {
+  css += `
+    * {
+      font-family: 'Source Han Sans SC', 'Noto Sans CJK SC', 'HanHei SC',
+        '方正兰亭黑_GB18030', '方正兰亭黑_GBK', system-ui, ui-sans-serif,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji;
+    }
+  `;
+}
+if ((location.hostname === "greasyfork.org" || location.hostname.endsWith(".greasyfork.org"))) {
+  css += `
+    #script_version_code,
+    .ace_editor {
+      font-family: 'Source Han Mono SC', 'Noto Sans Mono CJK SC',
+        'Source Code Pro', 'Noto Mono', 'SF Mono', 'Roboto Mono', ui-monospace,
+        monospace, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji !important;
+    }
+  `;
+}
+if ((location.hostname === "ithome.com" || location.hostname.endsWith(".ithome.com"))) {
+  css += `
+    .post_comment {
+      font-family: 'Source Han Sans SC', 'Noto Sans CJK SC', 'HanHei SC',
+        '方正兰亭黑_GB18030', '方正兰亭黑_GBK', system-ui, ui-sans-serif,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji;
+    }
+  `;
+}
+if ((location.hostname === "jiemian.com" || location.hostname.endsWith(".jiemian.com"))) {
+  css += `
+    .article-content {
+      font-family: 'Source Han Sans SC', 'Noto Sans CJK SC', 'HanHei SC',
+        '方正兰亭黑_GB18030', '方正兰亭黑_GBK', system-ui, ui-sans-serif,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji !important;
+    }
+    #ad_header_top,
+    .cnzz-ads,
+    .jm-app {
+      display: none !important;
+    }
+  `;
+}
+if (new RegExp("^(?:https://www\\.so\\.com/s?.*)\$").test(location.href)) {
+  css += `
+    * {
+      font-family: 'Source Han Sans SC', 'Noto Sans CJK SC', 'HanHei SC',
+        '方正兰亭黑_GB18030', '方正兰亭黑_GBK', system-ui, ui-sans-serif,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji;
+    }
+  `;
+}
+if (new RegExp("^(?:https://(www\\.)?sogou\\.com/(web|sogou)?.*)\$").test(location.href)) {
+  css += `
+    * {
+      font-family: 'Source Han Sans SC', 'Noto Sans CJK SC', 'HanHei SC',
+        '方正兰亭黑_GB18030', '方正兰亭黑_GBK', system-ui, ui-sans-serif,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji;
+    }
+  `;
+}
+if ((location.hostname === "sspai.com" || location.hostname.endsWith(".sspai.com"))) {
+  css += `
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .title,
+    .content,
+    p,
+    a {
+      font-family: 'Source Han Sans SC', 'Noto Sans CJK SC', 'HanHei SC',
+        '方正兰亭黑_GB18030', '方正兰亭黑_GBK', system-ui, ui-sans-serif,
+        sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji !important;
+    }
+  `;
+}
+if ((location.hostname === "userstyles.org" || location.hostname.endsWith(".userstyles.org"))) {
+  css += `
+    .ad,
+    #top_android_button,
+    .android_button_button,
+    .android_button_banner,
+    .walking {
+      display: none !important;
+    }
+  `;
+}
+if (typeof GM_addStyle !== "undefined") {
+  GM_addStyle(css);
+} else {
+  const styleNode = document.createElement("style");
+  styleNode.appendChild(document.createTextNode(css));
+  (document.querySelector("head") || document.documentElement).appendChild(styleNode);
+}
+})();
