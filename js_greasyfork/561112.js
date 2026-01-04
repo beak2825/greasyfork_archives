@@ -1,0 +1,256 @@
+// ==UserScript==
+// @name         Anti-Anti-Debug
+// @version      1.0
+// @description  Prevents anti-debugging scripts from working by intercepting console logs, debugger statements, and iframe creation.
+// @author       Herewego
+// @match        *://*/*
+// @run-at       document-start
+// @grant        none
+// @namespace https://greasyfork.org/users/1555064
+// @downloadURL https://update.greasyfork.org/scripts/561112/Anti-Anti-Debug.user.js
+// @updateURL https://update.greasyfork.org/scripts/561112/Anti-Anti-Debug.meta.js
+// ==/UserScript==
+
+!(() => {
+    console.log("Anti-anti-debug loaded! Happy debugging!")
+    const Proxy = window.Proxy;
+    const Object = window.Object;
+    const Array = window.Array;
+    /**
+     * Save original methods before we override them
+     */
+    const Originals = {
+        createElement: document.createElement,
+        log: console.log,
+        warn: console.warn,
+        table: console.table,
+        clear: console.clear,
+        functionConstructor: window.Function.prototype.constructor,
+        setInterval: window.setInterval,
+        createElement: document.createElement,
+        toString: Function.prototype.toString,
+        addEventListener: window.addEventListener
+    }
+
+    /**
+     * Cutoffs for logging. After cutoff is reached, will no longer log anti debug warnings.
+     */
+    const cutoffs = {
+        table: {
+            amount: 5,
+            within: 5000
+        },
+        clear: {
+            amount: 5,
+            within: 5000
+        },
+        redactedLog: {
+            amount: 5,
+            within: 5000
+        },
+        debugger: {
+            amount: 10,
+            within: 10000
+        },
+        debuggerThrow: {
+            amount: 10,
+            within: 10000
+        }
+    }
+
+    /**
+     * Decides if anti debug warnings should be logged
+     */
+    function shouldLog(type) {
+        const cutoff = cutoffs[type];
+        if (cutoff.tripped) return false;
+        cutoff.current = cutoff.current || 0;
+        const now = Date.now();
+        cutoff.last = cutoff.last || now;
+
+        if (now - cutoff.last > cutoff.within) {
+            cutoff.current = 0;
+        }
+
+        cutoff.last = now;
+        cutoff.current++;
+
+        if (cutoff.current > cutoff.amount) {
+            Originals.warn("Limit reached! Will now ignore " + type)
+            cutoff.tripped = true;
+            return false;
+        }
+
+        return true;
+    }
+
+    window.console.log = wrapFn((...args) => {
+        // Keep track of redacted arguments
+        let redactedCount = 0;
+
+        // Filter arguments for detectors
+        const newArgs = args.map((a) => {
+
+            // Don't print functions.
+            if (typeof a === 'function') {
+                redactedCount++;
+                return "Redacted Function";
+            }
+
+            // Passthrough if primitive
+            if (typeof a !== 'object' || a === null) return a;
+
+            // For objects, scan properties
+            var props = Object.getOwnPropertyDescriptors(a)
+            for (var name in props) {
+
+                // Redact custom getters
+                if (props[name].get !== undefined) {
+                    redactedCount++;
+                    return "Redacted Getter";
+                }
+
+                // Also block toString overrides
+                if (name === 'toString') {
+                    redactedCount++;
+                    return "Redacted Str";
+                }
+            }
+
+            // Defeat Performance Detector
+            // https://github.com/theajack/disable-devtool/blob/master/src/detector/sub-detector/performance.ts
+            if (Array.isArray(a) && a.length === 50 && typeof a[0] === "object") {
+                redactedCount++;
+                return "Redacted LargeObjArray";
+            }
+
+            return a;
+        });
+
+        // If most arguments are redacted, its probably spam
+        if (redactedCount >= Math.max(args.length - 1, 1)) {
+            if (!shouldLog("redactedLog")) {
+                return;
+            }
+        }
+
+        return Originals.log.apply(console, newArgs)
+    }, Originals.log);
+
+    window.console.table = wrapFn((obj) => {
+        if (shouldLog("table")) {
+            Originals.warn("Redacted table");
+        }
+    }, Originals.table);
+
+    window.console.clear = wrapFn(() => {
+        if (shouldLog("table")) {
+            Originals.warn("Prevented clear");
+        }
+    }, Originals.clear);
+
+    let debugCount = 0;
+    window.Function.prototype.constructor = wrapFn((...args) => {
+        const originalFn = Originals.functionConstructor.apply(this, args);
+        var fnContent = args[0];
+        if (fnContent) {
+            if (fnContent.includes('debugger')) { // An anti-debugger is attempting to stop debugging
+                if (shouldLog("debugger")) {
+                    Originals.warn("Prevented debugger");
+                }
+                debugCount++;
+                if (debugCount > 100) {
+                    if (shouldLog("debuggerThrow")) {
+                        Originals.warn("Debugger loop detected! Throwing error to stop execution");
+                    }
+                    throw new Error("You bad!");
+                } else {
+                    setTimeout(() => {
+                        debugCount--;
+                    }, 1);
+                }
+                const newArgs = args.slice(0);
+                newArgs[0] = args[0].replaceAll("debugger", ""); // remove debugger statements
+                return new Proxy(Originals.functionConstructor.apply(this, newArgs),{
+                    get: function (target, prop) {
+                        if (prop === "toString") {
+                            return originalFn.toString;
+                        }
+                        return target[prop];
+                    }
+                });
+            }
+        }
+        return originalFn;
+    }, Originals.functionConstructor);
+
+    /**
+     * Better Iframe Protection:
+     * 1. Uses MutationObserver to catch innerHTML injections
+     * 2. Injects immediately for about:blank (synchronous)
+     * 3. Hooks 'load' for src-based iframes
+     */
+    function handleIframe(iframe) {
+        // protection logic
+        const protect = () => {
+            try {
+                if (iframe.contentWindow) {
+                    // Check if already protected to avoid recursion loops if the iframe is this same window
+                    // (though logic should prevent it, it's safe)
+                    if (iframe.contentWindow.console !== window.console) {
+                         iframe.contentWindow.console = window.console;
+                         iframe.contentWindow.Function = window.Function;
+                    }
+                }
+            } catch (e) {
+                // Ignore cross-origin errors
+            }
+        };
+
+        // 1. Try immediately (for about:blank or synchronous access)
+        protect();
+
+        // 2. Try on load (for src based iframes)
+        iframe.addEventListener('load', protect);
+    }
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.tagName === 'IFRAME') {
+                    handleIframe(node);
+                }
+                // Also check children if a container was added
+                if (node.querySelectorAll) {
+                    node.querySelectorAll('iframe').forEach(handleIframe);
+                }
+            });
+        });
+    });
+
+    observer.observe(document, {
+        childList: true,
+        subtree: true
+    });
+
+    document.createElement = wrapFn((el, o) => {
+        var string = el.toString();
+        var element = Originals.createElement.apply(document, [string, o]);
+        if (string.toLowerCase() === "iframe") {
+            handleIframe(element);
+        }
+        return element;
+    }, Originals.createElement);
+
+    function wrapFn(newFn, old) {
+        return new Proxy(newFn, {
+            get: function (target, prop) {
+                const callMethods = ['apply', 'bind', 'call'];
+                if (callMethods.includes(prop)) {
+                    return target[prop];
+                }
+                return old[prop];
+            }
+        });
+    }
+})()
