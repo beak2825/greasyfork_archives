@@ -1,0 +1,39 @@
+// ==UserScript==
+// @name         Robby Receder
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Replaces the entire webpage with a full-size image
+// @author       You
+// @match        *://*/*
+// @grant        none
+// @license      MIT
+// @downloadURL https://update.greasyfork.org/scripts/540683/Robby%20Receder.user.js
+// @updateURL https://update.greasyfork.org/scripts/540683/Robby%20Receder.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Your image URL here
+    const imageUrl = 'data:image/jpeg;base64,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';
+
+    // Remove everything on the page
+    document.documentElement.innerHTML = '';
+
+    // Set styles and create image
+    document.documentElement.style.margin = '0';
+    document.documentElement.style.padding = '0';
+    document.body = document.createElement('body');
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.body.style.overflow = 'hidden';
+
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.style.width = '100vw';
+    img.style.height = '100vh';
+    img.style.objectFit = 'cover';
+    img.style.display = 'block';
+
+    document.body.appendChild(img);
+})();

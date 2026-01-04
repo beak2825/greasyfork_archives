@@ -18,7 +18,7 @@
     const FC = 'KTW1';
     const BATCH_INFO_URL_ACTIVE = `https://picking-console.eu.picking.aft.a2z.com/api/fcs/${FC}/batch-info/Active`;
     const BATCH_INFO_URL_READY = `https://picking-console.eu.picking.aft.a2z.com/api/fcs/${FC}/batch-info/Ready`;
-    const SLACK_WEBHOOK_URL = 'https://hooks.slack.com/services/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';
+    const SLACK_WEBHOOK_URL = '';
 
     const pathStates = {};
     PROCESS_PATHS.forEach(path => {

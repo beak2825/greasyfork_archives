@@ -1,0 +1,248 @@
+// ==UserScript==
+// @name         Crosspost from Misskey
+// @namespace    https://lit.link/toracatman
+// @version      2025-07-11
+// @description  Misskey から 他の SNS に 半自動的に 同時投稿します。
+// @author       トラネコマン
+// @match        https://misskey.io/*
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @grant        none
+// @license      MIT
+// @downloadURL https://update.greasyfork.org/scripts/541907/Crosspost%20from%20Misskey.user.js
+// @updateURL https://update.greasyfork.org/scripts/541907/Crosspost%20from%20Misskey.meta.js
+// ==/UserScript==
+
+function getNoteText() {
+    return document.querySelector("textarea[data-cy-post-form-text]").value;
+}
+
+
+let btn_twitter;
+let btn_bluesky;
+let btn_threads;
+let btn_mastodon;
+const D_INS_MASTODON = "https://mstdn.jp";
+let ins_mastodon;
+let btn_facebook;
+let btn_line;
+let btn_fiicen;
+let btn_substitute;
+let btn_clipboard;
+
+let isPhone;
+
+function displayMessage(text, error) {
+    let div = document.createElement("div");
+    div.style.position = "fixed";
+    div.style.top = "0";
+    div.style.left = "0";
+    div.style.width = "100%";
+    div.style.backgroundColor = error ? "#f00" : "#008000";
+    div.style.color = "#fff";
+    div.style.textAlign = "center";
+    div.textContent = text;
+    document.body.appendChild(div);
+    setTimeout(() => { div.remove(); }, 3000);
+}
+
+function crosspost(url) {
+    let text = getNoteText().trim();
+    if (!text) {
+        displayMessage("テキストがありません", true);
+        return;
+    }
+    navigator.clipboard.writeText(text);
+    window.open(`${url.replace("TEXT", encodeURIComponent(text))}`);
+}
+
+function crosspostToFacebook() {
+    let text = getNoteText().trim();
+    if (!URL.canParse(text)) {
+        displayMessage("FacebookはURLのみ共有できます", true);
+        return;
+    }
+    navigator.clipboard.writeText(text);
+    window.open(`http://www.facebook.com/share.php?u=${encodeURIComponent(text)}`);
+}
+
+function copyToClipboard() {
+    let text = getNoteText().trim();
+    if (!text) {
+        displayMessage("テキストがありません", true);
+        return;
+    }
+    navigator.clipboard.writeText(text);
+    displayMessage("テキストをクリップボードにコピーしました！", false);
+}
+
+function loadSettings() {
+    btn_twitter = (localStorage.getItem("btn_twitter") ?? "true") == "true";
+    btn_bluesky = (localStorage.getItem("btn_bluesky") ?? "true") == "true";
+    btn_threads = (localStorage.getItem("btn_threads") ?? "true") == "true";
+    btn_mastodon = (localStorage.getItem("btn_mastodon") ?? "true") == "true";
+    ins_mastodon = localStorage.getItem("ins_mastodon") ?? D_INS_MASTODON;
+    btn_facebook = (localStorage.getItem("btn_facebook") ?? "true") == "true";
+    btn_line = (localStorage.getItem("btn_line") ?? "true") == "true";
+    btn_fiicen = (localStorage.getItem("btn_fiicen") ?? "true") == "true";
+    btn_substitute = (localStorage.getItem("btn_substitute") ?? "true") == "true";
+    btn_clipboard = (localStorage.getItem("btn_clipboard") ?? "true") == "true";
+}
+
+function setupButton() {
+    btn_twitter = confirm("Twitterで共有ボタン");
+    btn_bluesky = confirm("Blueskyで共有ボタン");
+    btn_threads = confirm("Threadsで共有ボタン");
+    btn_mastodon = confirm("Mastodonで共有ボタン");
+    if (btn_mastodon) ins_mastodon = prompt("Mastodonのインスタンス", ins_mastodon);
+    if (ins_mastodon.slice(0, 8) != "https://") ins_mastodon = `https://${ins_mastodon}`;
+    if (ins_mastodon.slice(-1) == "/") ins_mastodon = ins_mastodon.slice(0, -1);
+    btn_facebook = confirm("Facebookボタン");
+    btn_line = confirm("LINEで共有ボタン");
+    btn_fiicen = confirm("Fiicenで共有ボタン");
+    btn_substitute = confirm("代用表記レンダラーボタン");
+    btn_clipboard = confirm("クリップボードにコピーボタン");
+
+    localStorage.setItem("btn_twitter", btn_twitter);
+    localStorage.setItem("btn_bluesky", btn_bluesky);
+    localStorage.setItem("btn_threads", btn_threads);
+    localStorage.setItem("btn_mastodon", btn_mastodon);
+    if (btn_mastodon) localStorage.setItem("ins_mastodon", ins_mastodon);
+    localStorage.setItem("btn_facebook", btn_facebook);
+    localStorage.setItem("btn_line", btn_line);
+    localStorage.setItem("btn_fiicen", btn_fiicen);
+    localStorage.setItem("btn_substitute", btn_substitute);
+    localStorage.setItem("btn_clipboard", btn_clipboard);
+}
+
+function helpButton() {
+    alert("画像について\n" +
+          "共有ボタンはテキストのみを共有するので、画像を貼り付けたければテキストを共有してから画像を貼り付けてください");
+    alert("リロードされてテキストが消えてしまったら\n" +
+          "共有ボタンを押すときにテキストがクリップボードにもコピーされるので、本文に貼り付ければ復元できます");
+    if (btn_fiicen) {
+        alert("Fiicenに共有するには\n" +
+              "テキストがクリップボードにコピーされるので、「サークルを飛ばす」を押して貼り付けてください");
+    }
+}
+
+setInterval(() => {
+    //ツールバーの取得
+    let toolbar = document.querySelector(".xkr7J");
+    if (toolbar == null) return;
+
+    if (toolbar.getAttribute("data-second") == "true") return;
+    toolbar.setAttribute("data-second", "true");
+    let toolbarlist = toolbar.querySelector(".xwaYk");
+
+    //設定の読み込み
+    loadSettings();
+
+    //スマホ判定
+    isPhone = navigator.userAgent.match(/iPhone|Android.+Mobile/);
+
+    //新規ツールバーの作成
+    let toolbar2 = toolbarlist.cloneNode(false);
+
+    //ボタンの取得
+    let btn = toolbarlist.firstElementChild.cloneNode(true);
+    btn.style.backgroundColor = "#fff";
+    btn.style.borderRadius = "0";
+    let newBtn;
+
+    //Twitterで共有ボタンの作成
+    if (btn_twitter) {
+        newBtn = btn.cloneNode(true);
+        newBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#1DA1F2" d="M23.643 4.937c-.835.37-1.732.62-2.675.733a4.67 4.67 0 0 0 2.048-2.578a9.3 9.3 0 0 1-2.958 1.13a4.66 4.66 0 0 0-7.938 4.25a13.23 13.23 0 0 1-9.602-4.868c-.4.69-.63 1.49-.63 2.342A4.66 4.66 0 0 0 3.96 9.824a4.65 4.65 0 0 1-2.11-.583v.06a4.66 4.66 0 0 0 3.737 4.568a4.7 4.7 0 0 1-2.104.08a4.66 4.66 0 0 0 4.352 3.234a9.35 9.35 0 0 1-5.786 1.995a10 10 0 0 1-1.112-.065a13.2 13.2 0 0 0 7.14 2.093c8.57 0 13.255-7.098 13.255-13.254q0-.301-.014-.602a9.5 9.5 0 0 0 2.323-2.41z"/></svg>';
+        newBtn.onclick = () => { crosspost(`https://x.com/intent/post?text=TEXT`); }
+        toolbar2.appendChild(newBtn);
+    }
+
+    //Blueskyで共有ボタンの作成
+    if (btn_bluesky) {
+        newBtn = btn.cloneNode(true);
+        newBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#0285FF" d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565C.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 6.479c.815 2.736 3.713 3.66 6.383 3.364q.204-.03.415-.056q-.207.033-.415.056c-3.912.58-7.387 2.005-2.83 7.078c5.013 5.19 6.87-1.113 7.823-4.308c.953 3.195 2.05 9.271 7.733 4.308c4.267-4.308 1.172-6.498-2.74-7.078a9 9 0 0 1-.415-.056q.21.026.415.056c2.67.297 5.568-.628 6.383-3.364c.246-.828.624-5.79.624-6.478c0-.69-.139-1.861-.902-2.206c-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8"/></svg>';
+        newBtn.onclick = () => { crosspost("https://bsky.app/intent/compose?text=TEXT"); }
+        toolbar2.appendChild(newBtn);
+    }
+
+    //Threadsで共有ボタンの作成
+    if (btn_threads) {
+        newBtn = btn.cloneNode(true);
+        newBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#000000" d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098c1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015c-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164c1.43 1.783 3.631 2.698 6.54 2.717c2.623-.02 4.358-.631 5.8-2.045c1.647-1.613 1.618-3.593 1.09-4.798c-.31-.71-.873-1.3-1.634-1.75c-.192 1.352-.622 2.446-1.284 3.272c-.886 1.102-2.14 1.704-3.73 1.79c-1.202.065-2.361-.218-3.259-.801c-1.063-.689-1.685-1.74-1.752-2.964c-.065-1.19.408-2.285 1.33-3.082c.88-.76 2.119-1.207 3.583-1.291a14 14 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757c-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32l-1.757-1.18c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388q.163.07.321.142c1.49.7 2.58 1.761 3.154 3.07c.797 1.82.871 4.79-1.548 7.158c-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69q-.362 0-.739.021c-1.836.103-2.98.946-2.916 2.143c.067 1.256 1.452 1.839 2.784 1.767c1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221"/></svg>';
+        newBtn.onclick = () => { crosspost("https://www.threads.net/intent/post?text=TEXT"); }
+        toolbar2.appendChild(newBtn);
+    }
+
+    //Mastodonで共有ボタンの作成
+    if (btn_mastodon) {
+        newBtn = btn.cloneNode(true);
+        newBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#6364FF" d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792 0 11.813 0h-.03c-3.98 0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127C.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611c.118 1.24.325 2.47.62 3.68c.55 2.237 2.777 4.098 4.96 4.857c2.336.792 4.849.923 7.256.38q.398-.092.786-.213c.585-.184 1.27-.39 1.774-.753a.06.06 0 0 0 .023-.043v-1.809a.05.05 0 0 0-.02-.041a.05.05 0 0 0-.046-.01a20.3 20.3 0 0 1-4.709.545c-2.73 0-3.463-1.284-3.674-1.818a5.6 5.6 0 0 1-.319-1.433a.053.053 0 0 1 .066-.054c1.517.363 3.072.546 4.632.546c.376 0 .75 0 1.125-.01c1.57-.044 3.224-.124 4.768-.422q.059-.011.11-.024c2.435-.464 4.753-1.92 4.989-5.604c.008-.145.03-1.52.03-1.67c.002-.512.167-3.63-.024-5.545m-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976c-1.23 0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35c-1.112 0-1.668.668-1.67 1.977v6.218H4.822V8.102q0-1.965 1.011-3.12c.696-.77 1.608-1.164 2.74-1.164c1.311 0 2.302.5 2.962 1.498l.638 1.06l.638-1.06c.66-.999 1.65-1.498 2.96-1.498c1.13 0 2.043.395 2.74 1.164q1.012 1.155 1.012 3.12z"/></svg>';
+        newBtn.onclick = () => { crosspost(`${localStorage.getItem("ins_mastodon") ?? D_INS_MASTODON}/share?text=TEXT`); }
+        toolbar2.appendChild(newBtn);
+    }
+
+    //Facebookで共有ボタンの作成
+    if (btn_facebook) {
+        newBtn = btn.cloneNode(true);
+        newBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#0866FF" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978c.401 0 .955.042 1.468.103a9 9 0 0 1 1.141.195v3.325a9 9 0 0 0-.653-.036a27 27 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.7 1.7 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103l-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647"/></svg>';
+        newBtn.onclick = crosspostToFacebook;
+        toolbar2.appendChild(newBtn);
+    }
+
+    //LINEで共有ボタンの作成
+    if (btn_line) {
+        newBtn = btn.cloneNode(true);
+        newBtn.innerHTML = '<div style="display: inline-block; width: 24px; height: 24px; border-radius: 4px; background-color: #00C300;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="margin: 4px;" viewBox="0 0 24 24"><path fill="#fff" d="M19.365 9.863a.631.631 0 0 1 0 1.261H17.61v1.125h1.755a.63.63 0 1 1 0 1.259h-2.386a.63.63 0 0 1-.627-.629V8.108c0-.345.282-.63.63-.63h2.386a.63.63 0 0 1-.003 1.26H17.61v1.125zm-3.855 3.016a.63.63 0 0 1-.631.627a.62.62 0 0 1-.51-.25l-2.443-3.317v2.94a.63.63 0 0 1-1.257 0V8.108a.627.627 0 0 1 .624-.628c.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63c.345 0 .63.285.63.63zm-5.741 0a.63.63 0 0 1-.631.629a.63.63 0 0 1-.627-.629V8.108c0-.345.282-.63.63-.63c.346 0 .628.285.628.63zm-2.466.629H4.917a.634.634 0 0 1-.63-.629V8.108c0-.345.285-.63.63-.63c.348 0 .63.285.63.63v4.141h1.756a.63.63 0 0 1 0 1.259M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608c.391.082.923.258 1.058.59c.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645c1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></div>';
+        if (isPhone) {
+            newBtn.onclick = () => { crosspost("https://line.me/R/share?text=TEXT"); }
+        }
+        else {
+            newBtn.onclick = () => { crosspost("https://social-plugins.line.me/lineit/share?text=TEXT"); }
+        }
+        toolbar2.appendChild(newBtn);
+    }
+
+    //Fiicenで共有ボタンの作成
+    if (btn_fiicen) {
+        newBtn = btn.cloneNode(true);
+        newBtn.innerHTML = '<img src="https://lh3.googleusercontent.com/d/1H0FzsNLNVoZs9OydPv70VxQ4SMfG8odz" alt="Fiicen" style="width: 24px; height: 24px;">';
+        newBtn.onclick = () => { crosspost("https://fiicen.jp"); }
+        toolbar2.appendChild(newBtn);
+    }
+
+    btn.remove();
+    btn = toolbarlist.firstElementChild;
+
+    //代用表記レンダラーボタンの作成
+    if (btn_substitute) {
+        newBtn = btn.cloneNode(true);
+        newBtn.innerHTML = '<span style="font-size: 20px; font-weight: bold; line-height: 1;">代</span>';
+        newBtn.onclick = () => { crosspost("https://toracatman.github.io/SubstituteRenderer/?text=TEXT"); }
+        toolbar2.appendChild(newBtn);
+    }
+
+    //クリップボードにコピーボタンの作成
+    if (btn_clipboard) {
+        newBtn = btn.cloneNode(true);
+        newBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2"/></g></svg>';
+        newBtn.onclick = copyToClipboard;
+        toolbar2.appendChild(newBtn);
+    }
+
+    //設定ボタンの作成
+    newBtn = btn.cloneNode(true);
+    newBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37c1 .608 2.296.07 2.572-1.065"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0-6 0"/></g></svg>';
+    newBtn.onclick = setupButton;
+    toolbar2.appendChild(newBtn);
+
+    //ヘルプボタンの作成
+    newBtn = btn.cloneNode(true);
+    newBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0m9 5v.01"/><path d="M12 13.5a1.5 1.5 0 0 1 1-1.5a2.6 2.6 0 1 0-3-4"/></g></svg>';
+    newBtn.onclick = helpButton;
+    toolbar2.appendChild(newBtn);
+
+    //新規ツールバーの追加
+    let tb = toolbar.cloneNode(false);
+    tb.appendChild(toolbar2);
+    toolbar.after(tb);
+}, 100);

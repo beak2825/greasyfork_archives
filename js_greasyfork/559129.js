@@ -68,7 +68,7 @@
   "use strict";
  
   // GitHub API details
-  const GITHUB_TOKEN = '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'; // Your GitHub Token
+  const GITHUB_TOKEN = ''; // Your GitHub Token
   const REPO_OWNER = 'COURTESYCOIL';
   const REPO_NAME = 'EVIL-HOSTING-SITE-56';
   const FILE_PATH = 'api/accounts.json';

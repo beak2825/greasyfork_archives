@@ -1,0 +1,63 @@
+// ==UserScript==
+// @name        TriX UI Library
+// @namespace   https://github.com/YourUsername/TriX-Executor
+// @version     3.2.2
+// @description The main user interface for the TriX Executor, with CodeMirror integration.
+// @author      You
+// @license     MIT
+// ==/UserScript==
+
+const TriX_UI=(function(){"use strict";let _GM;const UI={isMinimized:!1,currentScriptName:"",jsEditor:null,pyEditor:null,
+    init(gmFunctions){
+        _GM = gmFunctions;
+        this.injectCSS();
+        this.injectHTML();
+        this.initEditors(); 
+        this.attachEventListeners();
+        TriX_Core.ScriptManager.populateScriptList();
+        this.updateTabCountUI(1);
+        this.log("TriX UI Library v3.2.2 initialized.");
+        this.showTab("js");
+        if(typeof TriX_Addons !== 'undefined') TriX_Addons.init(_GM);
+    },
+    initEditors() {
+        const { EditorView, basicSetup } = CM_VIEW; // Corrected global
+        const { EditorState } = CM_STATE;
+        const { javascript } = CM_LANG_JS;
+        const { python } = CM_LANG_PY;
+        // --- CORRECTED THEME REFERENCE ---
+        const { oneDark } = CM_THEME_ONEDARK;
+
+        const commonExtensions = [
+            basicSetup,
+            oneDark, // This now correctly references the loaded theme
+            EditorView.theme({
+                '&': { fontSize: '13px', height: '100%', backgroundColor: '#2d2d2d' },
+                '.cm-scroller': { overflow: 'auto', fontFamily: "'Fira Code', monospace" }
+            })
+        ];
+
+        this.jsEditor = new EditorView({
+            state: EditorState.create({
+                doc: "-- Paste or load a JavaScript script here...",
+                extensions: [...commonExtensions, javascript()]
+            }),
+            parent: document.getElementById('js-pane')
+        });
+
+        this.pyEditor = new EditorView({
+            state: EditorState.create({
+                doc: "# Skulpt Python Interpreter\n# Note: Libraries like numpy are not supported.\n\nimport time\n\nprint(\"Hello from Python in the browser!\")\nprint(time.ctime())\n",
+                extensions: [...commonExtensions, python()]
+            }),
+            parent: document.getElementById('python-pane')
+        });
+    },
+    // --- The rest of the file is unchanged, but included for completeness ---
+    updateTabCountUI(e){const t=document.getElementById("trix-open-btn-badge"),i=document.getElementById("trix-header-tab-counter");t&&(t.textContent=e),i&&(i.textContent=e)},
+    injectCSS:function(){_GM.GM_addStyle(`:root{--trix-bg-primary:#1e1e1e;--trix-bg-secondary:#2d2d2d;--trix-bg-tertiary:#3c3c3c;--trix-accent-color:#00aeff;--trix-text-primary:#d4d4d4;--trix-text-secondary:#8c8c8c;--trix-border-color:#4a4a4a}#trix-container,#trix-open-btn{font-family:'Segoe UI','Roboto',sans-serif!important}#trix-container{position:fixed!important;top:50px!important;left:50px!important;width:600px;height:400px;background-color:var(--trix-bg-primary);border:1px solid var(--trix-border-color);box-shadow:0 0 20px rgba(0,0,0,.5);z-index:1000000!important;display:flex!important;flex-direction:column;resize:both;overflow:hidden;min-width:450px;min-height:300px}#trix-container.hidden{display:none!important}#trix-container.minimized{height:auto!important;min-height:0!important;resize:none!important}#trix-container.minimized #trix-body,#trix-container.minimized #trix-footer,#trix-container.minimized #trix-console{display:none!important}#trix-open-btn{position:fixed!important;top:20px!important;right:20px!important;z-index:999999!important;display:flex!important;align-items:center;background-color:var(--trix-accent-color)!important;color:#fff!important;border:none!important;border-radius:5px;padding:10px 15px!important;cursor:pointer!important;box-shadow:0 0 10px rgba(0,174,255,.7);font-weight:700!important;font-size:14px!important}.trix-tab-badge{display:inline-block;background-color:var(--trix-bg-secondary);color:var(--trix-text-primary);padding:2px 8px;margin-left:8px;border-radius:10px;font-size:12px;font-weight:700;line-height:1.2;vertical-align:middle;min-width:10px;text-align:center}#trix-header{background-color:var(--trix-bg-secondary);padding:5px 10px;cursor:move;user-select:none;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--trix-border-color)}#trix-header-title{display:flex;align-items:center;font-weight:700;color:var(--trix-text-primary)}#trix-logo{width:24px;height:24px;margin-right:8px}#trix-addons-btn-container{flex-grow:1;text-align:center}#trix-addons-btn{display:inline-block;padding:4px 12px;font-size:13px;font-weight:700;background-color:var(--trix-bg-tertiary);border-radius:5px;cursor:pointer;transition:background-color .2s}#trix-addons-btn:hover{background-color:#4a5276}#trix-window-controls{display:flex;align-items:center}#trix-window-controls button{background:0 0;border:none;color:var(--trix-text-secondary);font-size:18px;cursor:pointer;margin-left:10px;padding:0 4px;line-height:1;transition:color .2s}#trix-window-controls button:hover{color:var(--trix-accent-color)}#trix-close-btn:hover{color:#ff5555}#trix-body{flex-grow:1;display:flex;overflow:hidden}#trix-left-panel{width:160px;background-color:var(--trix-bg-secondary);padding:10px 0;display:flex;flex-direction:column;border-right:1px solid var(--trix-border-color)}#trix-script-list-title{padding:0 10px 10px;font-weight:700;color:var(--trix-text-primary);border-bottom:1px solid var(--trix-border-color)}#trix-script-list{flex-grow:1;overflow-y:auto;margin-top:10px}.trix-script-item{padding:8px 15px;cursor:pointer;color:var(--trix-text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:3px solid transparent}.trix-script-item:hover{background-color:var(--trix-bg-tertiary);color:var(--trix-text-primary)}.trix-script-item.active{border-left:3px solid var(--trix-accent-color);background-color:rgba(0,174,255,.1);color:var(--trix-text-primary)!important;font-weight:700}#trix-right-panel{flex-grow:1;display:flex;flex-direction:column}#trix-editor-tabs{display:flex;background-color:var(--trix-bg-primary);border-bottom:1px solid var(--trix-border-color)}.trix-editor-tab-btn{padding:8px 12px;cursor:pointer;border:none;background-color:transparent;color:var(--trix-text-secondary);font-size:13px;border-bottom:2px solid transparent}.trix-editor-tab-btn.active{color:var(--trix-accent-color);border-bottom-color:var(--trix-accent-color)}.trix-editor-pane{display:none;flex-grow:1;flex-direction:column;overflow:hidden}.trix-editor-pane.active{display:flex}.cm-editor{flex-grow:1;height:100% !important;}#trix-console{height:120px;flex-shrink:0;background-color:var(--trix-bg-secondary);border-top:1px solid var(--trix-border-color);padding:5px;overflow-y:auto;font-size:12px;font-family:'Fira Code',monospace}#trix-console div{padding:2px 8px;border-bottom:1px solid #1e202c;word-break:break-all}#trix-console .log-error{color:#f7768e}#trix-console .log-warn{color:#e0af68}#trix-console .log-info{color:#7dcfff}#trix-console .log-broadcast{color:#9ece6a;font-style:italic}#trix-footer{display:flex;gap:10px;padding:10px;background-color:var(--trix-bg-secondary);border-top:1px solid var(--trix-border-color);align-items:center}.trix-button{background-color:var(--trix-bg-tertiary);border:1px solid var(--trix-border-color);color:var(--trix-text-primary);padding:8px 15px;cursor:pointer;border-radius:5px}.trix-button:hover{background-color:#4a5276}.trix-button.primary{background-color:var(--trix-accent-color);color:#1a1b26;font-weight:700}.trix-button.primary:hover{background-color:#9aadef}.trix-button.danger{background-color:#f7768e;color:#1a1b26}.trix-button.danger:hover{background-color:#f88e9a}`)},
+    injectHTML:function(){const e=`<div id="trix-container" class="hidden"><div id="trix-header"><div id="trix-header-title"><img id="trix-logo" src="https://i.postimg.cc/0NkRZxDm/image.png" alt="TriX Logo"> <span id="trix-header-title-text">TriX Executor</span><span id="trix-header-tab-counter" class="trix-tab-badge">1</span></div><div id="trix-addons-btn-container"><span id="trix-addons-btn" title="Addons">Addons +</span></div><div id="trix-window-controls"><button id="trix-minimize-btn" title="Minimize">－</button> <button id="trix-close-btn" title="Close">✕</button></div></div><div id="trix-body"><div id="trix-left-panel"><div id="trix-script-list-title">Script List</div><div id="trix-script-list"></div></div><div id="trix-right-panel"><div id="trix-editor-tabs"><button class="trix-editor-tab-btn" data-tab="js">JavaScript</button><button class="trix-editor-tab-btn" data-tab="python">Python</button></div><div id="js-pane" class="trix-editor-pane"></div><div id="python-pane" class="trix-editor-pane"></div><div id="trix-console"></div></div></div><div id="trix-footer"><button id="trix-execute-btn" class="trix-button primary">▶ Execute</button> <button id="trix-clear-btn" class="trix-button">Clear</button> <input type="text" id="trix-save-name" placeholder="Script Name..." class="trix-button" style="flex-grow:1; cursor:text;"> <button id="trix-save-btn" class="trix-button">Save</button> <button id="trix-delete-btn" class="trix-button danger">Delete</button></div></div><button id="trix-open-btn"><span>Open TriX</span><span id="trix-open-btn-badge" class="trix-tab-badge">1</span></button>`;document.body.insertAdjacentHTML("beforeend",e)},
+    attachEventListeners:function(){const e=document.getElementById("trix-container"),t=document.getElementById("trix-header");t.addEventListener("mousedown",t=>{if(t.target.closest("#trix-window-controls, #trix-addons-btn-container"))return;let i=!0;const s=t.clientX-e.offsetLeft,o=t.clientY-e.offsetTop,n=t=>{i&&(t.preventDefault(),e.style.left=`${t.clientX-s}px`,e.style.top=`${t.clientY-o}px`)},c=()=>{i=!1,document.removeEventListener("mousemove",n),document.removeEventListener("mouseup",c)};document.addEventListener("mousemove",n),document.addEventListener("mouseup",c)}),document.getElementById("trix-open-btn").addEventListener("click",()=>this.togglePanel(!0)),document.getElementById("trix-close-btn").addEventListener("click",()=>this.togglePanel(!1)),document.getElementById("trix-minimize-btn").addEventListener("click",()=>{this.isMinimized=!this.isMinimized,e.classList.toggle("minimized",this.isMinimized)}),document.querySelectorAll(".trix-editor-tab-btn").forEach(e=>{e.addEventListener("click",()=>this.showTab(e.dataset.tab))}),document.getElementById("trix-script-list").addEventListener("click",e=>{if(e.target.matches(".trix-script-item")){TriX_Core.ScriptManager.loadScriptToEditor(e.target.dataset.scriptKey)}}),document.getElementById("trix-execute-btn").addEventListener("click",()=>{const e=document.querySelector(".trix-editor-tab-btn.active").dataset.tab;"js"===e?TriX_Core.Executor.executeJS(this.jsEditor.state.doc.toString()):"python"===e&&TriX_Core.Executor.executePY(this.pyEditor.state.doc.toString())}),document.getElementById("trix-clear-btn").addEventListener("click",()=>{this.jsEditor.dispatch({changes:{from:0,to:this.jsEditor.state.doc.length,insert:""}}),this.pyEditor.dispatch({changes:{from:0,to:this.pyEditor.state.doc.length,insert:""}}),document.getElementById("trix-save-name").value="",this.setActiveScriptItem(null),this.currentScriptName=""}),document.getElementById("trix-save-btn").addEventListener("click",()=>TriX_Core.ScriptManager.saveScriptFromEditor()),document.getElementById("trix-delete-btn").addEventListener("click",()=>TriX_Core.ScriptManager.deleteCurrentScript()),document.getElementById("trix-addons-btn").addEventListener("click",()=>TriX_Addons.show())},
+    showTab:function(e){document.querySelectorAll(".trix-editor-pane").forEach(t=>t.classList.remove("active")),document.querySelectorAll(".trix-editor-tab-btn").forEach(t=>t.classList.remove("active")),document.getElementById(`${e}-pane`).classList.add("active"),document.querySelector(`.trix-editor-tab-btn[data-tab="${e}"]`).classList.add("active")},
+    togglePanel:function(e){const t=document.getElementById("trix-container"),i=document.getElementById("trix-open-btn"),s=t.classList.contains("hidden");!0===e||s?(t.classList.remove("hidden"),i.style.display="none"):(t.classList.add("hidden"),i.style.display="flex")},log:function(e,t="log"){const i=document.getElementById("trix-console");if(!i)return;const s=document.createElement("div");s.className=`log-${t}`,s.textContent=`> ${String(e)}`,i.prepend(s)},setActiveScriptItem:function(e){document.querySelectorAll(".trix-script-item").forEach(t=>{t.classList.toggle("active",t.dataset.scriptKey===e)})},
+}; return UI; })();
