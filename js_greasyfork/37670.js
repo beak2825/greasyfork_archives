@@ -1,0 +1,29 @@
+// ==UserScript==
+// @name         Amazon search MAM
+// @version      0.2
+// @description  Add "MAM" button to Amazon
+// @author       Original author Slengpung, edit - amisima
+// @include      https://www.amazon.*/*
+// @grant        none
+// @namespace https://greasyfork.org/users/166367
+// @downloadURL https://update.greasyfork.org/scripts/37670/Amazon%20search%20MAM.user.js
+// @updateURL https://update.greasyfork.org/scripts/37670/Amazon%20search%20MAM.meta.js
+// ==/UserScript==
+
+// Get current book title
+var title = document.getElementById("productTitle").innerHTML;
+var title2 = title.split(':'); 
+var author = document.querySelector("a.a-link-normal.contributorNameID").innerHTML;
+
+// Create search-link
+var li = document.createElement("li");
+var a = document.createElement("a");
+a.href = "https://www.myanonamouse.net/tor/browse.php?tor[text]=" + title2[0] + "%20" + author;
+a.target = "_new";
+var text = document.createTextNode("[ Search on MAM ]");
+a.appendChild(text);
+li.appendChild(a);
+
+// Inject text on page
+var list = document.getElementById("formats");
+list.appendChild(a);

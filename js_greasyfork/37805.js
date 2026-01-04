@@ -1,0 +1,1 @@
+Mệnh của mỗi người đều không thoát khỏi 12 con giáp, vì vậy, trong năm 2018 đặc biệt là vào tháng chập âm lịch này, có một vài con giáp được xếp vào danh sách may mắn, dễ trúng số. Đó là những người mang tuổi: Sửu, tuổi Thìn, tuổi Tuất, tuổi Dần. XSMT trực tiếp nhanh nhất
