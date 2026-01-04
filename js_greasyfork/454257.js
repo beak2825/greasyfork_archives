@@ -1,0 +1,644 @@
+// ==UserScript==
+// @name 全局霞鹜文楷
+// @namespace RxWill
+// @version 0.1
+// @description 一款使用霞鹜文楷字体替换网页原有字体的用户样式表，为你呈现更统一美观的页面风格。
+// @author Ge Will <531sunlight@gmail.com>
+// @homepageURL http://gewill.org/
+// @supportURL http://gewill.org/
+// @license MIT
+// @grant GM_addStyle
+// @run-at document-start
+// @match *://*/*
+// @downloadURL https://update.greasyfork.org/scripts/454257/%E5%85%A8%E5%B1%80%E9%9C%9E%E9%B9%9C%E6%96%87%E6%A5%B7.user.js
+// @updateURL https://update.greasyfork.org/scripts/454257/%E5%85%A8%E5%B1%80%E9%9C%9E%E9%B9%9C%E6%96%87%E6%A5%B7.meta.js
+// ==/UserScript==
+
+(function() {
+let css = "";
+css += `
+
+/* 字体设定 */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: 'LXGW WenKai', 'Source Han Sans SC', 'HanHei SC', system-ui,
+    -apple-system, ui-sans-serif, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+
+pre,
+code,
+kbd,
+samp {
+  font-family: 'LXGW WenKai Mono', 'LXGW WenKai', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+
+button,
+input,
+keygen,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+}
+
+html:lang(zh) body,
+html:lang(zh-CN) body,
+html:lang(zh-SG) body,
+html:lang(zh-Hans) body,
+html:lang(cmn) body,
+html:lang(cmn-Hans) body,
+html:lang(zh-cmn-Hans) body {
+  font-family: 'LXGW WenKai', 'Source Han Sans SC', 'HanHei SC', system-ui,
+    -apple-system, ui-sans-serif, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+  quotes: '“' '”';
+}
+html:lang(zh) pre,
+html:lang(zh) code,
+html:lang(zh) kbd,
+html:lang(zh) samp,
+html:lang(zh-CN) pre,
+html:lang(zh-CN) code,
+html:lang(zh-CN) kbd,
+html:lang(zh-CN) samp,
+html:lang(zh-SG) pre,
+html:lang(zh-SG) code,
+html:lang(zh-SG) kbd,
+html:lang(zh-SG) samp,
+html:lang(zh-Hans) pre,
+html:lang(zh-Hans) code,
+html:lang(zh-Hans) kbd,
+html:lang(zh-Hans) samp,
+html:lang(cmn) pre,
+html:lang(cmn) code,
+html:lang(cmn) kbd,
+html:lang(cmn) samp,
+html:lang(cmn-Hans) pre,
+html:lang(cmn-Hans) code,
+html:lang(cmn-Hans) kbd,
+html:lang(cmn-Hans) samp,
+html:lang(zh-cmn-Hans) pre,
+html:lang(zh-cmn-Hans) code,
+html:lang(zh-cmn-Hans) kbd,
+html:lang(zh-cmn-Hans) samp {
+  font-family: 'LXGW WenKai Mono', 'LXGW WenKai', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-TW) body,
+html:lang(zh-Hant) body,
+html:lang(cmn-Hant) body,
+html:lang(zh-cmn-Hant) body {
+  font-family: 'LXGW WenKai', 'Source Han Sans TC', 'HanHei TC', system-ui,
+    -apple-system, ui-sans-serif, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+  quotes: '「' '」';
+}
+html:lang(zh-TW) pre,
+html:lang(zh-TW) code,
+html:lang(zh-TW) kbd,
+html:lang(zh-TW) samp,
+html:lang(zh-Hant) pre,
+html:lang(zh-Hant) code,
+html:lang(zh-Hant) kbd,
+html:lang(zh-Hant) samp,
+html:lang(cmn-Hant) pre,
+html:lang(cmn-Hant) code,
+html:lang(cmn-Hant) kbd,
+html:lang(cmn-Hant) samp,
+html:lang(zh-cmn-Hant) pre,
+html:lang(zh-cmn-Hant) code,
+html:lang(zh-cmn-Hant) kbd,
+html:lang(zh-cmn-Hant) samp {
+  font-family: 'LXGW WenKai Mono', 'PingFang TC', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(zh-HK) body,
+html:lang(zh-MO) body,
+html:lang(yue) body,
+html:lang(yue-Hant) body,
+html:lang(zh-yue-Hant) body {
+  font-family: 'LXGW WenKai', 'Source Han Sans HC', 'LXGW WenKai',
+    'Source Han Sans TC', 'HanHei TC', system-ui, -apple-system, ui-sans-serif,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji', emoji;
+  quotes: '「' '」';
+}
+html:lang(zh-HK) pre,
+html:lang(zh-HK) code,
+html:lang(zh-HK) kbd,
+html:lang(zh-HK) samp,
+html:lang(zh-MO) pre,
+html:lang(zh-MO) code,
+html:lang(zh-MO) kbd,
+html:lang(zh-MO) samp,
+html:lang(yue) pre,
+html:lang(yue) code,
+html:lang(yue) kbd,
+html:lang(yue) samp,
+html:lang(yue-Hant) pre,
+html:lang(yue-Hant) code,
+html:lang(yue-Hant) kbd,
+html:lang(yue-Hant) samp,
+html:lang(zh-yue-Hant) pre,
+html:lang(zh-yue-Hant) code,
+html:lang(zh-yue-Hant) kbd,
+html:lang(zh-yue-Hant) samp {
+  font-family: 'LXGW WenKai Mono', 'PingFang HK', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(de) body,
+html:lang(nl) body,
+html:lang(en) body,
+html:lang(nb) body,
+html:lang(no) body,
+html:lang(is) body,
+html:lang(da) body,
+html:lang(sv) body,
+html:lang(pt) body,
+html:lang(es) body,
+html:lang(fr) body,
+html:lang(it) body,
+html:lang(ro) body,
+html:lang(lv) body,
+html:lang(lt) body,
+html:lang(pl) body,
+html:lang(cs) body,
+html:lang(sk) body,
+html:lang(bs) body,
+html:lang(hr) body,
+html:lang(sr) body,
+html:lang(bg) body,
+html:lang(sl) body,
+html:lang(ru) body,
+html:lang(uk) body,
+html:lang(be) body,
+html:lang(el) body,
+html:lang(hu) body,
+html:lang(et) body,
+html:lang(fi) body,
+html:lang(tr) body,
+html:lang(id) body,
+html:lang(ms) body {
+  font-family: 'LXGW WenKai', 'Source Sans 3', ui-sans-serif, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(de) pre,
+html:lang(de) code,
+html:lang(de) kbd,
+html:lang(de) samp,
+html:lang(nl) pre,
+html:lang(nl) code,
+html:lang(nl) kbd,
+html:lang(nl) samp,
+html:lang(en) pre,
+html:lang(en) code,
+html:lang(en) kbd,
+html:lang(en) samp,
+html:lang(nb) pre,
+html:lang(nb) code,
+html:lang(nb) kbd,
+html:lang(nb) samp,
+html:lang(no) pre,
+html:lang(no) code,
+html:lang(no) kbd,
+html:lang(no) samp,
+html:lang(is) pre,
+html:lang(is) code,
+html:lang(is) kbd,
+html:lang(is) samp,
+html:lang(da) pre,
+html:lang(da) code,
+html:lang(da) kbd,
+html:lang(da) samp,
+html:lang(sv) pre,
+html:lang(sv) code,
+html:lang(sv) kbd,
+html:lang(sv) samp,
+html:lang(pt) pre,
+html:lang(pt) code,
+html:lang(pt) kbd,
+html:lang(pt) samp,
+html:lang(es) pre,
+html:lang(es) code,
+html:lang(es) kbd,
+html:lang(es) samp,
+html:lang(fr) pre,
+html:lang(fr) code,
+html:lang(fr) kbd,
+html:lang(fr) samp,
+html:lang(it) pre,
+html:lang(it) code,
+html:lang(it) kbd,
+html:lang(it) samp,
+html:lang(ro) pre,
+html:lang(ro) code,
+html:lang(ro) kbd,
+html:lang(ro) samp,
+html:lang(lv) pre,
+html:lang(lv) code,
+html:lang(lv) kbd,
+html:lang(lv) samp,
+html:lang(lt) pre,
+html:lang(lt) code,
+html:lang(lt) kbd,
+html:lang(lt) samp,
+html:lang(pl) pre,
+html:lang(pl) code,
+html:lang(pl) kbd,
+html:lang(pl) samp,
+html:lang(cs) pre,
+html:lang(cs) code,
+html:lang(cs) kbd,
+html:lang(cs) samp,
+html:lang(sk) pre,
+html:lang(sk) code,
+html:lang(sk) kbd,
+html:lang(sk) samp,
+html:lang(bs) pre,
+html:lang(bs) code,
+html:lang(bs) kbd,
+html:lang(bs) samp,
+html:lang(hr) pre,
+html:lang(hr) code,
+html:lang(hr) kbd,
+html:lang(hr) samp,
+html:lang(sr) pre,
+html:lang(sr) code,
+html:lang(sr) kbd,
+html:lang(sr) samp,
+html:lang(bg) pre,
+html:lang(bg) code,
+html:lang(bg) kbd,
+html:lang(bg) samp,
+html:lang(sl) pre,
+html:lang(sl) code,
+html:lang(sl) kbd,
+html:lang(sl) samp,
+html:lang(ru) pre,
+html:lang(ru) code,
+html:lang(ru) kbd,
+html:lang(ru) samp,
+html:lang(uk) pre,
+html:lang(uk) code,
+html:lang(uk) kbd,
+html:lang(uk) samp,
+html:lang(be) pre,
+html:lang(be) code,
+html:lang(be) kbd,
+html:lang(be) samp,
+html:lang(el) pre,
+html:lang(el) code,
+html:lang(el) kbd,
+html:lang(el) samp,
+html:lang(hu) pre,
+html:lang(hu) code,
+html:lang(hu) kbd,
+html:lang(hu) samp,
+html:lang(et) pre,
+html:lang(et) code,
+html:lang(et) kbd,
+html:lang(et) samp,
+html:lang(fi) pre,
+html:lang(fi) code,
+html:lang(fi) kbd,
+html:lang(fi) samp,
+html:lang(tr) pre,
+html:lang(tr) code,
+html:lang(tr) kbd,
+html:lang(tr) samp,
+html:lang(id) pre,
+html:lang(id) code,
+html:lang(id) kbd,
+html:lang(id) samp,
+html:lang(ms) pre,
+html:lang(ms) code,
+html:lang(ms) kbd,
+html:lang(ms) samp {
+  font-family: 'LXGW WenKai Mono', 'Source Code Pro', ui-monospace, monospace,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(de) body {
+  quotes: '„' '“';
+}
+html:lang(nb) body,
+html:lang(no) body,
+html:lang(es) body {
+  quotes: '«' '»';
+}
+html:lang(fr) body {
+  quotes: '« ' ' »';
+}
+html:lang(ar) body,
+html:lang(he) body,
+html:lang(th) body,
+html:lang(vi) body {
+  font-family: system-ui, -apple-system, ui-sans-serif, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji',
+    emoji;
+}
+html:lang(ar) pre,
+html:lang(ar) code,
+html:lang(ar) kbd,
+html:lang(ar) samp,
+html:lang(he) pre,
+html:lang(he) code,
+html:lang(he) kbd,
+html:lang(he) samp,
+html:lang(th) pre,
+html:lang(th) code,
+html:lang(th) kbd,
+html:lang(th) samp,
+html:lang(vi) pre,
+html:lang(vi) code,
+html:lang(vi) kbd,
+html:lang(vi) samp {
+  font-family: ui-monospace, monospace, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+}
+
+/* 字体替换 */
+@font-face {
+  font-family: 'Arial';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Calibri';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Helvetica';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Lucida Sans Unicode';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Microsoft Sans Serif';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'San Francisco';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Segoe UI';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Tahoma';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Trebuchet';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Trebuchet MS';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Ubuntu';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Verdana';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Consolas';
+  src: local('LXGW WenKai Mono');
+}
+@font-face {
+  font-family: 'Courier';
+  src: local('LXGW WenKai Mono');
+}
+@font-face {
+  font-family: 'Courier New';
+  src: local('LXGW WenKai Mono');
+}
+@font-face {
+  font-family: 'DejaVu Sans Mono';
+  src: local('LXGW WenKai Mono');
+}
+@font-face {
+  font-family: 'Lucida Console';
+  src: local('LXGW WenKai Mono');
+}
+@font-face {
+  font-family: 'SF Mono';
+  src: local('LXGW WenKai Mono');
+}
+@font-face {
+  font-family: 'Ubuntu Mono';
+  src: local('LXGW WenKai Mono');
+}
+@font-face {
+  font-family: 'SimHei';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: '黑体';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'DengXian';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: '等线';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Microsoft YaHei UI';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Microsoft YaHei';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: '微软雅黑';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'STHeiti SC';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'PingFang SC';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: '苹方-简';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Microsoft JhengHei UI';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'Microsoft JhengHei';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: '微軟正黑體';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'STHeiti TC';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'PingFang TC';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: '蘋方-繁';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: 'PingFang HK';
+  src: local('LXGW WenKai');
+}
+@font-face {
+  font-family: '蘋方-港';
+  src: local('LXGW WenKai');
+}
+/* 特定网站适配 */
+`;
+if ((location.hostname === "423down.com" || location.hostname.endsWith(".423down.com"))) {
+  css += `
+    .excerpt h2 {
+      height: auto;
+      height: initial;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  `;
+}
+if ((location.hostname === "baidu.com" || location.hostname.endsWith(".baidu.com"))) {
+  css += `
+    * {
+      font-family: 'LXGW WenKai', 'Source Han Sans SC', 'HanHei SC', system-ui,
+        -apple-system, ui-sans-serif, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+    }
+  `;
+}
+if ((location.hostname === "github.com" || location.hostname.endsWith(".github.com"))) {
+  css += `
+    .text-mono {
+      font-family: 'LXGW WenKai Mono', 'LXGW WenKai', ui-monospace, monospace,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji !important;
+    }
+    .blob-num,
+    .blob-code-inner {
+      font-family: 'LXGW WenKai Mono', 'LXGW WenKai', ui-monospace, monospace,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji;
+    }
+  `;
+}
+if ((location.hostname === "greasyfork.org" || location.hostname.endsWith(".greasyfork.org"))) {
+  css += `
+    #script_version_code,
+    .ace_editor {
+      font-family: 'LXGW WenKai Mono', 'LXGW WenKai', ui-monospace, monospace,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji', emoji !important;
+    }
+  `;
+}
+if ((location.hostname === "ithome.com" || location.hostname.endsWith(".ithome.com"))) {
+  css += `
+    .post_comment {
+      font-family: 'LXGW WenKai', 'Source Han Sans SC', 'HanHei SC', system-ui,
+        -apple-system, ui-sans-serif, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', emoji;
+    }
+  `;
+}
+if ((location.hostname === "jiemian.com" || location.hostname.endsWith(".jiemian.com"))) {
+  css += `
+    .article-content {
+      font-family: 'LXGW WenKai', 'Source Han Sans SC', 'HanHei SC', system-ui,
+        -apple-system, ui-sans-serif, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', emoji !important;
+    }
+    #ad_header_top,
+    .cnzz-ads,
+    .jm-app {
+      display: none !important;
+    }
+  `;
+}
+if ((location.hostname === "sspai.com" || location.hostname.endsWith(".sspai.com"))) {
+  css += `
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .title,
+    .content,
+    p,
+    a {
+      font-family: 'LXGW WenKai', 'Source Han Sans SC', 'HanHei SC', system-ui,
+        -apple-system, ui-sans-serif, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', emoji !important;
+    }
+  `;
+}
+if ((location.hostname === "userstyles.org" || location.hostname.endsWith(".userstyles.org"))) {
+  css += `
+    .ad,
+    #top_android_button,
+    .android_button_button,
+    .android_button_banner,
+    .walking {
+      display: none !important;
+    }
+  `;
+}
+if (new RegExp("^(?:https://www\\.baidu\\.com/(s|#)?.*)\$").test(location.href) || new RegExp("^(?:https://(\\w+\\.)?bing\\.com/(search)?.*)\$").test(location.href) || new RegExp("^(?:https://www\\.google(\\.\\w+){1,2}/(search)?.*)\$").test(location.href) || new RegExp("^(?:https://www\\.so\\.com/s?.*)\$").test(location.href) || new RegExp("^(?:https://(www\\.)?sogou\\.com/(web|sogou)?.*)\$").test(location.href)) {
+  css += `
+    * {
+      font-family: 'LXGW WenKai', 'Source Han Sans SC', 'HanHei SC', system-ui,
+        -apple-system, ui-sans-serif, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', emoji !important;
+    }
+  `;
+}
+if (typeof GM_addStyle !== "undefined") {
+  GM_addStyle(css);
+} else {
+  const styleNode = document.createElement("style");
+  styleNode.appendChild(document.createTextNode(css));
+  (document.querySelector("head") || document.documentElement).appendChild(styleNode);
+}
+})();
