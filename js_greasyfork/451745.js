@@ -1,0 +1,437 @@
+// ==UserScript==
+// @name         Hotel Photos - Text Tagging
+// @version      0.1.0
+// @description  corolho
+// @author       lucassilvas1
+// @match        http*://www.mturkcontent.com/dynamic/hit*
+// @grant        GM_addStyle
+// jshint        esversion: 8
+// @namespace https://greasyfork.org/users/846945
+// @downloadURL https://update.greasyfork.org/scripts/451745/Hotel%20Photos%20-%20Text%20Tagging.user.js
+// @updateURL https://update.greasyfork.org/scripts/451745/Hotel%20Photos%20-%20Text%20Tagging.meta.js
+// ==/UserScript==
+
+if (
+  document.getElementsByTagName("center")[0].textContent !==
+  "\n\t\tText Tagging\n\t"
+)
+  return;
+
+const categories = {
+  amenities: [
+    "kettle",
+    "lift",
+    "a/c",
+    "arcade",
+    "amenities",
+    "air con",
+    "air-con",
+    "airport",
+    "airport transportation",
+    "all inclusive",
+    "balcony",
+    "terrace",
+    "basketball court",
+    "bathroom",
+    "checkin",
+    "check in",
+    "check-in",
+    "checkout",
+    "check out",
+    "check-out",
+    "child care",
+    "concierge",
+    "conference room",
+    "connecting rooms",
+    "dvd player",
+    "early checkin",
+    "elevator",
+    "ferry",
+    "fireplace",
+    "handicap",
+    "kitchen",
+    "kitchenette",
+    "laundry facility",
+    "microwave",
+    "no smoking policy",
+    "parking",
+    "public transit",
+    "fridge",
+    "refrig",
+    "shuttle",
+    "smoking",
+    "sofa bed",
+    "suite",
+    "taxi",
+    "tennis court",
+    "transport",
+    "transportation services",
+    "washer dryer",
+    "snack machine",
+    "snack bar",
+    "ice vending machine",
+    "vending machine",
+    "water park",
+    "coffee machine",
+  ],
+  bar: [
+    "bar",
+    "pub",
+    "nightclub",
+    "pool side bar",
+    "bar cabinet in the room",
+    "bar lounge",
+  ],
+  beach: [
+    "black sand beach",
+    "clear water beach",
+    "family beach",
+    "nude beach",
+    "pebble beach",
+    "rocky beach",
+    "sand beach",
+    "white sand beach",
+    "beach",
+    "beach hotel",
+    "beach view",
+    "beaches",
+    "beachfront",
+    "beachshore",
+    "beachshores",
+    "beachview",
+    "ocean view",
+  ],
+  breakfast: [
+    "bfast",
+    "bread",
+    "breakfast",
+    "buffet",
+    "breakfast bar",
+    "continental breakfast",
+    "eggs",
+    "english breakfast",
+    "fry up",
+    "fry-up",
+    "irish breakfast",
+    "sunny side",
+    "toast",
+  ],
+  cleanliness: [
+    "clean",
+    "cleanse",
+    "unprotected food ",
+    "covered breakfast",
+    "covered dinner",
+    "covered food",
+    "covered lunch",
+    "dirty",
+    "disinfect",
+    "disinfectant wipes",
+    "dust",
+    "dusty",
+    "dingy",
+    "foul",
+    "grotty",
+    "hand wash",
+    "hygiene",
+    "hygienic",
+    "immaculate",
+    "insanitary",
+    "mice",
+    "mildew",
+    "scum",
+    "neat",
+    "odor",
+    "plexiglass",
+    "pristine",
+    "rats",
+    "sanitation",
+    "sanitize",
+    "sanitizer",
+    "smell",
+    "spotless",
+    "stained",
+    "stains",
+    "stench",
+    "sterilise",
+    "sterilize",
+    "sticky",
+    "stink",
+    "tidy",
+    "unclean",
+    "unhygienic",
+    "unsanitary",
+    "untidy",
+    "vacuum",
+    "washed",
+    "who guidelines",
+    "who protocol",
+    "wrapped breakfast",
+    "wrapped dinner",
+    "wrapped food",
+    "wrapped lunch",
+    "roaches",
+    "spider",
+  ],
+  comfort: [
+    "soft bed",
+    "sofa",
+    "good nights sleep",
+    "comfortable chairs",
+    "comfortable sofas",
+    "comfortable stay",
+    "comfort",
+    "comfy",
+  ],
+  location: [
+    "area",
+    "around it",
+    "bus stop",
+    "close by",
+    "close-at-hand",
+    "convenient",
+    "could not find",
+    "couldn't find",
+    "difficult to find",
+    "directions",
+    "district",
+    "easy to find",
+    "hard to find",
+    "locale",
+    "location",
+    "nearby",
+    "neighbourhood",
+    "public transport",
+    "short walk",
+    "stranded",
+    "stroll to",
+    "surroundings",
+    "taxi",
+    "terminal",
+    "train station",
+    "tube",
+    "walk to",
+    "walkable",
+    "walking distance",
+    "within stone's throw",
+    "wrong address",
+    "located",
+    "proximity",
+    "near",
+  ],
+  pool: [
+    "outdoor pool",
+    "indoor pools",
+    "pool",
+    "pools",
+    "swimming pool",
+    "poolside",
+  ],
+  price: [
+    "fee",
+    "affordable",
+    "price",
+    "value",
+    "cost",
+    "value for money",
+    "cheap",
+    "reasonably priced",
+    "good price",
+    "expensive rate",
+    "rates",
+    "room rates",
+    "over charge",
+    "pay for",
+    "paid more",
+    "pay extra",
+    "tax",
+    "charge",
+  ],
+  restaurant: [
+    "steakhouse",
+    "eatery",
+    "buffet",
+    "cafe",
+    "cafee",
+    "cuisine",
+    "dining",
+    "dinning",
+    "fine cuisine",
+    "fine dining",
+    "food",
+    "foodie",
+    "gastronomy",
+    "good food",
+    "gourmet",
+    "gourmet food",
+    "great food",
+    "haute cuisine",
+    "restaurant",
+    "restaurants",
+  ],
+  room: [
+    "bed was",
+    "room size",
+    "room comfort",
+    "room cleanliness",
+    "room noise",
+    "in room light",
+    "room access",
+    "room quality",
+    "room bed",
+    "room design",
+    "nice bedroom",
+    "room",
+  ],
+  noise: [
+    "loud",
+    "hear",
+    "quiet",
+    "location noise",
+    "noise disclaimer",
+    "noise free rooms",
+    "room noise",
+    "can hear neighbors",
+    "ruckus",
+    "loud music",
+    "loud construction noise",
+    "loud noise",
+    "music from party outside",
+    "noise",
+    "noisy",
+  ],
+  service: [
+    "service",
+    "rude",
+    "unhelpful",
+    "bad service",
+    "concierge",
+    "no care taken",
+    "wait time",
+    "room service",
+    "staff",
+    "complaint",
+    "friendly",
+  ],
+  spagym: [
+    "exercise",
+    "beauty salon",
+    "beauty treatments",
+    "detox",
+    "facials",
+    "geothermal",
+    "health and beauty",
+    "health club",
+    "health facility",
+    "hot spring",
+    "hot tub",
+    "hot-spring",
+    "hydrotherapy",
+    "jacuzzi",
+    "jetted tub",
+    "massage treatments",
+    "mineral spring",
+    "onsen",
+    "pamper",
+    "sauna",
+    "spa",
+    "spa tub",
+    "spas",
+    "steam room",
+    "thalassotherapy",
+    "thermal bath",
+    "thermal spring",
+    "wellness",
+    "whirlpool",
+    "fitness",
+    "gym",
+    "fitness center",
+    "workout",
+    "work out",
+    "work-out",
+  ],
+  view: ["view"],
+  wifi: [
+    "wi-fi",
+    "wi fi",
+    "internet",
+    "free wifi",
+    "free internet",
+    "broadband",
+    "internet",
+    "wifi",
+    "wireless",
+    "connectivity",
+    "router",
+    "signal",
+  ],
+};
+
+const colors = {
+  amenities: "blue",
+  bar: "green",
+  beach: "yellow",
+  breakfast: "red",
+  cleanliness: "purple",
+  comfort: "olive",
+  location: "aqua",
+  pool: "chartreuse",
+  price: "lime",
+  restaurant: "coral",
+  room: "crimson",
+  noise: "cyan",
+  service: "darkcyan",
+  spagym: "darkmagenta",
+  wifi: "gainsboro",
+  none: "white",
+};
+
+const texts = [...document.getElementsByTagName("tr")];
+
+function highlightText(text, item, category) {
+  return text.replace(
+    RegExp(item, "g"),
+    `<b style="color: ${colors[category]}">$&</b>`
+  );
+}
+
+function highlightLabel(label, category) {
+  label.innerHTML = `<b style="color: ${colors[category]}">${label.textContent}</b>`;
+}
+
+function main() {
+  texts.forEach((question) => {
+    const textEl = question.firstElementChild;
+    const text = textEl.textContent.toLowerCase();
+    const has = [];
+    let highlighted = text;
+
+    for (const category of Object.keys(categories)) {
+      let alreadyChecked = false;
+      for (const item of categories[category]) {
+        if (text.includes(item)) {
+          highlighted = highlightText(highlighted, item, category);
+          if (alreadyChecked) continue;
+          has.push(category);
+        }
+      }
+    }
+    textEl.innerHTML = highlighted;
+
+    const checkboxes = {};
+    question.querySelectorAll("input[type='checkbox'").forEach((element) => {
+      checkboxes[element.id.slice(6)] = {
+        input: element,
+        label: element.nextElementSibling,
+      };
+    });
+
+    if (!has.length) has.push("none");
+    has.forEach((category) => {
+      checkboxes[category].input.checked = true;
+      highlightLabel(checkboxes[category].label, category);
+    });
+  });
+}
+
+setTimeout(main, 2000);
