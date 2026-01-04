@@ -1,0 +1,133 @@
+// ==UserScript==
+    // @name         基于CSDN极致去广告1.08 - 修复版
+    // @namespace    http://tampermonkey.net/
+    // @version      1.08
+    // @description  修复CSDN反屏蔽广告bug
+    // @author       https://github.com/1uokun
+    // @match        *://blog.csdn.net
+    // @match        *://blog.csdn.net/*
+    // @match        *://bbs.csdn.net/*
+    // @match        *://so.csdn.net/*
+    // @match        *://www.csdn.net
+    // @match        *://www.csdn.net/*
+    // @match        *://download.csdn.net
+    // @match        *://download.csdn.net/*
+    // @grant        GM_setValue
+    // @grant        GM_getValue
+// @downloadURL https://update.greasyfork.org/scripts/372141/%E5%9F%BA%E4%BA%8ECSDN%E6%9E%81%E8%87%B4%E5%8E%BB%E5%B9%BF%E5%91%8A108%20-%20%E4%BF%AE%E5%A4%8D%E7%89%88.user.js
+// @updateURL https://update.greasyfork.org/scripts/372141/%E5%9F%BA%E4%BA%8ECSDN%E6%9E%81%E8%87%B4%E5%8E%BB%E5%B9%BF%E5%91%8A108%20-%20%E4%BF%AE%E5%A4%8D%E7%89%88.meta.js
+    // ==/UserScript==
+
+    (function () {
+        'use strict';
+
+        //阅读全文
+        $('#btn-readmore').click();
+        // 获取当前地址url
+        var url = location.href;
+        // 正则匹配博客部分
+        var blogcsdn = /blog.csdn.net/i;
+        if (blogcsdn.test(url)) {
+            // 页面主体部分轮播广告
+            $(".box-box-large").css('visibility','hidden');
+            $("#asideProfile").next().css('visibility','hidden');
+            $($("#asideFooter").find("div").first()).css('visibility','hidden');
+            // 隐藏下面登录注册
+            $(".pulllog-box").css('visibility','hidden');
+            // 首页头部广告
+            $(".banner-ad-box").css('visibility','hidden');
+            // 去除列表自动加载的广告
+            $(".recommend-box").bind("DOMNodeInserted", function (e) {
+                for (var i = 0; i < $(".recommend-ad-box").length; i++) {
+                    // 去除文章列表中间广告
+                    if ($(".recommend-ad-box").attr("class") == "recommend-item-box recommend-ad-box") {
+                        // $(".recommend-ad-box").css('visibility','hidden');
+                        $(".recommend-ad-box").css('visibility','hidden');
+                    }
+                }
+            });
+            $($("aside div").first()).css('visibility','hidden');
+            // 右下角弹窗
+            $("#layerd").css('visibility','hidden');
+            $("#reportContent").css('visibility','hidden');
+            $(".tool-box").css('visibility','hidden');
+            $("#asideNewComments,.recommend-box,.edu-promotion,.comment-box,aside").css('visibility','hidden');
+            //底部空白
+            $("main").css("margin-bottom","0px");
+            //阅读全文
+            //$('#article_content').css("height","");
+            //$("div.readall_box,#btn-readmore,div.hide-article-box.text-center.csdn-tracking-statistics.tracking-click").css('visibility','hidden');
+            //顶部csdn
+            $("div.csdn-toolbar.csdn-toolbar.tb_disnone").css('visibility','hidden');
+            //底部版权声明
+            $(".article-copyright").css('visibility','hidden');
+            //上移按钮
+            $(".meau-gotop-box").css('visibility','hidden');
+            //文章居中
+            $("main").css("float","none");
+            $("main").css("margin","auto");
+            //右下角关闭按钮
+            $(".box-box-default").css('visibility','hidden');
+            //上部广告
+            $(".advert-bg").css('visibility','hidden');
+            $(".advert-cur").css('visibility','hidden');
+            $('newsfeed').css('visibility','hidden');
+            window.addEventListener ("load", removeIframe, false);
+            function removeIframe () {
+                $('iframe').css('visibility','hidden');
+                //更新提示
+                if (GM_getValue("csdnNotifi",true)==true)
+                    if(!confirm("CSDN极致去广告脚本已更新\n为解决csdn反广告问题\n请查看项目主页获取解决办法\n是否再次提示(取消即不再提示,确认将打开项目主页，请允许弹窗)"))
+                        GM_setValue("csdnNotifi",false);
+                    else
+                    {
+                        window.open('https://github.com/Azero-NG/csdnRemoveAd');
+                    }
+            }
+            $(".blog-content-box ~ div").css('visibility','hidden');//todo:streamline my code
+        }
+        // 正则匹配搜索页面
+        var socsdn = /so.csdn.net/i;
+        if (socsdn.test(url)) {
+            $(".rightadv").css('visibility','hidden');
+        }
+        // 正则匹配首页广告
+        var wwwcsdn = /www.csdn.net/i;
+        if (wwwcsdn.test(url)) {
+            console.log("有广告");
+            // 首页头部广告
+            $(".banner-ad-box").css('visibility','hidden');
+            if ($(".right_top").attr("class") == "slide-outer right_top") {
+                $(".right_top").css('visibility','hidden');
+            }
+            if ($(".right_extension").attr("class") == "right_extension slide-outer") {
+                $(".right_extension").css('visibility','hidden');
+            }
+        }
+        // 正则匹配下载页面
+        var downloadcsdn = /download.csdn.net/i;
+        if (downloadcsdn.test(url)) {
+            $(".mod_personal").next().css('visibility','hidden');
+            $(".top_ad_box").css('visibility','hidden');
+            $(".ad").css('visibility','hidden');
+            $(".right_plate_con").next().css('visibility','hidden');
+            $($(".download_r").find(".dl_mar_b").first()).css('visibility','hidden');
+            $($(".download_r").find(".dl_mar_b").last()).css('visibility','hidden');
+            // 去除列表自动加载的广告
+            $(".album_detail_wrap").bind("DOMNodeInserted", function (e) {
+                for (var i = 0; i < $(".yd_a_d_dl").length; i++) {
+                    // 去除文章列表中间广告
+                    if ($(".yd_a_d_dl").attr("class") == "album_detail_list yd_a_d_dl") {
+                        $(".yd_a_d_dl").css('visibility','hidden');
+                    }
+                }
+            });
+        }
+
+        if($('.blog-content-box')){
+            window.stop()
+        }
+        document.querySelectorAll('iframe').forEach(function(item){
+            item.style.display = 'none'
+        })
+    })();

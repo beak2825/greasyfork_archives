@@ -1,0 +1,3122 @@
+// ==UserScript==
+// @name         beat beibei everyday
+// @version      3.11
+// @namespace    btbb
+// @description  天天打贝贝
+// @author       beside4ever@outlook.com
+// @grant        GM_addStyle
+// @run-at       document-start
+// @match        http://118.25.41.160:8888/*
+// @match        https://www.idleinfinity.cn/*
+// @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/jquery-url-parser/2.3.1/purl.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.10.0/js/md5.min.js
+// @downloadURL https://update.greasyfork.org/scripts/371443/beat%20beibei%20everyday.user.js
+// @updateURL https://update.greasyfork.org/scripts/371443/beat%20beibei%20everyday.meta.js
+// ==/UserScript==
+
+const defaultFilterOptions = ['技能', '凹槽(0/2)', '凹槽(0/4)', '取得魔法装备', '攻击速度', '施法速度', '+20 毒素', '+25 毒素'];
+
+let config = {
+  showRequire: true,
+  fastFilter: true,
+  fastOptions: defaultFilterOptions.slice(0), // 快速过滤器配置，可自行增删
+  showSpellColor: true,
+  showSpeedLevel: true,
+  showCharDmg: true,
+  showAccuracy: true,
+  dropNotification: true,
+  itemStats: true,
+  showBattle: true,
+  mapHack: true,
+  mapHackType: 'all',
+  infiniteMap: false,
+  showSetAttr: true,
+  showAuctionNote: true,
+  auctionWatch: true,
+  oneKeyEquip: true,
+  oneKeyAgree: true,
+  oneKeyRune: true,
+  showRuneTip: true,
+  showBattleDetail: true,
+  d3theme: true,
+  setOnRight: true,
+  showAuctionLink: true,
+  autoSimulate: true,
+  batchTrade: true
+};
+
+const configLabel = {
+  showRequire: '职业专属显示',
+  fastFilter: '快速过滤选项',
+  showSpellColor: '法术技能高亮',
+  showSpeedLevel: '显示速度档位',
+  showCharDmg: '角色均伤显示',
+  showAccuracy: '角色命中显示',
+  dropNotification: '欧皇暗金通知',
+  itemStats: '欧皇收获统计',
+  showBattle: '快速秘境战斗',
+  mapHack: '秘境自动战斗',
+  infiniteMap: '无限秘境模式',
+  showSetAttr: '显示套装属性',
+  showAuctionNote: '显示拍卖备注',
+  auctionWatch: '拍卖特别关注',
+  oneKeyEquip: '一键换装功能',
+  oneKeyAgree: '一键同意功能',
+  oneKeyRune: '一键转移符文',
+  showRuneTip: '符文之语提示',
+  showBattleDetail: '战斗详细分析',
+  d3theme: '暗黑界面皮肤',
+  setOnRight: '套装属性居右',
+  showAuctionLink: '显示市场链接',
+  autoSimulate: '自动战斗模拟',
+  batchTrade: '批量交易物品'
+};
+
+const userConfig = ['dropNotification', 'd3theme', 'setOnRight'];
+const expTable = [1, 0.97, 0.94, 0.91, 0.88, 0.85, 0.82, 0.79, 0.76, 0.73, 0.7, 0.667, 0.634, 0.601, 0.568, 0.535, 0.502, 0.469, 0.436, 0.40299999999999997, 0.37, 0.335, 0.3, 0.265, 0.23, 0.195, 0.16, 0.125, 0.09, 0.05];
+
+let localConfig = localStorage.getItem('idle-ui-config');
+if (localConfig) {
+  localConfig = JSON.parse(localConfig);
+  Object.keys(localConfig).map(key => {
+    if (config[key] !== undefined) config[key] = localConfig[key];
+  });
+}
+
+if (config.d3theme) {
+  const htmlElement = document.getElementsByTagName('html')[0];
+  htmlElement.setAttribute('class', 'd3');
+}
+
+function idleInit() {
+  if(!checkAuth(true)) return;
+  addConfig();
+  // $('.equip-name.set').trigger('mouseenter');
+  $('.bg-canvas').hide();
+  Notification.requestPermission();
+
+  if (location.href.indexOf('Character/Detail') >= 0) {
+
+    const mapPanel = $('.panel-body').eq(2);
+    const mapLevel = mapPanel.find('.physical').first().text() - 0;
+
+    let minDrop = mapLevel + 1 + 2 - 15;
+    let maxDrop = mapLevel - 1 + 15;
+    let minExp = mapLevel + 1 + 2 - 10;
+    let maxExp = mapLevel - 1 + 10;
+
+    if(maxDrop > 100) maxDrop = 100;
+    if(minDrop < 1) minDrop = 1;
+    if(maxExp > 100) maxExp = 100;
+    if(minExp < 1) minExp = 1;
+
+    let maxLvl = 0;
+    let minLvl = 99;
+    $('.panel-body').last().find('.label').each(function() {
+      const label = $(this).text();
+      if(label.indexOf('Lv') >= 0){
+        const lvl = label.replace('Lv', '') - 0;
+        if(lvl > maxLvl) maxLvl = lvl;
+        if(lvl < minLvl) minLvl = lvl;
+      }
+      if(label.indexOf('PVP') >= 0) return false;
+    });
+
+    mapPanel.children().first().append(`<p><span>正常掉落范围：</span><span class="set">${minDrop}</span> - <span class="set">${maxDrop}</span></p>`);
+    mapPanel.children().last().append(`<p><span>正常经验范围：</span><span class="set">${minExp}</span> - <span class="set">${maxExp}</span></p>`);
+
+    let warnMessage = '正常';
+    let type = 'physical';
+    if(maxLvl > maxDrop) {
+      warnMessage = `队伍最高级（${maxLvl}）大于地图最高级`;
+      type = 'fire';
+    }else if (minLvl < minDrop) {
+      warnMessage = `队伍最低级（${minLvl}）小于地图最低级`;
+      type = 'fire';
+    }
+    mapPanel.append(`<div class="col-xs-12"><p><span>队伍掉落状态：</span><span class="${type}">${warnMessage}</span></p></div>`);
+
+    warnMessage = '正常';
+    type = 'physical';
+    const cLvl = $('.label.label-default').eq(0).text().replace('Lv', '') - 0;
+    if(cLvl > maxExp) {
+      warnMessage = '角色等级过高';
+      type = 'fire';
+    }else if (cLvl < minExp) {
+      warnMessage = '角色等级过低';
+      type = 'fire';
+    }
+    mapPanel.append(`<div class="col-xs-12"><span>角色经验获取：</span><span class="${type}">${warnMessage}</span></div>`);
+  }
+
+  $('.navbar-nav > li > a').each(function() {
+    if ($(this).text().indexOf('帮助') >= 0) {
+      const links = [
+        { text: '暗金列表', link: '/Help/Content?url=Unique' },
+        { text: '套装列表', link: '/Help/Content?url=Set' },
+        { text: '神器列表', link: '/Help/Content?url=Artifact' }
+      ].map(item => {
+        return `<li><a class="base" href="${item.link}" target="_blank">${item.text}</a></li>`;
+      }).join('');
+      $(this).next().append(links);
+    }
+  });
+
+  function fetchItem(name, callback) {
+    if (!name) return;
+    if (quickSearchType === 'Set' || quickSearchType === 'Unique') {
+      $.get(`/Help/${quickSearchType}`, function(html) {
+        const dom = $.parseHTML(html);
+        const type = quickSearchType.toLowerCase();
+        $(dom).find(`.equip > .${type}`).each(function() {
+          if ($(this).text().indexOf(name) >= 0) {
+            callback($(this).parent());
+            return;
+          }
+        });
+      });
+    } else {
+      $.get('/Help/Artifact', function(html) {
+        const dom = $.parseHTML(html);
+        $(dom).find('tr').each(function(i) {
+          if (i > 0) {
+            const nameLabel = $(this).children().last().find('.artifact');
+            if (nameLabel.text().indexOf(name) >= 0) {
+              const ret = [];
+              ret.push(`<p class="artifact">${nameLabel.text()}</p>`);
+              $(this).children().first().children('div').each(function() {
+                ret.push(`<p class="physical">${$(this).text()}</p>`);
+              });
+              ret.push('<p class="artifact">神器</p>');
+              nameLabel.parent().children().each(function(index) {
+                if (index > 0) ret.push(`<p>${$(this).text()}</p>`);
+              });
+              const recipe = [];
+              $(this).children().eq(1).find('.artifact.equip-name').each(function() {
+                const id = $(this).text().match(/\d+/g)[0];
+                recipe.push(`<span class="artifact">${id}#</span>`);
+              });
+              ret.push(`<p class="physical">${recipe.join(' + ')}</p>`);
+              callback($(`<div class="equip">${ret.join('')}</div>`));
+              return;
+            }
+          }
+        });
+      });
+    }
+  }
+
+  let quickSearchType = 'Unique';
+  const itemTypes = `
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+        <span id="idle-quick-type">暗金</span><span class="caret" style="margin-left: 5px;"></span>
+      </button>
+      <ul class="dropdown-menu">
+          <li><a class="quick-option unique" data-type="Unique" href="javascript: void(0);">暗金</a></li>
+          <li><a class="quick-option set" data-type="Set" href="javascript: void(0);">套装</a></li>
+          <li><a class="quick-option artifact" data-type="Artifact" href="javascript: void(0);">神器</a></li>
+      </ul>
+    </div>
+  `;
+  const input = `<div id="idle-ui-quicksearch">${itemTypes}<input placeholder="搜索..." class="form-control"/><div class="popover" style="display: none; left: 60px; top: 28px;"><div class="popover-content"></div></div></div>`;
+  $('.navbar-header').append(input);
+
+  $('.quick-option').click(function(e) {
+    e.preventDefault();
+    quickSearchType = $(this).data('type');
+    $('#idle-quick-type').text($(this).text());
+    const val = $('#idle-ui-quicksearch > input').val();
+    if (val) {
+      const popover = $('#idle-ui-quicksearch > input').next();
+      popover.hide();
+      fetchItem(val, function(html) {
+        popover.children().first().html(html);
+        popover.show();
+      });
+    }
+  });
+
+  let quickTimer = null;
+  $('#idle-ui-quicksearch > input').keyup(function() {
+    if (quickTimer) {
+      clearTimeout(quickTimer);
+      quickTimer = null;
+    }
+    const val = $(this).val();
+    if (!val) $(this).next().hide();
+    quickTimer = setTimeout(() => {
+      const popover = $(this).next();
+      popover.hide();
+      fetchItem(val, function(html) {
+        popover.children().first().html(html);
+        popover.show();
+      });
+    }, 500);
+  });
+
+  if (config.fastFilter) {
+    const fastOptions = (['无'].concat(config.fastOptions)).map(function(item) {
+      return `<li><a href="javascript: void(0);" class="filter-text" style="color: white">${item}</a></li>`;
+    }).join('');
+
+    const fastFilter = '<div class="fast-filter btn-group">' +
+      '<button type="button" class="btn btn-default btn-xs dropdown-toggle" style="margin-left: 10px;" data-toggle="dropdown">快速过滤<span class="caret"/></button>'
+      + `<ul class="dropdown-menu">${fastOptions}</ul></div>`;
+    $(fastFilter).insertAfter('.panel-filter');
+
+    $('.filter-text').click(function() {
+      const text = $(this).text() === '无' ? '' : $(this).text();
+      const filter = $(this).parent().parent().parent().prev();
+      filter.val(text);
+      filter.trigger('input');
+    });
+  }
+
+  if (config.showSpellColor) {
+    $('.skill-name').each(function() {
+      let desc = '';
+      let label = '';
+      if ($(this).children().length === 2) {
+        desc = $(this).next().text();
+        label = $(this).children().last();
+      } else {
+        desc = $(this).parent().next().text();
+        label = $(this);
+      }
+      if (desc.indexOf('法术技能') >= 0) {
+        label.addClass('skill');
+      }
+    });
+  }
+
+  function getSpeedLevel(speed, isAttack) {
+    const levels = isAttack ? [0, -25, -50, -80, -120, -160, -200] : [0, -20, -45, -75, -110, -145, -180];
+    for (let i = 0; i < levels.length; i++) {
+      if (speed > levels[i]) {
+        const next = levels[i];
+        return [i, next];
+      }
+    }
+    return [levels.length, '已最高'];
+  }
+
+  function getAvgDmg(dmgStr) {
+    const dmgArray = dmgStr.split('~');
+    const avg = (((dmgArray[0] - 0) + (dmgArray[1] - 0)) / 2);
+    return avg;
+  }
+
+  function getKeySkill() {
+    let ret = { name: '', accRate: 0, dmgRate: 0, skillType: null, dmgBuff: 0, resBuff: 0 };
+    $('span.label.label-danger').each(function() {
+      if (!$(this).hasClass('sr-only') && $(this).text().indexOf('K') >= 0) {
+        ret.name = $(this).prev().text();
+        const skill = $(this).parent().next().text();
+        ret.isAttack = skill.indexOf('攻击技能') >= 0;
+        if (ret.isAttack) {
+          const accMatch = skill.match(/提升(\d+)%准确率/);
+          const dmgMatch = skill.match(/(\d+)%基础伤害/);
+          if (accMatch) ret.accRate = (accMatch[1] - 0) / 100;
+          if (dmgMatch) ret.dmgRate = (dmgMatch[1] - 0) / 100;
+          ret.skillType = getSkillType(skill);
+          if(ret.skillType) {
+            const panel = $('.panel.panel-inverse').eq(4).text();
+            const dmgBuff = panel.match(new RegExp(`${ret.skillType}增伤：(\\d+)%`));
+            const resBuff = panel.match(new RegExp(`减目标${ret.skillType[0]}抗：(\\d+)%`));
+            if(dmgBuff) ret.dmgBuff = (dmgBuff[1] - 0) / 100;
+            if(resBuff) ret.resBuff = (resBuff[1] - 0) / 100;
+          }
+        }
+      }
+    });
+    return ret;
+  }
+
+  function getSkillType(skill) {
+    const types = ['物理', '闪电', '冰冷', '毒素', '火焰', '魔法'];
+    for (let i = 0; i < types.length; i++) {
+      if(skill.indexOf(types[i] >= 0)){
+        return types[i];
+      }
+    }
+    return null;
+  }
+
+  function renderCharLabel(name, value, id) {
+    const idStr = id ? `id="${id}"` : '';
+    return `<p><span>${name}：</span><span ${idStr} class="state">${value}</span></p>`;
+  }
+
+  function getMonsterRes(skillType, mLvl) {
+    if(skillType === '物理' || skillType === '魔法') {
+      return (mLvl / 400).toFixed(3) - 0;
+    }else {
+      return (mLvl / 200).toFixed(2) - 0;
+    }
+  }
+
+  if (location.href.indexOf('Character/Detail') >= 0) {
+    const keySkill = getKeySkill();
+    let level = 0;
+    let monsterLevel = $('.panel.panel-inverse').eq(2).find('span.physical').first().text() - 0;
+
+    $('.label.label-default').each(function() {
+      const label = $(this).text();
+      if (label.indexOf('Lv') >= 0 && level === 0) {
+        level = label.replace('Lv', '') - 0;
+      }
+      if (config.showSpeedLevel) {
+        if (label === '攻击') {
+          const attackSpeed = $(this).parent().next().next().next().next().children().last();
+          const level = getSpeedLevel(attackSpeed.text(), true);
+          const levelElement = renderCharLabel('攻速档位', level[0]) + renderCharLabel('下档攻速', level[1]);
+          $(levelElement).insertAfter(attackSpeed.parent());
+        } else if (label === '法术') {
+          const spellSpeed = $(this).parent().next().children().last();
+          const level = getSpeedLevel(spellSpeed.text(), false);
+          const levelElement = renderCharLabel('速度档位', level[0]) + renderCharLabel('下档速度', level[1]);
+          $(levelElement).insertAfter(spellSpeed.parent());
+        }
+      }
+      if (config.showCharDmg) {
+        if (label === '攻击') {
+          const baseDmg = $(this).parent().next().children().last().text();
+          const critElement = $(this).parent().next().next().next();
+          const crit = critElement.children().last().text().replace('%', '') / 100;
+          const avgDmg = getAvgDmg(baseDmg);
+          const finalDmg = Math.round(avgDmg * (1 + (crit - 0)));
+          let dmgElement = renderCharLabel('普攻均伤', finalDmg);
+          if (keySkill.isAttack) {
+            const monsterRes = getMonsterRes(keySkill.skillType, monsterLevel);
+            const keyDmg = Math.round(keySkill.dmgRate * finalDmg * (1 + keySkill.dmgBuff) * (1 + keySkill.resBuff - monsterRes));
+            dmgElement += renderCharLabel(`${keySkill.name}均伤`, keyDmg);
+          }
+          $(dmgElement).insertAfter(critElement);
+        }
+      }
+      if (config.showAccuracy) {
+        if (label === '攻击') {
+          const accuracy = $(this).parent().next().next().children().last().text() - 0;
+          const accuracyElement = $(this).parent().next().next();
+          const panel = $(this).parent().parent().text();
+          const ignoreDef = panel.match(/无视目标防御：True/) ? 100 : 0;
+          const decreaseDef = panel.match(/减目标防御：(\d+)%/)[1] - 0;
+          const accRate = getAccRate(level, monsterLevel, accuracy, ignoreDef + decreaseDef);
+          let accElement = renderCharLabel('普攻命中率', `${accRate}%`, 'idle-ui-acc');
+          if (keySkill.isAttack) {
+            const keyAcc = accuracy * keySkill.accRate;
+            const keyAccRate = getAccRate(level, monsterLevel, keyAcc, ignoreDef + decreaseDef);
+            accElement += renderCharLabel(`${keySkill.name}命中率`, `${keyAccRate}%`, 'idle-ui-key-acc');
+          }
+          $(accElement).insertAfter(accuracyElement);
+        }
+      }
+      if (config.itemStats) {
+        if (label == '综合') {
+          const uniqueNum = $(this).parent().next().next().next().next().children().last().text();
+          const setNum = $(this).parent().next().next().next().next().next().children().last().text();
+          const statsData = { uniqueNum: uniqueNum, setNum: setNum };
+          saveStats({ uniqueNum: uniqueNum, setNum: setNum });
+        }
+      }
+    });
+  }
+
+  function getAccRate(clvl, mlvl, acc, decreaseDef) {
+    clvl = clvl - 0;
+    mlvl = mlvl - 0;
+    acc = acc - 0;
+    let def = (mlvl - 0 + 1) * 10;
+    if(decreaseDef > 100) {
+      def = 0;
+    } else {
+      def = (1 - decreaseDef / 100) * def;
+    }
+    return (2 * (clvl / (clvl + mlvl)) * (acc / (acc + def)) * 100).toFixed(2) - 0;
+  }
+
+  function saveStats(statsData) {
+    const idMatch = location.href.match(/Character\/Detail\?Id=(\d+)/i);
+    if (!idMatch) return;
+    const id = idMatch[1];
+    let stats = localStorage.getItem('idle-ui-stats');
+    stats = stats ? JSON.parse(stats) : { uniqueNum: 0, setNum: 0 };
+    const lastStatsData = stats[id];
+    const time = +new Date();
+    if (lastStatsData && lastStatsData.time) {
+      const duration = moment.duration(moment(time).diff(moment(lastStatsData.time)));
+      const timeSpan = duration.asMinutes() > 60 ? (duration.asHours().toFixed(1) - 0) + '小时前' : Math.round(duration.asMinutes()) + '分钟前';
+      const uniqueChange = statsData.uniqueNum - lastStatsData.uniqueNum;
+      const setChange = statsData.setNum - lastStatsData.setNum;
+      displayStats(id, timeSpan, uniqueChange, setChange);
+    }
+    statsData.time = time;
+    stats[id] = statsData;
+    localStorage.setItem('idle-ui-stats', JSON.stringify(stats));
+  }
+
+  function displayStats(id, timeSpan, uniqueChange, setChange) {
+    const message = `<div class="panel panel-inverse panel-top"><div class="panel-body">上次访问是${timeSpan}，这段时间内你获得了 <span class="unique">${uniqueChange}</span> 件暗金，<span class="set">${setChange}</span> 件套装。<a href="javascript: void(0);" id="open-ui-modal" class="btn btn-xs btn-default ml-10">插件设置</a></div></div>`;
+
+    $('.navbar.navbar-inverse.navbar-fixed-top').next().next().prepend(message);
+    $('#open-ui-modal').click(function() {
+      $('#modalUI').modal('show');
+    });
+  }
+
+  if (config.dropNotification && location.href.indexOf('Map/Dungeon') === -1) {
+    $(document).ready(function() {
+      const dropTypes = { unique: '暗金', set: '套装' };
+      const oldLog = $.connection.userManagerHub.client.battleLog;
+      $.connection.userManagerHub.client.battleLog = function(data) {
+        const ret = JSON.parse(data);
+        const keys = Object.keys(ret.EquipmentNameList);
+        if (keys.length > 0) {
+          keys.forEach(function(type) {
+            const items = ret.EquipmentNameList[type].join(',');
+            if (dropTypes[type]) {
+              const notice = new Notification(
+                `${ret.CharName} 获得${dropTypes[type]}`,
+                {
+                  body: items,
+                  icon: 'https://cdn3.iconfinder.com/data/icons/game-play/512/gaming-game-play-multimedia-console-09-512.png'
+                }
+              );
+            }
+          });
+        }
+        if (ret.RuneNameList.length) {
+          new Notification(
+            `${ret.CharName} 获得符文`,
+            {
+              body: ret.RuneNameList.join(','),
+              icon: 'https://cdn0.iconfinder.com/data/icons/geek-4/24/Mortal_Instruments_movie_symbol_logo_rune-512.png'
+            }
+          );
+        }
+        if (oldLog) oldLog(data);
+      };
+      $.connection.hub.stop();
+      $.connection.hub.start();
+    });
+  }
+
+  if (config.showBattle && inBattlePage() && !$('.error').length) {
+    let waitTime = $('#time');
+    if (waitTime.length) {
+      waitTime = waitTime.val();
+    } else {
+      $(document).ready(function() {
+        $(".turn").battle({
+          interval: 0,
+          guaji: 0
+        });
+      });
+    }
+  }
+
+  function renderConigHtml() {
+    return Object.keys(config)
+      .filter(item => userConfig.indexOf(item) >= 0)
+      .map(key => {
+        const cfg = config[key];
+        return `<div class="col-sm-4"><div class="checkbox" style="margin: 2px 0;"><label><input class=" idle-ui-config" type="checkbox" data-key="${key}"> ${configLabel[key]}</label></div></div>`
+      })
+      .join('');
+  }
+
+  function addConfig() {
+    const configHtml = renderConigHtml();
+    const html = `
+          <div class="modal fade" id="modalUI" style="display: none;">
+              <div class="modal-dialog modal-large" role="">
+                  <div class="modal-content model-inverse">
+                      <div class="modal-header">
+                          <span class="modal-title">插件设置</span>
+                      </div>
+                      <div class="modal-body">
+                        <div class="idle-ui-title">Idle Infinity UI 增强插件 by 班登</div>
+                        <div>唯一指定赞助商：<span class="physical">☆☆☆永夜☆☆☆</span></div>
+                        <div class="panel-header state">配置项开关（配置具体含义请参考<a href="https://greasyfork.org/zh-CN/scripts/370841-fight-beibei-everyday" target="_blank">脚本介绍</a>，点击即可启用/禁用，变更后请刷新）</div>
+                        <div class="form row">${configHtml}</div>
+                        <div class="panel-header state">自动秘境模式</div>
+                        <div>
+                          <label class="radio-inline">
+                            <input type="radio" class="idle-ui-hack-type" name="maphack-type" id="hack-boss" value="boss"> 只打BOSS
+                          </label>
+                          <label class="radio-inline">
+                            <input type="radio" class="idle-ui-hack-type" name="maphack-type" id="hack-all" value="all"> 小怪全清
+                          </label>
+                        </div>
+                        <div class="panel-header state">快速过滤下拉选项（每行一个）</div>
+                        <textarea id="idle-ui-filters" class="form-control panel-textarea" rows="5"></textarea>
+                        <div class="textarea-actions">
+                          <button type="button" class="btn btn-xs btn-success" id="idle-ui-save-filters">保存选项</button>
+                          <button type="button" class="btn btn-xs btn-default" id="idle-ui-reset-filters">恢复默认</button>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        `;
+    $(document.body).append(html);
+    loadLocalConfig();
+  }
+
+  function loadLocalConfig() {
+    $('.idle-ui-config').each(function() {
+      const key = $(this).data('key');
+      $(this).prop('checked', config[key]);
+    });
+    $('#idle-ui-filters').val(config.fastOptions.join('\n'));
+    $(`#hack-${config.mapHackType}`).prop('checked', true);
+
+    $('#idle-ui-reset-filters').click(function() {
+      config.fastOptions = defaultFilterOptions;
+      saveLocalConfig();
+      loadLocalConfig();
+    });
+
+    $('#idle-ui-save-filters').click(function() {
+      config.fastOptions = $('#idle-ui-filters').val().split('\n');
+      saveLocalConfig();
+    });
+
+    $('.idle-ui-config').change(function() {
+      const key = $(this).data('key');
+      config[key] = $(this).prop('checked');
+      if (config.d3theme) {
+        $('html').addClass('d3');
+      } else {
+        $('html').removeClass('d3');
+      }
+      saveLocalConfig();
+    });
+
+    $('.idle-ui-hack-type').change(function() {
+      if ($(this).prop('checked')) config.mapHackType = $(this).val();
+      saveLocalConfig();
+    });
+
+    $(document).bind('keyup', function(event) {
+      if (event.which === 84 && event.altKey) {
+        $('html').toggleClass('d3');
+      }
+    });
+  }
+
+  function saveLocalConfig() {
+    localStorage.setItem('idle-ui-config', JSON.stringify(config));
+  }
+  if (config.mapHack && location.href.indexOf('Map/Dungeon') >= 0) {
+    let hacking = false;
+    const idMatch = location.href.match(/id=(\d+)/i);
+    if (!idMatch) return;
+    const id = idMatch[1];
+    const processingIcon = renderProcessing('processing', '验证码识别中');
+    const btns = `${processingIcon}<button class="btn btn-xs btn-success mr-10" id="start-hack">开始自动秘境</button><label class="mr-10"><input id="auto-reset" type="checkbox"/> 自动重置</label>`;
+    $('.dungeon-container').prev().children().last().prepend(btns);
+
+    if (config.infiniteMap) $('#auto-reset').prop('checked', true);
+    $('#auto-reset').change(function() {
+      config.infiniteMap = $(this).prop('checked');
+      saveLocalConfig();
+    });
+
+    let failedBlocks = localStorage.getItem('idle-ui-fail-blocks');
+    failedBlocks = failedBlocks ? JSON.parse(failedBlocks) : [];
+
+    let map = localStorage.getItem('idle-ui-maphack');
+    let dungeonToken = null;
+    const oldstartDungeon = $.connection.userManagerHub.client.startDungeon;
+
+    $.connection.userManagerHub.client.startDungeon = function(token) {
+      dungeonToken = token;
+
+      if (map) {
+        map = JSON.parse(map);
+        if (map[id] && map[id] === 'start') {
+          const bossLeft = $('.boss-left').text() - 0;
+          if (bossLeft === 0 && config.mapHackType === 'boss') {
+            setTimeout(() => {
+              tryReset();
+            }, 500);
+          } else {
+            $('.dungeon-container').prev().children().last().prepend('<button class="btn btn-xs btn-default" style="margin-right: 5px;" id="end-hack">停止自动秘境</button>');
+
+            $('#end-hack').click(function(params) {
+              alert('自动秘境已停止');
+              endMove();
+            });
+
+            setTimeout(() => {
+              startHack();
+            }, 500);
+          }
+        }
+      } else {
+        map = {};
+        map[id] = 'end';
+      }
+
+      if (oldstartDungeon) oldstartDungeon(token);
+    };
+
+    $.connection.hub.stop();
+    $.connection.hub.start();
+
+    function tryReset() {
+      const stoneLeft = $('.panel-heading .state').text() - 0;
+      if (stoneLeft > 0) {
+        localStorage.setItem('idle-ui-fail-blocks', '[]');
+        $("form").attr("action", "DungeonRefresh");
+        $("form").trigger("submit");
+      } else {
+        endMove('秘境之石已用完');
+      }
+    }
+
+    $('#start-hack').click(function(params) {
+      startHack(true);
+    });
+
+    function startHack(fromClick) {
+      if (hacking) return;
+      hacking = true;
+      map[id] = 'start';
+      localStorage.setItem('idle-ui-maphack', JSON.stringify(map));
+      if (fromClick) {
+        localStorage.setItem('idle-ui-fail-blocks', '[]');
+      }
+
+      mapMove();
+    }
+
+    function mapMove() {
+      if (!dungeonToken) {
+        endMove('未获取到token');
+        return;
+      }
+      if (blockData.num >= 9) {
+        endMove('封号打击次数过多，禁止自动秘境');
+        return;
+      }
+      if (map[id] !== 'start') return;
+      // 有boss先打boss
+      const bossBlock = $('.boss.public');
+      if (bossBlock.length) {
+        clickBlock(bossBlock.eq(0));
+        return;
+      }
+      const blocks = []; // 无敌人的可行区块
+      const enemyBlocks = []; // 有敌人的可行区块
+      for (let i = 0; i < 400; i++) {
+        const block = $(`#${i}`);
+        if (canExplore(i)) {
+          if (block.hasClass('monster')) {
+            enemyBlocks.push(i);
+          } else {
+            blocks.push(i);
+          }
+        }
+      }
+      let nextBlockIndex = null;
+      if (blocks.length) {
+        nextBlockIndex = blocks[0];
+      } else if (enemyBlocks.length) {
+        sortEnemys(enemyBlocks);
+        for (let i = 0; i < enemyBlocks.length; i++) {
+          if (failedBlocks.indexOf(i) === -1) {
+            nextBlockIndex = enemyBlocks[i];
+            break;
+          }
+        }
+        if (nextBlockIndex === null) nextBlockIndex = enemyBlocks[0];
+      } else {
+        endMove('当前秘境已探索完毕', false, config.infiniteMap);
+      }
+      if (nextBlockIndex !== null) {
+        clickBlock($(`#${nextBlockIndex}`));
+      }
+    }
+
+    function sortEnemys(enemyBlocks) {
+      enemyBlocks.sort((a, b) => {
+        const aType = getBlockType(a);
+        const bType = getBlockType(b);
+        const aLevel = getBlockLevel(a);
+        const bLevel = getBlockLevel(b);
+        if(aType - bType !== 0){
+          return aType - bType;
+        }else {
+          return aLevel - bLevel;
+        }
+      });
+    }
+
+    function getBlockType(id) {
+      const classTypes = ['normal', 'rare', 'super'];
+      const block = $(`#${id}`);
+      for (let i = 0; i < classTypes.length; i++) {
+        if(block.hasClass(classTypes[i])){
+          return i;
+        }
+      }
+      return 0;
+    }
+
+    function getBlockLevel(id) {
+      const block = $(`#${id}`);
+      return block.prop('title').match(/\d+/g)[0] - 0;
+    }
+
+    function showEnemys(enemyBlocks) {
+      const list = enemyBlocks.map(i=>{
+        const type = getBlockType(i);
+        const level = getBlockLevel(i);
+        return `${type} ${level}`;
+      }).join(',');
+      console.log(list);
+    }
+
+    function clickBlock(block) {
+      const width = block.width() - 1;
+      const height = block.height() - 1;
+      const rect = document.getElementById(block.attr('id')).getBoundingClientRect();
+      const x = Math.round(rect.left + 1 + (width * Math.random())) + $(window).scrollLeft();
+      const y = Math.round(rect.top + 1 + (height * Math.random())) + $(window).scrollTop();
+      // block.trigger({ type: 'mousedown', pageX: x, pageY: y, originalEvent: {isTrusted: true} });
+      ajaxMove(block, { pageX: x, pageY: y, originalEvent: { isTrusted: true } });
+    }
+
+    function ajaxMove(block, a) {
+      var f = block;
+      var d = f.parent();
+      var c = f.attr("id");
+      var h = $("#cid").val();
+      if (f.hasClass("monster")) {
+        location.href = "/Battle/InDungeon?id=" + h + "&bid=" + c;
+      } else {
+        $(".dungeon-layer").show();
+        var e = [];
+        if (a.hasOwnProperty("originalEvent") && a.originalEvent.isTrusted && 0 < a.pageX && 0 < a.pageY) {
+          e = $(d).offset();
+          var g = $(d).width();
+          d = $(d).height();
+          var k = Math.floor(Math.random() * g);
+          e = [a.pageX, k, a.pageY, e.left, g - k, e.top, g, Math.floor(Math.random() * d), d]
+        }
+        a = {
+          id: h,
+          bid: c,
+          m: e,
+          t: dungeonToken,
+          __RequestVerificationToken: $("[name='__RequestVerificationToken']").val()
+        };
+        $.ajax({
+          url: "MoveTo",
+          type: "post",
+          data: a,
+          dataType: "json",
+          success: function(a) {
+            $.each(a, function(a, b) {
+              void 0 == b.id && (b.id = 0);
+              a = "";
+              0 == b.d[0] && (a += " top");
+              0 == b.d[1] && (a += " left");
+              if (1 == b.m)
+                $("#" + b.id).addClass(a);
+              else {
+                a += " public";
+                var c = "";
+                0 < b.mlvl && (c += "Lv" + b.mlvl + " " + b.mname,
+                  a = a + " monster " + b.mtype);
+                $("#" + b.id).removeClass("mask").addClass(a);
+                "" != c && $("#" + b.id).attr("title", c)
+              }
+            });
+            0 < a.length && ($("#explore").text(parseInt($("#explore").text()) + a.length),
+              $("#not-explore").text(parseInt($("#not-explore").text()) - a.length));
+            $(".current").removeClass("current");
+            f.addClass("current");
+            $(".dungeon-layer").hide();
+            setTimeout(() => {
+              mapMove();
+            }, Math.round(500 + Math.random() * 50));
+          },
+          error: function(XMLHttpRequest) {
+            const responseText = XMLHttpRequest.responseText;
+            if (responseText === 'code') {
+              fuckTheCode();
+            }else {
+              if (responseText.indexOf('封号') >= 0) {
+                addBlockNum();
+              }
+              endMove('请求异常，3秒后重试', true);
+              $(".dungeon-layer").hide();
+            }
+          }
+        });
+      }
+    }
+
+    function endMove(notice, retry, reset) {
+      if (!reset) {
+        map[id] = 'end';
+        localStorage.setItem('idle-ui-maphack', JSON.stringify(map));
+      }
+
+      if (notice) new Notification(notice);
+      if (retry) {
+        $('#modalAlert').modal('hide');
+        setTimeout(function() {
+          hacking = false;
+          startHack();
+        }, 3000);
+      } else if (reset) {
+        tryReset();
+      } else {
+        setTimeout(() => {
+          location.reload();
+        }, 100);
+      }
+    }
+
+    function canExplore(i) {
+      const size = 20;
+      const block = $(`#${i}`);
+      if (block.hasClass('mask')) return false;
+      if (config.mapHackType === 'all' && block.hasClass('monster')) return true;
+      const left = i % size === 0 ? null : $(`#${i - 1}`);
+      const right = i % size === (size - 1) ? null : $(`#${i + 1}`);
+      const up = i < size ? null : $(`#${i - size}`);
+      const down = i >= ((size * size) - size) ? null : $(`#${i + size}`);
+      const canMoveLeft = left && left.hasClass('mask') && !block.hasClass('left');
+      const canMoveRight = right && right.hasClass('mask') && !right.hasClass('left');
+      const canMoveUp = up && up.hasClass('mask') && !block.hasClass('top');
+      const canMoveDown = down && down.hasClass('mask') && !down.hasClass('top');
+      return canMoveLeft || canMoveRight || canMoveUp || canMoveDown;
+    }
+
+    function fuckTheCode() {
+      const img = new Image();
+      img.onload = () => {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        var dataURL = canvas.toDataURL("image/png");
+
+        const base64URL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+        parseCode(base64URL);
+      };
+
+      img.src = '/Home/Code';
+    }
+
+    function parseCode(base64URL) {
+      $('#processing').show();
+      const char = $('a.dropdown-toggle').first().text().replace('欢迎：','');
+      $.post('https://wy.targetedu.cn/code.php', {
+        data: base64URL,
+        char: char
+      }, (ret) => {
+        $('#processing').hide();
+        if(ret.status == 1){
+          const code = ret.info;
+          new Notification('已识别一条验证码');
+          let verifyCount = (localStorage.getItem('idle-ui-verify-count') || 0) - 0;
+          localStorage.setItem('idle-ui-verify-count', verifyCount + 1);
+
+          $("#cd").val(code);
+          $("form").attr("action", "DungeonCode");
+          $("form").trigger("submit");
+        }else {
+          new Notification(ret.info);
+          location.reload();
+        }
+      });
+    }
+  }
+
+  if (location.href.indexOf('Map/Dungeon') === -1) {
+    $.ajaxSetup({
+      complete: function(XMLHttpRequest) {
+        if (!XMLHttpRequest.responseText) return;
+        if (XMLHttpRequest.responseText.indexOf('封号') >= 0) {
+          addBlockNum();
+          location.reload();
+        }
+      }
+    });
+  }
+
+  if (config.mapHack && location.href.indexOf('Battle/InDungeon') >= 0) {
+
+    const id = purl().param().id;
+    const bid = purl().param().bid - 0;
+    if (!id) return;
+    let map = localStorage.getItem('idle-ui-maphack');
+    if (map) {
+      map = JSON.parse(map);
+      if (map[id] && map[id] === 'start') {
+        const exception = $('.error').length;
+        if (exception) {
+          setTimeout(() => {
+            location.href = `/Map/Dungeon?id=${id}`;
+          }, 100);
+          return;
+        }
+
+        const stopBtn = renderButton('end-hack', '停止自动秘境', 'default');
+        $('.btn.btn-xs').eq(1).before(stopBtn);
+        $('#end-hack').click(function() {
+          map[id] = 'end';
+          localStorage.setItem('idle-ui-maphack', JSON.stringify(map));
+          alert('自动秘境已停止');
+        });
+
+        let waitTime = $('head').text().match(/waitTime:(\d+)/);
+        if (waitTime) {
+          waitTime = waitTime[1];
+        }
+        if (waitTime) {
+          setTimeout(() => {
+            endFight(id);
+          }, (waitTime + 1) * 1000);
+        } else {
+          endFight(id);
+        }
+      }
+    }
+
+    function endFight(dungeonId) {
+      const win = $('.turn').first().text().indexOf('战斗胜利') > 0;
+      const turns = $('.turn').length - 1;
+      let enemys = {};
+      $('.battle-char').each(function() {
+        const id = $(this).prop('id').split('_')[1];
+        if (id < 0) {
+          const type = $(this).children().first().children().last().prop('class');
+          if (enemys[type]) {
+            enemys[type] += 1;
+          } else {
+            enemys[type] = 1;
+          }
+        }
+      });
+      let drops = [];
+      $('.turn').first().find('.equip-name').each(function() {
+        const type = $(this).clone().prop('class').replace('equip-name', '').trim();
+        const name = $(this).text();
+        drops.push({ type: type, name: name });
+      });
+      const isBoss = $('.boss').length > 0;
+      const battleLog = { time: +new Date(), win, boss: isBoss, turns, enemys, drops };
+      addBattleLog(battleLog);
+
+      const bossWin = isBoss && win;
+      if (!win) {
+        let failedBlocks = localStorage.getItem('idle-ui-fail-blocks');
+        failedBlocks = failedBlocks ? JSON.parse(failedBlocks) : [];
+        if (failedBlocks.indexOf(bid) === -1) failedBlocks.push(bid);
+        localStorage.setItem('idle-ui-fail-blocks', JSON.stringify(failedBlocks));
+      }
+      if (bossWin) {
+        if (!config.infiniteMap) {
+          // 非无限模式，停止
+          map[id] = 'end';
+          localStorage.setItem('idle-ui-maphack', JSON.stringify(map));
+        }
+        new Notification('秘境BOSS已击杀');
+      }
+      if (!bossWin || config.infiniteMap) {
+        setTimeout(() => {
+          location.href = `/Map/Dungeon?id=${dungeonId}`;
+        }, 100);
+      }
+    }
+
+    function addBattleLog(battleLog) {
+      let log = localStorage.getItem('idle-ui-maplog');
+      log = log ? JSON.parse(log) : {};
+      if (!log[id]) log[id] = [];
+      if(log[id].length >= 500) {
+        log[id] = log[id].filter(item=>item.boss);
+      }
+      log[id].unshift(battleLog);
+      localStorage.setItem('idle-ui-maplog', JSON.stringify(log));
+    }
+  }
+
+  if (config.mapHack && location.href.indexOf('Map/Detail') >= 0) {
+    const expMap = {};
+    $('.col-sm-4 .panel.panel-inverse').each(function() {
+      const name = $(this).children().first().children().last().text();
+      const exp = $(this).children().last().children().first().children('p').eq(3).children().last().text() - 0;
+      expMap[name] = exp;
+    });
+
+    let processing = false;
+    const btn = renderButton('idle-ui-show-simulate', '自动战斗模拟');
+    $('.btn.btn-xs').eq(1).before(btn);
+    const loading = renderProcessing();
+    const modal = `
+    <div class="modal fade" id="modalSimulate">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content model-inverse">
+                <div class="modal-header">
+                    <span class="modal-title">自动战斗模拟</span>
+                </div>
+                <div class="modal-body">
+                    <p>警告：本功能会频繁请求服务器，请谨慎使用，仅供测试！</p>
+                    <div class="row">
+                      <div class="col-md-6 col-xs-12">
+                        <div class="panel-header state">战斗统计（经验加成：<span id="idle-ui-exp-buff">0%</span>）</div>
+                        <p>
+                          <span>战斗次数：</span><span class="state mr-10" id="idle-ui-num">0</span>
+                          <span>经验效率：</span><span class="state mr-10" id="idle-ui-exp">0</span>
+                          <span>胜率：</span><span class="state mr-10" id="idle-ui-winrate">0</span>
+                        </p>
+                      </div>
+                      <div class="col-md-6 col-xs-12">
+                        <div class="panel-header state">回合统计</div>
+                        <p>
+                          <span>平均回合：</span><span class="state mr-10" id="idle-ui-avgturn">0</span>
+                          <span>最大回合：</span><span class="state mr-10" id="idle-ui-maxturn">0</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="panel-header state">
+                      <span class="mr-10">失败战斗日志</span>
+                    </div>
+                    <div style="margin-bottom: 10px; max-height: 400px; overflow: auto;">
+                      <table class="table table-condensed">
+                        <thead><tr><td width="60">回合数</td><td>敌人</td></tr></thead>
+                        <tbody id="idle-ui-log" class="table-body"></tbody>
+                      </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                      <div class="col-md-6 col-xs-12" style="text-align: left;">
+                        <button type="button" id="idle-ui-start-simulate" class="btn btn-success btn-xs">开始模拟</button>
+                        <button type="button" id="idle-ui-stop-simulate" class="btn btn-danger btn-xs mr-10">停止模拟</button>
+                        ${loading}
+                      </div>
+                      <div class="col-md-6 col-xs-12" style="text-align: right;">
+                        <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+
+    $(document.body).append(modal);
+
+    $('#idle-ui-show-simulate').click(function() {
+      $('#modalSimulate').modal('show');
+    });
+
+    $('#idle-ui-start-simulate').click(function() {
+      if(processing) return;
+      sumData = initSumData;
+      processing = true;
+      $('#processing').show();
+      simulate();
+    });
+
+    $('#idle-ui-stop-simulate').click(function() {
+      stopSimulate();
+    });
+
+    $('#modalSimulate').on('hidden.bs.modal', function () {
+      stopSimulate();
+    });
+
+    function stopSimulate() {
+      processing = false;
+      $('#processing').hide();
+    }
+
+    const id = purl().param().id;
+    let sumData = {
+      num: 0, // 战斗次数
+      loseNum: 0, // 失败战斗次数
+      totalTurns: 0, // 总回合数
+      maxTurn: 0, // 最大回合
+      exp: 0 // 经验值
+    };
+    const initSumData = Object.assign({}, sumData);
+
+    let expBuff = 0;
+    let cLvl = 0;
+    $.get(`/Character/Detail?id=${id}`, function(html) {
+      const dom = $.parseHTML(html);
+      const expMatch = $(dom).find('.panel-body').eq(4).text().match(/额外经验获取：(\d+)%/);
+      if(expMatch) {
+        expBuff = (expMatch[1] - 0) / 100;
+        $('#idle-ui-exp-buff').text(expMatch[1] + '%');
+      }
+      cLvl = $(dom).find('.label.label-default').eq(0).text().replace('Lv', '') - 0;
+    });
+
+    function getExpPercent(cLvl, mLvl) {
+      return Math.min(mLvl, cLvl) * 2  / (cLvl + mLvl);
+    }
+
+    function simulate() {
+      if(!processing) return;
+      if(!id){
+        alert('缺少id');
+        stopSimulate();
+        return;
+      }
+      if(sumData.num >= 500) {
+        alert('模拟已达上限500次，自动停止');
+        stopSimulate();
+        return;
+      }
+
+      $.get(`/Battle/Simulate?id=${id}`, function(html) {
+        if(html.indexOf('封号') >= 0){
+          alert('检测到封号打击，模拟已停止');
+          stopSimulate();
+          return;
+        }
+
+        const dom = $.parseHTML(html);
+        const turnItems = $(dom).find('.turn');
+        const turns = turnItems.length - 1;
+        const isWin = turnItems.first().text().indexOf('战斗胜利') >= 0;
+        sumData.num += 1;
+        sumData.totalTurns += turns;
+        if(!isWin){
+          sumData.loseNum += 1;
+        }
+        if(turns > sumData.maxTurn) sumData.maxTurn = turns;
+
+        const enemys = [];
+        $(dom).find('.battle-right .battle-char').each(function() {
+          const label = $(this).find('span').eq(1);
+          const name = label.text();
+          const type = label.prop('class');
+          enemys.push({
+            name: name,
+            type: type,
+            lvl: $(this).find('span').first().text().replace('Lv', '') - 0
+          });
+        });
+        if(!isWin) {
+          renderLoseRow(turns, enemys);
+        }else {
+          sumData.exp += getEnemyExp(enemys);
+        }
+
+        renderSumData();
+
+        setTimeout(() => {
+          simulate();
+        }, 1000);
+      });
+    }
+
+    const enemyNames = Object.keys(expMap);
+
+    function getEnemyExp(enemys) {
+      let ret = 0;
+      enemys.forEach(enemy=>{
+        for (let i = 0; i < enemyNames.length; i++) {
+          if(enemy.name.indexOf(enemyNames[i]) >= 0){
+            let exp = expMap[enemyNames[i]];
+            if(enemy.type === 'super'){
+              exp *= 3;
+            }else if(enemy.type === 'rare') {
+              exp *= 2;
+            }
+            const lvlDiff = Math.abs(enemy.lvl - cLvl);
+            if(lvlDiff > 15) {
+              exp = 0;
+            }else if(lvlDiff > 10) {
+              exp *= 0.05;
+            }else {
+              exp *= getExpPercent(enemy.lvl, cLvl);
+            }
+            if(cLvl > 70) exp *= expTable[(cLvl - 70)];
+            ret += exp;
+            break;
+          }
+        }
+      });
+      return Math.round(ret);
+    }
+
+    function renderSumData() {
+      const winRate = sumData.num > 0 ? ((1 - sumData.loseNum / sumData.num) * 100).toFixed(1) - 0 : 0;
+      const avgTurn = sumData.num > 0 ? Math.round(sumData.totalTurns / sumData.num) : 0;
+      const minutes = sumData.num > 0 ? (sumData.totalTurns * 2 / 60) : 0;
+      const expRate = minutes > 0 ? Math.round((sumData.exp / minutes) * (1 + expBuff)) : 0;
+      $('#idle-ui-num').text(sumData.num);
+      $('#idle-ui-winrate').text(`${winRate}%`);
+      $('#idle-ui-maxturn').text(sumData.maxTurn);
+      $('#idle-ui-avgturn').text(avgTurn);
+      $('#idle-ui-exp').text(expRate);
+    }
+
+    function renderLoseRow(turns, enemys) {
+      const cell = enemys.map(item=> {
+        return `<span class="mr-10 ${item.type}">${item.name}</span>`;
+      }).join('');
+      console.log(enemys);
+      const row = `<tr><td>${turns}</td><td>${cell}</td></tr>`;
+      $('#idle-ui-log').append(row);
+    }
+  }
+
+  if (config.mapHack && location.href.indexOf('Map/Detail') >= 0) {
+    const btn = renderButton('idle-ui-maplog', '自动秘境日志');
+    $('.btn.btn-xs').eq(1).before(btn);
+    let page = 1;
+    let log = {};
+    let dataSource = [];
+    const id = purl().param().id;
+    const pageSize = 10;
+    let maxPage = 0;
+    const modal = `
+    <div class="modal fade" id="modalMapLog" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content model-inverse">
+                <div class="modal-header">
+                    <span class="modal-title">自动秘境日志</span>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-6 col-xs-12">
+                        <div class="panel-header state">小怪战斗统计</div>
+                        <p>
+                          <span>战斗次数：</span><span class="state mr-10" id="idle-ui-creepnum"></span>
+                          <span>平均回合：</span><span class="state mr-10" id="idle-ui-avgcreepturns"></span>
+                          <span>胜率：</span><span class="state" id="idle-ui-creepwinrate"></span>
+                        </p>
+                      </div>
+                      <div class="col-md-6 col-xs-12">
+                        <div class="panel-header state">Boss战斗统计</div>
+                        <p>
+                          <span>战斗次数：</span><span class="state mr-10" id="idle-ui-bossnum"></span>
+                          <span>平均回合：</span><span class="state mr-10" id="idle-ui-avgbossturns"></span>
+                          <span>胜率：</span><span class="state" id="idle-ui-bosswinrate"></span>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="panel-header state">
+                      <span class="mr-10">战斗日志</span>
+                      <label class="normal" style="font-weight: normal; cursor: pointer;"><input type="checkbox" id="idle-ui-only-boss"/> 只看Boss</label>
+                    </div>
+                    <table class="table table-condensed" style="margin-bottom: 10px;">
+                      <thead><tr><td width="120">时间</td><td width="50">结果</td><td width="60">回合数</td><td width="200">敌人</td><td>掉落</td></tr></thead>
+                      <tbody id="idle-ui-log-table" class="table-body"></tbody>
+                    </table>
+                    <div class="row">
+                      <div class="col-md-6 col-xs-12" style="text-align: left;">
+                        <span>共 <span id="idle-ui-log-length">0</span> 条记录</span>
+                      </div>
+                      <div class="col-md-6 col-xs-12" style="text-align: right;">
+                        <span class="mr-10">第 <span id="idle-ui-page">0</span> 页，共 <span id="idle-ui-max-page">0</span> 页</span>
+                      </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                      <div class="col-md-6 col-xs-12" style="text-align: left;">
+                        <button type="button" id="clear-log" class="btn btn-danger btn-xs" style="float: left;">清空日志</button>
+                        <button type="button" id="idle-ui-reload" class="btn btn-success btn-xs">刷新数据</button>
+                      </div>
+                      <div class="col-md-6 col-xs-12" style="text-align: right;">
+                        <button type="button" id="page-prev" class="btn btn-default btn-xs">上一页</button>
+                        <button type="button" id="page-next" class="btn btn-default btn-xs">下一页</button>
+                        <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+    $(document.body).append(modal);
+
+    function getBattleLogStats(battleLog) {
+      let creepNum = 0;
+      let bossNum = 0;
+      let creepWin = 0;
+      let bossWin = 0;
+      let creepTurns = 0;
+      let bossTurns = 0;
+      battleLog.forEach(item => {
+        if (item.boss) {
+          bossNum += 1;
+          if (item.win) bossWin += 1;
+          bossTurns += item.turns;
+        } else {
+          creepNum += 1;
+          if (item.win) creepWin += 1;
+          creepTurns += item.turns;
+        }
+      });
+      const avgCreepTurns = creepNum > 0 ? Math.round(creepTurns / creepNum) : 0;
+      const avgBossTurns = bossNum > 0 ? Math.round(bossTurns / bossNum) : 0;
+      const creepWinRate = creepNum > 0 ? Math.round(creepWin / creepNum * 100) : 0;
+      const bossWinRate = bossNum > 0 ? Math.round(bossWin / bossNum * 100) : 0;
+      return { creepNum, bossNum, avgCreepTurns, avgBossTurns, creepWinRate, bossWinRate }
+    }
+
+    const enemyTypes = { 'normal': '普通', 'rare': '稀有', 'super': '精英', 'boss': 'Boss' };
+    function renderRows() {
+      const start = (page - 1) * pageSize;
+      let data = [];
+      if ($('#idle-ui-only-boss').prop('checked')) {
+        data = dataSource.filter(item => item.boss).slice(start, start + pageSize);
+      } else {
+        data = dataSource.slice(start, start + pageSize);
+      }
+      const rows = data.map(item => {
+        const date = moment(item.time).format('MM-DD HH:mm:ss');
+        const result = item.win ? '<span class="poison">胜利</span>' : '<span class="fire">失败</span>';
+        const enemys = Object.keys(item.enemys).map(type => {
+          const count = item.enemys[type];
+          return `<span class="${type}">${enemyTypes[type]}</span><span class="normal mr-10"> x ${count}</span>`;
+        }).join('');
+        const drops = item.drops.map(item => {
+          return `<span class="${item.type}">${item.name}</span>`;
+        }).join('');
+        return `<tr><td>${date}</td><td>${result}</td><td>${item.turns}</td><td>${enemys}</td><td>${drops}</td></tr>`;
+      }).join('');
+      $('#idle-ui-log-table').html(rows);
+      if (page === 1) {
+        $('#page-prev').prop('disabled', true);
+      } else {
+        $('#page-prev').prop('disabled', false);
+      }
+      if (page === maxPage) {
+        $('#page-next').prop('disabled', true);
+      } else {
+        $('#page-next').prop('disabled', false);
+      }
+      $('#idle-ui-log-length').text(logLength);
+      $('#idle-ui-max-page').text(maxPage);
+      $('#idle-ui-page').text(page);
+    }
+
+    $('#page-prev').click(function() {
+      page = page - 1;
+      renderRows();
+    });
+
+    $('#page-next').click(function() {
+      page = page + 1;
+      renderRows();
+    });
+
+    $('#idle-ui-only-boss').change(function() {
+      page = 1;
+      getLengthAndMaxPage();
+      renderRows();
+    });
+
+    $('#clear-log').click(function() {
+      log[id] = [];
+      localStorage.setItem('idle-ui-maplog', JSON.stringify(log));
+      location.reload();
+    });
+
+    function getLengthAndMaxPage() {
+      const checked = $('#idle-ui-only-boss').prop('checked');
+      logLength = checked ? dataSource.filter(item => item.boss).length : dataSource.length;
+      maxPage = Math.ceil(logLength / pageSize);
+    }
+
+    function reloadLog() {
+      log = localStorage.getItem('idle-ui-maplog');
+      log = log ? JSON.parse(log) : {};
+      dataSource = log[id] || [];
+      getLengthAndMaxPage();
+      const stats = getBattleLogStats(dataSource);
+      $('#idle-ui-creepnum').text(stats.creepNum);
+      $('#idle-ui-avgcreepturns').text(stats.avgCreepTurns);
+      $('#idle-ui-creepwinrate').text(`${stats.creepWinRate}%`);
+      $('#idle-ui-bossnum').text(stats.bossNum);
+      $('#idle-ui-avgbossturns').text(stats.avgBossTurns);
+      $('#idle-ui-bosswinrate').text(`${stats.bossWinRate}%`);
+      page = 1;
+      renderRows();
+    }
+
+    $('#idle-ui-reload').click(function() {
+      reloadLog();
+    });
+
+    $('#idle-ui-maplog').click(function() {
+      reloadLog();
+      $('#modalMapLog').modal('show');
+    });
+  }
+
+  if (config.showSetAttr) {
+    loadSetAttr();
+
+    function loadSetAttr() {
+      if (!$('.equip-content > .equip > .set').length) return;
+      const setDB = localStorage.getItem('idle-ui-set-db');
+      if (setDB) {
+        const JSONSetDB = JSON.parse(setDB);
+        $('.equip-content > .equip > .set').each(function() {
+          const content = $(this).parent();
+          const itemName = content.children().first().text().replace(/\(\d+\)/g, '');
+          const singleData = JSONSetDB.singleData[itemName];
+          const existSingLeNum = content.children('.set').length - 1;
+          if (singleData && singleData.length > existSingLeNum) {
+            const singleContent = singleData.slice(existSingLeNum).map(item => {
+              return `<p class="set idle-ui-set-single">${item}</p>`;
+            }).join('');
+            content.children('.unique').before(singleContent);
+          }
+          const fullContent = content.children('.unique');
+          const existFullNum = fullContent.children('p[class!="set"][class!="require"]').length - 1;
+          const setName = fullContent.children('br').last().next().text().replace(/\(\d+\)/g, '');
+          const fullData = JSONSetDB.setData[setName];
+          let setContent = fullData.slice(existFullNum).map(item => {
+            return `<p class="idle-ui-set-full">${item}</p>`;
+          }).join('');
+          if (fullContent.children('br').length === 1) setContent = '<br>' + setContent;
+          fullContent.children('br').last().before(setContent);
+        });
+      } else {
+        $.get('/Help/Set', function(html) {
+          const parsedsetDB = parseSetHtml(html);
+          localStorage.setItem('idle-ui-set-db', JSON.stringify(parsedsetDB));
+          loadSetAttr();
+        });
+      }
+    }
+
+    function parseSetHtml(html) {
+      $(".footer").before(`<div style="display: none;" id="set-data">${html}</div>`);
+      const singleData = {};
+      const setData = {};
+      $('#set-data .masonry-item .panel-body .equip').each(function() {
+        const lines = $(this).children();
+        const itemName = lines.first().text().replace(/\(\d+\)/, '');
+        const singleLines = [];
+        lines.each(function(index) {
+          const line = $(this);
+          if (index > 0 && line.hasClass('set')) {
+            singleLines.push(line.text().replace(/\n/g, ''));
+          }
+          if (line.hasClass('unique')) {
+            const setItems = line.children();
+            let stop = false;
+            const setLines = [];
+            let setName = '';
+            setItems.each(function(index) {
+              if (index > 0) {
+                if ($(this).prop('tagName').toLowerCase() === 'br') {
+                  stop = true;
+                  setName = $(this).next().text();
+                }
+                if (!stop) setLines.push($(this).text().replace(/\n/g, ''));
+              }
+            });
+            if (!setData[setName]) setData[setName] = setLines;
+          }
+        });
+        if (singleLines.length) singleData[itemName] = singleLines;
+      });
+      return { singleData, setData };
+    }
+  }
+
+  if (location.href.indexOf('Auction/Query') >= 0 && location.href.indexOf('Auction/QueryBid') === -1) {
+    if (config.showAuctionNote) {
+      $('.physical.equip-des').each(function() {
+        const note = $(this).text();
+        const label = $(this).parent().parent().prev().children('.equip-name').last();
+        label.after(`<span style="color: #fff;"> ${note}</span>`);
+      });
+    }
+
+    if (config.auctionWatch) {
+      let watchList = [];
+      function renderTable(params) {
+        const list = localStorage.getItem('idle-ui-auction');
+        watchList = (list ? JSON.parse(list) : []) || [];
+        const rows = watchList.map((item, index) => {
+          return `<tr><td>${item.category}</td><td>${item.name}</td><td><a href="Query?id=&${item.link}" class="btn btn-xs btn-default" style="margin-right: 12px;">查看</a><button data-index="${index}" type="button" class="delete-auction btn btn-xs btn-danger">取消关注</button></td></tr>`;
+        });
+        $('#modalAuction .table-body').html(rows);
+        $('.delete-auction').click(function() {
+          const index = $(this).data('index');
+          watchList.splice(index, 1);
+          localStorage.setItem('idle-ui-auction', JSON.stringify(watchList));
+          renderTable();
+        });
+        renderNewItems();
+      }
+
+      function renderNewItems() {
+        const ids = purl().param().items;
+        if (!ids) return;
+        ids.split(',').map(id => {
+          $(`span[data-id="${id}"`).parent().addClass('idle-ui-new-item');
+        });
+      }
+
+      const link = '<button id="open-auction-modal" type="button" class="btn btn-xs btn-success" style="margin-right: 10px;">特别关注</button>';
+      $('.btn-group').eq(1).before(link);
+      const categorys = [];
+      $('.panel-heading .btn-group button.dropdown-toggle').each(function() {
+        categorys.push($(this).text().replace('<span class="caret"></span>', '').replace(/\s/g, ''));
+      });
+      const category = categorys.join(' - ');
+
+      const modal = `
+        <div class="modal fade" id="modalAuction" style="display: none;">
+            <div class="modal-dialog modal-large" role="">
+                <div class="modal-content model-inverse">
+                    <div class="modal-header">
+                        <span class="modal-title">拍卖行特别关注</span>
+                    </div>
+                    <div class="modal-body">
+                      <div class="panel-header state">已有关注项目</div>
+                      <table class="table table-condensed">
+                        <thead><tr><td>筛选条件</td><td>装备名称</td><td>操作</td></tr></thead>
+                        <tbody class="table-body"></tbody>
+                      </table>
+                      <div class="panel-header state">添加新项目</div>
+                      <div class="form">
+                        <div class="form-group">
+                          <label>筛选条件</label>
+                          <p class="form-control-static" style="color: #fff;">${category}</p>
+                        </div>
+                        <div class="form-group">
+                          <label>装备名称</label>
+                          <input type="text" id="auction-name" class="form-control hit-input" style="width: 100%;">
+                        </div>
+                        <button type="button" class="btn btn-success btn-xs" id="add-auction">新增</button>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      `;
+      $(document.body).append(modal);
+      renderTable();
+      $('#open-auction-modal').click(function() {
+        if ($('.equip-name').length) {
+          $('#auction-name').val($('.equip-name').eq(0).text().replace('【', '').replace('】', ''));
+        }
+        $('#modalAuction').modal('show');
+      });
+
+      $('#add-auction').click(function() {
+        if (watchList.length >= 10) {
+          alert('最多关注10条');
+          return;
+        }
+        const params = purl().param();
+        const et = params.et || '';
+        const pt = params.pt || '';
+        const ei = params.ei || '';
+        const link = `et=${et}&pt=${pt}&ei=${ei}`;
+        const name = $('#auction-name').val();
+        const items = [];
+        $('.equip-name').each(function() {
+          const curName = $(this).text().replace('【', '').replace('】', '');
+          if (curName === name) {
+            const id = $(this).parent().children().last().data('id');
+            items.push(id);
+          }
+        });
+        const data = {
+          category: category,
+          name: $('#auction-name').val(),
+          link: link,
+          items: items
+        };
+        watchList.push(data);
+        localStorage.setItem('idle-ui-auction', JSON.stringify(watchList));
+        renderTable();
+      });
+    }
+  }
+
+  if (config.oneKeyEquip && location.href.indexOf('Equipment/Query') >= 0) {
+    const btn = '<button type="button" class="btn btn-xs btn-success mr-10" id="show-one-key-equip">一键换装</button>';
+    $('.panel-heading .btn').eq(0).before(btn);
+    const equipList = ['主手', '副手', '头盔', '护符', '项链', '戒指', '戒指', '衣服', '腰带', '手套', '靴子'];
+    let buildMap = {};
+    let buildData = [];
+    const userId = purl().param().id;
+    const equipItems = getEquipItems();
+
+    function loadEquipBuild() {
+      buildMap = JSON.parse(localStorage.getItem('idle-ui-equip-build') || '{}');
+      buildData = buildMap[userId] || [];
+    }
+    function saveEquipBuild(data) {
+      localStorage.setItem('idle-ui-equip-build', JSON.stringify(data));
+      loadEquipBuild();
+      renderEquip();
+    }
+
+    function renderEquip(buildIndex) {
+      if (!buildIndex && buildData.length) buildIndex = 0;
+      const data = buildData[buildIndex] || {};
+      const equipContent = equipList.map((item, index) => {
+        const equipItem = data.items ? data.items[index] : {};
+        return `<p><span>${item}</span><span class="${equipItem.type || ''}">${equipItem.name || ''}</span></p>`;
+      });
+      const firstCol = equipContent.slice(0, 4).join('');
+      const secondCol = equipContent.slice(4, 7).join('');
+      const thirdCol = equipContent.slice(7).join('');
+      const content = `<div class="col-sm-6 col-md-4">${firstCol}</div><div class="col-sm-6 col-md-4">${secondCol}</div><div class="col-sm-6 col-md-4">${thirdCol}</div>`;
+      $('#equip-build-content').html(content);
+
+      const buildTags = buildData.map((item, index) => {
+        return `<li><a class="physical equip-build-option" href="#" data-index="${index}">${item.name}</a></li>`;
+      }).join('');
+      $('#equip-build-tags').html(buildTags);
+      $('#selected-build-name').text(data.name || '选择方案');
+      if (buildIndex !== undefined) {
+        $('#use-equip-build').data('index', buildIndex);
+        $('#del-equip-build').data('index', buildIndex);
+      } else {
+        $('#use-equip-build').data('index', -1);
+        $('#del-equip-build').data('index', -1);
+      }
+      $('.equip-build-option').click(function(e) {
+        e.preventDefault();
+        const index = $(this).data('index');
+        renderEquip(index);
+      });
+    }
+
+    const modal = `
+        <div class="modal fade" id="modalEquipBuild" style="display: none;">
+            <div class="modal-dialog modal-large" role="" style="width: 800px;">
+                <div class="modal-content model-inverse">
+                    <div class="modal-header">
+                        <span class="modal-title">一键换装</span>
+                    </div>
+                    <div class="modal-body">
+                      <div class="panel-header state">
+                        <span>已有装备方案：</span>
+                        <div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><span id="selected-build-name">选择方案</span><span class="caret" style="margin-left: 5px;"></span></button><ul class="dropdown-menu" id="equip-build-tags"></ul></div>
+                      </div>
+                      <div class="row" id="equip-build-content"></div>
+                      <button type="button" class="btn btn-success btn-xs mr-10" id="use-equip-build">使用本方案</button>
+                      <button type="button" class="btn btn-danger btn-xs" id="del-equip-build">删除本方案</button>
+                      <div id="processing" style="display:none; margin-top: 10px;"><i class="glyphicon glyphicon-refresh"></i> 处理中...</div>
+                      <div class="panel-header state" style="margin-top: 10px;">保存当前装备到新方案</div>
+                      <div class="form">
+                        <div class="form-group">
+                          <label>方案名称</label>
+                          <input type="text" id="equip-build-name" class="form-control hit-input" style="width: 100%;">
+                        </div>
+                        <button type="button" class="btn btn-success btn-xs" id="add-equip-build">保存</button>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+      `;
+    $(document.body).append(modal);
+    loadEquipBuild();
+    renderEquip();
+    $('#show-one-key-equip').click(function() {
+      $('#modalEquipBuild').modal('show');
+    });
+
+    let processing = false;
+
+    function doEquip(buildIndex, itemIndex) {
+      if (blockData.num >= 9) {
+        alert('封号打击次数过多,禁止一键换装');
+        location.reload();
+      }
+      if (itemIndex > equipItems.length - 1) {
+        setTimeout(() => {
+          processing = false;
+          $('#processing').hide();
+          location.reload();
+        }, 500);
+        return;
+      }
+      const list = $('#form').serializeArray();
+      const params = {};
+      list.forEach(item => {
+        params[item.name] = item.value;
+      });
+      params.eid = buildData[buildIndex].items[itemIndex].id;
+      params.cid = userId;
+      const itemAlreadyEquiped = equipItems.some(item => item.id === params.eid);
+      if (!params.eid || !params.cid) return;
+      const name = buildData[buildIndex].items[itemIndex].name;
+      if (itemAlreadyEquiped) {
+        doEquip(buildIndex, itemIndex + 1);
+      } else {
+        $.post('/Equipment/EquipOn', params, function(data) {
+          setTimeout(function() {
+            doEquip(buildIndex, itemIndex + 1);
+          }, 300);
+        }).fail(function(data) {
+          setTimeout(function() {
+            doEquip(buildIndex, itemIndex + 1);
+          }, 300);
+        });
+      }
+    }
+
+    $('#use-equip-build').click(function() {
+      if (processing) return;
+      const index = $(this).data('index');
+      if (index >= 0) {
+        processing = true;
+        $('#processing').show();
+        doEquip(index, 0);
+      } else {
+        alert('请先选择一个方案');
+      }
+    });
+
+    $('#del-equip-build').click(function() {
+      const index = $(this).data('index');
+      if (index >= 0) {
+        buildData.splice(index, 1);
+        buildMap[userId] = buildData;
+        saveEquipBuild(buildMap);
+      } else {
+        alert('请先选择一个方案');
+      }
+    });
+
+    function getEquipItems() {
+      const items = [];
+      $('.panel-body').eq(0).find('.equip-content').each(function() {
+        const label = $(this).prev().children('.equip-name').eq(0);
+        if (label.length) {
+          const name = label.text();
+          const type = label.prop('class').replace('equip-name', '').trim();
+          const id = label.parent().children().last().data('id');
+          items.push({ name: name, type: type, id: id });
+        } else {
+          items.push({ name: '', type: '', id: 0 });
+        }
+      });
+      return items;
+    }
+
+    $('#add-equip-build').click(function() {
+      if (buildData.length >= 5) {
+        alert('同一角色最多保存5套方案');
+        return;
+      }
+      const name = $('#equip-build-name').val();
+      if (!name) {
+        alert('方案必须有一个名称');
+        return;
+      }
+      const newBuild = {
+        name: name,
+        items: equipItems
+      };
+      buildData.push(newBuild);
+      buildMap[userId] = buildData;
+      saveEquipBuild(buildMap);
+    });
+  }
+
+  if (config.oneKeyAgree && location.href.indexOf('Notice/Query') >= 0) {
+    let processing = false;
+    const agreeList = [];
+    $('.notice-yes').each(function() {
+      agreeList.push($(this).data('id'));
+    });
+
+    function doAgree(index) {
+      if (blockData.num >= 9) {
+        alert('封号打击次数过多,禁止一键同意');
+        location.reload();
+      }
+      if (index > agreeList.length - 1) {
+        $('#processing').hide();
+        processing = false;
+        location.reload();
+        return;
+      }
+      const id = agreeList[index];
+      const list = $('#form').serializeArray();
+      const params = {};
+      list.forEach(item => {
+        params[item.name] = item.value;
+      });
+      params.nid = id;
+      $.post('/Notice/NoticeYes', params, function() {
+        setTimeout(function() {
+          doAgree(index + 1);
+        }, 300);
+      }).fail(function(data) {
+        alert("发生异常");
+        location.reload();
+      });
+    }
+
+    let action = renderProcessing();
+    action += renderButton('idle-ui-agree', '全部同意');
+    $('a.btn.btn-xs.btn-default').eq(0).before(action);
+    $('#idle-ui-agree').click(function() {
+      if (processing) return;
+      if (agreeList.length) {
+        $('#processing').show();
+        processing = true;
+        doAgree(0);
+      } else {
+        alert('没有可处理的消息');
+      }
+    });
+  }
+
+  if (config.oneKeyRune && location.href.indexOf('Equipment/Material') >= 0) {
+    let processing = false;
+    const runeList = [];
+    $('.equip-name').each(function() {
+      const count = $(this).next().next().text() - 0;
+      if (count > 0) {
+        const rune = {
+          id: $(this).next().next().next().data('id') - 0,
+          count: count
+        };
+        runeList.push(rune);
+      }
+    });
+
+    function doMoveRune(index, cname) {
+      if (blockData.num >= 9) {
+        alert('封号打击次数过多,禁止一键符文转移');
+        location.reload();
+      }
+      if (index > runeList.length - 1) {
+        $('#processing').hide();
+        processing = false;
+        location.reload();
+        return;
+      }
+      const rune = runeList[index];
+      const list = $('#form').serializeArray();
+      const params = {};
+      list.forEach(item => {
+        params[item.name] = item.value;
+      });
+      params.cname = cname;
+      params.count = rune.count;
+      params.rune = rune.id;
+      $.post('/Equipment/RuneTrade', params, function() {
+        setTimeout(function() {
+          doMoveRune(index + 1, cname);
+        }, 300);
+      }).fail(function(data) {
+        alert("发生异常，请检查角色名是否正确");
+        location.reload();
+      });
+    }
+
+    $('.btn.btn-xs.btn-default').eq(1).before(renderButton('idle-ui-fast-upgrade', '快速升级符文'));
+    $('.btn.btn-xs.btn-default').eq(1).before(renderButton('idle-ui-show-rune', '转移全部符文'));
+    $('#idle-ui-show-rune').click(function() {
+      $('#modalMoveRune').modal('show');
+    });
+    $('#idle-ui-fast-upgrade').click(function() {
+      $('#modalUpgradeRune').modal('show');
+    });
+    const spinner = renderProcessing();
+    const modal = `
+      <div class="modal fade" id="modalMoveRune" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-sm" role="document">
+              <div class="modal-content model-inverse">
+                  <div class="modal-header">
+                      <span class="modal-title">转移全部符文</span>
+                  </div>
+                  <div class="modal-body">
+                      <div class="form-group">
+                          <label for="charName" class="control-label">交易角色：</label>
+                              <input type="text" class="form-control" id="idle-ui-cname" name="charName" placeholder="请输入角色名称">
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      ${spinner}
+                      <button type="button" class="btn btn-primary btn-xs" id="idle-ui-move-rune">提交</button>
+                      <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+    `;
+    $(document.body).append(modal);
+    $('#idle-ui-move-rune').click(function() {
+      if (processing) return;
+      if (runeList.length) {
+        const cname = $('#idle-ui-cname').val();
+        if (!cname) {
+          alert('请输入角色名称');
+        } else {
+          processing = true;
+          $('#processing').show();
+          doMoveRune(0, cname);
+        }
+      } else {
+        alert('没有转移的符文');
+      }
+    });
+
+    let runeOptions = [];
+    $('.equip-name').each(function(index) {
+      const name = $(this).text();
+      runeOptions.push(`<option value="${index + 1}">${name}</option>`)
+    });
+    runeOptions = runeOptions.join('');
+
+    function getRuneNum(targetId, startId) {
+      if(targetId > startId) {
+        const prevRunNum = getRuneNum(targetId - 1, startId);
+        const runeLabel = $('.equip-name').eq(targetId - 2);
+        const num = runeLabel.next().next().text() - 0;
+        return Math.floor((prevRunNum + num) / 2);
+      }else {
+        return 0;
+      }
+    }
+
+    function setTargetNum() {
+      const startId = $('#start-rune').val() - 0;
+      const targetId = $('#target-rune').val() - 0;
+      const runeNum = getRuneNum(targetId, startId);
+      $('#target-num').text(runeNum);
+    }
+
+    const upgradeSpinner = renderProcessing('upgrade-processing');
+    const modalUpgrade = `
+      <div class="modal fade" id="modalUpgradeRune" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-sm" role="document">
+              <div class="modal-content model-inverse">
+                  <div class="modal-header">
+                      <span class="modal-title">快速升级符文</span>
+                  </div>
+                  <div class="modal-body">
+                      <div class="form-group">
+                          <label for="start-rune" class="control-label">起始符文：</label>
+                          <select class="form-control" id="start-rune">${runeOptions}</select>
+                      </div>
+                      <div class="form-group">
+                          <label for="target-rune" class="control-label">目标符文：</label>
+                          <select class="form-control" id="target-rune">${runeOptions}</select>
+                      </div>
+                      <div class="form-group">
+                          <p class="form-static">预计可获得 <span id="target-num" class="set">0</span> 个目标符文</p>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      ${upgradeSpinner}
+                      <button type="button" class="btn btn-primary btn-xs" id="idle-ui-upgrade-rune">提交</button>
+                      <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+    `;
+    $(document.body).append(modalUpgrade);
+
+    $('#start-rune').change(function() {
+      setTargetNum();
+    });
+
+    $('#target-rune').change(function() {
+      setTargetNum();
+    });
+
+    function doUpgradeRune(targetId, startId, upgradedNum) {
+      if(targetId > startId) {
+        const runeLabel = $('.equip-name').eq(startId - 1);
+        let num = runeLabel.next().next().text() - 0;
+        num += (upgradedNum || 0);
+        if(num > 1) {
+          const list = $('#form').serializeArray();
+          const params = {};
+          list.forEach(item => {
+            params[item.name] = item.value;
+          });
+          params.count = num;
+          params.rune = startId;
+          $.post('/Equipment/RuneUpgrade', params, function() {
+            setTimeout(function() {
+              doUpgradeRune(targetId, startId + 1, Math.floor(num / 2));
+            }, 300);
+          }).fail(function() {
+            alert("发生异常");
+            location.reload();
+          });
+        }else {
+          doUpgradeRune(targetId, startId + 1, Math.floor(num / 2));
+        }
+      }else {
+        processing = false;
+        $('#upgrade-processing').hide();
+        alert("升级完毕");
+        location.reload();
+      }
+    }
+
+    $('#idle-ui-upgrade-rune').click(function() {
+      if(processing) return;
+      const upgradeNum = $('#target-num').text() - 0;
+      if(upgradeNum > 0) {
+        const startId = $('#start-rune').val() - 0;
+        const targetId = $('#target-rune').val() - 0;
+        processing = true;
+        $('#upgrade-processing').show();
+        doUpgradeRune(targetId, startId);
+      }else {
+        alert('没有可升级的符文');
+      }
+    });
+  }
+
+  if (config.showRuneTip) {
+    let runeList = [];
+    const runeData = localStorage.getItem('idle-ui-rune-db');
+    if (runeData) {
+      runeList = JSON.parse(runeData);
+    } else {
+      fetchRuneTip();
+    }
+
+    if (location.href.indexOf('Equipment/Inlay') >= 0) {
+      let processing = false;
+      const footer = `
+        <div class="panel-footer">
+            <input class="panel-filter hidden-xs filter-input" id="panel-filter-runeword" placeholder="搜索符文之语">
+            <span id="runeword-content"></span>
+            <button type="button" class="btn btn-xs btn-success mr-10" id="one-key-rw" style="display: none;">一键镶嵌</button>
+            ${renderProcessing()}
+        </div>
+      `;
+      $('.panel').eq(0).append(footer);
+      let timer = null;
+      $('#panel-filter-runeword').keyup(function() {
+        if (timer) {
+          clearTimeout(timer);
+          timer = null;
+        }
+        timer = setTimeout(() => {
+          const name = $(this).val();
+          const filtered = name ? runeList.filter(item => item.name.indexOf(name) >= 0) : [];
+          let ret = '';
+          if (filtered.length) {
+            const item = filtered[0];
+            const recipe = item.recipe.map(item => {
+              return `<span class="artifact">${item}</span>`
+            }).join(' + ');
+            ret = `<span><span class="artifact equip-name">【${item.name}】</span>：<span>${recipe}</span></span>`;
+            const requireContent = item.require.map(item => {
+              return `<p><span class="equip-label">${item}</span></p>`;
+            }).join('');
+            const attrContent = item.attr.map(item => {
+              return `<p>${item}</p>`;
+            }).join('');
+            const tip = `<div class="equip-content"><div class="equip"><p class="artifact">${item.name}</p>${requireContent}${attrContent}</div></div>`;
+            ret += tip;
+            $('#one-key-rw').data('item', item);
+            $('#one-key-rw').show();
+          }else {
+            $('#one-key-rw').data('item', null);
+            $('#one-key-rw').hide();
+          }
+          $('#runeword-content').html(ret);
+          $.initPopup();
+        }, 300);
+      });
+
+      $('.equip').eq(0).children().last().prop('id', 'big-slot');
+
+      const link = '<a href="/Help/Content?url=Artifact" target="_blank" class="btn btn-xs btn-success mr-10">神器列表</a>';
+      $('.btn.btn-xs').eq(0).before(link);
+
+      $('#one-key-rw').click(function() {
+        if(processing) return;
+        const item = $(this).data('item');
+        if(item) {
+          if(confirm(`确定要一键制作神器【${item.name}】吗？`)){
+            const recipeLen = item.recipe.length;
+            const slotMatch = $('#big-slot').text().match(/\((\d)\/(\d)\)/);
+            if(slotMatch && slotMatch.length >= 2) {
+              const currentSlots = slotMatch[1] - 0;
+              const slotLen = slotMatch[2] - 0;
+              if(currentSlots > 0) {
+                alert('已有镶嵌物');
+              }else {
+                if(slotLen !== recipeLen) {
+                  alert(`神器需要${recipeLen}个符文，物品插槽为${slotLen}`);
+                }else {
+                  let notEnoughRune = false;
+                  const rwList = [];
+                  item.recipe.forEach(item=> {
+                    const id = item.match(/\d+/g)[0] - 0;
+                    rwList.push(id);
+                    const rune = $('.panel.panel-inverse:last-child .equip-name').eq(id - 1);
+                    console.log(rune);
+                    const count = rune.next().next().text() - 0;
+                    if(count === 0) {
+                      alert(`${item}符文不足`);
+                      notEnoughRune = true;
+                    }
+                  });
+
+                  if(!notEnoughRune) {
+                    doSlot(rwList, 0);
+                    $('#processing').show();
+                    processing = true;
+                  }
+                }
+              }
+            }else {
+              alert('未找到插槽信息');
+            }
+          }
+        }
+      });
+
+      function doSlot(rwList, index) {
+        if(index > rwList.length - 1){
+          $('#processing').hide();
+          processing = false;
+          location.reload();
+          return;
+        }
+        const list = $('#form').serializeArray();
+        const params = {};
+        list.forEach(item => {
+          params[item.name] = item.value;
+        });
+        params.eid2 = rwList[index];
+        $.post('/Equipment/RuneInlay', params, function() {
+          setTimeout(function() {
+            doSlot(rwList, index + 1);
+          }, 300);
+        }).fail(function(data) {
+          alert("发生异常");
+          location.reload();
+        });
+      }
+    }
+
+    if (location.href.indexOf('Help/Content?url=Artifact') >= 0) {
+      const filter = '<div class="container" style="margin-bottom: 20px;"><input class="form-control" id="panel-filter" placeholder="输入神器名称或符文序号" /></div>';
+      $('.navbar').next().after(filter);
+      let timer = null;
+      $('#panel-filter').keyup(function() {
+        if (timer) {
+          clearTimeout(timer);
+          timer = null;
+        }
+        timer = setTimeout(() => {
+          const val = $(this).val();
+          if (val) {
+            if (/^\d+$/.test(val)) {
+              $('tbody tr').each(function(i) {
+                const recipe = [];
+                $(this).children().eq(1).find('.artifact.equip-name').each(function() {
+                  recipe.push($(this).text().match(/\d+/g)[0]);
+                });
+                if (recipe.indexOf(val) >= 0) {
+                  $(this).hide();
+                } else {
+                  $(this).hide();
+                }
+              });
+            } else {
+              $('tbody tr').each(function(i) {
+                const name = $(this).children().last().find('.artifact').text();
+                if (name.indexOf(val) >= 0) {
+                  $(this).show();
+                } else {
+                  $(this).hide();
+                }
+              });
+            }
+          } else {
+            $('tbody tr').show();
+          }
+        }, 300);
+      });
+    }
+
+    function fetchRuneTip() {
+      $.get('/Help/Artifact', function(html) {
+        const dom = $.parseHTML(html);
+        $(dom).find('tr').each(function(i) {
+          if (i > 0) {
+            const nameLabel = $(this).children().last().find('.artifact');
+            const rune = { name: nameLabel.text(), attr: [], recipe: [], require: [] };
+            nameLabel.parent().children().each(function(index) {
+              if (index > 0) rune.attr.push($(this).text());
+            });
+            $(this).children().eq(1).find('.artifact.equip-name').each(function() {
+              rune.recipe.push($(this).text());
+            });
+            $(this).children().eq(0).find('.equip-label').each(function() {
+              rune.require.push($(this).text());
+            });
+            runeList.push(rune);
+          }
+        });
+        localStorage.setItem('idle-ui-rune-db', JSON.stringify(runeList));
+      });
+    }
+  }
+
+  if (config.showBattleDetail && inBattlePage()) {
+    const battleResult = {};
+    const addedDamageTypes = ['溅射', '触发了技能', '对方受到'];
+
+    function getDamageType(plainText) {
+      let ret = -1;
+      addedDamageTypes.forEach((item, i) => {
+        if (plainText.indexOf(item) >= 0) ret = i;
+      });
+      return ret;
+    }
+
+    $('.turn').each(function(index) {
+      if (index > 0) {
+        const line = $(this).children().eq(1);
+        const hpData = $(this).children().first().data('hp');
+        const id = hpData[0].id;
+        if (!hpData[1]) return;
+        const firstTargetId = hpData[1].id;
+        const skillLabel = line.children('.skill-name');
+        const skill = skillLabel.length ? skillLabel.eq(0).text() : '普通攻击';
+        const damageLabel = line.children('.damage');
+
+        let damage = 0;
+        let damageDetail = { base: 0 };
+        if (firstTargetId < 0) {
+          damage = damageLabel.length ? damageLabel.eq(0).text() - 0 : 0;
+          damageDetail = { base: damage };
+          $(this).children().each(function(i) {
+            if (i > 1) {
+              const plainText = getPlainText($(this));
+              if (getDamageType(plainText) >= 0) {
+                const addedDamage = $(this).children('.damage').eq(0).text() - 0;
+                const damageType = getDamageType(plainText);
+                damage += addedDamage;
+                const lastDamage = damageDetail[damageType];
+                damageDetail[damageType] = lastDamage ? lastDamage + addedDamage : addedDamage;
+              }
+            }
+          });
+        }
+        if (!battleResult[id]) battleResult[id] = {};
+        if (!battleResult[id][skill]) battleResult[id][skill] = { turn: 0, damage: 0, damageDetail: {} };
+
+        const skillData = battleResult[id][skill];
+        skillData.turn += 1;
+        skillData.damage += damage;
+        Object.keys(damageDetail).forEach(type => {
+          if (skillData.damageDetail[type]) {
+            skillData.damageDetail[type] += damageDetail[type];
+          } else {
+            skillData.damageDetail[type] = damageDetail[type];
+          }
+        });
+      }
+    });
+
+    const totalTurns = $('.turn').length - 1;
+    let partyTotalDamage = 0;
+    $('.battle-data tbody tr').each(function(index) {
+      if (getCharId(index) > 0) {
+        const dmg = $(this).children().eq(2).text() - 0;
+        partyTotalDamage += dmg;
+      }
+    });
+
+    $('.battle-data thead td').eq(2).after('<td class="text-center">友方伤害占比</td><td class="text-center">详情</td><td class="text-center">出手次数</td><td class="text-center">出手占比</td><td class="text-center">每回合伤害</td>');
+    $('.battle-data tbody tr').each(function(index) {
+      const id = getCharId(index);
+      const actor = $(this).children().first().text();
+      const turns = getActorTurns(id);
+      const turnsPercent = (turns / totalTurns * 100).toFixed(1) - 0;
+      const damage = $(this).children().eq(2).text() - 0;
+      const damagePercent = id > 0 ? `${(damage / partyTotalDamage * 100).toFixed(1) - 0}%` : '-';
+      const avgDamage = turns > 0 ? Math.round(damage / turns) : '-';
+      const link = battleResult[id] ? `<a href="javascript: void(0);" class="link-detail" data-id="${id}" data-actor="${actor}">查看</a>` : '-';
+      const content = `<td class="text-center poison">${damagePercent}</td><td class="text-center">${link}</td><td class="text-center physical ddd">${turns}</td><td class="text-center poison">${turnsPercent}%</td><td class="text-center fire ee">${avgDamage}</td>`;
+      $(this).children().eq(2).after(content);
+    });
+
+    $('.battle-data').css('overflow', 'auto');
+
+    const modal = `
+      <div class="modal fade" id="modalBattleDetail" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content model-inverse">
+                  <div class="modal-header">
+                      <span class="modal-title"><span id="idle-ui-char"></span> - 伤害详情</span>
+                  </div>
+                  <div class="modal-body">
+                      <table class="table table-condensed">
+                        <thead><tr><th class="text-center">技能</th><th class="text-center">总伤害</th><th class="text-center">伤害占比</th><th class="text-center">出手次数</th><th class="text-center">出手占比</th><th class="text-center">每回合伤害</th><th class="text-center">直接伤害</th><th class="text-center">溅射</th><th class="text-center">触发技能</th><th class="text-center">持续伤害及其他</th></tr></thead>
+                        <tbody id="idle-ui-battle-rows"></tbody>
+                      </table>
+                      <ul>
+                        <li>直接伤害：技能造成的实际直接伤害</li>
+                        <li>溅射：因溅射，对非主目标造成的溅射伤害之和</li>
+                        <li>触发技能：【装备自带技能】或【被击中触发】的技能等被触发后造成的伤害</li>
+                        <li>持续伤害及其他：技能造成的持续伤害，以及其他伤害  </li>
+                      </ul>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+    `;
+
+    $(document.body).append(modal);
+
+    $('.link-detail').click(function() {
+      const id = $(this).data('id');
+      const data = battleResult[id];
+      const actor = $(this).data('actor');
+      $('#idle-ui-char').text(actor);
+      let actorTotalTurns = 0;
+      let actorTotalDamage = 0;
+      Object.keys(data).forEach(skill => {
+        actorTotalTurns += data[skill].turn;
+        actorTotalDamage += data[skill].damage;
+      });
+
+      const content = Object.keys(data).map(skill => {
+        const skillData = data[skill];
+        const percent = (skillData.turn / actorTotalTurns * 100).toFixed(1) - 0;
+        const damagePercent = (skillData.damage / actorTotalDamage * 100).toFixed(1) - 0;
+        const avgDamage = skillData.turn > 0 ? Math.round(skillData.damage / skillData.turn) : '-';
+        return `<tr><td class="text-center skill">${skill}</td><td class="text-center fire">${skillData.damage}</td><td class="text-center poison">${damagePercent}%</td><td class="text-center physical">${skillData.turn}</td><td class="text-center poison">${percent}%</td><td class="text-center fire">${avgDamage}</td><td class="text-center fire">${skillData.damageDetail.base}</td><td class="text-center fire">${skillData.damageDetail['0'] || 0}</td><td class="text-center fire">${skillData.damageDetail['1'] || 0}</td><td class="text-center fire">${skillData.damageDetail['2'] || 0}</td></tr>`;
+      }).join('');
+      $('#idle-ui-battle-rows').html(content);
+      $('#modalBattleDetail').modal('show');
+    });
+
+    function getCharId(index) {
+      const ary = $('.battle-char').eq(index).prop('id').split('_');
+      return ary[ary.length - 1];
+    }
+
+    function getActorTurns(id) {
+      let ret = 0;
+      if (battleResult[id]) {
+        Object.keys(battleResult[id]).forEach(skill => {
+          ret += battleResult[id][skill].turn;
+        });
+      }
+      return ret;
+    }
+
+    function getPlainText(element) {
+      return element.clone()    //clone the element
+        .children() //select all the children
+        .remove()   //remove all the children
+        .end()  //again go back to selected element
+        .text();
+    }
+  }
+
+  if (config.showRequire) {
+    $('.equip-content > .equip').each(function(item) {
+      const type = $(this).children().first().attr('class');
+
+      let classLabel = '';
+      const requireIndex = $(this).text().indexOf('限');
+      if (requireIndex >= 0) {
+        const requireClass = $(this).text().substring(requireIndex + 1, requireIndex + 2);
+        classLabel = '<span style="color: #a99877" class="mr-10">' + requireClass + '</span>';
+      }
+
+      const label = location.href.indexOf('Auction/QueryBid') >= 0 ? $(this).parent().prev().find('.equip-name').first() : $(this).parent().prev().find('.equip-name').last();
+      if (classLabel) {
+        label.after(classLabel);
+      }
+    });
+  }
+
+  if(config.setOnRight) {
+    GM_addStyle(`
+      html.d3 .popover-content div.unique {
+        position: absolute;
+        top: -1px;
+        left: 100%;
+        white-space: nowrap;
+        background-color: #000;
+        padding: 12px 12px 4px 12px;
+        margin-left: 10px;
+        border: 1px solid #322a20;
+        border-radius: 2px;
+        box-shadow: 0 0 10px #000;
+      }
+      html.d3 .popover-content div.unique > br:first-child {
+        display: none;
+      }
+    `);
+  }
+
+  if(location.href.indexOf('/Equipment/Query') >= 0 || location.href.indexOf('/Auction/Query?') >= 0){
+    const checkbox = '<label class="mr-10" style="font-size: 14px; margin-bottom: 0; display: inline-block;"><input type="checkbox" class="idle-ui-toggle-ilvl"/> 显示物品等级</label>';
+    $('.panel-heading .pull-right').prepend(checkbox);
+    $('.idle-ui-toggle-ilvl').change(function() {
+      const checked = $(this).prop('checked');
+      localStorage.setItem('idle-ui-show-ilvl', checked ? 1 : 0);
+      if(checked) {
+        $(this).parent().parent().parent().next().find('.equip-title').each(function(){
+          const ilvl = $(this).text().match(/\d+/g);
+          const label = $(this).parent().parent().prev().find('.equip-name');
+          if(label.children('.require').length) {
+            const textLabel = label.children('span').eq(1);
+            textLabel.text(`${textLabel.text()}(${ilvl})`);
+          }else {
+            label.text(label.text().replace('】', `(${ilvl})】`));
+          }
+        });
+      }else {
+        $(this).parent().parent().parent().next().find('.equip-name').each(function(){
+          const label = $(this);
+          const textLabel = label.children('.require').length ? label.children('span').eq(1) : label;
+          textLabel.text(textLabel.text().replace(/\(\d+\)/, ''));
+        });
+      }
+    });
+
+    if(localStorage.getItem('idle-ui-show-ilvl') == 1) {
+      $('.idle-ui-toggle-ilvl').trigger('click');
+    }
+  }
+
+  // if(config.showAuctionLink && (location.href.indexOf('Auction/MyAuction') >= 0 || location.href.indexOf('Equipment/Query') >= 0)) {
+  //   $('.equip-title.set, .equip-title.unique, .equip-title.artifact').each(function() {
+  //     const btn = '<span class="sr-only label label-info equip-bid idle-ui-auction-link">市场</span>';
+  //     $(this).parent().parent().prev().append(btn);
+  //   });
+  // }
+
+  if(location.href.indexOf('Equipment/Material') === -1) {
+    $('.equip-content .equip').each(function() {
+      let totalElementRes = 0;
+      const content = $(this);
+      content.children('p').each(function() {
+        const text = $(this).text();
+        if(/抗火|抗毒|抗闪电|抗寒/.test(text)){
+          totalElementRes += text.match(/\d+/g)[0] - 0;
+        }else if (/元素抗性/.test(text)) {
+          totalElementRes += (text.match(/\d+/g)[0] - 0) * 4;
+        }
+      });
+      if(totalElementRes > 0) {
+        const tip = `<p class="unique">元素抗性总计 +${totalElementRes}%</p>`;
+        if(content.children().first().hasClass('set') || content.children().first().hasClass('artifact')) {
+          content.find('.equip-label').last().parent().after(tip);
+        }else {
+          content.children('p').last().after(tip);
+        }
+      }
+    });
+  }
+
+  if(location.href.indexOf('/Equipment/Query') >= 0) {
+    const storeLoading = renderProcessing('batch-store-loading');
+    const batchButton = `${storeLoading}<button type="button" class="btn btn-xs btn-default mr-10 idle-ui-show-batch">批量选择</button>`;
+    const tradeButton = `<button type="button" class="btn btn-xs btn-success mr-10 idle-ui-batch-trade">交易选中装备</button>`;
+    const storeButton = `<button type="button" class="btn btn-xs btn-success mr-10 idle-ui-batch-store">收藏选中装备</button>`;
+    const selectAll = '<label class="idle-ui-checkall mr-10"><input type="checkbox"/> 全选</label>';
+    const checkbox = '<input type="checkbox" class="idle-ui-batch-check" />';
+
+    $('.panel.panel-inverse').last().find('.pull-right').eq(0).prepend(tradeButton);
+    $('.panel.panel-inverse').last().find('.pull-right').eq(0).prepend(selectAll);
+    $('.panel.panel-inverse').last().find('.pull-right').eq(0).prepend(batchButton);
+    $('.panel.panel-inverse').last().find('.equip-name').before(checkbox);
+
+    $('.panel.panel-inverse').eq(1).find('.pull-right').eq(0).prepend(tradeButton);
+    $('.panel.panel-inverse').eq(1).find('.pull-right').eq(0).prepend(storeButton);
+    $('.panel.panel-inverse').eq(1).find('.pull-right').eq(0).prepend(selectAll);
+    $('.panel.panel-inverse').eq(1).find('.pull-right').eq(0).prepend(batchButton);
+    $('.panel.panel-inverse').eq(1).find('.equip-name').before(checkbox);
+
+    $('.idle-ui-show-batch').click(function() {
+      const body = $(this).parent().parent().next();
+      body.find('.idle-ui-batch-check').toggleClass('showinline');
+      $(this).next().next().toggleClass('showinline');
+      $(this).next().toggleClass('showinline');
+      if($(this).next().next().next().hasClass('idle-ui-batch-trade')) {
+        $(this).next().next().next().toggleClass('showinline');
+      }
+    });
+
+    $('.idle-ui-checkall input').change(function() {
+      const checked = $(this).prop('checked');
+      const body = $(this).parent().parent().parent().next();
+      body.find('.idle-ui-batch-check.showinline').prop('checked', checked);
+    });
+
+    let batchItemList = [];
+
+    $('.idle-ui-batch-trade').click(function() {
+      const body = $(this).parent().parent().next();
+      batchItemList = [];
+      $('#idle-ui-batch-list').empty();
+      body.find('.idle-ui-batch-check.showinline:checked').each(function() {
+        const id = $(this).parent().children().last().data('id');
+        const content = $(this).next().clone();
+        batchItemList.push(id);
+        const col = $('<div class="col-xs-12 col-md-3"></div>');
+        col.append(content);
+        $('#idle-ui-batch-list').append(col);
+      });
+
+      if(batchItemList.length) {
+        $('#modalBatchTrade').modal('show');
+      }else {
+        alert('没有选中装备');
+      }
+    });
+
+    let processing = false;
+
+    $('.idle-ui-batch-store').click(function() {
+      const body = $(this).parent().parent().next();
+      batchItemList = [];
+      $('#idle-ui-batch-list').empty();
+      body.find('.idle-ui-batch-check.showinline:checked').each(function() {
+        const id = $(this).parent().children().last().data('id');
+        batchItemList.push(id);
+      });
+
+      if(batchItemList.length) {
+        $('#batch-store-loading').show();
+        if(processing) return;
+        processing = true;
+        storeItem(0);
+      }else {
+        alert('没有选中装备');
+      }
+    });
+
+    function storeItem(index, token) {
+      if(index > batchItemList.length - 1) {
+        $('#batch-store-loading').hide();
+        alert('批量收藏完毕');
+        location.reload();
+      }else {
+        const list = $('#form').serializeArray();
+        const params = {};
+        list.forEach(item => {
+          params[item.name] = item.value;
+        });
+        if(token) params.__RequestVerificationToken = token;
+        params.eid = batchItemList[index];
+
+        $.post('/Equipment/EquipStore', params, function(html) {
+          const dom = $.parseHTML(html);
+          const token = $(dom).find('input[name="__RequestVerificationToken"]').val();
+          if(token){
+            setTimeout(() => {
+              storeItem(index + 1, token);
+            }, 750);
+          }
+        }).fail(function() {
+          alert("发生异常");
+          location.reload();
+        });
+      }
+    }
+
+    function tradeItem(index, token) {
+      if(index > batchItemList.length - 1) {
+        $('#batch-trade-loading').hide();
+        alert('批量交易完毕');
+        location.reload();
+      }else {
+        const list = $('#form').serializeArray();
+        const params = {};
+        list.forEach(item => {
+          params[item.name] = item.value;
+        });
+        if(token) params.__RequestVerificationToken = token;
+        params.eid = batchItemList[index];
+        params.cname = $('#idle-ui-cname').val();
+
+        $.post('/Equipment/EquipTrade', params, function(html) {
+          $('#idle-ui-batch-list .col-md-3').eq(index).append('ok');
+          const dom = $.parseHTML(html);
+          const token = $(dom).find('input[name="__RequestVerificationToken"]').val();
+          if(token){
+            setTimeout(() => {
+              tradeItem(index + 1, token);
+            }, 750);
+          }
+        }).fail(function() {
+          alert("发生异常，检查角色名是否有误");
+          location.reload();
+        });
+      }
+    }
+
+    const loading = renderProcessing('batch-trade-loading');
+    const modal = `
+    <div class="modal fade" id="modalBatchTrade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content model-inverse">
+                <div class="modal-header">
+                    <span class="modal-title">批量交易</span>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-header state">已选中装备：</div>
+                    <div class="row" id="idle-ui-batch-list" style="margin-bottom: 10px;"></div>
+                    <div class="form-group">
+                        <label for="charName" class="control-label">交易角色：</label>
+                        <input type="text" class="form-control" id="idle-ui-cname" name="charName" placeholder="请输入角色名称">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    ${loading}
+                    <button type="button" class="btn btn-success btn-xs" id="idle-ui-confirm-batchtrade">确定交易</button>
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+
+    $(document.body).append(modal);
+
+    $('#idle-ui-confirm-batchtrade').click(function() {
+      $('#batch-trade-loading').show();
+      if(processing) return;
+      processing = true;
+      tradeItem(0);
+    });
+  }
+
+  function inBattlePage() {
+    const battePages = ['Battle/Simulate', 'Battle/InDungeon', 'Battle/WithChar'];
+    return battePages.some(path => location.href.indexOf(path) >= 0);
+  }
+
+  function renderProcessing(id, text) {
+    return `<span id="${id || 'processing'}" class="processing mr-10" style="display:none;"><i class="glyphicon glyphicon-refresh"></i> ${text || '处理中'}...</span>`;
+  }
+
+  function renderButton(id, text, type) {
+    if (!type) type = 'success';
+    return `<button type="button" class="btn btn-xs btn-${type} mr-10" id="${id}">${text}</button>`;
+  }
+
+  let uid = purl().param().id || purl().param().Id;
+
+  let blockMap = localStorage.getItem('idle-ui-block');
+  if (blockMap) {
+    blockMap = JSON.parse(blockMap);
+  } else {
+    blockMap = {};
+  }
+  if (!blockMap[uid]) blockMap[uid] = { num: 0, time: +new Date() };
+  let blockData = blockMap[uid];
+
+  if (location.href.indexOf('Character/Detail') >= 0) {
+    checkBlockNum();
+    const verifyCount = localStorage.getItem('idle-ui-verify-count') || 0;
+    $('.col-sm-6 .panel-body').eq(0).children().last().append(`<p>封号打击次数（仅供参考）：<span class="physical">${blockData.num}</span></p><p>验证码破解次数：<span class="physical">${verifyCount}</span></p>`);
+  }
+
+  function addBlockNum() {
+    checkBlockNum();
+    if (!blockData.num) blockData.num = 0;
+    blockData.num += 1;
+    blockData.time = +new Date();
+    localStorage.setItem('idle-ui-block', JSON.stringify(blockMap));
+    new Notification(`当前封号打击为${blockData.num}次，请注意`);
+  }
+
+  function checkBlockNum() {
+    const curTime = +new Date();
+    const hours = Math.floor((curTime - blockData.time) / (3600 * 1000));
+    if (hours > 0) {
+      blockData.num = blockData.num > hours ? blockData.num - hours : 0;
+      blockData.time = blockData.time + (hours * 3600 * 1000);
+      localStorage.setItem('idle-ui-block', JSON.stringify(blockMap));
+    }
+  }
+};
+
+function checkAuth(onlyCheck) {
+  const pass = localStorage.getItem('idle-ui-pass');
+  const keyword = atob('YWNoZW5saXU=');
+  if(onlyCheck) return pass === keyword;
+  if(pass !== keyword){
+    let answer = prompt('口令验证，口令请联系作者获取：');
+    answer = (answer || '').toLowerCase();
+    localStorage.setItem('idle-ui-pass', answer);
+    if(answer !== keyword) {
+      alert('口令错误');
+    }
+    location.reload();
+  }
+}
+
+function addStyle() {
+  if(!checkAuth(true)) return;
+  const borderColor = '#6f5a40';
+GM_addStyle(`
+  .panel-top {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .idle-ui-batch-check, .idle-ui-batch-trade, .idle-ui-checkall, .idle-ui-batch-store {
+    display: none;
+  }
+  .idle-ui-batch-check.showinline, .idle-ui-batch-trade.showinline, .idle-ui-checkall.showinline, .idle-ui-batch-store.showinline {
+    display: inline;
+  }
+  .idle-ui-title {
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .panel-header {
+    margin: 8px 0;
+  }
+  .panel-textarea {
+    background-color: rgba(255,255,255,0.1);
+    color: #a99877;
+    margin-bottom: 8px;
+  }
+  .block-visited {
+    background-color: #3f51b5 !important;
+  }
+  .hit-input {
+    display: inline-block;
+    color: #fff;
+    width: 60px;
+    padding: 0 8px;
+    border-radius: 0;
+    background-color: transparent;
+  }
+  .idle-ui-set-single, .idle-ui-set-full {
+    opacity: 0.5;
+  }
+  .idle-ui-new-item {
+    border: 1px dashed #888 !important;
+  }
+  .mr-10 {
+    margin-right: 10px;
+  }
+  .ml-10 {
+    margin-left: 10px;
+  }
+  @-webkit-keyframes rotate {
+    from {
+      -webkit-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    to {
+      -webkit-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  #processing i, .processing i {
+    animation: rotate 1s ease-in-out infinite;
+  }
+  .filter-input {
+    width: 150px !important;
+  }
+  #big-slot {
+    font-size: 24px;
+    margin-top: 10px !important;
+    color: #fff;
+  }
+  #idle-ui-quicksearch {
+    position: relative;
+    float: left;
+    margin-top: 14px;
+  }
+  #idle-ui-quicksearch > input {
+    width: 150px;
+    display: inline-block;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 3px;
+  }
+  .equip-container > p:hover .sr-only {
+    z-index: 1;
+    position: relative;
+  }
+  html.d3 body {
+    color: #a99877;
+    font-family: "Consolas", Arial, sans-serif;
+  }
+  html.d3 .panel {
+    background-color: #171614;
+    border-color: ${borderColor};
+  }
+  html.d3 .panel-inverse > .panel-heading {
+    background-color: #101010;
+    border-color: ${borderColor};
+    font: normal 16px "Exocet Blizzard Light","Palatino Linotype", "Times", serif;
+    color: #F3E6D0;
+    line-height: 26px;
+  }
+  html.d3 .panel-inverse > .panel-heading .label {
+    font-size: 12px;
+    font-family: "Consolas", Arial, sans-serif;
+  }
+  html.d3 .btn {
+    background-color: transparent;
+    border: 1px solid ${borderColor};
+    vertical-align: top;
+    color: #ad835a;
+    font: normal 14px/1.5 Arial, sans-serif;
+    line-height: normal;
+  }
+  html.d3 .btn:hover {
+    color: #fff !important;
+  }
+  html.d3 .btn:active {
+    background-color: transparent;
+  }
+  html.d3 .label {
+    line-height: normal;
+    font-weight: normal;
+    border-radius: 2px;
+    padding: 3px 4px 1px;
+    border: 1px solid #5f3d11;
+    box-shadow: 0 0 2px #000;
+    background-color: #000;
+    color: #ad835a;
+  }
+  html.d3 .label.label-info {
+    color: #6969ff;
+  }
+  html.d3 .label.label-warning {
+    color: #ffff00;
+  }
+  html.d3 .label.label-danger {
+    color: #e60101;
+  }
+  html.d3 .label.label-success {
+    color: #00c400;
+  }
+  html.d3 .physical {
+    color: #f3e6d0 !important;
+  }
+  html.d3 .navbar-inverse.navbar-fixed-top {
+    border-bottom: 1px solid #322a20;
+    background-color: #171614;
+  }
+  html.d3 .navbar-inverse .navbar-brand {
+    color: #f3e6d0;
+    font-family: "Exocet Blizzard Light","Palatino Linotype", "Times", serif;
+  }
+  html.d3 a, html.d3 .navbar-inverse .navbar-nav>li>a {
+    color: #ad835a;
+  }
+  html.d3 .magical, html.d3 .skill, html.d3 .cold {
+    color: #6969ff !important;
+  }
+  html.d3 .hit-input {
+    border-color: ${borderColor};
+  }
+  html.d3 .progress {
+    border: 1px solid #513f2e;
+    border-radius: 0;
+    box-shadow: 0 0 5px #000;
+    background-color: #101010;
+    color: #f3e6d0;
+    height: 22px;
+  }
+  html.d3 .progress-bar {
+    border: 1px solid #101010;
+    line-height: 20px;
+  }
+  html.d3 .progress-bar-exp {
+    background-color: rgb(251,131,44);
+  }
+  html.d3 .progress-bar-life {
+    background: rgb(235,21,28);
+  }
+  html.d3 .footer {
+    border-top: 1px solid #322a20;
+    background-color: #171614;
+  }
+  html.d3 .btn.btn-success {
+    color: #00c400;
+  }
+  html.d3 .btn.btn-danger {
+    color: #e60101;
+  }
+  html.d3 .img-thumbnail {
+    border-color: #d59c52;
+  }
+  html.d3 .popover {
+    background: #1d180e;
+    padding: 1px;
+    border: 1px solid #322a20;
+    border-radius: 2px;
+    box-shadow: 0 0 10px #000;
+    max-width: 271px;
+    font-family: "Consolas", Arial, sans-serif;
+  }
+  html.d3 .popover-content .equip p:first-child {
+    height: 30px;
+    width: 263px;
+    padding: 0;
+    margin: 0 -10px 10px -10px !important;
+    background: url(http://images.targetedu.cn/d3/tooltip-title.jpg) no-repeat;
+    text-align: center;
+    line-height: 28px;
+    font-size: 16px;
+    font-family: "Exocet Blizzard Light","Palatino Linotype", "Times", serif;
+  }
+  html.d3 .popover-content .equip p.unique:first-child {
+    background-position: 0 -120px;
+  }
+  html.d3 .popover-content .equip p.set:first-child {
+    background-position: 0 -180px;
+  }
+  html.d3 .popover-content .equip p.rare:first-child {
+    background-position: 0 -90px;
+  }
+  html.d3 .popover-content .equip p.artifact:first-child {
+    background-position: 0 -150px;
+  }
+  html.d3 .popover-content .equip p.magical:first-child {
+    background-position: 0 -60px;
+  }
+  html.d3 .popover-content .equip p.base:first-child {
+    background-position: 0 -30px;
+  }
+  html.d3 .popover-content .equip p.slot:first-child {
+    background-position: 0 -30px;
+  }
+  html.d3 .popover-content {
+    background-color: #000;
+    padding: 2px 12px;
+  }
+  html.d3 hr {
+    border-color: ${borderColor};
+  }
+  html.d3 .panel-inverse > .panel-footer {
+    background-color: #101010;
+    border-color: ${borderColor};
+  }
+  html.d3 .modal-dialog {
+    box-shadow: 0 0 10px #000;
+  }
+  html.d3 .modal-content {
+    background-color: #171614;
+    border-color: ${borderColor};
+  }
+  html.d3 .model-inverse > .modal-header, html.d3 .model-inverse > .modal-footer {
+    background-color: #101010;
+    border-color: ${borderColor};
+  }
+  html.d3 .model-inverse > .modal-header span {
+    line-height: normal;
+  }
+  html.d3 .panel-textarea {
+    border-color: ${borderColor};
+  }
+  html.d3 .panel-footer .panel-filter {
+    border-color: #2a241c;
+  }
+  html.d3 .btn-default:active:focus,
+  html.d3 .open>.dropdown-toggle.btn-default:focus,
+  html.d3 .btn-default.active, .btn-default:active,
+  html.d3 .open>.dropdown-toggle.btn-default {
+    background-color: transparent;
+    color: #a99877;
+  }
+  html.d3 .dropdown-menu {
+    background-color: #101010;
+    border-color: ${borderColor};
+    box-shadow: 0 0 10px #000;
+    font-family: "Consolas", Arial, sans-serif;
+    max-height: 400px;
+    overflow: auto;
+  }
+  html.d3 .equip-container .selected {
+    border: 1px solid ${borderColor};
+    background-color: transparent;
+  }
+  html.d3 .table > tbody > tr > td,
+  html.d3 .table > tbody > tr > th,
+  html.d3 .table > tfoot > tr > td,
+  html.d3 .table > tfoot > tr > th,
+  html.d3 .table > thead > tr > td,
+  html.d3 .table > thead > tr > th {
+    border-color: ${borderColor};
+  }
+  html.d3 .equip .divider {
+    background-color: ${borderColor};
+  }
+  html.d3 .panel-heading .btn-group, html.d3 .panel-heading .btn {
+    vertical-align: top;
+  }
+  html.d3 .form-control{
+    border-color: ${borderColor};
+    background-color: #101010;
+    color: #a99877;
+  }
+  html.d3 .form-validation .form-control {
+    width: 198px;
+  }
+  html.d3 .popover.bottom>.arrow:after {
+    border-bottom-color: #322a20;
+  }
+  html.d3 .popover.top>.arrow:after {
+    border-top-color: #322a20;
+  }
+  html.d3 .super, html.d3 .unique {
+    color: rgb(255,128,0) !important;
+  }
+  html.d3 .artifact {
+    color: rgb(182,89,245) !important;
+  }
+  html.d3 .equip > p {
+    color: #6969ff;
+  }
+` );
+}
+checkAuth();
+addStyle();
+window.addEventListener('load', idleInit, false);
