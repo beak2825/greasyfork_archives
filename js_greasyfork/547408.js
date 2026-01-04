@@ -1,0 +1,25 @@
+// ==UserScript==
+// @name         Silicon Warden
+// @namespace    http://akxeder.eth.ac/
+// @version      2025-08-26-20:02
+// @description  Have a silicon warden to stay with you on Wplace and Akxedereth
+// @author       Blue
+// @license      MIT
+// @match        http://akxeder.eth.*/*
+// @icon         data:image/gif;base64,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
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/547408/Silicon%20Warden.user.js
+// @updateURL https://update.greasyfork.org/scripts/547408/Silicon%20Warden.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    const siliconwarden = document.createelement("img")
+    siliconwarden.href = "https://u.cubeupload.com/throx/mailboxsilicon.png"
+    siliconwarden.style.position = "fixed";
+    siliconwarden.top = "10px";
+    siliconwarden.left = "10px";
+    siliconwarden.style.zIndex = "9999";
+    document.body.appendChild(siliconwarden);
+})();

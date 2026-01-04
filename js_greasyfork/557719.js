@@ -1,0 +1,1595 @@
+// ==UserScript==
+// @name         Google Gemini 汉化脚本(自定义版)
+// @namespace    https://github.com/izscc
+// @version      0.1.0
+// @description  对 https://gemini.google.com/ 网站界面进行汉化，可在浏览器的油猴/Tampermonkey 中安装启用。当前基于 AI Studio 版本改造，可继续按需补充词条。
+// @author       zscc.in
+// @match        https://gemini.google.com/*
+// @grant        none
+// @run-at       document-start
+// @license      MIT
+// @downloadURL https://update.greasyfork.org/scripts/557719/Google%20Gemini%20%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC%28%E8%87%AA%E5%AE%9A%E4%B9%89%E7%89%88%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/557719/Google%20Gemini%20%E6%B1%89%E5%8C%96%E8%84%9A%E6%9C%AC%28%E8%87%AA%E5%AE%9A%E4%B9%89%E7%89%88%29.meta.js
+// ==/UserScript==
+
+(function () {
+    'use strict';
+
+    // 自动翻译配置 (用于越南语/其它非英文界面)
+    const autoTranslateConfig = {
+        enabled: true,
+        targetLanguage: 'zh-CN',
+        maxLength: 180,
+        endpoint: 'https://translate.googleapis.com/translate_a/single?client=gtx'
+    };
+    const autoTranslateTasks = new Map();
+    const chineseCharRegex = /[\u4E00-\u9FFF]/;
+    const asciiRegex = /^[\u0000-\u007F]+$/;
+    const accentedLatinRegex = /[\u00C0-\u024F\u1E00-\u1EFF]/;
+
+    // 防止重复处理的缓存
+    const processedNodes = new WeakSet();
+
+    // 翻译结果缓存 (优化性能)
+    const translationCache = new Map();
+
+    // 翻译映射表 (英文 -> 中文)
+    const translations = {
+        // --- 应用界面新增 ---
+        "Continue to the app": "继续前往应用",
+        "Report legal issue": "报告法律问题",
+        "This app was developed by another user. Be cautious and only continue with apps you trust. Don’t share personal or sensitive information, such as passwords or payment details. Anyone with this public link can access and edit shared data.": "此应用由其他用户开发。请谨慎行事，仅继续使用您信任的应用。不要分享个人信息或敏感信息，例如密码或支付详情。拥有此公共链接的任何人均可访问和编辑共享数据。",
+        "This app is from another developer": "这个应用来自另一个开发者",
+        "Allow this app to request access to:": "允许此应用请求访问：",
+        "The app may not work properly without these permissions.": "缺少这些权限，应用可能无法正常工作。",
+        "Geographic location": "地理位置",
+        "Allow": "允许",
+        "Send prompt": "发送提示",
+        "Unsaved": "未保存",
+        "Function declarations": "函数声明",
+        "Enter a list of function declarations for the model to call upon. See the": "输入供模型调用的函数声明列表。请参阅",
+        "for examples.": "以获取示例。",
+        "Code Editor": "代码编辑器",
+        "Visual Editor": "可视化编辑器",
+        "Add function declaration": "添加函数声明",
+        "Delete property": "删除属性",
+        "Mark property as optional": "将属性标记为可选",
+        "Make property an array": "将属性设为数组",
+        "Type of the property": "属性类型",
+        "Property": "属性",
+        "Add property": "添加属性",
+        "Enter an": "输入一个",
+        "to constrain the model output. See the": "以约束模型输出。请参阅",
+        "for examples.": "以获取示例。",
+        "Save the prompt before sharing it": "分享前保存提示词",
+        "Stop generation before creating a new chat": "在创建新聊天之前停止生成",
+        "Go back": "返回",
+        "string": "字符串",
+        "number": "数字",
+        "integer": "整数",
+        "boolean": "布尔值",
+        "object": "对象",
+        "enum": "枚举",
+        "Create a new chat": "新建聊天",
+        "Saving in progress. Dialog will close automatically when completed.": "正在保存，完成后对话框将自动关闭。",
+
+        // --- 语音名称 (神话/天文命名) ---
+        "Zephyr": "Zephyr(泽费尔)",
+        "Puck": "Puck(帕克)",
+        "Charon": "Charon(卡戎)",
+        "Kore": "Kore(科尔)",
+        "Fenrir": "Fenrir(芬里尔)",
+        "Leda": "Leda(勒达)",
+        "Orus": "Orus(奥鲁斯)",
+        "Aoede": "Aoede(伊达)",
+        "Callirrhoe": "Callirrhoe(卡利罗厄)",
+        "Autonoe": "Autonoe(欧托诺厄)",
+        "Enceladus": "Enceladus(恩克拉多斯)",
+        "Iapetus": "Iapetus(伊阿珀托斯)",
+        "Umbriel": "Umbriel(翁布里厄尔)",
+        "Algieba": "Algieba(轩辕十二)",
+        "Despina": "Despina(德斯皮娜)",
+        "Erinome": "Erinome(埃里诺梅)",
+        "Algenib": "Algenib(壁宿一)",
+        "Rasalgethi": "Rasalgethi(帝座)",
+        "Laomedeia": "Laomedeia(劳梅德亚)",
+        "Achernar": "Achernar(水委一)",
+        "Alnilam": "Alnilam(参宿二)",
+        "Schedar": "Schedar(王良四)",
+        "Gacrux": "Gacrux(十字架一)",
+        "Pulcherrima": "Pulcherrima(常陈一)",
+        "Achird": "Achird(王良一)",
+        "Zubenelgenubi": "Zubenelgenubi(氐宿一)",
+        "Vindemiatrix": "Vindemiatrix(东次将)",
+        "Sadachbia": "Sadachbia(坟墓二)",
+        "Sadaltager": "Sadaltager(萨达尔塔格)",
+        "Sulafat": "Sulafat(渐台三)",
+
+        // --- 语音特征描述 ---
+        "Bright, Higher pitch": "明亮，高音调",
+        "Upbeat, Middle pitch": "欢快，中音调",
+        "Informative, Lower pitch": "稳重，低音调",
+        "Firm, Middle pitch": "坚定，中音调",
+        "Excitable, Lower middle pitch": "激昂，中低音调",
+        "Youthful, Higher pitch": "年轻，高音调",
+        "Firm, Lower middle pitch": "坚定，中低音调",
+        "Breezy, Middle pitch": "轻快，中音调",
+        "Easy-going, Middle pitch": "随和，中音调",
+        "Bright, Middle pitch": "明亮，中音调",
+        "Breathy, Lower pitch": "气声，低音调",
+        "Clear, Lower middle pitch": "清晰，中低音调",
+        "Easy-going, Lower middle pitch": "随和，中低音调",
+        "Smooth, Lower pitch": "柔和，低音调",
+        "Smooth, Middle pitch": "柔和，中音调",
+        "Clear, Middle pitch": "清晰，中音调",
+        "Gravelly, Lower pitch": "沙哑，低音调",
+        "Informative, Middle pitch": "稳重，中音调",
+        "Upbeat, Higher pitch": "欢快，高音调",
+        "Soft, Higher pitch": "轻柔，高音调",
+        "Even, Lower middle pitch": "平稳，中低音调",
+        "Mature, Middle pitch": "成熟，中音调",
+        "Forward, Middle pitch": "自信，中音调",
+        "Friendly, Lower middle pitch": "友好，中低音调",
+        "Casual, Lower middle pitch": "休闲，中低音调",
+        "Gentle, Middle pitch": "温柔，中音调",
+        "Lively, Lower pitch": "生动，低音调",
+        "Knowledgeable, Middle pitch": "博学，中音调",
+        "Warm, Middle pitch": "温暖，中音调",
+
+        // --- 新增：分享对话框 ---
+        "Play audio sample": "播放音频示例",
+        "Support": "支持",
+        "Support options": "支持选项",
+        "Send feedback to Google": "向 Google 发送反馈",
+        "Got it": "知道了",
+        "Done": "完成",
+        "Access": "访问权限",
+        "Allow editors to change permissions and share": "允许编辑者更改权限和分享",
+        "Learn more about editors sharing settings": "了解有关编辑者分享设置的更多信息",
+        "People who can download, copy, and print": "可以下载、复制和打印的用户",
+        "Disabling this setting will also disable download, copy, and print for commenters and viewers": "禁用此设置也会禁止评论者和查看者下载、复制和打印",
+        "Editors": "编辑者",
+        "Commenters and viewers": "评论者和查看者",
+        "Add people, groups, spaces, and calendar events": "添加人员、群组、聊天室和日历活动",
+        "Notify people": "通知他人",
+        "Message": "留言",
+        "People with access": "拥有访问权限的人员",
+        "General access": "一般访问权限",
+        "Restricted": "受限",
+        "Anyone with the link": "任何拥有链接的人",
+        "Only people with access can open with the link": "只有拥有访问权限的人员才能通过链接打开",
+        "Copy link": "复制链接",
+        "Pending changes": "待更改",
+        "Send": "发送",
+        "Owner": "所有者",
+        "Restricted change link": "受限更改链接",
+        "Change link type": "更改链接类型",
+        "Menu for selecting permission roles": "选择权限角色的菜单",
+        "Menu for selecting suggested share recipients": "选择建议的分享接收者菜单",
+
+        // --- 新增：语音/音频构建器 (v2.5) ---
+        "Raw structure": "原始结构",
+        "The below reflects how to structure your script in your API request.": "下方内容反映了如何在 API 请求中构建您的脚本结构。",
+        "Script builder": "脚本构建器",
+        "Style instructions": "风格指令",
+        "Describe the style of your dialog, e.g. \"Read this in a dramatic whisper\"": "描述对话的风格，例如“用戏剧性的耳语朗读”",
+        "Speaker 1": "发言者 1",
+        "Speaker 2": "发言者 2",
+        "Speaker 1: Hello, world!": "发言者 1: 你好，世界！",
+        "Start typing dialog here...": "在此输入对话...",
+        "Add dialog": "添加对话",
+        "Single-speaker audio": "单人语音",
+        "Multi-speaker audio": "多人语音",
+        "Use a single voice with advanced tone and emotion controls or simulate a two-voice dialogue": "使用具有高级语调和情感控制的单一声音，或模拟双人对话",
+        "Model settings": "模型设置",
+        "Voice settings": "语音设置",
+        "Speaker 1 settings": "发言者 1 设置",
+        "Speaker 2 settings": "发言者 2 设置",
+        "Speaker names must be consistent with speakers used in your prompt": "发言者名称必须与提示词中使用的发言者一致",
+        "Voice used to generate audio output.": "用于生成音频输出的声音。",
+        "Podcast transcript": "播客文稿",
+        "Audio voice assistant": "语音助手",
+        "Movie scene script": "电影场景剧本",
+        "Stream, Imagen and Veo have moved into the model picker!": "流式传输、Imagen 和 Veo 已移至模型选择器！",
+        "Delete speaker dialog": "删除发言者对话",
+        "Expand or collapse Model settings": "展开或折叠模型设置",
+        "Speaker 1 dialog": "发言者 1 对话",
+        "Speaker 2 dialog": "发言者 2 对话",
+        "Read aloud in a warm, welcoming tone": "用温暖、热情的语气大声朗读",
+
+        // --- 新增：宣传横幅与空状态 (v2.4) ---
+        "Gemini 3 Pro Image Preview is here": "Gemini 3 Pro 图像预览版来了",
+        "Discover how Gemini 3 Pro Image Preview redefines consistency with pixel-perfect text and total character control.": "探索 Gemini 3 Pro 图像预览版如何通过像素级完美的文本和全面的角色控制重新定义一致性。",
+        "Create an app with Gemini 3 Pro Image Preview": "使用 Gemini 3 Pro 图像预览版创建应用",
+
+        "Build apps with AI video": "构建 AI 视频应用",
+        "Animate images to life, generate videos with a prompt, and more with Veo 3.1 in your apps.": "在您的应用中使用 Veo 3.1 让图像栩栩如生、通过提示词生成视频以及更多功能。",
+        "Create with Veo": "使用 Veo 创作",
+
+        "Usage information displayed is for the API and does not reflect AI Studio usage, which is offered free of charge (when no API key is selected). For latency/traffic data & method filtering please visit the": "显示的用量信息仅针对 API，不反映 AI Studio 的使用情况（未选择 API 密钥时免费提供）。如需延迟/流量数据及方法过滤，请访问",
+        "Google Cloud Console": "Google Cloud 控制台",
+
+        "This list only shows API keys for projects imported into Google AI Studio. Import other projects to manage their associated API Keys. You can also create a new API Key above.": "此列表仅显示导入到 Google AI Studio 的项目的 API 密钥。导入其他项目以管理其关联的 API 密钥。您也可以在上方创建新的 API 密钥。",
+
+        // --- 筛选器与导航 ---
+        "All apps": "所有应用",
+        "Games and Visualizations": "游戏与可视化",
+        "Multimodal understanding": "多模态理解",
+        "Tools and MCP": "工具与 MCP",
+        "Code gen": "代码生成",
+        "Code generation": "代码生成",
+        "Developer quickstarts": "开发者快速入门",
+        "Gemini 3 Pro is here": "Gemini 3 Pro 来了",
+
+        // --- Showcase 应用标题 ---
+        "Infinite Heroes": "无限英雄",
+        "Voxel Toy Box": "体素玩具箱",
+        "Gemini Runner": "Gemini 跑酷",
+        "Shader Pilot": "着色器飞行员",
+        "Research Visualization": "研究可视化",
+        "Lumina Festival": "Lumina 音乐节",
+        "Tempo Strike": "节奏打击",
+        "infoGenius": "信息天才",
+        "Image to Voxel Art": "图像转体素艺术",
+        "Sky Metropolis": "天空大都会",
+        "SVG Generator": "SVG 生成器",
+        "Synthwave Space": "合成波空间",
+        "Run Chase": "板球追逐赛 (Run Chase)",
+        "Native Audio Function Call Sandbox": "原生音频函数调用沙盒",
+        "ENHANCE!": "增强！(ENHANCE!)",
+        "Fit Check": "穿搭检查",
+        "Home Canvas": "家居画布",
+        "Gemini Co-Drawing": "Gemini 协同绘画",
+        "Get Started with Nano Banana": "Nano Banana 入门",
+        "Chat with Docs": "文档对话",
+        "Infinite Wiki": "无限维基",
+        "Veo 3 Gallery": "Veo 3 画廊",
+        "Robotics Spatial Understanding": "机器人空间理解",
+        "Gemini OS": "Gemini 操作系统",
+        "Audio Avatars": "音频化身",
+        "Audio Orb": "音频球",
+        "Thinking Space": "思考空间",
+        "MCP Maps 3D": "MCP 3D 地图",
+        "ChatterBots": "聊天机器人",
+        "Dictation App": "听写应用",
+        "Video to Learning App": "视频转学习应用",
+        "Gemini 95": "Gemini 95",
+        "MCP Maps Basic": "MCP 地图基础版",
+        "Maps Planner": "地图规划师",
+        "p5js playground": "p5.js 游乐场",
+        "Flashcard Maker": "抽认卡制作器",
+        "Video Analyzer": "视频分析器",
+        "Spatial Understanding": "空间理解",
+        "Maps Explorer": "地图探索者",
+        "Image to Code": "图像转代码",
+        "Models Page": "模型页面",
+        "Get Started with the Gemini JS SDK": "Gemini JS SDK 入门",
+        "Empty": "空",
+        "Prompt": "提示词",
+        "Chat example": "聊天示例",
+        "Count tokens": "计算 Token",
+        "Embeddings": "嵌入",
+        "Streaming": "流式传输",
+        "Angular Example": "Angular 示例",
+        "OpenAI SDK compatibility": "OpenAI SDK 兼容性",
+        "Visual Computer": "视觉计算机",
+        "One shot arcade": "一次性街机",
+        "Aura Quiet Living": "Aura 静谧生活",
+        "Kinetic Shapes": "动态形状",
+        "Veo Cameos": "Veo 客串",
+        "Ask the Manual": "询问手册",
+        "80s Mall Photo": "80年代商场照片",
+        "Maps Styling": "地图样式",
+        "Chat with Maps Live": "实时地图聊天",
+        "Veo Studio": "Veo 工作室",
+        "VibeCheck": "氛围检查",
+        "4K Wallpapers": "4K 壁纸",
+        "Product Mockup Visualization": "产品样机可视化",
+        "Bring Any Idea to Life": "让任何想法成为现实",
+
+        // --- 应用标签 ---
+        "Design and typography": "设计与排版",
+        "Gemini 3 Pro Image": "Gemini 3 Pro 图像",
+        "World knowledge": "世界知识",
+        "Text rendering": "文本渲染",
+        "Creative composition": "创意合成",
+        "Product generator": "产品生成器",
+        "3D Building": "3D 建模",
+        "3D Games": "3D 游戏",
+        "Tool calling": "工具调用",
+        "AI-powered Game": "AI 驱动的游戏",
+        "Gemini 2.5 Flash Image": "Gemini 2.5 Flash 图像",
+        "Image to video": "图像转视频",
+        "Image editing": "图像编辑",
+        "Image Editing": "图像编辑",
+        "Image Enhancement": "图像增强",
+        "Internet favorites": "网络收藏",
+        "Immersive Games & 3D Worlds": "沉浸式游戏与3D世界",
+        "Infographics": "信息图表",
+        "Studio-quality image generation & editing": "工作室级图像生成与编辑",
+        "Beautiful landing pages": "精美的着陆页",
+        "One Shot": "一镜到底",
+        "Design and Typography": "设计和排版",
+        "Character consistency": "角色一致性",
+        "Character Consistency": "角色一致性",
+        "Object consistency": "物体一致性",
+        "Veo 3.1 Fast": "Veo 3.1 快速版",
+        "Imagen 4.0 Fast": "Imagen 4.0 快速版",
+        "Gemini 3 Flash Image": "Gemini 3 Flash 图像",
+        "Cookbook": "食谱 (Cookbook)",
+        "URL Context": "URL 上下文",
+        "Audio-Video Generation": "音视频生成",
+        "Robotics visual understanding": "机器人视觉理解",
+        "Generative UI": "生成式 UI",
+        "Gemini 2.5 Flash Audio": "Gemini 2.5 Flash 音频",
+        "Native Audio": "原生音频",
+        "Music generation": "音乐生成",
+        "Google Maps API": "Google 地图 API",
+        "Audio transcription": "音频转录",
+        "Text generation": "文本生成",
+        "Visual understanding": "视觉理解",
+        "Native image gen": "原生图像生成",
+        "Physics Simulation": "物理模拟",
+        "File Search": "文件搜索",
+        "Maps Grounding": "地图定位",
+        "API key needed": "需要 API 密钥",
+        "Function Calling": "函数调用",
+        "Multimodal": "多模态",
+        "Get SDK code to generate speech": "获取用于生成语音的 SDK 代码",
+        "Send prompt (⌘ + Enter)": "发送提示（⌘ + Enter）",
+        "Text": "文本",
+        "Copy prompt to clipboard": "将提示复制到剪贴板",
+        "Read aloud in a warm, welcoming tone": "用温暖、亲切的语调朗读",
+        "Run": "运行",
+        "Mode": "模式",
+        "Use a single voice with advanced tone and emotion controls or simulate a two-voice dialogue": "使用具有高级语调和情感控制的单一语音，或模拟双语音对话",
+        "Use Gemini to read a disclaimer, really fast": "使用 Gemini 快速阅读免责声明",
+        "Use Gemini to greet you": "使用 Gemini 向你问候",
+        "Campfire story": "篝火故事",
+
+        // --- 应用描述 ---
+        "Localized and personalized comic book generator": "本地化和个性化的漫画书生成器",
+        "Using Google search grounding you are able to research topics and instantly generate verified visuals tailored to your audience.": "利用 Google 实时搜索，您可以研究主题并立即生成针对受众的经过验证的视觉效果。",
+        "Create, visualize, and rebuild sculptures using the same set of blocks.": "使用同一套积木创建、可视化和重建雕塑。",
+        "Race through a stunning synthwave cosmos at breakneck speeds in this retro-futuristic runner.": "在这个复古未来主义的跑酷游戏中，以极快的速度穿越令人惊叹的合成波宇宙。",
+        "Navigate a complex 3d world with customizable interactions.": "在具有可自定义交互的复杂 3D 世界中导航。",
+        "Research paper reimagined as an elegant, interactive narrative site.": "将研究论文重构为优雅的交互式叙事网站。",
+        "Immersive event landing page with interactive scroll effects.": "具有交互式滚动效果的沉浸式活动着陆页。",
+        "Use your webcam to track hand movements and slash Sparks to the beat.": "使用网络摄像头追踪手部动作，跟随节奏切开节拍。",
+        "Create voxel art scenes inspired by any image.": "创作受任何图像启发的体素艺术场景。",
+        "Manage a virtual metropolis and fulfill tasks provided by Gemini.": "管理虚拟大都会并完成 Gemini 提供的任务。",
+        "Describe an object, icon, or scene, and we'll render it as vector art.": "描述一个物体、图标或场景，我们将把它渲染为矢量艺术。",
+        "A retro-futuristic 3D arcade game where players navigate space and battle enemies.": "一款复古未来主义的 3D 街机游戏，玩家在太空中航行并与敌人战斗。",
+        "A serene e-commerce sample experience with an AI concierge.": "带有 AI 礼宾服务的宁静电商示例体验。",
+        "Physics sandbox for simulating variable gravity and collision dynamics.": "用于模拟可编辑重力和碰撞动力学的物理沙盒。",
+        "An arcade cricket game where Gemini is your personal, live sports commentator.": "一款街机板球游戏，Gemini 是您的个人实时体育解说员。",
+        "An interactive sandbox for Gemini's native audio and function calling.": "Gemini 原生音频和函数调用的交互式沙盒。",
+        "Infinitely zoom into any image with this creative enhancer. See if you can find the easter egg.": "使用此创意增强器无限放大任何图像。看看您能否找到彩蛋。",
+        "Upload a photo of yourself and an outfit to see how it looks on you, powered by Nano Banana.": "上传您自己的照片和一套服装，看看上身效果如何，由 Nano Banana 驱动。",
+        "Create and combine AI media, blending Veo and Imagen on a single canvas.": "创建并组合 AI 媒体，在单个画布上混合 Veo 和 Imagen。",
+        "Create animated GIFs with Nano Banana from your images and prompts.": "使用 Nano Banana 根据您的图像和提示词创建 GIF 动画。",
+        "Transform any Google Maps location into a stunning watercolor painting with Nano Banana.": "使用 Nano Banana 将任何 Google 地图位置转换为令人惊叹的水彩画。",
+        "Your personal time machine. Gemini reimagines you in past decades with character consistency.": "您的个人时间机器。Gemini 以角色一致性重现您在过去几十年的样子。",
+        "Try native image model effects with your webcam.": "使用您的网络摄像头尝试原生图像模型效果。",
+        "Drag, drop, and visualize any product in your personal space.": "拖放并在您的个人空间中可视化任何产品。",
+        "Gemini brings professional, prompt-based photo editing to your fingertips.": "Gemini 为您带来基于提示词的专业照片编辑功能。",
+        "Sketch and prompt, Gemini brings your drawings to life! Co-create collaboratively with AI by sketching and prompting.": "素描加提示词，Gemini 让您的画作栩栩如生！通过素描和提示与 AI 协同创作。",
+        "Discover how to use the Nano Banana models (aka Gemini Image) using the Gemini JS SDK in an interactive way. No need to create an API key or set up your environment.": "以交互方式探索如何使用 Gemini JS SDK 调用 Nano Banana 模型（即 Gemini Image）。无需创建 API 密钥或设置环境。",
+        "See the URL Context tool in action. Chat with Gemini to explore API documentation.": "查看 URL 上下文工具的实际应用。与 Gemini 聊天以探索 API 文档。",
+        "Explore an infinite wiki where every word is a hyperlink to descriptions generated in real-time.": "探索无限维基，其中的每个词都是指向实时生成描述的超链接。",
+        "Explore a gallery of stunning Veo videos and remix their prompts to create your own.": "浏览令人惊叹的 Veo 视频库，并重组其提示词以创建您自己的视频。",
+        "An interactive demo of how Gemini provides robots with critical spatial understanding.": "一个交互式演示，展示 Gemini 如何为机器人提供关键的空间理解能力。",
+        "Simulate a computer with a UI that is generated dynamically from user interactions.": "模拟一台计算机，其 UI 根据用户交互动态生成。",
+        "Unleash Gemini's creative TTS voices and see their characters come to life with Imagen.": "释放 Gemini 创造性的 TTS 声音，并使用 Imagen 让其角色栩栩如生。",
+        "Speak, and the orb responds. An interactive experience powered by the Live Audio API.": "说话，球体就会回应。由 Live Audio API 驱动的交互式体验。",
+        "Steer a continuous stream of music with text prompts": "使用文本提示控制连续的音乐流",
+        "Control real time music with a MIDI controller.": "使用 MIDI 控制器控制实时音乐。",
+        "Search a custom set of images using natural language.": "使用自然语言搜索自定义图像集。",
+        "Build Photoreal 3D maps with natural language using a Gemini-powered Agent and MCP tool.": "使用由 Gemini 驱动的 Agent 和 MCP 工具，通过自然语言构建逼真的 3D 地图。",
+        "Build and banter with your own AI characters using the Live API.": "使用 Live API 构建您自己的 AI 角色并与之闲聊。",
+        "Let Gemini turn your messy audio recordings into clean, perfectly structured notes.": "让 Gemini 将您杂乱的录音变成整洁、结构完美的笔记。",
+        "Instantly convert any YouTube video into an interactive learning app, coded by Gemini.": "立即将任何 YouTube 视频转换为交互式学习应用，由 Gemini 编码。",
+        "Explore a retro OS that brings back nostalgic memories with an AI twist.": "探索一个复古操作系统，带回怀旧记忆，并带有 AI 特色。",
+        "Query the globe and get answers instantly visualized, with Gemini grounded by MCP.": "查询全球信息并立即获得可视化的答案，由 Gemini 通过 MCP 进行定位。",
+        "Let Gemini plan your perfect day trip and instantly visualize it on Google Maps.": "让 Gemini 规划您的完美一日游，并在 Google 地图上即时可视化。",
+        "Generate, edit, and preview interactive p5.js art and games simply by chatting with Gemini.": "只需与 Gemini 聊天，即可生成、编辑和预览交互式 p5.js 艺术和游戏。",
+        "Effortless flashcards on any subject. Just name a topic, and Gemini creates your study deck.": "任何主题的轻松抽认卡。只需说出一个主题，Gemini 就会创建您的学习卡片组。",
+        "Chat with any video to instantly summarize, find objects, or extract text with Gemini.": "与任何视频聊天，使用 Gemini 即时总结、查找对象或提取文本。",
+        "Detect the precise 2D/3D location of objects in any image or live screenshare.": "检测任何图像或实时屏幕共享中对象的精确 2D/3D 位置。",
+        "Ask Gemini to find any place on Earth and explore it instantly on Google Maps.": "让 Gemini 查找地球上的任何地方，并在 Google 地图上立即进行探索。",
+        "Let Gemini transform your images into living, interactive p5.js sketches, coded on the fly.": "让 Gemini 将您的图像转换为生动的交互式 p5.js 草图，实时编码。",
+        "List of models available in the system.": "系统中可用的模型列表。",
+        "Discover how to take your first steps with the Gemini JS SDK in an interactive way. No need to create an API key or set up your environment.": "以交互方式探索如何开始使用 Gemini JS SDK。无需创建 API 密钥或设置环境。",
+        "An empty app": "一个空应用",
+        "Prompt Gemini in this simple example": "在这个简单示例中向 Gemini 提问",
+        "Use Imagen to generate images from a text prompt": "使用 Imagen 从文本提示生成图像",
+        "Create a live agent using bidirectional streaming": "使用双向流式传输创建实时代理",
+        "Example of live agent with AI Action Engine": "使用 AI 动作引擎的实时代理示例",
+        "Set the temperature of a room using function calls": "使用函数调用设置房间温度",
+        "Sample from Veo models to generate videos": "使用 Veo 模型生成视频示例",
+        "Sample from Imagen models to generate images": "使用 Imagen 模型生成图像示例",
+        "Example chat app built with Gemini": "使用 Gemini 构建的聊天应用示例",
+        "Count how many tokens are in a piece of text": "计算一段文本中有多少 Token",
+        "Calculate text embeddings for use in RAG": "计算用于 RAG 的文本嵌入",
+        "Stream responses containing both images and text": "流式传输包含图像和文本的响应",
+        "Let Gemini execute Python code in a sandbox": "让 Gemini 在沙盒中执行 Python 代码",
+        "Provide Gemini with functions it can use to create responses": "为 Gemini 提供可用于创建响应的函数",
+        "Example React app using Gemini": "使用 Gemini 的 React 应用示例",
+        "Example Angular app using Gemini": "使用 Gemini 的 Angular 应用示例",
+        "Access Gemini models with the OpenAI SDK": "使用 OpenAI SDK 访问 Gemini 模型",
+        "Give your Google Map a new personality to match your brand, your mood, or the spirit of your favorite holiday": "赋予您的 Google 地图新的个性，以匹配您的品牌、心情或您最喜欢的节日的精神",
+        "Experience Gemini and Grounding with Google Maps' ability to engage in real-time, voice-driven conversations for trip planning using natural language.": "体验 Gemini 和实时与 Google 地图的能力，使用自然语言进行实时语音驱动的对话以规划行程。",
+        "An AI powered retro gaming experience that uses Nano Banana Pro to transform user photos into playable 8-bit sprites within a fully functional retro style maze game.": "一个 AI 驱动的复古游戏体验，使用 Nano Banana Pro 将用户照片转换为可玩的8位精灵，并在功能齐全的复古风格迷宫游戏中展现。",
+        "Link 2 Ink is a visual intelligence platform that transforms GitHub repositories into interactive architectural blueprints and converts web articles into concise, professional infographics.": "Link 2 Ink 是一个视觉智能平台，将 GitHub 仓库转换为交互式架构蓝图，并将网络文章转换为简洁专业的信息图表。",
+        "A professional design studio that generates photo realistic product mock-ups from uploaded or AI created assets.": "专业设计工作室，从上传或 AI 创建的资源生成照片级真实的产品模型。",
+        "A next-generation AI wallpaper creator using Gemini 3 Pro. Generate stunning 2K and 4K backgrounds with a polished, professional interface.": "使用 Gemini 3 Pro 的下一代 AI 壁纸创作工具。通过精美专业的界面生成令人惊叹的2K 和 4K 背景。",
+        "Use your pen to control a virtual OS. Create AI wallpapers, take actions on folders, and summarize emails, leveraging the multimodal understanding capabilities of Gemini 3 Pro.": "使用笔控制虚拟操作系统。创建 AI 壁纸、对文件夹执行操作、总结电子邮件，利用 Gemini 3 Pro 的多模态理解能力。",
+        "Quickly batch test prompts with visual outputs.": "快速批量测试具有可视化输出的提示词。",
+        "Step into the spotlight. An effortless way to cast yourself or friends in high-quality Veo videos using simple prompts.": "站在聚光灯下。使用简单的提示词将您自己或朋友呈现在高质量的 Veo 视频中，轻松自如。",
+        "Explore the power of FileSearch,the simplest integrated RAG solution. Just upload any text file, from product manuals to dense reports, and ask away. FileSearch takes care of the rest, instantly digging through the content to find the precise answers you need.": "探索 FileSearch 的强大功能，这是最简单的集成 RAG 解决方案。只需上传任何文本文件，从产品手册到密集报告，然后提问即可。FileSearch 会处理剩下的工作，即时挖掘内容以找到您需要的精确答案。",
+        "Strike a pose for a Gemini-powered 80s photo, then animate it instantly with Veo.": "为 Gemini 驱动的 80 年代照片摆个姿势，然后使用 Veo 立即将其制作成动画。",
+
+        // --- FAQ 修复 ---
+        "FAQ": "常见问题",
+        "What is Build in AI Studio?": "什么是 AI Studio 中的构建？",
+        "An environment for building with the Gemini SDK. Go from prompt to working project. Transition to code for deeper refinement and customization. Explore and fork demos showcasing the API's full potential.": "一个使用 Gemini SDK 进行构建的环境。从提示词到工作项目。转换为代码以进行更深入的完善和定制。探索并复刻展示 API 全部潜力的演示。",
+        "How do apps run?": "应用如何运行？",
+        "Apps run in your browser in a sandboxed iframe. There is no server-side component. To run an app that requires additional services such as a backend, consider using": "应用在浏览器的沙盒 iframe 中运行。没有服务器端组件。要运行需要后端等额外服务的应用，请考虑使用",
+        "Is my API key exposed when sharing apps?": "分享应用时会暴露我的 API 密钥吗？",
+        "Don't use a real API key in your app. Use a placeholder value instead.": "不要在应用中使用真实的 API 密钥。请使用占位符值代替。",
+        "is set to a placeholder value that you can use. When another user uses your app, AI Studio proxies the calls to the Gemini API, replacing the placeholder value with": "被设置为您可以使用的占位符值。当其他用户使用您的应用时，AI Studio 会代理对 Gemini API 的调用，将占位符值替换为",
+        "the user's": "用户自己的",
+        "(not your) API key. Do not use a real API key in your app, as the code is visible to anyone who can view your app.": "（而不是您的）API 密钥。切勿在应用中使用真实的 API 密钥，因为任何可以查看您应用的人都能看到代码。",
+        "Who can see my apps?": "谁可以看到我的应用？",
+        "AI Studio uses Google Drive to store apps, and inherits": "AI Studio 使用 Google Drive 存储应用，并继承",
+        "its permissions model": "其权限模型",
+        ". By default your app is private. You can share your app with other users to let them use it. Users you share your app with can see its code and fork it for their own purposes. If you share your app with edit permission, the other users can edit the code of your app.": "。默认情况下，您的应用是私有的。您可以与他人分享应用以供其使用。获得分享的用户可以查看代码并将其复刻以用于自己的目的。如果您授予编辑权限，其他用户则可以编辑您的应用代码。",
+        "Can I run apps outside of AI Studio?": "我可以在 AI Studio 之外运行应用吗？",
+        "You can deploy your app to": "您可以将应用部署到",
+        "from AI Studio, which will give your app a public URL. It's deployed along with a proxy server that will keep your API key private, however the deployed app will use your API key for all users' Gemini API calls. You can also download your app as a zip file. If you replace the placeholder value with a real API key, it should still work. But you": "（从 AI Studio），这将为您的应用提供一个公共 URL。它与代理服务器一起部署，可保护您的 API 密钥私密，但部署的应用将使用您的 API 密钥处理所有用户的 Gemini API 调用。您也可以将应用下载为 Zip 文件。如果您将占位符值替换为真实的 API 密钥，它仍然可以工作。但是您",
+        "should not": "不应该",
+        "deploy your app like this, as any user will be able to see the API key. To make an app run securely outside of AI Studio requires": "这样部署应用，因为任何用户都可以看到 API 密钥。要使应用在 AI Studio 之外安全运行，需要",
+        "moving some logic server-side": "将部分逻辑移至服务器端",
+        ", so the API key is no longer exposed.": "，这样 API 密钥就不再暴露了。",
+        "Can I develop apps locally with my own tools and then share them here?": "我可以用自己的工具在本地开发应用然后在这里分享吗？",
+        "This functionality is not yet available. We're excited to support more use-cases for apps in the future. Please consider": "此功能暂不可用。我们很高兴在未来支持更多应用用例。请考虑",
+        "giving us feedback": "向我们反馈",
+        "if you have anything specific in mind.": "如果您有任何具体的想法。",
+        "Can I use Next.js, Svelte, Vue or Astro?": "我可以使用 Next.js, Svelte, Vue 或 Astro 吗？",
+        "At the moment these libraries are not supported, because of limited support for compiler plug-ins.": "目前不支持这些库，因为对编译器插件的支持有限。",
+        "How can I manage npm packages and their versions?": "如何管理 npm 包及其版本？",
+        "The": "使用",
+        "import map": "import map",
+        "in index.html instead of a package.json file to manage code packages. Our CDN, aistudiocdn.com, automatically finds and serves these packages for you using": "（在 index.html 中）代替 package.json 文件来管理代码包。我们的 CDN (aistudiocdn.com) 会自动查找并通过",
+        "esm.sh": "esm.sh",
+        ", which": "为您提供这些包，该服务",
+        "handles versioning and dependencies": "处理版本控制和依赖关系",
+        ". Note that some older packages not designed as ES modules (ESM) may not work correctly.": "。请注意，某些未设计为 ES 模块 (ESM) 的旧包可能无法正常工作。",
+        "How can I access the microphone, webcam, and other": "如何访问麦克风、网络摄像头和其他",
+        "Navigator APIs": "Navigator API",
+        "?": "？",
+        "To ensure that viewers are aware of an app’s usage of their webcam or other devices, we require an extra acknowledgement before the app can access these": "为了确保用户了解应用对其网络摄像头或其他设备的使用情况，我们需要额外的确认，应用才能访问这些",
+        ". App creators can add these permission requests to their app’s": "。应用创建者可以将这些权限请求添加到应用的",
+        "file. For example,": "文件中。例如，",
+        "Supported values for": "支持的值 (",
+        "are a subset of the standard": ") 是标准",
+        "policy-controlled features": "策略控制特性",
+        ".": "的子集。",
+        "How can I use GitHub with my apps?": "如何在我的应用中使用 GitHub？",
+        "AI Studio's GitHub integration allows you to create a repository for your work and commit your latest changes. We do not currently support pulling remote changes.": "AI Studio 的 GitHub 集成允许您为您的工作创建一个存储库并提交您的最新更改。我们目前不支持拉取远程更改。",
+        "What terms apply to apps in the app gallery in AI Studio?": "AI Studio 应用图库中的应用适用什么条款？",
+        "Gemini API Additional Terms of Service": "Gemini API 附加服务条款",
+        "apply to use of apps featured in the app gallery in AI Studio, unless otherwise noted.": "适用于使用 AI Studio 应用图库中的应用，除非另有说明。",
+
+        // --- 旧有内容保留 ---
+        "OK, got it": "好的，知道了",
+        "Skip to main content": "跳转到主要内容",
+        "Home": "主页",
+        "Saved to Drive": "已保存到云端硬盘",
+        "View all history": "查看所有历史",
+        "Playground": "AI 实验室",
+        "Vibe code": "氛围编程",
+        "Chat with models": "与模型对话",
+        "Monitor usage": "监控用量",
+        "Get started with Gemini": "开始使用 Gemini",
+        "View API keys": "查看 API 密钥",
+        "Explore docs": "浏览文档",
+        "New app": "新建应用",
+        "Thoughts": "思考内容",
+        "Expand to view model thoughts": "展开以查看模型思考",
+        "Analyzing the Input": "分析输入",
+        "Understanding the Structure": "理解结构",
+        "Optimizing the Output": "优化输出",
+        "Deciding on Translations": "决定翻译",
+        "Interpreting the Arrow": "解读箭头",
+        "Refining the Translation": "完善翻译",
+        "Formulating a Response": "制定回应",
+        "Collapse to hide model thoughts": "折叠以隐藏模型思考",
+        "Collapse code snippet": "折叠代码片段",
+        "Expand code snippet": "展开代码片段",
+        "Stop editing": "保存更改",
+        "Rerun": "重试",
+        "Start": "开始",
+        "Failed": "失败",
+        "Cancel generation": "取消生成",
+        "Copy as markdown": "复制Markdown",
+        "Copy as text": "复制文本",
+        "Branch from here": "从这里分支",
+        "More options": "更多选项",
+        "Edit title and description": "编辑标题和描述",
+        "Prompt name": "提示词名称",
+        "See API usage cost on our": "查看我们的 API 使用成本",
+        "Total tokens:": "总令牌数：",
+        "Output tokens:": "输出令牌数：",
+        "Input tokens:": "输入令牌数：",
+        "Token Usage:": "令牌使用：",
+        "Sync system instructions on both sides": "同步双方的系统指令",
+        "Gallery": "创意画廊",
+        "Your apps": "您的应用",
+        "Recently viewed": "最近查看",
+        "Supercharge your apps with AI": "用 AI 为您的应用增效",
+        "Discover and remix app ideas": "发现并重组应用创意",
+        "Browse the app gallery": "浏览应用图库",
+        "I'm feeling lucky": "手气不错",
+        "Build your ideas with Gemini": "用 Gemini 构建您的创意",
+        "Describe your idea": "描述您的想法",
+        "Switch to a paid API key to unlockhigher quota and more features.": "切换到付费 API 密钥以解锁更高配额和更多功能。",
+        "Reset default settings": "重置默认设置",
+        "Google AI models may make mistakes, so double-check outputs.": "Google AI 模型可能会犯错，请务必核对输出。",
+        "Media resolution": "媒体分辨率",
+        "Settings": "设置",
+        "Thinking level": "思考深度",
+        "Structured outputs": "结构化输出",
+        "Top-P": "Top-P采样概率阈值",
+        "Top-K": "Top-K",
+        "Featured": "精选",
+        "Images": "图像",
+        "Compare mode": "对比模式",
+        "Temporary chat": "临时对话",
+        "Already in a new chat": "已在新对话中",
+        "Get API key": "获取 API 密钥",
+        "Collapse prompts history": "折叠提示历史",
+        "New chat": "新对话",
+        "Stream": "流式传输",
+        "Generate Media": "生成媒体",
+        "Build": "构建APP",
+        "History": "历史记录",
+        "Studio": "工作室",
+        "Dashboard": "仪表盘",
+        "Documentation": "文档",
+        "API Keys": "API 密钥",
+        "Usage & Billing": "用量与计费",
+        "Changelog": "更新日志",
+        "Disclaimer": "免责声明",
+        "Expand or collapse navigation menu": "展开/折叠导航菜单",
+        "Open navigation menu": "打开导航菜单",
+        "Show run settings": "显示运行设置",
+        "Open settings menu": "打开设置菜单",
+        "Chat Prompt": "聊天提示词",
+        "System instructions": "Prompt提示词设置",
+        "Get code": "获取代码",
+        "Get SDK code to chat with Gemini": "获取用于与 Gemini 对话的 SDK 代码",
+        "Share prompt": "分享提示词",
+        "You need to create and run a prompt in order to share it": "您需要创建并运行一个提示词才能分享它",
+        "Save prompt": "保存提示词",
+        "No changes to save": "没有更改需要保存",
+        "Clear chat": "清空对话",
+        "User": "用户",
+        "View full image": "查看完整图像",
+        "Edited": "已编辑",
+        "Rerun this turn": "重试此轮对话",
+        "View more actions": "查看更多操作",
+        "Welcome to AI Studio": "欢迎来到 AI Studio",
+        "Type something or tab to choose an example prompt": "输入内容，或按 Tab 选择示例提示词",
+        "Explain the probability of rolling two dice and getting 7": "解释掷两个骰子点数和为 7 的概率",
+        "Insert assets such as images, videos, files, or audio": "插入图片、视频、文件或音频等资源",
+        "Insert assets such as images, videos, folders, files, or audio": "插入图片、视频、文件夹、文件或音频等资源",
+        "Resolution of the generated images": "生成图像的分辨率",
+        "Aspect ratio of the generated images": "生成图像的纵横比",
+        "Append to prompt and run (⌘ + Enter)": "附加到提示并运行（⌘ + Enter）",
+        "My Drive": "我的云端硬盘",
+        "Upload File": "上传文件",
+        "Take a photo": "拍照",
+        "Sample Media": "示例媒体",
+        "Run prompt": "运行提示词",
+        "What's new": "新功能",
+        "URL context tool": "URL 上下文工具",
+        "Fetch information from web links": "从网页链接获取信息",
+        "Native speech generation": "原生语音生成",
+        "Generate high quality text to speech with Gemini": "使用 Gemini 生成高质量文本转语音",
+        "Live audio-to-audio dialog": "实时音频对话",
+        "Try Gemini's natural, real-time dialog with audio and video inputs": "体验 Gemini 支持音视频输入的自然实时对话",
+        "Native image generation": "原生图像生成",
+        "Interleaved text-and-image generation with the new Gemini 2.0 Flash": "使用新的 Gemini 2.0 Flash 进行图文交错生成",
+        "Run settings": "运行设置",
+        "Close run settings panel": "关闭运行设置面板",
+        "Token count": "Token 计数",
+        "Temperature": "温度 (随机性)",
+        "Creativity allowed in the responses": "响应的创造性程度",
+        "Default": "默认",
+        "Thinking": "思考中",
+        "Thinking mode": "思考模式",
+        "Toggle thinking mode": "切换思考模式",
+        "Unable to disable thinking mode for this model.": "无法为此模型禁用思考模式。",
+        "Set thinking budget": "设置思考预算",
+        "Let the model decide how many thinking tokens to use or choose your own value": "让模型决定使用多少思考 Token，或自定义数值",
+        "Toggle thinking budget between auto and manual": "切换自动/手动思考预算",
+        "Tools": "工具",
+        "Structured output": "结构化输出",
+        "Generate structured output": "生成结构化输出，结构化输出就像是给 AI 一张'表格'，要求它必须按照这个表格的格式填写内容，而不是自由发挥。一般是JSON格式",
+        "Generate structured outputs": "生成结构化输出，结构化输出就像是给 AI 一张'表格'，要求它必须按照这个表格的格式填写内容，而不是自由发挥。一般是JSON格式",
+        "Edit": "编辑",
+        "Code execution": "代码执行",
+        "Lets Gemini use code to solve complex tasks": "允许 Gemini 运行代码以解决复杂任务，它不仅能帮你写出代码，还能当场运行这段代码，直接给出结果，不用你自己复制到别的软件里测试",
+        "Function calling": "函数调用",
+        "Grounding with Google Search": "Google 实时搜索",
+        "Use Google Search": "使用Google搜索,给 AI 装上了'互联网眼睛'，让它能在回答问题时自动搜索最新信息，而不只是依赖自己已有的知识",
+        "URL context": "URL 上下文",
+        "Browse the url context": "给AI递了一份'参考文档链接'，让它先去读取这个链接里的公开内容，再基于这些具体信息回答你的问题，不用你手动复制粘贴文档内容",
+        "Advanced settings": "高级设置",
+        "Safety settings": "安全设置",
+        "Adjust harmful response settings": "调整有害内容过滤设置",
+        "Run safety settings": "运行安全设置",
+        "Block most": "屏蔽大多数",
+        "Block some": "屏蔽部分",
+        "Block few": "屏蔽少量",
+        "Block none": "不屏蔽",
+        "Block low, medium and high probability of being harmful": "屏蔽有害概率为低、中、高的内容",
+        "Block medium or high probability of being harmful": "屏蔽有害概率为中或高的内容",
+        "Block high probability of being harmful": "屏蔽有害概率为高的内容",
+        "Always show regardless of probability of being harmful": "无论有害概率如何，始终显示",
+        "Do not run safety filters": "不运行安全过滤器",
+        "Dangerous Content": "危险内容",
+        "Sexually Explicit": "露骨色情",
+        "Hate": "仇恨言论",
+        "Harassment": "骚扰",
+        "Harassment": "骚扰",
+        "View All Libraries": "查看所有库",
+        "Open in Colab": "在 Colab 中打开",
+        "API Docs": "API 文档",
+        "You are responsible for ensuring that safety settings for your intended use case comply with the": "您有责任确保您的预期用例的安全设置符合",
+        "Adjust how likely you are to see responses that could be harmful. Content is blocked based on the probability that it is harmful.": "调整您看到可能有害的回复的可能性。内容将根据其有害的概率被屏蔽。",
+        "Run safety settings": "运行安全设置",
+        "and": "以及",
+        "Off": "关闭",
+        "Reset defaults": "重置默认设置",
+        "Content blocked": "内容被屏蔽",
+        "Show details": "显示详情",
+        "Chat": "聊天",
+        "Chat": "聊天",
+        "Chat": "聊天",
+        "Chat": "聊天",
+        "Chat": "聊天",
+        "Chat": "聊天",
+        "Add stop sequence": "添加停止序列",
+        "Truncate response including and after string": "特定字符串设为 AI 停止暗号，生成时出现即停（如产品介绍设 “核心功能”，写到即止避冗余）。",
+        "Add stop...": "添加停止符...",
+        "Output length": "输出长度",
+        "Maximum number of tokens in response": "响应的最大 Token 数",
+        "Top P": "Top-P采样概率阈值",
+        "Probability threshold for top-p sampling": "Top-P 为概率分数线，AI 按词概率排序累加至设定值，从过线词中随机选生成文本。",
+        "Prompt gallery": "提示词库",
+        "Chat": "聊天",
+        "Light theme": "浅色主题",
+        "Dark theme": "深色主题",
+        "System theme": "跟随系统",
+        "Select or upload a file on Google Drive to include in your prompt": "选择或上传 Google Drive 文件以包含在提示词中",
+        "Upload a file to Google Drive to include in your prompt": "上传文件到 Google Drive 以包含在提示词中",
+        "Learn more": "了解更多",
+        "My library": "我的库",
+        "Create new": "新建",
+        "Folder": "文件夹",
+        "File": "文件",
+        "Drive": "网盘",
+        "Upload": "上传",
+        "Cancel": "取消",
+        "Add": "添加",
+        "Remove": "移除",
+        "Stop": "停止",
+        "Regenerate": "重新生成",
+        "Copy": "复制",
+        "Copied": "已复制",
+        "Good response": "回答得好",
+        "Bad response": "回答得不好",
+        "Modify response": "修改响应",
+        "Shorter": "更短",
+        "Longer": "更长",
+        "Simpler": "更简单",
+        "More casual": "更随意",
+        "More professional": "更专业",
+        "Export to Docs": "导出到文档",
+        "Draft in Gmail": "在 Gmail 中起草",
+        "Search related topics": "搜索相关主题",
+        "Google it": "Google 一下",
+        "Show code": "显示代码",
+        "Hide code": "隐藏代码",
+        "Expand": "展开",
+        "Collapse": "折叠",
+        "Untitled prompt": "未命名提示词",
+        "Untitled chat": "未命名对话",
+        "Rename": "重命名",
+        "Delete": "删除",
+        "Delete chat?": "删除对话？",
+        "This action cannot be undone.": "此操作无法撤销。",
+        "Confirm": "确认",
+        "Select model": "选择模型",
+        "Model": "模型",
+        "Tuned models": "微调模型",
+        "Base models": "基础模型",
+        "Easy use settings": "易用性设置",
+        "Try it": "试一试",
+        "The fastest way from prompt to production with Gemini": "使用 Gemini 从提示词到产品的最快途径",
+        "Vibe code GenAI apps": "Vibe code 生成式 AI 应用",
+        "Monitor usage and projects": "监控用量与项目",
+        "Try Gemini 3": "试用 Gemini 3",
+        "Our most intelligent model to date.": "我们迄今为止最智能的模型。",
+        "Try Nano Banana Pro": "试用 Nano Banana Pro",
+        "State-of-the-art image generation and editing": "最先进的图像生成与编辑",
+        "Veo 3.1": "Veo 3.1",
+        "Our best video generation model, now with sound effects.": "我们最好的视频生成模型，现已支持音效。",
+        "Text to speech with Gemini": "使用 Gemini 进行文本转语音",
+        "Use Gemini to generate high quality text to speech": "使用 Gemini 生成高质量文本转语音",
+        "Nano banana powered app": "Nano Banana 驱动的应用",
+        "Add powerful photo editing to your app.": "为您的应用添加强大的照片编辑功能。",
+        "Add powerful photo editing to your app. Allow users to add objects, remove backgrounds, or change a photo's style just by typing.": "为您的应用添加强大的照片编辑功能。允许用户只需输入文字即可添加对象、移除背景或更改照片样式。",
+        "Allow users to add objects, remove backgrounds, or change a photo's style just by typing.": "允许用户仅通过打字即可添加对象、移除背景或更改照片风格。",
+        "Create conversational voice apps": "创建对话式语音应用",
+        "Use the Gemini Live API to give your app a voice and make your own conversational experiences.": "使用 Gemini Live API 为您的应用赋予声音，打造您自己的对话体验。",
+        "Animate images with Veo": "使用 Veo 让图像动起来",
+        "Bring images to life with Veo 3. Let users upload a product photo and turn it into a dynamic video ad, or animate a character's portrait.": "使用 Veo 3 让图像栩栩如生。让用户上传产品照片并将其转化为动态视频广告，或让角色肖像动起来。",
+        "Use Google Search data": "使用 Google 搜索数据",
+        "Connect your app to real-time Google Search results. Build an agent that can discuss current events, cite recent news, or fact-check information.": "将您的应用连接到实时 Google 搜索结果。构建一个可以讨论时事、引用最新新闻或核查信息的智能体。",
+        "Upload an image of a board game, floor layout, or anything you can think of to turn it into an interactive experience.": "上传棋盘游戏、楼层布局或您能想到的任何图像，将其转化为交互式体验。",
+        "Created by you": "由您创建",
+        "Created by others": "由他人创建",
+        "Explore the gallery": "浏览图库",
+        "Create a new app": "创建新应用",
+        "Search for an app": "搜索应用",
+        "A collection of our favorite examples from incredible 3D games, multimodal apps, landing pages, and more for you to remix.": "精选了我们最喜爱的 3D 游戏、多模态应用、着陆页等示例，供您重组和创作。",
+        "Create your first app": "创建您的第一个应用",
+        "API quickstart": "API 快速入门",
+        "Create API key": "创建 API 密钥",
+        "Group by": "分组方式",
+        "Project": "项目",
+        "Filter by": "筛选方式",
+        "All projects": "所有项目",
+        "Key": "密钥",
+        "Created on": "创建时间",
+        "Quota tier": "配额层级",
+        "Set up billing": "设置账单",
+        "Free tier": "免费层级",
+        "Can't find your API keys here?": "在这里找不到您的 API 密钥？",
+        "This list only shows API keys for projects imported into Google AI Studio.": "此列表仅显示导入到 Google AI Studio 的项目的 API 密钥。",
+        "Import other projects to manage their associated API Keys.": "导入其他项目以管理其关联的 API 密钥。",
+        "Import projects": "导入项目",
+        "Search your projects": "搜索您的项目",
+        "Google AI Studio does not show all your Cloud Projects. To import them, search by name or project ID.": "Google AI Studio 不会显示您所有的 Cloud 项目。要导入它们，请按名称或项目 ID 搜索。",
+        "Search for a project": "搜索项目",
+        "Projects you may want to import": "您可能想要导入的项目",
+        "Select all": "全选",
+        "Imported": "已导入",
+        "Create a new key": "创建新密钥",
+        "Name your key": "命名您的密钥",
+        "Choose an imported project": "选择一个已导入的项目",
+        "Select a Cloud Project": "选择一个 Cloud 项目",
+        "Create key": "创建密钥",
+        "Understanding projects": "了解项目",
+        "Create a new project": "创建新项目",
+        "Keys": "密钥",
+        "2 keys": "2 个密钥",
+        "Can't find your projects here?": "在这里找不到您的项目？",
+        "Only imported projects appear here. If you don't see your projects, you can import projects from Google Cloud on this page.": "只有已导入的项目才会显示在这里。如果您没有看到您的项目，可以在此页面从 Google Cloud 导入项目。",
+        "Gemini API Usage": "Gemini API 用量",
+        "Usage": "用量",
+        "Rate Limit": "速率限制",
+        "Billing": "计费",
+        "Time Range": "时间范围",
+        "Last Hour": "最后一小时",
+        "1 Day": "1 天",
+        "7 Days": "7 天",
+        "28 Days": "28 天",
+        "90 Days": "90 天",
+        "Overview": "概览",
+        "Total API Requests per day": "每日总API请求数",
+        "Total API Errors per day": "每日总API错误数",
+        "Generate content": "生成内容",
+        "Input Tokens per day": "每日输入Token数",
+        "Requests per day": "每日请求数",
+        "Generate media": "生成媒体",
+        "Imagen Requests per day": "每日Imagen请求数",
+        "Veo Requests per day": "每日Veo请求数",
+        "No Data Available": "暂无数据",
+        "Usage information displayed is for the API and does not reflect AI Studio usage, which is offered free of charge (when no API key is selected). For latency/traffic data & method filtering please visit the Google Cloud Console": "显示的用量信息仅针对 API，不反映 AI Studio 的使用情况（未选择 API 密钥时免费提供）。如需延迟/流量数据及方法过滤，请访问 Google Cloud 控制台",
+        "Gemini API Rate Limit": "Gemini API 速率限制",
+        "Rate limits by model": "按模型划分的速率限制",
+        "Peak usage per model compared to its limit over the last 28 days": "过去 28 天内每个模型的峰值使用量与其限制的对比",
+        "Category": "类别",
+        "RPM": "RPM (每分钟请求)",
+        "TPM": "TPM (每分钟Token)",
+        "RPD": "RPD (每天请求)",
+        "Run prompt (⌘ + Enter)": "运行提示 (⌘ + Enter)",
+        "Ground responses with Google Search.": "使用 Google 搜索作为回复依据。",
+        "Enable function calling to get automatically generated responses for your function calls.": "启用函数调用，以获取自动生成的函数调用回复。",
+        "Lets you define functions that Gemini can call": "允许您定义 Gemini 可调用的函数",
+        "Enable a sliding context window to automatically shorten chat history by removing the oldest turns.": "启用滑动上下文窗口，通过移除最早的对话轮次来自动缩短聊天记录。",
+        "This feature enables the model to choose to not respond to audio that’s not relevant to the ongoing conversation": "此功能使模型能够选择不回应对当前对话无关的音频",
+        "Let Gemini adapt its response style to the input expression and tone": "让 Gemini 根据输入的表达和语气调整其回复风格",
+        "Enable or disable thinking for responses": "启用或禁用回复的思考过程",
+        "Lets Gemini send audio and video when speech is not detected": "允许 Gemini 在未检测到语音时发送音频和视频",
+        "Select media resolution": "选择媒体分辨率",
+        "Select the model voice": "选择模型语音",
+        "Model used to generate response": "用于生成回复的模型",
+        "Select or Upload a file on Google Drive to send to the model": "选择或上传 Google 云端硬盘上的文件以发送给模型",
+        "Send a file to the model": "向模型发送文件",
+        "Stream is live": "实时对话中",
+        "Start new stream": "开始新实时对话流",
+        "Disconnect": "断开连接",
+        "Start stream to record": "开始实时流进行录制",
+        "Get SDK code to interact with Gemini Live": "获取用于与 Gemini Live 交互的 SDK 代码",
+        "Connecting to server...": "正在连接到服务器...",
+        "Something went wrong.": "出了点问题",
+        "Resume stream": "恢复实时流",
+        "Charts": "图表",
+        "Text-out models": "文本输出模型",
+        "Multi-modal generative models": "多模态生成模型",
+        "Other models": "其他模型",
+        "Unlimited": "无限",
+        "N/A": "不适用",
+        "Rate limits breakdown": "速率限制细分",
+        "Peak requests per minute (RPM)": "每分钟峰值请求数 (RPM)",
+        "Peak input tokens per minute (TPM)": "每分钟峰值输入 Token 数 (TPM)",
+        "Peak requests per day (RPD)": "每天峰值请求数 (RPD)",
+        "Limit": "限制",
+        "Deleting prompt...": "正在删除提示...",
+        "Import project": "导入项目",
+        "Create project": "创建项目",
+        "Generative Language API Key": "生成式语言 API 密钥",
+        "Gemini API Billing": "Gemini API 计费",
+        "There is no billing currently set up for this project": "此项目目前未设置计费",
+        "Gemini API Logs and Datasets": "Gemini API 日志和数据集",
+        "Dataset": "数据集",
+        "All datasets": "所有数据集",
+        "All models": "所有模型",
+        "All time": "所有时间",
+        "Status": "状态",
+        "Rating": "评分",
+        "Set up billing to enable Gemini API logging": "设置计费以启用 Gemini API 日志记录",
+        "You can then view your Gemini API history and create datasets.": "然后您可以查看您的 Gemini API 历史记录并创建数据集。",
+        "Toggle navigation menu": "切换导航菜单",
+        "New": "新",
+        "Gemini 3: Our most intelligent model to date.": "Gemini 3: 我们迄今为止最智能的模型。",
+        "Back to start": "返回开始",
+        "Open editor settings": "打开编辑器设置",
+        "Code assistant": "代码助手",
+        "Collapse all folders": "折叠所有文件夹",
+        "Add items to file explorer": "向文件资源管理器添加项目",
+        "Search in files": "在文件中搜索",
+        "File explorer": "文件管理器",
+        "Preview": "预览",
+        "Show preview": "显示预览",
+        "Fullscreen": "全屏",
+        "Device": "设备",
+        "Add new features or easily modify this app with a prompt or the suggestions below": "使用提示词或下方的建议添加新功能或轻松修改此应用(由于建议内容随机性较大不便汉化，可使用微信截图进行翻译)",
+        "Your conversations won’t be saved. However, any files you upload will be saved to your Google Drive. Logging policy still apply even in Temporary chat. See": "你的对话不会被保存。不过，任何你上传的文件都会保存到你的 Google 云端硬盘。即使在临时聊天中，日志记录政策仍然适用。查看",
+        "Your conversation won’t be saved": "您的对话不会被保存",
+        "Show conversation with markdown formatting": "以 Markdown 格式显示对话",
+        "AI Features": "AI 功能",
+        "Modify Camera Controls": "修改相机控制",
+        "Add Ship Customization": "添加飞船自定义",
+        "Enhance Ship with AI": "使用AI增强飞船",
+        "Improve Audio Engine": "改进音频引擎",
+        "Add Collision Feedback": "添加碰撞反馈",
+        "Add sound effects": "添加音效",
+        "Animate panels": "为面板添加动画",
+        "Add villain generator": "添加反派生成器",
+        "Improve transitions": "改善过渡",
+        "Add narrator voice": "添加旁白声音",
+        "Add voice narration": "添加语音旁白",
+        "Add translation option": "添加翻译选项",
+        "Add video quality options": "添加视频质量选项",
+        "Add animation preview": "添加动画预览",
+        "Add audio generation": "添加音频生成",
+        "Improve error handling": "改进错误处理",
+        "Add video editing tools": "添加视频编辑工具",
+        "Paid API Key Required for Veo": "Veo 需要付费 API 密钥",
+        "Veo is a paid-only video generation model. To use this feature, please select an API key associated with a paid Google Cloud project that has billing enabled.": "Veo 是仅限付费的视频生成模型。要使用此功能，请选择与已启用计费的 Google Cloud 项目关联的 API 密钥。",
+        "For more information, see the how to enable billing and Veo pricing.": "有关更多信息，请参阅如何启用计费和 Veo 定价。",
+        "Continue to Select a Paid API Key": "继续选择付费 API 密钥",
+        "Text to Video": "文本转视频",
+        "Describe the video you want to create...": "描述您想要创建的视频...",
+        "Make changes, add new features, ask for anything": "进行更改、添加新功能或询问任何内容",
+        "Select model for the code assistant:": "选择代码助手模型：",
+        "Default (Gemini 3 Pro Preview)": "默认 (Gemini 3 Pro Preview)",
+        "The model will be used by the code assistant to generate code.": "该模型将由代码助手用于生成代码。",
+        "Add custom instructions for your project to control style, models used, add specific knowledge, and more.": "为您的项目添加自定义指令以控制风格、使用的模型、添加特定知识等。",
+        "System instructions template": "Prompt提示词模板",
+        "React (TypeScript)": "React (TypeScript)",
+        "The configuration is for working with React + TypeScript application. Assumes a basic structure with index.html and index.tsx. Code Assistant follows strict guidelines for using the Gemini API.": "此配置用于 React + TypeScript 应用。假设具有 index.html 和 index.tsx 的基本结构。代码助手遵循使用 Gemini API 的严格准则。",
+        "Microphone selector": "麦克风选择器",
+        "Select the audio source for the speech-to-text feature.": "选择语音转文本功能的音频源。",
+        "Rename app": "重命名应用",
+        "You can change the display name and description of your app.": "您可以更改应用的显示名称和描述。",
+        "Name": "名称",
+        "Description": "描述",
+        "Describe any scene and get a stunning video in seconds. An effortless video generator powered by Veo.": "描述任何场景，几秒钟内即可获得令人惊叹的视频。由 Veo 驱动的轻松视频生成器。",
+        "Save": "保存",
+        "Upload Image": "上传图片",
+        "Record Audio": "录制音频",
+        "Camera": "相机",
+        "YouTube Video": "YouTube 视频",
+        "No recording devices available.": "没有可用的录音设备",
+        "Record new audio": "录制新音频",
+        "Audio recording will be added to your prompt": "音频录音将被添加到你的提示中",
+        "Start recording": "开始录音",
+        "Stop recording": "停止录音",
+        "Video settings": "视频设置",
+        "Start Time (e.g., 1m10s)": "开始时间（例如：1m10s）",
+        "End Time (e.g., 2m30s)": "结束时间 (例如，2m30s)",
+        "FPS (frames per second)": "FPS (每秒帧数)",
+        "YouTube URL": "YouTube 网址",
+        "Upload text file": "上传文本文件",
+        "Upload PDF": "上传 PDF",
+        "Rename key": "重命名 Key",
+        "Delete key": "删除 Key",
+        "All statuses": "所有状态",
+        "Bad": "坏",
+        "Good": "好",
+        "All ratings": "所有评分",
+        "Last hour": "上一小时",
+        "Search grounding": "实时搜索",
+        "Fail": "失败",
+        "Success": "成功",
+        "Usage is only reflective of GenerateContent requests. Other request types are not yet supported.": "使用情况仅反映生成内容的请求。其他请求类型尚不支持。",
+        "Usage is reflective of all request types to the Gemini API.": "使用情况反映了对 Gemini API 的所有请求类型",
+        "All Models": "全部模型",
+        "Usage is only reflective of Imagen and Veo requests. Other request types are not yet supported.": "使用情况仅反映 Imagen 和 Veo 请求。其他请求类型尚不支持。",
+        "503 ServiceUnavailable": "503 服务不可用",
+        "Total API Requests": "API 请求总数",
+        "Logs containing videos or PDFs are currently not supported.": "当前不支持包含视频或PDF的日志",
+        "Switch account": "切换账户",
+        "Sign out": "退出",
+        "Privacy Policy": "隐私政策",
+        "Terms of Service": "服务条款",
+        "Videos": "视频",
+        "Animal": "动物",
+        "Architecture": "建筑",
+        "Nature": "自然",
+        "Flower": "鲜花",
+        "Food": "食物",
+        "Objects": "对象",
+        "Transportation": "交通工具",
+        "Space": "空间",
+        "GenMedia": "通用媒体",
+        "Raw Mode": "原始模式",
+        "Close chat": "关闭聊天",
+        "Add file": "添加文件",
+        "Add files": "添加文件",
+        "Upload Files": "上传文件",
+        "Instructions": "指令",
+        "Save changes": "保存更改",
+        "Reset to default": "重置为默认",
+        "Upload an instructions file": "上传说明文件",
+        "Write my own instructions": "编写我自己的指令",
+        "Powered by Veo": "由Veo驱动",
+        "Nano banana image generation": "Nano banana 图像生成",
+        "Music generation with Lyria": "使用 Lyria 进行音乐生成",
+        "Conversational agents": "会话代理",
+        "Control image-output aspect ratios with Nano Banana Pro": "使用 Nano Banana Pro 控制图像输出纵横比",
+        "Show conversation without markdown formatting": "显示对话，不使用 Markdown 格式",
+        "Select an image or video to add to the prompt": "选择一张图片或视频以添加到提示中",
+        "Add to prompt": "添加到提示中",
+        "Use Google Maps data": "使用 Google 地图数据",
+        "Connect your app to real-time Google Maps data. Build an agent that can pull information about places, routes, or directions.": "将您的应用连接到实时 Google 地图数据。构建一个可以获取地点、路线或方向信息的智能体。",
+        "Generate images with Nano Banana Pro": "使用 Nano Banana Pro 生成图像",
+        "Generate high-quality images with Nano Banana Pro": "使用 Nano Banana Pro 生成高质量图像",
+        "Generate images with Nano Banana...": "使用 Nano Banana 生成图像...",
+        "Generate high-quality images from a text prompt. Create blog post heroes, concept art, or unique assets in your application.": "通过文本提示生成高质量图像。为您的应用创建博客文章配图、概念艺术或独特资产。",
+        "Gemini intelligence in your app": "应用中的 Gemini 智能",
+        "Embed Gemini in your app to complete all sorts of tasks - analyze content, make edits, and more": "将 Gemini 嵌入您的应用以完成各种任务 - 分析内容、进行编辑等",
+        "AI powered chatbot": "AI 驱动的聊天机器人",
+        "Add a context-aware chatbot to your app. Give your users a support agent that remembers the conversation, perfect for multi-step bookings or troubleshooting.": "向您的应用添加上下文感知聊天机器人。为您的用户提供一个记住对话的支持代理，非常适合多步骤预订或故障排除。",
+        "Prompt based video generation": "基于提示的视频生成",
+        "Add video generation to your creative app. Let users turn their blog posts, scripts, or product descriptions into short video clips.": "向您的创意应用添加视频生成功能。让用户将博客文章、脚本或产品描述转换为短视频片段。",
+        "Control image aspect ratios": "控制图像纵横比",
+        "Control the exact shape of your generated images. Build an app that creates perfect-fit images for vertical phone wallpapers or horizontal web banners.": "控制生成图像的确切形状。构建一个为垂直手机壁纸或水平网页横幅创建完美适配图像的应用。",
+        "Analyze images": "分析图像",
+        "Enable your app to see and understand images. Allow users to upload a photo of a receipt, a menu, or a chart to get instant data extraction, translations, or summaries.": "使您的应用能够查看和理解图像。允许用户上传收据、菜单或图表的照片，以获得即时数据提取、翻译或摘要。",
+        "Fast AI responses": "快速 AI 响应",
+        "Add lightning-fast, real-time responses to your app using 2.5 Flash-Lite. Perfect for instant auto-completes, or conversational agents that feel alive.": "使用 2.5 Flash-Lite 向您的应用添加闪电般的实时响应。非常适合即时自动完成，或感觉栩栩如生的对话代理。",
+        "Video understanding": "视频理解",
+        "Help users find the key moments in long videos. Add a feature to analyze video content to instantly generate summaries, flashcards, or marketing highlights.": "帮助用户在长视频中找到关键时刻。添加分析视频内容的功能，以即时生成摘要、抽认卡或营销亮点。",
+        "Transcribe audio": "转录音频",
+        "Add a feature to provide live, real-time transcription of any audio feed for your users.": "添加一项功能，为您的用户提供任何音频源的实时转录。",
+        "Think more when needed": "在需要时进行更多思考",
+        "Give your app's AI time to think. Enable 'Thinking Mode' to handle your users' most complex queries.": "给您的应用 AI 思考的时间。启用“思考模式”来处理用户最复杂的查询。",
+        "Generate speech": "生成语音",
+        "Give your app a voice. Add text-to-speech to read articles aloud, provide audio navigation, or create voice-based assistants for your users.": "给您的应用一个声音。添加文本转语音以朗读文章、提供音频导航或为您的用户创建基于语音的助手。",
+        "Gemini 3 Pro Preview": "Gemini 3 Pro 预览版",
+        "Nano Banana Pro": "Nano Banana Pro",
+        "Gemini Flash Latest": "Gemini Flash 最新版",
+        "Our hybrid reasoning model, with a 1M token context window and thinking budgets.": "我们的混合推理模型，具有 100 万 Token 上下文窗口和思考预算。",
+        "Optional tone and style instructions for the model": "模型的可选语气和风格说明",
+        "No API Key": "无 API 密钥",
+        "gemini-3-pro-preview": "gemini-3-pro-preview",
+        "State-of-the-art image generation and editing model.": "最先进的图像生成和编辑模型",
+        "API pricing per 1M tokens.": "每百万令牌的 API 定价",
+        "API pricing per 1M tokens. Usage in AI Studio UI is free of charge when no API key is selected": "每 100 万个令牌的 API 定价。在未选择 API 密钥时，AI Studio 界面中的使用是免费的",
+        "Developer docs": "开发者文档",
+        "Image output is priced at $30 per 1,000,000 tokens. Output images up to 1024x1024px consume 1290 tokens and are equivalent to $0.039 per image. Usage in AI Studio UI is free of charge when no API key is selected": "图像输出的价格为每 1,000,000 个令牌 30 美元。输出的图像最高为 1024x1024 像素，将消耗 1290 个令牌，相当于每张图像 0.039 美元。在未选择 API 密钥的情况下，AI Studio UI 中的使用是免费的。",
+        "Image output is priced at $120 per 1,000,000 tokens. Output images up to 1024x1024px consume 1120 tokens and are equivalent to $0.134 per image.": "图像输出的价格为每 1,000,000 个 tokens 收费 120 美元。输出分辨率最高为 1024x1024 像素的图像会消耗 1120 个 tokens，相当于每张图像 0.134 美元。",
+        "Our most intelligent model with SOTA reasoning and multimodal understanding, and powerful agentic and vibe coding capabilities": "我们最智能的模型，具备最先进的推理和多模态理解能力，以及强大的代理和氛围编码能力",
+        "Switch to a paid API key to unlock higher quota and more features.": "切换到付费 API 密钥以解锁更高配额和更多功能。",
+        "Optional tone and style instructions for the model": "模型的可选语气和风格指令",
+        "Delete system instruction": "删除Prompt提示词",
+        "Create new instruction": "创建新指令",
+        "Instructions are saved in local storage.": "指令保存在本地存储中。",
+        "Model selection": "模型选择",
+        "Search for a model": "搜索模型",
+        "Gemini 3 Pro Image Preview": "Gemini 3 Pro 图像预览",
+        "Gemini Flash-Lite Latest": "Gemini Flash-Lite 最新版",
+        "Our smallest and most cost effective model, built for at scale usage.": "我们最小且最具成本效益的模型，专为大规模使用而构建。",
+        "Imagen 4": "Imagen 4",
+        "Our latest image generation model, with significantly better text rendering and better overall image quality.": "我们最新的图像生成模型，具有显著更好的文本渲染和更好的整体图像质量。",
+        "Imagen 4 Ultra": "Imagen 4 Ultra",
+        "Choose a paid API key": "选择付费 API 密钥",
+        "You have no Paid Project. Please view the Projects Page to choose a Project and Upgrade.": "您没有付费项目。请查看项目页面以选择项目并升级。",
+        "Go to Projects Page": "前往项目页面",
+        "Close?": "关闭？",
+        "Closing the chat will lose the data. Do you want to continue?": "关闭聊天将丢失数据。您确定要继续吗？",
+        "Continue": "继续",
+        "Run settings - Right": "运行设置 - 右侧",
+        "Sync": "同步",
+        "Knowledge cut off: Unknown": "知识截止日期: 未知",
+        "Knowledge cut off: Jan 2025": "知识截止日期: 2025 年 1 月",
+        "Link a paid API key to access Nano Banana Pro": "关联付费 API 密钥以访问 Nano Banana Pro",
+        "Create a fashion product collage on a brown corkboard based on this outfit.": "基于这套服装在棕色软木板上创建一个时尚产品拼贴画。",
+        "Create an orthographic blueprint that describes this building in plan.": "创建一个描述该建筑平面图的正交蓝图。",
+        "Create an illustrated explainer, detailing the physics of the fluid dynamics.": "创建一个插图解释器，详细说明流体动力学的物理原理。",
+        "Nano Banana Pro is only available for paid tier users. Link a paid API key to access higher rate limits, advanced features, and more.": "Nano Banana Pro 仅供付费层级用户使用。关联付费 API 密钥以访问更高的速率限制、高级功能等。",
+        "Link API key": "关联 API 密钥",
+        "Show me different logos and brand swag ideas for my startup called Avurna": "为著名 Avurna 的初创公司展示不同的徽标和品牌周边创意",
+        "Plot sin(x) from 0 to 2*pi. Generate the resulting graph image.": "绘制 sin(x) 从 0 到 2*pi 的图像。生成所得的图形图像",
+        "Design a custom birthday card.": "设计定制生日贺卡",
+        "Link a paid API key here.": "在此链接付费的 API 密钥",
+        "Ready to chat!": "准备好聊天了！",
+        "Selected Nano Banana Pro 🍌": "已选择 Nano Banana Pro 🍌",
+        "Selected Nano Banana 🍌": "已选择 Nano Banana 🍌",
+        "Selected Gemini 3 Pro Preview": "已选择 Gemini 3 Pro Preview",
+        "Selected Gemini 2.5 Pro": "已选择 Gemini 2.5 Pro",
+        "Selected Gemini Flash Latest": "已选择 Gemini Flash Latest",
+        "Selected Gemini Flash-Lite Latest": "已选择 Gemini Flash-Lite Latest",
+        "Aspect ratio": "纵横比",
+        "Resolution": "分辨率",
+        "Gemini 2.5 Pro Preview TTS": "Gemini 2.5 Pro 预览版 TTS",
+        "Our 2.5 Pro text-to-speech audio model optimized for powerful, low-latency speech generation for more natural outputs and easier to steer prompts.": "我们的 2.5 Pro 文本转语音音频模型，针对强大、低延迟的语音生成进行了优化，可提供更自然的输出并更易于控制提示。",
+        "Gemini 2.5 Flash Preview TTS": "Gemini 2.5 Flash 预览版 TTS",
+        "Our 2.5 Flash text-to-speech audio model optimized for price-performant, low-latency, controllable speech generation.": "我们的 2.5 Flash 文本转语音音频模型，针对性价比高、低延迟、可控的语音生成进行了优化。",
+        "Gemini 2.5 Flash Native Audio Preview 09-2025": "Gemini 2.5 Flash 原生音频预览版 09-2025",
+        "Our native audio models optimized for higher quality audio outputs with better pacing, voice naturalness, verbosity, and mood.": "我们的原生音频模型，针对更高质量的音频输出进行了优化，具有更好的节奏、语音自然度、冗长程度和情绪。",
+        "Talk to Gemini live": "与 Gemini Live 对话",
+        "Talk": "说话",
+        "Share Screen": "共享屏幕",
+        "Start typing a prompt": "开始输入提示词",
+        "Voice": "声音",
+        "Turn coverage": "轮次覆盖",
+        "Affective dialog": "情感对话",
+        "Proactive audio": "主动音频",
+        "Session Context": "会话上下文",
+        "Automatic Function Response": "自动函数响应",
+        "Stream is live": "实时流进行中",
+        "Clear the chat to start a new stream": "清空聊天以开始新流",
+        "Start new stream": "开始新流",
+        "Veo 2": "Veo 2",
+        "Our state-of-the-art video generation model, available to developers on the paid tier of the Gemini API.": "我们最先进的视频生成模型，可供 Gemini API 付费层级的开发者使用。",
+        "Gemini 2.0 Flash": "Gemini 2.0 Flash",
+        "Our most balanced multimodal model with great performance across all tasks.": "我们最均衡的多模态模型，在所有任务中均表现出色。",
+        "Knowledge cut off: Aug 2024": "知识截止日期: 2024 年 8 月",
+        "Gemini 2.5 Pro": "Gemini 2.5 Pro",
+        "Our advanced reasoning model, which excels at coding and complex reasoning tasks": "我们的高级推理模型，在编码和复杂推理任务中表现出色",
+        "Gemini Robotics-ER 1.5 Preview": "Gemini Robotics-ER 1.5 预览版",
+        "Gemini Robotics-ER, short for Gemini Robotics-Embodied Reasoning, is a thinking model that enhances robots' abilities to understand and interact with the physical world.": "Gemini Robotics-ER，即 Gemini 机器人具身推理的缩写，是一个思考模型，可增强机器人理解物理世界并与之交互的能力。",
+        "Set the thinking level": "设置思考级别",
+        "Low": "低",
+        "Medium": "中",
+        "Higher resolutions may provide better understanding but use more tokens.": "媒体清晰度档次：控制 AI 处理图或视频的清晰度，高 清显细节，低 快缺精细，默认 兼顾速度与细节。",
+        "Truncate response including partial string": "截断响应（包括部分字符串）",
+        "Expand prompts history": "展开提示历史",
+        "Generate Python code for a simple calculator app": "为简单计算器应用生成 Python 代码",
+        "Design a REST API for a social media platform.": "为社交媒体平台设计 REST API。",
+        "Generate a scavenger hunt for street food around the city of Seoul, Korea": "生成首尔街头美食寻宝游戏",
+        "Generate a Docker script to create a simple linux machine.": "生成 Docker 脚本来创建简单的 Linux 机器。",
+        "Teach me a lesson on quadratic equations. Assume I know absolutely nothing about it": "教我二次方程。假设我对此一无所知",
+        "Generate a high school revision guide on quantum computing": "生成量子计算的高中复习指南",
+        "For Gemini 3, best results at default 1.0. Lower values may impact reasoning.": "Gemini 3 默认温度 1.0 最优（低则影响推理），温度控 AI 创造力：低温谨慎准确缺创意，高温大胆有创意但可能不准。",
+        "Angular (TypeScript)": "Angular (TypeScript)",
+        "The configuration is for working with Angular + TypeScript application. The Code Assistant is instructed to work with Angular components, services, and modules. It follows strict guidelines for using the Gemini API.": "此配置用于 Angular + TypeScript 应用。代码助手被指示使用 Angular 组件、服务和模块。它遵循使用 Gemini API 的严格准则。",
+        "Select the model for the code assistant": "为代码助手选择模型",
+        "Choose a system instructions configuration to use with the applet": "选择要与小程序一起使用的系统指令配置",
+        "Select the audio source for the speech-to-text feature": "选择语音转文本功能的音频来源",
+        "Edit images with Gemini 2.5 Flash Image": "使用 Gemini 2.5 Flash Image 编辑图像",
+        "Conversational voice apps with Gemini Live": "使用 Gemini Live 的对话式语音应用",
+        "Bring images to life with Veo 3": "使用 Veo 3 让图像动起来",
+        "Access real-time info with Maps Grounding": "使用地图定位访问实时信息",
+        "Access real-time info with Search Grounding": "使用搜索定位访问实时信息",
+        "Gemini in your app": "应用中的 Gemini",
+        "Chat powered by Gemini 3 Pro": "由 Gemini 3 Pro 驱动的聊天",
+        "Generate videos with Veo 3": "使用 Veo 3 生成视频",
+        "Control image aspect ratios with Nano Banana Pro": "使用 Nano Banana Pro 控制图像输出纵横比",
+        "Analyze images with Gemini": "使用 Gemini 分析图像",
+        "Low-latency responses with Flash-Lite": "使用 Flash-Lite 的低延迟响应",
+        "Understand video inputs with Gemini": "使用 Gemini 理解视频输入",
+        "Transcribe audio using Gemini 2.5 Flash": "使用 Gemini 2.5 Flash 转录音频",
+        "Enable Thinking for complex queries": "为复杂查询启用思考模式",
+        "Convert text to natural-sounding speech": "将文本转换为自然语音",
+        "Theme": "主题",
+        "Light": "明亮",
+        "Dark": "暗黑",
+        "System": "跟随系统",
+        "Submit prompt key": "提交提示词快捷键",
+        "View status": "查看状态",
+        "Terms of service": "服务条款",
+        "Privacy policy": "隐私政策",
+        "Send feedback": "发送反馈",
+        "Billing Support": "计费支持",
+        "Google Account:": "Google 账户：",
+        "Temporary chat toggle": "临时对话切换",
+        "Gemini": "Gemini",
+        "Live": "实时",
+        "Video": "视频",
+        "Audio": "音频",
+        "Copy to clipboard": "复制到剪贴板",
+        "developer guide docs": "开发者指南文档",
+        "No API key selected": "未选择 API 密钥",
+        "Thinking Level": "思考级别",
+        "Expand or collapse tools": "展开或折叠工具",
+        "Expand or collapse advanced settings": "展开或折叠高级设置",
+        "Source:": "来源：",
+        "Enter a prompt to generate an app": "输入提示词以生成应用",
+        "Model:": "模型：",
+        "Speech to text": "语音转文本",
+        "Insert files (text, images, audio, video) into your prompt.": "将文件（文本、图像、音频、视频）插入到提示词中。",
+        "Logs and Datasets": "日志与数据集",
+        "Usage and Billing": "用量与计费",
+        "Copy project ID": "复制项目 ID",
+        "View billing": "查看计费",
+        "View usage": "查看用量",
+        "Enable logging": "启用日志记录",
+        "Link to documentation for logging and datasets": "日志和数据集文档链接",
+        "Time range": "时间范围",
+        "System instruction deleted": "Prompt提示词已删除",
+        "0 logs selected": "已选择 0 条日志",
+        "Create dataset": "创建数据集",
+        "Add to existing dataset": "添加到现有数据集",
+        "Per page:": "每页：",
+        "0 of 0": "0 / 0",
+        "Previous page": "上一页",
+        "Next page": "下一页",
+        "Datasets": "数据集",
+        "Human Eval": "人工评估",
+        "High": "高",
+        "Auto": "自动",
+        "Manual": "手动",
+        "Close": "关闭",
+        "Open": "打开",
+        "Select": "选择",
+        "Deselect": "取消选择",
+        "Filter": "过滤器",
+        "Sort": "排序",
+        "Search": "搜索",
+        "Refresh": "刷新",
+        "Export": "导出",
+        "Import": "导入",
+        "Download": "下载",
+        "Share": "分享",
+        "More": "更多",
+        "Less": "更少",
+        "Show more": "显示更多",
+        "Show less": "显示更少",
+        "View all": "查看全部",
+        "Clear all": "清除全部",
+        "Reset": "重置",
+        "Apply": "应用",
+        "Done": "完成",
+        "Back": "返回",
+        "Next": "下一步",
+        "Previous": "上一步",
+        "Finish": "完成",
+        "Skip": "跳过",
+        "Edit safety settings": "编辑安全设置",
+        "Add stop token": "添加停止标记",
+        "Maximum output tokens": "最大输出 Token 数",
+        "Scroll right": "向右滚动",
+        "Copy API key": "复制 API 密钥",
+        "View AI Studio and Gemini status page": "查看 AI Studio 和 Gemini 状态页面",
+        "Scroll left": "向左滚动",
+        "Scroll to top": "滚动到顶部",
+        "Scroll to bottom": "滚动到底部",
+        "Toggle preview": "切换预览",
+        "Toggle code": "切换代码",
+        "Minimize": "最小化",
+        "Maximize": "最大化",
+        "Restore": "恢复",
+        "API keys": "API 密钥",
+        "Projects": "项目",
+        "Logs & Datasets": "日志与数据集",
+        "filtered by tag": "按标签过滤",
+        "All tags": "所有标签",
+        "Edit app name and description": "编辑应用名称和描述",
+        "Copy app": "复制应用",
+        "Download app": "下载应用",
+        "Save to GitHub": "保存到 GitHub",
+        "Deploy app": "部署应用",
+        "Share app": "分享应用",
+        "Hide code editor": "隐藏代码编辑器",
+        "Hide preview": "隐藏预览",
+        "Switch to API Key for your app": "切换应用的 API 密钥",
+        "Annotate app": "标注应用",
+        "Show code editor": "显示代码编辑器",
+        "Make the app fullscreen": "全屏显示应用",
+        "Select device preview": "选择设备预览",
+        "Reload the app": "重新加载应用",
+        "Show in editor": "在编辑器中显示",
+        "Reset the conversation": "重置对话",
+        "Move": "移动",
+        "Sort by": "排序方式",
+        "Modified": "修改时间",
+        "Opened": "打开时间",
+        "Prompt type": "提示词类型",
+        "All prompt types": "所有提示词类型",
+        "Structured prompt": "结构化提示词",
+        "Freeform prompt": "自由格式提示词",
+        "Table": "表格",
+        "Grid": "网格",
+        "Type": "类型",
+        "Last opened": "最后打开",
+        "Date created": "创建日期",
+        "Owner": "所有者",
+        "Updated": "排序",
+        "Chat prompt": "对话提示词",
+        "Open in Drive": "在云端硬盘中打开",
+        "All": "全部",
+        "Shared with me": "与我共享",
+        "My history": "我的历史",
+        "me": "我",
+        "Empty Trash": "清空回收站",
+        "Empty My Library Trash": "清空我的库回收站",
+        "All items in Trash will be deleted permanently.": "回收站中的所有项目将被永久删除。",
+        "New folder": "新建文件夹",
+        "Move to Trash": "移至回收站",
+        "Move to...": "移至...",
+        "Delete forever": "永久删除",
+        "Make a copy": "复制副本",
+        "Details": "详细信息",
+        "Activity": "活动",
+        "Sharing": "共享",
+        "Create new folder": "创建新文件夹",
+        "Upload files": "上传文件",
+        "Upload Zip file": "上传 Zip 文件",
+        "Create new file": "创建新文件",
+        "Folder name": "文件夹名称",
+        "Suggestions": "建议",
+        "No suggestions available": "暂无建议",
+        "Clear conversation": "清空对话",
+        "Stop generating": "停止生成",
+        "Regenerate response": "重新生成响应",
+        "Copy response": "复制响应",
+        "Insert code": "插入代码",
+        "Apply changes": "应用更改",
+        "Discard changes": "放弃更改",
+        "View diff": "查看差异",
+        "Accept": "接受",
+        "Reject": "拒绝",
+        "Code changes": "代码更改",
+        "No changes": "无更改",
+        "Showing changes": "显示更改",
+        "Hide changes": "隐藏更改",
+        "Editor settings": "编辑器设置",
+        "The following settings are available for your code editor.": "以下是您的代码编辑器可用的设置。",
+        "Text wrapping": "文本换行",
+        "The text wraps around the edges of the editor.": "文本将在编辑器边缘自动换行。",
+        "Font ligatures": "字体连字",
+        "Render the text with font ligatures.": "使用字体连字渲染文本。",
+        "Minimap": "缩略图",
+        "Render the minimap with the file overview.": "渲染带有文件概览的缩略图。",
+        "Folding": "代码折叠",
+        "Enable folding to collapse code blocks.": "启用折叠以收起代码块。",
+        "Line numbers": "行号",
+        "Render the line numbers for each line of code.": "为每行代码显示行号。",
+        "Sticky scroll": "粘性滚动",
+        "Enable sticky scroll to show the nested code blocks.": "启用粘性滚动以显示嵌套的代码块。",
+        "Render indentation guides": "渲染缩进参考线",
+        "Render indentation guides for each line of code.": "为每行代码渲染缩进参考线。"
+    };
+
+    // 正则表达式替换规则 (处理动态内容)
+    const regexReplacements = [
+        // --- 修复价格显示汉化 (动态价格匹配) ---
+        // 放在最前面以优先匹配整句话
+        { regex: /^All context lengths ?• ?Input: (\$[0-9.]+) \/ Output: (\$[0-9.]+)$/i, replacement: "所有上下文长度 • 输入: $1 / 输出: $2" },
+        { regex: /^Image \(\*Output per image\) ?• ?Input: (\$[0-9.]+) \/ Output: (\$[0-9.]+)$/i, replacement: "图像 (*每张图像输出) • 输入: $1 / 输出: $2" },
+
+        { regex: /^Thinking budget: (\d+)%$/, replacement: "思考预算: $1%" },
+        { regex: /^Thinking budget: Auto$/, replacement: "思考预算: 自动" },
+        { regex: /^(\d+) tokens$/, replacement: "$1 Token" },
+        { regex: /^Model: (.+)$/, replacement: "模型: $1" },
+        { regex: /^'Item: Apple, Price: \$1'. Extract name, price to JSON.$/, replacement: "'商品: 苹果, 价格: $1'. 提取名称, 价格为 JSON." },
+        { regex: /^Points to (.+)$/, replacement: "指向 $1" },
+        { regex: /^Knowledge cut off: (.+)$/, replacement: "知识截止日期: $1" },
+        { regex: /Input: (\$[0-9.]+) \/ Output: (\$[0-9.]+)/, replacement: "输入: $1 / 输出: $2" },
+        { regex: /^<=(\d+)K tokens$/, replacement: "<=$1K Token" },
+        { regex: /^> (\d+)K tokens$/, replacement: "> $1K Token" },
+        { regex: /^All context lengths$/, replacement: "所有上下文长度" },
+        { regex: /^(\d+) tokens \/ image$/, replacement: "$1 Token / 图像" },
+        // --- v2.5 新增动态正则 ---
+        { regex: /^Speaker (\d+)$/, replacement: "发言者 $1" },
+        { regex: /^Speaker (\d+) settings$/, replacement: "发言者 $1 设置" },
+        { regex: /^Speaker (\d+) dialog$/, replacement: "发言者 $1 对话" },
+        // --- 分享对话框正则 ---
+        { regex: /^Share "(.*)"$/, replacement: "分享 \"$1\"" }
+    ];
+
+    function shouldAttemptAutoTranslation(text) {
+        if (!autoTranslateConfig.enabled) return false;
+        if (!text) return false;
+        if (translationCache.has(text)) return false;
+        if (text.length > autoTranslateConfig.maxLength) return false;
+        if (chineseCharRegex.test(text)) return false;
+        if (asciiRegex.test(text) && !accentedLatinRegex.test(text)) return false;
+        return true;
+    }
+
+    function parseAutoTranslateResponse(result) {
+        if (!Array.isArray(result) || !Array.isArray(result[0])) return null;
+        try {
+            return result[0].map(entry => Array.isArray(entry) ? entry[0] : '').join('');
+        } catch (error) {
+            console.warn('[Gemini 汉化] 解析自动翻译结果失败', error);
+            return null;
+        }
+    }
+
+    function requestAutoTranslation(text) {
+        if (translationCache.has(text)) {
+            return Promise.resolve(translationCache.get(text));
+        }
+        if (!shouldAttemptAutoTranslation(text)) {
+            return Promise.resolve(null);
+        }
+        if (autoTranslateTasks.has(text)) {
+            return autoTranslateTasks.get(text);
+        }
+        if (typeof fetch !== 'function') {
+            return Promise.resolve(null);
+        }
+        const url = `${autoTranslateConfig.endpoint}&sl=auto&tl=${autoTranslateConfig.targetLanguage}&dt=t&q=${encodeURIComponent(text)}`;
+        const task = fetch(url)
+            .then(response => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
+            .then(parseAutoTranslateResponse)
+            .then(translated => {
+                if (translated) {
+                    translationCache.set(text, translated);
+                }
+                return translated;
+            })
+            .catch(error => {
+                console.warn('[Gemini 汉化] 自动翻译请求失败', error);
+                return null;
+            })
+            .finally(() => {
+                autoTranslateTasks.delete(text);
+            });
+        autoTranslateTasks.set(text, task);
+        return task;
+    }
+
+    function attemptDynamicTranslation(text, applyTranslation) {
+        if (!shouldAttemptAutoTranslation(text)) return;
+        requestAutoTranslation(text).then(translated => {
+            if (!translated || translated === text) return;
+            try {
+                applyTranslation(translated);
+            } catch (error) {
+                console.warn('[Gemini 汉化] 应用自动翻译失败', error);
+            }
+        });
+    }
+
+    /**
+     * 判断节点是否应该被跳过 (代码块保护)
+     */
+    function shouldSkipNode(node) {
+        const tagName = node.tagName;
+        if (tagName === 'SCRIPT' || tagName === 'STYLE' || tagName === 'PRE' || tagName === 'CODE' || tagName === 'TEXTAREA') {
+            return true;
+        }
+        if (node.classList && (
+            node.classList.contains('monaco-editor') ||
+            node.classList.contains('code-block') ||
+            node.classList.contains('hljs') ||
+            node.classList.contains('cm-editor') ||
+            node.classList.contains('prism')
+        )) {
+            return true;
+        }
+        let parent = node.parentElement;
+        let depth = 0;
+        while (parent && depth < 5) {
+            const pTag = parent.tagName;
+            if (pTag === 'PRE' || pTag === 'CODE' || (parent.classList && (
+                parent.classList.contains('monaco-editor') ||
+                parent.classList.contains('code-block')
+            ))) {
+                return true;
+            }
+            parent = parent.parentElement;
+            depth++;
+        }
+        return false;
+    }
+
+    /**
+     * 翻译单个节点
+     */
+    function translateNode(node) {
+        if (processedNodes.has(node)) return;
+        processedNodes.add(node);
+
+        if (node.nodeType === Node.ELEMENT_NODE) {
+            if (shouldSkipNode(node)) return;
+            const attributes = ['aria-label', 'placeholder', 'mattooltip', 'title', 'data-tooltip', 'data-after-input'];
+            for (const attr of attributes) {
+                const value = node.getAttribute(attr);
+                if (value) {
+                    const trimmedValue = value.trim();
+                    if (!trimmedValue) continue;
+                    if (translationCache.has(trimmedValue)) {
+                        node.setAttribute(attr, translationCache.get(trimmedValue));
+                    } else if (translations[trimmedValue]) {
+                        const translated = translations[trimmedValue];
+                        node.setAttribute(attr, translated);
+                        translationCache.set(trimmedValue, translated);
+                    } else {
+                        attemptDynamicTranslation(trimmedValue, (translated) => {
+                            const currentValue = node.getAttribute(attr);
+                            if (!currentValue) return;
+                            const trimmedCurrent = currentValue.trim();
+                            if (trimmedCurrent === trimmedValue) {
+                                node.setAttribute(attr, translated);
+                            } else if (currentValue.includes(trimmedValue)) {
+                                node.setAttribute(attr, currentValue.replace(trimmedValue, translated));
+                            } else {
+                                node.setAttribute(attr, translated);
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        if (node.nodeType === Node.TEXT_NODE) {
+            if (shouldSkipNode(node.parentElement)) return;
+
+            const originalText = node.nodeValue;
+            const text = originalText.trim();
+
+            if (!text) return;
+
+            if (translationCache.has(text)) {
+                node.nodeValue = originalText.replace(text, translationCache.get(text));
+                return;
+            }
+
+            if (translations[text]) {
+                const translated = translations[text];
+                node.nodeValue = originalText.replace(text, translated);
+                translationCache.set(text, translated);
+                return;
+            }
+
+            if (text.startsWith("Google AI Studio uses cookies")) {
+                const translated = "Google AI Studio 使用 Google 的 Cookie 来提供和增强其服务质量，并分析流量。";
+                node.nodeValue = translated;
+                translationCache.set(text, translated);
+                return;
+            }
+
+            for (const rule of regexReplacements) {
+                if (rule.regex.test(text)) {
+                    const translated = text.replace(rule.regex, rule.replacement);
+                    node.nodeValue = node.nodeValue.replace(rule.regex, rule.replacement);
+                    translationCache.set(text, translated);
+                    return;
+                }
+            }
+
+            attemptDynamicTranslation(text, (translated) => {
+                if (!node.nodeValue) return;
+                if (node.nodeValue.includes(text)) {
+                    node.nodeValue = node.nodeValue.replace(text, translated);
+                } else if (node.nodeValue.trim() === text) {
+                    node.nodeValue = translated;
+                }
+            });
+        }
+    }
+
+    /**
+     * 遍历并翻译
+     */
+    function walkAndTranslate(rootNode) {
+        if (!rootNode) return;
+        if (rootNode.nodeType === Node.ELEMENT_NODE && shouldSkipNode(rootNode)) {
+            processedNodes.add(rootNode);
+            return;
+        }
+
+        const walker = document.createTreeWalker(
+            rootNode,
+            NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
+            {
+                acceptNode: function (node) {
+                    if (node.nodeType === Node.ELEMENT_NODE && shouldSkipNode(node)) {
+                        processedNodes.add(node);
+                        return NodeFilter.FILTER_REJECT;
+                    }
+                    if (processedNodes.has(node)) {
+                        return NodeFilter.FILTER_SKIP;
+                    }
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            },
+            false
+        );
+
+        translateNode(rootNode);
+        let node;
+        while (node = walker.nextNode()) {
+            translateNode(node);
+        }
+    }
+
+    const observerConfig = {
+        childList: true,
+        subtree: true,
+        characterData: true,
+        attributes: true,
+        attributeFilter: ['aria-label', 'placeholder', 'mattooltip', 'title', 'data-tooltip', 'data-after-input']
+    };
+
+    let mutationTimeout;
+    let pendingMutations = [];
+
+    const observer = new MutationObserver((mutations) => {
+        pendingMutations.push(...mutations);
+        clearTimeout(mutationTimeout);
+        mutationTimeout = setTimeout(() => {
+            const batchMutations = pendingMutations;
+            pendingMutations = [];
+            for (const mutation of batchMutations) {
+                if (mutation.type === 'childList') {
+                    for (const node of mutation.addedNodes) {
+                        walkAndTranslate(node);
+                    }
+                } else if (mutation.type === 'characterData') {
+                    translateNode(mutation.target);
+                } else if (mutation.type === 'attributes') {
+                    const node = mutation.target;
+                    processedNodes.delete(node);
+                    translateNode(node);
+                }
+            }
+        }, 50);
+    });
+
+    function init() {
+        walkAndTranslate(document.body);
+        observer.observe(document.body, observerConfig);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        setTimeout(init, 1000);
+    }
+
+})();

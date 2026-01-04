@@ -1,0 +1,866 @@
+// ==UserScript==
+// @name         Scribd Downloader
+// @namespace    https://github.com/ThanhNguyxn/scribd-downloader
+// @version      2.2.5
+// @description  📚 Download documents from Scribd for free as PDF - Fully automated!
+// @author       ThanhNguyxn
+// @match        https://www.scribd.com/*
+// @icon         https://www.scribd.com/favicon.ico
+// @grant        GM_addStyle
+// @grant        GM_setClipboard
+// @grant        GM_openInTab
+// @run-at       document-idle
+// @license      MIT
+// @homepageURL  https://github.com/ThanhNguyxn/scribd-downloader
+// @supportURL   https://github.com/ThanhNguyxn/scribd-downloader/issues
+// @downloadURL https://update.greasyfork.org/scripts/557768/Scribd%20Downloader.user.js
+// @updateURL https://update.greasyfork.org/scripts/557768/Scribd%20Downloader.meta.js
+// ==/UserScript==
+
+(function () {
+    'use strict';
+
+    // ==================== CONFIG ====================
+    const BUTTON_DELAY = 1500;
+    const GITHUB_URL = 'https://github.com/ThanhNguyxn/scribd-downloader';
+    const SPONSOR_URL = 'https://github.com/sponsors/ThanhNguyxn';
+    const DONATE_URL = 'https://buymeacoffee.com/thanhnguyxn';
+
+    // ==================== STYLES ====================
+    const styles = `
+        /* Main floating button - TOP RIGHT */
+        #sd-floating-btn {
+            position: fixed !important;
+            top: 80px !important;
+            right: 20px !important;
+            z-index: 2147483647 !important;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 12px 20px !important;
+            border-radius: 12px !important;
+            font-size: 14px !important;
+            font-weight: 700 !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5) !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            transition: all 0.3s ease !important;
+            text-decoration: none !important;
+        }
+
+        #sd-floating-btn:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6) !important;
+        }
+
+        #sd-floating-btn:active {
+            transform: scale(0.98) !important;
+        }
+
+        #sd-floating-btn.loading {
+            background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%) !important;
+            pointer-events: none !important;
+        }
+
+        #sd-popup {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0,0,0,0.85) !important;
+            z-index: 2147483647 !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease !important;
+        }
+
+        #sd-popup.show {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        #sd-popup-content {
+            background: white !important;
+            padding: 30px !important;
+            border-radius: 20px !important;
+            max-width: 420px !important;
+            width: 90% !important;
+            text-align: center !important;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4) !important;
+            transform: scale(0.9);
+            transition: transform 0.3s ease !important;
+        }
+
+        #sd-popup.show #sd-popup-content {
+            transform: scale(1) !important;
+        }
+
+        #sd-popup h2 {
+            margin: 0 0 20px 0 !important;
+            color: #333 !important;
+            font-size: 22px !important;
+            font-weight: 700 !important;
+        }
+
+        #sd-url-display {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+            color: #00d9ff !important;
+            padding: 15px !important;
+            border-radius: 10px !important;
+            font-family: 'Monaco', 'Consolas', monospace !important;
+            font-size: 12px !important;
+            word-break: break-all !important;
+            margin: 15px 0 !important;
+            text-align: left !important;
+            border: 2px solid #667eea !important;
+            user-select: all !important;
+            cursor: text !important;
+        }
+
+        .sd-btn {
+            padding: 12px 24px !important;
+            border: none !important;
+            border-radius: 10px !important;
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            margin: 5px !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+        }
+
+        .sd-btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+        }
+
+        .sd-btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+            color: white !important;
+        }
+
+        .sd-btn-warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+            color: white !important;
+        }
+
+        .sd-btn-close {
+            background: #e0e0e0 !important;
+            color: #333 !important;
+        }
+
+        .sd-btn:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2) !important;
+        }
+
+        .sd-info {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%) !important;
+            border-left: 4px solid #4caf50 !important;
+            padding: 12px 15px !important;
+            margin: 15px 0 !important;
+            border-radius: 0 10px 10px 0 !important;
+            text-align: left !important;
+            font-size: 13px !important;
+            color: #2e7d32 !important;
+        }
+
+        .sd-btn-group {
+            display: flex !important;
+            gap: 8px !important;
+            justify-content: center !important;
+            flex-wrap: wrap !important;
+            margin-top: 15px !important;
+        }
+
+        .sd-links {
+            margin-top: 20px !important;
+            padding-top: 15px !important;
+            border-top: 1px solid #eee !important;
+            display: flex !important;
+            justify-content: center !important;
+            gap: 15px !important;
+        }
+
+        .sd-link {
+            color: #666 !important;
+            text-decoration: none !important;
+            font-size: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 5px !important;
+            transition: color 0.2s !important;
+        }
+
+        .sd-link:hover {
+            color: #667eea !important;
+        }
+
+        /* Progress bar in button */
+        .sd-progress-inline {
+            width: 100px !important;
+            height: 6px !important;
+            background: rgba(255,255,255,0.3) !important;
+            border-radius: 3px !important;
+            overflow: hidden !important;
+            margin-left: 8px !important;
+        }
+
+        .sd-progress-inline-fill {
+            height: 100% !important;
+            background: white !important;
+            width: 0% !important;
+            transition: width 0.3s ease !important;
+            border-radius: 3px !important;
+        }
+
+        /* For embed page - TOP RIGHT green button */
+        #sd-download-btn {
+            position: fixed !important;
+            top: 20px !important;
+            right: 20px !important;
+            z-index: 2147483647 !important;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 14px 24px !important;
+            border-radius: 12px !important;
+            font-size: 15px !important;
+            font-weight: 700 !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.5) !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            transition: all 0.3s ease !important;
+        }
+
+        #sd-download-btn:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 6px 25px rgba(17, 153, 142, 0.6) !important;
+        }
+
+        #sd-download-btn.loading {
+            background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%) !important;
+        }
+
+        #sd-progress-popup {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0,0,0,0.9) !important;
+            z-index: 2147483647 !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+        #sd-progress-content {
+            background: white !important;
+            padding: 35px !important;
+            border-radius: 20px !important;
+            text-align: center !important;
+            min-width: 320px !important;
+        }
+
+        #sd-progress-bar {
+            width: 100% !important;
+            height: 10px !important;
+            background: #e0e0e0 !important;
+            border-radius: 10px !important;
+            overflow: hidden !important;
+            margin: 20px 0 !important;
+        }
+
+        #sd-progress-fill {
+            height: 100% !important;
+            background: linear-gradient(90deg, #667eea, #764ba2) !important;
+            width: 0% !important;
+            transition: width 0.3s ease !important;
+            border-radius: 10px !important;
+        }
+
+        #sd-progress-text {
+            color: #666 !important;
+            font-size: 15px !important;
+            margin-bottom: 10px !important;
+        }
+    `;
+
+    // Inject styles
+    const styleEl = document.createElement('style');
+    styleEl.textContent = styles;
+    document.head.appendChild(styleEl);
+
+    // ==================== UTILITIES ====================
+
+    function getDocId() {
+        const url = window.location.href;
+        const match = url.match(/(?:document|doc|embeds|read)\/(\d+)/);
+        return match ? match[1] : null;
+    }
+
+    function isEmbed() {
+        return window.location.href.includes('/embeds/');
+    }
+
+    function getEmbedUrl(id) {
+        return `https://www.scribd.com/embeds/${id}/content`;
+    }
+
+    function copyText(text) {
+        try {
+            if (typeof GM_setClipboard === 'function') {
+                GM_setClipboard(text, 'text');
+                return true;
+            }
+        } catch (e) { }
+
+        try {
+            navigator.clipboard.writeText(text);
+            return true;
+        } catch (e) { }
+
+        try {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            ta.remove();
+            return true;
+        } catch (e) { }
+
+        return false;
+    }
+
+    function sleep(ms) {
+        return new Promise(r => setTimeout(r, ms));
+    }
+
+    // ==================== MAIN PAGE FUNCTIONS ====================
+
+    function showMainButton() {
+        if (document.getElementById('sd-floating-btn')) return;
+
+        const docId = getDocId();
+        if (!docId) return;
+
+        const btn = document.createElement('button');
+        btn.id = 'sd-floating-btn';
+        btn.innerHTML = '📥 Download PDF';
+        btn.onclick = startAutoDownload;
+        document.body.appendChild(btn);
+    }
+
+    async function startAutoDownload() {
+        const btn = document.getElementById('sd-floating-btn');
+        const docId = getDocId();
+
+        if (!docId) {
+            alert('Cannot find document ID!');
+            return;
+        }
+
+        const embedUrl = getEmbedUrl(docId);
+
+        // Change button to loading state
+        btn.classList.add('loading');
+        btn.innerHTML = '⏳ Opening...';
+
+        // Show quick popup then auto-open
+        showAutoPopup(embedUrl);
+    }
+
+    function showAutoPopup(embedUrl) {
+        const existing = document.getElementById('sd-popup');
+        if (existing) existing.remove();
+
+        const popup = document.createElement('div');
+        popup.id = 'sd-popup';
+        popup.innerHTML = `
+            <div id="sd-popup-content">
+                <h2>📚 Scribd Downloader</h2>
+                
+                <div class="sd-info">
+                    ✨ <strong>Auto mode:</strong> Opening embed page in new tab...
+                </div>
+
+                <div id="sd-url-display">${embedUrl}</div>
+
+                <p style="color: #666; font-size: 13px; margin: 15px 0;">
+                    A new tab will open automatically.<br>
+                    Click the <strong style="color: #11998e;">green button</strong> there to download!
+                </p>
+
+                <div class="sd-btn-group">
+                    <button class="sd-btn sd-btn-success" id="sd-open-now">🚀 Open Now</button>
+                    <button class="sd-btn sd-btn-warning" id="sd-open-incognito">🕵️ Manual (Incognito)</button>
+                    <button class="sd-btn sd-btn-close" id="sd-close-btn">Close</button>
+                </div>
+
+                <div class="sd-links">
+                    <a href="${GITHUB_URL}" target="_blank" class="sd-link">
+                        ⭐ GitHub
+                    </a>
+                    <a href="${SPONSOR_URL}" target="_blank" class="sd-link">
+                        💖 Sponsor
+                    </a>
+                    <a href="${DONATE_URL}" target="_blank" class="sd-link">
+                        ☕ Buy me a coffee
+                    </a>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+
+        requestAnimationFrame(() => {
+            popup.classList.add('show');
+        });
+
+        // Auto open after 1 second
+        const autoTimer = setTimeout(() => {
+            openEmbedPage(embedUrl);
+        }, 1500);
+
+        // Event handlers
+        document.getElementById('sd-open-now').onclick = function () {
+            clearTimeout(autoTimer);
+            openEmbedPage(embedUrl);
+        };
+
+        document.getElementById('sd-open-incognito').onclick = function () {
+            clearTimeout(autoTimer);
+            copyText(embedUrl);
+            this.innerHTML = '✅ URL Copied!';
+            showManualInstructions();
+        };
+
+        document.getElementById('sd-close-btn').onclick = function () {
+            clearTimeout(autoTimer);
+            closePopup();
+        };
+
+        popup.onclick = function (e) {
+            if (e.target === popup) {
+                clearTimeout(autoTimer);
+                closePopup();
+            }
+        };
+    }
+
+    function openEmbedPage(url) {
+        // Open in new tab but keep current tab focused (active: false)
+        if (typeof GM_openInTab === 'function') {
+            GM_openInTab(url, { active: false, insert: true, setParent: true });
+        } else {
+            // For regular window.open, we open in background
+            const newTab = window.open(url, '_blank');
+            // Blur the new tab and focus back on current window
+            if (newTab) {
+                window.focus();
+            }
+        }
+
+        // Update button
+        const btn = document.getElementById('sd-floating-btn');
+        if (btn) {
+            btn.classList.remove('loading');
+            btn.innerHTML = '✅ Opened!';
+            setTimeout(() => {
+                btn.innerHTML = '📥 Download PDF';
+            }, 3000);
+        }
+
+        // Update popup content instead of closing it (keep popup visible for credits)
+        const popupContent = document.getElementById('sd-popup-content');
+        if (popupContent) {
+            popupContent.innerHTML = `
+                <h2>✅ Tab Opened!</h2>
+                
+                <div class="sd-info" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%) !important;">
+                    🎉 <strong>Success!</strong> A new tab has been opened in the background.
+                </div>
+
+                <p style="color: #666; font-size: 13px; margin: 15px 0;">
+                    📌 <strong>Next steps:</strong><br>
+                    1. Switch to the new tab<br>
+                    2. Click the <strong style="color: #11998e;">green Download button</strong><br>
+                    3. Wait for all pages to load<br>
+                    4. Save as PDF
+                </p>
+
+                <div class="sd-btn-group">
+                    <button class="sd-btn sd-btn-close" id="sd-close-btn2">Got it!</button>
+                </div>
+
+                <div class="sd-links">
+                    <a href="${GITHUB_URL}" target="_blank" class="sd-link">⭐ GitHub</a>
+                    <a href="${SPONSOR_URL}" target="_blank" class="sd-link">💖 Sponsor</a>
+                    <a href="${DONATE_URL}" target="_blank" class="sd-link">☕ Buy me a coffee</a>
+                </div>
+
+                <p style="color: #999; font-size: 11px; margin-top: 15px;">
+                    Made with ❤️ by <a href="${GITHUB_URL}" target="_blank" style="color: #667eea;">ThanhNguyxn</a>
+                </p>
+            `;
+
+            // Re-attach close button event
+            const closeBtn2 = document.getElementById('sd-close-btn2');
+            if (closeBtn2) {
+                closeBtn2.onclick = closePopup;
+            }
+        }
+    }
+
+    function showManualInstructions() {
+        const content = document.getElementById('sd-popup-content');
+        if (!content) return;
+
+        content.innerHTML = `
+            <h2>🕵️ Manual Mode</h2>
+            
+            <div class="sd-info">
+                ✅ <strong>URL copied!</strong> Follow these steps:
+            </div>
+
+            <ol style="text-align: left; color: #444; line-height: 1.8; padding-left: 20px; margin: 20px 0;">
+                <li>Press <strong>Ctrl+Shift+N</strong> (Incognito window)</li>
+                <li>Paste the URL (<strong>Ctrl+V</strong>)</li>
+                <li>Press <strong>Enter</strong></li>
+                <li>Click the <strong style="color: #11998e;">green Download button</strong></li>
+            </ol>
+
+            <div class="sd-btn-group">
+                <button class="sd-btn sd-btn-close" id="sd-close-btn2">Got it!</button>
+            </div>
+
+            <div class="sd-links">
+                <a href="${GITHUB_URL}" target="_blank" class="sd-link">⭐ GitHub</a>
+                <a href="${SPONSOR_URL}" target="_blank" class="sd-link">💖 Sponsor</a>
+                <a href="${DONATE_URL}" target="_blank" class="sd-link">☕ Buy me a coffee</a>
+            </div>
+        `;
+
+        document.getElementById('sd-close-btn2').onclick = closePopup;
+    }
+
+    function closePopup() {
+        const popup = document.getElementById('sd-popup');
+        const btn = document.getElementById('sd-floating-btn');
+
+        if (popup) {
+            popup.classList.remove('show');
+            setTimeout(() => popup.remove(), 300);
+        }
+
+        if (btn) {
+            btn.classList.remove('loading');
+            btn.innerHTML = '📥 Download PDF';
+        }
+    }
+
+    // ==================== EMBED PAGE FUNCTIONS ====================
+
+    function showEmbedButton() {
+        if (document.getElementById('sd-download-btn')) return;
+
+        const btn = document.createElement('button');
+        btn.id = 'sd-download-btn';
+        btn.innerHTML = '⬇️ Download PDF';
+        btn.onclick = startDownload;
+        document.body.appendChild(btn);
+
+        // Auto-start download after 2 seconds if opened from main script
+        if (document.referrer.includes('scribd.com')) {
+            setTimeout(() => {
+                const autoBtn = document.getElementById('sd-download-btn');
+                if (autoBtn && !autoBtn.classList.contains('loading')) {
+                    // Show notification
+                    autoBtn.innerHTML = '🚀 Starting...';
+                    setTimeout(startDownload, 500);
+                }
+            }, 2000);
+        }
+    }
+
+    async function startDownload() {
+        const btn = document.getElementById('sd-download-btn');
+        btn.classList.add('loading');
+        btn.innerHTML = '⏳ Processing...';
+
+        // Create progress popup
+        const progress = document.createElement('div');
+        progress.id = 'sd-progress-popup';
+        progress.innerHTML = `
+            <div id="sd-progress-content">
+                <h2>📚 Preparing PDF...</h2>
+                <div id="sd-progress-text">Loading pages...</div>
+                <div id="sd-progress-bar">
+                    <div id="sd-progress-fill"></div>
+                </div>
+                <p style="color: #888; font-size: 12px; margin-top: 15px;">
+                    Please wait, this may take a moment...
+                </p>
+            </div>
+        `;
+        document.body.appendChild(progress);
+
+        const fill = document.getElementById('sd-progress-fill');
+        const text = document.getElementById('sd-progress-text');
+
+        try {
+            // ==================== STEP 1: SCROLL ALL PAGES ====================
+            text.textContent = '📄 Loading all pages...';
+
+            // Find the scroll container (document_scroller)
+            const scrollContainer = document.querySelector('.document_scroller') ||
+                document.querySelector('[class*="scroller"]') ||
+                document.documentElement;
+
+            // Get all page elements
+            const pages = document.querySelectorAll("[class*='page']");
+            console.log(`[Scribd Downloader] Found ${pages.length} pages`);
+
+            if (pages.length > 0) {
+                for (let i = 0; i < pages.length; i++) {
+                    // Scroll the page into view
+                    pages[i].scrollIntoView({ behavior: 'instant', block: 'start' });
+
+                    // Also try scrolling the container directly
+                    if (scrollContainer && scrollContainer !== document.documentElement) {
+                        const pageTop = pages[i].offsetTop;
+                        scrollContainer.scrollTop = pageTop;
+                    }
+
+                    // Wait for content to load (like Python's time.sleep(0.5))
+                    await sleep(500);
+
+                    const pct = Math.round(((i + 1) / pages.length) * 40);
+                    fill.style.width = pct + '%';
+                    text.textContent = `📄 Loading page ${i + 1}/${pages.length}...`;
+                }
+            } else {
+                // Fallback: scroll the entire document height
+                console.log('[Scribd Downloader] No pages found, using fallback scroll');
+                const h = Math.max(
+                    document.body.scrollHeight,
+                    document.documentElement.scrollHeight,
+                    scrollContainer?.scrollHeight || 0
+                );
+
+                for (let i = 0; i <= 30; i++) {
+                    const scrollPos = (h / 30) * i;
+                    window.scrollTo(0, scrollPos);
+                    if (scrollContainer && scrollContainer !== document.documentElement) {
+                        scrollContainer.scrollTop = scrollPos;
+                    }
+                    await sleep(200);
+                    fill.style.width = (i * 1.3) + '%';
+                }
+            }
+
+            console.log('[Scribd Downloader] Finished scrolling - Last Page');
+
+            // ==================== STEP 2: DELETE TOOLBAR (like Python) ====================
+            fill.style.width = '50%';
+            text.textContent = '🧹 Removing toolbar_top...';
+            await sleep(200);
+
+            // Delete toolbar_top (exactly like Python script)
+            const toolbarTop = document.querySelector('.toolbar_top');
+            if (toolbarTop) {
+                toolbarTop.remove();
+                console.log("[Scribd Downloader] 'toolbar_top' was successfully deleted.");
+            } else {
+                console.log("[Scribd Downloader] 'toolbar_top' was not found.");
+            }
+
+            // Delete toolbar_bottom (exactly like Python script)
+            fill.style.width = '55%';
+            text.textContent = '🧹 Removing toolbar_bottom...';
+            const toolbarBottom = document.querySelector('.toolbar_bottom');
+            if (toolbarBottom) {
+                toolbarBottom.remove();
+                console.log("[Scribd Downloader] ✅ 'toolbar_bottom' was successfully deleted.");
+            } else {
+                console.log("[Scribd Downloader] ❌ 'toolbar_bottom' was not found.");
+            }
+
+            // ==================== STEP 3: REMOVE DOCUMENT_SCROLLER CLASS (like Python) ====================
+            fill.style.width = '60%';
+            text.textContent = '🧹 Removing scroll containers...';
+            await sleep(200);
+
+            // Remove document_scroller class to fix layout for print (exactly like Python)
+            const scrollers = document.querySelectorAll('.document_scroller');
+            scrollers.forEach(el => {
+                el.setAttribute('class', '');
+                el.style.overflow = 'visible';
+                el.style.height = 'auto';
+                el.style.maxHeight = 'none';
+            });
+            console.log('[Scribd Downloader] ------- Deleted containers ----------');
+
+            // ==================== STEP 4: REMOVE OTHER JUNK ====================
+            fill.style.width = '70%';
+            text.textContent = '🧹 Cleaning up overlays...';
+            await sleep(200);
+
+            const junkSelectors = [
+                '.promo_div',
+                '[class*="blur"]',
+                '[class*="paywall"]',
+                '[class*="overlay"]:not([class*="page"])',
+                '[class*="upsell"]',
+                '[class*="signup"]',
+                '.ReactModalPortal',
+                '[class*="banner"]',
+                '[class*="modal"]',
+                '[class*="footer"]',
+                '[class*="header"]:not([class*="page"])',
+                '[class*="sidebar"]',
+                '[class*="ad-"]',
+                '[class*="advertisement"]',
+                '[class*="promo"]'
+            ];
+
+            junkSelectors.forEach(sel => {
+                try {
+                    document.querySelectorAll(sel).forEach(el => el.remove());
+                } catch (e) { }
+            });
+
+            // ==================== STEP 5: FIX VISIBILITY & LAYOUT ====================
+            fill.style.width = '85%';
+            text.textContent = '✨ Optimizing for print...';
+            await sleep(200);
+
+            // Remove blur and fix opacity
+            document.querySelectorAll('*').forEach(el => {
+                try {
+                    const s = getComputedStyle(el);
+                    if (s.filter && s.filter.includes('blur')) {
+                        el.style.filter = 'none';
+                    }
+                    if (parseFloat(s.opacity) < 1) {
+                        el.style.opacity = '1';
+                    }
+                    // Fix any hidden overflow that might hide pages
+                    if (s.overflow === 'hidden' || s.overflowY === 'hidden') {
+                        el.style.overflow = 'visible';
+                    }
+                } catch (e) { }
+            });
+
+            // Make pages display properly for print
+            document.querySelectorAll("[class*='page']").forEach(page => {
+                page.style.pageBreakAfter = 'always';
+                page.style.pageBreakInside = 'avoid';
+                page.style.breakAfter = 'page';
+                page.style.breakInside = 'avoid';
+            });
+
+            // Add print-specific styles - SIMPLE like Python (only hide toolbars)
+            const printStyles = document.createElement('style');
+            printStyles.id = 'sd-print-styles';
+            printStyles.textContent = `
+                @media print {
+                    /* Only hide toolbars and buttons - don't touch content! */
+                    .toolbar_top, .toolbar_bottom {
+                        display: none !important;
+                    }
+                    #sd-download-btn, #sd-progress-popup, #sd-floating-btn {
+                        display: none !important;
+                    }
+                    
+                    /* Page settings */
+                    @page {
+                        margin: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(printStyles);
+
+            // ==================== STEP 6: SCROLL TO TOP & PRINT ====================
+            window.scrollTo(0, 0);
+            if (scrollContainer && scrollContainer !== document.documentElement) {
+                scrollContainer.scrollTop = 0;
+            }
+
+            fill.style.width = '100%';
+            text.textContent = '✅ Ready! Opening print dialog...';
+            await sleep(500);
+
+            progress.remove();
+
+            // REMOVE the download button completely before printing (not just hide)
+            if (btn) {
+                btn.remove();
+            }
+
+            // Print (exactly like Python: window.print())
+            window.print();
+
+            // Recreate the button after print dialog closes
+            const newBtn = document.createElement('button');
+            newBtn.id = 'sd-download-btn';
+            newBtn.innerHTML = '✅ Done! Print again?';
+            newBtn.onclick = startDownload;
+            document.body.appendChild(newBtn);
+
+            setTimeout(() => {
+                const b = document.getElementById('sd-download-btn');
+                if (b) b.innerHTML = '⬇️ Download PDF';
+            }, 5000);
+
+        } catch (err) {
+            console.error('[Scribd Downloader] Download error:', err);
+            progress.remove();
+            btn.classList.remove('loading');
+            btn.innerHTML = '❌ Error - Try again';
+
+            setTimeout(() => {
+                btn.innerHTML = '⬇️ Download PDF';
+            }, 3000);
+        }
+    }
+
+    // ==================== INIT ====================
+
+    function init() {
+        // Check if we're on Scribd
+        if (!window.location.hostname.includes('scribd.com')) return;
+
+        setTimeout(() => {
+            if (isEmbed()) {
+                showEmbedButton();
+            } else if (getDocId()) {
+                showMainButton();
+            }
+        }, BUTTON_DELAY);
+    }
+
+    // Run
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+
+})();

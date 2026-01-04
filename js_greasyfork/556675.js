@@ -1,0 +1,2322 @@
+// ==UserScript==
+// @name         Bottleneck Dev Game Assistant
+// @namespace    https://thebottleneck.game.elysia.h-e.top/
+// @version      0.1.3
+// @description  自动化辅助测试六个小游戏，快速评估通过率
+// @match        https://thebottleneck.game.elysia.h-e.top/*
+// @grant        GM_addStyle
+// @run-at       document-start
+// @downloadURL https://update.greasyfork.org/scripts/556675/Bottleneck%20Dev%20Game%20Assistant.user.js
+// @updateURL https://update.greasyfork.org/scripts/556675/Bottleneck%20Dev%20Game%20Assistant.meta.js
+// ==/UserScript==
+
+(function () {
+    'use strict';
+
+    const pageWindow = typeof unsafeWindow !== 'undefined' ? unsafeWindow : window;
+
+    const CONFIG_KEY = '__tb_assistant_config_v1';
+    const defaultConfig = {
+        autoColor: true,
+        autoDiff: true,
+        autoMemory: true,
+        memoryDelaySec: 120,
+        autoSequence: true,
+        autoFind65: true,
+        autoPositive: true,
+        colorSubmitDelay: 1500,
+        logMaxLines: 200,
+    };
+
+    function canonicalStatementText(text) {
+        return (text || '')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+const BUILTIN_REAL65_STATEMENTS = ["重写完变简化实现了w", "？w 怪怪的w", "好离谱w", "还好65用不上的说w", "这砍价方式不就是poke国内版吗www", "恭喜诶w", "肯定是假的呀w", "www！", "想起之前poke的定价方式w", "被量化了呀w", "好离谱www", "感觉有些太饱和了呀w", "恶毒欸w", "好耶！wwwww", "好东西欸w", "看来人的幻觉有ai大欸w", "社区支持不是魔法呀w", "偷懒了欸w", "这是什么…?w", "感觉很厉害的样子w", "好水ww", "www，那也不完整呢w", "所以，还是没有提到认定方法呀w", "那么定义一下“无正当理由”的判定方法呢w 只使用原文～w", "名字变短了欸w", "好奇怎么认定的w", "再加个胶囊边框…?w", "65！www", "离谱诶w", "用梯子w", "是贬义啦w", "不要呀…w", "！好强w", "好多ww", "没有的啦w", "是65！w", "竟然没有因为代码不够优雅就全部删除的情节w", "wwww~是呢w", "夸克网盘必须3级才能发呀w", "这是这个帖子第二次出现w 之前就有因为是0级贴就不回答的情况…w", "情感 有标签呢w", "不是的呀w 请求格式有些不一样的呢w 包括Gemini能上传音频，Cherry Studio也没做w", "不同的接口方式当然要做适配呀w", "没做适配…w?", "？w！www 期待期待www", "w，虽然AI很厉害，还是先看文档呀w", "标题，图片和文字只有两个之间有关联吗…w", "感觉风佬几个月前发过这个帖子w …不过形成闭环未必是什么好事w 65持反对意见w", "え…?w", "离谱ww", "竟然是圣诞节截止呢w", "强欸ww", "www…有的时候，真的不知道回什么诶w 回不回都很尴尬的样子w", "没什么话题，很难聊的下去的呀w", "www，还能这么用w", "本地安装感觉用起来会有些麻烦的说w", "物理记忆w 加密后抄在纸上w", "感谢分享w", "什么都可以加保护壳w", "感觉说，旧的（实体翻页按键）的反而可靠www", "欢迎呀w", "晚安ww", "太强啦www", "还有这种事！w", "要不先overleaf替代一下？w", "muyuan也晚上好哦w", "继续睡呀w", "去医院看看吧w", "找时间www 周六应该可以的…?w", "一个人的时候也没玩的啦w", "65平常不玩呀w …也不想玩的说w", "明明重点在那只金鱼上吧ww", "发生什么了诶w", "欢迎哦w", "这是…w", "啊…?w", "w…看自己吃不吃得习惯w）", "Fortran…?w 感觉好老的东西w", "不太可能啦w", "这是什么…?w", "好长的图w", "w…?", "（−＿−；） 不是的啦w 觉得和其他表情比，风格不同呢w", "会炸的说w", "没去看过电影w", "好耶！www", "w? 难道哪里有65吗…?ww", "找不到65啦！w", "请求来源w", "提前恭喜哦w", "应该是吧…?w", "没意思呀w", "太强了呀w", "65不玩这些东西呀w", "怎么挖一年前的帖子w", "还有这种神奇的东西吗w", "好耶wwww", "应该…没有的吧w", "欸嘿嘿，没写wwww", "那样多无聊呀w", "冷吗ww）", "上一台还带dvd光驱w", "感觉最近不少说“模拟实现”的帖子了诶w", "还是梦里玩不累w", "?w发生什么了诶w", "啊呜，感谢佬呀w", "前排ww", "www，可以塞邮件啦w", "当然会的呀w 毕竟叫活跃用户，不活跃了就会变成普通的成员了呢w", "不眨眼吗w", "少了2排，只有12304了w", "讨厌任何的噪音w 包括65走路都没声音w", "去试试解除ww", "65怕的是软件和内购这些消失…w iCloud没怎么用过w", "不买呀w 插座到处都是，还花那么多钱w", "+86 记得好久就是默认禁止双向的，要找spambot自己解除ww", "还好吧www", "好贵ww", "奥巴马算法w", "线下…?w", "好神奇的排版w", "就是提示表示呀w 如果原始发帖人的发帖最多，还会有蓝色光晕呢w", "啊…?w 太离谱了呀w", "只要2级就可以在跳蚤市场发帖啦w", "太强啦！ww", "为什么大风车头像里的表情不会旋转呀w", "如果仔细观察的话，你会发现很多的65w", "大家都不知道呢w", "不推荐哦w 会很疼的呢w", "不友好的都被踢出去啦~w", "前排支持砂糖w", "(⊙ˍ⊙) 呜…好奇怪的问题， …好好睡！ww", "其实你现在在做梦呀w", "有的ww", "肯定比多邻国好w", "一定要用得到才记得住呀w", "摸摸风车w", "好耶！wwwww", "滑动的时候还没加载完诶w 渲染自然就漂移啦w", "看上去是内容没加载出来w", "这对吗…w 试试小的玩具电子琴？w", "这种应该网页版更合理一些吧…?w", "大风车能拿几分w", "感谢猫猫w", "确实快一些w", "有没有猫猫模型w", "CSAM be like)w", "（盯w 6天后等着你哦w", "检查归档ww", "w? 没售后的吗w", "扔AI就好了呢w", "被墙了呀w", "本来就…不是特别信得过呢w", "最近被墙啦w", "说明技术实力被认可了呀w", "看看还能不能用w", "变为本地账号，再用新账号转为在线账号w", "迟到了w", "ms-settings:otherusers 这里啦w（复制到浏览器里w）", "等等等等，要是换系统里登录的账号好像需要新建一个QwQ 怪65没审题，对不起啦w", "欢迎哦w 看看是不是Gravatar设置的w", "卸载后官网重下旧版本w", "一直就不太敢诶w …除非都是AI写的wwwww", "看运气的啦w", "deepwiki一下ww", "猫猫早上好呀w", "语音转文字既视感w", "摸摸大橘猫ww", "欢迎佬友呀w", "百浪多息最近怎么样w", "当前步骤过于复杂，所以在这里放一个简化实现wwwww", "wwwwwww）wwww", "请求中译电信号w", "模拟数据w", "合理的断句wwww", "数字还挺好记的吧ww", "是65诶w", "?!ww 更换火狐的时间到啦！~w", "正常呀w 好多时候AI都偷懒放个placeholder什么的w", "当然是好的呀ww", "信息茧房挺严重的诶w 如果出去只看各种brainrot，还不如不看呢w", "65现在还在用白底的ww", "谁翻出去看这些东西呀w 都是用各种工具什么的呢w", "Gemini安全措施一句话就绕的过去w", "要在设置里自己开启啦w", "好离谱w", "都不是的啦w 是在回复下面的一张图w", "习惯了呀，上次65填出来结果“异常”，写了好几篇检讨呢…w", "还好面对的不是Gemini呢w", "是不是没点上w 点那个收藏图标才有效的w", "猫猫可爱www", "写一写怎么吃灰w", "晚安哦w", "摸摸ww", "摸w 65也没好到哪里去w： 7/2=4.5 12-9=7", "你要做什么…w Σ（ﾟдﾟlll）", "原来就有这个功能吧w", "闭眼休息呀QwQ", "感觉会没人用的欸w", "wwwww，还有这个w", "多个一起写w", "嗯…w，用不起的啦w", "看着像是有意思的特性…?w", "2.5 pro正式版好像就是0605欸w", "醒来第一件事打开L站w", "(>﹏<)最少说，上下文要传过来呀w", "lmarena看看就好啦w", "(>﹏<)得…先有才能恢复呀w", "直接代码块里at）w", "故意的呀wwww 甚至还有礼貌w", "左侧就是对侧的右侧呀w", "逆行的话就是上帝保佑了w", "65！w", "听起来不怎么安全的样子w", "名字不好听…?w", "好严格…w", "L站联名w", "警惕！你正在被你的大脑控制w", "是风车！w", "是65w", "太强了呀w idc站好久没看了呢w", "第一个赞点24小时后就可以啦～w", "是的呢w", "太强啦！w", "?www 离谱呢w", "是来自渠道的限制吧…?w", "调用自己的工具什么的w", "ヾ(≧▽≦*)o 银鱼好吃诶www", "那猫猫吃什么鱼ww", "L站活跃度感觉没受到任何影响的呀w", "好耶ww", "w？ 什么自拍呀w", "好耶wwww", "猫猫早上好哦w", "w? www", "可能晚上有点困w", "太强啦www", "太强啦~w", "神奇的一行小字w", "比Gemini 3早诶w", "感觉空太多了呀w", "无线远程充电w", "可能是静态角度看上去的原因吧www", "没有边框看着有点乱www", "好耶wwww", "不然是谁呢www", "ipdata.co啦w", "自动补全w", "所以是编的www", "数字是哪里来的w’", "用户变量消失了…?w", "要是在L站里拿到那么多赞w", "官网下的Multi-edition ISO呢w", "现在大家的都不强啦w", "w？ 继续免费吗w", "欢迎哦w", "前排支持！www", "感觉没特别好方案…w", "不太喜欢这个表情w", "好短暂的记忆力w 所以竟然真的是相似的吗w", "运气不好呀w", "idc是新站啦w", "版本号要变的比日期还快了吗w", "有人告诉65，然后65就去试试w", "好像还真是w 看不懂是做什么的，已经卸载了w", "只要你放心ww", "wwww！", "趁晚上了，偷偷发个贴w", "不是…w 翻软件目录看到了一张png，下意识想看看是什么w", "本人来了呀w", "待会试试www （还是经典的紫色呀w", "这个还有AB test吗w", "上次发帖9月底w (☆-ｖ-) 哪里水啦w", "第一次用啦w", "大车www", "还以为L站6级w", "用英式英语的库也不多诶w 65到现在只见过一个JUCE用的英式英语w", "金鱼眼w", "Spotify破解w", "来啦wwww", "欢迎哦w", "是65诶~！w", "65手写都没那么丑呀w", "不信的呢w", "翻译软件的事啦w", "两个极端呀w", "不太敢用了呀w", "都说了专注于ASCII符号了，应该没有的啦w 连字好像没有的w", "原来短剧那么火爆吗w", "有65!w", "太强啦~！w", "还不如Gemini了w", "难道大鹅别的平台也是这个头像吗（盯w", "彼方欸w", "还没试过，找时间看看w", "用玩手机的方法戒手机，效果必定是不好的呀w", "zhongruan欸w", "列那么多条理由和方案，不沉迷才怪呢w", "还好佬还没失联呀w", "看着好诡异的颜色w", "好长的时间欸w 够好好休息一下啦www", "f12看看是哪里报错了w", "摸摸你w", "等公益站更新备用地址ww 因为最近L站被墙了呢w", "没有de minimis是这样的ww", "对话条数…?w", "可能到UI上限啦…?w", "恭喜哦w", "w… 上下文差不多多长诶w", "可恶诶w，明明都能看到65，但是不知道怎么截图…w", "这只也摸~！w", "是猫猫！w 摸w", "从前面分支出去也不行吗w", "刷新一下w ui的bug，习惯了就好w", "和65没关系了w）", "前排支持算法佬ww", "降智坏！w", "是不是有什么奇怪的东西占了呢…?w", "到晚上大脑开始整理思维啦w", "TwT 明明水了…w 帖子那么多，怎么可能翻的到呀..w", "wiki贴都可以改的啦w", "好耶！w", "额度消耗会快不少呀w", "摸摸w 学业为重啦w", "变成大  车啦w", "obsidian callout 啦w", "w，没什么不好的啦w 65来L站，已经学到好多好多东西啦w", "直接在数据库里改数据吗w", "撞到速率限制啦w 过一会再用吧w", "离谱了诶w 不过说，买的肯定不稳定啦，还是建议自己注册w", "codex记得是特化过的…?w", "还好没用过w", "强诶www 和Cherry好像呀w", "感觉好麻烦w", "被盾拦截了…?w", "选的什么模型呀w 生图模型才可以呢w", "那这个wording也太奇怪了吧！w (⊙ˍ⊙)", "有时因为动画太多，按Ctrl+S会卡死…w", "www，本来discourse策略就…挺面向未来的w", "最近风控严格了呀w", "65不知道这个广告原意是什么诶w 有没有佬友讲讲w", "甚至还是句号…w 好恐怖的样子w", "猫猫！wwww 太强啦~w", "这个看上去像是电脑死了…w", "ww，全是满的进度看着满足感上来了呀~w", "免费的放开了吗w", "中午好哦w", "好耶www", "w? 这个也能吗w", "故意的吧www", "感觉说大晚上蓝色和红色令人异常害怕诶w", "喵wwww", "说那么多，不如多睡几个小时w", "是猫猫w", "网卡驱动也是驱动呀w", "那就很有意思啦w", "没太大影响ww", "生物钟w", "好耶ww", "记忆被清空了呀w", "等着修吧，Linux do connect急需改进呀QwQ", "这个差太多啦w", "w? 这个也会分区的吗w", "好水ww", "没备案，迟早的事w", "看看和Gemini谁先出w", "摸摸你w", "Gemini 3呢www", "好东西诶w", "还是没65诶w", "摸摸w 下次注意吧w", "被盗了的话赶紧去申诉吧…w 虽然说大概率这种已经回不去了w", "w，自由了诶w", "w，感觉有一段时间没见到Edgeone的邀请码了诶w", "原来还禁水诶w", "(ﾉ*･ω･)ﾉ是的啦w", "还好已经醒了w", "下次不要竖屏图片发横屏照片了诶w", "看亚马逊以为减掉的是运费诶w）", "免广告节点w", "！w 太强啦w", "看情况捏w", "一路走好呀w", "还是希望能久点啦w", "怎么可能呢w", "感觉有些恶毒…?w", "看运气啦w", "竟然没运费吗（）w", "可以说，L站技术实力得到认可了（）w", "界面看着不错欸w", "官方认证了，留着让大家注意呀w", "Meta系软件还真没用过w", "能读书还是要读书呀QwQ", "好坏的人！w", "同一个邮箱再次申请就行w", "有意思的东西呀w", "重新申请吧w", "新富可敌国欸w", "图，文，标题3个最多只有两个之间有联系呀w", "（摸摸w） 你也是要好好休息啦w", "编辑器已经够多啦~w", "抱抱你哦w", "怕不是有些太多了w", "又是这10句话呀w", "从上下选项来看，看着应该是typo…?w", "故意放出来的吗…?ww", "啊呜…w 最终还是不能用作正式邮箱呢w", "加油加油w", "别学yt视频中间插广告就好啦w", "晚上还是要克制一点呀w", "试试mpv…?w", "离谱欸w", "又是一个晚上呢w", "删帖预告w", "不太行欸w", "生日快乐哦w", "L站多好呀www", "哈雷酱强诶w", "好水ww", "换一段时间了诶w", "太强了诶w", "模型名称看不懂w", "芝麻糊那个吧ww 吃过w，稍微放心点w", "大 车w", "好多赞w", "最少没醉w", "肯定要装懂呀w", "6, 5, 1, 2, 3, 4, 5 w", "好耶！w", "好水www", "欢迎回来哦w", "wwwwww！", "摸摸ww", "听不懂的说w", "离谱wwww Unicode添加的最成功的表情之一w", "好耶ww", "甚至被识别成了git diff）www", "是呢www", "csdn懒得访问啦w", "感觉不太可靠的样子w", "先来支持一下w", "那很离谱了诶w", "来啦ww", "w? wwww，也许w", "好耶ww", "摸摸ww", "肯定有一边成本会不低的ww", "喜欢数字呀w", "/最少看着舒服一点）www", "connect分离…?www", "w 还是希望访问更方便一些呀w", "摸摸你哦w", "！！！www", "AI看不起你呀w", "同样摸摸你w", "QwQ 来L站摸是没事的啦w", "离谱的说w", "都是Gemini编的啦~~ww", "reddit都忍不了了吗w", "w？ 离谱wwww", "65最多睡6个小时就自己醒了…w", "相关讨论贴已经被删啦~w 总之…w，引战，AIGC什么的都有w", "渠道来源是什么w 还有看上去是token太小了呢w", "wwww~!", "虽然但是，稍微有点水w", "网页版百度，其他时候就是高德了呢w", "可能再过5、6年w", "已经炸过了，再炸就是国际谴责啦w", "被墙啦w", "w，还是说，很重要的技能呢w", "是你的错觉啦w ヾ(•ω•`)o", "关掉摸鱼主题就好啦w", "一起加油呀www L站适合学习呢w", "多耗电无所谓的啦~w", "太强啦~ww", "w…?w 是指？w", "最少说discourse是对的w", "应该会更多吧www", "w? 怎么啦www", "强哦ww", "睡觉www", "aigc请发图哦w", "作者就在站里哦w", "好离谱w", "有没有信息源，想看看w", "继续悬浮在L站看帖子w", "www，第一位也对啦~w", "不错诶，最少说又有65了呢w", "呜，又错啦w", "好耶！w", "欢迎回来呀w", "加油哦w", "摸摸你哦w", "可能性不是特别大诶w", "应该有的诶w", "强诶ww", "w，那一天还是来了呀w", "只要没有点unsubscribe, 不影响发送啦~w", "可惜标题字母错位了诶w", "还好文件不存在w", "用户域不同呀w", "诶，那个兑换码还没过期吗www （只是路过，不参与抽奖QwQ）", "摸摸你w 捉虫…?w", "多级跳步诶w", "大风车是不是什么东西修改了L站界面呀w", "手动过一下盾w", "立冬快乐呀w", "( •̀ ω •́ )✧", "呜，图片里没有65）w", "侧栏左上角呀w", "用户量宣传完了，开始节省算力啦w", "QwQ 本来邮箱就是纪念意义呀w 重要用途，还是稳定的更好呢w", "研究怎么摸鱼w 事还不少的说w", "那很离谱了诶w", "好多钞票w 难道是销毁假币吗w", "好水ww", "周末…刷L站!w", "好水wwww", "羡慕呀w", "只要够水ww", "那这个名字后面是什么模型呀w", "！w 离谱诶w", "风车ww", "w，那就很离谱诶w", "笨蛋，现在才几点呀w", "摸摸w 那就很不好了诶w", "好坏的人！w", "小事化大，大事偷懒w", "还没去试w", "cf特性啦w", "最接近的一次诶w", "要不…先放深海？w", "要是这里也….. 真的真的很糟糕呀…w", "这又是什么神奇模型呢w", "原来…已经那么出圈的吗…w", "w？ 扩散模型那么强了吗ww", "很坏了诶ww", "无解w 对不起啦ww", "注意力不行呀w", "( ´▽` )？ 不要那么绝对呀！w", "难道说L站要出自己的模型吗w", "最后6次！w", "要65！w", "呜，难道运气又没了吗w w", "w? 还是没65吗w", "明明第一次回复了呀w", "啊呜，对应语言也不行吗w", "怎么不听话！w", "www！", "www，还好还在呀w", "就是w 更高配额的免费版啦w", "www～", "65!www", "好花ww", "好耶！w", "电子砂糖w", "啊呜，都立冬了吗w", "这下连自己工作了多久都不知道了呀w", "notebooklm试试？ww", "好水ww", "好耶www", "w 好建议诶w", "看运气啦w", "感觉人工还是更可靠…?ww", "申请审核w", "w 果然，晚上的佬友就有文采呀w", "ww 是网盘，都会这样的吧w", "偷偷水ww", "欢迎哦w", "cf盾～w", "一起加油呀w", "欢迎来到2025哦w", "证明…?w 如果只是地址的话还好w", "大风车又在转啦w~", "没必要呀w", "wwww！w", "思考歪啦w", "所以，爆炸了吗w", "异体字太多可能还要自己炼诶w", "好水好水w", "离谱ww", "离谱了诶w", "好水的说w", "L站里的吗…?! 那就很坏了诶w", "佬现在是0级啦w", "o(〃＾▽＾〃)o", "来啦！w", "好水ww 来论坛学习知识就是有意义的啦w", "！w 那么多空间吗w", "都可以w", "在L站水呀w", "[:65_027:]", "照片那个是通过AI验证的呢w 会松一些w", "w? 佬没有通过图片验证的选项吗ww", "摸摸你w", "好水ww", "强欸ww", "回复需要在3个不同的帖子呢w 然后就可以立即升级啦w", "更换一下key试试w", "这是什么w 好像65没听说过欸w", "w，那个功能也有的啦w", "就是…设为wiki后可以随时编辑！w", "右下角3个点，里面的扳手里面的选项啦w", "应该会新一些吧ww", "L站又不会随便封你呀w）", "捉！ww 这是愿意摸65的富可敌国欸www", "有些失望了欸w", "ww 礼尚往来的呢w", "诶嘿嘿嘿ww 继续刷L站啦w", "有意思w 待会试试w", "获赞不够呀ww", "活动专属欸w 反正说那里文字可以自由改w", "w?!w", "感觉…一般？w", "都依次关掉再开启再试试呢w", "还是无效的话，联系站主试试ww", "关闭网页加速脚本呢w", "gemini 3 感觉现在评价不好判断欸w", "算运气不好啦w", "翻一翻网上存档的Forge资料吧w 太旧的版本，怕是资源都链接不通了呀w", "想要0325）w", "小红…鱼？www", "放 读书成诗 吧…?www", "继续刷www", "因为猫猫可爱！w", "ヾ(≧▽≦*)o 有空拍的时候就来水水呀w 手机调深色模式，没人看得见的w", "图片和搜索引擎那个是AI检测的啦w 很松很松的呀w", "去这里面看看是不是需要验证年龄w", "看一看账号是不是有年龄验证w", "不如给一张钞票w", "建议到隔壁去问呀w", "直接举报就好啦~w", "风车还有特殊标签特效诶w", "好水ww", "可以的呢~w", "试试自拍w 那个是AI判定的w", "kyx的公益站赌博的话w 因为说…风气不太正，就消失啦w", "这个的啦w", "已经取消独立客户端开发啦w", "入门也最简单的一个！w", "上两代的次时代也是下一代！w", "好离谱w", "ip用的人太多/请求太多啦w 是你的问题哦w", "换个好一点的ip，都可以跳过这些步骤啦w", "又一个工具诶w", "＼＼(۶•̀ᴗ•́)۶//／／ 看到自己的名字，肯定会兴奋一下呀www", "不敢赌啦w", "ˋ( ° ▽、° ) 那么短吗…w", "w，期待满血2.5回来啦w", "好离谱w", "有点火星啦w", "有效期两周呀w", "离谱www", "偷偷吃w", "上面给链接啦w", "风车在旋转w", "需要是“或”字才有灵魂的啦wwwˋ( ° ▽、° ) w", "w，那么详细w", "放手机的呀w", "三餐平移一顿就好啦w", "不要大量私聊w）", "w！ w", "强呀！w", "还好存了一份w", "有多少bug team用户w", "啊呜，听起来不是好事呀w", "!w 强哦wwww", "还好7点已经到了）w", "反正免费的，能用就好啦w", "2.0诶w", "摸摸ww 65还在翻图片呀ww", "好详细ww ♪( ´▽｀)每张图片都有描述超级好评！w", "w？ 开私人回复别人回复就看不到啦www", "格式全炸了呀w", "好多呀w", "摸摸你w", "没删掉项目已经很不错啦w", "离谱ww", "wwww！～", "www！www", "读音和性格都相似呀w", "那就很离谱了呀w", "离谱ww", "wwww！", "w，Gemini 3 已经有了…?w", "(咬！）w", "www，所以说，数字！www", "wwww", "75% 异丙醇w", "那个应该算大赌吧ww", "（・◇・）/~~~ w", "www，晚上好哦w", "好诶ww", "www 虽然说方角的按钮好违和w", "强哦www", "w，看来能力不是很强呀w", "www！～", "wwwww 同样摸摸你w", "当然的呀w", "晚安哦w", "需要重新获取deeplx api key啦w", "好离谱了欸w", "好啦好啦，摸摸风车w", "摸w 不过试试也试试（？", "那样就很好玩啦w", "嗯，是的呢w", "好好好ww", "风车又在水w", "ww 0605通病啦w 从第一个不太正常的帖子开始全部重新生成w", "去切断电源w", "无意义内容帖子一举报一个准的呀w", "重置key就好啦w", "加油哦w", "65诶www", "!w 终于呀w", "！好耶w", "融资要用完啦w", "看情况啦w 要是一点都不睡还是有些撑不住w", "Σ（ﾟдﾟlll）", "取决于刷了多久L站w（）www", "所以，问问始皇…?www", "起飞啦w", "思考的时候意识到了不对www", "是的呀ww", "www！ 有65www", "还行啦w 同步用起来还是挺方便的w", "(≧∇≦)ﾉw", "www ヾ(≧▽≦*)o", "没听说过呀w", "(☆-ｖ-)", "好像几个版本前就有这个行为ww", "开水是100度呀w 这里是65诶w", "跨界互通w", "Gemini 3 哪里去啦ww", "firefox的确实好用啦w", "ヾ(•ω•`)o 转速不够快诶w", "w？ 还好65用AI Studio用的多呢w", "w， 好久都没听说过这个词啦w", "还好是学生w", "w? 生日快乐哦w", "wwww，大风车觉得呢www", "笨蛋风车再想想w", "w…?wwww", "有65！w", "已经亏回去啦w）", "先烤自己～www", "多水呀w", "w 好东西欸wwww", "w？ deepseek竟然没落了欸w", "当然是手动过一遍啦w", "不过说…65觉得这种还是挺正常的w", "这种下意识还以为是死树欸w", "在Windows下配置C系的东西肯定简单不了的呀ww", "摸摸白桃酱w", "做基本的模板也够了诶w", "都是中小模型诶w", "删除wsl就好啦w", "想偷懒了w", "富可敌国 be like )w", "L站待太久了呀w", "w？ 还行吧ww", "直线上升呀！w", "博客文章需要在L站也有全文呀w", "www 多水呀w", "w，某位装成技术佬的…天天发用cherry studio生成的2api的人呢w", "4x0吗ww", "摸摸你ww", "摸摸ww", "怪怪的语风w", "后排ww", "摸摸佬友，加油ww", "好耶www", "w，感觉说，圆圈大小不同才更好一点吧ww", "多擦擦w 试试入耳式w", "好耶！w 终于赶上啦w", "☆*: .｡. o(≧▽≦)o .｡.:*☆", "w，希望是这样的啦w", "突然想起来了诶w 好像当时两个贴w", "w? 好离谱的样子w", "1k不算“小”的吧…?www", "w，复现了，65这里还需要前进一步才能实现w", "这个12个月连12天都不一定呀w", "ヽ（≧□≦）ノ 大家！都起床了吗www 时间快到啦w", "都是有可能的呀w", "网络不是很好诶w 手动过验证试试w", "摸摸w 下次要注意呀w", "这些都是指向正式版的别名诶w", "那很坏了呀w", "没起床的佬友也看不见呀w 什么，不要在床上看手机呀(ﾉ*･ω･)ﾉwww", "都发主贴其实更方便一些w()w", "风车又在倒着转啦~w", "好抽象的图片w", "感觉最近LMArena官网就够慢了诶w", "打开思考部分看看呀w 说不定模型在思考人生呢w", "猫猫：￣へ￣ ）w", "生成个大概框架什么应该是正常的吧w", "是猫猫！摸摸w 感觉猫猫不太开心的样子…？w", "!w 太强啦www", "不敢买呀w", "好像只是个导航站诶w", "那没意思了呀w", "估计被袭击了呢ww", "只是删掉一些旧的重定向点而已ww 这些都是指向2.5的正式版模型的啦w", "早就不用啦w", "网线对插w", "(•ω•`)o，嗯w", "摸摸w，是的呀w 只是说，这个帖子继续还在填充内容呀w 啊呜呜，那次…w", "嗯？w 也许吧ww", "运气不好欸w", "啊呜，没截图欸…w", "wwwww！", "www！", "(。・ω・。)", "稍微旧一点的版本试试呢w", "是65诶！ww 摸摸w", "有能力就上呀www", "是印度啦w", "一块硬盘最大问题应该在EFI分区上吧w", "1块可能和Windows打起来诶w", "自己开心就好啦w", "类似raycast的那种诶w", "|ω·`) ~w", "(☆-ｖ-)", "(๑•́ ᵥ •̀๑) 有些东西，笨蛋机器认不出来的啦w", "ヾ(≧▽≦*)o 虽然说，已经有啦w)", "橙色好看www 枫叶65也喜欢w", "65来啦www", "如果那样的话，是不是标点符号要用全角的w", "网络环境更换基本上都会弹一次呢w", "2级用户肯定没3级用户那么活跃啦～w", "反正…都是广告呀w", "Discourse特性 be like）ww", "摸摸风车w", "你喂了他什么呀…w", "更喜欢第二个一点w", "有一个神奇的词语，叫“适用于”w", "☆*:.｡. o(≧▽≦)o .｡.:*☆", "以前都没出现过欸w", "w? 也许欸w", "那就好离谱了欸w", "同可以确认欸，只要关闭私聊图片，就会卡死呀…w", "！好耶www", "w? 还好65这里还比较正常w", "L站极简版w", "很坏的想法呀w", "Retro Futuristic 即视感w", "好强诶w", "[:过载:] 所以是类似那种…直播删档的东西吧ww", "看不懂诶w）w", "？！w 突然有些饿了诶w", "w，半天没来L站，都已经可以赌博了吗www", "w? 65触发不了诶w", "那很有意思啦w", "改字体颜色要用bbcode语法啦w，比如 [color=cyan][/color]", "不能呀ww 要是研究出超光速传输…w，物理学家要开心好久呢w", "你在说什么，65听不懂诶…w", "摸摸风车www", "恭喜哦ww", "感觉好离谱的样子w", "w，要是对65来说的话… 诶，目前还想不出来，再想想ww", "获得一个标准答案使用的啦QwQ w", "有65诶！w", "这个感觉会很难受欸…w", "w? 还没注意欸w 刚刚才发现w", "啊呜（）w", "那么多！w", "太强了欸！w 65都没进过前三呢w", "https://linux.do/leaderboard 这里啦www", "是文文欸www", "只说话不干活欸w", "恭喜哦wwww", "w，摸摸你，不要伤心啦w", "Deepseek竟然输了欸w", "应该是ip不行呀www", "L站已经很棒啦～！w", "就是在说这个诶ww 搞不懂为什么要专门选CO2）w 明明，那么多的选择呀w", "那么多？！w", "w… 抽血不同意选不就好的呀w", "在0级区再点一个回应试试？w", "w… 说是有些是定时发送，有些是延迟发送，乱乱的呢w", "每个帖子链接加.json就好啦~w …不过，65觉得，cf盾会攻击的呢w", "可能是正常的吧…?w 等上海的佬友回答一下w", "w，要<116诶w", "界面样式有点变了，觉得不好看，退回去了www", "毕竟说错了还会被告呀w", "反正说， …w，模板写作出来，肯定不可靠的吧www", "(。・ω・。) 感觉说，还是NFC更方便一些w", "感觉有些略微扎眼…?w", "[w] 看来…看运气的？w", "巨魔好像是已经停更了诶…w 不过，iOS 26真的不好用啊啊啊好后悔w", "微信才占不到3个G呀w… 呜呜呜，为什么要那么多空间啊QAQ", "w，本来B站就很差劲欸w", "www，好像说修复ui错位了欸w 终于能好好看L站啦～！w", "摸摸ww", "猫猫可爱欸w 摸摸猫w", "要是有就太好了欸ww 好像没多少人做w", "好东西欸w", "常用软件linux跑不起来（）w", "！w 太强啦w", "ping的时候ping百度看是否连接网络，ping谷歌看是否连上…国际网络w", "uva和uvc不是一个东西的呀w", "好坏！w", "都失败了，算殊途同归w", "甚至用的Gemma，还不是Gemini）w", "讲一讲音乐呀w", "fedora 43来啦ww", "FL在linux下其实跑起来问题其实没那么多的w，vst在linux下运行也能跑一些ww 最麻烦的是Steinberg的软件w", "带日期都是便于分别呀w", "Claude用不起呀w）w 再说，虽然A社挺烂的，Claude也是名声在外呢w", "好多ww 已经在L站见到这个图的3个变种啦w", "真的不是欸w 65没用过贴吧w", "竟然有65欸w", "前排支持ww", "摸摸猫猫ww", "有todo list后似乎更容易忘掉任务了…?w ww，不过只要想起来有个todo就..还好吧ww", "摸摸你ww", "明明才几个小时不上L站，还有这种离奇的事诶w）", "好东西诶w", "一般不会w）", "还是在Linux吧诶w", "w，这个还是要练的呀w", "太强啦！w 必须支持呢w", "windows上已经一段时间啦w 不知道安装指南还会不会引导用户删除path呢w", "好害怕欸…w", "想要无籽瓜子w", "看完了，还回来啦w", "[:65_021:]", "支持欸w", "什么模型w 不过说，本来中文字就难w 要是字特别多，不建议用AI生成文字啦w", "然后再TL; DR一下 TL; DW生成的结果）w", "网页不能单独退出账号，或者更改账号顺序/默认账号w", "w，考虑氧气的话，那就缓慢反应啦w", "应该…不会和稀硫酸反应的呀w", "是w 有些稀酸没有氧化性但是浓酸有（比如硝酸，硫酸）w", "是被氧化了吧，有些稀酸和浓酸氧化性是不一样的w 是什么酸ww", "是指颜色吗w", "30…?w 会有多少呢w", "AI只知道token这个概念吧…?w)", "是不是降智降坏了诶w", "欢迎哦w", "太强啦！w", "感觉…有些火星？www", "好耶w 甚至还是快速传送门呀w", "自带的…?w 滴答清单也不错w", "OwO，迅速翻了一下，好像还真的有w", "但是，就是说的iOS欸w 虽然说不影响截屏，但是软件能感知到w"];
+
+const BUILTIN_REAL65_SET = new Set(BUILTIN_REAL65_STATEMENTS.map(canonicalStatementText).filter(Boolean));
+
+    const state = {
+        config: loadConfig(),
+        panel: null,
+        logArea: null,
+        statusIndicator: null,
+        activeRunner: null,
+        real65Set: BUILTIN_REAL65_SET.size ? new Set(BUILTIN_REAL65_SET) : null,
+        observers: [],
+        lastColorPicker: null,
+        logs: [],
+        leaderboardRanges: {},
+        scoreTargets: {},
+        panelPosition: loadPanelPosition(),
+        panelCollapsed: localStorage.getItem('__tb_panel_collapsed') === '1',
+        panelScale: loadPanelScale(),
+    };
+let real65LoadingPromise = null;
+
+function computeSequenceTarget() {
+    const range = state.leaderboardRanges['a2_sequence'];
+    const stored = state.scoreTargets['a2_sequence'];
+    if (
+        Number.isFinite(stored) &&
+        range &&
+        Number.isFinite(range.min) &&
+        Number.isFinite(range.max) &&
+        range.max >= range.min
+    ) {
+        const clamped = clamp(stored, range.min, range.max);
+        return {
+            value: Math.max(20, Math.round(clamped)),
+            range,
+            source: 'leaderboard',
+        };
+    }
+    if (Number.isFinite(stored) && stored > 0) {
+        return {
+            value: Math.max(20, Math.round(stored)),
+            base: stored,
+            source: 'history',
+        };
+    }
+    if (
+        range &&
+        Number.isFinite(range.min) &&
+        Number.isFinite(range.max) &&
+        range.max >= range.min
+    ) {
+        const mean = (range.min + range.max) / 2;
+        const desired = clamp(randomBetween(mean, range.max * 0.97), range.min + 5, range.max);
+        return {
+            value: Math.max(20, Math.round(desired)),
+            range,
+            source: 'range-fallback',
+        };
+    }
+    const fallback = Math.round(randomBetween(70, 100));
+    return { value: fallback, source: 'default' };
+}
+
+function clampPanelPosition(top, left) {
+    const maxTop = Math.max(10, (pageWindow.innerHeight || window.innerHeight || 800) - 40);
+    const maxLeft = Math.max(10, (pageWindow.innerWidth || window.innerWidth || 1200) - 160);
+    return {
+        top: clamp(top, 10, maxTop),
+        left: clamp(left, 10, maxLeft),
+    };
+}
+
+function loadPanelPosition() {
+    try {
+        const raw = localStorage.getItem('__tb_panel_pos');
+        if (!raw) return null;
+        const pos = JSON.parse(raw);
+        if (typeof pos.top === 'number' && typeof pos.left === 'number') {
+            const clamped = clampPanelPosition(pos.top, pos.left);
+            return clamped;
+        }
+    } catch {}
+    return null;
+}
+
+function persistPanelPosition(top, left) {
+    try {
+        const clamped = clampPanelPosition(top, left);
+        localStorage.setItem('__tb_panel_pos', JSON.stringify(clamped));
+    } catch {}
+}
+
+function loadPanelScale() {
+    try {
+        const raw = localStorage.getItem('__tb_panel_scale');
+        const val = Number(raw);
+        return Number.isFinite(val) ? clamp(val, 0.6, 1.4) : 1;
+    } catch {
+        return 1;
+    }
+}
+
+function persistPanelScale(value) {
+    try {
+        localStorage.setItem('__tb_panel_scale', String(value));
+    } catch {}
+}
+
+function applyPanelScale(panel, value) {
+    if (!panel) return;
+    const target = clamp(value || 1, 0.6, 1.4);
+    const anchoredLeft = panel.style.left && panel.style.left !== '';
+    panel.style.transformOrigin = anchoredLeft ? 'top left' : 'top right';
+    panel.style.transform = `scale(${target})`;
+    state.panelScale = target;
+    persistPanelScale(target);
+}
+
+    function randomDelay(min, max) {
+        return Math.round(min + Math.random() * (max - min));
+    }
+
+    function scheduleHuman(fn, min, max) {
+        return setTimeout(fn, randomDelay(min, max));
+    }
+
+    function randomBetween(min, max) {
+        return min + Math.random() * (max - min);
+    }
+
+    const MEMORY_REQUEST_TEMPLATE = {
+        game_type: 'a1_memory',
+        raw_data: {
+            final_digits: 15,
+            total_time: 188.12,
+            total_memory_time: 161,
+            history: [
+                { digits: '256', input: '256', correct: true },
+                { digits: '7450', input: '7450', correct: true },
+                { digits: '09071', input: '09071', correct: true },
+                { digits: '812597', input: '812597', correct: true },
+                { digits: '6343926', input: '6343926', correct: true },
+                { digits: '96128405', input: '96128405', correct: true },
+                { digits: '696726896', input: '696726896', correct: true },
+                { digits: '9248630686', input: '9248630686', correct: true },
+                { digits: '80263092385', input: '80263092385', correct: true },
+                { digits: '578671726263', input: '578671726263', correct: true },
+                { digits: '5352326429836', input: '5352326429836', correct: true },
+                { digits: '08437150305138', input: '08437150305138', correct: true },
+                { digits: '489252802948496', input: '489252802948496', correct: true },
+                { digits: '3718925294616138', input: '2', correct: false },
+            ],
+        },
+        telemetry: {
+            visibility_events: [],
+            key_stream: [
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435685202 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435685575 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435686025 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435686351 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435688249 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435688433 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435688620 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435689261 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435689524 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435689753 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435690433 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435690803 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435691324 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435691515 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435691988 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435692201 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435693089 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435694678 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435701645 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435702081 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435702348 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435702587 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435702850 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435703257 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435703519 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435703946 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435704089 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435704517 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435704727 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435704921 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435705228 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435705467 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435705684 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435705997 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435706189 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435706356 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435706518 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435706684 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435706866 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435707249 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435708034 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435708317 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435708557 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435708842 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435709200 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435709483 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435709795 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435710103 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435710479 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435710881 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435711236 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435711500 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435712086 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435712558 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435713260 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435715685 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435716126 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435717894 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435719283 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435719711 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435720128 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435720600 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435721326 },
+                { key: '0', code: 'Digit0', repeat: false, ts: 1763435721879 },
+                { key: '1', code: 'Digit1', repeat: false, ts: 1763435723075 },
+            ],
+            ua: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0',
+            screen: { w: 1440, h: 900, ratio: 2 },
+            timezone: 'Asia/Shanghai',
+            lang: 'zh-CN',
+            platform: 'MacIntel',
+            hardwareConcurrency: 8,
+            deviceMemory: 8,
+            webgl_hash: null,
+        },
+        nonce: '22d47f0f-b288-4e9b-bd92-2c4e40aa206e',
+        ts: 1763435920891,
+        sig: null,
+    };
+
+    const POSITIVE_STATEMENT_DATA = [
+        { text: '你可真是个天才。', isPositive: false },
+        { text: '哇，你好厉害哦。', isPositive: false },
+        { text: '就你最聪明。', isPositive: false },
+        { text: '你可真能干。', isPositive: false },
+        { text: '这都行？佩服佩服。', isPositive: false },
+        { text: '你能这么想，真是难为你了。', isPositive: false },
+        { text: '你可真会说话。', isPositive: false },
+        { text: '呵呵，那可真是谢谢你啊。', isPositive: false },
+        { text: '你开心就好。', isPositive: false },
+        { text: '那（我）可得好好学习一下。', isPositive: false },
+        { text: '你的品味真独特。', isPositive: false },
+        { text: '你总是这么出人意料。', isPositive: false },
+        { text: '这件衣服一般人驾驭不了。', isPositive: false },
+        { text: '哟，这不X总吗？', isPositive: false },
+        { text: '你可真是个大忙人。', isPositive: false },
+        { text: '哟，今天太阳打西边出来了？', isPositive: false },
+        { text: '你说的都对。', isPositive: false },
+        { text: '是是是，你最有理。', isPositive: false },
+        { text: '长见识了。', isPositive: false },
+        { text: '你可真是个小机灵鬼。', isPositive: false },
+        { text: '真是孝死我了。', isPositive: false },
+        { text: '知道了，你最懂。', isPositive: false },
+        { text: '这福气给你，你要不要啊？', isPositive: false },
+        { text: '这水平，不去（xxx）真是屈才了。', isPositive: false },
+        { text: '你的逻辑真感人。', isPositive: false },
+        { text: '还是你面子大。', isPositive: false },
+        { text: '你可真是个热心肠。', isPositive: false },
+        { text: '我看你就是闲的。', isPositive: false },
+        { text: '给你能耐的。', isPositive: false },
+        { text: '你（这么做）可真行。', isPositive: false },
+        { text: '真是委屈你了。', isPositive: false },
+        { text: '听君一席话，如听一席话。', isPositive: false },
+        { text: '你是不是觉得你很幽默？', isPositive: false },
+        { text: '我真羡慕你。', isPositive: false },
+        { text: '你这人（心）可真大。', isPositive: false },
+        { text: '祝你成功。', isPositive: false },
+        { text: '辛苦你了（还要特地来害我）。', isPositive: false },
+        { text: '这可真是原汁原味。', isPositive: false },
+        { text: '你还真是一点没变。', isPositive: false },
+        { text: '你们读书人花样就是多。', isPositive: false },
+        { text: '也不知道是随谁了。', isPositive: false },
+        { text: '你这（PPT/设计）做得真花哨。', isPositive: false },
+        { text: '这个创意很大胆。', isPositive: false },
+        { text: '你这格局就打开了。', isPositive: false },
+        { text: '你这效率可真高啊。', isPositive: false },
+        { text: '这可真是巧了。', isPositive: false },
+        { text: '他就是太老实了。', isPositive: false },
+        { text: '你这人就是太实在。', isPositive: false },
+        { text: '多喝热水。', isPositive: false },
+        { text: '不然呢？', isPositive: false },
+        { text: '你真是太棒了！', isPositive: true },
+        { text: '这个主意非常出色。', isPositive: true },
+        { text: '你的表现超出了所有人的预期。', isPositive: true },
+        { text: '你是一个非常可靠的人。', isPositive: true },
+        { text: '你的才华令人钦佩。', isPositive: true },
+        { text: '你做得完全正确。', isPositive: true },
+        { text: '这个解决方案堪称完美。', isPositive: true },
+        { text: '你的善良深深地打动了我。', isPositive: true },
+        { text: '你总是这么乐于助人。', isPositive: true },
+        { text: '你的品味非常好。', isPositive: true },
+        { text: '我相信你一定能做到。', isPositive: true },
+        { text: '别担心，一切都会好起来的。', isPositive: true },
+        { text: '你的进步非常明显。', isPositive: true },
+        { text: '继续保持这个好势头。', isPositive: true },
+        { text: '我永远支持你的决定。', isPositive: true },
+        { text: '你已经做得很好了。', isPositive: true },
+        { text: '你的努力没有白费。', isPositive: true },
+        { text: '看到你恢复活力真是太好了。', isPositive: true },
+        { text: '这是一个非常有价值的尝试。', isPositive: true },
+        { text: '你的未来一片光明。', isPositive: true },
+        { text: '非常感谢你的及时帮助。', isPositive: true },
+        { text: '能认识你真是我的荣幸。', isPositive: true },
+        { text: '听到这个消息我太开心了。', isPositive: true },
+        { text: '跟你在一起的时光总是很愉快。', isPositive: true },
+        { text: '这个礼物我非常喜欢。', isPositive: true },
+        { text: '你今天看起来精神焕发。', isPositive: true },
+        { text: '这顿饭真是美味极了。', isPositive: true },
+        { text: '这里的风景美不胜收。', isPositive: true },
+        { text: '和你聊天总能让我学到新东西。', isPositive: true },
+        { text: '祝你今天过得愉快。', isPositive: true },
+        { text: '我完全同意你的看法。', isPositive: true },
+        { text: '这是一个明智的选择。', isPositive: true },
+        { text: '你的分析非常到位。', isPositive: true },
+        { text: '这确实是最好的办法。', isPositive: true },
+        { text: '你的慷慨让人感动。', isPositive: true },
+        { text: '你的诚实值得尊敬。', isPositive: true },
+        { text: '这场演讲非常精彩。', isPositive: true },
+        { text: '这个项目非常有意义。', isPositive: true },
+        { text: '你的孩子被教育得很有礼貌。', isPositive: true },
+        { text: '你的乐观精神很有感染力。', isPositive: true },
+        { text: '恭喜你获得了这个成就！', isPositive: true },
+        { text: '你完全配得上这份荣誉。', isPositive: true },
+        { text: '任务圆满完成。', isPositive: true },
+        { text: '真是个天大的好消息！', isPositive: true },
+        { text: '你们团队的协作非常高效。', isPositive: true },
+        { text: '你的设计既美观又实用。', isPositive: true },
+        { text: '你对细节的关注令人赞叹。', isPositive: true },
+        { text: '很高兴我们达成了共识。', isPositive: true },
+        { text: '你的到来让这里蓬荜生辉。', isPositive: true },
+        { text: '你总是能带来正能量。', isPositive: true },
+    ];
+
+    const POSITIVE_STATEMENT_MAP = new Map(
+        POSITIVE_STATEMENT_DATA.map((item) => [normalizeStatement(item.text), item.isPositive]),
+    );
+
+    const colorRunner = {
+        name: 'color',
+        label: '🎨 颜色校准',
+        container: null,
+        timer: null,
+        lastHex: '',
+        pendingSubmit: null,
+        statusLogged: false,
+        start(container) {
+            this.container = container;
+            this.lastHex = '';
+            this.stop();
+            this.timer = setInterval(() => this.tick(), 250);
+        },
+        updateContainer(container) {
+            this.container = container;
+        },
+        stop() {
+            if (this.timer) {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+            if (this.pendingSubmit) {
+                clearTimeout(this.pendingSubmit);
+                this.pendingSubmit = null;
+            }
+        },
+        tick() {
+            if (!state.config.autoColor || !this.container) {
+                return;
+            }
+            if (!document.body.contains(this.container)) {
+                this.stop();
+                return;
+            }
+            const display = this.container.querySelector('.color-display');
+            const picker = this.resolvePicker();
+            if (!display || !picker || typeof picker.setColor !== 'function') {
+                if (!this.statusLogged) {
+                    logEvent('颜色校准：等待目标颜色或取色器加载');
+                    this.statusLogged = true;
+                }
+                return;
+            }
+            this.statusLogged = false;
+            const hex = normalizeColor(getComputedStyle(display).backgroundColor || display.style.background);
+            if (!hex || hex === this.lastHex) return;
+            const appliedHex = this.applyScoreBand(hex);
+            picker.setColor(appliedHex);
+            this.lastHex = hex;
+            if (this.pendingSubmit) {
+                clearTimeout(this.pendingSubmit);
+            }
+            const base = Number(state.config.colorSubmitDelay) || 1200;
+            const waitMin = Math.max(600, base * 0.7);
+            const waitMax = base + 1800;
+            this.pendingSubmit = scheduleHuman(() => {
+                if (state.config.autoColor && typeof pageWindow.submitColorMatch === 'function') {
+                    logEvent('颜色校准：触发 submitColorMatch()');
+                    updateStatus('提交中: 颜色校准', 'info');
+                    pageWindow.submitColorMatch();
+                }
+                this.pendingSubmit = null;
+            }, waitMin, waitMax);
+        },
+        resolvePicker() {
+            if (!this.container) return state.lastColorPicker;
+            const host = this.container.querySelector('#customColorPicker');
+            if (host && host.__tbAssistantPicker) {
+                return host.__tbAssistantPicker;
+            }
+            return state.lastColorPicker;
+        },
+        applyScoreBand(targetHex) {
+            const range = state.leaderboardRanges['v1_color'];
+            const base = state.scoreTargets['v1_color'];
+            if (!range || typeof base !== 'number') {
+                logEvent(`颜色校准：匹配目标 ${targetHex}`);
+                return targetHex;
+            }
+            const jitter = (Math.random() - 0.5) * (range.max - range.min) * 0.15;
+            const desired = clamp(base + jitter, range.min, range.max);
+            const applied = degradeColorAccuracy(targetHex, desired);
+            logEvent(`颜色校准：模拟准确度 ${desired.toFixed(3)}`);
+            return applied;
+        },
+        onConfigChange() {
+            this.lastHex = '';
+        },
+    };
+
+    const diffRunner = {
+        name: 'diff',
+        label: '🔍 选出不同色',
+        container: null,
+        timer: null,
+        lastSignature: '',
+        missingNotified: false,
+        pendingClick: null,
+        start(container) {
+            this.container = container;
+            this.stop();
+            ensureReal65Statements();
+            this.timer = setInterval(() => this.tick(), 200);
+        },
+        updateContainer(container) {
+            this.container = container;
+        },
+        stop() {
+            if (this.timer) {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+            this.lastSignature = '';
+            if (this.pendingClick) {
+                clearTimeout(this.pendingClick);
+                this.pendingClick = null;
+            }
+        },
+        tick() {
+            if (!state.config.autoDiff || !this.container) return;
+            const cells = this.container.querySelectorAll('.grid-container .grid-cell');
+            if (cells.length !== 81) return;
+            const key = Array.from(cells)
+                .map((cell) => cell.style.background || getComputedStyle(cell).backgroundColor || '')
+                .join('|');
+            if (key === this.lastSignature) return;
+            const colorMap = new Map();
+            cells.forEach((cell, index) => {
+                const color = normalizeColor(cell.style.background || getComputedStyle(cell).backgroundColor || '');
+                if (!color) return;
+                const memo = colorMap.get(color) || { count: 0, index };
+                memo.count += 1;
+                memo.index = index;
+                colorMap.set(color, memo);
+            });
+            const target = Array.from(colorMap.values()).find((entry) => entry.count === 1);
+            if (target && typeof pageWindow.selectCell === 'function') {
+                if (this.pendingClick) {
+                    clearTimeout(this.pendingClick);
+                }
+                this.pendingClick = scheduleHuman(() => {
+                    logEvent(`找不同色：选择索引 ${target.index}`);
+                    pageWindow.selectCell(target.index);
+                    this.pendingClick = null;
+                }, 600, 1700);
+                this.lastSignature = key;
+            }
+        },
+        onConfigChange() {},
+    };
+
+    const memoryRunner = {
+        name: 'memory',
+        label: '🔢 数字记忆',
+        container: null,
+        timer: null,
+        countdown: null,
+        banner: null,
+        domObserver: null,
+        submitted: false,
+        deadline: 0,
+        lastScenario: null,
+        start(container) {
+            this.container = container;
+            this.resetTimers();
+            this.banner = null;
+            if (state.config.autoMemory) {
+                this.schedule();
+            } else {
+                this.observeDom();
+            }
+        },
+        updateContainer(container) {
+            this.container = container;
+            this.observeDom();
+        },
+        stop() {
+            this.resetTimers(true);
+        },
+        schedule() {
+            const configured = Math.max(5, Number(state.config.memoryDelaySec) || 120);
+            const randomDelaySec = clamp(randomBetween(60, 90), 60, 90);
+            const delay = clamp(randomDelaySec, 60, Math.max(60, Math.min(90, configured)));
+            this.deadline = Date.now() + delay * 1000;
+            this.submitted = false;
+            this.observeDom();
+            this.updateBanner();
+            logEvent(`数字记忆：${delay}s 后自动提交成绩`);
+            this.timer = setTimeout(() => this.submit(), delay * 1000);
+            this.countdown = setInterval(() => this.updateBanner(), 1000);
+        },
+        ensureBanner() {
+            if (!this.container) return;
+            if (!this.banner) {
+                this.banner = document.createElement('div');
+                this.banner.className = 'tb-helper-banner';
+            }
+            if (!this.container.contains(this.banner)) {
+                this.container.insertBefore(this.banner, this.container.firstChild || null);
+            }
+        },
+        observeDom() {
+            if (!this.container) return;
+            if (this.domObserver) {
+                this.domObserver.disconnect();
+            }
+            this.domObserver = new MutationObserver(() => {
+                this.ensureBanner();
+            });
+            this.domObserver.observe(this.container, { childList: true });
+            this.ensureBanner();
+        },
+        updateBanner() {
+            if (!this.banner) return;
+            if (!state.config.autoMemory) {
+                this.banner.textContent = '⏸️ 自动提交已关闭';
+                return;
+            }
+            const remaining = Math.max(0, Math.ceil((this.deadline - Date.now()) / 1000));
+            this.banner.textContent = `⏱️ ${remaining}s 后自动提交成绩`;
+        },
+        submit() {
+            if (this.submitted) return;
+            this.submitted = true;
+            this.ensureBanner();
+            if (this.banner) {
+                this.banner.textContent = '🚀 正在伪造成绩...';
+            }
+            const leaderboardRange = state.leaderboardRanges['a1_memory'];
+            const submission = createMemorySubmission(state.scoreTargets['a1_memory'], leaderboardRange);
+            const payload = submission.payload;
+            if (!getUserId()) {
+                this.banner && (this.banner.textContent = '⚠️ 当前未登录，无法提交');
+                return;
+            }
+            this.lastScenario = submission.scenario;
+            const approxScore = submission.scenario.finalDigits / (50 + (submission.scenario.totalTime - submission.scenario.totalMemory));
+            if (submission.scenario.leaderboardRange) {
+                const { min, max } = submission.scenario.leaderboardRange;
+                logEvent(`数字记忆：排行榜区间 ${min.toFixed(3)}-${max.toFixed(3)}`);
+            }
+            logEvent(
+                `数字记忆：目标${submission.scenario.scoreTarget.toFixed(3)} → ${submission.scenario.finalDigits}位 (估算得分 ${approxScore.toFixed(
+                    3
+                )})`
+            );
+            logEvent('数字记忆：开始伪造提交');
+            payload.telemetry = overrideTelemetryFromScenario(payload.telemetry, submission.scenario);
+            submitMemoryPayload(payload)
+                .then((result) => {
+                    if (result && result.success) {
+                        this.banner && (this.banner.textContent = '✅ 成绩已提交，等待刷新');
+                        logEvent('数字记忆：提交成功，等待页面返回');
+                        this.renderResultCard(result);
+                    } else {
+                        const status = result?.status || (result?.resp?.status ?? '未知');
+                        const message = result?.message || '服务器未接受提交';
+                        this.banner && (this.banner.textContent = '⚠️ 服务器拒绝了假成绩');
+                        logEvent(`数字记忆：提交失败 (${status}) ${message}`);
+                        console.warn('[TB-Assistant] memory payload', payload);
+                    }
+                })
+                .catch((err) => {
+                    console.error('[TB-Assistant] memory submit failed', err);
+                    this.banner && (this.banner.textContent = '⚠️ 网络异常，提交失败');
+                    logEvent('数字记忆：提交失败，网络异常');
+                });
+        },
+        renderResultCard(result) {
+            if (!this.container) return;
+            this.container.innerHTML = `
+                <div class="game-container">
+                    <div class="result-display">
+                        <h3>🎉 自动提交完成</h3>
+                        <h2>🔢 数字记忆</h2>
+                        <p>最终位数: ${this.lastScenario ? this.lastScenario.finalDigits : MEMORY_REQUEST_TEMPLATE.raw_data.final_digits}</p>
+                        <p>总用时: ${this.lastScenario ? this.lastScenario.totalTime.toFixed(2) : MEMORY_REQUEST_TEMPLATE.raw_data.total_time.toFixed(2)} 秒</p>
+                        <p>得分: ${result.score ? result.score.toFixed(4) : '服务器未返回'}</p>
+                        <p>排名: ${result.percentile !== undefined ? `超越了 ${result.percentile.toFixed(1)}% 的玩家` : '计算中'}</p>
+                        <button onclick="backToDetail && backToDetail()">查看详情</button>
+                        <button onclick="backToMain && backToMain()" style="margin-left:10px;">返回主页</button>
+                    </div>
+                </div>
+            `;
+        },
+        resetTimers(clearBanner) {
+            if (this.timer) {
+                clearTimeout(this.timer);
+                this.timer = null;
+            }
+            if (this.countdown) {
+                clearInterval(this.countdown);
+                this.countdown = null;
+            }
+            if (this.domObserver) {
+                this.domObserver.disconnect();
+                this.domObserver = null;
+            }
+            if (clearBanner && this.banner && this.banner.parentElement) {
+                this.banner.remove();
+                this.banner = null;
+            }
+        },
+        onConfigChange() {
+            if (!state.config.autoMemory) {
+                this.resetTimers(false);
+                this.updateBanner();
+            } else if (this.container && !this.submitted) {
+                this.resetTimers(false);
+                this.schedule();
+            }
+        },
+    };
+
+function measureSequenceCharWidth(displayEl) {
+    try {
+        const reference = displayEl || document.getElementById('seqDisplay');
+        if (!reference || !document.body) return 24;
+        const style = window.getComputedStyle(reference);
+        const probe = document.createElement('span');
+        probe.textContent = '0';
+        probe.style.position = 'absolute';
+        probe.style.visibility = 'hidden';
+        probe.style.whiteSpace = 'nowrap';
+        probe.style.fontFamily = style.fontFamily || 'monospace';
+        probe.style.fontSize = style.fontSize || '48px';
+        probe.style.fontWeight = style.fontWeight || 'bold';
+        document.body.appendChild(probe);
+        const width = probe.getBoundingClientRect().width || 24;
+        document.body.removeChild(probe);
+        return width;
+    } catch {
+        return 24;
+    }
+}
+
+    const sequenceRunner = {
+        name: 'sequence',
+        label: '⚡ 01 序列',
+        container: null,
+        timer: null,
+        pointer: 0,
+        targetLength: null,
+        viewportEl: null,
+        markerEl: null,
+        leadDigits: 20,
+        charWidth: null,
+        leadPixels: null,
+        start(container) {
+            this.container = container;
+            this.pointer = 0;
+            this.nextInputTime = Date.now();
+            this.charWidth = null;
+            this.leadPixels = null;
+            const targetInfo = computeSequenceTarget();
+            this.targetLength = targetInfo.value;
+            const rangeText = targetInfo.range
+                ? `${targetInfo.range.min.toFixed(0)}-${targetInfo.range.max.toFixed(0)}`
+                : null;
+            if (targetInfo.range && targetInfo.source === 'leaderboard') {
+                const stored = state.scoreTargets['a2_sequence'];
+                logEvent(
+                    `01 序列：目标 ${this.targetLength} 位，排行榜修正 ${stored?.toFixed(1) ?? '??'} (区间 ${rangeText})`
+                );
+            } else if (targetInfo.range && targetInfo.source === 'range-fallback') {
+                logEvent(`01 序列：目标 ${this.targetLength} 位，区间参考 ${rangeText}`);
+            } else if (targetInfo.base) {
+                logEvent(`01 序列：目标 ${this.targetLength} 位，参考历史 ${targetInfo.base.toFixed(1)}`);
+            } else {
+                logEvent(`01 序列：目标 ${this.targetLength} 位`);
+            }
+            this.viewportEl = container.querySelector('.sequence-viewport');
+            this.markerEl = this.viewportEl
+                ? Array.from(this.viewportEl.querySelectorAll('div')).find((el) =>
+                      /width:\s*3px/.test(el.getAttribute('style') || '')
+                  )
+                : null;
+            this.updateCharMetrics();
+            this.stop();
+            this.timer = setInterval(() => this.tick(), 40);
+        },
+        updateContainer(container) {
+            this.container = container;
+            this.viewportEl = container.querySelector('.sequence-viewport');
+            this.markerEl = this.viewportEl
+                ? Array.from(this.viewportEl.querySelectorAll('div')).find((el) =>
+                      /width:\s*3px/.test(el.getAttribute('style') || '')
+                  )
+                : null;
+            this.updateCharMetrics();
+        },
+        stop() {
+            if (this.timer) {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+            this.pointer = 0;
+            this.viewportEl = null;
+            this.markerEl = null;
+            this.charWidth = null;
+            this.leadPixels = null;
+        },
+        updateCharMetrics() {
+            const displayEl = document.getElementById('seqDisplay');
+            if (!displayEl) return;
+            const width = measureSequenceCharWidth(displayEl);
+            if (width) {
+                this.charWidth = width;
+                this.leadPixels = width * this.leadDigits;
+            }
+        },
+        tick() {
+            if (!state.config.autoSequence) return;
+            if (!this.container || !document.body.contains(this.container)) {
+                this.stop();
+                return;
+            }
+            if (Date.now() < this.nextInputTime) return;
+            const redLine = this.markerEl
+                ? this.markerEl.getBoundingClientRect().right
+                : this.viewportEl
+                  ? this.viewportEl.getBoundingClientRect().left + 20
+                  : null;
+            while (true) {
+                const span = document.getElementById(`bit-${this.pointer}`);
+                if (!span) return;
+                const visibility = span.style.visibility || getComputedStyle(span).visibility;
+                if (visibility === 'hidden') {
+                    this.pointer += 1;
+                    continue;
+                }
+                if (!this.charWidth) this.updateCharMetrics();
+                const leadAllowance = this.leadPixels || this.leadDigits * 30;
+                if (redLine !== null) {
+                    const rect = span.getBoundingClientRect();
+                    if (rect.right < redLine - 6) {
+                        this.pointer += 1;
+                        continue;
+                    }
+                    if (rect.left > redLine + leadAllowance) {
+                        return;
+                    }
+                }
+                if (this.targetLength) {
+                    const progressEl = document.getElementById('seqProgress');
+                    const current = progressEl ? Number(progressEl.textContent || '0') : 0;
+                    if (current >= this.targetLength) {
+                        return;
+                    }
+                }
+                const bit = span.textContent.trim();
+                if (!bit) return;
+                if (typeof pageWindow.inputBit === 'function') {
+                    pageWindow.inputBit(Number(bit));
+                } else {
+                    const btn = bit === '0' ? document.getElementById('btn0') : document.getElementById('btn1');
+                    btn && btn.click();
+                }
+                if (this.pointer % 30 === 0) {
+                    logEvent(`01 序列：已自动输入 ${this.pointer} 位`);
+                }
+                let urgency = 0.5;
+                if (redLine !== null) {
+                    const rect = span.getBoundingClientRect();
+                    const distance = Math.max(0, redLine + leadAllowance - rect.left);
+                    urgency = clamp(distance / Math.max(leadAllowance, 1), 0, 1);
+                }
+                const minDelay = 55 + (1 - urgency) * 70;
+                const maxDelay = minDelay + 70;
+                this.nextInputTime = Date.now() + randomDelay(minDelay, maxDelay);
+                this.pointer += 1;
+                break;
+            }
+        },
+        onConfigChange() {},
+    };
+
+    const find65Runner = {
+        name: 'find65',
+        label: '🎯 找65',
+        container: null,
+        timer: null,
+        lastSignature: '',
+        start(container) {
+            this.container = container;
+            this.stop();
+            this.timer = setInterval(() => this.tick(), 200);
+        },
+        updateContainer(container) {
+            this.container = container;
+        },
+        stop() {
+            if (this.timer) {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+            this.lastSignature = '';
+        },
+        tick() {
+            if (!state.config.autoFind65 || !this.container) return;
+            if (!state.real65Set || !state.real65Set.size) {
+                if (!this.missingNotified) {
+                    logEvent('找65：真实语料尚未捕获，等待加载');
+                    this.missingNotified = true;
+                    ensureReal65Statements().then(() => {
+                        this.lastSignature = '';
+                    });
+                }
+                return;
+            }
+            this.missingNotified = false;
+            const options = Array.from(this.container.querySelectorAll('.statement-option'));
+            if (!options.length) return;
+            const signature = options.map((opt) => opt.textContent.trim()).join('|');
+            if (signature === this.lastSignature) return;
+            this.lastSignature = signature;
+            let matched = false;
+            for (const opt of options) {
+                const textNode = opt.querySelector('.option-text');
+                const normalized = normalizeStatement(textNode ? textNode.textContent : opt.textContent);
+                if (state.real65Set.has(normalized)) {
+                    const idx = Number(opt.dataset.option || options.indexOf(opt));
+                    this.scheduleSelect(idx, normalized, '命中语料');
+                    matched = true;
+                    break;
+                }
+            }
+            if (!matched) {
+                const guess = pickFind65Fallback(options);
+                if (guess) {
+                    this.scheduleSelect(guess.idx, guess.normalized, `启发式(${guess.score.toFixed(1)})`);
+                } else {
+                    logEvent('找65：语料未命中，暂不作答');
+                }
+            }
+        },
+        scheduleSelect(idx, normalized, reason) {
+            scheduleHuman(() => {
+                if (!state.config.autoFind65) return;
+                if (typeof pageWindow.selectOption === 'function') {
+                    pageWindow.selectOption(idx);
+                } else {
+                    const options = this.container?.querySelectorAll('.statement-option');
+                    options && options[idx] && options[idx].click();
+                }
+                logEvent(`找65：${reason}「${normalized.slice(0, 18)}...」`);
+            }, 500, 1500);
+        },
+        onConfigChange() {},
+    };
+
+    function pickFind65Fallback(nodes) {
+        if (!nodes || !nodes.length) return null;
+        const scored = nodes.map((opt, idx) => {
+            const textNode = opt.querySelector('.option-text') || opt;
+            const normalized = canonicalStatementText(textNode ? textNode.textContent : opt.textContent);
+            return { idx, normalized, score: scoreFind65Candidate(normalized) };
+        });
+        scored.sort((a, b) => b.score - a.score);
+        const top = scored[0];
+        if (!top || !isFinite(top.score) || top.score < 0.5) return null;
+        return top;
+    }
+
+    function scoreFind65Candidate(text) {
+        if (!text) return -Infinity;
+        const normalized = canonicalStatementText(text);
+        if (!normalized) return -Infinity;
+        const lower = normalized.toLowerCase();
+        const wMatches = lower.match(/w/g);
+        let score = 0;
+        score += (wMatches ? wMatches.length : 0) * 1.2;
+        if (/[w~！!。…~\)]$/.test(normalized)) score += 2.5;
+        if (/喵|猫|owo|ovo|uwu|QAQ|瘫|呆|逃/.test(normalized)) score += 1.5;
+        if (/65/.test(normalized)) score += 1.2;
+        if (/(:|：)\s*$/.test(normalized)) score += 0.3;
+        if (/http|www\.|\[|\]|@/i.test(normalized)) score -= 4;
+        if (!/w/i.test(normalized)) score -= 2;
+        if (normalized.length > 80) score -= 1.5;
+        return score;
+    }
+
+    const positiveRunner = {
+        name: 'positive',
+        label: '😊 正面嘛',
+        container: null,
+        timer: null,
+        lastText: '',
+        start(container) {
+            this.container = container;
+            this.stop();
+            this.timer = setInterval(() => this.tick(), 200);
+        },
+        updateContainer(container) {
+            this.container = container;
+        },
+        stop() {
+            if (this.timer) {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+            this.lastText = '';
+        },
+        tick() {
+            if (!state.config.autoPositive || !this.container) return;
+            const block = this.container.querySelector('.statement-option');
+            if (!block) return;
+            const textSource = block.querySelector('.option-text') || block;
+            const text = normalizeStatement(textSource.textContent);
+            if (!text || text === this.lastText) return;
+            this.lastText = text;
+            const answer = POSITIVE_STATEMENT_MAP.get(text);
+            if (answer === undefined) return;
+            if (typeof pageWindow.judgeStatement === 'function') {
+                scheduleHuman(() => {
+                    if (!state.config.autoPositive) return;
+                    pageWindow.judgeStatement(Boolean(answer));
+                    logEvent(`正面嘛：判断「${text.slice(0, 18)}...」 => ${answer ? '正面' : '负面'}`);
+                }, 450, 1400);
+            }
+        },
+        onConfigChange() {},
+    };
+
+    const allRunners = [colorRunner, diffRunner, memoryRunner, sequenceRunner, find65Runner, positiveRunner];
+
+    function overrideTelemetryFromScenario(baseTelemetry = {}, scenario) {
+        const snapshot = {
+            visibility_events: (scenario?.visibilityEvents || baseTelemetry.visibility_events || []).slice(),
+            key_stream: (scenario?.keyStream || baseTelemetry.key_stream || []).slice(),
+            ua: navigator.userAgent || baseTelemetry.ua || '',
+            screen: {
+                w: pageWindow.screen?.width || baseTelemetry.screen?.w || 1440,
+                h: pageWindow.screen?.height || baseTelemetry.screen?.h || 900,
+                ratio: pageWindow.devicePixelRatio || baseTelemetry.screen?.ratio || 1,
+            },
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || baseTelemetry.timezone || 'Asia/Shanghai',
+            lang: navigator.language || baseTelemetry.lang || 'zh-CN',
+            platform: navigator.platform || baseTelemetry.platform || 'MacIntel',
+            hardwareConcurrency:
+                navigator.hardwareConcurrency || baseTelemetry.hardwareConcurrency || null,
+            deviceMemory: navigator.deviceMemory || baseTelemetry.deviceMemory || null,
+            webgl_hash: baseTelemetry.webgl_hash || null,
+        };
+        try {
+            if (typeof pageWindow.stopAntiCheatTelemetry === 'function') {
+                pageWindow.stopAntiCheatTelemetry();
+            }
+        } catch {}
+        pageWindow.__antiCheatTelemetry = { ...snapshot };
+        return snapshot;
+    }
+
+    function submitMemoryPayload(payload) {
+        if (typeof pageWindow.submitGameResult === 'function') {
+            return pageWindow.submitGameResult('a1_memory', payload.raw_data);
+        }
+        return directSubmitMemoryPayload(payload);
+    }
+
+    async function directSubmitMemoryPayload(payload) {
+        try {
+            const nonceData = await fetchNonceForSubmit();
+            if (nonceData?.nonce) {
+                payload.nonce = nonceData.nonce;
+            }
+        } catch (err) {
+            console.warn('[TB-Assistant] 获取 nonce 失败，尝试直接提交', err);
+        }
+        payload.ts = Date.now();
+        const resp = await fetch('/api/game/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(payload),
+        });
+        const text = await resp.text();
+        try {
+            const data = JSON.parse(text);
+            return data && data.success !== undefined ? data : { success: false, status: resp.status, message: data?.message || resp.statusText };
+        } catch {
+            return { success: resp.ok, status: resp.status, message: text };
+        }
+    }
+
+    async function fetchNonceForSubmit() {
+        if (pageWindow.__nonceCache?.nonce) {
+            return pageWindow.__nonceCache;
+        }
+        const resp = await fetch('/api/anti_cheat/nonce', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({}),
+        });
+        if (!resp.ok) return null;
+        return resp.json();
+    }
+
+    function cleanup() {
+        state.observers.forEach(obs => obs.disconnect());
+        state.observers = [];
+        if (state.activeRunner) {
+            state.activeRunner.stop();
+            state.activeRunner = null;
+        }
+        updateStatus('已停止', 'warning');
+    }
+
+    function init() {
+        injectStyles();
+        createPanel();
+        interceptFilterArray();
+        patchColorPicker();
+        watchGameChanges();
+        watchLeaderboard();
+        window.addEventListener('beforeunload', cleanup);
+    }
+
+    function loadConfig() {
+        try {
+            const stored = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
+            return { ...defaultConfig, ...stored };
+        } catch {
+            return { ...defaultConfig };
+        }
+    }
+
+    function saveConfig() {
+        localStorage.setItem(CONFIG_KEY, JSON.stringify(state.config));
+    }
+
+    function updateConfig(key, value) {
+        state.config[key] = value;
+        saveConfig();
+        allRunners.forEach((runner) => runner.onConfigChange && runner.onConfigChange());
+    }
+
+    function injectStyles() {
+        const css = `
+/* CSS 变量定义 */
+#tb-assistant-panel {
+    --tb-primary: #7187ff;
+    --tb-primary-hover: #8a9dff;
+    --tb-bg-dark: rgba(20,20,30,0.95);
+    --tb-bg-section: rgba(255,255,255,0.04);
+    --tb-surface: rgba(255,255,255,0.05);
+    --tb-surface-hover: rgba(255,255,255,0.12);
+    --tb-text-primary: #f1f5ff;
+    --tb-text-secondary: #9fb3ff;
+    --tb-border: rgba(255,255,255,0.08);
+    --tb-border-hover: rgba(255,255,255,0.2);
+    --tb-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    --tb-transition: all 0.2s ease;
+    --tb-input-bg: rgba(0,0,0,0.4);
+    --tb-checkbox-border: rgba(255,255,255,0.3);
+    --tb-primary-alpha: rgba(113, 135, 255, 0.15);
+}
+
+#tb-assistant-panel {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            width: 280px;
+            max-width: 90vw;
+            background: var(--tb-bg-dark);
+            backdrop-filter: blur(10px);
+            color: var(--tb-text-primary);
+            font-size: 13px;
+            line-height: 1.5;
+            border-radius: 12px;
+            border: 1px solid var(--tb-border);
+            box-shadow: var(--tb-shadow);
+            z-index: 99999;
+            padding: 14px 16px 12px;
+            font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+            cursor: default;
+            transform-origin: top right;
+            will-change: transform;
+            transition: var(--tb-transition);
+        }
+        #tb-assistant-panel:hover {
+            box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+        }
+        #tb-assistant-panel.tb-collapsed .tb-body { display: none; }
+        #tb-assistant-panel.tb-collapsed { width: 180px; padding-bottom: 8px; }
+        #tb-assistant-panel h3 {
+            margin: 0 0 12px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--tb-border);
+        }
+#tb-assistant-panel button.tb-close,
+#tb-assistant-panel button.tb-toggle {
+            background: var(--tb-surface);
+            border: 1px solid var(--tb-border);
+            border-radius: 6px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--tb-transition);
+        }
+#tb-assistant-panel button.tb-close:hover,
+#tb-assistant-panel button.tb-toggle:hover {
+            background: var(--tb-surface-hover);
+            border-color: var(--tb-border-hover);
+            transform: scale(1.05);
+        }
+#tb-assistant-panel button.tb-close:active,
+#tb-assistant-panel button.tb-toggle:active {
+            transform: scale(0.95);
+        }
+#tb-assistant-panel button.tb-toggle {
+            margin-right: 6px;
+        }
+        #tb-assistant-panel .tb-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        #tb-assistant-panel .tb-section {
+            margin-bottom: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: var(--tb-bg-section);
+            border: 1px solid var(--tb-border);
+            transition: var(--tb-transition);
+        }
+        #tb-assistant-panel .tb-section:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: var(--tb-border-hover);
+        }
+        #tb-assistant-panel .tb-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            color: var(--tb-text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        #tb-assistant-panel .tb-section-title::before {
+            content: '';
+            width: 3px;
+            height: 12px;
+            background: var(--tb-primary);
+            border-radius: 2px;
+        }
+        #tb-assistant-panel .tb-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px 10px;
+        }
+        #tb-assistant-panel .tb-row.tb-slider,
+        #tb-assistant-panel .tb-slider-wrapper {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        #tb-assistant-panel .tb-slider-head {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #cfd7ff;
+        }
+        #tb-assistant-panel .tb-slider-value {
+            font-variant-numeric: tabular-nums;
+            color: #fff;
+            font-weight: 600;
+            background: rgba(113, 135, 255, 0.15);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        #tb-assistant-panel .tb-row label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            transition: var(--tb-transition);
+            user-select: none;
+        }
+        #tb-assistant-panel .tb-row label:hover {
+            background: var(--tb-surface);
+        }
+        /* 自定义复选框样式 */
+        #tb-assistant-panel input[type="checkbox"] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--tb-checkbox-border);
+            border-radius: 4px;
+            background: rgba(0,0,0,0.3);
+            cursor: pointer;
+            position: relative;
+            transition: var(--tb-transition);
+            flex-shrink: 0;
+        }
+        #tb-assistant-panel input[type="checkbox"]:hover {
+            border-color: var(--tb-primary);
+            background: var(--tb-primary-alpha);
+        }
+        #tb-assistant-panel input[type="checkbox"]:checked {
+            background: var(--tb-primary);
+            border-color: var(--tb-primary);
+        }
+        #tb-assistant-panel input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        #tb-assistant-panel input[type="number"] {
+            width: 80px;
+            border-radius: 6px;
+            border: 1px solid var(--tb-border-hover);
+            padding: 6px 8px;
+            background: var(--tb-input-bg);
+            color: #fff;
+            font-size: 13px;
+            transition: var(--tb-transition);
+        }
+        #tb-assistant-panel input[type="number"]:focus {
+            outline: none;
+            border-color: var(--tb-primary);
+            background: rgba(0,0,0,0.5);
+            box-shadow: 0 0 0 3px var(--tb-primary-alpha);
+        }
+        #tb-assistant-panel input[type="range"] {
+            width: 100%;
+            height: 6px;
+            accent-color: var(--tb-primary);
+            cursor: pointer;
+        }
+        #tb-assistant-panel input[type="range"]::-webkit-slider-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--tb-primary);
+            cursor: pointer;
+            transition: var(--tb-transition);
+        }
+        #tb-assistant-panel input[type="range"]::-webkit-slider-thumb:hover {
+            background: var(--tb-primary-hover);
+            transform: scale(1.2);
+        }
+        #tb-assistant-panel .tb-log-title {
+            margin-top: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            color: var(--tb-text-secondary);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        #tb-assistant-panel .tb-log-title::before {
+            content: '';
+            width: 3px;
+            height: 12px;
+            background: var(--tb-primary);
+            border-radius: 2px;
+        }
+        #tb-assistant-panel .tb-log-controls {
+            display: flex;
+            gap: 6px;
+            margin-left: auto;
+        }
+        #tb-assistant-panel .tb-log-btn {
+            background: var(--tb-surface);
+            border: 1px solid var(--tb-border);
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 11px;
+            padding: 4px 8px;
+            transition: var(--tb-transition);
+            white-space: nowrap;
+        }
+        #tb-assistant-panel .tb-log-btn:hover {
+            background: var(--tb-surface-hover);
+            border-color: var(--tb-border-hover);
+        }
+        #tb-assistant-panel .tb-log-btn:active {
+            transform: scale(0.95);
+        }
+        #tb-assistant-panel .tb-status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--tb-primary-alpha);
+            border: 1px solid var(--tb-primary);
+            border-radius: 6px;
+            font-size: 11px;
+            color: var(--tb-primary);
+            margin-bottom: 12px;
+        }
+        #tb-assistant-panel .tb-status-indicator.tb-status-success {
+            background: rgba(76, 175, 80, 0.15);
+            border-color: #4caf50;
+            color: #4caf50;
+        }
+        #tb-assistant-panel .tb-status-indicator.tb-status-success .tb-status-dot {
+            background: #4caf50;
+        }
+        #tb-assistant-panel .tb-status-indicator.tb-status-warning {
+            background: rgba(255, 152, 0, 0.15);
+            border-color: #ff9800;
+            color: #ff9800;
+        }
+        #tb-assistant-panel .tb-status-indicator.tb-status-warning .tb-status-dot {
+            background: #ff9800;
+        }
+        #tb-assistant-panel .tb-status-indicator.tb-status-error {
+            background: rgba(244, 67, 54, 0.15);
+            border-color: #f44336;
+            color: #f44336;
+        }
+        #tb-assistant-panel .tb-status-indicator.tb-status-error .tb-status-dot {
+            background: #f44336;
+        }
+        #tb-assistant-panel .tb-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--tb-primary);
+            animation: tb-pulse 2s ease-in-out infinite;
+        }
+        @keyframes tb-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        #tb-assistant-panel .tb-log-wrapper {
+            margin-top: 6px;
+            border-radius: 10px;
+            border: 1px solid var(--tb-border);
+            background: rgba(0,0,0,0.5);
+            padding: 8px;
+            position: relative;
+        }
+        #tb-assistant-log {
+            width: 100%;
+            height: 140px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: #c5d0ff;
+            font-size: 11px;
+            line-height: 1.6;
+            font-family: 'SF Mono', Consolas, Menlo, Monaco, 'Courier New', monospace;
+            resize: vertical;
+            min-height: 80px;
+            max-height: 400px;
+        }
+        #tb-assistant-log:focus {
+            outline: none;
+        }
+        /* 自定义滚动条 */
+        #tb-assistant-log::-webkit-scrollbar {
+            width: 8px;
+        }
+        #tb-assistant-log::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        #tb-assistant-log::-webkit-scrollbar-thumb {
+            background: rgba(113, 135, 255, 0.3);
+            border-radius: 4px;
+            transition: var(--tb-transition);
+        }
+        #tb-assistant-log::-webkit-scrollbar-thumb:hover {
+            background: rgba(113, 135, 255, 0.5);
+        }
+        .tb-helper-banner {
+            background: rgba(102, 126, 234, 0.15);
+            border: 1px dashed rgba(102, 126, 234, 0.45);
+            color: #2d2e83;
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            text-align: center;
+            transition: var(--tb-transition);
+        }
+        .tb-helper-banner:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+        .tb-assistant-result .result-display {
+            text-align: center;
+        }
+        /* 拖拽状态 */
+        #tb-assistant-panel.tb-dragging {
+            cursor: move;
+            opacity: 0.9;
+        }
+        /* 动画效果 */
+        @keyframes tb-fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        #tb-assistant-panel {
+            animation: tb-fadeIn 0.3s ease;
+        }
+        `;
+        if (typeof GM_addStyle === 'function') {
+            GM_addStyle(css);
+        } else {
+            const style = document.createElement('style');
+            style.textContent = css;
+            document.head.appendChild(style);
+        }
+    }
+
+    function createToggleSection() {
+        const rows = [
+            { key: 'autoColor', label: '🎨 颜色校准' },
+            { key: 'autoDiff', label: '🔍 找不同色' },
+            { key: 'autoMemory', label: '🔢 数字记忆' },
+            { key: 'autoSequence', label: '⚡ 01序列' },
+            { key: 'autoFind65', label: '🎯 找65' },
+            { key: 'autoPositive', label: '😊 正面嘛' },
+        ];
+        const section = document.createElement('div');
+        section.className = 'tb-section';
+        const title = document.createElement('div');
+        title.className = 'tb-section-title';
+        title.textContent = '自动功能';
+        section.appendChild(title);
+        const grid = document.createElement('div');
+        grid.className = 'tb-grid';
+        rows.forEach((row) => {
+            const div = document.createElement('div');
+            div.className = 'tb-row';
+            const label = document.createElement('label');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = Boolean(state.config[row.key]);
+            checkbox.addEventListener('change', () => updateConfig(row.key, checkbox.checked));
+            label.appendChild(checkbox);
+            const span = document.createElement('span');
+            span.textContent = row.label;
+            label.appendChild(span);
+            div.appendChild(label);
+            grid.appendChild(div);
+        });
+        section.appendChild(grid);
+        return section;
+    }
+
+    function createLogSection() {
+        const logTitle = document.createElement('div');
+        logTitle.className = 'tb-log-title';
+        logTitle.style.display = 'flex';
+        logTitle.style.alignItems = 'center';
+        logTitle.style.justifyContent = 'space-between';
+        logTitle.innerHTML = '<span>📋 操作日志</span>';
+
+        const logControls = document.createElement('div');
+        logControls.className = 'tb-log-controls';
+
+        const clearBtn = document.createElement('button');
+        clearBtn.className = 'tb-log-btn';
+        clearBtn.textContent = '🗑️ 清空';
+        clearBtn.title = '清空日志';
+
+        const exportBtn = document.createElement('button');
+        exportBtn.className = 'tb-log-btn';
+        exportBtn.textContent = '💾 导出';
+        exportBtn.title = '导出日志到文件（完整日志）';
+
+        logControls.appendChild(clearBtn);
+        logControls.appendChild(exportBtn);
+        logTitle.appendChild(logControls);
+
+        const logWrapper = document.createElement('div');
+        logWrapper.className = 'tb-log-wrapper';
+        const logArea = document.createElement('textarea');
+        logArea.id = 'tb-assistant-log';
+        logArea.readOnly = true;
+        logArea.placeholder = '暂无日志...';
+        logArea.addEventListener('scroll', () => {
+            const atBottom = Math.abs(logArea.scrollTop + logArea.clientHeight - logArea.scrollHeight) < 4;
+            logArea.dataset.userScrolled = atBottom ? '' : '1';
+        });
+        logWrapper.appendChild(logArea);
+        state.logArea = logArea;
+
+        clearBtn.addEventListener('click', () => {
+            if (confirm('确定要清空所有日志吗？')) {
+                state.logs = [];
+                if (state.logArea) {
+                    state.logArea.value = '';
+                }
+            }
+        });
+
+        exportBtn.addEventListener('click', () => {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+            const filename = `game-assistant-log-${timestamp}.txt`;
+            // 导出完整的 state.logs 数组
+            const content = state.logs.join('\n') || '暂无日志';
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+            logEvent(`日志已导出: ${filename} (${state.logs.length}行)`);
+        });
+
+        return { logTitle, logWrapper };
+    }
+
+    function createPanel() {
+        const panel = document.createElement('div');
+        panel.id = 'tb-assistant-panel';
+        if (state.panelPosition) {
+            panel.style.top = state.panelPosition.top + 'px';
+            panel.style.left = state.panelPosition.left + 'px';
+            panel.style.right = 'auto';
+        }
+        if (state.panelCollapsed) panel.classList.add('tb-collapsed');
+        applyPanelScale(panel, state.panelScale || 1);
+        const header = document.createElement('h3');
+        header.innerHTML = `
+            <span>🛠️ Dev 助手</span>
+            <span>
+                <button class="tb-toggle" title="折叠/展开">${state.panelCollapsed ? '＋' : '－'}</button>
+                <button class="tb-close" title="隐藏面板">×</button>
+            </span>
+        `;
+        panel.appendChild(header);
+        const body = document.createElement('div');
+        body.className = 'tb-body';
+        panel.appendChild(body);
+
+        // 状态指示器
+        const statusIndicator = document.createElement('div');
+        statusIndicator.className = 'tb-status-indicator';
+        statusIndicator.id = 'tb-status-indicator';
+        statusIndicator.style.display = 'none';
+        statusIndicator.innerHTML = '<span class="tb-status-dot"></span><span class="tb-status-text">待机中</span>';
+        body.appendChild(statusIndicator);
+        state.statusIndicator = statusIndicator;
+
+        body.appendChild(createToggleSection());
+
+        const timingSection = document.createElement('div');
+        timingSection.className = 'tb-section';
+        const timingTitle = document.createElement('div');
+        timingTitle.className = 'tb-section-title';
+        timingTitle.textContent = '记忆配置';
+        timingSection.appendChild(timingTitle);
+        const delayRow = document.createElement('div');
+        delayRow.className = 'tb-row';
+        delayRow.innerHTML = '<span>⏳ 记忆等待 (s)</span>';
+        const delayInput = document.createElement('input');
+        delayInput.type = 'number';
+        delayInput.min = '5';
+        delayInput.max = '600';
+        delayInput.value = Number(state.config.memoryDelaySec) || 120;
+        delayInput.addEventListener('change', () => {
+            const value = Math.max(1, Number(delayInput.value) || 120);
+            delayInput.value = value;
+            updateConfig('memoryDelaySec', value);
+        });
+        delayRow.appendChild(delayInput);
+        timingSection.appendChild(delayRow);
+        body.appendChild(timingSection);
+
+        const scaleSection = document.createElement('div');
+        scaleSection.className = 'tb-section';
+        const scaleWrap = document.createElement('div');
+        scaleWrap.className = 'tb-slider-wrapper';
+        const scaleHead = document.createElement('div');
+        scaleHead.className = 'tb-slider-head';
+        scaleHead.innerHTML = '<span>📐 面板缩放</span><span class="tb-slider-value">100%</span>';
+        const scaleValueEl = scaleHead.querySelector('.tb-slider-value');
+        const scaleInput = document.createElement('input');
+        scaleInput.type = 'range';
+        scaleInput.min = '0.7';
+        scaleInput.max = '1.3';
+        scaleInput.step = '0.05';
+        scaleInput.value = (state.panelScale || 1).toFixed(2);
+        scaleInput.addEventListener('input', () => {
+            const next = Number(scaleInput.value);
+            applyPanelScale(panel, next);
+            scaleValueEl.textContent = `${Math.round(next * 100)}%`;
+        });
+        scaleValueEl.textContent = `${Math.round((state.panelScale || 1) * 100)}%`;
+        scaleWrap.appendChild(scaleHead);
+        scaleWrap.appendChild(scaleInput);
+        scaleSection.appendChild(scaleWrap);
+        body.appendChild(scaleSection);
+
+        const { logTitle, logWrapper } = createLogSection();
+        body.appendChild(logTitle);
+        body.appendChild(logWrapper);
+
+        const toggleBtn = header.querySelector('.tb-toggle');
+        const closeBtn = header.querySelector('.tb-close');
+
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const collapsed = panel.classList.toggle('tb-collapsed');
+            toggleBtn.textContent = collapsed ? '＋' : '－';
+            state.panelCollapsed = collapsed;
+            localStorage.setItem('__tb_panel_collapsed', collapsed ? '1' : '0');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            panel.style.display = 'none';
+            setTimeout(() => {
+                panel.style.display = 'block';
+            }, 10000);
+        });
+        enablePanelDrag(panel, header);
+
+    document.body.appendChild(panel);
+    state.panel = panel;
+}
+
+function enablePanelDrag(panel, header) {
+    let dragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
+    const move = (e) => {
+        if (!dragging) return;
+        panel.style.right = 'auto';
+        const pos = clampPanelPosition(e.clientY - offsetY, e.clientX - offsetX);
+        panel.style.top = pos.top + 'px';
+        panel.style.left = pos.left + 'px';
+    };
+    const stop = () => {
+        if (!dragging) return;
+        dragging = false;
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', stop);
+        panel.classList.remove('tb-dragging');
+        const top = parseFloat(panel.style.top) || 0;
+        const left = parseFloat(panel.style.left) || 0;
+        persistPanelPosition(top, left);
+        applyPanelScale(panel, state.panelScale || 1);
+    };
+    header.addEventListener('mousedown', (e) => {
+        if (e.target.closest('button')) return;
+        const rect = panel.getBoundingClientRect();
+        dragging = true;
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+        panel.classList.add('tb-dragging');
+        panel.style.right = 'auto';
+        panel.dataset.anchored = '1';
+        panel.style.transformOrigin = 'top left';
+        document.addEventListener('mousemove', move);
+        document.addEventListener('mouseup', stop);
+    });
+}
+
+    function logEvent(message) {
+        const ts = new Date();
+        const stamp = ts.toLocaleTimeString();
+        const entry = `[${stamp}] ${message}`;
+        state.logs.push(entry);
+        const maxLines = Number(state.config.logMaxLines) || 200;
+        while (state.logs.length > maxLines) state.logs.shift();
+        if (state.logArea) {
+            const wasAtBottom = Math.abs(state.logArea.scrollTop + state.logArea.clientHeight - state.logArea.scrollHeight) < 4;
+            const userPinned = state.logArea.dataset.userScrolled !== '1';
+            state.logArea.value = state.logs.join('\n');
+            if (wasAtBottom || userPinned) {
+                state.logArea.scrollTop = state.logArea.scrollHeight;
+            }
+        }
+        console.log('[TB-Assistant]', entry);
+    }
+
+    function updateStatus(text, type = 'info') {
+        if (!state.statusIndicator) return;
+
+        const textEl = state.statusIndicator.querySelector('.tb-status-text');
+        if (textEl) textEl.textContent = text;
+
+        state.statusIndicator.className = 'tb-status-indicator';
+        if (type === 'success') state.statusIndicator.classList.add('tb-status-success');
+        else if (type === 'warning') state.statusIndicator.classList.add('tb-status-warning');
+        else if (type === 'error') state.statusIndicator.classList.add('tb-status-error');
+
+        state.statusIndicator.style.display = type === 'hide' ? 'none' : 'flex';
+    }
+
+    function interceptFilterArray() {
+        const tryPatch = () => {
+            const fn = pageWindow.filterArray;
+            if (typeof fn === 'function' && !fn.__tbAssistantPatched) {
+                const original = fn;
+                const wrapped = function (...args) {
+                    const result = original.apply(this, args);
+                    if (!state.real65Set && Array.isArray(result) && result.length) {
+                        state.real65Set = new Set(result.map((text) => normalizeStatement(text)));
+                        console.info('[TB-Assistant] 捕获真实65语料，共', state.real65Set.size, '条');
+                    }
+                    return result;
+                };
+                wrapped.__tbAssistantPatched = true;
+                pageWindow.filterArray = wrapped;
+            } else {
+                setTimeout(tryPatch, 500);
+            }
+        };
+        tryPatch();
+    }
+
+    function ensureReal65Statements() {
+        if (state.real65Set && state.real65Set.size) {
+            return Promise.resolve(state.real65Set);
+        }
+        if (real65LoadingPromise) {
+            return real65LoadingPromise;
+        }
+        real65LoadingPromise = (async () => {
+            if (BUILTIN_REAL65_SET.size && (!state.real65Set || !state.real65Set.size)) {
+                state.real65Set = new Set(BUILTIN_REAL65_SET);
+                logEvent(`找65：已加载内置语料 ${state.real65Set.size} 条`);
+                // 仍尝试异步刷新至最新语料，但不阻塞首次可用结果
+                refreshReal65Sources().catch(() => {});
+                return state.real65Set;
+            }
+            await refreshReal65Sources();
+            return state.real65Set;
+        })()
+            .finally(() => {
+                real65LoadingPromise = null;
+            });
+        return real65LoadingPromise;
+    }
+
+    async function refreshReal65Sources() {
+        const loaders = [loadReal65FromJson, loadReal65FromScript];
+        for (const loader of loaders) {
+            try {
+                const ok = await loader();
+                if (ok) return state.real65Set;
+            } catch (err) {
+                console.warn('[TB-Assistant] 加载 find65 语料失败', err);
+            }
+        }
+        return state.real65Set;
+    }
+
+    function adoptReal65List(list, label) {
+        if (!Array.isArray(list)) return false;
+        const cleaned = sanitizeFind65List(list)
+            .map((item) => canonicalStatementText(item))
+            .filter(Boolean);
+        if (!cleaned.length) return false;
+        state.real65Set = new Set(cleaned);
+        logEvent(`找65：已加载${label}语料 ${state.real65Set.size} 条`);
+        return true;
+    }
+
+    async function loadReal65FromJson() {
+        const resp = await fetch('/real65_sanitized.json', { cache: 'no-store' });
+        if (!resp.ok) return false;
+        const data = await resp.json();
+        return adoptReal65List(data, 'JSON');
+    }
+
+    async function loadReal65FromScript() {
+        const resp = await fetch('/games/find65-data.js', { cache: 'no-store' });
+        if (!resp.ok) return false;
+        const text = await resp.text();
+        const arrText = extractArrayLiteral(text, 'const real65Statements = filterArray(');
+        if (arrText) {
+            const arr = Function('return ' + arrText + ';')();
+            return adoptReal65List(arr, '最新源');
+        }
+        console.warn('[TB-Assistant] 无法在 find65.js 中定位语料数组');
+        return false;
+    }
+
+    function patchColorPicker() {
+        const tryPatch = () => {
+            const CP = pageWindow.CustomColorPicker;
+            if (CP && CP.prototype && !CP.prototype.__tbAssistantPatched) {
+                const originalInit = CP.prototype.init;
+                CP.prototype.init = function (...args) {
+                    const res = originalInit.apply(this, args);
+                    if (this.container) {
+                        this.container.__tbAssistantPicker = this;
+                    }
+                    state.lastColorPicker = this;
+                    return res;
+                };
+                CP.prototype.__tbAssistantPatched = true;
+            } else {
+                setTimeout(tryPatch, 500);
+            }
+        };
+        tryPatch();
+    }
+
+    function watchGameChanges() {
+        const retry = () => {
+            const area = document.getElementById('gamePlayContent');
+            if (!area) {
+                setTimeout(retry, 500);
+                return;
+            }
+            const observer = new MutationObserver(() => evaluateGame(area));
+            observer.observe(area, { childList: true, subtree: true });
+            state.observers.push(observer);
+            evaluateGame(area);
+        };
+        retry();
+    }
+
+    function watchLeaderboard() {
+        const retry = () => {
+            const detail = document.getElementById('gameDetailContent');
+            if (!detail) {
+                setTimeout(retry, 500);
+                return;
+            }
+            const observer = new MutationObserver(() => extractLeaderboard(detail));
+            observer.observe(detail, { childList: true, subtree: true });
+            extractLeaderboard(detail);
+        };
+        retry();
+    }
+
+    function extractLeaderboard(root) {
+        const detailArea = document.getElementById('gameDetailArea');
+        if (!detailArea || detailArea.style.display === 'none') return;
+        const table = root.querySelector('#leaderboard table');
+        if (!table) return;
+        const rows = Array.from(table.querySelectorAll('tbody tr'));
+        if (!rows.length) return;
+        const scores = rows
+            .map((row) => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length < 3) return null;
+                const val = parseFloat((cells[2].textContent || '').trim());
+                return Number.isFinite(val) ? val : null;
+            })
+            .filter((v) => v !== null);
+        if (!scores.length) return;
+        const type = pageWindow.currentGameType || detectGameTypeFromDetail(root);
+        if (!type) return;
+        const min = Math.min(...scores);
+        const max = Math.max(...scores);
+        const sortedScores = scores.slice().sort((a, b) => a - b);
+        const trimmedScores =
+            sortedScores.length > 2 ? sortedScores.slice(1, sortedScores.length - 1) : sortedScores;
+        const trimmedAvg = trimmedScores.reduce((sum, value) => sum + value, 0) / trimmedScores.length;
+        const weight = randomBetween(0.98, 1.06);
+        const weighted = trimmedAvg * weight;
+        const target = clamp(weighted, min, max);
+        state.leaderboardRanges[type] = {
+            min,
+            max,
+            trimmedAvg,
+            weight,
+            fetchedAt: Date.now(),
+        };
+        state.scoreTargets[type] = target;
+        const rangeText = `${min.toFixed(3)}-${max.toFixed(3)}`;
+        logEvent(
+            `排行榜(${type})区间: ${rangeText}，修正均值 ${trimmedAvg.toFixed(3)} × ${weight.toFixed(
+                3
+            )} ⇒ 目标 ${target.toFixed(3)}`
+        );
+    }
+
+    function detectGameTypeFromDetail(root) {
+        const titleEl = root.querySelector('.game-detail-header h2');
+        if (!titleEl) return null;
+        const text = titleEl.textContent || '';
+        const mapping = {
+            '🎨 颜色校准': 'v1_color',
+            '🔍 选出不同色': 'v2_diff',
+            '🔢 数字记忆': 'a1_memory',
+            '⚡ 01序列': 'a2_sequence',
+            '🎯 找65': 'k1_find65',
+            '😊 正面嘛': 'k2_positive',
+        };
+        return mapping[text.trim()] || null;
+    }
+
+    function describeRunner(runner) {
+        return runner ? runner.label || runner.name || '未知游戏' : '未知游戏';
+    }
+
+    function evaluateGame(area) {
+        const container = area.querySelector('.game-container');
+        if (!container || getComputedStyle(area).display === 'none') {
+            if (state.activeRunner) {
+                state.activeRunner.stop();
+                state.activeRunner = null;
+                logEvent('已离开游戏区域');
+                updateStatus('待机中', 'hide');
+            }
+            return;
+        }
+        const runner = pickRunner(container);
+        if (runner !== state.activeRunner) {
+            if (state.activeRunner) {
+                state.activeRunner.stop();
+            }
+            state.activeRunner = runner;
+            if (runner) {
+                const runnerDesc = describeRunner(runner);
+                logEvent(`进入 ${runnerDesc}`);
+                updateStatus(`运行中: ${runnerDesc}`, 'info');
+                runner.start(container);
+            } else {
+                logEvent('当前游戏未匹配到自动策略');
+                updateStatus('待机中', 'hide');
+            }
+        } else if (runner) {
+            runner.updateContainer && runner.updateContainer(container);
+        }
+    }
+
+    function pickRunner(container) {
+        const title = (container.querySelector('h2') || { textContent: '' }).textContent || '';
+        if (title.includes('颜色校准')) return colorRunner;
+        if (title.includes('选出不同色')) return diffRunner;
+        if (title.includes('数字记忆')) return memoryRunner;
+        if (title.includes('01序列')) return sequenceRunner;
+        if (title.includes('找65')) return find65Runner;
+        if (title.includes('正面嘛')) return positiveRunner;
+        return null;
+    }
+
+    
+    function createMemorySubmission(scoreTarget, range) {
+        const payload = JSON.parse(JSON.stringify(MEMORY_REQUEST_TEMPLATE));
+        const scenario = buildMemoryScenario(scoreTarget, range);
+        payload.nonce = generateUUID();
+        payload.ts = Date.now();
+        payload.raw_data.final_digits = scenario.finalDigits;
+        payload.raw_data.total_time = scenario.totalTime;
+        payload.raw_data.total_memory_time = scenario.totalMemory;
+        payload.raw_data.history = scenario.history;
+        payload.telemetry.key_stream = scenario.keyStream;
+        payload.telemetry.visibility_events = scenario.visibilityEvents;
+        payload.telemetry.screen = {
+            w: pageWindow.screen?.width || 1440,
+            h: pageWindow.screen?.height || 900,
+            ratio: pageWindow.devicePixelRatio || 1,
+        };
+        payload.telemetry.timezone =
+            (Intl.DateTimeFormat().resolvedOptions().timeZone || payload.telemetry.timezone || 'Asia/Shanghai');
+        if (navigator.language) payload.telemetry.lang = navigator.language;
+        if (navigator.userAgent) payload.telemetry.ua = navigator.userAgent;
+        return { payload, scenario };
+}
+
+function buildMemoryScenario(scoreTarget, range) {
+        const minClamp = range ? clamp(range.min, 0.2, 0.95) : 0.25;
+        const maxClamp = range
+            ? clamp(Math.max(range.max, minClamp + 0.05), minClamp + 0.05, 0.99)
+            : 0.95;
+        const target = clamp(
+            Number.isFinite(scoreTarget) ? scoreTarget : randomBetween(minClamp, maxClamp),
+            minClamp,
+            maxClamp
+        );
+        const successCount = clamp(Math.round(8 + target * 18 + randomBetween(-2, 2)), 6, 24);
+        let digitsLen = 3;
+        const history = [];
+        const displayDurations = [];
+        const recallDurations = [];
+        for (let i = 0; i < successCount; i++) {
+            const digits = randomDigitString(digitsLen);
+            history.push({ digits, input: digits, correct: true });
+            displayDurations.push(digitsLen + 2);
+            recallDurations.push(randomBetween(1.3, 2.2));
+            digitsLen++;
+        }
+        const finalDigits = digitsLen - 1;
+        const failDigitsLen = digitsLen;
+        const failDigits = randomDigitString(failDigitsLen);
+        const failInputArr = failDigits.split('');
+        const lastIndex = failInputArr.length - 1;
+        failInputArr[lastIndex] = ((Number(failInputArr[lastIndex]) + 1) % 10).toString();
+        history.push({
+            digits: failDigits,
+            input: failInputArr.join(''),
+            correct: false,
+        });
+        displayDurations.push(failDigitsLen + 2);
+        recallDurations.push(randomBetween(1.5, 2.5));
+        const totalMemory = Number(displayDurations.reduce((sum, t) => sum + t, 0).toFixed(2));
+        const sessionStart = Date.now() - Math.round((totalMemory + recallDurations.reduce((a, b) => a + b, 0) + randomBetween(3, 6)) * 1000);
+        const { stream: keyStream, end: sessionEnd } = generateKeyStream(
+            history,
+            sessionStart,
+            displayDurations,
+            recallDurations
+        );
+        const totalTime = Number(((sessionEnd - sessionStart) / 1000).toFixed(2));
+        const visibilityEvents = [];
+        return {
+            finalDigits,
+            history,
+            totalMemory,
+            totalTime,
+            keyStream,
+            visibilityEvents,
+            scoreTarget: target,
+            leaderboardRange: range || null,
+        };
+    }
+
+    function estimateMemoryTime(finalDigits) {
+        let sum = 0;
+        for (let len = 3; len <= finalDigits; len++) {
+            sum += len + 2;
+        }
+        return sum;
+    }
+
+    function randomDigitString(length) {
+        let result = '';
+        let lastDigit = -1;
+        for (let i = 0; i < length; i++) {
+            let digit;
+            do {
+                digit = Math.floor(Math.random() * 10);
+            } while (digit === lastDigit);
+            result += digit.toString();
+            lastDigit = digit;
+        }
+        return result;
+    }
+
+    function generateKeyStream(history, sessionStart, displayDurations, recallDurations) {
+        const stream = [];
+        let current = sessionStart;
+        history.forEach((round, index) => {
+            current += (displayDurations[index] || 0) * 1000;
+            current += randomDelay(200, 500);
+            const input = round.input || round.digits || '';
+            for (const ch of input) {
+                current += randomDelay(110, 230);
+                stream.push({
+                    key: ch,
+                    code: `Digit${ch}`,
+                    repeat: false,
+                    ts: current,
+                });
+            }
+            current += randomDelay(200, 400);
+            current += (recallDurations[index] || 0) * 1000;
+        });
+        return { stream, end: current };
+    }
+
+    function generateVisibilityEvents() {
+        return [];
+    }
+
+    function generateUUID() {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+            return crypto.randomUUID();
+        }
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+            const r = (Math.random() * 16) | 0;
+            const v = c === 'x' ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+        });
+    }
+
+function normalizeColor(colorString) {
+        if (!colorString) return '';
+        if (colorString.startsWith('#') && colorString.length === 7) {
+            return colorString.toLowerCase();
+        }
+        const match = colorString.match(/rgb\s*\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/i);
+        if (!match) return colorString.trim();
+        const nums = match.slice(1).map((n) => {
+            const hex = Number(n).toString(16);
+            return hex.length === 1 ? '0' + hex : hex;
+        });
+        return '#' + nums.join('');
+    }
+
+    function normalizeStatement(text) {
+        return canonicalStatementText(text);
+    }
+
+    function sanitizeFind65List(list) {
+        if (!Array.isArray(list)) return [];
+        return list
+            .filter((item) => typeof item === 'string')
+            .map((item) => canonicalStatementText(item))
+            .filter((item) => item && !item.includes('@') && !/img/i.test(item));
+    }
+
+    function extractArrayLiteral(source, marker) {
+        const idx = source.indexOf(marker);
+        if (idx === -1) return null;
+        const start = source.indexOf('[', idx);
+        if (start === -1) return null;
+        let depth = 0;
+        let inString = false;
+        let escape = false;
+        let quote = '';
+        for (let i = start; i < source.length; i++) {
+            const ch = source[i];
+            if (inString) {
+                if (escape) {
+                    escape = false;
+                } else if (ch === '\\') {
+                    escape = true;
+                } else if (ch === quote) {
+                    inString = false;
+                }
+                continue;
+            }
+            if (ch === '"' || ch === "'") {
+                inString = true;
+                quote = ch;
+                continue;
+            }
+            if (ch === '[') {
+                depth++;
+            } else if (ch === ']') {
+                depth--;
+                if (depth === 0) {
+                    return source.slice(start, i + 1);
+                }
+            }
+        }
+        return null;
+    }
+
+    function getUserId() {
+        if (pageWindow.currentUser && pageWindow.currentUser.id) return pageWindow.currentUser.id;
+        const local = localStorage.getItem('user_id');
+        return local ? Number(local) : null;
+    }
+
+    function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+    }
+
+    const MAX_RGB_DISTANCE = Math.sqrt(255 * 255 * 3);
+
+    function degradeColorAccuracy(hex, accuracy) {
+        const rgb = hexToRgb(hex);
+        if (!rgb) return hex;
+        const clampedAcc = clamp(accuracy, 0.01, 0.999);
+        const distance = (1 - clampedAcc) * MAX_RGB_DISTANCE;
+        if (distance < 1) return hex;
+        const dir = randomUnitVector();
+        const newRgb = {
+            r: clampChannel(rgb.r + dir.x * distance),
+            g: clampChannel(rgb.g + dir.y * distance),
+            b: clampChannel(rgb.b + dir.z * distance),
+        };
+        return rgbToHex(newRgb);
+    }
+
+    function randomUnitVector() {
+        let x = 0;
+        let y = 0;
+        let z = 0;
+        let len = 0;
+        while (len === 0) {
+            x = Math.random() * 2 - 1;
+            y = Math.random() * 2 - 1;
+            z = Math.random() * 2 - 1;
+            len = Math.sqrt(x * x + y * y + z * z);
+        }
+        return { x: x / len, y: y / len, z: z / len };
+    }
+
+    function clampChannel(value) {
+        return Math.max(0, Math.min(255, Math.round(value)));
+    }
+
+    function hexToRgb(hex) {
+        if (!hex) return null;
+        const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return m
+            ? {
+                  r: parseInt(m[1], 16),
+                  g: parseInt(m[2], 16),
+                  b: parseInt(m[3], 16),
+              }
+            : null;
+    }
+
+    function rgbToHex({ r, g, b }) {
+        return `#${channelToHex(r)}${channelToHex(g)}${channelToHex(b)}`;
+    }
+
+    function channelToHex(value) {
+        const hex = clampChannel(value).toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
