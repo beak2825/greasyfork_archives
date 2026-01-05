@@ -1,0 +1,53 @@
+// ==UserScript==
+// @name                this is a test 10-a
+// @author              test001
+// @version             1.1
+// @description         test
+// @include             https://www.mturk.com/mturk/findhits*
+// @include             https://www.mturk.com/mturk/preview*
+// @include             https://www.mturk.com/mturk/searchbar*
+// @include             https://www.mturk.com/mturk/sorthits*
+// @include             https://www.mturk.com/mturk/sortsearchbar*
+// @include             https://www.mturk.com/mturk/viewhits*
+// @include             https://www.mturk.com/mturk/viewsearchbar*
+// @namespace           jhakjfh
+// @downloadURL https://update.greasyfork.org/scripts/20476/this%20is%20a%20test%2010-a.user.js
+// @updateURL https://update.greasyfork.org/scripts/20476/this%20is%20a%20test%2010-a.meta.js
+// ==/UserScript==
+
+var previewLinkEls = document.querySelectorAll('span.capsulelink a');
+
+for (var i = 0; i < previewLinkEls.length; i++) {
+    var previewLink = previewLinkEls[i].getAttribute('href');
+
+    if (previewLink && previewLink.split('?')) {
+        var previewLinkArray = previewLink.split('?');
+        if (previewLinkArray[0] == '/mturk/preview') {
+            var previewAndAcceptLink = previewLinkArray[0] + 'andaccept?' + previewLinkArray[1] + '&autoAcceptEnabled=true';
+
+            var previewAndAcceptEl = document.createElement('a');
+            previewAndAcceptEl.setAttribute('href', previewAndAcceptLink);
+            previewAndAcceptEl.setAttribute('target', 'mturkhits');
+            previewAndAcceptEl.setAttribute('style', 'margin-right: 20px;');
+            //previewAndAcceptEl.innerHTML = 'Preview & Accept HITs';
+            previewAndAcceptEl.innerHTML = previewLink;
+
+            var parentSpan = previewLinkEls[i].parentNode;
+            parentSpan.insertBefore(previewAndAcceptEl, parentSpan.firstChild);
+            
+           var test1 = ["37A2SHHJCAA4OEZURNW2APNCWINKJO", "32SOQFN7RN69ANCE3SJXXLOE49KIPK", "3RC5MYEBOEUTUWQQMTE7RXC3MYDPTF", "3HCACVK2ZBAIHHQXZB9ZROGP1J064M", "3XIFEF0YSRPO5FNSPQZPHGWQLADTWY", "30EWMN5823F6V067NMY50RQMKXZ47C", "33LV6TSG7A9WZGNVP1SUETIK8WJVQP", "3Q4JQOQUBRJ5E1P3X8LDXKYFZVKVM1", "34YHZZ9RB3TBW3O4TYQ1YX4MCYS5EV", "3I6C7P7ITDOXKLK5OF10KLHUCGH6ZL", "30LCVOSIGYZXFVA0STZH6E8S6MD6YU", "30LCVOSIGYZXFVA0STZH6E8S6MA6YR", "30LCVOSIGYZXFVA0STZH6E8S6LF6YU", "3HCACVK20CNHHOWG3MBAQP4LBKH64A", "38VQ1AW9T5R7EAHTZ8SMXA7NR7J62E", "35DNGIKWSGNJTPD2ZEX0Y5XEUCJ71R", "3SKITTYV05YWZSDC386RGKCFXLJ63P", "3GBCJUK5B11E755LSLD34C2Q6V7PKM", "3PYK988VEHLTI5LLVXTWEDRVY6S9XH", "36R3RQSDQUGJM0SK3VT0K0E4PKI70T", "3K8YRYAXTNY2H1YHU8XXDEXSRQ6DGP", "3SI493PTSWQ3S4N0UHF6QGKVRIHDZF", "3IJ5583D9EWBIPVAMIDYQZZU9NWE0E", "3WRXIMH6E1E5X224PNCJ7U84KKDL4A"];
+         
+         
+         
+          var test2 = previewLink.replace("/mturk/preview?groupId=", "");
+          var test3 = test1.indexOf(test2);
+          if(test3 === -1){
+            window.open(previewAndAcceptEl);
+            
+            break;
+            
+          }
+            
+        }
+    }
+}
