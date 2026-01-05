@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name        DisplaySongLinks
+// @name        Genius - DisplaySongLinks
 // @namespace   https://ioj4.net
 // @match       https://genius.com/*-lyrics
 // @grant       none
-// @version     1.0
+// @version     2
 // @author      ioj4
 // @license MIT
 // @description Displays all streaming links (SoundCloud, YouTube, Apple Music) of a song on their Genius page
-// @downloadURL https://update.greasyfork.org/scripts/546276/DisplaySongLinks.user.js
-// @updateURL https://update.greasyfork.org/scripts/546276/DisplaySongLinks.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/546276/Genius%20-%20DisplaySongLinks.user.js
+// @updateURL https://update.greasyfork.org/scripts/546276/Genius%20-%20DisplaySongLinks.meta.js
 // ==/UserScript==
 
 

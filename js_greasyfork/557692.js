@@ -2,9 +2,9 @@
 // @name         Cookie Clicker Ultimate Automation
 // @name:zh-TW   餅乾點點樂全自動掛機輔助 (Cookie Clicker)
 // @name:zh-CN   餅乾點點樂全自動掛機輔助 (Cookie Clicker)
-// @version      9.0.1.2
+// @version      9.1.0.1
 // @description  Automated clicker, auto-buy, auto-harvest, garden manager (5 slots), stock market, season manager, Santa evolver, Smart Sugar Lump harvester, Dragon Aura management, and the new Gambler feature.
-// @description:zh-TW 全功能自動掛機腳本 v9.0.1.2 Fortune Cookie Ticker
+// @description:zh-TW 全功能自動掛機腳本 v9.1.0.1 UI Sync Fix
 // @author       You & AI Architect
 // @match        https://wws.justnainai.com/*
 // @match        https://orteil.dashnet.org/cookieclicker/*
@@ -22,6 +22,13 @@
 
 /*
 變更日誌 (Changelog):
+v9.1.0.1 Hotfix (2026):
+  - [UI Fix] UI.bindEvents: 修復主面板「突變管理」開關無法同步更新花園側邊欄按鈕狀態的問題。
+v9.1.0 UI & Logic Overhaul (2026):
+  - [Logic Fix] Garden: 修正存檔時迴圈變數錯誤導致陣型全空的問題。
+  - [Feature] Garden: 新增多汁女王甜菜 (JQB) 保護協議，成熟自動收割糖塊，其餘時間絕對豁免。
+  - [UI Enhancement] Garden Protection: 側邊欄與大面板新增「突變管理」獨立開關。
+  - [UI] Settings: 新增外部鏈結區塊。
 v9.0.1.2 Hotfix (2026):
   - [Critical Fix] Stock Broker: 將經紀人購買方式改為 DOM 模擬點擊，解決 API `M.buyBroker` 不存在導致的崩潰問題。
 v9.0.1.1 Hotfix (2026):
@@ -33,10 +40,6 @@ v9.0.0 Feature Update (2026):
   - [Feature] Stock Broker: 新增自動僱用股市經紀人功能 (Auto-Hire Broker)，降低交易手續費。
   - [Security] Stock Logic: 全面重構股市邏輯，導入憲法級 isFarming 檢查與 SavingMode 分級鎖定。
   - [UI] Control Panel: 進階頁籤新增經紀人開關。
-v8.9.9.2 Hotfix (2026):
-  - [Fix] Garden Protection: 修復花園保護/戒嚴協議解除時，未正確還原「自動突變」開關的 Bug。
-v8.9.9.1 Rebuild (2026):
-  - [UI] Settings: 新增設定匯出/匯入功能。
 */
 
 (function() {
@@ -764,7 +767,7 @@ v8.9.9.1 Rebuild (2026):
                         color: white; padding: 15px; font-weight: bold; font-size: 18px;
                         cursor: move; display: flex; justify-content: space-between; align-items: center;
                     ">
-                        <span>🍪 控制面板 v9.0.1.2</span>
+                        <span>🍪 控制面板 v9.1.0.1</span>
                         <div class="cc-close-btn" id="main-panel-close">✕</div>
                     </div>
                     <div id="global-status-bar" style="
@@ -985,6 +988,14 @@ v8.9.9.1 Rebuild (2026):
                                     <div style="display:flex; gap:5px;">
                                         <button id="btn-settings-export" style="flex:1; padding:5px; background:#5c6bc0; color:white; border:none; border-radius:4px; cursor:pointer;">📤 匯出設定</button>
                                         <button id="btn-settings-import" style="flex:1; padding:5px; background:#ef5350; color:white; border:none; border-radius:4px; cursor:pointer;">📥 匯入設定</button>
+                                    </div>
+                                </div>
+                                
+                                <div style="margin-top:10px; border-top:1px solid #ccc; padding-top:8px;">
+                                    <div style="font-size:12px; text-align:center;">
+                                        <a href="https://github.com/wei9133/Cookie-Clicker" target="_blank" style="color:#667eea; text-decoration:none; font-weight:bold;">Github</a>
+                                        |
+                                        <a href="https://greasyfork.org/scripts/557692" target="_blank" style="color:#667eea; text-decoration:none; font-weight:bold;">GreasyFork</a>
                                     </div>
                                 </div>
                             </div>
@@ -1247,7 +1258,13 @@ v8.9.9.1 Rebuild (2026):
                     if(key==='ShowCountdown') self.Elements.Countdown.toggle(this.checked);
                     if(key==='ShowBuffMonitor') self.Elements.BuffMonitor.toggle(this.checked);
                     if(key==='GardenOverlay') Logic.Garden.clearOverlay();
-                    if(key==='GardenMutation') UI.GardenGrid.updateButtonState();
+                    if(key==='GardenMutation') {
+                        UI.GardenGrid.updateButtonState();
+                        // [Fix v9.1.0.1] 同步更新花園側邊欄狀態
+                        if (UI.GardenProtection && UI.GardenProtection.updateEmbeddedState) {
+                            UI.GardenProtection.updateEmbeddedState();
+                        }
+                    }
                     if(key==='DragonAura' && this.checked && Runtime.ModuleFailCount['Dragon'] >= 10) {
                         Runtime.ModuleFailCount['Dragon'] = 0;
                         Logger.success('Core', '已重置巨龍光環熔斷計數器');
@@ -1387,6 +1404,13 @@ v8.9.9.1 Rebuild (2026):
 
             $('#garden-save-btn').click(() => Logic.Garden.saveLayout());
             $('#main-panel-close').click(() => self.togglePanel());
+            
+            // [v9.1.0] Main Panel Mutation Toggle Event
+            $('#btn-toggle-mutation-panel').click(function() {
+                Config.Flags.GardenMutation = !Config.Flags.GardenMutation;
+                GM_setValue('isGardenMutationEnabled', Config.Flags.GardenMutation);
+                UI.GardenProtection.updateEmbeddedState(); // Update UI
+            });
 
             $('#chk-godzamok').change(function() { Config.Flags.GodzamokCombo = this.checked; GM_setValue('isGodzamokComboEnabled', this.checked); });
 
@@ -2663,7 +2687,13 @@ v8.9.9.1 Rebuild (2026):
 
                     <div id="prot-sync-status" style="margin-top: 6px; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: bold; text-align: center; color: white; display: none;"></div>
 
-                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                        <button id="btn-toggle-mutation-panel" style="
+                            width: 100%; padding: 6px; margin-bottom: 8px;
+                            background: #d84315; color: white; border: none;
+                            border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;
+                        ">🧬 突變管理: 關</button>
+
                         <button id="btn-save-garden-layout" style="
                             flex: 1; padding: 8px; background: #2196f3; color: white; border: none;
                             border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold;
@@ -2717,10 +2747,11 @@ v8.9.9.1 Rebuild (2026):
             this.Elements.EmbeddedControls = $(`
                 <div id="cc-embed-right" style="position: absolute; top: 50px; right: 0; height: calc(100% - 50px); display: flex; flex-direction: column; justify-content: flex-start; gap: 8px; z-index: 1000; pointer-events: none; padding-top: 4px; padding-right: 2px;">
                     <button class="cc-embed-btn" id="btn-embed-restore" title="恢復大面板">🔼</button>
-                    <div style="height: 4px;"></div>
+                    <div style="height: 2px;"></div>
                     <button class="cc-embed-btn" id="btn-embed-toggle-lock" title="狀態切換">
                     </button>
-                    <div style="height: 4px;"></div>
+                    <button class="cc-embed-btn" id="btn-embed-toggle-mutation" title="突變管理">變</button>
+                    <div style="height: 2px;"></div>
                     <button class="cc-embed-btn" id="btn-embed-save" title="記憶">💾</button>
                     <button class="cc-embed-btn" id="btn-embed-show" title="顯示">🗺️</button>
                 </div>
@@ -2743,6 +2774,14 @@ v8.9.9.1 Rebuild (2026):
             $('#btn-embed-toggle-lock').click(() => {
                 $('#chk-spending-lock').prop('checked', !Config.Flags.SpendingLocked).trigger('change');
             });
+            
+            // [v9.1.0] Embedded Mutation Toggle
+            $('#btn-embed-toggle-mutation').click(() => {
+                Config.Flags.GardenMutation = !Config.Flags.GardenMutation;
+                GM_setValue('isGardenMutationEnabled', Config.Flags.GardenMutation);
+                $('#chk-garden-mutation').prop('checked', Config.Flags.GardenMutation);
+                self.updateEmbeddedState();
+            });
 
             $('#btn-embed-save').click(() => {
                 this.saveCurrentLayout();
@@ -2755,18 +2794,49 @@ v8.9.9.1 Rebuild (2026):
 
         updateEmbeddedState: function() {
             const btn = $('#btn-embed-toggle-lock');
-            if (btn.length === 0) return;
+            const mutBtn = $('#btn-embed-toggle-mutation');
+            const mainMutBtn = $('#btn-toggle-mutation-panel');
 
-            if (Config.Flags.SpendingLocked) {
-                btn.html('鎖').css({
-                    'background': '#d32f2f',
-                    'border-color': '#ffcdd2'
-                }).attr('title', '目前已停止支出，點擊以恢復');
-            } else {
-                btn.html('開').css({
-                    'background': '#388e3c',
-                    'border-color': '#c8e6c9'
-                }).attr('title', '目前允許支出，點擊以鎖定');
+            if (btn.length) {
+                if (Config.Flags.SpendingLocked) {
+                    btn.html('鎖').css({
+                        'background': '#d32f2f',
+                        'border-color': '#ffcdd2'
+                    }).attr('title', '目前已停止支出，點擊以恢復');
+                } else {
+                    btn.html('開').css({
+                        'background': '#388e3c',
+                        'border-color': '#c8e6c9'
+                    }).attr('title', '目前允許支出，點擊以鎖定');
+                }
+            }
+            
+            // [v9.1.0] Mutation Buttons Update
+            if (mutBtn.length) {
+                if (Config.Flags.SpendingLocked) {
+                    // 鎖定時禁用
+                    mutBtn.css({ opacity: 0.5, 'pointer-events': 'none', filter: 'grayscale(100%)' });
+                } else {
+                    mutBtn.css({ opacity: 1, 'pointer-events': 'auto', filter: 'none' });
+                    if (Config.Flags.GardenMutation) {
+                        mutBtn.text('變').css({'background': '#9c27b0', 'border-color': '#ba68c8'});
+                    } else {
+                        mutBtn.text('否').css({'background': '#d84315', 'border-color': '#ffab91'});
+                    }
+                }
+            }
+            
+            if (mainMutBtn.length) {
+                if (Config.Flags.SpendingLocked) {
+                     mainMutBtn.prop('disabled', true).css('opacity', '0.5');
+                } else {
+                     mainMutBtn.prop('disabled', false).css('opacity', '1');
+                     if (Config.Flags.GardenMutation) {
+                         mainMutBtn.text('🧬 突變管理: 開').css({'background': '#4caf50'});
+                     } else {
+                         mainMutBtn.text('🧬 突變管理: 關').css({'background': '#d84315'});
+                     }
+                }
             }
         },
 
@@ -2787,6 +2857,14 @@ v8.9.9.1 Rebuild (2026):
             });
             $('#btn-save-garden-layout').click(function() { UI.GardenProtection.saveCurrentLayout(); });
             $('#btn-show-grid').click(function() { UI.GardenGrid.toggle(); });
+            
+            // [v9.1.0] Main Panel Mutation Toggle
+            $('#btn-toggle-mutation-panel').click(function() {
+                Config.Flags.GardenMutation = !Config.Flags.GardenMutation;
+                GM_setValue('isGardenMutationEnabled', Config.Flags.GardenMutation);
+                $('#chk-garden-mutation').prop('checked', Config.Flags.GardenMutation);
+                UI.GardenProtection.updateEmbeddedState();
+            });
 
             $('#gardenLayoutSelect').change(function() {
                 const newSlot = parseInt($(this).val());
@@ -3944,6 +4022,15 @@ v8.9.9.1 Rebuild (2026):
 
                         const normalizedId = (tileId === 0) ? -1 : tileId - 1;
 
+                        // [v9.1.0] JQB 收割與保護協議
+                        if (normalizedId === 21) {
+                            if (tileAge >= M.plantsById[normalizedId].mature + 1) {
+                                Logger.success('花園', '👑 收割多汁女王甜菜 (獲取糖塊)');
+                                M.harvest(x, y);
+                            }
+                            continue; // 強制保護，跳過後續鏟除邏輯
+                        }
+
                         if (normalizedId > -1) {
                             const plant = M.plantsById[normalizedId];
                             const isAnomaly = (savedId !== -1 && normalizedId !== savedId) || (savedId === -1);
@@ -4115,7 +4202,7 @@ v8.9.9.1 Rebuild (2026):
                     const M = Game.Objects['Farm'].minigame;
                     for (let y = 0; y < 6; y++) {
                         let row = [];
-                        for (let x = 6; x < 6; x++) {
+                        for (let x = 0; x < 6; x++) {
                             if (M.isTileUnlocked(x, y)) {
                                 const tile = M.plot[y][x];
                                 const gameId = tile[0];
@@ -4550,7 +4637,7 @@ v8.9.9.1 Rebuild (2026):
         },
 
         init: function() {
-            Logger.success('Core', 'Cookie Clicker Ultimate v9.0.1.2 Loading...');
+            Logger.success('Core', 'Cookie Clicker Ultimate v9.1.0.1 Loading...');
 
             Runtime.Timers.GardenWarmup = Date.now() + 10000;
             Logger.log('Core', '[花園保護] 暖機模式啟動：暫停操作 10 秒');

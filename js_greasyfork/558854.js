@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         WME Amtliche Hausnummern Import
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      4.0.6
-// @description  Massenimport von Hausnummern aus amtlichen Quellen (ALKIS, OpenData, WFS) in den Waze Map Editor
+// @version      4.3.3
+// @description  Massenimport von Hausnummern aus amtlichen Quellen (ALKIS, OpenData, WFS) - ALLE 16 Bundesländer + AT + CH
 // @author       Hiwi234
 // @match        https://www.waze.com/editor*
 // @match        https://www.waze.com/*/editor*
@@ -25,7 +25,7 @@
 
 const SCRIPT_NAME = 'WME Amtliche Hausnummern Import';
 const SCRIPT_ID = 'wme-official-hn-import';
-const SCRIPT_VERSION = GM_info.script.version; // 4.0.2
+const SCRIPT_VERSION = GM_info.script.version;
 
 // ============================================================================
 // KONFIGURATION - Amtliche Datenquellen für DACH-Region
@@ -33,25 +33,19 @@ const SCRIPT_VERSION = GM_info.script.version; // 4.0.2
 const OFFICIAL_DATA_SOURCES = {
     // Deutschland - Bundesländer WFS-Dienste
     germany: {
-        // NRW - Hauskoordinaten (ALKIS)
+        // NRW - ALKIS Vereinfacht (Gebäude mit Adressen) - funktioniert!
         nrw: {
-            name: 'NRW Hauskoordinaten',
+            name: 'NRW ALKIS Gebäude',
             type: 'WFS',
-            url: 'https://www.wfs.nrw.de/geobasis/wfs_nw_inspire-ad-adressen',
-            typeName: 'ad:Address',
+            url: 'https://www.wfs.nrw.de/geobasis/wfs_nw_alkis_vereinfacht',
+            typeName: 'ave:GebaeudeBauwerk',
             srsName: 'EPSG:4326',
-            outputFormat: 'application/json',
-            enabled: true
-        },
-        // NRW Alternative - Gebäudeadressen
-        nrw_adressen: {
-            name: 'NRW Gebäudeadressen',
-            type: 'WFS',
-            url: 'https://www.wfs.nrw.de/geobasis/wfs_nw_alkis_adressen',
-            typeName: 'adv:AX_Gebaeude',
-            srsName: 'EPSG:4326',
-            outputFormat: 'application/json',
-            enabled: true
+            outputFormat: 'text/xml; subtype=gml/3.2.1',
+            enabled: true,
+            // Spezielle Konfiguration für NRW ALKIS
+            isALKISGebaeude: true,
+            addressField: 'lagebeztxt',
+            defaultCRS: 'EPSG:25832'
         },
         bayern: {
             name: 'Bayern OpenData',
@@ -79,6 +73,126 @@ const OFFICIAL_DATA_SOURCES = {
             srsName: 'EPSG:4326',
             outputFormat: 'application/json',
             enabled: true
+        },
+        // Hessen - INSPIRE Adressen
+        hessen: {
+            name: 'Hessen INSPIRE Adressen',
+            type: 'WFS',
+            url: 'https://www.gds.hessen.de/cgi-bin/lika-services/ogc-free-ad.ows',
+            typeName: 'ad:Address',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
+        },
+        // Brandenburg - Geobasis
+        brandenburg: {
+            name: 'Brandenburg Adressen',
+            type: 'WFS',
+            url: 'https://inspire.brandenburg.de/services/ad_wfs',
+            typeName: 'ad:Address',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
+        },
+        // Sachsen - GeoSN
+        sachsen: {
+            name: 'Sachsen GeoSN',
+            type: 'WFS',
+            url: 'https://geodienste.sachsen.de/wfs_geosn_adressen/guest',
+            typeName: 'geosn:Adresse',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
+        },
+        // Rheinland-Pfalz
+        rlp: {
+            name: 'Rheinland-Pfalz Adressen',
+            type: 'WFS',
+            url: 'https://www.geoportal.rlp.de/spatial-objects/314/wfs',
+            typeName: 'ms:adressen',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
+        },
+        // Thüringen
+        thueringen: {
+            name: 'Thüringen Adressen',
+            type: 'WFS',
+            url: 'https://www.geoproxy.geoportal-th.de/geoproxy/services/inspire_ad',
+            typeName: 'ad:Address',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
+        },
+        // Niedersachsen
+        niedersachsen: {
+            name: 'Niedersachsen LGLN',
+            type: 'WFS',
+            url: 'https://www.geobasisdaten.niedersachsen.de/doorman/noauth/wfs_ni_inspire-ad',
+            typeName: 'ad:Address',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
+        },
+        // Schleswig-Holstein
+        sh: {
+            name: 'Schleswig-Holstein',
+            type: 'WFS',
+            url: 'https://service.gdi-sh.de/WFS_SH_INSPIRE_AD',
+            typeName: 'ad:Address',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
+        },
+        // Sachsen-Anhalt
+        sachsen_anhalt: {
+            name: 'Sachsen-Anhalt',
+            type: 'WFS',
+            url: 'https://www.geodatenportal.sachsen-anhalt.de/wss/service/ST_LVermGeo_INSPIRE_AD_WFS_OpenData/guest',
+            typeName: 'ad:Address',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
+        },
+        // Mecklenburg-Vorpommern
+        mv: {
+            name: 'Mecklenburg-Vorpommern',
+            type: 'WFS',
+            url: 'https://www.geodaten-mv.de/dienste/inspire_ad_wfs',
+            typeName: 'ad:Address',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
+        },
+        // Bremen
+        bremen: {
+            name: 'Bremen Adressen',
+            type: 'WFS',
+            url: 'https://geodienste.bremen.de/wfs_adressen',
+            typeName: 'adressen:Adressen',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
+        },
+        // Saarland
+        saarland: {
+            name: 'Saarland Adressen',
+            type: 'WFS',
+            url: 'https://geoportal.saarland.de/arcgis/services/Internet/WFS_Adressen/MapServer/WFSServer',
+            typeName: 'Adressen',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
+        },
+        // Baden-Württemberg
+        bw: {
+            name: 'Baden-Württemberg LGL',
+            type: 'WFS',
+            url: 'https://owsproxy.lgl-bw.de/owsproxy/ows/WFS_LGL-BW_ALKIS_Adressen',
+            typeName: 'ave:Adresse',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
         }
     },
     austria: {
@@ -87,6 +201,18 @@ const OFFICIAL_DATA_SOURCES = {
             type: 'WFS',
             url: 'https://kataster.bev.gv.at/geoserver/adressen/wfs',
             typeName: 'adressen:adr',
+            srsName: 'EPSG:4326',
+            outputFormat: 'application/json',
+            enabled: true
+        }
+    },
+    switzerland: {
+        // Schweiz - swisstopo
+        swisstopo: {
+            name: 'Schweiz swisstopo',
+            type: 'WFS',
+            url: 'https://wfs.geodienste.ch/av/deu',
+            typeName: 'ms:gebaeudeadressen',
             srsName: 'EPSG:4326',
             outputFormat: 'application/json',
             enabled: true
@@ -309,12 +435,15 @@ class OfficialDataFetcher {
             return cached.data;
         }
 
-        // NRW-spezifische URLs (mehrere Endpunkte versuchen)
-        const nrwUrls = [
-            { url: 'https://www.wfs.nrw.de/geobasis/wfs_nw_inspire-ad-adressen', typeName: 'ad:Address' },
-            { url: 'https://www.wfs.nrw.de/geobasis/wfs_nw_alkis_adressen', typeName: 'adv:AX_Adresse' },
-            { url: 'https://www.wfs.nrw.de/geobasis/wfs_nw_hausumringe', typeName: 'ave:Hausumring' }
-        ];
+        // Spezielle Behandlung für NRW ALKIS Gebäude
+        if (source.isALKISGebaeude) {
+            const result = await this.fetchNRWALKIS(source, bbox);
+            if (result && result.length > 0) {
+                this.cache.set(cacheKey, { data: result, time: Date.now() });
+                return result;
+            }
+            return [];
+        }
 
         // Versuche verschiedene WFS-Versionen und Formate
         const attempts = [
@@ -346,43 +475,290 @@ class OfficialDataFetcher {
 
         log(`WFS Request: ${source.name}`, 'info');
 
-        // Für NRW: Versuche mehrere Endpunkte
-        const urlsToTry = source.url.includes('nrw.de') ? 
-            nrwUrls.map(u => ({ ...source, url: u.url, typeName: u.typeName })) : 
-            [source];
+        for (const attempt of attempts) {
+            const params = new URLSearchParams({
+                service: 'WFS',
+                version: attempt.version,
+                request: 'GetFeature',
+                typeName: source.typeName,
+                srsName: source.srsName || 'EPSG:4326',
+                outputFormat: attempt.outputFormat,
+                bbox: attempt.bboxParam,
+                maxFeatures: '500',
+                count: '500'
+            });
 
-        for (const currentSource of urlsToTry) {
-            for (const attempt of attempts) {
-                const params = new URLSearchParams({
-                    service: 'WFS',
-                    version: attempt.version,
-                    request: 'GetFeature',
-                    typeName: currentSource.typeName,
-                    srsName: currentSource.srsName || 'EPSG:4326',
-                    outputFormat: attempt.outputFormat,
-                    bbox: attempt.bboxParam,
-                    maxFeatures: '500',
-                    count: '500'
-                });
-
-                const url = `${currentSource.url}?${params.toString()}`;
-                
-                try {
-                    const result = await this.makeWFSRequest(url, currentSource);
-                    if (result && result.length > 0) {
-                        this.cache.set(cacheKey, { data: result, time: Date.now() });
-                        log(`${result.length} Adressen von ${currentSource.url.split('/').pop()} erhalten`, 'success');
-                        return result;
-                    }
-                } catch (e) {
-                    // Nächsten Versuch probieren
-                    continue;
+            const url = `${source.url}?${params.toString()}`;
+            
+            try {
+                const result = await this.makeWFSRequest(url, source);
+                if (result && result.length > 0) {
+                    this.cache.set(cacheKey, { data: result, time: Date.now() });
+                    log(`${result.length} Adressen von ${source.url.split('/').pop()} erhalten`, 'success');
+                    return result;
                 }
+            } catch (e) {
+                // Nächsten Versuch probieren
+                continue;
             }
         }
 
         log('Keine Daten von WFS erhalten', 'warning');
         return [];
+    }
+
+    // NRW ALKIS Gebäude - spezielle Behandlung für Polygon-Geometrien mit lagebeztxt
+    async fetchNRWALKIS(source, bbox) {
+        log(`NRW ALKIS Request: ${source.name}`, 'info');
+        
+        // BBOX für EPSG:25832 (UTM Zone 32N) - NRW natives CRS
+        // Konvertiere WGS84 zu ungefähren UTM-Koordinaten
+        const utmBbox = this.wgs84ToUTM32(bbox);
+        
+        const params = new URLSearchParams({
+            service: 'WFS',
+            version: '2.0.0',
+            request: 'GetFeature',
+            typeName: source.typeName,
+            srsName: 'urn:ogc:def:crs:EPSG::4326',
+            outputFormat: 'text/xml; subtype=gml/3.2.1',
+            bbox: `${bbox.minLat},${bbox.minLon},${bbox.maxLat},${bbox.maxLon},urn:ogc:def:crs:EPSG::4326`,
+            count: '500'
+        });
+
+        const url = `${source.url}?${params.toString()}`;
+        
+        return new Promise((resolve) => {
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: url,
+                timeout: CONFIG.rateLimiting.requestTimeout,
+                headers: {
+                    'Accept': 'text/xml, application/xml'
+                },
+                onload: (response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        try {
+                            const result = this.parseNRWALKISResponse(response.responseText, source);
+                            if (result.length > 0) {
+                                log(`${result.length} Gebäude mit Adressen gefunden`, 'success');
+                            }
+                            resolve(result);
+                        } catch (e) {
+                            log(`Parse-Fehler NRW ALKIS: ${e.message}`, 'error');
+                            resolve([]);
+                        }
+                    } else {
+                        log(`HTTP ${response.status} für NRW ALKIS`, 'error');
+                        resolve([]);
+                    }
+                },
+                onerror: () => { log('Netzwerkfehler NRW ALKIS', 'error'); resolve([]); },
+                ontimeout: () => { log('Timeout NRW ALKIS', 'error'); resolve([]); }
+            });
+        });
+    }
+
+    // WGS84 zu UTM32 (ungefähre Konvertierung für BBOX)
+    wgs84ToUTM32(bbox) {
+        // Vereinfachte Konvertierung - für BBOX ausreichend genau
+        const toUTM = (lon, lat) => {
+            const k0 = 0.9996;
+            const a = 6378137;
+            const e = 0.081819191;
+            const e2 = e * e;
+            const lonRad = lon * Math.PI / 180;
+            const latRad = lat * Math.PI / 180;
+            const lon0 = 9 * Math.PI / 180; // Zone 32 Mittelmeridian
+            
+            const N = a / Math.sqrt(1 - e2 * Math.sin(latRad) * Math.sin(latRad));
+            const T = Math.tan(latRad) * Math.tan(latRad);
+            const C = e2 / (1 - e2) * Math.cos(latRad) * Math.cos(latRad);
+            const A = Math.cos(latRad) * (lonRad - lon0);
+            const M = a * ((1 - e2/4 - 3*e2*e2/64) * latRad - (3*e2/8 + 3*e2*e2/32) * Math.sin(2*latRad));
+            
+            const x = k0 * N * (A + (1-T+C)*A*A*A/6) + 500000;
+            const y = k0 * (M + N * Math.tan(latRad) * (A*A/2 + (5-T+9*C+4*C*C)*A*A*A*A/24));
+            
+            return { x, y };
+        };
+        
+        const min = toUTM(bbox.minLon, bbox.minLat);
+        const max = toUTM(bbox.maxLon, bbox.maxLat);
+        
+        return {
+            minX: min.x,
+            minY: min.y,
+            maxX: max.x,
+            maxY: max.y
+        };
+    }
+
+    // NRW ALKIS GML Response parsen
+    parseNRWALKISResponse(xmlText, source) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(xmlText, 'text/xml');
+        const houseNumbers = [];
+
+        // Finde alle GebaeudeBauwerk Features
+        const features = doc.getElementsByTagNameNS('*', 'GebaeudeBauwerk');
+        
+        for (const feature of features) {
+            // lagebeztxt enthält die Adresse(n) - kann mehrere durch Trennzeichen getrennt enthalten
+            const lagebeztxt = this.getElementText(feature, 'lagebeztxt');
+            if (!lagebeztxt) continue;
+
+            // Centroid der Gebäudegeometrie berechnen
+            const centroid = this.calculateGMLCentroid(feature);
+            if (!centroid) continue;
+
+            // Adressen aus lagebeztxt parsen (Format: "Straße Hausnummer" oder "Straße Hausnummer, Straße2 Hausnummer2")
+            const addresses = this.parseLagebeztxt(lagebeztxt);
+            
+            for (const addr of addresses) {
+                if (addr.number) {
+                    // Hausnummern aufteilen falls mehrere
+                    const numbers = this.splitAndValidateHouseNumbers(addr.number);
+                    
+                    // Positionen versetzen wenn mehrere HN aus einem Bereich
+                    const positions = this.spreadPositions(centroid.lon, centroid.lat, numbers.length);
+                    
+                    for (let idx = 0; idx < numbers.length; idx++) {
+                        houseNumbers.push({
+                            number: numbers[idx],
+                            street: addr.street || 'Unbekannt',
+                            lon: positions[idx].lon,
+                            lat: positions[idx].lat,
+                            source: source.name
+                        });
+                    }
+                }
+            }
+        }
+
+        return houseNumbers;
+    }
+
+    // Positionen für mehrere HN versetzen (z.B. bei "7-9" -> 7, 8, 9 nebeneinander)
+    spreadPositions(baseLon, baseLat, count) {
+        if (count <= 1) {
+            return [{ lon: baseLon, lat: baseLat }];
+        }
+        
+        const positions = [];
+        // Versatz: ca. 3 Meter pro HN (0.00003° ≈ 3m)
+        const offset = 0.00003;
+        // Verteile entlang einer Linie (leicht diagonal)
+        const startOffset = -((count - 1) / 2) * offset;
+        
+        for (let i = 0; i < count; i++) {
+            positions.push({
+                lon: baseLon + startOffset + (i * offset),
+                lat: baseLat + (startOffset + (i * offset)) * 0.3 // Leicht diagonal
+            });
+        }
+        
+        return positions;
+    }
+
+    // Text aus XML Element extrahieren
+    getElementText(parent, tagName) {
+        let el = parent.getElementsByTagNameNS('*', tagName)[0];
+        if (!el) el = parent.getElementsByTagName(tagName)[0];
+        return el ? el.textContent.trim() : null;
+    }
+
+    // Centroid aus GML Polygon berechnen
+    calculateGMLCentroid(feature) {
+        // Suche nach Koordinaten in verschiedenen GML-Formaten
+        const posListEl = feature.getElementsByTagNameNS('*', 'posList')[0];
+        const posEl = feature.getElementsByTagNameNS('*', 'pos')[0];
+        const coordsEl = feature.getElementsByTagNameNS('*', 'coordinates')[0];
+        
+        let coords = [];
+        
+        if (posListEl) {
+            // GML 3.x posList Format: "lat1 lon1 lat2 lon2 ..."
+            const values = posListEl.textContent.trim().split(/\s+/).map(parseFloat);
+            for (let i = 0; i < values.length - 1; i += 2) {
+                // Bei EPSG:4326 ist die Reihenfolge lat, lon
+                coords.push({ lat: values[i], lon: values[i + 1] });
+            }
+        } else if (posEl) {
+            const values = posEl.textContent.trim().split(/\s+/).map(parseFloat);
+            if (values.length >= 2) {
+                coords.push({ lat: values[0], lon: values[1] });
+            }
+        } else if (coordsEl) {
+            // Älteres Format: "lon1,lat1 lon2,lat2 ..."
+            const pairs = coordsEl.textContent.trim().split(/\s+/);
+            for (const pair of pairs) {
+                const [lon, lat] = pair.split(',').map(parseFloat);
+                if (!isNaN(lon) && !isNaN(lat)) {
+                    coords.push({ lat, lon });
+                }
+            }
+        }
+
+        if (coords.length === 0) return null;
+
+        // Centroid berechnen
+        const sumLat = coords.reduce((s, c) => s + c.lat, 0);
+        const sumLon = coords.reduce((s, c) => s + c.lon, 0);
+        
+        const lat = sumLat / coords.length;
+        const lon = sumLon / coords.length;
+
+        // Validierung: Koordinaten müssen in NRW liegen (ca. 5.8-9.5 lon, 50.3-52.5 lat)
+        if (lon < 5.5 || lon > 10 || lat < 50 || lat > 53) {
+            // Koordinaten könnten vertauscht sein
+            if (lat >= 5.5 && lat <= 10 && lon >= 50 && lon <= 53) {
+                return { lon: lat, lat: lon };
+            }
+            return null;
+        }
+
+        return { lon, lat };
+    }
+
+    // lagebeztxt parsen - extrahiert Straße und Hausnummer
+    parseLagebeztxt(text) {
+        const addresses = [];
+        if (!text) return addresses;
+
+        // Trennzeichen für mehrere Adressen: Semikolon, Pipe, oder Zeilenumbruch
+        const parts = text.split(/[;|]\s*|\n/).map(s => s.trim()).filter(s => s);
+
+        for (const part of parts) {
+            // Versuche Straße und Hausnummer zu trennen
+            // Typische Formate:
+            // "Musterstraße 123"
+            // "Musterstraße 123a"
+            // "Am Markt 5-7"
+            // "Straße des 17. Juni 100"
+            
+            // Regex: Alles bis zur letzten Zahl(engruppe) ist Straße
+            const match = part.match(/^(.+?)\s+(\d+[\d\s\-\/a-zA-Z]*)$/);
+            
+            if (match) {
+                addresses.push({
+                    street: match[1].trim(),
+                    number: match[2].trim()
+                });
+            } else {
+                // Fallback: Versuche nur Hausnummer am Ende zu finden
+                const numMatch = part.match(/(\d+[a-zA-Z]?)$/);
+                if (numMatch) {
+                    const street = part.substring(0, part.length - numMatch[0].length).trim();
+                    addresses.push({
+                        street: street || 'Unbekannt',
+                        number: numMatch[1]
+                    });
+                }
+            }
+        }
+
+        return addresses;
     }
 
     // Einzelner WFS Request
@@ -445,10 +821,16 @@ class OfficialDataFetcher {
             if (hn) {
                 // Hausnummer validieren und ggf. aufteilen
                 const numbers = this.splitAndValidateHouseNumbers(hn.number);
-                for (const num of numbers) {
+                
+                // Positionen versetzen wenn mehrere HN aus einem Bereich
+                const positions = this.spreadPositions(hn.lon, hn.lat, numbers.length);
+                
+                for (let idx = 0; idx < numbers.length; idx++) {
                     houseNumbers.push({
                         ...hn,
-                        number: num
+                        number: numbers[idx],
+                        lon: positions[idx].lon,
+                        lat: positions[idx].lat
                     });
                 }
             }
@@ -677,12 +1059,15 @@ class OfficialDataFetcher {
                 const numbers = this.splitAndValidateHouseNumbers(rawNumber);
                 const street = tags['addr:street'] || 'Unbekannt';
                 
-                for (const number of numbers) {
+                // Positionen versetzen wenn mehrere HN aus einem Bereich
+                const positions = this.spreadPositions(lon, lat, numbers.length);
+                
+                for (let idx = 0; idx < numbers.length; idx++) {
                     houseNumbers.push({
-                        number: number,
+                        number: numbers[idx],
                         street: street,
-                        lon: lon,
-                        lat: lat,
+                        lon: positions[idx].lon,
+                        lat: positions[idx].lat,
                         source: 'OpenStreetMap'
                     });
                 }
@@ -768,19 +1153,53 @@ class OfficialDataFetcher {
         return false;
     }
 
-    // Region automatisch erkennen
+    // Region automatisch erkennen - alle deutschen Bundesländer
     detectRegion(lon, lat) {
-        // Deutschland
+        // Deutschland gesamt
         if (lat >= 47.2 && lat <= 55.1 && lon >= 5.8 && lon <= 15.1) {
-            if (lon >= 6.0 && lon <= 9.5 && lat >= 50.3 && lat <= 52.5) return 'germany.nrw';
+            // NRW
+            if (lon >= 5.8 && lon <= 9.5 && lat >= 50.3 && lat <= 52.6) return 'germany.nrw';
+            // Bayern
             if (lon >= 8.9 && lon <= 13.9 && lat >= 47.2 && lat <= 50.6) return 'germany.bayern';
+            // Baden-Württemberg
+            if (lon >= 7.5 && lon <= 10.5 && lat >= 47.5 && lat <= 49.8) return 'germany.bw';
+            // Berlin
             if (lon >= 13.0 && lon <= 13.8 && lat >= 52.3 && lat <= 52.7) return 'germany.berlin';
+            // Brandenburg (um Berlin herum)
+            if (lon >= 11.2 && lon <= 14.8 && lat >= 51.3 && lat <= 53.6) return 'germany.brandenburg';
+            // Hamburg
             if (lon >= 9.7 && lon <= 10.3 && lat >= 53.4 && lat <= 53.7) return 'germany.hamburg';
-            return null; // Kein spezifischer WFS verfügbar
+            // Bremen
+            if (lon >= 8.5 && lon <= 9.0 && lat >= 53.0 && lat <= 53.2) return 'germany.bremen';
+            // Hessen
+            if (lon >= 7.7 && lon <= 10.3 && lat >= 49.4 && lat <= 51.7) return 'germany.hessen';
+            // Niedersachsen
+            if (lon >= 6.5 && lon <= 11.6 && lat >= 51.3 && lat <= 54.0) return 'germany.niedersachsen';
+            // Schleswig-Holstein
+            if (lon >= 8.3 && lon <= 11.4 && lat >= 53.4 && lat <= 55.1) return 'germany.sh';
+            // Mecklenburg-Vorpommern
+            if (lon >= 10.5 && lon <= 14.5 && lat >= 53.1 && lat <= 54.7) return 'germany.mv';
+            // Sachsen
+            if (lon >= 11.8 && lon <= 15.1 && lat >= 50.2 && lat <= 51.7) return 'germany.sachsen';
+            // Sachsen-Anhalt
+            if (lon >= 10.5 && lon <= 13.2 && lat >= 50.9 && lat <= 53.0) return 'germany.sachsen_anhalt';
+            // Thüringen
+            if (lon >= 9.8 && lon <= 12.7 && lat >= 50.2 && lat <= 51.7) return 'germany.thueringen';
+            // Rheinland-Pfalz
+            if (lon >= 6.1 && lon <= 8.5 && lat >= 48.9 && lat <= 50.9) return 'germany.rlp';
+            // Saarland
+            if (lon >= 6.3 && lon <= 7.4 && lat >= 49.1 && lat <= 49.7) return 'germany.saarland';
+            
+            // Fallback: OSM verwenden
+            return null;
         }
         // Österreich
         if (lat >= 46.3 && lat <= 49.0 && lon >= 9.5 && lon <= 17.2) {
             return 'austria.bev';
+        }
+        // Schweiz
+        if (lat >= 45.8 && lat <= 47.9 && lon >= 5.9 && lon <= 10.5) {
+            return 'switzerland.swisstopo';
         }
         return null;
     }
@@ -1184,7 +1603,8 @@ class WMEHouseNumberManager {
         return null;
     }
 
-    // Nächstes Segment für Hausnummer finden - VERBESSERTE VERSION MIT STRASSENNAMEN-MATCHING
+    // Nächstes Segment für Hausnummer finden - VERBESSERTE VERSION FÜR KREUZUNGEN
+    // Priorisiert Straßennamen-Match bei ähnlichen Distanzen
     findNearestSegment(lon, lat, streetName = null, returnDetails = false) {
         if (!W?.model?.segments) {
             console.log(`${SCRIPT_NAME}: Keine Segmente verfügbar`);
@@ -1197,126 +1617,193 @@ class WMEHouseNumberManager {
             return returnDetails ? { segment: null, reason: 'empty_segments' } : null;
         }
 
-        let nearestSegment = null;
-        let nearestWithMatchingName = null;
-        let minDistance = Infinity;
-        let minDistanceWithName = Infinity;
-        let nearestSegmentName = null;
+        // Sammle ALLE Kandidaten innerhalb des Suchradius
+        const candidates = [];
+        const maxDistance = 100; // Meter - maximale Distanz für Zuordnung
+        const junctionRadius = 25; // Meter - Radius in dem Kreuzungs-Logik greift
         let checkedCount = 0;
+
+        // GeoJSON Point für die Hausnummer-Position erstellen
+        const hnPoint = { type: 'Point', coordinates: [lon, lat] };
+        
+        // Versuche OpenLayers Geometrie zu erstellen für präzisere Distanzberechnung
+        let olPoint = null;
+        try {
+            if (W?.userscripts?.toOLGeometry) {
+                olPoint = W.userscripts.toOLGeometry(hnPoint);
+            }
+        } catch (e) {
+            // Fallback auf manuelle Berechnung
+        }
 
         for (const segment of segments) {
             if (!segment?.attributes) continue;
+            if (segment.isDeleted?.()) continue;
 
-            // Nur Straßen (roadType 1-7, 17, 20)
+            // Nur Straßen (roadType 1-7, 17, 20) - keine Fußwege, Treppen, Bahngleise
             const roadType = segment.attributes.roadType;
             const validTypes = [1, 2, 3, 4, 5, 6, 7, 17, 20];
             if (!validTypes.includes(roadType)) continue;
 
             checkedCount++;
 
-            // Geometrie holen - verschiedene Methoden versuchen
-            let geom = null;
+            // Distanz berechnen
+            let distance = Infinity;
+            
             try {
-                if (typeof segment.getGeometry === 'function') {
-                    geom = segment.getGeometry();
-                } else if (segment.geometry) {
-                    geom = segment.geometry;
-                } else if (segment.attributes.geometry) {
-                    geom = segment.attributes.geometry;
+                if (olPoint && typeof segment.getOLGeometry === 'function') {
+                    const segOLGeom = segment.getOLGeometry();
+                    if (segOLGeom) {
+                        const distResult = olPoint.distanceTo(segOLGeom, { details: true });
+                        if (distResult && distResult.x1 !== undefined && distResult.y1 !== undefined) {
+                            const closestLon = distResult.x1 * 180 / 20037508.34;
+                            let closestLat = distResult.y1 * 180 / 20037508.34;
+                            closestLat = 180 / Math.PI * (2 * Math.atan(Math.exp(closestLat * Math.PI / 180)) - Math.PI / 2);
+                            distance = CoordUtils.distance(lat, lon, closestLat, closestLon);
+                        }
+                    }
                 }
-            } catch (e) {
-                continue;
-            }
-
-            if (!geom) continue;
-
-            // Distanz berechnen - Punkt ist bereits WGS84 (lon, lat)
-            const distance = this.pointToGeometryDistanceWGS84(lon, lat, geom);
+            } catch (e) {}
             
-            // Straßenname des Segments holen
+            // Fallback: Manuelle WGS84 Distanzberechnung
+            if (distance === Infinity) {
+                let geom = null;
+                try {
+                    if (typeof segment.getGeometry === 'function') {
+                        geom = segment.getGeometry();
+                    } else if (segment.geometry) {
+                        geom = segment.geometry;
+                    } else if (segment.attributes.geometry) {
+                        geom = segment.attributes.geometry;
+                    }
+                } catch (e) {
+                    continue;
+                }
+                if (geom) {
+                    distance = this.pointToGeometryDistanceWGS84(lon, lat, geom);
+                }
+            }
+            
+            if (distance === Infinity || distance > maxDistance) continue;
+            
+            // Straßenname und Ähnlichkeit berechnen
             const segmentStreetName = this.getSegmentStreetName(segment);
+            const similarity = streetName && segmentStreetName ? 
+                this.streetNameSimilarity(streetName, segmentStreetName) : 0;
             
-            // Nächstes Segment generell
-            if (distance < minDistance) {
-                minDistance = distance;
-                nearestSegment = segment;
-                nearestSegmentName = segmentStreetName;
-            }
-            
-            // Nächstes Segment mit passendem Namen
-            if (streetName && segmentStreetName) {
-                const similarity = this.streetNameSimilarity(streetName, segmentStreetName);
-                if (similarity >= 0.5 && distance < minDistanceWithName) {
-                    minDistanceWithName = distance;
-                    nearestWithMatchingName = segment;
-                }
-            }
+            candidates.push({
+                segment,
+                distance,
+                streetName: segmentStreetName,
+                similarity,
+                nameMatch: similarity >= 0.5
+            });
         }
 
         // Debug-Ausgabe beim ersten Aufruf
         if (this.debugMode && checkedCount > 0) {
-            console.log(`${SCRIPT_NAME}: ${checkedCount} Straßensegmente geprüft, nächstes: ${minDistance.toFixed(1)}m`);
-            this.debugMode = false; // Nur einmal ausgeben
+            console.log(`${SCRIPT_NAME}: ${checkedCount} Segmente geprüft, ${candidates.length} Kandidaten`);
+            this.debugMode = false;
         }
 
-        // Entscheidungslogik
-        const maxDistance = 100; // Meter
+        if (candidates.length === 0) {
+            return returnDetails ? { segment: null, reason: 'no_candidates', requestedStreet: streetName } : null;
+        }
+
+        // Sortiere nach Distanz
+        candidates.sort((a, b) => a.distance - b.distance);
         
-        // Wenn wir ein Segment mit passendem Namen haben und es nah genug ist
-        if (nearestWithMatchingName && minDistanceWithName <= maxDistance) {
-            if (returnDetails) {
-                return {
-                    segment: nearestWithMatchingName,
-                    distance: minDistanceWithName,
-                    nameMatch: true,
-                    reason: 'matched'
-                };
+        const nearest = candidates[0];
+        
+        // ===== KREUZUNGS-LOGIK =====
+        // Wenn mehrere Segmente sehr nah beieinander sind (Kreuzung), 
+        // bevorzuge das mit passendem Straßennamen
+        if (streetName && candidates.length > 1) {
+            // Finde alle Segmente innerhalb des Kreuzungs-Radius vom nächsten
+            const nearbySegments = candidates.filter(c => 
+                c.distance <= nearest.distance + junctionRadius
+            );
+            
+            if (nearbySegments.length > 1) {
+                // Mehrere Segmente in der Nähe = wahrscheinlich Kreuzung
+                // Sortiere nach: 1. Namens-Match, 2. Ähnlichkeit, 3. Distanz
+                nearbySegments.sort((a, b) => {
+                    // Namens-Match hat höchste Priorität
+                    if (a.nameMatch !== b.nameMatch) {
+                        return b.nameMatch ? 1 : -1;
+                    }
+                    // Bei gleichem Match-Status: höhere Ähnlichkeit bevorzugen
+                    if (Math.abs(a.similarity - b.similarity) > 0.1) {
+                        return b.similarity - a.similarity;
+                    }
+                    // Bei ähnlicher Ähnlichkeit: kürzere Distanz
+                    return a.distance - b.distance;
+                });
+                
+                const best = nearbySegments[0];
+                
+                // Logging für Kreuzungs-Entscheidung
+                if (best.segment !== nearest.segment) {
+                    console.log(`${SCRIPT_NAME}: Kreuzung erkannt! ` +
+                        `Nächstes: ${nearest.streetName || 'unbekannt'} (${nearest.distance.toFixed(1)}m), ` +
+                        `Gewählt: ${best.streetName || 'unbekannt'} (${best.distance.toFixed(1)}m, ${Math.round(best.similarity*100)}% Match)`);
+                }
+                
+                if (returnDetails) {
+                    return {
+                        segment: best.segment,
+                        distance: best.distance,
+                        nameMatch: best.nameMatch,
+                        nameSimilarity: best.similarity,
+                        segmentStreetName: best.streetName,
+                        requestedStreet: streetName,
+                        reason: best.nameMatch ? 'matched' : 'name_mismatch',
+                        isJunction: true,
+                        candidateCount: nearbySegments.length
+                    };
+                }
+                return best.segment;
             }
-            return nearestWithMatchingName;
         }
         
-        // Wenn das nächste Segment zu weit weg ist
-        if (minDistance > maxDistance) {
-            if (returnDetails) {
-                return {
-                    segment: null,
-                    distance: minDistance,
-                    nearestName: nearestSegmentName,
-                    reason: 'too_far',
-                    requestedStreet: streetName
-                };
+        // ===== STANDARD-LOGIK (kein Kreuzungs-Fall) =====
+        // Wenn ein Segment mit passendem Namen existiert und nicht zu weit weg ist
+        if (streetName) {
+            const matchingCandidate = candidates.find(c => c.nameMatch);
+            if (matchingCandidate) {
+                // Toleranz: Segment mit passendem Namen darf bis zu 30m weiter weg sein
+                const nameTolerance = 30;
+                if (matchingCandidate.distance <= nearest.distance + nameTolerance) {
+                    if (returnDetails) {
+                        return {
+                            segment: matchingCandidate.segment,
+                            distance: matchingCandidate.distance,
+                            nameMatch: true,
+                            nameSimilarity: matchingCandidate.similarity,
+                            segmentStreetName: matchingCandidate.streetName,
+                            requestedStreet: streetName,
+                            reason: 'matched'
+                        };
+                    }
+                    return matchingCandidate.segment;
+                }
             }
-            return null;
         }
         
-        // Nächstes Segment verwenden, aber prüfen ob Name passt
-        if (streetName && nearestSegmentName) {
-            const similarity = this.streetNameSimilarity(streetName, nearestSegmentName);
-            if (returnDetails) {
-                return {
-                    segment: nearestSegment,
-                    distance: minDistance,
-                    nameMatch: similarity >= 0.5,
-                    nameSimilarity: similarity,
-                    segmentStreetName: nearestSegmentName,
-                    requestedStreet: streetName,
-                    reason: similarity >= 0.5 ? 'matched' : 'name_mismatch'
-                };
-            }
-            // Bei sehr schlechter Übereinstimmung trotzdem verwenden, aber warnen
-        }
-        
+        // Fallback: Nächstes Segment verwenden
         if (returnDetails) {
             return {
-                segment: nearestSegment,
-                distance: minDistance,
-                nameMatch: !streetName, // Wenn kein Name angefragt, gilt als Match
-                segmentStreetName: nearestSegmentName,
-                reason: 'matched'
+                segment: nearest.segment,
+                distance: nearest.distance,
+                nameMatch: nearest.nameMatch,
+                nameSimilarity: nearest.similarity,
+                segmentStreetName: nearest.streetName,
+                requestedStreet: streetName,
+                reason: nearest.nameMatch ? 'matched' : (streetName ? 'name_mismatch' : 'matched')
             };
         }
         
-        return nearestSegment;
+        return nearest.segment;
     }
 
     // Punkt-zu-Geometrie Distanz in Metern (alle Koordinaten in WGS84)
@@ -1383,6 +1870,79 @@ class WMEHouseNumberManager {
 
         // Haversine Distanz in Metern
         return CoordUtils.distance(py, px, projY, projX);
+    }
+
+    // NEUE FUNKTION: Projiziert einen Punkt auf das nächste Segment und gibt die projizierten Koordinaten zurück
+    // Dies ist KRITISCH für die korrekte Hausnummern-Positionierung!
+    projectPointOnGeometry(pointLon, pointLat, geometry) {
+        // Koordinaten aus Geometrie extrahieren (wie in pointToGeometryDistanceWGS84)
+        let coordinates = [];
+        
+        if (geometry.coordinates && geometry.coordinates.length > 0) {
+            coordinates = geometry.coordinates;
+        } else if (geometry.getVertices) {
+            const verts = geometry.getVertices();
+            coordinates = verts.map(v => {
+                const lon = v.x * 180 / 20037508.34;
+                let lat = v.y * 180 / 20037508.34;
+                lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
+                return [lon, lat];
+            });
+        } else if (geometry.components) {
+            coordinates = geometry.components.map(c => {
+                const lon = c.x * 180 / 20037508.34;
+                let lat = c.y * 180 / 20037508.34;
+                lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
+                return [lon, lat];
+            });
+        }
+
+        if (coordinates.length < 2) {
+            // Fallback: Original-Koordinaten zurückgeben
+            return { lon: pointLon, lat: pointLat, projected: false };
+        }
+
+        let minDist = Infinity;
+        let bestProjection = { lon: pointLon, lat: pointLat };
+
+        for (let i = 0; i < coordinates.length - 1; i++) {
+            const a = coordinates[i];
+            const b = coordinates[i + 1];
+            
+            if (!a || !b || a.length < 2 || b.length < 2) continue;
+
+            // Projektion berechnen
+            const ax = a[0], ay = a[1];
+            const bx = b[0], by = b[1];
+            const dx = bx - ax;
+            const dy = by - ay;
+            const lengthSq = dx * dx + dy * dy;
+
+            let t = 0;
+            if (lengthSq > 0) {
+                t = Math.max(0, Math.min(1, ((pointLon - ax) * dx + (pointLat - ay) * dy) / lengthSq));
+            }
+
+            const projX = ax + t * dx;
+            const projY = ay + t * dy;
+
+            // Distanz zur Projektion berechnen
+            const dist = CoordUtils.distance(pointLat, pointLon, projY, projX);
+            
+            if (dist < minDist) {
+                minDist = dist;
+                bestProjection = { lon: projX, lat: projY };
+            }
+        }
+
+        return { 
+            lon: bestProjection.lon, 
+            lat: bestProjection.lat, 
+            projected: true,
+            originalLon: pointLon,
+            originalLat: pointLat,
+            distanceFromOriginal: minDist
+        };
     }
 
     // Prüfen ob Hausnummer bereits existiert (VEREINFACHT UND ROBUSTER)
@@ -1558,16 +2118,38 @@ class WMEHouseNumberManager {
         // Session-Tracking mit Koordinaten
         if (lon !== null && lat !== null) {
             const coordKey = `${numberStr}_${lat.toFixed(4)}_${lon.toFixed(4)}`;
-            const coordData = { lon, lat, segmentId, number: numberStr };
+            const coordData = { lon, lat, segmentId: segIdStr, number: numberStr };
             this.importedThisSession.set(coordKey, coordData);
             
             // WICHTIG: Auch in GLOBALE Map eintragen (überlebt resetSessionTracking)
             globalImportedHN.set(coordKey, coordData);
         }
     }
+    
+    // Projizierte Position auf Segment berechnen
+    getProjectedPositionOnSegment(lon, lat, segment) {
+        if (!segment) return null;
+        
+        try {
+            let geom = null;
+            if (typeof segment.getGeometry === 'function') {
+                geom = segment.getGeometry();
+            } else if (segment.geometry) {
+                geom = segment.geometry;
+            } else if (segment.attributes?.geometry) {
+                geom = segment.attributes.geometry;
+            }
+            
+            if (!geom) return null;
+            
+            return this.projectPointOnGeometry(lon, lat, geom);
+        } catch (e) {
+            return null;
+        }
+    }
 
-    // Hausnummer hinzufügen
-    async addHouseNumber(houseNumber, segment) {
+    // Hausnummer hinzufügen - MIT POSITIONS-OPTIMIERUNG
+    async addHouseNumber(houseNumber, segment, segmentDistance = null) {
         if (!segment || !houseNumber) {
             return { success: false, reason: 'missing_data' };
         }
@@ -1575,6 +2157,12 @@ class WMEHouseNumberManager {
         const segmentId = segment.attributes.id;
         const numberStr = String(houseNumber.number).trim();
         const numberLower = numberStr.toLowerCase();
+
+        // ===== DISTANZ-CHECK: Ablehnen wenn zu weit vom Segment =====
+        const MAX_SEGMENT_DISTANCE = CONFIG.import.maxSegmentDistance || 50;
+        if (segmentDistance !== null && segmentDistance > MAX_SEGMENT_DISTANCE) {
+            return { success: false, reason: `too_far_from_segment (${segmentDistance.toFixed(0)}m > ${MAX_SEGMENT_DISTANCE}m)` };
+        }
 
         // Duplikat-Check (mit Koordinaten für bessere Erkennung)
         if (this.isDuplicate(numberStr, segmentId, houseNumber.lon, houseNumber.lat)) {
@@ -1589,16 +2177,13 @@ class WMEHouseNumberManager {
                     for (const hn of existingHN) {
                         const existingNum = String(hn?.number || '').trim().toLowerCase();
                         if (existingNum === numberLower) {
-                            // Zur Map hinzufügen für zukünftige Prüfungen
                             this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
                             return { success: false, reason: 'duplicate' };
                         }
                     }
                 }
             }
-        } catch (e) {
-            // Ignorieren, weiter mit Import
-        }
+        } catch (e) {}
 
         // FINALE PRÜFUNG 2: Über W.model.houseNumbers
         try {
@@ -1615,11 +2200,9 @@ class WMEHouseNumberManager {
                     }
                 }
             }
-        } catch (e) {
-            // Ignorieren
-        }
+        } catch (e) {}
 
-        // FINALE PRÜFUNG 3: W.model.segmentHouseNumbers.getByAttributes (WICHTIGSTE!)
+        // FINALE PRÜFUNG 3: W.model.segmentHouseNumbers.getByAttributes
         try {
             if (W?.model?.segmentHouseNumbers?.getByAttributes) {
                 const existingHN = W.model.segmentHouseNumbers.getByAttributes({
@@ -1627,16 +2210,13 @@ class WMEHouseNumberManager {
                     number: numberStr
                 });
                 if (existingHN && existingHN.length > 0) {
-                    console.log(`${SCRIPT_NAME}: FINAL segmentHouseNumbers blocked: ${numberStr}`);
                     this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
                     return { success: false, reason: 'duplicate' };
                 }
             }
-        } catch (e) {
-            // Ignorieren
-        }
+        } catch (e) {}
 
-        // ===== LETZTE PRÜFUNG: Nochmal gegen globale Map (direkt vor SDK-Aufruf) =====
+        // ===== LETZTE PRÜFUNG: Nochmal gegen globale Map =====
         const FINAL_CHECK_DISTANCE = CONFIG.import.duplicateRadius || 20;
         for (const [key, data] of globalImportedHN.entries()) {
             if (!data || data.lon === undefined || data.lat === undefined) continue;
@@ -1645,31 +2225,76 @@ class WMEHouseNumberManager {
             
             const dist = CoordUtils.distance(houseNumber.lat, houseNumber.lon, data.lat, data.lon);
             if (dist < FINAL_CHECK_DISTANCE) {
-                console.log(`${SCRIPT_NAME}: FINAL CHECK blocked duplicate: ${numberStr} (${dist.toFixed(1)}m)`);
                 return { success: false, reason: 'duplicate' };
             }
         }
 
         try {
-            // WME SDK verwenden
+            // METHODE 1: WME SDK verwenden (bevorzugt)
             if (wmeSDK?.DataModel?.HouseNumbers?.addHouseNumber) {
-                // GeoJSON Point - SDK erwartet "point" nicht "geometry"!
-                const point = {
+                // WICHTIG: Verwende die ORIGINAL-Koordinaten der Hausnummer!
+                // Die HN soll an ihrer echten Position bleiben, nicht auf dem Segment.
+                // Das SDK ordnet die HN automatisch dem angegebenen Segment zu.
+                const geometry = {
                     type: 'Point',
                     coordinates: [houseNumber.lon, houseNumber.lat]
                 };
+                
+                // DEBUG: Erste 5 Hausnummern loggen
+                if (importStats.successful < 5) {
+                    console.log(`${SCRIPT_NAME}: HN ${numberStr} @ ${houseNumber.lat.toFixed(5)}, ${houseNumber.lon.toFixed(5)} (Dist: ${segmentDistance?.toFixed(0) || '?'}m)`);
+                }
 
-                // SOFORT als importiert markieren BEVOR SDK-Aufruf (verhindert Race Conditions)
+                // Als importiert markieren (mit Original-Koordinaten)
                 this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
 
-                // Korrektes SDK Format: { segmentId, number, point }
-                await wmeSDK.DataModel.HouseNumbers.addHouseNumber({
-                    segmentId: segmentId,
-                    number: numberStr,
-                    point: point
-                });
-                
-                return { success: true, segmentId: segmentId };
+                try {
+                    await wmeSDK.DataModel.HouseNumbers.addHouseNumber({
+                        segmentId: segmentId,
+                        number: numberStr,
+                        geometry: geometry
+                    });
+                    return { success: true, segmentId: segmentId, distance: segmentDistance };
+                } catch (e1) {
+                    try {
+                        await wmeSDK.DataModel.HouseNumbers.addHouseNumber({
+                            segmentId: segmentId,
+                            number: numberStr,
+                            point: geometry
+                        });
+                        return { success: true, segmentId: segmentId, distance: segmentDistance };
+                    } catch (e2) {
+                        throw e1;
+                    }
+                }
+            }
+            
+            // METHODE 2: Native Waze Action verwenden (Fallback)
+            const pageRequire = unsafeWindow?.require || W?.require;
+            if (pageRequire) {
+                try {
+                    const AddHouseNumber = pageRequire('Waze/Action/AddHouseNumber');
+                    if (AddHouseNumber) {
+                        // Konvertiere WGS84 zu Web Mercator für OpenLayers
+                        const mercatorX = houseNumber.lon * 20037508.34 / 180;
+                        const mercatorY = Math.log(Math.tan((90 + houseNumber.lat) * Math.PI / 360)) / (Math.PI / 180) * 20037508.34 / 180;
+                        
+                        // OpenLayers Point erstellen
+                        const OL = unsafeWindow?.OpenLayers || window.OpenLayers;
+                        if (OL) {
+                            const olPoint = new OL.Geometry.Point(mercatorX, mercatorY);
+                            
+                            // Action erstellen und ausführen
+                            const action = new AddHouseNumber(segment, numberStr, olPoint);
+                            W.model.actionManager.add(action);
+                            
+                            this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
+                            return { success: true, segmentId: segmentId, method: 'native_action' };
+                        }
+                    }
+                } catch (e) {
+                    console.log(`${SCRIPT_NAME}: Native Action Fallback fehlgeschlagen:`, e.message);
+                }
             }
 
             // Kein SDK verfügbar
@@ -1825,109 +2450,112 @@ class ImportController {
         // Tracking für Auto-Pause (verhindert Überspringen bei parallelen Imports)
         let lastPauseAt = 0;
         
-        // Sortiere HN nach Position für effizientes Scrolling
+        // Sortiere HN nach Position für effizientes Scrolling (Cluster zusammen)
         const sortedHN = [...deduplicatedHN].sort((a, b) => {
             // Sortiere nach lat, dann lon (von oben-links nach unten-rechts)
-            if (Math.abs(a.lat - b.lat) > 0.001) return b.lat - a.lat;
+            if (Math.abs(a.lat - b.lat) > 0.0003) return b.lat - a.lat;
             return a.lon - b.lon;
         });
         
-        let lastScrollLat = null;
-        let lastScrollLon = null;
+        // Viewport-Tracking für intelligentes Scrolling
+        let lastCenterLat = null;
+        let lastCenterLon = null;
         
-        for (let i = 0; i < sortedHN.length && !this.shouldStop; i += batchSize) {
-            const batch = sortedHN.slice(i, i + batchSize);
+        // BATCH-Verarbeitung: Sammle HN im sicheren Bereich, dann parallel verarbeiten
+        let i = 0;
+        while (i < sortedHN.length && !this.shouldStop) {
+            const hn = sortedHN[i];
             
-            // Scrolle zur Position des ersten HN im Batch (wenn weit genug entfernt)
-            if (scrollDuringImport && batch.length > 0) {
-                const firstHN = batch[0];
-                const needsScroll = lastScrollLat === null || 
-                    Math.abs(firstHN.lat - lastScrollLat) > 0.0005 || 
-                    Math.abs(firstHN.lon - lastScrollLon) > 0.0005;
+            // Prüfe ob Zentrierung nötig ist
+            const needsCenter = scrollDuringImport && this.needsCenteringForHN(hn, lastCenterLat, lastCenterLon);
+            
+            if (needsCenter) {
+                try {
+                    // Zentriere Karte auf die aktuelle HN
+                    const mercX = hn.lon * 20037508.34 / 180;
+                    const mercY = Math.log(Math.tan((90 + hn.lat) * Math.PI / 360)) / (Math.PI / 180) * 20037508.34 / 180;
+                    
+                    if (W?.map?.setCenter) {
+                        W.map.setCenter({ lon: mercX, lat: mercY });
+                    }
+                    
+                    lastCenterLat = hn.lat;
+                    lastCenterLon = hn.lon;
+                    
+                    // Warte bis WME die HN für diesen Bereich geladen hat
+                    await this.sleep(1200);
+                    
+                    // HN neu laden für diesen Bereich
+                    wmeManager.loadExistingHouseNumbers();
+                    
+                    await this.sleep(300);
+                } catch (e) {
+                    // Ignorieren
+                }
+            }
+            
+            // Sammle alle HN die im sicheren Bereich liegen (max 10 für parallele Verarbeitung)
+            const safeBatch = [];
+            while (i < sortedHN.length && safeBatch.length < 10 && !this.shouldStop) {
+                const currentHN = sortedHN[i];
                 
-                if (needsScroll) {
-                    try {
-                        const mercX = firstHN.lon * 20037508.34 / 180;
-                        const mercY = Math.log(Math.tan((90 + firstHN.lat) * Math.PI / 360)) / (Math.PI / 180) * 20037508.34 / 180;
-                        
-                        if (W?.map?.setCenter) {
-                            W.map.setCenter({ lon: mercX, lat: mercY });
-                        }
-                        
-                        lastScrollLat = firstHN.lat;
-                        lastScrollLon = firstHN.lon;
-                        
-                        // 3 Sekunden warten bis WME die HN geladen hat
-                        await this.sleep(3000);
-                        
-                        // HN neu laden für diesen Bereich
-                        wmeManager.loadExistingHouseNumbers();
-                    } catch (e) {
-                        // Ignorieren
+                // Prüfe ob diese HN noch im sicheren Bereich liegt
+                if (safeBatch.length > 0 && this.needsCenteringForHN(currentHN, lastCenterLat, lastCenterLon)) {
+                    break; // Nächste HN braucht neue Zentrierung
+                }
+                
+                // Prüfe ob HN bereits importiert wurde
+                const numLower = String(currentHN.number).trim().toLowerCase();
+                let skipThis = false;
+                
+                for (const [key, data] of globalImportedHN.entries()) {
+                    if (!data || data.lon === undefined || data.lat === undefined) continue;
+                    if (String(data.number || '').toLowerCase() !== numLower) continue;
+                    
+                    const dist = CoordUtils.distance(currentHN.lat, currentHN.lon, data.lat, data.lon);
+                    if (dist < 20) {
+                        importStats.skipped++;
+                        skipThis = true;
+                        break;
+                    }
+                }
+                
+                if (!skipThis) {
+                    safeBatch.push(currentHN);
+                }
+                i++;
+            }
+            
+            // Parallele Verarbeitung des Safe-Batches
+            if (safeBatch.length > 0) {
+                await Promise.all(safeBatch.map(h => this.processHouseNumber(h)));
+                
+                // Kurze Pause nach Batch
+                await this.sleep(150);
+            }
+            
+            // Auto-Pause: Prüfe ob nächster Schwellenwert erreicht
+            if (CONFIG.import.autoPauseEnabled && CONFIG.import.autoPauseAfter > 0) {
+                const pauseInterval = CONFIG.import.autoPauseAfter;
+                const nextPauseAt = lastPauseAt + pauseInterval;
+                
+                if (importStats.successful >= nextPauseAt) {
+                    lastPauseAt = Math.floor(importStats.successful / pauseInterval) * pauseInterval;
+                    
+                    log(`⏸️ Auto-Pause nach ${importStats.successful} Imports - Bitte jetzt SPEICHERN!`, 'warning');
+                    updateProgress(`⏸️ PAUSE - Speichern! Dann "Fortfahren" klicken`);
+                    
+                    // Nicht-blockierende Pause - warte auf Button-Klick
+                    await this.waitForUserContinue(importStats.successful);
+                    
+                    if (this.shouldStop) {
+                        log('Import vom Benutzer abgebrochen', 'warning');
                     }
                 }
             }
             
-            // PARALLELE Verarbeitung - X HN gleichzeitig
-            const parallelCount = CONFIG.import.parallelImports || 5;
-            
-            for (let j = 0; j < batch.length && !this.shouldStop; j += parallelCount) {
-                const parallelBatch = batch.slice(j, j + parallelCount);
-                
-                // Filtere bereits importierte HN
-                const toImport = [];
-                for (const hn of parallelBatch) {
-                    const numLower = String(hn.number).trim().toLowerCase();
-                    let skipThis = false;
-                    
-                    for (const [key, data] of globalImportedHN.entries()) {
-                        if (!data || data.lon === undefined || data.lat === undefined) continue;
-                        if (String(data.number || '').toLowerCase() !== numLower) continue;
-                        
-                        const dist = CoordUtils.distance(hn.lat, hn.lon, data.lat, data.lon);
-                        if (dist < 20) {
-                            importStats.skipped++;
-                            skipThis = true;
-                            break;
-                        }
-                    }
-                    
-                    if (!skipThis) {
-                        toImport.push(hn);
-                    }
-                }
-                
-                // Parallele Imports ausführen
-                if (toImport.length > 0) {
-                    await Promise.all(toImport.map(hn => this.processHouseNumber(hn)));
-                    
-                    // Kurze Pause nach parallelem Batch
-                    await this.sleep(200);
-                    
-                    // Auto-Pause: Prüfe ob nächster Schwellenwert erreicht
-                    if (CONFIG.import.autoPauseEnabled && CONFIG.import.autoPauseAfter > 0) {
-                        const pauseInterval = CONFIG.import.autoPauseAfter;
-                        const nextPauseAt = lastPauseAt + pauseInterval;
-                        
-                        if (importStats.successful >= nextPauseAt) {
-                            lastPauseAt = Math.floor(importStats.successful / pauseInterval) * pauseInterval;
-                            
-                            log(`⏸️ Auto-Pause nach ${importStats.successful} Imports - Bitte jetzt SPEICHERN!`, 'warning');
-                            updateProgress(`⏸️ PAUSE - Speichern! Dann "Fortfahren" klicken`);
-                            
-                            // Nicht-blockierende Pause - warte auf Button-Klick
-                            await this.waitForUserContinue(importStats.successful);
-                            
-                            if (this.shouldStop) {
-                                log('Import vom Benutzer abgebrochen', 'warning');
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // Pause zwischen Batches
-            await this.sleep(300);
+            // Progress Update
+            updateProgress();
         }
 
         this.isRunning = false;
@@ -1951,6 +2579,74 @@ class ImportController {
             }
         } catch (e) {}
         return 0;
+    }
+    
+    // Aktuellen Viewport (Kartenausschnitt) holen
+    getCurrentViewport() {
+        try {
+            let bounds = null;
+            let center = null;
+            
+            // Versuche Bounds zu bekommen
+            if (W?.map?.olMap?.getExtent) {
+                const extent = W.map.olMap.getExtent();
+                if (extent) {
+                    // Mercator zu WGS84
+                    bounds = {
+                        minLon: extent.left * 180 / 20037508.34,
+                        maxLon: extent.right * 180 / 20037508.34,
+                        minLat: Math.atan(Math.exp(extent.bottom * Math.PI / 20037508.34)) * 360 / Math.PI - 90,
+                        maxLat: Math.atan(Math.exp(extent.top * Math.PI / 20037508.34)) * 360 / Math.PI - 90
+                    };
+                }
+            }
+            
+            // Versuche Center zu bekommen
+            if (W?.map?.olMap?.getCenter) {
+                const c = W.map.olMap.getCenter();
+                if (c) {
+                    center = {
+                        lon: c.lon * 180 / 20037508.34,
+                        lat: Math.atan(Math.exp(c.lat * Math.PI / 20037508.34)) * 360 / Math.PI - 90
+                    };
+                }
+            }
+            
+            if (bounds && center) {
+                return {
+                    ...bounds,
+                    centerLon: center.lon,
+                    centerLat: center.lat,
+                    width: bounds.maxLon - bounds.minLon,
+                    height: bounds.maxLat - bounds.minLat
+                };
+            }
+        } catch (e) {}
+        return null;
+    }
+    
+    // Prüft ob eine HN Zentrierung benötigt (außerhalb des sicheren Bereichs)
+    needsCenteringForHN(hn, lastCenterLat, lastCenterLon) {
+        // Wenn noch nie zentriert wurde, immer zentrieren
+        if (lastCenterLat === null || lastCenterLon === null) {
+            return true;
+        }
+        
+        // Berechne Distanz zum letzten Zentrum
+        const distLat = Math.abs(hn.lat - lastCenterLat);
+        const distLon = Math.abs(hn.lon - lastCenterLon);
+        
+        // Sicherer Bereich: ca. 30% des typischen Viewports in jede Richtung
+        // Bei Zoom 19 ist der Viewport ca. 0.002° breit/hoch
+        // Sicherer Bereich = 0.0006° (30% von 0.002°)
+        const safeRadius = 0.0006;
+        
+        // Wenn HN außerhalb des sicheren Bereichs liegt, zentrieren
+        if (distLat > safeRadius || distLon > safeRadius) {
+            return true;
+        }
+        
+        return false;
     }
     
     // Scanne ALLE sichtbaren Hausnummern und sammle ihre Koordinaten
@@ -2459,8 +3155,8 @@ class ImportController {
                     });
                 }
                 
-                // Hausnummer hinzufügen
-                const result = await wmeManager.addHouseNumber(houseNumber, segment);
+                // Hausnummer hinzufügen - MIT Distanz für Validierung
+                const result = await wmeManager.addHouseNumber(houseNumber, segment, findResult.distance);
 
                 if (result.success) {
                     importStats.successful++;
@@ -2488,6 +3184,17 @@ class ImportController {
                         street: houseNumber.street,
                         lat: houseNumber.lat,
                         lon: houseNumber.lon
+                    });
+                } else if (result.reason && result.reason.startsWith('too_far_from_segment')) {
+                    // Zu weit vom Segment - in tooFarAway Report
+                    importStats.skipped++;
+                    importReport.tooFarAway.push({
+                        number: houseNumber.number,
+                        street: houseNumber.street || 'Unbekannt',
+                        lat: houseNumber.lat,
+                        lon: houseNumber.lon,
+                        distance: findResult.distance,
+                        nearestStreet: findResult.segmentStreetName
                     });
                 } else {
                     importStats.failed++;
@@ -2747,14 +3454,28 @@ function createUI(tabPane) {
                     <option value="osm">🌍 OpenStreetMap (Overpass) - empfohlen</option>
                     <option value="manual">📝 Manuelle Eingabe</option>
                     <optgroup label="🇩🇪 Deutschland">
-                        <option value="germany.nrw">NRW Hausumringe</option>
-                        <option value="germany.nrw_adressen">NRW Open.NRW Adressen</option>
+                        <option value="germany.nrw">NRW ALKIS Gebäude</option>
                         <option value="germany.bayern">Bayern OpenData</option>
+                        <option value="germany.bw">Baden-Württemberg</option>
                         <option value="germany.berlin">Berlin FIS-Broker</option>
-                        <option value="germany.hamburg">Hamburg Geodaten</option>
+                        <option value="germany.brandenburg">Brandenburg</option>
+                        <option value="germany.bremen">Bremen</option>
+                        <option value="germany.hamburg">Hamburg</option>
+                        <option value="germany.hessen">Hessen</option>
+                        <option value="germany.mv">Mecklenburg-Vorpommern</option>
+                        <option value="germany.niedersachsen">Niedersachsen</option>
+                        <option value="germany.rlp">Rheinland-Pfalz</option>
+                        <option value="germany.saarland">Saarland</option>
+                        <option value="germany.sachsen">Sachsen</option>
+                        <option value="germany.sachsen_anhalt">Sachsen-Anhalt</option>
+                        <option value="germany.sh">Schleswig-Holstein</option>
+                        <option value="germany.thueringen">Thüringen</option>
                     </optgroup>
                     <optgroup label="🇦🇹 Österreich">
                         <option value="austria.bev">BEV Adressregister</option>
+                    </optgroup>
+                    <optgroup label="🇨🇭 Schweiz">
+                        <option value="switzerland.swisstopo">swisstopo</option>
                     </optgroup>
                 </select>
             </div>

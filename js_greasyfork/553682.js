@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DemonicScans Unified Automator
 // @namespace    https://github.com/wverri/autods
-// @version      0.7.19-alpha
+// @version      0.7.20-alpha
 // @description  Consolidated automation suite for DemonicScans: wave battles, PvP, farming, UI enhancements, and image blocking.
 // @author       Willian Verri
 // @match        https://demonicscans.org/*
@@ -12390,12 +12390,12 @@ var version = GM_info.script.version;
         },
 
         async performLoot(context, target) {
-            const isGuild = target.type === 'guild';
-            const url = isGuild ? 
+            const isDungeon = target.type === 'dungeon';
+            const url = isDungeon ? 
                 'https://demonicscans.org/dungeon_loot.php' : 
                 'https://demonicscans.org/loot.php';
             
-            const body = isGuild ?
+            const body = isDungeon ?
                 `dgmid=${target.dgmid}&instance_id=${target.instanceId}` :
                 `monster_id=${target.monsterId}`;
 
@@ -12405,7 +12405,7 @@ var version = GM_info.script.version;
                 return { success: false, message: 'User ID not found' };
             }
             
-            if (isGuild) {
+            if (isDungeon) {
                 return context.loot.lootDungeonMonsterDirect(target.dgmid, target.instanceId, userId, target.name || 'Unknown');
             } else {
                 return context.loot.lootWaveMonsterDirect(target.monsterId, userId, target.name || 'Unknown');
@@ -21236,7 +21236,7 @@ Magus" rows="2"></textarea>
                         position: fixed;
                         bottom: 90px;
                         left: 10px;
-                        z-index: 2147483647;
+                        z-index: 10000;
                         width: 44px;
                         height: 44px;
                         background: rgba(20, 40, 70, 0.95);

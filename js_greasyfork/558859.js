@@ -34,7 +34,7 @@
             enabled: true,
             username: 'moodHappy',
             repo: 'HelloWorld',
-            token: '',
+            token: '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',
             path: 'Notes/Notes/' // 目录路径
         },
         ui: {

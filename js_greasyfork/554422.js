@@ -1364,7 +1364,7 @@ if (typeof window.LecteurMedia === 'undefined') {
             name: 'Twitter',
             selector: 'a[href*="twitter.com/"], a[href*="x.com/"], a[href*="xcancel.com/"]',
             category: 'connect',
-            connect: ['api.vxtwitter.com', 'api.fixupx.com', 'publish.twitter.com', 'platform.twitter.com'],
+            connect: ['api.vxtwitter.com', 'api.fixupx.com', 'publish.twitter.com', 'platform.twitter.com', 'video.twimg.com'],
             createEmbedElement(link, isDarkTheme) {
                 if (typeof IframeResizeManager !== 'undefined') IframeResizeManager.init();
 
@@ -1379,7 +1379,6 @@ if (typeof window.LecteurMedia === 'undefined') {
                 const placeholderContainer = createSafeDiv();
                 placeholderContainer.className = 'bloc-embed';
                 
-                // Squelette
                 const skeletonElement = createSafeDiv();
                 skeletonElement.id = `skeleton-${uniqueId}`;
                 skeletonElement.className = 'tweet-skeleton';
@@ -1395,7 +1394,7 @@ if (typeof window.LecteurMedia === 'undefined') {
                 
                 placeholderContainer.appendChild(skeletonElement);
 
-                // FALLBACK (OFFICIEL)
+                // --- ETAPE 4 : FALLBACK OFFICIEL ---
                 const enableFallback = () => {
                     const sk = document.getElementById(`skeleton-${uniqueId}`);
                     const targetContainer = sk ? sk.parentNode : (placeholderContainer.querySelector('.media-content > div') || placeholderContainer);
@@ -1408,7 +1407,6 @@ if (typeof window.LecteurMedia === 'undefined') {
 
                     const handleOfficialResponse = (status, finalUrl) => {
                         const containerToUpdate = document.getElementById(`skeleton-${uniqueId}`)?.parentNode || targetContainer;
-                        
                         if (status === 200) {
                             const theme = isDarkTheme ? 'dark' : 'light';
                             const iframeUrl = `https://platform.twitter.com/embed/Tweet.html?id=${encodeURIComponent(tweetId)}&theme=${theme}&dnt=true&lang=fr`;
@@ -1447,11 +1445,10 @@ if (typeof window.LecteurMedia === 'undefined') {
                     });
                 };
 
-                // TENTATIVE PRINCIPALE (VX / FIXUPX)
+                // --- LOGIQUE PRINCIPALE ---
                 (async () => {
                     try {
                         const settings = await SettingsManager.getSettings();
-                        
                         const cacheKey = `twitter_v2_${tweetId}`;
                         let tweetData = await CacheManager.get(cacheKey);
 
@@ -1492,78 +1489,218 @@ if (typeof window.LecteurMedia === 'undefined') {
                             }
 
                             const mainTweetHtml = VxTwitterRenderer.render(tweetData, false);
-                            
                             const tweetEmbed = createSafeDiv();
                             tweetEmbed.className = 'vxtwitter-embed';
                             if (settings.twitterFullHeight) tweetEmbed.classList.add('vxtwitter-full-height');
-                            
                             tweetEmbed.innerHTML = parentTweetHtml + mainTweetHtml;
 
+                            // --- GESTION DES VIDÉOS (CASCADE DE SAUVETAGE) ---
                             const videos = tweetEmbed.querySelectorAll('.vxtwitter-video');
-
-                            videos.forEach(video => {
-                                video.addEventListener('error', function(e) {
-                                    // Sécurité : si on est déjà sur un blob, on arrête pour pas boucler
-                                    if (this.src.startsWith('blob:')) return;
-
-                                    console.warn("[Twitter] Erreur lecture standard (CORS/ORB). Tentative de sauvetage via GM...");
-
-                                    const wrapper = this.closest('.vxtwitter-video-wrapper');
-                                    const loader = wrapper.querySelector('.video-loader-fallback');
-                                    const progressSpan = wrapper.querySelector('.dl-progress');
+                            
+                            videos.forEach(videoElement => {
+                                const wrapper = videoElement.closest('.vxtwitter-video-wrapper');
+                                const originalUrl = videoElement.getAttribute('src');
+                                const posterUrl = videoElement.getAttribute('poster');
+                                
+                                let w = 0, h = 0;
+                                let aspectRatioStyle = "";
+                                const resolutionMatch = originalUrl.match(/\/(\d+)x(\d+)\//);
+                                
+                                if (resolutionMatch) {
+                                    w = parseInt(resolutionMatch[1]);
+                                    h = parseInt(resolutionMatch[2]);
+                                    const ratio = w / h;
                                     
-                                    const originalUrl = this.getAttribute('src');
+                                    // Initial : On contraint pour éviter le saut de layout avant chargement
+                                    const maxWidth = Math.floor(550 * ratio);
+                                    aspectRatioStyle = `aspect-ratio: ${w}/${h}; max-height: 550px; max-width: ${maxWidth}px; margin: 0 auto;`; 
+                                    wrapper.style.cssText += aspectRatioStyle;
 
-                                    if (loader) loader.style.display = 'flex';
-                                    console.log(`[Twitter] Sauvetage du flux vidéo via GM.xmlHttpRequest : ${originalUrl}`);
-                                    GM.xmlHttpRequest({
-                                        method: "GET",
-                                        url: originalUrl,
-                                        responseType: "blob",
-                                        onprogress: (evt) => {
-                                            if (evt.lengthComputable && progressSpan) {
-                                                const percent = Math.floor((evt.loaded / evt.total) * 100);
-                                                progressSpan.textContent = percent + '%';
-                                            }
-                                        },
-                                        onload: (response) => {
-                                            if (response.status === 200) {
-                                                const blobUrl = URL.createObjectURL(response.response);
-                                                
-                                                this.src = blobUrl;
-                                                this.load(); 
-                                                
-                                                if (loader) loader.style.display = 'none';
-                                                
-                                                const playPromise = this.play();
-                                                if (playPromise !== undefined) {
-                                                    playPromise.catch(() => {});
-                                                }
-                                            } else {
-                                                if (progressSpan) progressSpan.textContent = "Échec (HTTP " + response.status + ")";
-                                            }
-                                        },
-                                        onerror: () => {
-                                            if (progressSpan) progressSpan.textContent = "Échec réseau complet.";
+                                    videoElement.style.width = '100%';
+                                    videoElement.style.height = '100%';
+                                    videoElement.style.objectFit = 'cover';
+
+                                    // 1. FIX LAYOUT : Si natif OK, on relâche tout pour s'adapter au contenu
+                                    videoElement.addEventListener('loadeddata', () => {
+                                        if (!videoElement.src.startsWith('blob:')) {
+                                            console.log("[Twitter] Lecture native réussie.");
+                                            wrapper.style.aspectRatio = '';
+                                            wrapper.style.height = 'auto';
+                                            wrapper.style.maxWidth = '100%'; 
+                                            wrapper.style.background = 'transparent';
+                                            wrapper.style.display = 'block';
+
+                                            videoElement.style.width = '100%';
+                                            videoElement.style.height = 'auto';
+                                            videoElement.style.maxHeight = '550px';
+                                            videoElement.style.display = 'block';
+                                            videoElement.style.margin = '0 auto';
+                                            videoElement.style.objectFit = '';
                                         }
-                                    });
-                                }, true);
+                                    }, { once: true });
+                                }
+
+                                // Style pour l'IFRAME SEULEMENT (Boite noire large)
+                                const applyIframeWrapperStyle = () => {
+                                    if (w && h) {
+                                        wrapper.style.aspectRatio = `${w}/${h}`;
+                                        wrapper.style.width = '100%';
+                                        wrapper.style.maxWidth = '100%'; 
+                                        wrapper.style.height = 'auto';
+                                        wrapper.style.maxHeight = '550px';
+                                        wrapper.style.margin = '0';
+                                        wrapper.style.backgroundColor = '#000';
+                                    } else {
+                                        wrapper.style.height = '400px';
+                                        wrapper.style.width = '100%';
+                                    }
+                                };
+
+                                // --- ÉTAPE 3 : BLOB GM ---
+                                const triggerStep3_Blob = () => {
+                                    try {
+                                        console.log("[Twitter] Tentative 3 : Blob GM...");
+                                        
+                                        wrapper.innerHTML = `
+                                            <div class="video-loader-fallback" style="display:flex; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); flex-direction:column; justify-content:center; align-items:center; z-index:2;">
+                                                <div class="lm-spinner"></div>
+                                                <div style="color:white; font-size:12px; margin-top:10px; font-weight:bold; text-align:center;">
+                                                    Téléchargement... <span class="dl-progress">0%</span>
+                                                </div>
+                                            </div>`;
+                                        
+                                        // Pendant le chargement, on garde le ratio initial (propre)
+                                        if (aspectRatioStyle) wrapper.style.cssText += aspectRatioStyle;
+
+                                        const progressSpan = wrapper.querySelector('.dl-progress');
+
+                                        GM.xmlHttpRequest({
+                                            method: "GET", url: originalUrl, responseType: "blob",
+                                            headers: { "Referer": "https://twitter.com/", "Origin": "https://twitter.com" },
+                                            onprogress: (evt) => {
+                                                if (evt.lengthComputable && progressSpan) {
+                                                    const percent = Math.floor((evt.loaded / evt.total) * 100);
+                                                    progressSpan.textContent = percent + '%';
+                                                }
+                                            },
+                                            onload: (response) => {
+                                                try {
+                                                    if (response.status === 200) {
+                                                        const blobUrl = URL.createObjectURL(response.response);
+                                                        wrapper.innerHTML = '';
+                                                        
+                                                        // IMPORTANT : On passe en mode "Fluide" (comme le natif)
+                                                        // Plus de boite noire fixe, le wrapper s'adapte à la hauteur réelle
+                                                        wrapper.style.cssText = "width:100%; height:auto; display:block; background:transparent; aspect-ratio:unset;";
+                                                        
+                                                        const newVideo = document.createElement('video');
+                                                        newVideo.className = 'vxtwitter-video';
+                                                        newVideo.src = blobUrl;
+                                                        newVideo.poster = posterUrl;
+                                                        newVideo.controls = true;
+                                                        newVideo.loop = true;
+                                                        newVideo.playsInline = true;
+                                                        
+                                                        // La vidéo reprend ses dimensions naturelles avec limite de hauteur
+                                                        // Les contrôles feront la largeur de la vidéo (comme natif)
+                                                        newVideo.style.cssText = "width:100%; height:auto; max-height:550px; display:block; margin:0 auto;";
+                                                        
+                                                        wrapper.appendChild(newVideo);
+                                                        newVideo.play().catch(() => {});
+                                                    } else {
+                                                        console.warn("[Twitter] Echec Blob HTTP " + response.status);
+                                                        enableFallback();
+                                                    }
+                                                } catch (e) { enableFallback(); }
+                                            },
+                                            onerror: () => { enableFallback(); }
+                                        });
+                                    } catch (e) { enableFallback(); }
+                                };
+
+                                // --- ÉTAPE 2 : IFRAME SANDBOX ---
+                                const triggerStep2_Iframe = () => {
+                                    try {
+                                        console.log("[Twitter] Tentative 2 : Iframe...");
+                                        
+                                        wrapper.innerHTML = '';
+                                        
+                                        // Pour l'iframe, on force la boite large noire pour avoir de grands contrôles
+                                        applyIframeWrapperStyle();
+                                        
+                                        const iframe = document.createElement('iframe');
+                                        iframe.style.cssText = "width:100%; height:100%; border:none; display:block; background:#000; overflow:hidden; border-radius:12px;";
+                                        iframe.setAttribute('scrolling', 'no');
+                                        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+                                        
+                                        const uniqueMsgId = "tw_frame_" + Math.random().toString(36).substr(2, 9);
+                                        
+                                        const htmlContent = `
+                                            <html>
+                                            <head>
+                                                <meta name="referrer" content="no-referrer">
+                                                <style>
+                                                    html, body { 
+                                                        margin: 0; padding: 0; 
+                                                        width: 100%; height: 100%; 
+                                                        background: black; 
+                                                        overflow: hidden; 
+                                                        display: flex; 
+                                                        align-items: center; 
+                                                        justify-content: center; 
+                                                    }
+                                                    video { 
+                                                        width: 100%; 
+                                                        height: 100%; 
+                                                        object-fit: contain; 
+                                                        outline: none;
+                                                    }
+                                                </style>
+                                            </head>
+                                            <body>
+                                                <video controls autoplay playsinline loop poster="${sanitizeUrl(posterUrl)}">
+                                                    <source src="${sanitizeUrl(originalUrl)}" type="video/mp4">
+                                                </video>
+                                                <script>
+                                                    const v = document.querySelector('video');
+                                                    v.addEventListener('error', () => {
+                                                        window.parent.postMessage({ type: 'TW_VIDEO_ERROR', id: '${uniqueMsgId}' }, '*');
+                                                    });
+                                                    v.focus();
+                                                </script>
+                                            </body>
+                                            </html>
+                                        `;
+
+                                        const messageHandler = (e) => {
+                                            if (e.data && e.data.type === 'TW_VIDEO_ERROR' && e.data.id === uniqueMsgId) {
+                                                window.removeEventListener('message', messageHandler);
+                                                try { triggerStep3_Blob(); } catch(e) { enableFallback(); }
+                                            }
+                                        };
+                                        window.addEventListener('message', messageHandler);
+
+                                        iframe.srcdoc = htmlContent;
+                                        wrapper.appendChild(iframe);
+                                    } catch (e) {
+                                        try { triggerStep3_Blob(); } catch(e) { enableFallback(); }
+                                    }
+                                };
+
+                                videoElement.addEventListener('error', function(e) {
+                                    if (this.src.startsWith('blob:')) return;
+                                    try { triggerStep2_Iframe(); } 
+                                    catch (err) { triggerStep3_Blob(); }
+                                }, { once: true });
                             });
 
                             const currentSkeleton = document.getElementById(`skeleton-${uniqueId}`);
-                            
                             if (currentSkeleton && currentSkeleton.parentNode) {
                                 currentSkeleton.replaceWith(tweetEmbed);
                             } else {
                                 const contentWrapper = placeholderContainer.querySelector('.media-content > div') || placeholderContainer.querySelector('.media-content');
-                                
-                                if (contentWrapper) {
-                                    contentWrapper.innerHTML = '';
-                                    contentWrapper.appendChild(tweetEmbed);
-                                } else {
-                                    placeholderContainer.innerHTML = '';
-                                    placeholderContainer.appendChild(tweetEmbed);
-                                }
+                                if (contentWrapper) { contentWrapper.innerHTML = ''; contentWrapper.appendChild(tweetEmbed); } 
+                                else { placeholderContainer.innerHTML = ''; placeholderContainer.appendChild(tweetEmbed); }
                             }
 
                             const showMoreButton = tweetEmbed.querySelector('.vxtwitter-show-more');
@@ -1575,13 +1712,10 @@ if (typeof window.LecteurMedia === 'undefined') {
                                     showMoreButton.style.display = 'none';
                                 });
                             }
-
                             const nitterButton = tweetEmbed.querySelector('.vxtwitter-nitter-link');
                             if (nitterButton) {
                                 nitterButton.addEventListener('click', (e) => {
                                     e.preventDefault();
-                                    const mediaContent = placeholderContainer.querySelector('.media-content');
-                                    if (!mediaContent) return;
                                     const iframe = document.createElement('iframe');
                                     iframe.src = link.href.replace(/x\.com|twitter\.com/, 'nitter.net');
                                     iframe.className = "iframe-embed iframe-twitter";
@@ -1589,18 +1723,11 @@ if (typeof window.LecteurMedia === 'undefined') {
                                     tweetEmbed.replaceWith(iframe);
                                 });
                             }
-                        
                             const statsGroup = tweetEmbed.querySelector('.vxtwitter-stats-group');
                             if (statsGroup) setupStatCarousel(statsGroup);
 
-                        } else {
-                            enableFallback();
-                        }
-
-                    } catch (error) {
-                        console.error('[Twitter] Erreur fatale dans le script:', error);
-                        enableFallback();
-                    }
+                        } else { enableFallback(); }
+                    } catch (error) { enableFallback(); }
                 })();
 
                 return placeholderContainer;
@@ -2147,104 +2274,6 @@ if (typeof window.LecteurMedia === 'undefined') {
           }
         },
         {
-          name: 'Vimeo',
-          selector: 'a[href*="vimeo.com/"]',
-          category: 'base',
-          createEmbedElement(link) {
-              const match = link.href.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-              if (!match || !match[1]) return null;
-
-              const videoId = match[1];
-              const iframeUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1`;
-
-              const container = createSafeDiv();
-              container.className = 'bloc-embed';
-              container.innerHTML = `<iframe
-                  src="${iframeUrl}"
-                  class="iframe-embed iframe-youtube"
-                  title="Vimeo video player"
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  frameborder="0"
-                  allowfullscreen>
-              </iframe>`;
-              return container;
-          }
-        },
-        {
-          name: 'Dailymotion',
-          selector: 'a[href*="dailymotion.com/video/"], a[href*="dai.ly/"]',
-          category: 'base',
-          createEmbedElement(link) {
-              const url = new URL(link.href);
-              const pathParts = url.pathname.split('/');
-              let videoIdWithSlug = null;
-
-              if (link.hostname.includes('dai.ly')) {
-                  videoIdWithSlug = pathParts[1];
-              } else {
-                  const videoIndex = pathParts.findIndex(p => p === 'video');
-                  if (videoIndex !== -1 && pathParts[videoIndex + 1]) {
-                      videoIdWithSlug = pathParts[videoIndex + 1];
-                  }
-              }
-
-              if (!videoIdWithSlug) return null;
-              const videoId = videoIdWithSlug.split('_')[0];
-
-              const embedUrl = new URL(`https://www.dailymotion.com/embed/video/${videoId}`);
-              embedUrl.search = url.search;
-
-              const container = createSafeDiv();
-              container.className = 'bloc-embed';
-              container.innerHTML = `<iframe
-                  src="${embedUrl.href}"
-                  class="iframe-embed iframe-youtube"
-                  title="Dailymotion video player"
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  frameborder="0"
-                  allowfullscreen>
-              </iframe>`;
-              return container;
-          }
-        },
-        {
-          name: 'SoundCloud',
-          selector: 'a[href*="soundcloud.com/"]',
-          category: 'connect',
-          connect: 'soundcloud.com',
-          async createEmbedElement(link) {
-              const pathParts = new URL(link.href).pathname.split('/').filter(p => p);
-              if (pathParts.length < 2) return null;
-
-              try {
-                  const apiUrl = `https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(link.href)}&maxheight=166&color=%23ff5500&auto_play=false&show_comments=false`;
-                  const response = await LecteurMedia.compatibleHttpRequest({
-                      method: 'GET',
-                      url: apiUrl
-                  });
-
-                  if (response.status < 200 || response.status >= 300) {
-                      throw new Error(`L'API SoundCloud a retourné le statut ${response.status}`);
-                  }
-
-                  const data = JSON.parse(response.responseText);
-                  if (!data || !data.html) {
-                      console.warn('[SoundCloud] Pas de HTML d\'intégration dans la réponse API pour', link.href);
-                      return null;
-                  }
-
-                  const container = createSafeDiv();
-                  container.className = 'bloc-embed';
-                  container.innerHTML = safeHTML(data.html);
-                  return container;
-
-              } catch (error) {
-                  console.error('[SoundCloud] Erreur lors de la récupération de l\'embed :', error);
-                  return null;
-              }
-          }
-        },
-        {
           name: 'StrawPoll',
           selector: 'a[href*="strawpoll.com/"]',
           category: 'base',
@@ -2369,44 +2398,6 @@ if (typeof window.LecteurMedia === 'undefined') {
           }
         },
         {
-          name: 'Spotify',
-          selector: 'a[href*="open.spotify.com/"]',
-          category: 'base',
-          createEmbedElement(link) {
-              try {
-                  const url = new URL(link.href);
-                  if (!/\/(track|album|playlist|artist|episode|show)\//.test(url.pathname)) {
-                      return null;
-                  }
-
-                  const embedUrl = url.href.replace(
-                      'open.spotify.com/',
-                      'open.spotify.com/embed/'
-                  );
-
-                  const height = url.pathname.includes('/track/') ? '152' : '352';
-
-                  const container = createSafeDiv();
-                  container.className = 'bloc-embed';
-                  container.innerHTML = `<iframe
-                      class="iframe-embed"
-                      src="${embedUrl}"
-                      style="height: ${height}px;"
-                      frameborder="0"
-                      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                      loading="lazy"
-                      title="Lecteur Spotify intégré">
-                  </iframe>`;
-
-                  return container;
-
-              } catch (e) {
-                  console.error('[Spotify] Erreur lors de la création de l\'embed :', e);
-                  return null;
-              }
-          }
-        },
-        {
             name: 'Deezer',
             selector: 'a[href*="deezer.com/"]',
             category: 'base',
@@ -2467,7 +2458,7 @@ if (typeof window.LecteurMedia === 'undefined') {
         },
         {
           name: 'Giphy',
-          selector: 'a[href*="giphy.com/"], a[href*="gph.is/"]',
+          selector: 'a[href*="_giphy.com/"], a[href*="_gph.is/"]',
           category: 'connect',
           connect: 'gph.is',
           async createEmbedElement(link) {
@@ -3090,7 +3081,7 @@ if (typeof window.LecteurMedia === 'undefined') {
         },
         {
           name: 'Gyazo',
-          selector: 'a[href^="https://gyazo.com/"]',
+          selector: 'a[href^="https://_gyazo.com/"]',
           category: 'connect',
           connect: 'api.gyazo.com',
           async createEmbedElement(link) {
@@ -3194,64 +3185,6 @@ if (typeof window.LecteurMedia === 'undefined') {
                     return null;
                 }
             }
-        },
-        {
-          name: 'Tenor',
-          selector: 'a[href*="tenor.com/"][href*="/view/"]',
-          category: 'connect',
-          connect: 'tenor.com',
-          createEmbedElement(link) {
-              try {
-                  const gifId = link.pathname.split('-').pop();
-                  if (!gifId || !/^\d+$/.test(gifId)) {
-                      console.warn('[Tenor] ID du GIF non trouvé ou invalide pour le lien :', link.href);
-                      return null;
-                  }
-
-                  const iframeUrl = `https://tenor.com/embed/${gifId}`;
-
-                  const container = createSafeDiv();
-                  container.className = 'bloc-embed';
-
-                  const iframe = document.createElement('iframe');
-                  iframe.src = iframeUrl;
-                  iframe.className = 'iframe-embed iframe-youtube';
-                  iframe.title = "Tenor GIF";
-                  iframe.frameBorder = "0";
-                  iframe.allowFullscreen = true;
-                  iframe.style.width = '100%';
-                  iframe.style.minHeight = '200px';
-
-                  container.appendChild(iframe);
-
-                  (async () => {
-                      try {
-                          const response = await LecteurMedia.compatibleHttpRequest({
-                              method: 'GET',
-                              url: `https://tenor.com/oembed?url=${encodeURIComponent(link.href)}`
-                          });
-
-                          if (response.status === 200) {
-                              const data = JSON.parse(response.responseText);
-                              if (data && data.width && data.height) {
-
-                                  const aspectRatio = data.width / data.height;
-                                  iframe.style.aspectRatio = `${aspectRatio}`;
-                                  iframe.style.minHeight = 'auto';
-                              }
-                          }
-                      } catch (error) {
-                          console.error('[Tenor] Erreur lors de la récupération des métadonnées oEmbed :', error);
-                      }
-                  })();
-
-                  return container;
-
-              } catch (e) {
-                  console.error('[Tenor] Erreur lors de la création de l\'embed :', e);
-                  return null;
-              }
-          }
         },
         {
           name: 'Postimages',
@@ -3966,9 +3899,9 @@ if (typeof window.LecteurMedia === 'undefined') {
         },
         {
             name: 'Bluesky',
-            selector: 'a[href*="bsky.app/profile/"][href*="/post/"]',
+            selector: 'a[href*="_bsky.app/profile/"][href*="/post/"]',
             category: 'connect',
-            connect: ['bsky.app', 'embed.bsky.app'],
+            connect: ['_bsky.app', '_embed.bsky.app'],
             async createEmbedElement(link) {
                 try {
                     const url = new URL(link.href);
@@ -4033,6 +3966,183 @@ if (typeof window.LecteurMedia === 'undefined') {
                     </iframe>`;
                     return container;
                 } catch(e) { return null; }
+            }
+        },
+        {
+            name: 'TwitterDirectVideo',
+            selector: 'a[href*="video.twimg.com"]',
+            category: 'connect',
+            connect: ['video.twimg.com', 'twitter.com'], 
+            createEmbedElement(link) {
+                const targetUrl = link.href;
+                const safeSrc = sanitizeUrl(targetUrl);
+                
+                const container = createSafeDiv();
+                container.className = 'bloc-embed';
+                
+                const wrapper = createSafeDiv();
+                wrapper.className = 'twimg-direct-wrapper';
+
+                wrapper.style.width = '100%';
+                wrapper.style.margin = '0 auto';
+                wrapper.style.display = 'block';
+                
+                container.appendChild(wrapper);
+
+                let vidW = 0, vidH = 0;
+                const resolutionMatch = targetUrl.match(/\/(\d+)x(\d+)\//);
+                if (resolutionMatch) {
+                    vidW = parseInt(resolutionMatch[1]);
+                    vidH = parseInt(resolutionMatch[2]);
+                }
+
+                const triggerStep3_Blob = () => {
+                    console.log("[TwitterDirect] Passage au Blob...");
+                    
+                    // Loader
+                    wrapper.innerHTML = `
+                        <div style="background:#000; color: white; font-family: sans-serif; font-size: 13px; display: flex; flex-direction: column; align-items: center; justify-content:center; gap: 10px; height:200px; border-radius:8px;">
+                            <div class="lm-spinner" style="border-top-color: #1d9bf0;"></div>
+                            <span>Récupération fichier... <span class="percent">0%</span></span>
+                        </div>
+                    `;
+
+                    if (vidW && vidH) {
+                         const ratio = vidW / vidH;
+                         const maxWidth = Math.floor(550 * ratio);
+                         wrapper.style.cssText = `aspect-ratio: ${vidW}/${vidH}; max-height: 550px; max-width: ${maxWidth}px; width: 100%; margin: 0 auto; display: block;`;
+                    }
+
+                    GM.xmlHttpRequest({
+                        method: "GET",
+                        url: targetUrl,
+                        responseType: "blob",
+                        headers: { "Referer": "https://twitter.com/", "Origin": "https://twitter.com" },
+                        onprogress: (evt) => {
+                            if (evt.lengthComputable) {
+                                const percent = Math.floor((evt.loaded / evt.total) * 100);
+                                const pSpan = wrapper.querySelector('.percent');
+                                if (pSpan) pSpan.textContent = percent + '%';
+                            }
+                        },
+                        onload: (response) => {
+                            if (response.status === 200) {
+                                const blobUrl = URL.createObjectURL(response.response);
+                                wrapper.innerHTML = '';
+                                
+                                wrapper.style.cssText = 'width:100%; height:auto; background:transparent; display:block; aspect-ratio:unset;';
+                                
+                                const video = document.createElement('video');
+                                video.src = blobUrl;
+                                video.className = 'video-embed';
+                                video.controls = true;
+                                video.loop = true;
+                                video.playsInline = true;
+                                
+                                video.style.cssText = 'width:100%; height:auto; max-height:550px; display:block; margin: 0 auto;';
+                                
+                                wrapper.appendChild(video);
+                            } else {
+                                container.innerHTML = '<div class="dead-link-sticker"><span>[Erreur téléchargement Twitter]</span></div>';
+                            }
+                        },
+                        onerror: () => {
+                            container.innerHTML = '<div class="dead-link-sticker"><span>[Erreur réseau Twitter]</span></div>';
+                        }
+                    });
+                };
+
+                const triggerStep2_Iframe = () => {
+                    console.log("[TwitterDirect] Passage à l'Iframe...");
+                    wrapper.innerHTML = '';
+                    
+                    if (vidW && vidH) {
+                        const ratio = vidW / vidH;
+                        const maxWidth = Math.floor(550 * ratio);
+                        
+                        wrapper.style.cssText = `
+                            width: 100%;
+                            max-width: ${maxWidth}px;
+                            aspect-ratio: ${vidW}/${vidH};
+                            max-height: 550px;
+                            margin: 0 auto;
+                            display: block;
+                            background-color: #000;
+                            border-radius: 8px;
+                            overflow: hidden;
+                        `;
+                    } else {
+                        wrapper.style.height = '400px'; 
+                        wrapper.style.backgroundColor = '#000';
+                        wrapper.style.borderRadius = '8px';
+                        wrapper.style.overflow = 'hidden';
+                    }
+
+                    const iframe = document.createElement('iframe');
+                    iframe.style.cssText = "width:100%; height:100%; border:none;";
+                    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+                    
+                    const uniqueMsgId = "tw_direct_" + Math.random().toString(36).substr(2, 9);
+                    
+                    const htmlContent = `
+                        <html>
+                        <head>
+                            <meta name="referrer" content="no-referrer">
+                            <style>
+                                body { margin:0; background:black; display:flex; align-items:center; justify-content:center; height:100%; overflow:hidden; }
+                                video { width:100%; height:100%; object-fit:contain; outline:none; }
+                            </style>
+                        </head>
+                        <body>
+                            <video controls autoplay playsinline loop>
+                                <source src="${safeSrc}" type="video/mp4">
+                            </video>
+                            <script>
+                                const v = document.querySelector('video');
+                                v.addEventListener('error', () => {
+                                    window.parent.postMessage({ type: 'TW_DIRECT_ERROR', id: '${uniqueMsgId}' }, '*');
+                                });
+                                v.focus();
+                            </script>
+                        </body>
+                        </html>
+                    `;
+
+                    const messageHandler = (e) => {
+                        if (e.data && e.data.type === 'TW_DIRECT_ERROR' && e.data.id === uniqueMsgId) {
+                            window.removeEventListener('message', messageHandler);
+                            wrapper.style.aspectRatio = '';
+                            wrapper.style.backgroundColor = 'transparent';
+                            triggerStep3_Blob();
+                        }
+                    };
+                    window.addEventListener('message', messageHandler);
+                    
+                    iframe.srcdoc = htmlContent;
+                    wrapper.appendChild(iframe);
+                };
+
+                const video = document.createElement('video');
+                video.src = safeSrc;
+                video.className = 'video-embed';
+                video.controls = true;
+                video.muted = false; 
+                video.loop = true;
+                video.playsInline = true;
+                
+                video.style.width = '100%';
+                video.style.height = 'auto';
+                video.style.maxHeight = '550px';
+                video.referrerPolicy = "no-referrer"; 
+
+                video.onerror = (e) => {
+                    console.log("[TwitterDirect] Erreur Native. -> Iframe");
+                    triggerStep2_Iframe();
+                };
+
+                wrapper.appendChild(video);
+
+                return container;
             }
         },
         {
@@ -4272,9 +4382,9 @@ if (typeof window.LecteurMedia === 'undefined') {
           category: 'base',
           createEmbedElement(link) {
               let targetUrl = link.href;
+              
               try {
                   const u = new URL(targetUrl);
-                  
                   if (u.hostname === 'pbs.twimg.com' && u.searchParams.has('format')) {
                       const format = u.searchParams.get('format');
                       u.search = '';
@@ -4288,11 +4398,8 @@ if (typeof window.LecteurMedia === 'undefined') {
               container.className = 'bloc-embed';
 
               const urlObj = new URL(targetUrl);
-              
-              const isTwimgVideo = urlObj.hostname.includes('video.twimg.com');
               const hasVideoExtension = /\.(mp4|webm|mov|ogg)$/i.test(urlObj.pathname);
-              const isVideo = hasVideoExtension || isTwimgVideo;
-
+              
               const handleError = () => {
                   const stickerUrl = 'https://risibank.fr/cache/medias/0/5/512/51206/thumb.png';
                   container.innerHTML = `
@@ -4310,78 +4417,21 @@ if (typeof window.LecteurMedia === 'undefined') {
                   if (h > w) element.classList.add('iframe-vertical-content');
               };
 
-              if (isVideo) {
-                  if (isTwimgVideo) {
-                      const wrapper = createSafeDiv();
-                      wrapper.style.position = 'relative';
-                      wrapper.style.minHeight = '150px';
-                      wrapper.style.display = 'flex';
-                      wrapper.style.alignItems = 'center';
-                      wrapper.style.justifyContent = 'center';
-                      wrapper.style.backgroundColor = '#000';
-                      wrapper.style.borderRadius = '9px';
-                      wrapper.style.width = '100%';
-                      wrapper.style.maxWidth = '550px';
-
-                      const loaderId = `tw-loader-${Math.random().toString(36).substr(2, 9)}`;
-                      wrapper.innerHTML = `
-                          <div id="${loaderId}" style="color: white; font-family: sans-serif; font-size: 13px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                              <div class="lm-spinner" style="border-top-color: #1d9bf0;"></div>
-                              <span>Récupération vidéo Twitter... <span class="percent">0%</span></span>
-                          </div>
-                      `;
-                      container.appendChild(wrapper);
-
-                      GM.xmlHttpRequest({
-                          method: "GET",
-                          url: targetUrl,
-                          responseType: "blob",
-                          onprogress: (evt) => {
-                              if (evt.lengthComputable) {
-                                  const percent = Math.floor((evt.loaded / evt.total) * 100);
-                                  const pSpan = wrapper.querySelector(`#${loaderId} .percent`);
-                                  if (pSpan) pSpan.textContent = percent + '%';
-                              }
-                          },
-                          onload: (response) => {
-                              if (response.status === 200) {
-                                  const blobUrl = URL.createObjectURL(response.response);
-                                  wrapper.innerHTML = '';
-                                  const video = document.createElement('video');
-                                  video.src = blobUrl;
-                                  video.className = 'video-embed';
-                                  video.controls = true;
-                                  video.muted = false;
-                                  video.loop = true;
-                                  video.playsinline = true;
-                                  video.style.width = '100%';
-                                  video.style.height = 'auto';
-                                  video.onloadedmetadata = () => handleResize(video);
-                                  wrapper.appendChild(video);
-                              } else {
-                                  handleError();
-                              }
-                          },
-                          onerror: handleError
-                      });
-
-                  } else {
-                      // VIDÉO STANDARD
-                      const video = document.createElement('video');
-                      video.src = safeSrc;
-                      video.className = 'video-embed';
-                      video.controls = true;
-                      video.muted = true;
-                      video.loop = true;
-                      video.playsinline = true;
-                      video.setAttribute('referrerpolicy', 'no-referrer');
-                      video.onloadedmetadata = () => handleResize(video);
-                      video.onerror = handleError;
-                      container.appendChild(video);
-                  }
-
+              if (hasVideoExtension) {
+                  // VIDÉO STANDARD (MP4/WEBM/etc)
+                  const video = document.createElement('video');
+                  video.src = safeSrc;
+                  video.className = 'video-embed';
+                  video.controls = true;
+                  video.muted = true;
+                  video.loop = true;
+                  video.playsinline = true;
+                  video.setAttribute('referrerpolicy', 'no-referrer');
+                  video.onloadedmetadata = () => handleResize(video);
+                  video.onerror = handleError;
+                  container.appendChild(video);
               } else {
-                  // IMAGE
+                  // IMAGE STANDARD
                   const img = document.createElement('img');
                   img.src = safeSrc;
                   img.className = 'image-embed';
@@ -4396,66 +4446,75 @@ if (typeof window.LecteurMedia === 'undefined') {
           }
         },
         {
-          name: 'ArticlePreview',
-          selector: 'a[href^="http"]:not([data-miniatweet-processed])',
-          category: 'wildcard', 
-          
-          async createEmbedElement(link) {
-              const href = link.href;
-              const urlObj = new URL(href);
-              const urlToCheck = urlObj.hostname + urlObj.pathname;
+            name: 'ArticlePreview',
+            selector: 'a[href^="http"]:not([data-miniatweet-processed])',
+            category: 'wildcard',
 
-              const isHandledByOther = allProviders.some(p => {
-                  if (p.name === 'ArticlePreview' || p.name === 'GenericMedia') return false;
-                  return link.matches(p.selector);
-              });
-              
-              const excludedDomains = [
-                  'youtube.com', 'youtu.be', 'twitter.com', 'x.com', 'instagram.com',
-                  'tiktok.com', 'vm.tiktok.com', 'streamable.com', 'webmshare.com',
-                  'facebook.com', 'twitch.tv', 'vocaroo.com', 'voca.ro', 'reddit.com',
-                  'flourish.studio', 'jeuxvideo.com', 'jvarchive.com', 'jvarchive.st', 'jvarchive.net',
-                  'noelshack.com', 'spotify.com',  'drive.google.com', 'docs.google.com', 'google.com/maps', 'maps.app.goo.gl',
-                  'risibank.fr', 'imgur.com', 'giphy.com', 'tenor.com', 
-                  'google.com/search', 'bing.com/search', 'yahoo.com/search', 'qwant.com', 'duckduckgo.com'
-              ];
-              
-              if (isHandledByOther || excludedDomains.some(d => urlToCheck.includes(d)) || /\.(jpg|jpeg|png|gif|webp|bmp|mp4|webm|mov|ogg|pdf)$/i.test(href)) {
+            async createEmbedElement(link) {
+                const href = link.href;
+                const urlObj = new URL(href);
+                const urlToCheck = urlObj.hostname + urlObj.pathname;
+
+                const isHandledByOther = window.LecteurMedia?.AllProviders?.some(p => {
+                    if (p.name === 'ArticlePreview' || p.name === 'GenericMedia' || p.name === 'GenericOEmbed') return false;
+                    return link.matches(p.selector);
+                });
+
+                const excludedDomains = [
+                    'youtube.com', 'youtu.be', 'twitter.com', 'x.com', 'instagram.com',
+                    'tiktok.com', 'vm.tiktok.com', 'streamable.com', 'webmshare.com',
+                    'facebook.com', 'twitch.tv', 'vocaroo.com', 'voca.ro', 'reddit.com',
+                    'flourish.studio', 'jeuxvideo.com', 'jvarchive.com', 'jvarchive.st', 'jvarchive.net',
+                    'noelshack.com', 'drive.google.com', 'docs.google.com', 'google.com/maps', 'maps.app.goo.gl',
+                    'risibank.fr', 'imgur.com',
+                    'google.com/search', 'bing.com/search', 'yahoo.com/search', 'qwant.com', 'duckduckgo.com',
+                    'image.noelshack.com'
+                ];
+
+                if (isHandledByOther || excludedDomains.some(d => urlToCheck.includes(d)) || /\.(jpg|jpeg|png|gif|webp|bmp|mp4|webm|mov|ogg|pdf)$/i.test(href)) {
                     return null;
                 }
 
-            const createCard = (title, description, image, hostname, isDead = false) => {
-                const safeTitle = escapeHTML(title);
-                const safeDesc = description ? escapeHTML(description) : '';
-                const safeUrl = sanitizeUrl(href);
-                const safeHost = escapeHTML(hostname.replace(/^www\./, ''));
-                
-                let imageHtml = '';
-                let cardClass = isDead ? 'article-preview-card animate-in dead-link' : 'article-preview-card animate-in';
+                // HELPER UI : CRÉATION DE LA CARTE
+                const createCard = (title, description, image, hostname, isDead = false, isDirectImage = false) => {
+                    const safeTitle = escapeHTML(title);
+                    const safeDesc = description ? escapeHTML(description) : '';
+                    const safeUrl = sanitizeUrl(href);
+                    const safeHost = escapeHTML(hostname.replace(/^www\./, ''));
 
-                if (image && !isDead) {
-                    const safeImage = sanitizeUrl(image);
-                    imageHtml = `
+                    if (isDirectImage && image) {
+                         const imgDiv = document.createElement('div');
+                         imgDiv.className = 'bloc-embed';
+                         imgDiv.innerHTML = `<img src="${sanitizeUrl(image)}" class="image-embed" loading="lazy" alt="Image ${safeHost}">`;
+                         return imgDiv;
+                    }
+
+                    let imageHtml = '';
+                    let cardClass = isDead ? 'article-preview-card animate-in dead-link' : 'article-preview-card animate-in';
+
+                    if (image && !isDead) {
+                        const safeImage = sanitizeUrl(image);
+                        imageHtml = `
                         <div class="article-preview-image">
                             <div class="article-preview-skeleton-overlay"></div>
                             <img src="${safeImage}" class="article-preview-img-element" loading="lazy" referrerpolicy="no-referrer">
                         </div>`;
-                } else {
-                    cardClass += ' no-image';
-                }
+                    } else {
+                        cardClass += ' no-image';
+                    }
 
-                const cardLink = document.createElement('a');
-                cardLink.href = safeUrl;
-                cardLink.className = cardClass;
-                cardLink.target = "_blank";
-                cardLink.rel = "noopener noreferrer";
-                cardLink.dataset.miniatweetProcessed = "true";
+                    const cardLink = document.createElement('a');
+                    cardLink.href = safeUrl;
+                    cardLink.className = cardClass;
+                    cardLink.target = "_blank";
+                    cardLink.rel = "noopener noreferrer";
+                    cardLink.dataset.miniatweetProcessed = "true";
 
-                const iconHtml = isDead 
-                    ? `<div style="margin-bottom:4px;"><svg style="width:20px;vertical-align:bottom;color:inherit;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></div>`
-                    : '';
+                    const iconHtml = isDead
+                        ? `<div style="margin-bottom:4px; color:#e06c75;"><svg style="width:20px;vertical-align:bottom;color:inherit;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg></div>`
+                        : '';
 
-                cardLink.innerHTML = `
+                    cardLink.innerHTML = `
                         ${imageHtml}
                         <div class="article-preview-content">
                             ${iconHtml}
@@ -4465,45 +4524,60 @@ if (typeof window.LecteurMedia === 'undefined') {
                         <div class="article-preview-footer">
                             <span class="article-preview-sitename">${safeHost}</span>
                         </div>
-                `;
+                    `;
 
-                if (image && !isDead) {
-                    const img = cardLink.querySelector('img');
-                    const overlay = cardLink.querySelector('.article-preview-skeleton-overlay');
-                    const imgWrapper = cardLink.querySelector('.article-preview-image');
+                    if (image && !isDead) {
+                        const img = cardLink.querySelector('img');
+                        const overlay = cardLink.querySelector('.article-preview-skeleton-overlay');
+                        const imgWrapper = cardLink.querySelector('.article-preview-image');
 
-                    if (img && overlay) {
-                        const onImageLoaded = () => {
-                            img.classList.add('loaded');
-                            overlay.style.display = 'none';
-                        };
-
-                        if (img.complete) {
-                            onImageLoaded();
-                        } else {
-                            img.addEventListener('load', onImageLoaded);
-                            img.addEventListener('error', () => { 
-                                if(imgWrapper) imgWrapper.style.display = 'none';
-                                cardLink.classList.add('no-image');
-                            });
+                        if (img && overlay) {
+                            const onImageLoaded = () => { img.classList.add('loaded'); overlay.style.display = 'none'; };
+                            if (img.complete) onImageLoaded();
+                            else {
+                                img.addEventListener('load', onImageLoaded);
+                                img.addEventListener('error', () => { if (imgWrapper) imgWrapper.style.display = 'none'; cardLink.classList.add('no-image'); });
+                            }
                         }
                     }
-                }
-                return cardLink;
-            };
+                    return cardLink;
+                };
 
-              try {
-                  const cachedData = await CacheManager.get(href);
-                  if (cachedData) {
-                      const finalCard = createCard(cachedData.title, cachedData.description, cachedData.image, urlObj.hostname, cachedData.isDead);
-                      const c = createSafeDiv(); c.className = 'bloc-embed'; c.appendChild(finalCard);
-                      return c;
-                  }
-              } catch (e) {}
+                // GESTION DU CACHE
+                try {
+                    const cachedData = await CacheManager.get(href);
+                    if (cachedData) {
+                        if (cachedData.type === 'rich_oembed') {
+                            const container = createSafeDiv();
+                            container.className = 'bloc-embed oembed-rich';
+                            container.innerHTML = safeHTML(cachedData.html);
+                            const iframe = container.querySelector('iframe');
+                            if(iframe) {
+                                iframe.style.width = '100%'; 
+                                if (cachedData.width && cachedData.height && cachedData.width !== '100%') {
+                                     iframe.style.aspectRatio = `${cachedData.width}/${cachedData.height}`;
+                                     iframe.style.height = 'auto';
+                                } else { 
+                                     iframe.style.height = cachedData.height ? (cachedData.height.toString().includes('px') ? cachedData.height : cachedData.height + 'px') : '450px'; 
+                                }
+                            }
+                            return container;
+                        }
 
-              const skeletonContainer = createSafeDiv();
-              skeletonContainer.className = 'bloc-embed lm-skeleton-wrapper';
-              skeletonContainer.innerHTML = `
+                        const isDirect = cachedData.type === 'direct_image';
+                        const finalCard = createCard(cachedData.title, cachedData.description, cachedData.image, urlObj.hostname, cachedData.isDead, isDirect);
+                        
+                        if(finalCard.tagName === 'DIV' && finalCard.classList.contains('bloc-embed')) return finalCard;
+
+                        const c = createSafeDiv(); c.className = 'bloc-embed'; c.appendChild(finalCard);
+                        return c;
+                    }
+                } catch (e) {}
+
+                // SQUELETTE DE CHARGEMENT
+                const skeletonContainer = createSafeDiv();
+                skeletonContainer.className = 'bloc-embed lm-skeleton-wrapper';
+                skeletonContainer.innerHTML = `
                 <div class="article-preview-card skeleton-card">
                     <div class="skeleton-image"></div>
                     <div class="skeleton-content">
@@ -4512,152 +4586,220 @@ if (typeof window.LecteurMedia === 'undefined') {
                     </div>
                 </div>`;
 
-              (async () => {
-                  try {
-                      const settings = await SettingsManager.getSettings();
-                      const mode = settings.previewMode || 'proxy_fallback';
+                // LOGIQUE ASYNCHRONE
+                (async () => {
+                    try {
+                        const settings = await SettingsManager.getSettings();
+                        const mode = settings.previewMode || 'proxy_fallback';
 
-                      let dataFound = null;
+                        let dataFound = null;
 
-                      const fetchViaProxy = async () => {
-                          const workerUrl = `${baseUrl}/?url=${encodeURIComponent(href)}`;
-                          const timeoutVal = (mode === 'proxy_only') ? 4000 : 2000; 
-                          const response = await LecteurMedia.compatibleHttpRequest({ method: 'GET', url: workerUrl, timeout: timeoutVal });
-                          if (response.status === 200) {
-                              const data = JSON.parse(response.responseText);
-                              if (!data.error && data.title) return data;
-                          }
-                          throw new Error("Worker failed");
-                      };
+                        const fetchViaProxy = async () => {
+                            const workerUrl = `${baseUrl}/?url=${encodeURIComponent(href)}`;
+                            const timeoutVal = (mode === 'proxy_only') ? 4000 : 2000;
+                            const response = await LecteurMedia.compatibleHttpRequest({ method: 'GET', url: workerUrl, timeout: timeoutVal });
+                            if (response.status === 200) {
+                                const data = JSON.parse(response.responseText);
+                                if (!data.error && data.title) return data;
+                            }
+                            throw new Error("Worker failed");
+                        };
 
-                      const fetchDirect = async () => {
-                          const UA_STD = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36';
-                          const UA_BOT = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
-                          const performRequest = async (userAgent) => {
-                              const response = await LecteurMedia.compatibleHttpRequest({
-                                  method: 'GET', url: href, timeout: 6000,
-                                  headers: { 
-                                    'User-Agent': userAgent,
-                                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8'
-                                  }
-                              });
-                              if (response.status === 404 || response.status === 410) {
-                                  throw new Error("HTTP_DEAD_LINK");
-                              }
+                        const fetchDirect = async () => {
+                            const UA_STD = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36';
+                            const UA_BOT = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
 
-                              if (response.status >= 200 && response.status < 300) {
-                                  const parser = new DOMParser();
-                                  const doc = parser.parseFromString(response.responseText, 'text/html');
-                                  const getMeta = (prop) => doc.querySelector(`meta[property="${prop}"], meta[name="${prop}"]`)?.getAttribute('content')?.trim();
+                            const performRequest = async (userAgent) => {
+                                const response = await LecteurMedia.compatibleHttpRequest({
+                                    method: 'GET', url: href, timeout: 6000,
+                                    headers: {
+                                        'User-Agent': userAgent,
+                                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                                        'Range': 'bytes=0-150000' 
+                                    }
+                                });
+                                if (response.status === 404 || response.status === 410) throw new Error("HTTP_DEAD_LINK");
+                                if (response.status >= 400) throw new Error("NETWORK_ERROR");
 
-                                  let title = getMeta('og:title') || getMeta('twitter:title');
-                                  
-                                  if (!title) {
-                                      const titleTags = Array.from(doc.querySelectorAll('title'));
-                                      const validTitleTag = titleTags.find(t => !t.closest('svg'));
-                                      if (validTitleTag) {
-                                          title = validTitleTag.textContent.trim();
-                                      }
-                                  }
+                                //  DETECTION FICHIER DIRECT (IMAGE/VIDEO) VIA HEADER
+                                const ct = (response.responseHeaders || '').match(/content-type:\s*([^;\r\n]*)/i);
+                                const contentType = ct ? ct[1].toLowerCase() : '';
 
-                                  if(title) title = title.replace(/\s*\|.*$/, ''); 
+                                if (contentType.startsWith('image/')) {
+                                    return { type: 'direct_image', image: href };
+                                }
+                                if (contentType.startsWith('video/')) {
+                                    const videoHtml = `<video src="${sanitizeUrl(href)}" controls style="width:100%; max-height:500px; border-radius:8px;"></video>`;
+                                    return { type: 'rich_oembed', html: videoHtml };
+                                }
 
-                                  if (title && (/^loading\.{3}$/i.test(title) || title.toLowerCase() === 'loading')) {
-                                      title = null;
-                                  }
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(response.responseText, 'text/html');
 
-                                  const description = getMeta('og:description') || getMeta('twitter:description') || getMeta('description');
-                                  let imageUrl = getMeta('og:image') || getMeta('twitter:image') || doc.querySelector('link[rel="image_src"]')?.href;
+                                // RECHERCHE OEMBED
+                                const oembedLink = doc.querySelector('link[type="application/json+oembed"], link[type="text/json+oembed"]');
+                                if (oembedLink) {
+                                    let oembedUrl = oembedLink.getAttribute('href');
+                                    if (oembedUrl) {
+                                        if (oembedUrl.startsWith('/')) oembedUrl = new URL(oembedUrl, href).href;
+                                        try {
+                                            const jsonResp = await LecteurMedia.compatibleHttpRequest({ method: 'GET', url: oembedUrl });
+                                            if (jsonResp.status === 200) {
+                                                const data = JSON.parse(jsonResp.responseText);
+                                                if ((data.type === 'rich' || data.type === 'video') && data.html) {
+                                                    let cleanHtml = safeHTML(data.html).replace(/src="http:\/\//g, 'src="https://');
+                                                    return { 
+                                                        type: 'rich_oembed', 
+                                                        html: cleanHtml, 
+                                                        width: data.width, 
+                                                        height: data.height 
+                                                    };
+                                                }
+                                            }
+                                        } catch (e) { }
+                                    }
+                                }
 
-                                  if (imageUrl && !imageUrl.startsWith('http')) {
-                                      try { imageUrl = new URL(imageUrl, href).href; } catch(e){}
-                                  }
-                                  
-                                  if (title) return { title, description, image: imageUrl || null };
-                              }
-                              throw new Error("Request failed or no title");
-                          };
+                                // RECHERCHE TWITTER PLAYER
+                                const twPlayer = doc.querySelector('meta[name="twitter:player"]');
+                                if (twPlayer) {
+                                    const playerUrl = twPlayer.getAttribute('content');
+                                    if (playerUrl) {
+                                        const twWidth = doc.querySelector('meta[name="twitter:player:width"]')?.getAttribute('content');
+                                        const twHeight = doc.querySelector('meta[name="twitter:player:height"]')?.getAttribute('content');
+                                        const iframeHtml = `<iframe src="${sanitizeUrl(playerUrl)}" width="${twWidth||'100%'}" height="${twHeight||'400'}" frameborder="0" scrolling="no" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"></iframe>`;
+                                        return { type: 'rich_oembed', html: iframeHtml, width: twWidth, height: twHeight };
+                                    }
+                                }
 
-                          let standardData = null;
+                                // RECHERCHE DOUYIN / LARK (ByteDance)
+                                const larkPlayer = doc.querySelector('meta[name="lark:url:video_iframe_url"]');
+                                if (larkPlayer) {
+                                    const playerUrl = larkPlayer.getAttribute('content');
+                                    if (playerUrl) {
+                                        const iframeHtml = `<iframe src="${sanitizeUrl(playerUrl)}" width="100%" height="500" frameborder="0" scrolling="no" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"></iframe>`;
+                                        return { type: 'rich_oembed', html: iframeHtml, width: '100%', height: '500' };
+                                    }
+                                }
 
-                          try {
-                              standardData = await performRequest(UA_STD);
-                              if (standardData.image || standardData.description) {
-                                  return standardData;
-                              }
+                                // FALLBACK CARTE
+                                const getMeta = (prop) => doc.querySelector(`meta[property="${prop}"], meta[name="${prop}"]`)?.getAttribute('content')?.trim();
+                                let title = getMeta('og:title') || getMeta('twitter:title');
+                                if (!title) {
+                                    const titleTag = doc.querySelector('title');
+                                    if (titleTag) title = titleTag.textContent.trim();
+                                }
+                                if (title) title = title.replace(/\s*[|\-].*$/, '');
+                                if (title && (/^loading\.{3}$/i.test(title) || title.toLowerCase() === 'loading')) title = null;
 
-                          } catch (stdError) {
-                              if (stdError.message === "HTTP_DEAD_LINK" || stdError.message === "NETWORK_ERROR") {
-                                  return { title: "Page introuvable (404)", description: "Le lien semble mort ou la page a été supprimée.", image: null, isDead: true };
-                              }
-                          }
+                                const description = getMeta('og:description') || getMeta('twitter:description') || getMeta('description');
+                                let imageUrl = getMeta('og:image') || getMeta('twitter:image') || doc.querySelector('link[rel="image_src"]')?.href;
+                                if (imageUrl && !imageUrl.startsWith('http')) {
+                                    try { imageUrl = new URL(imageUrl, href).href; } catch (e) { }
+                                }
 
-                          try {
-                              const botData = await performRequest(UA_BOT);
-                              return botData; 
+                                if (title) return { title, description, image: imageUrl || null };
+                                throw new Error("Request failed or no title");
+                            };
 
-                          } catch (botError) {
-                              if (botError.message === "HTTP_DEAD_LINK" || botError.message === "NETWORK_ERROR") {
-                                   return { title: "Page introuvable (404)", description: "Le lien semble mort ou la page a été supprimée.", image: null, isDead: true };
-                              }
-                              
-                              if (standardData) {
-                                  return standardData;
-                              }
+                            let standardData = null;
+                            try {
+                                standardData = await performRequest(UA_STD);
+                                if (standardData.type === 'rich_oembed' || standardData.type === 'direct_image' || standardData.image || standardData.description) return standardData;
+                            } catch (stdError) {
+                                if (stdError.message === "HTTP_DEAD_LINK") return { title: "Page introuvable (404)", description: "Le lien semble mort.", image: null, isDead: true };
+                            }
 
-                              throw botError;
-                          }
-                      };
+                            try {
+                                const botData = await performRequest(UA_BOT);
+                                return botData;
+                            } catch (botError) {
+                                if (botError.message === "HTTP_DEAD_LINK") return { title: "Page introuvable (404)", description: "Le lien semble mort.", image: null, isDead: true };
+                                if (standardData) return standardData;
+                                throw botError;
+                            }
+                        };
 
-                      if (mode === 'direct') dataFound = await fetchDirect();
-                      else if (mode === 'proxy_only') dataFound = await fetchViaProxy();
-                      else {
-                          try { dataFound = await fetchViaProxy(); } catch (e) { dataFound = await fetchDirect(); }
-                      }
+                        if (mode === 'direct') dataFound = await fetchDirect();
+                        else if (mode === 'proxy_only') dataFound = await fetchViaProxy();
+                        else {
+                            try { dataFound = await fetchViaProxy(); } catch (e) { dataFound = await fetchDirect(); }
+                        }
 
-                      if (dataFound) {
-                          await CacheManager.set(href, dataFound);
-                          const finalCardElement = createCard(dataFound.title, dataFound.description, dataFound.image, urlObj.hostname, dataFound.isDead);
-                          
-                          const startHeight = skeletonContainer.offsetHeight;
-                          skeletonContainer.style.height = `${startHeight}px`;
-                          
-                          skeletonContainer.innerHTML = '';
-                          skeletonContainer.appendChild(finalCardElement);
-                          
-                          if (LecteurMedia.instance && LecteurMedia.instance.embedManager) {
-                              LecteurMedia.instance.embedManager._makeEmbedCollapsible(skeletonContainer, link);
-                          }
+                        if (dataFound) {
+                            await CacheManager.set(href, dataFound);
+                            let finalContent;
 
-                          requestAnimationFrame(() => {
-                                const endHeight = finalCardElement.offsetHeight + (finalCardElement.parentNode.querySelector('.embed-header')?.offsetHeight || 0);
-                                skeletonContainer.style.height = `${endHeight}px`;
-                                
+                            if (dataFound.type === 'rich_oembed') {
+                                const container = createSafeDiv();
+                                container.className = 'bloc-embed oembed-rich';
+                                container.innerHTML = dataFound.html;
+                                const iframe = container.querySelector('iframe');
+                                if(iframe) {
+                                    iframe.style.width = '100%'; iframe.style.maxWidth = '100%';
+                                    if(dataFound.width && dataFound.height && dataFound.width !== '100%') {
+                                        iframe.style.aspectRatio = `${dataFound.width} / ${dataFound.height}`;
+                                        iframe.style.height = 'auto';
+                                    } else { 
+                                        iframe.style.height = dataFound.height ? (dataFound.height.toString().includes('px') ? dataFound.height : dataFound.height + 'px') : '450px'; 
+                                    }
+                                }
+                                finalContent = container;
+                            } 
+                            // Cas Image directe
+                            else if (dataFound.type === 'direct_image') {
+                                finalContent = createCard(null, null, dataFound.image, urlObj.hostname, false, true);
+                            }
+                            // Cas Carte Article
+                            else {
+                                finalContent = createCard(dataFound.title, dataFound.description, dataFound.image, urlObj.hostname, dataFound.isDead);
+                            }
+
+                            const startHeight = skeletonContainer.offsetHeight;
+                            skeletonContainer.style.height = `${startHeight}px`;
+                            skeletonContainer.innerHTML = '';
+
+                            if (finalContent.classList.contains('bloc-embed')) {
+                                skeletonContainer.innerHTML = finalContent.innerHTML;
+                                skeletonContainer.className = finalContent.className;
+                            } else {
+                                skeletonContainer.appendChild(finalContent);
+                            }
+
+                            if (LecteurMedia.instance && LecteurMedia.instance.embedManager) {
+                                LecteurMedia.instance.embedManager._makeEmbedCollapsible(skeletonContainer, link);
+                            }
+
+                            requestAnimationFrame(() => {
+                                const headerHeight = skeletonContainer.querySelector('.embed-header')?.offsetHeight || 0;
+                                const contentHeight = skeletonContainer.querySelector('.media-content')?.offsetHeight || finalContent.offsetHeight || 150;
+                                skeletonContainer.style.height = `${headerHeight + contentHeight}px`;
                                 setTimeout(() => {
                                     skeletonContainer.style.height = 'auto';
                                     skeletonContainer.style.overflow = 'visible';
-                                    finalCardElement.classList.remove('animate-in');
+                                    const card = skeletonContainer.querySelector('.article-preview-card');
+                                    if (card) card.classList.remove('animate-in');
                                 }, 350);
-                          });
+                            });
 
-                      } else {
-                          skeletonContainer.style.height = `${skeletonContainer.offsetHeight}px`;
-                          requestAnimationFrame(() => { skeletonContainer.style.height = '0px'; });
-                          setTimeout(() => skeletonContainer.remove(), 350);
-                      }
+                        } else {
+                            skeletonContainer.style.height = `${skeletonContainer.offsetHeight}px`;
+                            requestAnimationFrame(() => { skeletonContainer.style.height = '0px'; });
+                            setTimeout(() => skeletonContainer.remove(), 350);
+                        }
 
-                  } catch (globalError) {
-                      skeletonContainer.style.height = `${skeletonContainer.offsetHeight}px`;
-                      requestAnimationFrame(() => { 
-                          skeletonContainer.style.height = '0px'; 
-                          skeletonContainer.style.opacity = '0';
-                      });
-                      setTimeout(() => skeletonContainer.remove(), 350);
-                  }
-              })();
+                    } catch (globalError) {
+                        skeletonContainer.style.height = `${skeletonContainer.offsetHeight}px`;
+                        requestAnimationFrame(() => { 
+                            skeletonContainer.style.height = '0px'; 
+                            skeletonContainer.style.opacity = '0';
+                        });
+                        setTimeout(() => skeletonContainer.remove(), 350);
+                    }
+                })();
 
-              return skeletonContainer;
-          }
+                return skeletonContainer;
+            }
         },
     ];
 

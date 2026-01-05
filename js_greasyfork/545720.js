@@ -3,8 +3,9 @@
 // @description  Shrink large YouTube thumbnails & adjust layout
 // @namespace    http://tampermonkey.net/
 // @icon         https://cdn-icons-png.flaticon.com/64/2504/2504965.png
-// @version      0.1.0
-// @author       rxm
+// @supportURL   https://github.com/5tratz/Tampermonkey-Scripts/issues
+// @version      0.1.1
+// @author       5tratz
 // @match        https://www.youtube.com/*
 // @license      MIT
 // @grant        GM_getValue

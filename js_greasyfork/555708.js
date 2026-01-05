@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         enhanced artikel-edit
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      0.7.5
+// @version      0.7.6
 // @description  Klon-Artikel Info | Vergleichslinks | Clone-Optionen | Grid Divider | Created-From-Info | Einstellungsmenü
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/kalif/artikel?id=*
@@ -330,7 +330,10 @@
             matchruleContainerReorder: false,
             bezeichnungKvHinweisEntfernen: false,
             linksCountDisplay: false,
-            linksAddArticleIds: false
+            linksAddArticleIds: false,
+            imageGalleryHoverPreview: false,
+            titlebarDatasheets: false,
+            hideImagePreviewThumbnails: false
         };
         try {
             const stored = localStorage.getItem('geizhals-other-settings-config');
@@ -2067,6 +2070,7 @@
             applyLinksCountDisplay();
             applyLinksAddArticleIds();
             applyHideImagePreviewThumbnails();
+            applyTitlebarDatasheets();
         };
 
         // Titelleiste - other settings
@@ -2078,7 +2082,8 @@
             { id: 'titlebarRemoveHerstellerLink', label: 'Hersteller: Entferne Link zu Herstellerverzeichnis', key: 'titlebarRemoveHerstellerLink' },
             { id: 'titlebarCreatedFromInTitlebar', label: 'Klon-Infos anzeigen (<created from>/<cloned from>)', key: 'titlebarCreatedFromInTitlebar' },
             { id: 'cloneDropdownEnabled', label: 'Compare-Dropdown anzeigen', key: 'cloneDropdownEnabled' },
-            { id: 'imageGalleryHoverPreview', label: 'Bildergalerie mit Hover-Vorschau', key: 'imageGalleryHoverPreview' }
+            { id: 'imageGalleryHoverPreview', label: 'Bildergalerie mit Hover-Vorschau', key: 'imageGalleryHoverPreview' },
+            { id: 'titlebarDatasheets', label: 'Datenblätter anzeigen', key: 'titlebarDatasheets' }
         ];
 
         titlebarOtherSettings.forEach(setting => {
@@ -2367,6 +2372,7 @@
             applyLinksCountDisplay();
             applyLinksAddArticleIds();
             applyHideImagePreviewThumbnails();
+            applyTitlebarDatasheets();
         };
 
         // Sonstige Einstellungen
@@ -2715,6 +2721,7 @@
             applyTitlebarRemoveHerstellerLink();
             applyTitlebarIdCopyIcon();
             applyImageGalleryHoverPreview();
+            applyTitlebarDatasheets();
             return;
         }
 
@@ -2766,6 +2773,7 @@
         applyTitlebarRemoveHerstellerLink();
         applyTitlebarIdCopyIcon();
         applyImageGalleryHoverPreview();
+        applyTitlebarDatasheets();
     }
 
     // ===== APPLY IMAGE VIEWER BEHAVIOR =====
@@ -4837,6 +4845,122 @@
         }
     }
 
+    function applyTitlebarDatasheets() {
+        try {
+            const otherSettings = getOtherSettingsConfig();
+
+            // Entferne existierenden Container
+            const existingContainer = document.querySelector('.geizhals-datasheet-favicons');
+            if (existingContainer) existingContainer.remove();
+
+            if (!otherSettings.titlebarDatasheets) {
+                return;
+            }
+
+            // Prüfe ob wir auf der richtigen URL sind (nur ?id=<id>, nicht mode= oder clone=)
+            const url = new URL(window.location.href);
+            if (!url.pathname.endsWith('/kalif/artikel')) return;
+
+            const params = url.searchParams;
+            const hasId = params.has('id');
+            const hasMode = params.has('mode');
+            const hasClone = params.has('clone') || params.has('clone_id');
+
+            // Nur wenn id vorhanden und kein mode/clone Parameter
+            if (!hasId || hasMode || hasClone) return;
+
+            // Finde den Datenblatt-Bereich
+            const datasheetContainers = document.querySelectorAll('div.d-flex.flex-wrap.justify-content-between.gap-0.border');
+            if (datasheetContainers.length === 0) return;
+
+            // Suche nach dem Container mit "Datenblatt" als strong-Element
+            let datasheetSection = null;
+            datasheetContainers.forEach(container => {
+                const strongElements = container.querySelectorAll('strong');
+                strongElements.forEach(strong => {
+                    if (strong.textContent === 'Datenblatt') {
+                        datasheetSection = strong.closest('div.px-1');
+                    }
+                });
+            });
+
+            if (!datasheetSection) return;
+
+            // Finde alle Links im Datenblatt-Bereich
+            const datasheetLinks = datasheetSection.querySelectorAll('a[href*="gzhls.at/blob/ldb"]');
+            if (datasheetLinks.length === 0) return;
+
+            // Finde die Titelleiste
+            const headbar = document.querySelector('.pane__headbar');
+            if (!headbar) return;
+
+            const navbarNav = headbar.querySelector('.navbar-nav');
+            if (!navbarNav) return;
+
+            // Erstelle Container für die Favicons
+            const faviconContainer = document.createElement('div');
+            faviconContainer.className = 'geizhals-datasheet-favicons';
+            faviconContainer.style.cssText = `
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                margin-right: 0.5rem;
+            `;
+
+            // Label
+            const label = document.createElement('span');
+            label.textContent = 'Datenblätter:';
+            label.style.cssText = 'font-size: 0.75rem; color: #fff; margin-right: 2px;';
+            faviconContainer.appendChild(label);
+
+            // Erstelle Favicons für jeden Datenblatt-Link
+            datasheetLinks.forEach(link => {
+                // Finde das Flaggen-Icon im Link
+                const flagImg = link.querySelector('img');
+                if (!flagImg) return;
+
+                const faviconLink = document.createElement('a');
+                faviconLink.href = link.href;
+                faviconLink.target = '_blank';
+                faviconLink.style.cssText = `
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20px;
+                    height: 14px;
+                    border: 1px solid #ccc;
+                    border-radius: 2px;
+                    background: white;
+                    cursor: pointer;
+                    transition: border-color 0.2s;
+                `;
+                faviconLink.title = 'Datenblatt öffnen';
+
+                // Klone das Flaggen-Icon
+                const flagClone = flagImg.cloneNode(true);
+                flagClone.style.cssText = 'display: block; height: 10px; width: auto;';
+                flagClone.removeAttribute('data-doubleclick-listener');
+
+                faviconLink.appendChild(flagClone);
+
+                faviconLink.addEventListener('mouseenter', () => {
+                    faviconLink.style.borderColor = '#0d6efd';
+                });
+                faviconLink.addEventListener('mouseleave', () => {
+                    faviconLink.style.borderColor = '#ccc';
+                });
+
+                faviconContainer.appendChild(faviconLink);
+            });
+
+            // Füge Container am Anfang der navbar-nav ein
+            navbarNav.insertBefore(faviconContainer, navbarNav.firstChild);
+
+        } catch (e) {
+            // Fehler ignorieren
+        }
+    }
+
     function openAddArticleIdsOverlay() {
         // Entferne vorhandenes Overlay falls vorhanden
         const existingOverlay = document.getElementById('geizhals-add-article-ids-overlay');
@@ -6077,6 +6201,9 @@
             imageGalleryLoading = false;
             document.querySelectorAll('.geizhals-image-gallery-container').forEach(el => el.remove());
             document.querySelectorAll('.geizhals-image-gallery-overlay').forEach(el => el.remove());
+
+            // Reset Datenblatt-Favicons bei URL-Wechsel
+            document.querySelectorAll('.geizhals-datasheet-favicons').forEach(el => el.remove());
 
             // Reset Grid-Divider bei URL-Wechsel (damit es auf neuer Seite neu initialisiert wird)
             const existingGridDivider = document.querySelector('.grid-divider-overlay');
@@ -8049,6 +8176,13 @@
             if (otherSettings.imageGalleryHoverPreview) {
                 if (!document.querySelector('.geizhals-image-gallery-container') && !imageGalleryLoading) {
                     applyImageGalleryHoverPreview();
+                }
+            }
+
+            // Titlebar Datasheets
+            if (otherSettings.titlebarDatasheets) {
+                if (!document.querySelector('.geizhals-datasheet-favicons')) {
+                    applyTitlebarDatasheets();
                 }
             }
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Homoer Forum Modern UI
 // @namespace    http://tampermonkey.net/
-// @version      19.8.1
+// @version      19.8.2
 // @description  Homoer 論壇現代化
 // @author       AI Assistant
 // @match        https://www.homoer.com/discuss_club.php*
@@ -424,58 +424,96 @@
         },
 
         rebuildDetail(box) {
-            if (box.dataset.done || box.classList.contains('reply_column')) return;
+            // 防止重複處理
+            if (box.dataset.done) return;
+
             const titleEl = box.querySelector('.guest_title');
             if (!titleEl) return;
 
-            const rawTitle = titleEl.innerText;
-            const floorMatch = rawTitle.match(/回覆\d+|首篇/);
-            const floorStr = floorMatch ? (floorMatch[0] === '首篇' ? '#1' : floorMatch[0].replace('回覆','#')) : '#';
-            const author = box.querySelector('.reply_by')?.innerText || "匿名";
-            const time = box.querySelector('.guest_time')?.innerText || "";
+            // 1. 判斷是否為回覆區 (有輸入框就是)
+            const isReplyArea = box.querySelector('textarea') || box.querySelector('form');
 
-            const flagImg = box.querySelector('.ip_flag');
-            const flagHtml = flagImg ? `<img src="${flagImg.src}" class="ip-flag-img">` : "";
-            const ipTextMatch = box.querySelector('.guest_date')?.innerText.match(/\d+\.\d+\.\d+\.\d+/);
-            const ipText = ipTextMatch ? ipTextMatch[0] : "";
-            
-            // 建立 Badge
-            const badge = document.createElement('span');
-            badge.className = 'net-type-badge';
-            badge.dataset.ip = ipText;
-            badge.title = "點擊編輯備註";
-            badge.innerText = "...";
-
+            // --- 樣式重置與設定 ---
+            // 讓標題區變成彈性盒子 (Flexbox)，方便我們把東西塞進去排排站
             titleEl.style.display = 'flex';
-            titleEl.style.justifyContent = 'space-between';
+            titleEl.style.flexWrap = 'wrap';       // 手機版空間不夠時自動換行
             titleEl.style.alignItems = 'center';
-            titleEl.style.padding = '12px 18px';
+            titleEl.style.gap = '6px';             // 元素之間的間距
+            titleEl.style.padding = '10px 15px';
             titleEl.style.borderBottom = '1px solid var(--border)';
-            titleEl.style.marginBottom = '12px';
+            titleEl.style.marginBottom = '10px';
 
-            titleEl.innerHTML = `
-                <div style="text-align: left;">
-                    <div style="display:flex; align-items:center; gap:5px;">
-                        <span style="font-weight:bold; font-size:15px; color:var(--text-black);">${author}</span>
-                        <span style="color:var(--text-gray); font-size:11px; display:flex; align-items:center;">
-                            (${flagHtml}${ipText})
-                        </span>
-                    </div>
-                    <div style="font-size:12px; color:var(--text-gray); margin-top:2px;">${time}</div>
-                </div>
-                <div style="background:var(--border); color:var(--text-gray); padding:4px 10px; border-radius:6px; font-size:12px; font-weight:bold; flex-shrink: 0;">${floorStr}</div>
-            `;
-            
-            const infoSpan = titleEl.querySelector('span[style*="font-size:11px"]');
-            if(ipText) {
-                infoSpan.appendChild(badge);
-                this.resolveBadgeContent(badge, ipText);
+            // 美化作者名稱 (如果找得到的話)
+            const authorEl = box.querySelector('.reply_by');
+            if (authorEl) {
+                authorEl.style.fontWeight = 'bold';
+                authorEl.style.fontSize = '15px';
+                authorEl.style.color = 'var(--text-black)';
+                authorEl.style.marginRight = '5px';
             }
 
-            const oldDateWrap = box.querySelector('.guest_date');
-            if (oldDateWrap) oldDateWrap.style.display = 'none';
+            // --- 關鍵修復：把下面的日期 IP 整塊搬上來 ---
+            if (!isReplyArea) {
+                const dateEl = box.querySelector('.guest_date');
+                if (dateEl) {
+                    // 1. 先抓出 IP 做 ISP 偵測 (功能面)
+                    const ipMatch = dateEl.innerText.match(/\d+\.\d+\.\d+\.\d+/);
+                    if (ipMatch) {
+                        const ip = ipMatch[0];
+                        // 建立 ISP 標籤
+                        if (!titleEl.querySelector('.net-type-badge')) {
+                            const badge = document.createElement('span');
+                            badge.className = 'net-type-badge';
+                            badge.innerText = '...';
+                            badge.dataset.ip = ip;
+                            badge.style.fontSize = '11px';
+                            
+                            // 插入標籤到作者後面 (如果作者存在)
+                            if (authorEl && authorEl.nextSibling) {
+                                titleEl.insertBefore(badge, authorEl.nextSibling);
+                            } else {
+                                titleEl.appendChild(badge);
+                            }
+                            
+                            this.resolveBadgeContent(badge, ip);
+                        }
+                    }
+
+                    // 2. 把原本的日期 IP 區塊「搬」進標題欄 (顯示面)
+                    // 使用 appendChild 會把元素從原本的位置「移動」過來，而不是複製
+                    titleEl.appendChild(dateEl);
+
+                    // 3. 調整這個搬過來的區塊樣式
+                    dateEl.style.display = 'inline-block'; // 確保顯示
+                    dateEl.style.margin = '0';
+                    dateEl.style.marginLeft = 'auto'; // 這招會把它推到最右邊
+                    dateEl.style.fontSize = '12px';
+                    dateEl.style.color = 'var(--text-gray)';
+                    
+                    // 稍微清理一下多餘的換行 (讓它緊湊一點)
+                    dateEl.innerHTML = dateEl.innerHTML.replace(/<br>/g, ' '); 
+                }
+            }
+
+            // --- 針對回覆區的按鈕美化 ---
+            if (isReplyArea) {
+                const btns = box.querySelectorAll('input[type="submit"], input[type="button"]');
+                btns.forEach(btn => {
+                    btn.style.padding = '6px 15px';
+                    btn.style.borderRadius = '5px';
+                    btn.style.border = '1px solid var(--primary)';
+                    btn.style.background = 'var(--bg)';
+                    btn.style.marginTop = '5px';
+                    btn.style.cursor = 'pointer';
+                });
+            }
+
+            // 標記完成
             box.dataset.done = "true";
         },
+
+
+
 
         observe() {
             const runner = () => {
@@ -488,4 +526,7 @@
     };
 
     App.init();
+    
+
+    
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Search the Ships (Enhanced UI v7)
 // @namespace    Violentmonkey Scripts
-// @version      1.6
+// @version      1.7
 // @description  Adds a beautifully designed button to book-related websites to search the current book title on various archives, with a centralized status indicator.
 // @author       Delaxy (UI by Gemini)
 // @match        https://thegreatestbooks.org/*
@@ -13,6 +13,7 @@
 // @match        https://www.amazon.it/*
 // @match        https://www.amazon.*/*
 // @match        https://tastedive.com/books/*
+// @match        https://app.thestorygraph.com/*
 // @grant        none
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/553077/Search%20the%20Ships%20%28Enhanced%20UI%20v7%29.user.js
@@ -93,24 +94,25 @@
   function getBookTitle() {
     let title = "";
     const hostname = window.location.hostname;
+    const pathname = window.location.pathname;
 
     // Goodreads
     if (hostname.includes("goodreads.com")) {
       // Books page is always in the goodreads.com/book/show section of the website
-      const isBookPage = window.location.pathname.includes("/book/show/");
+      const isBookPage = pathname.includes("/book/show/");
       if (isBookPage) {
         const el = document.querySelector('[data-testid="bookTitle"]');
         if (el) title = el.innerText.trim();
       }
     }
+
     // Amazon
     else if (hostname.includes("amazon.")) {
       // Amazon probably just needs the breadcrumb
       // The breadcrumb have either books or kindle store that indicates if it is a books page
       // I do plan of adding a seperate audiobook function so I just have to check if the breadcrumbs include audiobook
       const isProductPage =
-        window.location.pathname.includes("/dp/") ||
-        window.location.pathname.includes("/gp/product/");
+        pathname.includes("/dp/") || pathname.includes("/gp/product/");
       const breadcrumb = document.querySelector(
         "#wayfinding-breadcrumbs_feature_div",
       );
@@ -126,29 +128,39 @@
         if (el) title = el.innerText.trim();
       }
     }
+
     // The Greatest Books of All Time
     else if (hostname.includes("thegreatestbooks.org")) {
       // Pretty easy for this source since the book page is always in thegreatestbooks.org/books
-      const isBookPage = window.location.pathname.includes("/books/");
+      const isBookPage = pathname.includes("/books/");
       if (isBookPage) {
         const el = document.querySelector("h1 a.no-underline-link");
         if (el) title = el.textContent.trim();
       }
     }
+
     // Tastedive
-    // The best way I found to check if we are in the books page is to check if the section that says "Similar books" is shown
     else if (hostname.includes("tastedive.com")) {
-      // The element where similar books is located
-
-      const similarBooksElement = document.querySelector(
-        "h2.SectionHeader__Heading-sc-hhwqmu-1.djzdBM.RecommendedSection__StyledSectionHeader-sc-rgsodb-4.VUeGU",
-      );
-      const isBookPage =
-        similarBooksElement.innerHTML.includes("Similar books");
-
-      console.log(isBookPage);
+      const pagePath = pathname.includes("/like");
+      if (pagePath) {
+        const el = document.getElementsByClassName("sc-5b0eeb21-6 bpGMKW")[0]
+          .innerText;
+        if (el) title = el;
+      }
     }
 
+    // The storygraph
+    else if (hostname.includes("thestorygraph.com")) {
+      const pagePath = pathname.includes("/books");
+
+      if (pagePath) {
+        const el = document
+          .getElementsByClassName("book-title-author-and-series")[1]
+          .getElementsByTagName("h3")[0].innerText;
+
+        if (el) title = el;
+      }
+    }
     if (!title) {
       return "";
     } else {

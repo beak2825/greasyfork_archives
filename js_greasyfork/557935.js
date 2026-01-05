@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Popmundo - Gerenciador de Redes
 // @namespace    http://tampermonkey.net/
-// @version      13.17
+// @version      13.18
 // @description  xxx
 // @author       Chris Popper
 // @match        *://*.popmundo.com/World/Popmundo.aspx/Character*
@@ -393,7 +393,6 @@
           </button>
         </div>
 
-        <!-- TAB GERENCIADOR -->
         <div id="gerenciador-tab" class="tab-content active">
           <div class="pm-section">
             <h3><i class="fa-solid fa-calendar-plus"></i> Adicionar turnê</h3>
@@ -439,7 +438,7 @@
               <div class="config-item-full" style="background:#eef6ff; border:1px solid #cfe3ff; padding:10px; border-radius:10px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px;">
                   <label style="margin:0; font-size:14px; color:#1f2937;">
-                     <i class="fa-solid fa-wand-magic-sparkles"></i> GERADOR DE DATAS
+                      <i class="fa-solid fa-wand-magic-sparkles"></i> GERADOR DE DATAS
                           </label>
                   </label>
                   <label style="font-size:11px; cursor:pointer; display:flex; align-items:center; gap:6px; background:#fff; padding:3px 8px; border-radius:999px; border:1px solid #cfd6e0;">
@@ -525,7 +524,6 @@
           </div>
         </div>
 
-        <!-- TAB SCANNER -->
         <div id="agenda-tab" class="tab-content">
           <div class="pm-section" style="text-align:center;">
             <h3 style="justify-content:center;"><i class="fa-solid fa-radar"></i> Scanner</h3>
@@ -549,6 +547,10 @@
 
             <div id="scan-status" style="margin-top:10px; font-size:11px; color:var(--pm-muted); min-height:18px;"></div>
           </div>
+        </div>
+        
+        <div style="text-align:center; margin-top:10px; border-top:1px solid #e5e7eb; padding-top:5px;">
+           <span style="font-size:10px; color:#9ca3af; font-family:monospace;">Developed by Chris Popper</span>
         </div>
       </div>
 
@@ -1369,6 +1371,10 @@
           <div style="font-size:11px; color:var(--pm-muted); font-weight:700; margin-bottom:2px;">Total movimentado</div>
           <div id="sum-value" style="font-weight:900; font-size:14px;">R$ 0,00</div>
           <div id="sum-desc" style="font-size:11px; color:var(--pm-muted);">(Nenhuma alteração)</div>
+        </div>
+
+        <div style="text-align:center; margin-top:10px; border-top:1px solid #e5e7eb; padding-top:5px;">
+           <span style="font-size:10px; color:#9ca3af; font-family:monospace;">Developed by Chris Popper</span>
         </div>
       </div>
     `;

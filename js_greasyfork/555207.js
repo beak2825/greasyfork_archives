@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         TS FF BS
 // @namespace    TSFFBS
-// @version      2025-09-13
+// @version      2026-01-05
 // @description  TSFFBS
 // @author       _syntaxera_
-// @match        https://www.tornstats.com/wars/*
+// @match        *tornstats.com/wars/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tornstats.com
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle

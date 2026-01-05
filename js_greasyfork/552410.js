@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Интерфейс
 // @namespace    http://tampermonkey.net/
-// @version      3.0
+// @version      3.1
 // @author       Невезение
 // @match        *://patron.kinwoods.com/game/*
 // @grant        GM_getValue
@@ -725,6 +725,10 @@
             box-shadow: 0 4px 4px var(--color-shadow) !important;
         }
 
+        .effects_wrap.desktop {
+            top: unset !important;
+        }
+
         /* ===== ЧАТ ===== */
 
         div#gamechat-input {
@@ -791,7 +795,7 @@
 
         /* ===== ПАНЕЛЬ АКТИВНОСТИ ===== */
 
-        button.finish {
+        button.finish:hover {
             transform: translateY(-1px) !important;
             box-shadow: 0 4px 4px var(--color-shadow) !important;
         }
@@ -862,6 +866,7 @@
         const actions = document.querySelector('.actions');
         const items = document.querySelector('.items-desktop');
         const parameters = document.querySelector('.parameters');
+        const effectsWrap = document.querySelector('.effects_wrap.desktop');
 
         // Infoline в body div перед .game
         bodyDiv.insertBefore(info, game);
@@ -896,6 +901,7 @@
         leftWrapper.className = 'leftWrapper';
         leftWrapper.appendChild(actions);
         leftWrapper.appendChild(combatContainer);
+        leftWrapper.appendChild(effectsWrap);
         gameLeft.appendChild(leftWrapper);
 
         // Правый контейнер

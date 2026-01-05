@@ -3,7 +3,7 @@
 // @name:en      Facebook Login Wall Remover
 // @name:zh-TW   Facebook 登入牆移除器
 // @name:ja      Facebook ログインウォールリムーバー
-// @version      0.4.0
+// @version      0.4.1
 // @description  This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:en [Desktop Site | Guest Mode Only] Removes login popups and banners, prevents page jumps, and automatically opens media in a new tab to prevent page deadlocks. Now features an integrated, intelligent permalink copier for any post. Automatically disables itself when a logged-in state is detected.
 // @description:zh-TW 這個腳本的用途是改善在 Facebook 桌面版網站上未登入狀態的瀏覽體驗。它會移除一些常見的干擾，並加入一些方便的功能。
@@ -203,8 +203,8 @@
                     copier_format_username: 'Username + Post ID',
                     copier_format_author_id: 'Author ID + Post ID (Most Reliable)',
                     copier_format_shortest: 'Shortest (fb.com, less compatible)',
-                    tooltipAds: 'Go to Ads Library (About)',
-                    tooltipTransparency: 'Go to Internal Transparency',
+                    tooltipAds: 'Go to Ad Library (About)',
+                    tooltipTransparency: 'Go to Page transparency',
                 },
                 'zh-TW': {
                     notificationDeadlock: '登入提示已隱藏，動態消息將無法載入新內容。\n【提示】為避免動態消息卡住，請養成用滑鼠中鍵在新分頁開啟連結的習慣。請重新整理頁面以繼續瀏覽。',
@@ -220,7 +220,7 @@
                     autoUnmuteEnabled: '自動取消影片靜音',
                     postNumberingEnabled: '在動態消息上顯示貼文順序',
                     errorRecoveryEnabled: '錯誤頁面自動恢復 (按鈕偵測)',
-                    transparencyButtonsEnabled: '顯示透明度捷徑按鈕 (左下角)',
+                    transparencyButtonsEnabled: '顯示粉絲專頁資訊透明度捷徑按鈕 (左下角)',
                     setVolumeLabel: '自動音量大小',
                     searchPlaceholder: '搜尋...',
                     searchButton: '搜尋',
@@ -298,7 +298,7 @@
                     copier_format_author_id: '作者 ID + 貼文 ID (最可靠)',
                     copier_format_shortest: '最短連結 (fb.com, 相容性較差)',
                     tooltipAds: '前往 廣告檔案庫 (關於)',
-                    tooltipTransparency: '查看 站內透明度資訊',
+                    tooltipTransparency: '查看 粉絲專頁資訊透明度',
                 },
                 ja: {
                     notificationDeadlock: 'ログインプロンプトが非表示になりましたが、フィードは新しいコンテンツを読み込めなくなりました。\n【ヒント】フィードがロックされないように、新しいタブでリンクを開く（中央クリック）習慣を付けてください。閲覧を続けるには、このページをリロードしてください。',
@@ -314,7 +314,7 @@
                     autoUnmuteEnabled: '動画のミュートを自動解除',
                     postNumberingEnabled: 'フィードに投稿順序番号を表示する',
                     errorRecoveryEnabled: 'エラーページ自動回復 (ボタン検出)',
-                    transparencyButtonsEnabled: '透明性ショートカットを表示 (左下)',
+                    transparencyButtonsEnabled: 'ページの透明性ショートカットを表示 (左下)',
                     setVolumeLabel: '自動音量',
                     searchPlaceholder: '検索...',
                     searchButton: '検索',
@@ -392,7 +392,7 @@
                     copier_format_author_id: '作成者ID + 投稿ID (最も信頼性が高い)',
                     copier_format_shortest: '最短リンク (fb.com, 互換性低)',
                     tooltipAds: '広告ライブラリへ (情報)',
-                    tooltipTransparency: '透明性情報を表示',
+                    tooltipTransparency: 'ページの透明性を表示',
                 },
             },
         },
@@ -407,10 +407,6 @@
 
         // --- UTILITY FUNCTIONS ---
         utils: {
-            /**
-             * Reliably checks if the user is logged into Facebook.
-             * @returns {boolean} True if logged in, false otherwise.
-             */
             isLoggedIn() {
                 const banner = document.querySelector('div[role="banner"]');
                 if (!banner) {
@@ -426,13 +422,6 @@
                 console.warn(`${app.config.LOG_PREFIX} [Auth] No definitive login markers found, defaulting to logged out.`);
                 return false;
             },
-
-            /**
-             * Creates a throttled function that only invokes `func` at most once per `delay` milliseconds.
-             * @param {Function} func The function to throttle.
-             * @param {number} delay The number of milliseconds to throttle invocations to.
-             * @returns {Function} Returns the new throttled function.
-             */
             throttle(func, delay) {
                 let timeoutId = null;
                 return (...args) => {
@@ -444,25 +433,22 @@
                     }
                 };
             },
-
-            /**
-             * Creates and styles an HTML element.
-             * @param {string} tag The HTML tag name.
-             * @param {object} styles An object of CSS styles to apply.
-             * @param {object} properties An object of properties to assign to the element.
-             * @returns {HTMLElement} The created element.
-             */
             createStyledElement(tag, styles = {}, properties = {}) {
                 const element = document.createElement(tag);
                 Object.assign(element.style, styles);
-                Object.assign(element, properties);
+                const { on, children, ...rest } = properties;
+                Object.assign(element, rest);
+                if (on) {
+                    for (const [eventName, handler] of Object.entries(on)) {
+                        element.addEventListener(eventName, handler);
+                    }
+                }
+                if (children) {
+                    const childList = Array.isArray(children) ? children : [children];
+                    element.append(...childList.filter(Boolean));
+                }
                 return element;
             },
-            
-            /**
-             * Checks if the current page is a main feed page where post navigation is relevant.
-             * @returns {boolean} True if it's a feed page.
-             */
             isFeedPage() {
                 const { pathname } = window.location;
                 if (/\/posts\//.test(pathname)) return false; 
@@ -485,20 +471,8 @@
 
                 return !disallowedFirstSegments.includes(pathSegments[0]);
             },
-
-            /**
-             * A simple promise-based delay.
-             * @param {number} ms The number of milliseconds to wait.
-             * @returns {Promise<void>}
-             */
             delay: ms => new Promise(res => setTimeout(res, ms)),
-
-            /**
-             * Smart open link based on event type.
-             * Left click: window.open (Foreground)
-             * Middle/Ctrl click: GM_openInTab (Background)
-             */
-             smartOpen(event, url) {
+            smartOpen(event, url) {
                 event.preventDefault();
                 const isBackground = event.button === 1 || event.ctrlKey || event.metaKey;
                 if (isBackground) {
@@ -511,9 +485,6 @@
 
         // --- CORE MODULES ---
         modules: {
-            /**
-             * Manages script settings, persistence, and the user menu.
-             */
             settingsManager: {
                 app: null,
                 registeredCommands: [],
@@ -569,23 +540,16 @@
                         this.registeredCommands.forEach(cmdId => GM_unregisterMenuCommand(cmdId));
                     }
                     this.registeredCommands = []; 
-
                     const T = this.app.state.T;
-
                     const settingsCommand = () => this.app.modules.settingsModal.open();
-                    this.registeredCommands.push(
-                        GM_registerMenuCommand(T.menuSettings, settingsCommand)
-                    );
-
+                    this.registeredCommands.push(GM_registerMenuCommand(T.menuSettings, settingsCommand));
                     const resetCommand = () => {
                         if (window.confirm(T.resetSettingsConfirm)) {
                             this.resetAllSettings();
                             this.app.modules.toastNotifier.show(T.notificationSettingsReset, 'success');
                         }
                     };
-                    this.registeredCommands.push(
-                        GM_registerMenuCommand(T.menuResetSettings, resetCommand)
-                    );
+                    this.registeredCommands.push(GM_registerMenuCommand(T.menuResetSettings, resetCommand));
                 },
                 updateSetting(key, value) {
                     GM_setValue(key, value);
@@ -597,21 +561,16 @@
                     const SI = this.app.modules.styleInjector;
                     const ER = this.app.modules.errorRecovery;
                     const TA = this.app.modules.transparencyActions;
-
                     switch (key) {
                         case 'permalinkCopierEnabled':
-                            if (newValue) PC.init(this.app);
-                            else PC.deinit();
+                            if (newValue) PC.init(this.app); else PC.deinit();
                             break;
                         case 'copier_useSmartLink':
                         case 'copier_showButtonText':
-                            if (this.app.state.settings.permalinkCopierEnabled) {
-                                PC.reEvaluateAllButtons();
-                            }
+                            if (this.app.state.settings.permalinkCopierEnabled) PC.reEvaluateAllButtons();
                             break;
                         case 'floatingNavEnabled':
-                            if (newValue) FN.init(this.app);
-                            else FN.deinit();
+                            if (newValue) FN.init(this.app); else FN.deinit();
                             break;
                         case 'hidePostStats':
                             SI.updateStatsBarVisibility(newValue);
@@ -620,8 +579,7 @@
                             if (newValue) ER.init(this.app);
                             break;
                         case 'transparencyButtonsEnabled':
-                            if (newValue) TA.init(this.app);
-                            else TA.deinit();
+                            if (newValue) TA.init(this.app); else TA.deinit();
                             break;
                     }
                 },
@@ -629,116 +587,91 @@
                     this.definitions.forEach(def => {
                         const oldValue = this.app.state.settings[def.key];
                         const newValue = def.defaultValue;
-
                         if (oldValue !== newValue) {
                             this.updateSetting(def.key, newValue);
-                            if (def.instant) {
-                                this.handleSettingChange(def.key, newValue, oldValue);
-                            }
+                            if (def.instant) this.handleSettingChange(def.key, newValue, oldValue);
                         }
                     });
                 },
             },
 
-            /**
-             * Renders and manages the settings modal dialog.
-             */
             settingsModal: {
                 app: null,
                 modalContainer: null,
-                init(app) {
-                    this.app = app;
-                },
+                init(app) { this.app = app; },
                 open() {
                     if (!this.modalContainer) this._createModal();
-
                     const T = this.app.state.T;
-                    const body = this.modalContainer.body;
-                    body.innerHTML = ''; 
-
-                    const layout = this.app.utils.createStyledElement('div', { display: 'flex', gap: '24px', flexWrap: 'wrap' });
-                    const columns = {
-                        general: this._createSettingsColumn(T.settingsColumnGeneral, 'general'),
-                        navigation: this._createSettingsColumn(T.settingsColumnNavigation, 'navigation'),
-                        permalink: this._createSettingsColumn(T.settingsColumnPermalink, 'permalink')
-                    };
-
-                    layout.append(columns.general, columns.navigation, columns.permalink);
-                    body.append(layout);
-
-                    this._setupDependentControls(body);
+                    this.modalContainer.body.innerHTML = ''; 
+                    const layout = this.app.utils.createStyledElement('div', { display: 'flex', gap: '24px', flexWrap: 'wrap' }, {
+                        children: [
+                            this._createSettingsColumn(T.settingsColumnGeneral, 'general'),
+                            this._createSettingsColumn(T.settingsColumnNavigation, 'navigation'),
+                            this._createSettingsColumn(T.settingsColumnPermalink, 'permalink')
+                        ]
+                    });
+                    this.modalContainer.body.append(layout);
+                    this._setupDependentControls(this.modalContainer.body);
                     this.modalContainer.backdrop.style.display = 'block';
-                    this.modalContainer.modal.style.display = 'block';
+                    this.modalContainer.modal.style.display = 'flex';
                 },
                 _createSettingsColumn(title, group) {
-                    const column = this.app.utils.createStyledElement('div', { flex: '1', minWidth: '250px' });
-                    const heading = this.app.utils.createStyledElement('h4', { marginTop: '0', borderBottom: '1px solid #eee', paddingBottom: '8px' }, { textContent: title });
-                    column.append(heading);
-
-                    this.app.modules.settingsManager.definitions
-                        .filter(def => def.group === group)
-                        .forEach(def => {
-                            const row = this._createSettingRow(def);
-                            column.append(row);
-                        });
-
-                    return column;
+                    const children = [
+                        this.app.utils.createStyledElement('h4', {}, { className: 'gm-col-header', textContent: title }),
+                        ...this.app.modules.settingsManager.definitions.filter(def => def.group === group).map(def => this._createSettingRow(def))
+                    ];
+                    return this.app.utils.createStyledElement('div', {}, { className: 'gm-col', children });
                 },
                 _createSettingRow(def) {
                     const U = this.app.utils;
                     const T = this.app.state.T;
                     const SM = this.app.modules.settingsManager;
-
-                    const wrapper = U.createStyledElement('div', { display: 'flex', alignItems: 'center', marginBottom: '12px', transition: 'opacity 0.2s' });
-                    const label = U.createStyledElement('label', { marginRight: '8px', flexShrink: '0' }, { htmlFor: `setting-${def.key}`, textContent: T[def.labelKey] });
-                    wrapper.append(label);
-
-                    let inputElement;
                     const currentValue = this.app.state.settings[def.key];
+                    let inputElement, valueSpan;
+
+                    const handleInput = (e) => {
+                        const val = def.type === 'boolean' ? e.target.checked : (def.type === 'range' ? parseInt(e.target.value, 10) : e.target.value);
+                        if (valueSpan) valueSpan.textContent = `${e.target.value}${def.options.unit || ''}`;
+                        SM.updateSetting(def.key, val);
+                        if (def.instant) SM.handleSettingChange(def.key, val, this.app.state.settings[def.key]);
+                    };
 
                     switch (def.type) {
                         case 'boolean':
-                            inputElement = U.createStyledElement('input', { marginLeft: 'auto' }, { type: 'checkbox', id: `setting-${def.key}`, checked: currentValue });
+                            inputElement = U.createStyledElement('input', {}, { className: 'gm-input-right', type: 'checkbox', id: `setting-${def.key}`, checked: currentValue, on: { input: handleInput } });
                             break;
                         case 'range':
-                            const rangeWrapper = U.createStyledElement('div', { display: 'flex', alignItems: 'center', flexGrow: '1' });
-                            inputElement = U.createStyledElement('input', { flexGrow: '1' }, { type: 'range', id: `setting-${def.key}`, min: def.options.min, max: def.options.max, step: def.options.step, value: currentValue });
-                            const valueSpan = U.createStyledElement('span', { marginLeft: '12px', minWidth: '45px', textAlign: 'right', fontSize: '13px' }, { textContent: `${currentValue}${def.options.unit || ''}` });
-                            inputElement.addEventListener('input', () => valueSpan.textContent = `${inputElement.value}${def.options.unit || ''}`);
-                            rangeWrapper.append(inputElement, valueSpan);
-                            wrapper.append(rangeWrapper);
+                            valueSpan = U.createStyledElement('span', { marginLeft: '12px', minWidth: '45px', textAlign: 'right', fontSize: '13px' }, { textContent: `${currentValue}${def.options.unit || ''}` });
+                            inputElement = U.createStyledElement('div', { display: 'flex', alignItems: 'center', flexGrow: '1' }, {
+                                children: [
+                                    U.createStyledElement('input', { flexGrow: '1' }, { type: 'range', id: `setting-${def.key}`, min: def.options.min, max: def.options.max, step: def.options.step, value: currentValue, on: { input: handleInput } }),
+                                    valueSpan
+                                ]
+                            });
                             break;
                         case 'text':
-                            inputElement = U.createStyledElement('input', { marginLeft: 'auto', border: '1px solid #ccc', borderRadius: '4px', padding: '4px 8px', width: '100px' }, { type: 'text', id: `setting-${def.key}`, value: currentValue });
+                            inputElement = U.createStyledElement('input', {}, { className: 'gm-input-text', type: 'text', id: `setting-${def.key}`, value: currentValue, on: { input: handleInput } });
                             break;
                         case 'select':
-                            inputElement = U.createStyledElement('select', { marginLeft: 'auto', border: '1px solid #ccc', borderRadius: '4px', padding: '4px 8px' }, { id: `setting-${def.key}` });
-                            def.options.forEach(opt => {
-                                const option = U.createStyledElement('option', {}, { value: opt.value, textContent: T[opt.labelKey] });
-                                inputElement.append(option);
+                            inputElement = U.createStyledElement('select', {}, { 
+                                className: 'gm-input-select', id: `setting-${def.key}`, value: currentValue, on: { input: handleInput },
+                                children: def.options.map(opt => U.createStyledElement('option', {}, { value: opt.value, textContent: T[opt.labelKey] }))
                             });
-                            inputElement.value = currentValue;
+                            inputElement.value = currentValue; 
                             break;
                     }
-                    wrapper.append(inputElement);
 
-                    inputElement.addEventListener('input', () => {
-                        const oldValue = this.app.state.settings[def.key];
-                        let newValue;
-                        if (def.type === 'boolean') newValue = inputElement.checked;
-                        else if (def.type === 'range') newValue = parseInt(inputElement.value, 10);
-                        else newValue = inputElement.value;
-
-                        SM.updateSetting(def.key, newValue);
-                        if (def.instant) {
-                            SM.handleSettingChange(def.key, newValue, oldValue);
-                        }
+                    const wrapper = U.createStyledElement('div', {}, { 
+                        className: 'gm-setting-row', 
+                        children: [
+                            U.createStyledElement('label', {}, { className: 'gm-setting-label', htmlFor: `setting-${def.key}`, textContent: T[def.labelKey] }),
+                            inputElement
+                        ]
                     });
 
                     if (def.key === 'autoUnmuteVolume') wrapper.dataset.controls = 'autoUnmuteEnabled';
                     if (def.key.startsWith('keyNav')) wrapper.dataset.controls = 'keyboardNavEnabled';
                     if (def.group === 'permalink' && def.key !== 'permalinkCopierEnabled') wrapper.dataset.controls = 'permalinkCopierEnabled';
-
                     return wrapper;
                 },
                 _setupDependentControls(container) {
@@ -747,83 +680,51 @@
                         keyboardNavEnabled: container.querySelector('#setting-keyboardNavEnabled'),
                         permalinkCopierEnabled: container.querySelector('#setting-permalinkCopierEnabled'),
                     };
-
                     const toggleGroup = (controller, isEnabled) => {
-                        const controls = container.querySelectorAll(`[data-controls="${controller.id.substring(8)}"]`);
-                        controls.forEach(control => {
+                        container.querySelectorAll(`[data-controls="${controller.id.substring(8)}"]`).forEach(control => {
                             control.style.opacity = isEnabled ? '1' : '0.5';
                             const input = control.querySelector('input, select');
                             if (input) input.disabled = !isEnabled;
                         });
                     };
-
-                    const updateAll = () => {
-                        Object.values(controllers).forEach(controller => {
-                            if (controller) toggleGroup(controller, controller.checked);
-                        });
-                    };
-
-                    Object.values(controllers).forEach(controller => {
-                        if (controller) controller.addEventListener('input', updateAll);
-                    });
-
+                    const updateAll = () => Object.values(controllers).forEach(c => c && toggleGroup(c, c.checked));
+                    Object.values(controllers).forEach(c => c && c.addEventListener('input', updateAll));
                     updateAll();
                 },
                 _createModal() {
                     const T = this.app.state.T;
                     const U = this.app.utils;
-
-                    const backdrop = U.createStyledElement('div', { position: 'fixed', inset: '0px', backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: '99998' });
-                    const modal = U.createStyledElement('div', { position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', backgroundColor: 'white', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: '99999', minWidth: '600px', maxWidth: '90vw' });
-                    const header = U.createStyledElement('div', { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderBottom: '1px solid #ddd' });
-                    const title = U.createStyledElement('h2', { margin: '0', fontSize: '18px' }, { textContent: T.settingsTitle });
-                    const closeButton = U.createStyledElement('button', { background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', padding: '0 8px' }, { innerHTML: '&times;' });
-                    const body = U.createStyledElement('div', { padding: '16px', maxHeight: '70vh', overflowY: 'auto' });
-                    const footer = U.createStyledElement('div', { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px', borderTop: '1px solid #ddd' });
-                    const saveButton = U.createStyledElement('button', { padding: '8px 16px', border: '1px solid #1877F2', backgroundColor: '#1877F2', color: 'white', borderRadius: '6px', cursor: 'pointer' }, { textContent: T.saveAndClose });
-
-                    const resetButton = U.createStyledElement('button', {
-                        padding: '8px 12px',
-                        border: '1px solid #d9534f',
-                        backgroundColor: 'transparent',
-                        color: '#d9534f',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        transition: 'background-color 0.2s, color 0.2s',
-                    }, { textContent: T.resetSettings });
-
-                    resetButton.addEventListener('mouseenter', () => {
-                        resetButton.style.backgroundColor = '#d9534f';
-                        resetButton.style.color = 'white';
-                    });
-                    resetButton.addEventListener('mouseleave', () => {
-                        resetButton.style.backgroundColor = 'transparent';
-                        resetButton.style.color = '#d9534f';
-                    });
-
-                    const buttonGroup = U.createStyledElement('div', { display: 'flex', gap: '8px' });
-                    buttonGroup.append(saveButton);
-
-                    header.append(title, closeButton);
-                    footer.append(resetButton, buttonGroup);
-                    modal.append(header, body, footer);
-                    document.body.append(backdrop, modal);
-
-                    this.modalContainer = { backdrop, modal, body };
-
-                    closeButton.addEventListener('click', () => this.close());
-                    backdrop.addEventListener('click', () => this.close());
-                    saveButton.addEventListener('click', () => this.saveAndClose());
-
-                    resetButton.addEventListener('click', () => {
+                    
+                    const close = () => this.close();
+                    const save = () => this.saveAndClose();
+                    const reset = () => {
                         if (window.confirm(T.resetSettingsConfirm)) {
                             this.app.modules.settingsManager.resetAllSettings();
                             this.app.modules.toastNotifier.show(T.notificationSettingsReset, 'success');
-                            this.open(); 
+                            this.open();
                         }
-                    });
+                    };
 
-                    this.close(); 
+                    const header = U.createStyledElement('div', {}, { className: 'gm-settings-header', children: [
+                        U.createStyledElement('h2', {}, { className: 'gm-settings-title', textContent: T.settingsTitle }),
+                        U.createStyledElement('button', {}, { className: 'gm-settings-close-btn', innerHTML: '&times;', on: { click: close } })
+                    ]});
+
+                    const body = U.createStyledElement('div', {}, { className: 'gm-settings-body' });
+
+                    const footer = U.createStyledElement('div', {}, { className: 'gm-settings-footer', children: [
+                        U.createStyledElement('button', {}, { className: 'gm-btn-reset', textContent: T.resetSettings, on: { click: reset } }),
+                        U.createStyledElement('div', { display: 'flex', gap: '8px' }, { children: [
+                            U.createStyledElement('button', {}, { className: 'gm-btn-save', textContent: T.saveAndClose, on: { click: save } })
+                        ]})
+                    ]});
+
+                    const modal = U.createStyledElement('div', {}, { className: 'gm-settings-modal', children: [header, body, footer] });
+                    const backdrop = U.createStyledElement('div', {}, { className: 'gm-settings-backdrop', on: { click: close } });
+
+                    document.body.append(backdrop, modal);
+                    this.modalContainer = { backdrop, modal, body };
+                    this.close();
                 },
                 close() {
                     if (this.modalContainer) {
@@ -832,21 +733,12 @@
                     }
                 },
                 saveAndClose() {
-                    const needsReload = this.app.modules.settingsManager.definitions.some(def => {
-                        return def.needsReload && this.app.state.settings[def.key] !== GM_getValue(def.key);
-                    });
-
-                    if (needsReload) {
-                        this.app.modules.toastNotifier.show(this.app.state.T.notificationSettingsReload, 'success');
-                    }
-
+                    const needsReload = this.app.modules.settingsManager.definitions.some(def => def.needsReload && this.app.state.settings[def.key] !== GM_getValue(def.key));
+                    if (needsReload) this.app.modules.toastNotifier.show(this.app.state.T.notificationSettingsReload, 'success');
                     this.close();
                 }
             },
 
-            /**
-             * Intercepts native DOM methods to prevent unwanted page behavior.
-             */
             interceptor: {
                 init() {
                     const originalAddEventListener = EventTarget.prototype.addEventListener;
@@ -861,9 +753,6 @@
                 },
             },
 
-            /**
-             * Patches history methods to allow listening for SPA navigations.
-             */
             historyInterceptor: {
                 init() {
                     const originalPushState = history.pushState;
@@ -879,9 +768,6 @@
                 }
             },
 
-            /**
-             * Displays non-blocking toast notifications.
-             */
             toastNotifier: {
                 app: null,
                 init(app) { this.app = app; },
@@ -890,7 +776,6 @@
                         className: `gm-toast gm-toast-${type}`,
                         innerHTML: `<span>${message}</span>`
                     });
-
                     document.body.append(toast);
                     setTimeout(() => toast.classList.add('gm-toast-visible'), 10);
                     setTimeout(() => {
@@ -900,9 +785,6 @@
                 }
             },
 
-            /**
-             * Injects all necessary CSS into the document head.
-             */
             styleInjector: {
                 app: null,
                 statsStyleElement: null,
@@ -911,156 +793,91 @@
                     const C = this.app.config;
                     const settings = this.app.state.settings;
 
-                    const hideSelectors = [
-                        `div[data-nosnippet]`,
-                        `div[role="banner"]:has(a[href*="/reg/"])`
+                    const CSS_RULES = [
+                        // --- Base Hide Rules ---
+                        `div[data-nosnippet], div[role="banner"]:has(a[href*="/reg/"]) { display: none !important; }`,
+                        // --- Post Highlights ---
+                        `.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS} { outline: 3px solid #1877F2 !important; box-shadow: 0 0 15px rgba(24, 119, 242, 0.5) !important; border-radius: 8px; z-index: 10 !important; }`,
+                        // --- Floating Nav ---
+                        `.gm-floating-nav { position: fixed; bottom: 20px; right: 20px; z-index: 9990; display: flex; flex-direction: column; gap: 8px; }`,
+                        `.gm-floating-nav button { background-color: rgba(255, 255, 255, 0.9); border: 1px solid #ddd; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: background-color 0.2s, transform 0.1s; }`,
+                        `.gm-floating-nav button:hover { background-color: #f0f2f5; }`,
+                        `.gm-floating-nav button:active { transform: scale(0.95); }`,
+                        `.gm-floating-nav svg { width: 20px; height: 20px; fill: #65676b; }`,
+                        // --- Toolbar & Search ---
+                        `.gm-toolbar { position: fixed; top: 0; left: 0; width: 100%; padding: 4px 16px; background-color: #FFFFFF; z-index: 9998; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.2); box-sizing: border-box; transition: transform 0.3s ease-in-out; gap: 16px; }`,
+                        `.gm-button-group { display: flex; align-items: center; }`,
+                        `.gm-button-group button { background-color: #F0F2F5; border: 1px solid #CED0D4; padding: 0; height: 32px; width: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s; }`,
+                        `.gm-button-group button:hover { background-color: #E4E6EB; }`,
+                        `.gm-button-group button:not(:first-child) { margin-left: -1px; }`,
+                        `.gm-button-group button:first-child { border-radius: 6px 0 0 6px; }`,
+                        `.gm-button-group button:last-child { border-radius: 0 6px 6px 0; }`,
+                        `.gm-button-group button svg { width: 16px; height: 16px; fill: #65676B; }`,
+                        `.gm-button-group button.gm-pinned { background-color: #E7F3FF; }`,
+                        `.gm-search-core-wrapper { flex-grow: 1; display: flex; justify-content: center; }`,
+                        `.gm-search-component-wrapper { display: flex; align-items: center; border: 1px solid #CED0D4; border-radius: 18px; background-color: #F0F2F5; padding: 0; transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s; height: 36px; flex-grow: 1; max-width: 600px; }`,
+                        `.gm-search-component-wrapper.gm-focused { border-color: #1877F2; box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2); background-color: #FFFFFF; }`,
+                        `.gm-search-component-wrapper > select, .gm-search-input-container > input { background: transparent; border: none; outline: none; height: 100%; padding-top: 0; padding-bottom: 0; }`,
+                        `.gm-search-component-wrapper > select { padding-left: 12px; padding-right: 8px; margin-right: 8px; border-right: 1px solid #CED0D4; color: #65676B; font-weight: 500; }`,
+                        `.gm-search-input-container { position: relative; display: flex; align-items: center; flex-grow: 1; height: 100%; }`,
+                        `.gm-search-input-container > input { padding-right: 80px; width: 100%; }`,
+                        `.gm-search-clear-button { position: absolute; right: 40px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #65676B; font-size: 14px; width: 20px; height: 20px; display: none; align-items: center; justify-content: center; background: none; border: none; padding: 0; }`,
+                        `.gm-search-button-integrated { position: absolute; right: 0; height: 100%; width: 40px; background: transparent; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; border-radius: 0 18px 18px 0; }`,
+                        `.gm-search-button-integrated svg { width: 18px; height: 18px; fill: #1877F2; }`,
+                        `.gm-hover-hint { position: fixed; top: 0; left: 50%; width: 40px; height: 4px; background-color: rgba(0, 0, 0, 0.25); border-radius: 2px; z-index: 10000; opacity: 0; transform: translate(-50%, -12px); transition: opacity 0.2s ease-in-out, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; }`,
+                        `.gm-hover-hint.gm-visible { opacity: 1; transform: translate(-50%, 8px); }`,
+                        `.gm-hover-trigger { position: fixed; top: 0; left: 0; width: 100%; height: 10px; z-index: 9999; }`,
+                        // --- Toasts ---
+                        `.gm-toast { position: fixed; top: 20px; left: 50%; transform: translate(-50%, -100px); padding: 12px 20px; border-radius: 8px; color: white; font-size: 14px; font-weight: bold; z-index: 99999; opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.2); backdrop-filter: blur(5px); white-space: pre-wrap; }`,
+                        `.gm-toast-visible { opacity: 1; transform: translate(-50%, 0); }`,
+                        `.gm-toast-success { background-color: rgba(24, 119, 242, 0.85); }`,
+                        `.gm-toast-failure { background-color: rgba(220, 53, 69, 0.85); }`,
+                        `.gm-toast a { color: white; text-decoration: underline; font-weight: 600; transition: opacity 0.2s; }`,
+                        `.gm-toast a:hover { opacity: 0.8; }`,
+                        // --- Permalink Copier ---
+                        `.${C.SELECTORS.PERMALINK_COPIER.BUTTON_CLASS} { --positive-background: #E7F3FF; --negative-background: #FDEDEE; --hover-overlay: rgba(0, 0, 0, 0.05); --secondary-text: #65676B; --media-inner-border: #CED0D4; }`,
+                        // --- Transparency Buttons ---
+                        `.gm-transparency-container { position: fixed; bottom: 20px; left: 20px; z-index: 9990; display: none; flex-direction: column; gap: 10px; }`,
+                        `.gm-transparency-btn { width: 40px; height: 40px; border-radius: 50%; background-color: white; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.15); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: transform 0.1s; }`,
+                        `.gm-transparency-btn:hover { background-color: #f0f2f5; }`,
+                        `.gm-transparency-btn:active { transform: scale(0.95); }`,
+                        // --- Post Numbering ---
+                        `.gm-post-number { position: absolute; top: -10px; left: -10px; background-color: #e4e6eb; color: #65676b; padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: bold; z-index: 1; }`,
+                        // --- Settings Modal ---
+                        `.gm-settings-backdrop { position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.5); z-index: 99998; }`,
+                        `.gm-settings-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 99999; min-width: 600px; max-width: 90vw; display: flex; flex-direction: column; max-height: 85vh; }`,
+                        `.gm-settings-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid #ddd; }`,
+                        `.gm-settings-title { margin: 0; font-size: 18px; }`,
+                        `.gm-settings-close-btn { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 8px; }`,
+                        `.gm-settings-body { padding: 16px; overflow-y: auto; flex: 1; }`,
+                        `.gm-settings-footer { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-top: 1px solid #ddd; }`,
+                        `.gm-col { flex: 1; min-width: 250px; }`,
+                        `.gm-col-header { margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 8px; }`,
+                        `.gm-setting-row { display: flex; align-items: center; margin-bottom: 12px; transition: opacity 0.2s; }`,
+                        `.gm-setting-label { margin-right: 8px; flex-shrink: 0; }`,
+                        `.gm-input-right { margin-left: auto; }`,
+                        `.gm-input-text { margin-left: auto; border: 1px solid #ccc; border-radius: 4px; padding: 4px 8px; width: 100px; }`,
+                        `.gm-input-select { margin-left: auto; border: 1px solid #ccc; border-radius: 4px; padding: 4px 8px; }`,
+                        `.gm-btn-save { padding: 8px 16px; border: 1px solid #1877F2; background-color: #1877F2; color: white; border-radius: 6px; cursor: pointer; }`,
+                        `.gm-btn-reset { padding: 8px 12px; border: 1px solid #d9534f; background-color: transparent; color: #d9534f; border-radius: 6px; cursor: pointer; transition: background-color 0.2s, color 0.2s; }`,
+                        `.gm-btn-reset:hover { background-color: #d9534f; color: white; }`
                     ];
-                    
-                    let uselessElementsCSS = '';
-                    if (settings.hideUselessElements) {
-                        hideSelectors.push(`div[role="banner"]:has(${C.SELECTORS.GLOBAL.LOGIN_FORM})`);
 
+                    if (settings.hideUselessElements) {
                         const toolbarRuleA = `div:has(> div > div > div[role="button"]:not([aria-haspopup]) > div > div > i[data-visualcompletion="css-img"])`;
                         const toolbarRuleB = `div:has(> div > div[role="button"]:not([aria-haspopup]) > div > div > i[data-visualcompletion="css-img"])`;
                         const threeDotMenuSelector = `div[role="button"][aria-haspopup="menu"]:has(svg circle + circle + circle)`;
                         const stickyBannerSelector = 'div[style*="top:"][style*="z-index"]:has(div[role="tablist"])';
-
-                        uselessElementsCSS = `
-                            /* --- HIDE USELESS ELEMENTS (CSS :has) --- */
-                            ${toolbarRuleA}, ${toolbarRuleB} { display: none !important; }
-                            ${threeDotMenuSelector} { display: none !important; }
-                            ${stickyBannerSelector} { position: static !important; }
-                        `;
+                        CSS_RULES.push(
+                            `div[role="banner"]:has(${C.SELECTORS.GLOBAL.LOGIN_FORM}) { display: none !important; }`,
+                            `${toolbarRuleA}, ${toolbarRuleB} { display: none !important; }`,
+                            `${threeDotMenuSelector} { display: none !important; }`,
+                            `${stickyBannerSelector} { position: static !important; }`
+                        );
                     }
 
-                    const baseStyles = `${hideSelectors.join(',\n')} { display: none !important; }`;
-
-                    const highlightStyles = `
-                        .${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS} {
-                            outline: 3px solid #1877F2 !important;
-                            box-shadow: 0 0 15px rgba(24, 119, 242, 0.5) !important;
-                            border-radius: 8px;
-                            z-index: 10 !important;
-                        }`;
-
-                    const floatingNavStyles = `
-                        .gm-floating-nav { position: fixed; bottom: 20px; right: 20px; z-index: 9990; display: flex; flex-direction: column; gap: 8px; }
-                        .gm-floating-nav button { background-color: rgba(255, 255, 255, 0.9); border: 1px solid #ddd; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: background-color 0.2s, transform 0.1s; }
-                        .gm-floating-nav button:hover { background-color: #f0f2f5; }
-                        .gm-floating-nav button:active { transform: scale(0.95); }
-                        .gm-floating-nav svg { width: 20px; height: 20px; fill: #65676b; }
-                    `;
-
-                    const searchBarStyles = `
-                        .gm-toolbar {
-                            position: fixed; top: 0; left: 0; width: 100%;
-                            padding: 4px 16px; background-color: #FFFFFF; z-index: 9998;
-                            display: flex; align-items: center; justify-content: space-between;
-                            box-shadow: 0 2px 5px rgba(0,0,0,0.2); box-sizing: border-box;
-                            transition: transform 0.3s ease-in-out;
-                            gap: 16px;
-                        }
-                        .gm-button-group { display: flex; align-items: center; }
-                        .gm-button-group button {
-                            background-color: #F0F2F5; border: 1px solid #CED0D4; padding: 0;
-                            height: 32px; width: 32px; cursor: pointer; display: flex;
-                            align-items: center; justify-content: center; transition: background-color 0.2s;
-                        }
-                        .gm-button-group button:hover { background-color: #E4E6EB; }
-                        .gm-button-group button:not(:first-child) { margin-left: -1px; }
-                        .gm-button-group button:first-child { border-radius: 6px 0 0 6px; }
-                        .gm-button-group button:last-child { border-radius: 0 6px 6px 0; }
-                        .gm-button-group button svg { width: 16px; height: 16px; fill: #65676B; }
-                        .gm-button-group button.gm-pinned { background-color: #E7F3FF; }
-
-                        .gm-search-core-wrapper { flex-grow: 1; display: flex; justify-content: center; }
-                        .gm-search-component-wrapper {
-                            display: flex; align-items: center; border: 1px solid #CED0D4;
-                            border-radius: 18px; background-color: #F0F2F5; padding: 0;
-                            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
-                            height: 36px; flex-grow: 1; max-width: 600px;
-                        }
-                        .gm-search-component-wrapper.gm-focused {
-                            border-color: #1877F2;
-                            box-shadow: 0 0 0 2px rgba(24, 119, 242, 0.2);
-                            background-color: #FFFFFF;
-                        }
-                        .gm-search-component-wrapper > select,
-                        .gm-search-input-container > input {
-                            background: transparent; border: none; outline: none;
-                            height: 100%; padding-top: 0; padding-bottom: 0;
-                        }
-                        .gm-search-component-wrapper > select {
-                            padding-left: 12px; padding-right: 8px; margin-right: 8px;
-                            border-right: 1px solid #CED0D4; color: #65676B; font-weight: 500;
-                        }
-                        .gm-search-input-container {
-                            position: relative; display: flex; align-items: center;
-                            flex-grow: 1; height: 100%;
-                        }
-                        .gm-search-input-container > input { padding-right: 80px; width: 100%; }
-                        .gm-search-clear-button {
-                            position: absolute; right: 40px; top: 50%; transform: translateY(-50%);
-                            cursor: pointer; color: #65676B; font-size: 14px;
-                            width: 20px; height: 20px; display: none; align-items: center; justify-content: center;
-                            background: none; border: none; padding: 0;
-                        }
-                        .gm-search-button-integrated {
-                           position: absolute; right: 0; height: 100%; width: 40px;
-                           background: transparent; border: none; display: flex; align-items: center;
-                           justify-content: center; cursor: pointer; padding: 0; border-radius: 0 18px 18px 0;
-                        }
-                        .gm-search-button-integrated svg { width: 18px; height: 18px; fill: #1877F2; }
-
-                        .gm-hover-hint {
-                            position: fixed; top: 0; left: 50%;
-                            width: 40px; height: 4px; background-color: rgba(0, 0, 0, 0.25);
-                            border-radius: 2px; z-index: 10000;
-                            opacity: 0; transform: translate(-50%, -12px);
-                            transition: opacity 0.2s ease-in-out, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                            pointer-events: none;
-                        }
-                        .gm-hover-hint.gm-visible {
-                            opacity: 1;
-                            transform: translate(-50%, 8px);
-                        }
-                    `;
-
-                    const toastStyles = `
-                        .gm-toast {
-                            position: fixed; top: 20px; left: 50%;
-                            transform: translate(-50%, -100px); padding: 12px 20px; border-radius: 8px;
-                            color: white; font-size: 14px; font-weight: bold; z-index: 99999;
-                            opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease;
-                            box-shadow: 0 4px 10px rgba(0,0,0,0.2); backdrop-filter: blur(5px);
-                            white-space: pre-wrap;
-                        }
-                        .gm-toast-visible { opacity: 1; transform: translate(-50%, 0); }
-                        .gm-toast-success { background-color: rgba(24, 119, 242, 0.85); }
-                        .gm-toast-failure { background-color: rgba(220, 53, 69, 0.85); }
-                        .gm-toast a {
-                            color: white;
-                            text-decoration: underline;
-                            font-weight: 600;
-                            transition: opacity 0.2s;
-                        }
-                        .gm-toast a:hover {
-                            opacity: 0.8;
-                        }
-                    `;
-
-                    const copierButtonStyles = `
-                        .${C.SELECTORS.PERMALINK_COPIER.BUTTON_CLASS} {
-                           --positive-background: #E7F3FF; --negative-background: #FDEDEE;
-                           --hover-overlay: rgba(0, 0, 0, 0.05); --secondary-text: #65676B;
-                           --media-inner-border: #CED0D4;
-                        }
-                    `;
-
-                    const finalCSS = [baseStyles, uselessElementsCSS, highlightStyles, floatingNavStyles, searchBarStyles, toastStyles, copierButtonStyles].join('\n\n');
-                    const styleElement = this.app.utils.createStyledElement('style', {}, { textContent: finalCSS });
+                    const styleElement = this.app.utils.createStyledElement('style', {}, { textContent: CSS_RULES.join('\n') });
                     document.head.append(styleElement);
-
                     this.updateStatsBarVisibility(settings.hidePostStats);
                 },
                 updateStatsBarVisibility(shouldHide) {
@@ -1079,9 +896,6 @@
                 }
             },
 
-            /**
-             * Periodically scans and removes login walls and other UI annoyances.
-             */
             domCleaner: {
                 app: null,
                 init(app) {
@@ -1143,9 +957,7 @@
                         const C = this.app.config.ERROR_RECOVERY;
                         const selector = C.RELOAD_BUTTON_LABELS.map(label => `div[role="button"][aria-label="${label}"]`).join(', ');
                         const btn = document.querySelector(selector);
-                        
                         if (!btn) return;
-
                         const currentUrl = window.location.href;
                         let state = { url: '', count: 0 };
                         try {
@@ -1153,10 +965,7 @@
                             if (stored) state = JSON.parse(stored);
                         } catch (e) {}
 
-                        if (state.url !== currentUrl) {
-                            state = { url: currentUrl, count: 0 };
-                        }
-
+                        if (state.url !== currentUrl) state = { url: currentUrl, count: 0 };
                         if (state.count >= C.MAX_RETRIES) {
                             console.warn(`${this.app.config.LOG_PREFIX} [ErrorRecovery] Max retries reached for this URL.`);
                             return;
@@ -1168,9 +977,7 @@
                         btn.click();
                         
                         setTimeout(() => {
-                            if (document.querySelector(selector)) {
-                                window.location.reload();
-                            }
+                            if (document.querySelector(selector)) window.location.reload();
                         }, 1000);
                     };
 
@@ -1181,7 +988,6 @@
                 }
             },
 
-            // [NEW] Transparency Buttons (Sender)
             transparencyActions: {
                 app: null,
                 container: null,
@@ -1189,9 +995,7 @@
                 init(app) {
                     this.app = app;
                     if (!this.app.state.settings.transparencyButtonsEnabled) return;
-                    
                     this.updateUI();
-                    
                     this.interval = setInterval(() => {
                         const currentPath = window.location.pathname;
                         if (currentPath !== this.app.state.currentPath) {
@@ -1199,11 +1003,9 @@
                             this.app.state.cachedPageID = null;
                             this.updateUI(); 
                         }
-
                         const exclude = ['/watch', '/marketplace', '/gaming', '/events', '/groups', '/messages', '/ads'];
                         if (exclude.some(ex => currentPath.startsWith(ex)) || currentPath === '/') return;
                         if (this.app.state.cachedPageID) return;
-
                         const id = this._extractPageID();
                         if (id) {
                             this.app.state.cachedPageID = id;
@@ -1223,10 +1025,8 @@
                     for (const script of scripts) {
                         const content = script.textContent;
                         if (!content || content.includes('timeline_list_feed_units')) continue;
-
                         const matchAssoc = content.match(reAssociated);
                         if (matchAssoc && matchAssoc[1] && matchAssoc[1] !== '0') return matchAssoc[1];
-
                         if (content.includes('profile_header_renderer') || content.includes('profile_tile_sections')) {
                             const matchDel = content.match(reDelegate);
                             if (matchDel && matchDel[1] && matchDel[1] !== '0') return matchDel[1];
@@ -1236,29 +1036,19 @@
                 },
                 updateUI() {
                     if (!this.container) {
-                        this.container = this.app.utils.createStyledElement('div', {
-                            position: 'fixed', bottom: '20px', left: '20px', zIndex: '9990',
-                            display: 'none', flexDirection: 'column', gap: '10px'
-                        });
-                        
                         const T = this.app.state.T;
                         const C = this.app.config.ADS_LIB;
                         const U = this.app.utils;
 
-                        // Ads Button
-                        const btnAds = this._createBtn('📢', T.tooltipAds);
-                        btnAds.addEventListener('mouseup', (e) => {
+                        const btnAds = this._createBtn('📢', T.tooltipAds, (e) => {
                             if (this.app.state.cachedPageID) {
                                 localStorage.setItem(C.KEY_TARGET_ID, this.app.state.cachedPageID);
                                 const url = `https://www.facebook.com/ads/library/?active_status=active&view_all_page_id=${this.app.state.cachedPageID}`;
                                 U.smartOpen(e, url);
                             }
                         });
-                        btnAds.addEventListener('mousedown', (e) => { if (e.button === 1) e.preventDefault(); });
 
-                        // Internal Transparency Button
-                        const btnInt = this._createBtn('🛡️', T.tooltipTransparency);
-                        btnInt.addEventListener('mouseup', (e) => {
+                        const btnInt = this._createBtn('🛡️', T.tooltipTransparency, (e) => {
                             if (this.app.state.cachedPageID) {
                                 localStorage.setItem(C.KEY_INT_ACTION, 'true');
                                 const loc = window.location;
@@ -1276,43 +1066,34 @@
                                 U.smartOpen(e, targetUrl);
                             }
                         });
-                        btnInt.addEventListener('mousedown', (e) => { if (e.button === 1) e.preventDefault(); });
 
-                        this.container.appendChild(btnInt);
-                        this.container.appendChild(btnAds);
+                        this.container = U.createStyledElement('div', {}, { 
+                            className: 'gm-transparency-container',
+                            children: [btnInt, btnAds]
+                        });
                         document.body.appendChild(this.container);
                     }
-
-                    if (this.app.state.cachedPageID) {
-                        this.container.style.display = 'flex';
-                    } else {
-                        this.container.style.display = 'none';
-                    }
+                    if (this.app.state.cachedPageID) this.container.style.display = 'flex';
+                    else this.container.style.display = 'none';
                 },
-                _createBtn(icon, title) {
-                    const btn = this.app.utils.createStyledElement('button', {
-                        width: '40px', height: '40px', borderRadius: '50%',
-                        backgroundColor: 'white', border: '1px solid #ddd',
-                        boxShadow: '0 2px 5px rgba(0,0,0,0.15)', cursor: 'pointer',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: '18px', transition: 'transform 0.1s'
-                    }, { title: title, innerHTML: icon });
-                    
-                    btn.onmouseover = () => btn.style.backgroundColor = '#f0f2f5';
-                    btn.onmouseleave = () => btn.style.backgroundColor = 'white';
-                    btn.onmousedown = () => btn.style.transform = 'scale(0.95)';
-                    btn.addEventListener('mouseup', () => btn.style.transform = 'scale(1)');
-                    return btn;
+                _createBtn(icon, title, onClick) {
+                    return this.app.utils.createStyledElement('button', {}, { 
+                        className: 'gm-transparency-btn', title: title, innerHTML: icon,
+                        on: {
+                            mouseup: (e) => { e.currentTarget.style.transform = 'scale(1)'; onClick(e); },
+                            mousedown: (e) => { if (e.button === 1) e.preventDefault(); e.currentTarget.style.transform = 'scale(0.95)'; },
+                            mouseover: (e) => e.currentTarget.style.backgroundColor = '#f0f2f5',
+                            mouseleave: (e) => e.currentTarget.style.backgroundColor = 'white'
+                        }
+                    });
                 }
             },
 
-            // [NEW] Ads Library Handler (Receiver)
             adsLibraryHandler: {
                 app: null,
                 init(app) {
                     this.app = app;
                     if (!window.location.pathname.includes('/ads/library/')) return;
-
                     const C = this.app.config.ADS_LIB;
                     const urlParams = new URLSearchParams(window.location.search);
                     const currentID = urlParams.get('view_all_page_id');
@@ -1321,11 +1102,7 @@
                     if (currentID && targetID && currentID === targetID) {
                         console.log(`${this.app.config.LOG_PREFIX} [AdsLib] ID Match. Auto-nav initiating...`);
                         localStorage.removeItem(C.KEY_TARGET_ID);
-
-                        // 1. AdBlock Remover (Scoped to verified session)
                         this._initAdBlockerRemover();
-
-                        // 2. Auto Navigation
                         setTimeout(() => {
                             let attempts = 0;
                             const autoClicker = setInterval(() => {
@@ -1337,7 +1114,6 @@
                                     if (!parentMap.has(parent)) parentMap.set(parent, []);
                                     parentMap.get(parent).push(link);
                                 });
-
                                 let targetGroup = null;
                                 for (const [parent, children] of parentMap.entries()) {
                                     if (children.length >= 3) {
@@ -1345,8 +1121,7 @@
                                         break;
                                     }
                                 }
-
-                                if (targetGroup && targetGroup[1]) { // Index 1
+                                if (targetGroup && targetGroup[1]) { 
                                     clearInterval(autoClicker);
                                     targetGroup[1].click();
                                 } else if (attempts > C.MAX_ATTEMPTS) {
@@ -1386,27 +1161,23 @@
                 }
             },
 
-            // [NEW] Internal Transparency Handler (Receiver)
             internalTransparencyHandler: {
                 app: null,
                 init(app) {
                     this.app = app;
                     if (!window.location.href.includes('about_profile_transparency')) return;
-
-                    const C = this.app.config.ADS_LIB; // Reuse timing configs
+                    const C = this.app.config.ADS_LIB; 
                     const T_CONF = this.app.config.TRANSPARENCY;
 
                     if (localStorage.getItem(C.KEY_INT_ACTION) === 'true') {
                         console.log(`${this.app.config.LOG_PREFIX} [IntTrans] Expanding details...`);
                         localStorage.removeItem(C.KEY_INT_ACTION);
-
                         setTimeout(() => {
                             let attempts = 0;
                             const autoExpander = setInterval(() => {
                                 attempts++;
                                 const selector = T_CONF.SEE_ALL_BUTTONS.map(l => `div[role="button"][aria-label="${l}"]`).join(', ');
                                 const btn = document.querySelector(selector);
-
                                 if (btn) {
                                     clearInterval(autoExpander);
                                     btn.click();
@@ -1419,11 +1190,266 @@
                 }
             },
 
-            postNavigatorCore: { app: null, currentPostIndex: -1, isRetrying: false, RETRY_INTERVAL: 200, MAX_RETRY_DURATION: 3000, continuousNavInterval: null, init(app) { this.app = app; }, startContinuousNavigation(direction) { this.stopContinuousNavigation(); this.navigateToPost(direction); const interval = this.app.state.settings.continuousNavInterval; this.continuousNavInterval = setInterval(() => { this.navigateToPost(direction); }, interval); }, stopContinuousNavigation() { if (this.continuousNavInterval) { clearInterval(this.continuousNavInterval); this.continuousNavInterval = null; } }, getSortedPosts() { const posts = Array.from(document.querySelectorAll('[role="article"][aria-posinset]')).filter(p => !p.closest(this.app.config.SELECTORS.GLOBAL.DIALOG)); posts.sort((a, b) => parseInt(a.getAttribute('aria-posinset'), 10) - parseInt(b.getAttribute('aria-posinset'), 10)); return posts; }, triggerLoadAndRetry() { if (this.isRetrying) return; this.isRetrying = true; const initialPostCount = this.getSortedPosts().length; window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); const startTime = Date.now(); const retryInterval = setInterval(() => { const newPostCount = this.getSortedPosts().length; if (newPostCount > initialPostCount) { clearInterval(retryInterval); this.isRetrying = false; this.navigateToPost('next'); return; } if (Date.now() - startTime > this.MAX_RETRY_DURATION) { clearInterval(retryInterval); this.isRetrying = false; console.log(`${this.app.config.LOG_PREFIX} Failed to load new posts.`); } }, this.RETRY_INTERVAL); }, navigateToPost(direction) { const posts = this.getSortedPosts(); if (posts.length === 0) return; const currentHighlighted = document.querySelector(`.${this.app.config.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}`); if (currentHighlighted) { currentHighlighted.classList.remove(this.app.config.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS); const currentIndex = posts.findIndex(p => p === currentHighlighted); if(currentIndex !== -1) this.currentPostIndex = currentIndex; } if (direction === 'next') this.currentPostIndex++; else this.currentPostIndex--; if (this.currentPostIndex >= posts.length) { if (direction === 'next') { this.currentPostIndex = posts.length - 1; this.triggerLoadAndRetry(); return; } this.currentPostIndex = posts.length - 1; } if (this.currentPostIndex < 0) this.currentPostIndex = 0; const targetPost = posts[this.currentPostIndex]; if (targetPost) { targetPost.classList.add(this.app.config.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS); const alignment = this.app.state.settings.navigationScrollAlignment; const useSmoothScroll = this.app.state.settings.enableSmoothScrolling; const scrollBehavior = useSmoothScroll ? 'smooth' : 'auto'; if (alignment === 'top') { const searchBarHeight = this.app.modules.searchBar.getOccupiedHeight(); const postTop = targetPost.getBoundingClientRect().top + window.scrollY; const targetY = postTop - searchBarHeight - 10; window.scrollTo({ top: targetY, behavior: scrollBehavior }); } else { targetPost.scrollIntoView({ behavior: scrollBehavior, block: 'center' }); } } } },
-            linkInterceptor: { app: null, init(app) { this.app = app; const UNSAFE_ANCESTORS = ['[role="tablist"]', '[data-pagelet="ProfileTabs"]']; const unsafeSelector = UNSAFE_ANCESTORS.join(', '); const handleClick = (event) => { if (!this.app.state.settings.autoOpenMediaInNewTab || event.button !== 0) return; const mediaLinkAncestor = event.target.closest(this.app.config.SELECTORS.GLOBAL.MEDIA_LINK); if (!mediaLinkAncestor || mediaLinkAncestor.closest(unsafeSelector)) return; let currentElement = event.target; while (currentElement && currentElement !== mediaLinkAncestor) { const tagName = currentElement.tagName.toLowerCase(); const role = currentElement.getAttribute('role'); if ((tagName === 'a' && currentElement !== mediaLinkAncestor) || role === 'button' || role === 'slider') return; currentElement = currentElement.parentElement; } event.preventDefault(); event.stopPropagation(); window.open(mediaLinkAncestor.href, '_blank'); }; document.body.addEventListener('click', handleClick, true); } },
-            scrollRestorer: { app: null, init(app) { this.app = app; let restoreY = null; let watcherInterval = null; let correctionInterval = null; const C = this.app.config; const forceScrollCorrection = () => { if (restoreY === null) return; if (correctionInterval) clearInterval(correctionInterval); const { CORRECTION_DURATION, CORRECTION_FREQUENCY } = C.SCROLL_RESTORER_CONFIG; const startTime = Date.now(); const initialRestoreY = restoreY; correctionInterval = setInterval(() => { window.scrollTo({ top: initialRestoreY, behavior: 'instant' }); if (Date.now() - startTime > CORRECTION_DURATION) { clearInterval(correctionInterval); correctionInterval = null; restoreY = null; } }, CORRECTION_FREQUENCY); }; const startWatcher = () => { if (watcherInterval) clearInterval(watcherInterval); let isContentModalDetected = false; let modalFirstSeenTime = null; watcherInterval = setInterval(() => { const modal = document.querySelector(C.SELECTORS.GLOBAL.DIALOG); const hasLoginForm = modal && modal.querySelector(C.SELECTORS.GLOBAL.LOGIN_FORM); if (!isContentModalDetected && modal && !hasLoginForm) { isContentModalDetected = true; modalFirstSeenTime = Date.now(); } else if (isContentModalDetected && !modal) { if (Date.now() - modalFirstSeenTime > C.SCROLL_RESTORER_CONFIG.MODAL_GRACE_PERIOD) { clearInterval(watcherInterval); watcherInterval = null; forceScrollCorrection(); } } }, C.SCROLL_RESTORER_CONFIG.WATCHER_FREQUENCY); }; const recordClick = e => { if (watcherInterval || correctionInterval) return; if (e.target.closest(C.SELECTORS.GLOBAL.POST_CONTAINER) && !e.target.closest('a[target="_blank"]')) { restoreY = window.scrollY; setTimeout(startWatcher, 0); } }; const handleCloseClick = e => { if (e.target.closest(C.SELECTORS.GLOBAL.CLOSE_BUTTON) && restoreY !== null && watcherInterval) { clearInterval(watcherInterval); watcherInterval = null; forceScrollCorrection(); } }; document.body.addEventListener('click', recordClick, true); document.body.addEventListener('click', handleCloseClick, true); } },
-            autoUnmuter: { app: null, init(app) { this.app = app; const nativeVolumeSetter = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'volume').set; const nativeMutedSetter = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'muted').set; const attemptUnmute = (video) => { if (!this.app.state.settings.autoUnmuteEnabled) return; if (video instanceof HTMLVideoElement && (video.muted || video.volume === 0)) { const targetVolume = this.app.state.settings.autoUnmuteVolume / 100; nativeMutedSetter.call(video, false); nativeVolumeSetter.call(video, targetVolume); if (video.audioTracks?.length > 0) { for (let track of video.audioTracks) track.enabled = true; } video.dispatchEvent(new Event('volumechange', { bubbles: true })); } }; document.addEventListener('play', (e) => attemptUnmute(e.target), true); const observer = new MutationObserver(mutations => { mutations.forEach(mutation => mutation.addedNodes.forEach(node => { if (node.nodeName === 'VIDEO') attemptUnmute(node); else if (node.querySelectorAll) node.querySelectorAll('video').forEach(attemptUnmute); })); }); observer.observe(document.body, { childList: true, subtree: true }); document.addEventListener('click', (event) => { if (event.target.closest('[aria-label*="mute" i], [aria-label*="sound" i], [role="button"][aria-pressed]')) { setTimeout(() => document.querySelectorAll('video').forEach(attemptUnmute), 150); } }, true); const checkInterval = setInterval(() => document.querySelectorAll('video').forEach(attemptUnmute), 2000); window.addEventListener('beforeunload', () => { clearInterval(checkInterval); observer.disconnect(); }); } },
-            postNumbering: { app: null, init(app) { this.app = app; if (!this.app.state.settings.postNumberingEnabled) return; const processNewPosts = () => { if (!this.app.utils.isFeedPage()) return; const posts = document.querySelectorAll('[role="article"][aria-posinset]:not([data-gm-numbered])'); posts.forEach(articleElement => { if (articleElement.closest(this.app.config.SELECTORS.GLOBAL.DIALOG)) return; const postNumber = articleElement.getAttribute('aria-posinset'); if (!postNumber) return; articleElement.style.position = 'relative'; const numberTag = this.app.utils.createStyledElement('span', { position: 'absolute', top: '-10px', left: '-10px', backgroundColor: '#e4e6eb', color: '#65676b', padding: '2px 6px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold', zIndex: '1', }, { textContent: postNumber }); articleElement.appendChild(numberTag); articleElement.dataset.gmNumbered = 'true'; }); }; const throttledProcess = this.app.utils.throttle(processNewPosts, 300); const observer = new MutationObserver(throttledProcess); observer.observe(document.body, { childList: true, subtree: true }); throttledProcess(); } },
+            postNavigatorCore: {
+                app: null,
+                currentPostIndex: -1,
+                isRetrying: false,
+                RETRY_INTERVAL: 200,
+                MAX_RETRY_DURATION: 3000,
+                continuousNavInterval: null,
+                init(app) {
+                    this.app = app;
+                },
+                startContinuousNavigation(direction) {
+                    this.stopContinuousNavigation();
+                    this.navigateToPost(direction);
+                    const interval = this.app.state.settings.continuousNavInterval;
+                    this.continuousNavInterval = setInterval(() => {
+                        this.navigateToPost(direction);
+                    }, interval);
+                },
+                stopContinuousNavigation() {
+                    if (this.continuousNavInterval) {
+                        clearInterval(this.continuousNavInterval);
+                        this.continuousNavInterval = null;
+                    }
+                },
+                getSortedPosts() {
+                    const posts = Array.from(document.querySelectorAll('[role="article"][aria-posinset]')).filter(p => !p.closest(this.app.config.SELECTORS.GLOBAL.DIALOG));
+                    posts.sort((a, b) => parseInt(a.getAttribute('aria-posinset'), 10) - parseInt(b.getAttribute('aria-posinset'), 10));
+                    return posts;
+                },
+                triggerLoadAndRetry() {
+                    if (this.isRetrying) return;
+                    this.isRetrying = true;
+                    const initialPostCount = this.getSortedPosts().length;
+                    window.scrollTo({
+                        top: document.body.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                    const startTime = Date.now();
+                    const retryInterval = setInterval(() => {
+                        const newPostCount = this.getSortedPosts().length;
+                        if (newPostCount > initialPostCount) {
+                            clearInterval(retryInterval);
+                            this.isRetrying = false;
+                            this.navigateToPost('next');
+                            return;
+                        }
+                        if (Date.now() - startTime > this.MAX_RETRY_DURATION) {
+                            clearInterval(retryInterval);
+                            this.isRetrying = false;
+                            console.log(`${this.app.config.LOG_PREFIX} Failed to load new posts.`);
+                        }
+                    }, this.RETRY_INTERVAL);
+                },
+                navigateToPost(direction) {
+                    const posts = this.getSortedPosts();
+                    if (posts.length === 0) return;
+                    const currentHighlighted = document.querySelector(`.${this.app.config.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}`);
+                    if (currentHighlighted) {
+                        currentHighlighted.classList.remove(this.app.config.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS);
+                        const currentIndex = posts.findIndex(p => p === currentHighlighted);
+                        if (currentIndex !== -1) this.currentPostIndex = currentIndex;
+                    }
+                    if (direction === 'next') this.currentPostIndex++;
+                    else this.currentPostIndex--;
+                    if (this.currentPostIndex >= posts.length) {
+                        if (direction === 'next') {
+                            this.currentPostIndex = posts.length - 1;
+                            this.triggerLoadAndRetry();
+                            return;
+                        }
+                        this.currentPostIndex = posts.length - 1;
+                    }
+                    if (this.currentPostIndex < 0) this.currentPostIndex = 0;
+                    const targetPost = posts[this.currentPostIndex];
+                    if (targetPost) {
+                        targetPost.classList.add(this.app.config.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS);
+                        const alignment = this.app.state.settings.navigationScrollAlignment;
+                        const useSmoothScroll = this.app.state.settings.enableSmoothScrolling;
+                        const scrollBehavior = useSmoothScroll ? 'smooth' : 'auto';
+                        if (alignment === 'top') {
+                            const searchBarHeight = this.app.modules.searchBar.getOccupiedHeight();
+                            const postTop = targetPost.getBoundingClientRect().top + window.scrollY;
+                            const targetY = postTop - searchBarHeight - 10;
+                            window.scrollTo({
+                                top: targetY,
+                                behavior: scrollBehavior
+                            });
+                        } else {
+                            targetPost.scrollIntoView({
+                                behavior: scrollBehavior,
+                                block: 'center'
+                            });
+                        }
+                    }
+                }
+            },
+
+            linkInterceptor: {
+                app: null,
+                init(app) {
+                    this.app = app;
+                    const UNSAFE_ANCESTORS = ['[role="tablist"]', '[data-pagelet="ProfileTabs"]'];
+                    const unsafeSelector = UNSAFE_ANCESTORS.join(', ');
+                    const handleClick = (event) => {
+                        if (!this.app.state.settings.autoOpenMediaInNewTab || event.button !== 0) return;
+                        const mediaLinkAncestor = event.target.closest(this.app.config.SELECTORS.GLOBAL.MEDIA_LINK);
+                        if (!mediaLinkAncestor || mediaLinkAncestor.closest(unsafeSelector)) return;
+                        let currentElement = event.target;
+                        while (currentElement && currentElement !== mediaLinkAncestor) {
+                            const tagName = currentElement.tagName.toLowerCase();
+                            const role = currentElement.getAttribute('role');
+                            if ((tagName === 'a' && currentElement !== mediaLinkAncestor) || role === 'button' || role === 'slider') return;
+                            currentElement = currentElement.parentElement;
+                        }
+                        event.preventDefault();
+                        event.stopPropagation();
+                        window.open(mediaLinkAncestor.href, '_blank');
+                    };
+                    document.body.addEventListener('click', handleClick, true);
+                }
+            },
+
+            scrollRestorer: {
+                app: null,
+                init(app) {
+                    this.app = app;
+                    let restoreY = null;
+                    let watcherInterval = null;
+                    let correctionInterval = null;
+                    const C = this.app.config;
+                    const forceScrollCorrection = () => {
+                        if (restoreY === null) return;
+                        if (correctionInterval) clearInterval(correctionInterval);
+                        const {
+                            CORRECTION_DURATION,
+                            CORRECTION_FREQUENCY
+                        } = C.SCROLL_RESTORER_CONFIG;
+                        const startTime = Date.now();
+                        const initialRestoreY = restoreY;
+                        correctionInterval = setInterval(() => {
+                            window.scrollTo({
+                                top: initialRestoreY,
+                                behavior: 'instant'
+                            });
+                            if (Date.now() - startTime > CORRECTION_DURATION) {
+                                clearInterval(correctionInterval);
+                                correctionInterval = null;
+                                restoreY = null;
+                            }
+                        }, CORRECTION_FREQUENCY);
+                    };
+                    const startWatcher = () => {
+                        if (watcherInterval) clearInterval(watcherInterval);
+                        let isContentModalDetected = false;
+                        let modalFirstSeenTime = null;
+                        watcherInterval = setInterval(() => {
+                            const modal = document.querySelector(C.SELECTORS.GLOBAL.DIALOG);
+                            const hasLoginForm = modal && modal.querySelector(C.SELECTORS.GLOBAL.LOGIN_FORM);
+                            if (!isContentModalDetected && modal && !hasLoginForm) {
+                                isContentModalDetected = true;
+                                modalFirstSeenTime = Date.now();
+                            } else if (isContentModalDetected && !modal) {
+                                if (Date.now() - modalFirstSeenTime > C.SCROLL_RESTORER_CONFIG.MODAL_GRACE_PERIOD) {
+                                    clearInterval(watcherInterval);
+                                    watcherInterval = null;
+                                    forceScrollCorrection();
+                                }
+                            }
+                        }, C.SCROLL_RESTORER_CONFIG.WATCHER_FREQUENCY);
+                    };
+                    const recordClick = e => {
+                        if (watcherInterval || correctionInterval) return;
+                        if (e.target.closest(C.SELECTORS.GLOBAL.POST_CONTAINER) && !e.target.closest('a[target="_blank"]')) {
+                            restoreY = window.scrollY;
+                            setTimeout(startWatcher, 0);
+                        }
+                    };
+                    const handleCloseClick = e => {
+                        if (e.target.closest(C.SELECTORS.GLOBAL.CLOSE_BUTTON) && restoreY !== null && watcherInterval) {
+                            clearInterval(watcherInterval);
+                            watcherInterval = null;
+                            forceScrollCorrection();
+                        }
+                    };
+                    document.body.addEventListener('click', recordClick, true);
+                    document.body.addEventListener('click', handleCloseClick, true);
+                }
+            },
+
+            autoUnmuter: {
+                app: null,
+                init(app) {
+                    this.app = app;
+                    const nativeVolumeSetter = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'volume').set;
+                    const nativeMutedSetter = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'muted').set;
+                    const attemptUnmute = (video) => {
+                        if (!this.app.state.settings.autoUnmuteEnabled) return;
+                        if (video instanceof HTMLVideoElement && (video.muted || video.volume === 0)) {
+                            const targetVolume = this.app.state.settings.autoUnmuteVolume / 100;
+                            nativeMutedSetter.call(video, false);
+                            nativeVolumeSetter.call(video, targetVolume);
+                            if (video.audioTracks?.length > 0) {
+                                for (let track of video.audioTracks) track.enabled = true;
+                            }
+                            video.dispatchEvent(new Event('volumechange', {
+                                bubbles: true
+                            }));
+                        }
+                    };
+                    document.addEventListener('play', (e) => attemptUnmute(e.target), true);
+                    const observer = new MutationObserver(mutations => {
+                        mutations.forEach(mutation => mutation.addedNodes.forEach(node => {
+                            if (node.nodeName === 'VIDEO') attemptUnmute(node);
+                            else if (node.querySelectorAll) node.querySelectorAll('video').forEach(attemptUnmute);
+                        }));
+                    });
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+                    document.addEventListener('click', (event) => {
+                        if (event.target.closest('[aria-label*="mute" i], [aria-label*="sound" i], [role="button"][aria-pressed]')) {
+                            setTimeout(() => document.querySelectorAll('video').forEach(attemptUnmute), 150);
+                        }
+                    }, true);
+                    const checkInterval = setInterval(() => document.querySelectorAll('video').forEach(attemptUnmute), 2000);
+                    window.addEventListener('beforeunload', () => {
+                        clearInterval(checkInterval);
+                        observer.disconnect();
+                    });
+                }
+            },
+
+            postNumbering: {
+                app: null,
+                init(app) {
+                    this.app = app;
+                    if (!this.app.state.settings.postNumberingEnabled) return;
+                    const processNewPosts = () => {
+                        if (!this.app.utils.isFeedPage()) return;
+                        const posts = document.querySelectorAll('[role="article"][aria-posinset]:not([data-gm-numbered])');
+                        posts.forEach(articleElement => {
+                            if (articleElement.closest(this.app.config.SELECTORS.GLOBAL.DIALOG)) return;
+                            const postNumber = articleElement.getAttribute('aria-posinset');
+                            if (!postNumber) return;
+                            articleElement.style.position = 'relative';
+                            const numberTag = this.app.utils.createStyledElement('span', {}, { className: 'gm-post-number', textContent: postNumber });
+                            articleElement.appendChild(numberTag);
+                            articleElement.dataset.gmNumbered = 'true';
+                        });
+                    };
+                    const throttledProcess = this.app.utils.throttle(processNewPosts, 300);
+                    const observer = new MutationObserver(throttledProcess);
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true
+                    });
+                    throttledProcess();
+                }
+            },
 
             searchBar: {
                 app: null,
@@ -1432,7 +1458,6 @@
                     isPinned: true,
                     isAtTop: true, 
                 },
-
                 icons: {
                     pinned: `<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="#1877F2" d="M7.084 11.457C5.782 12.325 5 12.709 5 14.274V15h7v7l.5 1 .5-1v-7h7v-.726c0-1.565-.782-1.95-2.084-2.817l-1.147-.765L15 4l1.522-.43A2.029 2.029 0 0 0 18 1.619V1H7v.618A2.029 2.029 0 0 0 8.478 3.57L10 4l-1.77 6.692zM16.93 12l.73.485c1 .659 1.28.866 1.332 1.515H6.009c.051-.65.332-.856 1.333-1.515L8.07 12zM8.75 2.608A1.033 1.033 0 0 1 8.075 2h8.852a1.033 1.033 0 0 1-.676.608L14.862 3h-4.724zM11.035 4h2.931l1.85 7h-6.63z"/></svg>`,
                     unpinned: `<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path d="M20 14.274V15h-7v7l-.5 1-.5-1v-6.172L13.828 14h5.163c-.051-.65-.332-.856-1.333-1.515L16.93 12h-1.1l1.16-1.161.927.618c1.302.868 2.084 1.252 2.084 2.817zm2.4-10.966L3.307 22.399l-.707-.707L9.293 15H5v-.726c0-1.565.782-1.95 2.084-2.817l1.147-.765L10 4l-1.522-.43A2.029 2.029 0 0 1 7 1.619V1h11v.618a2.029 2.029 0 0 1-1.478 1.953L15 4l1.107 4.186L21.692 2.6zM10.137 3h4.724l1.388-.392A1.033 1.033 0 0 0 16.926 2H8.074a1.033 1.033 0 0 0 .676.608zm-.954 8h4.109l1.995-1.995L13.966 4h-2.931zm1.109 3l2-2H8.07l-.73.485c-1 .659-1.28.866-1.332 1.515z"/></svg>`,
@@ -1441,14 +1466,12 @@
                     marketplace: `<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 576 512"><path d="M547.6 103.8L490.3 13.1C485.2 5 476.1 0 466.4 0H109.6C99.9 0 90.8 5 85.7 13.1L28.4 103.8c-7.9 12.8-1.2 29.8 15.3 35.4l2.5 1c4.2 1.7 8.8 2.6 13.5 2.6H491.3c4.7 0 9.3-1 13.5-2.6l2.5-1c16.5-5.6 23.2-22.6 15.3-35.4zM320 224v16c0 8.8-7.2 16-16 16s-16-7.2-16-16V224H160v16c0 8.8-7.2 16-16 16s-16-7.2-16-16V224H32v224c0 17.7 14.3 32 32 32h448c17.7 0 32-14.3 32-32V224H448v16c0 8.8-7.2 16-16 16s-16-7.2-16-16V224H320zM176 160H400c8.8 0 16-7.2 16-16s-7.2-16-16-16H176c-8.8 0-16 7.2-16 16s7.2 16 16 16z"/></svg>`,
                     search: `<svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>`,
                 },
-
                 getOccupiedHeight() {
                     if (this.state.isPinned && this.elements.toolbar && this.elements.toolbar.style.visibility !== 'hidden') {
                         return this.elements.toolbar.offsetHeight;
                     }
                     return 0;
                 },
-
                 init(app) {
                     this.app = app;
                     if (!this.app.state.settings.hideUselessElements) return;
@@ -1463,59 +1486,56 @@
                         this._updatePinState();
                     }, 50);
                 },
-
                 _getCurrentPageName() {
                     const h1 = document.querySelector('h1');
                     if (!h1) return null;
-
                     let pageName = '';
                     for (const node of h1.childNodes) {
-                        if (node.nodeType === Node.TEXT_NODE) {
-                            pageName += node.nodeValue;
-                        }
+                        if (node.nodeType === Node.TEXT_NODE) pageName += node.nodeValue;
                     }
                     return pageName.trim();
                 },
-
                 _createUI() {
+                    const U = this.app.utils;
                     const elements = {};
-                    
                     const shortcutsGroup = this._createShortcutsGroup(elements);
                     const searchComponent = this._createSearchComponent(elements);
                     const toolsGroup = this._createToolsGroup(elements);
 
-                    elements.toolbar = this.app.utils.createStyledElement('div', {}, { className: 'gm-toolbar' });
-                    elements.toolbar.append(shortcutsGroup, searchComponent, toolsGroup);
-                    
-                    elements.hoverTrigger = this.app.utils.createStyledElement('div', { position: 'fixed', top: '0', left: '0', width: '100%', height: '10px', zIndex: '9999' });
-                    elements.hoverHint = this.app.utils.createStyledElement('div', {}, { className: 'gm-hover-hint' });
+                    elements.toolbar = U.createStyledElement('div', {}, { className: 'gm-toolbar', children: [shortcutsGroup, searchComponent, toolsGroup] });
+                    elements.hoverTrigger = U.createStyledElement('div', {}, { className: 'gm-hover-trigger' });
+                    elements.hoverHint = U.createStyledElement('div', {}, { className: 'gm-hover-hint' });
 
                     return elements;
                 },
-                
                 _createShortcutsGroup(elements) {
                     const T = this.app.state.T;
-                    const wrapper = this.app.utils.createStyledElement('div', {}, { className: 'gm-button-group' });
+                    const U = this.app.utils;
                     const shortcuts = [
                         { key: 'watch', url: '/watch/', icon: this.icons.watch, tooltip: T.shortcutWatch },
                         { key: 'events', url: '/events/', icon: this.icons.events, tooltip: T.shortcutEvents },
                         { key: 'marketplace', url: '/marketplace/', icon: this.icons.marketplace, tooltip: T.shortcutMarketplace },
                     ];
-                    shortcuts.forEach(sc => {
-                        const button = this.app.utils.createStyledElement('button', {}, { title: sc.tooltip, innerHTML: sc.icon });
-                        button.dataset.url = `https://www.facebook.com${sc.url}`;
+                    const buttons = shortcuts.map(sc => {
+                        const button = U.createStyledElement('button', {}, { 
+                            title: sc.tooltip, innerHTML: sc.icon,
+                            on: { mousedown: (e) => {
+                                if (e.button === 0 || e.button === 1) { 
+                                    e.preventDefault();
+                                    window.open(`https://www.facebook.com${sc.url}`, e.button === 1 ? '_blank' : '_self');
+                                }
+                            }}
+                        });
                         elements[`shortcut_${sc.key}`] = button;
-                        wrapper.appendChild(button);
+                        return button;
                     });
-                    return wrapper;
+                    return U.createStyledElement('div', {}, { className: 'gm-button-group', children: buttons });
                 },
-
                 _createSearchComponent(elements) {
                     const T = this.app.state.T;
-                    const coreWrapper = this.app.utils.createStyledElement('div', {}, { className: 'gm-search-core-wrapper' });
-                    const componentWrapper = this.app.utils.createStyledElement('div', {}, { className: 'gm-search-component-wrapper' });
+                    const U = this.app.utils;
                     
-                    elements.scopeSelector = this.app.utils.createStyledElement('select', { cursor: 'pointer' });
+                    elements.scopeSelector = U.createStyledElement('select', { cursor: 'pointer' });
                     const scopes = {
                         [T.searchGroupContextual]: [
                             { text: T.searchScopePosts, value: '', tooltip: T.searchTooltipPosts },
@@ -1534,50 +1554,40 @@
                         ]
                     };
                     for (const groupLabel in scopes) {
-                        const optgroup = this.app.utils.createStyledElement('optgroup', {}, { label: groupLabel });
-                        scopes[groupLabel].forEach(scope => optgroup.appendChild(this.app.utils.createStyledElement('option', {}, { value: scope.value, textContent: scope.text, title: scope.tooltip })));
+                        const optgroup = U.createStyledElement('optgroup', {}, { label: groupLabel });
+                        scopes[groupLabel].forEach(scope => optgroup.appendChild(U.createStyledElement('option', {}, { value: scope.value, textContent: scope.text, title: scope.tooltip })));
                         elements.scopeSelector.appendChild(optgroup);
                     }
                     
-                    const inputContainer = this.app.utils.createStyledElement('div', {}, { className: 'gm-search-input-container' });
-                    elements.searchInput = this.app.utils.createStyledElement('input', {}, { type: 'text', placeholder: T.searchPlaceholder });
-                    elements.clearButton = this.app.utils.createStyledElement('button', {}, { className: 'gm-search-clear-button', textContent: '✖' });
-                    elements.searchButton = this.app.utils.createStyledElement('button', {}, { className: 'gm-search-button-integrated', innerHTML: this.icons.search, title: T.searchButton });
+                    elements.searchInput = U.createStyledElement('input', {}, { type: 'text', placeholder: T.searchPlaceholder });
+                    elements.clearButton = U.createStyledElement('button', {}, { className: 'gm-search-clear-button', textContent: '✖', on: { mousedown: (e) => e.preventDefault() } });
+                    elements.searchButton = U.createStyledElement('button', {}, { className: 'gm-search-button-integrated', innerHTML: this.icons.search, title: T.searchButton });
                     
-                    inputContainer.append(elements.searchInput, elements.clearButton, elements.searchButton);
-                    componentWrapper.append(elements.scopeSelector, inputContainer);
-                    coreWrapper.append(componentWrapper);
-                    elements.searchComponentWrapper = componentWrapper;
+                    const inputContainer = U.createStyledElement('div', {}, { 
+                        className: 'gm-search-input-container',
+                        children: [elements.searchInput, elements.clearButton, elements.searchButton]
+                    });
                     
-                    return coreWrapper;
+                    elements.searchComponentWrapper = U.createStyledElement('div', {}, { 
+                        className: 'gm-search-component-wrapper',
+                        children: [elements.scopeSelector, inputContainer]
+                    });
+                    return U.createStyledElement('div', {}, { className: 'gm-search-core-wrapper', children: [elements.searchComponentWrapper] });
                 },
-
                 _createToolsGroup(elements) {
-                    const wrapper = this.app.utils.createStyledElement('div', {}, { className: 'gm-button-group' });
-                    elements.pinButton = this.app.utils.createStyledElement('button', {}, { innerHTML: this.icons.unpinned + this.icons.pinned });
-                    elements.settingsButton = this.app.utils.createStyledElement('button', {}, { textContent: '⚙️', title: 'Script Settings' });
-                    wrapper.append(elements.pinButton, elements.settingsButton);
-                    return wrapper;
+                    const U = this.app.utils;
+                    elements.pinButton = U.createStyledElement('button', {}, { innerHTML: this.icons.unpinned + this.icons.pinned });
+                    elements.settingsButton = U.createStyledElement('button', {}, { textContent: '⚙️', title: 'Script Settings' });
+                    return U.createStyledElement('div', {}, { className: 'gm-button-group', children: [elements.pinButton, elements.settingsButton] });
                 },
-
                 _bindEvents() {
                     const { searchInput, clearButton, searchButton, pinButton, settingsButton, toolbar, scopeSelector, searchComponentWrapper, hoverTrigger } = this.elements;
-
-                    const handleShortcutMouseDown = (e) => {
-                        if (e.button === 0 || e.button === 1) { 
-                            e.preventDefault();
-                            const url = e.currentTarget.dataset.url;
-                            window.open(url, e.button === 1 ? '_blank' : '_self');
-                        }
-                    };
-                    Object.keys(this.elements).filter(k => k.startsWith('shortcut_')).forEach(key => this.elements[key].addEventListener('mousedown', handleShortcutMouseDown));
 
                     pinButton.addEventListener('click', () => this._togglePinState());
                     settingsButton.addEventListener('click', () => this.app.modules.settingsModal.open());
                     
                     searchButton.addEventListener('mousedown', (e) => {
                         if (searchButton.disabled) return;
-                        
                         if (e.button === 0) {
                             e.preventDefault();
                             this.performSearch('_blank');
@@ -1595,21 +1605,16 @@
                     searchInput.addEventListener('focus', () => searchComponentWrapper.classList.add('gm-focused'));
                     searchInput.addEventListener('blur', () => searchComponentWrapper.classList.remove('gm-focused'));
                     clearButton.addEventListener('click', () => { searchInput.value = ''; searchInput.focus(); clearButton.style.display = 'none'; this._updateSearchButtonState(); });
-                    clearButton.addEventListener('mousedown', (e) => e.preventDefault());
-                    
                     toolbar.addEventListener('focusout', (e) => { if (!this.state.isPinned && !toolbar.contains(e.relatedTarget)) setTimeout(() => this._hideBar(), 100); });
                     scopeSelector.addEventListener('change', () => this._updateSearchButtonState());
-
                     hoverTrigger.addEventListener('mouseenter', this._onHoverTriggerEnter.bind(this));
                     toolbar.addEventListener('mouseenter', this._onSearchBarEnter.bind(this));
                     hoverTrigger.addEventListener('mouseleave', this._onMouseLeave.bind(this));
                     toolbar.addEventListener('mouseleave', this._onMouseLeave.bind(this));
-                    
                     window.addEventListener('scroll', this.app.utils.throttle(() => this._handleScroll(), 100), { passive: true });
                     window.addEventListener('historyChange', () => this.updateVisibility());
                     new MutationObserver(this.app.utils.throttle(() => this.updateVisibility(), 150)).observe(document.body, { childList: true, subtree: true });
                 },
-
                 _updateSearchButtonState() {
                     const T = this.app.state.T;
                     const { searchInput, scopeSelector, searchButton } = this.elements;
@@ -1627,51 +1632,35 @@
                         searchButton.disabled = false;
                         searchButton.style.opacity = '1';
                         searchButton.style.cursor = 'pointer';
-                        searchButton.title = !keyword && isContextual
-                            ? T.searchAllContextualTooltip.replace('{scope}', selectedOption.textContent)
-                            : T.searchButton;
+                        searchButton.title = !keyword && isContextual ? T.searchAllContextualTooltip.replace('{scope}', selectedOption.textContent) : T.searchButton;
                     }
                 },
-
                 performSearch(target = '_blank') { 
                     const T = this.app.state.T;
                     const selectedOption = this.elements.scopeSelector.options[this.elements.scopeSelector.selectedIndex];
                     const isContextual = selectedOption.parentElement.label === T.searchGroupContextual;
                     const keyword = this.elements.searchInput.value.trim();
-
                     if (!isContextual && !keyword) return;
                     
                     const langExclusion = ' -inurl:?locale= -inurl:?locale2=';
-
                     const openUrl = (url) => {
                         switch (target) {
-                            case 'background':
-                                GM_openInTab(url, { active: false, insert: true });
-                                break;
-                            case '_self':
-                                window.open(url, '_self');
-                                break;
-                            case '_blank':
-                            default:
-                                window.open(url, '_blank');
-                                break;
+                            case 'background': GM_openInTab(url, { active: false, insert: true }); break;
+                            case '_self': window.open(url, '_self'); break;
+                            case '_blank': default: window.open(url, '_blank'); break;
                         }
                     };
-
                     const selectedScopeValue = selectedOption.value;
                     let searchUrl = '';
-
                     const internalSearchMap = {
                         'events_search': `https://www.facebook.com/events/search/?q=${encodeURIComponent(keyword)}`,
                         'marketplace_search': `https://www.facebook.com/marketplace/search/?query=${encodeURIComponent(keyword)}`,
                         'watch_search': `https://www.facebook.com/watch/search/?q=${encodeURIComponent(keyword)}`
                     };
-
                     if (internalSearchMap[selectedScopeValue]) {
                         openUrl(internalSearchMap[selectedScopeValue]);
                         return;
                     }
-
                     if (selectedScopeValue === 'reel_search') {
                         const pageName = this._getCurrentPageName();
                         if (!pageName) {
@@ -1695,43 +1684,31 @@
                         const query = keyword ? `${encodeURIComponent(keyword)}+${encodeURIComponent(fullSiteTarget)}` : encodeURIComponent(fullSiteTarget);
                         searchUrl = `https://www.google.com/search?q=${query}`;
                     }
-
                     if (selectedScopeValue === '/photos/') searchUrl += '&udm=2';
                     openUrl(searchUrl);
                 },
-
                 updateVisibility() {
                     const C = this.app.config;
                     const currentPath = window.location.pathname;
                     const isDisallowed = ['/photo/', '/videos/', '/reel/', '/posts/', '/watch/'].some(p => currentPath.startsWith(p)) || !!document.querySelector(C.SELECTORS.GLOBAL.DIALOG);
-
                     const newVisibility = isDisallowed ? 'hidden' : 'visible';
                     const elementsToToggle = [this.elements.toolbar, this.elements.hoverTrigger, this.elements.hoverHint];
-                    if (this.elements.toolbar.style.visibility !== newVisibility) {
-                         elementsToToggle.forEach(el => el.style.visibility = newVisibility);
-                    }
-
+                    if (this.elements.toolbar.style.visibility !== newVisibility) elementsToToggle.forEach(el => el.style.visibility = newVisibility);
                     const isGroupPage = currentPath.startsWith('/groups/');
                     for (const option of this.elements.scopeSelector.options) {
                         if (option.parentElement.tagName !== 'OPTGROUP') continue;
                         const isContextualGroup = option.parentElement.label === this.app.state.T.searchGroupContextual;
                         option.disabled = isGroupPage && isContextualGroup && option.value !== '';
                     }
-                    if (isGroupPage && this.elements.scopeSelector.options[this.elements.scopeSelector.selectedIndex].disabled) {
-                        this.elements.scopeSelector.value = '';
-                    }
-
+                    if (isGroupPage && this.elements.scopeSelector.options[this.elements.scopeSelector.selectedIndex].disabled) this.elements.scopeSelector.value = '';
                     this._handleScroll(true);
                     this._updateSearchButtonState();
                 },
-
                 _handleScroll(force = false) {
                     if (this.state.isPinned) return;
-
                     const currentIsAtTop = window.scrollY < 10;
                     if (!force && currentIsAtTop === this.state.isAtTop) return;
                     this.state.isAtTop = currentIsAtTop;
-
                     if (this.state.isAtTop) {
                         this._showBar();
                         this.elements.hoverHint.classList.remove('gm-visible');
@@ -1741,24 +1718,20 @@
                         this.elements.hoverHint.classList.add('gm-visible');
                     }
                 },
-
                 _togglePinState() {
                     this.state.isPinned = !this.state.isPinned;
                     GM_setValue('isSearchBarPinned', this.state.isPinned);
                     this._updatePinState();
                 },
-
                 _updatePinState() {
                     const T = this.app.state.T;
                     const { pinButton, hoverHint } = this.elements;
                     const isPinned = this.state.isPinned;
-
                     pinButton.classList.toggle('gm-pinned', isPinned);
                     const [unpinnedIcon, pinnedIcon] = pinButton.querySelectorAll('svg');
                     pinnedIcon.style.display = isPinned ? 'block' : 'none';
                     unpinnedIcon.style.display = isPinned ? 'none' : 'block';
                     pinButton.title = isPinned ? T.unpinToolbar : T.pinToolbar;
-
                     if (isPinned) {
                         this._showBar();
                         hoverHint.classList.remove('gm-visible');
@@ -1766,10 +1739,8 @@
                         this._handleScroll(true); 
                     }
                 },
-
                 _showBar() { this.elements.toolbar.style.transform = 'translateY(0)'; },
                 _hideBar() { this.elements.toolbar.style.transform = 'translateY(-100%)'; },
-
                 _onHoverTriggerEnter() { if (!this.state.isPinned) { this.elements.hoverHint.classList.remove('gm-visible'); this._showBar(); } },
                 _onSearchBarEnter() { if (!this.state.isPinned) this._showBar(); },
                 _onMouseLeave() { if (!this.state.isPinned && !this.elements.toolbar.contains(document.activeElement)) { this._hideBar(); if (!this.state.isAtTop) this.elements.hoverHint.classList.add('gm-visible'); } },
@@ -1785,12 +1756,15 @@
                 isProcessingClick: false,
                 isModalOpening: false,
                 observer: null,
+                boundHandleClick: null,
 
                 init(app) {
                     if (!this.app) this.app = app;
                     if (this.observer) return; 
                     console.log(`${this.app.config.LOG_PREFIX} [Copier] Module enabled and initializing.`);
                     this.startObserver();
+                    this.boundHandleClick = this.handleCopyClick.bind(this);
+                    document.body.addEventListener('click', this.boundHandleClick);
                 },
 
                 deinit() {
@@ -1798,6 +1772,10 @@
                         this.observer.disconnect();
                         this.observer = null;
                         console.log(`${this.app.config.LOG_PREFIX} [Copier] Module observer stopped.`);
+                    }
+                    if (this.boundHandleClick) {
+                        document.body.removeEventListener('click', this.boundHandleClick);
+                        this.boundHandleClick = null;
                     }
                     this.cleanupButtons();
                     console.log(`${this.app.config.LOG_PREFIX} [Copier] Module disabled and cleaned up.`);
@@ -1924,11 +1902,7 @@
                     if (!headerEl?.parentElement || headerEl.parentElement.querySelector(`.${C.BUTTON_CLASS}`)) return;
 
                     postEl.setAttribute(`data-${C.PROCESSED_MARKER}`, 'true');
-                    if (!postEl.dataset.fpcListenerAdded) {
-                        postEl.addEventListener('click', this.handleCopyClick.bind(this), { capture: true });
-                        postEl.dataset.fpcListenerAdded = 'true';
-                    }
-
+                    
                     const contentType = this.determinePostContentType(postEl);
                     const isSmart = this.app.state.settings.copier_useSmartLink && contentType === 'standard';
                     const newButton = this.createPermalinkButton(isSmart, isDialog);
@@ -1946,7 +1920,7 @@
                     const icon = isSmart ? '✨' : '🔗';
                     const title = isSmart ? T.copier_fetchPermalinkSmart : T.copier_fetchPermalinkDirect;
 
-                    const button = this.app.utils.createStyledElement('div', {
+                    return this.app.utils.createStyledElement('div', {
                         cursor: 'pointer', backgroundColor: 'transparent', color: 'var(--secondary-text)',
                         lineHeight: '1', marginLeft: '8px', border: '1px solid var(--media-inner-border)',
                         transition: 'all 0.15s ease-out', userSelect: 'none',
@@ -1964,11 +1938,11 @@
                         innerHTML: settings.copier_showButtonText
                             ? `<span>${icon}</span><span style="margin-left: 5px;">${title}</span>`
                             : `<span>${icon}</span>`,
+                        on: {
+                            mouseover: (e) => { if (e.currentTarget.style.pointerEvents !== 'none') e.currentTarget.style.backgroundColor = 'var(--hover-overlay)'; },
+                            mouseout: (e) => { if (e.currentTarget.style.pointerEvents !== 'none') e.currentTarget.style.backgroundColor = 'transparent'; }
+                        }
                     });
-
-                    button.addEventListener('mouseover', () => { if (button.style.pointerEvents !== 'none') button.style.backgroundColor = 'var(--hover-overlay)'; });
-                    button.addEventListener('mouseout', () => { if (button.style.pointerEvents !== 'none') button.style.backgroundColor = 'transparent'; });
-                    return button;
                 },
 
                 scanNodeForPosts(node) {
@@ -1993,9 +1967,53 @@
                     });
                 },
 
-                processDialogPost(dialogEl) { this.isModalOpening = true; let observer; const C_GLOBAL = this.app.config.SELECTORS.GLOBAL; const C_COPIER = this.app.config.SELECTORS.PERMALINK_COPIER; const cleanup = () => { if (observer) observer.disconnect(); clearTimeout(timeoutId); setTimeout(() => { this.isModalOpening = false; }, 200); }; const timeoutId = setTimeout(() => { console.warn(`${this.app.config.LOG_PREFIX} [Copier] Dialog observer timed out waiting for post header.`); cleanup(); }, 3000); const findAndProcessHeader = () => { const postEl = dialogEl.querySelector(C_GLOBAL.POST_CONTAINER); if (postEl) { const headerEl = postEl.querySelector(C_COPIER.DIALOG_POST_HEADER); if (headerEl) { this.addButtonsToPost(postEl, headerEl, true); cleanup(); return true; } } return false; }; if (findAndProcessHeader()) return; observer = new MutationObserver(() => findAndProcessHeader()); observer.observe(dialogEl, { childList: true, subtree: true }); },
-                reEvaluateAllButtons() { if (!this.app.state.settings.permalinkCopierEnabled) return; this.cleanupButtons(); this.scanNodeForPosts(document.body); },
-                cleanupButtons() { const C = this.app.config.SELECTORS.PERMALINK_COPIER; document.querySelectorAll(`[data-${C.PROCESSED_MARKER}]`).forEach(el => { el.removeAttribute(`data-${C.PROCESSED_MARKER}`); el.removeAttribute('data-fpc-listener-added'); el.querySelectorAll(`.${C.BUTTON_CLASS}`).forEach(btn => btn.remove()); }); },
+                processDialogPost(dialogEl) {
+                    this.isModalOpening = true;
+                    let observer;
+                    const C_GLOBAL = this.app.config.SELECTORS.GLOBAL;
+                    const C_COPIER = this.app.config.SELECTORS.PERMALINK_COPIER;
+                    const cleanup = () => {
+                        if (observer) observer.disconnect();
+                        clearTimeout(timeoutId);
+                        setTimeout(() => {
+                            this.isModalOpening = false;
+                        }, 200);
+                    };
+                    const timeoutId = setTimeout(() => {
+                        console.warn(`${this.app.config.LOG_PREFIX} [Copier] Dialog observer timed out waiting for post header.`);
+                        cleanup();
+                    }, 3000);
+                    const findAndProcessHeader = () => {
+                        const postEl = dialogEl.querySelector(C_GLOBAL.POST_CONTAINER);
+                        if (postEl) {
+                            const headerEl = postEl.querySelector(C_COPIER.DIALOG_POST_HEADER);
+                            if (headerEl) {
+                                this.addButtonsToPost(postEl, headerEl, true);
+                                cleanup();
+                                return true;
+                            }
+                        }
+                        return false;
+                    };
+                    if (findAndProcessHeader()) return;
+                    observer = new MutationObserver(() => findAndProcessHeader());
+                    observer.observe(dialogEl, {
+                        childList: true,
+                        subtree: true
+                    });
+                },
+                reEvaluateAllButtons() {
+                    if (!this.app.state.settings.permalinkCopierEnabled) return;
+                    this.cleanupButtons();
+                    this.scanNodeForPosts(document.body);
+                },
+                cleanupButtons() {
+                    const C = this.app.config.SELECTORS.PERMALINK_COPIER;
+                    document.querySelectorAll(`[data-${C.PROCESSED_MARKER}]`).forEach(el => {
+                        el.removeAttribute(`data-${C.PROCESSED_MARKER}`);
+                        el.querySelectorAll(`.${C.BUTTON_CLASS}`).forEach(btn => btn.remove());
+                    });
+                },
                 determinePostContentType(postEl) {
                     if (!postEl) return 'unknown';
                     const timestampUrl = this.getPermalinkFromTimestamp(postEl);
@@ -2029,7 +2047,34 @@
                     }
                     return null;
                 },
-                getPermalinkFromTimestamp(postEl) { try { const timeLink = this.findTimestampLink(postEl); if (!timeLink?.href) return null; const rawUrl = new URL(timeLink.href, window.location.origin); const searchParams = rawUrl.searchParams; const basePath = `${rawUrl.protocol}//${rawUrl.host}${rawUrl.pathname}`; if (rawUrl.pathname.includes('/watch/')) { const videoId = searchParams.get('v'); if (videoId) return `${basePath}?v=${videoId}`; } else if (rawUrl.pathname.includes('permalink.php') || rawUrl.search.includes('story_fbid=')) { const storyFbid = searchParams.get('story_fbid'); const id = searchParams.get('id'); if (storyFbid && id) return `${basePath}?story_fbid=${storyFbid}&id=${id}`; } else if (rawUrl.pathname.includes('photo.php') || searchParams.has('fbid')) { const fbid = searchParams.get('fbid'); const setId = searchParams.get('set'); if (fbid && setId) return `${basePath}?fbid=${fbid}&set=${setId}`; if (fbid) return `${basePath}?fbid=${fbid}`; } else if (rawUrl.search.includes('multi_permalinks=')) { const permalinkId = searchParams.get('multi_permalinks'); return basePath.replace(/\/$/, '') + `/posts/${permalinkId}/`; } return basePath; } catch (e) { return null; } },
+                getPermalinkFromTimestamp(postEl) {
+                    try {
+                        const timeLink = this.findTimestampLink(postEl);
+                        if (!timeLink?.href) return null;
+                        const rawUrl = new URL(timeLink.href, window.location.origin);
+                        const searchParams = rawUrl.searchParams;
+                        const basePath = `${rawUrl.protocol}//${rawUrl.host}${rawUrl.pathname}`;
+                        if (rawUrl.pathname.includes('/watch/')) {
+                            const videoId = searchParams.get('v');
+                            if (videoId) return `${basePath}?v=${videoId}`;
+                        } else if (rawUrl.pathname.includes('permalink.php') || rawUrl.search.includes('story_fbid=')) {
+                            const storyFbid = searchParams.get('story_fbid');
+                            const id = searchParams.get('id');
+                            if (storyFbid && id) return `${basePath}?story_fbid=${storyFbid}&id=${id}`;
+                        } else if (rawUrl.pathname.includes('photo.php') || searchParams.has('fbid')) {
+                            const fbid = searchParams.get('fbid');
+                            const setId = searchParams.get('set');
+                            if (fbid && setId) return `${basePath}?fbid=${fbid}&set=${setId}`;
+                            if (fbid) return `${basePath}?fbid=${fbid}`;
+                        } else if (rawUrl.search.includes('multi_permalinks=')) {
+                            const permalinkId = searchParams.get('multi_permalinks');
+                            return basePath.replace(/\/$/, '') + `/posts/${permalinkId}/`;
+                        }
+                        return basePath;
+                    } catch (e) {
+                        return null;
+                    }
+                },
                 getAnyPostUrl(postEl) {
                     if (!postEl) return null;
                     const linkSelectors = ['a[href*="/photo/"]', 'a[href*="fbid="]', 'a[href*="/reel/"]', 'a[href*="/videos/"]', 'a[href*="/watch/"]', 'a[href*="/events/"]'];
@@ -2046,10 +2091,7 @@
             },
         },
 
-        /**
-         * Main function for the background worker tab.
-         * This runs in a separate, temporary tab to fetch canonical permalinks.
-         */
+        // ... Worker and Init remain the same, just included for completeness
         async handleWorkerTask() {
             const urlParams = new URLSearchParams(window.location.search);
             const taskId = urlParams.get(this.config.WORKER_PARAM);
@@ -2109,9 +2151,6 @@
             }
         },
 
-        /**
-         * Main application entry point.
-         */
         init() {
             const lang = navigator.language.toLowerCase();
             if (lang.startsWith('ja')) this.state.T = this.config.STRINGS.ja;

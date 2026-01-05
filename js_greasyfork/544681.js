@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         自动计算最大时利润
 // @namespace    https://github.com/gangbaRuby
-// @version      1.22.3
+// @version      1.23.0
 // @license      AGPL-3.0
 // @description  在商店计算自动计算最大时利润，在合同、交易所展示最大时利润
 // @author       Rabbit House
@@ -1544,7 +1544,7 @@
                             <p style="margin-top:0;margin-bottom:15px;font-size:14px;">
                                 请输入自定义数量或运行时长，使用<strong style="color:#FF8888;">逗号（, 或 ，）</strong>分隔，你可以在插件菜单中禁用此功能。你可以通过输入“am”，“pm”，“hr”和“m”来快捷决定生产数量。例如: 10pm, 2hr, 30m，11:4am,5:14,字母不区分大小写，半角全角均可。
                             </p>
-                            <textarea id="autoamount-config-input" 
+                            <textarea id="autoamount-config-input"
                                 style="width:100%;height:80px;margin-bottom:20px;padding:8px;border:1px solid #666;border-radius:4px;box-sizing:border-box;font-size:14px;color:#EEE;background:#2C2C2C;resize:vertical;">
                             </textarea>
                             <div style="display:flex;justify-content:flex-end;gap:10px;">
@@ -1845,8 +1845,8 @@
         const workerCode = `
         self.onmessage = function(e) {
         const { lwe, zn, size, acceleration, economyState, resource, salesModifierWithRecreationBonus,
-            skillCMO, skillCOO, saturation, administrationOverhead, wages, buildingKind, forceQuality, weather, 
-            v, b, 
+            skillCMO, skillCOO, saturation, administrationOverhead, wages, buildingKind, forceQuality, weather,
+            v, b,
             cogs, quality, quantity, cardIndex} = e.data;
 
 
@@ -1920,32 +1920,32 @@
         }
 
         const finalW = zL(
-            buildingKind, 
-            wv(economyState, resource.dbLetter, forceQuality ?? null), 
-            parseFloat(quantity), 
-            v, 
+            buildingKind,
+            wv(economyState, resource.dbLetter, forceQuality ?? null),
+            parseFloat(quantity),
+            v,
             bestPrice, // 使用找到的最佳价格
-            forceQuality === undefined ? quality : 0, 
-            saturation, 
-            acceleration, 
-            size, 
+            forceQuality === undefined ? quality : 0,
+            saturation,
+            acceleration,
+            size,
             resource.retailSeason === "Summer" ? weather : undefined
         );
-        
+
         // 计算对应的工资总额
         const calculatedWages = Math.ceil(finalW * wages * acceleration * b / 3600);
-        
+
         // 发送结果，带上 calculatedWages
-        self.postMessage({ 
-            bestPrice: bestPrice, 
-            maxProfit: maxProfit, 
+        self.postMessage({
+            bestPrice: bestPrice,
+            maxProfit: maxProfit,
             calculatedWages: calculatedWages, // <--- 新增这个
-            cardIndex: cardIndex 
+            cardIndex: cardIndex
         });
 
-        self.postMessage({ 
-            bestPrice: bestPrice, 
-            maxProfit: maxProfit, 
+        self.postMessage({
+            bestPrice: bestPrice,
+            maxProfit: maxProfit,
             cardIndex: cardIndex // 返回 ID 以供主线程识别
         });
     };
@@ -2001,7 +2001,7 @@
                     alert("计算利润与显示利润不相符，请输入具体数量或尝试更新基本数据（左下角按钮）,多次提醒且价格未发生改变请更新脚本或联系作者");
 
                     // 改变显示颜色，给出视觉警告
-                    profitDisplay.style.background = 'red'; 
+                    profitDisplay.style.background = 'red';
                 }
             }, 100); // 延迟 300 毫秒，通常足以等待 React 完成一次 State 更新。
 
@@ -2190,17 +2190,17 @@
         let currentRealmId = null;
         let rowIdCounter = 0;
         const pendingRows = new Map(); // rowId -> <tr> element
+        let summaryDisplay = null; // 用于展示2400h模拟结果的绿色面板
+        let calcTimer = null; // 用于限流
 
-        // Create worker blob: calculations move into worker's onmessage
+        // Worker 代码保持完全不变
         const workerCode = `
         self.onmessage = function(e) {
         const { rowId, order, SCD, SRC } = e.data;
         const { price, quantity, quality, resourceId: resource } = order;
-        // bring constants into worker scope
         const lwe = SCD.retailInfo;
         const zn = SCD.data;
 
-        // Utility functions defined inside to use local lwe and zn
         const Ul = (overhead, skillCOO) => {
             const r = overhead || 1;
             return r - (r - 1) * skillCOO / 100;
@@ -2237,9 +2237,6 @@
             return weather && (p /= weather.sellingSpeedMultiplier), p
         };
 
-        // Initial debug log
-
-        // profit calculation loop
         let currentPrice = price,
             maxProfit = -Infinity,
             size = 1,
@@ -2249,7 +2246,6 @@
             skillCMO = SRC.saleBonus,
             skillCOO = SRC.adminBonus;
 
-        // compute saturation locally
         const saturation = (() => {
             const list = SRC.ResourcesRetailInfo;
             const m = list.find(item =>
@@ -2301,7 +2297,6 @@
             } else if (maxProfit > 0 && profit < 0) {
                 break;
             }
-            // price increment
             if (currentPrice < 8) {
                 currentPrice = Math.round((currentPrice + 0.01) * 100) / 100;
             } else if (currentPrice < 2001) {
@@ -2309,58 +2304,309 @@
             } else {
                 currentPrice = Math.round(currentPrice + 1);
             }
-
         }
 
         self.postMessage({ rowId, maxProfit, selltime});
-    };
-    `;
+        };
+        `;
         const profitWorker = new Worker(URL.createObjectURL(new Blob([workerCode], { type: 'application/javascript' })));
 
-        // 全局状态与注册器（放最上面，只运行一次）
         const allProfitSpans = new Set();
         let isShowingProfit = true;
+
+        // 专门用于监听顶部输入框
+        function attachInputListener() {
+            const input = document.querySelector('input[name="quantity"]');
+
+            if (input && !input.hasAttribute('data-calc-listener')) {
+                input.setAttribute('data-calc-listener', 'true');
+
+                // 1. 保留原有的手动输入监听
+                input.addEventListener('input', () => {
+                    requestAnimationFrame(updateGlobalSimulation);
+                });
+
+                // 2. 针对“自动填入”：使用定时器进行“脏检查”
+                // 每 500ms 检查一次输入框的值是否变化
+                let lastValue = input.value;
+                setInterval(() => {
+                    if (input.value !== lastValue) {
+                        lastValue = input.value;
+                        updateGlobalSimulation();
+                    }
+                }, 500);
+
+                // 3. 针对游戏内的“快速按钮” (例如 Max/Half 按钮)
+                // 游戏中的按钮通常在 input 的父级或兄弟级
+                const parentForm = input.closest('form');
+                if (parentForm) {
+                    parentForm.addEventListener('click', (e) => {
+                        // 如果点击了按钮，延迟一会等待值更新后执行计算
+                        if (e.target.tagName === 'BUTTON') {
+                            setTimeout(updateGlobalSimulation, 50);
+                        }
+                    });
+                }
+            }
+        }
+
+        // 辅助函数：将小时数转换为 "1h 20m" 或 "45m" 格式
+        function formatDuration(totalHours) {
+            if (!totalHours || totalHours <= 0) return "0m";
+            const h = Math.floor(totalHours);
+            const m = Math.round((totalHours - h) * 60);
+
+            if (h === 0) return `${m}m`;
+            if (m === 0) return `${h}h`;
+            return `${h}h ${m}m`;
+        }
+
+        function debouncedUpdate() {
+            if (calcTimer) cancelAnimationFrame(calcTimer);
+            calcTimer = requestAnimationFrame(() => {
+                updateGlobalSimulation();
+            });
+        }
+
+        function updateGlobalSimulation() {
+            const tbody = findValidTbody();
+            if (!tbody || !summaryDisplay) return;
+
+            // 1. 获取输入框的值
+            const inputElement = document.querySelector('input[name="quantity"]');
+            const userWantedQty = inputElement ? (parseFloat(inputElement.value) || 0) : 0;
+            const isSimulationMode = userWantedQty > 0;
+
+            // 2. 获取原始数据（先不筛选 >0，也不排序）
+            // 我们只获取已经计算完成的行
+            let rawRows = [];
+            tbody.querySelectorAll('tr[data-profit-calculated]').forEach(row => {
+                if (row.offsetParent !== null && row.__profitData) {
+                    rawRows.push({
+                        row: row,
+                        profit: row.__profitData.profit, // 单位: $/s (可能是负数)
+                        time: row.__profitData.time      // 单位: s
+                    });
+                }
+            });
+
+            // 如果连一行数据都没有，显示空状态
+            if (rawRows.length === 0) {
+                summaryDisplay.style.display = "none";
+                return;
+            }
+
+            // ============================================
+            // 核心计算分流
+            // ============================================
+
+            let avgProfitPerHour = 0;
+            let totalProfitVal = 0;
+            let totalTimeSeconds = 0;
+            let isFull = false;     // 状态：是否满足/是否充满
+            let displayTitle = "";
+            let borderColor = "";
+            let coveredCount = 0;   // 买了多少单
+
+            // 用于展示的状态文本
+            let statusText = "";
+
+            if (isSimulationMode) {
+                // === 模式 A：真实扫货模拟 (修正：强制 价格升序 + 品质降序) ===
+
+                // 1. 预提取所有行的数据，并转换为数值对象
+                const processedRows = rawRows.map(item => {
+                    const data = extractNumbersFromAriaLabel(item.row.getAttribute('aria-label'));
+                    return {
+                        row: item.row,
+                        profit: item.profit, // $/s
+                        time: item.time,     // s
+                        price: data?.price || 0,
+                        quantity: data?.quantity || 0,
+                        quality: data?.quality || 0
+                    };
+                });
+
+                // 2. 核心：模拟游戏市场真实排序逻辑
+                // 价格越低越靠前；价格相同时，品质(Q)越高越靠前
+                processedRows.sort((a, b) => {
+                    if (a.price !== b.price) return a.price - b.price;
+                    return b.quality - a.quality;
+                });
+
+                let remainingQty = userWantedQty;
+                totalProfitVal = 0;   // 重置外部定义的累加变量
+                totalTimeSeconds = 0;
+                coveredCount = 0;
+
+                // 3. 按正确逻辑顺序开始扫货
+                for (const item of processedRows) {
+                    if (remainingQty <= 0) break;
+                    if (item.quantity <= 0) continue;
+
+                    const takeQty = Math.min(remainingQty, item.quantity);
+                    const ratio = takeQty / item.quantity;
+
+                    // 累加利润：单秒利润 * 该单据实际卖出所需的总秒数 * 购买比例
+                    totalProfitVal += (item.profit * item.time) * ratio;
+                    // 累加时间
+                    totalTimeSeconds += item.time * ratio;
+
+                    remainingQty -= takeQty;
+                    coveredCount++;
+                }
+
+                const totalHours = totalTimeSeconds / 3600;
+                avgProfitPerHour = totalHours > 0 ? (totalProfitVal / totalHours) : 0;
+
+                // 状态判定
+                isFull = remainingQty <= 0.01;
+
+                displayTitle = `购买 ${userWantedQty.toLocaleString()} 个 - 扫货模拟`;
+                borderColor = "#FFD700";
+
+                if (isFull) {
+                    statusText = "✅ 数量满足";
+                } else {
+                    const bought = userWantedQty - remainingQty;
+                    statusText = `⚠️ 缺货 (仅买到 ${Math.floor(bought).toLocaleString()})`;
+                }
+
+                // 清除所有行的高亮（因为这是模拟模式，不需要像 B 模式那样高亮单行）
+                rawRows.forEach(item => {
+                    item.row.style.outline = "none";
+                    item.row.style.boxShadow = "none";
+                    item.row.style.backgroundColor = "";
+                });
+            } else {
+                // === 模式 B：2400h 最优解 (原来的逻辑) ===
+
+                // 1. 过滤掉负利润 (只找赚钱的)
+                const profitableRows = rawRows.filter(r => r.profit > 0);
+
+                if (profitableRows.length === 0) {
+                    summaryDisplay.style.display = "block";
+                    summaryDisplay.innerHTML = `<div style="color: #ff9800; font-size: 13px; text-align: center;">⚠️ 无正利润订单</div>`;
+                    return;
+                }
+
+                // 2. 排序：利润高的在前
+                profitableRows.sort((a, b) => b.profit - a.profit);
+
+                // 3. 高亮第一名
+                rawRows.forEach(item => {
+                    // 先清除所有
+                    item.row.style.outline = "none";
+                    item.row.style.boxShadow = "none";
+                    item.row.style.backgroundColor = "";
+                });
+                // 再高亮最佳
+                const best = profitableRows[0];
+                if (best) {
+                    best.row.style.outline = "2px dashed #FFD700";
+                    best.row.style.outlineOffset = "-2px";
+                    best.row.style.boxShadow = "inset 0 0 8px rgba(255, 215, 0, 0.3)";
+                    best.row.style.backgroundColor = "rgba(255, 215, 0, 0.05)";
+                }
+
+                // 4. 填满 2400h
+                let remainingTime = 2400 * 3600; // 秒
+                let usedTime = 0;
+
+                for (const order of profitableRows) {
+                    if (remainingTime <= 0) break;
+
+                    const takeTime = Math.min(order.time, remainingTime);
+
+                    totalProfitVal += (order.profit * takeTime);
+                    usedTime += takeTime;
+                    remainingTime -= takeTime;
+                }
+
+                totalTimeSeconds = usedTime;
+                const totalHours = totalTimeSeconds / 3600;
+
+                avgProfitPerHour = totalHours > 0 ? (totalProfitVal / totalHours) : 0;
+                isFull = totalHours >= 2399.9;
+
+                displayTitle = "100级建筑运行24H理论最优 (仅计算正利润)";
+                borderColor = isFull ? "#4CAF50" : "#ff9800"; // 绿或橙
+
+                // 格式化时间字符串
+                const timeStr = formatDuration(totalHours);
+                statusText = isFull ? "✅ 货源充足" : `⚠️ 仅覆盖 ${timeStr}`;
+            }
+
+            // 5. 渲染 UI
+            const avgStr = avgProfitPerHour.toFixed(2);
+            const totalProfitK = (totalProfitVal / 1000).toFixed(1);
+            const durationStr = formatDuration(totalTimeSeconds / 3600);
+
+            const renderUI = () => {
+                summaryDisplay.style.display = "block";
+                summaryDisplay.style.borderLeft = `4px solid ${borderColor}`;
+
+                summaryDisplay.innerHTML = `
+                    <div style="font-family: sans-serif; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; padding-bottom: 6px;">
+                            <span style="color: #aaa; font-size: 12px;">${displayTitle}</span>
+                            <span style="font-size: 20px; font-weight: bold; color: ${borderColor};">$${avgStr}<span style="font-size:12px; font-weight:normal;">/h</span></span>
+                        </div>
+
+                        <div style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 11px;">
+                            <div style="background: ${isFull ? 'rgba(76, 175, 80, 0.2)' : 'rgba(255, 152, 0, 0.2)'};
+                                        color: ${isFull ? '#81c784' : '#ffb74d'};
+                                        padding: 2px 6px; border-radius: 4px;">
+                                ${statusText}
+                            </div>
+
+                            <div style="background: #333; color: #ccc; padding: 2px 6px; border-radius: 4px;">
+                                💰 总利: $${totalProfitK}k
+                            </div>
+
+                            <div style="background: #333; color: #ccc; padding: 2px 6px; border-radius: 4px;">
+                                ⏱️ 用时: ${durationStr}
+                            </div>
+                        </div>
+                    </div>`;
+            };
+            renderUI();
+        }
 
         // 主回调处理
         profitWorker.onmessage = function (e) {
             const { rowId, maxProfit, selltime } = e.data;
-            const hours = Math.floor(selltime / 3600);
-            const minutes = Math.ceil((selltime % 3600) / 60);
-            const timeStr = `${hours > 0 ? `${hours}h ` : ''}${minutes}m`;
-            const profit = (maxProfit * 3600).toFixed(2);
             const row = pendingRows.get(rowId);
             if (!row) return;
             pendingRows.delete(rowId);
 
+            // --- 核心改动：把数值作为对象属性直接挂载到 DOM 元素上 ---
+            row.__profitData = { profit: maxProfit, time: selltime };
+
+            const hours = Math.floor(selltime / 3600);
+            const minutes = Math.ceil((selltime % 3600) / 60);
+            const timeStr = `${hours > 0 ? `${hours}h ` : ''}${minutes}m`;
+            const profitStr = (maxProfit * 3600).toFixed(2);
+
             if (!row.querySelector('td.auto-profit-info')) {
                 const td = document.createElement('td');
                 td.classList.add('auto-profit-info');
-
                 const span = document.createElement('span');
+                span.style.cssText = `display: inline-block; min-width: 60px; font-size: 14px; color: white; background: #555; padding: 4px 8px; border-radius: 2px;`;
 
-                const profitText = `时利润：${profit}`;
-                const timeText = `用时：${timeStr}`;
-
-                span.textContent = isShowingProfit ? profitText : timeText
-
-                span.style.cssText = `
-                display: inline-block;
-                min-width: 60px;
-                font-size: 16px;
-                color: white;
-                background: gray;
-                padding: 4px 8px;
-                line-height: 1.2;
-                box-sizing: border-box;
-            `.trim();
+                // 存储显示文案到 dataset 方便切换按钮使用
+                span.dataset.p = `时利润：${profitStr}`;
+                span.dataset.t = `用时：${timeStr}`;
+                span.textContent = isShowingProfit ? span.dataset.p : span.dataset.t;
 
                 td.appendChild(span);
                 row.appendChild(td);
-
-                span.dataset.profitText = profitText;
-                span.dataset.timeText = timeText;
                 allProfitSpans.add(span);
             }
+
+            attachInputListener();
+            // 每次新数据回来，立刻重算 2400h 模拟
+            updateGlobalSimulation();
         };
 
         function findValidTbody() {
@@ -2374,39 +2620,18 @@
 
         function extractNumbersFromAriaLabel(label) {
             if (!label || typeof label !== 'string') return null;
-
             let match;
-
-            // === 英文 ===
             const regexEN = /^market order, price \$?([\d,.]+), quantity ([\d,.]+), quality (\d+), offered by company/i;
-
-            // === 简体中文 ===
             const regexSC = /^由.*公司提供的市场订单：价格\$?([\d,.]+)，数量([\d,.]+)，质量(\d+)/;
-
-            // === 繁体中文 ===
             const regexTC = /^由.*公司提供的市場訂單：價格\$?([\d,.]+)，數量([\d,.]+)，品質(\d+)/;
 
             if (match = label.match(regexEN)) {
-                return {
-                    price: parseFloat(match[1].replace(/,/g, '')),
-                    quantity: parseFloat(match[2].replace(/,/g, '')),
-                    quality: parseInt(match[3])
-                };
+                return { price: parseFloat(match[1].replace(/,/g, '')), quantity: parseFloat(match[2].replace(/,/g, '')), quality: parseInt(match[3]) };
             } else if (match = label.match(regexSC)) {
-                return {
-                    price: parseFloat(match[1].replace(/,/g, '')),
-                    quantity: parseFloat(match[2].replace(/,/g, '')),
-                    quality: parseInt(match[3])
-                };
+                return { price: parseFloat(match[1].replace(/,/g, '')), quantity: parseFloat(match[2].replace(/,/g, '')), quality: parseInt(match[3]) };
             } else if (match = label.match(regexTC)) {
-                return {
-                    price: parseFloat(match[1].replace(/,/g, '')),
-                    quantity: parseFloat(match[2].replace(/,/g, '')),
-                    quality: parseInt(match[3])
-                };
+                return { price: parseFloat(match[1].replace(/,/g, '')), quantity: parseFloat(match[2].replace(/,/g, '')), quality: parseInt(match[3]) };
             }
-
-            // 未匹配
             return null;
         }
 
@@ -2417,104 +2642,150 @@
             const match = link?.getAttribute('href')?.match(/\/company\/(\d+)\//);
             if (match) {
                 currentRealmId = match[1];
-                // console.log('领域ID：', currentRealmId);
             }
         }
 
         async function processNewRows(tbody) {
-            const salesMap = JSON.parse(localStorage.getItem("SimcompaniesConstantsData")).data.SALES;
+            const SCD_raw = localStorage.getItem("SimcompaniesConstantsData");
+            if (!SCD_raw) return;
+            const SCD = JSON.parse(SCD_raw);
+            const SRC = JSON.parse(localStorage.getItem(`SimcompaniesRetailCalculation_${currentRealmId}`));
+            if (!SRC) return;
+
+            // 过滤非零售商品逻辑保持不变
+            const isRetail = Object.values(SCD.data.SALES).some(l => l.includes(parseInt(currentResourceId)));
+            if (!isRetail) {
+                if (summaryDisplay) summaryDisplay.style.display = "none";
+                return;
+            }
+
+            // 扫描还未处理过的行
             const rows = Array.from(tbody.querySelectorAll('tr'))
-                .filter(r => !r.querySelector('td.auto-profit-info') && !r.hasAttribute('data-profit-calculated'));
+                .filter(r => !r.hasAttribute('data-profit-calculated'));
+
             rows.forEach(row => {
-                const ariaData = extractNumbersFromAriaLabel(row.getAttribute('aria-label') || '');
-                if (!ariaData) return;
-                // 过滤非零售商品
-                const isRetail = Object.values(salesMap).some(list => list.includes(parseInt(currentResourceId)));
-                if (!isRetail) return;
-                const order = { resourceId: currentResourceId, realmId: currentRealmId, ...ariaData };
-                const SCD = JSON.parse(localStorage.getItem("SimcompaniesConstantsData"));
-                const SRC = JSON.parse(localStorage.getItem(`SimcompaniesRetailCalculation_${order.realmId}`));
-                if (!SCD || !SRC) return;
-                if (rowIdCounter > 99999) rowIdCounter = 0;
+                const data = extractNumbersFromAriaLabel(row.getAttribute('aria-label'));
+                if (!data) return;
+
                 const rowId = rowIdCounter++;
                 pendingRows.set(rowId, row);
-                row.setAttribute('data-profit-calculated', '1'); // 防止重复处理
-                profitWorker.postMessage({ rowId, order, SCD, SRC });
+                row.setAttribute('data-profit-calculated', '1');
+                profitWorker.postMessage({ rowId, order: { resourceId: currentResourceId, ...data }, SCD, SRC });
             });
+
+            // 关键：即使没有新行增加（仅仅是筛选隐藏了某些行），也要重算模拟结果
+            updateGlobalSimulation();
         }
 
         return {
             init(resourceId) {
                 currentResourceId = resourceId;
                 currentRealmId = null;
-                let observer;
-                function tryInit() {
+                let globalObserver = null;
+                let tableObserver = null;
+
+                const tryInit = () => {
                     const tbody = findValidTbody();
-                    if (!tbody) return;
-                    if (observer) observer.disconnect();
-
-                    // 👉 插入到form中
                     const form = document.querySelector('form');
-                    if (form) {
-                        const parentDiv = form.parentElement; // form 的直接父级 <div>
-                        const container = parentDiv?.parentElement?.parentElement; // css-rnlot4 的容器
 
-                        if (container && !container.querySelector('[data-custom-notice]')) {
-                            const infoText = document.createElement('div');
-                            infoText.textContent = '高管，学院，周期的不及时更新可能导致计算误差，左下菜单可手动更新。所有展示内容均为1级建筑。如果您的屏幕过小会导致交易所展示内容不全，请注意！';
-                            infoText.dataset.customNotice = 'true'; // 避免重复添加
-                            container.appendChild(infoText); // 插入在 form 所在 div 的后面
+                    // 1. 基础检查：没有表格或没有表单，说明页面还没加载好
+                    if (!tbody || !form) return;
 
-                            // 找到 form
-                            const form = document.querySelector('form');
+                    // 2. 防止重复注入：检查是否已经处理过
+                    // 使用一个唯一的 ID 标记 form，防止 tryInit 被多次触发时重复创建面板
+                    if (form.hasAttribute('data-market-calc-initialized')) {
+                        return;
+                    }
 
-                            // 创建切换按钮
-                            const toggleButton = document.createElement('button');
-                            toggleButton.type = 'button'; // 不触发表单提交
-                            toggleButton.textContent = '利润/用时';
-                            toggleButton.style.cssText = `
-                                margin-left: 8px;
-                            `;
+                    // 3. 提取 Realm ID (读取存档需要)
+                    extractRealmIdOnce(tbody);
 
-                            // 找到 css-zl1inp 内最后一个 div
-                            const lastDiv = form.querySelector('.css-zl1inp > div:last-child');
-                            if (lastDiv) {
-                                lastDiv.insertAdjacentElement('afterend', toggleButton);
-                            }
+                    // 4. 插入 UI 元素
+                    const parentDiv = form.parentElement;
+                    const container = parentDiv?.parentElement?.parentElement;
 
-                            toggleButton.addEventListener('click', () => {
-                                isShowingProfit = !isShowingProfit;
-                                for (const span of allProfitSpans) {
-                                    const { profitText, timeText } = span.dataset;
-                                    span.textContent = isShowingProfit ? profitText : timeText;
+                    if (container && !container.querySelector('[data-custom-notice]')) {
+                        // 创建提示文案
+                        const infoText = document.createElement('div');
+                        infoText.textContent = '高管，学院，周期的不及时更新可能导致计算误差，左下菜单可手动更新。所有展示内容均为1级建筑。';
+                        infoText.style.cssText = "font-size: 11px; color: #888; margin-bottom: 4px;";
+                        infoText.dataset.customNotice = 'true';
+
+                        // 创建汇总面板
+                        summaryDisplay = document.createElement('div');
+                        summaryDisplay.style.cssText = "background: #222; padding: 12px; border-radius: 4px; margin-bottom: 10px; border-left: 4px solid #4CAF50; display: none; min-height: 40px;";
+
+                        container.appendChild(infoText);
+                        container.insertBefore(summaryDisplay, infoText);
+
+                        // 创建切换按钮
+                        const toggleButton = document.createElement('button');
+                        toggleButton.type = 'button';
+                        toggleButton.textContent = '切换至：用时';
+                        toggleButton.className = "btn btn-primary";
+                        toggleButton.style.marginLeft = "10px";
+
+                        const lastDiv = form.querySelector('.css-zl1inp > div:last-child');
+                        if (lastDiv) {
+                            lastDiv.insertAdjacentElement('afterend', toggleButton);
+                        }
+
+                        toggleButton.addEventListener('click', () => {
+                            isShowingProfit = !isShowingProfit;
+                            document.querySelectorAll('.auto-profit-info span').forEach(span => {
+                                const { p, t } = span.dataset;
+                                if (p && t) {
+                                    span.textContent = isShowingProfit ? p : t;
                                 }
                             });
+                            toggleButton.textContent = isShowingProfit ? '用时' : '时利润';
+                        });
+
+                        // 标记已完成注入
+                        form.setAttribute('data-market-calc-initialized', 'true');
+                    }
+
+                    // 5. 初始执行：处理当前已有的行
+                    const SCD_raw = localStorage.getItem("SimcompaniesConstantsData");
+                    if (SCD_raw) {
+                        const SCD = JSON.parse(SCD_raw);
+                        const isRetail = Object.values(SCD.data.SALES).some(list => list.includes(parseInt(currentResourceId)));
+                        if (isRetail) {
+                            processNewRows(tbody);
+                        } else if (summaryDisplay) {
+                            summaryDisplay.style.display = "none";
                         }
                     }
 
-                    const initPromise = (() => {
-                        extractRealmIdOnce(tbody);
+                    // 6. 开启表格行监听 (仅监听子节点变化，避免监听属性导致的死循环)
+                    if (tableObserver) tableObserver.disconnect();
+                    tableObserver = new MutationObserver(() => {
+                        // 使用 requestAnimationFrame 确保在浏览器空闲帧执行，不卡主线程
+                        requestAnimationFrame(() => processNewRows(tbody));
+                    });
+                    tableObserver.observe(tbody, { childList: true });
 
-                        const salesMap = JSON.parse(localStorage.getItem("SimcompaniesConstantsData")).data.SALES;
-                        const isRetail = Object.values(salesMap).some(list => list.includes(parseInt(currentResourceId)));
-                        if (!isRetail) return Promise.resolve();  // 如果不是零售商品，跳过处理
+                    // 7. 既然已经成功初始化，可以停止全局 document 监听了，节省性能
+                    if (globalObserver) {
+                        globalObserver.disconnect();
+                        globalObserver = null;
+                    }
+                };
 
-                        return processNewRows(tbody);  // 是零售商品就处理新行
-                    })();
-
-
-                    initPromise
-                        .then(() => {
-                            // 不需要重复调用 extract 和 process，如果上面处理过了
-                        })
-                        .catch(console.error);
-
-                    const rowObserver = new MutationObserver(() => processNewRows(tbody));
-                    rowObserver.observe(tbody, { childList: true, subtree: true });
-                }
+                // 启动逻辑：首先尝试初始化
                 tryInit();
-                observer = new MutationObserver(tryInit);
-                observer.observe(document, { childList: true, subtree: true });
+
+                // 如果页面还没加载完，启动全局监听
+                globalObserver = new MutationObserver((mutations, obs) => {
+                    // 只有当有新节点增加时才尝试，减少无谓触发
+                    for (const mutation of mutations) {
+                        if (mutation.addedNodes.length) {
+                            tryInit();
+                            break;
+                        }
+                    }
+                });
+                globalObserver.observe(document.body, { childList: true, subtree: true });
             }
         };
     })();
@@ -4505,7 +4776,7 @@
     function checkUpdate() {
         const scriptUrl = 'https://simcompanies-scripts.pages.dev/autoMaxPPHPL.user.js?t=' + Date.now();
         const downloadUrl = 'https://simcompanies-scripts.pages.dev/autoMaxPPHPL.user.js';
-        // @changelog    优化商店中树的计算，为计算错误增加颜色提醒
+        // @changelog    增加交易所高亮当前最高时利润订单，100级建筑运行24H理论最优平均时利润，扫货模拟
 
         fetch(scriptUrl)
             .then(res => {

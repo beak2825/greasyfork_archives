@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnimeStars Card Master (fork)
 // @namespace    AnimeStars.org
-// @version      1.19b3
+// @version      1.19.1
 // @description  1) Показывает спрос на карты.
 // @description  2) Показывает дубликаты карт.
 // @description  3) Отправляет карты в "Не нужное".
@@ -22,6 +22,7 @@
 // @author       Jericho (Forked/Modified by RUSViRTuE)
 
 // @match        http*://*.animestars.org/*
+// @match        http*://*.animesss.tv/*
 // @match        http*://*.asstars.tv/*
 // @match        http*://*.astars.club/*
 // @match        http*://*.asstars.online/*

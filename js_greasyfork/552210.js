@@ -7275,9 +7275,15 @@ class BrowseController {
         // 获取昨日数据用于对比
         const yesterdaySnapshot = this.getYesterdaySnapshot(username);
 
+        // 判断是否已满足所有要求，决定标题显示
+        const isAllMetForHeader = type === 'low_level' ? allMet : (achievedCount === totalCount);
+        const headerTitle = isAllMetForHeader
+            ? `Lv${targetLevel} ✓`
+            : (levelNames[type === 'low_level' ? currentLevel : targetLevel] || `Lv${currentLevel} → Lv${targetLevel}`);
+
         let html = `
             <div class="trust-level-header">
-                <span>📊 ${levelNames[type === 'low_level' ? currentLevel : targetLevel] || `Lv${currentLevel} → Lv${targetLevel}`} (${username})</span>
+                <span>📊 ${headerTitle} (${username})</span>
                 <button class="trust-level-refresh" data-action="refresh">🔄 刷新</button>
             </div>
             <div style="font-size: 10px; color: rgba(255,255,255,0.6); margin-bottom: 4px; text-align: right;">缓存: ${cacheTimeText}</div>
@@ -7568,9 +7574,14 @@ class BrowseController {
         // 获取昨日数据用于对比
         const yesterdaySnapshot = this.getYesterdaySnapshot(username);
 
+        // 判断是否已满足所有要求，决定标题显示
+        const headerTitle = allMet
+            ? `Lv${targetLevel} ✓`
+            : (levelNames[currentLevel] || `Lv${currentLevel} → Lv${targetLevel}`);
+
         let html = `
             <div class="trust-level-header">
-                <span>📊 ${levelNames[currentLevel] || `Lv${currentLevel} → Lv${targetLevel}`} (${username})</span>
+                <span>📊 ${headerTitle} (${username})</span>
                 <button class="trust-level-refresh" data-action="refresh">🔄 刷新</button>
             </div>
         `;
@@ -7958,9 +7969,15 @@ class BrowseController {
         // 获取昨日数据用于对比
         const yesterdaySnapshot = this.getYesterdaySnapshot(username);
 
+        // 判断是否已满足所有要求，决定标题显示
+        const allRequirementsMet = achievedCount === totalCount;
+        const headerTitle = allRequirementsMet
+            ? `Lv${targetLevel} ✓`
+            : (levelNames[targetLevel] || `Lv${currentLevel} → Lv${targetLevel}`);
+
         let html = `
             <div class="trust-level-header">
-                <span>📊 ${levelNames[targetLevel] || `Lv${currentLevel} → Lv${targetLevel}`} (${username})</span>
+                <span>📊 ${headerTitle} (${username})</span>
                 <button class="trust-level-refresh" data-action="refresh">🔄 刷新</button>
             </div>
         `;

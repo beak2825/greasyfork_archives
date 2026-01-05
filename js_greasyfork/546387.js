@@ -3,8 +3,9 @@
 // @description  Automatically skip sponsor segments in YouTube videos using SponsorBlock API
 // @namespace    http://tampermonkey.net/
 // @icon         https://cdn-icons-png.flaticon.com/64/2504/2504965.png
-// @version      0.0.7
-// @author       rxm
+// @supportURL   https://github.com/5tratz/Tampermonkey-Scripts/issues
+// @version      0.0.8
+// @author       5tratz
 // @match        https://www.youtube.com/*
 // @match        https://m.youtube.com/*
 // @grant        GM_xmlhttpRequest

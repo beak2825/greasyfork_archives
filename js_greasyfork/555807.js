@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         One-Click Steam Demo License Auto Remover
 // @namespace    https://github.com/joex92/Steam-Auto-Demo-License-Remover
-// @version      6.6.6.6.6.6
+// @version      7.2
 // @description  This is an English Translated version from the original by PeiqiLi. Plus the addition of removing demo titles only as well as auto ignore the removed games in the steamDB free packages script page.
 // @author       PeiqiLi + JoeX92
 // @match        https://store.steampowered.com/account/licenses/
@@ -9,6 +9,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=steampowered.com
 // @grant        GM.setValue
 // @grant        GM.getValue
+// @grant        GM.registerMenuCommand
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/555807/One-Click%20Steam%20Demo%20License%20Auto%20Remover.user.js
 // @updateURL https://update.greasyfork.org/scripts/555807/One-Click%20Steam%20Demo%20License%20Auto%20Remover.meta.js
@@ -242,6 +243,80 @@
     }
     const timer = new SleepTimer();
     let hasError21 = false;
+    
+    async function exportValues() {
+        const games2remove = JSON.parse(await GM.getValue("games2remove", "[]"));
+        const customFilter = JSON.parse(await GM.getValue("customFilter", "[]"));    
+        const gamesIgnored = JSON.parse(await GM.getValue("gamesIgnored", "[]"));
+        const gamesIgnoredChk = JSON.parse(await GM.getValue("gamesIgnoredChk", '[{"checked":true}]'));
+        const dataObj = {games2remove, customFilter, gamesIgnored, gamesIgnoredChk, timestamp: Date.now()};
+        const jsonString = JSON.stringify(dataObj, null, 2);
+        const filename = `SDLAR_export${Date.now()}.json`;
+
+        const blob = new Blob([jsonString], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+    function importValues() {
+        // 1. Create a hidden file input
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.style.position = 'fixed';
+        input.style.top = '-10000px';
+        input.style.left = '-10000px';
+        input.style.opacity = '0';
+        document.body.appendChild(input);
+
+        // 2. Listen for the file selection
+        input.onchange = function(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                document.body.removeChild(input);
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = async function(e) {
+                try {
+                    // 3. Parse the file content
+                    const importedData = JSON.parse(e.target.result);
+
+                    // 4. Save values back to storage
+                    if (importedData.games2remove) await updateArrayToStorage( "games2remove", importedData.games2remove, "packageId", [], true );
+                    if (importedData.customFilter) await updateArrayToStorage( "customFilter", importedData.customFilter, "length", [], true );
+                    if (importedData.gamesIgnored) await updateArrayToStorage( "gamesIgnored", importedData.gamesIgnored, "packageId", [], true );
+                    if (importedData.gamesIgnoredChk) await updateArrayToStorage( "gamesIgnoredChk", importedData.gamesIgnoredChk, "checked", [], true );
+
+                    alert("Import successful! The page will now reload.");
+                    location.reload(); // Reload to apply changes immediately
+
+                } catch (err) {
+                    alert("Error importing file: " + err);
+                    console.error(err);
+                } finally {
+                    // Clean up the input element
+                    document.body.removeChild(input);
+                }
+            };
+
+            // Read the file as text
+            reader.readAsText(file);
+        };
+
+        // 5. Trigger the file picker
+        input.click();
+    }
+    // Register the command
+    GM.registerMenuCommand("Export Titles", exportValues);
+    GM.registerMenuCommand("Import Titles", importValues);
     
     if ( location.host.match('store.steampowered.com') ) { ////////////////////////////////////////////////////////////////////////////////////////////////////
         const btn = document.createElement('button');
@@ -937,7 +1012,7 @@
         async function startCleaning(statusDiv) {
             await requestWakeLock();
             const games = await scanRemovableGames(!chk.checked,schchk.checked);
-            console.log(updateArrayToStorage("games2remove", games, "packageId", JSON.parse(await GM.getValue("customFilter", "[]")), chkGMreset.checked));
+            console.log(await updateArrayToStorage("games2remove", games, "packageId", JSON.parse(await GM.getValue("customFilter", "[]")), chkGMreset.checked));
             const total = games.length;
     
             console.log(`Removing ${total} games:`, games);
@@ -1123,7 +1198,7 @@
                     });
                 });
             }
-            updateArrayToStorage("gamesIgnoredChk", [{checked: probchk.checked }], "checked", [], true )
+            await updateArrayToStorage("gamesIgnoredChk", [{checked: probchk.checked }], "checked", [], true )
         });
 
         const ignoreContainer = document.createElement("div");
@@ -1210,7 +1285,7 @@
                                 if ( childNode && childNode.classList && childNode.classList.contains("tabular-nums") ) {
                                     const problemRegExp = /There was a problem adding this product/i;
                                     if ( childNode.textContent.match(problemRegExp) ) {
-                                        console.log(updateArrayToStorage("gamesIgnored", [{packageId: childNode.querySelector(".package").textContent.trim(), message: childNode.textContent.split("[Ignore]")[1].trim()}], "packageId", [], chkGMreset.checked && !ignoredCounter++ ));
+                                        console.log(await updateArrayToStorage("gamesIgnored", [{packageId: childNode.querySelector(".package").textContent.trim(), message: childNode.textContent.split("[Ignore]")[1].trim()}], "packageId", [], chkGMreset.checked && !ignoredCounter++ ));
                                         childNode.childNodes.forEach( (n) => {
                                             const igngMessage = " Auto-ignoring package..."
                                             if ( !n.textContent.match(igngMessage) && n.textContent.match(problemRegExp) ) {

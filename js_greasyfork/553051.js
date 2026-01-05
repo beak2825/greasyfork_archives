@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            HWH Tweaker
 // @namespace       http://tampermonkey.net/
-// @version         5.8.8
+// @version         5.8.9
 // @description     Extension for HeroWarsHelper by ZingerY - Adds adventure path editor, custom buttons, and tweaks
 // @author          AI Assistant
 // @license         MIT
@@ -16,8 +16,8 @@
 
 
 // Configuration at the top of the script
-const TWEAKER_VERSION = '5.8.8'
-const DEBUG_MODE = false; // Set to false for production
+const TWEAKER_VERSION = '5.8.9'
+const DEBUG_MODE = localStorage.getItem('hwh_debug_mode') === 'true';
 const TOURNAMENT_RETENTION_DAYS = 7;
 const TOURNAMENT_RETENTION_MS = TOURNAMENT_RETENTION_DAYS * 24 * 60 * 60 * 1000;
 // Preferred Items Settings
@@ -7895,8 +7895,7 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                 content += `
 <div data-user-id="${user.userId}" style="display: grid; grid-template-columns: 34px 90px 30px 36px 36px 120px 58px 42px 46px 40px 46px 36px 36px 36px 36px 100px; gap: 4px; padding: 2px 2px; border-bottom: 1px solid #333; align-items: center; font-size: 11px;">
             <div style="text-align: center; font-size: 11px; color: #999; font-weight: bold;">${user.serverId}</div>
-            <div class="guild-name-link" data-clan-id="${user.clanId}" data-user-id="${user.userId}" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: #4ae29a; font-weight: bold; cursor: pointer; text-decoration: underline;">${user.clanTitle}</div>
-            <div class="member-count" style="text-align: center; font-size: 11px; color: #999;">${user.memberCount}</div>
+<div class="guild-name-link" data-clan-id="${user.clanId}" data-user-id="${user.userId}" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: #888; cursor: pointer; text-decoration: underline;">${user.clanTitle}</div>            <div class="member-count" style="text-align: center; font-size: 11px; color: #999;">${user.memberCount}</div>
             <div style="text-align: center; font-size: 11px; color: #999;">${user.lastLoginDisplay}</div>
             <div style="font-size: 13px; text-align: center;">${medal || user.rank}</div>
             <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
@@ -9800,6 +9799,7 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
                         debugLog('✅ Loaded flag data:', Object.keys(result.result.response).length, 'banners');
                     }
                 });
+                window.gameLoadData.timestamp = Date.now();
 
                 if (HWHFuncs && HWHFuncs.setProgress) {
                     HWHFuncs.setProgress('✅ Game data loaded successfully', true);
@@ -10458,7 +10458,9 @@ color: #ffd700; font-family: Arial, sans-serif; font-size: 14px;
             ]}));
             inventory = result?.results?.find(r => r.ident === 'inv')?.result?.response?.consumable || {};
             const heroes = result?.results?.find(r => r.ident === 'heroes')?.result?.response || {};
-            heroRunes = heroes[heroId]?.runes || [0, 0, 0, 0, 0];
+            const rawRunes = heroes[heroId]?.runes;
+            heroRunes = Array.isArray(rawRunes) ? rawRunes :
+            (rawRunes ? [rawRunes[0]||0, rawRunes[1]||0, rawRunes[2]||0, rawRunes[3]||0, rawRunes[4]||0] : [0,0,0,0,0]);
         } catch (e) {
             console.error('Failed to get data:', e);
             popup.remove();
@@ -10754,6 +10756,35 @@ ${heroRunes.map((xp, idx) => {
             const addedXP = Object.entries(consumables).reduce((sum, [id, count]) => sum + (count * consumableXP[id]), 0);
             const calculatedNewXP = currentXP + addedXP;
             window.glyphUpgradeHeroRunes[tier] = calculatedNewXP;
+
+            // Update game's internal hero model so UI stays in sync
+            try {
+                const collections = getUnitCollections();
+                const hero = collections.heroes?.[heroId];
+                if (hero) {
+                    // Find runes array dynamically (5-element array with XP values)
+                    for (let k in hero) {
+                        let v = hero[k];
+                        if (v && typeof v === 'object') {
+                            for (let k2 in v) {
+                                if (Array.isArray(v[k2]) && v[k2].length === 5 && typeof v[k2][0] === 'number') {
+                                    v[k2][tier] = calculatedNewXP;
+                                    debugLog('⬡ Updated game model:', heroId, k + '.' + k2, tier, '→', calculatedNewXP);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch(e) { debugLog('Could not update game model:', e); }
+            // Update gameLoadData cache so hero browser table stays in sync
+            try {
+                if (window.gameLoadData?.heroes?.[heroId]?.runes) {
+                    window.gameLoadData.heroes[heroId].runes[tier] = calculatedNewXP;
+                    window.gameLoadData.timestamp = Date.now(); // Invalidate display cache
+                    debugLog('⬡ Updated gameLoadData:', heroId, 'runes', tier, '→', calculatedNewXP);
+                }
+            } catch(e) { debugLog('Could not update gameLoadData:', e); }
 
             // Update inventory locally (subtract what we used)
             for (const [id, count] of Object.entries(consumables)) {
@@ -11161,11 +11192,18 @@ scrollbar-color: #8b6914 #1a0f08;
         return allMaxed ? `<span class="twk-green">✓${total}</span>` : `<span class="twk-dim">${maxed}/${total}</span>`;
     }
 
-    function getArtifactsDisplay(artifacts) {
+    function getArtifactStarsDisplay(artifacts) {
         if (!artifacts || !Array.isArray(artifacts)) return '-';
-        const allMaxed = artifacts.every(a => a.level >= 130 && a.star >= 6);
+        const allMaxed = artifacts.every(a => a.star >= 6);
         if (allMaxed) return '<span class="twk-green">✓3</span>';
-        return `<span class="twk-dim">${artifacts.map(a => `${a.level}`).join('/')}</span>`;
+        return `<span class="twk-dim">${artifacts.map(a => a.star).join('/')}</span>`;
+    }
+
+    function getArtifactLevelsDisplay(artifacts) {
+        if (!artifacts || !Array.isArray(artifacts)) return '-';
+        const allMaxed = artifacts.every(a => a.level >= 130);
+        if (allMaxed) return '<span class="twk-green">✓3</span>';
+        return `<span class="twk-dim">${artifacts.map(a => a.level).join('/')}</span>`;
     }
 
     function getSkillsDisplay(skills, heroLevel) {
@@ -11240,29 +11278,30 @@ scrollbar-color: #8b6914 #1a0f08;
         return `<span class="twk-dim">${filled}/${available}</span>`;
     }
     function generateHeroesTable(heroes) {
-const heroArray = Object.values(heroes);
-const totalPower = heroArray.reduce((sum, h) => sum + h.power, 0);
-const avgLevel = (heroArray.reduce((sum, h) => sum + h.level, 0) / heroArray.length).toFixed(1);
+        const heroArray = Object.values(heroes);
+        const totalPower = heroArray.reduce((sum, h) => sum + h.power, 0);
+        const avgLevel = (heroArray.reduce((sum, h) => sum + h.level, 0) / heroArray.length).toFixed(1);
 
-// Cache display values once
-if (!window.heroDisplayCache || window.heroDisplayCacheTime !== window.gameLoadData.timestamp) {
-    window.heroDisplayCache = {};
-    window.heroDisplayCacheTime = window.gameLoadData.timestamp;
-    heroArray.forEach(h => {
-        window.heroDisplayCache[h.id] = {
-            name: getName(h.id, 'hero'),
-            color: getColorDisplay(h.color),
-            items: getItemsDisplay(h.slots),
-            skins: getSkinsDisplay(h.skins),
-            arts: getArtifactsDisplay(h.artifacts),
-            skills: getSkillsDisplay(h.skills, h.level),
-            glyphs: getGlyphsDisplay(h.runes),
-            asc: getAscensionsDisplay(h.ascensions),
-            ascPlus: getAscPlusDisplay(h.ascensions)
-        };
-    });
-}
-const cache = window.heroDisplayCache;
+        // Cache display values once
+        if (!window.heroDisplayCache || window.heroDisplayCacheTime !== window.gameLoadData.timestamp) {
+            window.heroDisplayCache = {};
+            window.heroDisplayCacheTime = window.gameLoadData.timestamp;
+            heroArray.forEach(h => {
+                window.heroDisplayCache[h.id] = {
+                    name: getName(h.id, 'hero'),
+                    color: getColorDisplay(h.color),
+                    items: getItemsDisplay(h.slots),
+                    skins: getSkinsDisplay(h.skins),
+                    artStars: getArtifactStarsDisplay(h.artifacts),
+                    artLevels: getArtifactLevelsDisplay(h.artifacts),
+                    skills: getSkillsDisplay(h.skills, h.level),
+                    glyphs: getGlyphsDisplay(h.runes),
+                    asc: getAscensionsDisplay(h.ascensions),
+                    ascPlus: getAscPlusDisplay(h.ascensions)
+                };
+            });
+        }
+        const cache = window.heroDisplayCache;
 
         if (!window.heroTableState) {
             window.heroTableState = { hideMaxed: false, sortBy: 'power', sortDir: 'desc', nameSearch: '' };
@@ -11270,25 +11309,26 @@ const cache = window.heroDisplayCache;
         const state = window.heroTableState;
 
         if (!window.heroHideMax) {
-            window.heroHideMax = { core: false, stars: false, skins: false, arts: false, skills: false, glyph: false, asc: false, goe: false };
+            window.heroHideMax = { core: false, stars: false, skins: false, artStars: false, artLevels: false, skills: false, glyph: false, asc: false, goe: false };
         }
 
-const isStarsMxd = h => h.star >= 6;
-const isGlyphsMxd = h => cache[h.id].glyphs.includes('twk-green');
-const isGoeMxd = h => h.titanGiftLevel >= 30;
-const isCoreMxd = h => h.level >= 130 && h.color >= 18 && cache[h.id].items.includes('twk-green');
-const isSkinsMxd = h => cache[h.id].skins.includes('twk-green');
-const isArtsMxd = h => cache[h.id].arts.includes('twk-green');
-const isSkillsMxd = h => cache[h.id].skills.includes('twk-green');
-const isAscMxd = h => cache[h.id].asc.includes('twk-green');
+        const isStarsMxd = h => h.star >= 6;
+        const isGlyphsMxd = h => cache[h.id].glyphs.includes('twk-green');
+        const isGoeMxd = h => h.titanGiftLevel >= 30;
+        const isCoreMxd = h => h.level >= 130 && h.color >= 18 && cache[h.id].items.includes('twk-green');
+        const isSkinsMxd = h => cache[h.id].skins.includes('twk-green');
+        const isArtsMxd = h => cache[h.id].artStars.includes('twk-green') && cache[h.id].artLevels.includes('twk-green');
+        const isSkillsMxd = h => cache[h.id].skills.includes('twk-green');
+        const isAscMxd = h => cache[h.id].asc.includes('twk-green');
 
         let filtered = heroArray.filter(h => {
-if (state.nameSearch && !cache[h.id].name.toLowerCase().includes(state.nameSearch.toLowerCase())) return false;
+            if (state.nameSearch && !cache[h.id].name.toLowerCase().includes(state.nameSearch.toLowerCase())) return false;
 
             if (window.heroHideMax.core && isCoreMxd(h)) return false;
             if (window.heroHideMax.stars && isStarsMxd(h)) return false;
             if (window.heroHideMax.skins && isSkinsMxd(h)) return false;
-            if (window.heroHideMax.arts && isArtsMxd(h)) return false;
+            if (window.heroHideMax.artStars && cache[h.id].artStars.includes('twk-green')) return false;
+            if (window.heroHideMax.artLevels && cache[h.id].artLevels.includes('twk-green')) return false;
             if (window.heroHideMax.skills && isSkillsMxd(h)) return false;
             if (window.heroHideMax.glyph && isGlyphsMxd(h)) return false;
             if (window.heroHideMax.asc && isAscMxd(h)) return false;
@@ -11298,9 +11338,9 @@ if (state.nameSearch && !cache[h.id].name.toLowerCase().includes(state.nameSearc
 
         filtered.sort((a, b) => {
             let aVal, bVal;
-if (state.sortBy === 'name') {
-    aVal = cache[a.id].name.toLowerCase();
-    bVal = cache[b.id].name.toLowerCase();
+            if (state.sortBy === 'name') {
+                aVal = cache[a.id].name.toLowerCase();
+                bVal = cache[b.id].name.toLowerCase();
                 return state.sortDir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
             } else if (state.sortBy === 'id') {
                 aVal = a.id; bVal = b.id;
@@ -11339,7 +11379,8 @@ if (state.sortBy === 'name') {
         <th style="padding: 5px; width: 30px;">★</th>
         <th style="padding: 5px; width: 65px; cursor: pointer;" onclick="window.sortHeroTable('power')">Power${sortIcon('power')}</th>
         <th style="padding: 5px; width: 45px;">Skins</th>
-        <th style="padding: 5px; width: 45px;">Arts</th>
+     <th style="padding: 5px; width: 45px;" title="Artifact Stars">Art⭐</th>
+        <th style="padding: 5px; width: 55px;" title="Artifact Levels">Art📊</th>
         <th style="padding: 5px; width: 45px;">Skills</th>
         <th style="padding: 5px; width: 35px;">Prks</th>
         <th style="padding: 5px; width: 50px;">Glyph</th>
@@ -11357,7 +11398,8 @@ if (state.sortBy === 'name') {
         <th><input type="checkbox" id="heroHideStars" ${window.heroHideMax.stars ? 'checked' : ''} title="Hide maxed"></th>
         <th></th>
         <th><input type="checkbox" id="heroHideSkins" ${window.heroHideMax.skins ? 'checked' : ''} title="Hide maxed"></th>
-        <th><input type="checkbox" id="heroHideArts" ${window.heroHideMax.arts ? 'checked' : ''} title="Hide maxed"></th>
+<th><input type="checkbox" id="heroHideArtStars" ${window.heroHideMax.artStars ? 'checked' : ''} title="Hide maxed"></th>
+        <th><input type="checkbox" id="heroHideArtLevels" ${window.heroHideMax.artLevels ? 'checked' : ''} title="Hide maxed"></th>
         <th><input type="checkbox" id="heroHideSkills" ${window.heroHideMax.skills ? 'checked' : ''} title="Hide maxed"></th>
         <th></th>
         <th><input type="checkbox" id="heroHideGlyph" ${window.heroHideMax.glyph ? 'checked' : ''} title="Hide maxed"></th>
@@ -11375,7 +11417,7 @@ if (state.sortBy === 'name') {
 <colgroup>
     <col style="width: 35px;"><col style="width: 100px;"><col style="width: 30px;"><col style="width: 35px;">
     <col style="width: 50px;"><col style="width: 40px;"><col style="width: 30px;"><col style="width: 65px;">
-    <col style="width: 45px;"><col style="width: 45px;"><col style="width: 45px;"><col style="width: 35px;">
+    <col style="width: 45px;"><col style="width: 45px;"><col style="width: 55px;"><col style="width: 45px;"><col style="width: 35px;">
     <col style="width: 50px;"><col style="width: 45px;"><col style="width: 30px;"><col style="width: 40px;">
 </colgroup>
                 <tbody>
@@ -11398,7 +11440,8 @@ if (state.sortBy === 'name') {
                     <td class="twk-cell">${starsDisplay}</td>
                     <td style="padding: 3px; text-align: right; font-family: monospace; color: #fff;">${hero.power.toLocaleString()}</td>
 <td class="twk-cell">${cache[hero.id].skins}</td>
-<td class="twk-cell">${cache[hero.id].arts}</td>
+<td class="twk-cell">${cache[hero.id].artStars}</td>
+<td class="twk-cell">${cache[hero.id].artLevels}</td>
 <td class="twk-cell">${cache[hero.id].skills}</td>
 <td class="twk-cell" style="color: #ccc;">${perksCount}</td>
 <td class="twk-cell" style="cursor: pointer;" onclick="window.showGlyphUpgrade(${hero.id}, '${cache[hero.id].name.replace(/'/g, "\\'")}')">${cache[hero.id].glyphs}</td>
@@ -11407,18 +11450,18 @@ if (state.sortBy === 'name') {
                     <td class="twk-cell">${hero.titanGiftLevel >= 30 ? '<span class="twk-green">✓</span>' : `<span class="twk-dim">${hero.titanGiftLevel || 0}/30</span>`}</td>
                 </tr>
             `;
-       });
+        });
 
         body += `</tbody></table>`;
 
         // Event listeners
         setTimeout(() => {
-            const keys = ['Stars', 'Skins', 'Arts', 'Skills', 'Glyph', 'Asc', 'Goe'];
-            keys.forEach(key => {
+            const keyMap = { Stars: 'stars', Skins: 'skins', ArtStars: 'artStars', ArtLevels: 'artLevels', Skills: 'skills', Glyph: 'glyph', Asc: 'asc', Goe: 'goe' };
+            Object.keys(keyMap).forEach(key => {
                 const cb = document.getElementById('heroHide' + key);
                 if (cb) {
                     cb.onchange = function() {
-                        window.heroHideMax[key.toLowerCase()] = this.checked;
+                        window.heroHideMax[keyMap[key]] = this.checked;
                         const parts = generateHeroesTable(window.gameLoadData.heroes);
                         document.getElementById('tab-header').innerHTML = parts.header;
                         document.getElementById('tab-content').innerHTML = parts.body;
@@ -11498,17 +11541,20 @@ if (state.sortBy === 'name') {
         });
 
         if (!window.titanTableState) { window.titanTableState = { nameSearch: '' }; }
-        if (!window.titanHideMax) { window.titanHideMax = { stars: false, skins: false, arts: false, skills: false }; }
-
+        if (!window.titanHideMax) { window.titanHideMax = { stars: false, skins: false, artStars: false, artLevels: false, skills: false }; }
         const isStarsMxd = t => t.star >= 6;
         const isSkinsMxd = t => {
             if (!t.skins || typeof t.skins !== 'object') return false;
             const vals = Object.values(t.skins);
             return vals.length > 0 && vals.every(s => s >= 60);
         };
-        const isArtsMxd = t => {
+        const isArtStarsMxd = t => {
             const arts = t.artifacts || [];
-            return arts.length >= 3 && arts.every(a => a.level >= 120 && a.star >= 6);
+            return arts.length >= 3 && arts.every(a => a.star >= 6);
+        };
+        const isArtLevelsMxd = t => {
+            const arts = t.artifacts || [];
+            return arts.length >= 3 && arts.every(a => a.level >= 130);
         };
         const isSkillsMxd = t => {
             const skills = t.skills || {};
@@ -11520,7 +11566,8 @@ if (state.sortBy === 'name') {
             if (window.titanTableState.nameSearch && !getName(t.id, 'titan').toLowerCase().includes(window.titanTableState.nameSearch.toLowerCase())) return false;
             if (window.titanHideMax.stars && isStarsMxd(t)) return false;
             if (window.titanHideMax.skins && isSkinsMxd(t)) return false;
-            if (window.titanHideMax.arts && isArtsMxd(t)) return false;
+            if (window.titanHideMax.artStars && isArtStarsMxd(t)) return false;
+            if (window.titanHideMax.artLevels && isArtLevelsMxd(t)) return false;
             if (window.titanHideMax.skills && isSkillsMxd(t)) return false;
             return true;
         });
@@ -11546,7 +11593,8 @@ if (state.sortBy === 'name') {
 <th style="padding: 5px; width: 35px;">★</th>
 <th style="padding: 5px; text-align: right; width: 75px; cursor: pointer;" onclick="window.sortTitanTable('power')">Power${sortIcon('power')}</th>
         <th style="padding: 5px; width: 50px;">Skins</th>
-        <th style="padding: 5px; width: 50px;">Arts</th>
+<th style="padding: 5px; width: 45px;" title="Artifact Stars">Art⭐</th>
+        <th style="padding: 5px; width: 55px;" title="Artifact Levels">Art📊</th>
         <th style="padding: 5px; width: 50px;">Skills</th>
     </tr>
     <tr style="background: #6b5010; font-size: 10px;">
@@ -11557,7 +11605,8 @@ if (state.sortBy === 'name') {
         <th><input type="checkbox" id="titanHideStars" ${window.titanHideMax.stars ? 'checked' : ''} title="Hide maxed"></th>
         <th></th>
         <th><input type="checkbox" id="titanHideSkins" ${window.titanHideMax.skins ? 'checked' : ''} title="Hide maxed"></th>
-        <th><input type="checkbox" id="titanHideArts" ${window.titanHideMax.arts ? 'checked' : ''} title="Hide maxed"></th>
+<th><input type="checkbox" id="titanHideArtStars" ${window.titanHideMax.artStars ? 'checked' : ''} title="Hide maxed"></th>
+        <th><input type="checkbox" id="titanHideArtLevels" ${window.titanHideMax.artLevels ? 'checked' : ''} title="Hide maxed"></th>
         <th><input type="checkbox" id="titanHideSkills" ${window.titanHideMax.skills ? 'checked' : ''} title="Hide maxed"></th>
     </tr>
 </thead>
@@ -11568,8 +11617,8 @@ if (state.sortBy === 'name') {
             <table style="width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed;">
                 <colgroup>
                     <col style="width: 35px;"><col style="width: 100px;"><col style="width: 45px;"><col style="width: 45px;">
-                    <col style="width: 35px;"><col style="width: 75px;"><col style="width: 50px;"><col style="width: 50px;"><col style="width: 50px;">
-                </colgroup>
+<col style="width: 35px;"><col style="width: 75px;"><col style="width: 50px;"><col style="width: 45px;"><col style="width: 55px;"><col style="width: 50px;">
+</colgroup>
                 <tbody>
         `;
 
@@ -11586,8 +11635,10 @@ if (state.sortBy === 'name') {
             }
 
             const arts = titan.artifacts || [];
-            const artsMaxed = arts.length >= 3 && arts.every(a => a.level >= 120 && a.star >= 6);
-            const artsDisplay = artsMaxed ? '<span class="twk-green">✓</span>' : `<span class="twk-dim">${arts.filter(a => a.level >= 120 && a.star >= 6).length}/${arts.length || 3}</span>`;
+            const artStarsMaxed = arts.length >= 3 && arts.every(a => a.star >= 6);
+            const artStarsDisplay = artStarsMaxed ? '<span class="twk-green">✓3</span>' : `<span class="twk-dim">${arts.map(a => a.star).join('/')}</span>`;
+            const artLevelsMaxed = arts.length >= 3 && arts.every(a => a.level >= 130);
+            const artLevelsDisplay = artLevelsMaxed ? '<span class="twk-green">✓3</span>' : `<span class="twk-dim">${arts.map(a => a.level).join('/')}</span>`;
 
             const skills = titan.skills || {};
             const skillVals = Object.values(skills);
@@ -11603,11 +11654,12 @@ if (state.sortBy === 'name') {
                     <td class="twk-cell">${starsDisplay}</td>
                     <td style="padding: 3px; text-align: right; font-family: monospace; color: #fff;">${titan.power.toLocaleString()}</td>
                     <td class="twk-cell">${skinsDisplay}</td>
-                    <td class="twk-cell">${artsDisplay}</td>
+<td class="twk-cell">${artStarsDisplay}</td>
+                    <td class="twk-cell">${artLevelsDisplay}</td>
                     <td class="twk-cell">${skillsDisplay}</td>
                 </tr>
             `;
-     });
+        });
 
         body += `</tbody></table>`;
 
@@ -11623,11 +11675,12 @@ if (state.sortBy === 'name') {
                     if (newInput) { newInput.focus(); newInput.setSelectionRange(this.value.length, this.value.length); }
                 };
             }
-            ['Stars', 'Skins', 'Arts', 'Skills'].forEach(key => {
+            const keyMap = { Stars: 'stars', Skins: 'skins', ArtStars: 'artStars', ArtLevels: 'artLevels', Skills: 'skills' };
+            Object.keys(keyMap).forEach(key => {
                 const cb = document.getElementById('titanHide' + key);
                 if (cb) {
                     cb.onchange = function() {
-                        window.titanHideMax[key.toLowerCase()] = this.checked;
+                        window.titanHideMax[keyMap[key]] = this.checked;
                         const parts = generateTitansTable(window.gameLoadData.titans);
                         document.getElementById('tab-header').innerHTML = parts.header;
                         document.getElementById('tab-content').innerHTML = parts.body;
@@ -11639,19 +11692,19 @@ if (state.sortBy === 'name') {
         return { header, body };
     }
     unsafeWindow.sortTitanTable = window.sortTitanTable = function(column) {
-    if (!window.titanTableState) {
-        window.titanTableState = { sortBy: 'power', sortDir: 'desc', nameSearch: '' };
-    }
-    if (window.titanTableState.sortBy === column) {
-        window.titanTableState.sortDir = window.titanTableState.sortDir === 'asc' ? 'desc' : 'asc';
-    } else {
-        window.titanTableState.sortBy = column;
-        window.titanTableState.sortDir = column === 'name' ? 'asc' : 'desc';
-    }
-    const parts = generateTitansTable(window.gameLoadData.titans);
-    document.getElementById('tab-header').innerHTML = parts.header;
-    document.getElementById('tab-content').innerHTML = parts.body;
-};
+        if (!window.titanTableState) {
+            window.titanTableState = { sortBy: 'power', sortDir: 'desc', nameSearch: '' };
+        }
+        if (window.titanTableState.sortBy === column) {
+            window.titanTableState.sortDir = window.titanTableState.sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            window.titanTableState.sortBy = column;
+            window.titanTableState.sortDir = column === 'name' ? 'asc' : 'desc';
+        }
+        const parts = generateTitansTable(window.gameLoadData.titans);
+        document.getElementById('tab-header').innerHTML = parts.header;
+        document.getElementById('tab-content').innerHTML = parts.body;
+    };
 
     function generatePetsTable(pets) {
         if (!window.petTableState) {
@@ -11830,19 +11883,19 @@ if (state.sortBy === 'name') {
         return { header, body };
     }
     unsafeWindow.sortPetTable = window.sortPetTable = function(column) {
-    if (!window.petTableState) {
-        window.petTableState = { sortBy: 'power', sortDir: 'desc' };
-    }
-    if (window.petTableState.sortBy === column) {
-        window.petTableState.sortDir = window.petTableState.sortDir === 'asc' ? 'desc' : 'asc';
-    } else {
-        window.petTableState.sortBy = column;
-        window.petTableState.sortDir = column === 'name' ? 'asc' : 'desc';
-    }
-    const parts = generatePetsTable(window.gameLoadData.pets);
-    document.getElementById('tab-header').innerHTML = parts.header;
-    document.getElementById('tab-content').innerHTML = parts.body;
-};
+        if (!window.petTableState) {
+            window.petTableState = { sortBy: 'power', sortDir: 'desc' };
+        }
+        if (window.petTableState.sortBy === column) {
+            window.petTableState.sortDir = window.petTableState.sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            window.petTableState.sortBy = column;
+            window.petTableState.sortDir = column === 'name' ? 'asc' : 'desc';
+        }
+        const parts = generatePetsTable(window.gameLoadData.pets);
+        document.getElementById('tab-header').innerHTML = parts.header;
+        document.getElementById('tab-content').innerHTML = parts.body;
+    };
 
     function generateFlagsTable(flags) {
         if (!flags || Object.keys(flags).length === 0) {
@@ -16537,6 +16590,16 @@ ${preTasks.length ? `
             '</div>' +
             '<div style="font-size: 10px; color: #999; line-height: 1.3; margin-top: 4px;">Disable to reduce CPU usage<br>(requires page reload)</div>' +
             '</div>' +
+
+            '<div class="twk-mb-15">' +
+            '<div style="display: flex; align-items: center; gap: 8px;">' +
+            '<label style="display: flex; align-items: center; cursor: pointer; font-size: 12px;">' +
+            '<input type="checkbox" id="debug-mode-enabled" ' + (localStorage.getItem('hwh_debug_mode') === 'true' ? 'checked' : '') + ' style="margin-right: 6px; cursor: pointer;">' +
+            '<span>Debug Mode</span>' +
+            '</label>' +
+            '</div>' +
+            '<div style="font-size: 10px; color: #999; line-height: 1.3; margin-top: 4px;">Show debug logs in console<br>(requires page reload)</div>' +
+            '</div>' +
             '</div>' + // end right column
 
             '</div>' + // end grid
@@ -16998,6 +17061,12 @@ ${preTasks.length ? `
         document.getElementById('arena-stats-enabled').addEventListener('change', function() {
             localStorage.setItem('hwh_arena_stats_enabled', this.checked ? 'true' : 'false');
             debugLog('Arena stats:', this.checked ? 'enabled' : 'disabled', '(reload required)');
+        });
+
+        // Debug mode toggle handler
+        document.getElementById('debug-mode-enabled').addEventListener('change', function() {
+            localStorage.setItem('hwh_debug_mode', this.checked ? 'true' : 'false');
+            console.log('🔧 Debug mode:', this.checked ? 'enabled' : 'disabled', '(reload required)');
         });
 
         // Heroic Override handlers
@@ -17681,1569 +17750,1569 @@ transition: all 0.2s;
                         let isExporting = false;
 
                         // Close function
-const closeUI = () => {
-    if (!isExporting || confirm('Export is in progress. Are you sure you want to close?')) {
-        isExporting = false;
-        uiContainer.remove();
-    }
-};
+                        const closeUI = () => {
+                            if (!isExporting || confirm('Export is in progress. Are you sure you want to close?')) {
+                                isExporting = false;
+                                uiContainer.remove();
+                            }
+                        };
 
-// Event handlers
-document.getElementById('cancel-export').onclick = closeUI;
-document.getElementById('close-x').onclick = closeUI;
-document.getElementById('export-backdrop').onclick = closeUI;
+                        // Event handlers
+                        document.getElementById('cancel-export').onclick = closeUI;
+                        document.getElementById('close-x').onclick = closeUI;
+                        document.getElementById('export-backdrop').onclick = closeUI;
 
-const closeBtn = document.getElementById('close-button');
-if (closeBtn) closeBtn.onclick = closeUI;
+                        const closeBtn = document.getElementById('close-button');
+                        if (closeBtn) closeBtn.onclick = closeUI;
 
-// ESC key to close
-const escHandler = (e) => {
-    if (e.key === 'Escape') closeUI();
-};
-document.addEventListener('keydown', escHandler);
+                        // ESC key to close
+                        const escHandler = (e) => {
+                            if (e.key === 'Escape') closeUI();
+                        };
+                        document.addEventListener('keydown', escHandler);
 
-const originalRemove = uiContainer.remove;
-uiContainer.remove = function() {
-    document.removeEventListener('keydown', escHandler);
-    originalRemove.call(this);
-};
+                        const originalRemove = uiContainer.remove;
+                        uiContainer.remove = function() {
+                            document.removeEventListener('keydown', escHandler);
+                            originalRemove.call(this);
+                        };
 
-// In the export type change handler:
-document.getElementById('export-type').addEventListener('change', function() {
-    // Hide all option sections
-    document.querySelectorAll('.export-options').forEach(el => el.style.display = 'none');
+                        // In the export type change handler:
+                        document.getElementById('export-type').addEventListener('change', function() {
+                            // Hide all option sections
+                            document.querySelectorAll('.export-options').forEach(el => el.style.display = 'none');
 
-    // Show selected option section
-    const selectedType = this.value;
-    const optionSection = document.getElementById(selectedType + '-options');
-    if (optionSection) {
-        optionSection.style.display = 'block';
-    }
-
-    // Show/hide delay section
-    const delaySection = document.getElementById('delay-section');
-    if (selectedType === 'rankings' || selectedType === 'allusers' || selectedType === 'allguilds') {
-        delaySection.style.display = 'block';
-    } else {
-        delaySection.style.display = 'none';
-    }
-});
-// Handle ranking type change
-document.getElementById('ranking-type').addEventListener('change', function() {
-    if (this.value === 'all') {
-        const serverStart = document.getElementById('server-start').value;
-        document.getElementById('server-end').value = serverStart;
-    }
-});
-
-// Validate rank inputs
-document.getElementById('rank-start').addEventListener('input', function() {
-    if (this.value > 50) this.value = 50;
-    if (this.value < 1) this.value = 1;
-});
-
-document.getElementById('rank-end').addEventListener('input', function() {
-    if (this.value > 50) this.value = 50;
-    if (this.value < 1) this.value = 1;
-});
-
-// Start export handler
-document.getElementById('start-export').onclick = async () => {
-    if (isExporting) return;
-
-    const exportType = document.getElementById('export-type').value;
-
-    isExporting = true;
-    document.getElementById('start-export').disabled = true;
-    document.getElementById('cancel-export').textContent = 'Stop';
-    document.getElementById('progress-area').style.display = 'block';
-
-    try {
-        switch (exportType) {
-            case 'myheroes':
-                await exportMyHeroes();
-                break;
-            case 'rankings':
-                await exportRankings();
-                break;
-            case 'myguildwar':
-                await exportMyGuildWar();
-                break;
-            case 'allusers':
-                // Set fileName globally before calling the function
-                fileName = `all_top_users_s${document.getElementById('user-server-start').value}-${document.getElementById('user-server-end').value}_${new Date().toISOString().split('T')[0]}.tsv`;
-
-                // Call the export function and capture the result
-                exportData = await exportAllUsers((progress, text, timeRemaining) => {
-                    if (!isExporting) throw new Error('Export cancelled');
-                    document.getElementById('progress-bar').style.width = `${progress}%`;
-                    document.getElementById('progress-text').innerHTML = text;
-                    if (timeRemaining !== null) {
-                        document.getElementById('time-remaining').innerHTML = `Est. time remaining: ${timeRemaining}s`;
-                    }
-                }, isExporting);
-                break;
-            case 'allguilds':
-                // Set fileName globally before calling the function
-                fileName = `all_top_guilds_s${document.getElementById('guild-server-start').value}-${document.getElementById('guild-server-end').value}_${new Date().toISOString().split('T')[0]}.tsv`;
-
-                // Call the export function and capture the result
-                exportData = await exportAllGuilds((progress, text, timeRemaining) => {
-                    if (!isExporting) throw new Error('Export cancelled');
-                    document.getElementById('progress-bar').style.width = `${progress}%`;
-                    document.getElementById('progress-text').innerHTML = text;
-                    if (timeRemaining !== null) {
-                        document.getElementById('time-remaining').innerHTML = `Est. time remaining: ${timeRemaining}s`;
-                    }
-                }, isExporting);
-                break;
-        }
-        // Show results
-        document.getElementById('progress-area').style.display = 'none';
-        document.getElementById('result-area').style.display = 'block';
-        const entryCount = exportData.split('\n').length - 1;
-        document.getElementById('result-message').innerHTML = `✅ Exported ${entryCount} entries!`;
-
-        // Hide form controls
-        document.querySelectorAll('#export-ui > div:not(#result-area):not(:first-child)').forEach(el => {
-            el.style.display = 'none';
-        });
-
-    } catch (error) {
-        if (error.message !== 'Export cancelled') {
-            alert(`Export failed: ${error.message}`);
-        }
-        closeUI();
-    }
-
-    isExporting = false;
-};
-
-// Export My Heroes function
-async function exportMyHeroes() {
-    document.getElementById('progress-bar').style.width = '50%';
-    document.getElementById('progress-text').innerHTML = 'Fetching hero data...';
-
-    const SendFunction = getSend();
-    const response = await SendFunction('{"calls":[{"name":"heroGetAll","args":{},"ident":"body"}]}');
-
-    if (!response?.results?.[0]?.result?.response) {
-        throw new Error('No hero data available!');
-    }
-
-    document.getElementById('progress-bar').style.width = '100%';
-    document.getElementById('progress-text').innerHTML = 'Processing heroes...';
-
-    const heroResponse = response.results[0].result.response;
-    const myHeroes = [];
-    const timestamp = new Date().toISOString();
-    const gameData = window.getGameData();
-
-    Object.entries(heroResponse).forEach(([key, hero]) => {
-        if (hero && hero.id) {
-            const heroName = window.itemNameCache?.hero?.[hero.id] || `Hero #${hero.id}`;
-            const heroDefinition = gameData?.hero?.[hero.id];
-
-            let gameMaxStar = 6;
-            if (heroDefinition?.stars) {
-                const availableStars = Object.keys(heroDefinition.stars).map(Number);
-                gameMaxStar = Math.max(...availableStars, 6);
-            }
-
-            const flatHero = {
-                timestamp: timestamp,
-                id: hero.id,
-                name: heroName,
-                level: hero.level || 0,
-                star: hero.star || 0,
-                absoluteStar: hero.absoluteStar || 0,
-                color: hero.color || 0,
-                power: hero.power || 0,
-                xp: hero.xp || 0,
-                characterType: heroDefinition?.characterType || '',
-                role: heroDefinition?.role || '',
-                mainStat: heroDefinition?.mainStat || '',
-                skills: hero.skills ? Object.entries(hero.skills).map(([k,v]) => `${k}:${v}`).join(';') : '',
-                runes: hero.runes ? hero.runes.join(';') : '',
-                runeCount: hero.runes ? hero.runes.length : 0,
-                skins: hero.skins ? Object.keys(hero.skins).join(';') : '',
-                skinCount: hero.skins ? Object.keys(hero.skins).length : 0,
-                currentSkin: hero.currentSkin || 'default',
-                artifacts: hero.artifacts ? hero.artifacts.join(';') : '',
-                artifactCount: hero.artifacts ? hero.artifacts.length : 0,
-                slots: hero.slots ? Object.keys(hero.slots).join(';') : '',
-                slotCount: hero.slots ? Object.keys(hero.slots).length : 0,
-                titanGiftLevel: hero.titanGiftLevel || 0,
-                petId: hero.petId || 0,
-                isMaxLevel: hero.level === 130,
-                isMaxStar: hero.star === gameMaxStar,
-                starsToMax: gameMaxStar - hero.star,
-                canGetMoreStars: hero.star < gameMaxStar
-            };
-
-            myHeroes.push(flatHero);
-        }
-    });
-
-    myHeroes.sort((a, b) => Number(a.id) - Number(b.id));
-
-    const headers = Object.keys(myHeroes[0]);
-    exportData = [
-        headers.join('\t'),
-        ...myHeroes.map(hero =>
-                        headers.map(header => {
-            const value = hero[header];
-            return value === null || value === undefined ? '' : String(value);
-        }).join('\t')
-                       )
-    ].join('\n');
-
-    fileName = `my_heroes_${new Date().toISOString().split('T')[0]}.tsv`;
-}
-
-// Export Rankings function
-async function exportRankings() {
-    const rankingType = document.getElementById('ranking-type').value;
-    const serverStart = parseInt(document.getElementById('server-start').value);
-    const serverEnd = parseInt(document.getElementById('server-end').value);
-    const rankStart = parseInt(document.getElementById('rank-start').value);
-    const rankEnd = parseInt(document.getElementById('rank-end').value);
-    const delaySeconds = parseFloat(document.getElementById('delay').value);
-
-    localStorage.setItem('hwh_lastRankingServer', serverStart);
-
-    if (serverEnd < serverStart || rankEnd < rankStart) {
-        throw new Error('Invalid range!');
-    }
-
-    if (rankingType === 'all' && serverStart !== serverEnd) {
-        document.getElementById('server-end').value = serverStart;
-        throw new Error('All Rankings option requires a single server!');
-    }
-
-    fileName = `rankings_${rankingType}_s${serverStart}-${serverEnd}_r${rankStart}-${rankEnd}_${new Date().toISOString().split('T')[0]}.tsv`;
-
-    const rankingTypes = {
-        'power': { name: 'Hero Power', valueField: 'sumPower', isGuild: false },
-        'titanPower': { name: 'Titan Power', valueField: 'sumPower', isGuild: false },
-        'dungeonFloor': { name: 'Dungeon Floor', valueField: 'maxFloorNum', isGuild: false },
-        'arena': { name: 'Arena', valueField: 'sumPower', isGuild: false },
-        'grand': { name: 'Grand Arena', valueField: 'sumPower', isGuild: false },
-        'clan': { name: 'Guild Activity', valueField: 'activity', isGuild: true },
-        'clanDungeon': { name: 'Guild Titanite', valueField: 'dungeonActivity', isGuild: true },
-        'prestige': { name: 'Guild Prestige', valueField: 'score', isGuild: true }
-    };
-
-    if (rankingType === 'all') {
-        exportData = await exportAllRankingsData({
-            serverId: serverStart,
-            rankStart,
-            rankEnd,
-            delaySeconds,
-            onProgress: (progress, text, timeRemaining) => {
-                if (!isExporting) throw new Error('Export cancelled');
-                document.getElementById('progress-bar').style.width = `${progress}%`;
-                document.getElementById('progress-text').innerHTML = text;
-                if (timeRemaining !== null) {
-                    document.getElementById('time-remaining').innerHTML = `Est. time remaining: ${timeRemaining}s`;
-                }
-            }
-        });
-    } else {
-        exportData = await exportRankingsData({
-            rankingType,
-            serverStart,
-            serverEnd,
-            rankStart,
-            rankEnd,
-            delaySeconds,
-            rankingDef: rankingTypes[rankingType],
-            onProgress: (progress, text, timeRemaining) => {
-                if (!isExporting) throw new Error('Export cancelled');
-                document.getElementById('progress-bar').style.width = `${progress}%`;
-                document.getElementById('progress-text').innerHTML = text;
-                if (timeRemaining !== null) {
-                    document.getElementById('time-remaining').innerHTML = `Est. time remaining: ${timeRemaining}s`;
-                }
-            }
-        });
-    }
-}
-
-// Export My Guild War function
-async function exportMyGuildWar() {
-    const includeDetails = document.getElementById('include-war-details').checked;
-
-    document.getElementById('progress-bar').style.width = '50%';
-    document.getElementById('progress-text').innerHTML = 'Fetching guild war data...';
-
-    const SendFunction = getSend();
-    const response = await SendFunction(JSON.stringify({
-        calls: [{
-            name: "clanWarGetDefence",
-            args: {},
-            context: {
-                actionTs: Date.now()
-            },
-            ident: "body"
-        }]
-    }));
-
-    document.getElementById('progress-bar').style.width = '100%';
-    document.getElementById('progress-text').innerHTML = 'Processing data...';
-
-    if (!response?.results?.[0]?.result?.response) {
-        throw new Error('No war defense data found');
-    }
-
-    const warData = response.results[0].result.response;
-    exportData = await exportMyGuildWarData(warData, includeDetails);
-    fileName = `my_guild_war_defense_${new Date().toISOString().split('T')[0]}.tsv`;
-}
-
-// Copy button handler
-document.getElementById('copy-button').onclick = () => {
-    const textarea = document.createElement('textarea');
-    textarea.value = exportData;
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-
-    const btn = document.getElementById('copy-button');
-    btn.innerHTML = '✅ Copied!';
-    setTimeout(() => {
-        if (document.getElementById('copy-button')) {
-            btn.innerHTML = '📋 Copy to Clipboard';
-        }
-    }, 2000);
-};
-
-// In the download button handler:
-document.getElementById('download-button').onclick = () => {
-    const blob = new Blob([exportData], { type: 'text/tab-separated-values;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = window.exportFileName || fileName || 'export.tsv'; // Use saved filename
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    const btn = document.getElementById('download-button');
-    btn.innerHTML = '✅ Downloaded!';
-    setTimeout(() => {
-        if (document.getElementById('download-button')) {
-            btn.innerHTML = '💾 Download File';
-        }
-    }, 2000);
-};
-}
-
-// In the exportRankingsData function, update the part that processes guild rankings:
-
-// Updated exportRankingsData function with complete clan data handling:
-
-async function exportRankingsData(options) {
-    const {
-        rankingType,
-        serverStart,
-        serverEnd,
-        rankStart,
-        rankEnd,
-        delaySeconds,
-        rankingDef,
-        onProgress
-    } = options;
-
-    const SendFunction = getSend();
-    const allData = [];
-    const totalServers = serverEnd - serverStart + 1;
-
-    for (let serverId = serverStart; serverId <= serverEnd; serverId++) {
-        const progress = ((serverId - serverStart) / totalServers) * 100;
-        const serversRemaining = serverEnd - serverId + 1;
-        const timeRemaining = Math.ceil(serversRemaining * delaySeconds);
-
-        onProgress(
-            progress,
-            `Fetching server ${serverId} of ${serverEnd}...<br>Found: ${allData.length} entries`,
-            timeRemaining
-        );
-
-        try {
-            const response = await SendFunction(JSON.stringify({
-                calls: [{
-                    name: "topGet",
-                    args: {
-                        type: rankingType,
-                        extraId: 0,
-                        serverId: serverId
-                    },
-                    context: {
-                        actionTs: Date.now()
-                    },
-                    ident: "body"
-                }]
-            }));
-
-            if (response?.results?.[0]?.result?.response?.top) {
-                const data = response.results[0].result.response;
-
-                // Build a clan lookup map - handle different structures
-                const clanLookup = {};
-
-                // For clanDungeon and clan: data.clans is an array
-                if (data.clans && Array.isArray(data.clans)) {
-                    data.clans.forEach(clan => {
-                        if (clan.id) {
-                            clanLookup[clan.id] = clan;
-                        }
-                    });
-                }
-                // For prestige: data.items is an object
-                else if (data.items && typeof data.items === 'object') {
-                    Object.entries(data.items).forEach(([clanId, clan]) => {
-                        clanLookup[clanId] = clan;
-                    });
-                }
-
-                data.top.forEach((entry, index) => {
-                    const rank = entry.place || (index + 1);
-                    if (rank >= rankStart && rank <= rankEnd) {
-                        if (rankingDef.isGuild) {
-                            // For prestige, clanId is stored in itemId
-                            const clanId = entry.clanId || entry.itemId || entry.id;
-                            const clanInfo = clanLookup[clanId] || {};
-
-                            // Get the value based on ranking type
-                            let value = 0;
-                            if (rankingType === 'clanDungeon' && entry.dungeonActivity) {
-                                value = parseInt(entry.dungeonActivity) || 0;
-                            } else if (rankingType === 'prestige' && entry.score) {
-                                value = parseInt(entry.score) || 0;
-                            } else {
-                                value = parseInt(entry[rankingDef.valueField] || 0);
+                            // Show selected option section
+                            const selectedType = this.value;
+                            const optionSection = document.getElementById(selectedType + '-options');
+                            if (optionSection) {
+                                optionSection.style.display = 'block';
                             }
 
-                            allData.push({
-                                Type: rankingDef.name,
-                                Rank: rank,
-                                Value: value,
-                                UserName: '',
-                                GuildName: clanInfo.title || clanInfo.name || `Guild ${clanId}`,
-                                UserLevel: '',
-                                GWLeague: '',
-                                UserID: '',
-                                FrameID: '',
-                                AvatarID: '',
-                                GuildID: clanId,
-                                ServerID: serverId,
-                                LastLoginTime: '',
-                                TimeStamp: new Date().toISOString(),
-                                isGuildRanking: 'TRUE'
-                            });
-                        } else {
-                            const userId = entry.userId || entry.id;
-                            const userInfo = data.users?.[userId] || {};
-
-                            allData.push({
-                                Type: rankingDef.name,
-                                Rank: rank,
-                                Value: parseInt(entry[rankingDef.valueField] || 0),
-                                UserName: userInfo.name || 'Unknown',
-                                GuildName: userInfo.clanTitle || '',
-                                UserLevel: parseInt(userInfo.level || 0),
-                                GWLeague: userInfo.leagueId || '',
-                                UserID: userId,
-                                FrameID: userInfo.frameId || 0,
-                                AvatarID: userInfo.avatarId || '',
-                                GuildID: userInfo.clanId || '',
-                                ServerID: serverId,
-                                LastLoginTime: userInfo.lastLoginTime ?
-                                `=((${userInfo.lastLoginTime}/86400)+25569)` : '',
-                                TimeStamp: new Date().toISOString(),
-                                isGuildRanking: 'FALSE'
-                            });
-                        }
-                    }
-                });
-
-                debugLog(`✓ Server ${serverId}: Found ${data.top.length} entries`);
-            }
-        } catch (err) {
-            debugLog(`✗ Server ${serverId}: Error`, err);
-        }
-
-        if (serverId < serverEnd) {
-            await new Promise(r => setTimeout(r, delaySeconds * 1000));
-        }
-    }
-
-    onProgress(100, `Processing ${allData.length} entries...`, 0);
-
-    if (allData.length === 0) {
-        throw new Error('No data collected!');
-    }
-
-    const headers = [
-        'Type', 'Rank', 'Value', 'UserName', 'GuildName', 'UserLevel',
-        'GWLeague', 'UserID', 'FrameID', 'AvatarID', 'GuildID',
-        'ServerID', 'LastLoginTime', 'TimeStamp', 'isGuildRanking'
-    ];
-
-    const delimiter = '\t';
-    const content = [
-        headers.join(delimiter),
-        ...allData.map(row =>
-                       headers.map(header => {
-            const value = row[header];
-            if (value === undefined || value === null) return '';
-            if (typeof value === 'string') {
-                return value.replace(/\t/g, ' ').replace(/\n/g, ' ');
-            }
-            return value;
-        }).join(delimiter)
-                      )
-    ].join('\n');
-
-    return content;
-}
-
-// Updated exportAllRankingsData function with complete clan data handling:
-
-async function exportAllRankingsData(options) {
-    const {
-        serverId,
-        rankStart,
-        rankEnd,
-        delaySeconds,
-        onProgress
-    } = options;
-
-    const SendFunction = getSend();
-    const allData = [];
-    const allRankingTypes = [
-        { type: 'power', name: 'Hero Power', valueField: 'sumPower', isGuild: false },
-        { type: 'titanPower', name: 'Titan Power', valueField: 'sumPower', isGuild: false },
-        { type: 'dungeonFloor', name: 'Dungeon Floor', valueField: 'maxFloorNum', isGuild: false },
-        { type: 'arena', name: 'Arena', valueField: 'sumPower', isGuild: false },
-        { type: 'grand', name: 'Grand Arena', valueField: 'sumPower', isGuild: false },
-        { type: 'clan', name: 'Guild Activity', valueField: 'activity', isGuild: true },
-        { type: 'clanDungeon', name: 'Guild Titanite', valueField: 'dungeonActivity', isGuild: true },
-        { type: 'prestige', name: 'Guild Prestige', valueField: 'score', isGuild: true }
-    ];
-
-    const totalTypes = allRankingTypes.length;
-
-    for (let i = 0; i < allRankingTypes.length; i++) {
-        const rankingDef = allRankingTypes[i];
-        const progress = (i / totalTypes) * 100;
-        const typesRemaining = totalTypes - i;
-        const timeRemaining = Math.ceil(typesRemaining * delaySeconds);
-
-        onProgress(
-            progress,
-            `Fetching ${rankingDef.name} rankings...<br>Progress: ${i}/${totalTypes} types<br>Found: ${allData.length} entries`,
-            timeRemaining
-        );
-
-        try {
-            const response = await SendFunction(JSON.stringify({
-                calls: [{
-                    name: "topGet",
-                    args: {
-                        type: rankingDef.type,
-                        extraId: 0,
-                        serverId: serverId
-                    },
-                    context: {
-                        actionTs: Date.now()
-                    },
-                    ident: "body"
-                }]
-            }));
-
-            if (response?.results?.[0]?.result?.response?.top) {
-                const data = response.results[0].result.response;
-
-                // Build a clan lookup map - handle different structures
-                const clanLookup = {};
-
-                // For clanDungeon and clan: data.clans is an array
-                if (data.clans && Array.isArray(data.clans)) {
-                    data.clans.forEach(clan => {
-                        if (clan.id) {
-                            clanLookup[clan.id] = clan;
-                        }
-                    });
-                }
-                // For prestige: data.items is an object
-                else if (data.items && typeof data.items === 'object') {
-                    Object.entries(data.items).forEach(([clanId, clan]) => {
-                        clanLookup[clanId] = clan;
-                    });
-                }
-
-                data.top.forEach((entry, index) => {
-                    const rank = entry.place || (index + 1);
-                    if (rank >= rankStart && rank <= rankEnd) {
-                        if (rankingDef.isGuild) {
-                            // For prestige, clanId is stored in itemId
-                            const clanId = entry.clanId || entry.itemId || entry.id;
-                            const clanInfo = clanLookup[clanId] || {};
-
-                            // Get the value based on ranking type
-                            let value = 0;
-                            if (rankingDef.type === 'clanDungeon' && entry.dungeonActivity) {
-                                value = parseInt(entry.dungeonActivity) || 0;
-                            } else if (rankingDef.type === 'prestige' && entry.score) {
-                                value = parseInt(entry.score) || 0;
+                            // Show/hide delay section
+                            const delaySection = document.getElementById('delay-section');
+                            if (selectedType === 'rankings' || selectedType === 'allusers' || selectedType === 'allguilds') {
+                                delaySection.style.display = 'block';
                             } else {
-                                value = parseInt(entry[rankingDef.valueField] || 0);
+                                delaySection.style.display = 'none';
+                            }
+                        });
+                        // Handle ranking type change
+                        document.getElementById('ranking-type').addEventListener('change', function() {
+                            if (this.value === 'all') {
+                                const serverStart = document.getElementById('server-start').value;
+                                document.getElementById('server-end').value = serverStart;
+                            }
+                        });
+
+                        // Validate rank inputs
+                        document.getElementById('rank-start').addEventListener('input', function() {
+                            if (this.value > 50) this.value = 50;
+                            if (this.value < 1) this.value = 1;
+                        });
+
+                        document.getElementById('rank-end').addEventListener('input', function() {
+                            if (this.value > 50) this.value = 50;
+                            if (this.value < 1) this.value = 1;
+                        });
+
+                        // Start export handler
+                        document.getElementById('start-export').onclick = async () => {
+                            if (isExporting) return;
+
+                            const exportType = document.getElementById('export-type').value;
+
+                            isExporting = true;
+                            document.getElementById('start-export').disabled = true;
+                            document.getElementById('cancel-export').textContent = 'Stop';
+                            document.getElementById('progress-area').style.display = 'block';
+
+                            try {
+                                switch (exportType) {
+                                    case 'myheroes':
+                                        await exportMyHeroes();
+                                        break;
+                                    case 'rankings':
+                                        await exportRankings();
+                                        break;
+                                    case 'myguildwar':
+                                        await exportMyGuildWar();
+                                        break;
+                                    case 'allusers':
+                                        // Set fileName globally before calling the function
+                                        fileName = `all_top_users_s${document.getElementById('user-server-start').value}-${document.getElementById('user-server-end').value}_${new Date().toISOString().split('T')[0]}.tsv`;
+
+                                        // Call the export function and capture the result
+                                        exportData = await exportAllUsers((progress, text, timeRemaining) => {
+                                            if (!isExporting) throw new Error('Export cancelled');
+                                            document.getElementById('progress-bar').style.width = `${progress}%`;
+                                            document.getElementById('progress-text').innerHTML = text;
+                                            if (timeRemaining !== null) {
+                                                document.getElementById('time-remaining').innerHTML = `Est. time remaining: ${timeRemaining}s`;
+                                            }
+                                        }, isExporting);
+                                        break;
+                                    case 'allguilds':
+                                        // Set fileName globally before calling the function
+                                        fileName = `all_top_guilds_s${document.getElementById('guild-server-start').value}-${document.getElementById('guild-server-end').value}_${new Date().toISOString().split('T')[0]}.tsv`;
+
+                                        // Call the export function and capture the result
+                                        exportData = await exportAllGuilds((progress, text, timeRemaining) => {
+                                            if (!isExporting) throw new Error('Export cancelled');
+                                            document.getElementById('progress-bar').style.width = `${progress}%`;
+                                            document.getElementById('progress-text').innerHTML = text;
+                                            if (timeRemaining !== null) {
+                                                document.getElementById('time-remaining').innerHTML = `Est. time remaining: ${timeRemaining}s`;
+                                            }
+                                        }, isExporting);
+                                        break;
+                                }
+                                // Show results
+                                document.getElementById('progress-area').style.display = 'none';
+                                document.getElementById('result-area').style.display = 'block';
+                                const entryCount = exportData.split('\n').length - 1;
+                                document.getElementById('result-message').innerHTML = `✅ Exported ${entryCount} entries!`;
+
+                                // Hide form controls
+                                document.querySelectorAll('#export-ui > div:not(#result-area):not(:first-child)').forEach(el => {
+                                    el.style.display = 'none';
+                                });
+
+                            } catch (error) {
+                                if (error.message !== 'Export cancelled') {
+                                    alert(`Export failed: ${error.message}`);
+                                }
+                                closeUI();
                             }
 
-                            allData.push({
-                                Type: rankingDef.name,
-                                Rank: rank,
-                                Value: value,
-                                UserName: '',
-                                GuildName: clanInfo.title || clanInfo.name || `Guild ${clanId}`,
-                                UserLevel: '',
-                                GWLeague: '',
-                                UserID: '',
-                                FrameID: '',
-                                AvatarID: '',
-                                GuildID: clanId,
-                                ServerID: serverId,
-                                LastLoginTime: '',
-                                TimeStamp: new Date().toISOString(),
-                                isGuildRanking: 'TRUE'
-                            });
-                        } else {
-                            const userId = entry.userId || entry.id;
-                            const userInfo = data.users?.[userId] || {};
+                            isExporting = false;
+                        };
 
-                            allData.push({
-                                Type: rankingDef.name,
-                                Rank: rank,
-                                Value: parseInt(entry[rankingDef.valueField] || 0),
-                                UserName: userInfo.name || 'Unknown',
-                                GuildName: userInfo.clanTitle || '',
-                                UserLevel: parseInt(userInfo.level || 0),
-                                GWLeague: userInfo.leagueId || '',
-                                UserID: userId,
-                                FrameID: userInfo.frameId || 0,
-                                AvatarID: userInfo.avatarId || '',
-                                GuildID: userInfo.clanId || '',
-                                ServerID: serverId,
-                                LastLoginTime: userInfo.lastLoginTime ?
-                                `=((${userInfo.lastLoginTime}/86400)+25569)` : '',
-                                TimeStamp: new Date().toISOString(),
-                                isGuildRanking: 'FALSE'
-                            });
-                        }
-                    }
-                });
+                        // Export My Heroes function
+                        async function exportMyHeroes() {
+                            document.getElementById('progress-bar').style.width = '50%';
+                            document.getElementById('progress-text').innerHTML = 'Fetching hero data...';
 
-                debugLog(`✓ ${rankingDef.name}: Found ${data.top.length} entries`);
-            }
-        } catch (err) {
-            debugLog(`✗ ${rankingDef.name}: Error`, err);
-        }
+                            const SendFunction = getSend();
+                            const response = await SendFunction('{"calls":[{"name":"heroGetAll","args":{},"ident":"body"}]}');
 
-        if (i < allRankingTypes.length - 1) {
-            await new Promise(r => setTimeout(r, delaySeconds * 1000));
-        }
-    }
+                            if (!response?.results?.[0]?.result?.response) {
+                                throw new Error('No hero data available!');
+                            }
 
-    onProgress(100, `Processing ${allData.length} entries...`, 0);
+                            document.getElementById('progress-bar').style.width = '100%';
+                            document.getElementById('progress-text').innerHTML = 'Processing heroes...';
 
-    if (allData.length === 0) {
-        throw new Error('No data collected!');
-    }
+                            const heroResponse = response.results[0].result.response;
+                            const myHeroes = [];
+                            const timestamp = new Date().toISOString();
+                            const gameData = window.getGameData();
 
-    const headers = [
-        'Type', 'Rank', 'Value', 'UserName', 'GuildName', 'UserLevel',
-        'GWLeague', 'UserID', 'FrameID', 'AvatarID', 'GuildID',
-        'ServerID', 'LastLoginTime', 'TimeStamp', 'isGuildRanking'
-    ];
+                            Object.entries(heroResponse).forEach(([key, hero]) => {
+                                if (hero && hero.id) {
+                                    const heroName = window.itemNameCache?.hero?.[hero.id] || `Hero #${hero.id}`;
+                                    const heroDefinition = gameData?.hero?.[hero.id];
 
-    const delimiter = '\t';
-    const content = [
-        headers.join(delimiter),
-        ...allData.map(row =>
-                       headers.map(header => {
-            const value = row[header];
-            if (value === undefined || value === null) return '';
-            if (typeof value === 'string') {
-                return value.replace(/\t/g, ' ').replace(/\n/g, ' ');
-            }
-            return value;
-        }).join(delimiter)
-                      )
-    ].join('\n');
-
-    return content;
-}
-
-async function exportMyGuildWarData(warData, includeDetails) {
-    const allData = [];
-    const teams = warData.teams || {};
-    const warriors = warData.warriors || {};
-    const slots = warData.slots || {};
-    const league = warData.league || 0;
-
-    // Create a reverse mapping of userId to slots
-    const userToSlots = {};
-    for (const [slot, userId] of Object.entries(slots)) {
-        if (!userToSlots[userId]) {
-            userToSlots[userId] = [];
-        }
-        userToSlots[userId].push(parseInt(slot));
-    }
-
-    // Process ALL teams (not just those in slots)
-    for (const [userId, teamData] of Object.entries(teams)) {
-        if (!teamData) continue;
-
-        const isChampion = warriors[userId] === 1;
-        const assignedSlots = userToSlots[userId] || [];
-        const slotsString = assignedSlots.length > 0 ? assignedSlots.sort((a, b) => a - b).join(',') : 'BACKUP';
-
-        // Hero defense
-        if (teamData.clanDefence_heroes?.units) {
-            const heroes = Object.values(teamData.clanDefence_heroes.units);
-            const heroUnits = heroes.filter(u => u.type !== 'pet');
-            const pet = heroes.find(u => u.type === 'pet');
-            const banner = teamData.clanDefence_heroes.banner;
-            const totalPower = heroes.reduce((sum, unit) => sum + (unit.power || 0), 0);
-
-            const row = {
-                timestamp: new Date().toISOString(),
-                userId: userId,
-                slots: slotsString,
-                slotCount: assignedSlots.length,
-                isChampion: isChampion ? 'YES' : 'NO',
-                isBackup: assignedSlots.length === 0 ? 'YES' : 'NO',
-                defenseType: 'Heroes',
-                totalPower: totalPower,
-                bannerId: banner?.id || '',
-                bannerSlots: banner?.slots ? (Array.isArray(banner.slots) ? banner.slots.join(',') : Object.values(banner.slots).join(',')) : ''
-            };
-
-            // Add hero details
-            heroUnits.forEach((hero, idx) => {
-                row[`hero${idx+1}Id`] = hero.id || '';
-                row[`hero${idx+1}Power`] = hero.power || '';
-                row[`hero${idx+1}Level`] = hero.level || '';
-                row[`hero${idx+1}Color`] = hero.color || '';
-                row[`hero${idx+1}Star`] = hero.star || '';
-
-                if (includeDetails) {
-                    row[`hero${idx+1}Skills`] = hero.skills ? Object.keys(hero.skills).join(',') : '';
-                    row[`hero${idx+1}Artifacts`] = hero.artifacts ? Object.keys(hero.artifacts).join(',') : '';
-                }
-            });
-
-            // Fill empty hero slots
-            for (let i = heroUnits.length; i < 5; i++) {
-                row[`hero${i+1}Id`] = '';
-                row[`hero${i+1}Power`] = '';
-                row[`hero${i+1}Level`] = '';
-                row[`hero${i+1}Color`] = '';
-                row[`hero${i+1}Star`] = '';
-                if (includeDetails) {
-                    row[`hero${i+1}Skills`] = '';
-                    row[`hero${i+1}Artifacts`] = '';
-                }
-            }
-
-            // Add pet details
-            row['petId'] = pet?.id || '';
-            row['petPower'] = pet?.power || '';
-            row['petLevel'] = pet?.level || '';
-            row['petColor'] = pet?.color || '';
-            row['petStar'] = pet?.star || '';
-
-            allData.push(row);
-        }
-
-        // Titan defense
-        if (teamData.clanDefence_titans?.units) {
-            const titans = Object.values(teamData.clanDefence_titans.units);
-            const totalPower = titans.reduce((sum, unit) => sum + (unit.power || 0), 0);
-
-            const row = {
-                timestamp: new Date().toISOString(),
-                userId: userId,
-                slots: slotsString,
-                slotCount: assignedSlots.length,
-                isChampion: isChampion ? 'YES' : 'NO',
-                isBackup: assignedSlots.length === 0 ? 'YES' : 'NO',
-                defenseType: 'Titans',
-                totalPower: totalPower,
-                bannerId: '',
-                bannerSlots: ''
-            };
-
-            // Add titan details
-            titans.forEach((titan, idx) => {
-                row[`titan${idx+1}Id`] = titan.id || '';
-                row[`titan${idx+1}Power`] = titan.power || '';
-                row[`titan${idx+1}Level`] = titan.level || '';
-                row[`titan${idx+1}Star`] = titan.star || '';
-                row[`titan${idx+1}Element`] = titan.element || '';
-                row[`titan${idx+1}ElementLevel`] = titan.elementSpiritLevel || '';
-                row[`titan${idx+1}ElementStar`] = titan.elementSpiritStar || '';
-
-                if (includeDetails) {
-                    row[`titan${idx+1}Artifacts`] = titan.artifacts ? Object.keys(titan.artifacts).join(',') : '';
-                }
-            });
-
-            // Fill empty titan slots
-            for (let i = titans.length; i < 5; i++) {
-                row[`titan${i+1}Id`] = '';
-                row[`titan${i+1}Power`] = '';
-                row[`titan${i+1}Level`] = '';
-                row[`titan${i+1}Star`] = '';
-                row[`titan${i+1}Element`] = '';
-                row[`titan${i+1}ElementLevel`] = '';
-                row[`titan${i+1}ElementStar`] = '';
-                if (includeDetails) {
-                    row[`titan${i+1}Artifacts`] = '';
-                }
-            }
-
-            allData.push(row);
-        }
-    }
-
-    // Sort by: active defenders first, then backups, then by userId
-    allData.sort((a, b) => {
-        // Active defenders before backups
-        if (a.isBackup !== b.isBackup) {
-            return a.isBackup === 'YES' ? 1 : -1;
-        }
-        // Then by userId
-        if (a.userId !== b.userId) {
-            return parseInt(a.userId) - parseInt(b.userId);
-        }
-        // Then by defense type
-        return a.defenseType.localeCompare(b.defenseType);
-    });
-
-    // Create headers dynamically based on defense type
-    let headers = ['Timestamp', 'UserID', 'Slots', 'SlotCount', 'IsChampion', 'IsBackup', 'DefenseType', 'TotalPower', 'BannerId', 'BannerSlots'];
-
-    // Add unit-specific headers
-    const hasHeroes = allData.some(row => row.defenseType === 'Heroes');
-    const hasTitans = allData.some(row => row.defenseType === 'Titans');
-
-    if (hasHeroes) {
-        for (let i = 1; i <= 5; i++) {
-            headers.push(`Hero${i}Id`, `Hero${i}Power`, `Hero${i}Level`, `Hero${i}Color`, `Hero${i}Star`);
-            if (includeDetails) {
-                headers.push(`Hero${i}Skills`, `Hero${i}Artifacts`);
-            }
-        }
-        headers.push('PetId', 'PetPower', 'PetLevel', 'PetColor', 'PetStar');
-    }
-
-    if (hasTitans) {
-        for (let i = 1; i <= 5; i++) {
-            headers.push(`Titan${i}Id`, `Titan${i}Power`, `Titan${i}Level`, `Titan${i}Star`,
-                         `Titan${i}Element`, `Titan${i}ElementLevel`, `Titan${i}ElementStar`);
-            if (includeDetails) {
-                headers.push(`Titan${i}Artifacts`);
-            }
-        }
-    }
-
-    const rows = [headers.join('\t')];
-
-    // Add data rows with fixed UserID mapping
-    allData.forEach(row => {
-        const values = headers.map(header => {
-            // Special case for UserID
-            if (header === 'UserID') {
-                return row['userId'] !== undefined ? row['userId'] : '';
-            }
-            // Special case for Slots
-            if (header === 'Slots') {
-                return row['slots'] !== undefined ? row['slots'] : '';
-            }
-            // Special case for SlotCount
-            if (header === 'SlotCount') {
-                return row['slotCount'] !== undefined ? row['slotCount'] : '';
-            }
-            // Special case for IsChampion
-            if (header === 'IsChampion') {
-                return row['isChampion'] !== undefined ? row['isChampion'] : '';
-            }
-            // Special case for IsBackup
-            if (header === 'IsBackup') {
-                return row['isBackup'] !== undefined ? row['isBackup'] : '';
-            }
-            // For other headers, lowercase the first character
-            const key = header.charAt(0).toLowerCase() + header.slice(1);
-            return row[key] !== undefined ? row[key] : '';
-        });
-        rows.push(values.join('\t'));
-    });
-
-    return rows.join('\n');
-}
-// Export All Users function - WITH PROGRESSIVE SORTING
-async function exportAllUsers(onProgress, isExportingRef) {
-    const serverStart = parseInt(document.getElementById('user-server-start').value);
-    const serverEnd = parseInt(document.getElementById('user-server-end').value);
-    const delaySeconds = parseFloat(document.getElementById('delay').value);
-
-    if (serverEnd < serverStart) {
-        throw new Error('Invalid server range!');
-    }
-
-    const SendFunction = getSend();
-    const allUsers = [];
-    const globalUserMap = new Map();
-
-    const rankingTypes = [
-        { type: 'power', name: 'Hero Power' },
-        { type: 'titanPower', name: 'Titan Power' },
-        { type: 'arena', name: 'Arena' },
-        { type: 'grand', name: 'Grand Arena' },
-        { type: 'dungeonFloor', name: 'Dungeon Floor' }
-    ];
-
-    const totalRequests = (serverEnd - serverStart + 1) * rankingTypes.length;
-    let completedRequests = 0;
-
-    for (let serverId = serverStart; serverId <= serverEnd && isExportingRef; serverId++) {
-        const serverUserMap = new Map();
-
-        for (const ranking of rankingTypes) {
-            if (!isExportingRef) break;
-
-            const progress = (completedRequests / totalRequests) * 100;
-            const timeRemaining = Math.ceil((totalRequests - completedRequests) * delaySeconds);
-
-            onProgress(
-                progress,
-                `Server ${serverId}/${serverEnd} - ${ranking.name}<br>Server users: ${serverUserMap.size} | Total unique users: ${globalUserMap.size}`,
-                timeRemaining
-            );
-
-            try {
-                const response = await SendFunction(JSON.stringify({
-                    calls: [{
-                        name: "topGet",
-                        args: {
-                            type: ranking.type,
-                            extraId: 0,
-                            serverId: serverId
-                        },
-                        context: { actionTs: Date.now() },
-                        ident: "body"
-                    }]
-                }));
-
-                if (response?.results?.[0]?.result?.response?.top) {
-                    const data = response.results[0].result.response;
-
-                    data.top.slice(0, 50).forEach((entry, index) => {
-                        const userId = entry.userId || entry.id;
-                        const userInfo = data.users?.[userId];
-
-                        if (userInfo) {
-                            if (!globalUserMap.has(userId)) {
-                                const userData = {
-                                    rankings: {},
-                                    servers: new Set([serverId]),
-                                    userData: {
-                                        id: userId,
-                                        name: userInfo.name || 'Unknown',
-                                        level: parseInt(userInfo.level || 0),
-                                        clanId: userInfo.clanId || '',
-                                        clanTitle: userInfo.clanTitle || '',
-                                        clanRole: userInfo.clanRole || '',
-                                        clanIcon: userInfo.clanIcon || {},
-                                        avatarId: userInfo.avatarId || '',
-                                        frameId: userInfo.frameId || 0,
-                                        commander: userInfo.commander ? 'YES' : 'NO',
-                                        leagueId: userInfo.leagueId || '',
-                                        lastLoginTime: userInfo.lastLoginTime || '',
-                                        isChatModerator: userInfo.isChatModerator ? 'YES' : 'NO',
-                                        allowPm: userInfo.allowPm || '',
-                                        mainServer: userInfo.serverId || serverId
+                                    let gameMaxStar = 6;
+                                    if (heroDefinition?.stars) {
+                                        const availableStars = Object.keys(heroDefinition.stars).map(Number);
+                                        gameMaxStar = Math.max(...availableStars, 6);
                                     }
-                                };
 
-                                userData.rankings[ranking.type] = {
-                                    rank: entry.place || (index + 1),
-                                    value: parseInt(entry.sumPower || entry.maxFloorNum || 0),
-                                    server: serverId
-                                };
+                                    const flatHero = {
+                                        timestamp: timestamp,
+                                        id: hero.id,
+                                        name: heroName,
+                                        level: hero.level || 0,
+                                        star: hero.star || 0,
+                                        absoluteStar: hero.absoluteStar || 0,
+                                        color: hero.color || 0,
+                                        power: hero.power || 0,
+                                        xp: hero.xp || 0,
+                                        characterType: heroDefinition?.characterType || '',
+                                        role: heroDefinition?.role || '',
+                                        mainStat: heroDefinition?.mainStat || '',
+                                        skills: hero.skills ? Object.entries(hero.skills).map(([k,v]) => `${k}:${v}`).join(';') : '',
+                                        runes: hero.runes ? hero.runes.join(';') : '',
+                                        runeCount: hero.runes ? hero.runes.length : 0,
+                                        skins: hero.skins ? Object.keys(hero.skins).join(';') : '',
+                                        skinCount: hero.skins ? Object.keys(hero.skins).length : 0,
+                                        currentSkin: hero.currentSkin || 'default',
+                                        artifacts: hero.artifacts ? hero.artifacts.join(';') : '',
+                                        artifactCount: hero.artifacts ? hero.artifacts.length : 0,
+                                        slots: hero.slots ? Object.keys(hero.slots).join(';') : '',
+                                        slotCount: hero.slots ? Object.keys(hero.slots).length : 0,
+                                        titanGiftLevel: hero.titanGiftLevel || 0,
+                                        petId: hero.petId || 0,
+                                        isMaxLevel: hero.level === 130,
+                                        isMaxStar: hero.star === gameMaxStar,
+                                        starsToMax: gameMaxStar - hero.star,
+                                        canGetMoreStars: hero.star < gameMaxStar
+                                    };
 
-                                serverUserMap.set(userId, userData);
-                                globalUserMap.set(userId, userData);
+                                    myHeroes.push(flatHero);
+                                }
+                            });
+
+                            myHeroes.sort((a, b) => Number(a.id) - Number(b.id));
+
+                            const headers = Object.keys(myHeroes[0]);
+                            exportData = [
+                                headers.join('\t'),
+                                ...myHeroes.map(hero =>
+                                                headers.map(header => {
+                                    const value = hero[header];
+                                    return value === null || value === undefined ? '' : String(value);
+                                }).join('\t')
+                                               )
+                            ].join('\n');
+
+                            fileName = `my_heroes_${new Date().toISOString().split('T')[0]}.tsv`;
+                        }
+
+                        // Export Rankings function
+                        async function exportRankings() {
+                            const rankingType = document.getElementById('ranking-type').value;
+                            const serverStart = parseInt(document.getElementById('server-start').value);
+                            const serverEnd = parseInt(document.getElementById('server-end').value);
+                            const rankStart = parseInt(document.getElementById('rank-start').value);
+                            const rankEnd = parseInt(document.getElementById('rank-end').value);
+                            const delaySeconds = parseFloat(document.getElementById('delay').value);
+
+                            localStorage.setItem('hwh_lastRankingServer', serverStart);
+
+                            if (serverEnd < serverStart || rankEnd < rankStart) {
+                                throw new Error('Invalid range!');
+                            }
+
+                            if (rankingType === 'all' && serverStart !== serverEnd) {
+                                document.getElementById('server-end').value = serverStart;
+                                throw new Error('All Rankings option requires a single server!');
+                            }
+
+                            fileName = `rankings_${rankingType}_s${serverStart}-${serverEnd}_r${rankStart}-${rankEnd}_${new Date().toISOString().split('T')[0]}.tsv`;
+
+                            const rankingTypes = {
+                                'power': { name: 'Hero Power', valueField: 'sumPower', isGuild: false },
+                                'titanPower': { name: 'Titan Power', valueField: 'sumPower', isGuild: false },
+                                'dungeonFloor': { name: 'Dungeon Floor', valueField: 'maxFloorNum', isGuild: false },
+                                'arena': { name: 'Arena', valueField: 'sumPower', isGuild: false },
+                                'grand': { name: 'Grand Arena', valueField: 'sumPower', isGuild: false },
+                                'clan': { name: 'Guild Activity', valueField: 'activity', isGuild: true },
+                                'clanDungeon': { name: 'Guild Titanite', valueField: 'dungeonActivity', isGuild: true },
+                                'prestige': { name: 'Guild Prestige', valueField: 'score', isGuild: true }
+                            };
+
+                            if (rankingType === 'all') {
+                                exportData = await exportAllRankingsData({
+                                    serverId: serverStart,
+                                    rankStart,
+                                    rankEnd,
+                                    delaySeconds,
+                                    onProgress: (progress, text, timeRemaining) => {
+                                        if (!isExporting) throw new Error('Export cancelled');
+                                        document.getElementById('progress-bar').style.width = `${progress}%`;
+                                        document.getElementById('progress-text').innerHTML = text;
+                                        if (timeRemaining !== null) {
+                                            document.getElementById('time-remaining').innerHTML = `Est. time remaining: ${timeRemaining}s`;
+                                        }
+                                    }
+                                });
                             } else {
-                                const existingUser = globalUserMap.get(userId);
-                                existingUser.servers.add(serverId);
-                                existingUser.rankings[ranking.type] = {
-                                    rank: entry.place || (index + 1),
-                                    value: parseInt(entry.sumPower || entry.maxFloorNum || 0),
-                                    server: serverId
+                                exportData = await exportRankingsData({
+                                    rankingType,
+                                    serverStart,
+                                    serverEnd,
+                                    rankStart,
+                                    rankEnd,
+                                    delaySeconds,
+                                    rankingDef: rankingTypes[rankingType],
+                                    onProgress: (progress, text, timeRemaining) => {
+                                        if (!isExporting) throw new Error('Export cancelled');
+                                        document.getElementById('progress-bar').style.width = `${progress}%`;
+                                        document.getElementById('progress-text').innerHTML = text;
+                                        if (timeRemaining !== null) {
+                                            document.getElementById('time-remaining').innerHTML = `Est. time remaining: ${timeRemaining}s`;
+                                        }
+                                    }
+                                });
+                            }
+                        }
+
+                        // Export My Guild War function
+                        async function exportMyGuildWar() {
+                            const includeDetails = document.getElementById('include-war-details').checked;
+
+                            document.getElementById('progress-bar').style.width = '50%';
+                            document.getElementById('progress-text').innerHTML = 'Fetching guild war data...';
+
+                            const SendFunction = getSend();
+                            const response = await SendFunction(JSON.stringify({
+                                calls: [{
+                                    name: "clanWarGetDefence",
+                                    args: {},
+                                    context: {
+                                        actionTs: Date.now()
+                                    },
+                                    ident: "body"
+                                }]
+                            }));
+
+                            document.getElementById('progress-bar').style.width = '100%';
+                            document.getElementById('progress-text').innerHTML = 'Processing data...';
+
+                            if (!response?.results?.[0]?.result?.response) {
+                                throw new Error('No war defense data found');
+                            }
+
+                            const warData = response.results[0].result.response;
+                            exportData = await exportMyGuildWarData(warData, includeDetails);
+                            fileName = `my_guild_war_defense_${new Date().toISOString().split('T')[0]}.tsv`;
+                        }
+
+                        // Copy button handler
+                        document.getElementById('copy-button').onclick = () => {
+                            const textarea = document.createElement('textarea');
+                            textarea.value = exportData;
+                            textarea.style.position = 'fixed';
+                            textarea.style.opacity = '0';
+                            document.body.appendChild(textarea);
+                            textarea.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(textarea);
+
+                            const btn = document.getElementById('copy-button');
+                            btn.innerHTML = '✅ Copied!';
+                            setTimeout(() => {
+                                if (document.getElementById('copy-button')) {
+                                    btn.innerHTML = '📋 Copy to Clipboard';
+                                }
+                            }, 2000);
+                        };
+
+                        // In the download button handler:
+                        document.getElementById('download-button').onclick = () => {
+                            const blob = new Blob([exportData], { type: 'text/tab-separated-values;charset=utf-8' });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = window.exportFileName || fileName || 'export.tsv'; // Use saved filename
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+
+                            const btn = document.getElementById('download-button');
+                            btn.innerHTML = '✅ Downloaded!';
+                            setTimeout(() => {
+                                if (document.getElementById('download-button')) {
+                                    btn.innerHTML = '💾 Download File';
+                                }
+                            }, 2000);
+                        };
+                    }
+
+                    // In the exportRankingsData function, update the part that processes guild rankings:
+
+                    // Updated exportRankingsData function with complete clan data handling:
+
+                    async function exportRankingsData(options) {
+                        const {
+                            rankingType,
+                            serverStart,
+                            serverEnd,
+                            rankStart,
+                            rankEnd,
+                            delaySeconds,
+                            rankingDef,
+                            onProgress
+                        } = options;
+
+                        const SendFunction = getSend();
+                        const allData = [];
+                        const totalServers = serverEnd - serverStart + 1;
+
+                        for (let serverId = serverStart; serverId <= serverEnd; serverId++) {
+                            const progress = ((serverId - serverStart) / totalServers) * 100;
+                            const serversRemaining = serverEnd - serverId + 1;
+                            const timeRemaining = Math.ceil(serversRemaining * delaySeconds);
+
+                            onProgress(
+                                progress,
+                                `Fetching server ${serverId} of ${serverEnd}...<br>Found: ${allData.length} entries`,
+                                timeRemaining
+                            );
+
+                            try {
+                                const response = await SendFunction(JSON.stringify({
+                                    calls: [{
+                                        name: "topGet",
+                                        args: {
+                                            type: rankingType,
+                                            extraId: 0,
+                                            serverId: serverId
+                                        },
+                                        context: {
+                                            actionTs: Date.now()
+                                        },
+                                        ident: "body"
+                                    }]
+                                }));
+
+                                if (response?.results?.[0]?.result?.response?.top) {
+                                    const data = response.results[0].result.response;
+
+                                    // Build a clan lookup map - handle different structures
+                                    const clanLookup = {};
+
+                                    // For clanDungeon and clan: data.clans is an array
+                                    if (data.clans && Array.isArray(data.clans)) {
+                                        data.clans.forEach(clan => {
+                                            if (clan.id) {
+                                                clanLookup[clan.id] = clan;
+                                            }
+                                        });
+                                    }
+                                    // For prestige: data.items is an object
+                                    else if (data.items && typeof data.items === 'object') {
+                                        Object.entries(data.items).forEach(([clanId, clan]) => {
+                                            clanLookup[clanId] = clan;
+                                        });
+                                    }
+
+                                    data.top.forEach((entry, index) => {
+                                        const rank = entry.place || (index + 1);
+                                        if (rank >= rankStart && rank <= rankEnd) {
+                                            if (rankingDef.isGuild) {
+                                                // For prestige, clanId is stored in itemId
+                                                const clanId = entry.clanId || entry.itemId || entry.id;
+                                                const clanInfo = clanLookup[clanId] || {};
+
+                                                // Get the value based on ranking type
+                                                let value = 0;
+                                                if (rankingType === 'clanDungeon' && entry.dungeonActivity) {
+                                                    value = parseInt(entry.dungeonActivity) || 0;
+                                                } else if (rankingType === 'prestige' && entry.score) {
+                                                    value = parseInt(entry.score) || 0;
+                                                } else {
+                                                    value = parseInt(entry[rankingDef.valueField] || 0);
+                                                }
+
+                                                allData.push({
+                                                    Type: rankingDef.name,
+                                                    Rank: rank,
+                                                    Value: value,
+                                                    UserName: '',
+                                                    GuildName: clanInfo.title || clanInfo.name || `Guild ${clanId}`,
+                                                    UserLevel: '',
+                                                    GWLeague: '',
+                                                    UserID: '',
+                                                    FrameID: '',
+                                                    AvatarID: '',
+                                                    GuildID: clanId,
+                                                    ServerID: serverId,
+                                                    LastLoginTime: '',
+                                                    TimeStamp: new Date().toISOString(),
+                                                    isGuildRanking: 'TRUE'
+                                                });
+                                            } else {
+                                                const userId = entry.userId || entry.id;
+                                                const userInfo = data.users?.[userId] || {};
+
+                                                allData.push({
+                                                    Type: rankingDef.name,
+                                                    Rank: rank,
+                                                    Value: parseInt(entry[rankingDef.valueField] || 0),
+                                                    UserName: userInfo.name || 'Unknown',
+                                                    GuildName: userInfo.clanTitle || '',
+                                                    UserLevel: parseInt(userInfo.level || 0),
+                                                    GWLeague: userInfo.leagueId || '',
+                                                    UserID: userId,
+                                                    FrameID: userInfo.frameId || 0,
+                                                    AvatarID: userInfo.avatarId || '',
+                                                    GuildID: userInfo.clanId || '',
+                                                    ServerID: serverId,
+                                                    LastLoginTime: userInfo.lastLoginTime ?
+                                                    `=((${userInfo.lastLoginTime}/86400)+25569)` : '',
+                                                    TimeStamp: new Date().toISOString(),
+                                                    isGuildRanking: 'FALSE'
+                                                });
+                                            }
+                                        }
+                                    });
+
+                                    debugLog(`✓ Server ${serverId}: Found ${data.top.length} entries`);
+                                }
+                            } catch (err) {
+                                debugLog(`✗ Server ${serverId}: Error`, err);
+                            }
+
+                            if (serverId < serverEnd) {
+                                await new Promise(r => setTimeout(r, delaySeconds * 1000));
+                            }
+                        }
+
+                        onProgress(100, `Processing ${allData.length} entries...`, 0);
+
+                        if (allData.length === 0) {
+                            throw new Error('No data collected!');
+                        }
+
+                        const headers = [
+                            'Type', 'Rank', 'Value', 'UserName', 'GuildName', 'UserLevel',
+                            'GWLeague', 'UserID', 'FrameID', 'AvatarID', 'GuildID',
+                            'ServerID', 'LastLoginTime', 'TimeStamp', 'isGuildRanking'
+                        ];
+
+                        const delimiter = '\t';
+                        const content = [
+                            headers.join(delimiter),
+                            ...allData.map(row =>
+                                           headers.map(header => {
+                                const value = row[header];
+                                if (value === undefined || value === null) return '';
+                                if (typeof value === 'string') {
+                                    return value.replace(/\t/g, ' ').replace(/\n/g, ' ');
+                                }
+                                return value;
+                            }).join(delimiter)
+                                          )
+                        ].join('\n');
+
+                        return content;
+                    }
+
+                    // Updated exportAllRankingsData function with complete clan data handling:
+
+                    async function exportAllRankingsData(options) {
+                        const {
+                            serverId,
+                            rankStart,
+                            rankEnd,
+                            delaySeconds,
+                            onProgress
+                        } = options;
+
+                        const SendFunction = getSend();
+                        const allData = [];
+                        const allRankingTypes = [
+                            { type: 'power', name: 'Hero Power', valueField: 'sumPower', isGuild: false },
+                            { type: 'titanPower', name: 'Titan Power', valueField: 'sumPower', isGuild: false },
+                            { type: 'dungeonFloor', name: 'Dungeon Floor', valueField: 'maxFloorNum', isGuild: false },
+                            { type: 'arena', name: 'Arena', valueField: 'sumPower', isGuild: false },
+                            { type: 'grand', name: 'Grand Arena', valueField: 'sumPower', isGuild: false },
+                            { type: 'clan', name: 'Guild Activity', valueField: 'activity', isGuild: true },
+                            { type: 'clanDungeon', name: 'Guild Titanite', valueField: 'dungeonActivity', isGuild: true },
+                            { type: 'prestige', name: 'Guild Prestige', valueField: 'score', isGuild: true }
+                        ];
+
+                        const totalTypes = allRankingTypes.length;
+
+                        for (let i = 0; i < allRankingTypes.length; i++) {
+                            const rankingDef = allRankingTypes[i];
+                            const progress = (i / totalTypes) * 100;
+                            const typesRemaining = totalTypes - i;
+                            const timeRemaining = Math.ceil(typesRemaining * delaySeconds);
+
+                            onProgress(
+                                progress,
+                                `Fetching ${rankingDef.name} rankings...<br>Progress: ${i}/${totalTypes} types<br>Found: ${allData.length} entries`,
+                                timeRemaining
+                            );
+
+                            try {
+                                const response = await SendFunction(JSON.stringify({
+                                    calls: [{
+                                        name: "topGet",
+                                        args: {
+                                            type: rankingDef.type,
+                                            extraId: 0,
+                                            serverId: serverId
+                                        },
+                                        context: {
+                                            actionTs: Date.now()
+                                        },
+                                        ident: "body"
+                                    }]
+                                }));
+
+                                if (response?.results?.[0]?.result?.response?.top) {
+                                    const data = response.results[0].result.response;
+
+                                    // Build a clan lookup map - handle different structures
+                                    const clanLookup = {};
+
+                                    // For clanDungeon and clan: data.clans is an array
+                                    if (data.clans && Array.isArray(data.clans)) {
+                                        data.clans.forEach(clan => {
+                                            if (clan.id) {
+                                                clanLookup[clan.id] = clan;
+                                            }
+                                        });
+                                    }
+                                    // For prestige: data.items is an object
+                                    else if (data.items && typeof data.items === 'object') {
+                                        Object.entries(data.items).forEach(([clanId, clan]) => {
+                                            clanLookup[clanId] = clan;
+                                        });
+                                    }
+
+                                    data.top.forEach((entry, index) => {
+                                        const rank = entry.place || (index + 1);
+                                        if (rank >= rankStart && rank <= rankEnd) {
+                                            if (rankingDef.isGuild) {
+                                                // For prestige, clanId is stored in itemId
+                                                const clanId = entry.clanId || entry.itemId || entry.id;
+                                                const clanInfo = clanLookup[clanId] || {};
+
+                                                // Get the value based on ranking type
+                                                let value = 0;
+                                                if (rankingDef.type === 'clanDungeon' && entry.dungeonActivity) {
+                                                    value = parseInt(entry.dungeonActivity) || 0;
+                                                } else if (rankingDef.type === 'prestige' && entry.score) {
+                                                    value = parseInt(entry.score) || 0;
+                                                } else {
+                                                    value = parseInt(entry[rankingDef.valueField] || 0);
+                                                }
+
+                                                allData.push({
+                                                    Type: rankingDef.name,
+                                                    Rank: rank,
+                                                    Value: value,
+                                                    UserName: '',
+                                                    GuildName: clanInfo.title || clanInfo.name || `Guild ${clanId}`,
+                                                    UserLevel: '',
+                                                    GWLeague: '',
+                                                    UserID: '',
+                                                    FrameID: '',
+                                                    AvatarID: '',
+                                                    GuildID: clanId,
+                                                    ServerID: serverId,
+                                                    LastLoginTime: '',
+                                                    TimeStamp: new Date().toISOString(),
+                                                    isGuildRanking: 'TRUE'
+                                                });
+                                            } else {
+                                                const userId = entry.userId || entry.id;
+                                                const userInfo = data.users?.[userId] || {};
+
+                                                allData.push({
+                                                    Type: rankingDef.name,
+                                                    Rank: rank,
+                                                    Value: parseInt(entry[rankingDef.valueField] || 0),
+                                                    UserName: userInfo.name || 'Unknown',
+                                                    GuildName: userInfo.clanTitle || '',
+                                                    UserLevel: parseInt(userInfo.level || 0),
+                                                    GWLeague: userInfo.leagueId || '',
+                                                    UserID: userId,
+                                                    FrameID: userInfo.frameId || 0,
+                                                    AvatarID: userInfo.avatarId || '',
+                                                    GuildID: userInfo.clanId || '',
+                                                    ServerID: serverId,
+                                                    LastLoginTime: userInfo.lastLoginTime ?
+                                                    `=((${userInfo.lastLoginTime}/86400)+25569)` : '',
+                                                    TimeStamp: new Date().toISOString(),
+                                                    isGuildRanking: 'FALSE'
+                                                });
+                                            }
+                                        }
+                                    });
+
+                                    debugLog(`✓ ${rankingDef.name}: Found ${data.top.length} entries`);
+                                }
+                            } catch (err) {
+                                debugLog(`✗ ${rankingDef.name}: Error`, err);
+                            }
+
+                            if (i < allRankingTypes.length - 1) {
+                                await new Promise(r => setTimeout(r, delaySeconds * 1000));
+                            }
+                        }
+
+                        onProgress(100, `Processing ${allData.length} entries...`, 0);
+
+                        if (allData.length === 0) {
+                            throw new Error('No data collected!');
+                        }
+
+                        const headers = [
+                            'Type', 'Rank', 'Value', 'UserName', 'GuildName', 'UserLevel',
+                            'GWLeague', 'UserID', 'FrameID', 'AvatarID', 'GuildID',
+                            'ServerID', 'LastLoginTime', 'TimeStamp', 'isGuildRanking'
+                        ];
+
+                        const delimiter = '\t';
+                        const content = [
+                            headers.join(delimiter),
+                            ...allData.map(row =>
+                                           headers.map(header => {
+                                const value = row[header];
+                                if (value === undefined || value === null) return '';
+                                if (typeof value === 'string') {
+                                    return value.replace(/\t/g, ' ').replace(/\n/g, ' ');
+                                }
+                                return value;
+                            }).join(delimiter)
+                                          )
+                        ].join('\n');
+
+                        return content;
+                    }
+
+                    async function exportMyGuildWarData(warData, includeDetails) {
+                        const allData = [];
+                        const teams = warData.teams || {};
+                        const warriors = warData.warriors || {};
+                        const slots = warData.slots || {};
+                        const league = warData.league || 0;
+
+                        // Create a reverse mapping of userId to slots
+                        const userToSlots = {};
+                        for (const [slot, userId] of Object.entries(slots)) {
+                            if (!userToSlots[userId]) {
+                                userToSlots[userId] = [];
+                            }
+                            userToSlots[userId].push(parseInt(slot));
+                        }
+
+                        // Process ALL teams (not just those in slots)
+                        for (const [userId, teamData] of Object.entries(teams)) {
+                            if (!teamData) continue;
+
+                            const isChampion = warriors[userId] === 1;
+                            const assignedSlots = userToSlots[userId] || [];
+                            const slotsString = assignedSlots.length > 0 ? assignedSlots.sort((a, b) => a - b).join(',') : 'BACKUP';
+
+                            // Hero defense
+                            if (teamData.clanDefence_heroes?.units) {
+                                const heroes = Object.values(teamData.clanDefence_heroes.units);
+                                const heroUnits = heroes.filter(u => u.type !== 'pet');
+                                const pet = heroes.find(u => u.type === 'pet');
+                                const banner = teamData.clanDefence_heroes.banner;
+                                const totalPower = heroes.reduce((sum, unit) => sum + (unit.power || 0), 0);
+
+                                const row = {
+                                    timestamp: new Date().toISOString(),
+                                    userId: userId,
+                                    slots: slotsString,
+                                    slotCount: assignedSlots.length,
+                                    isChampion: isChampion ? 'YES' : 'NO',
+                                    isBackup: assignedSlots.length === 0 ? 'YES' : 'NO',
+                                    defenseType: 'Heroes',
+                                    totalPower: totalPower,
+                                    bannerId: banner?.id || '',
+                                    bannerSlots: banner?.slots ? (Array.isArray(banner.slots) ? banner.slots.join(',') : Object.values(banner.slots).join(',')) : ''
                                 };
 
-                                if (!serverUserMap.has(userId)) {
-                                    serverUserMap.set(userId, existingUser);
+                                // Add hero details
+                                heroUnits.forEach((hero, idx) => {
+                                    row[`hero${idx+1}Id`] = hero.id || '';
+                                    row[`hero${idx+1}Power`] = hero.power || '';
+                                    row[`hero${idx+1}Level`] = hero.level || '';
+                                    row[`hero${idx+1}Color`] = hero.color || '';
+                                    row[`hero${idx+1}Star`] = hero.star || '';
+
+                                    if (includeDetails) {
+                                        row[`hero${idx+1}Skills`] = hero.skills ? Object.keys(hero.skills).join(',') : '';
+                                        row[`hero${idx+1}Artifacts`] = hero.artifacts ? Object.keys(hero.artifacts).join(',') : '';
+                                    }
+                                });
+
+                                // Fill empty hero slots
+                                for (let i = heroUnits.length; i < 5; i++) {
+                                    row[`hero${i+1}Id`] = '';
+                                    row[`hero${i+1}Power`] = '';
+                                    row[`hero${i+1}Level`] = '';
+                                    row[`hero${i+1}Color`] = '';
+                                    row[`hero${i+1}Star`] = '';
+                                    if (includeDetails) {
+                                        row[`hero${i+1}Skills`] = '';
+                                        row[`hero${i+1}Artifacts`] = '';
+                                    }
+                                }
+
+                                // Add pet details
+                                row['petId'] = pet?.id || '';
+                                row['petPower'] = pet?.power || '';
+                                row['petLevel'] = pet?.level || '';
+                                row['petColor'] = pet?.color || '';
+                                row['petStar'] = pet?.star || '';
+
+                                allData.push(row);
+                            }
+
+                            // Titan defense
+                            if (teamData.clanDefence_titans?.units) {
+                                const titans = Object.values(teamData.clanDefence_titans.units);
+                                const totalPower = titans.reduce((sum, unit) => sum + (unit.power || 0), 0);
+
+                                const row = {
+                                    timestamp: new Date().toISOString(),
+                                    userId: userId,
+                                    slots: slotsString,
+                                    slotCount: assignedSlots.length,
+                                    isChampion: isChampion ? 'YES' : 'NO',
+                                    isBackup: assignedSlots.length === 0 ? 'YES' : 'NO',
+                                    defenseType: 'Titans',
+                                    totalPower: totalPower,
+                                    bannerId: '',
+                                    bannerSlots: ''
+                                };
+
+                                // Add titan details
+                                titans.forEach((titan, idx) => {
+                                    row[`titan${idx+1}Id`] = titan.id || '';
+                                    row[`titan${idx+1}Power`] = titan.power || '';
+                                    row[`titan${idx+1}Level`] = titan.level || '';
+                                    row[`titan${idx+1}Star`] = titan.star || '';
+                                    row[`titan${idx+1}Element`] = titan.element || '';
+                                    row[`titan${idx+1}ElementLevel`] = titan.elementSpiritLevel || '';
+                                    row[`titan${idx+1}ElementStar`] = titan.elementSpiritStar || '';
+
+                                    if (includeDetails) {
+                                        row[`titan${idx+1}Artifacts`] = titan.artifacts ? Object.keys(titan.artifacts).join(',') : '';
+                                    }
+                                });
+
+                                // Fill empty titan slots
+                                for (let i = titans.length; i < 5; i++) {
+                                    row[`titan${i+1}Id`] = '';
+                                    row[`titan${i+1}Power`] = '';
+                                    row[`titan${i+1}Level`] = '';
+                                    row[`titan${i+1}Star`] = '';
+                                    row[`titan${i+1}Element`] = '';
+                                    row[`titan${i+1}ElementLevel`] = '';
+                                    row[`titan${i+1}ElementStar`] = '';
+                                    if (includeDetails) {
+                                        row[`titan${i+1}Artifacts`] = '';
+                                    }
+                                }
+
+                                allData.push(row);
+                            }
+                        }
+
+                        // Sort by: active defenders first, then backups, then by userId
+                        allData.sort((a, b) => {
+                            // Active defenders before backups
+                            if (a.isBackup !== b.isBackup) {
+                                return a.isBackup === 'YES' ? 1 : -1;
+                            }
+                            // Then by userId
+                            if (a.userId !== b.userId) {
+                                return parseInt(a.userId) - parseInt(b.userId);
+                            }
+                            // Then by defense type
+                            return a.defenseType.localeCompare(b.defenseType);
+                        });
+
+                        // Create headers dynamically based on defense type
+                        let headers = ['Timestamp', 'UserID', 'Slots', 'SlotCount', 'IsChampion', 'IsBackup', 'DefenseType', 'TotalPower', 'BannerId', 'BannerSlots'];
+
+                        // Add unit-specific headers
+                        const hasHeroes = allData.some(row => row.defenseType === 'Heroes');
+                        const hasTitans = allData.some(row => row.defenseType === 'Titans');
+
+                        if (hasHeroes) {
+                            for (let i = 1; i <= 5; i++) {
+                                headers.push(`Hero${i}Id`, `Hero${i}Power`, `Hero${i}Level`, `Hero${i}Color`, `Hero${i}Star`);
+                                if (includeDetails) {
+                                    headers.push(`Hero${i}Skills`, `Hero${i}Artifacts`);
+                                }
+                            }
+                            headers.push('PetId', 'PetPower', 'PetLevel', 'PetColor', 'PetStar');
+                        }
+
+                        if (hasTitans) {
+                            for (let i = 1; i <= 5; i++) {
+                                headers.push(`Titan${i}Id`, `Titan${i}Power`, `Titan${i}Level`, `Titan${i}Star`,
+                                             `Titan${i}Element`, `Titan${i}ElementLevel`, `Titan${i}ElementStar`);
+                                if (includeDetails) {
+                                    headers.push(`Titan${i}Artifacts`);
                                 }
                             }
                         }
-                    });
-                }
 
-                completedRequests++;
-            } catch (err) {
-                debugLog(`Error fetching ${ranking.name} for server ${serverId}:`, err);
-                completedRequests++;
-            }
+                        const rows = [headers.join('\t')];
 
-            if (completedRequests < totalRequests) {
-                await new Promise(r => setTimeout(r, delaySeconds * 1000));
-            }
-        }
-
-        const serverUsers = Array.from(serverUserMap.values());
-        serverUsers.sort((a, b) => {
-            const powerA = a.rankings.power?.value || 0;
-            const powerB = b.rankings.power?.value || 0;
-            return powerB - powerA;
-        });
-
-        serverUsers.forEach(userData => {
-            const user = userData.userData;
-            const rankings = userData.rankings;
-
-            allUsers.push({
-                UserID: user.id,
-                Name: user.name,
-                Level: user.level,
-                MainServer: user.mainServer,
-                CurrentProcessingServer: serverId,
-                ServersFound: Array.from(userData.servers).sort((a,b) => a-b).join(','),
-                ServerCount: userData.servers.size,
-                HeroPowerRank: rankings.power?.rank || '',
-                HeroPowerValue: rankings.power?.value || '',
-                HeroPowerServer: rankings.power?.server || '',
-                TitanPowerRank: rankings.titanPower?.rank || '',
-                TitanPowerValue: rankings.titanPower?.value || '',
-                TitanPowerServer: rankings.titanPower?.server || '',
-                ArenaRank: rankings.arena?.rank || '',
-                ArenaValue: rankings.arena?.value || '',
-                ArenaServer: rankings.arena?.server || '',
-                GrandArenaRank: rankings.grand?.rank || '',
-                GrandArenaValue: rankings.grand?.value || '',
-                GrandArenaServer: rankings.grand?.server || '',
-                DungeonFloorRank: rankings.dungeonFloor?.rank || '',
-                DungeonFloorValue: rankings.dungeonFloor?.value || '',
-                DungeonFloorServer: rankings.dungeonFloor?.server || '',
-                GuildID: user.clanId,
-                GuildName: user.clanTitle,
-                GuildRole: user.clanRole,
-                GuildFlagColor1: user.clanIcon.flagColor1 !== undefined ? user.clanIcon.flagColor1 : '',
-                GuildFlagColor2: user.clanIcon.flagColor2 !== undefined ? user.clanIcon.flagColor2 : '',
-                GuildFlagShape: user.clanIcon.flagShape !== undefined ? user.clanIcon.flagShape : '',
-                GuildIconColor: user.clanIcon.iconColor !== undefined ? user.clanIcon.iconColor : '',
-                GuildIconShape: user.clanIcon.iconShape !== undefined ? user.clanIcon.iconShape : '',
-                AvatarID: user.avatarId,
-                FrameID: user.frameId,
-                Commander: user.commander,
-                LeagueID: user.leagueId,
-                ChatModerator: user.isChatModerator,
-                AllowPM: user.allowPm,
-                LastLoginTime: user.lastLoginTime ? `=((${user.lastLoginTime}/86400)+25569)` : '',
-                TimeStamp: new Date().toISOString()
-            });
-        });
-    }
-
-    onProgress(100, `Finalizing ${allUsers.length} users...`, 0);
-
-    const headers = Object.keys(allUsers[0] || {});
-    return [
-        headers.join('\t'),
-        ...allUsers.map(user =>
-                        headers.map(header => {
-            const value = user[header];
-            return value === null || value === undefined ? '' : String(value);
-        }).join('\t')
-                       )
-    ].join('\n');
-}
-// Export All Guilds function - WITH PROGRESSIVE SORTING
-async function exportAllGuilds(onProgress, isExportingRef) {
-    const serverStart = parseInt(document.getElementById('guild-server-start').value);
-    const serverEnd = parseInt(document.getElementById('guild-server-end').value);
-    const delaySeconds = parseFloat(document.getElementById('delay').value);
-
-    if (serverEnd < serverStart) {
-        throw new Error('Invalid server range!');
-    }
-
-    // Set the filename in the parent scope
-    window.exportFileName = `all_top_guilds_s${serverStart}-${serverEnd}_${new Date().toISOString().split('T')[0]}.tsv`;
-
-    const SendFunction = getSend();
-
-    // Build the final array progressively
-    const allGuilds = [];
-    const globalGuildMap = new Map(); // Track unique guilds across all servers
-
-    const rankingTypes = [
-        { type: 'clan', name: 'Guild Activity' },
-        { type: 'clanDungeon', name: 'Guild Titanite' },
-        { type: 'prestige', name: 'Guild Prestige' }
-    ];
-
-    const totalRequests = (serverEnd - serverStart + 1) * rankingTypes.length;
-    let completedRequests = 0;
-
-    // Process each server completely before moving to next
-    for (let serverId = serverStart; serverId <= serverEnd && isExportingRef; serverId++) {
-        const serverGuildMap = new Map(); // Guilds for this specific server
-
-        // Collect all rankings for this server
-        for (const ranking of rankingTypes) {
-            if (!isExportingRef) break;
-
-            const progress = (completedRequests / totalRequests) * 100;
-            const timeRemaining = Math.ceil((totalRequests - completedRequests) * delaySeconds);
-
-            onProgress(
-                progress,
-                `Server ${serverId}/${serverEnd} - ${ranking.name}<br>Server guilds: ${serverGuildMap.size} | Total unique guilds: ${globalGuildMap.size}`,
-                timeRemaining
-            );
-
-            try {
-                const response = await SendFunction(JSON.stringify({
-                    calls: [{
-                        name: "topGet",
-                        args: {
-                            type: ranking.type,
-                            extraId: 0,
-                            serverId: serverId
-                        },
-                        context: { actionTs: Date.now() },
-                        ident: "body"
-                    }]
-                }));
-
-                if (response?.results?.[0]?.result?.response?.top) {
-                    const data = response.results[0].result.response;
-
-                    // Build clan lookup
-                    const clanLookup = {};
-                    if (data.clans && Array.isArray(data.clans)) {
-                        data.clans.forEach(clan => {
-                            if (clan.id) {
-                                clanLookup[clan.id] = clan;
-                            }
+                        // Add data rows with fixed UserID mapping
+                        allData.forEach(row => {
+                            const values = headers.map(header => {
+                                // Special case for UserID
+                                if (header === 'UserID') {
+                                    return row['userId'] !== undefined ? row['userId'] : '';
+                                }
+                                // Special case for Slots
+                                if (header === 'Slots') {
+                                    return row['slots'] !== undefined ? row['slots'] : '';
+                                }
+                                // Special case for SlotCount
+                                if (header === 'SlotCount') {
+                                    return row['slotCount'] !== undefined ? row['slotCount'] : '';
+                                }
+                                // Special case for IsChampion
+                                if (header === 'IsChampion') {
+                                    return row['isChampion'] !== undefined ? row['isChampion'] : '';
+                                }
+                                // Special case for IsBackup
+                                if (header === 'IsBackup') {
+                                    return row['isBackup'] !== undefined ? row['isBackup'] : '';
+                                }
+                                // For other headers, lowercase the first character
+                                const key = header.charAt(0).toLowerCase() + header.slice(1);
+                                return row[key] !== undefined ? row[key] : '';
+                            });
+                            rows.push(values.join('\t'));
                         });
-                    } else if (data.items && typeof data.items === 'object') {
-                        Object.entries(data.items).forEach(([clanId, clan]) => {
-                            clanLookup[clanId] = clan;
-                        });
+
+                        return rows.join('\n');
                     }
+                    // Export All Users function - WITH PROGRESSIVE SORTING
+                    async function exportAllUsers(onProgress, isExportingRef) {
+                        const serverStart = parseInt(document.getElementById('user-server-start').value);
+                        const serverEnd = parseInt(document.getElementById('user-server-end').value);
+                        const delaySeconds = parseFloat(document.getElementById('delay').value);
 
-                    // Process top 50 guilds
-                    data.top.slice(0, 50).forEach((entry, index) => {
-                        const clanId = entry.clanId || entry.itemId || entry.id;
-                        const clanInfo = clanLookup[clanId];
+                        if (serverEnd < serverStart) {
+                            throw new Error('Invalid server range!');
+                        }
 
-                        if (clanInfo) {
-                            // Get value based on ranking type
-                            let value = 0;
-                            if (ranking.type === 'clanDungeon' && entry.dungeonActivity) {
-                                value = parseInt(entry.dungeonActivity) || 0;
-                            } else if (ranking.type === 'prestige' && entry.score) {
-                                value = parseInt(entry.score) || 0;
-                            } else if (entry.activity) {
-                                value = parseInt(entry.activity) || 0;
-                            }
+                        const SendFunction = getSend();
+                        const allUsers = [];
+                        const globalUserMap = new Map();
 
-                            // Check if we've seen this guild globally
-                            if (!globalGuildMap.has(clanId)) {
-                                // New guild - add to both maps
-                                const icon = clanInfo.icon || {};
-                                const guildData = {
-                                    rankings: {},
-                                    servers: new Set([serverId]),
-                                    guildData: {
-                                        id: clanId,
-                                        name: clanInfo.title || clanInfo.name || 'Unknown Guild',
-                                        ownerId: clanInfo.ownerId || '',
-                                        level: clanInfo.level || '',
-                                        description: clanInfo.description || '',
-                                        country: clanInfo.country || '',
-                                        minLevel: clanInfo.minLevel || '',
-                                        homeServer: clanInfo.serverId || serverId,
-                                        membersCount: clanInfo.membersCount || '',
-                                        disbanding: clanInfo.disbanding ? 'YES' : 'NO',
-                                        topActivity: clanInfo.topActivity || '',
-                                        topDungeon: clanInfo.topDungeon || '',
-                                        frameId: clanInfo.frameId || '',
-                                        flagColor1: icon.flagColor1 !== undefined ? icon.flagColor1 : '',
-                                        flagColor2: icon.flagColor2 !== undefined ? icon.flagColor2 : '',
-                                        flagShape: icon.flagShape !== undefined ? icon.flagShape : '',
-                                        iconColor: icon.iconColor !== undefined ? icon.iconColor : '',
-                                        iconShape: icon.iconShape !== undefined ? icon.iconShape : '',
-                                        iconFrame: icon.frame !== undefined ? icon.frame : '',
-                                        roleNames: clanInfo.roleNames || {}
+                        const rankingTypes = [
+                            { type: 'power', name: 'Hero Power' },
+                            { type: 'titanPower', name: 'Titan Power' },
+                            { type: 'arena', name: 'Arena' },
+                            { type: 'grand', name: 'Grand Arena' },
+                            { type: 'dungeonFloor', name: 'Dungeon Floor' }
+                        ];
+
+                        const totalRequests = (serverEnd - serverStart + 1) * rankingTypes.length;
+                        let completedRequests = 0;
+
+                        for (let serverId = serverStart; serverId <= serverEnd && isExportingRef; serverId++) {
+                            const serverUserMap = new Map();
+
+                            for (const ranking of rankingTypes) {
+                                if (!isExportingRef) break;
+
+                                const progress = (completedRequests / totalRequests) * 100;
+                                const timeRemaining = Math.ceil((totalRequests - completedRequests) * delaySeconds);
+
+                                onProgress(
+                                    progress,
+                                    `Server ${serverId}/${serverEnd} - ${ranking.name}<br>Server users: ${serverUserMap.size} | Total unique users: ${globalUserMap.size}`,
+                                    timeRemaining
+                                );
+
+                                try {
+                                    const response = await SendFunction(JSON.stringify({
+                                        calls: [{
+                                            name: "topGet",
+                                            args: {
+                                                type: ranking.type,
+                                                extraId: 0,
+                                                serverId: serverId
+                                            },
+                                            context: { actionTs: Date.now() },
+                                            ident: "body"
+                                        }]
+                                    }));
+
+                                    if (response?.results?.[0]?.result?.response?.top) {
+                                        const data = response.results[0].result.response;
+
+                                        data.top.slice(0, 50).forEach((entry, index) => {
+                                            const userId = entry.userId || entry.id;
+                                            const userInfo = data.users?.[userId];
+
+                                            if (userInfo) {
+                                                if (!globalUserMap.has(userId)) {
+                                                    const userData = {
+                                                        rankings: {},
+                                                        servers: new Set([serverId]),
+                                                        userData: {
+                                                            id: userId,
+                                                            name: userInfo.name || 'Unknown',
+                                                            level: parseInt(userInfo.level || 0),
+                                                            clanId: userInfo.clanId || '',
+                                                            clanTitle: userInfo.clanTitle || '',
+                                                            clanRole: userInfo.clanRole || '',
+                                                            clanIcon: userInfo.clanIcon || {},
+                                                            avatarId: userInfo.avatarId || '',
+                                                            frameId: userInfo.frameId || 0,
+                                                            commander: userInfo.commander ? 'YES' : 'NO',
+                                                            leagueId: userInfo.leagueId || '',
+                                                            lastLoginTime: userInfo.lastLoginTime || '',
+                                                            isChatModerator: userInfo.isChatModerator ? 'YES' : 'NO',
+                                                            allowPm: userInfo.allowPm || '',
+                                                            mainServer: userInfo.serverId || serverId
+                                                        }
+                                                    };
+
+                                                    userData.rankings[ranking.type] = {
+                                                        rank: entry.place || (index + 1),
+                                                        value: parseInt(entry.sumPower || entry.maxFloorNum || 0),
+                                                        server: serverId
+                                                    };
+
+                                                    serverUserMap.set(userId, userData);
+                                                    globalUserMap.set(userId, userData);
+                                                } else {
+                                                    const existingUser = globalUserMap.get(userId);
+                                                    existingUser.servers.add(serverId);
+                                                    existingUser.rankings[ranking.type] = {
+                                                        rank: entry.place || (index + 1),
+                                                        value: parseInt(entry.sumPower || entry.maxFloorNum || 0),
+                                                        server: serverId
+                                                    };
+
+                                                    if (!serverUserMap.has(userId)) {
+                                                        serverUserMap.set(userId, existingUser);
+                                                    }
+                                                }
+                                            }
+                                        });
                                     }
-                                };
 
-                                guildData.rankings[ranking.type] = {
-                                    rank: entry.place || (index + 1),
-                                    value: value,
-                                    server: serverId
-                                };
+                                    completedRequests++;
+                                } catch (err) {
+                                    debugLog(`Error fetching ${ranking.name} for server ${serverId}:`, err);
+                                    completedRequests++;
+                                }
 
-                                serverGuildMap.set(clanId, guildData);
-                                globalGuildMap.set(clanId, guildData);
-                            } else {
-                                // Existing guild - update their rankings
-                                const existingGuild = globalGuildMap.get(clanId);
-                                existingGuild.servers.add(serverId);
-                                existingGuild.rankings[ranking.type] = {
-                                    rank: entry.place || (index + 1),
-                                    value: value,
-                                    server: serverId
-                                };
-
-                                // Also add to this server's map if not already there
-                                if (!serverGuildMap.has(clanId)) {
-                                    serverGuildMap.set(clanId, existingGuild);
+                                if (completedRequests < totalRequests) {
+                                    await new Promise(r => setTimeout(r, delaySeconds * 1000));
                                 }
                             }
+
+                            const serverUsers = Array.from(serverUserMap.values());
+                            serverUsers.sort((a, b) => {
+                                const powerA = a.rankings.power?.value || 0;
+                                const powerB = b.rankings.power?.value || 0;
+                                return powerB - powerA;
+                            });
+
+                            serverUsers.forEach(userData => {
+                                const user = userData.userData;
+                                const rankings = userData.rankings;
+
+                                allUsers.push({
+                                    UserID: user.id,
+                                    Name: user.name,
+                                    Level: user.level,
+                                    MainServer: user.mainServer,
+                                    CurrentProcessingServer: serverId,
+                                    ServersFound: Array.from(userData.servers).sort((a,b) => a-b).join(','),
+                                    ServerCount: userData.servers.size,
+                                    HeroPowerRank: rankings.power?.rank || '',
+                                    HeroPowerValue: rankings.power?.value || '',
+                                    HeroPowerServer: rankings.power?.server || '',
+                                    TitanPowerRank: rankings.titanPower?.rank || '',
+                                    TitanPowerValue: rankings.titanPower?.value || '',
+                                    TitanPowerServer: rankings.titanPower?.server || '',
+                                    ArenaRank: rankings.arena?.rank || '',
+                                    ArenaValue: rankings.arena?.value || '',
+                                    ArenaServer: rankings.arena?.server || '',
+                                    GrandArenaRank: rankings.grand?.rank || '',
+                                    GrandArenaValue: rankings.grand?.value || '',
+                                    GrandArenaServer: rankings.grand?.server || '',
+                                    DungeonFloorRank: rankings.dungeonFloor?.rank || '',
+                                    DungeonFloorValue: rankings.dungeonFloor?.value || '',
+                                    DungeonFloorServer: rankings.dungeonFloor?.server || '',
+                                    GuildID: user.clanId,
+                                    GuildName: user.clanTitle,
+                                    GuildRole: user.clanRole,
+                                    GuildFlagColor1: user.clanIcon.flagColor1 !== undefined ? user.clanIcon.flagColor1 : '',
+                                    GuildFlagColor2: user.clanIcon.flagColor2 !== undefined ? user.clanIcon.flagColor2 : '',
+                                    GuildFlagShape: user.clanIcon.flagShape !== undefined ? user.clanIcon.flagShape : '',
+                                    GuildIconColor: user.clanIcon.iconColor !== undefined ? user.clanIcon.iconColor : '',
+                                    GuildIconShape: user.clanIcon.iconShape !== undefined ? user.clanIcon.iconShape : '',
+                                    AvatarID: user.avatarId,
+                                    FrameID: user.frameId,
+                                    Commander: user.commander,
+                                    LeagueID: user.leagueId,
+                                    ChatModerator: user.isChatModerator,
+                                    AllowPM: user.allowPm,
+                                    LastLoginTime: user.lastLoginTime ? `=((${user.lastLoginTime}/86400)+25569)` : '',
+                                    TimeStamp: new Date().toISOString()
+                                });
+                            });
                         }
-                    });
-                }
 
-                completedRequests++;
-            } catch (err) {
-                debugLog(`Error fetching ${ranking.name} for server ${serverId}:`, err);
-                completedRequests++;
-            }
+                        onProgress(100, `Finalizing ${allUsers.length} users...`, 0);
 
-            if (completedRequests < totalRequests) {
-                await new Promise(r => setTimeout(r, delaySeconds * 1000));
-            }
-        }
+                        const headers = Object.keys(allUsers[0] || {});
+                        return [
+                            headers.join('\t'),
+                            ...allUsers.map(user =>
+                                            headers.map(header => {
+                                const value = user[header];
+                                return value === null || value === undefined ? '' : String(value);
+                            }).join('\t')
+                                           )
+                        ].join('\n');
+                    }
+                    // Export All Guilds function - WITH PROGRESSIVE SORTING
+                    async function exportAllGuilds(onProgress, isExportingRef) {
+                        const serverStart = parseInt(document.getElementById('guild-server-start').value);
+                        const serverEnd = parseInt(document.getElementById('guild-server-end').value);
+                        const delaySeconds = parseFloat(document.getElementById('delay').value);
 
-        // Process this server's guilds and add to results
-        const serverGuilds = Array.from(serverGuildMap.values());
+                        if (serverEnd < serverStart) {
+                            throw new Error('Invalid server range!');
+                        }
 
-        // Sort by Guild Activity for this server
-        serverGuilds.sort((a, b) => {
-            const activityA = a.rankings.clan?.value || 0;
-            const activityB = b.rankings.clan?.value || 0;
-            return activityB - activityA;
-        });
+                        // Set the filename in the parent scope
+                        window.exportFileName = `all_top_guilds_s${serverStart}-${serverEnd}_${new Date().toISOString().split('T')[0]}.tsv`;
 
-        // Convert to final format and add to results
-        serverGuilds.forEach(guildData => {
-            const guild = guildData.guildData;
-            const rankings = guildData.rankings;
-            const roles = guild.roleNames;
+                        const SendFunction = getSend();
 
-            allGuilds.push({
-                GuildID: guild.id,
-                Name: guild.name,
-                Level: guild.level,
-                HomeServer: guild.homeServer,
-                CurrentProcessingServer: serverId,
-                ServersFound: Array.from(guildData.servers).sort((a,b) => a-b).join(','),
-                ServerCount: guildData.servers.size,
+                        // Build the final array progressively
+                        const allGuilds = [];
+                        const globalGuildMap = new Map(); // Track unique guilds across all servers
 
-                // Rankings
-                ActivityRank: rankings.clan?.rank || '',
-                ActivityValue: rankings.clan?.value || '',
-                ActivityServer: rankings.clan?.server || '',
+                        const rankingTypes = [
+                            { type: 'clan', name: 'Guild Activity' },
+                            { type: 'clanDungeon', name: 'Guild Titanite' },
+                            { type: 'prestige', name: 'Guild Prestige' }
+                        ];
 
-                TitaniteRank: rankings.clanDungeon?.rank || '',
-                TitaniteValue: rankings.clanDungeon?.value || '',
-                TitaniteServer: rankings.clanDungeon?.server || '',
+                        const totalRequests = (serverEnd - serverStart + 1) * rankingTypes.length;
+                        let completedRequests = 0;
 
-                PrestigeRank: rankings.prestige?.rank || '',
-                PrestigeValue: rankings.prestige?.value || '',
-                PrestigeServer: rankings.prestige?.server || '',
+                        // Process each server completely before moving to next
+                        for (let serverId = serverStart; serverId <= serverEnd && isExportingRef; serverId++) {
+                            const serverGuildMap = new Map(); // Guilds for this specific server
 
-                // Guild details
-                OwnerID: guild.ownerId,
-                Description: guild.description.replace(/\n/g, ' '),
-                Country: guild.country,
-                MinLevel: guild.minLevel,
-                MembersCount: guild.membersCount,
-                Disbanding: guild.disbanding,
-                TopActivity: guild.topActivity,
-                TopDungeon: guild.topDungeon,
-                FrameID: guild.frameId,
+                            // Collect all rankings for this server
+                            for (const ranking of rankingTypes) {
+                                if (!isExportingRef) break;
 
-                // Icon details
-                FlagColor1: guild.flagColor1,
-                FlagColor2: guild.flagColor2,
-                FlagShape: guild.flagShape,
-                IconColor: guild.iconColor,
-                IconShape: guild.iconShape,
-                IconFrame: guild.iconFrame,
+                                const progress = (completedRequests / totalRequests) * 100;
+                                const timeRemaining = Math.ceil((totalRequests - completedRequests) * delaySeconds);
 
-                // Custom role names
-                RoleOwner: roles.owner || '',
-                RoleOfficer: roles.officer || '',
-                RoleMember: roles.member || '',
-                RoleWarlord: roles.warlord || '',
+                                onProgress(
+                                    progress,
+                                    `Server ${serverId}/${serverEnd} - ${ranking.name}<br>Server guilds: ${serverGuildMap.size} | Total unique guilds: ${globalGuildMap.size}`,
+                                    timeRemaining
+                                );
 
-                TimeStamp: new Date().toISOString()
-            });
-        });
-    }
+                                try {
+                                    const response = await SendFunction(JSON.stringify({
+                                        calls: [{
+                                            name: "topGet",
+                                            args: {
+                                                type: ranking.type,
+                                                extraId: 0,
+                                                serverId: serverId
+                                            },
+                                            context: { actionTs: Date.now() },
+                                            ident: "body"
+                                        }]
+                                    }));
 
-    onProgress(100, `Finalizing ${allGuilds.length} guilds...`, 0);
+                                    if (response?.results?.[0]?.result?.response?.top) {
+                                        const data = response.results[0].result.response;
 
-    // Create TSV content
-    const headers = Object.keys(allGuilds[0] || {});
-    return [
-        headers.join('\t'),
-        ...allGuilds.map(guild =>
-                         headers.map(header => {
-            const value = guild[header];
-            return value === null || value === undefined ? '' : String(value);
-        }).join('\t')
-                        )
-    ].join('\n');
-}
+                                        // Build clan lookup
+                                        const clanLookup = {};
+                                        if (data.clans && Array.isArray(data.clans)) {
+                                            data.clans.forEach(clan => {
+                                                if (clan.id) {
+                                                    clanLookup[clan.id] = clan;
+                                                }
+                                            });
+                                        } else if (data.items && typeof data.items === 'object') {
+                                            Object.entries(data.items).forEach(([clanId, clan]) => {
+                                                clanLookup[clanId] = clan;
+                                            });
+                                        }
 
-// ================================================================
-// WINTERFEST GIFT TRACKER
-// ================================================================
+                                        // Process top 50 guilds
+                                        data.top.slice(0, 50).forEach((entry, index) => {
+                                            const clanId = entry.clanId || entry.itemId || entry.id;
+                                            const clanInfo = clanLookup[clanId];
 
-window.showWinterfestGifts = async function() {
-    debugLog('🎄 Loading Winterfest gift data...');
+                                            if (clanInfo) {
+                                                // Get value based on ranking type
+                                                let value = 0;
+                                                if (ranking.type === 'clanDungeon' && entry.dungeonActivity) {
+                                                    value = parseInt(entry.dungeonActivity) || 0;
+                                                } else if (ranking.type === 'prestige' && entry.score) {
+                                                    value = parseInt(entry.score) || 0;
+                                                } else if (entry.activity) {
+                                                    value = parseInt(entry.activity) || 0;
+                                                }
 
-    const GIFT_TYPES = {
-        1: { name: 'Upgrade', coinId: 16, cost: 1000, pts: 4, bp: 50 },
-        2: { name: 'Pet', coinId: 16, cost: 2000, pts: 8, bp: 100 },
-        3: { name: 'Ascension', coinId: 16, cost: 5000, pts: 20, bp: 250 },
-        4: { name: 'Skin', coinId: 16, cost: 20000, pts: 80, bp: 1000 },
-        5: { name: 'Transform', coinId: 63, cost: 20, pts: 80, bp: 1000 },
-        6: { name: 'Power', coinId: 63, cost: 40, pts: 160, bp: 2000 }
-    };
+                                                // Check if we've seen this guild globally
+                                                if (!globalGuildMap.has(clanId)) {
+                                                    // New guild - add to both maps
+                                                    const icon = clanInfo.icon || {};
+                                                    const guildData = {
+                                                        rankings: {},
+                                                        servers: new Set([serverId]),
+                                                        guildData: {
+                                                            id: clanId,
+                                                            name: clanInfo.title || clanInfo.name || 'Unknown Guild',
+                                                            ownerId: clanInfo.ownerId || '',
+                                                            level: clanInfo.level || '',
+                                                            description: clanInfo.description || '',
+                                                            country: clanInfo.country || '',
+                                                            minLevel: clanInfo.minLevel || '',
+                                                            homeServer: clanInfo.serverId || serverId,
+                                                            membersCount: clanInfo.membersCount || '',
+                                                            disbanding: clanInfo.disbanding ? 'YES' : 'NO',
+                                                            topActivity: clanInfo.topActivity || '',
+                                                            topDungeon: clanInfo.topDungeon || '',
+                                                            frameId: clanInfo.frameId || '',
+                                                            flagColor1: icon.flagColor1 !== undefined ? icon.flagColor1 : '',
+                                                            flagColor2: icon.flagColor2 !== undefined ? icon.flagColor2 : '',
+                                                            flagShape: icon.flagShape !== undefined ? icon.flagShape : '',
+                                                            iconColor: icon.iconColor !== undefined ? icon.iconColor : '',
+                                                            iconShape: icon.iconShape !== undefined ? icon.iconShape : '',
+                                                            iconFrame: icon.frame !== undefined ? icon.frame : '',
+                                                            roleNames: clanInfo.roleNames || {}
+                                                        }
+                                                    };
 
-    const CURRENCIES = {
-        16: { name: 'Candy', icon: '🍬' },
-        63: { name: 'Cookie', icon: '❄️' }
-    };
+                                                    guildData.rankings[ranking.type] = {
+                                                        rank: entry.place || (index + 1),
+                                                        value: value,
+                                                        server: serverId
+                                                    };
 
-    const NPC_NAMES = {
-        '-306': '🎁 Wendy',
-        '-307': '🎁 Wendy 2',
-    };
+                                                    serverGuildMap.set(clanId, guildData);
+                                                    globalGuildMap.set(clanId, guildData);
+                                                } else {
+                                                    // Existing guild - update their rankings
+                                                    const existingGuild = globalGuildMap.get(clanId);
+                                                    existingGuild.servers.add(serverId);
+                                                    existingGuild.rankings[ranking.type] = {
+                                                        rank: entry.place || (index + 1),
+                                                        value: value,
+                                                        server: serverId
+                                                    };
 
-    const SELF_ID = 'self';
-    const SELF_NAME = '🎁 Self (Quest Farm)';
+                                                    // Also add to this server's map if not already there
+                                                    if (!serverGuildMap.has(clanId)) {
+                                                        serverGuildMap.set(clanId, existingGuild);
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
 
-    const SendFunction = getSend();
-    if (!SendFunction) {
-        alert('❌ Send function not available');
-        return;
-    }
+                                    completedRequests++;
+                                } catch (err) {
+                                    debugLog(`Error fetching ${ranking.name} for server ${serverId}:`, err);
+                                    completedRequests++;
+                                }
 
-    // State
-    let balances = { 16: 0, 63: 0 };
-    let currentSort = { column: 'total', direction: 'desc' };
-    let sendLog = [];
-    let currentPersonStats = {};
-    let currentNpcStats = {};
-    let currentTopsData = {};
-    let currentBehindByType = {};
-    let unopenedRecv = 0;
-    let unopenedSent = 0;
-    let currentTab = 'players';
+                                if (completedRequests < totalRequests) {
+                                    await new Promise(r => setTimeout(r, delaySeconds * 1000));
+                                }
+                            }
 
-    // Rewards tracking
-    let rewardsByGiftType = { recv: {}, sent: {} };
+                            // Process this server's guilds and add to results
+                            const serverGuilds = Array.from(serverGuildMap.values());
 
-    const getBalances = async () => {
-        try {
-            const inv = await SendFunction(JSON.stringify({
-                calls: [{ name: "inventoryGet", args: {}, ident: "inv" }]
-            }));
-            const coin = inv?.results?.[0]?.result?.response?.coin || {};
-            balances = {
-                16: parseInt(coin[16]) || 0,
-                63: parseInt(coin[63]) || 0
-            };
-        } catch (e) {
-            console.error('Failed to get balances:', e);
-        }
-        return balances;
-    };
+                            // Sort by Guild Activity for this server
+                            serverGuilds.sort((a, b) => {
+                                const activityA = a.rankings.clan?.value || 0;
+                                const activityB = b.rankings.clan?.value || 0;
+                                return activityB - activityA;
+                            });
 
-    // Get item name
-    const getItemName = (id, type) => {
-        // Special handling for skins FIRST - need to look up localeKey + hero name
-        if (type === 'fragmentSkin' || type === 'skin') {
-            const skinData = lib?.data?.skin?.[id];
-            if (skinData) {
-                const skinName = skinData.localeKey ? cheats.translate(skinData.localeKey) : null;
-                const heroName = skinData.heroId ? cheats.translate('LIB_HERO_NAME_' + skinData.heroId) : null;
-                if (heroName && skinName && !skinName.startsWith('LIB_')) {
-                    return `${heroName} - ${skinName}`;
-                }
-                if (skinName && !skinName.startsWith('LIB_')) return skinName;
-            }
-        }
-        if (window.identifyItem) {
-            const name = window.identifyItem(id, type);
-            if (name && !name.startsWith('Unknown') && !name.startsWith('fragmentSkin')) return name;
-        }
-        if (cheats?.translate) {
-            const keyMap = {
-                'consumable': 'LIB_CONSUMABLE_NAME_',
-                'coin': 'LIB_COIN_NAME_',
-                'fragmentHero': 'LIB_HERO_NAME_',
-                'fragmentTitanArtifact': 'LIB_TITAN_ARTIFACT_NAME_'
-            };
-            const prefix = keyMap[type];
-            if (prefix) {
-                const translated = cheats.translate(prefix + id);
-                if (translated && !translated.startsWith('LIB_')) return translated;
-            }
-        }
-        return `${type} #${id}`;
-    };
+                            // Convert to final format and add to results
+                            serverGuilds.forEach(guildData => {
+                                const guild = guildData.guildData;
+                                const rankings = guildData.rankings;
+                                const roles = guild.roleNames;
 
-    // Sort function
-    const sortPeople = (people, column, direction) => {
-        return [...people].sort((a, b) => {
-            let aVal, bVal;
-            const [aId, aP] = a;
-            const [bId, bP] = b;
+                                allGuilds.push({
+                                    GuildID: guild.id,
+                                    Name: guild.name,
+                                    Level: guild.level,
+                                    HomeServer: guild.homeServer,
+                                    CurrentProcessingServer: serverId,
+                                    ServersFound: Array.from(guildData.servers).sort((a,b) => a-b).join(','),
+                                    ServerCount: guildData.servers.size,
 
-            if (column === 'name') {
-                aVal = aP.name.toLowerCase();
-                bVal = bP.name.toLowerCase();
-            } else if (column === 'sent') {
-                aVal = aP.sentPts;
-                bVal = bP.sentPts;
-            } else if (column === 'recv') {
-                aVal = aP.recvPts;
-                bVal = bP.recvPts;
-            } else if (column === 'balance') {
-                aVal = aP.sentPts - aP.recvPts;
-                bVal = bP.sentPts - bP.recvPts;
-            } else if (column === 'total') {
-                aVal = aP.sentPts + aP.recvPts;
-                bVal = bP.sentPts + bP.recvPts;
-            } else if (column >= 1 && column <= 6) {
-                aVal = aP.recv[column] || 0;
-                bVal = bP.recv[column] || 0;
-            } else {
-                aVal = aP.sentPts + aP.recvPts;
-                bVal = bP.sentPts + bP.recvPts;
-            }
+                                    // Rankings
+                                    ActivityRank: rankings.clan?.rank || '',
+                                    ActivityValue: rankings.clan?.value || '',
+                                    ActivityServer: rankings.clan?.server || '',
 
-            if (direction === 'asc') {
-                return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
-            } else {
-                return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
-            }
-        });
-    };
+                                    TitaniteRank: rankings.clanDungeon?.rank || '',
+                                    TitaniteValue: rankings.clanDungeon?.value || '',
+                                    TitaniteServer: rankings.clanDungeon?.server || '',
 
-    // Send gift to multiple users in ONE call
-    const sendGiftBatch = async (userList, giftNum) => {
-        if (userList.length === 0) return { success: [], failed: [] };
+                                    PrestigeRank: rankings.prestige?.rank || '',
+                                    PrestigeValue: rankings.prestige?.value || '',
+                                    PrestigeServer: rankings.prestige?.server || '',
 
-        const users = {};
-        userList.forEach(u => { users[u.id] = 1; });
+                                    // Guild details
+                                    OwnerID: guild.ownerId,
+                                    Description: guild.description.replace(/\n/g, ' '),
+                                    Country: guild.country,
+                                    MinLevel: guild.minLevel,
+                                    MembersCount: guild.membersCount,
+                                    Disbanding: guild.disbanding,
+                                    TopActivity: guild.topActivity,
+                                    TopDungeon: guild.topDungeon,
+                                    FrameID: guild.frameId,
 
-        try {
-            const response = await SendFunction(JSON.stringify({
-                calls: [{
-                    name: "newYear_giftSend",
-                    args: {
-                        userId: userList[0].id,
-                        amount: 1,
-                        giftNum: giftNum,
-                        users: users
-                    },
-                    context: { actionTs: Date.now() },
-                    ident: "body"
-                }]
-            }));
+                                    // Icon details
+                                    FlagColor1: guild.flagColor1,
+                                    FlagColor2: guild.flagColor2,
+                                    FlagShape: guild.flagShape,
+                                    IconColor: guild.iconColor,
+                                    IconShape: guild.iconShape,
+                                    IconFrame: guild.iconFrame,
 
-            const result = response?.results?.[0]?.result?.response;
-            if (result?.giftIds && result.giftIds.length > 0) {
-                userList.forEach(u => {
-                    sendLog.push({ userName: u.name, giftType: GIFT_TYPES[giftNum].name, giftNum, success: true });
-                });
-                return { success: userList.map(u => u.name), failed: [] };
-            } else {
-                userList.forEach(u => {
-                    sendLog.push({ userName: u.name, giftType: GIFT_TYPES[giftNum].name, giftNum, success: false });
-                });
-                return { success: [], failed: userList.map(u => u.name) };
-            }
-        } catch (e) {
-            console.error('Send gift batch error:', e);
-            userList.forEach(u => {
-                sendLog.push({ userName: u.name, giftType: GIFT_TYPES[giftNum].name, giftNum, success: false });
-            });
-            return { success: [], failed: userList.map(u => u.name) };
-        }
-    };
+                                    // Custom role names
+                                    RoleOwner: roles.owner || '',
+                                    RoleOfficer: roles.officer || '',
+                                    RoleMember: roles.member || '',
+                                    RoleWarlord: roles.warlord || '',
 
-    // Send multiple gifts to match deficits
-    const sendGiftDeficits = async (needsList, giftNum, statusCallback) => {
-        const maxDeficit = Math.max(...needsList.map(u => u.deficit));
-        let totalSent = 0;
-        const totalToSend = needsList.reduce((sum, u) => sum + u.deficit, 0);
+                                    TimeStamp: new Date().toISOString()
+                                });
+                            });
+                        }
 
-        for (let round = 1; round <= maxDeficit; round++) {
-            const usersThisRound = needsList.filter(u => u.deficit >= round);
-            if (usersThisRound.length === 0) continue;
+                        onProgress(100, `Finalizing ${allGuilds.length} guilds...`, 0);
 
-            totalSent += usersThisRound.length;
-            if (statusCallback) statusCallback(`Round ${round}/${maxDeficit} (${totalSent}/${totalToSend})`);
+                        // Create TSV content
+                        const headers = Object.keys(allGuilds[0] || {});
+                        return [
+                            headers.join('\t'),
+                            ...allGuilds.map(guild =>
+                                             headers.map(header => {
+                                const value = guild[header];
+                                return value === null || value === undefined ? '' : String(value);
+                            }).join('\t')
+                                            )
+                        ].join('\n');
+                    }
 
-            await sendGiftBatch(usersThisRound, giftNum);
+                    // ================================================================
+                    // WINTERFEST GIFT TRACKER
+                    // ================================================================
 
-            if (round < maxDeficit) {
-                await new Promise(r => setTimeout(r, 300));
-            }
-        }
-    };
+                    window.showWinterfestGifts = async function() {
+                        debugLog('🎄 Loading Winterfest gift data...');
 
-    // Nice confirmation popup
-    const showConfirmPopup = (title, message, details, costInfo) => {
-        return new Promise((resolve) => {
-            const confirmModal = document.createElement('div');
-            confirmModal.style.cssText = `
+                        const GIFT_TYPES = {
+                            1: { name: 'Upgrade', coinId: 16, cost: 1000, pts: 4, bp: 50 },
+                            2: { name: 'Pet', coinId: 16, cost: 2000, pts: 8, bp: 100 },
+                            3: { name: 'Ascension', coinId: 16, cost: 5000, pts: 20, bp: 250 },
+                            4: { name: 'Skin', coinId: 16, cost: 20000, pts: 80, bp: 1000 },
+                            5: { name: 'Transform', coinId: 63, cost: 20, pts: 80, bp: 1000 },
+                            6: { name: 'Power', coinId: 63, cost: 40, pts: 160, bp: 2000 }
+                        };
+
+                        const CURRENCIES = {
+                            16: { name: 'Candy', icon: '🍬' },
+                            63: { name: 'Cookie', icon: '❄️' }
+                        };
+
+                        const NPC_NAMES = {
+                            '-306': '🎁 Wendy',
+                            '-307': '🎁 Wendy 2',
+                        };
+
+                        const SELF_ID = 'self';
+                        const SELF_NAME = '🎁 Self (Quest Farm)';
+
+                        const SendFunction = getSend();
+                        if (!SendFunction) {
+                            alert('❌ Send function not available');
+                            return;
+                        }
+
+                        // State
+                        let balances = { 16: 0, 63: 0 };
+                        let currentSort = { column: 'total', direction: 'desc' };
+                        let sendLog = [];
+                        let currentPersonStats = {};
+                        let currentNpcStats = {};
+                        let currentTopsData = {};
+                        let currentBehindByType = {};
+                        let unopenedRecv = 0;
+                        let unopenedSent = 0;
+                        let currentTab = 'players';
+
+                        // Rewards tracking
+                        let rewardsByGiftType = { recv: {}, sent: {} };
+
+                        const getBalances = async () => {
+                            try {
+                                const inv = await SendFunction(JSON.stringify({
+                                    calls: [{ name: "inventoryGet", args: {}, ident: "inv" }]
+                                }));
+                                const coin = inv?.results?.[0]?.result?.response?.coin || {};
+                                balances = {
+                                    16: parseInt(coin[16]) || 0,
+                                    63: parseInt(coin[63]) || 0
+                                };
+                            } catch (e) {
+                                console.error('Failed to get balances:', e);
+                            }
+                            return balances;
+                        };
+
+                        // Get item name
+                        const getItemName = (id, type) => {
+                            // Special handling for skins FIRST - need to look up localeKey + hero name
+                            if (type === 'fragmentSkin' || type === 'skin') {
+                                const skinData = lib?.data?.skin?.[id];
+                                if (skinData) {
+                                    const skinName = skinData.localeKey ? cheats.translate(skinData.localeKey) : null;
+                                    const heroName = skinData.heroId ? cheats.translate('LIB_HERO_NAME_' + skinData.heroId) : null;
+                                    if (heroName && skinName && !skinName.startsWith('LIB_')) {
+                                        return `${heroName} - ${skinName}`;
+                                    }
+                                    if (skinName && !skinName.startsWith('LIB_')) return skinName;
+                                }
+                            }
+                            if (window.identifyItem) {
+                                const name = window.identifyItem(id, type);
+                                if (name && !name.startsWith('Unknown') && !name.startsWith('fragmentSkin')) return name;
+                            }
+                            if (cheats?.translate) {
+                                const keyMap = {
+                                    'consumable': 'LIB_CONSUMABLE_NAME_',
+                                    'coin': 'LIB_COIN_NAME_',
+                                    'fragmentHero': 'LIB_HERO_NAME_',
+                                    'fragmentTitanArtifact': 'LIB_TITAN_ARTIFACT_NAME_'
+                                };
+                                const prefix = keyMap[type];
+                                if (prefix) {
+                                    const translated = cheats.translate(prefix + id);
+                                    if (translated && !translated.startsWith('LIB_')) return translated;
+                                }
+                            }
+                            return `${type} #${id}`;
+                        };
+
+                        // Sort function
+                        const sortPeople = (people, column, direction) => {
+                            return [...people].sort((a, b) => {
+                                let aVal, bVal;
+                                const [aId, aP] = a;
+                                const [bId, bP] = b;
+
+                                if (column === 'name') {
+                                    aVal = aP.name.toLowerCase();
+                                    bVal = bP.name.toLowerCase();
+                                } else if (column === 'sent') {
+                                    aVal = aP.sentPts;
+                                    bVal = bP.sentPts;
+                                } else if (column === 'recv') {
+                                    aVal = aP.recvPts;
+                                    bVal = bP.recvPts;
+                                } else if (column === 'balance') {
+                                    aVal = aP.sentPts - aP.recvPts;
+                                    bVal = bP.sentPts - bP.recvPts;
+                                } else if (column === 'total') {
+                                    aVal = aP.sentPts + aP.recvPts;
+                                    bVal = bP.sentPts + bP.recvPts;
+                                } else if (column >= 1 && column <= 6) {
+                                    aVal = aP.recv[column] || 0;
+                                    bVal = bP.recv[column] || 0;
+                                } else {
+                                    aVal = aP.sentPts + aP.recvPts;
+                                    bVal = bP.sentPts + bP.recvPts;
+                                }
+
+                                if (direction === 'asc') {
+                                    return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+                                } else {
+                                    return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+                                }
+                            });
+                        };
+
+                        // Send gift to multiple users in ONE call
+                        const sendGiftBatch = async (userList, giftNum) => {
+                            if (userList.length === 0) return { success: [], failed: [] };
+
+                            const users = {};
+                            userList.forEach(u => { users[u.id] = 1; });
+
+                            try {
+                                const response = await SendFunction(JSON.stringify({
+                                    calls: [{
+                                        name: "newYear_giftSend",
+                                        args: {
+                                            userId: userList[0].id,
+                                            amount: 1,
+                                            giftNum: giftNum,
+                                            users: users
+                                        },
+                                        context: { actionTs: Date.now() },
+                                        ident: "body"
+                                    }]
+                                }));
+
+                                const result = response?.results?.[0]?.result?.response;
+                                if (result?.giftIds && result.giftIds.length > 0) {
+                                    userList.forEach(u => {
+                                        sendLog.push({ userName: u.name, giftType: GIFT_TYPES[giftNum].name, giftNum, success: true });
+                                    });
+                                    return { success: userList.map(u => u.name), failed: [] };
+                                } else {
+                                    userList.forEach(u => {
+                                        sendLog.push({ userName: u.name, giftType: GIFT_TYPES[giftNum].name, giftNum, success: false });
+                                    });
+                                    return { success: [], failed: userList.map(u => u.name) };
+                                }
+                            } catch (e) {
+                                console.error('Send gift batch error:', e);
+                                userList.forEach(u => {
+                                    sendLog.push({ userName: u.name, giftType: GIFT_TYPES[giftNum].name, giftNum, success: false });
+                                });
+                                return { success: [], failed: userList.map(u => u.name) };
+                            }
+                        };
+
+                        // Send multiple gifts to match deficits
+                        const sendGiftDeficits = async (needsList, giftNum, statusCallback) => {
+                            const maxDeficit = Math.max(...needsList.map(u => u.deficit));
+                            let totalSent = 0;
+                            const totalToSend = needsList.reduce((sum, u) => sum + u.deficit, 0);
+
+                            for (let round = 1; round <= maxDeficit; round++) {
+                                const usersThisRound = needsList.filter(u => u.deficit >= round);
+                                if (usersThisRound.length === 0) continue;
+
+                                totalSent += usersThisRound.length;
+                                if (statusCallback) statusCallback(`Round ${round}/${maxDeficit} (${totalSent}/${totalToSend})`);
+
+                                await sendGiftBatch(usersThisRound, giftNum);
+
+                                if (round < maxDeficit) {
+                                    await new Promise(r => setTimeout(r, 300));
+                                }
+                            }
+                        };
+
+                        // Nice confirmation popup
+                        const showConfirmPopup = (title, message, details, costInfo) => {
+                            return new Promise((resolve) => {
+                                const confirmModal = document.createElement('div');
+                                confirmModal.style.cssText = `
                 position: fixed; top: 0; left: 0; width: 100%; height: 100%;
                 background: rgba(0,0,0,0.85); z-index: 99999999;
                 display: flex; justify-content: center; align-items: center;
             `;
 
-            const confirmPopup = document.createElement('div');
-            confirmPopup.style.cssText = `
+                                const confirmPopup = document.createElement('div');
+                                confirmPopup.style.cssText = `
                 background: linear-gradient(135deg, #2d2416 0%, #1a1408 100%);
                 border: 3px solid #c9a227; border-radius: 12px;
                 padding: 20px; min-width: 400px; max-width: 500px;
@@ -21034,22 +21103,22 @@ window.showWinterfestGifts = async function() {
                         }
                     };
 
-ModuleTracker.register('Winterfest Gifts');
+                    ModuleTracker.register('Winterfest Gifts');
 
-// ================================================================
-// WINTERFEST 2025 RANKINGS - Gifts Sent, Gifts Received, NY Tree
-// ================================================================
+                    // ================================================================
+                    // WINTERFEST 2025 RANKINGS - Gifts Sent, Gifts Received, NY Tree
+                    // ================================================================
 
-window.showWinterfestRankings = async function() {
-    const SendFunction = getSend();
-    if (!SendFunction) {
-        alert('Send function not available');
-        return;
-    }
+                    window.showWinterfestRankings = async function() {
+                        const SendFunction = getSend();
+                        if (!SendFunction) {
+                            alert('Send function not available');
+                            return;
+                        }
 
-    // Create modal
-    const modal = document.createElement('div');
-    modal.style.cssText = `
+                        // Create modal
+                        const modal = document.createElement('div');
+                        modal.style.cssText = `
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(0,0,0,0.8); z-index: 999999;
         display: flex; justify-content: center; align-items: center;
@@ -21492,71 +21561,71 @@ window.showWinterfestRankings = async function() {
                     };
 
 
-// Quiz Rankings - HWH Tweaker Integration with 2-Column Layout
-// Add this complete function to your HWH Tweaker script
+                    // Quiz Rankings - HWH Tweaker Integration with 2-Column Layout
+                    // Add this complete function to your HWH Tweaker script
 
-window.showQuizRankings = function() {
-    // Get current server ID
-    if (!window.serverId) {
-        try {
-            const req = {
-                calls: [{
-                    name: "topGet",
-                    args: { type: "quiz", extraId: 0 },   // omit hard-coded serverId to prove detection
-                    context: { actionTs: Math.floor(Date.now()/1000) },
-                    ident: "body"
-                }]
-            };
+                    window.showQuizRankings = function() {
+                        // Get current server ID
+                        if (!window.serverId) {
+                            try {
+                                const req = {
+                                    calls: [{
+                                        name: "topGet",
+                                        args: { type: "quiz", extraId: 0 },   // omit hard-coded serverId to prove detection
+                                        context: { actionTs: Math.floor(Date.now()/1000) },
+                                        ident: "body"
+                                    }]
+                                };
 
-            const sendFn =
-                  (typeof HWHFuncs?.Send === "function" ? HWHFuncs.Send.bind(HWHFuncs) :
-                   (typeof unsafeWindow !== "undefined" && typeof unsafeWindow.Send === "function") ? unsafeWindow.Send :
-                   (typeof window.Send === "function" ? window.Send :
-                    (typeof Send === "function" ? Send : null)));
+                                const sendFn =
+                                      (typeof HWHFuncs?.Send === "function" ? HWHFuncs.Send.bind(HWHFuncs) :
+                                       (typeof unsafeWindow !== "undefined" && typeof unsafeWindow.Send === "function") ? unsafeWindow.Send :
+                                       (typeof window.Send === "function" ? window.Send :
+                                        (typeof Send === "function" ? Send : null)));
 
-            if (!sendFn) {
-                console.warn("[ServerDetect] ❌ No Send function available yet");
-                return;
-            }
-            debugLog("[ServerDetect] ✅ Using:", sendFn.name || "anonymous Send");
+                                if (!sendFn) {
+                                    console.warn("[ServerDetect] ❌ No Send function available yet");
+                                    return;
+                                }
+                                debugLog("[ServerDetect] ✅ Using:", sendFn.name || "anonymous Send");
 
-            sendFn(req)
-                .then(raw => {
-                debugLog("[ServerDetect] ↩ Raw response:", raw);
-                return (typeof raw === "string" ? JSON.parse(raw) : raw);
-            })
-                .then(resp => {
-                const r0 = resp?.results?.[0];
-                const users = r0?.result?.response?.users;
-                if (!users) {
-                    console.warn("[ServerDetect] ⚠ No users block in response");
-                    return;
-                }
+                                sendFn(req)
+                                    .then(raw => {
+                                    debugLog("[ServerDetect] ↩ Raw response:", raw);
+                                    return (typeof raw === "string" ? JSON.parse(raw) : raw);
+                                })
+                                    .then(resp => {
+                                    const r0 = resp?.results?.[0];
+                                    const users = r0?.result?.response?.users;
+                                    if (!users) {
+                                        console.warn("[ServerDetect] ⚠ No users block in response");
+                                        return;
+                                    }
 
-                const firstUser = users[Object.keys(users)[0]];
-                const sid = parseInt(firstUser?.serverId, 10);
-                if (!Number.isNaN(sid)) {
-                    window.serverId = sid;
-                    debugLog("[ServerDetect] 🎯 Detected serverId =", sid);
-                } else {
-                    console.warn("[ServerDetect] ⚠ serverId missing in user entry:", firstUser);
-                }
-            })
-                .catch(e => {
-                console.error("[ServerDetect] ❌ Send promise rejected:", e);
-            });
+                                    const firstUser = users[Object.keys(users)[0]];
+                                    const sid = parseInt(firstUser?.serverId, 10);
+                                    if (!Number.isNaN(sid)) {
+                                        window.serverId = sid;
+                                        debugLog("[ServerDetect] 🎯 Detected serverId =", sid);
+                                    } else {
+                                        console.warn("[ServerDetect] ⚠ serverId missing in user entry:", firstUser);
+                                    }
+                                })
+                                    .catch(e => {
+                                    console.error("[ServerDetect] ❌ Send promise rejected:", e);
+                                });
 
-        } catch (e) {
-            console.error("[ServerDetect] ❌ Immediate failure (before Send call):", e);
-        }
-    }
-    const existingPanel = document.getElementById('quiz-rankings-panel');
-    if (existingPanel) existingPanel.remove();
+                            } catch (e) {
+                                console.error("[ServerDetect] ❌ Immediate failure (before Send call):", e);
+                            }
+                        }
+                        const existingPanel = document.getElementById('quiz-rankings-panel');
+                        if (existingPanel) existingPanel.remove();
 
-    // Create the main panel - wider for 2 columns
-    const panel = document.createElement('div');
-    panel.id = 'quiz-rankings-panel';
-    panel.style.cssText = `
+                        // Create the main panel - wider for 2 columns
+                        const panel = document.createElement('div');
+                        panel.id = 'quiz-rankings-panel';
+                        panel.style.cssText = `
         position: fixed;
         top: 50%;
         left: 50%;
@@ -21919,393 +21988,393 @@ window.showQuizRankings = function() {
                             }, 3000);
                         };
                     };
-HWHFuncs.popup.confirm.__tweaker_hooked__ = true;
-debugLog('HWH popup confirm hooked for Tweaker settings access');
-}
-}
-}, 5000);
+                    HWHFuncs.popup.confirm.__tweaker_hooked__ = true;
+                    debugLog('HWH popup confirm hooked for Tweaker settings access');
+                }
+            }
+        }, 5000);
 
-// ================================================================
-// COMPLETE ARENA STATS + ENHANCED SIDEBAR REPLACEMENT
-// Replace entire sidebar section in Tweaker 4.6
-// ================================================================
+        // ================================================================
+        // COMPLETE ARENA STATS + ENHANCED SIDEBAR REPLACEMENT
+        // Replace entire sidebar section in Tweaker 4.6
+        // ================================================================
 
-// Arena Stats Storage Keys
-const STORAGE_KEY_ARENA = 'hwh_arena_battle_history';
-const STORAGE_KEY_GRAND = 'hwh_grand_battle_history';
-const MAX_HISTORY_SIZE = 500;
+        // Arena Stats Storage Keys
+        const STORAGE_KEY_ARENA = 'hwh_arena_battle_history';
+        const STORAGE_KEY_GRAND = 'hwh_grand_battle_history';
+        const MAX_HISTORY_SIZE = 500;
 
-// Arena Stats State
-let arenaHistory = [];
-let grandHistory = [];
-let currentUserId = null;
+        // Arena Stats State
+        let arenaHistory = [];
+        let grandHistory = [];
+        let currentUserId = null;
 
-// Try to get user ID from localStorage on startup
-try {
-    // 1. Check our own cache first (fastest)
-    const storedUserId = localStorage.getItem('hw_UserId');
-    if (storedUserId) {
-        currentUserId = parseInt(storedUserId, 10);
-        debugLog('🔑 User ID loaded from storage:', currentUserId);
-    }
-
-    // 2. Check HWH's localStorage key (very reliable)
-    if (!currentUserId) {
-        const hwUserId = localStorage.getItem('userId');
-        if (hwUserId) {
-            currentUserId = parseInt(hwUserId, 10);
-            localStorage.setItem('hw_UserId', currentUserId);
-            debugLog('🔑 User ID loaded from HWH localStorage:', currentUserId);
-        }
-    }
-} catch (e) {}
-
-// Helper function to get the "true" userId from game sources
-function getGameUserId() {
-    // Check global userId variable
-    if (typeof userId !== 'undefined' && userId) {
-        return parseInt(userId, 10);
-    }
-
-    // Check HWH's localStorage
-    const hwUserId = localStorage.getItem('userId');
-    if (hwUserId) {
-        return parseInt(hwUserId, 10);
-    }
-
-    // Check gameUserData
-    try {
-        const gameData = JSON.parse(localStorage.getItem('gameUserData'));
-        const userIdKey = Object.keys(gameData)[0];
-        if (userIdKey && !isNaN(userIdKey)) {
-            return parseInt(userIdKey, 10);
-        }
-    } catch (e) {}
-
-    return null;
-}
-
-// Wait for game to fully load, then check global variables
-setTimeout(() => {
-    // 3. Check global userId variable (set by HWH early in load)
-    if (!currentUserId && typeof userId !== 'undefined' && userId) {
-        currentUserId = parseInt(userId, 10);
-        localStorage.setItem('hw_UserId', currentUserId);
-        debugLog('🔑 User ID captured from global userId:', currentUserId);
-    }
-
-    // 4. Check gameUserData as last fallback before prompt
-    if (!currentUserId && localStorage.getItem('gameUserData')) {
+        // Try to get user ID from localStorage on startup
         try {
-            const gameData = JSON.parse(localStorage.getItem('gameUserData'));
-            const userIdKey = Object.keys(gameData)[0];
-            if (userIdKey && !isNaN(userIdKey)) {
-                currentUserId = parseInt(userIdKey, 10);
-                localStorage.setItem('hw_UserId', currentUserId);
-                debugLog('🔑 User ID loaded from gameUserData:', currentUserId);
+            // 1. Check our own cache first (fastest)
+            const storedUserId = localStorage.getItem('hw_UserId');
+            if (storedUserId) {
+                currentUserId = parseInt(storedUserId, 10);
+                debugLog('🔑 User ID loaded from storage:', currentUserId);
+            }
+
+            // 2. Check HWH's localStorage key (very reliable)
+            if (!currentUserId) {
+                const hwUserId = localStorage.getItem('userId');
+                if (hwUserId) {
+                    currentUserId = parseInt(hwUserId, 10);
+                    localStorage.setItem('hw_UserId', currentUserId);
+                    debugLog('🔑 User ID loaded from HWH localStorage:', currentUserId);
+                }
             }
         } catch (e) {}
-    }
 
-    // 5. Last resort: prompt user WITH VALIDATION
-    if (!currentUserId) {
-        const trueUserId = getGameUserId();
-
-        if (trueUserId) {
-            // We found it in game sources - just use it!
-            currentUserId = trueUserId;
-            localStorage.setItem('hw_UserId', currentUserId);
-            debugLog('🔑 User ID auto-detected:', currentUserId);
-        } else {
-            // Truly can't find it anywhere - ask user
-            const userInput = prompt('Arena Stats needs your User ID to track battles.\n\nEnter your User ID (found in game settings/profile):');
-            if (userInput && !isNaN(userInput)) {
-                const enteredId = parseInt(userInput, 10);
-
-                // Double-check if we can now verify it
-                const verifyId = getGameUserId();
-                if (verifyId && verifyId !== enteredId) {
-                    alert(`⚠️ Warning: You entered ${enteredId}, but the game shows ${verifyId}.\n\nUsing game's ID: ${verifyId}`);
-                    currentUserId = verifyId;
-                } else {
-                    currentUserId = enteredId;
-                }
-
-                localStorage.setItem('hw_UserId', currentUserId);
-                debugLog('🔑 User ID set:', currentUserId);
-            }
-        }
-    }
-}, 3000);
-
-
-
-function isPet(id) {
-    return id >= 6000;
-}
-
-
-// Load/Save History
-function loadArenaHistory(key) {
-    try {
-        const data = localStorage.getItem(key);
-        return data ? JSON.parse(data) : [];
-    } catch (e) {
-        console.warn('Failed to load arena history:', e);
-        return [];
-    }
-}
-
-function saveArenaHistory(key, history) {
-    try {
-        localStorage.setItem(key, JSON.stringify(history));
-    } catch (e) {
-        console.warn('Failed to save arena history:', e);
-    }
-}
-
-// Initialize histories
-arenaHistory = loadArenaHistory(STORAGE_KEY_ARENA);
-grandHistory = loadArenaHistory(STORAGE_KEY_GRAND);
-
-// ADD THESE DEBUG LINES:
-debugLog('🔍 Arena history loaded:', arenaHistory.length, 'sessions');
-debugLog('🔍 Grand history loaded:', grandHistory.length, 'sessions');
-debugLog('🔍 Arena data:', arenaHistory);
-debugLog('🔍 Grand data:', grandHistory);
-
-
-// Hook into XMLHttpRequest to detect arena screens AND battles
-// Skip if arena stats disabled for performance
-if (localStorage.getItem('hwh_arena_stats_enabled') === 'false') {
-    debugLog('⏸️ Arena stats disabled - skipping XHR hook');
-} else {
-    (function() {
-        const originalOpen = XMLHttpRequest.prototype.open;
-        const originalSend = XMLHttpRequest.prototype.send;
-
-        // Call names we care about
-        const TRACKED_CALLS = ['arena', 'grand', 'userGetInfo', 'clanWarGetInfo'];
-
-        XMLHttpRequest.prototype.open = function(method, url, ...args) {
-            this._arenaTrackedUrl = url;
-            return originalOpen.call(this, method, url, ...args);
-        };
-
-        XMLHttpRequest.prototype.send = function(data) {
-            // Quick bail - only process /api/ calls
-            if (!this._arenaTrackedUrl || !this._arenaTrackedUrl.includes('/api/')) {
-                return originalSend.call(this, data);
+        // Helper function to get the "true" userId from game sources
+        function getGameUserId() {
+            // Check global userId variable
+            if (typeof userId !== 'undefined' && userId) {
+                return parseInt(userId, 10);
             }
 
-            // Quick string check before expensive JSON parse
-            const dataStr = typeof data === 'string' ? data : '';
-            const mightBeRelevant = TRACKED_CALLS.some(t => dataStr.includes(t));
-
-            if (!mightBeRelevant) {
-                return originalSend.call(this, data);
+            // Check HWH's localStorage
+            const hwUserId = localStorage.getItem('userId');
+            if (hwUserId) {
+                return parseInt(hwUserId, 10);
             }
 
-            // Now parse - we likely have something relevant
-            let requestData = null;
+            // Check gameUserData
             try {
-                if (typeof data === 'string') {
-                    requestData = JSON.parse(data);
-                } else if (data instanceof ArrayBuffer || ArrayBuffer.isView(data)) {
-                    const decoder = new TextDecoder('utf-8');
-                    requestData = JSON.parse(decoder.decode(data));
+                const gameData = JSON.parse(localStorage.getItem('gameUserData'));
+                const userIdKey = Object.keys(gameData)[0];
+                if (userIdKey && !isNaN(userIdKey)) {
+                    return parseInt(userIdKey, 10);
                 }
-            } catch (e) {
-                return originalSend.call(this, data);
-            }
+            } catch (e) {}
 
-            if (!requestData?.calls) {
-                return originalSend.call(this, data);
-            }
-
-            const oldOnReadyStateChange = this.onreadystatechange;
-
-            this.onreadystatechange = function(e) {
-                if (this.readyState === 4 && this.status === 200) {
-                    try {
-                        let response;
-                        if (this.responseType === 'json') {
-                            response = this.response;
-                        } else {
-                            response = JSON.parse(this.responseText || this.response);
-                        }
-
-                        if (response?.results && Array.isArray(response.results)) {
-                            response.results.forEach((result, idx) => {
-                                const call = requestData.calls[idx];
-                                if (!call || !result.result?.response) return;
-
-                                const callName = call.name;
-                                const responseData = result.result.response;
-
-                                // Arena enemies screen
-                                if (callName === 'arenaFindEnemies' && Array.isArray(responseData)) {
-                                    debugLog('⚔️ Arena enemies detected:', responseData.length);
-                                    updateStatsForEnemies(responseData, false);
-                                }
-
-                                // Grand arena enemies screen
-                                if (callName === 'grandFindEnemies' && Array.isArray(responseData)) {
-                                    debugLog('🏆 Grand Arena enemies detected:', responseData.length);
-                                    updateStatsForEnemies(responseData, true);
-                                }
-
-                                // Capture user ID
-                                if (callName === 'userGetInfo' && responseData?.userId) {
-                                    currentUserId = parseInt(responseData.userId, 10);
-                                    debugLog('👤 User ID captured:', currentUserId);
-                                }
-
-                                // Capture GW member tries
-                                if (callName === 'clanWarGetInfo' && responseData) {
-                                    window.gwMemberTries = responseData.clanTries || {};
-                                    window.gwMyTries = responseData.myTries ?? 0;
-                                    window.gwEnemyTries = responseData.enemyClanTries || {};
-                                    window.gwActive = !!responseData.enemyId;
-                                    debugLog('⚔️ GW Tries captured:', window.gwMyTries, 'active:', window.gwActive);
-                                }
-
-                                // Arena battle completed
-                                if (callName === 'arenaAttack' || callName === 'arenaEndBattle') {
-                                    debugLog('⚔️ Arena battle completed');
-                                    if (currentUserId && responseData?.battles?.[0]) {
-                                        const battleData = responseData.battles[0];
-                                        const battleRecord = {
-                                            timestamp: Math.floor(Date.now() / 1000),
-                                            opponentId: parseInt(call.args?.userId, 10),
-                                            type: 'A',
-                                            myTeam: extractTeam(battleData.attackers),
-                                            opponentTeam: extractTeam(battleData.defenders[0] || battleData.defenders),
-                                            win: responseData.win || false
-                                        };
-                                        battleRecord.myTeamKey = generateTeamKey(battleRecord.myTeam);
-                                        battleRecord.opponentTeamKey = generateTeamKey(battleRecord.opponentTeam);
-                                        battleRecord.myTeamKeyNoPet = generateTeamKeyNoPet(battleRecord.myTeam);
-                                        battleRecord.opponentTeamKeyNoPet = generateTeamKeyNoPet(battleRecord.opponentTeam);
-
-                                        if (battleRecord.opponentId) {
-                                            debugLog('💾 Saving arena battle');
-                                            addBattleToHistory(arenaHistory, STORAGE_KEY_ARENA, battleRecord, 1);
-                                        }
-                                    }
-                                }
-
-                                // Grand arena battle completed
-                                if (callName === 'grandAttack' || callName === 'grandEndBattle') {
-                                    debugLog('🏆 Grand Arena battle completed');
-                                    if (currentUserId && responseData?.battles?.[0]) {
-                                        const battleData = responseData.battles[0];
-                                        const battleRecord = {
-                                            timestamp: Math.floor(Date.now() / 1000),
-                                            opponentId: parseInt(call.args?.userId, 10) || null,
-                                            type: 'A',
-                                            myTeam: extractTeam(battleData.attackers),
-                                            opponentTeam: extractTeam(battleData.defenders[0] || battleData.defenders),
-                                            win: responseData.win || false
-                                        };
-                                        battleRecord.myTeamKey = generateTeamKey(battleRecord.myTeam);
-                                        battleRecord.opponentTeamKey = generateTeamKey(battleRecord.opponentTeam);
-                                        battleRecord.myTeamKeyNoPet = generateTeamKeyNoPet(battleRecord.myTeam);
-                                        battleRecord.opponentTeamKeyNoPet = generateTeamKeyNoPet(battleRecord.opponentTeam);
-
-                                        if (battleRecord.opponentId) {
-                                            debugLog('💾 Saving grand arena battle');
-                                            addBattleToHistory(grandHistory, STORAGE_KEY_GRAND, battleRecord, 2);
-                                        }
-                                    }
-                                }
-                            });
-                        }
-                    } catch (err) {
-                        console.error('Arena hook error:', err);
-                    }
-                }
-
-                if (oldOnReadyStateChange) {
-                    return oldOnReadyStateChange.apply(this, arguments);
-                }
-            };
-
-            return originalSend.call(this, data);
-        };
-    })();
-} // end arena stats enabled check
-
-// Update stats tab when enemies are detected
-function updateStatsForEnemies(enemies, isGrand) {
-    const statsContent = document.getElementById('stats-tab-content');
-    if (!statsContent) return;
-
-    const history = isGrand ? grandHistory : arenaHistory;
-    const arenaType = isGrand ? '🏆 Grand Arena' : '⚔️ Arena';
-
-    let html = `<div style="text-align: center; color: #ffd700; font-weight: bold; font-size: 13px; margin-bottom: 12px;">${arenaType} - Current Enemies</div>`;
-
-    enemies.forEach((enemy, idx) => {
-        const enemyName = enemy.user?.name || enemy.name || 'Unknown';
-        const enemyRank = enemy.place ? `[${enemy.place}]` : '';
-        const enemyId = parseInt(enemy.user?.id || enemy.userId || enemy.id || 0, 10);
-
-        // Get current enemy team
-        let currentEnemyTeam = [];
-        if (isGrand && enemy.heroes && enemy.heroes.length > 0) {
-            currentEnemyTeam = extractTeam(enemy.heroes[0]);
-        } else if (!isGrand && enemy.heroes) {
-            currentEnemyTeam = extractTeam(enemy.heroes);
+            return null;
         }
-        const currentEnemyTeamKey = generateTeamKey(currentEnemyTeam);
 
-        // Find battles against this opponent's CURRENT team
-        const sessions = history.filter(s => s.opponentId === enemyId && s.type === 'A');
+        // Wait for game to fully load, then check global variables
+        setTimeout(() => {
+            // 3. Check global userId variable (set by HWH early in load)
+            if (!currentUserId && typeof userId !== 'undefined' && userId) {
+                currentUserId = parseInt(userId, 10);
+                localStorage.setItem('hw_UserId', currentUserId);
+                debugLog('🔑 User ID captured from global userId:', currentUserId);
+            }
 
-        // Group by MY team composition
-        const myTeamStats = {};
-
-        sessions.forEach(session => {
-            session.battles.forEach(battle => {
-                // Only count battles vs their CURRENT team
-                if (battle.opponentTeamKey === currentEnemyTeamKey) {
-                    const myTeamKey = battle.myTeamKey;
-
-                    if (!myTeamStats[myTeamKey]) {
-                        myTeamStats[myTeamKey] = {
-                            team: battle.myTeam,
-                            wins: 0,
-                            losses: 0
-                        };
+            // 4. Check gameUserData as last fallback before prompt
+            if (!currentUserId && localStorage.getItem('gameUserData')) {
+                try {
+                    const gameData = JSON.parse(localStorage.getItem('gameUserData'));
+                    const userIdKey = Object.keys(gameData)[0];
+                    if (userIdKey && !isNaN(userIdKey)) {
+                        currentUserId = parseInt(userIdKey, 10);
+                        localStorage.setItem('hw_UserId', currentUserId);
+                        debugLog('🔑 User ID loaded from gameUserData:', currentUserId);
                     }
+                } catch (e) {}
+            }
 
-                    if (battle.win) {
-                        myTeamStats[myTeamKey].wins++;
-                    } else {
-                        myTeamStats[myTeamKey].losses++;
+            // 5. Last resort: prompt user WITH VALIDATION
+            if (!currentUserId) {
+                const trueUserId = getGameUserId();
+
+                if (trueUserId) {
+                    // We found it in game sources - just use it!
+                    currentUserId = trueUserId;
+                    localStorage.setItem('hw_UserId', currentUserId);
+                    debugLog('🔑 User ID auto-detected:', currentUserId);
+                } else {
+                    // Truly can't find it anywhere - ask user
+                    const userInput = prompt('Arena Stats needs your User ID to track battles.\n\nEnter your User ID (found in game settings/profile):');
+                    if (userInput && !isNaN(userInput)) {
+                        const enteredId = parseInt(userInput, 10);
+
+                        // Double-check if we can now verify it
+                        const verifyId = getGameUserId();
+                        if (verifyId && verifyId !== enteredId) {
+                            alert(`⚠️ Warning: You entered ${enteredId}, but the game shows ${verifyId}.\n\nUsing game's ID: ${verifyId}`);
+                            currentUserId = verifyId;
+                        } else {
+                            currentUserId = enteredId;
+                        }
+
+                        localStorage.setItem('hw_UserId', currentUserId);
+                        debugLog('🔑 User ID set:', currentUserId);
                     }
                 }
-            });
-        });
+            }
+        }, 3000);
 
-        // Calculate overall vs current team
-        let totalWins = 0;
-        let totalLosses = 0;
-        Object.values(myTeamStats).forEach(stats => {
-            totalWins += stats.wins;
-            totalLosses += stats.losses;
-        });
 
-        const total = totalWins + totalLosses;
-        const winRate = total > 0 ? ((totalWins / total) * 100).toFixed(0) : '0';
 
-        const bgColor = total === 0 ? 'rgba(100,100,100,0.15)' :
-        winRate >= 70 ? 'rgba(74,226,154,0.15)' :
-        winRate >= 40 ? 'rgba(139,105,20,0.15)' :
-        'rgba(255,107,107,0.15)';
+        function isPet(id) {
+            return id >= 6000;
+        }
 
-        html += `
+
+        // Load/Save History
+        function loadArenaHistory(key) {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : [];
+            } catch (e) {
+                console.warn('Failed to load arena history:', e);
+                return [];
+            }
+        }
+
+        function saveArenaHistory(key, history) {
+            try {
+                localStorage.setItem(key, JSON.stringify(history));
+            } catch (e) {
+                console.warn('Failed to save arena history:', e);
+            }
+        }
+
+        // Initialize histories
+        arenaHistory = loadArenaHistory(STORAGE_KEY_ARENA);
+        grandHistory = loadArenaHistory(STORAGE_KEY_GRAND);
+
+        // ADD THESE DEBUG LINES:
+        debugLog('🔍 Arena history loaded:', arenaHistory.length, 'sessions');
+        debugLog('🔍 Grand history loaded:', grandHistory.length, 'sessions');
+        debugLog('🔍 Arena data:', arenaHistory);
+        debugLog('🔍 Grand data:', grandHistory);
+
+
+        // Hook into XMLHttpRequest to detect arena screens AND battles
+        // Skip if arena stats disabled for performance
+        if (localStorage.getItem('hwh_arena_stats_enabled') === 'false') {
+            debugLog('⏸️ Arena stats disabled - skipping XHR hook');
+        } else {
+            (function() {
+                const originalOpen = XMLHttpRequest.prototype.open;
+                const originalSend = XMLHttpRequest.prototype.send;
+
+                // Call names we care about
+                const TRACKED_CALLS = ['arena', 'grand', 'userGetInfo', 'clanWarGetInfo'];
+
+                XMLHttpRequest.prototype.open = function(method, url, ...args) {
+                    this._arenaTrackedUrl = url;
+                    return originalOpen.call(this, method, url, ...args);
+                };
+
+                XMLHttpRequest.prototype.send = function(data) {
+                    // Quick bail - only process /api/ calls
+                    if (!this._arenaTrackedUrl || !this._arenaTrackedUrl.includes('/api/')) {
+                        return originalSend.call(this, data);
+                    }
+
+                    // Quick string check before expensive JSON parse
+                    const dataStr = typeof data === 'string' ? data : '';
+                    const mightBeRelevant = TRACKED_CALLS.some(t => dataStr.includes(t));
+
+                    if (!mightBeRelevant) {
+                        return originalSend.call(this, data);
+                    }
+
+                    // Now parse - we likely have something relevant
+                    let requestData = null;
+                    try {
+                        if (typeof data === 'string') {
+                            requestData = JSON.parse(data);
+                        } else if (data instanceof ArrayBuffer || ArrayBuffer.isView(data)) {
+                            const decoder = new TextDecoder('utf-8');
+                            requestData = JSON.parse(decoder.decode(data));
+                        }
+                    } catch (e) {
+                        return originalSend.call(this, data);
+                    }
+
+                    if (!requestData?.calls) {
+                        return originalSend.call(this, data);
+                    }
+
+                    const oldOnReadyStateChange = this.onreadystatechange;
+
+                    this.onreadystatechange = function(e) {
+                        if (this.readyState === 4 && this.status === 200) {
+                            try {
+                                let response;
+                                if (this.responseType === 'json') {
+                                    response = this.response;
+                                } else {
+                                    response = JSON.parse(this.responseText || this.response);
+                                }
+
+                                if (response?.results && Array.isArray(response.results)) {
+                                    response.results.forEach((result, idx) => {
+                                        const call = requestData.calls[idx];
+                                        if (!call || !result.result?.response) return;
+
+                                        const callName = call.name;
+                                        const responseData = result.result.response;
+
+                                        // Arena enemies screen
+                                        if (callName === 'arenaFindEnemies' && Array.isArray(responseData)) {
+                                            debugLog('⚔️ Arena enemies detected:', responseData.length);
+                                            updateStatsForEnemies(responseData, false);
+                                        }
+
+                                        // Grand arena enemies screen
+                                        if (callName === 'grandFindEnemies' && Array.isArray(responseData)) {
+                                            debugLog('🏆 Grand Arena enemies detected:', responseData.length);
+                                            updateStatsForEnemies(responseData, true);
+                                        }
+
+                                        // Capture user ID
+                                        if (callName === 'userGetInfo' && responseData?.userId) {
+                                            currentUserId = parseInt(responseData.userId, 10);
+                                            debugLog('👤 User ID captured:', currentUserId);
+                                        }
+
+                                        // Capture GW member tries
+                                        if (callName === 'clanWarGetInfo' && responseData) {
+                                            window.gwMemberTries = responseData.clanTries || {};
+                                            window.gwMyTries = responseData.myTries ?? 0;
+                                            window.gwEnemyTries = responseData.enemyClanTries || {};
+                                            window.gwActive = !!responseData.enemyId;
+                                            debugLog('⚔️ GW Tries captured:', window.gwMyTries, 'active:', window.gwActive);
+                                        }
+
+                                        // Arena battle completed
+                                        if (callName === 'arenaAttack' || callName === 'arenaEndBattle') {
+                                            debugLog('⚔️ Arena battle completed');
+                                            if (currentUserId && responseData?.battles?.[0]) {
+                                                const battleData = responseData.battles[0];
+                                                const battleRecord = {
+                                                    timestamp: Math.floor(Date.now() / 1000),
+                                                    opponentId: parseInt(call.args?.userId, 10),
+                                                    type: 'A',
+                                                    myTeam: extractTeam(battleData.attackers),
+                                                    opponentTeam: extractTeam(battleData.defenders[0] || battleData.defenders),
+                                                    win: responseData.win || false
+                                                };
+                                                battleRecord.myTeamKey = generateTeamKey(battleRecord.myTeam);
+                                                battleRecord.opponentTeamKey = generateTeamKey(battleRecord.opponentTeam);
+                                                battleRecord.myTeamKeyNoPet = generateTeamKeyNoPet(battleRecord.myTeam);
+                                                battleRecord.opponentTeamKeyNoPet = generateTeamKeyNoPet(battleRecord.opponentTeam);
+
+                                                if (battleRecord.opponentId) {
+                                                    debugLog('💾 Saving arena battle');
+                                                    addBattleToHistory(arenaHistory, STORAGE_KEY_ARENA, battleRecord, 1);
+                                                }
+                                            }
+                                        }
+
+                                        // Grand arena battle completed
+                                        if (callName === 'grandAttack' || callName === 'grandEndBattle') {
+                                            debugLog('🏆 Grand Arena battle completed');
+                                            if (currentUserId && responseData?.battles?.[0]) {
+                                                const battleData = responseData.battles[0];
+                                                const battleRecord = {
+                                                    timestamp: Math.floor(Date.now() / 1000),
+                                                    opponentId: parseInt(call.args?.userId, 10) || null,
+                                                    type: 'A',
+                                                    myTeam: extractTeam(battleData.attackers),
+                                                    opponentTeam: extractTeam(battleData.defenders[0] || battleData.defenders),
+                                                    win: responseData.win || false
+                                                };
+                                                battleRecord.myTeamKey = generateTeamKey(battleRecord.myTeam);
+                                                battleRecord.opponentTeamKey = generateTeamKey(battleRecord.opponentTeam);
+                                                battleRecord.myTeamKeyNoPet = generateTeamKeyNoPet(battleRecord.myTeam);
+                                                battleRecord.opponentTeamKeyNoPet = generateTeamKeyNoPet(battleRecord.opponentTeam);
+
+                                                if (battleRecord.opponentId) {
+                                                    debugLog('💾 Saving grand arena battle');
+                                                    addBattleToHistory(grandHistory, STORAGE_KEY_GRAND, battleRecord, 2);
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                            } catch (err) {
+                                console.error('Arena hook error:', err);
+                            }
+                        }
+
+                        if (oldOnReadyStateChange) {
+                            return oldOnReadyStateChange.apply(this, arguments);
+                        }
+                    };
+
+                    return originalSend.call(this, data);
+                };
+            })();
+        } // end arena stats enabled check
+
+        // Update stats tab when enemies are detected
+        function updateStatsForEnemies(enemies, isGrand) {
+            const statsContent = document.getElementById('stats-tab-content');
+            if (!statsContent) return;
+
+            const history = isGrand ? grandHistory : arenaHistory;
+            const arenaType = isGrand ? '🏆 Grand Arena' : '⚔️ Arena';
+
+            let html = `<div style="text-align: center; color: #ffd700; font-weight: bold; font-size: 13px; margin-bottom: 12px;">${arenaType} - Current Enemies</div>`;
+
+            enemies.forEach((enemy, idx) => {
+                const enemyName = enemy.user?.name || enemy.name || 'Unknown';
+                const enemyRank = enemy.place ? `[${enemy.place}]` : '';
+                const enemyId = parseInt(enemy.user?.id || enemy.userId || enemy.id || 0, 10);
+
+                // Get current enemy team
+                let currentEnemyTeam = [];
+                if (isGrand && enemy.heroes && enemy.heroes.length > 0) {
+                    currentEnemyTeam = extractTeam(enemy.heroes[0]);
+                } else if (!isGrand && enemy.heroes) {
+                    currentEnemyTeam = extractTeam(enemy.heroes);
+                }
+                const currentEnemyTeamKey = generateTeamKey(currentEnemyTeam);
+
+                // Find battles against this opponent's CURRENT team
+                const sessions = history.filter(s => s.opponentId === enemyId && s.type === 'A');
+
+                // Group by MY team composition
+                const myTeamStats = {};
+
+                sessions.forEach(session => {
+                    session.battles.forEach(battle => {
+                        // Only count battles vs their CURRENT team
+                        if (battle.opponentTeamKey === currentEnemyTeamKey) {
+                            const myTeamKey = battle.myTeamKey;
+
+                            if (!myTeamStats[myTeamKey]) {
+                                myTeamStats[myTeamKey] = {
+                                    team: battle.myTeam,
+                                    wins: 0,
+                                    losses: 0
+                                };
+                            }
+
+                            if (battle.win) {
+                                myTeamStats[myTeamKey].wins++;
+                            } else {
+                                myTeamStats[myTeamKey].losses++;
+                            }
+                        }
+                    });
+                });
+
+                // Calculate overall vs current team
+                let totalWins = 0;
+                let totalLosses = 0;
+                Object.values(myTeamStats).forEach(stats => {
+                    totalWins += stats.wins;
+                    totalLosses += stats.losses;
+                });
+
+                const total = totalWins + totalLosses;
+                const winRate = total > 0 ? ((totalWins / total) * 100).toFixed(0) : '0';
+
+                const bgColor = total === 0 ? 'rgba(100,100,100,0.15)' :
+                winRate >= 70 ? 'rgba(74,226,154,0.15)' :
+                winRate >= 40 ? 'rgba(139,105,20,0.15)' :
+                'rgba(255,107,107,0.15)';
+
+                html += `
             <div style="background: ${bgColor}; padding: 8px; border-radius: 4px; margin-bottom: 8px; border-left: 3px solid ${total === 0 ? '#666' : winRate >= 70 ? '#4ae29a' : winRate >= 40 ? '#ffd700' : '#ff6b6b'};">
                 <div class="enemy-header" data-enemy-id="${idx}" style="font-size: 12px; font-weight: bold; margin-bottom: 4px;">
                     <span class="enemy-collapse-icon">▼</span>
@@ -22389,119 +22458,119 @@ function updateStatsForEnemies(enemies, isGrand) {
             }
         }
 
-// Hero Name Resolution
-const heroNameCache = {};
-function getHeroName(heroId) {
-    if (heroNameCache[heroId]) return heroNameCache[heroId];
+        // Hero Name Resolution
+        const heroNameCache = {};
+        function getHeroName(heroId) {
+            if (heroNameCache[heroId]) return heroNameCache[heroId];
 
-    // Use cheats.translate - works for all heroes, titans, and pets
-    try {
-        if (typeof cheats !== 'undefined' && cheats.translate) {
-            const name = cheats.translate(`LIB_HERO_NAME_${heroId}`);
-            if (name && !name.startsWith('LIB_HERO_NAME_')) {
-                heroNameCache[heroId] = name;
-                return name;
+            // Use cheats.translate - works for all heroes, titans, and pets
+            try {
+                if (typeof cheats !== 'undefined' && cheats.translate) {
+                    const name = cheats.translate(`LIB_HERO_NAME_${heroId}`);
+                    if (name && !name.startsWith('LIB_HERO_NAME_')) {
+                        heroNameCache[heroId] = name;
+                        return name;
+                    }
+                }
+            } catch (e) {
+                console.warn(`Failed to get name for hero ${heroId}:`, e);
+            }
+
+            // Fallback only if translate fails
+            return `Hero_${heroId}`;
+        }
+
+        function generateTeamKey(team) {
+            if (!team || !Array.isArray(team)) return '';
+            return team.map(h => `${h.id}_${h.level || 0}_${h.color || 0}_${h.star || 0}`).join('|');
+        }
+
+        function generateTeamKeyNoPet(team) {
+            if (!team || !Array.isArray(team)) return '';
+            const noPetTeam = team.filter(h => !isPet(h.id));
+            return noPetTeam.map(h => `${h.id}_${h.level || 0}_${h.color || 0}_${h.star || 0}`).join('|');
+        }
+
+        function extractTeam(heroes) {
+            if (!heroes) return [];
+            const teamArray = Array.isArray(heroes) ? heroes : Object.values(heroes);
+            return teamArray.map(h => ({
+                id: h.id || 0,
+                level: h.level || 0,
+                color: h.color || 0,
+                star: h.star || 0
+            })).filter(h => h.id > 0);
+        }
+
+        // Battle History Storage Function
+        function addBattleToHistory(history, storageKey, battle, minWins = 1) {
+            if (!battle) return;
+
+            let session = history.find(s =>
+                                       s.opponentId === battle.opponentId &&
+                                       s.timestamp === battle.timestamp &&
+                                       s.type === battle.type
+                                      );
+
+            if (!session) {
+                session = {
+                    opponentId: battle.opponentId,
+                    timestamp: battle.timestamp,
+                    type: battle.type,
+                    battles: []
+                };
+                history.push(session);
+            }
+
+            const exists = session.battles.some(b =>
+                                                b.opponentTeamKey === battle.opponentTeamKey &&
+                                                b.myTeamKey === battle.myTeamKey
+                                               );
+
+            if (!exists) {
+                session.battles.push(battle);
+                const winCount = session.battles.filter(b => b.win).length;
+                session.win = winCount >= minWins;
+
+                if (history.length > MAX_HISTORY_SIZE) {
+                    history.sort((a, b) => a.timestamp - b.timestamp);
+                    history.shift();
+                }
+
+                // Debounce save to avoid blocking during rapid battles
+                clearTimeout(window._arenaHistorySaveTimeout);
+                window._arenaHistorySaveTimeout = setTimeout(() => {
+                    saveArenaHistory(storageKey, history);
+                }, 500);
+                debugLog(`💾 Battle saved to ${storageKey}`);
             }
         }
-    } catch (e) {
-        console.warn(`Failed to get name for hero ${heroId}:`, e);
-    }
+        // Enhanced Chat Sidebar with Mass PM and Stats Tab
+        window.createChatPopup = function(){
+            const existing = DOMCache.get('quickChatSidebar', '#quickChatSidebar');
+            if (existing) {
+                existing.classList.toggle('collapsed');
+                return;
+            }
 
-    // Fallback only if translate fails
-    return `Hero_${heroId}`;
-}
+            const savedUsers = JSON.parse(localStorage.getItem('quickChatUsers') || '[]');
+            let guildMembers = [];
+            let selectedRecipient = null;
+            let selectedMembers = new Set();
+            let currentSortMode = 'alphabetical'; // Default sort mode (A-Z within groups)
 
-function generateTeamKey(team) {
-    if (!team || !Array.isArray(team)) return '';
-    return team.map(h => `${h.id}_${h.level || 0}_${h.color || 0}_${h.star || 0}`).join('|');
-}
+            let sidebarWidth = parseInt(localStorage.getItem('hwh_chat_sidebar_width') || '224');
 
-function generateTeamKeyNoPet(team) {
-    if (!team || !Array.isArray(team)) return '';
-    const noPetTeam = team.filter(h => !isPet(h.id));
-    return noPetTeam.map(h => `${h.id}_${h.level || 0}_${h.color || 0}_${h.star || 0}`).join('|');
-}
+            let warStatus = {
+                gw: { active: false, tries: 0, targets: 0 },
+                cow: { active: false, heroTries: 0, titanTries: 0, heroTargets: 0, titanTargets: 0 }
+            };
 
-function extractTeam(heroes) {
-    if (!heroes) return [];
-    const teamArray = Array.isArray(heroes) ? heroes : Object.values(heroes);
-    return teamArray.map(h => ({
-        id: h.id || 0,
-        level: h.level || 0,
-        color: h.color || 0,
-        star: h.star || 0
-    })).filter(h => h.id > 0);
-}
+            const sidebar = document.createElement('div');
+            sidebar.id = 'quickChatSidebar';
+            sidebar.className = '';
 
-// Battle History Storage Function
-function addBattleToHistory(history, storageKey, battle, minWins = 1) {
-    if (!battle) return;
-
-    let session = history.find(s =>
-                               s.opponentId === battle.opponentId &&
-                               s.timestamp === battle.timestamp &&
-                               s.type === battle.type
-                              );
-
-    if (!session) {
-        session = {
-            opponentId: battle.opponentId,
-            timestamp: battle.timestamp,
-            type: battle.type,
-            battles: []
-        };
-        history.push(session);
-    }
-
-    const exists = session.battles.some(b =>
-                                        b.opponentTeamKey === battle.opponentTeamKey &&
-                                        b.myTeamKey === battle.myTeamKey
-                                       );
-
-    if (!exists) {
-        session.battles.push(battle);
-        const winCount = session.battles.filter(b => b.win).length;
-        session.win = winCount >= minWins;
-
-        if (history.length > MAX_HISTORY_SIZE) {
-            history.sort((a, b) => a.timestamp - b.timestamp);
-            history.shift();
-        }
-
-        // Debounce save to avoid blocking during rapid battles
-        clearTimeout(window._arenaHistorySaveTimeout);
-        window._arenaHistorySaveTimeout = setTimeout(() => {
-            saveArenaHistory(storageKey, history);
-        }, 500);
-        debugLog(`💾 Battle saved to ${storageKey}`);
-    }
-}
-// Enhanced Chat Sidebar with Mass PM and Stats Tab
-window.createChatPopup = function(){
-    const existing = DOMCache.get('quickChatSidebar', '#quickChatSidebar');
-    if (existing) {
-        existing.classList.toggle('collapsed');
-        return;
-    }
-
-    const savedUsers = JSON.parse(localStorage.getItem('quickChatUsers') || '[]');
-    let guildMembers = [];
-    let selectedRecipient = null;
-    let selectedMembers = new Set();
-    let currentSortMode = 'alphabetical'; // Default sort mode (A-Z within groups)
-
-    let sidebarWidth = parseInt(localStorage.getItem('hwh_chat_sidebar_width') || '224');
-
-    let warStatus = {
-        gw: { active: false, tries: 0, targets: 0 },
-        cow: { active: false, heroTries: 0, titanTries: 0, heroTargets: 0, titanTargets: 0 }
-    };
-
-    const sidebar = document.createElement('div');
-    sidebar.id = 'quickChatSidebar';
-    sidebar.className = '';
-
-    sidebar.innerHTML = `
+            sidebar.innerHTML = `
         <style>
             #quickChatSidebar {
                 position: fixed;
@@ -23481,141 +23550,141 @@ ${member.role === 'owner' ? '<span style="font-size: 9px;">👑</span>' : ''}
                 });
             }
 
-function initializeSortButtons() {
-    const sortToggle = document.getElementById('sortToggleBtn');
+            function initializeSortButtons() {
+                const sortToggle = document.getElementById('sortToggleBtn');
 
-    if (sortToggle) {
-        sortToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
+                if (sortToggle) {
+                    sortToggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
 
-            // Toggle between modes
-            const currentMode = sortToggle.dataset.sort;
-            const newMode = currentMode === 'alphabetical' ? 'last-active' : 'alphabetical';
+                        // Toggle between modes
+                        const currentMode = sortToggle.dataset.sort;
+                        const newMode = currentMode === 'alphabetical' ? 'last-active' : 'alphabetical';
 
-            // Update button
-            sortToggle.dataset.sort = newMode;
-            if (newMode === 'alphabetical') {
-                sortToggle.textContent = 'A';
-                sortToggle.title = 'Sort: A-Z (click to toggle to Last Active)';
-            } else {
-                sortToggle.textContent = '🕒';
-                sortToggle.title = 'Sort: Last Active (click to toggle to A-Z)';
+                        // Update button
+                        sortToggle.dataset.sort = newMode;
+                        if (newMode === 'alphabetical') {
+                            sortToggle.textContent = 'A';
+                            sortToggle.title = 'Sort: A-Z (click to toggle to Last Active)';
+                        } else {
+                            sortToggle.textContent = '🕒';
+                            sortToggle.title = 'Sort: Last Active (click to toggle to A-Z)';
+                        }
+
+                        // Perform sort
+                        sortGuildMembers(newMode);
+
+                        // Save preference
+                        localStorage.setItem('hwh_member_sort_mode', newMode);
+                    });
+                }
+
+                // Load saved sort preference
+                const savedSort = localStorage.getItem('hwh_member_sort_mode') || 'alphabetical';
+                if (sortToggle) {
+                    sortToggle.dataset.sort = savedSort;
+                    if (savedSort === 'alphabetical') {
+                        sortToggle.textContent = 'A';
+                        sortToggle.title = 'Sort: A-Z (click to toggle to Last Active)';
+                    } else {
+                        sortToggle.textContent = '🕒';
+                        sortToggle.title = 'Sort: Last Active (click to toggle to A-Z)';
+                    }
+                    currentSortMode = savedSort;
+                }
             }
 
-            // Perform sort
-            sortGuildMembers(newMode);
-
-            // Save preference
-            localStorage.setItem('hwh_member_sort_mode', newMode);
-        });
-    }
-
-    // Load saved sort preference
-    const savedSort = localStorage.getItem('hwh_member_sort_mode') || 'alphabetical';
-    if (sortToggle) {
-        sortToggle.dataset.sort = savedSort;
-        if (savedSort === 'alphabetical') {
-            sortToggle.textContent = 'A';
-            sortToggle.title = 'Sort: A-Z (click to toggle to Last Active)';
-        } else {
-            sortToggle.textContent = '🕒';
-            sortToggle.title = 'Sort: Last Active (click to toggle to A-Z)';
-        }
-        currentSortMode = savedSort;
-    }
-}
 
 
+            function selectRecipient(recipient) {
+                selectedRecipient = recipient;
 
-function selectRecipient(recipient) {
-    selectedRecipient = recipient;
+                const display = document.getElementById('selectedRecipientDisplay');
+                const nameSpan = document.getElementById('selectedRecipientName');
+                const messageInput = document.getElementById('messageInput');
+                const sendBtn = document.getElementById('sendBtn');
 
-    const display = document.getElementById('selectedRecipientDisplay');
-    const nameSpan = document.getElementById('selectedRecipientName');
-    const messageInput = document.getElementById('messageInput');
-    const sendBtn = document.getElementById('sendBtn');
+                if (recipient) {
+                    if (recipient.type === 'guild') {
+                        nameSpan.textContent = '💬 Guild Chat';
+                        messageInput.placeholder = 'Message to guild...';
+                    } else if (recipient.type === 'mass-pm') {
+                        // NEW: Handle mass PM recipient type
+                        nameSpan.textContent = `📤 PM All (${recipient.count} members)`;
+                        messageInput.placeholder = `Message to ${recipient.count} guild members...`;
+                    } else {
+                        nameSpan.textContent = `👤 ${recipient.name}`;
+                        messageInput.placeholder = `Message to ${recipient.name}...`;
+                    }
+                    display.style.display = 'block';
+                    messageInput.disabled = false;
+                    messageInput.focus(); // Auto-focus for better UX
+                    updateSendButton();
+                }
+            }
 
-    if (recipient) {
-        if (recipient.type === 'guild') {
-            nameSpan.textContent = '💬 Guild Chat';
-            messageInput.placeholder = 'Message to guild...';
-        } else if (recipient.type === 'mass-pm') {
-            // NEW: Handle mass PM recipient type
-            nameSpan.textContent = `📤 PM All (${recipient.count} members)`;
-            messageInput.placeholder = `Message to ${recipient.count} guild members...`;
-        } else {
-            nameSpan.textContent = `👤 ${recipient.name}`;
-            messageInput.placeholder = `Message to ${recipient.name}...`;
-        }
-        display.style.display = 'block';
-        messageInput.disabled = false;
-        messageInput.focus(); // Auto-focus for better UX
-        updateSendButton();
-    }
-}
+            function clearRecipient() {
+                selectedRecipient = null;
+                document.getElementById('selectedRecipientDisplay').style.display = 'none';
+                document.getElementById('messageInput').placeholder = 'Select recipient first...';
+                document.getElementById('messageInput').disabled = true;
+                document.getElementById('sendBtn').disabled = true;
+            }
 
-function clearRecipient() {
-    selectedRecipient = null;
-    document.getElementById('selectedRecipientDisplay').style.display = 'none';
-    document.getElementById('messageInput').placeholder = 'Select recipient first...';
-    document.getElementById('messageInput').disabled = true;
-    document.getElementById('sendBtn').disabled = true;
-}
+            sidebar.querySelector('.guild-chat-btn').addEventListener('click', () => {
+                selectRecipient({ type: 'guild', name: 'Guild Chat' });
+            });
 
-sidebar.querySelector('.guild-chat-btn').addEventListener('click', () => {
-    selectRecipient({ type: 'guild', name: 'Guild Chat' });
-});
+            sidebar.querySelector('#openGameChatBtn').addEventListener('click', () => {
+                if (window.goGuildChat) {
+                    window.goGuildChat();
+                } else {
+                    alert('Chat function not available');
+                }
+            });
 
-sidebar.querySelector('#openGameChatBtn').addEventListener('click', () => {
-    if (window.goGuildChat) {
-        window.goGuildChat();
-    } else {
-        alert('Chat function not available');
-    }
-});
+            sidebar.querySelector('.clear-btn').addEventListener('click', clearRecipient);
 
-sidebar.querySelector('.clear-btn').addEventListener('click', clearRecipient);
+            // Direct User ID functionality
+            const MAX_RECENT_USERS = 10;
 
-// Direct User ID functionality
-const MAX_RECENT_USERS = 10;
+            function getRecentUsers() {
+                const stored = localStorage.getItem('hwh_recent_user_ids');
+                return stored ? JSON.parse(stored) : [];
+            }
 
-function getRecentUsers() {
-    const stored = localStorage.getItem('hwh_recent_user_ids');
-    return stored ? JSON.parse(stored) : [];
-}
+            function saveRecentUser(userId, userName) {
+                let recent = getRecentUsers();
+                // Remove if already exists
+                recent = recent.filter(u => u.id !== userId);
+                // Add to beginning with name
+                recent.unshift({ id: userId, name: userName || `User ${userId}`, timestamp: Date.now() });
+                // Keep only MAX_RECENT_USERS
+                recent = recent.slice(0, MAX_RECENT_USERS);
+                localStorage.setItem('hwh_recent_user_ids', JSON.stringify(recent));
+                displayRecentUsers();
+            }
 
-function saveRecentUser(userId, userName) {
-    let recent = getRecentUsers();
-    // Remove if already exists
-    recent = recent.filter(u => u.id !== userId);
-    // Add to beginning with name
-    recent.unshift({ id: userId, name: userName || `User ${userId}`, timestamp: Date.now() });
-    // Keep only MAX_RECENT_USERS
-    recent = recent.slice(0, MAX_RECENT_USERS);
-    localStorage.setItem('hwh_recent_user_ids', JSON.stringify(recent));
-    displayRecentUsers();
-}
+            function deleteRecentUser(userId) {
+                let recent = getRecentUsers();
+                recent = recent.filter(u => u.id !== userId);
+                localStorage.setItem('hwh_recent_user_ids', JSON.stringify(recent));
+                displayRecentUsers();
+            }
+            function displayRecentUsers() {
+                const recent = getRecentUsers();
+                const container = document.getElementById('recentUsersContainer');
+                const list = document.getElementById('recentUsersList');
 
-function deleteRecentUser(userId) {
-    let recent = getRecentUsers();
-    recent = recent.filter(u => u.id !== userId);
-    localStorage.setItem('hwh_recent_user_ids', JSON.stringify(recent));
-    displayRecentUsers();
-}
-function displayRecentUsers() {
-    const recent = getRecentUsers();
-    const container = document.getElementById('recentUsersContainer');
-    const list = document.getElementById('recentUsersList');
+                if (recent.length === 0) {
+                    container.style.display = 'none';
+                    return;
+                }
 
-    if (recent.length === 0) {
-        container.style.display = 'none';
-        return;
-    }
-
-    container.style.display = 'block';
-    list.innerHTML = recent.map(user => {
-        const displayName = user.name || `User ${user.id}`;
-        return `
+                container.style.display = 'block';
+                list.innerHTML = recent.map(user => {
+                    const displayName = user.name || `User ${user.id}`;
+                    return `
             <div class="recent-user-item" style="padding: 4px 6px; margin-bottom: 2px; background: rgba(139,105,20,0.2); border-radius: 3px; font-size: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
                 <span style="color: #ffd700; cursor: pointer; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" data-userid="${user.id}" title="${displayName} (${user.id})">👤 ${displayName}</span>
                 <button class="delete-user-btn" data-userid="${user.id}" style="background: #d32f2f; color: #fff; border: none; padding: 2px 6px; border-radius: 3px; cursor: pointer; font-size: 9px; flex-shrink: 0;">✕</button>
@@ -23642,136 +23711,136 @@ function displayRecentUsers() {
                 });
             }
 
-async function selectDirectUserId() {
-    const input = document.getElementById('directUserIdInput');
-    const userId = input.value.trim();
+            async function selectDirectUserId() {
+                const input = document.getElementById('directUserIdInput');
+                const userId = input.value.trim();
 
-    if (!userId) {
-        alert('Please enter a user ID');
-        return;
-    }
+                if (!userId) {
+                    alert('Please enter a user ID');
+                    return;
+                }
 
-    if (!/^\d+$/.test(userId)) {
-        alert('User ID must be a number');
-        return;
-    }
+                if (!/^\d+$/.test(userId)) {
+                    alert('User ID must be a number');
+                    return;
+                }
 
-    const selectBtn = document.getElementById('selectUserIdBtn');
-    selectBtn.disabled = true;
-    selectBtn.textContent = '⏳';
+                const selectBtn = document.getElementById('selectUserIdBtn');
+                selectBtn.disabled = true;
+                selectBtn.textContent = '⏳';
 
-    try {
-        const SendFunction = getSend();
+                try {
+                    const SendFunction = getSend();
 
-        // First get user's clan info to find their name
-        const response = await SendFunction(JSON.stringify({
-            calls: [{
-                name: "userGetInfo",
-                args: { userId: userId },
-                context: { actionTs: Math.floor(performance.now()) },
-                ident: "body"
-            }]
-        }));
+                    // First get user's clan info to find their name
+                    const response = await SendFunction(JSON.stringify({
+                        calls: [{
+                            name: "userGetInfo",
+                            args: { userId: userId },
+                            context: { actionTs: Math.floor(performance.now()) },
+                            ident: "body"
+                        }]
+                    }));
 
-        let userName = `User ${userId}`;
-        let clanId = null;
+                    let userName = `User ${userId}`;
+                    let clanId = null;
 
-        if (response?.results?.[0]?.result?.response) {
-            const userInfo = response.results[0].result.response;
-            clanId = userInfo.clanId;
+                    if (response?.results?.[0]?.result?.response) {
+                        const userInfo = response.results[0].result.response;
+                        clanId = userInfo.clanId;
 
-            // If user has a clan, get their name from clan info
-            if (clanId) {
-                const clanResponse = await SendFunction(JSON.stringify({
-                    calls: [{
-                        name: "clanGetInfo",
-                        args: { clanId: clanId },
-                        context: { actionTs: Math.floor(performance.now()) },
-                        ident: "body"
-                    }]
-                }));
+                        // If user has a clan, get their name from clan info
+                        if (clanId) {
+                            const clanResponse = await SendFunction(JSON.stringify({
+                                calls: [{
+                                    name: "clanGetInfo",
+                                    args: { clanId: clanId },
+                                    context: { actionTs: Math.floor(performance.now()) },
+                                    ident: "body"
+                                }]
+                            }));
 
-                if (clanResponse?.results?.[0]?.result?.response?.clan?.members?.[userId]) {
-                    const memberData = clanResponse.results[0].result.response.clan.members[userId];
-                    userName = memberData.name || userName;
+                            if (clanResponse?.results?.[0]?.result?.response?.clan?.members?.[userId]) {
+                                const memberData = clanResponse.results[0].result.response.clan.members[userId];
+                                userName = memberData.name || userName;
+                            }
+                        }
+                    }
+
+                    selectRecipient({ id: userId, name: userName, type: 'direct' });
+                    saveRecentUser(userId, userName);
+                    input.value = '';
+
+                } catch (e) {
+                    console.error('Failed to fetch user info:', e);
+                    // Fallback
+                    selectRecipient({ id: userId, name: `User ${userId}`, type: 'direct' });
+                    saveRecentUser(userId, `User ${userId}`);
+                    input.value = '';
+                } finally {
+                    selectBtn.disabled = false;
+                    selectBtn.textContent = '✓ Select';
                 }
             }
-        }
+            // Event listeners for direct user ID
+            document.getElementById('selectUserIdBtn').addEventListener('click', selectDirectUserId);
 
-        selectRecipient({ id: userId, name: userName, type: 'direct' });
-        saveRecentUser(userId, userName);
-        input.value = '';
+            document.getElementById('directUserIdInput').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    selectDirectUserId();
+                }
+            });
 
-    } catch (e) {
-        console.error('Failed to fetch user info:', e);
-        // Fallback
-        selectRecipient({ id: userId, name: `User ${userId}`, type: 'direct' });
-        saveRecentUser(userId, `User ${userId}`);
-        input.value = '';
-    } finally {
-        selectBtn.disabled = false;
-        selectBtn.textContent = '✓ Select';
-    }
-}
-// Event listeners for direct user ID
-document.getElementById('selectUserIdBtn').addEventListener('click', selectDirectUserId);
+            // Display recent users on load
+            displayRecentUsers();
 
-document.getElementById('directUserIdInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        selectDirectUserId();
-    }
-});
+            const messageInput = document.getElementById('messageInput');
+            messageInput.addEventListener('input', (e) => {
+                customMessage = e.target.value;
+                updateSendButton();
+            });
 
-// Display recent users on load
-displayRecentUsers();
+            messageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (selectedRecipient && customMessage.trim()) {
+                        sendMessage();
+                    }
+                }
+            });
 
-const messageInput = document.getElementById('messageInput');
-messageInput.addEventListener('input', (e) => {
-    customMessage = e.target.value;
-    updateSendButton();
-});
+            function updateSendButton() {
+                const sendBtn = document.getElementById('sendBtn');
+                sendBtn.disabled = !selectedRecipient || !customMessage.trim();
+            }
 
-messageInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        if (selectedRecipient && customMessage.trim()) {
-            sendMessage();
-        }
-    }
-});
+            document.getElementById('sendBtn').addEventListener('click', sendMessage);
 
-function updateSendButton() {
-    const sendBtn = document.getElementById('sendBtn');
-    sendBtn.disabled = !selectedRecipient || !customMessage.trim();
-}
+            async function sendMessage() {
+                if (!selectedRecipient || !customMessage.trim()) return;
 
-document.getElementById('sendBtn').addEventListener('click', sendMessage);
-
-async function sendMessage() {
-    if (!selectedRecipient || !customMessage.trim()) return;
-
-    // NEW: Handle mass PM sending
-    if (selectedRecipient.type === 'mass-pm') {
-        const total = selectedRecipient.count;
-        const confirmed = confirm(
-            `📤 Send this message to ${total} guild members?\n\n` +
-            `"${customMessage.trim()}"\n\n` +
-            `This will send ${total} individual PMs.`
+                // NEW: Handle mass PM sending
+                if (selectedRecipient.type === 'mass-pm') {
+                    const total = selectedRecipient.count;
+                    const confirmed = confirm(
+                        `📤 Send this message to ${total} guild members?\n\n` +
+                        `"${customMessage.trim()}"\n\n` +
+                        `This will send ${total} individual PMs.`
                     );
 
-        if (!confirmed) return;
+                    if (!confirmed) return;
 
-        // Helper to get member name from ID
-        const getMemberName = (userId) => {
-            const member = guildMembers.find(m => String(m.id) === String(userId));
-            return member ? member.name : userId;
-        };
+                    // Helper to get member name from ID
+                    const getMemberName = (userId) => {
+                        const member = guildMembers.find(m => String(m.id) === String(userId));
+                        return member ? member.name : userId;
+                    };
 
-        // Create progress popup
-        const progressPopup = document.createElement('div');
-        progressPopup.id = 'mass-pm-progress';
-        progressPopup.style.cssText = `
+                    // Create progress popup
+                    const progressPopup = document.createElement('div');
+                    progressPopup.id = 'mass-pm-progress';
+                    progressPopup.style.cssText = `
                         position: fixed;
                         top: 10px;
                         right: 320px;
@@ -23921,33 +23990,33 @@ async function sendMessage() {
                     alert('❌ Failed to send message');
                 }
             }
-// Stats Tab Loader - LAZY LOADED on tab click
-function loadStatsTab() {
-    const statsContent = document.getElementById('stats-tab-content');
-    if (!statsContent) return;
+            // Stats Tab Loader - LAZY LOADED on tab click
+            function loadStatsTab() {
+                const statsContent = document.getElementById('stats-tab-content');
+                if (!statsContent) return;
 
-    const totalArenaBattles = arenaHistory.reduce((sum, s) => sum + s.battles.length, 0);
-    const totalGrandBattles = grandHistory.reduce((sum, s) => sum + s.battles.length, 0);
+                const totalArenaBattles = arenaHistory.reduce((sum, s) => sum + s.battles.length, 0);
+                const totalGrandBattles = grandHistory.reduce((sum, s) => sum + s.battles.length, 0);
 
-    let arenaWins = 0;
-    let grandWins = 0;
+                let arenaWins = 0;
+                let grandWins = 0;
 
-    arenaHistory.forEach(session => {
-        session.battles.forEach(battle => {
-            if (battle.win) arenaWins++;
-        });
-    });
+                arenaHistory.forEach(session => {
+                    session.battles.forEach(battle => {
+                        if (battle.win) arenaWins++;
+                    });
+                });
 
-    grandHistory.forEach(session => {
-        session.battles.forEach(battle => {
-            if (battle.win) grandWins++;
-        });
-    });
+                grandHistory.forEach(session => {
+                    session.battles.forEach(battle => {
+                        if (battle.win) grandWins++;
+                    });
+                });
 
-    const arenaWinRate = totalArenaBattles > 0 ? ((arenaWins / totalArenaBattles) * 100).toFixed(1) : '0.0';
-    const grandWinRate = totalGrandBattles > 0 ? ((grandWins / totalGrandBattles) * 100).toFixed(1) : '0.0';
+                const arenaWinRate = totalArenaBattles > 0 ? ((arenaWins / totalArenaBattles) * 100).toFixed(1) : '0.0';
+                const grandWinRate = totalGrandBattles > 0 ? ((grandWins / totalGrandBattles) * 100).toFixed(1) : '0.0';
 
-    statsContent.innerHTML = `
+                statsContent.innerHTML = `
             <div style="background: rgba(139,105,20,0.15); padding: 8px; border-radius: 4px; margin-bottom: 8px;">
                 <div style="color: #ffd700; font-weight: bold; font-size: 10px; margin-bottom: 6px;">⚔️ Arena</div>
 <div style="font-size: 12px; line-height: 1.6;">
@@ -23991,41 +24060,41 @@ Win Rate: <span class="twk-gold">${grandWinRate}%</span>
                 });
             }
 
-initializeSortButtons();
-loadGuildMembers();
-setTimeout(loadGuildMembers, 2000);
+            initializeSortButtons();
+            loadGuildMembers();
+            setTimeout(loadGuildMembers, 2000);
 
-// Smart refresh - skip when page not visible or sidebar not showing relevant tab
-const refreshInterval = (parseInt(localStorage.getItem('hwh_autorefresh_interval')) || 60) * 1000;
-setInterval(() => {
-    // Skip if browser tab is hidden/minimized
-    if (document.hidden) {
-        debugLog('⏸️ Guild refresh skipped - tab not visible');
-        return;
-    }
+            // Smart refresh - skip when page not visible or sidebar not showing relevant tab
+            const refreshInterval = (parseInt(localStorage.getItem('hwh_autorefresh_interval')) || 60) * 1000;
+            setInterval(() => {
+                // Skip if browser tab is hidden/minimized
+                if (document.hidden) {
+                    debugLog('⏸️ Guild refresh skipped - tab not visible');
+                    return;
+                }
 
-    const sidebar = DOMCache.get('quickChatSidebar', '#quickChatSidebar');
-    if (!sidebar) return;
+                const sidebar = DOMCache.get('quickChatSidebar', '#quickChatSidebar');
+                if (!sidebar) return;
 
-    // Skip if sidebar collapsed
-    if (sidebar.classList.contains('collapsed')) {
-        debugLog('⏸️ Guild refresh skipped - sidebar collapsed');
-        return;
-    }
+                // Skip if sidebar collapsed
+                if (sidebar.classList.contains('collapsed')) {
+                    debugLog('⏸️ Guild refresh skipped - sidebar collapsed');
+                    return;
+                }
 
-    // Skip if not on members or stats tab
-    const activeTab = sidebar.querySelector('.tab-btn.active');
-    const tabName = activeTab?.dataset?.tab;
-    if (tabName !== 'members' && tabName !== 'stats') {
-        debugLog('⏸️ Guild refresh skipped - not on members/stats tab');
-        return;
-    }
+                // Skip if not on members or stats tab
+                const activeTab = sidebar.querySelector('.tab-btn.active');
+                const tabName = activeTab?.dataset?.tab;
+                if (tabName !== 'members' && tabName !== 'stats') {
+                    debugLog('⏸️ Guild refresh skipped - not on members/stats tab');
+                    return;
+                }
 
-    loadGuildMembers();
-}, refreshInterval);
-};
+                loadGuildMembers();
+            }, refreshInterval);
+        };
 
-/* KEYBOARD SHORTCUTS REMOVED
+        /* KEYBOARD SHORTCUTS REMOVED
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
                 return;
@@ -24073,295 +24142,295 @@ setInterval(() => {
             }
         });
         */
-// Auto-initialize
-// Create chat popup as soon as game is ready
-waitForGameReady().then(() => createChatPopup());
+        // Auto-initialize
+        // Create chat popup as soon as game is ready
+        waitForGameReady().then(() => createChatPopup());
 
-debugLog('✅ Enhanced Sidebar loaded - Compact 40px buttons, Arena Stats tab, Mass PM, Green highlights');
-
-
-
-debugLog(`HWH Tweaker v${TWEAKER_VERSION} initialized successfully`);
-debugLog(`Delay factor: ${getDelayFactor()}x`);
-debugLog(`Adventure extension: ${window.isUISettingEnabled('enableAdventureExtension') ? 'ENABLED' : 'DISABLED'}`);
-debugLog('Features: Collection automation, Custom navigation buttons, Button visibility control, Collect More with internal functions, Collect on load, HWH Do All integration, Config gear icon, Adventure path integration');
-// Check if AoC is active on page load and show dock
-// Check if AoC is active on page load and show dock
-window.checkAoCOnLoad = async function() {
-    try {
-        const SendFunction = getSend();
-        if (!SendFunction) return;
-
-        const response = await SendFunction(JSON.stringify({
-            calls: [{
-                name: "clanDomination_mapState",
-                args: {},
-                context: { actionTs: Date.now() },
-                ident: "body"
-            }]
-        }));
-
-        const mapState = response?.results?.[0]?.result?.response;
-
-        // If mapState has data, AoC is active
-        if (mapState && Object.keys(mapState).length > 0) {
-            debugLog('🏰 AoC is active - showing dock');
-            const liveData = await window.fetchLiveCastleData();
-
-            // Also fetch guild members (needed for dock)
-            const guildResponse = await SendFunction(JSON.stringify({
-                calls: [{
-                    name: "clanGetInfo",
-                    args: {},
-                    context: { actionTs: Date.now() },
-                    ident: "body"
-                }]
-            }));
-            liveData.guildMembers = guildResponse?.results?.[0]?.result?.response?.clan?.members || {};
+        debugLog('✅ Enhanced Sidebar loaded - Compact 40px buttons, Arena Stats tab, Mass PM, Green highlights');
 
 
-            // Set up auto-refresh if not already running
-            if (!window._aocAutoRefresh) {
-                window._aocAutoRefresh = {
-                    timer: null,
-                    interval: 15,
-                    lastRefresh: null
-                };
-                window._aocAutoRefresh.timer = setInterval(async () => {
-                    window.showAoCDock(null);  // Let it fetch its own data
-                    debugLog('🏰 AoC auto-refreshed (dock only)');
 
-                    const idleTime = Date.now() - (window._lastActivity || Date.now());
-                    if (idleTime > 60000) {
-                        await sendAoCStatusNotification();
+        debugLog(`HWH Tweaker v${TWEAKER_VERSION} initialized successfully`);
+        debugLog(`Delay factor: ${getDelayFactor()}x`);
+        debugLog(`Adventure extension: ${window.isUISettingEnabled('enableAdventureExtension') ? 'ENABLED' : 'DISABLED'}`);
+        debugLog('Features: Collection automation, Custom navigation buttons, Button visibility control, Collect More with internal functions, Collect on load, HWH Do All integration, Config gear icon, Adventure path integration');
+        // Check if AoC is active on page load and show dock
+        // Check if AoC is active on page load and show dock
+        window.checkAoCOnLoad = async function() {
+            try {
+                const SendFunction = getSend();
+                if (!SendFunction) return;
+
+                const response = await SendFunction(JSON.stringify({
+                    calls: [{
+                        name: "clanDomination_mapState",
+                        args: {},
+                        context: { actionTs: Date.now() },
+                        ident: "body"
+                    }]
+                }));
+
+                const mapState = response?.results?.[0]?.result?.response;
+
+                // If mapState has data, AoC is active
+                if (mapState && Object.keys(mapState).length > 0) {
+                    debugLog('🏰 AoC is active - showing dock');
+                    const liveData = await window.fetchLiveCastleData();
+
+                    // Also fetch guild members (needed for dock)
+                    const guildResponse = await SendFunction(JSON.stringify({
+                        calls: [{
+                            name: "clanGetInfo",
+                            args: {},
+                            context: { actionTs: Date.now() },
+                            ident: "body"
+                        }]
+                    }));
+                    liveData.guildMembers = guildResponse?.results?.[0]?.result?.response?.clan?.members || {};
+
+
+                    // Set up auto-refresh if not already running
+                    if (!window._aocAutoRefresh) {
+                        window._aocAutoRefresh = {
+                            timer: null,
+                            interval: 15,
+                            lastRefresh: null
+                        };
+                        window._aocAutoRefresh.timer = setInterval(async () => {
+                            window.showAoCDock(null);  // Let it fetch its own data
+                            debugLog('🏰 AoC auto-refreshed (dock only)');
+
+                            const idleTime = Date.now() - (window._lastActivity || Date.now());
+                            if (idleTime > 60000) {
+                                await sendAoCStatusNotification();
+                            }
+                        }, 15 * 60 * 1000);
+                        window._aocAutoRefresh.lastRefresh = Date.now();
                     }
-                }, 15 * 60 * 1000);
-                window._aocAutoRefresh.lastRefresh = Date.now();
+
+                    window.showAoCDock(liveData);
+                } else {
+                    debugLog('🏰 AoC not active');
+                }
+            } catch (error) {
+                debugLog('🏰 AoC check failed:', error.message);
             }
+        };
 
-            window.showAoCDock(liveData);
-        } else {
-            debugLog('🏰 AoC not active');
-        }
-    } catch (error) {
-        debugLog('🏰 AoC check failed:', error.message);
+        // Check AoC as soon as game is ready
+        waitForGameReady().then(() => window.checkAoCOnLoad?.());
+
+
+        // Check if Power Tournament is active on page load and show dock
+        window.checkPowerTournamentOnLoad = async function() {
+            try {
+                const SendFunction = getSend();
+                if (!SendFunction) return;
+
+                const response = await SendFunction('{"calls":[{"name":"powerTournament_getState","args":{},"context":{"actionTs":' + Date.now() + '},"ident":"body"},{"name":"powerTournament_getGroupInfo","args":{},"context":{"actionTs":' + Date.now() + '},"ident":"powerTournament_getGroupInfo"}]}');
+
+                const tournamentState = response?.results?.[0]?.result?.response;
+                const groupData = response?.results?.[1]?.result?.response;
+
+                // No data = not active
+                if (!groupData?.users) {
+                    debugLog('🏆 Power Tournament not active');
+                    return;
+                }
+
+                // state === 2 means ended
+                window._tournamentEnded = tournamentState?.state === 2;
+                if (window._tournamentEnded) {
+                    window._tournamentEndTime = parseInt(localStorage.getItem('hwh_tournament_end_time')) || null;
+                    debugLog('🏆 Power Tournament ended - skipping dock');
+                    return;
+                }
+
+                debugLog('🏆 Power Tournament is active - showing dock');
+
+                // Build user rankings (points are in groupData.points, not in users)
+                const userRankings = Object.keys(groupData.users)
+                .map(userId => ({
+                    userId,
+                    name: groupData.users[userId]?.name || 'Player',
+                    points: groupData.points?.[userId] || 0
+                }))
+                .sort((a, b) => b.points - a.points);
+
+                window.showTournamentDock(userRankings);
+
+                // Initialize auto-refresh state (but don't start timer - let user control from popup)
+                if (!window._tournamentAutoRefresh) {
+                    window._tournamentAutoRefresh = {
+                        timer: null,
+                        timeout: null,
+                        interval: 0,
+                        startTime: null
+                    };
+                }
+            } catch (error) {
+                debugLog('🏆 Power Tournament check failed:', error.message);
+            }
+        };
+
+        // Check Tournament as soon as game is ready
+        waitForGameReady().then(() => window.checkPowerTournamentOnLoad?.());
     }
-};
-
-// Check AoC as soon as game is ready
-waitForGameReady().then(() => window.checkAoCOnLoad?.());
 
 
-// Check if Power Tournament is active on page load and show dock
-window.checkPowerTournamentOnLoad = async function() {
-    try {
-        const SendFunction = getSend();
-        if (!SendFunction) return;
-
-        const response = await SendFunction('{"calls":[{"name":"powerTournament_getState","args":{},"context":{"actionTs":' + Date.now() + '},"ident":"body"},{"name":"powerTournament_getGroupInfo","args":{},"context":{"actionTs":' + Date.now() + '},"ident":"powerTournament_getGroupInfo"}]}');
-
-        const tournamentState = response?.results?.[0]?.result?.response;
-        const groupData = response?.results?.[1]?.result?.response;
-
-        // No data = not active
-        if (!groupData?.users) {
-            debugLog('🏆 Power Tournament not active');
-            return;
-        }
-
-        // state === 2 means ended
-        window._tournamentEnded = tournamentState?.state === 2;
-        if (window._tournamentEnded) {
-            window._tournamentEndTime = parseInt(localStorage.getItem('hwh_tournament_end_time')) || null;
-            debugLog('🏆 Power Tournament ended - skipping dock');
-            return;
-        }
-
-        debugLog('🏆 Power Tournament is active - showing dock');
-
-        // Build user rankings (points are in groupData.points, not in users)
-        const userRankings = Object.keys(groupData.users)
-        .map(userId => ({
-            userId,
-            name: groupData.users[userId]?.name || 'Player',
-            points: groupData.points?.[userId] || 0
-        }))
-        .sort((a, b) => b.points - a.points);
-
-        window.showTournamentDock(userRankings);
-
-        // Initialize auto-refresh state (but don't start timer - let user control from popup)
-        if (!window._tournamentAutoRefresh) {
-            window._tournamentAutoRefresh = {
-                timer: null,
-                timeout: null,
-                interval: 0,
-                startTime: null
-            };
-        }
-    } catch (error) {
-        debugLog('🏆 Power Tournament check failed:', error.message);
-    }
-};
-
-// Check Tournament as soon as game is ready
-waitForGameReady().then(() => window.checkPowerTournamentOnLoad?.());
-}
-
-
-// COMPACT SIDEBAR WITH STYLE TOGGLE - GAME STYLE vs FLAT STYLE
-// ================================================================
-// Add this at the end of your script (before waitForHWH())
-
-(function() {
-    debugLog('🎨 Loading Compact Sidebar with Style Toggle...');
-
+    // COMPACT SIDEBAR WITH STYLE TOGGLE - GAME STYLE vs FLAT STYLE
     // ================================================================
-    // CUSTOM FUNCTIONS MANAGEMENT
-    // ================================================================
+    // Add this at the end of your script (before waitForHWH())
 
-    let DEFAULT_BUTTON_FUNCTIONS = null;
+    (function() {
+        debugLog('🎨 Loading Compact Sidebar with Style Toggle...');
 
-    function loadCustomFunctions() {
-        try {
-            const stored = localStorage.getItem('hwh_custom_functions');
-            if (!stored) return {};
+        // ================================================================
+        // CUSTOM FUNCTIONS MANAGEMENT
+        // ================================================================
 
-            const parsed = JSON.parse(stored);
-            const customFuncs = {};
+        let DEFAULT_BUTTON_FUNCTIONS = null;
 
-            Object.keys(parsed).forEach(name => {
-                const func = parsed[name];
-                if (func.actionCode) {
-                    try {
+        function loadCustomFunctions() {
+            try {
+                const stored = localStorage.getItem('hwh_custom_functions');
+                if (!stored) return {};
+
+                const parsed = JSON.parse(stored);
+                const customFuncs = {};
+
+                Object.keys(parsed).forEach(name => {
+                    const func = parsed[name];
+                    if (func.actionCode) {
+                        try {
+                            customFuncs[name] = {
+                                action: eval(`(${func.actionCode})`),
+                                icon: func.icon,
+                                color: func.color,
+                                description: func.description,
+                                fontSize: func.fontSize,
+                                customColor: func.customColor,
+                                isCustom: true
+                            };
+                        } catch (e) {
+                            console.error(`Failed to load custom function "${name}":`, e);
+                        }
+                    }
+                });
+
+                return customFuncs;
+            } catch (e) {
+                console.error('Failed to load custom functions:', e);
+                return {};
+            }
+        }
+
+        function saveCustomFunctions() {
+            try {
+                const customFuncs = {};
+
+                Object.keys(BUTTON_FUNCTIONS).forEach(name => {
+                    const func = BUTTON_FUNCTIONS[name];
+                    if (func.isCustom) {
                         customFuncs[name] = {
-                            action: eval(`(${func.actionCode})`),
+                            actionCode: func.action.toString(),
                             icon: func.icon,
                             color: func.color,
                             description: func.description,
                             fontSize: func.fontSize,
-                            customColor: func.customColor,
-                            isCustom: true
+                            customColor: func.customColor
                         };
-                    } catch (e) {
-                        console.error(`Failed to load custom function "${name}":`, e);
                     }
-                }
-            });
+                });
 
-            return customFuncs;
-        } catch (e) {
-            console.error('Failed to load custom functions:', e);
-            return {};
+                localStorage.setItem('hwh_custom_functions', JSON.stringify(customFuncs));
+                debugLog(`💾 Saved ${Object.keys(customFuncs).length} custom functions`);
+            } catch (e) {
+                console.error('Failed to save custom functions:', e);
+            }
         }
-    }
+        // ==================== LUCKY ROAD AUTO-ROLLER ====================
+        async function openLuckyRoadPopup() {
+            debugLog("🎲 Lucky Road Auto-Roller starting...");
 
-    function saveCustomFunctions() {
-        try {
-            const customFuncs = {};
+            if (typeof Send !== 'function') {
+                alert("❌ Send function not found! Make sure HeroWarsHelper is loaded.");
+                return;
+            }
 
-            Object.keys(BUTTON_FUNCTIONS).forEach(name => {
-                const func = BUTTON_FUNCTIONS[name];
-                if (func.isCustom) {
-                    customFuncs[name] = {
-                        actionCode: func.action.toString(),
-                        icon: func.icon,
-                        color: func.color,
-                        description: func.description,
-                        fontSize: func.fontSize,
-                        customColor: func.customColor
-                    };
-                }
-            });
+            // Auto-detect the currently active Line Gacha ID
+            let lineGachaId = null;
+            let eventDates = null;
 
-            localStorage.setItem('hwh_custom_functions', JSON.stringify(customFuncs));
-            debugLog(`💾 Saved ${Object.keys(customFuncs).length} custom functions`);
-        } catch (e) {
-            console.error('Failed to save custom functions:', e);
-        }
-    }
-    // ==================== LUCKY ROAD AUTO-ROLLER ====================
-    async function openLuckyRoadPopup() {
-        debugLog("🎲 Lucky Road Auto-Roller starting...");
+            try {
+                if (lib?.data?.lineGacha?.list) {
+                    const today = new Date().toISOString().split('T')[0];
 
-        if (typeof Send !== 'function') {
-            alert("❌ Send function not found! Make sure HeroWarsHelper is loaded.");
-            return;
-        }
+                    for (let [id, entry] of Object.entries(lib.data.lineGacha.list)) {
+                        if (id === "1") continue;
 
-        // Auto-detect the currently active Line Gacha ID
-        let lineGachaId = null;
-        let eventDates = null;
-
-        try {
-            if (lib?.data?.lineGacha?.list) {
-                const today = new Date().toISOString().split('T')[0];
-
-                for (let [id, entry] of Object.entries(lib.data.lineGacha.list)) {
-                    if (id === "1") continue;
-
-                    let dates = entry?.requirements?.ymdDate?.value;
-                    if (dates && dates.length === 2) {
-                        let [start, end] = dates;
-                        if (today >= start && today <= end) {
-                            lineGachaId = parseInt(id);
-                            eventDates = `${start} to ${end}`;
-                            debugLog(`✅ Found active Lucky Road: ${id} (${eventDates})`);
-                            break;
+                        let dates = entry?.requirements?.ymdDate?.value;
+                        if (dates && dates.length === 2) {
+                            let [start, end] = dates;
+                            if (today >= start && today <= end) {
+                                lineGachaId = parseInt(id);
+                                eventDates = `${start} to ${end}`;
+                                debugLog(`✅ Found active Lucky Road: ${id} (${eventDates})`);
+                                break;
+                            }
                         }
                     }
                 }
+            } catch(e) {
+                console.error("Auto-detect error:", e);
             }
-        } catch(e) {
-            console.error("Auto-detect error:", e);
-        }
 
-        if (!lineGachaId) {
-            alert("❌ No active Lucky Road event found!");
-            return;
-        }
+            if (!lineGachaId) {
+                alert("❌ No active Lucky Road event found!");
+                return;
+            }
 
-        // Auto-detect coin balance via inventoryGet API
-        let coinBalance = 0;
-        try {
-            const invResponse = await Send('{"calls":[{"name":"inventoryGet","args":{},"ident":"body"}]}');
-            coinBalance = invResponse.results[0].result.response.coin['59'] || 0;
-            debugLog(`✅ Found Lucky Road coins: ${coinBalance}`);
-        } catch(e) {
-            console.error("Coin balance detection error:", e);
-        }
-
-        // Reward name helper
-        function getRewardName(type, id) {
+            // Auto-detect coin balance via inventoryGet API
+            let coinBalance = 0;
             try {
-                if (typeof cheats !== 'undefined' && cheats.translate) {
-                    const prefixes = {
-                        coin: 'LIB_COIN_NAME_',
-                        consumable: 'LIB_CONSUMABLE_NAME_',
-                        fragmentHero: 'LIB_HERO_NAME_',
-                        gear: 'LIB_GEAR_NAME_',
-                        scroll: 'LIB_SCROLL_NAME_'
-                    };
-                    if (prefixes[type]) {
-                        let name = cheats.translate(prefixes[type] + id);
-                        if (name && !name.startsWith('LIB_')) return name;
+                const invResponse = await Send('{"calls":[{"name":"inventoryGet","args":{},"ident":"body"}]}');
+                coinBalance = invResponse.results[0].result.response.coin['59'] || 0;
+                debugLog(`✅ Found Lucky Road coins: ${coinBalance}`);
+            } catch(e) {
+                console.error("Coin balance detection error:", e);
+            }
+
+            // Reward name helper
+            function getRewardName(type, id) {
+                try {
+                    if (typeof cheats !== 'undefined' && cheats.translate) {
+                        const prefixes = {
+                            coin: 'LIB_COIN_NAME_',
+                            consumable: 'LIB_CONSUMABLE_NAME_',
+                            fragmentHero: 'LIB_HERO_NAME_',
+                            gear: 'LIB_GEAR_NAME_',
+                            scroll: 'LIB_SCROLL_NAME_'
+                        };
+                        if (prefixes[type]) {
+                            let name = cheats.translate(prefixes[type] + id);
+                            if (name && !name.startsWith('LIB_')) return name;
+                        }
                     }
-                }
-            } catch(e) {}
+                } catch(e) {}
 
-            const knownTypes = {
-                gold: 'Gold',
-                starmoney: 'Emeralds',
-                stamina: 'Energy',
-                experience: 'Experience',
-                vipPoints: 'VIP Points'
-            };
-            return knownTypes[type] || `${type}${id ? ':' + id : ''}`;
-        }
+                const knownTypes = {
+                    gold: 'Gold',
+                    starmoney: 'Emeralds',
+                    stamina: 'Energy',
+                    experience: 'Experience',
+                    vipPoints: 'VIP Points'
+                };
+                return knownTypes[type] || `${type}${id ? ':' + id : ''}`;
+            }
 
-        // Create popup UI
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
+            // Create popup UI
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
         position: fixed;
         top: 0; left: 0;
         width: 100vw; height: 100vh;
@@ -29504,282 +29573,282 @@ body > * {
                 this.applySearchFilter();
                 console.timeEnd('⏱️ renderLayout');
             }
-renderTabBar() {
-    const container = document.getElementById('hwh-layout-content');
-    if (!container) return;
+            renderTabBar() {
+                const container = document.getElementById('hwh-layout-content');
+                if (!container) return;
 
-    // Create tab bar container
-    let tabBar = container.querySelector('.hwh-editor-tab-bar');
-    if (!tabBar) {
-        tabBar = document.createElement('div');
-        tabBar.className = 'hwh-editor-tab-bar';
-        container.insertBefore(tabBar, container.firstChild);
-    }
-    tabBar.innerHTML = '';
-
-    // Render each tab
-    this.tempTabs.forEach((tab, index) => {
-        const tabEl = document.createElement('div');
-        tabEl.className = 'hwh-editor-tab' + (index === this.activeEditTabIndex ? ' active' : '');
-
-        const nameSpan = document.createElement('span');
-        nameSpan.className = 'hwh-editor-tab-name';
-        nameSpan.textContent = tab.name || `Tab ${index + 1}`;
-
-        const actions = document.createElement('div');
-        actions.className = 'hwh-editor-tab-actions';
-
-        // Rename button
-        const renameBtn = document.createElement('button');
-        renameBtn.className = 'hwh-editor-tab-btn';
-        renameBtn.innerHTML = '✏️';
-        renameBtn.title = 'Rename tab';
-        renameBtn.onclick = (e) => {
-            e.stopPropagation();
-            const newName = prompt('Enter new tab name:', tab.name);
-            if (newName && newName.trim()) {
-                this.tempTabs[index].name = newName.trim();
-                this.renderTabBar();
-            }
-        };
-
-        // Delete button (only if more than one tab)
-        if (this.tempTabs.length > 1) {
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'hwh-editor-tab-btn delete';
-            deleteBtn.innerHTML = '×';
-            deleteBtn.title = 'Delete tab';
-            deleteBtn.onclick = (e) => {
-                e.stopPropagation();
-                if (confirm(`Delete tab "${tab.name}"? All rows will be lost!`)) {
-                    this.tempTabs.splice(index, 1);
-                    if (this.activeEditTabIndex >= this.tempTabs.length) {
-                        this.activeEditTabIndex = this.tempTabs.length - 1;
-                    }
-                    this.renderTabBar();
-                    this.renderLayout();
+                // Create tab bar container
+                let tabBar = container.querySelector('.hwh-editor-tab-bar');
+                if (!tabBar) {
+                    tabBar = document.createElement('div');
+                    tabBar.className = 'hwh-editor-tab-bar';
+                    container.insertBefore(tabBar, container.firstChild);
                 }
-            };
-            actions.appendChild(deleteBtn);
-        }
+                tabBar.innerHTML = '';
 
-        actions.insertBefore(renameBtn, actions.firstChild);
+                // Render each tab
+                this.tempTabs.forEach((tab, index) => {
+                    const tabEl = document.createElement('div');
+                    tabEl.className = 'hwh-editor-tab' + (index === this.activeEditTabIndex ? ' active' : '');
 
-        tabEl.appendChild(nameSpan);
-        tabEl.appendChild(actions);
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'hwh-editor-tab-name';
+                    nameSpan.textContent = tab.name || `Tab ${index + 1}`;
 
-        tabEl.onclick = () => {
-            this.activeEditTabIndex = index;
-            this.renderTabBar();
-            this.renderLayout();
-        };
+                    const actions = document.createElement('div');
+                    actions.className = 'hwh-editor-tab-actions';
 
-        tabBar.appendChild(tabEl);
-    });
+                    // Rename button
+                    const renameBtn = document.createElement('button');
+                    renameBtn.className = 'hwh-editor-tab-btn';
+                    renameBtn.innerHTML = '✏️';
+                    renameBtn.title = 'Rename tab';
+                    renameBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        const newName = prompt('Enter new tab name:', tab.name);
+                        if (newName && newName.trim()) {
+                            this.tempTabs[index].name = newName.trim();
+                            this.renderTabBar();
+                        }
+                    };
 
-    // Add new tab button
-    const addTabBtn = document.createElement('button');
-    addTabBtn.className = 'hwh-editor-add-tab';
-    addTabBtn.innerHTML = '+ Add Tab';
-    addTabBtn.onclick = () => {
-        const name = prompt('Enter tab name:', `Tab ${this.tempTabs.length + 1}`);
-        if (name && name.trim()) {
-            this.tempTabs.push({
-                name: name.trim(),
-                rows: []
-            });
-            this.activeEditTabIndex = this.tempTabs.length - 1;
-            this.renderTabBar();
-            this.renderLayout();
-        }
-    };
-    tabBar.appendChild(addTabBtn);
-}
-showMoveToTabMenu(rowIndex, buttonEl) {
-    // Remove any existing menu
-    document.querySelectorAll('.hwh-move-to-tab-dropdown').forEach(m => m.remove());
+                    // Delete button (only if more than one tab)
+                    if (this.tempTabs.length > 1) {
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'hwh-editor-tab-btn delete';
+                        deleteBtn.innerHTML = '×';
+                        deleteBtn.title = 'Delete tab';
+                        deleteBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            if (confirm(`Delete tab "${tab.name}"? All rows will be lost!`)) {
+                                this.tempTabs.splice(index, 1);
+                                if (this.activeEditTabIndex >= this.tempTabs.length) {
+                                    this.activeEditTabIndex = this.tempTabs.length - 1;
+                                }
+                                this.renderTabBar();
+                                this.renderLayout();
+                            }
+                        };
+                        actions.appendChild(deleteBtn);
+                    }
 
-    const menu = document.createElement('div');
-    menu.className = 'hwh-move-to-tab-dropdown';
+                    actions.insertBefore(renameBtn, actions.firstChild);
 
-    this.tempTabs.forEach((tab, tabIndex) => {
-        if (tabIndex === this.activeEditTabIndex) return; // Skip current tab
+                    tabEl.appendChild(nameSpan);
+                    tabEl.appendChild(actions);
 
-        const option = document.createElement('div');
-        option.className = 'hwh-move-to-tab-option';
-        option.textContent = tab.name || `Tab ${tabIndex + 1}`;
-        option.onclick = () => {
-            // Move the row to the other tab
-            const row = this.tempLayout.splice(rowIndex, 1)[0];
-            this.tempTabs[tabIndex].rows.push(row);
-            menu.remove();
-            this.renderLayout();
-        };
-        menu.appendChild(option);
-    });
+                    tabEl.onclick = () => {
+                        this.activeEditTabIndex = index;
+                        this.renderTabBar();
+                        this.renderLayout();
+                    };
 
-    // Position the menu near the button
-    const rect = buttonEl.getBoundingClientRect();
-    menu.style.position = 'fixed';
-    menu.style.top = rect.bottom + 'px';
-    menu.style.left = rect.left + 'px';
+                    tabBar.appendChild(tabEl);
+                });
 
-    document.body.appendChild(menu);
-
-    // Close menu when clicking outside
-    setTimeout(() => {
-        document.addEventListener('click', function closeMenu(e) {
-            if (!menu.contains(e.target) && e.target !== buttonEl) {
-                menu.remove();
-                document.removeEventListener('click', closeMenu);
+                // Add new tab button
+                const addTabBtn = document.createElement('button');
+                addTabBtn.className = 'hwh-editor-add-tab';
+                addTabBtn.innerHTML = '+ Add Tab';
+                addTabBtn.onclick = () => {
+                    const name = prompt('Enter tab name:', `Tab ${this.tempTabs.length + 1}`);
+                    if (name && name.trim()) {
+                        this.tempTabs.push({
+                            name: name.trim(),
+                            rows: []
+                        });
+                        this.activeEditTabIndex = this.tempTabs.length - 1;
+                        this.renderTabBar();
+                        this.renderLayout();
+                    }
+                };
+                tabBar.appendChild(addTabBtn);
             }
-        });
-    }, 0);
-}
+            showMoveToTabMenu(rowIndex, buttonEl) {
+                // Remove any existing menu
+                document.querySelectorAll('.hwh-move-to-tab-dropdown').forEach(m => m.remove());
+
+                const menu = document.createElement('div');
+                menu.className = 'hwh-move-to-tab-dropdown';
+
+                this.tempTabs.forEach((tab, tabIndex) => {
+                    if (tabIndex === this.activeEditTabIndex) return; // Skip current tab
+
+                    const option = document.createElement('div');
+                    option.className = 'hwh-move-to-tab-option';
+                    option.textContent = tab.name || `Tab ${tabIndex + 1}`;
+                    option.onclick = () => {
+                        // Move the row to the other tab
+                        const row = this.tempLayout.splice(rowIndex, 1)[0];
+                        this.tempTabs[tabIndex].rows.push(row);
+                        menu.remove();
+                        this.renderLayout();
+                    };
+                    menu.appendChild(option);
+                });
+
+                // Position the menu near the button
+                const rect = buttonEl.getBoundingClientRect();
+                menu.style.position = 'fixed';
+                menu.style.top = rect.bottom + 'px';
+                menu.style.left = rect.left + 'px';
+
+                document.body.appendChild(menu);
+
+                // Close menu when clicking outside
+                setTimeout(() => {
+                    document.addEventListener('click', function closeMenu(e) {
+                        if (!menu.contains(e.target) && e.target !== buttonEl) {
+                            menu.remove();
+                            document.removeEventListener('click', closeMenu);
+                        }
+                    });
+                }, 0);
+            }
 
 
 
-handleLayoutClick(e) {
-    const button = e.target.closest('button[data-action], button[data-row]');
-    if (!button) return;
+            handleLayoutClick(e) {
+                const button = e.target.closest('button[data-action], button[data-row]');
+                if (!button) return;
 
-    const action = button.dataset.action;
-    const rowIndex = parseInt(button.dataset.row);
+                const action = button.dataset.action;
+                const rowIndex = parseInt(button.dataset.row);
 
-    if (action === 'up' && rowIndex > 0) {
-        [this.tempLayout[rowIndex], this.tempLayout[rowIndex - 1]] =
-            [this.tempLayout[rowIndex - 1], this.tempLayout[rowIndex]];
-        this.renderLayout();
-    } else if (action === 'down' && rowIndex < this.tempLayout.length - 1) {
-        [this.tempLayout[rowIndex], this.tempLayout[rowIndex + 1]] =
-            [this.tempLayout[rowIndex + 1], this.tempLayout[rowIndex]];
-        this.renderLayout();
-    } else if (action === 'delete') {
-        if (confirm(`Delete row ${rowIndex + 1}?`)) {
-            this.tempLayout.splice(rowIndex, 1);
-            this.renderLayout();
-        }
-    } else if (button.classList.contains('hwh-editor-btn-add')) {
-        if (this.tempLayout[rowIndex].length < 3) {
-            this.tempLayout[rowIndex].push('ToE');
-            this.renderLayout();
-        }
-    } else if (button.classList.contains('hwh-editor-btn-remove')) {
-        if (this.tempLayout[rowIndex].length > 1) {
-            this.tempLayout[rowIndex].pop();
-            this.renderLayout();
-        }
-    }
-}
+                if (action === 'up' && rowIndex > 0) {
+                    [this.tempLayout[rowIndex], this.tempLayout[rowIndex - 1]] =
+                        [this.tempLayout[rowIndex - 1], this.tempLayout[rowIndex]];
+                    this.renderLayout();
+                } else if (action === 'down' && rowIndex < this.tempLayout.length - 1) {
+                    [this.tempLayout[rowIndex], this.tempLayout[rowIndex + 1]] =
+                        [this.tempLayout[rowIndex + 1], this.tempLayout[rowIndex]];
+                    this.renderLayout();
+                } else if (action === 'delete') {
+                    if (confirm(`Delete row ${rowIndex + 1}?`)) {
+                        this.tempLayout.splice(rowIndex, 1);
+                        this.renderLayout();
+                    }
+                } else if (button.classList.contains('hwh-editor-btn-add')) {
+                    if (this.tempLayout[rowIndex].length < 3) {
+                        this.tempLayout[rowIndex].push('ToE');
+                        this.renderLayout();
+                    }
+                } else if (button.classList.contains('hwh-editor-btn-remove')) {
+                    if (this.tempLayout[rowIndex].length > 1) {
+                        this.tempLayout[rowIndex].pop();
+                        this.renderLayout();
+                    }
+                }
+            }
 
-// ========================================================================
-// FUNCTIONS TAB
-// ========================================================================
+            // ========================================================================
+            // FUNCTIONS TAB
+            // ========================================================================
 
-// ============================================================================
-// HWH TWEAKER v4.9.6 - ENHANCED FUNCTION EDITOR UPDATE
-// ============================================================================
-// This file contains the COMPLETE replacement sections
-// Follow the instructions to replace sections in your 4.9.5 file
-// ============================================================================
+            // ============================================================================
+            // HWH TWEAKER v4.9.6 - ENHANCED FUNCTION EDITOR UPDATE
+            // ============================================================================
+            // This file contains the COMPLETE replacement sections
+            // Follow the instructions to replace sections in your 4.9.5 file
+            // ============================================================================
 
-// ============================================================================
-// SECTION 1: REPLACE ENTIRE "FUNCTIONS TAB" SECTION
-// ============================================================================
-// Location: Lines 16620-16850 (approximately)
-// Find the line: "// FUNCTIONS TAB"
-// Replace from that comment down through the cloneFunction method
-// ============================================================================
+            // ============================================================================
+            // SECTION 1: REPLACE ENTIRE "FUNCTIONS TAB" SECTION
+            // ============================================================================
+            // Location: Lines 16620-16850 (approximately)
+            // Find the line: "// FUNCTIONS TAB"
+            // Replace from that comment down through the cloneFunction method
+            // ============================================================================
 
-// ========================================================================
-// FUNCTIONS TAB - ENHANCED WITH FAVORITES & COMPACT VIEW
-// ========================================================================
-initFunctionsTab() {
-    const searchInput = document.getElementById('hwh-func-search');
-    const clearBtn = document.getElementById('hwh-func-search-clear');
-    const addBtn = document.getElementById('hwh-func-add');
+            // ========================================================================
+            // FUNCTIONS TAB - ENHANCED WITH FAVORITES & COMPACT VIEW
+            // ========================================================================
+            initFunctionsTab() {
+                const searchInput = document.getElementById('hwh-func-search');
+                const clearBtn = document.getElementById('hwh-func-search-clear');
+                const addBtn = document.getElementById('hwh-func-add');
 
-    let funcSearchDebounce;
-    searchInput.addEventListener('input', (e) => {
-        clearBtn.style.display = e.target.value ? 'block' : 'none';
+                let funcSearchDebounce;
+                searchInput.addEventListener('input', (e) => {
+                    clearBtn.style.display = e.target.value ? 'block' : 'none';
 
-        // Debounce the render (wait 150ms after typing stops)
-        clearTimeout(funcSearchDebounce);
-        funcSearchDebounce = setTimeout(() => {
-            this.renderFunctions(e.target.value);
-        }, 150);
-    });
+                    // Debounce the render (wait 150ms after typing stops)
+                    clearTimeout(funcSearchDebounce);
+                    funcSearchDebounce = setTimeout(() => {
+                        this.renderFunctions(e.target.value);
+                    }, 150);
+                });
 
-    clearBtn.onclick = () => {
-        searchInput.value = '';
-        this.renderFunctions();
-        clearBtn.style.display = 'none';
-    };
+                clearBtn.onclick = () => {
+                    searchInput.value = '';
+                    this.renderFunctions();
+                    clearBtn.style.display = 'none';
+                };
 
-    addBtn.onclick = () => this.addFunction();
+                addBtn.onclick = () => this.addFunction();
 
-    this.renderFunctions();
-}
+                this.renderFunctions();
+            }
 
-renderFunctions(filter = '') {
-    const list = document.getElementById('hwh-func-list');
-    const stats = document.getElementById('hwh-func-stats');
-    if (!list || !stats) return;
+            renderFunctions(filter = '') {
+                const list = document.getElementById('hwh-func-list');
+                const stats = document.getElementById('hwh-func-stats');
+                if (!list || !stats) return;
 
-    list.innerHTML = '';
-    const filterLower = filter.toLowerCase();
+                list.innerHTML = '';
+                const filterLower = filter.toLowerCase();
 
-    // Load favorites from localStorage
-    const favorites = JSON.parse(localStorage.getItem('hwh_favorite_functions') || '[]');
+                // Load favorites from localStorage
+                const favorites = JSON.parse(localStorage.getItem('hwh_favorite_functions') || '[]');
 
-    let customCount = 0;
-    let defaultCount = 0;
-    let visibleCount = 0;
+                let customCount = 0;
+                let defaultCount = 0;
+                let visibleCount = 0;
 
-    // Sort functions: favorites first, then alphabetically
-    const sortedNames = Object.keys(BUTTON_FUNCTIONS).sort((a, b) => {
-        const aFav = favorites.includes(a);
-        const bFav = favorites.includes(b);
-        if (aFav && !bFav) return -1;
-        if (!aFav && bFav) return 1;
-        return a.localeCompare(b);
-    });
+                // Sort functions: favorites first, then alphabetically
+                const sortedNames = Object.keys(BUTTON_FUNCTIONS).sort((a, b) => {
+                    const aFav = favorites.includes(a);
+                    const bFav = favorites.includes(b);
+                    if (aFav && !bFav) return -1;
+                    if (!aFav && bFav) return 1;
+                    return a.localeCompare(b);
+                });
 
-    sortedNames.forEach(name => {
-        const func = BUTTON_FUNCTIONS[name];
-        const hasCustomization = window.buttonCustomizations && window.buttonCustomizations[name] &&
-              (window.buttonCustomizations[name].icon ||
-               window.buttonCustomizations[name].color ||
-               window.buttonCustomizations[name].description);
+                sortedNames.forEach(name => {
+                    const func = BUTTON_FUNCTIONS[name];
+                    const hasCustomization = window.buttonCustomizations && window.buttonCustomizations[name] &&
+                          (window.buttonCustomizations[name].icon ||
+                           window.buttonCustomizations[name].color ||
+                           window.buttonCustomizations[name].description);
 
-        if (func.isCustom) customCount++;
-        else defaultCount++;
+                    if (func.isCustom) customCount++;
+                    else defaultCount++;
 
-        const matchesSearch = !filter ||
-              name.toLowerCase().includes(filterLower) ||
-              func.description.toLowerCase().includes(filterLower);
+                    const matchesSearch = !filter ||
+                          name.toLowerCase().includes(filterLower) ||
+                          func.description.toLowerCase().includes(filterLower);
 
-        if (!matchesSearch) return;
-        visibleCount++;
+                    if (!matchesSearch) return;
+                    visibleCount++;
 
-        const isFavorite = favorites.includes(name);
+                    const isFavorite = favorites.includes(name);
 
-        const item = document.createElement('div');
-        item.className = 'hwh-func-item hwh-func-item-compact';
-        if (func.isCustom) item.classList.add('hwh-func-item-custom');
-        if (isFavorite) item.classList.add('hwh-func-item-favorite');
+                    const item = document.createElement('div');
+                    item.className = 'hwh-func-item hwh-func-item-compact';
+                    if (func.isCustom) item.classList.add('hwh-func-item-custom');
+                    if (isFavorite) item.classList.add('hwh-func-item-favorite');
 
-        // Compact color preview
-        const colorSwatch = func.color ?
-              `<span class="hwh-func-color-preview hwh-color-swatch-${func.color}"></span>` :
-        '<span class="hwh-func-color-none">○</span>';
+                    // Compact color preview
+                    const colorSwatch = func.color ?
+                          `<span class="hwh-func-color-preview hwh-color-swatch-${func.color}"></span>` :
+                    '<span class="hwh-func-color-none">○</span>';
 
-        // Compact icon preview
-        const iconPreview = func.icon ?
-              `<span class="hwh-func-icon-preview">${func.icon}</span>` :
-        '<span class="hwh-func-icon-none">○</span>';
+                    // Compact icon preview
+                    const iconPreview = func.icon ?
+                          `<span class="hwh-func-icon-preview">${func.icon}</span>` :
+                    '<span class="hwh-func-icon-none">○</span>';
 
-        item.innerHTML = `
+                    item.innerHTML = `
                     <div class="hwh-func-item-header-compact">
                         <button class="hwh-func-fav-btn" data-name="${name}" title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
                             ${isFavorite ? '⭐' : '☆'}
@@ -29839,74 +29908,74 @@ renderFunctions(filter = '') {
             `;
             }
 
-toggleFavorite(name) {
-    const favorites = JSON.parse(localStorage.getItem('hwh_favorite_functions') || '[]');
-    const index = favorites.indexOf(name);
+            toggleFavorite(name) {
+                const favorites = JSON.parse(localStorage.getItem('hwh_favorite_functions') || '[]');
+                const index = favorites.indexOf(name);
 
-    if (index > -1) {
-        favorites.splice(index, 1);
-    } else {
-        favorites.push(name);
-    }
+                if (index > -1) {
+                    favorites.splice(index, 1);
+                } else {
+                    favorites.push(name);
+                }
 
-    localStorage.setItem('hwh_favorite_functions', JSON.stringify(favorites));
-    this.renderFunctions();
-    this.renderLayout(); // Refresh layout to show favorites section
-}
+                localStorage.setItem('hwh_favorite_functions', JSON.stringify(favorites));
+                this.renderFunctions();
+                this.renderLayout(); // Refresh layout to show favorites section
+            }
 
-addFunction() {
-    const name = prompt('Enter function name:\n\nTip: Use ">>" prefix for navigation buttons');
-    if (!name || name.trim() === '') return;
+            addFunction() {
+                const name = prompt('Enter function name:\n\nTip: Use ">>" prefix for navigation buttons');
+                if (!name || name.trim() === '') return;
 
-    if (BUTTON_FUNCTIONS[name]) {
-        alert('❌ Function already exists! Use Clone to duplicate it.');
-        return;
-    }
+                if (BUTTON_FUNCTIONS[name]) {
+                    alert('❌ Function already exists! Use Clone to duplicate it.');
+                    return;
+                }
 
-    this.editFunction(name, true);
-}
+                this.editFunction(name, true);
+            }
 
-cloneFunction(name) {
-    const func = BUTTON_FUNCTIONS[name];
-    if (!func) return;
+            cloneFunction(name) {
+                const func = BUTTON_FUNCTIONS[name];
+                if (!func) return;
 
-    const newName = prompt('Enter name for the cloned function:', name + ' Copy');
-    if (!newName || newName.trim() === '') return;
+                const newName = prompt('Enter name for the cloned function:', name + ' Copy');
+                if (!newName || newName.trim() === '') return;
 
-    if (BUTTON_FUNCTIONS[newName]) {
-        alert('❌ A function with that name already exists!');
-        return;
-    }
+                if (BUTTON_FUNCTIONS[newName]) {
+                    alert('❌ A function with that name already exists!');
+                    return;
+                }
 
-    BUTTON_FUNCTIONS[newName] = {
-        action: func.action,
-        icon: func.icon,
-        color: func.color,
-        description: func.description + ' (cloned)',
-        isCustom: true
-    };
+                BUTTON_FUNCTIONS[newName] = {
+                    action: func.action,
+                    icon: func.icon,
+                    color: func.color,
+                    description: func.description + ' (cloned)',
+                    isCustom: true
+                };
 
-    saveCustomFunctions();
-    this.renderFunctions();
-    alert(`✅ Function "${newName}" created!`);
-}
+                saveCustomFunctions();
+                this.renderFunctions();
+                alert(`✅ Function "${newName}" created!`);
+            }
 
 
-editFunction(name, isNew = false) {
-    PerfLog.start('editFunction-inner');
-    const func = BUTTON_FUNCTIONS[name];
-    const isCustom = func ? func.isCustom : true;
-    const canEditAction = isCustom || isNew;
+            editFunction(name, isNew = false) {
+                PerfLog.start('editFunction-inner');
+                const func = BUTTON_FUNCTIONS[name];
+                const isCustom = func ? func.isCustom : true;
+                const canEditAction = isCustom || isNew;
 
-    // Remove any existing dialogs first
-    const existingDialogs = document.querySelectorAll('.hwh-func-edit-dialog');
-    existingDialogs.forEach(d => d.remove());
+                // Remove any existing dialogs first
+                const existingDialogs = document.querySelectorAll('.hwh-func-edit-dialog');
+                existingDialogs.forEach(d => d.remove());
 
-    const dialog = document.createElement('div');
-    dialog.className = 'hwh-func-edit-dialog';
+                const dialog = document.createElement('div');
+                dialog.className = 'hwh-func-edit-dialog';
 
-    // CRITICAL: Set inline styles to override EVERYTHING
-    dialog.style.cssText = `
+                // CRITICAL: Set inline styles to override EVERYTHING
+                dialog.style.cssText = `
         display: flex !important;
         position: fixed !important;
         top: 0 !important;
