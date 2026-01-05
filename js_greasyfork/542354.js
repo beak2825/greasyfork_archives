@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - fr
-// @version         4.2.7.1
+// @version         4.2.8.0
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -1809,9 +1809,11 @@ else if (matchDomain('lemagit.fr')) {
 
 else if (matchDomain('lemonde.fr')) {
   let url = window.location.href.split(/[\?#]/)[0];
-  let paywall = document.querySelector('section.lmd-paywall');
+  let paywall_sel = 'section.lmd-paywall';
+  let paywall = document.querySelector(paywall_sel);
   if (paywall) {
     removeDOMElement(paywall);
+    hideDOMStyle(paywall_sel, 2);
     let article = document.querySelector('.article__content');
     if (article) {
       let match = url.match(/article.*_(\d+)_/);
@@ -1859,6 +1861,17 @@ else if (matchDomain('lemonde.fr')) {
                   elem.parentNode.parentNode.removeAttribute('class');
                   elem.src = mobile ? elem.getAttribute('src_350') : elem.getAttribute('src_700');
                   elem.style = 'width: 90%; margin: auto;';
+                }
+                let charts = article_new.querySelectorAll('section.snippet-infog');
+                for (let elem of charts) {
+                  let img = elem.querySelector('img:not([src])');
+                  if (img) {
+                    let attributes = [...img.attributes].filter(x => img.getAttribute(x.name) && x.name.startsWith('src_'));
+                    if (attributes.length) {
+                      img.src = img.getAttribute(attributes[0].name);
+                      elem.removeAttribute('class');
+                    }
+                  }
                 }
                 let inread = article_new.querySelectorAll('div.inread-container');
                 removeDOMElement(...inread);

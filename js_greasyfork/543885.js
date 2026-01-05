@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Для Руководства | KHABAROVSK
 // @namespace    https://forum.blackrussia.online/
-// @version      1.5
+// @version      1.9
 // @description  Создано для KHABAROVSK
 // @author       Orkni_Stalin
 // @match        https://forum.blackrussia.online/threads/*
@@ -220,7 +220,7 @@
             "[url=https://ibb.co/51gRYCr][img]https://i.ibb.co/grLRvQS/image.png[/img][/url]<br>"+
             "Зайдите в игру и сделайте скрин окна с баном после чего, заново напишите жалобу.<br>"+
             "[url=https://ibb.co/51gRYCr][img]https://i.ibb.co/grLRvQS/image.png[/img][/url]<br>"+
-            '[COLOR=RED]Отказано[/COLOR], Закрыто., Закрыто[/FONT][/CENTER]',
+            '[COLOR=RED]Отказано[/COLOR], Закрыто.[/FONT][/CENTER]',
             prefix: UNACCEPT_PREFIX,
             status: false,
         },
@@ -231,7 +231,7 @@
             "[url=https://ibb.co/51gRYCr][img]https://i.ibb.co/grLRvQS/image.png[/img][/url]<br>"+
             "Ответ вам уже был дан в предыдущей теме. Напоминаю, за дублирование тем ваш форумный аккаунт может быть заблокирован.<br>"+
             "[url=https://ibb.co/51gRYCr][img]https://i.ibb.co/grLRvQS/image.png[/img][/url]<br>"+
-            '[COLOR=red]Отказано[/COLOR], Закрыто., Закрыто[/FONT][/CENTER]',
+            '[COLOR=red]Отказано[/COLOR], Закрыто.[/FONT][/CENTER]',
             prefix: UNACCEPT_PREFIX,
             status: false,
         },
@@ -242,6 +242,18 @@
             "[url=https://ibb.co/51gRYCr][img]https://i.ibb.co/grLRvQS/image.png[/img][/url]<br>"+
             "Ваша жалоба была рассмотрена и одобрена, с администратором будет проведена профилактическая беседа.<br>"+
             "Ваше наказание будет снято в ближайшее время, если оно еще не снято.<br>"+
+            "Приносим извинения за предоставленные неудобства.<br>"+
+            "[url=https://ibb.co/51gRYCr][img]https://i.ibb.co/grLRvQS/image.png[/img][/url]<br>"+
+            '[COLOR=#00FA9A]Одобрено[/COLOR], Закрыто.[/FONT][/CENTER]',
+            prefix: ACCEPT_PREFIX,
+            status: false,
+        },
+       {
+            title: 'Беседа с адм без снятия наказания',
+            content:
+            "[CENTER][FONT=Verdana]Доброго времени суток, уважаемый(-ая) {{ user.name }}.<br><br>"+
+            "[url=https://ibb.co/51gRYCr][img]https://i.ibb.co/grLRvQS/image.png[/img][/url]<br>"+
+            "Ваша жалоба была рассмотрена и одобрена, с администратором будет проведена профилактическая беседа.<br>"+
             "Приносим извинения за предоставленные неудобства.<br>"+
             "[url=https://ibb.co/51gRYCr][img]https://i.ibb.co/grLRvQS/image.png[/img][/url]<br>"+
             '[COLOR=#00FA9A]Одобрено[/COLOR], Закрыто.[/FONT][/CENTER]',
@@ -268,7 +280,7 @@
             "Наказание выдано верно.<br>"+
             "[url=https://ibb.co/51gRYCr][img]https://i.ibb.co/grLRvQS/image.png[/img][/url]<br>"+
             '[COLOR=RED]Закрыто.[/COLOR][/FONT][/CENTER]',
-            prefix: UNACCEPT_PREFIX,
+            prefix: CLOSE_PREFIX,
             status: false,
         },
         {
@@ -292,6 +304,18 @@
             "Ожидайте ответа в данной теме, не нужно создавать копии этой темы.<br>"+
             "[url=https://ibb.co/51gRYCr][img]https://i.ibb.co/grLRvQS/image.png[/img][/url]<br>"+
             '[COLOR=red]Передано Главному Администратору[/COLOR][/FONT][/CENTER]',
+            prefix: GA_PREFIX,
+            status: true,
+        },
+        {
+            title: 'Передано ГА/ЗГА',
+            content:
+            "[CENTER][FONT=Verdana]Доброго времени суток, уважаемый(-ая) {{ user.name }}.<br><br>"+
+            "[url=https://ibb.co/51gRYCr][img]https://i.ibb.co/grLRvQS/image.png[/img][/url]<br>"+
+            "Жалоба передана Главному Администратору/Заместителю Главного Администратора, пожалуйста ожидайте ответа.<br>"+
+            "Ожидайте ответа в данной теме, не нужно создавать копии этой темы.<br>"+
+            "[url=https://ibb.co/51gRYCr][img]https://i.ibb.co/grLRvQS/image.png[/img][/url]<br>"+
+            '[COLOR=red]Передано Главному Администратору/Заместителю Главного Администратора[/COLOR][/FONT][/CENTER]',
             prefix: GA_PREFIX,
             status: true,
         },
@@ -756,7 +780,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Вы ошиблись разделом, переподайте свою жалобу в раздел жалоб на сотрудников организации.[/CENTER]<br>",
+        "[CENTER]Вы ошиблись разделом, перепадайте свою жалобу в раздел жалоб на сотрудников организации.[/CENTER]<br>",
       prefix: UNACCEPT_PREFIX,
       status: false,
     },
@@ -776,7 +800,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Ваши доказательства не рабочие/обрезанные, перезалейте их правильно и без обрезаний.[/CENTER]<br>" +
+        "[CENTER]Ваши доказательства не рабочие/обрезанные, загрузите их заново, правильно и без обрезаний.[/CENTER]<br>" +
         '[Color=Red][CENTER]Отказано, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: UNACCEPT_PREFIX,
       status: false,
@@ -808,7 +832,7 @@
          '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
           "[CENTER]В данном случае у игрока произошел баг с зеленой зоной.[/CENTER]<br>" +
         '[CENTER]Если игрок использует читы. то у него снимается здоровье и резко восстанавливается.[/CENTER]<br>' +
-        "[CENTER]Тут ни снимается, ни восстонавливается.[/CENTER]<br>" +
+        "[CENTER]Тут ни снимается, ни восстанавливается.[/CENTER]<br>" +
         '[Color=Red][CENTER]Закрыто.[/I][/CENTER][/color][/FONT]',
         prefix: CLOSE_PREFIX,
         status: false,
@@ -911,7 +935,7 @@
         content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]4.04[/color]. Запрещено редактировать поданные объявления в личных целях заменяя текст обьявления на несоответствующий отправленному игроком | [Color=Red]Ban 7 дней + Чс Организации[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по данному пункту правил: [Color=Red]4.04[/color]. Запрещено редактировать поданные объявления в личных целях заменяя текст объявления на несоответствующий отправленному игроком | [Color=Red]Ban 7 дней + Чс Организации[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color]',
         prefix: ACCEPT_PREFIX,
         status: false,
@@ -1068,7 +1092,7 @@
 '[CENTER][COLOR=violet][FONT=Georgia][SIZE=4][I]Доброго времени суток, уважаемый {{ user.mention }}[/I][/SIZE][/FONT][/COLOR]<br><br>' +
 '[CENTER]<br>[I]Игроку будет выдано следующее наказание за нарушение данного пункта правил:[/I]<br><br>' +
 '[COLOR=rgb(255, 0, 0)]3.01.[/COLOR][COLOR=rgb(209, 213, 216)] Общепризнанный язык сервера — русский. Общение в IC и OOC чатах во всех RolePlay ситуациях обязательно должно проходить исключительно на русском языке. [COLOR=rgb(255, 0, 0)]| Устное замечание / Mute 30 минут[/COLOR][COLOR=rgb(209, 213, 216)]<br><br>' +
-'[B][CENTER][COLOR=green][ICODE]Одобрено,закрыто.[/ICODE][/COLOR][/CENTER][/B]',
+'[B][CENTER][COLOR=green][ICODE]Одобрено, закрыто.[/ICODE][/COLOR][/CENTER][/B]',
 	  prefix: ACCEPT_PREFIX,
 	  status: false,
     },
@@ -1102,7 +1126,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по данному пункту правил:[Color=Red]2.02[/COLOR]. Запрещено целенаправленно уходить от Role Play процесса всеразличными способами | [Color=Red]Jail 30 минут / Warn[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по данному пункту правил:[Color=Red]2.02[/COLOR]. Запрещено целенаправленно уходить от Role Play процесса все различными способами | [Color=Red]Jail 30 минут / Warn[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/CENTER][/color] <br>' +
         "[CENTER] Приятной игры на [Color=Red]Black Russia [/I][/CENTER][/color][/FONT]",
       prefix: ACCEPT_PREFIX,
@@ -1519,7 +1543,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]1.08[/color]. Запрещено использование фракционного транспорта в личных целях | [Color=Red]Jail 30 минут[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]1.08[/color]. Запрещено использование фракционного транспорта в личных целях | [Color=Red]Jail 30 минут[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1529,7 +1553,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]4.01[/color]. Запрещено редактирование объявлений, не соответствующих ПРО | [Color=Red]Mute 30 минут[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]4.01[/color]. Запрещено редактирование объявлений, не соответствующих ПРО | [Color=Red]Mute 30 минут[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1539,7 +1563,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]4.02[/color]. Запрещено проведение эфиров, не соответствующих Role Play правилам и логике | [Color=Red]Mute 30 минут[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]4.02[/color]. Запрещено проведение эфиров, не соответствующих Role Play правилам и логике | [Color=Red]Mute 30 минут[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1560,7 +1584,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]6.01[/color]. Запрещено наносить урон игрокам без Role Play причины на территории УМВД | [Color=Red]Jail 60 минут / Warn[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]6.01[/color]. Запрещено наносить урон игрокам без Role Play причины на территории УМВД | [Color=Red]Jail 60 минут / Warn[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1570,7 +1594,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]6.02[/color]. Запрещено выдавать розыск без Role Play причины | [Color=Red]Warn[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]6.02[/color]. Запрещено выдавать розыск без Role Play причины | [Color=Red]Warn[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1580,7 +1604,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]6.03[/color]. Запрещено nRP поведение | [Color=Red]Warn[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]6.03[/color]. Запрещено nRP поведение | [Color=Red]Warn[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1590,7 +1614,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]7.01[/color]. Запрещено наносить урон игрокам без Role Play причины на территории ГИБДД | [Color=Red]Jail 60 минут / Warn[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]7.01[/color]. Запрещено наносить урон игрокам без Role Play причины на территории ГИБДД | [Color=Red]Jail 60 минут / Warn[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1600,7 +1624,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]2.02[/color]. Запрещено наносить урон игрокам, которые находятся вне территории воинской части, запрещено. | [Color=Red]Jail 60 минут / Warn[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]2.02[/color]. Запрещено наносить урон игрокам, которые находятся вне территории воинской части, запрещено. | [Color=Red]Jail 60 минут / Warn[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1611,7 +1635,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]7.02[/color]. Запрещено выдавать розыск, штраф без Role Play причины | [Color=Red]Warn[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]7.02[/color]. Запрещено выдавать розыск, штраф без Role Play причины | [Color=Red]Warn[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1621,7 +1645,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]6.02[/color]. Запрещено выдавать розыск без Role Play причины | [Color=Red]Warn[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]6.02[/color]. Запрещено выдавать розыск без Role Play причины | [Color=Red]Warn[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1631,7 +1655,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]7.04[/color]. Запрещено отбирать водительские права во время погони за нарушителем | [Color=Red]Warn[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]7.04[/color]. Запрещено отбирать водительские права во время погони за нарушителем | [Color=Red]Warn[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1641,7 +1665,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]8.01[/color]. Запрещено наносить урон игрокам без Role Play причины на территории ФСБ | [Color=Red]DM / Jail 60 минут / Warn[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]8.01[/color]. Запрещено наносить урон игрокам без Role Play причины на территории ФСБ | [Color=Red]DM / Jail 60 минут / Warn[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1651,7 +1675,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]8.02[/color]. Запрещено выдавать розыск без Role Play причины | [Color=Red]Warn[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]8.02[/color]. Запрещено выдавать розыск без Role Play причины | [Color=Red]Warn[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1661,7 +1685,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан по пунтку правил: [Color=Red]9.01[/color]. Запрещено наносить урон игрокам без Role Play причины на территории ФСИН | [Color=Red]Jail 60 минут / Warn[/color][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан по пункту правил: [Color=Red]9.01[/color]. Запрещено наносить урон игрокам без Role Play причины на территории ФСИН | [Color=Red]Jail 60 минут / Warn[/color][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1695,7 +1719,7 @@
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +
-        "[CENTER]Нарушитель будет наказан за NonRP Ограбление/Похищениее в соответствии с этими правилами [URL='https://forum.blackrussia.online/index.php?threads/%D0%9F%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0-%D0%BE%D0%B3%D1%80%D0%B0%D0%B1%D0%BB%D0%B5%D0%BD%D0%B8%D0%B9-%D0%B8-%D0%BF%D0%BE%D1%85%D0%B8%D1%89%D0%B5%D0%BD%D0%B8%D0%B9.29/']Кликабельно[/URL][/CENTER]<br>" +
+        "[CENTER]Нарушитель будет наказан за NonRP Ограбление/Похищение в соответствии с этими правилами [URL='https://forum.blackrussia.online/index.php?threads/%D0%9F%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0-%D0%BE%D0%B3%D1%80%D0%B0%D0%B1%D0%BB%D0%B5%D0%BD%D0%B8%D0%B9-%D0%B8-%D0%BF%D0%BE%D1%85%D0%B8%D1%89%D0%B5%D0%BD%D0%B8%D0%B9.29/']Кликабельно[/URL][/CENTER]<br>" +
         '[Color=Lime][CENTER]Одобрено, закрыто.[/I][/CENTER][/color][/FONT]',
       prefix: ACCEPT_PREFIX,
       status: false,
@@ -1853,7 +1877,7 @@
       status: false,
     },
     {
-      title: 'Неофициальная Орг на дороботке',
+      title: 'Неофициальная Орг на доработке',
       content:
         '[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/mrhcH5vR/1621526767066.png[/img][/url][/CENTER]<br>' +
         '[Color=rgb(222, 143, 255)][FONT=Georgia][CENTER][I]{{ greeting }}, уважаемый {{ user.mention }}.[/color][/CENTER]<br>' +

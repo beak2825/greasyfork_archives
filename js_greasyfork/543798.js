@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         Universal HTML5 Speed Hack
 // @namespace    https://greasyfork.org/users/1498931-kubabreak
-// @version      3.0
-// @description  Lets you change the speed of any website. Press L to hide UI.
+// @version      4.0
+// @description  Lets you change the speed of any website.
 // @author       kubabreak
 // @match        *://*/*
 // @grant        none
 // @run-at       document-start
+// @icon         https://static.wikia.nocookie.net/logopedia/images/1/19/HTML5_shield.svg/revision/latest/scale-to-width-down/1000?cb=20210709052138
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/543798/Universal%20HTML5%20Speed%20Hack.user.js
 // @updateURL https://update.greasyfork.org/scripts/543798/Universal%20HTML5%20Speed%20Hack.meta.js
@@ -58,7 +59,6 @@
     let uiElement = null;
     let isInitialized = false;
     let startTime = Date.now();
-    let refreshRequired = false;
     const __trackedSources = new Map(); // AudioBufferSourceNode -> isMusic
     const globalState = {
         perfNow: false,
@@ -130,9 +130,9 @@
             left: 50%;
             transform: translateX(-50%);
             background: ${type === 'error' ? 'rgba(244,67,54,0.95)' :
-        type === 'warning' ? 'rgba(255,193,7,0.95)' :
-        type === 'success' ? 'rgba(76,175,80,0.95)' :
-        'rgba(33,150,243,0.95)'};
+                type === 'warning' ? 'rgba(255,193,7,0.95)' :
+                    type === 'success' ? 'rgba(76,175,80,0.95)' :
+                        'rgba(33,150,243,0.95)'};
             color: white;
             padding: 12px 20px;
             border-radius: 8px;
@@ -226,12 +226,21 @@
     })();
 
 
+    // Replace the createInjectionScript function with this permanent hooks version
+
     function createInjectionScript(speed, state) {
         return `
     (function() {
-        if (window.__speedHackInjected) return;
+        if (window.__speedHackInjected) {
+            // Already injected, just update the config
+            if (window.__updateSpeedConfig) {
+                window.__updateSpeedConfig(${speed}, ${JSON.stringify(state)});
+            }
+            return;
+        }
         window.__speedHackInjected = true;
 
+        // Store original functions
         const realPerfNow = performance.now.bind(performance);
         const realDateNow = Date.now;
         const realSetTimeout = window.setTimeout;
@@ -239,131 +248,271 @@
         const realClearTimeout = window.clearTimeout;
         const realClearInterval = window.clearInterval;
         const realRAF = window.requestAnimationFrame;
-        const realCAF = window.cancelAnimationFrame;
 
-        let currentSpeed = ${speed};
-        let functionSpeeds = {
-            perfNow: ${state.perfNowSpeed || 1.0},
-            dateNow: ${state.dateNowSpeed || 1.0},
-            setTimeout: ${state.setTimeoutSpeed || 1.0},
-            setInterval: ${state.setIntervalSpeed || 1.0},
-            raf: ${state.rafSpeed || 1.0}
+        // Speed configuration that can be updated without refresh
+        let speedConfig = {
+            globalSpeed: ${speed},
+            perfNowSpeed: ${state.perfNowSpeed || 1.0},
+            dateNowSpeed: ${state.dateNowSpeed || 1.0},
+            setTimeoutSpeed: ${state.setTimeoutSpeed || 1.0},
+            setIntervalSpeed: ${state.setIntervalSpeed || 1.0},
+            rafSpeed: ${state.rafSpeed || 1.0},
+            perfNowEnabled: ${state.perfNow || false},
+            dateNowEnabled: ${state.dateNow || false},
+            setTimeoutEnabled: ${state.setTimeout || false},
+            setIntervalEnabled: ${state.setInterval || false},
+            rafEnabled: ${state.raf || false}
         };
 
-        let perfStartTime = realPerfNow();
-        let virtualStartTime = perfStartTime;
-        let dateStartTime = realDateNow();
-        let virtualDateStart = dateStartTime;
+        // Timers tracking for setInterval
+        let timers = [];
 
-        const timeoutMap = new Map();
-        const intervalMap = new Map();
-        let timeoutId = 1;
-        let intervalId = 1;
+        // Performance.now hook with smooth transition
+let perfNowValue = null;
+let prevPerfNowValue = null;
+let perfNowOffset = 0; // Track the offset between real and virtual time
 
-        // Performance.now override - uses individual speed only if enabled
-        ${state.perfNow ? `
-        performance.now = function() {
-            const realNow = realPerfNow();
-            const realElapsed = realNow - perfStartTime;
-            return virtualStartTime + (realElapsed * functionSpeeds.perfNow);
-        };
-        ` : ''}
+performance.now = function() {
+    const originalValue = realPerfNow();
 
-        // Date.now override - uses individual speed only if enabled
-        ${state.dateNow ? `
-        Date.now = function() {
-            const realNow = realPerfNow();
-            const realElapsed = realNow - perfStartTime;
-            return Math.floor(virtualDateStart + (realElapsed * functionSpeeds.dateNow));
-        };
-        ` : ''}
+    if (perfNowValue === null) {
+        // First call - initialize
+        perfNowValue = originalValue;
+        prevPerfNowValue = originalValue;
+        perfNowOffset = 0;
+    }
 
-        // setTimeout override - uses individual speed only if enabled
-        ${state.setTimeout ? `
+    if (!speedConfig.perfNowEnabled) {
+        // When disabled, maintain continuity by using offset
+        // This prevents time jumps when toggling on/off
+        return originalValue + perfNowOffset;
+    }
+
+    // When enabled, apply speed multiplier
+    perfNowValue += (originalValue - prevPerfNowValue) * speedConfig.perfNowSpeed;
+    prevPerfNowValue = originalValue;
+
+    // Update offset for when we disable (difference between virtual and real time)
+    perfNowOffset = perfNowValue - originalValue;
+
+    return perfNowValue;
+};
+
+        // Date.now hook with smooth transition
+let dateNowValue = null;
+let prevDateNowValue = null;
+let dateNowOffset = 0; // Track the offset between real and virtual time
+
+Date.now = function() {
+    const originalValue = realDateNow();
+
+    if (dateNowValue === null) {
+        // First call - initialize
+        dateNowValue = originalValue;
+        prevDateNowValue = originalValue;
+        dateNowOffset = 0;
+    }
+
+    if (!speedConfig.dateNowEnabled) {
+        // When disabled, maintain continuity by using offset
+        return originalValue + dateNowOffset;
+    }
+
+    // When enabled, apply speed multiplier
+    dateNowValue += (originalValue - prevDateNowValue) * speedConfig.dateNowSpeed;
+    prevDateNowValue = originalValue;
+
+    // Update offset for when we disable
+    dateNowOffset = dateNowValue - originalValue;
+
+    return Math.floor(dateNowValue);
+};
+
+        // setTimeout hook with smooth transition
+        let setTimeoutValue = null;
+        let prevSetTimeoutValue = null;
+        let setTimeoutOffset = 0;
+
         window.setTimeout = function(callback, delay, ...args) {
-            if (typeof callback !== 'function') return realSetTimeout(callback, delay, ...args);
-
-            const adjustedDelay = Math.max(0, delay / functionSpeeds.setTimeout);
-            const id = timeoutId++;
-            const realId = realSetTimeout(() => {
-                timeoutMap.delete(id);
-                callback.apply(this, args);
-            }, adjustedDelay);
-
-            timeoutMap.set(id, realId);
-            return id;
-        };
-
-        ${state.clearTimeouts ? `
-        window.clearTimeout = function(id) {
-            const realId = timeoutMap.get(id);
-            if (realId !== undefined) {
-                timeoutMap.delete(id);
-                return realClearTimeout(realId);
+            if (typeof callback !== 'function') {
+                return realSetTimeout(callback, delay, ...args);
             }
-            return realClearTimeout(id);
-        };
-        ` : ''}
-        ` : ''}
 
-        // setInterval override - uses individual speed only if enabled
-        ${state.setInterval ? `
+            // Track timing for smooth transitions
+            const currentTime = realPerfNow();
+            if (setTimeoutValue === null) {
+                setTimeoutValue = currentTime;
+                prevSetTimeoutValue = currentTime;
+                setTimeoutOffset = 0;
+            }
+
+            const adjustedDelay = speedConfig.setTimeoutEnabled ?
+                Math.max(0, delay / speedConfig.setTimeoutSpeed) : delay;
+
+            return realSetTimeout(callback, adjustedDelay, ...args);
+        };
+
+        // setInterval hook with smooth transition and reload capability
+        let setIntervalValue = null;
+        let prevSetIntervalValue = null;
+        let setIntervalOffset = 0;
+
+        const reloadTimers = () => {
+            const newTimers = [];
+            timers.forEach((timer) => {
+                realClearInterval(timer.realId);
+                if (timer.customId) {
+                    realClearInterval(timer.customId);
+                }
+
+                if (!timer.finished) {
+                    const adjustedDelay = speedConfig.setIntervalEnabled ?
+                        timer.delay / speedConfig.setIntervalSpeed : timer.delay;
+
+                    const newRealId = realSetInterval(timer.callback, adjustedDelay, ...timer.args);
+                    timer.customId = newRealId;
+                    newTimers.push(timer);
+                }
+            });
+            timers = newTimers;
+        };
+
         window.setInterval = function(callback, delay, ...args) {
-            if (typeof callback !== 'function') return realSetInterval(callback, delay, ...args);
-
-            const adjustedDelay = Math.max(1, delay / functionSpeeds.setInterval);
-            const id = intervalId++;
-            const realId = realSetInterval(() => {
-                callback.apply(this, args);
-            }, adjustedDelay);
-
-            intervalMap.set(id, realId);
-            return id;
-        };
-
-        ${state.clearTimeouts ? `
-        window.clearInterval = function(id) {
-            const realId = intervalMap.get(id);
-            if (realId !== undefined) {
-                intervalMap.delete(id);
-                return realClearInterval(realId);
+            if (typeof callback !== 'function') {
+                return realSetInterval(callback, delay, ...args);
             }
-            return realClearInterval(id);
-        };
-        ` : ''}
-        ` : ''}
 
-        // requestAnimationFrame override - uses individual speed only if enabled
-        ${state.raf ? `
+            // Track timing for smooth transitions
+            const currentTime = realPerfNow();
+            if (setIntervalValue === null) {
+                setIntervalValue = currentTime;
+                prevSetIntervalValue = currentTime;
+                setIntervalOffset = 0;
+            }
+
+            const adjustedDelay = speedConfig.setIntervalEnabled ?
+                Math.max(1, delay / speedConfig.setIntervalSpeed) : delay;
+
+            const realId = realSetInterval(callback, adjustedDelay, ...args);
+
+            timers.push({
+                realId: realId,
+                callback: callback,
+                delay: delay || 0,
+                args: args,
+                finished: false,
+                customId: null
+            });
+
+            return realId;
+        };
+
+        // requestAnimationFrame hook with smooth transition
+        let disableRAF = false;
+        const rafCallbacks = [];
+        const rafTicks = [];
+        let rafValue = null;
+        let prevRafValue = null;
+        let rafOffset = 0;
+
         window.requestAnimationFrame = function(callback) {
+            if (disableRAF) return 1;
+
             return realRAF((timestamp) => {
-                const virtualTime = performance.now();
-                callback(virtualTime);
+                // Track timing for smooth transitions
+                const currentTime = realPerfNow();
+                if (rafValue === null) {
+                    rafValue = currentTime;
+                    prevRafValue = currentTime;
+                    rafOffset = 0;
+                }
+
+                const index = rafCallbacks.indexOf(callback);
+
+                if (index === -1) {
+                    rafCallbacks.push(callback);
+                    rafTicks.push(0);
+                    callback(performance.now());
+                } else if (speedConfig.rafEnabled) {
+                    let tickFrame = rafTicks[index];
+                    tickFrame += speedConfig.rafSpeed;
+
+                    if (tickFrame >= 1) {
+                        const startTime = realPerfNow();
+                        while (tickFrame >= 1) {
+                            try {
+                                callback(performance.now());
+                            } catch (e) {
+                                console.error(e);
+                            }
+                            disableRAF = true;
+                            tickFrame -= 1;
+
+                            if (realPerfNow() - startTime > 15) {
+                                tickFrame = 0;
+                                break;
+                            }
+                        }
+                        disableRAF = false;
+                    } else {
+                        window.requestAnimationFrame(callback);
+                    }
+                    rafTicks[index] = tickFrame;
+                } else {
+                    callback(performance.now());
+                }
+
+                // Update offset tracking
+                rafValue += (currentTime - prevRafValue) * (speedConfig.rafEnabled ? speedConfig.rafSpeed : 1);
+                prevRafValue = currentTime;
+                rafOffset = rafValue - currentTime;
             });
         };
-        ` : ''}
 
-        // Update speed function
-        window.__updateSpeedHack = function(newSpeed, newState) {
-            currentSpeed = newSpeed;
-            if (newState.perfNowSpeed !== undefined) functionSpeeds.perfNow = newState.perfNowSpeed;
-            if (newState.dateNowSpeed !== undefined) functionSpeeds.dateNow = newState.dateNowSpeed;
-            if (newState.setTimeoutSpeed !== undefined) functionSpeeds.setTimeout = newState.setTimeoutSpeed;
-            if (newState.setIntervalSpeed !== undefined) functionSpeeds.setInterval = newState.setIntervalSpeed;
-            if (newState.rafSpeed !== undefined) functionSpeeds.raf = newState.rafSpeed;
+        // Update function - NO REFRESH NEEDED!
+        window.__updateSpeedConfig = function(newSpeed, newState) {
+            speedConfig.globalSpeed = newSpeed;
+            speedConfig.perfNowSpeed = newState.perfNowSpeed || 1.0;
+            speedConfig.dateNowSpeed = newState.dateNowSpeed || 1.0;
+            speedConfig.setTimeoutSpeed = newState.setTimeoutSpeed || 1.0;
+            speedConfig.setIntervalSpeed = newState.setIntervalSpeed || 1.0;
+            speedConfig.rafSpeed = newState.rafSpeed || 1.0;
+            speedConfig.perfNowEnabled = newState.perfNow || false;
+            speedConfig.dateNowEnabled = newState.dateNow || false;
+            speedConfig.setTimeoutEnabled = newState.setTimeout || false;
+            speedConfig.setIntervalEnabled = newState.setInterval || false;
+            speedConfig.rafEnabled = newState.raf || false;
 
-            const realNow = realPerfNow();
-            const currentVirtualTime = virtualStartTime + ((realNow - perfStartTime) * functionSpeeds.perfNow);
-            perfStartTime = realNow;
-            virtualStartTime = currentVirtualTime;
+            // Reload intervals with new speed
+            reloadTimers();
 
-            const currentVirtualDate = virtualDateStart + ((realNow - perfStartTime) * functionSpeeds.dateNow);
-            virtualDateStart = currentVirtualDate;
+            ${state.debugLogging ? 'console.log("[SpeedHack] Speed updated to", newSpeed, "x");' : ''}
         };
 
-        ${state.debugLogging ? `console.log('[SpeedHack] Injected at ' + currentSpeed + 'x speed with individual function speeds');` : ''}
+        ${state.debugLogging ? 'console.log("[SpeedHack] Permanent hooks installed");' : ''}
     })();
     `;
+    }
+
+    // Update the updateAllWindows function to use the new approach
+    function updateAllWindows() {
+        // Inject or update main window
+        injectIntoWindow(window, globalSpeed, globalState);
+
+        // Update all iframes if enabled
+        if (globalState.autoInjectFrames) {
+            const frames = document.querySelectorAll('iframe');
+            frames.forEach(frame => {
+                try {
+                    const frameWindow = frame.contentWindow;
+                    if (frameWindow && frameWindow.document) {
+                        injectIntoWindow(frameWindow, globalSpeed, globalState);
+                    }
+                } catch (e) {
+                    // Cross-origin iframe, ignore
+                }
+            });
+        }
     }
 
     function injectIntoWindow(targetWindow, speed, state) {
@@ -385,32 +534,6 @@
             }
         }
         return false;
-    }
-
-    function updateAllWindows() {
-        // Update main window
-        injectIntoWindow(window, globalSpeed, globalState);
-        if (window.__updateSpeedHack) {
-            window.__updateSpeedHack(globalSpeed, globalState);
-        }
-
-        // Update all iframes if enabled
-        if (globalState.autoInjectFrames) {
-            const frames = document.querySelectorAll('iframe');
-            frames.forEach(frame => {
-                try {
-                    const frameWindow = frame.contentWindow;
-                    if (frameWindow && frameWindow.document) {
-                        injectIntoWindow(frameWindow, globalSpeed, globalState);
-                        if (frameWindow.__updateSpeedHack) {
-                            frameWindow.__updateSpeedHack(globalSpeed, globalState);
-                        }
-                    }
-                } catch (e) {
-                    // Cross-origin iframe, ignore
-                }
-            });
-        }
     }
 
     setInterval(() => {
@@ -441,70 +564,6 @@
         } else {
             return speed.toFixed(6).replace(/\.?0+$/, '');
         }
-    }
-
-    function createRefreshIndicator() {
-        if (document.querySelector('#speedhack-refresh-indicator')) return;
-
-        const indicator = document.createElement('div');
-        indicator.id = 'speedhack-refresh-indicator';
-        indicator.style.cssText = `
-            position: fixed;
-            top: 70px;
-            right: 10px;
-            padding: 12px 16px;
-            background: linear-gradient(135deg, rgba(255,193,7,0.95), rgba(255,152,0,0.95));
-            color: #000;
-            z-index: 2147483648;
-            border-radius: 8px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            box-shadow: 0 4px 20px rgba(255,193,7,0.4);
-            border: 1px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(15px);
-            animation: pulse 2s infinite;
-            cursor: pointer;
-            user-select: none;
-            max-width: 250px;
-        `;
-
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes pulse {
-                0%, 100% { transform: scale(1); opacity: 1; }
-                50% { transform: scale(1.05); opacity: 0.9; }
-            }
-        `;
-        document.head.appendChild(style);
-
-        indicator.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 16px;">🔄</span>
-                <div>
-                    <div style="font-weight: bold;">Refresh Required</div>
-                    <div style="font-size: 10px; opacity: 0.8;">Click to refresh page</div>
-                </div>
-            </div>
-        `;
-
-        indicator.addEventListener('click', () => {
-            location.reload();
-        });
-
-        document.body.appendChild(indicator);
-
-        // Auto-remove after 10 seconds if not clicked
-        setTimeout(() => {
-            if (document.body.contains(indicator)) {
-                indicator.style.animation = 'slideUp 0.3s ease-in forwards';
-                setTimeout(() => {
-                    if (document.body.contains(indicator)) {
-                        document.body.removeChild(indicator);
-                    }
-                }, 300);
-            }
-        }, 10000);
     }
 
     function createUI() {
@@ -799,9 +858,13 @@
                         <div style="font-size: 9px; color: #90CAF9; margin-top: 4px;">Click the input and press any key to rebind</div>
                     </div>
 
-                    <div style="background: rgba(255,193,7,0.1); border: 1px solid rgba(255,193,7,0.3); border-radius: 6px; padding: 8px; margin-bottom: 10px;">
-                        <div style="font-size: 11px; color: #FFC107; font-weight: 600; margin-bottom: 4px;">⚠️ Function Change Notice</div>
-                        <div style="font-size: 10px; color: #FFE082;">Changing function toggles or individual speeds requires a page refresh to take effect.</div>
+                    <div style="margin-bottom: 10px; padding: 10px; background: rgba(33,150,243,0.1); border: 1px solid rgba(33,150,243,0.3); border-radius: 6px;">
+                        <div style="font-size: 11px; color: #64B5F6; font-weight: 600; margin-bottom: 6px;">⏱️ Time Functions</div>
+                        <button id="reset-time-functions" style="width: 100%; padding: 8px; background: linear-gradient(135deg, rgba(33,150,243,0.2), rgba(25,118,210,0.2)); border: 1px solid #2196F3; color: #2196F3; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px;" onmouseover="this.style.background='linear-gradient(135deg, rgba(33,150,243,0.3), rgba(25,118,210,0.3))'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(33,150,243,0.3)'" onmouseout="this.style.background='linear-gradient(135deg, rgba(33,150,243,0.2), rgba(25,118,210,0.2))'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            <span style="font-size: 14px;">🔄</span>
+                            <span>Reset Time Functions</span>
+                        </button>
+                        <div style="font-size: 9px; color: #90CAF9; margin-top: 4px; text-align: center;">Use if game freezes after toggling time functions</div>
                     </div>
 
                     <div style="display: flex; gap: 6px;">
@@ -833,6 +896,7 @@
         const speedInput = ui.querySelector('#speed-input');
         const speedApply = ui.querySelector('#speed-apply');
 
+
         // Add the updateSliderStates function HERE
         function updateSliderStates() {
             const sliderMap = {
@@ -845,72 +909,7 @@
                 'sfx': 'sfx'
             };
 
-            // Hide key rebind functionality
-            const hideKeyInput = ui.querySelector('#hide-key-input');
-            const hideKeyDisplay = ui.querySelector('#hide-key-display');
-            const resetHideKey = ui.querySelector('#reset-hide-key');
-
-            if (hideKeyInput) {
-                hideKeyInput.value = globalState.hideKey.replace('Key', '').replace('Digit', '');
-
-                hideKeyInput.addEventListener('click', () => {
-                    hideKeyInput.value = 'Press a key...';
-                    hideKeyInput.style.background = 'rgba(76,175,80,0.2)';
-                    hideKeyInput.style.borderColor = '#4CAF50';
-
-                    const keyListener = (e) => {
-                        e.preventDefault();
-
-                        // Ignore modifier keys alone
-                        if (['Control', 'Shift', 'Alt', 'Meta'].includes(e.key)) return;
-
-                        globalState.hideKey = e.code;
-                        const displayKey = e.code.replace('Key', '').replace('Digit', '');
-                        hideKeyInput.value = displayKey;
-                        hideKeyDisplay.textContent = displayKey;
-                        hideKeyInput.style.background = 'rgba(255,255,255,0.1)';
-                        hideKeyInput.style.borderColor = 'rgba(255,255,255,0.25)';
-
-                        saveSettings();
-                        showNotification(`Hide UI key set to: ${displayKey}`, 'success', 2000);
-
-                        hideKeyInput.removeEventListener('keydown', keyListener);
-                        hideKeyInput.blur();
-                    };
-
-                    hideKeyInput.addEventListener('keydown', keyListener, { once: false });
-                });
-
-                hideKeyInput.addEventListener('blur', () => {
-                    const displayKey = globalState.hideKey.replace('Key', '').replace('Digit', '');
-                    hideKeyInput.value = displayKey;
-                    hideKeyInput.style.background = 'rgba(255,255,255,0.1)';
-                    hideKeyInput.style.borderColor = 'rgba(255,255,255,0.25)';
-                });
-            }
-
-            if (resetHideKey) {
-                resetHideKey.addEventListener('click', () => {
-                    globalState.hideKey = 'KeyL';
-                    hideKeyInput.value = 'L';
-                    hideKeyDisplay.textContent = 'L';
-                    saveSettings();
-                    showNotification('Hide UI key reset to: L', 'info', 2000);
-                });
-            }
-
-            // Update display on load
-            if (hideKeyDisplay) {
-                hideKeyDisplay.textContent = globalState.hideKey.replace('Key', '').replace('Digit', '');
-            }
-
-            if (!localStorage.getItem(STORAGE_KEY)) {
-                ['perfNowSpeed', 'dateNowSpeed', 'setTimeoutSpeed', 'setIntervalSpeed', 'rafSpeed', 'musicSpeed', 'sfxSpeed'].forEach(key => {
-                    globalState[key] = globalSpeed;
-                });
-                saveSettings();
-            }
-
+            // Update slider states
             Object.entries(sliderMap).forEach(([sliderName, stateKey]) => {
                 const slider = ui.querySelector(`#${sliderName}-speed-slider`);
                 if (slider) {
@@ -924,6 +923,91 @@
 
         // Now call it after the function is defined
         updateSliderStates();
+
+        // Hide key rebind functionality - placed OUTSIDE updateSliderStates to prevent duplicate listeners
+        const hideKeyInput = ui.querySelector('#hide-key-input');
+        const hideKeyDisplay = ui.querySelector('#hide-key-display');
+        const resetHideKey = ui.querySelector('#reset-hide-key');
+
+        if (hideKeyInput && hideKeyDisplay) {
+            hideKeyInput.value = globalState.hideKey.replace('Key', '').replace('Digit', '');
+            hideKeyDisplay.textContent = globalState.hideKey.replace('Key', '').replace('Digit', '');
+
+            hideKeyInput.addEventListener('click', () => {
+                hideKeyInput.value = 'Press a key...';
+                hideKeyInput.style.background = 'rgba(76,175,80,0.2)';
+                hideKeyInput.style.borderColor = '#4CAF50';
+
+                const keyListener = (e) => {
+                    e.preventDefault();
+                    if (['Control', 'Shift', 'Alt', 'Meta'].includes(e.key)) return;
+
+                    const oldKey = globalState.hideKey;
+                    globalState.hideKey = e.code;
+                    const displayKey = e.code.replace('Key', '').replace('Digit', '');
+                    hideKeyInput.value = displayKey;
+                    hideKeyDisplay.textContent = displayKey;
+                    hideKeyInput.style.background = 'rgba(255,255,255,0.1)';
+                    hideKeyInput.style.borderColor = 'rgba(255,255,255,0.25)';
+
+                    saveSettings();
+
+                    // Check if they set it to the same key
+                    if (oldKey === e.code) {
+                        showNotification(`Hide UI key set to... the same key? Alright lol`, 'success', 4000);
+                    } else {
+                        showNotification(`Hide UI key set to: ${displayKey}`, 'success', 2000);
+                    }
+
+                    hideKeyInput.removeEventListener('keydown', keyListener);
+                    hideKeyInput.blur();
+                };
+
+                hideKeyInput.addEventListener('keydown', keyListener, { once: false });
+            });
+
+            hideKeyInput.addEventListener('blur', () => {
+                const displayKey = globalState.hideKey.replace('Key', '').replace('Digit', '');
+                hideKeyInput.value = displayKey;
+                hideKeyInput.style.background = 'rgba(255,255,255,0.1)';
+                hideKeyInput.style.borderColor = 'rgba(255,255,255,0.25)';
+            });
+        }
+
+        if (resetHideKey) {
+            resetHideKey.addEventListener('click', () => {
+                globalState.hideKey = 'KeyL';
+                hideKeyInput.value = 'L';
+                hideKeyDisplay.textContent = 'L';
+                saveSettings();
+                showNotification('Hide UI key reset to: L', 'info', 2000);
+            });
+        }
+
+        // Reset Time Functions button - placed OUTSIDE updateSliderStates to prevent duplicate listeners
+        ui.querySelector('#reset-time-functions')?.addEventListener('click', () => {
+            if (confirm('Reset all time functions to current real time? This helps fix frozen games after toggling time functions.')) {
+                // Disable all time functions
+                globalState.perfNow = false;
+                globalState.dateNow = false;
+                globalState.setTimeout = false;
+                globalState.setInterval = false;
+                globalState.raf = false;
+
+                // Update checkboxes
+                ui.querySelector('#toggle-perfnow').checked = false;
+                ui.querySelector('#toggle-datenow').checked = false;
+                ui.querySelector('#toggle-settimeout').checked = false;
+                ui.querySelector('#toggle-setinterval').checked = false;
+                ui.querySelector('#toggle-raf').checked = false;
+
+                updateSliderStates();
+                updateAllWindows();
+                saveSettings();
+
+                showNotification('Time functions reset! Game should unfreeze. If not, try refreshing the page.', 'success', 3000);
+            }
+        });
 
         // Individual function speed slider handlers
         function setupFunctionSpeedSlider(functionName, stateKey) {
@@ -1005,23 +1089,9 @@
                 if (display) display.textContent = `${formatSpeed(globalSpeed)}x`;
             });
 
-            updateSliderFromSpeed(globalSpeed);
             updateAllWindows();
             saveSettings();
-
-            speedApply.innerHTML = '✅';
-            speedApply.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
-
-            if (inputValue > CONFIG.maxSpeed) {
-                showNotification(`Speed set to ${formatSpeed(inputValue)}x (beyond slider limit)`, 'success', 2000);
-            } else {
-                showNotification(`Speed applied: ${formatSpeed(inputValue)}x`, 'success', 1500);
-            }
-
-            setTimeout(() => {
-                speedApply.innerHTML = 'Apply';
-                speedApply.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
-            }, 1000);
+            updatePresetHighlight();
         }
 
         function updateSliderFromSpeed(speed) {
@@ -1129,7 +1199,10 @@
 
         // Enhanced statistics with refresh indicator
         function updateStats() {
-            const activeFunctions = Object.values(globalState).slice(0, 5).filter(val => val === true).length;
+            // Count all active functions including music and sfx
+            const activeFunctions = ['perfNow', 'dateNow', 'setTimeout', 'setInterval', 'raf', 'music', 'sfx']
+                .filter(key => globalState[key] === true).length;
+
             const uptime = Math.floor((Date.now() - startTime) / 1000);
 
             const statsElement = ui.querySelector('#active-functions');
@@ -1148,10 +1221,7 @@
             }
 
             if (statusElement) {
-                if (refreshRequired) {
-                    statusElement.textContent = 'Refresh Required';
-                    statusElement.style.color = '#FF9800';
-                } else if (activeFunctions > 0) {
+                if (activeFunctions > 0) {
                     statusElement.textContent = 'Active';
                     statusElement.style.color = '#4CAF50';
                 } else {
@@ -1164,17 +1234,11 @@
         setInterval(updateStats, 1000);
         updateStats();
 
-        // Enhanced checkbox listeners with refresh requirement
+        // Enhanced checkbox listeners
         function createCheckboxListener(checkboxId, stateKey) {
             ui.querySelector(checkboxId).addEventListener('change', (e) => {
                 const oldValue = globalState[stateKey];
                 globalState[stateKey] = e.target.checked;
-
-                if (oldValue !== e.target.checked) {
-                    refreshRequired = true;
-                    createRefreshIndicator();
-                    showNotification('Function toggle changed. Refresh the page to apply changes.', 'warning', 4000);
-                }
 
                 updateSliderStates(); // Update slider states when checkbox changes
                 updateAllWindows();
@@ -1489,11 +1553,9 @@
                             const checkbox = ui.querySelector(`#toggle-${key.toLowerCase()}`);
                             if (checkbox) checkbox.checked = !allEnabled;
                         });
-                        refreshRequired = true;
-                        createRefreshIndicator();
                         updateAllWindows();
                         saveSettings();
-                        showNotification('All functions toggled. Refresh required.', 'warning', 3000);
+                        showNotification('All functions toggled!', 'success', 2000);
                     }
                 },
                 {
@@ -1595,6 +1657,14 @@
 
         loadSettings();
 
+        // First load initialization - sync all speeds to global speed
+        if (!localStorage.getItem(STORAGE_KEY)) {
+            ['perfNowSpeed', 'dateNowSpeed', 'setTimeoutSpeed', 'setIntervalSpeed', 'rafSpeed', 'musicSpeed', 'sfxSpeed'].forEach(key => {
+                globalState[key] = globalSpeed;
+            });
+            saveSettings();
+        }
+
         // Initial injection
         updateAllWindows();
 
@@ -1650,24 +1720,13 @@
             }
         });
 
-        // Enhanced visibility change handler
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && refreshRequired) {
-                // Page became visible and refresh is required
-                const indicator = document.querySelector('#speedhack-refresh-indicator');
-                if (!indicator) {
-                    createRefreshIndicator();
-                }
-            }
-        });
-
         // Performance monitoring
         if (globalState.debugLogging) {
             console.log('[SpeedHack] Pro Enhanced version 2.5 initialized successfully');
             console.log('[SpeedHack] Current speed:', globalSpeed + 'x');
             console.log('[SpeedHack] Active functions:', Object.entries(globalState).filter(([key, value]) =>
-                                                                                            ['perfNow', 'dateNow', 'setTimeout', 'setInterval', 'raf'].includes(key) && value
-                                                                                           ).map(([key]) => key));
+                ['perfNow', 'dateNow', 'setTimeout', 'setInterval', 'raf'].includes(key) && value
+            ).map(([key]) => key));
         }
 
         // Global error handler for speed hack related errors
@@ -1728,7 +1787,8 @@
         },
         getState: () => ({ ...globalState }),
         reload: () => location.reload(),
-        version: '3.0'
+        version: '4.0'
     };
 
-})();
+}
+)();

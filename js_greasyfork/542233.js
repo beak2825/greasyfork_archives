@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          BetterHive
 // @namespace     Violentmonkey Scripts
-// @version       2.1.1
+// @version       3.0.0
 // @description   Nutzt die Hive-Bilderanalyse in der AdU sowie wenn ein Bild direkt geöffnet ist
 // @author        Rho
 // @license       Proprietary
@@ -167,7 +167,7 @@ function openReverseHubTabs(baseUrl) {
     w.document.close();
 }
 
-    const PROXY_URL = 'https://rhotel.app/hive/api/?https://plugin.hivemoderation.com/api/v1/image/ai_detection';
+    const PROXY_URL = 'https://hive.rhotel.app/?https://plugin.hivemoderation.com/api/v1/image/ai_detection';
 
     function generateUuid() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {

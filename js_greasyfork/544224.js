@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Lecteur Media
 // @namespace    http://tampermonkey.net/
-// @version      1.6.4
+// @version      1.7.0
 // @description  Intègre TOUS les lecteurs (Insta, FB, Twitter, TikTok, etc...) et améliore les balises CODE
 // @author       FaceDePet
 // @match        https://www.jeuxvideo.com/forums/*
@@ -46,6 +46,11 @@
 // @connect      *.tiktok.com
 // @connect      vxtwitter.com
 // @connect      *.vxtwitter.com
+// @connect      twitter.com
+// @connect      x.com
+// @connect      api.vxtwitter.com
+// @connect      video.twimg.com
+// @connect      pbs.twimg.com
 // @connect      jvc-preview-proxy.lecteurmedia.workers.dev
 // @connect      vxinstagram.com
 // @connect      ddinstagram.com
@@ -56,7 +61,7 @@
 // @connect      *
 // @run-at       document-start
 // @license      MIT
-// @require      https://update.greasyfork.org/scripts/554422/1725480/LecteurMedia%20API%20Library.js
+// @require      https://update.greasyfork.org/scripts/554422/1727534/LecteurMedia%20API%20Library.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.8/purify.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js
 // @resource     HLJS_CSS https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css
