@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         文本链接转可点击链接
-// @version      1.5
-// @description  自动识别页面中的文本链接和磁力链接并转换为可点击的链接
+// @version      1.4
+// @description  自动识别页面中的文本链接并转换为可点击的超链接
 // @author       DeepSeek
 // @match        *://*/*
 // @run-at       document-end
@@ -15,20 +15,11 @@
 (() => {
     'use strict';
     
-    // 跳过处理的元素标签 - 移除了 CODE 和 PRE
-    const SKIP_TAGS = ['A', 'SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT', 'IFRAME'];
-    
-    // 磁力链接匹配正则表达式
-    const MAGNET_PATTERN = /magnet:\?xt=urn:(?:btih|sha1|tree:tiger):[a-zA-Z0-9&=._\-%]+/gi;
+    // 跳过处理的元素标签
+    const SKIP_TAGS = ['A', 'SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT', 'CODE', 'PRE', 'IFRAME'];
     
     // 完整的URL匹配正则表达式（支持更多格式）- 保持原正则
     const URL_PATTERN = /\b(?:(?:https?:\/\/)?(?:www\.)?(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}|(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|localhost)(?::\d{1,5})?(?:\/[-a-zA-Z0-9()@:%_\+.~#?&//=]*)?)(?![a-zA-Z0-9@:%_\+.~#?&//=])/gi;
-    
-    // 合并的正则表达式：匹配URL或磁力链接
-    const COMBINED_PATTERN = new RegExp(
-        `(${MAGNET_PATTERN.source}|${URL_PATTERN.source})`,
-        'gi'
-    );
     
     // 常见顶级域名列表
     const COMMON_TLDS = [
@@ -51,11 +42,6 @@
     
     // 验证URL
     const isValidURL = (url) => {
-        // 如果是磁力链接，直接返回true
-        if (url.toLowerCase().startsWith('magnet:')) {
-            return true;
-        }
-        
         // 如果包含协议，直接认为是有效URL（不验证域名）
         if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//')) {
             return true;
@@ -111,17 +97,6 @@
         
         let cleaned = urlStr;
         
-        // 磁力链接特殊处理：确保完整磁力链接
-        if (cleaned.toLowerCase().startsWith('magnet:')) {
-            // 磁力链接通常包含特殊字符，保持原样
-            // 但移除末尾可能的多余标点
-            const magnetMatch = cleaned.match(/^(magnet:\?xt=urn:(?:btih|sha1|tree:tiger):[a-zA-Z0-9&=._\-%]+)/i);
-            if (magnetMatch) {
-                cleaned = magnetMatch[1];
-            }
-            return cleaned;
-        }
-        
         // 处理括号：找到平衡的括号
         if (cleaned.endsWith(')')) {
             let openCount = 0;
@@ -156,11 +131,10 @@
     // 提取文本中的链接
     const extractLinks = content => {
         const results = [];
+        URL_PATTERN.lastIndex = 0;
         let match;
         
-        // 使用合并的正则表达式进行匹配
-        COMBINED_PATTERN.lastIndex = 0;
-        while ((match = COMBINED_PATTERN.exec(content)) !== null) {
+        while ((match = URL_PATTERN.exec(content)) !== null) {
             const original = match[0];
             const cleaned = sanitizeURL(original);
             
@@ -186,16 +160,10 @@
     // 构建链接元素 - 已移除颜色和下划线
     const buildLinkElement = url => {
         const link = document.createElement('a');
+        // 如果URL包含协议或已经是完整URL，直接使用
+        const href = url.startsWith('http') || url.startsWith('//') ? url : `http://${url}`;
         
-        // 磁力链接直接使用magnet:协议
-        if (url.toLowerCase().startsWith('magnet:')) {
-            link.href = url;
-        } else {
-            // 如果URL包含协议或已经是完整URL，直接使用
-            const href = url.startsWith('http') || url.startsWith('//') ? url : `http://${url}`;
-            link.href = href;
-        }
-        
+        link.href = href;
         link.textContent = url;
         link.target = '_blank';
         link.rel = 'noopener noreferrer nofollow';
@@ -287,7 +255,7 @@
                     }
                     
                     // 只处理包含URL的文本节点
-                    return COMBINED_PATTERN.test(node.textContent) ? 
+                    return URL_PATTERN.test(node.textContent) ? 
                         NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
                 }
             }
@@ -398,8 +366,8 @@
         extractLinks: extractLinks,
         isValidURL: isValidURL,
         testPattern: (text) => {
-            COMBINED_PATTERN.lastIndex = 0;
-            return COMBINED_PATTERN.test(text);
+            URL_PATTERN.lastIndex = 0;
+            return URL_PATTERN.test(text);
         },
         isInsideAnchor: isInsideAnchor,
         COMMON_TLDS: COMMON_TLDS
