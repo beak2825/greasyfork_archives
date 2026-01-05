@@ -8,3 +8,5 @@ Archived all of 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015
 
 7:14 PM 1/4/2026  
 Now archiving all userscripts going forward.
+
+TODO: Update modified userscripts, must actively watch updated scripts json via API to do so.
