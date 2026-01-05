@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name AnimeStars Deck Tracker
 // @namespace http://tampermonkey.net/
-// @version 5.1
+// @version 5.2
 // @description Ручной трекер колод с экспортом.
 // @author Sandr
 // @match *://animestars.org/*
@@ -12,6 +12,7 @@
 // @match *://as2.asstars.tv/*
 // @match *://asstars.club/*
 // @match *://asstars.online/*
+// @match *://animesss.tv//*
 // @noframes
 // @grant GM_getValue
 // @grant GM_setValue

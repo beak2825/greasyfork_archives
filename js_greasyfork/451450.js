@@ -18,7 +18,7 @@
 (async function() {
     'use strict';
     const BASE_URI = "https://gitlab.cochlear.dev/api/v4/";
-    const TOKEN = "glpat-.";
+    const TOKEN = "glpat-xFyiWGN46Pv_MoyG9Z_Q";
 
     async function gitlabGet(path) {
         const response = await GM.xmlHttpRequest({

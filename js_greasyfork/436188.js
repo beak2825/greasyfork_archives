@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hentai Heroes Helper (auto collect, button press and more)
 // @namespace    https://greasyfork.org/users/807892
-// @version      4.1.8
+// @version      4.1.12
 // @author       Morryx
 // @description  Extension for Hentai Heroes game.
 // @license      MIT
@@ -25,109 +25,49 @@
 (function () {
   'use strict';
 
-  class Settings {
-    static storage_key = "erocollect_options";
-    static default_settings = {
-      auto_collect_harem: false,
-      timeout_collect_after: 3e3,
-      not_collect_full_graded: false,
-      safe_work: false,
-      safe_work_opacity: 0.05,
-      pantheon_auto_enter: true,
-      auto_press_btns: false,
-      girls_data: false,
-      girls_data_export: false,
-      girls_data_full: false,
-      random_waifu: false,
-      change_waifu_interval: 30,
-      last_id_troll: 1,
-      last_bang_team_points: 0,
-      last_bang_team_points_active: false,
-      last_side_quest: false,
-      min_collect_exp: 1e4,
-      journey_champion_active: true,
-      journey_champion: false,
-      last_link_activity: false,
-      last_link_shop: false,
-      last_link_champion: false,
-      colored_season: true,
-      last_links: true,
-      back_to_link: true,
-      header_link_show: true,
-      confirm_exceed: true,
-      auto_start_activities: false,
-      max_days_club: 60,
-      auto_assign_pop: true,
-      exit_after_pop_assign: false,
-      start_girl_story: false,
-      retrive_home_timer: false,
-      redirect_to_home: false,
-      selected_mythic_item: true,
-      upgrade_girl_redirect: false,
-      trigger_shop_arrows: 0,
-      choosed_bg: "",
-      invert_bg: false,
-      cg_background: false,
-      shards_state: {},
-      carac_state: {},
-      minimum_money_open_harem: 0,
-      link_last_troll: true,
-      pachinko_press_btn: true,
-      auto_battle: false,
-      battle_count: 0,
-      avoid_legendary_first: true
-    };
-    static theme_colors = {
-      green: "#53af00",
-      red: "#b14",
-      gray: "#6a6a6a",
-      shadow_gray: "0 3px 0 rgb(23 33 7 / 60%), inset 0 3px 0 #3c3c3c",
-      orange: "#eeaa34",
-      shadow_orange: "rgb(33 27 7 / 60%) 0px 3px 0px, rgb(240 117 33) 0px 3px 0px inset"
-    };
-    static settings = {};
+  const _Settings = class _Settings {
     static save_settings(settings) {
       window.localStorage.setItem(
-        Settings.storage_key,
+        _Settings.storage_key,
         JSON.stringify(settings)
       );
     }
     static clear_settings() {
-      window.localStorage.removeItem(Settings.storage_key);
+      window.localStorage.removeItem(_Settings.storage_key);
     }
     static get_settings() {
-      let settings = window.localStorage.getItem(Settings.storage_key);
+      let settings = window.localStorage.getItem(_Settings.storage_key);
       const default_settings_length = Object.keys(
-        Settings.default_settings
+        _Settings.default_settings
       ).length;
-      const last_added_settings = Object.keys(Settings.default_settings)[default_settings_length - 1];
+      const last_added_settings = Object.keys(_Settings.default_settings)[default_settings_length - 1];
       let key;
       if (settings === null) settings = {};
       else settings = JSON.parse(settings);
       if (!settings.hasOwnProperty(last_added_settings) || default_settings_length != Object.keys(settings).length) {
-        for (key in Settings.default_settings) {
+        for (key in _Settings.default_settings) {
           if (!settings.hasOwnProperty(key))
-            settings[key] = Settings.default_settings[key];
+            settings[key] = _Settings.default_settings[key];
         }
       }
       for (key in settings) {
-        if (!Settings.default_settings.hasOwnProperty(key))
+        if (!_Settings.default_settings.hasOwnProperty(key))
           delete settings[key];
       }
-      Settings.save_settings(settings);
-      Settings.settings = settings;
+      _Settings.save_settings(settings);
+      _Settings.settings = settings;
       return settings;
     }
     static change_settings(key, value) {
-      Settings.settings[key] = value;
-      Settings.save_settings(Settings.settings);
+      _Settings.settings[key] = value;
+      _Settings.save_settings(_Settings.settings);
     }
     static generateSetting(setting, $el) {
       if (typeof setting.type == "undefined") setting.type = "checkbox";
       let $setting;
       if (setting.type == "checkbox")
         $setting = $(
-          '<label class="switchSetting">  <input type="' + setting.type + '" setting="' + setting.name + '"' + (Settings.settings[setting.name] === true ? ' checked="checked"' : "") + '/>  <span class="sliderSetting"></span></label>' + setting.text + "<br />"
+          '<label class="switchSetting">  <input type="' + setting.type + '" setting="' + setting.name + '"' + (_Settings.settings[setting.name] === true ? ' checked="checked"' : "") + '/>  <span class="sliderSetting"></span></label>' + setting.text + "<br />"
         );
       else {
         let min = "", max = "", step = "";
@@ -138,10 +78,10 @@
         if (typeof setting.step != "undefined")
           step = ' step="' + setting.step + '"';
         $setting = $(
-          '<label class="textSetting setting-text">  <input type="' + setting.type + '"' + min + max + step + ' setting="' + setting.name + '" value="' + Settings.settings[setting.name] + '"/></label>' + setting.text + "<br />"
+          '<label class="textSetting setting-text">  <input type="' + setting.type + '"' + min + max + step + ' setting="' + setting.name + '" value="' + _Settings.settings[setting.name] + '"/></label>' + setting.text + "<br />"
         );
       }
-      $setting.appendTo($el).find("input").change(function() {
+      $setting.appendTo($el).find("input").on("change", function() {
         var value = false;
         if ($(this).attr("type") == "checkbox")
           value = $(this).is(":checked");
@@ -151,24 +91,87 @@
           if (typeof setting.stopafterchange != "undefined" && setting.stopafterchange)
             return;
         }
-        Settings.change_settings($(this).attr("setting"), value);
+        _Settings.change_settings($(this).attr("setting"), value);
       });
     }
-  }
-  class Css {
+  };
+  _Settings.storage_key = "erocollect_options";
+  _Settings.default_settings = {
+    auto_collect_harem: false,
+    timeout_collect_after: 3e3,
+    not_collect_full_graded: false,
+    safe_work: false,
+    safe_work_opacity: 0.05,
+    pantheon_auto_enter: true,
+    auto_press_btns: false,
+    girls_data: false,
+    girls_data_export: false,
+    girls_data_full: false,
+    random_waifu: false,
+    change_waifu_interval: 30,
+    last_id_troll: 1,
+    last_bang_team_points: 0,
+    last_bang_team_points_active: false,
+    last_side_quest: false,
+    min_collect_exp: 1e4,
+    journey_champion_active: true,
+    journey_champion: false,
+    last_link_activity: false,
+    last_link_shop: false,
+    last_link_champion: false,
+    colored_season: true,
+    last_links: true,
+    back_to_link: true,
+    header_link_show: true,
+    confirm_exceed: true,
+    auto_start_activities: false,
+    auto_start_legacy_mode: false,
+    max_days_club: 60,
+    auto_assign_pop: true,
+    exit_after_pop_assign: false,
+    start_girl_story: false,
+    retrive_home_timer: false,
+    redirect_to_home: false,
+    selected_mythic_item: true,
+    upgrade_girl_redirect: false,
+    trigger_shop_arrows: 0,
+    choosed_bg: "",
+    invert_bg: false,
+    cg_background: false,
+    shards_state: {},
+    carac_state: {},
+    minimum_money_open_harem: 0,
+    link_last_troll: true,
+    pachinko_press_btn: true,
+    auto_battle: false,
+    battle_count: 0,
+    avoid_legendary_first: true
+  };
+  _Settings.theme_colors = {
+    green: "#53af00",
+    red: "#b14",
+    gray: "#6a6a6a",
+    shadow_gray: "0 3px 0 rgb(23 33 7 / 60%), inset 0 3px 0 #3c3c3c",
+    orange: "#eeaa34",
+    shadow_orange: "rgb(33 27 7 / 60%) 0px 3px 0px, rgb(240 117 33) 0px 3px 0px inset"
+  };
+  _Settings.settings = {};
+  let Settings = _Settings;
+  const _Css = class _Css {
     static addCss(code, append = false) {
-      if (code !== "") Css.styleContent += "" + code;
-      if (append) Css.appendCss();
+      if (code !== "") _Css.styleContent += "" + code;
+      if (append) _Css.appendCss();
     }
-    static styleContent = "";
     static appendCss() {
       $("#customStyle").remove();
-      if (Css.styleContent !== "")
+      if (_Css.styleContent !== "")
         $("body").append(
-          $('<style id="customStyle">' + Css.styleContent + "</style>")
+          $('<style id="customStyle">' + _Css.styleContent + "</style>")
         );
     }
-    static MAIN = `#popups #heal_girl_labyrinth_popup .flex-container, #popups #labyrinth_reward_popup .flex-container, #popups #level_up .flex-container, #popups #rewards_popup .flex-container, #sliding-popups #heal_girl_labyrinth_popup .flex-container, #sliding-popups #labyrinth_reward_popup .flex-container, #sliding-popups #level_up .flex-container, #sliding-popups #rewards_popup .flex-container, #sliding-popups #heal_girl_labyrinth_popup .flex-container, #sliding-popups #labyrinth_reward_popup .flex-container, #sliding-popups #level_up .flex-container, #sliding-popups #rewards_popup .flex-container{height:530px!important}
+  };
+  _Css.styleContent = "";
+  _Css.MAIN = `#popups #heal_girl_labyrinth_popup .flex-container, #popups #labyrinth_reward_popup .flex-container, #popups #level_up .flex-container, #popups #rewards_popup .flex-container, #sliding-popups #heal_girl_labyrinth_popup .flex-container, #sliding-popups #labyrinth_reward_popup .flex-container, #sliding-popups #level_up .flex-container, #sliding-popups #rewards_popup .flex-container, #sliding-popups #heal_girl_labyrinth_popup .flex-container, #sliding-popups #labyrinth_reward_popup .flex-container, #sliding-popups #level_up .flex-container, #sliding-popups #rewards_popup .flex-container{height:530px!important}
     #popups #no_HC .payments-wrapper{transform:translateY(-60px)}
     #pass_reminder_popup,#hero_resources_popup,#no_energy_quest{top:0!important}
     #bg_all>.fixed_scaled>img{object-fit:cover}
@@ -262,7 +265,7 @@
     #popups #level_up .flex-container button, #sliding-popups #level_up .flex-container button, #popups #rewards_popup .flex-container button, #sliding-popups #rewards_popup .flex-container button, #popups #heal_girl_labyrinth_popup .flex-container button, #sliding-popups #heal_girl_labyrinth_popup .flex-container button, #popups #labyrinth_reward_popup .flex-container button, #sliding-popups #labyrinth_reward_popup .flex-container button{
         margin-top:-2rem
     }`;
-    static HOME = `#homepage .waifuStory{
+  _Css.HOME = `#homepage .waifuStory{
         position: absolute;
         bottom: 20px;
         left: 49%;
@@ -388,7 +391,7 @@
         bottom: -3px;
         height: 50%;
     }`;
-    static POP = `#pop .pop_list .pop_list_scrolling_area .pop_thumb_container {
+  _Css.POP = `#pop .pop_list .pop_list_scrolling_area .pop_thumb_container {
         margin: 0px 2px 10px;
         width: 100px;
     }
@@ -410,7 +413,7 @@
     .nicescroll-rails{
         display:none!important
     }`;
-    static SHOP = `#player-inventory{width:21rem!important}
+  _Css.SHOP = `#player-inventory{width:21rem!important}
     #girls_list h3{
         display: flex;
         justify-content: center;
@@ -433,10 +436,11 @@
     #arena_filter_box{
         width: 218px!important
     }`;
-  }
+  let Css = _Css;
   class Utils {
     static getHeroData() {
-      return window.shared?.Hero || window.Hero;
+      var _a;
+      return ((_a = window.shared) == null ? void 0 : _a.Hero) || window.Hero;
     }
     static is_numeric(c) {
       return /^\d+$/.test(c.toString());
@@ -463,14 +467,7 @@
       return false;
     }
   }
-  class StoryHelper {
-    static links = {
-      troll: "/troll-pre-battle.html?id_opponent=",
-      activity: "/activities.html?tab=",
-      shop: "/shop.html?type="
-    };
-    static NOT_FOUND = "NOT_FOUND";
-    static unsafe_click = false;
+  const _StoryHelper = class _StoryHelper {
     static girlLink(id, tab = "affection") {
       tab = "?resource=" + tab;
       if (!tab) tab = "";
@@ -495,7 +492,7 @@
     }
     static unsafeWork() {
       $(".safe-work").off("dblclick.unsafe").on("dblclick.unsafe", function(e) {
-        StoryHelper.unsafe_click = true;
+        _StoryHelper.unsafe_click = true;
         $(this).toggleClass("safe-work").toggleClass("unsafe-work");
         return Utils.stopClick(e);
       });
@@ -509,40 +506,40 @@
     static getLastLink($el, type) {
       let link = $el.attr("href");
       if (typeof link == "undefined") link = $el.attr("data-href");
-      if (typeof link != "undefined" && link.includes(StoryHelper.links[type]))
-        return link.split(StoryHelper.links[type])[1];
-      return StoryHelper.NOT_FOUND;
+      if (typeof link != "undefined" && link.includes(_StoryHelper.links[type]))
+        return link.split(_StoryHelper.links[type])[1];
+      return _StoryHelper.NOT_FOUND;
     }
     static changeLastTroll() {
-      const result = StoryHelper.getLastLink($(this), "troll");
-      if (result == StoryHelper.NOT_FOUND) return;
+      const result = _StoryHelper.getLastLink($(this), "troll");
+      if (result == _StoryHelper.NOT_FOUND) return;
       Settings.change_settings("last_id_troll", Utils.toint_string(result));
     }
     static trollMenuLink() {
       const $trollMenu = $(".TrollsMenu");
       if (!$trollMenu.length) {
-        setTimeout(StoryHelper.trollMenuLink, 200);
+        setTimeout(_StoryHelper.trollMenuLink, 200);
         return;
       }
-      $trollMenu.find('a[href^="' + StoryHelper.links.troll + '"]').click(StoryHelper.changeLastTroll);
+      $trollMenu.find('a[href^="' + _StoryHelper.links.troll + '"]').on("click", _StoryHelper.changeLastTroll);
     }
     static changeLastActivityLink() {
-      const result = StoryHelper.getLastLink($(this), "activity");
-      if (result == StoryHelper.NOT_FOUND) return;
+      const result = _StoryHelper.getLastLink($(this), "activity");
+      if (result == _StoryHelper.NOT_FOUND) return;
       Settings.change_settings("last_link_activity", result);
     }
     static changeLastShopLink() {
-      let result = StoryHelper.getLastLink($(this), "shop");
-      if (result == StoryHelper.NOT_FOUND) result = false;
+      let result = _StoryHelper.getLastLink($(this), "shop");
+      if (result == _StoryHelper.NOT_FOUND) result = false;
       Settings.change_settings("last_link_shop", result);
     }
     static shopMenuLink() {
       const $shopMenuLinks = $('a[rel="shop"] .market_menu');
       if (!$shopMenuLinks.length) {
-        setTimeout(StoryHelper.shopMenuLink, 200);
+        setTimeout(_StoryHelper.shopMenuLink, 200);
         return;
       }
-      $shopMenuLinks.click(StoryHelper.changeLastShopLink);
+      $shopMenuLinks.on("click", _StoryHelper.changeLastShopLink);
     }
     static changeLastChampionLink() {
       Settings.change_settings("last_link_champion", $(this).attr("href"));
@@ -550,24 +547,24 @@
     static championMenuLink() {
       const $championMenuLinks = $('a[rel="sex-god-path"] .champions_menu');
       if (!$championMenuLinks.length) {
-        setTimeout(StoryHelper.championMenuLink, 200);
+        setTimeout(_StoryHelper.championMenuLink, 200);
         return;
       }
-      $championMenuLinks.click(StoryHelper.changeLastChampionLink);
+      $championMenuLinks.on("click", _StoryHelper.changeLastChampionLink);
     }
     static goToChampion(id_champion) {
       location.href = "/champions/" + id_champion;
     }
     static journeyChampion(id_champion) {
       if (Settings.settings.journey_champion) {
-        StoryHelper.goToChampion(Settings.settings.journey_champion);
+        _StoryHelper.goToChampion(Settings.settings.journey_champion);
         Settings.change_settings("journey_champion", false);
       }
     }
     static waifuSafeWork() {
       $(".waifu-girl-container img").addClass("safe-work");
-      $(".diamond-bar .diamond").click(function() {
-        setTimeout(StoryHelper.waifuSafeWork, 200);
+      $(".diamond-bar .diamond").on("click", function() {
+        setTimeout(_StoryHelper.waifuSafeWork, 200);
       });
     }
     static generateImg(id, grade, src, type = "girls") {
@@ -586,7 +583,7 @@
         );
         $waifuStory.appendTo($(selector));
       }
-      $waifuStory.attr("href", StoryHelper.girlLink(id)).click(function() {
+      $waifuStory.attr("href", _StoryHelper.girlLink(id)).on("click", function() {
         Settings.change_settings("start_girl_story", true);
       });
     }
@@ -599,12 +596,13 @@
       }, 500);
     }
     static autoBattle(options) {
+      var _a;
       const settings = Settings.settings;
       const HeroData = Utils.getHeroData();
       let initialValue = options.defaultCount;
       if (settings.battle_count > 0) {
         initialValue = settings.battle_count;
-      } else if (options.energyType && HeroData?.energies?.[options.energyType]) {
+      } else if (options.energyType && ((_a = HeroData == null ? void 0 : HeroData.energies) == null ? void 0 : _a[options.energyType])) {
         const now = new Date();
         const romeStr = now.toLocaleString("en-US", {
           timeZone: "Europe/Rome"
@@ -633,7 +631,7 @@
           if (overflow_time > 0) {
             extra_burn = Math.ceil(overflow_time / time_for_new);
           }
-          initialValue = base_burn + extra_burn;
+          initialValue = Math.min(base_burn + extra_burn, current_val);
         }
       }
       const $autoDiv = $(
@@ -657,7 +655,7 @@
           $input.val(0);
         }
       };
-      $startBtn.click(function() {
+      $startBtn.on("click", function() {
         const count = parseInt($input.val()) || 0;
         startAuto(count);
       });
@@ -667,9 +665,16 @@
         }, 2e3);
       }
     }
-  }
-  class MiscGlobal {
-    static page_interact = false;
+  };
+  _StoryHelper.links = {
+    troll: "/troll-pre-battle.html?id_opponent=",
+    activity: "/activities.html?tab=",
+    shop: "/shop.html?type="
+  };
+  _StoryHelper.NOT_FOUND = "NOT_FOUND";
+  _StoryHelper.unsafe_click = false;
+  let StoryHelper = _StoryHelper;
+  const _MiscGlobal = class _MiscGlobal {
     static init(page) {
       const settings = Settings.settings;
       Settings.change_settings("pachinko_press_btn", true);
@@ -692,10 +697,11 @@
         if (settings.invert_bg) $bg.addClass("invert");
       }
       $("#popups").on("DOMNodeInserted", () => {
+        var _a;
         var text_popup = $("#popup_message").text(), founds = text_popup.match(
           /(Club room|Clubraum|chat server|sala del club|Club depuis|チャットサーバー)/g
         );
-        if (text_popup.match(/(non supported)/g)?.length) {
+        if ((_a = text_popup.match(/(non supported)/g)) == null ? void 0 : _a.length) {
           $("#popup_message").hide();
           location.reload();
         }
@@ -704,7 +710,9 @@
       });
       StoryHelper.fixDiamondImg();
     }
-  }
+  };
+  _MiscGlobal.page_interact = false;
+  let MiscGlobal = _MiscGlobal;
   class RedirectHome {
     static init(page, page_interact) {
       const settings = Settings.settings;
@@ -789,7 +797,7 @@
         '<div id="btnExportData" style="cursor:grab; display: flex; position: absolute; font-size:30px; z-index: 30; left:3.5rem">⇲</div>'
       );
       $(".general_girls_console").children(":eq(0)").after($btnExportData);
-      $btnExportData.click(function() {
+      $btnExportData.on("click", function() {
         var girls_data_csv = ExportData.toCsv([
           {
             name: "Name",
@@ -820,7 +828,7 @@
         link.setAttribute("download", "girls_data.csv");
         link.style.display = "none";
         document.body.appendChild(link);
-        link.click();
+        $(link).trigger("click");
         setTimeout(function() {
           URL.revokeObjectURL(link.href);
           link.parentNode.removeChild(link);
@@ -851,7 +859,7 @@
         if (settings.shards_state[shard_name])
           $(`.shards-state.${shard_name}`).trigger("click");
       }
-      $(".shards-state").click(function() {
+      $(".shards-state").on("click", function() {
         var btn = $(this).attr("class").replace("check-btn shards-state ", "");
         settings.shards_state[btn] = $(this).attr("shardsstate") == "active";
         Settings.change_settings("shards_state", settings.shards_state);
@@ -860,7 +868,7 @@
         if (settings.carac_state[`c${carac}`])
           $(`.carac-state[carac="${carac}"]`).trigger("click");
       }
-      $(".carac-state").click(function() {
+      $(".carac-state").on("click", function() {
         settings.carac_state["c" + $(this).attr("carac")] = $(this).attr("caracstate") == "active";
         Settings.change_settings("carac_state", settings.carac_state);
       });
@@ -900,7 +908,7 @@
           id: +$girl.attr("girl"),
           grade: $stars.length
         });
-        $girl.click(function() {
+        $girl.on("click", function() {
           setTimeout(function() {
             $(".diamond-bar .diamond.selected").trigger("mouseenter");
           }, 500);
@@ -919,7 +927,7 @@
         }
         if (!$girl.find(".salary.loads").length && !skip_girl) {
           $girl.trigger("click");
-          after = parseInt(settings.timeout_collect_after);
+          after = settings.timeout_collect_after;
         }
         if (i2 === girls.length - 1) {
           $girl_list.scrollTop($girl_list.prop("scrollHeight") - 300);
@@ -944,7 +952,7 @@
       };
       const $haremLeft = $("#harem_left");
       $btnStopCollect = $('<div id="btnStopCollect" class="stop"></div>');
-      $btnStopCollect.click(function() {
+      $btnStopCollect.on("click", function() {
         clearInterval(interval_collect);
         stop_collect = !stop_collect;
         var icon = "";
@@ -954,7 +962,7 @@
       });
       $btnStopCollect.appendTo($haremLeft);
       $btnRestartCollect = $('<div id="btnRestartCollect">⟲</div>');
-      $btnRestartCollect.click(function() {
+      $btnRestartCollect.on("click", function() {
         if (!stop_collect) $btnStopCollect.trigger("click");
         $btnStopCollect.trigger("click");
       });
@@ -962,7 +970,7 @@
       var total_salary = StoryHelper.retriveSalary();
       if (settings.auto_collect_harem && !settings.upgrade_girl_redirect && !settings.start_girl_story && !(total_salary == 0 && settings.girls_data.length > 0)) {
         collect();
-        $("select").change(function() {
+        $("select").on("change", function() {
           $girl_list.scrollTop(0);
           restart_collect();
         });
@@ -1002,7 +1010,7 @@
         observer.observe($haremRightEl[0], { childList: true, subtree: true });
         handleHaremRightChanges();
       }
-      $btnSafeWork.click(function() {
+      $btnSafeWork.on("click", function() {
         StoryHelper.toggleSafeWork(harem_right + " .avatar-box");
         $(this).attr("src", retrive_img());
       });
@@ -1079,7 +1087,7 @@
       };
       selectGirlSlot();
       setTimeout(selectGirlSlot, 2e3);
-      $(".tabs-switcher .switch-tab").click(selectGirlSlot);
+      $(".tabs-switcher .switch-tab").on("click", selectGirlSlot);
       Css.addCss(
         `#girl_max_out_popup{margin-top:-5em}
             .btns_container{
@@ -1098,22 +1106,22 @@
       if (settings.safe_work) {
         var scene_selector = "#scene #background, .quest_v2";
         $(scene_selector).addClass("safe-work");
-        $("#temp-background").dblclick(function() {
+        $("#temp-background").on("dblclick", function() {
           $(scene_selector).trigger("dblclick");
         });
-        $("#scene .eye").click(function() {
+        $("#scene .eye").on("click", function() {
           StoryHelper.toggleSafeWork(scene_selector);
         });
       }
       if (settings.cg_background)
-        $("#scene").contextmenu(function(e) {
+        $("#scene").on("contextmenu", function(e) {
           Settings.change_settings(
             "choosed_bg",
             $(this).find("#background").attr("src")
           );
           return Utils.stopClick(e);
         });
-      $("#breadcrumbs>span:nth-child(7)").css("cursor", "pointer").click(function() {
+      $("#breadcrumbs>span:nth-child(7)").css("cursor", "pointer").on("click", function() {
         location.reload();
       });
       var $girlBack = $("#breadcrumbs > a:nth-child(5)"), linkGirlBack = $girlBack.attr("href");
@@ -1123,6 +1131,7 @@
   }
   class SeasonArenaPage {
     static init(theme_colors) {
+      var _a, _b;
       const settings = Settings.settings;
       if (settings.colored_season) {
         var css_hero = "#season-arena .battle_hero", hero_power = Utils.toint_element(
@@ -1167,7 +1176,7 @@
       StoryHelper.questLink();
       if (settings.auto_battle) {
         const HeroData = Utils.getHeroData();
-        const kissAmount = HeroData?.energies?.kiss?.amount || 0;
+        const kissAmount = ((_b = (_a = HeroData == null ? void 0 : HeroData.energies) == null ? void 0 : _a.kiss) == null ? void 0 : _b.amount) || 0;
         const $container = $("#opponents_choose_text");
         $container.empty();
         StoryHelper.autoBattle({
@@ -1190,10 +1199,10 @@
     static init() {
       const settings = Settings.settings;
       if (settings.safe_work) $(".market-girl").addClass("safe-work");
-      $(".market-menu-switch-tab").click(function(e) {
+      $(".market-menu-switch-tab").on("click", function(e) {
         Settings.change_settings("last_link_shop", $(this).attr("type"));
       });
-      $(".right-side-title").dblclick(function() {
+      $(".right-side-title").on("dblclick", function() {
         var items = null, $items_list = $(this).parent().find(".menu-content"), start_from = 0, nb_track = 0, total_slot = 0;
         $items_list.bind("DOMNodeInserted", function() {
           if (nb_track > 5) return;
@@ -1281,13 +1290,16 @@
                 }, 2e3);
               }
               if ($btnExit.length)
-                $('[rel="pop_auto_assign"]').click(function() {
-                  if ($('[rel="pop_action"]').is(":disabled"))
-                    Settings.change_settings(
-                      "auto_assign_pop",
-                      false
-                    );
-                });
+                $('[rel="pop_auto_assign"]').on(
+                  "click",
+                  function() {
+                    if ($('[rel="pop_action"]').is(":disabled"))
+                      Settings.change_settings(
+                        "auto_assign_pop",
+                        false
+                      );
+                  }
+                );
               var $btnPurple = $(".purple_button_L:visible").first();
               $btnPurple.trigger("click");
               if (!$btnPurple.length)
@@ -1319,7 +1331,7 @@
             if (settings.confirm_exceed)
               $(
                 '.contest .personal_rewards button[rel="claim"]:visible'
-              ).mousedown(function(e) {
+              ).on("mousedown", function(e) {
                 var rewards_string = $(e.target).parent().find(".reward_wrap").attr("data-reward-display"), rewards = JSON.parse(rewards_string).rewards;
                 if (confirm_exceed(e, find_rewards(rewards)))
                   return;
@@ -1329,7 +1341,8 @@
             if (settings.safe_work)
               $(".daily-goals-right-part>img").addClass("safe-work");
             if (settings.confirm_exceed)
-              $(".progress-bar-rewards-container").mousedown(
+              $(".progress-bar-rewards-container").on(
+                "mousedown",
                 function(e) {
                   var rewards_string = $(e.target).parent().find(".progress-bar-reward-chest").attr("data-rewards"), rewards = JSON.parse(rewards_string).rewards;
                   if (confirm_exceed(e, find_rewards(rewards)))
@@ -1370,30 +1383,39 @@
                 $(".end_gift button").trigger("click");
             }
             if (settings.confirm_exceed)
-              $("button.purple_button_L:visible").mousedown(function(e) {
-                var rewards_string = $(e.target).parent().parent().find(".mission_reward .reward_wrap").attr("data-reward-display"), rewards = JSON.parse(rewards_string).rewards;
-                if (confirm_exceed(e, find_rewards(rewards)))
-                  return;
-              });
+              $("button.purple_button_L:visible").on(
+                "mousedown",
+                function(e) {
+                  var rewards_string = $(e.target).parent().parent().find(".mission_reward .reward_wrap").attr("data-reward-display"), rewards = JSON.parse(rewards_string).rewards;
+                  if (confirm_exceed(e, find_rewards(rewards)))
+                    return;
+                }
+              );
             if (settings.auto_start_activities) {
-              const $startableMissions = $(".mission_object").filter(
-                function() {
+              if (settings.auto_start_legacy_mode) {
+                $(".mission_button .blue_button_L:visible").trigger(
+                  "click"
+                );
+              } else {
+                const $startableMissions = $(
+                  ".mission_object"
+                ).filter(function() {
                   return $(this).find(
                     ".mission_button .blue_button_L:visible"
                   ).length > 0;
-                }
-              );
-              const $nonLegendaryStartable = $startableMissions.not(".legendary");
-              $startableMissions.each(function() {
-                const $mission = $(this);
-                const $btn = $mission.find(
-                  ".mission_button .blue_button_L:visible"
-                );
-                if (settings.avoid_legendary_first && $mission.hasClass("legendary") && $nonLegendaryStartable.length > 0) {
-                  return;
-                }
-                $btn.trigger("click");
-              });
+                });
+                const $nonLegendaryStartable = $startableMissions.not(".legendary");
+                $startableMissions.each(function() {
+                  const $mission = $(this);
+                  const $btn = $mission.find(
+                    ".mission_button .blue_button_L:visible"
+                  );
+                  if (settings.avoid_legendary_first && $mission.hasClass("legendary") && $nonLegendaryStartable.length > 0) {
+                    return;
+                  }
+                  $btn.trigger("click");
+                });
+              }
             }
             break;
         }
@@ -1401,7 +1423,7 @@
       if (settings.safe_work)
         $(".mission_image, .timer-girl-container").addClass("safe-work");
       change_tab();
-      $(".tabs-switcher .switch-tab").click(change_tab);
+      $(".tabs-switcher .switch-tab").on("click", change_tab);
     }
   }
   class PantheonPage {
@@ -1420,7 +1442,7 @@
             location.href = $btnPantheon.attr("href");
         };
         setTimeout(auto_enter, 3e3);
-        $(".tabs-switcher .switch-tab").click(auto_enter);
+        $(".tabs-switcher .switch-tab").on("click", auto_enter);
       }
     }
   }
@@ -1432,17 +1454,16 @@
         $(
           ".girl-avatar, .nc-event-reward-preview #carousel, .sm-static-girl"
         ).addClass("safe-work");
-      $(".nc-event-list-reward-container").click(function() {
-        if (settings.safe_work)
-          var interval = setInterval(function() {
-            var $girl = $(
-              ".animated-girl-display, img[girl-ava-src], .gradient_mask>img"
-            );
-            if ($girl.length) {
-              $girl.addClass("safe-work");
-              clearInterval(interval);
-            }
-          }, 5);
+      $(".nc-event-list-reward-container").on("click", function() {
+        if (settings.safe_work) var interval = setInterval(function() {
+          var $girl = $(
+            ".animated-girl-display, img[girl-ava-src], .gradient_mask>img"
+          );
+          if ($girl.length) {
+            $girl.addClass("safe-work");
+            clearInterval(interval);
+          }
+        }, 5);
         StoryHelper.fixDiamondImg();
       });
       var tempGirlAnimation = null;
@@ -1493,7 +1514,7 @@
       });
       if ($("#boss_bang").length) {
         var bang_selector = ".boss-bang-team-slot", bang_selected = bang_selector + ".selected-boss-bang-team";
-        $("#start-bang-button").click(function() {
+        $("#start-bang-button").on("click", function() {
           Settings.change_settings("last_bang_team_points_active", true);
         });
         if (settings.last_bang_team_points_active) {
@@ -1506,7 +1527,7 @@
             ` <span style="color:${$score}${new_point}%</span>`
           );
         }
-        $(bang_selector).click(function() {
+        $(bang_selector).on("click", function() {
           Settings.change_settings(
             "last_bang_team_points",
             Utils.toint_element(
@@ -1525,7 +1546,7 @@
     static init() {
       const settings = Settings.settings;
       if (settings.safe_work) $(".side-quest-image").addClass("safe-work");
-      $(".side-quest-button").click(function() {
+      $(".side-quest-button").on("click", function() {
         Settings.change_settings("last_side_quest", $(this).attr("href"));
       });
     }
@@ -1565,7 +1586,7 @@
       $("#collect_all .collect-infos .sum").after($("<br>"));
       const amountAttr = $("#collect_all .sum").attr("amount");
       if (!$(".free-text:visible").length && amountAttr !== void 0 && Utils.toint_string(amountAttr) >= settings.minimum_money_open_harem)
-        $("#collect_all_container").click(function() {
+        $("#collect_all_container").on("click", function() {
           location.href = "/harem.html";
         });
       if (settings.auto_press_btns) {
@@ -1715,7 +1736,7 @@
             settings.change_waifu_interval * 1e3
           );
           var timeoutWaifu = false;
-          $waifu_container.click(function() {
+          $waifu_container.on("click", function() {
             clearTimeout(timeoutWaifu);
             timeoutWaifu = setTimeout(function() {
               if (!StoryHelper.unsafe_click) change_waifu();
@@ -1725,7 +1746,7 @@
         }
       };
       init_change_waifu();
-      $(".waifu-buttons-container .eye").click(init_change_waifu);
+      $(".waifu-buttons-container .eye").on("click", init_change_waifu);
       setTimeout(function() {
         if (settings.last_links) {
           if (settings.last_side_quest)
@@ -1734,7 +1755,7 @@
               settings.last_side_quest
             );
           var $activitiesLink = $('a[rel="activities"]');
-          $activitiesLink.find(`a[href^="${StoryHelper.links.activity}"]`).click(StoryHelper.changeLastActivityLink);
+          $activitiesLink.find(`a[href^="${StoryHelper.links.activity}"]`).on("click", StoryHelper.changeLastActivityLink);
           if (settings.last_link_activity)
             $activitiesLink.attr(
               "href",
@@ -1759,7 +1780,7 @@
         '<img src="https://hh.hh-content.com/design/menu/panel.svg" id="btnSettings"></img>'
       );
       var $settingsArea = $('<div id="settingsArea"></div>');
-      $toggleSettings.appendTo($containerSettings).click(function() {
+      $toggleSettings.appendTo($containerSettings).on("click", function() {
         $settingsArea.toggleClass("active");
       });
       $settingsArea.appendTo($containerSettings);
@@ -1839,6 +1860,10 @@
           text: "Auto start the daily activities"
         },
         {
+          name: "auto_start_legacy_mode",
+          text: 'Legacy Mode for auto-start <span title="If enabled, it will start missions indiscriminately (ignoring the avoid legendary check), as in version 3.x" style="cursor:help; border-bottom:1px dotted white">(?)</span>'
+        },
+        {
           name: "avoid_legendary_first",
           text: "Avoid collecting legendary missions first"
         },
@@ -1905,7 +1930,7 @@
         if (typeof step != "undefined") step = parseFloat(step);
         else step = 1;
         if (step <= 0) step = 1;
-        btnUp.click(function() {
+        btnUp.on("click", function() {
           var oldValue = parseFloat(input.val()), newVal = oldValue;
           if (oldValue + step >= max) {
             newVal = max;
@@ -1915,7 +1940,7 @@
           spinner.find("input").val(newVal);
           spinner.find("input").trigger("change");
         });
-        btnDown.click(function() {
+        btnDown.on("click", function() {
           var oldValue = parseFloat(input.val()), newVal = oldValue;
           if (oldValue - step <= min) {
             newVal = min;
@@ -1967,10 +1992,8 @@
   }
   class WaifuPage {
     static init() {
-      const settings = Settings.settings;
-      if (settings.safe_work) {
-        setTimeout(StoryHelper.waifuSafeWork, 500);
-        $(".harem-girl-container").click(StoryHelper.waifuSafeWork);
+      if (Settings.settings.safe_work) {
+        $(".harem-girl-container").on("click", StoryHelper.waifuSafeWork);
       }
     }
   }
@@ -2019,7 +2042,7 @@
         var $a = $(
           '<a class="waifuStory" href="/girl/' + $(this).attr("girl-id") + '?resource=affection"><img src="https://hh.hh-content.com/design_v2/affstar.png"></a>'
         );
-        $a.click(function() {
+        $a.on("click", function() {
           Settings.change_settings("start_girl_story", true);
         });
         $(this).find(".girl-info-container").append($a);
@@ -2067,7 +2090,7 @@
             clearInterval(interval);
           }
         }, 5);
-        $(".champions-over__champion-tier-link").click(function() {
+        $(".champions-over__champion-tier-link").on("click", function() {
           setTimeout(function() {
             StoryHelper.safeWorkBackground("#scene_popup");
           }, 100);
@@ -2087,7 +2110,7 @@
           `<button class="finished round_blue_button">
                     <img src="https://hh.hh-content.com/design/ic_arrow-left-ffffff.svg">
                 </button>`
-        ).click(function() {
+        ).on("click", function() {
           StoryHelper.goToChampion(previous_champion_id);
         }).appendTo($btns_container);
         var next_champion_id = champion_id + 1;
@@ -2096,7 +2119,7 @@
           `<button class="finished round_blue_button">
                     <img class="continue" src="https://hh.hh-content.com/design/ic_arrow-right-ffffff.svg">
                 </button>`
-        ).click(function() {
+        ).on("click", function() {
           StoryHelper.goToChampion(next_champion_id);
         }).appendTo($btns_container);
         Css.addCss(
@@ -2110,7 +2133,7 @@
         );
         if (settings.journey_champion_active) {
           StoryHelper.journeyChampion();
-          $('button[rel="perform"]').click(function() {
+          $('button[rel="perform"]').on("click", function() {
             Settings.change_settings(
               "journey_champion",
               next_champion_id
@@ -2119,12 +2142,13 @@
         }
       } else if (page === "champions_map") {
         if (settings.journey_champion_active) StoryHelper.journeyChampion();
-        $(".champion-lair").click(StoryHelper.changeLastChampionLink);
+        $(".champion-lair").on("click", StoryHelper.changeLastChampionLink);
       }
     }
   }
   class PreBattlePage {
     static init(page) {
+      var _a, _b;
       const settings = Settings.settings;
       if (page === "troll-pre-battle") {
         StoryHelper.questLink();
@@ -2150,7 +2174,7 @@
       }
       if (settings.auto_battle && page === "troll-pre-battle") {
         const HeroData = Utils.getHeroData();
-        const fightAmount = HeroData?.energies?.fight?.amount || 0;
+        const fightAmount = ((_b = (_a = HeroData == null ? void 0 : HeroData.energies) == null ? void 0 : _a.fight) == null ? void 0 : _b.amount) || 0;
         const $container = $(".battle-buttons-row").first();
         StoryHelper.autoBattle({
           container: $container,
@@ -2175,8 +2199,11 @@
       var to_press = true;
       setInterval(function() {
         var $btns = $(
-          '.popup_buttons .blue_button_L, button[rel="pop_claim"]:not(:disabled), #heal_girl_labyrinth_popup .blue_button_L, #all-battle-skip-btn'
+          '.popup_buttons .blue_button_L:not(#redirect-to-harem), button[rel="pop_claim"]:not(:disabled), #heal_girl_labyrinth_popup .blue_button_L, #all-battle-skip-btn'
         );
+        if (page === "pachinko") {
+          $btns = $btns.not(":disabled");
+        }
         if ($btns.length && $btns.is(":visible") && to_press && settings.pachinko_press_btn) {
           to_press = false;
           setTimeout(function() {
@@ -2233,10 +2260,12 @@
     static init() {
       const settings = Settings.settings;
       const HeroData = Utils.getHeroData();
-      $(`a[href^="${StoryHelper.links.troll}"]`).click(
+      $(`a[href^="${StoryHelper.links.troll}"]`).on(
+        "click",
         StoryHelper.changeLastTroll
       );
-      $(`button[data-href^="${StoryHelper.links.troll}"]`).click(
+      $(`button[data-href^="${StoryHelper.links.troll}"]`).on(
+        "click",
         StoryHelper.changeLastTroll
       );
       StoryHelper.trollMenuLink();
@@ -2244,7 +2273,8 @@
         $('.energy_counter[type="fight"] .energy_counter_amount').wrap(
           `<a href="${StoryHelper.links.troll}${settings.last_id_troll}" class="link_last_troll"></a>`
         );
-      $('.energy_counter[type="fight"] .energy_counter_bar').contextmenu(
+      $('.energy_counter[type="fight"] .energy_counter_bar').on(
+        "contextmenu",
         function(e) {
           location.href = StoryHelper.links.troll + (HeroData.infos.questing.id_world - 1);
           return Utils.stopClick(e);
@@ -2252,20 +2282,15 @@
       );
     }
   }
-  class GirlPreview {
-    static current_girlPreview = 0;
-    static discover_previewGirls = false;
-    static list_previewGirls = [];
-    static list_previewGirls_info = {};
-    static selector_previewGirls = `canvas, img:not(.excluded, .icon, .user-avatar, .background_images, [src*="/pictures/design/"], [src*="/pictures/misc/"], [src*="/pictures/hero/"], [src*="/payments/"], [src*="/logo_picture/"], [src*="ic_"] , [src*="/seasonal_event/"])`;
-    static current_src;
+  const _GirlPreview = class _GirlPreview {
     static init() {
       setInterval(() => {
         $(this.selector_previewGirls).off("contextmenu.girlPreview").on("contextmenu.girlPreview", (e) => {
-          var $this = $(e.currentTarget);
-          var search;
-          var founds_preview = [];
-          var regex;
+          let $this = $(e.currentTarget);
+          let search;
+          let founds_preview = [];
+          let regex;
+          let id_img;
           if ($this.is("canvas")) {
             regex = /id_[0-9]+_grade/g;
             search = $this.attr("id");
@@ -2276,7 +2301,7 @@
           if (search) founds_preview = search.match(regex);
           else {
             founds_preview = [];
-            var $girlId = $("[girl-id]");
+            let $girlId = $("[girl-id]");
             if ($girlId.length) {
               $girlId.each(function() {
                 founds_preview.push($(this).attr("girl-id"));
@@ -2284,19 +2309,19 @@
             }
           }
           if (founds_preview === null || !founds_preview.length) return;
-          for (var j = 0; j < founds_preview.length; j++) {
-            var id_img = Utils.toint_string(founds_preview[j]);
+          for (let j = 0; j < founds_preview.length; j++) {
+            id_img = Utils.toint_string(founds_preview[j]);
             if (!id_img) continue;
             if (!this.list_previewGirls.includes(id_img)) {
               this.list_previewGirls.push(id_img);
-              var type = "girls", types = ["troll", "club_champions", "champions"];
-              for (var i = 0; i < types.length; i++) {
+              let type = "girls", types = ["troll", "club_champions", "champions"];
+              for (let i = 0; i < types.length; i++) {
                 if (search && search.includes(types[i])) {
                   type = types[i];
                   break;
                 }
               }
-              var owned = $this.parent().hasClass("already-owned") || $this.next().find(".shards>p>span").text() === "100/100";
+              let owned = $this.parent().hasClass("already-owned") || $this.next().find(".shards>p>span").text() === "100/100";
               this.list_previewGirls_info[id_img] = {
                 type,
                 owned
@@ -2351,25 +2376,25 @@
         '<div class="nc-panel-preview-girl">  <div class="nc-panel">    <div class="nc-panel-header">      <a href="#" class="close_cross potions-paths-panel-button">        <img class="excluded" src="https://hh.hh-content.com/clubs/ic_xCross.png">      </a>    </div>    <div class="nc-panel-body"><p style="text-align:center;font-size:2em;color:#fff">LOADING..</p></div>    <div class="nc-panel-footer">      <p class="prev">&lt;</p>      <div class="current"' + (this.list_previewGirls.length > 1 ? "" : ' style="visibility:hidden"') + ">        <p>" + (this.list_previewGirls_info[id_img].owned ? '<span style="color:#6ed902;font-weight:bold">✔</span> ' : "") + '        <span class="position">' + this.position_preview() + '</span></p>      </div>      <p class="next">&gt;</p>    </div>  </div></div>'
       );
       $("#contains_all").append($panelImg);
-      $panelImg.find(".close_cross").click(() => {
+      $panelImg.find(".close_cross").on("click", () => {
         $panelImg.remove();
         this.list_previewGirls = [];
         this.list_previewGirls_info = {};
         this.current_girlPreview = 0;
       });
-      $panelImg.find(".prev").click(() => {
+      $panelImg.find(".prev").on("click", () => {
         this.current_girlPreview--;
         if (this.current_girlPreview < 0)
           this.current_girlPreview = this.list_previewGirls.length - 1;
         this.preview_girl(this.list_previewGirls[this.current_girlPreview]);
       });
-      $panelImg.find(".next").click(() => {
+      $panelImg.find(".next").on("click", () => {
         this.current_girlPreview++;
         if (this.current_girlPreview >= this.list_previewGirls.length)
           this.current_girlPreview = 0;
         this.preview_girl(this.list_previewGirls[this.current_girlPreview]);
       });
-      $panelImg.find(".current .position").click(() => {
+      $panelImg.find(".current .position").on("click", () => {
         var input = window.prompt(
           "Type a number [0 to " + (this.list_previewGirls.length - 1) + '] or string "random":',
           "random"
@@ -2385,6 +2410,13 @@
       });
       StoryHelper.appendStory(".nc-panel-preview-girl .current", id_img);
       var $panelBody = $panelImg.find(".nc-panel-body"), total_images = 0;
+      const onImageProcessed = function() {
+        var _a;
+        if (this.tagName === "IMG" && ((_a = arguments[0]) == null ? void 0 : _a.type) === "error") {
+          $(this).remove();
+        }
+        total_images++;
+      };
       for (var grade = 0; grade < 7; grade++)
         $(
           '<img class="excluded" src="' + StoryHelper.generateImg(
@@ -2393,12 +2425,7 @@
             this.current_src,
             this.list_previewGirls_info[id_img].type
           ) + '">'
-        ).appendTo($panelBody).on("error", function() {
-          $(this).remove();
-          total_images++;
-        }).on("load", function() {
-          total_images++;
-        });
+        ).appendTo($panelBody).on("error", onImageProcessed).on("load", onImageProcessed);
       var intResizeGirl = setInterval(() => {
         if (total_images == 7) {
           clearInterval(intResizeGirl);
@@ -2407,19 +2434,28 @@
           $imgs.css({
             width: 100 / $imgs.length + "%",
             height: $panelBody.height()
-          }).click(function() {
+          }).on("click", function() {
             $(this).toggleClass("zoom");
             $panelBody.scrollTop($(this).position().top);
           });
         }
       }, 500);
     }
-  }
+  };
+  _GirlPreview.current_girlPreview = 0;
+  _GirlPreview.discover_previewGirls = false;
+  _GirlPreview.list_previewGirls = [];
+  _GirlPreview.list_previewGirls_info = {};
+  _GirlPreview.selector_previewGirls = `canvas, img:not(.excluded, .icon, .user-avatar, .background_images, [src*="/pictures/design/"], [src*="/pictures/misc/"], [src*="/pictures/hero/"], [src*="/payments/"], [src*="/logo_picture/"], [src*="ic_"] , [src*="/seasonal_event/"])`;
+  let GirlPreview = _GirlPreview;
   class FinalCss {
     static init() {
       const settings = Settings.settings;
       Css.addCss(
-        Css.MAIN.replace("{{SFW_OPACITY}}", settings.safe_work_opacity)
+        Css.MAIN.replace(
+          "{{SFW_OPACITY}}",
+          settings.safe_work_opacity.toString()
+        )
       );
       if (settings.header_link_show)
         Css.addCss(

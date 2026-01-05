@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AS CardControl
 // @namespace    https://animestars.org/
-// @version      10.9
+// @version      11
 // @description  Множество вспомогательных функций для работы с картами
 // @author       Sandr
 // @match        *://animestars.org/*
@@ -12,6 +12,7 @@
 // @match        *://as2.asstars.tv/*
 // @match        *://asstars.club/*
 // @match        *://asstars.online/*
+// @match        *://animesss.tv/*
 // @match        *://animestars.org/cards/*/trade/*
 // @match        *://asstars.tv/cards/*/trade/*
 // @match        *://astars.club/cards/*/trade/*
@@ -19,7 +20,8 @@
 // @match        *://as1.asstars.tv/cards/*/trade/*
 // @match        *://as2.asstars.tv/cards/*/trade/*
 // @match        *://asstars.club/cards/*/trade/*
-// @match        *://asstars.online/cards/*/trade/*
+// @match        *://animesss.tv/cards/*/trade/*
+
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_openInTab

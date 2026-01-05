@@ -441,7 +441,7 @@ function callChatGPTAPI(questionText, answerOptions, isMultipleAnswer) {
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
-          apiKey = '' // Replace with your OpenAI API key
+          apiKey = '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' // Replace with your OpenAI API key
           apiUrl = 'https://api.openai.com/v1/chat/completions'
           // Construct the prompt for ChatGPT
           console.log('questionText: '.concat(questionText))
