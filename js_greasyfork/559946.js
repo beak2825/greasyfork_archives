@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         OurCoinCash Full Auto Flow
+// @name         OurCoinCash Full Auto Flow + Auto Reload
 // @namespace    https://tampermonkey.net/
-// @version      1.1
-// @description  Enter via referral link, auto login, navigate to faucet, wait for 3 antibot clicks, then collect reward
+// @version      1.2
+// @description  Auto login, faucet flow, antibot detect, claim reward, auto reload if page stalls
 // @author       Rubystance
 // @license      MIT
 // @match        https://ourcoincash.xyz/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/559946/OurCoinCash%20Full%20Auto%20Flow.user.js
-// @updateURL https://update.greasyfork.org/scripts/559946/OurCoinCash%20Full%20Auto%20Flow.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559946/OurCoinCash%20Full%20Auto%20Flow%20%2B%20Auto%20Reload.user.js
+// @updateURL https://update.greasyfork.org/scripts/559946/OurCoinCash%20Full%20Auto%20Flow%20%2B%20Auto%20Reload.meta.js
 // ==/UserScript==
 
 (function () {
@@ -18,20 +18,33 @@
     const EMAIL = 'YOUR_EMAIL_HERE'; // << YOUR_EMAIL
     const PASSWORD = 'YOUR_PASSWORD_HERE'; // << YOUR_PASSWORD
 
+    const INACTIVITY_LIMIT = 30000; // 30 seconds
+
     let executedLogin = false;
     let executedFaucet = false;
     let antibotClicks = 0;
     let executedClaim = false;
 
-    if (
-        !location.search.includes('r=70698') &&
-        !localStorage.getItem('occ_referral_applied') &&
-        !document.querySelector('#email')
-    ) {
-        localStorage.setItem('occ_referral_applied', 'true');
-        location.href = REFERRAL_URL;
-        return;
+    let lastActivity = Date.now();
+
+    function markActivity() {
+        lastActivity = Date.now();
     }
+
+    const activityObserver = new MutationObserver(markActivity);
+    activityObserver.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+        attributes: true
+    });
+
+    setInterval(() => {
+        const idleTime = Date.now() - lastActivity;
+        if (idleTime >= INACTIVITY_LIMIT) {
+            console.warn('[OCC] Page inactive for 30s. Reloading...');
+            location.reload();
+        }
+    }, 5000);
 
     function waitForElement(selector, callback) {
         const el = document.querySelector(selector);
@@ -46,6 +59,16 @@
         });
 
         observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    if (
+        !location.search.includes('r=70698') &&
+        !localStorage.getItem('occ_referral_applied') &&
+        !document.querySelector('#email')
+    ) {
+        localStorage.setItem('occ_referral_applied', 'true');
+        location.href = REFERRAL_URL;
+        return;
     }
 
     if (document.querySelector('#email') && document.querySelector('#password')) {
@@ -91,11 +114,11 @@
                     link.dataset.listenerAdded = 'true';
                     link.addEventListener('click', () => {
                         antibotClicks++;
-                        console.log(`[OCC] Manual antibot click ${antibotClicks}/3`);
+                        console.log(`[OCC] Antibot click ${antibotClicks}/3`);
 
                         if (antibotClicks >= 3 && !executedClaim) {
                             executedClaim = true;
-                            console.log('[OCC] 3 antibot clicks detected. Preparing to collect reward...');
+                            console.log('[OCC] Antibot complete. Waiting for claim button...');
                             waitForClaimButton();
                         }
                     });
@@ -105,7 +128,7 @@
 
         setupAntibotListeners();
 
-        const observer = new MutationObserver(() => setupAntibotListeners());
+        const observer = new MutationObserver(setupAntibotListeners);
         observer.observe(document.body, { childList: true, subtree: true });
 
         function waitForClaimButton() {
@@ -122,7 +145,7 @@
                             }))
                         );
 
-                        console.log('[OCC] Reward successfully collected.');
+                        console.log('[OCC] Reward collected successfully.');
                     }
                 }, 300);
             });

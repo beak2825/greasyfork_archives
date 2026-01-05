@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          从linux do获取论坛文章数据与复制
 // @namespace     http://tampermonkey.net/
-// @version       0.15.15
+// @version       0.15.18
 // @description   从linux do论坛页面获取文章的板块、标题、链接、标签和内容总结，并在标题旁添加复制按钮。支持设置界面配置。
 // @author        @Loveyless https://github.com/Loveyless/linuxdo-share
 // @match         *://*.linux.do/*
@@ -69,6 +69,10 @@
     COPY_SUCCESS_DURATION_MS: 2000,
     // 复制失败提示显示时间 (毫秒)
     COPY_FAILURE_DURATION_MS: 3000,
+    // 回到顶部：每隔多久检测一次 timeline-replies（毫秒）
+    BACK_TO_TOP_RETRY_INTERVAL_MS: 300,
+    // 回到顶部：最多重试次数（避免异常情况下无限循环）
+    BACK_TO_TOP_RETRY_MAX_ATTEMPTS: 40,
     // 设置保存后关闭延迟 (毫秒)
     SETTINGS_CLOSE_DELAY_MS: 300,
     // Dialog 关闭动画时间 (毫秒)
@@ -975,12 +979,19 @@
 
         .linuxdo-copy-history-header {
             display: flex;
-            align-items: baseline;
+            align-items: center;
             justify-content: space-between;
             gap: 10px;
             padding: 2px 2px 10px;
             border-bottom: 1px solid var(--ld-h-border);
             margin-bottom: 8px;
+        }
+
+        .linuxdo-copy-history-header-left {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
         }
 
         .linuxdo-copy-history-title {
@@ -989,6 +1000,43 @@
             letter-spacing: 0.06em;
             text-transform: uppercase;
             color: var(--ld-h-muted-fg);
+        }
+
+        .linuxdo-copy-history-settings-btn {
+            appearance: none;
+            border: 1px solid var(--ld-h-border);
+            background: transparent;
+            color: var(--ld-h-muted-fg);
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+        }
+
+        .linuxdo-copy-history-settings-btn:hover {
+            background: var(--ld-h-muted);
+            color: var(--ld-h-fg);
+            box-shadow: 0 0 0 3px var(--ld-h-ring);
+        }
+
+        .linuxdo-copy-history-settings-btn:active {
+            transform: translateY(1px);
+        }
+
+        .linuxdo-copy-history-settings-btn:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--ld-h-ring);
+        }
+
+        .linuxdo-copy-history-settings-btn svg {
+            width: 14px;
+            height: 14px;
+            display: block;
         }
 
         .linuxdo-copy-history-hint {
@@ -1330,6 +1378,15 @@
     });
 
     popover.addEventListener('click', (e) => {
+      const settingsBtn = e.target.closest('button[data-action="settings"]');
+      if (settingsBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        hideCopyHistoryPopover();
+        if (typeof showSettingsModal === 'function') showSettingsModal();
+        return;
+      }
+
       const btn = e.target.closest('button[data-action][data-id]');
       if (!btn) return;
       e.preventDefault();
@@ -1393,7 +1450,15 @@
 
     const header = `
       <div class="linuxdo-copy-history-header">
-        <div class="linuxdo-copy-history-title">历史复制</div>
+        <div class="linuxdo-copy-history-header-left">
+          <div class="linuxdo-copy-history-title">历史复制</div>
+          <button type="button" class="linuxdo-copy-history-settings-btn" data-action="settings" aria-label="打开设置" title="打开设置">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" stroke="currentColor" stroke-width="2"/>
+              <path d="M19.4 15a8.1 8.1 0 0 0 .1-1l2-1.2-2-3.5-2.3.6a7.8 7.8 0 0 0-1.7-1L15 6h-4l-.5 2.9a7.8 7.8 0 0 0-1.7 1l-2.3-.6-2 3.5 2 1.2a8.1 8.1 0 0 0 .1 1 8.1 8.1 0 0 0-.1 1l-2 1.2 2 3.5 2.3-.6a7.8 7.8 0 0 0 1.7 1L11 18h4l.5-2.9a7.8 7.8 0 0 0 1.7-1l2.3.6 2-3.5-2-1.2a8.1 8.1 0 0 0-.1-1z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
         <div class="linuxdo-copy-history-hint">点击复制 / 打开链接</div>
       </div>
     `;
@@ -1511,6 +1576,7 @@
   const BACK_TO_TOP_POSITION_STORAGE_KEY = `BACK_TO_TOP_POSITION_V1_${window.location.host}`;
   let backToTopButtonEl = null;
   let suppressBackToTopClick = false;
+  let backToTopRetryTimer = null;
 
   function isTopicPageForBackToTop() {
     const path = window.location.pathname || '';
@@ -1566,8 +1632,57 @@
     return false;
   }
 
+  function clearBackToTopRetryTimer() {
+    if (backToTopRetryTimer) {
+      clearInterval(backToTopRetryTimer);
+      backToTopRetryTimer = null;
+    }
+  }
+
+  function getTimelineRepliesCurrentIndex() {
+    const el = document.querySelector('.timeline-replies');
+    if (!el) return null;
+    const text = String(el.textContent || '').trim().replace(/\s+/g, ' ');
+    const match = text.match(/(\d+)\s*\/\s*\d+/);
+    if (!match) return null;
+    const current = Number.parseInt(match[1], 10);
+    return Number.isFinite(current) ? current : null;
+  }
+
+  function performBackToTop() {
+    window.scrollTo(0, 0);
+    tryScrollToTopByTimeline();
+  }
+
+  function startBackToTopRetryUntilFirstPage() {
+    clearBackToTopRetryTimer();
+
+    let attempts = 0;
+    backToTopRetryTimer = setInterval(() => {
+      attempts += 1;
+      if (!isTopicPageForBackToTop()) {
+        clearBackToTopRetryTimer();
+        return;
+      }
+
+      const currentIndex = getTimelineRepliesCurrentIndex();
+      if (currentIndex === 1) {
+        clearBackToTopRetryTimer();
+        return;
+      }
+
+      if (attempts >= SCRIPT_CONSTANTS.BACK_TO_TOP_RETRY_MAX_ATTEMPTS) {
+        clearBackToTopRetryTimer();
+        return;
+      }
+
+      performBackToTop();
+    }, SCRIPT_CONSTANTS.BACK_TO_TOP_RETRY_INTERVAL_MS);
+  }
+
   function ensureBackToTopButton() {
     if (!isTopicPageForBackToTop()) {
+      clearBackToTopRetryTimer();
       if (backToTopButtonEl) backToTopButtonEl.style.display = 'none';
       return;
     }
@@ -1593,8 +1708,8 @@
           suppressBackToTopClick = false;
           return;
         }
-        window.scrollTo(0, 0);
-        tryScrollToTopByTimeline();
+        performBackToTop();
+        startBackToTopRetryUntilFirstPage();
       });
 
       let dragging = false;
@@ -1743,8 +1858,7 @@
    */
   function copyTextToClipboard({ element, text }) {
     navigator.clipboard.writeText(text).then(function () {
-      console.log('文本已复制到剪贴板');
-      console.log(text);
+      console.debug('文本已复制到剪贴板');
       element.focus(); // 触发 :focus 样式显示“已复制”
       setTimeout(() => {
         element.blur(); // 移除焦点，重置提示
@@ -1776,7 +1890,9 @@
 
     // 如果 wait 小于等于 0，则无论如何都立即执行
     if (wait <= 0) {
-      return (...args) => func.apply(this, args);
+      return function (...args) {
+        return func.apply(this, args);
+      };
     }
 
     // 定时器触发时执行的函数，用于处理 trailing 调用
@@ -1960,7 +2076,7 @@
       fullTextContent = fullTextContent.replace(/\s*\n\s*/g, '\n').replace(/\n{2,}/g, '\n\n').trim();
 
       if (CONFIG.USE_AI_FOR_SUMMARY && CONFIG.API_KEY) {
-        console.log('尝试使用 AI 总结内容...');
+        console.debug('尝试使用 AI 总结内容...');
         const contentToSummarize = fullTextContent.substring(0, SCRIPT_CONSTANTS.AI_CONTENT_MAX_LENGTH);
         const customPrompt = CONFIG.CUSTOM_SUMMARY_PROMPT || DEFAULT_CONFIG.CUSTOM_SUMMARY_PROMPT;
         const prompt = customPrompt
@@ -1969,7 +2085,7 @@
 
         try {
           articleData.summary = `[AI总结]:` + await callAiAPI(prompt, CONFIG.API_KEY, CONFIG.MODEL_NAME);
-          console.log('OpenAI Compatible', CONFIG.MODEL_NAME, '总结:', articleData.summary);
+          console.debug('AI 总结完成:', CONFIG.MODEL_NAME);
           articleData.summary = articleData.summary.replace(/^(.)\s*(\S+)/, '$1$2').trim();
         } catch (error) {
           console.error('AI 总结失败:', error);
@@ -2049,7 +2165,6 @@
         const currentTitleElement = document.querySelector('h1[data-topic-id] a.fancy-title');
         const currentArticleRootElement = document.querySelector('.cooked');
         const articleData = await getArticleData(currentTitleElement, currentArticleRootElement);
-        console.log('获取到的文章数据:', articleData);
 
         const formattedText = formatCopiedText(articleData);
         addCopyHistoryItem({ articleData, copiedText: formattedText });
@@ -2425,7 +2540,7 @@
    */
   function showSettingsModal() {
     if (window !== window.top) {
-      console.log('在 iframe 中，跳过显示设置界面');
+      console.debug('在 iframe 中，跳过显示设置界面');
       return;
     }
 
@@ -2476,7 +2591,7 @@
    */
   function initializeScript() {
     if (window !== window.top) {
-      console.log("在 iframe 中，跳过脚本初始化");
+      console.debug("在 iframe 中，跳过脚本初始化");
       return;
     }
 
@@ -2510,7 +2625,7 @@
 
       addCopyButtonToArticleTitle(titleLinkElement);
     } else if (document.querySelector('h1[data-topic-id]')) {
-      console.log('部分所需元素未找到，等待DOM更新:', {
+      console.debug('部分所需元素未找到，等待DOM更新:', {
         title: !!titleLinkElement,
         content: !!articleRootElement,
         userData: !!userDataContainer,
