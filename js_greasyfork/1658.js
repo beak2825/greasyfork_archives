@@ -1,0 +1,26 @@
+// ==UserScript==
+// @name          Nuke myspace login
+// @description   Stop people from loging in to myspace by removing the entire login/sign-up box. Why? You either want to tick someone off or you are a parent who thinks myspace is evil.
+// @include       http://myspace.com/*
+// @include       http://*.myspace.com/*
+// @include       https://myspace.com/*
+// @include       https://*.myspace.com/*
+// @version 0.0.1.20140525024115
+// @namespace https://greasyfork.org/users/2178
+// @downloadURL https://update.greasyfork.org/scripts/1658/Nuke%20myspace%20login.user.js
+// @updateURL https://update.greasyfork.org/scripts/1658/Nuke%20myspace%20login.meta.js
+// ==/UserScript==
+
+function addGlobalStyle(css) {
+    var head, style;
+    head = document.getElementsByTagName('head')[0];
+    if (!head) { return; }
+    style = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = css;
+    head.appendChild(style);
+}
+
+addGlobalStyle(
+'#account {display:none!important' +
+'}');
