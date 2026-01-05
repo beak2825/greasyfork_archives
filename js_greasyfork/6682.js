@@ -1,0 +1,61 @@
+// ==UserScript==
+// @id              YouTubeCenter
+// @name            YouTube Center
+// @namespace       http://www.facebook.com/YouTubeCenter
+// @version         2.1.7.1
+// @author          Jeppe Rune Mortensen <jepperm@gmail.com>
+// @description     This script was deleted from Greasy Fork, and due to its negative effects, it has been automatically removed from your browser.
+// @icon64          https://raw.github.com/YePpHa/YouTubeCenter/master/assets/icon64.png
+// @domain          yeppha.github.io
+// @domain          youtube.com
+// @domain          www.youtube.com
+// @domain          gdata.youtube.com
+// @domain          apis.google.com
+// @domain          plus.googleapis.com
+// @domain          googleapis.com
+// @domain          raw.github.com
+// @domain          raw2.github.com
+// @domain          raw.githubusercontent.com
+// @domain          s.ytimg.com
+// @match           http://www.youtube.com/*
+// @match           https://www.youtube.com/*
+// @match           http://youtube.com/*
+// @match           https://youtube.com/*
+// @match           https://yeppha.github.io/downloads/YouTubeCenter.meta.js
+// @match           http://s.ytimg.com/yts/jsbin/*
+// @match           https://s.ytimg.com/yts/jsbin/*
+// @match           https://raw.github.com/YePpHa/YouTubeCenter/master/*
+// @match           https://raw.githubusercontent.com/YePpHa/YouTubeCenter/master/*
+// @match           http://raw.github.com/YePpHa/YouTubeCenter/master/*
+// @match           http://raw.githubusercontent.com/YePpHa/YouTubeCenter/master/*
+// @match           http://apis.google.com/*/widget/render/comments?*
+// @match           https://apis.google.com/*/widget/render/comments?*
+// @match           http://plus.googleapis.com/*/widget/render/comments?*
+// @match           https://plus.googleapis.com/*/widget/render/comments?*
+// @include         http://www.youtube.com/*
+// @include         https://www.youtube.com/*
+// @include         http://youtube.com/*
+// @include         https://youtube.com/*
+// @include         http://apis.google.com/*/widget/render/comments?*
+// @include         https://apis.google.com/*/widget/render/comments?*
+// @include         http://plus.googleapis.com/*/widget/render/comments?*
+// @include         https://plus.googleapis.com/*/widget/render/comments?*
+// @exclude         http://apiblog.youtube.com/*
+// @exclude         https://apiblog.youtube.com/*
+// @exclude         http://*.youtube.com/subscribe_embed?*
+// @exclude         https://*.youtube.com/subscribe_embed?*
+// @grant           GM_getValue
+// @grant           GM_setValue
+// @grant           GM_xmlhttpRequest
+// @grant           GM_getResourceText
+// @grant           GM_log
+// @grant           GM_registerMenuCommand
+// @grant           unsafeWindow
+// @updateVersion   156
+// @run-at          document-start
+// @priority        9001
+// @contributionURL https://github.com/YePpHa/YouTubeCenter/wiki/Donate
+// @license         MIT
+// @downloadURL https://update.greasyfork.org/scripts/6682/YouTube%20Center.user.js
+// @updateURL https://update.greasyfork.org/scripts/6682/YouTube%20Center.meta.js
+// ==/UserScript==

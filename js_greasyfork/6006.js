@@ -1,0 +1,12 @@
+// ==UserScript==
+// @name        Hatırlat Canım Hatırlat
+// @namespace   Merhaba
+// @description Made By Clive Sadhu
+// @include     http:/*.popmundo.com/World/Popmundo.aspx/Character/*
+// @include     http:/*.popmundo.com/World/Popmundo.aspx/Character
+// @version     1.1
+// @grant       none
+// @downloadURL https://update.greasyfork.org/scripts/6006/Hat%C4%B1rlat%20Can%C4%B1m%20Hat%C4%B1rlat.user.js
+// @updateURL https://update.greasyfork.org/scripts/6006/Hat%C4%B1rlat%20Can%C4%B1m%20Hat%C4%B1rlat.meta.js
+// ==/UserScript==
+document.querySelector('#sidemenu .box').innerHTML += '<div class="menu"><h2 class="menu"> <center>Hatırlatmalar</center> </h2><center><ul><li><b>* Sırlar Kitabı</b></li><li>-Her Gün 16:00</li><b>* Enstrüman Akord/Parlatma</b><li>-Her Gün 16:00</li><li><b>* Pon Pon Kullanma</b></li><li>-Her Gün 15:00    </li><li><b>* Ekibe Prim</b></li><li>    -Her Çaşramba    </li>     <br><li><b></center><center>* Kısa Patikalar *</center></b></li>  <li><a href="/World/Popmundo.aspx/Locale/233224">-Berlin / Schliemann\'s Zimmer (~10 dk)</a>    </li>    <li><a href="/World/Popmundo.aspx/Locale/234234">-Londra / Herman\'s Palace (~5 dk)</a>    </li>    <li><a href="/World/Popmundo.aspx/Locale/49090">-Barcelona / Costa Brava (~20 dk)</a>    </li>    <li><a href="/World/Popmundo.aspx/Locale/76469">-Nashville / Little house On.. (~10 dk.)</a>    </li>    <li><a href="/World/Popmundo.aspx/Locale/195084">-Talinn / Pirita (~15 dk)</a>    </li>    <li><a href="/World/Popmundo.aspx/Locale/49094">-Toronto / Sunnyside (~15 dk)</a>    </li>    <li><a href="/World/Popmundo.aspx/Locale/106202">-Tromso / Telegrafbukta (~15 dk)</a>    </li>    <li><a href="/World/Popmundo.aspx/Locale/140964">-Porto / Costa Verde (~20 dk)</a>    </li>    <li><a href="/World/Popmundo.aspx/Locale/104742">-Rio / Ipanema (~20 dk)</a>    </li>    <li><a href="/World/Popmundo.aspx/Locale/1349118">-Seattle / Elliott Bay Park (~20 dk)</a>    </li>    <li><a href="/World/Popmundo.aspx/Locale/49198">-Los A. / Santa Monica Beach (~20 dk)</a>    </li>    <li><a href="/World/Popmundo.aspx/Locale/473018">-Singapoure / Sentosa (~36 dk)</a></li><li><a href="/World/Popmundo.aspx/Locale/182793">-Glasgow / Öğretmenin Evi (~5 dk) </a></li>(Girmeden önce Biftek Ye)</ul></div>';
