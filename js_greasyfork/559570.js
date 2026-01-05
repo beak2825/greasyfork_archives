@@ -1,26 +1,20 @@
 // ==UserScript==
-// @name               视频网页全屏
-// @name:zh            视频网页全屏
-// @name:zh-TW         視頻網頁全屏
-// @name:en            Video webpage fullscreen
-// @namespace          npm/vite-plugin-monkey
-// @version            3.8.3
-// @author             Feny
-// @description        通用(网页)全屏，快捷键：P-网页全屏，Enter-全屏；视频左右两侧可单击网页全屏
-// @description:zh     通用(网页)全屏，快捷键：P-网页全屏，Enter-全屏；视频左右两侧可单击网页全屏
-// @description:zh-TW  通用(網頁)全屏，快捷鍵：P-網頁全屏，Enter-全屏；視頻左右兩側可單擊網頁全屏
-// @description:en     Universal (Web) Full Screen; Shortcut keys: P-Web Fullscreen, Enter-Fullscreen; You can click on either side of the video to make the webpage full screen.
-// @license            GPL-3.0-only
-// @icon               data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAABNNJREFUeF7tm09oHFUcx79vNtkElgQDwYMgaUJulVhIwXoIFAvtQRAPXnopQXZfchD00ksPKoh4KUQJksx7C4UUihREcvFQhB70UMmuYhXBGMRDmrAJ+Wf+2MSwP/kNb5fNZrPzkt3ZzCT7IIfszve93+/z+/NmZmcEzvkQ59x/HAIgpXwI4AoRrRHR9XQ6nWNIUsonAF6zAHZfKXWLj0smk72O4/xloQER3dZa3zW6m47jPLDRAbihlHrEx46MjHxORO9b6DYB/EJE6gAAKSWViR8ppW7wZ8PDwy/E4/E/ALzot4AQ4q7rureNUdeI6Ds/DX9PRLe01vcN8DsAPrXQ5WKx2PWJiYmnRjcN4C0LnXdIEYCU8ihhMaKpVOqSEOJnm8lLIyqlTALQNrrSiEopWcPaqoOInra3tw+Nj4//YyD8CuAVP105gGcAXqokKo2olPJtAN/YTF4WUY4mR9Vv5IQQQ67r/mmc4ey55icCUMzW0dHRC/l8/jcACT9daQaUp/8BbVlEPwAw5je5+X5IKfWDKYcHRHTTT8cRFUJcVkr9Z0rvJwC9fjoApf3nquM4j/001gBMjb6jtf7aOGPbcHL5fP5yOp2eNxG1babFiB6n9EqzNZVKDQsh7lWDcCwAPJFxJmucsWo4HFGt9ausMen5o00zLY3ocUoPwHtKqS+NjR8D+OgoCMcGACD3/Pnzi1NTUysmPb+3bDjFiCaTSav0NEZ/opT60DhjXXpCiDdd1/3WZOs9Ihqu2N8KH1bYAo/MnNKImvTkGvdtOACUUmqEJ7ZJz4IBQoh3Xdf1UllKyb2HQfgOIcRF13V/N+s9FkJcLRedJAO8OYhoWmvNOwIbdZyd4Y7W+jOb9Cwz9g2llNfUpJS8C3lr+4xcIpHoHRsb+9eUHusvlGpODMBA+EJr7UVDSmmdnrwTaK2/8kvPcuccx+mdnJz825QeO3PJj4AQ4onruq/zcZVKr3kt4EfwrH9fzICZmZlDDeKsO8/+FQFkMpmqZ4JnFUYTQCGyzQxolkCzBzSb4Fnt9NX8au4CjdoFOjo6EI/HEYvFsLW1hZ2dnVAkXOAZ0NLSgv7+fiQSB6+Wt7e3kcvlsLa2dqogAgfQ19eHrq6uI51kAAyCgZzGCBzAwMAAWltbfX1jCEtLS9jb2/M9tp4HBA5gcHDQ2l52niEwjEaNUAEoON3I/hBKAAUQjegPoQZQABFkf4gEAAYRVH+IDICg+kPkABRALC4uYmFhoebNIrIA2PN6QIg0gM3NTczOztaUBZEGwJ5ns97vtCcekQawsbGBubm5EzvPwkgDOLc9YH9/H/Pz81hZWakp+pHMgOXlZe9iaXd3t2bnIwVgfX3du1Lkzl/PEfoewLfOOOKrq6v19Ls4V2gBcJ2z4/xHFNwd+1ACqHedV0udUAEIqs5PFYDNPcGg6/xUAVS7K9yoOj9VALx4T08Puru7i3bk83nvJKae+/lJt4jAe0DBsM7OTrS1tXn/8r0+jn4YRsMAhMHZSjY0ARSoNB+RaT4i03xEJrgT7rB2wEbcEQqx755pxV0gm80+I6KKL02F3Yla7Ct9VnhaCGH9vl0ti4ZJe+Bx+fO4FR56XyCTyTwkoitCiJfDFKk621L51dk6LxKJ6c79GyP/A7T+4JsF5qmXAAAAAElFTkSuQmCC
-// @match              *://*/*
-// @grant              GM_addStyle
-// @grant              GM_addValueChangeListener
-// @grant              GM_getValue
-// @grant              GM_registerMenuCommand
-// @grant              GM_setValue
-// @grant              GM_unregisterMenuCommand
-// @grant              unsafeWindow
-// @run-at             document-start
+// @name         视频网页全屏
+// @namespace    npm/vite-plugin-monkey
+// @version      3.8.3
+// @author       Feny
+// @description  快捷键：P-网页全屏，Enter-全屏；支持侧边点击切换网页全屏；支持自动网页全屏
+// @license      GPL-3.0-only
+// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAABNNJREFUeF7tm09oHFUcx79vNtkElgQDwYMgaUJulVhIwXoIFAvtQRAPXnopQXZfchD00ksPKoh4KUQJksx7C4UUihREcvFQhB70UMmuYhXBGMRDmrAJ+Wf+2MSwP/kNb5fNZrPzkt3ZzCT7IIfszve93+/z+/NmZmcEzvkQ59x/HAIgpXwI4AoRrRHR9XQ6nWNIUsonAF6zAHZfKXWLj0smk72O4/xloQER3dZa3zW6m47jPLDRAbihlHrEx46MjHxORO9b6DYB/EJE6gAAKSWViR8ppW7wZ8PDwy/E4/E/ALzot4AQ4q7rureNUdeI6Ds/DX9PRLe01vcN8DsAPrXQ5WKx2PWJiYmnRjcN4C0LnXdIEYCU8ihhMaKpVOqSEOJnm8lLIyqlTALQNrrSiEopWcPaqoOInra3tw+Nj4//YyD8CuAVP105gGcAXqokKo2olPJtAN/YTF4WUY4mR9Vv5IQQQ67r/mmc4ey55icCUMzW0dHRC/l8/jcACT9daQaUp/8BbVlEPwAw5je5+X5IKfWDKYcHRHTTT8cRFUJcVkr9Z0rvJwC9fjoApf3nquM4j/001gBMjb6jtf7aOGPbcHL5fP5yOp2eNxG1babFiB6n9EqzNZVKDQsh7lWDcCwAPJFxJmucsWo4HFGt9ausMen5o00zLY3ocUoPwHtKqS+NjR8D+OgoCMcGACD3/Pnzi1NTUysmPb+3bDjFiCaTSav0NEZ/opT60DhjXXpCiDdd1/3WZOs9Ihqu2N8KH1bYAo/MnNKImvTkGvdtOACUUmqEJ7ZJz4IBQoh3Xdf1UllKyb2HQfgOIcRF13V/N+s9FkJcLRedJAO8OYhoWmvNOwIbdZyd4Y7W+jOb9Cwz9g2llNfUpJS8C3lr+4xcIpHoHRsb+9eUHusvlGpODMBA+EJr7UVDSmmdnrwTaK2/8kvPcuccx+mdnJz825QeO3PJj4AQ4onruq/zcZVKr3kt4EfwrH9fzICZmZlDDeKsO8/+FQFkMpmqZ4JnFUYTQCGyzQxolkCzBzSb4Fnt9NX8au4CjdoFOjo6EI/HEYvFsLW1hZ2dnVAkXOAZ0NLSgv7+fiQSB6+Wt7e3kcvlsLa2dqogAgfQ19eHrq6uI51kAAyCgZzGCBzAwMAAWltbfX1jCEtLS9jb2/M9tp4HBA5gcHDQ2l52niEwjEaNUAEoON3I/hBKAAUQjegPoQZQABFkf4gEAAYRVH+IDICg+kPkABRALC4uYmFhoebNIrIA2PN6QIg0gM3NTczOztaUBZEGwJ5ns97vtCcekQawsbGBubm5EzvPwkgDOLc9YH9/H/Pz81hZWakp+pHMgOXlZe9iaXd3t2bnIwVgfX3du1Lkzl/PEfoewLfOOOKrq6v19Ls4V2gBcJ2z4/xHFNwd+1ACqHedV0udUAEIqs5PFYDNPcGg6/xUAVS7K9yoOj9VALx4T08Puru7i3bk83nvJKae+/lJt4jAe0DBsM7OTrS1tXn/8r0+jn4YRsMAhMHZSjY0ARSoNB+RaT4i03xEJrgT7rB2wEbcEQqx755pxV0gm80+I6KKL02F3Yla7Ct9VnhaCGH9vl0ti4ZJe+Bx+fO4FR56XyCTyTwkoitCiJfDFKk621L51dk6LxKJ6c79GyP/A7T+4JsF5qmXAAAAAElFTkSuQmCC
+// @match        *://*/*
+// @grant        GM_addStyle
+// @grant        GM_addValueChangeListener
+// @grant        GM_getValue
+// @grant        GM_registerMenuCommand
+// @grant        GM_setValue
+// @grant        GM_unregisterMenuCommand
+// @grant        unsafeWindow
+// @run-at       document-start
 // @downloadURL https://update.greasyfork.org/scripts/559570/%E8%A7%86%E9%A2%91%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F.user.js
 // @updateURL https://update.greasyfork.org/scripts/559570/%E8%A7%86%E9%A2%91%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F.meta.js
 // ==/UserScript==
@@ -374,17 +368,16 @@
     }
   };
   class BasicStorage {
-    constructor(name, defVal, parser = (v) => v, splice = false) {
-      Object.assign(this, { name, defVal, parser, splice });
+    constructor(name, defVal, parser = (v) => v) {
+      Object.assign(this, { name, defVal, parser });
       this.storage = { getItem: _GM_getValue, setItem: _GM_setValue };
     }
-    #getFinalKey(suffix = "", requireKey = false) {
-      if (requireKey && [null, void 0].includes(suffix)) throw new Error("键名拼接时，第二个参数不能为空");
-      if (suffix.startsWith(this.name)) return suffix;
-      return this.splice ? this.name + suffix : this.name;
+    #getFinalKey(suffix) {
+      if ([null, void 0].includes(suffix)) throw new Error("键名后缀不能为空");
+      return suffix.startsWith(this.name) ? suffix : this.name + suffix;
     }
     set(value, key) {
-      this.storage.setItem(this.#getFinalKey(key, true), value);
+      this.storage.setItem(this.#getFinalKey(key), value);
     }
     get(key) {
       const value = this.storage.getItem(this.#getFinalKey(key));
@@ -392,10 +385,10 @@
     }
   }
   const Storage = {
-    IS_AUTO: new BasicStorage("IS_AUTO_", false, Boolean, true),
-    DETACH_THRESHOLD: new BasicStorage("DETACH_THRESHOLD_", 20, Number, true),
-    CUSTOM_CONTAINER: new BasicStorage("CUSTOM_CONTAINER_", "", void 0, true),
-    IGNORE_URLS: new BasicStorage("IGNORE_URLS", "", void 0, true)
+    IS_AUTO: new BasicStorage("IS_AUTO_", false, Boolean),
+    DETACH_THRESHOLD: new BasicStorage("DETACH_THRESHOLD_", 20, Number),
+    CUSTOM_CONTAINER: new BasicStorage("CUSTOM_CONTAINER_", ""),
+    IGNORE_URLS: new BasicStorage("IGNORE_URLS", "")
   };
   const WebFull = {
     toggleFullscreen() {
@@ -536,33 +529,6 @@
       return pathname === "/" || urls.some((u) => href.startsWith(u));
     }
   };
-  class I18n {
-    static langPacks = {
-      zh_CN: {
-        detach: "此站脱离式全屏阈值",
-        enable: "启用自动网页全屏",
-        disable: "禁用自动网页全屏",
-        ignore: "自动时忽略的网址",
-        custom: "自定义视频容器",
-        close: "关闭"
-      },
-      en: {
-        detach: "Leave the original DOM threshold",
-        enable: "Enable automatic web full-screen",
-        disable: "Disable automatic web full-screen",
-        ignore: "Exclude URLs from auto full-screen",
-        custom: "Custom video container",
-        close: "close"
-      }
-    };
-    static getLang() {
-      const lang = navigator.language || navigator.userLanguage;
-      return lang.includes("zh") ? "zh_CN" : "en";
-    }
-    static t(key) {
-      return this.langPacks[this.getLang()][key];
-    }
-  }
   const Menu = {
     isAuto: () => Storage.IS_AUTO.get(Tools.isTopWin() ? location.host : window.topWin?.host),
     setupScriptMenuCommand() {
@@ -574,11 +540,12 @@
     },
     registMenuCommand() {
       const host = location.host;
+      const isAuto = `此站${this.isAuto() ? "禁" : "启"}用自动网页全屏`;
       const configs = [
-        { title: I18n.t(this.isAuto() ? "disable" : "enable"), cache: Storage.IS_AUTO, fn: (cache, val) => cache.set(!val, host) },
-        { title: I18n.t("detach"), cache: Storage.DETACH_THRESHOLD },
-        { title: I18n.t("ignore"), cache: Storage.IGNORE_URLS },
-        { title: I18n.t("custom"), cache: Storage.CUSTOM_CONTAINER }
+        { title: isAuto, cache: Storage.IS_AUTO, fn: (cache, val) => cache.set(!val, host) },
+        { title: "此站脱离式全屏阈值", cache: Storage.DETACH_THRESHOLD },
+        { title: "自动时忽略的网址", cache: Storage.IGNORE_URLS },
+        { title: "自定义视频容器", cache: Storage.CUSTOM_CONTAINER }
       ];
       configs.forEach(({ title, cache, fn }) => {
         const id = `${cache.name}_MENU_ID`;

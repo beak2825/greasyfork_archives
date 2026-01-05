@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LIMS 메인 대시보드 - 업무 요청 현황
 // @namespace    http://tampermonkey.net/
-// @version      1.1.2
+// @version      1.1.3
 // @description  LIMS 메인 페이지에 팀별 미완료 업무 요청 리스트를 직관적으로 표시하며, 사용자 및 팀 설정을 지원합니다.
 // @author       김재형
 // @match        https://lims3.macrogen.com/main.do*
@@ -38,7 +38,7 @@
         deptName: 'NGS수행3부>LRS수행팀'
     });
 
-    let currentMode = 'team'; // 'team' | 'instruct' | 'my'
+    let currentMode = 'instruct'; // 'instruct' | 'my' | 'team'
     const MEMORY_CACHE = { team: null, my: null, instruct: null }; // 메모리 캐시 저장소
 
     // 보안 토큰(CSRF) 추출 함수
@@ -69,7 +69,7 @@
         customSection.querySelector('#lrs-setting-btn').onclick = toggleSettings;
         customSection.querySelector('#lrs-save-btn').onclick = saveSettings;
 
-        await fetchData('team');
+        await fetchData('instruct');
     }
 
     // 커스텀 섹션 구조 생성
@@ -90,9 +90,9 @@
                         <h3 id="lrs-title" style="margin: 0; font-size: 15px; color: #fff; font-weight: 700; min-width: 250px; white-space: nowrap;">📂 업무 요청 현황</h3>
                         <div style="display: flex; align-items: center; gap: 10px;">
                             <div id="lrs-mode-toggle" style="display: flex; background: rgba(0,0,0,0.2); padding: 2px; border-radius: 8px; gap: 2px;">
-                                <span id="lrs-team-btn" class="lrs-mode-btn active" style="cursor: pointer; font-size: 11px; color: #fff; background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 6px; transition: 0.2s; font-weight: 600; display: flex; align-items: center; gap: 4px;">🏢 팀</span>
+                                <span id="lrs-instruct-btn" class="lrs-mode-btn active" style="cursor: pointer; font-size: 11px; color: #fff; background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 6px; transition: 0.2s; font-weight: 600; display: flex; align-items: center; gap: 4px;">📋 지시</span>
                                 <span id="lrs-my-btn" class="lrs-mode-btn" style="cursor: pointer; font-size: 11px; color: rgba(255,255,255,0.6); padding: 4px 10px; border-radius: 6px; transition: 0.2s; font-weight: 600; display: flex; align-items: center; gap: 4px;">📑 내 요청</span>
-                                <span id="lrs-instruct-btn" class="lrs-mode-btn" style="cursor: pointer; font-size: 11px; color: rgba(255,255,255,0.6); padding: 4px 10px; border-radius: 6px; transition: 0.2s; font-weight: 600; display: flex; align-items: center; gap: 4px;">📋 지시</span>
+                                <span id="lrs-team-btn" class="lrs-mode-btn" style="cursor: pointer; font-size: 11px; color: rgba(255,255,255,0.6); padding: 4px 10px; border-radius: 6px; transition: 0.2s; font-weight: 600; display: flex; align-items: center; gap: 4px;">🏢 팀</span>
                             </div>
                             <div id="lrs-refresh-group" style="display: flex; align-items: center; background: rgba(255,255,255,0.1); border-radius: 6px; border: 1px solid rgba(255,255,255,0.15); overflow: hidden;">
                                 <span id="lrs-refresh-btn" class="lrs-control-btn" style="cursor: pointer; font-size: 11px; color: #fff; padding: 4px 10px; transition: 0.2s; border-right: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 4px;">🔄 새로고침</span>
