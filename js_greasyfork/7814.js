@@ -1,0 +1,77 @@
+// ==UserScript==
+// @name        萌否电台 to last.fm scrobbler
+// @namespace   https://greasyfork.org/users/8650
+// @description 记录萌否电台到 last.fm
+// @include     http://moe.fm/listen/*
+// @require     https://greasyfork.org/scripts/7807-lrc-paser/code/lrc%20paser.js?version=34341
+// @require     https://greasyfork.org/scripts/7806-gmscrobber/code/GMscrobber.js?version=34342
+// @version     0.1.5
+// @run-at      document-end
+// @grant       GM_getValue
+// @grant       GM_setValue 
+// @grant       GM_deleteValue 
+// @grant       GM_xmlhttpRequest 
+// @grant       GM_registerMenuCommand 
+// @grant       unsafeWindow
+// @grant       GM_log
+// @downloadURL https://update.greasyfork.org/scripts/7814/%E8%90%8C%E5%90%A6%E7%94%B5%E5%8F%B0%20to%20lastfm%20scrobbler.user.js
+// @updateURL https://update.greasyfork.org/scripts/7814/%E8%90%8C%E5%90%A6%E7%94%B5%E5%8F%B0%20to%20lastfm%20scrobbler.meta.js
+// ==/UserScript==
+
+var init = function(){
+    log('init');
+    scrobber.setSongInfoFN(getSongInfo, {checktime: 4000});
+    document.getElementsByClassName('buffer')[0].addEventListener('click', function(e){
+        var oldTime = getSongInfo().playTime;
+        setTimeout(function(){
+            var newTime = getSongInfo().playTime;
+            offset = oldTime - newTime;
+            scrobber.seek(offset);
+        }, 0);
+    }, true);
+    
+    scrobber.on('nowplaying', function(){
+        var loveEle = document.getElementsByClassName('button-love')[0];
+        loveEle.addEventListener('click', function(e){
+            if(!loveEle.classList.contains('on')){
+                scrobber.love();
+            }else{
+                scrobber.unlove();
+            }
+        }, false);
+        scrobber.getInfo(scrobber.song, function(info){
+            document.getElementsByClassName('radio')[0].title = '在 last.fm 中记录: ' + info.len + ' 次';
+            //console.log(info.islove);
+            //同步 last.fm 红心歌曲到 萌否电台
+            if(info.islove == '1' && !loveEle.classList.contains('on') ){
+                document.getElementsByClassName('button-love')[0].click();
+            }
+            //同步 萌否电台 红心歌曲到 last.fm
+            if(info.islove == '0' && loveEle.classList.contains('on') ){
+            	scrobber.love();
+            }
+        });
+    });
+};
+
+var scrobber = new Scrobbler({
+    name: '萌否电台',
+    ready: init
+});
+
+var getSongInfo = function(){
+    var song = {};
+    var songinfo = document.getElementsByClassName('radio');
+    song.title = songinfo[0].getElementsByClassName('playlist_title')[0].innerText.replace(/song.\d{2,} /,'');
+    song.artist = songinfo[0].getElementsByClassName('playlist_artist')[0].innerText.replace(/\/ /,'')
+    song.duration = timeParse(songinfo[0].getElementsByClassName('time')[0].getElementsByTagName('strong')[0].innerText);
+    song.playTime = song.duration + timeParse(songinfo[0].getElementsByClassName('time')[0].getElementsByTagName('span')[0].innerText);
+    song.album = songinfo[0].getElementsByClassName('playlist_wiki_title')[0].innerText;
+    // console.log(song);
+    return song;
+};
+
+var timeParse = function(timeStr){
+    var ts = timeStr.split(':');
+    return ts[0] * 60 + ts[1] * 1;
+};

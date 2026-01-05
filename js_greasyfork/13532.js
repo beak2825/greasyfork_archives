@@ -1,0 +1,1 @@
+var hide_users = ['DamianJ','DVTimes','Rochard','Juicy D. Links','Twitter',];

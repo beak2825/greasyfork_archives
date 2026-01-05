@@ -1,0 +1,41 @@
+// ==UserScript==
+// @name        如意淘
+// @namespace   ruyi.taobao.com
+// @description This script was deleted from Greasy Fork, and due to its negative effects, it has been automatically removed from your browser.
+// @version     0.2.0.2
+// @grant       GM_xmlhttpRequest
+// @include     http://mvd.jd.com/*
+// @include     http://book.jd.com/*
+// @include     http://item.jd.com/*
+// @include     http://www.newegg.cn/product/*
+// @include     http://www.newegg.cn/Product/*
+// @include     http://www.amazon.cn/gp/product/*
+// @include     http://www.amazon.cn/*/dp/*
+// @include     http://www.amazon.cn/mn/detailApp*
+// @include     http://product.dangdang.com/*
+// @include     http://item.yixun.com/item-*
+// @include     http://product.suning.com/*
+// @include     http://www.gome.com.cn/product/*
+// @include     http://www.lusen.com/Product/*
+// @include     http://www.efeihu.com/Product/*
+// @include     http://www.tao3c.com/product/*
+// @include     http://www.coo8.com/product/*
+// @include     http://www.yihaodian.com/item/*
+// @include     http://www.1mall.com/item/*
+// @include     http://www.ouku.com/goods*
+// @include     http://www.redbaby.com.cn/*/*.html*
+// @include     http://cn.strawberrynet.com/a/b/c/*/
+// @include     http://web1.sasa.com/SasaWeb/sch/product/viewProductDetail.jspa?itemno=*
+// @include     http://www.bookschina.com/*.htm
+// @include     http://www.wl.cn/*
+// @include     http://product.china-pub.com/*
+// @include     http://www.winxuan.com/product/*
+// @include     http://www.99read.com/product/*
+// @include     http://www.99read.com/Product/*
+// @include     http://www.new7.com/product/*
+// @include     http://detail.bookuu.com/*.html
+// @include     http://item.taobao.com/item.htm?*
+// @include     http://detail.tmall.com/item.htm?*
+// @downloadURL https://update.greasyfork.org/scripts/8718/%E5%A6%82%E6%84%8F%E6%B7%98.user.js
+// @updateURL https://update.greasyfork.org/scripts/8718/%E5%A6%82%E6%84%8F%E6%B7%98.meta.js
+// ==/UserScript==

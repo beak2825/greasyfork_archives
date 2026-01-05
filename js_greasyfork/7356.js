@@ -1,0 +1,13 @@
+// ==UserScript==
+// @name       Wnet WAP2 Tijdelijk!
+// @description  Tralala
+// @match      http://www.wakkerdam.net/forum/index.php?*wap2*
+// @version 0.0.1.20150109180255
+// @namespace https://greasyfork.org/users/8212
+// @downloadURL https://update.greasyfork.org/scripts/7356/Wnet%20WAP2%20Tijdelijk%21.user.js
+// @updateURL https://update.greasyfork.org/scripts/7356/Wnet%20WAP2%20Tijdelijk%21.meta.js
+// ==/UserScript==
+
+var myList = document.getElementsByTagName("link");
+myList[0].disabled = true;
+GM_addStyle ('.catbg { 	border: 1px solid #375576;     border-top-left-radius: 5px;     border-top-right-radius: 5px;     width: 90%;     margin-left: auto;     margin-right: auto;   	margin-bottom: 0px;       padding: 6px 0px 6px 0px;     text-align: center;         background-color: #6d92aa;     /*Op bepaalde browsers zal dit helaas niet werken:*/     background-image: linear-gradient(#4D7599, #88A6C0);       color: white; }   .titlebg {     border: 1px solid black;     border-bottom-color: #375576;     border-top-left-radius: 5px;     border-top-right-radius: 5px;     width: 90%;     margin-left: auto;     margin-right: auto;       margin-bottom: 0px;       padding: 6px 0px 6px 0px;     text-align: center;       	background-color: #b6dbff;      /*Op bepaalde browsers zal dit helaas niet werken:*/     background-image: linear-gradient(#4D7599, #9FBDD7);   	color: white; }   .windowbg { 	border: 1px solid black;     border-top-width: 0px;     width: 90%;     margin-left: auto;     margin-right: auto;      margin-top: 0px;     margin-bottom: 0px;       padding: 10px 0px 10px 0px;     	background-color: #F0F0F0; }   .windowbg2 { 	border: 1px solid black;     border-top-width: 0px;     width: 90%;     margin-left: auto;     margin-right: auto;      margin-top: 0px;     margin-bottom: 0px;       padding: 10px 0px 10px 0px;     	background-color: #E3E3E3; }  body>a:last-child {     display: block;      margin-left: auto;     margin-right: auto;      margin-top: 0px;     margin-bottom: 0px;       padding: 10px 0px 10px 0px;     text-align: center; }  .updated { 	color: #4D7599; } .new { 	color: #4D7599; }  body { 	background-color: #ecedf3; }  a { 	text-decoration: none;     color: #111;     display: inline-block;     height: 100%; } a:only-of-type { 	width: 90%; } a:first-child { 	width: 90% } a:hover { 	text-decoration: underline; } .titlebg a { 	color: white; }')

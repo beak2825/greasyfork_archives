@@ -1,0 +1,54 @@
+// ==UserScript==
+// @name        bangumi domain redirector
+// @namespace   https://github.com/22earth
+// @description choose the domain of bangumi that you like, redirect to it
+// @description:zh-CN 重定向番组计划(Bangumi)域名为个人常用域名
+// @icon        http://bgm.tv/img/favicon.ico
+// @include     /^https?:\/\/(bangumi|bgm|chii)\.(tv|in)\/.*$/
+// @author      22earth
+// @version     0.3
+// @grant       GM_setValue
+// @grant       GM_getValue
+// @grant       GM_registerMenuCommand
+// @run-at      document-start
+// @downloadURL https://update.greasyfork.org/scripts/12803/bangumi%20domain%20redirector.user.js
+// @updateURL https://update.greasyfork.org/scripts/12803/bangumi%20domain%20redirector.meta.js
+// ==/UserScript==
+
+
+(function() {
+  function setDomain() {
+    bgm_domain = prompt (
+      '预设bangumi的域名是 "' + 'bangumi.tv' + '". 根据需要输入chii.in或者bgm.tv',
+      'bangumi.tv'
+    );
+    GM_setValue('bgm', bgm_domain);
+    return bgm_domain;
+  }
+
+  var bgm_domain = GM_getValue('bgm') || '';
+  var current_url = window.location.href;
+  var host = window.location.hostname;
+  var domains = ['bangumi.tv', 'bgm.tv', 'chii.in'];
+  if (!bgm_domain.length || !bgm_domain.match(/bangumi\.tv|chii\.in|bgm\.tv/)) {
+    bgm_domain = setDomain();
+    bgm_domain = GM_getValue('bgm');
+  }
+  //console.log(bgm_domain);
+  var index = domains.indexOf(bgm_domain);
+  if (index > -1) domains.splice(index, 1);
+  if (host.match(new RegExp(domains.join('|')))) {
+    var URI = current_url.replace(/((?:bgm|bangumi)\.tv|chii\.in)/, bgm_domain);
+    // 强制使用 https
+    URI = URI.replace('http:', 'https:');
+    // if (/bgm\.tv/.test(bgm_domain)) {
+    //   URI = URI.replace('http:', 'https:');
+    // } else if (/bangumi\.tv/.test(bgm_domain)) {
+    //   URI = URI.replace('http:', 'https:');
+    // }
+    window.location.href = URI;
+  }
+  if (GM_registerMenuCommand) {
+    GM_registerMenuCommand('设置常用域名', setDomain, 's');
+  }
+})();

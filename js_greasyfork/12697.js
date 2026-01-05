@@ -1,0 +1,11 @@
+// ==UserScript==
+// @name        Oscar.Booking
+// @namespace   Oscar.Booking
+// @description Oscar's Booking
+// @version     2015.09.26.01
+// @author Oscar Koo
+// @grant       none
+// @noframes
+// ==/UserScript==
+
+(function(t,e){if(typeof ok=="undefined"||!ok.isTopWindow())return;function i(){var t=this;this.isLooped=true;this.interval=500;this.isStopped=true;this.isTriggered=true;var i=function(e,i,n,o){if(t.onResponse(e,i,n,o)){t.onFinished();t.isStopped=true}else{t.onUnfinished(e,i,n,o)}};this.alterQuery=null;this.query=function(t,e,n){if(typeof this.alterQuery=="function")this.alterQuery(t,n,function(o){i(o,t,e,n)},e);else ok.query(t,n,function(o){i(o,t,e,n)},e)};this.onResponse=function(t,e,i,n){};this.onFinished=function(){};this.onUnfinished=function(e,i,n,o){if(this.isLooped&&!this.isStopped)setTimeout(function(){t.query(i,n,o)},this.interval)};this.container=null;this.log=null;this.create=function(i,n){if(typeof ok=="undefined"||!ok.isTopWindow())return;t.container=ok.CreateContainer(i,true);var o=i+"_Booking";var r=o+"_txtStart";var a=o+"_txtInterval";var u=o+"_btnRun";var s=i+"_Log";var d=o+"_Cache";t.container.addComponent('<div>启动时间: <input type="text" id="'+r+'" style="width:70px" /><input type="text" id="'+a+'" style="width:67px" /></div>'+'<div><input type="button" id="'+u+'" value="启动" /></div>'+'<div><span id="'+s+'"></span></div>');var l=e.getElementById(r);var v=e.getElementById(a);var f=e.getElementById(u);t.log=ok.CreateLog(s,n);var p={};var c=function(){p=ok.readLocal(d);l.value=p.start||"00:00:00";var e=v.value=p.interval||t.interval;setTimeout(function(){t.interval=e},0)};var h=function(){p={start:l.value.trim()||"00:00:00",interval:v.value.trim()||t.interval};setTimeout(function(){t.interval=p.interval},0);ok.writeLocal(d,p)};var g=function(){if(t.isStopped){t.isStopped=t.isTriggered=false;f.value="停止";t.log.write("启动...")}else{t.isStopped=t.isTriggered=true;f.value="启动";t.log.write("停止...")}};var y=function(){l.onchange=h;v.onchange=h;f.onclick=g};c();y()}}ok.extend({CreateBooking:function(){return new i}})})(window,document);

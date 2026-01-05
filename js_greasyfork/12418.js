@@ -1,0 +1,185 @@
+// ==UserScript==
+// @name         haitao
+// @version      0.2.4
+// @description  惠惠海淘自动脚本，使用时打开脚本就行，自动运行的。抢到单就自动停止，否则会一直抢。保留一切版权。
+// @author       Wanghsinche 
+// @include      http://buyers.youdao.com/list*
+// @include      http://buyers.youdao.com/lis*
+// @grant        none
+// @namespace https://greasyfork.org/users/326
+// @downloadURL https://update.greasyfork.org/scripts/12418/haitao.user.js
+// @updateURL https://update.greasyfork.org/scripts/12418/haitao.meta.js
+// ==/UserScript==
+
+var timer;
+var success = false;
+var order=false;
+var showout=false;
+var btnlst=[];
+var btnposition="right";//选项为 left  right  和 center
+var positive=true;//true是点击第一个符合条件的账单，改为false就是点最后一个账单
+//账号密码在这里添加
+var judgeTime=500;//判断时间的间隔
+var accountlst=[
+	{username:'2323861569@qq.com',password:'ilovechina..',oname:'杜子腾'},
+	{username:'du0329@qq.com',password:'ilovechina..',oname:'杜琪琪'}
+];
+
+
+
+
+
+function insertHtml(accountlst){
+	var html='<form action="https://buyers.youdao.com/auth/login" method="post" style="display:inline-block;margin:5px;">'+
+		'<input  name="username" type="Hidden" placeholder="Email" value=[un]>'+
+		'<input  name="password" type="Hidden" placeholder="password" value=[pw]>'+
+		'<input type="submit" style="padding: 5px;border-radius: 5px;"class="button postfix margin-top-small login-button" value="[na]">'+
+		'</form>';
+	var finalhtml="";
+	$.each(accountlst,function(index,val){
+		finalhtml+=html.replace(/\[un\]/g,val.username).replace(/\[pw\]/g,val.password).replace(/\[na\]/g,val.oname);
+	});
+	//$('.pagination').before(finalhtml);
+	$('.breadcrumbs').append('<li style="float:'+btnposition+';">'+finalhtml+'</li>');
+
+}
+function extend2(p) {
+	var parent = p.prototype;
+　　　　var c = {};
+　　　　for (var i in parent) {
+　　　　　　c[i] = parent[i];
+　　　　　　}
+　　　　c.uber = parent;
+　　　　return c;
+　　}
+function extend(Parent) {
+
+　　　　var F = function(){};
+// 	var Child={};
+　　　　F.prototype = Parent.prototype;
+// 　　　　Child.prototype = new F();
+// 　　　　Child.prototype.constructor = Child;
+// 　　　　Child.uber = Parent.prototype;
+
+	return new F();
+　　}	
+function judgeHasOrder() {
+	//var only6pn=false;
+	if ($('.all-list-tbody').children().length !== 0) {
+		console.log('it should be click');
+		order=true;
+		btnlst=$(".-order-compete-button");
+		only6pn=true;
+		if (positive) {
+			for (var i = 0; i < btnlst.length; i++) {
+				if($(btnlst[i]).closest('tr').find('td').eq(2).text()==='amazon.com'){
+			//		only6pn=false;
+					$(btnlst[i]).trigger('click');
+					break;
+				}
+			}			
+		}else{
+			for (var i = btnlst.length - 1; i >= 0; i--) {
+				if($(btnlst[i]).closest('tr').find('td').eq(2).text()==='amazon.com'){
+			//		only6pn=false;
+					$(btnlst[i]).trigger('click');
+					break;
+				}
+			}
+		}
+		//if(only6pn===true){
+		//	location.reload();
+		//}
+		$.each(btnlst,function(index,val){
+			if($(index).closest('tr').find('td').eq(2).text()==='success'){
+				console.log('click');
+				return false;
+			}
+		});	
+		define(['jquery'],function($){
+			var ModalClass=function(id){
+				this.id=id;
+				$('.modal-content').append('<div class="modal-content-body" id="'+this.id+'"></div>');
+				$('body').on('click','.modal-background, .modal-close',this, function(e) {
+					e.preventDefault();
+					if (e.target === e.currentTarget){
+						e.data.hide();
+					}
+				});
+				this.modalContent=$('.modal-content');
+
+			};
+			ModalClass.prototype.insertHtml=function(html){
+				$('#'+this.id).html(html);
+			};
+			ModalClass.prototype.show=function(){
+				$('.modal-background,.modal-content,#'+this.id).addClass('active');
+				this.modalContent.css({'margin-top':-this.modalContent.height()/2,'margin-left':-this.modalContent.width()/2});
+			};
+			ModalClass.prototype.hide=function(){
+				$('.modal-background,.modal-content,#'+this.id).removeClass('active');
+			};
+
+			return ModalClass;
+		});		
+		// $(".-order-compete-button:last").trigger('click'); //click last one 
+		//$(".-order-compete-button:first").trigger('click');//click first one 
+
+	} else {
+		console.log("finding...");
+		timer = setTimeout(function() {
+			judgeHasOrder();
+		}, judgeTime);
+	}
+}
+
+function judgeSuccess() {
+	$.each($('.-order-release-anchor'), function(i, e) {
+		if ($(e).css('display') === 'inline') {
+			success = true;
+		}
+	});
+	if (success) {
+		console.log('judgeSuccess success');
+		$('label').trigger('click');
+		$('body').prepend("<div id='alart' style='height:300px;text-align:center;background: yellow;'>好了</div>");
+		$('body').prepend('<audio autoplay loop hidden><source  src="https://kyfw.12306.cn/otn/resources/js/framework/audio/message.wav"></audio>');
+	} else {
+		setTimeout(function() {
+			judgeSuccess();
+		}, 5000);
+	}
+}
+
+function judgeShowOut(){
+	if ($('.lightRedText').length !== 0){
+		$.each($('.lightRedText'),function(i,e){
+			if($(e).text()==='错误！'){
+				showout=true;
+			}
+		});
+	}
+	if(showout){
+		console.log('judgeShowOut success');
+		setTimeout(function(){location.reload();},2000);
+	}
+	else{
+		setTimeout(function(){
+			judgeShowOut();
+		},2000);
+	}
+}
+
+var wxzscript = "<script type='text/javascript'>window.alert = function alert(msg) {console.log('Hidden Alert ' + msg);};</script>";
+$('script[src="/script/list.js"]').after(wxzscript);
+
+$('label').trigger('click');
+console.log('v0.2.2');
+
+insertHtml(accountlst);
+
+judgeSuccess(); /* ring tone */
+judgeShowOut();
+judgeHasOrder(); /* Act on the event */
+
+
