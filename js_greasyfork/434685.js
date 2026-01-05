@@ -20,7 +20,7 @@
 (function() {
 let css = `
 /* powered on https://raw.githubusercontent.com/Katsute/GitHub-Red-Issues/main/src/style.css */
-/* Copyright (C) 2025 Katsute <https://github.com/Katsute> */
+/* Copyright (C) 2026 Katsute <https://github.com/Katsute> */
 
 :root {
     --rissue-issue-closed    : var(--bgColor-closed-emphasis, #da3633);
@@ -119,15 +119,15 @@ svg:has(path[d="M11.28 6.78a.75.75 0 0 0-1.06-1.06L7.25 8.69 5.78 7.22a.75.75 0 
     fill: unset !important;
 }
 /* powered on https://raw.githubusercontent.com/Katsute/GitHub-Red-Issues/main/src/style.css */
-/* Copyright (C) 2025 Katsute <https://github.com/Katsute> */
+/* Copyright (C) 2026 Katsute <https://github.com/Katsute> */
 /* ======================================================= */
-/* Copyright (C) 2025 Krystian3w <https://greasyfork.org/pl/users/167625-krystian3w> */
+/* Copyright (C) 2026 Krystian3w <https://greasyfork.org/pl/users/167625-krystian3w> */
 /* Bottom Iimeline border hotfix 10.4+ */
 html body div[class*=" prc-Timeline-TimelineBadge-"]:has(path[d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm1.5 0a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm10.28-1.72-4.5 4.5a.75.75 0 0 1-1.06 0l-2-2a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l1.47 1.47 3.97-3.97a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042Z"]) {
             border-color: var(--bgColor-default, var(--color-canvas-default)) !important;
 }
 /* Bottom Iimeline border hotfix 10.4+ */
-/* Copyright (C) 2025 Krystian3w <https://greasyfork.org/pl/users/167625-krystian3w> */
+/* Copyright (C) 2026 Krystian3w <https://greasyfork.org/pl/users/167625-krystian3w> */
 `;
 if (typeof GM_addStyle !== "undefined") {
   GM_addStyle(css);

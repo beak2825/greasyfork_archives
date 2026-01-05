@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FMP Stadium Planner
 // @namespace    https://github.com/napcoder/fmp-stadium-planner
-// @version      0.4.0
+// @version      0.5.0
 // @description  Plan, analyze and optimize your Football Manager Project (FMP) stadium!
 // @author       Marco Travaglini (Napcoder)
 // @match        https://footballmanagerproject.com/Economy/Stadium
@@ -190,91 +190,647 @@
         }
     }
 
-    const translations = {
-        en: {
-            totalSeats: "Total seats",
-            currentInfoTitle: "Current information",
-            plannedInfoTitle: "Planned information",
-            detailedInfoTitle: "Detailed information",
-            constructionDetailsTitle: "Construction details per sector",
-            maxIncome: "Maximum income",
-            maxIncomeWithoutSeasonTickets: "Maximum income (no seas. tkts)",
-            maintenanceCost: "Maintenance cost",
-            ratioLabel: "Seats ratio",
-            seatsRatioExtendedLabel: "Seats ratio (VIP / Covered / Standard / Standing)",
-            seatsRatioDescription: "Defines how many seats of each type are created for every 1 VIP seat.",
-            plan: "Plan",
-            planner: "Planner",
-            planned: "Planned",
-            current: "Current",
-            desiredTotalSeats: "Desired total seats",
-            days: "days",
-            buildingCost: "Building cost",
-            timeToBuild: "Time to build",
-            delta: "Delta",
-            sizeDelta: "Size delta",
-            costsTableHeader: "Costs ⓕ",
-            timeTableHeader: "Time (days)",
-            sectorsTableHeader: "Sector",
-            total: "Total",
-            controlsAutomaticKhristianLabel: "Automatic default preset (recommended)",
-            controlsAutomaticTicketsLabel: "Automatic preset based on ticket prices ratios",
-            controlsAutomaticCustomLabel: "Automatic - custom ratio",
-            controlsAdvancedManualLabel: "Advanced - manual sector setup",
-            lastGeneratedLayoutTitle: "Seats layout (last generated)",
-        },
-        it: {
-            totalSeats: "Posti totali",
-            currentInfoTitle: "Informazioni attuali",
-            plannedInfoTitle: "Informazioni pianificate",
-            detailedInfoTitle: "Informazioni dettagliate",
-            constructionDetailsTitle: "Dettagli costruzione per settore",
-            maxIncome: "Massimo incasso",
-            maxIncomeWithoutSeasonTickets: "Massimo incasso (meno quota abb.)",
-            maintenanceCost: "Costo di manutenzione",
-            ratioLabel: "Rapporto posti",
-            seatsRatioExtendedLabel: "Rapporto posti (VIP / Coperti / Standard / In piedi)",
-            seatsRatioDescription: "Definisce quanti posti di ogni tipo vengono creati per ogni posto VIP.",
-            plan: "Pianifica",
-            planner: "Planner",
-            planned: "Pianificato",
-            current: "Attuale",
-            desiredTotalSeats: "Posti totali desiderati",
-            days: "giorni",
-            buildingCost: "Costo di costruzione",
-            timeToBuild: "Tempo di costruzione",
-            delta: "Delta",
-            sizeDelta: "Delta capienza",
-            costsTableHeader: "Costi (ⓕ)",
-            timeTableHeader: "Tempo (giorni)",
-            sectorsTableHeader: "Settore",
-            total: "Totale",
-            controlsAutomaticKhristianLabel: "Automatico default (raccomandato)",
-            controlsAutomaticTicketsLabel: "Automatico basato sui rapporti dei prezzi dei biglietti",
-            controlsAutomaticCustomLabel: "Automatico - rapporto personalizzato",
-            controlsAdvancedManualLabel: "Avanzato - impostazione manuale dei settori",
-            lastGeneratedLayoutTitle: "Layout posti (ultimi generati)",
-        }
+    var apply$8 = "Apply";
+    var advancedPlannerSubtitle$8 = "Plan seats per sector";
+    var advancedPlannerTotalPlannedSeats$8 = "Total planned seats:";
+    var buildingCost$8 = "Building cost";
+    var costsTableHeader$8 = "Costs ⓕ";
+    var controlsAdvancedManualLabel$8 = "Advanced - manual sector setup";
+    var controlsAutomaticCustomLabel$8 = "Automatic - custom ratio";
+    var controlsAutomaticKhristianLabel$8 = "Automatic default preset (recommended)";
+    var controlsAutomaticTicketsLabel$8 = "Automatic preset based on ticket prices ratios";
+    var current$8 = "Current";
+    var currentInfoTitle$8 = "Current information";
+    var delta$8 = "Delta";
+    var desiredTotalSeats$8 = "Desired total seats";
+    var detailedInfoTitle$8 = "Detailed information";
+    var days$8 = "days";
+    var lastGeneratedLayoutTitle$8 = "Seats layout (last generated)";
+    var maintenanceCost$8 = "Maintenance cost";
+    var maxIncome$8 = "Maximum income";
+    var maxIncomeWithoutSeasonTickets$8 = "Maximum income (no seas. tkts)";
+    var plan$8 = "Plan";
+    var planned$8 = "Planned";
+    var plannedInfoTitle$8 = "Planned information";
+    var planner$9 = "Planner";
+    var ratioLabel$8 = "Seats ratio";
+    var seatsRatioDescription$8 = "Defines how many seats of each type are created for every 1 VIP seat.";
+    var seatsRatioExtendedLabel$8 = "Seats ratio (VIP / Covered / Standard / Standing)";
+    var sectorsTableHeader$8 = "Sector";
+    var sizeDelta$8 = "Size delta";
+    var timeTableHeader$8 = "Time (days)";
+    var timeToBuild$8 = "Time to build";
+    var total$8 = "Total";
+    var totalSeats$8 = "Total seats";
+    var en = {
+    	apply: apply$8,
+    	advancedPlannerSubtitle: advancedPlannerSubtitle$8,
+    	advancedPlannerTotalPlannedSeats: advancedPlannerTotalPlannedSeats$8,
+    	buildingCost: buildingCost$8,
+    	costsTableHeader: costsTableHeader$8,
+    	controlsAdvancedManualLabel: controlsAdvancedManualLabel$8,
+    	controlsAutomaticCustomLabel: controlsAutomaticCustomLabel$8,
+    	controlsAutomaticKhristianLabel: controlsAutomaticKhristianLabel$8,
+    	controlsAutomaticTicketsLabel: controlsAutomaticTicketsLabel$8,
+    	current: current$8,
+    	currentInfoTitle: currentInfoTitle$8,
+    	delta: delta$8,
+    	desiredTotalSeats: desiredTotalSeats$8,
+    	detailedInfoTitle: detailedInfoTitle$8,
+    	days: days$8,
+    	lastGeneratedLayoutTitle: lastGeneratedLayoutTitle$8,
+    	maintenanceCost: maintenanceCost$8,
+    	maxIncome: maxIncome$8,
+    	maxIncomeWithoutSeasonTickets: maxIncomeWithoutSeasonTickets$8,
+    	plan: plan$8,
+    	planned: planned$8,
+    	plannedInfoTitle: plannedInfoTitle$8,
+    	planner: planner$9,
+    	ratioLabel: ratioLabel$8,
+    	seatsRatioDescription: seatsRatioDescription$8,
+    	seatsRatioExtendedLabel: seatsRatioExtendedLabel$8,
+    	sectorsTableHeader: sectorsTableHeader$8,
+    	sizeDelta: sizeDelta$8,
+    	timeTableHeader: timeTableHeader$8,
+    	timeToBuild: timeToBuild$8,
+    	total: total$8,
+    	totalSeats: totalSeats$8
     };
+
+    var advancedPlannerSubtitle$7 = "Pianifica i posti per ogni settore";
+    var advancedPlannerTotalPlannedSeats$7 = "Posti totali pianificati:";
+    var apply$7 = "Applica";
+    var buildingCost$7 = "Costo di costruzione";
+    var costsTableHeader$7 = "Costi (ⓕ)";
+    var controlsAdvancedManualLabel$7 = "Avanzato - impostazione manuale dei settori";
+    var controlsAutomaticCustomLabel$7 = "Automatico - rapporto personalizzato";
+    var controlsAutomaticKhristianLabel$7 = "Automatico default (raccomandato)";
+    var controlsAutomaticTicketsLabel$7 = "Automatico basato sui rapporti dei prezzi dei biglietti";
+    var current$7 = "Attuale";
+    var currentInfoTitle$7 = "Informazioni attuali";
+    var delta$7 = "Delta";
+    var desiredTotalSeats$7 = "Posti totali desiderati";
+    var detailedInfoTitle$7 = "Informazioni dettagliate";
+    var days$7 = "giorni";
+    var lastGeneratedLayoutTitle$7 = "Layout posti (ultimi generati)";
+    var maintenanceCost$7 = "Costo di manutenzione";
+    var maxIncome$7 = "Massimo incasso";
+    var maxIncomeWithoutSeasonTickets$7 = "Massimo incasso (meno quota abb.)";
+    var plan$7 = "Pianifica";
+    var planned$7 = "Pianificato";
+    var plannedInfoTitle$7 = "Informazioni pianificate";
+    var planner$8 = "Planner";
+    var ratioLabel$7 = "Rapporto posti";
+    var seatsRatioDescription$7 = "Definisce quanti posti di ogni tipo vengono creati per ogni posto VIP.";
+    var seatsRatioExtendedLabel$7 = "Rapporto posti (VIP / Coperti / Standard / In piedi)";
+    var sectorsTableHeader$7 = "Settore";
+    var sizeDelta$7 = "Delta capienza";
+    var timeTableHeader$7 = "Tempo (giorni)";
+    var timeToBuild$7 = "Tempo di costruzione";
+    var total$7 = "Totale";
+    var totalSeats$7 = "Posti totali";
+    var it = {
+    	advancedPlannerSubtitle: advancedPlannerSubtitle$7,
+    	advancedPlannerTotalPlannedSeats: advancedPlannerTotalPlannedSeats$7,
+    	apply: apply$7,
+    	buildingCost: buildingCost$7,
+    	costsTableHeader: costsTableHeader$7,
+    	controlsAdvancedManualLabel: controlsAdvancedManualLabel$7,
+    	controlsAutomaticCustomLabel: controlsAutomaticCustomLabel$7,
+    	controlsAutomaticKhristianLabel: controlsAutomaticKhristianLabel$7,
+    	controlsAutomaticTicketsLabel: controlsAutomaticTicketsLabel$7,
+    	current: current$7,
+    	currentInfoTitle: currentInfoTitle$7,
+    	delta: delta$7,
+    	desiredTotalSeats: desiredTotalSeats$7,
+    	detailedInfoTitle: detailedInfoTitle$7,
+    	days: days$7,
+    	lastGeneratedLayoutTitle: lastGeneratedLayoutTitle$7,
+    	maintenanceCost: maintenanceCost$7,
+    	maxIncome: maxIncome$7,
+    	maxIncomeWithoutSeasonTickets: maxIncomeWithoutSeasonTickets$7,
+    	plan: plan$7,
+    	planned: planned$7,
+    	plannedInfoTitle: plannedInfoTitle$7,
+    	planner: planner$8,
+    	ratioLabel: ratioLabel$7,
+    	seatsRatioDescription: seatsRatioDescription$7,
+    	seatsRatioExtendedLabel: seatsRatioExtendedLabel$7,
+    	sectorsTableHeader: sectorsTableHeader$7,
+    	sizeDelta: sizeDelta$7,
+    	timeTableHeader: timeTableHeader$7,
+    	timeToBuild: timeToBuild$7,
+    	total: total$7,
+    	totalSeats: totalSeats$7
+    };
+
+    var apply$6 = "Aplicar";
+    var advancedPlannerSubtitle$6 = "Planificar asientos por sector";
+    var advancedPlannerTotalPlannedSeats$6 = "Asientos planeados totales:";
+    var buildingCost$6 = "Costo de construcción";
+    var costsTableHeader$6 = "Costos ⓕ";
+    var controlsAdvancedManualLabel$6 = "Avanzado - configuración manual de sectores";
+    var controlsAutomaticCustomLabel$6 = "Automático - proporción personalizada";
+    var controlsAutomaticKhristianLabel$6 = "Automático predeterminado (recomendado)";
+    var controlsAutomaticTicketsLabel$6 = "Automático basado en proporciones de precios de entradas";
+    var current$6 = "Actual";
+    var currentInfoTitle$6 = "Información actual";
+    var delta$6 = "Delta";
+    var desiredTotalSeats$6 = "Asientos totales deseados";
+    var detailedInfoTitle$6 = "Información detallada";
+    var days$6 = "días";
+    var lastGeneratedLayoutTitle$6 = "Diseño de asientos (último generado)";
+    var maintenanceCost$6 = "Costo de mantenimiento";
+    var maxIncome$6 = "Ingresos máximos";
+    var maxIncomeWithoutSeasonTickets$6 = "Ingresos máximos (sin abonos)";
+    var plan$6 = "Planificar";
+    var planned$6 = "Planeado";
+    var plannedInfoTitle$6 = "Información planificada";
+    var planner$7 = "Planner";
+    var ratioLabel$6 = "Proporción de asientos";
+    var seatsRatioDescription$6 = "Define cuántos asientos de cada tipo se crean por cada 1 asiento VIP.";
+    var seatsRatioExtendedLabel$6 = "Proporción de asientos (VIP / Cubiertos / Estándar / De pie)";
+    var sectorsTableHeader$6 = "Sector";
+    var sizeDelta$6 = "Delta de tamaño";
+    var timeTableHeader$6 = "Tiempo (días)";
+    var timeToBuild$6 = "Tiempo de construcción";
+    var total$6 = "Total";
+    var totalSeats$6 = "Asientos totales";
+    var es = {
+    	apply: apply$6,
+    	advancedPlannerSubtitle: advancedPlannerSubtitle$6,
+    	advancedPlannerTotalPlannedSeats: advancedPlannerTotalPlannedSeats$6,
+    	buildingCost: buildingCost$6,
+    	costsTableHeader: costsTableHeader$6,
+    	controlsAdvancedManualLabel: controlsAdvancedManualLabel$6,
+    	controlsAutomaticCustomLabel: controlsAutomaticCustomLabel$6,
+    	controlsAutomaticKhristianLabel: controlsAutomaticKhristianLabel$6,
+    	controlsAutomaticTicketsLabel: controlsAutomaticTicketsLabel$6,
+    	current: current$6,
+    	currentInfoTitle: currentInfoTitle$6,
+    	delta: delta$6,
+    	desiredTotalSeats: desiredTotalSeats$6,
+    	detailedInfoTitle: detailedInfoTitle$6,
+    	days: days$6,
+    	lastGeneratedLayoutTitle: lastGeneratedLayoutTitle$6,
+    	maintenanceCost: maintenanceCost$6,
+    	maxIncome: maxIncome$6,
+    	maxIncomeWithoutSeasonTickets: maxIncomeWithoutSeasonTickets$6,
+    	plan: plan$6,
+    	planned: planned$6,
+    	plannedInfoTitle: plannedInfoTitle$6,
+    	planner: planner$7,
+    	ratioLabel: ratioLabel$6,
+    	seatsRatioDescription: seatsRatioDescription$6,
+    	seatsRatioExtendedLabel: seatsRatioExtendedLabel$6,
+    	sectorsTableHeader: sectorsTableHeader$6,
+    	sizeDelta: sizeDelta$6,
+    	timeTableHeader: timeTableHeader$6,
+    	timeToBuild: timeToBuild$6,
+    	total: total$6,
+    	totalSeats: totalSeats$6
+    };
+
+    var apply$5 = "Appliquer";
+    var advancedPlannerSubtitle$5 = "Planifier les sièges par secteur";
+    var advancedPlannerTotalPlannedSeats$5 = "Sièges planifiés au total :";
+    var buildingCost$5 = "Coût de construction";
+    var costsTableHeader$5 = "Coûts ⓕ";
+    var controlsAdvancedManualLabel$5 = "Avancé - configuration manuelle des secteurs";
+    var controlsAutomaticCustomLabel$5 = "Automatique - ratio personnalisé";
+    var controlsAutomaticKhristianLabel$5 = "Préréglage automatique par défaut (recommandé)";
+    var controlsAutomaticTicketsLabel$5 = "Préréglage automatique basé sur les ratios des prix des billets";
+    var current$5 = "Actuel";
+    var currentInfoTitle$5 = "Informations actuelles";
+    var delta$5 = "Delta";
+    var desiredTotalSeats$5 = "Nombre total de sièges souhaité";
+    var detailedInfoTitle$5 = "Informations détaillées";
+    var days$5 = "jours";
+    var lastGeneratedLayoutTitle$5 = "Disposition des sièges (dernière générée)";
+    var maintenanceCost$5 = "Coût d'entretien";
+    var maxIncome$5 = "Revenu maximum";
+    var maxIncomeWithoutSeasonTickets$5 = "Revenu maximum (sans abonnements)";
+    var plan$5 = "Planifier";
+    var planned$5 = "Planifié";
+    var plannedInfoTitle$5 = "Informations planifiées";
+    var planner$6 = "Planner";
+    var ratioLabel$5 = "Ratio de sièges";
+    var seatsRatioDescription$5 = "Définit combien de sièges de chaque type sont créés pour chaque siège VIP.";
+    var seatsRatioExtendedLabel$5 = "Ratio de sièges (VIP / Couvert / Standard / Debout)";
+    var sectorsTableHeader$5 = "Secteur";
+    var sizeDelta$5 = "Delta de taille";
+    var timeTableHeader$5 = "Temps (jours)";
+    var timeToBuild$5 = "Temps de construction";
+    var total$5 = "Total";
+    var totalSeats$5 = "Nombre total de sièges";
+    var fr = {
+    	apply: apply$5,
+    	advancedPlannerSubtitle: advancedPlannerSubtitle$5,
+    	advancedPlannerTotalPlannedSeats: advancedPlannerTotalPlannedSeats$5,
+    	buildingCost: buildingCost$5,
+    	costsTableHeader: costsTableHeader$5,
+    	controlsAdvancedManualLabel: controlsAdvancedManualLabel$5,
+    	controlsAutomaticCustomLabel: controlsAutomaticCustomLabel$5,
+    	controlsAutomaticKhristianLabel: controlsAutomaticKhristianLabel$5,
+    	controlsAutomaticTicketsLabel: controlsAutomaticTicketsLabel$5,
+    	current: current$5,
+    	currentInfoTitle: currentInfoTitle$5,
+    	delta: delta$5,
+    	desiredTotalSeats: desiredTotalSeats$5,
+    	detailedInfoTitle: detailedInfoTitle$5,
+    	days: days$5,
+    	lastGeneratedLayoutTitle: lastGeneratedLayoutTitle$5,
+    	maintenanceCost: maintenanceCost$5,
+    	maxIncome: maxIncome$5,
+    	maxIncomeWithoutSeasonTickets: maxIncomeWithoutSeasonTickets$5,
+    	plan: plan$5,
+    	planned: planned$5,
+    	plannedInfoTitle: plannedInfoTitle$5,
+    	planner: planner$6,
+    	ratioLabel: ratioLabel$5,
+    	seatsRatioDescription: seatsRatioDescription$5,
+    	seatsRatioExtendedLabel: seatsRatioExtendedLabel$5,
+    	sectorsTableHeader: sectorsTableHeader$5,
+    	sizeDelta: sizeDelta$5,
+    	timeTableHeader: timeTableHeader$5,
+    	timeToBuild: timeToBuild$5,
+    	total: total$5,
+    	totalSeats: totalSeats$5
+    };
+
+    var apply$4 = "Aplicar";
+    var advancedPlannerSubtitle$4 = "Planear lugares por setor";
+    var advancedPlannerTotalPlannedSeats$4 = "Total de lugares planeados:";
+    var buildingCost$4 = "Custo de construção";
+    var costsTableHeader$4 = "Custos ⓕ";
+    var controlsAdvancedManualLabel$4 = "Avançado - configuração manual de setores";
+    var controlsAutomaticCustomLabel$4 = "Automático - rácio personalizado";
+    var controlsAutomaticKhristianLabel$4 = "Predefinição automática (recomendada)";
+    var controlsAutomaticTicketsLabel$4 = "Predefinição automática baseada nas proporções dos preços dos bilhetes";
+    var current$4 = "Atual";
+    var currentInfoTitle$4 = "Informação atual";
+    var delta$4 = "Delta";
+    var desiredTotalSeats$4 = "Total de lugares desejado";
+    var detailedInfoTitle$4 = "Informação detalhada";
+    var days$4 = "dias";
+    var lastGeneratedLayoutTitle$4 = "Layout de lugares (último gerado)";
+    var maintenanceCost$4 = "Custo de manutenção";
+    var maxIncome$4 = "Rendimento máximo";
+    var maxIncomeWithoutSeasonTickets$4 = "Rendimento máximo (sem bilhetes de época)";
+    var plan$4 = "Planear";
+    var planned$4 = "Planeado";
+    var plannedInfoTitle$4 = "Informação planeada";
+    var planner$5 = "Planner";
+    var ratioLabel$4 = "Rácio de lugares";
+    var seatsRatioDescription$4 = "Define quantos lugares de cada tipo são criados para cada 1 lugar VIP.";
+    var seatsRatioExtendedLabel$4 = "Rácio de lugares (VIP / Cobertos / Standard / Em pé)";
+    var sectorsTableHeader$4 = "Setor";
+    var sizeDelta$4 = "Delta de tamanho";
+    var timeTableHeader$4 = "Tempo (dias)";
+    var timeToBuild$4 = "Tempo de construção";
+    var total$4 = "Total";
+    var totalSeats$4 = "Total de lugares";
+    var pt = {
+    	apply: apply$4,
+    	advancedPlannerSubtitle: advancedPlannerSubtitle$4,
+    	advancedPlannerTotalPlannedSeats: advancedPlannerTotalPlannedSeats$4,
+    	buildingCost: buildingCost$4,
+    	costsTableHeader: costsTableHeader$4,
+    	controlsAdvancedManualLabel: controlsAdvancedManualLabel$4,
+    	controlsAutomaticCustomLabel: controlsAutomaticCustomLabel$4,
+    	controlsAutomaticKhristianLabel: controlsAutomaticKhristianLabel$4,
+    	controlsAutomaticTicketsLabel: controlsAutomaticTicketsLabel$4,
+    	current: current$4,
+    	currentInfoTitle: currentInfoTitle$4,
+    	delta: delta$4,
+    	desiredTotalSeats: desiredTotalSeats$4,
+    	detailedInfoTitle: detailedInfoTitle$4,
+    	days: days$4,
+    	lastGeneratedLayoutTitle: lastGeneratedLayoutTitle$4,
+    	maintenanceCost: maintenanceCost$4,
+    	maxIncome: maxIncome$4,
+    	maxIncomeWithoutSeasonTickets: maxIncomeWithoutSeasonTickets$4,
+    	plan: plan$4,
+    	planned: planned$4,
+    	plannedInfoTitle: plannedInfoTitle$4,
+    	planner: planner$5,
+    	ratioLabel: ratioLabel$4,
+    	seatsRatioDescription: seatsRatioDescription$4,
+    	seatsRatioExtendedLabel: seatsRatioExtendedLabel$4,
+    	sectorsTableHeader: sectorsTableHeader$4,
+    	sizeDelta: sizeDelta$4,
+    	timeTableHeader: timeTableHeader$4,
+    	timeToBuild: timeToBuild$4,
+    	total: total$4,
+    	totalSeats: totalSeats$4
+    };
+
+    var apply$3 = "应用";
+    var advancedPlannerSubtitle$3 = "按区域规划座位";
+    var advancedPlannerTotalPlannedSeats$3 = "计划总座位：";
+    var buildingCost$3 = "建设成本";
+    var costsTableHeader$3 = "成本 ⓕ";
+    var controlsAdvancedManualLabel$3 = "高级 - 手动设置分区";
+    var controlsAutomaticCustomLabel$3 = "自动 - 自定义比例";
+    var controlsAutomaticKhristianLabel$3 = "自动默认预设（推荐）";
+    var controlsAutomaticTicketsLabel$3 = "基于票价比率的自动预设";
+    var current$3 = "当前";
+    var currentInfoTitle$3 = "当前信息";
+    var delta$3 = "差值";
+    var desiredTotalSeats$3 = "期望总座位数";
+    var detailedInfoTitle$3 = "详细信息";
+    var days$3 = "天";
+    var lastGeneratedLayoutTitle$3 = "座位布局（最后生成）";
+    var maintenanceCost$3 = "维护成本";
+    var maxIncome$3 = "最大收入";
+    var maxIncomeWithoutSeasonTickets$3 = "最大收入（无季票）";
+    var plan$3 = "计划";
+    var planned$3 = "已计划";
+    var plannedInfoTitle$3 = "计划信息";
+    var planner$4 = "Planner";
+    var ratioLabel$3 = "座位比例";
+    var seatsRatioDescription$3 = "定义每个 VIP 座位创建多少种类的座位。";
+    var seatsRatioExtendedLabel$3 = "座位比例 (VIP / 覆盖 / 标准 / 站立)";
+    var sectorsTableHeader$3 = "分区";
+    var sizeDelta$3 = "容量差";
+    var timeTableHeader$3 = "时间（天）";
+    var timeToBuild$3 = "建造时间";
+    var total$3 = "总计";
+    var totalSeats$3 = "总座位数";
+    var zh = {
+    	apply: apply$3,
+    	advancedPlannerSubtitle: advancedPlannerSubtitle$3,
+    	advancedPlannerTotalPlannedSeats: advancedPlannerTotalPlannedSeats$3,
+    	buildingCost: buildingCost$3,
+    	costsTableHeader: costsTableHeader$3,
+    	controlsAdvancedManualLabel: controlsAdvancedManualLabel$3,
+    	controlsAutomaticCustomLabel: controlsAutomaticCustomLabel$3,
+    	controlsAutomaticKhristianLabel: controlsAutomaticKhristianLabel$3,
+    	controlsAutomaticTicketsLabel: controlsAutomaticTicketsLabel$3,
+    	current: current$3,
+    	currentInfoTitle: currentInfoTitle$3,
+    	delta: delta$3,
+    	desiredTotalSeats: desiredTotalSeats$3,
+    	detailedInfoTitle: detailedInfoTitle$3,
+    	days: days$3,
+    	lastGeneratedLayoutTitle: lastGeneratedLayoutTitle$3,
+    	maintenanceCost: maintenanceCost$3,
+    	maxIncome: maxIncome$3,
+    	maxIncomeWithoutSeasonTickets: maxIncomeWithoutSeasonTickets$3,
+    	plan: plan$3,
+    	planned: planned$3,
+    	plannedInfoTitle: plannedInfoTitle$3,
+    	planner: planner$4,
+    	ratioLabel: ratioLabel$3,
+    	seatsRatioDescription: seatsRatioDescription$3,
+    	seatsRatioExtendedLabel: seatsRatioExtendedLabel$3,
+    	sectorsTableHeader: sectorsTableHeader$3,
+    	sizeDelta: sizeDelta$3,
+    	timeTableHeader: timeTableHeader$3,
+    	timeToBuild: timeToBuild$3,
+    	total: total$3,
+    	totalSeats: totalSeats$3
+    };
+
+    var apply$2 = "Uygula";
+    var advancedPlannerSubtitle$2 = "Sektör başına koltuk planla";
+    var advancedPlannerTotalPlannedSeats$2 = "Toplam planlanan koltuk:";
+    var buildingCost$2 = "İnşaat maliyeti";
+    var costsTableHeader$2 = "Maliyetler ⓕ";
+    var controlsAdvancedManualLabel$2 = "Gelişmiş - sektörlerin elle yapılandırılması";
+    var controlsAutomaticCustomLabel$2 = "Otomatik - özel oran";
+    var controlsAutomaticKhristianLabel$2 = "Otomatik varsayılan ön ayar (önerilen)";
+    var controlsAutomaticTicketsLabel$2 = "Bilet fiyat oranlarına göre otomatik ön ayar";
+    var current$2 = "Güncel";
+    var currentInfoTitle$2 = "Mevcut bilgiler";
+    var delta$2 = "Delta";
+    var desiredTotalSeats$2 = "İstenen toplam koltuk";
+    var detailedInfoTitle$2 = "Detaylı bilgi";
+    var days$2 = "gün";
+    var lastGeneratedLayoutTitle$2 = "Koltuk düzeni (son oluşturulan)";
+    var maintenanceCost$2 = "Bakım maliyeti";
+    var maxIncome$2 = "Maksimum gelir";
+    var maxIncomeWithoutSeasonTickets$2 = "Maksimum gelir (sezonluk bilet yok)";
+    var plan$2 = "Planla";
+    var planned$2 = "Planlandı";
+    var plannedInfoTitle$2 = "Planlanan bilgiler";
+    var planner$3 = "Planner";
+    var ratioLabel$2 = "Koltuk oranı";
+    var seatsRatioDescription$2 = "Her 1 VIP koltuk için her türden kaç koltuk oluşturulduğunu tanımlar.";
+    var seatsRatioExtendedLabel$2 = "Koltuk oranı (VIP / Kapalı / Standart / Ayakta)";
+    var sectorsTableHeader$2 = "Sektör";
+    var sizeDelta$2 = "Boyut farkı";
+    var timeTableHeader$2 = "Zaman (gün)";
+    var timeToBuild$2 = "İnşa süresi";
+    var total$2 = "Toplam";
+    var totalSeats$2 = "Toplam koltuk";
+    var tr = {
+    	apply: apply$2,
+    	advancedPlannerSubtitle: advancedPlannerSubtitle$2,
+    	advancedPlannerTotalPlannedSeats: advancedPlannerTotalPlannedSeats$2,
+    	buildingCost: buildingCost$2,
+    	costsTableHeader: costsTableHeader$2,
+    	controlsAdvancedManualLabel: controlsAdvancedManualLabel$2,
+    	controlsAutomaticCustomLabel: controlsAutomaticCustomLabel$2,
+    	controlsAutomaticKhristianLabel: controlsAutomaticKhristianLabel$2,
+    	controlsAutomaticTicketsLabel: controlsAutomaticTicketsLabel$2,
+    	current: current$2,
+    	currentInfoTitle: currentInfoTitle$2,
+    	delta: delta$2,
+    	desiredTotalSeats: desiredTotalSeats$2,
+    	detailedInfoTitle: detailedInfoTitle$2,
+    	days: days$2,
+    	lastGeneratedLayoutTitle: lastGeneratedLayoutTitle$2,
+    	maintenanceCost: maintenanceCost$2,
+    	maxIncome: maxIncome$2,
+    	maxIncomeWithoutSeasonTickets: maxIncomeWithoutSeasonTickets$2,
+    	plan: plan$2,
+    	planned: planned$2,
+    	plannedInfoTitle: plannedInfoTitle$2,
+    	planner: planner$3,
+    	ratioLabel: ratioLabel$2,
+    	seatsRatioDescription: seatsRatioDescription$2,
+    	seatsRatioExtendedLabel: seatsRatioExtendedLabel$2,
+    	sectorsTableHeader: sectorsTableHeader$2,
+    	sizeDelta: sizeDelta$2,
+    	timeTableHeader: timeTableHeader$2,
+    	timeToBuild: timeToBuild$2,
+    	total: total$2,
+    	totalSeats: totalSeats$2
+    };
+
+    var apply$1 = "Zastosuj";
+    var advancedPlannerSubtitle$1 = "Planowanie miejsc według sektora";
+    var advancedPlannerTotalPlannedSeats$1 = "Łączna liczba zaplanowanych miejsc:";
+    var buildingCost$1 = "Koszt budowy";
+    var costsTableHeader$1 = "Koszty ⓕ";
+    var controlsAdvancedManualLabel$1 = "Zaawansowane - ręczne ustawienie sektorów";
+    var controlsAutomaticCustomLabel$1 = "Automatyczne - niestandardowy stosunek";
+    var controlsAutomaticKhristianLabel$1 = "Automatyczny domyślny preset (zalecane)";
+    var controlsAutomaticTicketsLabel$1 = "Automatyczny preset oparty na stosunkach cen biletów";
+    var current$1 = "Aktualne";
+    var currentInfoTitle$1 = "Informacje aktualne";
+    var delta$1 = "Delta";
+    var desiredTotalSeats$1 = "Pożądana całkowita liczba miejsc";
+    var detailedInfoTitle$1 = "Szczegółowe informacje";
+    var days$1 = "dni";
+    var lastGeneratedLayoutTitle$1 = "Układ miejsc (ostatnio wygenerowany)";
+    var maintenanceCost$1 = "Koszt utrzymania";
+    var maxIncome$1 = "Maksymalny przychód";
+    var maxIncomeWithoutSeasonTickets$1 = "Maksymalny przychód (bez karnetów)";
+    var plan$1 = "Zaplanuj";
+    var planned$1 = "Zaplanowano";
+    var plannedInfoTitle$1 = "Informacje zaplanowane";
+    var planner$2 = "Planner";
+    var ratioLabel$1 = "Stosunek miejsc";
+    var seatsRatioDescription$1 = "Określa, ile miejsc każdego typu jest tworzonych dla każdego 1 miejsca VIP.";
+    var seatsRatioExtendedLabel$1 = "Stosunek miejsc (VIP / Zadaszone / Standard / Stojące)";
+    var sectorsTableHeader$1 = "Sektor";
+    var sizeDelta$1 = "Różnica wielkości";
+    var timeTableHeader$1 = "Czas (dni)";
+    var timeToBuild$1 = "Czas budowy";
+    var total$1 = "Razem";
+    var totalSeats$1 = "Łączna liczba miejsc";
+    var pl = {
+    	apply: apply$1,
+    	advancedPlannerSubtitle: advancedPlannerSubtitle$1,
+    	advancedPlannerTotalPlannedSeats: advancedPlannerTotalPlannedSeats$1,
+    	buildingCost: buildingCost$1,
+    	costsTableHeader: costsTableHeader$1,
+    	controlsAdvancedManualLabel: controlsAdvancedManualLabel$1,
+    	controlsAutomaticCustomLabel: controlsAutomaticCustomLabel$1,
+    	controlsAutomaticKhristianLabel: controlsAutomaticKhristianLabel$1,
+    	controlsAutomaticTicketsLabel: controlsAutomaticTicketsLabel$1,
+    	current: current$1,
+    	currentInfoTitle: currentInfoTitle$1,
+    	delta: delta$1,
+    	desiredTotalSeats: desiredTotalSeats$1,
+    	detailedInfoTitle: detailedInfoTitle$1,
+    	days: days$1,
+    	lastGeneratedLayoutTitle: lastGeneratedLayoutTitle$1,
+    	maintenanceCost: maintenanceCost$1,
+    	maxIncome: maxIncome$1,
+    	maxIncomeWithoutSeasonTickets: maxIncomeWithoutSeasonTickets$1,
+    	plan: plan$1,
+    	planned: planned$1,
+    	plannedInfoTitle: plannedInfoTitle$1,
+    	planner: planner$2,
+    	ratioLabel: ratioLabel$1,
+    	seatsRatioDescription: seatsRatioDescription$1,
+    	seatsRatioExtendedLabel: seatsRatioExtendedLabel$1,
+    	sectorsTableHeader: sectorsTableHeader$1,
+    	sizeDelta: sizeDelta$1,
+    	timeTableHeader: timeTableHeader$1,
+    	timeToBuild: timeToBuild$1,
+    	total: total$1,
+    	totalSeats: totalSeats$1
+    };
+
+    var apply = "Anwenden";
+    var advancedPlannerSubtitle = "Sitze pro Sektor planen";
+    var advancedPlannerTotalPlannedSeats = "Insgesamt geplante Sitze:";
+    var buildingCost = "Baukosten";
+    var costsTableHeader = "Kosten ⓕ";
+    var controlsAdvancedManualLabel = "Erweitert - manuelle Sektoreinstellung";
+    var controlsAutomaticCustomLabel = "Automatisch - benutzerdefiniertes Verhältnis";
+    var controlsAutomaticKhristianLabel = "Automatische Standardvoreinstellung (empfohlen)";
+    var controlsAutomaticTicketsLabel = "Automatische Vorgabe basierend auf Ticketpreisverhältnissen";
+    var current = "Aktuell";
+    var currentInfoTitle = "Aktuelle Informationen";
+    var delta = "Delta";
+    var desiredTotalSeats = "Gewünschte Gesamtanzahl Plätze";
+    var detailedInfoTitle = "Detaillierte Informationen";
+    var days = "Tage";
+    var lastGeneratedLayoutTitle = "Sitzplan (zuletzt generiert)";
+    var maintenanceCost = "Wartungskosten";
+    var maxIncome = "Maximaler Erlös";
+    var maxIncomeWithoutSeasonTickets = "Maximaler Erlös (ohne Dauerkarten)";
+    var plan = "Planen";
+    var planned = "Geplant";
+    var plannedInfoTitle = "Geplante Informationen";
+    var planner$1 = "Planner";
+    var ratioLabel = "Sitzverhältnis";
+    var seatsRatioDescription = "Definiert, wie viele Sitze jedes Typs für je 1 VIP-Sitz erstellt werden.";
+    var seatsRatioExtendedLabel = "Sitzverhältnis (VIP / Überdacht / Standard / Stehend)";
+    var sectorsTableHeader = "Sektor";
+    var sizeDelta = "Größendifferenz";
+    var timeTableHeader = "Zeit (Tage)";
+    var timeToBuild = "Bauzeit";
+    var total = "Gesamt";
+    var totalSeats = "Gesamtanzahl Plätze";
+    var de = {
+    	apply: apply,
+    	advancedPlannerSubtitle: advancedPlannerSubtitle,
+    	advancedPlannerTotalPlannedSeats: advancedPlannerTotalPlannedSeats,
+    	buildingCost: buildingCost,
+    	costsTableHeader: costsTableHeader,
+    	controlsAdvancedManualLabel: controlsAdvancedManualLabel,
+    	controlsAutomaticCustomLabel: controlsAutomaticCustomLabel,
+    	controlsAutomaticKhristianLabel: controlsAutomaticKhristianLabel,
+    	controlsAutomaticTicketsLabel: controlsAutomaticTicketsLabel,
+    	current: current,
+    	currentInfoTitle: currentInfoTitle,
+    	delta: delta,
+    	desiredTotalSeats: desiredTotalSeats,
+    	detailedInfoTitle: detailedInfoTitle,
+    	days: days,
+    	lastGeneratedLayoutTitle: lastGeneratedLayoutTitle,
+    	maintenanceCost: maintenanceCost,
+    	maxIncome: maxIncome,
+    	maxIncomeWithoutSeasonTickets: maxIncomeWithoutSeasonTickets,
+    	plan: plan,
+    	planned: planned,
+    	plannedInfoTitle: plannedInfoTitle,
+    	planner: planner$1,
+    	ratioLabel: ratioLabel,
+    	seatsRatioDescription: seatsRatioDescription,
+    	seatsRatioExtendedLabel: seatsRatioExtendedLabel,
+    	sectorsTableHeader: sectorsTableHeader,
+    	sizeDelta: sizeDelta,
+    	timeTableHeader: timeTableHeader,
+    	timeToBuild: timeToBuild,
+    	total: total,
+    	totalSeats: totalSeats
+    };
+
+    const translationsMap = {
+        en,
+        it,
+        es,
+        fr,
+        pt,
+        zh,
+        tr,
+        pl,
+        de,
+    };
+    // Returns the best matching user language present in translationsMap, falls back to 'en'
     function getUserLang() {
-        const lang = navigator.language || navigator.languages[0] || 'en';
-        return lang.startsWith('it') ? 'it' : 'en';
-    }
-    const supportedLangs = ['en', 'it'];
-    function getTranslator(lang) {
-        let userLang = getUserLang();
-        if (!supportedLangs.includes(userLang)) {
-            userLang = 'en';
+        try {
+            const raw = (typeof navigator !== 'undefined' && (navigator.language || (navigator.languages && navigator.languages[0]))) || 'en';
+            const parts = raw.toLowerCase().split('-');
+            // exact match
+            if (parts[0] && translationsMap[parts[0]])
+                return parts[0];
+            // try full tag
+            if (raw && translationsMap[raw])
+                return raw;
         }
+        catch (e) {
+            // ignore
+        }
+        return 'en';
+    }
+    function getTranslator$1(lang) {
+        const userLang = (lang || getUserLang());
+        const chosen = translationsMap[userLang] || translationsMap[userLang.split('-')[0]] || translationsMap['en'];
         return function t(key) {
-            return translations[userLang][key] || translations['en'][key] || key;
+            return chosen[key] || translationsMap['en'][key] || key;
         };
     }
     // Helper to retrieve host-provided translation object `window.trxt` when available
     function getHostTrxt() {
         try {
-            // Prefer host globals exposed on window in browser, but also
-            // support test environments where globals are on globalThis.
             const host = (typeof window !== 'undefined') ? window : (typeof globalThis !== 'undefined' ? globalThis : undefined);
             if (host && host.trxt)
                 return host.trxt;
@@ -284,9 +840,7 @@
         }
         return null;
     }
-    // Try to retrieve a label from the host-provided `trxt` object.
-    // `label` is the key to look up; `label` is returned when not found.
-    function getHostLabel(label) {
+    function getHostLabel$1(label) {
         const trxt = getHostTrxt();
         if (!trxt)
             return label;
@@ -298,6 +852,9 @@
         }
         return label;
     }
+
+    const getTranslator = getTranslator$1;
+    const getHostLabel = getHostLabel$1;
 
     class UpgradeManager {
         currentStadium;
@@ -383,7 +940,7 @@
         return title;
     }
 
-    const t$3 = getTranslator();
+    const t$4 = getTranslator();
     // Renders general-info-view and subscribes to store updates
     function renderGeneralInfoView(container, store) {
         // Clear container
@@ -395,13 +952,13 @@
             const maxIncome = state.currentStadium.calcMaxIncome(state.baseTicketPrice);
             const maintainanceCost = state.currentStadium.getMaintainCost();
             container.innerHTML = '';
-            const title = makeTitleContainer('FMP Stadium Planner', t$3('currentInfoTitle'));
+            const title = makeTitleContainer('FMP Stadium Planner', t$4('currentInfoTitle'));
             container.appendChild(title);
             const content = createItemContainer$2();
-            const totalSeatsRow = createRow$1(t$3('totalSeats'), totalSeats.toLocaleString());
-            const currentRatioRow = createRow$1(t$3('ratioLabel'), currentRatio);
-            const maintenanceCostRow = createRow$1(t$3('maintenanceCost'), `ⓕ ${maintainanceCost.toLocaleString()}`);
-            const maxIncomeRow = createRow$1(t$3('maxIncome'), `ⓕ ${maxIncome.toLocaleString()}`);
+            const totalSeatsRow = createRow$1(t$4('totalSeats'), totalSeats.toLocaleString());
+            const currentRatioRow = createRow$1(t$4('ratioLabel'), currentRatio);
+            const maintenanceCostRow = createRow$1(t$4('maintenanceCost'), `ⓕ ${maintainanceCost.toLocaleString()}`);
+            const maxIncomeRow = createRow$1(t$4('maxIncome'), `ⓕ ${maxIncome.toLocaleString()}`);
             content.appendChild(totalSeatsRow);
             content.appendChild(currentRatioRow);
             content.appendChild(maintenanceCostRow);
@@ -416,15 +973,15 @@
                 const plannedBuildingCost = upgradeManager.getTotalBuildingCost();
                 const plannedTimeToBuild = upgradeManager.getTotalTimeToBuild();
                 const plannedRatio = state.plannedStadium.getRatio().toString();
-                const plannedTitle = makeTitleContainer(null, t$3('plannedInfoTitle'));
+                const plannedTitle = makeTitleContainer(null, t$4('plannedInfoTitle'));
                 container.appendChild(plannedTitle);
                 const plannedContent = createItemContainer$2();
-                const plannedTotalSeatsRow = createRow$1(t$3('totalSeats'), plannedTotalSeats.toLocaleString());
-                const plannedRatioRow = createRow$1(t$3('ratioLabel'), plannedRatio);
-                const plannedMaintenanceCostRow = createRow$1(t$3('maintenanceCost'), `ⓕ ${plannedMaintenanceCost.toLocaleString()}`);
-                const plannedMaxIncomeRow = createRow$1(t$3('maxIncome'), `ⓕ ${plannedMaxIncome.toLocaleString()}`);
-                const plannedBuildingCostRow = createRow$1(t$3('buildingCost'), `ⓕ ${plannedBuildingCost.toLocaleString()}`);
-                const plannedTimeToBuildRow = createRow$1(t$3('timeToBuild'), `${plannedTimeToBuild} ${t$3('days')}`);
+                const plannedTotalSeatsRow = createRow$1(t$4('totalSeats'), plannedTotalSeats.toLocaleString());
+                const plannedRatioRow = createRow$1(t$4('ratioLabel'), plannedRatio);
+                const plannedMaintenanceCostRow = createRow$1(t$4('maintenanceCost'), `ⓕ ${plannedMaintenanceCost.toLocaleString()}`);
+                const plannedMaxIncomeRow = createRow$1(t$4('maxIncome'), `ⓕ ${plannedMaxIncome.toLocaleString()}`);
+                const plannedBuildingCostRow = createRow$1(t$4('buildingCost'), `ⓕ ${plannedBuildingCost.toLocaleString()}`);
+                const plannedTimeToBuildRow = createRow$1(t$4('timeToBuild'), `${plannedTimeToBuild} ${t$4('days')}`);
                 plannedContent.appendChild(plannedTotalSeatsRow);
                 plannedContent.appendChild(plannedRatioRow);
                 plannedContent.appendChild(plannedMaintenanceCostRow);
@@ -573,10 +1130,19 @@
         return new Stadium({ standing, standard, covered, vip });
     }
 
-    const VERSION = "0.4.0";
+    const VERSION = "0.5.0";
     const MAX_SEATS = 1000000;
+    const MAX_SEATS_PER_SECTOR = 600000;
 
-    const t$2 = getTranslator();
+    var PlannerMode;
+    (function (PlannerMode) {
+        PlannerMode["PRESET_KHRISTIAN"] = "preset-khristian";
+        PlannerMode["PRESET_TICKETS"] = "preset-tickets";
+        PlannerMode["CUSTOM"] = "custom";
+        PlannerMode["ADVANCED"] = "advanced";
+    })(PlannerMode || (PlannerMode = {}));
+
+    const t$3 = getTranslator();
     function createPlannerAutomaticView(props) {
         const autoInputsContainer = document.createElement('div');
         autoInputsContainer.id = 'autoInputsContainer';
@@ -585,7 +1151,7 @@
         const desiredTotalLabel = document.createElement('label');
         desiredTotalLabel.className = 'form-label';
         desiredTotalLabel.htmlFor = 'totalSeats';
-        desiredTotalLabel.textContent = t$2('desiredTotalSeats');
+        desiredTotalLabel.textContent = t$3('desiredTotalSeats');
         const desiredTotalInput = document.createElement('input');
         desiredTotalInput.type = 'number';
         desiredTotalInput.className = 'form-control fmp-stadium-planner-input';
@@ -611,7 +1177,7 @@
         ratioContainer.className = 'mb-3';
         const ratioLabel = document.createElement('label');
         ratioLabel.className = 'form-label';
-        ratioLabel.textContent = t$2('seatsRatioExtendedLabel');
+        ratioLabel.textContent = t$3('seatsRatioExtendedLabel');
         ratioContainer.appendChild(ratioLabel);
         autoInputsContainer.appendChild(ratioContainer);
         if (props.modeSelected === PlannerMode.CUSTOM) {
@@ -626,14 +1192,14 @@
             ratioContainer.appendChild(presetRatioValue);
         }
         const description = document.createElement('div');
-        description.textContent = t$2('seatsRatioDescription');
+        description.textContent = t$3('seatsRatioDescription');
         ratioContainer.appendChild(description);
         const previewLayout = createGeneratedLayoutView(props.currentSeatsLayout);
         autoInputsContainer.appendChild(previewLayout);
         const planButton = document.createElement('button');
         planButton.className = 'btn fmp-btn btn-green fmp-stadium-planner-button w-100 mt-3 btn-lg';
         planButton.id = 'planBtn';
-        planButton.textContent = t$2('plan').toLocaleUpperCase();
+        planButton.textContent = t$3('plan').toLocaleUpperCase();
         planButton.style.paddingBottom = '16px';
         planButton.style.paddingTop = '16px';
         planButton.style.fontSize = '1.5rem';
@@ -702,7 +1268,7 @@
         previewContainer.className = 'mt-3';
         const title = document.createElement('div');
         title.className = 'fw-bold mb-2';
-        title.textContent = t$2('lastGeneratedLayoutTitle');
+        title.textContent = t$3('lastGeneratedLayoutTitle');
         previewContainer.appendChild(title);
         const listGroup = document.createElement('ul');
         listGroup.className = 'list-group fmp-stadium-planner-list-group';
@@ -726,20 +1292,129 @@
         const totalItem = document.createElement('li');
         totalItem.className = 'list-group-item fw-bold fmp-stadium-planner-list-item';
         const totalSeats = layout.vip + layout.covered + layout.standard + layout.standing;
-        totalItem.innerHTML = `<i class="fmp-icons fmp-stadium" style="font-size: 20px;"></i> ${t$2('totalSeats')} <span class="float-end">${totalSeats}</span>`;
+        totalItem.innerHTML = `<i class="fmp-icons fmp-stadium" style="font-size: 20px;"></i> ${t$3('totalSeats')} <span class="float-end">${totalSeats}</span>`;
         listGroup.appendChild(totalItem);
         previewContainer.appendChild(listGroup);
         return previewContainer;
     }
 
+    const t$2 = getTranslator();
+    function createAdvancedPlannerView(props) {
+        function sanitizeInputs() {
+            let vip = parseInt(vipInput.value, 10) || 0;
+            if (vip < 0)
+                vip = 0;
+            if (vip > MAX_SEATS_PER_SECTOR)
+                vip = MAX_SEATS_PER_SECTOR;
+            let covered = parseInt(coveredInput.value, 10) || 0;
+            if (covered < 0)
+                covered = 0;
+            if (covered > MAX_SEATS_PER_SECTOR)
+                covered = MAX_SEATS_PER_SECTOR;
+            let standard = parseInt(standardInput.value, 10) || 0;
+            if (standard < 0)
+                standard = 0;
+            if (standard > MAX_SEATS_PER_SECTOR)
+                standard = MAX_SEATS_PER_SECTOR;
+            let standing = parseInt(standingInput.value, 10) || 0;
+            if (standing < 0)
+                standing = 0;
+            if (standing > MAX_SEATS_PER_SECTOR)
+                standing = MAX_SEATS_PER_SECTOR;
+            return { vip, covered, standard, standing };
+        }
+        function onApplyEventHandler() {
+            const sanitizedInputs = sanitizeInputs();
+            props.onApply(sanitizedInputs);
+        }
+        function onInputEventHandler() {
+            const sanitizedInputs = sanitizeInputs();
+            upsertTotal({ container, plannedSeats: sanitizedInputs });
+        }
+        const { vip, covered, standard, standing } = props.plannedSeatsLayout;
+        const container = document.createElement('div');
+        container.id = 'advancedInputs';
+        const subTitle = document.createElement('div');
+        subTitle.className = 'h5 mb-2';
+        subTitle.textContent = t$2('advancedPlannerSubtitle');
+        container.appendChild(subTitle);
+        const vipInput = document.createElement('input');
+        vipInput.id = 'plannerAdvancedVipSeats';
+        vipInput.type = 'number';
+        vipInput.className = 'form-control mb-2 fmp-stadium-planner-input';
+        vipInput.placeholder = getHostLabel('stadium.VIP Seats');
+        vipInput.value = vip.toString();
+        const vipInputLabel = document.createElement('label');
+        vipInputLabel.className = 'form-label';
+        vipInputLabel.htmlFor = 'plannerAdvancedVipSeats';
+        vipInputLabel.textContent = getHostLabel('stadium.VIP Seats');
+        container.appendChild(vipInputLabel);
+        container.appendChild(vipInput);
+        const coveredInput = document.createElement('input');
+        coveredInput.id = 'plannerAdvancedCoveredSeats';
+        coveredInput.type = 'number';
+        coveredInput.className = 'form-control mb-2 fmp-stadium-planner-input';
+        coveredInput.placeholder = getHostLabel('stadium.Covered Seats');
+        coveredInput.value = covered.toString();
+        const coveredInputLabel = document.createElement('label');
+        coveredInputLabel.htmlFor = 'plannerAdvancedCoveredSeats';
+        coveredInputLabel.className = 'form-label';
+        coveredInputLabel.textContent = getHostLabel('stadium.Covered Seats');
+        container.appendChild(coveredInputLabel);
+        container.appendChild(coveredInput);
+        const standardInput = document.createElement('input');
+        standardInput.id = 'plannerAdvancedStandardSeats';
+        standardInput.type = 'number';
+        standardInput.className = 'form-control mb-2 fmp-stadium-planner-input';
+        standardInput.placeholder = getHostLabel('stadium.Other Seats');
+        standardInput.value = standard.toString();
+        const standardInputLabel = document.createElement('label');
+        standardInputLabel.className = 'form-label';
+        standardInputLabel.htmlFor = 'plannerAdvancedStandardSeats';
+        standardInputLabel.textContent = getHostLabel('stadium.Other Seats');
+        container.appendChild(standardInputLabel);
+        container.appendChild(standardInput);
+        const standingInput = document.createElement('input');
+        standingInput.id = 'plannerAdvancedStandingSeats';
+        standingInput.type = 'number';
+        standingInput.className = 'form-control mb-2 fmp-stadium-planner-input';
+        standingInput.placeholder = getHostLabel('stadium.Standing');
+        standingInput.value = standing.toString();
+        const standingInputLabel = document.createElement('label');
+        standingInputLabel.className = 'form-label';
+        standingInputLabel.htmlFor = 'plannerAdvancedStandingSeats';
+        standingInputLabel.textContent = getHostLabel('stadium.Standing');
+        container.appendChild(standingInputLabel);
+        container.appendChild(standingInput);
+        vipInput.addEventListener('input', onInputEventHandler);
+        coveredInput.addEventListener('input', onInputEventHandler);
+        standardInput.addEventListener('input', onInputEventHandler);
+        standingInput.addEventListener('input', onInputEventHandler);
+        upsertTotal({ container, plannedSeats: props.plannedSeatsLayout });
+        const planButton = document.createElement('button');
+        planButton.className = 'btn fmp-btn btn-green fmp-stadium-planner-button w-100 mt-3 btn-lg';
+        planButton.id = 'planBtn';
+        planButton.textContent = t$2('apply').toLocaleUpperCase();
+        planButton.style.paddingBottom = '16px';
+        planButton.style.paddingTop = '16px';
+        planButton.style.fontSize = '1.5rem';
+        planButton.addEventListener('click', onApplyEventHandler);
+        container.appendChild(planButton);
+        return container;
+    }
+    function upsertTotal({ container, plannedSeats }) {
+        const { vip, covered, standard, standing } = plannedSeats;
+        let totalPlannedSeatsDiv = container.querySelector('#totalPlannedSeatsDiv');
+        if (!totalPlannedSeatsDiv) {
+            totalPlannedSeatsDiv = document.createElement('div');
+            totalPlannedSeatsDiv.id = 'totalPlannedSeatsDiv';
+            totalPlannedSeatsDiv.className = 'mt-2 text-muted';
+            container.appendChild(totalPlannedSeatsDiv);
+        }
+        totalPlannedSeatsDiv.innerHTML = `${t$2('advancedPlannerTotalPlannedSeats')} <strong>${vip + covered + standard + standing}</strong>`;
+    }
+
     const t$1 = getTranslator();
-    var PlannerMode;
-    (function (PlannerMode) {
-        PlannerMode["PRESET_KHRISTIAN"] = "preset-khristian";
-        PlannerMode["PRESET_TICKETS"] = "preset-tickets";
-        PlannerMode["CUSTOM"] = "custom";
-        PlannerMode["ADVANCED"] = "advanced";
-    })(PlannerMode || (PlannerMode = {}));
     // Renders planner-view and subscribes to store updates
     function renderPlannerView(container, store) {
         container.innerHTML = '';
@@ -799,6 +1474,10 @@
                     onStateUpdate(container, store.getState(), store, componentContext);
                 }
             },
+            onApply: (plannedSeatsLayout) => {
+                console.log('Apply clicked with layout:', plannedSeatsLayout);
+                store.setState({ ...componentContext, plannedStadium: new Stadium(plannedSeatsLayout) });
+            }
         };
         store.subscribe((state, prevState) => {
             onStateUpdate(container, state, store, componentContext);
@@ -814,7 +1493,10 @@
         itemContainer.appendChild(controlsContainer);
         // Mode-specific views
         if (componentContext.modeSelected === PlannerMode.ADVANCED) {
-            const advancedView = createAdvancedView();
+            const advancedView = createAdvancedPlannerView({
+                plannedSeatsLayout: state.plannedStadium?.getLayout() || state.currentStadium.getLayout(),
+                onApply: componentContext.onApply,
+            });
             itemContainer.appendChild(advancedView);
         }
         else {
@@ -858,9 +1540,6 @@
             if (selectedMode === mode.value) {
                 input.checked = true;
             }
-            if (mode.value === PlannerMode.ADVANCED) {
-                input.disabled = true; // Advanced mode is disabled for now
-            }
             input.addEventListener('change', () => {
                 onModeChange(mode.value, mode.seatsRatio);
             });
@@ -874,11 +1553,6 @@
             mainContainer.appendChild(formCheck);
         });
         return mainContainer;
-    }
-    function createAdvancedView() {
-        const container = document.createElement('div');
-        container.textContent = 'Advanced view content goes here.';
-        return container;
     }
 
     const t = getTranslator();

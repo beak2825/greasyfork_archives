@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Janitor AI - Automatic Message Formatting Corrector
+// @name         Janitor AI - Automatic Message Formatting Corrector (Settings Menu)
 // @namespace    http://tampermonkey.net/
-// @version      10
+// @version      10.7
 // @description  The "One-Click" cleanup script. Floating, Inline Top, or Inline Bottom. Select Italics/Bold/Plain text. Edge compatible.
 // @author       accforfaciet
 // @match        *://janitorai.com/chats/*
 // @grant        GM_addStyle
 // @run-at       document-idle
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/551458/Janitor%20AI%20-%20Automatic%20Message%20Formatting%20Corrector.user.js
-// @updateURL https://update.greasyfork.org/scripts/551458/Janitor%20AI%20-%20Automatic%20Message%20Formatting%20Corrector.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/551458/Janitor%20AI%20-%20Automatic%20Message%20Formatting%20Corrector%20%28Settings%20Menu%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/551458/Janitor%20AI%20-%20Automatic%20Message%20Formatting%20Corrector%20%28Settings%20Menu%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -26,12 +26,13 @@
         removeThinkTags: true,
         removeSystemPrompt: true,
         removeGeneralTags: true,
+        removeEmDashes: false, // New: Disabled by default
         // UI
         buttonPosition: 'floating', // 'floating', 'inline-top', 'inline-bottom'
         floatSize: 50,
         floatOpacity: 50,
-        showButtonText: true, // For Inline Formatting Button
-        showSettingsText: true // For Global Settings Button
+        showButtonText: true,
+        showSettingsText: true
     };
 
     // --- SELECTORS ---
@@ -83,6 +84,12 @@
 
     // --- TEXT PROCESSING ---
     function processText(text) {
+        // 1. Remove Em Dashes (If enabled)
+        if (currentSettings.removeEmDashes) {
+            // Replace em dash with a space, then collapse any double spaces created
+            text = text.replace(/—/g, ' ').replace(/ {2,}/g, ' ');
+        }
+
         if (currentSettings.removeThinkTags) {
             text = text.replace(/\n?\s*<(thought|thoughts)>[\s\S]*?<\/(thought|thoughts)>\s*\n?/g, '');
             text = text.replace(/<(system|response)>|<\/response>/g, '');
@@ -114,7 +121,7 @@
             if (trimmedLine === '') return '';
             const cleanLine = trimmedLine.replace(/\*/g, '');
 
-            if (/^["*]+$/.test(cleanLine)) return null;
+            if (/^["*]+$/.test(cleanLine)) return null; 
             if (cleanLine === '---') return '---';
 
             if (cleanLine.includes('"') || cleanLine.includes('`')) {
@@ -147,7 +154,7 @@
 
             const lastEditButton = allEditButtons[allEditButtons.length - 1];
             lastEditButton.click();
-
+            
             await new Promise(r => setTimeout(r, 600));
 
             const textField = await waitForElement(TEXT_AREA_SELECTOR);
@@ -187,7 +194,7 @@
             });
             uiObserver.observe(document.body, { childList: true, subtree: true });
         }
-
+        
         initKeyboardFix();
     }
 
@@ -196,10 +203,10 @@
         if (floatContainer) floatContainer.remove();
 
         document.querySelectorAll('.janitor-formatter-btn-inline').forEach(el => el.remove());
-
+        
         const settingsTrigger = document.getElementById('janitor-settings-btn-inline');
         if (settingsTrigger) settingsTrigger.remove();
-
+        
         if (uiObserver) {
             uiObserver.disconnect();
             uiObserver = null;
@@ -212,7 +219,6 @@
         if (menuWrapper && !document.getElementById('janitor-settings-btn-inline')) {
             const settingsBtn = document.createElement('button');
             settingsBtn.id = 'janitor-settings-btn-inline';
-            // Check setting to determine text
             settingsBtn.innerHTML = currentSettings.showSettingsText ? '⚙️ Formatter' : '⚙️';
             settingsBtn.title = 'Formatting Settings';
             settingsBtn.addEventListener('click', (e) => {
@@ -225,15 +231,15 @@
 
     // --- INLINE BUTTON (Top or Bottom) ---
     function injectInlineButton() {
-        const pos = currentSettings.buttonPosition;
-
+        const pos = currentSettings.buttonPosition; 
+        
         // --- INLINE TOP (Controls) ---
         if (pos === 'inline-top') {
             const allTargets = document.querySelectorAll(MSG_CONTROLS_SELECTOR);
             if (allTargets.length === 0) return;
             const lastTarget = allTargets[allTargets.length - 1];
 
-            if (lastTarget.querySelector('.janitor-formatter-btn-inline')) return;
+            if (lastTarget.querySelector('.janitor-formatter-btn-inline')) return; 
 
             document.querySelectorAll('.janitor-formatter-btn-inline').forEach(btn => btn.remove());
 
@@ -242,7 +248,7 @@
             btn.innerHTML = currentSettings.showButtonText ? '✏️ Auto-Format' : '✏️';
             btn.title = 'Clean and Format';
             btn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); executeFormat(); });
-
+            
             lastTarget.prepend(btn);
         }
 
@@ -251,9 +257,9 @@
             const allNextButtons = document.querySelectorAll(MSG_NEXT_BTN_SELECTOR);
             if (allNextButtons.length === 0) return;
             const lastNextBtn = allNextButtons[allNextButtons.length - 1];
-            const targetContainer = lastNextBtn.parentElement;
+            const targetContainer = lastNextBtn.parentElement; 
 
-            if (targetContainer.querySelector('.janitor-formatter-btn-inline')) return;
+            if (targetContainer.querySelector('.janitor-formatter-btn-inline')) return; 
 
             document.querySelectorAll('.janitor-formatter-btn-inline').forEach(btn => btn.remove());
 
@@ -276,10 +282,10 @@
     function createFloatingUI() {
         const container = document.createElement('div');
         container.id = 'janitor-editor-container';
-
+        
         const size = currentSettings.floatSize || 50;
         const opacity = (currentSettings.floatOpacity || 50) / 100;
-
+        
         container.style.opacity = opacity;
         document.body.appendChild(container);
 
@@ -301,11 +307,11 @@
 
         const modalOverlay = document.createElement('div');
         modalOverlay.id = 'janitor-settings-modal';
-
+        
         modalOverlay.innerHTML = `
             <div class="janitor-modal-content">
                 <h3>Formatter Settings</h3>
-
+                
                 <div class="setting-scroll-area">
                     <div class="setting-section">
                         <h4>Interface</h4>
@@ -318,19 +324,16 @@
                             </select>
                         </div>
 
-                        <!-- Settings Button Text Toggle -->
                         <div class="setting-group checkbox">
                             <input type="checkbox" id="setting-showsettings-text" ${currentSettings.showSettingsText ? 'checked' : ''}>
                             <label for="setting-showsettings-text">Show Text on Settings Button (Top Right)</label>
                         </div>
-
-                        <!-- Inline Formatter Text Toggle -->
+                        
                         <div id="inline-text-option" class="setting-group checkbox" style="display:none;">
                             <input type="checkbox" id="setting-showtext" ${currentSettings.showButtonText ? 'checked' : ''}>
                             <label for="setting-showtext">Show Text on Format Button (Inline)</label>
                         </div>
 
-                        <!-- Float Options -->
                         <div id="float-options" style="display:none; padding-left:10px; border-left:2px solid #444;">
                             <div class="setting-group">
                                 <button id="reset-float-pos" style="background:#444; margin-bottom:10px;">Reset Position to Center</button>
@@ -374,6 +377,10 @@
                             <input type="checkbox" id="setting-prompt" ${currentSettings.removeSystemPrompt ? 'checked' : ''}>
                             <label for="setting-prompt">Remove System Prompts</label>
                         </div>
+                        <div class="setting-group checkbox">
+                            <input type="checkbox" id="setting-emdashes" ${currentSettings.removeEmDashes ? 'checked' : ''}>
+                            <label for="setting-emdashes">Remove Em Dashes (—)</label>
+                        </div>
                     </div>
                 </div>
 
@@ -406,7 +413,6 @@
         sizeInput.addEventListener('input', (e) => document.getElementById('size-val').innerText = e.target.value);
         opInput.addEventListener('input', (e) => document.getElementById('op-val').innerText = e.target.value);
 
-        // Reset Position Logic
         document.getElementById('reset-float-pos').onclick = () => {
             const container = document.getElementById('janitor-editor-container');
             if (container) {
@@ -416,7 +422,6 @@
                 container.style.top = centerY + 'px';
                 container.style.right = 'auto';
                 container.style.bottom = 'auto';
-                // Save immediately
                 localStorage.setItem(POSITION_KEY, JSON.stringify({ left: container.style.left, top: container.style.top }));
             }
         };
@@ -427,6 +432,7 @@
                 removeThinkTags: document.getElementById('setting-think').checked,
                 removeGeneralTags: document.getElementById('setting-gentags').checked,
                 removeSystemPrompt: document.getElementById('setting-prompt').checked,
+                removeEmDashes: document.getElementById('setting-emdashes').checked,
                 buttonPosition: posSelect.value,
                 showButtonText: document.getElementById('setting-showtext').checked,
                 showSettingsText: document.getElementById('setting-showsettings-text').checked,
@@ -456,7 +462,7 @@
         function onStart(e) {
             isDragging = true; wasDragged = false;
             handle.classList.add('is-dragging');
-            container.style.opacity = '1';
+            container.style.opacity = '1'; 
             const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
             const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
             startX = clientX; startY = clientY;
@@ -518,7 +524,7 @@
         #janitor-editor-container button { border: none; border-radius: 50%; color: white; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; }
         #formatter-btn { background-color: #c9226e; }
         #formatter-btn.is-dragging { transform: scale(1.1); box-shadow: 0 8px 16px rgba(0,0,0,0.5); }
-
+        
         /* Inline Button - Common */
         .janitor-formatter-btn-inline {
             background: transparent; border: none !important; color: #fff;
@@ -538,7 +544,7 @@
             white-space: nowrap; display: flex; align-items: center;
         }
         #janitor-settings-btn-inline:hover { color: white; }
-
+        
         /* Modal Styles */
         #janitor-settings-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; display: flex; justify-content: center; align-items: center; }
         .janitor-modal-content { background: #1f1f1f; color: white; padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-family: sans-serif; display: flex; flex-direction: column; max-height: 90vh; }
@@ -550,11 +556,11 @@
         .setting-group select, .setting-group input[type="range"] { padding: 8px; border-radius: 4px; background: #333; color: white; border: 1px solid #555; width: 100%; box-sizing: border-box; }
         .modal-buttons { display: flex; gap: 10px; margin-top: auto; }
         .modal-buttons button { flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; color: white; background: #c9226e; font-weight: bold; }
-
+        
         @media (min-width: 769px) { #janitor-editor-container { right: 27%; bottom: 12%; } }
         @media (max-width: 768px) { #janitor-editor-container { right: 5%; bottom: 20%; } }
     `);
 
     initUI();
-    console.log('Janitor Formatter v10.5 Loaded');
+    console.log('Janitor Formatter v10.7 Loaded');
 })();

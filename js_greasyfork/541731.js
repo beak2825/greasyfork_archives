@@ -3,7 +3,7 @@
 // @description a
 // @match       https://chat.mistral.ai/*
 // @run-at      document-start
-// @version 0.0.1.20251013165414
+// @version 0.0.1.20260105113350
 // @namespace https://greasyfork.org/users/1435046
 // @downloadURL https://update.greasyfork.org/scripts/541731/mistral%20css.user.js
 // @updateURL https://update.greasyfork.org/scripts/541731/mistral%20css.meta.js
@@ -56,7 +56,7 @@ img[alt="LeChat - Mistral"] {
     display: none !important;
 }
 
-footer {
+footer, div:has(> div > span > div > svg > path[d*="M13.3715 16.358H16"]) {
     display: none !important;
 }
   `;
