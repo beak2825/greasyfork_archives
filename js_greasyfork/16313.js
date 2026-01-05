@@ -1,0 +1,11 @@
+// ==UserScript==
+// @name        Avabur Dark Mode
+// @namespace   https://greasyfork.org/en/scripts/16313-avabur-dark-mode/
+// @description Alternative color scheme for Relics of Avabur
+// @include     https://avabur.com/game.php
+// @version     1.1
+// @grant       GM_addStyle
+// @downloadURL https://update.greasyfork.org/scripts/16313/Avabur%20Dark%20Mode.user.js
+// @updateURL https://update.greasyfork.org/scripts/16313/Avabur%20Dark%20Mode.meta.js
+// ==/UserScript==
+GM_addStyle(".ui-element { background: transparent linear-gradient(to bottom, #000 0%, #000 100%) repeat scroll 0% 0% !important} body{background: transparent linear-gradient(to bottom, #000 0%, #000 100%) repeat scroll 0% 0%} #PlayerHPFill{background-image: linear-gradient(to bottom, #004708 0%, #004708 100%)} .currentPage {border: 1px solid #000844} .border2 {border: 1px solid #000844} .border1 {border: 1px solid #000844} .bt1 {border-top: 1px solid #000844} #xpFill{background-image:linear-gradient(to right, rgb(24, 35, 0) 0%, rgb(46, 51, 0) 100%)} #tradeskillXPFill{background-image:linear-gradient(to right, rgb(24, 35, 0) 0%, rgb(46, 51, 0) 100%)} h1,h2,h3,h4,h5,h6{background:linear-gradient(to bottom, #000 0%, #00052A 100%)} #helpSection a{background: transparent linear-gradient(to bottom, #0F0F0F 0%, #000 100%) repeat scroll 0% 0%; border-top: 1px solid #000} .navSection a{background: transparent linear-gradient(to bottom, #0F0F0F 0%, #000 100%) repeat scroll 0% 0%; border-top: 1px solid #000} .toprounder{box-shadow: 0px 0px 0px 1px #000} .toprounder15{box-shadow: 0px 0px 0px 1px #000} #accountLinks a{background: transparent linear-gradient(to bottom, #0F0F0F 0%, #000 100%) repeat scroll 0% 0%; border: 1px solid #000} #gameStatList li{background: transparent linear-gradient(to bottom, #0F0F0F 0%, #000 100%) repeat scroll 0% 0%; border: 1px solid #000} #moreStatsLinkWrapper{background: transparent linear-gradient(to bottom, #0F0F0F 0%, #000 100%) repeat scroll 0% 0%} .chat_invert{background-color: #14193E}");
