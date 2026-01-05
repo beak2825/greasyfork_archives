@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Vinted Country & City Filter (client-side)
 // @namespace    https://greasyfork.org/en/users/1550823-nigel1992
-// @version      1.1.9
-// @description  Adds a country and city indicator to Vinted items and allows client-side visual filtering by item location. The script uses Vinted’s public item API to retrieve country and city information. It does not perform purchases, send messages, or modify anything on Vinted servers.
+// @version      1.3.0
+// @description  Adds a country and city indicator to Vinted items and allows client-side visual filtering by excluding selected countries. The script uses Vinted’s public item API to retrieve country and city information. It does not perform purchases, send messages, or modify anything on Vinted servers.
 // @author       Nigel1992
 // @license      MIT
 // @match        https://www.vinted.nl/*
@@ -60,7 +60,7 @@
        Settings & state
     ========================== */
 
-    let selectedCountry = sessionStorage.getItem('vinted_filter_country') || '';
+    let excludedCountries = JSON.parse(sessionStorage.getItem('vinted_excluded_countries') || '[]');
     let isFilterEnabled = sessionStorage.getItem('vinted_filter_enabled') !== 'false'; // Default: enabled
     let isProcessing = false;
     let isPausedForCaptcha = false;
@@ -71,6 +71,7 @@
 
     const processedItems = new Map();
     const queue = [];
+    const CACHE_PREFIX = 'vinted_item_';
 
     const countryToFlag = {
         netherlands: '🇳🇱',
@@ -282,33 +283,64 @@
                 <div id="vinted-filter-options" style="${isFilterEnabled ? '' : 'opacity: 0.5; pointer-events: none;'}">
                 <div style="margin-bottom: 16px;">
                     <label style="display: block; margin-bottom: 8px; color: #333; font-weight: 500; font-size: 14px;">
-                        Filter by Country:
+                        Exclude Countries:
                     </label>
-                    <select id="vinted-country-select" style="
-                        width: 100%;
-                        padding: 12px;
-                        border: 2px solid #ddd;
-                        border-radius: 8px;
-                        font-size: 14px;
-                        background: white;
-                        cursor: pointer;
-                        transition: all 0.2s;
-                        font-family: inherit;
+                    <div id="vinted-country-checkboxes" style="
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        gap: 8px;
+                        max-height: 200px;
+                        overflow-y: auto;
                     ">
-                        <option value="">🌐 Show All Countries</option>
-                        <option value="netherlands">🇳🇱 Netherlands</option>
-                        <option value="belgium">🇧🇪 Belgium</option>
-                        <option value="france">🇫🇷 France</option>
-                        <option value="germany">🇩🇪 Germany</option>
-                        <option value="spain">🇪🇸 Spain</option>
-                        <option value="italy">🇮🇹 Italy</option>
-                        <option value="portugal">🇵🇹 Portugal</option>
-                        <option value="poland">🇵🇱 Poland</option>
-                        <option value="sweden">🇸🇪 Sweden</option>
-                        <option value="denmark">🇩🇰 Denmark</option>
-                        <option value="finland">🇫🇮 Finland</option>
-                        <option value="uk">🇬🇧 United Kingdom</option>
-                    </select>
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                            <input type="checkbox" id="exclude-netherlands" style="margin: 0;">
+                            <span>🇳🇱 Netherlands</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                            <input type="checkbox" id="exclude-belgium" style="margin: 0;">
+                            <span>🇧🇪 Belgium</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                            <input type="checkbox" id="exclude-france" style="margin: 0;">
+                            <span>🇫🇷 France</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                            <input type="checkbox" id="exclude-germany" style="margin: 0;">
+                            <span>🇩🇪 Germany</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                            <input type="checkbox" id="exclude-spain" style="margin: 0;">
+                            <span>🇪🇸 Spain</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                            <input type="checkbox" id="exclude-italy" style="margin: 0;">
+                            <span>🇮🇹 Italy</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                            <input type="checkbox" id="exclude-portugal" style="margin: 0;">
+                            <span>🇵🇹 Portugal</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                            <input type="checkbox" id="exclude-poland" style="margin: 0;">
+                            <span>🇵🇱 Poland</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                            <input type="checkbox" id="exclude-sweden" style="margin: 0;">
+                            <span>🇸🇪 Sweden</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                            <input type="checkbox" id="exclude-denmark" style="margin: 0;">
+                            <span>🇩🇰 Denmark</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                            <input type="checkbox" id="exclude-finland" style="margin: 0;">
+                            <span>🇫🇮 Finland</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 6px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='transparent'">
+                            <input type="checkbox" id="exclude-uk" style="margin: 0;">
+                            <span>🇬🇧 United Kingdom</span>
+                        </label>
+                    </div>
                 </div>
 
                 <div style="background: #f5f5f5; border-radius: 10px; padding: 12px; margin-bottom: 12px;">
@@ -317,8 +349,8 @@
                         align-items: center;
                         justify-content: space-between;
                         margin-bottom: 8px;
-                    " title="Items matching your selected country filter (shown at full opacity)">
-                        <span style="color: #666; font-size: 13px; font-weight: 500;">✅ Matching Filter:</span>
+                    " title="Items not excluded by your country filter (shown at full opacity)">
+                        <span style="color: #666; font-size: 13px; font-weight: 500;">✅ Shown Items:</span>
                         <span id="vinted-match-number" style="
                             background: #4caf50;
                             color: white;
@@ -534,41 +566,31 @@
                     padding-top: 8px;
                     border-top: 1px solid #eee;
                 ">
-                    v1.1.9 • Jan 4, 2026
+                    v1.3.0 • Jan 4, 2026
                 </div>
             </div>
         `;
 
         document.body.appendChild(menu);
 
-        const select = document.getElementById('vinted-country-select');
-        select.value = selectedCountry;
-
-        // Enhanced select styling on hover/focus
-        select.addEventListener('mouseenter', () => {
-            select.style.borderColor = '#007782';
-            select.style.boxShadow = '0 0 0 3px rgba(0,119,130,0.1)';
-        });
-        select.addEventListener('mouseleave', () => {
-            if (document.activeElement !== select) {
-                select.style.borderColor = '#ddd';
-                select.style.boxShadow = 'none';
-            }
-        });
-        select.addEventListener('focus', () => {
-            select.style.borderColor = '#007782';
-            select.style.boxShadow = '0 0 0 3px rgba(0,119,130,0.1)';
-        });
-        select.addEventListener('blur', () => {
-            select.style.borderColor = '#ddd';
-            select.style.boxShadow = 'none';
-        });
-
-        select.addEventListener('change', () => {
-            selectedCountry = select.value;
-            sessionStorage.setItem('vinted_filter_country', selectedCountry);
-            updateStatusMessage(selectedCountry ? `Filtering by ${select.options[select.selectedIndex].text.replace(/^[^\s]+\s/, '')}...` : 'Showing all countries...');
-            applyFilter();
+        // Set up country exclusion checkboxes
+        const countryCheckboxes = document.querySelectorAll('#vinted-country-checkboxes input[type="checkbox"]');
+        countryCheckboxes.forEach(checkbox => {
+            const country = checkbox.id.replace('exclude-', '');
+            checkbox.checked = excludedCountries.includes(country);
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    if (!excludedCountries.includes(country)) {
+                        excludedCountries.push(country);
+                    }
+                } else {
+                    excludedCountries = excludedCountries.filter(c => c !== country);
+                }
+                sessionStorage.setItem('vinted_excluded_countries', JSON.stringify(excludedCountries));
+                const excludedNames = excludedCountries.map(c => c.charAt(0).toUpperCase() + c.slice(1)).join(', ');
+                updateStatusMessage(excludedCountries.length > 0 ? `Excluding ${excludedNames}...` : 'Showing all countries...');
+                applyFilter();
+            });
         });
 
         // Filter enable/disable toggle
@@ -645,6 +667,7 @@
             if (confirm('Clear all cached item data? This will re-process all items.')) {
                 processedItems.clear();
                 queue.length = 0;
+                clearItemCache();
                 updateStatusMessage('Cache cleared. Rescanning items...');
                 updateQueueStatus();
                 applyFilter();
@@ -754,6 +777,42 @@
     }
 
     /* =========================
+       Cache functions
+    ========================== */
+
+    function getCachedItem(itemId) {
+        try {
+            const cached = localStorage.getItem(CACHE_PREFIX + itemId);
+            return cached ? JSON.parse(cached) : null;
+        } catch (e) {
+            console.warn('Error reading from cache:', e);
+            return null;
+        }
+    }
+
+    function setCachedItem(itemId, country, city) {
+        try {
+            const data = { country: country.toLowerCase(), city, timestamp: Date.now() };
+            localStorage.setItem(CACHE_PREFIX + itemId, JSON.stringify(data));
+        } catch (e) {
+            console.warn('Error writing to cache:', e);
+        }
+    }
+
+    function clearItemCache() {
+        try {
+            const keys = Object.keys(localStorage);
+            keys.forEach(key => {
+                if (key.startsWith(CACHE_PREFIX)) {
+                    localStorage.removeItem(key);
+                }
+            });
+        } catch (e) {
+            console.warn('Error clearing cache:', e);
+        }
+    }
+
+    /* =========================
        API processing
     ========================== */
 
@@ -763,6 +822,32 @@
 
         isProcessing = true;
         const item = queue.shift();
+
+        // Check cache first
+        const cachedData = getCachedItem(item.id);
+        if (cachedData) {
+            // Use cached data
+            const country = cachedData.country;
+            const city = cachedData.city;
+            const flag = countryToFlag[country] || '🏳️';
+
+            item.country = country;
+            item.overlay.textContent = city
+                ? `${flag} ${country.charAt(0).toUpperCase() + country.slice(1)}, ${city}`
+                : `${flag} ${country.charAt(0).toUpperCase() + country.slice(1)}`;
+
+            // Enhanced overlay styling after loading
+            item.overlay.style.background = 'linear-gradient(135deg, rgba(76,175,80,0.95) 0%, rgba(56,142,60,0.95) 100%)';
+            item.overlay.style.color = 'white';
+            item.overlay.style.borderColor = '#4caf50';
+            item.overlay.style.fontSize = '10px';
+            item.overlay.style.padding = '5px 9px';
+
+            applyFilter();
+            updateQueueStatus();
+            setTimeout(() => (isProcessing = false), 100);
+            return;
+        }
 
         try {
             const response = await fetch(
@@ -799,6 +884,9 @@
                     ? `${flag} ${country}, ${city}`
                     : `${flag} ${country}`;
 
+                // Cache the data
+                setCachedItem(item.id, country, city);
+
                 // Enhanced overlay styling after loading
                 item.overlay.style.background = 'linear-gradient(135deg, rgba(76,175,80,0.95) 0%, rgba(56,142,60,0.95) 100%)';
                 item.overlay.style.color = 'white';
@@ -834,8 +922,7 @@
             if (!item.country) return;
             total++;
 
-            const match =
-                !selectedCountry || item.country === selectedCountry;
+            const match = !excludedCountries.includes(item.country);
 
             item.element.style.opacity = match ? '1' : '0.1';
             item.element.style.filter = match ? 'none' : 'grayscale(100%)';

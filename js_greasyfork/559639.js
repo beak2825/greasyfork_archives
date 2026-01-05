@@ -3,8 +3,9 @@
 // @description  Forces Instagram videos to play at a set volume by default
 // @namespace    http://tampermonkey.net/
 // @icon         https://cdn-icons-png.flaticon.com/128/15713/15713420.png
-// @version      0.0.3
-// @author       rxm
+// @supportURL   https://github.com/5tratz/Tampermonkey-Scripts/issues
+// @version      0.0.4
+// @author       5tratz
 // @match        https://www.instagram.com/*
 // @license      MIT
 // @grant        none

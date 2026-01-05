@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FMP Stadium Planner
 // @namespace    https://github.com/napcoder/fmp-stadium-planner
-// @version      0.3.0
+// @version      0.4.0
 // @description  Plan, analyze and optimize your Football Manager Project (FMP) stadium!
 // @author       Marco Travaglini (Napcoder)
 // @match        https://footballmanagerproject.com/Economy/Stadium
@@ -16,6 +16,31 @@
 
 (function () {
     'use strict';
+
+    class SeatsRatio {
+        vip;
+        covered;
+        standard;
+        standing;
+        constructor({ vip, covered, standard, standing }) {
+            this.vip = vip;
+            this.covered = covered;
+            this.standard = standard;
+            this.standing = standing;
+        }
+        getTotalWeight() {
+            return this.vip + this.covered + this.standard + this.standing;
+        }
+        toString() {
+            return `${this.vip}-${this.covered}-${this.standard}-${this.standing}`;
+        }
+        static getDefaultRatio() {
+            return new SeatsRatio({ vip: 1, covered: 4, standard: 8, standing: 16 });
+        }
+        static getMaintananceOptimizedRatio() {
+            return new SeatsRatio({ vip: 1, covered: 3, standard: 6, standing: 12 });
+        }
+    }
 
     class Stadium {
         standing;
@@ -91,6 +116,26 @@
         clone() {
             return new Stadium(this.getLayout());
         }
+        getRatio() {
+            const totalSeats = this.getTotalSeats();
+            if (totalSeats === 0) {
+                return new SeatsRatio({
+                    vip: 0,
+                    covered: 0,
+                    standard: 0,
+                    standing: 0
+                });
+            }
+            // find the lower non zero number in seats and use it to calculate ratio
+            const nonZeroSeats = [this.standing, this.standard, this.covered, this.vip].filter(seat => seat > 0);
+            const minNonZeroSeat = nonZeroSeats.length > 0 ? Math.min(...nonZeroSeats) : 1;
+            return new SeatsRatio({
+                vip: Math.round(this.vip / minNonZeroSeat),
+                covered: Math.round(this.covered / minNonZeroSeat),
+                standard: Math.round(this.standard / minNonZeroSeat),
+                standing: Math.round(this.standing / minNonZeroSeat)
+            });
+        }
     }
 
     async function getStadiumData() {
@@ -154,7 +199,10 @@
             constructionDetailsTitle: "Construction details per sector",
             maxIncome: "Maximum income",
             maxIncomeWithoutSeasonTickets: "Maximum income (no seas. tkts)",
-            maintananceCost: "Maintanance cost",
+            maintenanceCost: "Maintenance cost",
+            ratioLabel: "Seats ratio",
+            seatsRatioExtendedLabel: "Seats ratio (VIP / Covered / Standard / Standing)",
+            seatsRatioDescription: "Defines how many seats of each type are created for every 1 VIP seat.",
             plan: "Plan",
             planner: "Planner",
             planned: "Planned",
@@ -169,6 +217,11 @@
             timeTableHeader: "Time (days)",
             sectorsTableHeader: "Sector",
             total: "Total",
+            controlsAutomaticKhristianLabel: "Automatic default preset (recommended)",
+            controlsAutomaticTicketsLabel: "Automatic preset based on ticket prices ratios",
+            controlsAutomaticCustomLabel: "Automatic - custom ratio",
+            controlsAdvancedManualLabel: "Advanced - manual sector setup",
+            lastGeneratedLayoutTitle: "Seats layout (last generated)",
         },
         it: {
             totalSeats: "Posti totali",
@@ -178,7 +231,10 @@
             constructionDetailsTitle: "Dettagli costruzione per settore",
             maxIncome: "Massimo incasso",
             maxIncomeWithoutSeasonTickets: "Massimo incasso (meno quota abb.)",
-            maintananceCost: "Costo di manutenzione",
+            maintenanceCost: "Costo di manutenzione",
+            ratioLabel: "Rapporto posti",
+            seatsRatioExtendedLabel: "Rapporto posti (VIP / Coperti / Standard / In piedi)",
+            seatsRatioDescription: "Definisce quanti posti di ogni tipo vengono creati per ogni posto VIP.",
             plan: "Pianifica",
             planner: "Planner",
             planned: "Pianificato",
@@ -193,6 +249,11 @@
             timeTableHeader: "Tempo (giorni)",
             sectorsTableHeader: "Settore",
             total: "Totale",
+            controlsAutomaticKhristianLabel: "Automatico default (raccomandato)",
+            controlsAutomaticTicketsLabel: "Automatico basato sui rapporti dei prezzi dei biglietti",
+            controlsAutomaticCustomLabel: "Automatico - rapporto personalizzato",
+            controlsAdvancedManualLabel: "Avanzato - impostazione manuale dei settori",
+            lastGeneratedLayoutTitle: "Layout posti (ultimi generati)",
         }
     };
     function getUserLang() {
@@ -322,7 +383,7 @@
         return title;
     }
 
-    const t$2 = getTranslator();
+    const t$3 = getTranslator();
     // Renders general-info-view and subscribes to store updates
     function renderGeneralInfoView(container, store) {
         // Clear container
@@ -330,37 +391,43 @@
         // Subscribe to store
         store.subscribe((state, prevState) => {
             const totalSeats = state.currentStadium.getTotalSeats();
+            const currentRatio = state.currentStadium.getRatio().toString();
             const maxIncome = state.currentStadium.calcMaxIncome(state.baseTicketPrice);
             const maintainanceCost = state.currentStadium.getMaintainCost();
             container.innerHTML = '';
-            const title = makeTitleContainer('FMP Stadium Planner', t$2('currentInfoTitle'));
+            const title = makeTitleContainer('FMP Stadium Planner', t$3('currentInfoTitle'));
             container.appendChild(title);
             const content = createItemContainer$2();
-            const totalSeatsRow = createRow$1(t$2('totalSeats'), totalSeats.toLocaleString());
-            const maintainanceCostRow = createRow$1(t$2('maintananceCost'), `ⓕ ${maintainanceCost.toLocaleString()}`);
-            const maxIncomeRow = createRow$1(t$2('maxIncome'), `ⓕ ${maxIncome.toLocaleString()}`);
+            const totalSeatsRow = createRow$1(t$3('totalSeats'), totalSeats.toLocaleString());
+            const currentRatioRow = createRow$1(t$3('ratioLabel'), currentRatio);
+            const maintenanceCostRow = createRow$1(t$3('maintenanceCost'), `ⓕ ${maintainanceCost.toLocaleString()}`);
+            const maxIncomeRow = createRow$1(t$3('maxIncome'), `ⓕ ${maxIncome.toLocaleString()}`);
             content.appendChild(totalSeatsRow);
-            content.appendChild(maintainanceCostRow);
+            content.appendChild(currentRatioRow);
+            content.appendChild(maintenanceCostRow);
             content.appendChild(maxIncomeRow);
             container.appendChild(content);
             // Planned stadium info (if available)
             if (state.plannedStadium) {
                 const upgradeManager = new UpgradeManager(state.currentStadium.getLayout(), state.baseTicketPrice, state.plannedStadium.getLayout());
                 const plannedMaxIncome = state.plannedStadium.calcMaxIncome(state.baseTicketPrice);
-                const plannedMaintainanceCost = state.plannedStadium.getMaintainCost();
+                const plannedMaintenanceCost = state.plannedStadium.getMaintainCost();
                 const plannedTotalSeats = state.plannedStadium.getTotalSeats();
                 const plannedBuildingCost = upgradeManager.getTotalBuildingCost();
                 const plannedTimeToBuild = upgradeManager.getTotalTimeToBuild();
-                const plannedTitle = makeTitleContainer(null, t$2('plannedInfoTitle'));
+                const plannedRatio = state.plannedStadium.getRatio().toString();
+                const plannedTitle = makeTitleContainer(null, t$3('plannedInfoTitle'));
                 container.appendChild(plannedTitle);
                 const plannedContent = createItemContainer$2();
-                const plannedTotalSeatsRow = createRow$1(t$2('totalSeats'), plannedTotalSeats.toLocaleString());
-                const plannedMaintainanceCostRow = createRow$1(t$2('maintananceCost'), `ⓕ ${plannedMaintainanceCost.toLocaleString()}`);
-                const plannedMaxIncomeRow = createRow$1(t$2('maxIncome'), `ⓕ ${plannedMaxIncome.toLocaleString()}`);
-                const plannedBuildingCostRow = createRow$1(t$2('buildingCost'), `ⓕ ${plannedBuildingCost.toLocaleString()}`);
-                const plannedTimeToBuildRow = createRow$1(t$2('timeToBuild'), `${plannedTimeToBuild} ${t$2('days')}`);
+                const plannedTotalSeatsRow = createRow$1(t$3('totalSeats'), plannedTotalSeats.toLocaleString());
+                const plannedRatioRow = createRow$1(t$3('ratioLabel'), plannedRatio);
+                const plannedMaintenanceCostRow = createRow$1(t$3('maintenanceCost'), `ⓕ ${plannedMaintenanceCost.toLocaleString()}`);
+                const plannedMaxIncomeRow = createRow$1(t$3('maxIncome'), `ⓕ ${plannedMaxIncome.toLocaleString()}`);
+                const plannedBuildingCostRow = createRow$1(t$3('buildingCost'), `ⓕ ${plannedBuildingCost.toLocaleString()}`);
+                const plannedTimeToBuildRow = createRow$1(t$3('timeToBuild'), `${plannedTimeToBuild} ${t$3('days')}`);
                 plannedContent.appendChild(plannedTotalSeatsRow);
-                plannedContent.appendChild(plannedMaintainanceCostRow);
+                plannedContent.appendChild(plannedRatioRow);
+                plannedContent.appendChild(plannedMaintenanceCostRow);
                 plannedContent.appendChild(plannedMaxIncomeRow);
                 plannedContent.appendChild(plannedBuildingCostRow);
                 plannedContent.appendChild(plannedTimeToBuildRow);
@@ -390,20 +457,56 @@
         return row;
     }
 
+    const defaultRatio = SeatsRatio.getDefaultRatio();
+    function planner(desiredTotal, currentStadium, desiredRatio = defaultRatio) {
+        const currentTotal = currentStadium.getTotalSeats();
+        if (currentTotal >= desiredTotal) {
+            return currentStadium; // No changes needed
+        }
+        // Desired proportion: vip:covered:standard:standing = e.g. default ratio 1:4:8:16
+        // Total weight = 1+4+8+16 = 29
+        const totalWeight = desiredRatio.getTotalWeight();
+        // Get current layout
+        const layout = currentStadium.getLayout();
+        let remaining = desiredTotal - currentTotal;
+        // Calculate the ideal seat counts for each type
+        const idealLayout = {
+            vip: desiredTotal * desiredRatio.vip / totalWeight,
+            covered: desiredTotal * desiredRatio.covered / totalWeight,
+            standard: desiredTotal * desiredRatio.standard / totalWeight,
+            standing: desiredTotal * desiredRatio.standing / totalWeight
+        };
+        // Calculate how many more seats are needed for each type to reach the ideal
+        const addLayout = {
+            vip: Math.max(0, Math.ceil(idealLayout.vip - layout.vip)),
+            covered: Math.max(0, Math.ceil(idealLayout.covered - layout.covered)),
+            standard: Math.max(0, Math.ceil(idealLayout.standard - layout.standard)),
+            standing: Math.max(0, Math.ceil(idealLayout.standing - layout.standing)),
+        };
+        let totalAdded = addLayout.vip + addLayout.covered + addLayout.standard + addLayout.standing;
+        if (totalAdded > remaining) {
+            return distributeGreedy(layout, idealLayout, remaining, desiredRatio);
+        }
+        else {
+            let extra = remaining - totalAdded;
+            return distributeWithExtra(layout, addLayout, extra, desiredRatio);
+        }
+    }
     /**
      * Distributes remaining seats to approach the ideal 1-4-8-16 proportion, never decreasing any type.
      * Uses a greedy algorithm to increment the type with the largest gap to its ideal until all seats are assigned.
      * @param layout The current seat layout (SeatsLayout)
      * @param idealLayout The ideal seat layout (SeatsLayout)
      * @param remaining Number of seats left to assign
+     * @param desiredRatio The desired seats ratio (SeatsRatio)
      * @returns A new Stadium instance with the updated seat distribution
      */
-    function distributeGreedy(layout, idealLayout, remaining) {
+    function distributeGreedy(layout, idealLayout, remaining, desiredRatio) {
         let needs = [
-            { type: 'vip', current: layout.vip, ideal: idealLayout.vip, weight: 1 },
-            { type: 'covered', current: layout.covered, ideal: idealLayout.covered, weight: 4 },
-            { type: 'standard', current: layout.standard, ideal: idealLayout.standard, weight: 8 },
-            { type: 'standing', current: layout.standing, ideal: idealLayout.standing, weight: 16 },
+            { type: 'vip', current: layout.vip, ideal: idealLayout.vip, weight: desiredRatio.vip },
+            { type: 'covered', current: layout.covered, ideal: idealLayout.covered, weight: desiredRatio.covered },
+            { type: 'standard', current: layout.standard, ideal: idealLayout.standard, weight: desiredRatio.standard },
+            { type: 'standing', current: layout.standing, ideal: idealLayout.standing, weight: desiredRatio.standing },
         ];
         while (remaining > 0) {
             needs.sort((a, b) => (b.ideal - b.current) - (a.ideal - a.current));
@@ -432,18 +535,19 @@
      * @param layout The current seat layout (SeatsLayout)
      * @param addLayout Object with seats to add for each type (SeatsLayout)
      * @param extra Remaining seats to distribute after reaching all ideals
+     * @param desiredRatio The desired seats ratio (SeatsRatio)
      * @returns A new Stadium instance with the updated seat distribution
      */
-    function distributeWithExtra(layout, addLayout, extra) {
+    function distributeWithExtra(layout, addLayout, extra, desiredRatio) {
         let vip = layout.vip + addLayout.vip;
         let covered = layout.covered + addLayout.covered;
         let standard = layout.standard + addLayout.standard;
         let standing = layout.standing + addLayout.standing;
         const weights = [
-            { type: 'vip', weight: 1 },
-            { type: 'covered', weight: 4 },
-            { type: 'standard', weight: 8 },
-            { type: 'standing', weight: 16 },
+            { type: 'vip', weight: desiredRatio.vip },
+            { type: 'covered', weight: desiredRatio.covered },
+            { type: 'standard', weight: desiredRatio.standard },
+            { type: 'standing', weight: desiredRatio.standing },
         ];
         while (extra > 0) {
             for (const w of weights) {
@@ -468,152 +572,313 @@
         }
         return new Stadium({ standing, standard, covered, vip });
     }
-    function planner(desiredTotal, currentStadium) {
-        const currentTotal = currentStadium.getTotalSeats();
-        if (currentTotal >= desiredTotal) {
-            return currentStadium; // No changes needed
-        }
-        // Desired proportion: vip:covered:standard:standing = 1:4:8:16
-        // Total weight = 1+4+8+16 = 29
-        const totalWeight = 29;
-        // Get current layout
-        const layout = currentStadium.getLayout();
-        let remaining = desiredTotal - currentTotal;
-        // Calculate the ideal seat counts for each type
-        const idealLayout = {
-            vip: desiredTotal * 1 / totalWeight,
-            covered: desiredTotal * 4 / totalWeight,
-            standard: desiredTotal * 8 / totalWeight,
-            standing: desiredTotal * 16 / totalWeight
-        };
-        // Calculate how many more seats are needed for each type to reach the ideal
-        const addLayout = {
-            vip: Math.max(0, Math.ceil(idealLayout.vip - layout.vip)),
-            covered: Math.max(0, Math.ceil(idealLayout.covered - layout.covered)),
-            standard: Math.max(0, Math.ceil(idealLayout.standard - layout.standard)),
-            standing: Math.max(0, Math.ceil(idealLayout.standing - layout.standing)),
-        };
-        let totalAdded = addLayout.vip + addLayout.covered + addLayout.standard + addLayout.standing;
-        if (totalAdded > remaining) {
-            return distributeGreedy(layout, idealLayout, remaining);
-        }
-        else {
-            let extra = remaining - totalAdded;
-            return distributeWithExtra(layout, addLayout, extra);
-        }
-    }
 
-    const VERSION = "0.3.0";
+    const VERSION = "0.4.0";
     const MAX_SEATS = 1000000;
 
+    const t$2 = getTranslator();
+    function createPlannerAutomaticView(props) {
+        const autoInputsContainer = document.createElement('div');
+        autoInputsContainer.id = 'autoInputsContainer';
+        const desiredTotalContainer = document.createElement('div');
+        desiredTotalContainer.className = 'mb-3';
+        const desiredTotalLabel = document.createElement('label');
+        desiredTotalLabel.className = 'form-label';
+        desiredTotalLabel.htmlFor = 'totalSeats';
+        desiredTotalLabel.textContent = t$2('desiredTotalSeats');
+        const desiredTotalInput = document.createElement('input');
+        desiredTotalInput.type = 'number';
+        desiredTotalInput.className = 'form-control fmp-stadium-planner-input';
+        desiredTotalInput.id = 'desiredTotalSeatsInput';
+        desiredTotalInput.min = props.desiredTotalSeatsMin.toString();
+        desiredTotalInput.max = props.desiredTotalSeatsMax.toString();
+        desiredTotalInput.value = props.desiredTotalSeats?.toString() || '';
+        desiredTotalInput.placeholder = props.desiredTotalSeats?.toString() || '';
+        desiredTotalInput.addEventListener('input', () => {
+            const value = parseInt(desiredTotalInput.value, 10);
+            if (isNaN(value)) {
+                props.onDesiredTotalSeatsChange(null);
+            }
+            else {
+                props.onDesiredTotalSeatsChange(value);
+            }
+        });
+        desiredTotalContainer.appendChild(desiredTotalLabel);
+        desiredTotalContainer.appendChild(desiredTotalInput);
+        autoInputsContainer.appendChild(desiredTotalContainer);
+        const ratioContainer = document.createElement('div');
+        ratioContainer.id = 'ratioContainer';
+        ratioContainer.className = 'mb-3';
+        const ratioLabel = document.createElement('label');
+        ratioLabel.className = 'form-label';
+        ratioLabel.textContent = t$2('seatsRatioExtendedLabel');
+        ratioContainer.appendChild(ratioLabel);
+        autoInputsContainer.appendChild(ratioContainer);
+        if (props.modeSelected === PlannerMode.CUSTOM) {
+            const customView = createAutomaticCustomView(props.currentSeatsRatio || SeatsRatio.getDefaultRatio(), props.onCurrentSeatsRatioChange);
+            ratioContainer.appendChild(customView);
+        }
+        else {
+            const presetRatioValue = document.createElement('div');
+            presetRatioValue.className = 'h4';
+            presetRatioValue.id = 'presetLabel';
+            presetRatioValue.textContent = props.currentSeatsRatio?.toString() || '';
+            ratioContainer.appendChild(presetRatioValue);
+        }
+        const description = document.createElement('div');
+        description.textContent = t$2('seatsRatioDescription');
+        ratioContainer.appendChild(description);
+        const previewLayout = createGeneratedLayoutView(props.currentSeatsLayout);
+        autoInputsContainer.appendChild(previewLayout);
+        const planButton = document.createElement('button');
+        planButton.className = 'btn fmp-btn btn-green fmp-stadium-planner-button w-100 mt-3 btn-lg';
+        planButton.id = 'planBtn';
+        planButton.textContent = t$2('plan').toLocaleUpperCase();
+        planButton.style.paddingBottom = '16px';
+        planButton.style.paddingTop = '16px';
+        planButton.style.fontSize = '1.5rem';
+        planButton.addEventListener('click', props.onPlanClick);
+        autoInputsContainer.appendChild(planButton);
+        return autoInputsContainer;
+    }
+    function createAutomaticCustomView(currentSeatsRatio, onCurrentSeatsRatioChange) {
+        const inputContainer = document.createElement('div');
+        inputContainer.className = 'd-flex gap-2';
+        function inputEventHandler() {
+            let vip = parseInt(vipInput.value, 10) || 0;
+            if (vip < 0)
+                vip = 0;
+            if (vip > 1)
+                vip = 1;
+            let covered = parseInt(coveredInput.value, 10) || 0;
+            if (covered < 1)
+                covered = 1;
+            let standard = parseInt(standardInput.value, 10) || 0;
+            if (standard < 1)
+                standard = 1;
+            let standing = parseInt(standingInput.value, 10) || 0;
+            if (standing < 1)
+                standing = 1;
+            onCurrentSeatsRatioChange(new SeatsRatio({ vip, covered, standard, standing }));
+        }
+        const vipInput = document.createElement('input');
+        const isVipEnabled = currentSeatsRatio.vip !== 1;
+        if (isVipEnabled) {
+            vipInput.type = 'number';
+        }
+        vipInput.className = 'form-control text-center ratio fmp-stadium-planner-input';
+        vipInput.value = currentSeatsRatio.vip.toString();
+        vipInput.min = '0';
+        vipInput.max = '1';
+        vipInput.addEventListener('input', inputEventHandler);
+        vipInput.disabled = !isVipEnabled;
+        const coveredInput = document.createElement('input');
+        coveredInput.type = 'number';
+        coveredInput.className = 'form-control text-center ratio fmp-stadium-planner-input';
+        coveredInput.value = currentSeatsRatio.covered.toString();
+        coveredInput.min = '1';
+        coveredInput.addEventListener('input', inputEventHandler);
+        const standardInput = document.createElement('input');
+        standardInput.type = 'number';
+        standardInput.className = 'form-control text-center ratio fmp-stadium-planner-input';
+        standardInput.value = currentSeatsRatio.standard.toString();
+        standardInput.min = '1';
+        standardInput.addEventListener('input', inputEventHandler);
+        const standingInput = document.createElement('input');
+        standingInput.type = 'number';
+        standingInput.className = 'form-control text-center ratio fmp-stadium-planner-input';
+        standingInput.value = currentSeatsRatio.standing.toString();
+        standingInput.min = '1';
+        standingInput.addEventListener('input', inputEventHandler);
+        inputContainer.appendChild(vipInput);
+        inputContainer.appendChild(coveredInput);
+        inputContainer.appendChild(standardInput);
+        inputContainer.appendChild(standingInput);
+        return inputContainer;
+    }
+    function createGeneratedLayoutView(layout) {
+        const previewContainer = document.createElement('div');
+        previewContainer.id = 'preview';
+        previewContainer.className = 'mt-3';
+        const title = document.createElement('div');
+        title.className = 'fw-bold mb-2';
+        title.textContent = t$2('lastGeneratedLayoutTitle');
+        previewContainer.appendChild(title);
+        const listGroup = document.createElement('ul');
+        listGroup.className = 'list-group fmp-stadium-planner-list-group';
+        // listGroup.style.borderRadius = '3px';
+        const vipItem = document.createElement('li');
+        vipItem.className = 'list-group-item fmp-stadium-planner-list-item';
+        vipItem.innerHTML = `<i class="fmp-icons fmp-stadium" style="font-size: 20px;"></i> ${getHostLabel('stadium.VIP Seats')} <span class="float-end">${layout.vip}</span>`;
+        listGroup.appendChild(vipItem);
+        const coveredItem = document.createElement('li');
+        coveredItem.className = 'list-group-item fmp-stadium-planner-list-item';
+        coveredItem.innerHTML = `<i class="fmp-icons fmp-stadium" style="font-size: 20px;"></i> ${getHostLabel('stadium.Covered Seats')} <span class="float-end">${layout.covered}</span>`;
+        listGroup.appendChild(coveredItem);
+        const standardItem = document.createElement('li');
+        standardItem.className = 'list-group-item fmp-stadium-planner-list-item';
+        standardItem.innerHTML = `<i class="fmp-icons fmp-stadium" style="font-size: 20px;"></i> ${getHostLabel('stadium.Other Seats')} <span class="float-end">${layout.standard}</span>`;
+        listGroup.appendChild(standardItem);
+        const standingItem = document.createElement('li');
+        standingItem.className = 'list-group-item fmp-stadium-planner-list-item';
+        standingItem.innerHTML = `<i class="fmp-icons fmp-stadium" style="font-size: 20px;"></i> ${getHostLabel('stadium.Standing')} <span class="float-end">${layout.standing}</span>`;
+        listGroup.appendChild(standingItem);
+        const totalItem = document.createElement('li');
+        totalItem.className = 'list-group-item fw-bold fmp-stadium-planner-list-item';
+        const totalSeats = layout.vip + layout.covered + layout.standard + layout.standing;
+        totalItem.innerHTML = `<i class="fmp-icons fmp-stadium" style="font-size: 20px;"></i> ${t$2('totalSeats')} <span class="float-end">${totalSeats}</span>`;
+        listGroup.appendChild(totalItem);
+        previewContainer.appendChild(listGroup);
+        return previewContainer;
+    }
+
     const t$1 = getTranslator();
+    var PlannerMode;
+    (function (PlannerMode) {
+        PlannerMode["PRESET_KHRISTIAN"] = "preset-khristian";
+        PlannerMode["PRESET_TICKETS"] = "preset-tickets";
+        PlannerMode["CUSTOM"] = "custom";
+        PlannerMode["ADVANCED"] = "advanced";
+    })(PlannerMode || (PlannerMode = {}));
     // Renders planner-view and subscribes to store updates
     function renderPlannerView(container, store) {
         container.innerHTML = '';
-        store.subscribe((state, prevState) => {
-            container.innerHTML = '';
-            const title = makeTitleContainer('FMP Stadium Planner', t$1('planner'));
-            container.appendChild(title);
-            const itemContainer = createItemContainer$1();
-            container.appendChild(itemContainer);
-            const table = createTable(state.plannedStadium?.getLayout() || state.currentStadium.getLayout());
-            itemContainer.appendChild(table);
-            // Bootstrap layout: label above input, button right
-            const controls = document.createElement('div');
-            controls.id = 'planner-controls';
-            controls.className = 'item economy';
-            controls.style.marginTop = '12px';
-            // Form group for label above input
-            const formGroup = document.createElement('div');
-            formGroup.className = 'mb-0';
-            formGroup.style.display = 'flex';
-            formGroup.style.flexDirection = 'column';
-            formGroup.style.marginRight = '8px';
-            const label = document.createElement('label');
-            label.htmlFor = 'desiredTotalInput';
-            label.textContent = t$1('desiredTotalSeats');
-            label.className = 'form-label';
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.id = 'desiredTotalInput';
-            input.min = state.currentStadium.getTotalSeats().toString();
-            input.max = MAX_SEATS.toString();
-            input.placeholder = state.plannedStadium?.getTotalSeats().toString() || state.currentStadium.getTotalSeats().toString();
-            input.value = state.plannedStadium?.getTotalSeats().toString() || state.currentStadium.getTotalSeats().toString();
-            input.className = 'form-control';
-            input.style.width = '160px';
-            formGroup.appendChild(label);
-            formGroup.appendChild(input);
-            // Button
-            const btn = document.createElement('button');
-            btn.id = 'planBtn';
-            btn.className = 'fmp-btn btn-green btn ms-2';
-            btn.textContent = t$1('plan');
-            // Flex row: formGroup (label+input) + button
-            const flexRow = document.createElement('div');
-            flexRow.className = 'd-flex align-items-end';
-            flexRow.appendChild(formGroup);
-            flexRow.appendChild(btn);
-            controls.appendChild(flexRow);
-            container.appendChild(controls);
-            btn.addEventListener('click', () => {
-                let desired = parseInt(input.value, 10);
-                console.log('Plan button clicked with desired seats: ', desired);
-                if (isNaN(desired) || desired < state.currentStadium.getTotalSeats()) {
-                    desired = state.currentStadium.getTotalSeats();
-                    input.value = desired.toString();
+        let componentContext = {
+            modeSelected: PlannerMode.PRESET_KHRISTIAN,
+            currentSeatsRatio: SeatsRatio.getDefaultRatio(),
+            desiredTotalSeats: store.getState().plannedStadium?.getTotalSeats() || store.getState().currentStadium.getTotalSeats(),
+            onModeChange: (mode, seatsRatio) => {
+                const newContext = {
+                    ...componentContext,
+                    modeSelected: mode,
+                };
+                if (seatsRatio !== undefined) {
+                    newContext.currentSeatsRatio = seatsRatio;
                 }
-                else if (desired > MAX_SEATS) {
-                    desired = MAX_SEATS;
-                    input.value = MAX_SEATS.toString();
+                componentContext = newContext;
+                onStateUpdate(container, store.getState(), store, newContext);
+            },
+            onDesiredTotalSeatsChange: (seats) => {
+                const newContext = {
+                    ...componentContext,
+                    desiredTotalSeats: seats
+                };
+                componentContext = newContext;
+            },
+            onCurrentSeatsRatioChange: (seatsRatio) => {
+                const newContext = {
+                    ...componentContext,
+                    currentSeatsRatio: seatsRatio
+                };
+                componentContext = newContext;
+            },
+            onPlanClick: () => {
+                let desiredTotal = componentContext.desiredTotalSeats;
+                let shouldUpdateInput = false;
+                const state = store.getState();
+                if (!desiredTotal || isNaN(desiredTotal) || desiredTotal < state.currentStadium.getTotalSeats()) {
+                    desiredTotal = state.currentStadium.getTotalSeats();
+                    shouldUpdateInput = true;
+                }
+                else if (desiredTotal > MAX_SEATS) {
+                    desiredTotal = MAX_SEATS;
+                    shouldUpdateInput = true;
                 }
                 // Use store to update plannedStadium
-                const planned = planner(desired, state.currentStadium);
+                const planned = planner(desiredTotal, state.currentStadium, componentContext.currentSeatsRatio || SeatsRatio.getDefaultRatio());
+                if (shouldUpdateInput) {
+                    const newContext = {
+                        ...componentContext,
+                        desiredTotalSeats: desiredTotal
+                    };
+                    componentContext = newContext;
+                }
                 store.setState({ plannedStadium: planned });
-            });
+                if (!state.plannedStadium.isDifferentLayout(planned) && shouldUpdateInput) {
+                    // Force re-render to update input value
+                    onStateUpdate(container, store.getState(), store, componentContext);
+                }
+            },
+        };
+        store.subscribe((state, prevState) => {
+            onStateUpdate(container, state, store, componentContext);
         });
+    }
+    function onStateUpdate(container, state, store, componentContext) {
+        container.innerHTML = '';
+        const title = makeTitleContainer('FMP Stadium Planner', t$1('planner'));
+        container.appendChild(title);
+        const itemContainer = createItemContainer$1();
+        container.appendChild(itemContainer);
+        const controlsContainer = createModeControls(componentContext.modeSelected, componentContext.onModeChange);
+        itemContainer.appendChild(controlsContainer);
+        // Mode-specific views
+        if (componentContext.modeSelected === PlannerMode.ADVANCED) {
+            const advancedView = createAdvancedView();
+            itemContainer.appendChild(advancedView);
+        }
+        else {
+            const automaticView = createPlannerAutomaticView({
+                modeSelected: componentContext.modeSelected,
+                currentSeatsRatio: componentContext.currentSeatsRatio,
+                desiredTotalSeats: componentContext.desiredTotalSeats,
+                onDesiredTotalSeatsChange: componentContext.onDesiredTotalSeatsChange,
+                desiredTotalSeatsMin: state.currentStadium.getTotalSeats(),
+                desiredTotalSeatsMax: MAX_SEATS,
+                onCurrentSeatsRatioChange: componentContext.onCurrentSeatsRatioChange,
+                currentSeatsLayout: state.plannedStadium?.getLayout() || state.currentStadium.getLayout(),
+                onPlanClick: componentContext.onPlanClick,
+            });
+            itemContainer.appendChild(automaticView);
+        }
     }
     function createItemContainer$1() {
         const item = document.createElement('div');
         item.className = 'item economy';
         return item;
     }
-    function makeRow(captionText, id, value) {
-        const tr = document.createElement('tr');
-        tr.className = 'logo-info';
-        const tdIcon = document.createElement('td');
-        const iconWrap = document.createElement('div');
-        const icon = document.createElement('i');
-        icon.className = 'fmp-icons fmp-stadium';
-        iconWrap.appendChild(icon);
-        tdIcon.appendChild(iconWrap);
-        const tdVal = document.createElement('td');
-        tdVal.style.verticalAlign = 'middle';
-        const caption = document.createElement('div');
-        caption.className = 'caption';
-        caption.textContent = captionText;
-        const val = document.createElement('div');
-        val.id = id;
-        val.className = 'value';
-        val.textContent = value.toLocaleString();
-        const sub = document.createElement('div');
-        sub.className = 'subtext';
-        tdVal.appendChild(caption);
-        tdVal.appendChild(val);
-        tdVal.appendChild(sub);
-        tr.appendChild(tdIcon);
-        tr.appendChild(tdVal);
-        return tr;
+    function createModeControls(selectedMode, onModeChange) {
+        const mainContainer = document.createElement('div');
+        mainContainer.className = 'mb-3';
+        const modes = [
+            { value: PlannerMode.PRESET_KHRISTIAN, label: t$1('controlsAutomaticKhristianLabel'), seatsRatio: SeatsRatio.getDefaultRatio() },
+            { value: PlannerMode.PRESET_TICKETS, label: t$1('controlsAutomaticTicketsLabel'), seatsRatio: SeatsRatio.getMaintananceOptimizedRatio() },
+            { value: PlannerMode.CUSTOM, label: t$1('controlsAutomaticCustomLabel'), seatsRatio: undefined },
+            { value: PlannerMode.ADVANCED, label: t$1('controlsAdvancedManualLabel'), seatsRatio: null },
+        ];
+        modes.forEach(mode => {
+            const formCheck = document.createElement('div');
+            formCheck.className = 'form-check';
+            const input = document.createElement('input');
+            input.className = 'form-check-input fmp-stadium-planner-radio';
+            input.type = 'radio';
+            input.name = 'mode';
+            input.id = `mode-${mode.value}`;
+            input.value = mode.value;
+            if (selectedMode === mode.value) {
+                input.checked = true;
+            }
+            if (mode.value === PlannerMode.ADVANCED) {
+                input.disabled = true; // Advanced mode is disabled for now
+            }
+            input.addEventListener('change', () => {
+                onModeChange(mode.value, mode.seatsRatio);
+            });
+            const label = document.createElement('label');
+            label.className = 'form-check-label';
+            label.style.color = '#cce8ba';
+            label.htmlFor = `mode-${mode.value}`;
+            label.textContent = mode.label;
+            formCheck.appendChild(input);
+            formCheck.appendChild(label);
+            mainContainer.appendChild(formCheck);
+        });
+        return mainContainer;
     }
-    function createTable(currentLayout) {
-        const table = document.createElement('table');
-        table.id = 'planner-stadium-info';
-        const layout = currentLayout;
-        table.appendChild(makeRow(getHostLabel('stadium.VIP Seats'), 'planner-stadium-vip', layout.vip));
-        table.appendChild(makeRow(getHostLabel('stadium.Covered Seats'), 'planner-stadium-cov', layout.covered));
-        table.appendChild(makeRow(getHostLabel('stadium.Other Seats'), 'planner-stadium-sea', layout.standard));
-        table.appendChild(makeRow(getHostLabel('stadium.Standing'), 'planner-stadium-sta', layout.standing));
-        return table;
+    function createAdvancedView() {
+        const container = document.createElement('div');
+        container.textContent = 'Advanced view content goes here.';
+        return container;
     }
 
     const t = getTranslator();
@@ -720,13 +985,13 @@
             (state.plannedStadium.getLayout().standing - state.currentStadium.getLayout().standing).toLocaleString()
         ]);
         tableBody.appendChild(standingSeatsRow);
-        const maintainingCostRow = createRow([
-            t('maintananceCost'),
+        const maintenanceCostRow = createRow([
+            t('maintenanceCost'),
             `ⓕ ${state.currentStadium.getMaintainCost().toLocaleString()}`,
             `ⓕ ${state.plannedStadium.getMaintainCost().toLocaleString()}`,
             `ⓕ ${(state.plannedStadium.getMaintainCost() - state.currentStadium.getMaintainCost()).toLocaleString()}`
         ]);
-        tableBody.appendChild(maintainingCostRow);
+        tableBody.appendChild(maintenanceCostRow);
         const maxIncomeRow = createRow([
             t('maxIncome'),
             `ⓕ ${state.currentStadium.calcMaxIncome(state.baseTicketPrice).toLocaleString()}`,
@@ -803,6 +1068,45 @@
         return item;
     }
 
+    // Inject custom CSS if not already present
+    function injectCustomStyles() {
+        if (document.getElementById('fmp-stadium-planner-style'))
+            return;
+        const style = document.createElement('style');
+        style.id = 'fmp-stadium-planner-style';
+        style.textContent = `
+        .d-flex, .flexbox, .economy {
+            min-width: 0 !important;
+        }
+        input.form-check-input.fmp-stadium-planner-radio:checked {
+            background-color: #4caf50 !important;
+            border-color: #388e3c !important;
+        }
+        input.form-check-input.fmp-stadium-planner-radio {
+            background-color: #8bb299;
+        }
+        .fmp-stadium-planner-input {
+            background-color: #467246 !important;
+            color: #cce8ba !important;
+            border: 1px solid #5ea141 !important;
+            border-radius: 3px !important;
+        }
+        .fmp-stadium-planner-button {
+            border-radius: 3px !important;
+        }
+        .fmp-stadium-planner-list-group {
+            border-radius: 3px !important;
+        }
+        .fmp-stadium-planner-list-item {
+            color: #cce8ba !important;
+            background-color: transparent !important;
+            border-color: #cce8ba !important;
+            border-width: 0.5px !important;
+        }
+    `;
+        document.head.appendChild(style);
+    }
+
     getTranslator();
     function buildView(store) {
         const injectionPoint = findInjectionPoint();
@@ -810,14 +1114,7 @@
             console.error('FMP Stadium Planner: Unable to find injection point in DOM.');
             return;
         }
-        // Add styles for responsive tables
-        const style = document.createElement('style');
-        style.textContent = `
-        .d-flex, .flexbox, .economy {
-            min-width: 0 !important;
-        }
-    `;
-        document.head.appendChild(style);
+        injectCustomStyles();
         const mainHeader = makeMainHeader(VERSION);
         const mainContainer = makeMainContainer();
         injectionPoint.after(mainHeader);
@@ -837,7 +1134,6 @@
         mainContainer.appendChild(detailedInfoSection);
     }
     function findInjectionPoint() {
-        // Find the first element with all three classes: d-flex flex-row flex-wrap
         const candidates = document.querySelectorAll('div.d-flex.flex-row.flex-wrap');
         return candidates.length > 0 ? candidates[0] : null;
     }

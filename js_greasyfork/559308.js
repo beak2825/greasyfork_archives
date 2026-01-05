@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         YouTube to DownSub (With Format Choice)
 // @namespace    http://tampermonkey.net/
-// @version      4.0
-// @description  Automated subtitle download via DownSub with format selection popup
+// @version      5.1
+// @description  Automated subtitle download via DownSub with format selection popup.
 // @author       You
 // @match        https://www.youtube.com/*
 // @match        https://downsub.com/*
@@ -20,11 +20,8 @@
     // ==========================================
     if (window.location.hostname.includes('youtube.com')) {
 
-        let currentUrl = location.href;
-
         // --- POPUP LOGIC ---
         function createFormatPopup() {
-            // Remove existing if any
             if (document.getElementById('ds-popup-overlay')) return;
 
             // 1. Overlay
@@ -79,7 +76,6 @@
             const srtBtn = createBtn('SRT', '#3498db', 'SRT');
             const txtBtn = createBtn('TXT', '#e67e22', 'TXT');
 
-            // Append everything
             btnContainer.appendChild(srtBtn);
             btnContainer.appendChild(txtBtn);
             box.appendChild(title);
@@ -95,30 +91,41 @@
 
         function openDownSub(format) {
             const videoUrl = encodeURIComponent(window.location.href);
-            // We append the selected format to the URL (target_fmt)
             window.open(`https://downsub.com/?url=${videoUrl}&auto_dl=1&target_fmt=${format}`, '_blank');
         }
 
         // --- BUTTON INJECTION ---
-        function addButton() {
+        function tryInjectButton() {
+            // 1. Only run on Watch pages
+            if (!window.location.pathname.startsWith('/watch')) return;
+
+            // 2. Check if button already exists
             if (document.getElementById('ds-download-btn')) return;
 
-            const validSelectors = [
-                '#top-level-buttons-computed',
-                '#flexible-item-buttons',
-                'ytd-menu-renderer #top-level-buttons-computed'
+            // 3. Find the container (Updated Selectors for 2025 compatibility)
+            const selectors = [
+                'ytd-watch-metadata #top-level-buttons-computed', // Newest YouTube UI
+                '#top-level-buttons-computed',                    // Older UI
+                '#flexible-item-buttons',                         // Flexible container
+                'ytd-menu-renderer #top-level-buttons-computed'   // Fallback
             ];
 
             let container = null;
-            for (let sel of validSelectors) {
-                container = document.querySelector(sel);
-                if (container) break;
+            for (const sel of selectors) {
+                const el = document.querySelector(sel);
+                if (el && el.offsetParent !== null) { // Check visibility
+                    container = el;
+                    break;
+                }
             }
 
-            if (window.location.pathname === '/watch' && container) {
+            // 4. Create and Inject the button (With your Original Style)
+            if (container) {
                 const btn = document.createElement('button');
                 btn.id = 'ds-download-btn';
                 btn.innerText = 'Download Subtitle';
+
+                // RESTORED ORIGINAL STYLING
                 btn.style.cssText = `
                     background-color: #2c3e50; color: white; border: 1px solid #e67e22;
                     border-radius: 18px; padding: 0 16px; margin-left: 8px;
@@ -129,22 +136,19 @@
                 btn.onmouseover = () => { btn.style.backgroundColor = '#e67e22'; };
                 btn.onmouseout = () => { btn.style.backgroundColor = '#2c3e50'; };
 
-                // Open the popup instead of direct link
-                btn.onclick = createFormatPopup;
+                btn.onclick = (e) => {
+                    e.preventDefault(); // Stop YouTube from clicking background elements
+                    createFormatPopup();
+                };
 
                 container.appendChild(btn);
             }
         }
 
-        const observer = new MutationObserver(() => {
-            if (window.location.href !== currentUrl) {
-                currentUrl = window.location.href;
-                setTimeout(addButton, 500);
-            }
-            addButton();
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
-        setTimeout(addButton, 1000);
+        // --- HEARTBEAT CHECK ---
+        // Checks every second. If the user navigates to a new video,
+        // the button is re-added automatically without refreshing.
+        setInterval(tryInjectButton, 1000);
     }
 
     // ==========================================
@@ -152,45 +156,37 @@
     // ==========================================
     if (window.location.hostname.includes('downsub.com')) {
 
-        // 1. Check if we should run
         if (!window.location.href.includes('auto_dl=1')) return;
 
-        // 2. Determine target format from URL (Default to TXT if missing)
         const urlParams = new URLSearchParams(window.location.search);
         const targetFormat = urlParams.get('target_fmt') || 'TXT';
 
-        console.log(`⚡ Auto-Downloader Active. Target: ${targetFormat}`);
+        let attempts = 0;
+        const maxAttempts = 30; // 30 seconds max wait time
 
-        let hasClicked = false;
+        const downsubInterval = setInterval(() => {
+            attempts++;
+            if (attempts > maxAttempts) clearInterval(downsubInterval);
 
-        const checkLoop = setInterval(() => {
-            if (hasClicked) return;
+            const buttons = document.querySelectorAll('button, a');
 
-            const candidates = document.querySelectorAll('button, a');
+            for (let el of buttons) {
+                const text = el.textContent.trim().toUpperCase();
 
-            for (let el of candidates) {
-                const text = el.textContent.trim();
-
-                // DYNAMIC CHECK: Matches "SRT" or "TXT" depending on user choice
-                // Logic: Text matches target exactly OR contains target but is NOT a translation button
-                if (text === targetFormat || (text.includes(targetFormat) && !text.includes('Translate'))) {
-
-                    console.log(`⚡ Target (${targetFormat}) found:`, el);
+                // Check matches format but ignore "Translate" buttons
+                if ((text === targetFormat || text.includes(targetFormat)) && !text.includes('TRANSLATE')) {
 
                     el.click();
-                    hasClicked = true;
-                    clearInterval(checkLoop);
+                    clearInterval(downsubInterval);
 
                     setTimeout(() => {
                         window.close();
                     }, 1500);
 
-                    break;
+                    return;
                 }
             }
-        }, 100);
-
-        setTimeout(() => clearInterval(checkLoop), 15000);
+        }, 1000);
     }
 
 })();
