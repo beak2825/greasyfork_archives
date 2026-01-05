@@ -1,12 +1,14 @@
 // ==UserScript==
 // @name         Invidious Clean View with List View of Thumbnails, and Threshold Control
 // @namespace    http://tampermonkey.net/
-// @version      2.2
+// @version      2.3
 // @license      MIT
 // @description  Clean Invidious: remove short/hashtag videos, shorts links, login/subscribe prompts, with adjustable short video threshold and persistent settings.
-// @match        https://yewtu.be/*
+// @match        https://yewtu.be/search?*
 // @match        https://inv.nadeko.net/search?*
-// @match        https://invidious.nerdvpn.de/*
+// @match        https://invidious.nerdvpn.de/search?*
+// @match        https://inv.perditum.com/search?*
+// @match        https://invidious.f5.si/search?*
 // @match        https://*/watch*
 // @match        https://*/channel/*
 // @match        https://*/feed/popular*

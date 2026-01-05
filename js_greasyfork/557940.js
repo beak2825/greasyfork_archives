@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fix Mangapark Image Loading Issue
 // @namespace    http://tampermonkey.net/
-// @version      0.24
+// @version      0.25
 // @description  Auto-loads images from the main host to bypass CDN issues. Click "PICK" to manually change servers.
 // @match        https://mangapark.io/title/*-chapter-*
 // @match        https://mangapark.io/title/*-ch-*
@@ -15,6 +15,10 @@
 // @match        https://mpark.to/title/*-ch-*
 // @match        https://mpark.to/title/*-prologue
 // @match        https://mpark.to/title/*-oneshot
+// @match        https://mangapark.to/title/*-chapter-*
+// @match        https://mangapark.to/title/*-ch-*
+// @match        https://mangapark.to/title/*-prologue
+// @match        https://mangapark.to/title/*-oneshot
 // @license      MIT
 // @grant        none
 // @run-at       document-idle

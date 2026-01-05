@@ -3,13 +3,14 @@
 // @name:zh-CN          Misskey 实例过滤器 (全局流/白名单)
 // @name:ja             Misskey タイムライン インスタンス フィルター
 // @namespace           https://github.com/Jarvie8176/misskey-instance-filter
-// @version             1.1.1
+// @version             1.1.2
 // @description         Filter Misskey global timeline by instances
 // @description:zh-CN   通过实例白名单过滤 Misskey 全局流内容，支持自动翻页直至命中白名单实例内容。
 // @description:ja      インスタンスのホワイトリストに基づいてMisskeyのグローバルタイムラインをフィルタリングします。ホワイトリストに一致するインスタンスのコンテンツが見つかるまで、自動的にページを進めることができます。
 // @author              JarvieK
 // @license             MIT
 // @match               *://*/*
+// @match               *://misskey.io/*
 // @include             *
 // @icon                https://misskey-hub.net/favicon.ico
 // @grant               GM_setValue

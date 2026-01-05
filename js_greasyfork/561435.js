@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grok Favorites Batch Download
 // @namespace    https://greasyfork.org/pt-BR/users/1556138-marcos-monteiro
-// @version      2026.01.04.1
+// @version      2026.01.04.2
 // @description  Batch download videos and images from Grok 'imagine' collections, supporting history tracking to prevent duplicate downloads
 // @author       Marcos Monteiro
 // @Credits      Based on a script under MIT License (Grok 收藏批量下载 - https://greasyfork.org/pt-BR/scripts/556281-grok-%E6%94%B6%E8%97%8F%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD) authored by 3989364 https://greasyfork.org/zh-CN/users/309232-3989364
@@ -412,6 +412,7 @@ function createDownloadPanel(onDownloadCallback) {
                         this.updateStatus('Error');
                     }
                 } finally {
+                    this.saveLog();
                     downloadBtn.style.display = 'inline-block';
                     dryRunBtn.style.display = 'inline-block';
                     cancelBtn.style.display = 'none';
@@ -451,6 +452,16 @@ function createDownloadPanel(onDownloadCallback) {
         },
         clearLog() {
             logContainer.innerHTML = '';
+        },
+        saveLog() {
+            const content = logContainer.innerText;
+            if (content && content.trim()) {
+                const blob = new Blob([content], {type: 'text/plain'});
+                const d = new Date();
+                const pad = (n) => String(n).padStart(2, '0');
+                const timestamp = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}-${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}`;
+                downloadFile(`grok-log-${timestamp}.txt`, blob);
+            }
         },
         get signal() {
             return this.abortController ? this.abortController.signal : null;
@@ -499,7 +510,7 @@ function downloadFile(filename, blob) {
     URL.revokeObjectURL(objectUrl);
 }
 
-async function downloadFileFromURL(filename, url, includeCredentials = true, signal) {
+async function downloadFileFromURL(filename, url, includeCredentials, signal) {
     const performFetch = async (creds) => {
         const response = await fetch(url, {
             method: 'GET',
@@ -514,21 +525,21 @@ async function downloadFileFromURL(filename, url, includeCredentials = true, sig
         return await response.blob();
     };
 
+    // Try downloading with the specified credential mode    
     try {
         const blob = await performFetch(includeCredentials ? 'include' : 'omit');
         downloadFile(filename, blob)
     } catch (err) {
-        if (includeCredentials && err.name !== 'AbortError') {
-            try {
-                const blob = await performFetch('omit');
-                downloadFile(filename, blob);
-                return;
-            } catch (e) {
-                console.error('Error downloading file without credentials:', err);
-            }
-        }
-        console.error('Error downloading file with credentials:', err);
-        throw err;
+        if (err.name == 'AbortError') throw err;
+        // Try downloading with opposite specified credential mode    
+        try {
+            const blob = await performFetch(!includeCredentials ? 'include' : 'omit');
+            downloadFile(filename, blob);
+            return;
+        } catch (e) {
+            console.error('Error trying downloading again with' + (includeCredentials ? '' : 'out') + ' and with' + (!includeCredentials ? 'out' : '') + ' credentials:', err);
+            throw e;
+        }           
     }
 }
 
@@ -560,7 +571,9 @@ const DownloadRecordStore = {
             this.load()
         }
         const blob = new Blob([JSON.stringify(this.urls, null, 2)], {type: 'application/json'})
-        downloadFile(`grok-download-history-${new Date().toISOString().slice(0, 10)}.json`, blob)
+        const d = new Date();
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        downloadFile(`grok-download-history-${dateStr}.json`, blob)
     },
     import(urlList) {
         if (this.urls == null) {
@@ -612,14 +625,16 @@ const handleDownloadMedias = async (mediaList, {includeImage, includeVideo, save
         }
         
         if (shouldDownload) {
-            let filename = ""
-            if (type.startsWith('image') && url.includes('imagine-public.x.ai')) {                
-                // https://imagine-public.x.ai/imagine-public/images/xxx_filename_xxx.png
+            let filename = ""            
+            if (url.includes('imagine-public.x.ai')) {                
+                // https://imagine-public.x.ai/imagine-public/images/xxx_filename_xxx.xxx
                 filename = (url.split('/').slice(-1)[0]).split('.').slice(0, -1).join('.')                    
+                includeCredentials = false
             } else { 
                 // https://assets.grok.com/users/xxx_user_xxx/generated/xxx_filename_xxx/generated_video.mp4
                 // https://assets.grok.com/users/xxx_user_xxx/generated/xxx_filename_xxx/image.jpg
-                filename = url.split('/').slice(-2)[0]                
+                filename = url.split('/').slice(-2)[0]    
+                includeCredentials = true            
             }
             const ext = type.split('/')[1]
             
@@ -635,6 +650,7 @@ const handleDownloadMedias = async (mediaList, {includeImage, includeVideo, save
                 if (onProgress) onProgress(currentDownload, totalDownloads);
             } catch (e) {
                 if (e.name === 'AbortError') throw e;
+                if (onLog) onLog(`Error downloading ${filename}.${ext}: ${e.message}\nURL: ${url}`, 'error');
             }
         }
     }

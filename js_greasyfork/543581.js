@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name          从linux do获取论坛文章数据与复制
+// @name          Linuxdo-share
 // @namespace     http://tampermonkey.net/
-// @version       0.15.18
+// @version       0.15.30
 // @description   从linux do论坛页面获取文章的板块、标题、链接、标签和内容总结，并在标题旁添加复制按钮。支持设置界面配置。
 // @author        @Loveyless https://github.com/Loveyless/linuxdo-share
 // @match         *://*.linux.do/*
@@ -13,8 +13,8 @@
 // @grant         GM_addStyle
 // @grant         GM_registerMenuCommand
 // @run-at        document-idle // 更可靠的运行时间，等待DOM和资源加载完成且浏览器空闲
-// @downloadURL https://update.greasyfork.org/scripts/543581/%E4%BB%8Elinux%20do%E8%8E%B7%E5%8F%96%E8%AE%BA%E5%9D%9B%E6%96%87%E7%AB%A0%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%A4%8D%E5%88%B6.user.js
-// @updateURL https://update.greasyfork.org/scripts/543581/%E4%BB%8Elinux%20do%E8%8E%B7%E5%8F%96%E8%AE%BA%E5%9D%9B%E6%96%87%E7%AB%A0%E6%95%B0%E6%8D%AE%E4%B8%8E%E5%A4%8D%E5%88%B6.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/543581/Linuxdo-share.user.js
+// @updateURL https://update.greasyfork.org/scripts/543581/Linuxdo-share.meta.js
 // ==/UserScript==
 
 (function () {
@@ -29,8 +29,8 @@
   const DEFAULT_CONFIG = {
     // 是否启用简洁模式：标题+摘要合并一段，隐藏作者/板块/标签，链接单独一行
     COMPACT_MODE: false,
-    // 主题列表分栏数（0/空表示关闭，最大 5；未设置时默认 2）
-    TWO_COLUMN_LAYOUT: 2,
+    // 主题列表分栏数（0/空表示关闭，最大 5；默认关闭）
+    TWO_COLUMN_LAYOUT: 0,
     // 主题列表瀑布流展示（仅分栏数>0时生效）
     TOPIC_LIST_WATERFALL: false,
     // 是否启用 AI 进行内容总结
@@ -146,7 +146,8 @@
             --tooltip-offset: 8px;
         }
 
-        html[style*="color-scheme: dark"] .copy-button {
+        html[style*="color-scheme: dark"] .copy-button,
+        html.dark .copy-button {
             --button-bg: #353434;
             --button-hover-bg: #464646;
             --button-text-color: #ccc;
@@ -295,15 +296,16 @@
 
         /* 设置界面样式 - shadcn 风格（简约） */
         .linuxdo-settings-dialog {
-            --ld-bg: #ffffff;
-            --ld-fg: #0f172a;
-            --ld-muted: #f1f5f9;
-            --ld-muted-fg: #64748b;
-            --ld-card: #ffffff;
-            --ld-border: rgba(15, 23, 42, 0.12);
-            --ld-ring: rgba(59, 130, 246, 0.45);
-            --ld-primary: #0f172a;
-            --ld-primary-fg: #ffffff;
+            /* 优先使用 Discourse 主题变量，自动适配深浅色；无变量时回退到浅色 */
+            --ld-bg: var(--secondary, #ffffff);
+            --ld-fg: var(--primary, #0f172a);
+            --ld-muted: var(--primary-very-low, #f1f5f9);
+            --ld-muted-fg: var(--primary-medium, #64748b);
+            --ld-card: var(--secondary, #ffffff);
+            --ld-border: var(--content-border-color, rgba(15, 23, 42, 0.12));
+            --ld-ring: var(--tertiary-low, rgba(59, 130, 246, 0.45));
+            --ld-primary: var(--primary, #0f172a);
+            --ld-primary-fg: var(--secondary, #ffffff);
 
             border: none;
             padding: 0;
@@ -319,16 +321,18 @@
             box-sizing: border-box;
         }
 
-        html[style*="color-scheme: dark"] .linuxdo-settings-dialog {
-            --ld-bg: #0b1220;
-            --ld-fg: #e2e8f0;
-            --ld-muted: rgba(148, 163, 184, 0.12);
-            --ld-muted-fg: #94a3b8;
-            --ld-card: #0f172a;
-            --ld-border: rgba(148, 163, 184, 0.18);
-            --ld-ring: rgba(59, 130, 246, 0.55);
-            --ld-primary: #e2e8f0;
-            --ld-primary-fg: #0b1220;
+        html[style*="color-scheme: dark"] .linuxdo-settings-dialog,
+        html.dark .linuxdo-settings-dialog {
+            /* 深色模式兜底：仅当站点未提供主题变量时生效 */
+            --ld-bg: var(--secondary, #0b1220);
+            --ld-fg: var(--primary, #e2e8f0);
+            --ld-muted: var(--primary-very-low, rgba(148, 163, 184, 0.12));
+            --ld-muted-fg: var(--primary-medium, #94a3b8);
+            --ld-card: var(--secondary, #0f172a);
+            --ld-border: var(--content-border-color, rgba(148, 163, 184, 0.18));
+            --ld-ring: var(--tertiary-low, rgba(59, 130, 246, 0.55));
+            --ld-primary: var(--primary, #e2e8f0);
+            --ld-primary-fg: var(--secondary, #0b1220);
         }
 
         .linuxdo-settings-dialog::backdrop {
@@ -671,21 +675,24 @@
 
         /* 主题列表两栏布局 */
         html.linuxdo-two-column-layout {
-            --ld-list-bg: #ffffff;
-            --ld-list-fg: #0f172a;
-            --ld-list-muted: #64748b;
-            --ld-list-border: rgba(15, 23, 42, 0.12);
-            --ld-list-card: #ffffff;
-            --ld-list-ring: rgba(59, 130, 246, 0.18);
+            /* 颜色尽量复用 Discourse 的 CSS 变量，自动适配深浅色主题 */
+            --ld-list-bg: var(--d-content-background, var(--secondary, #ffffff));
+            --ld-list-fg: var(--primary, #0f172a);
+            --ld-list-muted: var(--metadata-color, var(--primary-medium, #64748b));
+            --ld-list-border: var(--content-border-color, rgba(15, 23, 42, 0.12));
+            --ld-list-card: var(--topic-list-item-background-color, var(--secondary, #ffffff));
+            --ld-list-ring: var(--tertiary-low, rgba(59, 130, 246, 0.18));
         }
 
-        html[style*="color-scheme: dark"].linuxdo-two-column-layout {
-            --ld-list-bg: #0b1220;
-            --ld-list-fg: #e2e8f0;
-            --ld-list-muted: #94a3b8;
-            --ld-list-border: rgba(148, 163, 184, 0.18);
-            --ld-list-card: #0f172a;
-            --ld-list-ring: rgba(59, 130, 246, 0.28);
+        html.linuxdo-two-column-layout .linuxdo-topic-meta-item.linuxdo-topic-meta-count-warn {
+            color: var(--highlight-high, #fbbf24);
+            font-weight: 600;
+        }
+
+        html.linuxdo-two-column-layout .linuxdo-topic-meta-item.linuxdo-topic-meta-count-hot {
+            /* 来自 Discourse topic list 的 heatmap-high 颜色 */
+            color: #fe7a15;
+            font-weight: 700;
         }
 
         html.linuxdo-two-column-layout table.topic-list {
@@ -791,7 +798,8 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 0 0 3px var(--ld-list-ring);
         }
 
-        html[style*="color-scheme: dark"].linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item.selected:hover {
+        html[style*="color-scheme: dark"].linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item.selected:hover,
+        html.dark.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item.selected:hover {
             box-shadow: 0 18px 44px rgba(0, 0, 0, 0.35), 0 0 0 3px var(--ld-list-ring);
         }
 
@@ -799,7 +807,8 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 0 0 3px var(--ld-list-ring);
         }
 
-        html[style*="color-scheme: dark"].linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item:hover {
+        html[style*="color-scheme: dark"].linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item:hover,
+        html.dark.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item:hover {
             box-shadow: 0 18px 44px rgba(0, 0, 0, 0.35), 0 0 0 3px var(--ld-list-ring);
         }
 
@@ -851,6 +860,14 @@
             gap: 8px;
         }
 
+        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item td.main-link .link-bottom-line .discourse-tags {
+            display: contents;
+        }
+
+        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item td.main-link .link-bottom-line .discourse-tags__tag-separator {
+            display: none !important;
+        }
+
         html.linuxdo-two-column-layout .linuxdo-topic-meta {
             margin-top: 10px;
             padding-top: 10px;
@@ -895,6 +912,23 @@
             color: var(--ld-list-muted);
         }
 
+        html.linuxdo-two-column-layout .linuxdo-topic-meta .topic-post-badges {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        html.linuxdo-two-column-layout .linuxdo-topic-meta .topic-post-badges a {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        html.linuxdo-two-column-layout .linuxdo-topic-meta .linuxdo-topic-meta-item + .topic-post-badges::before {
+            content: "·";
+            margin: 0 6px 0 0;
+            color: var(--ld-list-muted);
+        }
+
         /* 历史复制内容（搜索框右侧） */
         .linuxdo-copy-history-trigger {
             --ld-h-bg: #ffffff;
@@ -920,7 +954,8 @@
             transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
         }
 
-        html[style*="color-scheme: dark"] .linuxdo-copy-history-trigger {
+        html[style*="color-scheme: dark"] .linuxdo-copy-history-trigger,
+        html.dark .linuxdo-copy-history-trigger {
             --ld-h-bg: #0b1220;
             --ld-h-fg: #e2e8f0;
             --ld-h-muted: rgba(148, 163, 184, 0.12);
@@ -967,7 +1002,8 @@
             display: none;
         }
 
-        html[style*="color-scheme: dark"] .linuxdo-copy-history-popover {
+        html[style*="color-scheme: dark"] .linuxdo-copy-history-popover,
+        html.dark .linuxdo-copy-history-popover {
             --ld-h-bg: #0b1220;
             --ld-h-fg: #e2e8f0;
             --ld-h-muted: rgba(148, 163, 184, 0.12);
@@ -1007,14 +1043,16 @@
             border: 1px solid var(--ld-h-border);
             background: transparent;
             color: var(--ld-h-muted-fg);
-            width: 24px;
             height: 24px;
-            padding: 0;
+            padding: 0 10px;
             border-radius: 10px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1;
             transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
         }
 
@@ -1031,12 +1069,6 @@
         .linuxdo-copy-history-settings-btn:focus-visible {
             outline: none;
             box-shadow: 0 0 0 3px var(--ld-h-ring);
-        }
-
-        .linuxdo-copy-history-settings-btn svg {
-            width: 14px;
-            height: 14px;
-            display: block;
         }
 
         .linuxdo-copy-history-hint {
@@ -1166,7 +1198,8 @@
             transition: transform 0.05s ease, box-shadow 0.15s ease, background 0.15s ease;
         }
 
-        html[style*="color-scheme: dark"] .linuxdo-back-to-top {
+        html[style*="color-scheme: dark"] .linuxdo-back-to-top,
+        html.dark .linuxdo-back-to-top {
             --ld-btt-bg: #0b1220;
             --ld-btt-fg: #e2e8f0;
             --ld-btt-muted: rgba(148, 163, 184, 0.12);
@@ -1214,7 +1247,7 @@
   }
   // #endregion
 
-  // #region 通用辅助函数
+  // #region 工具函数
   // ==========================================================
 
   /**
@@ -1251,6 +1284,10 @@
     return (summary || '').replace(/^\[AI\s*总结\]\s*:?\s*/i, '');
   }
 
+  function isAiSummaryText(summary) {
+    return /^\[AI\s*总结\]\s*:?\s*/i.test(summary || '');
+  }
+
   /**
    * @description 根据配置格式化复制内容。
    * @param {object} articleData - 文章数据。
@@ -1258,10 +1295,20 @@
    */
   function formatCopiedText(articleData) {
     if (CONFIG.COMPACT_MODE) {
+      const rawSummary = articleData && articleData.summary;
       const title = normalizeToSingleLine(articleData && articleData.title);
-      const summary = normalizeToSingleLine(stripAiSummaryPrefix(articleData && articleData.summary));
-      const combined = title && summary ? `${title}：${summary}` : (title || summary);
-      return [combined, articleData && articleData.link].filter(Boolean).join('\n').trim();
+      const summary = normalizeToSingleLine(stripAiSummaryPrefix(rawSummary));
+
+      const aiConfigured = !!(CONFIG.USE_AI_FOR_SUMMARY && CONFIG.API_KEY);
+      const aiSucceeded = isAiSummaryText(rawSummary);
+
+      // 简洁模式：默认不保留标题；但若 AI 总结失败（配置了 AI 且未生成 AI 总结），则回退为旧版简洁输出（标题：摘要）
+      if (aiConfigured && !aiSucceeded) {
+        const combined = title && summary ? `${title}：${summary}` : (title || summary);
+        return [combined, articleData && articleData.link].filter(Boolean).join('\n').trim();
+      }
+
+      return [summary, articleData && articleData.link].filter(Boolean).join('\n').trim();
     }
 
     const template = CONFIG.ARTICLE_COPY_TEMPLATE || DEFAULT_CONFIG.ARTICLE_COPY_TEMPLATE;
@@ -1272,7 +1319,9 @@
     return formattedText.replace(/\n\n+/g, '\n\n').trim();
   }
 
-  // #region 历史复制内容
+  // #endregion
+
+  // #region 历史复制内容（搜索框）
   // ==========================================================
 
   const COPY_HISTORY_STORAGE_KEY = 'COPY_HISTORY_V1';
@@ -1405,7 +1454,13 @@
       }
     });
 
-    window.addEventListener('scroll', () => hideCopyHistoryPopover(), true);
+    window.addEventListener('scroll', (e) => {
+      // 不要在滚动弹窗自身时关闭（鼠标滚轮/拖动滚动条）
+      if (!copyHistoryPopoverEl || copyHistoryPopoverEl.style.display === 'none') return;
+      const target = e && e.target;
+      if (target && copyHistoryPopoverEl.contains(target)) return;
+      hideCopyHistoryPopover();
+    }, true);
     window.addEventListener('resize', () => hideCopyHistoryPopover(), true);
 
     copyHistoryPopoverEl = popover;
@@ -1449,19 +1504,14 @@
     const list = Array.isArray(items) ? items : getCopyHistoryItems();
 
     const header = `
-      <div class="linuxdo-copy-history-header">
-        <div class="linuxdo-copy-history-header-left">
-          <div class="linuxdo-copy-history-title">历史复制</div>
-          <button type="button" class="linuxdo-copy-history-settings-btn" data-action="settings" aria-label="打开设置" title="打开设置">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" stroke="currentColor" stroke-width="2"/>
-              <path d="M19.4 15a8.1 8.1 0 0 0 .1-1l2-1.2-2-3.5-2.3.6a7.8 7.8 0 0 0-1.7-1L15 6h-4l-.5 2.9a7.8 7.8 0 0 0-1.7 1l-2.3-.6-2 3.5 2 1.2a8.1 8.1 0 0 0 .1 1 8.1 8.1 0 0 0-.1 1l-2 1.2 2 3.5 2.3-.6a7.8 7.8 0 0 0 1.7 1L11 18h4l.5-2.9a7.8 7.8 0 0 0 1.7-1l2.3.6 2-3.5-2-1.2a8.1 8.1 0 0 0-.1-1z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-            </svg>
-          </button>
+        <div class="linuxdo-copy-history-header">
+          <div class="linuxdo-copy-history-header-left">
+            <div class="linuxdo-copy-history-title">历史复制</div>
+            <button type="button" class="linuxdo-copy-history-settings-btn" data-action="settings" aria-label="打开设置" title="打开设置">设置</button>
+          </div>
+          <div class="linuxdo-copy-history-hint">点击复制 / 打开链接</div>
         </div>
-        <div class="linuxdo-copy-history-hint">点击复制 / 打开链接</div>
-      </div>
-    `;
+      `;
 
     if (!list || list.length === 0) {
       popover.innerHTML = header + `<div class="linuxdo-copy-history-empty">暂无历史记录</div>`;
@@ -1579,8 +1629,30 @@
   let backToTopRetryTimer = null;
 
   function isTopicPageForBackToTop() {
-    const path = window.location.pathname || '';
-    return /^\/t\/topic\/\d+(?:\/\d+)?/.test(path);
+    return !!getTopicPathInfoForBackToTop(window.location.pathname);
+  }
+
+  function getTopicPathInfoForBackToTop(pathname) {
+    const path = String(pathname || '');
+    const topicIndex = path.indexOf('/t/');
+    if (topicIndex < 0) return null;
+    const prefix = path.slice(0, topicIndex);
+    const topicPath = path.slice(topicIndex);
+    const match = topicPath.match(/^\/t\/([^\/]+)\/(\d+)(?:\/([^\/?#]+))?/);
+    if (!match) return null;
+
+    const slug = match[1];
+    const topicId = match[2];
+    const postSegment = match[3] || '';
+    const postNumber = postSegment && /^\d+$/.test(postSegment) ? Number.parseInt(postSegment, 10) : null;
+
+    return {
+      prefix,
+      slug,
+      topicId,
+      postNumber,
+      postSegment,
+    };
   }
 
   function getBackToTopSavedPosition() {
@@ -1618,17 +1690,130 @@
     }
   }
 
-  function tryScrollToTopByTimeline() {
-    const t = document.getElementsByClassName('timeline-padding');
-    if (t && t[0]) {
+  function toRelativeUrl(urlLike) {
+    if (!urlLike) return '';
+    try {
+      const url = new URL(urlLike, window.location.origin);
+      return `${url.pathname}${url.search}${url.hash}`;
+    } catch (_) {
+      return String(urlLike || '');
+    }
+  }
+
+  function getFirstPostUrlForBackToTop() {
+    const startLink = document.querySelector('.timeline-date-wrapper a.start-date[href]');
+    if (startLink) {
+      const href = startLink.getAttribute('href') || startLink.href || '';
+      if (href) return href;
+    }
+
+    const info = getTopicPathInfoForBackToTop(window.location.pathname);
+    if (info && info.topicId) {
+      const prefix = info.prefix || '';
+      const slug = info.slug || 'topic';
+      return `${prefix}/t/${slug}/${info.topicId}/1`;
+    }
+    return '';
+  }
+
+  function tryJumpToFirstPostByTimelineStartDate() {
+    const startLink = document.querySelector('.timeline-date-wrapper a.start-date[href]');
+    if (!startLink) return false;
+    try {
+      startLink.click();
+      return true;
+    } catch (error) {
+      console.warn('start-date 回到顶部执行失败:', error);
+      return false;
+    }
+  }
+
+  function getDiscourseContainerForBackToTop() {
+    const container = window.Discourse && window.Discourse.__container__ ? window.Discourse.__container__ : null;
+    if (container && typeof container.lookup === 'function') return container;
+
+    const req = window.require || window.requirejs;
+    if (typeof req === 'function') {
       try {
-        t[0].style.height = 0;
-        t[0].click();
-        return true;
-      } catch (error) {
-        console.warn('timeline-padding 回到顶部执行失败:', error);
+        const appMod = req('discourse/app');
+        const appInstance = (appMod && (appMod.default || appMod)) || null;
+        const appContainer = appInstance && appInstance.__container__;
+        if (appContainer && typeof appContainer.lookup === 'function') return appContainer;
+      } catch (_) {
+        // ignore
       }
     }
+
+    return null;
+  }
+
+  function tryJumpToFirstPostByTopicController() {
+    const container = getDiscourseContainerForBackToTop();
+    if (!container) return false;
+    try {
+      const controller = container.lookup('controller:topic');
+      if (!controller) return false;
+      if (typeof controller.jumpTop === 'function') {
+        controller.jumpTop();
+        return true;
+      }
+      if (typeof controller.send === 'function') {
+        controller.send('jumpTop');
+        return true;
+      }
+    } catch (error) {
+      console.warn('topic controller jumpTop 回到顶部执行失败:', error);
+    }
+    return false;
+  }
+
+  function getDiscourseUrlApi() {
+    if (window.DiscourseURL && typeof window.DiscourseURL.routeTo === 'function') {
+      return window.DiscourseURL;
+    }
+
+    const req = window.require || window.requirejs;
+    if (typeof req === 'function') {
+      try {
+        const mod = req('discourse/lib/url');
+        const api = (mod && (mod.default || mod)) || null;
+        if (api && typeof api.routeTo === 'function') return api;
+      } catch (_) {
+        // ignore
+      }
+    }
+
+    return null;
+  }
+
+  function tryJumpToFirstPostByDiscourseURL() {
+    const href = getFirstPostUrlForBackToTop();
+    if (!href) return false;
+
+    const discourseURL = getDiscourseUrlApi();
+    if (discourseURL && typeof discourseURL.routeTo === 'function') {
+      try {
+        discourseURL.routeTo(toRelativeUrl(href), {
+          skipIfOnScreen: false,
+          keepFilter: true,
+          afterRouteComplete: () => {
+            window.scrollTo(0, 0);
+            requestAnimationFrame(() => window.scrollTo(0, 0));
+          },
+        });
+        return true;
+      } catch (error) {
+        console.warn('DiscourseURL.routeTo 回到顶部执行失败:', error);
+      }
+    }
+    return false;
+  }
+
+  function tryJumpToFirstPost() {
+    // 优先使用 Discourse 的路由（无整页刷新），其次点击官方“跳到顶部”入口
+    if (tryJumpToFirstPostByTopicController()) return true;
+    if (tryJumpToFirstPostByDiscourseURL()) return true;
+    if (tryJumpToFirstPostByTimelineStartDate()) return true;
     return false;
   }
 
@@ -1649,15 +1834,38 @@
     return Number.isFinite(current) ? current : null;
   }
 
+  function getTopicProgressCurrentIndex() {
+    const el = document.querySelector('#topic-progress .nums span:first-child');
+    if (!el) return null;
+    const value = Number.parseInt(String(el.textContent || '').trim(), 10);
+    return Number.isFinite(value) ? value : null;
+  }
+
+  function getCurrentPostIndexForBackToTop() {
+    return getTimelineRepliesCurrentIndex() ?? getTopicProgressCurrentIndex();
+  }
+
+  function isAtFirstPost() {
+    const currentIndex = getCurrentPostIndexForBackToTop();
+    if (currentIndex === 1) return true;
+
+    const info = getTopicPathInfoForBackToTop(window.location.pathname);
+    if (!info) return false;
+    if (!info.postSegment) return true;
+    return info.postNumber === 1;
+  }
+
   function performBackToTop() {
     window.scrollTo(0, 0);
-    tryScrollToTopByTimeline();
+    requestAnimationFrame(() => window.scrollTo(0, 0));
+    tryJumpToFirstPost();
   }
 
   function startBackToTopRetryUntilFirstPage() {
     clearBackToTopRetryTimer();
 
     let attempts = 0;
+    let hardNavigated = false;
     backToTopRetryTimer = setInterval(() => {
       attempts += 1;
       if (!isTopicPageForBackToTop()) {
@@ -1665,10 +1873,25 @@
         return;
       }
 
-      const currentIndex = getTimelineRepliesCurrentIndex();
-      if (currentIndex === 1) {
+      if (isAtFirstPost()) {
         clearBackToTopRetryTimer();
+        window.scrollTo(0, 0);
+        requestAnimationFrame(() => window.scrollTo(0, 0));
         return;
+      }
+
+      if (!hardNavigated && attempts >= 4) {
+        const href = getFirstPostUrlForBackToTop();
+        if (href) {
+          hardNavigated = true;
+          try {
+            window.location.assign(href);
+            clearBackToTopRetryTimer();
+            return;
+          } catch (_) {
+            // ignore
+          }
+        }
       }
 
       if (attempts >= SCRIPT_CONSTANTS.BACK_TO_TOP_RETRY_MAX_ATTEMPTS) {
@@ -1777,6 +2000,9 @@
   }
 
   // #endregion
+
+  // #region AI 总结与剪贴板
+  // ==========================================================
 
   /**
    * @description 调用 AI 以获取内容总结 (OpenAI Compatible 格式)。
@@ -2077,7 +2303,15 @@
 
       if (CONFIG.USE_AI_FOR_SUMMARY && CONFIG.API_KEY) {
         console.debug('尝试使用 AI 总结内容...');
-        const contentToSummarize = fullTextContent.substring(0, SCRIPT_CONSTANTS.AI_CONTENT_MAX_LENGTH);
+        const titleForAi = normalizeToSingleLine(articleData.title);
+        let contentToSummarize = '';
+        if (titleForAi) {
+          const header = `标题：${titleForAi}\n\n`;
+          const remaining = Math.max(0, SCRIPT_CONSTANTS.AI_CONTENT_MAX_LENGTH - header.length);
+          contentToSummarize = header + fullTextContent.substring(0, remaining);
+        } else {
+          contentToSummarize = fullTextContent.substring(0, SCRIPT_CONSTANTS.AI_CONTENT_MAX_LENGTH);
+        }
         const customPrompt = CONFIG.CUSTOM_SUMMARY_PROMPT || DEFAULT_CONFIG.CUSTOM_SUMMARY_PROMPT;
         const prompt = customPrompt
           .replace('{maxChars}', CONFIG.LOCAL_SUMMARY_MAX_CHARS)
@@ -2182,6 +2416,59 @@
   // #region 主题列表布局
   // ==========================================================
 
+  function normalizeTopicBadgesWhitespace(badges) {
+    if (!badges) return;
+    badges.childNodes.forEach((node) => {
+      if (node.nodeType !== Node.TEXT_NODE) return;
+      const cleaned = String(node.textContent || '').replace(/\u00A0/g, '').trim();
+      if (!cleaned) node.remove();
+    });
+  }
+
+  function parseTopicMetricNumber(text) {
+    const raw = String(text || '').trim().toLowerCase().replace(/,/g, '');
+    if (!raw) return 0;
+    const match = raw.match(/^(\d+(?:\.\d+)?)([km]?)$/);
+    if (match) {
+      const base = Number.parseFloat(match[1]);
+      if (!Number.isFinite(base)) return 0;
+      const unit = match[2];
+      if (unit === 'k') return base * 1000;
+      if (unit === 'm') return base * 1000000;
+      return base;
+    }
+    const fallback = Number.parseFloat(raw);
+    return Number.isFinite(fallback) ? fallback : 0;
+  }
+
+  function appendTopicMetaItem(meta, text, title) {
+    const value = (text || '').trim();
+    if (!value) return;
+    const span = document.createElement('span');
+    span.className = 'linuxdo-topic-meta-item';
+    span.textContent = value;
+    if (title) span.title = title;
+    meta.appendChild(span);
+  }
+
+  function appendTopicMetaCountItem(meta, text, title) {
+    const value = (text || '').trim();
+    if (!value) return;
+    const span = document.createElement('span');
+    span.className = 'linuxdo-topic-meta-item';
+    span.textContent = value;
+    if (title) span.title = title;
+
+    const numericValue = parseTopicMetricNumber(value);
+    if (numericValue >= 500) {
+      span.classList.add('linuxdo-topic-meta-count-hot');
+    } else if (numericValue >= 100) {
+      span.classList.add('linuxdo-topic-meta-count-warn');
+    }
+
+    meta.appendChild(span);
+  }
+
   /**
    * @description 清理两栏布局的增强 DOM，恢复为默认样式。
    */
@@ -2189,7 +2476,19 @@
     document.documentElement.classList.remove('linuxdo-two-column-layout', 'linuxdo-topic-waterfall');
     document.documentElement.style.removeProperty('--ld-topic-columns');
 
-    document.querySelectorAll('.linuxdo-topic-meta').forEach((el) => el.remove());
+    document.querySelectorAll('.linuxdo-topic-meta').forEach((meta) => {
+      const badges = meta.querySelector('.topic-post-badges');
+      if (badges) {
+        const mainLinkCell = meta.closest('td.main-link');
+        const linkTopLine = mainLinkCell ? mainLinkCell.querySelector('.link-top-line') : null;
+        if (linkTopLine) {
+          linkTopLine.appendChild(badges);
+        } else if (mainLinkCell) {
+          mainLinkCell.appendChild(badges);
+        }
+      }
+      meta.remove();
+    });
     document.querySelectorAll('tr.topic-list-item[data-linuxdo-two-column-enhanced="1"]').forEach((tr) => {
       tr.removeAttribute('data-linuxdo-two-column-enhanced');
     });
@@ -2238,12 +2537,18 @@
       if (!rows || rows.length === 0) return;
 
       rows.forEach((row) => {
-        if (row.getAttribute('data-linuxdo-two-column-enhanced') === '1') {
-          return;
-        }
-
         const mainLinkCell = row.querySelector('td.main-link');
         if (!mainLinkCell) return;
+
+        const existingMeta = mainLinkCell.querySelector('.linuxdo-topic-meta');
+        if (row.getAttribute('data-linuxdo-two-column-enhanced') === '1' && existingMeta) {
+          const badges = mainLinkCell.querySelector('.topic-post-badges');
+          if (badges && !existingMeta.contains(badges)) {
+            normalizeTopicBadgesWhitespace(badges);
+            existingMeta.appendChild(badges);
+          }
+          return;
+        }
 
         const meta = document.createElement('div');
         meta.className = 'linuxdo-topic-meta';
@@ -2262,27 +2567,23 @@
           meta.appendChild(avatar);
         }
 
-        const addMetaItem = (text, title) => {
-          const value = (text || '').trim();
-          if (!value) return;
-          const span = document.createElement('span');
-          span.className = 'linuxdo-topic-meta-item';
-          span.textContent = value;
-          if (title) span.title = title;
-          meta.appendChild(span);
-        };
-
         // b: 回复数（posts-map 列的第一个 a）
         const repliesEl = row.querySelector('td.num.posts-map a.badge-posts .number') || row.querySelector('td.num.posts-map .number');
-        addMetaItem(repliesEl ? repliesEl.textContent : '', '回复');
+        appendTopicMetaCountItem(meta, repliesEl ? repliesEl.textContent : '', '回复');
 
         // c: 浏览量
         const viewsEl = row.querySelector('td.num.views .number') || row.querySelector('td.views .number');
-        addMetaItem(viewsEl ? viewsEl.textContent : '', '浏览');
+        appendTopicMetaCountItem(meta, viewsEl ? viewsEl.textContent : '', '浏览');
 
         // 活动时间（relative-date）
         const activityEl = row.querySelector('td.activity .relative-date') || row.querySelector('td.age .relative-date');
-        addMetaItem(activityEl ? activityEl.textContent : '', '活动');
+        appendTopicMetaItem(meta, activityEl ? activityEl.textContent : '', '活动');
+
+        const badges = mainLinkCell.querySelector('.topic-post-badges');
+        if (badges) {
+          normalizeTopicBadgesWhitespace(badges);
+          meta.appendChild(badges);
+        }
 
         if (!meta.firstChild) return;
 
@@ -2345,38 +2646,6 @@
 
           <section class="linuxdo-settings-section">
             <div class="linuxdo-settings-section-header">
-              <h3 class="linuxdo-settings-section-title">列表布局</h3>
-              <p class="linuxdo-settings-section-desc">仅影响主题列表页（最新 / 分类 / 标签等）</p>
-            </div>
-            <div class="linuxdo-settings-card">
-              <div class="linuxdo-settings-item">
-                <div class="linuxdo-settings-item-text">
-                  <label class="linuxdo-settings-item-label" for="twoColumnLayout">两栏布局</label>
-                  <div class="linuxdo-settings-description">填写分栏数（最大 5，默认 2）；填 0 或留空可关闭。开启后列表以卡片展示，并将发帖人/回复/浏览/活动信息收纳到标题下方</div>
-                </div>
-                <div class="linuxdo-settings-control">
-                  <input type="number" id="twoColumnLayout" class="linuxdo-settings-input small" value="${topicListColumnsInputValue}" placeholder="2" min="0" max="5" step="1" inputmode="numeric">
-                  <span class="linuxdo-settings-unit">列</span>
-                </div>
-              </div>
-
-              <div class="linuxdo-settings-separator"></div>
-
-              <div class="linuxdo-settings-item" id="topicListWaterfallRow" style="${topicListColumns > 0 ? '' : 'display:none;'}">
-                <div class="linuxdo-settings-item-text">
-                  <label class="linuxdo-settings-item-label" for="topicListWaterfall">瀑布流</label>
-                  <div class="linuxdo-settings-description">仅在分栏数大于 0 时显示/生效；开启后以瀑布流方式排列卡片</div>
-                </div>
-                <label class="linuxdo-settings-switch">
-                  <input type="checkbox" id="topicListWaterfall" ${CONFIG.TOPIC_LIST_WATERFALL ? 'checked' : ''}>
-                  <span class="linuxdo-settings-switch-slider"></span>
-                </label>
-              </div>
-            </div>
-          </section>
-
-          <section class="linuxdo-settings-section">
-            <div class="linuxdo-settings-section-header">
               <h3 class="linuxdo-settings-section-title">AI 总结</h3>
               <p class="linuxdo-settings-section-desc">可选：使用 OpenAI Compatible 接口</p>
             </div>
@@ -2430,6 +2699,38 @@
                 <label class="linuxdo-settings-label" for="customPrompt">自定义 Prompt</label>
                 <textarea id="customPrompt" class="linuxdo-settings-textarea" placeholder="输入自定义的总结提示词">${escapeHtml(CONFIG.CUSTOM_SUMMARY_PROMPT)}</textarea>
                 <div class="linuxdo-settings-description">使用 {maxChars} 表示最大字符数，{content} 表示文章内容</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="linuxdo-settings-section">
+            <div class="linuxdo-settings-section-header">
+              <h3 class="linuxdo-settings-section-title">列表布局</h3>
+              <p class="linuxdo-settings-section-desc">仅影响主题列表页（最新 / 分类 / 标签等）</p>
+            </div>
+            <div class="linuxdo-settings-card">
+              <div class="linuxdo-settings-item">
+                <div class="linuxdo-settings-item-text">
+                  <label class="linuxdo-settings-item-label" for="twoColumnLayout">两栏布局</label>
+                  <div class="linuxdo-settings-description">填写分栏数（最大 5）；留空或填 0 可关闭（默认关闭）。例如填 2 即两栏；开启后列表以卡片展示，并将发帖人/回复/浏览/活动信息收纳到标题下方</div>
+                </div>
+                <div class="linuxdo-settings-control">
+                  <input type="number" id="twoColumnLayout" class="linuxdo-settings-input small" value="${topicListColumnsInputValue}" placeholder="2" min="0" max="5" step="1" inputmode="numeric">
+                  <span class="linuxdo-settings-unit">列</span>
+                </div>
+              </div>
+
+              <div class="linuxdo-settings-separator"></div>
+
+              <div class="linuxdo-settings-item" id="topicListWaterfallRow" style="${topicListColumns > 0 ? '' : 'display:none;'}">
+                <div class="linuxdo-settings-item-text">
+                  <label class="linuxdo-settings-item-label" for="topicListWaterfall">瀑布流</label>
+                  <div class="linuxdo-settings-description">仅在分栏数大于 0 时显示/生效；开启后以瀑布流方式排列卡片</div>
+                </div>
+                <label class="linuxdo-settings-switch">
+                  <input type="checkbox" id="topicListWaterfall" ${CONFIG.TOPIC_LIST_WATERFALL ? 'checked' : ''}>
+                  <span class="linuxdo-settings-switch-slider"></span>
+                </label>
               </div>
             </div>
           </section>

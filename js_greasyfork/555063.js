@@ -1,14 +1,15 @@
 // ==UserScript==
-// @name         Duolingo Extractor v3.9
+// @name         Duolingo Extractor v4.0
 // @namespace    http://tampermonkey.net/
-// @version      3.9
-// @license MIT
-// @description  Capture Duolingo sentences, export XLSX with dynamic unit title, DeepL/Google links, session counting, draggable UI, auto-clear, and manual update
+// @version      4.0
+// @description  Capture Duolingo sentences, export XLSX with Google Translate links only, dynamic unit title, session counting, draggable UI, and auto-clear
+// @author       VIC
+// @license      MIT
 // @match        https://www.duolingo.com/*
 // @grant        none
 // @require      https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js
-// @downloadURL https://update.greasyfork.org/scripts/555063/Duolingo%20Extractor%20v39.user.js
-// @updateURL https://update.greasyfork.org/scripts/555063/Duolingo%20Extractor%20v39.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/555063/Duolingo%20Extractor%20v40.user.js
+// @updateURL https://update.greasyfork.org/scripts/555063/Duolingo%20Extractor%20v40.meta.js
 // ==/UserScript==
 
 (function(){
@@ -17,10 +18,10 @@
 /* -------------------------
    STORAGE / CONFIG
 -------------------------*/
-const STORAGE_KEY = 'duo_sents_v39';
-const CONFIG_KEY  = 'duo_sents_cfg_v39';
-const SESSION_KEY = 'duo_sess_ids_v39';
-const TITLE_KEY   = 'duo_unit_title_v39';
+const STORAGE_KEY = 'duo_sents_v40';
+const CONFIG_KEY  = 'duo_sents_cfg_v40';
+const SESSION_KEY = 'duo_sess_ids_v40';
+const TITLE_KEY   = 'duo_unit_title_v40';
 
 let collectedData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 let config = JSON.parse(localStorage.getItem(CONFIG_KEY) || '{}');
@@ -30,8 +31,6 @@ if(typeof config.locked === 'undefined') config.locked = false;
 let lessonCounter = 0;
 let lessonSessions = new Set(JSON.parse(localStorage.getItem(SESSION_KEY) || '[]'));
 let currentUnitTitle = localStorage.getItem(TITLE_KEY) || null;
-
-const DEEPL_SUPPORTED = new Set(['de','en','fr','es','it','nl','pl','pt','ru','ja','zh']);
 
 /* -------------------------
    UTILS
@@ -62,18 +61,14 @@ function detectLangs(){
   return { source: learn, target: ui };
 }
 
-function translateLink(src,tgt,text){
+function googleTranslateLink(src, tgt, text){
   const enc = encodeURIComponent(text);
-  return DEEPL_SUPPORTED.has(src)&&DEEPL_SUPPORTED.has(tgt)
-    ? `https://www.deepl.com/translator#${src}/${tgt}/${enc}`
-    : `https://translate.google.com/?sl=${src}&tl=${tgt}&text=${enc}&op=translate`;
+  return `https://translate.google.com/?sl=${src}&tl=${tgt}&text=${enc}&op=translate`;
 }
 
-function ttsLink(src,text){
-  const t = encodeURIComponent(text);
-  return DEEPL_SUPPORTED.has(src)
-    ? `https://www.deepl.com/translator#${src}/${src}/${t}`
-    : `https://translate.google.com/?sl=${src}&tl=${src}&text=${t}&op=translate`;
+function googleTTSLink(src, text){
+  const enc = encodeURIComponent(text);
+  return `https://translate.google.com/?sl=${src}&tl=${src}&text=${enc}&op=translate`;
 }
 
 /* -------------------------
@@ -86,9 +81,14 @@ function exportXLSX(autoClear=false){
   const langs = detectLangs();
   const rows = [['Source','Target','Translate 🌐','Listen 🔊']];
   collectedData.forEach(s=>{
-    const linkT = translateLink(langs.source,langs.target,s.source);
-    const linkL = ttsLink(langs.source,s.source);
-    rows.push([s.source,s.target,{f:`HYPERLINK("${linkT}","🌐 Translate")`},{f:`HYPERLINK("${linkL}","🔊 Listen")`}]);
+    const linkT = googleTranslateLink(langs.source, langs.target, s.source);
+    const linkL = googleTTSLink(langs.source, s.source);
+    rows.push([
+      s.source,
+      s.target,
+      {f:`HYPERLINK("${linkT}","🌐 Translate")`},
+      {f:`HYPERLINK("${linkL}","🔊 Listen")`}
+    ]);
     rows.push(['','','','']);
   });
 
@@ -100,7 +100,13 @@ function exportXLSX(autoClear=false){
   // filename with space between section/unit and title
   const filename = cleanFilename(currentUnitTitle || 'Unit') + '.xlsx';
   XLSX.writeFile(wb,filename);
-  if(autoClear){ collectedData=[]; lessonCounter=0; lessonSessions.clear(); saveAll(); updateUI(); }
+  if(autoClear){
+    collectedData=[];
+    lessonCounter=0;
+    lessonSessions.clear();
+    saveAll();
+    updateUI();
+  }
 }
 
 /* -------------------------
@@ -199,17 +205,52 @@ function createUI(){
   document.body.appendChild(ui);
 
   const lockBtn = document.getElementById('duo-lock');
-  lockBtn.onclick=()=>{ config.locked=!config.locked; saveAll(); lockBtn.textContent=config.locked?'🛑':'✅'; lockBtn.title=config.locked?'Auto-export locked':'Auto-export unlocked'; };
-  document.getElementById('duo-lessons').onchange=()=>{ config.lessons=Number(document.getElementById('duo-lessons').value)||1; saveAll(); };
+  lockBtn.onclick=()=>{
+    config.locked=!config.locked;
+    saveAll();
+    lockBtn.textContent=config.locked?'🛑':'✅';
+    lockBtn.title=config.locked?'Auto-export locked':'Auto-export unlocked';
+  };
+  document.getElementById('duo-lessons').onchange=()=>{
+    config.lessons=Number(document.getElementById('duo-lessons').value)||1;
+    saveAll();
+  };
   document.getElementById('duo-export').onclick=()=>exportXLSX(true);
-  document.getElementById('duo-clear').onclick=()=>{ if(confirm('Clear all captured sentences?')){ collectedData=[]; lessonCounter=0; lessonSessions.clear(); saveAll(); updateUI(); } };
-  document.getElementById('duo-update').onclick=()=>{ refreshUnitTitle(); updateUI(); };
+  document.getElementById('duo-clear').onclick=()=>{
+    if(confirm('Clear all captured sentences?')){
+      collectedData=[];
+      lessonCounter=0;
+      lessonSessions.clear();
+      saveAll();
+      updateUI();
+    }
+  };
+  document.getElementById('duo-update').onclick=()=>{
+    refreshUnitTitle();
+    updateUI();
+  };
 
   // draggable
   let drag=false,startX=0,startY=0,startL=0,startT=0;
-  ui.addEventListener('mousedown',e=>{ if(['BUTTON','INPUT'].includes(e.target.tagName)) return; drag=true; startX=e.clientX; startY=e.clientY; const rect=ui.getBoundingClientRect(); startL=rect.left; startT=rect.top; ui.style.transition='none'; });
-  window.addEventListener('mousemove',e=>{if(!drag) return; ui.style.left=Math.max(6,startL+e.clientX-startX)+'px'; ui.style.top=Math.max(6,startT+e.clientY-startY)+'px';});
-  window.addEventListener('mouseup',()=>{drag=false; ui.style.transition='';});
+  ui.addEventListener('mousedown',e=>{
+    if(['BUTTON','INPUT'].includes(e.target.tagName)) return;
+    drag=true;
+    startX=e.clientX;
+    startY=e.clientY;
+    const rect=ui.getBoundingClientRect();
+    startL=rect.left;
+    startT=rect.top;
+    ui.style.transition='none';
+  });
+  window.addEventListener('mousemove',e=>{
+    if(!drag) return;
+    ui.style.left=Math.max(6,startL+e.clientX-startX)+'px';
+    ui.style.top=Math.max(6,startT+e.clientY-startY)+'px';
+  });
+  window.addEventListener('mouseup',()=>{
+    drag=false;
+    ui.style.transition='';
+  });
 }
 
 function updateUI(){
@@ -222,7 +263,10 @@ function updateUI(){
    INIT
 -------------------------*/
 setTimeout(createUI,1200);
-setInterval(()=>{ if(!document.getElementById('duo-logger-ui')) createUI(); updateUI(); },2000);
+setInterval(()=>{
+  if(!document.getElementById('duo-logger-ui')) createUI();
+  updateUI();
+},2000);
 
-console.log('✅ Duolingo Extractor v3.9 loaded — dynamic unit, XLSX export, manual update, session capture.');
+console.log('✅ Duolingo Extractor v4.0 loaded — Google Translate only, dynamic unit, XLSX export, manual update, session capture.');
 })();

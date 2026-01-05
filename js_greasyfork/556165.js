@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck
 // @namespace    Para_Thenics.torn.com
-// @version      0.99.992
+// @version      1.00.000
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -175,13 +175,23 @@ async function getPricesFromAPI() {
     "Dampen: "
            ]
 ],
-"A Fungus Among Us": [
+        "A Fungus Among Us": [
+            [
+    "Payout:38K",
+    "Profit/Nerve: ",
+    "Flamethrower: No",
+    "Place: 3 Gasoline",
+    "Stoke: ",
+    "Dampen: "
+],
+[
     "Payout:34K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
     "Place: 1 Gasoline",
     "Stoke: ",
     "Dampen: "
+    ]
 ],
 "A Hot Lead": [
     "Payout:22K",
@@ -1390,13 +1400,23 @@ async function getPricesFromAPI() {
     "Dampen: "
             ]
 ],
-"Going Viral": [
-    "Payout: 150K",
+        "Going Viral": [
+            [
+    "Payout: 190K",
+    "Profit/Nerve: 4.9K",
+    "Flamethrower: No",
+    "Place: 4 Gasoline",
+    "Stoke: ",
+    "Dampen: "
+],
+ [
+    "Payout: 190K",
     "Profit/Nerve: 4.9K",
     "Flamethrower: Yes",
     "Place: 4 Gasoline",
     "Stoke: ",
     "Dampen: "
+     ]
 ],
 "Green With Envy": [
     [
@@ -2501,10 +2521,10 @@ async function getPricesFromAPI() {
         "Smoke Without Fire": [
     "Payout: 200K",
     "Profit/Nerve: ",
-    "Flamethrower: Yes",
-    "Place: 1 Gasoline",
+    "Ignite: Lighter",
+    "Place: 2 Gasoline",
     "Stoke: ",
-    "Dampen: "
+    "Dampen: ? 1 Blanket?"
 ],
 "Smoldering Resentment": [
     [
@@ -2580,12 +2600,21 @@ async function getPricesFromAPI() {
     "Stoke: 2 Hydrogen Tank",
     "Dampen: "
 ],
-"Stroke of Fortune": [
+        "Stroke of Fortune": [
+            [
+    "Payout: 120K",
+    "Profit/Nerve: ",
+    "Flamethrower: No",
+    "Place: 6 Gasoline",
+    "Stoke: ",
+    ],
+[
     "Payout: 120K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
     "Place: 3 Gasoline",
     "Stoke: 1 Flamethrower",
+    ]
     ],
 "Supermarket Sweep": [
     "Payout: 265K",

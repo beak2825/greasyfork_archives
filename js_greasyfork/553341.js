@@ -66,10 +66,6 @@
       }
     return a
   }
-  var win = globalThis
-  function isTopFrame() {
-    return win.self === win.top
-  }
   function registerMenu(caption, onClick, options) {
     if (typeof GM_registerMenuCommand === 'function') {
       return GM_registerMenuCommand(caption, onClick, options)
@@ -238,6 +234,10 @@
     }
     startPolling()
     return id
+  }
+  var win = globalThis
+  function isTopFrame() {
+    return win.self === win.top
   }
   var CONFIG = {
     localhost: {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit Anti Translate
 // @author       Minjae Kim
-// @version      1.7
+// @version      1.8
 // @description  Redirects Reddit pages auto translated by removing the tl="selected language" parameter from Reddit URLs
 // @match        https://www.reddit.com/r/*/comments/*
 // @icon         https://www.iconpacks.net/icons/2/free-reddit-logo-icon-2436-thumb.png

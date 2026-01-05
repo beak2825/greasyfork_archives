@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WritingTeam Achievement Plan Generator
 // @namespace    http://tampermonkey.net/
-// @version      2.2
+// @version      2.3
 // @description  Writing Plan generator compatible with new grouped achievements.
 // @author       PS2Hagrid / Player1041
 // @match        https://retroachievements.org/game2/*
@@ -40,109 +40,112 @@
     const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbwzQCW8p467nvosPhe9f7WvRpExy3LmmXEaj-yorqc80sUhFmOYcbmjR-OOlVGdUB9AaQ/exec';
 
     function extractData() {
-            const achievements = [];
-            let totalCheevos = 0;
-            let headerCount = 0
+        const achievements = [];
+        let totalCheevos = 0;
+        let headerCount = 0
 
-            const isNewLayout = !!document.querySelector('[id^="radix-"][data-state]');
+        const cheevoContainer = document.querySelector(
+            "#game-achievement-sets-container > div > div.relative"
+        );
 
-            if (isNewLayout) {
-                // group list
-                const groupLis = document.querySelectorAll(
-                    "#game-achievement-sets-container > div > div.relative > ul > li"
-                );
+        const groups = cheevoContainer.querySelectorAll("ul");
+        console.log(groups.length);
 
-                groupLis.forEach(groupLi => {
-                    //  group title
-                    const groupSpan = groupLi.querySelector("button > span");
-                    let groupTitle = '';
-                    if (groupSpan) {
-                        const text = groupSpan.textContent.trim();
-                        const match = text.match(/^(.*?)(\s*\(\d+\s+achievements?\))$/);
-                        groupTitle = match ? match[1].trim() : text;
-                    }
+        if (groups.length > 1) {
+            // group list
+            const groupLis = document.querySelectorAll(
+                "#game-achievement-sets-container > div > div.relative > ul > li"
+            );
 
-                    // add group title
+            groupLis.forEach(groupLi => {
+                //  group title
+                const groupSpan = groupLi.querySelector("button > span");
+                let groupTitle = '';
+                if (groupSpan) {
+                    const text = groupSpan.textContent.trim();
+                    const match = text.match(/^(.*?)(\s*\(\d+\s+achievements?\))$/);
+                    groupTitle = match ? match[1].trim() : text;
+                }
+
+                // add group title
+                achievements.push({
+                    title: groupTitle,
+                    description: '',
+                    link: '',
+                    id: ''
+                });
+
+                // achievements
+                const achLis = groupLi.querySelectorAll("li.game-set-item");
+                achLis.forEach(li => {
+                    const linkEl = li.querySelector(
+                        "div.grid div.md\\:col-span-4 span.mr-2 > a[href*='/achievement/']"
+                    );
+                    const descEl = li.querySelector(
+                        "div.grid div.md\\:col-span-4 > p"
+                    );
+                    if (!linkEl || !descEl) return;
+
+                    const id = linkEl.href.split("/").pop();
+
                     achievements.push({
-                        title: groupTitle,
-                        description: '',
-                        link: '',
-                        id: ''
-                    });
-
-                    // achievements
-                    const achLis = groupLi.querySelectorAll("li.game-set-item");
-                    achLis.forEach(li => {
-                        const linkEl = li.querySelector(
-                            "div.grid div.md\\:col-span-4 span.mr-2 > a[href*='/achievement/']"
-                        );
-                        const descEl = li.querySelector(
-                            "div.grid div.md\\:col-span-4 > p"
-                        );
-                        if (!linkEl || !descEl) return;
-
-                        const id = linkEl.href.split("/").pop();
-
-                        achievements.push({
-                            title: linkEl.textContent.trim(),
-                            description: descEl.textContent.trim(),
-                            link: linkEl.href,
-                            id
-                        });
-                    });
-
-                    // spacer row
-                    achievements.push({
-                        title: '---',
-                        description: '---',
-                        link: '---',
-                        id: '---'
+                        title: linkEl.textContent.trim(),
+                        description: descEl.textContent.trim(),
+                        link: linkEl.href,
+                        id
                     });
                 });
 
-            } else {
-                // no groups
-                const lists = document.querySelectorAll(
-                    "#game-achievement-sets-container > div.flex.flex-col.gap-2\\.5 > div.relative > ul"
-                );
-
-                lists.forEach(ul => {
-                    ul.querySelectorAll('li').forEach(li => {
-                        const linkElement = li.querySelector(
-                            "span.mr-2 > a[href*='/achievement/']"
-                        );
-                        const descElement = li.querySelector('p');
-
-                        if (!linkElement || !descElement) return;
-
-                        const id = linkElement.href.split('/').pop();
-
-                        achievements.push({
-                            title: linkElement.textContent.trim(),
-                            description: descElement.textContent.trim(),
-                            link: linkElement.href,
-                            id
-                        });
-                    });
+                // spacer row
+                achievements.push({
+                    title: '---',
+                    description: '---',
+                    link: '---',
+                    id: '---'
                 });
-            }
-
-            console.log({
-                gameTitle,
-                gameId,
-                gameSystem,
-                achievements,
-                titleOrder,
             });
 
-            return {
-                gameTitle,
-                gameId,
-                gameSystem,
-                achievements,
-                titleOrder,
-            };
+        } else {
+            // no groups
+            const titleAndID = document.querySelector("#app > div > main > article > div > div.flex.flex-col.gap-3 > div.flex.gap-4.sm\\:gap-6 > div > div.flex.flex-col.gap-1.sm\\:gap-0\\.5");
+            const gameTitle = titleAndID?.querySelector('h1 > span')?.textContent.trim();
+            const gameSystem = titleAndID?.querySelector('span.flex.items-center > span')?.textContent.trim();
+            const gameId = window.location.pathname.split('/').pop();
+
+            const listItems = document.querySelectorAll("#game-achievement-sets-container > div > div.relative > ul > li");
+
+            listItems.forEach(li => {
+                const linkElement = li.querySelector("div.grid.w-full.gap-x-5.gap-y-1\\.5.leading-4.md\\:grid-cols-6 > div.md\\:col-span-4 > div.mb-0\\.5.flex.justify-between.gap-x-2 > div.-mt-1.mb-0\\.5.md\\:mt-0 > span.mr-2 > a");
+                const descElement = li.querySelector("div.grid.w-full.gap-x-5.gap-y-1\\.5.leading-4.md\\:grid-cols-6 > div.md\\:col-span-4 > p");
+
+                if (linkElement && descElement) {
+                    const title = linkElement.textContent.trim();
+                    const link = linkElement.href;
+                    const description = descElement.textContent.trim();
+                    const id = link.split('/').pop();
+                    totalCheevos++;
+
+                    achievements.push({ title, description, link, id });
+                }
+            });
         }
+
+        console.log({
+            gameTitle,
+            gameId,
+            gameSystem,
+            achievements,
+            titleOrder,
+        });
+
+        return {
+            gameTitle,
+            gameId,
+            gameSystem,
+            achievements,
+            titleOrder,
+        };
+    }
     function insertButton() {
         const targetDiv = document.querySelector(
             "#app > div > main > article > div > div.flex.flex-col.gap-3 > div.flex.gap-4.sm\\:gap-6 > div > div.hidden.flex-wrap.gap-x-2.gap-y-1.text-neutral-300.light\\:text-neutral-700.sm\\:flex > div"

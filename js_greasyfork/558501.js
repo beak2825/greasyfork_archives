@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Book More
 // @namespace    https://example.com/
-// @version      1.1.1
+// @version      1.2.0
 // @author       cccccc
 // @description  Quick access buttons for Anna (ISBN/Title) and Libby (copies title) on Douban, NeoDb, and Goodreads
 // @match        https://neodb.social/book/*
@@ -48,8 +48,8 @@
 
   // --------- Build search URLs ----------
   const links = {
-    annaIsbn: isbn ? `https://annas-archive.org/search?q=${isbn}` : null,
-    annaTitle: `https://annas-archive.org/search?q=${encodeURIComponent(title)}`,
+    annaIsbn: isbn ? `https://annas-archive.se/search?q=${isbn}` : null,
+    annaTitle: `https://annas-archive.se/search?q=${encodeURIComponent(title)}`,
     libby: 'https://libbyapp.com/search'
   };
 

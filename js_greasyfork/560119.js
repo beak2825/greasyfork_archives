@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            OpenFront.IO UI Enhancer
-// @version         1.0.1
+// @version         1.0.2
 // @description     Enhances the OpenFront.IO game interface with troop ratios, visual indicators, and threat icons for better decision making.
 // @author          Speedrunner
 // @license         MIT
@@ -39,22 +39,23 @@
         }
 
         .player-name-span {
-            font-family: Fira Mono, DejaVu Sans Mono, Menlo, Consolas, Liberation Mono, Monaco, Lucida Console, monospace;
-            color: black;
-            text-shadow: 0 0 0.03em #ffffffff;
+
+            color: #000000;
+            text-shadow: 0 0 0.1em #ffffff;
             font-weight: 600;
         }
 
         .player-troops {
-            font-family: Fira Mono, DejaVu Sans Mono, Menlo, Consolas, Liberation Mono, Monaco, Lucida Console, monospace;
-            text-shadow: 0 0 0.03em #ffffffff;
+
+            color: #000000;
+            text-shadow: 0 0 0.1em #ffffff;
             font-weight: 600;
         }
 
         .max-troops {
-            font-size: 0.65em;
-            color: #3b3b3bff;
-            text-shadow: 0 0 0.05em #ffffffff;
+            font-size: 0.68em;
+            color: #000000d0;
+            text-shadow: 0 0 0.1em #ffffff;
         }
 
         .troop-ratio-bar {
@@ -210,7 +211,7 @@
         const playerName = nameSpan.innerHTML.replace(new RegExp(`${ATOM_ICON}|${HYDROGEN_ICON}`, 'g'), "");
 
         const players = game.playerViews();
-        const player = players.find(p => p.name() === playerName || p.displayName() === playerName);
+        const player = players.find(p => p.isAlive() && (p.name() === playerName || p.displayName() === playerName));
         if (!player) return;
 
         const observer = troopsDiv._observer;

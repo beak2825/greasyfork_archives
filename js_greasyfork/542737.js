@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         GGn Game Description Formatter
 // @namespace    none
-// @version      1.7.0.001
+// @version      1.7.0.002
 // @description  Buttons to format description
 // @author       ingts
 // @grant        GM_addStyle
 // @match        https://gazellegames.net/upload.php*
 // @match        https://gazellegames.net/torrents.php?action=editgroup&groupid=*
-// @require      https://update.greasyfork.org/scripts/540511/1727368/GGn%20Formatters.js
+// @require      https://update.greasyfork.org/scripts/540511/1727707/GGn%20Formatters.js
 // @downloadURL https://update.greasyfork.org/scripts/542737/GGn%20Game%20Description%20Formatter.user.js
 // @updateURL https://update.greasyfork.org/scripts/542737/GGn%20Game%20Description%20Formatter.meta.js
 // ==/UserScript==

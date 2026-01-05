@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         Bilibili CC字幕实时显示插件（含AI翻译）
-// @name:en      Bilibili CC Subtitle Extractor with AI Translation - Initial Alignment
+// @name         Bilibili CC字幕实时显示插件（含AI翻译）- 修复版
+// @name:en      Bilibili CC Subtitle Extractor with AI Translation - Fixed
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  在B站播放器中集成CC字幕列表，支持DeepSeek AI实时翻译，提供“双语双行”字幕渲染。
-// @description:en  Integrate CC subtitle list in Bilibili video player with DeepSeek AI translation. Fixed "initial subtitle mismatch" caused by auto-resume when visiting a BVID without the P parameter.
+// @version      1.2
+// @description  在B站播放器中集成CC字幕列表，支持DeepSeek AI实时翻译，提供"双语双行"字幕渲染。已修复AI字幕URL不包含CID导致的识别失败问题。
+// @description:en Integrate CC subtitle list in Bilibili video player with DeepSeek AI translation. Fixed "initial subtitle mismatch" caused by auto-resume. Fixed hash-URL subtitle detection.
 // @author       Corde
 // @match        *://*.bilibili.com/video/*
 // @grant        GM_setValue
@@ -14,8 +14,8 @@
 // @grant        unsafeWindow
 // @license      MIT
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/561121/Bilibili%20CC%E5%AD%97%E5%B9%95%E5%AE%9E%E6%97%B6%E6%98%BE%E7%A4%BA%E6%8F%92%E4%BB%B6%EF%BC%88%E5%90%ABAI%E7%BF%BB%E8%AF%91%EF%BC%89.user.js
-// @updateURL https://update.greasyfork.org/scripts/561121/Bilibili%20CC%E5%AD%97%E5%B9%95%E5%AE%9E%E6%97%B6%E6%98%BE%E7%A4%BA%E6%8F%92%E4%BB%B6%EF%BC%88%E5%90%ABAI%E7%BF%BB%E8%AF%91%EF%BC%89.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561121/Bilibili%20CC%E5%AD%97%E5%B9%95%E5%AE%9E%E6%97%B6%E6%98%BE%E7%A4%BA%E6%8F%92%E4%BB%B6%EF%BC%88%E5%90%ABAI%E7%BF%BB%E8%AF%91%EF%BC%89-%20%E4%BF%AE%E5%A4%8D%E7%89%88.user.js
+// @updateURL https://update.greasyfork.org/scripts/561121/Bilibili%20CC%E5%AD%97%E5%B9%95%E5%AE%9E%E6%97%B6%E6%98%BE%E7%A4%BA%E6%8F%92%E4%BB%B6%EF%BC%88%E5%90%ABAI%E7%BF%BB%E8%AF%91%EF%BC%89-%20%E4%BF%AE%E5%A4%8D%E7%89%88.meta.js
 // ==/UserScript==
 
 (function() {
@@ -235,7 +235,6 @@
 
     // ==================== 视频信息获取模块 (增强版) ====================
     const VideoInfoFetcher = {
-        // 核心修改：返回是否显式指定了 p 参数
         getUrlParams() {
             const url = window.location.href;
             const bvidMatch = url.match(/\/video\/(BV[a-zA-Z0-9]+)/);
@@ -246,44 +245,53 @@
             return { bvid, p, isExplicitP: !!pParam };
         },
 
-        async fetchWithRetry(url, retries = 3, resultParser = null) {
+        // 增强的fetchWithRetry，支持自定义headers和更好的错误处理
+        async fetchWithRetry(url, retries = 3, resultParser = null, customHeaders = null) {
             for (let i = 0; i < retries; i++) {
                 try {
                     return await new Promise((resolve, reject) => {
                         GM_xmlhttpRequest({
                             method: "GET",
                             url: url,
+                            headers: customHeaders || { "Referer": window.location.href },
                             onload: (res) => {
                                 if (res.status === 200) {
                                     try {
                                         const json = JSON.parse(res.responseText);
-                                        if (resultParser) resolve(resultParser(json));
-                                        else {
-                                            if (json.code === 0) resolve(json.data);
-                                            else reject(new Error(`API Code: ${json.code}`));
+                                        if (resultParser) {
+                                            resolve(resultParser(json));
+                                        } else {
+                                            // 返回整个response对象，让调用方检查code
+                                            resolve(json);
                                         }
-                                    } catch (e) { reject(e); }
-                                } else reject(new Error(`HTTP ${res.status}`));
+                                    } catch (e) {
+                                        reject(new Error(`JSON解析失败: ${e.message}`));
+                                    }
+                                } else {
+                                    reject(new Error(`HTTP ${res.status}`));
+                                }
                             },
-                            onerror: (e) => reject(e),
-                            ontimeout: () => reject(new Error('Timeout'))
+                            onerror: (e) => reject(new Error(`网络错误: ${e.message}`)),
+                            ontimeout: () => reject(new Error('请求超时'))
                         });
                     });
                 } catch (e) {
-                    if (i === retries - 1) throw e;
-                    await new Promise(r => setTimeout(r, 1000));
+                    if (i === retries - 1) {
+                        Logger.error(`fetchWithRetry 最终失败: ${url}, 错误: ${e.message}`);
+                        throw e;
+                    }
+                    Logger.warn(`fetchWithRetry 重试 ${i + 1}/${retries}: ${url}, 错误: ${e.message}`);
+                    await new Promise(r => setTimeout(r, 1000 * (i + 1))); // 指数退避
                 }
             }
         },
 
-        // 新增：等待播放器就绪并返回实际 CID（用于解决隐式 P1 问题）
         async sniffPlayerCid(targetBvid, maxWaitMs = 5000) {
             const start = Date.now();
             while (Date.now() - start < maxWaitMs) {
                 const player = win.player || win.bpxPlayer;
                 if (player && typeof player.getVideoInfo === 'function') {
                     const info = player.getVideoInfo();
-                    // 确保播放器 BVID 匹配，防止切页残留
                     if (info && info.bvid === targetBvid && info.cid) {
                         return info.cid;
                     }
@@ -298,20 +306,29 @@
 
             try {
                 const apiUrl = `https://api.bilibili.com/x/web-interface/view?bvid=${bvid}`;
-                const data = await this.fetchWithRetry(apiUrl);
+                const response = await this.fetchWithRetry(apiUrl);
+
+                // 修复：检查响应完整性
+                if (!response || response.code !== 0 || !response.data) {
+                    throw new Error(`API响应异常: code=${response?.code}, message=${response?.message || '无详情'}`);
+                }
+
+                const videoData = response.data;
 
                 let targetP = p;
                 let targetCid = null;
 
-                // 如果 URL 没有指定 P，B站可能会自动续播（如跳到 P5）
-                // 此时我们需要等待播放器告诉我们真正的 CID
                 if (!isExplicitP) {
                     Logger.log('URL未指定分P，进入首屏智能嗅探模式...');
                     const playerCid = await this.sniffPlayerCid(bvid);
 
                     if (playerCid) {
-                        // 反查 API 数据找到对应的 P
-                        const realPage = data.pages.find(pg => pg.cid === playerCid);
+                        // 修复：访问 videoData.pages
+                        if (!videoData.pages || !Array.isArray(videoData.pages)) {
+                            throw new Error('视频数据格式异常: pages字段缺失或不是数组');
+                        }
+
+                        const realPage = videoData.pages.find(pg => pg.cid === playerCid);
                         if (realPage) {
                             Logger.log(`嗅探成功! 播放器实际在播 P${realPage.page} (CID=${playerCid})`);
                             targetP = realPage.page;
@@ -324,10 +341,16 @@
                     }
                 }
 
-                // 如果嗅探没结果，或者不需要嗅探，使用 targetP 获取 CID
+                // 修复：访问 videoData.pages
                 if (!targetCid) {
-                    const pageData = data.pages.find(page => page.page === targetP);
-                    if (!pageData) throw new Error(`未找到分P: ${targetP}`);
+                    if (!videoData.pages || !Array.isArray(videoData.pages)) {
+                        throw new Error('视频数据格式异常: pages字段缺失');
+                    }
+
+                    const pageData = videoData.pages.find(page => page.page === targetP);
+                    if (!pageData) {
+                        throw new Error(`未找到分P ${targetP}，可用分P: ${videoData.pages.map(p => p.page).join(', ')}`);
+                    }
                     targetCid = pageData.cid;
                 }
 
@@ -335,11 +358,11 @@
 
                 return {
                     cid: targetCid,
-                    aid: data.aid,
+                    aid: videoData.aid,
                     bvid: bvid,
-                    title: data.title,
-                    p: targetP,  // 返回实际使用的 P
-                    pages: data.pages
+                    title: videoData.title,
+                    p: targetP,
+                    pages: videoData.pages
                 };
             } catch (e) {
                 Logger.error('视频信息解析失败:', e);
@@ -348,34 +371,102 @@
         },
 
         async getSubtitleConfig(cid, bvid, aid) {
+            // 获取当前页面的Cookie用于认证
+            const getCookies = () => {
+                return document.cookie.split('; ').map(c => {
+                    const [name, ...valueParts] = c.split('=');
+                    return { name, value: valueParts.join('=') };
+                });
+            };
+
+            const cookies = getCookies();
+            const sessData = cookies.find(c => c.name === 'SESSDATA')?.value || '';
+
+            // 构建完整的请求头
+            const headers = {
+                "Referer": window.location.href,
+                "User-Agent": navigator.userAgent,
+                "Origin": "https://www.bilibili.com",
+                "Cookie": sessData ? `SESSDATA=${sessData}` : ''
+            };
+
+            // 优先调用更稳定的公开API，修复URL格式
             const urls = [
-                `https://api.bilibili.com/x/player/v2?cid=${cid}&bvid=${bvid}`,
-                `https://api.bilibili.com/x/v2/dm/view?aid=${aid}&oid=${cid}&type=1`
+                `https://api.bilibili.com/x/v2/dm/view?aid=${aid}&oid=${cid}&type=1`,
+                `https://api.bilibili.com/x/player/v2?cid=${cid}&bvid=${bvid}`
             ];
 
             for (const url of urls) {
                 try {
-                    const data = await new Promise((resolve, reject) => {
-                        GM_xmlhttpRequest({
-                            method: "GET",
-                            url: url,
-                            headers: { "Referer": window.location.href },
-                            onload: (res) => resolve(JSON.parse(res.responseText)),
-                            onerror: () => reject()
-                        });
-                    });
-                    if (data.code === 0 && data.data?.subtitle?.subtitles?.length > 0) return data.data.subtitle.subtitles;
-                    if (data.code === 0 && data.data?.subtitles?.length > 0) return data.data.subtitles;
-                } catch (e) { /* continue */ }
+                    Logger.log(`尝试获取字幕: ${url}`);
+                    const response = await this.fetchWithRetry(url, 3, null, headers);
+
+                    if (response.code === 0) {
+                        let subtitles = null;
+
+                        // 统一处理两种API的返回格式
+                        if (response.data?.subtitle?.subtitles?.length > 0) {
+                            subtitles = response.data.subtitle.subtitles;
+                        } else if (response.data?.subtitles?.length > 0) {
+                            subtitles = response.data.subtitles;
+                        }
+
+                        // 验证字幕有效性
+                        if (subtitles && subtitles.length > 0) {
+                            const firstSub = subtitles[0];
+                            // FIX: 移除严格的CID包含检查。B站AI字幕(aisubtitle.hdslb.com)使用Hash文件名，不包含明文CID。
+                            // 只要API调用是针对正确CID发起的，返回的数据通常就是正确的。
+                            if (firstSub.subtitle_url) {
+                                Logger.log(`✅ 获取到字幕: ${firstSub.lan_doc || '未知语言'}`);
+                                Logger.log(`字幕URL: ${firstSub.subtitle_url}`);
+
+                                // 简单的二次校验，记录一下但不拦截
+                                if (!firstSub.subtitle_url.includes(`${cid}`) && !firstSub.subtitle_url.includes('aisubtitle')) {
+                                     Logger.log('提示: 字幕URL未使用CID命名，可能是Hash命名或AI字幕');
+                                }
+
+                                return subtitles;
+                            } else {
+                                Logger.warn(`⚠️ API返回了空字幕URL`);
+                            }
+                        } else {
+                            Logger.warn(`API返回无字幕数据: ${url}`);
+                        }
+                    } else {
+                        Logger.warn(`API返回错误 code: ${response.code}, message: ${response.message || ''}`);
+                    }
+                } catch (e) {
+                    Logger.warn(`字幕API请求失败: ${url}, 错误: ${e.message}`);
+                }
             }
+
+            Logger.error(`❌ 所有字幕API均无法获取有效字幕 for CID: ${cid}`);
             return null;
         },
 
         async getSubtitleContent(url) {
             if (url.startsWith('//')) url = 'https:' + url;
             if (url.startsWith('http://')) url = url.replace('http://', 'https://');
+
+            // 增加字幕内容验证
             return await this.fetchWithRetry(url, 3, (json) => {
-                if (json.body) return json;
+                if (json.body && Array.isArray(json.body)) {
+                    // 验证字幕时间线是否有效
+                    const validItems = json.body.filter(item =>
+                        item.hasOwnProperty('from') &&
+                        item.hasOwnProperty('to') &&
+                        item.hasOwnProperty('content') &&
+                        typeof item.from === 'number' &&
+                        typeof item.to === 'number' &&
+                        typeof item.content === 'string'
+                    );
+
+                    if (validItems.length > 0) {
+                        Logger.log(`✅ 字幕内容加载成功，共${validItems.length}条`);
+                        return json;
+                    }
+                    throw new Error(`Invalid Subtitle: 无效的subtitle数据格式，仅${validItems.length}条有效`);
+                }
                 throw new Error('Invalid Subtitle JSON: missing body');
             });
         }
@@ -478,22 +569,34 @@
             div.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 100001; display: none; align-items: center; justify-content: center;`;
 
             div.innerHTML = `
-                <div class="cc-settings-box" style="background: white; width: 400px; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                <div class="cc-settings-box" style="background: white; width: 420px; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto;">
                     <h3 style="margin-top:0; border-bottom:1px solid #eee; padding-bottom:10px;">字幕插件设置</h3>
+
                     <div style="margin-bottom: 15px;">
                         <label style="display:block; font-weight:bold; margin-bottom:5px;">功能开关</label>
                         <label style="margin-right: 15px;"><input type="checkbox" id="cc-cfg-enabled"> 启用 AI 翻译</label>
                         <label style="margin-right: 15px;"><input type="checkbox" id="cc-cfg-dual"> 双语字幕</label>
                         <label><input type="checkbox" id="cc-cfg-preload"> 智能预加载(3分钟)</label>
                     </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display:block; font-weight:bold; margin-bottom:5px;">加载指定视频 (BV号)</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="cc-cfg-bvid-search" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" placeholder="BV1xx411c7mD">
+                            <button id="cc-cfg-bvid-load" style="padding: 8px 16px; border: none; border-radius: 4px; background: #00a1d6; color: white; cursor: pointer;">加载</button>
+                        </div>
+                    </div>
+
                     <div style="margin-bottom: 15px;">
                         <label style="display:block; font-weight:bold; margin-bottom:5px;">API Key</label>
                         <input type="password" id="cc-cfg-apikey" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" placeholder="sk-...">
                     </div>
+
                     <div style="margin-bottom: 15px;">
                         <label style="display:block; font-weight:bold; margin-bottom:5px;">Base URL</label>
                         <input type="text" id="cc-cfg-baseurl" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                     </div>
+
                     <div style="margin-bottom: 15px;">
                         <label style="display:block; font-weight:bold; margin-bottom:5px;">目标语言</label>
                         <select id="cc-cfg-lang" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
@@ -502,6 +605,7 @@
                             <option value="English">英语 (English)</option>
                         </select>
                     </div>
+
                     <div style="text-align: right; margin-top: 20px;">
                         <button id="cc-cfg-save" style="background: #00a1d6; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">保存</button>
                         <button id="cc-cfg-close" style="background: #eee; color: #333; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-left: 10px;">关闭</button>
@@ -512,7 +616,14 @@
             this.element = div;
             div.querySelector('#cc-cfg-close').addEventListener('click', () => this.hide());
             div.querySelector('#cc-cfg-save').addEventListener('click', () => this.save());
+
+            // 新增：BV号加载按钮事件
+            div.querySelector('#cc-cfg-bvid-load').addEventListener('click', () => this.loadByBvid());
+            div.querySelector('#cc-cfg-bvid-search').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') this.loadByBvid();
+            });
         },
+
         updateFields() {
             const config = ConfigManager.getAll();
             this.element.querySelector('#cc-cfg-enabled').checked = config.enabled;
@@ -522,6 +633,7 @@
             this.element.querySelector('#cc-cfg-baseurl').value = config.baseURL || '';
             this.element.querySelector('#cc-cfg-lang').value = config.targetLanguage || 'Indonesian';
         },
+
         save() {
             const enabled = this.element.querySelector('#cc-cfg-enabled').checked;
             const dualMode = this.element.querySelector('#cc-cfg-dual').checked;
@@ -532,6 +644,22 @@
             ConfigManager.setAll({ enabled, dualMode, preload, apiKey, baseURL, targetLanguage });
             this.hide();
             alert('设置已保存');
+        },
+
+        // 新增：通过BV号加载视频
+        loadByBvid() {
+            const bvid = this.element.querySelector('#cc-cfg-bvid-search').value.trim();
+            if (!bvid) {
+                alert('请输入BV号');
+                return;
+            }
+            if (!/^BV[a-zA-Z0-9]{10}$/.test(bvid)) {
+                alert('BV号格式不正确，应为BV开头+10位字符，如: BV1xx411c7mD');
+                return;
+            }
+            this.hide();
+            Logger.log(`>>> 正在跳转至视频: ${bvid}`);
+            window.location.href = `https://www.bilibili.com/video/${bvid}`;
         }
     };
 
@@ -543,6 +671,8 @@
 
     const FloatingWindow = {
         el: null,
+        cidInfo: null,
+
         init() {
             if (this.el) return;
             const config = ConfigManager.get('floatingWindow');
@@ -551,10 +681,16 @@
             div.style.cssText = `left:${config.position.x}px; top:${config.position.y}px; width:${config.size.width}px; height:${config.size.height}px;`;
             div.innerHTML = `
                 <div class="cc-fw-header">
-                    <span>AI 实时翻译</span>
+                    <div style="display: flex; flex-direction: column; flex: 1;">
+                        <span>AI 实时翻译</span>
+                        <div class="cc-fw-video-info" style="font-size: 10px; color: #aaa; margin-top: 2px;">
+                            <span class="cc-fw-bvid">BV: -</span> | <span class="cc-fw-cid">CID: -</span>
+                        </div>
+                    </div>
                     <div class="cc-fw-ctrls">
-                         <span class="cc-fw-btn settings-btn">⚙️</span>
-                         <span class="cc-fw-btn close-btn">✕</span>
+                         <span class="cc-fw-btn search-btn" title="加载其他视频">🔍</span>
+                         <span class="cc-fw-btn settings-btn" title="设置">⚙️</span>
+                         <span class="cc-fw-btn close-btn" title="关闭">✕</span>
                     </div>
                 </div>
                 <div class="cc-fw-content">等待字幕...</div>
@@ -562,10 +698,12 @@
             `;
             document.body.appendChild(div);
             this.el = div;
+            this.cidInfo = div.querySelector('.cc-fw-video-info');
             this.injectStyles();
             this.bindEvents(div);
             if (!ConfigManager.get('enabled')) this.hide();
         },
+
         injectStyles() {
             if (document.getElementById('cc-fw-style')) return;
             const style = document.createElement('style');
@@ -574,8 +712,9 @@
                 .cc-floating-window { position: fixed; z-index: 100000; background: rgba(0,0,0,0.85); color: #fff; border-radius: 8px; display: flex; flex-direction: column; backdrop-filter: blur(5px); box-shadow: 0 4px 12px rgba(0,0,0,0.5); min-width: 200px; min-height: 60px; }
                 .cc-fw-header { padding: 8px 12px; background: rgba(255,255,255,0.1); border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; cursor: move; user-select: none; }
                 .cc-fw-ctrls { display: flex; gap: 8px; }
-                .cc-fw-btn { cursor: pointer; opacity: 0.7; }
+                .cc-fw-btn { cursor: pointer; opacity: 0.7; font-size: 14px; }
                 .cc-fw-btn:hover { opacity: 1; }
+                .cc-fw-video-info { font-family: monospace; }
                 .cc-fw-content { padding: 12px; flex: 1; overflow-y: auto; font-size: 16px; line-height: 1.5; white-space: pre-wrap; text-shadow: 1px 1px 2px black; }
                 .cc-fw-resize { position: absolute; right: 0; bottom: 0; width: 15px; height: 15px; cursor: nwse-resize; }
                 .fw-primary { font-size: 18px; color: #fff; font-weight: bold; margin-bottom: 4px; }
@@ -583,6 +722,7 @@
             `;
             document.head.appendChild(style);
         },
+
         bindEvents(el) {
             const header = el.querySelector('.cc-fw-header');
             let isDragging = false, startX, startY, initialLeft, initialTop;
@@ -607,10 +747,30 @@
             });
             el.querySelector('.close-btn').addEventListener('click', () => this.hide());
             el.querySelector('.settings-btn').addEventListener('click', () => SettingsUI.show());
+
+            // 新增：搜索按钮事件 - 打开设置并聚焦到BV号输入框
+            el.querySelector('.search-btn').addEventListener('click', () => {
+                SettingsUI.show();
+                setTimeout(() => {
+                    const searchInput = document.getElementById('cc-cfg-bvid-search');
+                    if (searchInput) {
+                        searchInput.focus();
+                        searchInput.select();
+                    }
+                }, 100);
+            });
         },
+
         show() { this.init(); this.el.style.display = 'flex'; ConfigManager.get('floatingWindow').visible = true; ConfigManager.set('floatingWindow', ConfigManager.get('floatingWindow')); },
         hide() { if (this.el) { this.el.style.display = 'none'; ConfigManager.get('floatingWindow').visible = false; ConfigManager.set('floatingWindow', ConfigManager.get('floatingWindow')); } },
-        updateContent(html) { if (this.el) this.el.querySelector('.cc-fw-content').innerHTML = html; }
+        updateContent(html) { if (this.el) this.el.querySelector('.cc-fw-content').innerHTML = html; },
+
+        // 新增：更新视频信息
+        updateVideoInfo(bvid, cid) {
+            if (!this.el || !this.cidInfo) return;
+            this.cidInfo.querySelector('.cc-fw-bvid').textContent = `BV: ${bvid || '-'}`;
+            this.cidInfo.querySelector('.cc-fw-cid').textContent = `CID: ${cid || '-'}`;
+        }
     };
 
     // 字幕列表UI
@@ -808,6 +968,9 @@
             VideoSubtitleRenderer.init();
             FloatingWindow.init();
 
+            // 新增：更新FloatingWindow中的视频信息
+            FloatingWindow.updateVideoInfo(details.bvid, details.cid);
+
             // 步骤2：开启同步与纠错循环
             syncInterval = setInterval(async () => {
                 const player = win.player;
@@ -826,6 +989,9 @@
 
                                 if (FloatingWindow.el) FloatingWindow.updateContent('检测到分P跳转，正在同步字幕...');
                                 await reloadSubtitlesByCid(playerInfo.cid, playerInfo.aid, playerInfo.bvid);
+
+                                // 新增：更新FloatingWindow中的CID信息
+                                FloatingWindow.updateVideoInfo(playerInfo.bvid, playerInfo.cid);
                                 return;
                             }
                         }

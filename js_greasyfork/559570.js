@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name               视频网页全屏
-// @name:zh            視頻网页全屏
+// @name:zh            视频网页全屏
 // @name:zh-TW         視頻網頁全屏
 // @name:en            Video webpage fullscreen
 // @namespace          npm/vite-plugin-monkey
-// @version            3.8.2
+// @version            3.8.3
 // @author             Feny
 // @description        通用(网页)全屏，快捷键：P-网页全屏，Enter-全屏；视频左右两侧可单击网页全屏
 // @description:zh     通用(网页)全屏，快捷键：P-网页全屏，Enter-全屏；视频左右两侧可单击网页全屏
@@ -13,13 +13,8 @@
 // @license            GPL-3.0-only
 // @icon               data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAABNNJREFUeF7tm09oHFUcx79vNtkElgQDwYMgaUJulVhIwXoIFAvtQRAPXnopQXZfchD00ksPKoh4KUQJksx7C4UUihREcvFQhB70UMmuYhXBGMRDmrAJ+Wf+2MSwP/kNb5fNZrPzkt3ZzCT7IIfszve93+/z+/NmZmcEzvkQ59x/HAIgpXwI4AoRrRHR9XQ6nWNIUsonAF6zAHZfKXWLj0smk72O4/xloQER3dZa3zW6m47jPLDRAbihlHrEx46MjHxORO9b6DYB/EJE6gAAKSWViR8ppW7wZ8PDwy/E4/E/ALzot4AQ4q7rureNUdeI6Ds/DX9PRLe01vcN8DsAPrXQ5WKx2PWJiYmnRjcN4C0LnXdIEYCU8ihhMaKpVOqSEOJnm8lLIyqlTALQNrrSiEopWcPaqoOInra3tw+Nj4//YyD8CuAVP105gGcAXqokKo2olPJtAN/YTF4WUY4mR9Vv5IQQQ67r/mmc4ey55icCUMzW0dHRC/l8/jcACT9daQaUp/8BbVlEPwAw5je5+X5IKfWDKYcHRHTTT8cRFUJcVkr9Z0rvJwC9fjoApf3nquM4j/001gBMjb6jtf7aOGPbcHL5fP5yOp2eNxG1babFiB6n9EqzNZVKDQsh7lWDcCwAPJFxJmucsWo4HFGt9ausMen5o00zLY3ocUoPwHtKqS+NjR8D+OgoCMcGACD3/Pnzi1NTUysmPb+3bDjFiCaTSav0NEZ/opT60DhjXXpCiDdd1/3WZOs9Ihqu2N8KH1bYAo/MnNKImvTkGvdtOACUUmqEJ7ZJz4IBQoh3Xdf1UllKyb2HQfgOIcRF13V/N+s9FkJcLRedJAO8OYhoWmvNOwIbdZyd4Y7W+jOb9Cwz9g2llNfUpJS8C3lr+4xcIpHoHRsb+9eUHusvlGpODMBA+EJr7UVDSmmdnrwTaK2/8kvPcuccx+mdnJz825QeO3PJj4AQ4onruq/zcZVKr3kt4EfwrH9fzICZmZlDDeKsO8/+FQFkMpmqZ4JnFUYTQCGyzQxolkCzBzSb4Fnt9NX8au4CjdoFOjo6EI/HEYvFsLW1hZ2dnVAkXOAZ0NLSgv7+fiQSB6+Wt7e3kcvlsLa2dqogAgfQ19eHrq6uI51kAAyCgZzGCBzAwMAAWltbfX1jCEtLS9jb2/M9tp4HBA5gcHDQ2l52niEwjEaNUAEoON3I/hBKAAUQjegPoQZQABFkf4gEAAYRVH+IDICg+kPkABRALC4uYmFhoebNIrIA2PN6QIg0gM3NTczOztaUBZEGwJ5ns97vtCcekQawsbGBubm5EzvPwkgDOLc9YH9/H/Pz81hZWakp+pHMgOXlZe9iaXd3t2bnIwVgfX3du1Lkzl/PEfoewLfOOOKrq6v19Ls4V2gBcJ2z4/xHFNwd+1ACqHedV0udUAEIqs5PFYDNPcGg6/xUAVS7K9yoOj9VALx4T08Puru7i3bk83nvJKae+/lJt4jAe0DBsM7OTrS1tXn/8r0+jn4YRsMAhMHZSjY0ARSoNB+RaT4i03xEJrgT7rB2wEbcEQqx755pxV0gm80+I6KKL02F3Yla7Ct9VnhaCGH9vl0ti4ZJe+Bx+fO4FR56XyCTyTwkoitCiJfDFKk621L51dk6LxKJ6c79GyP/A7T+4JsF5qmXAAAAAElFTkSuQmCC
 // @match              *://*/*
-// @require            https://unpkg.com/sweetalert2@11.26.10/dist/sweetalert2.min.js
-// @require            data:application/javascript,%3Bwindow.sweetalert2%3DSwal%3B
-// @resource           sweetalert2  https://unpkg.com/sweetalert2@11.26.10/dist/sweetalert2.min.css
 // @grant              GM_addStyle
 // @grant              GM_addValueChangeListener
-// @grant              GM_deleteValue
-// @grant              GM_getResourceText
 // @grant              GM_getValue
 // @grant              GM_registerMenuCommand
 // @grant              GM_setValue
@@ -30,16 +25,11 @@
 // @updateURL https://update.greasyfork.org/scripts/559570/%E8%A7%86%E9%A2%91%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F.meta.js
 // ==/UserScript==
 
-(o=>{const n=Symbol("styleAdded"),t=document.createElement("style");t.textContent=o,window.gmStyle=t,document.addEventListener("addStyle",r=>{const{shadowRoot:e}=r.detail;e[n]||e instanceof Document||(e.prepend(t.cloneNode(!0)),e[n]=!0)}),(GM_addStyle??(()=>document.head.append(t.cloneNode(!0))))(o)})(' @charset "UTF-8";::part(webFullscreen),[part*=webFullscreen],body[part*=webFullscreen] [part*=webFullscreen]{top:0!important;left:0!important;margin:0!important;padding:0!important;zoom:normal!important;border:none!important;width:100vw!important;height:100vh!important;position:fixed!important;transform:none!important;max-width:none!important;max-height:none!important;border-radius:0!important;transition:none!important;z-index:2147483646!important;background-color:#000!important;flex-direction:column!important;overflow:hidden!important;display:flex!important}[part*=webFullscreen]~*:not(.monkey-web-fullscreen){display:none!important}[part*=webFullscreen] video,body[part*=webFullscreen] [part*=webFullscreen] video{top:0!important;left:0!important;width:100vw!important;border:none!important;height:clamp(100vh - 100%,100vh,100%)!important;object-fit:contain!important}.monkey-web-fullscreen{z-index:2147483647!important}.monkey-web-fullscreen *{box-sizing:border-box!important;font-family:Verdana,Geneva,Tahoma,sans-serif}.monkey-web-fullscreen .swal2-cancel{background-color:#757575!important}.monkey-web-fullscreen textarea{color:#333;border-radius:3px;width:100%!important;resize:none!important;font-size:12px!important;padding:3px 5px!important;box-shadow:none!important;min-height:8rem!important;border:1px solid #cbd5e1!important}.monkey-web-fullscreen textarea::-webkit-scrollbar{width:4px}.monkey-web-fullscreen textarea::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}.monkey-web-fullscreen textarea:focus{outline:none!important;border-color:#3b82f6!important}.video-edge-click{cursor:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAaBJREFUSEutlL8vBEEcxT9fpxSdVtQkGqqrHP8CoqDXSZTC7VpcRa3SCBJEclcgEQmNShDFKVRXKSj8atmv7Gbvsrd2Zydhus2+75v33rwZwXKpx0UAlTIlmxGxAQUY9dCI2GrGCvRn4tCu8CJLTCadmBTrCgcoPfGY2hRHgAmEwyR5FnHWzK8osoDq0hdm7NJoujEJSc24NdDJgCzwkHbAWqGfL+pp7kIBWa1QjyEpc2NqjQlj3QrbWjZxucQty3CHsMU3u+LylreRRDdqJAa8xmdaXB7D/rp00cFngmgPZUccTrM2SCNu4FNKnP42ykwKSdCQbaAqZe7i/3OjCFWvUsTnKsf+GUKVb2ri8mRFHJIvc48wmJct8AHMZdetQn+8w+oxC2xaEAeQdfMFgeFml7VCD188G4hfgRpKVRxq1lc6euECxYHy+LpEOKHAcdyh9SMU5TyGcN5GqyyKw1rSSTux4dlsPTzLXCEUo+93fEbF5dZIbHMw6jEPbIRY5UgcxtPmrOvWUuzQS4E60IUyJQ77/0IcZe0C3eKE6lPXDznkqgSwYj+tAAAAAElFTkSuQmCC),pointer!important;left:0!important;top:6%!important;width:25px!important;height:70%!important;position:absolute!important;z-index:2147483647!important;background-color:transparent!important;user-select:none!important;opacity:0!important}.video-edge-click.right{right:0!important;left:auto!important} ');
+(n=>{const o=Symbol("styleAdded"),t=document.createElement("style");t.textContent=n,window.gmStyle=t,document.addEventListener("addStyle",r=>{const{shadowRoot:e}=r.detail;e[o]||e instanceof Document||(e.prepend(t.cloneNode(!0)),e[o]=!0)}),(GM_addStyle??(()=>document.head.append(t.cloneNode(!0))))(n)})(' @charset "UTF-8";::part(webFullscreen),[part*=webFullscreen],body[part*=webFullscreen] [part*=webFullscreen]{top:0!important;left:0!important;margin:0!important;padding:0!important;zoom:normal!important;border:none!important;width:100vw!important;height:100vh!important;position:fixed!important;transform:none!important;max-width:none!important;max-height:none!important;border-radius:0!important;transition:none!important;z-index:2147483646!important;background-color:#000!important;flex-direction:column!important;overflow:hidden!important;display:flex!important}[part*=webFullscreen]~*:not(.monkey-web-fullscreen){display:none!important}[part*=webFullscreen] video,body[part*=webFullscreen] [part*=webFullscreen] video{top:0!important;left:0!important;width:100vw!important;border:none!important;height:clamp(100vh - 100%,100vh,100%)!important;object-fit:contain!important}.video-edge-click{cursor:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAaBJREFUSEutlL8vBEEcxT9fpxSdVtQkGqqrHP8CoqDXSZTC7VpcRa3SCBJEclcgEQmNShDFKVRXKSj8atmv7Gbvsrd2Zydhus2+75v33rwZwXKpx0UAlTIlmxGxAQUY9dCI2GrGCvRn4tCu8CJLTCadmBTrCgcoPfGY2hRHgAmEwyR5FnHWzK8osoDq0hdm7NJoujEJSc24NdDJgCzwkHbAWqGfL+pp7kIBWa1QjyEpc2NqjQlj3QrbWjZxucQty3CHsMU3u+LylreRRDdqJAa8xmdaXB7D/rp00cFngmgPZUccTrM2SCNu4FNKnP42ykwKSdCQbaAqZe7i/3OjCFWvUsTnKsf+GUKVb2ri8mRFHJIvc48wmJct8AHMZdetQn+8w+oxC2xaEAeQdfMFgeFml7VCD188G4hfgRpKVRxq1lc6euECxYHy+LpEOKHAcdyh9SMU5TyGcN5GqyyKw1rSSTux4dlsPTzLXCEUo+93fEbF5dZIbHMw6jEPbIRY5UgcxtPmrOvWUuzQS4E60IUyJQ77/0IcZe0C3eKE6lPXDznkqgSwYj+tAAAAAElFTkSuQmCC),pointer!important;left:0!important;top:6%!important;width:25px!important;height:70%!important;position:absolute!important;z-index:2147483647!important;background-color:transparent!important;user-select:none!important;opacity:0!important}.video-edge-click.right{right:0!important;left:auto!important} ');
 
-(function (Swal) {
+(function () {
   'use strict';
 
-  const cssLoader = (e) => {
-    const t = GM_getResourceText(e);
-    return GM_addStyle(t), t;
-  };
-  cssLoader("sweetalert2");
   const isElement = (node) => node instanceof Element;
   const isDocument = (node) => node instanceof Document;
   const getSRoot = (node) => node?._shadowRoot ?? node?.shadowRoot ?? null;
@@ -85,6 +75,7 @@
     return results;
   }
   const Consts = Object.freeze({
+    P: "P",
     EMPTY: "",
     HALF_SEC: 500,
     ONE_SEC: 1e3,
@@ -93,7 +84,6 @@
   });
   const Tools = {
     isTopWin: () => window.top === window,
-    isNumber: (str) => /^[0-9]$/.test(str),
     scrollTop: (top) => window.scrollTo({ top }),
     getElementRect: (el) => el?.getBoundingClientRect(),
     microTask: (callback) => Promise.resolve().then(callback),
@@ -110,18 +100,10 @@
       this.getIFrames().forEach((iframe) => this.postMessage(iframe?.contentWindow, data));
     },
     freqTimes: /* @__PURE__ */ new Map(),
-    _getTimeDiff(key) {
+    isThrottle(key = "throttle", gap = 300) {
       const now = Date.now();
       const last = this.freqTimes.get(key) ?? 0;
       const diff = now - last;
-      return { now, last, diff };
-    },
-    isFrequent(key = "frequent", gap = 300) {
-      const { now, diff } = this._getTimeDiff(key);
-      return this.freqTimes.set(key, now) && diff < gap;
-    },
-    isThrottle(key = "throttle", gap = 300) {
-      const { now, diff } = this._getTimeDiff(key);
       return diff >= gap ? this.freqTimes.set(key, now) && false : true;
     },
     limitCountMap: /* @__PURE__ */ new Map(),
@@ -144,12 +126,6 @@
       const { top, left, right, bottom } = this.getElementRect(element);
       return pointX >= left && pointX <= right && pointY >= top && pointY <= bottom;
     },
-    createObserver(target, callback, options = {}) {
-      const observer = new MutationObserver(callback);
-      const observeTarget = typeof target === "string" ? this.query(target) : target;
-      observer.observe(observeTarget, { childList: true, subtree: true, ...options });
-      return observer;
-    },
     findParentWithChild(element, selector, maxLevel = 8) {
       for (let parent = element?.parentElement, level = 0; parent && level < maxLevel; parent = parent.parentElement, level++) {
         if (this.query(selector, parent)) return parent;
@@ -170,15 +146,15 @@
       }
       return parents;
     },
+    getParts: (node) => node.getAttribute("part")?.split(/\s+/) ?? [],
     setPart(node, value) {
       if (!(node instanceof Element)) return;
-      const parts = node?.getAttribute("part")?.split(/\s+/) ?? [];
-      node?.setAttribute("part", [.../* @__PURE__ */ new Set([...parts, value])].join(" ").trim());
+      node.setAttribute("part", [.../* @__PURE__ */ new Set([...this.getParts(node), value])].join(" "));
     },
     delPart(node, value) {
       if (!(node instanceof Element)) return;
-      const parts = (node?.getAttribute("part")?.split(/\s+/) ?? []).filter((v) => v !== value);
-      node?.setAttribute("part", parts.join(" ").trim());
+      const parts = this.getParts(node).filter((v) => v !== value);
+      node.setAttribute("part", parts.join(" "));
     },
     safeHTML(htmlStr) {
       if (!window.trustedTypes?.createPolicy) return htmlStr;
@@ -234,12 +210,7 @@
     }
   }
   VideoEnhancer.hackAttachShadow();
-  const Keyboard = Object.freeze({
-    P: "KeyP",
-    Enter: "Enter",
-    NumEnter: "NumpadEnter"
-  });
-  const observedValue = { isFullscreen: false, fsWrapper: null };
+  const observedValue = { isFullscreen: false };
   const Listen = {
     noVideo: () => !window.videoInfo && !window.topWin,
     isBackgroundVideo: (video) => video?.muted && video?.loop,
@@ -253,7 +224,6 @@
       if (isNonFirst) return;
       this.setupDocumentObserver();
       this.observeFullscreenChange();
-      this.observeWebFullscreenChange();
       this.setupIgnoreUrlsChangeListener();
       this.setupShadowVideoListeners();
     },
@@ -265,8 +235,7 @@
     },
     setupFullscreenListener() {
       document.addEventListener("fullscreenchange", () => {
-        const isFullscreen = !!document.fullscreenElement;
-        Tools.postMessage(window.top, { isFullscreen });
+        Tools.postMessage(window.top, { isFullscreen: !!document.fullscreenElement });
       });
     },
     observeFullscreenChange() {
@@ -274,18 +243,7 @@
         get: () => observedValue.isFullscreen,
         set: (value) => {
           observedValue.isFullscreen = value;
-          !value && this.fsWrapper && this.dispatchShortcutKey(Keyboard.P);
-        }
-      });
-    },
-    observeWebFullscreenChange() {
-      const handle = () => Tools.scrollTop(this.fsWrapper.scrollY);
-      Object.defineProperty(this, "fsWrapper", {
-        get: () => observedValue.fsWrapper,
-        set: (value) => {
-          observedValue.fsWrapper = value;
-          const method = value ? "addEventListener" : "removeEventListener";
-          window[method]("scroll", handle, true);
+          !value && this.fsWrapper && this.dispatchShortcutKey(Consts.P);
         }
       });
     },
@@ -313,7 +271,7 @@
           Tools.preventDefault(e);
           const vid = e.target.video;
           if (this.player !== vid) this.player = vid, this.setVideoInfo(vid);
-          Tools.microTask(() => this.dispatchShortcutKey(Keyboard.P, { isTrusted: true }));
+          Tools.microTask(() => this.dispatchShortcutKey(Consts.P, true));
         };
         return element;
       };
@@ -328,37 +286,24 @@
     }
   };
   var _GM_addValueChangeListener = /* @__PURE__ */ (() => typeof GM_addValueChangeListener != "undefined" ? GM_addValueChangeListener : void 0)();
-  var _GM_deleteValue = /* @__PURE__ */ (() => typeof GM_deleteValue != "undefined" ? GM_deleteValue : void 0)();
   var _GM_getValue = /* @__PURE__ */ (() => typeof GM_getValue != "undefined" ? GM_getValue : void 0)();
   var _GM_registerMenuCommand = /* @__PURE__ */ (() => typeof GM_registerMenuCommand != "undefined" ? GM_registerMenuCommand : void 0)();
   var _GM_setValue = /* @__PURE__ */ (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
   var _GM_unregisterMenuCommand = /* @__PURE__ */ (() => typeof GM_unregisterMenuCommand != "undefined" ? GM_unregisterMenuCommand : void 0)();
   var _unsafeWindow = /* @__PURE__ */ (() => typeof unsafeWindow != "undefined" ? unsafeWindow : void 0)();
   const Keydown = {
-    dispatchShortcutKey(code, { isTrusted = false } = {}) {
-      const key = this.processShortcutKey({ code });
-      Tools.postMessage(window.top, { key, isTrusted });
-    },
-    processShortcutKey({ key, code, ctrlKey, shiftKey, altKey }) {
-      code = code.replace(/key|arrow|numpad|tract/gi, Consts.EMPTY);
-      const keys = [ctrlKey && "ctrl", shiftKey && "shift", altKey && "alt", /[0-9]/.test(key) ? key : code];
-      return keys.filter(Boolean).join("_").toUpperCase();
-    },
+    dispatchShortcutKey: (key, isTrusted = false) => Tools.postMessage(window.top, { key: key.toUpperCase(), isTrusted }),
     setupKeydownListener() {
-      try {
-        window.addEventListener("keydown", (event) => this.handleKeydown(event), true);
-        window.addEventListener("message", ({ data }) => this.handleMessage(data));
-      } catch {
-        _unsafeWindow.addEventListener("keydown", (event) => this.handleKeydown(event), true);
-        _unsafeWindow.addEventListener("message", ({ data }) => this.handleMessage(data));
-      }
+      _unsafeWindow.addEventListener("message", ({ data }) => this.handleMessage(data));
+      _unsafeWindow.addEventListener("keydown", (event) => this.handleKeydown(event), true);
+      _unsafeWindow.addEventListener("scroll", () => this.fsWrapper && Tools.scrollTop(this.fsWrapper.scrollY));
     },
-    handleKeydown(event, { key, code, isTrusted } = event) {
+    handleKeydown(event) {
+      const { key, isTrusted } = event;
       const target = event.composedPath()[0];
-      if (this.noVideo() || Tools.isInputable(target) || !Object.values(Keyboard).includes(code)) return;
+      if (this.noVideo() || Tools.isInputable(target) || !["p", "Enter"].includes(key)) return;
       Tools.preventDefault(event);
-      key = this.processShortcutKey(event);
-      Tools.postMessage(window.top, { key, isTrusted });
+      this.dispatchShortcutKey(key, isTrusted);
     },
     handleMessage(data) {
       if (!data?.source?.includes(Consts.MSG_SOURCE)) return;
@@ -371,13 +316,7 @@
       if (!this.player) Tools.sendToIFrames(data);
       if (data?.key) this.execHotKeyActions(data);
     },
-    execHotKeyActions({ key, isTrusted }) {
-      const dict = {
-        P: () => this.toggleWebFullscreen(isTrusted),
-        ENTER: () => this.toggleFullscreen()
-      };
-      dict[key]?.();
-    }
+    execHotKeyActions: ({ key, isTrusted }) => key === Consts.P ? App.toggleWebFullscreen(isTrusted) : App.toggleFullscreen()
   };
   const Events = {
     videoEvents: ["loadedmetadata", "timeupdate", "playing"],
@@ -435,46 +374,37 @@
     }
   };
   class BasicStorage {
-    constructor(name, defVal, useLocalStore = false, parser = (v) => v, splice = false) {
-      Object.assign(this, { name, defVal, useLocalStore, parser, splice });
-      this.storage = useLocalStore ? localStorage : { getItem: _GM_getValue, setItem: _GM_setValue, removeItem: _GM_deleteValue };
+    constructor(name, defVal, parser = (v) => v, splice = false) {
+      Object.assign(this, { name, defVal, parser, splice });
+      this.storage = { getItem: _GM_getValue, setItem: _GM_setValue };
     }
     #getFinalKey(suffix = "", requireKey = false) {
-      if (requireKey && [null, void 0].includes(suffix)) throw new Error("键名拼接时，suffix（第二个参数）不能为空");
+      if (requireKey && [null, void 0].includes(suffix)) throw new Error("键名拼接时，第二个参数不能为空");
       if (suffix.startsWith(this.name)) return suffix;
       return this.splice ? this.name + suffix : this.name;
     }
-    set(value, key, expires) {
-      const val = expires ? JSON.stringify({ value, expires: Date.now() + expires * 864e5 }) : value;
-      this.storage.setItem(this.#getFinalKey(key, true), val);
+    set(value, key) {
+      this.storage.setItem(this.#getFinalKey(key, true), value);
     }
     get(key) {
-      const data = this.#get(this.#getFinalKey(key));
-      return !data?.value ? data : data.expires > Date.now() ? data.value : this.defVal;
-    }
-    #get(key) {
-      const value = this.storage.getItem(key);
-      try {
-        return JSON.parse(value) ?? this.defVal;
-      } catch {
-        return this.parser(value ?? this.defVal);
-      }
+      const value = this.storage.getItem(this.#getFinalKey(key));
+      return this.parser(value ?? this.defVal);
     }
   }
   const Storage = {
-    DETACH_THRESHOLD: new BasicStorage("DETACH_THRESHOLD_", 20, false, Number, true),
-    CUSTOM_CONTAINER: new BasicStorage("CUSTOM_CONTAINER_", "", false, void 0, true),
-    THIS_SITE_AUTO: new BasicStorage("THIS_SITE_AUTO_", false, false, Boolean, true),
-    IGNORE_URLS: new BasicStorage("IGNORE_URLS", "")
+    IS_AUTO: new BasicStorage("IS_AUTO_", false, Boolean, true),
+    DETACH_THRESHOLD: new BasicStorage("DETACH_THRESHOLD_", 20, Number, true),
+    CUSTOM_CONTAINER: new BasicStorage("CUSTOM_CONTAINER_", "", void 0, true),
+    IGNORE_URLS: new BasicStorage("IGNORE_URLS", "", void 0, true)
   };
   const WebFull = {
     toggleFullscreen() {
-      if (!Tools.isTopWin() || Tools.isFrequent("toggleFull")) return;
+      if (!Tools.isTopWin() || Tools.isThrottle("toggleFull")) return;
       this.isFullscreen ? document.exitFullscreen() : this.getVideoHostContainer()?.requestFullscreen();
-      if (this.isFullscreen || !this.fsWrapper) this.dispatchShortcutKey(Keyboard.P);
+      if (this.isFullscreen || !this.fsWrapper) this.dispatchShortcutKey(Consts.P);
     },
     toggleWebFullscreen(isTrusted) {
-      if (this.noVideo() || Tools.isFrequent("toggleWeb")) return;
+      if (this.noVideo() || Tools.isThrottle("toggleWeb")) return;
       if (this.isFullscreen && isTrusted) return document.fullscreenElement && document.exitFullscreen();
       this.fsWrapper ? this.exitWebFullscreen() : this.enterWebFullscreen();
     },
@@ -577,9 +507,9 @@
   const Automatic = {
     async autoWebFullscreen(video) {
       if (!this.topWin || !video.offsetWidth || this.player !== video) return;
-      if (video.__isWide || Tools.isThrottle("autoWide", Consts.ONE_SEC) || !this.isAutoSite()) return;
+      if (video.__isWide || Tools.isThrottle("autoWide", Consts.ONE_SEC) || !this.isAuto()) return;
       if (this.isIgnoreUrl() || await this.isWebFull(video) || Tools.isOverLimit("autoWide")) return video.__isWide = true;
-      this.dispatchShortcutKey(Keyboard.P);
+      this.dispatchShortcutKey(Consts.P);
     },
     async isWebFull(video) {
       const isWebFull = video.offsetWidth >= this.topWin.viewWidth;
@@ -588,151 +518,81 @@
       return video.offsetWidth >= this.topWin.viewWidth;
     }
   };
-  class URLBlacklist {
-    constructor(blacklist) {
-      this.blacklist = this.normalizeBlacklist(blacklist);
-    }
-    normalizeBlacklist(urls) {
-      return urls.map((url) => {
-        try {
-          const parsedUrl = new URL(url);
-          return { hostname: parsedUrl.hostname, pathname: this.normalizePath(parsedUrl.pathname) };
-        } catch (e) {
-          console.error(`无效的URL: ${url}`, e);
-          return null;
-        }
-      }).filter(Boolean);
-    }
-    normalizePath(path) {
-      return path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
-    }
-    isBlocked(url) {
-      try {
-        const parsedUrl = new URL(url);
-        const normalizedPath = this.normalizePath(parsedUrl.pathname);
-        if (normalizedPath === "/") return true;
-        return this.blacklist.some((entry) => {
-          if (parsedUrl.hostname !== entry.hostname) return false;
-          if (entry.pathname === "/") return normalizedPath === "/";
-          return normalizedPath === entry.pathname || normalizedPath.startsWith(`${entry.pathname}/`);
-        });
-      } catch (e) {
-        console.error(`要检查的URL无效: ${url}`, e);
-        return false;
-      }
-    }
-  }
   const Ignore = {
-    defIgnore: ["https://www.youtube.com/results", "https://www.youtube.com/shorts", "https://www.bilibili.com/anime"],
+    initIgnoreUrls: () => App.urlFilter = App.getIgnoreUrls(),
     setupIgnoreUrlsChangeListener() {
-      this.initializeIgnoreUrls();
-      _GM_addValueChangeListener(Storage.IGNORE_URLS.name, (_, oldVal, newVal) => {
-        if (oldVal === newVal) return;
-        this.initializeIgnoreUrls();
-      });
-    },
-    initializeIgnoreUrls() {
-      const urls = this.processIgnoreUrls(Storage.IGNORE_URLS, this.defIgnore);
-      this.urlFilter = new URLBlacklist(urls);
+      _GM_addValueChangeListener(Storage.IGNORE_URLS.name, (_, oldVal, newVal) => oldVal !== newVal && this.initIgnoreUrls());
     },
     isIgnoreUrl() {
-      return this.urlFilter?.isBlocked(this.topWin?.url ?? location.href);
+      if (!this.urlFilter) this.initIgnoreUrls();
+      return this.isBlocked(this.urlFilter);
     },
-    processIgnoreUrls(cache, defaultUrls) {
-      const urlsStr = cache.get() ?? "";
-      const existUrls = urlsStr.split(/[;\n]/).filter((e) => e.trim());
-      if (existUrls.length) return existUrls;
-      cache.set(defaultUrls.join(";\n"));
-      return defaultUrls;
+    getIgnoreUrls() {
+      const urlsStr = Storage.IGNORE_URLS.get(this.topWin.host);
+      return urlsStr.split(/[;\n]/).filter((url) => url.trim());
+    },
+    isBlocked(urls = []) {
+      const { href, pathname } = new URL(this.topWin.url);
+      return pathname === "/" || urls.some((u) => href.startsWith(u));
     }
   };
   class I18n {
     static langPacks = {
       zh_CN: {
         detach: "此站脱离式全屏阈值",
-        enAuto: "启用自动网页全屏",
-        disAuto: "禁用自动网页全屏",
+        enable: "启用自动网页全屏",
+        disable: "禁用自动网页全屏",
         ignore: "自动时忽略的网址",
         custom: "自定义视频容器",
         close: "关闭"
       },
-      zh_TW: {
-        detach: "此站脫離式全屏閾值",
-        enAuto: "啓用自動網頁全屏",
-        disAuto: "禁用自動網頁全屏",
-        ignore: "自動時忽略的網址",
-        custom: "自定義視頻容器",
-        close: "關閉"
-      },
       en: {
         detach: "Leave the original DOM threshold",
-        enAuto: "Enable automatic web full-screen",
-        disAuto: "Disable automatic web full-screen",
+        enable: "Enable automatic web full-screen",
+        disable: "Disable automatic web full-screen",
         ignore: "Exclude URLs from auto full-screen",
         custom: "Custom video container",
         close: "close"
       }
     };
     static getLang() {
-      const browserLang = navigator.language || navigator.userLanguage;
-      if (browserLang.includes("zh-TW") || browserLang.includes("zh-HK")) return "zh_TW";
-      return browserLang.includes("zh") ? "zh_CN" : "en";
+      const lang = navigator.language || navigator.userLanguage;
+      return lang.includes("zh") ? "zh_CN" : "en";
     }
     static t(key) {
-      const lang = this.getLang();
-      return this.langPacks[lang][key];
+      return this.langPacks[this.getLang()][key];
     }
   }
   const Menu = {
-    isAutoSite: () => Storage.THIS_SITE_AUTO.get(Tools.isTopWin() ? location.host : window?.topWin?.host),
+    isAuto: () => Storage.IS_AUTO.get(Tools.isTopWin() ? location.host : window.topWin?.host),
     setupScriptMenuCommand() {
       if (this.hasMenu || !Tools.isTopWin()) return;
-      this.setupMenuChangeListener();
+      const key = Storage.IS_AUTO.name + location.host;
+      _GM_addValueChangeListener(key, () => this.registMenuCommand());
       this.registMenuCommand();
       this.hasMenu = true;
     },
-    setupMenuChangeListener() {
-      const key = Storage.THIS_SITE_AUTO.name + location.host;
-      _GM_addValueChangeListener(key, () => this.registMenuCommand());
-    },
     registMenuCommand() {
-      const siteFn = ({ host, cache }) => cache.set(!cache.get(host), host);
+      const host = location.host;
       const configs = [
-        { title: I18n.t(this.isAutoSite() ? "disAuto" : "enAuto"), cache: Storage.THIS_SITE_AUTO, useHost: true, fn: siteFn },
-        { title: I18n.t("detach"), cache: Storage.DETACH_THRESHOLD, useHost: true },
-        { title: I18n.t("ignore"), cache: Storage.IGNORE_URLS, fn: this.ignoreUrlsPopup },
-        { title: I18n.t("custom"), cache: Storage.CUSTOM_CONTAINER, useHost: true }
+        { title: I18n.t(this.isAuto() ? "disable" : "enable"), cache: Storage.IS_AUTO, fn: (cache, val) => cache.set(!val, host) },
+        { title: I18n.t("detach"), cache: Storage.DETACH_THRESHOLD },
+        { title: I18n.t("ignore"), cache: Storage.IGNORE_URLS },
+        { title: I18n.t("custom"), cache: Storage.CUSTOM_CONTAINER }
       ];
-      configs.forEach(({ title, useHost, cache, isHidden, fn }) => {
+      configs.forEach(({ title, cache, fn }) => {
         const id = `${cache.name}_MENU_ID`;
         _GM_unregisterMenuCommand(this[id]);
-        if (isHidden) return;
-        const host = useHost ? location.host : Consts.EMPTY;
         this[id] = _GM_registerMenuCommand(title, () => {
-          if (fn) return fn.call(this, { host, cache, title });
-          const input = prompt(title, host ? cache.get(host) : cache.get());
-          if (input !== null) host ? cache.set(input, host) : cache.set(input);
+          const value = cache.get(host);
+          if (fn) return fn.call(this, cache, value);
+          const input = prompt(title, value);
+          if (input !== null) cache.set(input, host);
         });
-      });
-    },
-    ignoreUrlsPopup({ title, cache }) {
-      Swal.fire({
-        width: 350,
-        title,
-        showCancelButton: true,
-        showConfirmButton: false,
-        cancelButtonText: I18n.t("close"),
-        html: Tools.safeHTML('<textarea id="ignoreUrls" spellcheck="false"></textarea>'),
-        customClass: { container: "monkey-web-fullscreen" },
-        didOpen(popup) {
-          const textarea = Tools.query("#ignoreUrls", popup);
-          textarea.oninput = () => cache.set(textarea.value);
-          textarea.value = cache.get();
-        }
       });
     }
   };
-  const App = {};
+  window.App = {};
   const handlers = [Listen, Keydown, Events, WebFull, Automatic, Ignore, Menu];
   handlers.forEach((handler) => {
     const entries = Object.entries(handler);
@@ -742,4 +602,4 @@
   });
   App.init();
 
-})(sweetalert2);
+})();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Holotower Custom Emotes Box
 // @namespace    http://holotower.org/
-// @version      1.23
+// @version      1.24
 // @author       anonymous
 // @license      CC0
 // @description  Adds a custom emote box to the quick reply form on Holotower
@@ -1542,6 +1542,13 @@
                         "TerrAhoge", "404T", "404E", "404R", "404A"
                     ]
                 }, {
+                    name: "Toffee", id: "toffee", oshimark: "🐾🎋", emotes: [
+                        "ToffCheer", "ToffHic", "ToffLaugh", "ToffBlush", "ToffShock", "ToffComfy",
+                        "ToffPat", "ToffHeart", "ToffLoad", "ToffLurk", "ToffScared", "ToffWaku",
+                        "ToffWave", "ToffYawn", "BambudCry", "BambudPeek", "BambudWota", "Mochi",
+                        "MILT", "Necotoff", "ToffT", "ToffO", "ToffF", "ToffE", "wip9", "wip10"
+                    ]
+                }, {
                     name: "Yuuna Nini", id: "yuuna", oshimark: "🥖", emotes: [
                         "yuunaPatpat", "yuunaPeek", "yuunaRingoshock", "yuunaAyamepls", "yuunaBred",
                         "yuunaPat.gif", "yuunaWiggle.gif", "yuunaHopping.gif", "yuunaBonk.gif",
@@ -1578,11 +1585,55 @@
     // Run the script whenever QR is opened
     $(window).on('quick-reply', injectEmoteBox);
 
+    // Append CSS
+    const style = document.createElement("style");
+    style.textContent = `
+  #emote-menu {
+    float: right;
+    display: flex;
+    width: 20px;
+    height: 22px;
+    margin: 0px;
+    padding: 0px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  #emote-list {
+    overflow-y: auto;
+    resize: vertical;
+    max-height: max-content;
+    min-height: 40px;
+    min-width: 100%;
+    margin-bottom: 2px;
+    display: grid;
+    grid-template-rows: 40px;
+    grid-auto-rows: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+    justify-items: center;
+  }
+
+  #emote-list > img {
+    width: 40px;
+    height: 40px;
+    display: block;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  #emote-talent-select > optgroup {
+    font-style: normal;
+    font-size: 10pt;
+  }
+`;
+    document.head.appendChild(style);
+
     function injectEmoteBox() {
         $('form#quick-reply input[name="subject"]').after(
-            $('<div id="emote-menu" style="float: right; display: flex; width: 20px; height: 22px; margin: 0px; padding: 0px; align-items: center; justify-content: center; cursor:pointer;">')
+            $('<div id="emote-menu">')
                 .append(
-                    $('<img src="/static/emotes/ina/_tehepero.png" alt="Emotes" title="Emotes" style="width: 16px; height: 16px; margin: 0px 0px 1px;">')
+                    $('<img src="/static/emotes/ina/_tehepero.png" alt="Emotes" title="Emotes" style="width: 16px; height: 16px; margin: 0px 0px 1px; user-select: none;" draggable="false">')
                 )
         ).css('max-width', 'calc(100% - 22px)');
 
@@ -1591,20 +1642,7 @@
                 <div style="display:flex; flex-wrap:nowrap;">
                     <select id="emote-category-select" style="flex:2"></select>
                     <select id="emote-talent-select" style="flex:3"></select>
-                </div><div id="emote-list" style="
-                    overflow-y: auto;
-                    resize: vertical;
-                    max-height: max-content;
-                    min-height: 40px;
-                    min-width: 100%;
-                    margin-bottom: 2px;
-                    display: grid;
-                    grid-template-rows: 40px;
-                    grid-auto-rows: 40px;
-                    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
-                    justify-items: center;
-                    height: ${settings.emoteListHeight}px;
-                "></div></td></tr>`);
+                </div><div id="emote-list" style="height: ${settings.emoteListHeight}px;"></div></td></tr>`);
         }
 
         $('form#quick-reply td.submit').closest('tr').after(emoteSelectContainer);
@@ -1690,7 +1728,7 @@
 
         // Fetch all subcategories and their members
         $.each(curCategory.subcategories, function (index, subcategory) {
-            const $optgroup = $('<optgroup label="' + subcategory.name + '"></optgroup>').css('font-style', 'normal');
+            const $optgroup = $('<optgroup label="' + subcategory.name + '"></optgroup>');
             $talentSelect.append($optgroup);
 
             $.each(subcategory.members, function (index, member) {
@@ -1725,7 +1763,7 @@
             const emoteCode = ':' + curMember.id + '.' + emote + ':';
 
             $emoteList.append(
-                $(`<img src="/static/emotes/${filename}" alt="${emoteCode}" title="${emoteCode}" data-shortcode="${emoteCode}" style="width: 40px; height: 40px; display: block; cursor: pointer">`)
+                $(`<img src="/static/emotes/${filename}" alt="${emoteCode}" title="${emoteCode}" data-shortcode="${emoteCode}" draggable="false">`)
                     .on('error', function () { $(this).remove(); })
             );
         });

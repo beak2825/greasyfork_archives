@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fix Mangapark Image Loading Issue (Lightweight)
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.6
 // @description  Click an image to replace its prefix. | Auto-loads the recommended image source server.
 // @match        https://mangapark.io/title/*-chapter-*
 // @match        https://mangapark.io/title/*-ch-*
@@ -15,6 +15,10 @@
 // @match        https://mpark.to/title/*-ch-*
 // @match        https://mpark.to/title/*-prologue
 // @match        https://mpark.to/title/*-oneshot
+// @match        https://mangapark.to/title/*-chapter-*
+// @match        https://mangapark.to/title/*-ch-*
+// @match        https://mangapark.to/title/*-prologue
+// @match        https://mangapark.to/title/*-oneshot
 // @license      MIT
 // @grant        none
 // @run-at       document-idle

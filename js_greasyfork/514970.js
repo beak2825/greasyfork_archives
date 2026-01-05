@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name       datatools
 // @namespace  npm/vite-plugin-monkey
-// @version    2.2
+// @version    2.3
 // @author     monkey
 // @description run datatools
 // @license    MIT
@@ -15,6 +15,7 @@
 // @match      *haixiang.app/*
 // @match      *qihang10.8888ws.net/*
 // @match      *web.sihai.plus/*
+// @match      *v2sotua1.7xing168.com/*
 // @match      *qh.yinchao.ws/*
 // @match      *sys.helloworlds.cn/*
 // @match      */share/share/*
@@ -62,16 +63,16 @@
 // @grant      window.close
 // @grant      window.focus
 // @grant      window.onurlchange
- 
- 
+
+
 // @downloadURL https://update.greasyfork.org/scripts/514970/datatools.user.js
 // @updateURL https://update.greasyfork.org/scripts/514970/datatools.meta.js
 // ==/UserScript==
- 
+
 console.log("油猴脚本----")
- 
- 
- 
+
+
+
 const NumStateType = {
     NumType_OffLine: 0,   // 离线
     NumType_OnLine: 1,    // 在线
@@ -79,10 +80,10 @@ const NumStateType = {
     NumType_Freeze: 3,    // 冻结
     NumType_Lost: 4       // 丢失
 };
- 
+
 const monkey_url = "http://8.219.232.159:8080/app/sendData";
 const monkey_url2 = "http://8.219.232.159:9080/app/sendData";
- 
+
 let data_url = "";
 let post_data = {};
 let uuid = {};
@@ -91,23 +92,23 @@ let haixiangCode = ""
 let workId = ""
 let orderNum = ""
 let shareToken = ""
- 
+
 window.onload = function () {
     console.log("页面加载完------- DOMContentLoaded")
     //可以手动点一下查询 不然记录不到地址
- 
+
     setTimeout(function () {
         clickQuery();
     }, 500); // 延迟0.5秒后执行，可能开始还没有按钮
- 
- 
+
+
     setTimeout(function () {
         createBtn();
     }, 1000); // 延迟1秒后执行，可能开始还没有按钮
 }
- 
+
 listenForRequests();
- 
+
 // 监听XMLHttpRequest网络请求
 function listenForRequests() {
     const open = XMLHttpRequest.prototype.open;
@@ -123,7 +124,7 @@ function listenForRequests() {
             console.log("data_url = " + data_url)
             startSend()
         }
- 
+
         if (url.includes("counter-api/detail/user-detail/get_share_code_list")) {
             console.log("007出海 KF007 get_share_code_list 接口URL--:", url);
             // data_url = "https://kf.007.tools/counter-api/detail/user-detail/get_share_code_list?software_code=6l/IU8VmN1U6iWBtSU0cZQ==&uuid=ab67b292bc084823b370a568fe0b29cb&share_pwd=a111&platform=1&platform=0&platform=6&platform=3&platform=2&platform=4&platform=5&platform=7&platform=9&platform=10&&page=1&per_page=50";
@@ -136,7 +137,7 @@ function listenForRequests() {
             data_url = "https://" + window.location.hostname + url.replace(/(per_page=)\d+/, "per_page=500");
             console.log("data_url = " + data_url)
         }
- 
+
         //https://007.mn/new-ws-api/counter/work-share/open/detail
         // '/new-ws-api/counter/work-share/open/checkExpired'
         // '/new-ws-api/counter/work-share/open/detail'
@@ -145,35 +146,41 @@ function listenForRequests() {
             console.log('post接口请求数据的工单');
             data_url = "https://" + window.location.hostname + "/new-ws-api/counter/work-share/open/detail";
         }
- 
+
         if (window.location.hostname.includes("haixiang.app")) {
             console.log("haixiang接口 URL:", url);
             data_url = "https://" + window.location.hostname + url;
             console.log('海象 data_url ---  ' + data_url)
         }
- 
-        if (url.includes("apiqihang10.8888ws") || url.includes("sihai.plus") || url.includes("qhapi.yinchao.ws")) {
+
+        if (url.includes("apiqihang10.8888ws") || url.includes("sihai.plus") || url.includes("qhapi.yinchao.ws") ) {
             console.log("四海接口--- url：" + url);
             //https://apiqihang10.8888ws.net/agent/wa.json
             //"https://s1.sihai.plus/agent/wa.json"
             console.log("域名-- " + window.location.hostname)
-            data_url = url
+            data_url = url;
+            console.log("最终四海URL-- " + data_url)
         }
- 
+
+        if(url.includes("7xing168.com")){
+            console.log("7xing168-四海" + url)
+            data_url=  "https://v2sotua1api.7xing168.com/agent/wa.json"
+            console.log("转换接口url" + data_url)
+        }
         if (url.includes("/apis/orderDetails/shareOrder")) {
             console.log("helloworlds--- url：" + url);
             //https://sys.helloworlds.cn/apis/orderDetails/shareOrder
             console.log("域名-- " + window.location.hostname)
             data_url = "https://sys.helloworlds.cn/apis/orderDetails/shareOrder";
         }
- 
+
         if (url.includes("/biz/link/share")) {
             console.log("url66.e--- url：" + url);
             //新版地址https://v3.url66.me/prod-api1/biz/link/share?shareId=10697&sharePassword=518518&pageNum=1&pageSize=10&isDelete=0
             data_url = "https://" + window.location.hostname + url.replace(/(pageSize=)\d+/, "pageSize=500");
             // http://url66.me/prod-api1/biz/link/share?shareId=636&sharePassword=123123
             // data_url = "http://" + window.location.hostname + url;
- 
+
             var shareIdMatch = url.match(/shareId=([^&]+)/);
             var sharePasswordMatch = url.match(/sharePassword=([^&]+)/);
             // 获取提取的值
@@ -183,25 +190,25 @@ function listenForRequests() {
             orderNum = shareId + '-' + sharePassword;
             console.log('orderNum --- ' + orderNum);
         }
- 
+
         if (url.includes("/share/share/")) {
             console.log('share 工单-----' + url);
             //http://47.242.190.206/share/share/api_yinliu_count.html?page=1&limit=10&id=&class_id=&is_repet=1&start_time=&end_time=
- 
+
             // 检查当前页面是否有端口号
             var port = window.location.port ? ":" + window.location.port : "";
- 
+
             // 构建包含端口的 data_url
             data_url = "http://" + window.location.hostname + port + "/share/share/api_yinliu_count.html?page=1&limit=500&id=&class_id=&is_repet=1&start_time=&end_time=";
         }
- 
+
         console.log("最终dataurl -- " + data_url)
         open.apply(this, arguments);
     };
- 
-   
+
+
     var send = XMLHttpRequest.prototype.send;
- 
+
     XMLHttpRequest.prototype.send = function (data) {
         console.log('开始判断获取的数据');
         if (window.location.hostname.includes("haixiang")) {
@@ -211,8 +218,8 @@ function listenForRequests() {
             haixiangCode = aa.code
             post_data = JSON.stringify(aa);
         }
- 
-        if (window.location.href.includes("007.mn/work-order-sharing") || window.location.href.includes("imx.chat/work-order-sharing") 
+
+        if (window.location.href.includes("007.mn/work-order-sharing") || window.location.href.includes("imx.chat/work-order-sharing")
             || window.location.href.includes("yf.lu/work-order-sharing") || window.location.href.includes("scrmchampion.com/shared-order")) {
             console.log('判断获取的数据--007工单')
             //{"page":1,"per_page":10,"workId":"1701124542770438145"}
@@ -224,9 +231,9 @@ function listenForRequests() {
             post_data = data
             // console.log('007.mn imx.chat post 数据--- ' + JSON.stringify(post_data));
         }
- 
+
         console.log(' send window.location.href -- ' + window.location.href)
-        if (window.location.href.includes("qihang") || window.location.href.includes("sihai") || window.location.href.includes("yinchao")) {
+        if (window.location.href.includes("qihang") || window.location.href.includes("sihai") || window.location.href.includes("yinchao") || window.location.href.includes("7xing168")) {
             console.log('post 四海 数据--- ' + data);
             //{page: 1, page_size: 50}
             //将per_page的值改为500
@@ -235,27 +242,27 @@ function listenForRequests() {
             post_data = JSON.stringify(aa);
             console.log('四海 post 数据--- ' + post_data);
         }
- 
+
         if (window.location.href.includes("sys.helloworlds.cn")) {
             console.log('post helloworlds 数据--- ' + data);
             var params = data.split('&');
- 
+
             for (var i = 0; i < params.length; i++) {
                 var pair = params[i].split('=');
                 if (pair[0] === 'rows') {
                     pair[1] = '500';
                     params[i] = pair.join('=');
                 }
- 
+
                 if (pair[0] === 'orderNum') {
                     orderNum = pair[1];
                 }
             }
- 
+
             post_data = params.join('&');
             // console.log('helloworlds 数据--- ' + post_data);
         }
- 
+
         if (window.location.href.includes("/share/share")) {
             console.log('post share 数据--- ' + data);
             var tokenRegex = /token=([^&]+)/;
@@ -267,7 +274,7 @@ function listenForRequests() {
         console.log("获取datas数据结束");
         return datas;
     };
- 
+
     // 拦截请求头
     var originalSetRequestHeader = XMLHttpRequest.prototype.setRequestHeader;
     XMLHttpRequest.prototype.setRequestHeader = function (header, value) {
@@ -282,11 +289,11 @@ function listenForRequests() {
         originalSetRequestHeader.apply(this, arguments);
     }
 }
- 
+
 function getDataAndSendToMonkey() {
     console.log('getDataAndSendToMonkey request url -- ' + data_url)
     console.log(" window.location.href --" + window.location.href)
- 
+
     if (window.location.hostname.includes("haixiang") || window.location.href.includes("007.mn/work-order-sharing") || window.location.href.includes("imx.chat/work-order-sharing")
         || window.location.href.includes("yf.lu/work-order-sharing") || window.location.href.includes("scrmchampion.com/shared-order")) {
         console.log('海象 007.mn imx.chat scrmchampion  yf.lu post 11111---' + data_url)
@@ -303,7 +310,7 @@ function getDataAndSendToMonkey() {
         // 根据不同网站选择不同的请求方法
         const requestMethod = window.location.href.includes("scrmchampion.com") ? "GET" : "POST";
         console.log("请求方法: " + requestMethod);
-        
+
         GM_xmlhttpRequest({
             method: requestMethod,
             url: data_url,
@@ -339,7 +346,7 @@ function getDataAndSendToMonkey() {
             }
         });
     }
- 
+
     if (window.location.href.includes("helloworlds")) {
         console.log('helloworlds post---' + data_url)
         console.log('helloworlds post_data---' + post_data)
@@ -367,8 +374,8 @@ function getDataAndSendToMonkey() {
             }
         });
     }
- 
-    if (window.location.href.includes("qihang") || window.location.href.includes("sihai") || window.location.href.includes("yinchao")) {
+
+    if (window.location.href.includes("qihang") || window.location.href.includes("sihai") || window.location.href.includes("yinchao") || window.location.href.includes("7xing168")) {
         console.log('四海手动post---' + data_url)
         GM_xmlhttpRequest({
             method: "POST",
@@ -384,7 +391,7 @@ function getDataAndSendToMonkey() {
                 let dataStr = ""
                 //根据不同类型处理数据
                 // console.log('post 返回数据-- ' + response.responseText)
-                if (window.location.href.includes("qihang") || window.location.href.includes("sihai") || window.location.href.includes("yinchao")) {
+                if (window.location.href.includes("qihang") || window.location.href.includes("sihai") || window.location.href.includes("yinchao") || window.location.href.includes("7xing168")) {
                     let aa = getSiHaiPostData(response)
                     dataStr = JSON.stringify(aa)
                 }
@@ -453,7 +460,7 @@ function getDataAndSendToMonkey() {
                     let aa = getShareData(response)
                     dataStr = JSON.stringify(aa)
                 }
- 
+
                 //console.log('发送数据---- dataStr ' + dataStr);
                 sendDataToMonkey(dataStr);
             },
@@ -463,24 +470,28 @@ function getDataAndSendToMonkey() {
         });
     }
 }
- 
+
 //将数据发送到服务器
 function sendDataToMonkey(data) {
- 
+
     console.log('开始判断subuuid');
     // 获取当前页面的 URL 路径作为唯一标识
     const pagePath = window.location.href;
- 
+    if (window.location.href.includes("7xing168") && !window.location.href.includes("wa") ) {
+        console.log('7xing168 没有到列表页');
+        return;
+    }
+
     // 根据页面路径生成唯一的存储键
     const localStorageKey = `character_${pagePath}`;
- 
+
     // 检查本地存储是否已有对应字符
     let storedChar = localStorage.getItem(localStorageKey);
- 
+
     if (!storedChar) {
         // 如果没有设置过字符，则弹出输入框
         let inputChar = prompt(`当前页面(${pagePath})没有设置子链，请输入子链：`);
- 
+
         // 检查用户是否输入内容，避免保存空字符
         if (inputChar) {
             localStorage.setItem(localStorageKey, inputChar);
@@ -493,7 +504,7 @@ function sendDataToMonkey(data) {
     }
     // 从本地存储中获取字符，作为 subuuid 添加到数据中
     const subuuid = localStorage.getItem(localStorageKey);
- 
+
     if (subuuid) {
         // 将字符串 data 转换为对象并添加 subuuid
         let dataObj;
@@ -504,7 +515,7 @@ function sendDataToMonkey(data) {
             // 如果 data 不是 JSON 格式字符串，则初始化为对象
             dataObj = { originalData: data, subuuid: subuuid };
         }
- 
+
         data = JSON.stringify(dataObj); // 将对象转换回字符串存储
         console.log("data添加subuuid", subuuid);
     } else {
@@ -529,14 +540,14 @@ function sendDataToMonkey(data) {
     //发送到新服务器
     sendDataToMonkey2(data)
 }
- 
- 
+
+
 //将数据发送到服务器
 function sendDataToMonkey2(data) {
- 
- 
+
+
     console.log('发送数据到新服务器: ' + JSON.stringify(data));
- 
+
     GM_xmlhttpRequest({
         method: "POST",
         url: monkey_url2,
@@ -552,37 +563,37 @@ function sendDataToMonkey2(data) {
         }
     });
 }
- 
- 
+
+
 //KF007的处理
 function getKF007Data(response) {
- 
+
     var text = response.responseText;
     console.log('开始处理kf007' , text)
     var new_data = {};
- 
+
     if (response.status_code === 403) {
         new_data.code = 7;
         new_data.msg = "工单地址拒绝访问";
         return new_data;
     }
- 
+
     var data = JSON.parse(text);
     console.log("KF007 工单2 data code == " + data.code + '\n');
- 
+
     if (!data || !data.code || data.code !== 200) {
         new_data.code = data.code;
         new_data.msg = data.msg;
         return new_data;
     }
- 
+
     // 因为工单不同 code 正确 返回值不同 有的0 有的200 这里统一200
     new_data.code = 200;
     new_data.data = {};
     new_data.data.intoAllFuns = parseInt(data.data.total);
     new_data.data.list = [];
- 
- 
+
+
     for (var i = 0; i < data.data.list.length; i++) {
         var item = data.data.list[i];
         var numId = item.line_id && item.line_id.length > 0 ? item.line_id : item.line_account;
@@ -591,7 +602,7 @@ function getKF007Data(response) {
         if (isNaN(intoFans)) {
             intoFans = 0;
         }
- 
+
         var new_item = {
             "numId": numId,
             "state": item.status,
@@ -601,12 +612,12 @@ function getKF007Data(response) {
         new_data.data.list.push(new_item);
     }
     new_data.orderUrl = window.location.href;
- 
+
     // var match = window.location.search.match(/u=([^&]*)/);
     // var code = match ? match[1] : window.location.search;
     // new_data.monkeyName = code;
     // console.log('monkeyName -- ' + new_data.monkeyName);
- 
+
     var params = new URLSearchParams(window.location.search);
     console.log("params --- " + params);
     var uValue = params.get('u');
@@ -618,45 +629,45 @@ function getKF007Data(response) {
     console.log('monkeyName -- ' + new_data.monkeyName);
     return new_data;
 }
- 
+
 //007.mn工单处理
 function get007MNData(response) {
     var text = response.responseText;
- 
+
     var new_data = {};
- 
+
     if (response.status === 403) {
         new_data.code = 7;
         new_data.msg = "工单地址拒绝访问";
         return new_data;
     }
- 
+
     var data = JSON.parse(text);
     if (!data || !data.code || data.code !== 200) {
         new_data.code = data.code;
         new_data.msg = data.msg;
         return new_data;
     }
- 
+
     new_data.code = 200;
     new_data.data = {};
     var intoAllFans = 0;
     new_data.data.list = [];
- 
+
     for (var i = 0; i < data.data.list.length; i++) {
         var item = data.data.list[i];
         var state = item.online_status;
- 
+
         if (state === 2) {
             state = NumStateType.NumType_OffLine;
         } else if (state === 3) {
             state = NumStateType.NumType_Lock;
         }
- 
+
         if (item.single_into_fans_num === null) {
             continue;
         }
- 
+
         intoAllFans += parseInt(item.single_into_fans_num);
         var new_item = {
             numId: item.username,
@@ -664,19 +675,19 @@ function get007MNData(response) {
             intoFans: parseInt(item.single_into_fans_num),
             repeatFans: parseInt(item.single_repeat_fans_num)
         };
- 
+
         new_data.data.list.push(new_item);
     }
- 
+
     new_data.data.intoAllFuns = intoAllFans;
- 
+
     new_data.orderUrl = window.location.href;
- 
+
     // var match = window.location.search.match(/u=([^&]*)/);
     // var code = match ? match[1] : window.location.search;
     // new_data.monkeyName = code;
     // console.log('monkeyName -- ' + new_data.monkeyName);
- 
+
     var params = new URLSearchParams(window.location.search);
     var uValue = params.get('u');
     var codeValue = params.get('code');
@@ -690,15 +701,15 @@ function get007MNData(response) {
     console.log('monkeyName -- ' + new_data.monkeyName);
     return new_data;
 }
- 
+
 //007.mn  Post工单处理
 function get007MNPostData(response) {
-    
+
     var text = response.responseText;
     console.log('007工单的数据:' , text)
 
     var new_data = {};
- 
+
     if (response.status === 403) {
         new_data.code = 7;
         new_data.msg = "工单地址拒绝访问";
@@ -717,13 +728,13 @@ function get007MNPostData(response) {
     for (var i = 0; i < data.data.list.length; i++) {
         var item = data.data.list[i];
         var state = item.isOnline;
- 
+
         if (state === 2 || item.isAllocation == 0) {
             state = NumStateType.NumType_OffLine;
         } else if (state === 3) {
             state = NumStateType.NumType_Lock;
         }
- 
+
         // 这里减去了重复的fans
         intoAllFans += parseInt(item.dayNewFans - item.dayRepeatFans);
         var new_item = {
@@ -732,22 +743,22 @@ function get007MNPostData(response) {
             intoFans: parseInt(item.dayNewFans),
             repeatFans: parseInt(item.dayRepeatFans)
         };
- 
+
         new_data.data.list.push(new_item);
     }
- 
+
     new_data.data.intoAllFuns = intoAllFans;
     new_data.orderUrl = window.location.href;
     new_data.monkeyName = workId;
     // console.log("解析完的 new_data == " + JSON.stringify(new_data));
     return new_data;
 }
- 
+
 function getHaiXiangPostData(response) {
     var text = response.responseText;
- 
+
     var new_data = {};
- 
+
     if (response.status === 403) {
         new_data.code = 7;
         new_data.msg = "工单地址拒绝访问";
@@ -759,16 +770,16 @@ function getHaiXiangPostData(response) {
         new_data.msg = data.msg;
         return new_data;
     }
- 
+
     new_data.code = 200;
     new_data.data = {};
     var intoAllFans = 0;
     new_data.data.list = [];
- 
+
     for (var i = 0; i < data.data.list.length; i++) {
         var item = data.data.list[i];
         var state = item.status;
- 
+
         if (state === 0) {
             state = NumStateType.NumType_OffLine;
         } else if (state === -1) {
@@ -785,23 +796,23 @@ function getHaiXiangPostData(response) {
             intoFans: parseInt(item.add_contact),
             repeatFans: 0
         };
- 
+
         new_data.data.list.push(new_item);
     }
- 
+
     new_data.data.intoAllFuns = intoAllFans;
     new_data.orderUrl = window.location.href;
     new_data.monkeyName = haixiangCode;
     // console.log("解析完的 new_data == " + JSON.stringify(new_data));
     return new_data;
 }
- 
+
 //四海  Post工单处理
 function getSiHaiPostData(response) {
     var text = response.responseText;
- 
+
     var new_data = {};
- 
+
     if (response.status === 403) {
         new_data.code = 7;
         new_data.msg = "工单地址拒绝访问";
@@ -820,11 +831,11 @@ function getSiHaiPostData(response) {
     for (var i = 0; i < data.data.list.length; i++) {
         var item = data.data.list[i];
         var state = NumStateType.NumType_OffLine;
- 
+
         if ("在线" === item.state_text) {
             state = NumStateType.NumType_OnLine;
         }
- 
+
         // 这里减去了重复的fans
         intoAllFans += parseInt(item.friend);
         var new_item = {
@@ -833,22 +844,22 @@ function getSiHaiPostData(response) {
             intoFans: parseInt(item.friend),
             repeatFans: 0
         };
- 
+
         new_data.data.list.push(new_item);
     }
- 
+
     new_data.data.intoAllFuns = intoAllFans;
     new_data.orderUrl = window.location.href;
     new_data.monkeyName = agentToken;
     // console.log("解析完的 new_data == " + JSON.stringify(new_data));
     return new_data;
 }
- 
+
 function getHelloWorldPostData(response) {
     var text = response.responseText;
- 
+
     var new_data = {};
- 
+
     if (response.status === 403) {
         new_data.code = 7;
         new_data.msg = "工单地址拒绝访问";
@@ -860,7 +871,7 @@ function getHelloWorldPostData(response) {
     //     new_data.msg = data.alert;
     //     return new_data;
     // }
- 
+
     new_data.code = 200;
     new_data.data = {};
     var intoAllFans = 0;
@@ -868,7 +879,7 @@ function getHelloWorldPostData(response) {
     for (var i = 0; i < data.rows.length; i++) {
         var item = data.rows[i];
         var state = item.onlineStatus;
- 
+
         // 这里减去了重复的fans
         intoAllFans += parseInt(item.completedDayTarget - item.dayRepeatQuantity);
         var new_item = {
@@ -877,23 +888,23 @@ function getHelloWorldPostData(response) {
             intoFans: parseInt(item.completedDayTarget),
             repeatFans: parseInt(item.dayRepeatQuantity)
         };
- 
+
         new_data.data.list.push(new_item);
     }
- 
+
     new_data.data.intoAllFuns = intoAllFans;
     new_data.orderUrl = window.location.href;
     new_data.monkeyName = orderNum;
     // console.log("解析完的 new_data == " + JSON.stringify(new_data));
     return new_data;
 }
- 
+
 function getUrl66Data(response) {
     console.log("开始处理url66数据")
     var text = response.responseText;
- 
+
     var new_data = {};
- 
+
     if (response.status === 403) {
         new_data.code = 7;
         new_data.msg = "工单地址拒绝访问";
@@ -906,7 +917,7 @@ function getUrl66Data(response) {
     //     new_data.msg = data.alert;
     //     return new_data;
     // }
- 
+
     new_data.code = 200;
     new_data.data = {};
     var intoAllFans = 0;
@@ -914,7 +925,7 @@ function getUrl66Data(response) {
     for (var i = 0; i < data.rows.length; i++) {
         var item = data.rows[i];
         var state = item.onlineType;
- 
+
         // 这里减去了重复的fans
         intoAllFans += parseInt(item.addCountNow - item.repCountNow);
         var new_item = {
@@ -923,10 +934,10 @@ function getUrl66Data(response) {
             intoFans: parseInt(item.addCountNow),
             repeatFans: parseInt(item.repCountNow)
         };
- 
+
         new_data.data.list.push(new_item);
     }
- 
+
     new_data.data.intoAllFuns = intoAllFans;
     new_data.orderUrl = window.location.href;
     new_data.monkeyName = orderNum;
@@ -934,12 +945,12 @@ function getUrl66Data(response) {
     console.log("url66数据处理完毕")
     return new_data;
 }
- 
+
 function getShareData(response) {
     var text = response.responseText;
     console.log("text --- "  +text)
     var new_data = {};
- 
+
     if (response.status === 403) {
         new_data.code = 7;
         new_data.msg = "工单地址拒绝访问";
@@ -951,7 +962,7 @@ function getShareData(response) {
         new_data.msg = data.alert;
         return new_data;
     }
- 
+
     new_data.code = 200;
     new_data.data = {};
     var intoAllFans = 0;
@@ -959,7 +970,7 @@ function getShareData(response) {
     for (var i = 0; i < data.data.length; i++) {
         var item = data.data[i];
         var state = item.online;
- 
+
         // 这里减去了重复的fans
         intoAllFans += item.day_sum;
         var new_item = {
@@ -968,34 +979,34 @@ function getShareData(response) {
             intoFans: parseInt(item.day_sum),
             repeatFans: 0
         };
- 
+
         new_data.data.list.push(new_item);
     }
- 
+
     new_data.data.intoAllFuns = intoAllFans;
     new_data.orderUrl = window.location.href;
     new_data.monkeyName = shareToken;
     // console.log("解析完的 new_data == " + JSON.stringify(new_data));
     return new_data;
 }
- 
+
 //创建提取按钮
 function createBtn() {
     //kf007 界面  007.mn 界面
     var resetButton = document.querySelector('.el-icon-refresh-right'); // 找到重置按钮图标
     if (resetButton) {
         var parentButton = resetButton.closest('.el-button'); // 找到包含按钮图标的父按钮
- 
+
         if (parentButton) {
             var extractButton = parentButton.cloneNode(true); // 克隆父按钮
             extractButton.textContent = '提取号码'; // 修改按钮文本
- 
+
             // 创建页面内提示元素
             var messageElement = document.createElement('div');
             messageElement.className = 'message';
- 
+
             extractButton.addEventListener('click', function () {
- 
+
                 if (extractButton.textContent == '复制提取码') {
                     let monkeyName = "";
                     if (window.location.href.includes("007.mn/work-order-sharing") || window.location.href.includes("imx.chat/work-order-sharing")
@@ -1004,7 +1015,7 @@ function createBtn() {
                         monkeyName = workId;
                     }
                     else {
- 
+
                         //var str = "?u=81101c82ef2c4b979f60e1be812b64fe&code=suqHgXZx";
                         var params = new URLSearchParams(window.location.search);
                         var uValue = params.get('u');
@@ -1017,14 +1028,14 @@ function createBtn() {
                         }
                         // // 拼接成一个新的字符串
                         // var newStr = 'u=' + uValue + '&code=' + codeValue;
- 
+
                         // var match = window.location.search.match(/u=([^&]*)/);
                         // var code = match ? match[1] : window.location.search;
                         monkeyName = uValue + codeValue;
                     }
- 
+
                     copyToClipboard(monkeyName);
- 
+
                     // 显示提示信息
                     messageElement.textContent = '复制成功';
                     parentButton.parentNode.parentNode.parentNode.appendChild(messageElement);
@@ -1035,10 +1046,10 @@ function createBtn() {
                 } else {
                     startSend()
                 }
- 
+
                 extractButton.textContent = '复制提取码';
             });
- 
+
             // 在父按钮后插入提取号码按钮
             parentButton.parentNode.insertBefore(extractButton, parentButton.nextSibling);
         }
@@ -1060,18 +1071,18 @@ function createBtn() {
             if (parentDiv) {
                 let extractButton = parentDiv.cloneNode(true);
                 extractButton.textContent = '提取号码'; // 修改按钮文本
- 
+
                 // 创建页面内提示元素
                 var messageElement = document.createElement('div');
                 messageElement.className = 'message';
- 
+
                 extractButton.addEventListener('click', function () {
- 
+
                     if (extractButton.textContent == '复制提取码') {
                         console.log("复制成功")
- 
+
                         copyToClipboard(haixiangCode)
- 
+
                         // 显示提示信息
                         messageElement.textContent = '复制成功';
                         parentDiv.appendChild(messageElement);
@@ -1082,45 +1093,45 @@ function createBtn() {
                     } else {
                         startSend();
                     }
- 
+
                     extractButton.textContent = '复制提取码';
                 });
- 
+
                 // 在按钮后插入提取号码按钮
                 parentDiv.appendChild(extractButton);
             }
         }
     }
- 
+
     console.log('添加按钮----' + window.location.hostname)
- 
+
     //四海工单
     if (window.location.hostname.includes("sihai") || window.location.hostname.includes("qihang") || window.location.href.includes("yinchao")) {
         console.log('四海工单 添加按钮')
         const originalButton = document.querySelector('.layui-btn.cy');
- 
+
         if (originalButton) {
             //这里因为开始截获不到数据 要手动点下搜索按钮
             originalButton.click();
             const extractButton = originalButton.cloneNode(true);
- 
+
             // 找到这个按钮的父节点
             const parentDiv = originalButton.parentNode;
- 
+
             if (parentDiv) {
- 
+
                 extractButton.textContent = '提取号码';
                 // 创建页面内提示元素
                 var messageElement = document.createElement('div');
                 messageElement.className = 'message';
- 
+
                 extractButton.addEventListener('click', function () {
- 
+
                     if (extractButton.textContent == '复制提取码') {
                         console.log("复制成功")
- 
+
                         copyToClipboard(agentToken)
- 
+
                         // 显示提示信息
                         messageElement.textContent = '复制成功';
                         parentDiv.appendChild(messageElement);
@@ -1131,40 +1142,40 @@ function createBtn() {
                     } else {
                         startSend();
                     }
- 
+
                     extractButton.textContent = '复制提取码';
                 });
                 parentDiv.appendChild(extractButton);
- 
+
             }
         }
     }
- 
+
     //helloworlds 界面
     if (window.location.hostname.includes("helloworlds")) {
- 
- 
+
+
         let searchButton = document.querySelector('.el-button.el-button--primary');
- 
+
         if (searchButton) {
             // 创建复制按钮
             let copyButton = document.createElement('button');
             copyButton.type = "button";
             copyButton.className = "el-button el-button--default";
             copyButton.innerHTML = '<i class="el-icon-copy"></i><span>提取号码</span>';
- 
+
             // 创建页面内提示元素
             var messageElement = document.createElement('div');
             messageElement.className = 'message';
- 
+
             copyButton.addEventListener('click', function () {
- 
+
                 if (copyButton.textContent == '复制提取码') {
                     console.log("复制成功")
- 
+
                     console.log('orderNum ---' + orderNum);
                     copyToClipboard(orderNum)
- 
+
                     // 显示提示信息
                     messageElement.textContent = '复制成功';
                     searchButton.parentNode.appendChild(messageElement);
@@ -1175,38 +1186,38 @@ function createBtn() {
                 } else {
                     startSend();
                 }
- 
+
                 copyButton.textContent = '复制提取码';
             });
- 
+
             searchButton.parentNode.insertBefore(copyButton, searchButton.nextSibling);
         }
     }
- 
+
     if (window.location.hostname.includes("url66.me")) {
- 
- 
+
+
         let resetButton = document.querySelector('.el-icon-search').parentElement;
- 
+
         if (resetButton) {
             // 创建复制按钮
             let copyButton = document.createElement('button');
             copyButton.type = "button";
             copyButton.className = "el-button el-button--default";
             copyButton.innerHTML = '<i class="el-icon-copy"></i><span>提取号码</span>';
- 
+
             // 创建页面内提示元素
             var messageElement = document.createElement('div');
             messageElement.className = 'message';
- 
+
             copyButton.addEventListener('click', function () {
- 
+
                 if (copyButton.textContent == '复制提取码') {
                     console.log("复制成功")
- 
+
                     console.log('orderNum ---' + orderNum);
                     copyToClipboard(orderNum)
- 
+
                     // 显示提示信息
                     messageElement.textContent = '复制成功';
                     resetButton.parentNode.appendChild(messageElement);
@@ -1217,39 +1228,39 @@ function createBtn() {
                 } else {
                     startSend();
                 }
- 
+
                 copyButton.textContent = '复制提取码';
             });
- 
+
             resetButton.parentNode.insertBefore(copyButton, resetButton.nextSibling);
         }else {
             console.error("url66页面布局需要重新校验")
         }
     }
- 
+
     if (data_url.includes("/share/share/")) {
- 
+
         let searchButton = document.querySelector('.layui-btn');
- 
+
         if (searchButton) {
             // 创建复制按钮
             let copyButton = document.createElement('button');
             copyButton.type = "button";
             copyButton.className = "layui-btn";
             copyButton.innerHTML = '<i class="el-icon-copy"></i><span>提取号码</span>';
- 
+
             // 创建页面内提示元素
             var messageElement = document.createElement('div');
             messageElement.className = 'message';
- 
+
             copyButton.addEventListener('click', function () {
- 
+
                 if (copyButton.textContent == '复制提取码') {
                     console.log("复制成功")
- 
+
                     console.log('shareToken ---' + shareToken);
                     copyToClipboard(shareToken)
- 
+
                     // 显示提示信息
                     messageElement.textContent = '复制成功';
                     searchButton.parentNode.appendChild(messageElement);
@@ -1260,23 +1271,23 @@ function createBtn() {
                 } else {
                     startSend();
                 }
- 
+
                 copyButton.textContent = '复制提取码';
             });
- 
+
             searchButton.parentNode.insertBefore(copyButton, searchButton.nextSibling);
         }
     }
 }
- 
+
 function clickQuery() {
     var queryButton = document.querySelector('.el-button--primary .el-icon-search');
- 
+
     // Click the query button if found
     if (queryButton) {
         queryButton.parentElement.click();
     }
- 
+
     var buttons = document.querySelectorAll('button');
     // Iterate through the buttons to find the "查询" button
     buttons.forEach(function (button) {
@@ -1284,15 +1295,15 @@ function clickQuery() {
             button.click();
         }
     });
- 
+
     //自动就开始发送数据
     setTimeout(function () {
         startSend();
     }, 500);
 }
- 
- 
- 
+
+
+
 // 将内容放入剪贴板
 function copyToClipboard(text) {
     var textarea = document.createElement('textarea');
@@ -1302,13 +1313,13 @@ function copyToClipboard(text) {
     document.execCommand('copy');
     document.body.removeChild(textarea);
 }
- 
+
 //开始定时发送服务器
 function startSend() {
     getDataAndSendToMonkey();
     // setInterval(getDataAndSendToMonkey, 3 * 60 * 1000); // 3 minutes in milliseconds
     // 生成 40～60 秒之间的随机秒数（单位：毫秒）
     const randomDelay = Math.floor(Math.random() * (60 - 40 + 1) + 40) * 1000;
- 
+
     setInterval(getDataAndSendToMonkey, randomDelay); // 3 minutes in milliseconds
 }

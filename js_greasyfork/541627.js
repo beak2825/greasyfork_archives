@@ -18,14 +18,23 @@
 // ==/UserScript==
 
 // ==================== 远程数据源配置 ====================
-// 选修课分类数据源
-const CATEGORY_URL = 'https://fastly.jsdelivr.net/npm/njust-jwc-enhance@latest/data/xxk.json';
-// 课程大纲数据源
-const OUTLINE_URL = 'https://fastly.jsdelivr.net/npm/njust-jwc-enhance@latest/data/kcdg.json';
+// 选修课分类数据源（按优先级排序）
+const CATEGORY_URLS = [
+    'https://fastly.jsdelivr.net/gh/NJUST-OpenLib/NJUST-JWC-Enhance@latest/data/xxk.json',
+    'https://gcore.jsdelivr.net/gh/NJUST-OpenLib/NJUST-JWC-Enhance@latest/data/xxk.json',
+    'https://testingcf.jsdelivr.net/gh/NJUST-OpenLib/NJUST-JWC-Enhance@latest/data/xxk.json',
+    'https://raw.gitcode.com/Misaka10032/NJUST-JWC-Enhance/raw/main/data/xxk.json',
+    'https://enhance.njust.wiki/data/xxk.json'
+];
 
-// 备用数据源（如需要可取消注释）Q
-// const CATEGORY_URL = 'https://fastly.jsdelivr.net/gh/NJUST-OpenLib/NJUST-JWC-Enhance@latest/data/xxk.json';
-// const OUTLINE_URL = 'https://fastly.jsdelivr.net/gh/NJUST-OpenLib/NJUST-JWC-Enhance@latest/data/kcdg.json';
+// 课程大纲数据源（按优先级排序）
+const OUTLINE_URLS = [
+    'https://fastly.jsdelivr.net/gh/NJUST-OpenLib/NJUST-JWC-Enhance@latest/data/kcdg.json',
+    'https://gcore.jsdelivr.net/gh/NJUST-OpenLib/NJUST-JWC-Enhance@latest/data/kcdg.json',
+    'https://testingcf.jsdelivr.net/gh/NJUST-OpenLib/NJUST-JWC-Enhance@latest/data/kcdg.json',
+    'https://raw.gitcode.com/Misaka10032/NJUST-JWC-Enhance/raw/main/data/kcdg.json',
+    'https://enhance.njust.wiki/data/kcdg.json',
+];
 
 (function () {
     'use strict';
@@ -40,8 +49,8 @@ const OUTLINE_URL = 'https://fastly.jsdelivr.net/npm/njust-jwc-enhance@latest/da
 
     // 调试配置
     const DEBUG_CONFIG = {
-        enabled: false,          // 是否启用调试
-        level: 0,              // 调试级别: 0=关闭，1=错误，2=警告，3=信息，4=详细
+        enabled: true,          // 是否启用调试
+        level: 4,              // 调试级别: 0=关闭，1=错误，2=警告，3=信息，4=详细
         showCache: true        // 是否显示缓存相关日志
     };
 
@@ -794,70 +803,119 @@ const OUTLINE_URL = 'https://fastly.jsdelivr.net/npm/njust-jwc-enhance@latest/da
         }
     }
 
-    function loadJSON(url) {
+    function loadJSONWithFallback(urls) {
         return new Promise((resolve, reject) => {
-            Logger.debug(`📡 请求数据: ${url}`);
+            // 确保urls是数组
+            const urlArray = Array.isArray(urls) ? urls : [urls];
+            
+            // 获取数据类型名称用于日志显示
+            const fileName = urlArray[0].includes('xxk') ? '选修课分类' : '课程大纲';
+            
+            Logger.info(`🔄 开始智能数据源切换: ${fileName}`, {
+                数据源数量: urlArray.length,
+                数据源列表: urlArray
+            });
 
-            // 尝试从缓存获取数据
-            const cachedData = CacheManager.get(url);
-            if (cachedData) {
-                Logger.debug(`🎯 使用缓存数据: ${url}`);
+            let currentIndex = 0;
+            
+            function tryNextUrl() {
+                if (currentIndex >= urlArray.length) {
+                    Logger.error(`❌ 所有数据源都不可用: ${fileName}`);
+                    StatusNotifier.show(`${fileName}数据加载失败，所有数据源都不可用`, 'error', 5000);
+                    reject(new Error(`所有数据源都不可用: ${fileName}`));
+                    return;
+                }
 
-                // 显示缓存命中状态
-                const fileName = url.includes('xxk') ? '选修课分类' : '课程大纲';
-                StatusNotifier.show(`从缓存读取${fileName}数据成功`, 'success');
+                const currentUrl = urlArray[currentIndex];
+                currentIndex++;
+                
+                Logger.info(`🌐 尝试数据源 ${currentIndex}/${urlArray.length}: ${currentUrl}`);
+                
+                // 尝试从缓存获取数据（只尝试第一个URL的缓存）
+                if (currentIndex === 1) {
+                    const cachedData = CacheManager.get(currentUrl);
+                    if (cachedData) {
+                        Logger.debug(`🎯 使用缓存数据: ${currentUrl}`);
+                        StatusNotifier.show(`从缓存读取${fileName}数据成功`, 'success');
+                        resolve(cachedData);
+                        return;
+                    }
+                }
 
-                resolve(cachedData);
-                return;
+                // 发起网络请求
+                const startTime = Date.now();
+                
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: currentUrl,
+                    timeout: 10000, // 10秒超时
+                    onload: function (response) {
+                        const loadTime = Date.now() - startTime;
+
+                        try {
+                            const json = JSON.parse(response.responseText);
+
+                            // 保存到缓存（只缓存第一个成功请求的URL）
+                            if (currentIndex === 1) {
+                                const cached = CacheManager.set(currentUrl, json);
+                                Logger.info(`✅ 请求成功: ${currentUrl}`, {
+                                    耗时: loadTime + 'ms',
+                                    大小: response.responseText.length + ' bytes',
+                                    缓存: cached ? '已保存' : '保存失败'
+                                });
+                            } else {
+                                Logger.info(`✅ 备用数据源请求成功: ${currentUrl}`, {
+                                    耗时: loadTime + 'ms',
+                                    大小: response.responseText.length + ' bytes',
+                                    备用序号: currentIndex
+                                });
+                            }
+
+                            // 显示成功状态
+                            if (currentIndex > 1) {
+                                StatusNotifier.show(`从备用数据源${currentIndex-1}加载${fileName}成功 (${loadTime}ms)`, 'success');
+                            } else {
+                                StatusNotifier.show(`从远程加载${fileName}成功 (${loadTime}ms)`, 'success');
+                            }
+
+                            resolve(json);
+                        } catch (e) {
+                            Logger.error(`❌ JSON 解析失败: ${currentUrl}`, e);
+                            // 继续尝试下一个URL
+                            tryNextUrl();
+                        }
+                    },
+                    onerror: function (err) {
+                        const loadTime = Date.now() - startTime;
+                        Logger.warn(`⚠️ 数据源 ${currentIndex} 请求失败: ${currentUrl}`, {
+                            耗时: loadTime + 'ms',
+                            错误: err,
+                            将尝试: currentIndex < urlArray.length ? '下一个数据源' : '无更多数据源'
+                        });
+                        
+                        // 继续尝试下一个URL
+                        tryNextUrl();
+                    },
+                    ontimeout: function() {
+                        Logger.warn(`⏰ 数据源 ${currentIndex} 请求超时: ${currentUrl}`);
+                        // 继续尝试下一个URL
+                        tryNextUrl();
+                    }
+                });
             }
 
-            // 缓存未命中，发起网络请求
-            Logger.info(`🌐 发起网络请求: ${url}`);
-            const startTime = Date.now();
-
-            // 显示加载状态
-            const fileName = url.includes('xxk') ? '选修课分类' : '课程大纲';
-        //   StatusNotifier.show(`正在从远程加载${fileName}数据...`, 'info', 0);
-
-            GM_xmlhttpRequest({
-                method: "GET",
-                url,
-                onload: function (response) {
-                    const loadTime = Date.now() - startTime;
-
-                    try {
-                        const json = JSON.parse(response.responseText);
-
-                        // 保存到缓存
-                        const cached = CacheManager.set(url, json);
-
-                        Logger.info(`✅ 请求成功: ${url}`, {
-                            耗时: loadTime + 'ms',
-                            大小: response.responseText.length + ' bytes',
-                            缓存: cached ? '已保存' : '保存失败'
-                        });
-
-                        // 显示成功状态
-                        StatusNotifier.show(`从远程加载${fileName}成功 (${loadTime}ms)`, 'success');
-
-                        resolve(json);
-                    } catch (e) {
-                        Logger.error(`❌ JSON 解析失败: ${url}`, e);
-                        StatusNotifier.show(`${fileName}数据解析失败`, 'error');
-                        reject(e);
-                    }
-                },
-                onerror: function (err) {
-                    const loadTime = Date.now() - startTime;
-                    Logger.error(`❌ 网络请求失败: ${url}`, {
-                        耗时: loadTime + 'ms',
-                        错误: err
-                    });
-                    StatusNotifier.show(`${fileName}数据加载失败`, 'error', 4000);
-                    reject(err);
-                }
-            });
+            // 开始尝试第一个URL
+            tryNextUrl();
         });
+    }
+
+    function loadJSON(url) {
+        // 兼容原有的单URL调用方式
+        if (typeof url === 'string') {
+            return loadJSONWithFallback([url]);
+        }
+        // 新的多数据源调用方式
+        return loadJSONWithFallback(url);
     }
 
     function buildCourseMaps(categoryList, outlineList) {
@@ -899,13 +957,13 @@ const OUTLINE_URL = 'https://fastly.jsdelivr.net/npm/njust-jwc-enhance@latest/da
                 Logger.warn('⚠️ 大纲数据不是数组格式:', typeof outlineList);
             }
 
-            Logger.info('📋 课程映射表构建完成', {
+            Logger.info('课程映射表构建完成', {
                 选修课类别: categoryCount + '条',
                 课程大纲: outlineCount + '条',
                 总数据: (categoryCount + outlineCount) + '条'
             });
         } catch (e) {
-            Logger.error('❌ 构建课程映射表失败:', e);
+            Logger.error('× 构建课程映射表失败:', e);
             // 确保映射表至少是空对象，避免后续访问出错
             if (typeof courseCategoryMap !== 'object') courseCategoryMap = {};
             if (typeof courseOutlineMap !== 'object') courseOutlineMap = {};
@@ -974,10 +1032,12 @@ const OUTLINE_URL = 'https://fastly.jsdelivr.net/npm/njust-jwc-enhance@latest/da
                         line-height: 1.6;
                         text-align: left;
                     ">
-                     <div style="color: #e67e22; font-weight: 500; margin-bottom: 5px;">⚠️ 特别声明</div>
-                        <div>选修课类别可能发生变化，仅供参考。<br>本工具可能因为教务处改版而不可靠，不对数据准确性负责</div>
+
+                        <div><li>对照个人培养方案核实具体修课要求</li></div><li>选修课类别统计仅包含已知分类的通识教育选修课</li>
+                                <li>课程分类信息可能随时更新，请以教务处最新通知为准</li>
+                                
                         <div style="margin-bottom: 8px;">
-                            <span>请查看 <a href="https://enhance.njust.wiki" target="_blank" style="color: #007bff; text-decoration: none;">南理工教务增强助手官方网站</a> 以获取使用说明</span>
+                            <span>请查看 <a href="https://enhance.njust.wiki" target="_blank" style="color: #007bff; text-decoration: none;">增强助手官网</a> 获取使用说明</span>
                         </div>
                     </div>
                 </div>
@@ -1137,7 +1197,7 @@ const OUTLINE_URL = 'https://fastly.jsdelivr.net/npm/njust-jwc-enhance@latest/da
 
         // 生成 HTML - 表格样式布局
         let summaryHTML = '<div style="border-bottom: 1px solid #e0e0e0; margin-bottom: 12px; padding-bottom: 10px;">';
-        summaryHTML += '<div style="margin-bottom: 8px; font-size: 15px; color: #222; font-weight: 600; letter-spacing: 0.5px;">📊 按课程类型统计</div>';
+        summaryHTML += '<div style="margin-bottom: 8px; font-size: 15px; color: #222; font-weight: 600; letter-spacing: 0.5px;">📊 按课程性质统计</div>';
         // 总计行
         summaryHTML += `<div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 6px; padding: 2px 0; align-items: center; background: #f7f7fa; border-radius: 4px; padding: 4px 6px; margin-bottom: 4px;">
             <span style="color: #007bff; font-weight: 600; font-size: 13px; text-align: left;">总计</span>
@@ -1306,7 +1366,28 @@ const OUTLINE_URL = 'https://fastly.jsdelivr.net/npm/njust-jwc-enhance@latest/da
                                 outlineDiv.setAttribute('data-outline-inserted', '1');
                                 outlineDiv.style.marginTop = '4px';
 
-                                if (realId) {
+                                // 检查当前是否在智慧理工平台
+                                const currentUrl = window.location.href;
+                                const isSmartCampus = currentUrl.includes('bkjw.njust.edu.cn');
+                                
+                                if (isSmartCampus) {
+                                    // 在智慧理工平台下，显示提示信息
+                                    outlineDiv.textContent = '⚠️ 课程大纲功能受限';
+                                    outlineDiv.style.color = '#ff9800';
+                                    outlineDiv.style.fontWeight = 'bold';
+                                    outlineDiv.style.cursor = 'pointer';
+                                    outlineDiv.title = '当前使用智慧理工平台，课程大纲功能受限。请访问教务处官网 http://202.119.81.113:8080/ 获取完整功能';
+                                    
+                                    // 添加点击事件，显示详细提示
+                                    outlineDiv.addEventListener('click', function() {
+                                        if (UI_CONFIG.showNotifications) {
+                                            StatusNotifier.show('智慧理工平台限制：课程大纲功能无法使用。请访问教务处官网 http://202.119.81.113:8080/ 获取完整功能', 'warning', 8000);
+                                        }
+                                    });
+                                    
+                                    Logger.warn('⚠️ 智慧理工平台检测到，课程大纲功能已禁用');
+                                    courseEnhanced = true;
+                                } else if (realId) {
                                     const link = document.createElement('a');
                                     link.href = `http://202.119.81.112:8080/kcxxAction.do?method=kcdgView&jx02id=${realId}&isentering=0`;
                                     link.textContent = '📘 查看课程大纲';
@@ -1542,6 +1623,17 @@ const OUTLINE_URL = 'https://fastly.jsdelivr.net/npm/njust-jwc-enhance@latest/da
                 return; // 如果是强智科技页面，显示提示后直接返回
             }
 
+            // 检测智慧理工平台并显示相应提示
+            const currentUrl = window.location.href;
+            const isSmartCampus = currentUrl.includes('bkjw.njust.edu.cn');
+            
+            if (isSmartCampus) {
+                Logger.warn('⚠️ 检测到智慧理工平台，课程大纲功能将受限');
+                if (UI_CONFIG.showNotifications) {
+                    StatusNotifier.show('当前使用智慧理工平台，课程大纲功能受限。建议访问教务处官网 http://202.119.81.113:8080/ 获取完整功能', 'warning', 8000);
+                }
+            }
+
             // 检查是否需要自动刷新登录状态
             autoRefreshLoginStatus();
             
@@ -1552,8 +1644,8 @@ const OUTLINE_URL = 'https://fastly.jsdelivr.net/npm/njust-jwc-enhance@latest/da
          //   StatusNotifier.show('正在加载课程数据...', 'loading');
 
             const [categoryData, outlineData] = await Promise.all([
-                loadJSON(CATEGORY_URL),
-                loadJSON(OUTLINE_URL)
+                loadJSON(CATEGORY_URLS),
+                loadJSON(OUTLINE_URLS)
             ]);
 
             Logger.info('✅ 数据加载完成，开始初始化功能');
@@ -1638,7 +1730,7 @@ const OUTLINE_URL = 'https://fastly.jsdelivr.net/npm/njust-jwc-enhance@latest/da
                 Logger.error('❌ 启动页面变化监听器失败:', e);
             }
 
-            Logger.info('🎉 脚本初始化完成');
+            Logger.info(' 脚本初始化完成');
             StatusNotifier.show('南理工教务增强助手加载成功！', 'success', 5000);
 
         } catch (err) {

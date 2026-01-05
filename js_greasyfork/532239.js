@@ -1,13 +1,15 @@
 // ==UserScript==
 // @name                YouTube Music Opus Codec
-// @icon                https://www.youtube.com/img/favicon_48.png
+// @icon                https://www.google.com/s2/favicons?sz=64&domain=music.youtube.com
 // @author              ElectroKnight22
 // @namespace           electroknight22_youtube_music_opus_codec_namespace
-// @version             2.0.0
+// @version             3.0.0
+// @description         Force YouTube Music to use the Opus codec by blocking AAC.
 // @match               *://music.youtube.com/*
+// @run-at              document-start
 // @grant               none
+// @inject-into         page
 // @license             MIT
-// @description         Spoofs a mobile user agent to trick YouTube Music into using the Opus audio codec if the song is not available in 256kbps AAC (High Quality), since desktop YouTube Music seems to be unable to play in Opus codec always defaults to AAC.
 // @downloadURL https://update.greasyfork.org/scripts/532239/YouTube%20Music%20Opus%20Codec.user.js
 // @updateURL https://update.greasyfork.org/scripts/532239/YouTube%20Music%20Opus%20Codec.meta.js
 // ==/UserScript==
@@ -15,15 +17,24 @@
 /*jshint esversion: 11 */
 
 (function () {
-    "use strict";
-    const mobileUA = "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X)...";
-    Object.defineProperty(navigator, "userAgent", {
-        get: function () { return mobileUA; }
-    });
-    Object.defineProperty(navigator, "platform", {
-        get: function () { return "iPhone"; }
-    });
-    Object.defineProperty(navigator, "maxTouchPoints", {
-        get: function () { return 1; }
-    });
+    'use strict';
+
+    // Modern Logic
+    if (window.MediaSource) {
+        const originalIsTypeSupported = window.MediaSource.isTypeSupported;
+        window.MediaSource.isTypeSupported = function (mime) {
+            // Block AAC to force YTM to default to Opus.
+            if (typeof mime === 'string' && (mime.includes('mp4a') || mime.includes('aac'))) return false;
+            return originalIsTypeSupported.call(this, mime);
+        };
+    }
+
+    // Legacy Fallback Logic
+    const originalCanPlayType = window.HTMLMediaElement.prototype.canPlayType;
+    window.HTMLMediaElement.prototype.canPlayType = function (mime) {
+        // Block AAC to force YTM to default to Opus.
+        if (typeof mime === 'string' && (mime.includes('mp4a') || mime.includes('aac'))) return '';
+        return originalCanPlayType.call(this, mime);
+    };
+
 })();

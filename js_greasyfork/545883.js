@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AI Conversation Navigator
 // @namespace    https://greasyfork.org
-// @version      6.9
+// @version      7.0
 // @description  Floating navigator for your prompts in conversations. Applied for ChatGPT, Gemini, Aistudio, NotebookLM, Grok, Claude, Mistral, Perplexity, Meta, Poe, Deepai, Huggingface, Deepseek, Kimi, Qwen, Manus, Z.ai, Longcat, Chatglm, Chatboxai, Lmarena, Spacefrontiers, Scienceos, Evidencehunt, Playground (allen), Paperfigureqa (allen), Scira, Scispace, Exa.ai, Consensus, Openevidence, Pathway, Math-gpt.
 // @author       Bui Quoc Dung
 // @match        https://chatgpt.com/*
@@ -82,7 +82,7 @@
         },
         gemini: {
             domain: 'gemini.google.com',
-            includePath: 'gemini.google.com/app/',
+            includePath: ['gemini.google.com/app/','gemini.google.com/gem/'],
             promptSelector: '.query-text',
             shiftTarget: 'chat-app, .boqOnegoogleliteOgbOneGoogleBar, top-bar-actions'
         },

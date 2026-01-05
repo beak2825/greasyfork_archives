@@ -1,1062 +1,748 @@
 // ==UserScript==
-// @name         Claude Token Saver v35
+// @name         Claude Token Saver v43
 // @namespace    http://tampermonkey.net/
-// @version      35
-// @description  Prevents token waste by enforcing file creation instead of chat pasting. Monitors output length and detects file creation. FIXED: Copy command, monitoring, visual feedback.
-// @author       You
+// @version      43
+// @description  Prevents token waste by enforcing file creation. Smooth draggable UI.
+// @author       Solomon
 // @match        https://claude.ai/*
-// @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/555151/Claude%20Token%20Saver%20v35.user.js
-// @updateURL https://update.greasyfork.org/scripts/555151/Claude%20Token%20Saver%20v35.meta.js
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_addStyle
+// @downloadURL https://update.greasyfork.org/scripts/555151/Claude%20Token%20Saver%20v43.user.js
+// @updateURL https://update.greasyfork.org/scripts/555151/Claude%20Token%20Saver%20v43.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    console.log('🎯 Token Saver v35 - Script loaded!');
+    console.log('💾 Token Saver v43 loaded!');
 
-    // ==================== CONFIGURATION ====================
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔧 CONFIGURATION
+    // ═══════════════════════════════════════════════════════════════════════════
+
     const CONFIG = {
-        warningThreshold: 500,
-        dangerThreshold: 1000,
-        checkInterval: 500,
-        fileCheckInterval: 2000,
-        statusUpdateDebounce: 2000,
-        pastePatterns: [
-            '```markdown',
-            '```md',
-            '# ',
-            '## ',
-            '### ',
-            '---\n',
-            '\n\n\n'
-        ],
-        fileKeywords: [
-            'download',
-            'computer://',
-            '/mnt/user-data/outputs/',
-            'view your',
-            'file created',
-            'saved to'
-        ]
+        thresholds: {
+            warning: 500,
+            danger: 1000
+        },
+        intervals: {
+            responseCheck: 500,
+            fileDetection: 2000
+        },
+        patterns: {
+            paste: ['```', '# ', '## ', '### ', '---\n', '| ', '\n\n\n'],
+            file: ['download', 'computer://', '/mnt/user-data/outputs/', 'file created', 'saved to', '.user.js']
+        },
+        minimized: GM_getValue('minimized', true),
+        position: GM_getValue('btnPosition', { bottom: 100, right: 20 })
     };
 
-    // ==================== STATE MANAGEMENT ====================
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📊 STATE
+    // ═══════════════════════════════════════════════════════════════════════════
+
     const state = {
-        monitoring: {
-            isActive: false,
-            responseLength: 0,
-            hasFileMention: false,
-            fileDetectedPermanently: false
-        },
-        ui: {
-            isMaximized: false,
-            statusIndicator: null,
-            lastStatusType: null,
-            lastUpdateTime: 0
-        },
-        files: {
-            detected: [],
-            observerActive: false
-        },
-        drag: {
-            panel: {
-                active: false,
-                x: 0,
-                y: 0,
-                startX: 0,
-                startY: 0
-            },
-            status: {
-                active: false,
-                x: 0,
-                y: 0,
-                startX: 0,
-                startY: 0
-            }
-        }
+        monitoring: false,
+        responseLength: 0,
+        fileDetected: false,
+        files: [],
+        isMinimized: CONFIG.minimized
     };
 
-    // ==================== UTILITY FUNCTIONS ====================
-    const utils = {
-        debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        },
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🎨 STYLES - v43 SMOOTH
+    // ═══════════════════════════════════════════════════════════════════════════
 
-        copyToClipboard(text, successMessage) {
-            console.log('📋 Attempting to copy:', text.substring(0, 100) + '...');
+    GM_addStyle(`
+        /* ═══════════════════════════════════════════════════════════════════════
+           MINIMIZED BUTTON
+           ═══════════════════════════════════════════════════════════════════════ */
+        #cts-mini-btn {
+            position: fixed !important;
+            z-index: 2147483647 !important;
+            width: 56px !important;
+            height: 56px !important;
+            background: linear-gradient(145deg, #14b8c6 0%, #0891b2 100%) !important;
+            border: none !important;
+            border-radius: 50% !important;
+            box-shadow: 
+                0 4px 15px rgba(8, 145, 178, 0.4),
+                0 2px 6px rgba(0, 0, 0, 0.1) !important;
+            cursor: grab !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 26px !important;
+            user-select: none !important;
+        }
 
-            // Modern Clipboard API
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text)
-                    .then(() => {
-                        console.log('✅ Copy successful!');
-                        statusManager.update('safe', successMessage);
-                    })
-                    .catch((err) => {
-                        console.error('❌ Clipboard API failed:', err);
-                        this.fallbackCopy(text, successMessage);
-                    });
-            } else {
-                this.fallbackCopy(text, successMessage);
-            }
-        },
+        #cts-mini-btn:hover {
+            box-shadow: 
+                0 6px 20px rgba(8, 145, 178, 0.5),
+                0 3px 8px rgba(0, 0, 0, 0.15) !important;
+        }
 
-        fallbackCopy(text, successMessage) {
-            // Fallback method using textarea
+        #cts-mini-btn.dragging {
+            cursor: grabbing !important;
+            box-shadow: 
+                0 10px 30px rgba(8, 145, 178, 0.5),
+                0 4px 10px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           EXPANDED PANEL
+           ═══════════════════════════════════════════════════════════════════════ */
+        #cts-panel {
+            position: fixed !important;
+            z-index: 2147483647 !important;
+            width: 540px !important;
+            background: #ffffff !important;
+            border: none !important;
+            border-radius: 14px !important;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.12),
+                0 4px 12px rgba(0, 0, 0, 0.08) !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            font-size: 12px !important;
+            display: none !important;
+            overflow: hidden !important;
+        }
+
+        #cts-panel.visible {
+            display: block !important;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           HEADER
+           ═══════════════════════════════════════════════════════════════════════ */
+        .cts-header {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 12px 16px !important;
+            background: linear-gradient(145deg, #14b8c6 0%, #0891b2 100%) !important;
+            color: white !important;
+            cursor: grab !important;
+            user-select: none !important;
+        }
+
+        .cts-header.dragging {
+            cursor: grabbing !important;
+        }
+
+        .cts-title {
+            font-weight: 600 !important;
+            font-size: 14px !important;
+        }
+
+        .cts-toggle {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border: none !important;
+            color: white !important;
+            width: 28px !important;
+            height: 28px !important;
+            border-radius: 6px !important;
+            cursor: pointer !important;
+            font-size: 14px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: background 0.15s ease !important;
+        }
+
+        .cts-toggle:hover { 
+            background: rgba(255, 255, 255, 0.25) !important;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           CONTENT
+           ═══════════════════════════════════════════════════════════════════════ */
+        .cts-body {
+            padding: 12px !important;
+        }
+
+        .cts-content {
+            display: flex !important;
+            gap: 10px !important;
+        }
+
+        .cts-section {
+            flex: 1 !important;
+            background: #f8fafc !important;
+            padding: 10px !important;
+            border-radius: 8px !important;
+        }
+
+        .cts-section-title {
+            font-weight: 600 !important;
+            font-size: 10px !important;
+            color: #0891b2 !important;
+            margin-bottom: 8px !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.3px !important;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           BUTTONS
+           ═══════════════════════════════════════════════════════════════════════ */
+        .cts-btn {
+            width: 100% !important;
+            padding: 8px 12px !important;
+            border: none !important;
+            border-radius: 6px !important;
+            cursor: pointer !important;
+            font-weight: 500 !important;
+            font-size: 11px !important;
+            margin-bottom: 6px !important;
+            transition: all 0.15s ease !important;
+        }
+
+        .cts-btn:last-child { margin-bottom: 0 !important; }
+
+        .cts-btn-primary {
+            background: linear-gradient(145deg, #14b8c6 0%, #0891b2 100%) !important;
+            color: white !important;
+        }
+
+        .cts-btn-primary:hover {
+            filter: brightness(1.1) !important;
+        }
+
+        .cts-btn-secondary {
+            background: #e2e8f0 !important;
+            color: #334155 !important;
+        }
+
+        .cts-btn-secondary:hover {
+            background: #cbd5e1 !important;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           FILE LIST
+           ═══════════════════════════════════════════════════════════════════════ */
+        .cts-file-list {
+            max-height: 90px !important;
+            overflow-y: auto !important;
+            font-size: 10px !important;
+        }
+
+        .cts-file-item {
+            padding: 6px 8px !important;
+            background: white !important;
+            border-radius: 4px !important;
+            margin-bottom: 4px !important;
+            cursor: pointer !important;
+            transition: background 0.15s ease !important;
+        }
+
+        .cts-file-item:hover {
+            background: #e0f2fe !important;
+        }
+
+        .cts-file-name {
+            font-weight: 500 !important;
+            color: #0891b2 !important;
+        }
+
+        .cts-file-hint {
+            font-size: 9px !important;
+            color: #94a3b8 !important;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════════
+           STATUS INDICATOR
+           ═══════════════════════════════════════════════════════════════════════ */
+        #cts-status {
+            position: fixed !important;
+            top: 20px !important;
+            right: 20px !important;
+            padding: 10px 16px !important;
+            border-radius: 8px !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+            z-index: 2147483646 !important;
+            display: none !important;
+        }
+
+        #cts-status.safe { background: #10b981 !important; color: white !important; }
+        #cts-status.warning { background: #f59e0b !important; color: white !important; }
+        #cts-status.danger { background: #ef4444 !important; color: white !important; }
+        #cts-status.info { background: #0891b2 !important; color: white !important; }
+
+        .cts-features {
+            font-size: 10px !important;
+            line-height: 1.6 !important;
+            color: #475569 !important;
+        }
+
+        .cts-help {
+            font-size: 9px !important;
+            line-height: 1.5 !important;
+            color: #64748b !important;
+        }
+
+        .cts-file-list::-webkit-scrollbar { width: 4px !important; }
+        .cts-file-list::-webkit-scrollbar-track { background: transparent !important; }
+        .cts-file-list::-webkit-scrollbar-thumb { background: #cbd5e1 !important; border-radius: 2px !important; }
+    `);
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🛠️ UTILITIES
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    async function copyText(text, successMsg) {
+        try {
+            await navigator.clipboard.writeText(text);
+            showStatus('info', successMsg);
+        } catch {
             const textarea = document.createElement('textarea');
             textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
+            textarea.style.cssText = 'position:fixed;opacity:0;';
             document.body.appendChild(textarea);
             textarea.select();
-
-            try {
-                const success = document.execCommand('copy');
-                if (success) {
-                    console.log('✅ Fallback copy successful!');
-                    statusManager.update('safe', successMessage);
-                } else {
-                    console.error('❌ Fallback copy failed');
-                    this.showManualCopy(text);
-                }
-            } catch (err) {
-                console.error('❌ Copy error:', err);
-                this.showManualCopy(text);
-            } finally {
-                document.body.removeChild(textarea);
-            }
-        },
-
-        showManualCopy(text) {
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: white;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 4px 30px rgba(0,0,0,0.3);
-                z-index: 10001;
-                max-width: 500px;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            `;
-
-            modal.innerHTML = `
-                <div style="font-weight: 700; margin-bottom: 10px; color: #06b6d4;">📋 Copy This Command</div>
-                <textarea readonly style="width: 100%; height: 150px; padding: 10px; font-family: monospace; font-size: 11px; border: 1px solid #e2e8f0; border-radius: 6px;">${text}</textarea>
-                <button id="close-modal" style="margin-top: 10px; padding: 8px 16px; background: #06b6d4; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Close</button>
-            `;
-
-            document.body.appendChild(modal);
-            modal.querySelector('textarea').select();
-
-            modal.querySelector('#close-modal').addEventListener('click', () => {
-                document.body.removeChild(modal);
-            });
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showStatus('info', successMsg);
         }
-    };
+    }
 
-    // ==================== STATUS INDICATOR MANAGER ====================
-    const statusManager = {
-        create() {
-            const indicator = document.createElement('div');
-            indicator.id = 'workflow-status';
-            // v35: Changed default position from top 20px to top 100px to avoid overlap with Usage Tracker
-            indicator.style.cssText = `
-                position: fixed;
-                top: 100px;
-                right: 20px;
-                padding: 12px 20px 12px 12px;
-                border-radius: 8px;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                font-size: 13px;
-                font-weight: 600;
-                z-index: 10000;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-                display: none;
-                cursor: grab;
-                user-select: none;
-                will-change: transform;
-                transition: background-color 0.3s ease;
-            `;
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🚦 STATUS INDICATOR
+    // ═══════════════════════════════════════════════════════════════════════════
 
-            indicator.addEventListener('mousedown', dragManager.statusStart, { passive: false });
-            document.body.appendChild(indicator);
-            state.ui.statusIndicator = indicator;
-            return indicator;
-        },
+    let statusTimeout = null;
 
-        update(status, message) {
-            console.log(`📊 Status update: ${status} - ${message}`);
+    function showStatus(type, message, duration = 3000) {
+        let status = document.getElementById('cts-status');
 
-            if (status === 'safe' && message.includes('File creation detected')) {
-                state.monitoring.fileDetectedPermanently = true;
-            }
-
-            if (state.monitoring.fileDetectedPermanently && status !== 'safe') {
-                return;
-            }
-
-            const now = Date.now();
-            const timeSinceLastUpdate = now - state.ui.lastUpdateTime;
-
-            if (status === state.ui.lastStatusType && timeSinceLastUpdate < CONFIG.statusUpdateDebounce) {
-                return;
-            }
-
-            state.ui.lastStatusType = status;
-            state.ui.lastUpdateTime = now;
-
-            if (!state.ui.statusIndicator) {
-                this.create();
-            }
-
-            const indicator = state.ui.statusIndicator;
-            indicator.style.display = 'flex';
-            indicator.style.alignItems = 'center';
-            indicator.style.gap = '8px';
-
-            const statusConfig = {
-                safe: { bg: '#10b981', text: '#ffffff', icon: '✓' },
-                warning: { bg: '#f59e0b', text: '#ffffff', icon: '⚠' },
-                danger: { bg: '#ef4444', text: '#ffffff', icon: '✕' },
-                info: { bg: '#06b6d4', text: '#ffffff', icon: 'ℹ' }
-            };
-
-            const config = statusConfig[status] || statusConfig.info;
-            indicator.style.backgroundColor = config.bg;
-            indicator.style.color = config.text;
-
-            indicator.innerHTML = `<span style="flex: 1;">${config.icon} ${message}</span>`;
-            indicator.appendChild(this.createCloseButton());
-        },
-
-        createCloseButton() {
-            const closeBtn = document.createElement('button');
-            closeBtn.textContent = '✕';
-            closeBtn.style.cssText = `
-                background: rgba(0,0,0,0.2);
-                border: none;
-                color: inherit;
-                cursor: pointer;
-                padding: 4px 8px;
-                border-radius: 4px;
-                font-weight: bold;
-                font-size: 11px;
-                transition: background 0.2s;
-            `;
-            closeBtn.addEventListener('mouseenter', () => closeBtn.style.background = 'rgba(0,0,0,0.3)');
-            closeBtn.addEventListener('mouseleave', () => closeBtn.style.background = 'rgba(0,0,0,0.2)');
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.close();
-            });
-            return closeBtn;
-        },
-
-        close() {
-            if (state.ui.statusIndicator) {
-                state.ui.statusIndicator.style.display = 'none';
-            }
+        if (!status) {
+            status = document.createElement('div');
+            status.id = 'cts-status';
+            document.body.appendChild(status);
         }
-    };
 
-    // ==================== DRAG MANAGER (OPTIMIZED) ====================
-    const dragManager = {
-        panelStart(e) {
-            // Skip if clicking on buttons
-            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
-                return;
-            }
+        if (state.fileDetected && type !== 'safe' && type !== 'info') return;
 
-            // Skip if clicking on clickable file items
-            if (e.target.closest('#file-list > div')) {
-                return;
-            }
+        status.className = type;
+        status.textContent = message;
+        status.style.display = 'block';
 
-            e.preventDefault();
-
-            const panel = document.getElementById('workflow-panel');
-            const rect = panel.getBoundingClientRect();
-
-            state.drag.panel.active = true;
-            state.drag.panel.startX = e.clientX;
-            state.drag.panel.startY = e.clientY;
-            state.drag.panel.x = rect.left;
-            state.drag.panel.y = rect.top;
-
-            if (panel) {
-                panel.style.cursor = 'grabbing';
-                panel.style.transition = 'none';
-            }
-            document.body.style.userSelect = 'none';
-        },
-
-        panelMove(e) {
-            if (!state.drag.panel.active) return;
-
-            e.preventDefault();
-
-            const deltaX = e.clientX - state.drag.panel.startX;
-            const deltaY = e.clientY - state.drag.panel.startY;
-
-            const newX = state.drag.panel.x + deltaX;
-            const newY = state.drag.panel.y + deltaY;
-
-            const panel = document.getElementById('workflow-panel');
-            if (panel) {
-                panel.style.left = newX + 'px';
-                panel.style.top = newY + 'px';
-                panel.style.right = 'auto';
-                panel.style.bottom = 'auto';
-            }
-        },
-
-        panelEnd() {
-            if (!state.drag.panel.active) return;
-
-            state.drag.panel.active = false;
-            const panel = document.getElementById('workflow-panel');
-            if (panel) {
-                panel.style.cursor = 'grab';
-            }
-            document.body.style.userSelect = '';
-        },
-
-        statusStart(e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const indicator = state.ui.statusIndicator;
-            const rect = indicator.getBoundingClientRect();
-
-            state.drag.status.active = true;
-            state.drag.status.startX = e.clientX;
-            state.drag.status.startY = e.clientY;
-            state.drag.status.x = rect.left;
-            state.drag.status.y = rect.top;
-
-            if (indicator) {
-                indicator.style.cursor = 'grabbing';
-                indicator.style.transition = 'none';
-            }
-        },
-
-        statusMove(e) {
-            if (!state.drag.status.active || !state.ui.statusIndicator) return;
-
-            e.preventDefault();
-
-            const deltaX = e.clientX - state.drag.status.startX;
-            const deltaY = e.clientY - state.drag.status.startY;
-
-            const newX = state.drag.status.x + deltaX;
-            const newY = state.drag.status.y + deltaY;
-
-            state.ui.statusIndicator.style.left = newX + 'px';
-            state.ui.statusIndicator.style.top = newY + 'px';
-            state.ui.statusIndicator.style.right = 'auto';
-        },
-
-        statusEnd() {
-            if (!state.drag.status.active) return;
-
-            state.drag.status.active = false;
-            if (state.ui.statusIndicator) {
-                state.ui.statusIndicator.style.cursor = 'grab';
-            }
-        },
-
-        init() {
-            document.addEventListener('mousemove', (e) => {
-                this.panelMove(e);
-                this.statusMove(e);
-            }, { passive: false });
-
-            document.addEventListener('mouseup', () => {
-                this.panelEnd();
-                this.statusEnd();
-            });
+        clearTimeout(statusTimeout);
+        if (duration > 0) {
+            statusTimeout = setTimeout(() => {
+                status.style.display = 'none';
+            }, duration);
         }
-    };
+    }
 
-    // ==================== MONITORING MANAGER ====================
-    const monitoringManager = {
-        detectPastePattern(text) {
-            return CONFIG.pastePatterns.some(pattern => text.includes(pattern));
-        },
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📊 RESPONSE MONITORING
+    // ═══════════════════════════════════════════════════════════════════════════
 
-        detectFileMention(text) {
-            return CONFIG.fileKeywords.some(keyword =>
-                text.toLowerCase().includes(keyword.toLowerCase())
-            );
-        },
+    function hasPastePattern(text) {
+        return CONFIG.patterns.paste.some(p => text.includes(p));
+    }
 
-        checkResponse() {
-            const responseElements = document.querySelectorAll('[data-test-render-count]');
+    function hasFileMention(text) {
+        return CONFIG.patterns.file.some(p => text.toLowerCase().includes(p.toLowerCase()));
+    }
 
-            if (responseElements.length === 0) {
-                state.monitoring.isActive = false;
-                return;
-            }
+    function checkResponse() {
+        if (!state.monitoring) return;
 
-            const latestResponse = responseElements[responseElements.length - 1];
-            const responseText = latestResponse.textContent || '';
-            state.monitoring.responseLength = responseText.length;
+        const responses = document.querySelectorAll('[data-test-render-count]');
+        if (responses.length === 0) return;
 
-            if (!state.monitoring.hasFileMention) {
-                state.monitoring.hasFileMention = this.detectFileMention(responseText);
-            }
+        const latest = responses[responses.length - 1];
+        const text = latest.textContent || '';
+        state.responseLength = text.length;
 
-            if (state.monitoring.hasFileMention) {
-                statusManager.update('safe', '✅ File creation detected');
-            } else if (state.monitoring.responseLength > CONFIG.dangerThreshold &&
-                       this.detectPastePattern(responseText)) {
-                statusManager.update('danger', '❌ Paste detected - may timeout');
-            } else if (state.monitoring.responseLength > CONFIG.warningThreshold) {
-                statusManager.update('warning', `⚠️ ${state.monitoring.responseLength} chars, no file yet`);
-            }
-
-            if (state.monitoring.isActive) {
-                setTimeout(() => this.checkResponse(), CONFIG.checkInterval);
-            }
-        },
-
-        start() {
-            console.log('🔍 Starting response monitoring...');
-            state.monitoring.isActive = true;
-            state.monitoring.responseLength = 0;
-            state.monitoring.hasFileMention = false;
-            state.monitoring.fileDetectedPermanently = false;
-            this.checkResponse();
-        },
-
-        observeMessages() {
-            const observer = new MutationObserver((mutations) => {
-                const hasNewResponse = mutations.some(mutation =>
-                    Array.from(mutation.addedNodes).some(node =>
-                        node.nodeType === 1 && (
-                            node.querySelector('[data-test-render-count]') ||
-                            node.hasAttribute('data-test-render-count')
-                        )
-                    )
-                );
-
-                if (hasNewResponse && !state.monitoring.isActive) {
-                    console.log('🆕 New response detected, starting monitoring');
-                    this.start();
-                }
-            });
-
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-
-            console.log('👀 Message observer active');
+        if (hasFileMention(text)) {
+            state.fileDetected = true;
+            showStatus('safe', '✅ File creation detected!');
+            return;
         }
-    };
 
-    // ==================== FILE MANAGER ====================
-    const fileManager = {
-        detect() {
-            const fileElements = document.querySelectorAll(
-                '[class*="attachment"], [class*="file"], [data-testid*="file"], a[href*="uploads"]'
-            );
-            const newFiles = [];
+        if (state.responseLength > CONFIG.thresholds.danger && hasPastePattern(text)) {
+            showStatus('danger', `❌ ${state.responseLength} chars - paste detected!`, 0);
+        } else if (state.responseLength > CONFIG.thresholds.warning) {
+            showStatus('warning', `⚠️ ${state.responseLength} chars - consider file`, 0);
+        }
 
-            fileElements.forEach(el => {
-                const fileName = el.textContent || el.getAttribute('title') || el.getAttribute('aria-label') || el.getAttribute('href');
-                if (fileName && (fileName.includes('.') || fileName.includes('uploads/'))) {
-                    const cleanName = fileName.split('/').pop().trim();
-                    if (cleanName && cleanName.length > 0) {
-                        newFiles.push(cleanName);
+        setTimeout(checkResponse, CONFIG.intervals.responseCheck);
+    }
+
+    function startMonitoring() {
+        if (state.monitoring) return;
+        state.monitoring = true;
+        state.responseLength = 0;
+        state.fileDetected = false;
+        checkResponse();
+    }
+
+    function observeNewResponses() {
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
+                    if (node.nodeType === 1) {
+                        if (node.querySelector?.('[data-test-render-count]') ||
+                            node.hasAttribute?.('data-test-render-count')) {
+                            startMonitoring();
+                            return;
+                        }
                     }
                 }
-            });
-
-            if (newFiles.length > state.files.detected.length) {
-                state.files.detected = [...new Set(newFiles)];
-                console.log('📁 Files detected:', state.files.detected);
-                this.updateList();
-                statusManager.update('info', `📂 ${newFiles.length} file(s) detected`);
             }
-        },
+        });
 
-        updateList() {
-            const listContainer = document.getElementById('file-list');
-            if (!listContainer) return;
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
 
-            if (state.files.detected.length === 0) {
-                listContainer.innerHTML = `
-                    <div style="color: #64748b; font-size: 10px;">
-                        No files detected<br>
-                        <small style="opacity: 0.7;">Upload via Claude</small>
-                    </div>
-                `;
-                return;
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📁 FILE MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function detectFiles() {
+        const selectors = '[class*="attachment"], [class*="file"], a[href*="uploads"]';
+        const elements = document.querySelectorAll(selectors);
+        const files = new Set();
+
+        elements.forEach(el => {
+            const name = el.textContent || el.getAttribute('title') || el.getAttribute('href') || '';
+            if (name.includes('.')) {
+                const clean = name.split('/').pop().trim();
+                if (clean) files.add(clean);
             }
+        });
 
-            listContainer.innerHTML = '';
-            state.files.detected.forEach((fileName) => {
-                const fileDiv = this.createFileItem(fileName);
-                listContainer.appendChild(fileDiv);
-            });
-        },
-
-        createFileItem(fileName) {
-            const fileDiv = document.createElement('div');
-            fileDiv.style.cssText = `
-                background: #ffffff;
-                padding: 8px;
-                border-radius: 6px;
-                margin-bottom: 4px;
-                font-size: 11px;
-                cursor: pointer;
-                border: 1px solid #e2e8f0;
-                transition: all 0.2s;
-            `;
-
-            fileDiv.addEventListener('mouseenter', () => {
-                fileDiv.style.background = '#f1f5f9';
-                fileDiv.style.borderColor = '#06b6d4';
-            });
-
-            fileDiv.addEventListener('mouseleave', () => {
-                fileDiv.style.background = '#ffffff';
-                fileDiv.style.borderColor = '#e2e8f0';
-            });
-
-            fileDiv.addEventListener('click', (e) => {
-                e.stopPropagation();
-                console.log('🖱️ File clicked:', fileName);
-                this.copyViewCommand(fileName);
-            });
-
-            fileDiv.innerHTML = `
-                <div style="font-weight: 600; color: #06b6d4; margin-bottom: 2px;">📄 ${fileName}</div>
-                <div style="color: #64748b; font-size: 9px;">Click to copy command</div>
-            `;
-
-            return fileDiv;
-        },
-
-        copyViewCommand(fileName) {
-            const command = `Please use the view tool to read this file:
-/mnt/user-data/uploads/${fileName}
-
-Then process it according to my instructions and create a downloadable output file in /mnt/user-data/outputs/ - do NOT paste content in chat.`;
-
-            console.log('📋 Copying command for:', fileName);
-            utils.copyToClipboard(command, `✅ Command copied for ${fileName}`);
-        },
-
-        scanUploads() {
-            const command = `Please use the view tool to scan /mnt/user-data/uploads and tell me what files are there. List their exact names.`;
-            console.log('🔍 Copying scan command');
-            utils.copyToClipboard(command, '✅ Scan command copied - paste in chat');
-        },
-
-        clear() {
-            state.files.detected = [];
-            this.updateList();
-            statusManager.update('info', '🗑️ File list cleared');
-        },
-
-        startPeriodicCheck() {
-            setInterval(() => this.detect(), CONFIG.fileCheckInterval);
-            console.log('⏰ Periodic file check started');
+        if (files.size > state.files.length) {
+            state.files = [...files];
+            updateFileList();
+            showStatus('info', `📂 ${files.size} file(s) detected`);
         }
-    };
+    }
 
-    // ==================== UI MANAGER ====================
-    const uiManager = {
-        toggleMaximize() {
-            const panel = document.getElementById('workflow-panel');
-            const maximizeBtn = document.getElementById('maximize-btn');
-            const testBtn = document.getElementById('test-status-btn');
-            const dragHandle = panel.querySelector('.drag-handle');
+    function updateFileList() {
+        const list = document.getElementById('cts-file-list');
+        if (!list) return;
 
-            if (!panel || !maximizeBtn) {
-                console.error('❌ Panel or button not found!');
-                return;
-            }
+        if (state.files.length === 0) {
+            list.innerHTML = '<div class="cts-file-hint">No files detected yet</div>';
+            return;
+        }
 
-            state.ui.isMaximized = !state.ui.isMaximized;
-            console.log('🔄 Toggle maximize:', state.ui.isMaximized);
+        list.innerHTML = state.files.map(file => `
+            <div class="cts-file-item" data-file="${file}">
+                <div class="cts-file-name">📄 ${file}</div>
+            </div>
+        `).join('');
 
-            const sections = panel.querySelectorAll('.panel-section');
-            const bottomDiv = document.getElementById('bottom-buttons');
-
-            sections.forEach((section) => {
-                section.style.display = state.ui.isMaximized ? 'flex' : 'none';
+        list.querySelectorAll('.cts-file-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const cmd = `Please use the view tool to read: /mnt/user-data/uploads/${item.dataset.file}\n\nThen process it and create a downloadable output file in /mnt/user-data/outputs/ - do NOT paste content in chat.`;
+                copyText(cmd, `📋 Copied!`);
             });
+        });
+    }
 
-            // Enable smooth transitions for size changes
-            panel.style.transition = 'all 0.3s ease';
-            setTimeout(() => {
-                panel.style.transition = 'none';
-            }, 300);
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🖱️ SMOOTH DRAG - v43 improved
+    // ═══════════════════════════════════════════════════════════════════════════
 
-            if (state.ui.isMaximized) {
-                // Maximized state
-                maximizeBtn.textContent = '➖';
-                testBtn.style.display = 'block';
-                panel.style.width = 'auto';
-                panel.style.minWidth = '600px';
-                panel.style.maxWidth = '650px';
-                panel.style.cursor = 'grab';
-                panel.style.padding = '12px';
-                dragHandle.style.margin = '-6px -6px 10px -6px';
-                bottomDiv.style.flexDirection = 'row';
-                bottomDiv.style.gap = '6px';
-                bottomDiv.style.marginTop = '10px';
-            } else {
-                // Minimized state
-                maximizeBtn.textContent = '➕';
-                testBtn.style.display = 'none';
-                panel.style.width = '60px';
-                panel.style.minWidth = '60px';
-                panel.style.maxWidth = '60px';
-                panel.style.cursor = 'grab';
-                panel.style.padding = '10px';
-                dragHandle.style.margin = '-6px -6px 8px -6px';
-                bottomDiv.style.flexDirection = 'column';
-                bottomDiv.style.gap = '0';
-                bottomDiv.style.marginTop = '8px';
-            }
-        },
+    function smoothDrag(element, saveKey, onClick) {
+        let startX, startY, startLeft, startTop;
+        let isDragging = false;
+        let hasMoved = false;
 
-        createButton(config) {
-            const btn = document.createElement('button');
-            btn.id = config.id;
-            btn.textContent = config.text;
-            btn.style.cssText = config.style;
+        element.addEventListener('mousedown', (e) => {
+            if (e.target.tagName === 'BUTTON') return;
+            
+            isDragging = true;
+            hasMoved = false;
+            
+            startX = e.clientX;
+            startY = e.clientY;
+            
+            const rect = element.getBoundingClientRect();
+            startLeft = rect.left;
+            startTop = rect.top;
 
-            if (config.hover) {
-                btn.addEventListener('mouseenter', () => Object.assign(btn.style, config.hover.in));
-                btn.addEventListener('mouseleave', () => Object.assign(btn.style, config.hover.out));
+            element.classList.add('dragging');
+            
+            // Prevent text selection
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+
+            // Threshold to distinguish click from drag
+            if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+                hasMoved = true;
             }
 
-            if (config.onClick) {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    config.onClick(e);
-                });
+            if (hasMoved) {
+                let newX = startLeft + dx;
+                let newY = startTop + dy;
+
+                // Constrain to viewport
+                const w = element.offsetWidth;
+                const h = element.offsetHeight;
+                newX = Math.max(0, Math.min(newX, window.innerWidth - w));
+                newY = Math.max(0, Math.min(newY, window.innerHeight - h));
+
+                // Apply position directly (no transition during drag)
+                element.style.left = newX + 'px';
+                element.style.top = newY + 'px';
+                element.style.right = 'auto';
+                element.style.bottom = 'auto';
             }
+        });
 
-            return btn;
-        },
+        document.addEventListener('mouseup', () => {
+            if (!isDragging) return;
+            
+            isDragging = false;
+            element.classList.remove('dragging');
 
-        injectStyles() {
-            const style = document.createElement('style');
-            style.textContent = `
-                #workflow-panel {
-                    will-change: auto;
-                    -webkit-font-smoothing: antialiased;
-                    -moz-osx-font-smoothing: grayscale;
-                    text-rendering: optimizeLegibility;
-                }
-                #file-list::-webkit-scrollbar {
-                    width: 4px;
-                }
-                #file-list::-webkit-scrollbar-track {
-                    background: #f1f5f9;
-                }
-                #file-list::-webkit-scrollbar-thumb {
-                    background: #cbd5e1;
-                    border-radius: 2px;
-                }
-                #file-list::-webkit-scrollbar-thumb:hover {
-                    background: #94a3b8;
-                }
-            `;
-            document.head.appendChild(style);
-        },
-
-        createPanel() {
-            const existingPanel = document.getElementById('workflow-panel');
-            if (existingPanel) {
-                existingPanel.remove();
+            if (hasMoved) {
+                // Save position
+                const rect = element.getBoundingClientRect();
+                GM_setValue(saveKey, { left: rect.left, top: rect.top });
+            } else if (onClick) {
+                // It was a click
+                onClick();
             }
+        });
+    }
 
-            this.injectStyles();
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🎛️ UI
+    // ═══════════════════════════════════════════════════════════════════════════
 
-            const panel = document.createElement('div');
-            panel.id = 'workflow-panel';
+    function togglePanel() {
+        const miniBtn = document.getElementById('cts-mini-btn');
+        const panel = document.getElementById('cts-panel');
 
-            // v35: Changed default position from bottom-right to top-right
-            // Start with minimized styles at top right
-            panel.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 100px;
-                background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
-                padding: 10px;
-                border-radius: 10px;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-                z-index: 9999;
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                color: #1e293b;
-                min-width: 60px;
-                max-width: 60px;
-                width: 60px;
-                cursor: grab;
-                border: 2px solid #cbd5e1;
-            `;
+        if (state.isMinimized) {
+            const btnRect = miniBtn.getBoundingClientRect();
+            
+            miniBtn.style.display = 'none';
+            
+            // Position panel near button
+            let panelX = btnRect.left - 480;
+            let panelY = btnRect.top;
+            
+            // Keep in viewport
+            panelX = Math.max(10, Math.min(panelX, window.innerWidth - 550));
+            panelY = Math.max(10, Math.min(panelY, window.innerHeight - 300));
+            
+            panel.style.left = panelX + 'px';
+            panel.style.top = panelY + 'px';
+            panel.style.right = 'auto';
+            panel.style.bottom = 'auto';
+            panel.classList.add('visible');
+            
+            state.isMinimized = false;
+        } else {
+            const panelRect = panel.getBoundingClientRect();
+            
+            panel.classList.remove('visible');
+            
+            miniBtn.style.left = (panelRect.right - 60) + 'px';
+            miniBtn.style.top = panelRect.top + 'px';
+            miniBtn.style.right = 'auto';
+            miniBtn.style.bottom = 'auto';
+            miniBtn.style.display = 'flex';
+            
+            state.isMinimized = true;
+        }
 
-            // Drag handle
-            const dragHandle = document.createElement('div');
-            dragHandle.className = 'drag-handle';
-            dragHandle.style.cssText = `
-                font-size: 24px;
-                cursor: grab;
-                padding: 6px;
-                margin: -6px -6px 8px -6px;
-                border-radius: 8px;
-                text-align: center;
-                background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-                transition: all 0.2s;
-                color: white;
-                font-weight: 700;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            `;
-            dragHandle.innerHTML = '💾';
-            dragHandle.addEventListener('mouseenter', () => dragHandle.style.transform = 'scale(1.05)');
-            dragHandle.addEventListener('mouseleave', () => dragHandle.style.transform = 'scale(1)');
+        GM_setValue('minimized', state.isMinimized);
+    }
 
-            // Main content section
-            const mainSection = document.createElement('div');
-            mainSection.className = 'panel-section';
-            mainSection.style.cssText = `
-                display: none;
-                gap: 10px;
-                margin-bottom: 10px;
-            `;
+    function createUI() {
+        document.getElementById('cts-mini-btn')?.remove();
+        document.getElementById('cts-panel')?.remove();
 
-            const col1 = this.createFeaturesColumn();
-            const col2 = this.createButtonsColumn();
-            const col3 = this.createFileListColumn();
-            const col4 = this.createHowItWorksColumn();
+        const pos = CONFIG.position;
 
-            mainSection.appendChild(col1);
-            mainSection.appendChild(col2);
-            mainSection.appendChild(col3);
-            mainSection.appendChild(col4);
+        // ═══════════════════════════════════════════════════════════════════
+        // MINI BUTTON
+        // ═══════════════════════════════════════════════════════════════════
+        const miniBtn = document.createElement('div');
+        miniBtn.id = 'cts-mini-btn';
+        miniBtn.textContent = '💾';
 
-            const bottomDiv = this.createBottomButtons();
-            bottomDiv.style.flexDirection = 'column';
-            bottomDiv.style.gap = '0';
-            bottomDiv.style.marginTop = '8px';
+        if (pos.left !== undefined) {
+            miniBtn.style.left = pos.left + 'px';
+            miniBtn.style.top = (pos.top || 100) + 'px';
+        } else {
+            miniBtn.style.bottom = (pos.bottom || 100) + 'px';
+            miniBtn.style.right = (pos.right || 20) + 'px';
+        }
 
-            panel.appendChild(dragHandle);
-            panel.appendChild(mainSection);
-            panel.appendChild(bottomDiv);
+        if (!state.isMinimized) {
+            miniBtn.style.display = 'none';
+        }
 
-            document.body.appendChild(panel);
+        document.body.appendChild(miniBtn);
+        smoothDrag(miniBtn, 'btnPosition', togglePanel);
 
-            panel.addEventListener('mousedown', dragManager.panelStart, { passive: false });
+        // ═══════════════════════════════════════════════════════════════════
+        // PANEL
+        // ═══════════════════════════════════════════════════════════════════
+        const panel = document.createElement('div');
+        panel.id = 'cts-panel';
 
-            return panel;
-        },
+        if (pos.left !== undefined) {
+            panel.style.left = Math.max(10, pos.left - 480) + 'px';
+            panel.style.top = (pos.top || 100) + 'px';
+        } else {
+            panel.style.bottom = (pos.bottom || 100) + 'px';
+            panel.style.right = (pos.right || 20) + 'px';
+        }
 
-        createFeaturesColumn() {
-            const col = document.createElement('div');
-            col.className = 'panel-section';
-            col.style.cssText = `
-                flex: 1;
-                background: #ffffff;
-                padding: 10px;
-                border-radius: 6px;
-                border: 1px solid #e2e8f0;
-                display: flex;
-                flex-direction: column;
-            `;
-            col.innerHTML = `
-                <div style="font-weight: 700; margin-bottom: 6px; font-size: 11px; color: #06b6d4;">💾 TOKEN SAVING</div>
-                <div style="font-size: 10px; line-height: 1.6; color: #334155;">
-                    ✓ Prevents pasting<br>
-                    ✓ Enforces files<br>
-                    ✓ Length monitor<br>
-                    ✓ Timeout prevention
-                </div>
-            `;
-            return col;
-        },
+        if (!state.isMinimized) {
+            panel.classList.add('visible');
+        }
 
-        createButtonsColumn() {
-            const col = document.createElement('div');
-            col.className = 'panel-section';
-            col.style.cssText = `
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                gap: 5px;
-            `;
-
-            const scanBtn = this.createButton({
-                id: 'scan-uploads-btn',
-                text: '🔍 Scan',
-                style: `
-                    width: 100%;
-                    padding: 8px;
-                    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
-                    color: white;
-                    border: none;
-                    border-radius: 6px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    font-size: 11px;
-                    transition: all 0.2s;
-                    box-shadow: 0 2px 6px rgba(6,182,212,0.2);
-                `,
-                hover: {
-                    in: { transform: 'translateY(-1px)', boxShadow: '0 4px 10px rgba(6,182,212,0.3)' },
-                    out: { transform: 'translateY(0)', boxShadow: '0 2px 6px rgba(6,182,212,0.2)' }
-                },
-                onClick: () => {
-                    console.log('🔍 Scan button clicked');
-                    fileManager.scanUploads();
-                }
-            });
-
-            const refreshBtn = this.createButton({
-                id: 'refresh-files-btn',
-                text: '🔄 Refresh',
-                style: `
-                    width: 100%;
-                    padding: 8px;
-                    background: #cbd5e1;
-                    color: #1e293b;
-                    border: none;
-                    border-radius: 6px;
-                    font-weight: 600;
-                    cursor: pointer;
-                    font-size: 11px;
-                    transition: all 0.2s;
-                `,
-                hover: {
-                    in: { background: '#94a3b8', color: '#ffffff' },
-                    out: { background: '#cbd5e1', color: '#1e293b' }
-                },
-                onClick: () => {
-                    console.log('🔄 Refresh button clicked');
-                    fileManager.detect();
-                    statusManager.update('info', '🔄 Refreshing file list');
-                }
-            });
-
-            const clearBtn = this.createButton({
-                id: 'clear-files-btn',
-                text: '🗑️ Clear',
-                style: `
-                    width: 100%;
-                    padding: 8px;
-                    background: #f1f5f9;
-                    color: #64748b;
-                    border: 1px solid #e2e8f0;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-size: 11px;
-                    transition: all 0.2s;
-                `,
-                hover: {
-                    in: { background: '#e2e8f0', color: '#334155' },
-                    out: { background: '#f1f5f9', color: '#64748b' }
-                },
-                onClick: () => {
-                    console.log('🗑️ Clear button clicked');
-                    fileManager.clear();
-                }
-            });
-
-            col.appendChild(scanBtn);
-            col.appendChild(refreshBtn);
-            col.appendChild(clearBtn);
-            return col;
-        },
-
-        createFileListColumn() {
-            const col = document.createElement('div');
-            col.className = 'panel-section';
-            col.style.cssText = `
-                flex: 2;
-                background: #ffffff;
-                padding: 8px;
-                border-radius: 6px;
-                max-height: 120px;
-                overflow-y: auto;
-                display: flex;
-                flex-direction: column;
-                border: 1px solid #e2e8f0;
-            `;
-            col.innerHTML = `
-                <div style="font-weight: 700; margin-bottom: 6px; font-size: 10px; color: #06b6d4;">📂 DETECTED FILES</div>
-                <div id="file-list">
-                    <div style="color: #64748b; font-size: 10px;">
-                        No files detected<br>
-                        <small style="opacity: 0.7;">Upload via Claude</small>
+        panel.innerHTML = `
+            <div class="cts-header">
+                <div class="cts-title">💾 Token Saver</div>
+                <button class="cts-toggle" id="cts-toggle" title="Minimize">✕</button>
+            </div>
+            <div class="cts-body">
+                <div class="cts-content">
+                    <div class="cts-section">
+                        <div class="cts-section-title">📊 Status</div>
+                        <div class="cts-features">
+                            <div>✓ Real-time monitoring</div>
+                            <div>✓ Paste detection</div>
+                            <div>✓ File enforcement</div>
+                        </div>
+                    </div>
+                    <div class="cts-section">
+                        <div class="cts-section-title">🔧 Actions</div>
+                        <button class="cts-btn cts-btn-primary" id="cts-scan">🔍 Scan Uploads</button>
+                        <button class="cts-btn cts-btn-secondary" id="cts-refresh">🔄 Refresh</button>
+                        <button class="cts-btn cts-btn-secondary" id="cts-clear">🗑️ Clear</button>
+                    </div>
+                    <div class="cts-section" style="flex: 1.3;">
+                        <div class="cts-section-title">📂 Files</div>
+                        <div class="cts-file-list" id="cts-file-list">
+                            <div class="cts-file-hint">No files detected</div>
+                        </div>
+                    </div>
+                    <div class="cts-section">
+                        <div class="cts-section-title">ℹ️ Help</div>
+                        <div class="cts-help">
+                            1. Upload files<br>
+                            2. Scan Uploads<br>
+                            3. Click file to copy<br>
+                            4. Paste in chat
+                        </div>
                     </div>
                 </div>
-            `;
-            return col;
-        },
+            </div>
+        `;
 
-        createHowItWorksColumn() {
-            const col = document.createElement('div');
-            col.className = 'panel-section';
-            col.style.cssText = `
-                flex: 1;
-                background: #ffffff;
-                padding: 8px;
-                border-radius: 6px;
-                display: flex;
-                flex-direction: column;
-                border: 1px solid #e2e8f0;
-            `;
-            col.innerHTML = `
-                <div style="font-weight: 700; margin-bottom: 5px; font-size: 10px; color: #06b6d4;">ℹ️ HOW IT WORKS</div>
-                <div style="font-size: 9px; line-height: 1.5; color: #64748b;">
-                    1. Upload files<br>
-                    2. Click "Scan"<br>
-                    3. Click file to copy<br>
-                    4. Paste in chat<br>
-                    5. Auto-monitoring
-                </div>
-            `;
-            return col;
-        },
+        document.body.appendChild(panel);
 
-        createBottomButtons() {
-            const bottomDiv = document.createElement('div');
-            bottomDiv.id = 'bottom-buttons';
-            bottomDiv.style.cssText = 'display: flex; flex-direction: row; gap: 6px; margin-top: 10px;';
+        // Header drag
+        const header = panel.querySelector('.cts-header');
+        smoothDrag(panel, 'panelPosition', null);
+        
+        // Only drag from header
+        panel.onmousedown = null;
+        
+        let headerDragging = false;
+        let hStartX, hStartY, hStartLeft, hStartTop;
 
-            const testBtn = this.createButton({
-                id: 'test-status-btn',
-                text: '🧪 Test',
-                style: `
-                    flex: 1;
-                    padding: 8px;
-                    background: #cbd5e1;
-                    color: #1e293b;
-                    border: none;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-size: 11px;
-                    font-weight: 600;
-                    transition: all 0.2s;
-                    display: none;
-                `,
-                hover: {
-                    in: { background: '#94a3b8', color: '#ffffff' },
-                    out: { background: '#cbd5e1', color: '#1e293b' }
-                },
-                onClick: () => {
-                    console.log('🧪 Test button clicked');
-                    statusManager.update('warning', '⚠️ Test warning');
-                    setTimeout(() => statusManager.update('safe', '✅ Test passed'), 2000);
-                }
-            });
+        header.addEventListener('mousedown', (e) => {
+            if (e.target.tagName === 'BUTTON') return;
+            
+            headerDragging = true;
+            hStartX = e.clientX;
+            hStartY = e.clientY;
+            
+            const rect = panel.getBoundingClientRect();
+            hStartLeft = rect.left;
+            hStartTop = rect.top;
+            
+            header.classList.add('dragging');
+            e.preventDefault();
+        });
 
-            const maximizeBtn = this.createButton({
-                id: 'maximize-btn',
-                text: '➕',
-                style: `
-                    flex: 1;
-                    padding: 8px;
-                    background: #cbd5e1;
-                    color: #1e293b;
-                    border: none;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-size: 16px;
-                    font-weight: 600;
-                    transition: all 0.2s;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                `,
-                hover: {
-                    in: { background: '#94a3b8', color: '#ffffff' },
-                    out: { background: '#cbd5e1', color: '#1e293b' }
-                },
-                onClick: () => this.toggleMaximize()
-            });
+        document.addEventListener('mousemove', (e) => {
+            if (!headerDragging) return;
 
-            bottomDiv.appendChild(testBtn);
-            bottomDiv.appendChild(maximizeBtn);
-            return bottomDiv;
-        }
-    };
+            const dx = e.clientX - hStartX;
+            const dy = e.clientY - hStartY;
 
-    // ==================== PROMPT INJECTION ====================
-    const promptInjector = {
-        enhance() {
-            const observer = new MutationObserver(() => {
-                const textareas = document.querySelectorAll('textarea, [contenteditable="true"]');
+            let newX = hStartLeft + dx;
+            let newY = hStartTop + dy;
 
-                textareas.forEach(textarea => {
-                    if (textarea.dataset.workflowEnhanced) return;
-                    textarea.dataset.workflowEnhanced = 'true';
+            newX = Math.max(0, Math.min(newX, window.innerWidth - panel.offsetWidth));
+            newY = Math.max(0, Math.min(newY, window.innerHeight - panel.offsetHeight));
 
-                    textarea.addEventListener('keydown', (e) => {
-                        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                            const currentText = textarea.value || textarea.textContent || '';
+            panel.style.left = newX + 'px';
+            panel.style.top = newY + 'px';
+            panel.style.right = 'auto';
+            panel.style.bottom = 'auto';
+        });
 
-                            if (!currentText.includes('downloadable file') && currentText.length > 100) {
-                                const reminder = '\n\n⚠️ CRITICAL: Create downloadable file only, do NOT paste content in chat. Save to /mnt/user-data/outputs/';
+        document.addEventListener('mouseup', () => {
+            if (!headerDragging) return;
+            headerDragging = false;
+            header.classList.remove('dragging');
+            
+            const rect = panel.getBoundingClientRect();
+            GM_setValue('panelPosition', { left: rect.left, top: rect.top });
+        });
 
-                                if (textarea.value !== undefined) {
-                                    textarea.value = currentText + reminder;
-                                } else {
-                                    textarea.textContent = currentText + reminder;
-                                }
-                            }
-                        }
-                    });
-                });
-            });
+        // Buttons
+        document.getElementById('cts-toggle').addEventListener('click', (e) => {
+            e.stopPropagation();
+            togglePanel();
+        });
 
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
+        document.getElementById('cts-scan').addEventListener('click', () => {
+            copyText(`Please use the view tool to scan /mnt/user-data/uploads and list all files there.`, '📋 Scan command copied!');
+        });
 
-            console.log('✉️ Prompt injector active');
-        }
-    };
+        document.getElementById('cts-refresh').addEventListener('click', () => {
+            detectFiles();
+            showStatus('info', '🔄 Refreshed!');
+        });
 
-    // ==================== INITIALIZATION ====================
+        document.getElementById('cts-clear').addEventListener('click', () => {
+            state.files = [];
+            updateFileList();
+            showStatus('info', '🗑️ Cleared!');
+        });
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🚀 INIT
+    // ═══════════════════════════════════════════════════════════════════════════
+
     function init() {
-        console.log('🚀 Token Saver v35 initializing...');
+        console.log('🚀 Token Saver v43 initializing...');
+        
+        createUI();
+        observeNewResponses();
+        
+        setInterval(detectFiles, CONFIG.intervals.fileDetection);
+        detectFiles();
 
-        try {
-            dragManager.init();
-            uiManager.createPanel();
-            promptInjector.enhance();
-            monitoringManager.observeMessages();
-            fileManager.startPeriodicCheck();
-            fileManager.detect();
-
-            statusManager.update('safe', '✅ Token Saver v35 ready');
-            console.log('✅ Token Saver v35 initialized successfully!');
-        } catch (error) {
-            console.error('❌ Initialization error:', error);
-        }
+        showStatus('safe', '✅ Token Saver v43 ready!');
     }
 
     if (document.readyState === 'loading') {
@@ -1064,12 +750,5 @@ Then process it according to my instructions and create a downloadable output fi
     } else {
         init();
     }
-
-    setTimeout(() => {
-        if (!document.getElementById('workflow-panel')) {
-            console.log('🔄 Retrying initialization...');
-            init();
-        }
-    }, 1000);
 
 })();

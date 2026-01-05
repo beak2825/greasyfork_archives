@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn Steam Uploady (edited)
 // @namespace    https://gazellegames.net/
-// @version      47.001
+// @version      47.002
 // @description  Fill upload form with Steam info. Edited from "GGn New Uploady"
 // @author       NeutronNoir, ZeDoCaixao, ingts
 // @match        https://gazellegames.net/upload.php*
@@ -12,7 +12,7 @@
 // @connect      store.steampowered.com
 // @connect      steamcdn-a.akamaihd.net
 // @require      https://update.greasyfork.org/scripts/548332/1727369/GGn%20Uploady.js
-// @require      https://update.greasyfork.org/scripts/540511/1727368/GGn%20Formatters.js
+// @require      https://update.greasyfork.org/scripts/540511/1727707/GGn%20Formatters.js
 // @downloadURL https://update.greasyfork.org/scripts/479713/GGn%20Steam%20Uploady%20%28edited%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/479713/GGn%20Steam%20Uploady%20%28edited%29.meta.js
 // ==/UserScript==
