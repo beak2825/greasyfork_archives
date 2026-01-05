@@ -1,54 +1,43 @@
 // ==UserScript==
-// @name         FaceScroll - 头部远程控屏
+// @name         FaceScroll - 头部控制网页滚动 (CN畅通版)
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
-// @description  解放双手！通过头部动作（抬头/低头）控制网页滚动。适配抖音/B站/YouTube Shorts（按键翻页）及普通网页（平滑滚屏）。包含校准功能，省力且丝滑。
+// @version      1.1.3
+// @description  解放双手！头部控制滚动。支持随时重置校准，已集成 zzko/eleme 双重加速源。仅在网页使用，不会上传数据。
 // @author       无敌暴龙兽
 // @match        *://*/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=douyin.com
 // @run-at       document-idle
 // @grant        none
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/561362/FaceScroll%20-%20%E5%A4%B4%E9%83%A8%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%B1%8F.user.js
-// @updateURL https://update.greasyfork.org/scripts/561362/FaceScroll%20-%20%E5%A4%B4%E9%83%A8%E8%BF%9C%E7%A8%8B%E6%8E%A7%E5%B1%8F.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561362/FaceScroll%20-%20%E5%A4%B4%E9%83%A8%E6%8E%A7%E5%88%B6%E7%BD%91%E9%A1%B5%E6%BB%9A%E5%8A%A8%20%28CN%E7%95%85%E9%80%9A%E7%89%88%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561362/FaceScroll%20-%20%E5%A4%B4%E9%83%A8%E6%8E%A7%E5%88%B6%E7%BD%91%E9%A1%B5%E6%BB%9A%E5%8A%A8%20%28CN%E7%95%85%E9%80%9A%E7%89%88%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
     // --- 0. 调试日志 ---
-    console.log("FaceScroll 省力版已启动");
+    console.log("%c FaceScroll v1.1.3 随时校准版启动 ", "background: #ff0055; color: white; padding: 4px; border-radius: 4px;");
 
-    // 防止 iframe 重复加载
     if (window.top !== window.self) return;
 
     // --- 1. 配置参数 ---
     const CONFIG = {
-        SENSITIVITY_UP: 0.06,    // 抬头灵敏度
-        SENSITIVITY_DOWN: 0.04,  // 低头灵敏度 (极度省力)
-        SCROLL_SPEED: 4,         // 滚动速度 (慢速阅读)
-        SMOOTH_FACTOR: 0.1,      // 防抖平滑系数
-        COOLDOWN_KEY: 1200       // 短视频冷却
+        SENSITIVITY_UP: 0.06,
+        SENSITIVITY_DOWN: 0.04,
+        SCROLL_SPEED: 4,
+        SMOOTH_FACTOR: 0.1,
+        COOLDOWN_KEY: 1200
     };
 
-    // --- 2. 全局状态 ---
-    const STATE = {
-        isCalibrated: false,
-        baseRatio: 0.5,
-        currentRatio: 0.5,
-        rawRatio: 0.5,
-        scrollDirection: 0,
-        lastActionTime: 0
-    };
+    const STATE = { isCalibrated: false, baseRatio: 0.5, currentRatio: 0.5, rawRatio: 0.5, scrollDirection: 0, lastActionTime: 0 };
 
-    // --- 3. 稳健的启动循环 ---
     let checkTimer = setInterval(() => {
         if (!document.body) return;
         if (document.getElementById('fs-container')) return;
         initUI();
     }, 1000);
 
-    // --- 4. UI 构建 ---
     function initUI() {
         try {
             const container = document.createElement('div');
@@ -57,7 +46,7 @@
 
             const toggleBtn = document.createElement('div');
             toggleBtn.innerText = "👀";
-            toggleBtn.title = "点击展开控制面板";
+            toggleBtn.title = "点击展开/重置校准";
             toggleBtn.style.cssText = `width: 50px; height: 50px; background: #000; border: 3px solid #0f0; border-radius: 50%; color: #fff; font-size: 24px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 0 15px rgba(0,255,0,0.4); transition: all 0.3s; pointer-events: auto; user-select: none;`;
 
             const panel = document.createElement('div');
@@ -86,10 +75,12 @@
                 if (STATE.rawRatio > 0) {
                     STATE.baseRatio = STATE.rawRatio;
                     STATE.isCalibrated = true;
-                    caliBtn.style.display = 'none';
+                    caliBtn.style.display = 'none'; // 校准完隐藏按钮
                     statusText.innerText = "✅ 模式已就绪";
                     panel.style.borderColor = "#0f0";
-                    setTimeout(() => { statusText.innerText = "运行中..."; }, 1500);
+                    setTimeout(() => { 
+                        if(STATE.isCalibrated) statusText.innerText = "运行中..."; 
+                    }, 1500);
                 } else {
                     statusText.innerText = "未检测到面部";
                 }
@@ -102,12 +93,22 @@
 
             let isActive = false;
             let isEngineLoaded = false;
+            
+            // 🔥🔥🔥 核心修改逻辑 🔥🔥🔥
             toggleBtn.onclick = () => {
                 isActive = !isActive;
                 if (isActive) {
+                    // --- 开启时：强制重置状态 ---
+                    STATE.isCalibrated = false;       // 重置为未校准
+                    STATE.scrollDirection = 0;        // 停止滚动
+                    caliBtn.style.display = 'block';  // 把按钮显示出来
+                    statusText.innerText = "请点击校准"; // 提示文字复原
+                    panel.style.borderColor = "#333"; // 边框颜色复原
+                    
                     panel.style.display = 'block';
                     toggleBtn.innerText = "🐵";
                     toggleBtn.style.background = "#222";
+                    
                     if (!isEngineLoaded) {
                         loadEngine(statusText, video, canvas, panel);
                         isEngineLoaded = true;
@@ -116,6 +117,7 @@
                         startScrollLoop();
                     }
                 } else {
+                    // --- 关闭时 ---
                     panel.style.display = 'none';
                     toggleBtn.innerText = "👀";
                     if(window.fsCam) window.fsCam.stop();
@@ -123,37 +125,66 @@
                 }
             };
         } catch (e) {
-            console.error("FaceScroll UI Error:", e);
+            console.error(e);
         }
     }
 
-    // --- 5. 动态加载引擎 (绕过GreasyFork检测的关键) ---
+    // --- 5. 动态加载 (双源保险) ---
     function loadEngine(statusEl, videoEl, canvasEl, panelEl) {
-        statusEl.innerText = "加载核心库...";
-        const libs = [
-            "https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js",
-            "https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js",
-            "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"
-        ];
-        let loaded = 0;
-        libs.forEach(url => {
-            const s = document.createElement('script');
-            s.src = url; s.crossOrigin = "anonymous";
-            s.onload = () => { if (++loaded === libs.length) initMediaPipe(statusEl, videoEl, canvasEl, panelEl); };
-            s.onerror = () => { statusEl.innerText = "加载失败"; statusEl.style.color = "red"; };
-            document.head.append(s);
-        });
+        const PRIMARY_CDN = "https://jsd.cdn.zzko.cn/npm";
+        const BACKUP_CDN = "https://npm.elemecdn.com";
+        let currentBase = PRIMARY_CDN; 
+
+        statusEl.innerText = "正在连接加速源...";
+        
+        const loadScript = (baseUrl) => {
+            const libs = [
+                `${baseUrl}/@mediapipe/camera_utils/camera_utils.js`,
+                `${baseUrl}/@mediapipe/control_utils/control_utils.js`,
+                `${baseUrl}/@mediapipe/face_mesh/face_mesh.js`
+            ];
+
+            let loaded = 0;
+            let hasError = false;
+
+            libs.forEach(url => {
+                const s = document.createElement('script');
+                s.src = url; s.crossOrigin = "anonymous";
+                s.onload = () => { 
+                    if (!hasError && ++loaded === libs.length) initMediaPipe(statusEl, videoEl, canvasEl, panelEl, baseUrl); 
+                };
+                s.onerror = () => {
+                    if (!hasError) {
+                        hasError = true;
+                        if (baseUrl === PRIMARY_CDN) {
+                            console.warn("首选源失败，切换到备选源...");
+                            statusEl.innerText = "切换备用线路...";
+                            loadScript(BACKUP_CDN);
+                        } else {
+                            statusEl.innerText = "所有线路被拦截";
+                            statusEl.style.color = "red";
+                        }
+                    }
+                };
+                document.head.append(s);
+            });
+        };
+        loadScript(currentBase);
     }
 
     // --- 6. 视觉逻辑 ---
-    function initMediaPipe(statusEl, videoEl, canvasEl, panelEl) {
+    function initMediaPipe(statusEl, videoEl, canvasEl, panelEl, cdnBase) {
         const ctx = canvasEl.getContext('2d');
-        const faceMesh = new FaceMesh({locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`});
+        const faceMesh = new FaceMesh({
+            locateFile: (file) => `${cdnBase}/@mediapipe/face_mesh/${file}`
+        });
+
         faceMesh.setOptions({maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5});
         faceMesh.onResults(onResults);
 
         window.fsCam = new Camera(videoEl, {onFrame: async () => await faceMesh.send({image: videoEl}), width: 320, height: 240});
-        window.fsCam.start();
+        
+        window.fsCam.start().then(()=>statusEl.innerText="摄像头就绪").catch(e=>statusEl.innerText="权限拒绝");
         
         startScrollLoop();
 
@@ -168,18 +199,15 @@
                 STATE.currentRatio = (STATE.currentRatio * (1 - CONFIG.SMOOTH_FACTOR)) + (newRatio * CONFIG.SMOOTH_FACTOR);
 
                 if (!STATE.isCalibrated) return;
-
                 drawDebugUI(ctx, 150, 220);
                 
                 const isShort = checkIsShortVideoSite();
                 const UP_LIMIT = STATE.baseRatio - CONFIG.SENSITIVITY_UP;
                 const DOWN_LIMIT = STATE.baseRatio + CONFIG.SENSITIVITY_DOWN;
 
-                if (STATE.currentRatio < UP_LIMIT) {
-                    handleAction(isShort, 'DOWN', statusEl, panelEl);
-                } else if (STATE.currentRatio > DOWN_LIMIT) {
-                    handleAction(isShort, 'UP', statusEl, panelEl);
-                } else {
+                if (STATE.currentRatio < UP_LIMIT) handleAction(isShort, 'DOWN', statusEl, panelEl);
+                else if (STATE.currentRatio > DOWN_LIMIT) handleAction(isShort, 'UP', statusEl, panelEl);
+                else {
                     STATE.scrollDirection = 0;
                     panelEl.style.borderColor = "#333";
                     statusEl.innerText = "●";

@@ -1,19 +1,113 @@
 // ==UserScript==
 // @name         小红书网页直播界面美化
-// @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @namespace    https://greasyfork.org/zh-CN/users/1553511
+// @version      1.2.0
 // @description  1.自动点击播放，去除底部打开APP按钮。2.调整视频为全屏显示，弹幕区域悬浮在左下
 // @author       Ling77 & MAXLZ
 // @license      MIT
 // @icon         https://www.xiaohongshu.com/favicon.ico
 // @match        https://www.xiaohongshu.com/livestream/*
-// @grant        none
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_registerMenuCommand
+// @require      https://update.greasyfork.org/scripts/561258/1726820.js
+// @homepageURL  https://greasyfork.org/zh-CN/users/1553511-ling77
 // @downloadURL https://update.greasyfork.org/scripts/560557/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E7%BD%91%E9%A1%B5%E7%9B%B4%E6%92%AD%E7%95%8C%E9%9D%A2%E7%BE%8E%E5%8C%96.user.js
 // @updateURL https://update.greasyfork.org/scripts/560557/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E7%BD%91%E9%A1%B5%E7%9B%B4%E6%92%AD%E7%95%8C%E9%9D%A2%E7%BE%8E%E5%8C%96.meta.js
 // ==/UserScript==
 
 (function() {
-  'use strict';
+  let CONFIG = {
+    danmuArea: {
+      height: '60%',
+      width: '30%',
+      position: '左下',
+      opacity: 1
+    }
+  };
+  const ScriptName = '小红书网页直播界面美化';
+  const Position = [ {
+    label: '左上',
+    inset: '20px auto auto 20px'
+  }, {
+    label: '左下',
+    inset: 'auto auto 20px 20px'
+  }, {
+    label: '右上',
+    inset: '20px 20px auto auto'
+  }, {
+    label: '右下',
+    inset: 'auto 20px 20px auto'
+  } ];
+  function parseConfig() {
+    let result = {
+      danmuArea: {
+        ...CONFIG.danmuArea
+      }
+    };
+    if (result.danmuArea.position === '隐藏') result.danmuArea.display = 'none'; else result.danmuArea.inset = Position.find(item => item.label === result.danmuArea.position)?.inset;
+    delete result.danmuArea.position;
+    return result;
+  }
+  function settingPage() {
+    const myConfigData = {
+      title: ScriptName + ' - 脚本设置',
+      desp: '不会对设置项进行验证，如果输错导致界面显示异常请重置数据',
+      fields: {
+        a: {
+          groups: {
+            danmuArea: {
+              label: '弹幕区域',
+              desp: '弹幕区域显示效果自定义',
+              items: {
+                height: {
+                  label: "高度",
+                  desp: "支持绝对像素值 (500px) 和相对百分比 (50%)",
+                  type: "text"
+                },
+                width: {
+                  label: "宽度",
+                  desp: "支持绝对像素值 (500px) 和相对百分比 (50%)",
+                  type: "text"
+                },
+                position: {
+                  label: "位置",
+                  type: "select",
+                  style: "dropdown",
+                  options: [ ...Position.map(({label}) => label), '隐藏' ]
+                },
+                opacity: {
+                  label: "透明度",
+                  desp: "0-1，0为完全透明，1为完全不透胆",
+                  type: "number",
+                  min: 0,
+                  max: 1,
+                  step: .1
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+    const settings = new GM_ConfigUI({
+      config: myConfigData,
+      onSave: data => {
+        CONFIG = data.a;
+        GM_setValue("config", JSON.stringify(CONFIG));
+      },
+      defaultData: {
+        a: CONFIG
+      }
+    });
+    if (!GM_getValue("config")) GM_setValue("config", JSON.stringify(CONFIG)); else {
+      CONFIG = JSON.parse(GM_getValue("config"));
+      settings.updateData({
+        a: CONFIG
+      });
+    }
+    GM_registerMenuCommand("打开设置", () => settings.open());
+  }
   function bootstrap() {
     const title = document.querySelector(".livestream-container .title");
     if (title && title.textContent.includes("直播已结束")) return;
@@ -35,16 +129,10 @@
               for (let index = 0; index < addedNodes.length; index++) {
                 const node = addedNodes[index];
                 if (node instanceof HTMLElement && node.classList.contains("comment-container")) {
-                  // !!! 可修改这里的参数来改变弹幕区域的大小和位置
-                  Object.assign(node.style, {
-                    height: '60%',
-                    width: '30%',
+                  Object.assign(node.style, parseConfig().danmuArea, {
                     position: 'fixed',
-                    top: 'auto',
-                    bottom: '20px',
-                    left: '20px',
-                    right: 'auto',
-                    zIndex: '9999'
+                    zIndex: '9999',
+                    '-webkit-mask-image': 'none'
                   });
                   mutationObserver.disconnect();
                 }
@@ -75,5 +163,6 @@
       }
     });
   }
+  settingPage();
   bootstrap();
 })();

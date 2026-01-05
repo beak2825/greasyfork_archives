@@ -1,18 +1,16 @@
 // ==UserScript==
-// @name         MWI 装备强化 - 基底等级对合成到+20（无输入框版）
-// @version      4.3.0
+// @name         testMWI 装备强化 - 自动计算基底等级对添加队列到+20（测试服专用）
+// @version      4.4.0
 // @namespace    http://tampermonkey.net/
-// @description  选择基底等级对 (1,2) 到 (18,19)，自动计算并批量强化到 +20（已移除次数输入框）
-// @author       Customized
-// @match        https://www.milkywayidle.com/*
+// @description  选择基底等级对 (1,2) 到 (18,19)，自动计算所需到+20基底并批量强化
+// @author       GAN
 // @match        https://test.milkywayidle.com/*
-// @match        https://www.milkywayidlecn.com/*
 // @match        https://test.milkywayidlecn.com/*
 // @grant        none
 // @run-at       document-body
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/560117/MWI%20%E8%A3%85%E5%A4%87%E5%BC%BA%E5%8C%96%20-%20%E5%9F%BA%E5%BA%95%E7%AD%89%E7%BA%A7%E5%AF%B9%E5%90%88%E6%88%90%E5%88%B0%2B20%EF%BC%88%E6%97%A0%E8%BE%93%E5%85%A5%E6%A1%86%E7%89%88%EF%BC%89.user.js
-// @updateURL https://update.greasyfork.org/scripts/560117/MWI%20%E8%A3%85%E5%A4%87%E5%BC%BA%E5%8C%96%20-%20%E5%9F%BA%E5%BA%95%E7%AD%89%E7%BA%A7%E5%AF%B9%E5%90%88%E6%88%90%E5%88%B0%2B20%EF%BC%88%E6%97%A0%E8%BE%93%E5%85%A5%E6%A1%86%E7%89%88%EF%BC%89.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560117/testMWI%20%E8%A3%85%E5%A4%87%E5%BC%BA%E5%8C%96%20-%20%E8%87%AA%E5%8A%A8%E8%AE%A1%E7%AE%97%E5%9F%BA%E5%BA%95%E7%AD%89%E7%BA%A7%E5%AF%B9%E6%B7%BB%E5%8A%A0%E9%98%9F%E5%88%97%E5%88%B0%2B20%EF%BC%88%E6%B5%8B%E8%AF%95%E6%9C%8D%E4%B8%93%E7%94%A8%EF%BC%89.user.js
+// @updateURL https://update.greasyfork.org/scripts/560117/testMWI%20%E8%A3%85%E5%A4%87%E5%BC%BA%E5%8C%96%20-%20%E8%87%AA%E5%8A%A8%E8%AE%A1%E7%AE%97%E5%9F%BA%E5%BA%95%E7%AD%89%E7%BA%A7%E5%AF%B9%E6%B7%BB%E5%8A%A0%E9%98%9F%E5%88%97%E5%88%B0%2B20%EF%BC%88%E6%B5%8B%E8%AF%95%E6%9C%8D%E4%B8%93%E7%94%A8%EF%BC%89.meta.js
 // ==/UserScript==
 
 (function() {
@@ -130,7 +128,7 @@
                     secondaryItemHash: `${characterId}::/item_locations/inventory::/items/mirror_of_protection::0`,
                     enhancingMaxLevel: maxLevel,
                     enhancingProtectionMinLevel: 2,
-                    characterLoadoutId: 14449,
+                    characterLoadoutId: 0,
                     shouldClearQueue: false,
                     hasMaxCount: false,
                     maxCount: 0
@@ -162,5 +160,5 @@
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
-    console.log('🎯 MWI 批量强化脚本已加载（无输入框版）！进入贤者之境选择装备后会出现下拉菜单和强化按钮');
+    console.log('🎯 MWI 批量强化脚本已加载,选择基底等级并自动添加相应数量到行动队列');
 })();

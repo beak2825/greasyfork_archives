@@ -5,7 +5,7 @@
 // @match       https://gazellegames.net/user.php?action=inventory*
 // @match       https://gazellegames.net/user.php?action=crafting*
 // @icon         https://gazellegames.net/favicon.ico
-// @version     1.3
+// @version     1.3.2
 // @author      kdln | Based on FinalDoom's Quick Crafter data
 // @license     ISC
 // @grant       GM.getValue
@@ -6904,7 +6904,7 @@
                     ${recipeForItem ? `
                         <div class="action-row" style="padding: 12px 18px;">
                             <button class="action-btn primary inline-craft-btn" data-itemid="${recipeForItem.itemId}" ${canCraftNow ? '' : 'disabled'}>${canCraftNow ? 'Craft' : 'Need Items'}</button>
-                            <button class="action-btn open-craft-btn" data-recipe='${JSON.stringify({itemId: recipeForItem.itemId, recipe: recipeForItem.recipe, name: recipeName})}'>Open</button>
+                            <button class="action-btn open-craft-btn" data-recipe="${encodeURIComponent(JSON.stringify({itemId: recipeForItem.itemId, recipe: recipeForItem.recipe, name: recipeName}))}">Open</button>
                         </div>
                     ` : ''}
                 </div>
@@ -6938,7 +6938,7 @@
                 btn.dataset.boundOpen = '1';
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    const recipeData = JSON.parse(btn.dataset.recipe);
+                    const recipeData = JSON.parse(decodeURIComponent(btn.dataset.recipe));
                     openCraftingPage(recipeData);
                 });
             });
@@ -10062,7 +10062,7 @@
                                     <div>
                                         <div style="color:#7a9a7a; font-size:12px; font-weight:700; text-transform:uppercase; margin-bottom:8px; text-align:center;">Valentines</div>
                                         <div style="display:flex; gap:8px;">
-                                            ${craftCardHtml('pinkvalentine', 'Dom and Maria', specialCrafts.pinkValentine, 'https://gazellegames.net/static/common/items/Items/Card/9th_Valentine_Master_Mr_and_Mrs_Pac_Man.png', null, cardCounts)}
+                                            ${craftCardHtml('pinkvalentine', 'Mr. And Mrs. Pac Man', specialCrafts.pinkValentine, 'https://gazellegames.net/static/common/items/Items/Card/9th_Valentine_Master_Mr_and_Mrs_Pac_Man.png', null, cardCounts)}
                                             ${craftCardHtml('brownvalentine', 'Yennefer', specialCrafts.brownValentine, 'https://gazellegames.net/static/common/items/Items/Card/9th_Valentine_Yennefer.png', null, cardCounts)}
                                         </div>
                                     </div>
@@ -12751,3 +12751,4 @@ Iron Ore: 10
     }
 
 })();
+

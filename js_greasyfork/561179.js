@@ -19,117 +19,74 @@
 
 var Detcord = (function(exports) {
   "use strict";
-  const DELETABLE_MESSAGE_TYPES$1 = [
-    0,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21
-  ];
-  function isMessageDeletable(type) {
-    return type === 0 || type >= 6 && type <= 21;
-  }
-  function getTokenFromLocalStorage() {
-    try {
-      window.dispatchEvent(new Event("beforeunload"));
-      const iframe = document.createElement("iframe");
-      iframe.style.display = "none";
-      document.body.appendChild(iframe);
-      const iframeWindow = iframe.contentWindow;
-      if (!iframeWindow) {
-        document.body.removeChild(iframe);
-        return null;
-      }
-      const storage = iframeWindow.localStorage;
-      document.body.removeChild(iframe);
-      const tokenValue = storage.getItem("token");
-      if (tokenValue) {
-        return JSON.parse(tokenValue);
-      }
-      return null;
-    } catch {
-      return null;
+  const DISCORD_EPOCH = 1420070400000n;
+  function dateToSnowflake(date) {
+    const timestamp = date instanceof Date ? date.getTime() : new Date(date).getTime();
+    if (Number.isNaN(timestamp)) {
+      throw new Error("Invalid date provided");
     }
+    const timestampBigInt = BigInt(timestamp);
+    const snowflake = timestampBigInt - DISCORD_EPOCH << 22n;
+    return snowflake.toString();
   }
-  function getTokenFromWebpack() {
-    try {
-      const webpackChunk = window.webpackChunkdiscord_app;
-      if (!webpackChunk) {
-        return null;
-      }
-      const modules = [];
-      webpackChunk.push([
-        ["detcord-token-extractor"],
-        {},
-        (require) => {
-          for (const moduleId in require.c) {
-            const module = require.c[moduleId];
-            if (module) {
-              modules.push(module);
-            }
-          }
-        }
-      ]);
-      for (const module of modules) {
-        if (module?.exports?.default?.getToken) {
-          const token = module.exports.default.getToken();
-          if (typeof token === "string" && token.length > 0) {
-            return token;
-          }
-        }
-      }
-      return null;
-    } catch {
-      return null;
+  function snowflakeToDate(snowflake) {
+    if (!snowflake || !/^\d+$/.test(snowflake)) {
+      throw new Error("Invalid snowflake: must be a numeric string");
     }
+    const snowflakeBigInt = BigInt(snowflake);
+    const timestamp = (snowflakeBigInt >> 22n) + DISCORD_EPOCH;
+    return new Date(Number(timestamp));
   }
-  function getAuthorId() {
-    try {
-      const iframe = document.createElement("iframe");
-      iframe.style.display = "none";
-      document.body.appendChild(iframe);
-      const iframeWindow = iframe.contentWindow;
-      if (!iframeWindow) {
-        document.body.removeChild(iframe);
-        return null;
-      }
-      const storage = iframeWindow.localStorage;
-      document.body.removeChild(iframe);
-      const userIdCache = storage.getItem("user_id_cache");
-      if (userIdCache) {
-        return JSON.parse(userIdCache);
-      }
-      return null;
-    } catch {
-      return null;
+  function formatDuration(ms) {
+    if (!Number.isFinite(ms)) {
+      return "0s";
     }
-  }
-  function getGuildIdFromUrl() {
-    const match = window.location.href.match(/channels\/([\w@]+)\/(\d+)/);
-    return match?.[1] ?? null;
-  }
-  function getChannelIdFromUrl() {
-    const match = window.location.href.match(/channels\/([\w@]+)\/(\d+)/);
-    return match?.[2] ?? null;
-  }
-  function getToken() {
-    const localStorageToken = getTokenFromLocalStorage();
-    if (localStorageToken) {
-      return localStorageToken;
+    if (ms <= 0) {
+      return "0s";
     }
-    return getTokenFromWebpack();
+    const totalSeconds = Math.floor(ms / 1e3);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor(totalSeconds % 3600 / 60);
+    const seconds = totalSeconds % 60;
+    const parts = [];
+    if (hours > 0) {
+      parts.push(`${hours}h`);
+    }
+    if (minutes > 0) {
+      parts.push(`${minutes}m`);
+    }
+    if (seconds > 0 || parts.length === 0) {
+      parts.push(`${seconds}s`);
+    }
+    return parts.join(" ");
+  }
+  function escapeHtml(str) {
+    if (typeof str !== "string") {
+      return "";
+    }
+    const htmlEscapeMap = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    };
+    return str.replace(/[&<>"']/g, (char) => htmlEscapeMap[char] ?? char);
+  }
+  function buildQueryString(params) {
+    return params.filter((pair) => pair[1] !== void 0).map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join("&");
+  }
+  function delay(ms) {
+    if (ms <= 0) {
+      return Promise.resolve();
+    }
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  function clamp(value, min, max) {
+    if (!Number.isFinite(value)) {
+      return min;
+    }
+    return Math.min(Math.max(value, min), max);
   }
   const MAX_PATTERN_LENGTH = 100;
   const REGEX_TIMEOUT_MS = 100;
@@ -242,271 +199,6 @@ var Detcord = (function(exports) {
       return "****";
     }
     return `${token.slice(0, 4)}...${token.slice(-4)}`;
-  }
-  const API_VERSION = "v10";
-  const BASE_URL = `https://discord.com/api/${API_VERSION}`;
-  class DiscordApiClient {
-    token;
-    rateLimitInfo = null;
-    /**
-     * Create a new Discord API client
-     * @param token User authentication token (without "Bot " prefix)
-     * @throws Error if token is missing or has invalid format
-     */
-    constructor(token) {
-      if (!token || typeof token !== "string") {
-        throw new Error("Token is required and must be a string");
-      }
-      if (!isValidTokenFormat(token)) {
-        throw new Error("Token has invalid format");
-      }
-      this.token = token;
-    }
-    /**
-     * Get current rate limit information from most recent request
-     * @returns Rate limit info or null if no requests have been made
-     */
-    getRateLimitInfo() {
-      return this.rateLimitInfo;
-    }
-    /**
-     * Search for messages in a guild or channel
-     * @param params Search parameters
-     * @returns Search response with messages and total count
-     * @throws DiscordApiError on API errors
-     */
-    async searchMessages(params) {
-      const { guildId, channelId, ...queryParams } = params;
-      if (guildId && !isValidGuildId(guildId)) {
-        throw this.createError("UNKNOWN", "Invalid guild ID format");
-      }
-      if (channelId && !isValidSnowflake(channelId)) {
-        throw this.createError("UNKNOWN", "Invalid channel ID format");
-      }
-      let endpoint;
-      if (guildId) {
-        endpoint = `${BASE_URL}/guilds/${guildId}/messages/search`;
-      } else if (channelId) {
-        endpoint = `${BASE_URL}/channels/${channelId}/messages/search`;
-      } else {
-        throw this.createError("UNKNOWN", "Either guildId or channelId is required for search");
-      }
-      const searchParams = new URLSearchParams();
-      if (queryParams.authorId) {
-        searchParams.set("author_id", queryParams.authorId);
-      }
-      if (queryParams.content) {
-        searchParams.set("content", queryParams.content);
-      }
-      if (queryParams.minId) {
-        searchParams.set("min_id", queryParams.minId);
-      }
-      if (queryParams.maxId) {
-        searchParams.set("max_id", queryParams.maxId);
-      }
-      if (queryParams.hasLink) {
-        searchParams.set("has", "link");
-      }
-      if (queryParams.hasFile) {
-        searchParams.set("has", "file");
-      }
-      if (queryParams.offset !== void 0 && queryParams.offset > 0) {
-        searchParams.set("offset", String(queryParams.offset));
-      }
-      if (queryParams.includeNsfw) {
-        searchParams.set("include_nsfw", "true");
-      }
-      const queryString = searchParams.toString();
-      const url = queryString ? `${endpoint}?${queryString}` : endpoint;
-      const response = await this.makeRequest(url, "GET");
-      if (response.status === 202) {
-        throw this.createError("INDEXING", "Search index is being built, try again later");
-      }
-      if (!response.ok) {
-        throw await this.handleErrorResponse(response);
-      }
-      const data = await response.json();
-      return data;
-    }
-    /**
-     * Get all channels in a guild
-     * @param guildId The guild ID to fetch channels from
-     * @returns Array of channels (filtered to text-based channels)
-     */
-    async getGuildChannels(guildId) {
-      if (!guildId) {
-        throw this.createError("UNKNOWN", "guildId is required");
-      }
-      if (!isValidSnowflake(guildId)) {
-        throw this.createError("UNKNOWN", "Invalid guild ID format");
-      }
-      const url = `${BASE_URL}/guilds/${guildId}/channels`;
-      const response = await this.makeRequest(url, "GET");
-      if (!response.ok) {
-        throw await this.handleErrorResponse(response);
-      }
-      const channels = await response.json();
-      const textChannelTypes = /* @__PURE__ */ new Set([
-        0,
-        5,
-        11,
-        12,
-        15
-        /* GUILD_FORUM */
-      ]);
-      return channels.filter((ch) => textChannelTypes.has(ch.type));
-    }
-    /**
-     * Delete a specific message
-     * @param channelId Channel containing the message
-     * @param messageId ID of the message to delete
-     * @returns Delete result indicating success or failure
-     */
-    async deleteMessage(channelId, messageId) {
-      if (!channelId || !messageId) {
-        return {
-          success: false,
-          error: "channelId and messageId are required"
-        };
-      }
-      if (!isValidSnowflake(channelId)) {
-        return {
-          success: false,
-          error: "Invalid channel ID format"
-        };
-      }
-      if (!isValidSnowflake(messageId)) {
-        return {
-          success: false,
-          error: "Invalid message ID format"
-        };
-      }
-      const url = `${BASE_URL}/channels/${channelId}/messages/${messageId}`;
-      try {
-        const response = await this.makeRequest(url, "DELETE");
-        if (response.status === 204) {
-          return { success: true };
-        }
-        if (response.status === 202) {
-          return {
-            success: false,
-            indexing: true,
-            error: "Message indexing in progress"
-          };
-        }
-        if (response.status === 429) {
-          const body = await response.json();
-          const retryAfter = body.retry_after ?? this.rateLimitInfo?.resetAfter ?? 1;
-          return {
-            success: false,
-            error: "Rate limited",
-            retryAfter
-          };
-        }
-        const error = await this.handleErrorResponse(response);
-        return {
-          success: false,
-          error: error.message
-        };
-      } catch (err) {
-        if (this.isDiscordApiError(err)) {
-          const result = {
-            success: false,
-            error: err.message
-          };
-          if (err.retryAfter !== void 0) {
-            result.retryAfter = err.retryAfter;
-          }
-          return result;
-        }
-        return {
-          success: false,
-          error: err instanceof Error ? err.message : "Unknown error"
-        };
-      }
-    }
-    /**
-     * Make an authenticated request to the Discord API
-     */
-    async makeRequest(url, method) {
-      try {
-        const response = await fetch(url, {
-          method,
-          headers: {
-            Authorization: this.token,
-            "Content-Type": "application/json"
-          }
-        });
-        this.updateRateLimitInfo(response.headers);
-        return response;
-      } catch (err) {
-        throw this.createError(
-          "NETWORK_ERROR",
-          err instanceof Error ? err.message : "Network request failed"
-        );
-      }
-    }
-    /**
-     * Update rate limit info from response headers
-     */
-    updateRateLimitInfo(headers) {
-      const remaining = headers.get("X-RateLimit-Remaining");
-      const limit = headers.get("X-RateLimit-Limit");
-      const resetAfter = headers.get("X-RateLimit-Reset-After");
-      if (remaining !== null && limit !== null && resetAfter !== null) {
-        this.rateLimitInfo = {
-          remaining: Number.parseInt(remaining, 10),
-          limit: Number.parseInt(limit, 10),
-          resetAfter: Number.parseFloat(resetAfter)
-        };
-      }
-    }
-    /**
-     * Handle error responses from the API
-     */
-    async handleErrorResponse(response) {
-      let message = `HTTP ${response.status}`;
-      try {
-        const body = await response.json();
-        if (body.message) {
-          message = body.message;
-        }
-        if (response.status === 429) {
-          return this.createError("RATE_LIMITED", message, body.retry_after, response.status);
-        }
-      } catch {
-        message = response.statusText || message;
-      }
-      switch (response.status) {
-        case 401:
-          return this.createError("UNAUTHORIZED", message, void 0, response.status);
-        case 403:
-          return this.createError("FORBIDDEN", message, void 0, response.status);
-        case 404:
-          return this.createError("NOT_FOUND", message, void 0, response.status);
-        default:
-          return this.createError("UNKNOWN", message, void 0, response.status);
-      }
-    }
-    /**
-     * Create a structured API error
-     */
-    createError(code, message, retryAfter, httpStatus) {
-      const error = { code, message };
-      if (retryAfter !== void 0) {
-        error.retryAfter = retryAfter;
-      }
-      if (httpStatus !== void 0) {
-        error.httpStatus = httpStatus;
-      }
-      return error;
-    }
-    /**
-     * Type guard for DiscordApiError
-     */
-    isDiscordApiError(err) {
-      return typeof err === "object" && err !== null && "code" in err && "message" in err && typeof err.code === "string" && typeof err.message === "string";
-    }
   }
   const STORAGE_KEY = "detcord_progress";
   const PROGRESS_EXPIRY_MS = 24 * 60 * 60 * 1e3;
@@ -622,80 +314,11 @@ var Detcord = (function(exports) {
   function shouldSaveProgress(deletedCount) {
     return deletedCount > 0 && deletedCount % 10 === 0;
   }
-  const DISCORD_EPOCH = 1420070400000n;
-  function dateToSnowflake(date) {
-    const timestamp = date instanceof Date ? date.getTime() : new Date(date).getTime();
-    if (Number.isNaN(timestamp)) {
-      throw new Error("Invalid date provided");
-    }
-    const timestampBigInt = BigInt(timestamp);
-    const snowflake = timestampBigInt - DISCORD_EPOCH << 22n;
-    return snowflake.toString();
-  }
-  function snowflakeToDate(snowflake) {
-    if (!snowflake || !/^\d+$/.test(snowflake)) {
-      throw new Error("Invalid snowflake: must be a numeric string");
-    }
-    const snowflakeBigInt = BigInt(snowflake);
-    const timestamp = (snowflakeBigInt >> 22n) + DISCORD_EPOCH;
-    return new Date(Number(timestamp));
-  }
-  function formatDuration(ms) {
-    if (!Number.isFinite(ms)) {
-      return "0s";
-    }
-    if (ms <= 0) {
-      return "0s";
-    }
-    const totalSeconds = Math.floor(ms / 1e3);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor(totalSeconds % 3600 / 60);
-    const seconds = totalSeconds % 60;
-    const parts = [];
-    if (hours > 0) {
-      parts.push(`${hours}h`);
-    }
-    if (minutes > 0) {
-      parts.push(`${minutes}m`);
-    }
-    if (seconds > 0 || parts.length === 0) {
-      parts.push(`${seconds}s`);
-    }
-    return parts.join(" ");
-  }
-  function escapeHtml(str) {
-    if (typeof str !== "string") {
-      return "";
-    }
-    const htmlEscapeMap = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    };
-    return str.replace(/[&<>"']/g, (char) => htmlEscapeMap[char] ?? char);
-  }
-  function buildQueryString(params) {
-    return params.filter((pair) => pair[1] !== void 0).map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join("&");
-  }
-  function delay(ms) {
-    if (ms <= 0) {
-      return Promise.resolve();
-    }
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-  function clamp(value, min, max) {
-    if (!Number.isFinite(value)) {
-      return min;
-    }
-    return Math.min(Math.max(value, min), max);
-  }
   const DEFAULT_SEARCH_DELAY = 1e4;
   const DEFAULT_DELETE_DELAY = 1e3;
   const DEFAULT_MAX_RETRIES = 3;
   const MESSAGES_PER_PAGE = 25;
-  const DELETABLE_MESSAGE_TYPES = /* @__PURE__ */ new Set([
+  const DELETABLE_MESSAGE_TYPES$1 = /* @__PURE__ */ new Set([
     0,
     // DEFAULT - regular user message
     6,
@@ -1367,7 +990,7 @@ var Detcord = (function(exports) {
      */
     filterDeletableMessages(messages) {
       return messages.filter((message) => {
-        if (!DELETABLE_MESSAGE_TYPES.has(message.type)) {
+        if (!DELETABLE_MESSAGE_TYPES$1.has(message.type)) {
           return false;
         }
         if (message.pinned && !this.options?.includePinned) {
@@ -1557,6 +1180,383 @@ var Detcord = (function(exports) {
     reportProgress() {
       this.callbacks.onStatus?.(this.state.status);
     }
+  }
+  const API_VERSION = "v10";
+  const BASE_URL = `https://discord.com/api/${API_VERSION}`;
+  class DiscordApiClient {
+    token;
+    rateLimitInfo = null;
+    /**
+     * Create a new Discord API client
+     * @param token User authentication token (without "Bot " prefix)
+     * @throws Error if token is missing or has invalid format
+     */
+    constructor(token) {
+      if (!token || typeof token !== "string") {
+        throw new Error("Token is required and must be a string");
+      }
+      if (!isValidTokenFormat(token)) {
+        throw new Error("Token has invalid format");
+      }
+      this.token = token;
+    }
+    /**
+     * Get current rate limit information from most recent request
+     * @returns Rate limit info or null if no requests have been made
+     */
+    getRateLimitInfo() {
+      return this.rateLimitInfo;
+    }
+    /**
+     * Search for messages in a guild or channel
+     * @param params Search parameters
+     * @returns Search response with messages and total count
+     * @throws DiscordApiError on API errors
+     */
+    async searchMessages(params) {
+      const { guildId, channelId, ...queryParams } = params;
+      if (guildId && !isValidGuildId(guildId)) {
+        throw this.createError("UNKNOWN", "Invalid guild ID format");
+      }
+      if (channelId && !isValidSnowflake(channelId)) {
+        throw this.createError("UNKNOWN", "Invalid channel ID format");
+      }
+      let endpoint;
+      if (guildId) {
+        endpoint = `${BASE_URL}/guilds/${guildId}/messages/search`;
+      } else if (channelId) {
+        endpoint = `${BASE_URL}/channels/${channelId}/messages/search`;
+      } else {
+        throw this.createError("UNKNOWN", "Either guildId or channelId is required for search");
+      }
+      const searchParams = new URLSearchParams();
+      if (queryParams.authorId) {
+        searchParams.set("author_id", queryParams.authorId);
+      }
+      if (queryParams.content) {
+        searchParams.set("content", queryParams.content);
+      }
+      if (queryParams.minId) {
+        searchParams.set("min_id", queryParams.minId);
+      }
+      if (queryParams.maxId) {
+        searchParams.set("max_id", queryParams.maxId);
+      }
+      if (queryParams.hasLink) {
+        searchParams.set("has", "link");
+      }
+      if (queryParams.hasFile) {
+        searchParams.set("has", "file");
+      }
+      if (queryParams.offset !== void 0 && queryParams.offset > 0) {
+        searchParams.set("offset", String(queryParams.offset));
+      }
+      if (queryParams.includeNsfw) {
+        searchParams.set("include_nsfw", "true");
+      }
+      const queryString = searchParams.toString();
+      const url = queryString ? `${endpoint}?${queryString}` : endpoint;
+      const response = await this.makeRequest(url, "GET");
+      if (response.status === 202) {
+        throw this.createError("INDEXING", "Search index is being built, try again later");
+      }
+      if (!response.ok) {
+        throw await this.handleErrorResponse(response);
+      }
+      const data = await response.json();
+      return data;
+    }
+    /**
+     * Get all channels in a guild
+     * @param guildId The guild ID to fetch channels from
+     * @returns Array of channels (filtered to text-based channels)
+     */
+    async getGuildChannels(guildId) {
+      if (!guildId) {
+        throw this.createError("UNKNOWN", "guildId is required");
+      }
+      if (!isValidSnowflake(guildId)) {
+        throw this.createError("UNKNOWN", "Invalid guild ID format");
+      }
+      const url = `${BASE_URL}/guilds/${guildId}/channels`;
+      const response = await this.makeRequest(url, "GET");
+      if (!response.ok) {
+        throw await this.handleErrorResponse(response);
+      }
+      const channels = await response.json();
+      const textChannelTypes = /* @__PURE__ */ new Set([
+        0,
+        5,
+        11,
+        12,
+        15
+        /* GUILD_FORUM */
+      ]);
+      return channels.filter((ch) => textChannelTypes.has(ch.type));
+    }
+    /**
+     * Delete a specific message
+     * @param channelId Channel containing the message
+     * @param messageId ID of the message to delete
+     * @returns Delete result indicating success or failure
+     */
+    async deleteMessage(channelId, messageId) {
+      if (!channelId || !messageId) {
+        return {
+          success: false,
+          error: "channelId and messageId are required"
+        };
+      }
+      if (!isValidSnowflake(channelId)) {
+        return {
+          success: false,
+          error: "Invalid channel ID format"
+        };
+      }
+      if (!isValidSnowflake(messageId)) {
+        return {
+          success: false,
+          error: "Invalid message ID format"
+        };
+      }
+      const url = `${BASE_URL}/channels/${channelId}/messages/${messageId}`;
+      try {
+        const response = await this.makeRequest(url, "DELETE");
+        if (response.status === 204) {
+          return { success: true };
+        }
+        if (response.status === 202) {
+          return {
+            success: false,
+            indexing: true,
+            error: "Message indexing in progress"
+          };
+        }
+        if (response.status === 429) {
+          const body = await response.json();
+          const retryAfter = body.retry_after ?? this.rateLimitInfo?.resetAfter ?? 1;
+          return {
+            success: false,
+            error: "Rate limited",
+            retryAfter
+          };
+        }
+        const error = await this.handleErrorResponse(response);
+        return {
+          success: false,
+          error: error.message
+        };
+      } catch (err) {
+        if (this.isDiscordApiError(err)) {
+          const result = {
+            success: false,
+            error: err.message
+          };
+          if (err.retryAfter !== void 0) {
+            result.retryAfter = err.retryAfter;
+          }
+          return result;
+        }
+        return {
+          success: false,
+          error: err instanceof Error ? err.message : "Unknown error"
+        };
+      }
+    }
+    /**
+     * Make an authenticated request to the Discord API
+     */
+    async makeRequest(url, method) {
+      try {
+        const response = await fetch(url, {
+          method,
+          headers: {
+            Authorization: this.token,
+            "Content-Type": "application/json"
+          }
+        });
+        this.updateRateLimitInfo(response.headers);
+        return response;
+      } catch (err) {
+        throw this.createError(
+          "NETWORK_ERROR",
+          err instanceof Error ? err.message : "Network request failed"
+        );
+      }
+    }
+    /**
+     * Update rate limit info from response headers
+     */
+    updateRateLimitInfo(headers) {
+      const remaining = headers.get("X-RateLimit-Remaining");
+      const limit = headers.get("X-RateLimit-Limit");
+      const resetAfter = headers.get("X-RateLimit-Reset-After");
+      if (remaining !== null && limit !== null && resetAfter !== null) {
+        this.rateLimitInfo = {
+          remaining: Number.parseInt(remaining, 10),
+          limit: Number.parseInt(limit, 10),
+          resetAfter: Number.parseFloat(resetAfter)
+        };
+      }
+    }
+    /**
+     * Handle error responses from the API
+     */
+    async handleErrorResponse(response) {
+      let message = `HTTP ${response.status}`;
+      try {
+        const body = await response.json();
+        if (body.message) {
+          message = body.message;
+        }
+        if (response.status === 429) {
+          return this.createError("RATE_LIMITED", message, body.retry_after, response.status);
+        }
+      } catch {
+        message = response.statusText || message;
+      }
+      switch (response.status) {
+        case 401:
+          return this.createError("UNAUTHORIZED", message, void 0, response.status);
+        case 403:
+          return this.createError("FORBIDDEN", message, void 0, response.status);
+        case 404:
+          return this.createError("NOT_FOUND", message, void 0, response.status);
+        default:
+          return this.createError("UNKNOWN", message, void 0, response.status);
+      }
+    }
+    /**
+     * Create a structured API error
+     */
+    createError(code, message, retryAfter, httpStatus) {
+      const error = { code, message };
+      if (retryAfter !== void 0) {
+        error.retryAfter = retryAfter;
+      }
+      if (httpStatus !== void 0) {
+        error.httpStatus = httpStatus;
+      }
+      return error;
+    }
+    /**
+     * Type guard for DiscordApiError
+     */
+    isDiscordApiError(err) {
+      return typeof err === "object" && err !== null && "code" in err && "message" in err && typeof err.code === "string" && typeof err.message === "string";
+    }
+  }
+  function getTokenFromLocalStorage() {
+    try {
+      window.dispatchEvent(new Event("beforeunload"));
+      const iframe = document.createElement("iframe");
+      iframe.style.display = "none";
+      document.body.appendChild(iframe);
+      const iframeWindow = iframe.contentWindow;
+      if (!iframeWindow) {
+        document.body.removeChild(iframe);
+        return null;
+      }
+      const storage = iframeWindow.localStorage;
+      document.body.removeChild(iframe);
+      const tokenValue = storage.getItem("token");
+      if (tokenValue) {
+        return JSON.parse(tokenValue);
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+  function getTokenFromWebpack() {
+    try {
+      const webpackChunk = window.webpackChunkdiscord_app;
+      if (!webpackChunk) {
+        return null;
+      }
+      const modules = [];
+      webpackChunk.push([
+        ["detcord-token-extractor"],
+        {},
+        (require) => {
+          for (const moduleId in require.c) {
+            const module = require.c[moduleId];
+            if (module) {
+              modules.push(module);
+            }
+          }
+        }
+      ]);
+      for (const module of modules) {
+        if (module?.exports?.default?.getToken) {
+          const token = module.exports.default.getToken();
+          if (typeof token === "string" && token.length > 0) {
+            return token;
+          }
+        }
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+  function getAuthorId() {
+    try {
+      const iframe = document.createElement("iframe");
+      iframe.style.display = "none";
+      document.body.appendChild(iframe);
+      const iframeWindow = iframe.contentWindow;
+      if (!iframeWindow) {
+        document.body.removeChild(iframe);
+        return null;
+      }
+      const storage = iframeWindow.localStorage;
+      document.body.removeChild(iframe);
+      const userIdCache = storage.getItem("user_id_cache");
+      if (userIdCache) {
+        return JSON.parse(userIdCache);
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+  function getGuildIdFromUrl() {
+    const match = window.location.href.match(/channels\/([\w@]+)\/(\d+)/);
+    return match?.[1] ?? null;
+  }
+  function getChannelIdFromUrl() {
+    const match = window.location.href.match(/channels\/([\w@]+)\/(\d+)/);
+    return match?.[2] ?? null;
+  }
+  function getToken() {
+    const localStorageToken = getTokenFromLocalStorage();
+    if (localStorageToken) {
+      return localStorageToken;
+    }
+    return getTokenFromWebpack();
+  }
+  const DELETABLE_MESSAGE_TYPES = [
+    0,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ];
+  function isMessageDeletable(type) {
+    return type === 0 || type >= 6 && type <= 21;
   }
   function throttle(fn, intervalMs) {
     let lastRun = 0;
@@ -5194,7 +5194,9 @@ var Detcord = (function(exports) {
       console.warn("[Detcord] Not running in browser environment");
       return;
     }
-    if (!window.location.hostname.includes("discord.com")) {
+    const hostname = window.location.hostname;
+    const isDiscord = hostname === "discord.com" || hostname.endsWith(".discord.com");
+    if (!isDiscord) {
       console.warn("[Detcord] Not on Discord");
       return;
     }
@@ -5230,7 +5232,7 @@ var Detcord = (function(exports) {
       window.addEventListener("load", init);
     }
   }
-  exports.DELETABLE_MESSAGE_TYPES = DELETABLE_MESSAGE_TYPES$1;
+  exports.DELETABLE_MESSAGE_TYPES = DELETABLE_MESSAGE_TYPES;
   exports.DM_GUILD_ID = DM_GUILD_ID;
   exports.DeletionEngine = DeletionEngine;
   exports.DetcordUI = DetcordUI;

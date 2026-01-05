@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         小L书——LinuxDo仿小红书主题
 // @namespace    http://tampermonkey.net/
-// @version      2.9.1
+// @version      2.9.3
 // @license      MIT
 // @description  将LinuxDo改造成小红书风格瀑布流布局，支持自定义主题色
 // @author       JackyLiii
 // @match        https://linux.do/*
-// @icon         https://linux.do/uploads/default/optimized/3X/9/d/9dd49731091ce8656e94433a26a3ef36062b3994_2_32x32.png
+// @icon         https://raw.githubusercontent.com/caigg188/littleLBook/main/llb_icon.png
 // @supportURL   https://github.com/caigg188/littleLBook/issues
 // @homepageURL  https://github.com/caigg188/littleLBook
 // @grant        GM_addStyle
@@ -2595,7 +2595,7 @@
             const li = document.createElement('li');
             li.innerHTML = `
                 <div class="xhs-btn ${Config.get().enabled ? 'on' : 'off'}" title="小L书设置">
-                    <span style="font-size:20px;line-height:1;">🍠</span>
+                    <img src="https://raw.githubusercontent.com/caigg188/littleLBook/main/llb_icon.png" style="width:36px;height:36px;border-radius:8px;image-rendering:crisp-edges;" alt="小L书">
                 </div>
             `;
             this.btn = li.querySelector('.xhs-btn');
@@ -2618,7 +2618,7 @@
             return `
                 <div class="xhs-panel-header">
                     <div class="xhs-panel-title">
-                        <span>🍠</span>
+                        <img src="https://raw.githubusercontent.com/caigg188/littleLBook/main/llb_icon.png" style="width:32px;height:32px;border-radius:8px;image-rendering:crisp-edges;" alt="">
                         <span>小L书</span>
                         <span class="xhs-panel-ver">v${VERSION}</span>
                     </div>
@@ -2794,33 +2794,52 @@
         get concurrency() {
             if (Utils.isDataSaverMode()) return 1; // 省流量模式只用1个并发
             if (Utils.isMobile()) return 2;        // 移动端2个并发
-            return 4;                              // 桌面端4个并发
+            return 3;                              // 桌面端3个并发（降低以减少429风险）
         },
+        
+        // 当前活跃请求计数
+        _activeRequests: 0,
         
         // 速率限制和退避策略（根据设备类型调整）
         get rateLimiter() {
             const isMobile = Utils.isMobile();
             const isDataSaver = Utils.isDataSaverMode();
             
-            // 移动端/省流量模式使用更保守的参数
+            // 从 sessionStorage 恢复冷却状态（页面刷新后保持冷却）
             if (!this._rateLimiterCache) {
+                let savedCooldown = 0;
+                let savedFailureCount = 0;
+                try {
+                    const saved = sessionStorage.getItem('xhs_rate_limiter');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        // 只恢复冷却时间和失败计数
+                        if (parsed.cooldownUntil > Date.now()) {
+                            savedCooldown = parsed.cooldownUntil;
+                            savedFailureCount = parsed.failureCount || 0;
+                        }
+                    }
+                } catch { }
+                
                 this._rateLimiterCache = {
                     requestCount: 0,
                     windowStart: Date.now(),
                     lastRequestTime: 0,
-                    failureCount: 0,
-                    cooldownUntil: 0,
+                    failureCount: savedFailureCount,
+                    cooldownUntil: savedCooldown,
+                    lastCooldownShown: 0, // 上次显示冷却提示的时间
                 };
             }
             
-            // 动态参数（不缓存，实时计算）
+            // 动态参数（不缓存，实时计算）- 更保守的参数防止429
             return {
                 ...this._rateLimiterCache,
-                maxRequestsPerWindow: isDataSaver ? 10 : (isMobile ? 15 : 30),
-                windowDuration: isDataSaver ? 15000 : (isMobile ? 12000 : 10000),
-                minInterval: isDataSaver ? 500 : (isMobile ? 350 : 200),
-                baseCooldown: isDataSaver ? 10000 : (isMobile ? 8000 : 5000),
-                maxCooldown: 60000,
+                maxRequestsPerWindow: isDataSaver ? 8 : (isMobile ? 12 : 20),
+                windowDuration: isDataSaver ? 20000 : (isMobile ? 15000 : 12000),
+                minInterval: isDataSaver ? 600 : (isMobile ? 400 : 300),
+                baseCooldown: isDataSaver ? 15000 : (isMobile ? 12000 : 8000),
+                maxCooldown: 120000, // 最大冷却2分钟
+                cooldownNoticeInterval: 10000, // 冷却提示最小间隔10秒
             };
         },
         
@@ -2833,9 +2852,20 @@
                     lastRequestTime: 0,
                     failureCount: 0,
                     cooldownUntil: 0,
+                    lastCooldownShown: 0,
                 };
             }
             Object.assign(this._rateLimiterCache, updates);
+            
+            // 持久化冷却状态到 sessionStorage
+            if (updates.cooldownUntil || updates.failureCount !== undefined) {
+                try {
+                    sessionStorage.setItem('xhs_rate_limiter', JSON.stringify({
+                        cooldownUntil: this._rateLimiterCache.cooldownUntil,
+                        failureCount: this._rateLimiterCache.failureCount
+                    }));
+                } catch { }
+            }
         },
 
         styles: ['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10'],
@@ -2870,18 +2900,24 @@
         ],
 
         init() {
-            // 根据设备类型调整预加载范围
-            // 移动端使用更小的预加载范围，减少不必要的请求
+            // 初始化页面可见性监听
+            this._initVisibilityHandler();
+            
+            // 根据设备类型调整预加载范围 - 更保守以减少请求
             const rootMargin = Utils.isMobile() 
-                ? (Utils.isDataSaverMode() ? '200px 0px' : '400px 0px')
-                : '800px 0px';
+                ? (Utils.isDataSaverMode() ? '100px 0px' : '200px 0px')
+                : '400px 0px';
             
             this.observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const card = entry.target;
-                        const tid = card.dataset.tid;
-                        if (tid && !card.dataset.queued) {
+                // 限制单次处理的条目数，避免突发大量请求
+                const visibleEntries = entries.filter(e => e.isIntersecting).slice(0, 8);
+                
+                visibleEntries.forEach(entry => {
+                    const card = entry.target;
+                    const tid = card.dataset.tid;
+                    if (tid && !card.dataset.queued) {
+                        // 检查队列是否已满（防止堆积过多请求）
+                        if (this.loadQueue.length < 30) {
                             card.dataset.queued = '1';
                             this._queueLoad(card, tid, true);
                         }
@@ -2907,6 +2943,11 @@
             
             // 检查是否在冷却期
             if (now < rl.cooldownUntil) {
+                return false;
+            }
+            
+            // 检查活跃请求数是否超过并发限制
+            if (this._activeRequests >= this.concurrency) {
                 return false;
             }
             
@@ -2971,6 +3012,15 @@
         
         // 显示冷却提示给用户
         _showCooldownNotice(cooldown, statusCode) {
+            const now = Date.now();
+            const rl = this.rateLimiter;
+            
+            // 检查是否在冷却提示间隔内，避免频繁弹出
+            if (now - (rl.lastCooldownShown || 0) < rl.cooldownNoticeInterval) {
+                return;
+            }
+            this._updateRateLimiter({ lastCooldownShown: now });
+            
             // 移除旧的提示
             const oldNotice = document.querySelector('.xhs-cooldown-notice');
             if (oldNotice) oldNotice.remove();
@@ -2980,18 +3030,23 @@
             notice.className = 'xhs-cooldown-notice';
             
             let message = '图片加载暂停';
+            let icon = '⏸️';
             if (statusCode === 429) {
-                message = '请求过于频繁，暂停加载';
+                message = '请求过于频繁';
+                icon = '🚫';
             } else if (statusCode >= 500) {
-                message = '服务器繁忙，暂停加载';
+                message = '服务器繁忙';
+                icon = '⚠️';
             } else if (statusCode === 408) {
-                message = '请求超时，暂停加载';
+                message = '网络超时';
+                icon = '⏱️';
             }
             
             const seconds = Math.ceil(cooldown / 1000);
             notice.innerHTML = `
-                <span class="xhs-cooldown-icon">⏸️</span>
-                <span class="xhs-cooldown-text">${message}，${seconds}秒后恢复</span>
+                <span class="xhs-cooldown-icon">${icon}</span>
+                <span class="xhs-cooldown-text">${message}</span>
+                <span class="xhs-cooldown-timer">${seconds}s</span>
             `;
             
             // 添加样式
@@ -3016,11 +3071,25 @@
             
             document.body.appendChild(notice);
             
-            // 自动移除
+            // 更新倒计时
+            const timerEl = notice.querySelector('.xhs-cooldown-timer');
+            let remaining = seconds;
+            const timerInterval = setInterval(() => {
+                remaining--;
+                if (remaining > 0 && timerEl) {
+                    timerEl.textContent = `${remaining}s`;
+                } else {
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+            
+            // 自动移除（显示时间取决于冷却时间，但最多显示8秒）
+            const displayTime = Math.min(cooldown, 8000);
             setTimeout(() => {
+                clearInterval(timerInterval);
                 notice.style.animation = 'xhs-notice-out 0.3s ease forwards';
                 setTimeout(() => notice.remove(), 300);
-            }, Math.min(cooldown, 5000));
+            }, displayTime);
         },
         
         // 计算下次可请求的等待时间
@@ -3049,29 +3118,56 @@
         },
 
         async _processQueue() {
-            if (this.isLoading || this.loadQueue.length === 0) return;
+            if (this.loadQueue.length === 0) return;
+            
+            // 页面不可见时暂停处理
+            if (!this._isPageVisible) {
+                return;
+            }
             
             // 检查速率限制
             if (!this._canRequest()) {
                 const waitTime = this._getWaitTime();
                 if (waitTime > 0) {
-                    setTimeout(() => this._processQueue(), waitTime + 50);
+                    // 避免重复设置定时器
+                    if (!this._queueTimer) {
+                        this._queueTimer = setTimeout(() => {
+                            this._queueTimer = null;
+                            this._processQueue();
+                        }, waitTime + 100);
+                    }
                     return;
                 }
             }
 
-            this.isLoading = true;
-            
-            // 批量处理，但受速率限制
-            const batch = this.loadQueue.splice(0, this.concurrency);
-            await Promise.allSettled(batch.map(({ card, tid }) => this._loadImage(card, tid)));
-            this.isLoading = false;
-
-            if (this.loadQueue.length > 0) {
-                // 添加固定延迟，避免请求过快
-                const delay = this.rateLimiter.failureCount > 0 ? 500 : 100;
-                setTimeout(() => this._processQueue(), delay);
+            // 计算本次可处理的数量（确保不超过并发限制）
+            const availableSlots = Math.max(0, this.concurrency - this._activeRequests);
+            if (availableSlots === 0) {
+                // 等待一段时间后重试
+                if (!this._queueTimer) {
+                    this._queueTimer = setTimeout(() => {
+                        this._queueTimer = null;
+                        this._processQueue();
+                    }, 200);
+                }
+                return;
             }
+            
+            // 取出要处理的项目
+            const batch = this.loadQueue.splice(0, Math.min(availableSlots, 2)); // 每次最多处理2个
+            if (batch.length === 0) return;
+            
+            // 并行处理当前批次
+            batch.forEach(({ card, tid }) => {
+                this._loadImage(card, tid).finally(() => {
+                    // 处理完一个后继续处理队列
+                    if (this.loadQueue.length > 0) {
+                        // 根据失败计数调整延迟
+                        const delay = (this._rateLimiterCache?.failureCount || 0) > 0 ? 500 : 150;
+                        setTimeout(() => this._processQueue(), delay);
+                    }
+                });
+            });
         },
 
         render() {
@@ -3106,12 +3202,31 @@
             this.container.appendChild(frag);
         },
 
+        // 页面可见性状态
+        _isPageVisible: true,
+
         reset() {
             this.seen.clear();
             this.index = 0;
             this.loadQueue = [];
+            this._activeRequests = 0;
+            if (this._queueTimer) {
+                clearTimeout(this._queueTimer);
+                this._queueTimer = null;
+            }
             this.container?.remove();
             this.container = null;
+        },
+
+        // 初始化页面可见性监听
+        _initVisibilityHandler() {
+            document.addEventListener('visibilitychange', () => {
+                this._isPageVisible = !document.hidden;
+                // 页面重新可见时，继续处理队列
+                if (this._isPageVisible && this.loadQueue.length > 0) {
+                    setTimeout(() => this._processQueue(), 500);
+                }
+            });
         },
 
         _extract() {
@@ -3370,12 +3485,20 @@
             let data = this.cache.get(tid);
 
             if (!data) {
+                // 检查是否在冷却期（双重检查）
+                if (Date.now() < (this._rateLimiterCache?.cooldownUntil || 0)) {
+                    // 重新加入队列末尾
+                    this.loadQueue.push({ card, tid });
+                    return;
+                }
+                
                 // 记录请求（用于速率限制统计）
                 this._recordRequest();
+                this._activeRequests++;
                 
                 try {
                     const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 8000); // 增加超时时间
+                    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
 
                     const res = await fetch(`/t/topic/${tid}.json`, {
                         signal: controller.signal,
@@ -3387,7 +3510,12 @@
                     
                     if (!res.ok) {
                         // 请求失败，应用退避策略
+                        this._activeRequests--;
                         this._onRequestFailure(res.status);
+                        // 如果不是 429/5xx，可以稍后重试
+                        if (res.status < 400 || (res.status >= 400 && res.status < 429)) {
+                            this.loadQueue.push({ card, tid });
+                        }
                         return;
                     }
                     
@@ -3455,11 +3583,15 @@
                     });
 
                     this.cache.set(tid, data);
+                    this._activeRequests--;
                 } catch (e) {
+                    this._activeRequests--;
                     // 网络错误或超时，应用退避策略
                     if (e.name === 'AbortError') {
                         // 超时，轻微退避
                         this._onRequestFailure(408);
+                        // 超时的请求可以稍后重试
+                        this.loadQueue.push({ card, tid });
                     } else {
                         // 其他网络错误
                         this._onRequestFailure(0);
@@ -3589,11 +3721,13 @@
                 }
             }, 500);
 
-            const debouncedRender = Utils.debounce(() => Grid.render(), 200);
+            const debouncedRender = Utils.debounce(() => Grid.render(), 400); // 增加去抖时间
             
-            // 用于防止推荐区域重复触发
+            // 用于防止频繁触发
             let lastMoreTopicsReset = 0;
-            const MORE_TOPICS_COOLDOWN = 1000; // 1秒冷却时间
+            let lastNormalRender = 0;
+            const MORE_TOPICS_COOLDOWN = 2000; // 推荐区域2秒冷却时间
+            const NORMAL_RENDER_COOLDOWN = 500; // 普通渲染500ms冷却
             
             this.mutationObserver = new MutationObserver((mutations) => {
                 if (!Config.get().enabled) return;
@@ -3639,10 +3773,15 @@
                         setTimeout(() => {
                             Grid.reset();
                             Grid.render();
-                        }, 100);
+                        }, 200);
                     }
                 } else if (hasNewTopics && !isMoreTopicsChange) {
-                    debouncedRender();
+                    // 普通渲染也添加冷却
+                    const now = Date.now();
+                    if (now - lastNormalRender > NORMAL_RENDER_COOLDOWN) {
+                        lastNormalRender = now;
+                        debouncedRender();
+                    }
                 }
             });
             this.mutationObserver.observe(document.body, { childList: true, subtree: true });

@@ -1,1 +1,1 @@
-Status: 404
+HTTP 410

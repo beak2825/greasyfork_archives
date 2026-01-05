@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 身份认证全自动 (V21.1 增强版)GPT认证
 // @namespace    http://tampermonkey.net/
-// @version      21.1.4
+// @version      21.1.5
 // @description  加强版，自动从页面提取数据并填充表单，支持一键导出数据
 // @author       CreatorEdition
 // @match        https://gravelocator.cem.va.gov/*
@@ -360,7 +360,7 @@ div.innerHTML = `
                 <div style="font-size:12px;
                 margin-bottom: 8px; border-bottom:1px solid #ffcccc; padding-bottom:8px;">
                     <span style="color:#000;
-                    font-weight:500; font-weight:bold; text-decoration:underline;">普通充值Plus会员138一个月/新号115一个月</span>
+                    font-weight:500; font-weight:bold; text-decoration:underline;">普通充值Plus会员125一个月/新号115一个月</span>
                     <span style="color:#000;
                     font-weight:500;">→</span>
                     <a href="https://work.weixin.qq.com/ca/cawcde170dc32c3290" target="_blank" style="color:#0d6efd;

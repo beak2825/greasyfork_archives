@@ -591,21 +591,21 @@
 
         console.log(`[JavBus Tracker] 详情页: ${code}`);
 
-        // 上报查看记录
-        await trackView(code);
-
-        // 查询状态
+        // 先尝试显示缓存的状态
         const cached = getCache(code);
         if (cached) {
             renderDetailInfo(cached);
         }
 
-        // 无论是否有缓存都查询最新状态
+        // 先查询之前的状态（在上报之前查询，这样显示的是历史记录）
         const results = await batchQueryStatus([code]);
         if (results.length > 0) {
             setCache(code, results[0]);
             renderDetailInfo(results[0]);
         }
+
+        // 最后上报本次查看记录（不影响当前显示的状态）
+        trackView(code);
     }
 
     /**

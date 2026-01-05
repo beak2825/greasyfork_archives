@@ -2,7 +2,7 @@
 // @name         Braains.io script
 // @namespace    braains.io
 // @description  fun project for my fellow players
-// @version      2.4
+// @version      2.5
 // @author       John pork
 // @match        https://www.modd.io/play/braainsio/*
 // @match        https://www.modd.io/*
@@ -99,11 +99,14 @@
     let nameDisplayEnabled = false, keySpamEnabled = false;
     let autoSellEnabled = false, emoteSpamEnabled = false;
     let showHumans = true, showZombies = true, showCoins = true, showOtherItems = true;
+    let showGems = true, showSG = true;
     let disableStartupUI = startupUIDisabled;
 
-    let hitboxGraphics = null, nameGraphics = null;
-    let textObjects = new Map(), loggedPlayers = new Set(), loggedItems = new Map();
+    let hitboxGraphics = null, nameGraphics = null, pillGraphics = null;
+    let textObjects = new Map(), pillTexts = new Map(), loggedPlayers = new Set(), loggedItems = new Map();
     let humanCount = 0, zombieCount = 0, coinCount = 0, otherItemCount = 0;
+    let gemCount = 0, sgCount = 0;
+    let immunityDisplayEnabled = false;
 
     let spinAngle = 0, spinRadius = 150, spinSpeed = 0.15, spinAnimationFrame = null;
     let currentZoom = 1.0;
@@ -263,6 +266,89 @@
         nameGraphics.setDepth(1000000);
     }
 
+    // PILL/IMMUNITY DISPLAY
+    function createPillGraphics() {
+        const scene = getGameScene();
+        if (!scene || pillGraphics) return;
+        pillGraphics = scene.add.container();
+        pillGraphics.setDepth(1000002);
+    }
+
+    function drawPillIndicators() {
+        if (!immunityDisplayEnabled || !pillGraphics) {
+            pillTexts.forEach(t => t?.destroy && t.destroy());
+            pillTexts.clear();
+            return;
+        }
+
+        const scene = getGameScene();
+        if (!scene) return;
+
+        try {
+            const entities = window.taro?.entitiesToRender?.trackEntityById;
+            if (!(entities instanceof Map)) return;
+
+            const activePlayers = new Set();
+
+            entities.forEach((entity, id) => {
+                if (!entity?._alive || !entity._translate || entity._category !== 'unit') return;
+
+                const type = entity._stats?.type;
+                if (!['human', 'zombie', 'zombieKing'].includes(type)) return;
+
+                const name = entity._stats?.name;
+                if (!name || name.startsWith('AI ')) return;
+
+                const immunityValue = entity._stats?.attributes?.immunity?.value || 0;
+
+                if (immunityValue > 0) {
+                    activePlayers.add(id);
+
+                    const {x, y} = entity._translate;
+                    let textObj = pillTexts.get(id);
+
+                    let displayText = immunityValue === 1 ? 'pilled' : `pilled ${immunityValue}`;
+
+                    if (!textObj) {
+                        textObj = scene.add.text(x, y - 75, displayText, {
+                            fontFamily: 'Arial', fontSize: '13px', fontStyle: 'bold',
+                            color: '#222', stroke: '#fff', strokeThickness: 2,
+                            backgroundColor: 'rgba(255,255,255,0.8)', padding: {x: 5, y: 2}
+                        });
+                        textObj.setOrigin(0.5, 0.5).setDepth(1000003);
+                        pillGraphics.add(textObj);
+                        pillTexts.set(id, textObj);
+                    } else {
+                        textObj.setText(displayText);
+                        textObj.setPosition(x, y - 75);
+                        textObj.setVisible(true);
+                    }
+                } else {
+                    const textObj = pillTexts.get(id);
+                    if (textObj) textObj.setVisible(false);
+                }
+            });
+
+            pillTexts.forEach((textObj, id) => {
+                if (!activePlayers.has(id)) {
+                    textObj?.destroy && textObj.destroy();
+                    pillTexts.delete(id);
+                }
+            });
+        } catch (e) {}
+    }
+
+    function toggleImmunityDisplay() {
+        immunityDisplayEnabled = !immunityDisplayEnabled;
+        if (immunityDisplayEnabled && !pillGraphics) createPillGraphics();
+
+        const btn = document.getElementById('immunity-btn');
+        const state = document.getElementById('immunity-state');
+        if (btn) btn.style.background = immunityDisplayEnabled ? '#fff' : '#000';
+        if (btn) btn.style.color = immunityDisplayEnabled ? '#000' : '#fff';
+        if (state) state.textContent = immunityDisplayEnabled ? 'ON' : 'OFF';
+    }
+
     function drawPlayerNames() {
         if (!nameDisplayEnabled || !nameGraphics) {
             textObjects.forEach(t => t?.destroy && t.destroy());
@@ -363,6 +449,7 @@
             if (!(entities instanceof Map)) return;
 
             humanCount = 0; zombieCount = 0; coinCount = 0; otherItemCount = 0;
+            gemCount = 0; sgCount = 0;
 
             entities.forEach((entity, id) => {
                 if (!entity?._translate || !entity._alive) return;
@@ -374,8 +461,26 @@
                     const name = entity._stats?.name;
                     const itemId = entity._stats?.itemTypeId;
 
+                    // GEMS (Purple)
+                    if (itemId === 'HoRkmdYOhT' && showGems) {
+                        loggedItems.set(id, name || 'gem');
+                        ctx.fillStyle = '#a020f0';  // Purple
+                        ctx.beginPath();
+                        ctx.arc(x, y, 2.5, 0, Math.PI*2);
+                        ctx.fill();
+                        gemCount++;
+                    }
+                    // SG (Dark Grey)
+                    else if (itemId === 'd73qo6nov5' && showSG) {
+                        loggedItems.set(id, name || 'sg');
+                        ctx.fillStyle = '#333333';  // Dark grey
+                        ctx.beginPath();
+                        ctx.arc(x, y, 2.5, 0, Math.PI*2);
+                        ctx.fill();
+                        sgCount++;
+                    }
                     // COINS
-                    if ((itemId === 'Z4vVSxpakD' || name === 'Modd-coin') && showCoins) {
+                    else if ((itemId === 'Z4vVSxpakD' || name === 'Modd-coin') && showCoins) {
                         loggedItems.set(id, name);
                         ctx.fillStyle = '#ffd700';
                         ctx.beginPath();
@@ -412,9 +517,9 @@
                 if (isZ) zombieCount++; else humanCount++;
             });
 
-            ['human-count', 'zombie-count', 'coin-count', 'other-count'].forEach((sid, i) => {
+            ['human-count', 'zombie-count', 'coin-count', 'other-count', 'gem-count', 'sg-count'].forEach((sid, i) => {
                 const el = document.getElementById(sid);
-                if (el) el.textContent = [humanCount, zombieCount, coinCount, otherItemCount][i];
+                if (el) el.textContent = [humanCount, zombieCount, coinCount, otherItemCount, gemCount, sgCount][i];
             });
         } catch (e) {}
     }
@@ -597,16 +702,14 @@
     document.addEventListener('wheel', (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
         if (e.target.tagName === 'CANVAS' || e.target.closest('#panel') || e.target.closest('#minimap')) {
-            return; // Don't zoom when scrolling in UI elements
+            return;
         }
 
         e.preventDefault();
 
         if (e.deltaY < 0) {
-            // Scroll up = zoom in
             setZoom(currentZoom + ZOOM_STEP);
         } else if (e.deltaY > 0) {
-            // Scroll down = zoom out
             setZoom(currentZoom - ZOOM_STEP);
         }
     }, { passive: false });
@@ -794,6 +897,7 @@
                         <button id="autosell-btn" class="btn">Auto-Sell: <span id="autosell-state">OFF</span></button>
                         <button id="emote-btn" class="btn">Emote: <span id="emote-state">OFF</span></button>
                         <button id="names-btn" class="btn">Names: <span id="names-state">OFF</span></button>
+                        <button id="immunity-btn" class="btn">Immunity: <span id="immunity-state">OFF</span></button>
                         <button id="keyspam-btn" class="btn">G+E Spam: <span id="keyspam-state">OFF</span></button>
                         <button id="startup-ui-btn" class="btn">Startup UI: <span id="startup-ui-state">${disableStartupUI ? 'OFF' : 'ON'}</span></button>
                     </div>
@@ -842,6 +946,8 @@
                         <div style="display:flex;flex-direction:column;gap:4px;">
                             <button id="filter-humans" style="background:#fff;border:1px solid #fff;color:#000;padding:4px;cursor:pointer;font-size:10px;font-weight:600;">HUMANS</button>
                             <button id="filter-zombies" style="background:#fff;border:1px solid #fff;color:#000;padding:4px;cursor:pointer;font-size:10px;font-weight:600;">ZOMBIES</button>
+                            <button id="filter-gems" style="background:#fff;border:1px solid #fff;color:#000;padding:4px;cursor:pointer;font-size:10px;font-weight:600;">GEMS</button>
+                            <button id="filter-sg" style="background:#fff;border:1px solid #fff;color:#000;padding:4px;cursor:pointer;font-size:10px;font-weight:600;">SG</button>
                             <button id="filter-coins" style="background:#fff;border:1px solid #fff;color:#000;padding:4px;cursor:pointer;font-size:10px;font-weight:600;">COINS</button>
                             <button id="filter-other" style="background:#fff;border:1px solid #fff;color:#000;padding:4px;cursor:pointer;font-size:10px;font-weight:600;">OTHER</button>
                         </div>
@@ -850,7 +956,9 @@
                             <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:9px;color:#888;">
                                 <div>H: <strong id="human-count" style="color:#fff;">0</strong></div>
                                 <div>Z: <strong id="zombie-count" style="color:#fff;">0</strong></div>
-                                <div>C: <strong id="coin-count" style="color:#fff;">0</strong></div>
+                                <div>G: <strong id="gem-count" style="color:#a020f0;">0</strong></div>
+                                <div>S: <strong id="sg-count" style="color:#777;">0</strong></div>
+                                <div>C: <strong id="coin-count" style="color:#ffd700;">0</strong></div>
                                 <div>O: <strong id="other-count" style="color:#fff;">0</strong></div>
                             </div>
                         </div>
@@ -892,6 +1000,7 @@
         document.getElementById('autosell-btn').onclick = toggleAutoSell;
         document.getElementById('emote-btn').onclick = toggleEmoteSpam;
         document.getElementById('names-btn').onclick = toggleNameDisplay;
+        document.getElementById('immunity-btn').onclick = toggleImmunityDisplay;
         document.getElementById('keyspam-btn').onclick = toggleKeySpam;
         document.getElementById('startup-ui-btn').onclick = toggleStartupUI;
 
@@ -924,6 +1033,16 @@
             showZombies = !showZombies;
             const b = document.getElementById('filter-zombies');
             b.style.opacity = showZombies ? '1' : '0.3';
+        };
+        document.getElementById('filter-gems').onclick = () => {
+            showGems = !showGems;
+            const b = document.getElementById('filter-gems');
+            b.style.opacity = showGems ? '1' : '0.3';
+        };
+        document.getElementById('filter-sg').onclick = () => {
+            showSG = !showSG;
+            const b = document.getElementById('filter-sg');
+            b.style.opacity = showSG ? '1' : '0.3';
         };
         document.getElementById('filter-coins').onclick = () => {
             showCoins = !showCoins;
@@ -981,6 +1100,7 @@
             scene.events.on('postupdate', () => {
                 drawPlayerNames();
                 drawHitbox();
+                drawPillIndicators();
             });
         } else {
             setTimeout(() => {
@@ -989,6 +1109,7 @@
                     s.events.on('postupdate', () => {
                         drawPlayerNames();
                         drawHitbox();
+                        drawPillIndicators();
                     });
                 }
             }, 1000);
@@ -1007,6 +1128,7 @@
             createPanel();
             createMinimapElement();
             createNameGraphics();
+            createPillGraphics();
             createHitboxGraphics();
             startLoops();
         }

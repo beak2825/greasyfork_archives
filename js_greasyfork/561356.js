@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         Torn - Profit Tracker by srsbsns
+// @name         Torn - Profit Tracker CLEAN
 // @namespace    http://torn.com/
-// @version      17.2
-// @description  Simple profit tracker with $1MV calculated
+// @version      18.7
+// @description  Simple profit tracker with WORKING reset
 // @author       srsbsns
 // @match        *://www.torn.com/*
 // @grant        GM_addStyle
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/561356/Torn%20-%20Profit%20Tracker%20by%20srsbsns.user.js
-// @updateURL https://update.greasyfork.org/scripts/561356/Torn%20-%20Profit%20Tracker%20by%20srsbsns.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561356/Torn%20-%20Profit%20Tracker%20CLEAN.user.js
+// @updateURL https://update.greasyfork.org/scripts/561356/Torn%20-%20Profit%20Tracker%20CLEAN.meta.js
 // ==/UserScript==
 
 (function() {
@@ -32,11 +32,27 @@
     // Load data
     let data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
         resetTimestamp: 0,
-        bazaar: { sales: 0, buys: 0, marketValueLost: 0 },
-        market: { sales: 0, buys: 0 },
-        shops: { sales: 0, buys: 0 },
+        bazaarSales: { total: 0, marketValueLost: 0 },  // Your bazaar sales
+        bazaarBuys: { total: 0 },                        // Buying from other bazaars
+        marketBuys: { total: 0 },                        // Item market purchases
+        marketSales: { total: 0 },                       // Item market sales
+        shops: { sales: 0, buys: 0 },                    // Shops (NPC)
         totalProfit: 0
     };
+
+    // Migration: Convert old data structure if needed
+    if (data.bazaar || data.market) {
+        data = {
+            resetTimestamp: data.resetTimestamp || 0,
+            bazaarSales: { total: data.bazaar?.sales || 0, marketValueLost: data.bazaar?.marketValueLost || 0 },
+            bazaarBuys: { total: data.bazaar?.buys || 0 },
+            marketBuys: { total: data.market?.buys || 0 },
+            marketSales: { total: data.market?.sales || 0 },
+            shops: data.shops || { sales: 0, buys: 0 },
+            totalProfit: data.totalProfit || 0
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
 
     // Market cache
     let marketCache = JSON.parse(localStorage.getItem(MARKET_CACHE_KEY)) || {};
@@ -105,6 +121,17 @@
     `);
 
     function save() {
+        // CRITICAL: Before saving, check if another tab has a newer reset timestamp
+        const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+        if (stored && stored.resetTimestamp > data.resetTimestamp) {
+            console.warn('⚠️ Another tab has newer reset time, aborting save to prevent overwrite');
+            console.warn('  Our reset:', new Date(data.resetTimestamp * 1000).toLocaleString());
+            console.warn('  Their reset:', new Date(stored.resetTimestamp * 1000).toLocaleString());
+            // Reload their data instead
+            data = stored;
+            render();
+            return;
+        }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
 
@@ -145,39 +172,67 @@
         let old = document.getElementById('profit-widget');
         if (old) old.remove();
 
-        const bazaarNet = data.bazaar.sales - data.bazaar.buys - (data.bazaar.marketValueLost || 0);
-        const marketNet = data.market.sales - data.market.buys;
-        const shopsNet = data.shops.sales - data.shops.buys;
-        const total = data.totalProfit;
+        // Safety checks - ensure all data properties exist
+        if (!data.bazaarSales) data.bazaarSales = { total: 0, marketValueLost: 0 };
+        if (!data.bazaarBuys) data.bazaarBuys = { total: 0 };
+        if (!data.marketBuys) data.marketBuys = { total: 0 };
+        if (!data.marketSales) data.marketSales = { total: 0 };
+        if (!data.shops) data.shops = { sales: 0, buys: 0 };
+
+        // Calculate net values - bazaar sales shows ACTUAL money received, value lost shown separately
+        const bazaarSalesTotal = data.bazaarSales.total || 0;
+        const bazaarBuysNet = -(data.bazaarBuys.total || 0);
+        const marketBuysNet = -(data.marketBuys.total || 0);
+        const marketSalesNet = data.marketSales.total || 0;
+        const shopsNet = (data.shops.sales || 0) - (data.shops.buys || 0);
+        const total = data.totalProfit || 0;
 
         const widget = document.createElement('div');
         widget.id = 'profit-widget';
         widget.innerHTML = `
             <div class="header">💰 Daily Profit</div>
+
             <div class="row">
-                <span>Bazaar:</span>
-                <span style="color:${bazaarNet >= 0 ? '#76c776' : '#ff6b6b'}">
-                    ${bazaarNet < 0 ? '-' : ''}$${Math.abs(bazaarNet).toLocaleString()}
+                <span>Bazaar Sales:</span>
+                <span style="color:${bazaarSalesTotal >= 0 ? '#76c776' : '#ff6b6b'}">
+                    ${bazaarSalesTotal < 0 ? '-' : ''}$${Math.abs(bazaarSalesTotal).toLocaleString()}
                 </span>
             </div>
-            ${data.bazaar.marketValueLost > 0 ? `
+            ${data.bazaarSales.marketValueLost > 0 ? `
             <div class="subrow">
                 <span>└ Value lost:</span>
-                <span style="color:#ff6b6b">-$${data.bazaar.marketValueLost.toLocaleString()}</span>
+                <span style="color:#ff6b6b">-$${data.bazaarSales.marketValueLost.toLocaleString()}</span>
             </div>
             ` : ''}
+
             <div class="row">
-                <span>Market:</span>
-                <span style="color:${marketNet >= 0 ? '#76c776' : '#ff6b6b'}">
-                    ${marketNet < 0 ? '-' : ''}$${Math.abs(marketNet).toLocaleString()}
+                <span>Bazaar Buys:</span>
+                <span style="color:${bazaarBuysNet >= 0 ? '#76c776' : '#ff6b6b'}">
+                    ${bazaarBuysNet < 0 ? '-' : ''}$${Math.abs(bazaarBuysNet).toLocaleString()}
                 </span>
             </div>
+
+            <div class="row">
+                <span>Item Market Buys:</span>
+                <span style="color:${marketBuysNet >= 0 ? '#76c776' : '#ff6b6b'}">
+                    ${marketBuysNet < 0 ? '-' : ''}$${Math.abs(marketBuysNet).toLocaleString()}
+                </span>
+            </div>
+
+            <div class="row">
+                <span>Item Market Sales:</span>
+                <span style="color:${marketSalesNet >= 0 ? '#76c776' : '#ff6b6b'}">
+                    ${marketSalesNet < 0 ? '-' : ''}$${Math.abs(marketSalesNet).toLocaleString()}
+                </span>
+            </div>
+
             <div class="row">
                 <span>Shops:</span>
                 <span style="color:${shopsNet >= 0 ? '#76c776' : '#ff6b6b'}">
                     ${shopsNet < 0 ? '-' : ''}$${Math.abs(shopsNet).toLocaleString()}
                 </span>
             </div>
+
             <div class="net">
                 <span>NET:</span>
                 <span style="color:${total >= 0 ? '#76c776' : '#ff6b6b'}">
@@ -273,13 +328,19 @@
                 const now = Math.floor(Date.now() / 1000);
                 data = {
                     resetTimestamp: now,
-                    bazaar: { sales: 0, buys: 0, marketValueLost: 0 },
-                    market: { sales: 0, buys: 0 },
+                    bazaarSales: { total: 0, marketValueLost: 0 },
+                    bazaarBuys: { total: 0 },
+                    marketBuys: { total: 0 },
+                    marketSales: { total: 0 },
                     shops: { sales: 0, buys: 0 },
                     totalProfit: 0
                 };
-                save();
+
+                // Save immediately to trigger storage event in other tabs
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
                 console.log(`✅ RESET at timestamp ${now} (${new Date(now * 1000).toLocaleString()})`);
+                console.log('📡 Reset will sync to all open tabs automatically');
                 render();
             }
         };
@@ -287,17 +348,30 @@
 
     async function sync() {
         try {
-            const response = await fetch(`https://api.torn.com/user/?selections=log&key=${apiKey}`);
-            const json = await response.json();
-            if (!json.log) return;
+            // CRITICAL: ALWAYS check for newer reset timestamp before syncing
+            // (protects against old tabs that have been asleep since yesterday)
+            const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+            if (stored && stored.resetTimestamp > data.resetTimestamp) {
+                console.log('🔄 Found newer reset timestamp in localStorage, updating...');
+                console.log('  Old reset:', new Date(data.resetTimestamp * 1000).toLocaleString());
+                console.log('  New reset:', new Date(stored.resetTimestamp * 1000).toLocaleString());
+                data = stored;
+                render();
+            }
 
             const resetTime = data.resetTimestamp;
             console.log(`🔍 Syncing... Reset time: ${resetTime} (${new Date(resetTime * 1000).toLocaleString()})`);
 
+            const response = await fetch(`https://api.torn.com/user/?selections=log&key=${apiKey}`);
+            const json = await response.json();
+            if (!json.log) return;
+
             // Create a snapshot of current state
             const snapshot = {
-                bazaar: { sales: 0, buys: 0, marketValueLost: 0 },
-                market: { sales: 0, buys: 0 },
+                bazaarSales: { total: 0, marketValueLost: 0 },
+                bazaarBuys: { total: 0 },
+                marketBuys: { total: 0 },
+                marketSales: { total: 0 },
                 shops: { sales: 0, buys: 0 },
                 totalProfit: 0
             };
@@ -313,16 +387,31 @@
                 const d = log.data;
                 if (!d) continue;
 
+                // IGNORE bazaar management actions (add/edit/remove) - only track actual transactions
+                if (title.includes("bazaar add") || title.includes("bazaar edit") || title.includes("bazaar remove")) {
+                    continue;
+                }
+
+                // IGNORE non-financial activities
+                if (title.includes("nerve") || title.includes("energy") ||
+                    title.includes("bootleg") || title.includes("contract") ||
+                    title.includes("mission") || title.includes("crime") ||
+                    title.includes("attacking") || title.includes("defeated")) {
+                    continue;
+                }
+
                 const money = parseFloat(d.cost_total || d.total_cost || d.cost || d.total_value || 0);
                 if (money === 0) continue;
 
                 let cat = "";
                 let isYourBazaarSale = false;
+                let isBazaarBuy = false;
 
                 if (title.includes("bazaar")) {
                     if (title.includes("buy") || title.includes("bought")) {
-                        cat = "market"; // Buying from someone's bazaar = market
-                    } else {
+                        cat = "bazaar"; // Buying from someone's bazaar
+                        isBazaarBuy = true;
+                    } else if (title.includes("sell")) {
                         cat = "bazaar"; // Selling on YOUR bazaar
                         isYourBazaarSale = true;
                     }
@@ -335,36 +424,53 @@
                 if (!cat) continue;
 
                 if (title.includes("buy")) {
-                    snapshot[cat].buys += money;
-                    snapshot.totalProfit -= money;
+                    if (cat === "bazaar" && isBazaarBuy) {
+                        snapshot.bazaarBuys.total += money;
+                        snapshot.totalProfit -= money;
+                    } else if (cat === "market") {
+                        snapshot.marketBuys.total += money;
+                        snapshot.totalProfit -= money;
+                    } else if (cat === "shops") {
+                        snapshot.shops.buys += money;
+                        snapshot.totalProfit -= money;
+                    }
                 } else if (title.includes("sell")) {
-                    snapshot[cat].sales += money;
-                    snapshot.totalProfit += money;
+                    if (cat === "bazaar" && isYourBazaarSale) {
+                        snapshot.bazaarSales.total += money;
+                        snapshot.totalProfit += money;
 
-                    // Check market value for YOUR bazaar sales
-                    // Item ID is in items array: items[0].id or items[0]
-                    const itemId = d.items?.[0]?.id || d.items?.[0] || d.item;
-                    if (isYourBazaarSale && itemId) {
-                        const qty = d.quantity || d.items?.[0]?.quantity || 1;
-                        const marketVal = await getMarketValue(itemId);
+                        // Check market value for YOUR bazaar sales
+                        const itemId = d.items?.[0]?.id || d.items?.[0] || d.item;
+                        if (itemId) {
+                            const qty = d.quantity || d.items?.[0]?.quantity || 1;
+                            const marketVal = await getMarketValue(itemId);
 
-                        if (marketVal > 0) {
-                            const totalMarketVal = marketVal * qty;
-                            const valueLost = totalMarketVal - money;
+                            if (marketVal > 0) {
+                                const totalMarketVal = marketVal * qty;
+                                const valueLost = totalMarketVal - money;
 
-                            if (valueLost > 0) {
-                                snapshot.bazaar.marketValueLost += valueLost;
-                                snapshot.totalProfit -= valueLost;
-                                console.log(`📉 Bazaar: Sold item #${itemId} for $${money}, market $${totalMarketVal}, lost $${valueLost}`);
+                                if (valueLost > 0) {
+                                    snapshot.bazaarSales.marketValueLost += valueLost;
+                                    snapshot.totalProfit -= valueLost;
+                                    console.log(`📉 Bazaar: Sold item #${itemId} for $${money}, market $${totalMarketVal}, lost $${valueLost}`);
+                                }
                             }
                         }
+                    } else if (cat === "market") {
+                        snapshot.marketSales.total += money;
+                        snapshot.totalProfit += money;
+                    } else if (cat === "shops") {
+                        snapshot.shops.sales += money;
+                        snapshot.totalProfit += money;
                     }
                 }
             }
 
             // Replace entire state with snapshot
-            data.bazaar = snapshot.bazaar;
-            data.market = snapshot.market;
+            data.bazaarSales = snapshot.bazaarSales;
+            data.bazaarBuys = snapshot.bazaarBuys;
+            data.marketBuys = snapshot.marketBuys;
+            data.marketSales = snapshot.marketSales;
             data.shops = snapshot.shops;
             data.totalProfit = snapshot.totalProfit;
 
@@ -381,6 +487,43 @@
     render();
     sync();
     setInterval(sync, 30000);
+
+    // CRITICAL: Listen for storage changes from other tabs (e.g., when reset is clicked in another tab)
+    window.addEventListener('storage', (e) => {
+        if (e.key === STORAGE_KEY && e.newValue) {
+            try {
+                const newData = JSON.parse(e.newValue);
+
+                // CRITICAL: Only accept if the new reset timestamp is NEWER or EQUAL
+                if (newData.resetTimestamp < data.resetTimestamp) {
+                    console.warn('🚫 Ignoring older reset from another tab');
+                    console.warn('  Our reset:', new Date(data.resetTimestamp * 1000).toLocaleString());
+                    console.warn('  Their reset:', new Date(newData.resetTimestamp * 1000).toLocaleString());
+                    // Force save our newer reset back to localStorage
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                    return;
+                }
+
+                console.log('📡 Data changed in another tab, reloading...');
+
+                // Ensure all required fields exist
+                data = {
+                    resetTimestamp: newData.resetTimestamp || 0,
+                    bazaarSales: newData.bazaarSales || { total: 0, marketValueLost: 0 },
+                    bazaarBuys: newData.bazaarBuys || { total: 0 },
+                    marketBuys: newData.marketBuys || { total: 0 },
+                    marketSales: newData.marketSales || { total: 0 },
+                    shops: newData.shops || { sales: 0, buys: 0 },
+                    totalProfit: newData.totalProfit || 0
+                };
+
+                render();
+                console.log('✅ Synced with other tab. Reset time:', new Date(data.resetTimestamp * 1000).toLocaleString());
+            } catch (err) {
+                console.error('❌ Error syncing from other tab:', err);
+            }
+        }
+    });
 
     console.log('💰 Profit Tracker loaded');
 })();

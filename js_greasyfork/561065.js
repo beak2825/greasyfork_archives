@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name         Milovana: Sidebar
 // @namespace    wompi72
-// @version      1.0.2
+// @author       wompi72
+// @version      1.0.3
 // @description  Milovana Sidebar
 // @match        *://milovana.com/*
 // @grant        none
@@ -34,10 +35,27 @@ function getPageData() {
     }
 
     const type = getTeaseType();
-    return {id, page, type, isReload};
+
+    function getTeaseTitle(type) {
+        if (type === TEASE_TYPES.eos) {
+            return document.body.dataset.title;
+        } else if (type === TEASE_TYPES.text) {
+            const titleElement = document.querySelector('#tease_title');
+            if (!titleElement) return null;
+
+            const autorElement = titleElement.querySelector('.tease_author');
+            if (autorElement) autorElement.remove();
+
+            return titleElement.textContent.trim();
+        }
+    }
+
+    const title = getTeaseTitle(type)
+    return {id, page, type, title, isReload};
 }
 
 const pageData = getPageData();
+
 console.log(pageData);
 
 const STORAGE = {
@@ -1062,52 +1080,59 @@ settings.addSection();
 sound.addOptions();
 settings.addSectionContent();
 
-function disableRedirectOnSpacebar() {
-    function isEditable(el) {
-        return el && (
-            el.tagName === 'INPUT' ||
-            el.tagName === 'TEXTAREA' ||
-            el.isContentEditable
-        );
-    }
-    const handleKey = function(e) {
-        if ((e.code === 'Space' || e.key === ' ' || e.keyCode === 32)) {
-            const target = e.target;
 
-            if (isEditable(target)) {
-                // Allow spacebar behavior inside inputs by manually dispatching
-                e.stopImmediatePropagation();
-                e.preventDefault();
+window.pageData = pageData;
+window.TEASE_TYPES = TEASE_TYPES;
+window.sidebar = sidebar;
 
-                // Create and dispatch a new event to simulate a space input
-                const evt = new InputEvent("input", {
-                    bubbles: true,
-                    cancelable: true,
-                    inputType: "insertText",
-                    data: " ",
-                    dataTransfer: null
-                });
+if (pageData.type !== TEASE_TYPES.none) {
 
-                if (target.setRangeText) {
-                    target.setRangeText(" ", target.selectionStart, target.selectionEnd, "end");
-                    target.dispatchEvent(evt);
-                } else {
-                    // Fallback for contenteditable
-                    document.execCommand("insertText", false, " ");
-                }
-
-            } else {
-                e.stopImmediatePropagation();
-                e.preventDefault();
-            }
+    function disableRedirectOnSpacebar() {
+        function isEditable(el) {
+            return el && (
+                el.tagName === 'INPUT' ||
+                el.tagName === 'TEXTAREA' ||
+                el.isContentEditable
+            );
         }
-    };
+        const handleKey = function(e) {
+            if ((e.code === 'Space' || e.key === ' ' || e.keyCode === 32)) {
+                const target = e.target;
 
-    window.addEventListener('keydown', handleKey, true);
-    window.addEventListener('keypress', handleKey, true);
+                if (isEditable(target)) {
+                    // Allow spacebar behavior inside inputs by manually dispatching
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+
+                    // Create and dispatch a new event to simulate a space input
+                    const evt = new InputEvent("input", {
+                        bubbles: true,
+                        cancelable: true,
+                        inputType: "insertText",
+                        data: " ",
+                        dataTransfer: null
+                    });
+
+                    if (target.setRangeText) {
+                        target.setRangeText(" ", target.selectionStart, target.selectionEnd, "end");
+                        target.dispatchEvent(evt);
+                    } else {
+                        // Fallback for contenteditable
+                        document.execCommand("insertText", false, " ");
+                    }
+
+                } else {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKey, true);
+        window.addEventListener('keypress', handleKey, true);
+    }
+    disableRedirectOnSpacebar();
 }
-
-disableRedirectOnSpacebar();
 
 function addCSS() {
     const style = document.createElement('style');
@@ -1190,6 +1215,10 @@ body.mv-sidebar-dynamic-tease-size #csl {
 }
 #mv-sidebar button:hover {
     opacity: 0.9;
+}
+#mv-sidebar button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 #mv-sidebar button:active {
     transform: translateY(1px);
