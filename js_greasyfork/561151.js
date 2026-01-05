@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         toonkor adblock css
 // @author       Minjae Kim
-// @version      1.00
-// @description  Moves an element before another element on the page
+// @version      1.02
+// @description  cleans the site 
 // @include      /^https?:\/\/(?:www\.)?tkor\d{3}\.com\/.*/
 // @grant        none
 // @license      MIT

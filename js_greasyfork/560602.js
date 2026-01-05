@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         dアニメ共有ボタン
 // @namespace    https://greasyfork.org/ja/users/1492018-sino087
-// @version      1.0.0
+// @version      1.0.1
 // @description  dアニメストアで動画再生終了後にX(Twitter)への共有ボタンと共有内容をコピーするボタンを表示する
 // @author       sino
 // @homepage     https://github.com/tatsuya087
@@ -126,9 +126,8 @@
         const partId = urlParams.get('partId');
         let shareUrl = window.location.href;
 
-        if (partId && partId.length >= 5) {
-            const workId = partId.substring(0, 5);
-            shareUrl = `https://animestore.docomo.ne.jp/animestore/ci_pc?workId=${workId}&partId=${partId}`;
+        if (partId) {
+            shareUrl = `https://animestore.docomo.ne.jp/animestore/cd?partId=${partId}`;
         }
 
         return { text, shareUrl };

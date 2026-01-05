@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         HALO Armory Tracker Pro (Alien UI)
+// @name         HALO Armory Tracker Pro (Alien UI) - V2 Enhanced
 // @namespace    http://tampermonkey.net/
-// @version      HALO.3
-// @description  Faction armory tracker with futuristic alien UI
+// @version      HALO.4
+// @description  Faction armory tracker with V2 gap coverage and futuristic alien UI
 // @author       Nova
 // @match        https://www.torn.com/*
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @connect      api.torn.com
-// @downloadURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20V2%20Enhanced.user.js
+// @updateURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20V2%20Enhanced.meta.js
 // ==/UserScript==
 
 (function(){
@@ -18,7 +18,9 @@
 
 /* ---------- CONFIG ---------- */
 const factionIds = ["48418"];
-const REFRESH_MS = 45000;
+const REFRESH_MS = 45000; // V1: 45 seconds
+const V2_REFRESH_MS = 6 * 60 * 60 * 1000; // V2: 6 hours
+const PRUNE_DAYS = 3; // Prune V2 markers after 3 days
 
 /* ---------- FACTION RULES ---------- */
 const FREE_ITEMS = [
@@ -33,10 +35,11 @@ const MEDICAL_ITEMS = [
 
 const STANDARD_DEPOSIT_RATE = 0.90;
 const XANAX_DEPOSIT_RATE = 0.9375;
-const STANDARD_USE_RATE = 0.95;
+const STANDARD_USE_RATE = 0.97;
 const MEDICAL_EXCESS_RATE = 1.00;
 const BLOOD_BAG_FILL_CREDIT = 200;
 const DAILY_MEDICAL_LIMIT = 100000;
+const LOAN_DISCOUNT_RATE = 0.50; // 50% price for loans
 
 /* ---------- STORAGE ---------- */
 let factionKey = GM_getValue("FACTION_API_KEY","");
@@ -47,6 +50,8 @@ let deposits      = GM_getValue("deposits", {});
 let processedLogs = GM_getValue("processedLogs", {});
 let medWindows    = GM_getValue("medWindows", {});
 let beerWindows   = GM_getValue("beerWindows", {});
+let lastV2Fetch   = GM_getValue("lastV2Fetch", 0);
+let v2Stats       = GM_getValue("v2Stats", { recovered: 0, lastRun: 0 });
 
 /* ---------- HELPER FUNCTIONS ---------- */
 function stripTags(str){ return str ? str.replace(/<[^>]*>/g,"").trim() : ""; }
@@ -152,138 +157,380 @@ function getNetValue(user){
     return Math.round(dep - use);
 }
 
-/* ---------- FETCH LOGS ---------- */
-async function fetchFactionLogs(id){
+/* ---------- V1 LOGS FETCH ---------- */
+async function fetchFactionLogsV1(id){
     const r = await fetch(`https://api.torn.com/faction/${id}?selections=armorynews&key=${factionKey}`);
     const d = await r.json();
     return d.armorynews || {};
 }
 
-/* ---------- CORE ---------- */
-async function loadLogs(){
-    if(!factionKey || !marketKey) return;
-
-    let logs = {};
-    for(const id of factionIds){
-        Object.assign(logs, await fetchFactionLogs(id));
+/* ---------- V2 LOGS FETCH ---------- */
+async function fetchV2LogsPage(url){
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("V2 fetch error:", error);
+        return { news: [], _metadata: { links: {} } };
     }
+}
 
-    const arr = Object.entries(logs)
-        .map(([k,v])=>({ logId:k, entry:v, t:v.time||0 }))
-        .sort((a,b)=> a.t - b.t || parseInt(a.logId) - parseInt(b.logId));
-
-    for(const item of arr){
-        const { logId, entry, t } = item;
-        if(processedLogs[logId]) continue;
-
-        const text = stripTags(entry.news).replace(/\s+/g," ").trim();
-
-        const dep = text.match(/^(.+?) deposited (?:(\d+)\s*[x×]?\s*)?(.+?)\.?$/i);
-        const use = text.match(/^(.+?) used (?:one of the faction's |a |)(.+?) items?\.?$/i)
-                 || text.match(/^(.+?) used (.+?)\.?$/i);
-        const filled = text.match(/^(.+?) filled one of the faction's (.+?) items?\.?$/i);
-
-        if(dep){
-            const user = dep[1].trim();
-            const count = dep[2] ? parseInt(dep[2],10) : 1;
-            const itemName = normalize(dep[3]);
-            
-            if(isFillingBloodBag(text, itemName)){
-                const key = `id:blood_bag_fill`;
-                deposits[user] ??= {};
-                deposits[user][key] ??= { 
-                    count:0, 
-                    price:BLOOD_BAG_FILL_CREDIT, 
-                    last:t,
-                    fullName: "Blood Bag Fill"
-                };
-                deposits[user][key].count += count;
-                deposits[user][key].last = t;
-            } else {
-                let price = await resolvePriceForName(itemName);
-                if(price){
-                    const depositRate = isXanax(itemName) ? XANAX_DEPOSIT_RATE : STANDARD_DEPOSIT_RATE;
-                    const creditedPrice = Math.round(price * depositRate);
-                    const key = `id:${itemName}`;
-                    deposits[user] ??= {};
-                    deposits[user][key] ??= { 
-                        count:0, 
-                        price:creditedPrice, 
-                        last:t,
-                        fullName: itemName
-                    };
-                    deposits[user][key].count += count;
-                    deposits[user][key].last = t;
-                }
+async function fetchAllV2Logs(sinceTimestamp = 0){
+    if(!factionKey) return { logs: [], recovered: 0 };
+    
+    let allLogs = [];
+    let recovered = 0;
+    
+    // Build base URL
+    let baseUrl = `https://api.torn.com/v2/faction/news` +
+                 `?cat=armoryAction&cat=armoryDeposit` +
+                 `&stripTags=true&sort=desc` +
+                 `&key=${factionKey}`;
+    
+    if(sinceTimestamp > 0){
+        baseUrl += `&from=${sinceTimestamp}`;
+    }
+    
+    let nextUrl = baseUrl;
+    let pageCount = 0;
+    
+    while(nextUrl && pageCount < 10){ // Safety limit: max 10 pages
+        const data = await fetchV2LogsPage(nextUrl);
+        
+        if(!data.news || !Array.isArray(data.news)){
+            break;
+        }
+        
+        // Filter out already processed logs
+        for(const log of data.news){
+            if(!processedLogs[log.id]){
+                allLogs.push(log);
+                recovered++;
             }
         }
-        else if(use){
-            const user = use[1].trim();
-            const itemName = normalize(use[2]);
-            
-            if(isFree(itemName)){
-                processedLogs[logId]=true; 
-                continue;
-            }
+        
+        // Check for next page
+        nextUrl = data._metadata?.links?.next || null;
+        pageCount++;
+        
+        // Rate limit delay
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    return { logs: allLogs, recovered: recovered };
+}
 
-            const price = await resolvePriceForName(itemName);
-            if(!price){ 
-                processedLogs[logId]=true; 
-                continue;
-            }
-
-            let charge = 0;
-            let isMedicalExcess = false;
-            
-            if(isMedical(itemName)){
-                if(processMedicalUse(user, price, t)){
-                    isMedicalExcess = true;
-                    charge = Math.round(price * MEDICAL_EXCESS_RATE);
-                } else {
-                    processedLogs[logId]=true;
-                    continue;
-                }
-            }
-            else{
-                charge = Math.round(price * STANDARD_USE_RATE);
-            }
-
-            const key = `id:${itemName}`;
-            usedItems[user] ??= {};
-            usedItems[user][key] ??= { 
-                count:0, 
-                price:charge, 
-                last:t,
-                fullName: itemName,
-                isMedicalExcess: isMedicalExcess
+/* ---------- LOG PROCESSING ---------- */
+async function processLogEntry(logId, entry, source = 'v1'){
+    // Skip if already processed
+    if(processedLogs[logId]) return null;
+    
+    // Extract text based on source
+    let text = '';
+    let timestamp = 0;
+    
+    if(source === 'v1'){
+        text = stripTags(entry.news);
+        timestamp = entry.timestamp || entry.time || 0;
+    } else {
+        text = entry.text || '';
+        timestamp = entry.timestamp || 0;
+    }
+    
+    if(!text || !timestamp) return null;
+    
+    text = text.replace(/\s+/g," ").trim();
+    
+    // Parse the text
+    const dep = text.match(/^(.+?) deposited (?:(\d+)\s*[x×]?\s*)?(.+?)\.?$/i);
+    const use = text.match(/^(.+?) used (?:one of the faction's |a |)(.+?) items?\.?$/i)
+             || text.match(/^(.+?) used (.+?)\.?$/i);
+    const filled = text.match(/^(.+?) filled one of the faction's (.+?) items?\.?$/i);
+    const loan = text.match(/^(.+?) loaned (\d+)\s*[x×]?\s*(.+?) to themselves from the faction armory$/i);
+    
+    let result = null;
+    
+    if(dep){
+        const user = dep[1].trim();
+        const count = dep[2] ? parseInt(dep[2],10) : 1;
+        const itemName = normalize(dep[3]);
+        
+        if(isFillingBloodBag(text, itemName)){
+            result = {
+                type: 'deposit',
+                user: user,
+                action: 'filled',
+                itemName: itemName,
+                count: count,
+                isBloodBagFill: true,
+                source: source
             };
-            usedItems[user][key].count++;
-            usedItems[user][key].last = t;
+        } else {
+            result = {
+                type: 'deposit',
+                user: user,
+                action: 'deposit',
+                itemName: itemName,
+                count: count,
+                source: source
+            };
         }
-        else if(filled){
-            const user = filled[1].trim();
-            const itemName = normalize(filled[2]);
+    }
+    else if(use){
+        const user = use[1].trim();
+        const itemName = normalize(use[2]);
+        
+        if(isFree(itemName)){
+            return null;
+        }
+        
+        result = {
+            type: 'use',
+            user: user,
+            action: 'use',
+            itemName: itemName,
+            count: 1,
+            source: source
+        };
+    }
+    else if(filled){
+        const user = filled[1].trim();
+        const itemName = normalize(filled[2]);
+        
+        if(isFillingBloodBag(text, itemName)){
+            result = {
+                type: 'deposit',
+                user: user,
+                action: 'filled',
+                itemName: itemName,
+                count: 1,
+                isBloodBagFill: true,
+                source: source
+            };
+        }
+    }
+    else if(loan){
+        const user = loan[1].trim();
+        const count = parseInt(loan[2],10) || 1;
+        const itemName = normalize(loan[3]);
+        
+        if(isFree(itemName)){
+            return null;
+        }
+        
+        result = {
+            type: 'use',
+            user: user,
+            action: 'loan',
+            itemName: itemName,
+            count: count,
+            isHalfPrice: true,
+            source: source
+        };
+    }
+    
+    if(result){
+        result.logId = logId;
+        result.timestamp = timestamp;
+    }
+    
+    return result;
+}
+
+async function processParsedResult(result){
+    if(!result) return;
+    
+    const { user, action, itemName, count, logId, timestamp, source, isHalfPrice, isBloodBagFill } = result;
+    
+    // Get price
+    let price = null;
+    
+    if(isBloodBagFill){
+        price = BLOOD_BAG_FILL_CREDIT;
+    } else {
+        const marketPrice = await resolvePriceForName(itemName);
+        if(!marketPrice) return;
+        
+        let adjustedPrice = marketPrice;
+        
+        if(action === 'deposit' || action === 'filled'){
+            adjustedPrice *= isXanax(itemName) ? XANAX_DEPOSIT_RATE : STANDARD_DEPOSIT_RATE;
+        } else if(action === 'use' || action === 'loan'){
+            adjustedPrice *= STANDARD_USE_RATE;
             
-            if(isFillingBloodBag(text, itemName)){
-                const key = `id:blood_bag_fill`;
-                deposits[user] ??= {};
-                deposits[user][key] ??= { 
-                    count:0, 
-                    price:BLOOD_BAG_FILL_CREDIT, 
-                    last:t,
-                    fullName: "Blood Bag Fill"
-                };
-                deposits[user][key].count++;
-                deposits[user][key].last = t;
+            // Apply 50% discount for loans
+            if(isHalfPrice){
+                adjustedPrice *= LOAN_DISCOUNT_RATE;
+            }
+            
+            // Medical excess handling
+            if(isMedical(itemName)){
+                if(!processMedicalUse(user, marketPrice, timestamp)){
+                    return; // Not excess, skip
+                }
+                adjustedPrice = Math.round(marketPrice * MEDICAL_EXCESS_RATE);
             }
         }
-
-        processedLogs[logId] = true;
+        
+        price = Math.round(adjustedPrice);
     }
+    
+    // Store based on action type
+    const key = `id:${itemName}`;
+    
+    if(action === 'deposit' || action === 'filled'){
+        deposits[user] ??= {};
+        deposits[user][key] ??= { 
+            count: 0, 
+            price: price, 
+            last: timestamp,
+            fullName: itemName,
+            source: source,
+            isHalfPrice: isHalfPrice || false
+        };
+        deposits[user][key].count += count;
+        deposits[user][key].last = timestamp;
+    } else {
+        usedItems[user] ??= {};
+        usedItems[user][key] ??= { 
+            count: 0, 
+            price: price, 
+            last: timestamp,
+            fullName: itemName,
+            source: source,
+            isHalfPrice: isHalfPrice || false
+        };
+        usedItems[user][key].count += count;
+        usedItems[user][key].last = timestamp;
+    }
+    
+    // Mark as processed
+    processedLogs[logId] = {
+        source: source,
+        timestamp: timestamp
+    };
+    
+    // Update V2 stats if applicable
+    if(source === 'v2'){
+        v2Stats.recovered++;
+        v2Stats.lastRun = Date.now();
+        GM_setValue("v2Stats", v2Stats);
+    }
+}
 
+/* ---------- V2 CATCH-UP SYSTEM ---------- */
+async function runV2CatchUp(){
+    if(!factionKey) return;
+    
+    console.log("HALO: Running V2 catch-up...");
+    
+    const sinceTime = lastV2Fetch;
+    const result = await fetchAllV2Logs(sinceTime);
+    
+    if(result.logs.length === 0){
+        console.log("HALO: No new logs via V2");
+        return;
+    }
+    
+    console.log(`HALO: V2 recovered ${result.recovered} new logs`);
+    
+    // Process each new log
+    for(const log of result.logs){
+        const parsed = await processLogEntry(log.id, log, 'v2');
+        if(parsed){
+            await processParsedResult(parsed);
+        }
+    }
+    
+    // Update last fetch time
+    if(result.logs.length > 0){
+        const newestTime = Math.max(...result.logs.map(l => l.timestamp));
+        lastV2Fetch = newestTime;
+        GM_setValue("lastV2Fetch", lastV2Fetch);
+    }
+    
+    // Save all data
     GM_setValue("usedItems", usedItems);
     GM_setValue("deposits", deposits);
     GM_setValue("processedLogs", processedLogs);
+    
+    // Prune old V2 markers
+    pruneOldV2Markers();
+    
+    // Update UI
+    renderPanel();
+}
+
+function pruneOldV2Markers(){
+    const pruneTime = Date.now() - (PRUNE_DAYS * 24 * 60 * 60 * 1000);
+    let pruned = 0;
+    
+    // Prune from processedLogs
+    Object.keys(processedLogs).forEach(logId => {
+        const entry = processedLogs[logId];
+        if(entry.source === 'v2' && entry.timestamp * 1000 < pruneTime){
+            delete processedLogs[logId];
+            pruned++;
+        }
+    });
+    
+    // Remove source markers from transactions (keep the data)
+    for(const user in deposits){
+        for(const itemKey in deposits[user]){
+            const entry = deposits[user][itemKey];
+            if(entry.source === 'v2' && entry.last * 1000 < pruneTime){
+                delete deposits[user][itemKey].source;
+            }
+        }
+    }
+    
+    for(const user in usedItems){
+        for(const itemKey in usedItems[user]){
+            const entry = usedItems[user][itemKey];
+            if(entry.source === 'v2' && entry.last * 1000 < pruneTime){
+                delete usedItems[user][itemKey].source;
+            }
+        }
+    }
+    
+    if(pruned > 0){
+        console.log(`HALO: Pruned ${pruned} old V2 markers`);
+        GM_setValue("processedLogs", processedLogs);
+        GM_setValue("deposits", deposits);
+        GM_setValue("usedItems", usedItems);
+    }
+}
+
+/* ---------- MAIN LOG PROCESSING ---------- */
+async function loadLogs(){
+    if(!factionKey || !marketKey) return;
+    
+    // Process V1 logs as before
+    let v1Logs = {};
+    for(const id of factionIds){
+        Object.assign(v1Logs, await fetchFactionLogsV1(id));
+    }
+    
+    const arr = Object.entries(v1Logs)
+        .map(([k,v])=>({ logId:k, entry:v, t:v.timestamp||v.time||0 }))
+        .sort((a,b)=> a.t - b.t || a.logId.localeCompare(b.logId));
+    
+    for(const item of arr){
+        const { logId, entry } = item;
+        
+        if(processedLogs[logId]) continue;
+        
+        const parsed = await processLogEntry(logId, entry, 'v1');
+        if(parsed){
+            await processParsedResult(parsed);
+        }
+    }
+    
+    GM_setValue("usedItems", usedItems);
+    GM_setValue("deposits", deposits);
+    GM_setValue("processedLogs", processedLogs);
+    
     renderPanel();
 }
 
@@ -463,7 +710,7 @@ GM_addStyle(`
 /* Stats Panel */
 .stats-slim {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     margin-bottom: 20px;
     background: rgba(0, 255, 234, 0.08);
@@ -994,107 +1241,130 @@ GM_addStyle(`
     border-radius: 50%;
     animation: loading 1s linear infinite;
 }
-`);
 
-/* ---------- UI CREATION ---------- */
-const panel = document.createElement("div");
-panel.id = "armoryPanel";
-panel.innerHTML = `
-<div class="panel-header">
-    <h1>HALO ARMORY</h1>
-    <div class="header-controls">
-        <button class="header-btn" id="refreshBtn" title="Refresh">⟳</button>
-        <button class="header-btn" id="closeBtn" title="Close">✕</button>
-    </div>
-</div>
-<div class="panel-content">
-    <div class="stats-slim">
-        <div class="stat-slim">
-            <div class="stat-slim-number" id="statUsers">0</div>
-            <div class="stat-slim-label">ACTIVE USERS</div>
-        </div>
-        <div class="stat-slim">
-            <div class="stat-slim-number" id="statLogs">0</div>
-            <div class="stat-slim-label">LOGS PROCESSED</div>
-        </div>
-        <div class="stat-slim">
-            <div class="stat-slim-number" id="statCache">0</div>
-            <div class="stat-slim-label">PRICE CACHE</div>
-        </div>
-    </div>
-
-    <div class="api-toggle" id="apiToggle">
-        API CONFIGURATION
-    </div>
-    <div class="api-fields" id="apiFields">
-        <input type="password" id="factionKeyInput" class="api-input-slim" placeholder="FACTION API KEY" value="${factionKey}">
-        <input type="password" id="marketKeyInput" class="api-input-slim" placeholder="MARKET API KEY" value="${marketKey}">
-    </div>
-
-    <select id="sortUsers" class="sort-select-slim">
-        <option value="debt">▼ HIGHEST DEBT</option>
-        <option value="credit">▲ HIGHEST CREDIT</option>
-        <option value="alphabetical">🔤 A-Z</option>
-    </select>
-
-    <div class="users-slim" id="debtLog"></div>
-</div>`;
-
-document.body.appendChild(panel);
-
-const bubble = document.createElement("div");
-bubble.id = "bubbleBtn";
-document.body.appendChild(bubble);
-
-let minimized = true;
-let apiExpanded = false;
-
-/* ---------- UI INTERACTIONS ---------- */
-bubble.onclick = () => {
-    minimized = !minimized;
-    panel.style.display = minimized ? "none" : "block";
-};
-
-document.getElementById("closeBtn").onclick = () => {
-    panel.style.display = "none";
-    minimized = true;
-};
-
-document.getElementById("refreshBtn").onclick = () => {
-    loadLogs();
-};
-
-document.getElementById("apiToggle").onclick = () => {
-    apiExpanded = !apiExpanded;
-    const apiToggle = document.getElementById("apiToggle");
-    const apiFields = document.getElementById("apiFields");
-    
-    apiToggle.classList.toggle("expanded", apiExpanded);
-    apiFields.style.display = apiExpanded ? "block" : "none";
-};
-
-document.getElementById("factionKeyInput").onchange = e => {
-    factionKey = e.target.value.trim();
-    GM_setValue("FACTION_API_KEY", factionKey);
-    loadLogs();
-};
-
-document.getElementById("marketKeyInput").onchange = e => {
-    marketKey = e.target.value.trim();
-    GM_setValue("MARKET_API_KEY", marketKey);
-    loadLogs();
-};
-
-// Auto-show panel if no API keys are set
-if (!factionKey || !marketKey) {
-    panel.style.display = "block";
-    minimized = false;
-    apiExpanded = true;
-    document.getElementById("apiToggle").classList.add("expanded");
-    document.getElementById("apiFields").style.display = "block";
+/* V2 Indicators */
+.v2-indicator {
+    color: #ff9900 !important;
+    margin-left: 4px;
+    font-size: 10px;
+    vertical-align: super;
 }
 
-/* ---------- FIXED: Better Sorting ---------- */
+.loan-indicator {
+    color: #ffcc00 !important;
+    margin-left: 4px;
+    font-size: 10px;
+    vertical-align: super;
+}
+
+/* V2 Stats in panel */
+.v2-stat {
+    background: linear-gradient(135deg, 
+        rgba(255, 153, 0, 0.15) 0%, 
+        rgba(255, 153, 0, 0.05) 100%) !important;
+    border: 1px solid rgba(255, 153, 0, 0.3) !important;
+}
+
+.v2-stat .stat-slim-number {
+    color: #ff9900 !important;
+    text-shadow: 0 0 8px rgba(255, 153, 0, 0.5) !important;
+}
+
+/* V2 item background */
+.item-v2 {
+    background: rgba(255, 153, 0, 0.08) !important;
+    border-left: 3px solid rgba(255, 153, 0, 0.4) !important;
+}
+
+/* V2 last run info */
+.v2-last-run {
+    font-size: 9px;
+    color: rgba(255, 153, 0, 0.8);
+    text-align: center;
+    margin-top: 5px;
+    font-family: 'Courier New', monospace;
+}
+`);
+
+/* ---------- MODIFIED RENDER FUNCTIONS ---------- */
+const MAX_ITEM_DISPLAY = 3;
+
+function renderItemListCompact(items, isUsed = false) {
+    if (!items || Object.keys(items).length === 0) {
+        return '<div class="empty-state-slim" style="font-size: 10px; padding: 8px;">NO ITEMS</div>';
+    }
+    
+    const entries = Object.entries(items);
+    const displayEntries = entries.slice(0, MAX_ITEM_DISPLAY);
+    const hiddenCount = entries.length - MAX_ITEM_DISPLAY;
+    
+    let html = displayEntries.map(([k, v]) => {
+        const shortName = v.fullName ? v.fullName.split(' ').pop() : k.replace('id:', '');
+        const timeDate = v.last ? formatTimeDate(v.last) : "";
+        
+        // Determine CSS classes
+        let itemClass = "item-row-slim";
+        if (isUsed) itemClass += " item-used-slim";
+        if (v.source === 'v2') itemClass += " item-v2";
+        
+        // Build indicators
+        let indicators = '';
+        if (v.source === 'v2') {
+            indicators += '<span class="v2-indicator" title="Recovered via V2 backup">🔄</span>';
+        }
+        if (v.isHalfPrice) {
+            indicators += '<span class="loan-indicator" title="Loan (50% price)">📜</span>';
+        }
+        
+        return `
+            <div class="${itemClass}">
+                <div class="item-info-slim">
+                    <span class="item-name-slim" title="${v.fullName || k}">${shortName}</span>
+                    <span class="item-count-slim">x${v.count}</span>
+                    <span class="item-price-slim">$${v.price.toLocaleString()}</span>
+                    ${indicators}
+                </div>
+                <div class="item-time-slim">${timeDate}</div>
+            </div>
+        `;
+    }).join("");
+    
+    if (hiddenCount > 0) {
+        html += `<div class="more-items">+${hiddenCount} MORE ITEMS</div>`;
+    }
+    
+    return html;
+}
+
+function updateStats() {
+    const activeUsers = [...new Set([...Object.keys(usedItems), ...Object.keys(deposits)])].filter(u => getNetValue(u) !== 0).length;
+    const totalProcessed = Object.keys(processedLogs).length;
+    const cachedPrices = Object.keys(nameToIdCache).length;
+    
+    document.getElementById("statUsers").textContent = activeUsers;
+    document.getElementById("statLogs").textContent = totalProcessed;
+    document.getElementById("statCache").textContent = cachedPrices;
+    
+    // V2 stats
+    const v2Recovered = v2Stats.recovered || 0;
+    const v2Element = document.getElementById("statV2");
+    if(v2Element){
+        v2Element.innerHTML = `
+            <div class="stat-slim-number">${v2Recovered}</div>
+            <div class="stat-slim-label">V2 RECOVERED</div>
+        `;
+    }
+    
+    // Last V2 run time
+    const lastRunElement = document.getElementById("v2LastRun");
+    if(lastRunElement && v2Stats.lastRun > 0){
+        const lastRun = new Date(v2Stats.lastRun);
+        const hours = String(lastRun.getHours()).padStart(2, '0');
+        const minutes = String(lastRun.getMinutes()).padStart(2, '0');
+        lastRunElement.textContent = `Last V2: ${hours}:${minutes}`;
+    }
+}
+
 function sortUsers(users, sortType) {
     return users.sort((a, b) => {
         const netA = getNetValue(a);
@@ -1116,52 +1386,6 @@ function sortUsers(users, sortType) {
         
         return a.localeCompare(b);
     });
-}
-
-/* ---------- Statistics ---------- */
-function updateStats() {
-    const activeUsers = [...new Set([...Object.keys(usedItems), ...Object.keys(deposits)])].filter(u => getNetValue(u) !== 0).length;
-    const totalProcessed = Object.keys(processedLogs).length;
-    const cachedPrices = Object.keys(nameToIdCache).length;
-    
-    document.getElementById("statUsers").textContent = activeUsers;
-    document.getElementById("statLogs").textContent = totalProcessed;
-    document.getElementById("statCache").textContent = cachedPrices;
-}
-
-/* ---------- RENDER FUNCTIONS ---------- */
-const MAX_ITEM_DISPLAY = 3;
-
-function renderItemListCompact(items, isUsed = false) {
-    if (!items || Object.keys(items).length === 0) {
-        return '<div class="empty-state-slim" style="font-size: 10px; padding: 8px;">NO ITEMS</div>';
-    }
-    
-    const entries = Object.entries(items);
-    const displayEntries = entries.slice(0, MAX_ITEM_DISPLAY);
-    const hiddenCount = entries.length - MAX_ITEM_DISPLAY;
-    
-    let html = displayEntries.map(([k, v]) => {
-        const shortName = v.fullName ? v.fullName.split(' ').pop() : k.replace('id:', '');
-        const timeDate = v.last ? formatTimeDate(v.last) : "";
-        
-        return `
-            <div class="item-row-slim ${isUsed ? 'item-used-slim' : ''}">
-                <div class="item-info-slim">
-                    <span class="item-name-slim" title="${v.fullName || k}">${shortName}</span>
-                    <span class="item-count-slim">x${v.count}</span>
-                    <span class="item-price-slim">$${v.price.toLocaleString()}</span>
-                </div>
-                <div class="item-time-slim">${timeDate}</div>
-            </div>
-        `;
-    }).join("");
-    
-    if (hiddenCount > 0) {
-        html += `<div class="more-items">+${hiddenCount} MORE ITEMS</div>`;
-    }
-    
-    return html;
 }
 
 function renderPanel() {
@@ -1238,11 +1462,132 @@ function renderPanel() {
     updateStats();
 }
 
-/* ---------- INITIALIZATION ---------- */
+/* ---------- UI CREATION ---------- */
+const panel = document.createElement("div");
+panel.id = "armoryPanel";
+panel.innerHTML = `
+<div class="panel-header">
+    <h1>HALO ARMORY V2</h1>
+    <div class="header-controls">
+        <button class="header-btn" id="refreshBtn" title="Refresh">⟳</button>
+        <button class="header-btn" id="v2NowBtn" title="Run V2 Now" style="color: #ff9900;">V2</button>
+        <button class="header-btn" id="closeBtn" title="Close">✕</button>
+    </div>
+</div>
+<div class="panel-content">
+    <div class="stats-slim">
+        <div class="stat-slim">
+            <div class="stat-slim-number" id="statUsers">0</div>
+            <div class="stat-slim-label">ACTIVE USERS</div>
+        </div>
+        <div class="stat-slim">
+            <div class="stat-slim-number" id="statLogs">0</div>
+            <div class="stat-slim-label">LOGS PROCESSED</div>
+        </div>
+        <div class="stat-slim">
+            <div class="stat-slim-number" id="statCache">0</div>
+            <div class="stat-slim-label">PRICE CACHE</div>
+        </div>
+        <div class="stat-slim v2-stat">
+            <div class="stat-slim-number" id="statV2">0</div>
+            <div class="stat-slim-label">V2 RECOVERED</div>
+        </div>
+    </div>
+    <div class="v2-last-run" id="v2LastRun"></div>
+
+    <div class="api-toggle" id="apiToggle">
+        API CONFIGURATION
+    </div>
+    <div class="api-fields" id="apiFields">
+        <input type="password" id="factionKeyInput" class="api-input-slim" placeholder="FACTION API KEY" value="${factionKey}">
+        <input type="password" id="marketKeyInput" class="api-input-slim" placeholder="MARKET API KEY" value="${marketKey}">
+    </div>
+
+    <select id="sortUsers" class="sort-select-slim">
+        <option value="debt">▼ HIGHEST DEBT</option>
+        <option value="credit">▲ HIGHEST CREDIT</option>
+        <option value="alphabetical">🔤 A-Z</option>
+    </select>
+
+    <div class="users-slim" id="debtLog"></div>
+</div>`;
+
+document.body.appendChild(panel);
+
+const bubble = document.createElement("div");
+bubble.id = "bubbleBtn";
+document.body.appendChild(bubble);
+
+let minimized = true;
+let apiExpanded = false;
+
+/* ---------- UI INTERACTIONS ---------- */
+bubble.onclick = () => {
+    minimized = !minimized;
+    panel.style.display = minimized ? "none" : "block";
+};
+
+document.getElementById("closeBtn").onclick = () => {
+    panel.style.display = "none";
+    minimized = true;
+};
+
+document.getElementById("refreshBtn").onclick = () => {
+    loadLogs();
+};
+
+document.getElementById("v2NowBtn").onclick = () => {
+    runV2CatchUp();
+};
+
+document.getElementById("apiToggle").onclick = () => {
+    apiExpanded = !apiExpanded;
+    const apiToggle = document.getElementById("apiToggle");
+    const apiFields = document.getElementById("apiFields");
+    
+    apiToggle.classList.toggle("expanded", apiExpanded);
+    apiFields.style.display = apiExpanded ? "block" : "none";
+};
+
+document.getElementById("factionKeyInput").onchange = e => {
+    factionKey = e.target.value.trim();
+    GM_setValue("FACTION_API_KEY", factionKey);
+    loadLogs();
+};
+
+document.getElementById("marketKeyInput").onchange = e => {
+    marketKey = e.target.value.trim();
+    GM_setValue("MARKET_API_KEY", marketKey);
+    loadLogs();
+};
+
 document.getElementById("sortUsers").onchange = renderPanel;
 
-/* ---------- MAIN LOOP ---------- */
+/* ---------- INITIALIZATION ---------- */
+// Auto-show panel if no API keys are set
+if (!factionKey || !marketKey) {
+    panel.style.display = "block";
+    minimized = false;
+    apiExpanded = true;
+    document.getElementById("apiToggle").classList.add("expanded");
+    document.getElementById("apiFields").style.display = "block";
+}
+
+/* ---------- START SYSTEMS ---------- */
+// Start V1 interval (45 seconds)
 setInterval(loadLogs, REFRESH_MS);
+
+// Start V2 scheduler (6 hours)
+function startV2Scheduler() {
+    // First run after 5 seconds (let V1 initialize first)
+    setTimeout(runV2CatchUp, 5000);
+    
+    // Then every 6 hours
+    setInterval(runV2CatchUp, V2_REFRESH_MS);
+}
+
+// Initial load
 loadLogs();
+startV2Scheduler();
 
 })();

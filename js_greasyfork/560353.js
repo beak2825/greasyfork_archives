@@ -5,7 +5,7 @@
 // @namespace    lunzhiPenxil
 // @repository   https://github.com/lunzhiPenxil/WoDBeautify
 // @license      AGPL3
-// @version      2025.12.30.2
+// @version      2026.1.5.1
 // @include      http*://*.world-of-dungeons.org/*
 // @grant        GM_addStyle
 // @grant        GM_getValue
@@ -459,8 +459,41 @@
             #gadgettable-right {
                 padding-top: 20px;
             }
+
+            #gadgettable-top .gadget.ticker .gadget_body > div {
+                display: block !important;
+                height: 21px;
+            }
         `
     };
+
+    // 市镇传报员滚动动画生成
+    function generateScrollCSS(itemCount, itemHeight = 21, stayTime = 9.7, scrollTime = 0.3) {
+        const totalTime = itemCount * (stayTime + scrollTime);
+        let css = `@keyframes ticker-dynamic {`;
+        css += `0% { transform: translateY(-1px); }`;
+
+        for (let i = 0; i <= itemCount; i++) {
+            const startPercent = ((i * (stayTime + scrollTime) + stayTime) / totalTime) * 100;
+            const endPercent = ((i + 1) * (stayTime + scrollTime) / totalTime) * 100;
+            const pos = -i * itemHeight - 1;
+            const nextPos = i === itemCount ? -1 : pos - itemHeight;
+            css += `${startPercent.toFixed(2)}% { transform: translateY(${pos}px); }`;
+            css += `${(endPercent - 0.01).toFixed(2)}% { transform: translateY(${nextPos}px); }`;
+        }
+        css += `100% { transform: translateY(-1px); }}`;
+        css += /*css*/ `
+            #gadgettable-top .gadget.ticker .gadget_body {
+                animation: ticker-dynamic ${totalTime}s linear infinite;
+                animation-play-state: running;
+            }
+    
+            #gadgettable-top .gadget.ticker .gadget_body:hover {
+                animation-play-state: paused;
+            }
+        `;
+        cssFragments.topMenu += css;
+    }
 
     // 应用CSS样式
     function applyStyles(settings) {
@@ -498,6 +531,9 @@
             document.head.appendChild(style);
         }
     }
+
+    // 动态生成计算
+    generateScrollCSS(document.querySelectorAll('#gadgettable-top .gadget.ticker .gadget_body > div').length)
 
     // 初始化
     const settings = loadSettings();

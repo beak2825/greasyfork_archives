@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Trade Value Calculator
+// @name         TornW3B Trading Companion BETA
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      2.0
 // @description  Calculates the total value of items in a trade on Torn.com.
 // @match        https://www.torn.com/*
 // @grant        GM_setValue
@@ -10,16 +10,16 @@
 // @grant        GM_addStyle
 // @connect      weav3r.dev
 // @connect      api.torn.com
+// @connect      www.torn.com
 // @run-at       document-end
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/561305/Trade%20Value%20Calculator.user.js
-// @updateURL https://update.greasyfork.org/scripts/561305/Trade%20Value%20Calculator.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561305/TornW3B%20Trading%20Companion%20BETA.user.js
+// @updateURL https://update.greasyfork.org/scripts/561305/TornW3B%20Trading%20Companion%20BETA.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // Chrome WebView compatibility: Set up GM_* API fallbacks BEFORE any usage
     if (typeof GM_addStyle === 'undefined') {
         window.GM_addStyle = function(css) {
             const style = document.createElement('style');
@@ -123,6 +123,7 @@
         CACHE_DURATION: 3600000,
         MAX_CACHE_SIZE: 100,
         SEVEN_HOURS: 7 * 60 * 60 * 1000,
+        TWENTY_FOUR_HOURS: 24 * 60 * 60 * 1000,
         POLL_INTERVAL: 30000,
         POLL_BUFFER: 29000
     };
@@ -171,6 +172,18 @@
         if (status === 429) return 'Too many requests';
         if (status >= 500) return 'Server error';
         return `HTTP error ${status}`;
+    };
+
+    const API_KEY_INVALID_CODES = [1, 2, 10, 13, 18];
+    const shouldInvalidateApiKey = (errorCode) => API_KEY_INVALID_CODES.includes(errorCode);
+
+    const handleApiKeyError = async (tornError, stopPolling = false) => {
+        if (tornError && shouldInvalidateApiKey(tornError.code)) {
+            await storage.set({ torn_api_key: undefined });
+            if (stopPolling) stopTradePolling();
+            return true;
+        }
+        return false;
     };
 
     const TRADE_EVENTS = {
@@ -250,6 +263,8 @@
     const SELECTORS = {
         TRADE_LIST: '.trades-cont.current:not(.m-bottom10)',
         TRADE_LIST_ITEM: '.trades-cont.current:not(.m-bottom10) li',
+        PAST_TRADES_LIST: '.trades-cont.current.m-bottom10',
+        PAST_TRADES_ITEM: '.trades-cont.current.m-bottom10 li',
         TRADE_LINK: '.view a[href*="ID="]',
         STRIPE_CONTAINER: '.stripe-container',
         TRADE_CONTAINER: '#trade-container',
@@ -268,7 +283,9 @@
         money: '<svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>',
         add: '<svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>',
         check: '<svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>',
-        paste: '<svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>'
+        paste: '<svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>',
+        close: '<svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>',
+        chat: '<svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>'
     };
 
     const isTradePage = location.pathname.startsWith('/trade.php');
@@ -352,13 +369,19 @@ a:hover {color:var(--text)}
 .info-hidden {display:none}
 .msg.right-round button.api-key-button,.title-black button.api-key-button {font-size:10px !important;padding:4px 8px !important;margin-left:8px !important;background:rgba(255,255,255,0.5) !important;border:1px solid rgba(0,0,0,0.15) !important;border-radius:3px !important;color:#555 !important;cursor:pointer !important;vertical-align:middle !important;display:inline-block !important}
 body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-black button.api-key-button {background:rgba(0,0,0,0.35) !important;border:1px solid rgba(255,255,255,0.1) !important;color:#999 !important}
+.message-section {margin-bottom:16px;padding:14px;background:var(--bg-darker);border-radius:6px;border:1px solid var(--border)}
+.message-content {color:var(--text-muted);font:13px 'Segoe UI',sans-serif;line-height:1.5;margin-bottom:12px;white-space:pre-wrap;word-wrap:break-word}
+.message-content a {color:#4a9eff;text-decoration:underline}
+.message-content a:hover {color:#6bb3ff}
+.message-section .copy-url-button {display:block;width:100%}
 @media only screen and (max-width:784px), only screen and (max-device-width:784px) {
 .stripe-container {display:flex !important;flex-direction:row !important;flex-wrap:wrap !important;gap:8px !important;padding:15px !important;align-items:stretch !important;justify-content:space-between !important}
 .stripe-container>.value-container,.stripe-container>.value-container.visible {display:contents !important;flex-direction:unset !important}
 .stripe-container>.value-container>.total-value-container,.stripe-container .total-value-container {width:100% !important;max-width:100% !important;min-width:100% !important;flex:0 0 100% !important;margin:0 !important;padding:12px 20px !important;font-size:16px !important;box-shadow:0 2px 4px rgba(0,0,0,.2) !important;order:-3 !important;box-sizing:border-box !important}
-.stripe-container>.calculate-button {width:calc(33.333% - 5.33px) !important;max-width:calc(33.333% - 5.33px) !important;min-width:0 !important;flex:0 0 calc(33.333% - 5.33px) !important;margin:0 !important;padding:12px 6px !important;font-size:12px !important;box-shadow:0 2px 4px rgba(0,0,0,.2) !important;order:-2 !important;white-space:nowrap !important;overflow:hidden !important;box-sizing:border-box !important;text-overflow:clip !important}
-.stripe-container>.value-container>.receipt-url-container,.stripe-container .receipt-url-container {width:calc(33.333% - 5.33px) !important;max-width:calc(33.333% - 5.33px) !important;min-width:0 !important;flex:0 0 calc(33.333% - 5.33px) !important;margin:0 !important;padding:12px 6px !important;font-size:12px !important;box-shadow:0 2px 4px rgba(0,0,0,.2) !important;order:-1 !important;white-space:nowrap !important;overflow:hidden !important;box-sizing:border-box !important;text-overflow:clip !important}
-.stripe-container>.accept-trade-button {width:calc(33.333% - 5.33px) !important;max-width:calc(33.333% - 5.33px) !important;min-width:0 !important;flex:0 0 calc(33.333% - 5.33px) !important;margin:0 !important;padding:12px 6px !important;font-size:12px !important;box-shadow:0 2px 4px rgba(0,0,0,.2) !important;order:0 !important;white-space:nowrap !important;overflow:hidden !important;box-sizing:border-box !important;text-overflow:clip !important}
+.stripe-container>.calculate-button,.stripe-container>.value-container>.receipt-url-container,.stripe-container .receipt-url-container,.stripe-container>.accept-trade-button {width:calc(33.333% - 5.33px) !important;max-width:calc(33.333% - 5.33px) !important;min-width:0 !important;flex:0 0 calc(33.333% - 5.33px) !important;margin:0 !important;padding:12px 6px !important;font-size:12px !important;box-shadow:0 2px 4px rgba(0,0,0,.2) !important;white-space:nowrap !important;overflow:hidden !important;box-sizing:border-box !important;text-overflow:clip !important}
+.stripe-container>.calculate-button {order:-2 !important}
+.stripe-container>.value-container>.receipt-url-container,.stripe-container .receipt-url-container {order:-1 !important}
+.stripe-container>.accept-trade-button {order:0 !important}
 .stripe-container .button-icon {display:inline-block !important;width:18px !important;height:18px !important;vertical-align:middle !important}
 .stripe-container .button-text {display:none !important}
 .copy-url-button,.view-edit-receipt-button {width:auto;padding:10px 16px;touch-action:manipulation;font-size:13px}
@@ -372,14 +395,22 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 .items-table td {padding:8px 8px !important;font-size:13px}
 .url-display {flex-direction:row;gap:8px;flex-wrap:wrap}
 .url-text {font-size:11px}
+.completed-trade{flex-wrap:wrap !important;padding:8px !important;gap:8px}
+.completed-trade>a.user.name{flex:1 1 100%;min-width:0}
+.completed-trade .completed-actions{flex:1 1 100%;flex-wrap:wrap;padding:0;justify-content:center;gap:6px}
+.completed-trade .completed-actions .total-display{font-size:11px;width:100%;text-align:center;margin-bottom:4px}
+.completed-trade .completed-actions .action-btn{padding:6px 10px;font-size:10px;flex:1 1 auto;min-width:60px}
+.completed-trade .completed-actions .dismiss-btn{width:20px;height:20px;margin-left:4px}
+.completed-trade .completed-actions .dismiss-btn svg{width:14px;height:14px}
 }
 @media only screen and (max-width:480px), only screen and (max-device-width:480px) {
 .stripe-container {display:flex !important;flex-direction:row !important;flex-wrap:wrap !important;gap:6px !important;padding:12px !important;align-items:stretch !important;justify-content:space-between !important}
 .stripe-container>.value-container,.stripe-container>.value-container.visible {display:contents !important;flex-direction:unset !important}
 .stripe-container>.value-container>.total-value-container,.stripe-container .total-value-container {width:100% !important;max-width:100% !important;min-width:100% !important;flex:0 0 100% !important;margin:0 !important;padding:14px !important;font-size:14px !important;order:-3 !important;box-sizing:border-box !important}
-.stripe-container>.calculate-button {width:calc(33.333% - 4px) !important;max-width:calc(33.333% - 4px) !important;min-width:0 !important;flex:0 0 calc(33.333% - 4px) !important;margin:0 !important;padding:12px 3px !important;font-size:11px !important;order:-2 !important;white-space:nowrap !important;overflow:hidden !important;box-sizing:border-box !important;text-overflow:clip !important}
-.stripe-container>.value-container>.receipt-url-container,.stripe-container .receipt-url-container {width:calc(33.333% - 4px) !important;max-width:calc(33.333% - 4px) !important;min-width:0 !important;flex:0 0 calc(33.333% - 4px) !important;margin:0 !important;padding:12px 3px !important;font-size:11px !important;order:-1 !important;white-space:nowrap !important;overflow:hidden !important;box-sizing:border-box !important;text-overflow:clip !important}
-.stripe-container>.accept-trade-button {width:calc(33.333% - 4px) !important;max-width:calc(33.333% - 4px) !important;min-width:0 !important;flex:0 0 calc(33.333% - 4px) !important;margin:0 !important;padding:12px 3px !important;font-size:11px !important;order:0 !important;white-space:nowrap !important;overflow:hidden !important;box-sizing:border-box !important;text-overflow:clip !important}
+.stripe-container>.calculate-button,.stripe-container>.value-container>.receipt-url-container,.stripe-container .receipt-url-container,.stripe-container>.accept-trade-button {width:calc(33.333% - 4px) !important;max-width:calc(33.333% - 4px) !important;min-width:0 !important;flex:0 0 calc(33.333% - 4px) !important;margin:0 !important;padding:12px 3px !important;font-size:11px !important;white-space:nowrap !important;overflow:hidden !important;box-sizing:border-box !important;text-overflow:clip !important}
+.stripe-container>.calculate-button {order:-2 !important}
+.stripe-container>.value-container>.receipt-url-container,.stripe-container .receipt-url-container {order:-1 !important}
+.stripe-container>.accept-trade-button {order:0 !important}
 .stripe-container .button-icon {display:inline-block !important;width:16px !important;height:16px !important;vertical-align:middle !important}
 .receipt-modal {width:100%;max-width:100%;margin:5px;max-height:95vh}
 .modal-header {padding:12px 16px}
@@ -394,10 +425,25 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 .url-display {flex-direction:row;gap:6px;flex-wrap:wrap}
 .url-text {font-size:10px}
 .editable-input {width:70px;font-size:13px;padding:5px}
+.completed-trade .completed-actions .action-btn{padding:5px 8px;font-size:9px;min-width:50px}
+.completed-trade .completed-actions .dismiss-btn{width:18px;height:18px}
+.completed-trade .completed-actions .dismiss-btn svg{width:12px;height:12px}
 }
 .new-trade-toggle-header{cursor:pointer;position:relative}
 .new-trade-toggle-header::after{content:'▼';font-size:11px;position:absolute;right:10px;top:50%;transform:translateY(-50%);opacity:.7;transition:transform .2s}
 .new-trade-toggle-header.expanded::after{transform:translateY(-50%) rotate(-180deg)}
+.completed-trade{background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(16,185,129,0.05)) !important;border-left:3px solid #22c55e;display:flex !important;flex-direction:row !important;align-items:center !important;padding:8px 15px !important;min-height:40px !important;height:auto !important;position:relative !important;overflow:visible !important;gap:15px}
+.completed-trade .desc{display:none !important;visibility:hidden !important;height:0 !important;padding:0 !important;margin:0 !important;overflow:hidden !important}
+.completed-trade .view{display:none !important;visibility:hidden !important;height:0 !important;padding:0 !important;margin:0 !important;overflow:hidden !important}
+.completed-trade>a.user.name{flex-shrink:0;opacity:.7}
+.completed-trade .completed-actions{display:flex !important;align-items:center;justify-content:center;gap:10px;flex:1;padding:0;position:relative !important;z-index:2 !important}
+.completed-trade .completed-actions .action-btn{padding:5px 10px;background:linear-gradient(145deg,var(--bg-light),var(--bg-lighter));color:var(--text);border:1px solid var(--border);border-radius:4px;cursor:pointer;font:500 11px 'Segoe UI';transition:all .2s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.completed-trade .completed-actions .action-btn:hover{background:linear-gradient(145deg,var(--bg-lighter),var(--bg-light));transform:translateY(-1px)}
+.completed-trade .completed-actions .action-btn svg{width:12px;height:12px}
+.completed-trade .completed-actions .total-display{font:600 12px 'Segoe UI';color:#22c55e}
+.completed-trade .completed-actions .dismiss-btn{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;color:#ef4444;cursor:pointer;transition:transform .2s,color .2s;border-radius:4px;border:none;background:transparent;padding:0;margin-left:8px}
+.completed-trade .completed-actions .dismiss-btn:hover{transform:scale(1.15);color:#dc2626;background:rgba(239,68,68,0.1)}
+.completed-trade .completed-actions .dismiss-btn svg{width:16px;height:16px}
 `);
     }
 
@@ -419,7 +465,38 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         set: (items) => Promise.resolve(Object.entries(items).forEach(([k, v]) => GM_setValue(k, v)))
     };
 
+    const storageKeys = {
+        trade: (tradeID) => `trade_${tradeID}`,
+        tradeState: (tradeID) => `trade_state_${tradeID}`,
+        TRADE_STATE_PREFIX: 'trade_state_'
+    };
+
     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    const waitForElement = (selector, timeout = 60000) => {
+        return new Promise((resolve) => {
+            const existing = document.querySelector(selector);
+            if (existing) {
+                resolve(existing);
+                return;
+            }
+
+            const startTime = Date.now();
+
+            const check = () => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    resolve(element);
+                } else if (Date.now() - startTime >= timeout) {
+                    resolve(null);
+                } else {
+                    requestAnimationFrame(check);
+                }
+            };
+
+            requestAnimationFrame(check);
+        });
+    };
 
     const retry = async (fn, maxAttempts = 5, delay = 100) => {
         for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -448,7 +525,6 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
     const updateMobileStatus = () => {
         const wasMobile = isMobile;
         isMobile = checkIsMobile();
-        if (wasMobile !== isMobile) console.log('Mobile status changed:', isMobile);
     };
 
     window.addEventListener('resize', debounce(updateMobileStatus, 250));
@@ -487,6 +563,16 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         }
     };
 
+    const includeMessageSetting = {
+        get: async () => (await storage.get(['include_receipt_message'])).include_receipt_message || false,
+        set: (value) => storage.set({ include_receipt_message: value }),
+        toggle: async () => {
+            const current = await includeMessageSetting.get();
+            await includeMessageSetting.set(!current);
+            return !current;
+        }
+    };
+
     const fetchUserProfile = async (userID) => {
         const cached = userProfileCache.get(userID);
         if (cached && Date.now() - cached.timestamp < CONFIG.CACHE_DURATION) return cached.data;
@@ -502,9 +588,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             const data = await response.json();
             const tornError = handleTornApiError(data);
             if (tornError) {
-                if (tornError.code === 2) {
-                    await storage.set({ torn_api_key: undefined });
-                }
+                await handleApiKeyError(tornError);
                 return null;
             }
 
@@ -513,7 +597,8 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             }
             userProfileCache.set(userID, { data, timestamp: Date.now() });
             return data;
-        } catch {
+        } catch (e) {
+            console.error('Failed to fetch user profile:', e);
             return null;
         }
     };
@@ -555,7 +640,13 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 
     const q = (sel) => document.querySelector(sel);
     const qa = (sel) => document.querySelectorAll(sel);
-    const getParam = (name) => new URLSearchParams(location.hash.substring(1)).get(name);
+    const getParam = (name) => {
+        let hashStr = location.hash.substring(1);
+        if (hashStr.startsWith('/')) {
+            hashStr = hashStr.substring(1);
+        }
+        return new URLSearchParams(hashStr).get(name);
+    };
     const getTradeID = () => getParam('ID');
     const getStep = () => getParam('step');
 
@@ -567,6 +658,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
     let apiTradeData = {};
     let currentReceipt = null;
     let currentReceiptURL = null;
+    let currentTradeMessage = null;
 
     const initTradeData = () => ({
         items: [],
@@ -593,22 +685,33 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                     return userData.id;
                 }
             }
-        } catch (e) { console.error('Failed to get user ID:', e); }
+        } catch (e) {
+            console.error('Failed to get user ID:', e);
+        }
         return null;
     };
 
-    const getMoneyInTrade = () => {
-        const match = q(SELECTORS.USER_LEFT_MONEY)?.textContent?.trim()?.match(/\$([0-9,]+)/);
+    const parseMoney = (text) => {
+        const match = text?.match(/\$([0-9,]+)/);
         return match ? parseInt(match[1].replace(/,/g, ''), 10) : 0;
     };
+
+    const parseItemNameQty = (text) => {
+        if (!text) return null;
+        const match = text.match(/^(.+?)(?:\s+x(\d+))?$/);
+        return match ? { name: match[1].trim(), quantity: parseInt(match[2] || 1, 10) } : null;
+    };
+
+    const getMoneyInTrade = () => parseMoney(q(SELECTORS.USER_LEFT_MONEY)?.textContent?.trim());
 
     const moneyMatches = () => currentReceipt?.total_value && getMoneyInTrade() === currentReceipt.total_value;
 
     const parseItems = () => {
         const items = [];
         qa(SELECTORS.USER_RIGHT_ITEMS).forEach(row => {
-            const name = row.querySelector('.name.left')?.childNodes[0]?.nodeValue?.trim()?.match(/^(.+?)(?:\s+x(\d+))?$/);
-            if (name) items.push({ name: name[1].trim(), quantity: parseInt(name[2] || 1, 10) });
+            const text = row.querySelector('.name.left')?.childNodes[0]?.nodeValue?.trim();
+            const parsed = parseItemNameQty(text);
+            if (parsed) items.push(parsed);
         });
         return items;
     };
@@ -622,18 +725,160 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         return s1.every((item, i) => item.name === s2[i].name && item.quantity === s2[i].quantity);
     };
 
-    const getStoredData = async (tradeID) => (await storage.get([`trade_${tradeID}`]))[`trade_${tradeID}`] || null;
+    const getStoredData = async (tradeID) => {
+        const key = storageKeys.trade(tradeID);
+        return (await storage.get([key]))[key] || null;
+    };
 
-    const storeData = async (tradeID, items, receipt, receiptURL) => {
+    const storeData = async (tradeID, items, receipt, receiptURL, message = null) => {
         const existing = await getStoredData(tradeID);
         const manual_prices = existing?.manual_prices || {};
-        return storage.set({
-            [`trade_${tradeID}`]: { items, receipt, receiptURL, timestamp: Date.now(), total_value: receipt.total_value, manual_prices }
+        await storage.set({
+            [storageKeys.trade(tradeID)]: { items, receipt, receiptURL, message, timestamp: Date.now(), total_value: receipt.total_value, manual_prices }
         });
+        const playerName = getUsername();
+        if (playerName && items.length > 0 && receipt?.total_value > 0) {
+            await storeCompletedTradeData(playerName, items, receipt, receiptURL, message);
+        }
+    };
+
+    const COMPLETED_TRADES_KEY = 'completed_trades_index';
+
+    const getCompletedTradesIndex = async () => {
+        const data = (await storage.get([COMPLETED_TRADES_KEY]))[COMPLETED_TRADES_KEY];
+        return data || [];
+    };
+
+    const storeCompletedTradeData = async (playerName, items, receipt, receiptURL, message = null) => {
+        const index = await getCompletedTradesIndex();
+        const now = Date.now();
+
+        const itemsKey = items
+            .map(i => `${i.name.toLowerCase()}:${i.quantity}`)
+            .sort()
+            .join('|');
+
+        const tradeEntry = {
+            playerName: playerName.toLowerCase(),
+            items,
+            itemsKey,
+            totalValue: receipt.total_value,
+            receipt,
+            receiptURL,
+            message,
+            timestamp: now
+        };
+
+        const filtered = index.filter(entry =>
+            !(entry.playerName === tradeEntry.playerName &&
+              entry.itemsKey === tradeEntry.itemsKey &&
+              entry.totalValue === tradeEntry.totalValue)
+        );
+
+        filtered.push(tradeEntry);
+
+        const validEntries = filtered.filter(entry =>
+            now - entry.timestamp < CONFIG.TWENTY_FOUR_HOURS
+        );
+
+        await storage.set({ [COMPLETED_TRADES_KEY]: validEntries });
+    };
+
+    const findMatchingCompletedTrade = async (playerName, items, moneyAmount) => {
+        const index = await getCompletedTradesIndex();
+        const now = Date.now();
+
+        const itemsKey = items
+            .map(i => `${i.name.toLowerCase()}:${i.quantity}`)
+            .sort()
+            .join('|');
+
+        for (const entry of index) {
+            if (now - entry.timestamp > CONFIG.TWENTY_FOUR_HOURS) continue;
+
+            if (entry.playerName !== playerName.toLowerCase()) continue;
+
+            if (entry.itemsKey !== itemsKey) continue;
+
+            if (Math.abs(entry.totalValue - moneyAmount) <= 1) {
+                return entry;
+            }
+        }
+
+        return null;
+    };
+
+    const cleanupCompletedTrades = async () => {
+        const index = await getCompletedTradesIndex();
+        const now = Date.now();
+        const validEntries = index.filter(entry =>
+            now - entry.timestamp < CONFIG.TWENTY_FOUR_HOURS
+        );
+
+        if (validEntries.length !== index.length) {
+            await storage.set({ [COMPLETED_TRADES_KEY]: validEntries });
+        }
+    };
+
+    const isLogviewPage = () => getStep() === 'logview';
+
+    const parseLogviewTrade = () => {
+        const tradeCont = q('.trade-cont.m-top10');
+        if (!tradeCont) return null;
+
+        const leftUser = tradeCont.querySelector('.user.left');
+        const rightUser = tradeCont.querySelector('.user.right');
+        if (!leftUser || !rightUser) return null;
+
+        const leftHeader = leftUser.querySelector('.title-black')?.textContent?.trim() || '';
+        const rightHeader = rightUser.querySelector('.title-black')?.textContent?.trim() || '';
+
+        const leftPlayerMatch = leftHeader.match(/^(.+?)(?:'s items traded|'s items|$)/i);
+        const rightPlayerMatch = rightHeader.match(/^(.+?)(?:'s items traded|'s items|$)/i);
+
+        const leftPlayerName = leftPlayerMatch ? leftPlayerMatch[1].trim() : '';
+        const rightPlayerName = rightPlayerMatch ? rightPlayerMatch[1].trim() : '';
+
+        const parseMoneyFromSide = (side) => {
+            const moneyText = side.querySelector('.cont li.color1 .name.left')?.textContent?.trim() || '';
+            return parseMoney(moneyText);
+        };
+
+        const parseItemsFromSide = (side) => {
+            const items = [];
+            const itemsList = side.querySelector('.cont li.color2 ul.desc');
+            if (!itemsList) return items;
+
+            itemsList.querySelectorAll('li').forEach(li => {
+                const nameEl = li.querySelector('.name.left');
+                if (!nameEl) return;
+
+                const text = nameEl.childNodes[0]?.nodeValue?.trim() || nameEl.textContent?.trim() || '';
+                if (!text || text.toLowerCase() === 'no items in trade') return;
+
+                const parsed = parseItemNameQty(text);
+                if (parsed) items.push(parsed);
+            });
+            return items;
+        };
+
+        const leftMoney = parseMoneyFromSide(leftUser);
+        const rightMoney = parseMoneyFromSide(rightUser);
+        const leftItems = parseItemsFromSide(leftUser);
+        const rightItems = parseItemsFromSide(rightUser);
+
+        return {
+            leftPlayerName,
+            rightPlayerName,
+            leftMoney,
+            rightMoney,
+            leftItems,
+            rightItems
+        };
     };
 
     const getTradeState = async (tradeID) => {
-        const key = `trade_state_${tradeID}`;
+        const key = storageKeys.tradeState(tradeID);
         const data = (await storage.get([key]))[key];
         if (!data) return null;
         if (Date.now() - data.timestamp > CONFIG.SEVEN_HOURS) {
@@ -644,7 +889,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
     };
 
     const setTradeState = async (tradeID, state, additionalData = {}) => {
-        batchedStorage.set(`trade_state_${tradeID}`, { state, timestamp: Date.now(), ...additionalData });
+        batchedStorage.set(storageKeys.tradeState(tradeID), { state, timestamp: Date.now(), ...additionalData });
     };
 
     const formatTimeAgo = (timestamp) => {
@@ -717,6 +962,11 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         await sleep(duration);
         span ? (span.textContent = orig) : (element[prop] = orig);
         element.classList.remove(className);
+    };
+
+    const flashClass = (element, className, duration = 2000) => {
+        element.classList.add(className);
+        sleep(duration).then(() => element.classList.remove(className));
     };
 
     const createButton = (classes, iconSvg, text, onClick) =>
@@ -849,74 +1099,98 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         const allKeys = await storage.get([]);
         const now = Date.now();
         const toDelete = Object.keys(allKeys)
-            .filter(k => k.startsWith('trade_state_') && allKeys[k] && now - allKeys[k].timestamp > CONFIG.SEVEN_HOURS)
+            .filter(k => k.startsWith(storageKeys.TRADE_STATE_PREFIX) && allKeys[k] && now - allKeys[k].timestamp > CONFIG.SEVEN_HOURS)
             .reduce((obj, k) => ({ ...obj, [k]: undefined }), {});
 
         if (Object.keys(toDelete).length) await storage.set(toDelete);
+
+        await cleanupCompletedTrades();
+    };
+
+    const isMainTradePage = () => isTradePage && !getStep();
+    const isTradePageView = () => isTradePage && getStep() === 'view';
+
+    const getTradeIDFromElement = (element) => {
+        const link = element.querySelector?.(SELECTORS.TRADE_LINK) || element;
+        if (!link?.href) return null;
+        const match = link.href.match(/ID=(\d+)/);
+        return match ? match[1] : null;
+    };
+
+    const findTradeListItem = (tradeID) => {
+        for (const li of qa(SELECTORS.TRADE_LIST_ITEM)) {
+            const linkTradeID = getTradeIDFromElement(li);
+            if (linkTradeID === String(tradeID)) return li;
+        }
+        return null;
+    };
+
+    const ensureTradeData = (tradeID) => {
+        if (!apiTradeData[tradeID]) {
+            apiTradeData[tradeID] = initTradeData();
+        }
+        return apiTradeData[tradeID];
+    };
+
+    const getTradeList = () => q(SELECTORS.TRADE_LIST) || ensureTradeListExists();
+
+    const updateIndicator = async (li, tradeID) => {
+        if (!li || !tradeID) return;
+        const stateData = await getTradeState(tradeID);
+        const display = await getStateDisplay(stateData, tradeID);
+        if (!display) return;
+
+        let statusSpan = li.querySelector('.trade-status-indicator');
+        if (!statusSpan) {
+            statusSpan = el('span', {
+                classes: 'trade-status-indicator',
+                attributes: { 'data-trade-id': tradeID }
+            });
+            const descP = li.querySelector('.desc p');
+            if (descP) descP.appendChild(statusSpan);
+        }
+
+        statusSpan.textContent = display.text;
+        Object.assign(statusSpan.style, {
+            color: display.color,
+            backgroundColor: `${display.color}20`,
+            border: `1px solid ${display.color}40`
+        });
     };
 
     const displayTradeStates = async () => {
-        if (!isTradePage || getStep()) return;
+        if (!isMainTradePage()) return;
 
         ensureTradeListExists();
         const tradeListItems = qa(SELECTORS.TRADE_LIST_ITEM);
         if (!tradeListItems.length) return;
 
         await Promise.all(Array.from(tradeListItems).map(async (li) => {
-            if (li.querySelector('.trade-status-indicator')) return;
-
-            const viewLink = li.querySelector(SELECTORS.TRADE_LINK);
-            const tradeID = viewLink?.href.match(/ID=(\d+)/)?.[1];
+            const tradeID = getTradeIDFromElement(li);
             if (!tradeID) return;
-
-            const stateData = await getTradeState(tradeID);
-            const display = await getStateDisplay(stateData, tradeID);
-            if (!display) return;
-
-            const statusSpan = el('span', {
-                classes: 'trade-status-indicator',
-                text: display.text,
-                attributes: { 'data-trade-id': tradeID },
-                style: {
-                    color: display.color,
-                    backgroundColor: `${display.color}20`,
-                    border: `1px solid ${display.color}40`
-                }
-            });
-
-            const descP = li.querySelector('.desc p');
-            if (descP) descP.appendChild(statusSpan);
+            await updateIndicator(li, tradeID);
         }));
     };
 
     const debouncedDisplayStates = debounce(displayTradeStates, 100);
 
     const refreshTradeStatusTimes = async () => {
-        if (!isTradePage || getStep()) return;
+        if (!isMainTradePage()) return;
 
         const statusBadges = qa('.trade-status-indicator[data-trade-id]');
         if (!statusBadges.length) return;
 
         await Promise.all(Array.from(statusBadges).map(async (badge) => {
             const tradeID = badge.getAttribute('data-trade-id');
-            if (!tradeID) return;
-
-            const display = await getStateDisplay(await getTradeState(tradeID), tradeID);
-            if (badge.textContent !== display.text) {
-                badge.textContent = display.text;
-                Object.assign(badge.style, {
-                    color: display.color,
-                    backgroundColor: `${display.color}20`,
-                    border: `1px solid ${display.color}40`
-                });
-            }
+            const li = badge.closest('li');
+            if (tradeID && li) await updateIndicator(li, tradeID);
         }));
     };
 
     const createTradeRow = async (tradeID, userID, description, timestamp) => {
         if (!isTradePage) return;
-        
-        const tradeList = q(SELECTORS.TRADE_LIST) || ensureTradeListExists();
+
+        const tradeList = getTradeList();
         if (!tradeList) return;
 
         const profile = await fetchUserProfile(userID);
@@ -962,48 +1236,138 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 
         tradeList.appendChild(li);
         li.classList.add('last');
-        debouncedDisplayStates();
-
+        await updateIndicator(li, tradeID);
         li.classList.add('flash-new');
     };
 
-    const updateTradeStatusBadge = async (tradeID) => {
-        if (!isTradePage) return;
-        
-        const allTrades = qa(SELECTORS.TRADE_LIST_ITEM);
-        for (const li of allTrades) {
-            const link = li.querySelector(SELECTORS.TRADE_LINK);
-            if (link && link.href.includes(`ID=${tradeID}`)) {
-                const statusIndicator = li.querySelector('.trade-status-indicator');
-                if (statusIndicator) {
-                    statusIndicator.remove();
-                    debouncedDisplayStates();
-                }
-                li.classList.add('flash-update');
-                break;
-            }
+
+    const removeTradeFromList = (tradeID) => {
+        if (!isMainTradePage()) return;
+
+        const li = findTradeListItem(tradeID);
+        if (li) {
+            li.classList.add('fade-out');
+            sleep(300).then(() => li.remove());
         }
     };
 
-    const removeTradeFromList = (tradeID) => {
-        if (!isTradePage) return;
-        
-        for (const li of qa(SELECTORS.TRADE_LIST_ITEM)) {
-            const link = li.querySelector(SELECTORS.TRADE_LINK);
-            if (link?.href.match(/ID=(\d+)/)?.[1] === String(tradeID)) {
-                li.classList.add('fade-out');
-                sleep(300).then(() => li.remove());
-                return;
-            }
+    const openChat = (userID) => {
+        if (window.chat && typeof window.chat === 'object') {
+            window.chat.r(userID);
+        } else {
+            window.dispatchEvent(new CustomEvent('chat.openChannel', {
+                detail: { userId: String(userID) }
+            }));
         }
+    };
+
+    const transformToCompletedTrade = async (tradeID, userID) => {
+        if (!isMainTradePage()) return;
+
+        const li = findTradeListItem(tradeID);
+        if (!li) return;
+
+        const stored = await getStoredData(tradeID);
+        const totalValue = stored?.total_value || 0;
+        const message = stored?.message || null;
+        const hasReceipt = stored?.receiptURL && stored?.receipt;
+
+        li.classList.add('completed-trade');
+        li.classList.add('flash-new');
+
+        const nametDiv = li.querySelector('.namet');
+        if (nametDiv) {
+            const nameLinks = Array.from(nametDiv.querySelectorAll('a.user.name'));
+            nameLinks.forEach(link => {
+                link.style.opacity = '0.7';
+                link.style.flexShrink = '0';
+                li.insertBefore(link, li.firstChild);
+            });
+            nametDiv.remove();
+        }
+
+        const descDiv = li.querySelector('.desc');
+        if (descDiv) {
+            descDiv.style.display = 'none';
+            descDiv.style.visibility = 'hidden';
+            descDiv.style.height = '0';
+            descDiv.style.padding = '0';
+            descDiv.style.margin = '0';
+            descDiv.style.overflow = 'hidden';
+
+            const actionsDiv = el('div', { classes: 'completed-actions' });
+
+            actionsDiv.appendChild(el('span', {
+                classes: 'total-display',
+                text: `✓ Completed${totalValue > 0 ? ` - $${totalValue.toLocaleString()}` : ''}`
+            }));
+
+            if (hasReceipt) {
+                const viewReceiptBtn = el('button', {
+                    classes: 'action-btn',
+                    html: `${SVG_ICONS.receipt} Receipt`,
+                    onClick: async () => {
+                        currentReceipt = stored.receipt;
+                        currentReceiptURL = stored.receiptURL;
+                        currentTradeMessage = stored.message || null;
+                        showModal();
+                    }
+                });
+                actionsDiv.appendChild(viewReceiptBtn);
+            }
+
+            if (message) {
+                const copyMsgBtn = el('button', {
+                    classes: 'action-btn',
+                    html: `${SVG_ICONS.paste} Message`,
+                    onClick: () => {
+                        navigator.clipboard.writeText(message);
+                        showMsg(copyMsgBtn, 'Copied!', 1000);
+                    }
+                });
+                actionsDiv.appendChild(copyMsgBtn);
+            }
+
+            if (userID) {
+                const chatBtn = el('button', {
+                    classes: 'action-btn',
+                    html: `${SVG_ICONS.chat} Chat`,
+                    onClick: () => openChat(userID)
+                });
+                actionsDiv.appendChild(chatBtn);
+            }
+
+            const dismissBtn = el('button', {
+                classes: 'dismiss-btn',
+                html: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>',
+                onClick: () => {
+                    li.classList.add('fade-out');
+                    sleep(300).then(() => li.remove());
+                }
+            });
+            actionsDiv.appendChild(dismissBtn);
+
+            descDiv.parentNode.insertBefore(actionsDiv, descDiv.nextSibling);
+        }
+
+        const viewDiv = li.querySelector('.view');
+        if (viewDiv) {
+            viewDiv.style.display = 'none';
+            viewDiv.style.visibility = 'hidden';
+            viewDiv.style.height = '0';
+            viewDiv.style.padding = '0';
+            viewDiv.style.margin = '0';
+            viewDiv.style.overflow = 'hidden';
+        }
+
+        const statusIndicator = li.querySelector('.trade-status-indicator');
+        if (statusIndicator) statusIndicator.remove();
     };
 
     const processActivityLog = async (eventsData) => {
         if (!eventsData || typeof eventsData !== 'object') return;
 
-        const step = getStep();
-        const isMainTradePage = isTradePage && !step;
-        const tradeList = isMainTradePage ? (q(SELECTORS.TRADE_LIST) || ensureTradeListExists()) : null;
+        const tradeList = isMainTradePage() ? getTradeList() : null;
 
         const events = Object.entries(eventsData)
             .map(([id, event]) => ({ ...event, ID: id }))
@@ -1016,10 +1380,8 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             if (lastProcessedEventID && event.ID === lastProcessedEventID) break;
             if (event.category !== 'Trades') continue;
 
-            const tradeIDMatch = event.data?.trade_id?.match(/ID=(\d+)/);
-            if (!tradeIDMatch) continue;
-
-            const tradeID = tradeIDMatch[1];
+            const tradeID = event.data?.parsed_trade_id;
+            if (!tradeID) continue;
             const eventLog = Number(event.log);
 
             if (!tradeStatuses[tradeID]) tradeStatuses[tradeID] = eventLog;
@@ -1040,21 +1402,16 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             .sort((a, b) => a.timestamp - b.timestamp);
 
         for (const trade of validTrades) {
-            if (!apiTradeData[trade.tradeID]) {
-                apiTradeData[trade.tradeID] = initTradeData();
-            }
-            apiTradeData[trade.tradeID].userID = trade.userID;
-            apiTradeData[trade.tradeID].lastEventTime = trade.timestamp * 1000;
+            const data = ensureTradeData(trade.tradeID);
+            data.userID = trade.userID;
+            data.lastEventTime = trade.timestamp * 1000;
         }
 
         if (tradeList) {
             for (const trade of validTrades) {
-                const allTrades = Array.from(qa(SELECTORS.TRADE_LIST_ITEM));
-                const existingTrade = allTrades.find(li => {
-                    const link = li.querySelector(SELECTORS.TRADE_LINK);
-                    return link && link.href.includes(`ID=${trade.tradeID}`);
-                });
-                if (!existingTrade) await createTradeRow(trade.tradeID, trade.userID, trade.description, trade.timestamp);
+                if (!findTradeListItem(trade.tradeID)) {
+                    await createTradeRow(trade.tradeID, trade.userID, trade.description, trade.timestamp);
+                }
             }
         }
 
@@ -1062,23 +1419,24 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             if (lastProcessedEventID && event.ID === lastProcessedEventID) break;
             if (event.category !== 'Trades') continue;
 
-            const tradeIDMatch = event.data?.trade_id?.match(/ID=(\d+)/);
-            if (!tradeIDMatch) continue;
+            const tradeID = event.data?.parsed_trade_id;
+            if (!tradeID) continue;
 
-            const tradeID = tradeIDMatch[1];
-
-            if (!apiTradeData[tradeID]) {
-                apiTradeData[tradeID] = initTradeData();
-            }
-
-            const data = apiTradeData[tradeID];
+            const data = ensureTradeData(tradeID);
 
             const eventLog = Number(event.log);
 
             if (TERMINAL_EVENTS.includes(eventLog)) {
-                if (isMainTradePage) removeTradeFromList(tradeID);
+                if (isMainTradePage()) {
+                    if (eventLog === TRADE_EVENTS.COMPLETED) {
+                        const userID = data.userID || event.data?.user;
+                        transformToCompletedTrade(tradeID, userID);
+                    } else {
+                        removeTradeFromList(tradeID);
+                    }
+                }
                 delete apiTradeData[tradeID];
-                batchedStorage.set(`trade_state_${tradeID}`, undefined);
+                batchedStorage.set(storageKeys.tradeState(tradeID), undefined);
                 continue;
             }
 
@@ -1099,7 +1457,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                 data.declinedAt = event.timestamp * 1000;
             }
 
-            if ([TRADE_EVENTS.OTHER_ITEMS_ADD].includes(eventLog)) {
+            if (eventLog === TRADE_EVENTS.OTHER_ITEMS_ADD) {
                 if (event.data?.items) data.items = event.data.items;
                 data.hasItems = true;
             } else if (eventLog === TRADE_EVENTS.OTHER_ITEMS_REMOVE) {
@@ -1134,7 +1492,10 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 
             if (isTrackedEvent) {
                 await inferStateFromAPI(tradeID);
-                if (isMainTradePage) updateTradeStatusBadge(tradeID);
+                if (isMainTradePage()) {
+                    const li = findTradeListItem(tradeID);
+                    if (li) await updateIndicator(li, tradeID);
+                }
             }
         }
 
@@ -1157,26 +1518,24 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         const key = await apiKey.get();
         if (!key) return;
 
-        const fiveMinutesAgo = Math.floor((Date.now() - 300000) / 1000);
+        const tenMinutesAgo = Math.floor((Date.now() - 600000) / 1000);
 
         try {
-            const response = await fetch(`${CONFIG.TORN_API}user/?key=${key}&cat=94&from=${fiveMinutesAgo}&selections=log`);
+            const apiUrl = `${CONFIG.TORN_API}user/?key=${key}&cat=94&from=${tenMinutesAgo}&comment=W3B-Script&selections=log`;
+            const response = await fetch(apiUrl);
             const httpError = handleHttpError(response.status);
             if (httpError) return;
 
             const data = await response.json();
             const tornError = handleTornApiError(data);
             if (tornError) {
-                if ([1, 2, 10, 13, 18].includes(tornError.code)) {
-                    await storage.set({ torn_api_key: undefined });
-                    stopTradePolling();
-                }
+                await handleApiKeyError(tornError, true);
                 return;
             }
 
             if (data?.log && typeof data.log === 'object') {
                 await processActivityLog(data.log);
-                if (isTradePage && !getStep()) {
+                if (isMainTradePage()) {
                     await sleep(100);
                     debouncedDisplayStates();
                 }
@@ -1199,6 +1558,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         if (!timeRefreshInterval) {
             timeRefreshInterval = setInterval(refreshTradeStatusTimes, 1000);
         }
+
     };
 
     const stopTradePolling = () => {
@@ -1276,6 +1636,13 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         });
     };
 
+    const clickAcceptButton = () => {
+        const acceptBtn = q(SELECTORS.ACCEPT_BTN);
+        if (acceptBtn) {
+            acceptBtn.click();
+        }
+    };
+
     const updateAcceptBtn = (btn) => {
         if (!isTradePage) return;
         if (!btn) btn = q('.accept-trade-button');
@@ -1285,7 +1652,12 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         const acceptButtonExists = !!q(SELECTORS.ACCEPT_BTN);
         const expectedValue = currentReceipt?.total_value || 0;
         const hasItems = currentReceipt?.items?.length > 0;
-        const goToAddMoney = () => q(SELECTORS.ADD_MONEY_LINK)?.click();
+        const goToAddMoney = () => {
+            const tradeID = getTradeID();
+            if (tradeID) {
+                window.location.href = `https://www.torn.com/trade.php#step=addmoney&ID=${tradeID}`;
+            }
+        };
 
         let newState;
         if (!hasItems) {
@@ -1318,16 +1690,13 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                 enabled: matches,
                 onClick: async () => {
                     if (!moneyMatches()) return;
-                    const acceptBtn = q(SELECTORS.ACCEPT_BTN);
-                    if (acceptBtn) {
-                        const tradeID = getTradeID();
-                        if (tradeID) {
-                            await setTradeState(tradeID, 'accepted', {
-                                acceptedAt: Date.now(),
-                                totalValue: currentReceipt?.total_value || 0
-                            });
-                        }
-                        acceptBtn.click();
+                    const tradeID = getTradeID();
+                    if (tradeID) {
+                        await setTradeState(tradeID, 'accepted', {
+                            acceptedAt: Date.now(),
+                            totalValue: currentReceipt?.total_value || 0
+                        });
+                        clickAcceptButton();
                     }
                 }
             };
@@ -1338,8 +1707,8 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         const currentEnabled = btn.classList.contains('enabled');
         const currentBackground = btn.style.background;
 
-        if (currentText !== newState.text || 
-            currentDisabled !== newState.disabled || 
+        if (currentText !== newState.text ||
+            currentDisabled !== newState.disabled ||
             currentEnabled !== newState.enabled ||
             currentBackground !== (newState.background || '')) {
             setButtonState(btn, newState);
@@ -1348,7 +1717,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 
     const updateUI = () => {
         if (!isTradePage) return;
-        
+
         const total = q('.total-value-container');
         const receipt = q('.receipt-url-container');
         const container = q('.value-container');
@@ -1392,7 +1761,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 
     const autoCalc = async () => {
         if (!isTradePage) return;
-        
+
         const tradeID = getTradeID();
         if (!tradeID) return;
 
@@ -1416,6 +1785,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         if (stored && itemsMatch(stored.items, items)) {
             currentReceipt = stored.receipt;
             currentReceiptURL = stored.receiptURL;
+            currentTradeMessage = stored.message || null;
 
             if (stored.manual_prices) {
                 currentReceipt.items = currentReceipt.items.map(item =>
@@ -1437,14 +1807,14 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             return;
         }
 
-        const res = await apiCall(`pricelist/${userID}`, { items, username, tradeID });
+        const includeMessage = await includeMessageSetting.get();
+        const res = await apiCall(`pricelist/${userID}`, { items, username, tradeID: parseInt(tradeID), includeMessage });
 
         if (res?.error) {
             const totalEl = q('.total-value-container');
             if (totalEl) {
                 totalEl.textContent = `Error: ${res.error}`;
-                totalEl.classList.add('error-button');
-                sleep(3000).then(() => totalEl.classList.remove('error-button'));
+                flashClass(totalEl, 'error-button', 3000);
             }
             return;
         }
@@ -1452,7 +1822,8 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         if (res?.receipt?.total_value !== undefined && res.receiptURL) {
             currentReceipt = res.receipt;
             currentReceiptURL = res.receiptURL;
-            storeData(tradeID, items, res.receipt, res.receiptURL);
+            currentTradeMessage = res.message || null;
+            storeData(tradeID, items, res.receipt, res.receiptURL, res.message);
             updateUI();
             requestAnimationFrame(() => colorCodeItemsByValue());
         }
@@ -1506,18 +1877,18 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             cell.classList.add('price-editable');
             addHandler(cell, () => {
                 if (cell.querySelector('input')) return;
-                
+
                 const price = cell.textContent.replace(/[^0-9.]/g, '');
                 const formattedPrice = parseFloat(price).toLocaleString();
-                const input = Object.assign(document.createElement('input'), { 
-                    type: 'text', 
-                    value: formattedPrice, 
+                const input = Object.assign(document.createElement('input'), {
+                    type: 'text',
+                    value: formattedPrice,
                     className: 'editable-input'
                 });
                 cell.textContent = '';
                 cell.appendChild(input);
                 input.focus();
-                
+
                 input.select();
 
                 const formatInput = () => {
@@ -1604,7 +1975,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             sleep(2000).then(() => {
                 saveBtn.classList.remove('error');
                 saveBtn.textContent = 'Save Changes';
-            });
+            }); // Intentional fire-and-forget for UI feedback
         } else {
             const tradeID = getTradeID();
 
@@ -1637,7 +2008,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                 existing.timestamp = Date.now();
                 existing.manual_prices = { ...existing.manual_prices, ...manualPrices };
 
-                await storage.set({ [`trade_${tradeID}`]: existing });
+                await storage.set({ [storageKeys.trade(tradeID)]: existing });
             }
 
             const tbody = table.querySelector('tbody');
@@ -1668,10 +2039,9 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             updateAcceptBtn();
 
             saveBtn.classList.add('saved');
-            sleep(2000).then(() => {
-                saveBtn.classList.add('save-button-hidden');
-                saveBtn.classList.remove('saved');
-            });
+            await sleep(2000);
+            saveBtn.classList.add('save-button-hidden');
+            saveBtn.classList.remove('saved');
         }
     };
 
@@ -1685,6 +2055,21 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 
         await sleep(200);
         content.innerHTML = '';
+
+            if (currentTradeMessage) {
+                const copyMsgBtn = el('button', {
+                    classes: 'copy-url-button',
+                    text: 'Copy Message',
+                    onClick: () => navigator.clipboard.writeText(currentTradeMessage).then(() => showMsg(copyMsgBtn, 'Copied!', 2000))
+                });
+
+                const messageContainer = el('div', { classes: 'message-section' });
+                const messageContent = el('div', { classes: 'message-content' });
+                messageContent.innerHTML = currentTradeMessage.replace(/\n/g, '<br>');
+                messageContainer.appendChild(messageContent);
+                messageContainer.appendChild(copyMsgBtn);
+                content.appendChild(messageContainer);
+            }
 
             const copyBtn = el('button', {
                 classes: 'copy-url-button',
@@ -1712,7 +2097,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
     };
 
     const ensureTradeListExists = () => {
-        if (!isTradePage || getStep()) return null;
+        if (!isMainTradePage()) return null;
 
         let tradeList = q(SELECTORS.TRADE_LIST);
         if (tradeList) return tradeList;
@@ -1733,10 +2118,12 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
     };
 
     const initApiKeyButton = async (retryCount = 0) => {
-        if (!isTradePage || getStep()) return;
-        if (retryCount > 20) return; // Stop retrying after 2 seconds
+        if (!isMainTradePage()) return;
+        if (retryCount > 20) return;
 
-        const currentTradeHeading = Array.from(qa('.title-black.top-round.m-top10')).find(el => 
+        if (q('.api-key-button')) return;
+
+        const currentTradeHeading = Array.from(qa('.title-black.top-round.m-top10')).find(el =>
             el.textContent.trim() === 'Current Trade'
         );
 
@@ -1745,13 +2132,12 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             return msg && msg.textContent.trim() === 'You have no current trades.';
         })?.querySelector('.msg.right-round');
 
-        // Try alternative selectors if the primary ones don't work
         const altHeading = q('.title-black.top-round') || q('.title-black.m-top10');
         const altMsg = Array.from(qa('.info-msg-cont')).find(el => {
             const msg = el.querySelector('.msg');
             return msg && msg.textContent.trim().includes('no current trades');
         })?.querySelector('.msg');
-        
+
         const container = currentTradeHeading || noTradesMsg || altHeading || altMsg;
         if (!container) {
             sleep(100).then(() => initApiKeyButton(retryCount + 1));
@@ -1762,9 +2148,11 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         const updateButton = async () => {
             const existingBtn = container.querySelector('.api-key-button');
             if (existingBtn) existingBtn.remove();
+            const existingMsgBtn = container.querySelector('.msg-toggle-button');
+            if (existingMsgBtn) existingMsgBtn.remove();
 
             const hasKey = !!(await apiKey.get());
-            
+
             const button = el('button', {
                 classes: 'api-key-button',
                 text: hasKey ? 'Remove key' : 'Set API key',
@@ -1785,6 +2173,18 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             });
 
             container.appendChild(button);
+
+            const includeMsg = await includeMessageSetting.get();
+            const msgToggleBtn = el('button', {
+                classes: ['api-key-button', 'msg-toggle-button'],
+                text: includeMsg ? 'Including Message' : 'Excluding Message',
+                onClick: async () => {
+                    const newValue = await includeMessageSetting.toggle();
+                    msgToggleBtn.textContent = newValue ? 'Including Message' : 'Excluding Message';
+                }
+            });
+
+            container.appendChild(msgToggleBtn);
         };
 
         await updateButton();
@@ -1793,7 +2193,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
     const debouncedInitApiKeyButton = debounce(initApiKeyButton, 100);
 
     const initNewTradeCollapsible = (root = document) => {
-        if (!isTradePage || getStep()) return;
+        if (!isMainTradePage()) return;
 
         root.querySelectorAll('.init-trade.m-top10').forEach(container => {
             if (container.dataset.newTradeCollapsedInit === '1') return;
@@ -1815,8 +2215,8 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
     };
 
     const initStripe = () => {
-        if (!isTradePage) return;
-        
+        if (!isTradePage || !getStep()) return;
+
         const isAcceptPage = getStep() === 'accept2';
         let tc = q('.trade-cont.m-top10');
         const isAddMoneyPage = !!q('.init-trade.add-money.m-top10');
@@ -1844,7 +2244,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                 );
 
                 const dashboardBtn = createButton(['accept-trade-button', 'enabled'], SVG_ICONS.dashboard, 'Dashboard',
-                    () => window.location.hash = '#'
+                    () => window.location.hash = ''
                 );
 
                 const stripe = el('div', { classes: ['stripe-container', 'expanded'], children: [backToTradeBtn, container, dashboardBtn] });
@@ -1856,6 +2256,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                         if (stored?.receipt) {
                             currentReceipt = stored.receipt;
                             currentReceiptURL = stored.receiptURL;
+                            currentTradeMessage = stored.message || null;
                             total.textContent = `Total Value: $${currentReceipt.total_value.toLocaleString()}`;
 
                             if (currentReceipt.items?.length > 0 && currentReceiptURL) {
@@ -1939,9 +2340,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 
             children = [pasteBtn, placeholderContainer, changeBtn];
         } else {
-            const accept = createButton(['accept-trade-button'], SVG_ICONS.check, 'Accept Trade',
-                () => moneyMatches() && q(SELECTORS.ACCEPT_BTN)?.click()
-            );
+            const accept = createButton(['accept-trade-button'], SVG_ICONS.check, 'Accept Trade', null);
             accept.disabled = true;
 
             const calculateHandler = async () => {
@@ -1972,7 +2371,8 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                     return;
                 }
 
-                const res = await apiCall(`pricelist/${userID}`, { items, username, tradeID });
+                const includeMessage = await includeMessageSetting.get();
+                const res = await apiCall(`pricelist/${userID}`, { items, username, tradeID: parseInt(tradeID), includeMessage });
 
                 btn.classList.remove('calculating');
                 btn.disabled = false;
@@ -1986,13 +2386,14 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                 if (res?.receipt?.total_value !== undefined && res.receiptURL) {
                     currentReceipt = res.receipt;
                     currentReceiptURL = res.receiptURL;
+                    currentTradeMessage = res.message || null;
                     total.textContent = `Total Value: $${currentReceipt.total_value.toLocaleString()}`;
                     [total, receipt].forEach(e => e.classList.remove('hidden'));
                     container.classList.add('visible');
                     stripe.classList.add('expanded');
                     updateAcceptBtn(accept);
                     requestAnimationFrame(() => colorCodeItemsByValue());
-                    storeData(tradeID, items, res.receipt, res.receiptURL);
+                    storeData(tradeID, items, res.receipt, res.receiptURL, res.message);
                 }
             };
 
@@ -2004,104 +2405,188 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         tc.parentNode.insertBefore(stripe, tc);
     };
 
+    const initLogviewStripe = async () => {
+        if (!isTradePage || !isLogviewPage()) return;
+        if (q('.stripe-container')) return;
+
+        const tradeCont = q('.trade-cont.m-top10');
+        if (!tradeCont) return;
+
+        const tradeData = parseLogviewTrade();
+        if (!tradeData) return;
+
+        let otherPlayerName, itemsReceived, moneyPaid;
+
+        if (tradeData.leftMoney > 0 && tradeData.rightItems.length > 0) {
+            otherPlayerName = tradeData.rightPlayerName;
+            itemsReceived = tradeData.rightItems;
+            moneyPaid = tradeData.leftMoney;
+        } else if (tradeData.rightMoney > 0 && tradeData.leftItems.length > 0) {
+            otherPlayerName = tradeData.leftPlayerName;
+            itemsReceived = tradeData.leftItems;
+            moneyPaid = tradeData.rightMoney;
+        } else {
+            return;
+        }
+
+        if (!otherPlayerName || itemsReceived.length === 0 || moneyPaid === 0) return;
+
+        const matchedTrade = await findMatchingCompletedTrade(otherPlayerName, itemsReceived, moneyPaid);
+
+        if (matchedTrade) {
+            currentReceipt = matchedTrade.receipt;
+            currentReceiptURL = matchedTrade.receiptURL;
+            currentTradeMessage = matchedTrade.message || null;
+        }
+
+        const total = el('div', {
+            classes: ['total-value-container'],
+            text: matchedTrade
+                ? `Total Value: $${matchedTrade.totalValue.toLocaleString()}`
+                : `Trade Value: $${moneyPaid.toLocaleString()}`,
+            onClick: () => {
+                const value = matchedTrade?.totalValue || moneyPaid;
+                navigator.clipboard.writeText(value.toString());
+                showMsg(total, 'Copied!', 1000);
+            }
+        });
+
+        const receipt = el('div', {
+            classes: ['receipt-url-container', matchedTrade ? '' : 'hidden'].filter(Boolean),
+            html: `${SVG_ICONS.receipt}<span class="button-text">View Receipt</span>`,
+            onClick: matchedTrade ? showModal : null
+        });
+
+        const container = el('div', { classes: ['value-container', 'visible'], children: [total, receipt] });
+
+        const statusBtn = createButton(
+            ['accept-trade-button', matchedTrade ? 'button-accepted' : ''].filter(Boolean),
+            SVG_ICONS.check,
+            matchedTrade ? 'Completed' : 'No Receipt',
+            null
+        );
+        statusBtn.disabled = true;
+        statusBtn.style.cursor = 'default';
+        if (matchedTrade) {
+            statusBtn.title = `Receipt found - trade with ${otherPlayerName}`;
+        } else {
+            statusBtn.title = 'No matching receipt found in storage';
+        }
+
+        const dashboardBtn = createButton(['calculate-button'], SVG_ICONS.dashboard, 'Dashboard',
+            () => window.location.hash = ''
+        );
+
+        const stripe = el('div', { classes: ['stripe-container', 'expanded'], children: [dashboardBtn, container, statusBtn] });
+        tradeCont.parentNode.insertBefore(stripe, tradeCont);
+    };
+
     const autoFill = async () => {
         if (!isTradePage || getStep() !== 'addmoney') return;
         const stored = await getStoredData(getTradeID());
         if (!stored?.total_value) return;
 
-            const fill = () => {
-            const inputs = qa('input.input-money');
-            if (!inputs.length) return false;
-            inputs.forEach(i => {
-                if (isMobile) i.classList.add('mobile-input-font');
-                i.value = stored.total_value.toString();
-                i.dispatchEvent(new Event('input', { bubbles: true }));
-                i.dispatchEvent(new Event('change', { bubbles: true }));
-            });
-            return true;
-        };
+        const input = await waitForElement('input.input-money');
+        if (!input) return;
 
-        if (fill()) return;
-        const obs = new MutationObserver((_, o) => fill() && o.disconnect());
-        obs.observe(document.body, { childList: true, subtree: true });
-        sleep(isMobile ? 7000 : 5000).then(() => obs.disconnect());
+        const inputs = qa('input.input-money');
+        inputs.forEach(i => {
+            if (isMobile) i.classList.add('mobile-input-font');
+            i.value = stored.total_value.toString();
+            i.dispatchEvent(new Event('input', { bubbles: true }));
+            i.dispatchEvent(new Event('change', { bubbles: true }));
+        });
     };
 
-    const initializeScript = () => {
-        if (!isTradePage) return;
-        
-        const obs = new MutationObserver((muts) => {
-            for (const m of muts) {
-                if (m.type === 'childList') {
-                    const nodes = Array.from(m.addedNodes);
+    let messageObserver = null;
 
-                    if (nodes.some(n => n.nodeType === 1 && n.classList?.contains('trade-cont'))) {
-                        initStripe();
-                        autoCalc();
-                    }
+    const initMessageObserver = () => {
+        if (messageObserver) return messageObserver;
 
-                    if (nodes.some(n => n.nodeType === 1 && n.classList?.contains('add-money'))) {
-                        initStripe();
-                        autoFill();
-                    }
+        messageObserver = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type !== 'childList') continue;
 
-                    if (nodes.some(n => n.nodeType === 1 && (n.classList?.contains('init-trade') || n.querySelector?.('.init-trade.m-top10')))) {
-                        initNewTradeCollapsible();
-                    }
+                for (const node of mutation.addedNodes) {
+                    if (node.nodeType !== 1) continue;
+                    if (!node.classList?.contains('info-msg-cont')) continue;
 
-                    if (nodes.some(n => n.nodeType === 1 && n.classList?.contains('trades-cont'))) {
-                        debouncedDisplayStates();
-                    }
+                    const msgText = node.querySelector?.('.msg')?.textContent?.trim();
+                    if (!msgText) continue;
 
-                    if (nodes.some(n => n.nodeType === 1 && (n.classList?.contains('title-black') || n.querySelector?.('.title-black.top-round.m-top10')))) {
-                        debouncedInitApiKeyButton();
-                    }
-
-                    if (nodes.some(n => n.nodeType === 1 && (n.classList?.contains('info-msg-cont') || n.querySelector?.('.info-msg-cont')))) {
-                        ensureTradeListExists();
-                        debouncedInitApiKeyButton();
-                    }
-
-                    for (const node of nodes) {
-                        if (node.nodeType === 1 && node.classList?.contains('info-msg-cont') && node.classList?.contains('green')) {
-                            const msgText = node.querySelector('.msg')?.textContent?.trim();
-
-                            if (msgText?.includes('accepted the trade')) {
-                                sleep(50).then(() => initStripe());
-                            } else if (msgText?.includes('changed your money for the trade') && !msgText?.includes('accepted') && !msgText?.includes('complete')) {
-                                node.classList.add('info-hidden');
-                                const nextSibling = node.nextElementSibling;
-                                requestAnimationFrame(() => {
-                                    node.remove();
-                                    if (nextSibling?.tagName === 'HR' && nextSibling.classList.contains('page-head-delimiter')) {
-                                        nextSibling.remove();
-                                    }
-                                });
-                            }
+                    if (msgText.includes('changed your money for the trade') &&
+                        !msgText.includes('accepted') &&
+                        !msgText.includes('complete')) {
+                        node.classList.add('info-hidden');
+                        const nextSibling = node.nextElementSibling;
+                        node.remove();
+                        if (nextSibling?.tagName === 'HR' && nextSibling.classList.contains('page-head-delimiter')) {
+                            nextSibling.remove();
                         }
                     }
                 }
             }
         });
 
-        obs.observe(document.body, { childList: true, subtree: true });
-        initNewTradeCollapsible();
-        debouncedInitApiKeyButton();
-        ensureTradeListExists();
-        initStripe();
-        autoCalc();
+        messageObserver.observe(document.body, { childList: true, subtree: true });
+        return messageObserver;
+    };
+
+    const stopMessageObserver = () => {
+        if (messageObserver) {
+            messageObserver.disconnect();
+            messageObserver = null;
+        }
+    };
+
+    const handlePageStep = async (step) => {
+        const stepHandlers = {
+            'view': async () => {
+                await waitForElement('.trade-cont.m-top10');
+                initStripe();
+                autoCalc();
+                initMessageObserver();
+            },
+            'addmoney': async () => {
+                await waitForElement('.init-trade.add-money');
+                initStripe();
+                autoFill();
+                initMessageObserver();
+            },
+            'accept2': async () => {
+                await waitForElement('.info-msg-cont.green');
+                initStripe();
+                initMessageObserver();
+            },
+            'logview': async () => {
+                await waitForElement('.trade-cont.m-top10');
+                initLogviewStripe();
+                stopMessageObserver();
+            }
+        };
+
+        const defaultHandler = async () => {
+            await waitForElement('.trades-cont, .info-msg-cont');
+            ensureTradeListExists();
+            displayTradeStates();
+            initApiKeyButton();
+            initNewTradeCollapsible();
+            stopMessageObserver();
+        };
+
+        const handler = stepHandlers[step] || defaultHandler;
+        await handler();
+    };
+
+    const initializeScript = async () => {
+        if (!isTradePage) return;
+
+        await handlePageStep(getStep());
     };
 
     if (isTradePage) {
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeScript);
-        } else {
-            initializeScript();
-        }
+        initializeScript();
     }
-
-    if (isTradePage && getStep() === 'addmoney') autoFill();
-    if (isTradePage && getStep() === 'accept2') initStripe();
 
     if (window.requestIdleCallback) {
         requestIdleCallback(() => cleanupOldStates(), { timeout: 5000 });
@@ -2111,26 +2596,16 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 
     startTradePolling();
 
-    if (isTradePage && !getStep()) {
-        ensureTradeListExists();
-        displayTradeStates();
-        initApiKeyButton(); // Also call directly in case MutationObserver misses it
-        const tradeListObserver = new MutationObserver(debouncedDisplayStates);
-        const tradeList = q(SELECTORS.TRADE_LIST);
-        if (tradeList) tradeListObserver.observe(tradeList, { childList: true });
-    }
-
-    window.addEventListener('hashchange', () => {
+    window.addEventListener('hashchange', async () => {
         if (window.acceptBtnUpdateInterval) {
             clearInterval(window.acceptBtnUpdateInterval);
             window.acceptBtnUpdateInterval = null;
         }
 
-        if (isTradePage) {
-            if (getStep() === 'addmoney') autoFill();
-            if (getStep() === 'accept2') sleep(50).then(() => initStripe());
-            if (!getStep()) debouncedDisplayStates();
-        }
+        if (!isTradePage) return;
+
+        await sleep(100);
+        await handlePageStep(getStep());
     });
 
     window.addEventListener('beforeunload', () => {

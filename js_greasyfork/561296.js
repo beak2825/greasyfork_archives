@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TORN: Attack Assist Requesting DEV
 // @namespace    dekleinekobini.private.attack-assist-requesting--dev
-// @version      1.0.2
+// @version      1.0.3
 // @author       DeKleineKobini [2114440]
 // @description  Request assists for your attacks.
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
@@ -20,10 +20,23 @@
 (function () {
   'use strict';
 
+  const MAX_ASSISTS = 5;
+  const ERROR_MESSAGES = {
+    NOT_IN_ACTIVE_ATTACK: "You need to be in an active attack!",
+    INVALID_LOCATION_PROVIDED: "The request location is invalid. Please check your settings."
+  };
   const BUTTON_COLOR_PENDING = "#AA8800";
   const BUTTON_COLOR_SUCCESS = "#00AA00";
   const BUTTON_COLOR_FAILURE = "#AA0000";
-  const MAX_ASSISTS = 5;
+  class FetchError extends Error {
+    status;
+    statusText;
+    responseText;
+    code;
+    constructor(message, status, statusText, responseText, code) {
+      super(message), this.name = "FetchError", this.status = status, this.statusText = statusText, this.responseText = responseText, this.code = code;
+    }
+  }
   function fetchGM(url, options) {
     const method = options?.method || "GET";
     return new Promise((resolve, reject) => {
@@ -33,12 +46,72 @@
         headers: options?.headers,
         data: options?.body,
         onload: (response) => {
-          response.status === 200 ? resolve(JSON.parse(response.responseText)) : reject(new Error(`Request failed with status: ${response.status} - ${response.statusText}`));
+          if (response.status === 200)
+            try {
+              resolve(JSON.parse(response.responseText));
+            } catch {
+              reject(
+                new FetchError(
+                  "Response isn't in a supported format!",
+                  response.status,
+                  response.statusText,
+                  response.responseText,
+                  "INVALID_RESPONSE_FORMAT"
+                )
+              );
+            }
+          else
+            reject(
+              new FetchError(
+                `Failed with status ${response.status}.`,
+                response.status,
+                response.statusText,
+                response.responseText,
+                `HTTP_STATUS_${response.status}`
+              )
+            );
         },
-        onerror: (response) => reject(new Error(`Request failed with status: ${response.status} - ${response.statusText} or error: ${response.error}`)),
-        ontimeout: () => reject(new Error("Request timed out")),
-        onabort: () => reject(new Error("Request aborted"))
+        onerror: (response) => {
+          reject(
+            new FetchError(
+              `Unexpected error ${response.status}.`,
+              response.status,
+              response.statusText,
+              response.responseText,
+              `HTTP_STATUS_${response.status}`
+            )
+          );
+        },
+        ontimeout: () => reject(new FetchError("Request timed out.", null, null, null, "REQUEST_TIMED_OUT")),
+        onabort: () => reject(new FetchError("Request timed out.", null, null, null, "REQUEST_ABORTED"))
       });
+    });
+  }
+  const API_BASE = "https://api.no1irishstig.co.uk";
+  const SOURCE = "Attack Assist Script";
+  async function fetchButtons(location2) {
+    const response = await fetchGM(`${API_BASE}/abtns?locID=${encodeURIComponent(location2)}`);
+    return Object.entries(response).map(([name, label]) => ({ name, label }));
+  }
+  function requestAssist(userId, userName, targetId, targetName, button, quantity, location2) {
+    const payload = {
+      tornid: userId,
+      username: userName,
+      targetid: targetId,
+      targetname: targetName,
+      vendor: `${SOURCE} ${GM_info.script.version}`,
+      source: SOURCE,
+      type: "Assist",
+      mode: button,
+      quantity,
+      locid: location2,
+      token: "DKK_bMN5XhEo0qF4ztV7"
+};
+    console.log("Sending Payload:", payload);
+    return fetchGM(`${API_BASE}/request`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
   }
   const CHAT_SELECTORS = Object.freeze({
@@ -94,6 +167,13 @@ SETTINGS_PANEL_CLASS: "settings-panel___",
   function findByPartialClass(node, className, subSelector = "") {
     return node.querySelector(`[class*='${className}'] ${subSelector}`.trim());
   }
+  function isJSON(data) {
+    try {
+      return JSON.parse(data), true;
+    } catch {
+      return false;
+    }
+  }
   let currentPlayerName, currentPlayerId;
   function getCurrentPlayerName() {
     if (currentPlayerName)
@@ -146,58 +226,44 @@ SETTINGS_PANEL_CLASS: "settings-panel___",
     }
     return null;
   }
-  const API_BASE = "https://api.no1irishstig.co.uk";
-  const SOURCE = "Attack Assist Script";
-  async function fetchButtons(location2) {
-    const response = await fetchGM(`${API_BASE}/abtns?locID=${encodeURIComponent(location2)}`);
-    return Object.entries(response).map(([name, label]) => ({ name, label }));
+  function isInActiveAttack() {
+    return !document.evaluate('//span[text()="Back to profile"]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
   }
-  function requestAssist(targetId, targetName, button, quantity, location2) {
-    const userName = getCurrentPlayerName();
-    if (userName === null) throw new Error("Can't detect your player name.");
-    const userId = getCurrentPlayerId();
-    if (userId === null) throw new Error("Can't detect your player id.");
-    const payload = {
-      tornid: userId,
-      username: userName,
-      targetid: targetId,
-      targetname: targetName,
-      vendor: `${SOURCE} ${GM_info.script.version}`,
-      source: SOURCE,
-      type: "Assist",
-      mode: button,
-      quantity,
-      locid: location2,
-      token: "DKK_bMN5XhEo0qF4ztV7"
-};
-    console.log("Sending Payload:", payload);
-    return fetchGM(`${API_BASE}/request`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-  }
+  const _MAX_ASSISTS = MAX_ASSISTS;
+  const _ERROR_MESSAGES = ERROR_MESSAGES;
   const _BUTTON_COLOR_PENDING = BUTTON_COLOR_PENDING;
   const _BUTTON_COLOR_SUCCESS = BUTTON_COLOR_SUCCESS;
   const _BUTTON_COLOR_FAILURE = BUTTON_COLOR_FAILURE;
-  const _MAX_ASSISTS = MAX_ASSISTS;
-  const stylesString = "#attack-assist-panel {\r\n    position: fixed;\r\n    width: 140px;\r\n    background-color: rgba(0, 0, 0, 0.8);\r\n    color: #fff;\r\n    padding: 10px;\r\n    border-radius: 8px;\r\n    z-index: 899999;\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: 8px;\r\n    /*box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);*/\r\n    user-select: none;\r\n\r\n    /* Default position. */\r\n    top: 150px;\r\n    right: 0;\r\n}\r\n\r\n#attack-assist-panel.collapsed > :not(.assist-request-title-container) {\r\n    display: none;\r\n}\r\n\r\n.assist-request-title-container {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    gap: 5px;\r\n    margin-bottom: 5px;\r\n    cursor: move;\r\n}\r\n\r\n#attack-assist-panel.collapsed .assist-request-title-container {\r\n    margin-bottom: 0;\r\n}\r\n\r\n.assist-request-title {\r\n    font-weight: bold;\r\n    text-align: center;\r\n    flex-grow: 1;\r\n}\r\n\r\n.assist-request-icon {\r\n    width: 12px;\r\n    height: 12px;\r\n    cursor: pointer;\r\n    display: flex;\r\n    align-items: center;\r\n    opacity: 0.7;\r\n}\r\n\r\n.assist-request-icon:hover {\r\n    opacity: 1;\r\n}\r\n\r\n.quantity-container {\r\n    display: flex;\r\n    align-items: center;\r\n    gap: 5px;\r\n}\r\n\r\n.quantity-input {\r\n    width: 100%;\r\n    padding: 2px;\r\n    border-radius: 4px;\r\n    border: 1px solid #555;\r\n    background-color: #222;\r\n    color: #fff;\r\n}\r\n\r\n.assist-button {\r\n    padding: 8px;\r\n    cursor: pointer;\r\n    background-color: #444;\r\n    color: white;\r\n    border: 1px solid #666;\r\n    border-radius: 4px;\r\n    text-align: center;\r\n    font-weight: bold;\r\n}\r\n\r\n.assist-button:hover:not(:disabled) {\r\n    background-color: #555;\r\n}\r\n\r\n.assist-button:disabled {\r\n    cursor: not-allowed;\r\n    opacity: 0.7;\r\n}";
+  const stylesString = "#attack-assist-panel {\n    position: fixed;\n    width: 140px;\n    background-color: rgba(0, 0, 0, 0.8);\n    color: #fff;\n    padding: 10px;\n    border-radius: 8px;\n    z-index: 899999;\n    display: flex;\n    flex-direction: column;\n    gap: 8px;\n    user-select: none;\n\n    /* Default position. */\n    top: 150px;\n    right: 0;\n}\n\n#attack-assist-panel.collapsed > :not(.assist-request-title-container) {\n    display: none;\n}\n\n.assist-request-title-container {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    gap: 5px;\n    margin-bottom: 5px;\n    cursor: move;\n}\n\n#attack-assist-panel.collapsed .assist-request-title-container {\n    margin-bottom: 0;\n}\n\n.assist-request-title {\n    font-weight: bold;\n    text-align: center;\n    flex-grow: 1;\n}\n\n.assist-request-icon {\n    width: 12px;\n    height: 12px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    opacity: 0.7;\n}\n\n.assist-request-icon:hover {\n    opacity: 1;\n}\n\n.assist-error-message {\n    display: block;\n    padding: 8px;\n    margin-bottom: 4px;\n    background-color: rgba(170, 0, 0, 0.2);\n    border: 1px solid #aa0000;\n    border-radius: 4px;\n    color: #ff6666;\n    font-size: 12px;\n    text-align: center;\n}\n\n.quantity-container {\n    display: flex;\n    align-items: center;\n    gap: 5px;\n}\n\n.quantity-input {\n    width: 100%;\n    padding: 2px;\n    border-radius: 4px;\n    border: 1px solid #555;\n    background-color: #222;\n    color: #fff;\n}\n\n.assist-button {\n    padding: 8px;\n    cursor: pointer;\n    background-color: #444;\n    color: white;\n    border: 1px solid #666;\n    border-radius: 4px;\n    text-align: center;\n    font-weight: bold;\n}\n\n.assist-button:hover:not(:disabled) {\n    background-color: #555;\n}\n\n.assist-button:disabled {\n    cursor: not-allowed;\n    opacity: 0.7;\n}\n";
   async function main() {
-    let location2 = GM_getValue("request_location");
+    GM_registerMenuCommand("Reset Request Location", resetLocation);
+    let location2 = GM_getValue("request_location") ?? await promptAndValidateLocation();
     if (!location2) {
-      const input = prompt("Please set your 'Request Location':");
-      if (input) {
-        location2 = input;
-        GM_setValue("request_location", location2);
-      } else {
-        console.warn("Location not set. Attack Assist buttons will not be loaded.");
-        return;
-      }
+      console.warn("Location not set. Attack Assist buttons will not be loaded.");
+      return;
     }
     injectStyles();
-    const buttons = await fetchButtons(location2);
-    createPanel(buttons, location2);
-    GM_registerMenuCommand("Reset Request Location", resetLocation);
+    try {
+      const buttons = await fetchButtons(location2);
+      createPanel(buttons, location2);
+    } catch (error) {
+      console.error("Failed to fetch buttons:", error);
+      createPanelWithError(formatApiError(error));
+    }
+  }
+  async function promptAndValidateLocation() {
+    const input = prompt("Please set your 'Request Location':");
+    if (!input) return null;
+    try {
+      await fetchButtons(input);
+      GM_setValue("request_location", input);
+      return input;
+    } catch (error) {
+      alert(`Invalid location: ${formatApiError(error)}
+
+Please check the location and try again.`);
+      return null;
+    }
   }
   function injectStyles() {
     const styleElement = document.createElement("style");
@@ -205,9 +271,34 @@ SETTINGS_PANEL_CLASS: "settings-panel___",
     styleElement.innerHTML = stylesString;
     document.head.appendChild(styleElement);
   }
+  function formatApiError(error) {
+    if (error instanceof FetchError) {
+      let code;
+      if (error.responseText !== null) {
+        if (isJSON(error.responseText)) {
+          const data = JSON.parse(error.responseText);
+          if ("error" in data) code = data.error;
+          else code = error.responseText;
+        } else {
+          code = error.responseText;
+        }
+        code = code.toUpperCase().replaceAll(" ", "_");
+      } else {
+        code = error.code;
+      }
+      console.log("DKK error", code);
+      if (code in _ERROR_MESSAGES) {
+        return _ERROR_MESSAGES[code];
+      }
+    }
+    if (error instanceof Error) {
+      return error.message;
+    }
+    return String(error);
+  }
   const PANEL_STATE_KEY = "attack_assist_panel_state";
-  function createPanel(buttons, location2) {
-    if (document.getElementById("attack-assist-panel")) return;
+  function createBasicPanel() {
+    if (document.getElementById("attack-assist-panel")) return null;
     const container = document.createElement("div");
     container.id = "attack-assist-panel";
     const savedState = GM_getValue(PANEL_STATE_KEY, { top: "150px", left: "", collapsed: false });
@@ -242,58 +333,22 @@ SETTINGS_PANEL_CLASS: "settings-panel___",
     resetIcon.title = "Reset Request Location";
     resetIcon.addEventListener("click", (event) => {
       event.stopPropagation();
-      resetLocation();
+      void resetLocation();
     });
     titleContainer.appendChild(resetIcon);
-    let isDragging = false;
-    let dragOffsetX = 0;
-    let dragOffsetY = 0;
-    titleContainer.addEventListener("mousedown", (event) => {
-      if (event.target !== titleContainer && event.target !== title) return;
-      isDragging = true;
-      dragOffsetX = event.clientX - container.offsetLeft;
-      dragOffsetY = event.clientY - container.offsetTop;
-      document.body.style.userSelect = "none";
-    });
-    titleContainer.addEventListener("touchstart", (event) => {
-      if (event.target !== titleContainer && event.target !== title) return;
-      isDragging = true;
-      const touch = event.touches[0];
-      dragOffsetX = touch.clientX - container.offsetLeft;
-      dragOffsetY = touch.clientY - container.offsetTop;
-    }, { passive: true });
-    window.addEventListener("mousemove", (event) => {
-      if (!isDragging) return;
-      event.preventDefault();
-      const newLeft = event.clientX - dragOffsetX;
-      const newTop = event.clientY - dragOffsetY;
-      container.style.left = `${newLeft}px`;
-      container.style.top = `${newTop}px`;
-      container.style.right = "auto";
-    });
-    window.addEventListener("touchmove", (event) => {
-      if (!isDragging) return;
-      event.preventDefault();
-      const touch = event.touches[0];
-      const newLeft = touch.clientX - dragOffsetX;
-      const newTop = touch.clientY - dragOffsetY;
-      container.style.left = `${newLeft}px`;
-      container.style.top = `${newTop}px`;
-      container.style.right = "auto";
-    }, { passive: false });
-    window.addEventListener("mouseup", () => {
-      if (isDragging) {
-        isDragging = false;
-        document.body.style.userSelect = "";
-        saveState(container);
-      }
-    });
-    window.addEventListener("touchend", () => {
-      if (isDragging) {
-        isDragging = false;
-        saveState(container);
-      }
-    });
+    setupDragging(container, titleContainer, title);
+    document.body.appendChild(container);
+    ensureInViewport(container);
+    window.addEventListener("resize", () => ensureInViewport(container));
+    return container;
+  }
+  function createPanel(buttons, location2) {
+    const container = createBasicPanel();
+    if (!container) return;
+    const errorElement = document.createElement("span");
+    errorElement.classList.add("assist-error-message");
+    errorElement.style.display = "none";
+    container.appendChild(errorElement);
     const quantityContainer = document.createElement("div");
     quantityContainer.classList.add("quantity-container");
     const quantityLabel = document.createElement("label");
@@ -307,16 +362,80 @@ SETTINGS_PANEL_CLASS: "settings-panel___",
     quantityInput.classList.add("quantity-input");
     quantityContainer.appendChild(quantityInput);
     container.appendChild(quantityContainer);
-    buttons.forEach((btnData) => {
+    buttons.forEach((data) => {
       const button = document.createElement("button");
-      button.textContent = btnData.label;
+      button.textContent = data.label;
       button.classList.add("assist-button");
-      button.addEventListener("click", () => handleRequest(button, btnData, parseInt(quantityInput.value), location2, container));
+      button.addEventListener("click", () => handleRequest(button, data, parseInt(quantityInput.value), location2, container, errorElement));
       container.appendChild(button);
     });
-    document.body.appendChild(container);
-    ensureInViewport(container);
-    window.addEventListener("resize", () => ensureInViewport(container));
+  }
+  function createPanelWithError(errorMessage) {
+    const container = createBasicPanel();
+    if (!container) return;
+    const errorElement = document.createElement("div");
+    errorElement.classList.add("assist-error-message");
+    errorElement.textContent = errorMessage;
+    container.appendChild(errorElement);
+  }
+  function setupDragging(container, titleContainer, title) {
+    let isDragging = false;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+    titleContainer.addEventListener("mousedown", (event) => {
+      if (event.target !== titleContainer && event.target !== title) return;
+      isDragging = true;
+      dragOffsetX = event.clientX - container.offsetLeft;
+      dragOffsetY = event.clientY - container.offsetTop;
+      document.body.style.userSelect = "none";
+    });
+    titleContainer.addEventListener(
+      "touchstart",
+      (event) => {
+        if (event.target !== titleContainer && event.target !== title) return;
+        isDragging = true;
+        const touch = event.touches[0];
+        dragOffsetX = touch.clientX - container.offsetLeft;
+        dragOffsetY = touch.clientY - container.offsetTop;
+      },
+      { passive: true }
+    );
+    window.addEventListener("mousemove", (event) => {
+      if (!isDragging) return;
+      event.preventDefault();
+      const newLeft = event.clientX - dragOffsetX;
+      const newTop = event.clientY - dragOffsetY;
+      container.style.left = `${newLeft}px`;
+      container.style.top = `${newTop}px`;
+      container.style.right = "auto";
+    });
+    window.addEventListener(
+      "touchmove",
+      (event) => {
+        if (!isDragging) return;
+        event.preventDefault();
+        const touch = event.touches[0];
+        const newLeft = touch.clientX - dragOffsetX;
+        const newTop = touch.clientY - dragOffsetY;
+        container.style.left = `${newLeft}px`;
+        container.style.top = `${newTop}px`;
+        container.style.right = "auto";
+      },
+      { passive: false }
+    );
+    window.addEventListener("mouseup", () => {
+      if (isDragging) {
+        isDragging = false;
+        document.body.style.userSelect = "";
+        saveState(container);
+      }
+    });
+    window.addEventListener("touchend", () => {
+      if (isDragging) {
+        isDragging = false;
+        saveState(container);
+      }
+    });
   }
   function saveState(container) {
     const state = {
@@ -345,10 +464,17 @@ SETTINGS_PANEL_CLASS: "settings-panel___",
       saveState(container);
     }
   }
-  function handleRequest(clickedButton, btnData, quantity, location2, container) {
-    const allButtons = container.querySelectorAll("button");
-    allButtons.forEach((button) => button.disabled = true);
+  function handleRequest(clickedButton, data, quantity, location2, container, errorElement) {
+    const allButtons = Array.from(container.querySelectorAll("button"));
+    allButtons.forEach((button) => {
+      button.disabled = true;
+      button.style.backgroundColor = "";
+    });
     clickedButton.style.backgroundColor = _BUTTON_COLOR_PENDING;
+    if (!isInActiveAttack()) {
+      handleError(errorElement, "NOT_IN_ACTIVE_ATTACK", allButtons, clickedButton);
+      return;
+    }
     const targetName = getAttackLoaderPlayerName();
     if (targetName === null) throw new Error("Can't detect your target name.");
     const targetId = getAttackLoaderPlayerId();
@@ -357,9 +483,10 @@ SETTINGS_PANEL_CLASS: "settings-panel___",
     if (userName === null) throw new Error("Can't detect your player name.");
     const userId = getCurrentPlayerId();
     if (userId === null) throw new Error("Can't detect your player id.");
-    requestAssist(targetId, targetName, btnData.name, quantity, location2).then(() => {
+    requestAssist(userId, userName, targetId, targetName, data.name, quantity, location2).then(() => {
       clickedButton.style.backgroundColor = _BUTTON_COLOR_SUCCESS;
       clickedButton.textContent = "Sent!";
+      showErrorMessage(errorElement, null);
     }).catch((err) => {
       clickedButton.style.backgroundColor = _BUTTON_COLOR_FAILURE;
       alert(`Request Failed: ${err}`);
@@ -369,13 +496,35 @@ SETTINGS_PANEL_CLASS: "settings-panel___",
       });
     });
   }
-  function resetLocation() {
+  function handleError(errorElement, code, allButtons, clickedButton) {
+    allButtons.forEach((button) => {
+      button.disabled = false;
+      if (button !== clickedButton) button.style.backgroundColor = "";
+    });
+    clickedButton.style.backgroundColor = _BUTTON_COLOR_FAILURE;
+    showErrorMessage(errorElement, _ERROR_MESSAGES[code]);
+  }
+  async function resetLocation() {
     const newLocation = prompt("Enter new Request Location:", GM_getValue("request_location") || "");
     if (!newLocation) return;
-    GM_setValue("request_location", newLocation);
-    alert("Location updated. Reloading...");
-    location.reload();
+    try {
+      await fetchButtons(newLocation);
+      GM_setValue("request_location", newLocation);
+      alert("Location updated. Reloading...");
+      location.reload();
+    } catch (error) {
+      alert(`Invalid location: ${formatApiError(error)}`);
+    }
   }
   main().catch(console.error);
+  function showErrorMessage(errorElement, message) {
+    if (message) {
+      errorElement.textContent = message;
+      errorElement.style.display = "";
+    } else {
+      errorElement.textContent = "";
+      errorElement.style.display = "none";
+    }
+  }
 
 })();

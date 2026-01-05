@@ -1,22 +1,22 @@
 // ==UserScript==
-// @name         LANraragi EHentai 评论区
-// @namespace    https://github.com/Kelcoin
-// @version      4.0
-// @description  在 LANraragi 阅读器底部显示 EH 评论
-// @author       Kelcoin
-// @match        *://*/reader?id=*
-// @connect      e-hentai.org
-// @connect      exhentai.org
-// @connect      githubusercontent.com
-// @grant        GM_xmlhttpRequest
-// @grant        GM_addStyle
-// @grant        GM_setValue
-// @grant        GM_getValue
-// @grant        GM_deleteValue
-// @grant        GM_registerMenuCommand
-// @run-at       document-idle
-// @icon         https://e-hentai.org/favicon.ico
-// @license      MIT
+// @name          LANraragi EHentai 评论区
+// @namespace     https://github.com/Kelcoin
+// @version       4.1
+// @description   在 LANraragi 阅读器底部显示 EH 评论
+// @author        Kelcoin
+// @match         *://*/reader?id=*
+// @connect       e-hentai.org
+// @connect       exhentai.org
+// @connect       githubusercontent.com
+// @grant         GM_xmlhttpRequest
+// @grant         GM_addStyle
+// @grant         GM_setValue
+// @grant         GM_getValue
+// @grant         GM_deleteValue
+// @grant         GM_registerMenuCommand
+// @run-at        document-idle
+// @icon          https://e-hentai.org/favicon.ico
+// @license       MIT
 // @downloadURL https://update.greasyfork.org/scripts/560857/LANraragi%20EHentai%20%E8%AF%84%E8%AE%BA%E5%8C%BA.user.js
 // @updateURL https://update.greasyfork.org/scripts/560857/LANraragi%20EHentai%20%E8%AF%84%E8%AE%BA%E5%8C%BA.meta.js
 // ==/UserScript==
@@ -40,7 +40,7 @@
         blockWordsLocal: '',  // 本地屏蔽词（原始文本）
         blockWordsRemote: '', // 远程导入的屏蔽词（原始文本）
         blockWordsRemoteUrl: '', // 远程屏蔽词 URL
-        theme: 'modern'       // 主题选择 'modern' or 'traditional'
+        theme: 'modern'       // 新增：主题选择 'modern' or 'traditional'
     };
 
     // 读取配置
@@ -67,6 +67,22 @@
     let API_DATA = {};
     // 当前画廊 URL
     let CURRENT_GALLERY_URL = '';
+
+    // --- [修复核心] Cookie 增强处理函数 ---
+    // 确保发送请求时一定带有 nw=1，避免 Content Warning
+    function getSafeCookie() {
+        let c = (CONFIG.cookie || '').trim();
+        if (!c) return '';
+
+        // 如果末尾没有分号，补上分号以便拼接
+        if (!c.endsWith(';')) c += ';';
+
+        // 强制检查并追加 nw=1
+        if (!c.includes('nw=1')) {
+            c += ' nw=1;';
+        }
+        return c;
+    }
 
     // --- 主题定义 (CSS 变量) ---
     const THEMES = {
@@ -805,8 +821,8 @@
             method: "GET",
             url: url,
             headers: {
-                "Cookie": CONFIG.cookie,
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36"
+                "Cookie": getSafeCookie(), // [修复] 使用处理后的 Cookie
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
             },
             onload: function(response) {
                 if (response.status === 200) {
@@ -853,7 +869,7 @@
         };
 
         if (doc.querySelector('h1')?.textContent.includes('Content Warning')) {
-             renderError("遇到内容警告页，请在设置中更新 Cookie。");
+             renderError("遇到内容警告页。虽然脚本已尝试修复 Cookie，但若您未登录或 Cookie 完全失效，请在设置中更新有效 Cookie。");
              return [];
         }
 
@@ -950,7 +966,7 @@
             url: API_DATA.apiUrl,
             headers: {
                 "Content-Type": "application/json",
-                "Cookie": CONFIG.cookie
+                "Cookie": getSafeCookie() // [修复] 使用处理后的 Cookie
             },
             data: JSON.stringify(payload),
             onload: function(response) {
@@ -996,7 +1012,7 @@
             url: CURRENT_GALLERY_URL,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "Cookie": CONFIG.cookie
+                "Cookie": getSafeCookie() // [修复] 使用处理后的 Cookie
             },
             data: data,
             onload: function(response) {
@@ -1038,7 +1054,7 @@
             url: CURRENT_GALLERY_URL,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "Cookie": CONFIG.cookie
+                "Cookie": getSafeCookie() // [修复] 使用处理后的 Cookie
             },
             data: data,
             onload: function(response) {

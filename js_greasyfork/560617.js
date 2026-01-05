@@ -2,7 +2,7 @@
 // @name         Silent Reaper · 一键采集复制器
 // @namespace    http://yuyehk.cn/
 // @author       yuyehk
-// @version      1.0.1
+// @version      1.0.2
 // @description  一个安静、高效的悬浮复制工具。
 // @match        https://tvla-annotator.byte-test.com/reviewer/*
 // @grant        GM_setClipboard
@@ -16,7 +16,7 @@
   'use strict';
 
   // ====== 配置区 ======
-  const TARGET_SELECTOR = 'body > div.min-h-screen.bg-gray-50.text-gray-900.p-4 > div > div > div.col-span-1.space-y-4 > div:nth-child(6) > div.mt-4.pt-4.border-t.border-gray-200.space-y-2.text-xs > div:nth-child(2) > span.text-gray-700.font-medium';
+  const TARGET_SELECTOR = 'body > section > main > div > div > div > div.col-span-1.space-y-4 > div:nth-child(6) > div.mt-4.pt-4.border-t.border-gray-200.space-y-2.text-xs > div:nth-child(2) > span.text-gray-700.font-medium';
   const TAB = '\t';
 
   // ====== 工具函数 ======

@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Torn Market - Safe Auto-Scraper
+// @name         Torn Market - Auto-Scraper
 // @namespace    http://tampermonkey.net/
-// @version      1.6
+// @version      1.7
 // @match        *://www.torn.com/page.php?sid=ItemMarket*
 // @grant        none
 // @description  displays the item market in  a box
-// @license      licence
-// @downloadURL https://update.greasyfork.org/scripts/561439/Torn%20Market%20-%20Safe%20Auto-Scraper.user.js
-// @updateURL https://update.greasyfork.org/scripts/561439/Torn%20Market%20-%20Safe%20Auto-Scraper.meta.js
+// @license      licence is private and (c) 
+// @downloadURL https://update.greasyfork.org/scripts/561439/Torn%20Market%20-%20Auto-Scraper.user.js
+// @updateURL https://update.greasyfork.org/scripts/561439/Torn%20Market%20-%20Auto-Scraper.meta.js
 // ==/UserScript==
 
 (function() {

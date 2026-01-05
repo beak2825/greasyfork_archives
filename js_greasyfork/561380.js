@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Notion Database Batch Replace
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
-// @description  一款专为 Notion 用户打造的深度替换工具。它突破了 Notion 虚拟列表的限制，通过自动化的Z 字形扫描逻辑，确保您的替换操作覆盖到数据库的每一个角落。
+// @version      1.0.1
+// @description  一款专为 Notion 用户打造的深度替换工具
 // @author       DSTBP
 // @icon         https://github.com/DSTBP/NDBR/blob/main/favicon.png?raw=true
 // @match        https://www.notion.so/*
@@ -72,11 +72,30 @@
         makeDraggable(container, document.getElementById('n-header'));
         makeDraggable(icon, icon);
 
-        // 劫持修复
+        // --- 增强型劫持修复 ---
         const inputs = [document.getElementById('n-f'), document.getElementById('n-r')];
         inputs.forEach(input => {
-            input.addEventListener('keydown', (e) => e.stopPropagation(), true);
-            input.addEventListener('mousedown', (e) => e.stopPropagation(), true);
+            // 阻止所有可能触发 Notion 快捷键响应的事件冒泡
+            const eventsToStop = ['keydown', 'keyup', 'keypress', 'mousedown', 'mouseup', 'click', 'paste', 'contextmenu'];
+            
+            eventsToStop.forEach(eventType => {
+                input.addEventListener(eventType, (e) => {
+                    e.stopPropagation();
+                    // 特别针对粘贴事件，确保它在当前元素执行
+                    if (eventType === 'paste') {
+                        // 允许默认行为（即允许粘贴内容进 input），但停止冒泡
+                        return;
+                    }
+                }, { capture: true }); // 使用 capture 阶段提前拦截
+            });
+
+            // 额外保险：当 input 获得焦点时，禁用全局快捷键的影响
+            input.addEventListener('focus', () => {
+                input.style.borderColor = '#2383e2';
+            });
+            input.addEventListener('blur', () => {
+                input.style.borderColor = '#ddd';
+            });
         });
 
         // 收缩逻辑：记录当前的 top 和 right，确保图标出现在面板右上角

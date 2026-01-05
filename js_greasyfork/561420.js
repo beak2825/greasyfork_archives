@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         ESJZone 样式优化
 // @namespace    http://tampermonkey.net/
-// @version      1.3
-// @description  将小说阅读页面的样式应用到阅读页面，添加翻页功能
+// @version      1.4
+// @description  将小说阅读页面的样式应用到阅读页面，添加翻页功能（适配手机页面）
 // @author       deepseek
 // @match        https://www.esjzone.cc/forum/*
 // @grant        GM_addStyle
@@ -55,6 +55,7 @@
             border-bottom: 1px solid #82828200;
         }
         .navbar {
+            background-color: rgb(237, 231, 218) !important;
             border-bottom: 1px solid #828282;
         }
         .toolbar .search, .toolbar .account, .toolbar .cart {
@@ -62,6 +63,9 @@
         }
         .tag {
             border: 1px solid #828282;
+        }
+        .widget-title {
+            border-bottom: 1px solid #828282;
         }
         .btn-outline-secondary {
             border-color: #828282;
@@ -72,7 +76,7 @@
             background: rgb(237, 231, 218) !important;
         }
         .page-title {
-            background-color: rgb(237, 231, 218) !important;
+            background-color: rgba(251, 239, 212, 0.41) !important;
             border-bottom: 1px solid #828282;
         }
 
@@ -138,110 +142,11 @@
                 font-size: 16px !important;
             }
         }
-
-        /* 添加按钮样式（参考代码中的样式） */
-        .scroll-controls {
-            position: fixed;
-            right: 64px;
-            top: 85.6%;
-            transform: translateY(-50%);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .scroll-btn {
-            width: 44px;
-            height: 44px;
-            background: #374250;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .scroll-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .scroll-btn:active {
-            transform: scale(0.95);
-        }
     `);
-
-    // 翻页滚动函数（参考代码中的函数）
-    function pageScroll(direction) {
-        // 计算一屏的高度 - 90%的视口高度
-        const pageHeight = window.innerHeight * 0.9;
-
-        window.scrollBy({
-            top: direction * pageHeight,
-            behavior: 'smooth'
-        });
-    }
-
-    // 添加滚动控制按钮（参考代码中的函数）
-    function addScrollControls() {
-        // 检查是否已存在滚动控制按钮
-        if (document.querySelector('.scroll-controls')) {
-            return;
-        }
-
-        // 创建滚动控制容器
-        const controlsContainer = document.createElement('div');
-        controlsContainer.className = 'scroll-controls';
-
-        // 创建向下滚动按钮
-        const downBtn = document.createElement('button');
-        downBtn.className = 'scroll-btn';
-        downBtn.innerHTML = '∇';
-        downBtn.title = '向下翻页';
-
-        // 创建向上滚动按钮
-        const upBtn = document.createElement('button');
-        upBtn.className = 'scroll-btn';
-        upBtn.innerHTML = '∆';
-        upBtn.title = '向上翻页';
-
-        // 添加到页面
-        controlsContainer.appendChild(downBtn);
-        controlsContainer.appendChild(upBtn);
-        document.body.appendChild(controlsContainer);
-
-        // 按钮点击事件
-        downBtn.addEventListener('click', function(e) {
-            pageScroll(1);
-        });
-
-        upBtn.addEventListener('click', function(e) {
-            pageScroll(-1);
-        });
-
-        // 键盘控制（参考代码中的键盘控制）
-        document.addEventListener('keydown', function(e) {
-            // 方向键控制
-            if (e.code === 'ArrowDown') {
-                e.preventDefault();
-                pageScroll(1);
-            }
-
-            if (e.code === 'ArrowUp') {
-                e.preventDefault();
-                pageScroll(-1);
-            }
-        });
-    }
 
     // 初始化函数
     const init = () => {
-        console.log('ESJ Zone 小说阅读样式优化脚本已加载');
+        console.log('ESJZone 阅读样式优化脚本已加载');
 
         // 等待页面加载完成后调整布局
         setTimeout(() => {
@@ -250,11 +155,133 @@
             if (forumContent) {
                 forumContent.style.margin = '20px auto !important';
             }
-
-            // 添加滚动控制按钮
-            addScrollControls();
         }, 100);
     };
+
+    // 滚动翻页
+    // 滚动翻页按钮的样式
+    const buttonStyles = `
+        .scroll-page-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            right: 16px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,0.3) !important;
+            color: #fff !important;
+            font-size: 20px;
+            z-index: 2000;
+            text-align: center;
+            text-decoration: none !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            border: none !important;
+            outline: none !important;
+        }
+
+        .scroll-page-btn:hover,
+        .scroll-page-btn:active,
+        .scroll-page-btn:visited,
+        .scroll-page-btn:focus {
+            background-color: rgba(0,0,0,0.3) !important;
+            color: #fff !important;
+            text-decoration: none !important;
+        }
+
+        .scroll-page-btn.down {
+            bottom: 100px;
+        }
+        .scroll-page-btn.up {
+            bottom: 160px; /* 在向下按钮的上方 */
+        }
+    `;
+
+    // 注入CSS样式
+    const styleElement = document.createElement('style');
+    styleElement.textContent = buttonStyles;
+    document.head.appendChild(styleElement);
+
+    // 翻页滚动函数
+    function pageScroll(direction) {
+        const pageHeight = window.innerHeight * 0.9;
+        window.scrollBy({
+            top: direction * pageHeight,
+            behavior: 'smooth'
+        });
+    }
+
+    // 除页面上原有的按钮
+    function removeOriginalButtons() {
+        // 查找并删除 "滚动到底部" 按钮
+        const originalEndBtn = document.querySelector('.scroll-to-end-btn');
+        if (originalEndBtn) {
+            originalEndBtn.remove();
+        }
+
+        // 查找并删除 "滚动到顶部" 按钮
+        const originalTopBtn = document.querySelector('.scroll-to-top-btn');
+        if (originalTopBtn) {
+            originalTopBtn.remove();
+        }
+    }
+
+    // 创建并添加脚本的按钮
+    function createScrollButtons() {
+        // 创建向上翻页按钮
+        const upBtn = document.createElement('a');
+        upBtn.className = 'scroll-page-btn up';
+        upBtn.innerHTML = '<i class="icon-arrow-up"></i>';
+        upBtn.title = '向上翻页';
+
+        // 创建向下翻页按钮
+        const downBtn = document.createElement('a');
+        downBtn.className = 'scroll-page-btn down';
+        downBtn.innerHTML = '<i class="icon-arrow-down"></i>';
+        downBtn.title = '向下翻页';
+
+        // 为按钮绑定点击事件
+        upBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            pageScroll(-1);
+        });
+
+        downBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            pageScroll(1);
+        });
+
+        // 将按钮添加到页面
+        document.body.appendChild(upBtn);
+        document.body.appendChild(downBtn);
+    }
+
+    // 添加键盘控制
+    function setupKeyboardControls() {
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'ArrowDown') {
+                e.preventDefault();
+                pageScroll(1);
+            }
+            if (e.code === 'ArrowUp') {
+                e.preventDefault();
+                pageScroll(-1);
+            }
+        });
+    }
+
+    // 当页面加载完成后执行设置
+    window.addEventListener('load', () => {
+        // 删除原始按钮
+        removeOriginalButtons();
+        // 创建新按钮
+        createScrollButtons();
+        // 设置键盘控制
+        setupKeyboardControls();
+    });
 
     // 页面加载完成后执行
     if (document.readyState === 'loading') {
@@ -262,16 +289,4 @@
     } else {
         init();
     }
-
-    // 监听DOM变化，动态添加的按钮也能生效
-    const observer = new MutationObserver(() => {
-        // 重新添加滚动控制按钮（防止页面动态加载时按钮丢失）
-        setTimeout(addScrollControls, 500);
-    });
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-
 })();

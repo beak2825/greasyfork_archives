@@ -1,50 +1,51 @@
 // ==UserScript==
-// @name         ERP 결재 도착 알림 (JSON 상태 체크 + 고정 UI)
+// @name         ERP 결재 도착 알림 (api 상태 체크 + 고정 UI + 설정)
 // @match        https://admin.hyecho.com/*
 // @grant        GM_notification
 // @grant        GM_registerMenuCommand
-// @description 전자결재 건수를 JSON으로 백그라운드 확인하여 신규 결재 시 OS 알림 + 고정 UI 제공 (유저 액션 시 알림 해제)
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @description 미결재 문서 존재 여부만 확인하여 알림 제공 (단일 알림, 설정 UI 포함)
 // @license      MIT
-// @version      2.3
+// @version      3.0
 // @namespace    https://greasyfork.org/users/1554043
-// @downloadURL https://update.greasyfork.org/scripts/560701/ERP%20%EA%B2%B0%EC%9E%AC%20%EB%8F%84%EC%B0%A9%20%EC%95%8C%EB%A6%BC%20%28JSON%20%EC%83%81%ED%83%9C%20%EC%B2%B4%ED%81%AC%20%2B%20%EA%B3%A0%EC%A0%95%20UI%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/560701/ERP%20%EA%B2%B0%EC%9E%AC%20%EB%8F%84%EC%B0%A9%20%EC%95%8C%EB%A6%BC%20%28JSON%20%EC%83%81%ED%83%9C%20%EC%B2%B4%ED%81%AC%20%2B%20%EA%B3%A0%EC%A0%95%20UI%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560701/ERP%20%EA%B2%B0%EC%9E%AC%20%EB%8F%84%EC%B0%A9%20%EC%95%8C%EB%A6%BC%20%28api%20%EC%83%81%ED%83%9C%20%EC%B2%B4%ED%81%AC%20%2B%20%EA%B3%A0%EC%A0%95%20UI%20%2B%20%EC%84%A4%EC%A0%95%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/560701/ERP%20%EA%B2%B0%EC%9E%AC%20%EB%8F%84%EC%B0%A9%20%EC%95%8C%EB%A6%BC%20%28api%20%EC%83%81%ED%83%9C%20%EC%B2%B4%ED%81%AC%20%2B%20%EA%B3%A0%EC%A0%95%20UI%20%2B%20%EC%84%A4%EC%A0%95%29.meta.js
 // ==/UserScript==
 
 (function () {
   'use strict';
 
-  const CHECK_URL = 'https://admin.hyecho.com/erp/sy/getAlarm.json';
-  const INTERVAL = 60 * 1000;
-
-  let lastCount = null;
-  let alertActive = false;
-  let fixedUI = null;
+  // iframe 실행 차단 (중복 인스턴스 방지)
+  if (window.top !== window.self) return;
 
   /* ===============================
-     🔒 전역 알림 락
+     상수
   =============================== */
-  const ALERT_LOCK_KEY = 'ERP_APPROVAL_ALERT_LOCK';
-  const ALERT_LOCK_TTL = 60 * 1000;
-
-  function acquireAlertLock() {
-    const now = Date.now();
-    const lockTime = Number(localStorage.getItem(ALERT_LOCK_KEY));
-    if (lockTime && now - lockTime < ALERT_LOCK_TTL) return false;
-    localStorage.setItem(ALERT_LOCK_KEY, now);
-    return true;
-  }
-
-  function releaseAlertLock() {
-    localStorage.removeItem(ALERT_LOCK_KEY);
-  }
+  const CHECK_URL = 'https://admin.hyecho.com/erp/sy/getAlarm.json';
 
   /* ===============================
-     공통: 알림 상태 해제
+     설정
+  =============================== */
+  let settings = {
+    intervalMin: GM_getValue('intervalMin', 1),
+    enableOS: GM_getValue('enableOS', true),
+    enableFixedUI: GM_getValue('enableFixedUI', true)
+  };
+
+  /* ===============================
+     상태
+  =============================== */
+  let hasPending = false;   // 이전 체크 상태
+  let alertActive = false;  // 현재 알림 상태
+  let fixedUI = null;
+  let timerId = null;
+
+  /* ===============================
+     알림 상태 해제
   =============================== */
   function clearAlertState() {
     alertActive = false;
-    releaseAlertLock();
 
     if (fixedUI) {
       fixedUI.remove();
@@ -55,9 +56,9 @@
   }
 
   /* ===============================
-     고정 UI 표시
+     고정 UI
   =============================== */
-  function showFixedUI(count) {
+  function showFixedUI() {
     if (fixedUI) return;
 
     fixedUI = document.createElement('div');
@@ -76,7 +77,7 @@
 
     fixedUI.innerHTML = `
       <div style="margin-bottom:10px;">
-        📌 미결재 문서 <b>${count}</b>건
+        📌 미결재 문서가 존재합니다
       </div>
       <button id="erpOpenBtn">결재함 열기</button>
       <button id="erpCloseBtn" style="margin-left:8px;">닫기</button>
@@ -89,20 +90,22 @@
       clearAlertState();
     };
 
-    document.getElementById('erpCloseBtn').onclick = () => {
-      clearAlertState();
-    };
+    document.getElementById('erpCloseBtn').onclick = clearAlertState;
   }
 
   /* ===============================
-     결재 상태 체크
+     상태 체크 (존재 여부만)
   =============================== */
   async function check() {
     try {
+      if (alertActive) return; // 🔒 알림 활성 중이면 아무것도 안 함
+
       const res = await fetch(CHECK_URL, {
         method: 'POST',
         credentials: 'include',
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
       });
 
       if (!res.ok) return;
@@ -112,33 +115,103 @@
 
       if (typeof count !== 'number') return;
 
-      if (lastCount === null) {
-        lastCount = count;
-        console.log(`[ERP 알림] 초기 결재 건수: ${count}`);
-        return;
-      }
+      const existsNow = count > 0;
 
-      if (count > lastCount && !alertActive && acquireAlertLock()) {
-        console.log(`[ERP 알림] 신규 전자결재 감지 (${lastCount} → ${count})`);
+      // 없음 → 있음 변화만 감지
+      if (!hasPending && existsNow) {
         alertActive = true;
 
-        GM_notification({
-          title: '📌 전자결재 도착',
-          text: `미결재 문서 ${count}건`,
-          timeout: 0,
-          onclick: () => {
-            window.open('/erp/sy/sy99/pop/apprDocuAlarm', '_blank');
-            clearAlertState();
-          }
-        });
+        console.log('[ERP 알림] 미결재 문서 존재 감지');
 
-        showFixedUI(count);
+        if (settings.enableOS && typeof GM_notification === 'function') {
+          GM_notification({
+            title: '📌 전자결재 도착',
+            text: '미결재 문서가 있습니다',
+            timeout: 0,
+            onclick: () => {
+              window.open('/erp/sy/sy99/pop/apprDocuAlarm', '_blank');
+              clearAlertState();
+            }
+          });
+        }
+
+        if (settings.enableFixedUI) {
+          showFixedUI();
+        }
       }
 
-      lastCount = count;
+      hasPending = existsNow;
+
     } catch (e) {
       console.debug('[ERP 알림] 예외 발생', e);
     }
+  }
+
+  /* ===============================
+     타이머 재시작
+  =============================== */
+  function restartChecker() {
+    if (timerId) clearInterval(timerId);
+    timerId = setInterval(check, settings.intervalMin * 60 * 1000);
+  }
+
+  /* ===============================
+     설정 UI
+  =============================== */
+  function openSettingsUI() {
+    document.querySelectorAll('.erp-settings-panel').forEach(el => el.remove());
+
+    const panel = document.createElement('div');
+    panel.className = 'erp-settings-panel';
+    panel.style.cssText = `
+      position: fixed;
+      top: 80px;
+      right: 24px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.2);
+      z-index: 2147483647;
+      font-size: 13px;
+    `;
+
+    panel.innerHTML = `
+      <b>ERP 결재 알림 설정</b><br><br>
+
+      ⏱ 체크 주기 (분)<br>
+      <input id="erpInterval" type="number" min="1" value="${settings.intervalMin}" style="width:80px"><br><br>
+
+      <label>
+        <input id="erpOS" type="checkbox" ${settings.enableOS ? 'checked' : ''}>
+        OS 알림 사용
+      </label><br>
+
+      <label>
+        <input id="erpFixed" type="checkbox" ${settings.enableFixedUI ? 'checked' : ''}>
+        고정 UI 사용
+      </label><br><br>
+
+      <button id="erpSave">저장</button>
+      <button id="erpClose" style="margin-left:6px;">닫기</button>
+    `;
+
+    document.body.appendChild(panel);
+
+    document.getElementById('erpSave').onclick = () => {
+      settings.intervalMin = Number(document.getElementById('erpInterval').value);
+      settings.enableOS = document.getElementById('erpOS').checked;
+      settings.enableFixedUI = document.getElementById('erpFixed').checked;
+
+      GM_setValue('intervalMin', settings.intervalMin);
+      GM_setValue('enableOS', settings.enableOS);
+      GM_setValue('enableFixedUI', settings.enableFixedUI);
+
+      restartChecker();
+      panel.remove();
+      alert('설정이 즉시 적용되었습니다.');
+    };
+
+    document.getElementById('erpClose').onclick = () => panel.remove();
   }
 
   /* ===============================
@@ -146,25 +219,9 @@
   =============================== */
   setTimeout(() => {
     check();
-    setInterval(check, INTERVAL);
+    restartChecker();
   }, 10000);
 
-  /* ===============================
-     🧪 강제 테스트
-  =============================== */
-  GM_registerMenuCommand('🧪 결재 알림 강제 테스트', () => {
-    if (alertActive || !acquireAlertLock()) return;
-
-    alertActive = true;
-
-    GM_notification({
-      title: '🧪 전자결재 도착 (TEST)',
-      text: '실제 결재는 발생하지 않았습니다.',
-      timeout: 0,
-      onclick: clearAlertState
-    });
-
-    showFixedUI('TEST');
-  });
+  GM_registerMenuCommand('⚙ ERP 결재 알림 설정', openSettingsUI);
 
 })();

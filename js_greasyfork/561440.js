@@ -1,126 +1,99 @@
 // ==UserScript==
-// @name         Faucet Flow – Instant Verify + Retry + Continue (Human Click)
-// @name:en      Faucet Flow – Instant Verify + Retry + Continue (Human Click)
-// @namespace    https://greasyfork.org/en/users/1555740-inisaya-belze
-// @version      2.4-scroll
-// @description Auto-click Verify with human-like behavior + scroll before click, retry on incorrect click, and auto-continue after cooldown on litecoinrewards.click
+// @name         Faucet Flow – Verify Natural + Continue Spam
+// @namespace    litecoinrewards-flow-natural-spam
+// @version      2.6
 // @match        https://litecoinrewards.click/*
 // @run-at       document-idle
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/561440/Faucet%20Flow%20%E2%80%93%20Instant%20Verify%20%2B%20Retry%20%2B%20Continue%20%28Human%20Click%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561440/Faucet%20Flow%20%E2%80%93%20Instant%20Verify%20%2B%20Retry%20%2B%20Continue%20%28Human%20Click%29.meta.js
+// @description Auto-click Verify with human-like behavior + scroll before click, retry on incorrect click, and auto-continue after cooldown on litecoinrewards.click
+// @downloadURL https://update.greasyfork.org/scripts/561440/Faucet%20Flow%20%E2%80%93%20Verify%20Natural%20%2B%20Continue%20Spam.user.js
+// @updateURL https://update.greasyfork.org/scripts/561440/Faucet%20Flow%20%E2%80%93%20Verify%20Natural%20%2B%20Continue%20Spam.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
     let verifyBusy = false;
-    let continueClicked = false;
 
-    /* ========= SCROLL HELPER ========= */
-    function scrollToElement(el) {
+    /* ========= VISIBILITY HELPER ========= */
+    function isVisible(el) {
+        if (!el) return false;
+        const r = el.getBoundingClientRect();
+        return r.width > 0 && r.height > 0;
+    }
+
+    /* ========= NATURAL CLICK ========= */
+    function naturalClick(el) {
         if (!el) return;
-        el.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
-        });
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.focus({ preventScroll: true });
+
+        const r = el.getBoundingClientRect();
+        const startX = Math.random() * window.innerWidth;
+        const startY = Math.random() * window.innerHeight;
+        const endX = r.left + r.width * (0.3 + Math.random() * 0.4);
+        const endY = r.top + r.height * (0.3 + Math.random() * 0.4);
+
+        let step = 0;
+        const steps = 12 + Math.floor(Math.random() * 6);
+
+        const move = setInterval(() => {
+            const x = startX + (endX - startX) * (step / steps);
+            const y = startY + (endY - startY) * (step / steps);
+
+            document.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: x, clientY: y }));
+
+            step++;
+            if (step > steps) {
+                clearInterval(move);
+
+                el.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: endX, clientY: endY }));
+                setTimeout(() => {
+                    el.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientX: endX, clientY: endY }));
+                    el.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: endX, clientY: endY }));
+                }, 80 + Math.random() * 120);
+            }
+        }, 18 + Math.random() * 22);
     }
 
-    /* ========= HUMAN CLICK HELPER ========= */
-    function humanClick(btn) {
-        if (!btn) return;
-
-        const rect = btn.getBoundingClientRect();
-        const x = rect.left + Math.random() * rect.width;
-        const y = rect.top + Math.random() * rect.height;
-
-        btn.dispatchEvent(new MouseEvent('mousedown', {
-            bubbles: true,
-            clientX: x,
-            clientY: y
-        }));
-
-        setTimeout(() => {
-            btn.dispatchEvent(new MouseEvent('mouseup', {
-                bubbles: true,
-                clientX: x,
-                clientY: y
-            }));
-
-            setTimeout(() => {
-                btn.dispatchEvent(new MouseEvent('click', {
-                    bubbles: true,
-                    clientX: x,
-                    clientY: y
-                }));
-            }, 50 + Math.random() * 120);
-        }, 50 + Math.random() * 150);
-    }
-
-    /* ========= VERIFY ========= */
+    /* ========= VERIFY (NATURAL + RETRY) ========= */
     function tryVerify() {
         if (verifyBusy) return;
 
-        const verifyBtn = document.querySelector(
-            'button[type="submit"][title="Verify"]'
-        );
-        if (!verifyBtn) return;
-
-        const rect = verifyBtn.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) return;
+        const verifyBtn = document.querySelector('button[type="submit"][title="Verify"]');
+        if (!isVisible(verifyBtn)) return;
 
         verifyBusy = true;
+        console.log('🖱 Verify clicked (natural)');
 
-        // ✅ SCROLL DULU KE VERIFY
-        scrollToElement(verifyBtn);
-
-        // ⏳ TUNGGU SCROLL → BARU KLIK
-        setTimeout(() => {
-            humanClick(verifyBtn);
-        }, 600 + Math.random() * 400);
+        naturalClick(verifyBtn);
 
         setTimeout(() => {
             verifyBusy = false;
         }, 1500);
     }
 
-    /* ========= ALERT DETECTOR ========= */
+    /* ========= ZERO ALERT ========= */
     const originalAlert = window.alert;
-    window.alert = function (msg) {
-        if (typeof msg === 'string' && msg.includes('Incorrect')) {
-            setTimeout(tryVerify, 1000);
+    window.alert = function(msg) {
+        if (typeof msg === 'string' && msg.includes('Please move your mouse inside')) {
+            console.log('⚠️ Suppressed alert');
+            return;
         }
         return originalAlert.apply(this, arguments);
     };
 
-    /* ========= OBSERVE VERIFY ========= */
-    const verifyObserver = new MutationObserver(tryVerify);
-    verifyObserver.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
-
-    /* ========= CONTINUE ========= */
-    const continueObserver = new MutationObserver(() => {
-        if (continueClicked) return;
-
+    /* ========= CONTINUE SPAM TIAP 3 DETIK ========= */
+    setInterval(() => {
         const contBtn = document.querySelector('#earnBtn.btn-back');
-        if (!contBtn) return;
+        if (contBtn && isVisible(contBtn)) {
+            console.log('⏳ Continue clicked (spam 3s)');
+            naturalClick(contBtn);
+        }
+    }, 3000);
 
-        const rect = contBtn.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) return;
+    /* ========= OBSERVER UNTUK VERIFY ========= */
+    const observer = new MutationObserver(() => tryVerify());
+    observer.observe(document.body, { childList: true, subtree: true });
 
-        continueClicked = true;
-        continueObserver.disconnect();
-
-        setTimeout(() => {
-            if (!document.contains(contBtn)) return;
-            humanClick(contBtn);
-        }, 3000);
-    });
-
-    continueObserver.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
 })();

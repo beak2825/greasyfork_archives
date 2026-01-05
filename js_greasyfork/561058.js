@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Upcoming UFC Fight Stats Scraper (For use with the prediction python script)
+// @name         Upcoming UFC Fight Stats Scraper (with Fighter IDs + Fuzzy Odds)
 // @namespace    http://tampermonkey.net/
-// @version      3.4
-// @description  Scrapes UFC Stats event pages, calculates days since last fight, and merges with live odds.
-// @author       Merged by Gemini
+// @version      3.6
+// @description  Scrapes UFC Stats event pages, calculates days since last fight, merges with live odds using fuzzy name matching, and includes Fighter IDs.
+// @author       Merged by Gemini + patched
 // @match        http://www.ufcstats.com/event-details/*
 // @match        https://www.ufcstats.com/event-details/*
 // @connect      bestfightodds.com
@@ -13,8 +13,8 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM.xmlHttpRequest
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/561058/Upcoming%20UFC%20Fight%20Stats%20Scraper%20%28For%20use%20with%20the%20prediction%20python%20script%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561058/Upcoming%20UFC%20Fight%20Stats%20Scraper%20%28For%20use%20with%20the%20prediction%20python%20script%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561058/Upcoming%20UFC%20Fight%20Stats%20Scraper%20%28with%20Fighter%20IDs%20%2B%20Fuzzy%20Odds%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561058/Upcoming%20UFC%20Fight%20Stats%20Scraper%20%28with%20Fighter%20IDs%20%2B%20Fuzzy%20Odds%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -41,90 +41,131 @@
     };
 
     // ========================================================================
-    // 2. TEXT UTILITIES
+    // 2. TEXT UTILITIES (Hybrid: Forensic Matching + Existing Parsers)
     // ========================================================================
-    const TextUtils = {
-        clean: function(text) {
-            return text ? String(text).replace(/\s+/g, ' ').trim() : '';
-        },
+    const TextUtils = (() => {
+        const clean = (s) => (s ? String(s).replace(/\s+/g, ' ').trim() : '');
 
-        normalize: function(name) {
-            if (!name) return '';
-            return name.toLowerCase().trim()
-                .replace(/-/g, ' ') // FIX: Replace hyphens with spaces first (e.g. Cortes-Acosta -> Cortes Acosta)
-                .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
-                .replace(/\b(jr|sr|ii|iii|iv|v)\b/g, '') // Remove suffixes
-                .replace(/[^a-z0-9\s]/g, '') // Remove remaining special chars
-                .replace(/\s+/g, ' ').trim();
-        },
+        const norm = (s) =>
+            clean(String(s || ''))
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z\s]/g, '');
 
-        parseRecord: function(recordStr) {
+        const key = (s) =>
+            norm(s)
+                .replace(/\b(jr|sr|ii|iii|iv|v)\b/g, '')
+                .replace(/\s/g, '');
+
+        const levenshtein = (a, b) => {
+            const m = [];
+            for (let i = 0; i <= b.length; i++) m[i] = [i];
+            for (let j = 0; j <= a.length; j++) m[0][j] = j;
+            for (let i = 1; i <= b.length; i++) {
+                for (let j = 1; j <= a.length; j++) {
+                    m[i][j] =
+                        b[i - 1] === a[j - 1]
+                            ? m[i - 1][j - 1]
+                            : Math.min(
+                                  m[i - 1][j - 1] + 1,
+                                  m[i][j - 1] + 1,
+                                  m[i - 1][j] + 1
+                              );
+                }
+            }
+            return m[b.length][a.length];
+        };
+
+        const similarity = (a, b) => {
+            const na = norm(a);
+            const nb = norm(b);
+            const L = na.length >= nb.length ? na : nb;
+            const S = na.length >= nb.length ? nb : na;
+            return L.length ? (L.length - levenshtein(L, S)) / L.length : 1;
+        };
+
+        const namesMatch = (a, b) => {
+            const na = norm(a);
+            const nb = norm(b);
+
+            if (na === nb || key(a) === key(b)) return true;
+            if (similarity(a, b) >= 0.80) return true;
+
+            const aParts = na.split(' ');
+            const bParts = nb.split(' ');
+            if (aParts.length >= 2 && bParts.length >= 2) {
+                const aLast = aParts.slice(1).join(' ');
+                const bLast = bParts.slice(1).join(' ');
+                if (aLast === bLast) {
+                    if (aParts[0] === bParts[0]) return true;
+                    if (similarity(aParts[0], bParts[0]) >= 0.60) return true;
+                }
+            }
+            return false;
+        };
+
+        const extractIdFromUrl = (url) => {
+            if (!url) return null;
+            const parts = url.split('/');
+            return parts[parts.length - 1];
+        };
+
+        const parseRecord = (recordStr) => {
             if (!recordStr) return { wins: null, losses: null, draws: null };
             const cleanStr = String(recordStr).replace('Record:', '').trim();
             const parts = cleanStr.split('-');
             if (parts.length < 2) return { wins: null, losses: null, draws: null };
-
-            // Helper to ensure 0 is returned as 0, not null
-            const parseVal = (val) => {
-                const num = parseInt(val, 10);
-                return isNaN(num) ? null : num;
+            const p = (v) => {
+                const n = parseInt(v, 10);
+                return isNaN(n) ? null : n;
             };
+            return { wins: p(parts[0]), losses: p(parts[1]), draws: p(parts[2]) };
+        };
 
-            return {
-                wins: parseVal(parts[0]),
-                losses: parseVal(parts[1]),
-                draws: parseVal(parts[2])
-            };
-        },
+        const parseHeight = (h) => {
+            if (!h) return null;
+            const m = h.match(/(\d+)'?\s*(\d+)?/);
+            return m ? parseInt(m[1], 10) * 12 + (m[2] ? parseInt(m[2], 10) : 0) : null;
+        };
 
-        parseHeight: function(heightStr) {
-            if (!heightStr) return null;
-            const match = heightStr.match(/(\d+)'?\s*(\d+)?/);
-            if (match) {
-                const feet = parseInt(match[1], 10);
-                const inches = match[2] ? parseFloat(match[2]) : 0;
-                return feet * 12 + inches;
-            }
-            return null;
-        },
+        const parseReach = (r) => {
+            if (!r) return null;
+            const m = r.match(/(\d+\.?\d*)/);
+            return m ? parseFloat(m[1]) : null;
+        };
 
-        parseReach: function(reachStr) {
-            if (!reachStr) return null;
-            const match = reachStr.match(/(\d+\.?\d*)/);
-            return match ? parseFloat(match[1]) : null;
-        },
-
-        parseAge: function(dobStr, eventDate) {
+        const parseAge = (dobStr, eventDate) => {
             if (!dobStr || !eventDate) return null;
-            try {
-                const dob = new Date(dobStr);
-                const ref = new Date(eventDate);
-                if (isNaN(dob) || isNaN(ref)) return null;
+            const dob = new Date(dobStr);
+            const ref = new Date(eventDate);
+            if (isNaN(dob) || isNaN(ref)) return null;
+            let age = ref.getFullYear() - dob.getFullYear();
+            const md = ref.getMonth() - dob.getMonth();
+            if (md < 0 || (md === 0 && ref.getDate() < dob.getDate())) age--;
+            return age;
+        };
 
-                let age = ref.getFullYear() - dob.getFullYear();
-                const monthDiff = ref.getMonth() - dob.getMonth();
-                if (monthDiff < 0 || (monthDiff === 0 && ref.getDate() < dob.getDate())) {
-                    age--;
-                }
-                return age;
-            } catch (e) {
-                return null;
-            }
-        },
+        const formatDateISO = (d) => {
+            const x = new Date(d);
+            return isNaN(x) ? new Date().toISOString().slice(0, 10) : x.toISOString().slice(0, 10);
+        };
 
-        formatDateISO: function(dateStr) {
-            try {
-                const d = new Date(dateStr);
-                if (isNaN(d)) return new Date().toISOString().slice(0, 10);
-                return d.toISOString().slice(0, 10);
-            } catch (e) {
-                return new Date().toISOString().slice(0, 10);
-            }
-        }
-    };
+        return {
+            clean,
+            normalize: norm,
+            namesMatch,
+            extractIdFromUrl,
+            parseRecord,
+            parseHeight,
+            parseReach,
+            parseAge,
+            formatDateISO
+        };
+    })();
 
     // ========================================================================
-    // 3. BEST FIGHT ODDS LOGIC
+    // 3. BEST FIGHT ODDS LOGIC (Restored & Robust)
     // ========================================================================
     const OddsUtils = {
         getImpliedProb: function(odd) {
@@ -220,7 +261,7 @@
 
             let rowB = rowA.nextElementSibling;
             while(rowB && (!rowB.classList || rowB.classList.contains('item-mobile-only'))) {
-                 rowB = rowB.nextElementSibling;
+                rowB = rowB.nextElementSibling;
             }
             if (!rowB) return;
 
@@ -244,17 +285,17 @@
                 const count = Math.min(oddsA.length, oddsB.length);
                 const finalOddsA = oddsA.slice(0, count);
                 const finalOddsB = oddsB.slice(0, count);
+
                 const avgA = OddsUtils.getAmericanOdd(finalOddsA.map(OddsUtils.getImpliedProb).reduce((a, b) => a + b, 0) / count);
                 const avgB = OddsUtils.getAmericanOdd(finalOddsB.map(OddsUtils.getImpliedProb).reduce((a, b) => a + b, 0) / count);
 
-                // Store using the robust normalization
+                // Store using the NEW robust normalizer
                 oddsMap.set(TextUtils.normalize(nameA), avgA);
                 oddsMap.set(TextUtils.normalize(nameB), avgB);
             }
         });
         return oddsMap;
     }
-
 
     // ========================================================================
     // 4. UFC STATS SCRAPER LOGIC
@@ -283,9 +324,11 @@
                 fightLinks.push({
                     url: url,
                     fighter1: TextUtils.clean(fighterLinks[0].textContent),
-                    f1Url: fighterLinks[0].href, // Captured for history scraping
+                    f1Url: fighterLinks[0].href,
+                    f1Id: TextUtils.extractIdFromUrl(fighterLinks[0].href),
                     fighter2: TextUtils.clean(fighterLinks[1].textContent),
-                    f2Url: fighterLinks[1].href, // Captured for history scraping
+                    f2Url: fighterLinks[1].href,
+                    f2Id: TextUtils.extractIdFromUrl(fighterLinks[1].href),
                     weightClass: weightClassCell ? TextUtils.clean(weightClassCell.textContent).split('\n')[0].trim() : 'Unknown',
                     index: index + 1
                 });
@@ -311,19 +354,15 @@
                         const rows = doc.querySelectorAll('tr.b-fight-details__table-row');
                         const currentEvtDateObj = new Date(currentEventDate);
 
-                        // Loop through history to find the first completed fight before this event
                         for (let row of rows) {
                             const tds = row.querySelectorAll('td');
                             if (tds.length < 7) continue;
 
-                            // Date is typically in the 7th column (index 6), often in the 2nd <p> tag
                             const pTags = tds[6].querySelectorAll('p');
                             let dateText = pTags.length > 1 ? pTags[1].textContent.trim() : tds[6].textContent.trim();
 
                             const fightDate = new Date(dateText);
                             if (isNaN(fightDate)) continue;
-
-                            // If this fight date is strictly before our current event date, it's the "last fight"
                             if (fightDate < currentEvtDateObj) {
                                 const diffTime = Math.abs(currentEvtDateObj - fightDate);
                                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -331,7 +370,7 @@
                                 return;
                             }
                         }
-                        resolve(null); // No previous fights found
+                        resolve(null);
                     } catch (e) {
                         console.error("Error parsing dates for " + fighterUrl, e);
                         resolve(null);
@@ -407,6 +446,19 @@
         return data;
     }
 
+    // NEW: Fuzzy odds lookup helper
+    function findOdds(fighterName) {
+        const norm = TextUtils.normalize(fighterName);
+        if (State.oddsData.has(norm)) return State.oddsData.get(norm);
+        for (const [bfoName, odd] of State.oddsData.entries()) {
+            if (TextUtils.namesMatch(fighterName, bfoName)) {
+                console.log(`[Odds] Fuzzy match: '${fighterName}' ~= '${bfoName}'`);
+                return odd;
+            }
+        }
+        return null;
+    }
+
     function transformForPrediction(fightData, fightId, eventDate, f0_days, f1_days) {
         const stats = fightData.stats || {};
         const recordStats = stats['Record'] || stats['Wins/Losses/Draws'] || {};
@@ -422,16 +474,15 @@
         const dob2 = stats['DOB']?.fighter2;
         const age1 = TextUtils.parseAge(dob1, eventDate);
         const age2 = TextUtils.parseAge(dob2, eventDate);
-        // Note: total1 might still be null if parseRecord returned nulls.
-        // If 0 wins, 0 losses, 0 draws -> total is 0.
+
         const total1 = (record1.wins !== null) ? (record1.wins + (record1.losses||0) + (record1.draws || 0)) : null;
         const total2 = (record2.wins !== null) ? (record2.wins + (record2.losses||0) + (record2.draws || 0)) : null;
         const name1 = fightData.fighter1?.name || fightData.fighter1;
         const name2 = fightData.fighter2?.name || fightData.fighter2;
 
-        // --- LOOKUP ODDS ---
-        const odds1 = State.oddsData.get(TextUtils.normalize(name1)) || null;
-        const odds2 = State.oddsData.get(TextUtils.normalize(name2)) || null;
+        // --- FUZZY ODDS LOOKUP ---
+        const odds1 = findOdds(name1);
+        const odds2 = findOdds(name2);
 
         return {
             fight_id: fightId,
@@ -439,6 +490,7 @@
             weight_class: fightData.weightClass || 'Unknown',
 
             f0_name: name1,
+            f0_fighter_id: fightData.f1Id,
             f0_age: age1,
             f0_height: height1,
             f0_reach: reach1,
@@ -450,6 +502,7 @@
             f0_odds: odds1,
 
             f1_name: name2,
+            f1_fighter_id: fightData.f2Id,
             f1_age: age2,
             f1_height: height2,
             f1_reach: reach2,
@@ -475,8 +528,8 @@
         }
         const columns = [
             'fight_id', 'event_date', 'weight_class',
-            'f0_name', 'f0_odds', 'f0_days_since_last_fight', 'f0_age', 'f0_height', 'f0_reach', 'f0_wins', 'f0_losses', 'f0_draws', 'f0_total_fights',
-            'f1_name', 'f1_odds', 'f1_days_since_last_fight', 'f1_age', 'f1_height', 'f1_reach', 'f1_wins', 'f1_losses', 'f1_draws', 'f1_total_fights',
+            'f0_name', 'f0_fighter_id', 'f0_odds', 'f0_days_since_last_fight', 'f0_age', 'f0_height', 'f0_reach', 'f0_wins', 'f0_losses', 'f0_draws', 'f0_total_fights',
+            'f1_name', 'f1_fighter_id', 'f1_odds', 'f1_days_since_last_fight', 'f1_age', 'f1_height', 'f1_reach', 'f1_wins', 'f1_losses', 'f1_draws', 'f1_total_fights',
             'data_source', 'scrape_timestamp'
         ];
         let csv = columns.join(',') + '\n';
@@ -546,9 +599,7 @@
                 const fight = fights[i];
                 console.log(`Processing fight ${i + 1}/${fights.length}: ${fight.fighter1} vs ${fight.fighter2}`);
                 try {
-                    // Fetch Matchup Stats (Original Iframe Method)
                     const matchupPromise = scrapeMatchupPage(fight.url);
-                    // Fetch Days Since Last Fight (New Background Request)
                     const f1DaysPromise = getDaysSinceLastFight(fight.f1Url, State.eventDate);
                     const f2DaysPromise = getDaysSinceLastFight(fight.f2Url, State.eventDate);
 
@@ -558,11 +609,11 @@
                     matchupData.fighter1 = matchupData.fighter1?.name || fight.fighter1;
                     matchupData.fighter2 = matchupData.fighter2?.name || fight.fighter2;
 
+                    matchupData.f1Id = fight.f1Id;
+                    matchupData.f2Id = fight.f2Id;
+
                     const fightId = `${State.eventName.replace(/\s+/g, '_')}_${String(i + 1).padStart(2, '0')}`;
-
-                    // Pass the new days data into the transform function
                     const predData = transformForPrediction(matchupData, fightId, State.eventDate, f0_days, f1_days);
-
                     State.scrapedData.push(predData);
                 } catch (e) {
                     console.error(`Error scraping fight ${i + 1}:`, e);
