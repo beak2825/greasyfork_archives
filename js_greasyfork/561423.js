@@ -2,7 +2,7 @@
 // @name        Milovana: Data Extractor
 // @namespace   wompi72
 // @author      wompi72
-// @version     1.0
+// @version     1.0.3
 // @description Extract data from teases
 // @match       https://milovana.com/*
 // @grant       none
@@ -49,8 +49,14 @@ function displayJsonData(data) {
         downloadSimplifiedJson(teaseId, teaseTitle) {
             const jsonSourceUrl = this.getJsonSourceUrl(teaseId)
             fetch(jsonSourceUrl).then(res => res.json()).then(jsonData => {
-                const simplifiedData = new TeaseSimplifier().parseData(jsonData);
-                console.log(simplifiedData);
+                let parserClass;
+                if ("galleries" in jsonData) {
+                    parserClass = new EOSTeaseSimplifier()
+                } else {
+                    parserClass = new FlashTeaseSimplifier()
+                }
+                const simplifiedData = parserClass.parseData(jsonData);
+
                 const fileName = teaseTitle.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
                 const fullFileName = `${fileName}_simplified.json`;
                 const jsonString = JSON.stringify(simplifiedData, null, 4);
@@ -67,103 +73,24 @@ function displayJsonData(data) {
             return this.cached_data[teaseId] || null
         }
 
-        async scrapeTease(teaseId) {
+        async getTeaseSummary(teaseId) {
             const url = this.getJsonSourceUrl(teaseId);
             const res = await fetch(url);
             if (!res.ok) {
                 console.error(res);
                 return
             }
-            return this.parseData(await res.json(), teaseId);
+            let data = await res.json();
+            let summary;
+            if ("galleries" in data) {
+                summary = new EOSTeaseSimplifier().summarizeData(data);
+            } else {
+                summary = new FlashTeaseSimplifier().summarizeData(data);
+            }
+
+            this.save_data(summary, teaseId)
+            return summary;
         }
-
-        parseData(data, teaseId) {
-            const parsed = {
-                pages: 0,
-                words: 0,
-                scriptWords: 0,
-                meaningfulChoices: 0,
-                storage: false,
-            }
-            for (const page of Object.values(data.pages)) {
-                parsed.pages += 1;
-                this._parseData(page, parsed);
-            }
-            this._parseScript(data.init || "", parsed)
-            this.save_data(parsed, teaseId)
-            return parsed;
-        }
-
-        _parseData(inData, parsed) {
-            if (Array.isArray(inData)) {
-                for (const item of inData) {
-                    this._parseData(item, parsed);
-                }
-                return;
-            }
-            if (typeof inData !== "object") return;
-
-            if (Object.hasOwn(inData, "say")) {
-                // count words of inData.say.label after removing html elements
-                parsed.words += inData.say.label.split(" ").length;
-            } else if (Object.hasOwn(inData, "choice")) {
-                this._parseBranches(inData.choice.options, parsed);
-            } else if (Object.hasOwn(inData, "if")) {
-                const ifData = [{
-                    commands: inData.if.commands,
-                }]
-                if (Object.hasOwn(inData.if, "elseCommands")) {
-                    ifData.push({
-                        commands: inData.if.elseCommands,
-                    })
-                }
-                this._parseBranches(ifData, parsed, false, inData.if.condition == "true");
-            } else if (Object.hasOwn(inData, "eval")) {
-                this._parseScript(inData.eval.script, parsed);
-            }
-        }
-
-        _parseBranches(choices, parsed, checkAtLeastTwo=true, isNotMeaningful=false) {
-            let meaningfulChoicesFound = false;
-            for (const choice of choices) {
-                this._parseData(choice.commands, parsed);
-                if (!isNotMeaningful && meaningfulChoicesFound || (checkAtLeastTwo && choices.length < 2)) continue;
-                if (this._hasRelevantChoice(choice.commands)) {
-                    meaningfulChoicesFound = true;
-                }
-            }
-
-            if (!isNotMeaningful && meaningfulChoicesFound) {
-                parsed.meaningfulChoices += 1;
-            }
-        }
-
-        _hasRelevantChoice(choiceResults) {
-            for (const command of choiceResults) {
-                if (Object.hasOwn(command, "goto") || Object.hasOwn(command, "eval")){
-                    return  true;
-                }
-            }
-            return false
-        }
-
-        _parseScript(script, parsed) {
-            if (script.includes("teaseStorage")) {
-                parsed.storage = true;
-            }
-            script = script.replace(/\r\n?|\n/g, "\n");
-
-            // Remove comments while preserving string literals
-            script = script.replace(
-                /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|\/\/.*|\/\*[\s\S]*?\*\//g,
-                (match, stringLiteral) => (stringLiteral ? stringLiteral : "")
-            );
-
-            // Count words (alphanumeric + underscore)
-            const words = script.match(/\b[A-Za-z0-9_]+\b/g);
-            parsed.scriptWords += words ? words.length : 0;
-        }
-
 
         getJsonSourceUrl(teaseId) {
             return `https://milovana.com/webteases/geteosscript.php?id=${teaseId}`;
@@ -183,6 +110,11 @@ function displayJsonData(data) {
     const scraper = new DataScraper();
     scraper.init()
 
+    const TEASE_TYPES = {
+        EOS: "EOS",
+        FLASH: "FLASH",
+    }
+
     class DisplayData {
         display() {
             this.addCSS()
@@ -201,7 +133,16 @@ function displayJsonData(data) {
             const teaseId = titleEl.href.match(/id=(\d+)/)[1];
             const teaseTitle = titleEl.textContent;
             const teaseTypeImg = titleEl.querySelector("img");
-            if (teaseTypeImg==null || !teaseTypeImg.classList.contains("eosticon")) return;
+            if (teaseTypeImg==null) return;
+
+            let teaseType;
+            if (teaseTypeImg.classList.contains("eosticon")) {
+                teaseType = TEASE_TYPES.EOS
+            } else if (teaseTypeImg.classList.contains("flashticon")) {
+                teaseType = TEASE_TYPES.FLASH
+            } else {
+                return;
+            }
 
             const parentContainerEl= this._createDiv(["flex-row", "data-buttons-container"], bubbleEl);
             const dataContainerEl = this._createDiv(["data-display"], parentContainerEl);
@@ -216,9 +157,9 @@ function displayJsonData(data) {
             this._createButton("Simple", ["data-button", "tease_data_button"], buttonContainerEl, () => {
                 scraper.downloadSimplifiedJson(teaseId, teaseTitle)
             });
-            this._createButton("Show", ["parse-data-button", "tease_data_button"], buttonContainerEl, async () => {
+            this._createButton("Summary", ["parse-data-button", "tease_data_button"], buttonContainerEl, async () => {
                 buttonContainerEl.querySelector(".parse-data-button").disabled = true;
-                const data = await scraper.scrapeTease(teaseId);
+                const data = await scraper.getTeaseSummary(teaseId);
                 this._displayData(data, dataContainerEl);
             });
         }
@@ -289,12 +230,12 @@ function displayJsonData(data) {
 
     function isEmpty(value) {
         if (Array.isArray(value) && value.length === 0) return true;
-        return value === null || value === undefined;
+        return value === null || value === undefined || value == "";
     }
 
-    class TeaseSimplifier {
+    class EOSTeaseSimplifier {
         constructor() {
-            this.htmlPattern = /<\/?(strong|span|p|em)(?:\s+[^>]*)?>/gi;
+            this.htmlPattern = /<\/?(strong|span|p|em|b|i)(?:\s+[^>]*)?>/gi;
             this.scriptNewlinePattern = /(\\r)*(\\n)+/g;
         }
 
@@ -313,7 +254,11 @@ function displayJsonData(data) {
 
             const sortedPageData = Object.fromEntries(sortedEntries);
 
-            return this.parseElement(sortedPageData);
+            return this.parsePages(sortedPageData);
+        }
+
+        parsePages(pages) {
+            return this.parseElement(pages)
         }
 
         parseElement(inData) {
@@ -329,8 +274,7 @@ function displayJsonData(data) {
         parseDict(inData) {
             if ("say" in inData) {
                 let text = inData.say.label || "";
-                let cleaned = text.replace(this.htmlPattern, '');
-                return cleaned.replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+                return this.parseText(text);
             }
 
             if ("eval" in inData) {
@@ -347,15 +291,8 @@ function displayJsonData(data) {
 
             if ("timer" in inData) {
                 const timerData = inData.timer;
-                let key = `> Timer ${timerData.duration}`;
-                if (timerData.style) key += ` (${timerData.style})`;
-                if (timerData.isAsync) key += " (async)";
 
-                const commands = this.parseElement(timerData.commands || []);
-                if (isEmpty(commands)) {
-                    return key;
-                }
-                return { [key]: commands };
+                return this.parseTimer(timerData);
             }
 
             if ("if" in inData) {
@@ -373,31 +310,17 @@ function displayJsonData(data) {
             }
 
             if ("choice" in inData) {
-                const out = {};
                 const options = inData.choice.options || [];
-
-                options.forEach(option => {
-                    out[`Choice: ${option.label}`] = this.parseElement(option.commands);
-                });
-
-                const values = Object.values(out);
-                const labels = options.map(o => o.label).join(', ');
-
-                if (values.every(v => isEmpty(v))) {
-                    return `> Choice: ${labels}`;
-                }
-
-                if (values.length > 1 && values.every(v => JSON.stringify(v) === JSON.stringify(values[0]))) {
-                    return { [`Choice: ${labels}`]: values[0] };
-                }
-
-                return out;
+                return this.parseChoices(options);
             }
 
             if ("audio.play" in inData) {
                 const suffix = "loops" in inData["audio.play"] && inData["audio.play"].loops > 0 ? ` (${inData["audio.play"].loops} loops)` : "";
 
                 return `> Audio: ${inData["audio.play"].locator}${suffix}`;
+            }
+            if ("prompt" in inData) {
+                return `> Prompt: ${inData.prompt.variable}`
             }
 
             const outData = {};
@@ -407,13 +330,62 @@ function displayJsonData(data) {
             return outData;
         }
 
+        parseTimer(timerData) {
+            let key = `> Timer ${timerData.duration}`;
+            if (timerData.style) key += ` (${timerData.style})`;
+            if (timerData.isAsync) key += " (async)";
+
+            const commands = this.parseElement(timerData.commands || []);
+            if (isEmpty(commands)) {
+                return key;
+            }
+            if (commands.length === 1) {
+                return `${key} -${commands[0]}`;
+            }
+            return {[key]: commands};
+        }
+
+        parseText(text) {
+            let cleaned = text.replace(this.htmlPattern, '');
+            return cleaned.replace(/&#39;/g, "'").replace(/&apos;/g, "'").replace(/&quot;/g, "'");
+        }
+
         parseList(inData) {
             const out = [];
             for (const element of inData) {
                 const parsed = this.parseElement(element);
-                if (parsed === "Image") continue;
+                if (parsed === "Image" || isEmpty(parsed)) continue;
                 out.push(parsed);
             }
+            return out;
+        }
+
+        parseChoices(options) {
+            const out = {};
+            options.forEach(option => {
+                out[`Choice: ${option.label}`] = this.parseElement(option.commands);
+            });
+
+            const values = Object.values(out);
+            const labels = options.map(o => o.label).join(', ');
+
+            if (values.length === 0 || values.every(v => isEmpty(v))) {
+                return `> Choice: ${labels}`;
+            }
+            if (values.length === 1 && values[0].length === 1) {
+                return `> Choice: ${labels} -${values[0]}`;
+            }
+            if (values.every(v => JSON.stringify(v) === JSON.stringify(values[0]))) {
+                return {[`Choice: ${labels}`]: values[0]};
+            }
+            if (values.every(v => v.length === 1)) {
+                const outList = []
+                for (const [key, value] of Object.entries(out)) {
+                    outList.push(`> ${key} -${value[0]}`);
+                }
+                return outList;
+            }
+
             return out;
         }
 
@@ -421,6 +393,208 @@ function displayJsonData(data) {
             if (isEmpty(script)) return [];
             const normalized = script.replace(this.scriptNewlinePattern, "\n");
             return normalized.split("\n").filter(line => line.trim() !== "");
+        }
+
+        summarizeData(data) {
+            const parsed = {
+                pages: 0,
+                words: 0,
+                scriptWords: 0,
+                meaningfulChoices: 0,
+                storage: false,
+            }
+            for (const page of Object.values(data.pages)) {
+                parsed.pages += 1;
+                this._summarizePage(page, parsed);
+            }
+            this._summarizeScript(data.init || "", parsed)
+            return parsed;
+        }
+
+        _summarizePage(page, parsed) {
+            return this._summarizeData(page, parsed);
+        }
+
+        _summarizeData(inData, parsed) {
+            if (Array.isArray(inData)) {
+                for (const item of inData) {
+                    this._summarizeData(item, parsed);
+                }
+                return;
+            }
+            if (typeof inData !== "object") return;
+            this._summarizeDict(inData, parsed);
+        }
+
+
+        _summarizeDict(inData, parsed) {
+            if (Object.hasOwn(inData, "say")) {
+                parsed.words += inData.say.label.split(" ").length;
+            } else if (Object.hasOwn(inData, "choice")) {
+                this._summarizeBranches(inData.choice.options, parsed);
+            } else if (Object.hasOwn(inData, "if")) {
+                const ifData = [{
+                    commands: inData.if.commands,
+                }]
+                if (Object.hasOwn(inData.if, "elseCommands")) {
+                    ifData.push({
+                        commands: inData.if.elseCommands,
+                    })
+                }
+                this._summarizeBranches(ifData, parsed, false, inData.if.condition == "true");
+            } else if (Object.hasOwn(inData, "eval")) {
+                this._summarizeScript(inData.eval.script, parsed);
+            }
+        }
+        _summarizeBranches(choices, parsed, checkAtLeastTwo=true, isNotMeaningful=false) {
+            let meaningfulChoicesFound = false;
+            for (const choice of choices) {
+                this._summarizeData(choice.commands, parsed);
+                if (!isNotMeaningful && meaningfulChoicesFound || (checkAtLeastTwo && choices.length < 2)) continue;
+                if (this._hasRelevantChoice(choice.commands)) {
+                    meaningfulChoicesFound = true;
+                }
+            }
+
+            if (!isNotMeaningful && meaningfulChoicesFound) {
+                parsed.meaningfulChoices += 1;
+            }
+        }
+
+        _hasRelevantChoice(choiceResults) {
+            for (const command of choiceResults) {
+                if (Object.hasOwn(command, "goto") || Object.hasOwn(command, "eval")){
+                    return  true;
+                }
+            }
+            return false
+        }
+
+        _summarizeScript(script, parsed) {
+            if (script.includes("teaseStorage")) {
+                parsed.storage = true;
+            }
+            script = script.replace(/\r\n?|\n/g, "\n");
+
+            // Remove comments while preserving string literals
+            script = script.replace(
+                /("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|\/\/.*|\/\*[\s\S]*?\*\//g,
+                (match, stringLiteral) => (stringLiteral ? stringLiteral : "")
+            );
+
+            // Count words (alphanumeric + underscore)
+            const words = script.match(/\b[A-Za-z0-9_]+\b/g);
+            parsed.scriptWords += words ? words.length : 0;
+        }
+
+    }
+
+    class FlashTeaseSimplifier extends EOSTeaseSimplifier {
+        parsePages(pages) {
+            const out = {};
+            for (const [key, value] of Object.entries(pages)) {
+                if (value.length > 1) {
+                    out[key] = this.parseElement(value);
+                } else {
+                    out[key] = this.parseElement(value[0]);
+                }
+            }
+            return out;
+        }
+
+        parseDict(inData) {
+            if (isEmpty(inData)) {return null}
+
+            if ("nyx.page" in inData) {
+                const pageData = inData["nyx.page"];
+                let parsePage = [this.parseText(pageData.text)];
+                if ("action" in pageData) {
+                    parsePage.push(
+                        this.parseElement(pageData.action)
+                    )
+                }
+                return parsePage;
+            }
+
+            if ("nyx.buttons" in inData) {
+                const options = inData["nyx.buttons"] || [];
+                return this.parseChoices(options);
+            }
+
+            if ("nyx.vert" in inData) {
+                return this.parseElement(inData["nyx.vert"].elements);
+            }
+
+            if ("goto" in inData) {
+                return `> GOTO:${inData.goto.target}`;
+            }
+
+            if ("nyx.timer" in inData) {
+                const timerData = inData["nyx.timer"];
+
+                return this.parseTimer(timerData);
+            }
+
+            const outData = {};
+            for (const [key, value] of Object.entries(inData)) {
+                outData[key] = this.parseElement(value);
+            }
+            return outData;
+        }
+
+        _summarizePage(page, parsed) {
+            if (page.length > 1) {
+                return this._summarizeData(page, parsed);
+            } else {
+                return this._summarizeData(page[0], parsed);
+            }
+        }
+
+        _summarizeDict(inData, parsed) {
+            if ("nyx.page" in inData) {
+                const pageData = inData["nyx.page"];
+
+                parsed.words += pageData.text.split(" ").length;
+                if ("action" in pageData) {
+                    this._summarizeDict(pageData.action, parsed);
+                }
+                return;
+            }
+
+            if ("nyx.buttons" in inData) {
+                const options = this._summaryButtonOptions(inData["nyx.buttons"]);
+                this._summarizeOptions(options, parsed);
+            }
+            if ("nyx.vert" in inData) {
+                const options = []
+                for (const element of inData["nyx.vert"].elements) {
+                    if ("nyx.buttons" in element) {
+                        options.push(...this._summaryButtonOptions(element["nyx.buttons"]));
+                    }
+                    if ("nyx.timer" in element) {
+                        options.push(element["nyx.timer"].commands[0].goto.target)
+                    }
+                }
+                this._summarizeOptions(options, parsed);
+            }
+        }
+
+        _summaryButtonOptions(buttonOptions) {
+            const options = []
+            for (const option of buttonOptions) {
+                options.push(option.commands[0].goto.target);
+            }
+            return options;
+        }
+
+        _summarizeOptions(options, parsed) {
+            if (options.length <= 1) {
+                return;
+            }
+            if (options.every(v => JSON.stringify(v) === JSON.stringify(options[0]))) {
+                return;
+            }
+            parsed.meaningfulChoices += 1;
         }
     }
 
@@ -432,11 +606,11 @@ function displayJsonData(data) {
     }
 
     function sidebar_integration() {
-        if (!window.pageData || window.pageData.type !== TEASE_TYPES.eos) return;
+        if (!window.sidebar ||  !window.location.href.includes("showtease")) return;
         const section = window.sidebar.addSection("tease_data","Tease Data");
         const cached_data = scraper.get_data(window.pageData.id);
 
-        const dataDisplay = window.sidebar.addText("Click on Show to display tease data", section)
+        const dataDisplay = window.sidebar.addText("Click on Summary to display tease data", section, ["width-100"])
 
         function _displayData(data) {
             const text = displayJsonData(data);
@@ -447,8 +621,8 @@ function displayJsonData(data) {
             _displayData(cached_data)
         }
 
-        const showButton = window.sidebar.addButton(cached_data ? "Refresh Data" : "Show", async () => {
-            const new_data = await scraper.scrapeTease(window.pageData.id);
+        const showButton = window.sidebar.addButton(cached_data ? "Refresh Summary" : "Summary", async () => {
+            const new_data = await scraper.getTeaseSummary(window.pageData.id);
             _displayData(new_data);
 
             showButton.disabled = true;
@@ -459,8 +633,7 @@ function displayJsonData(data) {
         window.sidebar.addButton("Download Simplified", () => {
             scraper.downloadSimplifiedJson(window.pageData.id, window.pageData.title);
         }, section)
-
     }
 
-    setTimeout(sidebar_integration, 500);
+    setTimeout(sidebar_integration, 1000);
 })();

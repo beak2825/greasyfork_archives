@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Optimiseur du Chat de la Foret - V1.8 (Nested Quote Fix)
+// @name         Optimiseur du Chat de la Foret - V1.9 (Link url Fix)
 // @namespace    https://greasyfork.org/users/1555347
-// @version      1.8
-// @description  Ajout URL / IMG / Quote / @. Fix : Supprime les citations imbriquées (les quotes de quotes).
+// @version      1.9
+// @description  Ajout URL / IMG / Quote / @. Fix : Les liens URL cassés.
 // @author       Jukop22
 // @match        https://www.pasla.com/*
 // @grant        none
 // @license      MIT
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/561183/Optimiseur%20du%20Chat%20de%20la%20Foret%20-%20V18%20%28Nested%20Quote%20Fix%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561183/Optimiseur%20du%20Chat%20de%20la%20Foret%20-%20V18%20%28Nested%20Quote%20Fix%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561183/Optimiseur%20du%20Chat%20de%20la%20Foret%20-%20V19%20%28Link%20url%20Fix%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561183/Optimiseur%20du%20Chat%20de%20la%20Foret%20-%20V19%20%28Link%20url%20Fix%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -124,7 +124,7 @@
                 const url = qs('#sw-in-url').value.trim();
                 const txt = qs('#sw-in-txt').value.trim();
                 if (url) {
-                    const bb = mode === 'IMG' ? `[img]${url}[/img] ` : (txt ? `[url=${url}][color=#6fa8dc][u][b]${txt}[/b][/u][/color][/url] ` : `[url][color=#6fa8dc][u][b]${url}[/b][/u][/color][/url] `);
+                    const bb = mode === 'IMG' ? `[img]${url}[/img] ` : (txt ? `[url=${url}][color=#6fa8dc][u][b]${txt}[/b][/u][/color][/url] ` : `[url=${url}][color=#6fa8dc][u][b]${url}[/b][/u][/color][/url] `);
                     insert(bb);
                 }
             }

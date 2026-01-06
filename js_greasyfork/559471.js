@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         Wnacg下载按钮恢复
 // @namespace    http://tampermonkey.net/
-// @version      1.7
+// @version      1.9
 // @description  给浏览器无法单独放行广告拦截的，恢复下载按钮。
 // @author       Aloazny
+// @match        *://*.99xmh.*/*
+// @match        *://*.wnacg.*/*
 // @match        *://99mh.men/*
 // @match        *://99xmh.*/*
 // @match        *://99xmh.top/*
@@ -49,6 +51,14 @@
 // @match        *://wnacg03.ru/*
 // @match        *://wnacg04.cc/*
 // @match        *://wnacg04.ru/*
+// @match        *://www.99xmh.*/*
+// @match        *://www.wnacg.*/*
+// @match        *://www.wnacg.com/*
+// @match        *://www.wnacg.men/*
+// @match        *://www.wnacg.one/*
+// @match        *://www.wnacg.ru/*
+// @match        *://www.wnacg.top/*
+// @match        *://www.wnacg.vip/*
 // @run-at         document-start
 // @license         MIT
 // @icon           data:image/jpeg;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AN5hCZneYQn33mEJ8d5hCfHeYQnx3mEJ8d5hCfHeYQnx3mEJ995hCf3eYQn93mEJ895hCfHeYQnx3mEJ995hCZnfZQjv32UI/99lCP/fZQj/32UI/99lCP/fZQj/32UI/99lCN3fZQij32UIsd9lCPHfZQj/32UI/99lCP/fZQjv4WoI7+FqCP/hagj/4WoI/+FqCP/hagj/4WoI/+FqCIXhaggA4WoICOFqCADhaggW4WoIxeFqCP/hagj/4WoI7+NwB+/jcAf/43AH/+NwB//jcAf/43AH/+NwB7XjcAcA43AHi+NwB//jcAfx43AHRONwBxjjcAfx43AH/+NwB+/ldQbv5XUG/+V1Bv/ldQb/5XUG/+V1Bv/ldQZY5XUGNuV1Bv/ldQZY5XUGm+V1BuXldQYA5XUGseV1Bv/ldQbv5nsF7+Z7Bf/mewX/5nsF/+Z7Bf/mewX/5nsFVOZ7BTjmewX/5nsFTOZ7BZHmewXp5nsFAOZ7Ba/mewX/5nsF7+iCBO/oggT/6IIE/+iCBP/oggT/6IIE/+iCBK/oggQA6IIEleiCBP/oggT36IIETOiCBBToggTt6IIE/+iCBO/qhwP36ocDzeqHAxbqhwMM6ocDQOqHA/vqhwP/6ocDeuqHAwDqhwMQ6ocDBuqHAw7qhwO76ocD/+qHA//qhwPv7I0D8+yNA+/sjQOP7I0DheyNA6fsjQP/7I0D/+yNA//sjQPP7I0DkeyNA5/sjQPp7I0D/+yNA//sjQP/7I0D7+6SAqPukgL/7pIC/+6SAv/ukgL/7pIC+e6SAv3ukgL/7pIC/+6SAv/ukgL/7pIC/+6SAv/ukgL77pIC/+6SAqPvlgEA75YBYu+WAf/vlgH/75YB7++WAR7vlgFU75YB+e+WAf/vlgH/75YB/++WAf/vlgHT75YBKu+WARLvlgEE8JkBAPCZARDwmQFW8JkBXPCZAUTwmQEA8JkBAPCZAU7wmQHp8JkB8/CZAffwmQHF8JkBHPCZAQDwmQEA8JkBAP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A//8AAP//AAAAAAAAAAAAAADwAAABGAAAA0gAAANIAAABGAAAOfAAAAAAAAAAAAAAxgcAAP8PAAD//wAA//8AAA==
@@ -115,6 +125,7 @@
     }
 
     function blockExternalLinks() {
+        if (isDownloadPage()) return;
         const currentHostname = window.location.hostname;
         const fuzzyDomain = currentHostname.replace(/\d+/g, '').replace(/\.+$/, '');
         document.addEventListener('click', function(e) {

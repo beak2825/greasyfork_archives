@@ -4,8 +4,10 @@
 // @description     Facilitates access to serieturche.eu
 // @description:it  Facilita l'accesso a serieturche.eu
 // @match           https://player.serieturche.eu/e/*
+// @require         https://cdn.jsdelivr.net/npm/video.js@8.23.4/dist/video.min.js
+// @require         https://cdn.jsdelivr.net/npm/videojs-hotkeys@0.2.30/videojs.hotkeys.js
 // @grant           none
-// @version         1.2
+// @version         1.3
 // @license         GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html
 // @downloadURL https://update.greasyfork.org/scripts/561547/playerserieturcheeu-e.user.js
 // @updateURL https://update.greasyfork.org/scripts/561547/playerserieturcheeu-e.meta.js

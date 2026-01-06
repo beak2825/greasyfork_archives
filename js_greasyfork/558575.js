@@ -1,7 +1,7 @@
  // ==UserScript==
     // @name         LDStatus Pro
     // @namespace    http://tampermonkey.net/
-    // @version      3.5.4.1
+    // @version      3.5.4.6
     // @description  在 Linux.do 和 IDCFlare 页面显示信任级别进度，支持历史趋势、里程碑通知、阅读时间统计、排行榜系统、我的活动查看。两站点均支持排行榜和云同步功能
     // @author       JackLiii
     // @license      MIT
@@ -4368,6 +4368,8 @@
     .ldsp-shop-card-time{font-size:8px;color:var(--txt-mut);margin-left:auto}
     .ldsp-shop-card-seller{font-size:9px;color:var(--txt-sec);display:flex;align-items:center;gap:3px;overflow:hidden}
     .ldsp-shop-card-seller-avatar{width:14px;height:14px;border-radius:50%;background:var(--bg-el);flex-shrink:0;object-fit:cover}
+    .ldsp-shop-card-seller-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .ldsp-shop-card-sold{margin-left:auto;font-size:8px;color:#f97316;font-weight:600;flex-shrink:0}
     .ldsp-shop-card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px solid var(--border)}
     .ldsp-shop-card-price{font-size:13px;font-weight:700;color:var(--accent);display:flex;align-items:baseline;gap:1px}
     .ldsp-shop-card-price span{font-size:8px;font-weight:500;color:var(--txt-mut)}
@@ -4514,9 +4516,9 @@
     .ldsp-order-actions{display:flex;gap:6px}
     .ldsp-order-back-btn{padding:6px 12px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:11px;color:var(--txt-sec);background:var(--bg-el);cursor:pointer;transition:all .15s}
     .ldsp-order-back-btn:hover{border-color:var(--accent);color:var(--accent)}
-    .ldsp-order-detail-status{padding:12px 16px;border-radius:var(--r-md);border:1px solid;text-align:center;font-size:14px;font-weight:600}
-    .ldsp-order-detail-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
-    .ldsp-order-logs{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:14px;display:flex;flex-direction:column;gap:10px}
+    .ldsp-order-detail-status{padding:8px 12px;border-radius:var(--r-md);border:1px solid;text-align:center;font-size:12px;font-weight:600}
+    .ldsp-order-detail-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:10px 12px;overflow:hidden}
+    .ldsp-order-logs{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:12px;display:flex;flex-direction:column;gap:8px;max-height:150px;overflow-y:auto}
     .ldsp-order-logs-title{font-size:11px;font-weight:600;color:var(--txt-sec);padding-bottom:8px;border-bottom:1px dashed var(--border)}
     .ldsp-order-log-item{display:flex;justify-content:space-between;font-size:10px;color:var(--txt-mut)}
     .ldsp-order-log-action{color:var(--txt)}
@@ -4525,30 +4527,37 @@
     .ldsp-order-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;gap:12px;color:var(--txt-mut)}
     .ldsp-order-empty-icon{font-size:40px;opacity:.5}
     .ldsp-order-empty-text{font-size:12px}
-    /* Shop v2.0 订单详情页 */
-    .ldsp-order-detail{display:flex;flex-direction:column;gap:12px;padding:2px}
-    .ldsp-order-detail-header{display:flex;justify-content:space-between;align-items:center}
-    .ldsp-order-detail-id{font-size:12px;color:var(--txt-mut);font-family:monospace}
-    .ldsp-order-detail-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:14px;display:flex;flex-direction:column;gap:10px}
-    .ldsp-order-detail-section-title{font-size:11px;font-weight:600;color:var(--txt-sec);padding-bottom:8px;border-bottom:1px dashed var(--border);display:flex;align-items:center;gap:6px}
-    .ldsp-order-detail-product{display:flex;gap:12px;align-items:center}
-    .ldsp-order-detail-product-img{width:64px;height:64px;object-fit:cover;border-radius:var(--r-sm);background:var(--bg-el)}
-    .ldsp-order-detail-product-img-placeholder{width:64px;height:64px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:24px;background:var(--bg-el)}
-    .ldsp-order-detail-product-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
-    .ldsp-order-detail-product-name{font-size:14px;font-weight:600;color:var(--txt)}
-    .ldsp-order-detail-product-seller{font-size:11px;color:var(--txt-mut)}
-    .ldsp-order-detail-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0}
-    .ldsp-order-detail-row .label{font-size:11px;color:var(--txt-mut)}
-    .ldsp-order-detail-row .value{font-size:11px;color:var(--txt);font-weight:500}
-    .ldsp-order-detail-row .value.price{font-size:15px;font-weight:700;color:var(--accent)}
-    .ldsp-order-detail-row .value.status{padding:3px 8px;font-size:10px;font-weight:600;border-radius:4px}
-    .ldsp-order-cdk-section{background:linear-gradient(135deg,rgba(234,179,8,.08),rgba(234,179,8,.02));border:1px solid rgba(234,179,8,.2);border-radius:var(--r-md);padding:14px}
-    .ldsp-order-cdk-title{font-size:11px;font-weight:600;color:#eab308;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-    .ldsp-order-cdk-content{background:var(--bg-el);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px;position:relative}
-    .ldsp-order-cdk-value{font-size:13px;font-family:monospace;color:var(--txt);word-break:break-all;padding-right:36px;white-space:pre-wrap;line-height:1.5}
-    .ldsp-order-cdk-copy{position:absolute;top:8px;right:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:var(--bg-el);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;font-size:12px;transition:all .15s}
+    /* Shop v2.0 订单详情页 - 重构优化 */
+    .ldsp-order-detail{display:flex;flex-direction:column;gap:8px;padding:0;overflow:hidden}
+    .ldsp-order-detail-header{display:flex;align-items:center;gap:8px;padding-bottom:4px}
+    .ldsp-order-detail-header>span{flex:1;text-align:center;font-size:13px;font-weight:600}
+    .ldsp-order-detail-id{font-size:11px;color:var(--txt-mut);font-family:monospace}
+    .ldsp-order-detail-section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:12px;display:flex;flex-direction:column;gap:8px}
+    .ldsp-order-detail-section-title{font-size:11px;font-weight:600;color:var(--txt-sec);padding-bottom:6px;border-bottom:1px dashed var(--border);display:flex;align-items:center;gap:6px}
+    .ldsp-order-detail-product{display:flex;gap:10px;align-items:center}
+    .ldsp-order-detail-product-img{width:56px;height:56px;object-fit:cover;border-radius:var(--r-sm);background:var(--bg-el);flex-shrink:0}
+    .ldsp-order-detail-product-img-placeholder{width:56px;height:56px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--bg-el);flex-shrink:0}
+    .ldsp-order-detail-product-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;overflow:hidden}
+    .ldsp-order-detail-product-name{font-size:13px;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ldsp-order-detail-product-seller{font-size:10px;color:var(--txt-mut)}
+    .ldsp-order-detail-row{display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;gap:8px;border-bottom:1px dashed var(--border)}
+    .ldsp-order-detail-row:last-child{border-bottom:none}
+    .ldsp-order-detail-row .label{font-size:10px;color:var(--txt-mut);white-space:nowrap;flex-shrink:0;min-width:40px}
+    .ldsp-order-detail-row .value{font-size:10px;color:var(--txt);font-weight:500;text-align:right;word-break:break-all;min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis}
+    .ldsp-order-detail-row .value.mono{font-family:monospace;font-size:9px;letter-spacing:-.3px}
+    .ldsp-order-detail-row .value.price{font-size:13px;font-weight:700;color:var(--accent)}
+    .ldsp-order-detail-row .value.status{padding:2px 6px;font-size:9px;font-weight:600;border-radius:3px}
+    .ldsp-order-cdk-section{background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(34,197,94,.02));border:1px solid rgba(34,197,94,.25);border-radius:var(--r-md);padding:10px}
+    .ldsp-order-cdk-title{font-size:11px;font-weight:600;color:#22c55e;margin-bottom:6px;display:flex;align-items:center;gap:4px}
+    .ldsp-order-cdk-content{background:var(--bg-el);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 10px;font-size:11px;font-family:monospace;word-break:break-all;white-space:pre-wrap;line-height:1.5;max-height:100px;overflow-y:auto;color:var(--txt)}
+    .ldsp-order-cdk-value{font-size:11px;font-family:monospace;color:var(--txt);word-break:break-all;white-space:pre-wrap;line-height:1.5}
+    .ldsp-order-cdk-copy{position:absolute;top:6px;right:6px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;font-size:11px;transition:all .15s}
     .ldsp-order-cdk-copy:hover{border-color:var(--accent);color:var(--accent)}
     .ldsp-order-cdk-copy.copied{background:var(--accent);border-color:var(--accent);color:#fff}
+    .ldsp-order-cdk-actions{display:flex;gap:6px;margin-top:8px}
+    .ldsp-order-cdk-btn{flex:1;padding:6px 10px;border:1px solid rgba(34,197,94,.3);border-radius:var(--r-sm);font-size:10px;font-weight:600;color:#22c55e;background:rgba(34,197,94,.08);cursor:pointer;transition:all .15s;text-align:center}
+    .ldsp-order-cdk-btn:hover{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.4)}
+    .ldsp-order-cdk-btn.copied{background:#22c55e;border-color:#22c55e;color:#fff}
     .ldsp-order-detail-actions{display:flex;gap:8px;padding-top:12px}
     .ldsp-order-detail-btn{flex:1;padding:10px 16px;border:1px solid var(--border);border-radius:var(--r-md);font-size:12px;font-weight:600;color:var(--txt-sec);background:var(--bg-el);cursor:pointer;transition:all .15s;text-align:center}
     .ldsp-order-detail-btn:hover{border-color:var(--accent);color:var(--accent)}
@@ -4610,6 +4619,9 @@
     .ldsp-merchant-form-actions{display:flex;gap:10px;flex-wrap:wrap}
     .ldsp-merchant-edit-btn{flex:1;padding:10px 16px;border:1px solid var(--accent);border-radius:var(--r-md);font-size:12px;font-weight:600;background:transparent;color:var(--accent);cursor:pointer;transition:all .15s}
     .ldsp-merchant-edit-btn:hover{background:var(--accent);color:#fff}
+    .ldsp-merchant-test-btn{padding:10px 16px;border:1px solid #f59e0b;border-radius:var(--r-md);font-size:12px;font-weight:600;background:transparent;color:#f59e0b;cursor:pointer;transition:all .15s}
+    .ldsp-merchant-test-btn:hover{background:#f59e0b;color:#fff}
+    .ldsp-merchant-test-btn:disabled{opacity:.6;cursor:not-allowed}
     .ldsp-merchant-save-btn{flex:1;padding:10px 16px;border:none;border-radius:var(--r-md);font-size:12px;font-weight:600;background:var(--accent);color:#fff;cursor:pointer;transition:all .15s}
     .ldsp-merchant-save-btn:hover{filter:brightness(1.1)}
     .ldsp-merchant-save-btn:disabled{opacity:.6;cursor:not-allowed}
@@ -4664,6 +4676,10 @@
     .ldsp-shop-cdk-mgr-status.locked{background:rgba(234,179,8,.2);color:#eab308}
     .ldsp-shop-cdk-mgr-status.sold{background:rgba(107,114,128,.2);color:#6b7280}
     .ldsp-shop-cdk-mgr-remark{font-size:9px;color:var(--txt-mut);max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .ldsp-shop-cdk-mgr-actions{display:flex;gap:4px;flex-shrink:0}
+    .ldsp-shop-cdk-mgr-copy{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg-card);font-size:12px;cursor:pointer;transition:all .15s;flex-shrink:0}
+    .ldsp-shop-cdk-mgr-copy:hover{border-color:var(--accent);background:rgba(107,140,239,.1)}
+    .ldsp-shop-cdk-mgr-copy.copied{border-color:#22c55e;background:rgba(34,197,94,.15)}
     .ldsp-shop-cdk-mgr-delete{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg-card);font-size:14px;color:var(--txt-mut);cursor:pointer;transition:all .15s;flex-shrink:0}
     .ldsp-shop-cdk-mgr-delete:hover{color:#fff;background:var(--err);border-color:var(--err)}
     .ldsp-shop-cdk-mgr-pagination{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px dashed var(--border);font-size:10px;color:var(--txt-mut);flex-shrink:0}
@@ -4699,6 +4715,8 @@
     .ldsp-shop-my-card-status{position:absolute;top:8px;right:8px;padding:2px 6px;font-size:9px;font-weight:600;border-radius:4px}
     .ldsp-shop-my-card-status.active{background:rgba(34,197,94,.15);color:#22c55e}
     .ldsp-shop-my-card-status.inactive{background:rgba(239,68,68,.15);color:#ef4444}
+    .ldsp-shop-my-card-status.rejected{background:rgba(239,68,68,.2);color:#dc2626}
+    .ldsp-shop-my-card-reason{font-size:9px;color:#dc2626;background:rgba(239,68,68,.08);padding:4px 6px;border-radius:4px;border-left:2px solid #ef4444;margin-bottom:4px;line-height:1.4;word-break:break-all}
     .ldsp-shop-my-list{display:flex;flex-direction:column;gap:8px;overflow-y:auto;flex:1;min-height:0}
     /* LDC/工单/吃瓜/CDK 响应式适配 */
     @media (max-width:380px){.ldsp-ldc-header,.ldsp-ticket-header,.ldsp-melon-header,.ldsp-cdk-header{padding:8px 10px}.ldsp-ldc-title,.ldsp-ticket-title,.ldsp-melon-title,.ldsp-cdk-title{font-size:12px}.ldsp-ldc-tabs{}.ldsp-ldc-tab,.ldsp-cdk-tab{padding:8px 6px;font-size:10px}.ldsp-ldc-body,.ldsp-ticket-body,.ldsp-melon-body,.ldsp-cdk-body{padding:10px;gap:8px}.ldsp-ldc-balance-card{padding:12px}.ldsp-ldc-balance-main{gap:8px}.ldsp-ldc-balance-value{font-size:24px}.ldsp-ldc-balance-right{gap:3px}.ldsp-ldc-balance-sub,.ldsp-ldc-balance-estimate{font-size:9px}.ldsp-ldc-stats-grid{grid-template-columns:1fr}.ldsp-ldc-stat-card{padding:10px;gap:8px}.ldsp-ldc-stat-icon{font-size:16px}.ldsp-ldc-stat-num{font-size:13px}.ldsp-ldc-chart-bars{height:60px}.ldsp-ldc-filter-section{gap:6px;padding-bottom:8px}.ldsp-ldc-filter-label{font-size:9px;min-width:24px}.ldsp-ldc-filter-chip{padding:4px 8px;font-size:9px}.ldsp-ldc-trans-item{padding:8px}.ldsp-ldc-trans-icon{font-size:14px;width:22px;height:22px}.ldsp-ldc-trans-name{font-size:11px}.ldsp-ldc-trans-amount{font-size:13px}.ldsp-ticket-tabs{padding:0 8px}.ldsp-ticket-tab,.ldsp-melon-tab{padding:6px 10px;font-size:9px}.ldsp-ldc-support{gap:12px}.ldsp-ldc-support-header{padding:10px 8px}.ldsp-ldc-support-title{font-size:13px}.ldsp-ldc-support-grid{gap:8px}.ldsp-ldc-support-card{padding:14px 10px}.ldsp-ldc-support-icon{font-size:28px;margin-bottom:8px}.ldsp-ldc-support-amount{font-size:16px}.ldsp-github-star-card{gap:10px;padding:10px 12px}.ldsp-github-icon-wrap{width:30px;height:30px}.ldsp-github-icon{width:26px;height:26px}.ldsp-github-title{font-size:11px;gap:4px}.ldsp-github-star-icon{font-size:14px}.ldsp-github-desc{font-size:9px}.ldsp-github-arrow{font-size:14px}.ldsp-cdk-user-card{flex-wrap:wrap;gap:10px;padding:12px}.ldsp-cdk-user-card::before{display:none}.ldsp-cdk-user-avatar{width:40px;height:40px}.ldsp-cdk-user-info{flex:1;min-width:80px;display:flex;flex-direction:column;align-items:flex-start}.ldsp-cdk-user-name{font-size:13px}.ldsp-cdk-user-username{font-size:9px}.ldsp-cdk-user-level{font-size:9px;padding:2px 8px;margin-top:4px}.ldsp-cdk-score-card{min-width:70px;padding:10px}.ldsp-cdk-score-label{font-size:8px}.ldsp-cdk-score-value{font-size:20px}.ldsp-cdk-qty-card{flex-direction:column;padding:10px;gap:8px}.ldsp-cdk-qty-item{padding:8px}.ldsp-cdk-qty-item.remain{border-right:none;border-bottom:1px solid var(--border)}.ldsp-cdk-qty-item .num{font-size:20px}.ldsp-cdk-qty-divider{display:none}.ldsp-cdk-item{padding:10px}.ldsp-cdk-item-name{font-size:12px}.ldsp-cdk-item-content{padding:6px 8px;font-size:10px}}
@@ -7245,11 +7263,14 @@
                     const statusMap = {
                         'approved': { text: '在售', class: 'active' },
                         'pending': { text: '待审核', class: 'inactive' },
-                        'rejected': { text: '已拒绝', class: 'inactive' },
+                        'rejected': { text: '已拒绝', class: 'inactive rejected' },
                         'offline': { text: '已下架', class: 'inactive' }
                     };
                     const statusInfo = statusMap[status] || statusMap['pending'];
                     const myCardBgColor = this._getRandomLightColor(p.id);
+                    // 获取拒绝/下架原因
+                    const statusReason = p.status_reason || p.reject_reason;
+                    const isAdminAction = p.status_action === 'admin_offline' || p.status_admin;
                     // v2.0: 商品类型和库存（优先使用 availableStock 或 cdkStats.available）
                     const productType = p.product_type || 'link';
                     const isCdk = productType === 'cdk';
@@ -7265,6 +7286,7 @@
                         `<div class="ldsp-shop-my-card-img-placeholder" style="background:${myCardBgColor}">${catIcon}</div>`}
                         <div class="ldsp-shop-my-card-info">
                             <div class="ldsp-shop-my-card-name">${Utils.escapeHtml(p.name)}</div>
+                            ${(status === 'rejected' || status === 'offline') && statusReason ? `<div class="ldsp-shop-my-card-reason">${isAdminAction ? '⚠️ 管理员下架: ' : (status === 'rejected' ? '❌ 拒绝原因: ' : '📝 原因: ')}${Utils.escapeHtml(statusReason)}</div>` : ''}
                             <div class="ldsp-shop-my-card-meta">
                                 <span>${catIcon} ${Utils.escapeHtml(catName)}</span>
                                 ${isCdk ? `<span class="ldsp-shop-my-card-stock${isOutOfStock ? ' low' : isLowStock ? ' low' : ''}"><span class="available">${stock === -1 ? '∞' : availableStock}</span><span class="divider">/</span><span class="total">${p.cdkStats?.total || stock || 0}</span></span>` : ''}
@@ -7398,11 +7420,12 @@
                         </div>
                         <div class="ldsp-shop-card-seller">
                             <img class="ldsp-shop-card-seller-avatar" src="${sellerAvatar}" alt="" onerror="this.style.display='none'">
-                            ${Utils.escapeHtml(p.seller_username || '匿名')}
+                            <span class="ldsp-shop-card-seller-name">${Utils.escapeHtml(p.seller_username || '匿名')}</span>
+                            ${isCdk && soldCount > 0 ? `<span class="ldsp-shop-card-sold">🔥${soldCount}</span>` : ''}
                         </div>
                         <div class="ldsp-shop-card-footer">
                             <div class="ldsp-shop-card-price${hasDiscount ? ' discounted' : ''}">${finalPrice}<span>LDC</span>${hasDiscount ? `<span class="ldsp-shop-card-original">${price.toFixed(2)}</span>` : ''}</div>
-                            <div class="ldsp-shop-card-views">${isCdk && soldCount > 0 ? `🔥${soldCount}` : `👁${p.view_count || 0}`}</div>
+                            <div class="ldsp-shop-card-views">👁${p.view_count || 0}</div>
                         </div>
                     </div>
                 </div>`;
@@ -7811,6 +7834,8 @@
                 const stock = parseInt(product.stock) || 0;
                 const soldCount = parseInt(product.sold_count) || 0;
                 const availableStock = product.availableStock !== undefined ? product.availableStock : stock;
+                // 总库存应使用实际 CDK 数量（cdkStats.total），而不是初始库存值
+                const totalStock = product.cdkStats?.total || stock;
                 const canPurchase = product.canPurchase !== false;
                 const isOutOfStock = isCdk && stock !== -1 && availableStock <= 0;
                 
@@ -7860,7 +7885,7 @@
                         </div>
                         <div class="ldsp-shop-detail-info">
                             <span class="ldsp-shop-detail-info-item">👁 ${product.view_count || 0}</span>
-                            ${isCdk ? `<span class="ldsp-shop-detail-info-item stock${isOutOfStock ? ' low' : ''}">📦 <span class="available">${stock === -1 ? '∞' : availableStock}</span>/<span class="total">${stock === -1 ? '∞' : (product.stock || 0)}</span></span>` : ''}
+                            ${isCdk ? `<span class="ldsp-shop-detail-info-item stock${isOutOfStock ? ' low' : ''}">📦 <span class="available">${stock === -1 ? '∞' : availableStock}</span>/<span class="total">${stock === -1 ? '∞' : totalStock}</span></span>` : ''}
                             ${isCdk && soldCount > 0 ? `<span class="ldsp-shop-detail-info-item sold">🔥 已售${soldCount}</span>` : ''}
                             <span class="ldsp-shop-detail-info-item">📅 ${this._formatRelativeTime(product.updated_at || product.created_at)}</span>
                         </div>
@@ -8338,6 +8363,23 @@
                 });
             }
 
+            // 测试 LDC 回调配置
+            async _testMerchantCallback() {
+                return new Promise(resolve => {
+                    GM_xmlhttpRequest({
+                        method: 'POST',
+                        url: `${this._apiUrl}/api/shop/merchant/test-callback`,
+                        headers: { 'Authorization': `Bearer ${this._token}` },
+                        onload: r => {
+                            try { resolve(JSON.parse(r.responseText)); }
+                            catch { resolve({ success: false, error: '解析响应失败' }); }
+                        },
+                        onerror: () => resolve({ success: false, error: '网络错误' }),
+                        ontimeout: () => resolve({ success: false, error: '请求超时' })
+                    });
+                });
+            }
+
             // 渲染商户收款设置页面
             async _renderMerchantSettings() {
                 const body = this.overlay.querySelector('.ldsp-ldc-body');
@@ -8420,6 +8462,7 @@
                             <div class="ldsp-merchant-form-actions">
                                 ${isConfigured ? `
                                 <button class="ldsp-merchant-edit-btn" id="merchant-edit-btn">✏️ 编辑配置</button>
+                                <button class="ldsp-merchant-test-btn" id="merchant-test-btn">🔔 测试通知</button>
                                 <button class="ldsp-merchant-save-btn" id="merchant-save-btn" style="display:none">💾 保存配置</button>
                                 <button class="ldsp-merchant-cancel-btn" id="merchant-cancel-btn" style="display:none">取消</button>
                                 <button class="ldsp-merchant-delete-btn">🗑️ 删除配置</button>
@@ -8433,9 +8476,14 @@
                             <div class="ldsp-merchant-help-title">❓ 如何获取 LDC 收款凭证</div>
                             <div class="ldsp-merchant-help-content">
                                 <p>1. 访问 <a href="https://credit.linux.do/merchant" target="_blank" rel="noopener">LDC 集市</a></p>
-                                <p>2. 创建新应用或选择已有应用</p>
-                                <p>3. 在应用详情页获取 Client ID 和 Client Key</p>
+                                <p>2. 创建新应用，配置以下地址：</p>
+                                <p style="margin-top:6px">⚠️ <b>通知地址</b>（notify_url，服务器异步通知，必填）：</p>
+                                <p style="margin-left:12px;font-family:monospace;font-size:11px;color:#3b82f6;word-break:break-all">https://api.ldspro.qzz.io/api/shop/ldc/notify</p>
+                                <p style="margin-top:6px">⚠️ <b>回调地址</b>（return_url，支付后浏览器跳转）：</p>
+                                <p style="margin-left:12px;font-family:monospace;font-size:11px;color:#3b82f6;word-break:break-all">https://api.ldspro.qzz.io/api/shop/ldc/return</p>
+                                <p style="margin-top:8px">3. 在应用详情页获取 Client ID 和 Client Key</p>
                                 <p>4. 填写到上方配置表单并保存</p>
+                                <p style="margin-top:8px;font-size:11px;color:#94a3b8">💡 提示：通知地址是支付成功后自动发货的关键，请务必正确配置</p>
                             </div>
                         </div>
                     </div>
@@ -8511,7 +8559,13 @@
                     
                     const resp = await this._saveMerchantConfig(pid, key);
                     if (resp?.success) {
-                        LDSPDialog.success('配置保存成功');
+                        // 检查是否有回调警告
+                        const data = resp?.data || resp;
+                        if (data.callbackWarning) {
+                            LDSPDialog.warning(`配置已保存，但通知地址验证有警告：<br><br>${Utils.escapeHtml(data.callbackWarning)}<br><br>请确保 LDC 后台的通知地址设置为：<br><code style="font-size:11px;background:#333;padding:2px 6px;border-radius:3px">${Utils.escapeHtml(data.expectedNotifyUrl)}</code>`);
+                        } else {
+                            LDSPDialog.success('配置保存成功');
+                        }
                         this._renderMerchantSettings();
                     } else {
                         btn.disabled = false;
@@ -8520,6 +8574,29 @@
                     }
                 });
                 
+                // 测试通知按钮
+                body.querySelector('#merchant-test-btn')?.addEventListener('click', async () => {
+                    const btn = body.querySelector('#merchant-test-btn');
+                    btn.disabled = true;
+                    btn.textContent = '测试中...';
+                    
+                    const resp = await this._testMerchantCallback();
+                    btn.disabled = false;
+                    btn.textContent = '🔔 测试通知';
+                    
+                    if (resp?.success) {
+                        const data = resp?.data || resp;
+                        const testData = data.data || data;
+                        if (testData.status === 'ok') {
+                            LDSPDialog.success(`✅ 通知测试成功！<br><br>您的通知地址配置正确：<br><code style="font-size:11px;background:#333;padding:2px 6px;border-radius:3px">${Utils.escapeHtml(testData.notifyUrl)}</code>`);
+                        } else {
+                            LDSPDialog.warning(`⚠️ ${Utils.escapeHtml(data.message || '通知测试完成')}<br><br>请确保 LDC 后台的通知地址设置正确：<br><code style="font-size:11px;background:#333;padding:2px 6px;border-radius:3px">${Utils.escapeHtml(testData.notifyUrl)}</code>${testData.hint ? '<br><br>💡 ' + Utils.escapeHtml(testData.hint) : ''}`);
+                        }
+                    } else {
+                        LDSPDialog.error(this._formatError(resp));
+                    }
+                });
+
                 // 删除配置
                 body.querySelector('.ldsp-merchant-delete-btn')?.addEventListener('click', async () => {
                     const confirmed = await LDSPDialog.confirm('确定要删除收款配置吗？<br><br>删除后您的 CDK 物品将无法进行平台内支付。', { title: '删除配置', icon: '⚠️', danger: true });
@@ -8685,7 +8762,10 @@
                                             <span class="ldsp-shop-cdk-mgr-status ${c.status}">${c.status === 'available' ? '✓ 可用' : c.status === 'locked' ? '⏳ 锁定' : '✗ 已售'}</span>
                                             ${c.remark ? `<span class="ldsp-shop-cdk-mgr-remark" title="${Utils.escapeHtml(c.remark)}">${Utils.escapeHtml(c.remark)}</span>` : ''}
                                         </div>
-                                        ${c.status === 'available' ? `<button class="ldsp-shop-cdk-mgr-delete" data-id="${c.id}" title="删除此CDK">×</button>` : '<div style="width:24px"></div>'}
+                                        <div class="ldsp-shop-cdk-mgr-actions">
+                                            <button class="ldsp-shop-cdk-mgr-copy" data-code="${Utils.escapeHtml(c.code)}" title="复制CDK">📋</button>
+                                            ${c.status === 'available' ? `<button class="ldsp-shop-cdk-mgr-delete" data-id="${c.id}" title="删除此CDK">×</button>` : ''}
+                                        </div>
                                     </div>
                                 `).join('')}
                             </div>
@@ -8765,6 +8845,51 @@
                     });
                 });
                 
+                // 复制单个 CDK
+                body.querySelectorAll('.ldsp-shop-cdk-mgr-copy').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        const code = btn.dataset.code;
+                        if (!code) return;
+                        
+                        const doCopy = () => {
+                            btn.classList.add('copied');
+                            btn.textContent = '✓';
+                            setTimeout(() => {
+                                btn.classList.remove('copied');
+                                btn.textContent = '📋';
+                            }, 1500);
+                        };
+                        
+                        if (navigator.clipboard?.writeText) {
+                            try {
+                                await navigator.clipboard.writeText(code);
+                                doCopy();
+                            } catch {
+                                // 降级方案
+                                const textarea = document.createElement('textarea');
+                                textarea.value = code;
+                                textarea.style.cssText = 'position:fixed;left:-9999px';
+                                document.body.appendChild(textarea);
+                                textarea.select();
+                                document.execCommand('copy');
+                                document.body.removeChild(textarea);
+                                doCopy();
+                            }
+                        } else {
+                            // 降级方案
+                            const textarea = document.createElement('textarea');
+                            textarea.value = code;
+                            textarea.style.cssText = 'position:fixed;left:-9999px';
+                            document.body.appendChild(textarea);
+                            textarea.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(textarea);
+                            doCopy();
+                        }
+                    });
+                });
+                
                 // 删除单个 CDK
                 body.querySelectorAll('.ldsp-shop-cdk-mgr-delete').forEach(btn => {
                     btn.addEventListener('click', async (e) => {
@@ -8803,61 +8928,61 @@
                 const logs = resp.data.logs || [];
                 const product = order.product || {};
                 const statusMap = {
-                    'pending': { text: '待支付', color: '#f59e0b' },
-                    'paying': { text: '支付中', color: '#3b82f6' },
-                    'paid': { text: '待发货', color: '#f97316' },
-                    'delivered': { text: '已发货', color: '#22c55e' },
-                    'refunded': { text: '已退款', color: '#8b5cf6' },
-                    'expired': { text: '已过期', color: '#6b7280' },
-                    'cancelled': { text: '已取消', color: '#ef4444' }
+                    'pending': { text: '待支付', color: '#f59e0b', icon: '⏳' },
+                    'paying': { text: '支付中', color: '#3b82f6', icon: '💳' },
+                    'paid': { text: '待发货', color: '#f97316', icon: '📦' },
+                    'delivered': { text: '已完成', color: '#22c55e', icon: '✅' },
+                    'refunded': { text: '已退款', color: '#8b5cf6', icon: '↩️' },
+                    'expired': { text: '已过期', color: '#6b7280', icon: '⌛' },
+                    'cancelled': { text: '已取消', color: '#ef4444', icon: '❌' }
                 };
-                const status = statusMap[order.status] || { text: order.status, color: '#6b7280' };
+                const status = statusMap[order.status] || { text: order.status, color: '#6b7280', icon: '📋' };
+                const fmtDate = (d) => d ? new Date(d).toLocaleString('zh-CN', {month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
 
                 body.innerHTML = `
                     <div class="ldsp-order-detail">
                         <div class="ldsp-order-detail-header">
-                            <button class="ldsp-order-back-btn">← 返回</button>
+                            <button class="ldsp-order-back-btn">←</button>
                             <span>订单详情</span>
+                            <div style="width:32px"></div>
                         </div>
-                        <div class="ldsp-order-detail-status" style="background:${status.color}20;border-color:${status.color}">
-                            <span style="color:${status.color}">${status.text}</span>
+                        <div class="ldsp-order-detail-status" style="background:${status.color}12;border-color:${status.color}40">
+                            <span style="color:${status.color}">${status.icon} ${status.text}</span>
                         </div>
                         <div class="ldsp-order-detail-card">
-                            <div class="ldsp-order-detail-row"><span class="label">订单号</span><span class="value mono">${order.order_no}</span></div>
-                            <div class="ldsp-order-detail-row"><span class="label">物品名称</span><span class="value">${Utils.escapeHtml(product.name || '-')}</span></div>
+                            <div class="ldsp-order-detail-row"><span class="label">订单号</span><span class="value mono" title="${order.order_no}">${order.order_no}</span></div>
+                            <div class="ldsp-order-detail-row"><span class="label">商品</span><span class="value" title="${Utils.escapeHtml(product.name || '-')}">${Utils.escapeHtml(product.name || '-')}</span></div>
                             <div class="ldsp-order-detail-row"><span class="label">数量</span><span class="value">${order.quantity || 1}</span></div>
-                            <div class="ldsp-order-detail-row"><span class="label">实付金额</span><span class="value price">${parseFloat(order.amount).toFixed(2)} LDC</span></div>
-                            <div class="ldsp-order-detail-row"><span class="label">卖家</span><span class="value">${Utils.escapeHtml(order.seller_username)}</span></div>
-                            <div class="ldsp-order-detail-row"><span class="label">买家</span><span class="value">${Utils.escapeHtml(order.buyer_username)}</span></div>
-                            <div class="ldsp-order-detail-row"><span class="label">创建时间</span><span class="value">${new Date(order.created_at).toLocaleString('zh-CN')}</span></div>
-                            ${order.paid_at ? `<div class="ldsp-order-detail-row"><span class="label">支付时间</span><span class="value">${new Date(order.paid_at).toLocaleString('zh-CN')}</span></div>` : ''}
-                            ${order.delivered_at ? `<div class="ldsp-order-detail-row"><span class="label">发货时间</span><span class="value">${new Date(order.delivered_at).toLocaleString('zh-CN')}</span></div>` : ''}
+                            <div class="ldsp-order-detail-row"><span class="label">金额</span><span class="value price">${parseFloat(order.amount).toFixed(2)} LDC</span></div>
+                            <div class="ldsp-order-detail-row"><span class="label">${role === 'buyer' ? '卖家' : '买家'}</span><span class="value">${Utils.escapeHtml(role === 'buyer' ? order.seller_username : order.buyer_username)}</span></div>
+                            <div class="ldsp-order-detail-row"><span class="label">下单</span><span class="value">${fmtDate(order.created_at)}</span></div>
+                            ${order.paid_at ? `<div class="ldsp-order-detail-row"><span class="label">支付</span><span class="value">${fmtDate(order.paid_at)}</span></div>` : ''}
+                            ${order.delivered_at ? `<div class="ldsp-order-detail-row"><span class="label">发货</span><span class="value">${fmtDate(order.delivered_at)}</span></div>` : ''}
                         </div>
                         ${order.status === 'pending' && role === 'buyer' ? `
-                            <div class="ldsp-order-pending-notice" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:var(--r-md);padding:12px;margin-top:4px">
-                                <div style="font-size:11px;color:#f59e0b;font-weight:600;margin-bottom:8px">⏳ 等待支付</div>
-                                <div style="font-size:10px;color:var(--txt-sec);line-height:1.5;margin-bottom:10px">
-                                    如果您已完成支付但订单状态未更新，请点击"刷新状态"按钮手动查询支付结果。
+                            <div class="ldsp-order-pending-notice" style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:var(--r-md);padding:8px 10px">
+                                <div style="display:flex;align-items:center;gap:8px">
+                                    <div style="font-size:9px;color:var(--txt-sec);line-height:1.4;flex:1">已支付？点击刷新查询</div>
+                                    <button class="ldsp-order-refresh-btn" data-order="${order.order_no}" style="padding:5px 10px;background:#f59e0b;color:#fff;border:none;border-radius:var(--r-sm);font-size:9px;font-weight:600;cursor:pointer;white-space:nowrap">🔄 刷新</button>
                                 </div>
-                                <button class="ldsp-order-refresh-btn" data-order="${order.order_no}" style="padding:8px 16px;background:#f59e0b;color:#fff;border:none;border-radius:var(--r-sm);font-size:11px;font-weight:600;cursor:pointer">
-                                    🔄 刷新支付状态
-                                </button>
                             </div>
                         ` : ''}
                         ${order.status === 'delivered' && order.deliveryContent ? `
                             <div class="ldsp-order-cdk-section">
-                                <div class="ldsp-order-cdk-title">🎫 CDK 内容</div>
+                                <div class="ldsp-order-cdk-title">${role === 'buyer' ? '🎫 您购买的 CDK' : '📤 已发货内容'}</div>
                                 <div class="ldsp-order-cdk-content">${Utils.escapeHtml(order.deliveryContent)}</div>
-                                <button class="ldsp-order-copy-btn" data-content="${Utils.escapeHtml(order.deliveryContent)}">📋 复制</button>
+                                <div class="ldsp-order-cdk-actions">
+                                    <button class="ldsp-order-cdk-btn" data-action="copy" data-content="${Utils.escapeHtml(order.deliveryContent)}">📋 一键复制</button>
+                                </div>
                             </div>
                         ` : ''}
                         ${logs.length > 0 ? `
                             <div class="ldsp-order-logs">
                                 <div class="ldsp-order-logs-title">📋 订单记录</div>
-                                ${logs.map(log => `
+                                ${logs.slice(0, 5).map(log => `
                                     <div class="ldsp-order-log-item">
                                         <span class="ldsp-order-log-action">${Utils.escapeHtml(log.action)}</span>
-                                        <span class="ldsp-order-log-time">${new Date(log.created_at).toLocaleString('zh-CN')}</span>
+                                        <span class="ldsp-order-log-time">${fmtDate(log.created_at)}</span>
                                     </div>
                                 `).join('')}
                             </div>
@@ -8898,24 +9023,43 @@
                     }
                 });
 
-                // 复制按钮
-                body.querySelector('.ldsp-order-copy-btn')?.addEventListener('click', (e) => {
-                    const content = e.target.dataset.content;
-                    if (content) {
-                        navigator.clipboard?.writeText(content).then(() => {
-                            e.target.textContent = '✅ 已复制';
-                            setTimeout(() => { e.target.textContent = '📋 复制'; }, 2000);
-                        }).catch(() => {
+                // 复制按钮（CDK 一键复制）
+                body.querySelector('.ldsp-order-cdk-btn[data-action="copy"]')?.addEventListener('click', (e) => {
+                    const btn = e.target;
+                    const content = btn.dataset.content;
+                    if (!content) return;
+                    
+                    const doCopy = () => {
+                        btn.classList.add('copied');
+                        btn.textContent = '✅ 已复制';
+                        setTimeout(() => {
+                            btn.classList.remove('copied');
+                            btn.textContent = '📋 一键复制';
+                        }, 2000);
+                    };
+                    
+                    if (navigator.clipboard?.writeText) {
+                        navigator.clipboard.writeText(content).then(doCopy).catch(() => {
                             // 降级方案
                             const textarea = document.createElement('textarea');
                             textarea.value = content;
+                            textarea.style.cssText = 'position:fixed;left:-9999px';
                             document.body.appendChild(textarea);
                             textarea.select();
                             document.execCommand('copy');
                             document.body.removeChild(textarea);
-                            e.target.textContent = '✅ 已复制';
-                            setTimeout(() => { e.target.textContent = '📋 复制'; }, 2000);
+                            doCopy();
                         });
+                    } else {
+                        // 降级方案
+                        const textarea = document.createElement('textarea');
+                        textarea.value = content;
+                        textarea.style.cssText = 'position:fixed;left:-9999px';
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        doCopy();
                     }
                 });
             }

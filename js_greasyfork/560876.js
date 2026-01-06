@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Custom LEADERBOARD 🧬
 // @namespace   https://popmundo.com/
-// @version     2.0
+// @version     2.0.2
 // @description Replaces achievement table with custom leaderboard per Social Club, injects styled family tree, and adds online/inactivity/death status checking
 // @author      chk
 // @match       https://*.popmundo.com/World/Popmundo.aspx/SocialClub/AchievementPoints/*
@@ -164,7 +164,7 @@
             {id: "3572316", name: "James Yufan"},
             {id: "3572401", name: "Juhoon Kim"},
             {id: "3065847", name: "Rei Xie"},
-            {id: "3579423", name: "Tomie Ito 富江"},
+            {id: "3579423", name: "Yuzu Bunny 月"},
             {id: "3247354", name: "Koko Koharu"},
             {id: "3602175", name: "Ruby Ross"},
             {id: "3602139", name: "Nova Xie"},
@@ -173,12 +173,11 @@
             {id: "3616694", name: "Betty Doty"},
             {id: "3613832", name: "Kookie XXIN ア"},
             {id: "3613365", name: "Ryuzen 月影"},
-            {id: "3570776", name: "Yuzu Bunny 月"},
             {id: "3609829", name: "Alina Burrell"},
             {id: "3614576", name: "Ruth Kemp"},
             {id: "3580037", name: "Ruby Hamm"},
             {id: "3613871", name: "Yuki Makino"},
-            {id: "3616012", name: "Tomie Xie"}
+            {id: "3616012", name: "Tomie Ito 富江"}
         ],
     };
 

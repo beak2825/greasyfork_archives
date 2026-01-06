@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         LANraragi 标签翻译
 // @namespace    https://github.com/Kelcoin
-// @version      1.0
+// @version      1.1
 // @description  基于 EhTagTranslation 数据库翻译并替换 LANraragi 的标签
 // @author       Kelcoin
 // @include      https://lanraragi*/*
 // @include      http://lanraragi*/*
-// @match        https://lrr.tvc-16.science/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -23,485 +22,331 @@
 (function() {
     'use strict';
 
-    // ============================================================
-    //  配置项
-    // ============================================================
+    const style = document.createElement('style');
+    style.innerHTML = `
+        #DataTables_Table_0 .caption:not(.caption-tags) {
+            display: block !important;
+            visibility: hidden !important;
+            position: absolute !important;
+            top: -9999px !important;
+            left: -9999px !important;
+            width: 1px !important;
+            height: 1px !important;
+            z-index: -1;
+            overflow: hidden;
+        }
 
-    const DB_URL = 'https://github.com/EhTagTranslation/Database/releases/latest/download/db.text.json';
+        #DataTables_Table_0 .caption-tags,
+        #DataTables_Table_0 .caption table,
+        #DataTables_Table_0 .caption tbody,
+        #DataTables_Table_0 .caption tr,
+        #DataTables_Table_0 .caption td,
+        #DataTables_Table_0 .caption div.gt,
+        #DataTables_Table_0 .caption-namespace,
+        #DataTables_Table_0 table.itg {
+            display: none !important;
+            border: none !important;
+            background: none !important;
+            height: 0 !important;
+            width: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            pointer-events: none !important;
+        }
 
+        .tippy-content table.itg tbody,
+        .caption-tags table.itg tbody {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        .tippy-content table.itg tr,
+        .caption-tags table.itg tr {
+            display: flex !important;
+            width: 100% !important;
+            order: 0;
+        }
+        .tippy-content table.itg td,
+        .caption-tags table.itg td {
+            flex: 1;
+        }
+        .tippy-content table.itg td.caption-namespace,
+        .caption-tags table.itg td.caption-namespace {
+            flex: 0 0 auto !important;
+            min-width: 85px;
+        }
+    `;
+    document.head.appendChild(style);
+
+    const DB_JSONP_URL = 'https://github.com/EhTagTranslation/Database/releases/latest/download/db.text.js';
     const CACHE_KEY = 'lrr_ehtag_db_v2';
     const UPDATE_INTERVAL = 3 * 24 * 60 * 60 * 1000;
 
-    // 列表页 span 上的 class -> 命名空间
     const NAMESPACE_MAP = {
-        'artist-tag': 'artist',
-        'group-tag': 'group',
-        'parody-tag': 'parody',
-        'character-tag': 'character',
-        'female-tag': 'female',
-        'male-tag': 'male',
-        'language-tag': 'language',
-        'mixed-tag': 'mixed',
-        'other-tag': 'other',
-        'cosplayer-tag': 'cosplayer',
-        'reclass-tag': 'reclass',
-        'category-tag': 'category',
-        'location-tag': 'location',
-        'series-tag': 'series'
-        // 不处理 source-tag（值）
+        'artist-tag': 'artist', 'group-tag': 'group', 'parody-tag': 'parody', 'character-tag': 'character',
+        'female-tag': 'female', 'male-tag': 'male', 'language-tag': 'language', 'mixed-tag': 'mixed',
+        'other-tag': 'other', 'cosplayer-tag': 'cosplayer', 'reclass-tag': 'reclass',
+        'category-tag': 'category', 'location-tag': 'location', 'series-tag': 'series'
     };
 
-    // label class / 文本 -> 命名空间
     const LABEL_CLASS_MAP = {
-        'artist': 'artist',
-        'category': 'category',
-        'character': 'character',
-        'cosplayer': 'cosplayer',
-        'dateadded': 'date_added',
-        'date-added': 'date_added',
-        'female': 'female',
-        'group': 'group',
-        'language': 'language',
-        'location': 'location',
-        'male': 'male',
-        'mixed': 'mixed',
-        'other': 'other',
-        'parody': 'parody',
-        'series': 'series',
-        'source': 'source',
-        // 新的元数据命名空间
-        'timestamp': 'timestamp',
-        'uploader': 'uploader'
+        'artist': 'artist', 'category': 'category', 'character': 'character', 'cosplayer': 'cosplayer',
+        'dateadded': 'date_added', 'date-added': 'date_added', 'female': 'female', 'group': 'group',
+        'language': 'language', 'location': 'location', 'male': 'male', 'mixed': 'mixed',
+        'other': 'other', 'parody': 'parody', 'series': 'series', 'source': 'source',
+        'timestamp': 'timestamp', 'uploader': 'uploader'
     };
 
     const LABEL_TEXT_MAP = {
-        'artist:': 'artist',
-        'category:': 'category',
-        'character:': 'character',
-        'cosplayer:': 'cosplayer',
-        'date added:': 'date_added',
-        'female:': 'female',
-        'group:': 'group',
-        'language:': 'language',
-        'location:': 'location',
-        'male:': 'male',
-        'mixed:': 'mixed',
-        'other:': 'other',
-        'parody:': 'parody',
-        'series:': 'series',
-        'source:': 'source',
-        'timestamp:': 'timestamp',
+        'artist:': 'artist', 'category:': 'category', 'character:': 'character', 'cosplayer:': 'cosplayer',
+        'date added:': 'date_added', 'female:': 'female', 'group:': 'group', 'language:': 'language',
+        'location:': 'location', 'male:': 'male', 'mixed:': 'mixed', 'other:': 'other',
+        'parody:': 'parody', 'series:': 'series', 'source:': 'source', 'timestamp:': 'timestamp',
         'uploader:': 'uploader'
     };
 
-    // 命名空间中文显示名（用于左侧 label）
     const NAMESPACE_LABEL_CN = {
-        artist:     "艺术家",
-        category:   "分类",
-        character:  "角色",
-        cosplayer:  "Cosplayer",
-        date_added: "添加日期",
-        female:     "女性",
-        group:      "社团",
-        language:   "语言",
-        location:   "地点",
-        male:       "男性",
-        mixed:      "混合",
-        other:      "其他",
-        parody:     "原作",
-        series:     "系列",
-        source:     "来源",
-        timestamp:  "发布日期",
-        uploader:   "发布者"
+        artist: "艺术家", category: "分类", character: "角色", cosplayer: "Cosplayer",
+        date_added: "添加日期", female: "女性", group: "社团", language: "语言",
+        location: "地点", male: "男性", mixed: "混合", other: "其他", parody: "原作",
+        series: "系列", source: "来源", timestamp: "发布日期", uploader: "发布者"
     };
 
-    // category 固定映射（小写 key）
     const CATEGORY_MAP = {
-        "doujinshi": "同人志",
-        "manga": "漫画",
-        "artist cg": "画师CG",
-        "game cg": "游戏CG",
-        "western": "西方",
-        "image set": "图集",
-        "non-h": "无H",
-        "cosplay": "Cosplay",
-        "asian porn": "亚洲色情",
-        "misc": "杂项",
-        "private": "私有"
+        "doujinshi": "同人志", "manga": "漫画", "artist cg": "画师CG", "game cg": "游戏CG",
+        "western": "西方", "image set": "图集", "non-h": "无H", "cosplay": "Cosplay",
+        "asian porn": "亚洲色情", "misc": "杂项", "private": "私有"
     };
 
     let translationDB = null;
 
-    // ============================================================
-    //  EhTag DB 解析器（兼容新旧结构）
-    // ============================================================
-
     function parseEhTagDB(rawObj) {
-        if (!rawObj || typeof rawObj !== "object") {
-            throw new Error("DB root is not an object");
-        }
-
+        if (!rawObj || typeof rawObj !== "object") throw new Error("DB root is not an object");
         const optimizedDB = {};
 
-        if (Array.isArray(rawObj.data)) {
-            // 新结构：data 是数组
-            for (const nsObj of rawObj.data) {
-                if (!nsObj || typeof nsObj !== "object") continue;
+        const nsList = Array.isArray(rawObj.data) ? rawObj.data :
+                       (rawObj.data ? Object.entries(rawObj.data).map(([k, v]) => ({ namespace: k, data: v })) : []);
 
-                const nsName = nsObj.namespace;
-                const nsData = nsObj.data;
-
-                if (!nsName || !nsData || typeof nsData !== "object") {
-                    continue;
-                }
-
-                const nsKey = String(nsName).toLowerCase();
-                optimizedDB[nsKey] = optimizedDB[nsKey] || {};
-
-                for (const [tagKey, tagObj] of Object.entries(nsData)) {
-                    if (!tagObj || typeof tagObj !== "object") continue;
-                    const cnName = tagObj.name || "";
-                    if (!cnName) continue;
-                    optimizedDB[nsKey][tagKey.toLowerCase()] = cnName;
-                }
+        for (const nsObj of nsList) {
+            if (!nsObj || !nsObj.data) continue;
+            const nsKey = String(nsObj.namespace).toLowerCase();
+            optimizedDB[nsKey] = optimizedDB[nsKey] || {};
+            for (const [tagKey, tagObj] of Object.entries(nsObj.data)) {
+                if (tagObj && tagObj.name) optimizedDB[nsKey][tagKey.toLowerCase()] = tagObj.name;
             }
-        } else if (rawObj.data && typeof rawObj.data === "object") {
-            // 旧结构：data 是对象
-            for (const [nsName, nsData] of Object.entries(rawObj.data)) {
-                if (!nsData || typeof nsData !== "object") continue;
-
-                const nsKey = String(nsName).toLowerCase();
-                optimizedDB[nsKey] = optimizedDB[nsKey] || {};
-
-                for (const [tagKey, tagObj] of Object.entries(nsData)) {
-                    if (!tagObj || typeof tagObj !== "object") continue;
-                    const cnName = tagObj.name || "";
-                    if (!cnName) continue;
-                    optimizedDB[nsKey][tagKey.toLowerCase()] = cnName;
-                }
-            }
-        } else {
-            throw new Error("Unknown DB structure: no usable data field");
         }
 
-        const nsList = Object.keys(optimizedDB);
-        if (nsList.length === 0) {
-            throw new Error("Parsed DB is empty");
-        }
-
+        if (Object.keys(optimizedDB).length === 0) throw new Error("Parsed DB is empty");
         return optimizedDB;
     }
 
-    // ============================================================
-    //  数据库初始化
-    // ============================================================
+    function loadCache() {
+        try { return JSON.parse(window.localStorage.getItem(CACHE_KEY)); } catch (e) { return null; }
+    }
+    function saveCache(data) {
+        try { window.localStorage.setItem(CACHE_KEY, JSON.stringify({ data, time: Date.now() })); } catch (e) {}
+    }
+    function deleteCache() {
+        try { window.localStorage.removeItem(CACHE_KEY); } catch (e) {}
+    }
 
-    async function initDB() {
-        const cached = GM_getValue(CACHE_KEY);
+    let jsonpLoading = false;
+    let jsonpLoadedOnce = false;
+
+    function loadDBViaJSONP() {
+        if (jsonpLoading) return;
+        jsonpLoading = true;
+        if (translationDB && jsonpLoadedOnce) { jsonpLoading = false; return; }
+
+        try { delete window.load_ehtagtranslation_db_text; } catch (e) { window.load_ehtagtranslation_db_text = undefined; }
+
+        window.load_ehtagtranslation_db_text = function(rawDb) {
+            jsonpLoadedOnce = true;
+            jsonpLoading = false;
+            try {
+                const optimizedDB = parseEhTagDB(rawDb);
+                translationDB = optimizedDB;
+                saveCache(optimizedDB);
+                startObserver();
+                translateNode(document.body);
+            } catch (err) {}
+            finally {
+                try { delete window.load_ehtagtranslation_db_text; } catch (e) { window.load_ehtagtranslation_db_text = undefined; }
+            }
+        };
+
+        const script = document.createElement('script');
+        script.src = DB_JSONP_URL + '?_=' + Date.now();
+        script.async = true;
+        script.onerror = function() { jsonpLoading = false; };
+        (document.head || document.body || document.documentElement).appendChild(script);
+    }
+
+    function initDB() {
+        const cached = loadCache();
         const now = Date.now();
-
-        if (cached && cached.data && cached.time) {
-            if (now - cached.time > UPDATE_INTERVAL) {
-                return fetchDB();
-            }
-
-            if (Object.keys(cached.data).length < 3 || !cached.data['female']) {
-                return fetchDB();
-            }
-
+        if (cached && cached.data && cached.time && (now - cached.time <= UPDATE_INTERVAL) && Object.keys(cached.data).length >= 3) {
             translationDB = cached.data;
             startObserver();
         } else {
-            fetchDB();
+            loadDBViaJSONP();
         }
     }
-
-    // ============================================================
-    //  下载数据库
-    // ============================================================
-
-    function fetchDB() {
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: DB_URL,
-            timeout: 30000,
-
-            onload: function(response) {
-                if (response.status !== 200) {
-                    return;
-                }
-
-                try {
-                    const raw = response.responseText;
-                    const data = JSON.parse(raw);
-
-                    const optimizedDB = parseEhTagDB(data);
-
-                    translationDB = optimizedDB;
-                    GM_setValue(CACHE_KEY, { data: optimizedDB, time: Date.now() });
-
-                    startObserver();
-                    translateNode(document.body);
-                } catch (e) {
-                    alert("LRR汉化脚本: 数据库解析失败，请检查控制台日志。");
-                }
-            },
-
-            onerror: function() {
-                // 静默失败
-            },
-
-            ontimeout: function() {
-                // 静默超时
-            }
-        });
-    }
-
-    // ============================================================
-    //  翻译核心（只改显示，不破坏点击）
-    // ============================================================
 
     function getTranslation(namespace, text) {
         if (!translationDB || !text) return null;
-
-        const cleanText = text.trim().toLowerCase();
-
-        if (translationDB[namespace] && translationDB[namespace][cleanText]) {
-            return translationDB[namespace][cleanText];
-        }
-
-        // 兜底 mixed：EhTag 的 mixed 通常是杂项标签池
-        if (translationDB['mixed'] && translationDB['mixed'][cleanText]) {
-            return translationDB['mixed'][cleanText];
-        }
-
-        return null;
+        const clean = text.trim().toLowerCase();
+        return translationDB[namespace]?.[clean] || translationDB['mixed']?.[clean] || null;
     }
 
     function normalizeClassName(cls) {
         if (!cls) return "";
-        return cls.replace(/caption-namespace/gi, "")
-                  .replace(/-tag/gi, "")
-                  .replace(/_/g, "")
-                  .replace(/-/g, "")
-                  .trim()
-                  .toLowerCase();
+        return cls.replace(/caption-namespace|-tag|_|-/gi, "").trim().toLowerCase();
     }
 
     function applyNamespaceLabelTranslation(labelTd, ns) {
         const cn = NAMESPACE_LABEL_CN[ns];
-        if (!cn || !labelTd) return;
-
-        if (!labelTd.dataset.lrrNsLabelTranslated) {
-            const original = labelTd.textContent;
+        if (cn && !labelTd.dataset.lrrNsLabelTranslated) {
             labelTd.dataset.lrrNsLabelTranslated = "true";
-            labelTd.dataset.lrrNsLabelOriginal = original;
+            labelTd.dataset.lrrNsLabelOriginal = labelTd.textContent;
             labelTd.textContent = cn + ":";
         }
     }
 
     function resolveNamespaceFromLabelTd(labelTd) {
         if (!labelTd) return null;
-
-        // 1. 先从 class 推断
         for (const cls of labelTd.classList) {
             const n = normalizeClassName(cls);
-            if (!n) continue;
             if (LABEL_CLASS_MAP[n]) {
                 const ns = LABEL_CLASS_MAP[n];
                 applyNamespaceLabelTranslation(labelTd, ns);
                 return ns;
             }
         }
-
-        // 2. 再从文本内容推断
-        const labelText = labelTd.textContent.trim().toLowerCase();
-        const withColon = labelText.endsWith(':') ? labelText : (labelText + ':');
-        if (LABEL_TEXT_MAP[withColon]) {
-            const ns = LABEL_TEXT_MAP[withColon];
+        const txt = labelTd.textContent.trim().toLowerCase().replace(/:$/, '') + ':';
+        if (LABEL_TEXT_MAP[txt]) {
+            const ns = LABEL_TEXT_MAP[txt];
             applyNamespaceLabelTranslation(labelTd, ns);
             return ns;
         }
-
         return null;
     }
 
     function translateElement(element) {
         if (element.dataset.lrrTranslated) return;
-
         const originalText = element.innerText;
         let namespaceKey = null;
 
-        // A: 列表页 span（class 带 *-tag）
-        for (const [className, nsKey] of Object.entries(NAMESPACE_MAP)) {
-            if (element.classList.contains(className)) {
-                namespaceKey = nsKey;
-                break;
-            }
+        for (const [cls, key] of Object.entries(NAMESPACE_MAP)) {
+            if (element.classList.contains(cls)) { namespaceKey = key; break; }
         }
 
-        // B: 详情 / Tooltip link
         let labelTdRef = null;
-        if (!namespaceKey && element.tagName === 'A') {
-            if (element.parentElement?.classList.contains('gt')) {
-                const tr = element.closest('tr');
-                const labelTd = tr?.querySelector('td.caption-namespace');
-                labelTdRef = labelTd || null;
-                const nsFromLabel = resolveNamespaceFromLabelTd(labelTd);
-                if (nsFromLabel) {
-                    namespaceKey = nsFromLabel;
-                }
+        if (!namespaceKey && element.tagName === 'A' && element.parentElement?.classList.contains('gt')) {
+            const tr = element.closest('tr');
+            if (tr) {
+                const labelTd = tr.querySelector('td.caption-namespace');
+                labelTdRef = labelTd;
+                const ns = resolveNamespaceFromLabelTd(labelTd);
+                if (ns) namespaceKey = ns;
             }
         }
 
-        if (!namespaceKey) {
-            return;
-        }
+        if (!namespaceKey) return;
+        if (labelTdRef) applyNamespaceLabelTranslation(labelTdRef, namespaceKey);
 
-        // 再次确保 label 已翻译（详情面板左列）
-        if (labelTdRef) {
-            applyNamespaceLabelTranslation(labelTdRef, namespaceKey);
-        }
+        if (['source', 'date_added', 'timestamp', 'uploader'].includes(namespaceKey)) return;
 
-        // 跳过只需要翻 label 的字段值：source / date_added / timestamp / uploader
-        if (namespaceKey === 'source' ||
-            namespaceKey === 'date_added' ||
-            namespaceKey === 'timestamp' ||
-            namespaceKey === 'uploader') {
-            return;
-        }
+        const newText = namespaceKey === 'category' ? CATEGORY_MAP[originalText.trim().toLowerCase()] : getTranslation(namespaceKey, originalText);
 
-        let newText = null;
-
-        // category: 固定映射
-        if (namespaceKey === 'category') {
-            const keyLower = originalText.trim().toLowerCase();
-            if (CATEGORY_MAP.hasOwnProperty(keyLower)) {
-                newText = CATEGORY_MAP[keyLower];
-            }
-        } else {
-            newText = getTranslation(namespaceKey, originalText);
-        }
-
-        if (!newText) {
-            return;
-        }
-
-        if (!element.dataset.lrrOriginalText) {
+        if (newText) {
             element.dataset.lrrOriginalText = originalText;
+            element.textContent = newText;
+            element.title = originalText;
+            element.dataset.lrrTranslated = "true";
         }
-
-        element.textContent = newText;
-        element.title = originalText;
-        element.dataset.lrrTranslated = "true";
     }
 
-    // ============================================================
-    //  DOM 元素重排序逻辑
-    // ============================================================
-
-    // 想要固定在底部的字段顺序（对应 HTML 中 caption-namespace 的 class 前缀）
     const BOTTOM_SORT_ORDER = ['date_added', 'timestamp', 'uploader', 'source'];
 
     function reorderMetadata(root) {
         if (!root || !root.querySelectorAll) return;
 
-        const tables = root.querySelectorAll('.caption-tags table.itg tbody, table.itg tbody');
+        const tbodies = root.querySelectorAll('.caption-tags table.itg tbody, table.itg tbody');
 
-        tables.forEach(tbody => {
+        tbodies.forEach(tbody => {
+            if (tbody.closest('#DataTables_Table_0')) return;
+
             if (tbody.dataset.lrrSorted) return;
 
             const rows = Array.from(tbody.querySelectorAll('tr'));
-            const rowsToMove = {};
+            let hasTargetRows = false;
 
-            // 1. 扫描当前表格，找到需要移动的行
             rows.forEach(row => {
                 const labelTd = row.querySelector('td.caption-namespace');
                 if (!labelTd) return;
 
-                for (const key of BOTTOM_SORT_ORDER) {
+                for (let i = 0; i < BOTTOM_SORT_ORDER.length; i++) {
+                    const key = BOTTOM_SORT_ORDER[i];
                     if (labelTd.classList.contains(`${key}-tag`)) {
-                        rowsToMove[key] = row;
+                        row.style.order = 10 + i;
+                        hasTargetRows = true;
+
+                        if (i === 0) {
+                             row.style.borderTop = "1px dashed rgba(255,255,255,0.1)";
+                             row.style.marginTop = "4px";
+                             row.style.paddingTop = "2px";
+                        }
                         break;
                     }
                 }
             });
 
-            // 2. 按指定顺序将它们 append 到 tbody 末尾
-            let movedCount = 0;
-            BOTTOM_SORT_ORDER.forEach(key => {
-                if (rowsToMove[key]) {
-                    tbody.appendChild(rowsToMove[key]);
-                    movedCount++;
-                }
-            });
-
-            if (movedCount > 0) {
+            if (hasTargetRows) {
                 tbody.dataset.lrrSorted = "true";
             }
         });
     }
 
-    // ============================================================
-    //  扫描并翻译节点（仅标签和详情面板，完全不碰搜索框/搜索建议）
-    // ============================================================
-
     function translateNode(node) {
-        if (!translationDB) {
-            return;
-        }
-
+        if (!translationDB) return;
         const root = (node && node.querySelectorAll) ? node : document.body;
 
         const spans = root.querySelectorAll('span[class$="-tag"]');
         const links = root.querySelectorAll('.gt a');
-
         spans.forEach(translateElement);
         links.forEach(translateElement);
 
         reorderMetadata(root);
     }
 
-    // ============================================================
-    //  MutationObserver
-    // ============================================================
-
+    let lrrObserverStarted = false;
     function startObserver() {
+        if (lrrObserverStarted) return;
+        lrrObserverStarted = true;
         translateNode(document.body);
-
         const observer = new MutationObserver((mutations) => {
             let added = 0;
-
-            for (const m of mutations) {
-                added += m.addedNodes.length;
-            }
-
-            if (added > 0) {
-                translateNode(document.body);
-            }
+            for (const m of mutations) added += m.addedNodes.length;
+            if (added > 0) translateNode(document.body);
         });
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
 
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
+    window.LRREhTagForceUpdate = function() {
+        deleteCache(); translationDB = null; jsonpLoadedOnce = false; loadDBViaJSONP();
+    };
+
+    if (typeof GM_registerMenuCommand !== 'undefined') {
+        GM_registerMenuCommand("强制更新翻译数据库", () => {
+            if (confirm("确定要删除本地缓存并重新下载最新的翻译数据库吗？")) {
+                window.LRREhTagForceUpdate();
+            }
         });
     }
 
-    // ============================================================
-    //  菜单命令
-    // ============================================================
+    function bootstrap() { initDB(); }
 
-    GM_registerMenuCommand("强制更新翻译数据库", () => {
-        if (confirm("确定要删除本地缓存并重新下载最新的翻译数据库吗？")) {
-            GM_deleteValue(CACHE_KEY);
-            initDB();
-        }
-    });
-
-    // ============================================================
-    //  启动
-    // ============================================================
-
-    initDB();
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootstrap, { once: true });
+    else bootstrap();
 
 })();

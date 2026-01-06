@@ -2,7 +2,7 @@
 // @name         Milovana: Sidebar
 // @namespace    wompi72
 // @author       wompi72
-// @version      1.0.3
+// @version      1.0.5
 // @description  Milovana Sidebar
 // @match        *://milovana.com/*
 // @grant        none
@@ -10,6 +10,10 @@
 // @downloadURL https://update.greasyfork.org/scripts/561065/Milovana%3A%20Sidebar.user.js
 // @updateURL https://update.greasyfork.org/scripts/561065/Milovana%3A%20Sidebar.meta.js
 // ==/UserScript==
+
+
+// TODO add sessions history
+// {orgasm type, edges, duration (auto start/or manual star)}
 
 'use strict';
 const STORAGE_PREFIX = 'mv_sidebar_';
@@ -869,11 +873,12 @@ class RNG {
         this.randFrom.value = localStorage.getItem(STORAGE.RNG_FROM) || 1;
         this.randTo.value = localStorage.getItem(STORAGE.RNG_TO) || 6;
         sidebar.addButton('Generate', this.generateNumber.bind(this), randomRow);
+        this.displayGenerated = sidebar.addText("...", randomRow, ["rng-result"])
         this.hitoryEl = sidebar.addText(`History: ${this.rngHistory.join(',')}`, this.content, ["text-small"]);
-
     }
 
-    generateNumber() {
+    async generateNumber() {
+        this.displayGenerated.textContent = "...";
         const max = parseInt(this.randTo.value);
         const min = parseInt(this.randFrom.value);
         const generated = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -884,7 +889,9 @@ class RNG {
         if (this.rngHistory.length > 0) {
             numberLog += ` | ${this.rngHistory.join(',')}`;
         }
+        await new Promise(r => setTimeout(r, 200));
         this.hitoryEl.textContent = numberLog;
+        this.displayGenerated.textContent = generated;
         return generated;
     }
 }
@@ -1294,6 +1301,13 @@ body.mv-sidebar-dynamic-tease-size #csl {
     0% { background-color: #ffcccc; }
     50% { background-color: #ff8888; }
     100% { background-color: #ffcccc; }
+}
+.rng-result {
+    margin: auto;
+    font-size: 1.2rem;
+}
+.width-100 {
+    width: 100%;
 }
 
 `;

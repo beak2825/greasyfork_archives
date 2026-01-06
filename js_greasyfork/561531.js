@@ -82,7 +82,7 @@
 // @description:zh-CN  结合低音增强、音量/增强滑块、YouTube Music智能广告拦截加速。
 // @description:zh-TW  結合低音增強、音量/增強滑塊、YouTube Music智慧廣告攔截加速。
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @author       Pascal
 // @match        https://music.youtube.com/*
 // @grant        none
@@ -103,7 +103,19 @@
 
     let audioCtx, source, gainNode, bassFilter;
     let isAudioInited = false;
+    let userPaused = false;
     const wrapperId = 'custom-ytm-controls';
+
+    if (window.trustedTypes && trustedTypes.createPolicy) {
+        if (!trustedTypes.defaultPolicy) {
+            const passThroughFn = (x) => x;
+            trustedTypes.createPolicy('default', {
+                createHTML: passThroughFn,
+                createScriptURL: passThroughFn,
+                createScript: passThroughFn,
+            });
+        }
+    }
 
     function initAudio() {
         const video = document.querySelector('video');
@@ -164,7 +176,6 @@
             localStorage.setItem(storageKey, val);
         };
 
-        // Verhindert, dass das Ziehen des Sliders das Video pausiert
         slider.addEventListener('click', (e) => e.stopPropagation());
         slider.addEventListener('mousedown', (e) => e.stopPropagation());
 
@@ -175,21 +186,21 @@
     }
 
     function applyLogic() {
+        const video = document.querySelector('video');
+        const ad = document.querySelector('.ad-showing, .ad-interrupting');
+
         // 1. Logo (Grün-Cyan Filter)
         const logoImg = document.querySelector('ytmusic-logo img.logo');
         if (logoImg) logoImg.style.filter = "hue-rotate(145deg) brightness(1.2) saturate(1.5)";
 
         // 2. Controls einfügen
         const header = document.querySelector('.top-row-buttons.style-scope.ytmusic-player');
-        const video = document.querySelector('video');
 
         if (header && video && !document.getElementById(wrapperId)) {
             const wrap = document.createElement('div');
             wrap.id = wrapperId;
-            // WICHTIG: pointer-events auto und stopPropagation
             wrap.style.cssText = 'display: flex; align-items: center; background: rgba(0,0,0,0.8); padding: 5px 15px; border-radius: 20px; margin-right: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); z-index: 10000; position: relative; pointer-events: auto;';
 
-            // Klicks auf den schwarzen Balken abfangen
             wrap.addEventListener('click', (e) => e.stopPropagation());
             wrap.addEventListener('mousedown', (e) => e.stopPropagation());
             wrap.addEventListener('dblclick', (e) => e.stopPropagation());
@@ -203,24 +214,33 @@
             if(localStorage.getItem('ytm-vol')) video.volume = localStorage.getItem('ytm-vol') / 100;
         }
 
-        // 3. Ad-Skipper
-        const ad = document.querySelector('.ad-showing, .ad-interrupting');
         if (ad && video) {
             video.playbackRate = SETTINGS.fastSpeed;
             video.muted = true;
             const skipButtons = document.querySelectorAll('.ytp-ad-skip-button, .ytp-skip-ad-button, .ytp-ad-overlay-close-button');
             skipButtons.forEach(btn => btn.click());
+        } else if (video && video.playbackRate > 2) {
+            video.playbackRate = 1.0;
+            video.muted = false;
+        }
+
+        if (video && video.paused && !video.ended && !ad && !userPaused) {
+            video.play().catch(() => {});
+            const confirmDialog = document.querySelector('ytmusic-confirm-dialog-renderer, yt-confirm-dialog-renderer');
+            if (confirmDialog) confirmDialog.remove();
         }
     }
 
+    window.addEventListener('pause', () => { if (!document.hidden) userPaused = true; }, true);
+    window.addEventListener('play', () => { userPaused = false; }, true);
+    window.addEventListener('beforeunload', () => { if(audioCtx) audioCtx.close(); });
+
     setInterval(applyLogic, SETTINGS.checkInterval);
 
-    // Initialisierung bei erstem Klick
     document.addEventListener('mousedown', function initOnAction() {
         if (!isAudioInited) initAudio();
     }, { once: false });
 
-    // CSS Korrekturen
     const style = document.createElement('style');
     style.textContent = `
         .top-row-buttons.ytmusic-player { min-width: 600px !important; overflow: visible !important; }

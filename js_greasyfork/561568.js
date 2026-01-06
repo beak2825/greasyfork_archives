@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bouton Sharewood -> QBittorrent
 // @namespace    https://greasyfork.org/users/1556453
-// @version      1.1.5
+// @version      1.1.6
 // @description  Ajoute un bouton qui envoi le torrent à qBittorrent.
 // @author       pomdepain
 // @license      MIT
@@ -29,7 +29,7 @@ const QB_PASS = "pass"; // <-- mot de passe
 // Contrôler ce qu'on envoie au qBittorrent :
 // SEND_SAVE_PATH : si true, on envoie le paramètre `savepath` (chemin)
 // SEND_CATEGORY  : si true, on envoie le paramètre `category` (libellé catégorie)
-const SEND_SAVE_PATH = true;
+const SEND_SAVE_PATH = false;
 const SEND_CATEGORY = true;
 
 // mapping des chemins selon la catégorie ou sous-catégorie sur le site
@@ -61,6 +61,7 @@ const BUTTON_COLOR = "#086b9b";
 /* ==============================
    FIN CONFIGURATION
    ============================== */
+
 
 (function () {
     'use strict';
@@ -309,6 +310,24 @@ const BUTTON_COLOR = "#086b9b";
         btn.className = 'btn btn-primary btn-lg btn-upload hvr-bounce-to-bottom tm-qb-button';
         btn.style.marginLeft = '6px';
         btn.innerHTML = `<span class="btn-label">${BUTTON_TEXT}</span>`;
+
+        btn.title = BUTTON_TEXT;
+        btn.addEventListener('mouseenter', () => {
+            try {
+                const { category, subcategory } = extractCategoryInfo();
+                const savepath = choosePath(category, subcategory);
+                const qbCategory = buildCategoryString(category, subcategory);
+
+                const parts = [];
+                parts.push(`Envoi QBittorrent prêt`);
+                if (SEND_CATEGORY) parts.push(`Catégorie: ${qbCategory || '(vide)'}`);
+                if (SEND_SAVE_PATH) parts.push(`Chemin: ${savepath || '(par défaut)'}`);
+                btn.title = parts.join(' - ');
+            } catch (err) {
+                // fallback sûr
+                btn.title = BUTTON_TEXT;
+            }
+        });
         return btn;
     }
 
@@ -361,7 +380,7 @@ const BUTTON_COLOR = "#086b9b";
             } catch (loginErr) {
                 console.error('Login failed', loginErr);
                 const msg = 'Erreur login qBittorrent : ' + (loginErr.text || JSON.stringify(loginErr));
-                showToast(msg, { background: '#ef5c54', lifetime: 9000 });
+                showToast(msg, { background: '#ef5c54', lifetime: 7000 });
                 return;
             }
 
@@ -369,7 +388,7 @@ const BUTTON_COLOR = "#086b9b";
             try {
                 const res = await qbAddTorrentFromBlob(blob, savepath, qbCategory);
                 console.log('qb add OK:', res);
-                showToast('Torrent envoyé', { background: '#22b598', lifetime: 9000 });
+                showToast('Torrent envoyé', { background: '#22b598', lifetime: 7000 });
                 return;
             } catch (addErr) {
                 console.warn('qb add failed:', addErr);
@@ -378,7 +397,7 @@ const BUTTON_COLOR = "#086b9b";
                 else if (addErr && addErr.status) msg += `HTTP ${addErr.status}`;
                 else if (addErr && addErr.error) msg += JSON.stringify(addErr.error);
                 else msg += JSON.stringify(addErr);
-                showToast(msg, { background: '#ef5c54', lifetime: 9000 });
+                showToast(msg, { background: '#ef5c54', lifetime: 7000 });
                 return;
             }
         } catch (err) {
@@ -388,7 +407,7 @@ const BUTTON_COLOR = "#086b9b";
             else if (err && err.status) msg += `HTTP ${err.status}`;
             else if (err && err.error) msg += JSON.stringify(err.error);
             else msg += JSON.stringify(err);
-            showToast(msg, { background: '#ef5c54', lifetime: 9000 });
+            showToast(msg, { background: '#ef5c54', lifetime: 7000 });
         }
     }
 
@@ -428,4 +447,3 @@ const BUTTON_COLOR = "#086b9b";
 
     init();
 })();
-

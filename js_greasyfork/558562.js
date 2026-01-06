@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Bazaar Quick Pricer
 // @namespace    http://tampermonkey.net/
-// @version      2.8
+// @version      2.8.3
 // @description  Auto-fill bazaar items with market-based pricing (PDA optimized)
 // @author       Zedtrooper [3028329]
 // @license      MIT
@@ -20,7 +20,7 @@
 (function() {
     'use strict';
 
-    console.log('[BazaarQuickPricer] v2.8 Starting (PDA optimized)...');
+    console.log('[BazaarQuickPricer] v2.8.3 Starting (PDA optimized)...');
 
     // Configuration
     const CONFIG = {
@@ -28,6 +28,7 @@
         apiKey: GM_getValue('tornApiKey', ''),
         lastPriceUpdate: GM_getValue('lastPriceUpdate', 0),
         priceCache: GM_getValue('priceCache', {}),
+        disableNpcCheck: GM_getValue('disableNpcCheck', false),
         cacheTimeout: 5 * 60 * 1000
     };
 
@@ -53,11 +54,13 @@
         GM_setValue('tornApiKey', CONFIG.apiKey);
         GM_setValue('lastPriceUpdate', CONFIG.lastPriceUpdate);
         GM_setValue('priceCache', CONFIG.priceCache);
+        GM_setValue('disableNpcCheck', CONFIG.disableNpcCheck);
     }
 
     // Custom SVGs
     const addButtonSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M3,7.5v11c0,1.38,1.12,2.5,2.5,2.5h1c.83,0,1.5,.67,1.5,1.5s-.67,1.5-1.5,1.5h-1c-3.03,0-5.5-2.47-5.5-5.5V7.5C0,4.47,2.47,2,5.5,2h.35c.56-1.18,1.76-2,3.15-2h2c1.39,0,2.59,.82,3.15,2h.35c1.96,0,3.78,1.05,4.76,2.75,.42,.72,.17,1.63-.55,2.05-.24,.14-.49,.2-.75,.2-.52,0-1.02-.27-1.3-.75-.45-.77-1.28-1.25-2.17-1.25h-.35c-.56,1.18-1.76,2-3.15,2h-2c-1.39,0-2.59-.82-3.15-2h-.35c-1.38,0-2.5,1.12-2.5,2.5Zm14.5,6.5h-1c-.83,0-1.5,.67-1.5,1.5s.67,1.5,1.5,1.5h1c.83,0,1.5-.67,1.5-1.5s-.67-1.5-1.5-1.5Zm6.5-.5v6c0,2.48-2.02,4.5-4.5,4.5h-5c-2.48,0-4.5-2.02-4.5-4.5v-6c0-2.48,2.02-4.5,4.5-4.5h5c2.48,0,4.5,2.02,4.5,4.5Zm-3,0c0-.83-.67-1.5-1.5-1.5h-5c-.83,0-1.5,.67-1.5,1.5v6c0,.83,.67,1.5,1.5,1.5h5c.83,0,1.5-.67,1.5-1.5v-6Z"/></svg>`;
     const refreshSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10,10-4.48,10-10S17.52,2,12,2Zm0,18c-4.41,0-8-3.59-8-8s3.59-8,8-8,8,3.59,8,8-3.59,8-8,8Zm-1-13h2v6h-2v-6Zm0,8h2v2h-2v-2Z"/><path d="M13,7v6h4l-5,5-5-5h4V7h2Z" transform="translate(0,-1)"/></svg>`;
+    const infoSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm1,15a1,1,0,0,1-2,0V11a1,1,0,0,1,2,0ZM12,8a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,12,8Z"/></svg>`;
 
     function showApiKeyPrompt() {
         const overlay = document.createElement('div');
@@ -95,15 +98,26 @@
         overlay.innerHTML = `
             <div style="background:#2a2a2a;padding:25px;border-radius:8px;max-width:400px;width:100%;color:#fff;">
                 <h2 style="margin:0 0 15px 0;font-size:18px;">Quick Pricer Settings</h2>
+                
                 <div style="margin:15px 0;">
                     <label style="display:block;margin-bottom:5px;font-weight:bold;font-size:14px;">Discount %:</label>
                     <input type="number" id="discountInput" value="${CONFIG.defaultDiscount}" min="-50" max="50" step="0.5" style="width:100%;padding:10px;border:1px solid #555;border-radius:5px;background:#1a1a1a;color:#fff;font-size:14px;">
                     <small style="color:#999;font-size:11px;display:block;margin-top:5px;">Use negative values to price above market (e.g., -5 for +5%)</small>
                 </div>
+
                 <div style="margin:15px 0;">
                     <label style="display:block;margin-bottom:5px;font-weight:bold;font-size:14px;">API Key:</label>
                     <input type="text" id="apiKeyUpdateInput" value="${CONFIG.apiKey}" style="width:100%;padding:10px;border:1px solid #555;border-radius:5px;background:#1a1a1a;color:#fff;font-size:14px;">
                 </div>
+
+                <div style="margin:15px 0; display:flex; align-items:center; padding: 10px; background: #222; border-radius: 5px;">
+                    <input type="checkbox" id="npcOverrideCheck" ${CONFIG.disableNpcCheck ? 'checked' : ''} style="width:18px; height:18px; margin-right:10px; cursor:pointer;">
+                    <label for="npcOverrideCheck" style="font-size:13px; color:#fff; cursor:pointer; flex:1;">Disable NPC Safety Limit</label>
+                    <div id="npcInfoIcon" style="color:#2196F3; cursor:pointer; display:flex; align-items:center; padding: 5px;">
+                        ${infoSVG}
+                    </div>
+                </div>
+
                 <button id="clearCache" style="width:100%;padding:10px;background:#ff9800;color:white;border:none;border-radius:5px;cursor:pointer;font-size:14px;margin:10px 0;">Clear Cache</button>
                 <div style="display:flex;gap:10px;margin-top:15px;">
                     <button id="saveSettings" style="flex:1;padding:10px;background:#4CAF50;color:white;border:none;border-radius:5px;cursor:pointer;font-size:14px;">Save</button>
@@ -111,12 +125,18 @@
                 </div>
                 <div style="margin-top:15px;padding-top:15px;border-top:1px solid #555;text-align:center;">
                     <small style="color:#999;font-size:12px;">
-                        v2.8 | <a href="https://github.com/Musa-dabwe/Torn-Bazaar-Quick-Pricer" target="_blank" style="color:#2196F3;">GitHub</a>
+                        v2.8.3 | <a href="https://github.com/Musa-dabwe/Torn-Bazaar-Quick-Pricer" target="_blank" style="color:#2196F3;">GitHub</a>
                     </small>
                 </div>
             </div>
         `;
         document.body.appendChild(overlay);
+
+        document.getElementById('npcInfoIcon').onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            alert("NPC Safety Limit Explanation:\n\nChecked: Items can be priced BELOW their NPC sell value based on your discount.\n\nUnchecked (Default): The script safeguards you by ensuring you never list an item for less than you could sell it to a game shop.");
+        };
 
         document.getElementById('clearCache').onclick = () => {
             CONFIG.priceCache = {};
@@ -127,6 +147,7 @@
         document.getElementById('saveSettings').onclick = () => {
             CONFIG.defaultDiscount = parseFloat(document.getElementById('discountInput').value);
             CONFIG.apiKey = document.getElementById('apiKeyUpdateInput').value.trim();
+            CONFIG.disableNpcCheck = document.getElementById('npcOverrideCheck').checked;
             saveConfig();
             overlay.remove();
             alert('Settings saved!');
@@ -225,12 +246,42 @@
 
     function calculateFinalPrice(marketValue, sellPrice, discount) {
         let finalPrice = Math.round(marketValue * (1 - discount / 100));
-        if (sellPrice > 0 && finalPrice < sellPrice) {
+        
+        // Safety Check
+        if (!CONFIG.disableNpcCheck && sellPrice > 0 && finalPrice < sellPrice) {
             console.log(`[BazaarQuickPricer] Price ${finalPrice} below NPC sell price ${sellPrice}, adjusting...`);
             finalPrice = sellPrice;
         }
 
         return finalPrice;
+    }
+
+    // Helper to clear inputs
+    function clearItemInputs(itemElement) {
+        const amountDiv = itemElement.querySelector('div.amount-main-wrap');
+        if (!amountDiv) return;
+
+        // 1. Clear Price Inputs
+        const priceInputs = amountDiv.querySelectorAll('div.price div input');
+        priceInputs.forEach(input => {
+            input.value = '';
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+
+        // 2. Clear Quantity or Uncheck
+        const isQuantityCheckbox = amountDiv.querySelector('div.amount.choice-container');
+        if (isQuantityCheckbox) {
+            // If it's a checkbox (common for single items), uncheck it
+            const checkbox = isQuantityCheckbox.querySelector('input');
+            if (checkbox && checkbox.checked) checkbox.click();
+        } else {
+            // If it's a text input (bulk items), clear the text
+            const quantityInput = amountDiv.querySelector('div.amount input');
+            if (quantityInput) {
+                quantityInput.value = ''; 
+                quantityInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        }
     }
 
     function fillItemPrice(itemElement) {
@@ -244,6 +295,7 @@
         if (!amountDiv) return Promise.resolve();
         const priceInputs = amountDiv.querySelectorAll('div.price div input');
         if (priceInputs.length === 0) return Promise.resolve();
+
         return new Promise((resolve) => {
             fetchItemData(itemId, ({ marketValue, sellPrice }) => {
                 if (marketValue > 0) {
@@ -264,6 +316,13 @@
                             quantityInput.dispatchEvent(new Event('input', { bubbles: true }));
                             quantityInput.dispatchEvent(new Event('keyup', { bubbles: true }));
                         }
+                    }
+
+                    // UPDATE BUTTON VISUALS FOR UNDO
+                    const btn = itemElement.querySelector('.quick-price-btn button');
+                    if (btn) {
+                        btn.style.background = '#E3392C'; // Red
+                        btn.dataset.mode = 'undo';
                     }
                 }
                 resolve();
@@ -454,7 +513,8 @@
             let manageHeading = headings.find(h => h.textContent.includes('Manage your Bazaar') || h.textContent.includes('Manage items'));
 
             if (manageHeading) {
-                if (document.getElementById('quickUpdateAllPricesBtn')) {
+                // Check for the SETTINGS button ID, which exists on both mobile and desktop
+                if (document.getElementById('manageSettingsBtn')) {
                     clearInterval(tryAddButtons);
                     manageButtonsAdded = true;
                     return;
@@ -553,26 +613,52 @@
         const btnInput = document.createElement('button');
         btnInput.innerHTML = addButtonSVG;
         btnInput.style.cssText = 'background:#5F5F5F;color:white;padding:8px;border:none;border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.2);transition:background 0.2s;';
-        btnInput.setAttribute('title', 'Quick Add');
+        btnInput.setAttribute('title', 'Quick Add / Undo');
+        btnInput.dataset.mode = 'add'; // Default mode
+
+        // Handle Hover based on mode
         btnInput.addEventListener('mouseenter', () => {
-            btnInput.style.background = '#4F4F4F';
+            if (btnInput.dataset.mode === 'undo') {
+                btnInput.style.background = '#C03025'; // Darker red
+            } else {
+                btnInput.style.background = '#4F4F4F'; // Darker grey
+            }
         });
+
         btnInput.addEventListener('mouseleave', () => {
-            if (!btnInput.disabled) btnInput.style.background = '#5F5F5F';
+            if (!btnInput.disabled) {
+                if (btnInput.dataset.mode === 'undo') {
+                    btnInput.style.background = '#E3392C'; // Red
+                } else {
+                    btnInput.style.background = '#5F5F5F'; // Grey
+                }
+            }
         });
+
         btnContainer.appendChild(btnInput);
         titleWrap.style.position = 'relative';
         titleWrap.appendChild(btnContainer);
 
+        // Click Handler (Toggle Add/Undo)
         btnInput.addEventListener('click', function(event) {
             event.stopPropagation();
-            btnInput.disabled = true;
-            btnInput.style.opacity = '0.5';
+            
+            if (btnInput.dataset.mode === 'undo') {
+                // UNDO ACTION
+                clearItemInputs(itemElement);
+                // Reset styling
+                btnInput.style.background = '#5F5F5F';
+                btnInput.dataset.mode = 'add';
+            } else {
+                // ADD ACTION
+                btnInput.disabled = true;
+                btnInput.style.opacity = '0.5';
 
-            fillItemPrice(itemElement).then(() => {
-                btnInput.disabled = false;
-                btnInput.style.opacity = '1';
-            });
+                fillItemPrice(itemElement).then(() => {
+                    btnInput.disabled = false;
+                    btnInput.style.opacity = '1';
+                });
+            }
         });
     }
 

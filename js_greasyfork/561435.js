@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Grok Favorites Batch Download
 // @namespace    https://greasyfork.org/pt-BR/users/1556138-marcos-monteiro
-// @version      2026.01.05.8
+// @version      2026.01.05.9
 // @description  Batch download videos and images from Grok 'imagine' collections, supporting history tracking to prevent duplicate downloads
 // @author       mcm. Based on a script under MIT License (Grok 收藏批量下载 - https://greasyfork.org/pt-BR/scripts/556281-grok-%E6%94%B6%E8%97%8F%E6%89%B9%E9%87%8F%E4%B8%8B%E8%BD%BD) authored by 3989364 https://greasyfork.org/zh-CN/users/309232-3989364
 // @match        https://grok.com/*
@@ -206,6 +206,10 @@ function createDownloadPanel(onDownloadCallback) {
     executeLabel.style.color = '#ccc';
     executeLabel.style.fontSize = '12px';
 
+    const skipHistoryCheckObj = createCheckbox('Skip downloaded', savedSettings.skipHistory !== undefined ? savedSettings.skipHistory : true, 'skipHistory');
+    skipHistoryCheckObj.label.style.fontSize = '12px';
+    skipHistoryCheckObj.label.style.color = '#ccc';
+
     const actionButtonsContainer = document.createElement('div');
     actionButtonsContainer.style.cssText = 'display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;';
 
@@ -347,6 +351,7 @@ function createDownloadPanel(onDownloadCallback) {
     historyBtnRow.appendChild(historyButtonsContainer);
 
     actionBtnRow.appendChild(executeLabel);
+    actionBtnRow.appendChild(skipHistoryCheckObj.label);
     actionButtonsContainer.appendChild(downloadBtn);
     actionButtonsContainer.appendChild(dryRunBtn);
     actionButtonsContainer.appendChild(cancelBtn);
@@ -486,7 +491,8 @@ function createDownloadPanel(onDownloadCallback) {
                     includeCredentials: includeCredentialsCheckObj.input.checked,
                     urlOnly: urlOnlyCheckObj.checked,
                     maxConcurrency: parseInt(concurrencyObj.input.value, 10) || 3,
-                    isDryRun: isDryRun
+                    isDryRun: isDryRun,
+                    skipHistory: skipHistoryCheckObj.input.checked
                 };
 
                 downloadBtn.style.display = 'none';
@@ -815,6 +821,7 @@ const handleDownloadBtnClick = async (options, panel) => {
     panel.log(`Include Credentials: ${options.includeCredentials}`);
     panel.log(`Max Concurrency: ${options.maxConcurrency}`);
     panel.log(`Dry Run: ${options.isDryRun}`);
+    panel.log(`Skip History: ${options.skipHistory}`);
 
     const signal = panel.signal;
     const stats = {
@@ -877,8 +884,12 @@ const handleDownloadBtnClick = async (options, panel) => {
         panel.updateStatus(`Downloading`)
         // Exclude downloaded files
 
+        const targetMediaList = options.skipHistory
+            ? mediaList.filter(({ mediaUrl }) => !DownloadRecordStore.has(mediaUrl))
+            : mediaList;
+
         const downloadedFileUrls = await handleDownloadMedias(
-            mediaList.filter(({ mediaUrl }) => !DownloadRecordStore.has(mediaUrl)),
+            targetMediaList,
             options,
             signal,
             (curr, total) => panel.updateProgress(curr, total),

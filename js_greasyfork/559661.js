@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         文本链接转可点击链接
-// @version      1.9
-// @description  自动识别页面中的文本链接和磁力链接并转换为可点击的链接，保留原始文本
+// @version      2.2
+// @description  自动识别页面中的文本链接和磁力链接并转换为可点击的链接
 // @author       DeepSeek
 // @match        *://*/*
-// @run-at       document-end
+// @run-at       document-idle
 // @grant        none
 // @license      MIT
 // @namespace https://greasyfork.org/users/452911
@@ -14,431 +14,232 @@
 
 (() => {
     'use strict';
-    
-    // 跳过处理的元素标签
-    const SKIP_TAGS = ['A', 'SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT', 'IFRAME'];
-    
-    // 磁力链接匹配正则表达式
-    const MAGNET_PATTERN = /(magnet:\?xt=urn:(?:btih|sha1|tree:tiger):[a-zA-Z0-9&=._\-%]+)/gi;
-    
-    // 改进的URL正则，避免包含前面的斜杠
-    const URL_PATTERN = /\b(?:https?:\/\/|www\.)[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*(?:\.[a-zA-Z]{2,})(?::\d{1,5})?(?:\/[^\s<>()\[\]{}|\\^~`'";:,!?]*)?/gi;
-    
-    // 合并的正则表达式
-    const COMBINED_PATTERN = new RegExp(
-        `(${MAGNET_PATTERN.source}|${URL_PATTERN.source})`,
-        'gi'
-    );
-    
-    // 常见顶级域名列表
-    const COMMON_TLDS = [
-        // 通用顶级域名
-        'com', 'org', 'net', 'edu', 'gov', 'mil', 'int',
-        // 国家顶级域名
-        'cn', 'us', 'uk', 'jp', 'de', 'fr', 'ru', 'br', 'in', 'it', 'ca', 'au', 'mx', 'es', 'kr', 'id', 'nl', 'tr', 'sa', 'ch', 'tw', 'se', 'pl', 'be', 'th', 'ir', 'eg', 'gr', 'pt', 'cz', 'dk', 'fi', 'il', 'nz', 'ie', 'sg', 'my', 'za', 'ar', 'cl', 'co', 'pe', 've', 'ro', 'hu', 'sk', 'at', 'bg', 'hr', 'lt', 'si', 'ee', 'lv', 'cy', 'lu', 'mt', 'is', 'li',
-        // 新通用顶级域名
-        'xyz', 'top', 'site', 'online', 'club', 'shop', 'store', 'tech', 'fun', 'app', 'dev', 'ai', 'io', 'me', 'tv', 'co', 'biz', 'info', 'name', 'mobi', 'pro', 'asia',
-        // 您要求增加的新后缀
-        'la', 're', 'guru', 'pw', 'icu', 'live', 'work', 'space', 'ltd', 'xin', 'cc', 'vip', 'world', 'website', 'cyou', 'ink', 'link', 'st', 'fit', 'click', 'ms',
-        // 二级域名（国家顶级域名的二级）
-        'com.cn', 'org.cn', 'net.cn', 'edu.cn', 'gov.cn', 'ac.cn',
-        'co.uk', 'org.uk', 'me.uk', 'gov.uk', 'ac.uk',
-        'com.au', 'org.au', 'net.au', 'edu.au', 'gov.au',
-        'co.jp', 'or.jp', 'go.jp', 'ac.jp', 'ed.jp',
-        'com.de', 'org.de', 'net.de', 'edu.de',
-        'com.fr', 'org.fr', 'net.fr', 'edu.fr',
-        'com.br', 'org.br', 'net.br', 'edu.br', 'gov.br',
-        'com.mx', 'org.mx', 'net.mx', 'edu.mx', 'gob.mx'
-    ];
-    
-    // 验证URL
-    const isValidURL = (url) => {
-        // 如果是磁力链接，直接返回true
-        if (url.toLowerCase().startsWith('magnet:')) {
-            return true;
-        }
-        
-        // 如果包含协议，直接认为是有效URL
-        if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('www.')) {
-            return true;
-        }
-        
-        return false;
+
+    const SETTINGS = {
+        AUTO_START: true,
+        WATCH_DOM: true,
+        EXECUTION_TIMEOUT: 0,
+        IGNORE_SELECTORS: 'a, pre, code, script, style, textarea, input, .no-linkify, head, meta, noscript, object, embed, iframe, canvas, svg',
+        OPEN_NEW_TAB: true,
+        THROTTLE_MS: 1500,
+        // 新增：跳过特定标题的网页（完全匹配）
+        SKIP_TITLES: ['网页无法打开']
     };
-    
-    // 改进的链接提取函数，专门处理前面有斜杠的情况
-    const extractLinks = content => {
-        const results = [];
+
+    // 检查网页标题是否应该跳过（完全匹配）
+    const shouldSkipPageByTitle = () => {
+        const pageTitle = document.title.trim();
+        if (!pageTitle) return false;
         
-        // 先匹配磁力链接
-        const magnetPattern = /(magnet:\?xt=urn:(?:btih|sha1|tree:tiger):[a-zA-Z0-9&=._\-%]+)/gi;
-        let magnetMatch;
-        while ((magnetMatch = magnetPattern.exec(content)) !== null) {
-            results.push({
-                url: magnetMatch[1],
-                start: magnetMatch.index,
-                end: magnetMatch.index + magnetMatch[1].length,
-                originalLength: magnetMatch[1].length,
-                cleanedLength: magnetMatch[1].length,
-                isMagnet: true
-            });
-        }
-        
-        // 改进的URL匹配，避免包含前面的斜杠
-        // 我们使用更精确的正则，并手动检查前面的字符
-        const urlPattern = /(https?:\/\/[^\s<>()\[\]{}|\\^~`'";:,!?]+|www\.[^\s<>()\[\]{}|\\^~`'";:,!?]+)/gi;
-        let urlMatch;
-        while ((urlMatch = urlPattern.exec(content)) !== null) {
-            const url = urlMatch[1];
-            const startIndex = urlMatch.index;
-            
-            // 检查前面是否有冒号或斜杠（避免匹配到前面的内容）
-            const beforeMatch = startIndex > 0 ? content.substring(0, startIndex) : '';
-            const lastCharBefore = beforeMatch.length > 0 ? beforeMatch.charAt(beforeMatch.length - 1) : '';
-            
-            // 如果前面有冒号但不是 http: 或 https:，跳过
-            if (lastCharBefore === ':') {
-                const beforeUrl = beforeMatch.toLowerCase();
-                if (!beforeUrl.endsWith('http:') && !beforeUrl.endsWith('https:')) {
-                    continue;
-                }
-            }
-            
-            // 如果前面有斜杠但不是协议部分，跳过
-            if (lastCharBefore === '/' && !url.startsWith('//')) {
-                // 检查前面是否有冒号（协议分隔符）
-                const secondLastCharBefore = beforeMatch.length > 1 ? beforeMatch.charAt(beforeMatch.length - 2) : '';
-                if (secondLastCharBefore !== ':') {
-                    // 前面有斜杠但没有冒号，说明是路径的一部分，跳过
-                    continue;
-                }
-            }
-            
-            // 检查是否是单词的一部分
-            const afterIndex = startIndex + url.length;
-            if (isPartOfWord(content, startIndex, afterIndex)) {
-                continue;
-            }
-            
-            // 清理URL（移除末尾标点）
-            const cleaned = sanitizeURL(url, content, startIndex);
-            
-            if (isValidURL(cleaned)) {
-                results.push({
-                    url: cleaned,
-                    start: startIndex,
-                    end: startIndex + url.length,
-                    originalLength: url.length,
-                    cleanedLength: cleaned.length,
-                    isMagnet: false
-                });
-            }
-        }
-        
-        // 去重并排序
-        return results.filter((item, index, self) => 
-            index === self.findIndex(t => 
-                t.start === item.start && t.url === item.url
-            )
-        ).sort((a, b) => a.start - b.start);
-    };
-    
-    // 检查节点是否在A标签内
-    const isInsideAnchor = (node) => {
-        let parent = node.parentNode;
-        while (parent && parent !== document.body) {
-            if (parent.nodeName === 'A') {
-                return true;
-            }
-            parent = parent.parentNode;
-        }
-        return false;
-    };
-    
-    // 检查URL是否是单词的一部分
-    const isPartOfWord = (text, start, end) => {
-        const beforeChar = start > 0 ? text[start - 1] : '';
-        const afterChar = end < text.length ? text[end] : '';
-        
-        // 如果前面或后面是字母数字，说明可能是单词的一部分
-        return /[a-zA-Z0-9]/.test(beforeChar) || /[a-zA-Z0-9]/.test(afterChar);
-    };
-    
-    // 智能清理URL
-    const sanitizeURL = (urlStr, originalText, matchStart) => {
-        if (!urlStr) return urlStr;
-        
-        let cleaned = urlStr;
-        
-        // 磁力链接特殊处理
-        if (cleaned.toLowerCase().startsWith('magnet:')) {
-            const magnetMatch = cleaned.match(/^(magnet:\?xt=urn:(?:btih|sha1|tree:tiger):[a-zA-Z0-9&=._\-%]+)/i);
-            if (magnetMatch) {
-                cleaned = magnetMatch[1];
-            }
-            return cleaned;
-        }
-        
-        const originalLength = cleaned.length;
-        
-        // 移除常见的末尾标点
-        const trailingChars = /([.,;:!?'"`\]\}>]+)$/;
-        const match = cleaned.match(trailingChars);
-        if (match) {
-            const withoutPunctuation = cleaned.substring(0, cleaned.length - match[1].length);
-            // 确保移除标点后仍然看起来像URL
-            if (withoutPunctuation.length > 0 && 
-                (withoutPunctuation.includes('://') || withoutPunctuation.startsWith('www.'))) {
-                cleaned = withoutPunctuation;
-            }
-        }
-        
-        return cleaned;
-    };
-    
-    // 构建链接元素
-    const buildLinkElement = url => {
-        const link = document.createElement('a');
-        
-        if (url.toLowerCase().startsWith('magnet:')) {
-            link.href = url;
-        } else {
-            const href = url.startsWith('http') ? url : `http://${url}`;
-            link.href = href;
-        }
-        
-        link.textContent = url;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer nofollow';
-        link.setAttribute('data-text-link', 'true');
-        link.style.cssText = 'cursor: pointer;';
-        
-        return link;
-    };
-    
-    // 创建带链接的文本节点
-    const createTextWithLinks = (text) => {
-        if (!text || text.trim().length === 0) {
-            return document.createTextNode(text);
-        }
-        
-        // 检查整个文本是否就是一个URL
-        const trimmedText = text.trim();
-        if (isValidURL(trimmedText)) {
-            return buildLinkElement(trimmedText);
-        }
-        
-        // 提取链接
-        const links = extractLinks(text);
-        
-        if (links.length === 0) {
-            return document.createTextNode(text);
-        }
-        
-        // 创建文档片段
-        const fragment = document.createDocumentFragment();
-        let currentPos = 0;
-        
-        links.forEach((link, index) => {
-            // 添加链接前的文本
-            if (link.start > currentPos) {
-                fragment.appendChild(
-                    document.createTextNode(text.substring(currentPos, link.start))
-                );
-            }
-            
-            // 添加链接
-            fragment.appendChild(buildLinkElement(link.url));
-            
-            // 更新当前位置到清理后的URL的结束位置
-            currentPos = link.start + link.cleanedLength;
-            
-            // 如果清理后的URL比原始匹配短，添加被清理掉的字符
-            if (link.cleanedLength < link.originalLength) {
-                const removedChars = text.substring(
-                    link.start + link.cleanedLength, 
-                    link.start + link.originalLength
-                );
-                if (removedChars.length > 0) {
-                    fragment.appendChild(
-                        document.createTextNode(removedChars)
-                    );
-                }
-                currentPos = link.start + link.originalLength;
-            }
-            
-            // 添加最后一个链接后的文本
-            if (index === links.length - 1 && currentPos < text.length) {
-                fragment.appendChild(
-                    document.createTextNode(text.substring(currentPos))
-                );
-            }
+        // 完全匹配检查
+        return SETTINGS.SKIP_TITLES.some(skipTitle => {
+            return pageTitle === skipTitle;
         });
-        
-        return fragment;
     };
-    
-    // 处理单个文本节点
-    const processTextNode = textNode => {
-        const parent = textNode.parentNode;
-        if (!parent || SKIP_TAGS.includes(parent.nodeName)) return false;
-        
-        // 排除已经在A标签内的文本节点
-        if (isInsideAnchor(textNode)) return false;
-        
-        const content = textNode.textContent;
-        if (!content || content.trim().length === 0) return false;
-        
-        const replacement = createTextWithLinks(content);
-        
-        if (!replacement) return false;
-        
-        if (replacement.nodeType === Node.TEXT_NODE && 
-            replacement.textContent === content) {
-            return false;
-        }
-        
-        try {
-            parent.replaceChild(replacement, textNode);
-            return true;
-        } catch (error) {
-            console.warn('替换文本节点失败:', error);
-            return false;
-        }
-    };
-    
-    // 收集所有需要处理的文本节点
-    const collectTextNodes = (root = document.body) => {
-        const nodes = [];
-        const walker = document.createTreeWalker(
-            root,
-            NodeFilter.SHOW_TEXT,
-            {
-                acceptNode: node => {
-                    if (!node.parentNode || SKIP_TAGS.includes(node.parentNode.nodeName)) {
-                        return NodeFilter.FILTER_REJECT;
-                    }
-                    
-                    if (isInsideAnchor(node)) {
-                        return NodeFilter.FILTER_REJECT;
-                    }
-                    
-                    const content = node.textContent;
-                    if (!content || content.trim().length === 0) {
-                        return NodeFilter.FILTER_REJECT;
-                    }
-                    
-                    // 使用改进的检查方法
-                    const hasMagnet = /magnet:\?xt=urn:(?:btih|sha1|tree:tiger):[a-zA-Z0-9&=._\-%]+/i.test(content);
-                    const hasURL = /(?:https?:\/\/|www\.)[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*(?:\.[a-zA-Z]{2,})/i.test(content);
-                    
-                    return (hasMagnet || hasURL) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-                }
-            }
-        );
-        
-        let currentNode;
-        while (currentNode = walker.nextNode()) {
-            nodes.push(currentNode);
-        }
-        
-        return nodes;
-    };
-    
-    // 遍历Shadow DOM
-    const traverseShadowRoots = (element) => {
-        const results = [];
-        
-        if (element.shadowRoot) {
-            results.push(...collectTextNodes(element.shadowRoot));
-            element.shadowRoot.childNodes.forEach(child => {
-                if (child.nodeType === Node.ELEMENT_NODE) {
-                    results.push(...traverseShadowRoots(child));
-                }
-            });
-        }
-        
-        element.childNodes.forEach(child => {
-            if (child.nodeType === Node.ELEMENT_NODE) {
-                results.push(...traverseShadowRoots(child));
-            }
-        });
-        
-        return results;
-    };
-    
-    // 主要处理函数
-    const processDocument = () => {
-        try {
-            // 收集所有文本节点（包括Shadow DOM）
-            let allTextNodes = collectTextNodes();
-            
-            // 查找并处理Shadow DOM中的节点
-            document.querySelectorAll('*').forEach(element => {
-                if (element.shadowRoot) {
-                    allTextNodes.push(...traverseShadowRoots(element));
-                }
-            });
-            
-            // 去重并处理
-            const uniqueNodes = [...new Set(allTextNodes)];
-            
-            // 从后往前处理，避免索引变化
-            let processedCount = 0;
-            for (let i = uniqueNodes.length - 1; i >= 0; i--) {
-                const node = uniqueNodes[i];
-                if (node.parentNode && document.contains(node)) {
-                    if (processTextNode(node)) {
-                        processedCount++;
-                    }
-                }
-            }
-            
-            if (processedCount > 0) {
-                console.log(`已处理 ${processedCount} 个文本节点中的链接`);
-            }
-        } catch (error) {
-            console.error('处理文档时出错:', error);
-        }
-    };
-    
-    // 延迟执行
-    const delayedProcess = (function() {
-        let timer = null;
-        return function() {
-            if (timer) clearTimeout(timer);
-            timer = setTimeout(processDocument, 500);
-        };
-    })();
-    
-    // 初始执行
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', delayedProcess);
-    } else {
-        delayedProcess();
+
+    // 如果标题完全匹配跳过条件，直接退出脚本
+    if (shouldSkipPageByTitle()) {
+        console.log('链接转换：检测到需要跳过的页面标题，脚本已停止');
+        return;
     }
-    
-    // 监听DOM变化
-    const observer = new MutationObserver(mutations => {
-        let shouldUpdate = false;
-        
-        for (const mutation of mutations) {
-            if (mutation.type === 'characterData' || 
-                mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                shouldUpdate = true;
+
+    // 修复域名匹配问题：将较长的顶级域名放在前面
+    const LINK_PATTERN = /((https?:\/\/|www\.)[\x21-\x7e]+[\w\/=]|(\w[\w._-]+\.(network|online|website|world|guru|work|space|ltd|vip|cyou|ink|link|click|asia|shop|info|com|cn|org|net|tv|cc|gov|edu|la|re|pw|icu|live|xin|st|fit|ms|xyz|io|fun|top))(\/[\x21-\x7e]*[\w\/])?|ed2k:\/\/[\x21-\x7e]+\|\/|thunder:\/\/[\x21-\x7e]+=|magnet:\?xt=urn:[a-z0-9]+:[a-z0-9]{32,40}(&[a-z0-9]+=[\x21-\x7e]*)*)/gi;
+
+    const processedElements = new WeakSet();
+    let mutationWatcher = null;
+    let throttleId = null;
+    const queuedChanges = [];
+
+    // HTML编码防止XSS
+    const htmlEncoder = (text) => {
+        const escapeMap = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#x27;'
+        };
+        return text.replace(/[&<>"']/g, ch => escapeMap[ch]);
+    };
+
+    // 检查是否跳过该元素
+    const shouldSkipElement = (elem) => {
+        if (!elem || elem.nodeType !== 1) return true;
+        if (elem.getAttribute?.('data-link-converted')) return true;
+        if (elem.matches?.(SETTINGS.IGNORE_SELECTORS)) return true;
+        if (elem.closest?.(SETTINGS.IGNORE_SELECTORS)) return true;
+        return elem.isContentEditable;
+    };
+
+    // 规范化URL
+    const normalizeUrl = (rawUrl) => {
+        if (rawUrl.startsWith('magnet:')) return rawUrl;
+        if (/^(https?|ed2k|thunder|magnet):\/\//i.test(rawUrl)) return rawUrl;
+        return 'http://' + rawUrl;
+    };
+
+    // 创建可点击链接HTML
+    const createClickableLink = (originalText) => {
+        const url = normalizeUrl(originalText);
+        const newTabAttr = SETTINGS.OPEN_NEW_TAB ? ' target="_blank" rel="noopener noreferrer"' : '';
+        return `<a href="${htmlEncoder(url)}" class="auto-converted-link" data-link-converted="true"${newTabAttr}>${htmlEncoder(originalText)}</a>`;
+    };
+
+    // 转换文本节点中的链接
+    const convertTextContent = (textNode) => {
+        if (!textNode || textNode.nodeType !== 3) return false;
+        const container = textNode.parentNode;
+        if (!container || shouldSkipElement(container)) return false;
+
+        const original = textNode.textContent;
+        if (!original) return false;
+
+        const testPattern = new RegExp(LINK_PATTERN.source, LINK_PATTERN.flags);
+        if (!testPattern.test(original)) return false;
+
+        const transformed = original.replace(LINK_PATTERN, createClickableLink);
+        if (transformed === original) return false;
+
+        const wrapper = document.createElement('span');
+        wrapper.className = 'link-conversion-wrapper';
+        wrapper.innerHTML = transformed;
+
+        wrapper.childNodes.forEach(child => {
+            if (child.nodeType === 3) processedElements.add(child);
+        });
+
+        container.replaceChild(wrapper, textNode);
+        return true;
+    };
+
+    // 扫描元素中的文本链接
+    const scanElement = (rootElem) => {
+        if (!rootElem) return;
+        if (processedElements.has(rootElem)) return;
+        processedElements.add(rootElem);
+
+        const textNodes = [];
+        const nodeFilter = {
+            acceptNode: (node) => {
+                if (processedElements.has(node)) return NodeFilter.FILTER_REJECT;
+                if (shouldSkipElement(node.parentNode)) return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        };
+
+        const walker = document.createTreeWalker(
+            rootElem,
+            NodeFilter.SHOW_TEXT,
+            nodeFilter
+        );
+
+        let currentNode;
+        while ((currentNode = walker.nextNode())) {
+            textNodes.push(currentNode);
+        }
+
+        const timeLimit = SETTINGS.EXECUTION_TIMEOUT || Number.MAX_SAFE_INTEGER;
+        const startTimestamp = Date.now();
+
+        for (let i = 0; i < textNodes.length; i++) {
+            convertTextContent(textNodes[i]);
+
+            if (i < textNodes.length - 1 && 
+                Date.now() - startTimestamp > timeLimit && 
+                timeLimit !== Number.MAX_SAFE_INTEGER) {
+                
+                console.log(`链接转换：已处理 ${i + 1} 个节点，剩余 ${textNodes.length - i - 1} 个延迟执行`);
+                const pending = textNodes.slice(i + 1);
+                setTimeout(() => executeBatch(pending), 50);
                 break;
             }
         }
-        
-        if (shouldUpdate) {
-            delayedProcess();
+    };
+
+    // 批量处理节点
+    const executeBatch = (nodeList) => {
+        const limit = SETTINGS.EXECUTION_TIMEOUT || Number.MAX_SAFE_INTEGER;
+        const beginTime = Date.now();
+
+        for (let i = 0; i < nodeList.length; i++) {
+            convertTextContent(nodeList[i]);
+
+            if (i < nodeList.length - 1 && 
+                Date.now() - beginTime > limit && 
+                limit !== Number.MAX_SAFE_INTEGER) {
+                
+                const remaining = nodeList.slice(i + 1);
+                setTimeout(() => executeBatch(remaining), 50);
+                break;
+            }
         }
-    });
-    
-    // 开始观察
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        characterData: true
-    });
+    };
+
+    // DOM变化节流处理
+    const throttleHandler = () => {
+        if (throttleId) clearTimeout(throttleId);
+        
+        throttleId = setTimeout(() => {
+            if (queuedChanges.length === 0) return;
+
+            const uniqueElements = new Set();
+            queuedChanges.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1) {
+                        uniqueElements.add(node);
+                    } else if (node.nodeType === 3 && node.parentNode?.nodeType === 1) {
+                        uniqueElements.add(node.parentNode);
+                    }
+                });
+            });
+
+            uniqueElements.forEach(elem => {
+                if (!processedElements.has(elem)) {
+                    scanElement(elem);
+                }
+            });
+
+            queuedChanges.length = 0;
+        }, SETTINGS.THROTTLE_MS);
+    };
+
+    // MutationObserver回调
+    const mutationCallback = (mutations) => {
+        if (!SETTINGS.WATCH_DOM) return;
+        queuedChanges.push(...mutations);
+        throttleHandler();
+    };
+
+    // 初始化脚本
+    const setup = () => {
+        // 再次检查标题，以防动态加载的内容
+        if (shouldSkipPageByTitle()) {
+            console.log('链接转换：检测到需要跳过的页面标题，脚本已停止');
+            return;
+        }
+
+        if (SETTINGS.AUTO_START) {
+            scanElement(document.body);
+        }
+
+        if (SETTINGS.WATCH_DOM) {
+            mutationWatcher = new MutationObserver(mutationCallback);
+            mutationWatcher.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
+    };
+
+    // 修改点：等待网页完全加载完成后执行
+    if (document.readyState === 'complete') {
+        setup();
+    } else {
+        // 使用load事件确保所有资源加载完成
+        window.addEventListener('load', function() {
+            // 延迟一小段时间以确保动态内容加载完成
+            setTimeout(setup, 100);
+        }, { once: true });
+    }
 })();

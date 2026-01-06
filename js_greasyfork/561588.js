@@ -13,6 +13,7 @@ const STORAGE_KEY = 'hitomi_filter_settings_v5';
 
 const DEFAULT_SETTINGS = {
     syncMode: true,
+    layoutMode: 'list', // 追加: 'list', 'compact', 'grid'
     excludeList: [
         'tag:anthology',
         'male:shota',
@@ -105,12 +106,20 @@ function setSyncMode(isSyncOn) {
     _save(settings);
 }
 
+// Storage-5.0.js 内に追加
+    function updateLayoutMode(mode) {
+        const settings = loadSettings();
+        settings.layoutMode = mode;
+        _save(settings);
+    }
+
 window.HitomiFilterStorage = {
     loadSettings,
     updateState,
     updateAllStates,
     updateConfig,
     setSyncMode,
+    updateLayoutMode, // 追加
     defaults: DEFAULT_SETTINGS
 };
 })(window);

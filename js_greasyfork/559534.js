@@ -1,22 +1,23 @@
 // ==UserScript==
-// @name         ✈️ Travel Points Maker (Inventory-Correct + Abroad Info) - Heavenly UI
+// @name         ✈️ Travel Points Maker (Halo Armory Style)
 // @namespace    http://tampermonkey.net/
-// @version      2.0.1
-// @description  Correct Torn travel points tracker with heavenly clouds and rain animation
+// @version      2.0.2
+// @description  Halo armory style travel points tracker with plane emoji toggle
 // @match        https://www.torn.com/*
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_xmlhttpRequest
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/559534/%E2%9C%88%EF%B8%8F%20Travel%20Points%20Maker%20%28Inventory-Correct%20%2B%20Abroad%20Info%29%20-%20Heavenly%20UI.user.js
-// @updateURL https://update.greasyfork.org/scripts/559534/%E2%9C%88%EF%B8%8F%20Travel%20Points%20Maker%20%28Inventory-Correct%20%2B%20Abroad%20Info%29%20-%20Heavenly%20UI.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559534/%E2%9C%88%EF%B8%8F%20Travel%20Points%20Maker%20%28Halo%20Armory%20Style%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/559534/%E2%9C%88%EF%B8%8F%20Travel%20Points%20Maker%20%28Halo%20Armory%20Style%29.meta.js
 // ==/UserScript==
 
 (function () {
 'use strict';
 
 /* ================= CONFIG ================= */
-const PANEL_ID = 'travel_pts_heavenly';
+const PANEL_ID = 'travel_pts_halo';
+const TOGGLE_ID = 'travel_toggle';
 const POLL = 45000;
 const PRE_PTS=25, FLO_PTS=10, PLU_PTS=10, MET_PTS=15, FOS_PTS=20;
 const YATA_URL='https://yata.yt/api/v1/travel/export/';
@@ -71,52 +72,98 @@ const GROUPS = {
  }
 };
 
-/* ================= HEAVENLY STYLE ================= */
+/* ================= HALO ARMORY STYLE ================= */
 GM_addStyle(`
-/* Panel Container */
-#${PANEL_ID}{
- position:fixed;top:84px;right:8px;width:260px;
- background: linear-gradient(135deg, #1a1f2e 0%, #0c1b2e 50%, #051324 100%);
- color:#e6f7ff;
- font:10.5px 'Segoe UI', system-ui, sans-serif;
- border:1px solid rgba(135, 206, 235, 0.3);
- border-radius:12px;
- z-index:999999;
- max-height:70vh;
- display:flex;
- flex-direction:column;
+/* Toggle Button */
+#${TOGGLE_ID} {
+ position: fixed;
+ right: 8px;
+ top: 84px;
+ width: 40px;
+ height: 40px;
+ background: linear-gradient(135deg, #1a1f2e 0%, #0c1b2e 100%);
+ border: 1px solid rgba(135, 206, 235, 0.4);
+ border-radius: 6px;
+ color: #87ceeb;
+ font-size: 22px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ cursor: pointer;
+ z-index: 1000000;
  box-shadow: 
-  0 0 30px rgba(135, 206, 235, 0.2),
-  0 0 60px rgba(70, 130, 180, 0.1),
-  inset 0 1px 0 rgba(255,255,255,0.1);
+  0 2px 10px rgba(0, 0, 0, 0.5),
+  0 0 20px rgba(70, 130, 180, 0.3);
+ transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ user-select: none;
  backdrop-filter: blur(5px);
- overflow:hidden;
 }
 
-/* Cloud animations container */
+#${TOGGLE_ID}:hover {
+ background: linear-gradient(135deg, #2a2f3e 0%, #1c2b3e 100%);
+ border-color: rgba(155, 226, 255, 0.6);
+ color: #a7deff;
+ box-shadow: 
+  0 4px 15px rgba(0, 0, 0, 0.6),
+  0 0 30px rgba(100, 150, 255, 0.4);
+ transform: scale(1.05);
+}
+
+#${TOGGLE_ID}:active {
+ transform: scale(0.95);
+ transition: transform 0.1s;
+}
+
+/* Panel Container - Halo Armory Style */
+#${PANEL_ID} {
+ position: fixed;
+ right: 8px;
+ top: 84px;
+ width: 0;
+ height: 70vh;
+ background: linear-gradient(135deg, rgba(10, 15, 25, 0.98) 0%, rgba(5, 10, 20, 0.95) 100%);
+ color: #e6f7ff;
+ font: 10.5px 'Segoe UI', system-ui, sans-serif;
+ border: 1px solid rgba(135, 206, 235, 0.3);
+ border-radius: 12px 0 0 12px;
+ z-index: 999999;
+ max-height: 70vh;
+ display: flex;
+ flex-direction: column;
+ box-shadow: 
+  inset 0 0 50px rgba(70, 130, 180, 0.1),
+  0 0 40px rgba(0, 0, 0, 0.7);
+ backdrop-filter: blur(10px);
+ overflow: hidden;
+ transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+ opacity: 0;
+ border-right: none;
+}
+
+#${PANEL_ID}.open {
+ width: 280px;
+ opacity: 1;
+ border-right: 1px solid rgba(135, 206, 235, 0.3);
+ border-radius: 12px;
+}
+
+/* Panel interior with tech grid background */
 #${PANEL_ID}::before {
  content: '';
  position: absolute;
- top: -50px;
- left: -50px;
- right: -50px;
- bottom: -50px;
- background: 
-   radial-gradient(circle at 20% 20%, rgba(255,255,255,0.05) 1px, transparent 1px),
-   radial-gradient(circle at 80% 40%, rgba(255,255,255,0.04) 1px, transparent 1px),
-   radial-gradient(circle at 40% 80%, rgba(255,255,255,0.03) 1px, transparent 1px);
- background-size: 100px 100px;
- animation: cloudFloat 60s infinite linear;
- pointer-events: none;
+ top: 0;
+ left: 0;
+ right: 0;
+ bottom: 0;
+ background-image: 
+   linear-gradient(rgba(70, 130, 180, 0.05) 1px, transparent 1px),
+   linear-gradient(90deg, rgba(70, 130, 180, 0.05) 1px, transparent 1px);
+ background-size: 20px 20px;
+ mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
  z-index: 0;
 }
 
-@keyframes cloudFloat {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(-100px, 100px); }
-}
-
-/* Rain animation */
+/* Glowing edge effect */
 #${PANEL_ID}::after {
  content: '';
  position: absolute;
@@ -124,259 +171,279 @@ GM_addStyle(`
  left: 0;
  right: 0;
  bottom: 0;
- background: 
-   linear-gradient(180deg, 
-     transparent 0%, 
-     rgba(135, 206, 235, 0.1) 10%, 
-     transparent 20%,
-     rgba(135, 206, 235, 0.1) 30%,
-     transparent 40%,
-     rgba(135, 206, 235, 0.1) 50%,
-     transparent 60%,
-     rgba(135, 206, 235, 0.1) 70%,
-     transparent 80%,
-     rgba(135, 206, 235, 0.1) 90%,
-     transparent 100%);
- background-size: 2px 100px;
- animation: rainFall 1s infinite linear;
+ border: 1px solid transparent;
+ border-image: linear-gradient(45deg, #87ceeb, #4682b4, #87ceeb) 1;
+ border-radius: 12px;
+ box-shadow: 
+  0 0 30px rgba(70, 130, 180, 0.3),
+  inset 0 0 30px rgba(70, 130, 180, 0.1);
  pointer-events: none;
- z-index: 0;
- opacity: 0.3;
+ z-index: 1;
 }
 
-@keyframes rainFall {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 100px; }
-}
-
-/* Header with heavenly glow */
-#${PANEL_ID} .h{
- padding:8px 12px;
- font-weight:700;
- cursor:pointer;
- background: linear-gradient(135deg, rgba(70, 130, 180, 0.4), rgba(135, 206, 235, 0.3));
+/* Header */
+#${PANEL_ID} .h {
+ padding: 10px 14px;
+ font-weight: 700;
+ background: linear-gradient(90deg, rgba(70, 130, 180, 0.4), rgba(135, 206, 235, 0.2));
  color: #ffffff;
  text-shadow: 0 0 10px rgba(135, 206, 235, 0.8);
- border-bottom:1px solid rgba(135, 206, 235, 0.2);
- display:flex;
- align-items:center;
- gap:8px;
- position:relative;
- z-index:1;
- transition: all 0.3s ease;
-}
-
-#${PANEL_ID} .h:hover {
- background: linear-gradient(135deg, rgba(100, 150, 200, 0.5), rgba(155, 226, 255, 0.4));
- text-shadow: 0 0 15px rgba(155, 226, 255, 1);
+ border-bottom: 1px solid rgba(135, 206, 235, 0.3);
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ position: relative;
+ z-index: 2;
+ font-size: 11px;
+ letter-spacing: 0.5px;
 }
 
 #${PANEL_ID} .h::before {
- content: '☁️';
+ content: '✈️';
  font-size: 14px;
- filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+ filter: drop-shadow(0 0 3px rgba(135, 206, 235, 0.8));
 }
 
 /* Summary section */
-#${PANEL_ID} .s{
- padding:6px 12px;
- background: rgba(20, 30, 48, 0.7);
- font-weight:700;
+#${PANEL_ID} .s {
+ padding: 8px 14px;
+ background: rgba(20, 30, 48, 0.8);
+ font-weight: 700;
  color: #87ceeb;
- text-align:center;
- border-bottom:1px solid rgba(135, 206, 235, 0.2);
- position:relative;
- z-index:1;
+ text-align: center;
+ border-bottom: 1px solid rgba(135, 206, 235, 0.2);
+ position: relative;
+ z-index: 2;
  text-shadow: 0 0 5px rgba(135, 206, 235, 0.5);
+ font-size: 11px;
+ backdrop-filter: blur(5px);
 }
 
 /* Body container */
-#${PANEL_ID} .b{
- overflow:auto;
- position:relative;
- z-index:1;
- background: rgba(10, 20, 35, 0.8);
+#${PANEL_ID} .b {
+ overflow: auto;
+ position: relative;
+ z-index: 2;
+ background: rgba(10, 15, 25, 0.7);
+ flex: 1;
+ scrollbar-width: thin;
+ scrollbar-color: #4682b4 rgba(20, 30, 48, 0.3);
+}
+
+/* Scrollbar styling */
+#${PANEL_ID} .b::-webkit-scrollbar {
+ width: 6px;
+}
+
+#${PANEL_ID} .b::-webkit-scrollbar-track {
+ background: rgba(20, 30, 48, 0.3);
+ border-radius: 3px;
+}
+
+#${PANEL_ID} .b::-webkit-scrollbar-thumb {
+ background: linear-gradient(180deg, #4a90e2, #87ceeb);
+ border-radius: 3px;
+}
+
+#${PANEL_ID} .b::-webkit-scrollbar-thumb:hover {
+ background: linear-gradient(180deg, #5ca0f2, #97deff);
 }
 
 /* Warning alerts */
-#${PANEL_ID} .a{
- background: linear-gradient(135deg, rgba(255, 77, 77, 0.15), rgba(255, 100, 100, 0.1));
- border-left:3px solid #ff6b6b;
- margin:4px 8px;
- padding:4px 8px;
- font-weight:700;
- border-radius:6px;
+#${PANEL_ID} .a {
+ background: linear-gradient(90deg, rgba(255, 77, 77, 0.15), rgba(255, 100, 100, 0.1));
+ border-left: 3px solid #ff6b6b;
+ margin: 6px 10px;
+ padding: 6px 10px;
+ font-weight: 700;
+ border-radius: 4px;
  color: #ffcccc;
  text-shadow: 0 0 5px rgba(255, 100, 100, 0.5);
- position:relative;
- overflow:hidden;
+ position: relative;
+ overflow: hidden;
+ font-size: 10px;
 }
 
 #${PANEL_ID} .a::before {
  content: '⚠️';
  position: absolute;
- left: 4px;
+ left: 6px;
  top: 50%;
  transform: translateY(-50%);
- opacity: 0.7;
+ opacity: 0.8;
 }
 
 /* Category titles */
-#${PANEL_ID} .t{
- padding:6px 12px;
- background: linear-gradient(90deg, rgba(70, 130, 180, 0.2), transparent);
- color:#87cefa;
- font-weight:700;
- border-top:1px solid rgba(135, 206, 235, 0.1);
- border-bottom:1px solid rgba(135, 206, 235, 0.1);
- position:relative;
+#${PANEL_ID} .t {
+ padding: 8px 14px;
+ background: linear-gradient(90deg, rgba(70, 130, 180, 0.3), transparent);
+ color: #87cefa;
+ font-weight: 700;
+ border-top: 1px solid rgba(135, 206, 235, 0.2);
+ border-bottom: 1px solid rgba(135, 206, 235, 0.1);
+ position: relative;
  text-shadow: 0 0 5px rgba(135, 206, 235, 0.5);
+ font-size: 10.5px;
+ letter-spacing: 0.3px;
 }
 
 #${PANEL_ID} .t::after {
  content: '';
  position: absolute;
- right: 12px;
+ right: 14px;
  top: 50%;
  transform: translateY(-50%);
- width: 16px;
- height: 16px;
+ width: 12px;
+ height: 12px;
  background: rgba(135, 206, 235, 0.1);
- border-radius: 50%;
+ border-radius: 2px;
 }
 
 /* Row styling */
-#${PANEL_ID} .r{
- padding:3px 12px;
- line-height:1.2;
- display:flex;
- justify-content:space-between;
- align-items:center;
+#${PANEL_ID} .r {
+ padding: 6px 14px;
+ line-height: 1.3;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
  transition: all 0.2s ease;
- position:relative;
+ position: relative;
+ font-size: 10.5px;
 }
 
 #${PANEL_ID} .r:hover {
- background: rgba(135, 206, 235, 0.05);
+ background: rgba(135, 206, 235, 0.08);
 }
 
 #${PANEL_ID} .r:nth-child(even) {
- background: rgba(20, 40, 60, 0.3);
+ background: rgba(20, 40, 60, 0.2);
 }
 
-#${PANEL_ID} .r span{
- white-space:nowrap;
- padding:1px 4px;
- border-radius:3px;
+#${PANEL_ID} .r span {
+ white-space: nowrap;
+ padding: 2px 6px;
+ border-radius: 3px;
 }
 
 /* Column specific styling */
-#${PANEL_ID} .r span:nth-child(1) { /* Item name */
+#${PANEL_ID} .r span:nth-child(1) {
  color: #e6f7ff;
- font-weight:600;
- min-width:40px;
+ font-weight: 600;
+ min-width: 45px;
 }
 
-#${PANEL_ID} .r span:nth-child(2) { /* Inventory count */
+#${PANEL_ID} .r span:nth-child(2) {
  color: #90ee90;
- background: rgba(144, 238, 144, 0.1);
- padding:1px 6px;
- border-radius:4px;
- font-weight:700;
+ background: rgba(144, 238, 144, 0.12);
+ padding: 2px 8px;
+ border-radius: 4px;
+ font-weight: 700;
+ font-family: 'Consolas', monospace;
 }
 
-#${PANEL_ID} .r span:nth-child(3) { /* Abroad count */
+#${PANEL_ID} .r span:nth-child(3) {
  color: #ffb6c1;
- background: rgba(255, 182, 193, 0.1);
- padding:1px 6px;
- border-radius:4px;
+ background: rgba(255, 182, 193, 0.12);
+ padding: 2px 8px;
+ border-radius: 4px;
+ font-family: 'Consolas', monospace;
 }
 
-#${PANEL_ID} .r span:nth-child(4) { /* Location */
+#${PANEL_ID} .r span:nth-child(4) {
  color: #87ceeb;
- font-weight:600;
+ font-weight: 600;
+ font-size: 10px;
 }
 
-/* Scrollbar styling */
-#${PANEL_ID} .b::-webkit-scrollbar {
- width:6px;
-}
-
-#${PANEL_ID} .b::-webkit-scrollbar-track {
- background:rgba(20, 30, 48, 0.3);
- border-radius:3px;
-}
-
-#${PANEL_ID} .b::-webkit-scrollbar-thumb {
- background:linear-gradient(180deg, #4a90e2, #87ceeb);
- border-radius:3px;
-}
-
-#${PANEL_ID} .b::-webkit-scrollbar-thumb:hover {
- background:linear-gradient(180deg, #5ca0f2, #97deff);
-}
-
-/* Additional floating cloud elements */
-#${PANEL_ID} .cloud {
- position: absolute;
- background: rgba(255, 255, 255, 0.05);
- border-radius: 50%;
- pointer-events: none;
- z-index: 0;
- animation: float 20s infinite linear;
-}
-
-@keyframes float {
-  0% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(10px, 5px) rotate(90deg); }
-  50% { transform: translate(0, 10px) rotate(180deg); }
-  75% { transform: translate(-10px, 5px) rotate(270deg); }
-  100% { transform: translate(0, 0) rotate(360deg); }
+/* Scroll synchronization */
+.scrolling {
+ transition: transform 0.2s ease-out !important;
 }
 `);
 
-/* ================= PANEL CREATION ================= */
+/* ================= CREATE ELEMENTS ================= */
+// Create toggle button
+const toggle = document.createElement('div');
+toggle.id = TOGGLE_ID;
+toggle.innerHTML = '✈️';
+toggle.title = 'Travel Points Tracker';
+
+// Create panel
 const panel = document.createElement('div');
 panel.id = PANEL_ID;
 panel.innerHTML = `
-<div class="h">✈️ Travel Points - Heavenly Tracker</div>
+<div class="h">✈️ TRAVEL POINTS TRACKER</div>
 <div class="s"></div>
 <div class="b"></div>
 `;
 
-// Add floating clouds
-const cloudCount = 3;
-for (let i = 0; i < cloudCount; i++) {
-    const cloud = document.createElement('div');
-    cloud.className = 'cloud';
-    const size = 20 + Math.random() * 40;
-    cloud.style.width = `${size}px`;
-    cloud.style.height = `${size}px`;
-    cloud.style.top = `${20 + Math.random() * 60}%`;
-    cloud.style.left = `${Math.random() * 100}%`;
-    cloud.style.animationDelay = `${Math.random() * 20}s`;
-    cloud.style.animationDuration = `${15 + Math.random() * 25}s`;
-    panel.appendChild(cloud);
-}
-
+// Add to page
+document.body.appendChild(toggle);
 document.body.appendChild(panel);
 
 const sum = panel.querySelector('.s');
 const body = panel.querySelector('.b');
-body.style.display = sum.style.display = 'none';
+let isPanelOpen = false;
 
-panel.querySelector('.h').onclick = () => {
-    const isCollapsed = body.style.display === 'none';
-    body.style.display = sum.style.display = isCollapsed ? 'block' : 'none';
+/* ================= TOGGLE FUNCTIONALITY ================= */
+toggle.onclick = () => {
+    isPanelOpen = !isPanelOpen;
+    panel.classList.toggle('open', isPanelOpen);
     
-    // Add subtle animation on toggle
-    if (isCollapsed) {
-        panel.style.animation = 'none';
-        setTimeout(() => {
-            panel.style.animation = 'cloudFloat 60s infinite linear';
-        }, 10);
-    }
+    // Animate toggle button
+    toggle.style.transform = isPanelOpen ? 'translateX(-272px)' : 'translateX(0)';
+    
+    // Update toggle title
+    toggle.title = isPanelOpen ? 'Close Travel Tracker' : 'Open Travel Tracker';
 };
+
+/* ================= SCROLL SYNC FUNCTIONALITY ================= */
+let lastScrollY = window.scrollY;
+let isScrolling = false;
+let scrollTimer;
+
+function handleScroll() {
+    const currentScrollY = window.scrollY;
+    const scrollDelta = currentScrollY - lastScrollY;
+    
+    // Add scrolling class for smooth transition
+    if (!isScrolling) {
+        toggle.classList.add('scrolling');
+        panel.classList.add('scrolling');
+        isScrolling = true;
+    }
+    
+    // Clear existing timer
+    clearTimeout(scrollTimer);
+    
+    // Update position based on scroll direction
+    const newTop = 84 + scrollDelta;
+    toggle.style.top = `${Math.max(8, Math.min(newTop, window.innerHeight - 48))}px`;
+    panel.style.top = `${Math.max(8, Math.min(newTop, window.innerHeight - 48))}px`;
+    
+    // Update last scroll position
+    lastScrollY = currentScrollY;
+    
+    // Remove scrolling class after settling
+    scrollTimer = setTimeout(() => {
+        toggle.classList.remove('scrolling');
+        panel.classList.remove('scrolling');
+        isScrolling = false;
+    }, 200);
+}
+
+// Throttle scroll events for performance
+let scrollTimeout;
+window.addEventListener('scroll', () => {
+    if (scrollTimeout) return;
+    scrollTimeout = setTimeout(() => {
+        handleScroll();
+        scrollTimeout = null;
+    }, 16); // ~60fps
+});
+
+// Initial position update
+handleScroll();
 
 /* ================= FETCH FUNCTIONS ================= */
 async function localItems() {
@@ -467,7 +534,7 @@ async function render() {
         
         // Add group title
         const firstItem = Object.keys(group.items)[0];
-        const groupTitle = firstItem.includes('Plushie') ? 'Plushies' : firstItem.includes('Point') ? 'Prehistoric' : 'Flowers';
+        const groupTitle = firstItem.includes('Plushie') ? 'PLUSHIES' : firstItem.includes('Point') ? 'PREHISTORIC' : 'FLOWERS';
         html += `<div class="t">${groupTitle}</div>`;
         
         // Add items
@@ -488,14 +555,14 @@ async function render() {
     totalPoints += meteorite * MET_PTS + fossil * FOS_PTS;
     
     html += `
-    <div class="t">Meteorite</div>
+    <div class="t">METEORITE</div>
     <div class="r">
         <span>Meteor</span>
         <span>${meteorite}</span>
         <span>${abroad["Meteorite Fragment"] || 0}</span>
         <span>AR 🇦🇷</span>
     </div>
-    <div class="t">Fossil</div>
+    <div class="t">FOSSIL</div>
     <div class="r">
         <span>Fossil</span>
         <span>${fossil}</span>
@@ -504,13 +571,13 @@ async function render() {
     </div>`;
     
     // Update display
-    sum.textContent = `☁️ Sets: ${totalSets} • ${totalPoints} pts ✨`;
+    sum.textContent = `✈️ SETS: ${totalSets} • ${totalPoints} PTS`;
     body.innerHTML = html;
     
-    // Add subtle color pulse to summary on update
+    // Add subtle animation to summary
     sum.style.animation = 'none';
     setTimeout(() => {
-        sum.style.animation = 'pulse 2s ease';
+        sum.style.animation = 'pulse 1s ease';
     }, 10);
 }
 

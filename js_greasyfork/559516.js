@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          Bazaar Filler
 // @namespace     http://tampermonkey.net/
-// @version       3.9
+// @version       4.7
 // @author        WTV1
 // @description   Advanced Bazaar Filler with Market and Bazaar Price Points + Fill All + Trade Fill + Visual Qty and Price currently on Bazaar
 // @match         https://www.torn.com/bazaar.php*
@@ -12,6 +12,7 @@
 // @grant         GM_xmlhttpRequest
 // @connect       api.torn.com
 // @connect       weav3r.dev
+// @connect       script.google.com
 // @downloadURL https://update.greasyfork.org/scripts/559516/Bazaar%20Filler.user.js
 // @updateURL https://update.greasyfork.org/scripts/559516/Bazaar%20Filler.meta.js
 // ==/UserScript==
@@ -28,7 +29,8 @@
             undercutVal: parseFloat(GM_getValue("undercutVal", 1)),
             undercutType: GM_getValue("undercutType", "fixed"),
             undercutPos: parseInt(GM_getValue("undercutPos", 1)),
-            priceSource: GM_getValue("priceSource", "bz")
+            priceSource: GM_getValue("priceSource", "bz"),
+            skippedItems: JSON.parse(GM_getValue("skippedItems", "{}"))
         };
     }
     loadSettings();
@@ -46,12 +48,15 @@
         }
 
         .filler-relative { position: relative !important; }
-        .fill-wrapper-left { position: absolute !important; right: 175px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 10; }
+        .fill-wrapper-left { position: absolute !important; right: 155px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 10; }
+        .pda-skip-container { position: absolute !important; left: 5px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 11; }
         .add-wrapper { position: absolute !important; right: 8px !important; top: 50% !important; transform: translateY(-50%) !important; z-index: 10; }
-        .pc-filler-container { display: inline-flex; gap: 4px; align-items: center; margin-left: auto; padding-right: 5px; }
+        .pc-filler-container { display: inline-flex; gap: 8px; align-items: center; margin-left: auto; padding-right: 5px; }
 
         .row-fill-btn { padding: 0 8px; height: 24px; cursor: pointer; border: 1px solid #444; border-radius: 3px; background: #222; display: flex; align-items: center; justify-content: center; color: #7cfc00; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .item-toggle-btn { width: 24px; height: 24px; cursor: pointer; border: 1px solid #444; border-radius: 3px; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; color: #ffde00; font-size: 14px; font-weight: bold; }
+
+        .filler-skip-checkbox { cursor: pointer; width: 20px; height: 20px; accent-color: #ff3b3b; margin: 0; opacity: 0.8; }
 
         .draggable-popup { position: fixed !important; z-index: 999999998; background: #1a1a1a; color: #fff; border: 1px solid #444; border-radius: 5px; width: 220px; display: none; box-shadow: 0 8px 30px rgba(0,0,0,0.9); overflow: hidden; font-family: Arial, sans-serif; touch-action: none; }
         .popup-header { background: #222; padding: 12px; cursor: move; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; font-weight: bold; color: #ffde00; font-size: 12px; user-select: none; }
@@ -69,9 +74,13 @@
         .cfg-field input, .cfg-field select { background: #fff; color: #000; border: none; padding: 10px; border-radius: 2px; width: 100%; box-sizing: border-box; font-size: 14px; }
         .btn-save { width: 48%; background: #7cfc00; color: #000; border: none; padding: 12px; cursor: pointer; font-weight: bold; border-radius: 4px; }
         .btn-close { width: 48%; background: #333; color: #fff; border: none; padding: 12px; cursor: pointer; border-radius: 4px; margin-left: 4%; }
+        
+        @keyframes bzSpin { from { transform: translateY(-50%) rotate(0deg); } to { transform: translateY(-50%) rotate(360deg); } }
+        .bz-spinning { animation: bzSpin 0.8s linear infinite !important; opacity: 0.5 !important; pointer-events: none !important; }
     `;
     $("<style>").html(styleBlock).appendTo("head");
 
+    // Close logic (Identical to 3.9)
     $(document).on('touchstart mousedown', function (e) {
         if ($("#filler-config-modal").is(":visible") && !$(e.target).closest("#filler-config-modal, #f-cfg").length) $("#filler-config-modal").hide();
         if ($(".draggable-popup").is(":visible") && !$(e.target).closest(".draggable-popup, .item-toggle-btn").length) $(".draggable-popup").hide();
@@ -179,9 +188,9 @@
         const isManage = hash.includes('#/manage');
         const isAdd = hash.includes('#/add');
         if ($('input.torn-btn[value="CONFIRM"]').length > 0) {
-            $(".pc-filler-container, .fill-wrapper-left, .add-wrapper, .filler-header-links").addClass("filler-force-hide"); return;
+            $(".pc-filler-container, .fill-wrapper-left, .add-wrapper, .filler-header-links, .pda-skip-container").addClass("filler-force-hide"); return;
         } else {
-            $(".pc-filler-container, .fill-wrapper-left, .add-wrapper, .filler-header-links").removeClass("filler-force-hide");
+            $(".pc-filler-container, .fill-wrapper-left, .add-wrapper, .filler-header-links, .pda-skip-container").removeClass("filler-force-hide");
         }
         if (isPDA && !isAdd) return;
 
@@ -189,8 +198,23 @@
         if (header.length && $(".fill-all-btn").length === 0) {
             header.append(`<div class="filler-header-links"><a class="fill-qty-btn" id="f-qty">Fill Qty</a><a class="fill-all-btn" id="f-all">Fill All</a><a class="filler-nav-link" id="f-cfg">Settings</a></div>`);
             $("#f-cfg").on('touchstart click', (e) => { e.preventDefault(); $("#filler-config-modal").show(); });
-            $("#f-all").on('touchstart click', (e) => { e.preventDefault(); $("li:visible, [class*='listItem___'], [class*='row___']").each(function() { const id = $(this).find('img[src*="/items/"]').attr('src')?.match(/\/(\d+)\//)?.[1]; if(id && $(this).find('input').length > 0) handleFillSingleRow($(this), id, null); }); });
-            $("#f-qty").on('touchstart click', (e) => { e.preventDefault(); $("li:visible, [class*='listItem___'], [class*='row___']").each(function() { if ($(this).find('input').length > 0) { const max = $(this).find('[class*="amount"], .amount, .count').first().text().replace(/[^0-9]/g, ''); updateTornInput($(this).find('input[placeholder*="Amount"], input[name="amount"], [aria-label="Amount"]'), max); } }); });
+            
+            $("#f-all, #f-qty").on('touchstart click', function(e) { 
+                e.preventDefault(); 
+                const act = $(this).attr('id');
+                $("li:visible, [class*='listItem___'], [class*='row___']").each(function() { 
+                    const $r = $(this);
+                    if ($r.find('input').length > 0 && !$r.find('.filler-skip-checkbox').is(':checked')) { 
+                        if (act === 'f-all') {
+                            const id = $r.find('img[src*="/items/"]').attr('src')?.match(/\/(\d+)\//)?.[1];
+                            if (id) handleFillSingleRow($r, id, null);
+                        } else {
+                            const max = $r.find('[class*="amount"], .amount, .count').first().text().replace(/[^0-9]/g, '');
+                            updateTornInput($r.find('input[placeholder*="Amount"], input[name="amount"], [aria-label="Amount"]'), max);
+                        }
+                    } 
+                }); 
+            });
         }
 
         $("li, [class*='listItem___'], [class*='row___']").each(function () {
@@ -199,16 +223,20 @@
             const itemId = $row.find('img[src*="/items/"]').attr('src')?.match(/\/(\d+)\//)?.[1];
             if (!itemId || $row.find('input').length === 0) return;
 
+            const isSkipped = settings.skippedItems[itemId] ? "checked" : "";
+            const cbHTML = `<input type="checkbox" class="filler-skip-checkbox" data-id="${itemId}" ${isSkipped}>`;
+
             if (isPDA && isAdd) {
                 $row.addClass("filler-relative");
+                $(`<div class="pda-skip-container">${cbHTML}</div>`).appendTo($row);
                 const $fW = $('<div class="fill-wrapper-left"><div class="row-fill-btn">FILL</div></div>').appendTo($row);
-                $fW.on('touchstart click', (e) => { e.preventDefault(); handleFillSingleRow($row, itemId, $fW.find('.row-fill-btn')); });
+                $fW.find('.row-fill-btn').on('touchstart click', (e) => { e.preventDefault(); handleFillSingleRow($row, itemId, $fW.find('.row-fill-btn')); });
                 $('<div class="add-wrapper"><div class="item-toggle-btn">$</div></div>').appendTo($row).on('touchstart click', (e) => { e.preventDefault(); e.stopPropagation(); showDualTable(e, $row, itemId, $row.find('[class*="name"]').first().text().trim()); });
             } else if (!isPDA) {
                 let $target = isAdd ? $row.find('.info-wrap') : $row.find('[class*="bonuses___pTH_L"]');
                 if ($target.length) {
                     $target.css('display', 'flex');
-                    const $cont = $('<div class="pc-filler-container"></div>').appendTo($target);
+                    const $cont = $(`<div class="pc-filler-container">${cbHTML}</div>`).appendTo($target);
                     const $f = $('<div class="row-fill-btn">FILL</div>').appendTo($cont).on('click', (e) => { e.stopPropagation(); handleFillSingleRow($row, itemId, $f); });
                     $('<div class="item-toggle-btn">$</div>').appendTo($cont).on('click', (e) => { e.stopPropagation(); showDualTable(e, $row, itemId, $row.find('[class*="name"]').first().text().trim()); });
                 }
@@ -232,17 +260,20 @@
         $("#cfg-close").on('touchstart click', (e) => { e.preventDefault(); $("#filler-config-modal").hide(); });
     }
 
+    $(document).on('change', '.filler-skip-checkbox', function() {
+        settings.skippedItems[$(this).data('id')] = $(this).is(':checked');
+        GM_setValue("skippedItems", JSON.stringify(settings.skippedItems));
+    });
+
     const obs = new MutationObserver(inject);
     obs.observe(document.body, { childList: true, subtree: true });
     inject();
 
-    // ---------------------------------------------------------
-    // TREND / HEAT INDICATOR LOGIC (RESTORED)
-    // ---------------------------------------------------------
+    // RESTORED TRENDS
     (function() {
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxtyZmClPhnEbdX8vl00kwWAXheSSgLv620CVZOFOgJjoCT0_JhXcu4A2wtJ0u9mm1a/exec";
         let trendData = null;
-        function fetchTrends() { GM_xmlhttpRequest({ method: "GET", url: WEB_APP_URL, onload: (res) => { trendData = JSON.parse(res.responseText); } }); }
+        function fetchTrends() { GM_xmlhttpRequest({ method: "GET", url: WEB_APP_URL, onload: (res) => { try { trendData = JSON.parse(res.responseText); } catch(e){} } }); }
         fetchTrends();
         const trendObserver = new MutationObserver(() => {
             const $popup = $('.draggable-popup');
@@ -252,142 +283,73 @@
                 const $itemRow = $("li, [class*='listItem___']").filter(function() { return $(this).text().includes(itemName); });
                 const itemId = $itemRow.find('img[src*="/items/"]').attr('src')?.match(/\/(\d+)\//)?.[1];
                 if (itemId && trendData[itemId]) {
-                    const h = trendData[itemId].history;
-                    const latest = h[h.length - 1];
-                    const previous = h[h.length - 2] || latest;
-                    const high = Math.max(...h);
-                    const low = Math.min(...h);
-                    const change = (((latest - previous) / previous) * 100).toFixed(2);
-                    const color = change > 0 ? "#7cfc00" : (change < 0 ? "#ff3b3b" : "#aaa");
-                    let status = latest >= high ? "🔥" : (latest <= low ? "🧊" : "");
-                    const range = high - low || 1;
-                    const points = h.map((p, i) => `${(i / (h.length - 1 || 1)) * 40},${10 - ((p - low) / range) * 10}`).join(' ');
-                    $mvLine.append(`<span class="pro-trend" style="margin-left:10px; display:inline-flex; align-items:center; border-left: 1px solid #444; padding-left: 10px;" title="7D High: $${high.toLocaleString()} | 7D Low: $${low.toLocaleString()}"><span style="color:${color}; font-weight:bold; font-size:12px; margin-right:5px;">${status} ${change}%</span><svg width="40" height="12" style="background:rgba(255,255,255,0.05); border-radius:2px;"><polyline fill="none" stroke="${color}" stroke-width="1.5" points="${points}"/></svg></span>`);
+                    const h = trendData[itemId].history, latest = h[h.length - 1], prev = h[h.length - 2] || latest, hi = Math.max(...h), lo = Math.min(...h);
+                    const change = (((latest - prev) / prev) * 100).toFixed(2), col = change > 0 ? "#7cfc00" : (change < 0 ? "#ff3b3b" : "#aaa");
+                    let stat = latest >= hi ? "🔥" : (latest <= lo ? "🧊" : "");
+                    const pts = h.map((p, i) => `${(i / (h.length - 1 || 1)) * 40},${10 - ((p - lo) / (hi - lo || 1)) * 10}`).join(' ');
+                    $mvLine.append(`<span class="pro-trend" style="margin-left:10px; display:inline-flex; align-items:center; border-left: 1px solid #444; padding-left: 10px;"><span style="color:${col}; font-weight:bold; font-size:12px; margin-right:5px;">${stat} ${change}%</span><svg width="40" height="12"><polyline fill="none" stroke="${col}" stroke-width="1.5" points="${pts}"/></svg></span>`);
                 }
             }
         });
         trendObserver.observe(document.body, { childList: true, subtree: true });
     })();
 
-    // ---------------------------------------------------------
-    // TRADE FILL LOGIC (HEADER SINGLE BUTTON + QTY 1 FIX)
-    // ---------------------------------------------------------
+    // RESTORED TRADE FILL
     function injectTradeFill() {
         if (!window.location.href.includes('trade.php')) return;
-        
         const topFooter = $(".items-footer.clearfix").first(); 
-        
         if (topFooter.length && !$("#trade-fill-qty-single").length) {
             const $btn = $('<a id="trade-fill-qty-single" style="cursor: pointer; margin-left: 15px; font-size: 12px; color: #00aaff; text-transform: uppercase; font-weight: bold; line-height: 24px;">Fill Qty</a>');
             topFooter.append($btn);
-
             $btn.on('click', function(e) {
                 e.preventDefault();
                 $("li.clearfix.no-mods").each(function() {
-                    const $row = $(this);
-                    const $nameWrap = $row.find(".name-wrap");
-                    const qtyMatch = $nameWrap.text().match(/x(\d+)/);
-                    const maxQty = qtyMatch ? qtyMatch[1] : "1";
-                    const $input = $row.find("input[type='text']");
-                    if ($input.length) {
-                        updateTornInput($input, maxQty);
-                    }
+                    const qtyMatch = $(this).find(".name-wrap").text().match(/x(\d+)/);
+                    updateTornInput($(this).find("input[type='text']"), qtyMatch ? qtyMatch[1] : "1");
                 });
             });
         }
     }
-
     const tradeObs = new MutationObserver(injectTradeFill);
     tradeObs.observe(document.body, { childList: true, subtree: true });
     injectTradeFill();
 
-    // ---------------------------------------------------------
-    // NEW BLOCK: MY BAZAAR STOCK INDICATOR (SPIN & LOCK)
-    // ---------------------------------------------------------
+    // RESTORED STOCK INDICATOR WITH SPIN & LOCK
     (function() {
-        let myBazaarData = null;
-        let lastFetchTime = 0;
-        let isFetching = false;
-
-        // Add the spinning animation to the page style
-        $("<style>").html(`
-            @keyframes bzSpin { from { transform: translateY(-50%) rotate(0deg); } to { transform: translateY(-50%) rotate(360deg); } }
-            .bz-spinning { animation: bzSpin 0.8s linear infinite !important; opacity: 0.5 !important; pointer-events: none !important; }
-        `).appendTo("head");
-
-        function updateMyStockLine() {
-            const $popup = $('.draggable-popup');
-            const $header = $popup.find('.popup-header');
-            
-            if ($popup.is(':visible') && $header.length > 0) {
-                const itemName = $popup.find('.item-label').text().trim();
-                const itemNameLower = itemName.toLowerCase();
-                const $activeRow = $("li, [class*='listItem___']").filter(function() { return $(this).text().includes(itemName); });
-                const itemId = $activeRow.find('img[src*="/items/"]').attr('src')?.match(/\/(\d+)\//)?.[1];
-
-                if (!itemNameLower || itemNameLower === "loading...") return;
-
+        let myBazaarData = null, lastFetch = 0, isFetching = false;
+        function updateStock() {
+            const $p = $('.draggable-popup'), $h = $p.find('.popup-header');
+            if ($p.is(':visible') && $h.length > 0) {
+                const name = $p.find('.item-label').text().trim(), $row = $("li, [class*='listItem___']").filter(function() { return $(this).text().includes(name); });
+                const id = $row.find('img[src*="/items/"]').attr('src')?.match(/\/(\d+)\//)?.[1];
                 if (myBazaarData) {
-                    let myItem = null;
-                    if (itemId) { myItem = myBazaarData.find(i => String(i.ID || i.item_id) === String(itemId)); }
-                    if (!myItem) { myItem = myBazaarData.find(i => i.name.toLowerCase() === itemNameLower); }
-
-                    const displayText = myItem ? `On Bazaar: ${myItem.quantity.toLocaleString()} @ $${myItem.price.toLocaleString()}` : "On Bazaar: 0";
-                    
-                    const $existingLine = $popup.find('.my-stock-info');
-                    if ($existingLine.attr('data-item') !== itemNameLower) {
-                        $existingLine.remove();
-                        $header.after(`<div class="my-stock-info" data-item="${itemNameLower}" style="background: #2a2a2a; color: #ffde00; padding: 6px 12px; font-size: 11px; border-bottom: 1px solid #444; text-align: center; font-weight: bold; width: 100%; box-sizing: border-box; position: relative; z-index: 10;">
-                            ${displayText}
-                            <span class="bz-manual-refresh" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #ffde00; font-size: 16px; font-weight: bold; user-select: none; display: inline-block;" title="Refresh Stock Data">&#8635;</span>
-                        </div>`);
+                    let itm = id ? myBazaarData.find(i => String(i.ID || i.item_id) === String(id)) : myBazaarData.find(i => i.name.toLowerCase() === name.toLowerCase());
+                    const txt = itm ? `On Bazaar: ${itm.quantity.toLocaleString()} @ $${itm.price.toLocaleString()}` : "On Bazaar: 0";
+                    if ($p.find('.my-stock-info').attr('data-item') !== name) {
+                        $p.find('.my-stock-info').remove();
+                        $h.after(`<div class="my-stock-info" data-item="${name}" style="background: #2a2a2a; color: #ffde00; padding: 6px 12px; font-size: 11px; border-bottom: 1px solid #444; text-align: center; font-weight: bold; position: relative; z-index: 10;">${txt}<span class="bz-manual-refresh" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px;">&#8635;</span></div>`);
                     }
                 }
             }
         }
-
-        function fetchBazaarData(force = false) {
+        function fetchBZ(force = false) {
             if (!settings.apiKey || isFetching) return;
-            
-            const now = Date.now();
-            if (force || (now - lastFetchTime > 15000)) { 
-                isFetching = true;
-                $('.bz-manual-refresh').addClass('bz-spinning'); // Start Spin & Lock
-
+            if (force || (Date.now() - lastFetch > 15000)) { 
+                isFetching = true; $('.bz-manual-refresh').addClass('bz-spinning');
                 GM_xmlhttpRequest({
-                    method: "GET",
-                    url: `https://api.torn.com/user/?selections=bazaar&key=${settings.apiKey}`,
+                    method: "GET", url: `https://api.torn.com/user/?selections=bazaar&key=${settings.apiKey}`,
                     onload: (res) => {
-                        try { 
-                            const json = JSON.parse(res.responseText);
-                            myBazaarData = Array.isArray(json.bazaar) ? json.bazaar : Object.values(json.bazaar || {});
-                            lastFetchTime = Date.now();
-                            $('.my-stock-info').attr('data-item', ''); 
-                            updateMyStockLine();
-                        } catch(e) {}
-                        isFetching = false;
-                        $('.bz-manual-refresh').removeClass('bz-spinning'); // Stop Spin & Unlock
+                        try { const json = JSON.parse(res.responseText); myBazaarData = Array.isArray(json.bazaar) ? json.bazaar : Object.values(json.bazaar || {}); lastFetch = Date.now(); $('.my-stock-info').attr('data-item', ''); updateStock(); } catch(e){}
+                        isFetching = false; $('.bz-manual-refresh').removeClass('bz-spinning');
                     },
-                    onerror: () => {
-                        isFetching = false;
-                        $('.bz-manual-refresh').removeClass('bz-spinning');
-                    }
+                    onerror: () => { isFetching = false; $('.bz-manual-refresh').removeClass('bz-spinning'); }
                 });
             }
         }
-
-        $(document).on('click touchstart', '.bz-manual-refresh', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            if (!isFetching) fetchBazaarData(true);
-        });
-
-        setInterval(() => {
-            if ($('.draggable-popup').is(':visible')) { updateMyStockLine(); }
-        }, 300);
-
-        $(document).on('click touchstart', '.item-toggle-btn', function() { fetchBazaarData(); });
-        fetchBazaarData();
+        $(document).on('click touchstart', '.bz-manual-refresh', function(e) { e.preventDefault(); e.stopPropagation(); if (!isFetching) fetchBZ(true); });
+        setInterval(() => { if ($('.draggable-popup').is(':visible')) updateStock(); }, 300);
+        $(document).on('click touchstart', '.item-toggle-btn', function() { fetchBZ(); });
+        fetchBZ();
     })();
 
 })();

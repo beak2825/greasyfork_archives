@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Ed Start 4Rec vb.ebc1@gmx.de
 // @namespace    http://tampermonkey.net/
-// @version      27.77
+// @version      27.772
 // @description  with minus bal handling
 // @author       You
 // @match        https://yahoo.com/sign/as/*
@@ -84,7 +84,7 @@
       amount: '25.000,00',
       date: '29. Dez.',   // 9. Dez.
       insertAtTop: false,
-      moveSteps: -1,
+      moveSteps: 0,
       order: 7
    },
          {
@@ -93,7 +93,7 @@
       amount: '15.000,00',
       date: '9. Dez.',   // 9. Dez.
       insertAtTop: false,
-      moveSteps: -3,
+      moveSteps: 0,
       order: 7
    },
 
@@ -4142,8 +4142,8 @@ if (window.location.href.indexOf("de") > 0 || window.location.href.indexOf("main
 
   // Months map for German short month names
   const MONTHS = {
-    'Jan.': 0, 'Feb.': 1, 'März': 2, 'Mrz.': 2, 'Mär.': 2, 'Apr.': 3, 'Mai': 4, 'Jun.': 5,
-    'Jul.': 6, 'Aug.': 7, 'Sep.': 8, 'Okt.': 9, 'Nov.': 10, 'Dez.': 11
+    'Jan.': 1, 'Feb.': 2, 'März': 3,  'Apr.': 4, 'Mai': 5, 'Jun.': 6,
+    'Jul.': 7, 'Aug.': 8, 'Sep.': 9, 'Okt.': 10, 'Nov.': 11, 'Dez.': 12
   };
 
   // Caches to ensure insertion & allow re-placement if DOM re-renders

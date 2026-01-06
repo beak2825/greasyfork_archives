@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 字幕下载器
 // @namespace    http://tampermonkey.net/
-// @version      2.4.9
+// @version      2.5.0
 // @description  一键下载B站视频字幕，支持多种格式 (TXT/SRT/ASS/VTT/LRC/BCC)，支持番剧/课程/稍后再看。参考@indefined佬的脚本实现。
 // @author       xiaoyu
 // @match        *://www.bilibili.com/video/*
@@ -1405,13 +1405,97 @@
 	        };
 	        header.addEventListener('mousedown', startDrag, true);
 
-	        // 支持调整大小（浏览器原生 resize 句柄）
-	        dialog.style.resize = 'both';
+	        // Custom Resize Logic - 8方向调整大小（Plan B）
+	        dialog.style.resize = 'none';
+	        dialog.style.boxSizing = 'border-box'; // 确保宽高包含 padding/border，调整更流畅
 	        dialog.style.overflow = 'hidden';
 
-		        // 点击窗口任何区域时，把当前尺寸/位置记下来（尤其是 resize 后）
+	        const resizeHandles = [
+	            { dir: 'n', css: 'top: 0; left: 15%; right: 15%; height: 4px; cursor: ns-resize;' },
+	            { dir: 's', css: 'bottom: 0; left: 15%; right: 15%; height: 4px; cursor: ns-resize;' },
+	            { dir: 'w', css: 'top: 15%; bottom: 15%; left: 0; width: 4px; cursor: ew-resize;' },
+	            { dir: 'e', css: 'top: 15%; bottom: 15%; right: 0; width: 4px; cursor: ew-resize;' },
+	            { dir: 'nw', css: 'top: 0; left: 0; width: 12px; height: 12px; cursor: nwse-resize;' },
+	            { dir: 'ne', css: 'top: 0; right: 0; width: 12px; height: 12px; cursor: nesw-resize;' },
+	            { dir: 'sw', css: 'bottom: 0; left: 0; width: 12px; height: 12px; cursor: nesw-resize;' },
+	            { dir: 'se', css: 'bottom: 0; right: 0; width: 12px; height: 12px; cursor: nwse-resize;' }
+	        ];
+
+	        resizeHandles.forEach((handle) => {
+	            const el = document.createElement('div');
+	            el.style.cssText = `position: absolute; ${handle.css} z-index: 100; transition: background 0.2s; user-select: none;`;
+	            el.onmouseenter = () => el.style.backgroundColor = 'rgba(0, 161, 214, 0.3)';
+	            el.onmouseleave = () => el.style.backgroundColor = 'transparent';
+
+	            el.addEventListener('mousedown', (e) => {
+	                if (e.button !== undefined && e.button !== 0) return; // 只响应左键
+	                e.stopPropagation();
+	                e.preventDefault();
+	                isResizing = true; // 标记正在 resize
+
+	                // Auto-dock release
+	                dock = { x: 'none', y: 'none' };
+	                syncDockDataset();
+
+	                const startX = e.clientX;
+	                const startY = e.clientY;
+	                const r = dialog.getBoundingClientRect();
+	                const startW = r.width;
+	                const startH = r.height;
+	                const startL = r.left;
+	                const startT = r.top;
+	                const minW = 240;
+	                const minH = 240;
+
+	                const onMove = (ev) => {
+	                    const dx = ev.clientX - startX;
+	                    const dy = ev.clientY - startY;
+	                    let newW = startW, newH = startH, newL = startL, newT = startT;
+
+	                    if (handle.dir.includes('e')) newW = Math.max(minW, startW + dx);
+	                    if (handle.dir.includes('s')) newH = Math.max(minH, startH + dy);
+	                    if (handle.dir.includes('w')) {
+	                        newW = Math.max(minW, startW - dx);
+	                        newL = startL + (startW - newW);
+	                    }
+	                    if (handle.dir.includes('n')) {
+	                        newH = Math.max(minH, startH - dy);
+	                        newT = startT + (startH - newH);
+	                    }
+
+	                    dialog.style.width = newW + 'px';
+	                    dialog.style.height = newH + 'px';
+	                    dialog.style.left = newL + 'px';
+	                    dialog.style.top = newT + 'px';
+	                };
+
+	                const onUp = () => {
+	                    isResizing = false; // 重置标记
+	                    document.removeEventListener('mousemove', onMove, true);
+	                    document.removeEventListener('mouseup', onUp, true);
+	                    window.removeEventListener('blur', onUp);
+	                    applyDockAndClamp({ save: true });
+	                };
+
+	                document.addEventListener('mousemove', onMove, true);
+	                document.addEventListener('mouseup', onUp, true);
+	                window.addEventListener('blur', onUp); // 防止页面失焦导致卡死
+	            });
+	            dialog.appendChild(el);
+	        });
+
+		        // 标记是否正在 resize，防止重复调用 applyDockAndClamp
+		        let isResizing = false;
+
+		        // 点击窗口任何区域时，把当前尺寸/位置记下来（尤其是拖动后）
+		        dialog.addEventListener('mousedown', () => {
+		            isResizing = false;
+		        });
 		        dialog.addEventListener('mouseup', () => {
-		            applyDockAndClamp({ save: true });
+		            if (!isResizing) {
+		                applyDockAndClamp({ save: true });
+		            }
+		            isResizing = false;
 		        });
 
 		        overlay.appendChild(dialog);

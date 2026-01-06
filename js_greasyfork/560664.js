@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         🔥 Compass Pathfinder
 // @namespace    http://tampermundo.net/
-// @version      5.5
+// @version      5.6
 // @description  Auto-detects floors, waits for Normal state, runs routes. Mandatory Oxygen before Roof.
 // @match        *://*.popmundo.com/*Compass*
 // @grant        GM_setValue
@@ -964,53 +964,41 @@
                 // RESET isLeavingFloor - we're arriving, not leaving
                 state.isLeavingFloor = false;
 
-                // Use page content to determine the actual floor
-                const pageText = document.body.textContent;
-                let actualFloorKey = null;
-
-                // Check for specific floor indicators in page content
+                // Use H1 text to determine the actual floor - BE MORE PRECISE
                 const h1 = document.querySelector('h1');
                 const h1Text = h1?.textContent?.trim() || '';
 
                 console.log('H1 Text for floor detection:', h1Text);
-                console.log('Page text sample:', pageText.substring(0, 200));
 
-                // Check h1 text first (most reliable) - ORDER MATTERS!
-                // Check Burning Office FIRST before other "Office" floors
-                if (/Burning Office/i.test(h1Text)) {
-                    actualFloorKey = 'burning_office'; // Floor 9
-                } else if (/Wanda Massage/i.test(h1Text)) {
-                    actualFloorKey = 'wanda_massage'; // Floor 8
-                } else if (/Skyscraper Gym/i.test(h1Text)) {
-                    actualFloorKey = 'skyscraper_gym'; // Floor 7
-                } else if (/Skyscraper Library/i.test(h1Text)) {
-                    actualFloorKey = 'skyscraper_library'; // Floor 6
-                } else if (/Collapsed Office Floor/i.test(h1Text)) {
-                    actualFloorKey = 'collapsed_office_floor'; // Floor 5
-                } else if (/Collapsed Floor/i.test(h1Text)) {
-                    actualFloorKey = 'collapsed_floor'; // Floor 4
-                } else if (/Collapsed Office/i.test(h1Text)) {
-                    actualFloorKey = 'collapsed_office'; // Floor 3
-                }
-                // If h1 detection fails, fall back to page text with same order
-                else if (/Burning Office/i.test(pageText)) {
-                    actualFloorKey = 'burning_office'; // Floor 9
-                } else if (/Wanda Massage/i.test(pageText)) {
-                    actualFloorKey = 'wanda_massage'; // Floor 8
-                } else if (/Skyscraper Gym/i.test(pageText)) {
-                    actualFloorKey = 'skyscraper_gym'; // Floor 7
-                } else if (/Skyscraper Library/i.test(pageText)) {
-                    actualFloorKey = 'skyscraper_library'; // Floor 6
-                } else if (/Collapsed Office Floor/i.test(pageText)) {
-                    actualFloorKey = 'collapsed_office_floor'; // Floor 5
-                } else if (/Collapsed Floor/i.test(pageText)) {
-                    actualFloorKey = 'collapsed_floor'; // Floor 4
-                } else if (/Collapsed Office/i.test(pageText)) {
-                    actualFloorKey = 'collapsed_office'; // Floor 3
+                // NEW: Parse the actual floor name from the H1 text
+                // Example: "Wanda's Massage Parlor Elevator Access" → "Wanda's Massage Parlor"
+                // Remove "Elevator Access" and trim
+                let floorName = h1Text.replace(/Elevator\s+Access/i, '').trim();
+
+                console.log('Parsed floor name:', floorName);
+
+                // Now match based on the actual floor name
+                let actualFloorKey = null;
+
+                // Match floor names exactly (case-insensitive)
+                if (/Burning\s+Office/i.test(floorName)) {
+                    actualFloorKey = 'burning_office';
+                } else if (/Wanda.*Massage/i.test(floorName)) {
+                    actualFloorKey = 'wanda_massage';
+                } else if (/Skyscraper\s+Gym/i.test(floorName)) {
+                    actualFloorKey = 'skyscraper_gym';
+                } else if (/Skyscraper\s+Library/i.test(floorName)) {
+                    actualFloorKey = 'skyscraper_library';
+                } else if (/Collapsed\s+Office\s+Floor/i.test(floorName)) {
+                    actualFloorKey = 'collapsed_office_floor';
+                } else if (/Collapsed\s+Floor/i.test(floorName)) {
+                    actualFloorKey = 'collapsed_floor';
+                } else if (/Collapsed\s+Office/i.test(floorName)) {
+                    actualFloorKey = 'collapsed_office';
                 }
 
                 if (actualFloorKey) {
-                    state.log.push(`✅ At ${PLACES[actualFloorKey]?.name || actualFloorKey} (Detected from: ${h1Text})`);
+                    state.log.push(`✅ At ${PLACES[actualFloorKey]?.name || actualFloorKey} (Detected from: ${floorName})`);
                     state.waitingForNormal = false;
                     state.stateCheckReloaded = false;
                     state.active = true;
@@ -1038,7 +1026,7 @@
                     setTimeout(stepEngine, BASE_DELAY);
                     return;
                 } else {
-                    state.log.push(`❌ Could not determine floor from elevator access`);
+                    state.log.push(`❌ Could not determine floor from elevator access: ${floorName}`);
                     state.autoCycleActive = false;
                     save(state);
                     updateUI();

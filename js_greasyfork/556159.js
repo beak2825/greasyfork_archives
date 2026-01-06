@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TMN Mobile-All-in-One Script
 // @namespace    http://tampermonkey.net/
-// @version      1.6.12
+// @version      1.6.13
 // @description  Revised version with countdown fix and GTA/Crimes integration
 // @author       Pap
 // @license      MIT
@@ -66,76 +66,7 @@
         GM_setValue("TMN_LEAD_OC_INPUTS", '');
     });
 
-    if (page.endsWith('trade.aspx')) {
-        // Find the money offers table
-        const table = document.querySelector('#ctl00_main_pnlMoneyOffers table');
-        if (!table) return
-        // Insert header cell
-        const headerRow = table.querySelector('tr');
-        const perCreditHeader = document.createElement('td');
-        perCreditHeader.style.textAlign = 'center';
-        perCreditHeader.textContent = 'Per Unit';
-        headerRow.insertBefore(perCreditHeader, headerRow.children[4]); // after Return
-
-        // Process each row
-        [...table.querySelectorAll('tr')].slice(1).forEach(row => {
-            const cells = row.children;
-            const offerText = cells[2].textContent.replace(/[$,]/g, '');
-            const returnText = cells[3].textContent.replace(/[^\d]/g, '');
-
-            const offer = parseFloat(offerText);
-            const ret = parseFloat(returnText);
-
-            const perCredit = (!isNaN(offer) && !isNaN(ret) && ret > 0)
-            ? Math.round(offer / ret).toLocaleString()
-            : '';
-
-            const td = document.createElement('td');
-            td.style.textAlign = 'center';
-            td.textContent = `$${perCredit}`;
-            row.insertBefore(td, cells[4]); // after Return
-        });
-
-        // Find the credits offers table
-        const creditTable = document.querySelector('#ctl00_main_pnlCreditOffers table');
-        if (!creditTable) return;
-
-        // Insert header cell
-        const headerRow2 = creditTable.querySelector('tr');
-        const perCreditHeader2 = document.createElement('td');
-        perCreditHeader2.style.textAlign = 'center';
-        perCreditHeader2.textContent = 'Per Unit';
-        headerRow2.insertBefore(perCreditHeader2, headerRow2.children[4]); // after Return
-
-        // Process each row
-        [...creditTable.querySelectorAll('tr')].slice(1).forEach(row => {
-            const cells = row.children;
-
-            // Offer = “10 Credits”
-            const offerCredits = parseFloat(
-                cells[2].textContent.replace(/[^\d]/g, '')
-            );
-
-            // Return = “$11,000,000”
-            const returnMoney = parseFloat(
-                cells[3].textContent.replace(/[$,]/g, '')
-            );
-
-            const perCredit = (!isNaN(offerCredits) && !isNaN(returnMoney) && offerCredits > 0)
-            ? Math.round(returnMoney / offerCredits).toLocaleString()
-            : '';
-
-            const td = document.createElement('td');
-            td.style.textAlign = 'center';
-            td.textContent = `$${perCredit}`;
-            row.insertBefore(td, cells[4]); // after Return
-        });
-
-
-        $('[id$="btnTrade"]').each(function() {
-            $(this).attr('onclick', "return confirm('Are you sure?');" );
-        });
-    } else {
+    if (!page.endsWith('trade.aspx')) {
         const script = document.createElement('script');
         script.textContent = 'window.confirm = () => true;';
         document.documentElement.appendChild(script);
@@ -151,7 +82,6 @@
     if (page.includes('mailbox.aspx') && page.includes('autoaccept')) AcceptInvites();
     if (page.endsWith('organizedcrime.aspx') || page.includes('organizedcrime.aspx?act=') || page.includes('store.aspx?p=w') ) OCScript();
     if (page.includes('organizedcrime.aspx?p=dtm')) DTMScript();
-    if (page.includes('mailbox.aspx?p=s')) FreePhone();
     if (page.includes('trade.aspx?autoarbitrage')) AutoArbitrage();
     if (page.includes('playerproperty.aspx?a=')) AutoBank();
     if (page.includes('credits.aspx?autoheal')) AutoHeal();
@@ -160,9 +90,11 @@
     if (page.endsWith('crimes.aspx?scriptcheck')) UniversalCaptchaSolve();
     if (page.includes('playerproperty.aspx?p=g&cleanup')) GarageCleanup();
     if (page.includes('store.aspx?p=b')) BFScript();
-    if (page.includes('players.aspx')) TwentyFourFinder();
     if (page.includes('doubleup.aspx')) AutoDup();
+    if (page.includes('mailbox.aspx?p=s')) FreePhone();
+    if (page.endsWith('trade.aspx')) TradeQOL();
     if (page.includes('statistics.aspx?p=p')) PapStats();
+    if (page.includes('players.aspx')) TwentyFourFinder();
 
     // Run on all pages
     const lblMsg = $('#ctl00_lblMsg').text();
@@ -815,7 +747,6 @@
     }
 
     let notifyQueue = Promise.resolve();
-
     function Notify(msg) {
         notifyQueue = notifyQueue
             .then(() => PostMsg(msg))
@@ -874,10 +805,6 @@
     function Log(message) {
         AddLogDiv();
         $(window.top.document).find('#console > span')?.html(message);
-    }
-
-    function ClearLog() {
-        $(window.top.document).find('#console').remove();
     }
 
     function LogCountdown(totalTime, interval, message, callback) {
@@ -1165,7 +1092,7 @@
                                 GM_setValue('TMN_BF_TOKEN', JSON.stringify({ 'token': token, 'expiry': expiry }));
                                 window._tmn_solving_captcha = false;
                                 location.href = location.href;
-                            } else if (pageUrl.toLowerCase().includes('default.aspx') || pageUrl.toLowerCase().includes('jail.aspx')) {
+                            } else if ((pageUrl.toLowerCase().includes('default.aspx') || pageUrl.toLowerCase().includes('jail.aspx')) && !pageUrl.toLowerCase().includes('returnurl')) {
                                 const token = json.request;
                                 const expiry = Date.now() + 110000;
                                 GM_setValue('TMN_BF_TOKEN', JSON.stringify({ 'token': token, 'expiry': expiry }));
@@ -1341,10 +1268,6 @@
         } else if ((savedScriptStates['Auto Travel'])) {
             const fetchedPage = await FetchPage('statistics.aspx');
             const hotCity = decodeURIComponent(fetchedPage.find("td:first-child span:contains('Swords')").nextAll("span[id^='City']").text().trim());
-            //const alternateCity = decodeURIComponent(fetchedPage.find("#ctl00_main_gvCitiesInformation tr td:first-child span[id^='City']").filter(function() {
-            //    return !$(this).prev().text().includes("local_police");
-            //}).first().text().trim());
-
             if (currentCity != hotCity) {
                 if (isMobile()) location.href = `travel.aspx?d=${hotCity}`
                 else SetupContentFrame(`travel.aspx?d=${hotCity}`);
@@ -1367,8 +1290,9 @@
             }
         }
         setInterval( CheckMailbox, 5000);
+
         // Reload page every 5 min incase it hangs
-        setInterval(() => { location.href = defaultPage }, 5 * 60000);
+        setTimeout(() => { location.href = defaultPage }, 5 * 60000);
         async function CheckMailbox() {
             if (checkingMailbox) return;
             checkingMailbox = true;
@@ -1388,9 +1312,6 @@
                 for (const mail of receivedMail) {
                     await ProcessMail(mail);
                 }
-
-                // $('#divStats').html(fetchedPage.find('#divStats').html());
-                // AddRankBar();
             } finally {
                 checkingMailbox = false;
             }
@@ -1418,14 +1339,13 @@
 
                 // ✅ 2. TRADE NOTIFICATIONS
                 if (mail.author === TMN_PLAYER &&
-                    mail.subject === 'Trade Notification') {
+                    mail.subject === 'Trade Notification' &&
+                    mail.unread) {
 
                     const fetchedPage = await FetchPage(mail.link);
                     const mailContent = fetchedPage.find('.GridRow').text().trim().split('\n').at(-1).trim();
-                    Notify(`${mail.author} - ${mail.subject}\n${mailContent}`);
-                    if (savedScriptStates['Auto Arbitrage']) {
-                        location.href = 'trade.aspx?autoarbitrage';
-                    }
+                    await Notify(`${mail.author} - ${mail.subject}\n${mailContent}`);
+                    if (savedScriptStates['Auto Arbitrage']) location.href = defaultPage;
                     return;
                 }
 
@@ -1466,6 +1386,7 @@
                             return;
                         } else if (!inviteLocation.includes(currentCity)){
                             Notify(`${mail.author} - ${mail.subject}\nCan't accept invite to ${leader}'s OC as it's in a different city.`);
+                            return;
                         }
                     }
 
@@ -1476,6 +1397,7 @@
                         return;
                     } else if (!inviteLocation.includes(currentCity)){
                         Notify(`${mail.author} - DTM Invite\nCan't accept invite to ${leader}'s DTM as it's in a different city.`);
+                        return;
                     }
                 }
 
@@ -2069,12 +1991,6 @@
         }
     }
 
-    function FreePhone() {
-        const disabledFields = $('#ctl00_main_pnlMailSend :disabled');
-        if (disabledFields.length) {
-            disabledFields.prop('disabled', '');
-        }
-    }
     async function AutoArbitrage() {
         Log('Doing auto-arbitrage...');
         // Brief pause to wait for money to update
@@ -2150,46 +2066,6 @@
             GM_setValue('TMN_ACTIVE_ARBITRAGE_OFFERS', savedArbitrageOffers);
             if (isMobile()) location.href = 'jail.aspx'
             else window.top.location.href = defaultPage;
-        }
-    }
-
-    function CanArbitrage() {
-        const savedArbitrageOffers = JSON.parse(GM_getValue('TMN_ACTIVE_ARBITRAGE_OFFERS', '{}'));
-        const MAX_ACTIVE_OFFERS = 5;
-        const KEEP_ON_HAND = 5000000;
-        const activeCreditOffers = savedArbitrageOffers['activeCreditOffers'];
-        const activeMoneyOffers = savedArbitrageOffers['activeMoneyOffers'];
-        const totalActiveOffers = activeCreditOffers + activeMoneyOffers;
-        const savedArbitrageInputs = JSON.parse(GM_getValue('TMN_ARBITRAGE_INPUTS', '{}'));
-        const buyCreditsPrice = savedArbitrageInputs['BuyCreditsPrice'];
-        const buyCreditsQuantity = savedArbitrageInputs['BuyCreditsQuantity'];
-        const sellCreditsPrice = savedArbitrageInputs['SellCreditsPrice'];
-        const sellCreditsQuantity = savedArbitrageInputs['SellCreditsQuantity'];
-        const MAX_CREDIT_OFFERS = Math.ceil((MAX_ACTIVE_OFFERS * buyCreditsPrice * buyCreditsQuantity) / (sellCreditsPrice * sellCreditsQuantity));
-
-        if (!buyCreditsPrice || !buyCreditsQuantity || !sellCreditsPrice || !sellCreditsQuantity) return false;
-
-        const buyCost = buyCreditsPrice * buyCreditsQuantity;
-        const cashOnHand = parseInt($('#ctl00_userInfo_lblcash').text().replace(/[$,]/g, ''), 10);
-
-        if (cashOnHand - buyCost > KEEP_ON_HAND) {
-            if (totalActiveOffers < MAX_ACTIVE_OFFERS) {
-                // create money offer
-                return true;
-            } else if (activeMoneyOffers < MAX_ACTIVE_OFFERS) {
-                // Cancel credit offer
-                return true;
-            } else {
-                // Max money offers
-                // End arbitrage
-                return false;
-            }
-        } else if (activeCreditOffers < MAX_CREDIT_OFFERS && totalActiveOffers < MAX_ACTIVE_OFFERS) {
-            // Create credit offer
-            return true;
-        } else {
-            // end arbitrage
-            return false;
         }
     }
 
@@ -2333,7 +2209,7 @@
         $divContentIn.append(`<br>Current token valid until: <span id="token-expiry" style="color:${BF_TOKEN.expiry && now > BF_TOKEN.expiry ? 'red' : '#10af10'}">${BF_TOKEN.expiry && now > BF_TOKEN.expiry ? 'EXPIRED' : BF_TOKEN.expiry && new Date(BF_TOKEN.expiry).toLocaleTimeString() || ''}<span>`);
         const lblMsg = $("#ctl00_lblMsg").text();
         const MAX_PURCHASE_AMOUNT = $('#ctl00_userInfo_lblcity').text().includes('Sydney') ? 400 : 500;
-        const PURCHASE_CD = $('#ctl00_userInfo_lblcity').text().includes('Sydney') ? 16500 : 5500;
+        const PURCHASE_CD = $('#ctl00_userInfo_lblcity').text().includes('Sydney') ? 16500 : 6000;
         const bulletsAvailable = [ $("#ctl00_main_lblbullet1").text() * 1, $("#ctl00_main_lblbullet2").text() * 1 ];
         const bulletType = bulletsAvailable[0] > 0 ? 0 : bulletsAvailable[1] > 0 ? 1 : 0;
         const purchaseAmount = Math.min(bulletsAvailable[bulletType], MAX_PURCHASE_AMOUNT) == 0 ? Math.min(bulletsAvailable[1 - bulletType], MAX_PURCHASE_AMOUNT) == 0 ? 0 : Math.min(bulletsAvailable[1 - bulletType], MAX_PURCHASE_AMOUNT) : Math.min(bulletsAvailable[bulletType], MAX_PURCHASE_AMOUNT);
@@ -2351,11 +2227,9 @@
                 if (document.referrer.includes('store.aspx?p=b') && Date.now() > BF_TOKEN.expiry) location.href = defaultPage
                 else pollBFTimer = setInterval( PollBF, 2000);
             } else if (lblMsg.includes("again") || lblMsg.includes("The Bullets Factory doesn't have that many")) {
-                setTimeout(() => { location.href = location.href }, 1500);
+                setTimeout(() => { location.href = location.href }, 500);
             } else if (lblMsg.includes("bought")) {
-                setTimeout(() => {
-                    location.href = location.href;
-                }, PURCHASE_CD);
+                setTimeout(() => { location.href = location.href }, PURCHASE_CD);
             } else {
                 $("#ctl00_main_txtbullets").val(purchaseAmount);
                 $("#ctl00_main_ddlbullettype").val(bulletType + 1);
@@ -2427,15 +2301,16 @@
                 const base = new Date();
                 base.setHours(hours, minutes, seconds, 0);
 
-                const shoutDate = new Date(base.getTime() - (now.getHours() >= 12 ? -12 : 12) * 60 * 60 * 1000);
+                let shoutDate = new Date(base.getTime() - (now.getHours() >= 12 ? -12 : 12) * 60 * 60 * 1000);
+                shoutDate = shoutDate > now ? shoutDate - 24 * 60 * 60000 : shoutDate;
 
                 const diffMs = Math.abs(now - shoutDate);
                 const isWithinOneMinute = diffMs <= 60000 * 1;
 
                 if (!isWithinOneMinute) {
-                    if (LAST_SYDNEY_SPAWN_TIME == Infinity || Math.abs(now - LAST_SYDNEY_SPAWN_TIME) > 5 * 60000) {
+                    if (LAST_SYDNEY_SPAWN_TIME == Infinity || LAST_SYDNEY_SPAWN_TIME == {} || now > NEXT_SYDNEY_SPAWN_TIME) {
                         if (text.includes('Sydney') && text.includes('FMJ')) {
-                            Log('Last Sydney BF spawn time updated.')
+                            Log('Last Sydney BF spawn time updated.');
                             GM_setValue('TMN_LAST_SYDNEY_SPAWN_TIME', shoutDate.getTime());
                             break;
                         }
@@ -2459,23 +2334,6 @@
                 }
             }
         }
-    }
-
-    function TwentyFourFinder() {
-        const accounts = [ 'Catalystic', 'Ape', 'Maestro', 'GeniuSss', 'Predator',
-                          'LegendaryV2', 'Impulsive', 'Sonic', 'Bambi', 'Bombs',
-                          'Released', 'MegaWhale', 'Specto' ].map(a => a.toLowerCase());
-
-        $('#ctl00_main_pnlOnlinePlayers a[href^="profile.aspx"]').each(function () {
-            const name = $(this).text().trim().toLowerCase();
-
-            if (accounts.includes(name)) {
-                $(this).css({
-                    color: 'purple',
-                    fontWeight: 'bold'
-                });
-            }
-        });
     }
 
     function AutoDup() {
@@ -2545,6 +2403,101 @@
             $temp.remove();
 
         }
+    }
+
+    function FreePhone() {
+        const disabledFields = $('#ctl00_main_pnlMailSend :disabled');
+        if (disabledFields.length) {
+            disabledFields.prop('disabled', '');
+        }
+    }
+
+    function TradeQOL() {
+        // Find the money offers table
+        const table = document.querySelector('#ctl00_main_pnlMoneyOffers table');
+        if (!table) return
+        // Insert header cell
+        const headerRow = table.querySelector('tr');
+        const perCreditHeader = document.createElement('td');
+        perCreditHeader.style.textAlign = 'center';
+        perCreditHeader.textContent = 'Per Unit';
+        headerRow.insertBefore(perCreditHeader, headerRow.children[4]); // after Return
+
+        // Process each row
+        [...table.querySelectorAll('tr')].slice(1).forEach(row => {
+            const cells = row.children;
+            const offerText = cells[2].textContent.replace(/[$,]/g, '');
+            const returnText = cells[3].textContent.replace(/[^\d]/g, '');
+
+            const offer = parseFloat(offerText);
+            const ret = parseFloat(returnText);
+
+            const perCredit = (!isNaN(offer) && !isNaN(ret) && ret > 0)
+            ? Math.round(offer / ret).toLocaleString()
+            : '';
+
+            const td = document.createElement('td');
+            td.style.textAlign = 'center';
+            td.textContent = `$${perCredit}`;
+            row.insertBefore(td, cells[4]); // after Return
+        });
+
+        // Find the credits offers table
+        const creditTable = document.querySelector('#ctl00_main_pnlCreditOffers table');
+        if (!creditTable) return;
+
+        // Insert header cell
+        const headerRow2 = creditTable.querySelector('tr');
+        const perCreditHeader2 = document.createElement('td');
+        perCreditHeader2.style.textAlign = 'center';
+        perCreditHeader2.textContent = 'Per Unit';
+        headerRow2.insertBefore(perCreditHeader2, headerRow2.children[4]); // after Return
+
+        // Process each row
+        [...creditTable.querySelectorAll('tr')].slice(1).forEach(row => {
+            const cells = row.children;
+
+            // Offer = “10 Credits”
+            const offerCredits = parseFloat(
+                cells[2].textContent.replace(/[^\d]/g, '')
+            );
+
+            // Return = “$11,000,000”
+            const returnMoney = parseFloat(
+                cells[3].textContent.replace(/[$,]/g, '')
+            );
+
+            const perCredit = (!isNaN(offerCredits) && !isNaN(returnMoney) && offerCredits > 0)
+            ? Math.round(returnMoney / offerCredits).toLocaleString()
+            : '';
+
+            const td = document.createElement('td');
+            td.style.textAlign = 'center';
+            td.textContent = `$${perCredit}`;
+            row.insertBefore(td, cells[4]); // after Return
+        });
+
+
+        $('[id$="btnTrade"]').each(function() {
+            $(this).attr('onclick', "return confirm('Are you sure?');" );
+        });
+    }
+
+    function TwentyFourFinder() {
+        const accounts = [ 'Catalystic', 'Ape', 'Maestro', 'GeniuSss', 'Predator',
+                          'LegendaryV2', 'Impulsive', 'Sonic', 'Bambi', 'Bombs',
+                          'Released', 'MegaWhale', 'Specto' ].map(a => a.toLowerCase());
+
+        $('#ctl00_main_pnlOnlinePlayers a[href^="profile.aspx"]').each(function () {
+            const name = $(this).text().trim().toLowerCase();
+
+            if (accounts.includes(name)) {
+                $(this).css({
+                    color: 'purple',
+                    fontWeight: 'bold'
+                });
+            }
+        });
     }
 
     function PapStats() {

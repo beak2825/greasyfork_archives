@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Wplace Region Downloader
 // @namespace      https://greasyfork.org/ru/users/1556543-jimorosuto
-// @version        0.1.0
+// @version        0.1.1
 // @description    Allows downloading a selected region from wplace.live as a single image.
 // @description:ru Позволяет скачивать выбранный регион с wplace.live в виде одного изображения.
 // @author         Jimorosuto
@@ -27,11 +27,13 @@
       firstPoint: "First point",
       secondPoint: "Second point",
       download: "Download",
+      downloading: "Downloading",
     },
     ru: {
       firstPoint: "Первая точка",
       secondPoint: "Вторая точка",
       download: "Скачать",
+      downloading: "Скачивание",
     },
   }
   const t = translations[lang] || translations.en
@@ -223,8 +225,7 @@
     return res
   }
 
-  /* DOWNLOAD */
-
+  /* Download */
   function setDownloading(state) {
     const btn = downloadBtn
     const label = btn.querySelector(".wprd-download-label")
@@ -234,7 +235,7 @@
       label.innerHTML = `
       <span class="flex items-center gap-2">
         <span class="wprd-spinner"></span>
-        <span>Загрузка…</span>
+        <span>${t.downloading}…</span>
       </span>
     `
     } else {

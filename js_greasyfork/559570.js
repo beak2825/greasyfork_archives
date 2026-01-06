@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         视频网页全屏
 // @namespace    npm/vite-plugin-monkey
-// @version      3.8.3
+// @version      3.8.4
 // @author       Feny
 // @description  快捷键：P-网页全屏，Enter-全屏；支持侧边点击切换网页全屏；支持自动网页全屏
 // @license      GPL-3.0-only
@@ -120,12 +120,6 @@
       const { top, left, right, bottom } = this.getElementRect(element);
       return pointX >= left && pointX <= right && pointY >= top && pointY <= bottom;
     },
-    findParentWithChild(element, selector, maxLevel = 8) {
-      for (let parent = element?.parentElement, level = 0; parent && level < maxLevel; parent = parent.parentElement, level++) {
-        if (this.query(selector, parent)) return parent;
-      }
-      return null;
-    },
     getParent(element) {
       if (!element) return null;
       const parent = element.parentNode;
@@ -142,11 +136,11 @@
     },
     getParts: (node) => node.getAttribute("part")?.split(/\s+/) ?? [],
     setPart(node, value) {
-      if (!(node instanceof Element)) return;
+      if (!isElement(node)) return;
       node.setAttribute("part", [.../* @__PURE__ */ new Set([...this.getParts(node), value])].join(" "));
     },
     delPart(node, value) {
-      if (!(node instanceof Element)) return;
+      if (!isElement(node)) return;
       const parts = this.getParts(node).filter((v) => v !== value);
       node.setAttribute("part", parts.join(" "));
     },
@@ -254,7 +248,7 @@
     createEdgeClickElement(video) {
       const container = this.getEdgeClickContainer(video);
       if (video.lArea?.parentNode === container) return;
-      if (container instanceof Element && getComputedStyle(container).position === "static") {
+      if (container instanceof Element && this.lacksRelativePosition(container)) {
         Tools.setStyle(container, "position", "relative");
       }
       if (video.lArea) return container.prepend(video.lArea, video.rArea);
@@ -275,7 +269,10 @@
       if (this.fsWrapper) return video.closest(`[part="${Consts.webFull}"]`) ?? this.fsWrapper;
       const parentNode = video.parentNode;
       const sroot = video.getRootNode() instanceof ShadowRoot;
-      return sroot ? parentNode : this.findVideoParentContainer(parentNode, 4, false);
+      return sroot ? parentNode : this.findVideoParentContainer(parentNode, void 0, false);
+    },
+    lacksRelativePosition(element) {
+      return Tools.getParents(element, true, 2).every((el) => el && getComputedStyle(el).position === "static");
     }
   };
   var _GM_addValueChangeListener = /* @__PURE__ */ (() => typeof GM_addValueChangeListener != "undefined" ? GM_addValueChangeListener : void 0)();
@@ -449,21 +446,18 @@
     },
     getVideoContainer() {
       const selector = Storage.CUSTOM_CONTAINER.get(this.topWin?.host)?.trim();
-      const container = selector ? this.player.closest(selector) : null;
-      if (container) return container;
-      const ctrlContainer = this.findControlBarContainer();
-      return ctrlContainer ? this.findVideoParentContainer(ctrlContainer) : this.findVideoParentContainer();
+      const container = selector ? this.player.closest(selector) ?? Tools.query(selector) : null;
+      return container ?? this.findVideoParentContainer(this.findControlBarContainer());
     },
     findControlBarContainer() {
       const ignore = ":not(.Drag-Control, .vjs-controls-disabled, .vjs-control-text, .xgplayer-prompt)";
-      const ctrl = `[class*="contr" i]${ignore}, [id*="control"], [class*="ctrl"], [class*="progress"]`;
-      const ctrlContainer = Tools.findParentWithChild(this.player, ctrl);
-      if (!ctrlContainer) return null;
-      const { width } = Tools.getElementRect(ctrlContainer);
-      const { width: vw } = Tools.getElementRect(this.player);
-      const { centerX, centerY } = Tools.getCenterPoint(ctrlContainer);
-      const inRect = Tools.pointInElement(centerX, centerY, this.player);
-      return Math.floor(width) <= Math.floor(vw) && inRect ? ctrlContainer : null;
+      const selector = `[class*="contr" i]${ignore}, [id*="control"], [class*="ctrl"], [class*="progress"], [class*="volume"]`;
+      let parent = Tools.getParent(this.player);
+      while (parent && parent.offsetHeight <= this.player.offsetHeight) {
+        if (Tools.query(selector, parent)) return parent;
+        parent = Tools.getParent(parent);
+      }
+      return null;
     },
     videoParents: /* @__PURE__ */ new Set(),
     findVideoParentContainer(container, maxLevel = 4, track = true) {

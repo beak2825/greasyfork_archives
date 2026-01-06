@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Content Validator
 // @namespace    https://github.com/MajaBukvic/Scripts
-// @version      3.0
+// @version      3.1
 // @description  Validates Watson SOP content based on standardized rules, accessibility, and CSS compliance
 // @author       Maja Bukvic
 // @match        https://share.amazon.com/sites/amazonwatson/*
@@ -15,6 +15,101 @@
 
 (function() {
     'use strict';
+
+    // ===========================================
+    // USAGE LOGGING CONFIGURATION
+    // ===========================================
+
+    const LOG_CONFIG = {
+        siteUrl: 'https://share.amazon.com/sites/amazonwatson',
+        listName: 'TampermonkeyUsageLog',
+        entityType: 'SP.Data.TampermonkeyUsageLogListItem',
+        scriptName: 'Content Validator',
+
+        // Internal column names from SharePoint
+        columns: {
+            title: 'Title',
+            username: 'tg5f',
+            action: 'aflk',
+            pageUrl: 'k3hk',
+            scriptName: 'pk8k'
+        }
+    };
+
+    // ===========================================
+    // USAGE LOGGING FUNCTIONS
+    // ===========================================
+
+    function logUsage(action) {
+        try {
+            fetch(LOG_CONFIG.siteUrl + '/_api/contextinfo', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json;odata=verbose' },
+                credentials: 'include'
+            })
+            .then(function(r) { return r.json(); })
+            .then(function(digestData) {
+                var digest = digestData.d.GetContextWebInformation.FormDigestValue;
+                var listUrl = LOG_CONFIG.siteUrl + "/_api/web/lists/getbytitle('" + LOG_CONFIG.listName + "')/items";
+
+                var itemData = {
+                    '__metadata': { 'type': LOG_CONFIG.entityType }
+                };
+
+                // Use internal column names
+                itemData[LOG_CONFIG.columns.title] = new Date().toISOString();
+                itemData[LOG_CONFIG.columns.username] = getLogUsername();
+                itemData[LOG_CONFIG.columns.action] = action;
+                itemData[LOG_CONFIG.columns.pageUrl] = window.location.href.substring(0, 250);
+                itemData[LOG_CONFIG.columns.scriptName] = LOG_CONFIG.scriptName;
+
+                return fetch(listUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json;odata=verbose',
+                        'Content-Type': 'application/json;odata=verbose',
+                        'X-RequestDigest': digest
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(itemData)
+                });
+            })
+            .then(function(r) {
+                if (r.ok) {
+                    console.log('Usage logged:', action);
+                }
+            })
+            .catch(function(e) {
+                // Fail silently - don't break the main script
+                console.log('Usage logging skipped');
+            });
+        } catch (e) {
+            // Fail silently
+        }
+    }
+
+    function getLogUsername() {
+        // Try SharePoint context first
+        if (typeof _spPageContextInfo !== 'undefined') {
+            if (_spPageContextInfo.userDisplayName) {
+                return _spPageContextInfo.userDisplayName;
+            }
+            if (_spPageContextInfo.userLoginName) {
+                return _spPageContextInfo.userLoginName;
+            }
+        }
+
+        // Try common page elements
+        var selectors = ['.ms-core-menu-title', '#USER_NAME', '.user-name', '#userDisplayName'];
+        for (var i = 0; i < selectors.length; i++) {
+            var el = document.querySelector(selectors[i]);
+            if (el && el.textContent.trim()) {
+                return el.textContent.trim();
+            }
+        }
+
+        return 'unknown';
+    }
 
     // ===========================================
     // CONFIGURATION
@@ -134,10 +229,17 @@
         }
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', addValidationButton);
-    } else {
+    function initScript() {
         addValidationButton();
+
+        // Log script load
+        logUsage('script_loaded');
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initScript);
+    } else {
+        initScript();
     }
 
     // ===========================================
@@ -145,8 +247,11 @@
     // ===========================================
 
     function validateAndExport() {
+        // Log validation start
+        logUsage('validation_started');
+
         const issues = [];
-        console.log('=== Content Validator v3.0 Starting ===');
+        console.log('=== Content Validator v3.1 Starting ===');
 
         // Find ALL content containers
         const allContentContainers = document.querySelectorAll('div.ms-rtestate-field');
@@ -256,6 +361,9 @@
         // Output results
         console.log('=== Validation Complete ===');
         console.log('Total issues found:', issues.length);
+
+        // Log validation complete with issue count
+        logUsage('validation_complete_' + issues.length + '_issues');
 
         if (issues.length > 0) {
             exportToCSV(issues);

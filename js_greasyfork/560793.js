@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Map Comment Shapes
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      2026.01.07
+// @version      2026.01.08
 // @author       Hiwi234
 // @description  Erstelle Map Comments mit vordefinierten Formen (Kreis, Quadrat, etc.) im Waze Map Editor
 // @include      https://www.waze.com/editor*
@@ -21,7 +21,7 @@
 
     const SCRIPT_ID = 'wme-mapcomment-shapes';
     const SCRIPT_NAME = 'Map Comment Shapes';
-    const SCRIPT_VERSION = '2026.01.07';
+    const SCRIPT_VERSION = '2026.01.09';
 
     const SHAPES = {
         POINT: 'point',
@@ -149,6 +149,19 @@
             load: 'Laden',
             delete: 'Löschen',
             save: 'Speichern',
+            // Edit section
+            editSection: 'Bearbeiten',
+            editHint: 'Zuerst einen Map Comment auf der Karte auswählen!',
+            customShapesHint: 'Speichere einen ausgewählten Map Comment als wiederverwendbare Form',
+            simplifyTitle: 'Simplify - Punkte reduzieren',
+            simplifyDesc: 'Vereinfacht komplexe Formen durch Entfernen überflüssiger Punkte',
+            rotateTitle: 'Form drehen',
+            rotateDesc: 'Dreht die Form um ihren Mittelpunkt',
+            orthogonalizeTitle: 'Rechte Winkel',
+            orthogonalizeDesc: 'Macht alle Winkel rechtwinklig (90°) - ideal für Gebäude',
+            scaleTitle: 'Größe ändern',
+            scaleDesc: 'Ändert Breite und/oder Höhe der Form',
+            previewBtn: 'Vorschau',
             // Image Upload
             imageUpload: 'Bild zu Form:',
             imageUploadHint: 'Lade ein Bild hoch um die Kontur zu erkennen',
@@ -174,7 +187,44 @@
             updateUI1: '📦 Kompaktere Oberfläche mit Akkordeon-Menüs',
             updateUI2: '📝 Bessere Beschreibungen für alle Werkzeuge',
             updateUI3: '⚡ Live-Vorschau beim Skalieren und Drehen',
-            updateClose: 'Verstanden!'
+            updateClose: 'Verstanden!',
+            // Converter
+            converter: 'Konverter:',
+            converterHint: 'Wandle Map Comments in Places um',
+            convertToPlace: 'In Place umwandeln',
+            selectCategory: 'Kategorie wählen:',
+            placeCategories: 'Place-Kategorien:',
+            categoryParking: 'Parkplatz',
+            categoryGasStation: 'Tankstelle',
+            categoryRestaurant: 'Restaurant',
+            categoryCafe: 'Café',
+            categoryHotel: 'Hotel',
+            categoryHospital: 'Krankenhaus',
+            categorySchool: 'Schule',
+            categoryShoppingCenter: 'Einkaufszentrum',
+            categorySupermarket: 'Supermarkt',
+            categoryBank: 'Bank',
+            categoryATM: 'Geldautomat',
+            categoryPharmacy: 'Apotheke',
+            categoryPostOffice: 'Postamt',
+            categoryPolice: 'Polizeistation',
+            categoryFireStation: 'Feuerwehr',
+            categoryChurch: 'Kirche',
+            categoryMosque: 'Moschee',
+            categorySynagogue: 'Synagoge',
+            categoryPark: 'Park',
+            categoryPlayground: 'Spielplatz',
+            categorySportsField: 'Sportplatz',
+            categoryGym: 'Fitnessstudio',
+            categorySwimmingPool: 'Schwimmbad',
+            categoryTheater: 'Theater',
+            categoryCinema: 'Kino',
+            categoryMuseum: 'Museum',
+            categoryLibrary: 'Bibliothek',
+            categoryOther: 'Sonstiges',
+            convertSuccess: 'Erfolgreich umgewandelt!',
+            convertError: 'Fehler beim Umwandeln:',
+            deleteOriginal: 'Original Map Comment löschen'
         },
         en: {
             selectShape: 'Select shape:',
@@ -275,6 +325,19 @@
             load: 'Load',
             delete: 'Delete',
             save: 'Save',
+            // Edit section
+            editSection: 'Edit',
+            editHint: 'First select a Map Comment on the map!',
+            customShapesHint: 'Save a selected Map Comment as a reusable shape',
+            simplifyTitle: 'Simplify - Reduce points',
+            simplifyDesc: 'Simplifies complex shapes by removing unnecessary points',
+            rotateTitle: 'Rotate shape',
+            rotateDesc: 'Rotates the shape around its center',
+            orthogonalizeTitle: 'Right angles',
+            orthogonalizeDesc: 'Makes all angles right-angled (90°) - ideal for buildings',
+            scaleTitle: 'Change size',
+            scaleDesc: 'Changes width and/or height of the shape',
+            previewBtn: 'Preview',
             // Image Upload
             imageUpload: 'Image to Shape:',
             imageUploadHint: 'Upload an image to detect its contour',
@@ -300,7 +363,44 @@
             updateUI1: '📦 More compact interface with accordion menus',
             updateUI2: '📝 Better descriptions for all tools',
             updateUI3: '⚡ Live preview when scaling and rotating',
-            updateClose: 'Got it!'
+            updateClose: 'Got it!',
+            // Converter
+            converter: 'Converter:',
+            converterHint: 'Convert Map Comments to Places',
+            convertToPlace: 'Convert to Place',
+            selectCategory: 'Select category:',
+            placeCategories: 'Place Categories:',
+            categoryParking: 'Parking Lot',
+            categoryGasStation: 'Gas Station',
+            categoryRestaurant: 'Restaurant',
+            categoryCafe: 'Cafe',
+            categoryHotel: 'Hotel',
+            categoryHospital: 'Hospital',
+            categorySchool: 'School',
+            categoryShoppingCenter: 'Shopping Center',
+            categorySupermarket: 'Supermarket',
+            categoryBank: 'Bank',
+            categoryATM: 'ATM',
+            categoryPharmacy: 'Pharmacy',
+            categoryPostOffice: 'Post Office',
+            categoryPolice: 'Police Station',
+            categoryFireStation: 'Fire Station',
+            categoryChurch: 'Church',
+            categoryMosque: 'Mosque',
+            categorySynagogue: 'Synagogue',
+            categoryPark: 'Park',
+            categoryPlayground: 'Playground',
+            categorySportsField: 'Sports Field',
+            categoryGym: 'Gym',
+            categorySwimmingPool: 'Swimming Pool',
+            categoryTheater: 'Theater',
+            categoryCinema: 'Cinema',
+            categoryMuseum: 'Museum',
+            categoryLibrary: 'Library',
+            categoryOther: 'Other',
+            convertSuccess: 'Converted successfully!',
+            convertError: 'Error converting:',
+            deleteOriginal: 'Delete original Map Comment'
         },
         it: {
             selectShape: 'Seleziona forma:',
@@ -399,6 +499,19 @@
             load: 'Carica',
             delete: 'Elimina',
             save: 'Salva',
+            // Edit section
+            editSection: 'Modifica',
+            editHint: 'Prima seleziona un Map Comment sulla mappa!',
+            customShapesHint: 'Salva un Map Comment selezionato come forma riutilizzabile',
+            simplifyTitle: 'Semplifica - Riduci punti',
+            simplifyDesc: 'Semplifica forme complesse rimuovendo punti non necessari',
+            rotateTitle: 'Ruota forma',
+            rotateDesc: 'Ruota la forma attorno al suo centro',
+            orthogonalizeTitle: 'Angoli retti',
+            orthogonalizeDesc: 'Rende tutti gli angoli retti (90°) - ideale per edifici',
+            scaleTitle: 'Cambia dimensione',
+            scaleDesc: 'Cambia larghezza e/o altezza della forma',
+            previewBtn: 'Anteprima',
             // Image Upload
             imageUpload: 'Immagine a Forma:',
             imageUploadHint: 'Carica un\'immagine per rilevare il contorno',
@@ -424,7 +537,44 @@
             updateUI1: '📦 Interfaccia più compatta con menu a fisarmonica',
             updateUI2: '📝 Descrizioni migliori per tutti gli strumenti',
             updateUI3: '⚡ Anteprima live durante la scala e la rotazione',
-            updateClose: 'Capito!'
+            updateClose: 'Capito!',
+            // Converter
+            converter: 'Convertitore:',
+            converterHint: 'Converti i Map Comment in Places',
+            convertToPlace: 'Converti in Luogo',
+            selectCategory: 'Seleziona categoria:',
+            placeCategories: 'Categorie Luoghi:',
+            categoryParking: 'Parcheggio',
+            categoryGasStation: 'Stazione di Servizio',
+            categoryRestaurant: 'Ristorante',
+            categoryCafe: 'Caffè',
+            categoryHotel: 'Hotel',
+            categoryHospital: 'Ospedale',
+            categorySchool: 'Scuola',
+            categoryShoppingCenter: 'Centro Commerciale',
+            categorySupermarket: 'Supermercato',
+            categoryBank: 'Banca',
+            categoryATM: 'Bancomat',
+            categoryPharmacy: 'Farmacia',
+            categoryPostOffice: 'Ufficio Postale',
+            categoryPolice: 'Stazione di Polizia',
+            categoryFireStation: 'Vigili del Fuoco',
+            categoryChurch: 'Chiesa',
+            categoryMosque: 'Moschea',
+            categorySynagogue: 'Sinagoga',
+            categoryPark: 'Parco',
+            categoryPlayground: 'Parco Giochi',
+            categorySportsField: 'Campo Sportivo',
+            categoryGym: 'Palestra',
+            categorySwimmingPool: 'Piscina',
+            categoryTheater: 'Teatro',
+            categoryCinema: 'Cinema',
+            categoryMuseum: 'Museo',
+            categoryLibrary: 'Biblioteca',
+            categoryOther: 'Altro',
+            convertSuccess: 'Convertito con successo!',
+            convertError: 'Errore nella conversione:',
+            deleteOriginal: 'Elimina Map Comment originale'
         },
         es: {
             selectShape: 'Seleccionar forma:',
@@ -523,6 +673,19 @@
             load: 'Cargar',
             delete: 'Eliminar',
             save: 'Guardar',
+            // Edit section
+            editSection: 'Editar',
+            editHint: '¡Primero selecciona un Map Comment en el mapa!',
+            customShapesHint: 'Guarda un Map Comment seleccionado como forma reutilizable',
+            simplifyTitle: 'Simplificar - Reducir puntos',
+            simplifyDesc: 'Simplifica formas complejas eliminando puntos innecesarios',
+            rotateTitle: 'Rotar forma',
+            rotateDesc: 'Rota la forma alrededor de su centro',
+            orthogonalizeTitle: 'Ángulos rectos',
+            orthogonalizeDesc: 'Hace todos los ángulos rectos (90°) - ideal para edificios',
+            scaleTitle: 'Cambiar tamaño',
+            scaleDesc: 'Cambia ancho y/o alto de la forma',
+            previewBtn: 'Vista previa',
             // Image Upload
             imageUpload: 'Imagen a Forma:',
             imageUploadHint: 'Sube una imagen para detectar su contorno',
@@ -548,7 +711,44 @@
             updateUI1: '📦 Interfaz más compacta con menús acordeón',
             updateUI2: '📝 Mejores descripciones para todas las herramientas',
             updateUI3: '⚡ Vista previa en vivo al escalar y rotar',
-            updateClose: '¡Entendido!'
+            updateClose: '¡Entendido!',
+            // Converter
+            converter: 'Convertidor:',
+            converterHint: 'Convierte Map Comments a Places',
+            convertToPlace: 'Convertir a Lugar',
+            selectCategory: 'Seleccionar categoría:',
+            placeCategories: 'Categorías de Lugares:',
+            categoryParking: 'Estacionamiento',
+            categoryGasStation: 'Gasolinera',
+            categoryRestaurant: 'Restaurante',
+            categoryCafe: 'Cafetería',
+            categoryHotel: 'Hotel',
+            categoryHospital: 'Hospital',
+            categorySchool: 'Escuela',
+            categoryShoppingCenter: 'Centro Comercial',
+            categorySupermarket: 'Supermercado',
+            categoryBank: 'Banco',
+            categoryATM: 'Cajero Automático',
+            categoryPharmacy: 'Farmacia',
+            categoryPostOffice: 'Oficina de Correos',
+            categoryPolice: 'Estación de Policía',
+            categoryFireStation: 'Estación de Bomberos',
+            categoryChurch: 'Iglesia',
+            categoryMosque: 'Mezquita',
+            categorySynagogue: 'Sinagoga',
+            categoryPark: 'Parque',
+            categoryPlayground: 'Área de Juegos',
+            categorySportsField: 'Campo Deportivo',
+            categoryGym: 'Gimnasio',
+            categorySwimmingPool: 'Piscina',
+            categoryTheater: 'Teatro',
+            categoryCinema: 'Cine',
+            categoryMuseum: 'Museo',
+            categoryLibrary: 'Biblioteca',
+            categoryOther: 'Otro',
+            convertSuccess: '¡Convertido con éxito!',
+            convertError: 'Error al convertir:',
+            deleteOriginal: 'Eliminar Map Comment original'
         },
         fr: {
             selectShape: 'Choisir forme:',
@@ -647,6 +847,19 @@
             load: 'Charger',
             delete: 'Supprimer',
             save: 'Enregistrer',
+            // Edit section
+            editSection: 'Modifier',
+            editHint: 'Sélectionnez d\'abord un Map Comment sur la carte!',
+            customShapesHint: 'Enregistrez un Map Comment sélectionné comme forme réutilisable',
+            simplifyTitle: 'Simplifier - Réduire les points',
+            simplifyDesc: 'Simplifie les formes complexes en supprimant les points inutiles',
+            rotateTitle: 'Rotation de forme',
+            rotateDesc: 'Fait pivoter la forme autour de son centre',
+            orthogonalizeTitle: 'Angles droits',
+            orthogonalizeDesc: 'Rend tous les angles droits (90°) - idéal pour les bâtiments',
+            scaleTitle: 'Changer la taille',
+            scaleDesc: 'Change la largeur et/ou la hauteur de la forme',
+            previewBtn: 'Aperçu',
             // Image Upload
             imageUpload: 'Image vers Forme:',
             imageUploadHint: 'Téléchargez une image pour détecter son contour',
@@ -672,7 +885,44 @@
             updateUI1: '📦 Interface plus compacte avec menus accordéon',
             updateUI2: '📝 Meilleures descriptions pour tous les outils',
             updateUI3: '⚡ Aperçu en direct lors de la mise à l\'échelle et de la rotation',
-            updateClose: 'Compris!'
+            updateClose: 'Compris!',
+            // Converter
+            converter: 'Convertisseur:',
+            converterHint: 'Convertir les Map Comments en Places',
+            convertToPlace: 'Convertir en Lieu',
+            selectCategory: 'Sélectionner catégorie:',
+            placeCategories: 'Catégories de Lieux:',
+            categoryParking: 'Parking',
+            categoryGasStation: 'Station-service',
+            categoryRestaurant: 'Restaurant',
+            categoryCafe: 'Café',
+            categoryHotel: 'Hôtel',
+            categoryHospital: 'Hôpital',
+            categorySchool: 'École',
+            categoryShoppingCenter: 'Centre Commercial',
+            categorySupermarket: 'Supermarché',
+            categoryBank: 'Banque',
+            categoryATM: 'Distributeur',
+            categoryPharmacy: 'Pharmacie',
+            categoryPostOffice: 'Bureau de Poste',
+            categoryPolice: 'Commissariat',
+            categoryFireStation: 'Caserne de Pompiers',
+            categoryChurch: 'Église',
+            categoryMosque: 'Mosquée',
+            categorySynagogue: 'Synagogue',
+            categoryPark: 'Parc',
+            categoryPlayground: 'Aire de Jeux',
+            categorySportsField: 'Terrain de Sport',
+            categoryGym: 'Salle de Sport',
+            categorySwimmingPool: 'Piscine',
+            categoryTheater: 'Théâtre',
+            categoryCinema: 'Cinéma',
+            categoryMuseum: 'Musée',
+            categoryLibrary: 'Bibliothèque',
+            categoryOther: 'Autre',
+            convertSuccess: 'Converti avec succès!',
+            convertError: 'Erreur de conversion:',
+            deleteOriginal: 'Supprimer le Map Comment original'
         },
         nl: {
             selectShape: 'Kies vorm:',
@@ -771,6 +1021,19 @@
             load: 'Laden',
             delete: 'Verwijderen',
             save: 'Opslaan',
+            // Edit section
+            editSection: 'Bewerken',
+            editHint: 'Selecteer eerst een Map Comment op de kaart!',
+            customShapesHint: 'Sla een geselecteerde Map Comment op als herbruikbare vorm',
+            simplifyTitle: 'Vereenvoudigen - Punten verminderen',
+            simplifyDesc: 'Vereenvoudigt complexe vormen door onnodige punten te verwijderen',
+            rotateTitle: 'Vorm draaien',
+            rotateDesc: 'Draait de vorm rond het middelpunt',
+            orthogonalizeTitle: 'Rechte hoeken',
+            orthogonalizeDesc: 'Maakt alle hoeken recht (90°) - ideaal voor gebouwen',
+            scaleTitle: 'Grootte wijzigen',
+            scaleDesc: 'Wijzigt breedte en/of hoogte van de vorm',
+            previewBtn: 'Voorbeeld',
             // Image Upload
             imageUpload: 'Afbeelding naar Vorm:',
             imageUploadHint: 'Upload een afbeelding om de contour te detecteren',
@@ -796,7 +1059,44 @@
             updateUI1: '📦 Compactere interface met accordeonmenu\'s',
             updateUI2: '📝 Betere beschrijvingen voor alle tools',
             updateUI3: '⚡ Live voorbeeld bij schalen en roteren',
-            updateClose: 'Begrepen!'
+            updateClose: 'Begrepen!',
+            // Converter
+            converter: 'Converter:',
+            converterHint: 'Converteer Map Comments naar Places',
+            convertToPlace: 'Converteren naar Plaats',
+            selectCategory: 'Selecteer categorie:',
+            placeCategories: 'Plaats Categorieën:',
+            categoryParking: 'Parkeerplaats',
+            categoryGasStation: 'Tankstation',
+            categoryRestaurant: 'Restaurant',
+            categoryCafe: 'Café',
+            categoryHotel: 'Hotel',
+            categoryHospital: 'Ziekenhuis',
+            categorySchool: 'School',
+            categoryShoppingCenter: 'Winkelcentrum',
+            categorySupermarket: 'Supermarkt',
+            categoryBank: 'Bank',
+            categoryATM: 'Geldautomaat',
+            categoryPharmacy: 'Apotheek',
+            categoryPostOffice: 'Postkantoor',
+            categoryPolice: 'Politiebureau',
+            categoryFireStation: 'Brandweerkazerne',
+            categoryChurch: 'Kerk',
+            categoryMosque: 'Moskee',
+            categorySynagogue: 'Synagoge',
+            categoryPark: 'Park',
+            categoryPlayground: 'Speeltuin',
+            categorySportsField: 'Sportveld',
+            categoryGym: 'Sportschool',
+            categorySwimmingPool: 'Zwembad',
+            categoryTheater: 'Theater',
+            categoryCinema: 'Bioscoop',
+            categoryMuseum: 'Museum',
+            categoryLibrary: 'Bibliotheek',
+            categoryOther: 'Anders',
+            convertSuccess: 'Succesvol geconverteerd!',
+            convertError: 'Fout bij converteren:',
+            deleteOriginal: 'Originele Map Comment verwijderen'
         }
     };
 
@@ -1192,10 +1492,16 @@
 
     function updateEditHint() {
         const hint = document.getElementById('mcs-edit-hint');
-        if (!hint) return;
-
+        const convertHint = document.getElementById('mcs-convert-hint');
+        
         const selectedComment = getSelectedMapComment();
-        hint.style.display = selectedComment ? 'none' : 'block';
+        
+        if (hint) {
+            hint.style.display = selectedComment ? 'none' : 'block';
+        }
+        if (convertHint) {
+            convertHint.style.display = selectedComment ? 'none' : 'block';
+        }
     }
 
     // ============ UPDATE POPUP ============
@@ -1428,27 +1734,27 @@
 
                 <!-- Bearbeiten -->
                 <details class="mcs-accordion">
-                    <summary class="mcs-accordion-header">🛠️ Bearbeiten</summary>
+                    <summary class="mcs-accordion-header">🛠️ ${t('editSection')}</summary>
                     <div class="mcs-accordion-body">
-                        <p class="mcs-hint" id="mcs-edit-hint">⚠️ Zuerst einen Map Comment auf der Karte auswählen!</p>
+                        <p class="mcs-hint" id="mcs-edit-hint">⚠️ ${t('editHint')}</p>
 
                         <div class="mcs-tool-box">
-                            <div class="mcs-tool-title">✂️ Simplify - Punkte reduzieren</div>
-                            <div class="mcs-tool-desc">Vereinfacht komplexe Formen durch Entfernen überflüssiger Punkte</div>
+                            <div class="mcs-tool-title">✂️ ${t('simplifyTitle')}</div>
+                            <div class="mcs-tool-desc">${t('simplifyDesc')}</div>
                             <div class="mcs-field-row">
                                 <label>${t('tolerance')}</label>
                                 <input type="range" id="mcs-simplify-tolerance" min="1" max="50" value="5" class="mcs-range">
                                 <span id="mcs-tolerance-value" class="mcs-range-val">5m</span>
                             </div>
                             <div class="mcs-btn-row">
-                                <button id="mcs-simplify-preview" class="mcs-btn-sm">👁️ Vorschau</button>
+                                <button id="mcs-simplify-preview" class="mcs-btn-sm">👁️ ${t('previewBtn')}</button>
                                 <button id="mcs-simplify-btn" class="mcs-btn-sm mcs-btn-blue">✂️ Simplify</button>
                             </div>
                         </div>
 
                         <div class="mcs-tool-box">
-                            <div class="mcs-tool-title">🔄 ${t('rotate')} - Form drehen</div>
-                            <div class="mcs-tool-desc">Dreht die Form um ihren Mittelpunkt</div>
+                            <div class="mcs-tool-title">🔄 ${t('rotate')} - ${t('rotateTitle')}</div>
+                            <div class="mcs-tool-desc">${t('rotateDesc')}</div>
                             <div class="mcs-field-row">
                                 <label>${t('angle')}</label>
                                 <input type="range" id="mcs-rotate-angle" min="-180" max="180" value="45" class="mcs-range">
@@ -1460,16 +1766,16 @@
                         </div>
 
                         <div class="mcs-tool-box">
-                            <div class="mcs-tool-title">📐 ${t('orthogonalize')} - Rechte Winkel</div>
-                            <div class="mcs-tool-desc">Macht alle Winkel rechtwinklig (90°) - ideal für Gebäude</div>
+                            <div class="mcs-tool-title">📐 ${t('orthogonalize')} - ${t('orthogonalizeTitle')}</div>
+                            <div class="mcs-tool-desc">${t('orthogonalizeDesc')}</div>
                             <div class="mcs-btn-row">
                                 <button id="mcs-orthogonalize-btn" class="mcs-btn-sm mcs-btn-blue">📐 ${t('orthogonalizeBtn')}</button>
                             </div>
                         </div>
 
                         <div class="mcs-tool-box">
-                            <div class="mcs-tool-title">↔️ ${t('scale')} - Größe ändern</div>
-                            <div class="mcs-tool-desc">Ändert Breite und/oder Höhe der Form</div>
+                            <div class="mcs-tool-title">↔️ ${t('scale')} - ${t('scaleTitle')}</div>
+                            <div class="mcs-tool-desc">${t('scaleDesc')}</div>
                             <div class="mcs-field-row">
                                 <label>${t('width')}</label>
                                 <input type="range" id="mcs-scale-width" min="10" max="500" value="100" class="mcs-range">
@@ -1533,7 +1839,7 @@
                 <details class="mcs-accordion">
                     <summary class="mcs-accordion-header">🎨 ${t('customShapes')}</summary>
                     <div class="mcs-accordion-body">
-                        <div class="mcs-tool-desc">Speichere einen ausgewählten Map Comment als wiederverwendbare Form</div>
+                        <div class="mcs-tool-desc">${t('customShapesHint')}</div>
                         <div class="mcs-field-row">
                             <select id="mcs-custom-select" class="mcs-select"><option value="">${t('selectCustomShape')}</option></select>
                             <button id="mcs-custom-use" class="mcs-btn-sm">▶️ ${t('load')}</button>
@@ -1546,13 +1852,67 @@
                     </div>
                 </details>
 
+                <!-- Konverter -->
+                <details class="mcs-accordion">
+                    <summary class="mcs-accordion-header">🔄 ${t('converter')}</summary>
+                    <div class="mcs-accordion-body">
+                        <p class="mcs-hint" id="mcs-convert-hint">⚠️ ${t('selectMapComment')}</p>
+                        <div class="mcs-tool-desc">${t('converterHint')}</div>
+                        
+                        <div class="mcs-tool-box">
+                            <div class="mcs-tool-title">📍 ${t('convertToPlace')}</div>
+                            <div class="mcs-field-row">
+                                <label>${t('selectCategory')}</label>
+                                <select id="mcs-place-category" class="mcs-select">
+                                    <option value="PARKING_LOT">${t('categoryParking')}</option>
+                                    <option value="GAS_STATION">${t('categoryGasStation')}</option>
+                                    <option value="RESTAURANT">${t('categoryRestaurant')}</option>
+                                    <option value="CAFE">${t('categoryCafe')}</option>
+                                    <option value="HOTEL">${t('categoryHotel')}</option>
+                                    <option value="HOSPITAL_URGENT_CARE">${t('categoryHospital')}</option>
+                                    <option value="SCHOOL">${t('categorySchool')}</option>
+                                    <option value="SHOPPING_CENTER">${t('categoryShoppingCenter')}</option>
+                                    <option value="SUPERMARKET_GROCERY">${t('categorySupermarket')}</option>
+                                    <option value="BANK_FINANCIAL">${t('categoryBank')}</option>
+                                    <option value="ATM">${t('categoryATM')}</option>
+                                    <option value="PHARMACY">${t('categoryPharmacy')}</option>
+                                    <option value="POST_OFFICE">${t('categoryPostOffice')}</option>
+                                    <option value="POLICE_STATION">${t('categoryPolice')}</option>
+                                    <option value="FIRE_DEPARTMENT">${t('categoryFireStation')}</option>
+                                    <option value="CHURCH">${t('categoryChurch')}</option>
+                                    <option value="MOSQUE">${t('categoryMosque')}</option>
+                                    <option value="SYNAGOGUE">${t('categorySynagogue')}</option>
+                                    <option value="PARK">${t('categoryPark')}</option>
+                                    <option value="PLAYGROUND">${t('categoryPlayground')}</option>
+                                    <option value="SPORTS_COURT">${t('categorySportsField')}</option>
+                                    <option value="GYM_FITNESS">${t('categoryGym')}</option>
+                                    <option value="POOL">${t('categorySwimmingPool')}</option>
+                                    <option value="THEATER">${t('categoryTheater')}</option>
+                                    <option value="MOVIE_THEATER">${t('categoryCinema')}</option>
+                                    <option value="MUSEUM">${t('categoryMuseum')}</option>
+                                    <option value="LIBRARY">${t('categoryLibrary')}</option>
+                                    <option value="OTHER">${t('categoryOther')}</option>
+                                </select>
+                            </div>
+                            <div class="mcs-field-row">
+                                <label class="mcs-checkbox"><input type="checkbox" id="mcs-delete-after-place" checked> ${t('deleteOriginal')}</label>
+                            </div>
+                            <div class="mcs-btn-row">
+                                <button id="mcs-convert-place" class="mcs-btn-sm mcs-btn-green">📍 ${t('convertToPlace')}</button>
+                            </div>
+                        </div>
+
+                        <div id="mcs-convert-info" class="mcs-result-box"></div>
+                    </div>
+                </details>
+
                 <!-- Hilfe -->
                 <details class="mcs-accordion">
                     <summary class="mcs-accordion-header">❓ ${t('instructions')}</summary>
                     <div class="mcs-accordion-body mcs-help">
-                        <div><b>Punkt:</b> 1 Klick = Position</div>
-                        <div><b>Dynamisch AN:</b> 1. Klick = Mitte, 2. Klick = Größe</div>
-                        <div><b>Dynamisch AUS:</b> 1 Klick = Mitte (fester Radius)</div>
+                        <div><b>${t('shapePoint')}:</b> ${t('instrPoint')}</div>
+                        <div><b>Dynamic ON:</b> ${t('instrDynamicOn')}</div>
+                        <div><b>Dynamic OFF:</b> ${t('instrDynamicOff')}</div>
                     </div>
                 </details>
             </div>
@@ -1653,6 +2013,9 @@
             document.getElementById('mcs-minarea-value').textContent = e.target.value;
         });
         document.getElementById('mcs-image-invert')?.addEventListener('change', updateImagePreview);
+
+        // Converter buttons
+        document.getElementById('mcs-convert-place')?.addEventListener('click', convertToPlace);
 
         ['mcs-radius', 'mcs-subject', 'mcs-body', 'mcs-expiration'].forEach(id => {
             document.getElementById(id)?.addEventListener('change', saveSettings);
@@ -2902,6 +3265,201 @@
         return denormalizeCoords(customShapeCoords, center, radius);
     }
 
+    // ============ CONVERTER ============
+
+    // WME Place Kategorien (interne IDs)
+    const PLACE_CATEGORIES = {
+        'PARKING_LOT': 'PARKING_LOT',
+        'GAS_STATION': 'GAS_STATION',
+        'RESTAURANT': 'FOOD_AND_DRINK',
+        'CAFE': 'FOOD_AND_DRINK',
+        'HOTEL': 'LODGING',
+        'HOSPITAL_URGENT_CARE': 'HOSPITAL_URGENT_CARE',
+        'SCHOOL': 'SCHOOL',
+        'SHOPPING_CENTER': 'SHOPPING_AND_SERVICES',
+        'SUPERMARKET_GROCERY': 'SHOPPING_AND_SERVICES',
+        'BANK_FINANCIAL': 'BANK_FINANCIAL',
+        'ATM': 'ATM',
+        'PHARMACY': 'PHARMACY',
+        'POST_OFFICE': 'POST_OFFICE',
+        'POLICE_STATION': 'POLICE_STATION',
+        'FIRE_DEPARTMENT': 'FIRE_DEPARTMENT',
+        'CHURCH': 'RELIGIOUS_CENTER',
+        'MOSQUE': 'RELIGIOUS_CENTER',
+        'SYNAGOGUE': 'RELIGIOUS_CENTER',
+        'PARK': 'PARK',
+        'PLAYGROUND': 'PARK',
+        'SPORTS_COURT': 'GYM_FITNESS',
+        'GYM_FITNESS': 'GYM_FITNESS',
+        'POOL': 'GYM_FITNESS',
+        'THEATER': 'CULTURE_AND_ENTERTAINMENT',
+        'MOVIE_THEATER': 'CULTURE_AND_ENTERTAINMENT',
+        'MUSEUM': 'CULTURE_AND_ENTERTAINMENT',
+        'LIBRARY': 'CULTURE_AND_ENTERTAINMENT',
+        'OTHER': 'OTHER'
+    };
+
+    function convertToPlace() {
+        const comment = getSelectedMapComment();
+        if (!comment) {
+            updateStatus('⚠️ ' + t('selectMapComment'));
+            return;
+        }
+
+        const coords = getCommentGeometry(comment);
+        if (!coords || !coords[0] || coords[0].length < 3) {
+            updateStatus('⚠️ ' + t('noValidPolygon'));
+            return;
+        }
+
+        const categorySelect = document.getElementById('mcs-place-category')?.value || 'OTHER';
+        const category = PLACE_CATEGORIES[categorySelect] || 'OTHER';
+        const deleteOriginal = document.getElementById('mcs-delete-after-place')?.checked ?? true;
+
+        try {
+            // Hole Titel und Beschreibung vom Map Comment
+            const subject = comment.attributes?.subject || comment.getSubject?.() || '';
+            const body = comment.attributes?.body || comment.getBody?.() || '';
+
+            // Erstelle Place über WME SDK
+            if (sdk && sdk.DataModel && sdk.DataModel.Venues && sdk.DataModel.Venues.addVenue) {
+                const placeData = {
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: coords
+                    },
+                    name: subject || 'Converted Place',
+                    category: category  // Einzelne Kategorie, nicht Array!
+                };
+
+                console.log(`${SCRIPT_NAME} - Creating place with data:`, placeData);
+
+                const result = sdk.DataModel.Venues.addVenue(placeData);
+                
+                if (result) {
+                    console.log(`${SCRIPT_NAME} - Place created:`, result);
+                    
+                    // Lösche Original wenn gewünscht
+                    if (deleteOriginal) {
+                        setTimeout(() => deleteMapComment(comment), 200);
+                    }
+
+                    updateStatus('✅ ' + t('convertSuccess'));
+                    updateConvertInfo(`📍 Place erstellt: ${subject || 'Converted Place'} (${category})`);
+                    
+                    // Status nach 3 Sekunden zurücksetzen
+                    setTimeout(() => updateStatus(t('defaultStatus')), 3000);
+                }
+            } else {
+                // Fallback: Verwende WME Actions direkt
+                createPlaceViaWME(coords, subject, body, category, deleteOriginal, comment);
+            }
+
+        } catch (e) {
+            console.error(`${SCRIPT_NAME} - Convert to Place error:`, e);
+            updateStatus('❌ ' + t('convertError') + ' ' + e.message);
+            
+            // Zeige Hilfe bei Fehler
+            updateConvertInfo(`
+                <div style="text-align:left; font-size:11px; color:#856404;">
+                    <b>Fehler:</b> ${e.message}<br>
+                    <b>Tipp:</b> Versuche einen anderen Kategorietyp oder erstelle den Place manuell.
+                </div>
+            `);
+        }
+    }
+
+    function createPlaceViaWME(coords, name, description, category, deleteOriginal, originalComment) {
+        try {
+            // WME Place-Erstellung über Actions
+            const AddVenue = require('Waze/Action/AddVenue');
+
+            // Konvertiere Koordinaten zu Mercator für WME
+            const mercatorCoords = coords[0].map(coord => {
+                const [x, y] = wgs84ToMercator(coord[0], coord[1]);
+                return new OpenLayers.Geometry.Point(x, y);
+            });
+
+            const ring = new OpenLayers.Geometry.LinearRing(mercatorCoords);
+            const polygon = new OpenLayers.Geometry.Polygon([ring]);
+
+            // Berechne Zentrum für Entry Point
+            const center = getPolygonCenter(coords[0]);
+            const [cx, cy] = wgs84ToMercator(center[0], center[1]);
+            const centerPoint = new OpenLayers.Geometry.Point(cx, cy);
+
+            // Venue-Attribute
+            const venueAttributes = {
+                name: name || 'Converted Place',
+                categories: [category],
+                description: description || '',
+                geometry: polygon,
+                entryExitPoints: [{
+                    entry: true,
+                    exit: true,
+                    point: centerPoint
+                }]
+            };
+
+            // Erstelle Action
+            const addAction = new AddVenue(venueAttributes, W.model.venues);
+            W.model.actionManager.add(addAction);
+
+            // Lösche Original wenn gewünscht
+            if (deleteOriginal && originalComment) {
+                setTimeout(() => deleteMapComment(originalComment), 200);
+            }
+
+            updateStatus('✅ ' + t('convertSuccess'));
+            updateConvertInfo(`📍 Place erstellt: ${name || 'Converted Place'}`);
+            
+            // Status nach 3 Sekunden zurücksetzen
+            setTimeout(() => updateStatus(t('defaultStatus')), 3000);
+
+        } catch (e) {
+            console.error(`${SCRIPT_NAME} - WME Place creation error:`, e);
+            
+            // Zeige Anleitung für manuelle Erstellung
+            updateStatus('⚠️ Manuelle Erstellung erforderlich');
+            updateConvertInfo(`
+                <div style="text-align:left; font-size:11px;">
+                    <b>Automatische Erstellung fehlgeschlagen</b><br>
+                    <small>Fehler: ${e.message}</small><br><br>
+                    <b>Manuelle Schritte:</b><br>
+                    1. Zeichne einen neuen Place<br>
+                    2. Kopiere die Form vom Map Comment<br>
+                    3. Setze Kategorie: ${category}<br>
+                    4. Name: ${name || 'Converted Place'}
+                </div>
+            `);
+        }
+    }
+
+    function deleteMapComment(comment) {
+        try {
+            const commentId = comment.attributes?.id || comment.id;
+            
+            if (sdk && sdk.DataModel && sdk.DataModel.MapComments && sdk.DataModel.MapComments.deleteComment) {
+                sdk.DataModel.MapComments.deleteComment({ commentId: commentId });
+                console.log(`${SCRIPT_NAME} - Original Map Comment deleted via SDK`);
+            } else {
+                // Fallback über WME Actions
+                const DeleteObject = require('Waze/Action/DeleteObject');
+                W.model.actionManager.add(new DeleteObject(comment, W.model.mapComments));
+                console.log(`${SCRIPT_NAME} - Original Map Comment deleted via Action`);
+            }
+        } catch (e) {
+            console.warn(`${SCRIPT_NAME} - Could not delete original comment:`, e);
+        }
+    }
+
+    function updateConvertInfo(html) {
+        const infoEl = document.getElementById('mcs-convert-info');
+        if (infoEl) {
+            infoEl.innerHTML = html;
+        }
+    }
+
     // ============ DRAWING ============
 
     function startDrawing(shape) {
@@ -3296,8 +3854,10 @@
             .mcs-accordion:nth-of-type(4) .mcs-accordion-header { background: linear-gradient(135deg, #17a2b8, #138496); color: white; }
             .mcs-accordion:nth-of-type(5) { background: #fffde8; border-color: #f0e8a0; }
             .mcs-accordion:nth-of-type(5) .mcs-accordion-header { background: linear-gradient(135deg, #ffc107, #e0a800); color: white; }
-            .mcs-accordion:nth-of-type(6) { background: #f8f9fa; border-color: #dee2e6; }
-            .mcs-accordion:nth-of-type(6) .mcs-accordion-header { background: linear-gradient(135deg, #6c757d, #5a6268); color: white; }
+            .mcs-accordion:nth-of-type(6) { background: #fce8fc; border-color: #e8b8e8; }
+            .mcs-accordion:nth-of-type(6) .mcs-accordion-header { background: linear-gradient(135deg, #9c27b0, #7b1fa2); color: white; }
+            .mcs-accordion:nth-of-type(7) { background: #f8f9fa; border-color: #dee2e6; }
+            .mcs-accordion:nth-of-type(7) .mcs-accordion-header { background: linear-gradient(135deg, #6c757d, #5a6268); color: white; }
             .mcs-accordion-header { padding: 8px 10px; cursor: pointer; font-weight: 600; font-size: 12px; list-style: none; display: flex; align-items: center; }
             .mcs-accordion-header::-webkit-details-marker { display: none; }
             .mcs-accordion-header::before { content: '▶'; font-size: 9px; margin-right: 8px; transition: transform 0.2s; opacity: 0.8; }

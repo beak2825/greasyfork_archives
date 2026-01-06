@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Loot Visualizer
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @author       Lotak - Guild leader of Casual Ahab
 // @description  Loot window, totals, rarity colors, summary, tooltips, and pop-in animation
 // @match        https://demonicscans.org/*
@@ -13,7 +13,6 @@
 
 (function() {
     'use strict';
-
     let gateInfo = document.querySelector("body > div.gate-info > div.gate-info-scroll > div");
     if (gateInfo) {
         gateInfo.style.display = "none";
@@ -48,8 +47,8 @@
 
             // --- ADD YOUR CUSTOM BUTTONS BELOW ---
             const items = [
-                { icon: "🌊", label: "Event Gate", href: " /active_wave.php?event=4&wave=2" },
-                { icon: "🌀", label: "Gate 2", href: "/active_wave.php?gate=3&wave=5" },
+                //{ icon: "🌊", label: "Event Gate", href: " /active_wave.php?event=4&wave=2" },
+                //{ icon: "🌀", label: "Gate 2", href: "/active_wave.php?gate=3&wave=5" },
                 { icon: "🌀", label: "Gate 3", href: "/active_wave.php?gate=3&wave=8" },
                 { icon: "⚒️", label: "Legendary Forge", href: "/legendary_forge.php" },
                 { icon: "📅", label: "Weekly", href: "/weekly.php" },
@@ -73,7 +72,7 @@
     btn.textContent = "⟳ Refresh";
     btn.style.position = "fixed";
     btn.style.bottom = "20px";
-    btn.style.left = "50%";
+    btn.style.left = "40%";
     btn.style.transform = "translateX(-50%)";
     btn.style.padding = "10px 18px";
     btn.style.fontSize = "14px";

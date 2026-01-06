@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram Downloader Pro Max
 // @namespace    igDownloaderProMax
-// @version      1.3.59
+// @version      1.3.60
 // @description  instagram downloader with checkbox selection as bulk of just download with download button next to save button for posts, pause button for stories
 // @author       Runterya
 // @match        https://www.instagram.com/*
@@ -29,7 +29,7 @@
 
     // --- ICON ---
     const DOWNLOAD_ICON = `
-    <svg aria-label="Download" class="x1lliihq x1n2onr6" color="currentColor" fill="none" height="16" role="img" viewBox="0 0 24 24" width="16" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;">
+    <svg aria-label="Download" class="x1lliihq x1n2onr6" color="currentColor" fill="none" height="24" width="24" role="img" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
         <polyline points="7 10 12 15 17 10"></polyline>
         <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -144,11 +144,10 @@
             background: transparent;
             border: none;
             cursor: pointer;
-            padding: 8px;
+            padding: 4px 0px 4px 8px;
             display: inline-flex !important;
             align-items: center;
             justify-content: center;
-            margin-left: 8px;
             transition: transform 0.2s;
             color: inherit;
             z-index: 10001;
@@ -344,7 +343,7 @@
         if (isStory && domCount > 0 && apiCount < domCount) {
             const warning = document.createElement('div');
             warning.className = 'ig-dl-warning';
-            warning.innerText = `⚠️ Missing: ${domCount - apiCount} stories (Marked Red)`;
+            warning.innerText = `⚠️ API Missing: ${domCount - apiCount} stories`;
             popup.appendChild(warning);
         }
 
@@ -357,20 +356,20 @@
 
         const btnCurrent = document.createElement('button');
         if (currentIsAvailable) {
-            btnCurrent.innerText = `👁️ Download seen`;
+            btnCurrent.innerText = `Download visible`;
             btnCurrent.onclick = (e) => {
                 e.stopPropagation(); popup.remove(); onDownloadCurrent();
             };
             popup.appendChild(btnCurrent);
         } else {
-            btnCurrent.innerText = `👁️ Unavailable`;
+            btnCurrent.innerText = `Unavailable`;
             btnCurrent.disabled = true;
             btnCurrent.style.color = '#ff6b6b';
             popup.appendChild(btnCurrent);
         }
 
         const btnAll = document.createElement('button');
-        btnAll.innerText = `📥 Download All (${apiCount})`;
+        btnAll.innerText = `Download All (${apiCount})`;
         btnAll.onclick = (e) => {
             e.stopPropagation(); popup.remove(); onDownloadAll();
         };
@@ -410,7 +409,6 @@
                     dlBtn.className = 'ig-single-dl-btn ig-story-dl-btn';
                     dlBtn.title = "Pause and Download";
                     dlBtn.style.color = "white";
-                    dlBtn.style.marginRight = "8px";
 
                     dlBtn.onclick = async (e) => {
                         e.stopPropagation(); e.preventDefault();
@@ -449,6 +447,7 @@
                 dlBtn.className = 'ig-single-dl-btn';
                 dlBtn.innerHTML = DOWNLOAD_ICON;
                 dlBtn.title = "Download";
+                dlBtn.style.marginLeft = '8px'
                 dlBtn.style.color = getComputedStyle(icon).color;
                 dlBtn.onclick = async (e) => {
                     e.stopPropagation(); e.preventDefault();
@@ -483,7 +482,7 @@
 
             let videoUrls = await fetchFromTiooApi(url);
 
-            if (!videoUrls || videoUrls.length === 0) throw new Error("Link not found!");
+            if (!videoUrls || videoUrls.length === 0) throw new Error("Link not found or the account you are trying to download is private!");
 
             videoUrls = filterUniqueUrls(videoUrls);
 
@@ -619,7 +618,7 @@
             const dlBtn = document.createElement('button');
             dlBtn.id = 'ig-dl-btn';
             dlBtn.className = 'ig-btn ig-btn-dl';
-            dlBtn.innerHTML = DOWNLOAD_ICON + '<span>Download Selected</span>';
+            dlBtn.innerHTML = DOWNLOAD_ICON + '<span style="padding-left:8px">Download Selected</span>';
             dlBtn.onclick = startDirectDownload;
             bottomRightContainer.appendChild(dlBtn);
             document.body.appendChild(bottomRightContainer);

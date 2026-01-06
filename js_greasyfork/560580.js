@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Fadeline Reading (AO3)
-// @version      1.0.0
+// @version      1.0.1
 // @namespace    https://github.com/StarRinger/userscripts
 // @description  Implement faded gradients to the beginning and end of alternate lines
 // @match        *://*.archiveofourown.org/*
@@ -72,13 +72,12 @@
             transform: scale(1.2);
         }
 
-        /* Override word-wrap to prevent mid-word breaks */
+        // Override word-wrap
         .fadeline-active p {
             word-wrap: normal;
             overflow-wrap: normal;
         }
 
-        /* Fadeline text styles */
         .fadeline-line-wrapper {
             display: block;
             width: 100%;
@@ -106,7 +105,6 @@
     `;
     document.head.appendChild(style);
 
-    // Create floating button
     function createButton() {
         const button = document.createElement('div');
         button.id = 'fadeline-button';
@@ -160,12 +158,12 @@
             element.innerHTML = '';
             element.appendChild(fragment);
 
-            // Now group all child nodes (spans and text) by visual line
+            // Group all child nodes by visual line
             const lineGroups = [];
             let currentLineTop = -1;
             let currentLineStart = 0;
 
-            // Get all child nodes (spans and text nodes)
+            // Get all child nodes
             const allNodes = Array.from(element.childNodes);
 
             for (let i = 0; i < allNodes.length; i++) {
@@ -182,7 +180,7 @@
                 }
 
                 if (top !== currentLineTop) {
-                    // Save previous line (from currentLineStart to i-1)
+                    // Save previous line
                     const lineNodes = allNodes.slice(currentLineStart, i);
                     if (lineNodes.length > 0) {
                         lineGroups.push(lineNodes);
@@ -192,13 +190,13 @@
                 }
             }
 
-            // Don't forget the last line
+            // Last line
             const lastLineNodes = allNodes.slice(currentLineStart);
             if (lastLineNodes.length > 0) {
                 lineGroups.push(lastLineNodes);
             }
 
-            // Wrap each line in a div with mask
+            // Wrap each line in a div
             lineGroups.forEach((lineNodes) => {
                 const lineWrapper = document.createElement('div');
                 lineWrapper.className = `fadeline-line-wrapper ${globalLineIndex % 2 === 0 ? 'odd' : 'even'}`;
@@ -217,7 +215,6 @@
         });
     }
 
-    // Apply fadeline formatting
     function applyFadeline() {
         if (fadelineEnabled) return;
         fadelineEnabled = true;
@@ -236,7 +233,6 @@
         if (button) button.classList.add('active');
     }
 
-    // Remove fadeline formatting
     function removeFadeline() {
         if (!fadelineEnabled) return;
         fadelineEnabled = false;
@@ -272,7 +268,6 @@
         if (button) button.classList.remove('active');
     }
 
-    // Toggle fadeline on/off
     function toggleFadeline() {
         if (fadelineEnabled) {
             removeFadeline();
@@ -281,14 +276,12 @@
         }
     }
 
-    // Hide button
     function hideButton() {
         const button = document.getElementById('fadeline-button');
         if (button) button.remove();
         removeFadeline();
     }
 
-    // Initialize on page load (no retry gating)
     function initializeButton() {
         document.body.appendChild(createButton());
     }

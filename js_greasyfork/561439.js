@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Torn Market - Auto-Scraper
 // @namespace    http://tampermonkey.net/
-// @version      1.7
+// @version      1.9
 // @match        *://www.torn.com/page.php?sid=ItemMarket*
 // @grant        none
-// @description  displays the item market in  a box
-// @license      licence is private and (c) 
+// @license      no licence, private https://greasyfork.org/en/scripts/561439
+// @description  The Item Market goes by too quickly for me to read who is selling any item.  This script reads the Item Market and puts all the sellers, prices and quantities into a little box on the screen so I can read the text even once the item has been sold. 
 // @downloadURL https://update.greasyfork.org/scripts/561439/Torn%20Market%20-%20Auto-Scraper.user.js
 // @updateURL https://update.greasyfork.org/scripts/561439/Torn%20Market%20-%20Auto-Scraper.meta.js
 // ==/UserScript==
@@ -30,7 +30,75 @@
         scrollbar-color: #555 #222;    /* Firefox: Thumb and Track color */
     `;
     summaryDiv.innerHTML = '<h3 style="margin-top:0">Market Summary</h3><div id="summary-content">Loading...</div>';
+    // 1. Create the 'X' Close Button
+const closeBtn = document.createElement('span');
+closeBtn.innerHTML = '&times;'; // This is the HTML entity for a clean multiplication 'X'
+closeBtn.style = `
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    color: #888;
+    line-height: 1;
+    transition: color 0.2s;
+`;
+
+// 2. Add Hover Effect
+closeBtn.onmouseover = () => closeBtn.style.color = '#fff';
+closeBtn.onmouseout = () => closeBtn.style.color = '#888';
+
+// 3. Add Click Logic
+closeBtn.onclick = () => {
+    summaryDiv.style.display = 'none';
+    // Optional: stop the observer if the box is closed to save resources
+    if (typeof observer !== 'undefined') observer.disconnect();
+};
+
+// 4. Append to the main Div
+summaryDiv.appendChild(closeBtn);
+
+
+    /// make draggable
+    // 1. Make the Header a Handle
+const header = summaryDiv.querySelector('h3');
+header.style.cursor = 'move';
+header.style.userSelect = 'none'; // Prevents highlighting text while dragging
+
+let isDragging = false;
+let offsetX, offsetY;
+
+header.addEventListener('mousedown', (e) => {
+    isDragging = true;
+
+    // Calculate where the mouse is relative to the top-left of the DIV
+    offsetX = e.clientX - summaryDiv.getBoundingClientRect().left;
+    offsetY = e.clientY - summaryDiv.getBoundingClientRect().top;
+
+    header.style.color = '#fff'; // Visual feedback
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+
+    // Calculate new position
+    let x = e.clientX - offsetX;
+    let y = e.clientY - offsetY;
+
+    // Apply new position
+    summaryDiv.style.left = x + 'px';
+    summaryDiv.style.top = y + 'px';
+    summaryDiv.style.right = 'auto'; // Disable the 'right' property from our initial CSS
+});
+
+document.addEventListener('mouseup', () => {
+    isDragging = false;
+    header.style.color = '#aaa';
+});
+    ///
     document.body.appendChild(summaryDiv);
+
 
     function performScrape() {
         // Use the wildcard selectors we proved work

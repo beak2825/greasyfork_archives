@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          LANraragi EHentai 评论区
 // @namespace     https://github.com/Kelcoin
-// @version       4.1
+// @version       4.2
 // @description   在 LANraragi 阅读器底部显示 EH 评论
 // @author        Kelcoin
 // @match         *://*/reader?id=*
@@ -88,8 +88,8 @@
     const THEMES = {
         modern: `
             :root {
-                --lrr-bg: rgba(28, 30, 36, 0.96);
-                --lrr-box-bg: rgba(40, 43, 52, 0.98);
+                --lrr-bg: #1C1E24;
+                --lrr-box-bg: #1C1E24;
                 --lrr-item-bg: rgba(35, 37, 44, 0.96);
                 --lrr-uploader-bg: rgba(45, 48, 58, 0.98);
                 --lrr-text: #e3e9f3;
@@ -134,7 +134,7 @@
             #lrr-eh-comments-box {
                 box-sizing: border-box;
                 width: 100%;
-                max-width: 1100px;
+                max-width: 1400px;
                 margin: 25px auto;
                 background: var(--lrr-box-bg);
                 color: var(--lrr-text);
@@ -174,22 +174,32 @@
                 border: 1px solid rgba(255,255,255,0.05);
             }
             .lrr-eh-btn {
-                background: var(--lrr-accent);
-                color: white;
-                border: none;
-                padding: 6px 12px;
-                cursor: pointer;
-                border-radius: var(--lrr-btn-radius);
-                margin-left: 8px;
-                font-size: 0.9em;
-                transition: background 0.2s, transform 0.1s;
-                font-family: inherit;
-            }
-            .lrr-eh-btn:hover { background: var(--lrr-accent-hover); }
-            .lrr-eh-btn:active { transform: translateY(1px); }
-            .lrr-eh-btn:disabled { background: #444; cursor: not-allowed; opacity: 0.7; }
-            .lrr-eh-btn.secondary { background: rgba(255,255,255,0.1); border: 1px solid var(--lrr-border); }
-            .lrr-eh-btn.secondary:hover { background: rgba(255,255,255,0.2); }
+                 background: transparent;
+                 border: 1px solid var(--lrr-text-sub); /* 跟随文字颜色 */
+                 color: var(--lrr-text-sub);
+                 padding: 4px 8px;
+                 cursor: pointer;
+                 border-radius: 6px;
+                 margin-left: 8px;
+                 font-size: 13px;
+                 font-weight: 600;
+                 font-family: inherit;
+                 transition: all 0.2s;
+             }
+             .lrr-eh-btn:hover {
+                 background: var(--lrr-accent);
+                 color: #fff;
+                 border-color: rgba(206, 224, 255, 0.55) !important;
+                 transform: translateY(-1px);
+             }
+             .lrr-eh-btn:disabled {
+                 background: transparent;
+                 border-color: #444;
+                 color: #666;
+                 cursor: not-allowed;
+                 opacity: 0.7;
+                 transform: none;
+             }
 
             #lrr-eh-toolbar {
                 display: flex;
@@ -370,9 +380,14 @@
                 border-color: var(--lrr-accent);
                 outline: none;
             }
-            .lrr-post-actions, .lrr-edit-actions {
-                margin-top: 8px;
-                text-align: right;
+            .lrr-post-actions {
+                margin-top: 15px;
+                text-align: center;
+            }
+
+            .lrr-post-actions .lrr-eh-btn {
+                margin-left: 0;
+                width: 200px;
             }
 
             #lrr-eh-settings-overlay {
@@ -531,18 +546,33 @@
     function createUI(url) {
         let targetElement = null;
 
-        const allLinks = Array.from(document.querySelectorAll('a'));
-        const actionLink = allLinks.find(a =>
-            a.textContent.includes('全尺寸') ||
-            a.textContent.includes('Full Size') ||
-            a.textContent.includes('随机') ||
-            a.textContent.includes('Random')
-        );
+        // --- 新增：优先挂在 LRR 推荐块下面 ---
+        // 目标：让评论出现在整个推荐模块（wrapper + app）下方，而不是 app 右侧
+        const lrrRecWrapper = document.getElementById('lrr-rec-app-wrapper');
+        const lrrRecApp = document.getElementById('lrr-rec-app');
 
-        if (actionLink) {
-            targetElement = actionLink.closest('div.ip') || actionLink.closest('#i5') || actionLink.parentElement.parentElement;
+        if (lrrRecWrapper || lrrRecApp) {
+            // 如果有 wrapper，就认为“推荐块”是 wrapper，评论插在 wrapper 后面
+            // 没有 wrapper 时，退而求其次插在 lrr-rec-app 后面
+            targetElement = lrrRecWrapper || lrrRecApp;
         } else {
-            targetElement = document.querySelector('#i5') || document.querySelector('.ip');
+            // --- 原始兜底定位逻辑（保持不变） ---
+            const allLinks = Array.from(document.querySelectorAll('a'));
+            const actionLink = allLinks.find(a =>
+                a.textContent.includes('全尺寸') ||
+                a.textContent.includes('Full Size') ||
+                a.textContent.includes('随机') ||
+                a.textContent.includes('Random')
+            );
+
+            if (actionLink) {
+                targetElement =
+                    actionLink.closest('div.ip') ||
+                    actionLink.closest('#i5') ||
+                    (actionLink.parentElement && actionLink.parentElement.parentElement);
+            } else {
+                targetElement = document.querySelector('#i5') || document.querySelector('.ip');
+            }
         }
 
         if (!targetElement) return;
@@ -564,10 +594,15 @@
                 </div>
             </div>
             <div id="lrr-eh-content">
-                ${CONFIG.autoLoad ? '<div style="text-align:center; padding:20px;">正在从缓存或服务器加载...</div>' : '<div style="text-align:center; padding:10px; color:#aaa;">点击上方按钮加载评论</div>'}
+                ${
+                  CONFIG.autoLoad
+                    ? '<div style="text-align:center; padding:20px;">正在从缓存或服务器加载...</div>'
+                    : '<div style="text-align:center; padding:10px; color:#aaa;">点击上方按钮加载评论</div>'
+                }
             </div>
         `;
 
+        // 仍然使用原来的插入方式：在 targetElement 之后
         targetElement.insertAdjacentElement('afterend', container);
 
         const loadBtn = document.getElementById('lrr-eh-load-btn');

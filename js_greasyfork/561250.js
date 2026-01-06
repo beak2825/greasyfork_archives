@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Geoguessr duel round analysis
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.2.0
 // @description  Analyse duel round data on a map
 // @author       irrational
 // @match        https://www.geoguessr.com/*
@@ -10,7 +10,9 @@
 // @require      https://greasyfork.org/scripts/460322-geoguessr-styles-scan/code/Geoguessr%20Styles%20Scan.js?version=1408713
 // @require      https://cdn.jsdelivr.net/npm/ol@10.7.0/dist/ol.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.5.1
-// @resource     openlayersCSS https://cdn.jsdelivr.net/npm/ol@v10.7.0/ol.css
+// @require      https://cdn.jsdelivr.net/npm/kdbush@4.0.2
+// @require      https://cdn.jsdelivr.net/npm/chroma-js@3.2.0/dist/chroma.cjs
+// @resource     openlayersCSS https://cdn.jsdelivr.net/npm/ol@10.7.0/ol.css
 // @resource     countries https://cdn.jsdelivr.net/npm/world-countries@5.1.0/countries.json
 // @grant        GM_getResourceText
 // @downloadURL https://update.greasyfork.org/scripts/561250/Geoguessr%20duel%20round%20analysis.user.js
@@ -26,16 +28,26 @@ const ANALYSIS_CONTROLS_CLASS = '__userscript_analysis_controls';
 const FROM_DATE_INPUT_ID = '__userscript_from_date_input';
 const TO_DATE_INPUT_ID = '__userscript_to_date_input';
 const GAME_MODE_SELECT_ID = '__userscript_game_mode_select';
-const MODE_SELECT_ID = '__userscript_mode_select';
+const SELECT_SELECT_ID = '__userscript_select_select';
+const FILTER_SELECT_ID = '__userscript_filter_select';
 const COUNTRY_SELECT_ID = '__userscript_country_select';
+const SHOW_SELECT_ID = '__userscript_show_select';
+const LINES_INPUT_ID = '__userscript_lines_input';
+const LINES_LABEL_ID = '__userscript_lines_label';
+const LINECOLOUR_SELECT_ID = '__userscript_linecolour_select';
 
 
 let map = null;
-const locSource = new ol.source.Vector();
+const heatSource = new ol.source.Vector();
 const selectSource = new ol.source.Vector();
+const pairsSource = new ol.source.Vector();
 const selectDraw = new ol.interaction.Draw({source: selectSource, type: 'Polygon'});
 let allRounds = [];
+let activeRounds = [];
+let activeRoundIndexes = [];
 let chart = null;
+let locIndex = null;
+let guessIndex = null;
 
 const openDB = async (userId) => {
     const request = indexedDB.open('userscript_duels');
@@ -64,7 +76,7 @@ const makeStyledElement = (el, style) => {
     return element;
 };
 
-const makeSelect = (options) => {
+const makeSelect = (options, id = null, preset = null) => {
     const select = document.createElement('select');
     for (const [value, label] of options) {
         const option = makeStyledElement('option', {backgroundColor: 'black'});
@@ -72,13 +84,30 @@ const makeSelect = (options) => {
         option.innerHTML = label;
         select.append(option);
     }
+    if (id) select.id = id;
+    if (preset) select.value = preset;
     return select;
 };
 
 const flag = (cc) =>
     String.fromCodePoint(...cc.toUpperCase().split('').map(char => 127397 + char.charCodeAt()));
 
+const radiusToExtent = (lon, lat, radius) => {
+    const degPerMetre = 360/(2*Math.PI * 6371000);
+    const dLat = radius * degPerMetre;
+    const dLon = Math.cos(Math.PI*lat/180) * radius * degPerMetre;
+    return [lon - dLon, lat - dLat, lon + dLon, lat + dLat];
+};
+
+const lineColour = (value, min, max) => {
+    const gradient = chroma.scale('RdYlBu').mode('lab');
+    const clamped = Math.max(min, Math.min(max, value));
+    return gradient((clamped - min)/(max - min)).hex();
+};
+
 const openMap = (userId) => {
+    /* ===== Interface ===== */
+
     const modal = makeStyledElement('div', {
         position: 'fixed',
         top: '3vh',
@@ -108,29 +137,18 @@ const openMap = (userId) => {
 
     const controlsContainer = makeStyledElement('div', {
         position: 'absolute',
-        left: 'calc(40px + 1vw)',
+        left: 'calc(0.5em + 18.5px + 1vw)',
         top: '2vh',
-        width: '20vw',
-        color: 'white',
+        padding: '2ex',
+        color: 'rgba(255, 255, 255, 0.6)',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        borderRadius: '1vh',
         display: 'flex',
         flexDirection: 'column',
+        gap: '0.5em',
         zIndex: 9999
     });
     controlsContainer.className = ANALYSIS_CONTROLS_CLASS;
-
-    const chartContainer = makeStyledElement('div', {
-        position: 'absolute',
-        right: '2vh',
-        bottom: 'calc(17px + 2vh)',
-        width: '50vh',
-        height: '25vh',
-        padding: '1vh',
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        borderRadius: '1vh',
-        zIndex: 9999
-    });
-    const chartCanvas = document.createElement('canvas');
-    chartContainer.append(chartCanvas);
 
     const dateDiv = document.createElement('div');
 
@@ -155,17 +173,21 @@ const openMap = (userId) => {
 
     const gameModeSelect = makeSelect([['StandardDuels', 'Moving'],
                                        ['NoMoveDuels', 'NM'],
-                                       ['NmpzDuels', 'NMPZ']]);
-    gameModeSelect.id = GAME_MODE_SELECT_ID;
+                                       ['NmpzDuels', 'NMPZ']],
+                                      GAME_MODE_SELECT_ID);
     controlsContainer.append(gameModeSelect);
 
-    const modeSelect = makeSelect([['show', 'Show all of my guesses'],
-                                   ['guess', 'Select where I guessed, show locations'],
-                                   ['loc', 'Select where it was, show my guesses'],
-                                   ['country', 'Select country of location, show my guesses']]);
-    modeSelect.id = MODE_SELECT_ID;
-    modeSelect.value = 'guess';
-    controlsContainer.append(modeSelect);
+    const selectSelect = makeSelect([['guesses', 'Take all round guesses,'],
+                                     ['locs', 'Take all round locations,']],
+                                    SELECT_SELECT_ID,
+                                    'locs');
+    controlsContainer.append(selectSelect);
+
+    const filterSelect = makeSelect([['polygon', 'filter them by polygon,'],
+                                     ['country', 'filter them by country/territory:'],
+                                     ['none', 'don\'t filter them,']],
+                                    FILTER_SELECT_ID);
+    controlsContainer.append(filterSelect);
 
     const countryList = JSON.parse(GM_getResourceText('countries'));
     countryList.sort((a, b) => a.name.common < b.name.common ? -1 : 1);
@@ -175,12 +197,50 @@ const openMap = (userId) => {
     countrySelect.style.display = 'none';
     controlsContainer.append(countrySelect);
 
+    const showSelect = makeSelect([['guesses', 'and show the corresponding guesses.'],
+                                   ['locs', 'and show the corresponding locations.']],
+                                  SHOW_SELECT_ID);
+    controlsContainer.append(showSelect);
+
+    const checkboxDiv = document.createElement('div');
+    const linesCheckbox = makeStyledElement('input', {verticalAlign: 'middle', margin: '0 1ex 0 0'});
+    linesCheckbox.type = 'checkbox';
+    linesCheckbox.id = LINES_INPUT_ID;
+    checkboxDiv.append(linesCheckbox);
+    const linesLabel = makeStyledElement('label', {verticalAlign: 'middle'});
+    linesLabel.id = LINES_LABEL_ID;
+    linesLabel.htmlFor = LINES_INPUT_ID;
+    linesLabel.innerHTML = 'Inspect corresponding locations';
+    checkboxDiv.append(linesLabel);
+    controlsContainer.append(checkboxDiv);
+
+    const lineColourSelect = makeSelect([['score', 'Colour by score'],
+                                         ['damage', 'Colour by damage (before multipliers)'],
+                                         ['multidamage', 'Colour by damage (after multipliers)']],
+                                        LINECOLOUR_SELECT_ID);
+    lineColourSelect.style.display = 'none';
+    controlsContainer.append(lineColourSelect);
+
+    const chartContainer = makeStyledElement('div', {
+        position: 'absolute',
+        right: '2vh',
+        bottom: 'calc(17px + 2vh)',
+        width: '50vh',
+        height: '25vh',
+        padding: '1vh',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        borderRadius: '1vh',
+        zIndex: 9999
+    });
+    const chartCanvas = document.createElement('canvas');
+    chartContainer.append(chartCanvas);
+
     const olStyleSheet = document.createElement('style');
     let styles = GM_getResourceText('openlayersCSS');
     styles += `#${ANALYSIS_MAP_ID} * { font-family: sans-serif; font-size: 0.75rem; }`;
     styles += `.${ANALYSIS_MAP_TILES_CLASS} { filter: grayscale(100%) brightness(50%); }`;
     styles += `.${ANALYSIS_CONTROLS_CLASS} input { padding: 0; border:0; color: white; background-color: transparent; }`;
-    styles += `.${ANALYSIS_CONTROLS_CLASS} > * { padding: 0; border:0; color: white; background-color: transparent; margin-bottom: 0.5em }`;
+    styles += `.${ANALYSIS_CONTROLS_CLASS} > * { padding: 0; border:0; color: white; background-color: transparent; }`;
     styles += `.ol-viewport { border-radius: 1vh }`;
     olStyleSheet.innerHTML = styles;
     olStyleSheet.type = 'text/css';
@@ -191,42 +251,74 @@ const openMap = (userId) => {
     modal.append(chartContainer);
     document.body.append(modal);
 
+
+    /* ===== Event handlers ===== */
+
     for (const control of [fromDateInput, toDateInput, gameModeSelect]) {
         control.addEventListener('change', () => {
-            fetchRounds(userId).then(makeDataLayers);
+            fetchRounds(userId).then(makeHeatLayer);
         });
     }
-    modeSelect.addEventListener('change', () => {
-        countrySelect.style.display = modeSelect.value == 'country' ? null : 'none';
-        if (['show', 'country'].includes(modeSelect.value)) {
+    selectSelect.addEventListener('change', () => {
+        if (selectSelect.value == 'guesses') {
+            if (filterSelect.value == 'country') {
+                filterSelect.value = 'polygon';
+                filterSelect.dispatchEvent(new Event('change'));
+            }
+            filterSelect.querySelector("option[value='country']").disabled = true;
+        } else if (selectSelect.value == 'locs') {
+            filterSelect.querySelector("option[value='country']").disabled = false;
+        }
+        makeHeatLayer();
+    });
+    filterSelect.addEventListener('change', () => {
+        countrySelect.style.display = filterSelect.value == 'country' ? null : 'none';
+        if (filterSelect.value == 'country' ||
+            filterSelect.value == 'none')
+        {
             selectSource.clear();
             map.removeInteraction(selectDraw);
-            makeDataLayers();
-        } else if (selectSource.getFeatures().length > 0) makeDataLayers();
-        else {
-            locSource.clear();
+        } else if (filterSelect.value == 'polygon') {
+            heatSource.clear();
+            map.addInteraction(selectDraw);
             chart.data.datasets[0].data = new Array(11).fill(0);
             chart.update();
-            map.addInteraction(selectDraw);
         }
+        makeHeatLayer();
     });
-    countrySelect.addEventListener('change', makeDataLayers);
+
+    countrySelect.addEventListener('change', () => makeHeatLayer());
+
+    showSelect.addEventListener('change', () => {
+        linesLabel.innerHTML = `Inspect corresponding ${showSelect.value == 'guesses' ? 'locations' : 'guesses'}`;
+        makeHeatLayer();
+    });
+
+    linesCheckbox.addEventListener('change', () => {
+        lineColourSelect.style.display = linesCheckbox.checked ? null : 'none';
+        if (! linesCheckbox.checked) pairsSource.clear();
+    });
+
+
+    /* ===== OpenLayers ===== */
 
     const osmLayer = new ol.layer.Tile({ source: new ol.source.OSM(), className: ANALYSIS_MAP_TILES_CLASS });
     const heatmapLayer = new ol.layer.Heatmap({
-        source: locSource,
+        source: heatSource,
         blur: 15,
         radius: 5,
         weight: 'weight'
     });
     const selectLayer = new ol.layer.Vector({ source: selectSource });
+    const pairsLayer = new ol.layer.Vector({ source: pairsSource });
 
     map = new ol.Map({
         target: ANALYSIS_MAP_ID,
         layers: [
             osmLayer,
+            selectLayer,
             heatmapLayer,
-            selectLayer
+            pairsLayer
         ],
         view: new ol.View({
             center: ol.proj.fromLonLat([0, 0]),
@@ -234,9 +326,20 @@ const openMap = (userId) => {
         })
     });
 
-    map.addInteraction(selectDraw);
-    selectDraw.on('drawstart', () => { selectSource.clear(); });
-    selectDraw.on('drawend', (event) => makeDataLayers(event.feature));
+    selectDraw.on('drawstart', (event) => {
+         event.feature.setStyle(new ol.style.Style({
+             fill: new ol.style.Fill({
+                 color: 'rgba(255, 255, 255, 0.2)'
+             })
+         }));
+        selectSource.clear();
+    });
+    selectDraw.on('drawend', (event) => makeHeatLayer(event.feature));
+
+    map.on('pointermove', drawPairs);
+
+
+    /* ===== Chart ===== */
 
     const color = 'rgba(255, 255, 255, 0.6)';
     chart = new Chart(chartCanvas, {
@@ -256,7 +359,11 @@ const openMap = (userId) => {
         }
     });
 
-    fetchRounds(userId).then(makeDataLayers);
+
+    /* ===== Initialise ===== */
+
+    map.addInteraction(selectDraw);
+    fetchRounds(userId).then(makeHeatLayer);
 };
 
 const getControls = () => {
@@ -264,8 +371,12 @@ const getControls = () => {
         fromDate: document.getElementById(FROM_DATE_INPUT_ID).value,
         toDate: document.getElementById(TO_DATE_INPUT_ID).value,
         gameMode: document.getElementById(GAME_MODE_SELECT_ID).value,
-        mode: document.getElementById(MODE_SELECT_ID).value,
-        country: document.getElementById(COUNTRY_SELECT_ID).value
+        select: document.getElementById(SELECT_SELECT_ID).value,
+        filter: document.getElementById(FILTER_SELECT_ID).value,
+        country: document.getElementById(COUNTRY_SELECT_ID).value,
+        show: document.getElementById(SHOW_SELECT_ID).value,
+        lines: document.getElementById(LINES_INPUT_ID).checked,
+        linecolour: document.getElementById(LINECOLOUR_SELECT_ID).value
     };
 };
 
@@ -284,52 +395,72 @@ const fetchRounds = async (userId) => {
     for (const duel of duels) {
         allRounds.push(...duel.rounds.filter((round) => round.ourGuess));
     }
+    guessIndex = new KDBush(allRounds.length);
+    locIndex = new KDBush(allRounds.length);
+    for (const round of allRounds) {
+        /* We ignore the wraparound at +- 180 degrees longitude. This is a bug, but because
+           we're unlikely to have to index anything in a reasonably wide band around it,
+           we'll let it slide for now. */
+        guessIndex.add(round.ourGuess.lng, round.ourGuess.lat);
+        locIndex.add(round.panorama.lng, round.panorama.lat);
+    }
+    guessIndex.finish();
+    locIndex.finish();
 };
 
-const makeDataLayers = (selectFeature = null) => {
+const makeHeatLayer = (selectFeature = null) => {
     const controls = getControls();
     let features = null;
 
     const selectFeatures = selectSource.getFeatures();
     if (! selectFeature && selectFeatures.length > 0) selectFeature = selectFeatures[0];
-    locSource.clear();
-    if (['guess', 'loc'].includes(controls.mode) && ! selectFeature) return;
-    let activeRounds = [];
 
-    if (controls.mode == 'show') {
-        features = allRounds.map((round) => {
-            return new ol.Feature({
-                geometry: new ol.geom.Point(ol.proj.fromLonLat([round.ourGuess.lng, round.ourGuess.lat])),
-                weight: 10000/allRounds.length
-            });
-        });
+    heatSource.clear();
+
+    activeRounds = [];
+    activeRoundIndexes = [];
+    if (controls.filter == 'polygon' && selectFeature) {
+        const selectGeom = selectFeature.getGeometry();
+        if (controls.select == 'locs') {
+            activeRoundIndexes = locIndex
+                .range(...ol.proj.transformExtent(selectGeom.getExtent(), 'EPSG:3857', 'EPSG:4326'));
+            activeRounds = activeRoundIndexes
+                .map((i) => allRounds[i])
+                .filter((round) =>
+                        selectGeom.intersectsCoordinate(ol.proj.fromLonLat([round.panorama.lng, round.panorama.lat])));
+        } else if (controls.select == 'guesses') {
+            activeRoundIndexes = guessIndex
+                .range(...ol.proj.transformExtent(selectGeom.getExtent(), 'EPSG:3857', 'EPSG:4326'));
+            activeRounds = activeRoundIndexes
+                .map((i) => allRounds[i])
+                .filter((round) =>
+                        selectGeom.intersectsCoordinate(ol.proj.fromLonLat([round.ourGuess.lng, round.ourGuess.lat])));
+        }
+    } else if (controls.filter == 'country') {
+        // country filtering is only active when we are selecting locations
+        for (let i = 0; i < allRounds.length; ++i) {
+            if (allRounds[i].panorama.countryCode == controls.country) {
+                activeRounds.push(allRounds[i]);
+                activeRoundIndexes.push(i);
+            }
+        }
+    } else if (controls.filter == 'none') {
+        activeRoundIndexes = Array(allRounds.length).fill().map((e, i) => i);
         activeRounds = allRounds;
-    } else if (controls.mode == 'guess') {
-        activeRounds = allRounds.filter((round) =>
-            selectFeature.getGeometry().intersectsCoordinate(ol.proj.fromLonLat([round.ourGuess.lng, round.ourGuess.lat])));
-        features = activeRounds.map((round) => {
-            return new ol.Feature({
+    }
+
+    if (controls.show == 'locs') {
+        features = activeRounds.map((round) =>
+            new ol.Feature({
                 geometry: new ol.geom.Point(ol.proj.fromLonLat([round.panorama.lng, round.panorama.lat])),
                 weight: 10000/activeRounds.length
-            });
-        });
-    } else if (controls.mode == 'loc') {
-        activeRounds = allRounds.filter((round) =>
-            selectFeature.getGeometry().intersectsCoordinate(ol.proj.fromLonLat([round.panorama.lng, round.panorama.lat])));
-        features = activeRounds.map((round) => {
-            return new ol.Feature({
+            }));
+    } else if (controls.show == 'guesses') {
+        features = activeRounds.map((round) =>
+            new ol.Feature({
                 geometry: new ol.geom.Point(ol.proj.fromLonLat([round.ourGuess.lng, round.ourGuess.lat])),
                 weight: 10000/activeRounds.length
-            });
-        });
-    } else if (controls.mode == 'country') {
-        activeRounds = allRounds.filter((round) => round.panorama.countryCode == controls.country);
-        features = activeRounds.map((round) => {
-            return new ol.Feature({
-                geometry: new ol.geom.Point(ol.proj.fromLonLat([round.ourGuess.lng, round.ourGuess.lat])),
-                weight: 10000/activeRounds.length
-            });
-        });
+            }));
     }
 
     if (chart) {
@@ -339,7 +470,51 @@ const makeDataLayers = (selectFeature = null) => {
         chart.update();
     }
 
-    if (features) locSource.addFeatures(features);
+    if (features) heatSource.addFeatures(features);
+};
+
+const drawPairs = (event) => {
+    if (event.dragging) return;
+    if (! locIndex || ! guessIndex) return;
+    const controls = getControls();
+    if (! controls.lines) return;
+
+    const radius = Math.min(map.getView().getResolution() * 100, 200000); // 100 pixels, but at most 200 km
+    const centre = ol.proj.toLonLat(event.coordinate);
+    const searchBox = radiusToExtent(...centre, radius);
+    const guessesNotLocs = controls.show == 'guesses';
+    const candidates =
+          (guessesNotLocs ? guessIndex.range(...searchBox) : locIndex.range(...searchBox))
+          .filter((i) => activeRoundIndexes.includes(i))
+          .map((i) => allRounds[i]);
+
+    pairsSource.clear();
+    const focusCircle = new ol.Feature(new ol.geom.Circle(event.coordinate, radius));
+    focusCircle.setStyle(new ol.style.Style({ fill: new ol.style.Fill({ color: 'rgba(255, 255, 255, 0.2)' }) }));
+    pairsSource.addFeature(focusCircle);
+
+    for (const candidate of candidates) {
+        const measure =
+              new ol.geom.LineString([
+                  ol.proj.fromLonLat(centre),
+                  ol.proj.fromLonLat(guessesNotLocs ? [candidate.ourGuess.lng, candidate.ourGuess.lat] :
+                                     [candidate.panorama.lng, candidate.panorama.lat])]);
+        if (measure.getLength() < radius) {
+            const pairLine = new ol.Feature(new ol.geom.LineString([
+                    ol.proj.fromLonLat([candidate.ourGuess.lng, candidate.ourGuess.lat]),
+                    ol.proj.fromLonLat([candidate.panorama.lng, candidate.panorama.lat])
+                ]));
+            const damage = candidate.ourGuess.score - (candidate.theirGuess.score ? candidate.theirGuess.score : 0);
+            pairLine.setStyle(new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                    width: 2,
+                    color: controls.linecolour == 'score' ? lineColour(candidate.ourGuess.score, 0, 5000) :
+                           controls.linecolour == 'damage' ? lineColour(damage, -5000, 5000)
+                                                           : lineColour(damage * candidate.multiplier, -6000, 6000)
+                })}));
+            pairsSource.addFeature(pairLine);
+        }
+    }
 };
 
 const run = async (mutations) => {

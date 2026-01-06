@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Character Enhancer Pro
 // @namespace    http://tampermonkey.net/
-// @version      6.8
+// @version      6.9
 // @description  Complete character page enhancements: VIP visuals, talkboxes, achievement remapping, cash/star quality/points overrides, health/mood bars
 // @author       You
 // @match        https://*.popmundo.com/World/Popmundo.aspx/Character*
@@ -228,6 +228,7 @@
         '3577905': { 'Achievement_331': 'Achievement_290', 'Achievement_247': 'Achievement_129', 'Achievement_51': 'Achievement_264' },
         '3616012': { 'Achievement_428': 'Achievement_290', 'Achievement_340': 'Achievement_285', 'Achievement_80': 'Achievement_330' },
         '3579423': { 'Achievement_238': 'Achievement_404', 'Achievement_357': 'Achievement_238', 'Achievement_315': 'Achievement_400' },
+        '3602139': { 'Achievement_359': 'Achievement_227', 'Achievement_428': 'Achievement_82', 'Achievement_429': 'Achievement_362' },
     };
 
     const genericReplacements = {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck custom
 // @namespace    custom.Para_Thenics.torn.com
-// @version      0.0.0
+// @version      0.0.1
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -9,7 +9,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/561508/Arson%20bang%20for%20buck%20custom.user.js
 // @updateURL https://update.greasyfork.org/scripts/561508/Arson%20bang%20for%20buck%20custom.meta.js
 // ==/UserScript==
-
+ 
 // forked from https://greasyfork.org/en/scripts/556165-arson-bang-for-buck
 
 (function() {
@@ -77,6 +77,9 @@
   const ARSON_SCENARIOS = [
     {name: "A Fungus Among Us", payout: 38000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "A Fungus Among Us", payout: 34000, ignition: "flamethrower", materials: {gasoline: 1}},
+
+    {name: "A Problem Shared", payout: 180000, ignition: "lighter", materials: {gasoline: 6}, stoke: {gasoline: 1}},
+    {name: "A Problem Shared", payout: 180000, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}},
 
     {name: "Arson Around", payout: 110000, ignition: "lighter", materials: {gasoline: 2}, evidence: {toothbrush: 1}},
     {name: "Arson Around", payout: 110000, ignition: "flamethrower", materials: {gasoline: 2}, evidence: {toothbrush: 1}, stoke: {flamethrower: 1}},
@@ -243,7 +246,7 @@
 
     {name: "Fire in the Belly", payout: 17000, ignition: "flamethrower", materials: {gasoline: 1}},
 
-    {name: "Fire Kills 99.9% of Bacteria", payout: 295000, ignition: "lighter", materials: {hydrogenTank: 1}},
+    {name: "Fire Kills 99.9% of Bacteria", payout: 305000, ignition: "lighter", materials: {hydrogenTank: 1}},
 
     {name: "Fire Sale", payout: 110000, ignition: "lighter", materials: {methaneTank: 1}},
 
@@ -435,7 +438,7 @@
 
     {name: "Planted", payout: 120000, ignition: "lighter", materials: {gasoline: 1}, evidence: {peleCharm: 1}},
 
-    {name: "Playing With Fire", payout: 200000, ignition: "lighter", materials: {gasoline: 2}},
+    {name: "Playing With Fire", payout: 210000, ignition: "lighter", materials: {gasoline: 2}},
 
     {name: "Point of No Return", payout: 90000, ignition: "lighter", materials: {gasoline: 1, thermite: 1}, stoke: {magnesiumShavings: 2}},
 
@@ -620,6 +623,7 @@
   let apiKey = localStorage.getItem("tornApiKey") || "";
   let itemValues = {};
   let highlightThresholds = { ...DEFAULT_HIGHLIGHT_THRESHOLDS };
+  let lastApiUpdate = parseInt(localStorage.getItem("lastApiUpdate") || "0");
 
   function loadItemValues() {
     const savedValues = localStorage.getItem("itemValues");
@@ -642,6 +646,13 @@
 
   function saveItemValues() {
     localStorage.setItem("itemValues", JSON.stringify(itemValues));
+    lastApiUpdate = Date.now();
+    localStorage.setItem("lastApiUpdate", lastApiUpdate.toString());
+  }
+
+  function saveLastApiUpdate() {
+    lastApiUpdate = Date.now();
+    localStorage.setItem("lastApiUpdate", lastApiUpdate.toString());
   }
 
   function loadHighlightThresholds() {
@@ -658,6 +669,12 @@
 
   function saveHighlightThresholds() {
     localStorage.setItem("highlightValues", JSON.stringify(highlightThresholds));
+  }
+
+  function shouldUpdatePrices() {
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    const timeSinceLastUpdate = Date.now() - lastApiUpdate;
+    return timeSinceLastUpdate > TWENTY_FOUR_HOURS;
   }
 
   // Initialize state
@@ -723,6 +740,7 @@
 
       if (data.error) {
         console.error("[ArsonBangForBuck] Torn API error:", data.error.error);
+        alert(`API Error: ${data.error.error}\n\nPlease check your API key in Settings.`);
         return false;
       }
 
@@ -738,6 +756,7 @@
       if (Object.keys(updatedValues).length > 0) {
         itemValues = { ...itemValues, ...updatedValues };
         saveItemValues();
+        saveLastApiUpdate();
         console.log("[ArsonBangForBuck] Updated item values:", updatedValues);
         return true;
       } else {
@@ -746,9 +765,39 @@
       }
     } catch (error) {
       console.error("[ArsonBangForBuck] Network or fetch error:", error);
+      alert(`Failed to fetch item prices: ${error.message}\n\nPlease check your internet connection.`);
       return false;
     }
   }
+
+  // Auto-update prices if cache is older than 24 hours
+  async function autoUpdatePricesIfNeeded() {
+    if (apiKey && shouldUpdatePrices()) {
+      console.log("[ArsonBangForBuck] Item prices cache expired, fetching new prices...");
+      const success = await fetchItemPricesFromApi();
+      if (success) {
+        console.log("[ArsonBangForBuck] Auto-update successful");
+        attachTooltipToScenario(); // Refresh tooltips with new values
+      }
+    }
+  }
+
+  // ============================================================================
+  // PAGE DETECTION
+  // ============================================================================
+
+  function isArsonPage() {
+    const arsonTitle = document.querySelector('.heading___dOsMq');
+    return arsonTitle && arsonTitle.textContent.trim() === "Arson";
+  }
+
+  // Exit early if not on Arson page
+  if (!isArsonPage()) {
+    console.log("[ArsonBangForBuck] Not on Arson page, script inactive.");
+    return;
+  }
+
+  console.log("[ArsonBangForBuck] Arson page detected, initializing...");
 
   // ============================================================================
   // CALCULATION UTILITIES
@@ -1635,4 +1684,7 @@
   // Initial run
   attachTooltipToScenario();
   attachScenarioClickListeners();
+
+  // Auto-update prices if needed (non-blocking)
+  autoUpdatePricesIfNeeded();
 })();

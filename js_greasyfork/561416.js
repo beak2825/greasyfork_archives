@@ -40,50 +40,50 @@
 // @name:vi      YouTubeAdSolutions
 // @name:zh-CN   YouTubeAdSolutions
 // @name:zh-TW   YouTubeAdSolutions
-// @description         Combines bass boost, 1000% volume, intelligent ad-block speedup, and Shorts support.
-// @description:ar      يجمع بين تعزيز الباس، صوت 1000%، تسريع حظر الإعلانات الذكي، ودعم الشورتس.
-// @description:be      Комбінуе bass boost, гучнасць 1000%, інтэлектуальнае прыцягненне блякавання рэкламы і падтрымку Shorts.
-// @description:bg      Комбинира бас буст, 1000% сила, интелигентно ускоряване на блокиране на реклами и поддръжка на Shorts.
-// @description:ckb     هەموو بەس بوست، دەنگی ١٠٠٠٪، خێراکی زیرەک لە کۆتکردنەوەی ڕیکلامەکان، و پشتگیری Shorts.
-// @description:cs      Kombinuje basový posilovač, 1000% hlasitost, inteligentní urychlení blokování reklam a podporu Shorts.
-// @description:da      Kombinerer bas boost, 1000% volumen, intelligent annonceringsblokering og Shorts-understøttelse.
-// @description:de      Kombiniert Bass-Boost, 1000% Lautstärke, intelligente Ad-Block-Beschleunigung und Shorts-Unterstützung.
-// @description:el      Συνδυάζει ενίσχυση μπάσων, ένταση 1000%, έξυπνη επιτάχυνση μπλοκ διαφημίσεων και υποστήριξη Shorts.
-// @description:en      Combines bass boost, 1000% volume, intelligent ad-block speedup, and Shorts support.
-// @description:eo      Kombinas bass-plifortigo, 1000% sono, inteligenta reklamŝildo-akcelo, kaj Shorts subteno.
-// @description:es      Combina refuerzo de graves, volumen 1000%, aceleración inteligente de bloqueo de anuncios y soporte Shorts.
-// @description:es-419  Combina refuerzo de graves, volumen 1000%, aceleración inteligente de bloqueo de anuncios y soporte Shorts.
-// @description:fi      Yhdistää bass boostin, 1000% äänenvoimakkuuden, älykkään mainosesto-nopeuden ja Shorts-tuen.
-// @description:fr      Combine boost de basse, volume 1000%, accélération intelligente de blocage de pubs et support Shorts.
-// @description:fr-CA   Combine boost de basse, volume 1000%, accélération intelligente de blocage de pubs et support Shorts.
-// @description:he      משלב הגברת באס, עוצמת קול של 1000%, האצת חסימת פרסומות חכמה ותמיכה ב-Shorts.
-// @description:hr      Kombinira pojačanje basa, 1000% volumen, inteligentno ubrzanje blokiranja oglasa i podršku za Shorts.
-// @description:hu      Kombinálja a basszuskiemelést, az 1000%-os hangerőt, az intelligens hirdetésblokkoló-gyorsítást és a Shorts támogatást.
-// @description:id      Menggabungkan peningkatan bass, volume 1000%, akselerasi blokir iklan cerdas, dan dukungan Shorts.
-// @description:it      Combina bass boost, volume al 1000%, accelerazione intelligente del blocco degli annunci e supporto per i Shorts.
-// @description:ja      ベースブースト、1000%ボリューム、インテリジェントな広告ブロック加速、Shortsサポートを組み合わせたもの。
-// @description:ka      აერთიანებს ბასის გაძლიერებას, 1000% ხმას, რეკლამის დაბლოკვის ინტელექტუალურ დაჩქარებას და Shorts მხარდაჭერას.
-// @description:ko      베이스 부스트, 1000% 볼륨, 지능형 광고 차단 가속 및 Shorts 지원을 결합합니다.
-// @description:mr      बास बूस्ट, 1000% आवाज, इंटेलिजेंट जाहिरात-ब्लॉक प्रवेग आणि शॉर्ट्स सपोर्ट एकत्र करते.
-// @description:nb      Kombinerer bassboost, 1000 % volum, intelligent annonseblokkeringsakselerasjon og Shorts-støtte.
-// @description:nl      Combineert bass boost, 1000% volume, intelligente advertentieblokkeringversnelling en Shorts-ondersteuning.
-// @description:pl      Łączy wzmocnienie basów, 1000% głośności, inteligentne przyspieszanie blokowania reklam i obsługę Shorts.
-// @description:pt-BR   Combina reforço de graves, volume de 1000%, aceleração inteligente de bloqueio de anúncios e suporte a Shorts.
-// @description:ro      Combină amplificarea basului, volumul de 1000%, accelerarea inteligentă a blocării reclamelor și suportul pentru Shorts.
-// @description:ru      Сочетает в себе усиление басов, 1000% громкость, интеллектуальное ускорение блокировки рекламы и поддержку Shorts.
-// @description:sk      Kombinuje zosilnenie basov, 1000% hlasitosť, inteligentné zrýchlenie blokovania reklám a podporu Shorts.
-// @description:sr      Комбинује појачање баса, 1000% јачину звука, интелигентно убрзање блокирања огласа и подршку за Shorts.
-// @description:sv      Kombinerar basförstärkning, 1000 % volym, intelligent annonsblockeringsacceleration och Shorts-stöd.
-// @description:th      ผสมผสานการเพิ่มเบส, ระดับเสียง 1000%, การเร่งความเร็วการบล็อกโฆษณาอัจฉริยะ และการรองรับ Shorts
-// @description:tr      Bas güçlendirme, %1000 ses düzeyi, akıllı reklam engelleme hızlandırma ve Shorts desteğini birleştirir.
-// @description:uk      Поєднує посилення басів, 1000% гучності, інтелектуальне прискорення блокування реклами та підтримку Shorts.
-// @description:ug      بۇ باس كۈچەيتىش، 1000% ئاۋاز مىقدارى، ئەقلىي ئىقتىدارلىق ئېلان توسۇشنى تېزلىتىش ۋە Shorts قوللاشنى بىرلەشتۈرگەن.
-// @description:vi      Kết hợp tăng cường âm trầm, âm lượng 1000%, tăng tốc chặn quảng cáo thông minh và hỗ trợ Shorts.
-// @description:zh-CN   结合了低音增强、1000% 音量、智能广告拦截加速和 Shorts 支持。
-// @description:zh-TW   結合了低音增強、1000% 音量、智能廣告攔截加速和 Shorts 支持。
+// @description         Combines bass boost, 1000% volume, intelligent ad-block speedup, Picture-in-Picture & Shorts support
+// @description:ar      يجمع بين تعزيز الباس، صوت 1000%، تسريع حظر الإعلانات الذكي، Picture-in-Picture ودعم الشورتس
+// @description:be      Комбінуе bass boost, гучнасць 1000%, інтэлектуальнае прыцягненне блякавання рэкламы, Picture-in-Picture і падтрымку Shorts
+// @description:bg      Комбинира бас буст, 1000% сила, интелигентно ускоряване на блокиране на реклами, Picture-in-Picture и поддръжка на Shorts
+// @description:ckb     هەموو بەس بوست، دەنگی ١٠٠٠٪، خێراکی زیرەک لە کۆتکردنەوەی ڕیکلامەکان، Picture-in-Picture و پشتگیری Shorts
+// @description:cs      Kombinuje basový posilovač, 1000% hlasitost, inteligentní urychlení blokování reklam, Picture-in-Picture a podporu Shorts
+// @description:da      Kombinerer bas boost, 1000% volumen, intelligent annonceringsblokering, Picture-in-Picture og Shorts-understøttelse
+// @description:de      Kombiniert Bass-Boost, 1000% Lautstärke, intelligente Ad-Block-Beschleunigung, Picture-in-Picture und Shorts-Unterstützung
+// @description:el      Συνδυάζει ενίσχυση μπάσων, ένταση 1000%, έξυπνη επιτάχυνση μπλοκ διαφημίσεων, Picture-in-Picture και υποστήριξη Shorts
+// @description:en      Combines bass boost, 1000% volume, intelligent ad-block speedup, Picture-in-Picture & Shorts support
+// @description:eo      Kombinas bass-plifortigo, 1000% sono, inteligenta reklamŝildo-akcelo, Picture-in-Picture kaj Shorts subteno
+// @description:es      Combina refuerzo de graves, volumen 1000%, aceleración inteligente de bloqueo de anuncios, Picture-in-Picture y soporte Shorts
+// @description:es-419  Combina refuerzo de graves, volumen 1000%, aceleración inteligente de bloqueo de anuncios, Picture-in-Picture y soporte Shorts
+// @description:fi      Yhdistää bass boostin, 1000% äänenvoimakkuuden, älykkään mainosesto-nopeuden, Picture-in-Picture ja Shorts-tuen
+// @description:fr      Combine boost de basse, volume 1000%, accélération intelligente de blocage de pubs, Picture-in-Picture et support Shorts
+// @description:fr-CA   Combine boost de basse, volume 1000%, accélération intelligente de blocage de pubs, Picture-in-Picture et support Shorts
+// @description:he      משלב הגברת באס, עוצמת קול של 1000%, האצת חסימת פרסומות חכמה, Picture-in-Picture ותמיכה ב-Shorts
+// @description:hr      Kombinira pojačanje basa, 1000% volumen, inteligentno ubrzanje blokiranja oglasa, Picture-in-Picture i podršku za Shorts
+// @description:hu      Kombinálja a basszuskiemelést, az 1000%-os hangerőt, az intelligens hirdetésblokkoló-gyorsítást, Picture-in-Picture és Shorts támogatást
+// @description:id      Menggabungkan peningkatan bass, volume 1000%, akselerasi blokir iklan cerdas, Picture-in-Picture dan dukungan Shorts
+// @description:it      Combina bass boost, volume al 1000%, accelerazione intelligente del blocco degli annunci, Picture-in-Picture e supporto Shorts
+// @description:ja      ベースブースト、1000%ボリューム、インテリジェントな広告ブロック加速、Picture-in-PictureとShortsサポートを組み合わせたもの
+// @description:ka      აერთიანებს ბასის გაძლიერებას, 1000% ხმას, რეკლამის დაბლოკვის ინტელექტუალურ დაჩქარებას, Picture-in-Picture და Shorts მხარდაჭერას
+// @description:ko      베이스 부스트, 1000% 볼륨, 지능형 광고 차단 가속, Picture-in-Picture 및 Shorts 지원을 결합합니다
+// @description:mr      बास बूस्ट, 1000% आवाज, इंटेलिजेंट जाहिरात-ब्लॉक प्रवेग, Picture-in-Picture आणि शॉर्ट्स सपोर्ट एकत्र करते
+// @description:nb      Kombinerer bassboost, 1000 % volum, intelligent annonseblokkeringsakselerasjon, Picture-in-Picture og Shorts-støtte
+// @description:nl      Combineert bass boost, 1000% volume, intelligente advertentieblokkeringversnelling, Picture-in-Picture en Shorts-ondersteuning
+// @description:pl      Łączy wzmocnienie basów, 1000% głośności, inteligentne przyspieszanie blokowania reklam, Picture-in-Picture i obsługę Shorts
+// @description:pt-BR   Combina reforço de graves, volume de 1000%, aceleração inteligente de bloqueio de anúncios, Picture-in-Picture e suporte a Shorts
+// @description:ro      Combină amplificarea basului, volumul de 1000%, accelerarea inteligentă a blocării reclamelor, Picture-in-Picture și suport Shorts
+// @description:ru      Сочетает усиление басов, 1000% громкость, интеллектуальное ускорение блокировки рекламы, Picture-in-Picture и поддержку Shorts
+// @description:sk      Kombinuje zosilnenie basov, 1000% hlasitosť, inteligentné zrýchlenie blokovania reklám, Picture-in-Picture a podporu Shorts
+// @description:sr      Комбинује појачање баса, 1000% јачину звука, интелигентно убрзање блокирања огласа, Picture-in-Picture и подршку Shorts
+// @description:sv      Kombinerar basförstärkning, 1000 % volym, intelligent annonsblockeringsacceleration, Picture-in-Picture och Shorts-stöd
+// @description:th      ผสมผสานการเพิ่มเบส, ระดับเสียง 1000%, การเร่งความเร็วการบล็อกโฆษณาอัจฉริยะ, Picture-in-Picture และการรองรับ Shorts
+// @description:tr      Bas güçlendirme, %1000 ses düzeyi, akıllı reklam engelleme hızlandırma, Picture-in-Picture ve Shorts desteğini birleştirir
+// @description:uk      Поєднує посилення басів, 1000% гучності, інтелектуальне прискорення блокування реклами, Picture-in-Picture та підтримку Shorts
+// @description:ug      بۇ باس كۈچەيتىش، 1000% ئاۋاز مىقدارى، ئەقلىي ئىقتىدارلىق ئېلان توسۇشنى تېزلىتىش، Picture-in-Picture ۋە Shorts قوللاشنى بىرلەشتۈرگەن
+// @description:vi      Kết hợp tăng cường âm trầm, âm lượng 1000%, tăng tốc chặn quảng cáo thông minh, Picture-in-Picture và hỗ trợ Shorts
+// @description:zh-CN   结合低音增强、1000%音量、智能广告拦截加速、Picture-in-Picture和Shorts支持
+// @description:zh-TW   結合低音增強、1000%音量、智能廣告攔截加速、Picture-in-Picture和Shorts支持
 
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @author       Pascal
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/ee47b5e0/img/logos/favicon_144x144.png
@@ -262,47 +262,66 @@
         return { $container, $slider, $label };
     }
 
-    function setupUI() {
+   function setupUI() {
         const timeDisp = document.querySelector('.ytp-time-display');
+        const rightControls = document.querySelector('.ytp-right-controls');
         const videoPlayer = document.querySelector('#movie_player');
-        if (!timeDisp || !videoPlayer || document.querySelector('.' + tripleControlClass)) return;
 
-        const savedVol = localStorage.getItem('custom-player-volume') ?? 0.4;
-        videoPlayer.setVolume((savedVol**2)*100);
+        if (!videoPlayer) return;
 
-        // Volume Control
-        const vol = createControlPair('#FF0000', 'Volume');
-        vol.$slider.min = '0'; vol.$slider.max = '1'; vol.$slider.step = '0.01'; vol.$slider.value = savedVol;
-        vol.$label.textContent = Math.round((savedVol**2)*100) + "%";
-        vol.$slider.oninput = () => {
-            videoPlayer.setVolume((vol.$slider.value**2)*100);
-            vol.$label.textContent = Math.round((vol.$slider.value**2)*100) + "%";
-        };
-        vol.$slider.onchange = () => localStorage.setItem('custom-player-volume', vol.$slider.value);
+        // --- TEIL A: AUDIO REGLER (Links) ---
+        if (timeDisp && !document.querySelector('.' + tripleControlClass)) {
+            const savedVol = localStorage.getItem('custom-player-volume') ?? 0.4;
+            videoPlayer.setVolume((savedVol**2)*100);
 
-        // Booster Control (Safe)
-        const boost = createControlPair('#FFFF00', 'Booster');
-        boost.$slider.min = '1'; boost.$slider.max = '10'; boost.$slider.step = '0.1'; boost.$slider.value = '1';
-        boost.$label.textContent = "1x";
-        boost.$slider.oninput = () => {
-            initAudio();
-            if(gainNode) gainNode.gain.value = boost.$slider.value;
-            boost.$label.textContent = boost.$slider.value + "x";
-        };
+            const vol = createControlPair('#FF0000', 'Volume');
+            vol.$slider.min = '0'; vol.$slider.max = '1'; vol.$slider.step = '0.01'; vol.$slider.value = savedVol;
+            vol.$label.textContent = Math.round((savedVol**2)*100) + "%";
+            vol.$slider.oninput = () => {
+                videoPlayer.setVolume((vol.$slider.value**2)*100);
+                vol.$label.textContent = Math.round((vol.$slider.value**2)*100) + "%";
+            };
+            vol.$slider.onchange = () => localStorage.setItem('custom-player-volume', vol.$slider.value);
 
-        // Bass Control (Safe)
-        const bass = createControlPair('#FFA500', 'Bass');
-        bass.$slider.min = '0'; bass.$slider.max = '30'; bass.$slider.step = '1'; bass.$slider.value = '0';
-        bass.$label.textContent = "0dB";
-        bass.$slider.oninput = () => {
-            initAudio();
-            if(bassFilter) bassFilter.gain.value = bass.$slider.value;
-            bass.$label.textContent = bass.$slider.value + "dB";
-        };
+            const boost = createControlPair('#FFFF00', 'Booster');
+            boost.$slider.min = '1'; boost.$slider.max = '10'; boost.$slider.step = '0.1'; boost.$slider.value = '1';
+            boost.$label.textContent = "1x";
+            boost.$slider.oninput = () => {
+                initAudio();
+                if(gainNode) gainNode.gain.value = boost.$slider.value;
+                boost.$label.textContent = boost.$slider.value + "x";
+            };
 
-        timeDisp.after(bass.$container);
-        timeDisp.after(boost.$container);
-        timeDisp.after(vol.$container);
+            const bass = createControlPair('#FFA500', 'Bass');
+            bass.$slider.min = '0'; bass.$slider.max = '30'; bass.$slider.step = '1'; bass.$slider.value = '0';
+            bass.$label.textContent = "0dB";
+            bass.$slider.oninput = () => {
+                initAudio();
+                if(bassFilter) bassFilter.gain.value = bass.$slider.value;
+                bass.$label.textContent = bass.$slider.value + "dB";
+            };
+
+            timeDisp.after(bass.$container);
+            timeDisp.after(boost.$container);
+            timeDisp.after(vol.$container);
+        }
+
+        // --- TEIL B: PiP BUTTON (Rechts) ---
+        if (rightControls && !document.getElementById('custom-pip-button')) {
+            const pipBtn = document.createElement('button');
+            pipBtn.id = 'custom-pip-button';
+            pipBtn.className = 'ytp-button';
+            pipBtn.title = 'Picture-in-Picture (P)';
+            pipBtn.style.display = 'inline-flex';
+            pipBtn.style.alignItems = 'center';
+            pipBtn.style.justifyContent = 'center';
+            pipBtn.innerHTML = `
+                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none">
+                    <path d="M19 11h-8v6h8v-6zm4 8V4.98C23 3.88 22.1 3 21 3H3c-1.1 0-2 .88-2 1.98V19c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zm-2 .02H3V4.97h18v14.05z" fill="white"/>
+                </svg>`;
+            pipBtn.onclick = (e) => { e.preventDefault(); togglePiP(); };
+            rightControls.prepend(pipBtn);
+        }
     }
 
     function setupShortsUI() {
@@ -324,13 +343,38 @@
         document.body.appendChild($shortsSlider);
     }
 
+    // --- NEUE LOGIK: MANUELLE PAUSE ERKENNEN ---
+    let userPaused = false;
+
+    window.addEventListener('pause', () => {
+        if (!document.hidden) {
+            userPaused = true;
+        }
+    }, true);
+
+    window.addEventListener('play', () => {
+        userPaused = false;
+    }, true);
+
     // --- MAIN LOOP ---
     function runChecks() {
         handleAds();
         applyPremiumLogo();
+
+        const video = document.querySelector('video');
         const isShorts = window.location.pathname.startsWith('/shorts');
         const isWatch = window.location.pathname.startsWith('/watch');
         const $sSlider = document.querySelector('.' + shortsSliderClassname);
+
+        // --- INTELLIGENTE ANTI-PAUSE (HINTERGRUND & POPUPS) ---
+        if (video && video.paused && !video.ended && !isAdActive) {
+            const confirmDialog = document.querySelector('yt-confirm-dialog-renderer, ytd-enforcement-message-view-model, .yt-player-error-message-renderer');
+
+            if (confirmDialog || (document.hidden && !userPaused)) {
+                if (confirmDialog) confirmDialog.remove();
+                video.play().catch(() => { /* Autoplay-Einschränkung vom Browser */ });
+            }
+        }
 
         if (isWatch) { setupUI(); setupDownloader(); }
         if (isShorts) { setupShortsUI(); if ($sSlider) $sSlider.style.display = 'block'; }
@@ -340,8 +384,32 @@
     setInterval(runChecks, SETTINGS.checkInterval);
     const observer = new MutationObserver(runChecks);
     const startObserver = setInterval(() => {
-        if (document.body) { observer.observe(document.body, { childList: true, subtree: true }); clearInterval(startObserver); }
+        if (document.body) {
+            observer.observe(document.body, { childList: true, subtree: true });
+            clearInterval(startObserver);
+        }
     }, 500);
+
+const togglePiP = async () => {
+        const video = document.querySelector('video');
+        if (!video) return;
+        try {
+            if (document.pictureInPictureElement) {
+                await document.exitPictureInPicture();
+            } else {
+                video.disablePictureInPicture = false;
+                await video.requestPictureInPicture();
+            }
+        } catch (error) { console.error('[PiP] Fehler:', error); }
+    };
+
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+        if (e.key.toLowerCase() === 'p') {
+            togglePiP();
+            e.preventDefault();
+        }
+    });
 
     // Cleanup bei Tab Close
     window.addEventListener('beforeunload', () => { if(audioCtx) audioCtx.close(); });

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LANraragi 阅读模式
 // @namespace    https://github.com/Kelcoin
-// @version      4.1
+// @version      4.2
 // @description  为 LANraragi 阅读器添加阅读模式
 // @author       Kelcoin
 // @match        *://*/reader?id=*
@@ -20,7 +20,7 @@
     const BUTTON_ID = 'lrr-reading-toggle-btn';
     const THUMB_BUTTON_ID = 'lrr-reading-thumb-btn';
     const PAGE_INDICATOR_ID = 'lrr-reading-page-indicator';
-    const HITAREA_ID = 'lrr-reading-hitarea';       // 右侧热区
+    const HITAREA_ID = 'lrr-reading-hitarea';        // 右侧热区
     const LEFT_HITAREA_ID = 'lrr-reading-left-hitarea'; // 左侧热区
     const STYLE_ID = 'lrr-reading-style-v2';
     const BODY_READING_CLASS = 'lrr-reading-mode';
@@ -37,7 +37,8 @@
     const DEFAULT_SETTINGS = {
         autoEnter: false,
         btnPosition: 'right', // 'right' | 'left'
-        pageGap: 0
+        pageGap: 0,
+        thumbLayout: 'mirror' // 'mirror' (对侧) | 'stacked' (同侧上方)
     };
 
     let userSettings = { ...DEFAULT_SETTINGS };
@@ -54,6 +55,8 @@
     let btnHideTimer = null; // 统一管理按钮隐藏定时器
     let lastScrollTop = 0;
     let originalApplyContainerWidth = null;
+    let originalGoToPage = null;
+    let readingSessionId = 0;
 
     // 数据缓存
     let archiveData = {
@@ -97,17 +100,34 @@
 
         if (mainBtn && thumbBtn) {
             // 清除之前的定位样式
-            mainBtn.style.left = ''; mainBtn.style.right = '';
-            thumbBtn.style.left = ''; thumbBtn.style.right = '';
+            mainBtn.style.left = ''; mainBtn.style.right = ''; mainBtn.style.bottom = '';
+            thumbBtn.style.left = ''; thumbBtn.style.right = ''; thumbBtn.style.bottom = '';
 
-            if (userSettings.btnPosition === 'right') {
-                // 默认：主按钮在右，缩略图在左
+            const isRight = userSettings.btnPosition === 'right';
+            const isStacked = userSettings.thumbLayout === 'stacked';
+
+            // 1. 设置主按钮位置 (始终在底部30px)
+            if (isRight) {
                 mainBtn.style.right = '15px';
-                thumbBtn.style.left = '15px';
             } else {
-                // 交换：主按钮在左，缩略图在右
                 mainBtn.style.left = '15px';
-                thumbBtn.style.right = '15px';
+            }
+            mainBtn.style.bottom = '30px';
+
+            // 2. 设置缩略图按钮位置
+            if (isStacked) {
+                // 同侧堆叠模式：位置同主按钮，但高度增加
+                if (isRight) thumbBtn.style.right = '15px';
+                else thumbBtn.style.left = '15px';
+                
+                // 主按钮30px底 + 48px高 + 间距(约15px) -> 约95px
+                thumbBtn.style.bottom = '95px';
+            } else {
+                // 镜像模式：在另一侧，高度同主按钮
+                if (isRight) thumbBtn.style.left = '15px';
+                else thumbBtn.style.right = '15px';
+                
+                thumbBtn.style.bottom = '30px';
             }
         }
 
@@ -148,15 +168,56 @@
         }
     }
 
-    function hookReaderFunctions() {
-        if (typeof Reader !== 'undefined' && Reader.applyContainerWidth && !originalApplyContainerWidth) {
+    function hookReaderFunctions(enableHook) {
+        if (typeof Reader === 'undefined') return;
+
+        // === 关闭 hook（退出阅读模式时用）===
+        if (enableHook === false) {
+            if (originalApplyContainerWidth) {
+                Reader.applyContainerWidth = originalApplyContainerWidth;
+                originalApplyContainerWidth = null;
+            }
+            if (originalGoToPage) {
+                Reader.goToPage = originalGoToPage;
+                originalGoToPage = null;
+            }
+            return;
+        }
+
+        // === 开启 hook（进入阅读模式时用）===
+
+        // 1) hook applyContainerWidth：在阅读模式中阻止它乱调图片/容器，退出后彻底还原
+        if (Reader.applyContainerWidth && !originalApplyContainerWidth) {
             originalApplyContainerWidth = Reader.applyContainerWidth;
             Reader.applyContainerWidth = function() {
+                // 阅读模式下，由我们的 CSS 接管图片/容器尺寸，不让原生逻辑插手
                 if (document.body.classList.contains(BODY_READING_CLASS)) {
                     $(".reader-image, .sni").attr("style", "");
                     return;
                 }
+                // 非阅读模式下：完全走原生逻辑
                 return originalApplyContainerWidth.apply(this, arguments);
+            };
+        }
+
+        // 2) hook goToPage：阅读模式下增加“等图片加载完成再刷新自定义 UI”
+        if (Reader.goToPage && !originalGoToPage) {
+            originalGoToPage = Reader.goToPage.bind(Reader);
+            Reader.goToPage = function(pageIndex) {
+                originalGoToPage(pageIndex);
+
+                // 非阅读模式：完全不追加逻辑
+                if (!isReadingMode || !isReadingMode()) return;
+
+                waitForPageImageLoaded(pageIndex).then((loaded) => {
+                    // 会话已结束或图片没成功加载：直接退出
+                    if (!isReadingMode || !isReadingMode()) return;
+                    if (!loaded) return;
+
+                    const info = getPageInfo();
+                    updatePageIndicator();
+                    updateGhosts(info);
+                });
             };
         }
     }
@@ -177,6 +238,105 @@
         if (typeof Reader !== 'undefined' && typeof Reader.doublePageMode !== 'undefined') return Reader.doublePageMode;
         try { return localStorage.getItem('doublePageMode') === 'true'; } catch (e) { }
         return false;
+    }
+
+    // 等待指定页的主图加载完成后再继续（带会话防护）
+    // 依赖全局变量：let readingSessionId = 0; （每次进入阅读模式递增，在退出时设为 0）
+    function waitForPageImageLoaded(pageIndex, timeout = 5000) {
+        // 记录调用时所属的阅读会话 id
+        const sessionId = typeof readingSessionId !== 'undefined' ? readingSessionId : 0;
+
+        return new Promise((resolve) => {
+            // 如果调用时就已经不在有效阅读会话中，直接视为失败/取消
+            if (!sessionId || sessionId !== readingSessionId || !document.body.classList.contains(BODY_READING_CLASS)) {
+                resolve(false);
+                return;
+            }
+
+            const display = document.getElementById('display');
+            if (!display) {
+                resolve(false);
+                return;
+            }
+
+            const targetUrl = getPageUrl(pageIndex);
+            if (!targetUrl) {
+                resolve(false);
+                return;
+            }
+
+            // 当前 Reader 主图（单页或双页）
+            const mainImg =
+                document.getElementById('img') ||
+                display.querySelector('img.reader-image');
+
+            if (!mainImg) {
+                resolve(false);
+                return;
+            }
+
+            const isTargetSrc = () => {
+                const src = mainImg.currentSrc || mainImg.src || '';
+                return src === targetUrl ||
+                       src.startsWith(targetUrl) ||
+                       targetUrl.startsWith(src);
+            };
+
+            // 已是目标图且加载完
+            if (isTargetSrc() && mainImg.complete && mainImg.naturalWidth > 0) {
+                // 只有在会话仍然有效且仍在阅读模式时才算成功
+                if (sessionId && sessionId === readingSessionId && document.body.classList.contains(BODY_READING_CLASS)) {
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+                return;
+            }
+
+            let done = false;
+
+            const cleanup = () => {
+                if (done) return;
+                done = true;
+                mainImg.removeEventListener('load', onLoad);
+                mainImg.removeEventListener('error', onError);
+            };
+
+            const onLoad = () => {
+                // 会话已失效或已退出阅读模式：视为取消
+                if (!sessionId || sessionId !== readingSessionId || !document.body.classList.contains(BODY_READING_CLASS)) {
+                    cleanup();
+                    resolve(false);
+                    return;
+                }
+
+                if (isTargetSrc()) {
+                    cleanup();
+                    resolve(true);
+                }
+            };
+
+            const onError = () => {
+                cleanup();
+                resolve(false);
+            };
+
+            mainImg.addEventListener('load', onLoad);
+            mainImg.addEventListener('error', onError);
+
+            // 超时兜底，防止卡死
+            setTimeout(() => {
+                if (done) return;
+                cleanup();
+
+                // 超时时如果会话已失效或已退出阅读模式，同样视为取消，不触发任何后续刷新
+                if (!sessionId || sessionId !== readingSessionId || !document.body.classList.contains(BODY_READING_CLASS)) {
+                    resolve(false);
+                } else {
+                    resolve(false);
+                }
+            }, timeout);
+        });
     }
 
     function getPageInfo() {
@@ -226,259 +386,550 @@
         const style = document.createElement('style');
         style.id = STYLE_ID;
         style.textContent = `
-            body.${BODY_READING_CLASS},
-            html.${BODY_READING_CLASS} {
-                overflow: hidden !important;
-                background: #000 !important;
-                margin: 0 !important; padding: 0 !important;
-                width: 100% !important; height: 100% !important;
-                touch-action: none !important;
-                overscroll-behavior: none !important;
-                box-sizing: border-box !important;
-            }
-            body.${BODY_READING_CLASS} * {
-                -webkit-tap-highlight-color: transparent !important;
-                -webkit-touch-callout: none !important;
-                -webkit-user-select: none !important;
-                user-select: none !important;
-                -webkit-user-drag: none !important;
-                user-drag: none !important;
-            }
-            body.${BODY_READING_CLASS} header,
-            body.${BODY_READING_CLASS} nav,
-            body.${BODY_READING_CLASS} .navbar,
-            body.${BODY_READING_CLASS} .paginator,
-            body.${BODY_READING_CLASS} #footer,
-            body.${BODY_READING_CLASS} #i4,
-            body.${BODY_READING_CLASS} .id1,
-            body.${BODY_READING_CLASS} .id2,
-            body.${BODY_READING_CLASS} .id4,
-            body.${BODY_READING_CLASS} #overlay-shade,
-            body.${BODY_READING_CLASS} .absolute-options,
-            body.${BODY_READING_CLASS} .file-info,
-            body.${BODY_READING_CLASS} #i5,
-            body.${BODY_READING_CLASS} #i7,
-            body.${BODY_READING_CLASS} .sn {
-                display: none !important;
-            }
-
-            body.${BODY_READING_CLASS} #archivePagesOverlay {
-                display: none;
-                z-index: 2147483647 !important;
-                position: fixed !important;
-                top: 50% !important; left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                pointer-events: auto !important;
-                max-height: 90vh !important;
-                overflow-y: auto !important;
-            }
-
-            body.${BODY_READING_CLASS} #i3 {
-                position: fixed !important; top: 0; left: 0;
-                width: 100vw !important; height: 100vh !important;
-                background: #000 !important; z-index: 1000 !important;
-                display: flex !important; align-items: center; justify-content: center;
-                overflow: visible !important;
-                margin: 0 !important; padding: 0 !important;
-            }
-
-            body.${BODY_READING_CLASS} #display {
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                width: 100vw !important;
-                height: 100vh !important;
-                position: relative !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                top: 0 !important;
-                transform: translateX(0); will-change: transform;
-                cursor: grab; pointer-events: auto !important;
-                overflow: visible !important;
-                /* Gap dynamic via JS */
-            }
-            body.${BODY_READING_CLASS} #display:active { cursor: grabbing; }
-
-            body.${BODY_READING_CLASS} img.reader-image,
-            body.${BODY_READING_CLASS} .lrr-ghost-img {
-                position: static !important;
-                max-width: 100vw !important;
-                max-height: 100vh !important;
-                width: auto !important;
-                height: auto !important;
-                object-fit: contain !important;
-                margin: 0 !important;
-                pointer-events: auto !important;
-                background: #000;
-                outline: none !important;
-                display: block;
-                transform: none !important;
-                box-shadow: none !important;
-            }
-
-            body.${BODY_READING_CLASS} .sni {
-                padding: 0 !important;
-                margin: 0 !important;
-                width: auto !important;
-                max-width: none !important;
-                display: contents !important;
-            }
-
-            /* 幽灵页 */
-            .lrr-ghost-side {
-                position: absolute; top: 0;
-                width: 100vw; height: 100vh;
-                display: flex; align-items: center; justify-content: center;
-                background-color: #000; z-index: 1; pointer-events: none;
-            }
-            .lrr-ghost-left { left: -100vw; }
-            .lrr-ghost-right { left: 100vw; }
-
-            .lrr-ghost-container {
-                display: flex; flex-direction: row;
-                justify-content: center; align-items: center;
-                width: 100%; height: 100%;
-            }
-            .lrr-ghost-container.single-view .lrr-ghost-img { max-width: 100vw !important; max-height: 100vh !important; }
-            .lrr-ghost-container.double-view .lrr-ghost-img { max-width: 50vw !important; max-height: 100vh !important; }
-            .lrr-ghost-text { color: #444; font-size: 20px; font-weight: bold; text-align: center; }
-
-            /* 按钮样式 */
-            #${BUTTON_ID}, #${THUMB_BUTTON_ID} {
-                position: fixed; z-index: 200000; bottom: 30px;
-                width: 48px; height: 48px; border-radius: 50%;
-                background: rgba(0,0,0,0.6); 
-                border: 2px solid rgba(255,255,255,0.3);
-                backdrop-filter: blur(2px);
-                color: #fff; font-size: 22px; display: flex;
-                align-items: center; justify-content: center; cursor: pointer;
-                transition: opacity 0.3s, transform 0.3s;
-                
-                /* 防止选择和长按菜单 */
-                -webkit-user-select: none;
-                user-select: none;
-                -webkit-touch-callout: none;
-                touch-action: manipulation;
-                -webkit-tap-highlight-color: transparent;
-            }
-            #${BUTTON_ID}:active, #${THUMB_BUTTON_ID}:active { transform: scale(0.9); background: rgba(50,50,50,0.8); }
-
-            #${THUMB_BUTTON_ID} { font-size: 18px; opacity: 0; pointer-events: none; visibility: hidden; }
-
-            /* 阅读模式隐藏状态：完全移除交互 */
-            body.${BODY_READING_CLASS} #${BUTTON_ID},
-            body.${BODY_READING_CLASS} #${THUMB_BUTTON_ID} { opacity: 0; pointer-events: none; visibility: hidden; }
-
-            /* 非阅读模式下主按钮显示 */
-            body:not(.${BODY_READING_CLASS}) #${BUTTON_ID} { opacity: 1 !important; pointer-events: auto !important; visibility: visible !important; }
-            body:not(.${BODY_READING_CLASS}) #${BUTTON_ID}.hide-on-scroll { transform: translateY(100px); opacity: 0 !important; }
-
-            /* 触摸热区 */
-            #${HITAREA_ID}, #${LEFT_HITAREA_ID} {
-                position: fixed; bottom: 0; z-index: 199999;
-                width: 15vw; height: 15vh;
-                background: transparent;
-                pointer-events: none;
-            }
-            #${HITAREA_ID} { right: 0; }
-            #${LEFT_HITAREA_ID} { left: 0; }
-            body.${BODY_READING_CLASS} #${HITAREA_ID},
-            body.${BODY_READING_CLASS} #${LEFT_HITAREA_ID} { pointer-events: auto; }
-
-            /* 页码指示器：默认按手机端来设计 */
-            #${PAGE_INDICATOR_ID} {
-                position: fixed;
-                z-index: 200000;
-
-                /* 手机端默认：居中 + 稍微往上，避免圆角和手势条 */
-                left: 50%;
-                transform: translateX(-50%);
-                /* 兼顾安全区域：env(safe-area-inset-bottom) 在非刘海机上为 0 */
-                bottom: calc(env(safe-area-inset-bottom, 0px) + 15px);
-
-                background: rgba(0,0,0,0.5);
-                color: #fff;
-                padding: 2px 8px;
-                border-radius: 10px;
-                font-size: 12px;
-                pointer-events: none;
-                opacity: 0;
-                transition: opacity 0.3s;
-                white-space: nowrap;
-            }
-
-            /* 阅读模式下显示 */
-            body.${BODY_READING_CLASS} #${PAGE_INDICATOR_ID} {
-                opacity: 1;
-            }
-
-            /* 宽屏 / 桌面端：右下角显示，避免挡住图片中轴线 */
-            @media (min-width: 960px) {
-                #${PAGE_INDICATOR_ID} {
-                    left: auto;
-                    transform: none;
-
-                    right: 16px;
-                    bottom: 6px;
+                body.${BODY_READING_CLASS},
+                html.${BODY_READING_CLASS} {
+                    overflow: hidden !important;
+                    background: #000 !important;
+                    margin: 0 !important; padding: 0 !important;
+                    width: 100% !important; height: 100% !important;
+                    touch-action: none !important;
+                    overscroll-behavior: none !important;
+                    box-sizing: border-box !important;
                 }
-            }
-
-            /* 可选：横屏但不是特别宽的设备（如平板 / 横屏手机），也用右下角 */
-            @media (orientation: landscape) and (min-width: 720px) {
-                #${PAGE_INDICATOR_ID} {
-                    left: auto;
-                    transform: none;
-
-                    right: 16px;
-                    bottom: 6px;
+                body.${BODY_READING_CLASS} * {
+                    -webkit-tap-highlight-color: transparent !important;
+                    -webkit-touch-callout: none !important;
+                    -webkit-user-select: none !important;
+                    user-select: none !important;
+                    -webkit-user-drag: none !important;
+                    user-drag: none !important;
                 }
-            }
+                body.${BODY_READING_CLASS} header,
+                body.${BODY_READING_CLASS} nav,
+                body.${BODY_READING_CLASS} .navbar,
+                body.${BODY_READING_CLASS} .paginator,
+                body.${BODY_READING_CLASS} #footer,
+                body.${BODY_READING_CLASS} #i4,
+                body.${BODY_READING_CLASS} .id1,
+                body.${BODY_READING_CLASS} .id2,
+                body.${BODY_READING_CLASS} .id4,
+                body.${BODY_READING_CLASS} #overlay-shade,
+                body.${BODY_READING_CLASS} .absolute-options,
+                body.${BODY_READING_CLASS} .file-info,
+                body.${BODY_READING_CLASS} #i5,
+                body.${BODY_READING_CLASS} #i7,
+                body.${BODY_READING_CLASS} .sn {
+                    display: none !important;
+                }
 
-            /* 遮罩层保持不变 */
-            .lrr-thumb-backdrop {
-                position: fixed;
-                inset: 0;
-                background: rgba(0,0,0,0.7);
-                z-index: 2147483646;
-                backdrop-filter: blur(2px);
-            }
+                body.${BODY_READING_CLASS} #archivePagesOverlay {
+                    display: none;
+                    z-index: 2147483647 !important;
+                    position: fixed !important;
+                    top: 50% !important; left: 50% !important;
+                    transform: translate(-50%, -50%) !important;
+                    pointer-events: auto !important;
+                    max-height: 90vh !important;
+                    overflow-y: auto !important;
+                }
 
-            /* --- 设置面板样式 --- */
-            #${SETTINGS_MODAL_ID} {
-                position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-                background: rgba(0,0,0,0.6); z-index: 200001;
-                display: none; align-items: center; justify-content: center;
-                backdrop-filter: blur(3px);
-                /* 修复设置面板被选中导致的问题 */
-                -webkit-user-select: none !important;
-                user-select: none !important;
-            }
-            .lrr-settings-content {
-                background: #2b2b2b; color: #ddd;
-                width: 300px; padding: 20px; border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-                font-family: sans-serif;
-            }
-            .lrr-settings-header {
-                font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #444; padding-bottom: 10px;
-                display: flex; justify-content: space-between; align-items: center;
-            }
-            .lrr-settings-close { cursor: pointer; font-size: 24px; line-height: 20px; }
-            .lrr-setting-item { margin-bottom: 15px; display: flex; flex-direction: column; }
-            .lrr-setting-label { font-size: 14px; margin-bottom: 5px; color: #aaa; }
-            .lrr-setting-input-row { display: flex; align-items: center; justify-content: space-between; }
-            .lrr-switch { position: relative; display: inline-block; width: 40px; height: 20px; }
-            .lrr-switch input { opacity: 0; width: 0; height: 0; }
-            .lrr-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #555; transition: .4s; border-radius: 20px; }
-            .lrr-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
-            input:checked + .lrr-slider { background-color: #4CAF50; }
-            input:checked + .lrr-slider:before { transform: translateX(20px); }
-            .lrr-select, .lrr-input { background: #444; color: #fff; border: 1px solid #555; padding: 5px; border-radius: 4px; width: 100%; box-sizing: border-box; }
-        `;
+                /* 强制修复缩略图点击 */
+                body.${BODY_READING_CLASS} #archivePagesOverlay .quick-thumbnail,
+                body.${BODY_READING_CLASS} #archivePagesOverlay .quick-thumbnail * {
+                    pointer-events: auto !important;
+                    cursor: pointer !important;
+                }
+
+                body.${BODY_READING_CLASS} #i3 {
+                    position: fixed !important; top: 0; left: 0;
+                    width: 100vw !important; height: 100vh !important;
+                    background: #000 !important; z-index: 1000 !important;
+                    display: flex !important; align-items: center; justify-content: center;
+                    overflow: visible !important;
+                    margin: 0 !important; padding: 0 !important;
+                }
+
+                body.${BODY_READING_CLASS} #display {
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    width: 100vw !important;
+                    height: 100vh !important;
+                    position: relative !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    left: 0 !important;
+                    right: 0 !important;
+                    top: 0 !important;
+                    transform: translateX(0); will-change: transform;
+                    cursor: grab; pointer-events: auto !important;
+                    overflow: visible !important;
+                    /* Gap dynamic via JS */
+                }
+                body.${BODY_READING_CLASS} #display:active { cursor: grabbing; }
+
+                body.${BODY_READING_CLASS} img.reader-image,
+                body.${BODY_READING_CLASS} .lrr-ghost-img {
+                    position: static !important;
+                    max-width: 100vw !important;
+                    max-height: 100vh !important;
+                    width: auto !important;
+                    height: auto !important;
+                    object-fit: contain !important;
+                    margin: 0 !important;
+                    pointer-events: auto !important;
+                    background: #000;
+                    outline: none !important;
+                    display: block;
+                    transform: none !important;
+                    box-shadow: none !important;
+                }
+
+                body.${BODY_READING_CLASS} .sni {
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    width: auto !important;
+                    max-width: none !important;
+                    display: contents !important;
+                }
+
+                /* 幽灵页 */
+                .lrr-ghost-side {
+                    position: absolute; top: 0;
+                    width: 100vw; height: 100vh;
+                    display: flex; align-items: center; justify-content: center;
+                    background-color: #000; z-index: 1; pointer-events: none;
+                }
+                .lrr-ghost-left { left: -100vw; }
+                .lrr-ghost-right { left: 100vw; }
+
+                .lrr-ghost-container {
+                    display: flex; flex-direction: row;
+                    justify-content: center; align-items: center;
+                    width: 100%; height: 100%;
+                }
+                .lrr-ghost-container.single-view .lrr-ghost-img { max-width: 100vw !important; max-height: 100vh !important; }
+                .lrr-ghost-container.double-view .lrr-ghost-img { max-width: 50vw !important; max-height: 100vh !important; }
+                .lrr-ghost-text { color: #444; font-size: 20px; font-weight: bold; text-align: center; }
+
+                /* 浮动按钮样式（统一玻璃风格） */
+                #${BUTTON_ID}, #${THUMB_BUTTON_ID} {
+                    position: fixed;
+                    z-index: 200000;
+                    bottom: 30px;
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 999px;
+                    background: var(--glass-bg, rgba(28, 30, 36, 0.96));
+                    border: 1px solid var(--glass-border, rgba(140,160,190,0.28));
+                    backdrop-filter: blur(8px);
+                    color: var(--text-primary, #e3e9f3);
+                    font-size: 22px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    box-shadow: var(--shadow-soft, 0 10px 28px -8px rgba(5,10,25,0.72));
+                    transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1));
+
+                    -webkit-user-select: none;
+                    user-select: none;
+                    -webkit-touch-callout: none;
+                    touch-action: manipulation;
+                    -webkit-tap-highlight-color: transparent;
+                }
+                #${BUTTON_ID}:hover,
+                #${THUMB_BUTTON_ID}:hover {
+                    background: var(--glass-bg-hover, rgba(40,43,52,0.98));
+                    box-shadow: var(--shadow-hover, 0 14px 34px -6px rgba(5,12,32,0.9));
+                    transform: translateY(-2px);
+                }
+                #${BUTTON_ID}:active,
+                #${THUMB_BUTTON_ID}:active {
+                    transform: scale(0.94);
+                    background: rgba(50,50,50,0.9);
+                    box-shadow: var(--shadow-card, 0 4px 18px rgba(0,0,0,0.36));
+                }
+
+                #${THUMB_BUTTON_ID} {
+                    font-size: 18px;
+                    opacity: 0;
+                    pointer-events: none;
+                    visibility: hidden;
+                }
+
+                /* 阅读模式隐藏状态：完全移除交互 */
+                body.${BODY_READING_CLASS} #${BUTTON_ID},
+                body.${BODY_READING_CLASS} #${THUMB_BUTTON_ID} {
+                    opacity: 0;
+                    pointer-events: none;
+                    visibility: hidden;
+                }
+
+                /* 非阅读模式下主按钮显示 */
+                body:not(.${BODY_READING_CLASS}) #${BUTTON_ID} {
+                    opacity: 1 !important;
+                    pointer-events: auto !important;
+                    visibility: visible !important;
+                }
+                body:not(.${BODY_READING_CLASS}) #${BUTTON_ID}.hide-on-scroll {
+                    transform: translateY(100px);
+                    opacity: 0 !important;
+                }
+
+                /* 触摸热区 */
+                #${HITAREA_ID}, #${LEFT_HITAREA_ID} {
+                    position: fixed; bottom: 0; z-index: 199999;
+                    width: 15vw; height: 15vh;
+                    background: transparent;
+                    pointer-events: none;
+                }
+                #${HITAREA_ID} { right: 0; }
+                #${LEFT_HITAREA_ID} { left: 0; }
+                body.${BODY_READING_CLASS} #${HITAREA_ID},
+                body.${BODY_READING_CLASS} #${LEFT_HITAREA_ID} { pointer-events: auto; }
+
+                /* 页码指示器：默认按手机端来设计 */
+                #${PAGE_INDICATOR_ID} {
+                    position: fixed;
+                    z-index: 200000;
+
+                    left: 50%;
+                    transform: translateX(-50%);
+                    bottom: calc(env(safe-area-inset-bottom, 0px) + 15px);
+
+                    background: rgba(0,0,0,0.5);
+                    color: #fff;
+                    padding: 2px 8px;
+                    border-radius: 10px;
+                    font-size: 12px;
+                    pointer-events: none;
+                    opacity: 0;
+                    transition: opacity 0.3s;
+                    white-space: nowrap;
+                    text-align: center;
+                }
+
+                /* 阅读模式下显示 */
+                body.${BODY_READING_CLASS} #${PAGE_INDICATOR_ID} {
+                    opacity: 1;
+                }
+
+                /* 宽屏 / 桌面端：右下角显示，避免挡住图片中轴线 */
+                @media (min-width: 960px) {
+                    #${PAGE_INDICATOR_ID} {
+                        left: auto;
+                        transform: none;
+                        right: 16px;
+                        bottom: 6px;
+                    }
+                }
+
+                /* 可选：横屏但不是特别宽的设备（如平板 / 横屏手机），也用右下角 */
+                @media (orientation: landscape) and (min-width: 720px) {
+                    #${PAGE_INDICATOR_ID} {
+                        left: auto;
+                        transform: none;
+                        right: 16px;
+                        bottom: 6px;
+                    }
+                }
+
+                /* 遮罩层保持不变 */
+                .lrr-thumb-backdrop {
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(0,0,0,0.7);
+                    z-index: 2147483646;
+                    backdrop-filter: blur(2px);
+                }
+
+                /* --- 设置面板样式（玻璃卡片 + 分区布局） --- */
+                #${SETTINGS_MODAL_ID} {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    background: rgba(0,0,0,0.5);
+                    z-index: 200001;
+                    display: none;
+                    align-items: center;
+                    justify-content: center;
+                    backdrop-filter: blur(6px);
+
+                    -webkit-user-select: none !important;
+                    user-select: none !important;
+                }
+
+                .lrr-settings-content {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 14px;
+
+                    background: var(--glass-bg, rgba(28,30,36,0.96));
+                    color: var(--text-primary, #e3e9f3);
+                    width: 320px;
+                    max-width: calc(100vw - 32px);
+                    padding: 18px 18px 14px;
+                    border-radius: var(--radius-lg, 16px);
+                    border: 1px solid var(--glass-border, rgba(140,160,190,0.28));
+                    box-shadow: var(--shadow-soft, 0 10px 28px -8px rgba(5,10,25,0.72));
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                    box-sizing: border-box;
+                    text-align: left; /* 整体文本左对齐 */
+                }
+
+                .lrr-settings-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 10px;
+                    padding-bottom: 10px;
+                    border-bottom: 1px solid rgba(120, 135, 160, 0.38);
+                    text-align: left;
+                }
+
+                .lrr-settings-header-main {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2px;
+                    text-align: left;
+                }
+
+                .lrr-settings-title {
+                    font-size: 15px;
+                    font-weight: 600;
+                    color: var(--text-primary, #e3e9f3);
+                    text-align: left;
+                }
+
+                .lrr-settings-subtitle {
+                    font-size: 11px;
+                    color: var(--text-secondary, #a7b1c2);
+                    opacity: 0.9;
+                    text-align: left;
+                }
+
+                .lrr-settings-close {
+                    cursor: pointer;
+                    font-size: 18px;
+                    line-height: 1;
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 999px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--text-secondary, #a7b1c2);
+                    background: transparent;
+                    transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1));
+                }
+
+                .lrr-settings-close:hover {
+                    background: rgba(255,255,255,0.06);
+                    color: var(--text-primary, #e3e9f3);
+                }
+
+                /* 分组布局：开关一组，输入/选择一组 */
+                .lrr-settings-body {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 10px 16px;
+                    max-height: min(60vh, 420px);
+                    padding-right: 2px;
+                    margin-right: -4px;
+                    overflow-y: auto;
+                }
+
+                /* 标记为开关项的放在左侧列，输入/选择项放在右侧列（宽屏时） */
+                @media (min-width: 560px) {
+                    .lrr-settings-body {
+                        grid-template-columns: repeat(2, minmax(0, 1fr));
+                    }
+
+                    .lrr-setting-item--switch,
+                    .lrr-setting-item--toggle {
+                        grid-column: 1;
+                    }
+
+                    .lrr-setting-item--field,
+                    .lrr-setting-item--input,
+                    .lrr-setting-item--select {
+                        grid-column: 2;
+                    }
+                }
+
+                .lrr-settings-section {
+                    padding-top: 8px;
+                    margin-top: 2px;
+                    border-top: 1px solid rgba(120, 135, 160, 0.26);
+                    text-align: left;
+                }
+
+                .lrr-settings-section-title {
+                    font-size: 12px;
+                    font-weight: 600;
+                    letter-spacing: 0.02em;
+                    text-transform: uppercase;
+                    color: var(--text-secondary, #a7b1c2);
+                    margin-bottom: 6px;
+                    text-align: left;
+                }
+
+                .lrr-setting-item {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    padding: 6px 0;
+                    text-align: left;
+                }
+
+                .lrr-setting-label-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 8px;
+                    text-align: left;
+                }
+
+                .lrr-setting-label {
+                    font-size: 13px;
+                    color: var(--text-primary, #e3e9f3);
+                    text-align: left;
+                }
+
+                .lrr-setting-hint {
+                    font-size: 11px;
+                    color: var(--text-secondary, #a7b1c2);
+                    opacity: 0.9;
+                    text-align: left;
+                }
+
+                .lrr-setting-input-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 10px;
+                    margin-top: 2px;
+                    text-align: left;
+                }
+
+                /* 开关 */
+                .lrr-switch {
+                    position: relative;
+                    display: inline-flex;
+                    align-items: center;
+                    width: 40px;
+                    height: 20px;
+                }
+                .lrr-switch input {
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                }
+                .lrr-slider {
+                    position: absolute;
+                    cursor: pointer;
+                    inset: 0;
+                    background-color: #444b57;
+                    border-radius: 20px;
+                    transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1));
+                    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4);
+                }
+                .lrr-slider:before {
+                    position: absolute;
+                    content: "";
+                    height: 16px;
+                    width: 16px;
+                    left: 2px;
+                    bottom: 2px;
+                    background-color: #fafbff;
+                    border-radius: 50%;
+                    transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1));
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+                }
+                input:checked + .lrr-slider {
+                    background: linear-gradient(135deg, var(--accent-color, #4a9ff0), #6cc9ff);
+                    box-shadow: 0 0 0 1px rgba(74,159,240,0.6);
+                }
+                input:checked + .lrr-slider:before {
+                    transform: translateX(20px);
+                }
+
+                /* 选择器与输入框 */
+                .lrr-select,
+                .lrr-input {
+                    background: rgba(18, 20, 26, 0.9);
+                    color: var(--text-primary, #e3e9f3);
+                    border: 1px solid rgba(114, 132, 160, 0.7);
+                    padding: 5px 8px;
+                    border-radius: var(--radius-sm, 6px);
+                    width: 100%;
+                    box-sizing: border-box;
+                    font-size: 12px;
+                    outline: none;
+                    transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1));
+                    text-align: left; /* 输入框文本左对齐 */
+                }
+
+                /* 选择框内文字单独居中对齐 */
+                .lrr-select {
+                    text-align: center;
+                    text-align-last: center;
+                }
+
+                .lrr-select:focus,
+                .lrr-input:focus {
+                    border-color: var(--accent-color, #4a9ff0);
+                    box-shadow: 0 0 0 1px rgba(74,159,240,0.65);
+                    background: rgba(22, 25, 32, 0.98);
+                }
+
+                .lrr-select::placeholder,
+                .lrr-input::placeholder {
+                    color: rgba(160, 172, 192, 0.8);
+                }
+
+                /* 数字输入框：强制纯文本样式，去掉右侧加减按钮 */
+                .lrr-input[type="number"] {
+                    -moz-appearance: textfield;
+                }
+                .lrr-input[type="number"]::-webkit-inner-spin-button,
+                .lrr-input[type="number"]::-webkit-outer-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+
+                /* 底部轻量说明区域（可选） */
+                .lrr-settings-footer {
+                    margin-top: 4px;
+                    padding-top: 8px;
+                    border-top: 1px dashed rgba(120, 135, 160, 0.26);
+                    font-size: 10px;
+                    color: var(--text-secondary, #a7b1c2);
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 8px;
+                    opacity: 0.9;
+                    text-align: left;
+                }
+
+                @media (max-width: 480px) {
+                    .lrr-settings-content {
+                        width: calc(100vw - 24px);
+                        padding: 16px 14px 12px;
+                        border-radius: 14px;
+                    }
+                    .lrr-settings-body {
+                        max-height: min(65vh, 460px);
+                        grid-template-columns: 1fr;
+                    }
+                }
+            `;
         document.head.appendChild(style);
     }
+
 
     // ==========================================
     // 逻辑函数 - 设置面板
@@ -522,7 +973,17 @@
                             <option value="right">右下角 (默认)</option>
                             <option value="left">左下角</option>
                         </select>
-                        <div style="font-size:12px; color:#888; margin-top:4px;">注意：改为左下角时，阅读模式内的缩略图按钮将移至右下角。</div>
+                    </div>
+
+                    <div class="lrr-setting-item">
+                        <div class="lrr-setting-input-row">
+                            <span class="lrr-setting-label" style="margin:0">缩略图按钮: 显示在主按钮上方</span>
+                            <label class="lrr-switch">
+                                <input type="checkbox" id="lrr-cfg-stacked">
+                                <span class="lrr-slider"></span>
+                            </label>
+                        </div>
+                        <div style="font-size:12px; color:#888; margin-top:4px;">关闭则默认显示在主按钮对侧</div>
                     </div>
 
                     <div class="lrr-setting-item">
@@ -542,16 +1003,22 @@
             const elAuto = document.getElementById('lrr-cfg-auto');
             const elPos = document.getElementById('lrr-cfg-pos');
             const elGap = document.getElementById('lrr-cfg-gap');
+            const elStacked = document.getElementById('lrr-cfg-stacked');
 
             elAuto.addEventListener('change', (e) => { userSettings.autoEnter = e.target.checked; saveSettings(); });
             elPos.addEventListener('change', (e) => { userSettings.btnPosition = e.target.value; saveSettings(); });
             elGap.addEventListener('change', (e) => { userSettings.pageGap = parseInt(e.target.value) || 0; saveSettings(); });
+            elStacked.addEventListener('change', (e) => { 
+                userSettings.thumbLayout = e.target.checked ? 'stacked' : 'mirror'; 
+                saveSettings(); 
+            });
         }
 
         // 同步当前值
         document.getElementById('lrr-cfg-auto').checked = userSettings.autoEnter;
         document.getElementById('lrr-cfg-pos').value = userSettings.btnPosition;
         document.getElementById('lrr-cfg-gap').value = userSettings.pageGap;
+        document.getElementById('lrr-cfg-stacked').checked = userSettings.thumbLayout === 'stacked';
 
         modal.style.display = 'flex';
         // 打开时强制禁止全局选中，防止背景被选中
@@ -577,12 +1044,20 @@
 
     function handleCaptureClick(e) {
         if (!isReadingMode()) return;
+
+        // 修复核心：如果点击发生在缩略图覆盖层或遮罩上，直接放行，不要拦截
+        if (e.target.closest('#archivePagesOverlay') || e.target.closest('.lrr-thumb-backdrop')) {
+            return;
+        }
+
         if (e.target.closest(`#${BUTTON_ID}`) || e.target.closest(`#${THUMB_BUTTON_ID}`) || e.target.closest(`#${HITAREA_ID}`) || e.target.closest(`#${LEFT_HITAREA_ID}`) || e.target.closest(`#${SETTINGS_MODAL_ID}`)) {
             return;
         }
+
         const inReaderContainer = e.target.closest('#i3');
         const inDisplay = e.target.closest('#display');
         const isImg = e.target.tagName === 'IMG';
+
         if (inReaderContainer || inDisplay || isImg) {
             e.stopPropagation();
         }
@@ -642,16 +1117,19 @@
         document.body.appendChild(bd);
         return bd;
     }
+
     function removeThumbBackdrop() {
         const bd = document.querySelector('.lrr-thumb-backdrop');
         if (bd) bd.remove();
     }
+
     function closeThumbnailOverlay() {
         const overlay = document.getElementById('archivePagesOverlay');
         if (overlay) overlay.style.display = 'none';
         removeThumbBackdrop();
         if (typeof LRR !== 'undefined' && LRR.closeOverlay) LRR.closeOverlay();
     }
+
     function openThumbnailOverlay() {
         const nativeBtn = document.getElementById('toggle-archive-overlay');
         if (nativeBtn) nativeBtn.click();
@@ -662,12 +1140,50 @@
             if (overlay) {
                 overlay.style.setProperty('display', 'block', 'important');
                 ensureThumbBackdrop();
+                
+                // 覆盖层点击事件拦截（捕获阶段）
                 if (!overlay._hasDelegatedClick) {
-                    overlay.addEventListener('click', (e) => {
-                        if (e.target.closest('.quick-thumbnail') || e.target.closest('.id3') || e.target.tagName === 'A' || e.target.tagName === 'IMG') {
-                            setTimeout(closeThumbnailOverlay, 50);
+                    overlay.addEventListener('click', function(e) {
+                        const thumb = e.target.closest('.quick-thumbnail');
+                        
+                        // 1. 处理缩略图点击
+                        if (thumb) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            e.stopImmediatePropagation(); // 阻止其他监听器
+
+                            const pageAttr = thumb.getAttribute('page');
+                            if (pageAttr !== null) {
+                                const pageIndex = parseInt(pageAttr, 10);
+
+                                // 调用 LRR 原生翻页
+                                // 保持你当前的约定：直接传 pageIndex
+                                if (typeof Reader !== 'undefined' && Reader.goToPage) {
+                                    Reader.goToPage(pageIndex);
+                                }
+
+                                // 立即关闭覆盖层
+                                closeThumbnailOverlay();
+
+                                // 关键变化：不再立即 mock 刷新，而是等待目标页图片真正加载完成
+                                waitForPageImageLoaded(pageIndex).then(() => {
+                                    const info = getPageInfo();
+                                    updatePageIndicator();
+                                    updateGhosts(info);
+                                });
+
+                                return;
+                            }
                         }
-                    });
+
+                        // 2. 处理背景或其他点击（关闭面板）
+                        if (e.target.closest('.id3') || e.target.tagName === 'A' || e.target.tagName === 'IMG') {
+                            if (!thumb) {
+                                setTimeout(closeThumbnailOverlay, 50);
+                            }
+                        }
+                    }, true); // 使用捕获阶段
+                    
                     overlay._hasDelegatedClick = true;
                 }
             }
@@ -691,14 +1207,14 @@
             if (isHidden) {
                 // 刚出现时禁止交互
                 btn.style.pointerEvents = 'none';
-                // 500ms 后恢复交互
+                // 350ms 后恢复交互
                 if (btn._warmupTimer) clearTimeout(btn._warmupTimer);
                 btn._warmupTimer = setTimeout(() => {
                     // 确保此时按钮仍然应该是显示状态
                     if (btn.style.opacity === '1') {
                         btn.style.pointerEvents = 'auto';
                     }
-                }, 500);
+                }, 350);
             }
             // 如果不是刚出现（已经是1了），保持原状（由之前的 timer 负责开启 interaction，或者已经开启）
         }
@@ -732,16 +1248,38 @@
 
     // 触发右侧区域逻辑
     function handleRightAreaTrigger() {
-        // 如果按钮在右边，显示主按钮；否则显示缩略图按钮
-        if (userSettings.btnPosition === 'right') tempShowButton(BUTTON_ID);
-        else tempShowButton(THUMB_BUTTON_ID);
+        const isStacked = userSettings.thumbLayout === 'stacked';
+        if (isStacked) {
+            // 堆叠模式：如果主按钮在右侧，则显示两个；否则显示空（或看需求，这里假设堆叠都在同一侧显示）
+            if (userSettings.btnPosition === 'right') {
+                tempShowButton(BUTTON_ID);
+                tempShowButton(THUMB_BUTTON_ID);
+            } else {
+                // 主按钮在左，右侧无按钮
+            }
+        } else {
+            // 镜像模式
+            if (userSettings.btnPosition === 'right') tempShowButton(BUTTON_ID);
+            else tempShowButton(THUMB_BUTTON_ID);
+        }
     }
 
     // 触发左侧区域逻辑
     function handleLeftAreaTrigger() {
-        // 如果按钮在右边（即左边空闲），显示缩略图按钮；否则显示主按钮
-        if (userSettings.btnPosition === 'right') tempShowButton(THUMB_BUTTON_ID);
-        else tempShowButton(BUTTON_ID);
+        const isStacked = userSettings.thumbLayout === 'stacked';
+        if (isStacked) {
+            // 堆叠模式：如果主按钮在左侧，则显示两个
+            if (userSettings.btnPosition === 'left') {
+                tempShowButton(BUTTON_ID);
+                tempShowButton(THUMB_BUTTON_ID);
+            } else {
+                // 主按钮在右，左侧无按钮
+            }
+        } else {
+            // 镜像模式
+            if (userSettings.btnPosition === 'right') tempShowButton(THUMB_BUTTON_ID);
+            else tempShowButton(BUTTON_ID);
+        }
     }
 
 
@@ -891,20 +1429,43 @@
        const total = info.total;
        let logicalNextIndices = [];
        let logicalPrevIndices = [];
+
+       // 获取用户设置的 preloadCount，限制在 1-10 之间
+       let nextLimit = 10;
+       try {
+           const storedLimit = parseInt(localStorage.getItem('preloadCount') || '10', 10);
+           if (!isNaN(storedLimit)) {
+               nextLimit = Math.min(10, Math.max(1, storedLimit));
+           }
+       } catch(e) {}
+
        if (double) {
            const currentIndices = getCurrentPageIndices(info);
            if (currentIndices.length === 0) {
+               // Fallback if autodetection fails
                if (idx === 0) {
-                   if (1 < total) logicalNextIndices.push(1);
-                   if (2 < total) logicalNextIndices.push(2);
+                    // Next (dynamic)
+                    let nextCursor = 1;
+                    while (logicalNextIndices.length < nextLimit && nextCursor < total) {
+                        logicalNextIndices.push(nextCursor);
+                        nextCursor++;
+                    }
                } else if (idx === 1) {
-                   logicalPrevIndices = [0];
-                   if (idx + 2 < total) logicalNextIndices.push(idx + 2);
-                   if (idx + 3 < total) logicalNextIndices.push(idx + 3);
+                   logicalPrevIndices = [0]; // Prev 始终为 1-2 张
+                   // Next (dynamic)
+                   let nextCursor = idx + 2;
+                   while (logicalNextIndices.length < nextLimit && nextCursor < total) {
+                       logicalNextIndices.push(nextCursor);
+                       nextCursor++;
+                   }
                } else {
                    logicalPrevIndices = [idx - 2, idx - 1].filter(i => i >= 0);
-                   if (idx + 2 < total) logicalNextIndices.push(idx + 2);
-                   if (idx + 3 < total) logicalNextIndices.push(idx + 3);
+                   // Next (dynamic)
+                   let nextCursor = idx + 2;
+                   while (logicalNextIndices.length < nextLimit && nextCursor < total) {
+                        logicalNextIndices.push(nextCursor);
+                        nextCursor++;
+                   }
                }
            } else {
                const minIdx = currentIndices[0];
@@ -925,45 +1486,79 @@
                    if (nextStart === 0) {
                        logicalNextIndices = [0];
                    } else {
-                       const n1 = nextStart;
-                       const n2 = nextStart + 1;
-                       if (n1 >= 0 && n1 < total) logicalNextIndices.push(n1);
-                       if (n2 >= 0 && n2 < total) logicalNextIndices.push(n2);
+                       // Next Loop (dynamic)
+                       let cursor = nextStart;
+                       while(logicalNextIndices.length < nextLimit && cursor < total) {
+                            if (cursor >= 0) logicalNextIndices.push(cursor);
+                            cursor++;
+                       }
                    }
                }
            }
        } else {
-           if (idx + 1 < total) logicalNextIndices = [idx + 1];
+           // Single Page Mode
+           // Next Loop
+           let cursor = idx + 1;
+           while(logicalNextIndices.length < nextLimit && cursor < total) {
+               logicalNextIndices.push(cursor);
+               cursor++;
+           }
+           // Prev Fixed
            if (idx - 1 >= 0) logicalPrevIndices = [idx - 1];
        }
+
        let leftPages = manga ? logicalNextIndices : logicalPrevIndices;
        let rightPages = manga ? logicalPrevIndices : logicalNextIndices;
+
        const createGhostContent = (indices) => {
            const validIndices = indices.filter(i => i >= 0 && i < total);
            if (validIndices.length === 0) return `<div class="lrr-ghost-text"></div>`;
+           
            let html = '';
-           const isDoubleView = validIndices.length > 1;
-           const containerClass = isDoubleView ? 'double-view' : 'single-view';
+           // Container class determines flex-basis (50% or 100%)
+           // 这里我们只关心“可见”的幽灵页是否是双页，预加载的那些不应该影响布局
+           const visibleCount = double ? 2 : 1;
+           // 只要有至少两个有效索引，我们就先用 double-view 的容器样式（让每个图占50%）
+           // 然后在下面把多余的图隐藏掉
+           const isVisualDouble = double && validIndices.length > 1; 
+           const containerClass = isVisualDouble ? 'double-view' : 'single-view';
+           
            html += `<div class="lrr-ghost-container ${containerClass}">`;
            let sortedIndices = [...validIndices];
-           if (manga && isDoubleView) {
+           
+           // Sort order
+           if (manga && isVisualDouble) {
                sortedIndices.sort((a, b) => b - a);
            } else {
                sortedIndices.sort((a, b) => a - b);
            }
-           sortedIndices.forEach(i => {
-               const url = getPageUrl(i);
+           
+           sortedIndices.forEach((pageIdx, loopIndex) => {
+               const url = getPageUrl(pageIdx);
                if (!url) return;
+               
                let sizeStyle = '';
                if (baseWidth && baseHeight) {
                    sizeStyle = `width:${baseWidth}px; height:${baseHeight}px; max-width:none; max-height:none;`;
                }
-               html += `<img src="${url}" class="reader-image lrr-ghost-img" fetchpriority="high" ` +
-                       `style="${inheritedStyle}; ${sizeStyle}" loading="eager" draggable="false" />`;
+
+               // 核心逻辑：只显示前1或2张（作为即时视觉反馈），后续图片设为display:none进行静默预加载
+               let visibilityStyle = '';
+               if (loopIndex >= visibleCount) {
+                   visibilityStyle = 'display: none !important;';
+               }
+
+               // 自动重载脚本：加载失败后1秒重试
+               const onErrorScript = "this.onerror=null; setTimeout(()=>{ const curr = this.src; this.src = ''; this.src = curr; }, 1000);";
+
+               html += `<img src="${url}" class="reader-image lrr-ghost-img" fetchpriority="low" ` +
+                       `style="${inheritedStyle}; ${sizeStyle} ${visibilityStyle}" loading="eager" draggable="false" ` +
+                       `onerror="${onErrorScript}" />`;
            });
            html += `</div>`;
            return html;
        };
+
        leftGhost.innerHTML = createGhostContent(leftPages);
        rightGhost.innerHTML = createGhostContent(rightPages);
     }
@@ -1119,54 +1714,91 @@
     }
 
     function setReadingMode(enable) {
+        // 切换阅读模式标记（控制整页 CSS）
         document.body.classList.toggle(BODY_READING_CLASS, enable);
         document.documentElement.classList.toggle(BODY_READING_CLASS, enable);
+
         const btn = document.getElementById(BUTTON_ID);
         const tb = document.getElementById(THUMB_BUTTON_ID);
 
-        // 初始化布局
-        applyLayoutSettings();
-
+        // 按钮状态（无论进/出模式都要更新）
         if (btn) {
-            // 修改点：退出按钮变成叉，进入按钮变成书本
+            // 进入模式：✕，退出模式：📖
             btn.innerHTML = enable ? '✕' : '📖';
-            // 非阅读模式下检查是否自动开启
+            // 非阅读模式下根据自动进入状态调整边框颜色
             btn.style.borderColor = userSettings.autoEnter ? '#4CAF50' : 'rgba(255,255,255,0.3)';
             btn.classList.remove('hide-on-scroll');
         }
 
         if (enable) {
-            initPageData();
-            hookReaderFunctions();
+            // === 进入阅读模式 ===
 
-            if (btn) { btn.style.opacity = '0'; btn.style.pointerEvents = 'none'; btn.style.visibility = 'hidden'; }
-            if (tb) { tb.style.opacity = '0'; tb.style.pointerEvents = 'none'; tb.style.visibility = 'hidden'; }
+            // 先挂上 hook：拦截 applyContainerWidth / goToPage
+            hookReaderFunctions(true);
+
+            // 应用阅读模式布局（你的自定义 flex/fixed/全屏等）
+            if (typeof applyLayoutSettings === 'function') {
+                applyLayoutSettings();
+            }
+
+            initPageData();
+
+            // 进入阅读模式后隐藏按钮
+            if (btn) {
+                btn.style.opacity = '0';
+                btn.style.pointerEvents = 'none';
+                btn.style.visibility = 'hidden';
+            }
+            if (tb) {
+                tb.style.opacity = '0';
+                tb.style.pointerEvents = 'none';
+                tb.style.visibility = 'hidden';
+            }
             if (btnHideTimer) clearTimeout(btnHideTimer);
 
             updatePageIndicator();
             attachDragEvents();
             setupClickBlocker(true);
 
-            // 清理内联样式
+            // 清理 Reader 在主图上的内联样式，让阅读模式 CSS 接管
             const mainImg = document.getElementById('img');
             const dblImg = document.getElementById('img_doublepage');
             [mainImg, dblImg].forEach(el => { if (el) el.removeAttribute('style'); });
 
             updateGhosts(getPageInfo());
         } else {
+            // === 退出阅读模式 ===
+
             if (btnHideTimer) clearTimeout(btnHideTimer);
 
-            // 退出时，主按钮恢复显示，缩略图按钮隐藏
-            if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; btn.style.visibility = 'visible'; }
-            if (tb) { tb.style.opacity = '0'; tb.style.pointerEvents = 'none'; tb.style.visibility = 'hidden'; }
+            // 主按钮恢复，缩略图按钮隐藏
+            if (btn) {
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+                btn.style.visibility = 'visible';
+            }
+            if (tb) {
+                tb.style.opacity = '0';
+                tb.style.pointerEvents = 'none';
+                tb.style.visibility = 'hidden';
+            }
 
             detachDragEvents();
             setupClickBlocker(false);
             closeThumbnailOverlay();
 
-            if (typeof Reader !== 'undefined' && Reader.applyContainerWidth) {
+            // 关键：先彻底取消对 Reader 的 hook，
+            // 让后续的 applyContainerWidth / goToPage 完全走原生逻辑
+            hookReaderFunctions(false);
+
+            // 此时 BODY_READING_CLASS 已经移除，CSS 回到原生 reader 样式
+            // 这里调用一次原生 applyContainerWidth，由 LRR 自己恢复图片和容器尺寸
+            if (typeof Reader !== 'undefined' && typeof Reader.applyContainerWidth === 'function') {
                 Reader.applyContainerWidth();
             }
+
+            // 不要再额外改 #i3/#display 的宽度或样式，
+            // 避免再次叠加你自己的布局规则和 LRR 的布局规则。
         }
     }
 

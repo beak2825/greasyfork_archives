@@ -3,7 +3,7 @@
 // @name:en      Ask AI Anywhere (Support Image)
 // @namespace    https://blog.xlab.app/
 // @more         https://github.com/ttttmr/UserJS
-// @version      0.11
+// @version      0.12
 // @description  按快捷键选择页面元素，快速发送到Gemini/ChatGPT/AI Studio/DeepSeek
 // @description:en  Quickly send web content (text & images) to AI (Gemini, ChatGPT, AI Studio, DeepSeek) with a shortcut
 // @author       tmr
@@ -16,9 +16,22 @@
 // @grant        GM_unregisterMenuCommand
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
+// @run-at       document-start
 // @downloadURL https://update.greasyfork.org/scripts/556649/%E4%B8%80%E9%94%AE%E5%8F%91%E9%80%81%E5%88%B0AI%EF%BC%88%E6%94%AF%E6%8C%81%E5%9B%BE%E6%96%87%EF%BC%89.user.js
 // @updateURL https://update.greasyfork.org/scripts/556649/%E4%B8%80%E9%94%AE%E5%8F%91%E9%80%81%E5%88%B0AI%EF%BC%88%E6%94%AF%E6%8C%81%E5%9B%BE%E6%96%87%EF%BC%89.meta.js
 // ==/UserScript==
+
+try {
+  const originalAttachShadow = Element.prototype.attachShadow;
+  Element.prototype.attachShadow = function (init) {
+    if (init && init.mode === "closed") {
+      init.mode = "open";
+    }
+    return originalAttachShadow.call(this, init);
+  };
+} catch (e) {
+  console.error("[Ask] Failed to patch attachShadow", e);
+}
 
 const CONFIG = {
   SHORTCUT_TRIGGER: (e) => e.altKey && e.code === "Digit2",
@@ -142,6 +155,17 @@ function shouldIncludeImage(imgNode) {
   return true;
 }
 
+// Helper to pierce Shadow DOM for element selection
+function getDeepElementFromPoint(x, y) {
+  let el = document.elementFromPoint(x, y);
+  while (el && el.shadowRoot) {
+    const internalEl = el.shadowRoot.elementFromPoint(x, y);
+    if (!internalEl || internalEl === el) break;
+    el = internalEl;
+  }
+  return el;
+}
+
 // Helper to extract text (Markdown) and images from element or fragment
 function extractContent(elementOrFragment) {
   if (!elementOrFragment) return { text: "", images: [] };
@@ -162,9 +186,18 @@ function extractContent(elementOrFragment) {
       return "";
 
     const parts = [];
-    for (const child of node.childNodes) {
-      parts.push(traverse(child));
+    
+    // Handle Shadow DOM
+    if (node.shadowRoot) {
+      for (const child of node.shadowRoot.childNodes) {
+        parts.push(traverse(child));
+      }
+    } else {
+      for (const child of node.childNodes) {
+        parts.push(traverse(child));
+      }
     }
+    
     const content = parts.join("");
 
     // Handle specific tags
@@ -175,6 +208,16 @@ function extractContent(elementOrFragment) {
           const filename = `img_${images.length + 1}`;
           images.push({ url: src, filename });
           return `\n![${filename}]\n`;
+        }
+        return "";
+      }
+      case "SLOT": {
+        if (node.assignedNodes) {
+          const slotParts = [];
+          for (const child of node.assignedNodes()) {
+            slotParts.push(traverse(child));
+          }
+          return slotParts.join("");
         }
         return "";
       }
@@ -358,7 +401,7 @@ class DomSelector {
     if (!this.state.active) return;
 
     e.stopPropagation();
-    const element = document.elementFromPoint(e.clientX, e.clientY);
+    const element = getDeepElementFromPoint(e.clientX, e.clientY);
     this.highlight(element);
   }
 

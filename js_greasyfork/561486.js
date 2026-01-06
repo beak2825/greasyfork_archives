@@ -36,7 +36,7 @@
         #bazaar-sidebar {
             position: fixed;
             left: 10px;
-            top: 180px;
+            top: 80px;
             width: 180px;
             background: #1a1a1a;
             border: 2px solid #1E3078;
@@ -749,6 +749,9 @@
                         const itemName = nameEl.textContent.trim();
                         const idParts = btn.getAttribute('aria-controls').split('-');
                         const itemId = idParts[idParts.length - 1];
+                        if (window.BZ_FAVOURITES && typeof window.BZ_FAVOURITES.save === 'function') {
+                        window.BZ_FAVOURITES.save(itemId, itemName);
+}
 
                         processItem(itemName, itemId);
                     }, 100);
@@ -782,6 +785,7 @@
 
         attachListeners();
     }, 2000);
+    window.processItem = processItem;
 
 })();
 
@@ -802,4 +806,176 @@
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
+})();
+// =====================================================
+// BAZAAR FAVOURITES MODULE (ESLint-clean, additive only)
+// =====================================================
+(function () {
+    'use strict';
+
+    const FAV_KEY = 'bz_favourite_items';
+
+    function getAll() {
+        return GM_getValue(FAV_KEY, {});
+    }
+
+    function save(id, name) {
+        const favs = getAll();
+        if (!favs[id]) {
+            favs[id] = { id, name };
+            GM_setValue(FAV_KEY, favs);
+            render();
+        }
+    }
+
+    function remove(id) {
+        const favs = getAll();
+        delete favs[id];
+        GM_setValue(FAV_KEY, favs);
+        render();
+    }
+
+    // ---------- UI ----------
+    function createUI() {
+        if (document.getElementById('bz-fav-btn')) return;
+
+        GM_addStyle(`
+            #bz-fav-btn {
+                position: fixed;
+                right: 10px;
+                top: 80px;
+                width: 44px;
+                height: 44px;
+                background: #FFD700;
+                color: #000;
+                font-weight: bold;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 9999;
+            }
+
+            #bz-fav-panel {
+                position: fixed;
+                right: 50px;
+                top: 10px;
+                width: 144px;
+                background: #1a1a1a;
+                border: 2px solid #FFD700;
+                border-radius: 8px;
+                padding: 10px;
+                color: #fff;
+                display: none;
+                z-index: 9999;
+                max-height: 575px;        /* Limits the height of the box */
+                overflow-y: auto;         /* Adds a vertical scrollbar when needed */
+                overflow-x: hidden;       /* Prevents accidental horizontal shifting */
+
+#bz-fav-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+#bz-fav-panel::-webkit-scrollbar-thumb {
+    background: #FFD700;
+    border-radius: 3px;
+}
+
+#bz-fav-panel::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+            }
+
+            .bz-fav-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 6px;
+                border-bottom: 1px solid #333;
+                cursor: pointer;
+            }
+
+            .bz-fav-item:hover {
+                background: #2a2a2a;
+            }
+
+            .bz-fav-remove {
+                color: #FF4444;
+                font-weight: bold;
+                cursor: pointer;
+                margin-left: 8px;
+            }
+        `);
+
+        const btn = document.createElement('div');
+        btn.id = 'bz-fav-btn';
+        btn.textContent = '⭐';
+
+        const panel = document.createElement('div');
+        panel.id = 'bz-fav-panel';
+
+        btn.addEventListener('click', () => {
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            render();
+        });
+
+        document.body.appendChild(btn);
+        document.body.appendChild(panel);
+    }
+
+    function render() {
+        const panel = document.getElementById('bz-fav-panel');
+        if (!panel) return;
+
+        const favs = Object.values(getAll());
+        if (favs.length === 0) {
+            panel.innerHTML = `<div style="text-align:center;color:#888;">No favourites saved</div>`;
+            return;
+        }
+
+        panel.innerHTML = favs.map(f =>
+            `<div class="bz-fav-item" data-id="${f.id}">
+                <span>${f.name}</span>
+                <span class="bz-fav-remove">✕</span>
+            </div>`
+        ).join('');
+
+        panel.querySelectorAll('.bz-fav-item').forEach(el => {
+            const id = el.dataset.id;
+            const name = el.querySelector('span').textContent;
+
+            el.addEventListener('click', e => {
+                if (e.target.classList.contains('bz-fav-remove')) {
+                    remove(id);
+                    e.stopPropagation();
+                    return;
+                }
+
+                if (typeof window.processItem === 'function') {
+                    window.processItem(name, id);
+                }
+            });
+        });
+    }
+
+    // ---------- INIT ----------
+   function waitForBodyAndInit() {
+    if (document.body) {
+        createUI();
+    } else {
+        setTimeout(waitForBodyAndInit, 250);
+    }
+}
+
+waitForBodyAndInit();
+
+
+
+    // ---------- PUBLIC API ----------
+    window.BZ_FAVOURITES = {
+        save,
+        remove
+    };
+
 })();

@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name                Abdullah Abbas WME Tools
 // @namespace           https://greasyfork.org/users/abdullah-abbas
-// @description         Stable WME Suite: RA Editor + QA Scanner + Speed Visualizer (Kurdish Support Fix) (V1.13)
+// @description         Stable WME Suite: RA Editor + QA Scanner + Speed Visualizer + Routing Tool (V1.16 Fix)
 // @include             https://www.waze.com/*/editor*
 // @include             https://www.waze.com/editor*
 // @include             https://beta.waze.com/*
 // @exclude             https://www.waze.com/user/editor*
-// @version             2026.01.05.1
+// @version             2026.01.06.15
 // @grant               none
 // @author              Abdullah Abbas
 // @require             https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
@@ -16,9 +16,8 @@
 
 /*
  * Abdullah Abbas WME Tools
- * Version: 2026.01.05.1 (V1.13)
- * Base: The Ultra-Stable V1.12.
- * Update: Added full Kurdish (Sorani) translation support without touching tool logic.
+ * Version: 2026.01.06.15 (V1.16 Fix)
+ * Update: Fixed selection detection in Routing Tool (using getSelectedDataModelObjects).
  */
 
 (function() {
@@ -28,7 +27,7 @@
     //  GLOBAL CONFIGURATION
     // ===========================================================================
     const SCRIPT_NAME = "Abdullah Abbas WME Tools";
-    const SCRIPT_VERSION = "2026.01.05.1";
+    const SCRIPT_VERSION = "2026.01.06.15";
     const DEFAULT_W = "340px";
     const DEFAULT_H = "480px";
 
@@ -36,9 +35,9 @@
         'ar-IQ': {
             main_title: 'أدوات عبدالله عباس',
             btn_city: 'مستكشف المدن', btn_places: 'مستكشف الأماكن',
-            btn_editors: 'مستكشف المحررين', btn_ra: 'تعديل الدوار', btn_lock: 'مؤشر القفل', btn_qa: 'فحص الأخطاء', btn_speed: 'مؤشر السرعة',
+            btn_editors: 'مستكشف المحررين', btn_ra: 'تعديل الدوار', btn_lock: 'مؤشر القفل', btn_qa: 'فحص الأخطاء', btn_speed: 'مؤشر السرعة', btn_route: 'تحليل المسار',
             win_city: 'مستكشف المدن', win_places: 'مستكشف الأماكن',
-            win_editors: 'مستكشف المحررين', win_ra: 'تعديل الدوار', win_lock: 'مؤشر القفل', win_qa: 'فحص الأخطاء الهندسية', win_speed: 'مؤشر السرعة (رسم فقط)',
+            win_editors: 'مستكشف المحررين', win_ra: 'تعديل الدوار', win_lock: 'مؤشر القفل', win_qa: 'فحص الأخطاء الهندسية', win_speed: 'مؤشر السرعة', win_route: 'تحليل المسارات',
             common_scan: 'بحث', common_clear: 'مسح', common_close: 'إغلاق', common_ready: 'جاهز للتعديل',
             ph_city: 'اسم المدينة...', ph_place: 'اسم المكان...', ph_user: 'اسم المحرر...',
             lbl_days: 'عدد الأيام (0 = الكل)', lbl_enable: 'تفعيل',
@@ -53,14 +52,19 @@
             qa_opt_float: 'جهتين (طريق عائم)',
             qa_res_found: 'تم تحديد:',
             qa_res_scanning: 'جاري الفحص...',
-            qa_msg_zoom: '⚠️ المنطقة واسعة جداً! الرجاء التقريب (Zoom In) لفحص التقاطعات.'
+            qa_msg_zoom: '⚠️ المنطقة واسعة جداً! الرجاء التقريب (Zoom In) لفحص التقاطعات.',
+            // Routing Strings
+            rt_aim: '2. تصويب 🎯', rt_lock: '3. تثبيت 📌',
+            rt_simulate: 'محاكاة المسار', rt_copy: 'نسخ الرابط', rt_reset: 'إعادة ضبط',
+            rt_st_a_empty: '1. حدد الشارع للبداية', rt_st_b_empty: '1. حدد الشارع للنهاية',
+            rt_st_done: 'تم التثبيت', rt_msg_copied: 'تم النسخ!', rt_err_sel: '⚠️ يجب تحديد شارع أولاً!', rt_err_pts: 'حدد A و B أولاً'
         },
-        'ckb-IQ': { // Kurdish (Sorani) Added Here
+        'ckb-IQ': {
             main_title: 'Abdullah Abbas WME Tools',
             btn_city: 'پشکنەری شار', btn_places: 'پشکنەری شوێنەکان',
-            btn_editors: 'پشکنەری دەستکاریکەران', btn_ra: 'دەستکاری فلکە', btn_lock: 'نیشاندەری قوفڵ', btn_qa: 'پشکنینی هەڵەکان', btn_speed: 'نیشاندەری خێرایی',
+            btn_editors: 'پشکنەری دەستکاریکەران', btn_ra: 'دەستکاری فلکە', btn_lock: 'نیشاندەری قوفڵ', btn_qa: 'پشکنینی هەڵەکان', btn_speed: 'نیشاندەری خێرایی', btn_route: 'شیکردنەوەی ڕێڕەو',
             win_city: 'پشکنەری شار', win_places: 'پشکنەری شوێنەکان',
-            win_editors: 'پشکنەری دەستکاریکەران', win_ra: 'دەستکاری فلکە', win_lock: 'نیشاندەری قوفڵ', win_qa: 'پشکنینی هەڵە ئەندازیارییەکان', win_speed: 'نیشاندەری خێرایی (تەنها وێنە)',
+            win_editors: 'پشکنەری دەستکاریکەران', win_ra: 'دەستکاری فلکە', win_lock: 'نیشاندەری قوفڵ', win_qa: 'پشکنینی هەڵە ئەندازیارییەکان', win_speed: 'نیشاندەری خێرایی', win_route: 'شیکردنەوەی ڕێڕەو',
             common_scan: 'گەڕان', common_clear: 'پاککردنەوە', common_close: 'داخستن', common_ready: 'ئامادەیە بۆ دەستکاری',
             ph_city: 'ناوی شار...', ph_place: 'ناوی شوێن...', ph_user: 'ناوی بەکارهێنەر...',
             lbl_days: 'ژمارەی ڕۆژەکان (0 = هەمووی)', lbl_enable: 'چالاککردن',
@@ -75,14 +79,19 @@
             qa_opt_float: 'دوو لا (ڕێگای سەرئاوتوو)',
             qa_res_found: 'دیاریکرا:',
             qa_res_scanning: 'جارێ پشکنین...',
-            qa_msg_zoom: '⚠️ ناوچەکە زۆر گەورەیە! تکایە نزیک بەرەوە (Zoom In) بۆ پشکنینی یەکتربڕین.'
+            qa_msg_zoom: '⚠️ ناوچەکە زۆر گەورەیە! تکایە نزیک بەرەوە (Zoom In) بۆ پشکنینی یەکتربڕین.',
+            // Routing Strings
+            rt_aim: '2. نیشانە 🎯', rt_lock: '3. جێگیرکردن 📌',
+            rt_simulate: 'تەقلیبی ڕێڕەو', rt_copy: 'کۆپی', rt_reset: 'سڕینەوە',
+            rt_st_a_empty: '1. شەقام دیاری بکە (سەرەتا)', rt_st_b_empty: '1. شەقام دیاری بکە (کۆتایی)',
+            rt_st_done: 'جێگیرکرا', rt_msg_copied: 'کۆپی کرا!', rt_err_sel: '⚠️ شەقامەکە دیاری بکە!', rt_err_pts: 'خاڵەکان جێگیر بکە!'
         },
         'en-US': {
             main_title: 'Abdullah Abbas WME Tools',
             btn_city: 'City Explorer', btn_places: 'Places Explorer',
-            btn_editors: 'Editor Explorer', btn_ra: 'Roundabout Editor', btn_lock: 'Lock Indicator', btn_qa: 'QA Scanner', btn_speed: 'Speed Indicator',
+            btn_editors: 'Editor Explorer', btn_ra: 'Roundabout Editor', btn_lock: 'Lock Indicator', btn_qa: 'QA Scanner', btn_speed: 'Speed Indicator', btn_route: 'Routing Tool',
             win_city: 'City Explorer', win_places: 'Places Explorer',
-            win_editors: 'Editor Explorer', win_ra: 'Roundabout Editor', win_lock: 'Lock Indicator', win_qa: 'QA Scanner', win_speed: 'Speed Indicator (Draw Only)',
+            win_editors: 'Editor Explorer', win_ra: 'Roundabout Editor', win_lock: 'Lock Indicator', win_qa: 'QA Scanner', win_speed: 'Speed Indicator', win_route: 'Routing Tool',
             common_scan: 'Scan', common_clear: 'Clear', common_close: 'Close', common_ready: 'Ready',
             ph_city: 'City Name...', ph_place: 'Place Name...', ph_user: 'Username...',
             lbl_days: 'Days (0 = All)', lbl_enable: 'Enable',
@@ -97,14 +106,17 @@
             qa_opt_float: 'Both Sides (Floating)',
             qa_res_found: 'Selected:',
             qa_res_scanning: 'Scanning...',
-            qa_msg_zoom: '⚠️ Area too large! Please Zoom In to scan intersections.'
+            qa_msg_zoom: '⚠️ Area too large! Please Zoom In to scan intersections.',
+            // Routing Strings
+            rt_aim: '2. Aim 🎯', rt_lock: '3. Lock 📌',
+            rt_simulate: 'Simulate Route', rt_copy: 'Copy Link', rt_reset: 'Reset',
+            rt_st_a_empty: '1. Select Start Segment', rt_st_b_empty: '1. Select End Segment',
+            rt_st_done: 'Locked', rt_msg_copied: 'Copied!', rt_err_sel: '⚠️ Select a segment first!', rt_err_pts: 'Set A and B first!'
         }
     };
 
     let currentLang = 'ar-IQ';
-    // Logic ensures fallback to English if translation missing, but now Kurdish is present.
     const _t = (key) => (STRINGS[currentLang] || STRINGS['en-US'])[key] || key;
-    // Both Arabic and Kurdish are RTL
     const _dir = () => (currentLang === 'en-US' ? 'ltr' : 'rtl');
 
     // ===========================================================================
@@ -205,6 +217,257 @@
             return win;
         }
     }
+
+    // ===========================================================================
+    //  ROUTING TOOL (FIXED V2)
+    // ===========================================================================
+    const RoutingTool = {
+        layer: null,
+        pointA: null,
+        pointB: null,
+        isAiming: false,
+        crosshair: null,
+
+        init: () => {
+            const html = `
+                <div style="padding:10px;">
+                    <div class="aa-routing-box" style="border-right:4px solid #2e7d32;">
+                        <div class="aa-rt-header">
+                            <span style="color:#2e7d32; font-weight:bold;">A (Start)</span>
+                            <span id="rt_stat_a" style="color:#888; font-size:11px;">${_t('rt_st_a_empty')}</span>
+                        </div>
+                        <div class="aa-btn-group">
+                            <button id="rt_aim_a" class="aa-btn aa-bg-white aa-txt-dark" style="border:1px solid #ccc;">${_t('rt_aim')}</button>
+                            <button id="rt_lock_a" class="aa-btn aa-bg-green">${_t('rt_lock')}</button>
+                        </div>
+                    </div>
+
+                    <div class="aa-routing-box" style="border-right:4px solid #c62828;">
+                        <div class="aa-rt-header">
+                            <span style="color:#c62828; font-weight:bold;">B (End)</span>
+                            <span id="rt_stat_b" style="color:#888; font-size:11px;">${_t('rt_st_b_empty')}</span>
+                        </div>
+                        <div class="aa-btn-group">
+                            <button id="rt_aim_b" class="aa-btn aa-bg-white aa-txt-dark" style="border:1px solid #ccc;">${_t('rt_aim')}</button>
+                            <button id="rt_lock_b" class="aa-btn aa-bg-red">${_t('rt_lock')}</button>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:15px; display:flex; gap:8px;">
+                        <button id="rt_sim" class="aa-btn aa-bg-blue" style="flex:2;">${_t('rt_simulate')}</button>
+                        <button id="rt_copy" class="aa-btn aa-bg-white aa-txt-dark" style="flex:1; border:1px solid #ccc;">${_t('rt_copy')}</button>
+                    </div>
+                    <button id="rt_reset" class="aa-btn aa-gray" style="margin-top:10px;">${_t('rt_reset')}</button>
+                </div>
+            `;
+            const win = UIBuilder.createFloatingWindow('AA_RouteWin', 'win_route', 'aa-bg-darkblue', html);
+
+            document.getElementById('rt_aim_a').onclick = () => RoutingTool.activateAim('A');
+            document.getElementById('rt_lock_a').onclick = () => RoutingTool.lockPoint('A');
+            document.getElementById('rt_aim_b').onclick = () => RoutingTool.activateAim('B');
+            document.getElementById('rt_lock_b').onclick = () => RoutingTool.lockPoint('B');
+            document.getElementById('rt_sim').onclick = RoutingTool.openSimulation;
+            document.getElementById('rt_copy').onclick = RoutingTool.copyLink;
+            document.getElementById('rt_reset').onclick = RoutingTool.reset;
+
+            const closer = win.querySelector('.aa-close');
+            const originalClose = closer.onclick;
+            closer.onclick = () => {
+                RoutingTool.toggleCrosshair(false);
+                if(originalClose) originalClose();
+            };
+        },
+
+        initLayer: () => {
+            if (!RoutingTool.layer) {
+                RoutingTool.layer = new OpenLayers.Layer.Vector("AA_Routing_Markers", {
+                    displayInLayerSwitcher: false,
+                    styleMap: new OpenLayers.StyleMap({
+                        "default": {
+                            pointRadius: 6,
+                            fillColor: "${color}",
+                            strokeColor: "#ffffff",
+                            strokeWidth: 2,
+                            fillOpacity: 0.9,
+                            graphicZIndex: 9999
+                        }
+                    })
+                });
+                W.map.addLayer(RoutingTool.layer);
+            }
+        },
+
+        drawMarker: (coords, type) => {
+            RoutingTool.initLayer();
+            const color = type === 'A' ? '#2e7d32' : '#c62828';
+            RoutingTool.layer.features.forEach(f => {
+                if(f.attributes.type === type) RoutingTool.layer.removeFeatures([f]);
+            });
+
+            const pt = new OpenLayers.Geometry.Point(coords.lon, coords.lat)
+                .transform(new OpenLayers.Projection("EPSG:4326"), W.map.getProjectionObject());
+
+            const feature = new OpenLayers.Feature.Vector(pt, { type: type, color: color });
+            RoutingTool.layer.addFeatures([feature]);
+        },
+
+        toggleCrosshair: (state) => {
+            let cross = document.getElementById('aa-crosshair-overlay');
+            if (state) {
+                if (!cross) {
+                    cross = document.createElement('div');
+                    cross.id = 'aa-crosshair-overlay';
+                    cross.style.cssText = 'pointer-events:none; z-index:99999; position:absolute; top:0; left:0; width:100%; height:100%; display:none;';
+                    cross.innerHTML = `
+                        <div style="position:absolute; top:50%; left:50%; width:40px; height:1px; background:#333; transform:translate(-50%, -50%); opacity:0.8;"></div>
+                        <div style="position:absolute; top:50%; left:50%; width:1px; height:40px; background:#333; transform:translate(-50%, -50%); opacity:0.8;"></div>
+                        <div style="position:absolute; top:50%; left:50%; width:12px; height:12px; border:2px solid red; border-radius:50%; transform:translate(-50%, -50%);"></div>
+                    `;
+                    document.getElementById('WazeMap').appendChild(cross);
+                }
+                cross.style.display = 'block';
+            } else {
+                if (cross) cross.style.display = 'none';
+            }
+        },
+
+        activateAim: (type) => {
+            RoutingTool.toggleCrosshair(true);
+            document.querySelectorAll('.aa-btn').forEach(b => b.style.opacity = '1');
+            if(type === 'A') document.getElementById('rt_aim_a').style.background = '#e8f5e9';
+            if(type === 'B') document.getElementById('rt_aim_b').style.background = '#ffebee';
+        },
+
+        calcAzimuth: (p1, p2) => {
+             let angleDeg = Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
+             let azimuth = 90 - angleDeg;
+             if (azimuth < 0) azimuth += 360;
+             return Math.round(azimuth);
+        },
+
+        lockPoint: (type) => {
+            // FIX: Use getSelectedDataModelObjects() for robust model retrieval
+            let selModels = W.selectionManager.getSelectedDataModelObjects();
+
+            // Fallback for older WME versions or mixed selection states
+            if (selModels.length === 0) {
+                 const selFeats = W.selectionManager.getSelectedFeatures();
+                 if (selFeats.length > 0 && selFeats[0].model) {
+                     selModels = [selFeats[0].model];
+                 }
+            }
+
+            if (selModels.length === 0) { alert(_t('rt_err_sel')); return; }
+            const model = selModels[0];
+
+            let targetPoint = null;
+            let azimuth = null;
+
+            if (model.type === 'node') {
+                targetPoint = model.geometry.clone();
+            } else if (model.type === 'segment') {
+                try {
+                    const mapCenter = W.map.getCenter(); // LonLat
+                    const centerGeom = new OpenLayers.Geometry.Point(mapCenter.lon, mapCenter.lat);
+
+                    let closest = null;
+                    if (model.geometry.distanceTo) {
+                        try {
+                            closest = model.geometry.distanceTo(centerGeom, { details: true });
+                        } catch(err) { closest = null; }
+                    }
+
+                    if (closest && closest.x1 !== undefined) {
+                        targetPoint = new OpenLayers.Geometry.Point(closest.x1, closest.y1);
+                    } else {
+                        targetPoint = model.geometry.getCentroid();
+                    }
+
+                    // Calculate Azimuth
+                    const vertices = model.geometry.getVertices();
+                    if(vertices.length >= 2) {
+                        let p1, p2;
+                        const fwd = model.attributes.fwdDirection;
+                        const rev = model.attributes.revDirection;
+
+                        if (fwd && !rev) {
+                            p1 = vertices[0]; p2 = vertices[vertices.length - 1];
+                            azimuth = RoutingTool.calcAzimuth(p1, p2);
+                        } else if (!fwd && rev) {
+                            p1 = vertices[vertices.length - 1]; p2 = vertices[0];
+                            azimuth = RoutingTool.calcAzimuth(p1, p2);
+                        }
+                    }
+                } catch (e) {
+                    console.error("Lock Calculation Error", e);
+                    targetPoint = model.geometry.getCentroid();
+                }
+            } else {
+                alert(_t('rt_err_sel')); return;
+            }
+
+            if (targetPoint) {
+                const lonlat = new OpenLayers.LonLat(targetPoint.x, targetPoint.y)
+                    .transform(W.map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+
+                const data = { lat: lonlat.lat, lon: lonlat.lon, azimuth: azimuth };
+
+                if (type === 'A') {
+                    RoutingTool.pointA = data;
+                    document.getElementById('rt_stat_a').innerText = _t('rt_st_done');
+                    document.getElementById('rt_stat_a').style.color = 'green';
+                    document.getElementById('rt_aim_a').style.background = '#fff';
+                } else {
+                    RoutingTool.pointB = data;
+                    document.getElementById('rt_stat_b').innerText = _t('rt_st_done');
+                    document.getElementById('rt_stat_b').style.color = 'red';
+                    document.getElementById('rt_aim_b').style.background = '#fff';
+                }
+                RoutingTool.drawMarker(data, type);
+                RoutingTool.toggleCrosshair(false);
+            }
+        },
+
+        getLink: () => {
+            if (!RoutingTool.pointA || !RoutingTool.pointB) return null;
+            let url = `https://www.waze.com/live-map/directions?`;
+            url += `from=ll.${Number(RoutingTool.pointA.lat).toFixed(8)},${Number(RoutingTool.pointA.lon).toFixed(8)}`;
+            if (RoutingTool.pointA.azimuth !== null && RoutingTool.pointA.azimuth !== undefined) url += `&from_azimuth=${RoutingTool.pointA.azimuth}`;
+            url += `&to=ll.${Number(RoutingTool.pointB.lat).toFixed(8)},${Number(RoutingTool.pointB.lon).toFixed(8)}`;
+            return url;
+        },
+
+        openSimulation: () => {
+            const url = RoutingTool.getLink();
+            if (url) window.open(url, '_blank');
+            else alert(_t('rt_err_pts'));
+        },
+
+        copyLink: () => {
+            const url = RoutingTool.getLink();
+            if (url) {
+                navigator.clipboard.writeText(url).then(() => {
+                    let btn = document.getElementById('rt_copy');
+                    let oldTxt = btn.innerText;
+                    btn.innerText = _t('rt_msg_copied');
+                    setTimeout(() => btn.innerText = oldTxt, 1500);
+                });
+            } else {
+                alert(_t('rt_err_pts'));
+            }
+        },
+
+        reset: () => {
+            RoutingTool.pointA = null;
+            RoutingTool.pointB = null;
+            if (RoutingTool.layer) RoutingTool.layer.removeAllFeatures();
+            RoutingTool.toggleCrosshair(false);
+            document.getElementById('rt_stat_a').innerText = _t('rt_st_a_empty');
+            document.getElementById('rt_stat_a').style.color = '#888';
+            document.getElementById('rt_stat_b').innerText = _t('rt_st_b_empty');
+            document.getElementById('rt_stat_b').style.color = '#888';
+        }
+    };
 
     // ===========================================================================
     //  SPEED INDICATOR (DRAW ONLY - NO SELECTION)
@@ -453,10 +716,18 @@
             .aa-bg-cyan { background: #18FFFF; color:#000; } .aa-cyan { background: #00B8D4; }
             .aa-bg-red { background: #FF1744; } .aa-red { background: #D50000; }
             .aa-bg-orange { background: #FF9800; color:#000; }
+            .aa-bg-darkblue { background: #1565C0; }
+            .aa-bg-white { background: #ffffff; color: #333; text-shadow: none; }
+            .aa-txt-dark { color: #333; }
             .aa-gray { background: #78909C; }
+
             .rtl { direction: rtl; } .ltr { direction: ltr; }
             .aa-big-icon { font-size: 24px; padding: 5px 0; font-weight: 900; }
             .aa-huge-icon { font-size: 32px; padding: 5px 0; font-weight: 900; }
+
+            /* --- Routing Box --- */
+            .aa-routing-box { background: #fff; padding: 8px; border-radius: 6px; border: 1px solid #eee; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+            .aa-rt-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
         `;
         const style = document.createElement('style');
         style.innerHTML = css;
@@ -498,6 +769,8 @@
                 <button id="btn_open_speed" class="aa-btn aa-bg-red"><i class="fa fa-tachometer"></i> ${_t('btn_speed')}</button>
                 <button id="btn_open_qa" class="aa-btn aa-bg-orange"><i class="fa fa-bug"></i> ${_t('btn_qa')}</button>
                 <button id="btn_open_ra" class="aa-btn aa-bg-green"><i class="fa fa-refresh"></i> ${_t('btn_ra')}</button>
+                <div style="height:2px; background:#ccc; margin:10px 0;"></div>
+                <button id="btn_open_route" class="aa-btn aa-bg-darkblue"><i class="fa fa-location-arrow"></i> ${_t('btn_route')}</button>
                 <div style="margin-top:15px; font-size:10px; color:#555; font-weight:bold;">v${SCRIPT_VERSION}</div>
             </div>
         `;
@@ -520,6 +793,7 @@
         document.getElementById('btn_open_lock').onclick = LockIndicator.init;
         document.getElementById('btn_open_qa').onclick = QAScanner.init;
         document.getElementById('btn_open_speed').onclick = SpeedIndicator.init;
+        document.getElementById('btn_open_route').onclick = RoutingTool.init;
     }
 
     function bootstrap(tries=1) {

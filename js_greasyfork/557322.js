@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Veyra Enemy Wave Farming Bot
 // @namespace    http://tampermonkey.net/
-// @version      3.2.6
+// @version      3.2.7
 // @description  Automated farming bot for Veyra browser game
 // @author       Sinclair/Woobs
 // @match        https://demonicscans.org/active_wave.php*
@@ -1373,7 +1373,7 @@
 
         hudContainer.innerHTML = `
         <div id="hud-header" style="text-align: center; margin-bottom: 10px; cursor: move; display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin: 0; color: #3498db; flex-grow: 1; text-align:center;">🤖 Veyra Farming Bot v3.2.6</h3>
+            <h3 style="margin: 0; color: #3498db; flex-grow: 1; text-align:center;">🤖 Veyra Farming Bot v3.2.7</h3>
             <button id="hud-toggle" style="background:none;border:none;color:white;font-size:16px;font-weight:bold;cursor:pointer;margin-left:5px;">−</button>
         </div>
 
@@ -2116,7 +2116,7 @@
         // Reset summary
         gdLootSummary.items = {};
         gdLootSummary.mobs = 0;
-        gdLootSummary.zeroMobs = 0; // New counter for 0 EXP mobs
+        gdLootSummary.zeroMobs = 0;
         gdLootSummary.exp = 0;
         gdLootSummary.gold = 0;
 
@@ -2133,99 +2133,148 @@
         }
 
         const cards = Array.from(document.querySelectorAll(".monster-card[data-dead='1']"));
+
         if (cards.length === 0) {
             updateStatus("AutoLoot: No dead mobs to claim");
             return;
         }
+
         showLootSummaryModal();
-        // Get modal elements
-        const lootMobsEl = document.getElementById('lootMobs');
-        const lootZeroMobsEl = document.getElementById('lootZeroMobs');
-        const lootExpEl = document.getElementById('lootExp');
-        const lootGoldEl = document.getElementById('lootGold');
-        const lootItemsEl = document.getElementById('lootItems');
+
+        // Modal elements
+        const lootMobsEl = document.getElementById("lootMobs");
+        const lootZeroMobsEl = document.getElementById("lootZeroMobs");
+        const lootExpEl = document.getElementById("lootExp");
+        const lootGoldEl = document.getElementById("lootGold");
+        const lootItemsEl = document.getElementById("lootItems");
 
         updateStatus(`AutoLoot: Claiming… 0 / ${needed.toLocaleString()} EXP`);
 
-        let gained = 0;
-        const SKIP_NAMES = [
-            'skarn',
-            'vessir',
-            'hrazz',
-            'drakzareth',
-        ];
+        const SKIP_NAMES = ["skarn", "vessir", "hrazz", "drakzareth"];
+        const MAX_HP = 100_000_000_000;
+        const CONCURRENCY = 5;
 
-        for (let i = 0; i < cards.length && gained < needed; i++) {
-            const { id, name, maxHp } = getMonsterFromCard(cards[i]);
-
+        // Pre-filter valid cards
+        const validCards = cards.filter(card => {
+            const { id, name, maxHp } = getMonsterFromCard(card);
+            if (!id) return false;
             const lname = name.toLowerCase();
+            if (SKIP_NAMES.some(bad => lname.includes(bad))) return false;
+            if (maxHp > MAX_HP) return false;
+            return true;
+        });
 
-            // if name contains any of the blocked strings → skip
-            if (SKIP_NAMES.some(bad => lname.includes(bad)) || maxHp > 100_000_000_000) {
-                console.log('skipping ' + lname)
-                continue;
-            }
-            const card = cards[i];
-            if (!id) continue;
+        let gained = 0;
+        let index = 0;
 
-            const { ok, already, raw, data } = await postLootRequest(id);
-            if (!(ok || already)) continue;
+        async function lootWorker() {
+            while (true) {
+                if (gained >= needed) return;
 
-            // Extract EXP
-            const m = raw.match(/([0-9][0-9,\.]*)\s*EXP/i);
-            const expGain = m ? Number(m[1].replace(/[^0-9]/g, "")) : 0;
+                const i = index++;
+                if (i >= validCards.length) return;
 
-            if (expGain > 0) {
-                gdLootSummary.mobs++;
-                gained += expGain;
-                gdLootSummary.exp += expGain;
+                const card = validCards[i];
+                const { id } = getMonsterFromCard(card);
+                if (!id) continue;
 
-                if (lootMobsEl) lootMobsEl.textContent = gdLootSummary.mobs;
-                if (lootExpEl) lootExpEl.textContent = Math.min(gained, needed).toLocaleString();
-            } else {
-                gdLootSummary.zeroMobs++;
-                if (lootZeroMobsEl) lootZeroMobsEl.textContent = gdLootSummary.zeroMobs;
-            }
+                const { ok, already, raw, data } = await postLootRequest(id);
+                if (!(ok || already)) continue;
 
-            // Gold
-            if (data?.rewards?.gold) {
-                gdLootSummary.gold += Number(data.rewards.gold) || 0;
-                if (lootGoldEl) lootGoldEl.textContent = gdLootSummary.gold.toLocaleString();
-            }
+                // EXP
+                const m = raw.match(/([0-9][0-9,\.]*)\s*EXP/i);
+                const expGain = m
+                ? Number(m[1].replace(/[^0-9]/g, ""))
+                : 0;
 
-            // Items
-            if (data?.items && Array.isArray(data.items)) {
-                data.items.forEach(item => {
-                    addLootItem(item);
-                    // Optional: incremental DOM update if modal already open
-                    if (lootItemsEl && !lootItemsEl.querySelector(`#item-${item.ITEM_ID}`)) {
-                        const color = ITEM_TIER_COLORS[item.TIER] || DEFAULT_TIER_COLOR;
-                        const slot = document.createElement('div');
-                        slot.id = `item-${item.ITEM_ID}`;
-                        slot.style.cssText = `width:96px;display:flex;flex-direction:column;align-items:center;text-align:center;font-family:Arial,sans-serif;box-sizing:border-box;`;
-                        slot.innerHTML = `
-                        <div style="position:relative;width:64px;height:64px;">
-                            <img src="${item.IMAGE_URL}" alt="${item.NAME}" style="width:64px;height:64px;border-radius:4px;border:2px solid ${color};box-sizing:border-box;">
-                            <span style="position:absolute;bottom:-2px;right:-2px;background:rgba(0,0,0,0.75);color:white;font-size:12px;font-weight:bold;padding:1px 5px;border-radius:6px;">x${gdLootSummary.items[item.ITEM_ID].count}</span>
-                        </div>
-                        <div style="margin-top:6px;width:100%;line-height:1.1;">
-                            <div style="font-size:14px;font-weight:bold;color:white;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.NAME}</div>
-                            <div style="font-size:10px;font-weight:bold;color:${color};margin-top:2px;">${item.TIER}</div>
-                        </div>
-                    `;
-                        lootItemsEl.appendChild(slot);
-                    } else if (lootItemsEl) {
-                        // update count for existing slot
-                        const slotCount = lootItemsEl.querySelector(`#item-${item.ITEM_ID} span`);
-                        if (slotCount) slotCount.textContent = `x${gdLootSummary.items[item.ITEM_ID].count}`;
-                    }
-                });
+                if (expGain > 0) {
+                    gdLootSummary.mobs++;
+                    gained += expGain;
+                    gdLootSummary.exp += expGain;
+
+                    if (lootMobsEl){
+                        lootMobsEl.textContent = gdLootSummary.mobs;}
+                    if (lootExpEl){
+                        lootExpEl.textContent =
+                            Math.min(gained, needed).toLocaleString();}
+                } else {
+                    gdLootSummary.zeroMobs++;
+                    if (lootZeroMobsEl){
+                        lootZeroMobsEl.textContent =
+                            gdLootSummary.zeroMobs;}
+                }
+
+                // Gold
+                if (data?.rewards?.gold) {
+                    gdLootSummary.gold += Number(data.rewards.gold) || 0;
+                    if (lootGoldEl){
+                        lootGoldEl.textContent =
+                            gdLootSummary.gold.toLocaleString();}
+                }
+
+                // Items
+                if (Array.isArray(data?.items)) {
+                    data.items.forEach(item => {
+                        addLootItem(item);
+
+                        if (!lootItemsEl) return;
+
+                        const slotId = `item-${item.ITEM_ID}`;
+                        let slot = lootItemsEl.querySelector(`#${slotId}`);
+
+                        if (!slot) {
+                            const color =
+                                  ITEM_TIER_COLORS[item.TIER] ||
+                                  DEFAULT_TIER_COLOR;
+
+                            slot = document.createElement("div");
+                            slot.id = slotId;
+                            slot.style.cssText =
+                                "width:96px;display:flex;flex-direction:column;align-items:center;text-align:center;font-family:Arial,sans-serif;";
+
+                            slot.innerHTML = `
+                            <div style="position:relative;width:64px;height:64px;">
+                                <img src="${item.IMAGE_URL}"
+                                     style="width:64px;height:64px;border-radius:4px;border:2px solid ${color}">
+                                <span style="position:absolute;bottom:-2px;right:-2px;
+                                    background:rgba(0,0,0,0.75);color:white;
+                                    font-size:12px;font-weight:bold;
+                                    padding:1px 5px;border-radius:6px;">
+                                    x${gdLootSummary.items[item.ITEM_ID].count}
+                                </span>
+                            </div>
+                            <div style="margin-top:6px;width:100%;">
+                                <div style="font-size:14px;font-weight:bold;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                                    ${item.NAME}
+                                </div>
+                                <div style="font-size:10px;font-weight:bold;color:${color}">
+                                    ${item.TIER}
+                                </div>
+                            </div>
+                        `;
+                            lootItemsEl.appendChild(slot);
+                        } else {
+                            const countEl = slot.querySelector("span");
+                            if (countEl) {
+                                countEl.textContent =
+                                    `x${gdLootSummary.items[item.ITEM_ID].count}`;
+                            }
+                        }
+                    });
+                }
+
+                // Small human-like jitter (optional, safer)
+                await sleep(humanDelay(60));
             }
         }
 
+        // Launch workers
+        await Promise.all(
+            Array.from({ length: CONCURRENCY }, lootWorker)
+        );
+
         updateStatus("AutoLoot: Done");
 
-        // Small human-like delay before reload
         await sleep(humanDelay(1000));
         updateStatus("AutoLoot: Reloading…");
         location.reload();

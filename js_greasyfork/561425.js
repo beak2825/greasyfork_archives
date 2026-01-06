@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torrent Mod Toolkit
 // @namespace    http://tampermonkey.net/
-// @version      1.1.7.3
+// @version      1.1.7.7
 // @description  Common actions for torrent mods
 // @icon         https://raw.githubusercontent.com/xzin-CoRK/torrent-mod-toolkit/refs/heads/main/hammer.png
 // @author       xzin
@@ -27,7 +27,7 @@
 (function () {
     "use strict";
 
-    const version = "1.1.7.3";
+    const version = "1.1.7.7";
 
     var mediainfo;
     var uniqueId;
@@ -367,7 +367,7 @@
         if (window.tmtTitleBasedTrackers && window.tmtTitleBasedTrackers.length > 0) {
             return window.tmtTitleBasedTrackers.includes(releaseGroup);
         }
-        const titleBasedTrackers = ["HHWEB", "ANThELIa"];
+        const titleBasedTrackers = ["HHWEB", "ANThELIa", "CHDWEB", "ADWeb"];
         return titleBasedTrackers.includes(releaseGroup);
     }
 
@@ -376,8 +376,7 @@
             const firstFilename = file_structure.split('\n')[0].trim();
             if (firstFilename) {
                 let nameWithoutExt = firstFilename.replace(/\.(mkv|mp4|avi|m4v)$/i, '');
-                // Remove trailing episode like S01E01 / S1E1 / E01, but keep season (S01 / S1)
-                nameWithoutExt = nameWithoutExt.replace(/S(\d{1,2})E\d{1,2}$/i, 'S$1');
+                nameWithoutExt = nameWithoutExt.replace(/S(\d{1,2})E\d{1,2}/gi, 'S$1');
                 nameWithoutExt = nameWithoutExt.replace(/E\d{1,2}$/i, '');
                 nameWithoutExt = nameWithoutExt.replace(/[-.]([A-Za-z0-9]+)$/, '');
                 const parts = nameWithoutExt.split('.');
@@ -413,14 +412,20 @@
             .replace(/\s*-\s*[A-Za-z0-9]+$/, '')
             .replace(/\.[A-Za-z0-9]+$/, '')
             .trim();
-
-        // For series: drop trailing episode while keeping season
-        cleanedTitle = cleanedTitle.replace(/S(\d{1,2})E\d{1,2}$/i, 'S$1');
-        cleanedTitle = cleanedTitle.replace(/E\d{1,2}$/i, '');
+        cleanedTitle = cleanedTitle.replace(/(\s*)S(\d{1,2})E\d{1,2}(\s*)/gi, '$1S$2$3');
+        cleanedTitle = cleanedTitle.replace(/(\s+)E\d{1,2}\s*$/i, '$1');
+        cleanedTitle = cleanedTitle.trim();
         const words = cleanedTitle.split(/\s+/);
         const titleWords = [];
 
         for (const word of words) {
+            if (/^S\d{1,2}E\d{1,2}$/i.test(word)) {
+                const seasonMatch = word.match(/S(\d{1,2})E\d{1,2}/i);
+                if (seasonMatch) {
+                    titleWords.push('S' + seasonMatch[1]);
+                }
+                continue;
+            }
             if (/^\d{4}$/.test(word) || /^\d+p$/i.test(word) || /^\d+i$/i.test(word) ||
                 /^(NF|AMZN|WEB|DL|WEB-DL|WEBRip|BluRay|Blu-ray|REMUX|UHD|HDR|DV|DDP|DD\+|DTS|AC3|AAC|H\.264|H\.265|x264|x265)/i.test(word)) {
                 break;
@@ -887,20 +892,6 @@
             // Store data for comparison on the home tracker page (for all sites)
             if (uniqueId || file_structure) {
                 let filenameToStore = file_structure || null;
-                if (home_tracker_link && home_tracker_link.includes('audiences.me') && file_structure) {
-                    const filtered = filterMkvFilenames(file_structure);
-                    if (filtered) {
-                        const first = filtered.split('\n').map(l => l.trim()).find(l => l.length > 0) || null;
-                        if (first) {
-                            filenameToStore = first;
-                        }
-                    } else {
-                        const first = file_structure.split('\n').map(l => l.trim()).find(l => l.length > 0) || null;
-                        if (first) {
-                            filenameToStore = first;
-                        }
-                    }
-                }
 
                 // Ensure mediainfo is extracted if not already available
                 const mediainfoToStore = mediainfo || (activeTemplate.extractMediainfo ? activeTemplate.extractMediainfo() : null);
@@ -1596,14 +1587,26 @@
             domains: ["morethantv.me", "www.morethantv.me"],
             matches: function(url) { return matchDomains(url, this.domains); },
             extractMediainfo: () => {
-                const el = document.querySelector("div.body div.mediainfo");
-                return el ? el.textContent.trim() : null;
+                const visibleRow = document.querySelector('tr[id^="torrentinfo"]:not(.hidden)');
+                if (!visibleRow) return null;
+                const rowId = visibleRow.id;
+                const torrentId = rowId.replace('torrentinfo', '');
+                const contentDiv = visibleRow.querySelector(`div#content${torrentId}`);
+                if (contentDiv) {
+                    const mediainfoEl = contentDiv.querySelector("div.body div.mediainfo");
+                    if (mediainfoEl) return mediainfoEl.textContent.trim();
+                }
+                
+                return null;
             },
             extractFileStructure: () => {
-                const fileListDivs = document.querySelectorAll('div[id^="files_"]');
-
-                for (const fileListDiv of fileListDivs) {
-                    const rows = fileListDiv.querySelectorAll('tr:not(.rowa):not(.smallhead)');
+                const visibleRow = document.querySelector('tr[id^="torrentinfo"]:not(.hidden)');
+                if (!visibleRow) return null;
+                const rowId = visibleRow.id;
+                const torrentId = rowId.replace('torrentinfo', '');
+                const filesDiv = visibleRow.querySelector(`div#files_${torrentId}`);
+                if (filesDiv) {
+                    const rows = filesDiv.querySelectorAll('tr:not(.rowa):not(.smallhead)');
                     if (rows.length > 0) {
                         const filenames = Array.from(rows)
                             .map(row => {
@@ -1617,30 +1620,41 @@
                         }
                     }
                 }
-                const files = document.querySelectorAll('div#content div.body div.hidden tr:not(.rowa) td:first-child');
-                if (files && files.length > 0) {
-                    const filenames = Array.from(files)
-                    .map(file => file.innerText.trim())
-                        .filter(filename => filename && filename.toLowerCase().endsWith('.mkv'));
-                    if (filenames.length > 0) {
-                        return filenames.join("\n");
-                    }
-                }
 
                 return null;
             },
             extractIMDB: () => {
-                const links = [...document.querySelectorAll('a')];
+                // Find visible torrent info row and search within it
+                const visibleRow = document.querySelector('tr[id^="torrentinfo"]:not(.hidden)');
+                const searchScope = visibleRow || document;
+                
+                const links = [...searchScope.querySelectorAll('a')];
                 const imdbLink = links.find(el => el.href && el.href.includes("imdb.com"));
                 if (!imdbLink) return null;
                 const match = imdbLink.href.match(/tt\d{7,8}/);
                 return match ? match[0] : null;
             },
             extractReleaseGroup: () => {
-                const title = document.querySelector("div.body h1, div.body h2");
-                if (!title) return null;
-                const match = title.innerText.match(/-([A-Za-z0-9]+)$/);
-                return match ? match[1] : null;
+                // Find visible torrent info row and search within it
+                const visibleRow = document.querySelector('tr[id^="torrentinfo"]:not(.hidden)');
+                if (!visibleRow) return null;
+                
+                const rowId = visibleRow.id;
+                const torrentId = rowId.replace('torrentinfo', '');
+                const contentDiv = visibleRow.querySelector(`div#content${torrentId}`);
+                
+                if (contentDiv) {
+                    const title = contentDiv.querySelector("div.body h1, div.body h2");
+                    if (title) {
+                        const match = title.innerText.match(/-([A-Za-z0-9]+)$/);
+                        if (match) return match[1];
+                    }
+                }
+                
+                return null;
+            },
+            getDOMHook: () => {
+                return document.querySelector('table.torrent_table, table#torrent-table');
             }
         },
 
@@ -1817,7 +1831,7 @@
 
         {
             name: "Nexus Template",
-            domains: ["hhanclub.top", "audiences.me"],
+            domains: ["hhanclub.top", "audiences.me", "ptchdbits.co"],
             matches: function(url) { return matchDomains(url, this.domains); },
             extractMediainfo: () => {
                 let el = document.querySelector("#mediainfo-raw pre code") ||
@@ -1832,6 +1846,39 @@
                 return el ? el.textContent.trim() : null;
             },
             extractFileStructure: () => {
+                const isCHDBits = window.location.hostname.includes('ptchdbits.co');
+                if (isCHDBits) {
+                    const descriptionDiv = document.querySelector("div#kdescr, div[id='kdescr']");
+                    const codeMain = document.querySelector("div.hide div.codemain") ||
+                                   document.querySelector("div.codemain") ||
+                                   document.querySelector("fieldset");
+                    const searchText = descriptionDiv ? (descriptionDiv.textContent || descriptionDiv.innerText || "") :
+                                    codeMain ? (codeMain.textContent || codeMain.innerText || "") : "";
+                    
+                    if (searchText) {
+                        const fileNameMatch = searchText.match(/File\s+Name[.\s:]+:?\s*([^\r\n]+)/i);
+                        if (fileNameMatch && fileNameMatch[1]) {
+                            let fileName = fileNameMatch[1].trim();
+                            if (!/\.(mkv|mp4|avi|m4v)$/i.test(fileName)) {
+                                fileName += ".mkv";
+                            }
+                            if (fileName) {
+                                return fileName;
+                            }
+                        }
+                    }
+                    
+                    const downloadLink = document.querySelector("a.index[href*='download.php'], a[href*='download.php'].index");
+                    if (downloadLink) {
+                        let linkText = (downloadLink.textContent || downloadLink.innerText || "").trim();
+                        linkText = linkText.replace(/^\[CHDBits\]\.?/i, '');
+                        linkText = linkText.replace(/\.torrent$/i, '');
+                        if (linkText && /\.mkv$/i.test(linkText)) {
+                            return linkText;
+                        }
+                    }
+                }
+
                 const spans = document.querySelectorAll("#mediainfo-info span");
                 if (spans && spans.length > 0) {
                     for (let i = 0; i < spans.length - 1; i++) {
@@ -2094,16 +2141,27 @@
             if (storedNormalized === currentNormalized) {
                 filenameMatch = true;
             } else {
-                // Check if all stored filename lines exactly match lines in current (case-sensitive)
                 const storedLines = storedFilename.split('\n').map(f => f.trim()).filter(f => f.length > 0);
                 const currentLines = currentFilename.split('\n').map(f => f.trim()).filter(f => f.length > 0);
 
                 if (storedLines.length > 0 && currentLines.length > 0) {
-                    // Check if all stored lines exactly match lines in current (case-sensitive)
-                    const allFound = storedLines.every(storedLine => {
-                        return currentLines.some(currentLine => currentLine === storedLine);
-                    });
-                    filenameMatch = allFound;
+                    const isHHANAUDCHD = window.location.hostname.includes('hhanclub.top') ||
+                                       window.location.hostname.includes('audiences.me') ||
+                                       window.location.hostname.includes('ptchdbits.co');
+                    
+                    if (isHHANAUDCHD) {
+                        // Check if any stored line matches any current line (case-sensitive)
+                        const anyFound = storedLines.some(storedLine => {
+                            return currentLines.some(currentLine => currentLine === storedLine);
+                        });
+                        filenameMatch = anyFound;
+                    } else {
+                        // For other sites: check if all stored lines exactly match lines in current (case-sensitive)
+                        const allFound = storedLines.every(storedLine => {
+                            return currentLines.some(currentLine => currentLine === storedLine);
+                        });
+                        filenameMatch = allFound;
+                    }
                 }
             }
         }
@@ -2688,12 +2746,15 @@
         const isAnimebytes = window.location.hostname.includes('animebytes.tv');
         const isAnthelion = window.location.hostname.includes('anthelion.me');
         const isPTP = window.location.hostname.includes('passthepopcorn.me');
-        if (isAnimebytes || isAnthelion || isPTP) {
+        const isMTV = window.location.hostname.includes('morethantv.me');
+        if (isAnimebytes || isAnthelion || isPTP || isMTV) {
             const renderAnimebytesAnthelionPTP = () => {
                 if (document.body) {
                     let visibleTorrentRow = null;
                     if (isPTP) {
                         visibleTorrentRow = document.querySelector(`tr[id^="torrent_"]:not(.hidden)`);
+                    } else if (isMTV) {
+                        visibleTorrentRow = document.querySelector(`tr[id^="torrentinfo"]:not(.hidden)`);
                     } else {
                         visibleTorrentRow = document.querySelector(`tr[id^="torrent_"].pad:not(.hide)`);
                         if (!visibleTorrentRow) {
@@ -2737,15 +2798,17 @@
                         observerKey = 'tmtAnthelionObserver';
                     } else if (isPTP) {
                         observerKey = 'tmtPTPObserver';
+                    } else if (isMTV) {
+                        observerKey = 'tmtMTVObserver';
                     }
                     if (torrentTable && !window[observerKey]) {
                         window[observerKey] = new MutationObserver(() => {
                             let newVisibleRow = null;
                             if (isPTP) {
-                                // PTP uses tr[id^="torrent_"]:not(.hidden) (no .pad class)
                                 newVisibleRow = document.querySelector(`tr[id^="torrent_"]:not(.hidden)`);
+                            } else if (isMTV) {
+                                newVisibleRow = document.querySelector(`tr[id^="torrentinfo"]:not(.hidden)`);
                             } else {
-                                // Animebytes/Anthelion use .pad class
                                 newVisibleRow = document.querySelector(`tr[id^="torrent_"].pad:not(.hide)`);
                                 if (!newVisibleRow) {
                                     newVisibleRow = document.querySelector(`tr[id^="torrent_"].pad:not(.hidden)`);

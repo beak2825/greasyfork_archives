@@ -1,20 +1,23 @@
 // ==UserScript==
-// @name         HALO Armory Tracker Pro (Alien UI) - V2 Enhanced
+// @name         HALO Armory Tracker Pro (Alien UI) - V2 Enhanced - FIXED
 // @namespace    http://tampermonkey.net/
-// @version      HALO.5.2
-// @description  Faction armory tracker with V2 countdown scheduler and alien UI
+// @version      HALO.5.9
+// @description  Faction armory tracker with V2 countdown scheduler and alien UI - Fixed medical items, V2 mutex, price protection
 // @author       Nova
 // @match        https://www.torn.com/*
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @connect      api.torn.com
-// @downloadURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20V2%20Enhanced.user.js
-// @updateURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20V2%20Enhanced.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20V2%20Enhanced%20-%20FIXED.user.js
+// @updateURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20V2%20Enhanced%20-%20FIXED.meta.js
 // ==/UserScript==
 
 (function(){
 "use strict";
+
+/* ---------- DEBUG MODE ---------- */
+const DEBUG_MODE = false; // Set to true for troubleshooting
 
 /* ---------- CONFIG ---------- */
 const factionIds = ["48418"];
@@ -24,6 +27,7 @@ const PRICE_CACHE_TTL = 30 * 60 * 1000; // 30 minutes
 const PROCESSED_LOGS_PRUNE_DAYS = 7;
 const V2_MARKERS_PRUNE_DAYS = 3;
 const MAX_V2_PAGES = 20;
+const ZERO_BALANCE_ARCHIVE_DAYS = 30; // Archive users after 30 days inactive
 
 /* ---------- FACTION RULES ---------- */
 const FREE_ITEMS = [
@@ -31,9 +35,14 @@ const FREE_ITEMS = [
     "lollipop", "sweet hearts", "blood bag", "empty blood bag"
 ];
 
+// UPDATED: Correct Torn item names
 const MEDICAL_ITEMS = [
-    "first aid", "small first aid", "morphine", "ipecac",
-    "neumune tablet", "antidote"
+    "first aid kit",        // Torn: "First Aid Kit"
+    "small first aid kit",  // Torn: "Small First Aid Kit"
+    "morphine",             // Torn: "Morphine"
+    "ipecac syrup",         // Torn: "Ipecac Syrup"
+    "neumune tablet",       // Torn: "Neumune Tablet"
+    "antidote"              // Torn: "Antidote"
 ];
 
 const STANDARD_DEPOSIT_RATE = 0.90;
@@ -44,6 +53,12 @@ const BLOOD_BAG_FILL_CREDIT = 200;
 const DAILY_MEDICAL_LIMIT = 100000;
 const LOAN_DISCOUNT_RATE = 0.50;
 
+// XANAX BASELINE PRICE - For USE only
+const XANAX_BASELINE_PRICE = 815000;
+
+/* ---------- V2 MUTEX ---------- */
+let v2Lock = { active: false, expires: 0 };
+
 /* ---------- ENHANCED STORAGE ---------- */
 let factionKey = GM_getValue("FACTION_API_KEY","");
 let marketKey  = GM_getValue("MARKET_API_KEY","");
@@ -53,6 +68,9 @@ let deposits      = GM_getValue("deposits", {});
 let processedLogs = GM_getValue("processedLogs", {});
 let medWindows    = GM_getValue("medWindows", {});
 let beerWindows   = GM_getValue("beerWindows", {});
+
+// Archive for zero-balance users
+let archivedUsers = GM_getValue("archivedUsers", {});
 
 // V2 Scheduling system
 let v2Stats = GM_getValue("v2Stats", { 
@@ -76,6 +94,13 @@ let priceCache    = GM_getValue("priceCache", {});
 let itemsMapCache = null;
 let nameToIdCache = {};
 
+/* ---------- DEBUG LOGGING ---------- */
+function debugLog(...args) {
+    if (DEBUG_MODE) {
+        console.log("HALO DEBUG:", ...args);
+    }
+}
+
 /* ---------- HELPER FUNCTIONS ---------- */
 function stripTags(str){ return str ? str.replace(/<[^>]*>/g,"").trim() : ""; }
 function normalize(name){
@@ -86,12 +111,14 @@ function normalize(name){
         .replace(/\s+/g," ")
         .trim();
 }
+
 function dayFromLog(ts){
     const d = new Date(ts * 1000);
     return d.getUTCFullYear() + "-" +
            String(d.getUTCMonth()+1).padStart(2,"0") + "-" +
            String(d.getUTCDate()).padStart(2,"0");
 }
+
 function formatTime(ts){
     if(!ts) return "";
     const d = new Date(ts*1000);
@@ -108,20 +135,24 @@ function formatTimeDate(ts){
     return `${hours}:${minutes}, ${day}.${month}`;
 }
 
+// FIXED: All string comparisons now case-insensitive
 function isFree(itemName){
-    return FREE_ITEMS.some(freeItem => itemName.includes(freeItem));
+    const lowerName = itemName.toLowerCase();
+    return FREE_ITEMS.some(freeItem => lowerName.includes(freeItem));
 }
 
 function isMedical(itemName){
-    return MEDICAL_ITEMS.some(medItem => itemName.includes(medItem));
+    const lowerName = itemName.toLowerCase();
+    return MEDICAL_ITEMS.some(medItem => lowerName.includes(medItem));
 }
 
 function isXanax(itemName){
-    return itemName.includes("xanax");
+    return itemName.toLowerCase().includes("xanax");
 }
 
 function isFillingBloodBag(text, itemName){
-    return text.includes("filled") && itemName.includes("empty blood bag");
+    return text.toLowerCase().includes("filled") && 
+           itemName.toLowerCase().includes("empty blood bag");
 }
 
 /* ---------- ENHANCED ITEM RESOLUTION ---------- */
@@ -180,6 +211,7 @@ async function resolveItemId(itemName){
     return null;
 }
 
+// FIXED: Median of lowest 3 listings for price manipulation protection
 async function resolvePriceWithCache(itemId, itemName){
     const now = Date.now();
     
@@ -197,8 +229,26 @@ async function resolvePriceWithCache(itemId, itemName){
             return null;
         }
         
-        listings.sort((a,b)=> (a.price||a.cost||0)-(b.price||b.cost||0));
-        const price = Math.round(listings[0].price || listings[0].cost);
+        // Filter out single-item listings (troll protection)
+        const validListings = listings.filter(l => l.quantity > 1);
+        const listingsToUse = validListings.length > 0 ? validListings : listings;
+        
+        // Sort by price
+        listingsToUse.sort((a,b)=> (a.price||a.cost||0)-(b.price||b.cost||0));
+        
+        let price;
+        
+        // Take median of lowest 3 listings for manipulation protection
+        if(listingsToUse.length >= 3) {
+            const lowestThree = listingsToUse.slice(0, 3);
+            lowestThree.sort((a,b) => (a.price||a.cost||0) - (b.price||b.cost||0));
+            price = lowestThree[1].price || lowestThree[1].cost; // Median (middle of 3)
+            debugLog(`Price median: ${itemName} - prices:`, lowestThree.map(l => l.price || l.cost), `selected: ${price}`);
+        } else {
+            price = listingsToUse[0].price || listingsToUse[0].cost;
+        }
+        
+        price = Math.round(price);
         
         if(price > 0) {
             priceCache[itemId] = {
@@ -233,13 +283,17 @@ function cleanupPriceCache() {
 }
 
 /* ---------- WINDOWS ---------- */
+// FIXED: Medical tracking logic - returns true if OVER limit
 function processMedicalUse(user, value, ts){
     const day = dayFromLog(ts);
     medWindows[user] ??= {};
     medWindows[user][day] ??= 0;
     medWindows[user][day] += value;
     GM_setValue("medWindows", medWindows);
-    return medWindows[user][day] > DAILY_MEDICAL_LIMIT;
+    
+    const isOverLimit = medWindows[user][day] > DAILY_MEDICAL_LIMIT;
+    debugLog(`Medical window: ${user} on ${day} = $${medWindows[user][day]}, over limit: ${isOverLimit}`);
+    return isOverLimit; // Returns TRUE if OVER the limit
 }
 
 /* ---------- NET VALUE ---------- */
@@ -248,6 +302,68 @@ function getNetValue(user){
     for(const k in deposits[user]||{}) dep += deposits[user][k].price * deposits[user][k].count;
     for(const k in usedItems[user]||{}) use += usedItems[user][k].price * usedItems[user][k].count;
     return Math.round(dep - use);
+}
+
+/* ---------- ARCHIVE SYSTEM ---------- */
+function getUserLastActivity(user){
+    let lastActivity = 0;
+    
+    // Check deposits
+    for(const k in deposits[user] || {}) {
+        const entry = deposits[user][k];
+        if(entry.last && entry.last > lastActivity) {
+            lastActivity = entry.last;
+        }
+    }
+    
+    // Check used items
+    for(const k in usedItems[user] || {}) {
+        const entry = usedItems[user][k];
+        if(entry.last && entry.last > lastActivity) {
+            lastActivity = entry.last;
+        }
+    }
+    
+    return lastActivity * 1000; // Convert to milliseconds
+}
+
+function archiveZeroBalanceUsers(){
+    const now = Date.now();
+    let archived = 0;
+    
+    const users = [...new Set([...Object.keys(usedItems), ...Object.keys(deposits)])];
+    
+    for(const user of users) {
+        const net = getNetValue(user);
+        const lastActivity = getUserLastActivity(user);
+        const daysInactive = (now - lastActivity) / (24 * 60 * 60 * 1000);
+        
+        if(net === 0 && daysInactive > ZERO_BALANCE_ARCHIVE_DAYS) {
+            // Archive user data
+            archivedUsers[user] = {
+                deposits: deposits[user] || {},
+                usedItems: usedItems[user] || {},
+                archivedAt: now,
+                lastActivity: lastActivity
+            };
+            
+            // Remove from active storage
+            delete deposits[user];
+            delete usedItems[user];
+            archived++;
+            
+            debugLog(`Archived zero-balance user: ${user} (inactive ${Math.round(daysInactive)} days)`);
+        }
+    }
+    
+    if(archived > 0) {
+        GM_setValue("deposits", deposits);
+        GM_setValue("usedItems", usedItems);
+        GM_setValue("archivedUsers", archivedUsers);
+        console.log(`HALO: Archived ${archived} zero-balance users`);
+    }
+    
+    return archived;
 }
 
 /* ---------- V1 LOGS FETCH ---------- */
@@ -306,8 +422,10 @@ async function fetchAllV2Logs(sinceTimestamp = 0){
         }
         
         for(const log of data.news){
-            if(!processedLogs[log.id]){
-                allLogs.push(log);
+            // FIXED: Namespace log IDs to prevent collisions
+            const namespacedId = `v2:${log.id}`;
+            if(!processedLogs[namespacedId]){
+                allLogs.push({...log, namespacedId});
                 recovered++;
             }
         }
@@ -331,7 +449,13 @@ async function fetchAllV2Logs(sinceTimestamp = 0){
 
 /* ---------- LOG PROCESSING ---------- */
 async function processLogEntry(logId, entry, source = 'v1'){
-    if(processedLogs[logId]) return null;
+    // FIXED: Namespace processed log IDs
+    const namespacedId = source === 'v1' ? `v1:${logId}` : `v2:${logId}`;
+    
+    if(processedLogs[namespacedId]) {
+        debugLog(`Skipping already processed log: ${namespacedId}`);
+        return null;
+    }
     
     let text = '';
     let timestamp = 0;
@@ -387,6 +511,7 @@ async function processLogEntry(logId, entry, source = 'v1'){
         const itemName = normalize(use[2]);
         
         if(isFree(itemName)){
+            debugLog(`Skipping free item: ${itemName} for ${user}`);
             return null;
         }
         
@@ -421,6 +546,7 @@ async function processLogEntry(logId, entry, source = 'v1'){
         const itemName = normalize(loan[3]);
         
         if(isFree(itemName)){
+            debugLog(`Skipping free loan item: ${itemName} for ${user}`);
             return null;
         }
         
@@ -436,8 +562,9 @@ async function processLogEntry(logId, entry, source = 'v1'){
     }
     
     if(result){
-        result.logId = logId;
+        result.logId = namespacedId; // Use namespaced ID
         result.timestamp = timestamp;
+        debugLog(`Parsed ${source} log:`, result);
     }
     
     return result;
@@ -448,6 +575,8 @@ async function processParsedResult(result){
     
     const { user, action, itemName, count, logId, timestamp, source, isHalfPrice, isBloodBagFill } = result;
     
+    debugLog(`Processing: ${user} ${action} ${count}x ${itemName}`);
+    
     const itemId = await resolveItemId(itemName);
     if(!itemId) {
         console.warn(`HALO: Could not process log ${logId} - unknown item: ${itemName}`);
@@ -455,11 +584,13 @@ async function processParsedResult(result){
     }
     
     const displayName = itemCache[itemId]?.name || itemName;
+    debugLog(`Resolved item: ${itemName} -> ${displayName} (ID: ${itemId})`);
     
     let price = null;
     
     if(isBloodBagFill){
         price = BLOOD_BAG_FILL_CREDIT;
+        debugLog(`Blood bag fill: fixed price $${price}`);
     } else {
         const marketPrice = await resolvePriceWithCache(itemId, displayName);
         if(!marketPrice) {
@@ -467,22 +598,41 @@ async function processParsedResult(result){
             return;
         }
         
+        debugLog(`Market price for ${displayName}: $${marketPrice}`);
+        
         let adjustedPrice = marketPrice;
         
-        if(action === 'deposit' || action === 'filled'){
+        // FIXED: Medical logic - track all medical items, only charge if over limit
+        if(isMedical(displayName)){
+            debugLog(`Medical item detected: ${displayName}`);
+            const isOverMedicalLimit = processMedicalUse(user, marketPrice, timestamp);
+            
+            if(isOverMedicalLimit){
+                // Over limit - charge at 100%
+                adjustedPrice = Math.round(marketPrice * MEDICAL_EXCESS_RATE);
+                debugLog(`Medical OVER limit: charging $${adjustedPrice}`);
+            } else {
+                // Under limit - FREE
+                adjustedPrice = 0;
+                debugLog(`Medical UNDER limit: FREE (daily total: $${medWindows[user]?.[dayFromLog(timestamp)] || 0})`);
+            }
+        }
+        // Apply Xanax baseline for USE only (after use rate)
+        else if(action === 'use' && isXanax(displayName)){
+            adjustedPrice *= STANDARD_USE_RATE;
+            if(adjustedPrice < XANAX_BASELINE_PRICE) {
+                adjustedPrice = XANAX_BASELINE_PRICE;
+                debugLog(`Xanax price floor applied: $${adjustedPrice}`);
+            }
+        } else if(action === 'deposit' || action === 'filled'){
             adjustedPrice *= isXanax(displayName) ? XANAX_DEPOSIT_RATE : STANDARD_DEPOSIT_RATE;
+            debugLog(`Deposit rate applied: $${adjustedPrice}`);
         } else if(action === 'use' || action === 'loan'){
             adjustedPrice *= STANDARD_USE_RATE;
             
             if(isHalfPrice){
                 adjustedPrice *= LOAN_DISCOUNT_RATE;
-            }
-            
-            if(isMedical(displayName)){
-                if(!processMedicalUse(user, marketPrice, timestamp)){
-                    return;
-                }
-                adjustedPrice = Math.round(marketPrice * MEDICAL_EXCESS_RATE);
+                debugLog(`Loan discount applied: $${adjustedPrice}`);
             }
         }
         
@@ -504,6 +654,7 @@ async function processParsedResult(result){
         };
         deposits[user][key].count += count;
         deposits[user][key].last = timestamp;
+        debugLog(`Added deposit: ${user} +${count}x ${displayName} @ $${price}`);
     } else {
         usedItems[user] ??= {};
         usedItems[user][key] ??= { 
@@ -517,6 +668,7 @@ async function processParsedResult(result){
         };
         usedItems[user][key].count += count;
         usedItems[user][key].last = timestamp;
+        debugLog(`Added use: ${user} -${count}x ${displayName} @ $${price}`);
     }
     
     processedLogs[logId] = {
@@ -528,69 +680,88 @@ async function processParsedResult(result){
         v2Stats.recovered++;
         v2Stats.lastRun = Date.now();
         GM_setValue("v2Stats", v2Stats);
+        debugLog(`V2 recovered log: ${logId}`);
     }
 }
 
 /* ---------- V2 COUNTDOWN SCHEDULER ---------- */
 async function runV2CatchUp(){
-    if(!factionKey) return;
-    
-    console.log("HALO: Running V2 catch-up...");
-    
-    // Update schedule BEFORE running (in case of crash)
-    v2Schedule.lastFetch = Date.now();
-    v2Schedule.nextScheduled = v2Schedule.lastFetch + V2_INTERVAL_MS;
-    v2Schedule.lastCheck = Date.now();
-    GM_setValue("v2Schedule", v2Schedule);
-    
-    // Get last V2 fetch timestamp
-    let sinceTime = v2Stats.lastRun ? Math.floor(v2Stats.lastRun / 1000) : 0;
-    
-    // If first run or very old, go back 24 hours
-    if(sinceTime === 0 || (Date.now() - v2Stats.lastRun) > 86400000) {
-        sinceTime = Math.floor(Date.now() / 1000) - 86400;
-        console.log(`HALO: First V2 run or large gap, fetching from ${new Date(sinceTime * 1000).toLocaleString()}`);
+    // FIXED: V2 mutex to prevent overlapping runs
+    const now = Date.now();
+    if (v2Lock.active && now < v2Lock.expires) {
+        console.log("HALO: V2 already running, skipping");
+        return;
     }
     
-    const result = await fetchAllV2Logs(sinceTime);
+    // Set mutex lock (expires in 10 minutes in case of crash)
+    v2Lock = { active: true, expires: now + (10 * 60 * 1000) };
     
-    if(result.logs.length > 0){
-        for(const log of result.logs){
-            const parsed = await processLogEntry(log.id, log, 'v2');
-            if(parsed){
-                await processParsedResult(parsed);
-            }
+    try {
+        if(!factionKey) return;
+        
+        console.log("HALO: Running V2 catch-up...");
+        
+        // Update schedule BEFORE running (in case of crash)
+        v2Schedule.lastFetch = now;
+        v2Schedule.nextScheduled = v2Schedule.lastFetch + V2_INTERVAL_MS;
+        v2Schedule.lastCheck = now;
+        GM_setValue("v2Schedule", v2Schedule);
+        
+        // Get last V2 fetch timestamp
+        let sinceTime = v2Stats.lastRun ? Math.floor(v2Stats.lastRun / 1000) : 0;
+        
+        // If first run or very old, go back 24 hours
+        if(sinceTime === 0 || (now - v2Stats.lastRun) > 86400000) {
+            sinceTime = Math.floor(now / 1000) - 86400;
+            console.log(`HALO: First V2 run or large gap, fetching from ${new Date(sinceTime * 1000).toLocaleString()}`);
         }
         
-        // Update stats
-        v2Stats.lastRun = Date.now();
-        v2Stats.totalPages += result.pages;
-        v2Stats.truncated = v2Stats.truncated || result.truncated;
-        v2Stats.totalRuns = (v2Stats.totalRuns || 0) + 1;
+        const result = await fetchAllV2Logs(sinceTime);
         
-        GM_setValue("v2Stats", v2Stats);
-        GM_setValue("usedItems", usedItems);
-        GM_setValue("deposits", deposits);
-        GM_setValue("processedLogs", processedLogs);
+        if(result.logs.length > 0){
+            for(const log of result.logs){
+                const parsed = await processLogEntry(log.id, log, 'v2');
+                if(parsed){
+                    await processParsedResult(parsed);
+                }
+            }
+            
+            // Update stats
+            v2Stats.lastRun = Date.now();
+            v2Stats.totalPages += result.pages;
+            v2Stats.truncated = v2Stats.truncated || result.truncated;
+            v2Stats.totalRuns = (v2Stats.totalRuns || 0) + 1;
+            
+            GM_setValue("v2Stats", v2Stats);
+            GM_setValue("usedItems", usedItems);
+            GM_setValue("deposits", deposits);
+            GM_setValue("processedLogs", processedLogs);
+            
+            console.log(`HALO: V2 completed. Recovered ${result.recovered} logs.`);
+        } else {
+            console.log("HALO: No new logs via V2");
+        }
         
-        console.log(`HALO: V2 completed. Recovered ${result.recovered} logs.`);
-    } else {
-        console.log("HALO: No new logs via V2");
+        // Update schedule AFTER successful completion
+        v2Schedule.lastFetch = Date.now();
+        v2Schedule.nextScheduled = v2Schedule.lastFetch + V2_INTERVAL_MS;
+        v2Schedule.overdueCount = 0;
+        v2Schedule.lastCheck = Date.now();
+        GM_setValue("v2Schedule", v2Schedule);
+        
+        // Run maintenance
+        pruneProcessedLogs();
+        cleanupPriceCache();
+        archiveZeroBalanceUsers();
+        
+        // Update UI
+        renderPanel();
+    } catch (error) {
+        console.error("HALO: V2 catch-up error:", error);
+    } finally {
+        // Always release mutex
+        v2Lock = { active: false, expires: 0 };
     }
-    
-    // Update schedule AFTER successful completion
-    v2Schedule.lastFetch = Date.now();
-    v2Schedule.nextScheduled = v2Schedule.lastFetch + V2_INTERVAL_MS;
-    v2Schedule.overdueCount = 0;
-    v2Schedule.lastCheck = Date.now();
-    GM_setValue("v2Schedule", v2Schedule);
-    
-    // Run maintenance
-    pruneProcessedLogs();
-    cleanupPriceCache();
-    
-    // Update UI
-    renderPanel();
 }
 
 function initializeV2Scheduler(){
@@ -721,8 +892,6 @@ async function loadLogs(){
     for(const item of arr){
         const { logId, entry } = item;
         
-        if(processedLogs[logId]) continue;
-        
         const parsed = await processLogEntry(logId, entry, 'v1');
         if(parsed){
             await processParsedResult(parsed);
@@ -738,32 +907,32 @@ async function loadLogs(){
 
 /* ---------- UI ---------- */
 GM_addStyle(`
-/* Main Panel - Smaller and more compact */
+/* Compact Panel with Better Size */
 #armoryPanel {
     position: fixed;
     bottom: 0;
     right: 15px;
-    width: 300px;
-    height: 85vh;
+    width: 250px;
+    height: 80vh;
     background: 
         radial-gradient(circle at 20% 80%, rgba(0, 40, 60, 0.3) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(60, 0, 80, 0.3) 0%, transparent 50%),
-        linear-gradient(135deg, rgba(5, 5, 15, 0.95) 0%, rgba(15, 5, 25, 0.95) 100%);
+        linear-gradient(135deg, rgba(5, 5, 15, 0.97) 0%, rgba(15, 5, 25, 0.97) 100%);
     color: #00ffea;
     font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
     border-radius: 8px 8px 0 0;
     padding: 0;
     overflow: hidden;
     box-shadow: 
-        0 0 30px rgba(0, 255, 234, 0.4),
-        0 0 60px rgba(138, 43, 226, 0.3),
-        inset 0 0 20px rgba(0, 255, 234, 0.15);
+        0 0 25px rgba(0, 255, 234, 0.4),
+        0 0 50px rgba(138, 43, 226, 0.3),
+        inset 0 0 15px rgba(0, 255, 234, 0.15);
     display: none;
     z-index: 9999;
     border: 1px solid rgba(0, 255, 234, 0.4);
     border-bottom: none;
     backdrop-filter: blur(8px);
-    font-size: 10px;
+    font-size: 11px;
 }
 
 #armoryPanel::before {
@@ -780,7 +949,7 @@ GM_addStyle(`
     border-radius: 10px;
     z-index: -1;
     animation: hologram 3s linear infinite;
-    opacity: 0.8;
+    opacity: 0.7;
 }
 
 @keyframes hologram {
@@ -788,27 +957,25 @@ GM_addStyle(`
     100% { filter: hue-rotate(360deg); }
 }
 
-/* Minimized Header */
+/* Minimal Header - Smaller heading */
 .panel-header {
     background: linear-gradient(90deg, 
-        rgba(10, 20, 30, 0.9) 0%, 
-        rgba(30, 10, 40, 0.9) 100%);
-    padding: 8px 12px;
+        rgba(10, 20, 30, 0.95) 0%, 
+        rgba(30, 10, 40, 0.95) 100%);
+    padding: 6px 10px;
     border-bottom: 1px solid rgba(0, 255, 234, 0.3);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     position: relative;
     backdrop-filter: blur(4px);
-    min-height: 35px;
+    min-height: 28px;
+    text-align: center;
 }
 
 .panel-header::after {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 5%;
-    right: 5%;
+    left: 10%;
+    right: 10%;
     height: 1px;
     background: linear-gradient(90deg, 
         transparent, 
@@ -818,94 +985,46 @@ GM_addStyle(`
 }
 
 @keyframes scanline {
-    0% { left: 5%; right: 5%; }
-    50% { left: 10%; right: 10%; }
-    100% { left: 5%; right: 5%; }
+    0% { left: 10%; right: 10%; }
+    50% { left: 15%; right: 15%; }
+    100% { left: 10%; right: 10%; }
 }
 
 .panel-header h1 {
     margin: 0;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: #00ffea;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     text-shadow: 
-        0 0 8px rgba(0, 255, 234, 0.7),
-        0 0 15px rgba(0, 255, 234, 0.3);
-    letter-spacing: 1px;
+        0 0 6px rgba(0, 255, 234, 0.7),
+        0 0 12px rgba(0, 255, 234, 0.3);
+    letter-spacing: 0.8px;
     text-transform: uppercase;
     font-family: 'Orbitron', 'Courier New', monospace;
 }
 
 .panel-header h1:before {
     content: "🛸";
-    font-size: 16px;
-    filter: drop-shadow(0 0 6px #00ffea);
-    animation: float 3s ease-in-out infinite;
+    font-size: 14px;
+    filter: drop-shadow(0 0 4px #00ffea);
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-2px) rotate(5deg); }
-}
-
+/* No header buttons at all */
 .header-controls {
-    display: flex;
-    gap: 6px;
-}
-
-.header-btn {
-    background: rgba(0, 255, 234, 0.15);
-    border: 1px solid rgba(0, 255, 234, 0.4);
-    color: #00ffea;
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 11px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-shadow: 0 0 6px rgba(0, 255, 234, 0.7);
-    position: relative;
-    overflow: hidden;
-}
-
-.header-btn:hover {
-    background: rgba(0, 255, 234, 0.3);
-    transform: scale(1.1);
-    box-shadow: 
-        0 0 15px rgba(0, 255, 234, 0.6),
-        0 0 30px rgba(0, 255, 234, 0.3);
-}
-
-.header-btn::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(0, 255, 234, 0.2) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.header-btn:hover::before {
-    opacity: 1;
+    display: none;
 }
 
 .panel-content {
     padding: 12px;
-    height: calc(100% - 35px);
+    height: calc(100% - 28px);
     overflow-y: auto;
-    background: rgba(0, 5, 10, 0.7);
+    background: rgba(0, 5, 10, 0.8);
 }
 
-/* Stats - Smaller and more compact */
+/* Compact Stats Grid - 4 columns */
 .stats-slim {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -913,11 +1032,10 @@ GM_addStyle(`
     margin-bottom: 12px;
     background: rgba(0, 255, 234, 0.08);
     border-radius: 8px;
-    padding: 10px;
+    padding: 12px 10px;
     border: 1px solid rgba(0, 255, 234, 0.3);
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(5px);
 }
 
 .stats-slim::before {
@@ -946,57 +1064,81 @@ GM_addStyle(`
 }
 
 .stat-slim-number {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 800;
     color: #00ffea;
     text-shadow: 
         0 0 8px rgba(0, 255, 234, 0.8),
-        0 0 15px rgba(0, 255, 234, 0.4);
+        0 0 16px rgba(0, 255, 234, 0.4);
     font-family: 'Orbitron', monospace;
     letter-spacing: 0.5px;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
 }
 
 .stat-slim-label {
-    font-size: 8px;
+    font-size: 9px;
     color: #8af5ff;
     text-transform: uppercase;
     letter-spacing: 0.8px;
-    margin-top: 1px;
-    opacity: 0.8;
+    margin-top: 2px;
+    opacity: 0.9;
     font-weight: 600;
+    line-height: 1.1;
 }
 
-.v2-stat {
+/* Rec Data - Orange style - UPDATED LABEL */
+.rec-data-stat {
     background: linear-gradient(135deg, 
         rgba(255, 153, 0, 0.15) 0%, 
         rgba(255, 153, 0, 0.05) 100%) !important;
     border: 1px solid rgba(255, 153, 0, 0.3) !important;
 }
 
-.v2-stat .stat-slim-number {
+.rec-data-stat .stat-slim-number {
     color: #ff9900 !important;
     text-shadow: 0 0 6px rgba(255, 153, 0, 0.5) !important;
 }
 
-/* V2 Countdown Display - Removed */
-.v2-countdown-display {
-    display: none;
+.rec-data-stat .stat-slim-label {
+    color: #ffcc88 !important;
 }
 
+/* V2 last run info */
 .v2-last-run {
-    font-size: 8px;
+    font-size: 9px;
     color: rgba(255, 153, 0, 0.8);
     text-align: center;
     margin-top: 5px;
     font-family: 'Courier New', monospace;
 }
 
+/* V2 indicators */
+.v2-indicator {
+    color: #ff9900 !important;
+    margin-left: 4px;
+    font-size: 10px;
+    vertical-align: super;
+}
+
+.loan-indicator {
+    color: #ffcc00 !important;
+    margin-left: 4px;
+    font-size: 10px;
+    vertical-align: super;
+}
+
+/* V2 item background */
+.item-v2 {
+    background: rgba(255, 153, 0, 0.08) !important;
+    border-left: 2px solid rgba(255, 153, 0, 0.4) !important;
+}
+
+/* API Toggle - simple */
 .api-toggle {
     background: rgba(0, 255, 234, 0.1);
-    border: 1px solid rgba(0, 255, 234, 0.3);
+    border: 1px solid rgba(0, 255, 234, 0.25);
     border-radius: 6px;
-    padding: 8px 12px;
+    padding: 8px 10px;
     margin-bottom: 10px;
     cursor: pointer;
     display: flex;
@@ -1005,16 +1147,13 @@ GM_addStyle(`
     font-size: 10px;
     color: #00ffea;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.7px;
     font-weight: 600;
     transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
 }
 
 .api-toggle:hover {
-    background: rgba(0, 255, 234, 0.2);
-    box-shadow: 0 0 15px rgba(0, 255, 234, 0.3);
+    background: rgba(0, 255, 234, 0.15);
 }
 
 .api-toggle::after {
@@ -1029,18 +1168,18 @@ GM_addStyle(`
 
 .api-fields {
     display: none;
-    margin-top: 10px;
-    animation: slideDown 0.3s ease;
+    margin-top: 8px;
+    animation: slideDown 0.2s ease;
 }
 
 @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
+    from { opacity: 0; transform: translateY(-8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 .api-input-slim {
-    background: rgba(0, 10, 20, 0.8);
-    border: 1px solid rgba(0, 255, 234, 0.4);
+    background: rgba(0, 10, 20, 0.9);
+    border: 1px solid rgba(0, 255, 234, 0.3);
     border-radius: 5px;
     padding: 8px 10px;
     color: #00ffea;
@@ -1050,87 +1189,38 @@ GM_addStyle(`
     box-sizing: border-box;
     font-family: 'Courier New', monospace;
     transition: all 0.3s ease;
-    text-shadow: 0 0 5px rgba(0, 255, 234, 0.5);
 }
 
 .api-input-slim:focus {
     outline: none;
     border-color: #00ffea;
     box-shadow: 
-        0 0 12px rgba(0, 255, 234, 0.5),
+        0 0 10px rgba(0, 255, 234, 0.5),
         inset 0 0 8px rgba(0, 255, 234, 0.1);
 }
 
-.sort-select-slim {
-    background: rgba(0, 10, 20, 0.8);
-    border: 1px solid rgba(0, 255, 234, 0.4);
-    border-radius: 5px;
-    padding: 8px 30px 8px 10px;
-    color: #00ffea;
-    font-size: 10px;
-    width: 100%;
-    margin-bottom: 12px;
-    cursor: pointer;
-    appearance: none;
-    font-family: 'Courier New', monospace;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%2300ffea' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 10px;
-    transition: all 0.3s ease;
-}
-
-.sort-select-slim:hover {
-    background-color: rgba(0, 255, 234, 0.1);
-    box-shadow: 0 0 10px rgba(0, 255, 234, 0.3);
-}
-
-.sort-select-slim:focus {
-    outline: none;
-    border-color: #00ffea;
-    box-shadow: 
-        0 0 12px rgba(0, 255, 234, 0.5),
-        inset 0 0 8px rgba(0, 255, 234, 0.1);
-}
-
+/* Users List */
 .users-slim {
-    background: rgba(0, 5, 10, 0.5);
+    background: rgba(0, 5, 10, 0.6);
     border-radius: 6px;
-    padding: 4px;
+    padding: 5px;
     border: 1px solid rgba(0, 255, 234, 0.2);
 }
 
 .user-slim {
     background: linear-gradient(135deg, 
-        rgba(0, 20, 40, 0.7) 0%, 
-        rgba(20, 0, 40, 0.7) 100%);
+        rgba(0, 20, 40, 0.8) 0%, 
+        rgba(20, 0, 40, 0.8) 100%);
     border-radius: 5px;
     padding: 10px;
     margin-bottom: 6px;
     border: 1px solid rgba(0, 255, 234, 0.2);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    transition: all 0.2s ease;
 }
 
 .user-slim:hover {
-    border-color: rgba(0, 255, 234, 0.4);
-    box-shadow: 0 0 12px rgba(0, 255, 234, 0.2);
-}
-
-.user-slim::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, 
-        transparent, 
-        rgba(0, 255, 234, 0.5), 
-        transparent);
+    border-color: rgba(0, 255, 234, 0.3);
+    box-shadow: 0 0 10px rgba(0, 255, 234, 0.15);
 }
 
 .user-header-slim {
@@ -1138,34 +1228,28 @@ GM_addStyle(`
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    padding: 2px 0;
 }
 
 .user-name-slim {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     color: #8af5ff;
-    max-width: 110px;
+    max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     text-shadow: 0 0 5px rgba(138, 245, 255, 0.5);
     font-family: 'Orbitron', monospace;
-    letter-spacing: 0.5px;
 }
 
 .user-balance-slim {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     padding: 4px 8px;
     border-radius: 4px;
     min-width: 60px;
     text-align: center;
     font-family: 'Orbitron', monospace;
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
 }
 
 .balance-positive-slim {
@@ -1173,15 +1257,7 @@ GM_addStyle(`
         rgba(16, 185, 129, 0.2) 0%, 
         rgba(16, 185, 129, 0.1) 100%);
     color: #10f5c9;
-    border: 1px solid rgba(16, 185, 129, 0.4);
-    text-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
-}
-
-.balance-positive-slim:hover {
-    background: linear-gradient(135deg, 
-        rgba(16, 185, 129, 0.3) 0%, 
-        rgba(16, 185, 129, 0.2) 100%);
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+    border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .balance-negative-slim {
@@ -1189,15 +1265,7 @@ GM_addStyle(`
         rgba(255, 65, 108, 0.2) 0%, 
         rgba(255, 65, 108, 0.1) 100%);
     color: #ff416c;
-    border: 1px solid rgba(255, 65, 108, 0.4);
-    text-shadow: 0 0 6px rgba(255, 65, 108, 0.5);
-}
-
-.balance-negative-slim:hover {
-    background: linear-gradient(135deg, 
-        rgba(255, 65, 108, 0.3) 0%, 
-        rgba(255, 65, 108, 0.2) 100%);
-    box-shadow: 0 0 12px rgba(255, 65, 108, 0.3);
+    border: 1px solid rgba(255, 65, 108, 0.3);
 }
 
 .user-details-slim {
@@ -1205,12 +1273,6 @@ GM_addStyle(`
     padding-top: 8px;
     border-top: 1px solid rgba(0, 255, 234, 0.2);
     display: none;
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
 }
 
 .items-slim {
@@ -1221,19 +1283,12 @@ GM_addStyle(`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 6px;
-    background: rgba(0, 10, 20, 0.6);
-    border-radius: 3px;
+    padding: 6px 8px;
+    background: rgba(0, 10, 20, 0.7);
+    border-radius: 4px;
     margin-bottom: 4px;
-    font-size: 9px;
+    font-size: 10px;
     border: 1px solid rgba(0, 255, 234, 0.1);
-    transition: all 0.2s ease;
-}
-
-.item-row-slim:hover {
-    background: rgba(0, 255, 234, 0.1);
-    border-color: rgba(0, 255, 234, 0.3);
-    transform: translateX(3px);
 }
 
 .item-info-slim {
@@ -1244,57 +1299,34 @@ GM_addStyle(`
 
 .item-name-slim {
     color: #b8f5ff;
-    max-width: 80px;
+    max-width: 70px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: 600;
-    text-shadow: 0 0 3px rgba(184, 245, 255, 0.5);
 }
 
 .item-count-slim {
     color: #00ffea;
     font-weight: 700;
-    font-size: 9px;
+    font-size: 10px;
     font-family: 'Orbitron', monospace;
 }
 
 .item-price-slim {
     font-weight: 700;
-    font-size: 9px;
+    font-size: 10px;
     color: #10f5c9;
     font-family: 'Orbitron', monospace;
-    text-shadow: 0 0 5px rgba(16, 245, 201, 0.5);
 }
 
 .item-used-slim .item-price-slim {
     color: #ff416c;
-    text-shadow: 0 0 5px rgba(255, 65, 108, 0.5);
-}
-
-.item-v2 {
-    background: rgba(255, 153, 0, 0.08) !important;
-    border-left: 3px solid rgba(255, 153, 0, 0.4) !important;
-}
-
-.v2-indicator {
-    color: #ff9900 !important;
-    margin-left: 3px;
-    font-size: 9px;
-    vertical-align: super;
-}
-
-.loan-indicator {
-    color: #ffcc00 !important;
-    margin-left: 3px;
-    font-size: 9px;
-    vertical-align: super;
 }
 
 .item-time-slim {
     color: #8af5ff;
-    font-size: 8px;
-    margin-left: 5px;
+    font-size: 9px;
     min-width: 45px;
     text-align: right;
     opacity: 0.8;
@@ -1314,52 +1346,36 @@ GM_addStyle(`
     color: white;
     border: none;
     padding: 5px 10px;
-    border-radius: 3px;
-    font-size: 9px;
+    border-radius: 4px;
+    font-size: 10px;
     font-weight: 700;
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-family: 'Orbitron', monospace;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.action-btn-slim:before {
-    content: "✧";
-    font-size: 9px;
-    margin-right: 3px;
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    transition: all 0.2s ease;
 }
 
 .action-btn-slim:hover {
     transform: scale(1.05);
-    box-shadow: 
-        0 0 15px rgba(255, 65, 108, 0.6),
-        0 0 30px rgba(255, 65, 108, 0.3);
+    box-shadow: 0 0 10px rgba(255, 65, 108, 0.6);
 }
 
 .empty-state-slim {
     text-align: center;
-    padding: 25px 12px;
+    padding: 30px 15px;
     color: rgba(138, 245, 255, 0.6);
-    font-size: 10px;
+    font-size: 11px;
     font-family: 'Orbitron', monospace;
 }
 
 .empty-state-slim:before {
     content: "🛰️";
-    font-size: 28px;
+    font-size: 24px;
     display: block;
     margin-bottom: 8px;
     opacity: 0.7;
-    filter: drop-shadow(0 0 6px rgba(0, 255, 234, 0.5));
+    filter: drop-shadow(0 0 5px rgba(0, 255, 234, 0.5));
     animation: spin 10s linear infinite;
 }
 
@@ -1368,12 +1384,24 @@ GM_addStyle(`
     100% { transform: rotate(360deg); }
 }
 
+/* Debug toggle */
+.debug-toggle {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 8px;
+    color: rgba(255, 153, 0, 0.6);
+    cursor: pointer;
+    z-index: 100;
+}
+
+/* Bubble Button */
 #bubbleBtn {
     position: fixed;
     bottom: 15px;
     right: 15px;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     background: linear-gradient(135deg, 
         rgba(0, 40, 60, 0.9) 0%, 
         rgba(60, 0, 80, 0.9) 100%);
@@ -1389,20 +1417,20 @@ GM_addStyle(`
         0 0 20px rgba(0, 255, 234, 0.5),
         0 0 40px rgba(138, 43, 226, 0.3);
     border: 1px solid rgba(0, 255, 234, 0.5);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     animation: floatBtn 3s ease-in-out infinite;
 }
 
 @keyframes floatBtn {
     0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-8px) rotate(10deg); }
+    50% { transform: translateY(-8px) rotate(8deg); }
 }
 
 #bubbleBtn:hover {
-    transform: scale(1.2) rotate(20deg);
+    transform: scale(1.2) rotate(15deg);
     box-shadow: 
-        0 0 40px rgba(0, 255, 234, 0.8),
-        0 0 80px rgba(138, 43, 226, 0.5);
+        0 0 30px rgba(0, 255, 234, 0.8),
+        0 0 60px rgba(138, 43, 226, 0.5);
 }
 
 #bubbleBtn:before {
@@ -1416,48 +1444,35 @@ GM_addStyle(`
 
 .panel-content::-webkit-scrollbar-track {
     background: rgba(0, 255, 234, 0.05);
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 .panel-content::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, 
         rgba(0, 255, 234, 0.5) 0%, 
         rgba(138, 43, 226, 0.5) 100%);
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
-.panel-content::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, 
-        rgba(0, 255, 234, 0.7) 0%, 
-        rgba(138, 43, 226, 0.7) 100%);
+/* Warning messages */
+.halo-warning {
+    background: linear-gradient(135deg, 
+        rgba(255, 100, 0, 0.2) 0%, 
+        rgba(255, 50, 0, 0.1) 100%);
+    border: 1px solid rgba(255, 100, 0, 0.4);
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    font-size: 10px;
+    color: #ff9900;
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    animation: pulse 2s infinite;
 }
 
-.loading {
-    position: relative;
-}
-
-.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 16px;
-    height: 16px;
-    margin: -8px 0 0 -8px;
-    border: 2px solid rgba(0, 255, 234, 0.3);
-    border-top-color: #00ffea;
-    border-radius: 50%;
-    animation: loading 1s linear infinite;
-}
-
-@keyframes loading {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Remove overdue warning */
-.v2-overdue-warning {
-    display: none !important;
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
 }
 `);
 
@@ -1486,7 +1501,7 @@ function showWarning(message, duration = 30000){
 /* ---------- RENDER FUNCTIONS ---------- */
 function renderItemListCompact(items, isUsed = false) {
     if (!items || Object.keys(items).length === 0) {
-        return '<div class="empty-state-slim" style="font-size: 9px; padding: 6px;">NO ITEMS</div>';
+        return '<div class="empty-state-slim" style="font-size: 10px; padding: 6px;">NO ITEMS</div>';
     }
     
     const entries = Object.entries(items);
@@ -1499,9 +1514,10 @@ function renderItemListCompact(items, isUsed = false) {
         if (isUsed) itemClass += " item-used-slim";
         if (v.source === 'v2') itemClass += " item-v2";
         
+        // Build indicators like in HALO.5
         let indicators = '';
         if (v.source === 'v2') {
-            indicators += '<span class="v2-indicator" title="Recovered via V2 backup">🔄</span>';
+            indicators += '<span class="v2-indicator" title="Recovered via V2 backup">↻</span>';
         }
         if (v.isHalfPrice) {
             indicators += '<span class="loan-indicator" title="Loan (50% price)">📜</span>';
@@ -1525,20 +1541,15 @@ function updateStats() {
     const activeUsers = [...new Set([...Object.keys(usedItems), ...Object.keys(deposits)])].filter(u => getNetValue(u) !== 0).length;
     const totalProcessed = Object.keys(processedLogs).length;
     const cachedPrices = Object.keys(priceCache).length;
+    const v2Recovered = v2Stats.recovered || 0;
     
     document.getElementById("statUsers").textContent = activeUsers;
     document.getElementById("statLogs").textContent = totalProcessed;
     document.getElementById("statCache").textContent = cachedPrices;
+    // UPDATED: Changed label from "RECOVERED" to "V2 LOGS"
+    document.getElementById("statRecData").textContent = v2Recovered;
     
-    const v2Recovered = v2Stats.recovered || 0;
-    const v2Element = document.getElementById("statV2");
-    if(v2Element){
-        v2Element.innerHTML = `
-            <div class="stat-slim-number">${v2Recovered}</div>
-            <div class="stat-slim-label">V2 RECOVERED</div>
-        `;
-    }
-    
+    // Update V2 last run time
     const lastRunElement = document.getElementById("v2LastRun");
     if(lastRunElement){
         if(v2Stats.lastRun > 0){
@@ -1554,26 +1565,16 @@ function updateStats() {
     }
 }
 
-function sortUsers(users, sortType) {
+function sortUsers(users) {
+    // Always sort by highest debt (negative values first, then positive)
     return users.sort((a, b) => {
         const netA = getNetValue(a);
         const netB = getNetValue(b);
         
-        if (sortType === "debt") {
-            if (netA < 0 && netB < 0) return netA - netB;
-            if (netA < 0) return -1;
-            if (netB < 0) return 1;
-            return netB - netA;
-        }
-        
-        if (sortType === "credit") {
-            if (netA > 0 && netB > 0) return netB - netA;
-            if (netA > 0) return -1;
-            if (netB > 0) return 1;
-            return netA - netB;
-        }
-        
-        return a.localeCompare(b);
+        if (netA < 0 && netB < 0) return netA - netB; // Both negative, lowest first
+        if (netA < 0) return -1; // A negative, B positive
+        if (netB < 0) return 1;  // A positive, B negative
+        return netB - netA; // Both positive, highest first
     });
 }
 
@@ -1587,15 +1588,15 @@ function renderPanel() {
         div.innerHTML = `
             <div class="empty-state-slim">
                 <div>NO ACTIVE BALANCES</div>
-                <div style="margin-top: 5px; font-size: 9px;">CONFIGURE API KEYS ABOVE</div>
+                <div style="margin-top: 5px; font-size: 9px;">SET API KEYS</div>
             </div>
         `;
         updateStats();
         return;
     }
     
-    const sort = document.getElementById("sortUsers")?.value || "debt";
-    users = sortUsers(users, sort);
+    // Always sort by highest debt
+    users = sortUsers(users);
 
     div.innerHTML = users.map(u => {
         const net = getNetValue(u);
@@ -1655,48 +1656,37 @@ const panel = document.createElement("div");
 panel.id = "armoryPanel";
 panel.innerHTML = `
 <div class="panel-header">
-    <h1>HALO ARMORY V2</h1>
-    <div class="header-controls">
-        <button class="header-btn" id="refreshBtn" title="Refresh">⟳</button>
-        <button class="header-btn" id="v2NowBtn" title="Run V2 Now" style="color: #ff9900;">V2</button>
-        <button class="header-btn" id="closeBtn" title="Close">✕</button>
-    </div>
+    <h1>HALO ARMORY V2.9</h1>
+    ${DEBUG_MODE ? '<div class="debug-toggle" title="Debug Mode Active">DEBUG</div>' : ''}
 </div>
 <div class="panel-content">
     <div class="stats-slim">
         <div class="stat-slim">
             <div class="stat-slim-number" id="statUsers">0</div>
-            <div class="stat-slim-label">ACTIVE USERS</div>
+            <div class="stat-slim-label">USERS</div>
         </div>
         <div class="stat-slim">
             <div class="stat-slim-number" id="statLogs">0</div>
-            <div class="stat-slim-label">LOGS PROCESSED</div>
+            <div class="stat-slim-label">LOGS</div>
         </div>
         <div class="stat-slim">
             <div class="stat-slim-number" id="statCache">0</div>
-            <div class="stat-slim-label">PRICE CACHE</div>
+            <div class="stat-slim-label">CACHE</div>
         </div>
-        <div class="stat-slim v2-stat">
-            <div class="stat-slim-number" id="statV2">0</div>
-            <div class="stat-slim-label">V2 RECOVERED</div>
+        <div class="stat-slim rec-data-stat">
+            <div class="stat-slim-number" id="statRecData">0</div>
+            <div class="stat-slim-label">V2 LOGS</div> <!-- UPDATED LABEL -->
         </div>
     </div>
-    
     <div class="v2-last-run" id="v2LastRun"></div>
 
     <div class="api-toggle" id="apiToggle">
-        API CONFIGURATION
+        API CONFIG
     </div>
     <div class="api-fields" id="apiFields">
         <input type="password" id="factionKeyInput" class="api-input-slim" placeholder="FACTION API KEY" value="${factionKey}">
         <input type="password" id="marketKeyInput" class="api-input-slim" placeholder="MARKET API KEY" value="${marketKey}">
     </div>
-
-    <select id="sortUsers" class="sort-select-slim">
-        <option value="debt">▼ HIGHEST DEBT</option>
-        <option value="credit">▲ HIGHEST CREDIT</option>
-        <option value="alphabetical">🔤 A-Z</option>
-    </select>
 
     <div class="users-slim" id="debtLog"></div>
 </div>`;
@@ -1717,19 +1707,6 @@ bubble.onclick = () => {
     if(!minimized) {
         updateStats();
     }
-};
-
-document.getElementById("closeBtn").onclick = () => {
-    panel.style.display = "none";
-    minimized = true;
-};
-
-document.getElementById("refreshBtn").onclick = () => {
-    loadLogs();
-};
-
-document.getElementById("v2NowBtn").onclick = () => {
-    runV2CatchUp();
 };
 
 document.getElementById("apiToggle").onclick = () => {
@@ -1753,8 +1730,6 @@ document.getElementById("marketKeyInput").onchange = e => {
     loadLogs();
 };
 
-document.getElementById("sortUsers").onchange = renderPanel;
-
 /* ---------- INITIALIZATION ---------- */
 // Auto-show panel if no API keys are set
 if (!factionKey || !marketKey) {
@@ -1776,6 +1751,7 @@ setInterval(loadLogs, REFRESH_MS);
 setInterval(() => {
     cleanupPriceCache();
     pruneProcessedLogs();
+    archiveZeroBalanceUsers();
 }, 60 * 60 * 1000);
 
 // Initial load
@@ -1786,7 +1762,6 @@ setTimeout(() => {
     const now = Date.now();
     if(v2Stats.lastRun && (now - v2Stats.lastRun) > (7 * 60 * 60 * 1000)) {
         console.warn("HALO: Emergency - V2 hasn't run in over 7 hours!");
-        showWarning("V2 hasn't run in over 7 hours! Running emergency catch-up...", 15000);
         setTimeout(runV2CatchUp, 3000);
     }
 }, 5000);

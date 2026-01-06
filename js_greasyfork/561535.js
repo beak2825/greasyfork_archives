@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         MercadoLibre - Filtro Regional de Envíos Internacionales
 // @namespace    http://tampermonkey.net/
-// @version      2.3
-// @description  Oculta resultados internacionales, ajusta el contador de resultados reales y optimiza el rendimiento.
+// @version      2.4.1
+// @description  Oculta resultados internacionales en la búsqueda y muestra contador de publicaciones ocultas.
 // @author       Gemini
 // @match        https://*.mercadolibre.com.ar/*
 // @match        https://*.mercadolibre.com.bo/*
@@ -24,8 +24,8 @@
 // @match        https://*.mercadolibre.com.uy/*
 // @match        https://*.mercadolibre.com.ve/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=mercadolibre.com
-// @grant        none
 // @license      MIT 
+// @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/561535/MercadoLibre%20-%20Filtro%20Regional%20de%20Env%C3%ADos%20Internacionales.user.js
 // @updateURL https://update.greasyfork.org/scripts/561535/MercadoLibre%20-%20Filtro%20Regional%20de%20Env%C3%ADos%20Internacionales.meta.js
 // ==/UserScript==
@@ -67,7 +67,7 @@
         totalOriginal: 0,
         hidden: 0,
         visible: 0,
-        textNodes: null // Para guardar referencia al nodo de texto original
+        lastCleanText: "" // Caché para detectar cambios reales
     };
 
     // --- Estilos ---
@@ -124,7 +124,6 @@
 
     // --- Funciones de Utilidad ---
 
-    // Debounce para evitar ejecuciones excesivas durante scroll
     function debounce(func, wait) {
         let timeout;
         return function(...args) {
@@ -133,19 +132,21 @@
         };
     }
 
-    // Extraer número de strings como "1.234 resultados" o "1,234 resultados"
+    // CORRECCIÓN PRINCIPAL: Extraer solo el PRIMER bloque numérico
+    // Evita concatenar "100" y "20" en "10020"
     function parseNumber(str) {
         if (!str) return 0;
-        // Eliminar todo lo que no sea número, punto o coma
-        const cleanStr = str.replace(/[^\d.,]/g, '');
-        // Eliminar puntos y comas para obtener el entero puro (asumiendo formato estándar)
-        const numberStr = cleanStr.replace(/[.,]/g, '');
+        // Busca la primera ocurrencia de dígitos, puntos o comas seguidos
+        const match = str.match(/[\d.,]+/); 
+        if (!match) return 0;
+        
+        // Limpiar puntos y comas del número encontrado
+        const numberStr = match[0].replace(/[.,]/g, '');
         return parseInt(numberStr, 10) || 0;
     }
 
-    // Formatear número con separadores de miles según configuración local
     function formatNumber(num) {
-        return num.toLocaleString('es-MX'); // Usamos es-MX como base genérica para Latam
+        return num.toLocaleString('es-MX');
     }
 
     // --- Funciones Principales ---
@@ -166,34 +167,33 @@
         btn.title = 'Click para alternar filtro internacional';
         
         btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evitar propagación
+            e.stopPropagation();
             isFilterEnabled = !isFilterEnabled;
             localStorage.setItem(STORAGE_KEY, isFilterEnabled);
             
-            // Actualización visual inmediata
             updateBodyClass();
+            // IMPORTANTE: Forzar restauración del header antes de recalcular
+            // Esto "limpia" la vista antes de aplicar nuevos cambios
+            restoreHeaderOriginal(); 
             updateUI();
         });
 
         document.body.appendChild(btn);
-        updateUI(); // Render inicial
+        updateUI();
     }
 
     function updateUI() {
         const btn = document.getElementById('meli-filter-toggle');
         if (!btn) return;
 
-        // Actualizar botón flotante
         const icon = isFilterEnabled ? '🌎🚫' : '🌎👀';
         const statusClass = isFilterEnabled ? 'active' : 'inactive';
         
-        // Calcular visibles (aproximado basado en lo cargado en DOM)
-        // Nota: Total visible real es difícil de saber sin paginación, 
-        // así que mostramos "Visibles en pantalla" o "Resultados ajustados".
-        
-        // Lógica para el botón
-        const visibleText = isFilterEnabled ? (stats.totalOriginal - stats.hidden) : stats.totalOriginal;
-        
+        // Solo mostramos resta si el filtro está activo
+        const visibleValue = isFilterEnabled ? Math.max(0, stats.totalOriginal - stats.hidden) : stats.totalOriginal;
+        // Si totalOriginal es 0 (aún no cargó), mostramos "?"
+        const visibleText = stats.totalOriginal > 0 ? formatNumber(visibleValue) : '...';
+
         btn.className = statusClass;
         btn.innerHTML = `
             <span style="font-size: 20px;">${icon}</span>
@@ -201,7 +201,7 @@
                 <span>
                     <span class="meli-stat-label">Visibles:</span> 
                     <span class="meli-stat-value" style="color: ${isFilterEnabled ? '#333' : '#00a650'}">
-                        ${isFilterEnabled ? 'Filtrados' : 'Todos'}
+                        ${isFilterEnabled ? visibleText : 'Todos'}
                     </span>
                 </span>
                 <span>
@@ -214,52 +214,66 @@
         updateHeaderCounter();
     }
 
+    // Función dedicada para restaurar el texto limpio
+    function restoreHeaderOriginal() {
+        const countElement = document.querySelector(RESULT_COUNT_SELECTORS.join(', '));
+        if (countElement && countElement.dataset.originalHtml) {
+            countElement.innerHTML = countElement.dataset.originalHtml;
+        }
+    }
+
     function updateHeaderCounter() {
         const countElement = document.querySelector(RESULT_COUNT_SELECTORS.join(', '));
         if (!countElement) return;
 
-        // 1. Obtener y guardar el texto original UNA sola vez para evitar recursividad
-        if (!countElement.dataset.originalHtml) {
-            countElement.dataset.originalHtml = countElement.innerHTML;
-            countElement.dataset.originalText = countElement.innerText;
-            stats.totalOriginal = parseNumber(countElement.innerText);
-        }
-
-        // Si el sitio actualizó el contador por AJAX (ej. filtros laterales), detectamos cambio
         const currentText = countElement.innerText;
-        // Si el texto actual no contiene nuestra marca y es diferente al guardado, es nuevo
-        if (!currentText.includes('meli-original-count-sub') && currentText !== countElement.dataset.originalText) {
-             countElement.dataset.originalHtml = countElement.innerHTML;
-             countElement.dataset.originalText = countElement.innerText;
-             stats.totalOriginal = parseNumber(currentText);
+
+        // SEGURIDAD: Si detectamos nuestro propio span, NO leemos el número,
+        // asumimos que el DOM está "sucio" con nuestros cambios.
+        const isTainted = currentText.includes('meli-original-count-sub') || countElement.querySelector('.meli-original-count-sub');
+
+        // 1. Inicialización de caché (Solo si no está sucio)
+        if (!countElement.dataset.originalHtml && !isTainted) {
+            countElement.dataset.originalHtml = countElement.innerHTML;
+            countElement.dataset.originalText = currentText;
+            stats.totalOriginal = parseNumber(currentText);
+            stats.lastCleanText = currentText;
         }
 
-        if (isFilterEnabled && stats.hidden > 0) {
+        // 2. Detección de cambios externos (AJAX de MercadoLibre)
+        // Solo actualizamos el original si el texto cambió Y no es nuestra culpa
+        if (!isTainted && currentText !== stats.lastCleanText && currentText.trim() !== "") {
+             countElement.dataset.originalHtml = countElement.innerHTML;
+             countElement.dataset.originalText = currentText;
+             stats.totalOriginal = parseNumber(currentText);
+             stats.lastCleanText = currentText;
+        }
+
+        // 3. Aplicar cambios visuales
+        if (isFilterEnabled && stats.hidden > 0 && stats.totalOriginal > 0) {
             const newTotal = Math.max(0, stats.totalOriginal - stats.hidden);
             const newTotalFormatted = formatNumber(newTotal);
             
-            // Reconstruimos el string "134 resultados" manteniendo el estilo
-            // Usamos el texto original pero reemplazamos el número
-            let originalText = countElement.dataset.originalText;
+            let originalText = countElement.dataset.originalText || currentText;
             
-            // Buscar la parte del número en el texto original para reemplazarla
-            // Esto preserva palabras como "resultados" o "productos"
+            // Reemplazo inteligente: solo el número
             const match = originalText.match(/[\d.,]+/);
             let finalText = originalText;
             
             if (match) {
+                // Reemplazamos solo la primera coincidencia numérica
                 finalText = originalText.replace(match[0], newTotalFormatted);
             }
 
-            // Inyectamos HTML limpio
+            // Inyectamos
             countElement.innerHTML = `
                 ${finalText}
                 <span class="meli-original-count-sub" title="Original: ${formatNumber(stats.totalOriginal)}">
                     (${stats.hidden} ocultos)
                 </span>
             `;
-        } else {
-            // Restaurar original
+        } else if (!isFilterEnabled && countElement.dataset.originalHtml) {
+            // Asegurar restauración si el filtro se apagó
             countElement.innerHTML = countElement.dataset.originalHtml;
         }
     }
@@ -269,20 +283,16 @@
         let currentHiddenCount = 0;
         
         items.forEach(item => {
-            // Chequeo rápido de clase para rendimiento
             let isIntl = false;
 
             if (item.classList.contains('meli-processed')) {
-                // Si ya fue procesado, solo verificamos si es internacional
                 if (item.classList.contains('meli-item-international')) {
                     isIntl = true;
                 }
             } else {
-                // Primer procesamiento
                 item.classList.add('meli-processed');
                 const textContent = item.innerText.toLowerCase();
                 
-                // Verificación de palabras clave
                 if (KEYWORDS.some(k => textContent.includes(k.toLowerCase()))) {
                     item.classList.add('meli-item-international');
                     isIntl = true;
@@ -295,45 +305,47 @@
         // Solo actualizamos si cambiaron los números
         if (currentHiddenCount !== stats.hidden) {
             stats.hidden = currentHiddenCount;
-            // Si stats.totalOriginal es 0 (primera carga), intentamos leerlo
+            // Intento de re-leer el total si estaba en 0
             if (stats.totalOriginal === 0) updateHeaderCounter();
             updateUI();
+        } else {
+            // A veces el número de ocultos no cambia, pero el total original sí (paginación)
+            // Forzamos chequeo del header
+            updateHeaderCounter();
         }
     }
 
-    // Versión optimizada con Debounce para el Observer
     const debouncedProcess = debounce(processItems, 150);
 
     // --- Inicialización ---
 
     updateBodyClass();
 
-    // Iniciar UI
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', createToggleButton);
     } else {
         createToggleButton();
     }
 
-    // Iniciar lógica
     window.addEventListener('load', () => {
-        processItems(); // Ejecución inicial fuerte
-        updateHeaderCounter();
+        processItems();
     });
 
-    // Observer optimizado
     const observer = new MutationObserver((mutations) => {
         let shouldUpdate = false;
         
         for (const mutation of mutations) {
-            // Ignoramos cambios que hacemos nosotros mismos al botón o header
             if (mutation.target.id === 'meli-filter-toggle' || 
-                mutation.target.classList.contains('ui-search-search-result__quantity-results')) {
+                mutation.target.classList.contains('meli-original-count-sub')) {
                 continue;
             }
             if (mutation.addedNodes.length > 0) {
                 shouldUpdate = true;
                 break;
+            }
+             // Si cambia el texto del header (navegación entre páginas)
+            if (mutation.target.matches && mutation.target.matches(RESULT_COUNT_SELECTORS.join(', '))) {
+                 shouldUpdate = true;
             }
         }
 
@@ -344,6 +356,6 @@
 
     observer.observe(document.body, { childList: true, subtree: true });
 
-    console.log("Filtro ML Optimizado v2.3 activo");
+    console.log("Filtro ML v2.4 (Bugfix Conteo) activo");
 
 })();

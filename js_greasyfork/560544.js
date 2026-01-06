@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FCX
 // @namespace    https://github.com/mdmrk/fcx
-// @version      0.0.9
+// @version      0.1.0
 // @description  Mejora la navegación en ForoCoches.
 // @license      GNU General Public License v3.0
 // @author       mdmrk
@@ -18,7 +18,7 @@
 // ==/UserScript==
 
 // src/style.css
-var style_default = "";
+var style_default = ".infinite-scroll-separator{justify-content:center;align-items:center;margin:20px 0;display:flex;position:relative}.infinite-scroll-separator-line{background-color:var(--border-color,#e5e7eb);z-index:1;height:1px;position:absolute;left:0;right:0}.infinite-scroll-separator-text{background-color:var(--bg-color,#fff);color:var(--text-secondary,#6b7280);z-index:2;border:1px solid var(--border-color,#e5e7eb);border-radius:9999px;padding:0 16px;font-size:.875rem;font-weight:500}#fcx-config-backdrop{z-index:9998;background:#00000080;width:100%;height:100%;position:fixed;top:0;left:0}#fcx-config-panel{color:#ccc;z-index:9999;opacity:0;background:#1e1e1e;border:1px solid #444;border-radius:4px;flex-direction:column;width:900px;max-width:95%;max-height:90vh;font-size:13px;display:flex;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%)scale(.95);box-shadow:0 10px 25px #00000080}#fcx-config-header{color:#fff;background:linear-gradient(#2a2a2a,#1a1a1a);border-bottom:1px solid #000;padding:8px 10px;font-weight:700}#fcx-config-content{flex:1;padding:0;overflow-y:auto}#fcx-config-table{border-collapse:collapse;width:100%}#fcx-config-table th,#fcx-config-table td{text-align:left;border-bottom:1px solid #333;padding:10px}#fcx-config-table th{color:#fe5e00;z-index:10;background:#252525;font-weight:700;position:sticky;top:0}#fcx-config-table th.fcx-col-opt{width:auto}#fcx-config-table th.fcx-col-chk{text-align:center;width:80px}#fcx-config-table td.fcx-col-chk{text-align:center}.fcx-desc{color:#888;margin-top:4px;font-size:11px;display:block}.fcx-label{color:#eee;font-weight:700}.fcx-disabled{opacity:.3;pointer-events:none}#fcx-footer{text-align:right;color:#666;background:#1a1a1a;border-top:1px solid #333;padding:5px 10px;font-size:11px}#fcx-footer a{color:#888;cursor:pointer;margin-left:10px;text-decoration:none}#fcx-footer a:hover{color:#ccc}";
 
 // src/utils/inject-console.ts
 var consoleMethodsThatDontBreakWhenArgumentIsString = [
@@ -41,7 +41,7 @@ function injectConsole(prefix) {
 }
 
 // src/config.ts
-var devMode = true;
+var devMode = false;
 var theme = {
   enhancedCommentClass: "enhanced-comment"
 };
@@ -51,7 +51,9 @@ var oldSelectors = {
   avatar: ".avatar",
   authorName: ".bigusername",
   content: "div[id^='post_message_']",
-  nextPageLink: "a[rel='next']"
+  nextPageLink: "a[rel='next']",
+  prevPageLink: "a[rel='prev']",
+  activePage: "td.alt2 .mfont strong"
 };
 var newSelectors = {
   feedContainer: "#posts",
@@ -59,7 +61,9 @@ var newSelectors = {
   avatar: ".thread-profile-image",
   authorName: "div[id^='postmenu_'] > a",
   content: "div[id^='post_message_']",
-  nextPageLink: "a:has(span[style*='--next-right-icon'])"
+  nextPageLink: "a:has(span[style*='--next-right-icon'])",
+  prevPageLink: "a:has(span[style*='--next-left-icon'])",
+  activePage: "span[title*='Mostrando resultados'] > strong"
 };
 
 // src/utils/logger.ts
@@ -106,14 +110,6 @@ var detectPageType = () => {
 };
 var currentPageType = detectPageType();
 
-// src/types/config.ts
-var ConfigSection;
-((ConfigSection2) => {
-  ConfigSection2["COMMON"] = "General";
-  ConfigSection2["NEW_INTERFACE"] = "Nueva Interfaz";
-  ConfigSection2["OLD_INTERFACE"] = "Antigua Interfaz";
-})(ConfigSection ||= {});
-
 // src/config-registry.ts
 var CONFIG_KEYS = {
   REMOVE_SIDEBAR: "remove_sidebar",
@@ -123,15 +119,14 @@ var CONFIG_KEYS = {
 var configs = [
   {
     key: CONFIG_KEYS.REMOVE_SIDEBAR,
-    section: "Nueva Interfaz" /* NEW_INTERFACE */,
     label: "Eliminar Barra Lateral",
     description: "Elimina la barra lateral derecha y expande el área de contenido principal.",
     defaultValue: false,
-    type: "checkbox"
+    type: "checkbox",
+    scopes: ["new"]
   },
   {
     key: CONFIG_KEYS.INFINITE_SCROLL,
-    section: "General" /* COMMON */,
     label: "Scroll Infinito",
     description: "Carga automáticamente la siguiente página de hilos al llegar al final.",
     defaultValue: true,
@@ -139,7 +134,6 @@ var configs = [
   },
   {
     key: CONFIG_KEYS.REMOVE_BANNERS,
-    section: "General" /* COMMON */,
     label: "Eliminar Publicidad",
     description: "Oculta los banners de publicidad.",
     defaultValue: true,
@@ -171,103 +165,71 @@ var setConfig = (key, value) => {
 var resetConfig = (key, defaultValue) => {
   setConfig(key, defaultValue);
 };
+var getScopedConfigKey = (key, scope) => {
+  return `${key}_${scope}`;
+};
+var getEffectiveConfig = (key, scope) => {
+  const general = getConfig(key, false);
+  if (general === true)
+    return true;
+  const scopedKey = getScopedConfigKey(key, scope);
+  return getConfig(scopedKey, false);
+};
 
 // src/ui/config-panel.ts
-var STYLES = `
-#fcx-config-backdrop {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5); z-index: 9998;
-}
-#fcx-config-panel {
-    position: fixed; top: 50%; left: 50%; width: 1000px; max-width: 95%; max-height: 90vh;
-    transform: translate(-50%, -50%) scale(0.95);
-    background: #1e1e1e; color: #ccc; border-radius: 4px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 9999;
-    opacity: 0;
-    display: flex; flex-direction: column; font-size: 13px;
-    border: 1px solid #444;
-}
-#fcx-config-header {
-    background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
-    padding: 8px 10px; border-bottom: 1px solid #000;
-    font-weight: bold; color: #fff;
-}
-
-#fcx-config-content {
-    flex: 1; overflow-y: auto; padding: 10px;
-}
-fieldset.fcx-group {
-    border: 1px solid #444; margin: 0 0 10px 0; padding: 5px 10px;
-}
-fieldset.fcx-group legend {
-    color: #fe5e00; font-weight: bold; padding: 0 4px;
-}
-.fcx-item {
-    margin-bottom: 2px; display: flex; align-items: center; justify-content: space-between;
-}
-.fcx-item label {
-    cursor: pointer; color: #eee;
-}
-.fcx-item label:hover { color: #fff; }
-.fcx-desc {
-    color: #888; margin-left: 4px;
-}
-.fcx-reset {
-    background: transparent; border: none; color: #666; cursor: pointer;
-    font-size: 10px; padding: 0 4px; margin-left: auto;
-}
-.fcx-reset:hover { color: #fe5e00; }
-#fcx-footer {
-    border-top: 1px solid #333; padding: 5px 10px;
-    background: #1a1a1a; text-align: right;
-    font-size: 11px; color: #666;
-}
-#fcx-footer a { color: #888; text-decoration: none; margin-left: 10px; cursor: pointer; }
-#fcx-footer a:hover { color: #ccc; }
-`;
-var renderItem = (item) => {
-  const div = document.createElement("div");
-  div.className = "fcx-item";
-  div.dataset.name = item.label;
-  const left = document.createElement("div");
-  const label = document.createElement("label");
+var createCheckbox = (checked, onChange) => {
   const input = document.createElement("input");
-  if (item.type === "checkbox") {
-    input.type = "checkbox";
-    input.checked = getConfig(item.key, item.defaultValue);
-    input.onchange = (e) => {
-      setConfig(item.key, e.target.checked);
-    };
-  } else {
-    input.type = item.type;
-    input.value = String(getConfig(item.key, item.defaultValue));
-    input.classList.add("fcx-input-text");
-    input.onchange = (e) => {
-      const val = e.target.value;
-      setConfig(item.key, item.type === "number" ? Number(val) : val);
-    };
-  }
-  input.style.marginRight = "5px";
-  input.style.verticalAlign = "middle";
-  label.append(input, item.label);
+  input.type = "checkbox";
+  input.checked = checked;
+  input.onchange = (e) => {
+    onChange(e.target.checked);
+  };
+  return input;
+};
+var renderRow = (item) => {
+  const tr = document.createElement("tr");
+  const tdName = document.createElement("td");
+  const label = document.createElement("div");
+  label.className = "fcx-label";
+  label.textContent = item.label;
   const desc = document.createElement("span");
   desc.className = "fcx-desc";
-  desc.textContent = `: ${item.description || ""}`;
-  left.append(label, desc);
-  const reset = document.createElement("button");
-  reset.className = "fcx-reset";
-  reset.textContent = "Reset";
-  reset.title = "Restaurar valores predeterminados";
-  reset.onclick = () => {
-    resetConfig(item.key, item.defaultValue);
-    if (item.type === "checkbox") {
-      input.checked = item.defaultValue;
+  desc.textContent = item.description;
+  tdName.append(label, desc);
+  const tdGeneral = document.createElement("td");
+  tdGeneral.className = "fcx-col-chk";
+  const generalChecked = getConfig(item.key, item.defaultValue);
+  const updateRowState = (isGeneralChecked) => {
+    if (isGeneralChecked) {
+      tdNew.classList.add("fcx-disabled");
+      tdOld.classList.add("fcx-disabled");
     } else {
-      input.value = String(item.defaultValue);
+      tdNew.classList.remove("fcx-disabled");
+      tdOld.classList.remove("fcx-disabled");
     }
   };
-  div.append(left, reset);
-  return div;
+  const checkGeneral = createCheckbox(generalChecked, (val) => {
+    setConfig(item.key, val);
+    updateRowState(val);
+  });
+  tdGeneral.append(checkGeneral);
+  const tdNew = document.createElement("td");
+  tdNew.className = "fcx-col-chk";
+  if (!item.scopes || item.scopes.includes("new")) {
+    const keyNew = getScopedConfigKey(item.key, "new");
+    const checkNew = createCheckbox(getConfig(keyNew, false), (val) => setConfig(keyNew, val));
+    tdNew.append(checkNew);
+  }
+  const tdOld = document.createElement("td");
+  tdOld.className = "fcx-col-chk";
+  if (!item.scopes || item.scopes.includes("old")) {
+    const keyOld = getScopedConfigKey(item.key, "old");
+    const checkOld = createCheckbox(getConfig(keyOld, false), (val) => setConfig(keyOld, val));
+    tdOld.append(checkOld);
+  }
+  updateRowState(generalChecked);
+  tr.append(tdName, tdGeneral, tdNew, tdOld);
+  return tr;
 };
 var toggleConfigPanel = () => {
   if (document.getElementById("fcx-config-panel")) {
@@ -277,12 +239,6 @@ var toggleConfigPanel = () => {
   openPanel();
 };
 var openPanel = () => {
-  if (!document.getElementById("fcx-styles")) {
-    const styleInfo = document.createElement("style");
-    styleInfo.id = "fcx-styles";
-    styleInfo.textContent = STYLES;
-    document.head.append(styleInfo);
-  }
   const backdrop = document.createElement("div");
   backdrop.id = "fcx-config-backdrop";
   backdrop.onclick = closePanel;
@@ -293,27 +249,33 @@ var openPanel = () => {
   header.textContent = "Configuración FCX";
   const content = document.createElement("div");
   content.id = "fcx-config-content";
-  const sections = Object.values(ConfigSection);
-  sections.forEach((sec) => {
-    const currentItems = configs.filter((c) => c.section === sec);
-    if (currentItems.length > 0) {
-      const fieldset = document.createElement("fieldset");
-      fieldset.className = "fcx-group";
-      const legend = document.createElement("legend");
-      legend.textContent = sec;
-      fieldset.append(legend);
-      currentItems.forEach((item) => {
-        fieldset.append(renderItem(item));
-      });
-      content.append(fieldset);
-    } else {
-      const msg = document.createElement("div");
-      msg.style.padding = "20px";
-      msg.style.color = "#666";
-      msg.textContent = "No hay opciones en esta sección aún.";
-      content.append(msg);
+  const table = document.createElement("table");
+  table.id = "fcx-config-table";
+  const thead = document.createElement("thead");
+  const trHead = document.createElement("tr");
+  const thName = document.createElement("th");
+  thName.className = "fcx-col-opt";
+  thName.textContent = "Opción";
+  const thGen = document.createElement("th");
+  thGen.className = "fcx-col-chk";
+  thGen.textContent = "General";
+  const thNew = document.createElement("th");
+  thNew.className = "fcx-col-chk";
+  thNew.textContent = "Nuevo";
+  const thOld = document.createElement("th");
+  thOld.className = "fcx-col-chk";
+  thOld.textContent = "Antiguo";
+  trHead.append(thName, thGen, thNew, thOld);
+  thead.append(trHead);
+  table.append(thead);
+  const tbody = document.createElement("tbody");
+  configs.forEach((item) => {
+    if (item.type === "checkbox") {
+      tbody.append(renderRow(item));
     }
   });
+  table.append(tbody);
+  content.append(table);
   const footer = document.createElement("div");
   footer.id = "fcx-footer";
   const closeLink = document.createElement("a");
@@ -325,6 +287,12 @@ var openPanel = () => {
     if (confirm("¿Restaurar toda la configuración?")) {
       configs.forEach((c) => {
         resetConfig(c.key, c.defaultValue);
+        if (!c.scopes || c.scopes.includes("new")) {
+          resetConfig(getScopedConfigKey(c.key, "new"), false);
+        }
+        if (!c.scopes || c.scopes.includes("old")) {
+          resetConfig(getScopedConfigKey(c.key, "old"), false);
+        }
       });
       closePanel();
       openPanel();
@@ -403,6 +371,7 @@ var watchFeed = (selectors) => {
 // src/lib/infinite-scroll.ts
 var isLoading = false;
 var nextUrl = null;
+var prevUrl = null;
 var currentSelectors = null;
 var initInfiniteScroll = (selectors) => {
   currentSelectors = selectors;
@@ -410,28 +379,118 @@ var initInfiniteScroll = (selectors) => {
     logger.log("Infinite Scroll: Not a thread page.");
     return;
   }
+  const prevLink = document.querySelector(selectors.prevPageLink);
+  if (prevLink) {
+    prevUrl = prevLink.href;
+    logger.log("Infinite Scroll: Prev page is", prevUrl);
+    const topSentry = document.createElement("div");
+    topSentry.id = "infinite-scroll-top-sentry";
+    topSentry.innerHTML = "<p style='color: #666; font-weight: bold;'>Cargando página anterior...</p>";
+    topSentry.style.textAlign = "center";
+    topSentry.style.padding = "40px";
+    const feed = document.querySelector(selectors.feedContainer);
+    if (feed)
+      feed.before(topSentry);
+    const topObserver = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.isIntersecting && !isLoading && prevUrl) {
+        loadPrevPage();
+      }
+    }, { rootMargin: "300px" });
+    topObserver.observe(topSentry);
+  }
   const nextLink = document.querySelector(selectors.nextPageLink);
   if (!nextLink) {
     logger.log("Infinite Scroll: No next page found.");
-    return;
+  } else {
+    nextUrl = nextLink.href;
+    logger.log("Infinite Scroll: Next page is", nextUrl);
+    const bottomSentry = document.createElement("div");
+    bottomSentry.id = "infinite-scroll-bottom-sentry";
+    bottomSentry.innerHTML = "<p style='color: #666; font-weight: bold;'>Cargando página siguiente...</p>";
+    bottomSentry.style.textAlign = "center";
+    bottomSentry.style.padding = "40px";
+    const feed = document.querySelector(selectors.feedContainer);
+    if (feed)
+      feed.after(bottomSentry);
+    const bottomObserver = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.isIntersecting && !isLoading && nextUrl) {
+        loadNextPage();
+      }
+    }, { rootMargin: "300px" });
+    bottomObserver.observe(bottomSentry);
   }
-  nextUrl = nextLink.href;
-  logger.log("Infinite Scroll: Next page is", nextUrl);
-  const sentry = document.createElement("div");
-  sentry.id = "infinite-scroll-sentry";
-  sentry.innerHTML = "<p style='color: #666; font-weight: bold;'>Loading next page...</p>";
-  sentry.style.textAlign = "center";
-  sentry.style.padding = "40px";
-  const feed = document.querySelector(selectors.feedContainer);
-  if (feed)
-    feed.after(sentry);
-  const observer = new IntersectionObserver((entries) => {
-    const entry = entries[0];
-    if (entry.isIntersecting && !isLoading && nextUrl) {
-      loadNextPage();
+};
+var getPageNumber = (url) => {
+  try {
+    const urlObj = new URL(url);
+    const params = new URLSearchParams(urlObj.search);
+    return params.get("page");
+  } catch (e) {
+    console.error("Error parsing URL for page number", e);
+    return null;
+  }
+};
+var getPageNumberFromDoc = (doc) => {
+  if (currentSelectors?.activePage) {
+    const activePageEl = doc.querySelector(currentSelectors.activePage);
+    if (activePageEl?.textContent) {
+      return activePageEl.textContent.trim();
     }
-  }, { rootMargin: "300px" });
-  observer.observe(sentry);
+  }
+  return null;
+};
+var createSeparator = (pageNumber) => {
+  const div = document.createElement("div");
+  div.classList.add("infinite-scroll-separator");
+  const line = document.createElement("div");
+  line.classList.add("infinite-scroll-separator-line");
+  const span = document.createElement("span");
+  span.textContent = `Página ${pageNumber}`;
+  span.classList.add("infinite-scroll-separator-text");
+  div.appendChild(line);
+  div.appendChild(span);
+  return div;
+};
+var loadPrevPage = async () => {
+  if (!prevUrl)
+    return;
+  isLoading = true;
+  try {
+    const response = await fetch(prevUrl);
+    const text = await response.text();
+    const parser = new DOMParser;
+    const doc = parser.parseFromString(text, "text/html");
+    const newFeed = doc.querySelector(currentSelectors.feedContainer);
+    const currentFeed = document.querySelector(currentSelectors.feedContainer);
+    if (newFeed && currentFeed) {
+      const oldScrollHeight = document.documentElement.scrollHeight;
+      const oldScrollTop = document.documentElement.scrollTop;
+      Array.from(newFeed.children).reverse().forEach((child) => {
+        const importedNode = document.importNode(child, true);
+        currentFeed.insertBefore(importedNode, currentFeed.firstChild);
+      });
+      const pageNum = getPageNumberFromDoc(doc) || getPageNumber(prevUrl);
+      if (pageNum) {
+        const separator = createSeparator(pageNum);
+        currentFeed.insertBefore(separator, currentFeed.firstChild);
+      }
+      const newScrollHeight = document.documentElement.scrollHeight;
+      document.documentElement.scrollTop = oldScrollTop + (newScrollHeight - oldScrollHeight);
+    }
+    const prevLink = doc.querySelector(currentSelectors.prevPageLink);
+    if (prevLink) {
+      prevUrl = prevLink.href;
+    } else {
+      prevUrl = null;
+      document.querySelector("#infinite-scroll-top-sentry")?.remove();
+    }
+  } catch (err) {
+    console.error("Infinite Scroll (Prev) Error:", err);
+  } finally {
+    isLoading = false;
+  }
 };
 var loadNextPage = async () => {
   if (!nextUrl)
@@ -445,6 +504,11 @@ var loadNextPage = async () => {
     const newFeed = doc.querySelector(currentSelectors.feedContainer);
     const currentFeed = document.querySelector(currentSelectors.feedContainer);
     if (newFeed && currentFeed) {
+      const pageNum = getPageNumberFromDoc(doc) || getPageNumber(nextUrl);
+      if (pageNum) {
+        const separator = createSeparator(pageNum);
+        currentFeed.appendChild(separator);
+      }
       Array.from(newFeed.children).forEach((child) => {
         const importedNode = document.importNode(child, true);
         currentFeed.appendChild(importedNode);
@@ -455,7 +519,7 @@ var loadNextPage = async () => {
       nextUrl = nextLink.href;
     } else {
       nextUrl = null;
-      document.querySelector("#infinite-scroll-sentry")?.remove();
+      document.querySelector("#infinite-scroll-bottom-sentry")?.remove();
     }
   } catch (err) {
     console.error("Infinite Scroll Error:", err);
@@ -465,8 +529,8 @@ var loadNextPage = async () => {
 };
 
 // src/lib/remove-banners.ts
-var removeBanners = () => {
-  const shouldRemove = getConfig(CONFIG_KEYS.REMOVE_BANNERS, true);
+var removeBanners = (scope) => {
+  const shouldRemove = getEffectiveConfig(CONFIG_KEYS.REMOVE_BANNERS, scope);
   if (!shouldRemove)
     return;
   const banner = document.getElementById("notices-wrapper");
@@ -485,10 +549,10 @@ class NewSiteAdapter {
   init() {
     logger.log(`Initializing ${this.name} adapter...`);
     this.removeSidebar();
-    removeBanners();
+    removeBanners("new");
   }
   removeSidebar() {
-    const shouldRemove = getConfig(CONFIG_KEYS.REMOVE_SIDEBAR, true);
+    const shouldRemove = getEffectiveConfig(CONFIG_KEYS.REMOVE_SIDEBAR, "new");
     if (!shouldRemove)
       return;
     const sidebar = document.querySelector("#sidebar");
@@ -500,7 +564,7 @@ class NewSiteAdapter {
   }
   setupFeatures() {
     watchFeed(this.selectors);
-    if (getConfig(CONFIG_KEYS.INFINITE_SCROLL, true)) {
+    if (getEffectiveConfig(CONFIG_KEYS.INFINITE_SCROLL, "new")) {
       initInfiniteScroll(this.selectors);
     }
   }
@@ -515,11 +579,13 @@ class OldSiteAdapter {
   }
   init() {
     logger.log(`Initializing ${this.name} adapter...`);
-    removeBanners();
+    removeBanners("old");
   }
   setupFeatures() {
     watchFeed(this.selectors);
-    initInfiniteScroll(this.selectors);
+    if (getEffectiveConfig(CONFIG_KEYS.INFINITE_SCROLL, "old")) {
+      initInfiniteScroll(this.selectors);
+    }
   }
 }
 

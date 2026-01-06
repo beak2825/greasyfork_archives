@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         🔄️ Character Switcher Reorder
 // @namespace    chk.pop.locale.autouse.combo
-// @version      2.2
+// @version      2.3
 // @description  Reorder character switcher dropdown into custom groups by name across the whole game; waits until populated; adds separators only if needed; avoids layout flicker
 // @match        https://*.popmundo.com/*
 // @run-at       document-start
@@ -17,7 +17,7 @@
         { label: "— main —", names: ["Kitty Buttercup 么", "Keiji クーナ", "Miyu Ouchi", "Ken'ichi Yasui"] },
         { label: "— riize —", names: ["Park Wonbin", "Lee Sohee", "Osaki Shotaro", "Song Eunseok", "Anton Lee", "Jung Sungchan"] },
         { label: "— cortis —", names: ["Martin Edwards", "Keonho Ahn", "James Yufan", "Juhoon Kim"] },
-        { label: "— heist —", names: ["Kia Rivera", "Rei Xie", "Tomie Ito 富江", "Kai Kuno", "Juan Guanare", 'Eva Lavender'] },
+        { label: "— heist —", names: ["Kia Rivera", "Rei Xie", 'Yuzu Bunny 月', "Tomie Ito 富江", "Kai Kuno", "Juan Guanare", 'Eva Lavender'] },
         { label: "— advanture —", names: ["Koko Koharu", "Ruby Ross", "Nova Xie", "Toi Kuno", "Yuji Iwakura", "Ryu Iwakura", "Yuta Kuno", "XiAn Kuno"] },
         { label: "— pps —", names: ["Ion Grecescu", "Ren Kuno", "Jun Kuno"] },
         { label: "— sugarcubes —", names: ["Yuki Ouchi", "Oko Ouchi", "Olesya Ouchi", "June Ouchi", "Moona Ouchi"] },

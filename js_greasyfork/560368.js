@@ -2,7 +2,7 @@
 // @name        SendToClient
 // @namespace   https://greasyfork.org/en/users/1466117
 // @description Painlessly send torrents to your bittorrent client.
-// @version     3.13
+// @version     3.15
 // @author      Mocha, originally by notmarek
 // @license     MIT
 // @match       *://*.gazellegames.net/torrents.php*
@@ -806,6 +806,7 @@
 }
 .stc-form-group {
 	margin-bottom: 15px;
+	width: 100%;
 }
 .stc-form-label {
 	display: block;
@@ -821,11 +822,42 @@
 	border: 1px solid #444;
 	border-radius: 3px;
 	font-size: 13px;
-	box-sizing: border-box;
+	box-sizing: border-box; !important;
+	display: block;
 }
 .stc-form-input:disabled, .stc-form-select:disabled {
 	opacity: 0.5;
 	cursor: not-allowed;
+}
+.stc-form-input:disabled, .stc-form-select:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+/* HDBits-specific overrides */
+.stc-modal-content .stc-form-input,
+.stc-modal-content .stc-form-select {
+	width: 100% !important;
+	max-width: 100% !important;
+	box-sizing: border-box !important;
+	display: block !important;
+}
+
+.stc-modal-content .stc-form-group {
+	width: 100% !important;
+	max-width: 100% !important;
+	box-sizing: border-box !important;
+}
+
+.stc-modal-content {
+	box-sizing: border-box !important;
+}
+
+.stc-modal-content * {
+	box-sizing: border-box !important;
+}
+/* End HDBits overrides */
+.stc-form-checkbox {
+	margin-right: 8px;
 }
 .stc-form-checkbox {
 	margin-right: 8px;
@@ -956,28 +988,25 @@
 }
 .stc-inline-profile-modal {
 	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0, 0, 0, 0.8);
-	display: none;
-	align-items: center;
-	justify-content: center;
-	z-index: 999999;
-}
-.stc-inline-profile-modal.active {
-	display: flex;
-}
-.stc-inline-profile-content {
 	background: #1a1a1a;
 	border: 2px solid #444;
 	border-radius: 6px;
 	padding: 15px;
 	width: 280px;
 	color: #fff;
+	z-index: 999999;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+	opacity: 0;
+	transform: scale(0.9) translateY(-10px);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+	pointer-events: none;
 }
-.stc-inline-profile-content .stc-profile-container {
+.stc-inline-profile-modal.active {
+	opacity: 1;
+	transform: scale(1) translateY(0);
+	pointer-events: auto;
+}
+.stc-inline-profile-modal .stc-profile-container {
 	margin: 0;
 	padding: 0;
 	border: none;
@@ -2473,13 +2502,26 @@
 	}
 
 	async function openInlineProfileModal(optionsBtn) {
-		// Create modal structure
+		// Check if modal already exists
+		const existingModal = document.querySelector('.stc-inline-profile-modal');
+		if (existingModal) {
+			// If modal exists and is active, close it with animation
+			if (existingModal.classList.contains('active')) {
+				existingModal.classList.remove('active');
+				setTimeout(() => {
+					if (document.body.contains(existingModal)) {
+						document.body.removeChild(existingModal);
+					}
+				}, 300); // Match the CSS transition duration
+				return; // Exit the function - don't open a new modal
+			}
+			// If modal exists but isn't active, remove it
+			existingModal.remove();
+		}
+
+		// Create modal structure (no background overlay)
 		const modal = document.createElement('div');
 		modal.className = 'stc-inline-profile-modal';
-
-		const content = document.createElement('div');
-		content.className = 'stc-inline-profile-content';
-		content.onclick = (e) => e.stopPropagation();
 
 		// Create profile selector using existing component
 		const profileContainer = createProfileSelector();
@@ -2489,10 +2531,32 @@
 		closeBtn.className = 'stc-inline-close-btn';
 		closeBtn.textContent = 'Close';
 
-		content.appendChild(profileContainer);
-		content.appendChild(closeBtn);
-		modal.appendChild(content);
+		modal.appendChild(profileContainer);
+		modal.appendChild(closeBtn);
 		document.body.appendChild(modal);
+
+		// Position the modal near the options button
+		const btnRect = optionsBtn.getBoundingClientRect();
+		const modalWidth = 280;
+		const modalHeight = 250; // Approximate height
+
+		// Calculate position (try to position above and to the right of the button)
+		let top = btnRect.top - modalHeight - 10;
+		let left = btnRect.left;
+
+		// Adjust if modal would go off-screen
+		if (top < 10) {
+			// If not enough space above, position below
+			top = btnRect.bottom + 10;
+		}
+
+		if (left + modalWidth > window.innerWidth - 10) {
+			// If too far right, align to right edge
+			left = window.innerWidth - modalWidth - 10;
+		}
+
+		modal.style.top = `${top}px`;
+		modal.style.left = `${left}px`;
 
 		// Populate dropdown
 		const modalDropdown = profileContainer.querySelector('#stc-profile-dropdown');
@@ -2523,25 +2587,35 @@
 		// Close handlers
 		const closeModal = () => {
 			modal.classList.remove('active');
+			// Wait for animation to complete before removing
 			setTimeout(() => {
 				if (document.body.contains(modal)) {
 					document.body.removeChild(modal);
 				}
-			}, 300);
+			}, 300); // Match the CSS transition duration
 		};
 
 		closeBtn.onclick = closeModal;
-		modal.onclick = (e) => {
-			if (e.target === modal) {
+
+		// Close when clicking outside the modal
+		const outsideClickHandler = (e) => {
+			if (!modal.contains(e.target) && e.target !== optionsBtn) {
 				closeModal();
+				document.removeEventListener('click', outsideClickHandler);
 			}
 		};
+
+		// Add click listener after a short delay to prevent immediate closure
+		setTimeout(() => {
+			document.addEventListener('click', outsideClickHandler);
+		}, 100);
 
 		// Escape key handler
 		const escapeHandler = (e) => {
 			if (e.key === 'Escape') {
 				closeModal();
 				document.removeEventListener('keydown', escapeHandler);
+				document.removeEventListener('click', outsideClickHandler);
 			}
 		};
 		document.addEventListener('keydown', escapeHandler);
@@ -2550,6 +2624,7 @@
 		const observer = new MutationObserver(() => {
 			if (!document.body.contains(modal)) {
 				document.removeEventListener('keydown', escapeHandler);
+				document.removeEventListener('click', outsideClickHandler);
 				observer.disconnect();
 			}
 		});

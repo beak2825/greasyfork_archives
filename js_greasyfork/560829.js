@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Reddit Free Awards
 // @namespace    http://tampermonkey.net/
-// @version      2.0.1
+// @version      2.0.2
 // @description  Give away free awards on Reddit
 // @author       nrmu9
 // @match        https://www.reddit.com/*
@@ -500,16 +500,15 @@
       try {
         await sendAward(thingId, selectedAward);
         updateAwardUI(thingId, selectedAward.id, selectedAward.img);
+        closeModal();
         showConfetti();
         showToast("Award sent successfully!");
-        closeModal();
       } catch (e) {
+        closeModal();
         showToast(
           "Reddit servers failed. This is a Reddit bug, not this script. Try again!",
           true
         );
-        sendButton.disabled = false;
-        sendButton.textContent = originalText;
       }
     };
     modal.appendChild(sendButton);
