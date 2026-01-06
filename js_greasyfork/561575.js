@@ -1,0 +1,218 @@
+// ==UserScript==
+// @name         Bilibili 批量自动拉黑/取关工具 (支持昵称)
+// @namespace    https://github.com/Lanzy1029/bilibili-batch-blocker
+// @version      1.1.1
+// @description  输入昵称或UID，自动转换并执行拉黑（兼取关）操作。
+// @author       Lanzzzy
+// @license      MIT
+// @match        https://www.bilibili.com/*
+// @match        https://space.bilibili.com/*
+// @match        https://t.bilibili.com/*
+// @icon         https://i0.hdslb.com/bfs/static/jinkela/long/images/favicon.ico
+// @grant        GM_xmlhttpRequest
+// @grant        GM_registerMenuCommand
+// @connect      api.bilibili.com
+// @downloadURL https://update.greasyfork.org/scripts/561575/Bilibili%20%E6%89%B9%E9%87%8F%E8%87%AA%E5%8A%A8%E6%8B%89%E9%BB%91%E5%8F%96%E5%85%B3%E5%B7%A5%E5%85%B7%20%28%E6%94%AF%E6%8C%81%E6%98%B5%E7%A7%B0%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561575/Bilibili%20%E6%89%B9%E9%87%8F%E8%87%AA%E5%8A%A8%E6%8B%89%E9%BB%91%E5%8F%96%E5%85%B3%E5%B7%A5%E5%85%B7%20%28%E6%94%AF%E6%8C%81%E6%98%B5%E7%A7%B0%29.meta.js
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // --- 配置区域 ---
+    const DELAY_BLOCK_MIN = 1500;
+    const DELAY_BLOCK_MAX = 3000;
+    const DELAY_SEARCH = 1200;
+    // ----------------
+
+    let isProcessing = false; // 全局状态锁
+
+    // 注册菜单：只有点击这里，才会初始化面板
+    GM_registerMenuCommand("🛡️ 打开批量拉黑面板", () => {
+        initPanel();
+        const panel = document.getElementById('bili-block-panel');
+        panel.style.display = 'block';
+    });
+
+    // 懒加载初始化函数
+    function initPanel() {
+        if (document.getElementById('bili-block-panel')) return; // 防止重复创建
+
+        const panelHTML = `
+            <div id="bili-block-panel" style="position: fixed; top: 100px; right: 20px; width: 320px; background: #fff; border: 1px solid #ddd; z-index: 10000; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 8px; font-family: sans-serif;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="margin: 0; color: #fb7299; font-size: 16px; font-weight: bold;">🛡️ 批量拉黑/转换工具</h3>
+                    <span id="close-block-btn" style="cursor: pointer; font-size: 20px; color: #999; line-height: 1;">×</span>
+                </div>
+                
+                <p style="font-size: 12px; color: #666; margin-bottom: 5px;">输入列表 (一行一个，支持 <b>昵称</b> 或 <b>UID</b>):</p>
+                <textarea id="block-list-input" placeholder="例如：\n老番茄\n123456" style="width: 100%; height: 120px; border: 1px solid #ccc; margin-bottom: 10px; border-radius: 4px; padding: 8px; font-size: 12px; resize: vertical; box-sizing: border-box;"></textarea>
+                
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <button id="convert-uid-btn" style="flex: 1; background: #00aeec; color: white; border: none; padding: 8px 0; cursor: pointer; border-radius: 4px; font-size: 13px;">🔄 昵称转UID</button>
+                    <button id="start-block-btn" style="flex: 1; background: #fb7299; color: white; border: none; padding: 8px 0; cursor: pointer; border-radius: 4px; font-size: 13px; font-weight: bold;">🚫 开始拉黑</button>
+                </div>
+
+                <div style="font-size: 12px; color: #333; margin-bottom: 5px; font-weight: bold;">运行日志:</div>
+                <div id="block-log" style="height: 150px; overflow-y: auto; background: #f9f9f9; border: 1px solid #eee; padding: 8px; font-size: 12px; border-radius: 4px; white-space: pre-wrap; word-break: break-all;">
+                    <div style="color: #999;">等待操作...</div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', panelHTML);
+        bindEvents(); // 绑定按钮事件
+    }
+
+    // 绑定事件逻辑
+    function bindEvents() {
+        const panel = document.getElementById('bili-block-panel');
+        const inputArea = document.getElementById('block-list-input');
+        const convertBtn = document.getElementById('convert-uid-btn');
+        const startBtn = document.getElementById('start-block-btn');
+        const closeBtn = document.getElementById('close-block-btn');
+        const logDiv = document.getElementById('block-log');
+
+        // 关闭按钮
+        closeBtn.onclick = () => { panel.style.display = 'none'; };
+
+        // 日志工具
+        function log(msg, color = 'black', isBold = false) {
+            const p = document.createElement('div');
+            p.style.color = color;
+            p.style.marginBottom = '3px';
+            if (isBold) p.style.fontWeight = 'bold';
+            p.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            logDiv.appendChild(p);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        function clearLog() { logDiv.innerHTML = ''; }
+
+        // 按钮1：转换
+        convertBtn.onclick = async () => {
+            if (isProcessing) return;
+            const rawText = inputArea.value.trim();
+            if (!rawText) return log("❌ 请输入内容", "red");
+
+            const lines = rawText.split('\n').map(l => l.trim()).filter(l => l);
+            if (lines.length === 0) return;
+
+            isProcessing = true;
+            toggleBtns(true);
+            clearLog();
+            log(`🔍 开始转换 ${lines.length} 个条目...`, "blue", true);
+
+            let finalUids = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+                let item = lines[i];
+                if (/^\d+$/.test(item)) {
+                    finalUids.push(item);
+                } else {
+                    log(`正在搜索: ${item}...`);
+                    const res = await searchUserUid(item);
+                    if (res.success) {
+                        log(`✅ 找到: ${res.name} (${res.uid})`, "green");
+                        finalUids.push(res.uid);
+                    } else {
+                        log(`❌ 未找到: ${item}`, "red");
+                        finalUids.push(`${item} (未找到)`);
+                    }
+                    await sleep(DELAY_SEARCH);
+                }
+            }
+            inputArea.value = finalUids.join('\n');
+            log("转换结束，请检查上方列表。", "#00aeec", true);
+            isProcessing = false;
+            toggleBtns(false);
+        };
+
+        // 按钮2：拉黑
+        startBtn.onclick = async () => {
+            if (isProcessing) return;
+            const csrf = getCsrf();
+            if (!csrf) return log("❌ 未登录", "red");
+
+            let uids = inputArea.value.match(/\d+/g);
+            if(uids) uids = [...new Set(uids)];
+
+            if (!uids || uids.length === 0) return log("⚠️ 无有效 UID", "orange");
+
+            isProcessing = true;
+            toggleBtns(true);
+            clearLog();
+            log(`🚀 开始处理 ${uids.length} 个用户...`, "#fb7299", true);
+
+            let success = 0, fail = 0;
+            for (let i = 0; i < uids.length; i++) {
+                const uid = uids[i];
+                log(`[${i+1}/${uids.length}] 处理 UID: ${uid}`);
+                const res = await modifyRelation(uid, csrf);
+                if (res.success) {
+                    log(`✅ 拉黑成功`, "green");
+                    success++;
+                } else {
+                    log(`❌ 失败: ${res.msg}`, "red");
+                    fail++;
+                }
+                if (i < uids.length - 1) await sleep(Math.floor(Math.random() * (DELAY_BLOCK_MAX - DELAY_BLOCK_MIN + 1)) + DELAY_BLOCK_MIN);
+            }
+            log(`🎉 结束! 成功:${success} 失败:${fail}`, "blue", true);
+            isProcessing = false;
+            toggleBtns(false);
+        };
+
+        function toggleBtns(disable) {
+            convertBtn.disabled = disable;
+            startBtn.disabled = disable;
+            convertBtn.style.opacity = disable ? 0.6 : 1;
+            startBtn.style.opacity = disable ? 0.6 : 1;
+        }
+    }
+
+    // --- 工具函数 ---
+    function getCsrf() {
+        let match = document.cookie.match(/bili_jct=([^;]+)/);
+        return match ? match[1] : '';
+    }
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+    function searchUserUid(name) {
+        return new Promise((resolve) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: `https://api.bilibili.com/x/web-interface/search/type?search_type=bili_user&keyword=${encodeURIComponent(name)}`,
+                headers: { "Referer": "https://www.bilibili.com/" },
+                timeout: 5000,
+                onload: (res) => {
+                    try {
+                        const data = JSON.parse(res.responseText);
+                        if (data.code === 0 && data.data?.result?.[0]) {
+                            resolve({ success: true, uid: data.data.result[0].mid, name: data.data.result[0].uname });
+                        } else { resolve({ success: false }); }
+                    } catch (e) { resolve({ success: false }); }
+                },
+                onerror: () => resolve({ success: false })
+            });
+        });
+    }
+
+    function modifyRelation(fid, csrf) {
+        return new Promise((resolve) => {
+            GM_xmlhttpRequest({
+                method: "POST",
+                url: "https://api.bilibili.com/x/relation/modify",
+                headers: { "Content-Type": "application/x-www-form-urlencoded", "Referer": "https://www.bilibili.com/" },
+                data: `fid=${fid}&act=5&re_src=11&csrf=${csrf}`,
+                onload: (res) => {
+                    try {
+                        const data = JSON.parse(res.responseText);
+                        if (data.code === 0 || data.code === 22002) resolve({ success: true, msg: '' });
+                        else resolve({ success: false, msg: data.message });
+                    } catch (e) { resolve({ success: false, msg: '解析错' }); }
+                },
+                onerror: () => resolve({ success: false, msg: '网络错' })
+            });
+        });
+    }
+})();

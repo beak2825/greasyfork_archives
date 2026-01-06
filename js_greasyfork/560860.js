@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Character Enhancer Pro
 // @namespace    http://tampermonkey.net/
-// @version      6.6
+// @version      6.8
 // @description  Complete character page enhancements: VIP visuals, talkboxes, achievement remapping, cash/star quality/points overrides, health/mood bars
 // @author       You
 // @match        https://*.popmundo.com/World/Popmundo.aspx/Character*
@@ -63,7 +63,7 @@
         "3247354",
         "3613365",
         "3602175",
-        "3570776"
+        "3616012"
     ]);
 
     function convertHealthMoodBars(root = document) {
@@ -86,8 +86,9 @@
     // ===========================================================================
 
     const vipCharacterIds = [
-        '3620479', '3620400', '3609829', '3616694', '3581055', '3570776',
-        '3552119', '3613832', '3552255', '3617745', '3613365', '3580776'
+        '3620479', '3620400', '3609829', '3616694', '3581055', 
+        '3552119', '3613832', '3552255', '3617745', '3613365', '3580776', 
+        '3616012',
     ];
 
     const talkboxes = {
@@ -120,13 +121,15 @@
         '3580037': "ugh fine, i'll save the world again",
         '3614576': "kinda dead inside but the outfit slays",
         '3613871': "smiles in lowercase ツ",
-        '3570776': "all goes quiet in the end — silentia"
+        '3616012': "manifest me. /off",
         // ⠀★ ⠀ misty’s mom⠀ ⠀/ ⠀ ⠀pienso en tu mira, lili
         //too glam to give a damn
         // drama? i am the whole season, babe.
         // don’t text me, manifest me ✩
-        // you wish you sparkled like this ✦₊˚
-        // smiles in lowercase
+        // you wish u sparkled like this ✩₊˚
+        // all goes quiet in the end — silentia"
+
+
     };
 
     const vipStarHTML = `<a href="/Shop/Popmundo.aspx/VIPInfo" title="VIP member."><img src="/Static/Icons/VIPNameStar.png" class="lmargin5" style="vertical-align: top;"></a>`;
@@ -222,8 +225,9 @@
         '3614576': { 'Achievement_207': 'Achievement_331', 'Achievement_74': 'Achievement_235', 'Achievement_443': 'Achievement_227' },
         '3616694': { 'Achievement_443': 'Achievement_443', 'Achievement_238': 'Achievement_238', 'Achievement_297': 'Achievement_332' },
         '3613871': { 'Achievement_443': 'Achievement_181', 'Achievement_299': 'Achievement_368', 'Achievement_287': 'Achievement_332' },
-        '3570776': { 'Achievement_426': 'Achievement_404', 'Achievement_387': 'Achievement_238', 'Achievement_437': 'Achievement_400' },
-        '3577905': { 'Achievement_331': 'Achievement_290', 'Achievement_247': 'Achievement_129', 'Achievement_51': 'Achievement_264' }
+        '3577905': { 'Achievement_331': 'Achievement_290', 'Achievement_247': 'Achievement_129', 'Achievement_51': 'Achievement_264' },
+        '3616012': { 'Achievement_428': 'Achievement_290', 'Achievement_340': 'Achievement_285', 'Achievement_80': 'Achievement_330' },
+        '3579423': { 'Achievement_238': 'Achievement_404', 'Achievement_357': 'Achievement_238', 'Achievement_315': 'Achievement_400' },
     };
 
     const genericReplacements = {
@@ -236,6 +240,7 @@
         '3620400': '1,013,073.00 M$', '3247354': '1,013,073.00 M$',
         '3580776': '3,013,073.00 M$', '3581055': '2,013,073.00 M$',
         '3602175': '2,013,073.00 M$', '3570776': '2,013,073.00 M$',
+        '3616012': '2,013,073.00 M$',
     };
 
     // 🌟 Star Quality override

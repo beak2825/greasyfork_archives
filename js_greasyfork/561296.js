@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TORN: Attack Assist Requesting DEV
 // @namespace    dekleinekobini.private.attack-assist-requesting--dev
-// @version      1.0.3
+// @version      1.0.4
 // @author       DeKleineKobini [2114440]
 // @description  Request assists for your attacks.
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
@@ -236,7 +236,9 @@ SETTINGS_PANEL_CLASS: "settings-panel___",
   const _BUTTON_COLOR_FAILURE = BUTTON_COLOR_FAILURE;
   const stylesString = "#attack-assist-panel {\n    position: fixed;\n    width: 140px;\n    background-color: rgba(0, 0, 0, 0.8);\n    color: #fff;\n    padding: 10px;\n    border-radius: 8px;\n    z-index: 899999;\n    display: flex;\n    flex-direction: column;\n    gap: 8px;\n    user-select: none;\n\n    /* Default position. */\n    top: 150px;\n    right: 0;\n}\n\n#attack-assist-panel.collapsed > :not(.assist-request-title-container) {\n    display: none;\n}\n\n.assist-request-title-container {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    gap: 5px;\n    margin-bottom: 5px;\n    cursor: move;\n}\n\n#attack-assist-panel.collapsed .assist-request-title-container {\n    margin-bottom: 0;\n}\n\n.assist-request-title {\n    font-weight: bold;\n    text-align: center;\n    flex-grow: 1;\n}\n\n.assist-request-icon {\n    width: 12px;\n    height: 12px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    opacity: 0.7;\n}\n\n.assist-request-icon:hover {\n    opacity: 1;\n}\n\n.assist-error-message {\n    display: block;\n    padding: 8px;\n    margin-bottom: 4px;\n    background-color: rgba(170, 0, 0, 0.2);\n    border: 1px solid #aa0000;\n    border-radius: 4px;\n    color: #ff6666;\n    font-size: 12px;\n    text-align: center;\n}\n\n.quantity-container {\n    display: flex;\n    align-items: center;\n    gap: 5px;\n}\n\n.quantity-input {\n    width: 100%;\n    padding: 2px;\n    border-radius: 4px;\n    border: 1px solid #555;\n    background-color: #222;\n    color: #fff;\n}\n\n.assist-button {\n    padding: 8px;\n    cursor: pointer;\n    background-color: #444;\n    color: white;\n    border: 1px solid #666;\n    border-radius: 4px;\n    text-align: center;\n    font-weight: bold;\n}\n\n.assist-button:hover:not(:disabled) {\n    background-color: #555;\n}\n\n.assist-button:disabled {\n    cursor: not-allowed;\n    opacity: 0.7;\n}\n";
   async function main() {
-    GM_registerMenuCommand("Reset Request Location", resetLocation);
+    if (typeof GM_registerMenuCommand === "function") {
+      GM_registerMenuCommand("Reset Request Location", resetLocation);
+    }
     let location2 = GM_getValue("request_location") ?? await promptAndValidateLocation();
     if (!location2) {
       console.warn("Location not set. Attack Assist buttons will not be loaded.");

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bbsspeak
 // @namespace    http://tampermonkey.net/
-// @version      2026-01-03
+// @version      2026-01-05
 // @description  speak post
 // @author       fthvgb1
 // @match        https://*/*
@@ -66,6 +66,17 @@
             stick: '.gray > span,.no',
             format: '{no} {author} {content} {content.attachments}',
         },
+        "tieba.baidu.com": { // todo post in post
+            list: '.p_postlist > .l_post',
+            items: {
+                content: '.p_content',
+                author: '.d_author .d_name',
+                postNumber: '.post-tail-wrap span.tail-info:nth-child(6)',
+            },
+            stick: '.post-tail-wrap > span|beforebegin',
+            format: '{postNumber}的{author}说道：{content}',
+            stickElement: '<span style="cursor: pointer; margin-left: 1rem">📣</span>',
+        }
     }, GM_getValue('rules', {})), utterance = new SpeechSynthesisUtterance();
     // todo recur stick and items when items are unlimited nest rely
 
@@ -188,8 +199,20 @@
         }
         const posts = [...document.querySelectorAll(rule.list)];
         posts.forEach((div, i) => {
-            const a = document.createElement('a');
-            let count = 0;
+            let a = document.createElement('a'), count = 0;
+            if (rule?.stickElement) {
+                if (typeof rule.stickElement === 'string') {
+                    a.innerHTML = rule.stickElement;
+                    a = a.children[0];
+                } else if (rule.stickElement instanceof HTMLElement) {
+                    a = rule.stickElement;
+                }
+            } else {
+                a.innerText = '📢';
+                a.title = '左键单击朗读此楼，双击键朗读此楼及后面的回复，右键选择语音';
+                a.href = 'javascript:void(0)';
+                a.style.marginLeft = '1rem';
+            }
             a.addEventListener('mousedown', ev => {
                 if (ev.button !== 0) {
                     return;
@@ -229,9 +252,7 @@
                 ev.preventDefault();
                 a.replaceWith(select);
             });
-            a.innerText = '📢';
-            a.title = '左键单击朗读此楼，双击键朗读此楼及后面的回复，右键选择语音';
-            a.href = 'javascript:void(0)';
+
             const stick = rule.stick.split('|');
             div.querySelector(stick[0])?.insertAdjacentElement(stick?.[1] ?? 'afterend', a);
         });

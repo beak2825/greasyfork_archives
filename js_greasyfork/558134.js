@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Mobile 体验增强版
 // @namespace    yt-mobile-autoreply-ui
-// @version      3.13
+// @version      3.15
 // @description  自动@回复 + 引用 + 播放列表 + 全局速度控制 + 自动跳下一条 (增强版)
 // @match        https://m.youtube.com/*
 // @run-at       document-idle
@@ -87,7 +87,7 @@
       cursor: 'pointer',
       boxShadow: '0 4px 12px rgba(0,0,0,0.3)', // 稍微调淡一点阴影
       border: '1px solid rgba(255,255,255,0.1)',
-      backdropFilter: 'blur(4px)',
+      //backdropFilter: 'blur(4px)',
       userSelect: 'none',
       fontWeight: 'bold',
       transition: 'all 0.2s ease'
@@ -117,7 +117,7 @@
 
 function initQuoteModule() {
     // 颜色定义
-    const activeColor = '#4ade80'; // 开：薄荷绿
+    const activeColor = 'rgba(74, 222, 128, 0.5)'; // 开：薄荷绿
     const inactiveColor = 'rgba(40, 40, 40, 0.9)'; // 关：深灰
 
     const btn = createRoundBtn(
@@ -305,7 +305,7 @@ function initPlaylistModule() {
       createRoundBtn(
           'yt-playlist-btn',
           '🎶',
-          '#fb7185', 
+          'rgba(251, 113, 133, 0.55)', 
           '播放列表',
           togglePlaylistPanel
       );
@@ -511,7 +511,7 @@ function initSpeedModule() {
       createRoundBtn(
           'yt-speed-btn',
           '⏩',
-          '#818cf8',
+          'rgba(129, 140, 248, 0.55)',
           `播放速度 (${currentSpeed}x)`,
           toggleSpeedPanel
       );

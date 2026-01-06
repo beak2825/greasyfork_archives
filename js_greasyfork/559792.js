@@ -1,17 +1,21 @@
 // ==UserScript==
 // @name         集采助手
 // @namespace    http://tampermonkey.net/
-// @version      1.2.0
-// @description  物料录入、提交、类别选择及投标日期限制解除功能
+// @version      1.3.0
+// @description  物料录入、提交、类别选择、投标日期限制解除、验证码自动识别及比价表生成功能
 // @author       tafe
 // @match        http://zb.hnjgcg.com/*
 // @match        https://zb.hnjgcg.com/*
+// @match        http://ec.hnjgcg.com/*
+// @match        https://ec.hnjgcg.com/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        unsafeWindow
 // @require      https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js
 // @connect      zb.hnjgcg.com
+// @connect      ec.hnjgcg.com
+// @connect      aip.baidubce.com
 // @run-at       document-end
 // @downloadURL https://update.greasyfork.org/scripts/559792/%E9%9B%86%E9%87%87%E5%8A%A9%E6%89%8B.user.js
 // @updateURL https://update.greasyfork.org/scripts/559792/%E9%9B%86%E9%87%87%E5%8A%A9%E6%89%8B.meta.js
@@ -156,6 +160,120 @@
         }
     };
     // ========== 日期限制解除模块结束 ==========
+
+    // ========== 验证码识别模块 ==========
+    const captchaRecognizer = {
+        isRecognizing: false,
+
+        async getBaiduAccessToken() {
+            const apiKey = GM_getValue('baiduOcrApiKey', '');
+            const secretKey = GM_getValue('baiduOcrSecretKey', '');
+            if (!apiKey || !secretKey) {
+                throw new Error('请先在设置中配置百度OCR API密��');
+            }
+            const cachedToken = GM_getValue('baiduAccessToken', '');
+            const tokenExpiry = GM_getValue('baiduTokenExpiry', 0);
+            if (cachedToken && Date.now() < tokenExpiry) {
+                return cachedToken;
+            }
+            return new Promise((resolve, reject) => {
+                GM_xmlhttpRequest({
+                    url: `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${apiKey}&client_secret=${secretKey}`,
+                    method: 'GET',
+                    onload: (response) => {
+                        try {
+                            const data = JSON.parse(response.responseText);
+                            if (data.access_token) {
+                                GM_setValue('baiduAccessToken', data.access_token);
+                                GM_setValue('baiduTokenExpiry', Date.now() + (data.expires_in - 300) * 1000);
+                                resolve(data.access_token);
+                            } else {
+                                reject(new Error('获取百度API访问令牌失败'));
+                            }
+                        } catch (e) {
+                            reject(new Error('解析令牌响应失败: ' + e.message));
+                        }
+                    },
+                    onerror: () => reject(new Error('网络请求失败'))
+                });
+            });
+        },
+
+        async recognizeCaptcha(imageElement) {
+            try {
+                const accessToken = await this.getBaiduAccessToken();
+                const imageBase64 = await this.getImageBase64(imageElement);
+                return new Promise((resolve, reject) => {
+                    GM_xmlhttpRequest({
+                        url: `https://aip.baidubce.com/rest/2.0/ocr/v1/numbers?access_token=${accessToken}`,
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        data: `image=${encodeURIComponent(imageBase64)}`,
+                        onload: (response) => {
+                            try {
+                                const data = JSON.parse(response.responseText);
+                                if (data.words_result && data.words_result.length > 0) {
+                                    resolve(data.words_result.map(item => item.words).join('').replace(/\s+/g, ''));
+                                } else {
+                                    reject(new Error('识别结果为空'));
+                                }
+                            } catch (e) {
+                                reject(new Error('解析识别响应失败: ' + e.message));
+                            }
+                        },
+                        onerror: () => reject(new Error('网络请求失败'))
+                    });
+                });
+            } catch (error) {
+                console.error('验证码识别失败:', error);
+                throw error;
+            }
+        },
+
+        async getImageBase64(imageElement) {
+            return new Promise((resolve, reject) => {
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = imageElement.naturalWidth || imageElement.width;
+                    canvas.height = imageElement.naturalHeight || imageElement.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(imageElement, 0, 0);
+                    const base64 = canvas.toDataURL('image/png').split(',')[1];
+                    resolve(base64);
+                } catch (error) {
+                    reject(new Error('图片转换失败: ' + error.message));
+                }
+            });
+        },
+
+        async autoFillCaptcha() {
+            if (this.isRecognizing) {
+                console.log('验证码识别进行中，跳过重复调用');
+                return;
+            }
+
+            const captchaImg = document.querySelector('#img_valid');
+            const captchaInput = document.querySelector('#validatecode');
+            if (!captchaImg || !captchaInput) return;
+
+            this.isRecognizing = true;
+            try {
+                captchaInput.value = '识别中...';
+                const result = await this.recognizeCaptcha(captchaImg);
+                captchaInput.value = result;
+                console.log('验证码识别成功:', result);
+            } catch (error) {
+                captchaInput.value = '';
+                console.error('验证码识别失败:', error);
+                if (error.message.includes('配置百度OCR')) {
+                    alert(error.message);
+                }
+            } finally {
+                this.isRecognizing = false;
+            }
+        }
+    };
+    // ========== 验证码识别模块结束 ==========
 
     // 配置
     const CURRENT_ORIGIN = (() => {
@@ -726,6 +844,9 @@
                     <button class="menu-item" data-action="material" style="width: 100%; padding: 14px 16px; text-align: left; border: none; background: #f8f9fa; border-radius: 8px; cursor: pointer; font-size: 14px; color: #495057; transition: all 0.2s; margin-bottom: 6px;">
                         📦 物料管理
                     </button>
+                    <button class="menu-item" data-action="comparison" style="width: 100%; padding: 14px 16px; text-align: left; border: none; background: #f8f9fa; border-radius: 8px; cursor: pointer; font-size: 14px; color: #495057; transition: all 0.2s; margin-bottom: 6px;">
+                        📊 比价表生成
+                    </button>
                     <button class="menu-item" data-action="settings" style="width: 100%; padding: 14px 16px; text-align: left; border: none; background: #f8f9fa; border-radius: 8px; cursor: pointer; font-size: 14px; color: #495057; transition: all 0.2s;">
                         ⚙️ 更多设置
                     </button>
@@ -831,6 +952,9 @@
                 case 'material':
                     this.openMaterialPanel();
                     break;
+                case 'comparison':
+                    this.openComparisonTool();
+                    break;
                 case 'settings':
                     this.openSettingsPanel();
                     break;
@@ -862,14 +986,17 @@
             `;
 
             const isEnabled = GM_getValue('dateRestrictionRemoverEnabled', false);
+            const captchaEnabled = GM_getValue('captchaAutoRecognizeEnabled', false);
+            const apiKey = GM_getValue('baiduOcrApiKey', '');
+            const secretKey = GM_getValue('baiduOcrSecretKey', '');
 
             content.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                     <h3 style="margin: 0; color: #22588D;">设置</h3>
                     <button id="settings-close" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #6c757d;">×</button>
                 </div>
-                <div style="border-top: 1px solid #e9ecef; padding-top: 20px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+                <div style="border-top: 1px solid #e9ecef; padding-top: 20px; max-height: 60vh; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0;">
                         <div>
                             <div style="font-weight: 500; color: #495057; margin-bottom: 4px;">投标日期限制解除</div>
                             <div style="font-size: 12px; color: #6c757d;">移除日期选择器的5天内禁用限制</div>
@@ -879,6 +1006,28 @@
                             <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: ${isEnabled ? '#28a745' : '#ccc'}; transition: 0.3s; border-radius: 24px;"></span>
                             <span style="position: absolute; content: ''; height: 18px; width: 18px; left: ${isEnabled ? '27px' : '3px'}; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%;"></span>
                         </label>
+                    </div>
+                    <div style="padding: 12px 0; border-bottom: 1px solid #f0f0f0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div>
+                                <div style="font-weight: 500; color: #495057; margin-bottom: 4px;">验证码自动识别</div>
+                                <div style="font-size: 12px; color: #6c757d;">登录页面自动识别验证码(需配置百度OCR API)</div>
+                            </div>
+                            <label style="position: relative; display: inline-block; width: 48px; height: 24px;">
+                                <input type="checkbox" id="captcha-toggle" ${captchaEnabled ? 'checked' : ''} style="opacity: 0; width: 0; height: 0;">
+                                <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: ${captchaEnabled ? '#28a745' : '#ccc'}; transition: 0.3s; border-radius: 24px;"></span>
+                                <span style="position: absolute; content: ''; height: 18px; width: 18px; left: ${captchaEnabled ? '27px' : '3px'}; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%;"></span>
+                            </label>
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">百度OCR API Key:</label>
+                            <input type="text" id="baidu-api-key" value="${apiKey}" placeholder="请输入API Key" style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; box-sizing: border-box;">
+                        </div>
+                        <div style="margin-top: 8px;">
+                            <label style="display: block; font-size: 12px; color: #666; margin-bottom: 4px;">百度OCR Secret Key:</label>
+                            <input type="password" id="baidu-secret-key" value="${secretKey}" placeholder="请输入Secret Key" style="width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; box-sizing: border-box;">
+                        </div>
+                        <button id="save-baidu-keys" style="margin-top: 8px; padding: 6px 12px; background: #22588D; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">保存密钥</button>
                     </div>
                 </div>
             `;
@@ -910,6 +1059,32 @@
                     utils.showAlert('日期限制解除功能已关闭', 'info');
                 }
             });
+
+            const captchaToggle = content.querySelector('#captcha-toggle');
+            const captchaToggleBg = content.querySelectorAll('span')[2];
+            const captchaToggleBtn = content.querySelectorAll('span')[3];
+
+            captchaToggle.addEventListener('change', () => {
+                const enabled = captchaToggle.checked;
+                GM_setValue('captchaAutoRecognizeEnabled', enabled);
+                captchaToggleBg.style.backgroundColor = enabled ? '#28a745' : '#ccc';
+                captchaToggleBtn.style.left = enabled ? '27px' : '3px';
+                utils.showAlert(enabled ? '验证码自动识别已启用' : '验证码自动识别已关闭', enabled ? 'success' : 'info');
+            });
+
+            content.querySelector('#save-baidu-keys').addEventListener('click', () => {
+                const apiKey = content.querySelector('#baidu-api-key').value.trim();
+                const secretKey = content.querySelector('#baidu-secret-key').value.trim();
+                if (!apiKey || !secretKey) {
+                    utils.showAlert('请输入完整的API Key和Secret Key', 'error');
+                    return;
+                }
+                GM_setValue('baiduOcrApiKey', apiKey);
+                GM_setValue('baiduOcrSecretKey', secretKey);
+                GM_setValue('baiduAccessToken', '');
+                GM_setValue('baiduTokenExpiry', 0);
+                utils.showAlert('百度OCR API密钥已保存', 'success');
+            });
         },
 
         // 打开物料管理面板
@@ -923,6 +1098,41 @@
                 // 如果面板已存在，直接显示
                 overlay.style.display = 'flex';
             }
+        },
+
+        // 打开比价表生成工具
+        openComparisonTool() {
+            // 直接选择数据文件
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.xls,.xlsx';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    this.processComparisonFile(file);
+                }
+            };
+            input.click();
+        },
+
+        // 处理比价表文件
+        processComparisonFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(sheet, {header: 1});
+
+                    const result = generateComparisonData(jsonData);
+                    downloadComparisonExcel(result);
+                    alert(`生成成功！共导入 ${result.dataCount} 条数据，${result.supplierCount} 家供应商`);
+                } catch (err) {
+                    alert('处理失败: ' + err.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
         },
 
         // 创建主面板
@@ -2074,6 +2284,180 @@
         }
     };
 
+    // 独立的比价表生成函数（不依赖UI对象）
+    function generateComparisonData(data) {
+        console.log('=== 开始生成比价表数据 ===');
+        console.log('总行数:', data.length);
+        console.log('第一行列数:', data[0].length);
+        console.log('最后5行第一列内容:');
+        for (let i = Math.max(0, data.length - 5); i < data.length; i++) {
+            console.log(`第${i}行:`, data[i] ? data[i][0] : 'undefined');
+        }
+
+        const colCount = data[0].length;
+        const isNewFormat = colCount === 40;
+
+        let supplierCols, namCol, specCol, unitCol, qtyCol;
+        if (isNewFormat) {
+            supplierCols = [12, 21, 30];
+            [namCol, specCol, unitCol, qtyCol] = [4, 5, 9, 11];
+        } else {
+            supplierCols = [11, 20, 29];
+            [namCol, specCol, unitCol, qtyCol] = [2, 3, 4, 6];
+        }
+
+        const suppliers = supplierCols.map(col => data[0][col]).filter(s => s);
+
+        // 从第3行提取税率信息（列R=17, AA=26, AJ=35）
+        const taxRates = [];
+        const taxRateCols = isNewFormat ? [17, 26, 35] : [16, 25, 34]; // 根据格式调整列位置
+
+        if (data.length > 2) {
+            const taxRow = data[2]; // 第3行（索引2）
+            taxRateCols.forEach((col, idx) => {
+                const taxInfo = taxRow[col] || '含税9%';
+                taxRates.push(taxInfo);
+                console.log(`供应商${idx+1}税率 (列${col}):`, taxInfo);
+            });
+        }
+        console.log('提取的税率:', taxRates);
+
+        const rows = [];
+
+        for (let i = 2; i < data.length; i++) {
+            const row = data[i];
+            // 跳过备注行和合计行
+            if (!row[0] || row[0].toString().includes('备注') || row[0].toString().includes('合计')) continue;
+
+            const baseData = [row[0], row[namCol], row[specCol], row[unitCol], row[qtyCol]];
+            supplierCols.forEach(col => {
+                baseData.push(row[col + 2], row[col + 4]);
+            });
+            rows.push(baseData);
+        }
+
+        const headers = ['序号', '物料名称', '型号规格', '单位', '数量'];
+        suppliers.forEach(s => headers.push(`${s}-单价`, `${s}-合价`));
+
+        return {
+            headers,
+            rows,
+            suppliers,
+            taxRates: taxRates.length > 0 ? taxRates : suppliers.map(() => '含税9%'), // 如果没找到税率，使用默认值
+            dataCount: rows.length,
+            supplierCount: suppliers.length
+        };
+    }
+
+    function downloadComparisonExcel(result) {
+        // 构建表头：第一行是基础列+供应商名称（每个占2列）
+        const headerRow1 = ['序号', '物料名称', '型号规格', '单位', '数量'];
+        result.suppliers.forEach(supplier => {
+            headerRow1.push(supplier, '');
+        });
+
+        // 第二行：基础列为空+每个供应商下的"单价"和"合价"
+        const headerRow2 = ['', '', '', '', ''];
+        result.suppliers.forEach(() => {
+            headerRow2.push('单价', '合价');
+        });
+
+        // 备注行 - 使用从源数据提取的税率
+        const remarksRow = ['备注', '', '', '', ''];
+        result.suppliers.forEach((supplier, index) => {
+            const taxRate = result.taxRates[index] || '含税9%';
+            remarksRow.push(taxRate, '');
+        });
+
+        // 合计行 - 先用占位符，后面会替换为公式
+        const dataStartRow = 5;
+        const dataEndRow = 4 + result.rows.length;
+        const totalRow = ['合计', '', '', '', ''];
+        result.suppliers.forEach(() => {
+            totalRow.push('', '__FORMULA__');
+        });
+
+        const ws_data = [
+            ['工程招标比价表'],
+            ['项目：金多多江门生产研发基地2#厂房5楼车间装修基配套工程项目部'],
+            headerRow1,
+            headerRow2,
+            ...result.rows,
+            remarksRow,
+            totalRow
+        ];
+
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+        // 设置合计行的公式
+        const totalRowIndex = 4 + result.rows.length + 1; // 0-based
+        result.suppliers.forEach((supplier, index) => {
+            const colIndex = 5 + index * 2 + 1; // 合价列
+            const excelCol = String.fromCharCode(65 + colIndex);
+            const cellRef = XLSX.utils.encode_cell({r: totalRowIndex, c: colIndex});
+            ws[cellRef] = {
+                t: 'n',
+                f: `SUM(${excelCol}${dataStartRow}:${excelCol}${dataEndRow})`
+            };
+        });
+
+        // 添加边框样式
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        const border = {
+            top: {style: 'thin', color: {rgb: '000000'}},
+            bottom: {style: 'thin', color: {rgb: '000000'}},
+            left: {style: 'thin', color: {rgb: '000000'}},
+            right: {style: 'thin', color: {rgb: '000000'}}
+        };
+
+        for (let R = range.s.r; R <= range.e.r; R++) {
+            for (let C = range.s.c; C <= range.e.c; C++) {
+                const cellRef = XLSX.utils.encode_cell({r: R, c: C});
+                if (!ws[cellRef]) ws[cellRef] = {t: 's', v: ''};
+                if (!ws[cellRef].s) ws[cellRef].s = {};
+                ws[cellRef].s.border = border;
+            }
+        }
+
+        // 合并单元格
+        const merges = [
+            {s: {r: 0, c: 0}, e: {r: 0, c: headerRow1.length - 1}},
+            {s: {r: 1, c: 0}, e: {r: 1, c: headerRow1.length - 1}}
+        ];
+
+        for (let i = 0; i < 5; i++) {
+            merges.push({s: {r: 2, c: i}, e: {r: 3, c: i}});
+        }
+
+        for (let i = 0; i < result.suppliers.length; i++) {
+            const col = 5 + i * 2;
+            merges.push({s: {r: 2, c: col}, e: {r: 2, c: col + 1}});
+        }
+
+        ws['!merges'] = merges;
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, '比价表');
+
+        const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary', cellStyles: true});
+
+        const buf = new ArrayBuffer(wbout.length);
+        const view = new Uint8Array(buf);
+        for (let i = 0; i < wbout.length; i++) {
+            view[i] = wbout.charCodeAt(i) & 0xFF;
+        }
+
+        const blob = new Blob([buf], {type: 'application/octet-stream'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = '比价表_生成.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
     // 创建悬浮按钮
     function createFloatingButton() {
         if (document.getElementById('material-helper-btn')) {
@@ -2168,6 +2552,44 @@
         // 初始化日期限制解除功能
         dateRestrictionRemover.init();
 
+        // 初始化验证码自动识别功能
+        const initCaptchaRecognition = () => {
+            const captchaEnabled = GM_getValue('captchaAutoRecognizeEnabled', false);
+            if (!captchaEnabled) return;
+
+            const captchaImg = document.querySelector('#img_valid');
+            const captchaInput = document.querySelector('#validatecode');
+
+            if (captchaImg && captchaInput) {
+                console.log('检测到登录页面验证码，准备自动识别');
+
+                // 页面加载后自动识别
+                setTimeout(() => captchaRecognizer.autoFillCaptcha(), 500);
+
+                // 点击验证码图片刷新时，等待新图片加载完成后再识别
+                let lastSrc = captchaImg.src;
+                captchaImg.addEventListener('click', () => {
+                    const checkNewImage = () => {
+                        if (captchaImg.src !== lastSrc) {
+                            lastSrc = captchaImg.src;
+                            // 等待图片完全加载
+                            if (captchaImg.complete) {
+                                setTimeout(() => captchaRecognizer.autoFillCaptcha(), 200);
+                            } else {
+                                captchaImg.addEventListener('load', () => {
+                                    setTimeout(() => captchaRecognizer.autoFillCaptcha(), 200);
+                                }, { once: true });
+                            }
+                        } else {
+                            // 如果src还没变化，继续等待
+                            setTimeout(checkNewImage, 100);
+                        }
+                    };
+                    setTimeout(checkNewImage, 50);
+                });
+            }
+        };
+
         const initFunctions = () => {
             // 如果不在iframe中，创建悬浮按钮
             if (!isInIframe) {
@@ -2179,6 +2601,9 @@
                 }
                 createFloatingButton();
             }
+
+            // 初始化验证码识别
+            initCaptchaRecognition();
         };
 
         if (document.readyState === 'loading') {
@@ -2189,6 +2614,6 @@
     }
 
     init();
-    console.log('集采助手已加载（含日期限制解除功能）');
+    console.log('集采助手已加载（含日期限制解除、验证码自动识别及比价表生成功能）');
 })();
 

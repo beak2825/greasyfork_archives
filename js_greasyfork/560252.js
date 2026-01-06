@@ -6,7 +6,7 @@
 // @name:it      NeuraVeil - Chat IA nel tuo browser
 // @name:ja      NeuraVeil - ブラウザ内AIチャット
 // @namespace    https://github.com/DREwX-code
-// @version      1.1.1
+// @version      1.1.2
 // @description     Lightweight floating AI chat panel that works on any webpage. Free and no signup required. Uses Pollinations.ai for text and image generation, supports multiple conversations, reasoning levels, response styles, image tools, and a privacy-focused Ghost Mode.
 // @description:fr  Panneau de chat IA flottant, léger et moderne, utilisable sur n’importe quelle page web. Gratuit et sans inscription. Utilise Pollinations.ai pour la génération de texte et d’images, avec conversations multiples, niveaux de raisonnement, styles de réponse, outils d’image et un mode Ghost axé sur la confidentialité.
 // @description:es  Panel de chat IA flotante, ligero y moderno, que funciona en cualquier página web. Gratis y sin registro. Utiliza Pollinations.ai para la generación de texto e imágenes, con múltiples conversaciones, niveles de razonamiento, estilos de respuesta, herramientas de imagen y un modo Ghost centrado en la privacidad.
@@ -18,6 +18,13 @@
 // @icon         https://raw.githubusercontent.com/DREwX-code/NeuraVeil/refs/heads/main/assets/icon/Icon_NeuraVeil_Script.png
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM_xmlhttpRequest
+// @connect      text.pollinations.ai
+// @connect      image.pollinations.ai
+// @connect      api.openverse.org
+// @connect      stablehorde.net
+// @connect      aihorde.net
+// @connect      *
 // @run-at       document-end
 // @license      Apache-2.0
 // @copyright    2025 Dℝ∃wX
@@ -100,6 +107,21 @@ Website: https://highlightjs.org/
 Source code: https://github.com/highlightjs/highlight.js
 License: BSD 3-Clause
 
+---
+
+Image Search (Openverse):
+
+This project uses the public Openverse API to search openly licensed images.
+Attribution, license, and source links are preserved when available.
+No images are hosted or redistributed by this project.
+
+Website: https://openverse.org/
+API: https://api.openverse.engineering/
+Source: https://github.com/WordPress/openverse
+License: CC0
+
+---
+
 */
 
 
@@ -125,6 +147,7 @@ License: BSD 3-Clause
                 { id: 'pollinations', label: 'Pollinations' },
                 { id: 'ai-horde', label: 'AI Horde' }
             ];
+            this.IMAGE_PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
             this.INPUT_MAX_ROWS = 5;
             this.SIDEBAR_WIDTH = 430;
             this.DEFAULT_GREETING = 'Hello! I am NeuraVeil. How can I help you today?';
@@ -146,6 +169,7 @@ License: BSD 3-Clause
                 reasoningEffort: 'low',
                 responseStyle: 'default',
                 manualTitle: null,
+                autoTitle: null,
                 historySearchTerm: '',
                 historySearchIndex: -1
             };
@@ -178,6 +202,98 @@ License: BSD 3-Clause
             });
 
             return this.hljsReady;
+        }
+
+        request(url, options = {}) {
+            const gmRequest = typeof GM_xmlhttpRequest === 'function'
+                ? GM_xmlhttpRequest
+                : (typeof GM !== 'undefined' && typeof GM.xmlHttpRequest === 'function' ? GM.xmlHttpRequest : null);
+            if (gmRequest) {
+                return this.requestWithGM(gmRequest, url, options);
+            }
+
+            const { responseType, ...fetchOptions } = options;
+            return fetch(url, fetchOptions);
+        }
+
+        requestWithGM(gmRequest, url, options = {}) {
+            const method = options.method || 'GET';
+            const headers = options.headers || {};
+            const data = options.body || null;
+            const responseType = options.responseType || 'text';
+
+            return new Promise((resolve, reject) => {
+                gmRequest({
+                    method,
+                    url,
+                    headers,
+                    data,
+                    responseType,
+                    onload: (res) => {
+                        const parsedHeaders = this.parseResponseHeaders(res.responseHeaders || '');
+                        const responseText = typeof res.responseText === 'string' ? res.responseText : '';
+                        const responseBody = res.response;
+                        const decodeBuffer = (buffer) => {
+                            if (!buffer) return '';
+                            if (typeof TextDecoder !== 'undefined') {
+                                return new TextDecoder().decode(buffer);
+                            }
+                            const bytes = new Uint8Array(buffer);
+                            let out = '';
+                            for (let i = 0; i < bytes.length; i += 1) {
+                                out += String.fromCharCode(bytes[i]);
+                            }
+                            return out;
+                        };
+
+                        resolve({
+                            ok: res.status >= 200 && res.status < 300,
+                            status: res.status,
+                            headers: parsedHeaders,
+                            json: async () => {
+                                if (responseBody && responseType === 'json') return responseBody;
+                                const text = responseText ||
+                                    (responseBody instanceof ArrayBuffer ? decodeBuffer(responseBody) : '') ||
+                                    (responseBody instanceof Blob ? await responseBody.text() : '');
+                                if (!text) return null;
+                                return JSON.parse(text);
+                            },
+                            text: async () => {
+                                if (responseText) return responseText;
+                                if (responseBody instanceof ArrayBuffer) return decodeBuffer(responseBody);
+                                if (responseBody instanceof Blob) return await responseBody.text();
+                                return '';
+                            },
+                            blob: async () => {
+                                if (responseBody instanceof Blob) return responseBody;
+                                if (responseBody instanceof ArrayBuffer) return new Blob([responseBody]);
+                                if (responseText) return new Blob([responseText]);
+                                return new Blob();
+                            }
+                        });
+                    },
+                    onerror: (err) => reject(err),
+                    ontimeout: () => reject(new Error('Request timed out'))
+                });
+            });
+        }
+
+        parseResponseHeaders(rawHeaders) {
+            const headerMap = new Map();
+            const lines = String(rawHeaders || '').trim().split(/\r?\n/);
+            lines.forEach((line) => {
+                const index = line.indexOf(':');
+                if (index === -1) return;
+                const key = line.slice(0, index).trim().toLowerCase();
+                const value = line.slice(index + 1).trim();
+                if (key) headerMap.set(key, value);
+            });
+            return {
+                get(name) {
+                    if (!name) return null;
+                    return headerMap.get(String(name).toLowerCase()) || null;
+                }
+            };
         }
 
 
@@ -441,6 +557,42 @@ License: BSD 3-Clause
                     color: var(--nv-text-muted);
                     margin-top: 4px;
                     line-height: 1.35;
+                }
+                .nv-settings-danger {
+                    margin-top: 12px;
+                    padding-top: 12px;
+                    border-top: 1px dashed var(--nv-border);
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                }
+                .nv-danger-title {
+                    font-size: 11px;
+                    letter-spacing: 0.6px;
+                    text-transform: uppercase;
+                    color: #f87171;
+                    font-weight: 700;
+                }
+                .nv-danger-desc {
+                    font-size: 12px;
+                    color: var(--nv-text-muted);
+                    line-height: 1.35;
+                }
+                .nv-danger-btn {
+                    align-self: flex-start;
+                    border-radius: 10px;
+                    border: 1px solid rgba(248, 113, 113, 0.7);
+                    background: rgba(248, 113, 113, 0.12);
+                    color: #fecaca;
+                    padding: 8px 12px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                }
+                .nv-danger-btn:hover {
+                    background: rgba(248, 113, 113, 0.22);
+                    border-color: rgba(248, 113, 113, 0.9);
                 }
                 .nv-panel.ghost-mode {
                     background: radial-gradient(circle at 20% 20%, rgba(45, 212, 191, 0.08), transparent 35%), radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.08), transparent 35%), rgba(10, 12, 20, 0.95);
@@ -929,16 +1081,124 @@ License: BSD 3-Clause
                     color: var(--nv-text-muted);
                     margin-bottom: 6px;
                 }
+                .nv-tool-label-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 6px;
+                }
+                .nv-tool-label-row .nv-tool-label {
+                    margin-bottom: 0;
+                }
+                .nv-tool-source-link {
+                    font-size: 12px;
+                    color: var(--nv-text-muted);
+                    text-decoration: none;
+                }
+                .nv-tool-source-link:hover {
+                    color: var(--nv-text);
+                    text-decoration: underline;
+                    text-underline-offset: 2px;
+                }
                 .nv-tool-caption {
                     font-size: 12px;
                     color: var(--nv-text-muted);
                     margin-top: 6px;
+                }
+                .nv-md-p {
+                    margin: 0 0 8px;
+                }
+                .nv-md-p:last-child {
+                    margin-bottom: 0;
+                }
+                .nv-md-h1,
+                .nv-md-h2,
+                .nv-md-h3,
+                .nv-md-h4,
+                .nv-md-h5,
+                .nv-md-h6 {
+                    margin: 0 0 8px;
+                    font-weight: 700;
+                    line-height: 1.25;
+                }
+                .nv-md-h1 { font-size: 18px; }
+                .nv-md-h2 { font-size: 16px; }
+                .nv-md-h3 { font-size: 15px; }
+                .nv-md-h4 { font-size: 14px; }
+                .nv-md-h5 { font-size: 13px; }
+                .nv-md-h6 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+                .nv-md-hr {
+                    border: none;
+                    border-top: 1px solid var(--nv-border);
+                    margin: 8px 0;
+                }
+                .nv-md-list {
+                    margin: 0 0 8px 18px;
+                    padding: 0;
+                }
+                .nv-md-list li {
+                    margin: 4px 0;
+                }
+                .nv-md-quote {
+                    margin: 0 0 8px;
+                    padding: 6px 10px;
+                    border-left: 2px solid var(--nv-primary);
+                    background: rgba(255, 255, 255, 0.06);
+                    border-radius: 8px;
+                }
+                .nv-tool-attribution {
+                    font-size: 11px;
+                    color: var(--nv-text-muted);
+                }
+                .nv-tool-attribution a {
+                    color: inherit;
+                    text-decoration: underline;
+                    text-underline-offset: 2px;
                 }
                 .nv-tool-image img {
                     width: 100%;
                     display: block;
                     border-radius: 10px;
                     border: 1px solid var(--nv-border);
+                }
+                .nv-image-frame {
+                    position: relative;
+                }
+                .nv-image-actions {
+                    position: absolute;
+                    top: 8px;
+                    right: 8px;
+                    display: flex;
+                    gap: 6px;
+                    opacity: 0;
+                    pointer-events: none;
+                    transition: opacity 0.2s ease;
+                }
+                .nv-image-frame:hover .nv-image-actions,
+                .nv-image-frame:focus-within .nv-image-actions {
+                    opacity: 1;
+                    pointer-events: auto;
+                }
+                .nv-image-action {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 8px;
+                    border: 1px solid var(--nv-border);
+                    background: rgba(12, 17, 23, 0.75);
+                    color: var(--nv-text);
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                }
+                .nv-image-action:hover {
+                    color: var(--nv-primary);
+                    background: rgba(12, 17, 23, 0.9);
+                }
+                .nv-image-action svg {
+                    width: 14px;
+                    height: 14px;
                 }
                 .nv-tool-link a {
                     display: inline-flex;
@@ -951,6 +1211,7 @@ License: BSD 3-Clause
                     color: var(--nv-text);
                     text-decoration: none;
                     font-size: 12px;
+                    margin-block: 2px;
                 }
                 .nv-tool-link a:hover { background: rgba(255, 255, 255, 0.1); }
                 .nv-inline-link {
@@ -1376,6 +1637,11 @@ License: BSD 3-Clause
                     </button>
                     <div class="nv-settings-title">Choose how NeuraVeil should respond.</div>
                     <div class="nv-settings-list" id="nv-settings-list"></div>
+                    <div class="nv-settings-danger">
+                        <div class="nv-danger-title">Danger Zone</div>
+                        <div class="nv-danger-desc">Reset all data stored by NeuraVeil, including settings and conversations.</div>
+                        <button class="nv-danger-btn" id="nv-btn-reset-all" type="button">Reset all data</button>
+                    </div>
                 </div>
 
                 <div class="nv-info" id="nv-info-panel">
@@ -1390,7 +1656,7 @@ License: BSD 3-Clause
                     <div class="nv-info-grid">
                         <div class="nv-info-card variant-a">
                             <h4>Version</h4>
-                            <p>1.1.1<br>Last updated: 2026-01-02</p>
+                            <p>1.1.2<br>Last updated: 2026-01-05</p>
                         </div>
 
                         <div class="nv-info-card variant-b">
@@ -1589,6 +1855,7 @@ License: BSD 3-Clause
                 settingsPanel: panel.querySelector('#nv-settings-panel'),
                 settingsCloseBtn: panel.querySelector('#nv-settings-close'),
                 settingsList: panel.querySelector('#nv-settings-list'),
+                resetAllBtn: panel.querySelector('#nv-btn-reset-all'),
                 infoPanel: panel.querySelector('#nv-info-panel'),
                 infoCloseBtn: panel.querySelector('#nv-info-close'),
                 historyPanel: panel.querySelector('#nv-history-panel'),
@@ -1622,6 +1889,7 @@ License: BSD 3-Clause
             this.elements.clearAllBtn.addEventListener('click', () => this.clearAllHistory());
             this.elements.historySearchBtn.addEventListener('click', () => this.toggleHistorySearch());
             this.elements.historySearchInput.addEventListener('input', (e) => this.handleHistorySearch(e.target.value));
+            this.bindInputKeyShield(this.elements.historySearchInput);
             this.elements.historySearchInput.addEventListener('keydown', (e) => this.handleHistorySearchKeydown(e));
             this.elements.historySearchInput.addEventListener('blur', () => this.handleHistorySearchBlur());
             this.elements.modelSelect.addEventListener('change', (e) => this.changeReasoningEffort(e.target.value));
@@ -1632,6 +1900,9 @@ License: BSD 3-Clause
             if (this.elements.settingsCloseBtn) {
                 this.elements.settingsCloseBtn.addEventListener('click', () => this.closeSettingsPanel());
             }
+            if (this.elements.resetAllBtn) {
+                this.elements.resetAllBtn.addEventListener('click', () => this.resetAllData());
+            }
             if (this.elements.infoCloseBtn) {
                 this.elements.infoCloseBtn.addEventListener('click', () => this.closeInfoPanel());
             }
@@ -1641,6 +1912,7 @@ License: BSD 3-Clause
             this.elements.imgBtn.addEventListener('click', () => this.toggleImageMode());
 
             this.elements.input.addEventListener('input', () => this.adjustHeight());
+            this.bindInputKeyShield(this.elements.input);
             this.elements.input.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -1655,6 +1927,14 @@ License: BSD 3-Clause
             document.addEventListener('mousedown', (e) => this.handleOutsideHistoryClick(e));
 
             this.autoResizeInput();
+        }
+
+        bindInputKeyShield(el) {
+            if (!el) return;
+            const stop = (e) => e.stopPropagation();
+            el.addEventListener('keydown', stop);
+            el.addEventListener('keypress', stop);
+            el.addEventListener('keyup', stop);
         }
 
         toggleHeaderExtra() {
@@ -1997,8 +2277,8 @@ License: BSD 3-Clause
                 // Preload image via Fetch to handle rate limits and avoid double-requests
                 const blobUrl = await this.preloadImage(imageUrl);
 
-                // We save original URL to history for persistence, but use Blob URL for display
-                const imageHtmlOriginal = `<img src="${imageUrl}" alt="${prompt}" style="max-width: 100%; border-radius: 8px; margin-top: 4px;">`;
+                // Save original URL to history, but use a local placeholder in the markup
+                const imageHtmlOriginal = `<img src="${this.IMAGE_PLACEHOLDER}" data-nv-image-raw="${imageUrl}" data-nv-image-full="${imageUrl}" alt="${prompt}" style="max-width: 100%; border-radius: 8px; margin-top: 4px;">`;
                 this.appendMessageToChat(requestChatId, 'assistant', imageHtmlOriginal, true);
 
                 // Swap src to blobUrl in DOM to prevent re-fetching and hitting rate limits
@@ -2006,8 +2286,10 @@ License: BSD 3-Clause
                     const images = this.elements.msgContainer.querySelectorAll('img');
                     if (images.length) {
                         const lastImg = images[images.length - 1];
-                        if (lastImg.getAttribute('src') === imageUrl) {
+                        const raw = lastImg.dataset.nvImageRaw || lastImg.getAttribute('src') || '';
+                        if (raw === imageUrl) {
                             lastImg.src = blobUrl;
+                            lastImg.dataset.nvImageProxied = '1';
                         }
                     }
                 }, 0);
@@ -2047,7 +2329,7 @@ License: BSD 3-Clause
             };
 
             // 1. Submit Job
-            const submitResponse = await fetch('https://stablehorde.net/api/v2/generate/async', {
+            const submitResponse = await this.request('https://stablehorde.net/api/v2/generate/async', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2072,7 +2354,7 @@ License: BSD 3-Clause
                 await new Promise(r => setTimeout(r, 2000));
                 attempts++;
 
-                const checkResponse = await fetch(`https://stablehorde.net/api/v2/generate/check/${id}`, {
+                const checkResponse = await this.request(`https://stablehorde.net/api/v2/generate/check/${id}`, {
                     headers: { 'apikey': apiKey }
                 });
 
@@ -2081,7 +2363,7 @@ License: BSD 3-Clause
 
                 if (checkData.done) {
                     // 3. Get Result
-                    const statusResponse = await fetch(`https://stablehorde.net/api/v2/generate/status/${id}`, {
+                    const statusResponse = await this.request(`https://stablehorde.net/api/v2/generate/status/${id}`, {
                         headers: { 'apikey': apiKey }
                     });
                     if (!statusResponse.ok) throw new Error('Failed to retrieve Horde image');
@@ -2100,7 +2382,7 @@ License: BSD 3-Clause
         }
 
         async preloadImage(url) {
-            const response = await fetch(url);
+            const response = await this.request(url, { responseType: 'arraybuffer' });
 
             // Check for specific Rate Limit headers or errors
             // Pollinations might return 200 OK but with a rate limit image, checking headers:
@@ -2117,6 +2399,51 @@ License: BSD 3-Clause
 
             const blob = await response.blob();
             return URL.createObjectURL(blob);
+        }
+
+        loadExternalImage(img, rawUrl) {
+            if (!img) return;
+            if (img.dataset.nvImageProxying === '1' || img.dataset.nvImageProxied === '1') return;
+            const url = this.sanitizeUrl(rawUrl || '');
+            if (!url) return;
+            if (/^(data:|blob:)/i.test(url)) {
+                img.src = url;
+                return;
+            }
+            img.dataset.nvImageProxying = '1';
+            this.preloadImage(url)
+                .then((blobUrl) => {
+                    img.src = blobUrl;
+                })
+                .catch(() => {
+                    img.src = url;
+                })
+                .finally(() => {
+                    delete img.dataset.nvImageProxying;
+                    img.dataset.nvImageProxied = '1';
+                });
+        }
+
+        initDirectImages(container) {
+            const images = container.querySelectorAll('img');
+            images.forEach((img) => {
+                if (img.dataset.nvImageProxied === '1') return;
+                let raw = img.dataset.nvImageRaw || img.getAttribute('src') || '';
+                if (!raw) return;
+                if (/^(data:|blob:)/i.test(raw)) return;
+                if (!/^https?:\/\//i.test(raw) && !/^\/\//.test(raw)) return;
+                const isPlaceholder = img.getAttribute('src') === this.IMAGE_PLACEHOLDER;
+                if (img.dataset.nvImageProxying === '1' && !isPlaceholder) return;
+                if (img.dataset.nvImageProxying === '1' && isPlaceholder) {
+                    delete img.dataset.nvImageProxying;
+                }
+                if (!img.dataset.nvImageRaw) {
+                    img.dataset.nvImageRaw = raw;
+                    img.src = this.IMAGE_PLACEHOLDER;
+                }
+                raw = img.dataset.nvImageRaw || raw;
+                this.loadExternalImage(img, raw);
+            });
         }
 
         togglePanel(show) {
@@ -2251,6 +2578,7 @@ License: BSD 3-Clause
             this.messages = [];
             this.setActiveChatId(this.currentChatId);
             this.state.manualTitle = null;
+            this.state.autoTitle = null;
             this.elements.input.value = '';
             this.autoResizeInput();
 
@@ -2305,9 +2633,101 @@ License: BSD 3-Clause
                 this.messages = chat.messages;
                 this.setActiveChatId(chat.id);
                 this.state.manualTitle = chat.manualTitle || null;
+                this.state.autoTitle = chat.autoTitle || null;
             }
 
             this.renderMessages();
+        }
+
+        async generateTextOnce(prompt) {
+            const url = 'https://text.pollinations.ai/openai';
+            const payload = {
+                messages: [
+                    { role: 'system', content: 'You generate short conversation titles.' },
+                    { role: 'user', content: prompt }
+                ],
+                model: 'openai',
+                reasoning_effort: 'low',
+                seed: Math.floor(Math.random() * 10000)
+            };
+
+            const response = await this.request(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) throw new Error(`Title request failed: ${response.status}`);
+            const data = await response.json();
+            return data.choices?.[0]?.message?.content || '';
+        }
+
+        async generateConversationTitle(firstUserMessage) {
+            const text = String(firstUserMessage || '').trim();
+            if (!text) return 'New chat';
+
+            const fallback = text.split(/\s+/).slice(0, 6).join(' ').slice(0, 48);
+
+            try {
+                const prompt =
+                    'Generate a short conversation title (3-6 words, max 48 chars). ' +
+                    'Keep the meaning, correct spelling if needed. No quotes, no emojis, no punctuation at the end.\n\n' +
+                    `User message: ${text}\nTitle:`;
+
+                const title = await this.generateTextOnce(prompt);
+                const cleaned = String(title || '')
+                    .replace(/["“”]/g, '')
+                    .replace(/[.!?]+$/g, '')
+                    .replace(/\s+/g, ' ')
+                    .trim()
+                    .slice(0, 48);
+
+                return cleaned || fallback || 'New chat';
+            } catch (e) {
+                return fallback || 'New chat';
+            }
+        }
+
+        maybeGenerateConversationTitle(chatId, userText) {
+            if (this.state.isGhostMode) return;
+            const text = String(userText || '').trim();
+            if (!text) return;
+
+            const chat = this.history.find(h => h.id === chatId);
+            const manualTitle = chat?.manualTitle || (chatId === this.currentChatId ? this.state.manualTitle : null);
+            const existingAuto = chat?.autoTitle || (chatId === this.currentChatId ? this.state.autoTitle : null);
+            if (manualTitle || existingAuto) return;
+
+            if (!this._titleGenerationInFlight) {
+                this._titleGenerationInFlight = new Set();
+            }
+            if (this._titleGenerationInFlight.has(chatId)) return;
+            this._titleGenerationInFlight.add(chatId);
+
+            this.generateConversationTitle(text)
+                .then((title) => {
+                    if (!title) return;
+                    const target = this.history.find(h => h.id === chatId);
+                    if (target && !target.manualTitle && !target.autoTitle) {
+                        target.autoTitle = title;
+                        target.title = title;
+                        target.timestamp = Date.now();
+                    }
+                    if (chatId === this.currentChatId && !this.state.manualTitle) {
+                        this.state.autoTitle = title;
+                        this.saveHistory();
+                        if (this.state.isHistoryOpen) this.renderHistoryList();
+                    } else if (target) {
+                        GM_setValue('NeuraVeil_history', JSON.stringify(this.history));
+                        if (this.state.isHistoryOpen) this.renderHistoryList();
+                    }
+                })
+                .catch((err) => {
+                    console.warn('Title generation failed:', err);
+                })
+                .finally(() => {
+                    this._titleGenerationInFlight.delete(chatId);
+                });
         }
 
         saveHistory() {
@@ -2317,12 +2737,13 @@ License: BSD 3-Clause
 
             const existing = this.history.find(h => h.id === this.currentChatId);
             const manualTitle = this.state.manualTitle || existing?.manualTitle || null;
-            const autoTitle = this.messages.find(m => m.role === 'user')?.content.substring(0, 30) + '...' || 'New Conversation';
+            const autoTitle = this.state.autoTitle || existing?.autoTitle || null;
             const chatData = {
                 id: this.currentChatId,
                 timestamp: Date.now(),
-                title: manualTitle || autoTitle,
+                title: manualTitle || autoTitle || existing?.title || 'New Conversation',
                 manualTitle: manualTitle,
+                autoTitle: autoTitle || existing?.autoTitle || null,
                 messages: this.messages
             };
 
@@ -2366,6 +2787,29 @@ License: BSD 3-Clause
                 GM_setValue('NeuraVeil_history', '');
                 this.setActiveChatId('');
                 this.resetHistorySearch();
+                this.startNewChat();
+            });
+        }
+
+        resetAllData() {
+            this.showConfirm('Reset all NeuraVeil data? This clears settings and conversations.', () => {
+                this.history = [];
+                this.filteredHistory = [];
+                this.messages = [];
+                this.state.manualTitle = null;
+                this.state.autoTitle = null;
+                this.state.responseStyle = 'default';
+                this.state.reasoningEffort = 'low';
+
+                GM_setValue('NeuraVeil_history', '');
+                GM_setValue('NeuraVeil_active_chat_id', '');
+                GM_setValue('NeuraVeil_style', '');
+                GM_setValue('NeuraVeil_reasoning', '');
+
+                this.resetHistorySearch();
+                this.applyActiveStyle();
+                this.renderModelSelect();
+                this.renderHistoryList();
                 this.startNewChat();
             });
         }
@@ -2479,6 +2923,7 @@ License: BSD 3-Clause
             this.messages = chat.messages;
             this.setActiveChatId(chat.id);
             this.state.manualTitle = chat.manualTitle || null;
+            this.state.autoTitle = chat.autoTitle || null;
 
             this.renderMessages();
             this.toggleHistory(); // Close history
@@ -2605,9 +3050,13 @@ License: BSD 3-Clause
         }
 
         sanitizeUrl(url) {
-            if (!url) return '';
+            const raw = String(url || '').trim();
+            if (!raw) return '';
+            const hasProtocol = /^https?:\/\//i.test(raw);
+            const isProtocolRelative = /^\/\//.test(raw);
+            if (!hasProtocol && !isProtocolRelative) return '';
             try {
-                const parsed = new URL(url, window.location.href);
+                const parsed = new URL(raw, window.location.href);
                 if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
                     return parsed.toString();
                 }
@@ -2622,123 +3071,177 @@ License: BSD 3-Clause
             return match ? match[0] : '';
         }
 
-        normalizeWikipediaTitle(value) {
-            if (!value) return '';
-            let text = String(value);
-            try {
-                text = decodeURIComponent(text);
-            } catch (e) {
-                // Keep original if decoding fails.
-            }
-            return text
-                .replace(/_/g, ' ')
-                .replace(/\+/g, ' ')
-                .trim();
-        }
-
-        extractWikipediaQueryFromUrl(rawUrl) {
-            if (!rawUrl || !/^https?:\/\//i.test(rawUrl)) return '';
-            let parsed;
-            try {
-                parsed = new URL(rawUrl);
-            } catch (e) {
-                return '';
-            }
-            if (!/wikipedia\.org$/i.test(parsed.hostname) && !/\.wikipedia\.org$/i.test(parsed.hostname)) {
-                return '';
-            }
-            const path = parsed.pathname || '';
-            if (path.startsWith('/wiki/')) {
-                const title = path.replace(/^\/wiki\//, '');
-                return this.normalizeWikipediaTitle(title);
-            }
-            if (path.endsWith('/w/api.php') || path.endsWith('/w/index.php')) {
-                const params = parsed.searchParams;
-                const value = params.get('gsrsearch') || params.get('titles') || params.get('title') || params.get('page') || '';
-                return this.normalizeWikipediaTitle(value);
-            }
-            return '';
-        }
-
         normalizeImageQuery(rawQuery) {
             const query = String(rawQuery || '').trim();
             if (!query) return '';
-            const embeddedUrl = this.extractFirstUrl(query);
-            if (embeddedUrl) {
-                const extracted = this.extractWikipediaQueryFromUrl(embeddedUrl);
-                if (extracted) return extracted;
-            }
             return query;
         }
 
-        shortenText(value, maxLen = 200) {
-            const text = String(value || '').trim();
-            if (!text) return '';
-            if (text.length <= maxLen) return text;
-            const slice = text.slice(0, maxLen + 1);
-            const lastSpace = slice.lastIndexOf(' ');
-            if (lastSpace > 60) {
-                return `${slice.slice(0, lastSpace).trim()}...`;
-            }
-            return `${text.slice(0, maxLen).trim()}...`;
-        }
+        simplifyOpenverseQuery(query) {
+            const raw = String(query || '').toLowerCase();
+            if (!raw) return '';
+            let cleaned = raw
+                .replace(/image\s+libre\s+de\s+droits/gi, ' ')
+                .replace(/libre\s+de\s+droits/gi, ' ')
+                .replace(/royalty[-\s]?free/gi, ' ')
+                .replace(/public\s+domain/gi, ' ')
+                .replace(/creative\s+commons/gi, ' ')
+                .replace(/cc\s*(by|0|sa|nd|nc)?/gi, ' ')
+                .replace(/[^\w\s-]/g, ' ')
+                .replace(/[_-]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+            if (!cleaned) return '';
 
-        getWikipediaDescription(data) {
-            const raw = (data?.description || data?.extract || '').trim();
-            return this.shortenText(raw, 200);
-        }
-
-        async fetchWikipediaApiJson(url) {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`Wikipedia error: ${response.status}`);
-            return await response.json();
-        }
-
-        async fetchWikipediaSummaryRaw(title) {
-            const encoded = encodeURIComponent(title);
-            const url = `https://fr.wikipedia.org/api/rest_v1/page/summary/${encoded}`;
-            try {
-                return await this.fetchWikipediaApiJson(url);
-            } catch (e) {
-                return null;
-            }
-        }
-
-        async fetchWikipediaSummaryData(title) {
-            const data = await this.fetchWikipediaSummaryRaw(title);
-            if (!data) return null;
-            const rawUrl = data?.thumbnail?.source || data?.originalimage?.source || '';
-            const url = this.sanitizeUrl(rawUrl);
-            if (!url) return null;
-            return {
-                url,
-                description: this.getWikipediaDescription(data),
-                title: data?.title || title
+            const stopwords = new Set([
+                'image', 'images', 'photo', 'photos', 'picture', 'pictures',
+                'libre', 'droits', 'free', 'royalty', 'domain',
+                'de', 'du', 'des', 'la', 'le', 'les', 'un', 'une', 'et', 'ou', 'pour', 'avec',
+                'the', 'a', 'an', 'of', 'and', 'for', 'with', 'to', 'in'
+            ]);
+            const translate = {
+                'poule': 'chicken',
+                'poulet': 'chicken',
+                'coq': 'rooster',
+                'domestique': 'domestic',
+                'oiseau': 'bird',
+                'chat': 'cat',
+                'chien': 'dog',
+                'fleur': 'flower',
+                'fleurs': 'flowers',
+                'arbre': 'tree',
+                'mer': 'sea',
+                'ocean': 'ocean',
+                'montagne': 'mountain'
             };
+
+            const tokens = cleaned.split(/\s+/).filter(Boolean);
+            const mapped = [];
+            tokens.forEach((token) => {
+                if (stopwords.has(token)) return;
+                mapped.push(translate[token] || token);
+            });
+
+            const unique = [];
+            mapped.forEach((token) => {
+                if (!unique.includes(token)) unique.push(token);
+            });
+            if (!unique.length) return '';
+
+            if (unique.includes('domestic') && unique.includes('chicken')) {
+                return 'domestic chicken';
+            }
+
+            return unique.slice(0, 3).join(' ');
         }
 
-        async fetchWikipediaSearchTitle(query) {
-            const encoded = encodeURIComponent(query);
-            const url =
-                "https://fr.wikipedia.org/w/api.php" +
-                "?action=query" +
-                "&list=search" +
-                `&srsearch=${encoded}` +
-                "&srlimit=1" +
-                "&format=json" +
-                "&origin=*";
+        buildOpenverseSearchQueries(rawQuery) {
+            const base = this.normalizeImageQuery(rawQuery);
+            if (!base) return [];
+            const queries = [base];
+            const simplified = this.simplifyOpenverseQuery(base);
+            if (simplified && simplified !== base) queries.push(simplified);
+            return Array.from(new Set(queries));
+        }
+
+        getDomainFromUrl(rawUrl) {
+            if (!rawUrl) return '';
             try {
-                const data = await this.fetchWikipediaApiJson(url);
-                return data?.query?.search?.[0]?.title || '';
+                const parsed = new URL(rawUrl);
+                return parsed.hostname.replace(/^www\./i, '');
             } catch (e) {
                 return '';
             }
         }
 
-        async fetchWikipediaDescription(title) {
-            const data = await this.fetchWikipediaSummaryRaw(title);
-            if (!data) return '';
-            return this.getWikipediaDescription(data);
+        formatOpenverseDisplayName(value) {
+            return String(value || '').trim().replace(/\s+/g, '_');
+        }
+
+        formatOpenverseLicense(result) {
+            return this.formatOpenverseDisplayName(result?.license || '');
+        }
+
+        async fetchOpenverseApiJson(url) {
+            const response = await this.request(url);
+            if (!response.ok) throw new Error(`Openverse error: ${response.status}`);
+            return await response.json();
+        }
+
+        buildOpenverseMetadata(result, previewUrlOverride) {
+            const fullUrl = this.sanitizeUrl(result?.url || '');
+            const previewUrl = previewUrlOverride || fullUrl;
+            if (!previewUrl) return null;
+
+            const source = this.formatOpenverseDisplayName(result?.source || '');
+            const foreignLandingUrl = this.sanitizeUrl(result?.foreign_landing_url || '');
+            const creator = this.formatOpenverseDisplayName(result?.creator || '');
+            const creatorUrl = this.sanitizeUrl(result?.creator_url || '');
+            const license = this.formatOpenverseLicense(result);
+            const licenseUrl = this.sanitizeUrl(result?.license_url || '');
+
+            return {
+                thumbnail: previewUrl,
+                url: fullUrl || previewUrl,
+                source,
+                foreignLandingUrl,
+                creator,
+                creatorUrl,
+                license,
+                licenseUrl
+            };
+        }
+
+        normalizeTextForTitleMatch(value) {
+            return String(value || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, ' ')
+                .trim();
+        }
+
+        doesOpenverseTitleMatch(title, query) {
+            const normalizedTitle = this.normalizeTextForTitleMatch(title);
+            const normalizedQuery = this.normalizeTextForTitleMatch(query);
+            if (!normalizedTitle || !normalizedQuery) return false;
+            const tokens = normalizedQuery.split(/\s+/).filter((token) => token.length > 1);
+            if (!tokens.length) return false;
+            return tokens.every((token) => normalizedTitle.includes(token));
+        }
+
+        isIrrelevantOpenverseTitle(title) {
+            const text = String(title || '').toLowerCase().trim();
+            if (!text) return false;
+            const badTerms = /\b(cahier|document|scan|scanned|page|pages)\b/i;
+            const trailingPage = /(?:^|[\s_-])p\s*\d+\s*$/i;
+            return badTerms.test(text) || trailingPage.test(text);
+        }
+
+        async fetchOpenverseImage(query) {
+            const normalizedQuery = this.normalizeImageQuery(query);
+            if (!normalizedQuery) throw new Error('Openverse: empty query');
+
+            const queries = this.buildOpenverseSearchQueries(normalizedQuery);
+            let data = null;
+            let results = [];
+            let usedQuery = normalizedQuery;
+            for (const q of queries) {
+                const encoded = encodeURIComponent(q);
+                const url = `https://api.openverse.org/v1/images/?q=${encoded}&page_size=1`;
+                data = await this.fetchOpenverseApiJson(url);
+                results = Array.isArray(data?.results) ? data.results : [];
+                if (results.length) {
+                    usedQuery = q;
+                    break;
+                }
+            }
+            if (!results.length) throw new Error('Openverse: no results');
+            const result = results[0];
+            const payload = this.buildOpenverseMetadata(result);
+            if (!payload) throw new Error('Openverse: no image url');
+            payload.titleMatch = this.doesOpenverseTitleMatch(result?.title || '', usedQuery);
+            return payload;
         }
 
         escapeToolAttrValue(value) {
@@ -2810,131 +3313,53 @@ License: BSD 3-Clause
             return `${assistantText}\n\n${toolTag}`;
         }
 
+        buildWebImageAttributionHtml(data) {
+            const creator = String(data?.creator || '').trim();
+            const license = String(data?.license || '').trim();
+            const titleMatch = data?.titleMatch !== false;
+            const mismatchNotice = titleMatch ? '' : 'Image does not match.';
+            if (!creator && !license) return mismatchNotice;
 
+            const creatorUrl = this.sanitizeUrl(data?.creatorUrl || '');
+            const licenseUrl = this.sanitizeUrl(data?.licenseUrl || '');
+            const parts = [];
 
-        extractWikipediaImageData(data) {
-            const pages = data?.query?.pages;
-            if (!pages) return null;
-            const pageList = Array.isArray(pages) ? pages : Object.values(pages);
-            for (const page of pageList) {
-                if (!page || page.missing) continue;
-                const rawUrl = page?.thumbnail?.source || page?.original?.source || '';
-                const url = this.sanitizeUrl(rawUrl);
-                if (url) {
-                    return {
-                        url,
-                        title: page?.title || ''
-                    };
-                }
-            }
-            return null;
-        }
-
-        async fetchWikipediaPageImageDataByTitle(title) {
-            const encoded = encodeURIComponent(title);
-            const url =
-                "https://fr.wikipedia.org/w/api.php" +
-                "?action=query" +
-                `&titles=${encoded}` +
-                "&prop=pageimages" +
-                "&piprop=thumbnail|original" +
-                "&pithumbsize=800" +
-                "&format=json" +
-                "&origin=*" +
-                "&redirects=1";
-            try {
-                const data = await this.fetchWikipediaApiJson(url);
-                const imageData = this.extractWikipediaImageData(data);
-                if (!imageData) return null;
-                const description = await this.fetchWikipediaDescription(imageData.title || title);
-                return {
-                    url: imageData.url,
-                    description,
-                    title: imageData.title || title
-                };
-            } catch (e) {
-                return null;
-            }
-        }
-
-        async fetchWikipediaPageImageDataBySearch(query) {
-            const encoded = encodeURIComponent(query);
-            const url =
-                "https://fr.wikipedia.org/w/api.php" +
-                "?action=query" +
-                "&generator=search" +
-                `&gsrsearch=${encoded}` +
-                "&gsrlimit=1" +
-                "&prop=pageimages" +
-                "&piprop=thumbnail|original" +
-                "&pithumbsize=800" +
-                "&format=json" +
-                "&origin=*";
-            try {
-                const data = await this.fetchWikipediaApiJson(url);
-                const imageData = this.extractWikipediaImageData(data);
-                if (!imageData) return null;
-                const description = await this.fetchWikipediaDescription(imageData.title || query);
-                return {
-                    url: imageData.url,
-                    description,
-                    title: imageData.title || query
-                };
-            } catch (e) {
-                return null;
-            }
-        }
-
-        async fetchWikimediaImage(query) {
-            const normalizedQuery = this.normalizeImageQuery(query);
-            if (!normalizedQuery) throw new Error('Wikipedia: empty query');
-
-            let data = await this.fetchWikipediaSummaryData(normalizedQuery);
-            let searchTitle = '';
-            if (!data) {
-                searchTitle = await this.fetchWikipediaSearchTitle(normalizedQuery);
-                if (searchTitle && searchTitle !== normalizedQuery) {
-                    data = await this.fetchWikipediaSummaryData(searchTitle);
-                }
-            }
-            if (data?.url) {
-                await this.preloadImage(data.url);
-                return data;
+            if (creator) {
+                const safeCreator = this.escapeHtml(creator);
+                const value = creatorUrl
+                    ? `<a href="${this.escapeAttr(creatorUrl)}" target="_blank" rel="noopener noreferrer">${safeCreator}</a>`
+                    : safeCreator;
+                parts.push(`By ${value}`);
             }
 
-            data = await this.fetchWikipediaPageImageDataByTitle(normalizedQuery);
-            if (data?.url) {
-                await this.preloadImage(data.url);
-                return data;
+            if (license) {
+                const safeLicense = this.escapeHtml(license);
+                const value = licenseUrl
+                    ? `<a href="${this.escapeAttr(licenseUrl)}" target="_blank" rel="noopener noreferrer">${safeLicense}</a>`
+                    : safeLicense;
+                parts.push(`Licence ${value}`);
             }
 
-            if (searchTitle && searchTitle !== normalizedQuery) {
-                data = await this.fetchWikipediaPageImageDataByTitle(searchTitle);
-                if (data?.url) {
-                    await this.preloadImage(data.url);
-                    return data;
-                }
-            }
-
-            data = await this.fetchWikipediaPageImageDataBySearch(normalizedQuery);
-            if (data?.url) {
-                await this.preloadImage(data.url);
-                return data;
-            }
-
-            throw new Error('Wikipedia: no image');
+            const line = parts.join(' | ');
+            if (!mismatchNotice) return line;
+            return line ? `${mismatchNotice} ${line}` : mismatchNotice;
         }
 
         async searchWebImage(query) {
-            return await this.fetchWikimediaImage(query);
+            return await this.fetchOpenverseImage(query);
         }
 
-        updateToolImageCaption(container, text) {
+        updateToolImageCaption(container, text, allowHtml = false) {
             const caption = container.querySelector('.nv-tool-caption');
             if (!caption) return;
-            const value = String(text || '').trim();
+            const raw = String(text || '');
+            const value = raw.trim();
             if (value) {
-                caption.textContent = value;
+                if (allowHtml) {
+                    caption.innerHTML = raw;
+                } else {
+                    caption.textContent = value;
+                }
                 caption.style.display = 'block';
             } else {
                 caption.textContent = '';
@@ -2954,17 +3379,166 @@ License: BSD 3-Clause
                 if (!img.alt) img.alt = alt;
                 this.searchWebImage(query)
                     .then((result) => {
-                        const imageUrl = typeof result === 'string' ? result : result?.url;
-                        const caption = typeof result === 'string'
-                            ? alt
-                            : (result?.description || result?.title || alt);
-                        if (imageUrl) img.src = imageUrl;
-                        this.updateToolImageCaption(node, caption);
+                        const isString = typeof result === 'string';
+                        const sourceLinkEl = node.querySelector('[data-nv-image-source-link]');
+
+                        const applyWebImageResult = (data, previewUrl) => {
+                            const fullUrl = data?.url || '';
+                            const source = data?.source || '';
+                            const foreignLandingUrl = data?.foreignLandingUrl || '';
+                            const attributionHtml = data ? this.buildWebImageAttributionHtml(data) : '';
+
+                            if (previewUrl) {
+                                img.dataset.nvImageRaw = previewUrl;
+                                this.loadExternalImage(img, previewUrl);
+                            }
+                            if (fullUrl) {
+                                img.dataset.nvImageFull = fullUrl;
+                            } else {
+                                delete img.dataset.nvImageFull;
+                            }
+                            if (foreignLandingUrl) {
+                                img.dataset.nvImageSourceUrl = foreignLandingUrl;
+                            } else {
+                                delete img.dataset.nvImageSourceUrl;
+                            }
+
+                            if (sourceLinkEl) {
+                                const safeForeign = this.sanitizeUrl(foreignLandingUrl || '');
+                                const sourceValue = String(source || '').trim();
+                                if (safeForeign) {
+                                    sourceLinkEl.href = safeForeign;
+                                    sourceLinkEl.target = '_blank';
+                                    sourceLinkEl.rel = 'noopener noreferrer';
+                                    sourceLinkEl.textContent = sourceValue ? `${sourceValue}` : 'Source';
+                                    sourceLinkEl.style.display = '';
+                                } else {
+                                    sourceLinkEl.textContent = '';
+                                    sourceLinkEl.style.display = 'none';
+                                }
+                            }
+
+                            this.updateToolImageCaption(node, attributionHtml, true);
+                        };
+
+                        const showFallbackState = () => {
+                            if (sourceLinkEl) {
+                                sourceLinkEl.textContent = '';
+                                sourceLinkEl.style.display = 'none';
+                            }
+                            delete img.dataset.nvImageFull;
+                            delete img.dataset.nvImageSourceUrl;
+                            this.updateToolImageCaption(node, '', false);
+                        };
+
+                        if (isString) {
+                            img.onerror = null;
+                            if (result) {
+                                img.dataset.nvImageRaw = result;
+                                this.loadExternalImage(img, result);
+                            }
+                            showFallbackState();
+                            return;
+                        }
+
+                        img.onerror = null;
+                        const previewUrl = result?.url || '';
+                        if (previewUrl) {
+                            applyWebImageResult(result, previewUrl);
+                        } else {
+                            showFallbackState();
+                        }
                     })
                     .catch(() => {
                         img.alt = alt;
-                        this.updateToolImageCaption(node, alt);
+                        this.updateToolImageCaption(node, '', false);
                     });
+            });
+        }
+
+        renderImageActionsHtml(includeLink = false) {
+            const linkButton = includeLink
+                ? `<button class="nv-image-action" data-nv-image-link title="Copy Image Link" aria-label="Copy Image Link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L10.5 5"/><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L13.5 19"/></svg></button>`
+                : '';
+            return `<div class="nv-image-actions" data-nv-image-actions>
+                <button class="nv-image-action" data-nv-image-copy title="Copy Image" aria-label="Copy Image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+                <button class="nv-image-action" data-nv-image-download title="Download Image" aria-label="Download Image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
+                ${linkButton}
+            </div>`;
+        }
+
+        createImageActionsElement() {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'nv-image-actions';
+            wrapper.dataset.nvImageActions = '1';
+            wrapper.innerHTML = `
+                <button class="nv-image-action" data-nv-image-copy title="Copy Image" aria-label="Copy Image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+                <button class="nv-image-action" data-nv-image-download title="Download Image" aria-label="Download Image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></button>
+            `;
+            return wrapper;
+        }
+
+        wrapStandaloneImages(container) {
+            const images = container.querySelectorAll('img');
+            images.forEach((img) => {
+                if (img.closest('.nv-tool-image')) return;
+                if (img.closest('.nv-image-frame')) return;
+                if (img.closest('.nv-tool-code, .nv-code-block')) return;
+                const parent = img.parentNode;
+                if (!parent) return;
+
+                const frame = document.createElement('div');
+                frame.className = 'nv-image-frame';
+                const actions = this.createImageActionsElement();
+                parent.insertBefore(frame, img);
+                frame.appendChild(actions);
+                frame.appendChild(img);
+            });
+        }
+
+        initImageActions(container) {
+            const frames = container.querySelectorAll('.nv-image-frame');
+            frames.forEach((frame) => {
+                if (frame.dataset.nvImageActionsBound === '1') return;
+                frame.dataset.nvImageActionsBound = '1';
+
+                const img = frame.querySelector('img');
+                if (!img) return;
+
+                const getImageUrl = () => {
+                    return img.dataset.nvImageFull || img.currentSrc || img.src || '';
+                };
+
+                const copyBtn = frame.querySelector('[data-nv-image-copy]');
+                if (copyBtn) {
+                    copyBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const url = getImageUrl();
+                        if (!url) return;
+                        this.copyImageToClipboard(url, copyBtn);
+                    });
+                }
+
+                const downloadBtn = frame.querySelector('[data-nv-image-download]');
+                if (downloadBtn) {
+                    downloadBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const url = getImageUrl();
+                        if (!url) return;
+                        const filename = this.buildImageFilename(img.alt || '', url);
+                        this.downloadImage(url, filename);
+                    });
+                }
+
+                const linkBtn = frame.querySelector('[data-nv-image-link]');
+                if (linkBtn) {
+                    linkBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const url = getImageUrl();
+                        if (!url) return;
+                        this.copyTextToClipboard(url, linkBtn, 'primary');
+                    });
+                }
             });
         }
 
@@ -3053,6 +3627,54 @@ License: BSD 3-Clause
             return { html, hasLinks };
         }
 
+        renderTextWithBoldAndLinks(text) {
+            let html = '';
+            let hasMarkup = false;
+            let index = 0;
+
+            while (index < text.length) {
+                const start = text.indexOf('**', index);
+                if (start === -1) {
+                    const tail = text.slice(index);
+                    const renderedTail = this.renderTextWithLinks(tail);
+                    html += renderedTail.html;
+                    hasMarkup = hasMarkup || renderedTail.hasLinks;
+                    break;
+                }
+
+                const before = text.slice(index, start);
+                const renderedBefore = this.renderTextWithLinks(before);
+                html += renderedBefore.html;
+                hasMarkup = hasMarkup || renderedBefore.hasLinks;
+
+                const end = text.indexOf('**', start + 2);
+                if (end === -1) {
+                    const rest = text.slice(start);
+                    const renderedRest = this.renderTextWithLinks(rest);
+                    html += renderedRest.html;
+                    hasMarkup = hasMarkup || renderedRest.hasLinks;
+                    break;
+                }
+
+                const boldText = text.slice(start + 2, end);
+                if (!boldText.trim()) {
+                    const literal = text.slice(start, end + 2);
+                    const renderedLiteral = this.renderTextWithLinks(literal);
+                    html += renderedLiteral.html;
+                    hasMarkup = hasMarkup || renderedLiteral.hasLinks;
+                    index = end + 2;
+                    continue;
+                }
+
+                const renderedBold = this.renderTextWithLinks(boldText);
+                html += `<strong>${renderedBold.html}</strong>`;
+                hasMarkup = true;
+                index = end + 2;
+            }
+
+            return { html, hasMarkup };
+        }
+
         renderTextWithInlineCode(text) {
             const inlineCodeRegex = /`([^`]+)`/g;
             let html = '';
@@ -3062,9 +3684,9 @@ License: BSD 3-Clause
 
             while ((match = inlineCodeRegex.exec(text)) !== null) {
                 const before = text.slice(lastIndex, match.index);
-                const beforeRendered = this.renderTextWithLinks(before);
+                const beforeRendered = this.renderTextWithBoldAndLinks(before);
                 html += beforeRendered.html;
-                hasMarkup = hasMarkup || beforeRendered.hasLinks;
+                hasMarkup = hasMarkup || beforeRendered.hasMarkup;
 
                 const code = this.escapeHtml(match[1]);
                 html += `<code class="nv-inline-code">${code}</code>`;
@@ -3074,23 +3696,136 @@ License: BSD 3-Clause
             }
 
             const tail = text.slice(lastIndex);
-            const tailRendered = this.renderTextWithLinks(tail);
+            const tailRendered = this.renderTextWithBoldAndLinks(tail);
             html += tailRendered.html;
-            hasMarkup = hasMarkup || tailRendered.hasLinks;
+            hasMarkup = hasMarkup || tailRendered.hasMarkup;
+
+            return { html, hasMarkup };
+        }
+
+        renderInlineMarkdown(text) {
+            const rendered = this.renderTextWithInlineCode(text);
+            const html = rendered.html.replace(/\n/g, '<br>');
+            return { html, hasMarkup: rendered.hasMarkup || html !== this.escapeHtml(text) };
+        }
+
+        renderMarkdownBlocks(text) {
+            const lines = String(text || '').split('\n');
+            let html = '';
+            let hasMarkup = false;
+            let listType = null;
+            let paragraphLines = [];
+            let quoteLines = [];
+
+            const flushParagraph = () => {
+                if (!paragraphLines.length) return;
+                const blockText = paragraphLines.join('\n');
+                const rendered = this.renderInlineMarkdown(blockText);
+                html += `<p class="nv-md-p">${rendered.html}</p>`;
+                hasMarkup = true;
+                paragraphLines = [];
+            };
+
+            const flushList = () => {
+                if (!listType) return;
+                html += `</${listType}>`;
+                listType = null;
+            };
+
+            const flushQuote = () => {
+                if (!quoteLines.length) return;
+                const blockText = quoteLines.join('\n');
+                const rendered = this.renderInlineMarkdown(blockText);
+                html += `<blockquote class="nv-md-quote">${rendered.html}</blockquote>`;
+                hasMarkup = true;
+                quoteLines = [];
+            };
+
+            lines.forEach((line) => {
+                const trimmed = line.trim();
+
+                if (!trimmed) {
+                    flushParagraph();
+                    flushQuote();
+                    flushList();
+                    return;
+                }
+
+                const hrMatch = /^(?:-{3,}|\*{3,}|_{3,})$/.test(trimmed);
+                if (hrMatch) {
+                    flushParagraph();
+                    flushQuote();
+                    flushList();
+                    html += '<hr class="nv-md-hr">';
+                    hasMarkup = true;
+                    return;
+                }
+
+                const headingMatch = trimmed.match(/^(#{1,6})\s+(.*)$/);
+                if (headingMatch) {
+                    flushParagraph();
+                    flushQuote();
+                    flushList();
+                    const level = headingMatch[1].length;
+                    const rendered = this.renderInlineMarkdown(headingMatch[2] || '');
+                    html += `<div class="nv-md-h${level}">${rendered.html}</div>`;
+                    hasMarkup = true;
+                    return;
+                }
+
+                const quoteMatch = line.match(/^\s*>\s?(.*)$/);
+                if (quoteMatch) {
+                    flushParagraph();
+                    flushList();
+                    quoteLines.push(quoteMatch[1] || '');
+                    return;
+                }
+
+                if (quoteLines.length) {
+                    flushQuote();
+                }
+
+                const unorderedMatch = line.match(/^\s*[-*+]\s+(.*)$/);
+                const orderedMatch = line.match(/^\s*\d+[.)]\s+(.*)$/);
+                if (unorderedMatch || orderedMatch) {
+                    flushParagraph();
+                    const nextType = unorderedMatch ? 'ul' : 'ol';
+                    if (listType && listType !== nextType) {
+                        flushList();
+                    }
+                    if (!listType) {
+                        listType = nextType;
+                        html += `<${listType} class="nv-md-list">`;
+                        hasMarkup = true;
+                    }
+                    const itemText = unorderedMatch ? unorderedMatch[1] : orderedMatch[1];
+                    const rendered = this.renderInlineMarkdown(itemText || '');
+                    html += `<li>${rendered.html}</li>`;
+                    hasMarkup = true;
+                    return;
+                }
+
+                paragraphLines.push(line);
+            });
+
+            flushParagraph();
+            flushQuote();
+            flushList();
 
             return { html, hasMarkup };
         }
 
         renderTextWithFormatting(text) {
-            const codeBlockRegex = /```([\w-]+)?\n([\s\S]*?)```/g;
+            const normalized = String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            const codeBlockRegex = /```([\w-]+)?\s*\n([\s\S]*?)```/g;
             let html = '';
             let hasMarkup = false;
             let lastIndex = 0;
             let match;
 
-            while ((match = codeBlockRegex.exec(text)) !== null) {
-                const before = text.slice(lastIndex, match.index);
-                const beforeRendered = this.renderTextWithInlineCode(before);
+            while ((match = codeBlockRegex.exec(normalized)) !== null) {
+                const before = normalized.slice(lastIndex, match.index);
+                const beforeRendered = this.renderMarkdownBlocks(before);
                 html += beforeRendered.html;
                 hasMarkup = hasMarkup || beforeRendered.hasMarkup;
 
@@ -3106,8 +3841,8 @@ License: BSD 3-Clause
                 lastIndex = codeBlockRegex.lastIndex;
             }
 
-            const tail = text.slice(lastIndex);
-            const tailRendered = this.renderTextWithInlineCode(tail);
+            const tail = normalized.slice(lastIndex);
+            const tailRendered = this.renderMarkdownBlocks(tail);
             html += tailRendered.html;
             hasMarkup = hasMarkup || tailRendered.hasMarkup;
 
@@ -3120,17 +3855,46 @@ License: BSD 3-Clause
             const safeLabel = this.escapeHtml(label || 'Image');
             const safeCaption = caption ? this.escapeHtml(caption) : '';
             const captionHtml = safeCaption ? `<div class="nv-tool-caption">${safeCaption}</div>` : '';
-            return `<div class="nv-tool nv-tool-image"><div class="nv-tool-label">${safeLabel}</div><img src="${safeUrl}" alt="${safeAlt}" loading="lazy">${captionHtml}</div>`;
+            const actionsHtml = this.renderImageActionsHtml(false);
+            const rawAttr = safeUrl ? ` data-nv-image-raw="${safeUrl}" data-nv-image-full="${safeUrl}"` : '';
+            const imageHtml = `<div class="nv-image-frame">${actionsHtml}<img src="${this.IMAGE_PLACEHOLDER}" alt="${safeAlt}" loading="lazy"${rawAttr}></div>`;
+            return `<div class="nv-tool nv-tool-image"><div class="nv-tool-label">${safeLabel}</div>${imageHtml}${captionHtml}</div>`;
+        }
+
+        renderWebImageTool(url, alt, label, source, foreignLandingUrl, attributionHtml, fullUrl) {
+            const safeUrl = this.escapeAttr(url);
+            const safeAlt = this.escapeAttr(alt || '');
+            const safeLabel = this.escapeHtml(label || 'Web Image : ');
+            const sourceText = String(source || '').trim();
+            const safeSourceText = sourceText ? this.escapeHtml(sourceText) : '';
+            const safeForeignUrl = this.sanitizeUrl(foreignLandingUrl || '');
+            const sourceLabelText = safeSourceText ? `${safeSourceText}` : 'Source';
+            const sourceLinkHtml = safeForeignUrl
+                ? `<a class="nv-tool-source-link" data-nv-image-source-link href="${this.escapeAttr(safeForeignUrl)}" target="_blank" rel="noopener noreferrer">${sourceLabelText}</a>`
+                : `<a class="nv-tool-source-link" data-nv-image-source-link style="display:none"></a>`;
+            const labelHtml = `<div class="nv-tool-label-row"><div class="nv-tool-label">${safeLabel}</div>${sourceLinkHtml}</div>`;
+            const captionHtml = attributionHtml
+                ? `<div class="nv-tool-caption nv-tool-attribution">${attributionHtml}</div>`
+                : `<div class="nv-tool-caption nv-tool-attribution" style="display:none"></div>`;
+            const fullAttr = fullUrl ? ` data-nv-image-full="${this.escapeAttr(fullUrl)}"` : '';
+            const sourceAttr = safeForeignUrl ? ` data-nv-image-source-url="${this.escapeAttr(safeForeignUrl)}"` : '';
+            const actionsHtml = this.renderImageActionsHtml(true);
+            const rawAttr = safeUrl ? ` data-nv-image-raw="${safeUrl}"` : '';
+            const imageHtml = `<div class="nv-image-frame">${actionsHtml}<img src="${this.IMAGE_PLACEHOLDER}" alt="${safeAlt}" loading="lazy"${fullAttr}${sourceAttr}${rawAttr}></div>`;
+            return `<div class="nv-tool nv-tool-image">${labelHtml}${imageHtml}${captionHtml}</div>`;
         }
 
         renderImageToolWithQuery(query, alt, label, caption) {
             const safeQuery = this.escapeAttr(query);
             const safeAlt = this.escapeAttr(alt || query || '');
-            const safeLabel = this.escapeHtml(label || 'Image');
+            const safeLabel = this.escapeHtml(label || 'Web Image : ');
             const safeCaption = caption ? this.escapeHtml(caption) : '';
             const captionStyle = safeCaption ? '' : ' style="display:none"';
-            const captionHtml = `<div class="nv-tool-caption" data-nv-image-caption${captionStyle}>${safeCaption}</div>`;
-            return `<div class="nv-tool nv-tool-image" data-nv-image-query="${safeQuery}" data-nv-image-alt="${safeAlt}"><div class="nv-tool-label">${safeLabel}</div><img alt="${safeAlt}" loading="lazy">${captionHtml}</div>`;
+            const captionHtml = `<div class="nv-tool-caption nv-tool-attribution" data-nv-image-caption${captionStyle}>${safeCaption}</div>`;
+            const labelHtml = `<div class="nv-tool-label-row"><div class="nv-tool-label">${safeLabel}</div><a class="nv-tool-source-link" data-nv-image-source-link style="display:none"></a></div>`;
+            const actionsHtml = this.renderImageActionsHtml(true);
+            const imageHtml = `<div class="nv-image-frame">${actionsHtml}<img src="${this.IMAGE_PLACEHOLDER}" alt="${safeAlt}" loading="lazy"></div>`;
+            return `<div class="nv-tool nv-tool-image" data-nv-image-query="${safeQuery}" data-nv-image-alt="${safeAlt}">${labelHtml}${imageHtml}${captionHtml}</div>`;
         }
 
         renderToolCall(toolName, attrs) {
@@ -3158,39 +3922,41 @@ License: BSD 3-Clause
             const queryResult = this.tryRenderFromQuery(attrs);
             if (queryResult) return queryResult;
 
-            // Try to render from Wikipedia URL
-            const wikiResult = this.tryRenderFromWikipediaUrl(attrs);
-            if (wikiResult) return wikiResult;
-
             // Fallback to direct URL rendering
             return this.renderFromDirectUrl(attrs);
         }
 
         tryRenderFromQuery(attrs) {
             const rawQuery = attrs.query || attrs.search || attrs.text || '';
+            const directUrl = this.extractFirstUrl(rawQuery);
+            if (directUrl && rawQuery.trim() === directUrl) {
+                const alt = attrs.alt || 'Web image : ';
+                return this.renderWebImageTool(directUrl, alt, 'Web Image : ', '', '', '', directUrl);
+            }
             const query = this.normalizeImageQuery(rawQuery);
             if (!query) return null;
 
             const alt = attrs.alt || query;
-            return this.renderImageToolWithQuery(query, alt, 'Web Image', '');
-        }
-
-        tryRenderFromWikipediaUrl(attrs) {
-            const rawUrl = attrs.url || '';
-            const queryFromUrl = this.extractWikipediaQueryFromUrl(rawUrl);
-            if (!queryFromUrl) return null;
-
-            const alt = attrs.alt || queryFromUrl;
-            return this.renderImageToolWithQuery(queryFromUrl, alt, 'Web Image', '');
+            return this.renderImageToolWithQuery(query, alt, 'Web Image : ', '');
         }
 
         renderFromDirectUrl(attrs) {
-            const rawUrl = attrs.url || '';
-            const url = this.sanitizeUrl(rawUrl);
-            if (!url) return '';
+            const rawUrl = String(attrs.url || '').trim();
+            if (!rawUrl) return '';
 
-            const alt = attrs.alt || 'Web image';
-            return this.renderImageTool(url, alt, 'Web Image', alt);
+            const url = this.sanitizeUrl(rawUrl);
+            if (!url) {
+                if (/^https?:\/\//i.test(rawUrl) || /^\/\//.test(rawUrl)) {
+                    return '';
+                }
+                const query = this.normalizeImageQuery(rawUrl);
+                if (!query) return '';
+                const alt = attrs.alt || query;
+                return this.renderImageToolWithQuery(query, alt, 'Web Image : ', '');
+            }
+
+            const alt = attrs.alt || 'Web image : ';
+            return this.renderWebImageTool(url, alt, 'Web Image : ', '', '', '', url);
         }
 
         handleLinkTool(attrs) {
@@ -3200,7 +3966,7 @@ License: BSD 3-Clause
             const text = attrs.text || url;
             const safeText = this.escapeHtml(text);
             const safeUrl = this.escapeAttr(url);
-            return `<div class="nv-tool nv-tool-link"><a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${safeText}</a></div>`;
+            return `<span class="nv-tool nv-tool-link"><a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${safeText}</a></span>`;
         }
 
         renderToolMarkup(content) {
@@ -3261,6 +4027,9 @@ License: BSD 3-Clause
         applyAssistantContent(contentDiv, content, forceHtml = false) {
             if (forceHtml || content.startsWith('<img')) {
                 contentDiv.innerHTML = content;
+                this.wrapStandaloneImages(contentDiv);
+                this.initDirectImages(contentDiv);
+                this.initImageActions(contentDiv);
                 return;
             }
             const rendered = this.renderToolMarkup(content);
@@ -3268,6 +4037,9 @@ License: BSD 3-Clause
             if (rendered.hasTool) {
                 this.initToolImages(contentDiv);
             }
+            this.wrapStandaloneImages(contentDiv);
+            this.initDirectImages(contentDiv);
+            this.initImageActions(contentDiv);
             this.initCodeCopy(contentDiv);
             this.applyHighlighting(contentDiv);
         }
@@ -3388,6 +4160,8 @@ License: BSD 3-Clause
                     if (msg.content.trim().startsWith('<img')) {
                         // Extract image URL from HTML
                         const urlMatch = msg.content.match(/src="([^"]+)"/);
+                        const altMatch = msg.content.match(/alt="([^"]*)"/);
+                        const altText = altMatch ? altMatch[1] : '';
                         if (urlMatch) {
                             const imageUrl = urlMatch[1];
 
@@ -3398,7 +4172,8 @@ License: BSD 3-Clause
                             downloadBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>`;
                             downloadBtn.onclick = (e) => {
                                 e.stopPropagation();
-                                this.downloadImage(imageUrl, 'NeuraVeil-image.png');
+                                const filename = this.buildImageFilename(altText, imageUrl);
+                                this.downloadImage(imageUrl, filename);
                             };
                             actions.appendChild(downloadBtn);
 
@@ -3663,8 +4438,8 @@ License: BSD 3-Clause
             // Preload via Fetch/Blob
             await this.preloadImage(imageUrl);
 
-            // Store the original URL in history (not blob: to prevent broken images on reload)
-            return `<img src="${imageUrl}" alt="${userMessage.content}" style="max-width: 100%; border-radius: 8px; margin-top: 4px;">`;
+            // Store the original URL in history and display via blob when rendered
+            return `<img src="${this.IMAGE_PLACEHOLDER}" data-nv-image-raw="${imageUrl}" data-nv-image-full="${imageUrl}" alt="${userMessage.content}" style="max-width: 100%; border-radius: 8px; margin-top: 4px;">`;
         }
 
         async regenerateTextContent(userMessage, userMessageIndex) {
@@ -3742,8 +4517,42 @@ License: BSD 3-Clause
             }, 900);
         }
 
+        stripToolTagsForCopy(text) {
+            const raw = String(text || '');
+            let stripped = raw
+                .replace(/\[tool:link([^\]]*)\]/gi, (match, attrs) => {
+                    const urlMatch = String(attrs || '').match(/url\s*=\s*"([^"]+)"/i);
+                    return urlMatch ? urlMatch[1] : '';
+                })
+                .replace(/<tool:link([^>]*)>/gi, (match, attrs) => {
+                    const urlMatch = String(attrs || '').match(/url\s*=\s*"([^"]+)"/i);
+                    return urlMatch ? urlMatch[1] : '';
+                })
+                .replace(/\[tool:[^\]]+\]/gi, '')
+                .replace(/\[\/tool:[^\]]+\]/gi, '')
+                .replace(/<tool:[^>]+>/gi, '')
+                .replace(/<\/tool:[^>]+>/gi, '');
+
+            stripped = stripped
+                .replace(/\r\n/g, '\n')
+                .replace(/```[\w-]*\s*\n([\s\S]*?)```/g, '$1')
+                .replace(/`([^`]+)`/g, '$1')
+                .replace(/^\s*#{1,6}\s+/gm, '')
+                .replace(/^\s*[-*_]{3,}\s*$/gm, '')
+                .replace(/^\s*>\s?/gm, '')
+                .replace(/^\s*[-*+]\s+/gm, '')
+                .replace(/^\s*\d+[.)]\s+/gm, '')
+                .replace(/\*\*([\s\S]+?)\*\*/g, '$1')
+                .replace(/__([\s\S]+?)__/g, '$1')
+                .replace(/\*\*/g, '')
+                .replace(/__/g, '');
+
+            return stripped.replace(/\n{3,}/g, '\n\n').trim();
+        }
+
         copyToClipboard(text, button) {
-            navigator.clipboard.writeText(text).then(() => {
+            const cleaned = this.stripToolTagsForCopy(text);
+            navigator.clipboard.writeText(cleaned).then(() => {
                 this.triggerCopyFeedback(button);
             }).catch(err => {
                 console.error('Failed to copy:', err);
@@ -3752,10 +4561,12 @@ License: BSD 3-Clause
 
         async copyImageToClipboard(imageUrl, button) {
             try {
-                // Use DOM image to handle CORS and conversions
+                const response = await this.request(imageUrl, { responseType: 'arraybuffer' });
+                const sourceBlob = await response.blob();
+                const blobUrl = URL.createObjectURL(sourceBlob);
+
                 const img = new Image();
-                img.crossOrigin = 'anonymous';
-                img.src = imageUrl;
+                img.src = blobUrl;
 
                 await new Promise((resolve, reject) => {
                     img.onload = resolve;
@@ -3769,29 +4580,51 @@ License: BSD 3-Clause
                 ctx.drawImage(img, 0, 0);
 
                 // Convert to PNG blob (universally supported by Clipboard API)
-                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                const clipboardBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
 
-                if (!blob) throw new Error('Failed to create image blob');
+                if (!clipboardBlob) throw new Error('Failed to create image blob');
 
-                const item = new ClipboardItem({ 'image/png': blob });
+                const item = new ClipboardItem({ 'image/png': clipboardBlob });
                 await navigator.clipboard.write([item]);
                 this.triggerCopyFeedback(button);
+                URL.revokeObjectURL(blobUrl);
             } catch (err) {
                 console.error('Failed to copy image:', err);
             }
         }
 
+        getImageExtensionFromUrl(url) {
+            const match = String(url || '').match(/\.(png|jpe?g|webp|gif|bmp)(?:[?#].*)?$/i);
+            return match ? match[1].toLowerCase() : 'png';
+        }
+
+        buildImageFilename(altText, url) {
+            const raw = String(altText || '').trim();
+            let base = raw
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-zA-Z0-9 _-]/g, ' ')
+                .replace(/\s+/g, '_')
+                .replace(/^_+|_+$/g, '');
+            if (!base) base = 'image';
+            const maxLength = 48;
+            if (base.length > maxLength) {
+                base = base.slice(0, maxLength).replace(/_+$/g, '');
+            }
+            const ext = this.getImageExtensionFromUrl(url);
+            return `${base}.${ext}`;
+        }
 
         async downloadImage(url, filename) {
             try {
                 // Fetch image as blob to force download
-                const response = await fetch(url);
+                const response = await this.request(url, { responseType: 'arraybuffer' });
                 const blob = await response.blob();
                 const blobUrl = URL.createObjectURL(blob);
 
                 const a = document.createElement('a');
                 a.href = blobUrl;
-                a.download = filename || 'NeuraVeil-image.png';
+                a.download = filename || this.buildImageFilename('', url);
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -3824,14 +4657,20 @@ License: BSD 3-Clause
                     id: chatId,
                     timestamp: Date.now(),
                     title: 'New Conversation',
+                    autoTitle: null,
                     messages: []
                 };
                 this.history.unshift(chat);
             }
 
             chat.messages.push({ role, content });
-            const autoTitle = chat.messages.find(m => m.role === 'user')?.content.substring(0, 30) + '...' || 'New Conversation';
-            chat.title = chat.manualTitle || autoTitle;
+            if (role === 'user' && !chat.manualTitle && !chat.autoTitle) {
+                const userCount = chat.messages.filter(m => m.role === 'user').length;
+                if (userCount === 1) {
+                    this.maybeGenerateConversationTitle(chatId, content);
+                }
+            }
+            chat.title = chat.manualTitle || chat.autoTitle || chat.title || 'New Conversation';
             chat.timestamp = Date.now();
 
             this.history = this.history.filter(h => h.id !== chatId);
@@ -3867,6 +4706,8 @@ License: BSD 3-Clause
                 if (isHtml && content.trim().startsWith('<img')) {
                     // Extract image URL from HTML
                     const urlMatch = content.match(/src="([^"]+)"/);
+                    const altMatch = content.match(/alt="([^"]*)"/);
+                    const altText = altMatch ? altMatch[1] : '';
                     if (urlMatch) {
                         const imageUrl = urlMatch[1];
 
@@ -3877,7 +4718,8 @@ License: BSD 3-Clause
                         downloadBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>`;
                         downloadBtn.onclick = (e) => {
                             e.stopPropagation();
-                            this.downloadImage(imageUrl, 'NeuraVeil-image.png');
+                            const filename = this.buildImageFilename(altText, imageUrl);
+                            this.downloadImage(imageUrl, filename);
                         };
                         actions.appendChild(downloadBtn);
 
@@ -3919,10 +4761,15 @@ License: BSD 3-Clause
                 div.appendChild(actions);
             }
 
+            const isFirstUserMessage = role === 'user' && !this.messages.some(m => m.role === 'user');
             this.elements.msgContainer.insertBefore(div, this.elements.typingIndicator);
             this.scrollToBottom();
             this.messages.push({ role, content });
             this.saveHistory();
+
+            if (isFirstUserMessage) {
+                this.maybeGenerateConversationTitle(this.currentChatId, content);
+            }
 
             if (role === 'assistant') {
                 this.applyHighlighting(this.shadow);
@@ -4045,7 +4892,7 @@ License: BSD 3-Clause
 
             const makeRequest = async (retryCount = 0) => {
                 try {
-                    const response = await fetch(url, {
+                    const response = await this.request(url, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
@@ -4159,7 +5006,7 @@ License: BSD 3-Clause
             };
 
             const makeRequest = async (retryCount = 0) => {
-                const response = await fetch(url, {
+                const response = await this.request(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)

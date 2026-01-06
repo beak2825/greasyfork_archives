@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          linuxdo-shadcn
 // @namespace     http://tampermonkey.net/
-// @version       0.1.1
+// @version       0.2.0
 // @description   LinuxDo / Discourse 主题列表布局增强：分栏/瀑布流 + 设置面板
 // @author        @Loveyless https://github.com/Loveyless/linuxdo-shadcn
 // @homepageURL   https://github.com/Loveyless/linuxdo-shadcn
@@ -22,7 +22,8 @@
   'use strict';
 
   const DEFAULT_CONFIG = {
-    TWO_COLUMN_LAYOUT: 0,
+    TOPIC_LIST_LAYOUT_ENABLED: true,
+    TWO_COLUMN_LAYOUT: 2,
     TOPIC_LIST_WATERFALL: false,
   };
 
@@ -381,6 +382,12 @@
 
     .linuxdo-settings-button.primary:hover {
         filter: brightness(0.98);
+    }
+
+    /* 顶部搜索栏右侧：设置入口按钮 */
+    .linuxdo-shadcn-settings-trigger {
+        margin-left: 8px;
+        flex-shrink: 0;
     }
 
     @media (max-width: 520px) {
@@ -825,18 +832,30 @@
   }
 
   /**
+   * 是否启用主题列表分栏布局。
+   * @returns {boolean}
+   */
+  function isTopicListLayoutEnabled() {
+    const rawValue = CONFIG.TOPIC_LIST_LAYOUT_ENABLED;
+    if (rawValue === true || rawValue === false) return rawValue;
+    if (rawValue === 1 || rawValue === '1' || rawValue === 'true') return true;
+    if (rawValue === 0 || rawValue === '0' || rawValue === 'false') return false;
+    return true;
+  }
+
+  /**
    * 获取主题列表分栏数（兼容旧版 boolean 配置）。
-   * @returns {number} 0 表示关闭；否则为 1~5。
+   * @returns {number} 1~5。
    */
   function getTopicListColumns() {
     const rawValue = CONFIG.TWO_COLUMN_LAYOUT;
 
     if (typeof rawValue === 'boolean') {
-      return rawValue ? 2 : 0;
+      return rawValue ? 2 : DEFAULT_CONFIG.TWO_COLUMN_LAYOUT;
     }
 
     const parsed = Number.parseInt(String(rawValue || '').trim(), 10);
-    if (!Number.isFinite(parsed) || parsed <= 0) return 0;
+    if (!Number.isFinite(parsed) || parsed < 1) return DEFAULT_CONFIG.TWO_COLUMN_LAYOUT;
     return Math.min(parsed, 5);
   }
 
@@ -845,11 +864,12 @@
    * 将回复/浏览/活动/发帖人收纳到标题下方，避免挤压标题区域。
    */
   function applyTwoColumnLayoutToTopicLists() {
-    const columns = getTopicListColumns();
-    if (columns <= 0) {
+    if (!isTopicListLayoutEnabled()) {
       cleanupTwoColumnLayout();
       return;
     }
+
+    const columns = getTopicListColumns();
 
     const topicListBodies = document.querySelectorAll('tbody.topic-list-body');
     if (!topicListBodies || topicListBodies.length === 0) {
@@ -940,8 +960,9 @@
   function createSettingsModal() {
     const dialog = document.createElement('dialog');
     dialog.className = 'linuxdo-settings-dialog';
+    const topicListLayoutEnabled = isTopicListLayoutEnabled();
     const topicListColumns = getTopicListColumns();
-    const topicListColumnsInputValue = topicListColumns > 0 ? String(topicListColumns) : '';
+    const topicListColumnsInputValue = String(topicListColumns);
 
     dialog.innerHTML = `
       <div class="linuxdo-settings-content">
@@ -961,21 +982,34 @@
             <div class="linuxdo-settings-card">
               <div class="linuxdo-settings-item">
                 <div class="linuxdo-settings-item-text">
-                  <label class="linuxdo-settings-item-label" for="twoColumnLayout">分栏数</label>
-                  <div class="linuxdo-settings-description">留空或填 0 关闭（默认关闭），最大 5。开启后列表以卡片展示，并将发帖人/回复/浏览/活动信息收纳到标题下方</div>
+                  <label class="linuxdo-settings-item-label" for="topicListLayoutEnabled">启用分栏布局</label>
+                  <div class="linuxdo-settings-description">默认开启；关闭后恢复站点原生列表样式</div>
                 </div>
-                <div class="linuxdo-settings-control">
-                  <input type="number" id="twoColumnLayout" class="linuxdo-settings-input small" value="${topicListColumnsInputValue}" placeholder="2" min="0" max="5" step="1" inputmode="numeric">
-                  <span class="linuxdo-settings-unit">列</span>
-                </div>
+                <label class="linuxdo-settings-switch">
+                  <input type="checkbox" id="topicListLayoutEnabled" ${topicListLayoutEnabled ? 'checked' : ''}>
+                  <span class="linuxdo-settings-switch-slider"></span>
+                </label>
               </div>
 
               <div class="linuxdo-settings-separator"></div>
 
-              <div class="linuxdo-settings-item" id="topicListWaterfallRow" style="${topicListColumns > 0 ? '' : 'display:none;'}">
+              <div class="linuxdo-settings-item" id="topicListColumnsRow" style="${topicListLayoutEnabled ? '' : 'display:none;'}">
+                <div class="linuxdo-settings-item-text">
+                  <label class="linuxdo-settings-item-label" for="twoColumnLayout">分栏数</label>
+                  <div class="linuxdo-settings-description">范围 1-5；默认 2。开启后列表以卡片展示，并将发帖人/回复/浏览/活动信息收纳到标题下方</div>
+                </div>
+                <div class="linuxdo-settings-control">
+                  <input type="number" id="twoColumnLayout" class="linuxdo-settings-input small" value="${topicListColumnsInputValue}" placeholder="2" min="1" max="5" step="1" inputmode="numeric">
+                  <span class="linuxdo-settings-unit">列</span>
+                </div>
+              </div>
+
+              <div class="linuxdo-settings-separator" id="topicListWaterfallSeparator" style="${topicListLayoutEnabled ? '' : 'display:none;'}"></div>
+
+              <div class="linuxdo-settings-item" id="topicListWaterfallRow" style="${topicListLayoutEnabled ? '' : 'display:none;'}">
                 <div class="linuxdo-settings-item-text">
                   <label class="linuxdo-settings-item-label" for="topicListWaterfall">瀑布流</label>
-                  <div class="linuxdo-settings-description">仅在分栏数大于 0 时显示/生效；开启后以瀑布流方式排列卡片</div>
+                  <div class="linuxdo-settings-description">开启后以瀑布流方式排列卡片</div>
                 </div>
                 <label class="linuxdo-settings-switch">
                   <input type="checkbox" id="topicListWaterfall" ${CONFIG.TOPIC_LIST_WATERFALL ? 'checked' : ''}>
@@ -1000,24 +1034,25 @@
     const cancelBtn = dialog.querySelector('#cancelSettings');
     const saveBtn = dialog.querySelector('#saveSettings');
 
+    const topicListLayoutEnabledInput = dialog.querySelector('#topicListLayoutEnabled');
+    const topicListColumnsRow = dialog.querySelector('#topicListColumnsRow');
     const twoColumnLayoutInput = dialog.querySelector('#twoColumnLayout');
+    const topicListWaterfallSeparator = dialog.querySelector('#topicListWaterfallSeparator');
     const topicListWaterfallRow = dialog.querySelector('#topicListWaterfallRow');
     const topicListWaterfallInput = dialog.querySelector('#topicListWaterfall');
 
-    const updateTopicListWaterfallVisibility = () => {
-      if (!twoColumnLayoutInput || !topicListWaterfallRow) return;
-      const parsed = Number.parseInt(String(twoColumnLayoutInput.value || '').trim(), 10);
-      const enabled = Number.isFinite(parsed) && parsed > 0;
-      topicListWaterfallRow.style.display = enabled ? '' : 'none';
-      if (!enabled && topicListWaterfallInput) {
-        topicListWaterfallInput.checked = false;
-      }
+    const updateTopicListLayoutVisibility = () => {
+      const enabled = topicListLayoutEnabledInput ? !!topicListLayoutEnabledInput.checked : true;
+      if (topicListColumnsRow) topicListColumnsRow.style.display = enabled ? '' : 'none';
+      if (twoColumnLayoutInput) twoColumnLayoutInput.disabled = !enabled;
+      if (topicListWaterfallSeparator) topicListWaterfallSeparator.style.display = enabled ? '' : 'none';
+      if (topicListWaterfallRow) topicListWaterfallRow.style.display = enabled ? '' : 'none';
+      if (topicListWaterfallInput) topicListWaterfallInput.disabled = !enabled;
     };
 
-    if (twoColumnLayoutInput && topicListWaterfallRow) {
-      twoColumnLayoutInput.addEventListener('input', updateTopicListWaterfallVisibility);
-      twoColumnLayoutInput.addEventListener('change', updateTopicListWaterfallVisibility);
-      updateTopicListWaterfallVisibility();
+    if (topicListLayoutEnabledInput) {
+      topicListLayoutEnabledInput.addEventListener('change', updateTopicListLayoutVisibility);
+      updateTopicListLayoutVisibility();
     }
 
     const closeDialog = () => {
@@ -1045,15 +1080,16 @@
     saveBtn.addEventListener('click', (e) => {
       e.preventDefault();
 
+      const topicListLayoutEnabled = !!dialog.querySelector('#topicListLayoutEnabled').checked;
       const twoColumnLayoutRaw = dialog.querySelector('#twoColumnLayout').value;
       let twoColumnLayout = Number.parseInt(String(twoColumnLayoutRaw || '').trim(), 10);
-      if (!Number.isFinite(twoColumnLayout) || twoColumnLayout <= 0) twoColumnLayout = 0;
+      if (!Number.isFinite(twoColumnLayout) || twoColumnLayout < 1) twoColumnLayout = DEFAULT_CONFIG.TWO_COLUMN_LAYOUT;
       if (twoColumnLayout > 5) twoColumnLayout = 5;
 
       let topicListWaterfall = false;
       if (topicListWaterfallInput) topicListWaterfall = !!topicListWaterfallInput.checked;
-      if (twoColumnLayout <= 0) topicListWaterfall = false;
 
+      setConfig('TOPIC_LIST_LAYOUT_ENABLED', topicListLayoutEnabled);
       setConfig('TWO_COLUMN_LAYOUT', twoColumnLayout);
       setConfig('TOPIC_LIST_WATERFALL', topicListWaterfall);
 
@@ -1077,6 +1113,10 @@
     const existingDialog = document.querySelector('.linuxdo-settings-dialog');
     if (existingDialog) {
       existingDialog.remove();
+    }
+    const existingBackdrop = document.querySelector('.dialog-backdrop-fallback');
+    if (existingBackdrop) {
+      existingBackdrop.remove();
     }
 
     const dialog = createSettingsModal();
@@ -1112,8 +1152,33 @@
     console.warn('浏览器不支持 dialog 元素，使用降级方案');
   }
 
+  function ensureSettingsTriggerButton() {
+    if (document.querySelector('button.linuxdo-shadcn-settings-trigger')) return;
+
+    const searchMenu = document.querySelector('.floating-search-input-wrapper .search-menu');
+    if (!searchMenu) return;
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn no-text btn-icon btn-transparent linuxdo-shadcn-settings-trigger';
+    btn.title = '布局设置';
+    btn.setAttribute('aria-label', '布局设置');
+    btn.innerHTML = `
+      <svg class="fa d-icon d-icon-sliders svg-icon svg-string" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#sliders"></use></svg>
+      <span aria-hidden="true">&ZeroWidthSpace;</span>
+    `.trim();
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      showSettingsModal();
+    });
+
+    const searchMenuContainer = searchMenu.querySelector('.search-menu-container');
+    searchMenu.insertBefore(btn, searchMenuContainer ? searchMenuContainer.nextSibling : null);
+  }
+
   function initializeScript() {
     if (window !== window.top) return;
+    ensureSettingsTriggerButton();
     applyTwoColumnLayoutToTopicLists();
   }
 

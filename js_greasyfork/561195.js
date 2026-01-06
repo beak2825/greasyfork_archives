@@ -1,15 +1,17 @@
 // ==UserScript==
 // @name         Torn Item Market Bonus Search
 // @namespace    http://tampermonkey.net/
-// @version      1.1
+// @version      1.3
 // @description  Adds a button next to item name to search the item market for that item and its specific bonuses.
 // @license      MIT License
-// @match        https://www.torn.com/*
+// @match        https://www.torn.com/item.php*
+// @match        https://www.torn.com/factions.php*
 // @grant        none
 // @run-at       document-end
 // @downloadURL https://update.greasyfork.org/scripts/561195/Torn%20Item%20Market%20Bonus%20Search.user.js
 // @updateURL https://update.greasyfork.org/scripts/561195/Torn%20Item%20Market%20Bonus%20Search.meta.js
 // ==/UserScript==
+
 
 (function() {
     'use strict';
@@ -38,7 +40,7 @@
             stroke: #999; /* Grey color */
         }
         .${BUTTON_CLASS}:hover svg {
-            stroke: #0077b5; /* Optional hover color (Torn blueish) or keep grey */
+            stroke: #0077b5; /* Torn blueish hover */
             stroke: #666;
         }
     `;
@@ -60,17 +62,67 @@
     };
 
     function injectSearchButton() {
+        // Select broadly to catch standard inventory, faction armoury, and react lists
         const selectors = '.item-info-wrap, .info-cont, .item-info, [class*="itemInfo_"], li.item-info-active, li';
-        // We select broadly (LI) to catch items even if closed
         const containers = document.querySelectorAll(selectors);
         
         containers.forEach((itemInfoContainer) => {
             if (itemInfoContainer.classList.contains('wai-btn')) return;
-            
-            // Check if we already injected into this specific container or its header
+            // Check if we already injected into this specific container
             if (itemInfoContainer.querySelector(`.${BUTTON_CLASS}`)) return;
 
-            // --- 1. Extract Item ID ---
+            let itemName = '';
+            let injectTarget = null;
+
+            // --- 1. Identify Name & Injection Target ---
+            // We want to inject EXACTLY where the name is found to keep it inline.
+
+            // Priority A: Standard Inventory (.name-wrap)
+            // It usually has a child .name
+            const nameWrap = itemInfoContainer.querySelector('.name-wrap');
+            if (nameWrap) {
+                // If there's a .name inner element, prefer appending to wrapper (usually safer for alignment)
+                // If not, append to nameWrap itself
+                injectTarget = nameWrap;
+                const nameEl = nameWrap.querySelector('.name');
+                itemName = nameEl ? nameEl.innerText.trim() : nameWrap.innerText.trim();
+            }
+
+            // Priority B: Faction Armoury / Lists (.name.bold.t-overflow)
+            // This element holds the text directly. We inject INSIDE it.
+            if (!injectTarget) {
+                const armouryName = itemInfoContainer.querySelector('.name.bold.t-overflow');
+                if (armouryName) {
+                    injectTarget = armouryName;
+                    itemName = armouryName.innerText.trim();
+                }
+            }
+
+            // Priority C: Ancestor Check (React / Fallback)
+            if (!injectTarget && itemInfoContainer.parentElement) {
+                const parentNameWrap = itemInfoContainer.parentElement.querySelector('.name-wrap');
+                if (parentNameWrap) {
+                    injectTarget = parentNameWrap;
+                    const nameEl = parentNameWrap.querySelector('.name');
+                    itemName = nameEl ? nameEl.innerText.trim() : parentNameWrap.innerText.trim();
+                }
+            }
+
+            // Fallback: Generic Title
+            if (!injectTarget) {
+                const titleEl = itemInfoContainer.querySelector('.title, h4');
+                if (titleEl) {
+                    injectTarget = titleEl;
+                    itemName = titleEl.innerText.trim();
+                }
+            }
+
+            // Cleanup Name
+            if (itemName) {
+                itemName = itemName.replace(/x\d+$/, '').trim();
+            }
+
+            // --- 2. Extract Item ID ---
             let itemId = '';
             const actionDiv = itemInfoContainer.querySelector('[itemid]');
             if (actionDiv) itemId = actionDiv.getAttribute('itemid');
@@ -102,57 +154,36 @@
                          (itemInfoContainer.parentElement ? findIdInScope(itemInfoContainer.parentElement.parentElement) : null);
             }
 
-            // --- 2. Extract Item Name ---
-            // Look for name-wrap specifically as that's where we want to inject
-            let nameWrap = itemInfoContainer.querySelector('.name-wrap');
-            if (!nameWrap && itemInfoContainer.parentElement) nameWrap = itemInfoContainer.parentElement.querySelector('.name-wrap');
-            
-            let itemName = '';
-            if (nameWrap) {
-                const nameEl = nameWrap.querySelector('.name');
-                if (nameEl) itemName = nameEl.innerText.trim();
-                else itemName = nameWrap.innerText.trim(); // Fallback
-            } else {
-                // Fallback for React views
-                const rawEl = itemInfoContainer.querySelector('.name-wrap .name, [class*="nameWrap_"] .name, h4');
-                if (rawEl) {
-                    itemName = rawEl.innerText.trim();
-                    // Try to find the wrapper again if we found the name element
-                    if (rawEl.parentElement) nameWrap = rawEl.parentElement;
-                }
-            }
-
-            // Clean up name (remove quantity x1 etc)
-            if (itemName) {
-                itemName = itemName.replace(/x\d+$/, '').trim();
-            }
-
             if (!itemName && !itemId) return;
             if (!itemName) itemName = 'Item';
 
+
             // --- 3. Extract Bonuses ---
             const foundBonuses = [];
-            // Look deeply for bonuses, even if hidden
-            const ancestors = [itemInfoContainer, itemInfoContainer.parentElement].filter(Boolean);
-            let allIcons = [];
-            for (const scope of ancestors) {
+            // Look for bonuses in the container and its parent (to handle different DOM layouts)
+            const scopes = [itemInfoContainer, itemInfoContainer.parentElement].filter(Boolean);
+            
+            for (const scope of scopes) {
                  const icons = Array.from(scope.querySelectorAll('i[class*="bonus-attachment-"]'));
-                 if (icons.length > 0) { allIcons = icons; break; }
+                 if (icons.length > 0) {
+                     icons.forEach(icon => {
+                        let matchFound = false;
+                        const cls = Array.from(icon.classList).find(c => c.startsWith('bonus-attachment-'));
+                        if (cls) {
+                            const slug = cls.replace('bonus-attachment-', '').toLowerCase();
+                            if (BONUS_IDS.hasOwnProperty(slug)) { foundBonuses.push(BONUS_IDS[slug]); matchFound = true; }
+                        }
+                        if (!matchFound && icon.title) {
+                            const titleMatch = icon.title.match(/<b>(.*?)<\/b>/i) || [null, icon.title];
+                            const cleanTitle = (titleMatch[1] || icon.title).toLowerCase().trim();
+                            if (BONUS_IDS.hasOwnProperty(cleanTitle)) foundBonuses.push(BONUS_IDS[cleanTitle]);
+                        }
+                     });
+                     break; // Stop after finding the first set of bonuses
+                 }
             }
-            allIcons.forEach(icon => {
-                let matchFound = false;
-                const cls = Array.from(icon.classList).find(c => c.startsWith('bonus-attachment-'));
-                if (cls) {
-                    const slug = cls.replace('bonus-attachment-', '').toLowerCase();
-                    if (BONUS_IDS.hasOwnProperty(slug)) { foundBonuses.push(BONUS_IDS[slug]); matchFound = true; }
-                }
-                if (!matchFound && icon.title) {
-                    const titleMatch = icon.title.match(/<b>(.*?)<\/b>/i) || [null, icon.title];
-                    const cleanTitle = (titleMatch[1] || icon.title).toLowerCase().trim();
-                    if (BONUS_IDS.hasOwnProperty(cleanTitle)) foundBonuses.push(BONUS_IDS[cleanTitle]);
-                }
-            });
             const uniqueBonusIds = [...new Set(foundBonuses)];
+
 
             // --- 4. Create Icon Button ---
             const link = document.createElement('a');
@@ -175,24 +206,14 @@
 
             link.href = targetUrl;
 
-            // Stop click propagation to prevent item description toggle
+            // Stop click propagation to prevent opening the item details when clicking the search icon
             link.addEventListener('click', (e) => {
                 e.stopPropagation();
             });
 
-            // --- 5. Inject into Header (.name-wrap) ---
-            if (nameWrap) {
-                // Ensure we don't inject multiple times in the same header (since we iterate LIs and containers)
-                if (!nameWrap.querySelector(`.${BUTTON_CLASS}`)) {
-                    nameWrap.appendChild(link);
-                }
-            } else {
-                // Last resort fallback (React views might not have .name-wrap structured the same)
-                // Appending to the title container
-                const titleEl = itemInfoContainer.querySelector('.title');
-                if (titleEl && !titleEl.querySelector(`.${BUTTON_CLASS}`)) {
-                    titleEl.appendChild(link);
-                }
+            // --- 5. Inject into identified Target ---
+            if (injectTarget && !injectTarget.querySelector(`.${BUTTON_CLASS}`)) {
+                injectTarget.appendChild(link);
             }
         });
     }

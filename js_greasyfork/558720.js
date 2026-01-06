@@ -2,7 +2,7 @@
 // @name               PicKit
 // @name:zh-CN         拾字
 // @namespace          https://github.com/CodebyGPT/PicKit
-// @version            2025.12.31
+// @version            2026.01.05
 // @description        Reduce the number of mouse clicks for users
 // @description:zh-CN  帮你少点一次鼠标
 // @author             CodebyGPT
@@ -81,7 +81,7 @@ const safeOpenTab = (url, options) => {
         language: 'auto', // 'auto'（默认） | 'zh-CN' | 'en' | 'ru'
         positionMode: 'endchar', // 'endchar' | 'mouse'
         offset: 12, // px
-        timeout: 2800, // ms, 0 = infinite
+        timeout: 2400, // ms, 0 = infinite
         buttonStyle: 'row', // 'row' (capsule) | 'col' (rounded rect)
         forceWhiteBlack: true, // true = force white bg/black text
         searchEngine: 'baidu', // key or custom url
@@ -91,7 +91,14 @@ const safeOpenTab = (url, options) => {
         enablePaste: true,
         inputRecoveryMode: 'off', // 'off' | 'loose' (default, ignore tracking params) | 'strict'
         enableDragPreview: false,
+        scrollRepaintMode: 'always',
     };
+
+    const SCROLL_REPAINT_MODE = {
+    ALWAYS: 'always',      // 1. 始终重绘（默认）
+    VIEWPORT: 'viewport',  // 2. 锚点在视口内才重绘
+    HIDE: 'hide'           // 3. 滚动即隐藏，不重绘
+};
 
     const PASTE_MODE_THREE_BTNS = 'copy-search-paste';   // 闪电粘贴三按钮模式标记
 
@@ -199,7 +206,11 @@ const safeOpenTab = (url, options) => {
             btn_delete: '删除',
             btn_bold: '加粗',
             btn_highlight: '标记',
-            disclaimer_text: '此网页内容已经过 <SCRIPT_NAME> 编辑，仅出于简化网页便于浏览之目的，不用于其他用途。'
+            disclaimer_text: '此网页内容已经过 <SCRIPT_NAME> 编辑，仅出于简化网页便于浏览之目的，不作他用。',
+            scroll_repaint: '📜 UI 重绘',
+scroll_always: '始终重绘',
+scroll_viewport: '锚点在视口内重绘',
+scroll_hide: '始终不重绘',
         },
         'en': {
             lang_name: 'English',
@@ -260,7 +271,11 @@ const safeOpenTab = (url, options) => {
             btn_delete: 'Delete',
             btn_bold: 'Bold',
             btn_highlight: 'Highlight',
-            disclaimer_text: 'Content edited by <SCRIPT_NAME> for simplification purposes only.'
+            disclaimer_text: 'Content edited by <SCRIPT_NAME> for simplification purposes only.',
+            scroll_repaint: '📜 UI redrawing',
+scroll_always: 'Always redraw',
+scroll_viewport: 'Redraw anchor points within the viewport',
+scroll_hide: 'Never redraw',
         },
         'ru': {
             lang_name: 'Русский',
@@ -321,7 +336,11 @@ const safeOpenTab = (url, options) => {
             btn_delete: 'Удалить',
             btn_bold: 'Жирный',
             btn_highlight: 'Маркер',
-            disclaimer_text: 'Контент отредактирован <SCRIPT_NAME> только для упрощения просмотра.'
+            disclaimer_text: 'Контент отредактирован <SCRIPT_NAME> только для упрощения просмотра.',
+            scroll_repaint: '📜 Перерисовка интерфейса',
+scroll_always: 'Всегда перерисовывать',
+scroll_viewport: 'Анкор перерисовывается внутри окна просмотра',
+scroll_hide: 'Всегда не перерисовывать',
         }
     };
 
@@ -495,6 +514,7 @@ const safeOpenTab = (url, options) => {
     // ===============
 // 启动时一次性加载所有配置
     async function initConfiguration() {
+        configCache['scrollRepaintMode'] = await safeGetValue('scrollRepaintMode', 'always');  // 在 getConfig 读取处也加一行（initConfiguration 里）
         const keys = Object.keys(DEFAULT_CONFIG);
         // 并行读取所有配置，提高速度
         const values = await Promise.all(
@@ -539,6 +559,19 @@ const safeOpenTab = (url, options) => {
                 location.reload();
             }
         });
+
+//按钮重绘策略
+        const scrollMode = getConfig('scrollRepaintMode');
+const modeText = {
+  always: t('scroll_always'),
+  viewport: t('scroll_viewport'),
+  hide: t('scroll_hide')
+};
+GM_registerMenuCommand(`${t('scroll_repaint')}: ${modeText[scrollMode]}`, () => {
+  const nextMap = { always: 'viewport', viewport: 'hide', hide: 'always' };
+  setConfig('scrollRepaintMode', nextMap[scrollMode] || 'always');
+  location.reload();
+});
 
         // 2.3 停留时长
         const timeout = getConfig('timeout');
@@ -2169,38 +2202,47 @@ function handleSelectionMouseUp(e) {
     }
 
     // 滚动与调整大小处理
-    const handleResizeOrScroll = () => {
-        if (!hostElement) return;
-        
-        // 隐藏按钮
-        const btn = shadowRoot.querySelector('.sc-container');
-        if (btn && btn.classList.contains('visible')) {
-            btn.classList.remove('visible'); // 临时隐藏
-            isScrolling = true;
-            
-            if (scrollTimeout) clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                isScrolling = false;
-                // 停止滚动后，检查选区是否还存在
-                const selection = window.getSelection();
-                if (selection && selection.toString().trim().length > 0) {
-                    // 重新定位
-                    // 为了简化，这里触发一次模拟的逻辑，或者简单地重新获取位置
-                    // 由于丢失了 mouseX/Y，如果原先是Mouse定位可能会有问题
-                    // 所以这里强制尝试用 endchar 重新定位，如果不行则保持隐藏
-                    // 实际上 Req 4 要求重新定位。
-                    
-                    const range = selection.getRangeAt(0);
-                    const rects = range.getClientRects();
-                    if (rects.length > 0) {
-                        const rect = rects[rects.length - 1];
-                        // 传入模拟的 mouseX Y (rect center) 作为 fallback
-                        renderButton(rect, rect.right, rect.top, selection.toString(), getConfig('enableCache')?cachedSelection.html:'');
-                    }
-                }
-            }, 300); // debounce 300ms
+const handleResizeOrScroll = () => {
+    if (!hostElement) return;
+    const mode = getConfig('scrollRepaintMode');
+    const btn = shadowRoot.querySelector('.sc-container');
+    if (!btn) return;
+
+    if (mode === SCROLL_REPAINT_MODE.HIDE) {
+        hideUI();
+        return;
+    }
+
+    if (mode === SCROLL_REPAINT_MODE.VIEWPORT) {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) { hideUI(); return; }
+        const rect = selection.getRangeAt(0).getBoundingClientRect();
+        const inViewport = rect.top >= 0 && rect.left >= 0 &&
+                           rect.bottom <= window.innerHeight &&
+                           rect.right <= window.innerWidth;
+        if (!inViewport) { hideUI(); return; }
+        // 仍在视口，继续走重绘逻辑
+    }
+
+    // 以下为重绘逻辑
+    btn.classList.remove('visible');
+    isScrolling = true;
+    if (scrollTimeout) clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+        isScrolling = false;
+        const selection = window.getSelection();
+        if (selection && selection.toString().trim().length > 0) {
+            const range = selection.getRangeAt(0);
+            const rects = range.getClientRects();
+            if (rects.length > 0) {
+                const rect = rects[rects.length - 1];
+                renderButton(rect, rect.right, rect.top,
+                    selection.toString(),
+                    getConfig('enableCache') ? cachedSelection.html : '');
+            }
         }
-    };
+    }, 300);  // debounce 300ms
+};
 
     function handleContextMenu(e) {
     hideUI(); // 右键立即清除按钮

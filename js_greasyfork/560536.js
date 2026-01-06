@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         💙💛Ukrainian Flag & Sunflower (Ctrl+Shift+U)
 // @namespace    tampermonkey.net
-// @version      12.7
-// @description  写实花头，不规则分布向日葵与物理对齐修复。
+// @version      12.8
+// @description  写实花头，不规则分布向日葵与物理对齐修复 + 自适应窗口宽度≥800px。
 // @author       邢智轩 (from China)
 // @match        *://*/*
 // @grant        none
@@ -14,18 +14,22 @@
 (function() {
     'use strict';
 
-    // 检查网页宽度是否小于 800px
-    if (window.innerWidth < 800) {
-        console.log('当前宽度小于 800px，脚本已停止执行。');
-        return; // 直接跳出，后面的代码不会运行
-    }
-
-    // --- 在下方编写你的正式功能代码 ---
-    console.log('当前宽度大于等于 800px，脚本开始工作...');
-
     let isTerminated = false;
 
+    // 封装一个统一的“是否允许运行”判断
+    function canRun() {
+        return window.innerWidth >= 800;
+    }
+
+    // 初始化时的宽度判断
+    if (!canRun()) {
+        console.log('当前宽度小于 800px，脚本已停止执行。');
+    } else {
+        console.log('当前宽度大于等于 800px，脚本开始工作...');
+    }
+
     function injectBadge() {
+        if (!canRun()) return;                 // 宽度不够时直接不注入
         if (document.getElementById('ua-waving-badge-root')) return;
 
         const host = document.createElement('div');
@@ -55,8 +59,6 @@
                 display: flex;
                 align-items: flex-end;
             }
-
-            /* --- 黄金旗杆 (12.5 经典质感) --- */
             .pole-system {
                 position: absolute;
                 left: 40px;
@@ -81,12 +83,10 @@
                 background: linear-gradient(to right, #4d3d00 0%, #8b6914 15%, #ffd700 40%, #fff9e6 55%, #ffd700 70%, #8b6914 85%, #4d3d00 100%);
                 border-radius: 0 0 4px 4px;
             }
-
-            /* --- 旗帜：物理对齐修正 --- */
             .flag-wrapper {
                 position: absolute;
-                left: 44px; /* 锁死在旗杆边缘 */
-                top: 35px;  /* 绝不超出旗杆顶球 */
+                left: 44px;
+                top: 35px;
                 width: 150px;
                 height: 90px;
                 perspective: 1200px;
@@ -119,8 +119,6 @@
                 mix-blend-mode: overlay;
             }
             .trident { width: 30px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); transform: translateZ(10px); }
-
-            /* --- 18.0 版向日葵花头核心 --- */
             .garden {
                 position: absolute;
                 left: 0;
@@ -140,7 +138,6 @@
                 animation: flower-sway 5s infinite ease-in-out;
             }
             .flower-head { width: 24px; height: 24px; position: relative; }
-            /* 还原 18.0 花瓣逻辑 */
             .petals {
                 position: absolute; inset: 0;
                 background: radial-gradient(ellipse at center, #FFD700 35%, transparent 75%),
@@ -152,7 +149,6 @@
                 background: repeating-conic-gradient(from 10deg, transparent 0deg 15deg, #FFD700 15deg 35deg, transparent 35deg 40deg);
                 border-radius: 50%; mask: radial-gradient(circle, black 40%, transparent 85%);
             }
-            /* 还原 18.0 花芯逻辑 */
             .core {
                 position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
                 width: 8px; height: 8px; background: #3E2723;
@@ -171,8 +167,6 @@
             }
             .leaf-L { left: -8px; top: 12px; transform: rotate(-20deg); }
             .leaf-R { right: -8px; top: 18px; transform: scaleX(-1) rotate(-20deg); }
-
-            /* --- 21.5 版群落分布 --- */
             .sf1 { left: 18px; transform: scale(0.6); animation-delay: -0.2s; } .sf1 .stem { height: 35px; }
             .sf2 { left: 35px; transform: scale(0.85); animation-delay: -1.5s; z-index: 152; } .sf2 .stem { height: 58px; }
             .sf3 { left: 48px; transform: scale(0.55); animation-delay: -2.8s; } .sf3 .stem { height: 28px; }
@@ -185,7 +179,6 @@
             .sf10 { left: 70px; bottom: 5px; transform: scale(0.4); animation-delay: -3.7s; z-index: 160; } .sf10 .stem { height: 15px; }
             .sf11 { left: 135px; bottom: 10px; transform: scale(0.5); animation-delay: -0.5s; z-index: 160; } .sf11 .stem { height: 22px; }
             .sf12 { left: 195px; bottom: 4px; transform: scale(0.4); animation-delay: -2.9s; z-index: 160; } .sf12 .stem { height: 16px; }
-
             @keyframes cinematic-wave {
                 0%, 100% { transform: rotateY(12deg) rotateX(2deg); }
                 50% { transform: rotateY(26deg) rotateX(-2deg); }
@@ -213,7 +206,6 @@
             </div>
 
             <div class="garden">
-                <!-- 保持关键叶子分布 -->
                 <div class="sunflower sf1"><div class="flower-head"><div class="petals"></div><div class="core"></div></div><div class="stem"><div class="sf-leaf leaf-L"></div></div></div>
                 <div class="sunflower sf2"><div class="flower-head"><div class="petals"></div><div class="core"></div></div><div class="stem"><div class="sf-leaf leaf-R"></div></div></div>
                 <div class="sunflower sf3"><div class="flower-head"><div class="petals"></div><div class="core"></div></div><div class="stem"></div></div>
@@ -243,12 +235,36 @@
                 root.style.transform = 'translateX(-20px) scale(0.9)';
                 setTimeout(() => { root.remove(); isTerminated = true; }, 800);
             } else {
+                if (!canRun()) return; // 小屏按键时不显示
                 isTerminated = false;
                 injectBadge();
             }
         }
     }, true);
 
+    // 定时保活：同时增加宽度判断
+    setInterval(() => {
+        if (!isTerminated && canRun()) {
+            injectBadge();
+        }
+    }, 3000);
+
+    // 关键：监听窗口尺寸变化
+    window.addEventListener('resize', () => {
+        if (!canRun()) {
+            // 变成小于 800 时移除徽章并终止
+            const root = document.getElementById('ua-waving-badge-root');
+            if (root) {
+                root.remove();
+            }
+            isTerminated = true;
+        } else {
+            // 从小于 800 拉回 >=800 时重新允许显示
+            isTerminated = false;
+            injectBadge();
+        }
+    });
+
+    // 初始尝试注入（仅当宽度够）
     injectBadge();
-    setInterval(() => { if(!isTerminated) injectBadge(); }, 3000);
 })();

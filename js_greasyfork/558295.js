@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Subscriptions Watch Later Button
 // @namespace    https://github.com/CharlesMagnuson/YouTube-Subscriptions-Watch-Later-Button
-// @version      0.5
+// @version      1.0
 // @description  Adds a Watch Later button to videos on the YouTube subscriptions feed
 // @author       CharlesMagnuson
 // @match        https://www.youtube.com/*
@@ -14,7 +14,7 @@
 /*
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                    YOUTUBE SUBSCRIPTIONS WATCH LATER                         ║
-║                              Version 0.5                                     ║
+║                              Version 1.0                                     ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║  PURPOSE:                                                                    ║
 ║  Adds a "Watch Later" button overlay to video thumbnails on the YouTube      ║

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NEXUS Note
 // @namespace    http://tampermonkey.net/
-// @version      1.85
+// @version      1.87
 // @description  移动端/PC端英语学习终极版：WebDAV+GitHub双重同步、原生搜索级高亮、云端自动删除、双击关闭、支持笔记编辑（新笔记置顶）+ 归档搜索功能 + 详情页删除。
 // @author       Gemini
 // @match        *://*/*
@@ -52,7 +52,10 @@
     // 全局状态锁
     let isModalOpen = false;
 
-    // --- 样式定义 ---
+    // --- 防翻译与样式定义 ---
+    // 关键修复：创建一个特殊的隔离容器ID
+    const ISOLATION_ID = 'eng-nexus-isolation-layer';
+
     const styles = `
         /* 高亮样式 */
         .${HIGHLIGHT_CLASS} {
@@ -66,7 +69,20 @@
         }
         .${HIGHLIGHT_CLASS}:hover { background-color: #fdd835; }
 
-        /* 悬浮按钮 */
+        /* 防护容器：确保它不影响布局但能包裹弹窗 */
+        /* 修复：保持最高层级 2147483647 */
+        #${ISOLATION_ID} {
+            position: fixed; top: 0; left: 0; width: 0; height: 0; 
+            z-index: 2147483647; /* 保证在顶层，用于显示 SweetAlert */
+            background: transparent;
+            pointer-events: none; /* 让点击穿透，除非点到了里面的弹窗 */
+        }
+        /* 恢复容器内部子元素的点击事件 */
+        #${ISOLATION_ID} > * {
+            pointer-events: auto;
+        }
+
+        /* 悬浮按钮 - 添加 notranslate */
         .eng-fab-group { position: fixed; z-index: 2147483640; user-select: none; -webkit-tap-highlight-color: transparent; transition: opacity 0.3s; }
         
         #eng-add-btn {
@@ -99,10 +115,11 @@
         }
 
         /* 主面板 */
+        /* 修复：z-index 降低到 2147483646，使其低于 isolation-layer (2147483647) */
         #eng-panel {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0,0,0,0.5);
-            z-index: 2147483648;
+            z-index: 2147483646; 
             display: none; justify-content: flex-end;
             animation: fadeIn 0.2s;
         }
@@ -181,10 +198,31 @@
         }
         .eng-flash-target { animation: flashFocus 1.5s ease-in-out; scroll-margin-block: center; }
         
-        .swal2-container { z-index: 2147483647 !important; }
+        /* 针对 SweetAlert 的额外修正，确保在容器内正常显示 */
+        .swal2-container { position: fixed !important; width: 100%; height: 100%; top: 0; left: 0; }
         .swal2-input, .swal2-textarea { -webkit-user-select: text !important; user-select: text !important; }
     `;
     GM_addStyle(styles);
+
+    // --- 0. 核心修正：初始化防翻译隔离层 ---
+    // 创建一个永远不被翻译的容器，把SweetAlert挂载到这里面
+    const protectionContainer = document.createElement('div');
+    protectionContainer.id = ISOLATION_ID;
+    protectionContainer.className = 'notranslate'; // Google 标准
+    protectionContainer.setAttribute('translate', 'no'); // HTML5 标准
+    // 某些插件可能扫描 data 属性，加上双保险
+    protectionContainer.setAttribute('data-no-translate', 'true'); 
+    document.body.appendChild(protectionContainer);
+
+    // --- 全局覆写 SweetAlert，强制所有弹窗进入隔离层 ---
+    const Swal = window.Swal.mixin({
+        target: document.getElementById(ISOLATION_ID),
+        // 确保混合后的弹窗也带有禁止翻译类名 (三保险)
+        customClass: {
+            container: 'notranslate'
+        }
+    });
+
 
     // --- 2. 配置管理 ---
     const ConfigManager = {
@@ -221,7 +259,6 @@
     const WebDAV = {
         getAuth: (cfg) => 'Basic ' + btoa(cfg.webdav.user + ':' + cfg.webdav.pass),
         
-        // 修改：生成带年份的相对路径 (例如: 2025/Notes_2025-01.json)
         getFileRelativePath: (ts) => {
             const d = ts ? new Date(ts) : new Date();
             const year = d.getFullYear();
@@ -232,7 +269,6 @@
         syncPull: async () => {
             const cfg = ConfigManager.get();
             if (!cfg.webdav.enabled) return 0;
-            // 路径变为: URL + Path + 2025/Notes_2025-01.json
             const fileUrl = cfg.webdav.url + cfg.webdav.path + WebDAV.getFileRelativePath();
             
             return new Promise(resolve => {
@@ -257,21 +293,17 @@
             const cfg = ConfigManager.get();
             if (!cfg.webdav.enabled) return;
             
-            // 计算路径信息
-            const relPath = WebDAV.getFileRelativePath(noteObj.timestamp); // "2025/Notes_2025-01.json"
-            const yearDir = relPath.split('/')[0]; // "2025"
+            const relPath = WebDAV.getFileRelativePath(noteObj.timestamp);
+            const yearDir = relPath.split('/')[0];
             const fileUrl = cfg.webdav.url + cfg.webdav.path + relPath;
             const dirUrl = cfg.webdav.url + cfg.webdav.path + yearDir + '/';
             const headers = { 'Authorization': WebDAV.getAuth(cfg) };
 
-            // 1. 尝试创建年份文件夹 (MKCOL)
-            // 即使文件夹存在，返回405也是正常的，继续后续操作
             GM_xmlhttpRequest({
                 method: 'MKCOL',
                 url: dirUrl,
                 headers: headers,
                 onload: () => {
-                    // 2. 读取现有文件
                     GM_xmlhttpRequest({
                         method: 'GET',
                         url: fileUrl,
@@ -279,7 +311,6 @@
                         onload: (res) => {
                             let notes = (res.status === 200) ? JSON.parse(res.responseText) : [];
                             notes.unshift(noteObj);
-                            // 3. 写入文件
                             GM_xmlhttpRequest({ method: 'PUT', url: fileUrl, headers: headers, data: JSON.stringify(notes, null, 2) });
                         }
                     });
@@ -364,11 +395,9 @@
     // --- 4. GitHub 核心 ---
     const GitHub = {
         getApiUrl: (cfg, timestamp) => {
-            // 使用新的相对路径: 2025/Notes_2025-01.json
             const relativePath = WebDAV.getFileRelativePath(timestamp);
             let path = cfg.github.path.replace(/^\/+/, '').replace(/\/+$/, '');
             if (path) path += '/';
-            // GitHub API 路径结果: .../contents/Notes/Notes/2025/Notes_2025-01.json
             return `https://api.github.com/repos/${cfg.github.username}/${cfg.github.repo}/contents/${path}${relativePath}`;
         },
         getHeaders: (cfg) => ({
@@ -424,7 +453,6 @@
         },
         
         uploadNote: (noteObj) => {
-            // GitHub API 会自动创建父目录(例如 2025/)，无需额外处理
             GitHub.modifyFile(noteObj.timestamp, (notes) => {
                 notes.unshift(noteObj); 
                 return notes;
@@ -490,7 +518,6 @@
             db[pk].notes.push(obj);
             DataManager.setLocalDB(db);
             
-            // 执行双重同步
             WebDAV.uploadNote(obj);
             GitHub.uploadNote(obj);
             
@@ -506,8 +533,6 @@
                 if (target) {
                     target.note = newContent;
                     DataManager.setLocalDB(db);
-                    
-                    // 双重同步更新
                     WebDAV.updateRemoteNote(target);
                     GitHub.updateRemoteNote(target);
                     return true;
@@ -525,8 +550,6 @@
                     db[pageKey].notes = db[pageKey].notes.filter(n => n.id !== noteId);
                     if (db[pageKey].notes.length === 0) delete db[pageKey];
                     DataManager.setLocalDB(db);
-                    
-                    // 双重同步删除
                     WebDAV.deleteRemoteNote(noteId, ts);
                     GitHub.deleteRemoteNote(noteId, ts);
                     return true;
@@ -688,21 +711,17 @@
                                 cancelButtonColor: '#6b7280',
                                 confirmButtonText: '删除',
                                 cancelButtonText: '取消',
-                                target: document.getElementById('swal2-container') // 保持在顶层
+                                target: document.getElementById(ISOLATION_ID)
                             }).then((r) => {
                                 if (r.isConfirmed) {
-                                    // 1. 数据删除
                                     DataManager.deleteNote(note.urlKey || DataManager.getPageKey(), note.id);
                                     
-                                    // 2. DOM 移除高亮（即时反馈，无需刷新）
                                     const hl = document.getElementById(`eng-note-${note.id}`);
                                     if(hl) {
-                                        // 用纯文本节点替换高亮span
                                         const textNode = document.createTextNode(hl.innerText);
                                         hl.parentNode.replaceChild(textNode, hl);
                                     }
 
-                                    // 3. 关闭主弹窗并刷新侧边栏
                                     Swal.close();
                                     UI.refreshList();
                                     
@@ -722,16 +741,20 @@
         init: () => {
             const addBtn = document.createElement('div');
             addBtn.id = 'eng-add-btn';
-            addBtn.className = 'eng-fab-group';
+            addBtn.className = 'eng-fab-group notranslate'; // 添加防翻译类
+            addBtn.setAttribute('translate', 'no');
             addBtn.innerHTML = '<span>✏️</span> 记笔记';
 
             const menuBtn = document.createElement('div');
             menuBtn.id = 'eng-menu-btn';
-            menuBtn.className = 'eng-fab-group';
+            menuBtn.className = 'eng-fab-group notranslate'; // 添加防翻译类
+            menuBtn.setAttribute('translate', 'no');
             menuBtn.innerHTML = '📚<div class="eng-badge"></div>';
 
             const panel = document.createElement('div');
             panel.id = 'eng-panel';
+            panel.className = 'notranslate'; // 添加防翻译类
+            panel.setAttribute('translate', 'no');
             panel.innerHTML = `
                 <div class="eng-panel-inner">
                     <div class="eng-header">
@@ -865,12 +888,10 @@
             UI.refreshList();
         },
 
-        // 核心渲染逻辑
         refreshList: () => {
             const target = document.querySelector('.eng-tab.active').dataset.target;
             const container = document.getElementById('eng-content');
             
-            // 为了防止搜索框在刷新时失去焦点，只有非归档页才完全清空
             if (target !== 'all') {
                 container.innerHTML = '';
             }
@@ -884,7 +905,6 @@
                 if(notes.length === 0) container.innerHTML = '<div style="text-align:center;color:#999;margin-top:50px">本页暂无笔记</div>';
                 else notes.forEach(n => container.appendChild(UI.createCard(n, true)));
             } else {
-                // --- 归档页逻辑 ---
                 if (!container.querySelector('#eng-search-input')) {
                     container.innerHTML = `
                         <input type="text" id="eng-search-input" class="eng-search-bar" placeholder="🔍 搜索笔记内容、原文或标题...">
@@ -901,7 +921,6 @@
             }
         },
 
-        // 归档列表渲染函数
         renderArchiveList: (filterText) => {
             const listContainer = document.getElementById('eng-archive-list');
             if (!listContainer) return;
@@ -914,7 +933,6 @@
                 return;
             }
 
-            // 过滤逻辑
             const filteredNotes = !filterText ? all : all.filter(n => 
                 (n.text && n.text.toLowerCase().includes(filterText)) ||
                 (n.note && n.note.toLowerCase().includes(filterText)) ||
@@ -926,7 +944,6 @@
                 return;
             }
 
-            // 分组逻辑
             const groups = {};
             filteredNotes.forEach(n => {
                 const m = new Date(n.timestamp).getFullYear() + '年' + (new Date(n.timestamp).getMonth()+1) + '月';
@@ -944,7 +961,6 @@
                 
                 groups[m].forEach(n => list.appendChild(UI.createCard(n, false)));
                 
-                // 如果有搜索内容，默认展开所有分组
                 if (filterText) {
                     list.classList.add('open');
                 }
@@ -952,7 +968,6 @@
                 listContainer.appendChild(div);
             });
             
-            // 无搜索内容时，默认展开第一个月
             if (!filterText && listContainer.firstChild) {
                 listContainer.firstChild.querySelector('.eng-month-list').classList.add('open');
             }
@@ -1091,7 +1106,7 @@
         
         let shouldRefresh = false;
         for(let m of mutations) {
-            if (!m.target.classList.contains('swal2-container') && !m.target.closest('.swal2-container')) {
+            if (!m.target.classList.contains('swal2-container') && !m.target.closest('.swal2-container') && !m.target.closest(`#${ISOLATION_ID}`)) {
                 shouldRefresh = true;
                 break;
             }

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         LIMS Save Index 중복 확인
 // @namespace    http://tampermonkey.net/
-// @version      1.1.1
-// @description  수주별 통합 실시간 중복 체크 ( v1.1.1: 조회 기간 2개월 연장 반영 )
+// @version      1.1.2
+// @description  수주별 통합 실시간 중복 체크 ( v1.1.2: 내부/외부 중복 오보 수정 및 최적화 완료 )
 // @author       김재형
 // @match        *://lims3.macrogen.com/ngs/com/retrieveIndexPopup.do*
 // @match        *://lims3qas.macrogen.com/ngs/com/retrieveIndexPopup.do*
@@ -13,10 +13,9 @@
 
 (function () {
     'use strict';
-    const VERSION = "1.1.1";
+    const VERSION = "1.1.2";
     const IS_POPUP_PAGE = window.location.href.includes('retrieveIndexPopup.do');
     const LOG_PREFIX = `%c[IndexChecker]`;
-    const LOG_STYLE = 'color: #4834d4; font-weight: bold;';
 
     // === 날짜 유틸리티 ===
     const getDateRange = () => {
@@ -70,15 +69,39 @@
     // === 유틸리티 ===
     const normalize = (val) => String(val || '').trim().toUpperCase();
     const normalizeIndex = (val) => normalize(val).replace(/-/g, '');
+
+    // LIB ID에서 버전 접미사(_V1, -1 등) 제거하고 비교용 원본 ID 추출
+    const getBaseLibId = (val) => {
+        const id = normalize(val);
+        return id.split('_V')[0].split('-')[0].split('_')[0];
+    };
+
     const safeGetCell = (grid, row, col) => {
         try { return grid.GetCellValue(row, col); } catch (e) { return ''; }
     };
+
+    // 병합된 셀(Merged Cell) 처리: 값이 없으면 위쪽에서 찾아옴
+    const getMergedCellValue = (grid, row, col) => {
+        let val = safeGetCell(grid, row, col);
+        if (val === '') {
+            const mergedCols = ['ordNo', 'orderNo', 'smplReslOrdNo', 'libWshId', 'libWshNo', 'libId', 'libNo'];
+            if (mergedCols.includes(col)) {
+                for (let r = row - 1; r >= grid.HeaderRows(); r--) {
+                    val = safeGetCell(grid, r, col);
+                    if (val !== '') break;
+                }
+            }
+        }
+        return val;
+    };
+
     const firstFilled = (values) => {
         for (const val of values) {
             if (val && String(val).trim() !== '') return val;
         }
         return '';
     };
+
     const getInputValue = (selectors) => {
         for (const selector of selectors) {
             const el = document.querySelector(selector);
@@ -95,7 +118,7 @@
         if (id) return id.toUpperCase();
         if (grid && typeof grid.RowCount === 'function') {
             for (let i = headRow; i < headRow + grid.RowCount(); i++) {
-                id = firstFilled([safeGetCell(grid, i, 'libWshId'), safeGetCell(grid, i, 'worksheetId')]);
+                id = firstFilled([getMergedCellValue(grid, i, 'libWshId'), getMergedCellValue(grid, i, 'worksheetId')]);
                 if (id) return id.toUpperCase();
             }
         }
@@ -116,7 +139,7 @@
         return bestScore > 0 ? bestId : '';
     };
 
-    // === 배너 & CSS (OLD 디자인 참고) ===
+    // === 배너 & CSS ===
     let banner;
     if (IS_POPUP_PAGE) {
         banner = document.createElement('div');
@@ -137,15 +160,15 @@
         style.innerHTML = `
             body { padding-top: 55px !important; margin: 0 !important; }
             .pop_cont { padding-bottom: 65px !important; }
-            .btn_box { 
-                position: fixed !important; bottom: 0 !important; left: 0 !important; 
-                width: 100% !important; background: white !important; z-index: 999998 !important; 
+            .btn_box {
+                position: fixed !important; bottom: 0 !important; left: 0 !important;
+                width: 100% !important; background: white !important; z-index: 999998 !important;
                 border-top: 1px solid #ddd !important; padding: 12px 0 !important;
                 margin: 0 !important; text-align: center !important;
                 box-shadow: 0 -2px 10px rgba(0,0,0,0.1) !important;
             }
-            #divIbsIndex, #DIV_ibsIndex, #divIbsSmpl, #DIV_ibsSmpl, #divIbsWorksheet, #DIV_ibsWorksheet, #divIbsLib, #DIV_ibsLib { 
-                height: calc(100vh - 190px) !important; 
+            #divIbsIndex, #DIV_ibsIndex, #divIbsSmpl, #DIV_ibsSmpl, #divIbsWorksheet, #DIV_ibsWorksheet, #divIbsLib, #DIV_ibsLib {
+                height: calc(100vh - 190px) !important;
                 min-height: 200px !important;
             }
         `;
@@ -210,43 +233,87 @@
         }
 
         const samplesByOrd = {};
+        const currentGridSamples = [];
+
+        // 1. 현재 그리드 데이터 수집 (병합 셀 고려)
         for (let i = headRow; i < headRow + grid.RowCount(); i++) {
             if (grid.GetRowStatus(i) === 'D') continue;
             const idxVal = safeGetCell(grid, i, 'idxCd') || safeGetCell(grid, i, 'idxNo');
-            const normOrdNo = normalize(firstFilled([safeGetCell(grid, i, 'ordNo'), safeGetCell(grid, i, 'smplReslOrdNo'), safeGetCell(grid, i, 'orderNo')]));
-            if (idxVal && normOrdNo.startsWith('HN')) {
-                if (!samplesByOrd[normOrdNo]) samplesByOrd[normOrdNo] = [];
-                samplesByOrd[normOrdNo].push({ row: i, idxComp: normalizeIndex(idxVal), rawIdx: idxVal });
+            const libId = normalize(firstFilled([getMergedCellValue(grid, i, 'libId'), getMergedCellValue(grid, i, 'libNo'), getMergedCellValue(grid, i, 'smplReslNo')]));
+            const normOrdNo = normalize(firstFilled([getMergedCellValue(grid, i, 'ordNo'), getMergedCellValue(grid, i, 'smplReslOrdNo'), getMergedCellValue(grid, i, 'orderNo')]));
+
+            if (idxVal) {
+                const sampleObj = {
+                    row: i,
+                    idxComp: normalizeIndex(idxVal),
+                    rawIdx: idxVal,
+                    libId: libId,
+                    baseLibId: getBaseLibId(libId),
+                    ordNo: normOrdNo
+                };
+                currentGridSamples.push(sampleObj);
+
+                if (normOrdNo.startsWith('HN')) {
+                    if (!samplesByOrd[normOrdNo]) samplesByOrd[normOrdNo] = [];
+                    samplesByOrd[normOrdNo].push(sampleObj);
+                }
             }
         }
 
-        const ordNos = Object.keys(samplesByOrd);
-        if (ordNos.length === 0) {
-            if (manual) updateBanner('수주번호를 찾을 수 없습니다.', 'error');
-            return [];
-        }
-
-        if (manual) updateBanner('중복 대조 중...', 'loading');
         let totalConflicts = 0;
         let conflictDetails = [];
+
+        const formatMsg = (msg, isSameLib) => {
+            if (isSameLib) return `<div style="background: #1976d2; color: white; padding: 2px 6px; margin: 1px 0; border-radius: 3px; display: inline-block;">${msg} (동일샘플)</div>`;
+            return `<div style="padding: 2px 0;">${msg}</div>`;
+        };
+
+        // 2. 내부 중복 체크
+        const seenInGrid = {};
+        currentGridSamples.forEach(s => {
+            if (!seenInGrid[s.idxComp]) seenInGrid[s.idxComp] = [];
+            seenInGrid[s.idxComp].push(s);
+        });
+
+        Object.values(seenInGrid).forEach(group => {
+            if (group.length > 1) {
+                const isSameLib = group.every(g => g.baseLibId === group[0].baseLibId && g.baseLibId !== '');
+                const rows = group.map(g => g.row).join(', ');
+                const label = isSameLib ? '내부-동일샘플' : '내부-중복!';
+                conflictDetails.push(formatMsg(`[${rows}행] ${group[0].rawIdx} (${label})`, isSameLib));
+                if (manual) {
+                    group.forEach(g => grid.SetRowBackColor(g.row, isSameLib ? '#e3f2fd' : '#ffcdd2'));
+                }
+                if (!isSameLib) totalConflicts++;
+            }
+        });
+
+        // 3. 외부 DB 데이터 대조 (병렬 요청)
+        const ordNos = Object.keys(samplesByOrd);
         const curWkstId = normalize(getWorksheetId(grid, headRow));
 
         try {
             for (const ordNo of ordNos) {
                 const currentSamples = samplesByOrd[ordNo];
                 const listRes = await ajaxPost(API_CONFIG.LIST_API.url, API_CONFIG.LIST_API.buildPayload(ordNo));
-                const worksheets = (listRes.worksheetLists || []).map(ws => ({ id: ws.libWshId, idNorm: normalize(ws.libWshId), name: ws.libWshNm })).filter(ws => ws.idNorm);
+                const worksheets = (listRes.worksheetLists || []).map(ws => ({
+                    id: ws.libWshId,
+                    idNorm: normalize(ws.libWshId),
+                    name: ws.libWshNm
+                })).filter(ws => ws.idNorm);
 
                 const detailsById = {};
-                for (const target of worksheets) {
-                    if (detailCache.has(target.idNorm)) { detailsById[target.idNorm] = detailCache.get(target.idNorm); continue; }
+                await Promise.all(worksheets.map(async (target) => {
+                    if (detailCache.has(target.idNorm)) {
+                        detailsById[target.idNorm] = detailCache.get(target.idNorm);
+                        return;
+                    }
                     try {
                         const dataRes = await ajaxPost(API_CONFIG.DATA_API.url, API_CONFIG.DATA_API.buildPayload(target.id, target.name));
-                        const details = dataRes.worksheetDetails || [];
-                        detailsById[target.idNorm] = details;
-                        detailCache.set(target.idNorm, details);
+                        detailsById[target.idNorm] = dataRes.worksheetDetails || [];
+                        detailCache.set(target.idNorm, detailsById[target.idNorm]);
                     } catch (e) { detailsById[target.idNorm] = []; }
-                }
+                }));
 
                 let currentWorksheetId = curWkstId;
                 if (!currentWorksheetId) currentWorksheetId = autoDetectWorksheetId(detailsById, currentSamples);
@@ -254,13 +321,32 @@
                 const targetWorksheets = worksheets.filter(ws => !currentWorksheetId || ws.idNorm !== currentWorksheetId);
                 for (const target of targetWorksheets) {
                     (detailsById[target.idNorm] || []).forEach(item => {
+                        // DB 데이터 필터링: 삭제된 데이터 제외
+                        if (item.delYn === 'Y' || item.rowStatus === 'D') return;
+
+                        const extOrdNo = normalize(firstFilled([item.ordNo, item.orderNo, item.smplReslOrdNo]));
+                        // 핵심 수정: 현재 수주번호(ordNo)와 일치하는 샘플만 대조 (타 수주 샘플은 무시)
+                        if (extOrdNo !== ordNo) return;
+
                         const extIdxComp = normalizeIndex(item.idxCd || item.idxNo || '');
+                        const extLibId = normalize(item.libId || item.libNo || '');
+                        const extBaseLibId = getBaseLibId(extLibId);
                         if (!extIdxComp) return;
+
                         currentSamples.forEach(curr => {
                             if (curr.idxComp === extIdxComp) {
-                                if (manual) grid.SetRowBackColor(curr.row, '#fff9c4');
-                                totalConflicts++;
-                                conflictDetails.push(`[${curr.row}행] ${curr.rawIdx} (중복: ${target.idNorm})`);
+                                // 정규화된 LIB ID로 동일성 판단
+                                const isSameLib = (curr.baseLibId === extBaseLibId && curr.baseLibId !== '');
+
+                                if (manual) {
+                                    const curColor = grid.GetRowBackColor(curr.row);
+                                    if (curColor !== '#ffcdd2') {
+                                        grid.SetRowBackColor(curr.row, isSameLib ? '#e3f2fd' : '#fff9c4');
+                                    }
+                                }
+
+                                if (!isSameLib) totalConflicts++;
+                                conflictDetails.push(formatMsg(`[${curr.row}행] ${curr.rawIdx} (중복: ${target.idNorm} / 샘플: ${extLibId})`, isSameLib));
                             }
                         });
                     });
@@ -268,46 +354,39 @@
             }
 
             if (manual) {
-                if (totalConflicts > 0) updateBanner(`INDEX 중복 감지 (${totalConflicts}건)\n` + conflictDetails.join('\n'), 'error');
-                else updateBanner(`중복 없음 (동일 수주 내 타 워크시트 대조 완료)`, 'success');
+                if (conflictDetails.length > 0) {
+                    const status = totalConflicts > 0 ? 'error' : 'ready';
+                    updateBanner(`<b>INDEX 중복 감지</b><br>` + conflictDetails.join(''), status);
+                } else {
+                    updateBanner(`중복 없음 (동일 수주 내 타 워크시트 및 내부 대조 완료)`, 'success');
+                }
             } else if (banner.getAttribute('data-ready') !== 'true') {
                 updateBanner('동일 수주 INDEX 중복 확인 준비 완료', 'ready');
                 banner.setAttribute('data-ready', 'true');
             }
         } catch (e) {
-            console.error(LOG_PREFIX, e);
             if (manual) updateBanner('검사 실패: ' + e.message, 'error');
         }
-        return conflictDetails;
+        return conflictDetails.filter(d => !d.includes('동일샘플'));
     }
 
     // === 초기화 & 이벤트 ===
     if (IS_POPUP_PAGE) {
         document.getElementById('idx-run-full').onclick = () => runFullCheck(true);
-
         const oldDoAction = window.doAction;
         if (oldDoAction) {
             window.doAction = async function (act) {
-                if (act === 'save') {
-                    const errors = await runFullCheck(true);
-                    if (errors.length > 0) {
-                        alert("⚠️ 중복된 인덱스가 존재합니다!\n상단 배너에서 원인 워크시트를 확인해 주세요.");
-                        return;
-                    }
-                }
+                if (act === 'save') runFullCheck(true);
                 return oldDoAction.apply(this, arguments);
             };
         }
-
         const initAnalysis = setInterval(() => {
             const grid = window.ibsIndex || window.ibsSheet;
             if (grid && typeof grid.GetCellValue === 'function') {
                 clearInterval(initAnalysis);
-                runFullCheck(false); // 즉시 예열 분석
-                setInterval(() => runFullCheck(false), 3000); // 이후 3초 주기
+                runFullCheck(false);
+                setInterval(() => runFullCheck(false), 3000);
             }
         }, 1000);
-
-        console.log(LOG_PREFIX, "초기화 완료 (그리드 감지 대기 중)");
     }
 })();

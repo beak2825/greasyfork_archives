@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torrent Mod Toolkit
 // @namespace    http://tampermonkey.net/
-// @version      1.1.5
+// @version      1.1.7.3
 // @description  Common actions for torrent mods
 // @icon         https://raw.githubusercontent.com/xzin-CoRK/torrent-mod-toolkit/refs/heads/main/hammer.png
 // @author       xzin
@@ -27,7 +27,7 @@
 (function () {
     "use strict";
 
-    const version = "1.1.5";
+    const version = "1.1.7.3";
 
     var mediainfo;
     var uniqueId;
@@ -376,6 +376,9 @@
             const firstFilename = file_structure.split('\n')[0].trim();
             if (firstFilename) {
                 let nameWithoutExt = firstFilename.replace(/\.(mkv|mp4|avi|m4v)$/i, '');
+                // Remove trailing episode like S01E01 / S1E1 / E01, but keep season (S01 / S1)
+                nameWithoutExt = nameWithoutExt.replace(/S(\d{1,2})E\d{1,2}$/i, 'S$1');
+                nameWithoutExt = nameWithoutExt.replace(/E\d{1,2}$/i, '');
                 nameWithoutExt = nameWithoutExt.replace(/[-.]([A-Za-z0-9]+)$/, '');
                 const parts = nameWithoutExt.split('.');
                 const titleParts = [];
@@ -410,6 +413,10 @@
             .replace(/\s*-\s*[A-Za-z0-9]+$/, '')
             .replace(/\.[A-Za-z0-9]+$/, '')
             .trim();
+
+        // For series: drop trailing episode while keeping season
+        cleanedTitle = cleanedTitle.replace(/S(\d{1,2})E\d{1,2}$/i, 'S$1');
+        cleanedTitle = cleanedTitle.replace(/E\d{1,2}$/i, '');
         const words = cleanedTitle.split(/\s+/);
         const titleWords = [];
 
@@ -829,9 +836,13 @@
         // Helper function to store data with force load flag
         function storeDataForForceLoad() {
             if (uniqueId || file_structure) {
+                // Extract mediainfo if not already available
+                const mediainfoToStore = mediainfo || (activeTemplate && activeTemplate.extractMediainfo ? activeTemplate.extractMediainfo() : null);
+                
                 GM_setValue("tmt_search_data", {
                     uniqueId: uniqueId || null,
                     filename: file_structure || null,
+                    mediainfo: mediainfoToStore || null,
                     timestamp: Date.now(),
                     forceLoad: true,
                     showOnAither: false
@@ -875,15 +886,31 @@
 
             // Store data for comparison on the home tracker page (for all sites)
             if (uniqueId || file_structure) {
+                let filenameToStore = file_structure || null;
+                if (home_tracker_link && home_tracker_link.includes('audiences.me') && file_structure) {
+                    const filtered = filterMkvFilenames(file_structure);
+                    if (filtered) {
+                        const first = filtered.split('\n').map(l => l.trim()).find(l => l.length > 0) || null;
+                        if (first) {
+                            filenameToStore = first;
+                        }
+                    } else {
+                        const first = file_structure.split('\n').map(l => l.trim()).find(l => l.length > 0) || null;
+                        if (first) {
+                            filenameToStore = first;
+                        }
+                    }
+                }
+
                 // Ensure mediainfo is extracted if not already available
                 const mediainfoToStore = mediainfo || (activeTemplate.extractMediainfo ? activeTemplate.extractMediainfo() : null);
                 GM_setValue("tmt_search_data", {
                     uniqueId: uniqueId || null,
-                    filename: file_structure || null,
+                    filename: filenameToStore,
                     mediainfo: mediainfoToStore || null,
                     timestamp: Date.now(),
                     fromHomeTrackerButton: true,
-                    forceLoad: true, // Force load comparison data on destination page
+                    forceLoad: true, 
                     showOnAither: false
                 });
             }
@@ -900,11 +927,8 @@
                     return showToast("No template for this site");
                 }
 
-                // Filter filename to only include .mkv files and exclude samples
                 const filteredFilename = file_structure ? filterMkvFilenames(file_structure) : null;
-
                 if (uniqueId || filteredFilename) {
-                    // Ensure mediainfo is extracted if not already available
                     const mediainfoToStore = mediainfo || (activeTemplate.extractMediainfo ? activeTemplate.extractMediainfo() : null);
                     GM_setValue("tmt_search_data", {
                         uniqueId: uniqueId || null,
@@ -956,13 +980,9 @@
             });
         }
 
-        // Add click handlers to all tracker link buttons (PTP, BTN, HDB, BLU, BHD, srrDB, OMG, Animebytes)
-        // ATH button already has its own handler above
         const trackerButtons = document.querySelectorAll('.center.pad a[target="_blank"]');
         trackerButtons.forEach(button => {
-            // Skip ATH button as it has its own handler
             if (button.id === 'athButton') return;
-
             button.addEventListener("click", () => {
                 storeDataForForceLoad();
             });
@@ -998,30 +1018,24 @@
     const siteTemplates = [
         {
             name: "General UNIT3D Template",
-            domains: ["aither.cc", "blutopia.cc", "lst.gg", "upload.cx", "oldtoons.world", "hawke.uno"],
+            domains: ["aither.cc", "blutopia.cc", "lst.gg", "upload.cx", "oldtoons.world", "hawke.uno", "fearnopeer.com"],
             matches: function(url) { return matchDomains(url, this.domains); },
             extractMediainfo: () => {
                 let el = document.querySelector(".torrent-mediainfo-dump pre code[x-ref='mediainfo']");
                 if (el) return el.innerText.trim();
-
                 el = document.querySelector(".torrent-mediainfo-dump pre.decoda-code code") ||
                      document.querySelector(".torrent-mediainfo-dump .decoda-code code");
                 if (el) return el.innerText.trim();
-
-                // Fallback: any code element inside torrent-mediainfo-dump
                 el = document.querySelector(".torrent-mediainfo-dump code");
                 return el ? el.innerText.trim() : null;
             },
             extractFileStructure: () => {
-                // Try standard UNIT3D file list selector
                 let files = document.querySelectorAll("div[data-tab='list'] tr td:nth-child(2)");
                 if (files && files.length > 0) {
                     return Array.from(files)
                         .map(file => file.innerText.trim())
                         .join("\n");
                 }
-
-                // Fallback: try alternative selectors for different UNIT3D versions
                 files = document.querySelectorAll("div[data-tab='list'] td:nth-child(2)");
                 if (files && files.length > 0) {
                 return Array.from(files)
@@ -1031,15 +1045,12 @@
 
                 const modal = document.querySelector("#myModal") || document.querySelector(".modal");
                 if (modal) {
-                    // Try list tab first (table structure) - most reliable
                     files = modal.querySelectorAll("table.table-striped tbody tr td:nth-child(2)");
                     if (files && files.length > 0) {
                         return Array.from(files)
                             .map(file => file.innerText.trim())
                             .join("\n");
-                    }
-
-                    // Fallback: any table in modal
+                    }   
                     files = modal.querySelectorAll("table tbody tr td:nth-child(2)");
                     if (files && files.length > 0) {
                         return Array.from(files)
@@ -1195,8 +1206,6 @@
             extractMediainfo: () => {
                 const urlParams = new URLSearchParams(window.location.search);
                 const torrentId = urlParams.get('torrentid');
-
-                // First try to find within the specific torrent row
                 let blockquotes = [];
                 if (torrentId) {
                     const torrentRow = document.querySelector(`tr#torrent_${torrentId}`);
@@ -1204,8 +1213,6 @@
                         blockquotes = torrentRow.querySelectorAll('blockquote');
                     }
                 }
-
-                // If not found, search all blockquotes
                 if (blockquotes.length === 0) {
                     blockquotes = document.querySelectorAll('blockquote');
                 }
@@ -1222,7 +1229,6 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const torrentId = urlParams.get('torrentid');
 
-                // Extract filenames from table (BTN strips hyphens, so we need to restore them)
                 if (torrentId) {
                     const fileTable = document.querySelector(`tr#torrent_${torrentId} table tbody`);
                     if (fileTable) {
@@ -1298,10 +1304,8 @@
                 return null;
             },
             extractFileStructure: () => {
-                // First try to get files from table#details (for multiple files)
                 const detailsTable = document.querySelector('table#details');
                 if (detailsTable) {
-                    // Look for download links in the table
                     const downloadLinks = detailsTable.querySelectorAll('a.js-download, a[href*="/download.php/"]');
                     if (downloadLinks && downloadLinks.length > 0) {
                         const filenames = Array.from(downloadLinks)
@@ -1311,7 +1315,6 @@
                                 if (filenameMatch) {
                                     return filenameMatch[1];
                                 }
-                                // Fallback to text content
                                 const text = link.textContent || link.innerText || '';
                                 const filename = text.replace(/\.torrent$/, '').trim();
                                 return filename;
@@ -1323,7 +1326,6 @@
                     }
                 }
 
-                // Fallback: try collapsable file list block
                 const blocks = [...document.querySelectorAll("div.collapsable")];
                 const fileListBlock = blocks.find(el => el.textContent.includes("File list"));
                 if (fileListBlock && fileListBlock.nextElementSibling?.classList.contains("hideablecontent")) {
@@ -1339,7 +1341,6 @@
                     }
                 }
 
-                // Final fallback: try js-download class (for single file)
                 const singleFileLink = document.querySelector('a.js-download');
                 if (singleFileLink) {
                     const href = singleFileLink.getAttribute('href') || '';
@@ -1380,7 +1381,6 @@
                 return el ? el.textContent.trim() : null;
             },
             extractFileStructure: () => {
-                // First, try to extract from script tag (privatehd.to loads files dynamically)
                 const scripts = document.querySelectorAll('script:not([src])');
                 for (const script of scripts) {
                     const scriptText = script.textContent || script.innerText;
@@ -1816,6 +1816,88 @@
         },
 
         {
+            name: "Nexus Template",
+            domains: ["hhanclub.top", "audiences.me"],
+            matches: function(url) { return matchDomains(url, this.domains); },
+            extractMediainfo: () => {
+                let el = document.querySelector("#mediainfo-raw pre code") ||
+                         document.querySelector("#mediainfo-raw pre");
+                if (el) return el.textContent.trim();
+
+                el = document.querySelector("#mediainfo-info pre code") ||
+                     document.querySelector("#mediainfo-info pre");
+                if (el) return el.textContent.trim();
+                el = document.querySelector("div.hide div.codemain") ||
+                     document.querySelector("div.codemain");
+                return el ? el.textContent.trim() : null;
+            },
+            extractFileStructure: () => {
+                const spans = document.querySelectorAll("#mediainfo-info span");
+                if (spans && spans.length > 0) {
+                    for (let i = 0; i < spans.length - 1; i++) {
+                        const labelText = (spans[i].textContent || spans[i].innerText || "").trim();
+                        const normalized = labelText.replace(/\s+/g, "");
+                        if (normalized.startsWith("文件名") || /^file\s*name[:：]?$/i.test(labelText.trim())) {
+                            const valueSpan = spans[i + 1];
+                            if (!valueSpan) break;
+                            const fileName = (valueSpan.textContent || valueSpan.innerText || "").trim();
+                            if (fileName && /\.mkv$/i.test(fileName)) {
+                                return fileName;
+                            }
+                            return null;
+                        }
+                    }
+                }
+
+                const codeTopLink = document.querySelector("div.codetop a");
+                if (codeTopLink) {
+                    const text = (codeTopLink.textContent || codeTopLink.innerText || "").trim();
+                    if (text && /\.mkv$/i.test(text)) {
+                        return text;
+                    }
+                }
+
+                const codeMain = document.querySelector("div.hide div.codemain") ||
+                                 document.querySelector("div.codemain");
+                if (codeMain) {
+                    const raw = codeMain.textContent || codeMain.innerText || "";
+                    const match = raw.match(/Complete name\s*:?\s*(.+?\.mkv)/i);
+                    if (match && match[1]) {
+                        const fileName = match[1].trim().split(/[\\/]/).pop();
+                        if (fileName && /\.mkv$/i.test(fileName)) {
+                            return fileName;
+                        }
+                    }
+                }
+
+                return null;
+            },
+            extractIMDB: () => {
+                const imdbLink = document.querySelector("a[href*='imdb.com/title/tt']");
+                if (!imdbLink || !imdbLink.href) return null;
+                const match = imdbLink.href.match(/tt\d{7,8}/);
+                return match ? match[0] : null;
+            },
+            extractReleaseGroup: () => {
+                const titleBlocks = document.querySelectorAll("div.font-bold.leading-6");
+                if (!titleBlocks || titleBlocks.length < 2) return null;
+
+                for (let i = 0; i < titleBlocks.length - 1; i++) {
+                    const label = (titleBlocks[i].textContent || titleBlocks[i].innerText || "").trim();
+                    if (label === "标题" || /^title$/i.test(label)) {
+                        const titleDiv = titleBlocks[i + 1];
+                        if (!titleDiv) break;
+                        const text = (titleDiv.textContent || titleDiv.innerText || "").trim();
+                        const match = text.match(/-([A-Za-z0-9]+)$/);
+                        return match ? match[1] : null;
+                    }
+                }
+
+                return null;
+            }
+        },
+
+        {
             name: "PTP Template",
             matches: (url) => url.includes("passthepopcorn.me"),
             extractMediainfo: () => {
@@ -1867,8 +1949,8 @@
     const isPTP = url.hostname.includes('passthepopcorn.me');
     const hasNumericIdInPath = /\/(torrents?|details)\/\d+/.test(url.pathname) ||
                                /\/(torrents?|details)\/.*\.\d+$/.test(url.pathname) ||
-                               (/\/(details|torrents)\.php/.test(url.pathname) && url.searchParams.has('id')) || // Works for all sites including Animebytes and PTP with just id parameter
-                               (url.pathname.includes('/details') && url.searchParams.has('id')); // For omgwtfnzbs.org
+                               (/\/(details|torrents)\.php/.test(url.pathname) && url.searchParams.has('id')) ||
+                               (url.pathname.includes('/details') && url.searchParams.has('id'));
     if (!hasNumericIdInPath) {
         return;
     }
@@ -1892,16 +1974,18 @@
         const release_group = activeTemplate.extractReleaseGroup();
         const torrentType = activeTemplate.extractTorrentType ? activeTemplate.extractTorrentType() : null;
         buildHomeTrackerLink();
+        // Auto-store data only for Aither when page loads
         const isAither = window.location.hostname.includes('aither.cc');
-        if (isAither && (uniqueId || file_structure)) {
+        if (isAither && (uniqueId || file_structure || mediainfo)) {
             const existingData = GM_getValue("tmt_search_data", null);
             if (!existingData || !existingData.showOnAither) {
                 GM_setValue("tmt_search_data", {
                     uniqueId: uniqueId || null,
                     filename: file_structure || null,
+                    mediainfo: mediainfo || null,
                     timestamp: Date.now(),
-                    fromHomeTrackerButton: false, // Stored automatically, not from button click
-                    showOnAither: false // Don't show on Aither when auto-stored
+                    fromHomeTrackerButton: false,
+                    showOnAither: false
                 });
             }
         }
@@ -1936,8 +2020,8 @@
         const url = new URL(window.location.href);
         const hasNumericIdInPath = /\/(torrents?|details)\/\d+/.test(url.pathname) ||
                                    /\/(torrents?|details)\/.*\.\d+$/.test(url.pathname) ||
-                                   (/\/(details|torrents)\.php/.test(url.pathname) && url.searchParams.has('id')) || // Works for all sites with id parameter
-                                   (url.pathname.includes('/details') && url.searchParams.has('id')); // For omgwtfnzbs.org
+                                   (/\/(details|torrents)\.php/.test(url.pathname) && url.searchParams.has('id')) ||
+                                   (url.pathname.includes('/details') && url.searchParams.has('id'));
 
         // Only show on individual torrent pages (has numeric ID in path, not search results with just imdbId)
         const isIndividualTorrent = hasNumericIdInPath;
@@ -1948,10 +2032,8 @@
         if (isAnimebytes || isAnthelion || isPTP) {
             let visibleTorrentRow = null;
             if (isPTP) {
-                // PTP uses tr[id^="torrent_"]:not(.hidden) (no .pad class)
                 visibleTorrentRow = document.querySelector(`tr[id^="torrent_"]:not(.hidden)`);
             } else {
-                // Animebytes/Anthelion use .pad class
                 visibleTorrentRow = document.querySelector(`tr[id^="torrent_"].pad:not(.hide)`);
                 if (!visibleTorrentRow) {
                     visibleTorrentRow = document.querySelector(`tr[id^="torrent_"].pad:not(.hidden)`);
@@ -2061,11 +2143,14 @@
         });
 
         document.getElementById("btnMediainfoDiff").addEventListener("click", () => {
-            const storedMediainfo = (searchData.mediainfo && searchData.mediainfo !== "null") ? searchData.mediainfo : "";
-            const currentMediainfo = activeTemplate.extractMediainfo() || "";
-
+            const storedMediainfo = (searchData.mediainfo && searchData.mediainfo !== "null") ? searchData.mediainfo : "";            
+            let currentMediainfo = mediainfo || "";
+            if (!currentMediainfo && activeTemplate && activeTemplate.extractMediainfo) {
+                currentMediainfo = activeTemplate.extractMediainfo() || "";
+            }
+        
             const body = `mediainfo=${encodeURIComponent(storedMediainfo)}&mediainfo=${encodeURIComponent(currentMediainfo)}`;
-
+        
             GM_xmlhttpRequest({
                 method: "POST",
                 url: 'https://mediainfo.okami.icu/diff/create',
@@ -2097,13 +2182,10 @@
         let score = 0;
         let matchFound = false;
 
-        // Compare current page's data with stored data
-        // Use global mediainfo if available (for async sources like HDB), otherwise extract
         const currentMediainfo = mediainfo || activeTemplate.extractMediainfo();
         const currentUniqueId = currentMediainfo ? extractUniqueId(currentMediainfo) : null;
         const currentFilename = activeTemplate.extractFileStructure();
 
-        // Compare Unique IDs (perfect match)
         if (storedUniqueId && currentUniqueId) {
             if (storedUniqueId.toLowerCase() === currentUniqueId.toLowerCase()) {
                 score += 100;
@@ -2272,8 +2354,14 @@
           text-align: center !important;
       }
 
-       #torrentModToolkit .pad {
+      #torrentModToolkit .pad {
           padding: 3px !important;
+      }
+
+      /* Keep top tracker icons on one line even if site CSS forces links to block */
+      #torrentModToolkit .center.pad a {
+          display: inline-block !important;
+          margin: 0 2px !important;
       }
 
       #torrentModToolkit .uid {
@@ -2620,13 +2708,15 @@
                         const release_group = activeTemplate.extractReleaseGroup();
                         const torrentType = activeTemplate.extractTorrentType ? activeTemplate.extractTorrentType() : null;
                         buildHomeTrackerLink();
+                        // Auto-store data only for Aither when page loads
                         const isAither = window.location.hostname.includes('aither.cc');
-                        if (isAither && (uniqueId || file_structure)) {
+                        if (isAither && (uniqueId || file_structure || mediainfo)) {
                             const existingData = GM_getValue("tmt_search_data", null);
                             if (!existingData || !existingData.showOnAither) {
                                 GM_setValue("tmt_search_data", {
                                     uniqueId: uniqueId || null,
                                     filename: file_structure || null,
+                                    mediainfo: mediainfo || null, // Store mediainfo automatically
                                     timestamp: Date.now(),
                                     fromHomeTrackerButton: false,
                                     showOnAither: false
@@ -2670,13 +2760,15 @@
                                 const torrentType = activeTemplate.extractTorrentType ? activeTemplate.extractTorrentType() : null;
                                 buildHomeTrackerLink();
 
+                                // Auto-store data only for Aither when page loads
                                 const isAither = window.location.hostname.includes('aither.cc');
-                                if (isAither && (uniqueId || file_structure)) {
+                                if (isAither && (uniqueId || file_structure || mediainfo)) {
                                     const existingData = GM_getValue("tmt_search_data", null);
                                     if (!existingData || !existingData.showOnAither) {
                                         GM_setValue("tmt_search_data", {
                                             uniqueId: uniqueId || null,
                                             filename: file_structure || null,
+                                            mediainfo: mediainfo || null, // Store mediainfo automatically
                                             timestamp: Date.now(),
                                             fromHomeTrackerButton: false,
                                             showOnAither: false

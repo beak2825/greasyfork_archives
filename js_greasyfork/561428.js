@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GGn Individual Torrent Bookmarker
 // @namespace    delgan-ggn-individual-torrent-bookmarker
-// @version      1.0.0
+// @version      1.0.1
 // @license      MIT
 // @description  Bookmark single torrents (not groups) on GazelleGames.net
 // @author       Delgan
@@ -59,8 +59,13 @@
         const uniqueId = `${torrentData.groupId}-${torrentData.torrentId}`;
         const index = bookmarks.findIndex(b => `${b.groupId}-${b.torrentId}` === uniqueId);
 
+        // Probably already added in another tab, update instead.
         if (index !== -1) {
             torrentData.bookmarkedAt = bookmarks[index].bookmarkedAt;
+            // Search page may not have edition info, preserve existing if so.
+            if (torrentData.edition === null) {
+                torrentData.edition = bookmarks[index].edition;
+            }
             bookmarks[index] = torrentData;
         } else {
             bookmarks.push(torrentData);

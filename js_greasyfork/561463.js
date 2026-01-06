@@ -1,12 +1,7 @@
 // ==UserScript==
 // @name         翻译机增强版 - AI翻译支持
 // @namespace    https://greasyfork.org/zh-CN/scripts/561463
-// @version      0.04
-// @updateLog    v0.04 (2026-01-05): 修复Facebook页面闪烁问题
-//               - 优化轮询频率: 20ms → 200ms (减少97%CPU占用)
-//               - 增强文本规范化: 自动过滤Facebook动态添加的UI元素("展开"/"See more")
-//               - 完善变化检测逻辑: 避免误触发翻译清理循环
-//               - 添加详细调试日志: 便于问题诊断
+// @version      1.0.1
 // @description  基于原版翻译机的增强版本，新增AI翻译功能（支持LM Studio/OpenAI等），可视化配置界面。支持翻译Twitter/X、YouTube、Facebook、Reddit等主流社交网站。
 // @author       Enhanced by 翻译机增强版 | Original by HolynnChen
 // @match        *://*.twitter.com/*
@@ -508,44 +503,17 @@ const rules = [
         options: [
             {
                 name: "帖子内容",
-                selector: baseSelector("div[data-ad-comet-preview=message] div[dir=auto], div[data-ad-preview=message] div[dir=auto], div[role=article] div[id] div[dir=auto]", items => {
-                    // 过滤出实际包含文本内容的div，排除仅包含其他元素的容器
-                    return items.filter(item => {
-                        // 排除"展开"按钮：具有role=button的div
-                        if (item.getAttribute('role') === 'button') return false;
-                        
-                        // 排除只包含"展开"文本的元素
-                        if (item.innerText.trim() === '展开') return false;
-                        
-                        // 必须有文本内容
-                        const hasText = item.innerText && item.innerText.trim().length > 0;
-                        if (!hasText) return false;
-                        
-                        // 排除父容器：如果这个item的子元素中有其他item，说明它是父容器，不应该翻译
-                        const hasChildInItems = items.some(otherItem => 
-                            otherItem !== item && item.contains(otherItem)
-                        );
-                        if (hasChildInItems) return false;
-                        
-                        // 排除纯粹的容器元素（没有实际文本内容，只包含div/span）
-                        const directText = Array.from(item.childNodes)
-                            .filter(node => node.nodeType === Node.TEXT_NODE)
-                            .map(node => node.textContent.trim())
-                            .filter(t => t)
-                            .join('');
-                        
-                        // 必须有直接文本节点，或者包含实际内容元素（img、a、br等）
-                        return directText.length > 0 || item.querySelector('img[alt], a, br');
-                    });
-                }),
-                textGetter: baseTextGetter,
-                textSetter: options => setTimeout(baseTextSetter, 0, options),
+                // Facebook专用选择器：处理嵌套内容和展开后的新内容
+                selector: facebookPostSelector,
+                textGetter: facebookTextGetter,
+                textSetter: options => setTimeout(facebookTextSetter, 0, options),
             },
             {
                 name: "评论区",
-                selector: baseSelector("div[role=article] div>span[dir=auto][lang]"),
-                textGetter: baseTextGetter,
-                textSetter: options => setTimeout(baseTextSetter, 0, options),
+                // Facebook评论专用选择器：处理展开后的评论内容
+                selector: facebookCommentSelector,
+                textGetter: facebookTextGetter,
+                textSetter: options => setTimeout(facebookTextSetter, 0, options),
             }
         ]
     },
@@ -760,17 +728,9 @@ const GetActiveRule = () => rules.find(item => item.matcher.test(document.locati
                 continue
             }
             const temp = [...new Set(option.selector())];
-            
-            if (temp.length > 0) {
-                console.log(`[翻译机] 🔍 规则"${rule.name}-${option.name}" 获得${temp.length}个元素待处理`);
-            }
-            
             for (let i = 0; i < temp.length; i++) {
                 const now = temp[i];
-                if (globalProcessingSave.includes(now)) {
-                    console.log(`[翻译机] ⏸️ 跳过(处理中):`, now.innerText.substring(0, 30));
-                    continue;
-                }
+                if (globalProcessingSave.includes(now)) continue;
                 globalProcessingSave.push(now);
                 const rawText = option.textGetter(now);
                 const text = remove_url ? url_filter(rawText) : rawText;
@@ -796,7 +756,7 @@ const GetActiveRule = () => rules.find(item => item.matcher.test(document.locati
             }
         }
     };
-    PromiseRetryWrap(startup[GM_getValue('translate_choice', '谷歌翻译')]).then(() => { document.js_translater = setInterval(main, 200) }); // 从20ms改为200ms,降低CPU占用
+    PromiseRetryWrap(startup[GM_getValue('translate_choice', '谷歌翻译')]).then(() => { document.js_translater = setInterval(main, 20) });
     if(!GM_getValue('show_translate_ball',true))return;
     initPanel();
 })();
@@ -808,161 +768,237 @@ function removeItem(arr, item) {
     if (index > -1) arr.splice(index, 1);
 }
 
-// 用于防止频繁重复翻译的WeakMap
-const translationCooldown = new WeakMap();
-let debugCallCount = 0;
-
 function baseSelector(selector,customFilter) {
     return () => {
-        const callId = ++debugCallCount;
         const items = document.querySelectorAll(selector);
-        console.log(`[翻译机-${callId}] baseSelector调用: 选择器="${selector.substring(0, 50)}..." 匹配${items.length}个元素`);
-        
         let filterResult = Array.from(items).filter(item => {
-            // 检查冷却时间：如果最近1秒内已经处理过此元素，跳过
-            const lastProcessTime = translationCooldown.get(item);
-            const now = Date.now();
-            if (lastProcessTime && (now - lastProcessTime) < 1000) {
-                const cooldownRemaining = 1000 - (now - lastProcessTime);
-                console.log(`[翻译机-${callId}] 跳过(冷却中): 还需${cooldownRemaining}ms`, item.innerText.substring(0, 30));
-                return false;
-            }
-            
-            // 检查是否存在任何翻译节点(包括嵌套在子元素中的)
-            const allTranslationNodes = item.querySelectorAll('span[data-translate="processed"]');
-            
-            // 如果元素已标记为processed，或者包含翻译节点，检查内容是否变化
-            if (item.dataset.translate === "processed" || allTranslationNodes.length > 0) {
-                if (allTranslationNodes.length > 0) {
-                    // 先移除所有翻译节点来获取纯净的原始文本
-                    const clonedItem = item.cloneNode(true);
-                    const clonedTranslationNodes = clonedItem.querySelectorAll('span[data-translate="processed"]');
-                    clonedTranslationNodes.forEach(node => node.remove());
-                    const currentRawText = clonedItem.innerText.trim();
-                    
-                    // 从翻译节点的title获取保存的原始文本
-                    let savedRawText = '';
-                    allTranslationNodes.forEach(node => {
-                        if (node.title && node.title.length > savedRawText.length) {
-                            savedRawText = node.title;
-                        }
-                    });
-                    
-                    // 文本规范化函数：统一空格、换行，移除零宽字符
-                    const normalizeText = (text) => {
-                        return text
-                            .replace(/\s+/g, ' ')  // 统一所有空白字符为单个空格
-                            .replace(/[\u200B-\u200D\uFEFF]/g, '')  // 移除零宽字符
-                            .replace(/\s*展开\s*$/g, '')  // 移除末尾的"展开"按钮文本
-                            .replace(/\s*See\s+more\s*$/gi, '')  // 移除英文"See more"
-                            .replace(/\s*Show\s+more\s*$/gi, '')  // 移除"Show more"
-                            .trim();
-                    };
-                    
-                    // 规范化后再比较
-                    const normalizedCurrent = normalizeText(currentRawText);
-                    const normalizedSaved = normalizeText(savedRawText);
-                    
-                    // 判断内容是否变化：
-                    // 只有当保存的原始文本存在，且当前文本与保存的不同时，才清理并重新翻译
-                    // 如果title为空，跳过检测，避免无限循环
-                    const shouldClean = savedRawText && normalizedCurrent !== normalizedSaved && normalizedCurrent.length > 0;
-                    
-                    if (shouldClean) {
-                        console.log('[翻译机] ⚠️ 检测到内容变化，清理旧翻译:', { 
-                            callId,
-                            element: item.innerText.substring(0, 30),
-                            savedFull: savedRawText,  // 完整saved文本
-                            currentFull: currentRawText,  // 完整current文本
-                            normalizedSavedFull: normalizedSaved,  // 完整normalized saved
-                            normalizedCurrentFull: normalizedCurrent,  // 完整normalized current
-                            savedLen: savedRawText.length,
-                            currentLen: currentRawText.length,
-                            normalizedEqual: normalizedSaved === normalizedCurrent,  // 验证是否真的相等
-                            rawEqual: savedRawText === currentRawText  // 验证原始是否相等
-                        });
-                    }
-                    
-                    if (shouldClean) {
-                        // 获取当前使用的翻译引擎
-                        const choice = GM_getValue('translate_choice', '谷歌翻译');
-                        
-                        // 删除旧文本的缓存
-                        if (savedRawText) {
-                            try {
-                                sessionStorage.removeItem(choice + '-' + savedRawText);
-                                const filteredOldText = url_filter(savedRawText);
-                                if (filteredOldText !== savedRawText) {
-                                    sessionStorage.removeItem(choice + '-' + filteredOldText);
-                                }
-                            } catch (e) {
-                                console.log('清除缓存失败:', e);
-                            }
-                        }
-                        
-                        // 清除所有旧的翻译span节点(包括嵌套在子元素中的)
-                        allTranslationNodes.forEach(node => node.remove());
-                        
-                        // 移除标记，允许重新翻译
-                        delete item.dataset.translate;
-                        
-                        // 同时清除所有子元素的翻译标记
-                        item.querySelectorAll('[data-translate="processed"]').forEach(node => {
-                            delete node.dataset.translate;
-                        });
-                        
-                        // 设置冷却时间，防止立即再次处理
-                        translationCooldown.set(item, Date.now());
-                        console.log(`[翻译机-${callId}] ✓ 清理完成，重新翻译`);
-                        
-                        return true;
-                    }
-                }
-                return false;
-            }
-            // 检查子元素中是否有翻译节点
             const nodes = item.querySelectorAll('[data-translate]');
-            const hasTranslationInChildren = nodes && Array.from(nodes).some(node => node.parentNode === item);
-            
-            // 如果是新元素（没有翻译），也设置冷却时间
-            if (!hasTranslationInChildren) {
-                translationCooldown.set(item, Date.now());
-                console.log(`[翻译机-${callId}] ✓ 新元素待翻译:`, item.innerText.substring(0, 30));
-            }
-            
-            return !hasTranslationInChildren;
+            return !item.dataset.translate && !(nodes && Array.from(nodes).some(node => node.parentNode === item));
         })
-        
-        console.log(`[翻译机-${callId}] baseSelector返回: ${filterResult.length}个元素待处理`);
-        
         if(customFilter){
-            const beforeCustomFilter = filterResult.length;
             filterResult = customFilter(filterResult);
-            console.log(`[翻译机-${callId}] customFilter过滤: ${beforeCustomFilter} -> ${filterResult.length}`);
         }
         filterResult.map(item => item.dataset.translate = "processed");
         return filterResult;
     }
 }
 
-function baseTextGetter(e) {
-    // 获取文本时，排除掉role=button的子元素（如展开按钮）
+// Facebook专用：用于防止频繁重复翻译的WeakMap和冷却时间
+const facebookTranslationCooldown = new WeakMap();
+const FB_COOLDOWN_TIME = 1000; // 1秒冷却时间
+
+// Facebook专用：文本规范化函数
+function facebookNormalizeText(text) {
+    return text
+        .replace(/\s+/g, ' ')  // 统一所有空白字符为单个空格
+        .replace(/[\u200B-\u200D\uFEFF]/g, '')  // 移除零宽字符
+        .replace(/\s*展开\s*$/g, '')  // 移除末尾的"展开"按钮文本
+        .replace(/\s*See\s+more\s*$/gi, '')  // 移除英文"See more"
+        .replace(/\s*Show\s+more\s*$/gi, '')  // 移除"Show more"
+        .replace(/\s*查看更多\s*$/g, '')  // 移除"查看更多"
+        .trim();
+}
+
+// Facebook专用：检测内容是否变化，如果变化则清理旧翻译
+function facebookCheckContentChange(item) {
+    // 检查冷却时间
+    const lastProcessTime = facebookTranslationCooldown.get(item);
+    const now = Date.now();
+    if (lastProcessTime && (now - lastProcessTime) < FB_COOLDOWN_TIME) {
+        return false; // 还在冷却中
+    }
+    
+    // 检查是否存在任何翻译节点
+    const allTranslationNodes = item.querySelectorAll('span[data-translate="processed"]');
+    
+    if (item.dataset.translate === "processed" || allTranslationNodes.length > 0) {
+        if (allTranslationNodes.length > 0) {
+            // 先移除所有翻译节点来获取纯净的原始文本
+            const clonedItem = item.cloneNode(true);
+            const clonedTranslationNodes = clonedItem.querySelectorAll('span[data-translate="processed"]');
+            clonedTranslationNodes.forEach(node => node.remove());
+            // 同时移除role=button的元素
+            clonedItem.querySelectorAll('[role="button"]').forEach(btn => btn.remove());
+            const currentRawText = clonedItem.innerText.trim();
+            
+            // 从翻译节点的title获取保存的原始文本
+            let savedRawText = '';
+            allTranslationNodes.forEach(node => {
+                if (node.title && node.title.length > savedRawText.length) {
+                    savedRawText = node.title;
+                }
+            });
+            
+            // 规范化后比较
+            const normalizedCurrent = facebookNormalizeText(currentRawText);
+            const normalizedSaved = facebookNormalizeText(savedRawText);
+            
+            // 判断内容是否变化
+            const shouldClean = savedRawText && normalizedCurrent !== normalizedSaved && normalizedCurrent.length > 0;
+            
+            if (shouldClean) {
+                console.log('[翻译机-FB] ⚠️ 检测到内容变化，清理旧翻译');
+                
+                // 删除旧文本的缓存
+                const choice = GM_getValue('translate_choice', '谷歌翻译');
+                if (savedRawText) {
+                    try {
+                        sessionStorage.removeItem(choice + '-' + savedRawText);
+                        const filteredOldText = url_filter(savedRawText);
+                        if (filteredOldText !== savedRawText) {
+                            sessionStorage.removeItem(choice + '-' + filteredOldText);
+                        }
+                    } catch (e) {}
+                }
+                
+                // 清除所有旧的翻译span节点
+                allTranslationNodes.forEach(node => node.remove());
+                
+                // 移除标记
+                delete item.dataset.translate;
+                item.querySelectorAll('[data-translate="processed"]').forEach(node => {
+                    delete node.dataset.translate;
+                });
+                
+                // 设置冷却时间
+                facebookTranslationCooldown.set(item, Date.now());
+                return true; // 需要重新翻译
+            }
+        }
+        return false; // 已处理且无变化
+    }
+    
+    return true; // 新元素，需要翻译
+}
+
+// Facebook专用选择器：处理嵌套内容和展开后的新内容
+function facebookPostSelector() {
+    const selector = "div[data-ad-comet-preview=message] div[dir=auto], div[data-ad-preview=message] div[dir=auto], div[role=article] div[id] div[dir=auto]";
+    const items = document.querySelectorAll(selector);
+    
+    let results = Array.from(items).filter(item => {
+        // 排除"展开"按钮
+        if (item.getAttribute('role') === 'button') return false;
+        if (item.innerText.trim() === '展开' || item.innerText.trim() === 'See more') return false;
+        
+        // 必须有文本内容
+        const hasText = item.innerText && item.innerText.trim().length > 0;
+        if (!hasText) return false;
+        
+        // 跳过翻译结果节点本身
+        if (item.classList.contains('translate-processed-node')) return false;
+        
+        // 检查内容变化（会处理冷却、清理等）
+        if (!facebookCheckContentChange(item)) return false;
+        
+        return true;
+    });
+    
+    // 过滤父容器：只保留叶子节点
+    results = results.filter(item => {
+        const hasChildInItems = results.some(otherItem => 
+            otherItem !== item && item.contains(otherItem)
+        );
+        return !hasChildInItems;
+    });
+    
+    // 进一步过滤：必须有直接文本内容
+    results = results.filter(item => {
+        const directText = Array.from(item.childNodes)
+            .filter(node => node.nodeType === Node.TEXT_NODE)
+            .map(node => node.textContent.trim())
+            .filter(t => t)
+            .join('');
+        return directText.length > 0 || item.querySelector('img[alt], a, br');
+    });
+    
+    // 标记并返回
+    results.forEach(item => {
+        item.dataset.translate = "processed";
+        facebookTranslationCooldown.set(item, Date.now());
+    });
+    
+    return results;
+}
+
+// Facebook评论区专用选择器：处理展开后的评论内容
+function facebookCommentSelector() {
+    const selector = "div[role=article] div>span[dir=auto][lang]";
+    const items = document.querySelectorAll(selector);
+    
+    let results = Array.from(items).filter(item => {
+        // 排除"展开"按钮
+        if (item.getAttribute('role') === 'button') return false;
+        
+        // 必须有文本内容
+        const hasText = item.innerText && item.innerText.trim().length > 0;
+        if (!hasText) return false;
+        
+        // 跳过翻译结果节点本身
+        if (item.classList.contains('translate-processed-node')) return false;
+        
+        // 检查内容变化（会处理冷却、清理等）
+        if (!facebookCheckContentChange(item)) return false;
+        
+        return true;
+    });
+    
+    // 标记并返回
+    results.forEach(item => {
+        item.dataset.translate = "processed";
+        facebookTranslationCooldown.set(item, Date.now());
+    });
+    
+    return results;
+}
+
+// Facebook专用textGetter：过滤role=button的子元素
+function facebookTextGetter(e) {
     const clone = e.cloneNode(true);
+    // 移除所有role=button的元素（如展开按钮）
     const buttons = clone.querySelectorAll('[role="button"]');
     buttons.forEach(btn => btn.remove());
+    // 移除已有的翻译节点
+    const translationNodes = clone.querySelectorAll('span[data-translate="processed"]');
+    translationNodes.forEach(node => node.remove());
     return clone.innerText;
 }
 
-function baseTextSetter({ element, translatorName, text, rawText, rule, option }) {//change element text
-    console.log('[翻译机] 🎨 baseTextSetter调用:', {
-        ruleName: rule.name,
-        optionName: option.name,
-        elementText: element.innerText.substring(0, 30),
-        rawTextLen: rawText?.length,
-        translatedLen: text?.length,
-        translator: translatorName
-    });
+// Facebook专用textSetter：保存原始文本到title属性
+function facebookTextSetter({ element, translatorName, text, rawText, rule, option }) {
+    if ((text || "").length == 0) text = '翻译异常';
+    const currentReplaceTranslate = GM_getValue("option_setting:replace_translate:" + rule.name + "-" + option.name, replace_translate);
+    const currentShowInfo = GM_getValue("option_setting:show_info:" + rule.name + "-" + option.name, show_info);
     
+    if (currentReplaceTranslate) {
+        const spanNode = document.createElement('span');
+        spanNode.style.whiteSpace = "pre-wrap";
+        spanNode.innerText = `${currentShowInfo ? "-----------" + translatorName + "-----------\n\n" : ""}` + text;
+        spanNode.dataset.translate = "processed";
+        spanNode.title = rawText; // 保存原始文本到title，用于内容变化检测
+        spanNode.className = "translate-processed-node";
+        element.innerHTML = p.createHTML('');
+        element.appendChild(spanNode);
+        element.style.cssText += "-webkit-line-clamp: unset;max-height: unset";
+        return spanNode;
+    } else {
+        const spanNode = document.createElement('span');
+        spanNode.style.whiteSpace = "pre-wrap";
+        spanNode.innerText = `\n\n${currentShowInfo ? "-----------" + translatorName + "-----------\n\n" : ""}` + text;
+        spanNode.dataset.translate = "processed";
+        spanNode.title = rawText; // 保存原始文本到title，用于内容变化检测
+        spanNode.className = "translate-processed-node";
+        element.appendChild(spanNode);
+        element.style.cssText += "-webkit-line-clamp: unset;max-height: unset";
+        return spanNode;
+    }
+}
+
+function baseTextGetter(e) {
+    return e.innerText;
+}
+
+function baseTextSetter({ element, translatorName, text, rawText, rule, option }) {//change element text
     if ((text || "").length == 0) text = '翻译异常';
     const currentReplaceTranslate = GM_getValue("option_setting:replace_translate:" + rule.name + "-" + option.name, replace_translate)
     const currentShowInfo = GM_getValue("option_setting:show_info:" + rule.name + "-" + option.name, show_info)
@@ -982,7 +1018,6 @@ function baseTextSetter({ element, translatorName, text, rawText, rule, option }
         spanNode.style.whiteSpace = "pre-wrap";
         spanNode.innerText = `\n\n${currentShowInfo ? "-----------" + translatorName + "-----------\n\n" : ""}` + text;
         spanNode.dataset.translate = "processed";
-        spanNode.title = rawText;
         spanNode.class = "translate-processed-node"
         element.appendChild(spanNode);
         element.style.cssText += "-webkit-line-clamp: unset;max-height: unset";

@@ -24,9 +24,9 @@
 // @connect      raw.githubusercontent.com
 // @namespace    Violentmonkey Scripts
 // @author       SedapnyaTidur
-// @version      1.0.9
+// @version      1.0.10
 // @license      MIT
-// @revision     12/27/2025, 5:41:00 PM
+// @revision     1/6/2026, 4:13:00 PM
 // @description  Redirects instance of Redlib that having an error or has a Anubis/Cerberus/Cloudflare/GoAway check to another instance. The CSP for websites must be removed/modified using an addon for this script to work. To have a better effect make sure to reorder this script so it runs as soon as possible.
 // @downloadURL https://update.greasyfork.org/scripts/559009/%5BRedlib%5D%20Error%20%20PoW%20Redirector.user.js
 // @updateURL https://update.greasyfork.org/scripts/559009/%5BRedlib%5D%20Error%20%20PoW%20Redirector.meta.js
@@ -114,7 +114,7 @@
     texts: ['', 'Moved Permanently', 'Service has been shutdown']
   }, {
     query: ':scope > :is(main,div:first-child,article:first-child,center:first-child) > h1:first-child',
-    texts: ["Making sure you're not a bot!", 'The Oratrice is rendering its judgment!', 'Oh noes!', "We’ll be back soon!", 'Performance Tracking', '503 Service Temporarily Unavailable', '502 Bad Gateway', 'ERROR']
+    texts: ["Making sure you're not a bot!", 'The Oratrice is rendering its judgment!', 'Oh noes!', "We’ll be back soon!", 'Performance Tracking', '504 Gateway Time-out', '503 Service Temporarily Unavailable', '502 Bad Gateway', 'ERROR']
   }, {
     query: ':scope > :first-child > :first-child > h1:first-child',
     texts: ["Making sure you're not a bot!", 'Checking you are not a bot', 'An Error Occurred']
@@ -184,8 +184,9 @@
     const elapsed = updateFrequency.toLowerCase().replace(/[ s]/g, '').replace(/(mi|h|d|mo|y).*$/, field => {
       return { minute:' 1',hour:' 60',day:' 1440',month:' 43829',year:' 525949' }[field]
     }).split(' ').reduce((sum, value) => sum * Number(value), 1);
-    const values = lastUpdate.replace(/:[0-9]+\s+[apAP][mM]$/, '').split(/(?:\/|,\s+|:)/).map(Number);
-    const past = (values[0] * 1440) + (values[1] * 43829) + (values[2] * 525949) + (values[3] * 60) + values[4];
+    const clock24 = /[Aa][Mm]$/.test(lastUpdate) ? 0 : 12;
+    const values = lastUpdate.replace(/:[0-9]+\s+[APap][Mm]$/, '').split(/(?:\/|,\s+|:)/).map(Number);
+    const past = (values[0] * 1440) + (values[1] * 43829) + (values[2] * 525949) + ((values[3] + clock24) * 60) + values[4];
     const now = getDate(true); // Get current date in minutes as late as possible.
     if (now - past >= elapsed) return true;
     return false;

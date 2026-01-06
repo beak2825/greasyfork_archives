@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Custom LEADERBOARD 🧬
 // @namespace   https://popmundo.com/
-// @version     1.9.9
+// @version     2.0
 // @description Replaces achievement table with custom leaderboard per Social Club, injects styled family tree, and adds online/inactivity/death status checking
 // @author      chk
 // @match       https://*.popmundo.com/World/Popmundo.aspx/SocialClub/AchievementPoints/*
@@ -148,6 +148,8 @@
             {id: "3596238", name: "Lara Kwon"},
             {id: "3622990", name: "Arumi Watabe"},
             {id: "3623501", name: "Eriko Tanaka"},
+            {id: "3617507", name: "Mamoru Yamanaka"},
+            {id: "3622698", name: "Tsuseko Kasumi"},
         ],
         "7478": [
             {id: "3577905", name: "Kia Rivera"},

@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         ChatGPT: Highlight Current Chat (dark mode compatible)
+// @name         ChatGPT: Highlight Current Chat (oled/black dark mode)
 // @author       mekineer and Nova (GPT-5.2 Thinking)
 // @namespace    https://mekineer.com
-// @version      2.0
+// @version      2.01
 // @license      GPL-3.0-or-later
 // @description  Dark Reader compatible.  Outline the active chat in the sidebar history list.
 // @match        https://chatgpt.com/*
 // @match        https://chat.openai.com/*
 // @run-at       document-end
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/561105/ChatGPT%3A%20Highlight%20Current%20Chat%20%28dark%20mode%20compatible%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561105/ChatGPT%3A%20Highlight%20Current%20Chat%20%28dark%20mode%20compatible%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561105/ChatGPT%3A%20Highlight%20Current%20Chat%20%28oledblack%20dark%20mode%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561105/ChatGPT%3A%20Highlight%20Current%20Chat%20%28oledblack%20dark%20mode%29.meta.js
 // ==/UserScript==
 
 (() => {

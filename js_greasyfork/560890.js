@@ -5,6 +5,7 @@
 // @description  Fix inaccessible images hosted on k00.mbimg.org. Automatically change k00 to n00 or custom value, or remove external URLs and change to internal links.
 // @author       XComhghall, Gemini
 
+// @match        https://bato.to/title/*/*
 // @match        https://bato.si/title/*/*
 // @match        https://bato.ing/title/*/*
 

@@ -277,7 +277,13 @@
         const drawBuilds = (f = "") => {
             bList.innerHTML = "";
             allT4Builds.filter(b => b.name.toLowerCase().includes(f.toLowerCase()) || b.cat.toLowerCase().includes(f.toLowerCase())).forEach(b => {
-                const card = document.createElement('div'); card.className = 'build-card'; card.innerHTML = `<div class="build-card-name">${b.name.toUpperCase()}</div><div class="build-card-desc" style="font-size:9px;">${b.desc}</div>`;
+                const card = document.createElement('div'); card.className = 'build-card'; 
+                // ADDED STATS DISPLAY HERE
+                card.innerHTML = `
+                    <div class="build-card-name">${b.name.toUpperCase()}</div>
+                    <div style="font-size:10px; color:#aaa; font-weight:bold; letter-spacing:1px;">[${b.stats.join('/')}]</div>
+                    <div class="build-card-desc" style="font-size:9px; color:#666;">${b.desc}</div>
+                `;
                 card.onclick = () => { if(window.input?.execute) { window.input.execute("game_stats_build " + generateSmartCode(b.stats, b.type)); lastBuild = b.name; updateVisuals(); } };
                 bList.appendChild(card);
             });

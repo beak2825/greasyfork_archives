@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         TornW3B Trading Companion BETA
-// @namespace    http://tampermonkey.net/
-// @version      2.0
+// @namespace    https://weav3r.dev/
+// @version      2.12
 // @description  Calculates the total value of items in a trade on Torn.com.
+// @author       Weav3r
 // @match        https://www.torn.com/*
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -289,7 +290,13 @@
     };
 
     const isTradePage = location.pathname.startsWith('/trade.php');
-    const checkIsMobile = () => window.innerWidth <= 784;
+    const checkIsMobile = () => {
+        const ua = navigator.userAgent.toLowerCase();
+        const mobilePatterns = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i;
+        if (mobilePatterns.test(ua)) return true;
+
+        return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    };
     let isMobile = checkIsMobile();
 
     if (isTradePage) {
@@ -334,7 +341,7 @@ a:hover {color:var(--text)}
 .items-table td {background:var(--bg-darker);border-bottom:1px solid var(--border);padding:8px 12px !important;text-align:center;color:var(--text-muted);font-family:'Segoe UI',sans-serif;transition:background .2s;vertical-align:middle}
 .items-table tbody tr:last-child td {border-bottom:none}
 .items-table tbody tr:hover td {background:var(--bg-light)}
-.price-editable {cursor:pointer;position:relative;padding-right:24px;transition:background .2s}
+.price-editable {cursor:pointer;position:relative;padding-right:24px;transition:background .2s;touch-action:manipulation}
 .price-editable:hover {background:rgba(59,130,246,0.1)}
 .price-editable::after {content:'✎';position:absolute;right:8px;top:50%;transform:translateY(-50%);opacity:0;transition:opacity .2s;font-size:13px;color:#4a9eff}
 .price-editable:hover::after {opacity:.8}
@@ -350,9 +357,9 @@ a:hover {color:var(--text)}
 .receipt-url-copy {margin-bottom:12px;padding:14px;background:var(--bg-darker);border-radius:6px;border:1px solid var(--border)}
 .url-display {display:flex;align-items:center;justify-content:space-between;gap:12px}
 .url-text {color:var(--text-muted);font:12px 'Courier New',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
-.items-table input[type="text"] {background:var(--bg-med);border:2px solid #4a9eff;color:var(--text);border-radius:4px;font:14px 'Segoe UI',sans-serif;width:100%;padding:8px;box-shadow:0 0 0 3px rgba(74,158,255,0.1);outline:none;text-align:center}
+.items-table input[type="text"] {background:var(--bg-med);border:2px solid #4a9eff;color:var(--text);border-radius:4px;font:14px 'Segoe UI',sans-serif;width:100%;padding:8px;box-shadow:0 0 0 3px rgba(74,158,255,0.1);outline:none;text-align:center;touch-action:manipulation}
 .items-table input[type="text"]:focus {border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.2)}
-.editable-input {width:100px;padding:6px;text-align:center;font-size:15px}
+.editable-input {width:100px;padding:6px;text-align:center;font-size:15px;touch-action:manipulation}
 .copy-url-button,.view-edit-receipt-button {background:linear-gradient(145deg,var(--bg-light),var(--bg-lighter));border:1px solid var(--border);border-radius:6px;cursor:pointer;font-weight:600;transition:var(--transition)}
 .copy-url-button:hover,.view-edit-receipt-button:hover {background:linear-gradient(145deg,var(--bg-lighter),var(--bg-light));transform:translateY(-1px)}
 @media (max-width:784px) {.editable-input {width:80px;font-size:14px}}
@@ -385,14 +392,17 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 .stripe-container .button-icon {display:inline-block !important;width:18px !important;height:18px !important;vertical-align:middle !important}
 .stripe-container .button-text {display:none !important}
 .copy-url-button,.view-edit-receipt-button {width:auto;padding:10px 16px;touch-action:manipulation;font-size:13px}
-.receipt-modal {width:95%;max-width:95%;margin:10px;max-height:90vh}
-.modal-header {padding:14px 18px}
+.receipt-modal {width:90%;max-width:600px;margin:20px;max-height:80vh}
+.modal-header {padding:12px 16px}
 .modal-header h2 {font-size:1.1em}
 .close-modal {font-size:20px;padding:3px 8px}
-.modal-content {padding:16px}
-.items-table {font-size:13px}
-.items-table th {padding:10px 8px;font-size:13px}
-.items-table td {padding:8px 8px !important;font-size:13px}
+.modal-content {padding:14px}
+.items-table {font-size:12px}
+.items-table th {padding:9px 6px;font-size:11px;white-space:nowrap}
+.items-table td {padding:7px 4px !important;font-size:12px}
+.items-table th:first-child,.items-table td:first-child {display:none}
+.items-table td:nth-child(2) {font-size:11px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item-image {max-width:35px;max-height:35px}
 .url-display {flex-direction:row;gap:8px;flex-wrap:wrap}
 .url-text {font-size:11px}
 .completed-trade{flex-wrap:wrap !important;padding:8px !important;gap:8px}
@@ -412,14 +422,21 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 .stripe-container>.value-container>.receipt-url-container,.stripe-container .receipt-url-container {order:-1 !important}
 .stripe-container>.accept-trade-button {order:0 !important}
 .stripe-container .button-icon {display:inline-block !important;width:16px !important;height:16px !important;vertical-align:middle !important}
-.receipt-modal {width:100%;max-width:100%;margin:5px;max-height:95vh}
-.modal-header {padding:12px 16px}
+.receipt-modal {width:92%;max-width:none;margin:15px;max-height:80vh}
+.modal-header {padding:10px 14px}
 .modal-header h2 {font-size:1em}
 .close-modal {font-size:18px;padding:2px 7px}
-.modal-content {padding:14px}
-.items-table {font-size:12px}
-.items-table th {padding:9px 6px;font-size:12px}
-.items-table td {padding:8px 6px !important;font-size:12px}
+.modal-content {padding:10px}
+.items-table {font-size:11px;table-layout:fixed}
+.items-table th {padding:8px 3px;font-size:10px;white-space:nowrap}
+.items-table td {padding:6px 3px !important;font-size:11px}
+.items-table th:first-child,.items-table td:first-child {display:none}
+.items-table td:nth-child(2) {font-size:10px;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.items-table th:nth-child(2) {width:35%}
+.items-table th:nth-child(3) {width:20%}
+.items-table th:nth-child(4) {width:22.5%}
+.items-table th:nth-child(5) {width:22.5%}
+.item-image {max-width:30px;max-height:30px}
 .save-changes-button {width:100%;margin:12px 0;touch-action:manipulation}
 .copy-url-button,.view-edit-receipt-button {width:auto;padding:10px 14px;touch-action:manipulation;font-size:12px}
 .url-display {flex-direction:row;gap:6px;flex-wrap:wrap}
@@ -449,10 +466,13 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 
     if (isTradePage) {
         if (!document.querySelector('meta[name="viewport"]')) {
-            const viewport = document.createElement('meta');
-            viewport.name = 'viewport';
-            viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
-            document.head.appendChild(viewport);
+            const head = document.head || document.getElementsByTagName('head')[0];
+            if (head) {
+                const viewport = document.createElement('meta');
+                viewport.name = 'viewport';
+                viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+                head.appendChild(viewport);
+            }
         }
     }
 
@@ -468,7 +488,8 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
     const storageKeys = {
         trade: (tradeID) => `trade_${tradeID}`,
         tradeState: (tradeID) => `trade_state_${tradeID}`,
-        TRADE_STATE_PREFIX: 'trade_state_'
+        TRADE_STATE_PREFIX: 'trade_state_',
+        lastProcessedEvent: 'last_processed_event_id'
     };
 
     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -604,25 +625,13 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
     };
 
     const addHandler = (elem, handler, preventDisabled = false) => {
-        elem._clickHandler = handler;
-        elem.addEventListener('click', handler);
-        if (isMobile) {
-            elem._touchHandler = (e) => {
-                if (!preventDisabled || !elem.disabled) {
-                    e.preventDefault();
-                    handler(e);
-                }
-            };
-            elem.addEventListener('touchend', elem._touchHandler, { passive: false });
-        }
+        elem._pointerHandler = handler;
+        elem.addEventListener('pointerdown', handler);
     };
 
     const removeHandler = (elem) => {
-        if (elem._clickHandler) {
-            elem.removeEventListener('click', elem._clickHandler);
-            if (isMobile && elem._touchHandler) {
-                elem.removeEventListener('touchend', elem._touchHandler);
-            }
+        if (elem._pointerHandler) {
+            elem.removeEventListener('pointerdown', elem._pointerHandler);
         }
     };
 
@@ -650,7 +659,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
     const getTradeID = () => getParam('ID');
     const getStep = () => getParam('step');
 
-    let lastProcessedEventID = null;
+    let lastProcessedEventID = GM_getValue(storageKeys.lastProcessedEvent, null);
     let tradePollingInterval = null;
     let timeRefreshInterval = null;
     let isFirstPoll = true;
@@ -1287,7 +1296,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
         }
 
         const descDiv = li.querySelector('.desc');
-        if (descDiv) {
+        if (descDiv && !li.querySelector('.completed-actions')) {
             descDiv.style.display = 'none';
             descDiv.style.visibility = 'hidden';
             descDiv.style.height = '0';
@@ -1319,7 +1328,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             if (message) {
                 const copyMsgBtn = el('button', {
                     classes: 'action-btn',
-                    html: `${SVG_ICONS.paste} Message`,
+                    html: `${SVG_ICONS.paste} Copy Msg`,
                     onClick: () => {
                         navigator.clipboard.writeText(message);
                         showMsg(copyMsgBtn, 'Copied!', 1000);
@@ -1331,7 +1340,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             if (userID) {
                 const chatBtn = el('button', {
                     classes: 'action-btn',
-                    html: `${SVG_ICONS.chat} Chat`,
+                    html: `${SVG_ICONS.chat} Open Chat`,
                     onClick: () => openChat(userID)
                 });
                 actionsDiv.appendChild(chatBtn);
@@ -1506,7 +1515,10 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             }
         }));
 
-        if (events.length > 0) lastProcessedEventID = events[0].ID;
+        if (events.length > 0) {
+            lastProcessedEventID = events[0].ID;
+            GM_setValue(storageKeys.lastProcessedEvent, lastProcessedEventID);
+        }
         if (isFirstPoll) isFirstPoll = false;
     };
 
@@ -1835,7 +1847,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             const itemId = item.id || item.itemId || '';
             const imageUrl = itemId ? `https://www.torn.com/images/items/${itemId}/medium.png` : '';
             const row = el('tr', {
-                html: `<td><img src="${imageUrl}" alt="Item" class="item-image"/></td><td>${item.name}</td><td>${item.quantity}</td><td>$${(item.priceUsed || 0).toLocaleString()}</td><td>$${(item.totalValue || 0).toLocaleString()}</td>`
+                html: `<td><img src="${imageUrl}" alt="Item" class="item-image"/></td><td>${item.name}</td><td>${(item.quantity || 0).toLocaleString()}</td><td>$${(item.priceUsed || 0).toLocaleString()}</td><td>$${(item.totalValue || 0).toLocaleString()}</td>`
             });
             row.dataset.itemId = itemId;
             tbody.appendChild(row);
@@ -1875,7 +1887,8 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
     const makeEditable = (table, saveBtn) => {
         table.querySelectorAll('tbody tr td:nth-child(4)').forEach(cell => {
             cell.classList.add('price-editable');
-            addHandler(cell, () => {
+
+            const activateEdit = (e) => {
                 if (cell.querySelector('input')) return;
 
                 const price = cell.textContent.replace(/[^0-9.]/g, '');
@@ -1887,22 +1900,11 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                 });
                 cell.textContent = '';
                 cell.appendChild(input);
-                input.focus();
 
-                input.select();
-
-                const formatInput = () => {
-                    const rawValue = input.value.replace(/[^0-9.]/g, '');
-                    const numValue = parseFloat(rawValue);
-                    if (!isNaN(numValue)) {
-                        const cursorPos = input.selectionStart;
-                        const oldLength = input.value.length;
-                        input.value = numValue.toLocaleString();
-                        const newLength = input.value.length;
-                        const diff = newLength - oldLength;
-                        input.setSelectionRange(cursorPos + diff, cursorPos + diff);
-                    }
-                };
+                setTimeout(() => {
+                    input.focus();
+                    input.select();
+                }, 10);
 
                 input.addEventListener('input', (e) => {
                     input.value = input.value.replace(/[^0-9.,]/g, '');
@@ -1918,9 +1920,23 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                         saveBtn.classList.remove('save-button-hidden');
                     }
                 };
-                input.addEventListener('blur', done, { passive: true });
+
+                input.addEventListener('blur', done);
                 input.addEventListener('keypress', (e) => e.key === 'Enter' && input.blur());
-            });
+
+                const handleOutsideClick = (e) => {
+                    if (!input.contains(e.target) && !cell.contains(e.target)) {
+                        input.blur();
+                        document.removeEventListener('pointerdown', handleOutsideClick);
+                    }
+                };
+
+                setTimeout(() => {
+                    document.addEventListener('pointerdown', handleOutsideClick);
+                }, 100);
+            };
+
+            cell.addEventListener('pointerdown', activateEdit);
         });
     };
 
@@ -2023,7 +2039,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
                         children: [
                             el('td', { children: [el('img', { attributes: { src: imageUrl, alt: 'Item' }, classes: 'item-image' })] }),
                             el('td', { text: item.name }),
-                            el('td', { text: item.quantity.toString() }),
+                            el('td', { text: (item.quantity || 0).toLocaleString() }),
                             el('td', { text: `$${(item.priceUsed || 0).toLocaleString()}`, classes: isEdited ? ['price-edited'] : [] }),
                             el('td', { text: `$${(item.totalValue || 0).toLocaleString()}` })
                         ]
@@ -2156,8 +2172,12 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             const button = el('button', {
                 classes: 'api-key-button',
                 text: hasKey ? 'Remove key' : 'Set API key',
-                onClick: async () => {
+                onClick: async (e) => {
+                    e.stopPropagation();
                     if (hasKey) {
+                        if (!confirm('Are you sure you want to remove your API key? This will stop real-time trade updates.')) {
+                            return;
+                        }
                         await apiKey.remove();
                         stopTradePolling();
                         updateButton();
@@ -2178,7 +2198,8 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
             const msgToggleBtn = el('button', {
                 classes: ['api-key-button', 'msg-toggle-button'],
                 text: includeMsg ? 'Including Message' : 'Excluding Message',
-                onClick: async () => {
+                onClick: async (e) => {
+                    e.stopPropagation();
                     const newValue = await includeMessageSetting.toggle();
                     msgToggleBtn.textContent = newValue ? 'Including Message' : 'Excluding Message';
                 }
@@ -2274,7 +2295,7 @@ body.dark-mode .msg.right-round button.api-key-button,body.dark-mode .title-blac
 
         if (!tc && isAddMoneyPage) tc = q('.init-trade.add-money.m-top10');
 
-        if (isAddMoneyPage && !q('.info-msg-cont')) {
+        if (isAddMoneyPage && !q('.r3210')) {
             (async () => {
                 let messageText = 'Add money to complete your side of the trade';
                 const tradeID = getTradeID();

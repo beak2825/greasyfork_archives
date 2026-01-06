@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Marumori Flip Buttons Auto Toggle
 // @namespace    https://marumori.io/
-// @version      1.0
+// @version      1.2
 // @description  Automatically toggles (once) to Flip Button Mode during Reviews and to input mode during Lessons
 // @match        https://marumori.io/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=marumori.io
@@ -14,76 +14,107 @@
 (function () {
     'use strict';
 
-    let lastPageType = null;
-    let applied = false;
-    let lastUrl = location.href;
-    let interval = null;
+    /* ---------------- ROUTER STATE ---------------- */
 
-    function getPageType() {
-        if (location.pathname.includes('/study-lists/review')) return 'review';
-        if (location.pathname.includes('/study-lists/lesson')) return 'lesson';
+    let activeController = null;
+    let lastUrl = location.href;
+
+    /* ---------------- GUARDS ---------------- */
+
+    function isGrammarPage(url = location.href) {
+        return url.toLowerCase().includes('grammar');
+    }
+
+    function getPageType(url = location.href) {
+        if (url.includes('/study-lists/review')) return 'review';
+        if (url.includes('/study-lists/lesson')) return 'lesson';
         return null;
     }
 
-    function desiredState(type) {
-        return type === 'review';
+    /* ---------------- CONTROLLER ---------------- */
+
+    function createFlipController(pageType) {
+        let applied = false;
+        let interval = null;
+        let observer = null;
+
+        function destroy() {
+            applied = false;
+            if (interval) clearInterval(interval);
+            if (observer) observer.disconnect();
+            interval = observer = null;
+        }
+
+        function desiredState() {
+            return pageType === 'review';
+        }
+
+        function tryApply() {
+            if (applied) return;
+
+            const settingsBtn = document.querySelector('button.icon-btn.settings.desktop');
+            if (!settingsBtn) return;
+
+            settingsBtn.click();
+
+            observer = new MutationObserver(() => {
+                const checkbox = document.getElementById('Flip-Buttons Mode');
+                if (!checkbox) return;
+
+                const wrapper = checkbox.closest('.checkbox-wrapper');
+                const toggleBtn = wrapper?.querySelector('button.checkmark');
+
+                if (toggleBtn && checkbox.checked !== desiredState()) {
+                    toggleBtn.click();
+                }
+
+                settingsBtn.click();
+                applied = true;
+                destroy();
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+        }
+
+        interval = setInterval(tryApply, 300);
+        tryApply();
+
+        return { destroy };
     }
 
-    function tryApplyFlipMode() {
-        if (applied) return;
+    /* ---------------- ROUTER ---------------- */
 
-        const type = getPageType();
+    function route(url) {
+        // 🔒 Absolute first check
+        if (isGrammarPage(url)) {
+            if (activeController) {
+                activeController.destroy();
+                activeController = null;
+            }
+            return;
+        }
+
+        const type = getPageType(url);
         if (!type) return;
 
-        const settingsBtn = document.querySelector('button.icon-btn.settings.desktop');
-        if (!settingsBtn) return; // lesson UI not mounted yet
+        if (activeController) {
+            activeController.destroy();
+            activeController = null;
+        }
 
-        settingsBtn.click();
-
-        const observer = new MutationObserver(() => {
-            const checkbox = document.getElementById('Flip-Buttons Mode');
-            if (!checkbox) return;
-
-            const wrapper = checkbox.closest('.checkbox-wrapper');
-            const toggleBtn = wrapper?.querySelector('button.checkmark');
-
-            if (toggleBtn && checkbox.checked !== desiredState(type)) {
-                toggleBtn.click();
-            }
-
-            settingsBtn.click(); // close menu
-            applied = true;
-
-            observer.disconnect();
-            clearInterval(interval);
-            interval = null;
-        });
-
-        observer.observe(document.body, { childList: true, subtree: true });
+        activeController = createFlipController(type);
     }
 
-    function resetAndStart() {
-        applied = false;
-        if (interval) clearInterval(interval);
+    /* ---------------- SPA URL WATCHER ---------------- */
 
-        interval = setInterval(tryApplyFlipMode, 300);
-        tryApplyFlipMode(); // immediate attempt
-    }
-
-    // SPA URL watcher
     setInterval(() => {
         if (location.href !== lastUrl) {
             lastUrl = location.href;
-
-            const type = getPageType();
-            if (type !== lastPageType) {
-                lastPageType = type;
-                resetAndStart();
-            }
+            route(lastUrl);
         }
     }, 300);
 
-    // Initial run
-    lastPageType = getPageType();
-    resetAndStart();
+    // Initial route
+    route(location.href);
+
 })();

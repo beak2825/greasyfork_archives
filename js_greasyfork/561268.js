@@ -39,47 +39,47 @@
 // @name:uk             Перекладач
 // @name:ug             تەرجىمان
 // @name:vi             Trình thông dịch
-// @description         Translate any selected text on web pages using Google Translate or LongCat AI.
-// @description:pt-BR   Traduza qualquer texto selecionado em páginas da web utilizando o Google Translate ou LongCat AI.
-// @description:zh-CN   使用 Google Translate 或 LongCat AI 翻译网页上的任意选定文本。
-// @description:zh-TW   使用 Google Translate 或 LongCat AI 翻譯網頁上的任意選定文本。
-// @description:fr-CA   Traduisez tout texte sélectionné sur des pages web à l'aide de Google Translate ou de LongCat AI.
-// @description:ckb     وەرگێڕانی هەر دەقێکی دیاریکراو لە لاپەڕەکانی وێب بە بەکارهێنانی Google Translate یان LongCat AI.
-// @description:ar      ترجمة أي نص محدد على صفحات الويب باستخدام Google Translate أو LongCat AI.
-// @description:be      Перакладайце любы выбраны тэкст на вэб-старонках з дапамогай Google Translate або LongCat AI.
-// @description:bg      Превеждайте всеки избран текст на уеб страници с помощта на Google Translate или LongCat AI.
-// @description:cs      Přeložte jakýkoli vybraný text na webových stránkách pomocí Google Translate nebo LongCat AI.
-// @description:da      Oversæt enhver valgt tekst på websider ved hjælp af Google Translate eller LongCat AI.
-// @description:de      Übersetzen Sie jeden ausgewählten Text auf Webseiten mit Google Translate oder LongCat AI.
-// @description:el      Μεταφράστε οποιοδήποτε επιλεγμένο κείμενο σε ιστοσελίδες χρησιμοποιώντας το Google Translate ή το LongCat AI.
-// @description:en      Translate any selected text on web pages using Google Translate or LongCat AI.
-// @description:eo      Traduku iun ajn elektitan tekston en retpaĝoj per Google Translate aŭ LongCat AI.
-// @description:es      Traduzca cualquier texto seleccionado en páginas web utilizando Google Translate o LongCat AI.
-// @description:fi      Käännä mikä tahansa valittu teksti verkkosivuilla Google Translaten tai LongCat AI:n avulla.
-// @description:fr      Traduisez tout texte sélectionné sur des pages web à l'aide de Google Translate ou de LongCat AI.
-// @description:he      תרגם כל טקסט שנבחר בדפי אינטרנט באמצעות Google Translate או LongCat AI.
-// @description:hr      Prevedite bilo koji odabrani tekst na web stranicama koristeći Google Translate ili LongCat AI.
-// @description:hu      Bármely kijelölt szöveg lefordítása weboldalakon a Google Translate vagy a LongCat AI segítségével.
-// @description:id      Terjemahkan teks terpilih di halaman web menggunakan Google Translate atau LongCat AI.
-// @description:it      Traduci qualsiasi testo selezionato sulle pagine web utilizzando Google Translate o LongCat AI.
-// @description:ja      Google 翻訳または LongCat AI を使用して、ウェブページ上の任意の選択テキストを翻訳します。
-// @description:ka      თარგმნეთ ნებისმიერი არჩეული ტექსტი ვებ-გვერდებზე Google Translate-ის ან LongCat AI-ის გამოყენებით.
-// @description:ko      Google Translate 또는 LongCat AI를 사용하여 웹 페이지의 선택된 텍스트를 번역합니다.
-// @description:mr      Google Translate किंवा LongCat AI वापरून वेब पृष्ठांवरील कोणताही निवडलेला मजकूर अनुवादित करा.
-// @description:nb      Oversett enhver valgt tekst på nettsider ved hjelp av Google Translate eller LongCat AI.
-// @description:nl      Vertaal elke geselecteerde tekst op webpagina's met behulp van Google Translate of LongCat AI.
-// @description:pl      Tłumacz dowolny zaznaczony tekst na stronach internetowych za pomocą Google Translate lub LongCat AI.
-// @description:ro      Traduceți orice text selectat de pe paginile web folosind Google Translate sau LongCat AI.
-// @description:ru      Переводите любой выбранный текст на веб-страницах с помощью Google Translate или LongCat AI.
-// @description:sk      Preložte akýkoľvek vybraný text na webových stránkach pomocou Google Translate alebo LongCat AI.
-// @description:sr      Преведите било који изабрани текст на веб страницама користећи Google Translate или LongCat AI.
-// @description:sv      Översätt valfri markerad text på webbsidor med Google Translate eller LongCat AI.
-// @description:th      แปลข้อความที่เลือกบนหน้าเว็บโดยใช้ Google Translate หรือ LongCat AI
-// @description:tr      Web sayfalarındaki herhangi bir seçili metni Google Translate veya LongCat AI kullanarak çevirin.
-// @description:uk      Перекладайте будь-який вибраний текст на веб-сторінках за допомогою Google Translate або LongCat AI.
-// @description:ug      Google Translate ياكى LongCat AI ئىشلىتىپ تور بەتتىكى تاللانغان تېكىستلەرنى تەرجىمە قىلىڭ.
-// @description:vi      Dịch bất kỳ văn bản được chọn nào trên các trang web bằng Google Translate hoặc LongCat AI.
-// @version             1.0
+// @description         Translate and replace your typing in real-time. Features a practical basic mode for daily use and an AI mode for complex texts with a human touch, working directly in text boxes across the web.
+// @description:pt-BR   Traduza e substitua o que você digita em tempo real. Oferece um modo básico prático para o dia a dia e um modo IA para textos complexos com toque humano, funcionando diretamente em caixas de texto por toda a web.
+// @description:zh-CN   实时翻译并替换您输入的内容。提供适用于日常使用的实用基础模式，以及用于复杂文本且具有人性化触感的人工智能模式，直接在全网文本框中运行。
+// @description:zh-TW   即時翻譯並替換您輸入的內容。提供適用於日常使用的實用基礎模式，以及用於複雜文本且具有人性化觸感的人工智慧模式，直接在全網文字框中運行。
+// @description:fr-CA   Traduisez et remplacez votre saisie en temps réel. Offre un mode de base pratique pour le quotidien et un mode IA pour les textes complexes avec une touche humaine, fonctionnant directement dans les zones de texte sur le Web.
+// @description:ckb     وەرگێڕان و گۆڕینی ئەوەی دەینووسیت لە کاتی ڕاستەقینەدا. مۆدێکی بنەڕەتی پراکتیکی بۆ ژیانی ڕۆژانە و مۆدێکی زیرەکی دەستکرد بۆ دەقە ئاڵۆزەکان بە دەستکاری مرۆییەوە دابین دەکات، ڕاستەوخۆ لەناو سندووقە دەقەکاندا لە تەواوی وێب کاردەکات.
+// @description:ar      ترجمة واستبدال ما تكتبه في الوقت الفعلي. يقدم وضعًا أساسيًا عمليًا للاستخدام اليومي ووضع ذكاء اصطناعي للنصوص المعقدة بلمسة بشرية، ويعمل مباشرة في صناديق النصوص عبر الويب.
+// @description:be      Перакладайце і замяняйце тое, што вы ўводзіце, у рэжыме рэальнага часу. Прапануе практычны базавы рэжым для паўсядзённага выкарыстання і рэжым ІІ для складаных тэкстаў з чалавечым адценнем, працуючы непасрэдна ў тэкставых полях па ўсім інтэрнэце.
+// @description:bg      Превеждайте и заменяйте това, което пишете в реално време. Предлага практичен основен режим за ежедневието и ИИ режим за сложни текстове с човешко докосване, работещ директно в текстови полета в цялата мрежа.
+// @description:cs      Překládejte a nahrazujte to, co píšete, v reálném čase. Nabízí praktický základní režim pro každodenní použití a režim AI pro komplexní texty s lidským přístupem, fungující přímo v textových polích na celém webu.
+// @description:da      Oversæt og erstat det, du skriver, i realtid. Tilbyder en praktisk basistilstand til hverdag og en AI-tilstand til komplekse tekster med et menneskeligt præg, der fungerer direkte i tekstfelter over hele nettet.
+// @description:de      Übersetzen und ersetzen Sie das, was Sie schreiben, in Echtzeit. Bietet einen praktischen Basismodus für den Alltag und einen KI-Modus für komplexe Texte mit menschlicher Note, der direkt in Textfeldern im gesamten Web funktioniert.
+// @description:el      Μεταφράστε και αντικαταστήστε ό,τι πληκτρολογείτε σε πραγματικό χρόνο. Προσφέρει μια πρακτική βασική λειτουργία για την καθημερινότητα και μια λειτουργία AI για σύνθετα κείμενα με ανθρώπινη αίσθηση, λειτουργώντας απευθείας σε πεδία κειμένου σε όλο τον ιστό.
+// @description:en      Translate and replace your typing in real-time. Features a practical basic mode for daily use and an AI mode for complex texts with a human touch, working directly in text boxes across the web.
+// @description:eo      Traduku και anstataŭigu tion, kion vi tajpas en reala tempo. Oferas praktikan bazan modon por via ĉiutaga vivo kaj AI-modon por kompleksaj tekstoj kun homa nuanco, funkciante rekte en tekstujoj tra la tuta reto.
+// @description:es      Traduce y reemplaza lo que escribes en tiempo real. Ofrece un modo básico práctico para el día a día y un modo IA para textos complejos con un toque humano, funcionando directamente en cuadros de texto en toda la web.
+// @description:fi      Käännä ja korvaa kirjoittamasi teksti reaaliajassa. Tarjoaa käytännöllisen perustilan arkikäyttöön ja tekoälytilan monimutkaisille teksteille inhimillisellä vivahteella, toimien suoraan tekstikentissä kaikkialla verkossa.
+// @description:fr      Traduisez et remplacez votre saisie en temps réel. Offre un mode de base pratique pour le quotidien et un mode IA pour les textes complexes avec une touche humaine, fonctionnant directement dans les zones de texte sur le Web.
+// @description:he      תרגם והחלף את מה שאתה מקליד בזמן אמת. מציע מצב בסיסי מעשי ליומיום ומצב בינה מלאכותית לטקסטים מורכבים עם מגע אנושי, הפועל ישירות בתיבות טקסט ברחבי הרשת.
+// @description:hr      Prevedite i zamijenite ono što upisujete u stvarnom vremenu. Nudi praktičan osnovni način rada za svakodnevicu i AI način rada za složene tekstove s ljudskim dodirom, radeći izravno u tekstualnim okvirima diljem weba.
+// @description:hu      Fordítsa le és cserélje ki gépelését valós időben. Praktikus alapmódot kínál a mindennapokhoz és egy MI-módot a bonyolult szövegekhez emberi érintéssel, közvetlenül a weboldalak szövegmezőiben működik.
+// @description:id      Terjemahkan dan ganti apa yang Anda ketik secara real-time. Menawarkan mode dasar praktis untuk penggunaan sehari-hari dan mode AI untuk teks kompleks dengan sentuhan manusia, bekerja langsung di kotak teks di seluruh web.
+// @description:it      Traduci e sostituisci quello che digiti in tempo reale. Offre una modalità base pratica per l'uso quotidiano e una modalità IA per testi complessi con un tocco umano, funzionando direttamente nelle caselle di testo su tutto il web.
+// @description:ja      入力した内容をリアルタイムで翻訳して置換します。日常使いに便利な基本モードと、複雑な文章に対応する人間味のあるAIモードを提供し、ウェブ上のあらゆるテキストボックスで直接動作します。
+// @description:ka      თარგმნეთ და შეცვალეთ რასაც წერთ რეალურ დროში. გთავაზობთ პრაქტიკულ საბაზისო რეჟიმს ყოველდღიურობისთვის და AI რეჟიმს რთული ტექსტებისთვის ადამიანური შეხებით, რომელიც მუშაობს პირდაპირ ტექსტურ ველებში მთელ ინტერნეტში.
+// @description:ko      입력하는 내용을 실시간으로 번역하고 교체합니다. 일상적인 사용을 위한 실용적인 기본 모드와 인간적인 터치가 가미된 복잡한 텍스트용 AI 모드를 제공하며, 웹 전체의 텍스트 상자에서 직접 작동합니다.
+// @description:mr      तुम्ही जे टाइप करता ते रिअल-टाइममध्ये भाषांतरित करा आणि बदला. दैनंदिन वापरासाठी एक व्यावहारिक मूलभूत मोड आणि मानवी स्पर्शासह जटिल मजकुरासाठी एक AI मोड ऑफर करतो, जो संपूर्ण वेबवरील टेक्स्ट बॉक्समध्ये थेट काम करतो.
+// @description:nb      Oversett og erstatt det du skriver i sanntid. Tilbyr en praktisk basismodus for hverdagen og en AI-modus for komplekse tekster med et menneskelig preg, som fungerer direkte i tekstfelt over hele nettet.
+// @description:nl      Vertaal en vervang wat u typt in realtime. Biedt een praktische basismodus voor dagelijks gebruik en een AI-modus voor complexe teksten met een menselijke nuance, die rechtstreeks in tekstvakken op het hele web werkt.
+// @description:pl      Tłumacz i zastępuj to, co piszesz w czasie rzeczywistym. Oferuje praktyczny tryb podstawowy do codziennego użytku oraz tryb AI do złożonych tekstów z ludzkim akcentem, działający bezpośrednio w polach tekstowych w całej sieci.
+// @description:ro      Traduceți și înlocuiți ceea ce tastați în timp real. Oferă un mod de bază practic pentru viața de zi cu zi și un mod AI pentru texte complexe cu o notă umană, funcționând direct în casetele de tekst de pe întregul web.
+// @description:ru      Переводите и заменяйте набираемый текст в режиме реального времени. Предлагает практичный базовый режим для повседневного использования и режим ИИ для сложных текстов с человеческим оттенком, работающий непосредственно в текстовых полях на всех сайтах.
+// @description:sk      Prekladajte a nahrádzajte to, čo píšete, v reálnom čase. Ponúka praktický základný režim pre každodenný život a režim AI pre komplexné texty s ľudským prístupom, fungujúci priamo v textových poliach po celom webe.
+// @description:sr      Prevedite i zamenite ono što kucate u realnom vremenu. Nudi praktičan osnovni režim za svakodnevnu upotrebu i AI režim za složene tekstove sa ljudskim dodirom, radeći direktno u poljima za tekst širom veba.
+// @description:sv      Översätt och ersätt det du skriver i realtid. Erbjuder ett praktiskt basläge för vardagen och ett AI-läge för komplexa texter med en mänsklig touch, som fungerar direkt i textfält över hela webben.
+// @description:th      แปลและแทนที่สิ่งที่คุณพิมพ์แบบเรียลไทม์ นำเสนอโหมดพื้นฐานที่ใช้งานได้จริงสำหรับชีวิตประจำวันและโหมด AI สำหรับข้อความที่ซับซ้อนพร้อมสัมผัสของมนุษย์ โดยทำงานโดยตรงในช่องข้อความทั่วทั้งเว็บ
+// @description:tr      Yazdıklarınızı gerçek zamanlı olarak çevirin ve değiştirin. Günlük kullanım için pratik bir temel mod ve insan dokunuşuyla karmaşık metinler için bir yapay zeka modu sunar, doğrudan web genelindeki metin kutularında çalışır.
+// @description:uk      Перекладайте та замінюйте те, що ви вводите, у режимі реального часу. Пропонує практичний базовий режим для повсякденного використання та режим ШІ для складних текстів з людським відтінком, що працює безпосередньо в текстових полях на всіх сайтах.
+// @description:ug      يازغانلىرىڭىزنى دەل ۋاقتىدا تەرجىمە قىلىدۇ ۋە ئالماشتۇرىدۇ. كۈندىلىك تۇرمۇشقا ماس كېلىدىغان قوللىنىشچان ئاساسىي مودېل ۋە ئادەم تېگىش قىلىنغان مۇرەككەپ تېكىستلەر ئۈچۈن سۈنئىي ئىدراك مودېلى بىلەن تەمىنلەيدۇ، پۈتۈن تور ئارا تېكىست رامكىلىرىدا بىۋاسىتە ئىشلەيدۇ.
+// @description:vi      Dịch và thay thế những gì bạn nhập trong thời gian thực. Cung cấp chế độ cơ bản thực tế cho cuộc sống hàng ngày và chế độ AI cho các văn bản phức tạp với nét chạm của con người, hoạt động trực tiếp trong các khung văn bản trên toàn nền tảng web.
+// @version             1.1
 // @author              OHAS
 // @license             CC-BY-NC-ND-4.0
 // @copyright           2026 OHAS. All Rights Reserved.
@@ -112,9 +112,9 @@
 
 (function() {
     'use strict';
-    /*eslin-disable*/
+    /*eslint-disable*/
     // --- NOTIFICAÇÃO ---
-    const SCRIPT_CONFIG = {notificationsUrl: 'https://gist.github.com/0H4S/d133ce7b86ab1815acf1bb149ce2f059', scriptVersion: '1.0',};
+    const SCRIPT_CONFIG = {notificationsUrl: 'https://gist.github.com/0H4S/d133ce7b86ab1815acf1bb149ce2f059', scriptVersion: '1.1',};
     const notifier = new ScriptNotifier(SCRIPT_CONFIG);
     notifier.run();
     // #region INTERNACIONALIZAÇÃO E CONFIGURAÇÕES
@@ -125,13 +125,19 @@
             lbl_search:         "Buscar idioma...",
             lbl_mode:           "Motor de Tradução",
             lbl_key:            "Chave API (LongCat)",
+            lbl_hotkey:         "Tecla de Atalho (Clique e aperte)",
+            lbl_shortcuts_list: "Atalhos Definidos",
             btn_save:           "Salvar",
             btn_cancel:         "Cancelar",
+            btn_add:            "Adicionar",
             toast_saved:        "Configurações salvas com sucesso!",
             toast_sel:          "Selecione um texto primeiro",
             toast_translating:  "Traduzindo...",
             toast_done:         "Tradução concluída",
             toast_no_key:       "Configure a API Key",
+            tab_general:        "Geral",
+            tab_shortcuts:      "Atalhos Avançados",
+            ph_hotkey:          "Ex: Alt+S",
             menu_translate:     "🌐 Traduzir",
             menu_config:        "⚙️ Configurações"
         },
@@ -140,13 +146,19 @@
             lbl_search:         "Search language...",
             lbl_mode:           "Translation Engine",
             lbl_key:            "API Key (LongCat)",
+            lbl_hotkey:         "Hotkey (Click and press)",
+            lbl_shortcuts_list: "Defined Shortcuts",
             btn_save:           "Save",
             btn_cancel:         "Cancel",
+            btn_add:            "Add",
             toast_saved:        "Settings saved successfully!",
             toast_sel:          "Please select text first",
             toast_translating:  "Translating...",
             toast_done:         "Translation complete",
             toast_no_key:       "API Key required",
+            tab_general:        "General",
+            tab_shortcuts:      "Advanced Shortcuts",
+            ph_hotkey:          "Ex: Alt+S",
             menu_translate:     "🌐 Translate",
             menu_config:        "⚙️ Settings"
         },
@@ -155,13 +167,19 @@
             lbl_search:         "搜索语言...",
             lbl_mode:           "翻译引擎",
             lbl_key:            "API 密钥 (LongCat)",
+            lbl_hotkey:         "热键 (点击并按键)",
+            lbl_shortcuts_list: "已定义快捷键",
             btn_save:           "保存",
             btn_cancel:         "取消",
+            btn_add:            "添加",
             toast_saved:        "设置已保存！",
             toast_sel:          "请先选择文本",
             toast_translating:  "翻译中...",
             toast_done:         "翻译完成",
             toast_no_key:       "需要 API 密钥",
+            tab_general:        "常规",
+            tab_shortcuts:      "高级快捷键",
+            ph_hotkey:          "例如: Alt+S",
             menu_translate:     "🌐 翻译",
             menu_config:        "⚙️ 设置"
         },
@@ -170,13 +188,19 @@
             lbl_search:         "言語を検索...",
             lbl_mode:           "翻訳エンジン",
             lbl_key:            "APIキー (LongCat)",
+            lbl_hotkey:         "ホットキー (クリックして入力)",
+            lbl_shortcuts_list: "定義済みショートカット",
             btn_save:           "保存",
             btn_cancel:         "キャンセル",
+            btn_add:            "追加",
             toast_saved:        "設定を保存しました！",
             toast_sel:          "最初にテキストを選択してください",
             toast_translating:  "翻訳中...",
             toast_done:         "翻訳が完了しました",
             toast_no_key:       "APIキーが必要です",
+            tab_general:        "全般",
+            tab_shortcuts:      "高度なショートカット",
+            ph_hotkey:          "例: Alt+S",
             menu_translate:     "🌐 翻訳",
             menu_config:        "⚙️ 設定"
         },
@@ -185,13 +209,19 @@
             lbl_search:         "언어 검색...",
             lbl_mode:           "번역 엔진",
             lbl_key:            "API 키 (LongCat)",
+            lbl_hotkey:         "단축키 (클릭 후 입력)",
+            lbl_shortcuts_list: "정의된 단축키",
             btn_save:           "저장",
             btn_cancel:         "취소",
+            btn_add:            "추가",
             toast_saved:        "설정이 성공적으로 저장되었습니다!",
             toast_sel:          "먼저 텍스트를 선택하세요",
             toast_translating:  "번역 중...",
             toast_done:         "번역 완료",
             toast_no_key:       "API 키가 필요합니다",
+            tab_general:        "일반",
+            tab_shortcuts:      "고급 단축키",
+            ph_hotkey:          "예: Alt+S",
             menu_translate:     "🌐 번역",
             menu_config:        "⚙️ 설정"
         },
@@ -200,13 +230,19 @@
             lbl_search:         "Поиск языка...",
             lbl_mode:           "Система перевода",
             lbl_key:            "Ключ API (LongCat)",
+            lbl_hotkey:         "Горячая клавиша (Нажмите здесь)",
+            lbl_shortcuts_list: "Определенные ярлыки",
             btn_save:           "Сохранить",
             btn_cancel:         "Отмена",
+            btn_add:            "Добавить",
             toast_saved:        "Настройки успешно сохранены!",
             toast_sel:          "Сначала выделите текст",
             toast_translating:  "Перевод...",
             toast_done:         "Перевод завершен",
             toast_no_key:       "Требуется ключ API",
+            tab_general:        "Общие",
+            tab_shortcuts:      "Расширенные ярлыки",
+            ph_hotkey:          "Пример: Alt+S",
             menu_translate:     "🌐 Перевести",
             menu_config:        "⚙️ Настройки"
         },
@@ -215,13 +251,19 @@
             lbl_search:         "Rechercher une langue...",
             lbl_mode:           "Moteur de traduction",
             lbl_key:            "Clé API (LongCat)",
+            lbl_hotkey:         "Raccourci (Cliquez et appuyez)",
+            lbl_shortcuts_list: "Raccourcis Définis",
             btn_save:           "Enregistrer",
             btn_cancel:         "Annuler",
+            btn_add:            "Ajouter",
             toast_saved:        "Paramètres enregistrés avec succès !",
             toast_sel:          "Veuillez d'abord sélectionner du texte",
             toast_translating:  "Traduction en cours...",
             toast_done:         "Traduction terminée",
             toast_no_key:       "Clé API requise",
+            tab_general:        "Général",
+            tab_shortcuts:      "Raccourcis Avancés",
+            ph_hotkey:          "Ex: Alt+S",
             menu_translate:     "🌐 Traduire",
             menu_config:        "⚙️ Paramètres"
         },
@@ -230,13 +272,19 @@
             lbl_search:         "Sprache suchen...",
             lbl_mode:           "Übersetzungs-Engine",
             lbl_key:            "API-Schlüssel (LongCat)",
+            lbl_hotkey:         "Hotkey (Klicken und drücken)",
+            lbl_shortcuts_list: "Definierte Tastenkombinationen",
             btn_save:           "Speichern",
             btn_cancel:         "Abbrechen",
+            btn_add:            "Hinzufügen",
             toast_saved:        "Einstellungen erfolgreich gespeichert!",
             toast_sel:          "Bitte wählen Sie zuerst einen Text aus",
             toast_translating:  "Übersetzung läuft...",
             toast_done:         "Übersetzung abgeschlossen",
             toast_no_key:       "API-Schlüssel erforderlich",
+            tab_general:        "Allgemein",
+            tab_shortcuts:      "Erweiterte Tastenkombinationen",
+            ph_hotkey:          "Beispiel: Alt+S",
             menu_translate:     "🌐 Übersetzen",
             menu_config:        "⚙️ Einstellungen"
         },
@@ -245,13 +293,19 @@
             lbl_search:         "Buscar idioma...",
             lbl_mode:           "Motor de traducción",
             lbl_key:            "Clave API (LongCat)",
+            lbl_hotkey:         "Tecla de Atajo (Clic y presione)",
+            lbl_shortcuts_list: "Atajos Definidos",
             btn_save:           "Guardar",
             btn_cancel:         "Cancelar",
+            btn_add:            "Añadir",
             toast_saved:        "¡Ajustes guardados correctamente!",
             toast_sel:          "Por favor, selecciona un texto primero",
             toast_translating:  "Traduciendo...",
             toast_done:         "Traducción completada",
             toast_no_key:       "Clave API requerida",
+            tab_general:        "General",
+            tab_shortcuts:      "Atajos Avanzados",
+            ph_hotkey:          "Ej: Alt+S",
             menu_translate:     "🌐 Traducir",
             menu_config:        "⚙️ Configuración"
         },
@@ -260,13 +314,19 @@
             lbl_search:         "البحث عن لغة...",
             lbl_mode:           "محرك الترجمة",
             lbl_key:            "مفتاح API (LongCat)",
+            lbl_hotkey:         "مفتاح الاختصار (انقر واضغط)",
+            lbl_shortcuts_list: "الاختصارات المحددة",
             btn_save:           "حفظ",
             btn_cancel:         "إلغاء",
+            btn_add:            "إضافة",
             toast_saved:        "تم حفظ الإعدادات بنجاح!",
             toast_sel:          "يرجى تحديد النص أولاً",
             toast_translating:  "جاري الترجمة...",
             toast_done:         "اكتملت الترجمة",
             toast_no_key:       "مفتاح API مطلوب",
+            tab_general:        "عام",
+            tab_shortcuts:      "اختصارات متقدمة",
+            ph_hotkey:          "مثال: Alt+S",
             menu_translate:     "🌐 ترجمة",
             menu_config:        "⚙️ الإعدادات"
         },
@@ -275,13 +335,19 @@
             lbl_search:         "भाषा खोजें...",
             lbl_mode:           "अनुवाद इंजन",
             lbl_key:            "API कुंजी (LongCat)",
+            lbl_hotkey:         "हॉटकी (क्लिक करें और दबाएं)",
+            lbl_shortcuts_list: "परिभाषित शॉर्टकट",
             btn_save:           "सहेजें",
             btn_cancel:         "रद्द करें",
+            btn_add:            "जोड़ें",
             toast_saved:        "सेटिंग्स सफलतापूर्वक सहेजी गईं!",
             toast_sel:          "कृपया पहले टेक्स्ट चुनें",
             toast_translating:  "अनुवाद हो रहा है...",
             toast_done:         "अनुवाद पूरा हुआ",
             toast_no_key:       "API कुंजी आवश्यक है",
+            tab_general:        "सामान्य",
+            tab_shortcuts:      "उन्नत शॉर्टकट",
+            ph_hotkey:          "उदा: Alt+S",
             menu_translate:     "🌐 अनुवाद करें",
             menu_config:        "⚙️ सेटिंग्स"
         },
@@ -290,13 +356,19 @@
             lbl_search:         "Cerca lingua...",
             lbl_mode:           "Motore di traduzione",
             lbl_key:            "Chiave API (LongCat)",
+            lbl_hotkey:         "Tasto Scelta Rapida (Clicca e premi)",
+            lbl_shortcuts_list: "Scorciatoie Definite",
             btn_save:           "Salva",
             btn_cancel:         "Annulla",
+            btn_add:            "Aggiungi",
             toast_saved:        "Impostazioni salvate con successo!",
             toast_sel:          "Seleziona prima il testo",
             toast_translating:  "Traduzione in corso...",
             toast_done:         "Traduzione completata",
             toast_no_key:       "Chiave API richiesta",
+            tab_general:        "Generale",
+            tab_shortcuts:      "Scorciatoie Avanzate",
+            ph_hotkey:          "Es: Alt+S",
             menu_translate:     "🌐 Traduci",
             menu_config:        "⚙️ Impostazioni"
         },
@@ -561,7 +633,8 @@
         return {
             mode: GM_getValue('CFG_MODE', 'GOOGLE'),
             targetLang: GM_getValue('CFG_LANG', navigator.language.split('-')[0]),
-            keysString: GM_getValue("LONGCAT_KEYS_ARRAY", []).join(', ')
+            keysString: GM_getValue("LONGCAT_KEYS_ARRAY", []).join(', '),
+            shortcuts: GM_getValue('CFG_SHORTCUTS', [])
         };
     }
 
@@ -571,6 +644,7 @@
         GM_setValue('CFG_LANG', config.targetLang);
         const cleanKeys = config.keysString.split(',').map(k => k.trim()).filter(k => k.length > 5);
         GM_setValue("LONGCAT_KEYS_ARRAY", cleanKeys);
+        GM_setValue('CFG_SHORTCUTS', config.shortcuts || []);
     }
 
     // --- FUNÇÃO PARA PEGAR UMA KEY ALEATÓRIA ---
@@ -607,7 +681,16 @@
         const data = {
             model: "LongCat-Flash-Chat",
             messages: [
-                { role: "system", content: `Translate to ${langName}. Return ONLY the translated text. Maintain formatting.` },
+                { role: "system", content: `
+                    Act as a professional native translator for ${langName}.
+                    Translate the provided text ensuring it sounds natural, idiomatic, and culturally appropriate for a native speaker.
+
+                    Strict Rules:
+                    1. Maintain the original tone and intent (e.g., formal, technical, or persuasive).
+                    2. Keep the exact same formatting, including line breaks, markdown, and special characters.
+                    3. Use localized terminology instead of literal translations.
+                    4. Return ONLY the translated text. Do not include explanations, notes, or introductory remarks.`
+                },
                 { role: "user", content: text }
             ],
             temperature: 0.1
@@ -641,8 +724,8 @@
             this.policy = null;
             if (window.trustedTypes && window.trustedTypes.createPolicy) {
                 try {
-                    this.policy = window.trustedTypes.createPolicy('ohas-tradutor-policy-' + Math.random().toString(36).substring(7), { 
-                        createHTML: input => input 
+                    this.policy = window.trustedTypes.createPolicy('ohas-tradutor-policy-' + Math.random().toString(36).substring(7), {
+                        createHTML: input => input
                     });
                 } catch(e) {}
             }
@@ -695,6 +778,7 @@
                     --radius: 12px;
                     --toast-bg: #2d3748;
                     --toast-text: #fff;
+                    --danger: #e53e3e;
                 }
 
                 @media (prefers-color-scheme: dark) {
@@ -749,23 +833,66 @@
                 .modal-box {
                     background: var(--bg) !important;
                     color: var(--text) !important;
-                    padding: 24px !important;
+                    padding: 0 !important;
                     border-radius: var(--radius) !important;
-                    width: 340px !important;
+                    width: 380px !important;
                     border: 1px solid var(--border) !important;
                     box-shadow: var(--shadow) !important;
                     display: flex !important;
                     flex-direction: column !important;
-                    gap: 16px !important;
                     transform: scale(0.95);
                     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                    overflow: hidden !important;
                 }
 
                 .modal-overlay.visible .modal-box {
                     transform: scale(1);
                 }
 
-                /* --- NOTIFICAÇÃO --- */
+                /* --- TABS --- */
+                .tabs-head {
+                    display: flex !important;
+                    border-bottom: 1px solid var(--border) !important;
+                    background: var(--surface) !important;
+                    padding: 0 12px !important;
+                }
+
+                .tab-btn {
+                    flex: 1 !important;
+                    padding: 14px 12px !important;
+                    background: transparent !important;
+                    border: none !important;
+                    border-bottom: 2px solid transparent !important;
+                    color: var(--text-sec) !important;
+                    font-weight: 600 !important;
+                    cursor: pointer !important;
+                    border-radius: 0 !important;
+                    font-size: 13px !important;
+                    text-transform: uppercase !important;
+                }
+
+                .tab-btn:hover {
+                    color: var(--text) !important;
+                }
+
+                .tab-btn.active {
+                    color: var(--primary) !important;
+                    border-bottom-color: var(--primary) !important;
+                    background: transparent !important;
+                }
+
+                .tab-content {
+                    display: none !important;
+                    padding: 24px !important;
+                    gap: 16px !important;
+                    flex-direction: column !important;
+                }
+
+                .tab-content.active {
+                    display: flex !important;
+                }
+
+                /* --- FORMULÁRIOS --- */
                 label {
                     display: block !important;
                     font-size: 12px !important;
@@ -796,7 +923,7 @@
                     box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2) !important;
                 }
 
-                /* --- LISTAGEM DE IDIOMAS --- */
+                /* --- LISTAGEM --- */
                 .custom-list {
                     height: 140px !important;
                     overflow-y: auto !important;
@@ -839,7 +966,49 @@
                     font-weight: 600 !important;
                 }
 
-                /* --- BOTÕES --- */
+                /* --- LISTA DE ATALHOS --- */
+                .shortcut-row {
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: space-between !important;
+                    padding: 8px 10px !important;
+                    background: var(--surface) !important;
+                    border-radius: 6px !important;
+                    margin-bottom: 6px !important;
+                    border: 1px solid var(--border) !important;
+                }
+
+                .sc-info {
+                    display: flex !important;
+                    flex-direction: column !important;
+                }
+
+                .sc-keys {
+                    font-weight: 700 !important;
+                    color: var(--primary) !important;
+                    font-size: 13px !important;
+                }
+
+                .sc-lang {
+                    font-size: 12px !important;
+                    color: var(--text-sec) !important;
+                }
+
+                .btn-del {
+                    background: transparent !important;
+                    color: var(--danger) !important;
+                    border: none !important;
+                    padding: 4px 8px !important;
+                    font-size: 16px !important;
+                    cursor: pointer !important;
+                }
+
+                .btn-del:hover {
+                    background: rgba(229, 62, 62, 0.1) !important;
+                    border-radius: 4px !important;
+                }
+
+                /* --- BOTÕES GERAIS --- */
                 .btn-row {
                     display: flex !important;
                     justify-content: space-between !important;
@@ -940,31 +1109,65 @@
             container.className = 'ui-layer';
             const toastContainer = document.createElement('div');
             toastContainer.id = 'toast-container';
-            toastContainer.className = 'toast-container';
             container.appendChild(toastContainer);
-
-            // --- MENU DE CONFIGURAÇÕES ---
+            this.tempShortcuts = [];
+            this.tempShortcutLang = 'en';
             const modalHtml = `
                 <div id="modal" class="modal-overlay">
                     <div class="modal-box">
-                        <div>
-                            <label>${T('lbl_lang')}</label>
-                            <input type="text" id="lang-search" placeholder="${T('lbl_search')}">
-                            <!-- Custom DIV list instead of Select for better styling -->
-                            <div id="lang-list" class="custom-list"></div>
+                        <!-- ABAS -->
+                        <div class="tabs-head">
+                            <button class="tab-btn active" id="btn-tab-gen">${T('tab_general')}</button>
+                            <button class="tab-btn" id="btn-tab-adv">${T('tab_shortcuts')}</button>
                         </div>
-                        <div>
-                            <label>${T('lbl_mode')}</label>
-                            <select id="cfg-mode">
-                                <option value="GOOGLE">Google Translate</option>
-                                <option value="IA">IA (LongCat)</option>
-                            </select>
+
+                        <!-- CONTEÚDO: GERAL -->
+                        <div id="tab-gen" class="tab-content active">
+                            <div>
+                                <label>${T('lbl_lang')}</label>
+                                <input type="text" id="lang-search" placeholder="${T('lbl_search')}">
+                                <div id="lang-list" class="custom-list"></div>
+                            </div>
+                            <div>
+                                <label>${T('lbl_mode')}</label>
+                                <select id="cfg-mode">
+                                    <option value="GOOGLE">Google Translate</option>
+                                    <option value="IA">IA (LongCat)</option>
+                                </select>
+                            </div>
+                            <div id="key-area" style="display:none">
+                                <label>${T('lbl_key')}</label>
+                                <input type="text" id="cfg-key">
+                            </div>
                         </div>
-                        <div id="key-area" style="display:none">
-                            <label>${T('lbl_key')}</label>
-                            <input type="text" id="cfg-key">
+
+                        <!-- CONTEÚDO: ATALHOS -->
+                        <div id="tab-adv" class="tab-content">
+                            <!-- 1. IDIOMA -->
+                            <div>
+                                <label>${T('lbl_lang')}</label>
+                                <input type="text" id="sc-lang-search" placeholder="${T('lbl_search')}">
+                                <div id="sc-lang-list" class="custom-list" style="height: 100px !important;"></div>
+                            </div>
+
+                            <!-- 2. TECLA -->
+                            <div>
+                                <label>${T('lbl_hotkey')}</label>
+                                <input type="text" id="sc-key-input" placeholder="${T('ph_hotkey')}" readonly>
+                            </div>
+
+                            <!-- BOTÃO ADICIONAR -->
+                            <button id="btn-add-sc" style="background:var(--surface); border:1px solid var(--border); color:var(--primary); width:100%">${T('btn_add')}</button>
+
+                            <!-- LISTA -->
+                            <div style="border-top:1px solid var(--border); padding-top:10px;">
+                                <label>${T('lbl_shortcuts_list')}</label>
+                                <div id="saved-shortcuts" class="custom-list" style="height: 100px !important; background:transparent; border:none;"></div>
+                            </div>
                         </div>
-                        <div class="btn-row">
+
+                        <!-- RODAPÉ -->
+                        <div class="btn-row" style="padding: 0 24px 24px 24px;">
                             <button id="btn-cancel" class="btn-cancel">${T('btn_cancel')}</button>
                             <button id="btn-save" class="btn-save">${T('btn_save')}</button>
                         </div>
@@ -972,39 +1175,108 @@
                 </div>
             `;
 
-            // --- INSERT MODAL ---
             const wrapper = document.createElement('div');
             this._setSafeHTML(wrapper, modalHtml);
             while(wrapper.firstChild) container.appendChild(wrapper.firstChild);
             this.shadowRoot.appendChild(container);
+
+            // --- LÓGICA DE ABAS ---
+            const tabGen = this.shadowRoot.getElementById('tab-gen');
+            const tabAdv = this.shadowRoot.getElementById('tab-adv');
+            const btnTabGen = this.shadowRoot.getElementById('btn-tab-gen');
+            const btnTabAdv = this.shadowRoot.getElementById('btn-tab-adv');
+            const switchTab = (toGeneral) => {
+                if (toGeneral) {
+                    tabGen.classList.add('active'); tabAdv.classList.remove('active');
+                    btnTabGen.classList.add('active'); btnTabAdv.classList.remove('active');
+                } else {
+                    tabAdv.classList.add('active'); tabGen.classList.remove('active');
+                    btnTabAdv.classList.add('active'); btnTabGen.classList.remove('active');
+                }
+            };
+            btnTabGen.onclick = () => switchTab(true);
+            btnTabAdv.onclick = () => switchTab(false);
+
+            // --- EVENTOS GERAIS ---
             this.selectedLangCode = getConfig().targetLang;
-            this._populateLangs();
-            const searchInput = this.shadowRoot.getElementById('lang-search');
-            searchInput.oninput = (e) => this._populateLangs(e.target.value);
-            this.shadowRoot.getElementById('cfg-mode').onchange = (e) => this.shadowRoot.getElementById('key-area').style.display = e.target.value === 'IA' ? 'block' : 'none';
+            this._populateLangs('lang-list', '', this.selectedLangCode, (code) => this.selectedLangCode = code);
+            this.shadowRoot.getElementById('lang-search').oninput = (e) =>
+            this._populateLangs('lang-list', e.target.value, this.selectedLangCode, (code) => this.selectedLangCode = code);
+            this.shadowRoot.getElementById('cfg-mode').onchange = (e) =>
+            this.shadowRoot.getElementById('key-area').style.display = e.target.value === 'IA' ? 'block' : 'none';
             this.shadowRoot.getElementById('btn-cancel').onclick = () => this.toggleModal(false);
             this.shadowRoot.getElementById('btn-save').onclick = () => this.saveAndClose();
+
+            // --- LÓGICA DE EVENTOS DA ABA DE ATALHOS ---
+            // GRAVAÇÃO DE TECLA
+            const keyInput = this.shadowRoot.getElementById('sc-key-input');
+            keyInput.onkeydown = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                let keys = [];
+                if (e.ctrlKey) keys.push('Ctrl');
+                if (e.altKey) keys.push('Alt');
+                if (e.shiftKey) keys.push('Shift');
+                if (e.metaKey) keys.push('Meta');
+                if (!['Control','Alt','Shift','Meta'].includes(e.key)) {
+                    keys.push(e.key.length === 1 ? e.key.toUpperCase() : e.key);
+                }
+                if (keys.length > 0) keyInput.value = keys.join('+');
+            };
+
+            // SELETOR DE LÍNGUA DO ATALHO
+            this.shadowRoot.getElementById('sc-lang-search').oninput = (e) =>
+            this._populateLangs('sc-lang-list', e.target.value, this.tempShortcutLang, (code) => this.tempShortcutLang = code);
+
+            // ADICIONAR ATALHO
+            this.shadowRoot.getElementById('btn-add-sc').onclick = () => {
+                const keys = keyInput.value;
+                if (!keys || keys.length < 1) return;
+                this.tempShortcuts = this.tempShortcuts.filter(s => s.keys !== keys);
+                this.tempShortcuts.push({ keys: keys, lang: this.tempShortcutLang });
+                keyInput.value = "";
+                this._renderShortcutsList();
+            };
         }
 
-        // --- LISTAGEM DE IDIOMAS ---
-        _populateLangs(filter = "") {
-            const list = this.shadowRoot.getElementById('lang-list');
-            list.textContent = ''; 
+        // --- LISTAGEM DE IDIOMAS GENÉRICA ---
+        _populateLangs(containerId, filter = "", currentSel, onSelect) {
+            const list = this.shadowRoot.getElementById(containerId);
+            if (!list) return;
+            list.textContent = '';
             const term = filter.toLowerCase();
             SUPPORTED_LANGS.forEach(l => {
                 if (l.name.toLowerCase().includes(term) || l.code.includes(term)) {
                     const item = document.createElement('div');
                     item.className = 'lang-item';
-                    if (l.code === this.selectedLangCode) item.classList.add('selected');
+                    if (l.code === currentSel) item.classList.add('selected');
                     this._setSafeHTML(item, `<span>${l.name}</span> <span style="font-size:10px; opacity:0.6">${l.code}</span>`);
                     item.onclick = () => {
                         const old = list.querySelector('.selected');
                         if (old) old.classList.remove('selected');
                         item.classList.add('selected');
-                        this.selectedLangCode = l.code;
+                        onSelect(l.code);
                     };
                     list.appendChild(item);
                 }
+            });
+        }
+
+        // --- RENDERIZAR LISTA DE ATALHOS ---
+        _renderShortcutsList() {
+            const container = this.shadowRoot.getElementById('saved-shortcuts');
+            container.textContent = '';
+            this.tempShortcuts.forEach((sc, idx) => {
+                const row = document.createElement('div');
+                row.className = 'shortcut-row';
+                const langName = SUPPORTED_LANGS.find(l => l.code === sc.lang)?.name || sc.lang;
+                const html = `<div class="sc-info"><span class="sc-keys">${sc.keys}</span><span class="sc-lang">${langName}</span></div><button class="btn-del" data-idx="${idx}">🗑️</button>`;
+                this._setSafeHTML(row, html);
+                row.querySelector('.btn-del').onclick = () => {
+                    this.tempShortcuts.splice(idx, 1);
+                    this._renderShortcutsList();
+                };
+                container.appendChild(row);
             });
         }
 
@@ -1016,11 +1288,13 @@
             if (show) {
                 this.shadowRoot.getElementById('lang-search').value = "";
                 this.selectedLangCode = cfg.targetLang;
-                this._populateLangs("");
-                setTimeout(() => {
-                    const sel = this.shadowRoot.querySelector('.lang-item.selected');
-                    if (sel) sel.scrollIntoView({ block: 'center', behavior: 'smooth' });
-                }, 100);
+                this._populateLangs('lang-list', "", this.selectedLangCode, (c) => this.selectedLangCode = c);
+                this.tempShortcuts = [...cfg.shortcuts];
+                this.tempShortcutLang = 'en';
+                this.shadowRoot.getElementById('sc-key-input').value = "";
+                this.shadowRoot.getElementById('sc-lang-search').value = "";
+                this._populateLangs('sc-lang-list', "", 'en', (c) => this.tempShortcutLang = c);
+                this._renderShortcutsList();
                 this.shadowRoot.getElementById('cfg-mode').value = cfg.mode;
                 this.shadowRoot.getElementById('cfg-key').value = cfg.keysString;
                 this.shadowRoot.getElementById('key-area').style.display = cfg.mode === 'IA' ? 'block' : 'none';
@@ -1033,7 +1307,8 @@
             saveConfig({
                 targetLang: this.selectedLangCode || getConfig().targetLang,
                 mode: this.shadowRoot.getElementById('cfg-mode').value,
-                keysString: this.shadowRoot.getElementById('cfg-key').value
+                keysString: this.shadowRoot.getElementById('cfg-key').value,
+                shortcuts: this.tempShortcuts
             });
             this.toggleModal(false);
             this.showToast(T('toast_saved'), 'success');
@@ -1087,7 +1362,7 @@
     }
 
     // --- LÓGICA DE TRADUÇÃO ---
-    function runTranslation() {
+    function runTranslation(forceLang = null) {
         ui._ensureHost();
         let textToTranslate = "";
         let targetElement = document.activeElement;
@@ -1114,6 +1389,7 @@
         }
         ui.showToast(T('toast_translating'), "loading");
         const cfg = getConfig();
+        const finalLang = forceLang || cfg.targetLang;
         const onSuccess = (result) => {
             safeReplace(targetElement, result);
             ui.showToast(T('toast_done'), "success");
@@ -1124,16 +1400,37 @@
                 ui.toggleModal(true);
             } else ui.showToast(msg, "error");
         };
-        if (cfg.mode === 'IA') translateAI(textToTranslate, cfg.targetLang, onSuccess, onError);
-        else translateGoogle(textToTranslate, cfg.targetLang, onSuccess, onError);
+        if (cfg.mode === 'IA') translateAI(textToTranslate, finalLang, onSuccess, onError);
+        else translateGoogle(textToTranslate, finalLang, onSuccess, onError);
     }
 
-    // --- MENUS E ATALHOS ---
+    // --- MENUS ---
     GM_registerMenuCommand(T('menu_translate'), runTranslation);
     GM_registerMenuCommand(T('menu_config'), () => ui.toggleModal(true));
 
-    // --- ATALHO DE TECLADO (ALT+T) ---
+    // --- ATALHOS DE TECLADO ---
     document.addEventListener('keydown', function(e) {
+        const cfg = getConfig();
+        if (cfg.shortcuts && cfg.shortcuts.length > 0) {
+            const pressedKeys = [];
+            if (e.ctrlKey) pressedKeys.push('Ctrl');
+            if (e.altKey) pressedKeys.push('Alt');
+            if (e.shiftKey) pressedKeys.push('Shift');
+            if (e.metaKey) pressedKeys.push('Meta');
+            if (!['Control','Alt','Shift','Meta'].includes(e.key)) {
+                pressedKeys.push(e.key.length === 1 ? e.key.toUpperCase() : e.key);
+            }
+            const combo = pressedKeys.join('+');
+            const match = cfg.shortcuts.find(s => s.keys === combo);
+            if (match) {
+                e.preventDefault();
+                e.stopPropagation();
+                runTranslation(match.lang);
+                return;
+            }
+        }
+
+        // ATALHO PADRÃO (ALT+T)
         if (e.altKey && (e.key === 't' || e.key === 'T')) {
             e.preventDefault();
             e.stopPropagation();

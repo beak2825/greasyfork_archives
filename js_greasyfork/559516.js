@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name          Bazaar Filler
 // @namespace     http://tampermonkey.net/
-// @version       3.6.2
+// @version       3.9
 // @author        WTV1
-// @description   Advanced Bazaar Filler with Market and Bazaar Price Points + Fill All + Trade Fill
+// @description   Advanced Bazaar Filler with Market and Bazaar Price Points + Fill All + Trade Fill + Visual Qty and Price currently on Bazaar
 // @match         https://www.torn.com/bazaar.php*
 // @match         https://www.torn.com/trade.php*
 // @require       https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js
@@ -287,10 +287,7 @@
                     const $row = $(this);
                     const $nameWrap = $row.find(".name-wrap");
                     const qtyMatch = $nameWrap.text().match(/x(\d+)/);
-                    
-                    // Default to 1 if no 'x' found (single item rows)
                     const maxQty = qtyMatch ? qtyMatch[1] : "1";
-                    
                     const $input = $row.find("input[type='text']");
                     if ($input.length) {
                         updateTornInput($input, maxQty);
@@ -303,5 +300,94 @@
     const tradeObs = new MutationObserver(injectTradeFill);
     tradeObs.observe(document.body, { childList: true, subtree: true });
     injectTradeFill();
+
+    // ---------------------------------------------------------
+    // NEW BLOCK: MY BAZAAR STOCK INDICATOR (SPIN & LOCK)
+    // ---------------------------------------------------------
+    (function() {
+        let myBazaarData = null;
+        let lastFetchTime = 0;
+        let isFetching = false;
+
+        // Add the spinning animation to the page style
+        $("<style>").html(`
+            @keyframes bzSpin { from { transform: translateY(-50%) rotate(0deg); } to { transform: translateY(-50%) rotate(360deg); } }
+            .bz-spinning { animation: bzSpin 0.8s linear infinite !important; opacity: 0.5 !important; pointer-events: none !important; }
+        `).appendTo("head");
+
+        function updateMyStockLine() {
+            const $popup = $('.draggable-popup');
+            const $header = $popup.find('.popup-header');
+            
+            if ($popup.is(':visible') && $header.length > 0) {
+                const itemName = $popup.find('.item-label').text().trim();
+                const itemNameLower = itemName.toLowerCase();
+                const $activeRow = $("li, [class*='listItem___']").filter(function() { return $(this).text().includes(itemName); });
+                const itemId = $activeRow.find('img[src*="/items/"]').attr('src')?.match(/\/(\d+)\//)?.[1];
+
+                if (!itemNameLower || itemNameLower === "loading...") return;
+
+                if (myBazaarData) {
+                    let myItem = null;
+                    if (itemId) { myItem = myBazaarData.find(i => String(i.ID || i.item_id) === String(itemId)); }
+                    if (!myItem) { myItem = myBazaarData.find(i => i.name.toLowerCase() === itemNameLower); }
+
+                    const displayText = myItem ? `On Bazaar: ${myItem.quantity.toLocaleString()} @ $${myItem.price.toLocaleString()}` : "On Bazaar: 0";
+                    
+                    const $existingLine = $popup.find('.my-stock-info');
+                    if ($existingLine.attr('data-item') !== itemNameLower) {
+                        $existingLine.remove();
+                        $header.after(`<div class="my-stock-info" data-item="${itemNameLower}" style="background: #2a2a2a; color: #ffde00; padding: 6px 12px; font-size: 11px; border-bottom: 1px solid #444; text-align: center; font-weight: bold; width: 100%; box-sizing: border-box; position: relative; z-index: 10;">
+                            ${displayText}
+                            <span class="bz-manual-refresh" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #ffde00; font-size: 16px; font-weight: bold; user-select: none; display: inline-block;" title="Refresh Stock Data">&#8635;</span>
+                        </div>`);
+                    }
+                }
+            }
+        }
+
+        function fetchBazaarData(force = false) {
+            if (!settings.apiKey || isFetching) return;
+            
+            const now = Date.now();
+            if (force || (now - lastFetchTime > 15000)) { 
+                isFetching = true;
+                $('.bz-manual-refresh').addClass('bz-spinning'); // Start Spin & Lock
+
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: `https://api.torn.com/user/?selections=bazaar&key=${settings.apiKey}`,
+                    onload: (res) => {
+                        try { 
+                            const json = JSON.parse(res.responseText);
+                            myBazaarData = Array.isArray(json.bazaar) ? json.bazaar : Object.values(json.bazaar || {});
+                            lastFetchTime = Date.now();
+                            $('.my-stock-info').attr('data-item', ''); 
+                            updateMyStockLine();
+                        } catch(e) {}
+                        isFetching = false;
+                        $('.bz-manual-refresh').removeClass('bz-spinning'); // Stop Spin & Unlock
+                    },
+                    onerror: () => {
+                        isFetching = false;
+                        $('.bz-manual-refresh').removeClass('bz-spinning');
+                    }
+                });
+            }
+        }
+
+        $(document).on('click touchstart', '.bz-manual-refresh', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!isFetching) fetchBazaarData(true);
+        });
+
+        setInterval(() => {
+            if ($('.draggable-popup').is(':visible')) { updateMyStockLine(); }
+        }, 300);
+
+        $(document).on('click touchstart', '.item-toggle-btn', function() { fetchBazaarData(); });
+        fetchBazaarData();
+    })();
 
 })();

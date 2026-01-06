@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Nurbo Mod
 // @namespace    http://youtube.com
-// @version      1.5.6.5
-// @description  Auto Insta etc  Shift=InstaNormal   R=ReverseInsta   Space=BoostSpike  2nd click Fast Break    B=4Traps-Boost   C=4Spikes     ,=AntiTrap / M=AutoMills   F=Trap-BoostPad    V=Spike N=Mill  g=Teleport-Turret / AutoBiomeHat  Esc=Menu  AutoHeal AutoGG 
+// @version      1.5.7.1
+// @description  Macro: Shift=Insta, R=Reverse Insta, Space=Boost+Spike, B/C=4 Traps/Spikes.Bot Farmer: L=spawn alt, ,=delete alts, Z=repel bots, auto-mills and upgrades.
 // @icon         https://static.wikia.nocookie.net/moom/images/7/70/Cookie.png/revision/latest?cb=20190223141839
 // @author       Nurbo Mod
 // @match        *://moomoo.io/*
@@ -416,7 +416,7 @@
     }
 
 
- 
+
 
     // Функции для меню
     function createMenu() {
@@ -428,16 +428,16 @@
             position: fixed;
             top: 50px;
             left: 10px;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.85);
             color: white;
             padding: 12px;
-            border-radius: 8px;
+
             z-index: 9999;
             font-family: 'Segoe UI', Arial, sans-serif;
             font-size: 13px;
             min-width: 280px;
             display: none;
-            border: 2px solid #00ff00;
+
         `;
 
         document.body.appendChild(menuElement);
@@ -693,7 +693,7 @@
 
         // КЛАВИША H ДЛЯ АВТОХИЛА
         if (k === 'h') {
-               doNewSend(["6", ["cock-a-doodle-doo"]]);
+               doNewSend(["6", ["kukareku"]]);
         }
  if (k === 'y') {
                doNewSend(["6", ["y run?"]]);
@@ -1182,7 +1182,7 @@
             position: fixed;
             top: 10px;
             left: 10px;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.4);
             color: #00ff00;
             border: 1px solid #00ff00;
             border-radius: 4px;
@@ -1826,49 +1826,137 @@ class Player {
         };
     };
 };
-
 class Bot {
     constructor(serverUrl) {
         this.powSolver = new PowSolver();
-        // Генерация имени бота: Hypbo- + случайное число от 1000 до 9999
-        this.name = 'Hypbo-' + Math.floor(Math.random() * 9000 + 1000);
+        this.name = 'n agent' + Math.floor(Math.random() * 9000 + 1000);
         this.age = 1;
+        this.ws = null;
+        this.lastUpgradedAge = 1;
+        this.hasAttemptedUpgrade = false;
+        this.isUpgrading = false;
 
-        this.powSolver.generateAltchaToken().then((token) => {
-            this.ws = new WebSocket(document.ws.url.split('?token=')[0] + `?token=${token}`);
-            this.ws.binaryType = 'arraybuffer';
-            this.ws.player = new Player(this.ws);
-            this.ws.addEventListener('message', this.handleMessage.bind(this));
+        var self = this;
 
-            setInterval(() => {
-                // Отправляем сообщение в чат только с возрастом
-                this.ws.player.input.sendChatMessage('age: ' + this.age);
+        this.powSolver.generateAltchaToken().then(function(token) {
+            self.ws = new WebSocket(document.ws.url.split('?token=')[0] + '?token=' + token);
+            self.ws.binaryType = 'arraybuffer';
+            self.ws.player = new Player(self.ws);
+            self.ws.botInstance = self;
 
-                if (!this.ws.player.fullyUpgraded) {
-                    try {
-                        this.ws.player.input.sendMsg(['H', [upgradeOptions[this.ws.player.upgradeAge]]]);
-                    } catch(e) {
-                        ;
-                    };
-                };
-            }, 1000);
+            // Добавляем обработчик сообщений для самого бота
+            self.ws.addEventListener('message', function(m) {
+                self.handleMessage(m);
+            });
+
+            self.ws.addEventListener('close', function() {
+                console.log('Bot ' + self.name + ' WebSocket closed');
+                // Удаляем из массива
+                const index = multiboxAlts.indexOf(self.ws);
+                if (index > -1) {
+                    multiboxAlts.splice(index, 1);
+                    updateAltsCounter();
+                }
+            });
+
+            self.ws.addEventListener('error', function(error) {
+                console.log('Bot ' + self.name + ' WebSocket error:', error);
+            });
+
+            // Сообщение в чат каждые 30 секунд
+            setInterval(function() {
+                if (self.ws && self.ws.readyState === WebSocket.OPEN && self.ws.player) {
+                    self.ws.player.input.sendChatMessage('age: ' + self.age);
+                }
+            }, 30000);
+
+        }).catch(function(error) {
+            console.error('Error generating altcha token:', error);
         });
-    };
+    }
+
+    tryUpgrade(newAge) {
+        if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
+            console.log('Bot ' + this.name + ' WebSocket not ready for upgrade');
+            return false;
+        }
+
+        // Если уже пытались апгрейдить этот возраст
+        if (this.hasAttemptedUpgrade && this.lastUpgradedAge === newAge) {
+            console.log('Bot ' + this.name + ' уже пытался апгрейднуть age ' + newAge);
+            return false;
+        }
+
+        var ageToItemMap = {
+            2: 8,   // 2-8
+            3: 17,  // 3-17
+            4: 31,  // 4-31
+            5: 27,  // 5-27
+            6: 10,  // 6-10
+            7: 33,  // 7-33
+            8: 28,  // 8-28
+            9: 36   // 9-36
+        };
+
+        if (ageToItemMap[newAge]) {
+            console.log('Bot ' + this.name + ' пытается апгрейднуть на age ' + newAge + ' -> item ' + ageToItemMap[newAge]);
+
+            this.hasAttemptedUpgrade = true;
+            this.lastUpgradedAge = newAge;
+
+            var self = this;
+
+            // Ждем 3 секунды перед апгрейдом
+            setTimeout(function() {
+                if (self.ws && self.ws.readyState === WebSocket.OPEN) {
+                    try {
+                        console.log('Отправляю апгрейд для бота ' + self.name + ': age ' + newAge + ' -> item ' + ageToItemMap[newAge]);
+                        // Отправляем апгрейд
+                        self.ws.player.input.sendMsg(['H', [ageToItemMap[newAge]]]);
+
+                        // После апгрейда ждем и выбираем правильное оружие
+                        setTimeout(() => {
+                            if (self.ws && self.ws.readyState === WebSocket.OPEN) {
+                                // Выбираем основное оружие (item 0 - меч)
+                                self.ws.player.input.sendMsg(['z', [0, true]]);
+                            }
+                        }, 1000);
+                    } catch (error) {
+                        console.log('Ошибка при апгрейде бота ' + self.name + ':', error);
+                    }
+                }
+            }, 3000);
+
+            return true;
+        }
+
+        console.log('Bot ' + this.name + ' нет предмета для age ' + newAge);
+        return false;
+    }
 
     handleMessage(msg) {
-        const data = this.ws.player.input.msgpack.decode(msg.data);
+        var data = msgpack.decode(new Uint8Array(msg.data));
+        var self = this;
+
         switch (data[0]) {
             case 'io-init':
                 multiboxAlts.push(this.ws);
                 this.ws.player.input.sendEnterWorld(this.name);
-                setInterval(() => {
-                    this.ws.player.input.sendEnterWorld(this.name);
-                    this.ws.player.input.joinTribe(document.ws.player.entity.clan);
+
+                setInterval(function() {
+                    if (self.ws && self.ws.readyState === WebSocket.OPEN) {
+                        self.ws.player.input.sendEnterWorld(self.name);
+                        self.ws.player.input.joinTribe(document.ws.player.entity.clan);
+                    }
                 }, 1000);
+
                 updateAltsCounter();
-                console.log(multiboxAlts.length);
+                console.log('Bot created: ' + this.name + ', total: ' + multiboxAlts.length);
                 break;
+
             case 'a':
+                if (!this.ws || this.ws.readyState !== WebSocket.OPEN) break;
+
                 var mouseXWorld = (document.ws.player.entity.position.x - this.ws.player.entity.position.x) + (mousePosition.x - (window.innerWidth / 2)) * (1+(1/3));
                 var mouseYWorld = (document.ws.player.entity.position.y - this.ws.player.entity.position.y) + (mousePosition.y - (window.innerHeight / 2)) * (1+(1/3));
                 var dirToMove = Math.atan2(mouseYWorld, mouseXWorld);
@@ -1877,22 +1965,33 @@ class Bot {
                     this.ws.player.input.moveTowardsDirection(dirToMove - 2.35619);
                 } else {
                     this.ws.player.input.moveTowardsDirection(dirToMove);
-                };
+                }
                 break;
-            case 'U':
-                this.age = (data[1][0] + data[1][1]) - 1;
-        };
-    };
-};
 
+            case 'U':
+                var newAge = (data[1][0] + data[1][1]) - 1;
+                console.log('Bot ' + this.name + ' возраст: ' + this.age + ' -> ' + newAge);
+
+                if (newAge > this.age) {
+                    this.age = newAge;
+
+                    // Апгрейдим ТОЛЬКО если это новый уровень И если этот уровень нужно апгрейдить (2-9)
+                    if (this.age >= 2 && this.age <= 9) {
+                        this.tryUpgrade(this.age);
+                    }
+                }
+                break;
+        }
+    }
+}
 const init = () => {
     document.getElementById('promoImgHolder').remove();
     for (let i = 0; i < document.getElementsByClassName('adsbygoogle').length; i++) {
         document.getElementsByClassName('adsbygoogle')[0].remove();
     };
     document.getElementById('gameName').innerText = 'Hypbo mod'
-    document.getElementById('gameName').style = 'color: white';
-    document.getElementById('mainMenu').style = 'background-color: #333';
+    document.getElementById('gameName').style = 'color: white; font-family:monospace';
+
     document.getElementById('diedText').innerText = 'You Died';
     document.getElementById('diedText').style = 'color: #f00; background-color: #444;';
 
@@ -1916,28 +2015,43 @@ const init = () => {
             window.WebSocket = originalWebSocket;
 
             document.ws.player = new Player(document.ws);
-            window.addEventListener('keyup', (e) => {
-                if (e.target.tagName === 'INPUT') {
-                    return;
-                };
+           window.addEventListener('keyup', (e) => {
+    if (e.target.tagName === 'INPUT') {
+        return;
+    };
 
-                if (e.key === 'l') {
-                    new Bot('Hypbo-' + Math.floor(Math.random() * 9000 + 1000))
-                };
+    if (e.key === 'l') {
+        new Bot('n agent-' + Math.floor(Math.random() * 9000 + 1000));
+    };
 
-                if (e.key === ',') {
-                    multiboxAlts.forEach((sock) => {
-                        sock.close();
-                    })
-                    multiboxAlts = [];
-                    updateAltsCounter();
-                };
+    if (e.key === ',') {
+        multiboxAlts.forEach((sock) => {
+            if (sock) sock.close();
+        });
+        multiboxAlts = [];
+        updateAltsCounter();
+    };
 
-                if (e.key === 'm') {
-                    automill = !automill;
-                };
-            });
+    if (e.key === 'm') {
+        automill = !automill;
+        multiboxAlts.forEach((sock) => {
+            if (sock && sock.player) {
+                sock.player.autoMillEnabled = automill;
+                sock.player.copyPlayerAction('autoMill');
+            }
+        });
+        console.log('Все боты: авто-мельницы ' + (automill ? 'ON' : 'OFF'));
+    };
 
+    if (e.key === 't') {
+        multiboxAlts.forEach((sock) => {
+            if (sock && sock.readyState === WebSocket.OPEN && sock.player) {
+                sock.player.copyPlayerAction('attack');
+            }
+        });
+        console.log('Все боты атакуют!');
+    }
+});
             setInterval(() => {
                 if (automill) {
                     if (upgradeOptions[5] == 27) {
@@ -1952,22 +2066,75 @@ const init = () => {
                 };
             }, 50);
 
-            let originalSend = document.ws.send.bind(document.ws);
-            document.ws.send = (msg) => {
-                if (msgpack.decode(msg)[0] === 'F' || msgpack.decode(msg)[0] === 'z' || msgpack.decode(msg)[0] === 'c') {
-                    multiboxAlts.forEach((sock) => {
-                        sock.send(msg);
-                    });
-                };
+       let originalSend = document.ws.send.bind(document.ws);
+document.ws.send = (msg) => {
+    var decoded = msgpack.decode(msg);
 
-                if (msgpack.decode(msg)[0] === 'H') {
-                    upgradeOptions[document.ws.player.upgradeAge] = msgpack.decode(msg)[1][0];
-                };
+    // Сохраняем информацию о выбранных предметах для главного игрока
+    if (decoded[0] === 'H') {
+        upgradeOptions[document.ws.player.upgradeAge] = decoded[1][0];
+    }
 
-                console.log(msgpack.decode(msg));
-                originalSend(msg);
-            };
+    // Пересылаем ботам только определенные сообщения, которые безопасны:
+    const allowedForBots = [
+        '9',  // Движение
+        'F',  // Атака
+        'D',  // Направление
+        '0',  // Общие действия
+        'e'   // Другие действия
+    ];
 
+    // Обрабатываем команду 'z' - только использование предметов, НЕ выбор оружия
+    let shouldSendToBots = allowedForBots.includes(decoded[0]);
+
+    if (decoded[0] === 'z') {
+        // 'z' команда имеет формат: ['z', [id, equip]]
+        // equip === true - выбор оружия/предмета (НЕ пересылать ботам)
+        // equip === null - использование предмета (можно пересылать)
+        // equip === false - снятие предмета (НЕ пересылать)
+
+        if (decoded[1] && decoded[1][1] === null) {
+            // Это использование предмета (яблоко, печенька и т.д.)
+            shouldSendToBots = true;
+        } else {
+            // Это выбор оружия или снятие предмета - НЕ пересылать
+            shouldSendToBots = false;
+        }
+    }
+
+    if (shouldSendToBots) {
+        multiboxAlts.forEach((sock, index) => {
+            if (sock && sock.readyState === WebSocket.OPEN) {
+                try {
+                    // Добавляем небольшую задержку для стабильности
+                    setTimeout(() => {
+                        if (sock && sock.readyState === WebSocket.OPEN) {
+                            sock.send(msg);
+                        }
+                    }, index * 5);
+                } catch (e) {
+                    console.log('Ошибка при отправке сообщения боту:', e);
+                }
+            }
+        });
+    }
+
+    // НИКОГДА не пересылаем эти команды ботам:
+    const blockedForBots = [
+        'M',  // Вход в мир (у ботов свои имена)
+        'b',  // Присоединение к клану
+        'c',  // Выбор предметов/шляп/аксессуаров
+        'H'   // Апгрейды
+    ];
+
+    if (blockedForBots.includes(decoded[0])) {
+        // Не пересылаем эти команды ботам
+        console.log('Blocked for bots:', decoded[0]);
+    }
+
+    console.log('Main player:', decoded[0], decoded[1]);
+    originalSend(msg);
+};
             return ws;
         }
     };

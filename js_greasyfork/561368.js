@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stellar Blade Wplace Tool
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Overlay tool for Stellar Blade drawings on Wplace.live
 // @author       luke77_7
 // @match        https://wplace.live/*

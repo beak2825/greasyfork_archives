@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name                Abdullah Abbas WME Tools
 // @namespace           https://greasyfork.org/users/abdullah-abbas
-// @description         Stable WME Suite: RA Editor + QA Scanner + Speed Visualizer (No Selection) (V1.12)
+// @description         Stable WME Suite: RA Editor + QA Scanner + Speed Visualizer (Kurdish Support Fix) (V1.13)
 // @include             https://www.waze.com/*/editor*
 // @include             https://www.waze.com/editor*
 // @include             https://beta.waze.com/*
 // @exclude             https://www.waze.com/user/editor*
-// @version             2026.01.04.12
+// @version             2026.01.05.1
 // @grant               none
 // @author              Abdullah Abbas
 // @require             https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
@@ -16,9 +16,9 @@
 
 /*
  * Abdullah Abbas WME Tools
- * Version: 2026.01.04.12 (V1.12)
- * Base: Stable V1.7 (2026.01.04.8).
- * Feature: "Speed Indicator" now ONLY draws icons. It does NOT select segments.
+ * Version: 2026.01.05.1 (V1.13)
+ * Base: The Ultra-Stable V1.12.
+ * Update: Added full Kurdish (Sorani) translation support without touching tool logic.
  */
 
 (function() {
@@ -28,7 +28,7 @@
     //  GLOBAL CONFIGURATION
     // ===========================================================================
     const SCRIPT_NAME = "Abdullah Abbas WME Tools";
-    const SCRIPT_VERSION = "2026.01.04.12";
+    const SCRIPT_VERSION = "2026.01.05.1";
     const DEFAULT_W = "340px";
     const DEFAULT_H = "480px";
 
@@ -55,6 +55,28 @@
             qa_res_scanning: 'جاري الفحص...',
             qa_msg_zoom: '⚠️ المنطقة واسعة جداً! الرجاء التقريب (Zoom In) لفحص التقاطعات.'
         },
+        'ckb-IQ': { // Kurdish (Sorani) Added Here
+            main_title: 'Abdullah Abbas WME Tools',
+            btn_city: 'پشکنەری شار', btn_places: 'پشکنەری شوێنەکان',
+            btn_editors: 'پشکنەری دەستکاریکەران', btn_ra: 'دەستکاری فلکە', btn_lock: 'نیشاندەری قوفڵ', btn_qa: 'پشکنینی هەڵەکان', btn_speed: 'نیشاندەری خێرایی',
+            win_city: 'پشکنەری شار', win_places: 'پشکنەری شوێنەکان',
+            win_editors: 'پشکنەری دەستکاریکەران', win_ra: 'دەستکاری فلکە', win_lock: 'نیشاندەری قوفڵ', win_qa: 'پشکنینی هەڵە ئەندازیارییەکان', win_speed: 'نیشاندەری خێرایی (تەنها وێنە)',
+            common_scan: 'گەڕان', common_clear: 'پاککردنەوە', common_close: 'داخستن', common_ready: 'ئامادەیە بۆ دەستکاری',
+            ph_city: 'ناوی شار...', ph_place: 'ناوی شوێن...', ph_user: 'ناوی بەکارهێنەر...',
+            lbl_days: 'ژمارەی ڕۆژەکان (0 = هەمووی)', lbl_enable: 'چالاککردن',
+            ra_in: 'بچووککردن (-)', ra_out: 'گەورەکردن (+)', ra_err: 'فلکەیەک دیاری بکە', unit_m: 'م',
+            city_no_name: 'بێ شار (No City)', no_results: 'هیچ ئەنجامێک نەدۆزرایەوە',
+            // QA Strings
+            qa_lbl_short: 'مەودای کورت (کەمتر لە):',
+            qa_lbl_disc: 'مەودای پچڕاو (بێ بەستن):',
+            qa_lbl_cross: 'یەکتربڕین (بێ گرێ - Node)',
+            qa_lbl_distort: 'ڕێگای شێواو (لاری و زیکزاک)',
+            qa_opt_dead: 'یەک لا (کۆتایی داخراو)',
+            qa_opt_float: 'دوو لا (ڕێگای سەرئاوتوو)',
+            qa_res_found: 'دیاریکرا:',
+            qa_res_scanning: 'جارێ پشکنین...',
+            qa_msg_zoom: '⚠️ ناوچەکە زۆر گەورەیە! تکایە نزیک بەرەوە (Zoom In) بۆ پشکنینی یەکتربڕین.'
+        },
         'en-US': {
             main_title: 'Abdullah Abbas WME Tools',
             btn_city: 'City Explorer', btn_places: 'Places Explorer',
@@ -80,7 +102,9 @@
     };
 
     let currentLang = 'ar-IQ';
+    // Logic ensures fallback to English if translation missing, but now Kurdish is present.
     const _t = (key) => (STRINGS[currentLang] || STRINGS['en-US'])[key] || key;
+    // Both Arabic and Kurdish are RTL
     const _dir = () => (currentLang === 'en-US' ? 'ltr' : 'rtl');
 
     // ===========================================================================
@@ -246,7 +270,6 @@
                 else { rangeIdx = 6; color = "#FF0000"; }
 
                 if (enabledRanges.includes(rangeIdx)) {
-                    // Logic: Draw ONLY, do NOT select.
                     let centerPt = seg.geometry.getCentroid();
 
                     let style = {
@@ -266,7 +289,6 @@
             });
 
             SpeedIndicator.layer.addFeatures(features);
-            // Selection logic removed per user request
         }
     };
 

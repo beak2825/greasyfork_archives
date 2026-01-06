@@ -1,14 +1,13 @@
 // ==UserScript==
 // @name         WME Map Comment Shapes
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      2026.01.04
+// @version      2026.01.07
 // @author       Hiwi234
 // @description  Erstelle Map Comments mit vordefinierten Formen (Kreis, Quadrat, etc.) im Waze Map Editor
 // @include      https://www.waze.com/editor*
 // @include      https://www.waze.com/*/editor*
 // @include      https://beta.waze.com/*
 // @exclude      https://www.waze.com/user/editor*
-// @author       Custom
 // @grant        none
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/560793/WME%20Map%20Comment%20Shapes.user.js
@@ -22,7 +21,7 @@
 
     const SCRIPT_ID = 'wme-mapcomment-shapes';
     const SCRIPT_NAME = 'Map Comment Shapes';
-    const SCRIPT_VERSION = '2025.01.02.17';
+    const SCRIPT_VERSION = '2026.01.07';
 
     const SHAPES = {
         POINT: 'point',
@@ -76,6 +75,19 @@
             angle: 'Winkel:',
             rotateBtn: 'Drehen',
             rotated: 'Gedreht um {angle}°',
+            // Orthogonalize
+            orthogonalize: 'Orthogonalisieren:',
+            orthogonalizeHint: 'Macht Winkel rechtwinklig (90°)',
+            orthogonalizeBtn: 'Orthogonalisieren',
+            orthogonalized: 'Orthogonalisiert!',
+            // Scale/Resize
+            scale: 'Skalieren:',
+            scaleHint: 'Größe der Form anpassen',
+            width: 'Breite:',
+            height: 'Höhe:',
+            scaleBtn: 'Anwenden',
+            scaled: 'Skaliert!',
+            keepRatio: 'Seitenverhältnis beibehalten',
             // Custom Shapes
             saveShape: 'Form speichern',
             shapeName: 'Formname',
@@ -136,7 +148,33 @@
             cancel: 'Abbrechen',
             load: 'Laden',
             delete: 'Löschen',
-            save: 'Speichern'
+            save: 'Speichern',
+            // Image Upload
+            imageUpload: 'Bild zu Form:',
+            imageUploadHint: 'Lade ein Bild hoch um die Kontur zu erkennen',
+            selectImage: 'Bild wählen',
+            threshold: 'Schwellwert:',
+            minArea: 'Min. Fläche:',
+            detectContour: 'Kontur erkennen',
+            imageLoaded: 'Bild geladen: {width}x{height}',
+            contourDetected: 'Kontur erkannt: {points} Punkte',
+            noContourFound: 'Keine Kontur gefunden!',
+            clickToPlace: 'Klicke auf die Karte um die Form zu platzieren',
+            processing: 'Verarbeite Bild...',
+            invertColors: 'Farben invertieren',
+            smoothing: 'Glättung:',
+            // Update Popup
+            updateTitle: '🎉 Update v{version}',
+            updateNewFeatures: 'Neue Funktionen:',
+            updateFeature1: '📐 Orthogonalisieren - Macht alle Winkel rechtwinklig (90°)',
+            updateFeature2: '↔️ Skalieren - Breite und Höhe unabhängig anpassen mit Live-Vorschau',
+            updateFeature3: '🖼️ Bild zu Form - Lade ein Bild hoch und erkenne automatisch die Kontur',
+            updateFeature4: '🎨 Eigene Formen - Speichere Map Comments als wiederverwendbare Formen',
+            updateUIChanges: 'UI Verbesserungen:',
+            updateUI1: '📦 Kompaktere Oberfläche mit Akkordeon-Menüs',
+            updateUI2: '📝 Bessere Beschreibungen für alle Werkzeuge',
+            updateUI3: '⚡ Live-Vorschau beim Skalieren und Drehen',
+            updateClose: 'Verstanden!'
         },
         en: {
             selectShape: 'Select shape:',
@@ -168,6 +206,19 @@
             angle: 'Angle:',
             rotateBtn: 'Rotate',
             rotated: 'Rotated by {angle}°',
+            // Orthogonalize
+            orthogonalize: 'Orthogonalize:',
+            orthogonalizeHint: 'Makes angles right-angled (90°)',
+            orthogonalizeBtn: 'Orthogonalize',
+            orthogonalized: 'Orthogonalized!',
+            // Scale/Resize
+            scale: 'Scale:',
+            scaleHint: 'Adjust shape size',
+            width: 'Width:',
+            height: 'Height:',
+            scaleBtn: 'Apply',
+            scaled: 'Scaled!',
+            keepRatio: 'Keep aspect ratio',
             // Custom Shapes
             saveShape: 'Save shape',
             shapeName: 'Shape name',
@@ -223,7 +274,33 @@
             cancel: 'Cancel',
             load: 'Load',
             delete: 'Delete',
-            save: 'Save'
+            save: 'Save',
+            // Image Upload
+            imageUpload: 'Image to Shape:',
+            imageUploadHint: 'Upload an image to detect its contour',
+            selectImage: 'Select Image',
+            threshold: 'Threshold:',
+            minArea: 'Min. Area:',
+            detectContour: 'Detect Contour',
+            imageLoaded: 'Image loaded: {width}x{height}',
+            contourDetected: 'Contour detected: {points} points',
+            noContourFound: 'No contour found!',
+            clickToPlace: 'Click on the map to place the shape',
+            processing: 'Processing image...',
+            invertColors: 'Invert colors',
+            smoothing: 'Smoothing:',
+            // Update Popup
+            updateTitle: '🎉 Update v{version}',
+            updateNewFeatures: 'New Features:',
+            updateFeature1: '📐 Orthogonalize - Makes all angles right-angled (90°)',
+            updateFeature2: '↔️ Scale - Adjust width and height independently with live preview',
+            updateFeature3: '🖼️ Image to Shape - Upload an image and automatically detect its contour',
+            updateFeature4: '🎨 Custom Shapes - Save Map Comments as reusable shapes',
+            updateUIChanges: 'UI Improvements:',
+            updateUI1: '📦 More compact interface with accordion menus',
+            updateUI2: '📝 Better descriptions for all tools',
+            updateUI3: '⚡ Live preview when scaling and rotating',
+            updateClose: 'Got it!'
         },
         it: {
             selectShape: 'Seleziona forma:',
@@ -254,6 +331,19 @@
             angle: 'Angolo:',
             rotateBtn: 'Ruota',
             rotated: 'Ruotato di {angle}°',
+            // Orthogonalize
+            orthogonalize: 'Ortogonalizza:',
+            orthogonalizeHint: 'Rende gli angoli retti (90°)',
+            orthogonalizeBtn: 'Ortogonalizza',
+            orthogonalized: 'Ortogonalizzato!',
+            // Scale/Resize
+            scale: 'Scala:',
+            scaleHint: 'Regola la dimensione della forma',
+            width: 'Larghezza:',
+            height: 'Altezza:',
+            scaleBtn: 'Applica',
+            scaled: 'Scalato!',
+            keepRatio: 'Mantieni proporzioni',
             saveShape: 'Salva forma',
             shapeName: 'Nome forma',
             selectCustomShape: '-- Seleziona forma --',
@@ -308,7 +398,33 @@
             cancel: 'Annulla',
             load: 'Carica',
             delete: 'Elimina',
-            save: 'Salva'
+            save: 'Salva',
+            // Image Upload
+            imageUpload: 'Immagine a Forma:',
+            imageUploadHint: 'Carica un\'immagine per rilevare il contorno',
+            selectImage: 'Seleziona Immagine',
+            threshold: 'Soglia:',
+            minArea: 'Area min.:',
+            detectContour: 'Rileva Contorno',
+            imageLoaded: 'Immagine caricata: {width}x{height}',
+            contourDetected: 'Contorno rilevato: {points} punti',
+            noContourFound: 'Nessun contorno trovato!',
+            clickToPlace: 'Clicca sulla mappa per posizionare la forma',
+            processing: 'Elaborazione immagine...',
+            invertColors: 'Inverti colori',
+            smoothing: 'Levigatura:',
+            // Update Popup
+            updateTitle: '🎉 Aggiornamento v{version}',
+            updateNewFeatures: 'Nuove Funzionalità:',
+            updateFeature1: '📐 Ortogonalizza - Rende tutti gli angoli retti (90°)',
+            updateFeature2: '↔️ Scala - Regola larghezza e altezza indipendentemente con anteprima live',
+            updateFeature3: '🖼️ Immagine a Forma - Carica un\'immagine e rileva automaticamente il contorno',
+            updateFeature4: '🎨 Forme Personalizzate - Salva i Map Comment come forme riutilizzabili',
+            updateUIChanges: 'Miglioramenti UI:',
+            updateUI1: '📦 Interfaccia più compatta con menu a fisarmonica',
+            updateUI2: '📝 Descrizioni migliori per tutti gli strumenti',
+            updateUI3: '⚡ Anteprima live durante la scala e la rotazione',
+            updateClose: 'Capito!'
         },
         es: {
             selectShape: 'Seleccionar forma:',
@@ -339,6 +455,19 @@
             angle: 'Ángulo:',
             rotateBtn: 'Rotar',
             rotated: 'Rotado {angle}°',
+            // Orthogonalize
+            orthogonalize: 'Ortogonalizar:',
+            orthogonalizeHint: 'Hace los ángulos rectos (90°)',
+            orthogonalizeBtn: 'Ortogonalizar',
+            orthogonalized: '¡Ortogonalizado!',
+            // Scale/Resize
+            scale: 'Escalar:',
+            scaleHint: 'Ajustar tamaño de la forma',
+            width: 'Ancho:',
+            height: 'Alto:',
+            scaleBtn: 'Aplicar',
+            scaled: '¡Escalado!',
+            keepRatio: 'Mantener proporción',
             saveShape: 'Guardar forma',
             shapeName: 'Nombre de forma',
             selectCustomShape: '-- Seleccionar forma --',
@@ -393,7 +522,33 @@
             cancel: 'Cancelar',
             load: 'Cargar',
             delete: 'Eliminar',
-            save: 'Guardar'
+            save: 'Guardar',
+            // Image Upload
+            imageUpload: 'Imagen a Forma:',
+            imageUploadHint: 'Sube una imagen para detectar su contorno',
+            selectImage: 'Seleccionar Imagen',
+            threshold: 'Umbral:',
+            minArea: 'Área mín.:',
+            detectContour: 'Detectar Contorno',
+            imageLoaded: 'Imagen cargada: {width}x{height}',
+            contourDetected: 'Contorno detectado: {points} puntos',
+            noContourFound: '¡No se encontró contorno!',
+            clickToPlace: 'Haz clic en el mapa para colocar la forma',
+            processing: 'Procesando imagen...',
+            invertColors: 'Invertir colores',
+            smoothing: 'Suavizado:',
+            // Update Popup
+            updateTitle: '🎉 Actualización v{version}',
+            updateNewFeatures: 'Nuevas Funciones:',
+            updateFeature1: '📐 Ortogonalizar - Hace todos los ángulos rectos (90°)',
+            updateFeature2: '↔️ Escalar - Ajusta ancho y alto independientemente con vista previa en vivo',
+            updateFeature3: '🖼️ Imagen a Forma - Sube una imagen y detecta automáticamente su contorno',
+            updateFeature4: '🎨 Formas Personalizadas - Guarda Map Comments como formas reutilizables',
+            updateUIChanges: 'Mejoras de UI:',
+            updateUI1: '📦 Interfaz más compacta con menús acordeón',
+            updateUI2: '📝 Mejores descripciones para todas las herramientas',
+            updateUI3: '⚡ Vista previa en vivo al escalar y rotar',
+            updateClose: '¡Entendido!'
         },
         fr: {
             selectShape: 'Choisir forme:',
@@ -424,6 +579,19 @@
             angle: 'Angle:',
             rotateBtn: 'Rotation',
             rotated: 'Pivoté de {angle}°',
+            // Orthogonalize
+            orthogonalize: 'Orthogonaliser:',
+            orthogonalizeHint: 'Rend les angles droits (90°)',
+            orthogonalizeBtn: 'Orthogonaliser',
+            orthogonalized: 'Orthogonalisé!',
+            // Scale/Resize
+            scale: 'Échelle:',
+            scaleHint: 'Ajuster la taille de la forme',
+            width: 'Largeur:',
+            height: 'Hauteur:',
+            scaleBtn: 'Appliquer',
+            scaled: 'Mis à l\'échelle!',
+            keepRatio: 'Conserver les proportions',
             saveShape: 'Enregistrer forme',
             shapeName: 'Nom de forme',
             selectCustomShape: '-- Choisir forme --',
@@ -478,7 +646,33 @@
             cancel: 'Annuler',
             load: 'Charger',
             delete: 'Supprimer',
-            save: 'Enregistrer'
+            save: 'Enregistrer',
+            // Image Upload
+            imageUpload: 'Image vers Forme:',
+            imageUploadHint: 'Téléchargez une image pour détecter son contour',
+            selectImage: 'Sélectionner Image',
+            threshold: 'Seuil:',
+            minArea: 'Surface min.:',
+            detectContour: 'Détecter Contour',
+            imageLoaded: 'Image chargée: {width}x{height}',
+            contourDetected: 'Contour détecté: {points} points',
+            noContourFound: 'Aucun contour trouvé!',
+            clickToPlace: 'Cliquez sur la carte pour placer la forme',
+            processing: 'Traitement de l\'image...',
+            invertColors: 'Inverser les couleurs',
+            smoothing: 'Lissage:',
+            // Update Popup
+            updateTitle: '🎉 Mise à jour v{version}',
+            updateNewFeatures: 'Nouvelles Fonctionnalités:',
+            updateFeature1: '📐 Orthogonaliser - Rend tous les angles droits (90°)',
+            updateFeature2: '↔️ Échelle - Ajustez largeur et hauteur indépendamment avec aperçu en direct',
+            updateFeature3: '🖼️ Image vers Forme - Téléchargez une image et détectez automatiquement son contour',
+            updateFeature4: '🎨 Formes Personnalisées - Enregistrez les Map Comments comme formes réutilisables',
+            updateUIChanges: 'Améliorations UI:',
+            updateUI1: '📦 Interface plus compacte avec menus accordéon',
+            updateUI2: '📝 Meilleures descriptions pour tous les outils',
+            updateUI3: '⚡ Aperçu en direct lors de la mise à l\'échelle et de la rotation',
+            updateClose: 'Compris!'
         },
         nl: {
             selectShape: 'Kies vorm:',
@@ -509,6 +703,19 @@
             angle: 'Hoek:',
             rotateBtn: 'Draaien',
             rotated: 'Gedraaid met {angle}°',
+            // Orthogonalize
+            orthogonalize: 'Orthogonaliseren:',
+            orthogonalizeHint: 'Maakt hoeken haaks (90°)',
+            orthogonalizeBtn: 'Orthogonaliseren',
+            orthogonalized: 'Georthogonaliseerd!',
+            // Scale/Resize
+            scale: 'Schalen:',
+            scaleHint: 'Pas de grootte van de vorm aan',
+            width: 'Breedte:',
+            height: 'Hoogte:',
+            scaleBtn: 'Toepassen',
+            scaled: 'Geschaald!',
+            keepRatio: 'Verhouding behouden',
             saveShape: 'Vorm opslaan',
             shapeName: 'Vormnaam',
             selectCustomShape: '-- Kies vorm --',
@@ -563,7 +770,33 @@
             cancel: 'Annuleren',
             load: 'Laden',
             delete: 'Verwijderen',
-            save: 'Opslaan'
+            save: 'Opslaan',
+            // Image Upload
+            imageUpload: 'Afbeelding naar Vorm:',
+            imageUploadHint: 'Upload een afbeelding om de contour te detecteren',
+            selectImage: 'Selecteer Afbeelding',
+            threshold: 'Drempel:',
+            minArea: 'Min. Oppervlakte:',
+            detectContour: 'Detecteer Contour',
+            imageLoaded: 'Afbeelding geladen: {width}x{height}',
+            contourDetected: 'Contour gedetecteerd: {points} punten',
+            noContourFound: 'Geen contour gevonden!',
+            clickToPlace: 'Klik op de kaart om de vorm te plaatsen',
+            processing: 'Afbeelding verwerken...',
+            invertColors: 'Kleuren inverteren',
+            smoothing: 'Afvlakking:',
+            // Update Popup
+            updateTitle: '🎉 Update v{version}',
+            updateNewFeatures: 'Nieuwe Functies:',
+            updateFeature1: '📐 Orthogonaliseren - Maakt alle hoeken recht (90°)',
+            updateFeature2: '↔️ Schalen - Pas breedte en hoogte onafhankelijk aan met live voorbeeld',
+            updateFeature3: '🖼️ Afbeelding naar Vorm - Upload een afbeelding en detecteer automatisch de contour',
+            updateFeature4: '🎨 Aangepaste Vormen - Sla Map Comments op als herbruikbare vormen',
+            updateUIChanges: 'UI Verbeteringen:',
+            updateUI1: '📦 Compactere interface met accordeonmenu\'s',
+            updateUI2: '📝 Betere beschrijvingen voor alle tools',
+            updateUI3: '⚡ Live voorbeeld bij schalen en roteren',
+            updateClose: 'Begrepen!'
         }
     };
 
@@ -666,10 +899,10 @@
         const avgLat = (p1[1] + p2[1]) / 2;
         const latScale = 111000; // Meter pro Grad Latitude
         const lonScale = 111000 * Math.cos(avgLat * Math.PI / 180);
-        
+
         const dx = (p2[0] - p1[0]) * lonScale;
         const dy = (p2[1] - p1[1]) * latScale;
-        
+
         return dx * dx + dy * dy;
     }
 
@@ -678,11 +911,11 @@
         const avgLat = (p1[1] + p2[1] + p[1]) / 3;
         const latScale = 111000;
         const lonScale = 111000 * Math.cos(avgLat * Math.PI / 180);
-        
+
         const px = p[0] * lonScale, py = p[1] * latScale;
         const p1x = p1[0] * lonScale, p1y = p1[1] * latScale;
         const p2x = p2[0] * lonScale, p2y = p2[1] * latScale;
-        
+
         let x = p1x, y = p1y;
         let dx = p2x - x, dy = p2y - y;
 
@@ -768,7 +1001,7 @@
         const startLat = Number(start[1]);
         const dist = Number(distanceMeters);
         const bearing = Number(bearingDegrees);
-        
+
         const lon1 = toRadians(startLon);
         const lat1 = toRadians(startLat);
         const bearingRad = toRadians(bearing);
@@ -948,6 +1181,78 @@
         injectStyles();
         createPreviewLayer();
         createSidebarTab();
+        checkForUpdate();
+
+        // Selection-Event für Edit-Hint
+        sdk.Events.on({
+            eventName: 'wme-selection-changed',
+            eventHandler: updateEditHint
+        });
+    }
+
+    function updateEditHint() {
+        const hint = document.getElementById('mcs-edit-hint');
+        if (!hint) return;
+
+        const selectedComment = getSelectedMapComment();
+        hint.style.display = selectedComment ? 'none' : 'block';
+    }
+
+    // ============ UPDATE POPUP ============
+
+    function checkForUpdate() {
+        const storageKey = `${SCRIPT_ID}-lastVersion`;
+        const lastVersion = localStorage.getItem(storageKey);
+
+        if (lastVersion !== SCRIPT_VERSION) {
+            showUpdatePopup();
+            localStorage.setItem(storageKey, SCRIPT_VERSION);
+        }
+    }
+
+    function showUpdatePopup() {
+        // Popup Container
+        const overlay = document.createElement('div');
+        overlay.id = 'mcs-update-overlay';
+        overlay.innerHTML = `
+            <div class="mcs-update-popup">
+                <div class="mcs-update-header">
+                    <span class="mcs-update-title">${SCRIPT_NAME} - ${t('updateTitle').replace('{version}', SCRIPT_VERSION)}</span>
+                    <button class="mcs-update-close" id="mcs-update-close">✕</button>
+                </div>
+                <div class="mcs-update-content">
+                    <div class="mcs-update-section">
+                        <div class="mcs-update-section-title">✨ ${t('updateNewFeatures')}</div>
+                        <ul class="mcs-update-list">
+                            <li>${t('updateFeature1')}</li>
+                            <li>${t('updateFeature2')}</li>
+                            <li>${t('updateFeature3')}</li>
+                            <li>${t('updateFeature4')}</li>
+                        </ul>
+                    </div>
+                    <div class="mcs-update-section">
+                        <div class="mcs-update-section-title">🎨 ${t('updateUIChanges')}</div>
+                        <ul class="mcs-update-list">
+                            <li>${t('updateUI1')}</li>
+                            <li>${t('updateUI2')}</li>
+                            <li>${t('updateUI3')}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mcs-update-footer">
+                    <button class="mcs-update-btn" id="mcs-update-ok">${t('updateClose')}</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+
+        // Event Listeners
+        document.getElementById('mcs-update-close').addEventListener('click', () => overlay.remove());
+        document.getElementById('mcs-update-ok').addEventListener('click', () => overlay.remove());
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) overlay.remove();
+        });
     }
 
     function createPreviewLayer() {
@@ -1057,11 +1362,20 @@
     function buildTabContent() {
         return `
             <div class="mcs-container">
-                <h3>📝 Map Comment Shapes</h3>
-                <p class="mcs-version">v${SCRIPT_VERSION}</p>
+                <div class="mcs-header">
+                    <span class="mcs-title">📝 Map Comment Shapes</span>
+                    <span class="mcs-version">v${SCRIPT_VERSION}</span>
+                </div>
 
+                <!-- Status -->
+                <div id="mcs-status" class="mcs-status">${t('defaultStatus')}</div>
+                <div class="mcs-actions">
+                    <button id="mcs-cancel" class="mcs-action-btn mcs-cancel" style="display:none;">${t('cancel')}</button>
+                </div>
+
+                <!-- Formen -->
                 <div class="mcs-section">
-                    <label class="mcs-label">${t('selectShape')}</label>
+                    <div class="mcs-label">${t('selectShape')}</div>
                     <div class="mcs-shape-grid">
                         <button class="mcs-btn" data-shape="${SHAPES.POINT}" title="${t('shapePoint')}">•</button>
                         <button class="mcs-btn" data-shape="${SHAPES.CIRCLE}" title="${t('shapeCircle')}">●</button>
@@ -1072,129 +1386,175 @@
                         <button class="mcs-btn" data-shape="${SHAPES.HEXAGON}" title="${t('shapeHexagon')}">⬢</button>
                         <button class="mcs-btn" data-shape="${SHAPES.OCTAGON}" title="${t('shapeOctagon')}">⯃</button>
                         <button class="mcs-btn" data-shape="${SHAPES.STAR}" title="${t('shapeStar')}">★</button>
-                    </div>
-                    <label class="mcs-label mcs-sublabel">${t('arrows')}</label>
-                    <div class="mcs-shape-grid mcs-arrows">
                         <button class="mcs-btn" data-shape="${SHAPES.ARROW_UP}" title="${t('shapeArrowUp')}">⬆️</button>
                         <button class="mcs-btn" data-shape="${SHAPES.ARROW_DOWN}" title="${t('shapeArrowDown')}">⬇️</button>
                         <button class="mcs-btn" data-shape="${SHAPES.ARROW_LEFT}" title="${t('shapeArrowLeft')}">⬅️</button>
                         <button class="mcs-btn" data-shape="${SHAPES.ARROW_RIGHT}" title="${t('shapeArrowRight')}">➡️</button>
-                    </div>
-                    <label class="mcs-label mcs-sublabel">${t('speechBubbles')}</label>
-                    <div class="mcs-shape-grid mcs-speech">
                         <button class="mcs-btn" data-shape="${SHAPES.SPEECH_RECT}" title="${t('shapeSpeechRect')}">💬</button>
                         <button class="mcs-btn" data-shape="${SHAPES.SPEECH_ROUND}" title="${t('shapeSpeechRound')}">🗨️</button>
                     </div>
-                </div>
-
-                <div class="mcs-section">
-                    <label class="mcs-label">${t('size')}</label>
-                    <div class="mcs-row">
-                        <label class="mcs-checkbox">
-                            <input type="checkbox" id="mcs-dynamic" checked>
-                            ${t('dynamic')}
-                        </label>
+                    <div class="mcs-size-row">
+                        <label class="mcs-checkbox"><input type="checkbox" id="mcs-dynamic" checked> ${t('dynamic')}</label>
                     </div>
-                    <div class="mcs-row" id="mcs-radius-row">
-                        <span>${t('radius')}</span>
-                        <input type="number" id="mcs-radius" min="5" max="1000" value="50"> m
+                    <div id="mcs-radius-row" class="mcs-size-row" style="display:none;">
+                        <label>${t('radius')}</label>
+                        <input type="number" id="mcs-radius" min="5" max="1000" value="50" class="mcs-input-num"> m
                     </div>
                 </div>
 
-                <div class="mcs-section">
-                    <label class="mcs-label">${t('commentContent')}</label>
-                    <div class="mcs-row-full">
-                        <input type="text" id="mcs-subject" maxlength="30" placeholder="${t('titlePlaceholder')}">
+                <!-- Kommentar-Inhalt -->
+                <details class="mcs-accordion" open>
+                    <summary class="mcs-accordion-header">📝 ${t('commentContent')}</summary>
+                    <div class="mcs-accordion-body">
+                        <input type="text" id="mcs-subject" maxlength="30" placeholder="${t('titlePlaceholder')}" class="mcs-input">
+                        <textarea id="mcs-body" rows="2" maxlength="2000" placeholder="${t('descPlaceholder')}" class="mcs-textarea"></textarea>
+                        <div class="mcs-field-row">
+                            <label>${t('expiresIn')}</label>
+                            <input type="number" id="mcs-expiration" min="1" max="365" value="30" class="mcs-input-num"> ${t('days')}
+                        </div>
+                        <div class="mcs-divider"></div>
+                        <div class="mcs-sublabel">📋 ${t('templates')}</div>
+                        <div class="mcs-field-row">
+                            <select id="mcs-template-select" class="mcs-select"><option value="">${t('selectTemplate')}</option></select>
+                            <button id="mcs-template-load" class="mcs-btn-sm">📥 ${t('load')}</button>
+                            <button id="mcs-template-delete" class="mcs-btn-sm mcs-btn-red">🗑️</button>
+                        </div>
+                        <div class="mcs-field-row">
+                            <input type="text" id="mcs-template-name" placeholder="${t('templateName')}" class="mcs-input">
+                            <button id="mcs-template-save" class="mcs-btn-sm mcs-btn-green">💾 ${t('save')}</button>
+                        </div>
                     </div>
-                    <div class="mcs-row-full">
-                        <textarea id="mcs-body" rows="3" maxlength="2000" placeholder="${t('descPlaceholder')}"></textarea>
-                    </div>
-                    <div class="mcs-row">
-                        <span>${t('expiresIn')}</span>
-                        <input type="number" id="mcs-expiration" min="1" max="365" value="30"> ${t('days')}
-                    </div>
-                </div>
+                </details>
 
-                <div class="mcs-section">
-                    <label class="mcs-label">📋 ${t('templates')}</label>
-                    <div class="mcs-row">
-                        <select id="mcs-template-select" class="mcs-select">
-                            <option value="">${t('selectTemplate')}</option>
-                        </select>
-                        <button id="mcs-template-load" class="mcs-small-btn" title="${t('load')}">📥</button>
-                        <button id="mcs-template-delete" class="mcs-small-btn mcs-delete" title="${t('delete')}">🗑️</button>
-                    </div>
-                    <div class="mcs-row">
-                        <input type="text" id="mcs-template-name" placeholder="${t('templateName')}" class="mcs-template-input">
-                        <button id="mcs-template-save" class="mcs-small-btn mcs-save" title="${t('save')}">💾</button>
-                    </div>
-                </div>
+                <!-- Bearbeiten -->
+                <details class="mcs-accordion">
+                    <summary class="mcs-accordion-header">🛠️ Bearbeiten</summary>
+                    <div class="mcs-accordion-body">
+                        <p class="mcs-hint" id="mcs-edit-hint">⚠️ Zuerst einen Map Comment auf der Karte auswählen!</p>
 
-                <div class="mcs-section">
-                    <div id="mcs-status" class="mcs-status">${t('defaultStatus')}</div>
-                    <div class="mcs-actions">
-                        <button id="mcs-cancel" class="mcs-action-btn mcs-cancel" style="display:none;">${t('cancel')}</button>
-                    </div>
-                </div>
+                        <div class="mcs-tool-box">
+                            <div class="mcs-tool-title">✂️ Simplify - Punkte reduzieren</div>
+                            <div class="mcs-tool-desc">Vereinfacht komplexe Formen durch Entfernen überflüssiger Punkte</div>
+                            <div class="mcs-field-row">
+                                <label>${t('tolerance')}</label>
+                                <input type="range" id="mcs-simplify-tolerance" min="1" max="50" value="5" class="mcs-range">
+                                <span id="mcs-tolerance-value" class="mcs-range-val">5m</span>
+                            </div>
+                            <div class="mcs-btn-row">
+                                <button id="mcs-simplify-preview" class="mcs-btn-sm">👁️ Vorschau</button>
+                                <button id="mcs-simplify-btn" class="mcs-btn-sm mcs-btn-blue">✂️ Simplify</button>
+                            </div>
+                        </div>
 
-                <div class="mcs-section mcs-simplify-section">
-                    <label class="mcs-label">✂️ ${t('simplify')}</label>
-                    <p class="mcs-hint">${t('simplifyHint')}</p>
-                    <div class="mcs-row">
-                        <span>${t('tolerance')}</span>
-                        <input type="range" id="mcs-simplify-tolerance" min="1" max="50" value="5" class="mcs-slider">
-                        <span id="mcs-tolerance-value">5m</span>
-                    </div>
-                    <div class="mcs-row">
-                        <label class="mcs-checkbox">
-                            <input type="checkbox" id="mcs-simplify-hq" checked>
-                            ${t('highQuality')}
-                        </label>
-                    </div>
-                    <div class="mcs-row mcs-simplify-actions">
-                        <button id="mcs-simplify-btn" class="mcs-action-btn mcs-simplify">✂️ Simplify</button>
-                        <button id="mcs-simplify-preview" class="mcs-small-btn" title="${t('preview')}">👁️</button>
-                    </div>
-                    <div id="mcs-simplify-info" class="mcs-simplify-info"></div>
-                </div>
+                        <div class="mcs-tool-box">
+                            <div class="mcs-tool-title">🔄 ${t('rotate')} - Form drehen</div>
+                            <div class="mcs-tool-desc">Dreht die Form um ihren Mittelpunkt</div>
+                            <div class="mcs-field-row">
+                                <label>${t('angle')}</label>
+                                <input type="range" id="mcs-rotate-angle" min="-180" max="180" value="45" class="mcs-range">
+                                <span id="mcs-angle-value" class="mcs-range-val">45°</span>
+                            </div>
+                            <div class="mcs-btn-row">
+                                <button id="mcs-rotate-btn" class="mcs-btn-sm mcs-btn-blue">🔄 ${t('rotateBtn')}</button>
+                            </div>
+                        </div>
 
-                <div class="mcs-section mcs-rotate-section">
-                    <label class="mcs-label">🔄 ${t('rotate')}</label>
-                    <p class="mcs-hint">${t('rotateHint')}</p>
-                    <div class="mcs-row">
-                        <span>${t('angle')}</span>
-                        <input type="range" id="mcs-rotate-angle" min="-180" max="180" value="45" class="mcs-slider">
-                        <span id="mcs-angle-value">45°</span>
-                    </div>
-                    <div class="mcs-row mcs-rotate-actions">
-                        <button id="mcs-rotate-btn" class="mcs-action-btn mcs-rotate">🔄 ${t('rotateBtn')}</button>
-                    </div>
-                </div>
+                        <div class="mcs-tool-box">
+                            <div class="mcs-tool-title">📐 ${t('orthogonalize')} - Rechte Winkel</div>
+                            <div class="mcs-tool-desc">Macht alle Winkel rechtwinklig (90°) - ideal für Gebäude</div>
+                            <div class="mcs-btn-row">
+                                <button id="mcs-orthogonalize-btn" class="mcs-btn-sm mcs-btn-blue">📐 ${t('orthogonalizeBtn')}</button>
+                            </div>
+                        </div>
 
-                <div class="mcs-section mcs-custom-section">
-                    <label class="mcs-label">🎨 ${t('customShapes')}</label>
-                    <div class="mcs-row">
-                        <select id="mcs-custom-select" class="mcs-select">
-                            <option value="">${t('selectCustomShape')}</option>
-                        </select>
-                        <button id="mcs-custom-use" class="mcs-small-btn" title="${t('load')}">▶️</button>
-                        <button id="mcs-custom-delete" class="mcs-small-btn mcs-delete" title="${t('delete')}">🗑️</button>
-                    </div>
-                    <div class="mcs-row">
-                        <input type="text" id="mcs-custom-name" placeholder="${t('shapeName')}" class="mcs-template-input">
-                        <button id="mcs-custom-save" class="mcs-small-btn mcs-save" title="${t('saveShape')}">💾</button>
-                    </div>
-                    <p class="mcs-hint-small">💡 ${t('simplifyHint').replace('Simplify', t('saveShape'))}</p>
-                </div>
+                        <div class="mcs-tool-box">
+                            <div class="mcs-tool-title">↔️ ${t('scale')} - Größe ändern</div>
+                            <div class="mcs-tool-desc">Ändert Breite und/oder Höhe der Form</div>
+                            <div class="mcs-field-row">
+                                <label>${t('width')}</label>
+                                <input type="range" id="mcs-scale-width" min="10" max="500" value="100" class="mcs-range">
+                                <span id="mcs-width-value" class="mcs-range-val">100%</span>
+                            </div>
+                            <div class="mcs-field-row">
+                                <label>${t('height')}</label>
+                                <input type="range" id="mcs-scale-height" min="10" max="500" value="100" class="mcs-range">
+                                <span id="mcs-height-value" class="mcs-range-val">100%</span>
+                            </div>
+                            <div class="mcs-field-row">
+                                <label class="mcs-checkbox"><input type="checkbox" id="mcs-keep-ratio" checked> ${t('keepRatio')}</label>
+                            </div>
+                            <div class="mcs-btn-row">
+                                <button id="mcs-scale-btn" class="mcs-btn-sm mcs-btn-blue">↔️ ${t('scaleBtn')}</button>
+                            </div>
+                        </div>
 
-                <div class="mcs-section mcs-help">
-                    <label class="mcs-label">${t('instructions')}</label>
-                    <ul>
-                        <li>${t('instrPoint')}</li>
-                        <li>${t('instrDynamicOn')}</li>
-                        <li>${t('instrDynamicOff')}</li>
-                    </ul>
-                </div>
+                        <div id="mcs-simplify-info" class="mcs-result-box"></div>
+                    </div>
+                </details>
+
+                <!-- Bild zu Form -->
+                <details class="mcs-accordion">
+                    <summary class="mcs-accordion-header">🖼️ ${t('imageUpload')}</summary>
+                    <div class="mcs-accordion-body">
+                        <div class="mcs-tool-desc">${t('imageUploadHint')}</div>
+                        <input type="file" id="mcs-image-input" accept="image/*" style="display:none;">
+                        <button id="mcs-image-select" class="mcs-btn-full">📁 ${t('selectImage')}</button>
+                        <div id="mcs-image-preview-container" class="mcs-image-box" style="display:none;">
+                            <canvas id="mcs-image-canvas"></canvas>
+                        </div>
+                        <div id="mcs-image-controls" style="display:none;">
+                            <div class="mcs-field-row">
+                                <label>${t('threshold')}</label>
+                                <input type="range" id="mcs-image-threshold" min="1" max="255" value="128" class="mcs-range">
+                                <span id="mcs-threshold-value" class="mcs-range-val">128</span>
+                            </div>
+                            <div class="mcs-field-row">
+                                <label>${t('smoothing')}</label>
+                                <input type="range" id="mcs-image-smoothing" min="0" max="10" value="2" class="mcs-range">
+                                <span id="mcs-smoothing-value" class="mcs-range-val">2</span>
+                            </div>
+                            <div class="mcs-field-row">
+                                <label>${t('minArea')}</label>
+                                <input type="range" id="mcs-image-minarea" min="10" max="1000" value="100" class="mcs-range">
+                                <span id="mcs-minarea-value" class="mcs-range-val">100</span>
+                            </div>
+                            <div class="mcs-field-row">
+                                <label class="mcs-checkbox"><input type="checkbox" id="mcs-image-invert"> ${t('invertColors')}</label>
+                            </div>
+                            <div class="mcs-btn-row">
+                                <button id="mcs-detect-contour" class="mcs-btn-sm mcs-btn-green">🔍 ${t('detectContour')}</button>
+                            </div>
+                            <div id="mcs-contour-info" class="mcs-result-box"></div>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Eigene Formen -->
+                <details class="mcs-accordion">
+                    <summary class="mcs-accordion-header">🎨 ${t('customShapes')}</summary>
+                    <div class="mcs-accordion-body">
+                        <div class="mcs-tool-desc">Speichere einen ausgewählten Map Comment als wiederverwendbare Form</div>
+                        <div class="mcs-field-row">
+                            <select id="mcs-custom-select" class="mcs-select"><option value="">${t('selectCustomShape')}</option></select>
+                            <button id="mcs-custom-use" class="mcs-btn-sm">▶️ ${t('load')}</button>
+                            <button id="mcs-custom-delete" class="mcs-btn-sm mcs-btn-red">🗑️</button>
+                        </div>
+                        <div class="mcs-field-row">
+                            <input type="text" id="mcs-custom-name" placeholder="${t('shapeName')}" class="mcs-input">
+                            <button id="mcs-custom-save" class="mcs-btn-sm mcs-btn-green">💾 ${t('saveShape')}</button>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- Hilfe -->
+                <details class="mcs-accordion">
+                    <summary class="mcs-accordion-header">❓ ${t('instructions')}</summary>
+                    <div class="mcs-accordion-body mcs-help">
+                        <div><b>Punkt:</b> 1 Klick = Position</div>
+                        <div><b>Dynamisch AN:</b> 1. Klick = Mitte, 2. Klick = Größe</div>
+                        <div><b>Dynamisch AUS:</b> 1 Klick = Mitte (fester Radius)</div>
+                    </div>
+                </details>
             </div>
         `;
     }
@@ -1245,10 +1605,54 @@
             clearPreview();
         });
 
+        // Orthogonalize button
+        document.getElementById('mcs-orthogonalize-btn')?.addEventListener('click', orthogonalizeSelectedComment);
+
+        // Scale buttons
+        document.getElementById('mcs-scale-btn')?.addEventListener('click', scaleSelectedComment);
+        document.getElementById('mcs-scale-width')?.addEventListener('input', (e) => {
+            document.getElementById('mcs-width-value').textContent = e.target.value + '%';
+            const keepRatio = document.getElementById('mcs-keep-ratio')?.checked;
+            if (keepRatio) {
+                document.getElementById('mcs-scale-height').value = e.target.value;
+                document.getElementById('mcs-height-value').textContent = e.target.value + '%';
+            }
+            previewScale();
+        });
+        document.getElementById('mcs-scale-height')?.addEventListener('input', (e) => {
+            document.getElementById('mcs-height-value').textContent = e.target.value + '%';
+            const keepRatio = document.getElementById('mcs-keep-ratio')?.checked;
+            if (keepRatio) {
+                document.getElementById('mcs-scale-width').value = e.target.value;
+                document.getElementById('mcs-width-value').textContent = e.target.value + '%';
+            }
+            previewScale();
+        });
+        document.getElementById('mcs-scale-width')?.addEventListener('change', () => clearPreview());
+        document.getElementById('mcs-scale-height')?.addEventListener('change', () => clearPreview());
+
         // Custom shapes buttons
         document.getElementById('mcs-custom-save')?.addEventListener('click', saveCustomShape);
         document.getElementById('mcs-custom-use')?.addEventListener('click', useCustomShape);
         document.getElementById('mcs-custom-delete')?.addEventListener('click', deleteCustomShape);
+
+        // Image upload buttons
+        document.getElementById('mcs-image-select')?.addEventListener('click', () => {
+            document.getElementById('mcs-image-input')?.click();
+        });
+        document.getElementById('mcs-image-input')?.addEventListener('change', handleImageUpload);
+        document.getElementById('mcs-detect-contour')?.addEventListener('click', detectContourFromImage);
+        document.getElementById('mcs-image-threshold')?.addEventListener('input', (e) => {
+            document.getElementById('mcs-threshold-value').textContent = e.target.value;
+            updateImagePreview();
+        });
+        document.getElementById('mcs-image-smoothing')?.addEventListener('input', (e) => {
+            document.getElementById('mcs-smoothing-value').textContent = e.target.value;
+        });
+        document.getElementById('mcs-image-minarea')?.addEventListener('input', (e) => {
+            document.getElementById('mcs-minarea-value').textContent = e.target.value;
+        });
+        document.getElementById('mcs-image-invert')?.addEventListener('change', updateImagePreview);
 
         ['mcs-radius', 'mcs-subject', 'mcs-body', 'mcs-expiration'].forEach(id => {
             document.getElementById(id)?.addEventListener('change', saveSettings);
@@ -1498,7 +1902,7 @@
         const simplifiedCoords = simplify(originalCoords, tolerance, highQuality);
 
         // Polygon schließen falls nötig
-        if (simplifiedCoords.length > 0 && 
+        if (simplifiedCoords.length > 0 &&
             (simplifiedCoords[0][0] !== simplifiedCoords[simplifiedCoords.length-1][0] ||
              simplifiedCoords[0][1] !== simplifiedCoords[simplifiedCoords.length-1][1])) {
             simplifiedCoords.push(simplifiedCoords[0]);
@@ -1512,7 +1916,7 @@
     function simplifySelectedComment() {
         const comment = getSelectedMapComment();
         console.log(`${SCRIPT_NAME} - DEBUG: Selected comment:`, comment);
-        
+
         if (!comment) {
             updateStatus('⚠️ ' + t('selectMapComment'));
             return;
@@ -1523,7 +1927,7 @@
 
         const coords = getCommentGeometry(comment);
         console.log(`${SCRIPT_NAME} - DEBUG: Geometry coords:`, coords);
-        
+
         if (!coords || !coords[0] || coords[0].length < 4) {
             updateStatus('⚠️ ' + t('noValidPolygon'));
             return;
@@ -1552,10 +1956,10 @@
 
         try {
             // WME erwartet OpenLayers Geometry in Mercator (EPSG:3857)
-            
+
             // Alte Geometrie für Undo speichern
             const originalOLGeometry = comment.getOLGeometry().clone();
-            
+
             // Konvertiere WGS84 (lon/lat) zu Mercator und erstelle OL Points
             const mercatorCoords = simplifiedCoords.map(coord => {
                 const [x, y] = wgs84ToMercator(coord[0], coord[1]);
@@ -1574,13 +1978,16 @@
             const UpdateFeatureGeometry = require('Waze/Action/UpdateFeatureGeometry');
             const oldGeoJSON = W.userscripts.toGeoJSONGeometry(originalOLGeometry);
             const newGeoJSON = W.userscripts.toGeoJSONGeometry(newOLGeometry);
-            
+
             W.model.actionManager.add(new UpdateFeatureGeometry(comment, W.model.mapComments, oldGeoJSON, newGeoJSON));
 
             clearPreview();
             updateSimplifyInfo(originalCoords, simplifiedCoords);
             updateStatus('✅ ' + t('simplified', { from: originalCoords.length, to: simplifiedCoords.length }));
             console.log(`${SCRIPT_NAME} - Simplified: ${originalCoords.length} → ${simplifiedCoords.length} points`);
+
+            // Status nach 3 Sekunden zurücksetzen
+            setTimeout(() => updateStatus(t('defaultStatus')), 3000);
 
         } catch (e) {
             console.error(`${SCRIPT_NAME} - Simplify error:`, e);
@@ -1593,19 +2000,19 @@
 
     function rotatePoint(point, center, angleDeg) {
         const angleRad = toRadians(angleDeg);
-        
+
         // Konvertiere zu lokalen Koordinaten (Meter)
         const avgLat = center[1];
         const lonScale = 111000 * Math.cos(toRadians(avgLat));
         const latScale = 111000;
-        
+
         const dx = (point[0] - center[0]) * lonScale;
         const dy = (point[1] - center[1]) * latScale;
-        
+
         // Rotieren
         const rx = dx * Math.cos(angleRad) - dy * Math.sin(angleRad);
         const ry = dx * Math.sin(angleRad) + dy * Math.cos(angleRad);
-        
+
         // Zurück zu Geo-Koordinaten
         return [
             center[0] + rx / lonScale,
@@ -1681,17 +2088,658 @@
             const UpdateFeatureGeometry = require('Waze/Action/UpdateFeatureGeometry');
             const oldGeoJSON = W.userscripts.toGeoJSONGeometry(originalOLGeometry);
             const newGeoJSON = W.userscripts.toGeoJSONGeometry(newOLGeometry);
-            
+
             W.model.actionManager.add(new UpdateFeatureGeometry(comment, W.model.mapComments, oldGeoJSON, newGeoJSON));
 
             clearPreview();
             updateStatus('✅ ' + t('rotated', { angle }));
             console.log(`${SCRIPT_NAME} - Rotated by ${angle}°`);
 
+            // Status nach 3 Sekunden zurücksetzen
+            setTimeout(() => updateStatus(t('defaultStatus')), 3000);
+
         } catch (e) {
             console.error(`${SCRIPT_NAME} - Rotate error:`, e);
             updateStatus('❌ ' + t('error') + ' ' + e.message);
         }
+    }
+
+    // ============ ORTHOGONALIZE ============
+
+    function orthogonalizeSelectedComment() {
+        const comment = getSelectedMapComment();
+        if (!comment) {
+            updateStatus('⚠️ ' + t('selectMapComment'));
+            return;
+        }
+
+        const coords = getCommentGeometry(comment);
+        if (!coords || !coords[0] || coords[0].length < 4) {
+            updateStatus('⚠️ ' + t('noValidPolygon'));
+            return;
+        }
+
+        const orthogonalizedCoords = orthogonalizeCoords(coords[0]);
+
+        try {
+            const originalOLGeometry = comment.getOLGeometry().clone();
+
+            const mercatorCoords = orthogonalizedCoords.map(coord => {
+                const [x, y] = wgs84ToMercator(coord[0], coord[1]);
+                return new OpenLayers.Geometry.Point(x, y);
+            });
+
+            const ring = new OpenLayers.Geometry.LinearRing(mercatorCoords);
+            const newOLGeometry = new OpenLayers.Geometry.Polygon([ring]);
+
+            const UpdateFeatureGeometry = require('Waze/Action/UpdateFeatureGeometry');
+            const oldGeoJSON = W.userscripts.toGeoJSONGeometry(originalOLGeometry);
+            const newGeoJSON = W.userscripts.toGeoJSONGeometry(newOLGeometry);
+
+            W.model.actionManager.add(new UpdateFeatureGeometry(comment, W.model.mapComments, oldGeoJSON, newGeoJSON));
+
+            clearPreview();
+            updateStatus('✅ ' + t('orthogonalized'));
+            console.log(`${SCRIPT_NAME} - Orthogonalized`);
+
+            // Status nach 3 Sekunden zurücksetzen
+            setTimeout(() => updateStatus(t('defaultStatus')), 3000);
+
+        } catch (e) {
+            console.error(`${SCRIPT_NAME} - Orthogonalize error:`, e);
+            updateStatus('❌ ' + t('error') + ' ' + e.message);
+        }
+    }
+
+    function orthogonalizeCoords(coords) {
+        // Orthogonalisierung: Macht Winkel möglichst rechtwinklig (90°)
+        // Basiert auf dem Algorithmus von JOSM/iD Editor
+
+        const center = getPolygonCenter(coords);
+        const avgLat = center[1];
+        const lonScale = 111000 * Math.cos(toRadians(avgLat));
+        const latScale = 111000;
+
+        // Konvertiere zu lokalen Koordinaten (Meter)
+        const localCoords = coords.map(coord => [
+            (coord[0] - center[0]) * lonScale,
+            (coord[1] - center[1]) * latScale
+        ]);
+
+        // Finde die dominante Ausrichtung (Hauptachse)
+        let totalAngle = 0;
+        let count = 0;
+        for (let i = 0; i < localCoords.length - 1; i++) {
+            const dx = localCoords[i + 1][0] - localCoords[i][0];
+            const dy = localCoords[i + 1][1] - localCoords[i][1];
+            if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+                let angle = Math.atan2(dy, dx);
+                // Normalisiere auf 0-90° Bereich
+                while (angle < 0) angle += Math.PI / 2;
+                while (angle >= Math.PI / 2) angle -= Math.PI / 2;
+                totalAngle += angle;
+                count++;
+            }
+        }
+        const dominantAngle = count > 0 ? totalAngle / count : 0;
+
+        // Orthogonalisiere jeden Punkt
+        const orthogonalized = [];
+        for (let i = 0; i < localCoords.length - 1; i++) {
+            const curr = localCoords[i];
+            const next = localCoords[(i + 1) % (localCoords.length - 1)];
+
+            const dx = next[0] - curr[0];
+            const dy = next[1] - curr[1];
+            const length = Math.sqrt(dx * dx + dy * dy);
+
+            if (length < 0.1) {
+                orthogonalized.push(curr);
+                continue;
+            }
+
+            // Bestimme ob diese Kante horizontal oder vertikal sein sollte
+            let edgeAngle = Math.atan2(dy, dx);
+
+            // Runde auf nächstes 90°-Vielfaches relativ zur dominanten Ausrichtung
+            const relativeAngle = edgeAngle - dominantAngle;
+            const snappedRelative = Math.round(relativeAngle / (Math.PI / 2)) * (Math.PI / 2);
+            const snappedAngle = dominantAngle + snappedRelative;
+
+            if (i === 0) {
+                orthogonalized.push(curr);
+            }
+
+            // Berechne neuen Endpunkt
+            const newNext = [
+                curr[0] + Math.cos(snappedAngle) * length,
+                curr[1] + Math.sin(snappedAngle) * length
+            ];
+            orthogonalized.push(newNext);
+        }
+
+        // Schließe das Polygon
+        if (orthogonalized.length > 0) {
+            orthogonalized.push(orthogonalized[0]);
+        }
+
+        // Konvertiere zurück zu Geo-Koordinaten
+        return orthogonalized.map(([x, y]) => [
+            center[0] + x / lonScale,
+            center[1] + y / latScale
+        ]);
+    }
+
+    // ============ SCALE ============
+
+    function scaleCoords(coords, scaleX, scaleY) {
+        const center = getPolygonCenter(coords);
+        const avgLat = center[1];
+        const lonScale = 111000 * Math.cos(toRadians(avgLat));
+        const latScale = 111000;
+
+        return coords.map(coord => {
+            const dx = (coord[0] - center[0]) * lonScale;
+            const dy = (coord[1] - center[1]) * latScale;
+
+            const scaledX = dx * scaleX;
+            const scaledY = dy * scaleY;
+
+            return [
+                center[0] + scaledX / lonScale,
+                center[1] + scaledY / latScale
+            ];
+        });
+    }
+
+    function previewScale() {
+        const comment = getSelectedMapComment();
+        if (!comment) return;
+
+        const coords = getCommentGeometry(comment);
+        if (!coords || !coords[0] || coords[0].length < 4) return;
+
+        const scaleX = (parseInt(document.getElementById('mcs-scale-width')?.value) || 100) / 100;
+        const scaleY = (parseInt(document.getElementById('mcs-scale-height')?.value) || 100) / 100;
+
+        const scaledCoords = scaleCoords(coords[0], scaleX, scaleY);
+        updatePreview(scaledCoords);
+    }
+
+    function scaleSelectedComment() {
+        const comment = getSelectedMapComment();
+        if (!comment) {
+            updateStatus('⚠️ ' + t('selectMapComment'));
+            return;
+        }
+
+        const coords = getCommentGeometry(comment);
+        if (!coords || !coords[0] || coords[0].length < 4) {
+            updateStatus('⚠️ ' + t('noValidPolygon'));
+            return;
+        }
+
+        const scaleX = (parseInt(document.getElementById('mcs-scale-width')?.value) || 100) / 100;
+        const scaleY = (parseInt(document.getElementById('mcs-scale-height')?.value) || 100) / 100;
+
+        const scaledCoords = scaleCoords(coords[0], scaleX, scaleY);
+
+        try {
+            const originalOLGeometry = comment.getOLGeometry().clone();
+
+            const mercatorCoords = scaledCoords.map(coord => {
+                const [x, y] = wgs84ToMercator(coord[0], coord[1]);
+                return new OpenLayers.Geometry.Point(x, y);
+            });
+
+            const ring = new OpenLayers.Geometry.LinearRing(mercatorCoords);
+            const newOLGeometry = new OpenLayers.Geometry.Polygon([ring]);
+
+            const UpdateFeatureGeometry = require('Waze/Action/UpdateFeatureGeometry');
+            const oldGeoJSON = W.userscripts.toGeoJSONGeometry(originalOLGeometry);
+            const newGeoJSON = W.userscripts.toGeoJSONGeometry(newOLGeometry);
+
+            W.model.actionManager.add(new UpdateFeatureGeometry(comment, W.model.mapComments, oldGeoJSON, newGeoJSON));
+
+            clearPreview();
+
+            // Reset sliders
+            document.getElementById('mcs-scale-width').value = 100;
+            document.getElementById('mcs-scale-height').value = 100;
+            document.getElementById('mcs-width-value').textContent = '100%';
+            document.getElementById('mcs-height-value').textContent = '100%';
+
+            updateStatus('✅ ' + t('scaled'));
+            console.log(`${SCRIPT_NAME} - Scaled: ${scaleX * 100}% x ${scaleY * 100}%`);
+
+            // Status nach 3 Sekunden zurücksetzen
+            setTimeout(() => updateStatus(t('defaultStatus')), 3000);
+
+        } catch (e) {
+            console.error(`${SCRIPT_NAME} - Scale error:`, e);
+            updateStatus('❌ ' + t('error') + ' ' + e.message);
+        }
+    }
+
+    // ============ IMAGE TO SHAPE ============
+
+    let uploadedImageData = null;
+    let detectedContourCoords = null;
+
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        updateStatus(t('processing'));
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.getElementById('mcs-image-canvas');
+                const ctx = canvas.getContext('2d');
+
+                // Skaliere das Bild auf max 300px für die Vorschau
+                const maxSize = 300;
+                let width = img.width;
+                let height = img.height;
+
+                if (width > maxSize || height > maxSize) {
+                    if (width > height) {
+                        height = (height / width) * maxSize;
+                        width = maxSize;
+                    } else {
+                        width = (width / height) * maxSize;
+                        height = maxSize;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                uploadedImageData = {
+                    width: width,
+                    height: height,
+                    originalWidth: img.width,
+                    originalHeight: img.height
+                };
+
+                // Zeige Vorschau und Steuerelemente
+                document.getElementById('mcs-image-preview-container').style.display = 'block';
+                document.getElementById('mcs-image-controls').style.display = 'block';
+
+                updateStatus(t('imageLoaded', { width: img.width, height: img.height }));
+                updateImagePreview();
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function updateImagePreview() {
+        if (!uploadedImageData) return;
+
+        const canvas = document.getElementById('mcs-image-canvas');
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        const threshold = parseInt(document.getElementById('mcs-image-threshold')?.value) || 128;
+        const invert = document.getElementById('mcs-image-invert')?.checked || false;
+
+        // Erstelle eine Kopie für die Vorschau mit Schwellwert-Anzeige
+        const previewCanvas = document.createElement('canvas');
+        previewCanvas.width = canvas.width;
+        previewCanvas.height = canvas.height;
+        const previewCtx = previewCanvas.getContext('2d');
+        const previewData = previewCtx.createImageData(canvas.width, canvas.height);
+
+        for (let i = 0; i < data.length; i += 4) {
+            // Grauwert berechnen
+            const gray = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
+            let isWhite = gray > threshold;
+            if (invert) isWhite = !isWhite;
+
+            const val = isWhite ? 255 : 0;
+            previewData.data[i] = val;
+            previewData.data[i + 1] = val;
+            previewData.data[i + 2] = val;
+            previewData.data[i + 3] = 255;
+        }
+
+        // Zeige die Schwellwert-Vorschau
+        ctx.putImageData(previewData, 0, 0);
+    }
+
+    function detectContourFromImage() {
+        if (!uploadedImageData) {
+            updateStatus('⚠️ ' + t('selectImage'));
+            return;
+        }
+
+        const canvas = document.getElementById('mcs-image-canvas');
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        const threshold = parseInt(document.getElementById('mcs-image-threshold')?.value) || 128;
+        const minArea = parseInt(document.getElementById('mcs-image-minarea')?.value) || 100;
+        const smoothing = parseInt(document.getElementById('mcs-image-smoothing')?.value) || 2;
+        const invert = document.getElementById('mcs-image-invert')?.checked || false;
+
+        // Konvertiere zu Binärbild
+        const binary = createBinaryImage(imageData, threshold, invert);
+
+        // Finde Konturen mit Marching Squares
+        const contours = findContours(binary, canvas.width, canvas.height, minArea);
+
+        if (contours.length === 0) {
+            updateStatus('⚠️ ' + t('noContourFound'));
+            return;
+        }
+
+        // Nimm die größte Kontur
+        let largestContour = contours[0];
+        for (const contour of contours) {
+            if (contour.length > largestContour.length) {
+                largestContour = contour;
+            }
+        }
+
+        // Glätte die Kontur
+        let smoothedContour = smoothContour(largestContour, smoothing);
+
+        // Vereinfache die Kontur
+        const tolerance = Math.max(1, canvas.width / 100);
+        smoothedContour = simplifyContour(smoothedContour, tolerance);
+
+        // Normalisiere auf -1 bis 1
+        const normalizedCoords = normalizeImageContour(smoothedContour, canvas.width, canvas.height);
+
+        if (normalizedCoords.length < 3) {
+            updateStatus('⚠️ ' + t('noContourFound'));
+            return;
+        }
+
+        // Schließe das Polygon
+        if (normalizedCoords[0][0] !== normalizedCoords[normalizedCoords.length - 1][0] ||
+            normalizedCoords[0][1] !== normalizedCoords[normalizedCoords.length - 1][1]) {
+            normalizedCoords.push(normalizedCoords[0]);
+        }
+
+        detectedContourCoords = normalizedCoords;
+
+        // Zeichne die erkannte Kontur auf das Canvas
+        drawContourOnCanvas(smoothedContour);
+
+        // Zeige Info
+        const infoEl = document.getElementById('mcs-contour-info');
+        if (infoEl) {
+            infoEl.innerHTML = `✅ ${t('contourDetected', { points: normalizedCoords.length })}<br>
+                               <small>${t('clickToPlace')}</small>`;
+        }
+
+        updateStatus(t('clickToPlace'));
+
+        // Starte Platzierungsmodus
+        startImageShapePlacement();
+    }
+
+    function createBinaryImage(imageData, threshold, invert) {
+        const data = imageData.data;
+        const width = imageData.width;
+        const height = imageData.height;
+        const binary = new Uint8Array(width * height);
+
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                const i = (y * width + x) * 4;
+                const gray = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
+                let isObject = gray <= threshold;
+                if (invert) isObject = !isObject;
+                binary[y * width + x] = isObject ? 1 : 0;
+            }
+        }
+
+        return binary;
+    }
+
+    function findContours(binary, width, height, minArea) {
+        const contours = [];
+        const visited = new Uint8Array(width * height);
+
+        // Einfacher Kontur-Finder: Suche Kanten zwischen 0 und 1
+        for (let y = 1; y < height - 1; y++) {
+            for (let x = 1; x < width - 1; x++) {
+                const idx = y * width + x;
+                if (binary[idx] === 1 && !visited[idx]) {
+                    // Prüfe ob es eine Kante ist (Nachbar ist 0)
+                    const isEdge =
+                        binary[idx - 1] === 0 || binary[idx + 1] === 0 ||
+                        binary[idx - width] === 0 || binary[idx + width] === 0;
+
+                    if (isEdge) {
+                        const contour = traceContour(binary, visited, x, y, width, height);
+                        if (contour.length >= minArea / 10) {
+                            contours.push(contour);
+                        }
+                    }
+                }
+            }
+        }
+
+        return contours;
+    }
+
+    function traceContour(binary, visited, startX, startY, width, height) {
+        const contour = [];
+        const directions = [
+            [1, 0], [1, 1], [0, 1], [-1, 1],
+            [-1, 0], [-1, -1], [0, -1], [1, -1]
+        ];
+
+        let x = startX;
+        let y = startY;
+        let dir = 0;
+        let steps = 0;
+        const maxSteps = width * height;
+
+        do {
+            const idx = y * width + x;
+            if (!visited[idx]) {
+                contour.push([x, y]);
+                visited[idx] = 1;
+            }
+
+            // Suche nächsten Kantenpunkt
+            let found = false;
+            for (let i = 0; i < 8; i++) {
+                const newDir = (dir + i) % 8;
+                const nx = x + directions[newDir][0];
+                const ny = y + directions[newDir][1];
+
+                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                    const nidx = ny * width + nx;
+                    if (binary[nidx] === 1) {
+                        // Prüfe ob es eine Kante ist
+                        const isEdge =
+                            (nx > 0 && binary[nidx - 1] === 0) ||
+                            (nx < width - 1 && binary[nidx + 1] === 0) ||
+                            (ny > 0 && binary[nidx - width] === 0) ||
+                            (ny < height - 1 && binary[nidx + width] === 0);
+
+                        if (isEdge && !visited[nidx]) {
+                            x = nx;
+                            y = ny;
+                            dir = (newDir + 5) % 8; // Rückwärts starten
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!found) break;
+            steps++;
+        } while (steps < maxSteps && (x !== startX || y !== startY || contour.length < 3));
+
+        return contour;
+    }
+
+    function smoothContour(contour, iterations) {
+        if (iterations <= 0 || contour.length < 3) return contour;
+
+        let result = contour;
+        for (let iter = 0; iter < iterations; iter++) {
+            const smoothed = [];
+            for (let i = 0; i < result.length; i++) {
+                const prev = result[(i - 1 + result.length) % result.length];
+                const curr = result[i];
+                const next = result[(i + 1) % result.length];
+
+                smoothed.push([
+                    (prev[0] + curr[0] * 2 + next[0]) / 4,
+                    (prev[1] + curr[1] * 2 + next[1]) / 4
+                ]);
+            }
+            result = smoothed;
+        }
+        return result;
+    }
+
+    function simplifyContour(contour, tolerance) {
+        // Douglas-Peucker für Pixel-Koordinaten
+        if (contour.length < 3) return contour;
+
+        const sqTolerance = tolerance * tolerance;
+
+        function getSqDist(p1, p2) {
+            const dx = p1[0] - p2[0];
+            const dy = p1[1] - p2[1];
+            return dx * dx + dy * dy;
+        }
+
+        function getSqSegDist(p, p1, p2) {
+            let x = p1[0], y = p1[1];
+            let dx = p2[0] - x, dy = p2[1] - y;
+
+            if (dx !== 0 || dy !== 0) {
+                const t = ((p[0] - x) * dx + (p[1] - y) * dy) / (dx * dx + dy * dy);
+                if (t > 1) { x = p2[0]; y = p2[1]; }
+                else if (t > 0) { x += dx * t; y += dy * t; }
+            }
+
+            dx = p[0] - x;
+            dy = p[1] - y;
+            return dx * dx + dy * dy;
+        }
+
+        function simplifyDPStep(points, first, last, sqTol, simplified) {
+            let maxSqDist = sqTol;
+            let index = 0;
+
+            for (let i = first + 1; i < last; i++) {
+                const sqDist = getSqSegDist(points[i], points[first], points[last]);
+                if (sqDist > maxSqDist) {
+                    index = i;
+                    maxSqDist = sqDist;
+                }
+            }
+
+            if (maxSqDist > sqTol) {
+                if (index - first > 1) simplifyDPStep(points, first, index, sqTol, simplified);
+                simplified.push(points[index]);
+                if (last - index > 1) simplifyDPStep(points, index, last, sqTol, simplified);
+            }
+        }
+
+        const last = contour.length - 1;
+        const simplified = [contour[0]];
+        simplifyDPStep(contour, 0, last, sqTolerance, simplified);
+        simplified.push(contour[last]);
+
+        return simplified;
+    }
+
+    function normalizeImageContour(contour, width, height) {
+        // Finde Bounding Box
+        let minX = Infinity, maxX = -Infinity;
+        let minY = Infinity, maxY = -Infinity;
+
+        for (const [x, y] of contour) {
+            if (x < minX) minX = x;
+            if (x > maxX) maxX = x;
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+        }
+
+        const centerX = (minX + maxX) / 2;
+        const centerY = (minY + maxY) / 2;
+        const size = Math.max(maxX - minX, maxY - minY);
+
+        if (size === 0) return [];
+
+        // Normalisiere auf -1 bis 1
+        return contour.map(([x, y]) => [
+            (x - centerX) / (size / 2),
+            -(y - centerY) / (size / 2) // Y invertieren (Bild-Y ist umgekehrt)
+        ]);
+    }
+
+    function drawContourOnCanvas(contour) {
+        const canvas = document.getElementById('mcs-image-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Zeichne die Kontur in Rot
+        ctx.strokeStyle = '#ff0000';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+
+        if (contour.length > 0) {
+            ctx.moveTo(contour[0][0], contour[0][1]);
+            for (let i = 1; i < contour.length; i++) {
+                ctx.lineTo(contour[i][0], contour[i][1]);
+            }
+            ctx.closePath();
+        }
+
+        ctx.stroke();
+
+        // Zeichne Punkte
+        ctx.fillStyle = '#00ff00';
+        for (const [x, y] of contour) {
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function startImageShapePlacement() {
+        if (!detectedContourCoords || detectedContourCoords.length < 3) return;
+
+        // Setze die erkannte Kontur als Custom Shape
+        customShapeCoords = detectedContourCoords;
+
+        // Starte Zeichenmodus
+        drawingMode = SHAPES.CUSTOM;
+        isDrawing = true;
+        shapeCenter = null;
+
+        const cancelBtn = document.getElementById('mcs-cancel');
+        if (cancelBtn) cancelBtn.style.display = 'inline-block';
+
+        document.querySelectorAll('.mcs-btn').forEach(b => b.classList.remove('active'));
+
+        const isDynamic = document.getElementById('mcs-dynamic')?.checked;
+        if (isDynamic) {
+            updateStatus(t('clickForCenter', { shape: t('shapeCustom') }));
+        } else {
+            updateStatus(t('clickForPosition', { shape: t('shapeCustom') }));
+        }
+
+        document.body.classList.add('mcs-drawing-mode');
+        sdk.Events.on({ eventName: 'wme-map-mouse-up', eventHandler: onMapClick });
+        sdk.Events.on({ eventName: 'wme-map-mouse-move', eventHandler: onMapMouseMove });
     }
 
     // ============ CUSTOM SHAPES ============
@@ -1869,7 +2917,7 @@
         if (finishBtn) finishBtn.style.display = 'none';
 
         const isDynamic = document.getElementById('mcs-dynamic')?.checked;
-        const isShapeWithRadius = [SHAPES.CIRCLE, SHAPES.SQUARE, SHAPES.RECTANGLE, SHAPES.TRIANGLE, 
+        const isShapeWithRadius = [SHAPES.CIRCLE, SHAPES.SQUARE, SHAPES.RECTANGLE, SHAPES.TRIANGLE,
                                    SHAPES.PENTAGON, SHAPES.HEXAGON, SHAPES.OCTAGON, SHAPES.STAR,
                                    SHAPES.ARROW_UP, SHAPES.ARROW_DOWN, SHAPES.ARROW_LEFT, SHAPES.ARROW_RIGHT,
                                    SHAPES.SPEECH_RECT, SHAPES.SPEECH_ROUND, SHAPES.CUSTOM].includes(shape);
@@ -1922,11 +2970,11 @@
         // Debug: Prüfen ob Funktion aufgerufen wird
         if (!onMapMouseMove.callCount) onMapMouseMove.callCount = 0;
         onMapMouseMove.callCount++;
-        
+
         if (onMapMouseMove.callCount % 100 === 1) {
             console.log(`${SCRIPT_NAME} - MouseMove called (${onMapMouseMove.callCount}x), isDrawing=${isDrawing}, shapeCenter=${JSON.stringify(shapeCenter)}`);
         }
-        
+
         if (!isDrawing || !shapeCenter) return;
 
         const isDynamic = document.getElementById('mcs-dynamic')?.checked;
@@ -1939,13 +2987,13 @@
         if (!coords || isNaN(coords[0]) || isNaN(coords[1])) return;
 
         const radius = distanceBetween(shapeCenter, coords);
-        
+
         // Debug: Nur alle 500ms loggen um Console nicht zu fluten
         if (!onMapMouseMove.lastLog || Date.now() - onMapMouseMove.lastLog > 500) {
             console.log(`${SCRIPT_NAME} - Preview: center=${JSON.stringify(shapeCenter)}, mouse=${JSON.stringify(coords)}, radius=${radius.toFixed(1)}m`);
             onMapMouseMove.lastLog = Date.now();
         }
-        
+
         const previewCoords = getShapeCoords(shapeCenter, radius);
 
         if (previewCoords && previewCoords.length >= 3) {
@@ -2084,7 +3132,7 @@
 
         // Sicherstellen dass center Numbers enthält
         const safeCenter = [parseFloat(center[0]), parseFloat(center[1])];
-        
+
         // Mindestradius 5m
         const safeRadius = Math.max(5, parseFloat(radius));
 
@@ -2103,7 +3151,7 @@
     function addMapComment(geometry, subject, body, endDate) {
         try {
             let cleanGeometry;
-            
+
             if (geometry.type === 'Point') {
                 // Point: coordinates ist direkt [lon, lat]
                 cleanGeometry = {
@@ -2123,7 +3171,7 @@
                     coordinates: [coords]
                 };
             }
-            
+
             console.log(`${SCRIPT_NAME} - Creating map comment with geometry:`, JSON.stringify(cleanGeometry));
 
             const result = sdk.DataModel.MapComments.addComment({
@@ -2136,7 +3184,7 @@
             if (result) {
                 updateStatus('✅ ' + t('commentCreatedId', { id: result.id }));
                 console.log(`${SCRIPT_NAME} - Map comment created:`, result);
-                
+
                 // Neu erstellten Map Comment automatisch auswählen
                 setTimeout(() => {
                     try {
@@ -2146,7 +3194,7 @@
                             if (comment) {
                                 W.selectionManager.setSelectedModels([comment]);
                                 console.log(`${SCRIPT_NAME} - Auto-selected created comment:`, result.id);
-                                
+
                                 // Tab wieder auf unser Script setzen (WME springt automatisch zum Edit-Tab)
                                 setTimeout(() => {
                                     try {
@@ -2158,7 +3206,7 @@
                                             `[id*="${SCRIPT_ID}"]`,
                                             `a[href="#${SCRIPT_ID}"]`
                                         ];
-                                        
+
                                         let clicked = false;
                                         for (const selector of tabSelectors) {
                                             const tab = document.querySelector(selector);
@@ -2169,7 +3217,7 @@
                                                 break;
                                             }
                                         }
-                                        
+
                                         // Fallback: Suche nach Tab mit unserem Emoji
                                         if (!clicked) {
                                             const allTabs = document.querySelectorAll('#user-tabs .nav-tabs li a, #sidepanel-scripts .nav-tabs li a');
@@ -2191,7 +3239,7 @@
                         console.warn(`${SCRIPT_NAME} - Could not auto-select comment:`, e);
                     }
                 }, 100); // Kurze Verzögerung damit der Comment vollständig erstellt ist
-                
+
             } else {
                 updateStatus('⚠️ ' + t('commentCreated'));
             }
@@ -2210,270 +3258,124 @@
         const style = document.createElement('style');
         style.id = 'mcs-styles';
         style.textContent = `
-            .mcs-container {
-                padding: 8px;
-                font-family: 'Segoe UI', Tahoma, sans-serif;
-                font-size: 12px;
-            }
-            .mcs-container h3 {
-                margin: 0 0 3px 0;
-                color: #333;
-                font-size: 15px;
-            }
-            .mcs-version {
-                color: #888;
-                font-size: 10px;
-                margin: 0 0 8px 0;
-            }
-            .mcs-section {
-                margin-bottom: 10px;
-            }
-            .mcs-label {
-                display: block;
-                font-weight: bold;
-                margin-bottom: 4px;
-                color: #444;
-            }
-            .mcs-shape-grid {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 3px;
-            }
-            .mcs-shape-grid.mcs-arrows {
-                grid-template-columns: repeat(4, 1fr);
-                margin-top: 3px;
-            }
-            .mcs-shape-grid.mcs-speech {
-                grid-template-columns: repeat(2, 1fr);
-                margin-top: 3px;
-            }
-            .mcs-sublabel {
-                margin-top: 6px;
-                font-size: 10px;
-                color: #666;
-            }
-            .mcs-btn {
-                padding: 6px;
-                font-size: 20px;
-                line-height: 1;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                background: #f5f5f5;
-                cursor: pointer;
-                transition: all 0.15s;
-                min-width: 36px;
-                min-height: 36px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .mcs-btn:hover {
-                background: #e8e8e8;
-                border-color: #4a90d9;
-            }
-            .mcs-btn.active {
-                background: #4a90d9;
-                border-color: #357abd;
-                color: white;
-            }
-            .mcs-row {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                margin-bottom: 3px;
-            }
-            .mcs-row span {
-                min-width: 60px;
-                color: #555;
-            }
-            .mcs-row input[type="number"] {
-                width: 55px;
-                padding: 3px;
-                border: 1px solid #ccc;
-                border-radius: 3px;
-            }
-            .mcs-checkbox {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                cursor: pointer;
-                color: #555;
-            }
-            .mcs-checkbox input {
-                cursor: pointer;
-            }
-            .mcs-select {
-                flex: 1;
-                padding: 3px;
-                border: 1px solid #ccc;
-                border-radius: 3px;
-                font-size: 11px;
-            }
-            .mcs-small-btn {
-                padding: 3px 6px;
-                border: 1px solid #ccc;
-                border-radius: 3px;
-                background: #f5f5f5;
-                cursor: pointer;
-                font-size: 12px;
-                transition: all 0.15s;
-            }
-            .mcs-small-btn:hover {
-                background: #e8e8e8;
-            }
-            .mcs-small-btn.mcs-save {
-                background: #d4edda;
-                border-color: #28a745;
-            }
-            .mcs-small-btn.mcs-save:hover {
-                background: #c3e6cb;
-            }
-            .mcs-small-btn.mcs-delete {
-                background: #f8d7da;
-                border-color: #dc3545;
-            }
-            .mcs-small-btn.mcs-delete:hover {
-                background: #f5c6cb;
-            }
-            .mcs-template-input {
-                flex: 1;
-                padding: 4px 6px;
-                border: 1px solid #ccc;
-                border-radius: 3px;
-                font-size: 12px;
-            }
-            .mcs-row-full {
-                margin-bottom: 8px;
-            }
-            .mcs-row-full input,
-            .mcs-row-full textarea {
-                width: 100%;
-                padding: 6px;
-                border: 1px solid #ccc;
-                border-radius: 3px;
-                font-family: inherit;
-                font-size: 12px;
-                box-sizing: border-box;
-            }
-            .mcs-row-full textarea {
-                resize: vertical;
-            }
-            .mcs-status {
-                background: #e8f4fc;
-                border: 1px solid #b8d4e8;
-                border-radius: 4px;
-                padding: 8px;
-                text-align: center;
-                color: #2c5282;
-                margin-bottom: 8px;
-            }
-            .mcs-actions {
-                display: flex;
-                gap: 8px;
-                justify-content: center;
-            }
-            .mcs-action-btn {
-                padding: 6px 14px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                font-weight: bold;
-                font-size: 12px;
-            }
-            .mcs-cancel {
-                background: #dc3545;
-                color: white;
-            }
+            .mcs-container { padding: 8px; font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 12px; }
+            .mcs-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+            .mcs-title { font-weight: bold; font-size: 14px; color: #333; }
+            .mcs-version { color: #999; font-size: 10px; }
+            .mcs-section { margin-bottom: 8px; }
+            .mcs-label { font-weight: 600; color: #444; margin-bottom: 6px; font-size: 11px; }
+
+            /* Shape Grid */
+            .mcs-shape-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 8px; }
+            .mcs-btn { padding: 6px; font-size: 16px; line-height: 1; border: 1px solid #ddd; border-radius: 4px; background: #f5f5f5; cursor: pointer; transition: all 0.15s; min-width: 32px; min-height: 32px; display: flex; align-items: center; justify-content: center; }
+            .mcs-btn:hover { background: #e0e0e0; border-color: #4a90d9; transform: scale(1.05); }
+            .mcs-btn.active { background: #4a90d9; border-color: #357abd; color: white; }
+
+            /* Size Row */
+            .mcs-size-row { display: flex; align-items: center; gap: 8px; font-size: 11px; flex-wrap: wrap; }
+            .mcs-checkbox { display: flex; align-items: center; gap: 4px; cursor: pointer; color: #555; }
+            .mcs-checkbox input { width: 14px; height: 14px; }
+            .mcs-input-num { width: 55px; padding: 4px 6px; border: 1px solid #ccc; border-radius: 3px; font-size: 11px; }
+
+            /* Status */
+            .mcs-status { background: linear-gradient(135deg, #e8f4fc, #d4e8f7); border: 1px solid #b8d4e8; border-radius: 4px; padding: 8px; text-align: center; color: #2c5282; margin-bottom: 8px; font-size: 12px; font-weight: 500; }
+            .mcs-actions { display: flex; gap: 8px; justify-content: center; margin-bottom: 8px; }
+            .mcs-action-btn { padding: 6px 14px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
+            .mcs-cancel { background: #dc3545; color: white; }
             .mcs-cancel:hover { background: #c82333; }
-            .mcs-help {
-                background: #fffbeb;
-                border-radius: 4px;
-                padding: 10px;
-                margin-top: 10px;
-            }
-            .mcs-help ul {
-                margin: 0;
-                padding-left: 16px;
-                font-size: 11px;
-                color: #666;
-            }
-            .mcs-help li { margin-bottom: 3px; }
+
+            /* Accordion */
+            .mcs-accordion { border: 1px solid #ddd; border-radius: 6px; margin-bottom: 6px; overflow: hidden; }
+            .mcs-accordion:nth-of-type(1) { background: #e8f4fc; border-color: #b8d4e8; }
+            .mcs-accordion:nth-of-type(1) .mcs-accordion-header { background: linear-gradient(135deg, #4a90d9, #357abd); color: white; }
+            .mcs-accordion:nth-of-type(2) { background: #e8fcf4; border-color: #b8e8d4; }
+            .mcs-accordion:nth-of-type(2) .mcs-accordion-header { background: linear-gradient(135deg, #28a745, #218838); color: white; }
+            .mcs-accordion:nth-of-type(3) { background: #fcf4e8; border-color: #e8d4b8; }
+            .mcs-accordion:nth-of-type(3) .mcs-accordion-header { background: linear-gradient(135deg, #fd7e14, #e06b0a); color: white; }
+            .mcs-accordion:nth-of-type(4) { background: #e8fcfc; border-color: #b8e8e8; }
+            .mcs-accordion:nth-of-type(4) .mcs-accordion-header { background: linear-gradient(135deg, #17a2b8, #138496); color: white; }
+            .mcs-accordion:nth-of-type(5) { background: #fffde8; border-color: #f0e8a0; }
+            .mcs-accordion:nth-of-type(5) .mcs-accordion-header { background: linear-gradient(135deg, #ffc107, #e0a800); color: white; }
+            .mcs-accordion:nth-of-type(6) { background: #f8f9fa; border-color: #dee2e6; }
+            .mcs-accordion:nth-of-type(6) .mcs-accordion-header { background: linear-gradient(135deg, #6c757d, #5a6268); color: white; }
+            .mcs-accordion-header { padding: 8px 10px; cursor: pointer; font-weight: 600; font-size: 12px; list-style: none; display: flex; align-items: center; }
+            .mcs-accordion-header::-webkit-details-marker { display: none; }
+            .mcs-accordion-header::before { content: '▶'; font-size: 9px; margin-right: 8px; transition: transform 0.2s; opacity: 0.8; }
+            .mcs-accordion[open] .mcs-accordion-header::before { transform: rotate(90deg); }
+            .mcs-accordion-body { padding: 10px; border-top: 1px solid #eee; background: white; }
+
+            /* Inputs */
+            .mcs-input { width: 100%; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; box-sizing: border-box; margin-bottom: 6px; }
+            .mcs-input:focus { border-color: #4a90d9; outline: none; box-shadow: 0 0 0 2px rgba(74,144,217,0.2); }
+            .mcs-textarea { width: 100%; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; box-sizing: border-box; resize: vertical; margin-bottom: 6px; }
+            .mcs-select { flex: 1; padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 11px; min-width: 0; background: white; }
+
+            /* Field Rows */
+            .mcs-field-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+            .mcs-field-row label { font-size: 11px; color: #555; min-width: 60px; }
+            .mcs-divider { height: 1px; background: #e0e0e0; margin: 10px 0; }
+            .mcs-sublabel { font-size: 11px; font-weight: 600; color: #666; margin-bottom: 6px; }
+
+            /* Buttons */
+            .mcs-btn-sm { padding: 5px 10px; border: 1px solid #ccc; border-radius: 4px; background: #f5f5f5; cursor: pointer; font-size: 11px; white-space: nowrap; }
+            .mcs-btn-sm:hover { background: #e8e8e8; }
+            .mcs-btn-blue { background: #4a90d9; border-color: #4a90d9; color: white; }
+            .mcs-btn-blue:hover { background: #357abd; }
+            .mcs-btn-green { background: #28a745; border-color: #28a745; color: white; }
+            .mcs-btn-green:hover { background: #218838; }
+            .mcs-btn-red { background: #dc3545; border-color: #dc3545; color: white; }
+            .mcs-btn-red:hover { background: #c82333; }
+            .mcs-btn-full { width: 100%; padding: 8px; border: 1px solid #8b5cf6; border-radius: 4px; background: #8b5cf6; color: white; cursor: pointer; font-size: 12px; margin-bottom: 6px; }
+            .mcs-btn-full:hover { background: #7c3aed; }
+            .mcs-btn-row { display: flex; gap: 8px; margin-top: 8px; }
+
+            /* Tool Box */
+            .mcs-tool-box { background: linear-gradient(135deg, #e8f4fc, #d4e8f7); border: 1px solid #b8d4e8; border-radius: 6px; padding: 10px; margin-bottom: 10px; }
+            .mcs-tool-box:nth-child(odd) { background: linear-gradient(135deg, #e8f4fc, #d4e8f7); border-color: #b8d4e8; }
+            .mcs-tool-box:nth-child(even) { background: linear-gradient(135deg, #f0e8fc, #e4d4f7); border-color: #d4b8e8; }
+            .mcs-tool-title { font-weight: 600; font-size: 12px; color: #333; margin-bottom: 4px; }
+            .mcs-tool-desc { font-size: 10px; color: #666; margin-bottom: 8px; line-height: 1.4; }
+
+            /* Range Slider */
+            .mcs-range { flex: 1; height: 18px; cursor: pointer; min-width: 80px; }
+            .mcs-range-val { font-size: 11px; color: #4a90d9; font-weight: 600; min-width: 40px; text-align: right; }
+
+            /* Result/Info Box */
+            .mcs-result-box { margin-top: 8px; padding: 8px; background: #e8f4fc; border-radius: 4px; font-size: 11px; text-align: center; }
+            .mcs-result-box:empty { display: none; }
+
+            /* Image Box */
+            .mcs-image-box { margin: 8px 0; text-align: center; background: #f8f8f8; border: 1px solid #ddd; border-radius: 4px; padding: 8px; }
+            .mcs-image-box canvas { max-width: 100%; max-height: 150px; border: 1px solid #ccc; border-radius: 2px; }
+
+            /* Hint */
+            .mcs-hint { background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; padding: 8px; font-size: 11px; color: #856404; margin-bottom: 10px; text-align: center; }
+
+            /* Help */
+            .mcs-help { font-size: 11px; color: #555; line-height: 1.6; }
+            .mcs-help div { margin-bottom: 4px; }
             .mcs-help b { color: #333; }
 
-            /* Simplify Section */
-            .mcs-simplify-section {
-                background: #f0f7ff;
-                border: 1px solid #b8d4e8;
-                border-radius: 6px;
-                padding: 10px;
-            }
-            .mcs-hint {
-                font-size: 11px;
-                color: #666;
-                margin: 0 0 10px 0;
-            }
-            .mcs-hint-small {
-                font-size: 10px;
-                color: #888;
-                margin: 5px 0 0 0;
-            }
-            .mcs-slider {
-                flex: 1;
-                cursor: pointer;
-            }
-            .mcs-simplify-actions, .mcs-rotate-actions {
-                justify-content: center;
-                gap: 10px;
-                margin-top: 8px;
-            }
-            .mcs-simplify {
-                background: #17a2b8;
-                color: white;
-                padding: 8px 16px;
-            }
-            .mcs-simplify:hover { background: #138496; }
-            .mcs-simplify-info {
-                margin-top: 8px;
-                padding: 6px;
-                background: #e8f4fc;
-                border-radius: 4px;
-                font-size: 11px;
-                display: flex;
-                flex-wrap: wrap;
-                gap: 8px;
-                justify-content: center;
-            }
-            .mcs-simplify-info:empty { display: none; }
-            .mcs-info-item { color: #555; }
-            .mcs-info-item b { color: #333; }
-            .mcs-reduction b { color: #28a745; }
+            /* Drawing Mode */
+            body.mcs-drawing-mode #WazeMap, body.mcs-drawing-mode #WazeMap * { cursor: crosshair !important; }
 
-            /* Rotate Section */
-            .mcs-rotate-section {
-                background: #fff8e6;
-                border: 1px solid #f0d78c;
-                border-radius: 6px;
-                padding: 10px;
-            }
-            .mcs-rotate {
-                background: #ffc107;
-                color: #333;
-                padding: 8px 16px;
-            }
-            .mcs-rotate:hover { background: #e0a800; }
-
-            /* Custom Shapes Section */
-            .mcs-custom-section {
-                background: #f0fff0;
-                border: 1px solid #90ee90;
-                border-radius: 6px;
-                padding: 10px;
-            }
-
-            body.mcs-drawing-mode #WazeMap,
-            body.mcs-drawing-mode #WazeMap * {
-                cursor: crosshair !important;
-            }
+            /* Update Popup */
+            #mcs-update-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center; }
+            .mcs-update-popup { background: white; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); max-width: 420px; width: 90%; max-height: 80vh; overflow: hidden; animation: mcs-popup-in 0.3s ease; }
+            @keyframes mcs-popup-in { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+            .mcs-update-header { background: linear-gradient(135deg, #4a90d9, #357abd); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+            .mcs-update-title { font-size: 18px; font-weight: bold; }
+            .mcs-update-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 0; line-height: 1; opacity: 0.8; }
+            .mcs-update-close:hover { opacity: 1; }
+            .mcs-update-content { padding: 20px; max-height: 50vh; overflow-y: auto; }
+            .mcs-update-section { margin-bottom: 16px; }
+            .mcs-update-section:last-child { margin-bottom: 0; }
+            .mcs-update-section-title { font-weight: 600; font-size: 14px; color: #333; margin-bottom: 8px; }
+            .mcs-update-list { margin: 0; padding-left: 20px; color: #555; font-size: 13px; line-height: 1.8; }
+            .mcs-update-list li { margin-bottom: 4px; }
+            .mcs-update-footer { padding: 16px 20px; background: #f8f9fa; border-top: 1px solid #e9ecef; text-align: center; }
+            .mcs-update-btn { background: linear-gradient(135deg, #28a745, #218838); color: white; border: none; padding: 10px 30px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: transform 0.15s; }
+            .mcs-update-btn:hover { transform: scale(1.05); }
         `;
         document.head.appendChild(style);
     }

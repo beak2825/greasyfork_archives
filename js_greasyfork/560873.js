@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PP Replacer 🪮
 // @namespace    http://tampermonkey.net/
-// @version      1.9
+// @version      2.3.2
 // @description  Instant image replacement for Popmundo. Works on Tampermonkey and Violentmonkey (Mobile).
 // @author       Gemini
 // @match        https://*.popmundo.com/*
@@ -32,7 +32,7 @@
 
         /* lola */
         .avatar.pointer.idTrigger[style*="https://res.cloudinary.com/dlgjqlsb3/image/upload/v1767283555/4_ekcfl3.jpg"] {
-          background: url("https://i.imgur.com/iXvjgfA.jpeg") no-repeat !important;
+          background: url("https://i.imgur.com/H5WT6Sh.png") no-repeat !important;
           background-size: cover !important;
         }
 
@@ -120,12 +120,6 @@
           background-size: cover !important;
         }
 
-        /* jann */
-        .avatar.pointer.idTrigger[style*="https://images2.imgbox0.com/d8/6b/phRP3tQf_o.png"] {
-          background: url("https://i.imgur.com/H5WT6Sh.png") no-repeat !important;
-          background-size: cover !important;
-        }
-
         /* alina */
         .avatar.pointer.idTrigger[style*="https://images2.imgbox.com/61/54/1iSXWkEQ6_o.png"] {
           background: url("https://images2.imgbox.com/61/54/iSXWkEQ6_o.png") no-repeat !important;
@@ -152,7 +146,7 @@
 
         /* sam */
         .avatar.pointer.idTrigger[style*="https://images2.imgbox.com/41/bf/Bc91KqOe_2.png"] {
-          background: url("https://i.imgur.com/E52PmYw.jpeg") no-repeat !important;
+          background: url("https://i.imgur.com/FANAGcA.png") no-repeat !important;
           background-size: cover !important;
         }
 

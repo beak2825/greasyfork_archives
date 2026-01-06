@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         论坛列表自动显示图片
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4.1
 // @author       Cantona
 // @license      MIT
-// @description  在论坛列表页自动显示帖子缩略图和附件下载按钮，手动点击翻页
+// @description  在论坛列表页自动显示帖子缩略图和附件下载按钮,手动点击翻页
 // @match        *://*/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
@@ -13,7 +13,7 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_setClipboard
 // @run-at       document-end
-// @connect   
+// @connect      *
 // @downloadURL https://update.greasyfork.org/scripts/561308/%E8%AE%BA%E5%9D%9B%E5%88%97%E8%A1%A8%E8%87%AA%E5%8A%A8%E6%98%BE%E7%A4%BA%E5%9B%BE%E7%89%87.user.js
 // @updateURL https://update.greasyfork.org/scripts/561308/%E8%AE%BA%E5%9D%9B%E5%88%97%E8%A1%A8%E8%87%AA%E5%8A%A8%E6%98%BE%E7%A4%BA%E5%9B%BE%E7%89%87.meta.js
 // ==/UserScript==
@@ -231,22 +231,19 @@
         const allowedDomains = getAllowedDomains();
         
         if (allowedDomains.includes(mainDomain)) {
-            alert('主域名已在白名单中：' + mainDomain);
+            alert('主域名已在白名单中:' + mainDomain);
             return;
         }
         
-        if (confirm(`添加主域名到白名单？\n\n${mainDomain}\n\n将匹配所有子域名`)) {
+        if (confirm(`添加主域名到白名单?\n\n${mainDomain}\n\n将匹配所有子域名`)) {
             allowedDomains.push(mainDomain);
             saveAllowedDomains(allowedDomains);
-            alert('已添加，请刷新页面');
+            alert('已添加,请刷新页面');
         }
     }
     
     GM_registerMenuCommand('⚙️ 域名管理', showSettings);
     GM_registerMenuCommand('➕ 快速添加当前域名', addCurrentDomain);
-    
-    // 无论是否在白名单，都先准备样式，方便用户在任何站点管理白名单
-
     
     let isAutoLoading = false;
     let observer = null;
@@ -254,7 +251,6 @@
     let currentPage = 1;
     let isLoadingNextPage = false;
     
-    // 轻量级加载完成检测
     function isAllContentLoaded() {
         const loadingElements = document.querySelectorAll(
             '.thread-loading, .attachment-loading-btn'
@@ -265,41 +261,6 @@
         
         return loadingElements.length === 0 && processingThreads.length === 0;
     }
-    
-    // 更新翻页按钮状态
-    // function updatePaginationButton() {
-    //         const nextPageBtn = document.getElementById('nextPageBtn');
-    //         if (!nextPageBtn) return;
-    //         
-    //         if (isLoadingNextPage) {
-    //             nextPageBtn.textContent = '翻页中...';
-    //             nextPageBtn.disabled = true;
-    //             return;
-    //         }
-    //         
-    //         if (!isAllContentLoaded()) {
-    //             nextPageBtn.textContent = '下一页';
-    //             nextPageBtn.disabled = true;
-    //             nextPageBtn.classList.add('loading');
-    //         } else {
-    //             const nextPageUrl = findNextPageUrl();
-    //             if (nextPageUrl) {
-    //                 nextPageBtn.textContent = '下一页';
-    //                 nextPageBtn.disabled = false;
-    //                 nextPageBtn.classList.remove('loading');
-    //             } else {
-    //                 nextPageBtn.textContent = '最后一页';
-    //                 nextPageBtn.disabled = true;
-    //             }
-    //         }
-    //     }
-    
-    // 定时检查加载状态
-    // function startLoadingCheck() {
-    //         setInterval(() => {
-    //             // updatePaginationButton();
-    //         }, 500);
-    //     }
     
     GM_addStyle(`
         #settingsPanel {
@@ -691,7 +652,32 @@
             border: 1px solid #eee;
             max-width: 200px;
         }
-                        
+        
+        .images-control-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            z-index: 99999;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .control-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
         .control-btn:hover:not(:disabled) {
             background: #f0f0f0;
             color: #333;
@@ -726,7 +712,15 @@
             background: #15803d;
             border-color: #15803d;
         }
-                
+        
+        .page-info {
+            padding: 8px 12px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+        
         .loading-toast {
             position: fixed;
             top: 20px;
@@ -758,8 +752,7 @@
             }
         }
     `);
-
-    // 核心功能仅在白名单域名启用，样式已提前注入以便随时管理白名单
+    
     if (!isAllowedDomain()) {
         console.log('[图片预览] 当前域名不在白名单中');
         return;
@@ -906,35 +899,6 @@
         });
     }
     
-    function getRealDownloadUrl(popupUrl, callback) {
-        GM_xmlhttpRequest({
-            method: 'GET',
-            url: popupUrl,
-            timeout: 5000,
-            onload: function(response) {
-                if (response.status === 200) {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(response.responseText, 'text/html');
-                    
-                    const realLink = doc.querySelector('a[href*="forum.php?mod=attachment&aid="]');
-                    if (realLink) {
-                        callback(realLink.href, null);
-                    } else {
-                        callback(null, '未找到');
-                    }
-                } else {
-                    callback(null, '失败');
-                }
-            },
-            onerror: function() {
-                callback(null, '错误');
-            },
-            ontimeout: function() {
-                callback(null, '超时');
-            }
-        });
-    }
-    
     function parseAndDisplayImages(html, thread, container) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
@@ -968,36 +932,51 @@
             }
         });
         
+        // 修复: 磁力链接提取 - 移除"复制代码"等干扰文字
         const magnetLinks = [];
         const codeBlocks = doc.querySelectorAll('.blockcode, [class*="code"]');
         codeBlocks.forEach(block => {
-            const text = block.textContent || block.innerText;
-            const magnetRegex = /magnet:\?xt=urn:btih:[A-Z0-9]+[^\s]*/gi;
+            // 克隆节点以避免修改原始DOM
+            const clonedBlock = block.cloneNode(true);
+            // 移除所有可能包含"复制代码"等文字的按钮和操作元素
+            clonedBlock.querySelectorAll('button, em, i, .copy-btn, [onclick]').forEach(el => el.remove());
+            
+            const text = clonedBlock.textContent || clonedBlock.innerText;
+            // 更严格的正则表达式,只匹配标准磁力链接
+            const magnetRegex = /magnet:\?xt=urn:btih:[A-Z0-9]{32,40}(?:&[^\s&]*)?/gi;
             const matches = text.match(magnetRegex);
             if (matches) {
                 matches.forEach(magnet => {
-                    if (!magnetLinks.includes(magnet)) {
-                        magnetLinks.push(magnet);
+                    // 清理磁力链接,移除可能混入的中文和特殊字符
+                    let cleanMagnet = magnet.trim();
+                    // 移除URL中可能的中文编码干扰
+                    cleanMagnet = cleanMagnet.replace(/%E[0-9A-F]{1}%[0-9A-F]{2}%[0-9A-F]{2}/gi, '');
+                    // 确保是有效的磁力链接且未重复
+                    if (cleanMagnet.startsWith('magnet:?xt=urn:btih:') && !magnetLinks.includes(cleanMagnet)) {
+                        magnetLinks.push(cleanMagnet);
                     }
                 });
             }
         });
         
+        // 修复: 附件提取 - 直接构建下载链接
         const attachments = [];
         if (config.showAttachments) {
-            const attachList = doc.querySelectorAll('.pattl, dl.tattl');
+            const attachList = doc.querySelectorAll('.pattl, dl.tattl, .attnm');
             const processedAids = new Set();
             
             attachList.forEach(attach => {
                 const nameLink = attach.querySelector('a[id^="aid"], a[href*="forum.php?mod=attachment"]');
                 
                 if (nameLink) {
-                    const href = nameLink.href;
                     const attachName = nameLink.textContent.trim();
                     
-                    const isDirectLink = href.includes('forum.php?mod=attachment&aid=');
+                    // 跳过图片格式
+                    if (attachName.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/i)) {
+                        return;
+                    }
                     
-                    const aidMatch = href.match(/aid=([^&]+)/);
+                    const aidMatch = nameLink.href.match(/aid=([^&]+)/);
                     const aid = aidMatch ? aidMatch[1] : null;
                     
                     if (aid && processedAids.has(aid)) {
@@ -1006,14 +985,15 @@
                     
                     if (aid) {
                         processedAids.add(aid);
-                    }
-                    
-                    if (!attachName.match(/\.(jpg|jpeg|png|gif|bmp|webp)$/i)) {
+                        
+                        // 直接构建下载链接,无需二次请求
+                        const baseUrl = new URL(thread.url).origin;
+                        const directDownloadUrl = `${baseUrl}/forum.php?mod=attachment&aid=${aid}`;
+                        
                         attachments.push({
                             name: attachName,
-                            url: href,
-                            isDirect: isDirectLink,
-                            realUrl: isDirectLink ? href : null
+                            url: directDownloadUrl,
+                            aid: aid
                         });
                     }
                 }
@@ -1106,44 +1086,22 @@
             });
         }
         
+        // 修复: 附件按钮直接使用下载链接
         if (attachments.length > 0) {
             attachments.forEach((attach, index) => {
-                if (attach.isDirect) {
-                    const downloadBtn = document.createElement('a');
-                    downloadBtn.href = attach.realUrl;
-                    downloadBtn.target = '_blank';
-                    downloadBtn.className = 'thread-action-btn attachment-download-btn';
-                    downloadBtn.textContent = attachments.length > 1 ? `附件 ${index + 1}` : '下载附件';
-                    downloadBtn.title = attach.name;
-                    downloadBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                    });
-                    
-                    buttonsRow.appendChild(downloadBtn);
-                } else {
-                    const loadingBtn = document.createElement('span');
-                    loadingBtn.className = 'attachment-loading-btn';
-                    loadingBtn.textContent = '附件加载中...';
-                    buttonsRow.appendChild(loadingBtn);
-                    
-                    getRealDownloadUrl(attach.url, (realUrl, error) => {
-                        if (realUrl) {
-                            const downloadBtn = document.createElement('a');
-                            downloadBtn.href = realUrl;
-                            downloadBtn.target = '_blank';
-                            downloadBtn.className = 'thread-action-btn attachment-download-btn';
-                            downloadBtn.textContent = attachments.length > 1 ? `附件 ${index + 1}` : '下载附件';
-                            downloadBtn.title = attach.name;
-                            downloadBtn.addEventListener('click', (e) => {
-                                e.stopPropagation();
-                            });
-                            
-                            buttonsRow.replaceChild(downloadBtn, loadingBtn);
-                        } else {
-                            loadingBtn.textContent = '附件失败';
-                        }
-                    });
-                }
+                const downloadBtn = document.createElement('a');
+                downloadBtn.href = attach.url;
+                downloadBtn.target = '_blank';
+                downloadBtn.download = attach.name;
+                downloadBtn.className = 'thread-action-btn attachment-download-btn';
+                downloadBtn.textContent = attachments.length > 1 ? `附件 ${index + 1}` : '下载附件';
+                downloadBtn.title = attach.name;
+                
+                downloadBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                });
+                
+                buttonsRow.appendChild(downloadBtn);
             });
         }
         
@@ -1202,17 +1160,14 @@
         
         isAutoLoading = false;
         updatePageInfo();
-        // updatePaginationButton();
     }
-
-    // 监听原站分页（含自动翻页）插入的新帖子，自动补齐图片与链接
+    
     function startThreadObserver() {
         if (observer) observer.disconnect();
         const root = document.body;
         if (!root) return;
         observer = new MutationObserver((mutations) => {
             const hasNewThreads = mutations.some(m => {
-                // 直接新增的节点或其后代中包含帖子行
                 return Array.from(m.addedNodes).some(node => {
                     if (node.nodeType !== 1) return false;
                     if (node.matches && node.matches('tbody[id^="normalthread_"], tbody[id^="stickthread_"]')) return true;
@@ -1226,7 +1181,6 @@
                 loadAllThreadsImages(false);
             }, 200);
         });
-        // 监听整个页面子树，兼容站点通过 innerHTML/fragment 批量注入新列表
         observer.observe(root, { childList: true, subtree: true });
     }
     
@@ -1249,7 +1203,6 @@
         }
         
         isLoadingNextPage = true;
-        // updatePaginationButton();
         currentPage++;
         
         console.log(`[翻页] 加载第 ${currentPage} 页`);
@@ -1290,7 +1243,6 @@
                         
                         console.log(`[翻页] 插入 ${newThreads.length} 个新帖子`);
                         
-                        // 滚动到新内容
                         setTimeout(() => {
                             separator.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }, 100);
@@ -1308,7 +1260,6 @@
             hideLoadingToast();
         } finally {
             isLoadingNextPage = false;
-            // updatePaginationButton();
         }
     }
     
@@ -1352,7 +1303,6 @@
         
         createControlPanel();
         startThreadObserver();
-        // startLoadingCheck();
         
         if (config.autoLoad) {
             setTimeout(() => {

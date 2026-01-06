@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         HALO Armory Tracker Pro (Alien UI) - V2 Enhanced
 // @namespace    http://tampermonkey.net/
-// @version      HALO.4
-// @description  Faction armory tracker with V2 gap coverage and futuristic alien UI
+// @version      HALO.5.2
+// @description  Faction armory tracker with V2 countdown scheduler and alien UI
 // @author       Nova
 // @match        https://www.torn.com/*
 // @grant        GM_addStyle
@@ -19,8 +19,11 @@
 /* ---------- CONFIG ---------- */
 const factionIds = ["48418"];
 const REFRESH_MS = 45000; // V1: 45 seconds
-const V2_REFRESH_MS = 6 * 60 * 60 * 1000; // V2: 6 hours
-const PRUNE_DAYS = 3; // Prune V2 markers after 3 days
+const V2_INTERVAL_MS = 6 * 60 * 60 * 1000; // V2: 6 hours
+const PRICE_CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+const PROCESSED_LOGS_PRUNE_DAYS = 7;
+const V2_MARKERS_PRUNE_DAYS = 3;
+const MAX_V2_PAGES = 20;
 
 /* ---------- FACTION RULES ---------- */
 const FREE_ITEMS = [
@@ -35,13 +38,13 @@ const MEDICAL_ITEMS = [
 
 const STANDARD_DEPOSIT_RATE = 0.90;
 const XANAX_DEPOSIT_RATE = 0.9375;
-const STANDARD_USE_RATE = 0.97;
+const STANDARD_USE_RATE = 0.95;
 const MEDICAL_EXCESS_RATE = 1.00;
 const BLOOD_BAG_FILL_CREDIT = 200;
 const DAILY_MEDICAL_LIMIT = 100000;
-const LOAN_DISCOUNT_RATE = 0.50; // 50% price for loans
+const LOAN_DISCOUNT_RATE = 0.50;
 
-/* ---------- STORAGE ---------- */
+/* ---------- ENHANCED STORAGE ---------- */
 let factionKey = GM_getValue("FACTION_API_KEY","");
 let marketKey  = GM_getValue("MARKET_API_KEY","");
 
@@ -50,8 +53,28 @@ let deposits      = GM_getValue("deposits", {});
 let processedLogs = GM_getValue("processedLogs", {});
 let medWindows    = GM_getValue("medWindows", {});
 let beerWindows   = GM_getValue("beerWindows", {});
-let lastV2Fetch   = GM_getValue("lastV2Fetch", 0);
-let v2Stats       = GM_getValue("v2Stats", { recovered: 0, lastRun: 0 });
+
+// V2 Scheduling system
+let v2Stats = GM_getValue("v2Stats", { 
+    recovered: 0, 
+    lastRun: 0, 
+    totalPages: 0, 
+    truncated: false,
+    totalRuns: 0
+});
+
+let v2Schedule = GM_getValue("v2Schedule", { 
+    lastFetch: 0,
+    nextScheduled: 0,
+    overdueCount: 0,
+    lastCheck: 0
+});
+
+// Item and price caching
+let itemCache     = GM_getValue("itemCache", {});
+let priceCache    = GM_getValue("priceCache", {});
+let itemsMapCache = null;
+let nameToIdCache = {};
 
 /* ---------- HELPER FUNCTIONS ---------- */
 function stripTags(str){ return str ? str.replace(/<[^>]*>/g,"").trim() : ""; }
@@ -101,42 +124,112 @@ function isFillingBloodBag(text, itemName){
     return text.includes("filled") && itemName.includes("empty blood bag");
 }
 
-/* ---------- MARKET ---------- */
-let itemsMapCache = null;
-let nameToIdCache = {};
-
+/* ---------- ENHANCED ITEM RESOLUTION ---------- */
 async function fetchAllItems(){
     if(itemsMapCache) return itemsMapCache;
     if(!marketKey) return {};
-    const r = await fetch(`https://api.torn.com/v2/torn/items?cat=All&sort=ASC&key=${marketKey}`);
-    const d = await r.json();
-    itemsMapCache = d.items || {};
-    Object.values(itemsMapCache).forEach(it=>{
-        nameToIdCache[normalize(it.name)] = it.id;
-    });
-    return itemsMapCache;
+    
+    try {
+        const r = await fetch(`https://api.torn.com/v2/torn/items?cat=All&sort=ASC&key=${marketKey}`);
+        const d = await r.json();
+        itemsMapCache = d.items || {};
+        
+        Object.values(itemsMapCache).forEach(it => {
+            const itemId = it.id;
+            const itemName = it.name;
+            
+            if(!itemCache[itemId] || itemCache[itemId].name !== itemName) {
+                itemCache[itemId] = {
+                    name: itemName,
+                    lastSeen: Date.now()
+                };
+            }
+            
+            nameToIdCache[normalize(itemName)] = itemId;
+        });
+        
+        GM_setValue("itemCache", itemCache);
+        return itemsMapCache;
+    } catch (error) {
+        console.error("HALO: Error fetching items:", error);
+        return {};
+    }
 }
 
-async function resolvePriceForName(rawName){
-    const norm = normalize(rawName);
-    await fetchAllItems();
-    let id = nameToIdCache[norm];
-    if(!id){
-        for(const it of Object.values(itemsMapCache||{})){
-            const n = normalize(it.name);
-            if(n===norm || n.includes(norm) || norm.includes(n)){
-                id = it.id;
-                break;
-            }
+async function resolveItemId(itemName){
+    const norm = normalize(itemName);
+    
+    if(nameToIdCache[norm]) {
+        return nameToIdCache[norm];
+    }
+    
+    for(const [itemId, data] of Object.entries(itemCache)) {
+        if(normalize(data.name) === norm) {
+            nameToIdCache[norm] = itemId;
+            return itemId;
         }
     }
-    if(!id) return null;
-    const r = await fetch(`https://api.torn.com/v2/market/${id}/itemmarket?key=${marketKey}`);
-    const d = await r.json();
-    const listings = d?.itemmarket?.listings || [];
-    if(!listings.length) return null;
-    listings.sort((a,b)=> (a.price||a.cost||0)-(b.price||b.cost||0));
-    return Math.round(listings[0].price || listings[0].cost);
+    
+    await fetchAllItems();
+    
+    if(nameToIdCache[norm]) {
+        return nameToIdCache[norm];
+    }
+    
+    console.warn(`HALO: Could not resolve item ID for: ${itemName}`);
+    return null;
+}
+
+async function resolvePriceWithCache(itemId, itemName){
+    const now = Date.now();
+    
+    if(priceCache[itemId] && (now - priceCache[itemId].timestamp) < PRICE_CACHE_TTL) {
+        return priceCache[itemId].price;
+    }
+    
+    try {
+        const r = await fetch(`https://api.torn.com/v2/market/${itemId}/itemmarket?key=${marketKey}`);
+        const d = await r.json();
+        const listings = d?.itemmarket?.listings || [];
+        
+        if(!listings.length) {
+            console.warn(`HALO: No market listings for item ${itemId} (${itemName})`);
+            return null;
+        }
+        
+        listings.sort((a,b)=> (a.price||a.cost||0)-(b.price||b.cost||0));
+        const price = Math.round(listings[0].price || listings[0].cost);
+        
+        if(price > 0) {
+            priceCache[itemId] = {
+                price: price,
+                timestamp: now
+            };
+            GM_setValue("priceCache", priceCache);
+        }
+        
+        return price;
+    } catch (error) {
+        console.error(`HALO: Error fetching price for ${itemId}:`, error);
+        return null;
+    }
+}
+
+function cleanupPriceCache() {
+    const cutoff = Date.now() - (PRICE_CACHE_TTL * 2);
+    let cleaned = 0;
+    
+    for(const itemId in priceCache) {
+        if(priceCache[itemId].timestamp < cutoff) {
+            delete priceCache[itemId];
+            cleaned++;
+        }
+    }
+    
+    if(cleaned > 0) {
+        GM_setValue("priceCache", priceCache);
+        console.log(`HALO: Cleaned ${cleaned} expired price cache entries`);
+    }
 }
 
 /* ---------- WINDOWS ---------- */
@@ -159,30 +252,37 @@ function getNetValue(user){
 
 /* ---------- V1 LOGS FETCH ---------- */
 async function fetchFactionLogsV1(id){
-    const r = await fetch(`https://api.torn.com/faction/${id}?selections=armorynews&key=${factionKey}`);
-    const d = await r.json();
-    return d.armorynews || {};
+    try {
+        const r = await fetch(`https://api.torn.com/faction/${id}?selections=armorynews&key=${factionKey}`);
+        const d = await r.json();
+        return d.armorynews || {};
+    } catch (error) {
+        console.error("HALO: Error fetching V1 logs:", error);
+        return {};
+    }
 }
 
 /* ---------- V2 LOGS FETCH ---------- */
 async function fetchV2LogsPage(url){
     try {
         const response = await fetch(url);
+        if(!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error("V2 fetch error:", error);
+        console.error("HALO: V2 fetch error:", error);
         return { news: [], _metadata: { links: {} } };
     }
 }
 
 async function fetchAllV2Logs(sinceTimestamp = 0){
-    if(!factionKey) return { logs: [], recovered: 0 };
+    if(!factionKey) return { logs: [], recovered: 0, truncated: false, pages: 0 };
     
     let allLogs = [];
     let recovered = 0;
+    let pageCount = 0;
+    let truncated = false;
     
-    // Build base URL
     let baseUrl = `https://api.torn.com/v2/faction/news` +
                  `?cat=armoryAction&cat=armoryDeposit` +
                  `&stripTags=true&sort=desc` +
@@ -190,19 +290,21 @@ async function fetchAllV2Logs(sinceTimestamp = 0){
     
     if(sinceTimestamp > 0){
         baseUrl += `&from=${sinceTimestamp}`;
+    } else {
+        baseUrl += `&from=${Math.floor(Date.now() / 1000) - 86400}`;
     }
     
     let nextUrl = baseUrl;
-    let pageCount = 0;
     
-    while(nextUrl && pageCount < 10){ // Safety limit: max 10 pages
+    console.log(`HALO: V2 fetching since ${new Date(sinceTimestamp * 1000).toLocaleString()}`);
+    
+    while(nextUrl && pageCount < MAX_V2_PAGES){
         const data = await fetchV2LogsPage(nextUrl);
         
         if(!data.news || !Array.isArray(data.news)){
             break;
         }
         
-        // Filter out already processed logs
         for(const log of data.news){
             if(!processedLogs[log.id]){
                 allLogs.push(log);
@@ -210,23 +312,27 @@ async function fetchAllV2Logs(sinceTimestamp = 0){
             }
         }
         
-        // Check for next page
         nextUrl = data._metadata?.links?.next || null;
         pageCount++;
         
-        // Rate limit delay
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100 + (pageCount * 50)));
     }
     
-    return { logs: allLogs, recovered: recovered };
+    if(pageCount >= MAX_V2_PAGES && nextUrl){
+        truncated = true;
+        console.warn(`HALO: V2 fetch truncated at ${MAX_V2_PAGES} pages. More logs may exist.`);
+        showWarning(`V2 recovery truncated at ${MAX_V2_PAGES} pages. Some historical logs may be missing.`);
+    }
+    
+    console.log(`HALO: V2 fetched ${pageCount} pages, recovered ${recovered} new logs${truncated ? ' (TRUNCATED)' : ''}`);
+    
+    return { logs: allLogs, recovered, truncated, pages: pageCount };
 }
 
 /* ---------- LOG PROCESSING ---------- */
 async function processLogEntry(logId, entry, source = 'v1'){
-    // Skip if already processed
     if(processedLogs[logId]) return null;
     
-    // Extract text based on source
     let text = '';
     let timestamp = 0;
     
@@ -242,7 +348,6 @@ async function processLogEntry(logId, entry, source = 'v1'){
     
     text = text.replace(/\s+/g," ").trim();
     
-    // Parse the text
     const dep = text.match(/^(.+?) deposited (?:(\d+)\s*[x×]?\s*)?(.+?)\.?$/i);
     const use = text.match(/^(.+?) used (?:one of the faction's |a |)(.+?) items?\.?$/i)
              || text.match(/^(.+?) used (.+?)\.?$/i);
@@ -343,31 +448,39 @@ async function processParsedResult(result){
     
     const { user, action, itemName, count, logId, timestamp, source, isHalfPrice, isBloodBagFill } = result;
     
-    // Get price
+    const itemId = await resolveItemId(itemName);
+    if(!itemId) {
+        console.warn(`HALO: Could not process log ${logId} - unknown item: ${itemName}`);
+        return;
+    }
+    
+    const displayName = itemCache[itemId]?.name || itemName;
+    
     let price = null;
     
     if(isBloodBagFill){
         price = BLOOD_BAG_FILL_CREDIT;
     } else {
-        const marketPrice = await resolvePriceForName(itemName);
-        if(!marketPrice) return;
+        const marketPrice = await resolvePriceWithCache(itemId, displayName);
+        if(!marketPrice) {
+            console.warn(`HALO: No price for item ${itemId} (${displayName})`);
+            return;
+        }
         
         let adjustedPrice = marketPrice;
         
         if(action === 'deposit' || action === 'filled'){
-            adjustedPrice *= isXanax(itemName) ? XANAX_DEPOSIT_RATE : STANDARD_DEPOSIT_RATE;
+            adjustedPrice *= isXanax(displayName) ? XANAX_DEPOSIT_RATE : STANDARD_DEPOSIT_RATE;
         } else if(action === 'use' || action === 'loan'){
             adjustedPrice *= STANDARD_USE_RATE;
             
-            // Apply 50% discount for loans
             if(isHalfPrice){
                 adjustedPrice *= LOAN_DISCOUNT_RATE;
             }
             
-            // Medical excess handling
-            if(isMedical(itemName)){
+            if(isMedical(displayName)){
                 if(!processMedicalUse(user, marketPrice, timestamp)){
-                    return; // Not excess, skip
+                    return;
                 }
                 adjustedPrice = Math.round(marketPrice * MEDICAL_EXCESS_RATE);
             }
@@ -376,8 +489,7 @@ async function processParsedResult(result){
         price = Math.round(adjustedPrice);
     }
     
-    // Store based on action type
-    const key = `id:${itemName}`;
+    const key = `item:${itemId}`;
     
     if(action === 'deposit' || action === 'filled'){
         deposits[user] ??= {};
@@ -385,7 +497,8 @@ async function processParsedResult(result){
             count: 0, 
             price: price, 
             last: timestamp,
-            fullName: itemName,
+            itemId: itemId,
+            itemName: displayName,
             source: source,
             isHalfPrice: isHalfPrice || false
         };
@@ -397,7 +510,8 @@ async function processParsedResult(result){
             count: 0, 
             price: price, 
             last: timestamp,
-            fullName: itemName,
+            itemId: itemId,
+            itemName: displayName,
             source: source,
             isHalfPrice: isHalfPrice || false
         };
@@ -405,13 +519,11 @@ async function processParsedResult(result){
         usedItems[user][key].last = timestamp;
     }
     
-    // Mark as processed
     processedLogs[logId] = {
         source: source,
         timestamp: timestamp
     };
     
-    // Update V2 stats if applicable
     if(source === 'v2'){
         v2Stats.recovered++;
         v2Stats.lastRun = Date.now();
@@ -419,67 +531,153 @@ async function processParsedResult(result){
     }
 }
 
-/* ---------- V2 CATCH-UP SYSTEM ---------- */
+/* ---------- V2 COUNTDOWN SCHEDULER ---------- */
 async function runV2CatchUp(){
     if(!factionKey) return;
     
     console.log("HALO: Running V2 catch-up...");
     
-    const sinceTime = lastV2Fetch;
+    // Update schedule BEFORE running (in case of crash)
+    v2Schedule.lastFetch = Date.now();
+    v2Schedule.nextScheduled = v2Schedule.lastFetch + V2_INTERVAL_MS;
+    v2Schedule.lastCheck = Date.now();
+    GM_setValue("v2Schedule", v2Schedule);
+    
+    // Get last V2 fetch timestamp
+    let sinceTime = v2Stats.lastRun ? Math.floor(v2Stats.lastRun / 1000) : 0;
+    
+    // If first run or very old, go back 24 hours
+    if(sinceTime === 0 || (Date.now() - v2Stats.lastRun) > 86400000) {
+        sinceTime = Math.floor(Date.now() / 1000) - 86400;
+        console.log(`HALO: First V2 run or large gap, fetching from ${new Date(sinceTime * 1000).toLocaleString()}`);
+    }
+    
     const result = await fetchAllV2Logs(sinceTime);
     
-    if(result.logs.length === 0){
-        console.log("HALO: No new logs via V2");
-        return;
-    }
-    
-    console.log(`HALO: V2 recovered ${result.recovered} new logs`);
-    
-    // Process each new log
-    for(const log of result.logs){
-        const parsed = await processLogEntry(log.id, log, 'v2');
-        if(parsed){
-            await processParsedResult(parsed);
-        }
-    }
-    
-    // Update last fetch time
     if(result.logs.length > 0){
-        const newestTime = Math.max(...result.logs.map(l => l.timestamp));
-        lastV2Fetch = newestTime;
-        GM_setValue("lastV2Fetch", lastV2Fetch);
+        for(const log of result.logs){
+            const parsed = await processLogEntry(log.id, log, 'v2');
+            if(parsed){
+                await processParsedResult(parsed);
+            }
+        }
+        
+        // Update stats
+        v2Stats.lastRun = Date.now();
+        v2Stats.totalPages += result.pages;
+        v2Stats.truncated = v2Stats.truncated || result.truncated;
+        v2Stats.totalRuns = (v2Stats.totalRuns || 0) + 1;
+        
+        GM_setValue("v2Stats", v2Stats);
+        GM_setValue("usedItems", usedItems);
+        GM_setValue("deposits", deposits);
+        GM_setValue("processedLogs", processedLogs);
+        
+        console.log(`HALO: V2 completed. Recovered ${result.recovered} logs.`);
+    } else {
+        console.log("HALO: No new logs via V2");
     }
     
-    // Save all data
-    GM_setValue("usedItems", usedItems);
-    GM_setValue("deposits", deposits);
-    GM_setValue("processedLogs", processedLogs);
+    // Update schedule AFTER successful completion
+    v2Schedule.lastFetch = Date.now();
+    v2Schedule.nextScheduled = v2Schedule.lastFetch + V2_INTERVAL_MS;
+    v2Schedule.overdueCount = 0;
+    v2Schedule.lastCheck = Date.now();
+    GM_setValue("v2Schedule", v2Schedule);
     
-    // Prune old V2 markers
-    pruneOldV2Markers();
+    // Run maintenance
+    pruneProcessedLogs();
+    cleanupPriceCache();
     
     // Update UI
     renderPanel();
 }
 
-function pruneOldV2Markers(){
-    const pruneTime = Date.now() - (PRUNE_DAYS * 24 * 60 * 60 * 1000);
+function initializeV2Scheduler(){
+    const now = Date.now();
+    
+    // Initialize schedule if first time
+    if(v2Schedule.lastFetch === 0) {
+        v2Schedule.lastFetch = now - V2_INTERVAL_MS; // Pretend it ran 6 hours ago
+        v2Schedule.nextScheduled = now; // Schedule for now
+        v2Schedule.overdueCount = 0;
+        v2Schedule.lastCheck = now;
+        GM_setValue("v2Schedule", v2Schedule);
+        
+        console.log("HALO: Initialized V2 scheduler");
+    }
+    
+    // Check if overdue and run immediately if needed
+    checkV2Schedule();
+    
+    // Start monitoring
+    monitorV2Schedule();
+}
+
+function checkV2Schedule(){
+    const now = Date.now();
+    const overdue = now - v2Schedule.nextScheduled;
+    
+    v2Schedule.lastCheck = now;
+    GM_setValue("v2Schedule", v2Schedule);
+    
+    if(overdue > 0) {
+        // We're overdue!
+        const overdueMinutes = Math.round(overdue / 60000);
+        console.log(`HALO: V2 overdue by ${overdueMinutes} minutes`);
+        
+        v2Schedule.overdueCount++;
+        v2Schedule.nextScheduled = now + V2_INTERVAL_MS;
+        GM_setValue("v2Schedule", v2Schedule);
+        
+        // Show warning if severely overdue
+        if(overdueMinutes > 30) {
+            showWarning(`V2 overdue by ${overdueMinutes} minutes! Running catch-up...`, 15000);
+        }
+        
+        // Run V2
+        setTimeout(() => runV2CatchUp(), 1000);
+        
+        return true;
+    }
+    
+    return false;
+}
+
+function monitorV2Schedule(){
+    const now = Date.now();
+    const timeUntilNext = v2Schedule.nextScheduled - now;
+    
+    if(timeUntilNext <= 0) {
+        // Time's up - check and run
+        checkV2Schedule();
+        // Check again in 1 minute
+        setTimeout(monitorV2Schedule, 60000);
+    } else {
+        // Schedule check for when it's due (or 1 minute as safety)
+        const checkTime = Math.min(timeUntilNext, 60000);
+        setTimeout(monitorV2Schedule, checkTime);
+    }
+}
+
+/* ---------- DATA MANAGEMENT ---------- */
+function pruneProcessedLogs(){
+    const pruneTime = Date.now() - (PROCESSED_LOGS_PRUNE_DAYS * 24 * 60 * 60 * 1000);
     let pruned = 0;
     
-    // Prune from processedLogs
     Object.keys(processedLogs).forEach(logId => {
-        const entry = processedLogs[logId];
-        if(entry.source === 'v2' && entry.timestamp * 1000 < pruneTime){
+        if(processedLogs[logId].timestamp * 1000 < pruneTime) {
             delete processedLogs[logId];
             pruned++;
         }
     });
     
-    // Remove source markers from transactions (keep the data)
+    const v2MarkerPruneTime = Date.now() - (V2_MARKERS_PRUNE_DAYS * 24 * 60 * 60 * 1000);
+    
     for(const user in deposits){
         for(const itemKey in deposits[user]){
             const entry = deposits[user][itemKey];
-            if(entry.source === 'v2' && entry.last * 1000 < pruneTime){
+            if(entry.source === 'v2' && entry.last * 1000 < v2MarkerPruneTime){
                 delete deposits[user][itemKey].source;
             }
         }
@@ -488,17 +686,17 @@ function pruneOldV2Markers(){
     for(const user in usedItems){
         for(const itemKey in usedItems[user]){
             const entry = usedItems[user][itemKey];
-            if(entry.source === 'v2' && entry.last * 1000 < pruneTime){
+            if(entry.source === 'v2' && entry.last * 1000 < v2MarkerPruneTime){
                 delete usedItems[user][itemKey].source;
             }
         }
     }
     
     if(pruned > 0){
-        console.log(`HALO: Pruned ${pruned} old V2 markers`);
         GM_setValue("processedLogs", processedLogs);
         GM_setValue("deposits", deposits);
         GM_setValue("usedItems", usedItems);
+        console.log(`HALO: Pruned ${pruned} old processed logs`);
     }
 }
 
@@ -506,7 +704,11 @@ function pruneOldV2Markers(){
 async function loadLogs(){
     if(!factionKey || !marketKey) return;
     
-    // Process V1 logs as before
+    // Update last check time
+    v2Schedule.lastCheck = Date.now();
+    GM_setValue("v2Schedule", v2Schedule);
+    
+    // Process V1 logs
     let v1Logs = {};
     for(const id of factionIds){
         Object.assign(v1Logs, await fetchFactionLogsV1(id));
@@ -534,14 +736,14 @@ async function loadLogs(){
     renderPanel();
 }
 
-/* ---------- FUTURISTIC ALIEN UI ---------- */
+/* ---------- UI ---------- */
 GM_addStyle(`
-/* Main Panel */
+/* Main Panel - Smaller and more compact */
 #armoryPanel {
     position: fixed;
     bottom: 0;
     right: 15px;
-    width: 320px;
+    width: 300px;
     height: 85vh;
     background: 
         radial-gradient(circle at 20% 80%, rgba(0, 40, 60, 0.3) 0%, transparent 50%),
@@ -549,22 +751,21 @@ GM_addStyle(`
         linear-gradient(135deg, rgba(5, 5, 15, 0.95) 0%, rgba(15, 5, 25, 0.95) 100%);
     color: #00ffea;
     font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
-    border-radius: 12px 12px 0 0;
+    border-radius: 8px 8px 0 0;
     padding: 0;
     overflow: hidden;
     box-shadow: 
-        0 0 40px rgba(0, 255, 234, 0.4),
-        0 0 80px rgba(138, 43, 226, 0.3),
-        inset 0 0 30px rgba(0, 255, 234, 0.15);
+        0 0 30px rgba(0, 255, 234, 0.4),
+        0 0 60px rgba(138, 43, 226, 0.3),
+        inset 0 0 20px rgba(0, 255, 234, 0.15);
     display: none;
     z-index: 9999;
-    border: 2px solid rgba(0, 255, 234, 0.4);
+    border: 1px solid rgba(0, 255, 234, 0.4);
     border-bottom: none;
-    backdrop-filter: blur(10px);
-    font-size: 11px;
+    backdrop-filter: blur(8px);
+    font-size: 10px;
 }
 
-/* Hologram effect border */
 #armoryPanel::before {
     content: '';
     position: absolute;
@@ -576,7 +777,7 @@ GM_addStyle(`
         rgba(0, 255, 234, 0.4), 
         rgba(138, 43, 226, 0.4), 
         rgba(0, 255, 234, 0.4));
-    border-radius: 14px;
+    border-radius: 10px;
     z-index: -1;
     animation: hologram 3s linear infinite;
     opacity: 0.8;
@@ -587,21 +788,21 @@ GM_addStyle(`
     100% { filter: hue-rotate(360deg); }
 }
 
-/* Panel Header */
+/* Minimized Header */
 .panel-header {
     background: linear-gradient(90deg, 
         rgba(10, 20, 30, 0.9) 0%, 
         rgba(30, 10, 40, 0.9) 100%);
-    padding: 15px 20px;
+    padding: 8px 12px;
     border-bottom: 1px solid rgba(0, 255, 234, 0.3);
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(4px);
+    min-height: 35px;
 }
 
-/* Header scan line */
 .panel-header::after {
     content: '';
     position: absolute;
@@ -624,63 +825,61 @@ GM_addStyle(`
 
 .panel-header h1 {
     margin: 0;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 700;
     color: #00ffea;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
     text-shadow: 
-        0 0 10px rgba(0, 255, 234, 0.7),
-        0 0 20px rgba(0, 255, 234, 0.3);
-    letter-spacing: 1.5px;
+        0 0 8px rgba(0, 255, 234, 0.7),
+        0 0 15px rgba(0, 255, 234, 0.3);
+    letter-spacing: 1px;
     text-transform: uppercase;
     font-family: 'Orbitron', 'Courier New', monospace;
 }
 
-/* Alien icon with glow */
 .panel-header h1:before {
     content: "🛸";
-    font-size: 20px;
-    filter: drop-shadow(0 0 8px #00ffea);
+    font-size: 16px;
+    filter: drop-shadow(0 0 6px #00ffea);
     animation: float 3s ease-in-out infinite;
 }
 
 @keyframes float {
     0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-3px) rotate(5deg); }
+    50% { transform: translateY(-2px) rotate(5deg); }
 }
 
-/* Header buttons */
 .header-controls {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
 .header-btn {
     background: rgba(0, 255, 234, 0.15);
     border: 1px solid rgba(0, 255, 234, 0.4);
     color: #00ffea;
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-shadow: 0 0 8px rgba(0, 255, 234, 0.7);
+    text-shadow: 0 0 6px rgba(0, 255, 234, 0.7);
     position: relative;
     overflow: hidden;
 }
 
 .header-btn:hover {
     background: rgba(0, 255, 234, 0.3);
-    transform: scale(1.15);
+    transform: scale(1.1);
     box-shadow: 
-        0 0 20px rgba(0, 255, 234, 0.6),
-        0 0 40px rgba(0, 255, 234, 0.3);
+        0 0 15px rgba(0, 255, 234, 0.6),
+        0 0 30px rgba(0, 255, 234, 0.3);
 }
 
 .header-btn::before {
@@ -699,30 +898,28 @@ GM_addStyle(`
     opacity: 1;
 }
 
-/* Panel Content */
 .panel-content {
-    padding: 15px;
-    height: calc(100% - 50px);
+    padding: 12px;
+    height: calc(100% - 35px);
     overflow-y: auto;
     background: rgba(0, 5, 10, 0.7);
 }
 
-/* Stats Panel */
+/* Stats - Smaller and more compact */
 .stats-slim {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 12px;
     background: rgba(0, 255, 234, 0.08);
-    border-radius: 10px;
-    padding: 15px;
+    border-radius: 8px;
+    padding: 10px;
     border: 1px solid rgba(0, 255, 234, 0.3);
     position: relative;
     overflow: hidden;
     backdrop-filter: blur(5px);
 }
 
-/* Scanning effect */
 .stats-slim::before {
     content: '';
     position: absolute;
@@ -742,7 +939,6 @@ GM_addStyle(`
     100% { left: 100%; }
 }
 
-/* Individual Stats */
 .stat-slim {
     text-align: center;
     position: relative;
@@ -750,42 +946,66 @@ GM_addStyle(`
 }
 
 .stat-slim-number {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 800;
     color: #00ffea;
     text-shadow: 
-        0 0 10px rgba(0, 255, 234, 0.8),
-        0 0 20px rgba(0, 255, 234, 0.4);
+        0 0 8px rgba(0, 255, 234, 0.8),
+        0 0 15px rgba(0, 255, 234, 0.4);
     font-family: 'Orbitron', monospace;
-    letter-spacing: 1px;
-    margin-bottom: 3px;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
 }
 
 .stat-slim-label {
-    font-size: 9px;
+    font-size: 8px;
     color: #8af5ff;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 2px;
+    letter-spacing: 0.8px;
+    margin-top: 1px;
     opacity: 0.8;
     font-weight: 600;
 }
 
-/* API Toggle */
+.v2-stat {
+    background: linear-gradient(135deg, 
+        rgba(255, 153, 0, 0.15) 0%, 
+        rgba(255, 153, 0, 0.05) 100%) !important;
+    border: 1px solid rgba(255, 153, 0, 0.3) !important;
+}
+
+.v2-stat .stat-slim-number {
+    color: #ff9900 !important;
+    text-shadow: 0 0 6px rgba(255, 153, 0, 0.5) !important;
+}
+
+/* V2 Countdown Display - Removed */
+.v2-countdown-display {
+    display: none;
+}
+
+.v2-last-run {
+    font-size: 8px;
+    color: rgba(255, 153, 0, 0.8);
+    text-align: center;
+    margin-top: 5px;
+    font-family: 'Courier New', monospace;
+}
+
 .api-toggle {
     background: rgba(0, 255, 234, 0.1);
     border: 1px solid rgba(0, 255, 234, 0.3);
-    border-radius: 8px;
-    padding: 10px 15px;
-    margin-bottom: 12px;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 11px;
+    font-size: 10px;
     color: #00ffea;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
     font-weight: 600;
     transition: all 0.3s ease;
     position: relative;
@@ -799,7 +1019,7 @@ GM_addStyle(`
 
 .api-toggle::after {
     content: "▼";
-    font-size: 10px;
+    font-size: 9px;
     transition: transform 0.3s ease;
 }
 
@@ -807,7 +1027,6 @@ GM_addStyle(`
     transform: rotate(180deg);
 }
 
-/* API Fields */
 .api-fields {
     display: none;
     margin-top: 10px;
@@ -822,10 +1041,10 @@ GM_addStyle(`
 .api-input-slim {
     background: rgba(0, 10, 20, 0.8);
     border: 1px solid rgba(0, 255, 234, 0.4);
-    border-radius: 6px;
-    padding: 10px 12px;
+    border-radius: 5px;
+    padding: 8px 10px;
     color: #00ffea;
-    font-size: 11px;
+    font-size: 10px;
     width: 100%;
     margin-bottom: 8px;
     box-sizing: border-box;
@@ -838,29 +1057,28 @@ GM_addStyle(`
     outline: none;
     border-color: #00ffea;
     box-shadow: 
-        0 0 15px rgba(0, 255, 234, 0.5),
-        inset 0 0 10px rgba(0, 255, 234, 0.1);
+        0 0 12px rgba(0, 255, 234, 0.5),
+        inset 0 0 8px rgba(0, 255, 234, 0.1);
 }
 
-/* Sort Select */
 .sort-select-slim {
     background: rgba(0, 10, 20, 0.8);
     border: 1px solid rgba(0, 255, 234, 0.4);
-    border-radius: 6px;
-    padding: 10px 35px 10px 12px;
+    border-radius: 5px;
+    padding: 8px 30px 8px 10px;
     color: #00ffea;
-    font-size: 11px;
+    font-size: 10px;
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
     cursor: pointer;
     appearance: none;
     font-family: 'Courier New', monospace;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2300ffea' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%2300ffea' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 12px;
+    background-position: right 10px center;
+    background-size: 10px;
     transition: all 0.3s ease;
 }
 
@@ -873,26 +1091,24 @@ GM_addStyle(`
     outline: none;
     border-color: #00ffea;
     box-shadow: 
-        0 0 15px rgba(0, 255, 234, 0.5),
-        inset 0 0 10px rgba(0, 255, 234, 0.1);
+        0 0 12px rgba(0, 255, 234, 0.5),
+        inset 0 0 8px rgba(0, 255, 234, 0.1);
 }
 
-/* Users Container */
 .users-slim {
     background: rgba(0, 5, 10, 0.5);
-    border-radius: 8px;
-    padding: 5px;
+    border-radius: 6px;
+    padding: 4px;
     border: 1px solid rgba(0, 255, 234, 0.2);
 }
 
-/* Individual User Card */
 .user-slim {
     background: linear-gradient(135deg, 
         rgba(0, 20, 40, 0.7) 0%, 
         rgba(20, 0, 40, 0.7) 100%);
-    border-radius: 6px;
-    padding: 12px;
-    margin-bottom: 8px;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 6px;
     border: 1px solid rgba(0, 255, 234, 0.2);
     transition: all 0.3s ease;
     position: relative;
@@ -901,7 +1117,7 @@ GM_addStyle(`
 
 .user-slim:hover {
     border-color: rgba(0, 255, 234, 0.4);
-    box-shadow: 0 0 15px rgba(0, 255, 234, 0.2);
+    box-shadow: 0 0 12px rgba(0, 255, 234, 0.2);
 }
 
 .user-slim::before {
@@ -917,7 +1133,6 @@ GM_addStyle(`
         transparent);
 }
 
-/* User Header */
 .user-header-slim {
     display: flex;
     justify-content: space-between;
@@ -927,10 +1142,10 @@ GM_addStyle(`
 }
 
 .user-name-slim {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     color: #8af5ff;
-    max-width: 130px;
+    max-width: 110px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -939,13 +1154,12 @@ GM_addStyle(`
     letter-spacing: 0.5px;
 }
 
-/* Balance Display */
 .user-balance-slim {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
-    padding: 5px 10px;
+    padding: 4px 8px;
     border-radius: 4px;
-    min-width: 70px;
+    min-width: 60px;
     text-align: center;
     font-family: 'Orbitron', monospace;
     letter-spacing: 0.5px;
@@ -960,14 +1174,14 @@ GM_addStyle(`
         rgba(16, 185, 129, 0.1) 100%);
     color: #10f5c9;
     border: 1px solid rgba(16, 185, 129, 0.4);
-    text-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+    text-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
 }
 
 .balance-positive-slim:hover {
     background: linear-gradient(135deg, 
         rgba(16, 185, 129, 0.3) 0%, 
         rgba(16, 185, 129, 0.2) 100%);
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
 }
 
 .balance-negative-slim {
@@ -976,20 +1190,19 @@ GM_addStyle(`
         rgba(255, 65, 108, 0.1) 100%);
     color: #ff416c;
     border: 1px solid rgba(255, 65, 108, 0.4);
-    text-shadow: 0 0 8px rgba(255, 65, 108, 0.5);
+    text-shadow: 0 0 6px rgba(255, 65, 108, 0.5);
 }
 
 .balance-negative-slim:hover {
     background: linear-gradient(135deg, 
         rgba(255, 65, 108, 0.3) 0%, 
         rgba(255, 65, 108, 0.2) 100%);
-    box-shadow: 0 0 15px rgba(255, 65, 108, 0.3);
+    box-shadow: 0 0 12px rgba(255, 65, 108, 0.3);
 }
 
-/* User Details */
 .user-details-slim {
-    margin-top: 10px;
-    padding-top: 10px;
+    margin-top: 8px;
+    padding-top: 8px;
     border-top: 1px solid rgba(0, 255, 234, 0.2);
     display: none;
     animation: fadeIn 0.3s ease;
@@ -1000,21 +1213,19 @@ GM_addStyle(`
     to { opacity: 1; }
 }
 
-/* Items Container */
 .items-slim {
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
-/* Item Row */
 .item-row-slim {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 8px;
+    padding: 5px 6px;
     background: rgba(0, 10, 20, 0.6);
-    border-radius: 4px;
-    margin-bottom: 5px;
-    font-size: 10px;
+    border-radius: 3px;
+    margin-bottom: 4px;
+    font-size: 9px;
     border: 1px solid rgba(0, 255, 234, 0.1);
     transition: all 0.2s ease;
 }
@@ -1028,12 +1239,12 @@ GM_addStyle(`
 .item-info-slim {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .item-name-slim {
     color: #b8f5ff;
-    max-width: 70px;
+    max-width: 80px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1044,13 +1255,13 @@ GM_addStyle(`
 .item-count-slim {
     color: #00ffea;
     font-weight: 700;
-    font-size: 10px;
+    font-size: 9px;
     font-family: 'Orbitron', monospace;
 }
 
 .item-price-slim {
     font-weight: 700;
-    font-size: 10px;
+    font-size: 9px;
     color: #10f5c9;
     font-family: 'Orbitron', monospace;
     text-shadow: 0 0 5px rgba(16, 245, 201, 0.5);
@@ -1061,33 +1272,39 @@ GM_addStyle(`
     text-shadow: 0 0 5px rgba(255, 65, 108, 0.5);
 }
 
+.item-v2 {
+    background: rgba(255, 153, 0, 0.08) !important;
+    border-left: 3px solid rgba(255, 153, 0, 0.4) !important;
+}
+
+.v2-indicator {
+    color: #ff9900 !important;
+    margin-left: 3px;
+    font-size: 9px;
+    vertical-align: super;
+}
+
+.loan-indicator {
+    color: #ffcc00 !important;
+    margin-left: 3px;
+    font-size: 9px;
+    vertical-align: super;
+}
+
 .item-time-slim {
     color: #8af5ff;
-    font-size: 9px;
+    font-size: 8px;
     margin-left: 5px;
-    min-width: 50px;
+    min-width: 45px;
     text-align: right;
     opacity: 0.8;
     font-family: 'Courier New', monospace;
 }
 
-/* More Items Indicator */
-.more-items {
-    font-size: 9px;
-    color: #8af5ff;
-    text-align: center;
-    padding: 5px;
-    font-style: italic;
-    opacity: 0.7;
-    border-top: 1px dashed rgba(0, 255, 234, 0.2);
-    margin-top: 5px;
-}
-
-/* User Actions */
 .user-actions-slim {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
 .action-btn-slim {
@@ -1096,9 +1313,9 @@ GM_addStyle(`
         #ff4b2b 100%);
     color: white;
     border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 10px;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 9px;
     font-weight: 700;
     cursor: pointer;
     text-transform: uppercase;
@@ -1111,8 +1328,8 @@ GM_addStyle(`
 
 .action-btn-slim:before {
     content: "✧";
-    font-size: 10px;
-    margin-right: 4px;
+    font-size: 9px;
+    margin-right: 3px;
     animation: pulse 1.5s infinite;
 }
 
@@ -1124,26 +1341,25 @@ GM_addStyle(`
 .action-btn-slim:hover {
     transform: scale(1.05);
     box-shadow: 
-        0 0 20px rgba(255, 65, 108, 0.6),
-        0 0 40px rgba(255, 65, 108, 0.3);
+        0 0 15px rgba(255, 65, 108, 0.6),
+        0 0 30px rgba(255, 65, 108, 0.3);
 }
 
-/* Empty State */
 .empty-state-slim {
     text-align: center;
-    padding: 30px 15px;
+    padding: 25px 12px;
     color: rgba(138, 245, 255, 0.6);
-    font-size: 11px;
+    font-size: 10px;
     font-family: 'Orbitron', monospace;
 }
 
 .empty-state-slim:before {
     content: "🛰️";
-    font-size: 32px;
+    font-size: 28px;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     opacity: 0.7;
-    filter: drop-shadow(0 0 8px rgba(0, 255, 234, 0.5));
+    filter: drop-shadow(0 0 6px rgba(0, 255, 234, 0.5));
     animation: spin 10s linear infinite;
 }
 
@@ -1152,13 +1368,12 @@ GM_addStyle(`
     100% { transform: rotate(360deg); }
 }
 
-/* Bubble Button */
 #bubbleBtn {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
+    bottom: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
     background: linear-gradient(135deg, 
         rgba(0, 40, 60, 0.9) 0%, 
         rgba(60, 0, 80, 0.9) 100%);
@@ -1169,59 +1384,52 @@ GM_addStyle(`
     justify-content: center;
     cursor: pointer;
     z-index: 10000;
-    font-size: 24px;
+    font-size: 20px;
     box-shadow: 
-        0 0 30px rgba(0, 255, 234, 0.5),
-        0 0 60px rgba(138, 43, 226, 0.3);
-    border: 2px solid rgba(0, 255, 234, 0.5);
+        0 0 20px rgba(0, 255, 234, 0.5),
+        0 0 40px rgba(138, 43, 226, 0.3);
+    border: 1px solid rgba(0, 255, 234, 0.5);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     animation: floatBtn 3s ease-in-out infinite;
 }
 
 @keyframes floatBtn {
     0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-10px) rotate(10deg); }
+    50% { transform: translateY(-8px) rotate(10deg); }
 }
 
 #bubbleBtn:hover {
     transform: scale(1.2) rotate(20deg);
     box-shadow: 
-        0 0 50px rgba(0, 255, 234, 0.8),
-        0 0 100px rgba(138, 43, 226, 0.5);
+        0 0 40px rgba(0, 255, 234, 0.8),
+        0 0 80px rgba(138, 43, 226, 0.5);
 }
 
 #bubbleBtn:before {
     content: "👽";
-    filter: drop-shadow(0 0 10px #00ffea);
+    filter: drop-shadow(0 0 8px #00ffea);
 }
 
-/* Scrollbar Styling */
 .panel-content::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
 }
 
 .panel-content::-webkit-scrollbar-track {
     background: rgba(0, 255, 234, 0.05);
-    border-radius: 3px;
+    border-radius: 2px;
 }
 
 .panel-content::-webkit-scrollbar-thumb {
     background: linear-gradient(180deg, 
         rgba(0, 255, 234, 0.5) 0%, 
         rgba(138, 43, 226, 0.5) 100%);
-    border-radius: 3px;
+    border-radius: 2px;
 }
 
 .panel-content::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, 
         rgba(0, 255, 234, 0.7) 0%, 
         rgba(138, 43, 226, 0.7) 100%);
-}
-
-/* Loading Animation */
-@keyframes loading {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
 }
 
 .loading {
@@ -1233,81 +1441,64 @@ GM_addStyle(`
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
     border: 2px solid rgba(0, 255, 234, 0.3);
     border-top-color: #00ffea;
     border-radius: 50%;
     animation: loading 1s linear infinite;
 }
 
-/* V2 Indicators */
-.v2-indicator {
-    color: #ff9900 !important;
-    margin-left: 4px;
-    font-size: 10px;
-    vertical-align: super;
+@keyframes loading {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-.loan-indicator {
-    color: #ffcc00 !important;
-    margin-left: 4px;
-    font-size: 10px;
-    vertical-align: super;
-}
-
-/* V2 Stats in panel */
-.v2-stat {
-    background: linear-gradient(135deg, 
-        rgba(255, 153, 0, 0.15) 0%, 
-        rgba(255, 153, 0, 0.05) 100%) !important;
-    border: 1px solid rgba(255, 153, 0, 0.3) !important;
-}
-
-.v2-stat .stat-slim-number {
-    color: #ff9900 !important;
-    text-shadow: 0 0 8px rgba(255, 153, 0, 0.5) !important;
-}
-
-/* V2 item background */
-.item-v2 {
-    background: rgba(255, 153, 0, 0.08) !important;
-    border-left: 3px solid rgba(255, 153, 0, 0.4) !important;
-}
-
-/* V2 last run info */
-.v2-last-run {
-    font-size: 9px;
-    color: rgba(255, 153, 0, 0.8);
-    text-align: center;
-    margin-top: 5px;
-    font-family: 'Courier New', monospace;
+/* Remove overdue warning */
+.v2-overdue-warning {
+    display: none !important;
 }
 `);
 
-/* ---------- MODIFIED RENDER FUNCTIONS ---------- */
-const MAX_ITEM_DISPLAY = 3;
+function showWarning(message, duration = 30000){
+    const warning = document.createElement("div");
+    warning.className = "halo-warning";
+    warning.innerHTML = `⚠️ ${message}`;
+    warning.style.cursor = "pointer";
+    warning.onclick = () => warning.remove();
+    
+    const panelContent = document.querySelector(".panel-content");
+    if(panelContent) {
+        const existingWarnings = panelContent.querySelectorAll('.halo-warning');
+        existingWarnings.forEach(w => w.remove());
+        
+        panelContent.insertBefore(warning, panelContent.firstChild);
+        
+        if(duration > 0) {
+            setTimeout(() => {
+                if(warning.parentNode) warning.remove();
+            }, duration);
+        }
+    }
+}
 
+/* ---------- RENDER FUNCTIONS ---------- */
 function renderItemListCompact(items, isUsed = false) {
     if (!items || Object.keys(items).length === 0) {
-        return '<div class="empty-state-slim" style="font-size: 10px; padding: 8px;">NO ITEMS</div>';
+        return '<div class="empty-state-slim" style="font-size: 9px; padding: 6px;">NO ITEMS</div>';
     }
     
     const entries = Object.entries(items);
-    const displayEntries = entries.slice(0, MAX_ITEM_DISPLAY);
-    const hiddenCount = entries.length - MAX_ITEM_DISPLAY;
     
-    let html = displayEntries.map(([k, v]) => {
-        const shortName = v.fullName ? v.fullName.split(' ').pop() : k.replace('id:', '');
+    return entries.map(([k, v]) => {
+        const shortName = v.itemName ? v.itemName.split(' ').pop() : k.replace('item:', '');
         const timeDate = v.last ? formatTimeDate(v.last) : "";
         
-        // Determine CSS classes
         let itemClass = "item-row-slim";
         if (isUsed) itemClass += " item-used-slim";
         if (v.source === 'v2') itemClass += " item-v2";
         
-        // Build indicators
         let indicators = '';
         if (v.source === 'v2') {
             indicators += '<span class="v2-indicator" title="Recovered via V2 backup">🔄</span>';
@@ -1319,7 +1510,7 @@ function renderItemListCompact(items, isUsed = false) {
         return `
             <div class="${itemClass}">
                 <div class="item-info-slim">
-                    <span class="item-name-slim" title="${v.fullName || k}">${shortName}</span>
+                    <span class="item-name-slim" title="${v.itemName || k}">${shortName}</span>
                     <span class="item-count-slim">x${v.count}</span>
                     <span class="item-price-slim">$${v.price.toLocaleString()}</span>
                     ${indicators}
@@ -1328,24 +1519,17 @@ function renderItemListCompact(items, isUsed = false) {
             </div>
         `;
     }).join("");
-    
-    if (hiddenCount > 0) {
-        html += `<div class="more-items">+${hiddenCount} MORE ITEMS</div>`;
-    }
-    
-    return html;
 }
 
 function updateStats() {
     const activeUsers = [...new Set([...Object.keys(usedItems), ...Object.keys(deposits)])].filter(u => getNetValue(u) !== 0).length;
     const totalProcessed = Object.keys(processedLogs).length;
-    const cachedPrices = Object.keys(nameToIdCache).length;
+    const cachedPrices = Object.keys(priceCache).length;
     
     document.getElementById("statUsers").textContent = activeUsers;
     document.getElementById("statLogs").textContent = totalProcessed;
     document.getElementById("statCache").textContent = cachedPrices;
     
-    // V2 stats
     const v2Recovered = v2Stats.recovered || 0;
     const v2Element = document.getElementById("statV2");
     if(v2Element){
@@ -1355,13 +1539,18 @@ function updateStats() {
         `;
     }
     
-    // Last V2 run time
     const lastRunElement = document.getElementById("v2LastRun");
-    if(lastRunElement && v2Stats.lastRun > 0){
-        const lastRun = new Date(v2Stats.lastRun);
-        const hours = String(lastRun.getHours()).padStart(2, '0');
-        const minutes = String(lastRun.getMinutes()).padStart(2, '0');
-        lastRunElement.textContent = `Last V2: ${hours}:${minutes}`;
+    if(lastRunElement){
+        if(v2Stats.lastRun > 0){
+            const lastRun = new Date(v2Stats.lastRun);
+            const hours = String(lastRun.getHours()).padStart(2, '0');
+            const minutes = String(lastRun.getMinutes()).padStart(2, '0');
+            const truncated = v2Stats.truncated ? ' ⚠️' : '';
+            lastRunElement.textContent = `Last V2: ${hours}:${minutes}${truncated}`;
+            lastRunElement.title = v2Stats.truncated ? "V2 recovery was truncated - some logs may be missing" : "";
+        } else {
+            lastRunElement.textContent = "V2: Never run";
+        }
     }
 }
 
@@ -1435,7 +1624,6 @@ function renderPanel() {
         `;
     }).join("");
 
-    // Add event listeners
     div.querySelectorAll(".user-header-slim").forEach(header => {
         header.onclick = (e) => {
             if (!e.target.closest('.action-btn-slim')) {
@@ -1493,6 +1681,7 @@ panel.innerHTML = `
             <div class="stat-slim-label">V2 RECOVERED</div>
         </div>
     </div>
+    
     <div class="v2-last-run" id="v2LastRun"></div>
 
     <div class="api-toggle" id="apiToggle">
@@ -1525,6 +1714,9 @@ let apiExpanded = false;
 bubble.onclick = () => {
     minimized = !minimized;
     panel.style.display = minimized ? "none" : "block";
+    if(!minimized) {
+        updateStats();
+    }
 };
 
 document.getElementById("closeBtn").onclick = () => {
@@ -1574,20 +1766,29 @@ if (!factionKey || !marketKey) {
 }
 
 /* ---------- START SYSTEMS ---------- */
+// Initialize V2 scheduler
+setTimeout(initializeV2Scheduler, 2000);
+
 // Start V1 interval (45 seconds)
 setInterval(loadLogs, REFRESH_MS);
 
-// Start V2 scheduler (6 hours)
-function startV2Scheduler() {
-    // First run after 5 seconds (let V1 initialize first)
-    setTimeout(runV2CatchUp, 5000);
-    
-    // Then every 6 hours
-    setInterval(runV2CatchUp, V2_REFRESH_MS);
-}
+// Run maintenance every hour
+setInterval(() => {
+    cleanupPriceCache();
+    pruneProcessedLogs();
+}, 60 * 60 * 1000);
 
 // Initial load
 loadLogs();
-startV2Scheduler();
+
+// Emergency check: if V2 hasn't run in over 7 hours, run it now
+setTimeout(() => {
+    const now = Date.now();
+    if(v2Stats.lastRun && (now - v2Stats.lastRun) > (7 * 60 * 60 * 1000)) {
+        console.warn("HALO: Emergency - V2 hasn't run in over 7 hours!");
+        showWarning("V2 hasn't run in over 7 hours! Running emergency catch-up...", 15000);
+        setTimeout(runV2CatchUp, 3000);
+    }
+}, 5000);
 
 })();

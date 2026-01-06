@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LANraragi 现代主题
 // @namespace    https://github.com/Kelcoin
-// @version      3.1
+// @version      3.3
 // @description  更现代化、简介、美观的 LANraragi 主题
 // @author       Kelcoin
 // @include      https://lanraragi*/*
@@ -52,17 +52,17 @@
     .tippy-content .caption {
         padding: 0 !important;
         margin: 0 !important;
-        background: transparent !important; 
-        border: none !important;            
-        box-shadow: none !important;        
-        backdrop-filter: none !important;   
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
     }
 
     .tippy-content .caption img {
-        border-radius: 4px !important;      
+        border-radius: 4px !important;
         max-width: 100% !important;
         height: auto !important;
-        display: block !important;          
+        display: block !important;
     }
 
     .stdbtn,
@@ -92,9 +92,9 @@
         outline: none !important;
     }
 
-    .tippy-content div.gt,   
-    .id1 div.gt,             
-    .caption-tags div.gt {   
+    .tippy-content div.gt,
+    .id1 div.gt,
+    .caption-tags div.gt {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -573,7 +573,7 @@
         width: 95% !important;
         margin: 20px auto !important;
         padding: 30px 40px !important;
-        background: var(--glass-bg) !important; 
+        background: var(--glass-bg) !important;
         border-radius: var(--radius-lg) !important;
         box-shadow: var(--shadow-card) !important;
         border: 1px solid var(--glass-border) !important;
@@ -655,8 +655,8 @@
         box-sizing: border-box !important;
     }
 
-    .stdinput, 
-    #editArchiveForm input[type="text"], 
+    .stdinput,
+    #editArchiveForm input[type="text"],
     #editArchiveForm textarea,
     #editArchiveForm select {
         width: 100% !important;
@@ -672,7 +672,7 @@
         box-shadow: none !important;
     }
 
-    .stdinput:focus, 
+    .stdinput:focus,
     #editArchiveForm textarea:focus,
     #editArchiveForm select:focus {
         border-color: var(--accent-color) !important;
@@ -805,7 +805,7 @@
         padding: 0 5px !important;
         height: 30px !important;
         color: #fff !important;
-        field-sizing: content !important; 
+        field-sizing: content !important;
     }
 
     .tagger-new input:focus {
@@ -862,7 +862,7 @@
     }
 
     #plugin-block .plugin-row {
-        display: inline-flex; 
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
@@ -871,7 +871,7 @@
     .plugin-row {
         display: flex;
         align-items: center;
-        justify-content: center; 
+        justify-content: center;
         gap: 8px;
     }
 
@@ -993,7 +993,6 @@
         transform: translateY(-2px);
     }
 
-    /* 精确控制三个按钮的显示顺序 */
     #editArchiveForm #delete-archive {
         order: 1 !important;
     }
@@ -1011,11 +1010,11 @@
         width: 100% !important;
         float: none !important;
         display: block !important;
-        max-width: 1200px !important; 
+        max-width: 1200px !important;
     }
 
     form#editPluginForm .left-column {
-        margin: 0 auto 0 auto !important; 
+        margin: 0 auto 0 auto !important;
     }
 
     form#editPluginForm .right-column {
@@ -1034,15 +1033,423 @@
         gap: 15px !important;
     }
 
-    #plugin-upload {
+    #editPluginForm input[type="text"],
+    #editPluginForm input[type="password"],
+    #editPluginForm input[type="number"],
+    #editPluginForm input.stdinput,
+    #editPluginForm input:not([type]),
+    #editPluginForm textarea,
+    #editPluginForm select {
+        width: 400px !important;
+        max-width: 400px !important;
+        height: 38px !important;
+        background: rgba(12, 14, 20, 0.4) !important;
+        border: 1px solid var(--glass-border) !important;
+        border-radius: 6px !important;
+        padding: 0 10px !important;
+        color: var(--text-primary) !important;
+        font-family: inherit !important;
+        font-size: 14px !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        box-shadow: none !important;
+        margin: 4px 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    #editPluginForm #urlfinder_ARG {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 38px !important;
+
+        background: rgba(12, 14, 20, 0.4) !important;
+        border: 1px solid var(--glass-border) !important;
+        border-radius: 6px !important;
+
+        padding: 0 10px !important;
+        margin: 4px 0 !important;
+
+        color: var(--text-primary) !important;
+        font-family: inherit !important;
+        font-size: 14px !important;
+
+        box-sizing: border-box !important;
+    }
+
+    #editPluginForm textarea {
+        height: auto !important;
+        min-height: 80px !important;
+        padding: 10px !important;
+        resize: vertical !important;
+    }
+
+    #editPluginForm input:focus,
+    #editPluginForm textarea:focus,
+    #editPluginForm select:focus {
+        border-color: var(--accent-color) !important;
+        background: rgba(12, 14, 20, 0.7) !important;
+        outline: none !important;
+        box-shadow: 0 0 0 2px rgba(74, 159, 240, 0.28) !important;
+    }
+
+    #editPluginForm input[type=number]::-webkit-outer-spin-button,
+    #editPluginForm input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    #editPluginForm input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    #editPluginForm input[type="checkbox"] {
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        width: 50px !important;
+        height: 26px !important;
+        background: rgba(20, 22, 28, 0.6) !important;
+        border: 1px solid var(--glass-border) !important;
+        border-radius: 20px !important;
         position: relative !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        flex-shrink: 0 !important;
+        vertical-align: middle !important;
+        margin: 0 0 0 8px !important;
+        top: -2px !important;
+        outline: none !important;
+    }
+
+    #editPluginForm input[type="checkbox"]::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 3px !important;
+        left: 4px !important;
+        width: 18px !important;
+        height: 18px !important;
+        border-radius: 50% !important;
+        background: #5c6b7f !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        box-shadow: none !important;
+    }
+
+    #editPluginForm input[type="checkbox"]:checked {
+        background: rgba(74, 159, 240, 0.2) !important;
+        border-color: var(--accent-color) !important;
+    }
+
+    #editPluginForm input[type="checkbox"]:checked::before {
+        left: 26px !important;
+        background: var(--accent-color) !important;
+        box-shadow: 0 0 10px var(--accent-color) !important;
+    }
+
+    #editPluginForm input[type="checkbox"]::after {
+        content: none !important;
+        display: none !important;
+    }
+
+    #editPluginForm table td input[type="checkbox"] {
+        margin-top: 4px !important;
+    }
+    #editPluginForm div[style*="float:right"] input[type="checkbox"] {
+        margin-left: 10px !important;
+    }
+
+    .option-flyout:has(.fa-paint-brush) {
+        display: none !important;
+    }
+
+    #editConfigForm table,
+    #editConfigForm tbody {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    #editConfigForm tr {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding: 15px 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    #editConfigForm .option-td {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        width: 200px !important;
+        flex: 0 0 200px !important;
+        padding-right: 20px !important;
+        box-sizing: border-box !important;
+    }
+
+    #editConfigForm .option-td h2.ih {
+        margin: 0 !important;
+        font-size: 15px !important;
+        color: var(--text-primary) !important;
+        white-space: nowrap !important;
+        width: auto !important;
+    }
+
+    #editConfigForm .config-td {
+        display: flex !important;
+        flex: 1 1 0 !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        padding: 0 !important;
+        border: none !important;
+        gap: 15px !important;
+    }
+
+    #editConfigForm .config-control-wrapper {
+        flex: 0 0 auto !important;
+        width: 300px !important;
+        max-width: 100% !important;
+    }
+
+    #editConfigForm .config-desc-text {
+        flex: 1 1 200px !important;
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+        color: var(--text-secondary) !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        white-space: normal !important;
+        text-align: left !important;
+        opacity: 0.8;
+    }
+
+    #editPluginForm .collapsible-body > span[style*="border-bottom"] {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid var(--glass-border) !important;
+        border-radius: 12px !important;
+        padding: 10px !important;
+        margin-bottom: -20px !important;
+        position: relative !important;
+        text-align: left !important;
+    }
+
+    #editPluginForm .collapsible-body > span {
+        border-bottom: 1px solid transparent !important;
+    }
+
+    #editPluginForm .collapsible-body > span > br {
+        display: none !important;
+    }
+
+    #editPluginForm i.fa-puzzle-piece,
+    #editPluginForm img[src*="data:image"] {
+        font-size: 24px !important;
+        width: 24px !important;
+        height: 24px !important;
+        margin-right: 10px !important;
+        color: var(--accent-color) !important;
+        vertical-align: middle !important;
+        display: inline-block !important;
+    }
+
+    #editPluginForm h2.ih {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: var(--text-primary) !important;
+        display: inline !important;
+        margin: 0 8px 0 0 !important;
+        vertical-align: middle !important;
+    }
+
+    #editPluginForm h1.ih {
+        font-size: 13px !important;
+        font-weight: 400 !important;
+        color: var(--text-secondary) !important;
+        display: inline !important;
+        vertical-align: middle !important;
+        margin: 0 !important;
+        opacity: 0.8;
+    }
+
+    #editPluginForm .collapsible-body {
+        font-size: 14px !important;
+        line-height: 1.6 !important;
+        color: #cfd8dc !important;
+        padding: 0 !important;
+    }
+
+    #editPluginForm h1.ih::after {
+        content: "";
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    #editPluginForm div[style*="float:right"] {
+        float: none !important;
+        position: static !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+        margin-top: 10px !important;
+        margin-bottom: 4px !important;
+        padding: 0 !important;
+        background: transparent !important;
+        width: 100% !important;
+    }
+
+    #editPluginForm div[style*="float:right"] > h1.ih,
+    #editPluginForm div[style*="float:right"] > br {
+        display: none !important;
+    }
+
+    #editPluginForm div[style*="float:right"] > input[type="checkbox"] {
+        order: 2 !important;
+        margin: 0 !important;
+        vertical-align: middle !important;
+    }
+
+    #editPluginForm div[style*="float:right"] .plugin-dependency {
+        order: 1 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        font-size: 12px !important;
+        color: var(--text-secondary) !important;
+        white-space: nowrap !important;
+    }
+
+    #editPluginForm div[style*="float:right"] .plugin-dependency .fa-plug {
+        font-size: 12px !important;
+        margin-right: 4px !important;
+    }
+
+    #editPluginForm .collapsible-body table {
+        width: 100% !important;
+        margin-top: 20px !important;
+        border-collapse: collapse !important;
+    }
+
+    #editPluginForm .collapsible-body tbody {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    #editPluginForm .collapsible-body tr {
+        display: flex !important;
+        flex-direction: column;
+        align-items: flex-start !important;
+        width: 100% !important;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding: 12px 0 !important;
+    }
+
+    #editPluginForm .collapsible-body td:first-child:not([colspan="2"]) {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 8px !important;
+        padding: 0 !important;
+        text-align: left !important;
+    }
+
+    #editPluginForm .collapsible-body td:first-child b {
+        text-align: left !important;
+        display: block !important;
+        width: 100% !important;
+        color: var(--text-primary) !important;
+    }
+
+    #editPluginForm .collapsible-body td:nth-child(2) {
+        display: block !important;
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    #editPluginForm .collapsible-body input:not([type="checkbox"]):not([type="button"]),
+    #editPluginForm .collapsible-body select {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    #editPluginForm .collapsible-body td[colspan="2"] {
+        display: block !important;
+        width: 100% !important;
+        border: none !important;
+        padding-top: 15px !important;
+        text-align: center !important;
+    }
+
+    #editPluginForm .collapsible-body input[type="button"].stdbtn {
+        width: 100% !important;
+        max-width: 200px !important;
+        margin: 0 auto !important;
+        display: block !important;
+        height: 40px !important;
+        font-weight: 600 !important;
+        color: #fff !important;
+        cursor: pointer;
+    }
+
+    form#editPluginForm > h1 {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 16px !important;
+        flex-wrap: wrap !important;
+        margin-bottom: 16px !important;
+    }
+
+    form#editPluginForm > h1 .stdbtn,
+    form#editPluginForm > h1 input.stdbtn {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        text-align: center !important;
-        padding: 10px 24px !important;
-        height: auto !important; 
-        min-height: 44px !important; 
+        min-width: 140px !important;
+        height: 44px !important;
+        padding: 0 20px !important;
+        margin: 0 !important;
+        background: rgba(30, 35, 45, 0.6) !important;
+        border: 1px solid var(--glass-border) !important;
+        border-radius: var(--radius-md) !important;
+        color: var(--text-primary) !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+        text-decoration: none !important;
+        cursor: pointer !important;
+    }
+
+    form#editPluginForm > h1 .stdbtn:hover,
+    form#editPluginForm > h1 input.stdbtn:hover {
+        background: var(--accent-color) !important;
+        color: #fff !important;
+        border-color: rgba(255,255,255,0.3) !important;
+        transform: translateY(-2px);
+    }
+
+    form#editPluginForm > h1 #plugin-upload {
+        order: 1 !important;
+    }
+
+    form#editPluginForm > h1 #save {
+        order: 2 !important;
+    }
+
+    form#editPluginForm > h1 #return {
+        order: 3 !important;
+    }
+
+    form#editPluginForm > h1 #save {
+        border-color: var(--accent-color) !important;
+        color: #f7fbff !important;
+    }
+
+    form#editPluginForm > h1 #save:hover {
+        background: var(--accent-color) !important;
+        color: #fff !important;
+        border-color: rgba(255,255,255,0.4) !important;
     }
 
     #plugin-upload > span[style*="position:absolute"] {
@@ -1064,7 +1471,7 @@
     }
 
     .collapsible-body {
-        text-align: center !important; 
+        text-align: center !important;
     }
 
     .collapsible-body > h1.ih {
@@ -1100,7 +1507,7 @@
         flex-direction: column !important;
         align-items: center !important;
         width: 95% !important;
-        max-width: 1200px !important; 
+        max-width: 1200px !important;
         margin: 20px auto !important;
     }
 
@@ -1165,11 +1572,11 @@
     }
 
     div.ido:has(> #editConfigForm) > .left-column .logo-container,
-    div.ido:has(> #editConfigForm) > .left-column h1, 
+    div.ido:has(> #editConfigForm) > .left-column h1,
     div.ido:has(> #editConfigForm) > .left-column h2,
     div.ido:has(> #editConfigForm) > .left-column br,
     div.ido.admin-settings-mode > .left-column .logo-container,
-    div.ido.admin-settings-mode > .left-column h1, 
+    div.ido.admin-settings-mode > .left-column h1,
     div.ido.admin-settings-mode > .left-column h2,
     div.ido.admin-settings-mode > .left-column br {
         display: none !important;
@@ -1182,7 +1589,7 @@
         color: var(--text-primary) !important;
         height: 48px !important;
         padding: 0 20px !important;
-        margin: 0 !important; 
+        margin: 0 !important;
         flex: 1 1 18% !important;
         min-width: 140px !important;
         background: rgba(30, 35, 45, 0.6) !important;
@@ -1209,8 +1616,8 @@
     div.ido.admin-settings-mode > .left-column #duplicate { order: 2; }
 
     div.ido:has(> #editConfigForm) > .left-column #save,
-    div.ido.admin-settings-mode > .left-column #save { 
-        order: 3; 
+    div.ido.admin-settings-mode > .left-column #save {
+        order: 3;
         #background: rgba(74, 159, 240, 0.15) !important;
         border-color: var(--accent-color) !important;
         font-weight: bold !important;
@@ -1230,7 +1637,7 @@
     .config-td {
         display: flex !important;
         flex-direction: row !important;
-        align-items: flex-start !important; 
+        align-items: flex-start !important;
         justify-content: flex-start !important;
         flex-wrap: nowrap !important;
         gap: 20px !important;
@@ -1240,11 +1647,11 @@
     }
 
     .config-control-wrapper {
-        flex: 0 0 auto !important; 
-        width: 240px !important;   
+        flex: 0 0 auto !important;
+        width: 240px !important;
         max-width: 240px !important;
         display: flex !important;
-        align-items: center !important; 
+        align-items: center !important;
         min-height: 38px !important;
         position: relative !important;
     }
@@ -1256,7 +1663,7 @@
     .config-control-wrapper:has(textarea) {
         width: 100% !important;
         max-width: 100% !important;
-        flex-direction: column !important; 
+        flex-direction: column !important;
         align-items: flex-start !important;
         gap: 8px !important;
     }
@@ -1271,8 +1678,7 @@
         font-size: 14px !important;
         line-height: 1.6 !important;
         color: var(--text-secondary) !important;
-        padding-top: 4px !important; 
-        overflow-wrap: break-word !important;
+        padding-top: 4px !important;
         cursor: text !important;
     }
 
@@ -1347,16 +1753,16 @@
 
     .config-td {
         display: flex !important;
-        align-items: center !important; 
-        gap: 15px !important;           
+        align-items: center !important;
+        gap: 15px !important;
     }
 
     .config-desc-text {
-        font-size: 14px !important;     
+        font-size: 14px !important;
         color: var(--text-secondary) !important;
         line-height: 1.4 !important;
-        cursor: default !important;     
-        flex: 1;                        
+        cursor: default !important;
+        flex: 1;
         text-align: left;
     }
 
@@ -1373,13 +1779,13 @@
         box-shadow: var(--shadow-hover) !important;
         padding: 6px 0 !important;
         font-family: inherit !important;
-        min-width: 140px !important; 
+        min-width: 140px !important;
     }
 
     .context-menu-item {
         background: transparent !important;
         color: var(--text-primary) !important;
-        padding: 10px 16px !important; 
+        padding: 10px 16px !important;
         line-height: 1.5 !important;
         font-size: 14px !important;
         transition: all 0.1s ease;
@@ -1406,7 +1812,7 @@
     }
 
     .context-menu-item.context-menu-icon {
-        background-image: none !important; 
+        background-image: none !important;
     }
 
     .context-menu-item > span {
@@ -1455,7 +1861,7 @@
         width: auto !important;
         min-width: 320px !important;
         max-width: 480px !important;
-        display: grid !important; 
+        display: grid !important;
     }
 
     div.swal2-popup .swal2-range,
@@ -1521,14 +1927,14 @@
         box-shadow: none !important;
         transition: var(--transition-smooth) !important;
         outline: none !important;
-        margin: 0 !important; 
+        margin: 0 !important;
     }
 
     .swal2-styled.swal2-cancel {
         background: rgba(12, 14, 20, 0.6) !important;
         border-color: var(--glass-border) !important;
         color: var(--text-primary) !important;
-        font-size: 0 !important; 
+        font-size: 0 !important;
     }
 
     .swal2-styled.swal2-cancel::after {
@@ -1562,43 +1968,74 @@
         border-color: var(--accent-color) transparent var(--accent-color) transparent !important;
     }
 
+    #DataTables_Table_0 thead[style*="none"] {
+        display: none !important;
+    }
+
+    #DataTables_Table_0 thead[style*="none"] th,
+    #DataTables_Table_0 thead[style*="none"] th::before {
+        border: none !important;
+        background: none !important;
+        display: none !important;
+        height: 0 !important;
+        padding: 0 !important;
+    }
+
     #DataTables_Table_0 {
-        border-collapse: separate !important; 
-        border-spacing: 0 6px !important;     
-        margin-top: 10px !important;
+        border-collapse: separate !important;
+        border-spacing: 0 6px !important;
+        #margin-top: 10px !important;
         background: transparent !important;
     }
 
     #DataTables_Table_0 thead th {
-        background: rgba(12, 14, 20, 0.4) !important; 
+        background: transparent !important;
+        border: none !important;
+        position: relative !important;
+        z-index: 1;
         color: var(--text-secondary) !important;
         font-weight: 600 !important;
         text-transform: uppercase;
         font-size: 0.8rem !important;
-        letter-spacing: 1px;
         padding: 12px 16px !important;
-        border-bottom: 1px solid var(--glass-border) !important;
     }
+
+    #DataTables_Table_0 thead th::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 10px;
+        background: rgba(12, 14, 20, 0.4) !important;
+        border-bottom: 1px solid var(--glass-border) !important;
+        border-radius: 15px;
+    }
+
+    #DataTables_Table_0 thead th:last-child::before {
+        right: 0 !important;
+}
 
     #DataTables_Table_0 tbody tr {
         background: var(--glass-bg) !important;
-        backdrop-filter: blur(10px); 
+        backdrop-filter: blur(10px);
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         transition: transform 0.2s ease, background 0.2s ease !important;
     }
 
     #DataTables_Table_0 tbody tr:hover {
         background: var(--glass-bg-hover) !important;
-        transform: scale(1.005) !important; 
+        transform: scale(1.005) !important;
         z-index: 5;
         position: relative;
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-        border: 1px solid var(--accent-color) !important; 
+        border: 1px solid var(--accent-color) !important;
     }
 
     #DataTables_Table_0 td {
         padding: 12px 16px !important;
-        border: none !important; 
+        border: none !important;
         vertical-align: middle !important;
         color: var(--text-secondary) !important;
         font-size: 0.9rem !important;
@@ -1607,7 +2044,7 @@
     #DataTables_Table_0 tbody tr td:first-child {
         border-top-left-radius: 8px;
         border-bottom-left-radius: 8px;
-        border-left: 1px solid var(--glass-border); 
+        border-left: 1px solid var(--glass-border);
     }
     #DataTables_Table_0 tbody tr td:last-child {
         border-top-right-radius: 8px;
@@ -1665,7 +2102,7 @@
 
     #DataTables_Table_0 td.title {
         position: relative;
-        max-width: 40vw; 
+        max-width: 40vw;
         overflow: hidden;
     }
 
@@ -1673,7 +2110,7 @@
         display: block !important;
         width: 90%;
         white-space: nowrap !important;
-        overflow: hidden !important;  
+        overflow: hidden !important;
         text-overflow: ellipsis !important;
         padding-right: 10px;
     }
@@ -1686,20 +2123,54 @@
         color: var(--text-secondary) !important;
     }
 
-    .dataTables_paginate .paginate_button {
+    .dataTables_wrapper .dataTables_paginate {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        float: none !important;
+        margin-top: 20px !important;
+        padding: 0 !important;
+        text-align: center !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        display: inline-flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: auto !important;
+        min-width: 36px !important;
+        height: 36px !important;
+        margin: 0 4px !important;
+        padding: 0 8px !important;
+        font-size: 14px !important;
         background: rgba(12, 14, 20, 0.6) !important;
         border: 1px solid var(--glass-border) !important;
         color: var(--text-primary) !important;
         border-radius: 6px !important;
-        margin: 0 4px !important;
-        transition: all 0.2s !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    .dataTables_paginate .paginate_button.current,
-    .dataTables_paginate .paginate_button:hover {
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.disabled) {
         background: var(--accent-color) !important;
         color: #fff !important;
         border-color: var(--accent-color) !important;
+        font-weight: bold !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(74, 159, 240, 0.3);
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+        cursor: default !important;
+        color: rgba(255, 255, 255, 0.3) !important;
+        background: transparent !important;
+        border-color: transparent !important;
+        transform: none !important;
+        box-shadow: none !important;
     }
 
     #DataTables_Table_0 td.tags {
@@ -1708,6 +2179,73 @@
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         vertical-align: middle !important;
+    }
+
+    #DataTables_Table_0:has(thead[style*="none"]) {
+        border: none !important;
+        border-top: none !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+    }
+
+    #DataTables_Table_0.dataTable {
+        border-bottom: none !important;
+    }
+
+    #DataTables_Table_0 thead[style*="none"],
+    #DataTables_Table_0 thead[style*="none"] th,
+    #DataTables_Table_0 thead[style*="none"] th::before {
+        display: none !important;
+        border: none !important;
+        height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #urlForm {
+        width: 100% !important;
+        min-height: 240px !important;
+        box-sizing: border-box !important;
+        margin: 10px 0 20px 0 !important;
+        padding: 16px !important;
+        resize: vertical !important;
+        background-color: rgba(10, 12, 16, 0.5) !important;
+        border: 1px solid rgba(140, 160, 190, 0.2) !important;
+        border-radius: 12px !important;
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+        backdrop-filter: blur(4px);
+        color: #a7b1c2 !important;
+        font-family: "JetBrains Mono", "Fira Code", "Consolas", "Courier New", monospace !important;
+        font-size: 13px !important;
+        line-height: 1.6 !important;
+        white-space: pre !important;
+        overflow-x: auto !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        outline: none !important;
+    }
+
+    #urlForm:focus {
+        background-color: rgba(12, 14, 20, 0.8) !important;
+        color: #e3e9f3 !important;
+        border-color: #4a9ff0 !important;
+        box-shadow:
+            0 0 0 3px rgba(74, 159, 240, 0.15),
+            inset 0 2px 6px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    #urlForm::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    #urlForm::-webkit-scrollbar-thumb {
+        background: rgba(74, 159, 240, 0.3);
+        border-radius: 4px;
+    }
+    #urlForm::-webkit-scrollbar-thumb:hover {
+        background: rgba(74, 159, 240, 0.6);
+    }
+    #urlForm::-webkit-scrollbar-corner {
+        background: transparent;
     }
 
     @media (min-width: 700px) {
@@ -1825,18 +2363,60 @@
             position: relative !important;
             left: 31% !important;
             transform: translateX(-50%) !important;
-            white-space: nowrap !important; 
+            white-space: nowrap !important;
         }
 
         #thumbnail-crop:checked ~ label[for="thumbnail-crop"] {
             left: 31% !important;
             transform: translateX(-50%) !important;
         }
+
+        #editPluginForm div[style*="float:right"] {
+            position: absolute !important;
+            top: 15px !important;
+            right: 20px !important;
+            width: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border-top: none !important;
+            justify-content: flex-end !important;
+            background: transparent !important;
+        }
+
+        #editPluginForm .stdbtn {
+            width: auto !important;
+            min-width: 120px !important;
+        }
+
+                #editPluginForm .collapsible-body tr {
+            flex-direction: row !important;
+            align-items: center !important;
+        }
+
+        #editPluginForm .collapsible-body td:first-child:not([colspan="2"]) {
+            width: 30% !important;
+            padding-right: 20px !important;
+            margin-bottom: 0 !important;
+            text-align: right !important;
+        }
+
+        #editPluginForm .collapsible-body td:nth-child(2) {
+            width: 70% !important;
+        }
+
+        #editPluginForm .collapsible-body input[type="button"].stdbtn {
+            width: auto !important;
+            min-width: 160px !important;
+        }
+
+        #editPluginForm .collapsible-body > span {
+            padding-right: 180px !important;
+        }
     }
 
     .table-options .thumbnail-options,
     .table-options > div:last-child {
-        display: inline-flex; 
+        display: inline-flex;
         align-items: center;
         gap: 10px;
         white-space: nowrap;
@@ -2187,9 +2767,11 @@
         height: 240px !important;
         overflow: hidden !important;
         margin-bottom: 6px !important;
-        background: rgba(4, 6, 12, 0.75) !important;
+        background: transparent !important;
+        #box-shadow: none !important;
+        border: none !important;
         border-radius: var(--radius-sm);
-        position: relative !important; 
+        position: relative !important;
     }
 
     div.id3 a {
@@ -2211,13 +2793,18 @@
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
+    div.id1:hover div.id3 img {
+        transform: scale(1.02);
+        transition: transform 0.3s ease;
+    }
+
     body.crop-mode div.id3 img {
-        object-fit: cover !important;     
+        object-fit: cover !important;
         object-position: top center !important;
-        width: 100% !important;          
-        height: 100% !important;         
-        max-width: none !important;       
-        max-height: none !important;      
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        max-height: none !important;
     }
 
     div.id4 {
@@ -2265,130 +2852,149 @@
         }
     }
 
-    .tippy-box {
-        z-index: 2147483647 !important;
-        width: auto !important;          
-        max-width: 600px !important;     
+    a {
+        color: var(--text-primary) !important;
+        transition: color 0.2s;
+    }
+    a:hover {
+        color: var(--accent-color) !important;
+    }
+    .fade-in-up {
+        animation: fadeInUp 0.5s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    @keyframes fadeInUp {
+        to { opacity: 1; transform: translateY(0); }
     }
 
-    .tippy-box > .tippy-content {
+    .tippy-arrow {
+        color: var(--glass-bg) !important;
+    }
+    .tippy-arrow::before {
+        border-top-color: var(--glass-bg) !important;
+        border-bottom-color: var(--glass-bg) !important;
+    }
+
+    div[id^="tippy-"] .tippy-box {
+        z-index: 2147483647 !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        width: auto !important;
+        max-width: 95vw !important;
+    }
+
+    div[id^="tippy-"] .tippy-content {
         position: relative !important;
         z-index: 1 !important;
         overflow: hidden !important;
-        background: #262830 !important;
-        border: 1px solid rgba(140, 160, 190, 0.32) !important;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
-        border-radius: 8px !important;
-        padding: 8px 4px !important;
+
+        background: var(--glass-bg) !important;
+        border: 1px solid var(--glass-border) !important;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+
+        border-radius: 10px !important;
+        padding: 6px !important;
         text-align: left !important;
+        width: fit-content !important;
+        height: fit-content !important;
+        max-width: 450px !important;
     }
 
     .tippy-box > .tippy-content::before {
         content: none !important;
     }
 
-    .tippy-content table,
-    .tippy-content tr,
-    .tippy-content td {
+    div[id^="tippy-"] .tippy-content table,
+    div[id^="tippy-"] .tippy-content table.itg,
+    div[id^="tippy-"] .tippy-content tr,
+    div[id^="tippy-"] .tippy-content td {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
-        border-radius: 0 !important;
         margin: 0 !important;
     }
 
-    .tippy-content .caption {
-        padding: 0 !important;
-        margin: 0 !important;
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        position: static !important;
-        width: 100% !important;
+    div[id^="tippy-"] .tippy-content .caption:not(.caption-tags) {
         height: auto !important;
-    }
-
-    .tippy-content .caption img {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        max-width: 100% !important;
-        max-height: 300px !important;
         width: auto !important;
-        height: auto !important;
-        border-radius: 4px !important;
-        margin: 0 auto 8px auto !important;
-    }
-
-    .tippy-content table.itg {
+        display: block !important;
         margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+    }
+
+    div[id^="tippy-"] .tippy-content .caption:not(.caption-tags) img {
+        display: block !important;
+        height: auto !important;
+        max-height: 300px !important;
+        max-width: 300px !important;
+        width: auto !important;
+        border-radius: 6px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+        margin: 0 !important;
+    }
+
+    div[id^="tippy-"] .tippy-content .caption.caption-tags {
+        display: block !important;
+        padding: 4px !important;
         width: 100% !important;
-        border-collapse: separate !important;  
-        table-layout: auto !important;
     }
 
-    .tippy-content table.itg tr {
-        display: flex !important;             
-        align-items: flex-start !important;   
+    div[id^="tippy-"] .tippy-content table.itg {
+        width: 100% !important;
+        table-layout: fixed !important;
     }
 
-    .tippy-content td {
-        padding: 4px 0 !important;
+    div[id^="tippy-"] .tippy-content table.itg td {
+        padding: 4px 2px !important;
         font-size: 0.85rem !important;
-        line-height: 1.3 !important;
-
+        line-height: 1.4 !important;
+        color: var(--text-secondary) !important;
+        vertical-align: middle !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
     }
 
-    .tippy-content .caption-namespace {
-        color: var(--text-secondary) !important;
+    div[id^="tippy-"] .tippy-content .caption-namespace {
+        width: 80px !important;
+        color: var(--text-primary) !important;
         font-weight: 600 !important;
         text-align: right !important;
-
-        flex: 0 0 auto !important;
-        width: auto !important;
-        max-width: 7em !important;
+        padding-right: 10px !important;
         white-space: nowrap !important;
-
-        padding-right: 12px !important;
     }
 
-    .tippy-content td:not(.caption-namespace) {
-        flex: 1 1 auto !important;
-        padding-left: 0 !important;
-        text-align: left !important;
-        max-width: 580px !important;          
-        word-break: break-word !important;    
-    }
-
-    .tippy-content div.gt {
+    div[id^="tippy-"] .tippy-content div.gt {
         display: inline-flex !important;
         align-items: center !important;
-        justify-content: center !important;
-
-        min-height: 24px !important;
-        height: auto !important;
-        padding: 4px 12px !important;
-
-        margin: 0 6px 6px 0 !important;
-
+        padding: 2 6px !important;
+        margin: 1px 2px !important;
+        min-height: 21px !important;
         background: rgba(10, 12, 18, 0.7) !important;
         border: 1px solid var(--glass-border) !important;
-        border-radius: 9999px !important;     
+        border-radius: 10px !important;
         color: var(--text-secondary) !important;
-        font-size: 0.8rem !important;
-        font-weight: normal !important;
+        font-size: 0.75rem !important;
         box-shadow: none !important;
+        line-height: 1.3 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
         white-space: nowrap !important;
-        line-height: 1.2 !important;
     }
 
-    .tippy-content div.gt:hover {
+    div[id^="tippy-"] .tippy-content div.gt:hover {
         background: var(--accent-color) !important;
         color: #fff !important;
         border-color: var(--accent-color) !important;
     }
 
-    .tippy-content div.gt a {
+    div[id^="tippy-"] .tippy-content div.gt a {
         color: inherit !important;
         text-decoration: none !important;
         border: none !important;
@@ -2465,7 +3071,7 @@
         }
 
         #archivePagesOverlay .stdbtn {
-            margin: 0 !important; 
+            margin: 0 !important;
         }
 
         #archivePagesOverlay #tagContainer br {
@@ -2512,13 +3118,13 @@
 
         #archivePagesOverlay #tagContainer > div > div[style*="inline-block"] {
             display: flex !important;
-            flex-direction: row !important; 
+            flex-direction: row !important;
             flex-wrap: wrap !important;
             justify-content: center !important;
             width: 100% !important;
             gap: 4px !important;
             margin-top: 10px !important;
-            margin-left: auto !important; 
+            margin-left: auto !important;
             margin-right: auto !important;
         }
 
@@ -2658,21 +3264,19 @@
             flex: 1 1 100% !important;
         }
 
-    @media (max-width: 700px) {
-
         #DataTables_Table_0 thead {
             display: none !important;
         }
 
         #DataTables_Table_0 tbody tr {
             display: flex !important;
-            flex-direction: row !important; 
-            flex-wrap: wrap !important;     
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
             align-items: flex-start !important;
             align-content: flex-start !important;
             position: relative !important;
             height: auto !important;
-            min-height: 90px !important;   
+            min-height: 90px !important;
             margin-bottom: 12px !important;
             padding: 12px 12px 12px 12px !important;
 
@@ -2694,18 +3298,18 @@
         }
 
         #DataTables_Table_0 td.title {
-            flex: 1 1 100% !important; 
+            flex: 1 1 100% !important;
             width: 100% !important;
             max-width: 100% !important;
-            order: 1 !important;       
+            order: 1 !important;
             margin-bottom: 10px !important;
-            padding-right: 50px !important; 
+            padding-right: 50px !important;
             padding-left: 2px !important;
-            display: block !important; 
+            display: block !important;
         }
 
         #DataTables_Table_0 td.title a {
-            white-space: normal !important; 
+            white-space: normal !important;
             font-size: 1rem !important;
             font-weight: 600 !important;
             line-height: 1.4 !important;
@@ -2715,11 +3319,11 @@
 
         #DataTables_Table_0 td.customheader1,
         #DataTables_Table_0 td.customheader2 {
-            flex: 0 0 50% !important;   
+            flex: 0 0 50% !important;
             width: 50% !important;
             max-width: 50% !important;
-            order: 2 !important;        
-            display: flex !important;   
+            order: 2 !important;
+            display: flex !important;
             align-items: center !important;
 
             font-size: 0.8rem !important;
@@ -2739,12 +3343,12 @@
         }
 
         #DataTables_Table_0 td.tags {
-            flex: 1 1 100% !important; 
+            flex: 1 1 100% !important;
             width: 100% !important;
-            order: 3 !important;       
+            order: 3 !important;
             margin-top: 4px !important;
             display: block !important;
-            overflow: hidden !important; 
+            overflow: hidden !important;
         }
 
         #DataTables_Table_0 td.tags {
@@ -2752,7 +3356,7 @@
             flex-wrap: nowrap !important;
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; 
+            scrollbar-width: none;
         }
         #DataTables_Table_0 td.tags::-webkit-scrollbar { display: none; }
 
@@ -2781,7 +3385,47 @@
             border-radius: 4px !important;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
-    }
+
+        #editPluginForm .collapsible-body tr {
+            flex-direction: row !important;
+            align-items: center !important;
+        }
+
+        #editPluginForm .collapsible-body td:first-child:not([colspan="2"]) {
+            width: 30% !important;
+            padding-right: 20px !important;
+            margin-bottom: 0 !important;
+            text-align: right !important;
+        }
+
+        #editPluginForm .collapsible-body td:nth-child(2) {
+            width: 70% !important;
+        }
+
+        #editPluginForm .collapsible-body input[type="button"].stdbtn {
+            width: auto !important;
+            min-width: 160px !important;
+        }
+
+        #editPluginForm .collapsible-body > span {
+            padding-right: 180px !important;
+        }
+
+        #editPluginForm div[style*="float:right"] {
+            top: 15px !important;
+            right: 15px !important;
+        }
+
+        #editPluginForm .collapsible-body > span {
+            padding-top: 60px !important;
+        }
+
+        #editPluginForm h2.ih,
+        #editPluginForm h1.ih,
+        #editPluginForm i.fa-puzzle-piece {
+            position: relative;
+            top: -10px;
+        }
     }
 
     @media (max-width: 430px) {
@@ -2879,7 +3523,7 @@
                 padding: 0 !important;
                 margin: 0 !important;
                 border: none !important;
-                text-align: center !important; 
+                text-align: center !important;
             }
 
             div.ido.admin-login-mode tr:first-child td:first-child {
@@ -2900,7 +3544,7 @@
                 box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important;
                 margin-bottom: 20px !important;
                 text-align: center !important;
-                box-sizing: border-box !important; 
+                box-sizing: border-box !important;
             }
 
             div.ido.admin-login-mode input[type="password"]::placeholder {
@@ -2924,7 +3568,7 @@
 
             div.ido.admin-login-mode input[type="submit"] {
                 width: 100% !important;
-                min-width: 120px !important; 
+                min-width: 120px !important;
                 height: 44px !important;
                 background: var(--accent-color) !important;
                 color: #fff !important;
@@ -2936,7 +3580,7 @@
                 transition: all 0.2s ease !important;
                 box-shadow: 0 4px 12px rgba(74, 159, 240, 0.3) !important;
                 margin-top: 5px !important;
-                appearance: none !important; 
+                appearance: none !important;
                 -webkit-appearance: none !important;
             }
 
@@ -3068,7 +3712,7 @@
         const leftColumn = document.querySelector('.left-column');
         if (leftColumn) {
             Array.from(leftColumn.childNodes).forEach(node => {
-                if (node.nodeType === 3) { 
+                if (node.nodeType === 3) {
                     node.remove();
                 }
             });
@@ -3132,7 +3776,7 @@
             } else {
                 optionsPanel.classList.remove('scroll-hidden');
             }
-            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;  
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
         }, { passive: true });
     }
 
@@ -3145,7 +3789,7 @@
             if (td.querySelector('#shinobu-ok') || td.querySelector('#shinobu-ko') || td.innerHTML.includes('PID:')) {
                 td.dataset.isStatusRow = "true";
                 td.dataset.layoutFixed = 'true';
-                return; 
+                return;
             }
 
             const controlWrapper = document.createElement('div');
@@ -3162,7 +3806,7 @@
                 }
 
                 if (node.nodeName === 'BR') {
-                    return; 
+                    return;
                 }
 
                 const isControl = ['INPUT', 'SELECT', 'TEXTAREA'].includes(node.nodeName);
@@ -3178,7 +3822,7 @@
                 }
             });
 
-            td.innerHTML = '';  
+            td.innerHTML = '';
             td.appendChild(controlWrapper);
             td.appendChild(descWrapper);
 
@@ -3281,7 +3925,7 @@
         });
 
         (function fixPluginSection() {
-            const pluginCell = document.getElementById('plugin_table');   
+            const pluginCell = document.getElementById('plugin_table');
             const pluginSelect = document.getElementById('plugin');
             const runButton = document.getElementById('run-plugin');
             const helpButton = document.getElementById('show-help');
@@ -3354,6 +3998,34 @@
         form.dataset.lrreditFixed = "1";
     }
 
+    function wrapPluginDependencies() {
+        // 锁定所有包含“自动运行 + 依赖说明”的右侧控制区
+        var containers = document.querySelectorAll('#editPluginForm div[style*="float:right"]');
+
+        containers.forEach(function (c) {
+            // 已经处理过就跳过（防止重复包裹）
+            if (c.querySelector('.plugin-dependency')) return;
+
+            var plug = c.querySelector('i.fa-plug');
+            if (!plug) return;
+
+            // 创建依赖信息容器
+            var wrap = document.createElement('span');
+            wrap.className = 'plugin-dependency';
+
+            // 从图标开始，把后面的所有兄弟节点搬进容器
+            var node = plug;
+            while (node) {
+                var next = node.nextSibling;
+                wrap.appendChild(node);
+                node = next;
+            }
+
+            // 把容器挂回原来的 div 末尾
+            c.appendChild(wrap);
+        });
+    }
+
     function init() {
         styleLoginPage();
         cleanUpNotifications();
@@ -3366,6 +4038,7 @@
         fixEditFormStructure();
         identifySettingsPage();
         fixConfigLayout();
+        wrapPluginDependencies();
 
         const targetNode = document.body;
         if (targetNode) {
@@ -3374,8 +4047,8 @@
                 subtree: true
             });
         }
-        setTimeout(() => { 
-            document.body.classList.add("panel-ready"); 
+        setTimeout(() => {
+            document.body.classList.add("panel-ready");
         }, 500);
     }
 

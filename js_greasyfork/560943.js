@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Autodarts.io Match Analytics
 // @namespace    http://tampermonkey.net/
-// @version      0.14.26
+// @version      0.14.56
 // @description  Dieses Userscript erweitert autodarts.io um erweiterte Analyse-Funktionen für deine Matches.
 // @author       ThunderB   
 // @match        https://play.autodarts.io/*
@@ -244,8 +244,7 @@
     const SCRIPT_VERSION =
           (typeof GM_info !== "undefined" && GM_info && GM_info.script && GM_info.script.version) ? GM_info.script.version :
     (typeof GM !== "undefined" && GM && GM.info && GM.info.script && GM.info.script.version) ? GM.info.script.version :
-    "??";
-
+    "0.14.54";
     // =========================
     // Settings
     // =========================
@@ -511,6 +510,27 @@ const AD_EXT_CFG_FIELDS = [
         const v = (numer * 100) / denom;
         return Number.isFinite(v) ? v.toFixed(2) + " %" : "—";
     }
+    // UI helper: progress bar (DOM)
+    // pct: number (0..100+), hasGoal: goal > 0
+    function createProgressBarDom(pct, hasGoal) {
+        const has = !!hasGoal;
+        const raw = Number(pct);
+        const clamped = has && Number.isFinite(raw) ? Math.max(0, Math.min(100, raw)) : 0;
+
+        const track = document.createElement("div");
+        track.className = "ad-ext-progress";
+        track.style.width = "100%";
+        // In Tabellen: kein zusätzlicher Abstand nach oben
+        try { track.style.marginTop = "0"; } catch {}
+
+        const fill = document.createElement("div");
+        fill.className = "ad-ext-progress-bar";
+        fill.style.width = `${clamped.toFixed(0)}%`;
+
+        track.appendChild(fill);
+        return track;
+    }
+
     function parseIsoDateToDayKey(iso) {
         const d = iso ? new Date(iso) : null;
         if (!d || !Number.isFinite(d.getTime())) return null;
@@ -2463,7 +2483,7 @@ const AD_EXT_CFG_FIELDS = [
   .ad-ext-plan-week { display:flex; flex-direction:column; gap:2px; min-width: 220px; }
   .ad-ext-plan-week-label { font-weight: 950; letter-spacing: 0.02em; }
   .ad-ext-plan-week-sub { font-size: 11px; opacity: 0.78; line-height: 1.35; }
-  .ad-ext-plan-week-select { margin-top: 6px; width: 240px; max-width: 100%; }
+  .ad-ext-plan-week-select { margin-top: 6px; width: min(720px, 100%); max-width: 100%; white-space: nowrap; }
 
   /* X01 Liga: Sub-Panels (Liga | Hall of Fame) */
   .ad-ext-x01-subnav {
@@ -2518,7 +2538,27 @@ const AD_EXT_CFG_FIELDS = [
   .ad-ext-plan-sollcell { display:flex; justify-content:flex-end; align-items:center; gap:0; }
   .ad-ext-plan-progress { display:flex; align-items:center; gap:10px; }
   .ad-ext-progress.ad-ext-progress--thin { height: 10px; border-radius: 999px; }
-  .ad-ext-plan-pct { font-weight: 950; font-variant-numeric: tabular-nums; opacity: 0.92; min-width: 56px; text-align: right; }
+  .ad-ext-plan-pct { font-weight: 950; font-variant-numeric: tabular-nums; opacity: 0.92; text-align: left; }
+
+  /* Training-Tab: Gesamt-Zeile im Trainingsdaten-Panel hervorheben */
+  #ad-ext-view-training .ad-train-main tr.ad-ext-row-total td {
+    background: rgba(140, 190, 255, 0.10) !important;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    font-weight: 950;
+  }
+
+  .ad-ext-plan-perfline{
+    margin-top: 4px;
+    font-size: 11px;
+    opacity: 0.72;
+    font-weight: 800;
+    line-height: 1.25;
+    display:flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .ad-ext-plan-perfline span{ white-space: nowrap; }
+
 
   #ad-ext-time-week-body tr { cursor: pointer; }
   #ad-ext-time-week-body tr.ad-ext-row--selected td { background: rgba(140,190,255,0.12); }
@@ -3091,7 +3131,19 @@ const AD_EXT_CFG_FIELDS = [
 }
 
       /* Training: Plan-Sidebar Scaffold (UI-only) */
-      .ad-train-head { display:flex; justify-content:space-between; align-items:center; gap: 12px; margin: 14px 0 8px; }
+      .ad-train-head { display:flex; flex-direction:column; align-items:flex-start; gap: 10px; margin: 14px 0 8px; }
+      .ad-train-controls { width: 100%; display:flex; flex-direction:column; align-items:flex-start; gap: 10px; }
+      .ad-train-controls-row { width: 100%; display:flex; align-items:center; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+      #ad-train-controls-row #ad-ext-plan-basis { margin-left:auto; }
+      .ad-train-controls .ad-ext-plan-week { width: 100%; min-width: 0; }
+      /* Breiter Week-Select im Training-Header */
+      #ad-ext-plan-week-select { width: min(720px, 100%); max-width: 100%; }
+
+      /* Nur Combobox sichtbar: Label/Sub (KW/Zeitraum) ausblenden */
+      #ad-ext-view-training #ad-ext-plan-week-label { display:none; }
+      #ad-ext-view-training #ad-ext-plan-week-sub { display:none; }
+
+
 
       .ad-train-layout { display: grid; grid-template-columns: 1fr; gap: 12px; }
       @media (min-width: 1100px) {
@@ -3105,6 +3157,12 @@ const AD_EXT_CFG_FIELDS = [
       .ad-train-side[data-open="1"] { display: block; }
       .ad-train-layout[data-plan-open="0"] .ad-train-side { display: none; }
       .ad-train-layout[data-plan-open="1"] .ad-train-side { display: block; }
+
+      /* Training View Switch (Trainingsdaten | Trainingsplan) */
+      .ad-train-layout[data-train-view="DATA"] .ad-train-side { display:none; }
+      .ad-train-layout[data-train-view="PLAN"] .ad-train-main { display:none; }
+      .ad-train-layout[data-train-view="PLAN"] { grid-template-columns: 1fr !important; }
+      .ad-train-layout[data-train-view="PLAN"] .ad-train-side { width:auto; max-width:none; }
 
       .ad-train-side {
         border-radius: 18px;
@@ -3135,6 +3193,7 @@ const AD_EXT_CFG_FIELDS = [
       .ad-plan-controls { display:flex; flex-direction:column; gap: 10px; margin-bottom: 10px; }
       .ad-plan-row { display:flex; justify-content:space-between; align-items:center; gap: 10px; flex-wrap:wrap; }
       .ad-plan-label { font-size: 13px; opacity: .85; }
+      .ad-plan-week-info { font-size: 13px; opacity: .9; }
 
       .ad-plan-select {
         min-width: 180px;
@@ -3168,6 +3227,7 @@ const AD_EXT_CFG_FIELDS = [
         border-color: rgba(255,255,255,.18);
         background: rgba(0,0,0,.16);
       }
+      .ad-plan-seg-btn:disabled{ cursor:not-allowed; opacity:.45; }
 
       .ad-plan-check { display:flex; align-items:center; gap: 8px; font-size: 13px; opacity: .85; }
 
@@ -3257,6 +3317,130 @@ const AD_EXT_CFG_FIELDS = [
 
 
       .ad-plan-status { margin-top: 10px; font-size: 12px; opacity: .8; }
+
+      /* Training Plan Sidebar – Step 1 additions */
+      .ad-ext-btn--primary{ border-color: rgba(255,255,255,.22); background: rgba(255,255,255,.06); opacity: .9; }
+      .ad-ext-btn--primary:hover{ opacity: 1; }
+
+      .ad-plan-activityline{ display:flex; align-items:center; justify-content:space-between; gap: 8px; }
+      .ad-plan-activityline .ad-plan-activity{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      .ad-plan-mini-actions{ display:flex; gap: 6px; flex-shrink:0; }
+
+      .ad-plan-perfline{
+        font-size: 11px;
+        opacity: .72;
+        margin-top: 4px;
+        display:flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        line-height: 1.25;
+      }
+      .ad-plan-perfline span{ white-space: nowrap; }
+
+
+      .ad-plan-mini-btn{
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(0,0,0,.10);
+        color: inherit;
+        border-radius: 10px;
+        padding: 4px 7px;
+        cursor: pointer;
+        opacity: .75;
+        line-height: 1;
+      }
+      .ad-plan-mini-btn:hover{ opacity: 1; }
+      .ad-plan-mini-btn--danger{ border-color: rgba(255,90,90,.45); background: rgba(255,90,90,.10); opacity: .88; }
+
+      /* Drawer */
+      .ad-plan-drawer-overlay{
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.45);
+        z-index: 99998;
+      }
+
+      .ad-plan-drawer{
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 360px;
+        max-width: 92vw;
+        z-index: 99999;
+        border-left: 1px solid rgba(255,255,255,.12);
+        background: rgba(15,15,15,.96);
+        backdrop-filter: blur(6px);
+        transform: translateX(100%);
+        transition: transform .18s ease;
+        padding: 12px;
+        display:flex;
+        flex-direction:column;
+        gap: 10px;
+      }
+      .ad-plan-drawer[data-open="1"]{ transform: translateX(0); }
+
+      .ad-plan-drawer-head{ display:flex; justify-content:space-between; align-items:flex-start; gap: 10px; }
+      .ad-plan-drawer-title{ font-weight: 800; opacity: .95; }
+      .ad-plan-drawer-sub{ font-size: 12px; opacity: .7; margin-top: 2px; }
+
+      .ad-plan-drawer-close{
+        border: 1px solid rgba(255,255,255,.15);
+        background: rgba(0,0,0,.10);
+        color: inherit;
+        border-radius: 10px;
+        padding: 6px 10px;
+        cursor: pointer;
+      }
+
+      .ad-plan-drawer-body{ display:flex; flex-direction:column; gap: 10px; min-height: 0; }
+      .ad-plan-drawer-search{
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(0,0,0,.14);
+        color: inherit;
+      }
+
+      .ad-plan-drawer-list{
+        display:flex;
+        flex-direction:column;
+        gap: 8px;
+        overflow: auto;
+        padding-right: 2px;
+      }
+
+      .ad-plan-drawer-item{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap: 10px;
+        padding: 10px 10px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,.10);
+        background: rgba(0,0,0,.10);
+        cursor:pointer;
+      }
+      .ad-plan-drawer-item:hover{ background: rgba(255,255,255,.04); }
+
+      .ad-plan-drawer-item-left{ min-width: 0; }
+      .ad-plan-drawer-item-name{ font-weight: 700; opacity: .95; }
+      .ad-plan-drawer-item-meta{ font-size: 12px; opacity: .7; margin-top: 2px; }
+
+      .ad-plan-drawer-add{
+        padding: 7px 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+        color: inherit;
+        cursor: pointer;
+        opacity: .85;
+        flex-shrink:0;
+      }
+      .ad-plan-drawer-add:hover{ opacity: 1; }
+
+      .ad-plan-drawer-empty{ padding: 10px; font-size: 13px; opacity: .75; }
+
 
 `;
         document.head.appendChild(style);
@@ -3861,35 +4045,56 @@ const AD_EXT_CFG_FIELDS = [
 
         <div id="ad-ext-view-training" style="display:none;">
           <div class="ad-train-head">
-            <div class="ad-ext-section-title" style="margin:0;">Training</div>
-            <button type="button" id="adTrainPlanToggle" class="ad-ext-btn ad-ext-btn--secondary">Trainingsplan anzeigen</button>
+            <div class="ad-train-controls">
+              <div class="ad-ext-plan-week">
+                <div class="ad-ext-plan-week-label" id="ad-ext-plan-week-label" style="display:none;">–</div>
+                <select id="ad-ext-plan-week-select" class="ad-ext-select ad-ext-plan-week-select">
+                  <option value="">—</option>
+                </select>
+                <div class="ad-ext-plan-week-sub" id="ad-ext-plan-week-sub" style="display:none;">—</div>
+              </div>
+
+              <div id="ad-train-controls-row" class="ad-train-controls-row">
+                <div class="ad-ext-segcontrol" id="ad-ext-train-view">
+                  <button type="button" class="ad-ext-segbtn" data-view="DATA">Trainingsdaten</button>
+                  <button type="button" class="ad-ext-segbtn" data-view="PLAN">Trainingsplan</button>
+                </div>
+
+                <div class="ad-ext-segcontrol" id="ad-ext-plan-basis">
+                  <button type="button" class="ad-ext-segbtn" data-basis="TIME">Zeit</button>
+                  <button type="button" class="ad-ext-segbtn" data-basis="SESS">Sessions</button>
+                </div>
+
+                <label class="ad-ext-check">
+                  <input id="ad-ext-plan-showperf" class="ad-ext-check-input" type="checkbox" />
+                  <span>Leistung anzeigen</span>
+                </label>
+              </div>
+            </div>
           </div>
 
           <div class="ad-train-layout" data-plan-open="0">
             <div class="ad-train-main">
-              <div class="ad-ext-section-title">Trainingsplan Soll & Ist</div>
-              <div class="ad-ext-card">
-                <div class="ad-ext-plan-top">
-                  <div class="ad-ext-plan-week">
-                    <div class="ad-ext-plan-week-label" id="ad-ext-plan-week-label">–</div>
-                    <select id="ad-ext-plan-week-select" class="ad-ext-select ad-ext-plan-week-select">
-                      <option value="">—</option>
-                    </select>
-                    <div class="ad-ext-plan-week-sub" id="ad-ext-plan-week-sub">—</div>
-                  </div>
-
-                  <div class="ad-ext-segcontrol" id="ad-ext-plan-basis">
-                    <button type="button" class="ad-ext-segbtn" data-basis="TIME">Zeit</button>
-                    <button type="button" class="ad-ext-segbtn" data-basis="SESS">Sessions</button>
-                  </div>
-
-                  <label class="ad-ext-check">
-                    <input id="ad-ext-plan-showperf" class="ad-ext-check-input" type="checkbox" />
-                    <span>Leistung anzeigen</span>
-                  </label>
+              <div class="ad-ext-kpi-grid ad-ext-kpi-grid--x01">
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">Gesamt Soll</div>
+                  <div class="ad-ext-kpi-value" id="ad-ext-train-kpi-soll">—</div>
                 </div>
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">Ist</div>
+                  <div class="ad-ext-kpi-value" id="ad-ext-train-kpi-ist">—</div>
+                </div>
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">Fortschritt</div>
+                  <div class="ad-ext-kpi-value" id="ad-ext-train-kpi-progress">—</div>
+                  <div class="ad-ext-progress">
+                    <div class="ad-ext-progress-bar" id="ad-ext-train-kpi-progressbar" style="width:0%;"></div>
+                  </div>
+                </div>
+              </div>
 
-                <div class="ad-ext-table-scroll" style="margin-top:10px;">
+              <div class="ad-ext-card" style="padding:0; margin-bottom:12px;">
+                <div class="ad-ext-table-scroll">
                   <table class="ad-ext-table ad-ext-table--compact ad-ext-table--fixed">
                     <colgroup>
                       <col />
@@ -3900,8 +4105,8 @@ const AD_EXT_CFG_FIELDS = [
                     <thead>
                       <tr>
                         <th>Aktivität</th>
-                        <th class="ad-ext-table-value-right">Soll</th>
-                        <th class="ad-ext-table-value-right">Ist</th>
+                        <th>Soll</th>
+                        <th>Ist</th>
                         <th>Fortschritt</th>
                       </tr>
                     </thead>
@@ -3912,46 +4117,17 @@ const AD_EXT_CFG_FIELDS = [
                 </div>
               </div>
 
-              <div id="ad-ext-plan-focus-wrap" style="display:none;">
-                <div class="ad-ext-section-title">Fokustargets: Segment Training</div>
-                <div class="ad-ext-card" style="padding:0;">
-                  <div class="ad-ext-table-scroll">
-                    <table class="ad-ext-table ad-ext-table--compact ad-ext-table--fixed">
-                      <colgroup>
-                        <col style="width: 110px;" />
-                        <col style="width: 140px;" />
-                        <col style="width: 140px;" />
-                        <col style="width: 130px;" />
-                        <col style="width: 120px;" />
-                        <col />
-                      </colgroup>
-                      <thead>
-                        <tr>
-                          <th>Target</th>
-                          <th class="ad-ext-table-value-right">Soll</th>
-                          <th class="ad-ext-table-value-right">Ist</th>
-                          <th class="ad-ext-table-value-right">Trefferquote</th>
-                          <th class="ad-ext-table-value-right">Hits/min</th>
-                          <th>Fortschritt</th>
-                        </tr>
-                      </thead>
-                      <tbody id="ad-ext-plan-focus-body">
-                        <tr><td colspan="6" class="ad-ext-muted">–</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+
             </div>
 
             <aside class="ad-train-side" data-open="0">
               <div class="ad-train-side-head">
                 <div>
                   <div class="ad-train-side-title">Trainingsplan</div>
-                  <div class="ad-train-side-sub">(UI – Logik folgt)</div>
-                </div>
+</div>
                 <div class="ad-train-side-head-actions">
-                  <button id="adPlanEditBtn" class="ad-ext-btn ad-ext-btn--secondary" type="button">Bearbeiten</button>
+                  <button id="adPlanAddActivityBtn" class="ad-ext-btn ad-ext-btn--primary" type="button">+ Aktivität</button>
+                  <button id="adPlanCopyPrevWeekBtn" class="ad-ext-btn ad-ext-btn--secondary" type="button">Vorwoche kopieren</button>
                   <button type="button" class="ad-train-side-close" id="adTrainPlanClose">✕</button>
                 </div>
               </div>
@@ -3959,25 +4135,9 @@ const AD_EXT_CFG_FIELDS = [
               <div class="ad-train-side-body">
 
                 <div class="ad-plan-controls">
+
                   <div class="ad-plan-row">
-                    <div class="ad-plan-label">Woche</div>
-                    <select id="adPlanWeek" class="ad-plan-select">
-                      <option value="kw1_2026" selected>KW 1/2026 (aktuell)</option>
-                      <option value="kw52_2025">KW 52/2025</option>
-                      <option value="kw51_2025">KW 51/2025</option>
-                    </select>
-                  </div>
-
-                  <div class="ad-plan-row ad-plan-row--seg">
-                    <div class="ad-plan-seg" role="tablist" aria-label="Modus">
-                      <button type="button" id="adPlanModeTime" class="ad-plan-seg-btn is-active" aria-pressed="true">Zeit</button>
-                      <button type="button" id="adPlanModeSessions" class="ad-plan-seg-btn" aria-pressed="false">Sessions</button>
-                    </div>
-
-                    <label class="ad-plan-check">
-                      <input type="checkbox" id="adPlanShowPerf" checked />
-                      <span>Leistung anzeigen</span>
-                    </label>
+                    <div id="adPlanActiveWeekInfo" class="ad-plan-week-info">Aktive Woche: —</div>
                   </div>
                 </div>
 
@@ -4044,6 +4204,22 @@ const AD_EXT_CFG_FIELDS = [
     </div>
   </div>
 </div>
+
+<!-- Trainingsplan Drawer (Step 1) -->
+<div id="adPlanDrawerOverlay" class="ad-plan-drawer-overlay" hidden></div>
+<aside id="adPlanDrawer" class="ad-plan-drawer" data-open="0" aria-hidden="true">
+  <div class="ad-plan-drawer-head">
+    <div>
+      <div class="ad-plan-drawer-title">Aktivität hinzufügen</div>
+      <div class="ad-plan-drawer-sub">Vorlagen auswählen</div>
+    </div>
+    <button id="adPlanDrawerClose" type="button" class="ad-plan-drawer-close" title="Schließen" aria-label="Schließen">✕</button>
+  </div>
+  <div class="ad-plan-drawer-body">
+    <input id="adPlanDrawerSearch" class="ad-plan-drawer-search" type="text" placeholder="Suchen…" />
+    <div id="adPlanDrawerList" class="ad-plan-drawer-list"></div>
+  </div>
+</aside>
 
 </div> <!-- /#ad-ext-dashboard-wrap -->
 
@@ -9208,7 +9384,12 @@ const AD_EXT_CFG_FIELDS = [
         const minDate = minKey ? parseDayKeyToLocalDate(minKey) : null;
         const fromWeek = minDate ? startOfWeekMonday(minDate) : addDaysLocal(thisWeek, -7 * 11);
 
-        const rangeInfo = { from: fromWeek, to: null };
+        const FUTURE_WEEKS = 12;
+        // buildWeekSeriesMax() behandelt "to" als end-exklusiv (intern wird 1 Tag abgezogen),
+        // daher +1 Woche, damit die letzte Zukunftswoche sauber eingeschlossen ist.
+        const to = addDaysLocal(thisWeek, 7 * (FUTURE_WEEKS + 1));
+
+        const rangeInfo = { from: fromWeek, to };
         const weekKeys = buildWeekSeriesMax(rangeInfo, 260);
         return aggregateTimeWeeks(timeEntries, weekKeys);
     }
@@ -9286,7 +9467,162 @@ const AD_EXT_CFG_FIELDS = [
         return { wk, byActivity, stTargets };
     }
 
-    function renderTrainingPlan(panel, weeksAsc) {
+
+    // ---------------------------------------------------------------------------
+    // Training Tracker Adapter (Step 3 – Trainingsplan Sidebar)
+    // ---------------------------------------------------------------------------
+
+    /**
+     * WeekRange: start inklusiv, end exklusiv (empfohlen)
+     * @typedef {{ start: Date, end: Date }} WeekRange
+     *
+     * TrackerWeekAgg:
+     *  - minutesByActivity: Minuten pro Aktivität (Keys: PlanItem.type)
+     *  - sessionsByActivity: Sessions pro Aktivität (Keys: PlanItem.type)
+     *  - segmentTargetsMinutes: Minuten pro Segment-Target (z.B. D20, T20)
+     * @typedef {{ minutesByActivity: Object.<string, number>, sessionsByActivity: Object.<string, number>, segmentTargetsMinutes: Object.<string, number>, segmentTargetsSessions?: Object.<string, number>, performanceByActivity?: Object.<string, { hitRate?: number, hitsPerMin?: number }>, performanceBySegmentTarget?: Object.<string, { hitRate?: number, hitsPerMin?: number }> }} TrackerWeekAgg
+     */
+
+    // Mapping: PlanItem.type → Tracker Keys (einmal zentral anpassen, falls Tracker anders benennt)
+    const PLANITEM_TYPE_TO_TRACKER_KEY = Object.freeze({
+        ATC: "ATC",
+        COUNTUP: "COUNTUP",
+        CRICKET: "CRICKET",
+        RANDOM_CHECKOUT: "RANDOM_CHECKOUT",
+        SEGMENT_TRAINING: "SEGMENT_TRAINING",
+        X01_BOT: "X01_BOT",
+        X01_HUMAN: "X01_HUMAN",
+    });
+
+    function toIntMinutes(sec) {
+        const s = Number(sec) || 0;
+        if (!Number.isFinite(s) || s <= 0) return 0;
+        return Math.max(0, Math.round(s / 60));
+    }
+
+    // ---------------------------------------------------------
+    // Performance-Formatierung (0.14.32)
+    // - Nur Anzeige/Formatierung (keine Berechnung aus Rohwürfen)
+    // ---------------------------------------------------------
+
+    /** @param {any} hitRate @returns {number|null} Prozent 0..100 (gerundet) oder null */
+    function normalizeHitRateToPctInt(hitRate) {
+        const n = Number(hitRate);
+        if (!Number.isFinite(n)) return null;
+        if (n <= 1.0) return Math.round(n * 100);
+        return Math.round(n);
+    }
+
+    /** @param {any} hitRate @returns {string} */
+    function fmtHitRateMaybe(hitRate) {
+        const pct = normalizeHitRateToPctInt(hitRate);
+        return (pct === null) ? "—" : `${pct}%`;
+    }
+
+    /** @param {any} hitsPerMin @returns {string} */
+    function fmtHitsPerMinMaybe(hitsPerMin) {
+        const n = Number(hitsPerMin);
+        if (!Number.isFinite(n)) return "—";
+        return (Math.round(n * 10) / 10).toFixed(1);
+    }
+
+    
+    /**
+     * Aggregiert Ist-Minuten für eine Woche aus dem vorhandenen Tracker (IndexedDB Cache).
+     * Wichtig: UI darf den Tracker NICHT direkt zusammenrechnen – nur über diese Funktion.
+     * @param {WeekRange} weekRange
+     * @returns {TrackerWeekAgg}
+     */
+    function getTrackerAggregationForWeek(weekRange) {
+        /** @type {TrackerWeekAgg} */
+        const out = { minutesByActivity: {}, sessionsByActivity: {}, segmentTargetsMinutes: {}, segmentTargetsSessions: undefined };
+
+        // Defaults (alle bekannten Plan-Typen auf 0)
+        for (const k of Object.keys(PLANITEM_TYPE_TO_TRACKER_KEY)) {
+            out.minutesByActivity[k] = 0;
+            out.sessionsByActivity[k] = 0;
+        }
+
+        const start = weekRange && weekRange.start ? new Date(weekRange.start) : null;
+        if (!start || !Number.isFinite(start.getTime())) return out;
+
+        // Normalisieren: auf Wochen-Montag (damit Adapter unabhängig vom UI-Format ist)
+        const wkStart = startOfWeekMonday(start);
+        const weekKey = wkStart ? dayKeyFromLocalDate(wkStart) : null;
+        if (!weekKey) return out;
+
+        const { byActivity, stTargets } = aggregateTrainingActualsForWeek(weekKey);
+
+        // Optional (0.14.32): Performance nur durchreichen, wenn Tracker sie bereits liefert.
+        // Keine Berechnung/Fake-Werte.
+        /** @type {any|null} */ let perfByActivity = null;
+        /** @type {any|null} */ let perfBySegmentTarget = null;
+
+        // 0.14.33: Sessions pro Segment-Target (optional)
+        // Nur setzen, wenn aus den Rohdaten eindeutig ableitbar (kein Multi-Target pro Event).
+        /** @type {Record<string, number>} */ let segTargetsSessions = {};
+        let segTargetsSessionsAmbiguous = false;
+
+
+        // Minuten + Sessions pro Aktivität (PlanItem.type → Tracker-Key Mapping)
+        for (const [planType, trackerKey] of Object.entries(PLANITEM_TYPE_TO_TRACKER_KEY)) {
+            const rec = byActivity && byActivity.get ? (byActivity.get(trackerKey) || null) : null;
+            out.minutesByActivity[planType] = toIntMinutes(rec ? rec.sec : 0);
+            out.sessionsByActivity[planType] = Math.max(0, Math.round(Number(rec ? rec.count : 0) || 0));
+
+            // best-effort pass-through (falls Tracker diese Felder bereits anbietet)
+            const hr = rec ? rec.hitRate : undefined;
+            const hpm = rec ? rec.hitsPerMin : undefined;
+            if (Number.isFinite(Number(hr)) || Number.isFinite(Number(hpm))) {
+                perfByActivity = perfByActivity || {};
+                perfByActivity[planType] = {};
+                if (Number.isFinite(Number(hr))) perfByActivity[planType].hitRate = Number(hr);
+                if (Number.isFinite(Number(hpm))) perfByActivity[planType].hitsPerMin = Number(hpm);
+            }
+        }
+
+        // Minuten pro Segment-Target (Sessions pro Target bleiben in diesem Step unverändert)
+        if (stTargets && stTargets.forEach) {
+            stTargets.forEach((rec, target) => {
+                const t = String(target || "").trim();
+                if (!t || t === "DRandom" || t === "SRandom") return;
+                out.segmentTargetsMinutes[t] = toIntMinutes(rec ? rec.sec : 0);
+                // 0.14.33: Sessions pro Target (Count pro Event, bereits im Tracker aggregiert)
+                // Wenn Targets nicht eindeutig (z.B. "D20,D19"), deaktivieren wir segmentTargetsSessions komplett.
+                if (t && t !== "—") {
+                    if (/[\s,;|]/.test(t)) {
+                        segTargetsSessionsAmbiguous = true;
+                    } else {
+                        segTargetsSessions[t] = Math.max(0, Math.round(Number(rec ? rec.count : 0) || 0));
+                    }
+                }
+
+
+                // best-effort pass-through (falls Tracker diese Felder bereits anbietet)
+                const hr = rec ? rec.hitRate : undefined;
+                const hpm = rec ? rec.hitsPerMin : undefined;
+                if (Number.isFinite(Number(hr)) || Number.isFinite(Number(hpm))) {
+                    perfBySegmentTarget = perfBySegmentTarget || {};
+                    perfBySegmentTarget[t] = {};
+                    if (Number.isFinite(Number(hr))) perfBySegmentTarget[t].hitRate = Number(hr);
+                    if (Number.isFinite(Number(hpm))) perfBySegmentTarget[t].hitsPerMin = Number(hpm);
+                }
+            });
+
+        // 0.14.33: segmentTargetsSessions nur setzen, wenn keine Mehrfach-Targets erkannt wurden
+        if (!segTargetsSessionsAmbiguous) {
+            out.segmentTargetsSessions = segTargetsSessions;
+        }
+
+        }
+
+        if (perfByActivity && Object.keys(perfByActivity).length) out.performanceByActivity = perfByActivity;
+        if (perfBySegmentTarget && Object.keys(perfBySegmentTarget).length) out.performanceBySegmentTarget = perfBySegmentTarget;
+
+        return out;
+    }
+
+function renderTrainingPlan(panel, weeksAsc) {
         if (!panel) return;
 
         cache.trainingPlan = cache.trainingPlan || loadTrainingPlanState();
@@ -9295,13 +9631,14 @@ const AD_EXT_CFG_FIELDS = [
         const basis = normalizePlanBasis(st.basis);
         st.basis = basis;
 
-        const showPerf = !!st.showPerf;
+        const showPerf = !!planTabShowPerf;
 
         const mainBody = panel.querySelector("#ad-ext-plan-main-body");
-        const focusWrap = panel.querySelector("#ad-ext-plan-focus-wrap");
-        const focusBody = panel.querySelector("#ad-ext-plan-focus-body");
         const weekLabel = panel.querySelector("#ad-ext-plan-week-label");
         const weekSub = panel.querySelector("#ad-ext-plan-week-sub");
+        // Woche wird im Select-Text angezeigt → Label/Sub im Header ausblenden
+        if (weekLabel) { try { weekLabel.style.display = "none"; } catch {} }
+        if (weekSub) { try { weekSub.style.display = "none"; } catch {} }
         const basisWrap = panel.querySelector("#ad-ext-plan-basis");
         const chkPerf = panel.querySelector("#ad-ext-plan-showperf");
 
@@ -9322,13 +9659,28 @@ const AD_EXT_CFG_FIELDS = [
         const weekSelect = panel.querySelector("#ad-ext-plan-week-select");
         if (weekSelect) {
             const list = Array.isArray(weeksAsc) ? [...weeksAsc] : [];
+            const currentWeekKey = weekKeyFromDate(new Date());
+
             const opts = list.slice().reverse().map((w) => {
                 const wk = String(w?.weekKey || "");
                 if (!wk) return "";
+
+                const isPast = !!currentWeekKey && wk < currentWeekKey;
+                const isCurrent = !!currentWeekKey && wk === currentWeekKey;
+
+                let styleAttr = "";
+                let labelSuffix = "";
+
+                if (isPast) styleAttr = ' style="color: rgba(255,255,255,0.45);"';
+                if (isCurrent) {
+                    styleAttr = ' style="font-weight: 950; color: rgba(255,255,255,0.95);"';
+                    labelSuffix = " (aktuell)";
+                }
+
                 const kw = w?.kw ? `KW ${w.kw}${w.isoYear ? "/" + w.isoYear : ""}` : "Woche";
                 const range = w?.rangeLabel || "";
-                const label = range ? `${kw} · ${range}` : kw;
-                return `<option value="${escapeHtml(wk)}">${escapeHtml(label)}</option>`;
+                const label = range ? `${kw} · ${range}${labelSuffix}` : `${kw}${labelSuffix}`;
+                return `<option value="${escapeHtml(wk)}"${styleAttr}>${escapeHtml(label)}</option>`;
             }).filter(Boolean);
 
             weekSelect.innerHTML = opts.length ? opts.join("") : `<option value="">–</option>`;
@@ -9351,12 +9703,24 @@ const AD_EXT_CFG_FIELDS = [
             }
         }
         if (weekSub) {
-            const tip = `Woche wählen: Dropdown (oder Zeit Tracker → Wochenübersicht).`;
-            const note = `Ist-Werte: aus vorhandenem Tracker (Segment Training & X01) + ggf. erkannte Trainingsmodi.`;
-            weekSub.textContent = `${tip} ${note}`;
+            // 0.14.47: Info-Text entfernt (UI aufräumen)
+            weekSub.textContent = "";
+            try { weekSub.style.display = "none"; } catch {}
         }
 
         const { byActivity, stTargets } = aggregateTrainingActualsForWeek(selWeekKey);
+
+        // Optional (0.14.32): Performance nur anzeigen, wenn Tracker sie bereits liefert.
+        // Kein Neuberechnen aus Hits/Darts o.ä.
+        let perfAgg = null;
+        if (showPerf) {
+            const wkStart2 = parseDayKeyToLocalDate(selWeekKey);
+            if (wkStart2) {
+                const wkEnd2 = addDaysLocal(wkStart2, 7);
+                perfAgg = getTrackerAggregationForWeek({ start: wkStart2, end: wkEnd2 });
+            }
+        }
+
 
         const goals = (st.goals && st.goals[basis]) ? st.goals[basis] : {};
         const goalFor = (k) => Number(goals?.[k] ?? 0);
@@ -9383,13 +9747,12 @@ const AD_EXT_CFG_FIELDS = [
 
         const progressCell = (istVal, goalVal) => {
             const ratio = goalVal > 0 ? (istVal / goalVal) : 0;
-            const w = goalVal > 0 ? (clamp01(ratio) * 100) : 0;
             const pctTxt = goalVal > 0 ? `${Math.round(ratio * 100)}%` : "–";
+            const pctRaw = Number.isFinite(ratio) ? (ratio * 100) : 0;
+            const hasGoal = goalVal > 0;
+
             return `
-              <div class="ad-ext-plan-progress">
-                <div class="ad-ext-progress ad-ext-progress--thin">
-                  <div class="ad-ext-progress-bar" style="width:${w.toFixed(0)}%;"></div>
-                </div>
+              <div class="ad-ext-plan-progresswrap" data-pct="${pctRaw}" data-has-goal="${hasGoal ? 1 : 0}" style="display:flex;flex-direction:column;gap:4px;">
                 <div class="ad-ext-plan-pct">${pctTxt}</div>
               </div>
             `;
@@ -9398,116 +9761,141 @@ const AD_EXT_CFG_FIELDS = [
         if (mainBody) {
             const rows = [];
 
+            const weekId = selWeekKey ? weekIdFromWeekKey(selWeekKey) : "";
+            const wp = weekId ? loadWeekPlan(weekId) : null;
+
+            const viewMode = (basis === "SESS") ? "sessions" : "time";
+            const items = (wp && Array.isArray(wp.planItems)) ? sanitizePlanItemsForStorage(wp.planItems) : [];
+
             let totalGoal = 0;
             let totalIst = 0;
 
-            for (const a of TRAINING_ACTIVITIES) {
-                const key = a.key;
-                const lab = a.label;
+            const fmtGoal = (v) => {
+                if (viewMode === "time") return `${clampMinutes(v)}min`;
+                return String(clampSessions(v));
+            };
 
-                const act = byActivity.get(key) || { sec: 0, count: 0 };
-                const istU = unitsIst(act.sec, act.count);
+            const fmtIstVal = (v) => {
+                if (viewMode === "time") return `${Math.max(0, Math.round(Number(v) || 0))}min`;
+                return String(Math.max(0, Math.round(Number(v) || 0)));
+            };
 
-                const gRaw = goalFor(key);
-                const gU = unitsGoal(gRaw);
+            const perfLineFor = (trackerKey) => {
+                if (!showPerf) return "";
+                const perf = perfAgg?.performanceByActivity?.[trackerKey] || null;
+                return `<div class="ad-ext-plan-perfline"><span>Trefferquote: ${escapeHtml(fmtHitRateMaybe(perf?.hitRate))}</span><span>Hits/min: ${escapeHtml(fmtHitsPerMinMaybe(perf?.hitsPerMin))}</span></div>`;
+            };
 
-                totalGoal += gU;
-                totalIst += istU;
-
-                const valStr = fmtSollInput(gRaw);
-                const unit = (basis === "TIME") ? `<span class="ad-ext-plan-unit">h</span>` : "";
-
+            if (!wp || items.length === 0) {
                 rows.push(`
             <tr>
-              <td style="font-weight:950;">${escapeHtml(lab)}</td>
-              <td class="ad-ext-table-value-right">
-                <div class="ad-ext-plan-sollcell">
-                  <input class="ad-ext-input ad-ext-plan-input" data-plan-type="activity" data-activity-key="${escapeHtml(key)}" inputmode="${basis === "TIME" ? "decimal" : "numeric"}" value="${escapeHtml(valStr)}" />
-                  ${unit}
-                </div>
+              <td style="font-weight:950;">
+                Kein Trainingsplan für diese Woche angelegt
+                <div class="ad-ext-muted" style="margin-top:4px;">Rechts im Trainingsplan-Panel über <span style="font-weight:900;">+ Aktivität</span> anlegen.</div>
               </td>
-              <td class="ad-ext-table-value-right" style="font-weight:950;">${escapeHtml(fmtIst(act.sec, act.count))}</td>
-              <td>${progressCell(istU, gU)}</td>
+              <td>—</td>
+              <td>—</td>
+              <td class="ad-ext-muted">—</td>
             </tr>
           `);
+            } else {
+                for (const it of items) {
+                    const type = String(it?.type || "").trim() || "CUSTOM";
+                    const lab = String(it?.name || "").trim() || type;
+
+                    const trackerKey = PLANITEM_TYPE_TO_TRACKER_KEY[type] || type;
+
+                    let goal = 0;
+                    if (viewMode === "time") goal = clampMinutes(Number(it?.targetMinutes) || 0);
+                    else goal = clampSessions(Number(it?.targetSessions) || 0);
+
+                    let sec = 0;
+                    let cnt = 0;
+
+                    // Ist-Werte: Standard = nach Aktivität
+                    const rec = byActivity.get(trackerKey) || { sec: 0, count: 0 };
+                    sec = Number(rec?.sec || 0) || 0;
+                    cnt = Number(rec?.count || 0) || 0;
+
+                    // Sonderfall: Segment Training mit Targets -> Summe über Targets
+                    if (type === "SEGMENT_TRAINING") {
+                        const targets = it?.params?.targets;
+                        if (Array.isArray(targets) && targets.length) {
+                            let secSum = 0;
+                            let cntSum = 0;
+                            for (const t of targets) {
+                                const k = String(t || "").trim();
+                                if (!k) continue;
+                                const a = stTargets.get(k) || { sec: 0, count: 0 };
+                                secSum += Number(a?.sec || 0) || 0;
+                                cntSum += Number(a?.count || 0) || 0;
+                            }
+                            sec = secSum;
+                            cnt = cntSum;
+                        }
+                    }
+
+                    const ist = (viewMode === "time") ? toIntMinutes(sec) : Math.round(cnt || 0);
+
+                    totalGoal += goal;
+                    totalIst += ist;
+
+                    rows.push(`
+            <tr>
+              <td style="font-weight:950;">${escapeHtml(lab)}${perfLineFor(trackerKey)}</td>
+              <td style="font-weight:950; opacity:.9;">${escapeHtml(fmtGoal(goal))}</td>
+              <td style="font-weight:950;">${escapeHtml(fmtIstVal(ist))}</td>
+              <td>${progressCell(ist, goal)}</td>
+            </tr>
+          `);
+                }
             }
 
             // total row
-            const totalGoalTxt = (basis === "TIME") ? fmtHours(totalGoal * 3600) : String(Math.round(totalGoal));
-            const totalIstTxt = (basis === "TIME") ? fmtHours((totalIst * 3600)) : String(Math.round(totalIst));
+            const totalGoalTxt = (viewMode === "time") ? `${Math.round(totalGoal)}min` : String(Math.round(totalGoal));
+            const totalIstTxt = (viewMode === "time") ? `${Math.round(totalIst)}min` : String(Math.round(totalIst));
+
+            // KPI tiles (Training-View) – UI only (no wiring changes)
+            try {
+                const kpiSollEl = panel.querySelector("#ad-ext-train-kpi-soll");
+                const kpiIstEl = panel.querySelector("#ad-ext-train-kpi-ist");
+                const kpiProgEl = panel.querySelector("#ad-ext-train-kpi-progress");
+                const kpiBarEl = panel.querySelector("#ad-ext-train-kpi-progressbar");
+
+                if (kpiSollEl) kpiSollEl.textContent = String(totalGoalTxt || "—");
+                if (kpiIstEl) kpiIstEl.textContent = String(totalIstTxt || "—");
+
+                const goalNum = Number(totalGoal) || 0;
+                const istNum = Number(totalIst) || 0;
+                const hasGoal = goalNum > 0;
+                const pctRaw = hasGoal ? Math.round((istNum / goalNum) * 100) : NaN;
+                const pct = Number.isFinite(pctRaw) ? Math.max(0, Math.min(100, pctRaw)) : 0;
+
+                if (kpiProgEl) kpiProgEl.textContent = hasGoal ? `${pct}%` : "—";
+                if (kpiBarEl && kpiBarEl.style) kpiBarEl.style.width = `${pct}%`;
+            } catch {}
 
             rows.push(`
-          <tr>
+          <tr class="ad-ext-row-total">
             <td style="font-weight:950;">Gesamt</td>
-            <td class="ad-ext-table-value-right" style="font-weight:950; opacity:.9;">${escapeHtml(totalGoalTxt)}</td>
-            <td class="ad-ext-table-value-right" style="font-weight:950;">${escapeHtml(totalIstTxt)}</td>
+            <td style="font-weight:950; opacity:.9;">${escapeHtml(totalGoalTxt)}</td>
+            <td style="font-weight:950;">${escapeHtml(totalIstTxt)}</td>
             <td>${progressCell(totalIst, totalGoal)}</td>
           </tr>
         `);
 
             mainBody.innerHTML = rows.join("");
-        }
 
-        // Focus targets (Segment Training)
-        if (focusWrap) focusWrap.style.display = showPerf ? "" : "none";
-        if (showPerf && focusBody) {
-            const targetGoals = (st.targets && st.targets[basis]) ? st.targets[basis] : {};
-            const keys = new Set();
-
-            for (const t of stTargets.keys()) keys.add(t);
-            for (const t of Object.keys(targetGoals || {})) {
-                if ((Number(targetGoals[t]) || 0) > 0) keys.add(t);
+            // Inject progress bars (DOM) into progress cells
+            for (const wrap of mainBody.querySelectorAll(".ad-ext-plan-progresswrap")) {
+                const pct = parseFloat(String(wrap.getAttribute("data-pct") || "0"));
+                const hasGoal = String(wrap.getAttribute("data-has-goal") || "") === "1";
+                wrap.appendChild(createProgressBarDom(pct, hasGoal));
             }
 
-            const list = [...keys].filter(Boolean);
-            list.sort((a, b) => {
-                const A = stTargets.get(a) || { sec: 0, count: 0 };
-                const B = stTargets.get(b) || { sec: 0, count: 0 };
-                const va = basis === "TIME" ? (Number(A.sec) || 0) : (Number(A.count) || 0);
-                const vb = basis === "TIME" ? (Number(B.sec) || 0) : (Number(B.count) || 0);
-                if (vb !== va) return vb - va;
-                return String(a).localeCompare(String(b), "de");
-            });
-
-            const rows = [];
-
-            if (!list.length) {
-                rows.push(`<tr><td colspan="6" class="ad-ext-muted" style="padding:10px 12px;">Keine Segment-Training Targets in dieser Woche.</td></tr>`);
-            } else {
-                for (const target of list.slice(0, 12)) {
-                    const agg = stTargets.get(target) || { sec: 0, count: 0, hits: 0, darts: 0 };
-
-                    const gRaw = Number(targetGoals?.[target] ?? 0);
-                    const gU = unitsGoal(gRaw);
-
-                    const istU = basis === "TIME" ? (Number(agg.sec) || 0) / 3600 : Math.round(Number(agg.count) || 0);
-
-                    const hitrate = fmtPct(Number(agg.hits) || 0, Number(agg.darts) || 0);
-                    const hpm = (Number(agg.sec) || 0) > 0 ? ((Number(agg.hits) || 0) / ((Number(agg.sec) || 0) / 60)) : 0;
-
-                    const valStr = fmtSollInput(gRaw);
-                    const unit = (basis === "TIME") ? `<span class="ad-ext-plan-unit">h</span>` : "";
-
-                    rows.push(`
-              <tr>
-                <td style="font-weight:950;">${escapeHtml(target)}</td>
-                <td class="ad-ext-table-value-right">
-                  <div class="ad-ext-plan-sollcell">
-                    <input class="ad-ext-input ad-ext-plan-input" data-plan-type="target" data-target="${escapeHtml(target)}" inputmode="${basis === "TIME" ? "decimal" : "numeric"}" value="${escapeHtml(valStr)}" />
-                    ${unit}
-                  </div>
-                </td>
-                <td class="ad-ext-table-value-right" style="font-weight:950;">${escapeHtml(fmtIst(agg.sec, agg.count))}</td>
-                <td class="ad-ext-table-value-right" style="font-weight:950;">${escapeHtml(hitrate)}</td>
-                <td class="ad-ext-table-value-right" style="font-weight:950;">${escapeHtml(Number.isFinite(hpm) ? fmtDec(hpm, 1).replace(/\.0$/, "") : "—")}</td>
-                <td>${progressCell(istU, gU)}</td>
-              </tr>
-            `);
-                }
-            }
-
-            focusBody.innerHTML = rows.join("");
         }
+
+        
     }
 
 
@@ -9915,6 +10303,10 @@ const AD_EXT_CFG_FIELDS = [
             renderTimeTab(panel);
             renderTrainingTab(panel);
             renderMasterHallOfFame(panel);
+
+            // Trainingsplan Sidebar (Step 3): Wochen + Ist-Werte aktualisieren
+            try { cache._planSidebarRefreshWeeks?.(); } catch {}
+            try { cache._planSidebarRerender?.(); } catch {}
         }
         // AVG KPI: Tooltip mit Rekord (bestes AVG im aktuellen Filter) + "Zum Spiel" Button
         (function wireAvgKpiRecordTooltip() {
@@ -10754,202 +11146,1111 @@ const AD_EXT_CFG_FIELDS = [
     }
 
     
-    // Training Plan Sidebar (Option B) – UI scaffold only (no persistence, no logic)
-    let planOpen = false;
+        // Training Plan Sidebar – Week Plans (0.14.34)
+// - weekMode + planItems werden pro ISO-Woche lokal gespeichert (LocalStorage)
+    const WEEK_PLAN_STORAGE_PREFIX = "autodarts.segmentDash.plan.";
 
-    // Training Plan Sidebar: Controls UI (Step 2, RAM only – no persistence)
-    let planWeek = "kw1_2026";
-    let planMode = "time"; // "time" | "sessions"
-    let planShowPerf = true;
-    
+    /**
+     * StoredWeekPlan (Storage)
+     *   schemaVersion: 1;
+     *   weekId: string; // z.B. "2026-W01"
+     *   weekMode: "time" | "sessions";
+     *   planItems: PlanItem[];
+     */
 
-    // Step 4 (UI-only): Edit-Mode Workflow (RAM only – no persistence)
-    let planEdit = false;
-    let planDraft = null;      // Map key -> numeric value (mode dependent)
-    let planSaved = null;      // Optional: snapshot after "Speichern" (RAM only)
-    let planBeforeEdit = null; // snapshot um “Abbrechen” zu ermöglichen
-
-    // Step 3 (UI-only): Placeholder plan items for sidebar table (READ-ONLY)
-    const AD_PLAN_ITEMS = [
-        { key: "ATC", timeHours: 0.5, sessions: 2 },
-        { key: "CountUp", timeHours: 0.5, sessions: 2 },
-        { key: "Cricket", timeHours: 0.5, sessions: 2 },
-        { key: "Random Checkout", timeHours: 0.5, sessions: 2 },
-        { key: "Segment Training", timeHours: 3, sessions: 10 },
-        { key: "X01 vs Bot", timeHours: 1, sessions: 4 },
-        { key: "X01 vs Mensch", timeHours: 1, sessions: 4 }
-    ];
-
-    // Plan values (RAM only). Start with defaults from AD_PLAN_ITEMS.
-    function deepCopy(obj) {
-        try { return obj ? JSON.parse(JSON.stringify(obj)) : obj; }
-        catch (e) { return obj; }
+    function weekIdFromWeekKey(weekKey) {
+        const wr = weekRangeFromWeekKey(weekKey);
+        const y = Number(wr?.isoYear);
+        const w = Number(wr?.week);
+        if (!Number.isFinite(y) || !Number.isFinite(w)) return String(weekKey || "");
+        return `${y}-W${String(Math.max(1, Math.round(w))).padStart(2, "0")}`;
     }
 
-    function buildPlanValuesFromItems(items) {
-        const out = {};
-        (Array.isArray(items) ? items : []).forEach((it) => {
-            const k = String(it?.key || "");
-            if (!k) return;
-            out[k] = {
-                timeHours: Number(it?.timeHours) || 0,
-                sessions: Number(it?.sessions) || 0
-            };
-        });
+
+
+    // Helper: Vorwoche berechnen (ISO-Woche, Format "YYYY-Www")
+    // Muss Jahreswechsel korrekt behandeln (z.B. 2026-W01 -> 2025-W52/53)
+    function getPreviousWeekId(weekId) {
+        const m = /^(\d{4})-W(\d{2})$/i.exec(String(weekId || "").trim());
+        if (!m) return "";
+        const y = Number(m[1]);
+        const w = Number(m[2]);
+        if (!Number.isFinite(y) || !Number.isFinite(w) || w < 1) return "";
+
+        // ISO-Woche -> lokales Datum (Montag) über "4. Januar ist immer in KW1"
+        const jan4 = new Date(y, 0, 4);
+        const week1Monday = startOfWeekMonday(jan4);
+        if (!week1Monday) return "";
+
+        const thisMonday = addDaysLocal(week1Monday, (Math.round(w) - 1) * 7);
+        const prevMonday = addDaysLocal(thisMonday, -7);
+
+        const info = isoWeekInfoLocal(prevMonday);
+        const py = Number(info?.isoYear);
+        const pw = Number(info?.week);
+        if (!Number.isFinite(py) || !Number.isFinite(pw)) return "";
+
+        return `${py}-W${String(Math.max(1, Math.round(pw))).padStart(2, "0")}`;
+    }
+
+        function normalizeWeekMode(m) {
+        return (String(m || "") === "sessions") ? "sessions" : "time";
+    }
+
+    // Exakt die 3 Storage-Funktionen aus dem Spec:
+    // loadWeekPlan, saveWeekPlan, deleteWeekPlan (optional)
+    function loadWeekPlan(weekId) {
+        const id = String(weekId || "").trim();
+        if (!id) return null;
+        const key = WEEK_PLAN_STORAGE_PREFIX + id;
+
+        let raw = null;
+        try { raw = localStorage.getItem(key); } catch (e) { return null; }
+        if (!raw) return null;
+
+        try {
+            const obj = JSON.parse(raw);
+            if (!obj || typeof obj !== "object") return null;
+
+            const weekMode = normalizeWeekMode(obj.weekMode);
+            const planItems = Array.isArray(obj.planItems) ? obj.planItems : [];
+
+            return { schemaVersion: 1, weekId: id, weekMode, planItems };
+        } catch (e) {
+            // Robustheit: Parse-Fehler -> null
+            return null;
+        }
+    }
+
+    function sanitizePlanItemForStorage(it) {
+        const src = (it && typeof it === "object") ? it : {};
+
+        const type = String(src.type || "CUSTOM").trim() || "CUSTOM";
+        const id = String(src.id || "").trim() || makePlanId();
+        const name = String(src.name || "").trim() || type;
+
+        const targetMinutes = clampMinutes(Number(src.targetMinutes) || 0);
+
+        // Migration / Defaults: targetSessions immer vorhanden (Default 1)
+        let targetSessions = 1;
+        if ("targetSessions" in src) {
+            const n = Number(src.targetSessions);
+            targetSessions = Number.isFinite(n) ? clampSessions(n) : 1;
+        }
+
+let params = (src.params && typeof src.params === "object") ? { ...src.params } : undefined;
+
+        // Migration / Defaults: Segment Training braucht params.targets (Array)
+        if (type === "SEGMENT_TRAINING") {
+            const p = params ? { ...params } : {};
+            if (!Array.isArray(p.targets)) p.targets = [];
+            p.targets = p.targets.map(x => String(x || "").trim()).filter(Boolean);
+            params = p;
+        } else if (params && Array.isArray(params.targets)) {
+            params = { ...params, targets: params.targets.map(x => String(x || "").trim()).filter(Boolean) };
+        }
+
+        const out = { id, type, name, targetMinutes, targetSessions };
+        if (params && typeof params === "object" && Object.keys(params).length) out.params = params;
         return out;
     }
 
-    const PLAN_DEFAULT_VALUES = buildPlanValuesFromItems(AD_PLAN_ITEMS);
-    let planValues = deepCopy(PLAN_DEFAULT_VALUES);
-    planSaved = deepCopy(planValues);
-
-    function extractDraftFrom(values, mode) {
-        const isTime = (mode === "time");
-        const src = (values && typeof values === "object") ? values : PLAN_DEFAULT_VALUES;
-        const draft = {};
-        for (const k of Object.keys(PLAN_DEFAULT_VALUES)) {
-            const v = src?.[k] || PLAN_DEFAULT_VALUES[k] || { timeHours: 0, sessions: 0 };
-            draft[k] = isTime ? (Number(v?.timeHours) || 0) : (Number(v?.sessions) || 0);
-        }
-        return draft;
+    function sanitizePlanItemsForStorage(items) {
+        const arr = Array.isArray(items) ? items : [];
+        return arr.map(sanitizePlanItemForStorage);
     }
 
-    function clampDraftValue(raw, mode) {
-        const isTime = (mode === "time");
-        let n = Number(raw);
-        if (!Number.isFinite(n)) n = 0;
-        if (isTime) {
-            n = Math.round(n * 4) / 4;
-            if (n < 0) n = 0;
-            if (n > 20) n = 20;
-        } else {
-            n = Math.round(n);
-            if (n < 0) n = 0;
-            if (n > 200) n = 200;
+    function saveWeekPlan(plan) {
+        const p = (plan && typeof plan === "object") ? plan : {};
+        const weekId = String(p.weekId || "").trim();
+        if (!weekId) return;
+
+        const safe = {
+            schemaVersion: 1,
+            weekId,
+            weekMode: normalizeWeekMode(p.weekMode),
+            planItems: sanitizePlanItemsForStorage(p.planItems),
+        };
+
+        const key = WEEK_PLAN_STORAGE_PREFIX + weekId;
+        try {
+            localStorage.setItem(key, JSON.stringify(safe));
+            try { window.dispatchEvent(new CustomEvent("ad-ext-plan-changed", { detail: { weekId } })); } catch {}
+        } catch (e) {
+            // robust: ignore quota/private mode
         }
-        return n;
     }
 
-let statusTimer = null;
+    function deleteWeekPlan(weekId) {
+        const id = String(weekId || "").trim();
+        if (!id) return;
+        const key = WEEK_PLAN_STORAGE_PREFIX + id;
+        try { localStorage.removeItem(key); } catch (e) {}
+        try { window.dispatchEvent(new CustomEvent("ad-ext-plan-changed", { detail: { weekId: id } })); } catch {}
+    }
+
+    // Internal: Save scheduling for the currently active week in the sidebar
+    let _adPlanActiveWeekId = null;
+    let _adPlanActiveWeekHasStoredPlan = false; // true wenn ein Plan aus Storage geladen wurde oder bereits gespeichert ist
+    let _adPlanDirty = false; // wird erst bei User-Änderungen true (damit leere Wochen nicht auto-gespeichert werden)
+    let _adPlanSaveTimer = null;
+    let _adPlanLastSavedJson = null;
+    let _adPlanLastSavedWeekId = null;
+
+    function saveCurrentWeekPlanNow() {
+        const weekId = String(_adPlanActiveWeekId || "").trim();
+        if (!weekId) return;
+
+        // WICHTIG (0.14.42): Eine neue Woche ohne Plan soll NICHT automatisch gespeichert werden.
+        // Speichern erst, wenn der User wirklich etwas geändert/angelegt hat.
+        if (!_adPlanDirty) return;
+
+        const safe = {
+            schemaVersion: 1,
+            weekId,
+            weekMode: normalizeWeekMode(weekMode),
+            planItems: sanitizePlanItemsForStorage(planItems),
+        };
+
+        let json = "";
+        try { json = JSON.stringify(safe); } catch (e) { return; }
+
+        if (_adPlanLastSavedWeekId === weekId && _adPlanLastSavedJson === json) {
+            _adPlanDirty = false; // nichts zu speichern
+            return;
+        }
+
+        const key = WEEK_PLAN_STORAGE_PREFIX + weekId;
+        try {
+            localStorage.setItem(key, json);
+            try { window.dispatchEvent(new CustomEvent("ad-ext-plan-changed", { detail: { weekId } })); } catch {}
+            _adPlanLastSavedWeekId = weekId;
+            _adPlanLastSavedJson = json;
+            _adPlanDirty = false;
+            _adPlanActiveWeekHasStoredPlan = true;
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    function flushSaveCurrentWeekPlan() {
+        if (_adPlanSaveTimer) {
+            clearTimeout(_adPlanSaveTimer);
+            _adPlanSaveTimer = null;
+        }
+        saveCurrentWeekPlanNow();
+    }
+
+    function scheduleSaveCurrentWeekPlan() {
+        if (!_adPlanActiveWeekId) return;
+
+        // mark dirty -> erst jetzt darf gespeichert werden
+        _adPlanDirty = true;
+
+        if (_adPlanSaveTimer) clearTimeout(_adPlanSaveTimer);
+        _adPlanSaveTimer = setTimeout(() => {
+            _adPlanSaveTimer = null;
+            saveCurrentWeekPlanNow();
+        }, 400);
+    }
+
+    let planOpen = false;
+    let trainView = "DATA";
+    const AD_EXT_TRAIN_VIEW_LS_KEY = "ad_ext_train_view";
 
 
-    function wireTrainingPlanSidebarScaffold(panel) {
+    // UI Controls (Sidebar)
+    let planWeek = weekKeyFromDate(new Date()) || "";
+    let weekMode = "time"; // "time" | "sessions"
+    let planShowPerf = false; // RAM only (nicht gespeichert)
+    let planTabShowPerf = false; // RAM only (nicht gespeichert)
+
+    // Drawer state (RAM)
+    let planDrawerOpen = false;
+    let planDrawerSearch = "";
+    let statusTimer = null;
+
+    // Auswahl (Step 2)
+    let selectedPlanItemId = null;
+
+    // Step 2: CSS für Auswahl + Detailbereich
+    if (typeof GM_addStyle === "function") {
+        GM_addStyle(`
+          .ad-plan-table .ad-plan-row[data-plan-item-id] { cursor: pointer; }
+          .ad-plan-table .ad-plan-row[data-plan-item-id]:active { cursor: pointer; }
+          .ad-plan-table .ad-plan-drag-handle { display:inline-block; margin-right: 6px; opacity: .7; cursor: grab; }
+          .ad-plan-table .ad-plan-drag-handle:hover { opacity: 1; }
+          .ad-plan-table .ad-dragging .ad-plan-drag-handle { cursor: grabbing; }
+          .ad-plan-table .ad-dragging { opacity: 0.5; }
+          .ad-plan-table .ad-drop-target { outline: 2px dashed rgba(255,255,255,0.25); outline-offset: -2px; }
+          .ad-plan-table .ad-plan-row--selected {
+            background: rgba(0, 140, 255, 0.14) !important;
+            box-shadow: inset 3px 0 0 rgba(0, 140, 255, 0.75);
+          }
+
+          .ad-plan-details { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,.12); }
+          .ad-plan-details-card { border: 1px solid rgba(0,0,0,.12); border-radius: 10px; padding: 10px; background: rgba(255,255,255,.04); }
+          .ad-plan-details-head { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom: 8px; }
+          .ad-plan-details-title { font-weight: 800; font-size: 14px; line-height: 1.2; }
+          .ad-plan-details-sub { opacity: .75; font-size: 12px; margin-top: 2px; }
+          .ad-plan-details-badge { display:inline-flex; margin-top: 4px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(0,0,0,.10); opacity: .9; }
+
+          .ad-plan-details-section { margin-top: 10px; }
+          .ad-plan-details-label { display:block; font-size: 12px; opacity: .8; margin-bottom: 4px; }
+          .ad-plan-details-name { width: 100%; box-sizing: border-box; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,.18); background: rgba(255,255,255,.06); }
+
+          .ad-plan-details-section-title { font-weight: 800; font-size: 12px; opacity: .9; margin-bottom: 6px; }
+
+          .ad-plan-chip-row { display:flex; flex-wrap: wrap; gap: 6px; }
+          .ad-plan-chip {
+            display:inline-flex; align-items:center; gap: 6px;
+            padding: 4px 8px; border-radius: 999px;
+            border: 1px solid rgba(0,0,0,.14); background: rgba(0,0,0,.08);
+            font-size: 12px; line-height: 1;
+          }
+          .ad-plan-chip-x {
+            border: none; background: transparent; cursor: pointer;
+            font-weight: 900; opacity: .7; padding: 0 2px; line-height: 1;
+          }
+          .ad-plan-chip-x:hover { opacity: 1; }
+          .ad-plan-muted { opacity: .7; font-size: 12px; }
+          .ad-plan-error { margin-top: 6px; font-size: 12px; color: #b00020; }
+
+          .ad-plan-target-add { margin-top: 8px; }
+          .ad-plan-target-add-row { display:flex; gap: 6px; align-items:center; flex-wrap: wrap; }
+          .ad-plan-target-input {
+            flex: 1 1 180px;
+            padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,.18);
+            background: rgba(255,255,255,.06);
+          }
+
+          .ad-plan-target-table-wrap { overflow:auto; }
+          .ad-plan-target-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+          .ad-plan-target-table th, .ad-plan-target-table td { padding: 6px 8px; border-bottom: 1px solid rgba(0,0,0,.10); text-align: left; white-space: nowrap; }
+          .ad-plan-target-table thead th { font-weight: 800; opacity: .9; background: rgba(0,0,0,.06); }
+        `);
+    }
+
+
+    /**
+     * PlanItem
+     *   id: string
+     *   type: string
+     *   name: string
+     *   targetMinutes: number
+     *   targetSessions?: number
+     *   params?: {
+     *     targets?: string[]; // nur bei Segment Training
+     *   }
+     */
+    const PLAN_ACTIVITY_TEMPLATES = [
+        { type: "ATC", name: "ATC", defaultMinutes: 30 },
+        { type: "COUNTUP", name: "CountUp", defaultMinutes: 30 },
+        { type: "CRICKET", name: "Cricket", defaultMinutes: 30 },
+        { type: "RANDOM_CHECKOUT", name: "Random Checkout", defaultMinutes: 30 },
+        { type: "SEGMENT_TRAINING", name: "Segment Training", defaultMinutes: 180 },
+        { type: "X01_BOT", name: "X01 vs Bot", defaultMinutes: 60 },
+        { type: "X01_HUMAN", name: "X01 vs Mensch", defaultMinutes: 60 }
+    ];
+
+
+    // ---------------------------------------------------------
+    // Plan targets: zentrale Validierung / Clamps (Step 4B / 0.14.31)
+    // ---------------------------------------------------------
+    const PLAN_TARGET_MAX_MINUTES = 24 * 60; // 1440
+    const PLAN_TARGET_MAX_SESSIONS = 999;
+    const PLAN_SESSION_MINUTES = 30; // Heuristik: 30 min pro Session
+
+    /** @param {number} x @returns {number} */
+    function clampMinutes(x) {
+        let v = Number(x);
+        if (!Number.isFinite(v)) v = 0;
+        v = Math.round(v);
+        if (v < 0) v = 0;
+        if (v > PLAN_TARGET_MAX_MINUTES) v = PLAN_TARGET_MAX_MINUTES;
+        return v;
+    }
+
+    /** @param {number} x @returns {number} */
+    function clampSessions(x) {
+        let v = Number(x);
+        if (!Number.isFinite(v)) v = 0;
+        v = Math.round(v);
+        if (v < 0) v = 0;
+        if (v > PLAN_TARGET_MAX_SESSIONS) v = PLAN_TARGET_MAX_SESSIONS;
+        return v;
+    }
+
+    function makePlanId() {
+        try {
+            if (typeof crypto !== "undefined" && crypto && typeof crypto.randomUUID === "function") return crypto.randomUUID();
+        } catch {}
+        return String(Date.now()) + "_" + Math.random().toString(16).slice(2);
+    }
+
+    function stripNameSuffix(name) {
+        const s = String(name || "").trim();
+        const m = s.match(/^(.*)\s\((\d+)\)\s*$/);
+        return m ? String(m[1] || "").trim() : s;
+    }
+
+    function escapeRegExp(s) {
+        return String(s || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function nextUniqueName(baseName, items) {
+        const base = String(baseName || "").trim() || "Aktivität";
+        const names = new Set((Array.isArray(items) ? items : []).map(it => String(it?.name || "").trim()));
+        if (!names.has(base)) return base;
+
+        const re = new RegExp("^" + escapeRegExp(base) + "\\s\\((\\d+)\\)\\s*$");
+        let maxN = 1;
+        for (const n of names) {
+            const m = String(n).match(re);
+            if (m && m[1]) maxN = Math.max(maxN, parseInt(m[1], 10) || 1);
+        }
+        return `${base} (${maxN + 1})`;
+    }
+
+    function createPlanItemFromTemplate(tpl, items) {
+        const t = tpl || {};
+        const base = String(t.name || "").trim() || "Aktivität";
+        const type = String(t.type || base).trim() || "CUSTOM";
+
+        const it = {
+            id: makePlanId(),
+            type,
+            name: nextUniqueName(base, items),
+            targetMinutes: clampMinutes(Number(t.defaultMinutes) || 0),
+            targetSessions: 1
+        };
+
+        // Step 2: Segment Training bekommt params.targets (initial leer)
+        if (type === "SEGMENT_TRAINING") {
+            it.params = { targets: [] };
+        }
+
+        return it;
+    }
+
+    // Default-Initialisierung pro Woche (0.14.34):
+    // Wenn kein gespeicherter Wochenplan existiert, wird daraus ein neuer Plan erzeugt.
+    function createDefaultPlanItems() {
+        let items = [];
+        for (const tpl of PLAN_ACTIVITY_TEMPLATES) {
+            items.push(createPlanItemFromTemplate(tpl, items));
+        }
+        return items;
+    }
+
+    // Start-State: wird beim Laden der Sidebar ggf. durch den gespeicherten Wochenplan überschrieben
+    let planItems = [];
+
+function wireTrainingPlanSidebarScaffold(panel) {
         if (!panel) return;
 
-        const btnToggle = panel.querySelector("#adTrainPlanToggle");
-        const btnClose = panel.querySelector("#adTrainPlanClose");
-        const side = panel.querySelector(".ad-train-side");
-        const layout = panel.querySelector(".ad-train-layout");
-
-        if (!btnToggle || !btnClose || !side) return;
-
-        function setPlanOpen(open) {
-            planOpen = !!open;
-            const flag = planOpen ? "1" : "0";
-            side.dataset.open = flag;
-            if (layout) layout.dataset.planOpen = flag;
-            btnToggle.textContent = planOpen ? "Trainingsplan ausblenden" : "Trainingsplan anzeigen";
+        // Persisted view: DATA | PLAN
+        try {
+            const raw = String(localStorage.getItem(AD_EXT_TRAIN_VIEW_LS_KEY) || trainView || "DATA").toUpperCase();
+            trainView = (raw === "PLAN") ? "PLAN" : "DATA";
+        } catch {
+            trainView = trainView || "DATA";
         }
 
-        // Prevent duplicate listeners on SPA re-wires by using property assignment
-        btnToggle.onclick = () => setPlanOpen(!planOpen);
-        btnClose.onclick = () => setPlanOpen(false);
+        const tabs = panel.querySelector("#ad-ext-train-view");
+        const layout = panel.querySelector(".ad-train-layout");
+        const side = panel.querySelector(".ad-train-side");
+        const main = panel.querySelector(".ad-train-main");
+        const btnClose = panel.querySelector("#adTrainPlanClose");
+        const trainViewRoot = panel.querySelector("#ad-ext-view-training");
 
-        // Ensure current in-memory state is reflected after re-render
-        setPlanOpen(planOpen);
+        if (!tabs || !layout || !side || !main) return;
+        // Re-render helper: Trainingsdaten-Panel neu zeichnen (Plan frisch aus Storage lesen)
+        const rerenderTrainingMain = () => {
+            try {
+                if (!cache?.loaded) return;
+                const weeks = cache._training_weeksAsc || computeTrainingWeeksAsc();
+                cache._training_weeksAsc = weeks;
+                renderTrainingPlan(panel, weeks);
+            } catch {}
+        };
+
+        // Plan-Änderungen aus dem Sidebar-Storage sofort in Trainingsdaten übernehmen
+        if (!panel.__adExtPlanChangedListener) {
+            panel.__adExtPlanChangedListener = true;
+            window.addEventListener("ad-ext-plan-changed", () => {
+                try {
+                    const root = trainViewRoot || panel.querySelector("#ad-ext-view-training");
+                    if (!root) return;
+                    const isActive = (window.getComputedStyle(root).display !== "none");
+                    if (!isActive) return;
+                    // Nur sofort rerendern, wenn Trainingsdaten sichtbar sind
+                    if (String(layout.dataset.trainView || "").toUpperCase() === "DATA") {
+                        rerenderTrainingMain();
+                    }
+                } catch {}
+            });
+        }
+
+        function setTrainView(view) {
+            trainView = (String(view || "").toUpperCase() === "PLAN") ? "PLAN" : "DATA";
+            try { localStorage.setItem(AD_EXT_TRAIN_VIEW_LS_KEY, trainView); } catch {}
+
+            layout.dataset.trainView = trainView;
+
+            if (trainViewRoot) { try { trainViewRoot.dataset.trainView = trainView; } catch {} }
+
+            // Keep existing open-state flags so legacy CSS/logic doesn't break
+            const openFlag = (trainView === "PLAN") ? "1" : "0";
+            side.dataset.open = openFlag;
+            layout.dataset.planOpen = openFlag;
+
+            // Segmented buttons UI
+            for (const b of tabs.querySelectorAll(".ad-ext-segbtn")) {
+                const isOn = String(b?.dataset?.view || "").toUpperCase() === trainView;
+                try { b.classList.toggle("ad-ext-segbtn--active", isOn); } catch {}
+                try { b.classList.toggle("is-active", isOn); } catch {}
+                try { b.setAttribute("aria-pressed", isOn ? "true" : "false"); } catch {}
+            }
+
+            // Beim Umschalten immer Trainingsdaten neu berechnen (Plan aus Storage)
+            if (trainView === "DATA") {
+                rerenderTrainingMain();
+            }
+        }
+
+        // Event delegation
+        tabs.onclick = (ev) => {
+            const btn = ev?.target?.closest ? ev.target.closest(".ad-ext-segbtn") : null;
+            if (!btn || !tabs.contains(btn)) return;
+            ev.preventDefault();
+            ev.stopPropagation();
+            setTrainView(btn.dataset.view);
+            // Mouse-click: kein dauerhafter Focus-Ring
+            if (ev.detail && ev.detail > 0) { try { btn.blur(); } catch {} }
+        };
+
+        // Close-X im Plan → zurück zu Trainingsdaten
+        if (btnClose) {
+            btnClose.onclick = (ev) => {
+                ev?.preventDefault?.();
+                ev?.stopPropagation?.();
+                setTrainView("DATA");
+                if (ev?.detail && ev.detail > 0) { try { btnClose.blur(); } catch {} }
+            };
+        }
+
+        // Initial sync (wichtig nach SPA-Re-render)
+        setTrainView(trainView);
     }
 
 
-    function wireTrainingPlanSidebarControls(panel) {
+
+        function wireTrainingPlanSidebarControls(panel) {
         if (!panel) return;
 
         const side = panel.querySelector(".ad-train-side");
         if (!side) return;
 
-        const select = side.querySelector("#adPlanWeek");
+        const activeWeekInfo = side.querySelector("#adPlanActiveWeekInfo");
         const btnTime = side.querySelector("#adPlanModeTime");
         const btnSessions = side.querySelector("#adPlanModeSessions");
         const chk = side.querySelector("#adPlanShowPerf");
-        const btnEdit = side.querySelector("#adPlanEditBtn");
+const btnAdd = side.querySelector("#adPlanAddActivityBtn");
+        const btnCopyPrevWeek = side.querySelector("#adPlanCopyPrevWeekBtn");
 
         const statusEl = side.querySelector("#adPlanStatus");
-        const actionsEl = side.querySelector("#adPlanActions");
-        const actionsStatusEl = side.querySelector("#adPlanActionsStatus");
-        const btnSave = side.querySelector("#adPlanSave");
-        const btnCancel = side.querySelector("#adPlanCancel");
-        const btnReset = side.querySelector("#adPlanReset");
-
         const sumTarget = side.querySelector("#adPlanSumTarget");
         const sumActual = side.querySelector("#adPlanSumActual");
         const sumProgress = side.querySelector("#adPlanSumProgress");
 
-        if (!select || !btnTime || !btnSessions || !chk || !statusEl || !actionsEl || !actionsStatusEl || !btnSave || !btnCancel || !btnReset || !sumTarget || !sumActual || !sumProgress) return;
+        const table = side.querySelector("#adPlanTable");
 
+        // Drawer
+        const drawer = panel.querySelector("#adPlanDrawer");
+        const overlay = panel.querySelector("#adPlanDrawerOverlay");
+        const drawerClose = panel.querySelector("#adPlanDrawerClose");
+        const drawerSearch = panel.querySelector("#adPlanDrawerSearch");
+        const drawerList = panel.querySelector("#adPlanDrawerList");
+
+        if (!statusEl || !sumTarget || !sumActual || !sumProgress || !table || !activeWeekInfo) return;
+
+        // Step 2: Detailbereich unterhalb der Liste (Plan-Items)
+        let details = side.querySelector("#adPlanDetails");
+        if (!details) {
+            details = document.createElement("div");
+            details.id = "adPlanDetails";
+            details.className = "ad-plan-details";
+            table.insertAdjacentElement("afterend", details);
+        }
+
+        // Step 2: Segment-Targets UI state (RAM)
+        let targetAddOpen = false;
+        let targetAddValue = "";
+        let targetAddError = "";
+
+        const ALL_DART_TARGETS = (() => {
+            const out = ["SB", "DB"];
+            for (let i = 1; i <= 20; i++) out.push(`S${i}`);
+            for (let i = 1; i <= 20; i++) out.push(`D${i}`);
+            for (let i = 1; i <= 20; i++) out.push(`T${i}`);
+            return out;
+        })();
+
+        function getTypeLabel(type) {
+            const t = String(type || "");
+            const tpl = PLAN_ACTIVITY_TEMPLATES.find(x => String(x?.type || "") === t);
+            if (tpl && tpl.name) return String(tpl.name);
+            return t || "—";
+        }
+
+        function cssEscapeAttrValue(v) {
+            const s = String(v || "");
+            if (window.CSS && CSS.escape) return CSS.escape(s);
+            // minimal fallback
+            return s.replace(/["\\]/g, "\\$&");
+        }
+
+        function getPlanItemById(id) {
+            const s = String(id || "");
+            return (Array.isArray(planItems) ? planItems : []).find(x => String(x?.id || "") === s) || null;
+        }
+
+        function updatePlanItemById(id, updater) {
+            const s = String(id || "");
+            const idx = (Array.isArray(planItems) ? planItems : []).findIndex(x => String(x?.id || "") === s);
+            if (idx < 0) return null;
+
+            const next = typeof updater === "function" ? updater(planItems[idx]) : updater;
+            planItems = planItems.slice();
+            planItems[idx] = next;
+            scheduleSaveCurrentWeekPlan();
+            return next;
+        }
+
+        function normalizeTarget(raw) {
+            return String(raw || "").trim().toUpperCase().replace(/\s+/g, "");
+        }
+
+        function validateTarget(raw, existing) {
+            const t = normalizeTarget(raw);
+            if (!t) return { ok: false, error: "Bitte ein Target eingeben." };
+
+            if (t === "SB" || t === "DB") {
+                if ((existing || []).some(x => normalizeTarget(x) === t)) return { ok: false, error: "Dieses Target ist bereits vorhanden." };
+                return { ok: true, value: t };
+            }
+
+            const m = t.match(/^(S|D|T)(\d{1,2})$/);
+            if (!m) return { ok: false, error: "Ungültiges Format. Erlaubt: S1..S20, D1..D20, T1..T20, SB, DB." };
+
+            const n = Number(m[2]);
+            if (!Number.isFinite(n) || n < 1 || n > 20) return { ok: false, error: "Zahl muss zwischen 1 und 20 liegen." };
+
+            const value = `${m[1]}${n}`;
+            if ((existing || []).some(x => normalizeTarget(x) === value)) return { ok: false, error: "Dieses Target ist bereits vorhanden." };
+
+            return { ok: true, value };
+        }
+
+        function setSelectedPlanItemId(id) {
+            const prevId = String(selectedPlanItemId || "");
+            const nextId = id ? String(id) : "";
+
+            if (!nextId) {
+                selectedPlanItemId = null;
+                targetAddOpen = false;
+                targetAddValue = "";
+                targetAddError = "";
+
+                // remove highlight (no full table re-render -> keeps input focus)
+                if (prevId) {
+                    const prevRow = table.querySelector(`.ad-plan-row[data-plan-item-id="${cssEscapeAttrValue(prevId)}"]`);
+                    if (prevRow) {
+                        prevRow.classList.remove("ad-plan-row--selected");
+                        prevRow.setAttribute("aria-selected", "false");
+                    }
+                }
+
+                renderPlanDetails();
+                return;
+            }
+
+            selectedPlanItemId = nextId;
+
+            // Step 2: Beim Selektieren Segment-Item params.targets initialisieren
+            const it = getPlanItemById(nextId);
+            if (it && String(it.type || "") === "SEGMENT_TRAINING") {
+                const hasTargets = it.params && Array.isArray(it.params.targets);
+                if (!hasTargets) {
+                    updatePlanItemById(nextId, (cur) => {
+                        const p = cur && cur.params ? { ...cur.params } : {};
+                        if (!Array.isArray(p.targets)) p.targets = [];
+                        return { ...cur, params: p };
+                    });
+                }
+            }
+
+            // UI state reset (Add-Target)
+            targetAddOpen = false;
+            targetAddValue = "";
+            targetAddError = "";
+
+            // Update highlight (no full table re-render -> keeps input focus)
+            if (prevId && prevId !== nextId) {
+                const prevRow = table.querySelector(`.ad-plan-row[data-plan-item-id="${cssEscapeAttrValue(prevId)}"]`);
+                if (prevRow) {
+                    prevRow.classList.remove("ad-plan-row--selected");
+                    prevRow.setAttribute("aria-selected", "false");
+                }
+            }
+            const nextRow = table.querySelector(`.ad-plan-row[data-plan-item-id="${cssEscapeAttrValue(nextId)}"]`);
+            if (nextRow) {
+                nextRow.classList.add("ad-plan-row--selected");
+                nextRow.setAttribute("aria-selected", "true");
+            }
+
+            renderPlanDetails();
+        }
+        // 0.14.41: Performance wird global im Hauptpanel gesteuert (nur Anzeige in Sidebar)
+        if (chk) {
+            if (chk) chk.disabled = true;
+            if (chk) chk.title = "Global im Hauptpanel steuern";
+            if (chk) chk.checked = !!planTabShowPerf;
+        }
+        planShowPerf = !!planTabShowPerf;
         function setStatusTemp(msg) {
-            statusEl.textContent = msg;
+            if (!statusEl) return;
+            statusEl.textContent = String(msg || "");
             if (statusTimer) clearTimeout(statusTimer);
             statusTimer = setTimeout(() => {
-                if (statusEl && statusEl.isConnected) statusEl.textContent = "Bereit. (UI)";
-            }, 1000);
+                if (statusEl && statusEl.isConnected) statusEl.textContent = "Bereit.";
+            }, 1200);
         }
 
-        function setActionStatus(msg) {
-            actionsStatusEl.textContent = msg;
+        function clampHoursToMinutes(hours) {
+            let h = Number(hours);
+            if (!Number.isFinite(h)) h = 0;
+
+            // UI: Viertelstunden (wie bisher)
+            h = Math.round(h * 4) / 4;
+
+            if (h < 0) h = 0;
+
+            const maxH = PLAN_TARGET_MAX_MINUTES / 60;
+            if (h > maxH) h = maxH;
+
+            return clampMinutes(Math.round(h * 60));
         }
 
-        function setControlsDisabled(disabled) {
-            select.disabled = !!disabled;
-            btnTime.disabled = !!disabled;
-            btnSessions.disabled = !!disabled;
-            chk.disabled = !!disabled;
+        function minutesToHours(mins) {
+            const m = Number(mins) || 0;
+            return m / 60;
         }
 
-        function applyEditUI() {
-            actionsEl.hidden = !planEdit;
-            statusEl.hidden = !!planEdit;
-            if (btnEdit) btnEdit.hidden = !!planEdit;
-            setControlsDisabled(!!planEdit);
-            if (planEdit) setActionStatus("Bereit.");
+        function formatHoursNumber(hours) {
+            let h = Number(hours) || 0;
+            // keep quarter precision stable in UI
+            h = Math.round(h * 4) / 4;
+
+            const isInt = Math.abs(h - Math.round(h)) < 1e-9;
+            if (isInt) return Math.round(h).toFixed(1);
+
+            // up to 2 decimals, trim trailing zeros
+            let s = h.toFixed(2);
+            s = s.replace(/0+$/, "").replace(/\.$/, "");
+            return s;
         }
 
         function formatHoursWithUnit(hours) {
-            const h = Number(hours) || 0;
-            // Keep at least one decimal (e.g. 7.0 h), but don't over-format quarters
-            const isInt = Math.abs(h - Math.round(h)) < 1e-9;
-            const txt = isInt ? (Math.round(h).toFixed(1)) : String(h);
-            return txt + " h";
+            return formatHoursNumber(hours) + " h";
         }
 
-        function sumDraftValues() {
-            return Object.values(planDraft || {}).reduce((a, v) => a + (Number(v) || 0), 0);
+        function totalTargetMinutes() {
+            return (Array.isArray(planItems) ? planItems : []).reduce((a, it) => a + clampMinutes(Number(it?.targetMinutes)), 0);
         }
 
-        function sumValues(mode) {
-            const isTime = (mode === "time");
-            return Object.keys(PLAN_DEFAULT_VALUES).reduce((a, k) => {
-                const v = planValues?.[k] || PLAN_DEFAULT_VALUES[k] || { timeHours: 0, sessions: 0 };
-                return a + (isTime ? (Number(v?.timeHours) || 0) : (Number(v?.sessions) || 0));
-            }, 0);
+
+        // -------------------------------------------------------------------
+        // Step 3: Ist-Minuten aus Tracker (Adapter) + Reaktivität
+        // -------------------------------------------------------------------
+
+        let _sidebarAggCache = null;
+        let _sidebarAggWeekKey = null;
+        let _sidebarAggFp = null;
+
+        function sidebarTrackerFingerprint() {
+            // minimal & stabil: ändert sich, wenn Tracker-Daten neu geladen wurden
+            const a = Array.isArray(cache.sessions) ? cache.sessions.length : 0;
+            const b = Array.isArray(cache.x01Matches) ? cache.x01Matches.length : 0;
+            const c = Array.isArray(cache.otherTrainingSessions) ? cache.otherTrainingSessions.length : 0;
+            const r = Number(cache?.meta?.totalRows ?? 0) || 0;
+            return `${r}|${a}|${b}|${c}`;
         }
 
-        function renderSummary() {
-            if (planMode === "time") {
-                const totalHours = (planEdit && planDraft) ? sumDraftValues() : sumValues("time");
-                sumTarget.textContent = formatHoursWithUnit(totalHours);
-                sumActual.textContent = "0min";
-            } else {
-                const totalSessions = (planEdit && planDraft) ? sumDraftValues() : sumValues("sessions");
-                sumTarget.textContent = `${Math.round(totalSessions)} Sessions`;
-                sumActual.textContent = "0";
+        function getSidebarWeeksAsc() {
+            // Vor dem Laden NICHT computeTrainingWeeksAsc() ausführen (würde 260 Wochen füllen)
+            if (Array.isArray(cache._training_weeksAsc) && cache._training_weeksAsc.length) return cache._training_weeksAsc;
+            if (!cache.loaded) return [];
+            const w = computeTrainingWeeksAsc();
+            cache._training_weeksAsc = w;
+            return w;
+        }
+
+        function weekRangeExclusiveFromWeekKey(weekKey) {
+            const start = parseDayKeyToLocalDate(weekKey);
+            if (!start) return null;
+            const end = addDaysLocal(start, 7); // end exklusiv
+            return { start, end };
+        }
+
+        function ensureSidebarSelectedWeekKey() {
+            const weeksAsc = getSidebarWeeksAsc();
+            const sel = ensurePlanSelectedWeekKey(weeksAsc);
+            planWeek = String(sel || "") || (weekKeyFromDate(new Date()) || "");
+            return planWeek;
+        }
+
+        function refreshSidebarWeekOptions() {
+            // Sidepanel hat keine eigene Wochenwahl mehr -> zeigt nur Info zur aktiven Woche
+            if (!activeWeekInfo) return;
+
+            const wkKey = ensureSidebarSelectedWeekKey();
+            const info = weekRangeFromWeekKey(wkKey);
+
+            function dayKeyToGermanShort(dayKey) {
+                if (!dayKey || !/^\d{4}-\d{2}-\d{2}$/.test(dayKey)) return "—";
+                const [y, m, d] = dayKey.split("-");
+                // dd.MM. (ohne Jahr)
+                return `${d}.${m}.`;
             }
-            sumProgress.textContent = "0%";
+
+            if (!info) {
+                activeWeekInfo.textContent = "Aktive Woche: —";
+                return;
+            }
+
+            const kw = String(info.week || "").padStart(2, "0");
+            const yr = String(info.isoYear || "");
+            const s = dayKeyToGermanShort(info.startKey);
+            const e = dayKeyToGermanShort(info.endKey);
+            activeWeekInfo.textContent = `Aktive Woche: KW ${kw}/${yr} (${s}–${e})`;
         }
 
+        function getTrackerAggForSelectedWeek() {
+            const wk = ensureSidebarSelectedWeekKey();
+            const fp = sidebarTrackerFingerprint();
+
+            if (_sidebarAggCache && _sidebarAggWeekKey === wk && _sidebarAggFp === fp) return _sidebarAggCache;
+
+            const wr = weekRangeExclusiveFromWeekKey(wk);
+            _sidebarAggCache = wr ? getTrackerAggregationForWeek(wr) : { minutesByActivity: {}, sessionsByActivity: {}, segmentTargetsMinutes: {}, segmentTargetsSessions: undefined };
+            _sidebarAggWeekKey = wk;
+            _sidebarAggFp = fp;
+            return _sidebarAggCache;
+        }
+
+
+        function getSidebarViewMode() {
+            try { cache.trainingPlan = cache.trainingPlan || loadTrainingPlanState(); } catch {}
+            const st = cache.trainingPlan || {};
+            const basis = normalizePlanBasis(st.basis);
+            st.basis = basis;
+            return (basis === "SESS") ? "sessions" : "time";
+        }
+
+        function getSidebarShowPerf() {
+            return !!planTabShowPerf;
+        }
+
+        function syncModeButtons() {
+            const isSess = getSidebarViewMode() === "sessions";
+            if (btnSessions) {
+                btnSessions.classList.toggle("is-active", isSess);
+                btnSessions.setAttribute("aria-pressed", isSess ? "true" : "false");
+            }
+            if (btnTime) {
+                btnTime.classList.toggle("is-active", !isSess);
+                btnTime.setAttribute("aria-pressed", !isSess ? "true" : "false");
+            }
+        }
+
+        function ensureSidebarWeekPlanLoaded(force = false) {
+            const wkKey = ensureSidebarSelectedWeekKey();
+            const weekId = weekIdFromWeekKey(wkKey);
+            if (!weekId) return;
+
+            if (!force && String(_adPlanActiveWeekId || "") === String(weekId)) return;
+
+            // Beim Wochenwechsel zuerst pending Saves des alten Plans flushen
+            if (_adPlanActiveWeekId && String(_adPlanActiveWeekId) !== String(weekId)) {
+                flushSaveCurrentWeekPlan();
+            }
+
+            const loaded = loadWeekPlan(weekId);
+
+            if (loaded) {
+                weekMode = normalizeWeekMode(loaded.weekMode);
+                planItems = sanitizePlanItemsForStorage(loaded.planItems);
+                _adPlanActiveWeekHasStoredPlan = true;
+            } else {
+                // 0.14.42: Keine Auto-Templates/Auto-Speicherung mehr.
+                // Neue Wochen starten leer, bis der User aktiv etwas anlegt (z. B. +Aktivität).
+                weekMode = normalizeWeekMode(getSidebarViewMode());
+                planItems = [];
+                _adPlanActiveWeekHasStoredPlan = false;
+            }
+
+            // Auswahl: erstes Item oder null
+            selectedPlanItemId = (Array.isArray(planItems) && planItems.length) ? String(planItems[0].id || "") : null;
+
+            // Segment-Details UI zurücksetzen
+            targetAddOpen = false;
+            targetAddValue = "";
+            targetAddError = "";
+
+            _adPlanActiveWeekId = weekId;
+
+            // Save-Cache resetten (neue Woche)
+            _adPlanLastSavedWeekId = null;
+            _adPlanLastSavedJson = null;
+            _adPlanDirty = false;
+
+            syncModeButtons();
+        }
+
+
+
+        // Copy-Helper: gilt als "leer", wenn keine Items vorhanden ODER Plan exakt dem Default-Template entspricht
+        function isDefaultTemplatePlan(items) {
+            const arr = Array.isArray(items) ? items : [];
+            if (arr.length !== PLAN_ACTIVITY_TEMPLATES.length) return false;
+
+            for (let i = 0; i < PLAN_ACTIVITY_TEMPLATES.length; i++) {
+                const tpl = PLAN_ACTIVITY_TEMPLATES[i] || {};
+                const it = arr[i] || {};
+
+                const tplType = String(tpl.type || "").trim();
+                const itType = String(it.type || "").trim();
+                if (tplType !== itType) return false;
+
+                // Default-Initialisierung nutzt Template-Namen (unique), daher hier strikt
+                const tplName = String(tpl.name || "").trim();
+                const itName = String(it.name || "").trim();
+                if (tplName !== itName) return false;
+
+                const tplMin = clampMinutes(Number(tpl.defaultMinutes) || 0);
+                const itMin = clampMinutes(Number(it.targetMinutes));
+                if (tplMin !== itMin) return false;
+
+                const itSess = clampSessions(Number(it.targetSessions));
+                if (itSess !== 1) return false;
+
+                if (tplType === "SEGMENT_TRAINING") {
+                    const p = it && it.params ? it.params : {};
+                    const targets = Array.isArray(p?.targets) ? p.targets : [];
+                    if (targets.length !== 0) return false;
+                }
+            }
+
+            return true;
+        }
+
+        function isPlanEmptyForCopy() {
+            const arr = Array.isArray(planItems) ? planItems : [];
+            return !arr.length;
+        }
+
+        function syncCopyPrevWeekButton() {
+            if (!btnCopyPrevWeek) return;
+            const wkKey = ensureSidebarSelectedWeekKey();
+            const weekId = weekIdFromWeekKey(wkKey);
+            const can = !!weekId && isPlanEmptyForCopy();
+            btnCopyPrevWeek.disabled = !can;
+            btnCopyPrevWeek.title = !weekId
+                ? "Keine Woche gewählt"
+                : (can ? "Übernimmt den Plan der Vorwoche" : "Aktuelle Woche hat bereits einen Plan");
+        }
+
+        function copyPrevWeekPlanIntoCurrent() {
+            const wkKey = ensureSidebarSelectedWeekKey();
+            const curWeekId = weekIdFromWeekKey(wkKey);
+
+            if (!curWeekId) {
+                setStatusTemp("Keine Woche gewählt.");
+                return;
+            }
+
+            if (!isPlanEmptyForCopy()) {
+                setStatusTemp("Aktuelle Woche hat bereits einen Plan.");
+                syncCopyPrevWeekButton();
+                return;
+            }
+
+            // pending Saves vorher flushen (nur zur Sicherheit)
+            flushSaveCurrentWeekPlan();
+
+            const prevWeekId = getPreviousWeekId(curWeekId);
+            if (!prevWeekId) {
+                setStatusTemp("Vorwoche nicht bestimmbar.");
+                return;
+            }
+
+            const prevPlan = loadWeekPlan(prevWeekId);
+            if (!prevPlan) {
+                setStatusTemp("Kein Plan für Vorwoche vorhanden.");
+                return;
+            }
+
+            const baseItems = sanitizePlanItemsForStorage(prevPlan.planItems);
+            const copied = baseItems.map((src) => {
+                const srcParams = (src && src.params) ? { ...src.params } : undefined;
+                if (srcParams && Array.isArray(srcParams.targets)) srcParams.targets = srcParams.targets.slice();
+
+                const out = {
+                    id: makePlanId(),
+                    type: String(src?.type || "CUSTOM"),
+                    name: String(src?.name || src?.type || "Aktivität"),
+                    targetMinutes: clampMinutes(Number(src?.targetMinutes)),
+                    targetSessions: (Number.isFinite(Number(src?.targetSessions)) ? clampSessions(Number(src?.targetSessions)) : 1),
+                    params: srcParams
+                };
+
+                // Segment Training immer params.targets haben
+                if (String(out.type || "") === "SEGMENT_TRAINING") {
+                    const p = out.params ? { ...out.params } : {};
+                    if (!Array.isArray(p.targets)) p.targets = [];
+                    out.params = p;
+                }
+
+                return out;
+            });
+
+            weekMode = normalizeWeekMode(prevPlan.weekMode);
+            planItems = copied;
+
+            selectedPlanItemId = copied.length ? String(copied[0].id || "") : null;
+            targetAddOpen = false;
+            targetAddValue = "";
+            targetAddError = "";
+
+            const safe = { schemaVersion: 1, weekId: curWeekId, weekMode, planItems: sanitizePlanItemsForStorage(planItems) };
+
+            // Speichern (direkt)
+            try { saveWeekPlan(safe); } catch (e) { /* ignore */ }
+
+            // Save-Cache aktualisieren (damit der nächste Auto-Save nicht unnötig schreibt)
+            try {
+                _adPlanLastSavedWeekId = curWeekId;
+                _adPlanLastSavedJson = JSON.stringify(safe);
+            } catch (e) { /* ignore */ }
+
+            _adPlanActiveWeekHasStoredPlan = true;
+            _adPlanDirty = false;
+
+            syncModeButtons();
+            syncCopyPrevWeekButton();
+            renderAll();
+            setStatusTemp("Vorwoche kopiert.");
+        }
+
+
+                function getItemActualMinutes(it, agg) {
+            const type = String(it?.type || "");
+            if (type === "SEGMENT_TRAINING") {
+                const targets = it?.params && Array.isArray(it.params.targets) ? it.params.targets : [];
+                if (targets.length) {
+                    let sum = 0;
+                    for (const t of targets) {
+                        const k = normalizeTarget(t);
+                        sum += Number(agg?.segmentTargetsMinutes?.[k] ?? agg?.segmentTargetsMinutes?.[t] ?? 0) || 0;
+                    }
+                    return Math.max(0, Math.round(sum));
+                }
+            }
+            const m = agg && agg.minutesByActivity ? Number(agg.minutesByActivity[type] || 0) : 0;
+            return Number.isFinite(m) ? Math.max(0, Math.round(m)) : 0;
+        }
+
+        function getProgressPct(ist, soll) {
+            const goal = Number(soll) || 0;
+            if (goal <= 0) return 0;
+            const actual = Math.max(0, Number(ist) || 0);
+            return Math.min(100, Math.round((actual / goal) * 100));
+        }
+
+        function getTargetSessions(it) {
+            return clampSessions(Number(it?.targetSessions));
+        }
+
+        function getItemActualSessions(it, agg) {
+            const type = String(it?.type || "");
+            if (type === "SEGMENT_TRAINING") {
+                const targets = it?.params && Array.isArray(it.params.targets) ? it.params.targets : [];
+                const map = agg?.segmentTargetsSessions;
+                if (targets.length && map && typeof map === "object") {
+                    let sum = 0;
+                    for (const t of targets) {
+                        const k = normalizeTarget(t);
+                        sum += Number(map?.[k] ?? map?.[t] ?? 0) || 0;
+                    }
+                    return Math.max(0, Math.round(sum));
+                }
+            }
+            const s = agg && agg.sessionsByActivity ? Number(agg.sessionsByActivity[type] || 0) : 0;
+            return Number.isFinite(s) ? Math.max(0, Math.round(s)) : 0;
+        }
+
+        function computeSidebarTotals(agg) {
+            const items = Array.isArray(planItems) ? planItems : [];
+            let goal = 0;
+            let ist = 0;
+
+            if (getSidebarViewMode() === "sessions") {
+                for (const it of items) {
+                    goal += getTargetSessions(it);
+                    ist += getItemActualSessions(it, agg);
+                }
+            } else {
+                for (const it of items) {
+                    const g = clampMinutes(Number(it?.targetMinutes));
+                    goal += g;
+                    ist += getItemActualMinutes(it, agg);
+                }
+            }
+
+            const pct = getProgressPct(ist, goal);
+            return { goal, ist, progressPct: pct };
+        }
+
+
+        
+        function renderSummary() {
+            const agg = getTrackerAggForSelectedWeek();
+            const totals = computeSidebarTotals(agg);
+
+            if (getSidebarViewMode() === "sessions") {
+                sumTarget.textContent = String(Math.round(totals.goal));
+                sumActual.textContent = String(Math.round(totals.ist));
+            } else {
+                sumTarget.textContent = `${Math.round(totals.goal)}min`;
+                sumActual.textContent = `${Math.round(totals.ist)}min`;
+            }
+
+            sumProgress.textContent = `${Math.round(totals.progressPct)}%`;
+        }
+
+
+        
+        
         function renderPlanTable() {
-            const table = side.querySelector("#adPlanTable");
             if (!table) return;
 
-            const isTime = (planMode === "time");
+            const isSessions = getSidebarViewMode() === "sessions";
+
+            const agg = getTrackerAggForSelectedWeek();
+            const totals = computeSidebarTotals(agg);
+
             const head = `
               <div class="ad-plan-row ad-plan-row--head">
                 <div>Aktivität</div>
@@ -10959,230 +12260,917 @@ let statusTimer = null;
               </div>
             `;
 
-            const perfText = `Trefferquote: — · Hits/min: —`;
-            const rows = (Array.isArray(AD_PLAN_ITEMS) ? AD_PLAN_ITEMS : []).map((it) => {
-                const key = String(it?.key || "");
-                const saved = planValues?.[key] || PLAN_DEFAULT_VALUES[key] || { timeHours: 0, sessions: 0 };
+            const items = Array.isArray(planItems) ? planItems : [];
 
-                const vRaw = (planEdit && planDraft)
-                    ? (Number(planDraft?.[key]) || 0)
-                    : (isTime ? (Number(saved?.timeHours) || 0) : (Number(saved?.sessions) || 0));
+            const rows = items.length
+                ? items.map((it) => {
+                const id = String(it?.id || "");
+                const name = String(it?.name || "");
+                const typeKey = String(it?.type || "");
+                const perf = agg?.performanceByActivity?.[typeKey] || null;
+                const perfLine = (planShowPerf === true)
+                    ? `<div class="ad-plan-perfline"><span>Trefferquote: ${escapeHtml(fmtHitRateMaybe(perf?.hitRate))}</span><span>Hits/min: ${escapeHtml(fmtHitsPerMinMaybe(perf?.hitsPerMin))}</span></div>`
+                    : "";
+                const selected = String(selectedPlanItemId || "") === id;
 
-                const v = isTime ? vRaw : Math.round(vRaw);
+                const soll = isSessions ? getTargetSessions(it) : clampMinutes(Number(it?.targetMinutes));
+                const inputValue = isSessions
+                    ? String(soll)
+                    : String(soll);
 
-                const sollCell = planEdit
-                    ? `<div class="ad-plan-input-wrap">
-                         <input class="ad-plan-input" data-key="${escapeHtml(key)}" type="number" value="${escapeHtml(String(v))}"
-                           ${isTime ? 'step="0.25" min="0" max="20" inputmode="decimal"' : 'step="1" min="0" max="200" inputmode="numeric"'} />
-                         <span class="ad-plan-unit">${isTime ? "h" : "Sess."}</span>
-                       </div>`
-                    : `<div class="ad-plan-pill">${escapeHtml(isTime ? `${String(v)} h` : `${String(v)}`)}</div>`;
+                const ist = isSessions ? getItemActualSessions(it, agg) : getItemActualMinutes(it, agg);
+                const istLabel = isSessions ? String(Math.round(ist)) : `${Math.round(ist)}min`;
+                const progress = getProgressPct(ist, soll);
 
-                const ist = isTime ? "0min" : "0";
-                const prog = "0%";
-
-                const act = planShowPerf
-                    ? `<div class="ad-plan-activity"><span>${escapeHtml(key)}</span><span class="ad-plan-perf">${perfText}</span></div>`
-                    : `<div class="ad-plan-activity"><span>${escapeHtml(key)}</span></div>`;
+                const step = isSessions ? "1" : "5";
+                const max = isSessions ? String(PLAN_TARGET_MAX_SESSIONS) : String(PLAN_TARGET_MAX_MINUTES);
+                const inputmode = "numeric";
+                const pattern = "[0-9]*";
+                const unit = isSessions ? "" : "min";
 
                 return `
-                  <div class="ad-plan-row">
-                    <div>${act}</div>
-                    ${sollCell}
-                    <div class="ad-plan-cell-right">${escapeHtml(ist)}</div>
-                    <div class="ad-plan-cell-right">${escapeHtml(prog)}</div>
+                  <div class="ad-plan-row${selected ? " ad-plan-row--selected" : ""}" data-plan-item-id="${escapeHtml(id)}" role="button" tabindex="0" aria-selected="${selected ? "true" : "false"}">
+                    <div>
+                      <div class="ad-plan-activityline">
+                        <div class="ad-plan-activity"><span class="ad-plan-drag-handle" title="Ziehen zum Sortieren" aria-hidden="true" draggable="true">≡</span><span class="ad-plan-activity-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span></div>
+                        <div class="ad-plan-mini-actions">
+                          <button type="button" class="ad-plan-mini-btn" data-action="dup" data-id="${escapeHtml(id)}" title="Duplizieren">⎘</button>
+                          <button type="button" class="ad-plan-mini-btn ad-plan-mini-btn--danger" data-action="del" data-id="${escapeHtml(id)}" title="Löschen">🗑</button>
+                        </div>
+                      </div>
+                      ${perfLine}
+                    </div>
+                    <div class="ad-plan-input-wrap">
+                      <input class="ad-plan-input" data-id="${escapeHtml(id)}" type="number" value="${escapeHtml(String(inputValue))}"
+                        step="${escapeHtml(step)}" min="0" max="${escapeHtml(max)}" inputmode="${escapeHtml(inputmode)}" pattern="${escapeHtml(pattern)}" />
+                      <span class="ad-plan-unit">${escapeHtml(unit)}</span>
+                    </div>
+                    <div class="ad-plan-cell-right">${escapeHtml(istLabel)}</div>
+                    <div class="ad-plan-cell-right">${escapeHtml(String(Math.round(progress)))}%</div>
                   </div>
                 `;
-            }).join("");
+            }).join("")
+              : `
+                  <div class="ad-plan-row ad-plan-row--empty">
+                    <div style="font-weight:850;">
+                      Kein Trainingsplan angelegt
+                      <div class="ad-plan-muted" style="margin-top:4px;">Klicke auf <span style="font-weight:900;">+ Aktivität</span>.</div>
+                    </div>
+                    <div class="ad-plan-cell-right">—</div>
+                    <div class="ad-plan-cell-right">—</div>
+                    <div class="ad-plan-cell-right">—</div>
+                  </div>
+                `;
 
-            const totalHours = (planEdit && planDraft && isTime) ? sumDraftValues() : sumValues("time");
-            const totalSessions = (planEdit && planDraft && !isTime) ? sumDraftValues() : sumValues("sessions");
+            const totalSoll = isSessions
+                ? String(Math.round(totals.goal))
+                : `${Math.round(totals.goal)}min`;
+            const totalIst = isSessions
+                ? String(Math.round(totals.ist))
+                : `${Math.round(totals.ist)}min`;
 
-            const totalSoll = isTime ? formatHoursWithUnit(totalHours) : `${Math.round(totalSessions)}`;
-            const totalIst = isTime ? "0min" : "0";
             const foot = `
               <div class="ad-plan-row ad-plan-row--foot">
                 <div>Gesamt</div>
                 <div class="ad-plan-pill" id="adPlanTotalSoll">${escapeHtml(totalSoll)}</div>
                 <div class="ad-plan-cell-right">${escapeHtml(totalIst)}</div>
-                <div class="ad-plan-cell-right">0%</div>
+                <div class="ad-plan-cell-right">${escapeHtml(String(Math.round(totals.progressPct)))}%</div>
               </div>
             `;
 
             table.innerHTML = head + rows + foot;
         }
 
-        function updateDraftTotalsUI() {
-            renderSummary();
-            const totalEl = side.querySelector("#adPlanTotalSoll");
-            if (!totalEl) return;
-            const total = sumDraftValues();
-            totalEl.textContent = (planMode === "time") ? formatHoursWithUnit(total) : String(Math.round(total));
-        }
 
-        function startEdit() {
-            planBeforeEdit = deepCopy(planValues);
-            planDraft = extractDraftFrom(planValues, planMode);
-            planEdit = true;
-            applyEditUI();
-            renderSummary();
-            renderPlanTable();
-            setActionStatus("Bearbeiten…");
-        }
 
-        function cancelEdit(opts = {}) {
-            planValues = deepCopy(planBeforeEdit || planValues);
-            planSaved = deepCopy(planValues);
-            planEdit = false;
-            planDraft = null;
-            planBeforeEdit = null;
-            applyEditUI();
-            renderSummary();
-            renderPlanTable();
-            if (!opts.silent) setStatusTemp("Abgebrochen.");
-        }
+function renderPlanDetails() {
+            if (!details) return;
 
-        function resetDraftToDefaults() {
-            planDraft = extractDraftFrom(PLAN_DEFAULT_VALUES, planMode);
-            renderSummary();
-            renderPlanTable();
-            setActionStatus("Zurückgesetzt.");
-        }
+            const id = String(selectedPlanItemId || "");
+            const it = getPlanItemById(id);
 
-        function saveEdit() {
-            const mode = planMode;
-            const isTime = (mode === "time");
-
-            const keys = Object.keys(PLAN_DEFAULT_VALUES);
-            for (const k of keys) {
-                const val = clampDraftValue(planDraft?.[k], mode);
-                if (!planValues[k]) planValues[k] = deepCopy(PLAN_DEFAULT_VALUES[k] || { timeHours: 0, sessions: 0 });
-                if (isTime) planValues[k].timeHours = val;
-                else planValues[k].sessions = val;
+            if (!it) {
+                details.innerHTML = `
+                  <div class="ad-plan-details-card">
+                    <div class="ad-plan-details-head">
+                      <div>
+                        <div class="ad-plan-details-title">Details</div>
+                        <div class="ad-plan-details-sub">Wähle rechts ein Plan-Item aus.</div>
+                      </div>
+                    </div>
+                  </div>
+                `;
+                return;
             }
 
-            planSaved = deepCopy(planValues);
+            const type = String(it?.type || "");
+            const typeLabel = getTypeLabel(type);
+            const name = String(it?.name || "");
+            const isSeg = type === "SEGMENT_TRAINING";
+            const showPerfCols = isSeg && (planShowPerf === true);
+            const targets = (isSeg && it?.params && Array.isArray(it.params.targets)) ? it.params.targets : [];
 
-            setActionStatus("Gespeichert (UI)");
-            planEdit = false;
-            planDraft = null;
-            planBeforeEdit = null;
-            applyEditUI();
+            const chipsHtml = isSeg
+                ? (targets.length
+                    ? targets.map((t) => `
+                        <span class="ad-plan-chip">
+                          <span class="ad-plan-chip-text">${escapeHtml(String(t))}</span>
+                          <button type="button" class="ad-plan-chip-x" data-remove-target="${escapeHtml(String(t))}" title="Entfernen" aria-label="Target entfernen">×</button>
+                        </span>
+                      `).join("")
+                    : `<div class="ad-plan-muted">Noch keine Targets. Füge unten welche hinzu.</div>`
+                  )
+                : "";
+
+            const datalistHtml = isSeg
+                ? `<datalist id="adPlanTargetSuggestions">${ALL_DART_TARGETS.map(t => `<option value="${escapeHtml(t)}"></option>`).join("")}</datalist>`
+                : "";
+
+            const addUiHtml = isSeg
+                ? (!targetAddOpen
+                    ? `<button type="button" class="ad-ext-btn ad-ext-btn--secondary" data-action="open-add-target">+ Target hinzufügen</button>`
+                    : `
+                      <div class="ad-plan-target-add-row">
+                        <input id="adPlanTargetInput" class="ad-plan-target-input" type="text"
+                          placeholder="z. B. D20, T19, SB" value="${escapeHtml(String(targetAddValue || ""))}"
+                          list="adPlanTargetSuggestions" autocomplete="off" />
+                        <button type="button" class="ad-ext-btn ad-ext-btn--primary" data-action="confirm-add-target">Hinzufügen</button>
+                        <button type="button" class="ad-ext-btn ad-ext-btn--secondary" data-action="cancel-add-target">Abbrechen</button>
+                      </div>
+                      ${targetAddError ? `<div class="ad-plan-error">${escapeHtml(String(targetAddError))}</div>` : ``}
+                      ${datalistHtml}
+                    `
+                  )
+                : "";
+
+            const agg = getTrackerAggForSelectedWeek();
+
+            const isSessionsMode = getSidebarViewMode() === "sessions";
+            const segIstLabel = isSessionsMode ? "Ist (Sessions)" : "Ist (min)";
+            const hasSegSess = !!(agg && agg.segmentTargetsSessions && typeof agg.segmentTargetsSessions === "object");
+
+            const tableRowsHtml = isSeg && targets.length
+                ? targets.map((t) => {
+                    const tt = normalizeTarget(t);
+
+                    // Ist pro Target: entweder Minuten (time) oder Sessions (sessions)
+                    let istCell = "—";
+                    if (isSessionsMode) {
+                        if (hasSegSess) {
+                            const v = Number(agg?.segmentTargetsSessions?.[tt] ?? agg?.segmentTargetsSessions?.[t] ?? 0) || 0;
+                            istCell = String(Math.round(v));
+                        } else {
+                            // nicht verfügbar → bewusst "—"
+                            istCell = "—";
+                        }
+                    } else {
+                        const istTargetMin = Number(agg?.segmentTargetsMinutes?.[tt] ?? agg?.segmentTargetsMinutes?.[t] ?? 0) || 0;
+                        istCell = `${Math.round(istTargetMin)}min`;
+                    }
+
+                    const perfT = showPerfCols ? (agg?.performanceBySegmentTarget?.[tt] ?? agg?.performanceBySegmentTarget?.[t] ?? null) : null;
+                    const perfCells = showPerfCols
+                        ? `<td class="ad-plan-cell-right">${escapeHtml(fmtHitRateMaybe(perfT?.hitRate))}</td><td class="ad-plan-cell-right">${escapeHtml(fmtHitsPerMinMaybe(perfT?.hitsPerMin))}</td>`
+                        : "";
+                    return `
+                    <tr>
+                      <td>${escapeHtml(String(tt))}</td>
+                      <td class="ad-plan-cell-right">${escapeHtml(String(istCell))}</td>
+                      ${perfCells}
+                    </tr>
+                  `;
+                }).join("")
+                : "";
+
+
+            const segBody = isSeg ? `
+              <div class="ad-plan-details-section">
+                <div class="ad-plan-details-section-title">Targets</div>
+                <div class="ad-plan-chip-row">${chipsHtml}</div>
+                <div class="ad-plan-target-add">${addUiHtml}</div>
+
+                <div class="ad-plan-details-section-title" style="margin-top:10px;">Targets (Ist)</div>
+                <div class="ad-plan-target-table-wrap">
+                  <table class="ad-plan-target-table">
+                    <thead>
+                      <tr>
+                        <th>Target</th>
+                        <th class="ad-plan-cell-right">${escapeHtml(segIstLabel)}</th>
+                        ${showPerfCols ? `<th class="ad-plan-cell-right">Trefferquote</th><th class="ad-plan-cell-right">Hits/min</th>` : ``}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${tableRowsHtml || `<tr><td colspan="${showPerfCols ? 4 : 2}" class="ad-plan-muted">—</td></tr>`}
+                    </tbody>
+                  </table>
+                </div>
+            ` : `
+              <div class="ad-plan-details-section">
+                <div class="ad-plan-muted">Keine Details für diesen Modus (kommt später).</div>
+              </div>
+            `;
+
+            details.innerHTML = `
+              <div class="ad-plan-details-card">
+                <div class="ad-plan-details-head">
+                  <div>
+                    <div class="ad-plan-details-title">Details</div>
+                    <div class="ad-plan-details-badge">${escapeHtml(typeLabel)}</div>
+                  </div>
+                </div>
+
+                <div class="ad-plan-details-section">
+                  <label class="ad-plan-details-label" for="adPlanDetailName">Anzeigename</label>
+                  <input id="adPlanDetailName" class="ad-plan-details-name" type="text"
+                    data-id="${escapeHtml(String(it.id || ""))}" value="${escapeHtml(name)}" />
+                </div>
+
+                ${segBody}
+              </div>
+            `;
+
+            // Fokus, wenn Add-Target offen
+            if (targetAddOpen) {
+                setTimeout(() => {
+                    const inp = details.querySelector("#adPlanTargetInput");
+                    if (inp && inp.focus) inp.focus();
+                }, 0);
+            }
+        }
+
+
+        function renderAll() {
+            ensureSidebarWeekPlanLoaded(false);
+
+            // Sidebar folgt globalen Controls (Hauptpanel)
+            planShowPerf = getSidebarShowPerf();
+            if (chk) chk.checked = !!planShowPerf;
+            syncModeButtons();
+
+            syncCopyPrevWeekButton();
             renderSummary();
             renderPlanTable();
-            setStatusTemp("Gespeichert (UI)");
+            renderPlanDetails();
         }
 
-        function applyModeUI(mode) {
-            btnTime.classList.toggle("is-active", mode === "time");
-            btnSessions.classList.toggle("is-active", mode === "sessions");
-            btnTime.setAttribute("aria-pressed", mode === "time" ? "true" : "false");
-            btnSessions.setAttribute("aria-pressed", mode === "sessions" ? "true" : "false");
-        }
+        // Drawer helpers
+        function setDrawerOpen(open) {
+            planDrawerOpen = !!open;
 
-        function setMode(mode, opts = {}) {
-            const next = (mode === "sessions") ? "sessions" : "time";
-            if (planMode === next) return;
-
-            if (planEdit) {
-                const ok = confirm("Modus wechseln? Ungespeicherte Änderungen gehen verloren.");
-                if (!ok) { applyModeUI(planMode); return; }
-                cancelEdit({ silent: true });
+            if (overlay) overlay.hidden = !planDrawerOpen;
+            if (drawer) {
+                drawer.dataset.open = planDrawerOpen ? "1" : "0";
+                drawer.setAttribute("aria-hidden", planDrawerOpen ? "false" : "true");
             }
 
-            planMode = next;
-            applyModeUI(planMode);
+            if (planDrawerOpen) {
+                if (drawerSearch) drawerSearch.value = planDrawerSearch || "";
+                renderDrawerList();
+                try { drawerSearch?.focus?.(); } catch {}
+            }
+        }
+
+        function renderDrawerList() {
+            if (!drawerList) return;
+
+            const q = String(planDrawerSearch || "").trim().toLowerCase();
+            const filtered = PLAN_ACTIVITY_TEMPLATES.filter(t => {
+                const n = String(t?.name || "").toLowerCase();
+                return !q || n.includes(q);
+            });
+
+            if (!filtered.length) {
+                drawerList.innerHTML = `<div class="ad-plan-drawer-empty">Keine Treffer.</div>`;
+                return;
+            }
+
+            drawerList.innerHTML = filtered.map((t) => {
+                const type = String(t?.type || "");
+                const name = String(t?.name || "");
+                const h = `${clampMinutes(Number(t?.defaultMinutes) || 0)}min`;
+
+                return `
+                  <div class="ad-plan-drawer-item" data-template="${escapeHtml(type)}" role="button" tabindex="0">
+                    <div class="ad-plan-drawer-item-left">
+                      <div class="ad-plan-drawer-item-name">${escapeHtml(name)}</div>
+                      <div class="ad-plan-drawer-item-meta">Default: ${escapeHtml(h)}</div>
+                    </div>
+                    <button type="button" class="ad-plan-drawer-add" data-template-add="${escapeHtml(type)}">Hinzufügen</button>
+                  </div>
+                `;
+            }).join("");
+        }
+
+        function addTemplateByType(type) {
+            const t = PLAN_ACTIVITY_TEMPLATES.find(x => String(x?.type || "") === String(type || ""));
+            if (!t) return;
+
+            // 0.14.42: Wenn für die Woche noch kein Plan existiert, wird er erst bei der ersten User-Aktion angelegt.
+            if (!_adPlanActiveWeekHasStoredPlan && (!Array.isArray(planItems) || planItems.length === 0)) {
+                weekMode = normalizeWeekMode(getSidebarViewMode());
+            }
+
+            const item = createPlanItemFromTemplate(t, planItems);
+            planItems = Array.isArray(planItems) ? planItems.slice() : [];
+            planItems.push(item);
+
+            // Step 2: neu hinzugefügtes Item selektieren
+            selectedPlanItemId = String(item.id || "") || null;
+            targetAddOpen = false; targetAddValue = ""; targetAddError = "";
+
+            scheduleSaveCurrentWeekPlan();
+            renderAll();
+            setDrawerOpen(false);
+            focusPlanValueInput(selectedPlanItemId);
+            setStatusTemp(`Hinzugefügt: ${item.name}`);
+        }
+
+        function duplicateItemById(id) {
+            const idx = (Array.isArray(planItems) ? planItems : []).findIndex(x => String(x?.id || "") === String(id || ""));
+            if (idx < 0) return;
+
+            const src = planItems[idx];
+            const base = stripNameSuffix(src?.name);
+
+            const srcParams = (src && src.params) ? { ...src.params } : undefined;
+            if (srcParams && Array.isArray(srcParams.targets)) srcParams.targets = srcParams.targets.slice();
+
+            const copy = {
+                id: makePlanId(),
+                type: String(src?.type || "CUSTOM"),
+                name: nextUniqueName(base, planItems),
+                targetMinutes: clampMinutes(Number(src?.targetMinutes)),
+                targetSessions: (Number.isFinite(Number(src?.targetSessions)) ? clampSessions(Number(src?.targetSessions)) : 1),
+                params: srcParams
+            };
+
+            // Step 2: Segment Training immer params.targets haben
+            if (String(copy.type || "") === "SEGMENT_TRAINING") {
+                const p = copy.params ? { ...copy.params } : {};
+                if (!Array.isArray(p.targets)) p.targets = [];
+                copy.params = p;
+            }
+
+            planItems = planItems.slice();
+            planItems.splice(idx + 1, 0, copy);
+
+            // Step 2: Duplikat selektieren
+            selectedPlanItemId = String(copy.id || "") || null;
+            targetAddOpen = false; targetAddValue = ""; targetAddError = "";
+
+            scheduleSaveCurrentWeekPlan();
+            renderAll();
+            focusPlanValueInput(selectedPlanItemId);
+            setStatusTemp("Dupliziert.");
+        }
+
+        function deleteItemById(id) {
+            const arr = Array.isArray(planItems) ? planItems : [];
+            const sId = String(id || "");
+            const idx = arr.findIndex(x => String(x?.id || "") === sId);
+            if (idx < 0) return;
+
+            const next = arr.filter(x => String(x?.id || "") !== sId);
+            planItems = next;
+
+            // Step 2: Wenn selektiertes Item gelöscht wird -> nächstes, sonst vorheriges, sonst null
+            if (String(selectedPlanItemId || "") === sId) {
+                const pick = next[idx] || next[idx - 1] || null;
+                selectedPlanItemId = pick ? String(pick.id || "") : null;
+                targetAddOpen = false; targetAddValue = ""; targetAddError = "";
+            }
+
+            scheduleSaveCurrentWeekPlan();
+            renderAll();
+            setStatusTemp("Gelöscht.");
+        }
+
+        // Initial render (Week-Pläne sind pro Woche gespeichert)
+        refreshSidebarWeekOptions();
+        ensureSidebarWeekPlanLoaded(true);
+
+        statusEl.textContent = "Bereit.";
+        renderAll();
+
+// Bind: "+ Aktivität"
+        if (btnAdd) {
+            btnAdd.onclick = () => setDrawerOpen(true);
+        }
+
+
+        // Bind: "Vorwoche kopieren"
+        if (btnCopyPrevWeek) {
+            btnCopyPrevWeek.onclick = () => copyPrevWeekPlanIntoCurrent();
+        }
+        // Helper: Fokus auf Soll-Input (nach Render), abhängig vom weekMode
+        function focusPlanValueInput(id) {
+            const sId = String(id || "");
+            if (!sId) return;
+            setTimeout(() => {
+                try {
+                    const sel = `input.ad-plan-input[data-id="${cssEscapeAttrValue(sId)}"]`;
+                    const inp = table.querySelector(sel);
+                    if (inp && inp.focus) {
+                        inp.focus();
+                        if (inp.select) inp.select();
+                    }
+                } catch (e) { /* no-op */ }
+            }, 0);
+        }
+
+        // Helper: sanfte Konvertierung beim Umschalten (nur wenn Zielwert fehlt/0 ist)
+        function assistConvertTargetsForMode(nextMode) {
+            const nm = String(nextMode || "");
+            const items = Array.isArray(planItems) ? planItems : [];
+            if (!items.length) return;
+
+            let any = false;
+            const next = items.map((it) => {
+                if (!it) return it;
+
+                let changed = false;
+
+                const rawM = Number(it?.targetMinutes);
+                let minutes = clampMinutes(rawM);
+                if (!Number.isFinite(rawM) || minutes !== rawM) changed = true;
+
+                const rawS = Number(it?.targetSessions);
+                let sessions = clampSessions(rawS);
+                if (Number.isFinite(rawS) && sessions !== rawS) changed = true;
+
+                if (nm === "sessions") {
+                    if (!Number.isFinite(rawS) || rawS <= 0) {
+                        // 30 min pro Session (Heuristik)
+                        sessions = clampSessions(Math.max(1, Math.round(minutes / PLAN_SESSION_MINUTES)));
+                        changed = true;
+                    }
+                    // in sessions-mode legen wir targetSessions immer an
+                    if (changed) {
+                        any = true;
+                        return { ...it, targetMinutes: minutes, targetSessions: sessions };
+                    }
+                    return it;
+                }
+
+                if (nm === "time") {
+                    if (!Number.isFinite(rawM) || rawM <= 0) {
+                        minutes = clampMinutes(sessions * PLAN_SESSION_MINUTES);
+                        changed = true;
+                    }
+                    if (changed) {
+                        any = true;
+                        const out = { ...it, targetMinutes: minutes };
+                        // targetSessions nur clamped zurückschreiben, wenn es existiert
+                        if ("targetSessions" in (it || {}) || Number.isFinite(rawS)) out.targetSessions = sessions;
+                        return out;
+                    }
+                    return it;
+                }
+
+                return it;
+            });
+
+            if (any) planItems = next;
+        };
+
+        // 0.14.41: Sidebar folgt globalen Controls (Hauptpanel) – Controls nur Anzeige
+        try {
+            if (btnTime) btnTime.disabled = true;
+            if (btnSessions) btnSessions.disabled = true;
+            if (chk) chk.disabled = true;
+        } catch {}
+        try { if (btnTime) btnTime.onclick = null; } catch {}
+        try { if (btnSessions) btnSessions.onclick = null; } catch {}
+        try { if (chk) chk.onchange = null; } catch {}
+
+
+
+// -------------------------------------------------------------------
+// Drag & Drop Sorting (0.14.46)
+// -------------------------------------------------------------------
+function arrayMove(arr, from, to) {
+    const a = (Array.isArray(arr) ? arr : []).slice();
+    if (from < 0 || to < 0 || from >= a.length || to >= a.length) return a;
+    const [x] = a.splice(from, 1);
+    a.splice(to, 0, x);
+    return a;
+}
+
+function rerenderMainTrainingPlan() {
+    try {
+        const weeks = cache._training_weeksAsc || computeTrainingWeeksAsc();
+        cache._training_weeksAsc = weeks;
+        renderTrainingPlan(panel, weeks);
+    } catch {}
+}
+
+let _adPlanDraggedId = null;
+let _adPlanDraggedRowEl = null;
+let _adPlanDropTargetEl = null;
+
+function clearPlanDragStyles() {
+    try { _adPlanDraggedRowEl?.classList?.remove("ad-dragging"); } catch {}
+    try { _adPlanDropTargetEl?.classList?.remove("ad-drop-target"); } catch {}
+    _adPlanDraggedId = null;
+    _adPlanDraggedRowEl = null;
+    _adPlanDropTargetEl = null;
+}
+
+        // Table events: change Soll + row actions
+        
+        // Table events: change Soll + row actions
+        table.oninput = (ev) => {
+            const t = ev && ev.target;
+            if (!t || !t.classList || !t.classList.contains("ad-plan-input")) return;
+
+            const id = String(t.dataset.id || "");
+            if (!id) return;
+
+            const raw = String(t.value ?? "").trim();
+            const cleaned = raw.replace(/\s+/g, "").replace(",", ".");
+
+            const idx = planItems.findIndex(x => String(x?.id || "") === id);
+            if (idx < 0) return;
+
+            const agg = getTrackerAggForSelectedWeek();
+
+            if (getSidebarViewMode() === "sessions") {
+                const v = clampSessions(Number(cleaned));
+
+                planItems = planItems.slice();
+                planItems[idx] = { ...planItems[idx], targetSessions: v };
+
+                // normalize visible input (UI-only)
+                if (String(v) !== String(raw)) t.value = String(v);
+
+                // Update row computed cells (Ist/Progress) without re-render (keeps input focus)
+                const rowEl = table.querySelector(`.ad-plan-row[data-plan-item-id="${cssEscapeAttrValue(id)}"]`);
+                if (rowEl) {
+                    const it2 = planItems[idx];
+                    const ist = getItemActualSessions(it2, agg);
+                    const soll = getTargetSessions(it2);
+                    const pct = getProgressPct(ist, soll);
+                    const cells = rowEl.querySelectorAll(".ad-plan-cell-right");
+                    if (cells && cells[0]) cells[0].textContent = String(Math.round(ist));
+                    if (cells && cells[1]) cells[1].textContent = `${Math.round(pct)}%`;
+                }
+
+                // Update footer totals
+                const totals = computeSidebarTotals(agg);
+                const totalEl = side.querySelector("#adPlanTotalSoll");
+                if (totalEl) totalEl.textContent = String(Math.round(totals.goal));
+                const foot = table.querySelector(".ad-plan-row--foot");
+                if (foot) {
+                    const cells = foot.querySelectorAll(".ad-plan-cell-right");
+                    if (cells && cells[0]) cells[0].textContent = String(Math.round(totals.ist));
+                    if (cells && cells[1]) cells[1].textContent = `${Math.round(totals.progressPct)}%`;
+                }
+            } else {
+                const mins = clampMinutes(parseInt(cleaned, 10) || 0);
+
+                planItems = planItems.slice();
+                planItems[idx] = { ...planItems[idx], targetMinutes: mins };
+
+                // normalize visible input (UI-only)
+                if (String(mins) !== String(raw)) t.value = String(mins);
+
+                // Update row computed cells (Ist/Progress) without re-render (keeps input focus)
+                const rowEl = table.querySelector(`.ad-plan-row[data-plan-item-id="${cssEscapeAttrValue(id)}"]`);
+                if (rowEl) {
+                    const it2 = planItems[idx];
+                    const istMin = getItemActualMinutes(it2, agg);
+                    const pct = getProgressPct(istMin, Math.max(0, Math.round(Number(it2?.targetMinutes) || 0)));
+                    const cells = rowEl.querySelectorAll(".ad-plan-cell-right");
+                    if (cells && cells[0]) cells[0].textContent = `${Math.round(istMin)}min`;
+                    if (cells && cells[1]) cells[1].textContent = `${Math.round(pct)}%`;
+                }
+
+                // Update footer totals
+                const totals = computeSidebarTotals(agg);
+                const totalEl = side.querySelector("#adPlanTotalSoll");
+                if (totalEl) totalEl.textContent = `${Math.round(totals.goal)}min`;
+                const foot = table.querySelector(".ad-plan-row--foot");
+                if (foot) {
+                    const cells = foot.querySelectorAll(".ad-plan-cell-right");
+                    if (cells && cells[0]) cells[0].textContent = `${Math.round(totals.ist)}min`;
+                    if (cells && cells[1]) cells[1].textContent = `${Math.round(totals.progressPct)}%`;
+                }
+            }
+
+            scheduleSaveCurrentWeekPlan();
+
             renderSummary();
-            renderPlanTable();
-            if (!opts.silent) setStatusTemp("Aktualisiert. (UI)");
+        };
+
+table.onclick = (ev) => {
+            const btn = ev && ev.target && ev.target.closest ? ev.target.closest("button[data-action]") : null;
+
+            // Row actions
+            if (btn) {
+                const action = String(btn.getAttribute("data-action") || "");
+                const id = String(btn.getAttribute("data-id") || "");
+                if (!id) return;
+
+                if (action === "dup") { duplicateItemById(id); return; }
+                if (action === "del") { deleteItemById(id); return; }
+                return;
+            }
+
+            // Step 2: Row selection (click anywhere on the row)
+            const row = ev && ev.target && ev.target.closest ? ev.target.closest('.ad-plan-row[data-plan-item-id]') : null;
+            if (!row) return;
+
+            const id = String(row.getAttribute("data-plan-item-id") || "");
+            if (!id) return;
+
+            setSelectedPlanItemId(id);
+        };
+
+
+// Drag & Drop (Event Delegation on table)
+table.ondragstart = (ev) => {
+    const t = ev && ev.target;
+    // Don't start a drag from inputs/buttons
+    if (t && t.closest && t.closest("input,button,textarea,select")) return;
+
+    const handle = t && t.closest ? t.closest('.ad-plan-drag-handle') : null;
+
+    // Drag & Drop nur über Handle starten
+    if (!handle) return;
+
+    const row = handle && handle.closest ? handle.closest('.ad-plan-row[data-plan-item-id]') : null;
+    if (!row) return;
+
+    const id = String(row.getAttribute("data-plan-item-id") || "");
+    if (!id) return;
+
+    _adPlanDraggedId = id;
+    _adPlanDraggedRowEl = row;
+    try { row.classList.add("ad-dragging"); } catch {}
+
+    try {
+        if (ev.dataTransfer) {
+            ev.dataTransfer.setData("text/plain", id);
+            ev.dataTransfer.effectAllowed = "move";
         }
+    } catch {}
+};
 
-        // Clear old timer to avoid writing into stale DOM nodes on SPA re-renders
-        if (statusTimer) { clearTimeout(statusTimer); statusTimer = null; }
+table.ondragover = (ev) => {
+    if (!_adPlanDraggedId) return;
 
-        // Ensure edit draft survives SPA re-wires (RAM only)
-        if (planEdit) {
-            if (!planBeforeEdit) planBeforeEdit = deepCopy(planValues);
-            if (!planDraft) planDraft = extractDraftFrom(planValues, planMode);
+    const t = ev && ev.target;
+    const row = t && t.closest ? t.closest('.ad-plan-row[data-plan-item-id]') : null;
+    if (!row) return;
+
+    ev.preventDefault(); // allow drop
+
+    const id = String(row.getAttribute("data-plan-item-id") || "");
+    if (!id || id === _adPlanDraggedId) return;
+
+    try {
+        if (ev.dataTransfer) ev.dataTransfer.dropEffect = "move";
+    } catch {}
+
+    if (_adPlanDropTargetEl && _adPlanDropTargetEl !== row) {
+        try { _adPlanDropTargetEl.classList.remove("ad-drop-target"); } catch {}
+    }
+    _adPlanDropTargetEl = row;
+    try { row.classList.add("ad-drop-target"); } catch {}
+};
+
+table.ondrop = (ev) => {
+    if (!_adPlanDraggedId) return;
+
+    ev.preventDefault();
+
+    const t = ev && ev.target;
+    const row = t && t.closest ? t.closest('.ad-plan-row[data-plan-item-id]') : null;
+
+    const draggedId = (() => {
+        try {
+            const v = ev?.dataTransfer?.getData?.("text/plain");
+            return String(v || _adPlanDraggedId || "");
+        } catch {
+            return String(_adPlanDraggedId || "");
         }
+    })();
 
-        // Initial render (no status flash)
-        select.value = planWeek;
-        planWeek = select.value || "kw1_2026";
+    const targetId = row ? String(row.getAttribute("data-plan-item-id") || "") : "";
+    if (!draggedId || !targetId || draggedId === targetId) {
+        clearPlanDragStyles();
+        return;
+    }
 
-        chk.checked = !!planShowPerf;
-        planShowPerf = !!chk.checked;
+    const items = Array.isArray(planItems) ? planItems : [];
+    const from = items.findIndex(x => String(x?.id || "") === draggedId);
+    const to = items.findIndex(x => String(x?.id || "") === targetId);
+    if (from < 0 || to < 0 || from === to) {
+        clearPlanDragStyles();
+        return;
+    }
 
-        applyModeUI(planMode);
-        applyEditUI();
-        renderSummary();
-        renderPlanTable();
+    planItems = arrayMove(items, from, to);
 
-        statusEl.textContent = "Bereit. (UI)";
-        actionsStatusEl.textContent = "Bereit.";
+    // Save immediately (so main panel reflects order right away)
+    scheduleSaveCurrentWeekPlan();
+    flushSaveCurrentWeekPlan();
 
-        // Bind buttons
-        if (btnEdit) btnEdit.onclick = () => startEdit();
-        btnSave.onclick = () => saveEdit();
-        btnCancel.onclick = () => cancelEdit();
-        btnReset.onclick = () => resetDraftToDefaults();
+    clearPlanDragStyles();
 
-        // Event delegation: plan inputs (no repeated querySelectorAll listeners)
-        const table = side.querySelector("#adPlanTable");
-        if (table) {
-            table.oninput = (ev) => {
+    // Re-render: sidebar + main panel
+    try { cache._planSidebarRerender?.(); } catch {}
+    rerenderMainTrainingPlan();
+};
+
+table.ondragend = () => {
+    clearPlanDragStyles();
+};
+
+
+
+        // Step 2: Details events (Name + Segment Targets)
+        if (details) {
+            details.oninput = (ev) => {
                 const t = ev && ev.target;
-                if (!t || !t.classList || !t.classList.contains("ad-plan-input")) return;
-                if (!planEdit || !planDraft) return;
+                if (!t) return;
 
-                const key = String(t.dataset.key || "");
-                if (!key) return;
+                // Name edit
+                if (t.id === "adPlanDetailName") {
+                    const id = String(t.getAttribute("data-id") || "");
+                    const value = String(t.value ?? "");
 
-                const raw = String(t.value ?? "");
-                if (!raw.trim()) {
-                    planDraft[key] = 0;
-                    updateDraftTotalsUI();
+                    updatePlanItemById(id, (cur) => ({ ...cur, name: value }));
+
+                    // Update name in table without full re-render (better UX)
+                    const row = table.querySelector(`.ad-plan-row[data-plan-item-id="${cssEscapeAttrValue(id)}"]`);
+                    const span = row ? row.querySelector(".ad-plan-activity-name") : null;
+                    if (span) {
+                        span.textContent = value;
+                        span.setAttribute("title", value);
+                    }
                     return;
                 }
 
-                const val = clampDraftValue(raw, planMode);
-                planDraft[key] = val;
+                // Target input (live)
+                if (t.id === "adPlanTargetInput") {
+                    targetAddValue = String(t.value ?? "");
+                    if (targetAddError) {
+                        targetAddError = "";
+                        renderPlanDetails();
+                    }
+                    return;
+                }
+            };
 
-                // Normalize visible value (UI-only)
-                if (String(val) !== raw) t.value = String(val);
+            details.onclick = (ev) => {
+                const removeBtn = ev && ev.target && ev.target.closest ? ev.target.closest("button[data-remove-target]") : null;
+                if (removeBtn) {
+                    const rawTarget = String(removeBtn.getAttribute("data-remove-target") || "");
+                    const id = String(selectedPlanItemId || "");
+                    if (!id || !rawTarget) return;
 
-                updateDraftTotalsUI();
+                    const it = getPlanItemById(id);
+                    if (!it || String(it.type || "") !== "SEGMENT_TRAINING") return;
+
+                    updatePlanItemById(id, (cur) => {
+                        const p = cur && cur.params ? { ...cur.params } : {};
+                        const arr = Array.isArray(p.targets) ? p.targets.slice() : [];
+                        const norm = normalizeTarget(rawTarget);
+                        p.targets = arr.filter(x => normalizeTarget(x) !== norm);
+                        return { ...cur, params: p };
+                    });
+
+                    renderAll();
+                    return;
+                }
+
+                const btn = ev && ev.target && ev.target.closest ? ev.target.closest("button[data-action]") : null;
+                if (!btn) return;
+
+                const action = String(btn.getAttribute("data-action") || "");
+                const id = String(selectedPlanItemId || "");
+                const it = getPlanItemById(id);
+
+                if (action === "open-add-target") {
+                    targetAddOpen = true;
+                    targetAddValue = "";
+                    targetAddError = "";
+                    renderPlanDetails();
+                    return;
+                }
+
+                if (action === "cancel-add-target") {
+                    targetAddOpen = false;
+                    targetAddValue = "";
+                    targetAddError = "";
+                    renderPlanDetails();
+                    return;
+                }
+
+                if (action === "confirm-add-target") {
+                    if (!it || String(it.type || "") !== "SEGMENT_TRAINING") return;
+
+                    const existing = (it.params && Array.isArray(it.params.targets)) ? it.params.targets : [];
+                    const res = validateTarget(targetAddValue, existing);
+
+                    if (!res.ok) {
+                        targetAddError = String(res.error || "Ungültig.");
+                        renderPlanDetails();
+                        return;
+                    }
+
+                    updatePlanItemById(id, (cur) => {
+                        const p = cur && cur.params ? { ...cur.params } : {};
+                        const arr = Array.isArray(p.targets) ? p.targets.slice() : [];
+                        arr.push(res.value);
+                        p.targets = arr;
+                        return { ...cur, params: p };
+                    });
+
+                    targetAddOpen = false;
+                    targetAddValue = "";
+                    targetAddError = "";
+                    renderAll();
+                    setStatusTemp(`Target hinzugefügt: ${res.value}`);
+                    return;
+                }
+            };
+
+            details.onkeydown = (ev) => {
+                const t = ev && ev.target;
+                if (!t) return;
+
+                if (t.id === "adPlanTargetInput") {
+                    if (ev.key === "Enter") {
+                        ev.preventDefault();
+                        const btn = details.querySelector('button[data-action="confirm-add-target"]');
+                        if (btn && btn.click) btn.click();
+                    }
+                    if (ev.key === "Escape") {
+                        ev.preventDefault();
+                        targetAddOpen = false;
+                        targetAddValue = "";
+                        targetAddError = "";
+                        renderPlanDetails();
+                    }
+                }
             };
         }
 
-        // Avoid duplicate listeners by using property assignment
-        select.onchange = () => {
-            const next = String(select.value || "kw1_2026");
-            if (planEdit) {
-                const ok = confirm("Woche wechseln? Ungespeicherte Änderungen gehen verloren.");
-                if (!ok) { select.value = planWeek; return; }
-                cancelEdit({ silent: true });
-            }
+        // Drawer wiring
+        if (overlay) overlay.onclick = () => setDrawerOpen(false);
+        if (drawerClose) drawerClose.onclick = () => setDrawerOpen(false);
 
-            planWeek = next;
-            renderPlanTable();
-            setStatusTemp("Aktualisiert. (UI)");
-        };
+        if (drawerSearch) {
+            drawerSearch.oninput = () => {
+                planDrawerSearch = String(drawerSearch.value || "");
+                renderDrawerList();
+            };
+        }
 
-        btnTime.onclick = () => setMode("time");
-        btnSessions.onclick = () => setMode("sessions");
+        if (drawerList) {
+            drawerList.onclick = (ev) => {
+                const addBtn = ev && ev.target && ev.target.closest ? ev.target.closest("button[data-template-add]") : null;
+                if (addBtn) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    addTemplateByType(addBtn.getAttribute("data-template-add"));
+                    return;
+                }
 
-        chk.onchange = () => {
-            if (planEdit) {
-                chk.checked = !!planShowPerf;
-                return;
-            }
-            planShowPerf = !!chk.checked;
-            renderPlanTable();
-            setStatusTemp("Aktualisiert. (UI)");
-        };
+                const item = ev && ev.target && ev.target.closest ? ev.target.closest("[data-template]") : null;
+                if (item) {
+                    addTemplateByType(item.getAttribute("data-template"));
+                }
+            };
+
+            drawerList.onkeydown = (ev) => {
+                if (!ev || ev.key !== "Enter") return;
+                const item = ev.target && ev.target.closest ? ev.target.closest("[data-template]") : null;
+                if (item) addTemplateByType(item.getAttribute("data-template"));
+            };
+        }
+
+        // Escape closes drawer (avoid duplicate global listeners by storing a flag on panel)
+        if (!panel.__adPlanDrawerKeyHandler) {
+            panel.__adPlanDrawerKeyHandler = true;
+            panel.addEventListener("keydown", (ev) => {
+                if (!planDrawerOpen) return;
+                if (ev.key === "Escape") {
+                    ev.preventDefault();
+                    setDrawerOpen(false);
+                }
+            });
+        }
+
+        // expose for refreshAll(): Tracker reload → Sidebar aktualisieren
+        cache._planSidebarRefreshWeeks = refreshSidebarWeekOptions;
+        cache._planSidebarRerender = () => { refreshSidebarWeekOptions(); renderAll(); };
+
+        // Ensure drawer reflects current RAM state after SPA re-wires
+        setDrawerOpen(planDrawerOpen);
     }
-
 
 
 function wireTrainingPlanInteractions(panel) {
@@ -11195,6 +13183,10 @@ function wireTrainingPlanInteractions(panel) {
             const weeks = cache._training_weeksAsc || computeTrainingWeeksAsc();
             cache._training_weeksAsc = weeks;
             renderTrainingPlan(panel, weeks);
+        };
+
+        const rerenderPlanSidebar = () => {
+            try { cache._planSidebarRerender?.(); } catch {}
         };
 
         const scheduleSaveAndRerender = (immediate = false) => {
@@ -11282,6 +13274,7 @@ function wireTrainingPlanInteractions(panel) {
                     saveTrainingPlanState(st);
                 }
                 rerenderPlan();
+                rerenderPlanSidebar();
                 return;
             }
 
@@ -11295,6 +13288,9 @@ function wireTrainingPlanInteractions(panel) {
                 const st = cache.trainingPlan;
                 st.selectedWeekKey = wk;
                 saveTrainingPlanState(st);
+
+                rerenderPlan();
+                rerenderPlanSidebar();
 
                 // Re-render time tab to update row highlight (Plan wird im Training-Tab gerendert)
                 if (cache?.loaded) renderTimeTab(panel);
@@ -11314,15 +13310,14 @@ function wireTrainingPlanInteractions(panel) {
                 st.selectedWeekKey = wk || null;
                 saveTrainingPlanState(st);
                 rerenderPlan();
+                rerenderPlanSidebar();
                 return;
             }
 
             if (t && t.id === "ad-ext-plan-showperf" && inTrainingView(t)) {
-                cache.trainingPlan = cache.trainingPlan || loadTrainingPlanState();
-                const st = cache.trainingPlan;
-                st.showPerf = !!t.checked;
-                saveTrainingPlanState(st);
+                planTabShowPerf = !!t.checked;
                 rerenderPlan();
+                rerenderPlanSidebar();
                 return;
             }
         });

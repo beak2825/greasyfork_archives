@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Meeland Script
 // @namespace    meeland-script
-// @version      3.62
+// @version      3.65
 // @description  Meeland.io cheat script with auto-lock, speed boost, infinite jump, teleportation & more! Works on CrazyGames, twoplayergames.org, meeland.io, iogames.onl, sprunki-game.io, gameflare.com and other sites hosting Meeland
 // @match        *://*/*
 // @run-at       document-end
@@ -39,6 +39,21 @@
     const POSITION_STABLE_THRESHOLD = 0.1; // Position change less than this = stable (0.1 allows micro-drift)
     const POSITION_STABLE_DURATION = 250; // Wait for position to be stable for this long (ms)
     const PET_THEFT_COOLDOWN_MS = 15000; // Cooldown between pet theft taunts
+    // =======================
+
+    // ==== GREASYFORK PROMO VARIATIONS ====
+    const GREASYFORK_PROMOS = [
+        "Try the Meeland Script on Greasyfork.org",
+        "Get the Meeland Script from Greasyfork.org",
+        "Download Meeland Script at Greasyfork.org",
+        "Meeland Script available on Greasyfork.org",
+        "Find the Meeland Script on Greasyfork.org",
+        "Meeland Script - Greasyfork.org",
+        "Check out Meeland Script on Greasyfork.org",
+        "Get enhanced Meeland gameplay at Greasyfork.org",
+        "Meeland Script @ Greasyfork.org - Try it!",
+        "Level up your Meeland game: Greasyfork.org"
+    ];
     // =======================
 
     // ==== TRADE PHRASES (paste your phrases here, one per line in quotes) ====
@@ -1818,7 +1833,7 @@ const GRATITUDE_PHRASES = [
         autoLock: true,
         speedBoost: true,
         speedMultiplier: 4,
-        infiniteJump: true,
+        flyMode: true,
         homeWaypoint: true,
         teleportForward: true,
         showTimer: true,
@@ -1854,7 +1869,7 @@ const GRATITUDE_PHRASES = [
         document.getElementById('setting-autolock').checked = settings.autoLock;
         document.getElementById('setting-speed').checked = settings.speedBoost;
         document.getElementById('setting-speed-multiplier').value = settings.speedMultiplier;
-        document.getElementById('setting-jump').checked = settings.infiniteJump;
+        document.getElementById('setting-fly').checked = settings.flyMode;
         document.getElementById('setting-home').checked = settings.homeWaypoint;
         document.getElementById('setting-teleport').checked = settings.teleportForward;
         document.getElementById('setting-timer').checked = settings.showTimer;
@@ -1869,7 +1884,7 @@ const GRATITUDE_PHRASES = [
         let multiplier = parseFloat(document.getElementById('setting-speed-multiplier').value);
         multiplier = Math.max(1.5, Math.min(20, multiplier)); // Clamp to [1.5, 20]
         settings.speedMultiplier = multiplier;
-        settings.infiniteJump = document.getElementById('setting-jump').checked;
+        settings.flyMode = document.getElementById('setting-fly').checked;
         settings.homeWaypoint = document.getElementById('setting-home').checked;
         settings.teleportForward = document.getElementById('setting-teleport').checked;
         settings.showTimer = document.getElementById('setting-timer').checked;
@@ -2291,12 +2306,18 @@ const GRATITUDE_PHRASES = [
                 <div class="timer-label" id="defense-timer">—</div>
             </div>
             <div class="hotkey-info">
+                <div class="hotkey-row"><span class="hotkey-key">Y</span><span class="hotkey-desc">Settings</span></div>
+                <div class="hotkey-row"><span class="hotkey-key">L</span><span class="hotkey-desc">Lock Base</span></div>
                 <div class="hotkey-row"><span class="hotkey-key">Shift</span><span class="hotkey-desc">Sprint</span></div>
                 <div class="hotkey-row"><span class="hotkey-key">CapsLock</span><span class="hotkey-desc">Blink</span></div>
+                <div class="hotkey-row"><span class="hotkey-key">H</span><span class="hotkey-desc">Set Home</span></div>
                 <div class="hotkey-row"><span class="hotkey-key">Q</span><span class="hotkey-desc">Go Home</span></div>
                 <div class="hotkey-row"><span class="hotkey-key">Z</span><span class="hotkey-desc">Go Back</span></div>
-                <div class="hotkey-row"><span class="hotkey-key">Ctrl+D</span><span class="hotkey-desc">Change Direction</span></div>
-                <div class="hotkey-row"><span class="hotkey-key">Y</span><span class="hotkey-desc">Settings</span></div>
+                <div class="hotkey-row"><span class="hotkey-key">T</span><span class="hotkey-desc">Teleport Home</span></div>
+                <div class="hotkey-row"><span class="hotkey-key">Space×2</span><span class="hotkey-desc">Fly Mode</span></div>
+                <div class="hotkey-row"><span class="hotkey-key">Space</span><span class="hotkey-desc">Fly Up</span></div>
+                <div class="hotkey-row"><span class="hotkey-key">F</span><span class="hotkey-desc">Fly Down</span></div>
+                <div class="hotkey-row"><span class="hotkey-key">N</span><span class="hotkey-desc">Change Direction</span></div>
             </div>
         `;
         document.body.appendChild(overlay);
@@ -2341,8 +2362,8 @@ const GRATITUDE_PHRASES = [
                     </div>
 
                     <label class="setting-label">
-                        <input type="checkbox" id="setting-jump" checked>
-                        <span>Infinite multi-jump (Space while airborne)</span>
+                        <input type="checkbox" id="setting-fly">
+                        <span>Fly mode (Double jump to activate, Space=Up, F=Down)</span>
                     </label>
                 </div>
 
@@ -2986,28 +3007,39 @@ const GRATITUDE_PHRASES = [
             tryCalculateAndTeleportHome();
         }
 
+        // Global tracking for Greasyfork promo messages (ensure at least one every 5 mins)
+        window._lastGreasyforkPromo = window._lastGreasyforkPromo || 0;
+
         // Pet theft detection via notification interception
         if (settings.petStealTaunt && !window._petNotificationHooked) {
+            // Track previous stolen count to detect actual theft events
+            let previousStolenCount = 0;
+            
             // Hook into PlayCanvas app.fire to intercept pet steal notifications
             const originalFire = window.pc.app.fire.bind(window.pc.app);
             window.pc.app.fire = function(event, ...args) {
                 // Check for pet steal notification
                 if (event === 'PetTycoon:PetStolen') {
-                    // Only taunt if we already have stolen pets (count > 1)
-                    // This prevents taunting during initial pet loading
-                    const stolenCount = getMyActivePetCount();
-                    if (stolenCount <= 1) {
-                        return originalFire(event, ...args);
+                    const currentStolenCount = getMyActivePetCount();
+                    
+                    // Only taunt if stolen count actually increased (we just stole a pet)
+                    if (currentStolenCount > previousStolenCount && previousStolenCount > 0) {
+                        const timeSinceLastTaunt = window._lastPetTheftTaunt ? (Date.now() - window._lastPetTheftTaunt) : 999999;
+                        if (timeSinceLastTaunt >= PET_THEFT_COOLDOWN_MS) {
+                            const isPromo = Math.random() < 0.5;
+                            const message = isPromo
+                                ? GREASYFORK_PROMOS[Math.floor(Math.random() * GREASYFORK_PROMOS.length)]
+                                : GRATITUDE_PHRASES[Math.floor(Math.random() * GRATITUDE_PHRASES.length)];
+                            sendChatMessage(message);
+                            window._lastPetTheftTaunt = Date.now();
+                            if (isPromo) {
+                                window._lastGreasyforkPromo = Date.now();
+                            }
+                        }
                     }
                     
-                    const timeSinceLastTaunt = window._lastPetTheftTaunt ? (Date.now() - window._lastPetTheftTaunt) : 999999;
-                    if (timeSinceLastTaunt >= PET_THEFT_COOLDOWN_MS) {
-                        const message = Math.random() < 0.5 
-                            ? 'Try the Meeland Script on TamperMonkey' 
-                            : GRATITUDE_PHRASES[Math.floor(Math.random() * GRATITUDE_PHRASES.length)];
-                        sendChatMessage(message);
-                        window._lastPetTheftTaunt = Date.now();
-                    }
+                    // Update previous count
+                    previousStolenCount = currentStolenCount;
                 }
                 
                 return originalFire(event, ...args);
@@ -3039,11 +3071,20 @@ const GRATITUDE_PHRASES = [
 
                     // Detect when base LOCKS (timer goes from 0 to >0) - send message
                     if (timerValue > 0 && (lastTimerValue === null || lastTimerValue === 0)) {
-                        // Send famous quote when lock activates
-                        if (settings.famousQuotes) {
-                            const randomPhrase = TRADE_PHRASES[Math.floor(Math.random() * TRADE_PHRASES.length)];
-                            console.log(`[${getTimestamp()}] 📢 Lock activated chat: ${randomPhrase}`);
-                            sendChatMessage(randomPhrase);
+                        // Send famous quote or promo (20% chance) when lock activates
+                        // Rate limit: at most one message per minute
+                        const timeSinceLastQuote = window._lastLockQuoteTime ? (now - window._lastLockQuoteTime) : 999999;
+                        if (settings.famousQuotes && timeSinceLastQuote >= 60000) {
+                            const isPromo = Math.random() < 0.2;
+                            const message = isPromo
+                                ? GREASYFORK_PROMOS[Math.floor(Math.random() * GREASYFORK_PROMOS.length)]
+                                : TRADE_PHRASES[Math.floor(Math.random() * TRADE_PHRASES.length)];
+                            console.log(`[${getTimestamp()}] 📢 Lock activated chat: ${message}`);
+                            sendChatMessage(message);
+                            window._lastLockQuoteTime = now;
+                            if (isPromo) {
+                                window._lastGreasyforkPromo = now;
+                            }
                         }
                     }
 
@@ -3157,7 +3198,7 @@ const GRATITUDE_PHRASES = [
                 }
             }
 
-            if ((e.key === 'd' || e.key === 'D') && e.ctrlKey) {
+            if (e.key === 'n' || e.key === 'N') {
                 e.preventDefault();
                 e.stopPropagation();
                 window.pc.app.fire('NetworkManager:Send', 'changePetsSpawnDirection');
@@ -3196,30 +3237,107 @@ const GRATITUDE_PHRASES = [
         window.addEventListener('keydown', handleKeyDown, true);
         window.addEventListener('keyup', handleKeyUp, true);
 
-        // Infinite multi-jump system
+        // Fly mode system - activated by double jump, deactivated on ground touch
+        let flyModeActive = false;
+        let flyingUp = false;
+        let flyingDown = false;
         let lastJumpTime = 0;
-        const JUMP_BOOST = 8;  // Upward velocity boost
-        const JUMP_COOLDOWN = 150;  // ms between jumps
+        let jumpCount = 0;
+        const DOUBLE_JUMP_WINDOW = 400;  // ms window to detect double jump
+        const FLY_SPEED = 10;  // Vertical fly speed
 
         window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && settings.infiniteJump) {
+            const player = window.pc?.app?.root?.findByName('Player');
+            if (!player) return;
+
+            const kccScript = player.script?.kcc;
+            if (!kccScript) return;
+
+            // Space key - Double jump activates fly mode, then controls fly up
+            if (e.code === 'Space') {
                 const now = Date.now();
-                if (now - lastJumpTime < JUMP_COOLDOWN) return;
-
-                const player = window.pc?.app?.root?.findByName('Player');
-                if (!player) return;
-
-                const kccScript = player.script?.kcc;
-                if (!kccScript) return;
-
-                // If airborne (not grounded), apply upward boost
-                if (!kccScript._grounded) {
-                    kccScript._velY = JUMP_BOOST;
-                    console.log(`🚀 Multi-jump! _velY boosted to ${JUMP_BOOST}`);
+                
+                if (flyModeActive && settings.flyMode) {
+                    // Already flying, just go up
+                    flyingUp = true;
+                } else if (settings.flyMode) {
+                    // Not flying yet - check for double jump
+                    if (now - lastJumpTime < DOUBLE_JUMP_WINDOW) {
+                        // Double jump detected - activate fly mode
+                        flyModeActive = true;
+                        kccScript.gravity = 0;
+                        flyingUp = true;
+                        jumpCount = 0;
+                    } else {
+                        // First jump
+                        jumpCount = 1;
+                    }
                     lastJumpTime = now;
                 }
+                return;
+            }
+
+            // F key - Fly down when in fly mode
+            if (e.code === 'KeyF' && flyModeActive && settings.flyMode) {
+                flyingDown = true;
+                return;
             }
         }, true);
+
+        window.addEventListener('keyup', (e) => {
+            // Stop flying when keys are released
+            if (e.code === 'Space') {
+                flyingUp = false;
+            }
+            if (e.code === 'KeyF') {
+                flyingDown = false;
+            }
+        }, true);
+
+        // Continuous fly movement update & ground detection
+        setInterval(() => {
+            const player = window.pc?.app?.root?.findByName('Player');
+            if (!player) return;
+
+            const kccScript = player.script?.kcc;
+            if (!kccScript) return;
+
+            // Check if grounded and deactivate fly mode
+            if (flyModeActive && kccScript._grounded) {
+                flyModeActive = false;
+                kccScript.gravity = -30; // Reset to default gravity
+                flyingUp = false;
+                flyingDown = false;
+                jumpCount = 0;
+                return;
+            }
+
+            if (!flyModeActive || !settings.flyMode) return;
+
+            // Apply fly movement
+            if (flyingUp) {
+                kccScript._velY = FLY_SPEED;
+            } else if (flyingDown) {
+                kccScript._velY = -FLY_SPEED;
+            } else {
+                kccScript._velY = 0; // Stop vertical movement when no keys held
+            }
+        }, 16); // ~60fps update rate
+
+
+        // Ensure Greasyfork promo is sent at least once every 5 minutes
+        setInterval(() => {
+            const now = Date.now();
+            const timeSinceLastPromo = now - (window._lastGreasyforkPromo || 0);
+            const FIVE_MINUTES = 5 * 60 * 1000; // 5 minutes in ms
+            
+            if (timeSinceLastPromo >= FIVE_MINUTES) {
+                const promoMessage = GREASYFORK_PROMOS[Math.floor(Math.random() * GREASYFORK_PROMOS.length)];
+                console.log(`[${getTimestamp()}] ⏰ 5 minutes elapsed - sending Greasyfork promo: ${promoMessage}`);
+                sendChatMessage(promoMessage);
+                window._lastGreasyforkPromo = now;
+            }
+        }, 60000); // Check every minute
 
         // Auto-emote when idle
         const EMOTE_NAMES = ["Waving", "Breakdance", "Macarena", "Shuffle", "Smooth Moves", "Techno"];

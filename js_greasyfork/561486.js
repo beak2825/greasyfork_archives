@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name          Torn GOAT Scanner Total GOAT
+// @name          Bazaar Scanner Holy grail by srsbsns
 // @namespace     https://weav3r.dev/
 // @version       4.0.0
 // @description   Shows bazaar deals with NPC profit - click item eye button to see profitable deals
-// @author        srsbsns
+// @author        Modified for NPC Profit
 // @match         https://www.torn.com/*
 // @grant         GM_xmlhttpRequest
 // @grant         GM_addStyle
@@ -14,8 +14,8 @@
 // @connect       api.torn.com
 // @run-at        document-idle
 // @license       MIT
-// @downloadURL https://update.greasyfork.org/scripts/561486/Torn%20GOAT%20Scanner%20Total%20GOAT.user.js
-// @updateURL https://update.greasyfork.org/scripts/561486/Torn%20GOAT%20Scanner%20Total%20GOAT.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561486/Bazaar%20Scanner%20Holy%20grail%20by%20srsbsns.user.js
+// @updateURL https://update.greasyfork.org/scripts/561486/Bazaar%20Scanner%20Holy%20grail%20by%20srsbsns.meta.js
 // ==/UserScript==
 
 (function() {
@@ -37,9 +37,9 @@
             position: fixed;
             left: 10px;
             top: 180px;
-            width: 340px;
+            width: 180px;
             background: #1a1a1a;
-            border: 2px solid #FFD700;
+            border: 2px solid #1E3078;
             border-radius: 8px;
             padding: 12px;
             color: #fff;
@@ -60,7 +60,7 @@
         }
 
         #bazaar-sidebar::-webkit-scrollbar-thumb {
-            background: #FFD700;
+            background: #1E078A;
             border-radius: 4px;
         }
 
@@ -178,7 +178,7 @@
         }
 
         .bz-listing.profitable {
-            border-color: #00FF00;
+            border-color: #3A1CD4;
             background: linear-gradient(135deg, #1a3d1a 0%, #252525 100%);
         }
 

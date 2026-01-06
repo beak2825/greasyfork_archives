@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LabTrack Controller
 // @namespace    http://tampermonkey.net/
-// @version      7.13
+// @version      7.15
 // @description  Enhanced Labouchere strategy tracker for Torn.com Roulette with auto-detect, drag & drop, and advanced safety features
 // @author       Nimo313 (Enhanced by Claude AI)
 // @match        https://www.torn.com/*
@@ -26,7 +26,7 @@
     // CONFIGURATION CONSTANTS - V7.00 Enhancement
     // =============================================================================
     const CONFIG = Object.freeze({
-        VERSION: '7.13',
+        VERSION: '7.15',
         RACE_LOCK_MS: 3000,              // Race condition protection
         DOM_DELAY_MS: 50,                 // DOM spy delay
         POLL_MS: 500,                     // Polling interval
@@ -224,7 +224,7 @@
             position: relative; width: 100%; margin-bottom: 20px;
             background: #181818; border: 1px solid #7c3aed; border-radius: 8px;
             color: #e2e8f0; font-family: 'Segoe UI', Tahoma, sans-serif;
-            z-index: 1000001;
+            z-index: 10;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
             display: none; flex-direction: column; font-size: 13px; box-sizing: border-box;
         }
@@ -239,11 +239,10 @@
             background: rgba(220, 20, 60, 0.25);
             pointer-events: none;
             z-index: 999990;
-            display: none;
+            display: none !important;
             mix-blend-mode: multiply;
             transition: opacity 0.1s ease;
         }
-        body.hospital #lt-hospital-overlay,
         #lt-hospital-overlay.visible { display: block !important; }
 
         /* Full Screen Flash Overlay */
@@ -373,38 +372,30 @@
         /* Custom Scrollbars - V7.00 */
         #lt-info-panel::-webkit-scrollbar,
         #lt-debug-content-net::-webkit-scrollbar,
-        #lt-debug-content-dom::-webkit-scrollbar,
         #lt-gen-preview-seq::-webkit-scrollbar { width: 6px; }
         #lt-info-panel::-webkit-scrollbar-track,
         #lt-debug-content-net::-webkit-scrollbar-track,
-        #lt-debug-content-dom::-webkit-scrollbar-track,
         #lt-gen-preview-seq::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); border-radius: 4px; }
         #lt-info-panel::-webkit-scrollbar-thumb,
         #lt-debug-content-net::-webkit-scrollbar-thumb,
-        #lt-debug-content-dom::-webkit-scrollbar-thumb,
         #lt-gen-preview-seq::-webkit-scrollbar-thumb { background: rgba(124, 58, 237, 0.5); border-radius: 4px; }
         #lt-info-panel::-webkit-scrollbar-thumb:hover,
         #lt-debug-content-net::-webkit-scrollbar-thumb:hover,
-        #lt-debug-content-dom::-webkit-scrollbar-thumb:hover,
         #lt-gen-preview-seq::-webkit-scrollbar-thumb:hover { background: rgba(124, 58, 237, 0.7); }
 
         /* DEBUG TOOL STYLES */
         #lt-debug-panel {
             position: fixed; top: 50px; right: 20px; width: 450px; height: 500px;
             background: #0f172a; border: 2px solid #be123c; border-radius: 8px;
-            display: none; flex-direction: column; z-index: 1000000;
+            display: none; flex-direction: column; z-index: 1000100;
             box-shadow: 0 10px 25px rgba(0,0,0,0.8); font-family: monospace;
         }
         #lt-debug-header {
             padding: 10px; background: #be123c; color: white; font-weight: bold; display: flex; justify-content: space-between; align-items: center;
         }
-        .lt-debug-tabs { display:flex; background: #1e293b; border-bottom: 1px solid #334155; }
-        .lt-debug-tab { flex:1; padding: 8px; text-align: center; cursor: pointer; color: #94a3b8; font-size: 11px; font-weight: bold; }
-        .lt-debug-tab.active { background: #334155; color: white; }
-        #lt-debug-content-net, #lt-debug-content-dom {
-            flex: 1; overflow-y: auto; padding: 10px; color: #a5f3fc; font-size: 11px; white-space: pre-wrap; display: none;
+        #lt-debug-content-net {
+            flex: 1; overflow-y: auto; padding: 10px; color: #a5f3fc; font-size: 11px; white-space: pre-wrap;
         }
-        #lt-debug-content-net.active, #lt-debug-content-dom.active { display: block; }
         .lt-debug-entry { margin-bottom: 8px; border-bottom: 1px solid #334155; padding-bottom: 4px; word-break: break-all; }
         .lt-debug-time { color: #64748b; margin-right: 5px; }
         .lt-debug-tag { color: #facc15; font-weight: bold; margin-right: 5px; }
@@ -503,60 +494,19 @@
             if(document.getElementById('lt-debug-panel')) return;
             const div = document.createElement('div'); div.id = 'lt-debug-panel';
             div.innerHTML = `
-                <div id="lt-debug-header"><span>🐞 LabTrack Debug</span><span id="lt-debug-close" style="cursor:pointer">X</span></div>
-                <div class="lt-debug-tabs">
-                    <div id="lt-tab-net" class="lt-debug-tab active">📡 NETWORK</div>
-                    <div id="lt-tab-dom" class="lt-debug-tab">👁️ DOM SPY</div>
-                </div>
+                <div id="lt-debug-header"><span>🐞 LabTrack Debug - Network Log</span><span id="lt-debug-close" style="cursor:pointer">X</span></div>
                 <div id="lt-debug-content-net" class="active"></div>
-                <div id="lt-debug-content-dom"></div>
-                <div class="lt-spy-controls" id="lt-spy-controls" style="display:none;">
-                    <input id="lt-spy-input" class="lt-spy-input" type="text" value="${this.watchSelector}" placeholder="CSS Selector">
-                    <button id="lt-spy-btn" class="lt-btn lt-btn-action" style="width:auto;padding:4px 8px;">Watch</button>
-                </div>
                 <div style="padding:5px;border-top:1px solid #333;"><button class="lt-btn lt-btn-action" id="lt-copy-log">Copy Log</button></div>
             `;
             document.body.appendChild(div);
 
             div.querySelector('#lt-debug-close').addEventListener('click', () => { div.style.display = 'none'; });
 
-            const tabNet = document.getElementById('lt-tab-net');
-            const tabDom = document.getElementById('lt-tab-dom');
-            const conNet = document.getElementById('lt-debug-content-net');
-            const conDom = document.getElementById('lt-debug-content-dom');
-            const controls = document.getElementById('lt-spy-controls');
-
-            tabNet.addEventListener('click', () => {
-                this.activeTab = 'net';
-                tabNet.classList.add('active'); tabDom.classList.remove('active');
-                conNet.classList.add('active'); conDom.classList.remove('active');
-                controls.style.display = 'none';
-            });
-
-            tabDom.addEventListener('click', () => {
-                this.activeTab = 'dom';
-                tabDom.classList.add('active'); tabNet.classList.remove('active');
-                conDom.classList.add('active'); conNet.classList.remove('active');
-                controls.style.display = 'flex';
-            });
-
-            document.getElementById('lt-spy-btn').addEventListener('click', () => {
-                const val = document.getElementById('lt-spy-input').value;
-                if(val) {
-                    this.watchSelector = val;
-                    this.log('dom', 'SYS', `Watcher changed to: ${val}`);
-                    this.restartDomSpy();
-                }
-            });
-
             document.getElementById('lt-copy-log').addEventListener('click', () => {
-                const source = this.activeTab === 'net' ? this.netLogs : this.domLogs;
-                const txt = source.map(l => `[${l.time}] ${l.tag}: ${l.msg}`).join('\n');
+                const txt = this.netLogs.map(l => `[${l.time}] ${l.tag}: ${l.msg}`).join('\n');
                 navigator.clipboard.writeText(txt);
-                Utils.showToast(`${this.activeTab.toUpperCase()} Log copied!`);
+                Utils.showToast('Network Log copied!');
             });
-
-            this.startDomSpy();
         }
         toggle() {
             const el = document.getElementById('lt-debug-panel');

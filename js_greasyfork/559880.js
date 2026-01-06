@@ -1,94 +1,136 @@
 // ==UserScript==
-// @name         CoinKeel Auto Faucet
+// @name         CoinKeel Auto Faucet + Tabs + Popups + Verify + Auto Reload
 // @namespace    https://coinkeel.com/
-// @version      1.0
-// @description  Automatic faucet claim loop with realistic delays
+// @version      1.3
+// @description  Automatic faucet claim loop with realistic delays, popup control, tab handling, verify click and auto reload on redirect.
 // @author       Rubystance
 // @license      MIT
 // @match        https://coinkeel.com/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/559880/CoinKeel%20Auto%20Faucet.user.js
-// @updateURL https://update.greasyfork.org/scripts/559880/CoinKeel%20Auto%20Faucet.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559880/CoinKeel%20Auto%20Faucet%20%2B%20Tabs%20%2B%20Popups%20%2B%20Verify%20%2B%20Auto%20Reload.user.js
+// @updateURL https://update.greasyfork.org/scripts/559880/CoinKeel%20Auto%20Faucet%20%2B%20Tabs%20%2B%20Popups%20%2B%20Verify%20%2B%20Auto%20Reload.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
     const log = (msg) => console.log('[CoinKeel]', msg);
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+    const originalOpen = window.open;
+    window.open = function (url) {
+        log('Popup blocked:', url);
+        return null;
+    };
+
+    let lastUrl = location.href;
+    let lastActivity = Date.now();
+
+    setInterval(() => {
+
+        if (location.href !== lastUrl) {
+            lastUrl = location.href;
+            lastActivity = Date.now();
+        }
+
+        if (Date.now() - lastActivity > 90000) { // 90s
+            log('Stuck detected, reloading page (F5)');
+            location.reload();
+        }
+    }, 2000);
+
+    window.addEventListener('beforeunload', () => {
+        log('Browser redirect detected, forcing reload');
+        setTimeout(() => location.reload(), 1000);
+    });
+
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            lastActivity = Date.now();
+        }
+    });
 
     async function waitForClickable(selector, checkInterval = 300, timeout = 60000) {
-        const startTime = Date.now();
-        while (Date.now() - startTime < timeout) {
+        const start = Date.now();
+        while (Date.now() - start < timeout) {
             const el = document.querySelector(selector);
-            if (el) {
-                const style = window.getComputedStyle(el);
-                const clickable = !el.disabled && style.pointerEvents !== 'none' && style.visibility !== 'hidden';
-                if (clickable) return el;
-            }
+            if (el && !el.disabled) return el;
             await sleep(checkInterval);
         }
-        throw new Error(`Timeout waiting for clickable element: ${selector}`);
+        throw new Error(`Timeout waiting for ${selector}`);
     }
 
     async function clickAnyFaucetLink() {
-        const links = Array.from(document.querySelectorAll('a.nav-link'))
-            .filter(a => a.textContent.trim() === 'Faucet Claim');
-        if (links.length === 0) throw new Error('No Faucet Claim link found on dashboard');
-        const link = links[0];
-        const style = window.getComputedStyle(link);
-        if (!link.disabled && style.pointerEvents !== 'none' && style.visibility !== 'hidden') {
-            log(`Clicking Faucet Claim link: ${link.href}`);
+        const link = [...document.querySelectorAll('a.nav-link')]
+            .find(a => a.textContent.trim() === 'Faucet Claim');
+        if (link) {
+            log('Clicking Faucet Claim');
             link.click();
+            lastActivity = Date.now();
         }
     }
 
+    let verifyClicked = false;
+
+    function observeVerifyButton() {
+        const observer = new MutationObserver(async () => {
+            if (verifyClicked) return;
+
+            const btn = document.querySelector('#cmv');
+            if (btn && !btn.disabled && /verify/i.test(btn.innerText)) {
+                verifyClicked = true;
+                log('Please Verify detected');
+                await sleep(4000 + Math.random() * 2000);
+                btn.click();
+                lastActivity = Date.now();
+                observer.disconnect();
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+
     async function faucetFlow() {
-        const url = window.location.href;
+        const url = location.href;
 
         try {
-
-            if (url.includes('?game=dashboard')) {
-                log('Dashboard detected, waiting 1-2s...');
+            if (url.includes('dashboard')) {
                 await sleep(1000 + Math.random() * 1000);
                 await clickAnyFaucetLink();
                 return;
             }
 
             if (url.includes('?games=')) {
-                log('Faucet page detected, waiting 3-5s...');
                 await sleep(3000 + Math.random() * 2000);
                 const claimBtn = await waitForClickable('#cmopn');
-                log('Clicking Claim 20 Coins');
+                log('Clicking Claim');
                 claimBtn.click();
+                lastActivity = Date.now();
                 return;
             }
 
             if (url.includes('?play=')) {
-                log('Game page detected, waiting 2-3s...');
-                await sleep(2000 + Math.random() * 1000);
-                const visitBtn = await waitForClickable('#rm');
-                log('Clicking Visit Link');
-                visitBtn.click();
+                await sleep(3000 + Math.random() * 2000);
 
-                log('Waiting for Please Verify button to become clickable (may take up to 60s)...');
-                const verifyBtn = await waitForClickable('#cmv', 300, 60000);
-                log('Clicking Please Verify');
-                verifyBtn.click();
+                const visitBtn = document.querySelector('#rm');
+                if (visitBtn && !visitBtn.disabled) {
+                    log('Clicking Visit Link');
+                    visitBtn.click();
+                    lastActivity = Date.now();
+                }
 
-                await sleep(2000);
+                observeVerifyButton();
                 return;
             }
-
         } catch (e) {
-            log('Error in faucetFlow:', e);
+            log(e.message);
         }
     }
 
     async function mainLoop() {
         while (true) {
             await faucetFlow();
-            await sleep(1000);
+            await sleep(1200);
         }
     }
 

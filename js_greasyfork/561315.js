@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT Quick Search
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  通过快捷键快速激活/退出 ChatGPT 搜索模式。使用 Cmd/Ctrl+Shift+K 切换搜索模式。
 // @author       Lovecrafx
 // @license      MIT
@@ -13,187 +13,91 @@
 // ==/UserScript==
 
 (function () {
-  "use strict";
-
-  // ================= 配置区域 =================
-  const CONFIG = {
-    // 快捷键设置
-    SHORTCUT: {
-      KEY: "k",
-      SHIFT: true,
-      CTRL_OR_META: true,
-    },
-
-    // 指令设置
-    COMMAND: "/search",
-    TAB_DELAY: 50,
-
-    // DOM 选择器
-    SELECTORS: {
-      TEXT_AREA: "#prompt-textarea",
-      SEARCH_PILL:
-        '[data-testid="composer-search-pill"], button[class*="composer-pill"], button[aria-label*="Search"]',
-      CLOSE_BUTTON: "button",
-    },
-
-    // 调试模式
-    DEBUG: true,
-  };
-  // ============================================
-
-  const log = (msg) => CONFIG.DEBUG && console.log(`[Quick Search] ${msg}`);
-
-  // 防止重复激活的标志
-  let isActivating = false;
-
-  /**
-   * 获取当前的搜索状态标签
-   */
-  function getSearchPill() {
-    return document.querySelector(CONFIG.SELECTORS.SEARCH_PILL);
-  }
-
-  /**
-   * 保存并清空输入框内容
-   * 仅支持 contenteditable 元素
-   */
-  function saveAndClearContent(editor) {
-    const content = editor.innerText || editor.textContent || "";
-
-    // 对于 contenteditable 元素，使用 execCommand('selectAll') + delete
-    editor.focus();
-    document.execCommand("selectAll", false, null);
-    document.execCommand("delete", false, null);
-
-    return content;
-  }
-
-  /**
-   * 恢复输入框内容
-   * 使用 insertText 模拟真实用户输入，以正确触发 React 状态更新
-   */
-  function restoreContent(editor, content) {
-    if (!content) return;
-
-    editor.focus();
-    document.execCommand("insertText", false, content);
-
-    log(`已恢复内容: ${content.substring(0, 50)}...`);
-  }
-
-  /**
-   * 等待搜索模式激活
-   */
-  function waitForSearchMode(editor, savedContent) {
-    // 立即检查
-    const pill = getSearchPill();
-    if (pill) {
-      restoreContent(editor, savedContent);
-      log("搜索模式已激活");
-      isActivating = false;
-      return;
+    "use strict";
+    // 快捷键配置
+    const SHORTCUT_KEY = "i";        // 快捷键字符
+    const USE_META = true;           // 使用 Command 键 (Mac)
+    const USE_SHIFT = true;          // 使用 Shift 键
+    // 工具函数：获取搜索按钮元素
+    function getSearchButton() {
+        return document.querySelector("button.__composer-pill");
     }
-
-    // 创建 Observer
-    const observer = new MutationObserver(() => {
-      const currentPill = getSearchPill();
-      if (currentPill) {
-        observer.disconnect();
-        restoreContent(editor, savedContent);
-        log("搜索模式已激活");
-        isActivating = false;
-      }
-    });
-
-    // 开始观察
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-
-    // 简单超时处理
-    setTimeout(() => {
-      observer.disconnect();
-      if (!getSearchPill()) {
-        restoreContent(editor, savedContent);
-        log("搜索模式激活超时");
-        isActivating = false;
-      }
-    }, 1000);
-  }
-
-  /**
-   * 激活搜索模式
-   */
-  function activateSearchMode() {
-    const editor = document.querySelector(CONFIG.SELECTORS.TEXT_AREA);
-    if (!editor) {
-      log("未找到输入框");
-      isActivating = false;
-      return;
+    // 工具函数：获取编辑器元素
+    function getEditor() {
+        return document.querySelector("div.ProseMirror");
     }
-
-    // 临时保存当前内容
-    const savedContent = saveAndClearContent(editor);
-    log(`已保存内容: ${savedContent.substring(0, 50)}...`);
-
-    editor.focus();
-    document.execCommand("insertText", false, CONFIG.COMMAND);
-
-    const tabEvent = new KeyboardEvent("keydown", {
-      key: "Tab",
-      code: "Tab",
-      keyCode: 9,
-      which: 9,
-      bubbles: true,
-      cancelable: true,
-    });
-
-    setTimeout(() => {
-      editor.dispatchEvent(tabEvent);
-      // 开始等待并检查搜索模式
-      waitForSearchMode(editor, savedContent);
-    }, CONFIG.TAB_DELAY);
-  }
-
-  /**
-   * 退出搜索模式
-   */
-  function deactivateSearchMode(pill) {
-    if (!pill) return;
-    const closeBtn = pill.querySelector(CONFIG.SELECTORS.CLOSE_BUTTON) || pill;
-    closeBtn.click();
-    log("已退出搜索模式");
-  }
-
-  /**
-   * 键盘事件处理器
-   */
-  function handleKeydown(e) {
-    // 防止重复触发
-    if (isActivating) return;
-
-    const isModifierDown = CONFIG.SHORTCUT.CTRL_OR_META
-      ? e.ctrlKey || e.metaKey
-      : true;
-    const isShiftDown = CONFIG.SHORTCUT.SHIFT ? e.shiftKey : true;
-    const isTargetKey =
-      e.key.toLowerCase() === CONFIG.SHORTCUT.KEY.toLowerCase();
-
-    if (isModifierDown && isShiftDown && isTargetKey) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const currentPill = getSearchPill();
-      if (currentPill) {
-        deactivateSearchMode(currentPill);
-      } else {
+    // 工具函数：模拟点击菜单项
+    function clickSearchItem() {
+        const item = document.querySelector('.__menu-item[data-highlighted]');
+        if (!item) return;
+        const rect = item.getBoundingClientRect();
+        const options = {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+            pointerType: 'mouse',
+            clientX: rect.left + rect.width / 2,
+            clientY: rect.top + rect.height / 2,
+        };
+        item.dispatchEvent(new PointerEvent('pointerdown', options));
+        item.dispatchEvent(new PointerEvent('pointerup', options));
+        item.dispatchEvent(new MouseEvent('mousedown', options));
+        item.dispatchEvent(new MouseEvent('mouseup', options));
+        item.dispatchEvent(new MouseEvent('click', options));
+    }
+    // 工具函数：清空编辑器内容并返回原内容
+    function clearContent(editor){
+        const content = editor.innerText || editor.textContent || "";
+        editor.focus();
+        document.execCommand("selectAll", false, null);
+        document.execCommand("delete", false, null);
+        return content;
+    }
+    // 功能：取消搜索模式
+    function cancelSearchMode() {
+        console.log("[ChatGPT Shortcut] Cancelling search mode...");
+        const button = getSearchButton();
+        if (!button) return;
+        const text = button.outerText;
+        if (text === "搜索" || text === "Search") {
+            console.log("[ChatGPT Shortcut] Search mode cancelled.");
+            button.click();
+        }
+    }
+    // 全局状态标记
+    let isActivating = false;
+    // 功能：激活搜索模式
+    function activateSearchMode() {
+        if (isActivating) return;
+        const editor = getEditor();
+        if (!editor) return;
         isActivating = true;
-        activateSearchMode();
-      }
+        const content = clearContent(editor);
+        document.execCommand('insertText', false, '/search');
+        setTimeout(() => {
+            clickSearchItem();
+            isActivating = false;
+            document.execCommand('insertText', false, content);
+        }, 0);
     }
-  }
-
-  window.addEventListener("keydown", handleKeydown, true);
-  log("脚本已就绪");
+    // 键盘事件监听
+    window.addEventListener(
+        "keydown",
+        (e) => {
+            if (
+                e.key.toLowerCase() === SHORTCUT_KEY &&
+                e.metaKey === USE_META &&
+                e.shiftKey === USE_SHIFT
+            ) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (getSearchButton()) {
+                    cancelSearchMode();
+                } else {
+                    activateSearchMode();
+                }
+            }
+        },
+        true
+    );
 })();

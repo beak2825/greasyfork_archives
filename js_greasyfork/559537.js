@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Скрипт для ЗГС/ГС
 // @namespace    https://forum.blackrussia.online/
-// @version      0.1
+// @version      0.2
 // @description  Created for GOSS and OPG
 // @author       Artem_Gogol
 // @match        https://forum.blackrussia.online/threads/*
@@ -50,6 +50,17 @@
       content: "[B][CENTER][COLOR=#ff0000][ICODE]Здравствуйте, уважаемый {{ user.name }} [/ICODE][/COLOR][/CENTER][/B]<br><br>"+
         '[B][CENTER][url=https://postimages.org/][img]https://i.postimg.cc/VsXdc0M3/C0ffE.png[/img][/url]<br>'+
         "[CENTER][COLOR=#FFFF00][ICODE]Ваша жалоба взята на рассмотрение.<br>Просьба ожидать ответа и не создавать дубликаты данной темы.[/ICODE][/COLOR][/CENTER]<br>" +
+        '[url=https://postimages.org/][img]https://i.postimg.cc/VsXdc0M3/C0ffE.png[/img][/url]<br>' +
+		'[Color=AQUA][CENTER][ICODE]✿❯────「Ожидайте ответа...」────❮✿[/ICODE][/COLOR][/CENTER]'+
+        '[url=https://postimages.org/][img]https://i.postimg.cc/q7pLC4Bz/RLwzo.png[/img][/url]<br>',
+      prefix: NARASSSMOTRENII_PREFIX,
+	  status: true,
+    },
+        {
+      title: 'Передано ГС ГОСС',
+      content: "[B][CENTER][COLOR=#ff0000][ICODE]Здравствуйте, уважаемый {{ user.name }} [/ICODE][/COLOR][/CENTER][/B]<br><br>"+
+        '[B][CENTER][url=https://postimages.org/][img]https://i.postimg.cc/VsXdc0M3/C0ffE.png[/img][/url]<br>'+
+        "[CENTER][COLOR=#FFFF00][ICODE]Ваша жалоба передана Главному Следящему за Гос.структурами.<br>Просьба ожидать ответа и не создавать дубликаты данной темы.[/ICODE][/COLOR][/CENTER]<br>" +
         '[url=https://postimages.org/][img]https://i.postimg.cc/VsXdc0M3/C0ffE.png[/img][/url]<br>' +
 		'[Color=AQUA][CENTER][ICODE]✿❯────「Ожидайте ответа...」────❮✿[/ICODE][/COLOR][/CENTER]'+
         '[url=https://postimages.org/][img]https://i.postimg.cc/q7pLC4Bz/RLwzo.png[/img][/url]<br>',

@@ -1,88 +1,127 @@
 // ==UserScript==
-// @name         DogeRPG Ultra Light Mode + Timed Auto Claim + Auto Mining
+// @name         Auto DOGE Miner Claimer + Human Behavior
 // @namespace    https://tampermonkey.net/
-// @version      1.2
-// @description  Ultra Light Mode + Remove All Animations From The Page + Reload Cycle + Auto Claim + Auto Mining
+// @version      1.5
+// @description  Automatically claim DOGE when miner reaches max value, restart mining, remove heavy animations, human-like behavior.
 // @author       Rubystance
 // @license      MIT
 // @match        https://dogerpg.lovable.app/*
-// @grant        GM_addStyle
-// @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/560534/DogeRPG%20Ultra%20Light%20Mode%20%2B%20Timed%20Auto%20Claim%20%2B%20Auto%20Mining.user.js
-// @updateURL https://update.greasyfork.org/scripts/560534/DogeRPG%20Ultra%20Light%20Mode%20%2B%20Timed%20Auto%20Claim%20%2B%20Auto%20Mining.meta.js
+// @grant        none
+// @downloadURL https://update.greasyfork.org/scripts/560534/Auto%20DOGE%20Miner%20Claimer%20%2B%20Human%20Behavior.user.js
+// @updateURL https://update.greasyfork.org/scripts/560534/Auto%20DOGE%20Miner%20Claimer%20%2B%20Human%20Behavior.meta.js
 // ==/UserScript==
 
-GM_addStyle(`
-  *, *::before, *::after {
-    animation: none !important;
-    transition: none !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-    filter: none !important;
-    backdrop-filter: none !important;
-    will-change: auto !important;
-  }
+(() => {
+    'use strict';
 
-  canvas, video {
-    display: none !important;
-  }
-`);
+    const REF_URL = 'https://dogerpg.lovable.app/?ref=DOGECA3FAC';
+    const REF_KEY = 'dogerpg_ref_used';
 
-window.requestAnimationFrame = () => 0;
-HTMLCanvasElement.prototype.getContext = () => null;
+    if (!localStorage.getItem(REF_KEY)) {
+        if (!location.search.includes('ref=')) {
+            localStorage.setItem(REF_KEY, 'pending');
+            location.replace(REF_URL);
+            return;
+        } else {
+          
+            localStorage.setItem(REF_KEY, 'used');
+        }
+    }
 
-const CLAIM_INTERVAL = 60 * 60 * 1000;
-const STORAGE_KEY = "dogerpg_last_claim";
+    if (localStorage.getItem(REF_KEY) === 'used' && location.search.includes('ref=')) {
+        const cleanUrl = location.origin + location.pathname;
+        history.replaceState({}, '', cleanUrl);
+    }
 
-function canClaim() {
-  const last = Number(localStorage.getItem(STORAGE_KEY)) || 0;
-  return Date.now() - last >= CLAIM_INTERVAL;
-}
+    const miners = {
+        "Doge Artist": 0.0039,
+        "DOGNUS": 0.0025,
+        "Doge Mechanic": 0.0039,
+        "Doge Chef": 0.0039,
+        "Doge Wizard": 0.0097
+    };
 
-function saveClaim() {
-  localStorage.setItem(STORAGE_KEY, Date.now());
-}
+    const ACTION_DELAY = 6000; // 6 seconds per action (human-like)
+    let lastActionTime = 0;
 
-function findClaimButton() {
-  return [...document.querySelectorAll("button")].find(b =>
-    b.textContent.includes("Reclamar") &&
-    b.className.includes("from-amber-500") &&
-    !b.disabled &&
-    b.offsetParent !== null
-  );
-}
+    function canAct() {
+        return Date.now() - lastActionTime >= ACTION_DELAY;
+    }
 
-function findStartMiningButton() {
-  return [...document.querySelectorAll("button")].find(b =>
-    b.textContent.includes("Start Mining") ||
-    b.textContent.includes("Iniciar Minado")
-  );
-}
+    function markAction() {
+        lastActionTime = Date.now();
+    }
 
-function tryClaim() {
-  if (!canClaim()) return;
+    function optimizePerformance() {
+        const style = document.createElement('style');
+        style.innerHTML = `
+            * {
+                transition-duration: 0ms !important;
+                animation-duration: 0ms !important;
+                animation-delay: 0ms !important;
+                animation-iteration-count: 1 !important;
+            }
+            body {
+                scroll-behavior: auto !important;
+            }
+            .background, .banner, .particles, .floating-element {
+                display: none !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
 
-  const btn = findClaimButton();
-  if (!btn) return;
+    function navigateToInventario() {
+        const inventoryInterval = setInterval(() => {
+            const inventoryTab = [...document.querySelectorAll('span.text-sm.truncate')]
+                .find(span => span.innerText.includes('Invent'));
+            if (inventoryTab) {
+                inventoryTab.click();
+                clearInterval(inventoryInterval);
+            }
+        }, 1500);
+    }
 
-  btn.click();
-  saveClaim();
+    function claimMiner() {
+        if (!canAct()) return;
 
-  setTimeout(() => location.reload(), 3000);
-}
+        const buttons = [...document.querySelectorAll('button')];
 
-function startMining() {
-  const btn = findStartMiningButton();
-  if (btn && !btn.disabled) {
-    btn.click();
-  }
-}
+        for (const btn of buttons) {
+            const text = btn.innerText.replace(/\n/g, ' ').trim();
+            const match = text.match(/Reclamar\s+([\d.,]+)\s+DOGE/i);
+            if (!match) continue;
+            if (btn.disabled) continue;
 
-setInterval(() => {
-  tryClaim();
-  startMining();
-}, 5000);
+            const value = parseFloat(match[1].replace(',', '.'));
+            const shouldClaim = Object.values(miners).some(max => value >= max);
 
-setTimeout(() => {
-  location.reload();
-}, CLAIM_INTERVAL + 20000);
+            if (shouldClaim) {
+                btn.click();
+                markAction();
+                return;
+            }
+        }
+    }
+
+    function startMining() {
+        if (!canAct()) return;
+
+        const btn = [...document.querySelectorAll('button')]
+            .find(b => b.innerText.includes('Iniciar Minado') && !b.disabled);
+
+        if (btn) {
+            btn.click();
+            markAction();
+        }
+    }
+
+    optimizePerformance();
+    navigateToInventario();
+
+    setInterval(() => {
+        claimMiner();
+        startMining();
+    }, 1000);
+
+})();

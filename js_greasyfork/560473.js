@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         江江解析 - 多平台VIP视频解析工具
 // @namespace    http://tampermonkey.net/
-// @version      3.1
+// @version      3.11
 // @description  【全网VIP视频免费看】支持腾讯、爱奇艺、优酷、B站、芒果TV等主流平台，提供PotPlayer推送播放（江江独家4K高清）、网页内嵌播放、弹窗播放三种模式，19+解析源可选，自动记忆上次使用的解析源
 // @author       江江解析
 // @license      MIT
@@ -67,7 +67,7 @@
             {
                 name: '江江解析',
                 url: 'http://121.40.174.45:299/api/',
-                key: '64C9D6546228E1F',
+                key: '126BC84CBF41A2A',
                 color: '#3498db',
                 hoverColor: '#2980b9',
                 shadowColor: 'rgba(52, 152, 219, 0.5)',

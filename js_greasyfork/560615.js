@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          FF14物价查询补充-Universalis+Wiki
 // @namespace     FF14-Universalis-CN-L10n
-// @version       1.1.1
+// @version       1.2.0
 // @description   Universalis 新版本物品搜索补全；FF14 灰机Wiki 物品页增加物价链接。
 // @author        桀桀大王@红茶川
 // @match         https://ff14.huijiwiki.com/wiki/*
@@ -21,345 +21,279 @@
 (function() {
     'use strict';
 
-    /**
-     * 配置持久化管理
-     */
-    const config = {
-        getWikiEnabled: () => GM_getValue('ENABLE_WIKI_INTEGRATION', true),
-        getUniEnabled: () => GM_getValue('ENABLE_UNIVERSALIS_ENHANCER', true),
-        setWikiEnabled: (val) => GM_setValue('ENABLE_WIKI_INTEGRATION', val),
-        setUniEnabled: (val) => GM_setValue('ENABLE_UNIVERSALIS_ENHANCER', val)
-    };
-
-    /**
-     * 注册油猴功能菜单，点击后切换状态并刷新页面
-     */
-    function registerMenus() {
-        const wikiStatus = config.getWikiEnabled();
-        const uniStatus = config.getUniEnabled();
-
-        GM_registerMenuCommand(`${wikiStatus ? '✅' : '❌'} 灰机Wiki 添加Universalis链接`, () => {
-            config.setWikiEnabled(!wikiStatus);
-            location.reload();
-        });
-
-        GM_registerMenuCommand(`${uniStatus ? '✅' : '❌'} Universalis 新版本物品搜索补全`, () => {
-            config.setUniEnabled(!uniStatus);
-            location.reload();
-        });
-    }
-
-    registerMenus();
-
-    // ==========================================
-    // 模块一：灰机Wiki 市场集成
-    // ==========================================
-    const WIKI_MODULE = {
-        CONFIG: {
-            LODE_KEY: 'lodestone/playguide/db/item/',
-            GARL_KEY: 'garlandtools.cn/db/#item/',
-            UNI_BASE: 'https://universalis.app/market/',
-            UNIQUE_CLASS: 'uni-market-v12',
-            ICON: 'data:image/png;base64,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', // 按钮图标 Base64
-            UNTRADABLE_TEXT: '不可在市场出售'
+    // 全局配置
+    const CONF = {
+        KEYS: {
+            WIKI: 'CFG_WIKI_ENABLED',      // Wiki模块开关
+            UNI: 'CFG_UNI_ENABLED',        // Universalis模块开关
+            CACHE: 'DATA_CACHE',           // 可交易物品ID集合
+            TIME: 'DATA_TIMESTAMP'         // 缓存更新时间戳(ms)
         },
-        observer: null,
-        fastTimer: null,
-
-        /**
-         * 停止所有监听任务
-         */
-        stopAll: function() {
-            if (this.observer) this.observer.disconnect();
-            if (this.fastTimer) clearInterval(this.fastTimer);
-            this.observer = null;
-            this.fastTimer = null;
+        API: {
+            UNI_MARKET: 'https://universalis.app/api/marketable',
+            GT_SEARCH: 'https://www.garlandtools.cn/api/search.php',
+            GT_ICON: 'https://www.garlandtools.cn/files/icons/item/',
+            GT_DOC: 'https://www.garlandtools.cn/db/doc/item/chs/3/'
         },
-
-        /**
-         * 执行注入逻辑：在Lodestone链接旁插入Universalis跳转链接
-         */
-        processInject: function() {
-            const warningBox = document.querySelector('ul.color-warning');
-            if (warningBox && warningBox.textContent.includes(this.CONFIG.UNTRADABLE_TEXT)) {
-                this.stopAll();
-                return;
-            }
-
-            const lodeLinks = document.querySelectorAll(`a[href*="${this.CONFIG.LODE_KEY}"]`);
-            if (lodeLinks.length === 0) return;
-
-            lodeLinks.forEach(lodeLink => {
-                const lodeRow = lodeLink.closest('li');
-                if (!lodeRow || lodeRow.parentNode.querySelector('.' + this.CONFIG.UNIQUE_CLASS)) return;
-
-                const garlLink = lodeRow.parentNode.querySelector(`a[href*="${this.CONFIG.GARL_KEY}"]`) ||
-                                 document.querySelector(`a[href*="${this.CONFIG.GARL_KEY}"]`);
-
-                if (garlLink) {
-                    const match = garlLink.href.match(/item[\/|=](\d+)/i);
-                    if (match) {
-                        const uniID = match[1];
-                        const officialColor = window.getComputedStyle(lodeLink).color;
-
-                        const uniRow = document.createElement('li');
-                        uniRow.className = (lodeRow.className + ' ' + this.CONFIG.UNIQUE_CLASS).trim();
-
-                        const iconAnchor = document.createElement('a');
-                        iconAnchor.href = this.CONFIG.UNI_BASE + uniID;
-                        iconAnchor.target = "_blank";
-
-                        const img = document.createElement('img');
-                        img.src = this.CONFIG.ICON;
-                        img.style.cssText = "width:16px;height:16px;border:none;vertical-align:middle;";
-                        iconAnchor.appendChild(img);
-
-                        const textAnchor = document.createElement('a');
-                        textAnchor.href = this.CONFIG.UNI_BASE + uniID;
-                        textAnchor.target = "_blank";
-                        textAnchor.className = "external text";
-                        textAnchor.textContent = "Universalis";
-                        textAnchor.style.cssText = `color:${officialColor} !important; text-decoration:none;`;
-
-                        uniRow.appendChild(iconAnchor);
-                        uniRow.appendChild(document.createTextNode(' '));
-                        uniRow.appendChild(textAnchor);
-
-                        lodeRow.parentNode.insertBefore(uniRow, lodeRow);
-                    }
-                }
-            });
-        },
-
-        /**
-         * 启动MutationObserver监听动态内容加载
-         */
-        startWatcher: function() {
-            if (this.observer) return;
-            const target = document.getElementById('mw-content-text') || document.body;
-            this.observer = new MutationObserver(() => this.processInject());
-            this.observer.observe(target, { childList: true, subtree: true });
-            this.processInject();
-        },
-
-        /**
-         * Wiki模块初始化：采用高频轮询+DOM监听+自动停止策略
-         */
-        init: function() {
-            this.fastTimer = setInterval(() => this.processInject(), 100);
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => this.startWatcher());
-            } else {
-                this.startWatcher();
-            }
-
-            // 3秒后降低轮询频率以节省资源
-            setTimeout(() => {
-                if(this.fastTimer) {
-                    clearInterval(this.fastTimer);
-                    this.fastTimer = setInterval(() => this.processInject(), 1000);
-                }
-            }, 3000);
-
-            // 10秒后彻底停止以防内存泄露
-            setTimeout(() => this.stopAll(), 10000);
+        CACHE_TTL: 2592000000,  // 30天
+        ASSETS: {
+            LOGO: 'data:image/webp;base64,UklGRsIEAABXRUJQVlA4TLYEAAAvF8AFEPXIz7btfJ7M8tWKndS2bTv+KfpZsW3Utq0ROkA3Cb4VnmqKjtD/ukwX6ALdAI5s221bUawUgI8M/vxhunZpiAEApG36/y2dB4fgEql7FNZH5AYCQACO/0urtTWH7R/Ara0NjEFsl7YRJ1X6mwAYOq2/k2e1XK9redAK46S+rN1zSymZjSURJju3jinqWqbdn/N77St0JtRBqrYoYXh7yvVGWUr/ousYOd60uhSfSOvrh7f1qf6oIiWLILrCq5IX7pIiyaEsrcOuMQ8F40zUUhT8TH++fK3MVo67dyoin1m4KyeiccRbpy2JSy2NtZX1eaEvOWPU3PpOOfZ6fX1ORMCUY+ZFmGkJUFcgZVjGqLpCAdcOa4dShUTL1ubN1dcYPsKYpvlH70pMGDSUPCEXCSgbUhWkp9Bl/ZN0zq3BIWosv+923mcrxmA2/HcNU36GpLOp/XFzfUPDopmrI3CRgbwSLUeiD3VCooPtgkxRpEniNPjpEC1ZDcO/Oam0665d6IAGcoPUlZQzmClpYm5IpSPIdfojObXuvom8Lz69iUf1VwWJvDFZF5pMXCWM754dphVdm1IU1yYAwArjYGJJURcY4+qC/e1phTdqZ394+rp6VyTclMOROCNCxDjqjQPe85hXUqq4mFXlcWnIYyGAFcaJ+NZk4wSmmoTUDEgebOO+uv3uvBzUoYg8rsUEyzBSYCCnWF4xxKwDdhBSi0FjYRlOF/VjJJjz0s0tJxIcLVyTkMv257D2xFd0e0KO44hMXZnQ4/2jYNhN/NUUqOyY4DXBBa8E56R1bB0YYB4GbVpLHK2VEUo0Lq6U37W97eD29wfpCqdSgqkn68PDeyt2qC5VWoxIUWNDIq0mqXBOGl5KFpbpyQpz/O/V9XkfY4ExpcKIRyJPSUqIkaJUEEsrdYW+tPlXS6CiEJcJqCnG/whEGP9xcxAMto0bQ5pKQZ3XvrO9R5vFqRDqCjaSeNQSzPQRKQpwCf/0GSs6kXJKCu5nPDjmSKg7gTA8FByeB7q89CquTcCyaxdhhHyIzURWbsc+wnqUUi6LTFmwmlRu7B8XGSoakTaKOlrgMehjuNxD3KMfxWfO0XGgh3USQD/nXHNaLogdnMSObzSiKqSISTNRFej+/autWFGJiHOSccjjMUf7E3gs/7FwsRw90dQyDADWNqUYcl5b2man2k5cuIgwLcTiSjQYaCuRcEE4tZQTVGiYWmh43K+CqxVC63jfUefSrLg2AQCg+9+FKiG3L4Txb5Qk1qXKjaWESylRFqDIQM4Y/AlkJTDTkN8oGhzCXnpzq8rrj+U9pQ4AaNLSeqQfSC75zWiuSlIFMmoCUdfpSzWwtCFOD/gfyedejAWhGcpclmH47L9NmD6vq/iMOKkFUONYQ8NLG5YzhFQJEe+st84/kehSZxCLy/jdVJe0EfDPkqYzbAasKmekc0xaDgn26NEOu9hpZ6ekVyGkP6CVMP5XQa6DMY0jFxjSvHeonxAYeNlzUISRQ7GWIK67gGgzFsL0pYJSBWNb6jtaXUq/Gdabze3m+NzxzAidwbnWWV2Grzn1f8FShkyY7KJ0S9SXXKYpuVedy5QS8ogqry2/YCg='
         }
     };
 
-    // ==========================================
-    // 模块二：Universalis 增强补全
-    // ==========================================
-    const UNIVERSALIS_MODULE = {
-        marketableIds: new Set(),
-        CACHE_KEY: 'm_cache',
-        TIME_KEY: 'm_cache_time',
-        CACHE_TTL: 2592000000, // 30天缓存过期
-        scanObserver: null,
-        sleepTimer: null,
-        inputDebounceTimer: null,
+    const STATE = {
+        wiki: GM_getValue(CONF.KEYS.WIKI, true),
+        uni: GM_getValue(CONF.KEYS.UNI, true)
+    };
 
-        /**
-         * 初始化可交易物品ID库（优先读取缓存，过期则从API同步）
-         */
-        initData: function() {
-            const cached = GM_getValue(this.CACHE_KEY);
-            const lastTime = GM_getValue(this.TIME_KEY, 0);
+    // ═════════════════════════════════════════════════════════════════════════════════════════════
+    // Universalis 搜索增强
+    // 通过 Fetch 拦截器和跨域桥接实现搜索结果补全，修复 SPA 页面图标丢失
+    // ═════════════════════════════════════════════════════════════════════════════════════════════
+    const CoreUniversalis = {
+        init() {
+            this.syncCache();
+            this.injectInterceptor();
+            this.bindBridge();
+            this.injectStyles();
+            this.observeDOM();
+        },
 
-            if (cached && (Date.now() - lastTime < this.CACHE_TTL)) {
-                try {
-                    this.marketableIds = new Set(JSON.parse(cached));
-                    return;
-                } catch (e) {}
+        // 同步 Universalis 可交易物品缓存，30天更新一次
+        syncCache() {
+            const now = Date.now();
+            const last = GM_getValue(CONF.KEYS.TIME, 0);
+            if (!GM_getValue(CONF.KEYS.CACHE) || (now - last > CONF.CACHE_TTL)) {
+                GM_xmlhttpRequest({
+                    method: 'GET', url: CONF.API.UNI_MARKET,
+                    onload: r => {
+                        if (r.responseText.length > 100) {
+                            GM_setValue(CONF.KEYS.CACHE, r.responseText);
+                            GM_setValue(CONF.KEYS.TIME, now);
+                        }
+                    }
+                });
             }
+        },
 
-            GM_xmlhttpRequest({
-                method: "GET",
-                url: "https://universalis.app/api/marketable",
-                onload: (res) => {
-                    try {
-                        this.marketableIds = new Set(JSON.parse(res.responseText));
-                        GM_setValue(this.CACHE_KEY, res.responseText);
-                        GM_setValue(this.TIME_KEY, Date.now());
-                    } catch (e) {}
-                }
+        // 注入原生 Fetch 拦截器，拦截搜索请求并注入 GarlandTools 数据
+        injectInterceptor() {
+            const script = document.createElement('script');
+            script.textContent = `
+            (() => {
+                const _origFetch = window.fetch;
+                window.fetch = async (...args) => {
+                    const url = typeof args[0] === 'string' ? args[0] : (args[0]?.url || '');
+
+                    // 仅针对有效搜索请求
+                    if ((url.includes('/api/search') || url.includes('cafemaker')) && !url.includes('?term=&')) {
+                        try {
+                            const u = new URL(url, location.origin);
+                            const q = u.searchParams.get('term') || u.searchParams.get('string');
+                            if (!q || q.length < 2) return _origFetch(...args);
+
+                            // 并发执行原生请求和 GarlandTools 请求
+                            const [nativeRes, gtItems] = await Promise.all([
+                                _origFetch(...args),
+                                new Promise(resolve => {
+                                    const reqId = Math.random().toString(36).slice(2);
+                                    const handler = e => {
+                                        if (e.detail.reqId === reqId) {
+                                            window.removeEventListener('GT_RES', handler);
+                                            resolve(e.detail.data);
+                                        }
+                                    };
+                                    window.addEventListener('GT_RES', handler);
+                                    window.dispatchEvent(new CustomEvent('GT_REQ', { detail: { q, reqId } }));
+                                    setTimeout(() => { window.removeEventListener('GT_RES', handler); resolve([]); }, 2000);
+                                })
+                            ]);
+
+                            if (!nativeRes.ok || !gtItems.length) return nativeRes;
+
+                            // 合并去重搜索结果
+                            const data = await nativeRes.clone().json();
+                            if (data.Results) {
+                                const exist = new Set(data.Results.map(i => i.ID));
+                                const supp = gtItems.filter(i => !exist.has(i.ID)).map(i => ({
+                                    ID: i.ID,
+                                    Name: i.Name,
+                                    Icon: \`/i/\${String(i.Icon).padStart(6,'0').slice(0,3)}000/\${String(i.Icon).padStart(6,'0')}.png\`,
+                                    ItemKind: { Name: "GT" },
+                                    ItemSearchCategory: { Name: "补全" },
+                                    LevelItem: i.LevelItem || 1,
+                                    Rarity: 1,
+                                    isSupplemental: true
+                                }));
+                                data.Results.unshift(...supp);
+                                if (data.Pagination) data.Pagination.ResultsTotal += supp.length;
+                                return new Response(JSON.stringify(data), { status: 200, headers: nativeRes.headers });
+                            }
+                            return nativeRes;
+                        } catch (e) { return _origFetch(...args); }
+                    }
+                    return _origFetch(...args);
+                };
+            })();`;
+            (document.head || document.documentElement).appendChild(script).remove();
+        },
+
+        // 跨域通信桥接，利用 UserScript 权限请求 GarlandTools API
+        bindBridge() {
+            window.addEventListener('GT_REQ', e => {
+                const { q, reqId } = e.detail;
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: `${CONF.API.GT_SEARCH}?text=${encodeURIComponent(q)}&lang=chs&type=item`,
+                    onload: r => {
+                        let data = [];
+                        try {
+                            const raw = JSON.parse(r.responseText);
+                            const cacheStr = GM_getValue(CONF.KEYS.CACHE);
+                            const allowed = cacheStr ? new Set(JSON.parse(cacheStr)) : null;
+                            data = raw
+                                .map(x => ({ ID: parseInt(x.obj.i), Name: x.obj.n, Icon: x.obj.c, LevelItem: x.obj.l }))
+                                .filter(x => !allowed || allowed.has(x.ID));
+                        } catch(err) {}
+                        window.dispatchEvent(new CustomEvent('GT_RES', { detail: { data, reqId } }));
+                    }
+                });
             });
         },
 
-        /**
-         * 注入UI辅助样式
-         */
-        injectStyles: function() {
-            const style = document.createElement('style');
-            style.textContent = `
-                .gt-item-fix { color: #e67e22 !important; font-weight: bold !important; display: inline-flex !important; align-items: center; }
-                .gt-item-fix::after { content: " ➜"; margin-left: 4px; font-size: 2.5em; }
+        // 注入补全项样式
+        injectStyles() {
+            const css = document.createElement('style');
+            css.textContent = `
+                .gt-supp { color: #e67e22 !important; font-weight: 700; font-size: 0.8em !important; }
+                .gt-supp::after { content: '➜'; font-size: 2.2em; vertical-align: middle; margin-left: 2px; }
             `;
-            document.documentElement.appendChild(style);
+            document.head.appendChild(css);
         },
 
-        /**
-         * 劫持 Fetch API：当 Universalis 搜索无结果或结果不全时，混入 GarlandTools 的数据
-         */
-        hijackAPI: function() {
-            const self = this;
-            const originalJson = Response.prototype.json;
-            Response.prototype.json = async function () {
-                const data = await originalJson.call(this);
-                const isSearch = this.url.includes('/api/search') || this.url.includes('cafemaker');
+        // DOM 观察器：标记补全项样式并修复详情页图标丢失
+        observeDOM() {
+            const obs = new MutationObserver(mutations => {
+                let needsScan = false;
+                for (const m of mutations) {
+                    if ((m.type === 'childList' && m.addedNodes.length > 0) ||
+                        (m.type === 'attributes' && m.attributeName === 'src')) {
+                        needsScan = true;
+                        break;
+                    }
+                }
+                if (!needsScan) return;
 
-                if (isSearch && data && Array.isArray(data.Results)) {
-                    try {
-                        const url = new URL(this.url);
-                        const term = url.searchParams.get('term') || url.searchParams.get('string');
+                // 标记"补全"项样式
+                document.querySelectorAll('div,span,td').forEach(el => {
+                    if (el.textContent === '补全' && !el.classList.contains('gt-supp')) {
+                        el.classList.add('gt-supp');
+                        const row = el.closest('tr') || el.closest('[class*="styles_row"]');
+                        if (row) row.style.backgroundColor = 'rgba(230,126,34,0.05)';
+                    }
+                });
 
-                        if (term && term.length >= 2) {
-                            const gtItems = await self.fetchGT(term);
-                            const existingIds = new Set(data.Results.map(i => i.ID));
-
-                            gtItems.reverse().forEach(item => {
-                                // 仅补全 Universalis 库中存在但当前搜索未返回的物品
-                                if (self.marketableIds.has(item.ID) && !existingIds.has(item.ID)) {
-                                    data.Results.unshift({
-                                        ID: item.ID,
-                                        Name: item.Name,
-                                        Icon: `/i/${item.Icon.toString().padStart(6, '0').substring(0, 3)}000/${item.Icon.toString().padStart(6, '0')}.png`,
-                                        LevelItem: item.Lvl || 1,
-                                        ItemKind: { Name: "GT补全" },
-                                        ItemSearchCategory: { ID: 0, Name: "补全" },
-                                        Rarity: 1
-                                    });
+                // 修复详情页缺失图标
+                const mId = location.pathname.match(/\/market\/(\d+)/)?.[1];
+                if (mId) {
+                    const img = document.querySelector('img.item-icon');
+                    if (img && img.dataset.fixed !== mId) {
+                        if (img.naturalWidth === 0 || img.src.includes('undefined') || img.src === '') {
+                            img.dataset.fixed = mId;
+                            GM_xmlhttpRequest({
+                                method: 'GET', url: `${CONF.API.GT_DOC}${mId}.json`,
+                                onload: r => {
+                                    try { img.src = `${CONF.API.GT_ICON}${JSON.parse(r.responseText).item.icon}.png`; }
+                                    catch(e) { img.dataset.fixed = ''; }
                                 }
                             });
-                            if (data.Pagination) data.Pagination.ResultsTotal = data.Results.length;
                         }
-                    } catch (e) {}
+                    }
                 }
-                return data;
-            };
-        },
-
-        /**
-         * 调用 GarlandTools 搜索 API
-         */
-        fetchGT: function(term) {
-            return new Promise(resolve => {
-                GM_xmlhttpRequest({
-                    method: "GET",
-                    url: `https://www.garlandtools.cn/api/search.php?text=${encodeURIComponent(term)}&lang=chs&type=item`,
-                    onload: (res) => {
-                        try {
-                            const results = JSON.parse(res.responseText);
-                            resolve(results.map(i => ({
-                                ID: parseInt(i.obj.i),
-                                Name: i.obj.n,
-                                Icon: i.obj.c,
-                                Lvl: i.obj.l
-                            })));
-                        } catch (e) { resolve([]); }
-                    }
-                });
             });
-        },
 
-        /**
-         * 修复详情页缺失或损坏的图标
-         */
-        fixDetailIcon: function() {
-            if (document.hidden) return;
-            const img = document.querySelector('img.item-icon');
-            if (!img || img._fixed) return;
-
-            if (img.src.includes('error.png') || img.naturalWidth === 0) {
-                const itemId = window.location.pathname.match(/\/market\/(\d+)/)?.[1];
-                if (!itemId) return;
-
-                img._fixed = true;
-                GM_xmlhttpRequest({
-                    method: "GET",
-                    url: `https://www.garlandtools.cn/db/doc/item/chs/3/${itemId}.json`,
-                    onload: (res) => {
-                        try {
-                            const iconId = JSON.parse(res.responseText).item.icon;
-                            img.removeAttribute('srcset');
-                            img.src = `https://www.garlandtools.cn/files/icons/item/${iconId}.png`;
-                        } catch (e) { img._fixed = false; }
-                    }
-                });
-            }
-        },
-
-        /**
-         * 启动 DOM 扫描，为补全的物品添加视觉标记
-         */
-        startScanning: function() {
-            if (this.scanObserver) {
-                clearTimeout(this.sleepTimer);
-                this.sleepTimer = setTimeout(() => this.stopScanning(), 5000);
-                return;
-            }
-            this.scanObserver = new MutationObserver(() => {
-                document.querySelectorAll('div, span, td').forEach(el => {
-                    if (el.textContent === "补全" && !el.classList.contains('gt-item-fix')) {
-                        el.classList.add('gt-item-fix');
-                    }
-                });
-            });
-            this.scanObserver.observe(document.body, { childList: true, subtree: true });
-            this.sleepTimer = setTimeout(() => this.stopScanning(), 5000);
-        },
-
-        stopScanning: function() {
-            if (this.scanObserver) {
-                this.scanObserver.disconnect();
-                this.scanObserver = null;
-            }
-        },
-
-        init: function() {
-            this.initData();
-            this.injectStyles();
-            this.hijackAPI();
-            setInterval(() => this.fixDetailIcon(), 1500);
-
-            // 仅在用户输入搜索时激活 UI 扫描，减少静止状态下的开销
-            document.addEventListener('input', (e) => {
-                const t = e.target;
-                if (t && (t.tagName === 'INPUT' || t.type === 'text')) {
-                    clearTimeout(this.inputDebounceTimer);
-                    this.inputDebounceTimer = setTimeout(() => this.startScanning(), 200);
-                }
-            }, true);
+            obs.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
         }
     };
 
-    // 执行初始化
-    const currentHost = window.location.hostname;
-    if (config.getWikiEnabled() && currentHost.includes('huijiwiki.com')) {
-        WIKI_MODULE.init();
+    // ═════════════════════════════════════════════════════════════════════════════════════════════
+    // 灰机 Wiki 增强
+    // 在物品页面自动注入 Universalis 市场链接，排除不可交易物品
+    // ═════════════════════════════════════════════════════════════════════════════════════════════
+    const CoreWiki = {
+        init() {
+            const target = document.getElementById('mw-content-text') || document.body;
+            if (document.readyState !== 'loading') this.process(target);
+
+            const obs = new MutationObserver(() => this.process(target));
+            obs.observe(target, { childList: true, subtree: true });
+            this.observer = obs;
+        },
+
+        injectStyles() {
+            if (document.getElementById('uni-wiki-style')) return;
+            const css = document.createElement('style');
+            css.id = 'uni-wiki-style';
+            css.textContent = `
+                .uni-link-box { display: flex; align-items: center; gap: 4px; margin: 2px 0 4px; font-size: 14px; }
+                .uni-link-box a { color: #77d1ff !important; text-decoration: none !important; }
+                .uni-icon { width: 16px; height: 16px; vertical-align: middle; }
+            `;
+            document.head.appendChild(css);
+        },
+
+        process(target) {
+            // 排除不可交易物品
+            const warn = target.querySelector('ul.color-warning');
+            if (warn && warn.textContent.includes('不可在市场出售')) {
+                if (this.observer) this.observer.disconnect();
+                return;
+            }
+
+            const anchors = target.querySelectorAll('a[href*="lodestone/playguide/db/item/"]');
+            if (!anchors.length) return;
+
+            let injectedCount = 0;
+            anchors.forEach(node => {
+                const li = node.closest('li');
+                if (!li || li.dataset.uni) return;
+
+                // 通过相邻 GarlandTools 链接反推物品 ID
+                const gtUrl = li.parentNode.querySelector('a[href*="garlandtools"]')?.href;
+                const id = gtUrl?.match(/\/(\d+)\/?$/)?.[1] || gtUrl?.match(/#item\/(\d+)/)?.[1];
+
+                if (id) {
+                    li.dataset.uni = '1';
+                    const div = document.createElement('div');
+                    div.className = 'uni-link-box';
+                    div.innerHTML = `<img src="${CONF.ASSETS.LOGO}" class="uni-icon">
+                                     <a href="https://universalis.app/market/${id}" target="_blank" class="external text">Universalis</a>`;
+                    li.parentNode.insertBefore(div, li);
+                    injectedCount++;
+                }
+            });
+
+            if (injectedCount > 0) {
+                this.injectStyles();
+                if (this.observer) this.observer.disconnect();
+            }
+        }
+    };
+
+    // 程序入口
+    function initMenu() {
+        const toggle = (k, v) => { GM_setValue(k, !v); location.reload(); };
+        GM_registerMenuCommand(`${STATE.wiki ? '✅' : '❌'} 灰机Wiki 添加Universalis链接`, () => toggle(CONF.KEYS.WIKI, STATE.wiki));
+        GM_registerMenuCommand(`${STATE.uni ? '✅' : '❌'} Universalis 新版本物品搜索补全`, () => toggle(CONF.KEYS.UNI, STATE.uni));
     }
-    if (config.getUniEnabled() && currentHost.includes('universalis.app')) {
-        UNIVERSALIS_MODULE.init();
+
+    function dispatchRoute() {
+        const host = location.hostname;
+        if (STATE.uni && host.includes('universalis.app')) CoreUniversalis.init();
+        else if (STATE.wiki && host.includes('huijiwiki.com')) CoreWiki.init();
     }
+
+    initMenu();
+    dispatchRoute();
 
 })();

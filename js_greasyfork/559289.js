@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Kitty Buttercup FAM Tree 🧬
 // @namespace http://tampermonkey.net/
-// @version 3.5
+// @version 3.9
 // @description Inject all custom groups (RIIZE to Kawate) into Kitty Buttercup's family tree, with ID on hover
 // @match https://*.popmundo.com/World/Popmundo.aspx/Character/FamilyTree/2887796
 // @match https://*.popmundo.com/World/Popmundo.aspx/Character/FamilyTree/3065847
@@ -94,8 +94,8 @@
 
     // --- Data Definitions (split Wanderers into Heist + Wanderers) ---
     const heist = [
-        [3577905, "Kia Rivera", 27, "https://res.cloudinary.com/dlgjqlsb3/image/upload/v1762610378/11_qfpht7.png"],
-        [3579423, "Tomie Ito 富江", 19, "https://res.cloudinary.com/dlgjqlsb3/image/upload/v1767283555/4_ekcfl3.jpg"],
+        [3577905, "Kia Rivera", 27, "https://i.imgur.com/fzC4pk5.jpeg"],
+        [3579423, "Lola Lemon", 19, "https://res.cloudinary.com/dlgjqlsb3/image/upload/v1767283555/4_ekcfl3.jpg"],
         [3065847, "Rei Xie", 22, "https://res.cloudinary.com/dlgjqlsb3/image/upload/v1767282681/1_mluirc.jpg"],
     ];
 
@@ -103,6 +103,8 @@
         [3247354, "Kitti Gillis", 21, "https://i.imgur.com/Hn5ojCP.png"],
         [3602175, "Ruby Ross", 14, "https://res.cloudinary.com/dlgjqlsb3/image/upload/v1767283608/6_upaeug.jpg"],
         [3616694, "Betty Doty", 22, "https://i.imgur.com/JwXJnox.png"],
+        [3602139, "Nova Xie", 19, "https://res.cloudinary.com/dlgjqlsb3/image/upload/v1767283497/3_vrvv93.jpg"],
+        [3616012, "Tomie Xie", 19, "https://images2.imgbox.com/69/93/4tnIOc3m_o.png"],
     ];
 
     const oddyssey = [
@@ -117,6 +119,12 @@
   const kawate = [
           [3620400, "Chuu Xxnana", 18, "https://i.imgur.com/lI6k2NS.png"],
           [3620479, "Yuqi Kawai 㡺", 19, "https://images2.imgbox.com/2f/f1/liQ0gbfy_o.png"],
+          [3613365, "Ryuzen 月影", 19, "https://images2.imgbox.com/ba/eb/ENnidk0A_o.png"],
+          [3609829, "Alina Burrell", 19, "https://i.imgur.com/2Rph8il.png"],
+          [3614576, "Ruth Kemp", 19, "https://i.imgur.com/uxoFftH.jpeg"],
+          [3580037, "Ruby Hamm", 19, "https://i.imgur.com/pIjqdSr.jpeg"],
+          [3613832, "Kookie XXIN ア", 19, "https://images2.imgbox.com/db/69/g1LhQ9Jb_o.jpg"],
+          [3613871, "Yuki Makino", 19, "https://i.imgur.com/NKU5xqv.jpeg"],
    ];
     // --- End Data Definitions ---
 

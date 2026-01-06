@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Scholar - Research Assistant
 // @namespace    http://greasyfork.org/
-// @version      1.8
+// @version      1.9
 // @description  An all-in-one Google Scholar enhancement tool: automatically discovers PDF links using DOIs (via Sci-Hub, Sci-Net, Unpaywall, Semantic Scholar), validates if links are direct PDFs, provides batch download and copy-to-clipboard functionality, auto-renames downloaded files using article titles, and automates loading up to 50 results in Scholar Labs.
 // @author       Bui Quoc Dung
 // @match        https://scholar.google.com/*
@@ -43,7 +43,7 @@
     let waitingForReappearance = false;
 
     const COPY_ICON_SVG = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="#70757a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none"><rect x="9" y="9" width="11" height="11" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
-    const SUCCESS_ICON_SVG = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="#2e7d32" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    const SUCCESS_ICON_SVG = `<svg viewBox="0 0 24 24" width="14" height="14" stroke="#70757a" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
     const btnStyle = `
         margin-left: 8px;
@@ -289,7 +289,7 @@
         copyBtn.onclick = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            GM_setClipboard(doi);
+            GM_setClipboard("https://doi.org/" + doi);
             copyBtn.innerHTML = SUCCESS_ICON_SVG;
             setTimeout(() => { copyBtn.innerHTML = COPY_ICON_SVG; }, 1500);
         };
@@ -398,10 +398,10 @@
             renderDOILine(el, doi);
 
             const providers = [
-                { name: 'semantic', fn: searchSemantic },
-                { name: 'unpaywall', fn: searchUnpaywall },
                 { name: 'scihub', fn: searchSciHub },
                 { name: 'scinet', fn: searchSciNet },
+                { name: 'semantic', fn: searchSemantic },
+                { name: 'unpaywall', fn: searchUnpaywall },
             ];
 
             let foundPdf = false;

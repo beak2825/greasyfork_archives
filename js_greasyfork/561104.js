@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name High-Low Oracle (WIP) v3.5.0
+// @name High-Low Oracle (WIP) v3.5.2
 // @namespace http://tampermonkey.net/
-// @version 3.5.0
-// @description v3.4.9 + Full Description Help Page
+// @version 3.5.2
+// @description v3.5.1 Fix: Prevent repositioning after card input
 // @author Gemini
 // @match *://www.torn.com/page.php?sid=highlow*
 // @run-at document-start
-// @downloadURL https://update.greasyfork.org/scripts/561104/High-Low%20Oracle%20%28WIP%29%20v350.user.js
-// @updateURL https://update.greasyfork.org/scripts/561104/High-Low%20Oracle%20%28WIP%29%20v350.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561104/High-Low%20Oracle%20%28WIP%29%20v352.user.js
+// @updateURL https://update.greasyfork.org/scripts/561104/High-Low%20Oracle%20%28WIP%29%20v352.meta.js
 // ==/UserScript==
 
 (function() {
@@ -32,10 +32,10 @@
     const save = () => localStorage.setItem('hi_lo_stable_state', JSON.stringify(state));
 
     const injectStyles = () => {
-        const old = document.getElementById('oracle-v350-css');
+        const old = document.getElementById('oracle-v352-css');
         if (old) return;
         const s = document.createElement('style');
-        s.id = 'oracle-v350-css';
+        s.id = 'oracle-v352-css';
         s.innerHTML = `
             #oracle-root {
                 position: fixed !important; z-index: 2147483640 !important;
@@ -77,48 +77,45 @@
 
     const render = () => {
         let container = document.getElementById('oracle-root');
-        if (container) container.remove();
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'oracle-root';
+            document.body.appendChild(container);
+        }
         
+        // Sync style position without re-injecting full CSS
+        container.style.left = state.pos.x + 'px';
+        container.style.top = state.pos.y + 'px';
+
         if (state.helpOpen) {
-            let overlay = document.getElementById('help-overlay');
-            if (!overlay) {
-                overlay = document.createElement('div');
-                overlay.id = 'help-overlay';
-                overlay.innerHTML = `
+            container.innerHTML = `
+                <div id="help-overlay">
                     <h2 style="color:#00ffcc; margin-bottom:20px;">🎮 The Workflow</h2>
                     <div class="help-section">
                         <p>1. Log <b>DEALER</b> card first (Value + Suit), click <b>ADD</b>.</p>
                         <p>2. Follow the <b>HIGHER/LOWER</b> command.</p>
                         <p>3. Log <b>YOUR</b> card (Player), click <b>ADD</b>.</p>
-                        <p>4. Wait for <b>🔵 CONTINUE</b> before starting the next turn.</p>
+                        <p>4. Wait for <b>🔵 CONTINUE</b> before next turn.</p>
+                        <p>5. Paste DNA into a message to Profile 3262527 after tokens are spent.</p>
                     </div>
-
                     <h2 style="color:#00ffcc; margin-bottom:20px;">🧬 DNA & Shuffle Logic</h2>
                     <div class="help-section">
                         <span class="help-h">Manual Shuffles</span>
-                        <p>Click <b>SHUFFLE</b> only when the game resets, you reload, or start a new session. This logs an [S] marker in the DNA.</p>
+                        <p>Click <b>SHUFFLE</b> only when the game resets. This logs an [S] marker.</p>
                         <span class="help-h">Pairing</span>
-                        <p>The logic now tracks every card Value and Suit as a pair for daily analysis.</p>
+                        <p>Every card Value and Suit is paired in the history log.</p>
                     </div>
-
                     <h2 style="color:#00ffcc; margin-bottom:20px;">🆘 Recovery</h2>
                     <div class="help-section">
                         <span class="help-h">Stuck UI</span>
                         <p>If the Oracle is off-screen, <b>Long-Press the SHUFFLE button for 2 seconds</b> to snap it back to center.</p>
                     </div>
-                    
                     <div class="help-close">RETURN TO ORACLE</div>
-                `;
-                document.body.appendChild(overlay);
-                injectStyles();
-                overlay.querySelector('.help-close').onclick = () => { state.helpOpen = false; overlay.remove(); render(); };
-            }
+                </div>`;
+            container.querySelector('.help-close').onclick = () => { state.helpOpen = false; render(); };
             return;
         }
 
-        container = document.createElement('div');
-        container.id = 'oracle-root';
-        document.body.appendChild(container);
         injectStyles();
 
         const d = (v) => v===14?'A':v===11?'J':v===12?'Q':v===13?'K':v;
@@ -141,7 +138,7 @@
             icon = '🤔';
         }
 
-        let content = `<div class="header-bar" id="drag-handle"><div id="help-trigger">?</div><div style="font-size:10px; color:#00ffcc;">ORACLE (WIP) v3.5.0</div><div id="dna-btn">DNA</div></div>`;
+        let content = `<div class="header-bar" id="drag-handle"><div id="help-trigger">?</div><div style="font-size:10px; color:#00ffcc;">ORACLE (WIP) v3.5.2</div><div id="dna-btn">DNA</div></div>`;
 
         if (state.gridOpen) {
             content += `<div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top:10px;">
@@ -171,6 +168,16 @@
 
         container.innerHTML = content;
 
+        const tap = (id, fn) => { const el = container.querySelector(id); if(el) el.onclick = (e) => { e.preventDefault(); fn(); render(); }; };
+        
+        container.querySelectorAll('.val-sel').forEach(el => {
+            el.onclick = () => { state.selectedVal = parseInt(el.dataset.val); state.gridOpen = false; state.suitGridOpen = true; render(); };
+        });
+
+        container.querySelectorAll('.suit-sel').forEach(el => {
+            el.onclick = () => { state.selectedSuit = el.dataset.suit; state.suitGridOpen = false; render(); };
+        });
+
         const handle = container.querySelector('#drag-handle');
         handle.onpointerdown = (e) => {
             const startX = e.clientX - state.pos.x;
@@ -186,30 +193,27 @@
             document.addEventListener('pointermove', moveDrag); document.addEventListener('pointerup', stopDrag);
         };
 
-        const tap = (id, fn) => { const el = container.querySelector(id); if(el) el.onclick = () => { fn(); render(); }; };
         tap('#help-trigger', () => { state.helpOpen = true; });
         tap('#dna-btn', () => { 
             const data = btoa(JSON.stringify({ deck: state.deck, history: state.history, suitHistory: state.suitHistory }));
-            navigator.clipboard.writeText(data).then(() => alert("DNA Copied (v3.5.0)"));
+            navigator.clipboard.writeText(data).then(() => alert("DNA Copied (v3.5.2)"));
         });
 
         const resetBtn = container.querySelector('#reset-btn');
         let pressTimer;
-        resetBtn.onpointerdown = () => { pressTimer = window.setTimeout(() => { centerUI(container); alert("Position Reset!"); }, 2000); };
-        resetBtn.onpointerup = () => { clearTimeout(pressTimer); };
-        resetBtn.onclick = () => { 
-            state.deck = getFreshDeck(); state.history = []; state.suitHistory = [];
-            state.displayDealer = '--'; state.displayPlayer = '--'; state.displayDealerSuit = ''; state.displayPlayerSuit = '';
-            state.isShuffled = true; state.phase = "DEALER"; state.gridOpen = false; state.suitGridOpen = false;
-            save(); render();
-        };
+        if(resetBtn) {
+            resetBtn.onpointerdown = () => { pressTimer = window.setTimeout(() => { centerUI(container); alert("Position Reset!"); }, 2000); };
+            resetBtn.onpointerup = () => { clearTimeout(pressTimer); };
+            resetBtn.onclick = () => { 
+                state.deck = getFreshDeck(); state.history = []; state.suitHistory = [];
+                state.displayDealer = '--'; state.displayPlayer = '--'; state.displayDealerSuit = ''; state.displayPlayerSuit = '';
+                state.isShuffled = true; state.phase = "DEALER"; state.gridOpen = false; state.suitGridOpen = false;
+                save(); render();
+            };
+        }
 
         tap('#open-val', () => { state.gridOpen = true; });
         tap('#open-suit', () => { state.suitGridOpen = true; });
-        
-        container.querySelectorAll('.val-sel').forEach(el => el.onclick = () => { state.selectedVal = parseInt(el.dataset.val); state.gridOpen = false; state.suitGridOpen = true; render(); });
-        container.querySelectorAll('.suit-sel').forEach(el => el.onclick = () => { state.selectedSuit = el.dataset.suit; state.suitGridOpen = false; render(); });
-        
         tap('#add-btn', () => {
             if (state.deck[state.selectedVal] > 0) {
                 state.isShuffled = false;

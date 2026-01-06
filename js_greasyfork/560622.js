@@ -1,17 +1,15 @@
 // ==UserScript==
-// @name Funr3g
-// @description we do a little trolling
-// @version 4.2.9
-// @author crackbob
-// @homepage https://github.com/crackbob/Minebuns
-// @supportURL https://github.com/crackbob/Minebuns
+// @name 日本語版Minebuns
+// @description br
+// @version 4.3.0
+// @author さぎーん
 // @match *://minefun.io/*
 // @grant none
 // @namespace http://tampermonkey.net/
-// @downloadURL https://update.greasyfork.org/scripts/560622/Funr3g.user.js
-// @updateURL https://update.greasyfork.org/scripts/560622/Funr3g.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560622/%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88Minebuns.user.js
+// @updateURL https://update.greasyfork.org/scripts/560622/%E6%97%A5%E6%9C%AC%E8%AA%9E%E7%89%88Minebuns.meta.js
 // ==/UserScript==
- 
+
 (() => {
     "use strict";
     var __webpack_modules__ = {
@@ -59,7 +57,7 @@
             },
             72: e => {
                 var t = [];
- 
+
                 function n(e) {
                     for (var n = -1, o = 0; o < t.length; o++)
                         if (t[o].identifier === e) {
@@ -67,7 +65,7 @@
                             break
                         } return n
                 }
- 
+
                 function o(e, o) {
                     for (var i = {}, a = [], r = 0; r < e.length; r++) {
                         var l = e[r],
@@ -96,7 +94,7 @@
                     }
                     return a
                 }
- 
+
                 function s(e, t) {
                     var n = t.domAPI(t);
                     return n.update(e),
@@ -210,7 +208,7 @@
             }
         },
         __webpack_module_cache__ = {};
- 
+
     function __webpack_require__(e) {
         var t = __webpack_module_cache__[e];
         if (void 0 !== t) return t.exports;
@@ -274,7 +272,7 @@
     }
     class ArrayList extends Module {
         constructor() {
-            super("Arraylist", "Visual"), this.namesMap = {}, this.arraylistContainer = null, this.initialized = !1
+            super("ハックリスト", "ビジュアル"), this.namesMap = {}, this.arraylistContainer = null, this.initialized = !1
         }
         update(e, t) {
             if (t) {
@@ -312,8 +310,8 @@
     var hooks = __webpack_require__(548);
     class Watermark extends Module {
         constructor() {
-            super("Watermark", "Visual", {
-                Text: "Minebuns"
+            super("ウォーターマーク", "ビジュアル", {
+                テキスト: "Minebuns日本語版"
             })
         }
         onSettingUpdate() {
@@ -455,7 +453,7 @@
     const styles_clickgui = clickgui.A && clickgui.A.locals ? clickgui.A.locals : void 0;
     class ClickGUI extends Module {
         constructor() {
-            super("ClickGUI", "Visual", {
+            super("ハック一覧", "ビジュアル", {
                 "Accent Color 1": "rgb(64, 190, 255)",
                 "Accent Color 2": "rgb(129, 225, 255)",
                 "Button Color": "rgb(40, 40, 40, 0.9)",
@@ -482,25 +480,25 @@
             this.panels.forEach((e => {
                 e.panel && e.panel.parentNode && e.panel.parentNode.removeChild(e.panel)
             })), this.panels = [], [{
-                title: "Combat",
+                title: "戦闘系",
                 position: {
                     top: "100px",
                     left: "100px"
                 }
             }, {
-                title: "Movement",
+                title: "移動系",
                 position: {
                     top: "100px",
                     left: "320px"
                 }
             }, {
-                title: "Visual",
+                title: "ビジュアル",
                 position: {
                     top: "100px",
                     left: "540px"
                 }
             }, {
-                title: "Misc",
+                title: "その他",
                 position: {
                     top: "100px",
                     left: "760px"
@@ -537,7 +535,7 @@
     }
     class Airjump extends Module {
         constructor() {
-            super("Airjump", "Movement", null)
+            super("オートジャンプ", "移動系", null)
         }
         onRender() {
             hooks.A?.gameWorld?.player && (hooks.A.gameWorld.player.collision.isGrounded = !0)
@@ -545,7 +543,7 @@
     }
     class Instabreak extends Module {
         constructor() {
-            super("Instabreak", "Misc", null), this.originalHardness = new Map
+            super("一発破壊", "その他", null), this.originalHardness = new Map
         }
         onEnable() {
             Object.values(hooks.A.gameWorld.items).forEach((e => {
@@ -560,42 +558,42 @@
     }
     class Nuker extends Module {
     constructor() {
-        super("Nuker", "Misc", {
-            Radius: 1,
-            "Chunk Interval": 1000
+        super("地形削り", "その他", {
+            範囲: 4,
+            "チャンク": 1000
         });
         this.lastExecutionTime = 0;
     }
- 
+
     onRender() {
         const world = hooks.A?.gameWorld;
         if (!world?.player || !world?.chunkManager) return;
- 
+
         // Garantir tipos numéricos
         const radius = Math.max(0, parseInt(this.options.Radius) || 0);
         const interval = Math.max(0, parseInt(this.options["Chunk Interval"]) || 1000);
- 
+
         const now = Date.now();
         if (now - this.lastExecutionTime < interval) return;
         this.lastExecutionTime = now;
- 
+
         // Extrai e floor das coordenadas do jogador corretamente
         const playerPos = world.player.position;
         const playerX = Math.floor(playerPos.x);
         const playerY = Math.floor(playerPos.y);
         const playerZ = Math.floor(playerPos.z);
- 
+
         for (let dx = -radius; dx <= radius; dx++) {
             for (let dy = -radius; dy <= radius; dy++) {
                 for (let dz = -radius; dz <= radius; dz++) {
- 
+
                     const x = playerX + dx;
                     const y = playerY + dy;
                     const z = playerZ + dz;
- 
+
                     // NÃO destruir **nenhum** bloco que esteja exatamente uma unidade abaixo dos pés do jogador
                     if (y === playerY - 1) continue;
- 
+
                     try {
                         const block = world.chunkManager.getBlock(x, y, z);
                         if (block !== 0) {
@@ -610,11 +608,11 @@
         }
     }
 }
- 
- 
+
+
     class AdBypass extends Module {
         constructor() {
-            super("AdBypass", "Misc")
+            super("広告無効", "その他")
         }
         onEnable() {
             this._reward = this._reward || hooks.A.stores.adsStore.rewardCommercialVideoWrapper, hooks.A.stores.adsStore.rewardCommercialVideoWrapper = () => !0
@@ -627,23 +625,23 @@
 
 class Nuker1 extends Module {
     constructor() {
-        super("Nuker1", "Misc", {
+        super("地形削り1", "その他", {
             // Opções do módulo
-            Distance: 3, 
-            "Chunk Interval": 1000
+            範囲: 3,
+            "チャンク": 1000
         });
-        
+
         // Adiciona a propriedade de atalho de tecla (KeyZ)
-        // O nome da propriedade pode variar dependendo do seu framework, 
+        // O nome da propriedade pode variar dependendo do seu framework,
         // mas vou usar 'toggleKey' conforme sua sintaxe de exemplo.
-        this.toggleKey = "KeyZ"; 
+        this.toggleKey = "KeyZ";
         this.lastExecutionTime = 0;
     }
 
     // Função auxiliar para calcular o vetor de direção do olhar (look vector)
     getLookVector(playerRotation) {
-        const yaw = playerRotation.y; 
-        const pitch = playerRotation.x; 
+        const yaw = playerRotation.y;
+        const pitch = playerRotation.x;
         const x = -Math.sin(yaw) * Math.cos(pitch);
         const y = Math.sin(pitch);
         const z = Math.cos(yaw) * Math.cos(pitch);
@@ -653,36 +651,36 @@ class Nuker1 extends Module {
     onRender() {
         const world = hooks.A?.gameWorld;
         // O código de quebra só será executado se o módulo estiver ativo (this.enabled)
-        if (!world?.player || !world?.chunkManager || !this.enabled) return; 
+        if (!world?.player || !world?.chunkManager || !this.enabled) return;
 
         // Restante do código 3x3x1
-        const distance = Math.max(1, parseInt(this.options.Distance) || 3); 
+        const distance = Math.max(1, parseInt(this.options.Distance) || 3);
         const interval = Math.max(0, parseInt(this.options["Chunk Interval"]) || 1000);
-        const radius = 1; 
+        const radius = 1;
 
         const now = Date.now();
         if (now - this.lastExecutionTime < interval) return;
         this.lastExecutionTime = now;
-        
+
         const playerPos = world.player.position;
-        const playerRot = world.player.rotation; 
+        const playerRot = world.player.rotation;
         const lookVector = this.getLookVector(playerRot);
 
         const center_X_float = playerPos.x + lookVector.x * distance;
-        const center_Y_float = playerPos.y + world.player.height / 2 + lookVector.y * distance; 
+        const center_Y_float = playerPos.y + world.player.height / 2 + lookVector.y * distance;
         const center_Z_float = playerPos.z + lookVector.z * distance;
-        
+
         const centerX = Math.floor(center_X_float);
-        const centerY = Math.floor(center_Y_float); 
+        const centerY = Math.floor(center_Y_float);
         const centerZ = Math.floor(center_Z_float);
 
         for (let dx = -radius; dx <= radius; dx++) {
-            for (let dy = -radius; dy <= radius; dy++) { 
-                
+            for (let dy = -radius; dy <= radius; dy++) {
+
                 const x = centerX + dx;
                 const y = centerY + dy;
-                const z = centerZ; 
-                
+                const z = centerZ;
+
                 try {
                     const block = world.chunkManager.getBlock(x, y, z);
                     if (block !== 0) {
@@ -700,25 +698,25 @@ class Nuker1 extends Module {
 
 class Fly extends Module {
     constructor() {
-        super("Fly", "Movement", {
-            "Vertical Speed": 5
+        super("浮遊", "移動系", {
+            "速度": 15
         });
         this.toggleKey = "KeyF"; // Tecla para ativar/desativar (F)
         document.addEventListener("keydown", this.handleKeyPress.bind(this));
     }
- 
+
     handleKeyPress(e) {
         if (e.code === this.toggleKey && !e.repeat) {
             this.toggle(); // ativa ou desativa o módulo
         }
     }
- 
+
     onRender() {
         const player = hooks.A?.gameWorld?.player;
         if (!player) return;
- 
+
         player.velocity.gravity = 0;
- 
+
         if (player.inputs.jump) {
             player.velocity.velVec3.y = this.options["Vertical Speed"];
         } else if (player.inputs.crouch) {
@@ -727,7 +725,7 @@ class Fly extends Module {
             player.velocity.velVec3.y = 0;
         }
     }
- 
+
     onDisable() {
         const player = hooks.A?.gameWorld?.player;
         if (player) player.velocity.gravity = 23;
@@ -735,8 +733,8 @@ class Fly extends Module {
 }
     class Speed extends Module {
         constructor() {
-            super("Speed", "Movement", {
-                Speed: 6
+            super("移動速度", "移動系", {
+                速度: 7.1
             })
         }
         onRender() {
@@ -750,7 +748,7 @@ class Fly extends Module {
 
     class FreeMinebucks extends Module {
         constructor() {
-            super("Minebucks", "Misc")
+            super("札束10", "その他")
         }
         onEnable() {
             hooks.A.network.get("/users/freeHeadcoins"), hooks.A.stores.userState.user.balance.minebucks += 10, module_moduleManager.modules.minebucks.disable()
@@ -759,18 +757,63 @@ class Fly extends Module {
 
     class FreeSpins extends Module {
         constructor() {
-            super("freeSpins", "Misc")
+            super("無料スピン", "その他")
         }
         onEnable() {
             hooks.A.network.get("/users/freeSpinner"), hooks.A.stores.userState.user.balance.freeSpinner += 10, module_moduleManager.modules.freeSpinner.disable()
         }
     }
 
+  class NoFall extends Module {
+    constructor() {
+        super("落下無効", "ビジュアル", null);
+    }
+        onEnable() {
+            U.listeners.NoFall = function(e, t) {
+                if (e == U.toServer.TIME_STEP_INFO && t.lp) {
+                    let e = t.lp[3];
+                    e > 0 && (t.lp[3] *= .01), e < 0 && (t.lp[3] = -.01), 0 == e && (t.lp[3] = -.01)
+                }
+            }
+        }
+        onDisable() {
+            delete U.listeners.NoFall
+        }
+    }
 
+class NoHunger extends Module {
+    constructor() {
+        super("空腹無効", "ビジュアル", null);
+    }
+        onEnable() {
+            U.listeners.NoHunger = function(e, t) {
+                e == U.toServer.TIME_STEP_INFO && (t.m && delete t.m, t.s && delete t.s, t.j && delete t.j)
+            }
+        }
+        onDisable() {
+            delete U.listeners.NoHunger
+        }
+    }
+    class NoDrown extends Module {
+    constructor() {
+        super("溺死無効", "ビジュアル", null);
+    }
+        get damageListener() {
+            return a.gameWorld.eventEmitter._events.get(48).values().next().value
+        }
+        onRender() {
+            a?.gameWorld?.eventEmitter?._events && this.damageListener.callback.toString().includes("damageToApply") && (this.damageListener.callback = () => {})
+        }
+        onDisable() {
+            a?.gameWorld?.eventEmitter?._events && (this.damageListener.callback = e => {
+                this.damageToApply += e
+            })
+        }
+    }
 
     class FreeHeadcoins extends Module {
         constructor() {
-            super("FreeHeadcoins", "Misc")
+            super("無料ヘッドコイン", "その他")
         }
         onEnable() {
             hooks.A.network.get("/users/freeHeadcoins"), hooks.A.stores.userState.user.balance.headcoins += 10, module_moduleManager.modules.FreeHeadcoins.disable()
@@ -778,10 +821,10 @@ class Fly extends Module {
     }
     class Fill extends Module {
         constructor() {
-            super("Fill", "Misc", {
-                Radius: 4,
-                "Block ID": 472,
-                "Chunk Interval": 500
+            super("範囲設置", "その他", {
+                範囲: 4,
+                "ブロック ID": 1,
+                "チャンク": 500
             }), this.lastExecutionTime = 0
         }
         onRender() {
@@ -803,9 +846,9 @@ class Fly extends Module {
     }
     class Chams extends Module {
     constructor() {
-        super("Chams", "Visual", null);
+        super("スキン透視", "ビジュアル", null);
     }
- 
+
     onRender() {
         try {
             hooks.A?.gameWorld?.server?.players.forEach((plr) => {
@@ -814,7 +857,7 @@ class Fly extends Module {
             });
         } catch {}
     }
- 
+
     onDisable() {
         try {
             hooks.A?.gameWorld?.server?.players.forEach((plr) => {
@@ -825,23 +868,23 @@ class Fly extends Module {
 }
     class FOVChanger extends Module {
     constructor() {
-        super("FOVChanger", "Visual", {
-            FOV: 120
+        super("視野", "ビジュアル", {
+            視野範囲: 120
         });
         this.originalFOV = null;
     }
- 
+
     onEnable() {
         let cam = hooks.A?.gameWorld?.threeScene?.camera;
         if (cam) {
             this.originalFOV = cam.fov; // salva o FOV original
         }
     }
- 
+
     onRender() {
         let cam = hooks.A?.gameWorld?.threeScene?.camera;
         if (!cam) return;
- 
+
         const newFOV = parseFloat(this.options.FOV);
         if (cam.fov !== newFOV) {
             cam.fov = newFOV;
@@ -849,7 +892,7 @@ class Fly extends Module {
             hooks.A.gameWorld.player.settings.fov = newFOV;
         }
     }
- 
+
     onDisable() {
         let cam = hooks.A?.gameWorld?.threeScene?.camera;
         if (cam && this.originalFOV) {
@@ -861,7 +904,7 @@ class Fly extends Module {
 }
     class Scaffold extends Module {
         constructor() {
-            super("Scaffold", "Movement", null)
+            super("足場", "移動系", null)
         }
         onRender() {
             if (!hooks.A?.gameWorld?.player) return;
@@ -921,22 +964,22 @@ class Fly extends Module {
         };
     class Killaura extends Module {
   constructor() {
-    super("Killaura", "Combat", {
-      "Y Offset": 1.62,
-      Reach: 25,
-      Delay: 15
+    super("範囲攻撃", "戦闘系", {
+      "Y 座標": 1.62,
+      リーチ: 25,
+      遅延: 15
     });
     this.lastExecutionTime = 0; // more explicit
   }
- 
+
   onRender() {
     const now = Date.now();
     // garante que jogador exista e que passou o delay
     if (!hooks?.A?.gameWorld?.player) return;
- 
+
     const delay = Number(this.options?.Delay) || 100;
     if (now - this.lastExecutionTime < delay) return;
- 
+
     this.lastExecutionTime = now;
     try {
       this.tryKill();
@@ -944,43 +987,43 @@ class Fly extends Module {
       console.error("Killaura.tryKill erro:", err);
     }
   }
- 
+
   tryKill() {
     // protege e converte opções
     const reach = Number(this.options?.Reach) || 5;
     const yOffset = Number(this.options?.["Y Offset"]) || 1.62;
- 
+
     // pega o alvo mais próximo (pode retornar null)
     const target = (typeof gameUtils !== "undefined" && gameUtils.getClosestPlayer)
       ? gameUtils.getClosestPlayer()
       : null;
     if (!target) return;
- 
+
     // aceita model ou _model (compatibilidade)
     const targetModel = target.model || target._model || null;
     const s = targetModel?.position;
     if (!s) return; // sem posição do alvo, sai
- 
+
     const me = hooks?.A?.gameWorld?.player;
     if (!me?.position) return;
- 
+
     const origin = {
       x: me.position.x,
       y: me.position.y + yOffset,
       z: me.position.z
     };
- 
+
     const dx = origin.x - s.x;
     const dy = origin.y - s.y;
     const dz = origin.z - s.z;
     const dist = Math.hypot(dx, dy, dz);
     if (dist === 0) return;
- 
+
     // normaliza e inverte (mantive sua inversão)
     const nx = -dx / dist;
     const ny = -dy / dist;
     const nz = -dz / dist;
- 
+
     if (dist < reach) {
       // tenta pegar sessionId ou id (compatibilidade)
       const targetId = target.sessionId ?? target.id ?? target.sid ?? null;
@@ -998,10 +1041,10 @@ class Fly extends Module {
     }
   }
 }
- 
+
 class KnockbackDisabler extends Module {
     constructor() {
-        super("KnockbackDisabler", "Misc");
+        super("吹っ飛び無効", "その他");
 
         // Configurações internas
         this.blocks = 10;     // knockback
@@ -1043,30 +1086,30 @@ class KnockbackDisabler extends Module {
 
   class GunModifier extends Module {
     constructor() {
-        super("GunModifier", "Combat", {
-            "Spread": 0.0,
-            "Bullets per shot": 1,
-            "Bullet distance": 1000,
-            "Reload Time": 1,
-            "Recoil": 0,
-            "isAuto": true
+        super("銃の設定", "戦闘系", {
+            "照準": 0,
+            "1発あたりの弾丸数": 150,
+            "弾道距離": 1000,
+            "リロード時間": 0,
+            "ブレ動作": 0,
+            "長押し撃ち": true
         });
- 
+
         this.originalValuesMap = new Map(); // Salva os valores por arma
         this.toggleKey = "KeyJ"; // Tecla para ativar/desativar
         document.addEventListener("keydown", this.handleKeyPress.bind(this));
     }
- 
+
     handleKeyPress(e) {
         if (e.code === this.toggleKey && !e.repeat) {
             this.toggle();
         }
     }
- 
+
     get gunSystem() {
         return hooks.A.stores.gameState.gameWorld.systemsManager.activeSystems.find(e => e?.bulletsSystem);
     }
- 
+
     backupGun(gun) {
         if (!this.originalValuesMap.has(gun)) {
             this.originalValuesMap.set(gun, {
@@ -1080,7 +1123,7 @@ class KnockbackDisabler extends Module {
             });
         }
     }
- 
+
     applyMods(gun) {
         gun.bulletsPerShot = this.options["Bullets per shot"];
         gun.isAuto = this.options["isAuto"];
@@ -1092,22 +1135,22 @@ class KnockbackDisabler extends Module {
             gun.recoilAttackX = 0;
         }
     }
- 
+
     onEnable() {
         const gun = this.gunSystem?.playerShooter?.currPlayerWeaponSpec;
         if (!gun) return;
- 
+
         this.backupGun(gun);
         this.applyMods(gun);
     }
- 
+
     onDisable() {
         const gun = this.gunSystem?.playerShooter?.currPlayerWeaponSpec;
         if (!gun) return;
- 
+
         const original = this.originalValuesMap.get(gun);
         if (!original) return;
- 
+
         // Restaura valores originais
         gun.bulletsPerShot = original.bulletsPerShot;
         gun.isAuto = original.isAuto;
@@ -1116,15 +1159,15 @@ class KnockbackDisabler extends Module {
         gun.reloadTimeMs = original.reloadTimeMs;
         gun.recoilAttackY = original.recoilAttackY;
         gun.recoilAttackX = original.recoilAttackX;
- 
+
         // Remove backup (opcional)
         this.originalValuesMap.delete(gun);
     }
 }
- 
+
     class Disabler extends Module {
         constructor() {
-            super("Disabler", "Misc"), this.packetID = null
+            super("無効", "その他"), this.packetID = null
         }
         insaneBypass() {}
         onRender() {
@@ -1135,10 +1178,10 @@ class KnockbackDisabler extends Module {
     }
      class Aimbot extends Module {
         constructor() {
-            super("Aimbot", "Combat", {
-                "On Aim": "false",
-                "On Shoot": "false",
-                "Y Offset": .1
+            super("オートエイム", "戦闘系", {
+                "エイム オン": "false",
+                "ショット オン": "false",
+                "Y 座標": .1
             }), this.lastExecutionTime = null
         }
         getClosestEnemy(e, t) {
@@ -1178,37 +1221,37 @@ class KnockbackDisabler extends Module {
             hooks.A?.stores?.gameState?.gameWorld?.server && ("true" == this.options["On Aim"] && hooks.A.stores.gameState.gameWorld.player.inputs.rightMB || "true" == this.options["On Shoot"] && hooks.A.stores.gameState.gameWorld.player.inputs.leftMB || "true" !== this.options["On Shoot"] && "true" !== this.options["On Aim"]) && this.aimAtEnemy()
         }
     }
- 
+
     class NoClip extends Module {
     constructor() {
-        super("NoClip", "Movement");
+        super("すり抜け", "移動系");
         this.toggleKey = "KeyG"; // Tecla para ativar/desativar (letra N)
         this._og = null;
- 
+
         document.addEventListener("keydown", this.handleKeyPress.bind(this));
     }
- 
+
     handleKeyPress(e) {
         if (e.code === this.toggleKey && !e.repeat) {
             this.toggle();
         }
     }
- 
+
     get playerPhysicsSystem() {
         return hooks.A?.gameWorld?.systemsManager?.activeSystems?.find((e => e?.playerPhysicsSystem))?.playerPhysicsSystem;
     }
- 
+
     onRender() {
         const system = this.playerPhysicsSystem;
         if (!system || !hooks.A?.gameWorld?.player) return;
- 
+
         if (!this._og) this._og = system.resolveBlockCollision;
- 
+
         if (system.resolveBlockCollision === this._og) {
             system.resolveBlockCollision = () => {};
         }
     }
- 
+
     onDisable() {
         const system = this.playerPhysicsSystem;
         if (system && this._og) {
@@ -1221,9 +1264,9 @@ class KnockbackDisabler extends Module {
 
     class HitAllModule extends Module {
     constructor() {
-        super("1HitAll", "Combat", null, "KeyU"); // Atalho: tecla U
+        super("1人分判定", "戦闘系", null, "KeyU"); // Atalho: tecla U
     }
- 
+
     hitAll() {
         try {
         window.hooked.gameWorld.server.players.forEach(plr => {
@@ -1240,16 +1283,16 @@ class KnockbackDisabler extends Module {
         });
     } catch {}
     }
- 
+
     onEnable() {
         this.hitAll();
     }
 }
- 
+
 class TeleportModule extends Module {
     constructor() {
-        super("Teleport", "Misc", {
-            "Home": 1,
+        super("テレポート", "その他", {
+            "家": 1,
 
             // Home 1
             "X": 0, "Y": 80, "Z": 0,
@@ -1260,22 +1303,24 @@ class TeleportModule extends Module {
             // Home 3
             "X3": 0, "Y3": 80, "Z3": 0,
 
-            // Botão de ação
+            // Botão
             "Save current position": false
         });
 
-        this.toggleKey = "KeyY"; // ativa/desativa módulo (menu)
-        this.teleportKey = "KeyT"; // teleporta
+        this.toggleKey = "KeyY";   // abre menu (ativa/desativa)
+        this.teleportKey = "KeyT"; // TELEPORTA SEMPRE
 
         document.addEventListener("keydown", this.handleKeys.bind(this));
     }
 
     handleKeys(e) {
+        // Abre / fecha menu
         if (e.code === this.toggleKey && !e.repeat) {
             this.toggle();
         }
 
-        if (this.enabled && e.code === this.teleportKey && !e.repeat) {
+        // Teleporta SEMPRE (independente de enabled)
+        if (e.code === this.teleportKey && !e.repeat) {
             this.teleport();
         }
     }
@@ -1306,7 +1351,7 @@ class TeleportModule extends Module {
         this.player.physicsPosComp.copyPos(this.player.position);
     }
 
-    // Botão "Salvar posição atual"
+    // Botão: salvar posição atual
     onRender() {
         if (!this.enabled) return;
 
@@ -1339,19 +1384,19 @@ class TeleportModule extends Module {
 }
 
 
- 
+
 
 
      class HitModule extends Module {
     constructor() {
-        super("2HitAll", "Combat", null, "KeyX"); // Atalho: tecla X
+        super("2人分判定", "戦闘系", null, "KeyX"); // Atalho: tecla X
     }
- 
+
     hitAll() {
         try {
             hooks.A?.gameWorld?.server?.players.forEach(plr => {
                 const { x, y, z } = plr.model.position;
- 
+
                 if (plr.hasOwnProperty('isBlock')) { // HNS
                     if (plr.isHunter) return;
                     hooks.A.gameWorld.server.sendData(
@@ -1376,25 +1421,25 @@ class TeleportModule extends Module {
             });
         } catch {}
     }
- 
+
     onEnable() {
         this.hitAll(); // executa quando ativado pelo menu ou tecla X
     }
 }
- 
- 
-    
+
+
+
 class CustomCrosshair extends Module {
     constructor() {
-        super("CustomCrosshair", "Visual", {
-            Style: "myrrr"
+        super("十字線", "ビジュアル", {
+            スタイル: "myrrr"
         });
         this.crosshair = null;
     }
- 
+
     createCrosshair() {
         if (this.crosshair) return;
- 
+
         const crosshair = document.createElement("div");
         crosshair.id = "custom-crosshair";
         crosshair.style.position = "fixed";
@@ -1404,10 +1449,10 @@ class CustomCrosshair extends Module {
         crosshair.style.zIndex = "9999";
         crosshair.style.pointerEvents = "none";
         document.body.appendChild(crosshair);
- 
+
         this.crosshair = crosshair;
     }
- 
+
     clearCrosshair() {
         if (!this.crosshair) return;
         this.crosshair.innerHTML = "";
@@ -1421,15 +1466,15 @@ class CustomCrosshair extends Module {
         this.crosshair.style.webkitMaskImage = "";
         this.crosshair.style.display = "none";
     }
- 
+
     applyCrosshair(style) {
         if (!this.crosshair) this.createCrosshair();
         this.clearCrosshair();
- 
+
         this.crosshair.style.display = "flex";
         this.crosshair.style.alignItems = "center";
         this.crosshair.style.justifyContent = "center";
- 
+
         switch (style) {
             case "myrrr":
                 this.crosshair.style.width = "15px";
@@ -1454,7 +1499,7 @@ class CustomCrosshair extends Module {
                 this.crosshair.appendChild(horiz);
                 this.crosshair.appendChild(vert);
                 break;
- 
+
             case "dot":
                 this.crosshair.style.width = "8px";
                 this.crosshair.style.height = "8px";
@@ -1462,7 +1507,7 @@ class CustomCrosshair extends Module {
                 this.crosshair.style.background = "#fff";
                 this.crosshair.style.filter = "drop-shadow(0 0 4px #66f)";
                 break;
- 
+
             case "shotgun":
                 this.crosshair.style.width = "20px";
                 this.crosshair.style.height = "20px";
@@ -1472,7 +1517,7 @@ class CustomCrosshair extends Module {
                 this.crosshair.style.background = "rgba(255, 255, 255, 0.1)";
                 this.crosshair.style.filter = "drop-shadow(0 0 6px #0ff)";
                 break;
- 
+
             case "ceborix":
             default:
                 this.crosshair.style.width = "12px";
@@ -1498,26 +1543,26 @@ class CustomCrosshair extends Module {
                 break;
         }
     }
- 
+
     onEnable() {
         this.createCrosshair();
         this.applyCrosshair(this.options.Style);
     }
- 
+
     onSettingUpdate() {
         this.applyCrosshair(this.options.Style);
     }
- 
+
     onDisable() {
         if (this.crosshair) this.crosshair.style.display = "none";
     }
 }
- 
+
  class GhostMode extends Module {
     constructor() {
-        super("GhostMode", "Movement", {
-            Fade: true,
-            Duration: 500
+        super("透明人間", "移動系", {
+            透明解除: true,
+            間隔: 500
         });
         this.isGhost = false;
     }
@@ -1586,9 +1631,9 @@ class CustomCrosshair extends Module {
 
 class NoFog extends Module {
     constructor() {
-        super("NoFog", "Visual", null);
+        super("霧無効", "ビジュアル", null);
     }
- 
+
     onRender() {
         try {
             if (hooks.A?.gameWorld?.threeScene?.scene?.fog) {
@@ -1603,7 +1648,7 @@ class NoFog extends Module {
         } catch {}
     }
 }
- 
+
     const module_moduleManager = {
         modules: {},
         addModules: function(...e) {
@@ -1619,7 +1664,7 @@ class NoFog extends Module {
             }
         },
         init() {
-            this.addModules(new ArrayList, new Watermark, new ClickGUI, new Airjump, new Instabreak, new Nuker, new Nuker1, new AdBypass, new Fly, new Speed, new FreeHeadcoins, new FreeMinebucks, new FreeSpins, new Fill, new Chams, new FOVChanger, new Scaffold, new Killaura, new GunModifier, new Disabler, new GhostMode, new Aimbot, new NoClip, new HitAllModule, new TeleportModule, new NoFog, new CustomCrosshair, new HitModule, new KnockbackDisabler), events.on("render", (() => {
+            this.addModules(new ArrayList, new Watermark, new ClickGUI, new Airjump, new Instabreak, new Nuker, new Nuker1, new AdBypass, new Fly, new Speed, new FreeHeadcoins, new FreeMinebucks, new FreeSpins, new Fill, new Chams, new FOVChanger, new NoFall, new NoDrown, new NoHunger, new Scaffold, new Killaura, new GunModifier, new Disabler, new GhostMode, new Aimbot, new NoClip, new HitAllModule, new TeleportModule, new NoFog, new CustomCrosshair, new HitModule, new KnockbackDisabler), events.on("render", (() => {
                 for (let e in this.modules) this.modules[e].isEnabled && this.modules[e].onRender()
             })), events.on("keydown", this.handleKeyPress.bind(this)), events.on("setting.update", (() => {
                 for (let e in this.modules) this.modules[e].isEnabled && this.modules[e].onSettingUpdate()

@@ -5,6 +5,7 @@
 // @description  将小说阅读页面的样式应用到阅读页面，添加翻页功能（适配手机页面）
 // @author       deepseek
 // @match        https://www.esjzone.cc/forum/*
+// @match        https://www.esjzone.one/forum/*
 // @grant        GM_addStyle
 // @downloadURL https://update.greasyfork.org/scripts/561420/ESJZone%20%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%8C%96.user.js
 // @updateURL https://update.greasyfork.org/scripts/561420/ESJZone%20%E6%A0%B7%E5%BC%8F%E4%BC%98%E5%8C%96.meta.js

@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         AO3: mothman's Mark for Later Button 
 // @namespace    http://tampermonkey.net/
-// @version      1.8
+// @version      1.9
 // @description  Adds a native AO3 button that perfectly matches any site skin's colors and shapes.
 // @author       mothman
-// @match        http*://archiveofourown.org/*
+// @match        http://archiveofourown.org/*
+// @match        https://archiveofourown.org/*
 // @grant        none
 // @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/561412/AO3%3A%20mothman%27s%20Mark%20for%20Later%20Button.user.js

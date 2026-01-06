@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wnacg下载按钮恢复
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.7
 // @description  给浏览器无法单独放行广告拦截的，恢复下载按钮。
 // @author       Aloazny
 // @match        *://99mh.men/*
@@ -92,6 +92,49 @@
         });
     }
 
+    function blockAdFunctions() {
+        function disableAdFunctions() {
+            ['createFixedBottomBannerWithClose', 'addImageAd', 'loadNewPopupAd', 'loadScriptDynamically', 'nbnsfxdm', 'fanwt'].forEach(fn => {
+                try {
+                    Object.defineProperty(window, fn, {
+                        value: function() {},
+                        writable: false,
+                        configurable: false
+                    });
+                } catch (e) {}
+            });
+        }
+        disableAdFunctions();
+        const originalOpen = window.open;
+        window.open = function(url, target, features) {
+            if (url && !url.includes('wnacg')) {
+                return null;
+            }
+            return originalOpen.call(this, url, target, features);
+        };
+    }
+
+    function blockExternalLinks() {
+        const currentHostname = window.location.hostname;
+        const fuzzyDomain = currentHostname.replace(/\d+/g, '').replace(/\.+$/, '');
+        document.addEventListener('click', function(e) {
+            let target = e.target;
+            while (target && target.nodeName !== 'A' && target.nodeName !== 'AREA') {
+                target = target.parentElement;
+            }
+            if (target && target.href) {
+                try {
+                    const url = new URL(target.href, window.location.href);
+                    if (!url.hostname.includes('wnacg') && !url.hostname.includes(fuzzyDomain) && (target.target === '_blank' || e.ctrlKey || e.metaKey)) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        return false;
+                    }
+                } catch (err) {}
+            }
+        }, true);
+    }
+
     function createBtn(href, text) {
         const btn = document.createElement('div');
         btn.textContent = text;
@@ -159,6 +202,8 @@
 
     function run() {
         blockAds();
+        blockAdFunctions();
+        blockExternalLinks();
         if (isDownloadPage()) handleDownloadPage();
         else handleNormalPage();
     }

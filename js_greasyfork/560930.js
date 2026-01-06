@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         HH综合助手
 // @namespace    http://tampermonkey.net/
-// @version      3.6
-// @description  集成版本筛选、发布人筛选、缺集审计、无年份检查、跨季年份冲突检查、体积异常检查（<100MB）、批量下载。基于官方命名规范优化解析逻辑，默认仅显示HHWEB发布资源。
+// @version      4.0
+// @description  集成版本筛选、发布人筛选、缺集审计、无年份检查、跨季年份冲突检查、体积异常检查（<100MB）、批量下载。新增：后台跨页抓取与可见总体积计算（智能跳过非搜索页面）。
 // @author       kk
 // @match        *://hhanclub.top/torrents.php*
 // @icon         https://hhanclub.top/favicon.ico
@@ -21,6 +21,7 @@
     const STORAGE_KEY_YEAR_ERR_MODE = 'hh_audit_year_err_mode_v2';
     const STORAGE_KEY_SIZE_MODE = 'hh_audit_size_mode_v1';
     const STORAGE_KEY_EP_AUDIT_MODE = 'hh_audit_ep_mode_v1';
+    const STORAGE_KEY_EP_REDUNDANT_MODE = 'hh_audit_ep_redundant_mode_v1';
     const STORAGE_KEY_MASTER_SWITCH = 'hh_audit_master_switch';
     const STORAGE_KEY_COLLAPSED = 'hh_audit_panel_collapsed';
     const STORAGE_KEY_ONLY_HHWEB = 'hh_audit_only_hhweb';
@@ -35,16 +36,16 @@
     let yearErrCheckMode = parseMode(localStorage.getItem(STORAGE_KEY_YEAR_ERR_MODE));
     let sizeCheckMode = parseMode(localStorage.getItem(STORAGE_KEY_SIZE_MODE));
     let epAuditMode = localStorage.getItem(STORAGE_KEY_EP_AUDIT_MODE) === 'true';
-    
-    // 默认开启仅显示 HHWEB
-    let isOnlyHHWEB = localStorage.getItem(STORAGE_KEY_ONLY_HHWEB) !== 'false';
+    let epRedundantMode = localStorage.getItem(STORAGE_KEY_EP_REDUNDANT_MODE) === 'true';
 
+    let isOnlyHHWEB = localStorage.getItem(STORAGE_KEY_ONLY_HHWEB) !== 'false';
     let isMasterSwitchOn = localStorage.getItem(STORAGE_KEY_MASTER_SWITCH) !== 'false';
     let isPanelCollapsed = localStorage.getItem(STORAGE_KEY_COLLAPSED) === 'true';
     
     let selectedVersions = new Set();
     let selectedUploaders = new Set();
-    let allTorrentData = [];
+    let allTorrentData = []; // 存储所有（含跨页）种子数据
+    let isScanning = false; // 是否正在后台扫描
 
     // --- 样式定义 ---
     const styles = `
@@ -82,6 +83,8 @@
         .hh-audit-info-box { background: rgba(0,0,0,0.2); padding: 8px; border-radius: 4px; line-height: 1.6; }
         .hh-text-warning { color: #FFD700; font-weight: bold; word-break: break-all; }
         .hh-text-highlight { color: #00FFCC; }
+        .hh-text-redundant { color: #9B59B6; font-weight: bold; }
+        .hh-scan-status { font-size: 11px; color: #aaa; margin-left: 5px; font-weight: normal;}
 
         .hh-audit-btn {
             width: 100%; border: none; padding: 8px; border-radius: 5px; cursor: pointer;
@@ -115,13 +118,35 @@
     
     function parseSizeToBytes(str) {
         if (!str) return 0;
-        const units = { 'TB': 4, 'GB': 3, 'MB': 2, 'KB': 1, 'B': 0 };
-        const regex = /(\d+(?:\.\d+)?)\s*(TB|GB|MB|KB|B)/i;
+        const units = { 'TB': 4, 'GB': 3, 'MB': 2, 'KB': 1, 'B': 0, 'TiB': 4, 'GiB': 3, 'MiB': 2, 'KiB': 1 };
+        const regex = /(\d+(?:\.\d+)?)\s*([TGMK]?i?B)/i;
         const match = str.match(regex);
         if (!match) return 0;
         const val = parseFloat(match[1]);
         const unit = match[2].toUpperCase();
-        return val * Math.pow(1024, units[unit] || 0);
+        
+        // 简单处理: NexusPHP 通常使用 GB/MB 或 GiB/MiB，这里统一按 1024 进制
+        let power = 0;
+        if (unit.includes('T')) power = 4;
+        else if (unit.includes('G')) power = 3;
+        else if (unit.includes('M')) power = 2;
+        else if (unit.includes('K')) power = 1;
+        
+        return val * Math.pow(1024, power);
+    }
+
+    function formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
     // --- 核心逻辑 ---
@@ -131,24 +156,30 @@
         const subTitleEl = row.querySelector('.torrent-info-text-small_name');
         const sizeEl = row.querySelector('.torrent-info-text-size');
         const uploaderEl = row.querySelector('.torrent-info-text-author');
-        const dlLink = row.querySelector('a[href^="download.php"]')?.href;
+        
+        const dlNode = row.querySelector('a[href^="download.php"]');
+        const dlLink = dlNode ? dlNode.href : "";
         
         const title = titleEl ? titleEl.textContent.trim() : "";
         const subTitle = subTitleEl ? subTitleEl.textContent.trim() : "";
         const sizeStr = sizeEl ? sizeEl.textContent.trim() : "0 B";
         
-        // 1. 发布者解析
+        let timeAdded = 0;
+        const timeNode = row.querySelector('.torrent-info-text-added');
+        if (timeNode) {
+            const t = new Date(timeNode.textContent.trim()).getTime();
+            if (!isNaN(t)) timeAdded = t;
+        }
+
+        // 1. 发布者
         let uploader = "未知发布者";
         if (uploaderEl) {
             const uploaderLink = uploaderEl.querySelector('.Uploader_Name') || uploaderEl.querySelector('.Administrator_Name') || uploaderEl.querySelector('a');
-            if (uploaderLink) {
-                 uploader = uploaderLink.textContent.trim();
-            } else {
-                 uploader = uploaderEl.textContent.trim().split('(')[0].trim();
-            }
+            if (uploaderLink) uploader = uploaderLink.textContent.trim();
+            else uploader = uploaderEl.textContent.trim().split('(')[0].trim();
         }
 
-        // 2. 版本解析 (基于官方规范优化)
+        // 2. 版本 (智能匹配)
         let version = "常规版本";
         const verKeywords = /(2160p|1080[pi]|720p|4k|hq|高码|60帧|60fps|hdr|do?vi|hevc|h\.?265|avc|h\.?264|web-?dl|bluray|remux|iso|atmos|dts|aac|ddp|imax|edr|杜比|视界)/i;
         const excludeKeywords = /(类型|导演|主演|编剧|简介|IMDb|豆瓣|全\d+集|第\s*\d+|^\d+集全$)/i;
@@ -163,23 +194,18 @@
             }
             if (version === "常规版本") {
                  const titleRes = title.match(/(2160p|1080[pi]|720p|4k)/i);
-                 if (titleRes) {
-                     version = titleRes[0].toUpperCase() + " (主标题)";
-                 }
+                 if (titleRes) version = titleRes[0].toUpperCase() + " (主标题)";
             }
         } else if (title) {
             const titleRes = title.match(/(2160p|1080[pi]|720p|4k)/i);
-            if (titleRes) {
-                version = titleRes[0].toUpperCase() + " (主标题)";
-            }
+            if (titleRes) version = titleRes[0].toUpperCase() + " (主标题)";
         }
 
-        // 3. 集数解析
+        // 3. 集数
         let episodes = [];
         if (subTitle) {
             const fullMatch = subTitle.match(/(?:全\s*(\d+)\s*集)|(?:(\d+)\s*集全)/);
             const rangeMatch = subTitle.match(/第\s*(\d+)(?:\s*-\s*(\d+))?\s*集/);
-            
             if (fullMatch) {
                 const count = parseInt(fullMatch[1] || fullMatch[2]);
                 for (let i = 1; i <= count; i++) episodes.push(i);
@@ -190,7 +216,7 @@
             }
         }
 
-        // 4. 年份解析
+        // 4. 年份
         let hasYear = false;
         let yearInt = null;
         if (title) {
@@ -199,7 +225,7 @@
             yearInt = hasYear ? parseInt(yearMatch[0]) : null;
         }
 
-        // 5. 剧名解析
+        // 5. 剧名
         let mainTitle = "";
         if (title) {
             mainTitle = title.replace(/\s+S\d+.*/i, '') 
@@ -208,31 +234,87 @@
                              .trim();
         }
 
-        // 6. 体积解析 (<100MB)
+        // 6. 体积
         const sizeBytes = parseSizeToBytes(sizeStr);
         const thresholdBytes = 100 * 1024 * 1024; // 100 MB
         const isSmallFile = sizeBytes > 0 && sizeBytes < thresholdBytes;
 
-        // 7. 判断是否为 HHWEB
-        const isHHWEB = title.toUpperCase().includes('-HHWEB');
+        // 7. HHWEB
+        const isHHWEB = title && title.toUpperCase().indexOf('-HHWEB') > -1;
 
         return {
             element: row,
             divider: row.nextElementSibling,
-            title,
-            subTitle,
-            mainTitle,
-            version,
-            uploader,
-            episodes,
-            hasYear,
-            year: yearInt,
-            isSmallFile,
-            sizeStr,
-            dlLink,
-            isYearConflict: false,
-            isHHWEB
+            title, subTitle, mainTitle, version, uploader, episodes,
+            hasYear, year: yearInt, timeAdded, isSmallFile, sizeStr, sizeBytes,
+            dlLink, isYearConflict: false, isHHWEB, isRedundant: false
         };
+    }
+
+    // 后台扫描后续页面 (含智能跳过)
+    async function scanAllPages(panel) {
+        if (isScanning) return;
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchKey = urlParams.get('search');
+        
+        // --- 核心优化：仅在有搜索关键词时才扫描 ---
+        if (!searchKey || !searchKey.trim()) {
+            return;
+        }
+        
+        let currentPage = parseInt(urlParams.get('page')) || 0;
+        let maxPage = currentPage;
+        document.querySelectorAll('a[href*="page="]').forEach(a => {
+            const m = a.href.match(/page=(\d+)/);
+            if (m) {
+                const p = parseInt(m[1]);
+                if (p > maxPage) maxPage = p;
+            }
+        });
+
+        if (maxPage <= currentPage) return;
+
+        isScanning = true;
+        const statusEl = document.getElementById('hh-scan-status');
+        
+        const baseUrl = window.location.href.replace(/&page=\d+/, '');
+        const parser = new DOMParser();
+
+        for (let p = currentPage + 1; p <= maxPage; p++) {
+            if (statusEl) statusEl.innerText = `(加载中: ${p}/${maxPage})`;
+            
+            try {
+                const fetchUrl = baseUrl + (baseUrl.includes('?') ? '&' : '?') + `page=${p}`;
+                const response = await fetch(fetchUrl);
+                const html = await response.text();
+                const doc = parser.parseFromString(html, "text/html");
+                
+                const rows = doc.querySelectorAll('.torrent-table-sub-info');
+                rows.forEach(row => {
+                    const data = parseTorrentRow(row);
+                    allTorrentData.push(data);
+                });
+                
+                if (isMasterSwitchOn) {
+                    renderFilterLists(panel);
+                    executeAudit();
+                }
+
+            } catch (err) {
+                console.error("HH助手跨页抓取失败:", err);
+            }
+            
+            await new Promise(r => setTimeout(r, 800));
+        }
+
+        isScanning = false;
+        if (statusEl) statusEl.innerText = "";
+        
+        if (isMasterSwitchOn) {
+            renderFilterLists(panel);
+            executeAudit();
+        }
     }
 
     function checkYearConflicts() {
@@ -256,69 +338,134 @@
         });
     }
 
+    function checkRedundancy(items) {
+        items.forEach(i => i.isRedundant = false);
+        const groups = {};
+        items.forEach(item => {
+            if (item.episodes.length === 0) return;
+            const key = item.mainTitle + '|' + item.version;
+            if (!groups[key]) groups[key] = [];
+            groups[key].push(item);
+        });
+
+        const redundantEpisodes = new Set();
+        Object.values(groups).forEach(group => {
+            group.sort((a, b) => {
+                const lenA = a.episodes.length;
+                const lenB = b.episodes.length;
+                if (lenA !== lenB) return lenB - lenA; 
+                return b.timeAdded - a.timeAdded;
+            });
+
+            for (let i = 0; i < group.length; i++) {
+                const keeper = group[i];
+                if (keeper.isRedundant) continue;
+                for (let j = i + 1; j < group.length; j++) {
+                    const candidate = group[j];
+                    if (candidate.isRedundant) continue;
+                    const isSubset = candidate.episodes.every(ep => keeper.episodes.includes(ep));
+                    if (isSubset) {
+                        candidate.isRedundant = true;
+                        candidate.episodes.forEach(ep => redundantEpisodes.add(ep));
+                    }
+                }
+            }
+        });
+        return redundantEpisodes;
+    }
+
     function executeAudit() {
         const visibleEpisodes = new Set();
         let missingYearCount = 0;
         let conflictYearCount = 0;
         let smallFileCount = 0;
+        let totalVisibleSize = 0;
 
         checkYearConflicts();
 
-        allTorrentData.forEach(item => {
+        let preFilteredItems = allTorrentData.filter(item => {
+            if (isOnlyHHWEB && !item.isHHWEB) return false;
+            if (selectedVersions.size > 0 && !selectedVersions.has(item.version)) return false;
+            if (selectedUploaders.size > 0 && !selectedUploaders.has(item.uploader)) return false;
+            
+            if (yearCheckMode === 2 && item.hasYear) return false;
+            if (yearErrCheckMode === 2 && !item.isYearConflict) return false;
+            if (sizeCheckMode === 2 && !item.isSmallFile) return false;
+            
+            return true;
+        });
+
+        const redundantEpSet = checkRedundancy(preFilteredItems);
+
+        preFilteredItems.forEach(item => {
             let show = true;
+            if (epRedundantMode && item.isRedundant) show = false;
             
-            // 0. HHWEB 专属过滤 (最高优先级)
-            if (isOnlyHHWEB && !item.isHHWEB) show = false;
+            if (document.body.contains(item.element)) {
+                applyDisplay(item, show);
+                if (show) applyHighlight(item);
+            }
 
-            // 1. 版本筛选
-            if (selectedVersions.size > 0 && !selectedVersions.has(item.version)) show = false;
-            if (selectedUploaders.size > 0 && !selectedUploaders.has(item.uploader)) show = false;
-            
-            // 2. 仅显模式过滤
-            if (yearCheckMode === 2 && item.hasYear) show = false;
-            if (yearErrCheckMode === 2 && !item.isYearConflict) show = false;
-            if (sizeCheckMode === 2 && !item.isSmallFile) show = false;
+            if (show) {
+                item.episodes.forEach(ep => visibleEpisodes.add(ep));
+                totalVisibleSize += item.sizeBytes;
 
-            const titleEl = item.element.querySelector('.torrent-info-text-name');
-            titleEl.style.backgroundColor = ''; 
-            titleEl.style.color = '';
+                if (sizeCheckMode > 0 && item.isSmallFile) smallFileCount++;
+                if (yearCheckMode > 0 && !item.hasYear) missingYearCount++;
+                if (yearErrCheckMode > 0 && item.isYearConflict) conflictYearCount++;
+            }
+        });
 
+        allTorrentData.forEach(item => {
+            if (!preFilteredItems.includes(item) && document.body.contains(item.element)) {
+                applyDisplay(item, false);
+            }
+        });
+
+        updateAuditInfoUI(
+            Array.from(visibleEpisodes), 
+            missingYearCount, 
+            conflictYearCount, 
+            smallFileCount, 
+            Array.from(redundantEpSet),
+            totalVisibleSize
+        );
+        
+        function applyDisplay(item, show) {
             if (show) {
                 item.element.style.setProperty('display', 'flex', 'important');
                 if (item.divider) item.divider.style.setProperty('display', 'block', 'important');
-                
-                // 高亮逻辑
-                let isHighlighted = false;
-                if (sizeCheckMode > 0 && item.isSmallFile) {
-                    titleEl.style.backgroundColor = '#9B59B6';
-                    titleEl.style.color = 'white';
-                    smallFileCount++;
-                    isHighlighted = true;
-                }
-                if (!isHighlighted && yearCheckMode > 0 && !item.hasYear) {
-                    titleEl.style.backgroundColor = '#ff4d4d';
-                    titleEl.style.color = 'white';
-                    missingYearCount++;
-                    isHighlighted = true;
-                }
-                if (!isHighlighted && yearErrCheckMode > 0 && item.isYearConflict) {
-                    titleEl.style.backgroundColor = '#F29D38';
-                    titleEl.style.color = 'white';
-                    conflictYearCount++;
-                    isHighlighted = true;
-                }
-
-                item.episodes.forEach(ep => visibleEpisodes.add(ep));
             } else {
                 item.element.style.setProperty('display', 'none', 'important');
                 if (item.divider) item.divider.style.setProperty('display', 'none', 'important');
             }
-        });
-
-        updateAuditInfoUI(Array.from(visibleEpisodes), missingYearCount, conflictYearCount, smallFileCount);
+        }
+        
+        function applyHighlight(item) {
+            const titleEl = item.element.querySelector('.torrent-info-text-name');
+            titleEl.style.backgroundColor = ''; 
+            titleEl.style.color = '';
+            
+            let isHighlighted = false;
+            if (sizeCheckMode > 0 && item.isSmallFile) {
+                titleEl.style.backgroundColor = '#9B59B6';
+                titleEl.style.color = 'white';
+                isHighlighted = true;
+            }
+            if (!isHighlighted && yearCheckMode > 0 && !item.hasYear) {
+                titleEl.style.backgroundColor = '#ff4d4d';
+                titleEl.style.color = 'white';
+                isHighlighted = true;
+            }
+            if (!isHighlighted && yearErrCheckMode > 0 && item.isYearConflict) {
+                titleEl.style.backgroundColor = '#F29D38';
+                titleEl.style.color = 'white';
+                isHighlighted = true;
+            }
+        }
     }
 
-    function updateAuditInfoUI(epList, noYearCount, conflictCount, smallCount) {
+    function updateAuditInfoUI(epList, noYearCount, conflictCount, smallCount, redundantEpList, totalSize) {
         const infoEl = document.getElementById('audit-info-display');
         const yearCountEl = document.getElementById('hh-year-count-tag');
         const yearErrCountEl = document.getElementById('hh-year-err-count-tag');
@@ -328,21 +475,28 @@
 
         if (!epAuditMode) {
              infoEl.innerHTML = "<div style='color:#aaa;text-align:center'>-- 审计已暂停 --</div>";
-        } else if (epList.length === 0) {
-            infoEl.innerHTML = "无匹配数据...";
+        } else if (epList.length === 0 && totalSize === 0) {
+            infoEl.innerHTML = "<div style='color:#aaa;text-align:center'>无匹配数据</div>";
         } else {
             epList.sort((a, b) => a - b);
             const maxEp = Math.max(...epList);
             const totalCount = epList.length;
+            redundantEpList.sort((a, b) => a - b);
             
             let missing = [];
-            for (let i = 1; i <= maxEp; i++) {
-                if (!epList.includes(i)) missing.push(i);
+            if (maxEp > 0) {
+                for (let i = 1; i <= maxEp; i++) {
+                    if (!epList.includes(i)) missing.push(i);
+                }
             }
 
             infoEl.innerHTML = `
-                <div>目前最高集数: <span class="hh-text-highlight">${maxEp}</span></div>
+                <div>目前最高集数: <span class="hh-text-highlight">${isFinite(maxEp) ? maxEp : 0}</span></div>
                 <div>已包含总集数: <span class="hh-text-highlight">${totalCount}</span></div>
+                <div>可见总体积: <span class="hh-text-highlight" style="color:#F39C12">${formatBytes(totalSize)}</span></div>
+                <div>重复集数(被覆盖): <span class="hh-text-redundant">
+                    ${redundantEpList.length > 0 ? (redundantEpList.length > 15 ? redundantEpList.slice(0,15).join(',')+'...' : redundantEpList.join(',')) : '无'}
+                </span></div>
                 <div>缺少集数清单: <br><span class="${missing.length > 0 ? 'hh-text-warning' : 'hh-text-highlight'}">
                     ${missing.length > 0 ? (missing.length > 20 ? missing.slice(0,20).join(',')+'...' : missing.join(', ')) : '无'}
                 </span></div>
@@ -355,12 +509,19 @@
     }
 
     function batchDownload(count) {
-        const targets = allTorrentData.filter(item => 
-            item.element.style.display !== 'none' && item.dlLink
-        ).slice(0, count);
+        const targets = allTorrentData.filter(item => {
+             if (isOnlyHHWEB && !item.isHHWEB) return false;
+             if (selectedVersions.size > 0 && !selectedVersions.has(item.version)) return false;
+             if (selectedUploaders.size > 0 && !selectedUploaders.has(item.uploader)) return false;
+             if (yearCheckMode === 2 && item.hasYear) return false;
+             if (yearErrCheckMode === 2 && !item.isYearConflict) return false;
+             if (sizeCheckMode === 2 && !item.isSmallFile) return false;
+             if (epRedundantMode && item.isRedundant) return false;
+             return !!item.dlLink;
+        }).slice(0, count);
 
         if (targets.length === 0) return alert("没有可见的种子可供下载");
-        if (!confirm(`准备下载 ${targets.length} 个种子？`)) return;
+        if (!confirm(`准备下载 ${targets.length} 个种子？(含后台页数据)`)) return;
 
         targets.forEach((item, index) => {
             setTimeout(() => {
@@ -372,8 +533,7 @@
             }, index * 800);
         });
     }
-    
-    // --- 动态渲染筛选列表 ---
+
     function renderFilterLists(panel) {
         const verContainer = panel.querySelector('#ver-list-container');
         const uploaderContainer = panel.querySelector('#uploader-list-container');
@@ -384,18 +544,16 @@
         const uploaders = new Set();
 
         allTorrentData.forEach(item => {
-            // 如果仅看HHWEB开启，则只收集HHWEB的属性
             if (isOnlyHHWEB && !item.isHHWEB) return;
-            
             versions.add(item.version);
             uploaders.add(item.uploader);
         });
         
         const generateHtml = (set, type) => {
+            if (set.size === 0) return '<div style="color:#aaa; padding:4px;">(无数据)</div>';
             return Array.from(set).sort().map(val => {
-                // 检查是否在选中集合中，如果是则添加 active 类
                 const isActive = (type === 'ver' ? selectedVersions.has(val) : selectedUploaders.has(val)) ? 'active' : '';
-                return `<div class="hh-ver-item ${isActive}" data-type="${type}" data-val="${val}">${val}</div>`;
+                return `<div class="hh-ver-item ${isActive}" data-type="${type}" data-val="${escapeHtml(val)}">${val}</div>`;
             }).join('');
         };
 
@@ -403,7 +561,6 @@
         uploaderContainer.innerHTML = generateHtml(uploaders, 'uploader');
     }
 
-    // --- UI 初始化 ---
     function initApp() {
         const hidePopupUI = () => {
             const popupSelectors = ['#user-info-panel', '#search-more-select'];
@@ -419,7 +576,6 @@
         document.head.appendChild(styleSheet);
 
         const rows = document.querySelectorAll('.torrent-table-sub-info');
-        // allTorrentData 初始化
         rows.forEach(row => {
             const data = parseTorrentRow(row);
             allTorrentData.push(data);
@@ -438,7 +594,7 @@
             <div id="hh-audit-header">
                 <div style="display:flex; align-items:center;">
                     <span id="hh-toggle-collapse-btn" class="hh-toggle-btn" title="收起/展开面板">${isPanelCollapsed ? '➕' : '➖'}</span>
-                    <span>HH助手</span>
+                    <span>HH助手 <span id="hh-scan-status" class="hh-scan-status"></span></span>
                 </div>
                 <input type="checkbox" id="audit-master-switch" ${isMasterSwitchOn ? 'checked' : ''} title="功能总开关">
             </div>
@@ -461,9 +617,14 @@
 
                 <div class="hh-audit-section">
                     <span class="hh-section-title">3. 集数审计 (含合集识别)</span>
-                    <label style="cursor:pointer; font-size:11px; margin-bottom:5px; display:block;">
-                        <input type="checkbox" id="ep-audit-toggle" ${epAuditMode ? 'checked' : ''}> 仅显缺集/断档
-                    </label>
+                    <div class="hh-flex-row" style="flex-wrap:wrap; font-size:11px; margin-bottom:5px;">
+                        <label style="cursor:pointer; margin-right:10px;">
+                            <input type="checkbox" id="ep-audit-toggle" ${epAuditMode ? 'checked' : ''}> 仅显缺集/断档
+                        </label>
+                        <label style="cursor:pointer;">
+                            <input type="checkbox" id="ep-redundant-toggle" ${epRedundantMode ? 'checked' : ''}> 隐藏重复集数
+                        </label>
+                    </div>
                     <div class="hh-audit-info-box" id="audit-info-display">请勾选版本...</div>
                 </div>
 
@@ -514,13 +675,15 @@
         
         // 初始渲染列表
         renderFilterLists(panel);
+        
+        // 启动后台扫描
+        scanAllPages(panel);
 
         // 收起/展开
         document.getElementById('hh-toggle-collapse-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             isPanelCollapsed = !isPanelCollapsed;
             localStorage.setItem(STORAGE_KEY_COLLAPSED, isPanelCollapsed);
-            
             const contentWrapper = document.getElementById('hh-audit-content-wrapper');
             if (isPanelCollapsed) {
                 contentWrapper.style.display = 'none';
@@ -533,17 +696,13 @@
             }
         });
         
-        // 仅HHWEB开关
         document.getElementById('hhweb-only-toggle').addEventListener('change', (e) => {
             isOnlyHHWEB = e.target.checked;
             localStorage.setItem(STORAGE_KEY_ONLY_HHWEB, isOnlyHHWEB);
-            // 更新列表
             renderFilterLists(panel);
-            // 重新执行审计（过滤页面显示）
             executeAudit();
         });
 
-        // 点击筛选
         panel.addEventListener('click', (e) => {
             if (!isMasterSwitchOn && e.target.classList.contains('hh-ver-item')) return;
             
@@ -572,7 +731,6 @@
             }
         });
 
-        // 模式切换
         const bindModeChange = (id, setter, storageKey) => {
             document.getElementById(id).addEventListener('change', (e) => {
                 const val = parseInt(e.target.value);
@@ -592,6 +750,12 @@
             if (isMasterSwitchOn) executeAudit();
         });
 
+        document.getElementById('ep-redundant-toggle').addEventListener('change', (e) => {
+            epRedundantMode = e.target.checked;
+            localStorage.setItem(STORAGE_KEY_EP_REDUNDANT_MODE, epRedundantMode);
+            if (isMasterSwitchOn) executeAudit();
+        });
+
         document.getElementById('btn-dl-n').addEventListener('click', () => {
             batchDownload(parseInt(document.getElementById('dl-count-input').value));
         });
@@ -605,10 +769,12 @@
 
             if (!isMasterSwitchOn) {
                 allTorrentData.forEach(item => {
-                    item.element.style.setProperty('display', 'flex', 'important');
-                    if (item.divider) item.divider.style.setProperty('display', 'block', 'important');
-                    const tel = item.element.querySelector('.torrent-info-text-name');
-                    tel.style.backgroundColor = ''; tel.style.color = '';
+                    if (document.body.contains(item.element)) {
+                        item.element.style.setProperty('display', 'flex', 'important');
+                        if (item.divider) item.divider.style.setProperty('display', 'block', 'important');
+                        const tel = item.element.querySelector('.torrent-info-text-name');
+                        tel.style.backgroundColor = ''; tel.style.color = '';
+                    }
                 });
                 document.getElementById('audit-info-display').innerHTML = "功能已关闭，所有种子已显示。";
             } else {

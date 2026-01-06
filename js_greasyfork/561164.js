@@ -2,7 +2,7 @@
 // @name         轻量级聚合搜索-精美侧边栏版 (Gemini修改版)
 // @name:en      Light aggregate search
 // @namespace    http://bbs.91wc.net/aggregate-search.htm
-// @version      12.2.0
+// @version      12.4.0
 // @description  搜索引擎切换，增加临时关闭、域名黑白名单、一键添加域名功能。修复布局问题，增加文字头像兜底。
 // @description:en Switch search engine, with temporary close, domain whitelist/blacklist, and one-click add domain features.
 // @author       Wilson & Modified by Gemini
@@ -111,20 +111,31 @@
     var getDomain = url => { try { return new URL(url).hostname; } catch (e) { return ""; } };
     var generateUniqueId = () => 'se-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
 
-    // --- 辅助函数：根据名字生成颜色和文字头像 ---
+// --- 辅助函数：根据名字生成颜色和文字头像 ---
     var generateLetterIcon = function(name) {
         if (!name) name = "?";
         var letter = name.charAt(0).toUpperCase();
-        var colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#F1948A', '#82E0AA'];
-        // 简单的Hash算法选择颜色
-        var hash = 0;
-        for (var i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
-        var color = colors[Math.abs(hash) % colors.length];
 
-        // 生成SVG Data URI
+        // 1. 根据名字计算 Hash 值，用于生成伪随机颜色
+        // (这样做的好处是：同一个网站每次刷新颜色是固定的，但不同网站颜色看起来是随机的)
+        var hash = 0;
+        for (var i = 0; i < name.length; i++) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        }
+
+        // 2. 使用 HSL 生成颜色
+        // Hue (色相): 0 - 360 (全色谱随机)
+        var h = Math.abs(hash) % 360;
+        // Saturation (饱和度): 70% - 90% (保证颜色鲜艳)
+        var s = 70 + (Math.abs(hash) % 20);
+        // Lightness (亮度): 40% - 55% (关键点：控制在中间值，既能在白底看清，也能在黑底看清)
+        var l = 40 + (Math.abs(hash) % 15);
+
+        var color = `hsl(${h}, ${s}%, ${l}%)`;
+
+        // 3. 生成无背景 SVG
         var svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-            <rect width="100%" height="100%" rx="8" fill="${color}"/>
-            <text x="50%" y="50%" dy=".35em" text-anchor="middle" fill="#FFF" font-family="sans-serif" font-weight="bold" font-size="18">${letter}</text>
+            <text x="50%" y="50%" dy=".35em" text-anchor="middle" fill="${color}" font-family="sans-serif" font-weight="900" font-size="24">${letter}</text>
         </svg>`;
         return "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(svg)));
     };
@@ -245,7 +256,7 @@
             return encodeURIComponent((val || "").trim());
         };
 
-        var renderList = function() {
+var renderList = function() {
             var html = "";
             var index = 0;
             searchDataList.forEach(item => {
@@ -254,22 +265,54 @@
                 var shortcutHint = (index < 9) ? `Alt+${index + 1}` : "";
 
                 if (isGroup) {
-                    // ... 组的逻辑保持简化展示 ...
+                    // --- 组的处理逻辑 ---
+                    var groupIds = [];
+                    try { groupIds = JSON.parse(decodeURIComponent(item.url.replace("group://", ""))); } catch (e) {}
+
+                    // 获取组内前4个
+                    var subItems = groupIds.map(id => searchDataMap.get(id)).filter(Boolean).slice(0, 4);
+                    var iconHtml = "";
+
+                    if (subItems.length > 0) {
+                        // 【这里是关键】：四宫格模式
+                        iconHtml = '<div class="wish-group-grid">';
+                        subItems.forEach(sub => {
+                            var subDomain = getDomain(sub.url.replace("%s", ""));
+
+                            // 1. 核心代码：生成文字头像 (例如 "谷歌" -> "谷")
+                            var subFallback = generateLetterIcon(sub.name);
+
+                            // 2. 将 src 默认设为文字头像
+                            // class="wish-group-subicon" 会被脚本底部的逻辑尝试替换为真实图标，如果替换失败，就保持显示文字
+                            iconHtml += `<img class="wish-group-subicon" data-domain="${subDomain}" src="${subFallback}" style="width:100%;height:100%;object-fit:cover;">`;
+                        });
+                        iconHtml += '</div>';
+                    } else {
+                        // 空组的情况：显示组名的第一个字
+                        var groupLetterIcon = generateLetterIcon(item.name);
+                        iconHtml = `<img class="wish-icon" src="${groupLetterIcon}" />`;
+                    }
+
                     html += `
                     <div class="wish-item wish-group-item" data-index="${index++}" data-url='${item.url}'>
                         <div class="wish-checkbox-placeholder"></div>
                         <a href="javascript:;" class="wish-link">
-                            <div class="wish-icon-container"><img src="${DEFAULT_FOLDER_ICON}" style="width:100%;height:100%;object-fit:contain;opacity:0.6;"></div>
+                            <div class="wish-icon-container">${iconHtml}</div>
                             <span class="wish-text" style="font-weight:600; color:var(--wish-primary)">${item.name}</span>
                             <span class="wish-shortcut-hint">${shortcutHint}</span>
                         </a>
                     </div>`;
+
                 } else {
+                    // --- 普通列表项的处理逻辑 ---
                     var url = item.url;
                     if (url.indexOf("%s") === -1) url += "%s";
                     var domain = getDomain(url.replace("%s", ""));
-                    // 问题4：默认使用文字头像作为 src
+
+                    // 1. 核心代码：生成文字头像
                     var textIcon = generateLetterIcon(item.name);
+
+                    // 2. 将 src 默认设为文字头像
                     html += `
                     <div class="wish-item" data-index="${index++}" data-id="${item.id}" data-url="${url}" data-original-name="${item.name}" data-target="${item.newWindow ? '_blank' : '_self'}">
                         <label class="wish-checkbox-wrapper">
@@ -1033,11 +1076,11 @@
                         if (base64) $img.attr("src", base64);
                     });
                 });
-                $(".wish-group-subicon").each(function() {
+            $(".wish-group-subicon").each(function() {
                     var $img = $(this);
+                    // 尝试获取图标，如果获取到了就替换 src，如果没获取到(base64为空)，就什么都不做(保留原本的文字头像)
                     IconManager.get($img.data("domain"), "", function(base64) {
                         if (base64) $img.attr("src", base64);
-                        else $img.css("opacity", 0.3);
                     });
                 });
             }, 50);

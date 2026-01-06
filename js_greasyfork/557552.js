@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnimeStars Card Master (fork)
 // @namespace    AnimeStars.org
-// @version      1.19.1
+// @version      1.20
 // @description  1) Показывает спрос на карты.
 // @description  2) Показывает дубликаты карт.
 // @description  3) Отправляет карты в "Не нужное".
@@ -90,6 +90,7 @@ async function runMainScript() {
     const WISHLIST_HIGHLIGHT_INVENTORY_ENABLED_KEY = 'ascm_wishlistHighlightInventoryEnabled_v1';
     const WISHLIST_HIGHLIGHT_TRADES_ENABLED_KEY = 'ascm_wishlistHighlightTradesEnabled_v1';
     const WISHLIST_PROTECTION_ENABLED_KEY = 'ascm_wishlistProtectionEnabled_v1';
+	const HIGHLIGHT_READY_STARS_ENABLED_KEY = 'ascm_highlightReadyStarsEnabled_v1';
     let activeWishlistSet = null; // Будет содержать Set с ID карт из списка желаний
     let isHighlightingWishlist = false;
     let isWishlistScanning = false; // Флаг для предотвращения одновременного запуска сканирования
@@ -756,27 +757,35 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         const handleResponse = (responseText, responseURL, requestPayload = null, status = 200) => {
             const url = responseURL || "";
 
-            // 1. ШПИОНСКИЙ ЛОГ (видим всё)
-            if (url.includes("ajax") || url.includes("light_chat") || url.includes("calculate") || url.includes("card")) {
-                console.log("[ACM Spy] Сетевое событие:", url);
-            }
+			// 1. ШПИОНСКИЙ ЛОГ (видим всё, кроме чата во время вкладов)
+			const isChat = url.includes("light_chat");
+			const isBoosting = unsafeWindow.isSccInBoostWindow === true;
+
+			if (url.includes("ajax") || isChat || url.includes("calculate") || url.includes("card")) {
+				// Если идет вклад, не спамим в консоль событиями чата
+				if (!(isChat && isBoosting)) {
+					console.log("[ACM Spy] Сетевое событие:", url);
+				}
+			}
 
             // 2. ЧАТ (Кристаллы)
             if (url.includes("mod=light_chat")) {
-                GM_setValue(CHAT_ACTIVITY_KEY, Date.now());
-                if (typeof analyzeChatHtml === 'function') {
-                    try {
-                        // Пробуем как JSON
-                        const chatData = JSON.parse(responseText);
-                        analyzeChatHtml(chatData.html || responseText);
-                    } catch (e) {
-                        // Если не JSON — передаем как есть (HTML)
-                        analyzeChatHtml(responseText);
-                    }
-                }
-                return;
-            }
-
+				// Если включен Турбо-вклад, полностью игнорируем любые входящие данные чата
+				if (GM_getValue('boosterState', false) === true) {
+					return; 
+				}
+				
+				GM_setValue(CHAT_ACTIVITY_KEY, Date.now());
+				if (typeof analyzeChatHtml === 'function') {
+					try {
+						const chatData = JSON.parse(responseText);
+						analyzeChatHtml(chatData.html || responseText);
+					} catch (e) {
+						analyzeChatHtml(responseText);
+					}
+				}
+				return;
+			}
             // 3. ПУЛЬС ТАЙМЕРА
             if (url.includes("ajax/calculate_time_watch/")) {
                 GM_setValue(LAST_SUCCESSFUL_REQUEST_KEY_WATCH, Date.now());
@@ -1429,6 +1438,24 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                     box-shadow: 0 0 15px 10px #4CAF50, inset 0 0 0px 0px #4CAF50;
                     border: 0px solid #4CAF50 !important;
                     transition: none !important;
+            }
+			@keyframes readyStarPulse {
+                0% { 
+                    box-shadow: inset 0 0 15px #00ff00, 0 0 10px #00ff00; 
+                }
+                50% { 
+                    box-shadow: inset 0 0 40px #00ff00, 0 0 25px #00ff00, 0 0 35px #ffffff; 
+                }
+                100% { 
+                    box-shadow: inset 0 0 15px #00ff00, 0 0 10px #00ff00; 
+                }
+            }
+            .ready-to-star-highlight {
+                animation: readyStarPulse 1.5s infinite ease-in-out !important;
+                outline: 3px solid #00ff00 !important;
+                outline-offset: -3px;
+                position: relative;
+                z-index: 5;
             }
         `);
         // =================================================================================================
@@ -3034,6 +3061,65 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 lastDbUnloadLogTimestamp = now;
             }
             unloadDbTimeoutId = setTimeout(unloadDatabaseFromMemory, unloadDelayMs);
+        }
+
+		// ##################################################
+        // МОДУЛЬ: ЗАПИСЬ ДАННЫХ ПРИ РУЧНОМ ПОСЕЩЕНИИ СТРАНИЦЫ КАРТЫ
+        // ##################################################
+        async function monitorManualCardPageVisit() {
+            if (!window.location.pathname.startsWith('/cards/users/')) return;
+
+            const params = new URLSearchParams(window.location.search);
+            const cardId = params.get('id');
+            if (!cardId) return;
+
+            console.log(`[ACM] Ручное посещение страницы карты ID ${cardId}. Обновляю базу...`);
+
+            // 1. Считываем спрос прямо из DOM
+            const needCount = parseInt(document.querySelector('#owners-need')?.textContent.trim(), 10) || 0;
+            const tradeCount = parseInt(document.querySelector('#owners-trade')?.textContent.trim(), 10) || 0;
+            const popularityCount = parseInt(document.querySelector('#owners-count')?.textContent.trim(), 10) || 0;
+
+            // 2. Сохраняем в кэш спроса
+            const cacheKey = 'cardId: ' + cardId;
+            const demandData = { 
+                popularityCount, 
+                needCount, 
+                tradeCount, 
+                updatedAt: Date.now() 
+            };
+            
+            // Используем вашу существующую функцию кэширования
+            await cacheCard(cacheKey, demandData);
+
+            // 3. Проверяем, есть ли карта в основной базе данных
+            await ensureDbLoaded();
+            if (!cardDatabaseMap || !cardDatabaseMap.has(cardId)) {
+                // Если карты нет, пытаемся собрать её основные данные
+                const nameEl = document.querySelector('.ncard__main-title-2.as-center a[href^="/cards/"]');
+                const animeLinkEl = document.querySelector('a.ncard__img');
+                const imgEl = animeLinkEl?.querySelector('img');
+                const animeNameEl = document.querySelector('.ncard__main-title.as-center a');
+
+                if (nameEl && animeLinkEl && imgEl) {
+                    const rankMatch = (imgEl.dataset.src || imgEl.src).match(/\/cards_image\/\d+\/([a-z]+)\//);
+                    const newCard = {
+                        id: cardId,
+                        name: nameEl.textContent.trim(),
+                        rank: (rankMatch ? rankMatch[1] : 'e'),
+                        animeName: animeNameEl ? animeNameEl.textContent.trim() : 'N/A',
+                        animeLink: animeLinkEl.getAttribute('href'),
+                        image: imgEl.dataset.src || imgEl.src
+                    };
+                    
+                    // Добавляем в базу через ваш скрейпер
+                    if (typeof scraper_addCardsToDb === 'function') {
+                        await scraper_addCardsToDb([newCard]);
+                        console.log(`[ACM] Карта ${cardId} ("${newCard.name}") добавлена в локальную базу.`);
+                    }
+                }
+            }
+            console.log(`[ACM] Статистика спроса для карты ${cardId} обновлена.`);
         }
 
         // ##################################################
@@ -8179,6 +8265,40 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 });
             }
         }
+	
+	// Подсвечивает карты в инвентаре, готовые к повышению звездного уровня.
+    // Условия срабатывания: в URL есть sort=stars и число дублей в .dupl-count >= необходимому числу.
+	async function highlightReadyToStarCards() {
+        const isEnabled = await GM_getValue(HIGHLIGHT_READY_STARS_ENABLED_KEY, true);
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Условие 1: Включено в настройках и в URL есть sort=stars
+        if (!isEnabled || urlParams.get('sort') !== 'stars') {
+            document.querySelectorAll('.ready-to-star-highlight').forEach(el => el.classList.remove('ready-to-star-highlight'));
+            return;
+        }
+
+        const cards = document.querySelectorAll('.anime-cards__item');
+        cards.forEach(card => {
+            const countEl = card.querySelector('.dupl-count');
+            if (countEl) {
+                const text = countEl.textContent.trim(); // "22/25"
+                const parts = text.split('/');
+                if (parts.length === 2) {
+                    const current = parseInt(parts[0], 10);
+                    const required = parseInt(parts[1], 10);
+
+                    // Условие 2: Сравнение чисел
+                    if (!isNaN(current) && !isNaN(required) && current >= required) {
+                        card.classList.add('ready-to-star-highlight');
+                    } else {
+                        card.classList.remove('ready-to-star-highlight');
+                    }
+                }
+            }
+        });
+    }
+    unsafeWindow.highlightReadyToStarCards = highlightReadyToStarCards;
 
         // ##################################################
         // # Получает имя текущего залогиненного пользователя из разных мест на странице.
@@ -10034,6 +10154,7 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             if (typeof unsafeWindow.__isNotifBlockedWindowUTC3 === 'function') {
                 unsafeWindow.__isNotifBlockedWindowUTC3 = () => false;
             }
+			monitorManualCardPageVisit();
 			setupUnifiedXhrInterceptorForCardReward();
 			applyPageSpecificCardSizes();
             unsafeWindow.applyNoSRankGlowStyle();
@@ -10112,6 +10233,7 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                     if (typeof highlightTargetUserWishlist === 'function') {
                         highlightTargetUserWishlist();
                         unsafeWindow.highlightNoSRankDecks();
+						unsafeWindow.highlightReadyToStarCards();
                     }
                 };
                 setTimeout(processCardChanges);
@@ -10974,6 +11096,35 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                     select20Packs();
                     setTimeout(select20Packs, 500);
                 }
+				
+				// === ЗАЩИТА: Подтверждение покупки невыгодных паков (1 и 6) ===
+                document.addEventListener('click', async (e) => {
+                    const buyBtn = e.target.closest('.lootbox__open-btn');
+                    if (!buyBtn || window.location.pathname !== '/cards/pack/') return;
+
+                    // Если мы сами программно нажали кнопку после подтверждения — пропускаем проверку
+                    if (buyBtn.dataset.ascmConfirmed === "true") {
+                        delete buyBtn.dataset.ascmConfirmed;
+                        return;
+                    }
+
+                    const activePack = document.querySelector('.lootbox__middle-item--active');
+                    const count = activePack ? activePack.getAttribute('data-count') : "1";
+
+                    // Если выбрано НЕ 20 паков
+                    if (count !== "20") {
+                        e.stopImmediatePropagation(); // Останавливаем скрипты сайта
+                        e.preventDefault();
+
+                        const confirmText = `Вы выбрали покупку <b>${count} пак(ов)</b>.<br>Это менее выгодно, чем набор из 20 паков.<br><br>Вы действительно хотите потратить камни на этот пак?`;
+                        
+                        const confirmed = await protector_customConfirm(confirmText);
+                        if (confirmed) {
+                            buyBtn.dataset.ascmConfirmed = "true";
+                            buyBtn.click(); // Повторяем клик, теперь он пройдет
+                        }
+                    }
+                }, true); // Используем capture фазу для перехвата
 
                 let isAutoFarming = false;
                 let stopAutoFarming = false;
@@ -11776,7 +11927,8 @@ async function sccLog(message, type = 'info', forceConsole = false) {
 
 		// --- ЭТАП 3: ПАРСЕР HTML ЧАТА ---
 		async function analyzeChatHtml(htmlString) {
-            if (!htmlString || htmlString.trim() === "") {
+			if (unsafeWindow.isSccInBoostWindow === true) return; 
+			if (!htmlString || htmlString.trim() === "") {
                 console.log("[ACC Parser] Получен пустой ответ чата.");
                 return;
             }
@@ -11903,6 +12055,10 @@ async function sccLog(message, type = 'info', forceConsole = false) {
 		// --- ЭТАП 5: WATCHDOG (АКТИВНЫЙ ПОИСК) ---
 		async function fetchChatManually() {
             if (!isLeaderWatch || !crystalScriptEnabled || isVerificationScheduled || isFetchingManually) return;
+			
+			if (GM_getValue('boosterState', false) === true) {
+				return; // Если Турбо работает, Watchdog даже не пытается проверять чат
+			}
 
             // --- 1. ПРОВЕРКА ВРЕМЕНИ ВКЛАДОВ (ТИХИЙ РЕЖИМ) ---
             // Эта часть предотвращает ЛЮБЫЕ запросы к чату, когда идет время вкладов
@@ -12231,27 +12387,31 @@ async function sccLog(message, type = 'info', forceConsole = false) {
 				if (unsafeWindow.isElectionInProgress) return;
 				unsafeWindow.isElectionInProgress = true;
 
-                // ПРОВЕРКА ЗАМКА ПЕРЕЗАГРУЗКИ:
-                const reloadLock = localStorage.getItem('ascm_reload_fix_lock');
-                if (reloadLock) {
-                    const lockData = JSON.parse(reloadLock);
-                    // Если вкладка обновлялась менее 15 сек назад — она всё еще Лидер
-                    if (Date.now() - lockData.ts < 15000 && lockData.id !== tabIdWatch) {
-                        isLeaderWatch = false;
-                        unsafeWindow.isElectionInProgress = false;
-                        return; 
-                    }
-                }
-
-				const lockedId = await GM_getValue(LEADER_LOCK_KEY, null);
+				const now = Date.now();
+				const LEADER_DEAD_TIMEOUT = 15000; // Порог смерти лидера
 				const currentLeaderJSON = localStorage.getItem(LEADER_KEY_WATCH);
+				const reloadLock = localStorage.getItem('ascm_reload_fix_lock');
+				
 				let currentLeader = null;
 				try { currentLeader = JSON.parse(currentLeaderJSON); } catch(e) {}
 
-				const now = Date.now();
-				// Увеличиваем порог "мертв" до 15 секунд, чтобы избежать лишних выборов при сбоях сети
-				const LEADER_DEAD_TIMEOUT = 15000;
 				const isLeaderAlive = currentLeader && (now - currentLeader.time <= LEADER_DEAD_TIMEOUT);
+				const iAmInBoost = window.location.href.includes('/clubs/boost/');
+
+				// ПРИОРИТЕТ ШАХТЫ: Уступаем, только если лидер ЖИВ и реально бустит.
+				if (isLeaderAlive && !iAmInBoost) {
+					const otherIsBoosting = currentLeader.isBoosting === true && currentLeader.id !== tabIdWatch;
+					const otherIsReloading = reloadLock && JSON.parse(reloadLock).id !== tabIdWatch;
+
+					if (otherIsBoosting || otherIsReloading) {
+						isLeaderWatch = false;
+						unsafeWindow.isElectionInProgress = false;
+						updateLeaderLockButtonView();
+						return; 
+					}
+				}
+				
+				const lockedId = await GM_getValue(LEADER_LOCK_KEY, null);
 
 				// --- 1. ПРОВЕРКА ЗАМКА ---
 				if (lockedId) {
@@ -12339,25 +12499,30 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             // Вспомогательная функция для атомарного захвата лидерства (УБРАН ПРИОРИТЕТ isVideo)
             // ##################################################
 			function becomeLeader() {
-				// Если мы уже лидер — просто обновляем пульс в localStorage и выходим
+				const isTurboOn = GM_getValue('boosterState', false) === true;
+				const iAmInBoostPage = window.location.href.includes('/clubs/boost/');
+
+				// Проверяем реальный статус буста: либо включена кнопка ТУРБО, либо мы на странице шахты
+				const actuallyBoosting = isTurboOn || iAmInBoostPage;
+
 				if (isLeaderWatch) {
 					try {
 						const leaderData = JSON.parse(localStorage.getItem(LEADER_KEY_WATCH) || '{}');
 						if (leaderData.id === tabIdWatch) {
 							leaderData.time = Date.now();
+							leaderData.isBoosting = actuallyBoosting;
 							localStorage.setItem(LEADER_KEY_WATCH, JSON.stringify(leaderData));
 							return;
 						}
 					} catch(e) {}
 				}
 
-				// Если мы НЕ лидер — захватываем власть
 				const payload = JSON.stringify({
 					id: tabIdWatch,
 					time: Date.now(),
 					timestamp: tabTimestamp,
-					// isVideo удалено
 					isPaused: isCollectionPaused,
+					isBoosting: actuallyBoosting,
 					url: window.location.href,
 					title: document.title.replace("(AnimeStars)", "").trim()
 				});
@@ -12365,7 +12530,7 @@ async function sccLog(message, type = 'info', forceConsole = false) {
 				localStorage.removeItem(LEADER_CHALLENGE_KEY);
 
 				isLeaderWatch = true;
-				console.log(`%c[Лидерство] Я стал лидером (Профиль)`, "color: #00ff00; font-weight: bold;");
+				console.log(`%c[Лидерство] Я стал лидером ${actuallyBoosting ? '(ШАХТА/ТУРБО)' : ''}`, "color: #00ff00; font-weight: bold;");
 
 				if (typeof updateFullToggleButtonState === 'function') updateFullToggleButtonState();
 				if (typeof updateLeaderLockButtonView === 'function') updateLeaderLockButtonView();
@@ -12399,7 +12564,10 @@ async function sccLog(message, type = 'info', forceConsole = false) {
 
                 heartbeatIntervalId = setInterval(async () => {
                     if (typeof updateLeaderLockButtonView === 'function') updateLeaderLockButtonView();
-                    
+                    if (isLeaderWatch && window.location.href.includes('/clubs/boost/')) {
+						// Каждые 2.5 сек подтверждаем, что шахта под нашим контролем, на случай релоада
+						localStorage.setItem('ascm_reload_fix_lock', JSON.stringify({id: tabIdWatch, ts: Date.now()}));
+					}
                     const nowTs = Date.now();
                     const msk = new Date(nowTs + (3 * 60 * 60 * 1000));
                     const curH = msk.getUTCHours(), curM = msk.getUTCMinutes(), curS = msk.getUTCSeconds();
@@ -12478,8 +12646,20 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                         }
                         
                         // 2. ПРОВЕРКА ВРЕМЕНИ ДЛЯ РЕДИРЕКТА
-                        else if (!isBoostPage && isLeaderWatch) {
-                            const diff = startTimeInSeconds - currentTimeInSeconds;
+						const isVisible = document.visibilityState === 'visible';
+						const leaderDataJSON = localStorage.getItem(LEADER_KEY_WATCH);
+						let otherIsBoosting = false;
+						try { 
+							const ld = JSON.parse(leaderDataJSON || '{}');
+							// Проверяем, не бустит ли КТО-УГОДНО в системе прямо сейчас
+							if (ld.isBoosting === true && ld.id !== tabIdWatch) otherIsBoosting = true;
+						} catch(e) {}
+
+						const reloadLock = localStorage.getItem('ascm_reload_fix_lock');
+
+						if (!isBoostPage && !otherIsBoosting && !reloadLock && (isLeaderWatch || isVisible)) {
+							// Переходим только если НИКТО в системе еще не начал буст
+							const diff = startTimeInSeconds - currentTimeInSeconds;
                             if (diff > 0 && diff <= (sets.reminderMinutes * 60)) {
                                 await GM_setValue('ascm_global_countdown', { endTs: Date.now() + (diff * 1000), boostUrl, logLvl: sets.logLevel });
                             } else if (diff <= 0 && currentTimeInSeconds <= forcedEndSeconds) {
@@ -12491,19 +12671,41 @@ async function sccLog(message, type = 'info', forceConsole = false) {
 
                     // --- ТИХИЙ РЕЖИМ ЧАТА ---
                     const isBoostTime = sets.enabled && curH === parseInt(sets.startTime.split(':')[0]) && curM >= parseInt(sets.startTime.split(':')[1]) && curM <= (parseInt(sets.endTime.split(':')[1]) + 5);
-                    unsafeWindow.isSccInBoostWindow = isBoostTime;
+					// Если время вкладов ИЛИ если прямо сейчас КНОПКА Турбо активна
+					const isTurboActive = GM_getValue('boosterState', false) === true;
+					unsafeWindow.isSccInBoostWindow = isBoostTime || isTurboActive;
 
                     if (isLeaderWatch) {
                         if (typeof checkAndTriggerNewDay === 'function') checkAndTriggerNewDay();
                         const ld = localStorage.getItem(LEADER_KEY_WATCH);
                         try {
                             const d = JSON.parse(ld || '{}');
-                            if (d.id === tabIdWatch) { d.time = Date.now(); localStorage.setItem(LEADER_KEY_WATCH, JSON.stringify(d)); }
-                            else stopBeingLeader();
+                            // Если в хранилище всё еще я — обновляю время
+                            if (d.id === tabIdWatch) { 
+                                d.time = Date.now(); 
+                                d.isBoosting = (GM_getValue('boosterState', false) === true) || window.location.href.includes('/clubs/boost/');
+                                localStorage.setItem(LEADER_KEY_WATCH, JSON.stringify(d)); 
+                            }
+                            // Если там уже кто-то другой — я больше не лидер
+                            else {
+                                console.warn("[Лидерство] Обнаружена смена лидера в хранилище. Уступаю.");
+                                stopBeingLeader(); 
+                            }
                         } catch (e) { }
                     } else {
+                        // Если я не лидер, проверяю: жив ли текущий лидер?
                         const ld = localStorage.getItem(LEADER_KEY_WATCH);
-                        if (!ld || (Date.now() - JSON.parse(ld).time > LEADER_TIMEOUT_WATCH)) tryToBecomeLeaderWatch();
+                        if (!ld) {
+                            tryToBecomeLeaderWatch();
+                        } else {
+                            try {
+                                const d = JSON.parse(ld);
+                                if (Date.now() - d.time > LEADER_TIMEOUT_WATCH) {
+                                    console.log("[Лидерство] Лидер не отвечает. Запускаю перевыборы.");
+                                    tryToBecomeLeaderWatch();
+                                }
+                            } catch(e) { tryToBecomeLeaderWatch(); }
+                        }
                     }
                 }, HEARTBEAT_INTERVAL_WATCH);
             }
@@ -12564,8 +12766,26 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                     return;
                 }
                 if (e.key === LEADER_KEY_WATCH) {
-                    const currentIsLeaderBeforeCheck = isLeaderWatch;
-                    if (!e.newValue) {
+					const currentIsLeaderBeforeCheck = isLeaderWatch;
+					const I_Am_Boosting = GM_getValue('boosterState', false) === true;
+
+					// --- НОВОЕ: Если я бущу, я ВООБЩЕ ИГНОРИРУЮ любые новости о смене лидера ---
+					if (I_Am_Boosting && currentIsLeaderBeforeCheck) {
+						return; 
+					}
+					
+					// Если я НЕ бущу, но вижу, что КТО-ТО ДРУГОЙ бустит — я не пытаюсь стать лидером
+					if (e.newValue) {
+						try {
+							const newLeader = JSON.parse(e.newValue);
+							if (newLeader.id !== tabIdWatch && newLeader.isBoosting === true) {
+								if (isLeaderWatch) stopBeingLeader();
+								return;
+							}
+						} catch(err) {}
+					}
+					
+					if (!e.newValue) {
                         if (currentIsLeaderBeforeCheck) {
                             console.log(`Ключ лидера удален.\nЭта вкладка перестает быть лидером.`);
                             isLeaderWatch = false; stopMainCardCheckLogic(); updateFullToggleButtonState();
@@ -13078,11 +13298,11 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         .res-l { top: 0; bottom: 0; left: 0; width: 4px; cursor: w-resize; }
         .res-se { bottom: 0; right: 0; width: 12px; height: 12px; cursor: se-resize; }
 
-        .rank-badge { padding: 2px 5px; border-radius: 4px; font-weight: bold; font-size: 10px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1); }
-        .rank-ass { background: rgba(119, 44, 232, 0.2); color: #bc95ff; }
-        .rank-s { background: rgba(167, 76, 207, 0.2); color: #d495ff; }
-        .rank-a { background: rgba(217, 49, 52, 0.2); color: #ff8e90; }
-        .rank-b { background: rgba(32, 148, 228, 0.2); color: #8ecfff; }
+        #autofarm_control_modal .rank-badge { padding: 2px 5px; border-radius: 4px; font-weight: bold; font-size: 10px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1); }
+        #autofarm_control_modal .rank-ass { background: rgba(119, 44, 232, 0.2); color: #bc95ff; }
+        #autofarm_control_modal .rank-s { background: rgba(167, 76, 207, 0.2); color: #d495ff; }
+        #autofarm_control_modal .rank-a { background: rgba(217, 49, 52, 0.2); color: #ff8e90; }
+        #autofarm_control_modal .rank-b { background: rgba(32, 148, 228, 0.2); color: #8ecfff; }
     `);
 
 			// ##################################################
@@ -14652,6 +14872,16 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         async function performClick() {
             const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
             
+            // Если вкладка в фоне И при этом есть другая вкладка, которая ВИДИМА (Visible),
+            // то фоновая вкладка не должна кликать.
+            if (document.visibilityState !== 'visible') {
+                // Если мы в фоне, проверяем, нет ли живого лидера, который сейчас активен
+                const leaderData = JSON.parse(localStorage.getItem(LEADER_KEY_WATCH) || '{}');
+                if (leaderData.id !== tabIdWatch && leaderData.time > (Date.now() - 5000)) {
+                     return; // Уступаем активной вкладке
+                }
+            }
+			
             // ПРОВЕРКА 1: Защита от работы в двух окнах
             const globalActiveId = await GM_getValue('ascm_active_booster_tab');
             if (globalActiveId && globalActiveId !== tabIdWatch) {
@@ -16941,6 +17171,16 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                                     <span class="protector-toggle-slider"></span>
                                 </label>
                             </div>
+							<div style="border-top: 1px solid #4a2f3a; margin-top: 10px; padding-top: 10px;">
+                             <p style="font-size: 13px; color: #999; text-align: center; margin-bottom: 10px;">Готовность к повышению звезд:</p>
+                             <div class="setting-row" style="margin-bottom: 10px;">
+                                <span>Подсвечивать готовые карты</span>
+                                <label class="protector-toggle-switch">
+                                    <input type="checkbox" id="ready-stars-glow-toggle">
+                                    <span class="protector-toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
                             <div style="border-top: 1px solid #33353a; margin-top: 10px; padding-top: 10px;">
                                 <p style="text-align: center; font-size: 13px; color: #999; margin-bottom: 10px;">Защита/Предупреждение о карте из листа для рангов:</p>
                                 <div id="wishlist-protection-ranks" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;"></div>
@@ -17268,6 +17508,18 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 }
             }
         });
+		// Инициализация переключателя подсветки звезд
+        const readyStarsToggle = wrapper.querySelector('#ready-stars-glow-toggle');
+        if (readyStarsToggle) {
+            readyStarsToggle.checked = await GM_getValue(HIGHLIGHT_READY_STARS_ENABLED_KEY, true);
+            readyStarsToggle.addEventListener('change', async () => {
+                await GM_setValue(HIGHLIGHT_READY_STARS_ENABLED_KEY, readyStarsToggle.checked);
+                if (typeof unsafeWindow.highlightReadyToStarCards === 'function') {
+                    unsafeWindow.highlightReadyToStarCards();
+                }
+                safeDLEPushCall('info', 'Настройка звездной подсветки сохранена!');
+            });
+        }
         setIdleState();
         progressIntervalId = setInterval(checkAndUpdateStatus, 1000);
     }
@@ -17593,21 +17845,33 @@ async function sccLog(message, type = 'info', forceConsole = false) {
     });
 
     GM_addValueChangeListener('ascm_redirect_signal', async (key, oldV, newV, remote) => {
-        if (!newV || window.location.href.includes(newV.url)) return;
-        
-        // 1. Если вкладка открыта перед глазами (Visible) — она переходит СРАЗУ
+        if (!newV) return;
+
+        // --- НОВОЕ: Если я УЖЕ в шахте, я немедленно удаляю сигнал, 
+        // чтобы другие вкладки его не увидели и не прыгали сюда же.
+        if (window.location.href.includes('/clubs/boost/')) {
+            await GM_deleteValue('ascm_redirect_signal');
+            
+            // Если я активен (видим), фиксирую лидерство за собой
+            if (document.visibilityState === 'visible') {
+                await GM_setValue(LEADER_LOCK_KEY, tabIdWatch);
+                if (typeof tryToBecomeLeaderWatch === 'function') tryToBecomeLeaderWatch();
+            }
+            return; 
+        }
+
+        // Если я НЕ в шахте, но я Видим (активен), я перехожу и удаляю сигнал
         if (document.visibilityState === 'visible') {
-            sccLog("Я активен! Приоритетный переход в шахту.", 'info', true);
+            sccLog("Приоритетный переход в шахту из активной вкладки.", 'info', true);
             await GM_setValue(LEADER_LOCK_KEY, tabIdWatch); 
-            await GM_deleteValue('ascm_redirect_signal'); // Удаляем сигнал, чтобы другие не прыгали
+            await GM_deleteValue('ascm_redirect_signal'); 
             window.location.href = newV.url;
         } 
-        // 2. Если вкладка в фоне — она ждет 6 секунд, давая шанс активной вкладке
+        // Если я в фоне и я Лидер, я жду 6 сек (даю шанс активной вкладке)
         else if (isLeaderWatch) {
             setTimeout(async () => {
                 const stillNeeded = await GM_getValue('ascm_redirect_signal');
                 if (stillNeeded) { 
-                    sccLog("Активных вкладок не найдено. Перехожу из фона.", 'info', true);
                     await GM_deleteValue('ascm_redirect_signal'); 
                     window.location.href = stillNeeded.url; 
                 }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         聊天助手大纲
 // @namespace    http://tampermonkey.net/
-// @version      0.0.4
+// @version      0.0.5
 // @description  为多个AI聊天平台生成智能对话大纲，支持实时更新、层级结构、主题切换，提升聊天体验和内容导航效率
 // @author       xzhao
 // @match        *://chatgpt.com/*
@@ -10,6 +10,7 @@
 // @match        *://www.qianwen.com/*
 // @match        *://chat.qwen.ai/*
 // @match        *://*.doubao.com/*
+// @match        *://www.kimi.com/*
 // @icon         https://cdn.deepseek.com/chat/icon.png
 // @license      MIT
 // @grant        none
@@ -116,6 +117,9 @@
         if (window.location.hostname.includes('qwen.ai')) {
             return 'qwen';
         }
+        if (window.location.hostname.includes('kimi.com')) {
+            return 'kimi';
+        }
         return 'unknown';
     }
 
@@ -193,8 +197,7 @@
                     //将整个大纲元素插入到指定位置中
                     insertOutline: function (outlineEle) {
                         // 找到豆包的主布局容器，插入到侧边栏区域
-                        const chatLayout = document.querySelector('[data-testid="scroll_view"]')
-                            .parentElement.parentElement.parentElement.parentElement.parentElement;
+                        const chatLayout = document.querySelector('main');
                         chatLayout.appendChild(outlineEle);
                     }
                 };
@@ -352,6 +355,41 @@
                         mainContainer.style.backgroundColor = getCurrentColors().background;
                         mainContainer.appendChild(outlineEle);
                     }
+                };
+            case "kimi":
+                return {
+                    //获取对话区域元素，返回一个不会被清除的节点作为监视根节点
+                    selectChatArea: function () {
+                        return document.querySelector('.layout-content-main')
+                    },
+                    //根据传入的监视根节点获取其对应的对话历史列表
+                    getMessageList: function (root) {
+                        if (!root || !root.querySelectorAll) {
+                            return null;
+                        }
+                        let messages = root.querySelectorAll('.chat-content-item');
+                        return messages;
+                    }
+                    ,
+                    //判断是否为用户消息，传入参数为每一个消息对话框
+                    determineMessageOwner: function (messageEle) {
+                        if (messageEle.className.includes('chat-content-item-user')) {
+                            return MessageOwner.User;
+                        }else if(messageEle.className.includes('chat-content-item-assistant')){
+                            return MessageOwner.Assistant;
+                        }
+
+                        return MessageOwner.Other;
+                    }
+                    ,
+                    //将整个大纲元素插入到指定位置中
+                    insertOutline: function (outlineEle) {
+                        // 找到 Qwen 的主容器
+                        const mainContainer = document.querySelector('.main');
+                        // mainContainer.style.backgroundColor = getCurrentColors().background;
+                        mainContainer.appendChild(outlineEle);
+                    },
+                    timeout: 5000
                 };
             default: return null;
         }
@@ -759,8 +797,6 @@
 
         // 插入到body
         document.body.appendChild(outlineEle);
-
-        console.log('大纲已插入到body并固定在页面右侧');
     }
 
     // 切换大纲可见性
@@ -942,7 +978,7 @@
 
         const cached = GLOBAL_OBJ.messageCache[index];
         // 简单检查内容长度是否变化（适用于正在生成的消息）
-        return cached.originalElement===messageElement && cached.textLength === messageElement.textContent.length;
+        return cached.originalElement === messageElement && cached.textLength === messageElement.textContent.length;
     }
 
     // 缓存消息信息
@@ -1033,22 +1069,17 @@
         const fragment = document.createDocumentFragment();
         let messageIndex = 0;
         let hasChanges = false;
-        let checkChange = true;
         // 遍历对话生成大纲
         for (let i = 0; i < cd.length; i++) {
             const c = cd[i];
             const messageId = getMessageId(i, c);
 
             // 检查是否可以使用缓存
-            if (checkChange && messageIndex < GLOBAL_OBJ.messageCache.length) {
+            if (messageIndex < GLOBAL_OBJ.messageCache.length) {
                 if (isMessageCached(messageIndex, c, messageId)) {
                     fragment.append(GLOBAL_OBJ.messageCache[messageIndex].outlineElement)
                     messageIndex++;
                     continue;
-                } else {
-                    //中间存在某节点缓存但被修改，去除该缓存节点及其后所有节点
-                    GLOBAL_OBJ.messageCache.length = messageIndex;
-                    checkChange = false;
                 }
             }
 
@@ -1283,9 +1314,60 @@
             console.log('无法获取解析配置');
             return;
         }
+        GLOBAL_OBJ.parserConfig = parserConfig;
         const timeout = parserConfig.timeout ? parserConfig.timeout : 0;
+
+
+        // 创建强制刷新函数
+        const forceRefresh = () => {
+            console.log('执行强制刷新...');
+
+            // 清理所有缓存
+            clearAllCache();
+
+            // 强制重新获取chatArea
+            const newChatArea = GLOBAL_OBJ.getCachedChatArea(true);
+            if (newChatArea) {
+                // 重新设置 MutationObserver 监听新的 chatArea
+                setupMutationObserver(newChatArea);
+
+                // 立即刷新大纲内容
+                refreshOutlineItems(GLOBAL_OBJ.outlineContent, GLOBAL_OBJ.parserConfig.determineMessageOwner);
+                console.log('强制刷新完成，已重新监听新的 chatArea');
+            } else {
+                console.error('强制刷新失败：无法获取到chatArea');
+            }
+        };
+
+        // 将强制刷新函数设置为全局可访问
+        GLOBAL_OBJ.forceRefreshOutline = forceRefresh;
+
+        GLOBAL_OBJ.getCachedChatArea = function (force_refresh = false) {
+            // 缓存选择器结果
+            if (force_refresh || !this._cachedChatArea) {
+                this._cachedChatArea = parserConfig.selectChatArea() || null;
+                console.log('get chatArea:', this._cachedChatArea)
+            }
+            return this._cachedChatArea;
+        }
+
+        // 将展开/收起函数设置为全局可访问
+        GLOBAL_OBJ.toggleAllNodes = toggleAllNodes;
         setTimeout(async function () {
             const outlineEle = initOutlineEle();
+
+            // 获取大纲内容容器
+            const outlineContent = outlineEle.querySelector('#outline-content');
+
+            // 保存到全局对象
+            GLOBAL_OBJ.outlineContent = outlineContent;
+
+            // 创建防抖的刷新函数
+            const debouncedRefresh = debounce(() => {
+                refreshOutlineItems(GLOBAL_OBJ.outlineContent, GLOBAL_OBJ.parserConfig.determineMessageOwner);
+            }, GLOBAL_CONFIG.features.debouncedInterval);
+
+            GLOBAL_OBJ.debouncedRefresh = debouncedRefresh;
 
             try {
                 // 插入大纲到页面
@@ -1309,56 +1391,6 @@
 
             console.log('成功定位到 chatArea:', chatArea);
             GLOBAL_OBJ.chatArea = chatArea;
-
-            // 获取大纲内容容器
-            const outlineContent = outlineEle.querySelector('#outline-content');
-
-            // 保存到全局对象
-            GLOBAL_OBJ.outlineContent = outlineContent;
-            GLOBAL_OBJ.parserConfig = parserConfig;
-
-            // 创建防抖的刷新函数
-            const debouncedRefresh = debounce(() => {
-                refreshOutlineItems(GLOBAL_OBJ.outlineContent, GLOBAL_OBJ.parserConfig.determineMessageOwner);
-            }, GLOBAL_CONFIG.features.debouncedInterval);
-
-            GLOBAL_OBJ.debouncedRefresh = debouncedRefresh;
-
-            GLOBAL_OBJ.getCachedChatArea = function (force_refresh = false) {
-                // 缓存选择器结果
-                if (force_refresh || !this._cachedChatArea) {
-                    this._cachedChatArea = parserConfig.selectChatArea() || null;
-                    console.log('get chatArea:', this._cachedChatArea)
-                }
-                return this._cachedChatArea;
-            }
-
-            // 创建强制刷新函数
-            const forceRefresh = () => {
-                console.log('执行强制刷新...');
-
-                // 清理所有缓存
-                clearAllCache();
-
-                // 强制重新获取chatArea
-                const newChatArea = GLOBAL_OBJ.getCachedChatArea(true);
-                if (newChatArea) {
-                    // 重新设置 MutationObserver 监听新的 chatArea
-                    setupMutationObserver(newChatArea);
-
-                    // 立即刷新大纲内容
-                    refreshOutlineItems(GLOBAL_OBJ.outlineContent, GLOBAL_OBJ.parserConfig.determineMessageOwner);
-                    console.log('强制刷新完成，已重新监听新的 chatArea');
-                } else {
-                    console.error('强制刷新失败：无法获取到chatArea');
-                }
-            };
-
-            // 将强制刷新函数设置为全局可访问
-            GLOBAL_OBJ.forceRefreshOutline = forceRefresh;
-
-            // 将展开/收起函数设置为全局可访问
-            GLOBAL_OBJ.toggleAllNodes = toggleAllNodes;
 
             // 初始化大纲内容
             refreshOutlineItems(outlineContent, parserConfig.determineMessageOwner);

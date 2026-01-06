@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [MWI]Talent Market
 // @namespace    http://tampermonkey.net/
-// @version      1.2.7
+// @version      1.3.0
 // @description  MWI Talent Market(www.papiyas.chat)，游戏页面内嵌网站弹窗，支持一键导入角色信息生成名片上传
 // @author       SHIIN
 // @match        https://www.milkywayidle.com/*
@@ -16,9 +16,10 @@
 // @icon         https://www.papiyas.chat/img/favicon.ico
 // @license      CC-BY-NC-SA-4.0
 // @connect      papiyas.chat
+// @connect      tupian.li
 // @require      https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.2/math.js
-// @resource     cardStyles https://papiyas.chat/static/js/mwi-card-styles.css?v=1.2.7
+// @resource     cardStyles https://papiyas.chat/static/js/mwi-card-styles.css?v=1.3.0
 // @downloadURL https://update.greasyfork.org/scripts/559347/%5BMWI%5DTalent%20Market.user.js
 // @updateURL https://update.greasyfork.org/scripts/559347/%5BMWI%5DTalent%20Market.meta.js
 // ==/UserScript==
@@ -41,6 +42,17 @@
                     for (let i = 0; i < style.length; i++) {
                         const name = style[i];
                         if (name !== 'backgroundImage') clone.style[name] = style.getPropertyValue(name);
+                    }
+                    const classNameForFix = typeof node.className === 'string' ? node.className : (node.className?.baseVal || '');
+                    if (classNameForFix.includes('mwi-stat-value') || classNameForFix.includes('mwi-stat-label') || classNameForFix.includes('mwi-character-id')) {
+                        clone.style.setProperty('overflow', 'visible', 'important');
+                        clone.style.setProperty('text-overflow', 'clip', 'important');
+                        clone.style.setProperty('white-space', 'nowrap', 'important');
+                        clone.style.setProperty('max-width', 'none', 'important');
+                    }
+                    if (classNameForFix.includes('mwi-stat-item') || classNameForFix.includes('mwi-character-id-wrapper') || classNameForFix.includes('mwi-character-info-top')) {
+                        clone.style.setProperty('overflow', 'visible', 'important');
+                        clone.style.setProperty('max-width', 'none', 'important');
                     }
                     if (node.style) {
                         for (let i = 0; i < node.style.length; i++) {
@@ -276,6 +288,34 @@
         .tm-container[data-mobile="true"] #tm-iframe {
             min-width: 100% !important;
         }
+        .mwi-stat-item {
+            overflow: visible !important;
+        }
+        .mwi-stat-value {
+            overflow: visible !important;
+            text-overflow: clip !important;
+            white-space: nowrap !important;
+            font-size: 12px !important;
+            max-width: none !important;
+        }
+        .mwi-stat-label {
+            overflow: visible !important;
+            text-overflow: clip !important;
+            white-space: nowrap !important;
+            font-size: 10px !important;
+            max-width: none !important;
+        }
+        .mwi-character-id-wrapper,
+        .mwi-character-id-wrapper * {
+            overflow: visible !important;
+            text-overflow: clip !important;
+            white-space: nowrap !important;
+            max-width: none !important;
+        }
+        .mwi-character-info-top {
+            overflow: visible !important;
+            max-width: none !important;
+        }
     `);
     
     const SITE_URL = 'https://papiyas.chat';
@@ -491,7 +531,7 @@
         }
     })();
     
-    const CARD_BACKGROUND_IMAGE = 'https://pic1.imgdb.cn/item/691cf6a63203f7be00143865.png';
+    const CARD_BACKGROUND_IMAGE = 'https://tupian.li/images/2026/01/06/695c6aa763f87.png';
     const BackgroundImagePreloader = {
         cachedDataURL: null,
         isLoading: false,
@@ -520,15 +560,28 @@
             if (!CARD_BACKGROUND_IMAGE || CARD_BACKGROUND_IMAGE.trim() === '') {
                 throw new Error('Background image URL not configured');
             }
-            const response = await fetch(CARD_BACKGROUND_IMAGE);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const blob = await response.blob();
+            const blob = await new Promise((resolve, reject) => {
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: CARD_BACKGROUND_IMAGE,
+                    responseType: 'blob',
+                    onload: (response) => {
+                        if (response.status >= 200 && response.status < 300) {
+                            resolve(response.response);
+                        } else {
+                            reject(new Error(`HTTP ${response.status}`));
+                        }
+                    },
+                    onerror: () => reject(new Error('Network error loading background image')),
+                    ontimeout: () => reject(new Error('Timeout loading background image'))
+                });
+            });
             const img = await new Promise((resolve, reject) => {
                 const imgEl = new Image();
                 imgEl.crossOrigin = 'anonymous';
                 imgEl.decoding = 'sync';
                 imgEl.onload = () => resolve(imgEl);
-                imgEl.onerror = () => reject(new Error('Failed to load background image'));
+                imgEl.onerror = () => reject(new Error('Failed to decode background image'));
                 imgEl.src = URL.createObjectURL(blob);
             });
             const canvas = document.createElement('canvas');
@@ -3019,7 +3072,7 @@
                 <svg width="24" height="24" viewBox="0 0 24 24" style="flex-shrink: 0;">
                     <use href="${miscSpriteURL}#combat"></use>
                 </svg>
-                <span class="mwi-stat-value ${combatLevelClass}">Lv.${combatLevel}</span>
+                <span class="mwi-stat-value ${combatLevelClass}" style="overflow:visible!important;text-overflow:clip!important;white-space:nowrap!important;font-size:14px;font-weight:bold;">Lv.${combatLevel}</span>
             </div>
         `;
         firstRowStats.forEach(stat => {
@@ -3031,7 +3084,7 @@
                     <svg width="24" height="24" viewBox="0 0 24 24" style="flex-shrink: 0;">
                         <use href="${skillsSpriteURL}#${name}"></use>
                     </svg>
-                    <span class="mwi-stat-value ${levelClass}">Lv.${stat.level}</span>
+                    <span class="mwi-stat-value ${levelClass}" style="overflow:visible!important;text-overflow:clip!important;white-space:nowrap!important;font-size: 14px; font-weight: bold;">Lv.${stat.level}</span>
                 </div>
             `;
         });
@@ -3044,7 +3097,7 @@
                     <svg width="24" height="24" viewBox="0 0 24 24" style="flex-shrink: 0;">
                         <use href="${skillsSpriteURL}#${name}"></use>
                     </svg>
-                    <span class="mwi-stat-value ${levelClass}">Lv.${stat.level}</span>
+                    <span class="mwi-stat-value ${levelClass}" style="overflow:visible!important;text-overflow:clip!important;white-space:nowrap!important;font-size:14px;font-weight:bold;">Lv.${stat.level}</span>
                 </div>
             `;
         });

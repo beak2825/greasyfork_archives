@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name Для Руководства || by F Angel || Special for Xayn || Patch
+// @name Для Руководства || by F Angel || Special for Xayn || Patch 8.3
 // @namespace https://forum.blackrussia.online
-// @version 0.8.1
+// @version 0.8.3
 // @description kye
 // @author Favorite_Angel
 // @match https://forum.blackrussia.online/threads/*
@@ -10,8 +10,8 @@
 // @license MIT
 // @collaborator !
 // @icon https://icons.iconarchive.com/icons/papirus-team/papirus-apps/48/emerald-theme-manager-icon-icon.png
-// @downloadURL https://update.greasyfork.org/scripts/560228/%D0%94%D0%BB%D1%8F%20%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0%20%7C%7C%20by%20F%20Angel%20%7C%7C%20Special%20for%20Xayn%20%7C%7C%20Patch.user.js
-// @updateURL https://update.greasyfork.org/scripts/560228/%D0%94%D0%BB%D1%8F%20%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0%20%7C%7C%20by%20F%20Angel%20%7C%7C%20Special%20for%20Xayn%20%7C%7C%20Patch.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560228/%D0%94%D0%BB%D1%8F%20%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0%20%7C%7C%20by%20F%20Angel%20%7C%7C%20Special%20for%20Xayn%20%7C%7C%20Patch%2083.user.js
+// @updateURL https://update.greasyfork.org/scripts/560228/%D0%94%D0%BB%D1%8F%20%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%B0%20%7C%7C%20by%20F%20Angel%20%7C%7C%20Special%20for%20Xayn%20%7C%7C%20Patch%2083.meta.js
 // ==/UserScript==
  
 (function () {
@@ -177,7 +177,7 @@
     title: 'Не успел зафиксировать, наруш не выдал',
     content:
      '[COLOR=rgb(255, 20, 147)][SIZE=4][FONT=Times New Roman][CENTER][B]{{ greeting }}, уважаемый {{ user.mention }}<br>[/Color]'+
-    "[CENTER]К сожалению администратор не успел зафиксировать наказание, поэтому наказание игроку не было выдано. Балта нет.[/CENTER]<br><br>"+
+    "[CENTER]К сожалению администратор не успел зафиксировать наказание, поэтому наказание игроку не было выдано. Блата нет.[/CENTER]<br><br>"+
     '[COLOR=rgb(255, 20, 147)]Приятной игры и времяпровождение на сервере [/Color][COLOR=rgb(174, 212, 246)]NORILSK[/COLOR].[/CENTER][/B][/SIZE]'+
          "<br><br>[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/9Q7VFddH/a154899bb5bdafff43df448ecb837b14-(1).gif[/img][/url][/CENTER]",
     prefix: CLOSE_PREFIX,
@@ -270,7 +270,7 @@
     title: 'В жалобы на тех.спец',
     content:
      '[COLOR=rgb(255, 20, 147)][SIZE=4][FONT=Times New Roman][CENTER][B]{{ greeting }}, уважаемый {{ user.mention }}<br>[/Color]'+
-    "[CENTER]Обратитесь в раздел [URL='https://forum.blackrussia.online/forums/%D0%A1%D0%B5%D1%80%D0%B2%D0%B5%D1%80-%E2%84%9690-norilsk.3984/']«Жалобы на технических Специалистов [(174, 212, 246)]NORILSK[/color]».[/URL][/CENTER]<br><br>"+
+    "[CENTER]Обратитесь в раздел [URL='https://forum.blackrussia.online/forums/%D0%A1%D0%B5%D1%80%D0%B2%D0%B5%D1%80-%E2%84%9690-norilsk.3984/']«Жалобы на технических Специалистов [COLOR=rgb=(174, 212, 246)]NORILSK[/color]».[/URL][/CENTER]<br><br>"+
     '[COLOR=rgb(255, 20, 147)]Приятной игры и времяпровождение на сервере [/Color][COLOR=rgb(174, 212, 246)]NORILSK[/COLOR].[/CENTER][/B][/SIZE]'+
          "<br><br>[CENTER][url=https://postimages.org/][img]https://i.postimg.cc/9Q7VFddH/a154899bb5bdafff43df448ecb837b14-(1).gif[/img][/url][/CENTER]",
     prefix: UNACCEPT_PREFIX,

@@ -2,9 +2,9 @@
 // @name         Cookie Clicker Ultimate Automation
 // @name:zh-TW   餅乾點點樂全自動掛機輔助 (Cookie Clicker)
 // @name:zh-CN   餅乾點點樂全自動掛機輔助 (Cookie Clicker)
-// @version      9.1.0.1
+// @version      9.1.2.1
 // @description  Automated clicker, auto-buy, auto-harvest, garden manager (5 slots), stock market, season manager, Santa evolver, Smart Sugar Lump harvester, Dragon Aura management, and the new Gambler feature.
-// @description:zh-TW 全功能自動掛機腳本 v9.1.0.1 UI Sync Fix
+// @description:zh-TW 全功能自動掛機腳本 v9.1.2.1 UI Crash Fix
 // @author       You & AI Architect
 // @match        https://wws.justnainai.com/*
 // @match        https://orteil.dashnet.org/cookieclicker/*
@@ -22,6 +22,14 @@
 
 /*
 變更日誌 (Changelog):
+v9.1.2.1 UI Crash Fix (2026):
+  - [Critical Fix] UI: 變數名 `style` 衝突修復，解決 "Unexpected identifier" 導致的 UI 初始化失敗。
+v9.1.2 Virtual Lock Hardening (2026):
+  - [Critical Logic] Core: 升級憲法級阻斷協議，Godzamok 活躍期間同步阻斷購買邏輯 (防止 Race Condition)。
+  - [Logic Fix] Godzamok: 調整 isActive 狀態宣告順序，確保在執行任何賣出或鎖定操作前即刻生效。
+v9.1.1 Smart Locking Protocol (2026):
+  - [Logic Fix] Godzamok: 修復 Godzamok 戰術結束後強制解除支出鎖定的問題。
+  - [Feature] Godzamok: 新增智慧鎖定記憶 (Smart Locking)，現在會記憶觸發前的鎖定狀態，並在結束後準確還原，而非無腦解鎖。
 v9.1.0.1 Hotfix (2026):
   - [UI Fix] UI.bindEvents: 修復主面板「突變管理」開關無法同步更新花園側邊欄按鈕狀態的問題。
 v9.1.0 UI & Logic Overhaul (2026):
@@ -189,7 +197,8 @@ v9.0.0 Feature Update (2026):
             originalBuyState: true,
             mutationRestoreTimer: null,
             wasMutationEnabled: false,
-            lastMartialLawTime: 0
+            lastMartialLawTime: 0,
+            wasSpendingLocked: false // [v9.1.1 New] 記憶原始鎖定狀態
         },
         GodzamokTacticalState: {
             status: 'IDLE',
@@ -322,9 +331,9 @@ v9.0.0 Feature Update (2026):
         },
 
         initStyles: function() {
-            const style = document.createElement('style');
-            style.type = 'text/css';
-            style.innerHTML = `
+            const styleEl = document.createElement('style'); // ✅ [v9.1.2.1] 變數名稱修復 (原為 style)
+            styleEl.type = 'text/css';
+            styleEl.innerHTML = `
                 /* Ghost Element Fix */
                 b[style*="font-weight:bold"] { display: none !important; }
                 #gardenField { overflow: visible !important; }
@@ -402,7 +411,7 @@ v9.0.0 Feature Update (2026):
                 /* [v8.9.7 New] Mutation Input Style */
                 .cc-input-mutation { color: #d500f9 !important; font-weight: bold; }
             `;
-            document.head.appendChild(style);
+            document.head.appendChild(styleEl); // ✅ [v9.1.2.1]
         },
 
         formatMs: function(ms) {
@@ -767,7 +776,7 @@ v9.0.0 Feature Update (2026):
                         color: white; padding: 15px; font-weight: bold; font-size: 18px;
                         cursor: move; display: flex; justify-content: space-between; align-items: center;
                     ">
-                        <span>🍪 控制面板 v9.1.0.1</span>
+                        <span>🍪 控制面板 v9.1.2.1</span>
                         <div class="cc-close-btn" id="main-panel-close">✕</div>
                     </div>
                     <div id="global-status-bar" style="
@@ -3496,13 +3505,18 @@ v9.0.0 Feature Update (2026):
                 // [v8.8.8] 啟動戒嚴協議
                 this.enforceMartialLaw();
 
+                // [v9.1.2 Fix] 立即宣告活躍狀態 (同步阻斷 Logic.Buy)
+                Runtime.GodzamokState.isActive = true;
+
                 const obj = Game.Objects[targetName];
                 if (!obj) {
                     Logger.error('Godzamok', `目標建築 ${targetName} 不存在`);
+                    Runtime.GodzamokState.isActive = false; // Safety reset
                     return false;
                 }
                 if (![2, 3, 4].includes(obj.id)) {
                     Logger.error('Godzamok', `非法目標 ${targetName} (ID check failed)。僅允許 Farm, Mine, Factory。`);
+                    Runtime.GodzamokState.isActive = false; // Safety reset
                     return false;
                 }
 
@@ -3510,11 +3524,15 @@ v9.0.0 Feature Update (2026):
                 if (Game.cookies < costToBuyBack) {
                     Logger.warn('Godzamok', `觸發失敗：資金不足以買回 (需 ${costToBuyBack})`);
                     Runtime.Timers.NextGodzamokCombo = now + 5000;
+                    Runtime.GodzamokState.isActive = false; // Safety reset
                     return;
                 }
 
                 const displayMult = currentMult ? Math.round(currentMult).toLocaleString() : "???";
                 Logger.log('Godzamok', `觸發連擊！倍率滿足 (當前: ${displayMult}x > 設定: ${Config.Settings.GodzamokMinMult}x)`);
+
+                // [v9.1.1] 智慧鎖定記憶
+                Runtime.GodzamokState.wasSpendingLocked = Config.Flags.SpendingLocked;
 
                 if (!Config.Flags.SpendingLocked) {
                      $('#chk-spending-lock').prop('checked', true).trigger('change');
@@ -3522,7 +3540,7 @@ v9.0.0 Feature Update (2026):
 
                 building.sell(Config.Settings.GodzamokSellAmount);
                 Runtime.GodzamokState.soldAmount = Config.Settings.GodzamokSellAmount;
-                Runtime.GodzamokState.isActive = true;
+                // Runtime.GodzamokState.isActive = true; // Moved up in v9.1.2
 
                 setTimeout(() => {
                     this.buyBack(targetName);
@@ -3568,8 +3586,14 @@ v9.0.0 Feature Update (2026):
                 Runtime.GodzamokState.isActive = false;
                 Runtime.GodzamokState.soldAmount = 0;
 
-                if (Config.Flags.SpendingLocked) {
+                // [v9.1.1] 智慧鎖定還原
+                // 只有在「原本沒鎖 (was == false)」且「現在鎖著」的情況下，才執行解鎖
+                if (Config.Flags.SpendingLocked && !Runtime.GodzamokState.wasSpendingLocked) {
                      $('#chk-spending-lock').prop('checked', false).trigger('change');
+                     Logger.log('Godzamok', '已解除支出鎖定 (還原原始狀態)');
+                } else if (Runtime.GodzamokState.wasSpendingLocked) {
+                     // 如果原本就是鎖的，保持鎖定，不動作
+                     Logger.log('Godzamok', '保持支出鎖定 (使用者原始設定)');
                 }
 
                 // [v8.8.8] 排程恢復
@@ -3591,6 +3615,7 @@ v9.0.0 Feature Update (2026):
 
                 // [v8.8.8] 啟動戒嚴協議
                 Logic.GodzamokCombo.enforceMartialLaw();
+                Runtime.GodzamokState.wasSpendingLocked = Config.Flags.SpendingLocked;
 
                 const targetName = Config.Settings.GodzamokTargetBuilding;
                 const obj = Game.Objects[targetName];
@@ -3771,7 +3796,8 @@ v9.0.0 Feature Update (2026):
                 
                 // 🛡️ [CONSTITUTION LEVEL 0]: 誓約與打寶虛擬鎖定 (Elder Pledge & Virtual Lock)
                 // 必須在最頂層檢查 isFarming
-                if (Runtime.SeasonState.isFarming) {
+                // [v9.1.2] Virtual Lock Hardening: 同步阻斷 Godzamok 活躍狀態
+                if (Runtime.SeasonState.isFarming || Runtime.GodzamokState.isActive) {
                      return; // 🔴 憲法級阻斷
                 }
 
@@ -4637,7 +4663,7 @@ v9.0.0 Feature Update (2026):
         },
 
         init: function() {
-            Logger.success('Core', 'Cookie Clicker Ultimate v9.1.0.1 Loading...');
+            Logger.success('Core', 'Cookie Clicker Ultimate v9.1.2.1 Loading...');
 
             Runtime.Timers.GardenWarmup = Date.now() + 10000;
             Logger.log('Core', '[花園保護] 暖機模式啟動：暫停操作 10 秒');
