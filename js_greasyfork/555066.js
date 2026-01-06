@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nitro Type Startrack Leaderboard Integration
-// @version      8.9
-// @description  OPTIMIZED - Bug fixes: race condition guard, error handling, curtain removal
+// @version      9.5
+// @description  This script adds a custom Startrack Leaderboards tab to Nitro Type, providing advanced leaderboard functionality with multiple timeframes, intelligent caching, and a polished UI that closely matches the original Nitro Type leaderboard design.
 // @author       Combined Logic (SuperJoelzy + Captain.Loveridge)
 // @license      MIT
 // @match        https://www.nitrotype.com/*
@@ -45,6 +45,23 @@
             opacity: 1 !important;
             color: #fff !important;
         }
+
+        /* Position Change Arrows */
+        .position-change {
+            font-size: 10px;
+            font-weight: bold;
+            margin-right: 4px;
+            vertical-align: middle;
+            display: inline-flex;
+            align-items: center;
+            gap: 1px;
+        }
+        .position-change--up {
+            color: #28a745;
+        }
+        .position-change--down {
+            color: #dc3545;
+        }
     `;
 
     const styleEl = document.createElement('style');
@@ -71,32 +88,39 @@
 
 
     // =================================================================
-    // 2. SHARED OPTIMIZATION LAYER
+    // 2. SHARED OPTIMIZATION LAYER (PROPERLY KEYED BY VIEW+TIMEFRAME+RANGE)
     // =================================================================
     window.NTShared = window.NTShared || {
-        cache: {
-            individual: { data: null, timestamp: 0, expiresAt: 0 },
-            team: { data: null, timestamp: 0, expiresAt: 0 },
-            isbot: new Map()
+        cache: new Map(), // Now uses Map with composite keys
+        isbot: new Map(),
+
+        _makeKey(view, timeframe, startKey, endKey) {
+            return `${view}_${timeframe}_${startKey}_${endKey}`;
         },
-        setCache(type, data, expiresAt) {
-            this.cache[type].data = data;
-            this.cache[type].timestamp = Date.now();
-            this.cache[type].expiresAt = expiresAt || (Date.now() + 3600000);
-            window.dispatchEvent(new CustomEvent('nt-cache-updated', { detail: { type, data, expiresAt } }));
+
+        setCache(key, data, expiresAt) {
+            this.cache.set(key, {
+                data: data,
+                timestamp: Date.now(),
+                expiresAt: expiresAt || (Date.now() + 3600000)
+            });
+            window.dispatchEvent(new CustomEvent('nt-cache-updated', { detail: { key, data, expiresAt } }));
         },
-        getCache(type) {
-            const cached = this.cache[type];
-            if (!cached.data) return null;
+
+        getCache(key) {
+            const cached = this.cache.get(key);
+            if (!cached || !cached.data) return null;
             if (Date.now() < cached.expiresAt) return cached.data;
             return null;
         },
-        // NEW: Helper to get the timestamp from shared memory
-        getTimestamp(type) {
-            return this.cache[type]?.timestamp || null;
+
+        getTimestamp(key) {
+            const cached = this.cache.get(key);
+            return cached?.timestamp || null;
         },
-        getBotStatus(username) { return this.cache.isbot.get(username.toLowerCase()); },
-        setBotStatus(username, status) { this.cache.isbot.set(username.toLowerCase(), status); }
+
+        getBotStatus(username) { return this.isbot.get(username.toLowerCase()); },
+        setBotStatus(username, status) { this.isbot.set(username.toLowerCase(), status); }
     };
 
     // --- CONFIGURATION ---
@@ -104,6 +128,7 @@
     const LEADERBOARD_PATH = '/leaderboards';
     const CACHE_KEY = 'ntStartrackCache_';
     const CACHE_TIMESTAMP_KEY = 'ntStartrackCacheTime_';
+    const SEASON_CACHE_KEY = 'ntStartrackSeasonCache';
     const CACHE_DURATION = 60 * 60 * 1000;
     const ASYNC_DELAY = 50;
 
@@ -113,9 +138,22 @@
     let forceBackgroundUpdate = false;
     let initialCacheComplete = false;
     let carDataMap = {};
+    let carDataLoaded = false;
+    let carDataLoadAttempts = 0;
+    const MAX_CAR_LOAD_ATTEMPTS = 10;
     let lastCheckedHour = null;
     let hourlyCheckInterval = null;
-    let pageRenderInProgress = false; // Guard flag to prevent duplicate renders
+    let pageRenderInProgress = false;
+
+    // Dynamic season data (loaded from NTBOOTSTRAP)
+    let currentSeason = {
+        seasonID: null,
+        name: 'Season',
+        startCT: null,
+        endCT: null,
+        startStampUTC: null,
+        endStampUTC: null
+    };
 
     let state = {
         view: 'individual',
@@ -124,9 +162,6 @@
         dateRange: { start: null, end: null }
     };
 
-    const SEASON_START = '2025-11-02 06:00:00';
-    const SEASON_END = '2025-11-30 08:00:00';
-
     const timeframes = [
         { key: 'season', label: 'Season', hasNav: false },
         { key: '24hr', label: 'Last 24 Hours', hasNav: false },
@@ -134,17 +169,262 @@
         { key: '7day', label: 'Last 7 Days', hasNav: false },
         { key: 'daily', label: 'Daily', hasNav: true },
         { key: 'weekly', label: 'Weekly', hasNav: true },
-        { key: 'monthly', label: 'Monthly', hasNav: true },
-        { key: 'custom', label: 'Custom', hasNav: false }
+        { key: 'monthly', label: 'Monthly', hasNav: true }
+        // { key: 'custom', label: 'Custom', hasNav: false }  // TODO: Add custom date picker UI
     ];
 
-    // --- UTILITIES ---
+    // =================================================================
+    // 3. TIMEZONE & SEASON UTILITIES
+    // =================================================================
+
     function getCurrentCT() {
         const now = new Date();
         const ctString = now.toLocaleString("en-US", { timeZone: "America/Chicago" });
         return new Date(ctString);
     }
+
     function getCurrentHour() { return new Date().getHours(); }
+
+    // Convert Unix timestamp (UTC seconds) to CT-formatted string for Startrack API
+    function utcToCTString(unixTimestamp) {
+        const date = new Date(unixTimestamp * 1000);
+        const ctString = date.toLocaleString("en-US", { timeZone: "America/Chicago" });
+        const ctDate = new Date(ctString);
+        return formatDate(ctDate);
+    }
+
+    // Convert Unix timestamp to user's local timezone for display
+    function utcToLocalDate(unixTimestamp) {
+        return new Date(unixTimestamp * 1000);
+    }
+
+    // Check if cache should be refreshed (within 1 week of season end)
+    function shouldRefreshSeasonCache(endStampUTC) {
+        if (!endStampUTC) return true;
+        const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
+        const endMs = endStampUTC * 1000;
+        const now = Date.now();
+        return (endMs - now) < oneWeekMs;
+    }
+
+    // Load season data from NTBOOTSTRAP or cache
+    function loadSeasonData() {
+        // 1. Check localStorage cache first
+        try {
+            const cached = localStorage.getItem(SEASON_CACHE_KEY);
+            if (cached) {
+                const seasonCache = JSON.parse(cached);
+                // If cache exists and we're NOT within 1 week of end, use it
+                if (!shouldRefreshSeasonCache(seasonCache.endStampUTC)) {
+                    currentSeason = seasonCache;
+                    console.log('[Startrack] Using cached season data:', currentSeason.name);
+                    return;
+                }
+            }
+        } catch (e) {
+            console.warn('[Startrack] Error reading season cache:', e);
+        }
+
+        // 2. Parse NTBOOTSTRAP for ACTIVE_SEASONS
+        if (typeof NTBOOTSTRAP === 'function') {
+            try {
+                const bootstrapData = NTBOOTSTRAP();
+                const seasonsData = bootstrapData.find(item => item[0] === 'ACTIVE_SEASONS');
+
+                if (seasonsData && seasonsData[1] && seasonsData[1].length > 0) {
+                    const now = Math.floor(Date.now() / 1000); // Current time in UTC seconds
+
+                    // Find the current active season (now >= startStamp && now < endStamp)
+                    let activeSeason = seasonsData[1].find(s => now >= s.startStamp && now < s.endStamp);
+
+                    // If no active season, use the most recent/upcoming one
+                    if (!activeSeason) {
+                        activeSeason = seasonsData[1][0];
+                    }
+
+                    if (activeSeason) {
+                        currentSeason = {
+                            seasonID: activeSeason.seasonID,
+                            name: activeSeason.name,
+                            startStampUTC: activeSeason.startStamp,
+                            endStampUTC: activeSeason.endStamp,
+                            startCT: utcToCTString(activeSeason.startStamp),
+                            endCT: utcToCTString(activeSeason.endStamp)
+                        };
+
+                        // Cache the season data
+                        localStorage.setItem(SEASON_CACHE_KEY, JSON.stringify(currentSeason));
+                        console.log('[Startrack] Loaded season from NTBOOTSTRAP:', currentSeason.name);
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.warn('[Startrack] Error parsing NTBOOTSTRAP for seasons:', e);
+            }
+        }
+
+        // 3. Fallback: try to use cached data even if expired
+        try {
+            const cached = localStorage.getItem(SEASON_CACHE_KEY);
+            if (cached) {
+                currentSeason = JSON.parse(cached);
+                console.log('[Startrack] Using expired cache as fallback:', currentSeason.name);
+                return;
+            }
+        } catch (e) {}
+
+        // 4. Ultimate fallback - this shouldn't happen normally
+        console.warn('[Startrack] Could not load season data, using defaults');
+        currentSeason = {
+            seasonID: null,
+            name: 'Season',
+            startCT: '2025-01-01 00:00:00',
+            endCT: '2025-12-31 23:59:59',
+            startStampUTC: null,
+            endStampUTC: null
+        };
+    }
+
+    // Format season dates for display (user's local timezone)
+    function getSeasonDisplayDates() {
+        if (!currentSeason.startStampUTC || !currentSeason.endStampUTC) {
+            return { startDisplay: 'Unknown', endDisplay: 'Unknown' };
+        }
+
+        const startLocal = utcToLocalDate(currentSeason.startStampUTC);
+        const endLocal = utcToLocalDate(currentSeason.endStampUTC);
+
+        const options = { month: 'short', day: 'numeric', year: 'numeric' };
+        return {
+            startDisplay: startLocal.toLocaleDateString(undefined, options),
+            endDisplay: endLocal.toLocaleDateString(undefined, options)
+        };
+    }
+
+    // =================================================================
+    // 4. POSITION CHANGE HELPER
+    // =================================================================
+
+    function getPositionChangeHTML(change) {
+        if (change === null || change === undefined || change === 0) {
+            return '';
+        }
+        if (change > 0) {
+            return `<span class="position-change position-change--up">▲${change}</span>`;
+        } else {
+            return `<span class="position-change position-change--down">▼${Math.abs(change)}</span>`;
+        }
+    }
+
+    // =================================================================
+    // 5. CAR DATA LOADING (DEFERRED WITH RETRY)
+    // =================================================================
+
+    function loadCarData(callback) {
+        // Check cache timestamp first
+        const cacheTimestamp = localStorage.getItem('ntCarDataMapTimestamp');
+        const cacheAge = cacheTimestamp ? Date.now() - parseInt(cacheTimestamp) : Infinity;
+        const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+
+        // Try loading from cache if it's less than 7 days old
+        if (cacheAge < SEVEN_DAYS) {
+            const cached = localStorage.getItem('ntCarDataMap');
+            if (cached) {
+                try {
+                    carDataMap = JSON.parse(cached);
+                    if (Object.keys(carDataMap).length > 0) {
+                        carDataLoaded = true;
+                        console.log(`[Startrack] Loaded ${Object.keys(carDataMap).length} cars from cache`);
+                        if (callback) callback(true);
+                        return;
+                    }
+                } catch (e) {
+                    console.warn('[Startrack] Failed to parse cached car data');
+                }
+            }
+        }
+
+        // Try to load from NTBOOTSTRAP
+        if (typeof NTBOOTSTRAP === 'function') {
+            try {
+                const bootstrapData = NTBOOTSTRAP();
+                const carsData = bootstrapData.find(item => item[0] === 'CARS');
+
+                if (carsData && carsData[1] && carsData[1].length > 0) {
+                    carsData[1].forEach(car => {
+                        if (car.carID && car.options && car.options.smallSrc) {
+                            carDataMap[car.carID] = car.options.smallSrc;
+                        }
+                    });
+
+                    if (Object.keys(carDataMap).length > 0) {
+                        localStorage.setItem('ntCarDataMap', JSON.stringify(carDataMap));
+                        localStorage.setItem('ntCarDataMapTimestamp', Date.now().toString());
+                        carDataLoaded = true;
+                        console.log(`[Startrack] Loaded ${Object.keys(carDataMap).length} cars from NTBOOTSTRAP`);
+                        if (callback) callback(true);
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.warn('[Startrack] Error loading from NTBOOTSTRAP:', e);
+            }
+        }
+
+        // NTBOOTSTRAP not available yet - retry
+        carDataLoadAttempts++;
+        if (carDataLoadAttempts < MAX_CAR_LOAD_ATTEMPTS) {
+            console.log(`[Startrack] NTBOOTSTRAP not ready, retry ${carDataLoadAttempts}/${MAX_CAR_LOAD_ATTEMPTS}...`);
+            setTimeout(() => loadCarData(callback), 500);
+            return;
+        }
+
+        // Max attempts reached - try expired cache as fallback
+        const cached = localStorage.getItem('ntCarDataMap');
+        if (cached) {
+            try {
+                carDataMap = JSON.parse(cached);
+                if (Object.keys(carDataMap).length > 0) {
+                    carDataLoaded = true;
+                    console.log(`[Startrack] Using expired car cache (${Object.keys(carDataMap).length} cars)`);
+                    if (callback) callback(true);
+                    return;
+                }
+            } catch (e) {}
+        }
+
+        console.error('[Startrack] Failed to load car data after all attempts');
+        carDataLoaded = true; // Mark as loaded to prevent infinite retries
+        if (callback) callback(false);
+    }
+
+    function getCarImage(carID, carHueAngle) {
+        const smallSrc = carDataMap[carID];
+
+        if (smallSrc) {
+            // If car has a hue angle, use painted version
+            if (carHueAngle !== null && carHueAngle !== undefined && carHueAngle !== 0) {
+                // Format: /cars/painted/{smallSrc without .png}_{hue}.png
+                const baseImage = smallSrc.replace('.png', '');
+                const url = `https://www.nitrotype.com/cars/painted/${baseImage}_${carHueAngle}.png`;
+                // Debug: uncomment to trace image URLs
+                // console.log(`[Startrack] Car ${carID}: painted → ${url}`);
+                return url;
+            }
+            // Unpainted car - use smallSrc directly
+            // Debug: uncomment to trace image URLs
+            // console.log(`[Startrack] Car ${carID}: unpainted → /cars/${smallSrc}`);
+            return `https://www.nitrotype.com/cars/${smallSrc}`;
+        }
+
+        // Fallback - unpainted rental car (identifiable error state)
+        console.warn(`[Startrack] Unknown car ID: ${carID}, carDataMap has ${Object.keys(carDataMap).length} entries`);
+        return `https://www.nitrotype.com/cars/9_small_1.png`;
+    }
+
+    // =================================================================
+    // 6. OTHER UTILITIES
+    // =================================================================
 
     function startHourlyCheck() {
         lastCheckedHour = getCurrentHour();
@@ -164,47 +444,6 @@
 
     function stopHourlyCheck() {
         if (hourlyCheckInterval) { clearInterval(hourlyCheckInterval); hourlyCheckInterval = null; }
-    }
-
-    function loadCarData() {
-        const cacheTimestamp = localStorage.getItem('ntCarDataMapTimestamp');
-        const cacheAge = cacheTimestamp ? Date.now() - parseInt(cacheTimestamp) : Infinity;
-        const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
-
-        if (cacheAge < SEVEN_DAYS) {
-            const cached = localStorage.getItem('ntCarDataMap');
-            if (cached) { try { carDataMap = JSON.parse(cached); return; } catch (e) {} }
-        }
-
-        if (typeof NTBOOTSTRAP === 'function') {
-            try {
-                const bootstrapData = NTBOOTSTRAP();
-                const carsData = bootstrapData.find(item => item[0] === 'CARS');
-                if (carsData && carsData[1]) {
-                    carsData[1].forEach(car => {
-                        if (car.carID && car.options && car.options.smallSrc) carDataMap[car.carID] = car.options.smallSrc;
-                    });
-                    localStorage.setItem('ntCarDataMap', JSON.stringify(carDataMap));
-                    localStorage.setItem('ntCarDataMapTimestamp', Date.now().toString());
-                    return;
-                }
-            } catch (e) {}
-        }
-
-        const cached = localStorage.getItem('ntCarDataMap');
-        if (cached) { try { carDataMap = JSON.parse(cached); } catch (e) {} }
-    }
-
-    function getCarImage(carID, carHueAngle) {
-        const smallSrc = carDataMap[carID];
-        if (smallSrc) {
-            if (carHueAngle !== null && carHueAngle !== undefined) {
-                const baseImage = smallSrc.replace('.png', '');
-                return `https://www.nitrotype.com/cars/painted/${baseImage}_${carHueAngle}.png`;
-            }
-            return `https://www.nitrotype.com/cars/${smallSrc}`;
-        }
-        return `https://www.nitrotype.com/cars/${carID}_small_1.png`;
     }
 
     function formatDate(date) {
@@ -228,7 +467,10 @@
         const timeframe = tempState.timeframe || state.timeframe;
         const now = getCurrentCT();
 
-        if (timeframe === 'season') { return { start: SEASON_START, end: SEASON_END }; }
+        if (timeframe === 'season') {
+            // Use dynamic season data
+            return { start: currentSeason.startCT, end: currentSeason.endCT };
+        }
         else if (timeframe === '60min') { end = now; start = new Date(now.getTime() - (60 * 60 * 1000)); }
         else if (timeframe === '24hr') { end = now; start = new Date(now.getTime() - (24 * 60 * 60 * 1000)); }
         else if (timeframe === '7day') { end = now; start = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000)); }
@@ -284,6 +526,7 @@
         }
     }
 
+    // Generate a cache key for both localStorage and RAM cache
     function getCacheKey(tempState) {
         const s = tempState || state;
         const ranges = calculateDateRange(s);
@@ -407,7 +650,6 @@
     }
 
     // --- RENDER TABLE ---
-    // MODIFIED: Accepts specificTime to ensure "Last updated" is always correct
     function renderTable(data, specificTime = null) {
         const container = document.getElementById('leaderboard-table-container');
         if (!container) return;
@@ -431,11 +673,21 @@
         top100.forEach((item, index) => {
             const rank = index + 1;
             let rowClass = 'table-row';
-            let medalHTML = `<div class="mhc"><span class="h3 tc-ts">${rank}</span></div>`;
+            const posChangeHTML = getPositionChangeHTML(item.position_change);
 
-            if (rank === 1) { rowClass = 'table-row table-row--gold'; medalHTML = '<img class="db" src="/dist/site/images/medals/gold-sm.png">'; }
-            else if (rank === 2) { rowClass = 'table-row table-row--silver'; medalHTML = '<img class="db" src="/dist/site/images/medals/silver-sm.png">'; }
-            else if (rank === 3) { rowClass = 'table-row table-row--bronze'; medalHTML = '<img class="db" src="/dist/site/images/medals/bronze-sm.png">'; }
+            // Position change BEFORE rank/medal
+            let medalHTML = `<div class="mhc">${posChangeHTML}<span class="h3 tc-ts">${rank}</span></div>`;
+
+            if (rank === 1) {
+                rowClass = 'table-row table-row--gold';
+                medalHTML = `<div class="mhc">${posChangeHTML}<img class="db" src="/dist/site/images/medals/gold-sm.png"></div>`;
+            } else if (rank === 2) {
+                rowClass = 'table-row table-row--silver';
+                medalHTML = `<div class="mhc">${posChangeHTML}<img class="db" src="/dist/site/images/medals/silver-sm.png"></div>`;
+            } else if (rank === 3) {
+                rowClass = 'table-row table-row--bronze';
+                medalHTML = `<div class="mhc">${posChangeHTML}<img class="db" src="/dist/site/images/medals/bronze-sm.png"></div>`;
+            }
 
             const wpm = parseFloat(item.WPM).toFixed(1);
             const acc = (parseFloat(item.Accuracy) * 100).toFixed(2);
@@ -448,7 +700,7 @@
                 const tagColor = item.tagColor || 'fff';
                 const isGold = item.membership === 'gold';
                 const carImage = getCarImage(item.carID || 1, item.carHueAngle);
-                const title = 'titles coming soon';
+                const title = item.title || 'Untitled';
 
                 html += `
                     <td class="table-cell table-cell--racer">
@@ -478,7 +730,7 @@
                 html += `<tr class="${rowClass}" data-teamtag="${item.TeamTag || ''}" style="cursor: pointer;"><td class="table-cell table-cell--place tac">${medalHTML}</td>`;
                 html += `
                     <td class="table-cell table-cell--tag"><span class="twb" style="color: #${tagColor};">[${teamTag}]</span></td>
-                    <td class="table-cell table-cell--team"><span class="tc-lemon">${teamName}</span></td>
+                    <td class="table-cell table-cell--team"><span class="tc-lemon">"${teamName}"</span></td>
                     <td class="table-cell table-cell--speed">${wpm}</td>
                     <td class="table-cell table-cell--races">${acc}%</td>
                     <td class="table-cell table-cell--races">${item.Races}</td>
@@ -503,10 +755,6 @@
             });
         }
 
-        // UPDATED: Robust Timestamp Logic
-        // 1. Use specificTime if provided (API/RAM)
-        // 2. Use LocalStorage if found
-        // 3. Fallback to NOW (Date.now()) to ensure text is always visible
         const cacheKey = getCacheKey();
         let timeToDisplay = specificTime || localStorage.getItem(CACHE_TIMESTAMP_KEY + cacheKey);
 
@@ -531,7 +779,12 @@
         const start = new Date(ranges.start.replace(' ', 'T'));
         const end = new Date(ranges.end.replace(' ', 'T'));
 
-        if (state.timeframe === 'season') { titleEl.textContent = 'Season'; rangeEl.textContent = 'Nov 2 - Nov 30, 2025'; }
+        if (state.timeframe === 'season') {
+            // Use dynamic season name and dates
+            titleEl.textContent = currentSeason.name || 'Season';
+            const seasonDates = getSeasonDisplayDates();
+            rangeEl.textContent = `${seasonDates.startDisplay} - ${seasonDates.endDisplay}`;
+        }
         else if (state.timeframe === 'daily') { titleEl.textContent = 'Daily'; rangeEl.textContent = start.toLocaleDateString(); }
         else if (state.timeframe === 'weekly') { titleEl.textContent = 'Weekly'; rangeEl.textContent = `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`; }
         else if (state.timeframe === 'monthly') { titleEl.textContent = 'Monthly'; rangeEl.textContent = start.toLocaleDateString(undefined, { month: 'long', year: 'numeric' }); }
@@ -581,30 +834,35 @@
             fetchFreshData(nextKey, nextItem.view, nextItem.timeframe, nextItem.currentDate, cacheAllViews);
         } catch (error) {
             console.error('Error in cache queue:', error);
-            // Reset flags on error to prevent stuck state
             isCaching = false;
             forceBackgroundUpdate = false;
         }
     }
 
     function fetchLeaderboardData(forceRefresh = false) {
+        const cacheKey = getCacheKey();
+
+        // Check RAM cache first (now properly keyed)
         if (window.NTShared && window.NTShared.getCache && !forceRefresh) {
-            const sharedData = window.NTShared.getCache(state.view);
+            const sharedData = window.NTShared.getCache(cacheKey);
             if (sharedData) {
                 updateDateDisplay();
-                // PASS SHARED TIMESTAMP
-                const sharedTS = window.NTShared.getTimestamp ? window.NTShared.getTimestamp(state.view) : null;
+                const sharedTS = window.NTShared.getTimestamp(cacheKey);
                 renderTable(sharedData, sharedTS);
                 return;
             }
         }
 
-        const cacheKey = getCacheKey();
+        // Check localStorage cache
         const cachedData = localStorage.getItem(cacheKey);
         updateDateDisplay();
 
         if (cachedData && isCacheFresh(cacheKey) && !forceRefresh) {
-            try { renderTable(JSON.parse(cachedData)); return; }
+            try {
+                const data = JSON.parse(cachedData);
+                renderTable(data);
+                return;
+            }
             catch (e) { localStorage.removeItem(cacheKey); }
         }
 
@@ -640,17 +898,20 @@
                             if (view === 'individual') data = data.filter(item => item.bot !== 1);
 
                             const now = Date.now();
-                            saveToCache(cacheKey, JSON.stringify(data.slice(0, 100)));
-                            if (window.NTShared && window.NTShared.setCache) window.NTShared.setCache(view, data, now + CACHE_DURATION);
+                            const top100 = data.slice(0, 100);
+                            saveToCache(cacheKey, JSON.stringify(top100));
 
-                            // PASS 'now' AS TIMESTAMP
+                            // Save to RAM cache with proper key
+                            if (window.NTShared && window.NTShared.setCache) {
+                                window.NTShared.setCache(cacheKey, top100, now + CACHE_DURATION);
+                            }
+
                             if (view === state.view && timeframe === state.timeframe) renderTable(data, now);
                             if (callback) callback();
                         } catch (e) {
                             console.error(e);
                             if (view === state.view && timeframe === state.timeframe) {
                                 setIndicator(`Update failed`, false);
-                                // Remove curtain on error
                                 document.documentElement.classList.remove('is-leaderboard-route');
                                 const main = document.querySelector('main.structure-content');
                                 if (main) main.classList.remove('custom-loaded');
@@ -661,7 +922,6 @@
                 } else {
                     if (view === state.view && timeframe === state.timeframe) {
                         setIndicator(`Update failed`, false);
-                        // Remove curtain on HTTP error
                         document.documentElement.classList.remove('is-leaderboard-route');
                         const main = document.querySelector('main.structure-content');
                         if (main) main.classList.remove('custom-loaded');
@@ -672,7 +932,6 @@
             onerror: function() {
                 if (view === state.view && timeframe === state.timeframe) {
                     setIndicator('Update failed', false);
-                    // Remove curtain on network error
                     document.documentElement.classList.remove('is-leaderboard-route');
                     const main = document.querySelector('main.structure-content');
                     if (main) main.classList.remove('custom-loaded');
@@ -728,7 +987,6 @@
     }
 
     function renderLeaderboardPage(forceRefresh = false) {
-        // Guard against duplicate renders
         if (pageRenderInProgress) return;
         pageRenderInProgress = true;
 
@@ -739,18 +997,29 @@
         }
 
         try {
-            loadCarData();
+            // Load season data first (this can use NTBOOTSTRAP or cache)
+            loadSeasonData();
+
+            // Build HTML immediately
             mainContent.innerHTML = buildLeaderboardHTML();
             requestAnimationFrame(() => { mainContent.classList.add('custom-loaded'); });
 
             attachListeners();
-            fetchLeaderboardData(forceRefresh);
             setActiveTab();
             setTabTitle();
             startHourlyCheck();
+
+            // Defer car loading with retry mechanism
+            loadCarData((success) => {
+                if (success) {
+                    console.log('[Startrack] Car data ready, fetching leaderboard...');
+                }
+                // Fetch leaderboard data after car data is loaded (or failed)
+                fetchLeaderboardData(forceRefresh);
+            });
+
         } catch (error) {
             console.error('Error rendering leaderboard page:', error);
-            // Remove curtain on error to prevent permanent blank page
             document.documentElement.classList.remove('is-leaderboard-route');
             if (mainContent) mainContent.classList.remove('custom-loaded');
         } finally {

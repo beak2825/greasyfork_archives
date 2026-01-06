@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name     Nitter Auto Theme Cookie
-// @description Automatically set theme cookie on Nitter
-// @version  1.0.0
+// @description Automatically set theme cookie and URL param on Nitter
+// @version  1.1.0
 // @include *nitter*
 // @include *xcancel*
 // @grant none
@@ -16,16 +16,43 @@
 (
   function() {
     'use strict';
+    var themeName = 'theme'
+    var themeValue = 'Auto'
+    var paramAbsent=false
+    var cookieAbsent=false
+    var themeChanged=false
+    var url
 
-    if (document.cookie.indexOf('theme') == -1 ) {
-      document.cookie = "theme=Auto";
-      location.reload();
+    if ('URL' in window) {
+      url = new URL(window.location);
+      if(url.searchParams.get(themeName, themeValue) === null) {
+        paramAbsent=true
+      }
+    }
+    if (document.cookie.indexOf(themeName) == -1 ) {
+      cookieAbsent=true
+    }
+
+    if (paramAbsent) {
+      url.searchParams.set(themeName, themeValue);
+      themeChanged=true
+    }
+
+    if(cookieAbsent) {
+      document.cookie = `${themeName}=${themeValue}`;
+      themeChanged=true
+    }
+
+    if(themeChanged) {
+      window.location = url;
     }
   }
 )();
 
 
   // {{{ changelog :
+
+  // [2026-01-05 Mon] Set URL param and cookie
 
   // [2025-11-11 Tue] Hello
 

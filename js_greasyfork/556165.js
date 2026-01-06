@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck
 // @namespace    Para_Thenics.torn.com
-// @version      1.00.000
+// @version      1.00.001
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -125,7 +125,7 @@ async function getPricesFromAPI() {
 "A Black Mark": [
     [
     "Payout:210K",
-    "Profit/Nerve: 8.3K ",
+    "Profit/Nerve: ",
     "Flamethrower:  No",
     "Place: 2 Gasoline ",
     "Stoke: 1 Lighter",
@@ -220,13 +220,23 @@ async function getPricesFromAPI() {
     "Dampen: "
     ]
 ],
-"A Problem Shared": [
+        "A Problem Shared": [
+            [
+    "Payout: 180K",
+    "Profit/Nerve: ",
+    "Flamethrower: No",
+    "Place: 6 Gasoline",
+    "Stoke: 1 Gasoline",
+    "Dampen: "
+],
+ [
     "Payout: 180K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
     "Place: 4 Gasoline",
     "Stoke: 1 Flamethrower",
     "Dampen: "
+     ]
 ],
 "A Rash Decision": [
     "Payout: 11K",
@@ -1271,7 +1281,7 @@ async function getPricesFromAPI() {
     "Dampen: "
 ],
 "Fire Kills 99.9% of Bacteria": [
-    "Payout: 295K",
+    "Payout: 305K",
     "Profit/Nerve: ",
     "Ignite: Lighter",
     "Place: 1 Hydrogen Tank",
@@ -2250,7 +2260,7 @@ async function getPricesFromAPI() {
     "Dampen: "
 ],
         "Playing With Fire": [
-            "Payout: 200K",
+            "Payout: 210K",
             "Profit/Nerve: ",
             "Ignite: Lighter",
             "Place: 2 Gasoline ",

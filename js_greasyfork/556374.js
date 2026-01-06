@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TikTok Market Scope Data Extractor
 // @namespace    http://tampermonkey.net/
-// @version      1.0.2
+// @version      1.0.4
 // @license MIT
 // @description  抓取 TikTok Market Scope 的商品品类洞察和商品洞察数据
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tiktok.com
@@ -278,7 +278,7 @@
             const body = {
                 "globalFilter": {
                     "categoryId": filterParams.categoryId,
-                    "lastDays": filterParams.lastDays,
+                    "lastDays": Math.min(filterParams.lastDays, 30),
                     "endDate": filterParams.endDate,
                     "isDateRangeValid": filterParams.isDateRangeValid
                 },
@@ -323,7 +323,7 @@
             const body = {
                 "globalFilter": {
                     "categoryId": categoryId,
-                    "lastDays": filterParams.lastDays,
+                    "lastDays": Math.min(filterParams.lastDays, 30),
                     "endDate": filterParams.endDate,
                     "isDateRangeValid": filterParams.isDateRangeValid
                 },

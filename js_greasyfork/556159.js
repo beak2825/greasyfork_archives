@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TMN Mobile-All-in-One Script
 // @namespace    http://tampermonkey.net/
-// @version      1.6.5
+// @version      1.6.12
 // @description  Revised version with countdown fix and GTA/Crimes integration
 // @author       Pap
 // @license      MIT
@@ -67,6 +67,71 @@
     });
 
     if (page.endsWith('trade.aspx')) {
+        // Find the money offers table
+        const table = document.querySelector('#ctl00_main_pnlMoneyOffers table');
+        if (!table) return
+        // Insert header cell
+        const headerRow = table.querySelector('tr');
+        const perCreditHeader = document.createElement('td');
+        perCreditHeader.style.textAlign = 'center';
+        perCreditHeader.textContent = 'Per Unit';
+        headerRow.insertBefore(perCreditHeader, headerRow.children[4]); // after Return
+
+        // Process each row
+        [...table.querySelectorAll('tr')].slice(1).forEach(row => {
+            const cells = row.children;
+            const offerText = cells[2].textContent.replace(/[$,]/g, '');
+            const returnText = cells[3].textContent.replace(/[^\d]/g, '');
+
+            const offer = parseFloat(offerText);
+            const ret = parseFloat(returnText);
+
+            const perCredit = (!isNaN(offer) && !isNaN(ret) && ret > 0)
+            ? Math.round(offer / ret).toLocaleString()
+            : '';
+
+            const td = document.createElement('td');
+            td.style.textAlign = 'center';
+            td.textContent = `$${perCredit}`;
+            row.insertBefore(td, cells[4]); // after Return
+        });
+
+        // Find the credits offers table
+        const creditTable = document.querySelector('#ctl00_main_pnlCreditOffers table');
+        if (!creditTable) return;
+
+        // Insert header cell
+        const headerRow2 = creditTable.querySelector('tr');
+        const perCreditHeader2 = document.createElement('td');
+        perCreditHeader2.style.textAlign = 'center';
+        perCreditHeader2.textContent = 'Per Unit';
+        headerRow2.insertBefore(perCreditHeader2, headerRow2.children[4]); // after Return
+
+        // Process each row
+        [...creditTable.querySelectorAll('tr')].slice(1).forEach(row => {
+            const cells = row.children;
+
+            // Offer = “10 Credits”
+            const offerCredits = parseFloat(
+                cells[2].textContent.replace(/[^\d]/g, '')
+            );
+
+            // Return = “$11,000,000”
+            const returnMoney = parseFloat(
+                cells[3].textContent.replace(/[$,]/g, '')
+            );
+
+            const perCredit = (!isNaN(offerCredits) && !isNaN(returnMoney) && offerCredits > 0)
+            ? Math.round(returnMoney / offerCredits).toLocaleString()
+            : '';
+
+            const td = document.createElement('td');
+            td.style.textAlign = 'center';
+            td.textContent = `$${perCredit}`;
+            row.insertBefore(td, cells[4]); // after Return
+        });
+
+
         $('[id$="btnTrade"]').each(function() {
             $(this).attr('onclick', "return confirm('Are you sure?');" );
         });
@@ -1096,9 +1161,17 @@
                             clearInterval(poll);
                             if (pageUrl.includes('store.aspx?p=b')) {
                                 const token = json.request;
-                                const expiry = Date.now() + 70000;
+                                const expiry = Date.now() + 110000;
                                 GM_setValue('TMN_BF_TOKEN', JSON.stringify({ 'token': token, 'expiry': expiry }));
+                                window._tmn_solving_captcha = false;
                                 location.href = location.href;
+                            } else if (pageUrl.toLowerCase().includes('default.aspx') || pageUrl.toLowerCase().includes('jail.aspx')) {
+                                const token = json.request;
+                                const expiry = Date.now() + 110000;
+                                GM_setValue('TMN_BF_TOKEN', JSON.stringify({ 'token': token, 'expiry': expiry }));
+                                Log('[Captcha] Token saved.');  
+                                clearInterval(poll);
+                                window._tmn_solving_captcha = false;
                             }
                             else injectUniversalCaptcha(json.request);
                         } else if (json.request !== 'CAPCHA_NOT_READY') {
@@ -1506,14 +1579,18 @@
     }
 
     async function GoNextAction() {
+        const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         const nextBooze = GM_getValue('TMN_NEXT_BOOZE', 0);
         const nextCrime = GM_getValue('TMN_NEXT_CRIME', 0);
         const nextGTA = GM_getValue('TMN_NEXT_GTA', 0);
         const now = Date.now();
+        const campingBullets = savedScriptStates['Spawn Camp Bullets'];
+        const NEXT_SYDNEY_SPAWN_TIME = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
+        const sydneyBFSpawningShortly = NEXT_SYDNEY_SPAWN_TIME - now <= 120000;
 
-        if (now > nextBooze) location.href = 'crimes.aspx?p=b'
-        else if (now > nextCrime) location.href = 'crimes.aspx'
-        else if (now > nextGTA) location.href = 'crimes.aspx?p=g'
+        if (now > nextBooze && savedScriptStates.Booze && !(campingBullets && sydneyBFSpawningShortly)) location.href = 'crimes.aspx?p=b'
+        else if (now > nextCrime && savedScriptStates.Crimes && !(campingBullets && sydneyBFSpawningShortly)) location.href = 'crimes.aspx'
+        else if (now > nextGTA && savedScriptStates.GTA && !(campingBullets && sydneyBFSpawningShortly)) location.href = 'crimes.aspx?p=g'
         else if (!location.href.includes('jail.aspx')) location.href = 'jail.aspx';
     }
 
@@ -1616,7 +1693,7 @@
         } else if (OnLoginPage()) {
             window.top.location.href = 'https://www.tmn2010.net/login.aspx';
             return;
-        } else if (!savedScriptStates.Crimes && !isMobile()) {
+        } else if (!savedScriptStates.Crimes) {
             return;
         }
 
@@ -1627,10 +1704,15 @@
             } else */if (document.referrer?.includes('scriptCheck')) {
                 setTimeout(() => { location.href = defaultPage }, 500);
                 return;
-            } else if (!isMobile()) {
-                return;
-            }
+            } else if (!isMobile()) return;
         }
+
+        const now = Date.now();
+        const campingBullets = savedScriptStates['Spawn Camp Bullets'];
+        const NEXT_SYDNEY_SPAWN_TIME = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
+        const sydneyBFSpawningShortly = NEXT_SYDNEY_SPAWN_TIME - now <= 120000;
+
+        if (campingBullets && sydneyBFSpawningShortly && !isMobile) return;
 
         const lblMsg = $('#ctl00_lblMsg').text() || $('#ctl00_main_lblResult').text();
         const consoleMsg = window.top.$('#console').text();
@@ -1658,18 +1740,20 @@
     function GTAScript() {
         const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
         const scriptCheck = $('#ctl00_main_MyScriptTest_btnSubmit')[0];
-        if (scriptCheck) {
-            window.top.location.href = 'crimes.aspx?scriptCheck';
-        } else if (OnLoginPage()) {
+        if (scriptCheck) window.top.location.href = 'crimes.aspx?scriptCheck';
+        else if (OnLoginPage()) {
             window.top.location.href = 'https://www.tmn2010.net/login.aspx';
             return;
-        } else if (!savedScriptStates.GTA && !isMobile()) {
-            return;
-        }
+        } else if (!savedScriptStates.GTA) return;
 
-        if (window.self == window.top && !isMobile()) {
-            return;
-        }
+        if (window.self == window.top && !isMobile()) return;
+
+        const now = Date.now();
+        const campingBullets = savedScriptStates['Spawn Camp Bullets'];
+        const NEXT_SYDNEY_SPAWN_TIME = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
+        const sydneyBFSpawningShortly = NEXT_SYDNEY_SPAWN_TIME - now <= 120000;
+
+        if (campingBullets && sydneyBFSpawningShortly && !isMobile) return;
 
         const lblMsg = $('#ctl00_lblMsg').text();
         const lblResult = $('#ctl00_main_lblResult').text();
@@ -1688,9 +1772,6 @@
             GM_setValue('TMN_NEXT_GTA', Date.now() + 242000);
             $('#ctl00_main_carslist_4').click();
             $('#ctl00_main_btnStealACar').click();
-        } else if (!savedScriptStates.GTA) {
-            if (consoleMsg.includes('GTA')) Log('');
-            location.href = defaultPage;
         } else {
             const seconds = lblResult.split('Still ')[1].split(' seconds')[0];
             if (consoleMsg.includes('GTA')) Log('');
@@ -1724,6 +1805,13 @@
         if (window.self == window.top && !isMobile()) {
             return;
         }
+
+        const now = Date.now();
+        const campingBullets = savedScriptStates['Spawn Camp Bullets'];
+        const NEXT_SYDNEY_SPAWN_TIME = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
+        const sydneyBFSpawningShortly = NEXT_SYDNEY_SPAWN_TIME - now <= 120000;
+
+        if (campingBullets && sydneyBFSpawningShortly && !isMobile) return;
 
         const lblMsg = $('#ctl00_lblMsg').text();
         const lblResult = $('#ctl00_main_lblResult').text();
@@ -2007,10 +2095,7 @@
         const activeMoneyOffers = $('#ctl00_main_pnlMoneyOffers table.smallerfonttable tr').filter(function () {
             return $(this).find('td').first().text().trim().includes(savedUsername);
         }).length;
-        const totalActiveOffers = $('table.smallerfonttable tr').filter(function () {
-            const firstTdText = $(this).find('td').first().text().trim();
-            return firstTdText.includes(savedUsername);
-        }).length;
+        const totalActiveOffers = activeCreditOffers + activeBulletOffers + activeMoneyOffers;
         const savedArbitrageInputs = JSON.parse(GM_getValue('TMN_ARBITRAGE_INPUTS', '{}'));
         const KEEP_ON_HAND = savedArbitrageInputs['MoneyOnHand'];
         const buyCreditsPrice = savedArbitrageInputs['BuyCreditsPrice'];
@@ -2030,7 +2115,7 @@
         const cashOnHand = parseInt($('#ctl00_userInfo_lblcash').text().replace(/[$,]/g, ''), 10);
         const creditsOnHand = parseInt($('#ctl00_userInfo_lblcredits').text(), 10);
 
-        if (cashOnHand - buyCost > KEEP_ON_HAND) {
+        if (cashOnHand - buyCost > KEEP_ON_HAND && totalActiveOffers < MAX_ACTIVE_OFFERS) {
             if (totalActiveOffers < MAX_ACTIVE_OFFERS) {
                 // create money offer
                 $offerInput.val(buyCreditsPrice * buyCreditsQuantity);
@@ -2038,7 +2123,7 @@
                 $exchangeInput.val(buyCreditsQuantity);
                 $exchangeType.val('Credits');
                 LogCountdown(3000, 1000, 'Creating money offer', () => { $postButton.click() });
-            } else if (activeMoneyOffers < MAX_ACTIVE_OFFERS) {
+            } else if (activeMoneyOffers < MAX_ACTIVE_OFFERS && activeCreditOffers > 0) {
                 // Cancel credit offer
                 const firstCancelButton = $('#ctl00_main_pnlCreditOffers table.smallerfonttable tr').filter(function () {
                     return $(this).find('td').first().text().trim().includes(savedUsername);
@@ -2255,6 +2340,10 @@
         const submit = document.querySelector('#ctl00_main_MyScriptTest_btnSubmit') || document.querySelector('#ctl00_main_btnLogin');
 
         setTimeout(() => { location.href = defaultPage }, 3 * 60000);
+
+        const NEXT_SYDNEY_SPAWN_TIME = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
+        const $sydneySpawnDiv = $('<div>', {id: 'sydney-spawn', text: `Next Sydney Spawn: ${new Date(NEXT_SYDNEY_SPAWN_TIME).toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true })}`}).appendTo($divContentIn);
+
         let pollBFTimer;
         if (!submit) {
             if (purchaseAmount == 0) {
@@ -2313,9 +2402,10 @@
         const flightRegex = /Welcome to .+ - .+!/;
         const hasFlown = flightRegex.test($("div:contains('Welcome to')").last().text());
         const LAST_SYDNEY_SPAWN_TIME = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity);
+        const NEXT_SYDNEY_SPAWN_TIME = LAST_SYDNEY_SPAWN_TIME + 120 * 60000;
         const now = Date.now()
 
-        if (now - LAST_SYDNEY_SPAWN_TIME <= 118 * 60000 && now - LAST_SYDNEY_SPAWN_TIME >= (118 * 60000 - 5000) ) {
+        if (NEXT_SYDNEY_SPAWN_TIME - now <= 120000 && NEXT_SYDNEY_SPAWN_TIME - now >= 115000) {
             UniversalCaptchaSolve('6LfhsUcUAAAAANgy-ecJurYuIiSVtwDq_a9G3jUM');
         }
 
@@ -2343,7 +2433,7 @@
                 const isWithinOneMinute = diffMs <= 60000 * 1;
 
                 if (!isWithinOneMinute) {
-                    if (LAST_SYDNEY_SPAWN_TIME == Infinity || now - LAST_SYDNEY_SPAWN_TIME > 120 * 60000) {
+                    if (LAST_SYDNEY_SPAWN_TIME == Infinity || Math.abs(now - LAST_SYDNEY_SPAWN_TIME) > 5 * 60000) {
                         if (text.includes('Sydney') && text.includes('FMJ')) {
                             Log('Last Sydney BF spawn time updated.')
                             GM_setValue('TMN_LAST_SYDNEY_SPAWN_TIME', shoutDate.getTime());

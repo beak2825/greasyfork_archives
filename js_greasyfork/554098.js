@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         到店取组合脚本（互联）
 // @namespace    http://tampermonkey.net/
-// @version      5.4.1
-// @description  泡泡玛特库存监测和下单助手的组合脚本，支持模式切换 [v5.4.1关键修复: 店铺列表在所有模式下都能恢复，解决切换模式后店铺列表丢失问题] [v5.4.0状态持久化: 刷新页面保持详情模式/刷新间隔等所有设置；详情模式启动优化-自动跳过当前店铺避免重复检测] [v5.2.0重大重构: 统一店铺切换逻辑-购物车和详情页模式共用同一套店铺遍历、选择、切换逻辑，只在检测和下单环节有区别] [v5.1.5关键修复: 降低面板z-index解决遮挡弹窗] [v5.0新增: 详情页模式-支持商品详情页监控、API加购、降级策略、复用到店13结算流程；API优化-购物车检测从DOM改为API判断]
+// @version      5.4.3
+// @description  泡泡玛特库存监测和下单助手的组合脚本，支持模式切换 [v5.4.3新增: 支付流程自动处理错误弹窗并重试,最多3次] [v5.4.2修复: 详情模式支付流程添加确认弹窗处理，与下单模式保持一致] [v5.4.1关键修复: 店铺列表在所有模式下都能恢复，解决切换模式后店铺列表丢失问题] [v5.4.0状态持久化: 刷新页面保持详情模式/刷新间隔等所有设置；详情模式启动优化-自动跳过当前店铺避免重复检测] [v5.2.0重大重构: 统一店铺切换逻辑-购物车和详情页模式共用同一套店铺遍历、选择、切换逻辑，只在检测和下单环节有区别]
 // @author       You
 // @match        https://www.popmart.com/hk/largeShoppingCart
 // @match        https://www.popmart.com/hk/order-confirmation?isStore=true
@@ -22,7 +22,7 @@
 
     // ==================== 全局模式控制 ====================
     let currentMode = 'order'; // 默认下单模式 'monitor' | 'order'
-    
+
     // ==================== 监测模式配置 ====================
     const MONITOR_CONFIG = {
         ELEMENT_WAIT_TIMEOUT: 10000,
@@ -44,7 +44,7 @@
         AUTO_CLICK_COUNT: 2,        // 固定2次点击
         AUTO_ERROR_DETECT_TIMEOUT: 2000  // 错误检测超时
     };
-    
+
     // ==================== 并发控制配置 ====================
     const CONCURRENCY_CONFIG = {
         MAX_SLOTS: 2,               // 每浏览器最大并发数
@@ -59,25 +59,25 @@
     let monitor_isRunning = false;
     let monitor_isExecuting = false;
     let monitor_currentStoreStatus = null;
-    
+
     let monitor_isScheduledEnabled = false;
     let monitor_scheduledTime = { hour: 0, minute: 0, second: 0, millisecond: 0 };
     let monitor_scheduleInterval = null;
-    
+
     let monitor_isMessageModeEnabled = true;
     let monitor_refreshInterval = 1000;
-    
+
     let monitor_ALL_STORES = [];
     let monitor_windowStatuses = {}; // 存储所有下单窗口状态
     let monitor_windowFilter_enabled = false; // 是否启用窗口筛选
     let monitor_selectedStoreNames = []; // 当前选中的店铺名称列表
     let monitor_currentSyncRequestId = null; // 当前同步请求ID
-    
+
     // v5.0: 详情页模式
     let monitor_isDetailModeEnabled = false; // 是否启用详情页模式
     let monitor_detailQuantityMode = 'max'; // 'max' or 'half'
     let monitor_maxQuantity = 12; // 从页面获取的最大数量
-    
+
     // API拦截相关
     let latestCartApiResponse = null; // 购物车API响应
     let latestProductApiResponse = null; // 商品详情API响应  
@@ -91,15 +91,15 @@
     let order_isRunning = false;
     let order_isExecuting = false;
     let order_isStoreValid = true;
-    
+
     let order_isScheduledEnabled = false;
     let order_scheduledTime = { hour: 0, minute: 0, second: 0, millisecond: 0 };
     let order_scheduleInterval = null;
-    
+
     let order_durationSeconds = ORDER_CONFIG.DEFAULT_DURATION_SECONDS;
     let order_startTime = null;
     let order_submitSpeed = ORDER_CONFIG.DEFAULT_SUBMIT_SPEED;
-    
+
     let order_latestLog = ''; // 存储最新日志
     let order_windowId = ''; // 当前窗口的唯一ID
     let order_crossBrowserHeartbeatTimer = null; // 跨端心跳定时器
@@ -131,9 +131,9 @@
             .replace(/^POP\s*MART\s*/i, '')
             .trim();
     }
-    
+
     // ==================== 并发控制系统 ====================
-    
+
     /**
      * 尝试获取执行槽位（乐观锁 + 重试机制）
      * @param {string} windowId - 窗口ID
@@ -141,78 +141,78 @@
      */
     async function tryAcquireSlot(windowId) {
         const maxRetries = CONCURRENCY_CONFIG.ACQUIRE_MAX_RETRIES;
-        
+
         for (let i = 0; i < maxRetries; i++) {
             try {
                 // 1. 读取当前槽位状态
-                const slotsData = JSON.parse(localStorage.getItem('popmart_running_slots') || 
+                const slotsData = JSON.parse(localStorage.getItem('popmart_running_slots') ||
                     `{"slots":[],"maxSlots":${CONCURRENCY_CONFIG.MAX_SLOTS}}`);
-                
+
                 // 2. 检查是否有空位
                 if (slotsData.slots.length >= slotsData.maxSlots) {
                     return { success: false, reason: 'full' };
                 }
-                
+
                 // 3. 检查是否已存在（重复申请）
                 if (slotsData.slots.some(s => s.windowId === windowId)) {
                     return { success: true, reason: 'already_acquired' };
                 }
-                
+
                 // 4. 添加新槽位
                 slotsData.slots.push({
                     windowId: windowId,
                     startTime: Date.now(),
                     storeName: order_currentStoreName
                 });
-                
+
                 // 5. 写入 localStorage
                 localStorage.setItem('popmart_running_slots', JSON.stringify(slotsData));
-                
+
                 // 6. 立即回读验证（检测冲突）
                 const verified = JSON.parse(localStorage.getItem('popmart_running_slots'));
-                
+
                 // 7. 验证是否写入成功
                 if (verified.slots.some(s => s.windowId === windowId)) {
                     console.log(`✓ 槽位获取成功 (${verified.slots.length}/${slotsData.maxSlots})`);
-                    
+
                     // 广播槽位状态变化
                     broadcastSlotStatusChange('acquired', verified.slots);
-                    
+
                     return { success: true, reason: 'acquired' };
                 }
-                
+
                 // 8. 冲突检测到，随机延迟后重试
                 const delay = Math.random() * CONCURRENCY_CONFIG.ACQUIRE_RETRY_DELAY + 10;
                 await new Promise(resolve => setTimeout(resolve, delay));
-                console.log(`⚠️ 检测到槽位冲突，重试第${i+1}次...`);
-                
+                console.log(`⚠️ 检测到槽位冲突，重试第${i + 1}次...`);
+
             } catch (e) {
                 console.error('获取槽位异常:', e);
             }
         }
-        
+
         // 重试失败
         return { success: false, reason: 'conflict' };
     }
-    
+
     /**
      * 释放执行槽位
      * @param {string} windowId - 窗口ID
      */
     function releaseSlot(windowId) {
         try {
-            const slotsData = JSON.parse(localStorage.getItem('popmart_running_slots') || 
+            const slotsData = JSON.parse(localStorage.getItem('popmart_running_slots') ||
                 `{"slots":[],"maxSlots":${CONCURRENCY_CONFIG.MAX_SLOTS}}`);
-            
+
             // 过滤掉当前窗口
             const beforeCount = slotsData.slots.length;
             slotsData.slots = slotsData.slots.filter(s => s.windowId !== windowId);
             const afterCount = slotsData.slots.length;
-            
+
             if (beforeCount !== afterCount) {
                 localStorage.setItem('popmart_running_slots', JSON.stringify(slotsData));
                 console.log(`✓ 槽位已释放 (${afterCount}/${slotsData.maxSlots})`);
-                
+
                 // 广播槽位状态变化
                 broadcastSlotStatusChange('released', slotsData.slots);
             }
@@ -220,20 +220,20 @@
             console.error('释放槽位异常:', e);
         }
     }
-    
+
     /**
      * 获取当前槽位状态
      * @returns {Object} { slots: Array, maxSlots: number }
      */
     function getRunningSlots() {
         try {
-            return JSON.parse(localStorage.getItem('popmart_running_slots') || 
+            return JSON.parse(localStorage.getItem('popmart_running_slots') ||
                 `{"slots":[],"maxSlots":${CONCURRENCY_CONFIG.MAX_SLOTS}}`);
         } catch (e) {
             return { slots: [], maxSlots: CONCURRENCY_CONFIG.MAX_SLOTS };
         }
     }
-    
+
     /**
      * 清理超时的槽位
      */
@@ -242,16 +242,16 @@
             const slotsData = getRunningSlots();
             const now = Date.now();
             const timeout = CONCURRENCY_CONFIG.SLOT_TIMEOUT;
-            
+
             const validSlots = slotsData.slots.filter(slot => {
                 return (now - slot.startTime) < timeout;
             });
-            
+
             if (validSlots.length !== slotsData.slots.length) {
                 console.warn(`检测到 ${slotsData.slots.length - validSlots.length} 个超时槽位，已自动清理`);
                 slotsData.slots = validSlots;
                 localStorage.setItem('popmart_running_slots', JSON.stringify(slotsData));
-                
+
                 // 广播槽位状态变化
                 broadcastSlotStatusChange('cleanup', validSlots);
             }
@@ -259,13 +259,13 @@
             console.error('清理超时槽位异常:', e);
         }
     }
-    
+
     /**
      * 广播槽位状态变化
      */
     function broadcastSlotStatusChange(action, slots) {
         if (!broadcastChannel) return;
-        
+
         try {
             broadcastChannel.postMessage({
                 type: 'slot_status_change',
@@ -289,30 +289,30 @@
         if (!order_windowId) {
             order_windowId = generateWindowId();
         }
-        
+
         // 重试机制：最多尝试5次
         let retryCount = 0;
         const maxRetries = 5;
-        
+
         const tryRegister = () => {
             try {
                 const registrations = getOrderWindowRegistrations();
-                
+
                 // 检查是否已注册
                 if (registrations.find(r => r.id === order_windowId)) {
                     console.log('下单窗口已存在，跳过注册:', order_windowId);
                     return true;
                 }
-                
+
                 // 添加新注册
                 registrations.push({
                     id: order_windowId,
                     timestamp: Date.now(),
                     mode: 'order'
                 });
-                
+
                 localStorage.setItem('popmart_order_window_registrations', JSON.stringify(registrations));
-                
+
                 // 验证写入是否成功
                 const verification = getOrderWindowRegistrations();
                 if (verification.find(r => r.id === order_windowId)) {
@@ -328,14 +328,14 @@
                 return false;
             }
         };
-        
+
         // 执行注册（带重试）
         const register = () => {
             if (tryRegister()) {
                 // 注册成功
                 return;
             }
-            
+
             retryCount++;
             if (retryCount < maxRetries) {
                 // 随机延迟后重试（避免多个窗口同时重试）
@@ -346,11 +346,11 @@
                 console.error('❌ 注册失败，已达到最大重试次数');
             }
         };
-        
+
         // 随机延迟后开始注册（避免并发冲突）
         const initialDelay = Math.random() * 100; // 0-100ms
         setTimeout(register, initialDelay);
-        
+
         // 页面关闭时移除
         window.addEventListener('beforeunload', () => {
             unregisterOrderWindow();
@@ -368,7 +368,7 @@
             registrations.splice(index, 1);
             localStorage.setItem('popmart_order_window_registrations', JSON.stringify(registrations));
             console.log('下单窗口已注销:', order_windowId);
-            
+
             // 更新显示
             updateOrderWindowCountDisplay();
         }
@@ -520,7 +520,7 @@
 
             broadcastChannel.onmessage = (event) => {
                 const data = event.data;
-                
+
                 // 根据消息类型分发，不打印全局日志
                 if (data.type === 'stock_found' && currentMode === 'order') {
                     handleStockMessage(data);
@@ -572,28 +572,28 @@
         const messageStoreName = data.storeName;
         const successTime = data.successTime || '-';
         console.log(`收到下单成功消息: ${messageStoreName}`);
-        
+
         monitor_isRunning = false;
         monitor_isExecuting = false;
         saveUserRunningState(false, 'monitor');
         updateRunButtonState();
-        
+
         const statusText = document.getElementById('status-text');
         if (statusText) {
             statusText.textContent = `已停止 - ${messageStoreName}下单成功`;
             statusText.style.color = '#52c41a';
         }
-        
+
         console.log(`脚本已停止 - ${messageStoreName}下单成功`);
-        
+
         // v4.0: 如果是监控模式且消息来自同浏览器，弹窗提示
         if (currentMode === 'monitor' && data._source === 'broadcast') {
             // 先闪烁标题
             flashTitle('🎉 下单成功！', 3);
-            
+
             // 显示确认对话框
             const confirmMessage = `🎉 下单成功！\n\n店铺: ${messageStoreName}\n时间: ${successTime}\n\n是否跳转到该窗口？`;
-            
+
             if (confirm(confirmMessage)) {
                 // 用户点击确认，聚焦窗口
                 if (data.windowId) {
@@ -602,7 +602,7 @@
             }
         }
     }
-    
+
     /**
      * 标题闪烁提醒
      * @param {string} message - 提示消息
@@ -611,11 +611,11 @@
     function flashTitle(message, times) {
         const originalTitle = document.title;
         let count = 0;
-        
+
         const interval = setInterval(() => {
             document.title = count % 2 === 0 ? message : originalTitle;
             count++;
-            
+
             if (count >= times * 2) {
                 clearInterval(interval);
                 // 延迟50ms后确保恢复原标题
@@ -635,9 +635,9 @@
             instancePrefix: ws_instancePrefix,
             timestamp: Date.now()
         };
-        
+
         let sentCount = 0;
-        
+
         // 通过BroadcastChannel发送（同浏览器内）
         if (broadcastChannel) {
             try {
@@ -648,7 +648,7 @@
                 console.error('BroadcastChannel发送失败:', e);
             }
         }
-        
+
         // 通过WebSocket发送（跨设备，仅监控模式）
         if (currentMode === 'monitor' && ws_enabled && ws_isConnected) {
             try {
@@ -664,7 +664,7 @@
                 console.error('WebSocket发送失败:', e);
             }
         }
-        
+
         console.log(`📢 库存消息已发送 (${storeName}) - ${sentCount}个通道`);
     }
 
@@ -674,23 +674,23 @@
         console.log('当前窗口ID:', order_windowId);
         console.log('当前模式:', currentMode);
         console.log('当前店铺:', order_currentStoreName);
-        
+
         // 三重保护检查
         if (currentMode !== 'order') {
             console.log('❌ 拒绝响应：当前不是下单模式 (mode:', currentMode, ')');
             return;
         }
-        
+
         if (!order_windowId) {
             console.log('❌ 拒绝响应：窗口ID不存在');
             return;
         }
-        
+
         if (!broadcastChannel) {
             console.log('❌ 拒绝响应：BroadcastChannel未初始化');
             return;
         }
-        
+
         try {
             // 先发送注册响应
             const response = {
@@ -700,7 +700,7 @@
             };
             broadcastChannel.postMessage(response);
             console.log('✓ 已发送注册响应');
-            
+
             // 再发送完整信息
             sendFullInfo();
         } catch (e) {
@@ -720,76 +720,76 @@
             console.warn('BroadcastChannel未初始化');
             return;
         }
-        
+
         if (monitor_selectedStores.length === 0) {
             alert('请至少选择一个店铺');
             return;
         }
-        
+
         const testButton = document.getElementById('test-signal');
         if (!testButton) return;
-        
+
         const originalText = testButton.textContent;
         testButton.disabled = true;
-        
+
         // ========== 每次都重新注册和分配 ==========
         testButton.textContent = '注册中...';
-        
+
         // 清空响应数组
         registerResponses = [];
-        
+
         // 发送注册请求
         broadcastChannel.postMessage({
             type: 'register_request',
             timestamp: Date.now()
         });
         console.log('已发送注册请求');
-        
+
         // 等待3秒收集响应
         await new Promise(resolve => setTimeout(resolve, 3000));
-        
+
         console.log(`收到 ${registerResponses.length} 个响应:`, registerResponses);
-        
+
         // 调试信息
         const registeredCount = getOrderWindowCount();
         console.log(`[调试] localStorage中注册: ${registeredCount} 个`);
         console.log(`[调试] 实际响应: ${registerResponses.length} 个`);
-        
+
         // 详细列出所有响应窗口
         console.log('========== 响应窗口详细列表 ==========');
         registerResponses.forEach((r, i) => {
-            console.log(`${i+1}. ${r.windowId} (响应时间: ${new Date(r.timestamp).toLocaleTimeString()})`);
+            console.log(`${i + 1}. ${r.windowId} (响应时间: ${new Date(r.timestamp).toLocaleTimeString()})`);
         });
         console.log('====================================');
-        
+
         if (registeredCount !== registerResponses.length) {
             console.warn(`[警告] 数量不匹配！localStorage注册了${registeredCount}个，但实际响应了${registerResponses.length}个`);
         }
-        
+
         if (registerResponses.length === 0) {
             alert('未检测到下单窗口，请确保至少打开一个下单窗口');
             testButton.textContent = originalText;
             testButton.disabled = false;
             return;
         }
-        
+
         // 按timestamp排序（先响应的在前）
         registerResponses.sort((a, b) => a.timestamp - b.timestamp);
-        
+
         // 获取旧的分配关系
         const oldMapping = GM_getValue('popmart_window_store_mapping', {});
-        
+
         // 当前在线的windowId集合
         const onlineWindowIds = new Set(registerResponses.map(r => r.windowId));
-        
+
         // 当前选中的店铺名称集合
         const selectedStoreNames = new Set(monitor_selectedStores.map(idx => monitor_ALL_STORES[idx]));
-        
+
         // 检查哪些配对仍然有效
         const validPairs = {};
         const assignedWindows = new Set();
         const assignedStores = new Set();
-        
+
         for (const [windowId, storeName] of Object.entries(oldMapping)) {
             // 如果窗口在线 且 店铺在选中列表中
             if (onlineWindowIds.has(windowId) && selectedStoreNames.has(storeName)) {
@@ -799,26 +799,26 @@
                 console.log(`保持有效配对: ${windowId} → ${storeName}`);
             }
         }
-        
+
         // 计算需要重新分配的窗口和店铺
         const unassignedWindows = registerResponses.filter(r => !assignedWindows.has(r.windowId));
         const unassignedStores = monitor_selectedStores
             .map(idx => monitor_ALL_STORES[idx])
             .filter(name => !assignedStores.has(name));
-        
+
         console.log(`需要重新分配: ${unassignedWindows.length} 个窗口, ${unassignedStores.length} 个店铺`);
-        
+
         // 检查数量是否匹配
         const totalWindows = registerResponses.length;
         const totalStores = monitor_selectedStores.length;
-        
+
         if (totalStores > totalWindows) {
             // 选中数量大于窗口数量，自动调整
             const removed = totalStores - totalWindows;
-            
+
             // 需要移除的店铺是未分配店铺的后几个
             const storesToRemove = unassignedStores.slice(totalWindows - Object.keys(validPairs).length);
-            
+
             // 更新选中状态（移除多余的）
             const newSelectedStores = [];
             for (let i = 0; i < monitor_selectedStores.length; i++) {
@@ -828,14 +828,14 @@
                     newSelectedStores.push(idx);
                 }
             }
-            
+
             monitor_selectedStores = newSelectedStores;
             saveUserSelectedStores(newSelectedStores);
             updateStoreList();
             bindStoreCheckboxEvents();
-            
+
             alert(`已自动调整选中店铺：\n保留 ${totalWindows} 个店铺\n取消了 ${removed} 个店铺`);
-            
+
             // 重新计算未分配店铺
             const assignedStoresSet = new Set(Object.values(validPairs));
             unassignedStores.length = 0;
@@ -846,7 +846,7 @@
                 }
             }
         }
-        
+
         // 重新分配未分配的窗口和店铺
         const newMapping = { ...validPairs };
         for (let i = 0; i < unassignedWindows.length && i < unassignedStores.length; i++) {
@@ -855,36 +855,36 @@
             newMapping[windowId] = storeName;
             console.log(`新分配: ${windowId} → ${storeName}`);
         }
-        
+
         // 保存新的分配关系
         GM_setValue('popmart_window_store_mapping', newMapping);
         console.log('最终分配关系:', newMapping);
-        
+
         // 发送测试信号给所有窗口（包括保持的和重新分配的）
         let sendIndex = 0;
         const totalToSend = Object.keys(newMapping).length;
-        
+
         for (const [windowId, storeName] of Object.entries(newMapping)) {
             sendIndex++;
-            
+
             // 判断是保持还是新分配
             const isReassigned = !validPairs[windowId] || validPairs[windowId] !== storeName;
             const prefix = isReassigned ? '分配' : '测试中';
-            
+
             testButton.textContent = `${prefix} ${sendIndex}/${totalToSend}`;
-            
+
             sendStockMessage(storeName, true, windowId);
             console.log(`已发送: ${windowId} → ${storeName} (${isReassigned ? '新分配' : '保持'})`);
-            
+
             // 最后一个不需要等待
             if (sendIndex < totalToSend) {
                 await new Promise(resolve => setTimeout(resolve, 3000));
             }
         }
-        
+
         // 显示完成状态
         testButton.textContent = '✓ 已发送';
-        
+
         // 1秒后恢复
         setTimeout(() => {
             testButton.textContent = originalText;
@@ -896,7 +896,7 @@
         const messageStoreName = data.storeName;
         const isTest = data.isTest || false;
         const messageWindowId = data.windowId;
-        
+
         // 如果是测试信号，特殊处理
         if (isTest) {
             // 验证windowId是否匹配（只处理发给自己的消息）
@@ -904,17 +904,17 @@
                 console.log(`收到其他窗口的测试信号，忽略 (目标: ${messageWindowId}, 我的: ${order_windowId})`);
                 return;
             }
-            
+
             console.log(`收到测试信号: ${messageStoreName}, windowId: ${messageWindowId}`);
             addLog(`🧪 收到测试信号: ${messageStoreName}`);
-            
+
             // 检测是否在订单页面
             const isOnOrderPage = checkIfOnOrderPage();
-            
+
             if (isOnOrderPage) {
                 // 已在订单页面，检查店铺匹配
                 addLog(`✓ 已在订单页面`);
-                
+
                 // 验证店铺匹配
                 if (order_currentStoreName === messageStoreName) {
                     addLog(`✓ 店铺匹配! (测试模式，不执行下单)`);
@@ -929,7 +929,7 @@
             }
             return;
         }
-        
+
         // 正常库存消息处理
         console.log(`收到库存消息: ${messageStoreName}, 当前店铺: ${order_currentStoreName}`);
 
@@ -952,11 +952,11 @@
             // v4.0: 尝试获取执行槽位
             addLog('正在申请执行槽位...');
             const slotResult = await tryAcquireSlot(order_windowId);
-            
+
             if (slotResult.success) {
                 const slotsData = getRunningSlots();
                 addLog(`✓ 获得执行槽位 (${slotsData.slots.length}/${slotsData.maxSlots})`);
-                
+
                 // 执行新的2次点击流程
                 executeAutoPayment_V2();
             } else {
@@ -965,10 +965,10 @@
                     const runningStores = slotsData.slots.map(s => s.storeName).join(', ');
                     addLog(`⚠️ 执行槽位已满 (${slotsData.slots.length}/${slotsData.maxSlots})，跳过本次`, true);
                     addLog(`当前运行窗口: ${runningStores}`);
-                    
+
                     // 更新状态为 skipped
                     sendStatusChange({ status: 'skipped' });
-                    
+
                     // 3秒后恢复为 waiting
                     setTimeout(() => {
                         sendStatusChange({ status: 'waiting' });
@@ -984,7 +984,7 @@
     }
 
     // ==================== WebSocket功能函数 ====================
-    
+
     // 生成或获取会话ID
     function getOrCreateSessionId() {
         let sessionId = localStorage.getItem('popmart_ws_sessionId');
@@ -995,7 +995,7 @@
         }
         return sessionId;
     }
-    
+
     // 智能WebSocket连接：先尝试localhost，失败后切换到局域网IP
     async function tryConnectWebSocket(url, timeout = 500) {
         return new Promise((resolve, reject) => {
@@ -1004,12 +1004,12 @@
                 ws.close();
                 reject(new Error('连接超时'));
             }, timeout);
-            
+
             ws.onopen = () => {
                 clearTimeout(timer);
                 resolve(ws);
             };
-            
+
             ws.onerror = () => {
                 clearTimeout(timer);
                 ws.close();
@@ -1017,26 +1017,26 @@
             };
         });
     }
-    
+
     // 初始化WebSocket连接
     async function initWebSocket() {
         // 读取配置 [v5.3.7: 默认开启]
         ws_enabled = GM_getValue('popmart_ws_enabled', true);
-        
+
         if (!ws_enabled) {
             console.log('WebSocket未启用');
             return;
         }
-        
+
         console.log('正在初始化WebSocket连接...');
         console.log('页面协议:', window.location.protocol);
-        
+
         // 智能连接策略：
         // 1. 先尝试 localhost（本机不受Mixed Content限制）
         // 2. 失败后尝试局域网IP（其他电脑需手动允许不安全内容）
         const localhostUrl = 'ws://localhost:8080';
         const lanUrl = 'ws://192.168.3.49:8080';
-        
+
         try {
             console.log('🔍 步骤1：尝试连接本机 localhost:8080...');
             ws_connection = await tryConnectWebSocket(localhostUrl, 500);
@@ -1057,12 +1057,12 @@
                 return;
             }
         }
-        
+
         // 连接成功，设置状态并绑定事件
         ws_isConnected = true;
         ws_reconnectAttempts = 0;
         updateWebSocketStatus();
-        
+
         // 绑定消息处理
         ws_connection.onmessage = (event) => {
             try {
@@ -1073,20 +1073,20 @@
                 console.error('解析WebSocket消息失败:', error);
             }
         };
-        
+
         // 绑定错误处理
         ws_connection.onerror = (error) => {
             console.error('WebSocket错误:', error);
             ws_isConnected = false;
             updateWebSocketStatus();
         };
-        
+
         // 绑定关闭处理（自动重连）
         ws_connection.onclose = () => {
             console.log('WebSocket连接已关闭');
             ws_isConnected = false;
             updateWebSocketStatus();
-            
+
             // 自动重连
             if (ws_enabled && ws_reconnectAttempts < ws_maxReconnectAttempts) {
                 ws_reconnectAttempts++;
@@ -1096,46 +1096,46 @@
                 }, ws_reconnectDelay);
             }
         };
-        
+
         // 发送注册消息
         ws_sessionId = getOrCreateSessionId();
         sendWebSocketMessage('register', {
             deviceType: 'pc',
             sessionId: ws_sessionId
         });
-        
+
         console.log('✅ WebSocket初始化完成，当前地址:', ws_serverUrl);
     }
-    
+
     // 关闭WebSocket连接
     function closeWebSocket() {
         if (ws_reconnectTimer) {
             clearTimeout(ws_reconnectTimer);
             ws_reconnectTimer = null;
         }
-        
+
         if (ws_connection) {
             ws_connection.close();
             ws_connection = null;
         }
-        
+
         ws_isConnected = false;
         ws_instancePrefix = '';
         updateWebSocketStatus();
         console.log('WebSocket已关闭');
     }
-    
+
     // 发送WebSocket消息
     function sendWebSocketMessage(type, data) {
         if (!ws_enabled) {
             return;
         }
-        
+
         if (!ws_isConnected || !ws_connection || ws_connection.readyState !== WebSocket.OPEN) {
             console.warn('WebSocket未连接，无法发送消息');
             return;
         }
-        
+
         try {
             const message = {
                 type: type,
@@ -1148,7 +1148,7 @@
             console.error('发送WebSocket消息失败:', error);
         }
     }
-    
+
     // 处理WebSocket消息
     function handleWebSocketMessage(message) {
         switch (message.type) {
@@ -1159,49 +1159,49 @@
                 console.log('✅ 实例前缀已分配并保存:', ws_instancePrefix);
                 updateWebSocketStatus();
                 break;
-                
+
             case 'stock_found':
                 // 收到有货消息（下单模式处理）
                 if (currentMode === 'order') {
                     handleStockMessage(message);
                 }
                 break;
-                
+
             case 'sync_schedule':
                 // 收到定时同步消息（下单模式处理）
                 if (currentMode === 'order') {
                     handleScheduleSync(message);
                 }
                 break;
-                
+
             case 'order_success':
                 // 收到下单成功消息（监控模式处理）
                 if (currentMode === 'monitor') {
                     handleOrderSuccessMessage(message);
                 }
                 break;
-                
+
             case 'heartbeat':
                 // 收到心跳消息（监控模式处理）
                 if (currentMode === 'monitor') {
                     handleHeartbeat(message);
                 }
                 break;
-                
+
             case 'window_full_info':
                 // 收到完整窗口信息（监控模式处理）
                 if (currentMode === 'monitor') {
                     handleFullInfo(message);
                 }
                 break;
-                
+
             case 'window_status_change':
                 // 收到窗口状态变化（监控模式处理）
                 if (currentMode === 'monitor') {
                     handleStatusChange(message);
                 }
                 break;
-                
+
             case 'focus_window_request':
                 // 收到聚焦请求（下单模式处理）
                 if (currentMode === 'order' && message.targetWindowId === order_windowId) {
@@ -1209,40 +1209,40 @@
                     console.log('收到聚焦请求，已聚焦窗口');
                 }
                 break;
-                
+
             case 'force_full_info_update':
                 // 收到强制更新请求（下单模式处理，监控模式忽略）
                 if (currentMode === 'order') {
                     handleForceFullInfoUpdate(message);
                 }
                 break;
-                
+
             case 'enable_cross_browser_heartbeat':
                 // 收到启用跨端心跳请求（下单模式处理）
                 if (currentMode === 'order') {
                     startCrossBrowserHeartbeat();
                 }
                 break;
-                
+
             case 'cross_browser_heartbeat':
                 // 收到跨端心跳（监控模式处理）
                 if (currentMode === 'monitor') {
                     handleCrossBrowserHeartbeat(message);
                 }
                 break;
-                
+
             default:
                 console.log('未处理的消息类型:', message.type);
                 break;
         }
     }
-    
+
     // 更新WebSocket状态显示
     function updateWebSocketStatus() {
         const statusElement = document.getElementById('ws-status');
         const connectionElement = document.getElementById('ws-connection-status');
         const instanceElement = document.getElementById('ws-instance-prefix');
-        
+
         if (statusElement) {
             if (ws_isConnected) {
                 statusElement.textContent = '✅ 已连接';
@@ -1252,25 +1252,25 @@
                 statusElement.style.color = '#ff4d4f';
             }
         }
-        
+
         if (connectionElement) {
             connectionElement.textContent = ws_isConnected ? '已连接' : '断开';
             connectionElement.style.color = ws_isConnected ? '#52c41a' : '#999';
         }
-        
+
         if (instanceElement) {
             instanceElement.textContent = ws_instancePrefix || '-';
         }
-        
+
         // 更新按钮状态
         updateWebSocketButtonUI();
     }
-    
+
     // 切换WebSocket开关
     function toggleWebSocket() {
         ws_enabled = !ws_enabled;
         GM_setValue('popmart_ws_enabled', ws_enabled);
-        
+
         if (ws_enabled) {
             console.log('✅ WebSocket已启用');
             initWebSocket();
@@ -1278,17 +1278,17 @@
             console.log('❌ WebSocket已禁用');
             closeWebSocket();
         }
-        
+
         updateWebSocketButtonUI();
     }
-    
+
     // 更新WebSocket按钮UI
     function updateWebSocketButtonUI() {
         const toggleBtn = document.getElementById('toggle-websocket-btn');
         const btnText = document.querySelector('.ws-btn-text');
-        
+
         if (!toggleBtn || !btnText) return;
-        
+
         if (ws_enabled) {
             if (ws_isConnected) {
                 toggleBtn.className = 'websocket-toggle-btn ws-connected';
@@ -1306,61 +1306,61 @@
     // ==================== 模式切换功能 ====================
     function switchMode(newMode) {
         if (currentMode === newMode) return;
-        
+
         // 检查是否正在运行
         if (currentMode === 'monitor' && monitor_isRunning) {
             alert('请先停止监测模式的运行');
             return;
         }
-        
+
         if (currentMode === 'order' && order_isRunning) {
             alert('请先停止下单流程');
             return;
         }
-        
+
         // 弹窗确认
         const modeName = newMode === 'monitor' ? '监测模式' : '下单模式';
         if (!confirm(`确认切换到${modeName}？`)) {
             return;
         }
-        
+
         // 停止当前模式的定时器
         if (currentMode === 'monitor') {
             stopMonitorScheduleChecker();
         } else {
             stopOrderScheduleChecker();
         }
-        
+
         // 从下单模式切换出去时注销窗口
         if (currentMode === 'order' && order_windowId) {
             unregisterOrderWindow();
             order_windowId = ''; // 清空窗口ID，防止继续响应注册请求
             console.log('切换模式：已注销下单窗口并清空窗口ID');
         }
-        
+
         currentMode = newMode;
         saveCurrentMode();
-        
+
         // 切换到下单模式时注册窗口
         if (currentMode === 'order') {
             registerOrderWindow();
             console.log('切换模式：已注册下单窗口');
         }
-        
+
         // 切换UI
         switchUI();
-        
+
         // 更新按钮状态
         updateModeButtons();
         updateCollapsedInfo();
-        
+
         // 启动新模式的定时器（如果开启了）
         if (currentMode === 'monitor' && monitor_isScheduledEnabled) {
             startMonitorScheduleChecker();
         } else if (currentMode === 'order' && order_isScheduledEnabled) {
             startOrderScheduleChecker();
         }
-        
+
         console.log(`已切换到${modeName}`);
     }
 
@@ -1370,18 +1370,18 @@
         const runButton = document.getElementById('toggle-run');
         const testButton = document.getElementById('test-signal');
         const collapseSyncButton = document.getElementById('collapse-sync-store');
-        
+
         if (currentMode === 'monitor') {
             if (monitorContent) monitorContent.style.display = 'block';
             if (orderContent) orderContent.style.display = 'none';
             if (runButton) runButton.style.display = 'inline-block';
-            
+
             // 测试按钮：根据消息模式决定是否显示
             updateTestButtonVisibility();
-            
+
             // 折叠同步按钮：监测模式隐藏
             if (collapseSyncButton) collapseSyncButton.style.display = 'none';
-            
+
             // 更新监测模式的UI
             updateIntervalUI();
             if (monitor_ALL_STORES.length > 0) {
@@ -1393,10 +1393,10 @@
             if (orderContent) orderContent.style.display = 'block';
             if (runButton) runButton.style.display = 'none';
             if (testButton) testButton.style.display = 'none';
-            
+
             // 折叠同步按钮：根据折叠状态决定是否显示
             updateCollapseSyncButtonVisibility();
-            
+
             // 更新下单模式的UI
             updateStoreNameDisplay();
             updateDurationUI();
@@ -1408,7 +1408,7 @@
     function updateTestButtonVisibility() {
         const testButton = document.getElementById('test-signal');
         if (!testButton) return;
-        
+
         // 只在监测模式且消息模式开启时显示
         if (currentMode === 'monitor' && monitor_isMessageModeEnabled) {
             testButton.style.display = 'inline-block';
@@ -1420,7 +1420,7 @@
     function updateCollapseSyncButtonVisibility() {
         const collapseSyncButton = document.getElementById('collapse-sync-store');
         if (!collapseSyncButton) return;
-        
+
         // 只在下单模式且折叠时显示
         if (currentMode === 'order' && isCollapsed) {
             collapseSyncButton.style.display = 'inline-block';
@@ -1432,7 +1432,7 @@
     function updateModeButtons() {
         const monitorBtn = document.getElementById('mode-monitor');
         const orderBtn = document.getElementById('mode-order');
-        
+
         if (currentMode === 'monitor') {
             if (monitorBtn) {
                 monitorBtn.classList.add('active');
@@ -1498,7 +1498,7 @@
     function saveUserScheduleSettings(settings, mode) {
         const key = mode === 'monitor' ? 'popmart_monitor_scheduleSettings' : 'popmart_payment_scheduleSettings';
         GM_setValue(key, settings);
-        
+
         if (mode === 'monitor') {
             monitor_isScheduledEnabled = settings.enabled;
             monitor_scheduledTime = {
@@ -1577,7 +1577,7 @@
         // 初始化模式
         switchUI();
         updateModeButtons();
-        
+
         // 绑定监测模式事件
         bindMonitorEvents();
         // 绑定下单模式事件
@@ -1590,25 +1590,25 @@
         if (selectAllToggle) {
             selectAllToggle.addEventListener('change', toggleSelectAll);
         }
-        
+
         // 同步店铺列表按钮
         const syncStoreListBtn = document.getElementById('sync-store-list-btn');
         if (syncStoreListBtn) {
             syncStoreListBtn.addEventListener('click', syncStoreList);
         }
-        
+
         // WebSocket 开启/关闭按钮
         const toggleWebSocketBtn = document.getElementById('toggle-websocket-btn');
         if (toggleWebSocketBtn) {
             toggleWebSocketBtn.addEventListener('click', toggleWebSocket);
         }
-        
+
         // 同步下单窗口按钮
         const syncOrderWindowsBtn = document.getElementById('sync-order-windows-btn');
         if (syncOrderWindowsBtn) {
             syncOrderWindowsBtn.addEventListener('click', syncOrderWindows);
         }
-        
+
         // 定时运行事件
         const monitorScheduleToggle = document.getElementById('monitor-schedule-toggle');
         if (monitorScheduleToggle) {
@@ -1618,19 +1618,19 @@
         if (monitorScheduleSave) {
             monitorScheduleSave.addEventListener('click', saveMonitorSchedule);
         }
-        
+
         // 消息模式切换
         const messageModeToggle = document.getElementById('message-mode-toggle');
         if (messageModeToggle) {
             messageModeToggle.addEventListener('change', toggleMessageMode);
         }
-        
+
         // v5.0: 详情模式切换
         const detailModeToggle = document.getElementById('detail-mode-toggle');
         if (detailModeToggle) {
             detailModeToggle.addEventListener('change', toggleDetailMode);
         }
-        
+
         // v5.0: 数量模式切换
         document.querySelectorAll('input[name="quantity-mode"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
@@ -1644,7 +1644,7 @@
                 console.log('数量模式切换为:', monitor_detailQuantityMode);
             });
         });
-        
+
         // 刷新间隔按钮
         document.querySelectorAll('.interval-preset').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -1657,7 +1657,7 @@
                 e.target.classList.add('active');
             });
         });
-        
+
         // 绑定店铺列表的复选框事件
         bindStoreCheckboxEvents();
     }
@@ -1690,27 +1690,27 @@
     function toggleSelectAll() {
         const selectAllToggle = document.getElementById('select-all-toggle');
         const isChecked = selectAllToggle ? selectAllToggle.checked : false;
-        
+
         const checkboxes = document.querySelectorAll('#store-list input[type="checkbox"]');
         checkboxes.forEach(cb => {
             cb.checked = isChecked;
         });
-        
+
         const newSelection = isChecked ? monitor_ALL_STORES.map((_, i) => i) : [];
         saveUserSelectedStores(newSelection);
         updateSelectStatusText();
     }
-    
+
     function updateSelectStatusText() {
         const selectedCount = getUserSelectedStores().length;
         const totalCount = monitor_ALL_STORES.length;
         const statusText = document.getElementById('select-status-text');
         const selectAllToggle = document.getElementById('select-all-toggle');
-        
+
         if (statusText) {
             statusText.textContent = `${selectedCount}/${totalCount}`;
         }
-        
+
         if (selectAllToggle) {
             selectAllToggle.checked = selectedCount === totalCount && totalCount > 0;
         }
@@ -1722,20 +1722,20 @@
             const originalText = btn.textContent;
             btn.textContent = '同步中...';
             btn.disabled = true;
-            
+
             try {
                 // 获取当前选中的店铺名称列表
                 monitor_selectedStoreNames = GM_getValue('popmart_selectedStoreNames', []);
-                
+
                 // 启用筛选功能
                 monitor_windowFilter_enabled = true;
-                
+
                 console.log('启用窗口筛选，匹配店铺:', monitor_selectedStoreNames);
-                
+
                 // 生成同步请求ID
                 const syncRequestId = 'sync_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                 monitor_currentSyncRequestId = syncRequestId;
-                
+
                 // 通过 BroadcastChannel 向本浏览器的下单窗口发送请求
                 if (broadcastChannel) {
                     broadcastChannel.postMessage({
@@ -1745,7 +1745,7 @@
                     });
                     console.log('已通过 BroadcastChannel 发送同步请求（本浏览器）');
                 }
-                
+
                 // 通过 WebSocket 向其他浏览器的下单窗口发送请求
                 if (ws_enabled && ws_isConnected) {
                     sendWebSocketMessage('force_full_info_update', {
@@ -1753,14 +1753,14 @@
                         timestamp: Date.now()
                     });
                     console.log('已通过 WebSocket 发送同步请求（其他浏览器）');
-                    
+
                     // 启用跨端心跳（20秒一次）
                     sendWebSocketMessage('enable_cross_browser_heartbeat', {
                         timestamp: Date.now()
                     });
                     console.log('已启用跨端心跳（20秒一次）');
                 }
-                
+
                 // 立即更新UI
                 setTimeout(() => {
                     updateWindowMonitorUI();
@@ -1779,12 +1779,12 @@
             }
         }
     }
-    
+
     async function syncStoreList() {
         // v5.1.2: 第一阶段 - 优先提取商品数量（不依赖弹窗）
         let quantityExtracted = false;
         let extractedQuantity = null;
-        
+
         try {
             const quantityElement = document.querySelector('.index_info__XCDmR');
             console.log('🔍 第一阶段：检测商品数量元素:', {
@@ -1792,7 +1792,7 @@
                 text: quantityElement?.textContent,
                 pathname: window.location.pathname
             });
-            
+
             if (quantityElement) {
                 const match = quantityElement.textContent.match(/最大\s*(\d+)\s*件/);
                 if (match) {
@@ -1800,7 +1800,7 @@
                     monitor_maxQuantity = extractedQuantity;
                     updateQuantityDisplay();
                     quantityExtracted = true;
-                    
+
                     console.log(`✅ 已提取最大数量: ${extractedQuantity}件`);
                     console.log('✓ 数量配置已更新:', {
                         maxQuantity: monitor_maxQuantity,
@@ -1815,48 +1815,48 @@
         } catch (error) {
             console.error('❌ 提取商品数量失败:', error);
         }
-        
+
         // v5.1.3: 第二阶段 - 同步店铺列表
         try {
             console.log('🔍 第二阶段：开始同步店铺列表...');
-            
+
             const storeInfo = document.querySelector('.index_storeInfo__G9rTP');
             if (!storeInfo) {
                 throw new Error('未找到店铺信息元素');
             }
-            
+
             // 直接点击打开弹窗
             console.log('📍 点击打开店铺弹窗...');
             storeInfo.click();
-            
+
             // 等待弹窗出现
             await waitForElement('.ant-modal-content', 5000);
             console.log('✓ 弹窗已打开');
-            
+
             // ✅ 修复：直接查询店铺容器（兼容详情页多个弹窗的情况）
             await waitForElement('.index_storeListContainer__0Vg6c', 5000);
             const container = document.querySelector('.index_storeListContainer__0Vg6c');
-            
+
             if (!container) {
                 throw new Error('未找到店铺列表容器');
             }
-            
+
             const storeElements = container.querySelectorAll('.index_name__BHfG4');
             if (storeElements.length === 0) {
                 throw new Error('店铺容器已加载但未找到店铺元素');
             }
             console.log(`✅ 找到 ${storeElements.length} 个店铺元素`);
-            
+
             const storeList = [];
             storeElements.forEach(el => {
                 const originalName = el.textContent.trim();
                 const normalizedName = normalizeStoreName(originalName);
                 storeList.push(normalizedName);
             });
-            
+
             GM_setValue('popmart_storeList', storeList);
             monitor_ALL_STORES = storeList;
-            
+
             // v5.4.0: 验证保存是否成功
             const verifyStoreList = GM_getValue('popmart_storeList', []);
             if (verifyStoreList.length === storeList.length) {
@@ -1864,7 +1864,7 @@
             } else {
                 console.error('❌ 店铺列表保存验证失败! 期望:', storeList.length, '实际:', verifyStoreList.length);
             }
-            
+
             // ✅ 关闭弹窗：详情页和购物车页使用不同的策略
             if (quantityExtracted) {
                 // 详情页：从容器向上找到正确的modal，再找关闭按钮
@@ -1883,22 +1883,22 @@
                     console.log('✓ 已关闭弹窗（购物车）');
                 }
             }
-            
+
             updateStoreList();
             bindStoreCheckboxEvents();
-            
+
             // 根据两个阶段的结果显示状态
             if (quantityExtracted) {
                 updateStatusText(`✅ 同步成功! 共${storeList.length}家店铺 | 最大数量: ${extractedQuantity}件`);
             } else {
                 updateStatusText(`✅ 同步成功! 共${storeList.length}家店铺`);
             }
-            
+
             console.log('✅ 店铺列表同步完成');
-            
+
         } catch (error) {
             console.error('❌ 同步店铺列表失败:', error);
-            
+
             // 即使店铺同步失败，如果数量提取成功了，也要显示
             if (quantityExtracted) {
                 updateStatusText(`⚠️ 店铺同步失败，但已提取数量: ${extractedQuantity}件`);
@@ -2004,43 +2004,43 @@
         if (!broadcastChannel && monitor_isMessageModeEnabled) {
             initBroadcastChannel();
         }
-        
+
         // 更新测试按钮可见性
         updateTestButtonVisibility();
     }
-    
+
     // v5.0: 详情模式切换
     function toggleDetailMode() {
         const detailModeToggle = document.getElementById('detail-mode-toggle');
         monitor_isDetailModeEnabled = detailModeToggle.checked;
-        
+
         // v5.4.0: 保存详情模式状态
         GM_setValue('popmart_detailModeSettings', {
             enabled: monitor_isDetailModeEnabled,
             quantityMode: monitor_detailQuantityMode,
             maxQuantity: monitor_maxQuantity
         });
-        
+
         // 显示/隐藏详情模式配置区
         const detailModeSection = document.getElementById('detail-mode-section');
         if (detailModeSection) {
             detailModeSection.style.display = monitor_isDetailModeEnabled ? 'block' : 'none';
         }
-        
+
         // 如果开启详情模式，自动提取并更新最大数量显示
         if (monitor_isDetailModeEnabled && isOnProductDetailPage()) {
             monitor_maxQuantity = extractMaxQuantity();
             updateQuantityDisplay();
         }
-        
+
         console.log('详情模式已' + (monitor_isDetailModeEnabled ? '开启' : '关闭'));
     }
-    
+
     // v5.0: 更新数量显示
     function updateQuantityDisplay() {
         const maxQtyDisplay = document.getElementById('max-quantity-display');
         const halfQtyDisplay = document.getElementById('half-quantity-display');
-        
+
         if (maxQtyDisplay) {
             maxQtyDisplay.textContent = monitor_maxQuantity;
         }
@@ -2055,13 +2055,13 @@
         if (syncStoreBtn) {
             syncStoreBtn.addEventListener('click', syncStoreName);
         }
-        
+
         // 手动点击去支付按钮
         const manualPayBtn = document.getElementById('manual-pay-btn');
         if (manualPayBtn) {
             manualPayBtn.addEventListener('click', executeManualPayment);
         }
-        
+
         // 定时运行事件
         const orderScheduleToggle = document.getElementById('order-schedule-toggle');
         if (orderScheduleToggle) {
@@ -2075,7 +2075,7 @@
         if (orderScheduleSync) {
             orderScheduleSync.addEventListener('click', syncScheduleToOthers);
         }
-        
+
         // 持续时间调整
         const durationDecrease = document.getElementById('duration-decrease');
         const durationIncrease = document.getElementById('duration-increase');
@@ -2093,7 +2093,7 @@
                 updateDurationUI();
             });
         }
-        
+
         // 提交速度预设
         document.querySelectorAll('.speed-preset').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -2106,7 +2106,7 @@
                 e.target.classList.add('active');
             });
         });
-        
+
         // 快速开窗功能
         const openWindowsBtn = document.getElementById('open-windows-btn');
         if (openWindowsBtn) {
@@ -2124,46 +2124,46 @@
             addLog('店铺信息无变化');
             return;
         }
-        
+
         // 先取消注册旧店铺
         if (order_currentStoreName) {
             unregisterStore();
         }
-        
+
         order_currentStoreName = newStoreName;
         order_isStoreValid = true;
-        
+
         // 重新验证店铺
         registerStore();
         checkStoreInSelectedList();
-        
+
         updateStoreNameDisplay();
         addLog(`✓ 店铺已同步: ${order_currentStoreName}`);
-        
+
         if (order_isStoreValid) {
             addLog('等待购物车信号...');
         } else {
             addLog('自动功能已禁用,仅支持手动操作', true);
         }
-        
+
         if (isCollapsed) updateCollapsedInfo();
     }
 
     function syncStoreNameCollapsed() {
         // 折叠状态下的同步店铺 - 调用主同步函数保持功能一致
         const syncButton = document.getElementById('collapse-sync-store');
-        
+
         // 先执行主同步逻辑（与展开状态完全一致）
         syncStoreName();
-        
+
         // 折叠状态特有：按钮反馈动画
         if (syncButton) {
             const originalText = syncButton.textContent;
-            
+
             syncButton.textContent = '✓';
             syncButton.style.backgroundColor = '#389e0d';
             syncButton.disabled = true;
-            
+
             setTimeout(() => {
                 syncButton.textContent = originalText;
                 syncButton.style.backgroundColor = '#52c41a';
@@ -2269,12 +2269,12 @@
             stopOrderScheduleChecker();
             addLog('定时运行已关闭');
         }
-        
+
         // 更新手动模式折叠信息
         if (isManualCollapsed) {
             updateManualCollapsedInfo();
         }
-        
+
         if (isCollapsed) updateCollapsedInfo();
     }
 
@@ -2304,12 +2304,12 @@
         };
         saveUserScheduleSettings(settings, 'order');
         addLog('定时设置已保存');
-        
+
         // 更新手动模式折叠信息
         if (isManualCollapsed) {
             updateManualCollapsedInfo();
         }
-        
+
         if (isCollapsed) updateCollapsedInfo();
     }
 
@@ -2594,9 +2594,9 @@
         const container = document.querySelector('.collapsed-info-container');
         const monitorInfo = document.querySelector('.monitor-collapsed-info');
         const orderInfo = document.querySelector('.order-collapsed-info');
-        
+
         if (!isCollapsed && !container) return;
-        
+
         if (isCollapsed) {
             if (currentMode === 'monitor') {
                 if (monitorInfo) monitorInfo.style.display = 'block';
@@ -2613,17 +2613,17 @@
     function updateMonitorCollapsedInfo() {
         const statusEl = document.getElementById('monitor-status-collapsed');
         const storeEl = document.getElementById('monitor-store-collapsed');
-        
+
         if (statusEl) {
             statusEl.textContent = monitor_isRunning ? '运行中' : '已停止';
             statusEl.style.color = monitor_isRunning ? '#52c41a' : '#999';
         }
-        
+
         if (storeEl) {
             const currentStore = document.getElementById('current-store');
             let storeText = currentStore ? currentStore.textContent : '-';
             let storeColor = '#666';
-            
+
             // 根据库存状态添加标记和颜色
             if (monitor_currentStoreStatus === 'in_stock') {
                 storeText += ' 有货';
@@ -2632,11 +2632,11 @@
                 storeText += ' 无货';
                 storeColor = '#ff4d4f'; // 红色
             }
-            
+
             storeEl.textContent = storeText;
             storeEl.style.color = storeColor;
         }
-        
+
         // 更新窗口统计信息
         updateWindowCollapsedInfo();
     }
@@ -2644,11 +2644,11 @@
     function updateOrderCollapsedInfo() {
         const storeEl = document.getElementById('order-store-collapsed');
         const infoEl = document.getElementById('order-info-collapsed');
-        
+
         if (storeEl) {
             storeEl.textContent = order_currentStoreName || '-';
         }
-        
+
         if (infoEl) {
             if (order_isScheduledEnabled && !order_isRunning) {
                 // 显示定时时间和倒计时
@@ -2700,7 +2700,7 @@
         const content = panel.querySelector('.panel-content');
         const button = document.getElementById('toggle-panel');
         const collapsedContainer = document.querySelector('.collapsed-info-container');
-        
+
         if (isCollapsed) {
             panel.classList.add('collapsed');
             content.style.display = 'none';
@@ -2728,7 +2728,7 @@
         const content = panel.querySelector('.manual-content');
         const button = document.getElementById('toggle-manual');
         const collapsedInfo = document.querySelector('.manual-collapsed-info');
-        
+
         if (isManualCollapsed) {
             content.style.display = 'none';
             button.textContent = '+';
@@ -2754,21 +2754,21 @@
             order_scheduledTime.second,
             order_scheduledTime.millisecond
         );
-        
+
         let diff = target - now;
-        
+
         // 如果时间已过,可能是明天
         if (diff < 0) {
             target.setDate(target.getDate() + 1);
             diff = target - now;
         }
-        
+
         const totalMs = diff;
         const seconds = Math.floor(totalMs / 1000);
         const ms = totalMs % 1000;
         const minutes = Math.floor(seconds / 60);
         const hours = Math.floor(minutes / 60);
-        
+
         if (hours > 0) {
             return `${hours}小时${minutes % 60}分${seconds % 60}秒`;
         } else if (minutes > 0) {
@@ -2781,10 +2781,10 @@
     function updateManualCollapsedInfo() {
         const info = document.querySelector('.manual-collapsed-info');
         if (!info) return;
-        
+
         let statusText = '';
         let statusColor = '#999';
-        
+
         if (!order_isScheduledEnabled) {
             statusText = '未开启';
             statusColor = '#999';
@@ -2797,7 +2797,7 @@
             statusText = `${timeStr} (还有 ${countdown})`;
             statusColor = '#fa8c16';
         }
-        
+
         info.innerHTML = `定时: <span style="color: ${statusColor}">${statusText}</span>`;
     }
 
@@ -2813,17 +2813,17 @@
                 alert('请至少选择一个门店');
                 return;
             }
-            
+
             // 确保在到店取标签页
             await switchToPickupTab();
-            
+
             // v5.4.0: 详情模式启动优化 - 跳过当前店铺
             if (monitor_isDetailModeEnabled) {
                 const currentPageStore = extractDetailPageCurrentStore();
                 if (currentPageStore) {
                     const currentStoreIndex = monitor_selectedStores[monitor_currentStoreIndex];
                     const targetStoreName = monitor_ALL_STORES[currentStoreIndex];
-                    
+
                     if (currentPageStore === targetStoreName) {
                         console.log(`[启动优化] 当前页面已在店铺 ${currentPageStore}，跳过到下一个店铺`);
                         monitor_currentStoreIndex = (monitor_currentStoreIndex + 1) % monitor_selectedStores.length;
@@ -2833,7 +2833,7 @@
                     }
                 }
             }
-            
+
             monitor_isRunning = true;
             saveUserRunningState(true, 'monitor');
             updateRunButtonState();
@@ -2851,14 +2851,14 @@
 
         if (monitor_isExecuting) return;
         monitor_isExecuting = true;
-        
+
         // v5.2.0: 统一的店铺遍历逻辑（购物车和详情页共用）
         const storeIndex = monitor_selectedStores[monitor_currentStoreIndex];
         const storeName = monitor_ALL_STORES[storeIndex] || '未知门店';
-        
+
         const currentStoreEl = document.getElementById('current-store');
         if (currentStoreEl) currentStoreEl.textContent = storeName;
-        
+
         monitor_currentStoreStatus = null;
         updateCollapsedInfo();
 
@@ -2887,18 +2887,18 @@
             if (monitor_isDetailModeEnabled) {
                 // 详情页模式：执行详情页下单流程
                 const result = await executeDetailPageCheckoutFlow();
-                
+
                 if (result.success) {
                     // 有货且下单成功
                     console.log(`✓ 店铺 ${storeName} 下单成功！`);
                     monitor_currentStoreStatus = 'in_stock';
                     updateCollapsedInfo();
-                    
+
                     monitor_isRunning = false;
                     monitor_isExecuting = false;
                     saveUserRunningState(false, 'monitor');
                     updateRunButtonState();
-                    
+
                     alert(`详情页下单成功！\n店铺: ${storeName}\n${result.reason}`);
                     return;
                 } else {
@@ -2906,17 +2906,17 @@
                     console.log(`店铺 ${storeName} 失败: ${result.reason}`);
                     monitor_currentStoreStatus = 'out_of_stock';
                     updateCollapsedInfo();
-                    
+
                     monitor_currentStoreIndex = (monitor_currentStoreIndex + 1) % monitor_selectedStores.length;
                     setTimeout(runMonitorMainLoop, monitor_refreshInterval);
                     monitor_isExecuting = false;
                     return;
                 }
-                
+
             } else {
                 // 购物车模式 - 原有逻辑
                 console.log(`[购物车模式] 检测店铺: ${storeName}`);
-                
+
                 // 3. 检查全选按钮
                 const hasSelectAll = await checkSelectAllButton();
                 if (!hasSelectAll) {
@@ -2969,20 +2969,20 @@
     async function selectStoreByIndex(index) {
         try {
             await openStoreSelection();
-            
+
             // ✅ 修复：通过容器精确定位店铺列表（兼容详情页多弹窗）
             await waitForElement('.index_storeListContainer__0Vg6c', 5000);
             const container = document.querySelector('.index_storeListContainer__0Vg6c');
-            
+
             if (!container) {
                 console.error('未找到店铺列表容器');
                 return false;
             }
-            
+
             const storeItems = container.querySelectorAll('.index_storeListItem__IF8Cz');
             if (storeItems[index]) {
                 storeItems[index].click();
-                
+
                 // ✅ 修复：等待正确的弹窗消失
                 const modal = container.closest('.ant-modal-content');
                 if (modal) {
@@ -3017,7 +3017,7 @@
         try {
             const selectAllContainer = document.querySelector('.index_checkboxContainer__nQZ_a');
             if (!selectAllContainer) return false;
-            
+
             const checkboxButton = selectAllContainer.querySelector('.index_checkbox__w_166');
             const selectText = selectAllContainer.querySelector('.index_selectText___HDXz');
             if (!checkboxButton && !selectText) return false;
@@ -3071,7 +3071,7 @@
             // 格式化时间 "12:00:05"
             const now = new Date();
             const successTime = now.toTimeString().substring(0, 8);
-            
+
             const message = {
                 type: 'order_success',
                 windowId: order_windowId,
@@ -3081,19 +3081,19 @@
                 _source: 'broadcast'  // 标记消息来源
             };
             broadcastChannel.postMessage(message);
-            
+
             // 发送状态变化（标记为成功）
             sendStatusChange({
                 orderSuccess: true,
                 orderSuccessTime: Date.now()
             });
-            
+
             addLog(`✓ 已通知购物车: ${order_currentStoreName} 下单成功`);
         } catch (e) {
             console.error('发送消息失败:', e);
         }
     }
-    
+
     function sendFailureNotification() {
         if (!broadcastChannel) return;
         try {
@@ -3113,12 +3113,12 @@
         try {
             // 使用较短超时检测弹窗（800ms）
             const modal = await waitForElement('.index_storeConfirmModalTitle__jtuIE', 800);
-            
+
             if (!modal) return false; // 未检测到弹窗
-            
+
             console.log('检测到二次确认弹窗，开始处理');
             addLog('检测到门店确认弹窗');
-            
+
             // 1. 先勾选"无提示"复选框
             const checkbox = document.querySelector('.index_unNoticeCheckbox__lebkx input[type="checkbox"]');
             if (checkbox && !checkbox.checked) {
@@ -3126,7 +3126,7 @@
                 await new Promise(resolve => setTimeout(resolve, 100));
                 addLog('已勾选"无提示"');
             }
-            
+
             // 2. 点击确认按钮
             const confirmBtn = document.querySelector('.index_pickUpStoreBtn__cf1_Z');
             if (confirmBtn) {
@@ -3137,7 +3137,7 @@
                 await new Promise(resolve => setTimeout(resolve, 200));
                 return true; // 成功处理
             }
-            
+
             return false;
         } catch (e) {
             // 超时或未找到弹窗，直接返回false
@@ -3215,7 +3215,7 @@
             order_isRunning = false;
             saveUserRunningState(false, 'order');
             updateOrderPayButtonState();
-            
+
             // 发送状态变化（运行结束）
             sendStatusChange();
         }
@@ -3244,20 +3244,20 @@
      */
     async function executeAutoPayment_V2() {
         if (order_isExecuting) return;
-        
+
         order_isExecuting = true;
         order_isRunning = true;
         order_startTime = Date.now();
-        
+
         addLog(`开始自动提交（${ORDER_CONFIG.AUTO_CLICK_COUNT}次点击，间隔${ORDER_CONFIG.AUTO_CLICK_INTERVAL}ms）`);
-        
+
         // 发送状态变化（运行开始）
-        sendStatusChange({ 
+        sendStatusChange({
             status: 'running',
             currentClick: 0,
-            totalClicks: ORDER_CONFIG.AUTO_CLICK_COUNT 
+            totalClicks: ORDER_CONFIG.AUTO_CLICK_COUNT
         });
-        
+
         try {
             // 第1次点击
             addLog('→ 第1次点击');
@@ -3267,31 +3267,31 @@
                 return;
             }
             payButton1.click();
-            
+
             // 发送点击进度
             broadcastClickProgress(1, ORDER_CONFIG.AUTO_CLICK_COUNT);
-            
+
             // 处理二次确认弹窗
             await handleStoreConfirmModal();
-            
+
             // 检测错误通知
             const error1 = await checkErrorNotification();
             if (error1) {
                 addLog(`检测到错误: ${error1}`, true);
                 sendFailureNotification();
             }
-            
+
             // 检查按钮是否消失（成功）
             if (!document.querySelector('.index_placeOrderBtn__30ZOe')) {
                 addLog('✓ 下单成功！支付按钮已消失');
                 sendOrderSuccessMessage();
                 return;
             }
-            
+
             // 等待固定间隔
             addLog(`等待${ORDER_CONFIG.AUTO_CLICK_INTERVAL}ms...`);
             await new Promise(resolve => setTimeout(resolve, ORDER_CONFIG.AUTO_CLICK_INTERVAL));
-            
+
             // 第2次点击
             addLog('→ 第2次点击');
             const payButton2 = document.querySelector('.index_placeOrderBtn__30ZOe');
@@ -3301,20 +3301,20 @@
                 return;
             }
             payButton2.click();
-            
+
             // 发送点击进度
             broadcastClickProgress(2, ORDER_CONFIG.AUTO_CLICK_COUNT);
-            
+
             // 处理二次确认弹窗
             await handleStoreConfirmModal();
-            
+
             // 检测错误通知
             const error2 = await checkErrorNotification();
             if (error2) {
                 addLog(`检测到错误: ${error2}`, true);
                 sendFailureNotification();
             }
-            
+
             // 最终检查
             if (!document.querySelector('.index_placeOrderBtn__30ZOe')) {
                 addLog('✓ 下单成功！支付按钮已消失');
@@ -3322,7 +3322,7 @@
             } else {
                 addLog('自动提交流程结束');
             }
-            
+
         } catch (error) {
             console.error('自动支付异常:', error);
             addLog(`✗ 自动支付异常: ${error.message}`, true);
@@ -3331,15 +3331,15 @@
             releaseSlot(order_windowId);
             const slotsData = getRunningSlots();
             addLog(`已释放执行槽位 (${slotsData.slots.length}/${slotsData.maxSlots})`);
-            
+
             order_isRunning = false;
             order_isExecuting = false;
-            
+
             // 发送状态变化（运行结束）
             sendStatusChange({ status: 'waiting' });
         }
     }
-    
+
     /**
      * 检测错误通知
      * @returns {Promise<string|null>} 错误消息或null
@@ -3349,31 +3349,31 @@
             const notification = await waitForElement('.ant-notification-notice', ORDER_CONFIG.AUTO_ERROR_DETECT_TIMEOUT);
             const messageElement = notification.querySelector('.ant-notification-notice-message');
             const descElement = notification.querySelector('.ant-notification-notice-description');
-            
+
             let errorMessage = '';
             if (messageElement) errorMessage = messageElement.textContent.trim();
             if (descElement) {
                 const desc = descElement.textContent.trim();
                 if (desc) errorMessage += (errorMessage ? ' ' : '') + desc;
             }
-            
+
             // 移除通知
             const notifications = document.querySelectorAll('.ant-notification-notice');
             notifications.forEach(n => n.remove());
-            
+
             return errorMessage || null;
         } catch (e) {
             // 超时，没有错误通知
             return null;
         }
     }
-    
+
     /**
      * 广播点击进度
      */
     function broadcastClickProgress(currentClick, totalClicks) {
         if (!broadcastChannel) return;
-        
+
         try {
             broadcastChannel.postMessage({
                 type: 'click_progress',
@@ -3382,7 +3382,7 @@
                 totalClicks: totalClicks,
                 timestamp: Date.now()
             });
-            
+
             // 同时更新窗口状态
             sendStatusChange({
                 currentClick: currentClick,
@@ -3392,7 +3392,7 @@
             console.error('广播点击进度失败:', e);
         }
     }
-    
+
     /**
      * 旧的自动支付（保留，但不再使用）
      */
@@ -3409,7 +3409,7 @@
             saveUserRunningState(false, 'order');
             updateOrderPayButtonState();
             addLog('手动模式: 已停止');
-            
+
             // 发送状态变化（手动停止）
             sendStatusChange();
             return;
@@ -3452,9 +3452,9 @@
             submitSpeed: order_submitSpeed,
             timestamp: Date.now()
         };
-        
+
         let sentCount = 0;
-        
+
         // 通过BroadcastChannel同步（同浏览器内）
         if (broadcastChannel) {
             try {
@@ -3465,7 +3465,7 @@
                 console.error('BroadcastChannel同步失败:', e);
             }
         }
-        
+
         // 通过WebSocket同步（跨设备）
         if (ws_enabled && ws_isConnected) {
             try {
@@ -3484,10 +3484,10 @@
                 console.error('WebSocket同步失败:', e);
             }
         }
-        
+
         const timeStr = `${String(order_scheduledTime.hour).padStart(2, '0')}:${String(order_scheduledTime.minute).padStart(2, '0')}:${String(order_scheduledTime.second).padStart(2, '0')}.${String(order_scheduledTime.millisecond).padStart(3, '0')}`;
         addLog(`✓ 已同步: 定时 ${timeStr}, 持续 ${order_durationSeconds}秒, 速度 ${order_submitSpeed}ms (${sentCount}个通道)`);
-        
+
         const syncButton = document.getElementById('order-schedule-sync');
         if (syncButton) {
             const originalText = syncButton.textContent;
@@ -3512,7 +3512,7 @@
         };
         order_durationSeconds = data.durationSeconds;
         order_submitSpeed = data.submitSpeed;
-        
+
         saveUserScheduleSettings({
             enabled: order_isScheduledEnabled,
             hour: order_scheduledTime.hour,
@@ -3520,27 +3520,27 @@
             second: order_scheduledTime.second,
             millisecond: order_scheduledTime.millisecond
         }, 'order');
-        
+
         saveDurationSettings({ durationSeconds: order_durationSeconds });
         saveSubmitSpeedSettings({ submitSpeed: order_submitSpeed });
-        
+
         updateOrderScheduleUI();
         updateDurationUI();
         updateSpeedUI();
-        
+
         if (order_isScheduledEnabled) {
             startOrderScheduleChecker();
         } else {
             stopOrderScheduleChecker();
         }
-        
+
         // 更新手动模式折叠信息
         if (isManualCollapsed) {
             updateManualCollapsedInfo();
         }
-        
+
         if (isCollapsed) updateCollapsedInfo();
-        
+
         const timeStr = `${String(data.hour).padStart(2, '0')}:${String(data.minute).padStart(2, '0')}:${String(data.second).padStart(2, '0')}.${String(data.millisecond).padStart(3, '0')}`;
         addLog(`⬇️ 已接收同步: 定时 ${timeStr}, 持续 ${data.durationSeconds}秒, 速度 ${data.submitSpeed}ms`);
     }
@@ -3566,19 +3566,19 @@
         GM_setValue('popmart_payment_submitSpeedSettings', settings);
         order_submitSpeed = settings.submitSpeed;
     }
-    
+
     // ==================== 窗口监控功能 ====================
-    
+
     // 处理窗口状态更新（监测窗口接收）
     // ========== 新的消息处理函数（监控窗口） ==========
-    
+
     // 处理心跳（只更新lastUpdate）
     function handleHeartbeat(data) {
         if (monitor_windowStatuses[data.windowId]) {
             monitor_windowStatuses[data.windowId].lastUpdate = data.timestamp || Date.now();
         }
     }
-    
+
     // 处理完整信息（更新所有字段）
     function handleFullInfo(data) {
         // 如果消息带有 syncRequestId，检查是否匹配当前监控窗口的同步请求
@@ -3593,9 +3593,9 @@
             // 没有 syncRequestId 的是正常的心跳触发的更新，所有监控窗口都接受
             console.log('收到完整信息:', data.windowId, data.storeName);
         }
-        
+
         const existingStatus = monitor_windowStatuses[data.windowId];
-        
+
         monitor_windowStatuses[data.windowId] = {
             windowId: data.windowId,
             instancePrefix: data.instancePrefix || '', // 保存实例前缀
@@ -3612,14 +3612,14 @@
             failureCount: data.failureCount || (existingStatus ? existingStatus.failureCount : 0),
             lastUpdate: data.timestamp || Date.now()
         };
-        
+
         // 更新UI
         updateWindowMonitorUI();
         if (isCollapsed) {
             updateWindowCollapsedInfo();
         }
     }
-    
+
     // 处理状态变化（只更新动态字段）
     function handleStatusChange(data) {
         console.log('收到状态变化:', data.windowId);
@@ -3628,14 +3628,14 @@
             console.warn('窗口不存在，忽略状态变化:', data.windowId);
             return;
         }
-        
+
         const window = monitor_windowStatuses[data.windowId];
-        
+
         // 更新实例前缀（如果提供）
         if (data.instancePrefix !== undefined) {
             window.instancePrefix = data.instancePrefix;
         }
-        
+
         // 只更新动态字段
         window.status = data.status || window.status;
         window.isRunning = data.isRunning !== undefined ? data.isRunning : window.isRunning;
@@ -3645,28 +3645,28 @@
         window.orderSuccessTime = data.orderSuccessTime || window.orderSuccessTime;
         window.orderFailed = data.orderFailed !== undefined ? data.orderFailed : window.orderFailed;
         window.lastUpdate = data.timestamp || Date.now();
-        
+
         // 更新UI
         updateWindowMonitorUI();
         if (isCollapsed) {
             updateWindowCollapsedInfo();
         }
     }
-    
+
     // ========== 旧的兼容函数（暂时保留，后续可删除） ==========
     function handleWindowStatusUpdate(data) {
         // 为了兼容，保留这个函数，调用 handleFullInfo
         handleFullInfo(data);
     }
-    
+
     // 处理失败计数增加（监测窗口接收）
     function handleWindowFailureIncrement(data) {
         if (monitor_windowStatuses[data.windowId]) {
-            monitor_windowStatuses[data.windowId].failureCount = 
+            monitor_windowStatuses[data.windowId].failureCount =
                 (monitor_windowStatuses[data.windowId].failureCount || 0) + 1;
-            
+
             console.log(`窗口 ${data.windowId} 失败次数: ${monitor_windowStatuses[data.windowId].failureCount}`);
-            
+
             // 更新UI
             updateWindowMonitorUI();
             if (isCollapsed) {
@@ -3674,38 +3674,38 @@
             }
         }
     }
-    
+
     // v4.0: 更新监控窗口的槽位显示
     function updateSlotDisplayInMonitor() {
         const slotsData = getRunningSlots();
         const slotCountElement = document.getElementById('slot-count-display');
-        
+
         if (slotCountElement) {
             slotCountElement.textContent = `${slotsData.slots.length}/${slotsData.maxSlots}`;
         }
-        
+
         // 同时更新窗口监控UI
         updateWindowMonitorUI();
     }
-    
+
     // v4.0: 处理点击进度更新
     function handleClickProgress(data) {
         if (monitor_windowStatuses[data.windowId]) {
             monitor_windowStatuses[data.windowId].currentClick = data.currentClick;
             monitor_windowStatuses[data.windowId].totalClicks = data.totalClicks;
-            
+
             // 更新UI
             updateWindowMonitorUI();
         }
     }
-    
+
     // 更新窗口监控UI（展开状态）
     function updateWindowMonitorUI() {
         const listContainer = document.getElementById('window-monitor-list');
         const countElement = document.getElementById('online-window-count');
-        
+
         if (!listContainer || currentMode !== 'monitor') return;
-        
+
         // 过滤在线窗口
         const now = Date.now();
         let onlineWindows = Object.values(monitor_windowStatuses)
@@ -3723,18 +3723,18 @@
                 // 先按浏览器分组：本浏览器在前，其他浏览器在后
                 const aIsLocal = !a.instancePrefix || a.instancePrefix === ws_instancePrefix;
                 const bIsLocal = !b.instancePrefix || b.instancePrefix === ws_instancePrefix;
-                
+
                 if (aIsLocal && !bIsLocal) return -1; // a在前
                 if (!aIsLocal && bIsLocal) return 1;   // b在前
-                
+
                 // 同组内按创建时间排序（从windowId中提取时间戳）
                 const timeA = a.windowId.split('_')[1] || '0';
                 const timeB = b.windowId.split('_')[1] || '0';
                 return parseInt(timeA) - parseInt(timeB);
             });
-        
+
         const totalCount = onlineWindows.length;
-        
+
         // 如果启用筛选，过滤匹配的窗口
         let filteredWindows = onlineWindows;
         if (monitor_windowFilter_enabled && monitor_selectedStoreNames.length > 0) {
@@ -3747,9 +3747,9 @@
                 return monitor_selectedStoreNames.includes(w.storeName);
             });
         }
-        
+
         const matchedCount = filteredWindows.length;
-        
+
         // 更新在线数量（显示 匹配数/总数）
         if (countElement) {
             if (monitor_windowFilter_enabled && monitor_selectedStoreNames.length > 0) {
@@ -3758,31 +3758,31 @@
                 countElement.textContent = totalCount;
             }
         }
-        
+
         // 如果没有在线窗口
         if (totalCount === 0) {
             listContainer.innerHTML = '<div class="no-windows">暂无在线窗口</div>';
             return;
         }
-        
+
         // 如果筛选后没有匹配的窗口
         if (monitor_windowFilter_enabled && matchedCount === 0) {
             listContainer.innerHTML = '<div class="no-windows">无匹配窗口（总共 ' + totalCount + ' 个）</div>';
             return;
         }
-        
+
         // 渲染窗口列表（只显示筛选后的窗口）
         let html = '';
         let instanceCounters = {}; // 为每个实例前缀分别计数
         let localCounter = 0;
-        
+
         filteredWindows.forEach((window, index) => {
             const storeName = window.storeName.substring(0, 3).padEnd(3, ' '); // 固定3个字符
             const statusText = getStatusText(window);
             const statusClass = getStatusClass(window);
             const failureCount = window.failureCount || 0;
             const infoText = getThirdColumnText(window);
-            
+
             // 生成显示的ID
             let displayId;
             if (!window.instancePrefix || window.instancePrefix === ws_instancePrefix) {
@@ -3797,7 +3797,7 @@
                 instanceCounters[window.instancePrefix]++;
                 displayId = `${window.instancePrefix}-${instanceCounters[window.instancePrefix]}`;
             }
-            
+
             html += `
                 <div class="window-item">
                     <span class="window-number clickable-window-focus" data-window-id="${window.windowId}">${displayId}</span>
@@ -3811,14 +3811,14 @@
                 </div>
             `;
         });
-        
+
         listContainer.innerHTML = html;
-        
+
         // 绑定点击事件
         bindSuccessClickEvents();
         bindWindowFocusEvents();
     }
-    
+
     // 获取状态文本
     function getStatusText(window) {
         if (window.orderSuccess) return '已停止';
@@ -3827,7 +3827,7 @@
         if (window.isScheduledEnabled && !window.isRunning) return '定时等待';
         return '等待信号';
     }
-    
+
     // 获取状态样式类
     function getStatusClass(window) {
         if (window.orderSuccess) return 'status-stopped';
@@ -3836,7 +3836,7 @@
         if (window.isScheduledEnabled && !window.isRunning) return 'status-scheduled';
         return 'status-waiting';
     }
-    
+
     // 获取第三列文本（按优先级）
     function getThirdColumnText(window) {
         // 优先级1: 下单成功（带15分钟倒计时）
@@ -3850,12 +3850,12 @@
             }
             return '<span class="success-text">下单成功</span>';
         }
-        
+
         // 优先级2: 下单失败
         if (window.orderFailed) {
             return '<span class="failed-text">下单失败</span>';
         }
-        
+
         // v4.0: 优先级3: 运行中（显示点击进度）
         if (window.isRunning) {
             if (window.currentClick && window.totalClicks) {
@@ -3868,42 +3868,42 @@
                 return `剩余: ${remaining}秒`;
             }
         }
-        
+
         // 优先级4: 定时等待（显示定时时间）
         if (window.isScheduledEnabled && !window.isRunning) {
             const t = window.scheduledTime;
             return `${String(t.hour).padStart(2, '0')}:${String(t.minute).padStart(2, '0')}:${String(t.second).padStart(2, '0')}.${String(t.millisecond).padStart(3, '0')}`;
         }
-        
+
         // 优先级5: 默认
         return '-';
     }
-    
+
     // 绑定下单成功点击事件
     function bindSuccessClickEvents() {
         document.querySelectorAll('.success-link').forEach(link => {
-            link.addEventListener('click', function() {
+            link.addEventListener('click', function () {
                 const windowId = this.getAttribute('data-window-id');
                 handleSuccessClick(windowId);
             });
         });
     }
-    
+
     // 处理点击下单成功链接
     function handleSuccessClick(windowId) {
         focusOrderWindow(windowId);
     }
-    
+
     // 绑定窗口聚焦点击事件（序号和店名）
     function bindWindowFocusEvents() {
         document.querySelectorAll('.clickable-window-focus').forEach(element => {
-            element.addEventListener('click', function() {
+            element.addEventListener('click', function () {
                 const windowId = this.getAttribute('data-window-id');
                 focusOrderWindow(windowId);
             });
         });
     }
-    
+
     // 统一的窗口聚焦函数
     function focusOrderWindow(windowId) {
         const focusMessage = {
@@ -3911,29 +3911,29 @@
             targetWindowId: windowId,
             timestamp: Date.now()
         };
-        
+
         try {
             // 通过 BroadcastChannel 发送（同浏览器）
             if (broadcastChannel) {
                 broadcastChannel.postMessage(focusMessage);
             }
-            
+
             // 通过 WebSocket 发送（跨浏览器）
             if (ws_enabled && ws_isConnected) {
                 sendWebSocketMessage('focus_window_request', focusMessage);
             }
-            
+
             console.log(`已发送聚焦请求到窗口: ${windowId}`);
         } catch (e) {
             console.error('发送聚焦请求失败:', e);
         }
     }
-    
+
     // 更新折叠状态下的窗口统计
     function updateWindowCollapsedInfo() {
         const infoElement = document.getElementById('window-collapsed-info');
         if (!infoElement) return;
-        
+
         // 过滤在线窗口（与updateWindowMonitorUI保持一致）
         const now = Date.now();
         const onlineWindows = Object.values(monitor_windowStatuses)
@@ -3947,22 +3947,22 @@
                 // 先按浏览器分组：本浏览器在前，其他浏览器在后
                 const aIsLocal = !a.instancePrefix || a.instancePrefix === ws_instancePrefix;
                 const bIsLocal = !b.instancePrefix || b.instancePrefix === ws_instancePrefix;
-                
+
                 if (aIsLocal && !bIsLocal) return -1;
                 if (!aIsLocal && bIsLocal) return 1;
-                
+
                 // 同组内按创建时间排序
                 const timeA = a.windowId.split('_')[1] || '0';
                 const timeB = b.windowId.split('_')[1] || '0';
                 return parseInt(timeA) - parseInt(timeB);
             });
-        
+
         if (onlineWindows.length === 0) {
             infoElement.textContent = '无在线窗口';
             infoElement.style.color = '#999';
             return;
         }
-        
+
         // 统计各状态数量
         const stats = {
             waiting: 0,
@@ -3970,14 +3970,14 @@
             scheduled: 0,
             success: 0
         };
-        
+
         // 计算总失败次数
         let totalFailures = 0;
-        
+
         onlineWindows.forEach(window => {
             // 累计失败次数
             totalFailures += (window.failureCount || 0);
-            
+
             // 统计窗口状态
             if (window.orderSuccess) {
                 stats.success++;
@@ -3989,7 +3989,7 @@
                 stats.waiting++;
             }
         });
-        
+
         // 生成显示文本
         const parts = [];
         if (stats.waiting > 0) parts.push(`🟢等待:${stats.waiting}`);
@@ -3997,33 +3997,33 @@
         if (stats.scheduled > 0) parts.push(`🟡定时:${stats.scheduled}`);
         if (stats.success > 0) parts.push(`✅成功:${stats.success}`);
         if (totalFailures > 0) parts.push(`❌失败:${totalFailures}次`);
-        
+
         infoElement.textContent = parts.join(' ');
         infoElement.style.color = '#1890ff';
     }
-    
+
     // 处理聚焦请求（下单窗口接收）
     function handleFocusRequest(data) {
         console.log('收到聚焦请求:', data);
         console.log('目标窗口ID:', data.targetWindowId);
         console.log('当前窗口ID:', order_windowId);
         console.log('是否匹配:', data.targetWindowId === order_windowId);
-        
+
         if (data.targetWindowId === order_windowId) {
             try {
                 const originalTitle = document.title;
                 const alertTitle = '🔔🔔🔔 请查看此窗口！';
-                
+
                 // 立即显示第一次提醒（解决延迟问题）
                 document.title = alertTitle;
-                
+
                 // 闪烁5轮（每轮包含显示和恢复，共10次变化）
                 let count = 1; // 从1开始，因为已经显示了第一次
                 const flashInterval = setInterval(() => {
                     // 奇数次显示原标题，偶数次显示提醒
                     document.title = count % 2 === 1 ? originalTitle : alertTitle;
                     count++;
-                    
+
                     // 10次变化后停止（5轮完整闪烁）
                     if (count >= 10) {
                         clearInterval(flashInterval);
@@ -4033,33 +4033,33 @@
                         }, 50);
                     }
                 }, 500);
-                
+
                 // 尝试聚焦
                 window.focus();
-                
+
                 // 滚动到顶部
                 window.scrollTo(0, 0);
-                
+
                 console.log('已请求聚焦，标题闪烁中');
             } catch (e) {
                 console.error('聚焦失败:', e);
             }
         }
     }
-    
+
     // 处理强制完整信息更新请求（下单窗口接收）
     function handleForceFullInfoUpdate(data) {
         console.log('收到强制完整信息更新请求');
         sendFullInfo(data.syncRequestId);
     }
-    
+
     // 获取当前窗口状态（下单窗口调用）
     function getWindowStatus() {
         if (order_isRunning) return 'running';
         if (order_isScheduledEnabled && !order_isRunning) return 'scheduled';
         return 'waiting';
     }
-    
+
     // 获取剩余时间（下单窗口调用）
     function getRemainingTime() {
         if (!order_isRunning || !order_startTime) return null;
@@ -4067,12 +4067,12 @@
         const remaining = Math.max(0, order_durationSeconds - elapsed);
         return remaining;
     }
-    
+
     // 启动心跳（下单窗口调用，每5秒发送一次轻量级心跳）
     function startHeartbeat() {
         setInterval(() => {
             if (currentMode !== 'order' || !order_windowId) return;
-            
+
             try {
                 // 心跳只通过 BroadcastChannel 发送（轻量级，只用于检测同浏览器窗口在线状态）
                 // WebSocket 连接本身就能表明跨浏览器窗口是否在线，无需额外心跳
@@ -4088,7 +4088,7 @@
             }
         }, 5000);
     }
-    
+
     // 启动跨端心跳（下单窗口调用，点击同步后每20秒发送一次）
     function startCrossBrowserHeartbeat() {
         // 如果已启用，忽略（避免重复启动）
@@ -4096,26 +4096,26 @@
             console.log('⏭️ 跨端心跳已在运行，跳过重复启动');
             return;
         }
-        
+
         console.log('✅ 首次启动跨端心跳（20秒一次）');
-        
+
         // 标记为已启用
         order_crossBrowserHeartbeatEnabled = true;
-        
+
         // 立即发送一次
         sendCrossBrowserHeartbeat();
-        
+
         // 每20秒发送一次
         order_crossBrowserHeartbeatTimer = setInterval(() => {
             if (currentMode !== 'order' || !order_windowId) return;
             sendCrossBrowserHeartbeat();
         }, 20000);
     }
-    
+
     // 发送跨端心跳（轻量级，只通过WebSocket）
     function sendCrossBrowserHeartbeat() {
         if (!order_windowId || !ws_enabled || !ws_isConnected) return;
-        
+
         try {
             sendWebSocketMessage('cross_browser_heartbeat', {
                 windowId: order_windowId,
@@ -4127,22 +4127,22 @@
             console.error('发送跨端心跳失败:', e);
         }
     }
-    
+
     // 处理跨端心跳（监控窗口调用）
     function handleCrossBrowserHeartbeat(data) {
         if (!data.windowId) return;
-        
+
         // 如果窗口已存在，更新lastUpdate
         if (monitor_windowStatuses[data.windowId]) {
             monitor_windowStatuses[data.windowId].lastUpdate = data.timestamp || Date.now();
             console.log('📡 收到跨端心跳:', data.windowId);
         }
     }
-    
+
     // 发送完整信息（下单窗口调用）
     function sendFullInfo(syncRequestId) {
         if (!order_windowId) return;
-        
+
         const fullInfoMessage = {
             type: 'window_full_info',
             windowId: order_windowId,
@@ -4160,13 +4160,13 @@
             syncRequestId: syncRequestId, // 如果是响应同步请求，带上请求ID
             timestamp: Date.now()
         };
-        
+
         try {
             // 总是通过 BroadcastChannel 发送（同浏览器）
             if (broadcastChannel) {
                 broadcastChannel.postMessage(fullInfoMessage);
             }
-            
+
             // 只有在响应同步请求时才通过 WebSocket 发送（跨浏览器同步请求）
             if (syncRequestId && ws_enabled && ws_isConnected) {
                 sendWebSocketMessage('window_full_info', fullInfoMessage);
@@ -4178,11 +4178,11 @@
             console.error('发送完整信息失败:', e);
         }
     }
-    
+
     // 发送状态变化（下单窗口调用）
     function sendStatusChange(options = {}) {
         if (!order_windowId) return;
-        
+
         const statusMessage = {
             type: 'window_status_change',
             windowId: order_windowId,
@@ -4194,13 +4194,13 @@
             timestamp: Date.now(),
             ...options // 可以传入 orderSuccess, orderFailed 等
         };
-        
+
         try {
             // 总是通过 BroadcastChannel 发送（同浏览器）
             if (broadcastChannel) {
                 broadcastChannel.postMessage(statusMessage);
             }
-            
+
             // 只有关键状态（下单成功）才通过 WebSocket 发送（需要通知所有浏览器停止监控）
             const isCriticalStatus = options.orderSuccess === true;
             if (isCriticalStatus && ws_enabled && ws_isConnected) {
@@ -4213,43 +4213,43 @@
             console.error('发送状态变化失败:', e);
         }
     }
-    
+
     // 启动离线检测（监测窗口调用，每5秒检查一次）
     function startOfflineDetection() {
         setInterval(() => {
             if (currentMode !== 'monitor') return;
-            
+
             const now = Date.now();
             let hasOffline = false;
-            
+
             Object.values(monitor_windowStatuses).forEach(status => {
                 // 本浏览器窗口：15秒超时（心跳5秒，容错3倍）
                 // 其他浏览器窗口：30秒超时（因为心跳不通过WebSocket）
                 const isLocalWindow = !status.instancePrefix || status.instancePrefix === ws_instancePrefix;
                 const timeout = isLocalWindow ? 15000 : 30000;
-                
+
                 if (now - status.lastUpdate > timeout && status.status !== 'offline') {
                     status.status = 'offline';
                     hasOffline = true;
                     console.log(`窗口 ${status.windowId} 离线 (超时: ${timeout}ms)`);
                 }
             });
-            
+
             if (hasOffline) {
                 updateWindowMonitorUI();
                 if (isCollapsed) updateWindowCollapsedInfo();
             }
         }, 5000);
     }
-    
+
     // 启动15分钟倒计时更新（监测窗口调用，每秒更新一次）
     function startSuccessCountdown() {
         setInterval(() => {
             if (currentMode !== 'monitor') return;
-            
+
             let hasExpired = false;
             const now = Date.now();
-            
+
             Object.values(monitor_windowStatuses).forEach(status => {
                 if (status.orderSuccess && status.orderSuccessTime) {
                     const elapsed = now - status.orderSuccessTime;
@@ -4260,22 +4260,22 @@
                     }
                 }
             });
-            
+
             // 即使没有过期也要更新（更新倒计时显示）
             updateWindowMonitorUI();
             if (isCollapsed) updateWindowCollapsedInfo();
         }, 1000);
     }
-    
+
     // ==================== 快速开窗功能 ====================
     function getWindowCount() {
         return GM_getValue('popmart_windowCount', 4);
     }
-    
+
     function saveWindowCount(count) {
         GM_setValue('popmart_windowCount', count);
     }
-    
+
     function updateRegisteredWindowsCount() {
         const countElement = document.getElementById('registered-windows-count');
         if (countElement && currentMode === 'order') {
@@ -4283,7 +4283,7 @@
             countElement.textContent = count;
         }
     }
-    
+
     /**
      * v4.0: 更新自动模式槽位显示
      */
@@ -4294,45 +4294,45 @@
             slotDisplay.textContent = `${slotsData.slots.length}/${slotsData.maxSlots} 使用中`;
         }
     }
-    
+
     async function openMultipleWindows() {
         const windowCountInput = document.getElementById('window-count');
         const openBtn = document.getElementById('open-windows-btn');
-        
+
         if (!windowCountInput || !openBtn) return;
-        
+
         let count = parseInt(windowCountInput.value);
-        
+
         // 验证数量
         if (isNaN(count) || count < 1 || count > 20) {
             addLog('⚠️ 请输入有效的窗口数量 (1-20)', true);
             return;
         }
-        
+
         // 保存数量
         saveWindowCount(count);
-        
+
         // 禁用按钮，显示进度
         const originalText = openBtn.textContent;
         openBtn.disabled = true;
-        
+
         addLog(`开始打开 ${count} 个窗口...`);
-        
+
         const targetUrl = 'https://www.popmart.com/hk/largeShoppingCart';
         let successCount = 0;
-        
+
         for (let i = 0; i < count; i++) {
             try {
                 // 更新按钮文本显示进度
                 openBtn.textContent = `打开中 ${i + 1}/${count}`;
-                
+
                 // 使用 GM_openInTab 打开新窗口（不会被浏览器拦截）
-                GM_openInTab(targetUrl, { 
+                GM_openInTab(targetUrl, {
                     active: false,  // 后台打开，不切换焦点
                     insert: true    // 在当前标签页后插入
                 });
                 successCount++;
-                
+
                 // 等待1000ms再打开下一个
                 if (i < count - 1) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -4342,19 +4342,19 @@
                 addLog(`✗ 打开第 ${i + 1} 个窗口失败`, true);
             }
         }
-        
+
         // 完成反馈
         addLog(`✓ 成功打开 ${successCount} 个窗口`);
         openBtn.textContent = '✓ 已完成';
         openBtn.style.backgroundColor = '#52c41a';
-        
+
         // 1.5秒后恢复按钮
         setTimeout(() => {
             openBtn.textContent = originalText;
             openBtn.style.backgroundColor = '';
             openBtn.disabled = false;
         }, 1500);
-        
+
         // 5秒后更新窗口计数（等待新窗口加载和注册）
         setTimeout(() => {
             updateRegisteredWindowsCount();
@@ -4599,7 +4599,7 @@
         } else {
             monitor_selectedStores = monitor_ALL_STORES.map((_, index) => index);
         }
-        
+
         // 更新选择状态文本
         updateSelectStatusText();
     }
@@ -4639,7 +4639,7 @@
         }
         return '';
     }
-    
+
     // v5.4.0: 提取详情页当前显示的店铺名称
     function extractDetailPageCurrentStore() {
         const storeInfo = document.querySelector('.index_storeInfo__G9rTP');
@@ -4656,7 +4656,7 @@
     async function navigateToOrderPage(targetStoreName) {
         try {
             addLog(`开始跳转到店铺: ${targetStoreName}`);
-            
+
             // 1. 打开店铺选择器
             addLog(`1. 打开店铺选择器`);
             const storeInfo = document.querySelector('.index_storeInfo__G9rTP');
@@ -4666,12 +4666,12 @@
             }
             storeInfo.click();
             await waitForElement('.ant-modal-content', 5000);
-            
+
             // 2. 查找并选择目标店铺
             addLog(`2. 查找店铺: ${targetStoreName}`);
             const storeItems = document.querySelectorAll('.index_storeListItem__IF8Cz');
             let targetFound = false;
-            
+
             for (let i = 0; i < storeItems.length; i++) {
                 const nameElement = storeItems[i].querySelector('.index_name__BHfG4');
                 if (nameElement) {
@@ -4684,39 +4684,39 @@
                     }
                 }
             }
-            
+
             if (!targetFound) {
                 addLog(`✗ 未找到店铺: ${targetStoreName}`, true);
                 const closeBtn = document.querySelector('.ant-modal-close');
                 if (closeBtn) closeBtn.click();
                 return;
             }
-            
+
             // 等待弹窗关闭
             await waitForElementDisappear('.ant-modal-content', 5000);
-            
+
             // 3. 等待页面加载
             addLog(`3. 等待页面加载`);
             await waitForCartPageLoad();
-            
+
             // 4. 勾选全选按钮
             addLog(`4. 勾选全选按钮`);
             const selectAllSuccess = await checkSelectAllButton();
             if (!selectAllSuccess) {
                 addLog(`⚠️ 全选失败，可能无货`);
             }
-            
+
             // 5. 点击确认并支付
             addLog(`5. 点击确认并支付`);
             const checkoutButton = document.querySelector('.index_checkout__V9YPC');
             if (checkoutButton) {
                 checkoutButton.click();
                 addLog(`✓ 已点击确认并支付，等待跳转...`);
-                
+
                 // 等待跳转到订单页面
                 await waitForPaymentPageLoad();
                 addLog(`✓ 已到达订单页面`);
-                
+
                 // 跳转后提取店铺名称并验证
                 setTimeout(async () => {
                     order_currentStoreName = await waitForStoreElement(5000);
@@ -4735,7 +4735,7 @@
             } else {
                 addLog(`✗ 未找到确认并支付按钮`, true);
             }
-            
+
         } catch (error) {
             console.error('跳转到订单页面出错:', error);
             addLog(`✗ 跳转失败: ${error.message}`, true);
@@ -4781,61 +4781,61 @@
     // ==================== API拦截器 (v5.0) ====================
     function setupApiInterceptor() {
         console.log('设置API拦截器...');
-        
+
         // 拦截 fetch
         const originalFetch = unsafeWindow.fetch;
-        unsafeWindow.fetch = async function(...args) {
+        unsafeWindow.fetch = async function (...args) {
             const [url, options] = args;
-            
+
             // 拦截购物车API
             if (typeof url === 'string' && url.includes('/store/v1/store/cart/listByStore')) {
                 const response = await originalFetch.apply(this, args);
                 const clonedResponse = response.clone();
-                
+
                 try {
                     const data = await clonedResponse.json();
-                    
+
                     // 解析并存储
                     const hasStock = data.data?.hasStock === true;
                     const reason = data.data?.reason || '';
-                    
+
                     latestCartApiResponse = {
                         hasStock,
                         reason,
                         timestamp: Date.now(),
                         fullData: data
                     };
-                    
+
                     console.log('[API拦截] 购物车检测:', { hasStock, reason });
-                    
+
                     // 触发所有等待的Promise
                     cartApiResponseResolvers.forEach(resolve => resolve(latestCartApiResponse));
                     cartApiResponseResolvers = [];
-                    
+
                 } catch (e) {
                     console.error('[API拦截] 解析购物车API失败:', e);
                 }
-                
+
                 return response;
             }
-            
+
             // 拦截商品详情API
             if (typeof url === 'string' && url.includes('/store/v1/store/product/detail')) {
                 const response = await originalFetch.apply(this, args);
                 const clonedResponse = response.clone();
-                
+
                 try {
                     const data = await clonedResponse.json();
-                    
+
                     // ✅ 使用到店13的判断逻辑
                     const isAvailableInTheStore = data.data?.isAvailableInTheStore || false;
                     const isSoldOut = data.data?.isSoldOut || false;
                     const skus = data.data?.skus || [];
                     const onlineStock = skus.length > 0 && skus[0].stock ? skus[0].stock.onlineStock : 0;
-                    
+
                     // 综合判断：店铺有货 且 未售罄 且 有库存
                     const hasStock = isAvailableInTheStore && !isSoldOut && onlineStock > 0;
-                    
+
                     latestProductApiResponse = {
                         hasStock,
                         stock: onlineStock,
@@ -4844,88 +4844,88 @@
                         timestamp: Date.now(),
                         fullData: data
                     };
-                    
+
                     console.log('[API拦截] 商品详情:', {
                         hasStock,
                         isAvailableInTheStore,
                         isSoldOut,
                         onlineStock
                     });
-                    
+
                     // 触发所有等待的Promise
                     productApiResponseResolvers.forEach(resolve => resolve(latestProductApiResponse));
                     productApiResponseResolvers = [];
-                    
+
                 } catch (e) {
                     console.error('[API拦截] 解析商品详情API失败:', e);
                 }
-                
+
                 return response;
             }
-            
+
             // 拦截加购API
             if (typeof url === 'string' && url.includes('/store/v1/store/cart/add')) {
                 const response = await originalFetch.apply(this, args);
                 const clonedResponse = response.clone();
-                
+
                 try {
                     const data = await clonedResponse.json();
-                    
+
                     const success = data.data?.success === true;
                     const message = data.message || '';
-                    
+
                     latestCartAddApiResponse = {
                         success,
                         message,
                         timestamp: Date.now(),
                         fullData: data
                     };
-                    
+
                     console.log('[API拦截] 加购结果:', { success, message });
-                    
+
                     // 触发所有等待的Promise
                     cartAddApiResponseResolvers.forEach(resolve => resolve(latestCartAddApiResponse));
                     cartAddApiResponseResolvers = [];
-                    
+
                 } catch (e) {
                     console.error('[API拦截] 解析加购API失败:', e);
                 }
-                
+
                 return response;
             }
-            
+
             return originalFetch.apply(this, args);
         };
-        
+
         // 拦截 XMLHttpRequest
         const originalOpen = unsafeWindow.XMLHttpRequest.prototype.open;
         const originalSend = unsafeWindow.XMLHttpRequest.prototype.send;
-        
-        unsafeWindow.XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+
+        unsafeWindow.XMLHttpRequest.prototype.open = function (method, url, ...rest) {
             this._url = url;
             return originalOpen.apply(this, [method, url, ...rest]);
         };
-        
-        unsafeWindow.XMLHttpRequest.prototype.send = function(body) {
+
+        unsafeWindow.XMLHttpRequest.prototype.send = function (body) {
             const xhr = this;
-            
+
             // 购物车API
             if (xhr._url && xhr._url.includes('/store/v1/store/cart/listByStore')) {
-                xhr.addEventListener('load', function() {
+                xhr.addEventListener('load', function () {
                     try {
                         const data = JSON.parse(xhr.responseText);
                         const hasStock = data.data?.hasStock === true;
                         const reason = data.data?.reason || '';
-                        
+
                         latestCartApiResponse = {
                             hasStock,
                             reason,
                             timestamp: Date.now(),
                             fullData: data
                         };
-                        
+
                         console.log('[XHR拦截] 购物车检测:', { hasStock, reason });
-                        
+
                         cartApiResponseResolvers.forEach(resolve => resolve(latestCartApiResponse));
                         cartApiResponseResolvers = [];
                     } catch (e) {
@@ -4933,22 +4933,22 @@
                     }
                 });
             }
-            
+
             // 商品详情API
             if (xhr._url && xhr._url.includes('/store/v1/store/product/detail')) {
-                xhr.addEventListener('load', function() {
+                xhr.addEventListener('load', function () {
                     try {
                         const data = JSON.parse(xhr.responseText);
-                        
+
                         // ✅ 使用到店13的判断逻辑
                         const isAvailableInTheStore = data.data?.isAvailableInTheStore || false;
                         const isSoldOut = data.data?.isSoldOut || false;
                         const skus = data.data?.skus || [];
                         const onlineStock = skus.length > 0 && skus[0].stock ? skus[0].stock.onlineStock : 0;
-                        
+
                         // 综合判断：店铺有货 且 未售罄 且 有库存
                         const hasStock = isAvailableInTheStore && !isSoldOut && onlineStock > 0;
-                        
+
                         latestProductApiResponse = {
                             hasStock,
                             stock: onlineStock,
@@ -4957,14 +4957,14 @@
                             timestamp: Date.now(),
                             fullData: data
                         };
-                        
+
                         console.log('[XHR拦截] 商品详情:', {
                             hasStock,
                             isAvailableInTheStore,
                             isSoldOut,
                             onlineStock
                         });
-                        
+
                         productApiResponseResolvers.forEach(resolve => resolve(latestProductApiResponse));
                         productApiResponseResolvers = [];
                     } catch (e) {
@@ -4972,24 +4972,24 @@
                     }
                 });
             }
-            
+
             // 加购API
             if (xhr._url && xhr._url.includes('/store/v1/store/cart/add')) {
-                xhr.addEventListener('load', function() {
+                xhr.addEventListener('load', function () {
                     try {
                         const data = JSON.parse(xhr.responseText);
                         const success = data.data?.success === true;
                         const message = data.message || '';
-                        
+
                         latestCartAddApiResponse = {
                             success,
                             message,
                             timestamp: Date.now(),
                             fullData: data
                         };
-                        
+
                         console.log('[XHR拦截] 加购结果:', { success, message });
-                        
+
                         cartAddApiResponseResolvers.forEach(resolve => resolve(latestCartAddApiResponse));
                         cartAddApiResponseResolvers = [];
                     } catch (e) {
@@ -4997,13 +4997,13 @@
                     }
                 });
             }
-            
+
             return originalSend.apply(this, [body]);
         };
-        
+
         console.log('✓ API拦截器设置完成');
     }
-    
+
     // 等待API响应的辅助函数
     function waitForCartApiResponse(timeout = 3000) {
         return new Promise((resolve) => {
@@ -5012,10 +5012,10 @@
                 resolve(latestCartApiResponse);
                 return;
             }
-            
+
             // 添加到等待队列
             cartApiResponseResolvers.push(resolve);
-            
+
             // 超时处理
             setTimeout(() => {
                 const index = cartApiResponseResolvers.indexOf(resolve);
@@ -5026,16 +5026,16 @@
             }, timeout);
         });
     }
-    
+
     function waitForProductApiResponse(timeout = 3000) {
         return new Promise((resolve) => {
             if (latestProductApiResponse && (Date.now() - latestProductApiResponse.timestamp) < 500) {
                 resolve(latestProductApiResponse);
                 return;
             }
-            
+
             productApiResponseResolvers.push(resolve);
-            
+
             setTimeout(() => {
                 const index = productApiResponseResolvers.indexOf(resolve);
                 if (index > -1) {
@@ -5045,16 +5045,16 @@
             }, timeout);
         });
     }
-    
+
     function waitForCartAddApiResponse(timeout = 5000) {
         return new Promise((resolve) => {
             if (latestCartAddApiResponse && (Date.now() - latestCartAddApiResponse.timestamp) < 500) {
                 resolve(latestCartAddApiResponse);
                 return;
             }
-            
+
             cartAddApiResponseResolvers.push(resolve);
-            
+
             setTimeout(() => {
                 const index = cartAddApiResponseResolvers.indexOf(resolve);
                 if (index > -1) {
@@ -5066,13 +5066,13 @@
     }
 
     // ==================== 详情页模式函数 (v5.0) ====================
-    
+
     // 检测是否在商品详情页
     function isOnProductDetailPage() {
         return document.querySelector('.index_info__XCDmR') !== null ||
-               window.location.pathname.includes('/store-pickup/');
+            window.location.pathname.includes('/store-pickup/');
     }
-    
+
     // 提取最大数量
     function extractMaxQuantity() {
         const quantityText = document.querySelector('.index_info__XCDmR');
@@ -5084,13 +5084,13 @@
         }
         return 12; // 默认值
     }
-    
+
     // 获取当前数量
     function getCurrentQuantity() {
         const input = document.querySelector('.index_countInput__pvaLv');
         return input ? parseInt(input.value) || 1 : 1;
     }
-    
+
     // 等待值变化
     async function waitForValueChange(input, oldValue, timeout = 100) {
         const startTime = Date.now();
@@ -5103,19 +5103,19 @@
         }
         return false;
     }
-    
+
     // 点击+号到目标数量（参考到店13）
     async function increaseToTargetQuantity(targetQuantity) {
         console.log(`开始增加数量到 ${targetQuantity}...`);
-        
+
         let clickCount = 0;
         const maxClicks = targetQuantity - 1; // 假设初始是1
-        
+
         // ✅ 到店13方式：querySelector + click()
         for (let i = 0; i < maxClicks && i < 50; i++) {
             const buttons = document.querySelectorAll('.index_countButton__R0q92');
             let clicked = false;
-            
+
             for (let button of buttons) {
                 if (!button.classList.contains('index_disableBtn__v3vb5') && button.textContent.trim() === '+') {
                     button.click();
@@ -5125,31 +5125,31 @@
                     break;
                 }
             }
-            
+
             if (!clicked) {
                 console.warn('未找到+号按钮');
                 break;
             }
-            
+
             await new Promise(resolve => setTimeout(resolve, 100));
         }
-        
+
         console.log(`数量调整完成，共点击 ${clickCount} 次`);
         return targetQuantity;
     }
-    
+
     // 点击-号到目标数量（参考到店13）
     async function decreaseToTargetQuantity(targetQuantity) {
         console.log(`开始减少数量到 ${targetQuantity}...`);
-        
+
         let clickCount = 0;
         const maxClicks = 50; // 最多点击50次
-        
+
         // ✅ 到店13方式：querySelector + click()
         for (let i = 0; i < maxClicks; i++) {
             const buttons = document.querySelectorAll('.index_countButton__R0q92');
             let clicked = false;
-            
+
             for (let button of buttons) {
                 if (!button.classList.contains('index_disableBtn__v3vb5') && button.textContent.trim() === '-') {
                     button.click();
@@ -5159,19 +5159,19 @@
                     break;
                 }
             }
-            
+
             if (!clicked) {
                 console.warn('未找到-号按钮');
                 break;
             }
-            
+
             await new Promise(resolve => setTimeout(resolve, 100));
         }
-        
+
         console.log(`数量调整完成，共点击 ${clickCount} 次`);
         return targetQuantity;
     }
-    
+
     // 点击加购按钮（简化版：直接点击）
     async function clickAddToCartButton() {
         console.log('点击加购按钮...');
@@ -5184,26 +5184,26 @@
         console.error('✗ 未找到加购按钮');
         return false;
     }
-    
+
     // 等待加购结果
     async function waitForAddToCartResult(timeout = 5000) {
         // 清空之前的响应
         latestCartAddApiResponse = null;
-        
+
         // 等待API响应
         const apiResult = await waitForCartAddApiResponse(timeout);
-        
+
         if (apiResult) {
             return {
                 success: apiResult.success,
                 message: apiResult.message
             };
         }
-        
+
         // API超时，检查DOM
         console.warn('API响应超时，检查DOM...');
         await new Promise(resolve => setTimeout(resolve, 500));
-        
+
         const notification = document.querySelector('.ant-notification-notice');
         if (notification) {
             const message = notification.textContent;
@@ -5214,30 +5214,30 @@
                 return { success: false, message };
             }
         }
-        
+
         return { success: false, message: '无法判断加购结果' };
     }
-    
+
     // 点击查看购物车
     async function clickViewCartButton() {
         // 等待弹窗出现
         await new Promise(resolve => setTimeout(resolve, 500));
-        
+
         const viewCartBtn = document.querySelector('.index_noticeFooterBtn__3prxm.ant-btn-primary');
         if (viewCartBtn) {
             console.log('点击查看购物车...');
             viewCartBtn.click();
             return true;
         }
-        
+
         console.error('找不到查看购物车按钮');
         return false;
     }
-    
+
     // 等待购物车页面加载
     async function waitForCartPageLoad(timeout = 5000) {
         const startTime = Date.now();
-        
+
         while (Date.now() - startTime < timeout) {
             // 检查URL
             if (window.location.pathname.includes('largeShoppingCart')) {
@@ -5248,14 +5248,14 @@
                     return true;
                 }
             }
-            
+
             await new Promise(resolve => setTimeout(resolve, 200));
         }
-        
+
         console.error('购物车页面加载超时');
         return false;
     }
-    
+
     // 等待到店取标签加载并切换
     async function ensurePickupTab() {
         // 检查是否已经在到店取标签
@@ -5263,14 +5263,14 @@
             console.log('已在到店取标签');
             return true;
         }
-        
+
         // 切换到到店取
         await switchToPickupTab();
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
+
         return isPickupTabActive();
     }
-    
+
     // 全选商品
     async function ensureSelectAll() {
         // 检查总价
@@ -5279,29 +5279,29 @@
             console.error('找不到总价元素');
             return false;
         }
-        
+
         const priceText = totalPriceElement.textContent;
         const price = parseFloat(priceText.replace(/[^0-9.]/g, ''));
-        
+
         if (price > 0) {
             console.log(`商品已选中，总价: ${price}`);
             return true;
         }
-        
+
         // 价格为0，需要点击全选
         console.log('价格为0，点击全选...');
         const selectAllContainer = document.querySelector('.index_checkboxContainer__nQZ_a');
-        
+
         if (!selectAllContainer) {
             console.error('找不到全选按钮');
             return false;
         }
-        
+
         // 重试机制
         for (let i = 0; i < 5; i++) {
             selectAllContainer.click();
             await new Promise(resolve => setTimeout(resolve, 100));
-            
+
             // 检查价格是否变化
             const newPrice = parseFloat(totalPriceElement.textContent.replace(/[^0-9.]/g, ''));
             if (newPrice > 0) {
@@ -5309,11 +5309,11 @@
                 return true;
             }
         }
-        
+
         console.error('全选失败');
         return false;
     }
-    
+
     // 点击去结算
     async function clickCheckoutButton() {
         const checkoutBtn = document.querySelector('.index_checkout__V9YPC');
@@ -5322,15 +5322,15 @@
             checkoutBtn.click();
             return true;
         }
-        
+
         console.error('找不到去结算按钮');
         return false;
     }
-    
+
     // 等待订单页面加载
     async function waitForOrderPageLoad(timeout = 10000) {
         const startTime = Date.now();
-        
+
         while (Date.now() - startTime < timeout) {
             if (window.location.pathname.includes('order-confirmation')) {
                 const payBtn = document.querySelector('.index_placeOrderBtn__30ZOe');
@@ -5339,103 +5339,218 @@
                     return true;
                 }
             }
-            
+
             await new Promise(resolve => setTimeout(resolve, 200));
         }
-        
+
         console.error('订单页面加载超时');
         return false;
     }
-    
-    // 执行支付流程（复用到店13逻辑）
+
+    // v5.4.3: 处理店铺确认弹窗
+    async function handleStoreConfirmModal() {
+        // 等待弹窗出现
+        await new Promise(resolve => setTimeout(resolve, 200));
+
+        // 查找确认弹窗
+        const modal = document.querySelector('.ant-modal-content');
+        if (!modal) {
+            return false;
+        }
+
+        // 查找确认按钮(可能是"确认"、"确定"等文本)
+        const confirmBtn = modal.querySelector('.ant-btn-primary');
+        if (confirmBtn) {
+            console.log('检测到确认弹窗,点击确认按钮');
+            confirmBtn.click();
+            await new Promise(resolve => setTimeout(resolve, 300));
+            return true;
+        }
+
+        return false;
+    }
+
+    // v5.4.3: 处理错误弹窗并自动重试支付
+    async function handleErrorModalsAndRetry(maxRetries = 3) {
+        let retryCount = 0;
+
+        while (retryCount < maxRetries) {
+            // 等待弹窗可能出现
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            // 检测是否有弹窗
+            const modal = document.querySelector('.ant-modal-content');
+            if (!modal) {
+                // 没有弹窗,返回成功
+                return { hasError: false, retryCount };
+            }
+
+            // 提取弹窗内容
+            const modalBody = modal.querySelector('.ant-modal-body');
+            const errorMessage = modalBody ? modalBody.textContent.trim() : '';
+
+            console.log(`检测到错误弹窗 (第${retryCount + 1}次): ${errorMessage}`);
+
+            // 关闭弹窗 - 优先点击关闭按钮
+            const closeBtn = modal.querySelector('.ant-modal-close');
+            if (closeBtn) {
+                console.log('点击关闭按钮');
+                closeBtn.click();
+            } else {
+                // 如果没有关闭按钮,点击OK按钮
+                const okBtn = modal.querySelector('.ant-btn-primary');
+                if (okBtn) {
+                    console.log('点击OK按钮');
+                    okBtn.click();
+                }
+            }
+
+            // 等待弹窗关闭
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // 重新点击支付按钮
+            const payBtn = document.querySelector('.index_placeOrderBtn__30ZOe');
+            if (payBtn) {
+                console.log(`重新点击支付按钮 (第${retryCount + 1}次重试)`);
+                payBtn.click();
+
+                // 等待处理
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                retryCount++;
+            } else {
+                // 支付按钮消失,可能已成功
+                console.log('支付按钮已消失,可能支付成功');
+                return { hasError: false, retryCount, reason: '支付按钮消失' };
+            }
+        }
+
+        // 达到最大重试次数
+        return { hasError: true, retryCount, reason: '达到最大重试次数' };
+    }
+
+    // v5.4.2: 执行支付流程（优化：添加确认弹窗处理）
     async function executePaymentProcess() {
         console.log('开始支付流程...');
-        
+
         const payBtn = document.querySelector('.index_placeOrderBtn__30ZOe');
         if (!payBtn) {
             console.error('找不到支付按钮');
             return { success: false, reason: '找不到支付按钮' };
         }
-        
-        // 点击2次支付按钮（参考到店13）
+
+        // 第1次点击支付按钮
         console.log('点击支付按钮（第1次）...');
         payBtn.click();
-        
+
+        // v5.4.2: 立即处理确认弹窗
+        const hasModal1 = await handleStoreConfirmModal();
+        if (hasModal1) {
+            console.log('已处理确认弹窗（第1次点击后）');
+        }
+
+        // 检测错误
+        await new Promise(resolve => setTimeout(resolve, 500));
+        let errorNotification = document.querySelector('.ant-notification-notice');
+        if (errorNotification) {
+            const errorMsg = errorNotification.textContent;
+            console.warn('第1次点击检测到错误:', errorMsg);
+            // 移除错误通知
+            errorNotification.remove();
+        }
+
+        // 检查是否已成功（按钮消失）
+        if (!document.querySelector('.index_placeOrderBtn__30ZOe')) {
+            console.log('✓ 支付成功！（第1次点击后按钮已消失）');
+            return { success: true, reason: '支付成功' };
+        }
+
+        // 等待1秒后第2次点击
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
+
+        // 第2次点击支付按钮
         console.log('点击支付按钮（第2次）...');
-        payBtn.click();
-        
-        // 等待2秒检测错误
+        const payBtn2 = document.querySelector('.index_placeOrderBtn__30ZOe');
+        if (!payBtn2) {
+            console.log('✓ 支付成功！（第2次点击前按钮已消失）');
+            return { success: true, reason: '支付成功' };
+        }
+        payBtn2.click();
+
+        // v5.4.2: 再次处理确认弹窗
+        const hasModal2 = await handleStoreConfirmModal();
+        if (hasModal2) {
+            console.log('已处理确认弹窗（第2次点击后）');
+        }
+
+        // v5.4.3: 处理错误弹窗并自动重试
+        console.log('检测是否有错误弹窗...');
+        const retryResult = await handleErrorModalsAndRetry(3);
+
+        if (retryResult.hasError) {
+            console.error(`支付失败: ${retryResult.reason} (重试${retryResult.retryCount}次)`);
+            return { success: false, reason: retryResult.reason };
+        }
+
+        if (retryResult.retryCount > 0) {
+            console.log(`经过${retryResult.retryCount}次重试后继续检测...`);
+        }
+
+        // 等待2秒检测最终结果
         await new Promise(resolve => setTimeout(resolve, 2000));
-        console.log('等待2秒检测错误...');
-        
+        console.log('等待2秒检测最终结果...');
+
         // 检查是否有错误提示
-        const errorNotification = document.querySelector('.ant-notification-notice');
+        errorNotification = document.querySelector('.ant-notification-notice');
         if (errorNotification) {
             const errorMsg = errorNotification.textContent;
             console.error('支付失败:', errorMsg);
-            
-            // 检查是否有确认弹窗
-            const confirmModal = document.querySelector('.index_unNoticeCheckbox__lebkx');
-            if (confirmModal) {
-                console.log('检测到确认弹窗，点击确认...');
-                confirmModal.click();
-                await new Promise(resolve => setTimeout(resolve, 500));
-                
-                // 再次点击支付
-                payBtn.click();
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // 再次检查错误
-                const secondError = document.querySelector('.ant-notification-notice');
-                if (secondError) {
-                    return { success: false, reason: secondError.textContent };
-                } else {
-                    return { success: true, reason: '支付成功（二次尝试）' };
-                }
-            }
-            
             return { success: false, reason: errorMsg };
         }
-        
-        // 无错误，认为成功
-        console.log('✓ 支付成功！');
-        return { success: true, reason: '支付成功' };
+
+        // 最终检查按钮是否消失
+        if (!document.querySelector('.index_placeOrderBtn__30ZOe')) {
+            console.log('✓ 支付成功！（按钮已消失）');
+            return { success: true, reason: '支付成功' };
+        }
+
+        // 按钮仍存在，但无错误提示
+        console.log('✓ 支付完成（无错误提示）');
+        return { success: true, reason: '支付完成' };
     }
-    
+
     // v5.2.0: 详情页下单流程（不含店铺切换，由主循环统一处理）
     async function executeDetailPageCheckoutFlow() {
         try {
             console.log('========== 开始详情页下单流程 ==========');
-            
+
             // 1. 等待店铺切换后的loading消失
             console.log('1. 等待店铺切换后的loading消失...');
             await waitForElementDisappear('.index_loadingWrap__3Vucc', 5000);
             await new Promise(resolve => setTimeout(resolve, 300)); // 额外稳定时间
-            
+
             // 2. 检测有货（使用已有的API数据或等待新数据）
             console.log('2. 检测商品库存...');
-            
+
             const productApiResult = await waitForProductApiResponse(3000);
             if (!productApiResult || !productApiResult.hasStock) {
                 console.log('商品无货');
                 return { success: false, reason: '商品无货' };
             }
-            
+
             console.log('✓ 商品有货');
-            
+
             // 2. 提取最大数量
             monitor_maxQuantity = extractMaxQuantity();
             console.log(`最大数量: ${monitor_maxQuantity}`);
-            
+
             // 3. 确定目标数量
-            const targetQuantity = monitor_detailQuantityMode === 'max' 
-                ? monitor_maxQuantity 
+            const targetQuantity = monitor_detailQuantityMode === 'max'
+                ? monitor_maxQuantity
                 : Math.floor(monitor_maxQuantity / 2);
-            
+
             console.log(`目标数量: ${targetQuantity}`);
-            
+
             // 4. 调整数量
             const currentQty = getCurrentQuantity();
             if (currentQty < targetQuantity) {
@@ -5443,34 +5558,34 @@
             } else if (currentQty > targetQuantity) {
                 await decreaseToTargetQuantity(targetQuantity);
             }
-            
+
             // 5. 点击加购
             const clicked = await clickAddToCartButton();
             if (!clicked) {
                 return { success: false, reason: '加购按钮点击失败' };
             }
-            
+
             // 6. 等待加购结果
             const addResult = await waitForAddToCartResult();
-            
+
             if (!addResult.success) {
                 // 加购失败，降级到一半
                 const fallbackQuantity = Math.floor(targetQuantity / 2);
-                
+
                 if (fallbackQuantity >= 1) {
                     console.log(`加购${targetQuantity}个失败，降级到${fallbackQuantity}个...`);
-                    
+
                     await decreaseToTargetQuantity(fallbackQuantity);
-                    
+
                     // 再次加购
                     await clickAddToCartButton();
                     const retryResult = await waitForAddToCartResult();
-                    
+
                     if (!retryResult.success) {
                         console.error('降级后仍然失败，视为无货');
                         return { success: false, reason: '库存不足（降级失败）' };
                     }
-                    
+
                     console.log(`✓ 降级成功，已加入${fallbackQuantity}个`);
                 } else {
                     return { success: false, reason: '库存不足' };
@@ -5478,7 +5593,7 @@
             } else {
                 console.log(`✓ 加购成功：${targetQuantity}个`);
             }
-            
+
             // 7. 点击查看购物车
             await new Promise(resolve => setTimeout(resolve, 500));
             const viewCartClicked = await clickViewCartButton();
@@ -5486,40 +5601,40 @@
                 console.warn('未找到查看购物车按钮，尝试直接跳转...');
                 window.location.href = 'https://www.popmart.com/hk/largeShoppingCart?origin=pickup';
             }
-            
+
             // 8. 等待购物车页面
             const cartLoaded = await waitForCartPageLoad();
             if (!cartLoaded) {
                 return { success: false, reason: '购物车页面加载失败' };
             }
-            
+
             // 9. 切换到到店取标签
             await ensurePickupTab();
-            
+
             // 10. 全选商品
             const selected = await ensureSelectAll();
             if (!selected) {
                 return { success: false, reason: '全选商品失败' };
             }
-            
+
             // 11. 去结算
             const checkoutClicked = await clickCheckoutButton();
             if (!checkoutClicked) {
                 return { success: false, reason: '结算按钮点击失败' };
             }
-            
+
             // 12. 等待订单页面
             const orderLoaded = await waitForOrderPageLoad();
             if (!orderLoaded) {
                 return { success: false, reason: '订单页面加载失败' };
             }
-            
+
             // 13. 执行支付
             const paymentResult = await executePaymentProcess();
-            
+
             console.log('========== 详情页流程结束 ==========');
             return paymentResult;
-            
+
         } catch (error) {
             console.error('详情页流程异常:', error);
             return { success: false, reason: '流程异常: ' + error.message };
@@ -5529,22 +5644,22 @@
     // ==================== 初始化 ====================
     async function init() {
         console.log('到店取组合脚本已启动');
-        
+
         // v5.0: 设置API拦截器
         setupApiInterceptor();
-        
+
         // 恢复模式
         currentMode = getCurrentMode();
-        
+
         // 创建UI
         createPanel();
-        
+
         // 初始化BroadcastChannel
         initBroadcastChannel();
-        
+
         // 初始化WebSocket连接
         initWebSocket();
-        
+
         // v5.4.1: 在模式判断之前恢复店铺列表（确保两个模式都能使用）
         const savedStoreList = GM_getValue('popmart_storeList', []);
         if (savedStoreList.length > 0) {
@@ -5553,20 +5668,20 @@
         } else {
             console.warn('⚠️ 店铺列表为空，请点击"同步"按钮获取店铺列表');
         }
-        
+
         // 根据模式初始化
         if (currentMode === 'monitor') {
             // 监测模式初始化
-            
+
             // 切换到到店取标签页
             await switchToPickupTab();
-            
+
             // 更新店铺列表UI（只在监测模式需要）
             if (monitor_ALL_STORES.length > 0) {
                 updateStoreList();
                 bindStoreCheckboxEvents();
             }
-            
+
             const savedSchedule = getUserScheduleSettings('monitor');
             monitor_isScheduledEnabled = savedSchedule.enabled;
             monitor_scheduledTime = {
@@ -5575,13 +5690,13 @@
                 second: savedSchedule.second,
                 millisecond: savedSchedule.millisecond
             };
-            
+
             const savedMessageMode = GM_getValue('popmart_messageModeSettings', { enabled: true });
             monitor_isMessageModeEnabled = savedMessageMode.enabled;
-            
+
             // v5.4.0: 恢复刷新间隔
             monitor_refreshInterval = GM_getValue('popmart_refreshInterval', 1000);
-            
+
             // v5.4.0: 恢复详情模式设置
             const savedDetailMode = GM_getValue('popmart_detailModeSettings', {
                 enabled: false,
@@ -5591,10 +5706,10 @@
             monitor_isDetailModeEnabled = savedDetailMode.enabled;
             monitor_detailQuantityMode = savedDetailMode.quantityMode;
             monitor_maxQuantity = savedDetailMode.maxQuantity;
-            
+
             const savedRunning = getUserRunningState('monitor');
             monitor_isRunning = savedRunning;
-            
+
             updateRunButtonState();
             updateMonitorScheduleUI();
             updateIntervalUI();
@@ -5602,7 +5717,7 @@
             updateTestButtonVisibility();
             updateOrderWindowCountDisplay();
             updateWebSocketButtonUI();
-            
+
             // v5.4.0: 恢复详情模式UI状态
             const detailModeToggle = document.getElementById('detail-mode-toggle');
             if (detailModeToggle) {
@@ -5619,26 +5734,26 @@
             }
             // 更新数量显示
             updateQuantityDisplay();
-            
+
             // 定期更新下单窗口数量（每2秒检查一次）
             setInterval(() => {
                 if (currentMode === 'monitor') {
                     updateOrderWindowCountDisplay();
                 }
             }, 2000);
-            
+
             if (monitor_isScheduledEnabled) {
                 startMonitorScheduleChecker();
             }
-            
+
             if (monitor_isRunning && monitor_selectedStores.length > 0) {
                 setTimeout(runMonitorMainLoop, monitor_refreshInterval);
             }
-            
+
             // 启动窗口监控相关功能
             startOfflineDetection();
             startSuccessCountdown();
-            
+
             // v4.0: 启动槽位清理定时器（每10秒检查一次）
             setInterval(() => {
                 if (currentMode === 'monitor') {
@@ -5646,30 +5761,30 @@
                     updateSlotDisplayInMonitor();
                 }
             }, 10000);
-            
+
         } else {
             // 下单模式初始化
-            
+
             // 提前生成窗口ID（在 BroadcastChannel 监听器绑定后，确保能响应注册请求）
             order_windowId = generateWindowId();
             console.log('下单窗口ID已生成:', order_windowId);
-            
+
             // 切换到到店取标签页
             await switchToPickupTab();
-            
+
             // 注册下单窗口到 localStorage
             registerOrderWindow();
-            
+
             order_currentStoreName = await waitForStoreElement(10000);
-            
+
             if (order_currentStoreName) {
                 console.log('当前店铺:', order_currentStoreName);
                 addLog(`当前店铺: ${order_currentStoreName}`);
-                
+
                 // 验证店铺
                 registerStore();
                 checkStoreInSelectedList();
-                
+
                 if (order_isStoreValid) {
                     addLog('等待购物车信号...');
                 } else {
@@ -5678,7 +5793,7 @@
             } else {
                 addLog('⚠️ 未检测到店铺信息,请点击同步按钮', true);
             }
-            
+
             const savedSchedule = getUserScheduleSettings('order');
             order_isScheduledEnabled = savedSchedule.enabled;
             order_scheduledTime = {
@@ -5687,28 +5802,28 @@
                 second: savedSchedule.second,
                 millisecond: savedSchedule.millisecond
             };
-            
+
             const savedDuration = getDurationSettings();
             order_durationSeconds = savedDuration.durationSeconds;
-            
+
             const savedSpeed = getSubmitSpeedSettings();
             order_submitSpeed = savedSpeed.submitSpeed;
-            
+
             updateStoreNameDisplay();
             updateOrderScheduleUI();
             updateDurationUI();
             updateSpeedUI();
-            
+
             // 恢复保存的窗口数量
             const savedWindowCount = getWindowCount();
             const windowCountInput = document.getElementById('window-count');
             if (windowCountInput) {
                 windowCountInput.value = savedWindowCount;
             }
-            
+
             // 初始化已注册窗口数量显示
             updateRegisteredWindowsCount();
-            
+
             // 定期更新已注册窗口数量（每2秒检查一次）
             setInterval(() => {
                 if (currentMode === 'order') {
@@ -5717,38 +5832,38 @@
                     updateAutoSlotDisplay();
                 }
             }, 2000);
-            
+
             if (order_isScheduledEnabled) {
                 startOrderScheduleChecker();
             }
-            
+
             // 初始化手动模式折叠信息
             if (isManualCollapsed) {
                 updateManualCollapsedInfo();
             }
-            
+
             // 定期更新手动模式折叠信息
             setInterval(() => {
                 if (isManualCollapsed && order_isScheduledEnabled && !order_isRunning) {
                     updateManualCollapsedInfo();
                 }
             }, 100);
-            
+
             // 定期更新主面板折叠信息（倒计时）
             setInterval(() => {
                 if (isCollapsed && order_isScheduledEnabled && !order_isRunning) {
                     updateOrderCollapsedInfo();
                 }
             }, 100);
-            
+
             // 启动状态广播（发送到监测窗口）
             // 启动心跳
             startHeartbeat();
         }
-        
+
         // 开始时间显示更新
         setInterval(updateTimeDisplay, 100);
-        
+
         console.log(`初始化完成，当前模式: ${currentMode === 'monitor' ? '监测模式' : '下单模式'}`);
     }
 

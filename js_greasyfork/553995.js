@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name               Duolingo DuoFarmer
 // @namespace          https://duo-farmer.vercel.app
-// @version            1.3.10
+// @version            1.3.12
 // @author             Lamduck
 // @description        DuoFarmer is a tool that helps you farm XP, farm Streak, farm Gems or even repair frozen streak on Duolingo!.
 // @description:en     DuoFarmer is a tool that helps you farm XP, farm Streak, farm Gems or even repair frozen streak on Duolingo!.
@@ -40,6 +40,7 @@
 // @icon               https://www.google.com/s2/favicons?sz=64&domain=duolingo.com
 // @match              https://*.duolingo.com/*
 // @grant              GM_log
+// @run-at             document-start
 // @downloadURL https://update.greasyfork.org/scripts/528621/Duolingo%20DuoFarmer.user.js
 // @updateURL https://update.greasyfork.org/scripts/528621/Duolingo%20DuoFarmer.meta.js
 // ==/UserScript==
@@ -47,6 +48,116 @@
 (function () {
   'use strict';
 
+  const SETTINGS_KEY = "duofarmerSettings";
+  const TARGET_URL_REGEX = /https?:\/\/(?:[a-zA-Z0-9-]+\.)?duolingo\.[a-zA-Z]{2,6}(?:\.[a-zA-Z]{2})?\/\d{4}-\d{2}-\d{2}\/users\/.+/;
+  const CUSTOM_SHOP_ITEMS = {
+    gold_subscription: {
+      itemName: "gold_subscription",
+      subscriptionInfo: {
+        vendor: "STRIPE",
+        renewing: true,
+        isFamilyPlan: true,
+        expectedExpiration: 9999999999e3
+      }
+    }
+  };
+  function isMaxEnabled() {
+    try {
+      const saved = localStorage.getItem(SETTINGS_KEY);
+      if (saved) return JSON.parse(saved).enableMaxPatch || false;
+    } catch (e) {
+    }
+    return false;
+  }
+  function shouldIntercept(url, method = "GET") {
+    if (!isMaxEnabled()) return false;
+    if (method.toUpperCase() !== "GET") return false;
+    if (url.includes("/shop-items")) return false;
+    return TARGET_URL_REGEX.test(url);
+  }
+  function modifyJson(jsonText) {
+    try {
+      const data = JSON.parse(jsonText);
+      data.hasPlus = true;
+      if (!data.trackingProperties || typeof data.trackingProperties !== "object") {
+        data.trackingProperties = {};
+      }
+      data.trackingProperties.has_item_gold_subscription = true;
+      data.shopItems = { ...data.shopItems, ...CUSTOM_SHOP_ITEMS };
+      return JSON.stringify(data);
+    } catch (e) {
+      return jsonText;
+    }
+  }
+  function removeManageSubscriptionSection(root = document) {
+    const sections = root.querySelectorAll("section._3f-te");
+    for (const section of sections) {
+      const h2 = section.querySelector("h2._203-l");
+      if (h2 && h2.textContent.trim() === "Manage subscription") {
+        section.remove();
+        break;
+      }
+    }
+  }
+  function initPatcher() {
+    if (typeof window === "undefined") return;
+    const originalFetch = window.fetch;
+    window.fetch = function(resource, options) {
+      const url = resource instanceof Request ? resource.url : resource;
+      const method = resource instanceof Request ? resource.method : (options == null ? void 0 : options.method) || "GET";
+      if (shouldIntercept(url, method)) {
+        return originalFetch.apply(this, arguments).then(async (response) => {
+          const cloned = response.clone();
+          const jsonText = await cloned.text();
+          const modified = modifyJson(jsonText);
+          let hdrs = response.headers;
+          try {
+            const obj = {};
+            response.headers.forEach((v, k) => obj[k] = v);
+            hdrs = obj;
+          } catch {
+          }
+          return new Response(modified, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: hdrs
+          });
+        }).catch((err) => {
+          throw err;
+        });
+      }
+      return originalFetch.apply(this, arguments);
+    };
+    const originalXhrOpen = XMLHttpRequest.prototype.open;
+    const originalXhrSend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.open = function(method, url, ...args) {
+      this._method = method;
+      this._url = url;
+      originalXhrOpen.call(this, method, url, ...args);
+    };
+    XMLHttpRequest.prototype.send = function() {
+      if (shouldIntercept(this._url, this._method)) {
+        const originalOnReadyStateChange = this.onreadystatechange;
+        const xhr = this;
+        this.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const modifiedText = modifyJson(xhr.responseText);
+              Object.defineProperty(xhr, "responseText", { writable: true, value: modifiedText });
+              Object.defineProperty(xhr, "response", { writable: true, value: modifiedText });
+            } catch (e) {
+            }
+          }
+          if (originalOnReadyStateChange) originalOnReadyStateChange.apply(this, arguments);
+        };
+      }
+      originalXhrSend.apply(this, arguments);
+    };
+    const manageSubObserver = new MutationObserver(() => {
+      if (isMaxEnabled()) removeManageSubscriptionSection();
+    });
+    manageSubObserver.observe(document.documentElement, { childList: true, subtree: true });
+  }
   const templateRaw = `<div id="overlay"></div>
 <div id="container">
   <div id="header">
@@ -111,6 +222,16 @@
       <button id="settings-close" class="modal-close">✕</button>
     </div>
     <div class="modal-body">
+      <div class="settings-group">
+        <h3>Duolingo Max</h3>
+        <div class="setting-item">
+          <span>Enable Duolingo Max Patch
+            <br>
+            <i class="muted">(Bypass subscription check to get Duolingo Max!, thanks <a href="https://github.com/apersongithub/Duolingo-Unlimited-Hearts" target="_blank">apersongithub</a>)</i>
+          </span>
+          <input type="checkbox" id="enable-max-patch">
+        </div>
+      </div>
       <div class="settings-group">
         <h3>General</h3>
         <div class="setting-item">
@@ -201,21 +322,30 @@
           <span>Duofarmer Homepage</span>
           <a href="https://duo-farmer.vercel.app" target="_blank">Here</a>
         </div>
-        <div class="setting-item">
-          <span>Recommended Scripts (Free Max/ Super/ Unlimited subscriptions)</span>
-          <a href="https://greasyfork.org/en/scripts?set=593926" target="_blank">Here</a>
-        </div>
       </div>
 
       <div class="settings-group">
-        <h3>Donate me (please 😭)</h3>
+        <h3>Donate me (please im unemployed 😭)</h3>
         <div class="setting-item">
           <span>Donate via PayPal</span>
           <a href="https://duo-farmer.vercel.app/donate/paypal" target="_blank">Here</a>
         </div>
         <div class="setting-item">
           <span>Donate via Momo ( Vietnam )</span>
-          <a>Pls text me in telegram 😘</a>
+          <a href="https://t.me/duofarmer" target="_blank">Direct message me</a>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3>Feature Guide</h3>
+        <div class="setting-item">
+          <code id="feature-guide">
+            <p><b>- Enable Duolingo Max Patch:</b> Bypass subscription check to get Duolingo Max!, thanks <a href="https://github.com/apersongithub/Duolingo-Unlimited-Hearts" target="_blank">apersongithub</a>.</p>
+            <p><b>- Auto start farming onload:</b> Start farming default selected option automatically when the page loads. <br></p>
+            <p><b>- Repair streak:</b> Fills missing streak days from account creation date to now, it's also break all the frozen streak.<br></p>
+            <p><b>- Blank page (best performance):</b> Duolingo's error page with minimal load. It will have 100% power for farming 😎.<br></p>
+            <p><b>- Public/Private:</b> Toggle account visibility. Private = hidden from leaderboards. (Recommended to use private) <br></p>
+          </code>
         </div>
       </div>
 
@@ -284,8 +414,9 @@
   const formatHeaders = (jwtToken) => {
     return {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${jwtToken}`,
-      "User-Agent": navigator.userAgent
+      "Authorization": `Bearer ${jwtToken}`,
+      "User-Agent": navigator.userAgent,
+      "Accept-Encoding": "gzip, deflate, br, zstd"
     };
   };
   const extractSkillId = (currentCourse) => {
@@ -296,19 +427,34 @@
       for (const unit of units) {
         const levels = unit.levels || [];
         for (const level of levels) {
-          const skillId2 = ((_a = level.pathLevelMetadata) == null ? void 0 : _a.skillId) || ((_b = level.pathLevelClientData) == null ? void 0 : _b.skillId);
-          if (skillId2) return skillId2;
+          const skillId = ((_a = level.pathLevelMetadata) == null ? void 0 : _a.skillId) || ((_b = level.pathLevelClientData) == null ? void 0 : _b.skillId);
+          if (skillId) return skillId;
         }
       }
     }
     return null;
   };
+  const waitForBody = () => {
+    return new Promise((resolve) => {
+      if (document.body) {
+        resolve();
+      } else {
+        const observer = new MutationObserver(() => {
+          if (document.body) {
+            observer.disconnect();
+            resolve();
+          }
+        });
+        observer.observe(document.documentElement, { childList: true });
+      }
+    });
+  };
   class ApiService {
-    constructor(jwt2, defaultHeaders2, userInfo2, sub2) {
-      this.jwt = jwt2;
-      this.defaultHeaders = defaultHeaders2;
-      this.userInfo = userInfo2;
-      this.sub = sub2;
+    constructor(jwt, defaultHeaders, userInfo, sub) {
+      this.jwt = jwt;
+      this.defaultHeaders = defaultHeaders;
+      this.userInfo = userInfo;
+      this.sub = sub;
     }
     static async getUserInfo(userSub, headers) {
       const userInfoUrl = `https://www.duolingo.com/2017-06-30/users/${userSub}?fields=id,username,fromLanguage,learningLanguage,streak,totalXp,level,numFollowers,numFollowing,gems,creationDate,streakData,privacySettings,currentCourse{pathSectioned{units{levels{pathLevelMetadata{skillId}}}}}`;
@@ -343,31 +489,6 @@
         fromLanguage: this.userInfo.fromLanguage
       };
       return await this.sendRequest({ url: patchUrl, payload: patchBody, headers: this.defaultHeaders, method: "PATCH" });
-    }
-    async farmStoryOnce(config = {}) {
-      const startTime = getCurrentUnixTimestamp();
-      const fromLanguage = this.userInfo.fromLanguage;
-      const completeUrl = `https://stories.duolingo.com/api2/stories/en-${fromLanguage}-the-passport/complete`;
-      const storyPayload = {
-        awardXp: true,
-        isFeaturedStoryInPracticeHub: false,
-        completedBonusChallenge: true,
-        mode: "READ",
-        isV2Redo: false,
-        isV2Story: false,
-        isLegendaryMode: true,
-        masterVersion: false,
-        maxScore: 0,
-        numHintsUsed: 0,
-        score: 0,
-        startTime,
-        fromLanguage,
-        learningLanguage: this.userInfo.learningLanguage,
-        hasXpBoost: false,
-        // happyHourBonusXp: 449,
-        ...config.storyPayload || {}
-      };
-      return await this.sendRequest({ url: completeUrl, payload: storyPayload, headers: this.defaultHeaders, method: "POST" });
     }
     async farmSessionOnce(config = {}) {
       const startTime = config.startTime || getCurrentUnixTimestamp();
@@ -417,9 +538,9 @@
     }
   }
   class SettingsManager {
-    constructor(shadowRoot2, apiService2 = null) {
-      this.shadowRoot = shadowRoot2;
-      this.apiService = apiService2;
+    constructor(shadowRoot, apiService = null) {
+      this.shadowRoot = shadowRoot;
+      this.apiService = apiService;
       this.DEFAULT_SETTINGS = {
         autoOpenUI: false,
         autoStart: false,
@@ -429,7 +550,8 @@
         keepScreenOn: false,
         delayTime: 500,
         retryTime: 1e3,
-        autoStopTime: 0
+        autoStopTime: 0,
+        enableMaxPatch: false
       };
       this.settings = this.loadSettings();
     }
@@ -453,29 +575,66 @@
     }
     loadSettingsToUI() {
       const elements = this.getElements();
-      if (elements.autoOpenUI) elements.autoOpenUI.checked = this.settings.autoOpenUI;
-      if (elements.autoStart) elements.autoStart.checked = this.settings.autoStart;
-      if (elements.defaultOption) elements.defaultOption.value = this.settings.defaultOption.toString();
-      if (elements.hideUsername) elements.hideUsername.checked = this.settings.hideUsername;
-      if (elements.keepScreenOn) elements.keepScreenOn.checked = this.settings.keepScreenOn;
-      if (elements.delayTime) elements.delayTime.value = this.settings.delayTime;
-      if (elements.retryTime) elements.retryTime.value = this.settings.retryTime;
-      if (elements.autoStopTime) elements.autoStopTime.value = this.settings.autoStopTime;
+      const mappings = [
+        { key: "autoOpenUI", element: elements.autoOpenUI, setter: (el, val) => el.checked = val },
+        { key: "autoStart", element: elements.autoStart, setter: (el, val) => el.checked = val },
+        { key: "defaultOption", element: elements.defaultOption, setter: (el, val) => el.value = val.toString() },
+        { key: "hideUsername", element: elements.hideUsername, setter: (el, val) => el.checked = val },
+        { key: "keepScreenOn", element: elements.keepScreenOn, setter: (el, val) => el.checked = val },
+        { key: "delayTime", element: elements.delayTime, setter: (el, val) => el.value = val },
+        { key: "retryTime", element: elements.retryTime, setter: (el, val) => el.value = val },
+        { key: "autoStopTime", element: elements.autoStopTime, setter: (el, val) => el.value = val },
+        { key: "enableMaxPatch", element: elements.enableMaxPatch, setter: (el, val) => el.checked = val }
+      ];
+      mappings.forEach(({ key, element, setter }) => {
+        if (element && this.settings[key] !== void 0) {
+          setter(element, this.settings[key]);
+        }
+      });
     }
     saveSettingsFromUI() {
-      var _a, _b, _c, _d, _e, _f, _g, _h;
       const elements = this.getElements();
-      const settings = {
-        autoOpenUI: ((_a = elements.autoOpenUI) == null ? void 0 : _a.checked) || false,
-        autoStart: ((_b = elements.autoStart) == null ? void 0 : _b.checked) || false,
-        defaultOption: parseInt((_c = elements.defaultOption) == null ? void 0 : _c.value) || 1,
-        // index in OPTIONS array
-        hideUsername: ((_d = elements.hideUsername) == null ? void 0 : _d.checked) || false,
-        keepScreenOn: ((_e = elements.keepScreenOn) == null ? void 0 : _e.checked) || false,
-        delayTime: Math.max(100, Math.min(1e4, parseInt((_f = elements.delayTime) == null ? void 0 : _f.value) || 500)),
-        retryTime: Math.max(100, Math.min(1e4, parseInt((_g = elements.retryTime) == null ? void 0 : _g.value) || 1e3)),
-        autoStopTime: parseInt((_h = elements.autoStopTime) == null ? void 0 : _h.value) || 0
+      const getters = {
+        autoOpenUI: () => {
+          var _a;
+          return ((_a = elements.autoOpenUI) == null ? void 0 : _a.checked) || false;
+        },
+        autoStart: () => {
+          var _a;
+          return ((_a = elements.autoStart) == null ? void 0 : _a.checked) || false;
+        },
+        defaultOption: () => {
+          var _a;
+          return parseInt((_a = elements.defaultOption) == null ? void 0 : _a.value) || 1;
+        },
+        hideUsername: () => {
+          var _a;
+          return ((_a = elements.hideUsername) == null ? void 0 : _a.checked) || false;
+        },
+        keepScreenOn: () => {
+          var _a;
+          return ((_a = elements.keepScreenOn) == null ? void 0 : _a.checked) || false;
+        },
+        delayTime: () => {
+          var _a;
+          return Math.max(100, Math.min(1e4, parseInt((_a = elements.delayTime) == null ? void 0 : _a.value) || 500));
+        },
+        retryTime: () => {
+          var _a;
+          return Math.max(100, Math.min(1e4, parseInt((_a = elements.retryTime) == null ? void 0 : _a.value) || 1e3));
+        },
+        autoStopTime: () => {
+          var _a;
+          return parseInt((_a = elements.autoStopTime) == null ? void 0 : _a.value) || 0;
+        },
+        enableMaxPatch: () => {
+          var _a;
+          return ((_a = elements.enableMaxPatch) == null ? void 0 : _a.checked) || false;
+        }
       };
+      const settings = Object.fromEntries(
+        Object.entries(getters).map(([key, getter]) => [key, getter()])
+      );
       this.saveSettings(settings);
       return settings;
     }
@@ -495,7 +654,8 @@
         resetSetting: this.shadowRoot.getElementById("reset-setting"),
         settingsContainer: this.shadowRoot.getElementById("settings-container"),
         setAccountPublic: this.shadowRoot.getElementById("set-account-public"),
-        setAccountPrivate: this.shadowRoot.getElementById("set-account-private")
+        setAccountPrivate: this.shadowRoot.getElementById("set-account-private"),
+        enableMaxPatch: this.shadowRoot.getElementById("enable-max-patch")
       };
     }
     addEventListeners() {
@@ -554,7 +714,7 @@ Copy to clipboard?`) && navigator.clipboard.writeText(token);
       const settingsBtn = this.shadowRoot.getElementById("settings-btn");
       const settingsContainer = elements.settingsContainer;
       const settingsClose = this.shadowRoot.getElementById("settings-close");
-      const toggleModal = (modalElement, mainElement) => ({
+      const toggleModal2 = (modalElement, mainElement) => ({
         show: () => {
           mainElement.style.display = "none";
           modalElement.style.display = "flex";
@@ -564,7 +724,7 @@ Copy to clipboard?`) && navigator.clipboard.writeText(token);
           mainElement.style.display = "flex";
         }
       });
-      const settingsModal = toggleModal(settingsContainer, container);
+      const settingsModal = toggleModal2(settingsContainer, container);
       settingsBtn.addEventListener("click", settingsModal.show);
       settingsClose.addEventListener("click", settingsModal.hide);
     }
@@ -585,23 +745,297 @@ Copy to clipboard?`) && navigator.clipboard.writeText(token);
       });
     }
   }
-  let runtimeSettings = {
-    delayTime: 500,
-    retryTime: 1e3,
-    autoStopTime: 0
+  const safeCall = (callback, ...args) => callback == null ? void 0 : callback(...args);
+  const handleFarmingError = (error, context, callbacks) => {
+    const message = (error == null ? void 0 : error.status) ? `Error ${error.status}! Please report in telegram group!` : `Error in ${context}: ${(error == null ? void 0 : error.message) || error}`;
+    safeCall(callbacks.onError, message);
+    return message;
   };
-  let jwt = null;
-  let defaultHeaders = null;
-  let userInfo = null;
-  let sub = null;
-  let skillId = null;
-  let isRunning = false;
-  let shadowRoot = null;
-  let apiService = null;
-  let settingsManager = null;
-  let farmOptions = [];
-  let autoStopTimerId = null;
-  const getElements = () => {
+  const FARMING_STRATEGIES = {
+    gem: (apiService, config, callbacks) => new GemFarming(apiService, config, callbacks),
+    xp: (apiService, config, callbacks) => new XpFarming(apiService, config, callbacks),
+    streak: (apiService, config, callbacks) => new StreakFarming(apiService, config, callbacks)
+  };
+  class GemFarming {
+    constructor(apiService, config, callbacks) {
+      this.apiService = apiService;
+      this.config = config;
+      this.callbacks = callbacks;
+      this.gemFarmed = 30;
+    }
+    async start(userInfo) {
+      while (this.config.isRunning) {
+        try {
+          await this.apiService.farmGemOnce(userInfo);
+          safeCall(this.callbacks.onUpdate, "gem", this.gemFarmed);
+          await this.callbacks.delay(this.config.delayTime);
+        } catch (error) {
+          handleFarmingError(error, "gemFarming", this.callbacks);
+          await this.callbacks.delay(this.config.retryTime);
+        }
+      }
+    }
+  }
+  class XpFarming {
+    constructor(apiService, config, callbacks) {
+      this.apiService = apiService;
+      this.config = config;
+      this.callbacks = callbacks;
+    }
+    async start(value, amount, config = {}, userInfo) {
+      while (this.config.isRunning) {
+        try {
+          const response = await this.apiService.farmSessionOnce(config);
+          if (response.status > 400) {
+            safeCall(this.callbacks.onError, `Something went wrong! Please try again later.`);
+            await this.callbacks.delay(this.config.retryTime);
+            continue;
+          }
+          const responseData = await response.json();
+          const xpFarmed = (responseData == null ? void 0 : responseData.awardedXp) || (responseData == null ? void 0 : responseData.xpGain) || 0;
+          safeCall(this.callbacks.onUpdate, "xp", xpFarmed);
+          await this.callbacks.delay(this.config.delayTime);
+        } catch (error) {
+          handleFarmingError(error, "xpFarming", this.callbacks);
+          await this.callbacks.delay(this.config.retryTime);
+        }
+      }
+    }
+  }
+  class StreakFarming {
+    constructor(apiService, config, callbacks) {
+      this.apiService = apiService;
+      this.config = config;
+      this.callbacks = callbacks;
+      this.SECONDS_PER_DAY = 86400;
+      this.SESSION_DURATION_SECONDS = 60;
+    }
+    async start(value = "farm", userInfo) {
+      const method = value === "repair" ? this.repair.bind(this) : this.farm.bind(this);
+      await method(userInfo);
+    }
+    async farm(userInfo) {
+      const hasStreak = !!userInfo.streakData.currentStreak;
+      const startStreakDate = hasStreak ? userInfo.streakData.currentStreak.startDate : /* @__PURE__ */ new Date();
+      const startFarmStreakTimestamp = toTimestamp(startStreakDate);
+      let currentTimestamp = hasStreak ? startFarmStreakTimestamp - this.SECONDS_PER_DAY : startFarmStreakTimestamp;
+      while (this.config.isRunning) {
+        try {
+          const sessionRes = await this.apiService.farmSessionOnce({
+            startTime: currentTimestamp,
+            endTime: currentTimestamp + this.SESSION_DURATION_SECONDS
+          });
+          if (sessionRes) {
+            currentTimestamp -= this.SECONDS_PER_DAY;
+            safeCall(this.callbacks.onUpdate, "streak", 1);
+            await this.callbacks.delay(this.config.delayTime);
+          } else {
+            safeCall(this.callbacks.onError, "Failed to farm streak session, I'm trying again...");
+            await this.callbacks.delay(this.config.retryTime);
+            continue;
+          }
+        } catch (error) {
+          handleFarmingError(error, "farmStreak", this.callbacks);
+          await this.callbacks.delay(this.config.retryTime);
+          continue;
+        }
+      }
+    }
+    validateRepair(userInfo) {
+      const creationDate = userInfo.creationDate;
+      const currentStreak = userInfo.streak || 0;
+      const currentTime = getCurrentUnixTimestamp();
+      const daysSinceCreation = daysBetween(creationDate, currentTime);
+      const maxPossibleStreak = daysSinceCreation + 1;
+      const missingStreaks = maxPossibleStreak - currentStreak;
+      if (currentStreak >= maxPossibleStreak) {
+        return {
+          valid: false,
+          message: `Current streak (${currentStreak}) is greater than or equal to maximum possible streak (${maxPossibleStreak}). No repair needed.`
+        };
+      }
+      if (missingStreaks <= 0) {
+        return {
+          valid: false,
+          message: "No missing streaks to repair."
+        };
+      }
+      return {
+        valid: true,
+        missingStreaks,
+        endTimestamp: creationDate,
+        maxPossibleStreak
+      };
+    }
+    async repair(userInfo) {
+      const validation = this.validateRepair(userInfo);
+      if (!validation.valid) {
+        safeCall(this.callbacks.onNotify, validation.message);
+        safeCall(this.callbacks.onStop);
+        return;
+      }
+      const { missingStreaks, maxPossibleStreak, endTimestamp } = validation;
+      if (!confirm(`This feature will repair ${missingStreaks} missing streaks, so your streak will be ${maxPossibleStreak} days. Are you sure you want to continue?`)) {
+        const message = `Streak repair cancelled.`;
+        safeCall(this.callbacks.onNotify, message);
+        safeCall(this.callbacks.onStop);
+        return;
+      }
+      safeCall(this.callbacks.onNotify, `Repairing ${missingStreaks} missing streaks...`);
+      const hasStreak = !!userInfo.streakData.currentStreak;
+      const startStreakDate = hasStreak ? userInfo.streakData.currentStreak.startDate : /* @__PURE__ */ new Date();
+      const startFarmStreakTimestamp = toTimestamp(startStreakDate);
+      let repairTimestamp = hasStreak ? startFarmStreakTimestamp - this.SECONDS_PER_DAY : startFarmStreakTimestamp;
+      let repairedCount = 0;
+      while (this.config.isRunning && repairTimestamp >= endTimestamp && repairedCount < missingStreaks) {
+        try {
+          const sessionRes = await this.apiService.farmSessionOnce({
+            startTime: repairTimestamp,
+            endTime: repairTimestamp + this.SESSION_DURATION_SECONDS
+          });
+          if (sessionRes) {
+            repairTimestamp -= this.SECONDS_PER_DAY;
+            safeCall(this.callbacks.onUpdate, "streak", 1);
+            repairedCount += 1;
+            await this.callbacks.delay(this.config.delayTime);
+          } else {
+            safeCall(this.callbacks.onError, "Failed to repair streak session, I'm trying again...");
+            await this.callbacks.delay(this.config.retryTime);
+            continue;
+          }
+        } catch (error) {
+          handleFarmingError(error, "repairStreak", this.callbacks);
+          await this.callbacks.delay(this.config.retryTime);
+          continue;
+        }
+      }
+      if (repairedCount >= missingStreaks || repairTimestamp < endTimestamp) {
+        const message = `Streak repair completed. Repaired ${repairedCount} day(s).`;
+        safeCall(this.callbacks.onNotify, message);
+        safeCall(this.callbacks.onStop);
+      }
+    }
+  }
+  class FarmingController {
+    constructor(apiService, config, callbacks) {
+      this.apiService = apiService;
+      this.config = config;
+      this.callbacks = callbacks;
+      this.isRunning = false;
+      this.autoStopTimerId = null;
+      this.currentFarming = null;
+    }
+    getIsRunning() {
+      return this.isRunning;
+    }
+    setIsRunning(running) {
+      this.isRunning = running;
+      if (!running && this.autoStopTimerId) {
+        clearTimeout(this.autoStopTimerId);
+        this.autoStopTimerId = null;
+      }
+    }
+    startAutoStopTimer(autoStopTimeMinutes) {
+      if (autoStopTimeMinutes > 0) {
+        this.autoStopTimerId = setTimeout(() => {
+          const message = `Auto-stopped by setting (stop after ${autoStopTimeMinutes} minutes).`;
+          safeCall(this.callbacks.onNotify, message);
+          safeCall(this.callbacks.onAlert, message);
+          this.stop();
+        }, autoStopTimeMinutes * 60 * 1e3);
+      }
+    }
+    async start(option, userInfo) {
+      if (this.isRunning) {
+        return;
+      }
+      this.setIsRunning(true);
+      this.startAutoStopTimer(this.config.autoStopTime);
+      const { type, value, amount, config } = option;
+      try {
+        const strategy = FARMING_STRATEGIES[type];
+        if (!strategy) {
+          throw new Error(`Unknown farming type: ${type}`);
+        }
+        this.currentFarming = strategy(this.apiService, this.config, this.callbacks);
+        if (type === "xp") {
+          await this.currentFarming.start(value, amount, config, userInfo);
+        } else if (type === "streak") {
+          await this.currentFarming.start(value, userInfo);
+        } else {
+          await this.currentFarming.start(userInfo);
+        }
+      } catch (error) {
+        handleFarmingError(error, "FarmingController.start", this.callbacks);
+      } finally {
+        this.setIsRunning(false);
+      }
+    }
+    stop() {
+      this.setIsRunning(false);
+      this.currentFarming = null;
+    }
+  }
+  class UserManager {
+    constructor(callbacks) {
+      this.userInfo = null;
+      this.callbacks = callbacks;
+    }
+    setUserInfo(userInfo) {
+      this.userInfo = userInfo;
+      if (this.callbacks.onUserInfoUpdate) {
+        this.callbacks.onUserInfoUpdate(this.userInfo);
+      }
+    }
+    getUserInfo() {
+      return this.userInfo;
+    }
+    updateFarmResult(type, farmedAmount) {
+      if (!this.userInfo) {
+        return;
+      }
+      switch (type) {
+        case "gem":
+          this.userInfo = { ...this.userInfo, gems: this.userInfo.gems + farmedAmount };
+          if (this.callbacks.onNotify) {
+            this.callbacks.onNotify(`You got ${farmedAmount} gem!!!`);
+          }
+          break;
+        case "xp":
+          this.userInfo = { ...this.userInfo, totalXp: this.userInfo.totalXp + farmedAmount };
+          if (this.callbacks.onNotify) {
+            this.callbacks.onNotify(`You got ${farmedAmount} XP!!!`);
+          }
+          break;
+        case "streak":
+          this.userInfo = { ...this.userInfo, streak: this.userInfo.streak + farmedAmount };
+          if (this.callbacks.onNotify) {
+            this.callbacks.onNotify(`You got ${farmedAmount} streak! (maybe some xp too, idk)`);
+          }
+          break;
+      }
+      if (this.callbacks.onUserInfoUpdate) {
+        this.callbacks.onUserInfoUpdate(this.userInfo);
+      }
+    }
+  }
+  function generateFarmOptions(userInfo) {
+    const skillId = extractSkillId(userInfo.currentCourse || {});
+    return [
+      { type: "separator", label: "⟡ GEM FARMING ⟡", value: "", disabled: true },
+      { type: "gem", label: "Gem 30", value: "fixed", amount: 30 },
+      { type: "separator", label: "⟡ XP FARMING ⟡", value: "", disabled: true },
+      { type: "xp", label: "XP 10", value: "xp", amount: 10, config: {} },
+      { type: "xp", label: "XP 20", value: "xp", amount: 20, config: { updateSessionPayload: { hasBoost: true } } },
+      { type: "xp", label: "XP 40", value: "xp", amount: 40, config: { updateSessionPayload: { hasBoost: true, type: "TARGET_PRACTICE" } } },
+      { type: "xp", label: "XP 50", value: "xp", amount: 50, config: { updateSessionPayload: { enableBonusPoints: true, hasBoost: true, happyHourBonusXp: 10, type: "TARGET_PRACTICE" } } },
+      { type: "xp", label: "XP 110", value: "xp", amount: 110, config: { sessionPayload: { type: "UNIT_TEST", skillIds: skillId ? [skillId] : [] }, updateSessionPayload: { type: "UNIT_TEST", hasBoost: true, happyHourBonusXp: 10, pathLevelSpecifics: { unitIndex: 0 } } }, disabled: !skillId },
+      { type: "separator", label: "⟡ STREAK FARMING ⟡", value: "", disabled: true },
+      { type: "streak", label: "Unlimited Streak", value: "farm" },
+      { type: "streak", label: "Repair Streak", value: "repair" }
+    ];
+  }
+  function getElements(shadowRoot) {
     return {
       startBtn: shadowRoot.getElementById("start-btn"),
       stopBtn: shadowRoot.getElementById("stop-btn"),
@@ -623,175 +1057,215 @@ Copy to clipboard?`) && navigator.clipboard.writeText(token);
       setAccountPublic: shadowRoot.getElementById("set-account-public"),
       setAccountPrivate: shadowRoot.getElementById("set-account-private")
     };
-  };
-  const setRunningState = (running) => {
-    isRunning = running;
-    const { startBtn, stopBtn, select } = getElements();
-    if (running) {
-      startBtn.hidden = true;
-      stopBtn.hidden = false;
-      stopBtn.disabled = true;
-      stopBtn.className = "disable-btn";
-      select.disabled = true;
-    } else {
-      stopBtn.hidden = true;
-      startBtn.hidden = false;
-      startBtn.disabled = true;
-      startBtn.className = "disable-btn";
-      select.disabled = false;
-      if (autoStopTimerId) {
-        clearTimeout(autoStopTimerId);
-        autoStopTimerId = null;
-      }
-    }
-    setTimeout(() => {
-      const { startBtn: btn, stopBtn: stop } = getElements();
-      btn.className = "";
-      btn.disabled = false;
-      stop.className = "";
-      stop.disabled = false;
-    }, 3e3);
-  };
-  const disableAllControls = (notifyMessage = null) => {
-    const { startBtn, stopBtn, select } = getElements();
-    startBtn.disabled = true;
-    startBtn.className = "disable-btn";
-    stopBtn.disabled = true;
-    select.disabled = true;
-    if (notifyMessage) {
-      updateNotify(notifyMessage);
-    }
-  };
-  const initInterface = () => {
-    const container = document.createElement("div");
-    shadowRoot = container.attachShadow({ mode: "open" });
-    const style = document.createElement("style");
-    style.textContent = cssText;
-    shadowRoot.appendChild(style);
-    const content = document.createElement("div");
-    content.innerHTML = templateRaw;
-    shadowRoot.appendChild(content);
-    document.body.appendChild(container);
-    const settingsContainer = shadowRoot.getElementById("settings-container");
-    if (settingsContainer) {
-      settingsContainer.style.display = "none";
-    }
-    const requiredElements = [
-      "start-btn",
-      "stop-btn",
-      "select-option",
-      "floating-btn",
-      "container",
-      "overlay",
-      "notify"
-    ];
-    for (const id of requiredElements) {
-      if (!shadowRoot.getElementById(id)) {
-        throw new Error(`Required UI element '${id}' not found in template. Template may be corrupted.`);
-      }
-    }
-  };
-  const showElement = (element) => {
+  }
+  function showElement(element) {
     if (element) element.style.display = "flex";
-  };
-  const hideElement = (element) => {
+  }
+  function hideElement(element) {
     if (element) element.style.display = "none";
-  };
-  const setInterfaceVisible = (visible) => {
-    const { container, overlay } = getElements();
-    if (visible) {
-      showElement(container);
-      showElement(overlay);
-    } else {
-      hideElement(container);
-      hideElement(overlay);
+  }
+  function toggleModal(modalElement, mainElement) {
+    return {
+      show: () => {
+        hideElement(mainElement);
+        showElement(modalElement);
+      },
+      hide: () => {
+        hideElement(modalElement);
+        showElement(mainElement);
+      }
+    };
+  }
+  class UIController {
+    constructor(templateRaw2, cssText2) {
+      this.templateRaw = templateRaw2;
+      this.cssText = cssText2;
+      this.shadowRoot = null;
+      this.container = null;
     }
-  };
-  const addEventFloatingBtn = () => {
-    const { floatingBtn } = getElements();
-    floatingBtn.addEventListener("click", () => {
-      if (isRunning) {
-        if (confirm("Duofarmer is farming. Do you want to stop and hide UI?")) {
-          setRunningState(false);
-          setInterfaceVisible(false);
+    init() {
+      this.container = document.createElement("div");
+      this.shadowRoot = this.container.attachShadow({ mode: "open" });
+      const style = document.createElement("style");
+      style.textContent = this.cssText;
+      this.shadowRoot.appendChild(style);
+      const content = document.createElement("div");
+      content.innerHTML = this.templateRaw;
+      this.shadowRoot.appendChild(content);
+      document.body.appendChild(this.container);
+      const settingsContainer = this.shadowRoot.getElementById("settings-container");
+      if (settingsContainer) {
+        settingsContainer.style.display = "none";
+      }
+      const requiredElements = [
+        "start-btn",
+        "stop-btn",
+        "select-option",
+        "floating-btn",
+        "container",
+        "overlay",
+        "notify"
+      ];
+      for (const id of requiredElements) {
+        if (!this.shadowRoot.getElementById(id)) {
+          throw new Error(`Required UI element '${id}' not found in template. Template may be corrupted.`);
         }
-        return;
       }
-      toggleInterface();
-    });
-  };
-  const addEventStartBtn = () => {
-    const { startBtn, select } = getElements();
-    startBtn.addEventListener("click", async () => {
-      setRunningState(true);
-      if (runtimeSettings.autoStopTime > 0) {
-        autoStopTimerId = setTimeout(() => {
-          alert(`Auto-stopped by setting (stop after ${runtimeSettings.autoStopTime} minutes).`);
-          updateNotify(`Auto-stopped by setting (stop after ${runtimeSettings.autoStopTime} minutes).`);
-          setRunningState(false);
-        }, runtimeSettings.autoStopTime * 60 * 1e3);
+      return this.shadowRoot;
+    }
+    getShadowRoot() {
+      return this.shadowRoot;
+    }
+    setVisible(visible) {
+      const elements = getElements(this.shadowRoot);
+      if (visible) {
+        showElement(elements.container);
+        showElement(elements.overlay);
+      } else {
+        hideElement(elements.container);
+        hideElement(elements.overlay);
       }
-      const selected = select.options[select.selectedIndex];
-      const optionData = {
-        type: selected.getAttribute("data-type"),
-        amount: Number(selected.getAttribute("data-amount")),
-        value: selected.value,
-        label: selected.textContent,
-        config: selected.getAttribute("data-config") ? JSON.parse(selected.getAttribute("data-config")) : {}
-      };
-      await farmSelectedOption(optionData);
-    });
+    }
+    isVisible() {
+      const elements = getElements(this.shadowRoot);
+      return elements.container.style.display !== "none" && elements.container.style.display !== "";
+    }
+    toggle() {
+      this.setVisible(!this.isVisible());
+    }
+  }
+  class UIState {
+    constructor(shadowRoot) {
+      this.shadowRoot = shadowRoot;
+      this.isRunning = false;
+      this.autoStopTimerId = null;
+    }
+    setRunning(running) {
+      this.isRunning = running;
+      const elements = getElements(this.shadowRoot);
+      if (running) {
+        elements.startBtn.hidden = true;
+        elements.stopBtn.hidden = false;
+        elements.stopBtn.disabled = true;
+        elements.stopBtn.className = "disable-btn";
+        elements.select.disabled = true;
+      } else {
+        elements.stopBtn.hidden = true;
+        elements.startBtn.hidden = false;
+        elements.startBtn.disabled = true;
+        elements.startBtn.className = "disable-btn";
+        elements.select.disabled = false;
+        if (this.autoStopTimerId) {
+          clearTimeout(this.autoStopTimerId);
+          this.autoStopTimerId = null;
+        }
+      }
+      setTimeout(() => {
+        const elements2 = getElements(this.shadowRoot);
+        elements2.startBtn.className = "";
+        elements2.startBtn.disabled = false;
+        elements2.stopBtn.className = "";
+        elements2.stopBtn.disabled = false;
+      }, 3e3);
+    }
+    getIsRunning() {
+      return this.isRunning;
+    }
+    disableAllControls() {
+      const elements = getElements(this.shadowRoot);
+      elements.startBtn.disabled = true;
+      elements.startBtn.className = "disable-btn";
+      elements.stopBtn.disabled = true;
+      elements.select.disabled = true;
+    }
+  }
+  const updatePrivacyButtons = (elements, isPrivate) => {
+    elements.setAccountPublic.style.display = isPrivate ? "none" : "flex";
+    elements.setAccountPrivate.style.display = isPrivate ? "flex" : "none";
   };
-  const addEventStopBtn = () => {
-    const { stopBtn } = getElements();
-    stopBtn.addEventListener("click", () => {
-      setRunningState(false);
-    });
-  };
-  const isInterfaceVisible = () => {
-    const { container } = getElements();
-    return container.style.display !== "none" && container.style.display !== "";
-  };
-  const toggleInterface = () => {
-    setInterfaceVisible(!isInterfaceVisible());
-  };
-  const addEventListeners = () => {
-    addEventStartBtn();
-    addEventStopBtn();
-    const { container } = getElements();
-    settingsManager.addEventSettings(container);
-    settingsManager.addEventListeners();
-  };
-  const populateOptions = () => {
-    const select = shadowRoot.getElementById("select-option");
-    select.innerHTML = "";
-    farmOptions.forEach((opt) => {
-      const option = document.createElement("option");
-      option.value = opt.value;
-      option.textContent = opt.label;
-      option.setAttribute("data-type", opt.type);
-      if (opt.amount != null) option.setAttribute("data-amount", String(opt.amount));
-      if (opt.config) option.setAttribute("data-config", JSON.stringify(opt.config));
-      if (opt.disabled) option.disabled = true;
-      select.appendChild(option);
-    });
-  };
-  const updateNotify = (message) => {
-    const { notify } = getElements();
-    const now = (/* @__PURE__ */ new Date()).toLocaleTimeString();
-    notify.innerText = `[${now}] ` + message;
-    log(`[${now}] ${message}`);
-  };
-  const updateUserInfo = () => {
-    const elements = getElements();
-    if (userInfo) {
+  const extractOptionData = (selected) => ({
+    type: selected.getAttribute("data-type"),
+    amount: Number(selected.getAttribute("data-amount")),
+    value: selected.value,
+    label: selected.textContent,
+    config: selected.getAttribute("data-config") ? JSON.parse(selected.getAttribute("data-config")) : {}
+  });
+  class UIHandlers {
+    constructor(shadowRoot, farmingController, userManager, settingsManager, uiController, uiState) {
+      this.shadowRoot = shadowRoot;
+      this.farmingController = farmingController;
+      this.userManager = userManager;
+      this.settingsManager = settingsManager;
+      this.uiController = uiController;
+      this.uiState = uiState;
+    }
+    setupEventListeners() {
+      this.addEventStartBtn();
+      this.addEventStopBtn();
+      this.addEventFloatingBtn();
+      this.addEventSettings();
+      this.settingsManager.addEventListeners();
+    }
+    addEventStartBtn() {
+      const elements = getElements(this.shadowRoot);
+      elements.startBtn.addEventListener("click", async () => {
+        this.uiState.setRunning(true);
+        const selected = elements.select.options[elements.select.selectedIndex];
+        const optionData = extractOptionData(selected);
+        const userInfo = this.userManager.getUserInfo();
+        this.farmingController.start(optionData, userInfo).catch((error) => {
+          this.updateNotify(`Farming error: ${(error == null ? void 0 : error.message) || error}`);
+          this.uiState.setRunning(false);
+        });
+      });
+    }
+    addEventStopBtn() {
+      const elements = getElements(this.shadowRoot);
+      elements.stopBtn.addEventListener("click", () => {
+        this.farmingController.stop();
+        this.uiState.setRunning(false);
+      });
+    }
+    addEventFloatingBtn() {
+      const elements = getElements(this.shadowRoot);
+      elements.floatingBtn.addEventListener("click", () => {
+        if (this.uiState.getIsRunning()) {
+          if (confirm("Duofarmer is farming. Do you want to stop and hide UI?")) {
+            this.farmingController.stop();
+            this.uiState.setRunning(false);
+            this.uiController.setVisible(false);
+          }
+          return;
+        }
+        this.uiController.toggle();
+      });
+    }
+    addEventSettings() {
+      const elements = getElements(this.shadowRoot);
+      const settingsModal = toggleModal(elements.settingsContainer, elements.container);
+      elements.settingsBtn.addEventListener("click", settingsModal.show);
+      elements.settingsClose.addEventListener("click", settingsModal.hide);
+    }
+    updateNotify(message) {
+      const elements = getElements(this.shadowRoot);
+      const now = (/* @__PURE__ */ new Date()).toLocaleTimeString();
+      elements.notify.innerText = `[${now}] ` + message;
+      log(`[${now}] ${message}`);
+    }
+    updateUserInfo(userInfo, skillId, sub) {
+      var _a;
+      if (!userInfo) return;
+      const elements = getElements(this.shadowRoot);
       elements.username.innerText = userInfo.username;
       elements.from.innerText = userInfo.fromLanguage;
       elements.learn.innerText = userInfo.learningLanguage;
       elements.streak.innerText = userInfo.streak;
       elements.gem.innerText = userInfo.gems;
       elements.xp.innerText = userInfo.totalXp;
-      hideElement(userInfo.privacySettings && (userInfo.privacySettings.includes("DISABLE_FRIENDS_QUESTS") || userInfo.privacySettings.includes("DISABLE_LEADERBOARDS")) ? elements.setAccountPrivate : elements.setAccountPublic);
+      const isPrivate = (_a = userInfo.privacySettings) == null ? void 0 : _a.some(
+        (setting) => ["DISABLE_FRIENDS_QUESTS", "DISABLE_LEADERBOARDS"].includes(setting)
+      );
+      updatePrivacyButtons(elements, isPrivate);
       elements.userInfoDisplay.innerText = JSON.stringify({
         id: userInfo.id,
         username: userInfo.username,
@@ -808,240 +1282,135 @@ Copy to clipboard?`) && navigator.clipboard.writeText(token);
         streakData: userInfo.streakData
       }, null, 2);
     }
-  };
-  const updateFarmResult = (type, farmedAmount) => {
-    switch (type) {
-      case "gem":
-        userInfo = { ...userInfo, gems: userInfo.gems + farmedAmount };
-        updateNotify(`You got ${farmedAmount} gem!!!`);
-        break;
-      case "xp":
-        userInfo = { ...userInfo, totalXp: userInfo.totalXp + farmedAmount };
-        updateNotify(`You got ${farmedAmount} XP!!!`);
-        break;
-      case "streak":
-        userInfo = { ...userInfo, streak: userInfo.streak + farmedAmount };
-        updateNotify(`You got ${farmedAmount} streak! (maybe some xp too, idk)`);
-        break;
-    }
-    updateUserInfo();
-  };
-  const gemFarmingLoop = async () => {
-    const gemFarmed = 30;
-    while (isRunning) {
-      try {
-        await apiService.farmGemOnce(userInfo);
-        updateFarmResult("gem", gemFarmed);
-        await delay(runtimeSettings.delayTime);
-      } catch (error) {
-        updateNotify(`Error ${error.status}! Please report in telegram group!`);
-        await delay(runtimeSettings.retryTime);
-      }
-    }
-  };
-  const xpFarmingLoop = async (value, amount, config = {}) => {
-    while (isRunning) {
-      try {
-        let response;
-        if (value === "session") {
-          response = await apiService.farmSessionOnce(config);
-        } else if (value === "story") {
-          response = await apiService.farmStoryOnce(config);
-        }
-        if (response.status > 400) {
-          updateNotify(`Something went wrong! Pls try other farming methods.
-If you are using story method, u should try with English course!`);
-          await delay(runtimeSettings.retryTime);
-          continue;
-        }
-        const responseData = await response.json();
-        const xpFarmed = (responseData == null ? void 0 : responseData.awardedXp) || (responseData == null ? void 0 : responseData.xpGain) || 0;
-        updateFarmResult("xp", xpFarmed);
-        await delay(runtimeSettings.delayTime);
-      } catch (error) {
-        updateNotify(`Error ${error.status}! Please report in telegram group!`);
-        await delay(runtimeSettings.retryTime);
-      }
-    }
-  };
-  const streakFarmingLoop = async (value = "farm") => {
-    const SECONDS_PER_DAY = 86400;
-    const SESSION_DURATION_SECONDS = 60;
-    const hasStreak = !!userInfo.streakData.currentStreak;
-    const startStreakDate = hasStreak ? userInfo.streakData.currentStreak.startDate : /* @__PURE__ */ new Date();
-    const startFarmStreakTimestamp = toTimestamp(startStreakDate);
-    let currentTimestamp = hasStreak ? startFarmStreakTimestamp - SECONDS_PER_DAY : startFarmStreakTimestamp;
-    if (value === "repair") {
-      const creationDate = userInfo.creationDate;
-      const currentStreak = userInfo.streak || 0;
-      const currentTime = getCurrentUnixTimestamp();
-      const daysSinceCreation = daysBetween(creationDate, currentTime);
-      const maxPossibleStreak = daysSinceCreation + 1;
-      if (currentStreak >= maxPossibleStreak) {
-        const message = `Current streak (${currentStreak}) is greater than or equal to maximum possible streak (${maxPossibleStreak}). No repair needed.`;
-        updateNotify(message);
-        setRunningState(false);
-        return;
-      }
-      const endTimestamp = creationDate;
-      const missingStreaks = maxPossibleStreak - currentStreak;
-      if (missingStreaks <= 0) {
-        const message = "No missing streaks to repair.";
-        updateNotify(message);
-        setRunningState(false);
-        return;
-      }
-      updateNotify(`Repairing ${missingStreaks} missing streaks...`);
-      let repairTimestamp = currentTimestamp;
-      let repairedCount = 0;
-      while (isRunning && repairTimestamp >= endTimestamp && repairedCount < missingStreaks) {
-        try {
-          const sessionRes = await apiService.farmSessionOnce({ startTime: repairTimestamp, endTime: repairTimestamp + SESSION_DURATION_SECONDS });
-          if (sessionRes) {
-            repairTimestamp -= SECONDS_PER_DAY;
-            updateFarmResult("streak", 1);
-            repairedCount += 1;
-            await delay(runtimeSettings.delayTime);
-          } else {
-            updateNotify("Failed to repair streak session, I'm trying again...");
-            await delay(runtimeSettings.retryTime);
-            continue;
-          }
-        } catch (error) {
-          updateNotify(`Error in repairStreak: ${(error == null ? void 0 : error.message) || error}`);
-          await delay(runtimeSettings.retryTime);
-          continue;
-        }
-      }
-      if (repairedCount >= missingStreaks || repairTimestamp < endTimestamp) {
-        const message = `Streak repair completed. Repaired ${repairedCount} day(s).`;
-        updateNotify(message);
-        setRunningState(false);
-      }
-    } else {
-      while (isRunning) {
-        try {
-          const sessionRes = await apiService.farmSessionOnce({ startTime: currentTimestamp, endTime: currentTimestamp + SESSION_DURATION_SECONDS });
-          if (sessionRes) {
-            currentTimestamp -= SECONDS_PER_DAY;
-            updateFarmResult("streak", 1);
-            await delay(runtimeSettings.delayTime);
-          } else {
-            updateNotify("Failed to farm streak session, I'm trying again...");
-            await delay(runtimeSettings.retryTime);
-            continue;
-          }
-        } catch (error) {
-          updateNotify(`Error in farmStreak: ${(error == null ? void 0 : error.message) || error}`);
-          await delay(runtimeSettings.retryTime);
-          continue;
-        }
-      }
-    }
-  };
-  const farmSelectedOption = async (option) => {
-    const { type, value, amount, config } = option;
-    switch (type) {
-      case "gem":
-        gemFarmingLoop();
-        break;
-      case "xp":
-        xpFarmingLoop(value, amount, config);
-        break;
-      case "streak":
-        streakFarmingLoop(value);
-        break;
-    }
-  };
-  const loadSavedSettings = (settings) => {
-    runtimeSettings = { ...runtimeSettings, ...settings };
-    const elements = getElements();
-    if (settings.autoOpenUI) {
-      setInterfaceVisible(true);
-    }
-    if (settings.autoStart) {
-      setInterfaceVisible(true);
-      elements.startBtn.click();
-    }
-    if (settings.hideUsername) {
-      elements.username.classList.add("blur");
-    }
-    if (settings.keepScreenOn && "wakeLock" in navigator) {
-      navigator.wakeLock.request("screen").then((wakeLock) => {
-        log("Screen wake lock active");
+    populateOptions(farmOptions) {
+      const select = this.shadowRoot.getElementById("select-option");
+      select.innerHTML = "";
+      farmOptions.forEach((opt) => {
+        const option = document.createElement("option");
+        option.value = opt.value;
+        option.textContent = opt.label;
+        option.setAttribute("data-type", opt.type);
+        if (opt.amount != null) option.setAttribute("data-amount", String(opt.amount));
+        if (opt.config) option.setAttribute("data-config", JSON.stringify(opt.config));
+        if (opt.disabled) option.disabled = true;
+        select.appendChild(option);
       });
     }
-  };
-  const initVariables = async () => {
-    jwt = getJwtToken();
-    if (!jwt) {
-      disableAllControls("Please login to Duolingo and reload!");
-      return;
+    loadSavedSettings(settings) {
+      const elements = getElements(this.shadowRoot);
+      if (settings.autoOpenUI) {
+        this.uiController.setVisible(true);
+      }
+      if (settings.autoStart) {
+        this.uiController.setVisible(true);
+        elements.startBtn.click();
+      }
+      if (settings.hideUsername) {
+        elements.username.classList.add("blur");
+      }
+      if (settings.keepScreenOn && "wakeLock" in navigator) {
+        navigator.wakeLock.request("screen").then((wakeLock) => {
+          log("Screen wake lock active");
+        });
+      }
     }
-    defaultHeaders = formatHeaders(jwt);
-    const decodedJwt = decodeJwtToken(jwt);
-    sub = decodedJwt.sub;
-    userInfo = await ApiService.getUserInfo(sub, defaultHeaders);
-    apiService = new ApiService(jwt, defaultHeaders, userInfo, sub);
-    settingsManager = new SettingsManager(shadowRoot, apiService);
-    skillId = extractSkillId(userInfo.currentCourse || {});
-    farmOptions = [
-      { type: "separator", label: "⟡ GEM FARMING ⟡", value: "", disabled: true },
-      { type: "gem", label: "Gem 30", value: "fixed", amount: 30 },
-      { type: "separator", label: "⟡ XP SESSION FARMING ⟡", value: "", disabled: true },
-      { type: "separator", label: "(slow, safe, any language)", value: "", disabled: true },
-      { type: "xp", label: "XP 10", value: "session", amount: 10, config: {} },
-      // { type: 'xp', label: 'XP 13', value: 'session', amount: 13, config: { updateSessionPayload: { enableBonusPoints: true } } },
-      { type: "xp", label: "XP 20", value: "session", amount: 20, config: { updateSessionPayload: { hasBoost: true } } },
-      // { type: 'xp', label: 'XP 26', value: 'session', amount: 26, config: { updateSessionPayload: { enableBonusPoints: true, hasBoost: true } } },
-      // { type: 'xp', label: 'XP 36', value: 'session', amount: 36, config: { updateSessionPayload: { enableBonusPoints: true, hasBoost: true, happyHourBonusXp: 10 } } },
-      { type: "xp", label: "XP 40", value: "session", amount: 40, config: { updateSessionPayload: { hasBoost: true, type: "TARGET_PRACTICE" } } },
-      { type: "xp", label: "XP 50", value: "session", amount: 50, config: { updateSessionPayload: { enableBonusPoints: true, hasBoost: true, happyHourBonusXp: 10, type: "TARGET_PRACTICE" } } },
-      { type: "xp", label: "XP 110", value: "session", amount: 110, config: { sessionPayload: { type: "UNIT_TEST", skillIds: skillId ? [skillId] : [] }, updateSessionPayload: { type: "UNIT_TEST", hasBoost: true, happyHourBonusXp: 10, pathLevelSpecifics: { unitIndex: 0 } } }, disabled: !skillId },
-      // {
-      // 	type: 'xp', label: 'TEST', value: 'session', amount: 0, config: {
-      // 		sessionPayload: { type: 'UNIT_TEST', skillIds: skillId ? [skillId] : [] },
-      // 		updateSessionPayload: {
-      // 			hasBoost: true,
-      // 			happyHourBonusXp: 10,
-      // 			pathLevelSpecifics: {
-      // 				unitIndex: 0,
-      // 			}
-      // 		}
-      // 	},
-      // 	disabled: !skillId
-      // },
-      { type: "separator", label: "⟡ XP STORY FARMING ⟡", value: "", disabled: true },
-      { type: "separator", label: "(fast, unsafe, English only) ", value: "", disabled: true },
-      { type: "xp", label: "XP 50", value: "story", amount: 50, config: {} },
-      // { type: 'xp', label: 'XP 90 ', value: 'story', amount: 90, config: { storyPayload: { hasXpBoost: true } } },
-      { type: "xp", label: "XP 100 ", value: "story", amount: 100, config: { storyPayload: { happyHourBonusXp: 50 } } },
-      { type: "xp", label: "XP 200 ", value: "story", amount: 200, config: { storyPayload: { happyHourBonusXp: 150 } } },
-      { type: "xp", label: "XP 300 ", value: "story", amount: 300, config: { storyPayload: { happyHourBonusXp: 250 } } },
-      { type: "xp", label: "XP 400 ", value: "story", amount: 400, config: { storyPayload: { happyHourBonusXp: 350 } } },
-      { type: "xp", label: "XP 499 ", value: "story", amount: 499, config: { storyPayload: { happyHourBonusXp: 449 } } },
-      { type: "separator", label: "⟡ STREAK FARMING ⟡", value: "", disabled: true },
-      { type: "streak", label: "Nonstop farm (unlimited)", value: "farm" },
-      { type: "streak", label: "Repair streak (from account creation)", value: "repair" }
-    ];
-  };
-  const initSettings = () => {
-    settingsManager.populateDefaultOptionSelect(farmOptions);
-    settingsManager.loadDefaultFarmingOption(farmOptions);
-    settingsManager.loadSettingsToUI();
-  };
+  }
+  initPatcher();
+  function setupCallbacks(userManager, farmingController, uiHandlers, skillId, sub) {
+    userManager.callbacks.onUserInfoUpdate = (userInfo) => {
+      uiHandlers.updateUserInfo(userInfo, skillId, sub);
+    };
+    userManager.callbacks.onNotify = (message) => {
+      uiHandlers.updateNotify(message);
+    };
+    farmingController.callbacks.onError = (message) => {
+      uiHandlers.updateNotify(message);
+    };
+    farmingController.callbacks.onNotify = (message) => {
+      uiHandlers.updateNotify(message);
+    };
+  }
   (async () => {
+    await waitForBody();
     try {
-      initInterface();
-      setInterfaceVisible(false);
-      addEventFloatingBtn();
-      await initVariables();
-      populateOptions();
-      initSettings();
-      updateUserInfo();
-      addEventListeners();
-      loadSavedSettings(settingsManager.getSettings());
-      updateNotify('Duofarmer ready! For safety, I suggest that you use 2nd accounts.\nLimited or no use of "Story Farming"!');
+      const uiController = new UIController(templateRaw, cssText);
+      const shadowRoot = uiController.init();
+      uiController.setVisible(false);
+      const uiState = new UIState(shadowRoot);
+      const userManager = new UserManager({
+        onUserInfoUpdate: (userInfo2) => {
+        }
+      });
+      const jwt = getJwtToken();
+      if (!jwt) {
+        uiState.disableAllControls();
+        log("Please login to Duolingo and reload!");
+        return;
+      }
+      const defaultHeaders = formatHeaders(jwt);
+      const decodedJwt = decodeJwtToken(jwt);
+      const sub = decodedJwt.sub;
+      const userInfo = await ApiService.getUserInfo(sub, defaultHeaders);
+      if (!userInfo || !userInfo.id) {
+        uiState.disableAllControls();
+        log("Failed to get user info. Please reload!");
+        return;
+      }
+      userInfo.sub = sub;
+      userManager.setUserInfo(userInfo);
+      const apiService = new ApiService(jwt, defaultHeaders, userInfo, sub);
+      const settingsManager = new SettingsManager(shadowRoot, apiService);
+      const savedSettings = settingsManager.getSettings();
+      const skillId = extractSkillId(userInfo.currentCourse || {});
+      const farmOptions = generateFarmOptions(userInfo);
+      let farmingController;
+      const farmingConfig = {
+        get isRunning() {
+          return farmingController ? farmingController.getIsRunning() : false;
+        },
+        get delayTime() {
+          return savedSettings.delayTime;
+        },
+        get retryTime() {
+          return savedSettings.retryTime;
+        },
+        get autoStopTime() {
+          return savedSettings.autoStopTime;
+        }
+      };
+      farmingController = new FarmingController(
+        apiService,
+        farmingConfig,
+        {
+          delay,
+          onUpdate: (type, amount) => userManager.updateFarmResult(type, amount),
+          onError: () => {
+          },
+          // Will be set up after handlers are created
+          onNotify: () => {
+          },
+          // Will be set up after handlers are created
+          onStop: () => uiState.setRunning(false),
+          onAlert: (message) => alert(message)
+        }
+      );
+      const uiHandlers = new UIHandlers(
+        shadowRoot,
+        farmingController,
+        userManager,
+        settingsManager,
+        uiController,
+        uiState
+      );
+      setupCallbacks(userManager, farmingController, uiHandlers, skillId, sub);
+      uiHandlers.populateOptions(farmOptions);
+      settingsManager.populateDefaultOptionSelect(farmOptions);
+      settingsManager.loadDefaultFarmingOption(farmOptions);
+      settingsManager.loadSettingsToUI();
+      uiHandlers.updateUserInfo(userInfo, skillId, sub);
+      uiHandlers.setupEventListeners();
+      uiHandlers.loadSavedSettings(savedSettings);
+      uiHandlers.updateNotify('Duofarmer ready! For safety, I suggest that you use 2nd accounts.\nRecommended to use "Blank page" for best performance (check in setting)');
     } catch (err) {
       logError(err, "Duofarmer init error!");
     }

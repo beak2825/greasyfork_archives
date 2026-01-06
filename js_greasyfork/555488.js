@@ -43,6 +43,7 @@
 // @name:ne      YouTube - अटोप्ले थम्बनेल पूर्वावलोकन र च्यानल ट्रेलर ब्लक गर्नुहोस्
 // @name:nl      YouTube - Blokkeer Automatische Afspeelvoorbeeld van Thumbnails en Kanaaltrailer
 // @name:no      YouTube - Blokker Autoplay-Forhåndsvisning av Miniatyrer og Kanaltrailer
+// @name:pa      YouTube - ਆਟੋਪਲੇਅ ਪੂਰਵਦਰਸ਼ਨ ਥੰਬਨੇਲ ਅਤੇ ਚੈਨਲ ਟ੍ਰੇਲਰ ਨੂੰ ਬਲਾਕ ਕਰੋ
 // @name:pl      YouTube - Blokuj Podgląd Automatycznego Odtwarzania Miniaturek i Zwiastun Kanału
 // @name:pt      YouTube - Bloquear Pré-visualização de Reprodução Automática de Miniaturas e Trailer do Canal
 // @name:pt-BR   YouTube - Bloquear Prévia de Reprodução Automática de Miniaturas e Trailer do Canal
@@ -108,6 +109,7 @@
 // @description:ne      YouTube मा थम्बनेल होभर गर्दा आउने अटोप्ले पूर्वावलोकन (WebP र भिडियो) र च्यानल ट्रेलर (भिडियो + अडियो) लाई ब्लक गर्छ। प्रोग्रेस बार, प्ले बटन र स्थिर तस्बिरहरू कायम राख्छ। सबै पेजमा काम गर्छ, लगइन वा अनुमति चाहिँदैन, पेज लोड हुने बित्तिकै चल्छ।
 // @description:nl      Blokkeert hover-voorbeelden van thumbnails (WebP en video) en stopt kanaaltrailers (video + audio). Behoudt voortgangsbalken, afspeelknoppen en statische afbeeldingen. Geen login of toestemming, start bij paginalading.
 // @description:no      Blokkerer forhåndsvisninger av miniatyrer ved svev (WebP og video) og stopper kanaltrailere (video + lyd). Beholder fremdriftslinjer, avspillingsknapper og statiske bilder. Ingen innlogging eller tillatelser, kjører ved sidelasting.
+// @description:pa      ਯੂਟਿਊਬ ਥੰਬਨੇਲ ਹੋਵਰ ਪੂਰਵਦਰਸ਼ਨ (WebP ਅਤੇ ਵੀਡੀਓ) ਨੂੰ ਬਲਾਕ ਕਰਦਾ ਹੈ ਅਤੇ ਚੈਨਲ ਟ੍ਰੇਲਰ (ਵੀਡੀਓ + ਆਡੀਓ) ਨੂੰ ਰੋਕਦਾ ਹੈ। ਪ੍ਰੋਗ੍ਰੈਸ ਬਾਰ, ਪਲੇਅ ਬਟਨ ਅਤੇ ਸਥਿਰ ਚਿੱਤਰਾਂ ਨੂੰ ਰੱਖਦਾ ਹੈ। ਸਾਰੇ ਪੰਨਿਆਂ ਤੇ ਕੰਮ ਕਰਦਾ ਹੈ, ਲਾਗਇਨ ਜਾਂ ਅਨੁਮਤੀ ਦੀ ਲੋੜ ਨਹੀਂ, ਪੰਨਾ ਲੋਡ ਹੁੰਦੇ ਹੀ ਚੱਲਦਾ ਹੈ।
 // @description:pl      Blokuje podglądy miniaturek przy najechaniu myszą (WebP i wideo) oraz zatrzymuje zwiastuny kanałów (wideo + dźwięk). Zachowuje paski postępu, przyciski odtwarzania i statyczne obrazy. Bez logowania i uprawnień, uruchamia się przy ładowaniu strony.
 // @description:pt      Bloqueia pré-visualizações de miniaturas ao passar o rato (WebP e vídeo) e interrompe trailers de canal (vídeo + áudio). Mantém barras de progresso, botões de reprodução e imagens estáticas. Sem início de sessão ou permissões, executa ao carregar a página.
 // @description:pt-BR   Bloqueia prévias de miniaturas ao passar o mouse (WebP e vídeo) e interrompe trailers de canal (vídeo + áudio). Mantém barras de progresso, botões de play e imagens estáticas. Sem login ou permissão, executa ao carregar a página.
@@ -131,7 +133,7 @@
 // @description:zh-TW   在所有 YouTube 頁面上阻止縮圖懸停預覽（WebP 與視頻）並停止頻道預告片（視頻＋音頻）。保留進度條、播放按鈕和靜態圖像。無需登錄或權限，頁面載入時即執行。
 // @namespace    https://openuserjs.org/users/miebie.1412
 // @author       miebie.1412
-// @version      1.7.3
+// @version      1.7.5
 // @match        https://*.youtube.com/*
 // @grant        none
 // @run-at       document-start

@@ -3,7 +3,7 @@
 // @name:en          HWHHideButtonsExt
 // @name:ru          HWHHideButtonsExt
 // @namespace        HWHHideButtonsExt
-// @version          2.6
+// @version          2.7
 // @description      Extension for HeroWarsHelper script
 // @description:en   Extension for HeroWarsHelper script
 // @description:ru   Расширение для скрипта HeroWarsHelper
@@ -36,15 +36,30 @@
 
     const i18nLangDataEn = {
         HIDE_BUTTONS: 'Hide buttons',
-        HIDE_BUTTONS_TITLE: 'Button settings in the "Others" section',
+        HIDE_BUTTONS_TITLE: 'Hide buttons in the "Others" section',
+        HB_BUTTON_COLOR: 'Button color',
+        HB_BUTTON_COLOR_TITLE: 'Change the color of buttons in the "Others" section',
+        HB_BUTTON_COLOR_MESSAGE: 'Select color',
         HB_SELECT_BUTTONS:
-          `Choose the buttons you want to hide <br>
-          <span style="color: DeepSkyBlue;">The game will restart automatically to apply the changes</span>`,
+          `Choose the buttons <br> you want to hide`,
         HB_APPLY: 'Apply',
         HB_OTHERS_SETTINGS:
           `<span style="color: White;">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" style="width: 22px;height: 22px;"><path d="M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z"></path></svg>
           </span>`,
+        HB_OTHERS_SETTINGS_TITLE: 'Button settings',
+        HB_OTHERS_SETTINGS_MESSAGE: 'Button setting in the "Others" section',
+        HB_CHANGE_COLOR_EXTENSION_BUTTONS: 'Change the color of extension buttons',
+        HB_COLOR_GREEN: 'Green',
+        HB_COLOR_BROWN: 'Brown',
+        HB_COLOR_BLUE: 'Blue',
+        HB_COLOR_VIOLET: 'Violet',
+        HB_COLOR_YELLOW: 'Yellow',
+        HB_COLOR_ORANGE: 'Orange',
+        HB_COLOR_INDIGO: 'Indigo',
+        HB_COLOR_PINK: 'Pink',
+        HB_COLOR_RED: 'Red',
+        HB_COLOR_GRAPHITE: 'Graphite',
         HB_GRAPHICS_SWITCH_ON_TITLE: 'Turn on game graphics',
         HB_GRAPHICS_SWITCH_OFF_TITLE: 'Turn off game graphics',
         HB_GRAPHICS_SWITCH_OFF:
@@ -136,15 +151,30 @@
     const i18nLangDataRu = {
         BATTLE_RECALCULATION: 'Предрасчет боя',
         HIDE_BUTTONS: 'Скрыть кнопки',
-        HIDE_BUTTONS_TITLE: 'Настройки кнопок',
+        HIDE_BUTTONS_TITLE: 'Скрыть кнопки в разделе "разное"',
+        HB_BUTTON_COLOR: 'Цвет',
+        HB_BUTTON_COLOR_TITLE: 'Изменить цвет кнопок в разделе "разное"',
+        HB_BUTTON_COLOR_MESSAGE: 'Выберите цвет',
         HB_SELECT_BUTTONS:
-          `Выберите кнопки, которые нужно скрыть <br>
-          <span style="color: DeepSkyBlue;"> Для применения настроек игра будет перезагружена автоматически </span>`,
+          `Выберите кнопки, <br> которые нужно скрыть`,
         HB_APPLY: 'Применить',
         HB_OTHERS_SETTINGS:
           `<span style="color: White;">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" style="width: 22px;height: 22px;"><path d="M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z"></path></svg>
           </span>`,
+        HB_OTHERS_SETTINGS_TITLE: 'Настройки кнопок',
+        HB_OTHERS_SETTINGS_MESSAGE: 'Настройки кнопок в разделе "Разное"',
+        HB_CHANGE_COLOR_EXTENSION_BUTTONS: 'Изменить цвет кнопок расширений',
+        HB_COLOR_GREEN: 'Зеленый',
+        HB_COLOR_BROWN: 'Коричневый',
+        HB_COLOR_BLUE: 'Синий',
+        HB_COLOR_VIOLET: 'Фиолетовый',
+        HB_COLOR_YELLOW: 'Желтый',
+        HB_COLOR_ORANGE: 'Оранжевый',
+        HB_COLOR_INDIGO: 'Индиго',
+        HB_COLOR_PINK: 'Розовый',
+        HB_COLOR_RED: 'Красный',
+        HB_COLOR_GRAPHITE: 'Серый',
         HB_GRAPHICS_SWITCH_ON_TITLE: 'Включить графику игры',
         HB_GRAPHICS_SWITCH_OFF_TITLE: 'Выключить графику игры',
         HB_GRAPHICS_SWITCH_OFF:
@@ -272,10 +302,10 @@
         }
     }
 
-    //Для включения / выключения автоматического улучшения умений
     let automaticSkillImprovement = false;
     let automaticSkillImprovementTimer = false;
     Events.on('startGame', async () => {
+        //Для включения / выключения автоматического улучшения умений
         automaticSkillImprovement = getSaveVal('automaticSkillImprovement', false);
         automaticSkillImprovementTimer = getSaveVal('automaticSkillImprovementTimer', false);
         if (automaticSkillImprovement) {
@@ -296,7 +326,6 @@
                 }
             }
         }
-
     });
 
 
@@ -350,12 +379,12 @@
             return '<span style="color: White; font-size: 28px;">⚙</span>';
         },
         get title() {
-            return I18N('HIDE_BUTTONS_TITLE');
+            return I18N('HB_OTHERS_SETTINGS_TITLE');
         },
         result:async function () {
-            await selectButtons();
+            await onClickSettings();
         },
-        color: 'green',
+        color: 'blue',
     });
 
     othersPopupButtons.push({
@@ -371,6 +400,50 @@
 		color: 'pink',
 	});
 
+    async function onClickSettings() {
+        let colorMainButtons = getSaveVal('colorMainButtons', false);
+        let color = 'green';
+        if (colorMainButtons) {
+            color = colorMainButtons;
+        }
+        const popupButtons = [
+            {
+                get msg() {
+                    return I18N('HIDE_BUTTONS');
+                },
+                get title() {
+                    return I18N('HIDE_BUTTONS_TITLE');
+                },
+                result: async function () {
+                    await selectButtons();
+                },
+                color: color,
+            },
+            {
+                get msg() {
+                    return I18N('HB_BUTTON_COLOR');
+                },
+                get title() {
+                    return I18N('HB_BUTTON_COLOR_TITLE');
+                },
+                result: async function () {
+                    await selectColor();
+                },
+                color: color,
+            },
+        ];
+        popupButtons.push({
+            result:async function () {
+                await makeListOfButtons();
+            },
+            isClose: true,
+        });
+
+        const answer = await popup.confirm(`${I18N('HB_OTHERS_SETTINGS_MESSAGE')}`, popupButtons);
+        if (typeof answer === 'function') {
+            answer();
+        }
+    };
     async function onClickImprovingSkillss() {
         automaticSkillImprovement = getSaveVal('automaticSkillImprovement', false);
         let colorButton = 'green';
@@ -461,7 +534,7 @@
         if (typeof answer === 'function') {
             answer();
         }
-    }
+    };
 
     async function automaticallyImproveHeroesSkills() {
         let stopTheTimer = false;
@@ -488,21 +561,18 @@
 		 */
         const colors = [1, 2, 4, 7];
         for (let heroId of selectedHeroIdsForImprovement) {
-            //console.log(heroes[heroId]);
             if (skillPoints == 0 || notEnoughGold) {
                 break;
             }
             let skills = getHeroSkills(Number(heroId));
             let heroLvl = heroes[heroId].level;
             let heroColor = heroes[heroId].color;
-            //console.log(heroLvl);
             for (let skill of skills) {
                 let skillLvl = heroes[heroId].skills[skill];
                 if (heroColor < colors[skills.indexOf(skill)] || skillPoints == 0 || notEnoughGold) {
                     break;
                 }
                 if (skillLvl == heroLvl) {
-                    //console.log("skillLVL " + heroes[heroId].skills[skill]);
                     continue;
                 }
                 let calls = [];
@@ -522,7 +592,6 @@
                     }
                 }
                 if (calls.length >= 1) {
-                    //console.log(calls);
                     await Caller.send(calls);
                 }
             }
@@ -531,8 +600,10 @@
             await new Promise((e) => setTimeout(e, 4000));
             if (automaticSkillImprovementTimer) {
                 setProgress(I18N('IS_IMPROVING_SKILLS_TIMER_RESULT', {skillPointsSpent: skillPointsStart - skillPoints}), false, hideProgress);
+                console.log("%cУмений героев улучшено / Hero skills have been improved: " + (skillPointsStart - skillPoints), "color: red; font-weight: bold;");
             } else {
                 setProgress(I18N('IS_IMPROVING_SKILLS_RESULT', {skillPointsSpent: skillPointsStart - skillPoints}), false, hideProgress);
+                console.log("%cУмений героев улучшено / Hero skills have been improved: " + (skillPointsStart - skillPoints), "color: red; font-weight: bold;");
             }
         }
         if (notEnoughGold) {
@@ -545,38 +616,22 @@
             stopTheTimer = true;
             return stopTheTimer;
         }
-        //console.log("skillPoints " + skillPoints);
-        //console.log("gold " + gold);
     }
 
     async function makeListOfButtons() {
-        let { othersPopupButtons } = HWHData;
-
-        let hideSelectedButtons = null;
-        const hideSelectedButtonsString = localStorage.getItem('hideSelectedButtons');
-        if (hideSelectedButtonsString) {
-            try {
-                hideSelectedButtons = JSON.parse(hideSelectedButtonsString);
-            } catch (e) {
-                console.error(e);
-                hideSelectedButtons = null;
-            }
-        }
-
-        let buttonLanguage = null;
-        const buttonLanguageString = localStorage.getItem('buttonLanguage');
-        if (buttonLanguageString) {
-            try {
-                buttonLanguage = JSON.parse(buttonLanguageString);
-            } catch (e) {
-                console.error(e);
-                buttonLanguage = null;
-            }
-        }
+        let colorMainButtons = getSaveVal('colorMainButtons', false);
+        let changeColorExtensionButtons = getSaveVal('changeColorExtensionButtons', false);
+        let hideSelectedButtons = getSaveVal('hideSelectedButtons', false);
+        let buttonLanguage = getSaveVal('buttonLanguage', false);
 
         let changedGameLanguage = false;
         if (buttonLanguage != I18N('HIDE_BUTTONS')) {
             changedGameLanguage = true;
+        }
+        //Сохранение списка цветов кнопок "по умолчанию"
+        let othersPopupButtonsColors = [];
+        for (let button of othersPopupButtons) {
+            othersPopupButtonsColors.push(button.color);
         }
 
         let newOthersPopupButtons = othersPopupButtons;
@@ -588,36 +643,43 @@
             }
         }
 
+        //Смена цвета кнопок
+        let othersPopupButtonsName = ['GET_ENERGY', 'ITEM_EXCHANGE','BUY_SOULS','BUY_FOR_GOLD','BUY_OUTLAND','CLAN_STAT','EPIC_BRAWL',
+                                      'ARTIFACTS_UPGRADE','SKINS_UPGRADE','SEASON_REWARD','SELL_HERO_SOULS','CHANGE_MAP','HERO_POWER'];
+        let color = '';
+        if (colorMainButtons && !changeColorExtensionButtons) {
+            color = colorMainButtons;
+            for (let button of newOthersPopupButtons) {
+                for (let buttonName of othersPopupButtonsName) {
+                    if (button.msg == I18N(buttonName)){
+                        button.color = color;
+                    }
+                }
+            }
+        }
+        if (colorMainButtons && changeColorExtensionButtons) {
+            color = colorMainButtons;
+            for (let button of newOthersPopupButtons) {
+                button.color = color;
+            }
+        }
+        console.log(othersPopupButtons);
+        console.log(newOthersPopupButtons);
         newOthersPopupButtons.push({ result: false, isClose: true });
 
         const answer = await popup.confirm(`${I18N('CHOOSE_ACTION')}:`, newOthersPopupButtons);
         if (typeof answer === 'function') {
             answer();
         }
+        //Возвращение цвета кнопкам "по умолчанию"
+        for (let i = 0; i < othersPopupButtons.length; i++) {
+            othersPopupButtons[i].color = othersPopupButtonsColors[i]
+        }
     }
 
     async function selectButtons() {
-        let hideSelectedButtons = null;
-        const hideSelectedButtonsString = localStorage.getItem('hideSelectedButtons');
-        if (hideSelectedButtonsString) {
-            try {
-                hideSelectedButtons = JSON.parse(hideSelectedButtonsString);
-            } catch (e) {
-                console.error(e);
-                hideSelectedButtons = null;
-            }
-        }
-
-        let buttonLanguage = null;
-        const buttonLanguageString = localStorage.getItem('buttonLanguage');
-        if (buttonLanguageString) {
-            try {
-                buttonLanguage = JSON.parse(buttonLanguageString)
-            } catch (e) {
-                console.error(e);
-                buttonLanguage = null;
-            }
-        }
+        let hideSelectedButtons = getSaveVal('hideSelectedButtons', false);
+        let buttonLanguage = getSaveVal('buttonLanguage', false);
 
         let changedGameLanguage = false;
         if (buttonLanguage != I18N('HIDE_BUTTONS')) {
@@ -628,7 +690,7 @@
         if (hideSelectedButtons && !changedGameLanguage){
             let newSelectedButtons = [];
             for (let button of othersPopupButtons) {
-                if (!button.result || button.title == I18N('HIDE_BUTTONS_TITLE')) {
+                if (!button.result || button.title == I18N('HB_OTHERS_SETTINGS_TITLE')) {
                     continue;
                 }
                 let newButton = true;
@@ -660,7 +722,7 @@
         if (!hideSelectedButtons || changedGameLanguage){
             hideSelectedButtons = [];
             for (let button of othersPopupButtons) {
-                if (!button.result || button.title == I18N('HIDE_BUTTONS_TITLE')) {
+                if (!button.result || button.title == I18N('HB_OTHERS_SETTINGS_TITLE')) {
                     continue;
                 }
                 hideSelectedButtons.push({
@@ -681,6 +743,7 @@
             hideSelectedButtons
         );
         if (!answer) {
+            await onClickSettings();
             return;
         }
         const taskList = popup.getCheckBoxes();
@@ -688,10 +751,10 @@
             hideSelectedButtons[taskList.indexOf(button)].checked = button.checked;
         }
 
-        localStorage.setItem('hideSelectedButtons', JSON.stringify(hideSelectedButtons));
-        localStorage.setItem('buttonLanguage', JSON.stringify(I18N('HIDE_BUTTONS')));
-        //Перезагрузить игру
-        location.reload();
+        setSaveVal('hideSelectedButtons', hideSelectedButtons);
+        setSaveVal('buttonLanguage', I18N('HIDE_BUTTONS'));
+
+        await makeListOfButtons();
     }
 
     async function onClicGraphicsSwitchButton() {
@@ -777,6 +840,62 @@
         return 0;
     }
 
+    async function selectColor() {
+        let colorMainButtons = getSaveVal('colorMainButtons', false);
+        let changeColorExtensionButtons = getSaveVal('changeColorExtensionButtons', false);
+        let buttonColors = ['green', 'brown', 'blue', 'violet', 'yellow', 'orange', 'indigo', 'pink', 'red', 'graphite'];
+        let colors = [];
+        let checked = false;
+        if(changeColorExtensionButtons) {
+            checked = true;
+        }
+        colors.push({
+            name: 'changeColorExtensionButtons',
+            label: I18N('HB_CHANGE_COLOR_EXTENSION_BUTTONS'),
+            checked: checked,
+        });
+        for (let color of buttonColors) {
+            checked = false;
+            if(color == colorMainButtons) {
+                checked = true;
+            }
+            colors.push({
+                name: color,
+                label: I18N('HB_COLOR_' + color.toUpperCase()),
+                checked: checked,
+            });
+        }
+
+        let answer = await popup.confirm(
+            I18N('HB_BUTTON_COLOR_MESSAGE'),
+            [
+                { msg: I18N('HB_APPLY'), result: true, color: 'green' },
+                { msg: I18N('BTN_CANCEL'), result: false, isCancel: true, color: 'red' },
+            ],
+            colors
+        );
+        if (!answer) {
+            await onClickSettings();
+            return;
+        }
+
+        const taskList = popup.getCheckBoxes();
+        changeColorExtensionButtons = taskList[0].checked;
+        colorMainButtons = false;
+        for (let color of taskList) {
+            if (color.name == 'changeColorExtensionButtons') {
+                continue;
+            }
+            if (color.checked == true) {
+                colorMainButtons = color.name;
+                break;
+            }
+        }
+        setSaveVal('colorMainButtons', colorMainButtons);
+        setSaveVal('changeColorExtensionButtons', changeColorExtensionButtons);
+        await makeListOfButtons();
+    }
+
     async function selectHeroes() {
         let heroes = await getAllHeroesWithoutMaxSkills();
         if (heroes.length == 0) {
@@ -823,7 +942,7 @@
                 });
             }
         }
-        console.log(newListHeroIds);
+        //console.log(newListHeroIds);
         newListHeroIds = newListHeroIds.sort((a, b) => a.label.localeCompare(b.label));
         let answer = await popup.confirm(
             I18N('IS_SELECT_HEROES'),
