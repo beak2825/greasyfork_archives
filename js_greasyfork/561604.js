@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Mirror Forum Block v2.0 关键词屏蔽 用户名屏蔽 美化UI
+// @name         M系镜像Mirror Forum Block v2.0 关键词屏蔽 用户名屏蔽 美化UI
 // @namespace    https://mirror.chromaso.net/
 // @version      2.0
 // @description  1.深度引用屏蔽 2.关键词过滤 3.修复面板缩放点击失效问题
@@ -7,8 +7,8 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/561604/Mirror%20Forum%20Block%20v20%20%E5%85%B3%E9%94%AE%E8%AF%8D%E5%B1%8F%E8%94%BD%20%E7%94%A8%E6%88%B7%E5%90%8D%E5%B1%8F%E8%94%BD%20%E7%BE%8E%E5%8C%96UI.user.js
-// @updateURL https://update.greasyfork.org/scripts/561604/Mirror%20Forum%20Block%20v20%20%E5%85%B3%E9%94%AE%E8%AF%8D%E5%B1%8F%E8%94%BD%20%E7%94%A8%E6%88%B7%E5%90%8D%E5%B1%8F%E8%94%BD%20%E7%BE%8E%E5%8C%96UI.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561604/M%E7%B3%BB%E9%95%9C%E5%83%8FMirror%20Forum%20Block%20v20%20%E5%85%B3%E9%94%AE%E8%AF%8D%E5%B1%8F%E8%94%BD%20%E7%94%A8%E6%88%B7%E5%90%8D%E5%B1%8F%E8%94%BD%20%E7%BE%8E%E5%8C%96UI.user.js
+// @updateURL https://update.greasyfork.org/scripts/561604/M%E7%B3%BB%E9%95%9C%E5%83%8FMirror%20Forum%20Block%20v20%20%E5%85%B3%E9%94%AE%E8%AF%8D%E5%B1%8F%E8%94%BD%20%E7%94%A8%E6%88%B7%E5%90%8D%E5%B1%8F%E8%94%BD%20%E7%BE%8E%E5%8C%96UI.meta.js
 // ==/UserScript==
 
 (function () {

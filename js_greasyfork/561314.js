@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         发票查验二维码扫描好使
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.6
 // @description  在国家税务总局发票查验网站自动扫描二维码并填充表单
 // @author       Cline
 // @match        https://inv-veri.chinatax.gov.cn/*
@@ -12,6 +12,8 @@
 // @downloadURL https://update.greasyfork.org/scripts/561314/%E5%8F%91%E7%A5%A8%E6%9F%A5%E9%AA%8C%E4%BA%8C%E7%BB%B4%E7%A0%81%E6%89%AB%E6%8F%8F%E5%A5%BD%E4%BD%BF.user.js
 // @updateURL https://update.greasyfork.org/scripts/561314/%E5%8F%91%E7%A5%A8%E6%9F%A5%E9%AA%8C%E4%BA%8C%E7%BB%B4%E7%A0%81%E6%89%AB%E6%8F%8F%E5%A5%BD%E4%BD%BF.meta.js
 // ==/UserScript==
+
+
 
 (function() {
     'use strict';

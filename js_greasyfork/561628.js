@@ -418,7 +418,6 @@
         dropdown.className = 'layout-dropdown';
 
         const options = [
-            { label: 'Compact List', value: 'compact', icon: Utils.LAYOUT_ICONS.compact },
             { label: 'List',         value: 'list',    icon: Utils.LAYOUT_ICONS.list },
             { label: 'Grid',         value: 'grid',    icon: Utils.LAYOUT_ICONS.grid }
         ];

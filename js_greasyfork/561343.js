@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         海角社区
-// @version      1.0.1
-// @description  🔥 解锁海角社区全部付费视频（包括短视频），去广告、自动展开帖子，不限次数观看、下载视频，可复制观看链接
+// @version      1.0.2
+// @description  🔥 解锁海角社区全部付费视频（包括短视频、封禁用户视频），去广告、自动展开帖子，不限次数观看、下载视频，可复制观看链接
 // @namespace    海角社区
 // @author       fanqiechaodan
 // @match        *://*/videoplay/*
@@ -9,8 +9,8 @@
 // @match        *://*.haijiao.com/*
 // @match        *://hj251201*.*/*
 // @grant        unsafeWindow
-// @grant        GM_setClipboard
 // @grant        GM_addStyle
+// @grant        GM_setClipboard
 // @grant        GM_xmlhttpRequest
 // @require      https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.8/hls.min.js
 // @require      https://cdn.jsdelivr.net/npm/jsencrypt@3.2.1/bin/jsencrypt.min.js
@@ -24,7 +24,7 @@
 
 (function () {
     'use strict';
-    // 判断是不是手机端
+
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     let foundUrl = '';
     let isCopied = false;
@@ -713,7 +713,7 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
     const REGISTER_URL = 'https://gqkp.yidajichang.top';
 
     function removeAds() {
-        const adElement1 = document.querySelectorAll('.page-container')
+        const adElement1 = document.querySelectorAll('.page-container');
         const adElement2 = document.querySelectorAll('.containeradvertising');
         const adElement3 = document.querySelectorAll('.van-overlay');
         const adElement4 = document.querySelectorAll('.topbanmer');
@@ -721,31 +721,50 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
         const adElement6 = document.querySelector('.html-box');
         const adElement7 = document.querySelector('.html-bottom-box');
         const adElement8 = document.querySelector('.custom_carousel');
-        if (adElement1 || adElement2 || adElement3 || adElement4 || adElement5 || adElement6 || adElement7 || adElement8) {
-            adElement1.forEach(element => {
-                element.remove(); });
-            adElement2.forEach(element => {
-                element.remove(); });
-            adElement3.forEach(element => {
-                element.remove(); });
-            adElement4.forEach(element => {
-                element.remove(); });
-            adElement5.forEach(element => {
-                element.remove(); });
-            adElement6.classList.remove("ishide");
-            adElement8.remove();
-        } else {
+        const adElement9 = document.querySelector('.btnbox');
+
+        if (adElement1.length > 0) adElement1.forEach(el => el.remove());
+        if (adElement2.length > 0) adElement2.forEach(el => el.remove());
+        if (adElement3.length > 0) adElement3.forEach(el => el.remove());
+        if (adElement4.length > 0) adElement4.forEach(el => el.remove());
+        if (adElement5.length > 0) adElement5.forEach(el => el.remove());
+        if (adElement6) adElement6.classList.remove("ishide");
+        if (adElement7) adElement7.remove();
+        if (adElement8) adElement8.remove();
+        if (adElement9) adElement9.remove();
+
+        const allElementsGone =
+              adElement1.length === 0 &&
+              adElement2.length === 0 &&
+              adElement3.length === 0 &&
+              adElement4.length === 0 &&
+              adElement5.length === 0 &&
+              !adElement6 &&
+              !adElement7 &&
+              !adElement8 &&
+              !adElement9;
+
+        if (allElementsGone) {
             clearInterval(adCheckTimer);
         }
     }
-
-    const adCheckTimer = setInterval(removeAds,5000);
+    let adCheckTimer;
+    function startObserver() {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach(() => removeAds());
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+        removeAds();
+    }
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", startObserver);
+    } else {
+        startObserver();
+    }
 
     window.addEventListener('beforeunload', () => {
-        clearInterval(adCheckTimer);
+        if (adCheckTimer) clearInterval(adCheckTimer);
     });
-
-
 
     function copyToClipboard(text) {
         try {

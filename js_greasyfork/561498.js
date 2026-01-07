@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Userscript
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.4
 // @description  This makes HRMS more user friendly and easy to use
 // @author       You
 // @match        https://hrms.indianrail.gov.in/HRMS/*
@@ -147,7 +147,9 @@
 
 	else if (currentUrl.indexOf("https://hrms.indianrail.gov.in/HRMS/groupb-my-inbox") == 0) {
 
-		$("#groupBPendingAppnListTable tr td:last-child a")[Math.floor(Math.random() * $("#groupBPendingAppnListTable tr").length)].click();
+		setTimeout(function() {
+			$("#groupBPendingAppnListTable tr td:last-child a")[Math.floor(Math.random() * $("#groupBPendingAppnListTable tr").length)].click();
+		}, 1000);
 	}
 
 	else if (currentUrl === "https://hrms.indianrail.gov.in/HRMS/groupb-my-inbox/groupb-flow") {

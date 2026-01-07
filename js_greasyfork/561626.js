@@ -19,14 +19,135 @@
     
     // ★新規追加: レイアウト用アイコン定義
     const LAYOUT_ICONS = {
-        list: `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>`,
-        compact: `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><line x1="3" y1="14" x2="21" y2="14"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`,
+        list: `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`,
         grid: `<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>`
     };
 
-    function injectStyles() {
+function injectStyles() {
         const style = document.createElement('style');
         style.innerHTML = `
+/* 
+   ==========================================================================
+   【共通設定】
+   ========================================================================== 
+*/
+/* 1. 不要な裏画像などを削除 (全レイアウト共通) */
+.dj-img2, .dj-img-back { display: none !important; }
+.dj-img1 { transform: none !important; }
+
+/* 2. カスタムレイアウト適用時のみ、画像の強制変形(遠近法など)を解除する
+      ※ .layout-compact または .layout-grid クラスがある時だけ適用。
+      ※ これによりデフォルトの「リスト」表示はHitomi本来のCSSが維持されます。
+*/
+
+.gallery-content.layout-grid .dj-img1 {
+    clip-path: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    position: static !important;
+    margin: 0 !important;
+    object-fit: cover;
+}
+.gallery-content.layout-grid .dj-img-cont {
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden;
+    position: relative !important;
+}
+
+/* 
+   ==========================================================================
+   【2】Grid Layout (グリッド)
+   ========================================================================== 
+*/
+
+/* --- グリッド全体の定義 --- */
+.gallery-content.layout-grid {
+    display: grid !important;
+    /* 4列固定 */
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 16px;
+}
+@media (max-width: 768px) { .gallery-content.layout-grid { grid-template-columns: repeat(3, 1fr) !important; } }
+@media (max-width: 480px) { .gallery-content.layout-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+
+/* --- 個別カード --- */
+.gallery-content.layout-grid > div {
+    width: 100% !important;
+    height: auto !important;
+    /* display: flex; いらない横並び*/
+    flex-direction: column; /* 縦並び */
+    overflow: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important; /* 位置リセット */
+}
+
+/* --- 画像エリア --- */
+.gallery-content.layout-grid .dj-img-cont{
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 3 / 3;
+    margin: 0 !important;
+    padding: 0 !important;
+    float: none !important;
+    /* 画像を中央配置 */
+    display: flex !important;
+    justify-content: center;
+    align-items: start;
+}
+.gallery-content.layout-grid .dj-img1 {
+    /* 共通設定で変形は解除済み */
+    position: static !important;
+}
+
+/* --- テキストエリア (.dj-content) --- */
+/* Hitomiデフォルトの margin-left: 100px 等を解除して表示させる */
+.gallery-content.layout-grid .dj-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    float: none !important;
+    min-height: 0 !important;
+}
+
+/* 不要な詳細情報は隠す */
+.gallery-content.layout-grid table,
+.gallery-content.layout-grid .relatedtags { display: none !important; }
+
+.gallery-content.layout-grid .date { display: none !important; }
+
+/* --- タイトル & 作者名 --- */
+/* Hitomiデフォルトの絶対配置やマージンを強制リセット */
+.gallery-content.layout-grid h1,
+.gallery-content.layout-grid .artist-list {
+    position: static !important;
+    margin: 0 !important;
+    padding: 5px 5px !important; /* 左詰めPadding 5px */
+    width: auto !important;
+    text-align: left !important; /* 左詰め */
+    float: none !important;
+    display: block !important;
+}
+
+/* タイトル (上) */
+.gallery-content.layout-grid h1 {
+    line-height: 1.4;
+    margin-top: 6px !important;
+    overflow: hidden;
+    order: 1; /* Flexbox順序指定: 上 */
+}
+
+/* 作者名 (下) */
+.gallery-content.layout-grid .artist-list {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    order: 2; /* Flexbox順序指定: 下 */
+}
+
+/* ==========================================================================
+   UI Components (Buttons, Modal, etc.)
+   ========================================================================== */
 #type-filter-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px auto; max-width: 920px; padding: 0 20px; width: 100%; box-sizing: border-box; position: relative; z-index: 10; }
 @media (max-width: 768px) { #type-filter-container { gap: 10px; padding: 0 12px; margin: 16px auto; } }
 @media (max-width: 480px) { #type-filter-container { gap: 8px; padding: 0 8px; margin: 14px auto; } }
@@ -155,8 +276,6 @@ input:checked + .slider:before { transform: translateX(18px); }
 .sort-btn:hover { background: #e5e7eb; }
 .sort-btn:active { background: #d1d5db; }
 @media (hover: none) and (pointer: coarse), (max-width: 1024px) { .drag-handle { display: none; } .sort-arrows { display: flex; } .site-row { cursor: default; } }
-
-/* --- レイアウト切替ボタン用 --- */
 .layout-btn-wrapper { position: relative; }
 .layout-trigger-btn { min-width: 50px; padding: 0 10px; }
 .layout-dropdown { display: none; position: absolute; top: calc(100% + 8px); right: 0; background: white; min-width: 160px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 12px; border: 1px solid #f3f4f6; z-index: 100; padding: 6px; }
@@ -165,36 +284,6 @@ input:checked + .slider:before { transform: translateX(18px); }
 .layout-option:hover { background-color: #f9fafb; }
 .layout-option.active { background-color: #e0e7ff; color: #4f46e5; font-weight: bold; }
 .layout-option svg { flex-shrink: 0; }
-
-/* --- Grid Layout --- */
-.gallery-content.layout-grid { display: grid !important; grid-template-columns: repeat(5, 1fr); gap: 15px; padding-bottom: 20px; }
-@media (max-width: 1024px) { .gallery-content.layout-grid { grid-template-columns: repeat(4, 1fr); } }
-@media (max-width: 768px) { .gallery-content.layout-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 480px) { .gallery-content.layout-grid { grid-template-columns: repeat(2, 1fr); } }
-.gallery-content.layout-grid > div { width: 100% !important; height: auto !important; min-height: 200px; display: flex; flex-direction: column; border: 1px solid #eee; border-radius: 8px; overflow: hidden; background: #fff; margin: 0 !important; padding: 0 !important; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-.gallery-content.layout-grid .dj-img-container { width: 100% !important; height: auto !important; aspect-ratio: 2/3; margin: 0 !important; padding: 0 !important; float: none !important; }
-.gallery-content.layout-grid .dj-img1 { width: 100% !important; height: 100% !important; object-fit: cover; }
-.gallery-content.layout-grid .dj-content { width: 100% !important; padding: 8px !important; box-sizing: border-box; margin: 0 !important; float: none !important; display: flex; flex-direction: column; gap: 4px; }
-.gallery-content.layout-grid h1 { font-size: 13px !important; margin: 0 !important; line-height: 1.3; height: 2.6em; overflow: hidden; }
-.gallery-content.layout-grid .artist-list { font-size: 11px !important; margin: 0 !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.gallery-content.layout-grid table, .gallery-content.layout-grid .date { display: none !important; }
-
-/* --- Compact Layout --- */
-.gallery-content.layout-compact > div { width: 100% !important; height: 110px !important; display: flex !important; flex-direction: row !important; padding: 8px !important; margin-bottom: 8px !important; border: 1px solid #eee; border-radius: 6px; background: #fff; box-sizing: border-box; overflow: hidden; }
-.gallery-content.layout-compact .dj-img-container { width: 70px !important; height: 100% !important; margin: 0 10px 0 0 !important; float: none !important; flex-shrink: 0; }
-.gallery-content.layout-compact .dj-img1 { width: 100% !important; height: 100% !important; object-fit: cover; border-radius: 4px; }
-.gallery-content.layout-compact .dj-content { flex: 1; width: auto !important; margin: 0 !important; padding: 0 !important; float: none !important; display: flex; flex-direction: column; justify-content: space-between; }
-.gallery-content.layout-compact h1 { font-size: 14px !important; margin: 0 !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: baseline; gap: 10px; }
-.gallery-content.layout-compact h1 a { color: #333; text-decoration: none; }
-.gallery-content.layout-compact .artist-list { display: inline-block; font-size: 12px; margin-left: 10px; color: #666; }
-.gallery-content.layout-compact table { width: 100%; display: flex; flex-direction: column; gap: 2px; margin: 0 !important; }
-.gallery-content.layout-compact tbody, .gallery-content.layout-compact tr { display: contents; }
-.gallery-content.layout-compact td { display: inline-block; padding: 0 !important; font-size: 11px; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.gallery-content.layout-compact td:first-child { display: none; }
-.gallery-content.layout-compact .relatedtags { display: block; width: 100%; height: 18px; overflow: hidden; margin-top: 2px; }
-.gallery-content.layout-compact .relatedtags ul { display: flex; flex-wrap: wrap; gap: 4px; height: 18px; overflow: hidden; }
-.gallery-content.layout-compact .relatedtags li { float: none !important; display: inline-block; }
-.gallery-content.layout-compact .relatedtags a { padding: 0 4px; background: #f0f0f0; border-radius: 3px; color: #555; text-decoration: none; }
         `;
         document.head.appendChild(style);
     }

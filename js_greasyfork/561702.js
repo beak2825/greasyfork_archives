@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name          Bazaar Scanner Holy grail by srsbsns
+// @name          Bazaar Scanner Holy grail V2 by srsbsns
 // @namespace     https://weav3r.dev/
-// @version       5.0
+// @version       5.1
 // @description   Shows bazaar deals with NPC profit - click item eye button to see profitable deals
 // @author        Modified for NPC Profit
 // @match         https://www.torn.com/*
@@ -14,8 +14,8 @@
 // @connect       api.torn.com
 // @run-at        document-idle
 // @license       MIT
-// @downloadURL https://update.greasyfork.org/scripts/561486/Bazaar%20Scanner%20Holy%20grail%20by%20srsbsns.user.js
-// @updateURL https://update.greasyfork.org/scripts/561486/Bazaar%20Scanner%20Holy%20grail%20by%20srsbsns.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561702/Bazaar%20Scanner%20Holy%20grail%20V2%20by%20srsbsns.user.js
+// @updateURL https://update.greasyfork.org/scripts/561702/Bazaar%20Scanner%20Holy%20grail%20V2%20by%20srsbsns.meta.js
 // ==/UserScript==
 
 (function() {
@@ -808,21 +808,87 @@
     observer.observe(document.body, { childList: true, subtree: true });
 })();
 // =====================================================
-// BAZAAR FAVOURITES MODULE (ESLint-clean, additive only)
+// BAZAAR FAVOURITES MODULE (With Lock Toggle)
 // =====================================================
 (function () {
     'use strict';
 
     const FAV_KEY = 'bz_favourite_items';
+    const LOCK_KEY = 'bz_favourite_lock';
 
-    function getAll() {
-        return GM_getValue(FAV_KEY, {});
-    }
+    const ITEM_CATEGORIES = {
+        'Primary': [
+            'Sawed-Off Shotgun', 'Benelli M1 Tactical', 'MP5 Navy', 'P90', 'M4A1 Colt Carbine',
+            'Benelli M4 Super', 'M16 A2 Rifle', 'Steyr AUG', 'M249 SAW', '9mm Uzi', 'XM8 Rifle',
+            'Enfield SA-80', 'Mag 7', 'Vektor CR-21', 'Heckler & Koch SL8', 'SIG 550',
+            'Bushmaster Carbon 15', 'Ithaca 37', 'Negev NG-5', 'AK-47',
+           ],
+        'Secondary': [
+            'Raven MP25', 'Beretta M9', 'USP', 'Fiveseven', 'Magnum', 'Desert Eagle', 'Taser',
+            'Cobra Derringer', 'S&W Revolver', 'Qsz-92', 'Skorpion', 'Harpoon', 'BT MP9',
+           ],
+        'Melee': [
+            'Knuckle Dusters', 'Kitchen Knife', 'Axe', 'Scimitar', 'Chainsaw', 'Samurai Sword',
+            'Ninja Claws', 'Butterfly Knife', 'Claymore Sword', 'Swiss Army Knife', 'Kama',
+            'Katana', 'Twin Tiger Hooks', 'Wushu Double Axes', 'Guandao', 'Ice Pick',
+            'Cricket Bat', 'Golf Club', 'Kodachi', 'Macana'
+            ],
+        'Cars': [
+            'Alpha Milano 156', 'Bavaria M5', 'Bavaria X5', 'Bavaria Z8', 'Bedford Nova',
+            'Bedford Racer', 'Coche Basurero', 'Chevalier CVR', 'Chevalier CZ06', 'Colina Tanprice',
+            'Cosmos EX', 'Çagoutte 10-6', 'Dart Rampager', 'Echo Quadrato', 'Echo R8',
+            'Echo S3', 'Echo S4', 'Edomondo ACD', 'Edomondo IR', 'Edomondo Localé',
+            'Edomondo NSX', 'Edomondo S2', 'Invader H3', 'Knight Firebrand', 'Lambrini Torobravo',
+            'Limoen Saxon', 'Lolo 458', 'Mercia SLR', 'Nano Cavalier', 'Nano Pioneer',
+            'Oceania SS', 'Papani Colé', 'Stålhög 860', 'Sturmfahrt 111', 'Tabata RM2',
+            'Trident', 'Tsubasa Impressor', 'Veloria LFA', 'Verpestung Insecta', 'Verpestung Sport',
+            'Vita Bravo', 'Volt GT', 'Volt MNG', 'Volt RS', 'Weston Marlin 177',
+            'Wington GGU', 'Yotsuhada EVX', 'Zaibatsu GT-R', 'Zaibatsu Macro'
+        ],
+        'Clothing': [
+            'Bikini', 'Coconut Bra', 'Diving Gloves', 'Flippers', 'Mountie Hat',
+            'Proda Sunglasses', 'Snorkel', 'Speedo', 'Sports Shades', 'Trench Coat', 'Wetsuit'
+        ],
+        'Armor': [
+            'Bulletproof vest', 'Chain Mail', 'Construction Helmet', 'Flak Jacket', 'Full Body Armor',
+            'Hiking Boots', 'Kevlar Gloves', 'Leather Boots', 'Leather Helmet', 'Leather Gloves',
+            'Leather Vest', 'Leather Pants', 'Outer Tactical Vest', 'Police Vest', 'Safety Boots',
+            'WWII Helmet'
+        ],
+        'Miscellaneous': [
+            'Afro Comb', 'Ambergris Lump', 'Bank Check', 'Bear Gall', 'Bearer Bond',
+            'Big Al\'s Gun Oil', 'Birth Certificate', 'Boat Engine', 'Counterfeit Manga',
+            'Diploma', 'Donator Pack', 'Driver\'s License', 'Drug Pack', 'Ephedrine Powder',
+            'Ergotamine Ampoule', 'Fire Hydrant', 'Fishing Rod', 'Jade Buddha', 'Insulin',
+            'Lawyer Business Card', 'License Plate', 'Machine Part', 'Maneki Neko',
+            'Medical Supply Pack', 'Natural Pearls', 'Pangolin Scales', 'Parking Permit',
+            'Passport', 'Perfume', 'Points', 'Prescription', 'Raw Ivory', 'Safrole Oil',
+            'Shark Fin', 'Small Explosive Device', 'Snowboard', 'Subway Pass',
+            'Tailor\'s Dummy', 'Tiger Bone Powder', 'Tractor Part', 'Travel Visa',
+            'Turtle Shell', 'Whale Meat', 'Wind-up Toy', 'Travel Mug'
+        ],
+        'Consumables': [
+            'Blood Bag', 'Can of Red Bull', 'Can of Rockstar Rudolph', 'Can of Santa Shooters',
+            'Empty Blood Bag', 'Energy Drink', 'Erotic DVD', 'Feathery Hotel Coupon',
+            'FHC', 'First Aid Kit', 'LSD', 'Morphine', 'Small Medkit', 'Speed', 'Vicodin', 'Xanax'
+        ]
+    };
+
+    function getAll() { return GM_getValue(FAV_KEY, {}); }
+    function isLocked() { return GM_getValue(LOCK_KEY, false); }
 
     function save(id, name) {
+        if (isLocked()) return; // BLOCK SAVING IF LOCKED
         const favs = getAll();
         if (!favs[id]) {
-            favs[id] = { id, name };
+            let category = 'Uncategorized';
+            for (const [catName, items] of Object.entries(ITEM_CATEGORIES)) {
+                if (items.includes(name)) {
+                    category = catName;
+                    break;
+                }
+            }
+            favs[id] = { id, name, category };
             GM_setValue(FAV_KEY, favs);
             render();
         }
@@ -835,91 +901,41 @@
         render();
     }
 
-    // ---------- UI ----------
     function createUI() {
         if (document.getElementById('bz-fav-btn')) return;
 
         GM_addStyle(`
             #bz-fav-btn {
-                position: fixed;
-                right: 5px;
-                top: 5px;
-                width: 44px;
-                height: 44px;
-                background: #342B99;
-                color: #000;
-                font-weight: bold;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                z-index: 9999;
+                position: fixed; right: 5px; top: 5px; width: 44px; height: 44px;
+                background: #342B99; color: #000; font-weight: bold; border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                cursor: pointer; z-index: 9999;
             }
-
             #bz-fav-panel {
-                position: fixed;
-                right: 50px;
-                top: 10px;
-                width: 144px;
-                background: #1a1a1a;
-                border: 2px solid #202966;
-                border-radius: 8px;
-                padding: 2px;
-                color: #fff;
-                display: none;
-                z-index: 9999;
-                max-height: 575px;        /* Limits the height of the box */
-                overflow-y: auto;         /* Adds a vertical scrollbar when needed */
-                overflow-x: hidden;       /* Prevents accidental horizontal shifting */
-.bz-clear-btn {
-    text-align: center;
-    padding: 3px;
-    margin-bottom: 8px;
-    background: #434C66;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: bold;
-}
-.bz-clear-btn:hover {
-    background: #283F8F;
-}
-
-#bz-fav-panel::-webkit-scrollbar {
-    width: 6px;
-}
-
-#bz-fav-panel::-webkit-scrollbar-thumb {
-    background: #FFD700;
-    border-radius: 3px;
-}
-
-#bz-fav-panel::-webkit-scrollbar-track {
-    background: #1a1a1a;
-}
+                position: fixed; right: 50px; top: 10px; width: 144px;
+                background: #1a1a1a; border: 2px solid #202966; border-radius: 8px;
+                padding: 4px; color: #fff; display: none; z-index: 9999;
+                max-height: 575px; overflow-y: auto;
             }
+            .bz-header-controls { display: flex; gap: 4px; margin-bottom: 8px; }
+            .bz-ctrl-btn {
+                flex: 1; text-align: center; padding: 4px;
+                border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold;
+            }
+            #bz-clear-all { background: #434C66; color: white; }
+            #bz-lock-btn.locked { background: #992b2b; color: white; }
+            #bz-lock-btn.unlocked { background: #2b9943; color: white; }
 
+            .bz-fav-category-header {
+                background: #202966; color: #FFD700; padding: 4px 8px;
+                font-size: 11px; font-weight: bold; text-transform: uppercase;
+                margin-top: 5px; border-radius: 2px; border-left: 3px solid #FFD700;
+            }
             .bz-fav-item {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 6px;
-                border-bottom: 1px solid #333;
-                cursor: pointer;
+                display: flex; justify-content: space-between; align-items: center;
+                padding: 6px; border-bottom: 1px solid #333; cursor: pointer; font-size: 12px;
             }
-
-            .bz-fav-item:hover {
-                background: #2a2a2a;
-            }
-
-            .bz-fav-remove {
-                color: #575A66;
-                font-weight: bold;
-                cursor: pointer;
-                margin-left: 8px;
-            }
+            .bz-fav-remove { color: #575A66; margin-left: 8px; }
         `);
 
         const btn = document.createElement('div');
@@ -939,72 +955,75 @@
     }
 
     function render() {
-    const panel = document.getElementById('bz-fav-panel');
-    if (!panel) return;
+        const panel = document.getElementById('bz-fav-panel');
+        if (!panel) return;
 
-    const favs = Object.values(getAll());
-    if (favs.length === 0) {
-        panel.innerHTML = `<div style="text-align:center;color:#888;">Start collecting favorites!</div>`;
-        return;
-    }
+        const favs = Object.values(getAll());
+        const locked = isLocked();
 
-    // Added the Clear All button at the top of the innerHTML
-    panel.innerHTML = `
-        <div id="bz-clear-all" class="bz-clear-btn">Clear All</div>
-    ` + favs.map(f =>
-        `<div class="bz-fav-item" data-id="${f.id}">
-            <span>${f.name}</span>
-            <span class="bz-fav-remove">✕</span>
-        </div>`
-    ).join('');
+        let html = `
+            <div class="bz-header-controls">
+                <div id="bz-clear-all" class="bz-ctrl-btn">Clear</div>
+                <div id="bz-lock-btn" class="bz-ctrl-btn ${locked ? 'locked' : 'unlocked'}">
+                    ${locked ? 'Locked' : 'Unlocked'}
+                </div>
+            </div>
+        `;
 
-    // Logic for the Clear All button
-    const clearBtn = panel.querySelector('#bz-clear-all');
-    if (clearBtn) {
-        clearBtn.addEventListener('click', () => {
-            if (confirm("Clear all items from favorites?")) {
-                favs.forEach(f => remove(f.id));
+        if (favs.length === 0) {
+            html += `<div style="text-align:center;color:#888;padding:10px;">List Empty</div>`;
+        } else {
+            const groups = favs.reduce((acc, item) => {
+                const cat = item.category || 'Uncategorized';
+                if (!acc[cat]) acc[cat] = [];
+                acc[cat].push(item);
+                return acc;
+            }, {});
+
+            Object.keys(groups).sort().forEach(category => {
+                html += `<div class="bz-fav-category-header">${category}</div>`;
+                html += groups[category].map(f =>
+                    `<div class="bz-fav-item" data-id="${f.id}">
+                        <span>${f.name}</span>
+                        <span class="bz-fav-remove">✕</span>
+                    </div>`
+                ).join('');
+            });
+        }
+
+        panel.innerHTML = html;
+
+        // --- Event Listeners ---
+        panel.querySelector('#bz-clear-all').addEventListener('click', () => {
+            if (confirm("Clear all favorites?")) {
+                GM_setValue(FAV_KEY, {});
                 render();
             }
         });
-    }
 
-    panel.querySelectorAll('.bz-fav-item').forEach(el => {
-        const id = el.dataset.id;
-        const name = el.querySelector('span').textContent;
-
-        el.addEventListener('click', e => {
-            if (e.target.classList.contains('bz-fav-remove')) {
-                remove(id);
-                render(); // Re-render after removing single item
-                e.stopPropagation();
-                return;
-            }
-
-            if (typeof window.processItem === 'function') {
-                window.processItem(name, id);
-            }
+        panel.querySelector('#bz-lock-btn').addEventListener('click', () => {
+            GM_setValue(LOCK_KEY, !locked);
+            render();
         });
-    });
-}
 
-    // ---------- INIT ----------
-   function waitForBodyAndInit() {
-    if (document.body) {
-        createUI();
-    } else {
-        setTimeout(waitForBodyAndInit, 250);
+        panel.querySelectorAll('.bz-fav-item').forEach(el => {
+            el.addEventListener('click', e => {
+                const id = el.dataset.id;
+                const name = el.querySelector('span').textContent;
+                if (e.target.classList.contains('bz-fav-remove')) {
+                    remove(id);
+                } else if (typeof window.processItem === 'function') {
+                    window.processItem(name, id);
+                }
+            });
+        });
     }
-}
 
-waitForBodyAndInit();
+    function waitForBodyAndInit() {
+        if (document.body) createUI();
+        else setTimeout(waitForBodyAndInit, 250);
+    }
 
-
-
-    // ---------- PUBLIC API ----------
-    window.BZ_FAVOURITES = {
-        save,
-        remove
-    };
-
+    waitForBodyAndInit();
+    window.BZ_FAVOURITES = { save, remove };
 })();

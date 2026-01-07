@@ -422,7 +422,7 @@
     const input = document.createElement('input');
     input.type = 'number';
     input.min = '1';
-    input.max = '100';
+    input.max = '150';
     input.value = getSellPct();
 
     input.addEventListener('change', () => {

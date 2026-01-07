@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PTA清空题库工具 (自动过弹窗版)
-// @version      1.0.6
-// @description  清空PTA平台已提交编程题代码，自动屏蔽"系统可能不会保存更改"的弹窗
+// @version      1.0.7
+// @description  清空PTA平台已提交编程题代码，自动屏蔽"系统可能不会保存更改"的弹窗，支持菜单拖动
 // @author       Shen
 // @match        https://pintia.cn/problem-sets/*/exam/problems/type/*
 // @match        https://pintia.cn/problem-sets/*/exam/problems/*
@@ -23,10 +23,14 @@
     const TASK_RUNNING_KEY = 'pta_task_is_running';    // 运行状态
     const TASK_RETURN_URL_KEY = 'pta_return_url';      // 返回地址
     const TASK_TOTAL_KEY = 'pta_task_total';           // 总任务数
+    
+    // === 新增：位置记忆键名 ===
+    const MENU_POS_TOP_KEY = 'pta_menu_pos_top';
+    const MENU_POS_LEFT_KEY = 'pta_menu_pos_left';
 
     // === 基础工具函数 ===
 
-    // 强力屏蔽离开页面的弹窗（核心修复代码）
+    // 强力屏蔽离开页面的弹窗
     function suppressLeaveWarning() {
         window.onbeforeunload = null;
         window.addEventListener('beforeunload', function(e) {
@@ -126,7 +130,6 @@
         const nextUrl = queue[0];
         
         if (window.location.href !== nextUrl) {
-            // 跳转前先屏蔽弹窗
             suppressLeaveWarning();
             window.location.href = nextUrl;
         } else {
@@ -139,8 +142,6 @@
                     setTimeout(() => {
                         queue.shift(); 
                         GM_setValue(TASK_QUEUE_KEY, queue);
-                        
-                        // 跳转前先屏蔽弹窗
                         suppressLeaveWarning();
                         processNextTask();
                     }, 500);
@@ -148,7 +149,6 @@
                     console.warn('未找到编辑器，跳过此题');
                     queue.shift();
                     GM_setValue(TASK_QUEUE_KEY, queue);
-                    
                     suppressLeaveWarning();
                     processNextTask();
                 }
@@ -160,9 +160,7 @@
         GM_setValue(TASK_RUNNING_KEY, false);
         GM_setValue(TASK_QUEUE_KEY, []);
         const returnUrl = GM_getValue(TASK_RETURN_URL_KEY);
-        
-        suppressLeaveWarning(); // 屏蔽弹窗
-
+        suppressLeaveWarning();
         if (returnUrl && window.location.href !== returnUrl) {
             alert('所有题目清空完成！正在返回列表页...');
             window.location.href = returnUrl;
@@ -234,9 +232,6 @@
                 </div>
             </div>
             <div style="margin-bottom: 20px;">
-                <label style="display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: #333;">
-                    添加题目集链接或ID：
-                </label>
                 <input id="pta-url-input" type="text" placeholder="粘贴完整URL或输入题目集ID" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; box-sizing: border-box;" />
                 <button id="pta-add-btn" style="margin-top: 10px; padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">添加</button>
             </div>
@@ -288,7 +283,6 @@
             if (!value) return alert('请输入内容');
             let setId = value.match(/problem-sets\/(\d+)/) ? value.match(/problem-sets\/(\d+)/)[1] : value;
             if (!/^\d+$/.test(setId)) return alert('无效ID');
-            
             const newCfg = getConfig();
             if (!newCfg.enabledSets.includes(setId)) {
                 newCfg.enabledSets.push(setId);
@@ -305,37 +299,115 @@
         overlay.onclick = () => { panel.style.display = 'none'; overlay.style.display = 'none'; };
     }
 
+    // === 新增：使元素可拖拽函数 ===
+    function makeDraggable(element, handle) {
+        let isDragging = false;
+        let startX, startY, initialLeft, initialTop;
+
+        handle.addEventListener('mousedown', (e) => {
+            e.preventDefault(); // 防止选中文本
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            
+            // 获取当前位置，如果没有设置过left/top，则获取计算样式
+            const rect = element.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+            
+            handle.style.cursor = 'grabbing';
+            element.style.transition = 'none'; // 拖动时禁用过渡动画
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            
+            // 更新位置
+            element.style.left = `${initialLeft + dx}px`;
+            element.style.top = `${initialTop + dy}px`;
+            element.style.right = 'auto'; // 清除right属性，防止冲突
+            element.style.bottom = 'auto';
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                handle.style.cursor = 'move';
+                // 拖动结束后保存位置
+                GM_setValue(MENU_POS_TOP_KEY, element.style.top);
+                GM_setValue(MENU_POS_LEFT_KEY, element.style.left);
+            }
+        });
+    }
+
     function createButtons() {
         if (document.getElementById('pta-helper-container')) return;
 
         let isCollapsed = GM_getValue(MENU_STATE_KEY, false);
 
+        // 获取保存的位置，如果没有则使用默认位置（右上角）
+        const savedTop = GM_getValue(MENU_POS_TOP_KEY);
+        const savedLeft = GM_getValue(MENU_POS_LEFT_KEY);
+        
         const mainContainer = document.createElement('div');
         mainContainer.id = 'pta-helper-container';
+        
+        // 初始样式设置
+        let posStyle = '';
+        if (savedTop && savedLeft) {
+            posStyle = `top: ${savedTop}; left: ${savedLeft};`;
+        } else {
+            posStyle = `top: 80px; right: 20px;`;
+        }
+
         mainContainer.style.cssText = `
-            position: fixed; top: 80px; right: 20px; z-index: 99999;
+            position: fixed; ${posStyle} z-index: 99999;
             display: flex; flex-direction: column; align-items: flex-end;
+            user-select: none; /* 防止拖动时选中文字 */
         `;
 
         const toggleBtn = document.createElement('button');
-        toggleBtn.textContent = isCollapsed ? '展开菜单' : '收起菜单';
+        toggleBtn.textContent = isCollapsed ? '↕ 展开菜单 (按住拖动)' : '↕ 收起菜单 (按住拖动)';
+        toggleBtn.title = "按住此按钮可拖动位置";
         toggleBtn.style.cssText = `
             padding: 5px 10px; background: #6b7280; color: white; border: none;
-            border-radius: 4px; cursor: pointer; font-size: 12px; margin-bottom: 8px;
+            border-radius: 4px; cursor: move; margin-bottom: 8px;
             opacity: 0.9; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 12px; width: 140px;
         `;
 
         const contentContainer = document.createElement('div');
         contentContainer.style.cssText = `
-            display: ${isCollapsed ? 'none' : 'flex'}; flex-direction: column; gap: 10px;
+            display: ${isCollapsed ? 'none' : 'flex'}; flex-direction: column; gap: 10px; width: 100%;
         `;
 
-        toggleBtn.onclick = () => {
-            isCollapsed = !isCollapsed;
-            contentContainer.style.display = isCollapsed ? 'none' : 'flex';
-            toggleBtn.textContent = isCollapsed ? '展开菜单' : '收起菜单';
-            GM_setValue(MENU_STATE_KEY, isCollapsed);
+        toggleBtn.onmousedown = (e) => {
+             // 简单的点击判断：如果鼠标按下和松开位置偏移很小，视为点击，否则是拖拽
+             // 但由于我们把事件绑定在makeDraggable里处理，这里只处理点击切换逻辑
+             // 实际在mouseup中可以通过判断是否有位移来决定是否触发click，
+             // 为了简化，这里保留点击功能，拖拽由makeDraggable接管。
+             // 由于拖拽会触发 click，我们加个简单的延时锁或者允许共存（通常不影响）
         };
+
+        // 处理点击切换菜单（解决拖拽和点击的冲突：如果只是短暂点击未移动，则切换）
+        let startX, startY;
+        toggleBtn.addEventListener('mousedown', function(e) {
+            startX = e.clientX;
+            startY = e.clientY;
+        });
+        toggleBtn.addEventListener('click', function(e) {
+            const moveX = Math.abs(e.clientX - startX);
+            const moveY = Math.abs(e.clientY - startY);
+            // 如果移动距离小于5像素，视为点击，执行切换
+            if (moveX < 5 && moveY < 5) {
+                isCollapsed = !isCollapsed;
+                contentContainer.style.display = isCollapsed ? 'none' : 'flex';
+                toggleBtn.textContent = isCollapsed ? '↕ 展开菜单 (按住拖动)' : '↕ 收起菜单 (按住拖动)';
+                GM_setValue(MENU_STATE_KEY, isCollapsed);
+            }
+        });
 
         const btnStyle = `
             padding: 10px 20px; color: white; border: none; border-radius: 6px;
@@ -373,10 +445,12 @@
         mainContainer.appendChild(toggleBtn);
         mainContainer.appendChild(contentContainer);
         document.body.appendChild(mainContainer);
+
+        // 启用拖拽：拖拽 toggleBtn，移动 mainContainer
+        makeDraggable(mainContainer, toggleBtn);
     }
 
     function init() {
-        // 如果正在运行任务，强力屏蔽弹窗
         if (GM_getValue(TASK_RUNNING_KEY, false)) {
             suppressLeaveWarning();
             processNextTask();

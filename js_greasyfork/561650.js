@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         flow2ui
+// @name         veo3free
 // @namespace    http://tampermonkey.net/
-// @version      3.1
+// @version      3.2
 // @description  这里写脚本的英文描述
 // @match        https://labs.google/fx/tools/flow/project/*
 // @grant        none
 // @run-at       document-start
 // @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/561650/flow2ui.user.js
-// @updateURL https://update.greasyfork.org/scripts/561650/flow2ui.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561650/veo3free.user.js
+// @updateURL https://update.greasyfork.org/scripts/561650/veo3free.meta.js
 // ==/UserScript==
 
 (function() {

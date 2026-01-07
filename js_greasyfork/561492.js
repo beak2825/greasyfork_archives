@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         【智狐修改】全网VIP视频免费解析观看 (精简交互版)
 // @namespace    zhihu_vip
-// @version      2.3
+// @version      2.4
 // @description  精选解析线路为大家提供各大视频网站(PC+移动端)视频解析服务，简洁易用
 // @author       zhihu
 // @license MIT
@@ -86,7 +86,7 @@
         ],
 
         // 要删除的广告元素
-        AD_SELECTORS: [
+        AD_SELECTORS : [
             '.playlist-intro__actions',
             '.playlist-vip-section__vip',
             '.game_switch_page_with_user_policies',
@@ -97,7 +97,19 @@
             '.page-content__bottom',
             '.page-slice-footer-wrap',
             '#ssi-footer',
-            '.footer-color--override'
+            '.footer-color--override',
+            '#payview-container',
+            '#module-pc_detail_collection_list_main',// qq
+            '#module-related_short_video_main',// qq
+            '.video-list',// qq
+            '.game-module-container',// qq
+            '.game-module-web',// qq
+            '#module-pc_detail_rec_main',// qq
+            '#toplevel',// qq
+            '#vip-container',// qq
+            '#module-pc_detail_rec_main',// qq
+            '#module-pc_detail_rec_main',// qq
+            '.creative-player-1-layer'// qq
         ],
 
         // 默认设置

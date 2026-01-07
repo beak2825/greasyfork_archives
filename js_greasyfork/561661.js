@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name               LANraragi 推荐栏
-// @namespace          https://github.com/Kelcoin
-// @version            1.0
-// @description        基于标签为 LANraragi 阅读器下方推荐区：猜你喜欢 & 同作者
+// @namespace     https://github.com/Kelcoin
+// @version            1.2
+// @description     基于标签为 LANraragi 阅读器下方推荐区：猜你喜欢 & 同作者
 // @author             Kelcoin
 // @match              *://*/reader?id=*
-// @grant              none
-// @icon               https://github.com/Difegue/LANraragi/raw/dev/public/favicon.ico
+// @grant               none
+// @icon                 https://github.com/Difegue/LANraragi/raw/dev/public/favicon.ico
 // @license            MIT
 // @downloadURL https://update.greasyfork.org/scripts/561661/LANraragi%20%E6%8E%A8%E8%8D%90%E6%A0%8F.user.js
 // @updateURL https://update.greasyfork.org/scripts/561661/LANraragi%20%E6%8E%A8%E8%8D%90%E6%A0%8F.meta.js
@@ -33,6 +33,23 @@
 
         // 如果 likeNamespaces 里一个都没有，就退而求其次
         likeFallbackNamespaces: ['character', 'parody'],
+
+        // 高权重标签：命中这些标签会获得更高的权重分数 (原 HIGH_WEIGHT_TAGS)
+        highWeightTags: [
+            'female:netorare', 'female:mind control', 'female:corruption',
+            'female:tomboy', 'female:big breast', 'female:swimsuit',
+            'female:pantyhose', 'female:stockings', 'female:lolicon',
+            'female:harem', 'female:futanari', 'female:anal',
+            'female:public use', 'female:bbw', 'female:yuri',
+            'female:anal intercourse', 'female:paizuri', 'female:dark skin',
+            'female:huge breasts', 'female:dickgirl on female', 'female:hairy',
+            'male:netorare', 'male:tomgirl', 'male:harem',
+            'male:shotacon', 'male:gender change', 'male:virginity',
+            'mixed:incest', 'mixed:group'
+        ],
+
+        // 推荐缓存时间（毫秒），默认 24 小时
+        cacheExpiry: 24 * 60 * 60 * 1000,
 
         // Search API 基础路径（相对当前站点）
         apiBase: '/api/search',
@@ -325,6 +342,22 @@
         }
     }
 
+    // --- 高权重标签表 ---
+    // 在相似度判定时，命中这些标签会获得更高的权重分数
+    // 你可以在这里添加你认为更能决定相似度的标签（如特定角色、特定play等）
+    const HIGH_WEIGHT_TAGS = new Set([
+        'female:netorare', 'female:mind control', 'female:corruption',
+        'female:tomboy', 'female:big breast', 'female:swimsuit',
+        'female:pantyhose', 'female:stockings', 'female:lolicon',
+        'female:harem', 'female:futanari', 'female:anal',
+        'female:public use', 'female:bbw', 'female:yuri',
+        'female:anal intercourse', 'female:paizuri', 'female:dark skin',
+        'female:huge breasts', 'female:dickgirl on female', 'female:hairy',
+        'male:netorare', 'male:tomgirl', 'male:harem',
+        'male:shotacon', 'male:gender change', 'male:virginity',
+        'mixed:incest', 'mixed:group'
+    ]);
+
     // 从 DOM 获取当前归档标签 + 显示文本
     function getCurrentArchiveTags() {
         const tagElements = document.querySelectorAll('#tagContainer .gt a');
@@ -340,7 +373,7 @@
         // --- 黑名单标签列表 ---
         const blacklistedTags = [
             'other:extraneous ads',
-            // 你可以在这里添加更多想屏蔽的具体标签，例如 'female:mother'
+            // 你可以在这里添加更多想屏蔽的具体标签
         ];
 
         tagElements.forEach(el => {
@@ -444,14 +477,40 @@
         return matched;
     }
 
-    // 渲染标签 HTML（两行 + 毛玻璃 + 翻译修复）
+    // --- 相似度计算函数 ---
+    function calculateArchiveSimilarity(sourceTagsLower, candidateTagsStr, highWeightSet) {
+        if (!candidateTagsStr) return 0;
+
+        const candidateTags = candidateTagsStr.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+        let totalScore = 0;
+
+        candidateTags.forEach(tag => {
+            if (sourceTagsLower.has(tag)) {
+                // 1. 计算原始得分
+                let rawPoints = 1; // 基础分
+                if (highWeightSet && highWeightSet.has(tag)) {
+                    rawPoints += 3; // 高权重额外加分
+                }
+
+                // 2. 生成随机系数 (0.85 ~ 1.15)
+                const randomFactor = 0.85 + (Math.random() * 0.3);
+
+                // 3. 累加经随机浮动处理后的分数
+                totalScore += rawPoints * randomFactor;
+            }
+        });
+
+        return totalScore;
+    }
+
+    // 渲染标签 HTML
     function renderTags(tagsStr, sourceTagsLower, sourceDisplayTextMap, matchedSet) {
         if (!tagsStr) return '';
 
         const rawTags = tagsStr.split(',').map(t => t.trim()).filter(Boolean);
         if (rawTags.length === 0) return '';
 
-        // 归一化命名空间：小写 + 去掉空格/下划线
+        // 归一化命名空间
         const normalizeNs = ns =>
             (ns || 'other')
                 .toLowerCase()
@@ -459,7 +518,7 @@
                 .replace(/\s+/g, '')      // "date added" -> "dateadded"
                 .replace(/_/g, '');       // "date_added" -> "dateadded"
 
-        // 不显示的命名空间（归一化后比对）
+        // 不显示的命名空间
         const hiddenNamespaces = [
             'category',
             'uploader',
@@ -508,7 +567,7 @@
         if (processed.length === 0) return '';
 
         // 简单洗牌
-        function shuffle(arr) {
+        function shuffleLocal(arr) {
             const a = arr.slice();
             for (let i = a.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -535,7 +594,7 @@
         const picked = [];
 
         // 1. 从 primary 随机取
-        const primaryShuffled = shuffle(primary);
+        const primaryShuffled = shuffleLocal(primary);
         for (const t of primaryShuffled) {
             if (picked.length >= MAX_TAGS_PER_CARD) break;
             picked.push(t);
@@ -543,17 +602,8 @@
 
         // 2. 不足 5 个，从 secondary 随机补
         if (picked.length < MAX_TAGS_PER_CARD && secondary.length > 0) {
-            const secondaryShuffled = shuffle(secondary);
+            const secondaryShuffled = shuffleLocal(secondary);
             for (const t of secondaryShuffled) {
-                if (picked.length >= MAX_TAGS_PER_CARD) break;
-                picked.push(t);
-            }
-        }
-
-        // 3. 再不足，从其他命名空间补
-        if (picked.length < MAX_TAGS_PER_CARD && others.length > 0) {
-            const othersShuffled = shuffle(others);
-            for (const t of othersShuffled) {
                 if (picked.length >= MAX_TAGS_PER_CARD) break;
                 picked.push(t);
             }
@@ -659,7 +709,7 @@
     async function init() {
         // --- 0. 扩展配置项：自动展开 ---
         if (typeof CONFIG.autoExpand === 'undefined') {
-            CONFIG.autoExpand = false; // 默认禁用，用户可在脚本开头自行改为 true
+            CONFIG.autoExpand = false;
         }
 
         const currentId = new URLSearchParams(window.location.search).get('id');
@@ -747,7 +797,6 @@
                 container.classList.remove('collapsed');
                 const activeTarget = btnArtist.classList.contains('active') ? 'artist' : 'sim';
                 switchTab(activeTarget);
-
                 container.style.maxHeight = '';
             } else {
                 container.classList.add('collapsed');
@@ -760,24 +809,40 @@
             togglePanel();
         });
 
-
         await new Promise(r => setTimeout(r, 800));
 
+        // --- 数据准备 ---
         const sourceData = getCurrentArchiveTags();
         const sourceTagsLower = sourceData.allLower;
         const sourceArtist = Array.from(sourceData.artists);
         const sourceCategoryLower = sourceData.categoriesLower;
         const sourceDisplayTextMap = sourceData.displayTextMap;
 
+        // 将 Config 中的高权重标签转为 Set，提升查找性能
+        const highWeightSet = new Set(CONFIG.highWeightTags || []);
+
         logDebug('Current tags:', sourceData);
+
+        // --- 渲染辅助函数 ---
+        const renderArchiveList = (archives, containerEl) => {
+            if (!archives || archives.length === 0) return false;
+            const html = archives.map(arc => {
+                const matchedSet = getMatchedSetForArchive(arc.tags || '', sourceTagsLower);
+                return createCardHTML(arc, matchedSet, sourceTagsLower, sourceDisplayTextMap);
+            }).join('');
+            containerEl.innerHTML = html;
+            return true;
+        };
 
         let remainingTotal = CONFIG.totalLimit;
 
-        async function buildYouMayLike() {
-            if (remainingTotal <= 0) {
-                viewSim.innerHTML = `<div class="lrr-rec-loading">推荐配额已满。</div>`;
-                return;
-            }
+        // ==========================================
+        // 核心构建逻辑 (修改为返回数据而非直接操作 DOM，以便缓存)
+        // ==========================================
+
+        async function buildYouMayLikeData() {
+            if (remainingTotal <= 0) return [];
+
             const viewLimit = Math.min(CONFIG.perViewLimit, remainingTotal);
 
             const pickTags = (namespaces, fallbackNamespaces) => {
@@ -792,17 +857,23 @@
                 });
                 let base = primary.length > 0 ? primary : fallback;
                 if (base.length === 0) return [];
-                const count = Math.min(3, Math.max(1, base.length));
+
+                let maxSearchCount = 3;
+                const totalTagsCount = sourceData.all.size;
+                if (totalTagsCount > 40) {
+                    maxSearchCount = 7;
+                } else if (totalTagsCount > 20) {
+                    maxSearchCount = 5;
+                }
+
+                const count = Math.min(maxSearchCount, Math.max(1, base.length));
                 return sample(base, count);
             };
 
             const queryTags = pickTags(CONFIG.likeNamespaces, CONFIG.likeFallbackNamespaces);
             logDebug('Like query tags:', queryTags);
 
-            if (!queryTags || queryTags.length === 0) {
-                viewSim.innerHTML = `<div class="lrr-rec-loading">当前归档没有可用于推荐的标签。</div>`;
-                return;
-            }
+            if (!queryTags || queryTags.length === 0) return [];
 
             const allResultsMap = new Map();
             for (const tag of queryTags) {
@@ -814,101 +885,172 @@
                 });
             }
 
-            const allResults = Array.from(allResultsMap.values());
-            if (allResults.length === 0) {
-                viewSim.innerHTML = `<div class="lrr-rec-loading">暂无基于当前标签的推荐结果。</div>`;
-                return;
-            }
+            let allResults = Array.from(allResultsMap.values());
+            if (allResults.length === 0) return [];
+
+            // 计算相似度 (传入 highWeightSet)
+            allResults.forEach(arc => {
+                arc._simScore = calculateArchiveSimilarity(sourceTagsLower, arc.tags || '', highWeightSet);
+            });
 
             const sameCategory = [];
             const otherCategory = [];
+
             allResults.forEach(arc => {
-                if (archiveHasSameCategory(arc.tags || '', sourceCategoryLower)) sameCategory.push(arc);
-                else otherCategory.push(arc);
+                if (archiveHasSameCategory(arc.tags || '', sourceCategoryLower)) {
+                    sameCategory.push(arc);
+                } else {
+                    otherCategory.push(arc);
+                }
             });
 
-            const sameShuffled = shuffle(sameCategory);
-            const otherShuffled = shuffle(otherCategory);
-            const picked = [];
-            const need = viewLimit;
+            const sortByScoreDesc = (a, b) => b._simScore - a._simScore;
+            let picked = [];
 
-            for (const a of sameShuffled) { if (picked.length >= need) break; picked.push(a); }
-            for (const a of otherShuffled) { if (picked.length >= need) break; picked.push(a); }
-
-            if (picked.length === 0) {
-                viewSim.innerHTML = `<div class="lrr-rec-loading">暂无推荐结果。</div>`;
-                return;
+            if (sameCategory.length > 0) {
+                sameCategory.sort(sortByScoreDesc);
+                if (sameCategory.length >= viewLimit) {
+                    picked = sameCategory.slice(0, viewLimit);
+                } else {
+                    picked = [...sameCategory];
+                    const needMore = viewLimit - picked.length;
+                    if (otherCategory.length > 0) {
+                        otherCategory.sort(sortByScoreDesc);
+                        picked = picked.concat(otherCategory.slice(0, needMore));
+                    }
+                }
+            } else {
+                otherCategory.sort(sortByScoreDesc);
+                picked = otherCategory.slice(0, viewLimit);
             }
 
-            const html = picked.map(arc => {
-                const matchedSet = getMatchedSetForArchive(arc.tags || '', sourceTagsLower);
-                return createCardHTML(arc, matchedSet, sourceTagsLower, sourceDisplayTextMap);
-            }).join('');
-
-            viewSim.innerHTML = html;
             remainingTotal = Math.max(0, remainingTotal - picked.length);
+            return picked;
         }
 
-        async function buildSameAuthor() {
-            if (remainingTotal <= 0) return;
-            if (sourceArtist.length === 0) return;
+        async function buildSameAuthorData() {
+            if (remainingTotal <= 0) return [];
+            if (!Array.isArray(sourceArtist) || sourceArtist.length === 0) return [];
 
             const viewLimit = Math.min(CONFIG.perViewLimit, remainingTotal);
-            const allResultsMap = new Map();
+            if (viewLimit <= 0) return [];
 
-            for (const tag of sourceArtist) {
+            const allResultsMap = new Map();
+            const searchPromises = sourceArtist.map(tag => {
                 const filter = `${tag}$`;
-                const data = await searchArchives(filter);
+                return searchArchives(filter)
+                    .then(data => ({ tag, data }))
+                    .catch(e => {
+                        logDebug('buildSameAuthor search error for tag:', tag, e);
+                        return { tag, data: [] };
+                    });
+            });
+
+            const allSearchResults = await Promise.all(searchPromises);
+
+            for (const { data } of allSearchResults) {
+                if (!Array.isArray(data) || data.length === 0) continue;
                 data.forEach(arc => {
+                    if (!arc || arc.arcid == null) return;
                     if (arc.arcid === currentId) return;
-                    if (!allResultsMap.has(arc.arcid)) allResultsMap.set(arc.arcid, arc);
+                    if (!allResultsMap.has(arc.arcid)) {
+                        allResultsMap.set(arc.arcid, arc);
+                    }
                 });
             }
 
             const allResults = Array.from(allResultsMap.values());
-            if (allResults.length <= 1) return;
+            if (allResults.length === 0) return [];
 
             const shuffled = shuffle(allResults);
             const picked = shuffled.slice(0, viewLimit);
 
-            const html = picked.map(arc => {
-                const matchedSet = getMatchedSetForArchive(arc.tags || '', sourceTagsLower);
-                return createCardHTML(arc, matchedSet, sourceTagsLower, sourceDisplayTextMap);
-            }).join('');
-
-            viewArtist.innerHTML = html;
-            btnArtist.style.display = 'block';
-            btnArtist.innerText = '同作者';  // 去掉数量
             remainingTotal = Math.max(0, remainingTotal - picked.length);
+            return picked;
         }
 
-        // 自动执行生成
+        // ==========================================
+        // 执行逻辑：缓存检查 -> 生成 -> 渲染 -> 保存
+        // ==========================================
         try {
-            await buildYouMayLike();
-            await buildSameAuthor();
+            const cacheKey = `lrr_rec_cache_v1_${currentId}`;
+            let cachedData = null;
 
-            // 根据配置项决定是否自动展开
+            // 1. 尝试读取缓存
+            try {
+                const raw = localStorage.getItem(cacheKey);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    const now = Date.now();
+                    if (parsed && (now - parsed.timestamp < CONFIG.cacheExpiry)) {
+                        cachedData = parsed;
+                        logDebug('Loaded recommendations from cache');
+                    } else {
+                        logDebug('Cache expired or invalid');
+                    }
+                }
+            } catch (e) {
+                console.warn('LRR Rec: Cache read error', e);
+            }
+
+            let simResult = [];
+            let artistResult = [];
+
+            if (cachedData) {
+                // 2A. 命中缓存：直接使用数据
+                simResult = cachedData.sim || [];
+                artistResult = cachedData.artist || [];
+            } else {
+                // 2B. 未命中缓存：执行构建逻辑
+                simResult = await buildYouMayLikeData();
+                artistResult = await buildSameAuthorData();
+
+                // 写入缓存 (仅当有数据时)
+                if (simResult.length > 0 || artistResult.length > 0) {
+                    try {
+                        const payload = {
+                            timestamp: Date.now(),
+                            sim: simResult,
+                            artist: artistResult
+                        };
+                        localStorage.setItem(cacheKey, JSON.stringify(payload));
+                    } catch (e) {
+                        console.warn('LRR Rec: Cache write error', e);
+                    }
+                }
+            }
+
+            // 3. 渲染视图
+            if (simResult.length > 0) {
+                renderArchiveList(simResult, viewSim);
+            } else {
+                viewSim.innerHTML = `<div class="lrr-rec-loading">暂无推荐结果。</div>`;
+            }
+
+            if (artistResult.length > 0) {
+                renderArchiveList(artistResult, viewArtist);
+                btnArtist.style.display = 'block';
+                btnArtist.innerText = '同作者';
+            }
+
+            // 4. 后续 UI 状态更新
             if (CONFIG.autoExpand) {
                 if (container.classList.contains('collapsed')) {
                     container.classList.remove('collapsed');
+                    // 优先显示同作者（如果有），否则显示猜你喜欢 (根据逻辑需求调整，此处保持优先 Sim，除非用户点击)
+                    // 如果你想让同作者有数据时优先切过去，可以在这里判断。目前逻辑保持默认 Sim。
                     const activeTarget = btnArtist.classList.contains('active') ? 'artist' : 'sim';
                     switchTab(activeTarget);
                     container.style.maxHeight = '';
                 }
+                const statusMsg = document.getElementById('lrr-rec-status-msg');
+                if (statusMsg) statusMsg.style.display = 'none';
             } else {
-                // 如果不自动展开，更新状态文字提示用户已完成
                 const statusMsg = document.getElementById('lrr-rec-status-msg');
                 if (statusMsg) {
                     statusMsg.innerText = '推荐已就绪';
-                    // 3秒后淡出提示
                     setTimeout(() => { statusMsg.style.opacity = '0'; }, 3000);
                 }
-            }
-
-            // 如果开启了自动展开，直接隐藏提示
-            if (CONFIG.autoExpand) {
-                const statusMsg = document.getElementById('lrr-rec-status-msg');
-                if (statusMsg) statusMsg.style.display = 'none';
             }
 
         } catch (e) {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torrent Mod Toolkit
 // @namespace    http://tampermonkey.net/
-// @version      1.1.7.7
+// @version      1.1.7.9
 // @description  Common actions for torrent mods
 // @icon         https://raw.githubusercontent.com/xzin-CoRK/torrent-mod-toolkit/refs/heads/main/hammer.png
 // @author       xzin
@@ -27,7 +27,7 @@
 (function () {
     "use strict";
 
-    const version = "1.1.7.7";
+    const version = "1.1.7.9";
 
     var mediainfo;
     var uniqueId;
@@ -381,7 +381,29 @@
                 nameWithoutExt = nameWithoutExt.replace(/[-.]([A-Za-z0-9]+)$/, '');
                 const parts = nameWithoutExt.split('.');
                 const titleParts = [];
-                for (const part of parts) {
+                let foundSeason = false;
+                
+                for (let i = 0; i < parts.length; i++) {
+                    const part = parts[i];
+                    
+                    if (/^S\d{1,2}$/i.test(part)) {
+                        titleParts.push(part);
+                        foundSeason = true;
+                        if (i + 1 < parts.length) {
+                            const nextPart = parts[i + 1];
+                            const isTechnicalSpec = /^\d{4}$/.test(nextPart) || 
+                                                 /^\d+p$/i.test(nextPart) || 
+                                                 /^\d+i$/i.test(nextPart) ||
+                                                 /^(NF|AMZN|WEB|DL|WEB-DL|WEBRip|BluRay|Blu-ray|REMUX|UHD|HDR|DV|DDP|DD\+|DTS|AC3|AAC|H\.264|H\.265|x264|x265)/i.test(nextPart);
+                            if (!isTechnicalSpec) {
+                                break;
+                            }
+                        } else {
+                            break;
+                        }
+                        continue;
+                    }
+                    
                     if (/^\d{4}$/.test(part) || /^\d+p$/i.test(part) || /^\d+i$/i.test(part) ||
                         /^(NF|AMZN|WEB|DL|WEB-DL|WEBRip|BluRay|Blu-ray|REMUX|UHD|HDR|DV|DDP|DD\+|DTS|AC3|AAC|H\.264|H\.265|x264|x265)/i.test(part)) {
                         break;
@@ -417,12 +439,45 @@
         cleanedTitle = cleanedTitle.trim();
         const words = cleanedTitle.split(/\s+/);
         const titleWords = [];
+        let foundSeason = false;
 
-        for (const word of words) {
+        for (let i = 0; i < words.length; i++) {
+            const word = words[i];
+            
             if (/^S\d{1,2}E\d{1,2}$/i.test(word)) {
                 const seasonMatch = word.match(/S(\d{1,2})E\d{1,2}/i);
                 if (seasonMatch) {
                     titleWords.push('S' + seasonMatch[1]);
+                    foundSeason = true;
+                    if (i + 1 < words.length) {
+                        const nextWord = words[i + 1];
+                        const isTechnicalSpec = /^\d{4}$/.test(nextWord) || 
+                                             /^\d+p$/i.test(nextWord) || 
+                                             /^\d+i$/i.test(nextWord) ||
+                                             /^(NF|AMZN|WEB|DL|WEB-DL|WEBRip|BluRay|Blu-ray|REMUX|UHD|HDR|DV|DDP|DD\+|DTS|AC3|AAC|H\.264|H\.265|x264|x265)/i.test(nextWord);
+                        if (!isTechnicalSpec) {
+                            break;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+                continue;
+            }
+            if (/^S\d{1,2}$/i.test(word)) {
+                titleWords.push(word);
+                foundSeason = true;
+                if (i + 1 < words.length) {
+                    const nextWord = words[i + 1];
+                    const isTechnicalSpec = /^\d{4}$/.test(nextWord) || 
+                                         /^\d+p$/i.test(nextWord) || 
+                                         /^\d+i$/i.test(nextWord) ||
+                                         /^(NF|AMZN|WEB|DL|WEB-DL|WEBRip|BluRay|Blu-ray|REMUX|UHD|HDR|DV|DDP|DD\+|DTS|AC3|AAC|H\.264|H\.265|x264|x265)/i.test(nextWord);
+                    if (!isTechnicalSpec) {
+                        break;
+                    }
+                } else {
+                    break;
                 }
                 continue;
             }
@@ -495,9 +550,25 @@
     }
 
     function extractOMGSearchTitle() {
-        const titleElement = document.querySelector("h1.torrent__name");
-        if (!titleElement) return null;
-        const fullTitle = (titleElement.innerText || titleElement.textContent || "").trim();
+        let titleElement = document.querySelector("h1.torrent__name");
+        let fullTitle = null;
+        
+        if (titleElement) {
+            fullTitle = (titleElement.innerText || titleElement.textContent || "").trim();
+        } else {
+            const pageTitle = document.title || "";
+            const titleMatch = pageTitle.match(/^(.+?)\s*::/);
+            if (titleMatch) {
+                fullTitle = titleMatch[1].trim();
+                fullTitle = fullTitle.replace(/\s*-\s*Season\s+(\d+)/i, (match, seasonNum) => {
+                    const season = parseInt(seasonNum, 10);
+                    return ' S' + (season < 10 ? '0' + season : season);
+                });
+                fullTitle = fullTitle.replace(/\s*\((\d{4})\)\s*/i, ' $1 ');
+                fullTitle = fullTitle.replace(/\s+/g, ' ').trim();
+            }
+        }
+        
         if (!fullTitle) return null;
         let title = fullTitle;
         const akaIndex = title.search(/\s+AKA\s+/i);
@@ -506,7 +577,7 @@
             const afterAka = title.substring(akaIndex);
             const yearMatch = afterAka.match(/\b(19|20)\d{2}\b/);
             const seasonEpisodeMatch = afterAka.match(/\b(S\d+E\d+)\b/i);
-            const seasonPackMatch = afterAka.match(/\b(S\d+)\b/i); // Season pack (S03 without episode)
+            const seasonPackMatch = afterAka.match(/\b(S\d+)\b/i);
             if (seasonEpisodeMatch) {
                 title = beforeAka + ' ' + seasonEpisodeMatch[1];
             } else if (seasonPackMatch) {
@@ -2877,6 +2948,5 @@
     }
 
     initToolkit();
-
 
 })();

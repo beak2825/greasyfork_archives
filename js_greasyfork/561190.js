@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         LANraragi 现代主题
+// @name              LANraragi 现代主题
 // @namespace    https://github.com/Kelcoin
-// @version      3.3
-// @description  更现代化、简介、美观的 LANraragi 主题
-// @author       Kelcoin
-// @include      https://lanraragi*/*
-// @include      http://lanraragi*/*
-// @match        https://lrr.tvc-16.science/*
-// @grant        none
-// @run-at       document-end
-// @icon         https://github.com/Difegue/LANraragi/raw/dev/public/favicon.ico
-// @license      MIT
+// @version           3.3.2
+// @description    更现代化、简介、美观的 LANraragi 主题
+// @author            Kelcoin
+// @include           https://lanraragi*/*
+// @include           http://lanraragi*/*
+// @match             https://lrr.tvc-16.science/*
+// @grant              none
+// @run-at             document-end
+// @icon                https://github.com/Difegue/LANraragi/raw/dev/public/favicon.ico
+// @license           MIT
 // @downloadURL https://update.greasyfork.org/scripts/561190/LANraragi%20%E7%8E%B0%E4%BB%A3%E4%B8%BB%E9%A2%98.user.js
 // @updateURL https://update.greasyfork.org/scripts/561190/LANraragi%20%E7%8E%B0%E4%BB%A3%E4%B8%BB%E9%A2%98.meta.js
 // ==/UserScript==
@@ -2141,8 +2141,8 @@
         width: auto !important;
         min-width: 36px !important;
         height: 36px !important;
-        margin: 0 4px !important;
-        padding: 0 8px !important;
+        margin: 0 2px !important;
+        padding: 0 4px !important;
         font-size: 14px !important;
         background: rgba(12, 14, 20, 0.6) !important;
         border: 1px solid var(--glass-border) !important;
@@ -2248,7 +2248,7 @@
         background: transparent;
     }
 
-    @media (min-width: 700px) {
+    @media (min-width: 768px) {
 
         .Toastify__toast {
             min-width: 0 !important;
@@ -2994,11 +2994,42 @@
         border-color: var(--accent-color) !important;
     }
 
-    div[id^="tippy-"] .tippy-content div.gt a {
-        color: inherit !important;
-        text-decoration: none !important;
+    div[id^="tippy-"] .tippy-content div.gt {
+        display: inline-flex !important;
+        align-items: center !important;
+        margin: 1px 2px !important;
+        padding: 0 !important;
+        background: none !important;
         border: none !important;
-        display: block !important;
+        box-shadow: none !important;
+    }
+
+    div[id^="tippy-"] .tippy-content div.gt a {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        padding: 2px 6px !important;
+        min-height: 21px !important;
+        max-width: 100% !important;
+
+        background: rgba(10, 12, 18, 0.7) !important;
+        border: 2px solid var(--glass-border) !important;
+        border-radius: 10px !important;
+        color: var(--text-primary) !important;
+        font-size: 0.75rem !important;
+        line-height: 1.3 !important;
+        text-decoration: none !important;
+
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    div[id^="tippy-"] .tippy-content div.gt a:hover {
+        background: var(--accent-color) !important;
+        color: #fff !important;
+        border-color: var(--accent-color) !important;
     }
 
     #content div.gt,
@@ -3007,7 +3038,7 @@
         line-height: 1.2 !important;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 768px) {
         .tippy-box {
             max-width: 96vw !important;
         }
@@ -3426,6 +3457,33 @@
             position: relative;
             top: -10px;
         }
+
+        .dataTables_wrapper .dataTables_paginate {
+            display: block !important;
+            white-space: nowrap !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            display: inline-flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            min-width: 28px !important;
+            height: 32px !important;
+            margin: 0 1px !important;
+            padding: 0 3px !important;
+            font-size: 12px !important;
+            width: auto !important;
+            background: rgba(12, 14, 20, 0.6) !important;
+            border: 1px solid var(--glass-border) !important;
+            color: var(--text-primary) !important;
+            border-radius: 6px !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
     }
 
     @media (max-width: 430px) {
@@ -3605,7 +3663,7 @@
                 pointer-events: none !important;
             }
 
-            @media (max-height: 700px) {
+            @media (max-height: 768px) {
                 div.ido.admin-login-mode {
                     position: relative !important;
                     top: 20px !important;

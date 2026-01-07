@@ -292,14 +292,12 @@
         if (!container) return;
 
         // クラスのリセット
-        container.classList.remove('layout-grid', 'layout-compact');
+        container.classList.remove('layout-grid');
 
         // モード適用
         if (mode === 'grid') {
             container.classList.add('layout-grid');
-        } else if (mode === 'compact') {
-            container.classList.add('layout-compact');
-        }
+        } 
         // 'list' の場合はクラスなし（デフォルト）
 
         // 設定保存

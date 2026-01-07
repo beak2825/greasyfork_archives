@@ -1,8 +1,7 @@
-
 // ==UserScript==
 // @name         WM Norway + Sweden — gulesider + 1881 + ratsit + mrkoll + BE loader
 // @namespace    qc-automation
-// @version      2.0.17
+// @version      2.0.22
 // @description  Scrape (ratsit/mrkoll/gulesider/1881) → last-only cache → BE fill (address, phones, spouse & DOB, positions). Liquidity parser for events. Diacritics normalized at scrape + fill. Robust UI injection. Black pop-ups preserved (ratsit/mrkoll) with Save to cache button.
 // @match        https://www.gulesider.no/*
 // @match        https://www.1881.no/*
@@ -171,7 +170,7 @@
           <button id="rEdit" style="${main}">Edit</button>
           <button id="rCopy" style="${main}">Copy</button>
           <button id="rSave" style="${main}">Save</button>
-          <div id="rCopyFeedback" style="position:absolute;top:-35px;left:50%;transform:translateX(-50%);background:#252525;color:#e0e0e0;padding:4px 10px;border-radius:6px;font-size:24px;opacity:0;pointer-events:none;transition:opacity .3s;box-shadow:0 2px 5px rgba(0,0,0,.4);">🍻 Copied!</div>
+          <div id="rCopyFeedback" style="position:absolute;top:-35px;left:50%;transform:translateX(-50%);background:#252525;color:#e0e0e0;padding:4px 10px;border-radius:6px;font-size:24px;opacity:0;pointer-events:none;transition:opacity .3s;box-shadow:0 2px 5px rgba(0,0,0,.4);">Copied!</div>
         </div>
         <div style="padding:4px 14px 10px 14px;display:flex;gap:8px;justify-content:center;align-items:center;background:#222;border-bottom-left-radius:12px;border-bottom-right-radius:12px;">
           <button id="rZoomIn" title="Zoom in" style="${small}">+</button>
@@ -224,6 +223,7 @@
       const maritalHeader=Array.from(qa('span.f_line1.ins_edu')).find(el=>el.innerText.includes("gift"));
       if(maritalHeader){ const spouseBlock=maritalHeader.nextElementSibling; const spouseStrong=spouseBlock?spouseBlock.querySelector('strong'):null; if(spouseStrong) rec.spouse=cleanSE(text(spouseStrong).split(' ')[0]); }
       const personInfoDiv=q('div.personInfo.pBlock1'); if(personInfoDiv){ const dobMatch=personInfoDiv.innerText.match(/den\s+(\d{1,2}\s+[a-zåäö]+\s+\d{4})/i); if(dobMatch){ const dob=fixDateSE(dobMatch[1]); if(dob) rec.dob=dob; } }
+
       const rolesMap={'ordförande':'Chairman','verkställande direktör':'CEO','vd':'CEO','extern vd':'CEO','vice vd':'Deputy CEO','styrelseledamot':'Board Member','styrelsesuppleant':'Deputy Board Member','vice ordförande':'Deputy Chairman'};
       const companyData=new Map();
       qa('div.resBlockContentInfo p.f_line5').forEach(p=>{ const strong=p.querySelector('strong'); if(!strong) return; const companyName=cleanSE(text(strong)); const roleText=p.innerText.toLowerCase();
@@ -264,7 +264,7 @@
           <button id="mEdit" style="${main}">Edit</button>
           <button id="mCopy" style="${main}">Copy</button>
           <button id="mSave" style="${main}">Save</button>
-          <div id="mCopyFeedback" style="position:absolute;top:-35px;left:50%;transform:translateX(-50%);background:#252525;color:#e0e0e0;padding:4px 10px;border-radius:6px;font-size:20px;opacity:0;pointer-events:none;transition:opacity .3s;">🍻 Copied!</div>
+          <div id="mCopyFeedback" style="position:absolute;top:-35px;left:50%;transform:translateX(-50%);background:#252525;color:#e0e0e0;padding:4px 10px;border-radius:6px;font-size:20px;opacity:0;pointer-events:none;transition:opacity .3s;">Copied!</div>
         </div>
         <div style="padding:4px 14px 10px 14px;display:flex;gap:8px;justify-content:center;background:#222;border-bottom-left-radius:12px;border-bottom-right-radius:12px;">
           <button id="mZoomIn" style="${small}">+</button>
@@ -302,7 +302,14 @@
     const clickShowAllNumbersButton=()=>{ const btn=q('button[data-guv-click="person_phone_show"]')||q('button[data-gmc-click="ps_ip_phone_number_button_show_click"]')||qa('button').find(b=>/vis alle nummer/i.test(b.textContent||'')); if(!btn) return false; btn.click(); return true; };
     async function extractPhones(){
       const out=[], primary=findValueByLabel('Telefonnummer'); if(primary) out.push(sanitizePhone(primary));
-      const clicked=clickShowAllNumbersButton(); if(clicked){ for(let tries=0;tries<20;tries++){ const ps=qa('p.text-base.text-neutral-black.whitespace-nowrap.font-sans.font-medium'); if(ps.length){ ps.forEach(p=>{ const num=sanitizePhone(text(p)); if(num) out.push(num); }); break; } await sleep(150); } const close=qa('button').find(b=>/kopier/i.test(b.textContent||'')===false && /×|x/i.test(b.textContent||'')); if(close) close.click(); }
+      const clicked=clickShowAllNumbersButton(); if(clicked){
+        for(let tries=0;tries<20;tries++){
+          const ps=qa('p.text-base.text-neutral-black.whitespace-nowrap.font-sans.font-medium');
+          if(ps.length){ ps.forEach(p=>{ const num=sanitizePhone(text(p)); if(num) out.push(num); }); break; }
+          await sleep(150);
+        }
+        const close=qa('button').find(b=>/kopier/i.test(b.textContent||'')===false && /×|x/i.test(b.textContent||'')); if(close) close.click();
+      }
       qa('a[href^="tel:"]').forEach(a=>{ const t=sanitizePhone(text(a)); if(t) out.push(t); }); return dedupe(out);
     }
     const extractAddress=()=>({ address1:findValueByLabel('Adresse'), city:findValueByLabel('Poststed'), postcode:findValueByLabel('Postnummer') });
@@ -317,7 +324,6 @@
       await setLastPerson(record); toast(`Saved: ${record.name}`);
     }
 
-    // Save button style — match BE buttons
     const btnStyle=(bg)=>`background:${bg};color:#fff;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;`;
     function ensureButtons(){ if(byId('noSaveBtn')) return;
       const wrap=document.createElement('div'); wrap.style='position:fixed;right:20px;bottom:20px;z-index:2147483647;display:flex;flex-direction:column;gap:8px'; (document.body||document.documentElement).appendChild(wrap);
@@ -346,7 +352,6 @@
       await setLastPerson(record); toast(`Saved: ${record.name}`);
     }
 
-    // Save button style — match BE buttons
     const btnStyle=(bg)=>`background:${bg};color:#fff;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;`;
     function ensureButtons1881(forceLog=false){
       const topDoc=getTopDoc(), topBody=topDoc&&(topDoc.body||topDoc.documentElement);
@@ -360,7 +365,7 @@
     if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', boot1881); else boot1881();
   }
 
-  /* ========= BE loader + Liquidity (NO address gate + renamed button) ========= */
+  /* ========= BE loader + Liquidity (NO observers; build once; toggle visibility) ========= */
   else if (host.includes('admin.mergermarket.com')) {
     const isIndividual=/^\/wealthmonitor\/wmindividual/i.test(location.pathname); if(!isIndividual) return;
     const isIndividualPopup=/\/wealthmonitor\/wmindividualpopup\.asp/i.test(location.pathname); if(isIndividualPopup) return;
@@ -374,7 +379,22 @@
     /* NO helpers */
     const classifyNO=(noDisplay)=>{ const digits=String(noDisplay||'').replace(/\D+/g,''); const first=digits.charAt(0); return (first==='4'||first==='9')?'mobile':'phone'; };
     const sortPhonesLandlineFirst=(list)=>{ const land=[],mob=[]; for(const p of list)(classifyNO(p)==='phone'?land:mob).push(p); return [...land,...mob]; };
-    async function deriveLegacyCounty_BE(municipality, postcode){ return deriveLegacyCounty(municipality, postcode); }
+
+    /* Robust setters — stake % and exact worth */
+    function setAnyStakePercent(v){
+      const candidates=['share_stake','share_percentshares','share_percent','share_percentshare'];
+      for(const name of candidates){
+        const el=q(`input[name="${name}"]`)||byId(name);
+        if(el){ el.value=String(v||''); el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); }
+      }
+    }
+    function setAnyExactWorthMillions(v){
+      const candidates=['newwealth_value','newwealth_exacteventworth','newwealth_eventworth','newwealth_exacteventworthm'];
+      for(const name of candidates){
+        const el=q(`input[name="${name}"]`)||byId(name);
+        if(el){ el.value=String(v||''); el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); }
+      }
+    }
 
     /* Address fill (NO) — gated by hasAddress */
     async function fillAddressFromRecordNO(rec){
@@ -387,7 +407,7 @@
         setInputValue('addr_zip', rec.postcode);
         setInputValue('addr_city', rec.city);
 
-        const legacyCounty=await deriveLegacyCounty_BE(rec.municipality, rec.postcode);
+        const legacyCounty=await deriveLegacyCounty(rec.municipality, rec.postcode);
         const stateSel=byId('addr_state');
         if(stateSel && legacyCounty){
           let tries=0; const t=setInterval(()=>{ tries++; const ok=selectDropdownByExactText(stateSel, legacyCounty); if(ok||tries>20) clearInterval(t); }, 120);
@@ -460,118 +480,236 @@
       toast('✅ Address, phones, spouse & DOB (SE) filled from last cached record.');
     }
 
-    /* Liquidity panel + loader buttons (renamed main button) */
+    /* Liquidity panel + loader buttons — build once; toggle visibility; attach listeners once */
+    let beBuilt=false; // prevents re-builds
     function ensureBEButtons(){
+      if(beBuilt) return; // build only once
       const topDoc=getTopDoc(), topBody=topDoc&&(topDoc.body||topDoc.documentElement); if(!topBody){ setTimeout(ensureBEButtons,250); return; }
-      let wrap=byIdTop('beButtonsWrap'); if(!wrap){ wrap=topDoc.createElement('div'); wrap.id='beButtonsWrap'; wrap.style='position:fixed;right:20px;bottom:20px;z-index:2147483647;display:flex;gap:12px;align-items:flex-end'; topBody.appendChild(wrap); }
-      if(!byIdTop('loadNoCacheBtn')){
-        const loadBtn=topDoc.createElement('button');
-        loadBtn.id='loadNoCacheBtn';
-        loadBtn.textContent='Fill person details'; // ◀ Renamed
-        loadBtn.title='Fill person details from the saved record';
-        loadBtn.style='background:rgb(49 108 174);color:#fff;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;align-self:flex-end';
-        loadBtn.onclick=async()=>{
-          const rec=await loadLast();
-          if(!rec||!rec.name){ toast('Cache empty — save from ratsit/mrkoll or gulesider/1881 first.'); return; }
-          if(String(rec.country||'').toUpperCase()==='SWE') await fillAddressFromRecordSE(rec); else await fillAddressFromRecordNO(rec);
-        };
-        wrap.appendChild(loadBtn);
-      }
+      beBuilt=true;
 
+      // Wrapper
+      const wrap=topDoc.createElement('div');
+      wrap.id='beButtonsWrap';
+      wrap.style='position:fixed;right:20px;bottom:20px;z-index:2147483647;display:flex;gap:12px;align-items:flex-end';
+      topBody.appendChild(wrap);
+
+      // Main load button
+      const loadBtn=topDoc.createElement('button');
+      loadBtn.id='loadNoCacheBtn';
+      loadBtn.textContent='Fill person details';
+      loadBtn.title='Fill person details from the saved record';
+      loadBtn.style='background:rgb(49 108 174);color:#fff;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;align-self:flex-end';
+      loadBtn.onclick=async()=>{
+        const rec=await loadLast();
+        if(!rec||!rec.name){ toast('Cache empty — save from ratsit/mrkoll or gulesider/1881 first.'); return; }
+        if(String(rec.country||'').toUpperCase()==='SWE') await fillAddressFromRecordSE(rec); else await fillAddressFromRecordNO(rec);
+      };
+      wrap.appendChild(loadBtn);
+
+      // Liquidity panel
       const LIQ_BOX_HIDDEN_KEY='wm-liq-box-hidden';
-      const liqHidden=(function(){ try{ return (window.top.localStorage.getItem(LIQ_BOX_HIDDEN_KEY)==='1'); }catch{ return false; } })();
 
-      if(liqHidden && !byIdTop('wmShowLiqBtn')){
-        const showBtn=topDoc.createElement('button');
-        showBtn.id='wmShowLiqBtn';
-        showBtn.textContent='Show liquidity panel';
-        showBtn.style='background:#4b5563;color:#fff;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;';
-        showBtn.onclick=()=>{ try{ window.top.localStorage.removeItem(LIQ_BOX_HIDDEN_KEY);}catch{} byIdTop('wmLiqBox')?.remove(); showBtn.remove(); ensureBEButtons(); };
-        wrap.appendChild(showBtn);
-      }
+      const liqBox=topDoc.createElement('div');
+      liqBox.id='wmLiqBox';
+      liqBox.style='display:flex;flex-direction:column;gap:6px;background:#1f2937;color:#e5e7eb;padding:10px 12px;border-radius:6px;max-width:420px;position:relative';
+      wrap.appendChild(liqBox);
 
-      if(!liqHidden && !byIdTop('wmLiqBox')){
-        const liqBox=topDoc.createElement('div');
-        liqBox.id='wmLiqBox';
-        liqBox.style='display:flex;flex-direction:column;gap:6px;background:#1f2937;color:#e5e7eb;padding:10px 12px;border-radius:6px;max-width:420px;position:relative';
+      const closeBtn=topDoc.createElement('button');
+      closeBtn.textContent='✕';
+      closeBtn.title='Close';
+      closeBtn.style='position:absolute;top:6px;right:6px;background:#374151;color:#e5e7eb;border:none;border-radius:4px;cursor:pointer;padding:2px 6px;font-size:12px;line-height:1;';
+      closeBtn.onclick=()=>{
+        try{ window.top.localStorage.setItem(LIQ_BOX_HIDDEN_KEY,'1'); }catch{}
+        liqBox.style.display='none';
+        showBtn.style.display='inline-block';
+      };
 
-        const closeBtn=topDoc.createElement('button');
-        closeBtn.textContent='✕';
-        closeBtn.title='Close';
-        closeBtn.style='position:absolute;top:6px;right:6px;background:#374151;color:#e5e7eb;border:none;border-radius:4px;cursor:pointer;padding:2px 6px;font-size:12px;line-height:1;';
-        closeBtn.onclick=()=>{
-          try{ window.top.localStorage.setItem(LIQ_BOX_HIDDEN_KEY,'1'); }catch{}
-          if(!byIdTop('wmShowLiqBtn')){
-            const showBtn=topDoc.createElement('button');
-            showBtn.id='wmShowLiqBtn';
-            showBtn.textContent='Show liquidity panel';
-            showBtn.style='background:#4b5563;color:#fff;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;';
-            showBtn.onclick=()=>{ try{ window.top.localStorage.removeItem(LIQ_BOX_HIDDEN_KEY);}catch{} byIdTop('wmLiqBox')?.remove(); showBtn.remove(); ensureBEButtons(); };
-            wrap.appendChild(showBtn);
+      const liqLabel=topDoc.createElement('div'); liqLabel.textContent='Liquidity instructions:'; liqLabel.style='font-weight:600;padding-right:24px';
+      const liqText=topDoc.createElement('textarea');
+      liqText.id='wmLiqInstructions';
+      liqText.placeholder='e.g.\nstake sale, stake 0.7777, value USD 99m\n\nstake source: ratsit\n\nliq event note: Based on the implied equity value... Stake held... Shares held...\n\nliq event source: ABS Holco annual report';
+      liqText.style='width:380px;height:140px;background:#111;color:#eee;border:1px solid #374151;border-radius:2px;padding:6px;font:10px/1.4 system-ui';
+
+      const liqApply=topDoc.createElement('button');
+      liqApply.textContent='Apply';
+      liqApply.style='background:rgb(49 108 174);color:#fff;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;align-self:flex-start';
+
+      // build show button once
+      const showBtn=topDoc.createElement('button');
+      showBtn.id='wmShowLiqBtn';
+      showBtn.textContent='Show liquidity panel';
+      showBtn.style='background:#4b5563;color:#fff;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;margin-right:8px;display:none;';
+      showBtn.onclick=()=>{
+        try{ window.top.localStorage.removeItem(LIQ_BOX_HIDDEN_KEY);}catch{}
+        liqBox.style.display='flex';
+        showBtn.style.display='none';
+      };
+      wrap.appendChild(showBtn);
+
+      // initial visibility from localStorage
+      const hidden=(function(){ try{ return (window.top.localStorage.getItem(LIQ_BOX_HIDDEN_KEY)==='1'); }catch{ return false; } })();
+      liqBox.style.display = hidden ? 'none' : 'flex';
+      showBtn.style.display = hidden ? 'inline-block' : 'none';
+
+      // ---- Parser (robust event type + decimals preserved) ----
+      const EVENT_TYPE_MAP={
+        'pot stake sale':'potstakesale','potential stake sale':'potstakesale','stake sale':'stakesale',
+        'pot ipo':'potipo','potential ipo':'potipo','ipo':'ipo',
+        'potential extr dividends':'potextrdividends','pot extr dividends':'potextrdividends','extra dividends':'extrdividends','extr dividends':'extrdividends',
+        'potsmc':'potsmc','pot smc':'potsmc','smc':'smc',
+        'pot earn out':'potearndeffered','potential earn out':'potearndeffered','earn out':'earndeffered',
+        'deferred payment':'earndeffered',
+        'pot earn out deferred payment':'potearndeffered',
+        'earn out deferred payment':'earndeffered',
+        'pot exercise of warrants':'potexwarrants','pot ex warrants':'potexwarrants','exercise of warrants':'exwarrants','ex warrants':'exwarrants',
+        'pot exercise sale':'potexsale','pot exercise/sale':'potexsale','exercise sale':'exsale','exercise/sale':'exsale',
+        'other':'other','bonus':'bonus',
+        'long term holdings':'longtermhold','long-term holdings':'longtermhold',
+        'capital raises':'capraises',
+        'settlement payout':'settlementpayout','settlement/payout':'settlementpayout',
+        'salary':'salary'
+      };
+      const CURRENCY_ALLOWED=new Set(['EUR','GBP','USD','AUD','CNY','HKD','INR','JPY','CHF']);
+
+      const parse=(raw)=>{
+        const s=fixSpecialChars(String(raw||''));          // original string (preserve decimals)
+        const lower=s.toLowerCase();
+
+        // Normalize ONLY for event-type (ignore punctuation)
+        const evtLower=lower.replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ').trim();
+
+        let typeCode='';
+        for(const [phrase,code] of Object.entries(EVENT_TYPE_MAP)){
+          if(evtLower.includes(phrase)){ typeCode=code; break; }
+        }
+
+        // stake (preserve decimals)
+        let stakePercent=null; {
+          const m=lower.match(/stake\s*[:=]?\s*([\d.,]+)\s*%?/);
+          if(m){ const num=parseFloat(m[1].replace(/,/g,'')); if(!isNaN(num)) stakePercent=num; }
+        }
+
+        // currency + value (millions)
+        let currencyCode='', amount=null, unit='m'; {
+          let m=s.match(/value\s+([A-Z]{3})\s+([\d.,]+)\s*(bn|billion|billions|m|mn|million|millions)?/i);
+          if(!m) m=s.match(/\b([A-Z]{3})\s+([\d.,]+)\s*(bn|billion|billions|m|mn|million|millions)\b/i);
+          if(!m){ const m2=s.match(/value\s+([\d.,]+)\s*(bn|billion|billions|m|mn|million|millions)\s+([A-Z]{3})/i); if(m2) m=[m2[0],m2[3],m2[1],m2[2]]; }
+          if(m){
+            const cur=m[1].toUpperCase(); if(CURRENCY_ALLOWED.has(cur)) currencyCode=cur;
+            amount=parseFloat(String(m[2]).replace(/,/g,'')); const u=(m[3]||'m').toLowerCase(); unit=/bn|billion/.test(u)?'bn':'m';
           }
-          liqBox.remove();
-        };
+        }
+        { const mCur=s.match(/\bvalue\s*[:=]?\s*([A-Z]{3})\b(?!\s*[\d.,])/i); if(mCur){ const cur=mCur[1].toUpperCase(); if(CURRENCY_ALLOWED.has(cur)) currencyCode=cur; amount=null; } }
+        if(!currencyCode){ for(const cur of CURRENCY_ALLOWED){ if(s.includes(cur)){ currencyCode=cur; break; } } }
 
-        const liqLabel=topDoc.createElement('div'); liqLabel.textContent='Liquidity instructions:'; liqLabel.style='font-weight:600;padding-right:24px';
-        const liqText=topDoc.createElement('textarea');
-        liqText.id='wmLiqInstructions';
-        liqText.placeholder='e.g.\nstake sale, stake 0.7777, value USD 99m\n\nstake source: ratsit\n\nliq event note: Based on the implied equity value... Stake held... Shares held...\n\nliq event source: ABS Holco annual report';
-        liqText.style='width:380px;height:140px;background:#111;color:#eee;border:1px solid #374151;border-radius:2px;padding:6px;font:10px/1.4 system-ui';
+        // sources/notes
+        let stakeSource=''; {
+          let m=s.match(/stake\s*source\s*:\s*([^\n]+)/i);
+          if(!m) m=s.match(/source\s*for\s*stake\s*:\s*([^\n]+)/i);
+          if(m) stakeSource=m[1].trim(); else { const g=s.match(/\bsource\s*:\s*([^\n]+)/i); if(g) stakeSource=g[1].trim(); }
+        }
+        let liqSource=''; {
+          let m=s.match(/liq(?:uidity)?\s*event\s*source\s*:\s*([^\n]+)/i);
+          if(!m) m=s.match(/source\s*for\s*liq(?:uidity)?\s*event\s*:\s*([^\n]+)/i);
+          liqSource=m?m[1].trim():stakeSource||'';
+        }
+        let liqNote=''; {
+          let m=s.match(/liq(?:uidity)?\s*event\s*note\s*:\s*([\s\S]*?)(?:\n\s*(?:liq(?:uidity)?\s*event\s*source|source\s*for\s*liq(?:uidity)?\s*event|stake\s*source|source\s*for\s*stake|source)\s*:|$)/i);
+          if(!m) m=s.match(/liq\s*note\s*:\s*([\s\S]*?)(?:\n\s*(?:liq(?:uidity)?\s*event\s*source|source\s*for\s*liq(?:uidity)?\s*event|stake\s*source|source\s*for\s*stake|source)\s*:|$)/i);
+          if(m) liqNote=m[1].trim();
+        }
 
-        const liqApply=topDoc.createElement('button');
-        liqApply.textContent='Apply';
-        liqApply.style='background:rgb(49 108 174);color:#fff;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;align-self:flex-start';
+        const valueMillions=(typeof amount==='number' && !isNaN(amount)) ? (unit==='bn'? amount*1000 : amount) : null;
+        return { typeCode, stakePercent, currencyCode, valueMillions, stakeSource, liqSource, liqNote };
+      };
 
-        const EVENT_TYPE_MAP={ 'pot stake sale':'potstakesale','potential stake sale':'potstakesale','stake sale':'stakesale','pot ipo':'potipo','potential ipo':'potipo','ipo':'ipo','potential extr dividends':'potextrdividends','pot extr dividends':'potextrdividends','extra dividends':'extrdividends','extr dividends':'extrdividends','potsmc':'potsmc','pot smc':'potsmc','smc':'smc','pot earn out':'potearndeffered','potential earn out':'potearndeffered','earn out':'earndeffered','deferred payment':'earndeffered','pot exercise of warrants':'potexwarrants','pot ex warrants':'potexwarrants','exercise of warrants':'exwarrants','ex warrants':'exwarrants','pot exercise sale':'potexsale','pot exercise/sale':'potexsale','exercise sale':'exsale','exercise/sale':'exsale','other':'other','bonus':'bonus','long term holdings':'longtermhold','long-term holdings':'longtermhold','capital raises':'capraises','settlement payout':'settlementpayout','settlement/payout':'settlementpayout','salary':'salary' };
-        const CURRENCY_ALLOWED=new Set(['EUR','GBP','USD','AUD','CNY','HKD','INR','JPY','CHF']);
-        const parse=(raw)=>{ const s=fixSpecialChars(String(raw||'')), lower=s.toLowerCase(); let typeCode=''; for(const [phrase,code] of Object.entries(EVENT_TYPE_MAP)){ if(lower.includes(phrase)){ typeCode=code; break; } }
-          let stakePercent=null; { const m=lower.match(/stake\s*[:=]?\s*([\d.,]+)\s*%?/); if(m){ const num=parseFloat(m[1].replace(/,/g,'')); if(!isNaN(num)) stakePercent=num; } }
-          let currencyCode='', amount=null, unit='m'; { let m=s.match(/value\s+([A-Z]{3})\s+([\d.,]+)\s*(bn|billion|billions|m|mn|million|millions)?/i);
-            if(!m) m=s.match(/\b([A-Z]{3})\s+([\d.,]+)\s*(bn|billion|billions|m|mn|million|millions)\b/i);
-            if(!m){ const m2=s.match(/value\s+([\d.,]+)\s*(bn|billion|billions|m|mn|million|millions)\s+([A-Z]{3})/i); if(m2) m=[m2[0],m2[3],m2[1],m2[2]]; }
-            if(m){ const cur=m[1].toUpperCase(); if(CURRENCY_ALLOWED.has(cur)) currencyCode=cur; amount=parseFloat(String(m[2]).replace(/,/g,'')); const u=(m[3]||'m').toLowerCase(); unit=/bn|billion/.test(u)?'bn':'m'; }
+      const truncate4=(n)=> (typeof n!=='number'||!isFinite(n)) ? '' : String(Math.floor(n*10000)/10000);
+      const getAppt=()=>{ const el=q('[name="ind_dateappointment"]'); const v=el?String(el.value||'').trim():''; return /^\d{2}\/\d{2}\/\d{4}$/.test(v)?v:''; };
+      const extractStakeSentences=(note)=>{ const raw=String(note||'').replace(/\r\n/g,'\n').replace(/\r/g,'\n'); const matches=[]; const re=/(^|[\s"'`])((?:Stake|Shares)\s+held[^\n\.]*\.?)/gi; let m; while((m=re.exec(raw))!==null){ const s=(m[2]||'').trim(); if(s) matches.push(s); } return matches; };
+
+      const apply=(parsed)=>{
+        const {typeCode,stakePercent,currencyCode,valueMillions,stakeSource,liqSource,liqNote}=parsed||{};
+        const appt=getAppt(); if(!appt) toast('⚠️ Appointment date missing or invalid (dd/mm/yyyy). Fill it first.');
+
+        const typeSel=byId('newwealth_typecode'); if(typeSel && typeCode) selectDropdownByValue(typeSel,typeCode);
+
+        const stakeUnavailable=/size of stake held not available|exact breakdown of ownership not available/i.test(liqNote||'');
+
+        if(typeof stakePercent==='number' && !isNaN(stakePercent) && !stakeUnavailable){
+          setAnyStakePercent(stakePercent);
+        }
+
+        const atTxt=appt?` as at ${appt}.`:'';
+        if(typeof stakePercent==='number' && !isNaN(stakePercent) && !stakeUnavailable){
+          const finalStakeSource=fixSpecialChars((stakeSource||'proff.no').trim());
+          const shareSourceText=appt?`${finalStakeSource}${atTxt}`:finalStakeSource;
+          setInputByName('share_sourcetext', shareSourceText);
+          setInputByName('share_sourcenotes', shareSourceText);
+          setInputByName('share_sourcenote', shareSourceText);
+          setInputByName('share_sourcenotes_text', shareSourceText);
+          setInputValue('share_sourcenotes', shareSourceText);
+        }
+
+        const currSel=byId('newwealth_currencycode'); if(currSel && currencyCode) selectDropdownByValue(currSel,currencyCode);
+
+        if(typeCode!=='capraises' && typeof stakePercent==='number' && typeof valueMillions==='number'){
+          const exactWorth=truncate4((stakePercent/100) * valueMillions);
+          setAnyExactWorthMillions(exactWorth);
+        }
+
+        const finalLiqSource=fixSpecialChars((liqSource||stakeSource||'').trim());
+        if(finalLiqSource){
+          const liqSourceText=appt?`${finalLiqSource}${atTxt}`:finalLiqSource;
+          setInputByName('newwealth_sourcetext', liqSourceText);
+          setInputByName('newwealth_sourcenotes', liqSourceText);
+          setInputByName('newwealth_sourcenote', liqSourceText);
+          setInputByName('newwealth_sourcenotes_text', liqSourceText);
+          setInputValue('newwealth_sourcenotes', liqSourceText);
+        }
+
+        if(!stakeUnavailable){
+          const stakeSentences=extractStakeSentences(liqNote||'');
+          if(stakeSentences.length) setInputByName('share_sharenotes', fixSpecialChars(stakeSentences.join(' ')));
+        }
+
+        if(liqNote){
+          const noteEl=byId('newwealth_notes');
+          if(noteEl){
+            noteEl.value=fixSpecialChars(String(liqNote).trim());
+            noteEl.dispatchEvent(new Event('input',{bubbles:true}));
+            noteEl.dispatchEvent(new Event('change',{bubbles:true}));
           }
-          { const mCur=s.match(/\bvalue\s*[:=]?\s*([A-Z]{3})\b(?!\s*[\d.,])/i); if(mCur){ const cur=mCur[1].toUpperCase(); if(CURRENCY_ALLOWED.has(cur)) currencyCode=cur; amount=null; } }
-          if(!currencyCode){ for(const cur of CURRENCY_ALLOWED){ if(s.includes(cur)){ currencyCode=cur; break; } } }
-          let stakeSource=''; { let m=s.match(/stake\s*source\s*:\s*([^\n]+)/i); if(!m) m=s.match(/source\s*for\s*stake\s*:\s*([^\n]+)/i); if(m) stakeSource=m[1].trim(); else { const g=s.match(/\bsource\s*:\s*([^\n]+)/i); if(g) stakeSource=g[1].trim(); } }
-          let liqSource=''; { let m=s.match(/liq(?:uidity)?\s*event\s*source\s*:\s*([^\n]+)/i); if(!m) m=s.match(/source\s*for\s*liq(?:uidity)?\s*event\s*:\s*([^\n]+)/i); liqSource=m?m[1].trim():stakeSource||''; }
-          let liqNote=''; { let m=s.match(/liq(?:uidity)?\s*event\s*note\s*:\s*([\s\S]*?)(?:\n\s*(?:liq(?:uidity)?\s*event\s*source|source\s*for\s*liq(?:uidity)?\s*event|stake\s*source|source\s*for\s*stake|source)\s*:|$)/i); if(!m) m=s.match(/liq\s*note\s*:\s*([\s\S]*?)(?:\n\s*(?:liq(?:uidity)?\s*event\s*source|source\s*for\s*liq(?:uidity)?\s*event|stake\s*source|source\s*for\s*stake|source)\s*:|$)/i); if(m) liqNote=m[1].trim(); }
-          const valueMillions=(typeof amount==='number' && !isNaN(amount)) ? (unit==='bn'? amount*1000 : amount) : null;
-          return { typeCode, stakePercent, currencyCode, valueMillions, stakeSource, liqSource, liqNote };
-        };
-        const truncate4=(n)=> (typeof n!=='number'||!isFinite(n)) ? '' : String(Math.floor(n*10000)/10000);
-        const getAppt=()=>{ const el=q('[name="ind_dateappointment"]'); const v=el?String(el.value||'').trim():''; return /^\d{2}\/\d{2}\/\d{4}$/.test(v)?v:''; };
-        const extractStakeSentences=(note)=>{ const raw=String(note||'').replace(/\r\n/g,'\n').replace(/\r/g,'\n'); const matches=[]; const re=/(^|[\s"'`])((?:Stake|Shares)\s+held[^\n\.]*\.?)/gi; let m; while((m=re.exec(raw))!==null){ const s=(m[2]||'').trim(); if(s) matches.push(s); } return matches; };
-        const apply=(parsed)=>{ const {typeCode,stakePercent,currencyCode,valueMillions,stakeSource,liqSource,liqNote}=parsed||{}; const appt=getAppt(); if(!appt) toast('⚠️ Appointment date missing or invalid (dd/mm/yyyy). Fill it first.');
-          const typeSel=byId('newwealth_typecode'); if(typeSel && typeCode) selectDropdownByValue(typeSel,typeCode);
-          const stakeUnavailable=/size of stake held not available|exact breakdown of ownership not available/i.test(liqNote||'');
-          if(typeof stakePercent==='number' && !isNaN(stakePercent) && !stakeUnavailable){ setInputByName('share_stake', String(stakePercent)); setInputByName('share_percentshares', String(stakePercent)); }
-          const atTxt=appt?` as at ${appt}.`:''; if(!stakeUnavailable){ const finalStakeSource=fixSpecialChars((stakeSource||'proff.no').trim()); const shareSourceText=appt?`${finalStakeSource}${atTxt}`:finalStakeSource; setInputByName('share_sourcetext', shareSourceText); setInputByName('share_sourcenotes', shareSourceText); setInputByName('share_sourcenote', shareSourceText); setInputByName('share_sourcenotes_text', shareSourceText); setInputValue('share_sourcenotes', shareSourceText); }
-          const currSel=byId('newwealth_currencycode'); if(currSel && currencyCode) selectDropdownByValue(currSel,currencyCode);
-          if(typeof stakePercent==='number' && typeof valueMillions==='number'){ setInputValue('newwealth_value', truncate4((stakePercent/100)*valueMillions)); }
-          const finalLiqSource=fixSpecialChars((liqSource||stakeSource||'').trim()); if(finalLiqSource){ const liqSourceText=appt?`${finalLiqSource}${atTxt}`:finalLiqSource; setInputByName('newwealth_sourcetext', liqSourceText); setInputByName('newwealth_sourcenotes', liqSourceText); setInputByName('newwealth_sourcenote', liqSourceText); setInputByName('newwealth_sourcenotes_text', liqSourceText); setInputValue('newwealth_sourcenotes', liqSourceText); }
-          if(!stakeUnavailable){ const stakeSentences=extractStakeSentences(liqNote||''); if(stakeSentences.length) setInputByName('share_sharenotes', fixSpecialChars(stakeSentences.join(' '))); }
-          if(liqNote){ const noteEl=byId('newwealth_notes'); if(noteEl){ noteEl.value=fixSpecialChars(String(liqNote).trim()); noteEl.dispatchEvent(new Event('input',{bubbles:true})); noteEl.dispatchEvent(new Event('change',{bubbles:true})); } }
-          const displayChk=byId('newwealth_notes_displayflag'); if(displayChk){ displayChk.checked=true; displayChk.dispatchEvent(new Event('change',{bubbles:true})); }
-          const lastUpdateEl=byId('detail_dtsLastUpdate')||q('input[name="detail_dtsLastUpdate"]'), allocatedEl=q('input[name="share_dtsallocated"]');
-          if(appt){ if(lastUpdateEl){ lastUpdateEl.value=appt; lastUpdateEl.dispatchEvent(new Event('input',{bubbles:true})); lastUpdateEl.dispatchEvent(new Event('change',{bubbles:true})); }
-            if(!stakeUnavailable && allocatedEl){ allocatedEl.value=appt; allocatedEl.dispatchEvent(new Event('input',{bubbles:true})); allocatedEl.dispatchEvent(new Event('change',{bubbles:true})); } }
-          toast('✅ stake and liq event filled');
-        };
+        }
+        const displayChk=byId('newwealth_notes_displayflag'); if(displayChk){ displayChk.checked=true; displayChk.dispatchEvent(new Event('change',{bubbles:true})); }
 
-        liqBox.appendChild(closeBtn); liqBox.appendChild(liqLabel); liqBox.appendChild(liqText); liqBox.appendChild(liqApply);
-        wrap.appendChild(liqBox);
-        liqApply.onclick=()=>{ const raw=byIdTop('wmLiqInstructions')?.value||''; const parsed=parse(raw); apply(parsed); };
-      }
+        const lastUpdateEl=byId('detail_dtsLastUpdate')||q('input[name="detail_dtsLastUpdate"]'), allocatedEl=q('input[name="share_dtsallocated"]');
+        if(appt){
+          if(lastUpdateEl){
+            lastUpdateEl.value=appt;
+            lastUpdateEl.dispatchEvent(new Event('input',{bubbles:true}));
+            lastUpdateEl.dispatchEvent(new Event('change',{bubbles:true}));
+          }
+          if(typeof stakePercent==='number' && !isNaN(stakePercent) && !stakeUnavailable && allocatedEl){
+            allocatedEl.value=appt;
+            allocatedEl.dispatchEvent(new Event('input',{bubbles:true}));
+            allocatedEl.dispatchEvent(new Event('change',{bubbles:true}));
+          }
+        }
 
-      const topDoc2=getTopDoc();
+        toast('✅ stake and liq event filled');
+      };
+
+      liqBox.appendChild(closeBtn); liqBox.appendChild(liqLabel); liqBox.appendChild(liqText); liqBox.appendChild(liqApply);
+
+      liqApply.onclick=()=>{ const raw=byIdTop('wmLiqInstructions')?.value||''; const parsed=parse(raw); apply(parsed); };
+
+      // ALT+L hotkey (installed once)
       if(!byIdTop('wmAltLHandler')){
-        const marker=topDoc2.createElement('div'); marker.id='wmAltLHandler'; marker.style='display:none'; topDoc2.body.appendChild(marker);
-        topDoc2.addEventListener('keydown',(e)=>{ if(e.altKey && e.key.toLowerCase()==='l'){ e.preventDefault(); try{ window.top.localStorage.removeItem('wm-liq-box-hidden'); }catch{} byIdTop('wmShowLiqBtn')?.remove(); ensureBEButtons(); } });
+        const marker=topDoc.createElement('div'); marker.id='wmAltLHandler'; marker.style='display:none'; topDoc.body.appendChild(marker);
+        topDoc.addEventListener('keydown',(e)=>{ if(e.altKey && e.key.toLowerCase()==='l'){ e.preventDefault(); try{ window.top.localStorage.removeItem(LIQ_BOX_HIDDEN_KEY); }catch{} liqBox.style.display='flex'; showBtn.style.display='none'; } });
       }
-
-      try{ new MutationObserver(()=>ensureBEButtons()).observe(topDoc.documentElement,{childList:true,subtree:true}); }catch(e){ console.warn('[BE UI] Observer failed:', e); }
     }
+
     if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', ensureBEButtons); else ensureBEButtons();
   }
 })();

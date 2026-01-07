@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         美国大兵 GPT 认证
 // @namespace    http://tampermonkey.net/
-// @version      16.7.0
+// @version      16.8.0
 // @description  感谢作者FunkJ， 全流程全自动军人身份验证助手：**白嫖一年 GPT Plus，修复VLM自动翻页 + 动态加载检测 + 数据去重/预览/导出（优化提取）
 // @author       Antigravity
 // @match        https://services.sheerid.com/*
@@ -21,6 +21,7 @@
 // @downloadURL https://update.greasyfork.org/scripts/561636/%E7%BE%8E%E5%9B%BD%E5%A4%A7%E5%85%B5%20GPT%20%E8%AE%A4%E8%AF%81.user.js
 // @updateURL https://update.greasyfork.org/scripts/561636/%E7%BE%8E%E5%9B%BD%E5%A4%A7%E5%85%B5%20GPT%20%E8%AE%A4%E8%AF%81.meta.js
 // ==/UserScript==
+
 
 (function () {
     'use strict';
@@ -1040,6 +1041,39 @@
         dedupeSection.appendChild(dedupeHint);
         div.appendChild(dedupeSection);
 
+        // 🆕 数据修正按钮区域
+        const dataFixSection = document.createElement('div');
+        dataFixSection.style.cssText = "margin-bottom: 10px; padding: 10px; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); border-radius: 6px;";
+        
+        const dataFixTitle = document.createElement('div');
+        dataFixTitle.style.cssText = "color:white; font-size:12px; font-weight:bold; margin-bottom:8px; text-align:center;";
+        dataFixTitle.textContent = "📝 数据修正工具";
+        dataFixSection.appendChild(dataFixTitle);
+        
+        const dataFixBtnRow = document.createElement('div');
+        dataFixBtnRow.style.cssText = "display:flex; gap:5px;";
+        
+        const btnFixYear = document.createElement('button');
+        btnFixYear.id = "btn_fix_year";
+        btnFixYear.textContent = "🔧 修正年份/日期";
+        btnFixYear.style.cssText = "flex:1; padding:10px; border:none; border-radius:4px; background:#fff; color:#ee5a24; cursor:pointer; font-weight:bold; font-size:12px;";
+        
+        const btnAddMiddleName = document.createElement('button');
+        btnAddMiddleName.id = "btn_add_middle_name";
+        btnAddMiddleName.textContent = "✨ 拼接中间名";
+        btnAddMiddleName.style.cssText = "flex:1; padding:10px; border:none; border-radius:4px; background:#fff; color:#ee5a24; cursor:pointer; font-weight:bold; font-size:12px;";
+        
+        dataFixBtnRow.appendChild(btnFixYear);
+        dataFixBtnRow.appendChild(btnAddMiddleName);
+        dataFixSection.appendChild(dataFixBtnRow);
+        
+        const dataFixHint = document.createElement('div');
+        dataFixHint.style.cssText = "color:rgba(255,255,255,0.9); font-size:10px; text-align:center; margin-top:6px;";
+        dataFixHint.textContent = "修正年份: bYear<1950→1950-1980随机, dDay<05→07-28随机";
+        dataFixSection.appendChild(dataFixHint);
+        
+        div.appendChild(dataFixSection);
+
         const textarea = document.createElement('textarea');
         textarea.id = "bulk_input";
         textarea.placeholder = '批量导入 JSON 数据...';
@@ -1401,6 +1435,104 @@
             saveQueue(uniqueData);
             setStatus(`🧹 已去重: 移除 ${duplicateCount} 条重复数据`);
             alert(`✅ 去重完成！\n\n📊 统计:\n- 原有数据: ${queue.length} 条\n- 重复数据: ${duplicateCount} 条\n- 保留数据: ${uniqueData.length} 条`);
+        };
+        
+        // 🆕 修正年份/日期功能
+        document.getElementById('btn_fix_year').onclick = () => {
+            const queue = getQueue();
+            if (queue.length === 0) {
+                alert("❌ 队列为空，没有数据可修正！");
+                return;
+            }
+            
+            let bYearFixedCount = 0;
+            let dDayFixedCount = 0;
+            
+            const fixedQueue = queue.map(row => {
+                const newRow = [...row];
+                
+                // 修正 bYear (索引6): 小于1950的改为1950-1980随机值
+                const bYear = parseInt(newRow[6]);
+                if (!isNaN(bYear) && bYear < 1950) {
+                    newRow[6] = String(Math.floor(Math.random() * 31) + 1950); // 1950-1980
+                    bYearFixedCount++;
+                }
+                
+                // 修正 dDay (索引8): 小于05的改为07-28随机数
+                const dDay = parseInt(newRow[8]);
+                if (!isNaN(dDay) && dDay < 5) {
+                    newRow[8] = String(Math.floor(Math.random() * 22) + 7).padStart(2, '0'); // 07-28
+                    dDayFixedCount++;
+                }
+                
+                return newRow;
+            });
+            
+            if (bYearFixedCount === 0 && dDayFixedCount === 0) {
+                alert("✅ 没有需要修正的数据！\n\n所有 bYear >= 1950，所有 dDay >= 05");
+                return;
+            }
+            
+            saveQueue(fixedQueue);
+            setStatus(`🔧 已修正: ${bYearFixedCount} 个年份, ${dDayFixedCount} 个日期`);
+            alert(`✅ 数据修正完成！\n\n📊 统计:\n- 修正出生年份 (bYear<1950→1950-1980): ${bYearFixedCount} 条\n- 修正死亡日期 (dDay<05→07-28): ${dDayFixedCount} 条`);
+        };
+        
+        // 🆕 拼接中间名功能
+        document.getElementById('btn_add_middle_name').onclick = () => {
+            const queue = getQueue();
+            if (queue.length === 0) {
+                alert("❌ 队列为空，没有数据可处理！");
+                return;
+            }
+            
+            // 常见的中间名列表
+            const middleNames = [
+                "Allen", "Andrew", "Anthony", "Arthur", "Benjamin", "Brian", "Carl", "Charles",
+                "Christopher", "Daniel", "David", "Donald", "Douglas", "Edward", "Eugene", "Francis",
+                "Frank", "George", "Gerald", "Harold", "Henry", "Howard", "Jack", "James", "Jason",
+                "Jeffrey", "Jerome", "Jesse", "John", "Joseph", "Kenneth", "Kevin", "Larry", "Lawrence",
+                "Lee", "Leonard", "Louis", "Mark", "Martin", "Matthew", "Michael", "Nicholas", "Patrick",
+                "Paul", "Peter", "Philip", "Ralph", "Raymond", "Richard", "Robert", "Roger", "Ronald",
+                "Russell", "Samuel", "Scott", "Stephen", "Steven", "Terry", "Thomas", "Timothy", "Walter",
+                "Wayne", "William", "Alan", "Albert", "Alfred", "Bruce", "Dennis", "Earl", "Ernest",
+                "Frederick", "Gary", "Glenn", "Gordon", "Harry", "Herbert", "Jerry", "Keith", "Leo",
+                "Lloyd", "Melvin", "Norman", "Oscar", "Ray", "Roy", "Stanley", "Theodore", "Victor",
+                "Vincent", "Warren", "Wesley", "Willis", "Aaron", "Adam", "Adrian", "Alexander", "Antonio",
+                "Bernard", "Billy", "Bobby", "Brandon", "Calvin", "Cameron", "Carlos", "Chad", "Christian",
+                "Clarence", "Claude", "Clayton", "Clifford", "Clinton", "Curtis", "Dale", "Darrell", "Dean",
+                "Derek", "Derrick", "Dominic", "Duane", "Dustin", "Dylan", "Eddie", "Edwin", "Elmer"
+            ];
+            
+            let addedCount = 0;
+            let skippedCount = 0;
+            
+            const processedQueue = queue.map(row => {
+                const newRow = [...row];
+                const firstName = (newRow[2] || "").trim();
+                
+                // 检查是否已经有中间名（包含空格）
+                if (firstName.includes(" ")) {
+                    skippedCount++;
+                    return newRow;
+                }
+                
+                // 随机选择一个中间名并拼接
+                const randomMiddle = middleNames[Math.floor(Math.random() * middleNames.length)];
+                newRow[2] = `${firstName} ${randomMiddle}`;
+                addedCount++;
+                
+                return newRow;
+            });
+            
+            if (addedCount === 0) {
+                alert("✅ 所有数据已有中间名，无需处理！");
+                return;
+            }
+            
+            saveQueue(processedQueue);
+            setStatus(`✨ 已拼接中间名: ${addedCount} 条`);
+            alert(`✅ 中间名拼接完成！\n\n📊 统计:\n- 已拼接: ${addedCount} 条\n- 跳过(已有中间名): ${skippedCount} 条\n\n示例: LAWRENCE → LAWRENCE Allen`);
         };
         
         document.getElementById('btn_reset').onclick = () => {

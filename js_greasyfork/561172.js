@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              [TVER] | Скрипт для Кураторов Форума [RP биграфии , ситуации , неофициальные организации]
 // @namespace         https://forum.blackrussia.online
-// @version           1.1.1
+// @version           1.1.2
 // @author            Egor_Montano
 // @connection        none
 // @updateversion     Создан 03.01.2026
@@ -30,6 +30,47 @@
     const WAIT_PREFIX = 14; // Префикс "Ожидание"
     const PINBIO_PREFIX = 15; // Префикс "На рассмотрении" для биографий and Открыто/закреп
     const buttons = [
+{
+title: `Свой текст`,
+    content: "[CENTER][FONT=georgia]Доброго времени суток, уважаемый(-ая) [U]{{ user.name }}[/U]![/font][/center]<br><br>" +
+    "[font=georgia][center]Текст[/center][/font]<br><br>" +
+    "[center][FONT=georgia]Приятной игры на сервере [COLOR=rgb(0, 255, 255)]TVER[/COLOR].[/center][/FONT]",
+
+},
+
+
+{
+    title: `На расмот био`,
+    content: "[CENTER][FONT=georgia]Доброго времени суток, уважаемый(-ая) [U]{{ user.name }}[/U]![/font][/center]<br><br>" +
+    "[font=georgia][center]Ваша [COLOR=rgb(255, 0, 0)]RolePlay биография[/COLOR] находится:[/center][/font]<br><br>" +
+"[font=georgia][center][COLOR=rgb(255, 215, 0)]На рассмотрении...[/COLOR][/center][/font]<br><br>" +
+    "[center][FONT=georgia]Приятной игры на сервере [COLOR=rgb(0, 255, 255)]TVER[/COLOR].[/center][/FONT]",
+prefix: PIN_PREFIX,
+    status: true,
+
+},
+
+{
+    title: `На расмот сит`,
+    content: "[CENTER][FONT=georgia]Доброго времени суток, уважаемый(-ая) [U]{{ user.name }}[/U]![/font][/center]<br><br>" +
+    "[font=georgia][center]Ваша [COLOR=rgb(255, 0, 0)]RolePlay ситуация[/COLOR] находится:[/center][/font]<br><br>" +
+"[font=georgia][center][COLOR=rgb(255, 215, 0)]На рассмотрении...[/COLOR][/center][/font]<br><br>" +
+    "[center][FONT=georgia]Приятной игры на сервере [COLOR=rgb(0, 255, 255)]TVER[/COLOR].[/center][/FONT]",
+prefix: PIN_PREFIX,
+    status: true,
+
+},
+{
+    title: `На рассмот орг`,
+    content: "[CENTER][FONT=georgia]Доброго времени суток, уважаемый(-ая) [U]{{ user.name }}[/U]![/font][/center]<br><br>" +
+    "[font=georgia][center]Ваша [COLOR=rgb(255, 0, 0)]Неофициальная RolePlay организация[/COLOR] находится: [/center][/font]<br><br>" +
+ "[font=georgia][center][COLOR=rgb(255, 215, 0)]На рассмотрении...[/COLOR][/center][/font]<br><br>" +
+    "[center][FONT=georgia]Приятной игры на сервере [COLOR=rgb(0, 255, 255)]TVER[/COLOR].[/center][/FONT]",
+ prefix: PIN_PREFIX,
+    status: true,
+},
+
+
 {
     title: '------> RP Биографии дополнение <------',
     dpstyle: 'padding: 6px 16px; font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; color: #000000; text-shadow: 0 0 3px #000000; background: linear-gradient(to bottom, #00FFFF, #7FFFD4); border: none; border-radius: 10px; box-shadow: 0 0 8px rgba(102, 205, 170), inset 0 1px 1px rgba(0, 139, 139), 0 2px 0 #008B8B, 0 3px 5px rgba(0, 0, 0, 0.2); cursor: pointer; transition: all 0.1s ease; line-height: 1;'
