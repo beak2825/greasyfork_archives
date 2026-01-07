@@ -1,3 +1,4 @@
+// @ts-check
 // ==UserScript==
 // @name         Strava - Hide Unwanted Feed Items
 // @namespace    https://github.com/dtruebin/userscripts/
@@ -10,7 +11,6 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=strava.com
 // @grant        none
 // @license      MIT
-// @ts-check
 // @downloadURL https://update.greasyfork.org/scripts/560335/Strava%20-%20Hide%20Unwanted%20Feed%20Items.user.js
 // @updateURL https://update.greasyfork.org/scripts/560335/Strava%20-%20Hide%20Unwanted%20Feed%20Items.meta.js
 // ==/UserScript==

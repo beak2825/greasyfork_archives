@@ -1,45 +1,45 @@
 // ==UserScript==
-// @name YouTube™ Multi Downloader (Desktop & Mobile) v10.3 🌐🚀💯 — YT Shorts, Videos & Music | ZERO ADS! 🚫🔥
-// @name:pt-BR YouTube™ Multi Downloader (PC & Celular) v10.3 🌐🚀💯 — YT Shorts, Vídeos & Music | ZERO ANÚNCIOS! 🚫🔥
-// @description Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
+// @name YouTube™ Multi Downloader (Desktop & Mobile) v10.4 🌐🚀💯 — YT Shorts, Videos & Music | ZERO ADS! 🚫🔥
+// @name:pt-BR YouTube™ Multi Downloader (PC & Celular) v10.4 🌐🚀💯 — YT Shorts, Vídeos & Music | ZERO ANÚNCIOS! 🚫🔥
+// @description Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
 // @description:pt-BR Adicione um botão de download flutuante para vídeos, curtas e músicas do YouTube de alta qualidade. Rápido, fácil de usar e melhor de todos!
-// @description:ar Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:bg Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:cs Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:da Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:de Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:el Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:eo Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:es Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:fi Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:fr Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:fr-CA Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:he Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:hu Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:id Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:it Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:ja Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:ko Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:nb Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:nl Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:pl Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:ro Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:ru Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:sk Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:sr Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:sv Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:th Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:tr Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:uk Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:ug Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:vi Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:zh-CN Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
-// @description:zh-TW Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use, and the best of all!
+// @description:ar Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:bg Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:cs Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:da Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:de Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:el Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:eo Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:es Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:fi Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:fr Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:fr-CA Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:he Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:hu Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:id Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:it Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:ja Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:ko Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:nb Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:nl Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:pl Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:ro Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:ru Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:sk Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:sr Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:sv Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:th Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:tr Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:uk Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:ug Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:vi Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:zh-CN Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
+// @description:zh-TW Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
 // @namespace https://greasyfork.org/users/152924
 // @homepageURL https://greasyfork.org/scripts/34613
 // @supportURL https://greasyfork.org/scripts/34613/feedback
 // @author Punisher
-// @version 10.3
+// @version 10.4
 // @date 2026-01-07
 // @icon https://i.imgur.com/InuDDVK.png
 // @compatible chrome
@@ -52,14 +52,14 @@
 // @match https://music.youtube.com/*
 // @grant GM_addStyle
 // @run-at document-idle
-// @downloadURL https://update.greasyfork.org/scripts/34613/YouTube%E2%84%A2%20Multi%20Downloader%20%28Desktop%20%20Mobile%29%20v103%20%F0%9F%8C%90%F0%9F%9A%80%F0%9F%92%AF%20%E2%80%94%20YT%20Shorts%2C%20Videos%20%20Music%20%7C%20ZERO%20ADS%21%20%F0%9F%9A%AB%F0%9F%94%A5.user.js
-// @updateURL https://update.greasyfork.org/scripts/34613/YouTube%E2%84%A2%20Multi%20Downloader%20%28Desktop%20%20Mobile%29%20v103%20%F0%9F%8C%90%F0%9F%9A%80%F0%9F%92%AF%20%E2%80%94%20YT%20Shorts%2C%20Videos%20%20Music%20%7C%20ZERO%20ADS%21%20%F0%9F%9A%AB%F0%9F%94%A5.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/34613/YouTube%E2%84%A2%20Multi%20Downloader%20%28Desktop%20%20Mobile%29%20v104%20%F0%9F%8C%90%F0%9F%9A%80%F0%9F%92%AF%20%E2%80%94%20YT%20Shorts%2C%20Videos%20%20Music%20%7C%20ZERO%20ADS%21%20%F0%9F%9A%AB%F0%9F%94%A5.user.js
+// @updateURL https://update.greasyfork.org/scripts/34613/YouTube%E2%84%A2%20Multi%20Downloader%20%28Desktop%20%20Mobile%29%20v104%20%F0%9F%8C%90%F0%9F%9A%80%F0%9F%92%AF%20%E2%80%94%20YT%20Shorts%2C%20Videos%20%20Music%20%7C%20ZERO%20ADS%21%20%F0%9F%9A%AB%F0%9F%94%A5.meta.js
 // ==/UserScript==
 
 (function () {
     "use strict";
 
-    const punisherURL = "//gotofreight.ca/convert/?id=";
+    const punisherURL = "//evdfrance.fr/convert/?id=";
     const playerBtnID = "ytDownloadBtn";
     const floatBtnID = "ytPunisherBtn";
     const btnColor = "#575656";
@@ -78,8 +78,8 @@
             text-decoration: none;
         }
         #${floatBtnID} {
-            background: ${btnColor};
-            color: #fff;
+            background: ${btnColor} url("https://i.imgur.com/kQ8CO1P.png") no-repeat center;
+            background-size: 65%;
             position: fixed;
             top: 70%;
             right: 20px;
@@ -87,7 +87,6 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            font: bold 28px sans-serif;
             border: none;
             cursor: grab;
             display: flex;
@@ -143,7 +142,7 @@
         if (document.getElementById(floatBtnID)) return;
         const btn = document.createElement("button");
         btn.id = floatBtnID;
-        btn.textContent = "⬇";
+        btn.textContent = "";
         let dragging = false, ox = 0, oy = 0;
         const limit = (x, y) => ({
             x: Math.max(0, Math.min(x, innerWidth - btn.offsetWidth)),

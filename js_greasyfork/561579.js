@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name        快樂工具人聊天小幫手
-// @name:en     AI Chat Toolkit
-// @description AI 對話匯出與快捷指令工具箱
-// @description:en Export chat to MD/JSON/HTML/TXT + quick actions for ChatGPT/Gemini/Grok/Claude
+// @name        快樂工具人：AI 對話匯出與快速範本 (GPT/Gemini/Grok/Claude)
+// @name:en     AI Chat Exporter & Quick Templates (by Haoming)
+// @description 支援將 ChatGPT/Gemini/Grok/Claude 對話匯出至 MD/JSON/HTML，並內建快捷指令工具箱。
+// @description:en Export ChatGPT/Gemini/Grok/Claude chats to MD/JSON/HTML and use quick prompt templates.
 // @namespace   happy-toolman
-// @version     2025-01-06.035
-// @author      快樂工具人(Haoming Lu)
+// @version     2026-01-07.002
+// @author      快樂工具人 (Haoming Lu)
 // @icon        https://raw.githubusercontent.com/luhaoming/userscripts/main/assets/logo.png
 // @match       *://chatgpt.com/*
 // @match       *://chat.openai.com/*
@@ -22,14 +22,14 @@
 // @grant       GM_registerMenuCommand
 // @grant       GM_setValue
 // @grant       GM_getValue
-// @downloadURL https://update.greasyfork.org/scripts/561579/AI%20Chat%20Toolkit.user.js
-// @updateURL https://update.greasyfork.org/scripts/561579/AI%20Chat%20Toolkit.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561579/AI%20Chat%20Exporter%20%20Quick%20Templates%20%28by%20Haoming%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561579/AI%20Chat%20Exporter%20%20Quick%20Templates%20%28by%20Haoming%29.meta.js
 // ==/UserScript==
 
 (function() {
 'use strict';
 
-const VERSION = '2025-01-06.035';
+const VERSION = '2026-01-07.002';
 
 // Trusted Types Policy
 let trustedPolicy = null;

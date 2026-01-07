@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Script for complaining about players
 // @namespace https://forum.blackrussia.online
-// @version 1.2
+// @version 1.3
 // @description Специально для BlackRussia Curator Forum
 // @author Мастеrok
 // @match https://forum.blackrussia.online/threads/*
@@ -991,14 +991,7 @@ prefix: UNACCEPT_PREFIX,
 status: false,
 },
 {
-title : 'на доработку(граматика)' ,
-content:
-'[COLOR=rgb(255, 0, 0)][FONT=times new roman][SIZE=4][I]{{ greeting }}, уважаемый {{ user.mention }}.[/I][/FONT][/COLOR]<br><br>' +
-"[SIZE=4][FONT=times new roman][I][COLOR=rgb(209, 213, 216)] В вашей RolePlay биографии есть граматические ошибки. [/COLOR]<br><br>" +
-"[COLOR=rgb(209, 213, 216)] [/COLOR][/I][COLOR=rgb(209, 213, 216)][/COLOR][/FONT][/SIZE]<br><br>" +
-'[FONT=book antiqua][SIZE=4][COLOR=rgb(209, 213, 216)][I]Даю вам 24 часа на исправление.[FONT=times new roman][/I][/COLOR][I][COLOR=rgb(0, 255, 255)][/COLOR][/I][/SIZE][/FONT][COLOR=rgb(209, 213, 216)][FONT=book antiqua][SIZE=4][I].[/SIZE][/FONT][/COLOR]',
-prefix: PIN_PREFIX,
-status: true,
+
 },
 {
 title: 'На доработку(мало инфы)',
@@ -1006,6 +999,16 @@ content:
 '[COLOR=rgb(255, 0, 0)][FONT=times new roman][SIZE=4][I]{{ greeting }}, уважаемый {{ user.mention }}.[/I][/FONT][/COLOR]<br><br>' +
 "[COLOR=rgb(209, 213, 216)][FONT=times new roman][SIZE=4][I]В вашей RolePlay - биографии недостаточно информации.<br><br>" +
 "Даю вам 24 часа на ее дополнение.[/I][/SIZE][/FONT][/COLOR]<br><br>" +
+'[FONT=book antiqua][SIZE=4][COLOR=rgb(209, 213, 216)][I]Приятной игры на BLACK RUSSIA [/I][/COLOR][I][COLOR=rgb(0, 255, 255)][/COLOR][/I][/SIZE][/FONT][COLOR=rgb(209, 213, 216)][FONT=book antiqua][SIZE=4][I].[/SIZE][/FONT][/COLOR]',
+prefix: PIN_PREFIX,
+status: true,
+},
+{
+title: 'На доработку(грамматика)',
+content:
+'[COLOR=rgb(255, 0, 0)][FONT=times new roman][SIZE=4][I]{{ greeting }}, уважаемый {{ user.mention }}.[/I][/FONT][/COLOR]<br><br>' +
+"[COLOR=rgb(209, 213, 216)][FONT=times new roman][SIZE=4][I]В вашей RolePlay - биографии есть грамматические ошибки.<br><br>" +
+"Даю вам 24 часа на исправление.[/I][/SIZE][/FONT][/COLOR]<br><br>" +
 '[FONT=book antiqua][SIZE=4][COLOR=rgb(209, 213, 216)][I]Приятной игры на BLACK RUSSIA [/I][/COLOR][I][COLOR=rgb(0, 255, 255)][/COLOR][/I][/SIZE][/FONT][COLOR=rgb(209, 213, 216)][FONT=book antiqua][SIZE=4][I].[/SIZE][/FONT][/COLOR]',
 prefix: PIN_PREFIX,
 status: true,

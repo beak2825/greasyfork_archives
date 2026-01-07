@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Instagram Reels Auto Open Comment Section
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Opens the comment section when you scroll on Instagram Reels
 // @match        https://www.instagram.com/reels/*
 // @run-at       document-end
@@ -12,7 +12,7 @@
 
 (function () {
     const reelTimers = new WeakMap();
-    const DELAY_MS = 2000;
+    const DELAY_MS = 4000;
 
     const openComments = (reel) => {
         const button = reel.querySelector('svg[aria-label="Comment"]')?.closest('[role="button"]');

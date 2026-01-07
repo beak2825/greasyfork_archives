@@ -5,7 +5,7 @@
 // @name:ja            IG助手
 // @name:ko            IG조수
 // @namespace          https://github.snkms.com/
-// @version            3.9.1.1
+// @version            3.10.1
 // @description        Downloading is possible for both photos and videos from posts, as well as for stories, reels or profile picture.
 // @description:zh-TW  一鍵下載對方 Instagram 貼文中的相片、影片甚至是他們的限時動態、連續短片及大頭貼圖片！
 // @description:zh-CN  一键下载对方 Instagram 帖子中的相片、视频甚至是他们的快拍、Reels及头像图片！
@@ -70,6 +70,7 @@
         'SCROLL_BUTTON': true,
         'SKIP_VIEW_STORY_CONFIRM': false,
         'SKIP_SHARED_WITH_YOU_DIALOG': false,
+        'SET_INSTAGRAM_LAYOUT_AS_DEFAULT': false,
     };
 
     const PARENT_CHILD_MAPPING = {
@@ -79,6 +80,9 @@
         'FORCE_RESOURCE_VIA_MEDIA': [
             'FALLBACK_TO_BLOB_FETCH_IF_MEDIA_API_THROTTLED',
             'NEW_TAB_ALWAYS_FORCE_MEDIA_IN_POST'
+        ],
+        'HTML5_VIDEO_CONTROL': [
+            'SET_INSTAGRAM_LAYOUT_AS_DEFAULT'
         ]
     };
     const IMAGE_CACHE_KEY = 'URLS_OF_IMAGES_TEMPORARILY_STORED';
@@ -871,10 +875,16 @@
                         }
                     });
 
+                    if (USER_SETTING.SET_INSTAGRAM_LAYOUT_AS_DEFAULT) {
+                        $(this).css('z-index', '-1');
+                    }
+                    else {
+                        $(this).css('z-index', '2');
+                        $(this).attr('controls', true);
+                    }
+
                     $(this).css('position', 'absolute');
-                    $(this).css('z-index', '2');
                     $(this).attr('data-controls', true);
-                    $(this).attr('controls', true);
                 }
             });
         }
@@ -1855,10 +1865,16 @@
                                                     }
                                                 });
 
+                                                if (USER_SETTING.SET_INSTAGRAM_LAYOUT_AS_DEFAULT) {
+                                                    $(this).css('z-index', '-1');
+                                                }
+                                                else {
+                                                    $(this).css('z-index', '2');
+                                                    $(this).attr('controls', true);
+                                                }
+
                                                 $(this).css('position', 'relative');
-                                                $(this).css('z-index', '2');
                                                 $(this).attr('data-controls', true);
-                                                $(this).attr('controls', true);
                                             }
                                         });
                                     }
@@ -3210,7 +3226,10 @@
         const minute = date.getMinutes().toString().padStart(2, '0');
         const second = date.getSeconds().toString().padStart(2, '0');
 
-        var filename = state.fileRenameFormat.toUpperCase();
+        var filename = state.fileRenameFormat.replace(/%([^%]+)%/g, (match, content) => {
+            return `%${content.toUpperCase()}%`;
+        });
+
         var format_shortcode = shortcode ?? "";
         var replacements = {
             '%USERNAME%': username,
@@ -4254,6 +4273,7 @@
                 "SKIP_VIEW_STORY_CONFIRM": "Skip the Confirmation Page for Viewing a Story/Highlight",
                 "SKIP_SHARED_WITH_YOU_DIALOG": "Skip \"shared this with you\" dialog on shared profile links",
                 "CAPTURE_IMAGE_VIA_MEDIA_CACHE": "Capture Image Resource Using Media Cache",
+                "SET_INSTAGRAM_LAYOUT_AS_DEFAULT": "Set Instagram Layout as Default",
                 "AUTO_RENAME_INTRO": "Auto rename file to custom format:\nCustom Format List: \n%USERNAME% - Username\n%SOURCE_TYPE% - Download Source\n%SHORTCODE% - Post Shortcode\n%YEAR% - Year when downloaded/published\n%2-YEAR% - Year (last two digits) when downloaded/published\n%MONTH% - Month when downloaded/published\n%DAY% - Day when downloaded/published\n%HOUR% - Hour when downloaded/published\n%MINUTE% - Minute when downloaded/published\n%SECOND% - Second when downloaded/published\n%ORIGINAL_NAME% - Original name of downloaded file\n%ORIGINAL_NAME_FIRST% - Original name of downloaded file (first part of name)\n\nIf set to false, the file name will remain unchanged.\nExample: instagram_321565527_679025940443063_4318007696887450953_n.jpg",
                 "RENAME_PUBLISH_DATE_INTRO": "Sets the timestamp in the file rename format to the resource publish date (browser time zone).\n\nThis feature only works when [Automatically Rename Files] is set to TRUE.",
                 "RENAME_LOCATE_DATE_INTRO": "Modify the renamed file timestamp date format to the browser's local time, and format it to your preferred regional date format.\n\nThis feature only works when [Automatically Rename Files] is set to TRUE.",
@@ -4274,6 +4294,7 @@
                 "MODIFY_RESOURCE_EXIF_INTRO": "Modify the EXIF properties of the image resource to place the post link in it.",
                 "DIRECT_DOWNLOAD_STORY_INTRO": "When you click Download All Resources, all stories/highlights are downloaded directly, without showing the image selection dialog.",
                 "CAPTURE_IMAGE_VIA_MEDIA_CACHE_INTRO": "Use a watcher to capture any high-quality image URLs in the DOM tree into the script’s storage so that they can be extracted when available and upon user input.",
+                "SET_INSTAGRAM_LAYOUT_AS_DEFAULT_INTRO": "Set the Instagram web layout as the default layout instead of the HTML5 player layout.",
             }
         };
 
@@ -4842,10 +4863,18 @@
                                                 }
                                             });
 
+
+
+                                            if (USER_SETTING.SET_INSTAGRAM_LAYOUT_AS_DEFAULT) {
+                                                $video.css('z-index', '-1');
+                                            }
+                                            else {
+                                                $video.css('z-index', '2');
+                                                $video.attr('controls', true);
+                                            }
+
                                             $video.css('position', 'absolute');
-                                            $video.css('z-index', '2');
                                             $video.attr('data-controls', true);
-                                            $video.attr('controls', true);
                                         }
                                     }
                                     else {

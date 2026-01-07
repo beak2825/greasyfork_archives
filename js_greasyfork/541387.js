@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Holotower Custom Emotes Box
 // @namespace    http://holotower.org/
-// @version      1.24
+// @version      1.25
 // @author       anonymous
 // @license      CC0
 // @description  Adds a custom emote box to the quick reply form on Holotower
@@ -1395,7 +1395,21 @@
                 }, {
                     name: "Kiba", id: "kibawoo", oshimark: "🐺🪫", emotes: [
                         "nanoLove", "nanoBan", "nanoAngy", "nanoWave", "nanoPet",
-                        "nanoFlushed", "nanoSob", "nanoOmegalul", "nanoDespair"
+                        "nanoFlushed", "nanoSob", "nanoOmegalul", "nanoDespair",
+                        "kibawooPicocheer", "kibawooPied", "kibawooSquibbymoonmoon.gif",
+                        "kibawooNom.gif", "kibawooAwoo.gif", "kibawooNodders.gif",
+                        "kibawooClap.gif", "kibawooUm.gif", "kibawooBite.gif", "kibawooCrying.gif",
+                        "kibawooFlick.gif", "kibawooSquibbypunk.gif", "kibawooGlasses.gif",
+                        "kibawooRaveglowsticks.gif", "kibawooHuh.gif", "kibawooLaugh.gif",
+                        "kibawooOraorapunch.gif", "kibawooPleadpuppyeyes.gif",
+                        "kibawooUnoreverse.gif", "kibawooRifle.gif", "kibawooThumbsup2.gif",
+                        "kibawooBonk.gif", "kibawooGun", "kibawooWowie", "kibawooWut", "kibawooSpray",
+                        "kibawooSob", "kibawooSleep", "kibawooRaid", "kibawooHeadpat", "kibawooBooba",
+                        "kibawooPolite", "kibawooBrat", "kibawooPausechamp", "kibawooBath", "kibawooPensive",
+                        "kibawooWheeze", "kibawooPicorave", "kibawooBlankies.gif", "kibawooSquibbybnuy.gif",
+                        "kibawooSpin.gif", "kibawooSquibby.gif", "kibawooThisisfine", "kibawooBruh",
+                        "kibawooPray", "kibawooSip", "kibawooMeds", "kibawooThumbsup", "kibawooCute", "kibawooPout",
+                        "kibawooNoted", "kibawooCopium", "kibawooCool", "kibawooStare", "kibawooBuffer"
                     ]
                 }, {
                     name: "Jelly Hoshiumi", id: "jelly", oshimark: "🌠🎀", emotes: [
@@ -1875,7 +1889,7 @@
         }
 
         // Check remote json
-        fetch(document.location.origin + '/static/emotes/emotes_list.json')
+        fetch(document.location.origin + '/static/emotes/emotes_list.json', { cache: 'no-cache' })
             .then(response => {
                 const lastModified = new Date(response.headers.get('Last-Modified')).getTime();
                 // Check if emotes_list.json has changed since last time to avoid unnecessary processing

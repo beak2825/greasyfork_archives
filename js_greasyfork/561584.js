@@ -20,7 +20,7 @@
         else setTimeout(waitForCalc, 100);
     }
     function initKeybinds() {
-        console.log("[desmos key assist] desmos detected, scanning for action bindings...");
+        console.log("[keybind assist] desmos detected, scanning for action bindings...");
 
         const exprs = Calc.getExpressions();
         const bindings = {}; // key: action id
@@ -34,7 +34,7 @@
                 const actionExpr = exprs[i + 1];
                 if (actionExpr && actionExpr.type === "expression") {
                     let keys = args.slice(1);
-                    console.log(`found binding: key ${keys.join(", ")} --> expression ${actionExpr.id}:\n${actionExpr.latex}`)
+                    console.log(`[keybind assist] found binding: key ${keys.join(", ")} --> expression id ${actionExpr.id}:\n${actionExpr.latex}`)
                     for (let k of keys) {
                         k = k.toLowerCase();
                         if (k === "space") k = " ";
@@ -51,7 +51,7 @@
                     type: "action-single-step",
                     id: exprId
                 });
-                console.log(`key ${key} pressed: triggered action id ${exprId}"`);
+                console.log(`[keybind assist] key ${key} pressed: triggered action id ${exprId}`);
             }
         });
     }

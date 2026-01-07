@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Holotower Inline Quoting
 // @namespace    http://tampermonkey.net/
-// @version      3.0.1
+// @version      3.1.0
 // @author       grem
 // @license      MIT
 // @description  Inline Quoting for holotower.org
@@ -12,7 +12,7 @@
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // @connect      self
 // @connect      boards.holotower.org
-// @icon         https://boards.holotower.org/favicon.gif
+// @icon         data:image/gif;base64,R0lGODlhIAAgAHAAACH5BAEAAPsALAAAAAAgACAAh2x+yAc0uCFFvQo5vgI5wwY7wjpexwo8wQQ8xAU/xgVAyAxEyVh60w0/wwZAyAhCzAhEzghGzwhH0hRNz3eV3YnB7kin7E+v8VCz8VC571G88VHC8UzF9HrP7g1EyAdDzQlI0QpJ1AtL1gpO1w1P2ihf2Wiy8Rub+R6i+R6p+iKv+iO2/CK8/SvB+g9GzAhH0QpJ0wxN1wtP2Q1R2w5S3w1V3xFX4UJ142u28B6f+SKl9yKs+ySz+yS6/CXA/XHS9w1KzwpK1QtN1QtP1w1Q2w1S3Q9U3xBX4BBY5BBb5Q5d6BVf5laI5mu68R+i+CKq+iOw+yS3/CS9/jPC+XKO2nST3nSU3nOV4HSV4nWX5XaY43Sb5nib5nad6Hed6nWd7W6b64Ck6mu88R+m+iOt+iS0+yS7/SfB/ZDb9my88iCr+iSx+yS4/CS//kfH92y/8CKu+SS1+yS8/SrB/GzA8yGz+iS5/STA/mHN92rD8yO2+yS9/S7C+o6s3mzF8yO6/CbA/X/V9pGy7l2O5m3G8yK+/TvE+CNz7GOX6mzJ8yjA/J/f9nap7hR18mie7GbK9EvH9iB+7xV99Wmi7mnK8Fif8BmE8xiE9Wqn8CGL8huL9xqL9myr8EGe7xuT9xyT9xqT92yx8Y3H8iGa9h+b+B6b+B2b+Gy38S2k9B+i+SCi+G67827C8CCp+iGp+h+p+m/A83bT82nR93HQ9nHM9nDK9m3J9W7G9W/E83DA9G6/82y982258mu183u58Cqw9yOx+iSw+yKw+3LF9FnK9CvB/CO//SS7/CS3+yO0+iOw+SGs+iCo+iGk+B+h+B6d+iub71PC9CO4/SS5/CW4/CO4/HHL9UjH9ijB/SO+/iS6/SS2/CSy+yOu+yKr+iKn+B+j+TKm9Jzd9Si/+yPA/m3N9pbc9jfD+SOt+yCq+zSr9ZPX8IHW94LX9n7V9nnU9SS0/COw+jey81/N9ji29kjH9zm+9pTc9jPC+DTB94jW8QAAAAAAAAAAAAAAAAAAAAj/APcJFAhgoMGDCBMiDCBAocOHAwcQKGAAosWDBxAkULCAwcWLDRw8gBBBwgQKDytYuIAhg4YNHDoc9PAhAogQIkaQKOHQxAkUKVSsYNECoYsXMETEkDGDRg0bNxLiyKFjB48ePn4gBBJEyBAiRYwcQZJEyRImB5s4eQIlipQpCalUsXIFSxYtW7h08fIFTBiDYsaQKWPmDJqPENOoWcOmjRvEEN/AiSNnDmSIdOrYuYPn8sM8evbwudjno58/gAJZFDToI6FChi4eQvQxkaJFFhk1cvTxEaSLkSRN+kjpYiVLlzB5fphJ0yZOyxV28vQJVKjoCEWNIlXK1CnsB1GlnFKlCsUq8ANZtXLF/hUsg7FkzaJVy9YtXLl07eLVy1fCX8AEI6AwwxxETDHGHINMMsosw0wzzjwDDULRSDMNNRhWY01C12CTjTbbcNONN9+AE85B4ozjw4orklOOQuac48Me08SxBjrpqHPQOuy046OP7kD0Dh93yEENPPHIg95A88zRhhlR0LOkQfWckY09Uxp0Dz75ZHmQPgcFBAA7
 // @run-at       document-start
 // @downloadURL https://update.greasyfork.org/scripts/533222/Holotower%20Inline%20Quoting.user.js
 // @updateURL https://update.greasyfork.org/scripts/533222/Holotower%20Inline%20Quoting.meta.js
@@ -116,6 +116,8 @@ $(function () {
     GM_addStyle(`
         .${INLINE_CONTAINER_CLASS} { border: 1px dashed var(--subtle-border-color,#888); background-color: var(--inline-background-color,rgba(128,128,128,.05)); padding:5px; margin-top:5px; margin-left:20px; border-radius:4px; }
         .${INLINE_CONTAINER_CLASS} > .${CLONED_POST_CLASS}[data-board] { border:none!important; margin:0!important; padding:0!important; box-shadow:none!important; background:transparent!important; }
+        section.post { display: inline-block; background: inherit; border-color: inherit; border-width: inherit; border-style: inherit; }
+        section.post.reply { background: var(--reply-background-color, #d6daf0); border: 1px solid var(--subtle-border-color, #b7c5d9); border-left: none; border-top: none; }
         a.${INLINE_ACTIVE_LINK_CLASS} { font-weight:bold!important; color:var(--link-hover-color,#d11a1a)!important; opacity:.85; text-decoration:underline dotted!important; }
         a.${INLINE_ACTIVE_LINK_CLASS}:hover { opacity:1 }
         a[${LOADING_DATA_ATTR}="true"]::after { content:" (loading.)"; font-style:italic; color:var(--text-color-muted,#888); margin-left:4px }
@@ -129,7 +131,7 @@ $(function () {
     `);
 
     function adjustInlineQuoteContainer($container) {
-        const $parentPost = $container.closest('.post.reply');
+        const $parentPost = $container.closest('.post.reply, section.post');
         let marginLeft = 0;
         const $img = $parentPost.find('.files .file .post-image');
         if ($img.length && $img.css('display') !== 'none') {
@@ -211,7 +213,7 @@ $(function () {
 
     async function handleInlineQuoteClick(linkElement, postId) {
         const $link = $(linkElement);
-        let $mainPost = $link.closest('.post.reply');
+        let $mainPost = $link.closest('.post.reply, section.post');
         if ($mainPost.hasClass('post-hover')) {
             const match = $mainPost.attr('id') && $mainPost.attr('id').match(/^post-hover-(\d+)/);
             if (match) {
@@ -316,10 +318,20 @@ $(function () {
                 }
             }
             if (!handled) {
-                const cloned = targetPostElement.cloneNode(true);
-                cloned.removeAttribute('id');
-                cloned.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
-                cloned.classList.add(CLONED_POST_CLASS);
+                // Using <section> instead of <div> to fix auto-reload.js issue
+                // (auto-reload uses div.post:last selector which would match cloned divs)
+                const cloned = document.createElement('section');
+                const originalClasses = targetPostElement.className;
+                cloned.className = originalClasses + ' ' + CLONED_POST_CLASS;
+                
+                const postContent = targetPostElement.cloneNode(true);
+                postContent.removeAttribute('id');
+                postContent.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+                while (postContent.firstChild) {
+                    cloned.appendChild(postContent.firstChild);
+                }
+                
+                cloned.setAttribute('id', 'thread_0');
                 if (boardValue) cloned.setAttribute('data-board', boardValue);
                 else cloned.setAttribute('data-board-missing', 'true');
                 $container.append(cloned);

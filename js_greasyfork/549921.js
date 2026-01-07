@@ -40,7 +40,7 @@
 // @name:ug             مېنىڭ پرومپتۇم
 // @name:vi             Lời nhắc của tôi
 // @namespace           https://github.com/0H4S
-// @version             3.4
+// @version             3.5
 // @description         Save and use your personalized prompts in your own library. Use Dynamic Prompt mode to insert interactive information and adapt commands as needed. Attach and reuse files anytime without reselections. Compatible with: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM, and Google AI Mode.
 // @description:pt-BR   Salve e use seus prompts personalizados na sua própria biblioteca de prompts. Use o modo Prompt Dinâmico para inserir informações interativas e adaptar comandos conforme sua necessidade. Anexe e use arquivos sempre que quiser, sem precisar selecionar tudo de novo. Compatível com: ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, Tencent Yuanbao, ChatGLM e Google Modo IA.
 // @description:zh-CN   保存并在您自己的库中使用自定义提示词。使用动态提示词模式插入交互信息并根据需要调整指令。随时附加和使用文件，无需重新选择。兼容：ChatGPT, Gemini, DeepSeek, Google AI Studio, NotebookLM, Doubao, Claude, Kimi, Qwen, Grok, Mistral, LMArena, LongCat, Z.AI, Perplexity, Poe, 腾讯元宝, ChatGLM, Google AI Mode。
@@ -162,7 +162,7 @@
     }
 
     // ---NOTIFICADOR---
-    const SCRIPT_CONFIG = {notificationsUrl:'https://gist.github.com/0H4S/b2f9a9f92259deadc35bdccb11cd9a75', scriptVersion: '3.4',};
+    const SCRIPT_CONFIG = {notificationsUrl:'https://gist.github.com/0H4S/b2f9a9f92259deadc35bdccb11cd9a75', scriptVersion: '3.5',};
     const notifier      = new ScriptNotifier(SCRIPT_CONFIG);
     notifier.run();
 
@@ -2399,17 +2399,35 @@
     }
 
     // ---LONGCAT---
-    function createLongCatButton() {
+    function createLongcatButton() {
+        const styleId = 'uni-icon-btn-longcat';
+        if (!document.getElementById(styleId)) {
+            const style = document.createElement('style');
+            style.id = styleId;
+            style.textContent = `.uni-longcat-wrapper{display:flex;flex:none}.uni-icon-btn-longcat{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:32px;height:32px;border-radius:32px;border:1px solid rgba(17, 25, 37, 0.15);background:transparent;cursor:pointer;transition:all 0.2s ease;color:#000}.uni-icon-btn-longcat:hover{background-color:rgba(17, 25, 37, 0.05);border-color:rgba(17, 25, 37, 0.25)}.uni-icon-btn-longcat svg{width:16px;height:16px;display:block}`;
+            document.head.appendChild(style);
+        }
         const wrapper = document.createElement('div');
-        wrapper.className = 'upload-button-content';
-        wrapper.setAttribute('data-v-625d7fb6', '');
-        wrapper.setAttribute('data-v-6f28d2aa', '');
-        wrapper.setAttribute('data-v-4eeb4222-s', '');
-        wrapper.style.flexShrink = '0';
-        wrapper.style.cursor = 'pointer';
-        const btnHTML = `<div data-v-20f31264="" data-v-625d7fb6="" class="background-mp upload-button" style="--active-color:rgba(17,25,37,0.05);"><div data-v-b0734dc6="" class="upload-file default-upload"><svg data-v-641b0c80="" data-v-b0734dc6="" class="svg-icon icon-size" aria-hidden="true" width="16px" height="16px" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg><span data-v-b0734dc6="" class="text"></span></div><input data-v-b0734dc6="" class="upload-input" type="file" hidden=""></div>`;
-        setSafeInnerHTML(wrapper, btnHTML);
-        const btn = wrapper.querySelector('.background-mp');
+        wrapper.className = 'upload-button-content uni-longcat-wrapper';
+        const btn = document.createElement('div');
+        btn.className = 'background-mp upload-button uni-icon-btn-longcat';
+        btn.setAttribute('data-testid', 'composer-button-prompts');
+        btn.setAttribute('role', 'button');
+        btn.setAttribute('tabindex', '0');
+        const innerDiv = document.createElement('div');
+        innerDiv.className = 'upload-file default-upload';
+        innerDiv.style.display = 'flex';
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', '24'); svg.setAttribute('height', '24'); 
+        svg.setAttribute('viewBox', '0 0 20 20'); svg.setAttribute('fill', 'none');
+        svg.classList.add('svg-icon'); 
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M4 5h12M4 10h12M4 15h12');
+        path.setAttribute('stroke', 'currentColor'); path.setAttribute('stroke-width', '2');
+        svg.appendChild(path);
+        innerDiv.appendChild(svg);
+        btn.appendChild(innerDiv);
+        wrapper.appendChild(btn);
         createCustomTooltip(btn, getTranslation('prompts'));
         return wrapper;
     }
@@ -3689,7 +3707,7 @@
         }, true);
         editor.addEventListener('input', debounce(async (e) => {
             const textBefore = getTextBeforeCaret(editor);
-            const match = textBefore.match(/(?:^|\s)#([\w\-]*)$/);
+            const match = textBefore.match(/(?:^|\s)#([^\s]*)$/);
             if (match) {
                 const rawQuery = match[1];
                 const cleanQuery = rawQuery.toLowerCase().replace(/-/g, ' ');
@@ -4574,10 +4592,38 @@
 
             // ---LONGCAT---
             else if (currentPlatform === 'longcat') {
-                insertionPoint = await waitFor('.chat-input-buttons .upload-button-content', 8000);
-                btn = createLongCatButton();
+                const findAnchor = () => {
+                    const ANCHOR_HREF_FINGERPRINT = "#icon-upload"; 
+                    const uses = Array.from(document.querySelectorAll('use'));
+                    const targetUse = uses.find(u => u.getAttribute('href') === ANCHOR_HREF_FINGERPRINT);
+                    if (targetUse) {
+                        const anchorContainer = targetUse.closest('.upload-button-content');
+                        if (anchorContainer) return { element: anchorContainer, type: 'svg-href-fingerprint' };
+                    }
+                    return null;
+                };
+                let anchorData = findAnchor();
+                if (!anchorData) {
+                    await new Promise(r => setTimeout(r, 1500));
+                    anchorData = findAnchor();
+                }
+                if (!anchorData) return;
+                let container = anchorData.element.parentElement; 
+                if (!container) return;
+                let existingBtn = container.querySelector('[data-testid="composer-button-prompts"]');
+                if (existingBtn) {
+                    btn = existingBtn.closest('.upload-button-content');
+                } else {
+                    btn = createLongcatButton();
+                    if (anchorData.element.nextSibling) {
+                        container.insertBefore(btn, anchorData.element.nextSibling);
+                    } else {
+                        container.appendChild(btn);
+                    }
+                }
                 elementToInsert = btn;
-                insertionMethod = 'after';
+                insertionPoint = container;
+                insertionMethod = 'handled_manually';
             }
 
             // ---MISTRAL---

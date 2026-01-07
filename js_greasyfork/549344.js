@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Faction Organized Crime Metrics
 // @namespace    https://torn.com/
-// @version      1.0.6
+// @version      1.1.0
 // @description  Uses Torn API to list Organized Crime metrics for your faction.
 // @author       Canixe [3753120]
 // @match        https://www.torn.com/factions.php*
@@ -74,13 +74,6 @@
     #${SECTION_ID} .icons___VmEI4 .${CLS.caretFill}{ fill:#cfd6de; }
     #${SECTION_ID} .icons___VmEI4 .button___MO5cW:hover .${CLS.caretFill}{ fill:#ffffff; }
 
-    #${SECTION_ID} .kpis{ display:grid; gap:6px; grid-template-columns:repeat(3, minmax(0,1fr)); }
-    @media (min-width:785px){ #${SECTION_ID} .kpis{ grid-template-columns:repeat(5, minmax(0,1fr)); } }
-    #${SECTION_ID} .kpi{ background:var(--default-bg-panel-active-color); border:1px solid var(--default-panel-divider-outer-side-color); border-radius:6px; padding:6px 8px; min-width:0; box-sizing:border-box; }
-    #${SECTION_ID} .kpi .label{ font-size:11px; opacity:.85; color:var(--default-color); }
-    #${SECTION_ID} .kpi .value{ font-weight:700; font-size:14px; color:var(--default-color); }
-    #${SECTION_ID} .kpi .sub{ font-size:11px; opacity:.75; color:var(--default-color); text-align:right; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
     #${SECTION_ID} .grid{ display:grid; gap:8px; grid-template-columns:1fr; }
     #${SECTION_ID} .card{ border:1px solid var(--default-panel-divider-outer-side-color); border-radius:6px; background:var(--default-bg-panel-color); padding:8px; }
     #${SECTION_ID} .card h4{ margin:0 0 6px; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:space-between; }
@@ -141,6 +134,37 @@
       background:var(--default-bg-panel-active-color);
       opacity:1; font-weight:700;
     }
+    #${SECTION_ID} .kpis{ display:grid; gap:6px; grid-template-columns:repeat(3, minmax(0,1fr)); }
+    @media (min-width:785px){ #${SECTION_ID} .kpis{ grid-template-columns:repeat(5, minmax(0,1fr)); } }
+    #${SECTION_ID} .kpi{ background:var(--default-bg-panel-active-color); border:1px solid var(--default-panel-divider-outer-side-color); border-radius:6px; padding:6px 8px; min-width:0; box-sizing:border-box; }
+    #${SECTION_ID} .kpi .label{ font-size:11px; opacity:.85; color:var(--default-color); }
+    #${SECTION_ID} .kpi .value{ font-weight:700; font-size:14px; color:var(--default-color); }
+    #${SECTION_ID} .kpi .sub{ font-size:11px; opacity:.75; color:var(--default-color); text-align:right; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+    #${SECTION_ID} .kpi{ position:relative; }
+    #${SECTION_ID} .kpi.tf-copied{ outline:2px solid var(--default-panel-divider-outer-side-color); filter:brightness(1.06); }
+    #${SECTION_ID} .kpi .tf-copied-badge{
+      position:absolute; top:6px; right:8px;
+      font-size:11px; font-weight:700;
+      padding:1px 6px; border-radius:999px;
+      border:1px solid var(--default-panel-divider-outer-side-color);
+      background:var(--default-bg-panel-color);
+      color:var(--default-color);
+      opacity:0; transform:translateY(-2px);
+      transition:opacity .12s ease, transform .12s ease;
+      pointer-events:none;
+    }
+    #${SECTION_ID} .kpi.tf-copied .tf-copied-badge{ opacity:1; transform:none; }
+    #${SECTION_ID} #${SECTION_ID}-copy{
+      width:auto;
+      padding:0 10px;
+      font-size:12px;
+      line-height:28px;
+      color:var(--default-color);
+    }
+    #${SECTION_ID} #${SECTION_ID}-copy{ display:none; }
+    #${SECTION_ID} #${SECTION_ID}-copy.tf-show{ display:inline-flex; }
+
   `;
 
   ////////////////////////////////////////////////////////////////////////////
@@ -257,6 +281,30 @@
     return Math.round((paid * 10000) / bp);
   }
 
+  function showCopyButton(show){
+    const btn = document.getElementById(`${SECTION_ID}-copy`);
+    if (!btn) return;
+    btn.classList.toggle("tf-show", !!show);
+  }
+
+  async function copyToClipboard(text){
+    try{
+      // Tampermonkey
+      if (typeof GM_setClipboard === "function"){
+        GM_setClipboard(text, { type: "text", mimetype: "text/plain" });
+        return true;
+      }
+      // Modern
+      if (navigator?.clipboard?.writeText){
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    }catch{}
+    // Fallback that always works
+    try{ prompt("Copy to clipboard:", text); }catch{}
+    return false;
+  }
+
   ////////////////////////////////////////////////////////////////////////////
   // API HELPERS
   ////////////////////////////////////////////////////////////////////////////
@@ -289,7 +337,8 @@
 
   // News: walk DESC over [startSec..endSec], sum "balance by $X" amounts per crimeId
   async function fetchNewsExpenses({ key, startSec, endSec, includeCrimeIds, signal }){
-    const byCrime = new Map();
+    const paidToMembersByCrime = new Map();
+    const grossTotalByCrime = new Map();
     const seenNewsIds = new Set();
 
     let cursorTo  = endSec;
@@ -335,7 +384,8 @@
         const remainder = pool - each * participants;
         const paidOutTotal = each * participants; // matches sum of individual "increased ... by $X" lines
 
-        byCrime.set(crimeId, (byCrime.get(crimeId) || 0) + paidOutTotal);
+        paidToMembersByCrime.set(crimeId, (paidToMembersByCrime.get(crimeId) || 0) + paidOutTotal);
+        grossTotalByCrime.set(crimeId, (grossTotalByCrime.get(crimeId) || 0) + total);
       }
 
       if (count < API_PAGE_CAP) break;
@@ -353,7 +403,7 @@
       await delay(150);
     }
 
-    return byCrime;
+    return { paidToMembersByCrime, grossTotalByCrime };
   }
 
   // Items catalog (with 24h cache): value.market_price
@@ -491,9 +541,7 @@
     return { byKey, total: Math.round(total) };
   }
 
-  function buildOcTimeItemEstByKey(crimes, expenseByCrime){
-    // returns: { byKey: Map(key -> estItemsOcTime), total }
-    // estItemsOcTime = (grossed total value) - (cash income)
+  function buildOcTimeItemEstByKey(crimes, grossTotalByCrime){
     const grossedByKey = new Map();
     const incomeByKey  = new Map();
 
@@ -505,14 +553,10 @@
       const income = Math.round(Number(c?.rewards?.money || 0));
       incomeByKey.set(key, (incomeByKey.get(key) || 0) + income);
 
-      const paid = Math.round(expenseByCrime.get(c.id) || 0);
-      if (!paid) continue;
+      const gross = grossTotalByCrime.get(c.id) || 0;
+      if (!gross) continue;
 
-      const pct = Math.max(0, Math.min(100, Number(c?.rewards?.payout?.percentage ?? 0)));
-      const grossed = grossUpFromPaid(paid, pct);
-      if (!grossed) continue;
-
-      grossedByKey.set(key, (grossedByKey.get(key) || 0) + grossed);
+      grossedByKey.set(key, (grossedByKey.get(key) || 0) + gross);
     }
 
     const byKey = new Map(); let total = 0;
@@ -565,6 +609,7 @@
 
             <span id="${SECTION_ID}-status" class="status-err"></span>
             <span class="pills-right">
+              <button class="btn btn-icon" id="${SECTION_ID}-copy" title="Copy summary">Copy</button>
               <button class="btn btn-icon" id="${SECTION_ID}-stop" title="Stop" disabled>${ICONS.stop}</button>
               <button class="btn btn-icon" id="${SECTION_ID}-run"  title="Run">${ICONS.play}</button>
             </span>
@@ -635,6 +680,8 @@
       isPaid ? lastRender.itemEstByKeyPaid : lastRender.itemEstByKeyMV,
       { valueMode: mode }
     );
+
+    showCopyButton(true);
   }
 
   function renderTotals({ totals, countDays, paidToMembersOverride, netOverride }){
@@ -782,6 +829,8 @@
   let abortCtrl = null;
 
   async function runQuery(){
+    showCopyButton(false);
+
     const key = (await getSetting("apiKey","")).trim();
     if (!key){ setError(`API key required (${REQUIRED_ACCESS}).`); return; }
 
@@ -838,11 +887,20 @@
       const newsEnd = Number.isFinite(maxPaid) ? Math.max(endSec, maxPaid) : endSec;
 
       // News payouts → by OC
-      let ocExpenseMap = new Map();
-      let expenseByCrime = new Map();
+      let ocExpenseMap = new Map();           // by OC key (name|diff) => paid to members
+      let paidToMembersByCrime = new Map();   // by crimeId => paid to members
+      let grossTotalByCrime = new Map();      // by crimeId => payout "total" (pre-split)
       try{
-        expenseByCrime = await fetchNewsExpenses({ key, startSec, endSec: newsEnd, includeCrimeIds: idSet, signal: abortCtrl.signal });
-        ocExpenseMap = buildOcExpenseMap(ranged, expenseByCrime);
+        const news = await fetchNewsExpenses({
+          key, startSec, endSec: newsEnd, includeCrimeIds: idSet, signal: abortCtrl.signal
+        });
+
+        // fetchNewsExpenses now returns { paidToMembersByCrime, grossTotalByCrime }
+        paidToMembersByCrime = news.paidToMembersByCrime || new Map();
+        grossTotalByCrime    = news.grossTotalByCrime    || new Map();
+
+        // OC table needs paid-to-members aggregated by OC name|difficulty
+        ocExpenseMap = buildOcExpenseMap(ranged, paidToMembersByCrime);
       }catch{/* ignore news errors */}
 
       const diffDays = Math.ceil(((endSec - startSec + 1) * 1000) / (24*3600*1000));
@@ -854,7 +912,7 @@
 
       // OC-time (from payouts, grossed to 100%)
       const { byKey: itemEstByKeyPaid, total: itemEstTotalPaid } =
-            buildOcTimeItemEstByKey(ranged, expenseByCrime);
+            buildOcTimeItemEstByKey(ranged, grossTotalByCrime);
 
       let totalIncome = 0; for (const b of totals.ocBreakdown.values()) totalIncome += Math.round(b.income || 0);
       let totalPaid   = 0; for (const v of ocExpenseMap.values())        totalPaid  += Math.round(v || 0);
@@ -881,6 +939,54 @@
   function wireUp(){
     document.getElementById(`${SECTION_ID}-run`) ?.addEventListener("click", runQuery);
     document.getElementById(`${SECTION_ID}-stop`)?.addEventListener("click", () => abortCtrl?.abort());
+
+    document.getElementById(`${SECTION_ID}-copy`)?.addEventListener("click", async (ev)=>{
+      const btn = ev.currentTarget;
+      const txt = buildSummaryTSV();
+      if (!txt){
+        setError("Nothing to copy yet — run the report first.");
+        return;
+      }
+
+      await copyToClipboard(txt);
+
+      const prev = btn.textContent;
+      btn.textContent = "Copied ✓";
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.textContent = prev;
+        btn.disabled = false;
+      }, 2000);
+    });
+    document.getElementById(`${SECTION_ID}-totals`)?.addEventListener("click", async (ev)=>{
+      // If user is selecting text, don’t copy
+      const sel = (window.getSelection && window.getSelection()) ? String(window.getSelection()) : "";
+      if (sel && sel.trim().length) return;
+
+      const kpi = ev.target?.closest?.(".kpi");
+      if (!kpi) return;
+
+      const label = kpi.querySelector(".label")?.textContent?.trim() || "KPI";
+      const value = kpi.querySelector(".value")?.textContent?.trim() || "";
+      const sub   = kpi.querySelector(".sub")?.textContent?.trim() || "";
+      const txt = sub ? `${label}\t${value}\t${sub}` : `${label}\t${value}`;
+
+      await copyToClipboard(txt);
+
+      // Visual feedback: badge + pulse, auto-clear
+      let badge = kpi.querySelector(".tf-copied-badge");
+      if (!badge){
+        badge = document.createElement("span");
+        badge.className = "tf-copied-badge";
+        badge.textContent = "Copied ✓";
+        kpi.appendChild(badge);
+      }
+
+      kpi.classList.add("tf-copied");
+      clearTimeout(kpi._tfCopyTimer);
+      kpi._tfCopyTimer = setTimeout(() => kpi.classList.remove("tf-copied"), 2000);
+    });
 
     // Default range: last 7 days (UTC)
     const fromEl = document.getElementById(`${SECTION_ID}-from`);
@@ -946,6 +1052,52 @@
         }
       }, false);
     })();
+  }
+
+  function buildSummaryTSV(){
+    if (!lastRender) return "";
+
+    const fromStr = document.getElementById(`${SECTION_ID}-from`)?.value || "";
+    const toStr   = document.getElementById(`${SECTION_ID}-to`)?.value || "";
+
+    const mode = lastRender.valueMode || VALUE_MODES.MV;
+    const modeLabel = (mode === VALUE_MODES.PAID) ? "OC-Time" : "Current MV";
+
+    const totals = lastRender.totals;
+    const days   = Math.max(1, lastRender.diffDays|0);
+    const rate   = totals.count ? (totals.success / totals.count * 100) : 0;
+
+    const paidMembers = lastRender.totalPaid || 0;
+
+    // IMPORTANT: match what you show in the header:
+    // - "Money to faction" == net (income + itemEst - paid)
+    const netFaction = (mode === VALUE_MODES.PAID) ? (lastRender.netTotalPaid || 0) : (lastRender.netTotalMV || 0);
+    const grandTotal = paidMembers + netFaction;
+
+    const perRespect = totals.respect / days;
+    const perMem     = paidMembers   / days;
+    const perNet     = netFaction    / days;
+    const perGrand   = grandTotal    / days;
+
+    const headers = [
+      "From(UTC)","To(UTC)","ValueMode",
+      "Crimes","Success","Fail","SuccessRate(%)",
+      "Respect","RespectPerDay",
+      "MoneyToMembers","MoneyToMembersPerDay",
+      "MoneyToFaction(Net)","MoneyToFactionPerDay",
+      "GrandTotal","GrandTotalPerDay"
+    ].join("\t");
+
+    const row = [
+      fromStr, toStr, modeLabel,
+      totals.count, totals.success, totals.fail, rate.toFixed(1),
+      totals.respect, perRespect.toFixed(1),
+      paidMembers, Math.round(perMem),
+      netFaction,  Math.round(perNet),
+      grandTotal,  Math.round(perGrand)
+    ].join("\t");
+
+    return headers + "\n" + row;
   }
 
   ////////////////////////////////////////////////////////////////////////////

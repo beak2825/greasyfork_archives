@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PT site auto attendance (self use)
 // @namespace    http://tampermonkey.net/
-// @version      0.1.17
+// @version      0.1.19
 // @description  每天凌晨0点在pt站点进行签到
 // @author       Door Ma
 // @match        https://pt.btschool.club/*
@@ -33,7 +33,7 @@
             localStorage.setItem('checkedDate', new Date().toDateString()); // 标志签到时间
         } else {
             console.warn('[签到脚本] 未找到签到按钮。');
-            await wait(1000);
+            await wait(60000);
         }
     }
 
@@ -67,7 +67,6 @@
         console.log('[签到脚本] 下次将在', delay / 1000 / 60, '分钟后执行签到。');
         setTimeout(() => {
             location.reload();
-            scheduleDaily();
         }, delay);
     }
 

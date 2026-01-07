@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Wplace Region Downloader
 // @namespace      https://greasyfork.org/ru/users/1556543-jimorosuto
-// @version        0.1.1
+// @version        0.2.0
 // @description    Allows downloading a selected region from wplace.live as a single image.
 // @description:ru Позволяет скачивать выбранный регион с wplace.live в виде одного изображения.
 // @author         Jimorosuto
@@ -166,8 +166,8 @@
       const vals = [q(`.${p}-cx`).value.trim(), q(`.${p}-cy`).value.trim(), q(`.${p}-px`).value.trim(), q(`.${p}-py`).value.trim()]
       chunkCoords[p].x = vals[0] ? +vals[0] : null
       chunkCoords[p].y = vals[1] ? +vals[1] : null
-      pixelCoords[p].x = vals[2] ? +vals[2] : null
-      pixelCoords[p].y = vals[3] ? +vals[3] : null
+      pixelCoords[p].x = vals[2] ? Math.min(999, Math.max(0, +vals[2])) : null
+      pixelCoords[p].y = vals[3] ? Math.min(999, Math.max(0, +vals[3])) : null
     })
     downloadBtn.disabled = !Object.values(chunkCoords).every(c => c.x !== null && c.y !== null) ||
       !Object.values(pixelCoords).every(c => c.x !== null && c.y !== null)
@@ -244,6 +244,21 @@
     }
   }
 
+  async function fetchInBatches(tasks, limit = 6) {
+    const results = []
+    let idx = 0
+
+    async function worker() {
+      while (idx < tasks.length) {
+        const cur = idx++
+        results[cur] = await tasks[cur]()
+      }
+    }
+
+    await Promise.all(Array.from({ length: limit }, worker))
+    return results
+  }
+
   q(".wprd-download").onclick = async () => {
     syncFromInputs()
     const allSet =
@@ -271,29 +286,30 @@
     const widthChunks = c.x2 - c.x1 + 1
     const heightChunks = c.y2 - c.y1 + 1
 
+    const base = document.createElement("canvas")
+    base.width = widthChunks * TILE_SIZE
+    base.height = heightChunks * TILE_SIZE
+    const ctx = base.getContext("2d")
+
     try {
-      const imgs = []
+      const tasks = []
       for (let y = c.y1; y <= c.y2; y++) {
         for (let x = c.x1; x <= c.x2; x++) {
-          const r = await fetch(`${chunkTemplateUrl}${x}/${y}.png`)
-          if (!r.ok) continue
-          const b = await r.blob()
-          imgs.push(await createImageBitmap(b))
+          const dx = x - c.x1
+          const dy = y - c.y1
+
+          tasks.push(async () => {
+            const r = await fetch(`${chunkTemplateUrl}${x}/${y}.png`)
+            if (!r.ok) return
+            const b = await r.blob()
+            const img = await createImageBitmap(b)
+            ctx.drawImage(img, dx * TILE_SIZE, dy * TILE_SIZE)
+            img.close?.()
+          })
         }
       }
 
-      const base = document.createElement("canvas")
-      base.width = widthChunks * TILE_SIZE
-      base.height = heightChunks * TILE_SIZE
-      const ctx = base.getContext("2d")
-
-      let idx = 0
-      for (let y = 0; y < heightChunks; y++) {
-        for (let x = 0; x < widthChunks; x++) {
-          if (imgs[idx]) ctx.drawImage(imgs[idx], x * TILE_SIZE, y * TILE_SIZE)
-          idx++
-        }
-      }
+      await fetchInBatches(tasks, 6)
 
       const crop = calcCropRect()
       const rx = crop.x - c.x1 * TILE_SIZE
@@ -309,7 +325,6 @@
         a.href = URL.createObjectURL(blob)
         a.download = `wplace-region-${Date.now()}.png`
         a.click()
-        URL.revokeObjectURL(a.href)
       })
     } finally {
       setDownloading(false)

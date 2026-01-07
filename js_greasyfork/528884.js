@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Dark Google Workplace
 // @namespace djshigel
-// @version 0.2
+// @version 0.3
 // @description Darken Google Spreadsheets and the others
 // @license MIT
 // @grant GM_addStyle

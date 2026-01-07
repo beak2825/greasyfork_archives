@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT to PDF by PDFCrowd
 // @namespace    http://tampermonkey.net/
-// @version      3.6
+// @version      3.7
 // @description  Turn your chats into neatly formatted PDF.
 // @author       PDFCrowd (https://pdfcrowd.com/)
 // @match        https://chatgpt.com/*
@@ -42,12 +42,13 @@ pdfcrowdShared.defaultOptions = {
     toc: '',
     no_icons: false,
     model_name: false,
+    source_link: false,
     datetime_format: 'none',
     q_align: 'justified',
     q_rounded: false
 }
 
-pdfcrowdShared.version = 'v3.6';
+pdfcrowdShared.version = 'v3.7';
 
 pdfcrowdShared.rateUsLink = '#';
 pdfcrowdShared.hasOptions = true;
@@ -1010,6 +1011,14 @@ pdfcrowdChatGPT.init = function() {
         return '';
     }
 
+    function buildSourceLinkHtml(options) {
+        if(options.source_link) {
+            const source = window.location.href;
+            return `<div class="pdfcrowd-source-link">Source: <a href="${source}">${source}</a></div>`;
+        }
+        return '';
+    }
+
     function convert(event) {
         document.getElementById('pdfcrowd-extra-btns').classList.add(
             'pdfcrowd-hidden');
@@ -1074,11 +1083,12 @@ pdfcrowdChatGPT.init = function() {
                     }
 
                     const toc = buildTocHtml(options);
+                    const source_link = buildSourceLinkHtml(options);
                     const datetimeHtml = buildDatetimeHtml(options);
                     const h1_style = options.title_mode === 'none'
                         ? 'hidden' : '';
                     const body = `<h1 class="main-title ${h1_style}">` +
-                        `${title}</h1>` + datetimeHtml + toc +
+                        `${title}</h1>` + datetimeHtml + source_link + toc +
                         main_clone.outerHTML;
 
                     const model_name = buildModelNameHtml(options);
@@ -1293,6 +1303,10 @@ pdfcrowdChatGPT.init = function() {
     const options_el = document.getElementById('pdfcrowd-options');
     if(pdfcrowdShared.hasOptions) {
         options_el.addEventListener('click', function() {
+            if (!chrome.runtime?.id) {
+                alert("Extension was updated. Please refresh the page.");
+                return;
+            }
             chrome.runtime.sendMessage({action: "open_options_page"});
         });
     } else {

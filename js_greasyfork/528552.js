@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME EZRoad Mod
 // @namespace    https://greasyfork.org/users/1087400
-// @version      2.6.2
+// @version      2.6.4
 // @description  Easily update roads
 // @author       https://greasyfork.org/en/users/1087400-kid4rm90s
 // @include 	   /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
@@ -15,6 +15,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=waze.com
 // @license      GNU GPL(v3)
 // @connect      greasyfork.org
+// @require      https://cdn.jsdelivr.net/npm/@turf/turf@7/turf.min.js
 // @require      https://greasyfork.org/scripts/560385/code/WazeToastr.js
 
 // @downloadURL https://update.greasyfork.org/scripts/528552/WME%20EZRoad%20Mod.user.js
@@ -25,10 +26,11 @@
 
 (function main() {
   ('use strict');
-  const updateMessage = `<strong>Bug Fix:</strong><br> - Fixed auto city detection when "Set city as none" is unchecked. The script now properly checks connected segments for valid cities instead of defaulting to "None" when the displayed city is empty or unavailable.`;
+  const updateMessage = `<strong>Version 2.6.4 - 2026-01-07:</strong><br>
+    - Minor bug fixes and improvements.`;
   const scriptName = GM_info.script.name;
   const scriptVersion = GM_info.script.version;
-  const downloadUrl = 'https://greasyfork.org/scripts/528552-wme-ezroad-mod/code/wme-ezroad-mod.user.js';
+  const downloadUrl = GM_info.script.downloadURL;
   const forumURL = 'https://greasyfork.org/scripts/528552-wme-ezroad-mod/feedback';
   let wmeSDK;
 
@@ -64,6 +66,8 @@
     locks: roadTypes.map((roadType) => ({ id: roadType.id, lock: String(1) })),
     speeds: roadTypes.map((roadType) => ({ id: roadType.id, speed: 40 })),
     copySegmentAttributes: false,
+    showSegmentLength: false,
+    checkGeometryIssues: false,
     shortcutKey: 'g',
   };
 
@@ -76,6 +80,9 @@
     { id: 6, value: '6' },
     { id: 'HRCS', value: 'HRCS' },
   ];
+
+  const GeometryIssueLengthThresholdMeters = 2; // Threshold distance in meters to check for geometry nodes too close to endpoints
+  const UserRankRequiredForGeometryFix = 3; // Minimum user rank required to use the geometry fix feature - only show for L3 and above (rank >= 2 in SDK)
 
   const log = (message) => {
     if (typeof message === 'string') {
@@ -490,8 +497,465 @@
       }
     });
 
+    // Initialize segment length display layer
+    initSegmentLengthLayer();
+
+    // Inject Geometry Fix Button
+    setInterval(addGeometryFixButton, 2000);
+
     log('Completed Init');
   };
+
+  // ===== Geometry Quality Check Helper =====
+  /**
+   * Checks if any intermediate geometry nodes are too close to segment endpoints
+   * @param {Object} segment - WME segment object
+   * @param {number} thresholdMeters - Distance threshold in meters (default: 1)
+   * @returns {Object} { hasIssue: boolean, details: Array }
+   */
+  function checkGeometryNodePlacement(segment, thresholdMeters = GeometryIssueLengthThresholdMeters) {
+    if (!segment || !segment.geometry || !segment.geometry.coordinates) {
+      return { hasIssue: false, details: [] };
+    }
+
+    if (typeof turf === 'undefined') {
+      log('ERROR: Turf.js is not loaded!');
+      return { hasIssue: false, details: [] };
+    }
+
+    const coords = segment.geometry.coordinates;
+
+    // Need at least 3 points (start, intermediate, end) to have geometry nodes
+    if (coords.length < 3) {
+      return { hasIssue: false, details: [] };
+    }
+
+    const nodeA = turf.point(coords[0]); // First coordinate (Node A)
+    const nodeB = turf.point(coords[coords.length - 1]); // Last coordinate (Node B)
+    const issues = [];
+
+    // Check intermediate points (geometry nodes)
+    for (let i = 1; i < coords.length - 1; i++) {
+      const geometryNode = turf.point(coords[i]);
+
+      // Calculate distance to Node A
+      const distanceToA = turf.distance(geometryNode, nodeA, { units: 'meters' });
+      if (distanceToA <= thresholdMeters) {
+        issues.push({
+          nodeIndex: i,
+          distanceToA: distanceToA,
+          distanceToB: null,
+          closeTo: 'A',
+          coordinates: coords[i],
+        });
+      }
+
+      // Calculate distance to Node B
+      const distanceToB = turf.distance(geometryNode, nodeB, { units: 'meters' });
+      if (distanceToB <= thresholdMeters) {
+        issues.push({
+          nodeIndex: i,
+          distanceToA: null,
+          distanceToB: distanceToB,
+          closeTo: 'B',
+          coordinates: coords[i],
+        });
+      }
+    }
+
+    return {
+      hasIssue: issues.length > 0,
+      details: issues,
+      segmentId: segment.id,
+      totalGeometryNodes: coords.length - 2, // Exclude start and end
+    };
+  }
+
+  // ===== Segment Length Display Functionality =====
+  let segmentLengthContainer = null;
+  let segmentLabelCache = []; // Cache segment data and label elements
+
+  // Store last map bounds to detect changes
+  let lastBounds = null;
+  let lastZoom = null;
+  let updateInterval = null;
+  let isMapMoving = false;
+  let updateFrameRequest = null;
+
+  // Define helper functions first
+  function clearSegmentLengthDisplay() {
+    if (segmentLengthContainer) {
+      segmentLengthContainer.innerHTML = '';
+    }
+    segmentLabelCache = [];
+  }
+
+  // Rebuild segment data and create new labels (expensive - only on zoom/data changes)
+  function rebuildSegmentLengthDisplay() {
+    const options = getOptions();
+
+    // Update dashboard count if exists (even if hidden)
+    const countBadge = document.getElementById('ezroad-geometry-error-count');
+
+    if ((!options.showSegmentLength && !options.checkGeometryIssues) || !segmentLengthContainer) {
+      if (countBadge) countBadge.style.display = 'none';
+      return;
+    }
+
+    clearSegmentLengthDisplay();
+
+    if (typeof turf === 'undefined') {
+      log('ERROR: Turf.js is not loaded!');
+      return;
+    }
+
+    let issueCount = 0;
+
+    try {
+      const currentZoom = wmeSDK.Map.getZoomLevel();
+      if (currentZoom < 18) {
+        if (countBadge) countBadge.style.display = 'none';
+        return;
+      }
+
+      const allSegments = wmeSDK.DataModel.Segments.getAll();
+      let extent = wmeSDK.Map.getMapExtent();
+
+      if (!extent || !allSegments || allSegments.length === 0) {
+        if (countBadge) countBadge.style.display = 'none';
+        return;
+      }
+
+      const mapBounds = {
+        west: extent[0],
+        south: extent[1],
+        east: extent[2],
+        north: extent[3],
+      };
+
+      // Use a DocumentFragment to batch DOM insertions (Performance optimization)
+      const fragment = document.createDocumentFragment();
+
+      allSegments.forEach((segment) => {
+        try {
+          const geometry = segment.geometry;
+          if (!geometry || !geometry.coordinates || geometry.coordinates.length < 2) {
+            return;
+          }
+
+          // 1. Check for geometry issues (Priority)
+          if (options.checkGeometryIssues) {
+            const geoResult = checkGeometryNodePlacement(segment, GeometryIssueLengthThresholdMeters);
+            if (geoResult.hasIssue) {
+              geoResult.details.forEach((issue) => {
+                // Check visibility
+                if (issue.coordinates[0] < mapBounds.west || issue.coordinates[0] > mapBounds.east || issue.coordinates[1] < mapBounds.south || issue.coordinates[1] > mapBounds.north) {
+                  return;
+                }
+
+                issueCount++;
+
+                const pinDiv = document.createElement('div');
+                pinDiv.innerHTML = '📍'; // Pin icon
+                pinDiv.style.position = 'absolute';
+                pinDiv.style.width = '30px';
+                pinDiv.style.height = '30px';
+                pinDiv.style.display = 'flex';
+                pinDiv.style.alignItems = 'center';
+                pinDiv.style.justifyContent = 'center';
+                pinDiv.style.fontSize = '30px';
+                pinDiv.style.pointerEvents = 'none';
+
+                fragment.appendChild(pinDiv);
+
+                segmentLabelCache.push({
+                  lon: issue.coordinates[0],
+                  lat: issue.coordinates[1],
+                  labelDiv: pinDiv,
+                  offsetX: 10, // Center of 20px
+                  offsetY: 20, // Shift up
+                });
+              });
+            }
+          }
+
+          // 2. Show Segment Length
+          if (options.showSegmentLength) {
+            const line = turf.lineString(geometry.coordinates);
+            const lengthMeters = turf.length(line, { units: 'meters' });
+
+            if (lengthMeters <= 20) {
+              const midPointFeature = turf.along(line, lengthMeters / 2, { units: 'meters' });
+              const midCoords = midPointFeature.geometry.coordinates;
+
+              if (midCoords[0] >= mapBounds.west && midCoords[0] <= mapBounds.east && midCoords[1] >= mapBounds.south && midCoords[1] <= mapBounds.north) {
+                // Create label element
+                const labelDiv = document.createElement('div');
+                labelDiv.style.position = 'absolute';
+                labelDiv.style.width = '30px';
+                labelDiv.style.height = '30px';
+                labelDiv.style.borderRadius = '50%';
+                labelDiv.style.backgroundColor = '#ff6600a1';
+                labelDiv.style.display = 'flex';
+                labelDiv.style.alignItems = 'center';
+                labelDiv.style.justifyContent = 'center';
+                labelDiv.style.color = 'white';
+                labelDiv.style.fontSize = '12px';
+                labelDiv.style.fontWeight = 'bold';
+                labelDiv.style.pointerEvents = 'none';
+                labelDiv.textContent = Math.round(lengthMeters);
+
+                fragment.appendChild(labelDiv);
+
+                segmentLabelCache.push({
+                  lon: midCoords[0],
+                  lat: midCoords[1],
+                  labelDiv: labelDiv,
+                  offsetX: 15,
+                  offsetY: 35,
+                });
+              }
+            }
+          }
+        } catch (err) {
+          // Silent error handling
+        }
+      });
+
+      // Batch append all elements to the DOM
+      segmentLengthContainer.appendChild(fragment);
+
+      // Update positions after creating labels
+      updateSegmentLabelPositions();
+
+      // Update badge count
+      if (countBadge) {
+        if (issueCount > 0 && options.checkGeometryIssues) {
+          countBadge.value = issueCount;
+          countBadge.style.display = 'inline-flex';
+
+          // Update shadow dom content if needed (WME web components quirks)
+          // But simplest is to just set the value attribute
+        } else {
+          countBadge.style.display = 'none';
+        }
+      }
+    } catch (error) {
+      log('Error rebuilding segment length display: ' + error.message);
+    }
+  }
+
+  // Fast position update - only updates pixel positions of existing labels
+  function updateSegmentLabelPositions() {
+    if (!segmentLengthContainer || segmentLabelCache.length === 0) {
+      return;
+    }
+
+    try {
+      segmentLabelCache.forEach((cached) => {
+        const pixel = wmeSDK.Map.getMapPixelFromLonLat({
+          lonLat: { lon: cached.lon, lat: cached.lat },
+        });
+
+        if (pixel && typeof pixel.x === 'number' && typeof pixel.y === 'number') {
+          const offX = cached.offsetX || 15;
+          const offY = cached.offsetY || 35;
+          cached.labelDiv.style.left = pixel.x - offX + 'px';
+          cached.labelDiv.style.top = pixel.y - offY + 'px';
+        }
+      });
+    } catch (err) {
+      // Silent error handling
+    }
+  }
+
+  // Poll for map changes and update display
+  function checkAndUpdate() {
+    // Do not update if map is currently moving
+    if (typeof isMapMoving !== 'undefined' && isMapMoving) return;
+
+    const options = getOptions();
+    if (!options.showSegmentLength && !options.checkGeometryIssues) {
+      if (segmentLengthContainer) segmentLengthContainer.style.display = 'none';
+      return;
+    } else {
+      if (segmentLengthContainer) segmentLengthContainer.style.display = 'block';
+    }
+
+    try {
+      let extent;
+      let currentZoom;
+
+      try {
+        extent = wmeSDK.Map.getMapExtent();
+        currentZoom = wmeSDK.Map.getZoomLevel();
+      } catch (e) {
+        return;
+      }
+
+      const currentBounds = {
+        west: extent[0],
+        south: extent[1],
+        east: extent[2],
+        north: extent[3],
+      };
+
+      // Check if map has moved or zoomed
+      if (!lastBounds || lastBounds.north !== currentBounds.north || lastBounds.south !== currentBounds.south || lastBounds.east !== currentBounds.east || lastBounds.west !== currentBounds.west || lastZoom !== currentZoom) {
+        lastBounds = currentBounds;
+        lastZoom = currentZoom;
+        rebuildSegmentLengthDisplay();
+      }
+    } catch (e) {}
+  }
+
+  function handleSegmentLengthToggle() {
+    const options = getOptions();
+
+    // Update button visibility immediately on toggle
+    addGeometryFixButton();
+
+    if (options.showSegmentLength || options.checkGeometryIssues) {
+      if (segmentLengthContainer) segmentLengthContainer.style.display = 'block';
+
+      // Ensure polling is active
+      if (!updateInterval) {
+        updateInterval = setInterval(checkAndUpdate, 500);
+      }
+      rebuildSegmentLengthDisplay();
+    } else {
+      if (segmentLengthContainer) segmentLengthContainer.style.display = 'none';
+      clearSegmentLengthDisplay();
+
+      // Stop polling
+      if (updateInterval) {
+        clearInterval(updateInterval);
+        updateInterval = null;
+      }
+    }
+  }
+
+  function initSegmentLengthLayer() {
+    log('Initializing segment length display layer');
+
+    // Find viewport div - prefer standard class or ID
+    // Try SDK method first if possible, though getMapViewportElement might not be exposed on all versions?
+    // Docs say getMapViewportElement() returns HTMLElement.
+    let viewportDiv;
+    try {
+      viewportDiv = wmeSDK.Map.getMapViewportElement();
+    } catch (e) {
+      log('SDK getMapViewportElement failed, trying fallbacks');
+    }
+
+    if (!viewportDiv) {
+      viewportDiv = document.querySelector('.ol-viewport') || document.querySelector('#WazeMap') || document.querySelector('#map');
+    }
+
+    if (!viewportDiv) {
+      log('Map viewport not found');
+      return;
+    }
+
+    // Create div container for length labels
+    segmentLengthContainer = document.createElement('div');
+    segmentLengthContainer.id = 'ezroad-segment-length-container';
+    segmentLengthContainer.style.position = 'absolute';
+    segmentLengthContainer.style.top = '0';
+    segmentLengthContainer.style.left = '0';
+    segmentLengthContainer.style.width = '100%';
+    segmentLengthContainer.style.height = '100%';
+    segmentLengthContainer.style.pointerEvents = 'none';
+    segmentLengthContainer.style.zIndex = '1000';
+    segmentLengthContainer.style.display = 'none'; // Hidden by default
+
+    viewportDiv.appendChild(segmentLengthContainer);
+    log('Container appended to map viewport');
+
+    // Variables are now defined in outer scope to allow access from handleSegmentLengthToggle
+    // lastBounds, lastZoom, updateInterval, isMapMoving, updateFrameRequest
+
+    // Event handlers for map movement using SDK events
+    const onMapMove = function () {
+      isMapMoving = true;
+      // Use requestAnimationFrame to throttle position updates during map movement
+      if (updateFrameRequest) {
+        return; // Already scheduled
+      }
+
+      updateFrameRequest = requestAnimationFrame(() => {
+        updateFrameRequest = null;
+        const options = getOptions();
+        if ((options.showSegmentLength || options.checkGeometryIssues) && segmentLengthContainer && segmentLengthContainer.style.display !== 'none') {
+          updateSegmentLabelPositions(); // Fast position update only
+        }
+      });
+    };
+
+    const onMoveEnd = function () {
+      isMapMoving = false;
+      // Rebuild labels after movement ends (checks if segments entered/left viewport)
+      const options = getOptions();
+      if ((options.showSegmentLength || options.checkGeometryIssues) && segmentLengthContainer) {
+        segmentLengthContainer.style.display = 'block';
+        rebuildSegmentLengthDisplay();
+
+        // Update lastBounds/Zoom to prevent redundant update from interval
+        try {
+          let extent = wmeSDK.Map.getMapExtent();
+          lastBounds = {
+            west: extent[0],
+            south: extent[1],
+            east: extent[2],
+            north: extent[3],
+          };
+          lastZoom = wmeSDK.Map.getZoomLevel();
+        } catch (e) {}
+      }
+    };
+
+    const onZoomChanged = function () {
+      const options = getOptions();
+      if ((options.showSegmentLength || options.checkGeometryIssues) && segmentLengthContainer) {
+        rebuildSegmentLengthDisplay(); // Full rebuild on zoom
+        try {
+          let extent = wmeSDK.Map.getMapExtent();
+          lastBounds = {
+            west: extent[0],
+            south: extent[1],
+            east: extent[2],
+            north: extent[3],
+          };
+          lastZoom = wmeSDK.Map.getZoomLevel();
+        } catch (e) {}
+      }
+    };
+
+    // Register SDK event listeners
+    wmeSDK.Events.on({
+      eventName: 'wme-map-move',
+      eventHandler: onMapMove,
+    });
+
+    wmeSDK.Events.on({
+      eventName: 'wme-map-move-end',
+      eventHandler: onMoveEnd,
+    });
+
+    wmeSDK.Events.on({
+      eventName: 'wme-map-zoom-changed',
+      eventHandler: onZoomChanged,
+    });
+
+    // Initialize polling if already enabled
+    const options = getOptions();
+    if (options.showSegmentLength || options.checkGeometryIssues) {
+      handleSegmentLengthToggle();
+    }
+
+    log('Segment length layer initialized');
+  }
+  // ===== End Segment Length Display Functionality =====
 
   // Helper to register the shortcut, avoids duplicate code
   function registerShortcut(shortcutKey) {
@@ -527,6 +991,130 @@
       options.shortcutKey = null;
       saveOptions(options);
     }
+  }
+
+  // ===== New Feature: One-click Geometry Fix =====
+
+  async function fixVisibleGeometryIssues() {
+    const options = getOptions();
+    if (!options.checkGeometryIssues) {
+      if (WazeToastr?.Alerts) WazeToastr.Alerts.info('EZRoad Mod', 'Please enable "Check Geometry issues" in settings first.');
+      else alert('Please enable "Check Geometry issues" in EZRoad Mod settings first.');
+      return;
+    }
+
+    const allSegments = wmeSDK.DataModel.Segments.getAll();
+    let extent = wmeSDK.Map.getMapExtent();
+    if (!extent) return;
+    const mapBounds = { west: extent[0], south: extent[1], east: extent[2], north: extent[3] };
+
+    let fixedCount = 0;
+    let errors = 0;
+
+    // Filter for segments with issues in view
+    const segmentsToFix = allSegments.filter((segment) => {
+      if (!segment.geometry) return false;
+
+      // Check functionality
+      const result = checkGeometryNodePlacement(segment, GeometryIssueLengthThresholdMeters);
+      if (!result.hasIssue) return false;
+
+      // Initial visibility check of issues
+      const visibleIssues = result.details.filter((issue) => issue.coordinates[0] >= mapBounds.west && issue.coordinates[0] <= mapBounds.east && issue.coordinates[1] >= mapBounds.south && issue.coordinates[1] <= mapBounds.north);
+
+      return visibleIssues.length > 0;
+    });
+
+    if (segmentsToFix.length === 0) {
+      if (WazeToastr?.Alerts) WazeToastr.Alerts.info('EZRoad Mod', 'No visible geometry issues to fix.');
+      else alert('No visible geometry issues to fix.');
+      return;
+    }
+
+    const performFix = async () => {
+      for (const segment of segmentsToFix) {
+        try {
+          const result = checkGeometryNodePlacement(segment, GeometryIssueLengthThresholdMeters); // Recalculate to be safe
+          if (!result.hasIssue) continue;
+
+          const idxToRemove = new Set(result.details.map((d) => d.nodeIndex));
+          const oldCoords = segment.geometry.coordinates;
+          const newCoords = oldCoords.filter((_, i) => !idxToRemove.has(i));
+
+          if (newCoords.length < 2) continue; // Should not happen for geometry nodes, but safety
+
+          await wmeSDK.DataModel.Segments.updateSegment({
+            segmentId: segment.id,
+            geometry: {
+              type: 'LineString',
+              coordinates: newCoords,
+            },
+          });
+          fixedCount++;
+        } catch (e) {
+          console.error('Failed to fix segment', segment.id, e);
+          errors++;
+        }
+      }
+
+      const msg = `Fixed ${fixedCount} segments.${errors > 0 ? ` (${errors} errors)` : ''}`;
+      if (WazeToastr?.Alerts) WazeToastr.Alerts.success('EZRoad Mod', msg);
+      else alert(msg);
+
+      // Refresh display
+      rebuildSegmentLengthDisplay();
+    };
+
+    if (WazeToastr?.Alerts?.confirm) {
+      WazeToastr.Alerts.confirm('EZRoad Mod', `Found ${segmentsToFix.length} segments with geometry issues. Fix them now?`, performFix, null, 'Fix', 'Cancel');
+    } else if (confirm(`Found ${segmentsToFix.length} segments with geometry issues. Fix them now?`)) {
+      performFix();
+    }
+  }
+
+  function addGeometryFixButton() {
+    const options = getOptions();
+
+    // Check user rank - only show for L3 and above (rank >= 2 in SDK)
+    const userInfo = wmeSDK.State.getUserInfo();
+    if (!userInfo || userInfo.rank < UserRankRequiredForGeometryFix - 1) {
+      // Remove button if it exists and user doesn't have permission
+      const existingBtn = document.getElementById('ezroad-fix-geometry-btn');
+      if (existingBtn) existingBtn.remove();
+      return;
+    }
+
+    const prefsItem = document.querySelector('wz-navigation-item[data-for="prefs"]');
+    let btn = document.getElementById('ezroad-fix-geometry-btn');
+
+    if (btn) {
+      // Update visibility based on option and rank
+      btn.style.display = options.checkGeometryIssues ? 'block' : 'none';
+      return;
+    }
+
+    if (!prefsItem) return;
+
+    btn = document.createElement('wz-button');
+    btn.color = 'text';
+    btn.size = 'sm';
+    btn.style.margin = '20px auto 0 auto';
+    btn.id = 'ezroad-fix-geometry-btn';
+    btn.type = 'button';
+
+    // Initial visibility based on option
+    btn.style.display = options.checkGeometryIssues ? 'block' : 'none';
+
+    // HTML content matching user request style
+    btn.innerHTML = `
+        <i class="w-icon w-icon-bug-fill" style="color: #33CCFF"></i>
+        <wz-notification-indicator value="0" id="ezroad-geometry-error-count" class="counter" style="display: none;"></wz-notification-indicator>
+     `;
+
+    btn.addEventListener('click', fixVisibleGeometryIssues);
+
+    // Insert after prefs
+    prefsItem.insertAdjacentElement('afterend', btn);
   }
 
   const getEmptyCity = () => {
@@ -1639,6 +2227,18 @@
         tooltip:
           'Copies all major attributes (road type, lock level, speed limits, paved/unpaved status, primary and alternate street names, and city) from a connected segment. When enabled, it overrides all other options except Autosave. Use shortcut key or (Quick Update Segment) to apply.',
       },
+      {
+        id: 'showSegmentLength',
+        text: 'Show Segment Length <=20m',
+        key: 'showSegmentLength',
+        tooltip: 'Displays segment length in an orange circle with white font for segments 20 meters or shorter in the visible map area.',
+      },
+      {
+        id: 'checkGeometryIssues',
+        text: 'Check Geometry issues near node',
+        key: 'checkGeometryIssues',
+        tooltip: 'Checks if any intermediate geometry nodes are too close (within 2m) to the start or end nodes. Displays a pin icon if an issue is found.',
+      },
     ];
 
     // Helper function to create radio buttons
@@ -1687,7 +2287,7 @@
     // Helper function to create checkboxes
     const createCheckbox = (option) => {
       const isChecked = localOptions[option.key];
-      const otherClass = option.key !== 'autosave' && option.key !== 'copySegmentAttributes' ? 'ezroadsmod-other-checkbox' : '';
+      const otherClass = option.key !== 'autosave' && option.key !== 'copySegmentAttributes' && option.key !== 'showSegmentLength' && option.key !== 'checkGeometryIssues' ? 'ezroadsmod-other-checkbox' : '';
       const attrClass = option.key === 'copySegmentAttributes' ? 'ezroadsmod-attr-checkbox' : '';
 
       const div = $(`<div class="ezroadsmod-option">
@@ -1718,16 +2318,21 @@
           } else {
             update('copySegmentAttributes', false);
           }
-        } else if (option.key !== 'autosave') {
-          // If any other checkbox (except autosave) is checked, uncheck copySegmentAttributes
+        } else if (option.key !== 'autosave' && option.key !== 'showSegmentLength' && option.key !== 'checkGeometryIssues') {
+          // If any other checkbox (except autosave, showSegmentLength, checkGeometryIssues) is checked, uncheck copySegmentAttributes
           if ($(`#${option.id}`).prop('checked')) {
             $('#copySegmentAttributes').prop('checked', false);
             update('copySegmentAttributes', false);
           }
           update(option.key, $(`#${option.id}`).prop('checked'));
         } else {
-          // Autosave
+          // Autosave, showSegmentLength, or checkGeometryIssues
           update(option.key, $(`#${option.id}`).prop('checked'));
+        }
+
+        // Handle Segment Length / Geometry Check toggle
+        if (option.key === 'showSegmentLength' || option.key === 'checkGeometryIssues' || option.key === 'copySegmentAttributes') {
+          handleSegmentLengthToggle();
         }
       });
       return div;
@@ -2102,6 +2707,21 @@
 Changelog
 
 Version
+2.6.4 - 2026-01-07
+- Fixed checkbox mutual exclusion logic for display features.
+- "Show Segment Length ≤20m" and "Check Geometry issues near node" checkboxes now work independently from the "Copy Connected Segment Attribute" option.
+- These display options can now be enabled/disabled without affecting or being affected by the Copy Connected Segment Attribute feature.
+- Improved user interface behavior and option interactions.
+2.6.3 - 2026-01-07
+- Added "Show Segment Length ≤20m" feature: Displays segment length in an orange circle overlay for segments 20 meters or shorter.
+- Added "Check Geometry issues near node" feature: Detects intermediate geometry nodes that are too close (within 2m) to segment start/end nodes.
+- Geometry issues are marked with pin (📍) icons on the map.
+- Added one-click geometry fix button (bug icon) in the navigation bar to automatically fix all visible geometry issues (requires L3+ rank).
+- Added notification badge showing count of geometry issues in the current view.
+- Integrated Turf.js library for accurate geometry calculations and distance measurements.
+- New settings toggles for both segment length display and geometry quality checking.
+- Optimized performance with efficient map viewport tracking and label caching.
+- Fixed various minor bugs and improved code stability.
 2.6.2 - 2026-01-05
 - Fixed auto city detection when "Set city as none" is unchecked. The script now properly checks connected segments for valid cities instead of defaulting to "None" when the displayed city is empty or unavailable.
 2.6.1 - 2025-12-29

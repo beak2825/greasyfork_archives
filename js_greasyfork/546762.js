@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Spotify AI Artist Blocker
-// @version      0.1.9
+// @version      0.1.10
 // @description  Automatically block AI-generated artists on Spotify using a crowd-sourced list
 // @author       CennoxX
 // @namespace    https://greasyfork.org/users/21515
@@ -84,6 +84,28 @@
         return false;
     }
 
+    function toastMessage(number) {
+        var container = document.createElement("div");
+        container.innerHTML = `
+<div class="notistack-SnackbarContainer" style="position:fixed;bottom:100px;left:50%;transform:translateX(-50%)">
+  <div class="notistack-Snackbar">
+    <div class="e-91000-box e-91000-box--elevated encore-light-theme" style="display:flex;align-items:center;padding:2px 10px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3)">
+      <svg data-encore-id="icon" class="e-91000-icon" style="--encore-icon-height:var(--encore-graphic-size-decorative-larger);--encore-icon-width:var(--encore-graphic-size-decorative-larger);margin-right:10px;opacity:0.6" viewBox="0 0 24 24">
+        <path d="M6 12c0-1.296.41-2.496 1.11-3.477l8.366 8.368A6 6 0 0 1 6 12m10.89 3.476L8.524 7.11a6 6 0 0 1 8.367 8.367z"/>
+        <path d="M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12m11-8a8 8 0 1 0 0 16 8 8 0 0 0 0-16"/>
+      </svg>
+      <span>${number} AI artists blocked</span>
+    </div>
+  </div>
+</div>`;
+        document.querySelector(".VTO__modal-slot").appendChild(container);
+        setTimeout(()=>{
+            var snackbar = container.querySelector(".notistack-Snackbar");
+            snackbar.style.transition = "opacity 0.3s";
+            snackbar.style.opacity = 0;
+            setTimeout(()=>container.remove(),300);
+        },5000);
+    }
     async function main() {
         const randomDelay = () => new Promise(r => setTimeout(r, 500 + Math.random() * 250));
         try {
@@ -107,6 +129,8 @@
                 await randomDelay();
             }
             setLastRun(today);
+            if (done != 0)
+                toastMessage(done);
             console.log("Finished blocking artists.");
         } catch (e) {
             console.error("Error in Spotify AI Artist Blocker:", e);

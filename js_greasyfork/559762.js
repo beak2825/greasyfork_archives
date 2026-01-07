@@ -2,11 +2,11 @@
 // @name         Gemini Enterprise Inline Math Fix
 // @namespace    https://github.com/lueluelue2006
 // @author       schweigen
-// @version      1.2.0
+// @version      1.2.1
 // @license      MIT
 // @description  Render inline and block math that appears as raw delimiters in Gemini Enterprise.
 // @match        https://business.gemini.google/*
-// @run-at       document-idle
+// @run-at       document-start
 // @grant        unsafeWindow
 // @downloadURL https://update.greasyfork.org/scripts/559762/Gemini%20Enterprise%20Inline%20Math%20Fix.user.js
 // @updateURL https://update.greasyfork.org/scripts/559762/Gemini%20Enterprise%20Inline%20Math%20Fix.meta.js
@@ -17,7 +17,7 @@
 
   try {
     if (typeof unsafeWindow !== 'undefined') {
-      unsafeWindow.__geminiInlineMathFix = { version: '1.2.0' };
+      unsafeWindow.__geminiInlineMathFix = { version: '1.2.1' };
     }
   } catch (e) {
     // Ignore if unsafeWindow is blocked.
@@ -142,6 +142,126 @@
     return latex;
   };
 
+  const restoreIndexedSetBraces = (latex) => {
+    if (!latex || !latex.includes('{') || !latex.includes('}')) return latex;
+
+    const isEscaped = (s, idx) => idx > 0 && s[idx - 1] === '\\';
+
+    const findMatchingBrace = (s, start) => {
+      let depth = 0;
+      for (let i = start; i < s.length; i += 1) {
+        const ch = s[i];
+        if (ch === '{' && !isEscaped(s, i)) depth += 1;
+        if (ch === '}' && !isEscaped(s, i)) depth -= 1;
+        if (depth === 0) return i;
+      }
+      return -1;
+    };
+
+    const isInfinity = (s, caretIndex) => {
+      let i = caretIndex + 1;
+      while (i < s.length && /\s/.test(s[i])) i += 1;
+
+      if (i >= s.length) return null;
+
+      if (s[i] === '{' && !isEscaped(s, i)) {
+        const end = findMatchingBrace(s, i);
+        if (end > i) {
+          const inner = s.slice(i + 1, end).trim();
+          if (inner === '\\infty' || inner === '∞') return end + 1;
+        }
+        return null;
+      }
+
+      if (s.slice(i).startsWith('\\infty')) return i + '\\infty'.length;
+      if (s[i] === '∞') return i + 1;
+      return null;
+    };
+
+    let out = '';
+    let cursor = 0;
+
+    while (cursor < latex.length) {
+      const open = latex.indexOf('{', cursor);
+      if (open < 0) {
+        out += latex.slice(cursor);
+        break;
+      }
+
+      out += latex.slice(cursor, open);
+
+      if (isEscaped(latex, open)) {
+        out += '{';
+        cursor = open + 1;
+        continue;
+      }
+
+      const groupAEnd = findMatchingBrace(latex, open);
+      if (groupAEnd < 0) {
+        out += latex.slice(open);
+        break;
+      }
+
+      let idx = groupAEnd + 1;
+      while (idx < latex.length && /\s/.test(latex[idx])) idx += 1;
+
+      let groupBStart = -1;
+      if (idx < latex.length && latex[idx] === '_' && !isEscaped(latex, idx)) {
+        idx += 1;
+        while (idx < latex.length && /\s/.test(latex[idx])) idx += 1;
+        if (idx < latex.length && latex[idx] === '{' && !isEscaped(latex, idx)) {
+          groupBStart = idx;
+        }
+      } else if (idx < latex.length && latex[idx] === '{' && !isEscaped(latex, idx)) {
+        // Common Gemini markdown escape bug: "\\}_{k=1}" becomes "}{k=1}" (underscore eaten by markdown).
+        groupBStart = idx;
+      }
+
+      if (groupBStart < 0) {
+        out += latex.slice(open, groupAEnd + 1);
+        cursor = groupAEnd + 1;
+        continue;
+      }
+
+      const groupBEnd = findMatchingBrace(latex, groupBStart);
+      if (groupBEnd < 0) {
+        out += latex.slice(open, groupAEnd + 1);
+        cursor = groupAEnd + 1;
+        continue;
+      }
+
+      const groupBInner = latex.slice(groupBStart + 1, groupBEnd).trim();
+      if (!/^[a-zA-Z]\s*=\s*\d+$/.test(groupBInner)) {
+        out += latex.slice(open, groupAEnd + 1);
+        cursor = groupAEnd + 1;
+        continue;
+      }
+
+      idx = groupBEnd + 1;
+      while (idx < latex.length && /\s/.test(latex[idx])) idx += 1;
+      if (idx >= latex.length || latex[idx] !== '^' || isEscaped(latex, idx)) {
+        out += latex.slice(open, groupAEnd + 1);
+        cursor = groupAEnd + 1;
+        continue;
+      }
+
+      const afterInfinity = isInfinity(latex, idx);
+      if (!afterInfinity) {
+        out += latex.slice(open, groupAEnd + 1);
+        cursor = groupAEnd + 1;
+        continue;
+      }
+
+      const groupAInner = latex.slice(open + 1, groupAEnd);
+      const groupB = latex.slice(groupBStart, groupBEnd + 1);
+
+      out += `\\{${groupAInner}\\}_${groupB}${latex.slice(idx, afterInfinity)}`;
+      cursor = afterInfinity;
+    }
+
+    return out;
+  };
+
   const restoreSetBracesAfterEquals = (latex) => {
     if (!latex || !latex.includes('{') || !latex.includes('}')) return latex;
 
@@ -194,6 +314,89 @@
     return out;
   };
 
+  const restoreOperatorSetBraces = (latex) => {
+    if (!latex) return latex;
+    if (!latex.includes('\\max') && !latex.includes('\\min')) return latex;
+
+    const isEscaped = (s, idx) => idx > 0 && s[idx - 1] === '\\';
+
+    const findMatchingBrace = (s, start) => {
+      let depth = 0;
+      for (let i = start; i < s.length; i += 1) {
+        const ch = s[i];
+        if (ch === '{' && !isEscaped(s, i)) depth += 1;
+        if (ch === '}' && !isEscaped(s, i)) depth -= 1;
+        if (depth === 0) return i;
+      }
+      return -1;
+    };
+
+    const hasTopLevelComma = (inner) => {
+      if (!inner || !inner.includes(',')) return false;
+      let depth = 0;
+      for (let i = 0; i < inner.length; i += 1) {
+        const ch = inner[i];
+        if (ch === '{' && !isEscaped(inner, i)) depth += 1;
+        if (ch === '}' && !isEscaped(inner, i)) depth = Math.max(0, depth - 1);
+        if (depth === 0 && ch === ',' && !isEscaped(inner, i)) return true;
+      }
+      return false;
+    };
+
+    const ops = ['max', 'min'];
+    let out = '';
+    let cursor = 0;
+
+    while (cursor < latex.length) {
+      let bestIdx = -1;
+      let bestOp = null;
+      for (const op of ops) {
+        const idx = latex.indexOf(`\\${op}`, cursor);
+        if (idx < 0) continue;
+        if (bestIdx < 0 || idx < bestIdx) {
+          bestIdx = idx;
+          bestOp = op;
+        }
+      }
+
+      if (bestIdx < 0 || !bestOp) {
+        out += latex.slice(cursor);
+        break;
+      }
+
+      out += latex.slice(cursor, bestIdx);
+      out += `\\${bestOp}`;
+
+      let i = bestIdx + bestOp.length + 1;
+      const wsStart = i;
+      while (i < latex.length && /\s/.test(latex[i])) i += 1;
+      out += latex.slice(wsStart, i);
+
+      if (i >= latex.length || latex[i] !== '{' || isEscaped(latex, i)) {
+        cursor = i;
+        continue;
+      }
+
+      const end = findMatchingBrace(latex, i);
+      if (end <= i) {
+        out += latex.slice(i);
+        break;
+      }
+
+      const inner = latex.slice(i + 1, end);
+      if (!hasTopLevelComma(inner)) {
+        out += latex.slice(i, end + 1);
+        cursor = end + 1;
+        continue;
+      }
+
+      out += `\\{${inner}\\}`;
+      cursor = end + 1;
+    }
+
+    return out;
+  };
+
   const repairLatex = (latex) => {
     let out = latex;
 
@@ -224,6 +427,17 @@
       out = out.replace(/\{([^}]*)\}/g, '\\{$1\\}');
     }
 
+    return out;
+  };
+
+  const sanitizeLatexForKatex = (latex) => {
+    let out = typeof latex === 'string' ? latex : String(latex ?? '');
+    out = restoreSetBracesAfterEquals(out);
+    out = restoreOperatorSetBraces(out);
+    out = restoreOuterSetBraces(out);
+    out = restoreIndexedSetBraces(out);
+    out = normalizeBareLatex(out);
+    out = repairLatex(out);
     return out;
   };
 
@@ -519,6 +733,27 @@
     return filtered;
   };
 
+  const safeReplaceRange = (range, node) => {
+    let extracted;
+    try {
+      extracted = range.extractContents();
+    } catch (e) {
+      return false;
+    }
+
+    try {
+      range.insertNode(node);
+      return true;
+    } catch (e) {
+      try {
+        range.insertNode(extracted);
+      } catch (restoreErr) {
+        // Ignore restore failures.
+      }
+      return false;
+    }
+  };
+
   const processSequence = (text, segments, katex) => {
     if (!text || !segments.length) return;
     const matches = collectMatches(text);
@@ -542,14 +777,11 @@
         const range = document.createRange();
         range.setStart(startLoc.node, startLoc.offset);
         range.setEnd(endLoc.node, endLoc.offset);
-        range.deleteContents();
-        range.insertNode(document.createTextNode(latex));
+        safeReplaceRange(range, document.createTextNode(latex));
         continue;
       }
 
-      latex = restoreSetBracesAfterEquals(latex);
-      latex = restoreOuterSetBraces(latex);
-      latex = normalizeBareLatex(latex);
+      latex = sanitizeLatexForKatex(latex);
 
       const rendered = renderLatex(latex, m.displayMode, katex);
       if (!rendered) continue;
@@ -557,8 +789,7 @@
       const range = document.createRange();
       range.setStart(startLoc.node, startLoc.offset);
       range.setEnd(endLoc.node, endLoc.offset);
-      range.deleteContents();
-      range.insertNode(rendered);
+      safeReplaceRange(range, rendered);
     }
   };
 
@@ -862,6 +1093,18 @@
       .disclaimer { display: none !important; }
       .main.chat-mode.omnibar { padding-bottom: 0 !important; }
       .main.chat-mode.omnibar form.omnibar { margin-bottom: 0 !important; }
+
+      /* KaTeX inside shadow roots may miss base CSS, causing MathML+HTML duplication. */
+      .katex .katex-mathml {
+        position: absolute !important;
+        overflow: hidden !important;
+        clip: rect(1px, 1px, 1px, 1px) !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        border: 0 !important;
+      }
+      .katex .katex-html { position: relative; }
     `;
     root.appendChild(style);
   };
@@ -911,9 +1154,117 @@
     (document.body || document.documentElement).appendChild(btn);
   };
 
+  let katexHooked = false;
+  const hookKatex = (katex) => {
+    if (!katex || typeof katex.render !== 'function') return false;
+    if (katex.__geminiInlineMathFixWrapped) return true;
+
+    try {
+      const originalRender = katex.render.bind(katex);
+      const wrappedRender = (latex, element, options) => {
+        try {
+          return originalRender(sanitizeLatexForKatex(latex), element, options);
+        } catch (e) {
+          return originalRender(latex, element, options);
+        }
+      };
+      wrappedRender.__geminiInlineMathFixWrapped = true;
+      wrappedRender.__geminiInlineMathFixOriginal = originalRender;
+      katex.render = wrappedRender;
+
+      if (typeof katex.renderToString === 'function') {
+        const originalRenderToString = katex.renderToString.bind(katex);
+        const wrappedRenderToString = (latex, options) => {
+          try {
+            return originalRenderToString(sanitizeLatexForKatex(latex), options);
+          } catch (e) {
+            return originalRenderToString(latex, options);
+          }
+        };
+        wrappedRenderToString.__geminiInlineMathFixWrapped = true;
+        wrappedRenderToString.__geminiInlineMathFixOriginal = originalRenderToString;
+        katex.renderToString = wrappedRenderToString;
+      }
+
+      katex.__geminiInlineMathFixWrapped = true;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  let katexHookAttempts = 0;
+  const KATEX_HOOK_WAIT_MAX_ATTEMPTS = 200;
+  const KATEX_HOOK_WAIT_MS = 50;
+  const scheduleKatexHook = () => {
+    if (katexHooked) return;
+    const katex = getKatex();
+    if (katex) {
+      katexHooked = hookKatex(katex);
+      return;
+    }
+    if (katexHookAttempts >= KATEX_HOOK_WAIT_MAX_ATTEMPTS) return;
+    katexHookAttempts += 1;
+    setTimeout(scheduleKatexHook, KATEX_HOOK_WAIT_MS);
+  };
+
   let katexWaitAttempts = 0;
   const KATEX_WAIT_MAX_ATTEMPTS = 30;
   const KATEX_WAIT_MS = 600;
+  let followUpAttempts = 0;
+  const FOLLOW_UP_MAX_ATTEMPTS = 4;
+  const FOLLOW_UP_DELAY_MS = 650;
+
+  const hasUnrenderedMathDelimiters = (text) => {
+    if (!text) return false;
+    if (!text.includes('$') && !text.includes('\\(') && !text.includes('\\[')) return false;
+    const re = /\\\[([\s\S]+?)\\\]|\\\(([\s\S]+?)\\\)|\$\$([\s\S]+?)\$\$|\$([^$\n]+?)\$/g;
+    return re.test(text);
+  };
+
+  const EXISTING_KATEX_REPAIRED_ATTR = 'data-gemini-inline-math-fix-existing';
+  const repairExistingKatexOperators = (root, katex) => {
+    if (!root || typeof root.querySelectorAll !== 'function') return;
+
+    const katexEls = Array.from(root.querySelectorAll('.katex'));
+    for (const el of katexEls) {
+      if (!el || typeof el.querySelector !== 'function') continue;
+      if (el.closest(`[${EXISTING_KATEX_REPAIRED_ATTR}]`)) continue;
+      if (el.closest('[data-gemini-inline-math-fix]')) continue;
+
+      const ann = el.querySelector('.katex-mathml annotation');
+      const tex = ann && ann.textContent ? ann.textContent : '';
+      if (!tex) continue;
+
+      const repaired = restoreOperatorSetBraces(tex);
+      if (repaired === tex) continue;
+
+      const displayContainer = el.closest('.katex-display');
+      const container = displayContainer || el;
+      if (!container || container.closest('[data-gemini-inline-math-fix]')) continue;
+      if (container.hasAttribute(EXISTING_KATEX_REPAIRED_ATTR)) continue;
+
+      const displayMode = !!displayContainer;
+      try {
+        katex.render(repaired, container, {
+          displayMode,
+          throwOnError: false,
+          strict: 'ignore'
+        });
+        if (isKatexError(container)) {
+          katex.render(tex, container, {
+            displayMode,
+            throwOnError: false,
+            strict: 'ignore'
+          });
+          continue;
+        }
+        container.setAttribute(EXISTING_KATEX_REPAIRED_ATTR, '1');
+      } catch (e) {
+        // Ignore render failures.
+      }
+    }
+  };
 
   const processAll = () => {
     ensureRefreshButton();
@@ -926,6 +1277,7 @@
       }
       return;
     }
+    hookKatex(katex);
     katexWaitAttempts = 0;
 
     const app = document.querySelector('ucs-standalone-app');
@@ -933,6 +1285,7 @@
 
     const roots = [];
     collectShadowRoots(app.shadowRoot, roots);
+    const processedDocs = new Set();
 
     for (const r of roots) {
       patchMarkdownHosts(r);
@@ -945,6 +1298,7 @@
         }
         processRoot(doc, katex);
         processTableRows(doc, katex);
+        processedDocs.add(doc);
       }
 
       const markdowns = r.querySelectorAll('ucs-fast-markdown, ucs-markdown, ucs-response-markdown');
@@ -954,7 +1308,26 @@
           if (patchedAt && Date.now() - patchedAt < PATCH_SKIP_WINDOW_MS) continue;
           processRoot(fm.shadowRoot, katex);
           processTableRows(fm.shadowRoot, katex);
+          fm.shadowRoot.querySelectorAll('.markdown-document').forEach((d) => processedDocs.add(d));
         }
+      }
+
+      repairExistingKatexOperators(r, katex);
+    }
+
+    if (followUpAttempts < FOLLOW_UP_MAX_ATTEMPTS) {
+      let needsFollowUp = false;
+      for (const doc of processedDocs) {
+        if (hasUnrenderedMathDelimiters(doc.textContent || '')) {
+          needsFollowUp = true;
+          break;
+        }
+      }
+      if (needsFollowUp) {
+        followUpAttempts += 1;
+        setTimeout(schedule, FOLLOW_UP_DELAY_MS);
+      } else {
+        followUpAttempts = 0;
       }
     }
   };
@@ -980,5 +1353,6 @@
     // Ignore if unsafeWindow is blocked.
   }
 
+  scheduleKatexHook();
   schedule();
 })();

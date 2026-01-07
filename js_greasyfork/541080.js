@@ -1,9 +1,11 @@
 // ==UserScript==
 // @name         Milky Party Finder Filters
+// @name:zh-CN   Milky 组队过滤器
 // @namespace    http://tampermonkey.net/
-// @version      1.0
-// @description  Adds filters to the Find Party page in Milky Way Idle.
-// @author       Opzon - While this was stripped directly out of MWI Tools Modded by me I originally create this separately with Gemini AI
+// @version      1.3
+// @description  Adds filters to the Find Party page in Milky Way Idle. Matches MWITools language detection.
+// @description:zh-CN 在 Milky Way Idle 的组队页面添加过滤器。自动匹配游戏语言设置。
+// @author       Opzon - Localized by User Request
 // @match        https://www.milkywayidle.com/*
 // @match        https://test.milkywayidle.com/*
 // @grant        GM_addStyle
@@ -16,6 +18,15 @@
 
 (() => {
     "use strict";
+
+    // --- Localization Logic (Matches MWITools) ---
+    const isZH = localStorage.getItem("i18nextLng")?.toLowerCase()?.startsWith("zh");
+
+    const TEXT = {
+        combatLvSatisfied: isZH ? "战斗等级达标" : "Combat Lv. Satisfied",
+        partyOwnerReady: isZH ? "队长已准备" : "Party Owner Ready",
+        everyoneReady: isZH ? "全员已准备" : "Everyone Ready",
+    };
 
     // --- CSS for filter UI ---
     GM_addStyle(`
@@ -61,7 +72,6 @@
         hideIfNotCombatLvSatisfied: false,
         hideIfNotPartyOwnerReady: false,
         hideIfNotEveryoneReady: false,
-        hideIfNoAvailableSlots: false
     };
 
     let currentFilterSettings = GM_getValue(STORAGE_PREFIX + 'settings', defaultFilterSettings);
@@ -80,6 +90,7 @@
         partyDiv: 'FindParty_party__',
         levelRequirement: 'FindParty_levelReq__',
         partySlot: 'FindParty_partySlot__',
+        emptySlot: 'FindParty_empty__', // Added to identify empty slots
         readySlot: 'FindParty_ready__',
         notReadySlot: 'FindParty_notReady__',
         characterName: 'CharacterName_characterName__',
@@ -106,7 +117,7 @@
         const combatTextContainer = Array.from(document.querySelectorAll(getDynamicClassSelector(SELECTOR_PREFIXES.combatLevelContainer)))
             .find(container => {
                 const label = container.querySelector(getDynamicClassSelector(SELECTOR_PREFIXES.combatLevelLabel));
-                return label && label.textContent.trim() === 'Combat';
+                return label && (label.textContent.trim() === 'Combat' || label.textContent.trim() === '战斗');
             });
 
         if (combatTextContainer) {
@@ -127,16 +138,50 @@
         }
     }
 
-    function getPartyCombatLevelRequirement(partyElement) {
-        const levelReqElement = partyElement.querySelector(getDynamicClassSelector(SELECTOR_PREFIXES.levelRequirement));
-        if (levelReqElement && levelReqElement.textContent) {
-            const match = levelReqElement.textContent.match(/Lv\.(\d+)\+/);
-            if (match && match[1]) {
-                const requiredLevel = parseInt(match[1], 10);
-                return isNaN(requiredLevel) ? 0 : requiredLevel;
+    /**
+     * Checks if the user fits into ANY of the empty slots in the party.
+     * Parses formats like "Lv.123-143" or "Lv.123+"
+     */
+    function canUserJoinParty(partyElement) {
+        const slots = partyElement.querySelectorAll(getDynamicClassSelector(SELECTOR_PREFIXES.partySlot));
+        let hasJoinableSlot = false;
+
+        for (const slot of slots) {
+            // Only check empty slots
+            if (hasDynamicClass(slot, SELECTOR_PREFIXES.emptySlot)) {
+                const levelReqElement = slot.querySelector(getDynamicClassSelector(SELECTOR_PREFIXES.levelRequirement));
+
+                // If there is no level requirement element, assume it's open
+                if (!levelReqElement) {
+                    hasJoinableSlot = true;
+                    break;
+                }
+
+                const text = levelReqElement.textContent.trim();
+                const match = text.match(/(\d+)(?:-(\d+))?/);
+
+                if (match) {
+                    const min = parseInt(match[1], 10);
+                    let max = Infinity;
+
+                    if (match[2]) {
+                        max = parseInt(match[2], 10);
+                    }
+
+                    if (!isNaN(min)) {
+                        if (userCombatLevel >= min && userCombatLevel <= max) {
+                            hasJoinableSlot = true;
+                            break; // Found a valid slot, satisfied
+                        }
+                    }
+                } else if (!text) {
+                     // Empty text inside the element? Assume open.
+                     hasJoinableSlot = true;
+                     break;
+                }
             }
         }
-        return 0;
+        return hasJoinableSlot;
     }
 
     function isPartyOwnerReady(partyElement) {
@@ -161,23 +206,12 @@
         return true;
     }
 
-    function hasAvailableSlots(partyElement) {
-        const allSlots = partyElement.querySelectorAll(getDynamicClassSelector(SELECTOR_PREFIXES.partySlot));
-        for (const slot of allSlots) {
-            const characterNameDiv = slot.querySelector(getDynamicClassSelector(SELECTOR_PREFIXES.characterName));
-            if (!characterNameDiv) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     function applyFilterToParty(partyElement) {
         let hideParty = false;
 
         if (currentFilterSettings.hideIfNotCombatLvSatisfied) {
-            const requiredLevel = getPartyCombatLevelRequirement(partyElement);
-            if (requiredLevel > 0 && userCombatLevel < requiredLevel) {
+            // New Logic: Check if at least one empty slot accepts our level
+            if (!canUserJoinParty(partyElement)) {
                 hideParty = true;
             }
         }
@@ -190,12 +224,6 @@
 
         if (!hideParty && currentFilterSettings.hideIfNotEveryoneReady) {
             if (!isEveryoneReady(partyElement)) {
-                hideParty = true;
-            }
-        }
-
-        if (!hideParty && currentFilterSettings.hideIfNoAvailableSlots) {
-            if (!hasAvailableSlots(partyElement)) {
                 hideParty = true;
             }
         }
@@ -222,19 +250,15 @@
         filterContainer.innerHTML = `
             <div class="mwi-filter-checkbox-group">
                 <input type="checkbox" id="${STORAGE_PREFIX}hideIfNotCombatLvSatisfied">
-                <label for="${STORAGE_PREFIX}hideIfNotCombatLvSatisfied">Combat Lv. Satisfied</label>
+                <label for="${STORAGE_PREFIX}hideIfNotCombatLvSatisfied">${TEXT.combatLvSatisfied}</label>
             </div>
             <div class="mwi-filter-checkbox-group">
                 <input type="checkbox" id="${STORAGE_PREFIX}hideIfNotPartyOwnerReady">
-                <label for="${STORAGE_PREFIX}hideIfNotPartyOwnerReady">Party Owner Ready</label>
+                <label for="${STORAGE_PREFIX}hideIfNotPartyOwnerReady">${TEXT.partyOwnerReady}</label>
             </div>
             <div class="mwi-filter-checkbox-group">
                 <input type="checkbox" id="${STORAGE_PREFIX}hideIfNotEveryoneReady">
-                <label for="${STORAGE_PREFIX}hideIfNotEveryoneReady">Everyone Ready</label>
-            </div>
-            <div class="mwi-filter-checkbox-group">
-                <input type="checkbox" id="${STORAGE_PREFIX}hideIfNoAvailableSlots">
-                <label for="${STORAGE_PREFIX}hideIfNoAvailableSlots">Available Slot(s)</label>
+                <label for="${STORAGE_PREFIX}hideIfNotEveryoneReady">${TEXT.everyoneReady}</label>
             </div>
         `;
 

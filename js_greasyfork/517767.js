@@ -14,7 +14,7 @@
 // @description:ko Twitter/X에서 마지막 읽기 위치를 추적하고 동기화합니다. 수동 및 자동 옵션 포함. 새로운 게시물을 확인하면서 현재 위치를 잃지 않도록 이상적입니다. 트윗 ID를 사용하여 정확한 위치 지정을 하고, 리포스트를 지원합니다。
 // @icon https://x.com/favicon.ico
 // @namespace http://tampermonkey.net/
-// @version 2026.1.6
+// @version 2026.1.7
 // @author Copiis
 // @license MIT
 // @match https://x.com/*
@@ -637,79 +637,79 @@
 }
 
     async function downloadLastReadPost() {
-        if (!window.location.href.includes("/home")) {
-            console.log("⏹️ Download übersprungen: Nicht auf der Home-Seite.");
+    if (!window.location.href.includes("/home")) {
+        console.log("⏹️ Download übersprungen: Nicht auf der Home-Seite.");
+        return;
+    }
+    try {
+        if (!lastReadPost || !lastReadPost.tweetId || !lastReadPost.authorHandler) {
+            console.warn("⚠️ Keine gültige Leseposition zum Speichern:", lastReadPost);
+            showPopup("noValidPosition", 5000);
             return;
         }
+        const postKey = `${lastReadPost.tweetId}-${lastReadPost.authorHandler}`;
+        if (downloadedPosts.has(postKey)) {
+            console.log("⏹️ Leseposition bereits heruntergeladen:", postKey);
+            showPopup("alreadyDownloaded", 5000);
+            return;
+        }
+        if (!currentPost || currentPost.tweetId !== lastReadPost.tweetId || currentPost.authorHandler !== lastReadPost.authorHandler) {
+            console.warn("⚠️ currentPost und lastReadPost nicht synchron, aktualisiere currentPost:", currentPost, lastReadPost);
+            currentPost = { ...lastReadPost };
+        }
+        console.log("🛠️ DEBUG: Starte Download-Prozess für Leseposition:", lastReadPost);
+        const account = await getCurrentUserHandle();
+        const fileName = `${account}_${lastReadPost.tweetId}-${lastReadPost.authorHandler}.json`;
+        console.log("📄 Generierter Dateiname:", fileName);
+        const fileContent = JSON.stringify(lastReadPost, null, 2);
+        const blob = new Blob([fileContent], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        a.style.display = "none";
+        document.body.appendChild(a);
+        console.log("🔗 Download-Element erstellt:", a);
         try {
-            if (!lastReadPost || !lastReadPost.tweetId || !lastReadPost.authorHandler) {
-                console.warn("⚠️ Keine gültige Leseposition zum Speichern:", lastReadPost);
-                showPopup("noValidPosition", 5000);
+            a.click();
+            console.log(`💾 Leseposition als Datei gespeichert: ${fileName}`);
+            showPopup("downloadSuccess", 10000, { fileName });
+            downloadedPosts.add(postKey);
+            saveDownloadedPosts();
+        } catch (clickErr) {
+            console.error("❌ Fehler beim Auslösen des Downloads:", clickErr);
+            if (!navigator.clipboard) {
+                console.error("❌ Clipboard-API nicht verfügbar.");
+                showPopup("downloadClipboardFailed", 15000);
+                promptManualFallback(lastReadPost);
                 return;
             }
-            const postKey = `${lastReadPost.tweetId}-${lastReadPost.authorHandler}`;
-            if (downloadedPosts.has(postKey)) {
-                console.log("⏹️ Leseposition bereits heruntergeladen:", postKey);
-                showPopup("alreadyDownloaded", 5000);
-                return;
-            }
-            if (!currentPost || currentPost.tweetId !== lastReadPost.tweetId || currentPost.authorHandler !== lastReadPost.authorHandler) {
-                console.warn("⚠️ currentPost und lastReadPost nicht synchron, aktualisiere currentPost:", currentPost, lastReadPost);
-                currentPost = { ...lastReadPost };
-            }
-            console.log("🛠️ DEBUG: Starte Download-Prozess für Leseposition:", lastReadPost);
-            const account = await getCurrentUserHandle();
-            const fileName = `${account}_${lastReadPost.tweetId}-${lastReadPost.authorHandler}.json`;
-            console.log("📄 Generierter Dateiname:", fileName);
-            const fileContent = JSON.stringify(lastReadPost, null, 2);
-            const blob = new Blob([fileContent], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = fileName;
-            a.style.display = "none";
-            document.body.appendChild(a);
-            console.log("🔗 Download-Element erstellt:", a);
-            try {
-                a.click();
-                console.log(`💾 Leseposition als Datei gespeichert: ${fileName}`);
-                showPopup("downloadSuccess", 5000, { fileName });
+            navigator.clipboard.writeText(fileContent).then(() => {
+                console.log("📋 Leseposition in Zwischenablage kopiert.");
+                showPopup("downloadFailed", 15000, { fileName });
                 downloadedPosts.add(postKey);
                 saveDownloadedPosts();
-            } catch (clickErr) {
-                console.error("❌ Fehler beim Auslösen des Downloads:", clickErr);
-                if (!navigator.clipboard) {
-                    console.error("❌ Clipboard-API nicht verfügbar.");
-                    showPopup("downloadClipboardFailed", 10000);
-                    promptManualFallback(lastReadPost);
-                    return;
-                }
-                navigator.clipboard.writeText(fileContent).then(() => {
-                    console.log("📋 Leseposition in Zwischenablage kopiert.");
-                    showPopup("downloadFailed", 10000, { fileName });
-                    downloadedPosts.add(postKey);
-                    saveDownloadedPosts();
-                }).catch(clipErr => {
-                    console.error("❌ Fehler beim Kopieren in die Zwischenablage:", clipErr);
-                    showPopup("downloadClipboardFailed", 10000);
-                    promptManualFallback(lastReadPost);
-                });
-            }
-            setTimeout(() => {
-                try {
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                    console.log("🧹 Download-Element entfernt und URL freigegeben.");
-                } catch (cleanupErr) {
-                    console.error("❌ Fehler beim Aufräumen:", cleanupErr);
-                }
-            }, 3000);
-        } catch (err) {
-            console.error("❌ Fehler beim Speichern der Datei:", err);
-            showPopup("downloadClipboardFailed", 5000);
-            promptManualFallback(lastReadPost);
+            }).catch(clipErr => {
+                console.error("❌ Fehler beim Kopieren in die Zwischenablage:", clipErr);
+                showPopup("downloadClipboardFailed", 15000);
+                promptManualFallback(lastReadPost);
+            });
         }
+        setTimeout(() => {
+            try {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                console.log("🧹 Download-Element entfernt und URL freigegeben.");
+            } catch (cleanupErr) {
+                console.error("❌ Fehler beim Aufräumen:", cleanupErr);
+            }
+        }, 3000);
+    } catch (err) {
+        console.error("❌ Fehler beim Speichern der Datei:", err);
+        showPopup("downloadClipboardFailed", 15000);
+        promptManualFallback(lastReadPost);
     }
+}
 
     async function loadNewestLastReadPost() {
         return new Promise(resolve => {
@@ -1576,32 +1576,32 @@
 }
 
     function createSearchPopup(position) {
-        const lang = getUserLanguage();
-        const message = getTranslatedMessage(isFallbackSearching ? 'tweetIdNotFound' : 'searchPopup', lang, { authorHandler: position.authorHandler, tweetId: position.tweetId });
-        popup = document.createElement("div");
-        popup.style.position = "fixed";
-        popup.style.top = "20px";
-        popup.style.left = "50%";
-        popup.style.transform = "translateX(-50%)";
-        popup.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
-        popup.style.color = "#ffffff";
-        popup.style.padding = "10px 20px";
-        popup.style.borderRadius = "8px";
-        popup.style.fontSize = "14px";
-        popup.style.boxShadow = "0 0 10px rgba(246, 146, 25, 0.8)";
-        popup.style.zIndex = "10000";
-        popup.style.transition = "opacity 0.3s ease";
-        popup.style.opacity = "0";
-        popup.textContent = message;
-        if (document.body) {
-            document.body.appendChild(popup);
-            setTimeout(() => { popup.style.opacity = "1"; }, 100);
-            return popup;
-        } else {
-            console.error("❌ document.body nicht verfügbar für createSearchPopup.");
-            return null;
-        }
+    const lang = getUserLanguage();
+    const message = getTranslatedMessage(isFallbackSearching ? 'tweetIdNotFound' : 'searchPopup', lang, { authorHandler: position.authorHandler, tweetId: position.tweetId });
+    popup = document.createElement("div");
+    popup.style.position = "fixed";
+    popup.style.top = "20px";
+    popup.style.left = "50%";
+    popup.style.transform = "translateX(-50%)";
+    popup.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+    popup.style.color = "#ffffff";
+    popup.style.padding = "10px 20px";
+    popup.style.borderRadius = "8px";
+    popup.style.fontSize = "14px";
+    popup.style.boxShadow = "0 0 10px rgba(246, 146, 25, 0.8)";
+    popup.style.zIndex = "10000";
+    popup.style.transition = "opacity 1s ease";  // Auch hier langsames Ausfaden
+    popup.style.opacity = "0";
+    popup.textContent = message;
+    if (document.body) {
+        document.body.appendChild(popup);
+        setTimeout(() => { popup.style.opacity = "1"; }, 100);
+        return popup;
+    } else {
+        console.error("❌ document.body nicht verfügbar für createSearchPopup.");
+        return null;
     }
+}
 
     function observeForNewPosts() {
         const timelineContainer = document.querySelector('div[data-testid="primaryColumn"]') || document.body;
@@ -1790,44 +1790,44 @@
     }
 
     function showPopup(messageKey, duration = 3000, params = {}) {
-        const lang = getUserLanguage();
-        const message = getTranslatedMessage(messageKey, lang, params);
-        if (popup) {
-            popup.style.opacity = "0";
-            setTimeout(() => popup.remove(), 300);
-        }
-        popup = document.createElement("div");
-        popup.style.position = "fixed";
-        popup.style.top = "20px";
-        popup.style.left = "50%";
-        popup.style.transform = "translateX(-50%)";
-        popup.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
-        popup.style.color = "#ffffff";
-        popup.style.padding = "10px 20px";
-        popup.style.borderRadius = "8px";
-        popup.style.fontSize = "14px";
-        popup.style.boxShadow = "0 0 10px rgba(246, 146, 25, 0.8)";
-        popup.style.zIndex = "10000";
-        popup.style.maxWidth = "500px";
-        popup.style.whiteSpace = "pre-wrap";
-        popup.style.transition = "opacity 0.3s ease";
+    const lang = getUserLanguage();
+    const message = getTranslatedMessage(messageKey, lang, params);
+    if (popup) {
         popup.style.opacity = "0";
-        popup.textContent = message;
-        if (document.body) {
-            document.body.appendChild(popup);
-            setTimeout(() => { popup.style.opacity = "1"; }, 100);
-            setTimeout(() => {
-                try {
-                    popup.style.opacity = "0";
-                    setTimeout(() => popup.remove(), 300);
-                } catch (err) {
-                    console.error("❌ Fehler beim Entfernen des Popups:", err);
-                }
-            }, duration);
-        } else {
-            console.error("❌ document.body nicht verfügbar für showPopup.");
-        }
+        setTimeout(() => popup.remove(), 300);
     }
+    popup = document.createElement("div");
+    popup.style.position = "fixed";
+    popup.style.top = "20px";
+    popup.style.left = "50%";
+    popup.style.transform = "translateX(-50%)";
+    popup.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+    popup.style.color = "#ffffff";
+    popup.style.padding = "10px 20px";
+    popup.style.borderRadius = "8px";
+    popup.style.fontSize = "14px";
+    popup.style.boxShadow = "0 0 10px rgba(246, 146, 25, 0.8)";
+    popup.style.zIndex = "10000";
+    popup.style.maxWidth = "500px";
+    popup.style.whiteSpace = "pre-wrap";
+    popup.style.transition = "opacity 1s ease";  // Langsames Ein- und Ausfaden für alle Popups
+    popup.style.opacity = "0";
+    popup.textContent = message;
+    if (document.body) {
+        document.body.appendChild(popup);
+        setTimeout(() => { popup.style.opacity = "1"; }, 100);
+        setTimeout(() => {
+            try {
+                popup.style.opacity = "0";
+                setTimeout(() => popup.remove(), 1000);  // Wartezeit auf 1s erhöht, passend zur Transition
+            } catch (err) {
+                console.error("❌ Fehler beim Entfernen des Popups:", err);
+            }
+        }, duration);
+    } else {
+        console.error("❌ document.body nicht verfügbar für showPopup.");
+    }
+}
 
     function promptManualFallback(data) {
         const content = JSON.stringify(data);

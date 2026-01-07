@@ -1,8 +1,14 @@
 // ==UserScript==
 // @name         短视频去水印（支持抖音网页版）
-// @version      1.3.3
+// @name:en      Remove watermarks from short videos (supports TikTok web version)
+// @name:zh-CN   短视频去水印（支持抖音网页版）
+// @name:zh-TW   短影片去浮水印（支援抖音網頁版）
+// @version      1.3.5
 // @license      MIT
 // @description  一款短视频去水印下载工具，支持抖音网页版视频无水印下载
+// @description:en  A short video watermark removal and download tool that supports downloading videos from the Douyin (TikTok) web version without watermarks
+// @description:zh-CN   一款短视频去水印下载工具，支持抖音网页版视频无水印下载
+// @description:zh-TW   一款短影片去浮水印下載工具，支援抖音網頁版影片無浮水印下載
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABD0lEQVR42mP4TyJgoFTDrz//V537Vbj+R+G6HyvP/fr15x8+DQ/f/TXq/hq7+NuKs7+AKG7xdyAXKIhdw5+//017vi478xNZevnZXyY9X//8xaZh69XffrO+QdjXX/wBIgjbb/a3rVd/oWsA2usz69uEA1DjZx/7BUQQNlAQKAV3GEjD3Td/TLq/rLvw6/Xnv5gaXn3+u/biL6ACoDKohqL1P3Zcg0oDA6Vq87f+/T/79/+o2vwdHkY7rv0GKoNqiF/y/dKzP3BXrjr/S7jyCxCtPo9wOlABUBlUw9oLv2IXf/+F0AISASLkyAEqgIhAPd1/4Kdh11fz3m/Y0FfDri9AF2KJuH84EFXTEvU1AACibsLlJw3ttAAAAABJRU5ErkJggg==
 // @author       LightDownload
 // @match      *://*.douyin.com/*

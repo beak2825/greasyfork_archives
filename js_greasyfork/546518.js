@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         F95Zone Ultimate Enhancer
-// @version      4.1.5
+// @version      4.2.0
 // @icon         https://external-content.duckduckgo.com/iu/?u=https://f95zone.to/data/avatars/l/1963/1963870.jpg?1744969685
 // @namespace    https://f95zone.to/threads/f95zone-latest.250836/
 // @homepage     https://f95zone.to/threads/f95zone-latest.250836/
@@ -22,7 +22,7 @@
 // @updateURL https://update.greasyfork.org/scripts/546518/F95Zone%20Ultimate%20Enhancer.meta.js
 // ==/UserScript==
 // ------------------------------------------------------------
-// Built on 2025-12-21 04:13:48 UTC — AUTO-GENERATED, edit from /src and rebuild
+// Built on 2026-01-07 11:21:35 UTC — AUTO-GENERATED, edit from /src and rebuild
 // ------------------------------------------------------------
 
 (() => {
@@ -87,7 +87,18 @@
     minVersion: 0.5,
     wideLatest: false,
     denseLatestGrid: false,
-    latestOverlayToggle: true
+    latestOverlayToggle: true,
+    // ── new horny addition ──
+    goldenFreshGlow: true,
+    // main toggle
+    goldenMaxViews: 5e3,
+    // threshold
+    goldenMaxAgeMinutes: 60,
+    // strict <1h or relax to 120/180 later
+    goldenMaxBleedPx: 6,
+    // keep it tight
+    goldenMinOpacity: 0.15
+    // so it never fully disappears
   };
   var metrics = {
     retried: 0,
@@ -217,663 +228,7 @@
   var ui_default = '<div id="toast-container"></div>\r\n\r\n<div class="modal-content">\r\n  <h2 style="text-align: center">CONFIG</h2>\r\n\r\n  <!-- General -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>General</summary>\r\n      <div class="settings-wrapper">\r\n        <div id="global-settings-container"></div>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <!-- Latest page settings -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>Latest page settings</summary>\r\n      <div class="settings-wrapper">\r\n        <div id="latest-settings-warning"></div>\r\n        <div id="latest-settings-container"></div>\r\n        <div id="overlay-settings-container"></div>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <!-- Thread settings -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>Thread settings</summary>\r\n      <div class="settings-wrapper">\r\n        <div id="thread-settings-container"></div>\r\n        <div id="thread-overlay-settings-container"></div>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <!-- TAGS -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>Tags</summary>\r\n\r\n      <div class="settings-wrapper">\r\n        <div id="tag-error-notif" class="modal-error-notif"></div>\r\n        <div id="tags-container">\r\n          <div id="search-container">\r\n            <input type="text" id="tags-search" placeholder="Search tags..." autocomplete="off" />\r\n            <ul id="search-results"></ul>\r\n            <div id="preffered-tags-list"></div>\r\n            <div id="excluded-tags-list"></div>\r\n          </div>\r\n        </div>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n  <!-- COLORS -->\r\n  <div class="modal-settings-spacing">\r\n    <details class="config-list-details">\r\n      <summary>Color</summary>\r\n      <div class="settings-wrapper">\r\n        <div id="color-error-notif" class="modal-error-notif"></div>\r\n\r\n        <div id="color-container"></div>\r\n      </div>\r\n      <div class="centered-item">\r\n        <button id="reset-color" class="modal-btn">Reset color</button>\r\n      </div>\r\n    </details>\r\n  </div>\r\n  <hr class="thick-line" />\r\n\r\n  <!-- Close -->\r\n  <div class="centered-item">\r\n    <button id="close-modal" class="modal-btn">\u{1F5D9} Close</button>\r\n  </div>\r\n</div>\r\n';
 
   // src/template/css.css?raw
-  var css_default = `:root {\r
-  --completed-color: #388e3c;\r
-  --onhold-color: #1976d2;\r
-  --abandoned-color: #c9a300;\r
-  --highVersion-color: #2e7d32;\r
-  --invalidVersion-color: #a38400;\r
-  --tileInfo-color: #9398a0;\r
-  --tileHeader-color: #d9d9d9;\r
-  --preferred-color: #7b1fa2;\r
-  --preferred-text-color: #ffffff;\r
-  --excluded-color: #b71c1c;\r
-  --excluded-text-color: #ffffff;\r
-  --neutral-color: #37383a;\r
-  --neutral-text-color: #9398a0;\r
-\r
-  /* optional shadow toggles */\r
-  --preferred-shadow: 0 0 2px 1px white;\r
-  --excluded-shadow: 0 0 2px 1px white;\r
-}\r
-.modal-error-notif {\r
-  display: none; /* hidden by default */\r
-  background-color: #ffe5e5; /* soft red/pink */\r
-  color: #b00020; /* dark red text */\r
-  border: 1px solid #b00020;\r
-  padding: 12px 16px;\r
-  border-radius: 6px;\r
-  margin-bottom: 12px;\r
-  font-size: 14px;\r
-  font-weight: 500;\r
-}\r
-.preferred {\r
-  background-color: var(--preferred-color);\r
-  font-weight: bold;\r
-  color: var(--preferred-text-color);\r
-}\r
-.preffered-shadow {\r
-  box-shadow: var(--preferred-shadow);\r
-}\r
-.excluded {\r
-  background-color: var(--excluded-color);\r
-  font-weight: bold;\r
-  color: var(--excluded-text-color);\r
-}\r
-.excluded-shadow {\r
-  box-shadow: var(--excluded-shadow);\r
-}\r
-.neutral {\r
-  background-color: var(--neutral-color);\r
-  font-weight: bold;\r
-  color: var(--neutral-text-color);\r
-}\r
-.custom-overlay-reason {\r
-  position: absolute;\r
-  top: 4px;\r
-  left: 4px;\r
-  background: rgba(0, 0, 0, 0.7);\r
-  color: white;\r
-  padding: 2px 6px;\r
-  font-size: 12px;\r
-  border-radius: 4px;\r
-  z-index: 2;\r
-  pointer-events: none;\r
-}\r
-.centered-item {\r
-  display: flex;\r
-  justify-content: center;\r
-  align-items: center;\r
-  padding: 10px;\r
-}\r
-.settings-wrapper {\r
-  padding: 10px;\r
-  color: #ccc;\r
-  font-size: 14px;\r
-  line-height: 1.6;\r
-}\r
-div#latest-page_items-wrap_inner\r
-  div.resource-tile\r
-  a.resource-tile_link\r
-  div.resource-tile_info\r
-  div.resource-tile_info-meta {\r
-  color: var(--tileInfo-color);\r
-  font-weight: 600;\r
-}\r
-\r
-div#latest-page_items-wrap_inner div.resource-tile a.resource-tile_link {\r
-  color: var(--tileHeader-color);\r
-}\r
-.tag-btn {\r
-  border: none;\r
-  padding: 5px;\r
-  margin: 0 2px;\r
-  cursor: pointer;\r
-  font-size: 14px;\r
-  color: white;\r
-  font-weight: bold;\r
-  transition: background-color 0.2s ease;\r
-}\r
-\r
-.tag-btn.excluded {\r
-  background-color: var(--excluded-color);\r
-  color: var(--excludedText-color);\r
-}\r
-\r
-.tag-btn.preferred {\r
-  background-color: var(--preferred-color);\r
-  color: var(--preferredText-color);\r
-}\r
-\r
-.tag-btn:hover {\r
-  filter: brightness(1.1);\r
-}\r
-#toast-container {\r
-  position: fixed;\r
-  top: 20px;\r
-  left: 50%;\r
-  transform: translateX(-50%);\r
-  z-index: 10000; /* above modal */\r
-  display: flex;\r
-  flex-direction: column;\r
-  gap: 8px;\r
-  pointer-events: none;\r
-}\r
-\r
-.toast {\r
-  padding: 10px;\r
-  background-color: #333;\r
-  color: #fff;\r
-  border-radius: 8px;\r
-  opacity: 0;\r
-  transform: translateY(-10px);\r
-  transition:\r
-    opacity 0.3s ease,\r
-    transform 0.3s ease;\r
-}\r
-\r
-.toast.show {\r
-  opacity: 1;\r
-  transform: translateY(0);\r
-}\r
-\r
-#tag-config-modal {\r
-  display: none;\r
-  position: fixed;\r
-  z-index: 9999;\r
-  top: 0;\r
-  left: 0;\r
-  width: 100%;\r
-  height: 100%;\r
-  background-color: rgba(0, 0, 0, 0.5);\r
-}\r
-/* Preferred tags container */\r
-#preffered-tags-list {\r
-  display: flex;\r
-  flex-wrap: wrap;\r
-  gap: 6px;\r
-  margin-top: 8px;\r
-}\r
-\r
-/* Preferred tag item */\r
-.preferred-tag-item {\r
-  display: inline-flex;\r
-  align-items: center;\r
-  background-color: var(--preferred-color);\r
-  color: var(--preferredText-color);\r
-  border-radius: 4px;\r
-  font-size: 14px;\r
-  font-weight: bold;\r
-}\r
-\r
-.preferred-tag-item span {\r
-  margin-right: 6px;\r
-  margin-left: 6px;\r
-}\r
-\r
-.preferred-tag-remove {\r
-  background-color: #c15858;\r
-  color: #fff;\r
-  border: none;\r
-  border-top-right-radius: 4px;\r
-  border-bottom-right-radius: 4px;\r
-\r
-  padding: 10px;\r
-  cursor: pointer;\r
-  font-weight: bold;\r
-  font-size: 12px;\r
-}\r
-\r
-/* Excluded tags container */\r
-.tag-actions {\r
-  display: flex;\r
-  gap: 5px;\r
-}\r
-#excluded-tags-list {\r
-  display: flex;\r
-  flex-wrap: wrap;\r
-  gap: 6px;\r
-  margin-top: 8px;\r
-}\r
-#search-container {\r
-  position: relative;\r
-  display: inline-block;\r
-  min-height: 250px;\r
-  width: 100%;\r
-}\r
-/* Excluded tag item */\r
-.excluded-tag-item {\r
-  display: inline-flex;\r
-  align-items: center;\r
-  background-color: var(--excluded-color);\r
-  color: var(--excludedText-color);\r
-  border-radius: 4px;\r
-  font-size: 14px;\r
-  font-weight: bold;\r
-}\r
-\r
-.excluded-tag-item span {\r
-  margin-right: 6px;\r
-}\r
-\r
-.excluded-tag-remove {\r
-  background-color: #c15858;\r
-  color: #fff;\r
-  border: none;\r
-  padding: 10px;\r
-  cursor: pointer;\r
-  border-top-right-radius: 4px;\r
-  border-bottom-right-radius: 4px;\r
-  font-size: 12px;\r
-  font-weight: bold;\r
-}\r
-\r
-/* Individual list items */\r
-#search-results li {\r
-  padding: 6px 8px;\r
-  cursor: pointer;\r
-  color: #fff;\r
-  background-color: #222;\r
-\r
-  display: flex;\r
-  align-items: center;\r
-  justify-content: space-between;\r
-}\r
-\r
-#search-results li:hover {\r
-  background-color: #333; /* slightly lighter on hover */\r
-}\r
-#tags-search {\r
-  background-color: #222;\r
-  color: #fff;\r
-  border: 1px solid #555;\r
-  border-radius: 4px;\r
-  padding: 6px 8px;\r
-  width: 100%;\r
-}\r
-\r
-#tags-search:focus {\r
-  outline: none;\r
-  border: 1px solid #c15858;\r
-}\r
-#search-results {\r
-  position: absolute;\r
-  left: 0;\r
-  right: 0;\r
-  max-height: 200px;\r
-  overflow-y: auto;\r
-  background-color: #222; /* same as inputs */\r
-  border: 1px solid #555; /* same border as input */\r
-  border-radius: 4px;\r
-  margin: 2px 0 0 0; /* small gap below input */\r
-  padding: 0;\r
-  list-style: none;\r
-  display: none;\r
-  z-index: 1000;\r
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* subtle shadow */\r
-}\r
-/* All text inputs, textareas, selects */\r
-#tag-config-modal input,\r
-#tag-config-modal textarea,\r
-#tag-config-modal select {\r
-  background-color: #222;\r
-  color: #fff;\r
-  border: 1px solid #555;\r
-  border-radius: 4px;\r
-}\r
-#tag-config-modal input:focus,\r
-#tag-config-modal textarea:focus,\r
-#tag-config-modal select:focus {\r
-  outline: none;\r
-  border: 1px solid #c15858;\r
-}\r
-\r
-/* Checkboxes and radios */\r
-#tag-config-modal input[type="checkbox"],\r
-#tag-config-modal input[type="radio"] {\r
-  accent-color: #c15858;\r
-  background-color: #222;\r
-  border: 1px solid #555;\r
-}\r
-#tag-config-modal .config-color-input {\r
-  border: 2px solid #3f4043;\r
-  border-radius: 5px;\r
-  padding: 2px;\r
-  width: 40px;\r
-  height: 28px;\r
-  cursor: pointer;\r
-  background-color: #181a1d;\r
-}\r
-\r
-#tag-config-modal .config-color-input::-webkit-color-swatch-wrapper {\r
-  padding: 0;\r
-}\r
-\r
-#tag-config-modal .config-color-input::-webkit-color-swatch {\r
-  border-radius: 4px;\r
-  border: none;\r
-}\r
-\r
-.modal-btn {\r
-  background-color: #893839;\r
-  color: white;\r
-  border: 2px solid #893839;\r
-  border-radius: 6px;\r
-  padding: 8px 16px;\r
-  font-weight: 600;\r
-  font-size: 14px;\r
-  cursor: pointer;\r
-  transition:\r
-    background-color 0.3s ease,\r
-    border-color 0.3s ease;\r
-  box-shadow: 0 4px 8px rgba(137, 56, 56, 0.5);\r
-}\r
-\r
-.modal-btn:hover {\r
-  background-color: #b94f4f;\r
-  border-color: #b94f4f;\r
-}\r
-\r
-.modal-btn:active {\r
-  background-color: #6e2b2b;\r
-  border-color: #6e2b2b;\r
-  box-shadow: none;\r
-}\r
-.config-row {\r
-  display: flex;\r
-  align-items: center; /* vertically center everything */\r
-  gap: 12px;\r
-  margin: 8px 0;\r
-  line-height: 1.4;\r
-  user-select: none;\r
-}\r
-\r
-/* Fixed-width label column (all labels perfectly aligned) */\r
-.config-row label {\r
-  flex: 0 0 180px; /* adjust 180px to your longest label */\r
-  text-align: left;\r
-  font-weight: 500;\r
-  cursor: pointer;\r
-  white-space: nowrap; /* prevent label wrap */\r
-  overflow: hidden;\r
-  text-overflow: ellipsis;\r
-}\r
-\r
-/* Checkbox stays small and on the right */\r
-.config-row input[type="checkbox"] {\r
-  flex-shrink: 0;\r
-  width: 18px;\r
-  height: 18px;\r
-  margin: 0;\r
-  cursor: pointer;\r
-  accent-color: #6e42d6; /* optional: nice purple accent */\r
-}\r
-\r
-.config-row:hover {\r
-  background: rgba(110, 66, 214, 0.05);\r
-}\r
-\r
-#tag-config-button {\r
-  position: fixed;\r
-  bottom: 20px;\r
-  right: 20px;\r
-  left: 20px;\r
-  padding: 8px 12px;\r
-  font-size: 20px;\r
-  z-index: 7;\r
-  cursor: pointer;\r
-  border: 2px inset #461616;\r
-  background: #cc3131;\r
-  color: white;\r
-  border-radius: 8px;\r
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);\r
-  max-width: 70px;\r
-  width: auto;\r
-  opacity: 0.75;\r
-  transition:\r
-    opacity 1s ease,\r
-    transform 0.5s ease;\r
-}\r
-\r
-#tag-config-button:hover {\r
-  opacity: 1;\r
-}\r
-\r
-#tag-config-button:active {\r
-  transform: scale(0.9);\r
-}\r
-\r
-/* Hidden state that still allows hover */\r
-#tag-config-button.hidden {\r
-  opacity: 0;\r
-  pointer-events: auto; /* stays interactive for hover */\r
-  transition: opacity 0.3s ease;\r
-}\r
-\r
-#tag-config-button.hidden:hover {\r
-  opacity: 0.75; /* restores visible opacity on hover */\r
-}\r
-\r
-/* Optional: for blinking effect */\r
-.blink-hide {\r
-  animation: blink-hidden 0.4s ease-in-out 3;\r
-}\r
-\r
-#tag-config-modal .modal-content {\r
-  background: black;\r
-  border-radius: 10px;\r
-  min-width: 300px;\r
-  max-height: 80vh;\r
-  overflow-y: scroll; /* always show vertical scrollbar */\r
-  background: #191b1e;\r
-  max-width: 400px;\r
-  margin: 100px auto;\r
-}\r
-\r
-#tag-config-modal.show {\r
-  display: flex;\r
-}\r
-\r
-.config-list-details {\r
-  overflow: hidden;\r
-  transition:\r
-    border-width 1s,\r
-    max-height 1s ease;\r
-  max-height: 40px;\r
-}\r
-\r
-.config-list-details[open] {\r
-  border-width: 2px;\r
-  max-height: 1300px;\r
-}\r
-.thick-line {\r
-  border: none;\r
-  height: 1px;\r
-  background-color: #3f4043;\r
-}\r
-.config-list-details summary {\r
-  text-align: center;\r
-  background: #353535;\r
-  border-radius: 8px;\r
-  padding-top: 5px;\r
-  padding-bottom: 5px;\r
-  cursor: pointer;\r
-}\r
-\r
-.config-tag-item {\r
-  margin-left: 5px;\r
-  cursor: pointer;\r
-}\r
-\r
-.modal-settings-spacing {\r
-  padding: 10px;\r
-}\r
-.no-max-width {\r
-  max-width: none !important; /* or just max-width: unset; */\r
-}\r
-.config-label:hover {\r
-  text-decoration: underline;\r
-  text-decoration-style: dotted;\r
-}\r
-\r
-/* Toast container */\r
-.img-retry-toast {\r
-  position: fixed;\r
-  top: 20px;\r
-  right: 20px;\r
-  background: rgba(0, 0, 0, 0.85);\r
-  color: #fff;\r
-  padding: 10px 15px;\r
-  border-radius: 8px;\r
-  font-family: sans-serif;\r
-  font-size: 13px;\r
-  display: flex;\r
-  align-items: center;\r
-  gap: 10px;\r
-  z-index: 99999;\r
-  pointer-events: none;\r
-}\r
-\r
-/* Spinner inside toast */\r
-.img-retry-toast .img-retry-spinner {\r
-  border: 2px solid #fff;\r
-  border-top: 2px solid transparent;\r
-  border-radius: 50%;\r
-  width: 14px;\r
-  height: 14px;\r
-  display: inline-block;\r
-  animation: img-retry-spin 1s linear infinite;\r
-}\r
-\r
-/* Spinner animation */\r
-@keyframes img-retry-spin {\r
-  0% {\r
-    transform: rotate(0deg);\r
-  }\r
-  100% {\r
-    transform: rotate(360deg);\r
-  }\r
-}\r
-\r
-/* Stats inside toast */\r
-.img-retry-toast .img-retry-stats {\r
-  margin-left: 10px;\r
-  opacity: 0.8;\r
-}\r
-\r
-html.latest-wide .p-body-inner {\r
-  max-width: none !important;\r
-}\r
-\r
-html.latest-wide main#latest-page_main-wrap {\r
-  width: 100% !important;\r
-  max-width: none !important;\r
-}\r
-.config-header {\r
-  display: flex;\r
-  align-items: center;\r
-  justify-content: center;\r
-\r
-  margin: 14px 0 10px;\r
-  padding: 6px 0;\r
-\r
-  font-size: 0.95em;\r
-  font-weight: 600;\r
-  text-align: center;\r
-\r
-  color: #b0b3b8; /* subtle, non-dominant */\r
-  letter-spacing: 0.04em;\r
-  text-transform: uppercase;\r
-\r
-  user-select: none;\r
-}\r
-\r
-/* Existing: Wide Latest Page \u2013 full width container */\r
-html.latest-wide main#latest-page_main-wrap {\r
-  width: 100% !important;\r
-  max-width: none !important;\r
-}\r
-\r
-/* New: Dense Adaptive Grid \u2013 overrides the shitty 30% minmax */\r
-html.latest-dense .grid-normal {\r
-  grid-template-columns: repeat(\r
-    auto-fill,\r
-    minmax(260px, 1fr)\r
-  ) !important; /* Magic number \u2013 adaptive columns */\r
-  gap: 20px !important; /* Keeps spacing clean */\r
-}\r
-\r
-/* Polish: let cards breathe and fill the slot properly */\r
-html.latest-dense .structItem.structItem--latest {\r
-  max-width: none !important;\r
-  width: 100% !important;\r
-}\r
-\r
-/* Optional extra: slight card tightening if you want even more density */\r
-html.latest-dense .structItem-cell.structItem-cell--main {\r
-  padding: 12px !important; /* Default is bigger, this makes 'em snugger */\r
-}\r
-/* collapse signatures globally when enabled */\r
-html.latest-signature-collapsed aside.message-signature {\r
-  max-height: 0 !important;\r
-  overflow: hidden !important;\r
-\r
-  padding-top: 0 !important;\r
-  padding-bottom: 0 !important;\r
-  margin-top: 0 !important;\r
-  border-top: none !important;\r
-\r
-  opacity: 0;\r
-  transition:\r
-    max-height 0.25s ease,\r
-    opacity 0.2s ease;\r
-}\r
-\r
-/* expanded state (per message) */\r
-html.latest-signature-collapsed aside.message-signature.latest-signature-expanded {\r
-  max-height: 300px !important;\r
-  overflow-y: auto !important;\r
-\r
-  padding-top: 10px !important;\r
-  padding-bottom: 10px !important;\r
-  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;\r
-\r
-  opacity: 1;\r
-}\r
-\r
-/* toggle button */\r
-.latest-signature-toggle {\r
-  display: flex;\r
-  align-items: center;\r
-  justify-content: center;\r
-\r
-  width: 100%;\r
-  margin: 6px 0 12px;\r
-  padding: 6px 0;\r
-\r
-  border: none;\r
-  border-radius: 0;\r
-  background: transparent;\r
-\r
-  font-size: 1.2rem;\r
-  color: #ec5555;\r
-  cursor: pointer;\r
-\r
-  position: relative;\r
-}\r
-\r
-/* separator lines */\r
-.latest-signature-toggle::before,\r
-.latest-signature-toggle::after {\r
-  content: "";\r
-  flex: 1;\r
-  height: 1px;\r
-  background: rgba(255, 255, 255, 0.12);\r
-  margin: 0 10px;\r
-}\r
-\r
-.latest-signature-toggle span {\r
-  white-space: nowrap;\r
-}\r
-\r
-/* mobile keeps forum behavior */\r
-@media (max-width: 480px) {\r
-  html.latest-signature-collapsed .latest-signature-toggle {\r
-    display: none;\r
-  }\r
-}\r
-@keyframes blink-hidden {\r
-  0% {\r
-    opacity: 1;\r
-  }\r
-  50% {\r
-    opacity: 0;\r
-  }\r
-  100% {\r
-    opacity: 1;\r
-  }\r
-}\r
-`;
+  var css_default = ':root {\r\n  --completed-color: #388e3c;\r\n  --onhold-color: #1976d2;\r\n  --abandoned-color: #c9a300;\r\n  --highVersion-color: #2e7d32;\r\n  --invalidVersion-color: #a38400;\r\n  --tileInfo-color: #9398a0;\r\n  --tileHeader-color: #d9d9d9;\r\n  --preferred-color: #7b1fa2;\r\n  --preferred-text-color: #ffffff;\r\n  --excluded-color: #b71c1c;\r\n  --excluded-text-color: #ffffff;\r\n  --neutral-color: #37383a;\r\n  --neutral-text-color: #9398a0;\r\n\r\n  \r\n  --preferred-shadow: 0 0 2px 1px white;\r\n  --excluded-shadow: 0 0 2px 1px white;\r\n}\r\n.modal-error-notif {\r\n  display: none; \r\n  background-color: #ffe5e5; \r\n  color: #b00020; \r\n  border: 1px solid #b00020;\r\n  padding: 12px 16px;\r\n  border-radius: 6px;\r\n  margin-bottom: 12px;\r\n  font-size: 14px;\r\n  font-weight: 500;\r\n}\r\n.preferred {\r\n  background-color: var(--preferred-color);\r\n  font-weight: bold;\r\n  color: var(--preferred-text-color);\r\n}\r\n.preffered-shadow {\r\n  box-shadow: var(--preferred-shadow);\r\n}\r\n.excluded {\r\n  background-color: var(--excluded-color);\r\n  font-weight: bold;\r\n  color: var(--excluded-text-color);\r\n}\r\n.excluded-shadow {\r\n  box-shadow: var(--excluded-shadow);\r\n}\r\n.neutral {\r\n  background-color: var(--neutral-color);\r\n  font-weight: bold;\r\n  color: var(--neutral-text-color);\r\n}\r\n.custom-overlay-reason {\r\n  position: absolute;\r\n  top: 4px;\r\n  left: 4px;\r\n  background: rgba(0, 0, 0, 0.7);\r\n  color: white;\r\n  padding: 2px 6px;\r\n  font-size: 12px;\r\n  border-radius: 4px;\r\n  z-index: 2;\r\n  pointer-events: none;\r\n}\r\n.centered-item {\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  padding: 10px;\r\n}\r\n.settings-wrapper {\r\n  padding: 10px;\r\n  color: #ccc;\r\n  font-size: 14px;\r\n  line-height: 1.6;\r\n}\r\ndiv#latest-page_items-wrap_inner\r\n  div.resource-tile\r\n  a.resource-tile_link\r\n  div.resource-tile_info\r\n  div.resource-tile_info-meta {\r\n  color: var(--tileInfo-color);\r\n  font-weight: 600;\r\n}\r\n\r\ndiv#latest-page_items-wrap_inner div.resource-tile a.resource-tile_link {\r\n  color: var(--tileHeader-color);\r\n}\r\n.tag-btn {\r\n  border: none;\r\n  padding: 5px;\r\n  margin: 0 2px;\r\n  cursor: pointer;\r\n  font-size: 14px;\r\n  color: white;\r\n  font-weight: bold;\r\n  transition: background-color 0.2s ease;\r\n}\r\n\r\n.tag-btn.excluded {\r\n  background-color: var(--excluded-color);\r\n  color: var(--excludedText-color);\r\n}\r\n\r\n.tag-btn.preferred {\r\n  background-color: var(--preferred-color);\r\n  color: var(--preferredText-color);\r\n}\r\n\r\n.tag-btn:hover {\r\n  filter: brightness(1.1);\r\n}\r\n#toast-container {\r\n  position: fixed;\r\n  top: 20px;\r\n  left: 50%;\r\n  transform: translateX(-50%);\r\n  z-index: 10000; \r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 8px;\r\n  pointer-events: none;\r\n}\r\n\r\n.toast {\r\n  padding: 10px;\r\n  background-color: #333;\r\n  color: #fff;\r\n  border-radius: 8px;\r\n  opacity: 0;\r\n  transform: translateY(-10px);\r\n  transition:\r\n    opacity 0.3s ease,\r\n    transform 0.3s ease;\r\n}\r\n\r\n.toast.show {\r\n  opacity: 1;\r\n  transform: translateY(0);\r\n}\r\n\r\n#tag-config-modal {\r\n  display: none;\r\n  position: fixed;\r\n  z-index: 9999;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100%;\r\n  height: 100%;\r\n  background-color: rgba(0, 0, 0, 0.5);\r\n}\r\n\r\n#preffered-tags-list {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  gap: 6px;\r\n  margin-top: 8px;\r\n}\r\n\r\n\r\n.preferred-tag-item {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  background-color: var(--preferred-color);\r\n  color: var(--preferredText-color);\r\n  border-radius: 4px;\r\n  font-size: 14px;\r\n  font-weight: bold;\r\n}\r\n\r\n.preferred-tag-item span {\r\n  margin-right: 6px;\r\n  margin-left: 6px;\r\n}\r\n\r\n.preferred-tag-remove {\r\n  background-color: #c15858;\r\n  color: #fff;\r\n  border: none;\r\n  border-top-right-radius: 4px;\r\n  border-bottom-right-radius: 4px;\r\n\r\n  padding: 10px;\r\n  cursor: pointer;\r\n  font-weight: bold;\r\n  font-size: 12px;\r\n}\r\n\r\n\r\n.tag-actions {\r\n  display: flex;\r\n  gap: 5px;\r\n}\r\n#excluded-tags-list {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  gap: 6px;\r\n  margin-top: 8px;\r\n}\r\n#search-container {\r\n  position: relative;\r\n  display: inline-block;\r\n  min-height: 250px;\r\n  width: 100%;\r\n}\r\n\r\n.excluded-tag-item {\r\n  display: inline-flex;\r\n  align-items: center;\r\n  background-color: var(--excluded-color);\r\n  color: var(--excludedText-color);\r\n  border-radius: 4px;\r\n  font-size: 14px;\r\n  font-weight: bold;\r\n}\r\n\r\n.excluded-tag-item span {\r\n  margin-right: 6px;\r\n}\r\n\r\n.excluded-tag-remove {\r\n  background-color: #c15858;\r\n  color: #fff;\r\n  border: none;\r\n  padding: 10px;\r\n  cursor: pointer;\r\n  border-top-right-radius: 4px;\r\n  border-bottom-right-radius: 4px;\r\n  font-size: 12px;\r\n  font-weight: bold;\r\n}\r\n\r\n\r\n#search-results li {\r\n  padding: 6px 8px;\r\n  cursor: pointer;\r\n  color: #fff;\r\n  background-color: #222;\r\n\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n}\r\n\r\n#search-results li:hover {\r\n  background-color: #333; \r\n}\r\n#tags-search {\r\n  background-color: #222;\r\n  color: #fff;\r\n  border: 1px solid #555;\r\n  border-radius: 4px;\r\n  padding: 6px 8px;\r\n  width: 100%;\r\n}\r\n\r\n#tags-search:focus {\r\n  outline: none;\r\n  border: 1px solid #c15858;\r\n}\r\n#search-results {\r\n  position: absolute;\r\n  left: 0;\r\n  right: 0;\r\n  max-height: 200px;\r\n  overflow-y: auto;\r\n  background-color: #222; \r\n  border: 1px solid #555; \r\n  border-radius: 4px;\r\n  margin: 2px 0 0 0; \r\n  padding: 0;\r\n  list-style: none;\r\n  display: none;\r\n  z-index: 1000;\r\n  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); \r\n}\r\n\r\n#tag-config-modal input,\r\n#tag-config-modal textarea,\r\n#tag-config-modal select {\r\n  background-color: #222;\r\n  color: #fff;\r\n  border: 1px solid #555;\r\n  border-radius: 4px;\r\n}\r\n#tag-config-modal input:focus,\r\n#tag-config-modal textarea:focus,\r\n#tag-config-modal select:focus {\r\n  outline: none;\r\n  border: 1px solid #c15858;\r\n}\r\n\r\n\r\n#tag-config-modal input[type="checkbox"],\r\n#tag-config-modal input[type="radio"] {\r\n  accent-color: #c15858;\r\n  background-color: #222;\r\n  border: 1px solid #555;\r\n}\r\n#tag-config-modal .config-color-input {\r\n  border: 2px solid #3f4043;\r\n  border-radius: 5px;\r\n  padding: 2px;\r\n  width: 40px;\r\n  height: 28px;\r\n  cursor: pointer;\r\n  background-color: #181a1d;\r\n}\r\n\r\n#tag-config-modal .config-color-input::-webkit-color-swatch-wrapper {\r\n  padding: 0;\r\n}\r\n\r\n#tag-config-modal .config-color-input::-webkit-color-swatch {\r\n  border-radius: 4px;\r\n  border: none;\r\n}\r\n\r\n.modal-btn {\r\n  background-color: #893839;\r\n  color: white;\r\n  border: 2px solid #893839;\r\n  border-radius: 6px;\r\n  padding: 8px 16px;\r\n  font-weight: 600;\r\n  font-size: 14px;\r\n  cursor: pointer;\r\n  transition:\r\n    background-color 0.3s ease,\r\n    border-color 0.3s ease;\r\n  box-shadow: 0 4px 8px rgba(137, 56, 56, 0.5);\r\n}\r\n\r\n.modal-btn:hover {\r\n  background-color: #b94f4f;\r\n  border-color: #b94f4f;\r\n}\r\n\r\n.modal-btn:active {\r\n  background-color: #6e2b2b;\r\n  border-color: #6e2b2b;\r\n  box-shadow: none;\r\n}\r\n.config-row {\r\n  display: flex;\r\n  align-items: center; \r\n  gap: 12px;\r\n  margin: 8px 0;\r\n  line-height: 1.4;\r\n  user-select: none;\r\n}\r\n\r\n\r\n.config-row label {\r\n  flex: 0 0 180px; \r\n  text-align: left;\r\n  font-weight: 500;\r\n  cursor: pointer;\r\n  white-space: nowrap; \r\n  overflow: hidden;\r\n  text-overflow: ellipsis;\r\n}\r\n\r\n\r\n.config-row input[type="checkbox"] {\r\n  flex-shrink: 0;\r\n  width: 18px;\r\n  height: 18px;\r\n  margin: 0;\r\n  cursor: pointer;\r\n  accent-color: #6e42d6; \r\n}\r\n\r\n.config-row:hover {\r\n  background: rgba(110, 66, 214, 0.05);\r\n}\r\n\r\n#tag-config-button {\r\n  position: fixed;\r\n  bottom: 20px;\r\n  right: 20px;\r\n  left: 20px;\r\n  padding: 8px 12px;\r\n  font-size: 20px;\r\n  z-index: 7;\r\n  cursor: pointer;\r\n  border: 2px inset #461616;\r\n  background: #cc3131;\r\n  color: white;\r\n  border-radius: 8px;\r\n  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);\r\n  max-width: 70px;\r\n  width: auto;\r\n  opacity: 0.75;\r\n  transition:\r\n    opacity 1s ease,\r\n    transform 0.5s ease;\r\n}\r\n\r\n#tag-config-button:hover {\r\n  opacity: 1;\r\n}\r\n\r\n#tag-config-button:active {\r\n  transform: scale(0.9);\r\n}\r\n\r\n\r\n#tag-config-button.hidden {\r\n  opacity: 0;\r\n  pointer-events: auto; \r\n  transition: opacity 0.3s ease;\r\n}\r\n\r\n#tag-config-button.hidden:hover {\r\n  opacity: 0.75; \r\n}\r\n\r\n\r\n.blink-hide {\r\n  animation: blink-hidden 0.4s ease-in-out 3;\r\n}\r\n\r\n#tag-config-modal .modal-content {\r\n  background: black;\r\n  border-radius: 10px;\r\n  min-width: 300px;\r\n  max-height: 80vh;\r\n  overflow-y: scroll; \r\n  background: #191b1e;\r\n  max-width: 400px;\r\n  margin: 100px auto;\r\n}\r\n\r\n#tag-config-modal.show {\r\n  display: flex;\r\n}\r\n\r\n.config-list-details {\r\n  overflow: hidden;\r\n  transition:\r\n    border-width 1s,\r\n    max-height 1s ease;\r\n  max-height: 40px;\r\n}\r\n\r\n.config-list-details[open] {\r\n  border-width: 2px;\r\n  max-height: 1300px;\r\n}\r\n.thick-line {\r\n  border: none;\r\n  height: 1px;\r\n  background-color: #3f4043;\r\n}\r\n.config-list-details summary {\r\n  text-align: center;\r\n  background: #353535;\r\n  border-radius: 8px;\r\n  padding-top: 5px;\r\n  padding-bottom: 5px;\r\n  cursor: pointer;\r\n}\r\n\r\n.config-tag-item {\r\n  margin-left: 5px;\r\n  cursor: pointer;\r\n}\r\n\r\n.modal-settings-spacing {\r\n  padding: 10px;\r\n}\r\n.no-max-width {\r\n  max-width: none !important; \r\n}\r\n.config-label:hover {\r\n  text-decoration: underline;\r\n  text-decoration-style: dotted;\r\n}\r\n\r\n\r\n.img-retry-toast {\r\n  position: fixed;\r\n  top: 20px;\r\n  right: 20px;\r\n  background: rgba(0, 0, 0, 0.85);\r\n  color: #fff;\r\n  padding: 10px 15px;\r\n  border-radius: 8px;\r\n  font-family: sans-serif;\r\n  font-size: 13px;\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 10px;\r\n  z-index: 99999;\r\n  pointer-events: none;\r\n}\r\n\r\n\r\n.img-retry-toast .img-retry-spinner {\r\n  border: 2px solid #fff;\r\n  border-top: 2px solid transparent;\r\n  border-radius: 50%;\r\n  width: 14px;\r\n  height: 14px;\r\n  display: inline-block;\r\n  animation: img-retry-spin 1s linear infinite;\r\n}\r\n\r\n\r\n@keyframes img-retry-spin {\r\n  0% {\r\n    transform: rotate(0deg);\r\n  }\r\n  100% {\r\n    transform: rotate(360deg);\r\n  }\r\n}\r\n\r\n\r\n.img-retry-toast .img-retry-stats {\r\n  margin-left: 10px;\r\n  opacity: 0.8;\r\n}\r\n\r\nhtml.latest-wide .p-body-inner {\r\n  max-width: none !important;\r\n}\r\n\r\nhtml.latest-wide main#latest-page_main-wrap {\r\n  width: 100% !important;\r\n  max-width: none !important;\r\n}\r\n.hide-notices ul.notices.notices--block.js-notices {\r\n  display: none !important;\r\n}\r\n\r\n.header-scroll .uix_headerContainer {\r\n  transition: transform 0.25s ease;\r\n  will-change: transform;\r\n}\r\n\r\n.header-scroll.header-hidden .uix_headerContainer {\r\n  transform: translateY(-100%);\r\n}\r\n\r\n\r\n.thread-scroll-hide .p-navSticky {\r\n  transition: transform 0.25s ease;\r\n  will-change: transform;\r\n}\r\n\r\n\r\n.thread-scroll-hide .p-navSticky.is-sticky {\r\n  transition: transform 0.25s ease;\r\n  will-change: transform;\r\n}\r\n\r\n.thread-scroll-hide.thread-header-hidden .p-navSticky.is-sticky {\r\n  transform: translateY(-100%);\r\n}\r\n\r\n.config-header {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n\r\n  margin: 14px 0 10px;\r\n  padding: 6px 0;\r\n\r\n  font-size: 0.95em;\r\n  font-weight: 600;\r\n  text-align: center;\r\n\r\n  color: #b0b3b8; \r\n  letter-spacing: 0.04em;\r\n  text-transform: uppercase;\r\n\r\n  user-select: none;\r\n}\r\n\r\n\r\nhtml.latest-wide main#latest-page_main-wrap {\r\n  width: 100% !important;\r\n  max-width: none !important;\r\n}\r\n\r\n\r\nhtml.latest-dense .grid-normal {\r\n  grid-template-columns: repeat(\r\n    auto-fill,\r\n    minmax(260px, 1fr)\r\n  ) !important; \r\n  gap: 20px !important; \r\n}\r\n\r\n\r\nhtml.latest-dense .structItem.structItem--latest {\r\n  max-width: none !important;\r\n  width: 100% !important;\r\n}\r\n\r\n\r\nhtml.latest-dense .structItem-cell.structItem-cell--main {\r\n  padding: 12px !important; \r\n}\r\n\r\nhtml.latest-signature-collapsed aside.message-signature {\r\n  max-height: 0 !important;\r\n  overflow: hidden !important;\r\n\r\n  padding-top: 0 !important;\r\n  padding-bottom: 0 !important;\r\n  margin-top: 0 !important;\r\n  border-top: none !important;\r\n\r\n  opacity: 0;\r\n  transition:\r\n    max-height 0.25s ease,\r\n    opacity 0.2s ease;\r\n}\r\n\r\n\r\nhtml.latest-signature-collapsed aside.message-signature.latest-signature-expanded {\r\n  max-height: 300px !important;\r\n  overflow-y: auto !important;\r\n\r\n  padding-top: 10px !important;\r\n  padding-bottom: 10px !important;\r\n  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;\r\n\r\n  opacity: 1;\r\n}\r\n\r\n\r\n.latest-signature-toggle {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n\r\n  width: 100%;\r\n  margin: 6px 0 12px;\r\n  padding: 6px 0;\r\n\r\n  border: none;\r\n  border-radius: 0;\r\n  background: transparent;\r\n\r\n  font-size: 1.2rem;\r\n  color: #ec5555;\r\n  cursor: pointer;\r\n\r\n  position: relative;\r\n}\r\n\r\n\r\n.latest-signature-toggle::before,\r\n.latest-signature-toggle::after {\r\n  content: "";\r\n  flex: 1;\r\n  height: 1px;\r\n  background: rgba(255, 255, 255, 0.12);\r\n  margin: 0 10px;\r\n}\r\n\r\n.latest-signature-toggle span {\r\n  white-space: nowrap;\r\n}\r\n\r\n\r\n@media (max-width: 480px) {\r\n  html.latest-signature-collapsed .latest-signature-toggle {\r\n    display: none;\r\n  }\r\n}\r\n@keyframes blink-hidden {\r\n  0% {\r\n    opacity: 1;\r\n  }\r\n  50% {\r\n    opacity: 0;\r\n  }\r\n  100% {\r\n    opacity: 1;\r\n  }\r\n}\r\n';
 
   // src/cores/safety.js
   function checkTags() {
@@ -1302,10 +657,34 @@ html.latest-signature-collapsed aside.message-signature.latest-signature-expande
   function toggleWideLatestPage() {
     const root = document.documentElement;
     if (config.latestSettings.wideLatest) {
-      root.classList.add("latest-wide");
+      root.classList.add("latest-wide", "hide-notices", "header-scroll");
+      enableHeaderScrollBehavior();
     } else {
-      root.classList.remove("latest-wide");
+      root.classList.remove("latest-wide", "hide-notices", "header-scroll");
+      disableHeaderScrollBehavior();
     }
+  }
+  var headerScrollHandler = null;
+  function enableHeaderScrollBehavior() {
+    if (headerScrollHandler) return;
+    let lastScrollY = window.scrollY;
+    headerScrollHandler = () => {
+      const root = document.documentElement;
+      const currentY = window.scrollY;
+      if (currentY > lastScrollY && currentY > 80) {
+        root.classList.add("header-hidden");
+      } else {
+        root.classList.remove("header-hidden");
+      }
+      lastScrollY = currentY;
+    };
+    window.addEventListener("scroll", headerScrollHandler, { passive: true });
+  }
+  function disableHeaderScrollBehavior() {
+    if (!headerScrollHandler) return;
+    window.removeEventListener("scroll", headerScrollHandler);
+    headerScrollHandler = null;
+    document.documentElement.classList.remove("header-hidden");
   }
   function toggleDenseLatestGrid() {
     const root = document.documentElement;
@@ -2064,7 +1443,37 @@ html.latest-signature-collapsed aside.message-signature.latest-signature-expande
   function wideForum() {
     if (!state.isThread) return;
     const isWide = !!config.threadSettings.isWide;
+    const root = document.documentElement;
     document.querySelectorAll(".p-body-inner").forEach((el) => el.classList.toggle("no-max-width", isWide));
+    if (isWide) {
+      root.classList.add("thread-scroll-hide");
+      enableThreadHeaderScroll();
+    } else {
+      root.classList.remove("thread-scroll-hide");
+      disableThreadHeaderScroll();
+    }
+  }
+  var threadScrollHandler = null;
+  function enableThreadHeaderScroll() {
+    if (threadScrollHandler) return;
+    let lastScrollY = window.scrollY;
+    threadScrollHandler = () => {
+      const root = document.documentElement;
+      const currentY = window.scrollY;
+      if (currentY > lastScrollY && currentY > 120) {
+        root.classList.add("thread-header-hidden");
+      } else {
+        root.classList.remove("thread-header-hidden");
+      }
+      lastScrollY = currentY;
+    };
+    window.addEventListener("scroll", threadScrollHandler, { passive: true });
+  }
+  function disableThreadHeaderScroll() {
+    if (!threadScrollHandler) return;
+    window.removeEventListener("scroll", threadScrollHandler);
+    threadScrollHandler = null;
+    document.documentElement.classList.remove("thread-header-hidden");
   }
 
   // src/meta/threadSettings.js

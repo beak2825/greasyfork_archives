@@ -6,7 +6,7 @@
 // @match       https://new.chunithm-net.com/*
 // @match       https://chunithm.wahlap.com/*
 // @grant       GM.xmlHttpRequest
-// @version     1.0.6
+// @version     1.0.7
 // @author      esterTion
 // @description Display song levels on chunithm-net
 // @run-at      document-end
@@ -192,11 +192,16 @@ function fixEmblemOverflow() {
 }
 function fixPageWidth() {
 	const meta = document.querySelector('meta[name="viewport"]')
-	meta.setAttribute('content', 'width=device-width,user-scalable=yes')
+	if (screen.width <= 552) {
+		meta.setAttribute('content', 'width=552,user-scalable=yes')
+	} else {
+		meta.setAttribute('content', 'width=device-width,user-scalable=yes')
+	}
 }
 
 fixEmblemOverflow()
 fixPageWidth()
+window.addEventListener('resize', fixPageWidth)
 loadLocalInfo()
 checkUpdateForLocalInfo()
 addLevelToPage()
