@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         YouTube - Force rounded corners + tweaks included
-// @version      2025.12.27
+// @version      2026.01.06
 // @description  This script forces the rounded version of the layout (which includes some fewer tweaks applied, but also includes remaining UI codes from the original RD changes, late-'23 changes and pre-delhi UI changes).
 // @author       Joey_JTS (original author: xX_LegendCraftd_Xx)
 // @license MIT
@@ -940,7 +940,7 @@ margin-left: -45px !important;
 text-align: center !important
 }
 
-/* Other fixes */
+/* Other fixes (including the 'third' guide item removed to make in place for the Subscriptions tab) */
 #background.ytd-masthead {
 opacity: 1 !important
 }
@@ -995,6 +995,10 @@ color: var(--yt-spec-icon-active-other) !important;
 
 .ytSearchboxComponentClearButtonIcon svg path {
 d: path("M12.7,12l6.6,6.6l-0.7,0.7L12,12.7l-6.6,6.6l-0.7-0.7l6.6-6.6L4.6,5.4l0.7-0.7l6.6,6.6l6.6-6.6l0.7,0.7L12.7,12z") !important
+}
+
+ytd-guide-section-renderer.ytd-guide-renderer.style-scope:nth-of-type(1) ytd-guide-entry-renderer.ytd-guide-section-renderer.style-scope:nth-of-type(3) {
+display: none !important
 }
 
 /* Revert icons to outline version from 2023 */
@@ -2042,3 +2046,66 @@ if (typeof GM_addStyle !== "undefined") {
   });
 
 })({ ResizeObserver });
+ 
+// Re-add 'Subscriptions' tab from top of the left sidebar
+function waitForElm(selector) {
+    return new Promise(resolve => {
+        if (document.querySelector(selector)) {
+            return resolve(document.querySelector(selector));
+        }
+ 
+        const observer = new MutationObserver(mutations => {
+            if (document.querySelector(selector)) {
+                resolve(document.querySelector(selector));
+                observer.disconnect();
+            }
+        });
+ 
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+}
+ 
+    function restoreTrending() {
+ 
+        var trendingData = {
+            "navigationEndpoint": {
+                "clickTrackingParams": "CBwQtSwYASITCNqYh-qO_fACFcoRrQYdP44D9Q==",
+                "commandMetadata": {
+                    "webCommandMetadata": {
+                        "url": "/feed/subscriptions",
+                        "webPageType": "WEB_PAGE_TYPE_BROWSE",
+                        "rootVe": 6827,
+                        "apiUrl": "/youtubei/v1/browse"
+                    }
+                },
+                "browseEndpoint": {
+                    "browseId": "FEtrending"
+                }
+            },
+            "icon": {
+                "iconType": "SUBSCRIPTIONS"
+            },
+            "trackingParams": "CBwQtSwYASITCNqYh-qO_fACFcoRrQYdP44D9Q==",
+            "formattedTitle": {
+                "simpleText": "Subscriptions"
+            },
+            "accessibility": {
+                "accessibilityData": {
+                    "label": "Subscriptions"
+                }
+            },
+            "isPrimary": true
+        };
+ 
+        var guidetemplate = `<ytd-guide-entry-renderer class="style-scope ytd-guide-section-renderer" is-primary="" line-end-style="none"><!--css-build:shady--><a id="endpoint" class="yt-simple-endpoint style-scope ytd-guide-entry-renderer" tabindex="-1" role="tablist"><tp-yt-paper-item role="tab" class="style-scope ytd-guide-entry-renderer" tabindex="0" aria-disabled="false"><!--css-build:shady--><yt-icon class="guide-icon style-scope ytd-guide-entry-renderer" disable-upgrade=""></yt-icon><yt-img-shadow height="24" width="24" class="style-scope ytd-guide-entry-renderer" disable-upgrade=""></yt-img-shadow><yt-formatted-string class="title style-scope ytd-guide-entry-renderer"><!--css-build:shady--></yt-formatted-string><span class="guide-entry-count style-scope ytd-guide-entry-renderer"></span><yt-icon class="guide-entry-badge style-scope ytd-guide-entry-renderer" disable-upgrade=""></yt-icon><div id="newness-dot" class="style-scope ytd-guide-entry-renderer"></div></tp-yt-paper-item></a><yt-interaction class="style-scope ytd-guide-entry-renderer"><!--css-build:shady--><div class="stroke style-scope yt-interaction"></div><div class="fill style-scope yt-interaction"></div></yt-interaction></ytd-guide-entry-renderer>`;
+        document.querySelector(`#items > ytd-guide-entry-renderer:nth-child(2)`).data = trendingData;
+ 
+    }
+ 
+ 
+waitForElm("#items.ytd-guide-section-renderer").then((elm) => {
+    restoreTrending();
+});

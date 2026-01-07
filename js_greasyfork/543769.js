@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         【网站标题】自定义修改与管理
+// @name         【网页标题】自定义修改与管理
 // @namespace    https://github.com/realSilasYang
-// @version      2025-12-29
+// @version      2026-01-05
 // @description  根据网址自定义网页标题。拥有可视化设置界面。
 // @author       阳熙来
 // @license      MIT
@@ -12,8 +12,8 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_addStyle
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/543769/%E3%80%90%E7%BD%91%E7%AB%99%E6%A0%87%E9%A2%98%E3%80%91%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BF%AE%E6%94%B9%E4%B8%8E%E7%AE%A1%E7%90%86.user.js
-// @updateURL https://update.greasyfork.org/scripts/543769/%E3%80%90%E7%BD%91%E7%AB%99%E6%A0%87%E9%A2%98%E3%80%91%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BF%AE%E6%94%B9%E4%B8%8E%E7%AE%A1%E7%90%86.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/543769/%E3%80%90%E7%BD%91%E9%A1%B5%E6%A0%87%E9%A2%98%E3%80%91%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BF%AE%E6%94%B9%E4%B8%8E%E7%AE%A1%E7%90%86.user.js
+// @updateURL https://update.greasyfork.org/scripts/543769/%E3%80%90%E7%BD%91%E9%A1%B5%E6%A0%87%E9%A2%98%E3%80%91%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BF%AE%E6%94%B9%E4%B8%8E%E7%AE%A1%E7%90%86.meta.js
 // ==/UserScript==
 
 /**
@@ -79,8 +79,7 @@
     // 默认内置的规则列表 (用户首次安装运行时，这些规则会被写入存储)
     const defaultMap = {
         'tophub.today':  '新闻聚合',
-        'gushiwen.cn':  '古诗文网',
-        'douyin.com': '抖音'
+        'www.gushiwen.cn':  '古诗文网'
     };
 
     // 油猴存储的 Key 名称
@@ -345,11 +344,14 @@
         /* 按钮通用样式 */
         .gm-btn {
             padding: 6px 14px; border: none; border-radius: 6px; cursor: pointer;
-            font-size: 13px; transition: all 0.05s; font-weight: 500; height: 32px;
+            font-size: 13px; font-weight: 500; height: 32px;
             display: inline-flex; align-items: center; justify-content: center;
+            user-select: none; /* 防止点击时选中按钮文字 */
+            /* [重要修复] 移除 transition: all，只过渡特定属性，解决点击判定失效问题 */
+            transition: background-color 0.1s, opacity 0.1s, box-shadow 0.1s;
         }
-        .gm-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-        .gm-btn:active { transform: translateY(0); }
+        .gm-btn:hover { opacity: 0.9; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .gm-btn:active { opacity: 0.7; box-shadow: inset 0 1px 3px rgba(0,0,0,0.3); }
 
         /* 按钮统一操作列样式 (删除/新增/重置) */
         .gm-btn-action {
@@ -419,8 +421,8 @@
             </div>
         `;
         const btns = `
-            <button id="gm-confirm-yes" class="gm-btn gm-btn-danger">${CONFIG.btn_confirm_yes}</button>
-            <button id="gm-confirm-no" class="gm-btn gm-btn-secondary">${CONFIG.btn_confirm_no}</button>
+            <button type="button" id="gm-confirm-yes" class="gm-btn gm-btn-danger">${CONFIG.btn_confirm_yes}</button>
+            <button type="button" id="gm-confirm-no" class="gm-btn gm-btn-secondary">${CONFIG.btn_confirm_no}</button>
         `;
 
         const overlay = createModal('gm-confirm-overlay', title, html, btns);
@@ -485,8 +487,8 @@
         `;
 
         const btns = `
-            <button id="gm-btn-save" class="gm-btn gm-btn-primary">${CONFIG.btn_save}</button>
-            <button id="gm-btn-close" class="gm-btn gm-btn-secondary">${CONFIG.btn_cancel}</button>
+            <button type="button" id="gm-btn-save" class="gm-btn gm-btn-primary">${CONFIG.btn_save}</button>
+            <button type="button" id="gm-btn-close" class="gm-btn gm-btn-secondary">${CONFIG.btn_cancel}</button>
         `;
 
         const overlay = createModal('gm-main-overlay', headerTitle, html, btns);
@@ -557,7 +559,7 @@
                         <img src="${faviconUrl}" class="gm-favicon" loading="lazy" alt="icon" onerror="this.style.opacity=0.3">
                         <textarea class="gm-invisible-input gm-col-name" rows="2" data-key="${key}" placeholder="${CONFIG.ph_rule_name}" spellcheck="false">${map[key]}</textarea>
                         <textarea class="gm-invisible-input gm-col-url" rows="2" data-old-key="${key}" spellcheck="false">${key}</textarea>
-                        <button class="gm-btn gm-btn-danger gm-btn-action" data-key="${key}">${CONFIG.btn_delete}</button>
+                        <button type="button" class="gm-btn gm-btn-danger gm-btn-action" data-key="${key}">${CONFIG.btn_delete}</button>
                     </div>
                 `;
             });
@@ -569,7 +571,7 @@
                 <img id="gm-add-preview" class="gm-favicon" src="" style="visibility: hidden;">
                 <textarea id="gm-add-name" class="gm-invisible-input gm-col-name gm-add-input" rows="2" placeholder="${CONFIG.ph_new_name}" spellcheck="false"></textarea>
                 <textarea id="gm-add-url" class="gm-invisible-input gm-col-url gm-add-input" rows="2" placeholder="${CONFIG.ph_new_url}" spellcheck="false"></textarea>
-                <button id="gm-btn-add" class="gm-btn gm-btn-success gm-btn-action">${CONFIG.btn_add}</button>
+                <button type="button" id="gm-btn-add" class="gm-btn gm-btn-success gm-btn-action">${CONFIG.btn_add}</button>
             </div>
         `;
 
@@ -580,8 +582,8 @@
 
         // 底部按钮组
         const btns = `
-            <button id="gm-btn-close-mgr" class="gm-btn gm-btn-secondary" style="margin-right: auto; color: #fff;">${CONFIG.btn_close}</button>
-            <button id="gm-btn-reset" class="gm-btn gm-btn-danger gm-btn-action" style="background-color: #333; border: 1px solid #555; color: #999; margin-right: 10px;">${CONFIG.btn_reset}</button>
+            <button type="button" id="gm-btn-close-mgr" class="gm-btn gm-btn-secondary" style="margin-right: auto; color: #fff;">${CONFIG.btn_close}</button>
+            <button type="button" id="gm-btn-reset" class="gm-btn gm-btn-danger gm-btn-action" style="background-color: #333; border: 1px solid #555; color: #999; margin-right: 10px;">${CONFIG.btn_reset}</button>
         `;
         const overlay = createModal('gm-main-overlay', headerTitle, listHtml, btns);
 

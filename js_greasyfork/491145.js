@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter Alternative Share URL
 // @namespace    https://github.com/btcode23
-// @version      0.4.1
+// @version      0.5.2
 // @description  Adds a button to share a tweet with an alternative URL to the "X" link
 // @author       btcode23
 // @license      MIT
@@ -13,15 +13,14 @@
 // @match        https://x.com/*
 // @icon         https://abs.twimg.com/responsive-web/client-web/icon-ios.77d25eba.png
 
-
 // @downloadURL https://update.greasyfork.org/scripts/491145/Twitter%20Alternative%20Share%20URL.user.js
 // @updateURL https://update.greasyfork.org/scripts/491145/Twitter%20Alternative%20Share%20URL.meta.js
 // ==/UserScript==
 
-const baseUrl = 'https://fixvx.com';
+const baseXUrl = 'https://fixvx.com';
 
-if (GM_getValue('ALT_URL') == undefined) {
-    GM_setValue('ALT_URL', baseUrl);
+if (GM_getValue('ALT_X_URL') == undefined) {
+    GM_setValue('ALT_X_URL', baseXUrl);
 }
 
 const svg = '<path d="M8 5.00005C7.01165 5.00082 6.49359 5.01338 6.09202 5.21799C5.71569 5.40973 5.40973 5.71569 5.21799 6.09202C5 6.51984 5 7.07989 5 8.2V17.8C5 18.9201 5 19.4802 5.21799 19.908C5.40973 20.2843 5.71569 20.5903 6.09202 20.782C6.51984 21 7.07989 21 8.2 21H15.8C16.9201 21 17.4802 21 17.908 20.782C18.2843 20.5903 18.5903 20.2843 18.782 19.908C19 19.4802 19 18.9201 19 17.8V8.2C19 7.07989 19 6.51984 18.782 6.09202C18.5903 5.71569 18.2843 5.40973 17.908 5.21799C17.5064 5.01338 16.9884 5.00082 16 5.00005M8 5.00005V7H16V5.00005M8 5.00005V4.70711C8 4.25435 8.17986 3.82014 8.5 3.5C8.82014 3.17986 9.25435 3 9.70711 3H14.2929C14.7456 3 15.1799 3.17986 15.5 3.5C15.8201 3.82014 16 4.25435 16 4.70711V5.00005M12 11V17M12 17L10 15M12 17L14 15" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>';
@@ -52,22 +51,21 @@ function displayConfirmation() {
 
 function copyAlternativeTwitterUrl(tweet) {
     // the part of the tweet with time seems to give the path to the tweet
-    const tweetPath = tweet.querySelector('a:has(time)').getAttribute('href');
+    let tweetPath = tweet.querySelector('a:has(time)').getAttribute('href');
 
     // new share URL
-    let newUrl = GM_getValue('ALT_URL') + tweetPath;
+    let newUrl = GM_getValue('ALT_X_URL') + tweetPath;
 
     navigator.clipboard.writeText(newUrl);
     displayConfirmation();
 }
 
 function designButton(tweet) {
-    const group = tweet.querySelector('div[role="group"]');
-    const otherIcon = group.querySelector('button[aria-label="Share post"]').parentElement.parentElement;
+    let otherIcon = tweet.querySelector('button[aria-label="Share post"]').parentElement.parentElement;
 
     const newIcon = otherIcon.cloneNode(true);
     newIcon.classList.add('custom-copy-icon');
-    group.insertBefore(newIcon, otherIcon.sibling);
+    otherIcon.parentElement.insertBefore(newIcon, otherIcon.sibling);
 
     newIcon.querySelector('svg').innerHTML = svg; // add clipboard svg
     const icon = newIcon.querySelector('svg');
@@ -80,7 +78,7 @@ function designButton(tweet) {
     newIcon.style.display = computedContainerStyle.display;
     newIcon.style.width = computedContainerStyle.width;
     newIcon.style.height = computedContainerStyle.height;
-    newIcon.style.marginLeft = (parseFloat(computedContainerStyle.width) / 2) + "px";
+    newIcon.style.marginLeft = (parseFloat(computedContainerStyle.width) * 0.3) + "px";
 
     const backgroundElement = icon.previousElementSibling;
 
@@ -105,7 +103,8 @@ function designButton(tweet) {
 }
 
 function addNewShareButtons() {
-    const tweets = document.querySelectorAll('article[data-testid="tweet"]');
+    let tweets = document.querySelectorAll('article[data-testid="tweet"]');
+
     tweets.forEach(tweet => {
         if (!tweet.querySelector('.custom-copy-icon')) {
             designButton(tweet);
@@ -139,26 +138,26 @@ function config() {
 
     const configPopup = document.createElement('form');
     configPopup.innerHTML = '<p style="text-align: center;">Twitter Fix URL Config</p>';
-    configPopup.style.cssText = 'position: fixed; top: 50%; left: 50%; padding: 10px; margin-top: -100px; margin-left: -150px; width: 325px; height: 200px; background-color: black; border: 2px solid white; border-radius: 25px; color: white; font-size: 24px;';
+    configPopup.style.cssText = 'position: fixed; top: 50%; left: 50%; padding: 10px; margin-top: -150px; margin-left: -150px; width: 325px; height: 200px; background-color: black; border: 2px solid white; border-radius: 25px; color: white; font-size: 24px;  fontFamily: "Arial, sans-serif"';
 
     const formFontSize = 'font-size: 18px;';
-    const altUrlLabel = document.createElement('label');
-    altUrlLabel.style.cssText = formFontSize;
-    altUrlLabel.setAttribute('for', 'AltUrlTwttierFixUrl');
-    altUrlLabel.innerHTML = 'Alternative URL:';
+    const altXUrlLabel = document.createElement('label');
+    altXUrlLabel.style.cssText = formFontSize;
+    altXUrlLabel.setAttribute('for', 'AltUrlTwttierFixUrl');
+    altXUrlLabel.innerHTML = 'Alternative URL X :';
 
-    const altUrlInput = document.createElement('input');
-    altUrlInput.style.cssText = formFontSize + ' width: 280px;'
-    altUrlInput.setAttribute('type', 'text');
-    altUrlInput.setAttribute('id', 'AltUrlTwttierFixUrl');
-    altUrlInput.setAttribute('name', 'AltUrlTwttierFixUrl');
-    altUrlInput.setAttribute('value', GM_getValue('ALT_URL'));
+    const altXUrlInput = document.createElement('input');
+    altXUrlInput.style.cssText = formFontSize + ' width: calc(100% - 12px); padding: 5px'
+    altXUrlInput.setAttribute('type', 'text');
+    altXUrlInput.setAttribute('id', 'AltUrlTwttierFixUrl');
+    altXUrlInput.setAttribute('name', 'AltUrlTwttierFixUrl');
+    altXUrlInput.setAttribute('value', GM_getValue('ALT_X_URL'));
 
-    configPopup.append(altUrlLabel);
+    configPopup.append(altXUrlLabel);
     configPopup.append(document.createElement('br'));
-    configPopup.append(altUrlInput);
+    configPopup.append(altXUrlInput);
 
-    const buttonCSS = formFontSize + ' width: 75px; height: 30px; border: 2px solid white; text-align: center; padding: 0px; border-radius: 10px; margin-left: 12.25px; margin-right: 12.25px;';
+    const buttonCSS = formFontSize + ' width: 75px; height: 30px; border: 2px solid white; text-align: center; padding: 0px; border-radius: 10px; margin-left: 19px;';
 
     const altUrlResetButton = document.createElement('button');
     altUrlResetButton.setAttribute('type', 'button');
@@ -166,7 +165,7 @@ function config() {
     altUrlResetButton.style.cssText = buttonCSS;
     altUrlResetButton.innerHTML = 'Reset';
     altUrlResetButton.addEventListener('click', function(e) {
-        altUrlInput.value = baseUrl;
+        altXUrlInput.value = baseXUrl;
     });
 
     const altUrlCancelButton = document.createElement('button');
@@ -184,7 +183,7 @@ function config() {
     altUrlSubmitButton.style.cssText = buttonCSS;
     altUrlSubmitButton.innerHTML = 'Submit';
     altUrlSubmitButton.addEventListener('click', function(e) {
-        GM_setValue('ALT_URL', altUrlInput.value);
+        GM_setValue('ALT_X_URL', altXUrlInput.value);
         configPopupContainer.style.display = 'none';
     });
 

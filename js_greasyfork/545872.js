@@ -1,112 +1,130 @@
 // ==UserScript==
-// @name         EarnCryptoWRS Auto Faucet
+// @name         BitFaucet Auto Claim + Instant Currency Redirect
 // @namespace    http://tampermonkey.net/
-// @version      1.5
-// @description  Fills email and ONLY submits after IconCaptcha is truly solved + 10s delay on faucet
+// @version      1.6
 // @author       Rubystance
 // @license      MIT
-// @match        https://earncryptowrs.in/*
-// @match        https://earncryptowrs.in/app/dashboard*
-// @match        https://earncryptowrs.in/app/faucet*
+// @match        https://bitfaucet.net/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/545872/EarnCryptoWRS%20Auto%20Faucet.user.js
-// @updateURL https://update.greasyfork.org/scripts/545872/EarnCryptoWRS%20Auto%20Faucet.meta.js
+// @description Fills email and ONLY submits after IconCaptcha is truly solved + 10s delay on faucet
+// @downloadURL https://update.greasyfork.org/scripts/545872/BitFaucet%20Auto%20Claim%20%2B%20Instant%20Currency%20Redirect.user.js
+// @updateURL https://update.greasyfork.org/scripts/545872/BitFaucet%20Auto%20Claim%20%2B%20Instant%20Currency%20Redirect.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    const WALLET_EMAIL = 'YOUR_FAUCETPAY_EMAIL_HERE'; // << YOUR FAUCETPAY EMAIL
+    const EMAIL = 'YOUR_FAUCETPAY_EMAIL_HERE'; // << YOUR_FAUCETPAY_EMAIL
+    const STORAGE_KEY = 'bitfaucet_selected_currency';
 
-    function waitUntil(checkFn, okFn, interval = 700) {
-        const t = setInterval(() => {
-            try {
-                if (checkFn()) {
-                    clearInterval(t);
-                    okFn();
+    const CURRENCIES = [
+        'ltc','ton','doge','bch','usdt','trx','bnb','eth','sol','dash',
+        'dgb','xrp','usdc','fey','zec','ada','xlm','xmr','tara','pol',
+        'trump','pepe'
+    ];
+
+    function waitFor(checkFn, interval = 500, timeout = 180000) {
+        return new Promise((resolve, reject) => {
+            const start = Date.now();
+            const timer = setInterval(() => {
+                const result = checkFn();
+                if (result) {
+                    clearInterval(timer);
+                    resolve(result);
+                } else if (Date.now() - start > timeout) {
+                    clearInterval(timer);
+                    reject();
                 }
-            } catch (_) {}
-        }, interval);
+            }, interval);
+        });
     }
 
-    function iconCaptchaSolved() {
-        const tokenInputs = document.querySelectorAll(
-            'input[type="hidden"][name*="captcha"], input[type="hidden"][name*="icon"]'
+    function realClick(el) {
+        ['mousedown', 'mouseup', 'click'].forEach(evt =>
+            el.dispatchEvent(new MouseEvent(evt, { bubbles: true }))
         );
-        const tokenReady = [...tokenInputs].some(i => i.value && i.value.length > 10);
-
-        const successClass =
-            document.querySelector('.iconcaptcha-success') ||
-            document.querySelector('[data-ic-status="success"]');
-
-        const submitBtn = document.querySelector('button[type="submit"], input[type="submit"]');
-        const btnEnabled = submitBtn &&
-            !submitBtn.disabled &&
-            !submitBtn.classList.contains('disabled');
-
-        return (tokenReady || successClass) && btnEnabled;
     }
 
-    if (location.pathname === '/') {
+    function createCurrencySelector() {
+        if (document.getElementById('bf-currency-box')) return;
 
-        waitUntil(
-            () => document.querySelector('input[name="wallet"]'),
-            () => {
-                const input = document.querySelector('input[name="wallet"]');
-                input.value = WALLET_EMAIL;
+        const box = document.createElement('div');
+        box.id = 'bf-currency-box';
+        box.style = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #111;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            z-index: 99999;
+            font-family: Arial, sans-serif;
+        `;
+
+        const select = document.createElement('select');
+        select.style = `padding:5px;border-radius:5px;`;
+
+        const saved = localStorage.getItem(STORAGE_KEY) || '';
+
+        const placeholder = document.createElement('option');
+        placeholder.textContent = 'CHOOSE FAUCET';
+        placeholder.disabled = true;
+        placeholder.selected = !saved;
+        select.appendChild(placeholder);
+
+        CURRENCIES.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            opt.textContent = c.toUpperCase();
+            if (c === saved) opt.selected = true;
+            select.appendChild(opt);
+        });
+
+        select.addEventListener('change', () => {
+            const cur = select.value;
+            localStorage.setItem(STORAGE_KEY, cur);
+
+            const target = `/faucet/currency/${cur}`;
+            console.log('[Selector] Redirecting to:', target);
+            location.href = target;
+        });
+
+        box.appendChild(select);
+        document.body.appendChild(box);
+    }
+
+    createCurrencySelector();
+
+    if (location.pathname === '/' || location.pathname === '/home') {
+        waitFor(() => document.querySelector('input[name="wallet"]'))
+            .then(input => {
+                input.value = EMAIL;
                 input.dispatchEvent(new Event('input', { bubbles: true }));
-            }
-        );
-
-        waitUntil(
-            () => document.querySelector('form'),
-            () => {
-                const form = document.querySelector('form');
-                console.log('[Auto] Waiting for IconCaptcha (LOGIN)…');
-
-                waitUntil(
-                    () => iconCaptchaSolved(),
-                    () => {
-                        console.log('[Auto] IconCaptcha solved → submitting LOGIN');
-                        setTimeout(() => form.submit(), 800);
-                    },
-                    900
+                return waitFor(() =>
+                    document.querySelector('button.hero_form_btn:not([disabled])'),
+                    500,
+                    120000
                 );
-            }
-        );
+            })
+            .then(realClick)
+            .catch(() => {});
     }
 
-    if (location.pathname === '/app/dashboard') {
-        waitUntil(
-            () => document.querySelector('a[href*="currency=DOGE"]'),
-            () => {
-                document.querySelector('a[href*="currency=DOGE"]').click();
-            }
-        );
-    }
-
-    if (location.pathname.includes('/app/faucet')) {
-
-        waitUntil(
-            () => document.querySelector('form'),
-            () => {
-                const form = document.querySelector('form');
-                console.log('[Auto] Waiting for IconCaptcha (FAUCET)…');
-
-                waitUntil(
-                    () => iconCaptchaSolved(),
-                    () => {
-                        console.log('[Auto] IconCaptcha solved → waiting 10 seconds…');
-
-                        setTimeout(() => {
-                            console.log('[Auto] 10 seconds passed → submitting FAUCET');
-                            form.submit();
-                        }, 10000);
-                    },
-                    900
-                );
-            }
-        );
+    if (location.pathname.includes('/faucet/currency/')) {
+        waitFor(() => {
+            const t =
+                document.querySelector('input[name="cf-turnstile-response"]') ||
+                document.querySelector('textarea[name="cf-turnstile-response"]');
+            return t && t.value && t.value.length > 20 ? t : null;
+        }, 500, 180000)
+        .then(() => waitFor(() =>
+            document.querySelector('button.btn.sl_btn'),
+            300,
+            30000
+        ))
+        .then(realClick)
+        .catch(() => {});
     }
 
 })();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME EZRoad Mod
 // @namespace    https://greasyfork.org/users/1087400
-// @version      2.6.1
+// @version      2.6.2
 // @description  Easily update roads
 // @author       https://greasyfork.org/en/users/1087400-kid4rm90s
 // @include 	   /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
@@ -25,7 +25,7 @@
 
 (function main() {
   ('use strict');
-  const updateMessage = `<strong>New Features:</strong><br> - Enhanced "Copy Connected Segment Attribute" to copy all segment attributes including direction, speed limits, road type, lock rank, elevation level, street names, and unpaved status.`;
+  const updateMessage = `<strong>Bug Fix:</strong><br> - Fixed auto city detection when "Set city as none" is unchecked. The script now properly checks connected segments for valid cities instead of defaulting to "None" when the displayed city is empty or unavailable.`;
   const scriptName = GM_info.script.name;
   const scriptVersion = GM_info.script.version;
   const downloadUrl = 'https://greasyfork.org/scripts/528552-wme-ezroad-mod/code/wme-ezroad-mod.user.js';
@@ -120,16 +120,25 @@
   function getFirstConnectedSegmentAddress(segmentId) {
     const nonMatches = [];
     const segmentIDsToSearch = [segmentId];
-    const hasAddress = (id) => {
+    const hasValidCity = (id) => {
       const addr = wmeSDK.DataModel.Segments.getAddress({ segmentId: id });
-      return addr && !addr.isEmpty;
+      // Check if address has a city and the city is not empty
+      if (addr && addr.city && addr.city.id) {
+        const city = wmeSDK.DataModel.Cities.getById({ cityId: addr.city.id });
+        return city && !city.isEmpty;
+      }
+      return false;
     };
     while (segmentIDsToSearch.length > 0) {
       const startSegmentID = segmentIDsToSearch.pop();
       const connectedSegmentIDs = getConnectedSegmentIDs(startSegmentID);
-      const hasAddrSegmentId = connectedSegmentIDs.find(hasAddress);
-      if (hasAddrSegmentId) {
-        return wmeSDK.DataModel.Segments.getAddress({ segmentId: hasAddrSegmentId });
+      log(`Checking connected segments for segment ${startSegmentID}: ${connectedSegmentIDs.join(', ')}`);
+
+      const hasValidCitySegmentId = connectedSegmentIDs.find(hasValidCity);
+      if (hasValidCitySegmentId) {
+        const addr = wmeSDK.DataModel.Segments.getAddress({ segmentId: hasValidCitySegmentId });
+        log(`Found valid city in connected segment ${hasValidCitySegmentId}`);
+        return addr;
       }
       nonMatches.push(startSegmentID);
       connectedSegmentIDs.forEach((segmentID) => {
@@ -138,6 +147,7 @@
         }
       });
     }
+    log('No valid city found in any connected segments');
     return null;
   }
 
@@ -1082,15 +1092,27 @@
           city = null;
           // 1. Try top city
           city = getTopCity();
-          // 2. If not found, try connected segment's city
-          if (!city) {
+          log(`Top city: ${city ? `name="${city.name}", isEmpty=${city.isEmpty}, id=${city.id}` : 'null'}`);
+
+          // 2. If not found or empty, try connected segment's city
+          if (!city || city.isEmpty) {
+            log('Top city not found or empty, checking connected segments...');
             const connectedAddress = getFirstConnectedSegmentAddress(id);
             if (connectedAddress && connectedAddress.city && connectedAddress.city.id) {
-              city = wmeSDK.DataModel.Cities.getById({ cityId: connectedAddress.city.id });
+              const connectedCity = wmeSDK.DataModel.Cities.getById({ cityId: connectedAddress.city.id });
+              log(`Connected segment city: ${connectedCity ? `name="${connectedCity.name}", isEmpty=${connectedCity.isEmpty}, id=${connectedCity.id}` : 'null'}`);
+              // Only use connected city if it's not empty
+              if (connectedCity && !connectedCity.isEmpty) {
+                city = connectedCity;
+              }
+            } else {
+              log('No connected address found');
             }
           }
-          // 3. If still not found, fallback to none
-          if (!city) {
+
+          // 3. If still not found or empty, fallback to none
+          if (!city || city.isEmpty) {
+            log('No valid city found, using empty city');
             city = wmeSDK.DataModel.Cities.getAll().find((city) => city.isEmpty) || wmeSDK.DataModel.Cities.addCity({ cityName: '' });
           }
         }
@@ -1482,7 +1504,7 @@
         const message = updatedFeatures.filter(Boolean).join(', ');
         if (message) {
           if (WazeToastr?.Alerts) {
-            WazeToastr.Alerts.info('EZRoads Mod', `Segment updated with: ${message}`, false, false, 5000);
+            WazeToastr.Alerts.info('EZRoads Mod', `Segment updated with: ${message}`, false, false, 3000);
           } else {
             alert('EZRoads Mod: Segment updated (WazeToastr Alerts not available)');
           }
@@ -2077,9 +2099,11 @@
   console.log(`${scriptName} initialized.`);
 
   /*
-Change Log
+Changelog
 
 Version
+2.6.2 - 2026-01-05
+- Fixed auto city detection when "Set city as none" is unchecked. The script now properly checks connected segments for valid cities instead of defaulting to "None" when the displayed city is empty or unavailable.
 2.6.1 - 2025-12-29
 - Enhanced "Copy Connected Segment Attribute" feature:
   - Now copies all segment attributes including:

@@ -4,15 +4,19 @@
 // @description    This script adds two buttons in the page "Inbox" of FinecoBank.com that allow to mark all messages as read and to delete all messages.
 // @description:it Questo script aggiunge due bottoni nella pagina "Inbox" di FinecoBank.com che consentono di segnare tutti i messaggi come letti e di cancellare tutti i messaggi.
 // @namespace      https://greasyfork.org/users/788550
-// @version        1.1.6
+// @version        1.1.9
 // @author         Cyrano68
 // @license        MIT
 // @match          https://finecobank.com/*
-// @require        https://update.greasyfork.org/scripts/547732/1725674/BasicLib.js
+// @require        https://update.greasyfork.org/scripts/547732/1728184/BasicLib.js
 // @grant          none
 // @downloadURL https://update.greasyfork.org/scripts/491165/FinecoBankcom%20Inbox%3A%20Mark%20all%20messages%20as%20read%20and%20Delete%20all%20messages.user.js
 // @updateURL https://update.greasyfork.org/scripts/491165/FinecoBankcom%20Inbox%3A%20Mark%20all%20messages%20as%20read%20and%20Delete%20all%20messages.meta.js
 // ==/UserScript==
+
+//
+// >>>FILENAME=FinecoBank_com_Inbox_DeleteAll.js<<<
+//
 
 /* jshint esversion: 8 */
 
@@ -22,8 +26,7 @@
     "use strict";
 
     const blib = window.BasicLib;
-    //blib.setShowLogToScreen(true);
-    //blib.setMaxNumScreenLogs(200);
+    //blib.setShowLogToScreen(true, 200);
     blib.consoleLog(`CY==> FinecoBank_com_Inbox_DeleteAll: Using library 'BasicLib' (version: ${blib.getVersion()})`);
 
     const myVersion = GM_info.script.version;

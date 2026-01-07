@@ -4,7 +4,7 @@
 // @description    This script hides the annoying popups (the anti-adblock popup and others) that are shown in the web page.
 // @description:it Questo script nasconde i popup fastidiosi (il popup anti-adblock e altri) che vengono visualizzati nella pagina web.
 // @namespace      https://greasyfork.org/users/788550
-// @version        1.1.3
+// @version        1.1.7
 // @author         Cyrano68
 // @license        MIT
 // @match          https://*.wikicasa.it/*
@@ -15,14 +15,17 @@
 // @updateURL https://update.greasyfork.org/scripts/534439/WikiCasait%3A%20Hide%20Annoying%20popups%20%28the%20anti-adblock%20popup%20and%20others%29.meta.js
 // ==/UserScript==
 
+//
+// >>>FILENAME=WikiCasa_it_HideAnnoyingPopups.js<<<
+//
+
 // This is a IIFE (Immediately Invoked Function Expression).
 (function()
 {
     "use strict";
 
     const blib = window.BasicLib;
-    //blib.setShowLogToScreen(true);
-    //blib.setMaxNumScreenLogs(200);
+    //blib.setShowLogToScreen(true, 200);
     blib.consoleLog(`CY==> WikiCasa_it_HideAnnoyingPopups: Using library 'BasicLib' (version: ${blib.getVersion()})`);
 
     const haplib = window.HideAnnoyingPopupsLib;

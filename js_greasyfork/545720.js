@@ -4,7 +4,7 @@
 // @namespace    http://tampermonkey.net/
 // @icon         https://cdn-icons-png.flaticon.com/64/2504/2504965.png
 // @supportURL   https://github.com/5tratz/Tampermonkey-Scripts/issues
-// @version      0.1.1
+// @version      0.1.2
 // @author       5tratz
 // @match        https://www.youtube.com/*
 // @license      MIT
@@ -24,12 +24,49 @@
         thumbnailWidth: GM_getValue('thumbnailWidth', 246),
         thumbnailHeight: GM_getValue('thumbnailHeight', 138),
         gapSize: GM_getValue('gapSize', 8),
-        thumbnailsPerRow: GM_getValue('thumbnailsPerRow', 5)
+        thumbnailsPerRow: GM_getValue('thumbnailsPerRow', 5),
+        // ADDED: Responsive mode setting
+        useResponsiveMode: GM_getValue('useResponsiveMode', false),
+        responsiveMinWidth: GM_getValue('responsiveMinWidth', 180),
+        responsiveMaxWidth: GM_getValue('responsiveMaxWidth', 320)
     };
 
-    // Register menu commands for configuration
+    // Register menu commands for configuration - IN YOUR REQUESTED ORDER
     GM_registerMenuCommand('Configure Thumbnail Layout', configureLayout);
-    GM_registerMenuCommand('🔄 Reset to Defaults', resetToDefaults);
+    GM_registerMenuCommand('Enable/Disable Responsive Mode', toggleResponsiveMode);
+    GM_registerMenuCommand('Reset to Defaults', resetToDefaults);
+
+    // ADDED: Function to toggle responsive mode
+    function toggleResponsiveMode() {
+        config.useResponsiveMode = !config.useResponsiveMode;
+        GM_setValue('useResponsiveMode', config.useResponsiveMode);
+
+        if (config.useResponsiveMode) {
+            const minWidth = prompt('Minimum thumbnail width for responsive mode (pixels, 120-250 recommended):', config.responsiveMinWidth);
+            if (minWidth !== null) {
+                const parsedMinWidth = parseInt(minWidth);
+                if (!isNaN(parsedMinWidth) && parsedMinWidth >= 100 && parsedMinWidth <= 300) {
+                    config.responsiveMinWidth = parsedMinWidth;
+                    GM_setValue('responsiveMinWidth', parsedMinWidth);
+                }
+            }
+
+            const maxWidth = prompt('Maximum thumbnail width for responsive mode (pixels, 250-400 recommended):', config.responsiveMaxWidth);
+            if (maxWidth !== null) {
+                const parsedMaxWidth = parseInt(maxWidth);
+                if (!isNaN(parsedMaxWidth) && parsedMaxWidth >= 200 && parsedMaxWidth <= 500) {
+                    config.responsiveMaxWidth = parsedMaxWidth;
+                    GM_setValue('responsiveMaxWidth', parsedMaxWidth);
+                }
+            }
+
+            alert('Responsive Mode ENABLED!\n\nThumbnails will automatically adjust size based on screen width.\nMin: ' + config.responsiveMinWidth + 'px, Max: ' + config.responsiveMaxWidth + 'px');
+        } else {
+            alert('Responsive Mode DISABLED!\n\nUsing fixed thumbnail size: ' + config.thumbnailWidth + 'px');
+        }
+
+        applyCustomCSS();
+    }
 
     // Function to show configuration dialog
     function configureLayout() {
@@ -73,14 +110,59 @@
         config.thumbnailHeight = 138; // 246 * 9/16 = 138.375 ≈ 138
         config.gapSize = 8;
         config.thumbnailsPerRow = 5;
+        config.useResponsiveMode = false;
+        config.responsiveMinWidth = 180;
+        config.responsiveMaxWidth = 320;
 
         GM_setValue('thumbnailWidth', config.thumbnailWidth);
         GM_setValue('thumbnailHeight', config.thumbnailHeight);
         GM_setValue('gapSize', config.gapSize);
         GM_setValue('thumbnailsPerRow', config.thumbnailsPerRow);
+        GM_setValue('useResponsiveMode', config.useResponsiveMode);
+        GM_setValue('responsiveMinWidth', config.responsiveMinWidth);
+        GM_setValue('responsiveMaxWidth', config.responsiveMaxWidth);
 
         applyCustomCSS();
         alert('Reset to defaults! Refresh YouTube page to see changes.');
+    }
+
+    // ADDED: Function to calculate responsive thumbnail width
+    function calculateResponsiveWidth() {
+        if (!config.useResponsiveMode) {
+            // Use original calculation
+            const maxWidth = Math.floor((window.innerWidth - 100) / config.thumbnailsPerRow);
+            return Math.min(config.thumbnailWidth, maxWidth);
+        }
+
+        // Responsive mode: calculate based on screen width
+        const screenWidth = window.innerWidth;
+
+        // Scale thumbnail width based on screen size
+        let responsiveWidth;
+
+        if (screenWidth < 1280) {
+            // Small screens (mobile/tablet)
+            responsiveWidth = config.responsiveMinWidth;
+        } else if (screenWidth < 1920) {
+            // HD screens
+            responsiveWidth = config.responsiveMinWidth + (config.responsiveMaxWidth - config.responsiveMinWidth) * 0.3;
+        } else if (screenWidth < 2560) {
+            // 2K/QHD screens
+            responsiveWidth = config.responsiveMinWidth + (config.responsiveMaxWidth - config.responsiveMinWidth) * 0.6;
+        } else if (screenWidth < 3840) {
+            // 4K screens
+            responsiveWidth = config.responsiveMinWidth + (config.responsiveMaxWidth - config.responsiveMinWidth) * 0.8;
+        } else {
+            // Ultra-wide/5K+ screens
+            responsiveWidth = config.responsiveMaxWidth;
+        }
+
+        // Ensure it fits within min/max bounds
+        responsiveWidth = Math.max(config.responsiveMinWidth, Math.min(config.responsiveMaxWidth, responsiveWidth));
+
+        // Ensure it's not too wide for the screen
+        const maxPossibleWidth = Math.floor((screenWidth - 100) / config.thumbnailsPerRow);
+        return Math.min(Math.floor(responsiveWidth), maxPossibleWidth);
     }
 
     // Function to add or update the style
@@ -93,9 +175,43 @@
         }
 
         // Calculate dynamic values based on thumbnails per row
-        const maxWidth = Math.floor((window.innerWidth - 100) / config.thumbnailsPerRow);
-        const calculatedWidth = Math.min(config.thumbnailWidth, maxWidth);
+        const calculatedWidth = calculateResponsiveWidth();
         const calculatedHeight = Math.round(calculatedWidth * (9/16));
+
+        // ADDED: Multi-monitor responsive CSS
+        const responsiveCSS = config.useResponsiveMode ? `
+            /* Multi-monitor responsive adjustments */
+            @media (min-width: 3840px) {
+                /* 4K monitor optimization */
+                #video-title {
+                    font-size: 1.5rem !important;
+                }
+                #channel-name.ytd-video-meta-block {
+                    font-size: 1.4rem !important;
+                }
+                #metadata-line {
+                    font-size: 1.4rem !important;
+                }
+            }
+
+            @media (min-width: 5120px) {
+                /* Ultra-wide monitor optimization */
+                #video-title {
+                    font-size: 1.6rem !important;
+                }
+                #channel-name.ytd-video-meta-block {
+                    font-size: 1.5rem !important;
+                }
+                #metadata-line {
+                    font-size: 1.5rem !important;
+                }
+            }
+
+            /* Prevent layout breaking on multi-monitor setups */
+            ytd-rich-grid-renderer {
+                max-width: 100vw !important;
+            }
+        ` : '';
 
         style.textContent = `
             /* -----------------------------
@@ -215,64 +331,25 @@
                 justify-content: center !important;
                 grid-auto-flow: row !important;
             }
+
+            /* ADDED: Responsive and multi-monitor support */
+            ${responsiveCSS}
+
+            /* ADDED: Better handling for very wide screens */
+            @media (min-width: 3000px) {
+                ytd-rich-grid-renderer #contents,
+                #contents.ytd-rich-grid-row {
+                    justify-content: flex-start !important;
+                }
+            }
         `;
     }
 
-    // Add a settings button to YouTube interface
-    function addSettingsButton() {
-        // Check if button already exists
-        if (document.getElementById('yt-thumbnail-settings-btn')) return;
-
-        // Wait for YouTube's topbar to be available
-        const observer = new MutationObserver(() => {
-            const topbar = document.querySelector('#end');
-            if (topbar && !document.getElementById('yt-thumbnail-settings-btn')) {
-                // Create settings button
-                const settingsBtn = document.createElement('button');
-                settingsBtn.id = 'yt-thumbnail-settings-btn';
-                settingsBtn.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                    </svg>
-                    <span style="margin-left: 8px; font-size: 14px;">Thumbnail Settings</span>
-                `;
-                settingsBtn.style.cssText = `
-                    display: flex;
-                    align-items: center;
-                    background: rgba(255, 255, 255, 0.1);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 20px;
-                    color: white;
-                    padding: 8px 16px;
-                    margin: 0 8px;
-                    cursor: pointer;
-                    font-family: 'Roboto', 'Arial', sans-serif;
-                    font-size: 14px;
-                    transition: background 0.2s;
-                `;
-                settingsBtn.onmouseover = () => {
-                    settingsBtn.style.background = 'rgba(255, 255, 255, 0.2)';
-                };
-                settingsBtn.onmouseout = () => {
-                    settingsBtn.style.background = 'rgba(255, 255, 255, 0.1)';
-                };
-                settingsBtn.onclick = configureLayout;
-
-                // Insert button in topbar
-                topbar.insertBefore(settingsBtn, topbar.firstChild);
-                observer.disconnect();
-            }
-        });
-
-        observer.observe(document.body, { childList: true, subtree: true });
-    }
+    // REMOVED: The addSettingsButton() function completely
+    // Settings will only be accessed through Tampermonkey dropdown
 
     // Apply CSS immediately
     applyCustomCSS();
-
-    // Add settings button
-    setTimeout(addSettingsButton, 3000);
 
     // Reapply when page changes (for SPA navigation)
     let lastUrl = location.href;
@@ -283,7 +360,6 @@
             // Small delay to ensure DOM is ready
             setTimeout(() => {
                 applyCustomCSS();
-                addSettingsButton();
             }, 100);
         }
     }).observe(document, { subtree: true, childList: true });
@@ -291,6 +367,10 @@
     // Also reapply periodically to catch dynamic content
     setInterval(applyCustomCSS, 2000);
 
-    // Reapply CSS on window resize
-    window.addEventListener('resize', applyCustomCSS);
+    // Reapply CSS on window resize - MORE IMPORTANT for multi-monitor
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(applyCustomCSS, 150);
+    });
 })();

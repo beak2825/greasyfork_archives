@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Pixeldrain DL Bypass
 // @namespace       https://greasyfork.org/users/821661
-// @version         1.5.6b
+// @version         1.5.6bb
 // @description     Adds direct-download buttons and links for Pixeldrain files using an alternate proxy — inspired by 'Pixeldrain Download Bypass' by hhoneeyy and MegaLime0
 // @author          hdyzen
 // @match           https://pixeldrain.com/*
@@ -21,7 +21,7 @@
 // ==/UserScript==
 
 const CONFIG = {
-    defaultBypassURL: "pd.1drv.eu.org",
+    defaultBypassURL: "pd-pass.fdyzen.workers.dev",
     customBypassURL: GM_getValue("custom_proxy", ""),
     jDownloaderURL: "http://127.0.0.1:9666/flash/addcnl",
 
@@ -307,7 +307,6 @@ function handleFileList(separator, listData) {
         if (file.availability || file.availability_message) continue;
 
         availableFiles.push(file);
-
         bypassURLS.push(`https://${selectedProxy}/${file.id}`);
 
         filesLinkHTML += `

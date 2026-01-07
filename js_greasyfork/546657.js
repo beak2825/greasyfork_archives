@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Send To Telegram
 // @namespace    http://tampermonkey.net/
+// @run-at       document-start
 // @version      1.0.4
 // @description  将当前网页地址通过Telegram机器人发送给自己，支持快捷键(alt + t)、SweetAlert2美化提示和系统通知。
-// @author       zhiyu1998
+// @author       RrOrange
 // @match        *://*/*
 // @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest

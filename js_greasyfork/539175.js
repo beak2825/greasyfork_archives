@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Holotower Soundposts
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.6
 // @author       grem
 // @license      MIT
 // @description  Play sound for soundposts (video and image) on Holotower.
@@ -17,28 +17,50 @@
 (() => {
   'use strict';
 
+  // Storage key for user's volume preference
   const SITE_VOLUME_KEY = 'videovolume';
   const VOLUME_FALLBACK = 1.0;
 
+  // Maps file paths to their associated sound URLs
   const soundMap = new Map(); // filePath → sound URL
-  const active   = new Map(); // media element → { audio, visibilityObserver, listeners }
+  // Tracks active media elements with bound audio
+  const active = new Map(); // media element → { audio, visibilityObserver, listeners }
 
+  // CSS selectors for different image viewer types
   const NATIVE_EXPANDED_IMAGE_SELECTOR = 'img.full-image';
   const NATIVE_HOVER_IMAGE_SELECTOR = '#chx_hoverImage';
   const IQ_HOVER_IMAGE_SELECTOR = 'img[style*="position: fixed"][style*="pointer-events: none"]';
   const ALL_IMAGE_SELECTORS = `${NATIVE_EXPANDED_IMAGE_SELECTOR}, ${NATIVE_HOVER_IMAGE_SELECTOR}, ${IQ_HOVER_IMAGE_SELECTOR}`;
 
-
+  // Get user's saved volume preference, with validation
   const siteVolume = () => {
     let v = localStorage.getItem(SITE_VOLUME_KEY);
     if (typeof v === "string" && v.startsWith('"') && v.endsWith('"')) {
-      v = v.slice(1, -1);
+      v = v.slice(1, -1); // Remove JSON string quotes if present
     }
     v = parseFloat(v);
     if (!isFinite(v) || v < 0 || v > 1) v = VOLUME_FALLBACK;
     return v;
   };
 
+  // Whitelist of allowed domains for sound file URLs
+  const ALLOWED_SOUND_DOMAINS = [
+    'files.catbox.moe',
+    'litterbox.catbox.moe'
+    // Add more domains here as needed
+  ];
+
+  // Whitelist check for sound file URLs
+  const isAllowedSoundURL = (url) => {
+    try {
+      const urlObj = new URL(url);
+      return ALLOWED_SOUND_DOMAINS.includes(urlObj.hostname);
+    } catch {
+      return false;
+    }
+  };
+
+  // Add sound icon link next to file info (prevents duplicates)
   const tagIcon = (span, fullURL) => {
     if (span.dataset.soundControlsAdded) return;
     span.dataset.soundControlsAdded = 'true';
@@ -51,45 +73,39 @@
     return link;
   };
 
+  // Validate that a sound URL is actually playable (checks file exists and format is valid)
   function validateSoundLink(url, filePath, linkElement) {
     const audio = new Audio();
-    audio.preload = 'metadata'; // We only need to know if it's playable, not download the whole thing.
+    audio.preload = 'metadata'; // Only check metadata, don't download entire file
 
-    // --- Define our event handlers ---
-
-    // SUCCESS HANDLER: The browser confirmed it can play this file.
     const onSuccess = () => {
-      cleanup(); // Important: Stop listening to prevent memory leaks.
-      // The link is valid, so we do nothing and let the sound play later.
+      cleanup(); // Valid file - cleanup and let it play later
     };
 
-    // ERROR HANDLER: The browser failed to load the media.
     const onError = () => {
       cleanup();
-      // This is where we mark the link as broken.
-      soundMap.delete(filePath);
+      soundMap.delete(filePath); // Remove from map since it's broken
       const brokenMark = document.createElement('span');
       brokenMark.textContent = ' [broken]';
       brokenMark.style.color = 'red';
       linkElement.after(brokenMark);
     };
-    
-    // --- Cleanup function to remove event listeners ---
+
     const cleanup = () => {
       audio.removeEventListener('canplaythrough', onSuccess);
       audio.removeEventListener('error', onError);
       audio.removeEventListener('abort', onError);
-      audio.src = ''; // Stop any potential network activity.
+      audio.src = ''; // Stop network activity
     };
-    
-    // --- Attach listeners and start the loading process ---
+
     audio.addEventListener('canplaythrough', onSuccess, { once: true });
     audio.addEventListener('error', onError, { once: true });
-    audio.addEventListener('abort', onError, { once: true }); // Also catch if the download is aborted.
-    
-    audio.src = url;
+    audio.addEventListener('abort', onError, { once: true });
+
+    audio.src = url; // Start validation
   }
 
+  // Scan DOM for file download links with [sound=...] annotations
   function scan(root = document) {
     root.querySelectorAll('p.fileinfo a[download]').forEach(a => {
       const span = a.closest('span.unimportant');
@@ -97,32 +113,43 @@
       const m = a.download.match(/\[sound=([^\]]+)]/i);
       if (!m) return;
       try {
-        const url = decodeURIComponent(decodeURIComponent(m[1]));
+        const url = decodeURIComponent(decodeURIComponent(m[1])); // May be double-encoded
         const fullURL = url.startsWith('http') ? url : `https://${url}`;
         const filePath = new URL(a.getAttribute('href'), location.href).pathname;
+
+        // Security: reject URLs not from whitelisted domains
+        if (!isAllowedSoundURL(fullURL)) {
+          const rejectedMark = document.createElement('span');
+          rejectedMark.textContent = ' [blocked]';
+          rejectedMark.style.color = 'orange';
+          span.after(rejectedMark);
+          return;
+        }
 
         const linkElement = tagIcon(span, fullURL);
         if (!linkElement) return;
 
-        soundMap.set(filePath, fullURL);
-
+        soundMap.set(filePath, fullURL); // Register this file with its sound
         validateSoundLink(fullURL, filePath, linkElement);
       } catch {}
     });
   }
 
+  // Check if element is visible (not hidden by display:none)
   function isDisplayVisible(el) {
     if (!el) return false;
     const style = el.style.display || window.getComputedStyle(el).display;
     return style === "block" || style === "inline" || style === "";
   }
 
-  // SOUNDPOST VIDEO HANDLER
+  // Bind sound playback to a video element (syncs audio with video)
   function bind(video) {
     const path = new URL(video.src, location.href).pathname;
     const soundURL = soundMap.get(path);
     if (!soundURL || active.has(video)) return;
+    if (!isAllowedSoundURL(soundURL)) return; // Security check
 
+    // Find container element that controls visibility (for image viewer)
     let container = video.parentElement;
     for (let i = 0; i < 2; ++i) {
       if (!container) break;
@@ -133,18 +160,19 @@
 
     const audio = new Audio(soundURL);
     audio.preload = 'auto';
-    audio.loop    = true;
-    audio.volume  = video.volume ?? siteVolume();
-    audio.muted   = video.muted;
+    audio.loop = true;
+    audio.volume = video.volume ?? siteVolume();
+    audio.muted = video.muted;
     video.loop = true;
 
     const listeners = {};
 
+    // Keep video synchronized with audio loop
     listeners.tighten = () => {
       const d = video.duration || 1;
       const target = audio.currentTime % d;
       if (Math.abs(video.currentTime - target) > 0.25) {
-        video.currentTime = target;
+        video.currentTime = target; // Sync if more than 0.25s off
       }
       if (video.paused) video.play().catch(()=>{});
     };
@@ -166,7 +194,7 @@
     listeners.onVideoPause = () => { if (!audio.paused) audio.pause(); };
     listeners.onVolumeChange = () => {
       audio.volume = video.volume;
-      audio.muted  = video.muted;
+      audio.muted = video.muted;
     };
 
     audio.addEventListener('timeupdate', listeners.tighten);
@@ -174,6 +202,7 @@
     video.addEventListener('pause', listeners.onVideoPause);
     video.addEventListener('volumechange', listeners.onVolumeChange);
 
+    // Watch for visibility changes (e.g., when image viewer opens/closes)
     const visibilityObserver = new MutationObserver(() => {
       const visible = isDisplayVisible(container);
       if (visible) {
@@ -190,16 +219,19 @@
     active.set(video, { audio, visibilityObserver, listeners });
   }
 
-  // SOUNDPOST IMAGE HANDLER
+  // Bind sound playback to an image element (plays when image is visible)
   function bindImage(img) {
     const path = new URL(img.src, location.href).pathname;
     const soundURL = soundMap.get(path);
     if (!soundURL || active.has(img)) return;
+    if (!isAllowedSoundURL(soundURL)) return; // Security check
 
+    // For expanded/hover images, use image itself as container
     let container = img.parentElement;
     if (img.matches(ALL_IMAGE_SELECTORS)) {
         container = img;
     } else {
+      // Otherwise find parent container that controls visibility
       for (let i = 0; i < 2; ++i) {
         if (!container) break;
         if (container.style && (container.style.display !== undefined)) break;
@@ -210,19 +242,21 @@
 
     const audio = new Audio(soundURL);
     audio.preload = 'auto';
-    audio.loop    = true;
+    audio.loop = true;
 
     const listeners = {};
 
+    // Play from beginning when image becomes visible
     listeners.tryPlayAudio = () => {
       if (!audio.paused && isDisplayVisible(container)) return;
       if (isDisplayVisible(container)) {
         audio.volume = siteVolume();
-        audio.currentTime = 0;
+        audio.currentTime = 0; // Always restart from beginning
         audio.play().catch(()=>{});
       }
     };
 
+    // Pause and reset when image is hidden
     listeners.tryPauseAudio = () => {
       if (!isDisplayVisible(container) && !audio.paused) {
         audio.pause();
@@ -230,6 +264,7 @@
       }
     };
 
+    // Watch for visibility changes
     const visibilityObserver = new MutationObserver(() => {
       const visible = isDisplayVisible(container);
       if (visible) {
@@ -246,17 +281,17 @@
     active.set(img, { audio, visibilityObserver, listeners: {} });
   }
 
+  // Scan for image elements that should have sound bound
   function scanImages(root=document) {
     root.querySelectorAll(ALL_IMAGE_SELECTORS).forEach(bindImage);
   }
 
-  // CENTRALIZED OBSERVER FOR ADDING AND REMOVING NODES
-
+  // Watch for DOM changes to handle dynamically loaded content
   const mainObserver = new MutationObserver(mutations => {
     for (const mutation of mutations) {
-      // Handle newly added nodes
+      // Handle newly added nodes (new posts, videos, images)
       for (const node of mutation.addedNodes) {
-        if (node.nodeType !== 1) continue;
+        if (node.nodeType !== 1) continue; // Skip non-element nodes
         if (node.matches('.post, .reply')) scan(node);
         node.querySelectorAll?.('.post, .reply').forEach(scan);
         if (node.matches('video')) bind(node);
@@ -265,15 +300,15 @@
         node.querySelectorAll?.(ALL_IMAGE_SELECTORS).forEach(bindImage);
       }
 
-      // Handle removed nodes (GARBAGE COLLECTION)
+      // Clean up removed nodes to prevent memory leaks
       for (const removedNode of mutation.removedNodes) {
         if (removedNode.nodeType !== 1) continue;
         active.forEach((value, key) => {
           if (removedNode === key || removedNode.contains(key)) {
-            // Full teardown to prevent zombie listeners
             value.audio.pause();
             value.visibilityObserver.disconnect();
 
+            // Remove video-specific listeners if present
             if (value.listeners.tighten) {
               value.audio.removeEventListener('timeupdate', value.listeners.tighten);
               key.removeEventListener('play', value.listeners.tryPlayAudio);
@@ -288,15 +323,17 @@
     }
   });
 
-  // BOOTSTRAP
+  // Initialize: scan existing content and start watching for changes
   scan();
   document.querySelectorAll('video').forEach(bind);
   scanImages();
   mainObserver.observe(document.body, { childList: true, subtree: true });
 
+  // Patch Post.addClone to ensure soundposts work with cloned posts (previews, etc.)
   function patchPostCloning() {
     const postProto = window.g?.Post?.prototype;
     if (typeof postProto?.addClone !== 'function') {
+      // Retry if Post prototype not available yet (up to 5 attempts)
       if ((patchPostCloning.attempts || 0) < 5) {
         setTimeout(patchPostCloning, 500);
         patchPostCloning.attempts = (patchPostCloning.attempts || 0) + 1;
@@ -305,8 +342,9 @@
     }
 
     const originalAddClone = postProto.addClone;
-    if (originalAddClone.isPatchedBySoundposts) return;
+    if (originalAddClone.isPatchedBySoundposts) return; // Already patched
 
+    // Wrap addClone to scan and bind sound to cloned posts
     postProto.addClone = function(...args) {
       const cloneObj = originalAddClone.apply(this, args);
       if (cloneObj?.nodes?.root) {

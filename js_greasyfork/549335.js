@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Forcing YT to use advanced tweaks to compile less resources
-// @version      2025.12.29
-// @description  This userscript will mark both videos and notifications as focus mode, semi-advanced CSS tweaks, forcing h.264 codec on all videos along with other tweaks to prevent most of system resources.
+// @name         Extra tweaks for YouTube to improve functionally
+// @version      2026.01.06
+// @description  This userscript will disable and tweak some more of the functionally, forcing h.264 codec on all videos along with other tweaks to cut down on system resources.
 // @author       LegendCraftMC
 // @license MIT
 // @match        https://www.youtube.com/*
@@ -18,8 +18,8 @@
 // @inject-into  page
 // @allFrames    true
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/549335/Forcing%20YT%20to%20use%20advanced%20tweaks%20to%20compile%20less%20resources.user.js
-// @updateURL https://update.greasyfork.org/scripts/549335/Forcing%20YT%20to%20use%20advanced%20tweaks%20to%20compile%20less%20resources.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/549335/Extra%20tweaks%20for%20YouTube%20to%20improve%20functionally.user.js
+// @updateURL https://update.greasyfork.org/scripts/549335/Extra%20tweaks%20for%20YouTube%20to%20improve%20functionally.meta.js
 // ==/UserScript==
 // Add config flags to disable both animations and ambient mode functionally
 
@@ -61,7 +61,7 @@ const updateFlags = () => {
 const mutationObserver = new MutationObserver(updateFlags);
 mutationObserver.observe(document, { subtree: true, childList: true });
 
-// Hide the number of notifications to prevent any annoyances
+// Remove the tab prefix that displays the number of notifications
 // Save the original descriptor of document.title
 const originalTitleDescriptor = Object.getOwnPropertyDescriptor(Document.prototype, 'title');
 
@@ -78,14 +78,6 @@ Object.defineProperty(document, 'title', {
     originalTitleDescriptor.set.call(this, interceptedValue);
   }
 });
-
-(function() {
-    'use strict';
-    const style = document.createElement('style');
-    style.type = 'text/css';
-    style.innerText = '.yt-spec-icon-badge-shape--type-notification .yt-spec-icon-badge-shape__badge{display:none;}';
-    document.head.appendChild(style);
-})();
 
 // Disable both 'trailer autoplay' and 'automatic pause' features
 (function main() {
@@ -162,10 +154,6 @@ background: transparent !important
 
 div#end.style-scope.ytd-masthead .yt-spec-icon-badge-shape--style-overlay.yt-spec-icon-badge-shape--type-cart-refresh .yt-spec-icon-badge-shape__badge {
 color: #fff !important
-}
-
-.yt-spec-icon-badge-shape--type-notification .yt-spec-icon-badge-shape__badge {
-display: none !important
 }
 
 /* Player tweaks */
@@ -247,65 +235,6 @@ display: none !important
 
 ytd-watch-metadata.ytd-watch-flexy {
 padding-bottom: 36px !important
-}
-
-/* Watch page comments tweaks (plus it prevents 'endless scrolling' and limiting the number of posts to help resources) */
-#author-thumbnail.ytd-comment-simplebox-renderer,
-#primary #author-thumbnail.ytd-comment-view-model,
-#author-thumbnail.ytd-comment-view-model yt-img-shadow.ytd-comment-view-model {
-width: 40px !important;
-height: 40px !important
-}
-
-.ytSubThreadThreadline {
-visibility: hidden !important
-}
-
-ytSubThreadSubThreadContent {
-margin-top: 0 !important
-}
-
-.ytSubThreadSubThreadContent .yt-spec-button-shape-next {
-color: var(--yt-spec-call-to-action) !important;
-flex-direction: row-reverse !important
-}
-
-.ytSubThreadSubThreadContent .ytd-comment-engagement-bar .yt-spec-button-shape-next {
-color: var(--yt-spec-icon-active-other) !important
-}
-
-.ytSubThreadSubThreadContent .yt-spec-button-shape-next__icon {
-margin-left: 0 !important;
-margin-right: 6px !important
-}
-
-.thread-hitbox.ytd-comment-thread-renderer,
-ytd-watch-flexy #expanded-threads #author-thumbnail,
-ytd-watch-flexy #comments #contents {
-display: none
-}
-
-#comments.style-scope.ytd-watch-flexy #contents:nth-of-type(1),
-#comments.style-scope.ytd-watch-flexy #contents:nth-of-type(2),
-#comments.style-scope.ytd-watch-flexy #contents:nth-of-type(3),
-#comments.style-scope.ytd-watch-flexy #contents:nth-of-type(4),
-ytd-watch-flexy:not([full-bleed-player]) #primary #comments #contents:nth-of-type(5),
-ytd-watch-flexy:not([full-bleed-player]) #primary #comments #contents:nth-of-type(6),
-ytd-watch-flexy #panel-button.style-scope.ytd-comments-header-renderer {
-display: block
-}
-
-ytd-watch-flexy #comments #spinner {
-visibility: hidden !important;
-height: 0 !important
-}
-
-ytd-watch-flexy yt-comment-filter-context-view-model {
-display: none !important
-}
-
-ytd-watch-flexy #expanded-threads #main.ytd-comment-view-model {
-margin-left: 40px !important
 }`;
 if (typeof GM_addStyle !== "undefined") {
   GM_addStyle(css);

@@ -2,13 +2,13 @@
 // @name        Better DGG Kick Embed
 // @namespace   yuniDev.kickembed
 // @match       https://kick.com/*
-// @match       https://www.destiny.gg/bigscreen
-// @match       https://destiny.gg/bigscreen
+// @match       https://www.destiny.gg/bigscreen*
+// @match       https://destiny.gg/bigscreen*
 // @grant       GM.registerMenuCommand
 // @grant       GM.setValue
 // @grant       GM.getValue
 // @grant       GM.addStyle
-// @version     1.10
+// @version     1.11
 // @license     MIT
 // @author      yuniDev
 // @run-at      document-idle
@@ -161,7 +161,7 @@ if (window.location.hostname === "kick.com" && window.self !== window.top) { // 
     if (![...document.querySelectorAll("nav")].find(el => el.getAttribute("style") && el.getAttribute("style").indexOf("display: none") > -1)) hideSurroundings();
   }, 200);
   setupChatToggleCallback();
-} else if (window.location.pathname === "/bigscreen") {
+} else if (window.location.pathname.startsWith("/bigscreen")) {
   let disconnect = loadDGG();
   lastPath = window.location.href;
   addEventListener('hashchange', () => {

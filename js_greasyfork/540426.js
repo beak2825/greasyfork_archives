@@ -4,16 +4,20 @@
 // @description    This script hides the annoying popups (the warning-disconnection popu) that are shown in the web page.
 // @description:it Questo script nasconde i popup fastidiosi (il popup di avviso disconnessione) che vengono visualizzati nella pagina web.
 // @namespace      https://greasyfork.org/users/788550
-// @version        1.1.5
+// @version        1.1.9
 // @author         Cyrano68
 // @license        MIT
-// @match          https://finecobank.com/*
-// @require        https://update.greasyfork.org/scripts/547732/1725674/BasicLib.js
-// @require        https://update.greasyfork.org/scripts/535551/1726151/HideAnnoyingPopupsLib.js
+// @match          https://*finecobank.com/*
+// @require        https://update.greasyfork.org/scripts/547732/1728184/BasicLib.js
+// @require        https://update.greasyfork.org/scripts/535551/1728187/HideAnnoyingPopupsLib.js
 // @grant          none
 // @downloadURL https://update.greasyfork.org/scripts/540426/FinecoBankcom%3A%20Hide%20Annoying%20popups%20%28the%20warning-disconnection%20popup%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/540426/FinecoBankcom%3A%20Hide%20Annoying%20popups%20%28the%20warning-disconnection%20popup%29.meta.js
 // ==/UserScript==
+
+//
+// >>>FILENAME=FinecoBank_com_HideAnnoyingPopups.js<<<
+//
 
 // This is a IIFE (Immediately Invoked Function Expression).
 (function()
@@ -21,8 +25,7 @@
     "use strict";
 
     const blib = window.BasicLib;
-    //blib.setShowLogToScreen(true);
-    //blib.setMaxNumScreenLogs(200);
+    //blib.setShowLogToScreen(true, 200);
     blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: Using library 'BasicLib' (version: ${blib.getVersion()})`);
 
     const haplib = window.HideAnnoyingPopupsLib;
@@ -58,52 +61,55 @@
         blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: onMutatedNode - BEGIN - myID='${myID}' - foundNode.textContent=${foundNode.textContent}`);
         let stopMutationProcessing = false;
 
-        if ((buttonText.length === 0) || (foundNode.textContent.toUpperCase() === buttonText.toUpperCase()))
+        if (selector === "button.btn.btn-primary")
         {
-            // The popup will appear for "clickDelay_ms" milliseconds. Then the script will click "programmatically" on the button.
-            if (minClickDelay_s > 0)
+            if ((buttonText.length === 0) || (foundNode.textContent.toUpperCase() === buttonText.toUpperCase()))
             {
-                if (!timerAlreadyRunning)
+                // The popup will appear for "clickDelay_ms" milliseconds. Then the script will click "programmatically" on the button.
+                if (minClickDelay_s > 0)
                 {
-                    timerAlreadyRunning = true;
-
-                    const minClickDelay_ms = minClickDelay_s * 1e3;
-                    const maxClickDelay_ms = maxClickDelay_s * 1e3;
-                    const clickDelay_ms    = blib.getMathRandomInteger(minClickDelay_ms, maxClickDelay_ms);
-                    blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: onMutatedNode - myID='${myID}' - clickDelay_ms=${clickDelay_ms}`);
-
-                    setTimeout(() =>
+                    if (!timerAlreadyRunning)
                     {
-                        blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: onMutatedNode - delayed - myID='${myID}' - clicking on button programmatically`);
-                        foundNode.click();
-                        timerAlreadyRunning = false;
-                    }, clickDelay_ms);
+                        timerAlreadyRunning = true;
+
+                        const minClickDelay_ms = minClickDelay_s * 1e3;
+                        const maxClickDelay_ms = maxClickDelay_s * 1e3;
+                        const clickDelay_ms    = blib.getMathRandomInteger(minClickDelay_ms, maxClickDelay_ms);
+                        blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: onMutatedNode - myID='${myID}' - clickDelay_ms=${clickDelay_ms}`);
+
+                        setTimeout(() =>
+                        {
+                            blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: onMutatedNode - delayed - myID='${myID}' - clicking on button programmatically`);
+                            foundNode.click();
+                            timerAlreadyRunning = false;
+                        }, clickDelay_ms);
+                    }
+                    else
+                    {
+                        blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: onMutatedNode - myID='${myID}' - timer for delayed click already RUNNING`);
+                    }
                 }
                 else
                 {
-                    blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: onMutatedNode - myID='${myID}' - timer for delayed click already RUNNING`);
+                    blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: onMutatedNode - myID='${myID}' - clicking on button programmatically`);
+                    foundNode.click();
                 }
             }
             else
             {
-                blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: onMutatedNode - myID='${myID}' - clicking on button programmatically`);
-                foundNode.click();
+                blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: onMutatedNode - myID='${myID}' - Button IGNORED`);
             }
-        }
-        else
-        {
-            blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: onMutatedNode - myID='${myID}' - Button IGNORED`);
-        }
 
-        // IMPORTANT: In this case we will always return TRUE (otherwise the "haplib" will hide every matching button).
-        stopMutationProcessing = true;
+            // IMPORTANT: In this case we will always return TRUE (otherwise the "haplib" will hide every matching button).
+            stopMutationProcessing = true;
+        }
 
         blib.consoleLog(`CY==> FinecoBank_com_HideAnnoyingPopups: onMutatedNode - END - myID='${myID}' - stopMutationProcessing=${stopMutationProcessing}`);
         return stopMutationProcessing;
     }
 
     const mutationObserverConfig = {subtree: true, childList: true};
-    const mutatedNodesConfig     = {selectors: ["button.btn.btn-primary"], onMutatedNode: onMutatedNode};
+    const mutatedNodesConfig     = {selectors: ["button.btn.btn-primary", "div#onetrust-consent-sdk"], onMutatedNode: onMutatedNode};
     haplib.configure(mutationObserverConfig, mutatedNodesConfig);
 
     blib.consoleLog("CY==> FinecoBank_com_HideAnnoyingPopups: Script loaded");

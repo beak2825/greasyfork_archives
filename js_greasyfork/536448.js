@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         NEMT for IOA
 // @namespace    http://conanluo.com/
-// @version      v.1.6.6
+// @version      v.1.6.8
 // @description  Fixed New System
 // @author       Conan
 // @match        https://provider.nemtplatform.com/*
@@ -20,7 +20,6 @@
     const popUrl = _url+"/popRoute.html?arr=";
     const routeColors=["000000","b51548","188225","f3f600","AAAA00","443ea1","b1f9d1","aa77aa","01b4fa","f685e6","e08536","dddddd"];
     const wander = [
-        "Auyeung, Shum K",
         "Chan, Suk Ching",
         "Chen, Zong Liang",
         "Chiang, Kuo Hsiun",

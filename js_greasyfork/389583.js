@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [RED/OPS/DIC] Upload Assistant
 // @namespace    https://greasyfork.org/users/321857-anakunda
-// @version      1.430
+// @version      1.431
 // @description  Accurate filling of new upload/request and group/request edit forms based on foobar2000's playlist selection or web link, offline and online release integrity check, tracklist format customization, featured artists extraction, classical works formatting, online cover art lookup, reporting open requests, form enhancements and more
 // @author       Anakunda
 // @run-at       document-end
@@ -1052,11 +1052,11 @@ function setDynaHandlers() {
 							fr.onload = evt => { resolve(evt.currentTarget.result) };
 							fr.onerror = evt => { reject(`Log file reading error (${logFile.name})`) };
 							fr.readAsText(logFile);
-						}))), groupTorrents, scdAPI]).then(function([logs, torrents, scdAPI]) {
+						}))), groupTorrents, scdAPI]).then(async function([logs, torrents, scdAPI]) {
 							if (torrents.length <= 0) return;
 							if (!['getSessionsFromLogs', 'getUniqueSessions'].some(fn => typeof scdAPI[fn] == 'function'))
 								throw 'Assertion failed: Required API endpoints missing';
-							const userSessions = (scdAPI.getSessionsFromLogs || scdAPI.getUniqueSessions)(logs, true);
+							const userSessions = await (scdAPI.getSessionsFromLogs || scdAPI.getUniqueSessions)(logs, true);
 							if (['releaseFingerprintFromTorrent', 'releaseFingerprintFromSessions', 'testSimilarity'].every(fn => typeof scdAPI[fn] == 'function')) {
 								const userRelease = scdAPI.releaseFingerprintFromSessions(userSessions);
 								var testWorker = torrent => scdAPI.releaseFingerprintFromTorrent(torrent.id).then(function(torrentRelease) {
@@ -1081,7 +1081,7 @@ function setDynaHandlers() {
 							if (userSessions != null) return Promise.all(torrents.map(testWorker)).then(function(results) {
 								scdMessages = (results = results.filter(result => result != null)).length > 0 ? results.map(function(result, index) {
 									const type = result.torrent.reported || result.torrent.trumpable || !(result.torrent.logScore >= 100) ? 'notice' : 'warning';
-									let message = `${{ 'warning': 'This', 'notice': 'Unless uploading a trump, this' }[type]} mastering will be considered dupe to <a href="/torrents.php?torrentid=${result.torrent.id}" target="_blank" style="color: skyblue;">${result.torrent.remasterYear > 0 ? `${result.torrent.remasterYear} - ${[
+									let message = `${{ 'warning': 'This', 'notice': 'Unless uploading a trump, this' }[type]} pressing will be considered dupe to <a href="/torrents.php?torrentid=${result.torrent.id}" target="_blank" style="color: skyblue;">${result.torrent.remasterYear > 0 ? `${result.torrent.remasterYear} - ${[
 										'remasterRecordLabel',
 										'remasterCatalogueNumber',
 										'remasterTitle',

@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         YT - Other UI Tweaks (Performance tweaks + Anti-shorts/AI)
-// @version      2026.01.03
+// @name         YouTube - Web tweaks (Performance tweaks + Anti-shorts/AI)
+// @version      2026.01.06
 // @description  This is the script that tweaks other UI elements (that also includes removal of 'Shorts' and 'AI nonsense', along with performance tweaks such as disabling animations and hides most annoyances)
 // @author       Joey_JTS
 // @match        *://*.youtube.com/*
@@ -13,8 +13,8 @@
 // @run-at       document-start
 // @license      MIT
 // @namespace    https://greasyfork.org/en/users/761382
-// @downloadURL https://update.greasyfork.org/scripts/552336/YT%20-%20Other%20UI%20Tweaks%20%28Performance%20tweaks%20%2B%20Anti-shortsAI%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/552336/YT%20-%20Other%20UI%20Tweaks%20%28Performance%20tweaks%20%2B%20Anti-shortsAI%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/552336/YouTube%20-%20Web%20tweaks%20%28Performance%20tweaks%20%2B%20Anti-shortsAI%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/552336/YouTube%20-%20Web%20tweaks%20%28Performance%20tweaks%20%2B%20Anti-shortsAI%29.meta.js
 // ==/UserScript==
 
 (function() {

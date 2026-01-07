@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [RED] Similar CD Detector
 // @namespace    https://greasyfork.org/users/321857-anakunda
-// @version      1.11.5
+// @version      1.12.1
 // @description  Script for testing CD releases for duplicity by Gazelle tracker standard
 // @match        https://redacted.sh/torrents.php?id=*
 // @match        https://redacted.sh/torrents.php?page=*&id=*
@@ -9,10 +9,13 @@
 // @run-at       document-end
 // @author       Anakunda
 // @license      GPL-3.0-or-later
+// @grant        GM_getValue
+// @grant        GM_setValue
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
 // @connect      musicbrainz.org
 // @connect      db.cue.tools
+// @connect      accuraterip.com
 // @require      https://openuserjs.org/src/libs/Anakunda/Requests.min.js
 // @require      https://openuserjs.org/src/libs/Anakunda/libLocks.min.js
 // @require      https://openuserjs.org/src/libs/Anakunda/gazelleApiLib.min.js
@@ -32,11 +35,13 @@ function getTorrentId(tr) {
 const toASCII = str => str && str.normalize('NFKD').replace(/[\x00-\x1F\u0300-\u036F]/gu, '');
 const cmpNorm = str => str && toASCII(str).replace(/\s+(?:and|et|y|und|и)\s+/gi, ' & ').toLowerCase()
 	.replace(/[\s\‐\−\—\–\x00-\x25\x27-\x2F\x3A-\x40\x5B-\x5E\x60\x7B-\x7F\u2019]+/g, '');
+const sameStringValues = (...strVals) => strVals.length > 0 && strVals.every(strVal1 => strVal1
+	&& strVals.every(strVal2 => strVal2 && cmpNorm(strVal2) == cmpNorm(strVal1)));
 const dupePrecheckInLinkbox = false; // set to true to have own rip dupe precheck in group page linkbox
-const noseedGracePeriod = 120; // tolerated torrent age in minutes to allow auto-reporting without being seeded
+const noseedGracePeriod = 180; // tolerated torrent age in minutes to allow auto-reporting without being seeded
 const maxRemarks = 60, allowReports = true;
 const sessionsCache = new Map;
-let selected = null, sessionsSessionCache;
+let selected = null, sessionsSessionCache, logScoresCache, ssQuotaExceeded = false;
 // const rxStackedLogReducer = /^[\S\s]*(?:\r?\n)+(?=(?:Exact Audio Copy V|X Lossless Decoder version\s+|CUERipper v|EZ CD Audio Converter\s+)\d+\b)/;
 // const stackedLogReducer = logFile => rxStackedLogReducer.test(logFile) ?
 // 	logFile.replace(rxStackedLogReducer, '') : logFile;
@@ -143,6 +148,63 @@ function releaseFingerprintFromSessions(sessions, id) {
 	return Object.freeze(Object.assign(sessions.map(getSessionFingerprint), { source: 'logfile', id: id }));
 }
 
+let arOffsets;
+function verifyOffsets(sessions) {
+	if (!Array.isArray(sessions)) throw 'Invalid argument';
+	return sessions.length > 0 ? (function getAccuripOffsets() {
+		if (arOffsets instanceof Promise) return arOffsets;
+		const cachedOffsets = GM_getValue('read_offsets');
+		if (cachedOffsets && Object.keys(cachedOffsets).length <= 0) cachedOffsets = undefined;
+		if (cachedOffsets) {
+			const timeStamp = GM_getValue('read_offsets_time');
+			if (timeStamp > 0 && Date.now() - timeStamp < 24 * 60 * 60 * 1000)
+				return arOffsets = Promise.resolve(cachedOffsets);
+		}
+		return arOffsets = GlobalXHR.get('http://accuraterip.com/driveoffsets.htm').then(function({document}) {
+			const offsets = Object.assign.apply(null, Array.from(document.body.querySelectorAll('table table > tbody > tr:not(:first-of-type)'), function(tr) {
+				let offset = Array.from(tr.cells, cell => cell.textContent.trim());
+				offset = {
+					driveId: offset[0].replace(/\s+/g, ' ').replace(/^-\s*/, ''),
+					offset: parseInt(offset[1]), submits: parseInt(offset[2]), agreeRate: parseInt(offset[3]),
+				};
+				return offset.driveId && !isNaN(offset.offset) ? offset : null;
+			}).filter(Boolean).map(offset => ({ [offset.driveId]: [offset.offset, offset.submits, offset.agreeRate] })));
+			if (offsets.length <= 0) return Promise.reject('No drive offsets found');
+			GM_setValue('read_offsets_time', Date.now());
+			GM_setValue('read_offsets', offsets);
+			return offsets;
+		}).catch(reason => cachedOffsets || Promise.reject(reason));
+	})().then(arOffsets => sessions.map(function(session) {
+		let usedDrive = [
+			/^(?:Used drive|Benutztes Laufwerk|Unità predefinita|Usar unidad|Използвано устройство|使用驱动器|Použitá mechanika|Använd enhet|gebruikt loopwerk|Użyty napęd|Дисковод|Korišćen drajv|Äèñêîâîä|Unidade utilizada|Drive used)\s*:\s*(.+)$/im, // 1233
+			/^(?:Device: *\(?:\[ ?[A-Z]: ?\] *)? \s*:\s*(.+)$/m, // EZCD
+		].reduce((matches, rx) => matches || rx.exec(session), null);
+		let readOffset = /^(?:Read offset(?: correction)?|Коррекция смещения при чтении|读取偏移校正|Leseoffset Korrektur|Correzione offset di lettura|Corrección de Desplazamiento de Lectura|Lees-offset correctie|Läs-offset-korrigering|Офсет корекция при четене|Korekta położenia dla odczytu|Korekce vychýlení čtení|Offsetová korekcia pre čítanie|Korekcija offset-a kod čitanja|Êîððåêöèÿ ñìåùåíèÿ ïðè ÷òåíèè|Correcção do offset de leitura|Sample offset)\s*:\s*(\d+)\b/im.exec(session); // 1256
+		if (usedDrive == null || readOffset == null) return Promise.resolve(undefined);
+		usedDrive = usedDrive[1].replace(/\s+(?:(?:Adapter|ID):\s+\d+.*|\((?:not found|revision)\b.+\))$/, '').replace(/\s+/g, ' ').trim();
+		readOffset = parseInt(readOffset[1]);
+		const drives = Object.keys(arOffsets).filter(key => sameStringValues(key, usedDrive) || sameStringValues(key, [
+			[/^(?:JLMS)\b/, 'Lite-ON'],
+			[/^(?:HL-DT-ST|HL[ -]?DT[ -]?ST\b)/, 'LG Electronics'],
+			[/^(?:Matshita)\b/i, 'Panasonic'],
+		].reduce((driveStr, subst) => driveStr.replace(...subst), usedDrive)));
+		if (drives.length <= 0) return 0;
+		console.info('Read offset(s) for %s found in AR database:', usedDrive, drives.map(drive =>
+			`${arOffsets[drive][0] > 0 ? '+' + arOffsets[drive][0] : arOffsets[drive][0]} (submits: ${arOffsets[drive][1]}, agree rate: ${arOffsets[drive][2]})`));
+		const matches = drives.map(function(drive) {
+			if (arOffsets[drive][1] >= 5 || arOffsets[drive][2] >= 100) return readOffset == arOffsets[drive][0];
+			console.info('Weak read offset for', drive, 'found in AR database - offset not verified');
+		});
+		if (matches.some(Boolean)) return 1; else if (matches.some(match => match != false)) return 0;
+		const toc = getTocEntries(session), firstSector = toc != null ? toc[0].startSector : undefined;
+		console.warn('Mismatching read offset for %s: %o (%s)', usedDrive, matches, firstSector == 0 ?
+			'TOC zero-aligned' : `TOC offseted by ${firstSector} sectors`);
+		return firstSector == 0 ? -1 : -2;
+	})).then(results => !results.some(result => result < -1)
+		|| confirm('At least one disc was ripped with incorrect drive offset and nonzero based TOC, the analysis may give incorerct decision.\n(see browser console for more details)\n\nContinue anyway?')
+			? sessions : Promise.reject('Incorrect read offset'), reason => sessions) : Promise.resolve(null);
+}
+
 function getSessionsFromLogs(logFiles, detectCombinedLogs = true) {
 	logFiles = Array.prototype.map.call(logFiles, function(logFile) {
 		while (logFile.startsWith('\uFEFF')) logFile = logFile.slice(1);
@@ -156,7 +218,7 @@ function getSessionsFromLogs(logFiles, detectCombinedLogs = true) {
 		const rxCombinedLog = new RegExp(`^[\\S\\s]*(?:\\r?\\n)+(?=${rxRipperSignatures})`);
 		logFiles = logFiles.map(logFile => rxCombinedLog.test(logFile) ? logFile.replace(rxCombinedLog, '') : logFile)
 			.filter(RegExp.prototype.test.bind(new RegExp('^(?:' + rxRipperSignatures + '|' + sessionHeader + ')')));
-		return logFiles.length > 0 ? logFiles : null;
+		return verifyOffsets(logFiles);
 	} else if ((logFiles = logFiles.map(function(logFile) {
 		let rxSessionsIndexer = new RegExp('^' + rxRipperSignatures, 'gm'), indexes = [ ], match;
 		while ((match = rxSessionsIndexer.exec(logFile)) != null) indexes.push(match.index);
@@ -196,7 +258,7 @@ function getSessionsFromLogs(logFiles, detectCombinedLogs = true) {
 		if (uniqueKey.length > 0) sessions.set(uniqueKey.join(':'), session);
 	}
 	//console.info('Unique keys:', Array.from(sessions.keys()));
-	return sessions.size > 0 ? Array.from(sessions.values()) : null;
+	return sessions.size > 0 ? verifyOffsets(Array.from(sessions.values())) : null;
 }
 
 function getSessionsFromTorrent(torrentId, detectCombinedLogs, allowInvalid = true) {
@@ -212,20 +274,61 @@ function getSessionsFromTorrent(torrentId, detectCombinedLogs, allowInvalid = tr
 	if (sessionsSessionCache && torrentId in sessionsSessionCache)
 		return sessionsSessionCache[torrentId] || allowInvalid ?
 			Promise.resolve(sessionsSessionCache[torrentId]) : Promise.reject('No valid logfiles attached');
-	// let request = queryAjaxAPICached('torrent', { id: torrentId }).then(({torrent}) => torrent.logCount > 0 ?
-	// 		Promise.all(torrent.ripLogIds.map(ripLogId => queryAjaxAPICached('riplog', { id: torrentId, logid: ripLogId })
-	// 			.then(response => response))) : Promise.reject('No logfiles attached'));
-	let request = LocalXHR.get('/torrents.php?' + new URLSearchParams({ action: 'loglist', torrentid: torrentId }));
-	request = request.then(({document}) => Array.from(document.body.querySelectorAll(':scope > blockquote > pre:first-child'), pre => pre.textContent));
+	let request, logScores, apiRequest;
+	switch (document.domain) {
+		case 'redacted.sh': // API method not quite reliable
+			// apiRequest = queryAjaxAPICached('torrent', { id: torrentId }).then(function({torrent}) {
+			// 	if (!torrent.hasLog || torrent.ripLogIds.length <= 0) return Promise.reject('Torrent has no ripping logs');
+			// 	return Promise.all(torrent.ripLogIds.map(logId => queryAjaxAPICached('riplog', { id: torrentId, logid: logId })));
+			// });
+			// request = apiRequest.then(ripLogs => ripLogs.map(function(logEntry) {
+			// 	logEntry = Uint8Array.from(atob(logEntry.log), ch => ch.charCodeAt(0));
+			// 	const utf8 = new TextDecoder('utf-8').decode(logEntry);
+			// 	const utf16 = new TextDecoder('utf-16le').decode(logEntry);
+			// 	const score = str => (str.match(/[\x20-\x7E]/g) || []).length;
+			// 	return score(utf16) > score(utf8) ? utf16 : utf8;
+			// }));
+			// logScores = request.then(logFiles => Promise.all(logFiles.map(logFile =>
+			// 	queryAjaxAPI('logchecker', null, { pastelog: logFile })))).catch(reason =>
+			// 		apiRequest.then(ripLogs => ripLogs.map(logEntry => ({ score: logEntry.score, checksum: logEntry.checksum }))));
+			break;
+	}
+	request = LocalXHR.get('/torrents.php?' + new URLSearchParams({ action: 'loglist', torrentid: torrentId }))
+		.then(({document}) => document.body);
+	logScores = request.then(function(body) {
+		const scores = Array.from(body.querySelectorAll(':scope > blockquote > strong + span'), function(span) {
+			const result = { score: parseInt(span.textContent) };
+			console.assert(!isNaN(result.score), span.cloneNode());
+			if ((span = span.parentNode.nextElementSibling) != null
+					&& (span = span.querySelector(':scope > h3 + pre')) != null
+					&& (span = span.textContent.split(/\r?\n/).map(deduction => deduction.trim()).filter(Boolean)).length > 0)
+				result.issues = span;
+			return result;
+		});
+		return scores.length > 0 ? scores : Promise.reject('No log scores for torrent');
+	});
+	request = request.then(body =>
+		Array.from(body.querySelectorAll(':scope > blockquote > pre:first-child'), pre => pre.textContent));
 	request = request.then(logFiles => getSessionsFromLogs(logFiles, detectCombinedLogs)).then(function(sessions) {
-		try {
+		if (!sessions && !allowInvalid) return Promise.reject('No valid logfiles attached');
+		if (!ssQuotaExceeded) try {
 			if (!sessionsSessionCache) sessionsSessionCache = { };
 			sessionsSessionCache[torrentId] = sessions;
 			sessionStorage.setItem('ripSessionsCache', JSON.stringify(sessionsSessionCache));
-		} catch(e) { console.warn(e) }
-		return sessions || allowInvalid ? sessions : Promise.reject('No valid logfiles attached');
+		} catch(e) {
+			ssQuotaExceeded = true;
+			console.warn(e);
+		}
+		return sessions;
 	});
 	sessionsCache.set(torrentId, request);
+	if (logScores instanceof Promise) logScores.then(function(logScores) {
+		console.assert(Array.isArray(logScores));
+		if (!logScoresCache) logScoresCache = { };
+		logScoresCache[torrentId] = logScores;
+		sessionStorage.setItem('logScoresCache', JSON.stringify(logScoresCache));
+		return logScores;
+	}).catch(console.warn);
 	return request;
 }
 function releaseFingerprintFromTorrent(torrent, detectCombinedLogs) {
@@ -265,8 +368,8 @@ function testSimilarity(release1, release2, matchAnyOrder = true, progressivePea
 			// { maxShift: 40, maxDrift: 40 }, // staff standard
 		], maxPeakDelta = 0.001;
 		const tocShifts = tracksMapper(trackIndex =>
-			(media[1][trackIndex].endSector - media[1][0].startSector) -
-			(media[0][trackIndex].endSector - media[0][0].startSector));
+			(media[1][trackIndex].endSector/* - media[1][0].startSector*/) -
+			(media[0][trackIndex].endSector/* - media[0][0].startSector*/));
 		const tocShiftOf = shifts => shifts.length > 0 ? Math.max(...shifts.map(Math.abs)) : 0;
 		const tocDriftOf = shifts => shifts.length > 0 ? Math.max(...shifts) - Math.min(...shifts) : 0;
 		let shiftsPool = tocShifts.length > 1 ? tocShiftOf(tocShifts.slice(0, -1)) : undefined;
@@ -821,9 +924,10 @@ switch (document.location.pathname) {
 				}))); else return;
 				if (!(torrents instanceof Promise)) torrents = queryAjaxAPI('torrentgroup', { id: groupId })
 					.then(torrentGroup => torrentGroup.torrents.filter(torrent => torrent.hasLog && !torrent.reported));
-				Promise.all([allLogs, torrents]).then(function([logs, torrents]) {
+				Promise.all([allLogs, torrents]).then(async function([logs, torrents]) {
 					if (logs == null || torrents.length <= 0) return;
-					const userRelease = releaseFingerprintFromSessions(getSessionsFromLogs(logs, true));
+					const sessions = await getSessionsFromLogs(logs, true);
+					const userRelease = releaseFingerprintFromSessions(sessions);
 					if (userRelease != null) Promise.all(torrents.map(torrent => releaseFingerprintFromTorrent(torrent.id).then(function(torrentRelease) {
 						try {
 							const remarks = testSimilarity(userRelease, torrentRelease, true);
@@ -843,8 +947,8 @@ switch (document.location.pathname) {
 							return message;
 						}).join('\n');
 						const strictDupes = results.filter(result => !result.torrent.trumpable && result.torrent.logScore >= 100);
-						if (strictDupes.length > 0) dupeStatus = 'Warning: this mastering will be considered dupe to these editions:\n\n' + toMessage(strictDupes);
-						else if (results.length > 0) dupeStatus = 'Notice: unless uploading a trump, this mastering will be considered dupe to these editions:\n\n' + toMessage(results);
+						if (strictDupes.length > 0) dupeStatus = 'Warning: this pressing will be considered dupe to these editions:\n\n' + toMessage(strictDupes);
+						else if (results.length > 0) dupeStatus = 'Notice: unless uploading a trump, this pressing will be considered dupe to these editions:\n\n' + toMessage(results);
 						if (dupeStatus) alert(dupeStatus + '\n\n(If uploading a multi disc release with more .log files left to add, the message should be ignored until last log is added)');
 					}); else console.log('No valid logfiles attached');
 				}).catch(alert);

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          Auto hide next up card for Amazon Prime Video
 // @namespace     http://tampermonkey.net/
-// @version       2.15.0
+// @version       2.15.1
 // @description   Hides next up card and other obtrusive elements of Amazon Prime Video.
 // @author        ryo-fujinone
 // @match         https://*.amazon.co.jp/*
@@ -86,7 +86,7 @@
       disableRecommendations_xhook: false,
       disableReactions_xhook: false,
       forcePlayNextEpisode_xhook: false,
-      scriptVersion: "2.15.0",
+      scriptVersion: "2.15.1",
     };
   };
 
@@ -539,7 +539,7 @@
       hideCenterButtons: "中央のボタンを非表示にする",
       hideNextEpisodeButton: "次のエピソードボタンを非表示にする",
       tweakHideSkipIntroButton: "イントロスキップボタンの非表示機能を調整する",
-      tweakHideSkipIntroButton_Tooltip: `「オーバーレイ表示が有効な時はイントロスキップボタンを表示する」が有効になっている場合の挙動を調整します。
+      tweakHideSkipIntroButton_Tooltip: `「イントロスキップボタンを非表示にする」が有効になっている場合の挙動を調整します。
       Ctrl/Shiftキーを押しながらマウスを操作している間のみ、イントロスキップボタンが表示状態になります。`,
       tweakShowVideoResolutionInfo: "動画の解像度を表示する機能を調整する",
       tweakShowVideoResolutionInfo_Tooltip: `「左下に動画の解像度を表示する」が有効になっている場合の挙動を調整します。
@@ -646,7 +646,7 @@
       hideCenterButtons: "Hide center buttons",
       hideNextEpisodeButton: "Hide next episode button",
       tweakHideSkipIntroButton: "Tweak the feature to hide skip intro button",
-      tweakHideSkipIntroButton_Tooltip: `Tweaks the behavior when [Show skip intro button when overlay display is enabled] is enabled.
+      tweakHideSkipIntroButton_Tooltip: `Tweaks the behavior when [Hide skip intro button] is enabled.
       The intro skip button will only be shown while you are operating the mouse with the Ctrl/Shift keys pressed.`,
       tweakShowVideoResolutionInfo: "Tweak the feature to show video resolution",
       tweakShowVideoResolutionInfo_Tooltip: `Tweaks the behavior when [Show video resolution in bottom left] is enabled.
@@ -3946,8 +3946,8 @@
           const height = parseFloat(elementComputedStyle.height);
           const newWidth = width * 0.65;
           const newHeight = height * 0.65;
-          element.style.width = newWidth + "px";
-          element.style.height = newHeight + "px";
+          element.style.setProperty("width", newWidth + "px", "important");
+          element.style.setProperty("height", newHeight + "px", "important");
         }
       };
 
@@ -4313,7 +4313,7 @@
       };
 
       const tweakHideSkipIntroButton = () => {
-        if (!options.tweakHideSkipIntroButton) {
+        if (!options.hideSkipIntroBtn || !options.tweakHideSkipIntroButton) {
           return;
         }
 

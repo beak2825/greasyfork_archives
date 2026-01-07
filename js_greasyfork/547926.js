@@ -11,7 +11,7 @@ let opens = _____WB$wombat$assign$function_____("opens");
 // @name 4chan [s4s] colored text
 // @description For funposting on [s4s]
 // @include *//boards.4chan.org/s4s/*
-// @version 0.0.1.20260105012720
+// @version 0.0.1.20260106132915
 // @namespace https://greasyfork.org/users/1510523
 // @downloadURL https://update.greasyfork.org/scripts/547926/4chan%20%5Bs4s%5D%20colored%20text.user.js
 // @updateURL https://update.greasyfork.org/scripts/547926/4chan%20%5Bs4s%5D%20colored%20text.meta.js
@@ -58,7 +58,7 @@ newcss.innerHTML='@font-face{font-family:Papyrus;src:local(Papyrus),url(\'http:/
 }
 /*
      FILE ARCHIVED ON 02:40:12 Nov 04, 2013 AND RETRIEVED FROM THE
-     INTERNET ARCHIVE ON 01:27:19 Jan 05, 2026.
+     INTERNET ARCHIVE ON 13:29:14 Jan 06, 2026.
      JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
 
      ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
@@ -66,13 +66,13 @@ newcss.innerHTML='@font-face{font-family:Papyrus;src:local(Papyrus),url(\'http:/
 */
 /*
 playback timings (ms):
-  captures_list: 0.893
-  exclusion.robots: 0.054
-  exclusion.robots.policy: 0.042
-  esindex: 0.013
-  cdx.remote: 52.476
-  LoadShardBlock: 150.64 (3)
-  PetaboxLoader3.datanode: 114.048 (4)
-  PetaboxLoader3.resolve: 54.038 (2)
-  load_resource: 70.967
+  captures_list: 0.747
+  exclusion.robots: 0.056
+  exclusion.robots.policy: 0.043
+  esindex: 0.01
+  cdx.remote: 67.166
+  LoadShardBlock: 99.268 (3)
+  PetaboxLoader3.resolve: 152.736 (3)
+  PetaboxLoader3.datanode: 124.83 (4)
+  load_resource: 219.755
 */

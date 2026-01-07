@@ -1,159 +1,122 @@
 // ==UserScript==
-// @name         Smart Auto Skip YouTube Ads (Ultra Optimized 2026)
+// @name         YouTube Ad-Buster (Pro Max 2026)
 // @namespace    https://github.com/tientq64/userscripts
-// @version      9.0.0
-// @description  优化版：采用进度强跳、深度Shadow DOM检测与静音降噪技术，规避倍速拦截
-// @author       tientq64 + enhanced by Gemini
+// @version      9.2.0
+// @description  采用属性劫持技术，解决不可跳过广告及音量恢复失效问题
+// @author       tientq64 + Gemini
 // @match        https://www.youtube.com/*
 // @match        https://m.youtube.com/*
 // @match        https://music.youtube.com/*
 // @exclude      https://studio.youtube.com/*
 // @grant        none
-// @license      MIT
-// @downloadURL https://update.greasyfork.org/scripts/547035/Smart%20Auto%20Skip%20YouTube%20Ads%20%28Ultra%20Optimized%202026%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/547035/Smart%20Auto%20Skip%20YouTube%20Ads%20%28Ultra%20Optimized%202026%29.meta.js
+// @run-at       document-start
+// @license MIT
+// @downloadURL https://update.greasyfork.org/scripts/547035/YouTube%20Ad-Buster%20%28Pro%20Max%202026%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/547035/YouTube%20Ad-Buster%20%28Pro%20Max%202026%29.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    // --- 配置与状态 ---
     let originalVolume = 1;
     let originalMuted = false;
     let isAdActive = false;
 
-    // --- 核心工具函数 ---
-
-    // 检查是否正在播放广告
-    const isAdPlaying = () => {
-        return document.querySelector('.ad-showing, .ytp-ad-player-overlay, [class*="ad-countdown"]');
-    };
-
-    // 递归寻找按钮（穿透 Shadow DOM）
-    const findButtons = (root) => {
-        const selectors = [
-            '.ytp-ad-skip-button', 
-            '.ytp-ad-skip-button-modern', 
-            '.ytp-skip-ad-button',
-            '[id^="skip-button"]',
-            'button[aria-label*="Skip"], button[aria-label*="跳过"]'
-        ];
-        
-        let found = [];
-        selectors.forEach(sel => {
-            const elements = root.querySelectorAll(sel);
-            elements.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                if (rect.width > 0 && rect.height > 0 && getComputedStyle(el).display !== 'none') {
-                    found.push(el);
-                }
-            });
-        });
-
-        // 递归探测 ShadowRoot
-        root.querySelectorAll('*').forEach(el => {
-            if (el.shadowRoot) {
-                found = found.concat(findButtons(el.shadowRoot));
+    // --- 1. 底层拦截：音量与速率保障 ---
+    // 劫持播放器属性，防止广告逻辑恶意覆盖
+    const injectPropertyHijack = () => {
+        const originalPlay = HTMLVideoElement.prototype.play;
+        HTMLVideoElement.prototype.play = function() {
+            if (document.querySelector('.ad-showing')) {
+                this.muted = true;
+                this.playbackRate = 16; // 遇到顽固广告强制提速
             }
-        });
-        return found;
+            return originalPlay.apply(this, arguments);
+        };
     };
 
-    // 模拟真实点击
-    const forceClick = (el) => {
-        ['mousedown', 'mouseup', 'click'].forEach(type => {
-            el.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, view: window }));
-        });
+    // --- 2. 状态备份与恢复 ---
+    const updateStats = (video) => {
+        if (!document.querySelector('.ad-showing')) {
+            originalVolume = video.volume;
+            originalMuted = video.muted;
+        }
     };
 
-    // --- 核心逻辑 ---
-
-    const skipLogic = () => {
+    // --- 3. 强力跳过逻辑 ---
+    const forceSkip = () => {
         const video = document.querySelector('video.html5-main-video');
-        const moviePlayer = document.querySelector('#movie_player');
-        const adPlayingNow = !!isAdPlaying();
+        const adShowing = document.querySelector('.ad-showing, .ytp-ad-player-overlay');
 
-        if (adPlayingNow) {
-            // 1. 首次进入广告状态：保存音量并静音
+        if (!video) return;
+
+        if (adShowing) {
             if (!isAdActive) {
-                if (video) {
-                    originalVolume = video.volume;
-                    originalMuted = video.muted;
-                    video.muted = true;
-                }
+                updateStats(video);
                 isAdActive = true;
-                console.log('[AutoSkip] 广告开始：已静音');
             }
 
-            // 2. 进度强跳：将广告直接拉到最后 0.1s（绕过倍速限制）
-            if (video && !isNaN(video.duration)) {
-                // 如果广告没结束，强制跳转
-                if (video.currentTime < video.duration - 0.2) {
-                    video.currentTime = video.duration - 0.1;
-                }
-                // 确保视频在广告期间不被 YouTube 暂停
-                if (video.paused) video.play().catch(() => {});
+            // 策略 A: 极速播放 + 进度拉满 (应对不可跳过广告)
+            video.muted = true;
+            if (video.playbackRate < 16) video.playbackRate = 16;
+
+            // 策略 B: 强制跳转
+            if (!isNaN(video.duration) && video.currentTime < video.duration - 0.1) {
+                video.currentTime = video.duration - 0.1;
             }
 
-            // 3. 尝试底层 API 跳过
-            if (moviePlayer && typeof moviePlayer.skipAd === 'function') {
-                try { moviePlayer.skipAd(); } catch(e) {}
-            }
+            // 策略 C: 模拟点击所有潜在按钮 (包括隐藏的)
+            const skipBtns = document.querySelectorAll(`
+                .ytp-ad-skip-button,
+                .ytp-ad-skip-button-modern,
+                .ytp-skip-ad-button,
+                .ytp-ad-overlay-close-button
+            `);
+            skipBtns.forEach(btn => btn.click());
 
-            // 4. 深度检测并点击按钮
-            const btns = findButtons(document);
-            btns.forEach(btn => {
-                forceClick(btn);
-                console.log('[AutoSkip] 成功点击跳过按钮');
-            });
+            // 策略 D: 调用 YT 内部接口
+            const player = document.querySelector('#movie_player');
+            if (player && player.skipAd) player.skipAd();
 
         } else {
-            // 5. 广告结束：恢复音量状态
             if (isAdActive) {
-                if (video) {
-                    video.volume = originalVolume;
-                    video.muted = originalMuted;
-                }
+                // 广告消失瞬间，强制还原
+                video.playbackRate = 1;
+                video.volume = originalVolume;
+                video.muted = originalMuted;
                 isAdActive = false;
-                console.log('[AutoSkip] 广告结束：恢复音量');
+                console.log('[Success] 广告清除，音量已恢复');
             }
+            updateStats(video);
         }
     };
 
-    // --- 清理 UI ---
-    const removeAdsUI = () => {
-        const adSelectors = [
-            '#player-ads', '#masthead-ad', '.ytp-ad-overlay-container', 
-            'ytd-ad-slot-renderer', 'ytd-promoted-video-renderer'
-        ];
-        adSelectors.forEach(sel => {
-            document.querySelectorAll(sel).forEach(el => el.remove());
-        });
+    // --- 4. 视觉清理 (针对横幅广告) ---
+    const autoCleanUI = () => {
+        const css = `
+            #masthead-ad, ytd-ad-slot-renderer, .ytp-ad-overlay-container,
+            .ytp-ad-message-container, #player-ads { display: none !important; }
+        `;
+        if (!document.getElementById('yt-ad-buster-style')) {
+            const style = document.createElement('style');
+            style.id = 'yt-ad-buster-style';
+            style.textContent = css;
+            document.head.appendChild(style);
+        }
     };
 
-    // --- 执行循环 ---
+    // --- 5. 启动引擎 ---
+    injectPropertyHijack();
 
-    // 使用高频心跳保证响应速度
-    const mainInterval = setInterval(skipLogic, 300);
-
-    // 辅助 UI 清理
-    const uiInterval = setInterval(removeAdsUI, 1000);
-
-    // 监听页面切换（YouTube 是 SPA，需要监听 URL 变化重置状态）
-    let lastUrl = location.href;
+    // 高频扫描 (每 100ms 检查一次，比 requestAnimationFrame 在后台标签页更稳定)
     setInterval(() => {
-        if (location.href !== lastUrl) {
-            lastUrl = location.href;
-            isAdActive = false; // 重置广告状态
-        }
-    }, 1000);
+        forceSkip();
+        autoCleanUI();
+    }, 100);
 
-    // 注入 CSS 隐藏广告位
-    const style = document.createElement('style');
-    style.textContent = `
-        .video-ads, .ytp-ad-module, .ytp-ad-overlay-open { display: none !important; }
-        #player-ads, ytd-ad-slot-renderer { height: 0 !important; visibility: hidden !important; }
-    `;
-    document.head.appendChild(style);
+    // 处理页面跳转重置
+    window.addEventListener('yt-navigate-start', () => {
+        isAdActive = false;
+    });
 
 })();

@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Better Editor
-// @version      2.3.1
+// @version      2.3.2
 // @author       Apx
 // @description  Makes editor a bit better
 // @match        https://bonk.io/gameframe-release.html
 // @match        https://bonkisback.io/gameframe-release.html
-// @run-at       document-start
+// @run-at       document-end
 // @grant        none
 // @namespace    https://greasyfork.org/users/1272759
 // @downloadURL https://update.greasyfork.org/scripts/504131/Better%20Editor.user.js
@@ -28,7 +28,7 @@ let injector = (src) => {
 		return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 	};
 	function buildRegex (pattern, options) {
-		return new RegExp(pattern.replace(/(?<!\\)\$var/g, '[a-zA-Z0-9\\$_]{3}')       // var - variable
+		return new RegExp(pattern.replace(/(?<!\\)\$var/g, '[a-zA-Z0-9\\$_]{1,3}')       // var - variable
 		.replace(/(?<!\\)\$elem/g, '\\[[0-9]+]')                                       // elem - array element
 		.replace(/(?<!\\)\$prop/g, '\\[[a-zA-Z0-9\\$_]{3}\\[[0-9]+](?:\\[[0-9]+])?]')  // prop - object property
 		, options);
@@ -392,27 +392,27 @@ patch(regExp, regExp + `window.bonkEditor.renderEditor = ${resetFunction.match(/
 let vars = platZindex.match(/(?<![\.a-zA-Z])(?:[a-zA-Z0-9\$_]{3})(?=[\[=]{1})(?:\[[0-9]{1,3}])?/g);
 const modifiedPlatZindex = platZindex
 .replace(/}}(?!else)/, `
-			}
 		}
 	}
-	else{
-		if(this==${vars[10]}){
-			if(${vars[4]}.spawns[${spawnId}-1]!=undefined){
-				${vars[15]}=${vars[4]}.spawns[${spawnId}-1];
-				${vars[4]}.spawns[${spawnId}-1]=${vars[0]}[100];
-				${vars[4]}.spawns[${spawnId}]=${vars[15]};
-				${spawnId}--;
-			}
+}
+else{
+	if(this==${vars[10]}){
+		if(${vars[4]}.spawns[${spawnId}-1]!=undefined){
+			${vars[15]}=${vars[4]}.spawns[${spawnId}-1];
+			${vars[4]}.spawns[${spawnId}-1]=${vars[0]}[100];
+			${vars[4]}.spawns[${spawnId}]=${vars[15]};
+			${spawnId}--;
 		}
-		else if(this==${vars[33]}){
-			if(${vars[4]}.spawns[${spawnId}+1]!=undefined){
-				${vars[38]}=${vars[4]}.spawns[${spawnId}+1];
-				${vars[4]}.spawns[${spawnId}+1]=${vars[0]}[100];
-				${vars[4]}.spawns[${spawnId}]=${vars[38]};
-				${spawnId}++;
-			}
+	}
+	else if(this==${vars[33]}){
+		if(${vars[4]}.spawns[${spawnId}+1]!=undefined){
+			${vars[38]}=${vars[4]}.spawns[${spawnId}+1];
+			${vars[4]}.spawns[${spawnId}+1]=${vars[0]}[100];
+			${vars[4]}.spawns[${spawnId}]=${vars[38]};
+			${spawnId}++;
 		}
-	}`)
+	}
+}`)
 .replace(/if\(.*?\){.*?}/, "")
 .replace(/;if\(.*?\){.*?}/, `;${vars[0]}[100]=${vars[4]}.spawns[${spawnId}];if(${vars[3]} == -1 && ${vars[4]}.spawns.indexOf(${vars[0]}[100]) == -1){return;}if(${vars[3]}!=-1){`);
 patch(platZindex,modifiedPlatZindex);

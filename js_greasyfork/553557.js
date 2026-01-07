@@ -639,7 +639,6 @@ script ~ tr:not(:last-child):has(.sdb-saah-wearable), script ~ tr:not(:last-chil
   display: flex;
   gap: 0.25em;
   margin: 0.5em 0 0.25em;
-  justify-content: center;
 }
 
 .sdb-saah-move-form + br {
@@ -649,10 +648,6 @@ script ~ tr:not(:last-child):has(.sdb-saah-wearable), script ~ tr:not(:last-chil
 .sdb-saah-name .search-helper img {
     width: 20px;
     height: 20px;
-}
-
-.sdb-saah-value {
-  text-align: center;
 }
 
 @keyframes lds-hourglass {

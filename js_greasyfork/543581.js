@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name          Linuxdo-share
 // @namespace     http://tampermonkey.net/
-// @version       0.15.30
+// @version       0.15.36
 // @description   从linux do论坛页面获取文章的板块、标题、链接、标签和内容总结，并在标题旁添加复制按钮。支持设置界面配置。
+// @icon          data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij48cmVjdCB4PSIxOCIgeT0iMTQiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzOCIgcng9IjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzRlNTk2OSIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHJlY3QgeD0iMTIiIHk9IjIwIiB3aWR0aD0iMzAiIGhlaWdodD0iMzgiIHJ4PSI2IiBmaWxsPSJub25lIiBzdHJva2U9IiMxNjRkZTUiIHN0cm9rZS13aWR0aD0iNCIvPjwvc3ZnPg==
+// @icon64        data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij48cmVjdCB4PSIxOCIgeT0iMTQiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzOCIgcng9IjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzRlNTk2OSIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHJlY3QgeD0iMTIiIHk9IjIwIiB3aWR0aD0iMzAiIGhlaWdodD0iMzgiIHJ4PSI2IiBmaWxsPSJub25lIiBzdHJva2U9IiMxNjRkZTUiIHN0cm9rZS13aWR0aD0iNCIvPjwvc3ZnPg==
 // @author        @Loveyless https://github.com/Loveyless/linuxdo-share
 // @match         *://*.linux.do/*
 // @match         *://*.idcflare.com/*
-// @match         *://*.nodeloc.com/*
 // @grant         GM_getValue
 // @grant         GM_setValue
 // @grant         GM_xmlhttpRequest
@@ -29,10 +30,6 @@
   const DEFAULT_CONFIG = {
     // 是否启用简洁模式：标题+摘要合并一段，隐藏作者/板块/标签，链接单独一行
     COMPACT_MODE: false,
-    // 主题列表分栏数（0/空表示关闭，最大 5；默认关闭）
-    TWO_COLUMN_LAYOUT: 0,
-    // 主题列表瀑布流展示（仅分栏数>0时生效）
-    TOPIC_LIST_WATERFALL: false,
     // 是否启用 AI 进行内容总结
     USE_AI_FOR_SUMMARY: false,
     // AI Key，如果 USE_AI_FOR_SUMMARY 为 true，则需要填写此项
@@ -69,10 +66,6 @@
     COPY_SUCCESS_DURATION_MS: 2000,
     // 复制失败提示显示时间 (毫秒)
     COPY_FAILURE_DURATION_MS: 3000,
-    // 回到顶部：每隔多久检测一次 timeline-replies（毫秒）
-    BACK_TO_TOP_RETRY_INTERVAL_MS: 300,
-    // 回到顶部：最多重试次数（避免异常情况下无限循环）
-    BACK_TO_TOP_RETRY_MAX_ATTEMPTS: 40,
     // 设置保存后关闭延迟 (毫秒)
     SETTINGS_CLOSE_DELAY_MS: 300,
     // Dialog 关闭动画时间 (毫秒)
@@ -673,270 +666,14 @@
             }
         }
 
-        /* 主题列表两栏布局 */
-        html.linuxdo-two-column-layout {
-            /* 颜色尽量复用 Discourse 的 CSS 变量，自动适配深浅色主题 */
-            --ld-list-bg: var(--d-content-background, var(--secondary, #ffffff));
-            --ld-list-fg: var(--primary, #0f172a);
-            --ld-list-muted: var(--metadata-color, var(--primary-medium, #64748b));
-            --ld-list-border: var(--content-border-color, rgba(15, 23, 42, 0.12));
-            --ld-list-card: var(--topic-list-item-background-color, var(--secondary, #ffffff));
-            --ld-list-ring: var(--tertiary-low, rgba(59, 130, 246, 0.18));
-        }
-
-        html.linuxdo-two-column-layout .linuxdo-topic-meta-item.linuxdo-topic-meta-count-warn {
-            color: var(--highlight-high, #fbbf24);
-            font-weight: 600;
-        }
-
-        html.linuxdo-two-column-layout .linuxdo-topic-meta-item.linuxdo-topic-meta-count-hot {
-            /* 来自 Discourse topic list 的 heatmap-high 颜色 */
-            color: #fe7a15;
-            font-weight: 700;
-        }
-
-        html.linuxdo-two-column-layout table.topic-list {
-            display: block !important;
-            width: 100% !important;
-            background: transparent !important;
-        }
-
-        html.linuxdo-two-column-layout table.topic-list thead {
-            display: block !important;
-            padding: 0 0 8px;
-        }
-
-        html.linuxdo-two-column-layout table.topic-list thead tr {
-            display: block !important;
-        }
-
-        html.linuxdo-two-column-layout table.topic-list thead th {
-            display: block !important;
-            border: none !important;
-            padding: 0 2px 10px !important;
-            color: var(--ld-list-muted) !important;
-            font-size: 12px !important;
-            font-weight: 600 !important;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        html.linuxdo-two-column-layout table.topic-list thead th.posters,
-        html.linuxdo-two-column-layout table.topic-list thead th.num,
-        html.linuxdo-two-column-layout table.topic-list thead th.posts,
-        html.linuxdo-two-column-layout table.topic-list thead th.views,
-        html.linuxdo-two-column-layout table.topic-list thead th.activity,
-        html.linuxdo-two-column-layout table.topic-list thead th.age {
-            display: none !important;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body {
-            display: grid !important;
-            grid-template-columns: repeat(var(--ld-topic-columns, 2), minmax(0, 1fr));
-            gap: 12px;
-            padding: 0 !important;
-            border-top: none !important;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr:not(.topic-list-item) {
-            grid-column: 1 / -1;
-        }
-
-        /* 瀑布流（Masonry）：使用多列布局模拟 */
-        html.linuxdo-two-column-layout.linuxdo-topic-waterfall tbody.topic-list-body {
-            display: block !important;
-            column-count: var(--ld-topic-columns, 2);
-            column-gap: 12px;
-        }
-
-        html.linuxdo-two-column-layout.linuxdo-topic-waterfall tbody.topic-list-body > tr.topic-list-item {
-            break-inside: avoid;
-            margin-bottom: 12px !important;
-        }
-
-        html.linuxdo-two-column-layout.linuxdo-topic-waterfall tbody.topic-list-body > tr:not(.topic-list-item) {
-            column-span: all;
-            break-inside: avoid;
-            margin-bottom: 12px;
-        }
-
-        @media (max-width: 900px) {
-            html.linuxdo-two-column-layout tbody.topic-list-body {
-                grid-template-columns: 1fr;
-            }
-
-            html.linuxdo-two-column-layout.linuxdo-topic-waterfall tbody.topic-list-body {
-                column-count: 1;
-            }
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item {
-            display: flex !important;
-            flex-direction: column;
-            background: var(--ld-list-card);
-            border: 1px solid var(--ld-list-border);
-            border-radius: 12px;
-            padding: 12px 12px 10px;
-            margin: 0 !important;
-            overflow: hidden;
-            transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
-        }
-
-        /* 禁用 Discourse 的 selected 高亮效果（两栏模式） */
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item.selected,
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item.selected > td {
-            background: var(--ld-list-card) !important;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item.selected {
-            border-color: var(--ld-list-border) !important;
-            box-shadow: none !important;
-            outline: none !important;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item.selected:hover {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 0 0 3px var(--ld-list-ring);
-        }
-
-        html[style*="color-scheme: dark"].linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item.selected:hover,
-        html.dark.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item.selected:hover {
-            box-shadow: 0 18px 44px rgba(0, 0, 0, 0.35), 0 0 0 3px var(--ld-list-ring);
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item:hover {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 0 0 3px var(--ld-list-ring);
-        }
-
-        html[style*="color-scheme: dark"].linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item:hover,
-        html.dark.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item:hover {
-            box-shadow: 0 18px 44px rgba(0, 0, 0, 0.35), 0 0 0 3px var(--ld-list-ring);
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item > td {
-            display: block !important;
-            width: 100% !important;
-            padding: 0 !important;
-            border: none !important;
-            background: transparent !important;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item > td:not(.main-link) {
-            display: none !important;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item td.main-link {
-            min-width: 0;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item td.main-link.topic-list-data {
-            box-shadow: none !important;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item td.main-link .link-top-line {
-            display: block;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item td.main-link a.raw-topic-link {
-            color: var(--ld-list-fg) !important;
-            font-size: 15px;
-            font-weight: 600;
-            line-height: 1.35;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-decoration: none;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item td.main-link a.raw-topic-link:hover {
-            text-decoration: underline;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item td.main-link .link-bottom-line {
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item td.main-link .link-bottom-line .discourse-tags {
-            display: contents;
-        }
-
-        html.linuxdo-two-column-layout tbody.topic-list-body > tr.topic-list-item td.main-link .link-bottom-line .discourse-tags__tag-separator {
-            display: none !important;
-        }
-
-        html.linuxdo-two-column-layout .linuxdo-topic-meta {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--ld-list-border);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--ld-list-muted);
-            font-size: 12px;
-            line-height: 1.2;
-            white-space: nowrap;
-        }
-
-        html.linuxdo-two-column-layout .linuxdo-topic-meta-avatar {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 22px;
-            height: 22px;
-            border-radius: 999px;
-            overflow: hidden;
-            flex-shrink: 0;
-            border: 1px solid var(--ld-list-border);
-            background: var(--ld-list-bg);
-        }
-
-        html.linuxdo-two-column-layout .linuxdo-topic-meta-avatar img {
-            width: 22px;
-            height: 22px;
-            display: block;
-        }
-
-        html.linuxdo-two-column-layout .linuxdo-topic-meta-item {
-            display: inline-flex;
-            align-items: center;
-            white-space: nowrap;
-        }
-
-        html.linuxdo-two-column-layout .linuxdo-topic-meta-item + .linuxdo-topic-meta-item::before {
-            content: "·";
-            margin: 0 6px 0 0;
-            color: var(--ld-list-muted);
-        }
-
-        html.linuxdo-two-column-layout .linuxdo-topic-meta .topic-post-badges {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        html.linuxdo-two-column-layout .linuxdo-topic-meta .topic-post-badges a {
-            display: inline-flex;
-            align-items: center;
-        }
-
-        html.linuxdo-two-column-layout .linuxdo-topic-meta .linuxdo-topic-meta-item + .topic-post-badges::before {
-            content: "·";
-            margin: 0 6px 0 0;
-            color: var(--ld-list-muted);
-        }
-
         /* 历史复制内容（搜索框右侧） */
         .linuxdo-copy-history-trigger {
-            --ld-h-bg: #ffffff;
-            --ld-h-fg: #0f172a;
-            --ld-h-muted: #f1f5f9;
-            --ld-h-muted-fg: #64748b;
-            --ld-h-border: rgba(15, 23, 42, 0.12);
-            --ld-h-ring: rgba(59, 130, 246, 0.45);
+            --ld-h-bg: var(--secondary, #ffffff);
+            --ld-h-fg: var(--primary, #0f172a);
+            --ld-h-muted: var(--primary-very-low, #f1f5f9);
+            --ld-h-muted-fg: var(--primary-medium, #64748b);
+            --ld-h-border: var(--primary-low, rgba(15, 23, 42, 0.12));
+            --ld-h-ring: var(--tertiary-low, rgba(59, 130, 246, 0.45));
 
             appearance: none;
             border: 1px solid var(--ld-h-border);
@@ -956,12 +693,12 @@
 
         html[style*="color-scheme: dark"] .linuxdo-copy-history-trigger,
         html.dark .linuxdo-copy-history-trigger {
-            --ld-h-bg: #0b1220;
-            --ld-h-fg: #e2e8f0;
-            --ld-h-muted: rgba(148, 163, 184, 0.12);
-            --ld-h-muted-fg: #94a3b8;
-            --ld-h-border: rgba(148, 163, 184, 0.18);
-            --ld-h-ring: rgba(59, 130, 246, 0.55);
+            --ld-h-bg: var(--secondary, #111827);
+            --ld-h-fg: var(--primary, #e5e7eb);
+            --ld-h-muted: var(--primary-very-low, rgba(148, 163, 184, 0.12));
+            --ld-h-muted-fg: var(--primary-medium, #9ca3af);
+            --ld-h-border: var(--primary-low, rgba(148, 163, 184, 0.18));
+            --ld-h-ring: var(--tertiary-low, rgba(59, 130, 246, 0.55));
         }
 
         .linuxdo-copy-history-trigger:hover {
@@ -981,12 +718,12 @@
         }
 
         .linuxdo-copy-history-popover {
-            --ld-h-bg: #ffffff;
-            --ld-h-fg: #0f172a;
-            --ld-h-muted: #f1f5f9;
-            --ld-h-muted-fg: #64748b;
-            --ld-h-border: rgba(15, 23, 42, 0.12);
-            --ld-h-ring: rgba(59, 130, 246, 0.18);
+            --ld-h-bg: var(--secondary, #ffffff);
+            --ld-h-fg: var(--primary, #0f172a);
+            --ld-h-muted: var(--primary-very-low, #f1f5f9);
+            --ld-h-muted-fg: var(--primary-medium, #64748b);
+            --ld-h-border: var(--primary-low, rgba(15, 23, 42, 0.12));
+            --ld-h-ring: var(--tertiary-low, rgba(59, 130, 246, 0.18));
 
             position: fixed;
             z-index: 100000;
@@ -1004,12 +741,12 @@
 
         html[style*="color-scheme: dark"] .linuxdo-copy-history-popover,
         html.dark .linuxdo-copy-history-popover {
-            --ld-h-bg: #0b1220;
-            --ld-h-fg: #e2e8f0;
-            --ld-h-muted: rgba(148, 163, 184, 0.12);
-            --ld-h-muted-fg: #94a3b8;
-            --ld-h-border: rgba(148, 163, 184, 0.18);
-            --ld-h-ring: rgba(59, 130, 246, 0.24);
+            --ld-h-bg: var(--secondary, #111827);
+            --ld-h-fg: var(--primary, #e5e7eb);
+            --ld-h-muted: var(--primary-very-low, rgba(148, 163, 184, 0.12));
+            --ld-h-muted-fg: var(--primary-medium, #9ca3af);
+            --ld-h-border: var(--primary-low, rgba(148, 163, 184, 0.18));
+            --ld-h-ring: var(--tertiary-low, rgba(59, 130, 246, 0.24));
             box-shadow: 0 24px 90px rgba(0, 0, 0, 0.52);
         }
 
@@ -1038,7 +775,46 @@
             color: var(--ld-h-muted-fg);
         }
 
-        .linuxdo-copy-history-settings-btn {
+        .linuxdo-copy-history-select-all {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            height: 24px;
+            padding: 0 10px;
+            border-radius: 10px;
+            border: 1px solid var(--ld-h-border);
+            background: transparent;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1;
+            color: var(--ld-h-muted-fg);
+            user-select: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+        }
+
+        .linuxdo-copy-history-select-all:hover {
+            background: var(--ld-h-muted);
+            color: var(--ld-h-fg);
+            box-shadow: 0 0 0 3px var(--ld-h-ring);
+        }
+
+        .linuxdo-copy-history-select-all:active {
+            transform: translateY(1px);
+        }
+
+        .linuxdo-copy-history-select-all input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            margin: 0;
+            display: block;
+            cursor: pointer;
+            accent-color: var(--tertiary, #3b82f6);
+        }
+
+        .linuxdo-copy-history-settings-btn,
+        .linuxdo-copy-history-delete-btn {
             appearance: none;
             border: 1px solid var(--ld-h-border);
             background: transparent;
@@ -1056,19 +832,43 @@
             transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
         }
 
-        .linuxdo-copy-history-settings-btn:hover {
+        .linuxdo-copy-history-settings-btn:hover,
+        .linuxdo-copy-history-delete-btn:hover {
             background: var(--ld-h-muted);
             color: var(--ld-h-fg);
             box-shadow: 0 0 0 3px var(--ld-h-ring);
         }
 
-        .linuxdo-copy-history-settings-btn:active {
+        .linuxdo-copy-history-settings-btn:active,
+        .linuxdo-copy-history-delete-btn:active {
             transform: translateY(1px);
         }
 
-        .linuxdo-copy-history-settings-btn:focus-visible {
+        .linuxdo-copy-history-settings-btn:focus-visible,
+        .linuxdo-copy-history-delete-btn:focus-visible {
             outline: none;
             box-shadow: 0 0 0 3px var(--ld-h-ring);
+        }
+
+        .linuxdo-copy-history-delete-btn {
+            color: var(--danger, #b91c1c);
+        }
+
+        .linuxdo-copy-history-delete-btn:hover {
+            background: var(--danger-low, rgba(239, 68, 68, 0.12));
+            color: var(--danger, #991b1b);
+            box-shadow: 0 0 0 3px var(--danger-low, rgba(239, 68, 68, 0.22));
+        }
+
+        .linuxdo-copy-history-delete-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .linuxdo-copy-history-delete-btn:disabled:hover {
+            background: transparent;
+            color: var(--ld-h-muted-fg);
+            box-shadow: none;
         }
 
         .linuxdo-copy-history-hint {
@@ -1091,6 +891,11 @@
             transition: background 0.15s ease, box-shadow 0.15s ease;
         }
 
+        .linuxdo-copy-history-item.is-selected {
+            background: var(--ld-h-muted);
+            box-shadow: 0 0 0 3px var(--ld-h-ring);
+        }
+
         .linuxdo-copy-history-item:hover {
             background: var(--ld-h-muted);
             box-shadow: 0 0 0 3px var(--ld-h-ring);
@@ -1101,6 +906,22 @@
             align-items: flex-start;
             justify-content: space-between;
             gap: 10px;
+        }
+
+        .linuxdo-copy-history-item-checkbox-wrap {
+            display: inline-flex;
+            align-items: flex-start;
+            padding-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .linuxdo-copy-history-item-checkbox {
+            width: 14px;
+            height: 14px;
+            margin: 0;
+            display: block;
+            cursor: pointer;
+            accent-color: var(--tertiary, #3b82f6);
         }
 
         .linuxdo-copy-history-item-text {
@@ -1151,7 +972,7 @@
         }
 
         .linuxdo-copy-history-btn:hover {
-            background: var(--ld-h-bg);
+            background: var(--ld-h-muted);
             box-shadow: 0 0 0 3px var(--ld-h-ring);
         }
 
@@ -1169,65 +990,6 @@
             text-align: center;
             font-size: 12px;
             color: var(--ld-h-muted-fg);
-        }
-
-        /* 话题页：回到顶部（可拖动） */
-        .linuxdo-back-to-top {
-            --ld-btt-bg: #ffffff;
-            --ld-btt-fg: #0f172a;
-            --ld-btt-muted: #f1f5f9;
-            --ld-btt-muted-fg: #64748b;
-            --ld-btt-border: rgba(15, 23, 42, 0.12);
-            --ld-btt-ring: rgba(59, 130, 246, 0.45);
-
-            position: fixed;
-            z-index: 100000;
-            width: 42px;
-            height: 42px;
-            border-radius: 999px;
-            border: 1px solid var(--ld-btt-border);
-            background: var(--ld-btt-bg);
-            color: var(--ld-btt-fg);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            cursor: grab;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
-            touch-action: none;
-            user-select: none;
-            transition: transform 0.05s ease, box-shadow 0.15s ease, background 0.15s ease;
-        }
-
-        html[style*="color-scheme: dark"] .linuxdo-back-to-top,
-        html.dark .linuxdo-back-to-top {
-            --ld-btt-bg: #0b1220;
-            --ld-btt-fg: #e2e8f0;
-            --ld-btt-muted: rgba(148, 163, 184, 0.12);
-            --ld-btt-muted-fg: #94a3b8;
-            --ld-btt-border: rgba(148, 163, 184, 0.18);
-            --ld-btt-ring: rgba(59, 130, 246, 0.55);
-            box-shadow: 0 16px 42px rgba(0, 0, 0, 0.45);
-        }
-
-        .linuxdo-back-to-top:hover {
-            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18), 0 0 0 3px var(--ld-btt-ring);
-            background: var(--ld-btt-bg);
-        }
-
-        .linuxdo-back-to-top:active {
-            cursor: grabbing;
-            transform: translateY(1px);
-        }
-
-        .linuxdo-back-to-top:focus-visible {
-            outline: none;
-            box-shadow: 0 0 0 3px var(--ld-btt-ring);
-        }
-
-        .linuxdo-back-to-top svg {
-            width: 18px;
-            height: 18px;
-            display: block;
         }
     `;
 
@@ -1298,17 +1060,22 @@
       const rawSummary = articleData && articleData.summary;
       const title = normalizeToSingleLine(articleData && articleData.title);
       const summary = normalizeToSingleLine(stripAiSummaryPrefix(rawSummary));
+      const author = String((articleData && articleData.username) || '').replace(/^@/, '').trim();
+      const authorMention = author ? author.split(/\s+/)[0] : '';
+      const authorSuffix = authorMention ? ` @${authorMention}` : '';
 
       const aiConfigured = !!(CONFIG.USE_AI_FOR_SUMMARY && CONFIG.API_KEY);
       const aiSucceeded = isAiSummaryText(rawSummary);
 
       // 简洁模式：默认不保留标题；但若 AI 总结失败（配置了 AI 且未生成 AI 总结），则回退为旧版简洁输出（标题：摘要）
       if (aiConfigured && !aiSucceeded) {
-        const combined = title && summary ? `${title}：${summary}` : (title || summary);
+        let combined = title && summary ? `${title}：${summary}` : (title || summary);
+        if (combined && authorSuffix) combined = `${combined}${authorSuffix}`;
         return [combined, articleData && articleData.link].filter(Boolean).join('\n').trim();
       }
 
-      return [summary, articleData && articleData.link].filter(Boolean).join('\n').trim();
+      const summaryLine = summary && authorSuffix ? `${summary}${authorSuffix}` : summary;
+      return [summaryLine, articleData && articleData.link].filter(Boolean).join('\n').trim();
     }
 
     const template = CONFIG.ARTICLE_COPY_TEMPLATE || DEFAULT_CONFIG.ARTICLE_COPY_TEMPLATE;
@@ -1328,6 +1095,7 @@
   let copyHistoryPopoverEl = null;
   let copyHistoryHideTimer = null;
   let copyHistoryGlobalListenersBound = false;
+  let copyHistorySelectedIds = new Set();
 
   /**
    * @description 读取历史复制内容列表。
@@ -1426,6 +1194,32 @@
       scheduleHideCopyHistoryPopover();
     });
 
+    popover.addEventListener('change', (e) => {
+      const selectAll = e.target && e.target.closest && e.target.closest('input[type="checkbox"][data-action="select-all"]');
+      if (selectAll) {
+        const list = getCopyHistoryItems();
+        if (selectAll.checked) {
+          copyHistorySelectedIds = new Set(list.map((x) => x.id));
+        } else {
+          copyHistorySelectedIds.clear();
+        }
+        updateCopyHistorySelectionUI(list);
+        return;
+      }
+
+      const itemCheckbox = e.target && e.target.closest && e.target.closest('input[type="checkbox"][data-action="select-item"][data-id]');
+      if (itemCheckbox) {
+        const id = String(itemCheckbox.getAttribute('data-id') || '').trim();
+        if (!id) return;
+        if (itemCheckbox.checked) {
+          copyHistorySelectedIds.add(id);
+        } else {
+          copyHistorySelectedIds.delete(id);
+        }
+        updateCopyHistorySelectionUI();
+      }
+    });
+
     popover.addEventListener('click', (e) => {
       const settingsBtn = e.target.closest('button[data-action="settings"]');
       if (settingsBtn) {
@@ -1433,6 +1227,25 @@
         e.stopPropagation();
         hideCopyHistoryPopover();
         if (typeof showSettingsModal === 'function') showSettingsModal();
+        return;
+      }
+
+      const deleteBtn = e.target.closest('button[data-action="delete-selected"]');
+      if (deleteBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const count = copyHistorySelectedIds.size;
+        if (count <= 0) return;
+
+        const confirmed = window.confirm(`确定删除已选择的 ${count} 条记录吗？`);
+        if (!confirmed) return;
+
+        const items = getCopyHistoryItems();
+        const next = items.filter((x) => !copyHistorySelectedIds.has(x.id));
+        const saved = persistCopyHistoryItems(next);
+        copyHistorySelectedIds.clear();
+        renderCopyHistoryPopover(saved);
         return;
       }
 
@@ -1475,6 +1288,50 @@
   function hideCopyHistoryPopover() {
     if (!copyHistoryPopoverEl) return;
     copyHistoryPopoverEl.style.display = 'none';
+    copyHistorySelectedIds.clear();
+  }
+
+  function updateCopyHistorySelectionUI(items) {
+    const popover = copyHistoryPopoverEl;
+    if (!popover) return;
+
+    const list = Array.isArray(items) ? items : getCopyHistoryItems();
+    const validIds = new Set(list.map((x) => x.id));
+    for (const id of copyHistorySelectedIds) {
+      if (!validIds.has(id)) copyHistorySelectedIds.delete(id);
+    }
+
+    const selectedCount = copyHistorySelectedIds.size;
+    const totalCount = list.length;
+
+    const hintEl = popover.querySelector('.linuxdo-copy-history-hint');
+    if (hintEl) {
+      hintEl.textContent = selectedCount > 0
+        ? `已选 ${selectedCount} / 共 ${totalCount}`
+        : '勾选后可批量删除';
+    }
+
+    const deleteBtn = popover.querySelector('button[data-action="delete-selected"]');
+    if (deleteBtn) {
+      deleteBtn.disabled = selectedCount === 0;
+      deleteBtn.textContent = selectedCount > 0 ? `删除(${selectedCount})` : '删除';
+    }
+
+    const selectAllEl = popover.querySelector('input[type="checkbox"][data-action="select-all"]');
+    if (selectAllEl) {
+      selectAllEl.disabled = totalCount === 0;
+      selectAllEl.checked = totalCount > 0 && selectedCount === totalCount;
+      selectAllEl.indeterminate = selectedCount > 0 && selectedCount < totalCount;
+    }
+
+    const itemEls = popover.querySelectorAll('.linuxdo-copy-history-item[data-item-id]');
+    itemEls.forEach((itemEl) => {
+      const id = itemEl.getAttribute('data-item-id');
+      const checked = !!(id && copyHistorySelectedIds.has(id));
+      itemEl.classList.toggle('is-selected', checked);
+      const checkbox = itemEl.querySelector('input[type="checkbox"][data-action="select-item"][data-id]');
+      if (checkbox) checkbox.checked = checked;
+    });
   }
 
   function positionCopyHistoryPopover(triggerEl) {
@@ -1506,15 +1363,21 @@
     const header = `
         <div class="linuxdo-copy-history-header">
           <div class="linuxdo-copy-history-header-left">
+            <label class="linuxdo-copy-history-select-all" title="全选/取消全选">
+              <input type="checkbox" data-action="select-all" />
+              全选
+            </label>
             <div class="linuxdo-copy-history-title">历史复制</div>
             <button type="button" class="linuxdo-copy-history-settings-btn" data-action="settings" aria-label="打开设置" title="打开设置">设置</button>
+            <button type="button" class="linuxdo-copy-history-delete-btn" data-action="delete-selected" aria-label="删除已选择" title="删除已选择" disabled>删除</button>
           </div>
-          <div class="linuxdo-copy-history-hint">点击复制 / 打开链接</div>
+          <div class="linuxdo-copy-history-hint">勾选后可批量删除</div>
         </div>
       `;
 
     if (!list || list.length === 0) {
       popover.innerHTML = header + `<div class="linuxdo-copy-history-empty">暂无历史记录</div>`;
+      updateCopyHistorySelectionUI(list);
       return;
     }
 
@@ -1524,8 +1387,11 @@
         const safeTitle = escapeHtml(item.title || '（无标题）');
         const snippet = escapeHtml((item.summary || item.text || '').trim());
         return `
-          <div class="linuxdo-copy-history-item" role="menuitem">
+          <div class="linuxdo-copy-history-item" role="menuitem" data-item-id="${escapeHtml(item.id)}">
             <div class="linuxdo-copy-history-item-top">
+              <label class="linuxdo-copy-history-item-checkbox-wrap" title="选择">
+                <input type="checkbox" class="linuxdo-copy-history-item-checkbox" data-action="select-item" data-id="${escapeHtml(item.id)}" aria-label="选择此条历史记录" />
+              </label>
               <div class="linuxdo-copy-history-item-text">
                 <div class="linuxdo-copy-history-item-title">${safeTitle}</div>
                 <div class="linuxdo-copy-history-item-snippet">${snippet}</div>
@@ -1541,6 +1407,7 @@
       .join('');
 
     popover.innerHTML = header + `<div class="linuxdo-copy-history-list">${html}</div>`;
+    updateCopyHistorySelectionUI(list);
   }
 
   function findHeaderSearchActionsContainer() {
@@ -1616,387 +1483,6 @@
     }
 
     container.appendChild(trigger);
-  }
-
-  // #endregion
-
-  // #region 回到顶部按钮（话题页）
-  // ==========================================================
-
-  const BACK_TO_TOP_POSITION_STORAGE_KEY = `BACK_TO_TOP_POSITION_V1_${window.location.host}`;
-  let backToTopButtonEl = null;
-  let suppressBackToTopClick = false;
-  let backToTopRetryTimer = null;
-
-  function isTopicPageForBackToTop() {
-    return !!getTopicPathInfoForBackToTop(window.location.pathname);
-  }
-
-  function getTopicPathInfoForBackToTop(pathname) {
-    const path = String(pathname || '');
-    const topicIndex = path.indexOf('/t/');
-    if (topicIndex < 0) return null;
-    const prefix = path.slice(0, topicIndex);
-    const topicPath = path.slice(topicIndex);
-    const match = topicPath.match(/^\/t\/([^\/]+)\/(\d+)(?:\/([^\/?#]+))?/);
-    if (!match) return null;
-
-    const slug = match[1];
-    const topicId = match[2];
-    const postSegment = match[3] || '';
-    const postNumber = postSegment && /^\d+$/.test(postSegment) ? Number.parseInt(postSegment, 10) : null;
-
-    return {
-      prefix,
-      slug,
-      topicId,
-      postNumber,
-      postSegment,
-    };
-  }
-
-  function getBackToTopSavedPosition() {
-    const pos = GM_getValue(BACK_TO_TOP_POSITION_STORAGE_KEY, null);
-    if (!pos || typeof pos !== 'object') return null;
-    const left = Number(pos.left);
-    const top = Number(pos.top);
-    if (!Number.isFinite(left) || !Number.isFinite(top)) return null;
-    return { left, top };
-  }
-
-  function clampBackToTopPosition(pos, size = 42) {
-    const min = 8;
-    const maxLeft = Math.max(min, window.innerWidth - size - min);
-    const maxTop = Math.max(min, window.innerHeight - size - min);
-    return {
-      left: Math.min(Math.max(pos.left, min), maxLeft),
-      top: Math.min(Math.max(pos.top, min), maxTop),
-    };
-  }
-
-  function applyBackToTopPosition(el, pos) {
-    const safe = clampBackToTopPosition(pos, el ? el.offsetWidth || 42 : 42);
-    el.style.left = `${Math.round(safe.left)}px`;
-    el.style.top = `${Math.round(safe.top)}px`;
-    el.style.right = 'auto';
-    el.style.bottom = 'auto';
-  }
-
-  function saveBackToTopPosition(pos) {
-    try {
-      GM_setValue(BACK_TO_TOP_POSITION_STORAGE_KEY, pos);
-    } catch (error) {
-      console.warn('保存回到顶部按钮位置失败:', error);
-    }
-  }
-
-  function toRelativeUrl(urlLike) {
-    if (!urlLike) return '';
-    try {
-      const url = new URL(urlLike, window.location.origin);
-      return `${url.pathname}${url.search}${url.hash}`;
-    } catch (_) {
-      return String(urlLike || '');
-    }
-  }
-
-  function getFirstPostUrlForBackToTop() {
-    const startLink = document.querySelector('.timeline-date-wrapper a.start-date[href]');
-    if (startLink) {
-      const href = startLink.getAttribute('href') || startLink.href || '';
-      if (href) return href;
-    }
-
-    const info = getTopicPathInfoForBackToTop(window.location.pathname);
-    if (info && info.topicId) {
-      const prefix = info.prefix || '';
-      const slug = info.slug || 'topic';
-      return `${prefix}/t/${slug}/${info.topicId}/1`;
-    }
-    return '';
-  }
-
-  function tryJumpToFirstPostByTimelineStartDate() {
-    const startLink = document.querySelector('.timeline-date-wrapper a.start-date[href]');
-    if (!startLink) return false;
-    try {
-      startLink.click();
-      return true;
-    } catch (error) {
-      console.warn('start-date 回到顶部执行失败:', error);
-      return false;
-    }
-  }
-
-  function getDiscourseContainerForBackToTop() {
-    const container = window.Discourse && window.Discourse.__container__ ? window.Discourse.__container__ : null;
-    if (container && typeof container.lookup === 'function') return container;
-
-    const req = window.require || window.requirejs;
-    if (typeof req === 'function') {
-      try {
-        const appMod = req('discourse/app');
-        const appInstance = (appMod && (appMod.default || appMod)) || null;
-        const appContainer = appInstance && appInstance.__container__;
-        if (appContainer && typeof appContainer.lookup === 'function') return appContainer;
-      } catch (_) {
-        // ignore
-      }
-    }
-
-    return null;
-  }
-
-  function tryJumpToFirstPostByTopicController() {
-    const container = getDiscourseContainerForBackToTop();
-    if (!container) return false;
-    try {
-      const controller = container.lookup('controller:topic');
-      if (!controller) return false;
-      if (typeof controller.jumpTop === 'function') {
-        controller.jumpTop();
-        return true;
-      }
-      if (typeof controller.send === 'function') {
-        controller.send('jumpTop');
-        return true;
-      }
-    } catch (error) {
-      console.warn('topic controller jumpTop 回到顶部执行失败:', error);
-    }
-    return false;
-  }
-
-  function getDiscourseUrlApi() {
-    if (window.DiscourseURL && typeof window.DiscourseURL.routeTo === 'function') {
-      return window.DiscourseURL;
-    }
-
-    const req = window.require || window.requirejs;
-    if (typeof req === 'function') {
-      try {
-        const mod = req('discourse/lib/url');
-        const api = (mod && (mod.default || mod)) || null;
-        if (api && typeof api.routeTo === 'function') return api;
-      } catch (_) {
-        // ignore
-      }
-    }
-
-    return null;
-  }
-
-  function tryJumpToFirstPostByDiscourseURL() {
-    const href = getFirstPostUrlForBackToTop();
-    if (!href) return false;
-
-    const discourseURL = getDiscourseUrlApi();
-    if (discourseURL && typeof discourseURL.routeTo === 'function') {
-      try {
-        discourseURL.routeTo(toRelativeUrl(href), {
-          skipIfOnScreen: false,
-          keepFilter: true,
-          afterRouteComplete: () => {
-            window.scrollTo(0, 0);
-            requestAnimationFrame(() => window.scrollTo(0, 0));
-          },
-        });
-        return true;
-      } catch (error) {
-        console.warn('DiscourseURL.routeTo 回到顶部执行失败:', error);
-      }
-    }
-    return false;
-  }
-
-  function tryJumpToFirstPost() {
-    // 优先使用 Discourse 的路由（无整页刷新），其次点击官方“跳到顶部”入口
-    if (tryJumpToFirstPostByTopicController()) return true;
-    if (tryJumpToFirstPostByDiscourseURL()) return true;
-    if (tryJumpToFirstPostByTimelineStartDate()) return true;
-    return false;
-  }
-
-  function clearBackToTopRetryTimer() {
-    if (backToTopRetryTimer) {
-      clearInterval(backToTopRetryTimer);
-      backToTopRetryTimer = null;
-    }
-  }
-
-  function getTimelineRepliesCurrentIndex() {
-    const el = document.querySelector('.timeline-replies');
-    if (!el) return null;
-    const text = String(el.textContent || '').trim().replace(/\s+/g, ' ');
-    const match = text.match(/(\d+)\s*\/\s*\d+/);
-    if (!match) return null;
-    const current = Number.parseInt(match[1], 10);
-    return Number.isFinite(current) ? current : null;
-  }
-
-  function getTopicProgressCurrentIndex() {
-    const el = document.querySelector('#topic-progress .nums span:first-child');
-    if (!el) return null;
-    const value = Number.parseInt(String(el.textContent || '').trim(), 10);
-    return Number.isFinite(value) ? value : null;
-  }
-
-  function getCurrentPostIndexForBackToTop() {
-    return getTimelineRepliesCurrentIndex() ?? getTopicProgressCurrentIndex();
-  }
-
-  function isAtFirstPost() {
-    const currentIndex = getCurrentPostIndexForBackToTop();
-    if (currentIndex === 1) return true;
-
-    const info = getTopicPathInfoForBackToTop(window.location.pathname);
-    if (!info) return false;
-    if (!info.postSegment) return true;
-    return info.postNumber === 1;
-  }
-
-  function performBackToTop() {
-    window.scrollTo(0, 0);
-    requestAnimationFrame(() => window.scrollTo(0, 0));
-    tryJumpToFirstPost();
-  }
-
-  function startBackToTopRetryUntilFirstPage() {
-    clearBackToTopRetryTimer();
-
-    let attempts = 0;
-    let hardNavigated = false;
-    backToTopRetryTimer = setInterval(() => {
-      attempts += 1;
-      if (!isTopicPageForBackToTop()) {
-        clearBackToTopRetryTimer();
-        return;
-      }
-
-      if (isAtFirstPost()) {
-        clearBackToTopRetryTimer();
-        window.scrollTo(0, 0);
-        requestAnimationFrame(() => window.scrollTo(0, 0));
-        return;
-      }
-
-      if (!hardNavigated && attempts >= 4) {
-        const href = getFirstPostUrlForBackToTop();
-        if (href) {
-          hardNavigated = true;
-          try {
-            window.location.assign(href);
-            clearBackToTopRetryTimer();
-            return;
-          } catch (_) {
-            // ignore
-          }
-        }
-      }
-
-      if (attempts >= SCRIPT_CONSTANTS.BACK_TO_TOP_RETRY_MAX_ATTEMPTS) {
-        clearBackToTopRetryTimer();
-        return;
-      }
-
-      performBackToTop();
-    }, SCRIPT_CONSTANTS.BACK_TO_TOP_RETRY_INTERVAL_MS);
-  }
-
-  function ensureBackToTopButton() {
-    if (!isTopicPageForBackToTop()) {
-      clearBackToTopRetryTimer();
-      if (backToTopButtonEl) backToTopButtonEl.style.display = 'none';
-      return;
-    }
-
-    if (!backToTopButtonEl || !document.body.contains(backToTopButtonEl)) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'linuxdo-back-to-top';
-      btn.setAttribute('aria-label', '回到顶部');
-      btn.title = '回到顶部';
-      btn.innerHTML = /*html*/`
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 5l-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 5l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 5v14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      `;
-
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (suppressBackToTopClick) {
-          suppressBackToTopClick = false;
-          return;
-        }
-        performBackToTop();
-        startBackToTopRetryUntilFirstPage();
-      });
-
-      let dragging = false;
-      let startX = 0;
-      let startY = 0;
-      let startLeft = 0;
-      let startTop = 0;
-
-      const onPointerMove = (ev) => {
-        if (!dragging) return;
-        const dx = ev.clientX - startX;
-        const dy = ev.clientY - startY;
-        if (Math.abs(dx) + Math.abs(dy) > 3) suppressBackToTopClick = true;
-        applyBackToTopPosition(btn, { left: startLeft + dx, top: startTop + dy });
-      };
-
-      const stopDrag = () => {
-        if (!dragging) return;
-        dragging = false;
-        const left = Number.parseFloat(btn.style.left) || 0;
-        const top = Number.parseFloat(btn.style.top) || 0;
-        saveBackToTopPosition({ left, top });
-      };
-
-      btn.addEventListener('pointerdown', (ev) => {
-        if (ev.button !== 0) return;
-        dragging = true;
-        startX = ev.clientX;
-        startY = ev.clientY;
-        startLeft = Number.parseFloat(btn.style.left) || 0;
-        startTop = Number.parseFloat(btn.style.top) || 0;
-        btn.setPointerCapture(ev.pointerId);
-      });
-
-      btn.addEventListener('pointermove', onPointerMove);
-      btn.addEventListener('pointerup', (ev) => {
-        stopDrag();
-        try { btn.releasePointerCapture(ev.pointerId); } catch (_) { /* ignore */ }
-      });
-      btn.addEventListener('pointercancel', () => stopDrag());
-
-      window.addEventListener('resize', () => {
-        if (!backToTopButtonEl || backToTopButtonEl.style.display === 'none') return;
-        const left = Number.parseFloat(backToTopButtonEl.style.left) || 0;
-        const top = Number.parseFloat(backToTopButtonEl.style.top) || 0;
-        applyBackToTopPosition(backToTopButtonEl, { left, top });
-      });
-
-      document.body.appendChild(btn);
-      backToTopButtonEl = btn;
-
-      const saved = getBackToTopSavedPosition();
-      if (saved) {
-        applyBackToTopPosition(btn, saved);
-      } else {
-        const defaultPos = {
-          left: Math.max(8, window.innerWidth - 42 - 18),
-          top: Math.max(8, window.innerHeight - 42 - 90),
-        };
-        applyBackToTopPosition(btn, defaultPos);
-      }
-    }
-
-    backToTopButtonEl.style.display = 'inline-flex';
   }
 
   // #endregion
@@ -2214,7 +1700,7 @@
     // 获取用户名
     const postAuthorContainer = document.querySelector('.topic-meta-data, .post-stream .post:first-of-type');
     if (postAuthorContainer) {
-      const usernameElement = postAuthorContainer.querySelector('.names .first.full-name a, .username a');
+      const usernameElement = postAuthorContainer.querySelector('.username a, .names .first.full-name a');
       if (usernameElement) {
         userData.username = usernameElement.textContent.trim();
       }
@@ -2413,195 +1899,6 @@
   }
   // #endregion
 
-  // #region 主题列表布局
-  // ==========================================================
-
-  function normalizeTopicBadgesWhitespace(badges) {
-    if (!badges) return;
-    badges.childNodes.forEach((node) => {
-      if (node.nodeType !== Node.TEXT_NODE) return;
-      const cleaned = String(node.textContent || '').replace(/\u00A0/g, '').trim();
-      if (!cleaned) node.remove();
-    });
-  }
-
-  function parseTopicMetricNumber(text) {
-    const raw = String(text || '').trim().toLowerCase().replace(/,/g, '');
-    if (!raw) return 0;
-    const match = raw.match(/^(\d+(?:\.\d+)?)([km]?)$/);
-    if (match) {
-      const base = Number.parseFloat(match[1]);
-      if (!Number.isFinite(base)) return 0;
-      const unit = match[2];
-      if (unit === 'k') return base * 1000;
-      if (unit === 'm') return base * 1000000;
-      return base;
-    }
-    const fallback = Number.parseFloat(raw);
-    return Number.isFinite(fallback) ? fallback : 0;
-  }
-
-  function appendTopicMetaItem(meta, text, title) {
-    const value = (text || '').trim();
-    if (!value) return;
-    const span = document.createElement('span');
-    span.className = 'linuxdo-topic-meta-item';
-    span.textContent = value;
-    if (title) span.title = title;
-    meta.appendChild(span);
-  }
-
-  function appendTopicMetaCountItem(meta, text, title) {
-    const value = (text || '').trim();
-    if (!value) return;
-    const span = document.createElement('span');
-    span.className = 'linuxdo-topic-meta-item';
-    span.textContent = value;
-    if (title) span.title = title;
-
-    const numericValue = parseTopicMetricNumber(value);
-    if (numericValue >= 500) {
-      span.classList.add('linuxdo-topic-meta-count-hot');
-    } else if (numericValue >= 100) {
-      span.classList.add('linuxdo-topic-meta-count-warn');
-    }
-
-    meta.appendChild(span);
-  }
-
-  /**
-   * @description 清理两栏布局的增强 DOM，恢复为默认样式。
-   */
-  function cleanupTwoColumnLayout() {
-    document.documentElement.classList.remove('linuxdo-two-column-layout', 'linuxdo-topic-waterfall');
-    document.documentElement.style.removeProperty('--ld-topic-columns');
-
-    document.querySelectorAll('.linuxdo-topic-meta').forEach((meta) => {
-      const badges = meta.querySelector('.topic-post-badges');
-      if (badges) {
-        const mainLinkCell = meta.closest('td.main-link');
-        const linkTopLine = mainLinkCell ? mainLinkCell.querySelector('.link-top-line') : null;
-        if (linkTopLine) {
-          linkTopLine.appendChild(badges);
-        } else if (mainLinkCell) {
-          mainLinkCell.appendChild(badges);
-        }
-      }
-      meta.remove();
-    });
-    document.querySelectorAll('tr.topic-list-item[data-linuxdo-two-column-enhanced="1"]').forEach((tr) => {
-      tr.removeAttribute('data-linuxdo-two-column-enhanced');
-    });
-  }
-
-  /**
-   * @description 获取主题列表分栏数（兼容旧版 boolean 配置）。
-   * @returns {number} 0 表示关闭；否则为 1~5。
-   */
-  function getTopicListColumns() {
-    const rawValue = CONFIG.TWO_COLUMN_LAYOUT;
-
-    if (typeof rawValue === 'boolean') {
-      return rawValue ? 2 : 0;
-    }
-
-    const parsed = Number.parseInt(String(rawValue || '').trim(), 10);
-    if (!Number.isFinite(parsed) || parsed <= 0) return 0;
-    return Math.min(parsed, 5);
-  }
-
-  /**
-   * @description 在主题列表页启用/刷新两栏布局。
-   * 将回复/浏览/活动/发帖人收纳到标题下方，避免挤压标题区域。
-   */
-  function applyTwoColumnLayoutToTopicLists() {
-    const columns = getTopicListColumns();
-    if (columns <= 0) {
-      cleanupTwoColumnLayout();
-      return;
-    }
-
-    document.documentElement.classList.add('linuxdo-two-column-layout');
-    document.documentElement.style.setProperty('--ld-topic-columns', String(columns));
-    if (CONFIG.TOPIC_LIST_WATERFALL) {
-      document.documentElement.classList.add('linuxdo-topic-waterfall');
-    } else {
-      document.documentElement.classList.remove('linuxdo-topic-waterfall');
-    }
-
-    const topicListBodies = document.querySelectorAll('tbody.topic-list-body');
-    if (!topicListBodies || topicListBodies.length === 0) return;
-
-    topicListBodies.forEach((tbody) => {
-      const rows = tbody.querySelectorAll('tr.topic-list-item');
-      if (!rows || rows.length === 0) return;
-
-      rows.forEach((row) => {
-        const mainLinkCell = row.querySelector('td.main-link');
-        if (!mainLinkCell) return;
-
-        const existingMeta = mainLinkCell.querySelector('.linuxdo-topic-meta');
-        if (row.getAttribute('data-linuxdo-two-column-enhanced') === '1' && existingMeta) {
-          const badges = mainLinkCell.querySelector('.topic-post-badges');
-          if (badges && !existingMeta.contains(badges)) {
-            normalizeTopicBadgesWhitespace(badges);
-            existingMeta.appendChild(badges);
-          }
-          return;
-        }
-
-        const meta = document.createElement('div');
-        meta.className = 'linuxdo-topic-meta';
-
-        // a: 发帖人头像（取 posters 列的第一个 a）
-        const avatarAnchor = row.querySelector('td.posters a');
-        const avatarImg = avatarAnchor ? avatarAnchor.querySelector('img') : null;
-        if (avatarAnchor && avatarImg) {
-          const avatar = document.createElement('a');
-          avatar.className = 'linuxdo-topic-meta-avatar';
-          avatar.href = avatarAnchor.getAttribute('href') || '#';
-          avatar.setAttribute('aria-label', '发帖人');
-          const title = avatarAnchor.getAttribute('title');
-          if (title) avatar.title = title;
-          avatar.appendChild(avatarImg.cloneNode(true));
-          meta.appendChild(avatar);
-        }
-
-        // b: 回复数（posts-map 列的第一个 a）
-        const repliesEl = row.querySelector('td.num.posts-map a.badge-posts .number') || row.querySelector('td.num.posts-map .number');
-        appendTopicMetaCountItem(meta, repliesEl ? repliesEl.textContent : '', '回复');
-
-        // c: 浏览量
-        const viewsEl = row.querySelector('td.num.views .number') || row.querySelector('td.views .number');
-        appendTopicMetaCountItem(meta, viewsEl ? viewsEl.textContent : '', '浏览');
-
-        // 活动时间（relative-date）
-        const activityEl = row.querySelector('td.activity .relative-date') || row.querySelector('td.age .relative-date');
-        appendTopicMetaItem(meta, activityEl ? activityEl.textContent : '', '活动');
-
-        const badges = mainLinkCell.querySelector('.topic-post-badges');
-        if (badges) {
-          normalizeTopicBadgesWhitespace(badges);
-          meta.appendChild(badges);
-        }
-
-        if (!meta.firstChild) return;
-
-        // 插入到主列底部（category/tags 下方）
-        const bottomLine = mainLinkCell.querySelector('.link-bottom-line');
-        if (bottomLine && bottomLine.parentNode) {
-          bottomLine.parentNode.insertBefore(meta, bottomLine.nextSibling);
-        } else {
-          mainLinkCell.appendChild(meta);
-        }
-
-        row.setAttribute('data-linuxdo-two-column-enhanced', '1');
-      });
-    });
-  }
-
-  // #endregion
-
   // #region 设置界面
   // ==========================================================
 
@@ -2612,8 +1909,6 @@
   function createSettingsModal() {
     const dialog = document.createElement('dialog');
     dialog.className = 'linuxdo-settings-dialog';
-    const topicListColumns = getTopicListColumns();
-    const topicListColumnsInputValue = topicListColumns > 0 ? String(topicListColumns) : '';
 
     dialog.innerHTML = `
       <div class="linuxdo-settings-content">
@@ -2702,38 +1997,6 @@
               </div>
             </div>
           </section>
-
-          <section class="linuxdo-settings-section">
-            <div class="linuxdo-settings-section-header">
-              <h3 class="linuxdo-settings-section-title">列表布局</h3>
-              <p class="linuxdo-settings-section-desc">仅影响主题列表页（最新 / 分类 / 标签等）</p>
-            </div>
-            <div class="linuxdo-settings-card">
-              <div class="linuxdo-settings-item">
-                <div class="linuxdo-settings-item-text">
-                  <label class="linuxdo-settings-item-label" for="twoColumnLayout">两栏布局</label>
-                  <div class="linuxdo-settings-description">填写分栏数（最大 5）；留空或填 0 可关闭（默认关闭）。例如填 2 即两栏；开启后列表以卡片展示，并将发帖人/回复/浏览/活动信息收纳到标题下方</div>
-                </div>
-                <div class="linuxdo-settings-control">
-                  <input type="number" id="twoColumnLayout" class="linuxdo-settings-input small" value="${topicListColumnsInputValue}" placeholder="2" min="0" max="5" step="1" inputmode="numeric">
-                  <span class="linuxdo-settings-unit">列</span>
-                </div>
-              </div>
-
-              <div class="linuxdo-settings-separator"></div>
-
-              <div class="linuxdo-settings-item" id="topicListWaterfallRow" style="${topicListColumns > 0 ? '' : 'display:none;'}">
-                <div class="linuxdo-settings-item-text">
-                  <label class="linuxdo-settings-item-label" for="topicListWaterfall">瀑布流</label>
-                  <div class="linuxdo-settings-description">仅在分栏数大于 0 时显示/生效；开启后以瀑布流方式排列卡片</div>
-                </div>
-                <label class="linuxdo-settings-switch">
-                  <input type="checkbox" id="topicListWaterfall" ${CONFIG.TOPIC_LIST_WATERFALL ? 'checked' : ''}>
-                  <span class="linuxdo-settings-switch-slider"></span>
-                </label>
-              </div>
-            </div>
-          </section>
         </form>
         <div class="linuxdo-settings-footer">
           <button type="button" class="linuxdo-settings-button" id="cancelSettings">取消</button>
@@ -2753,26 +2016,6 @@
     const closeBtn = dialog.querySelector('.linuxdo-settings-close');
     const cancelBtn = dialog.querySelector('#cancelSettings');
     const saveBtn = dialog.querySelector('#saveSettings');
-
-    const twoColumnLayoutInput = dialog.querySelector('#twoColumnLayout');
-    const topicListWaterfallRow = dialog.querySelector('#topicListWaterfallRow');
-    const topicListWaterfallInput = dialog.querySelector('#topicListWaterfall');
-
-    const updateTopicListWaterfallVisibility = () => {
-      if (!twoColumnLayoutInput || !topicListWaterfallRow) return;
-      const parsed = Number.parseInt(String(twoColumnLayoutInput.value || '').trim(), 10);
-      const enabled = Number.isFinite(parsed) && parsed > 0;
-      topicListWaterfallRow.style.display = enabled ? '' : 'none';
-      if (!enabled && topicListWaterfallInput) {
-        topicListWaterfallInput.checked = false;
-      }
-    };
-
-    if (twoColumnLayoutInput && topicListWaterfallRow) {
-      twoColumnLayoutInput.addEventListener('input', updateTopicListWaterfallVisibility);
-      twoColumnLayoutInput.addEventListener('change', updateTopicListWaterfallVisibility);
-      updateTopicListWaterfallVisibility();
-    }
 
     const closeDialog = () => {
       if (typeof dialog.close === 'function') {
@@ -2800,13 +2043,6 @@
       e.preventDefault();
 
       const compactMode = dialog.querySelector('#compactMode').checked;
-      const twoColumnLayoutRaw = dialog.querySelector('#twoColumnLayout').value;
-      let twoColumnLayout = Number.parseInt(String(twoColumnLayoutRaw || '').trim(), 10);
-      if (!Number.isFinite(twoColumnLayout) || twoColumnLayout <= 0) twoColumnLayout = 0;
-      if (twoColumnLayout > 5) twoColumnLayout = 5;
-      let topicListWaterfall = false;
-      if (topicListWaterfallInput) topicListWaterfall = !!topicListWaterfallInput.checked;
-      if (twoColumnLayout <= 0) topicListWaterfall = false;
       const useAiForSummary = dialog.querySelector('#useAiForSummary').checked;
       const apiKey = dialog.querySelector('#apiKey').value.trim();
       const apiBaseUrl = dialog.querySelector('#apiBaseUrl').value.trim();
@@ -2815,16 +2051,12 @@
       const modelName = dialog.querySelector('#modelName').value.trim();
 
       setConfig('COMPACT_MODE', compactMode);
-      setConfig('TWO_COLUMN_LAYOUT', twoColumnLayout);
-      setConfig('TOPIC_LIST_WATERFALL', topicListWaterfall);
       setConfig('USE_AI_FOR_SUMMARY', useAiForSummary);
       setConfig('API_KEY', apiKey);
       setConfig('API_BASE_URL', apiBaseUrl || DEFAULT_CONFIG.API_BASE_URL);
       setConfig('MODEL_NAME', modelName || DEFAULT_CONFIG.MODEL_NAME);
       setConfig('LOCAL_SUMMARY_MAX_CHARS', localSummaryMaxChars);
       setConfig('CUSTOM_SUMMARY_PROMPT', customPrompt || DEFAULT_CONFIG.CUSTOM_SUMMARY_PROMPT);
-
-      applyTwoColumnLayoutToTopicLists();
 
       const originalText = saveBtn.textContent;
       saveBtn.textContent = '已保存';
@@ -2898,14 +2130,8 @@
 
     // console.log("油猴脚本已尝试初始化。");
 
-    // 主题列表布局（两栏）
-    applyTwoColumnLayoutToTopicLists();
-
     // 顶部搜索框：历史复制内容
     ensureCopyHistoryTrigger();
-
-    // 话题页：回到顶部按钮
-    ensureBackToTopButton();
 
     const titleLinkElement = document.querySelector('h1[data-topic-id] a.fancy-title');
     const articleRootElement = document.querySelector('.cooked');

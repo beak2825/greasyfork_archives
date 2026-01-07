@@ -1,7 +1,10 @@
 // ==UserScript==
 // @name            Better osm.org
 // @name:ru         Better osm.org
-// @version         1.4.9
+// @version         1.5.0
+// @changelog       v1.5.0: Shift + S: custom map layers, Shift + V: custom vector map styles, date for ESRI layer
+// @changelog       v1.5.0: KeyV: switch between raster and vector styles, render light:direction=* and direction=12-34
+// @changelog       v1.5.0: Initial OpenHistoricalMap support: changeset viewer
 // @changelog       v1.4.8: Highlight changesets with review_requested=yes
 // @changelog       v1.4.6: Copy coordinates button in map context menu, copy coordinates button for relations
 // @changelog       v1.4.0: More links in Edit menu, the ability to add custom links (like OSM Smart Menu)
@@ -48,13 +51,12 @@
 // @changelog       New: Comments templates, support ways render in relation members list
 // @changelog       New: Q for close sidebar, shift + Z for real bbox of changeset
 // @changelog       New: displaying the full history of ways (You can disable it in settings)
-// @changelog       https://c.osm.org/t/better-osm-org-a-script-that-adds-useful-little-things-to-osm-org/121670/196
+// @changelog       https://c.osm.org/t/better-osm-org-a-script-that-adds-useful-little-things-to-osm-org/121670/207
 // @description     Several improvements for advanced users of openstreetmap.org
 // @description:ru  Скрипт, добавляющий на openstreetmap.org полезные картографам функции
 // @author       deevroman
 // @match        https://www.openstreetmap.org/*
 // @exclude      https://www.openstreetmap.org/api*
-// @exclude      https://www.openstreetmap.org/diary/new
 // @exclude      https://www.openstreetmap.org/message/new/*
 // @exclude      https://www.openstreetmap.org/reports/new/*
 // @exclude      https://www.openstreetmap.org/profile/*
@@ -99,9 +101,9 @@
 // @incompatible safari https://github.com/deevroman/better-osm-org/issues/13
 // @grant        GM.getValue
 // @grant        GM.setValue
+// @grant        GM.listValues
+// @grant        GM.deleteValue
 // @grant        GM_registerMenuCommand
-// @grant        GM_listValues
-// @grant        GM_deleteValue
 // @grant        GM_getResourceURL
 // @grant        GM_getResourceText
 // @grant        GM_addElement
@@ -139,8 +141,23 @@
 // @connect      amazonaws.com
 // @comment      for satellite images
 // @connect      server.arcgisonline.com
+// @connect      services.arcgisonline.com
 // @connect      clarity.maptiles.arcgis.com
 // @connect      wayback.maptiles.arcgis.com
+// @connect      apps.kontur.io
+// @connect      vector.openstreetmap.org
+// @connect      vtiles.openhistoricalmap.org
+// @connect      openhistoricalmap.org
+// @connect      api.maptiler.com
+// @connect      api.jawg.io
+// @connect      tile.jawg.io
+// @connect      map.atownsend.org.uk
+// @connect      tiles.openfreemap.org
+// @connect      tiles.openrailwaymap.org
+// @connect      frexosm.ru
+// @comment      * for custom layers. ViolentMonkey ignores @connect by default,
+// @comment      Tampermonkey will show a warning before connecting to a host that is not listed above
+// @connect      *
 // @connect      geoscribble.osmz.ru
 // @connect      geoportal.dgu.hr
 // @comment      geocoder
@@ -150,7 +167,7 @@
 // @sandbox      JavaScript
 // @resource     OAUTH_HTML https://raw.githubusercontent.com/deevroman/better-osm-org/master/misc/assets/finish-oauth.html?bypass_cache
 // @resource     DARK_THEME_FOR_ID_CSS https://gist.githubusercontent.com/deevroman/55f35da68ab1efb57b7ba4636bdf013d/raw/1e91d589ca8cb51c693a119424a45d9f773c265e/dark.css
-// @run-at       document-end
+// @run-at       document-start
 // @downloadURL https://update.greasyfork.org/scripts/517486/Better%20osmorg.user.js
 // @updateURL https://update.greasyfork.org/scripts/517486/Better%20osmorg.meta.js
 // ==/UserScript==
@@ -161,8 +178,6 @@
 /*global GM_info*/
 /*global GM_config*/
 /*global GM_addElement*/
-/*global GM_listValues*/
-/*global GM_deleteValue*/
 /*global GM_getResourceURL*/
 /*global GM_getResourceText*/
 /*global GM_registerMenuCommand*/
@@ -175,30 +190,32 @@
 /*global runSnowAnimation*/
 /*global unzipit*/
 /*global bz2*/
-if ((location.origin + location.pathname).startsWith("https://github.com/openstreetmap/openstreetmap-website/issues/new")) {
-    function tryAddWarn() {
-        if (document.querySelector(".better-osm-org-warn")) {
-            return
-        }
-        let result = document.evaluate("//h1[normalize-space(text())='Create new issue']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
-        if (!result) {
-            result = document.evaluate("//h2[normalize-space(text())='Create new issue']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
-        }
-        if (result) {
-            const warn = document.createElement("div")
-            warn.textContent = "⚠️⚠️⚠️️ "
-            warn.classList.add("better-osm-org-warn")
-            const subWarn = document.createElement("span")
-            subWarn.textContent = "Disable better-osm-org"
-            subWarn.style.color = "red"
-            warn.appendChild(subWarn)
-            warn.appendChild(document.createTextNode(" before reporting bugs or asking questions about features ⚠️⚠️⚠️"))
-            result.before(warn)
-            result.before(document.createElement("br"))
-        }
+performance.mark("BETTER_OSM_START")
+function tryAddWarnAboutScriptIntoOsmOrgRepo() {
+    if (document.querySelector(".better-osm-org-warn")) {
+        return
     }
-    setInterval(tryAddWarn, 3000)
-    setTimeout(tryAddWarn, 100)
+    let result = document.evaluate("//h1[normalize-space(text())='Create new issue']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
+    if (!result) {
+        result = document.evaluate("//h2[normalize-space(text())='Create new issue']", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
+    }
+    if (result) {
+        const warn = document.createElement("div")
+        warn.textContent = "⚠️⚠️⚠️️ "
+        warn.classList.add("better-osm-org-warn")
+        const subWarn = document.createElement("span")
+        subWarn.textContent = "Disable better-osm-org"
+        subWarn.style.color = "red"
+        warn.appendChild(subWarn)
+        warn.appendChild(document.createTextNode(" before reporting bugs or asking questions about features ⚠️⚠️⚠️"))
+        result.before(warn)
+        result.before(document.createElement("br"))
+    }
+}
+
+if ((location.origin + location.pathname).startsWith("https://github.com/openstreetmap/openstreetmap-website/issues/new")) {
+    setInterval(tryAddWarnAboutScriptIntoOsmOrgRepo, 3000)
+    setTimeout(tryAddWarnAboutScriptIntoOsmOrgRepo, 100)
     throw "skip better-osm-org run on GitHub"
 }
 
@@ -208,6 +225,16 @@ if (location.search.includes("&kek")) {
 
 if (["Userscripts", "Greasemonkey", "Firemonkey", "OrangeMonkey"].includes(GM_info.scriptHandler)) {
     console.error("YOU ARE USING AN UNSUPPORTED SCRIPT MANAGER")
+}
+
+if (GM_info.scriptHandler === "Greasemonkey") {
+    alert(
+        "better-osm-org will not work in GreasyMonkey :(\n\n" +
+        "It does not support important APIs without which most of the script's functions will not work.\n\n" +
+        "Use ViolentMonkey or TamperMonkey\n\n" +
+        "Discussion: https://github.com/deevroman/better-osm-org/issues/217",
+    )
+    throw ""
 }
 
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
@@ -220,7 +247,7 @@ if (isSafari) {
     console.error("YOU ARE USING AN UNSUPPORTED BROWSER")
 }
 
-if (GM_info.scriptHandler === "Userscripts" || GM_info.scriptHandler === "Greasemonkey" || GM_info.scriptHandler === "OrangeMonkey") {
+function initGmApiPolyfills() {
     if (typeof GM_getResourceURL === "undefined") {
         const resources = {}
         setTimeout(async () => {
@@ -276,6 +303,16 @@ if (GM_info.scriptHandler === "Userscripts" || GM_info.scriptHandler === "Grease
             return fn
         }
     }
+
+    if (typeof cloneInto === "undefined") {
+        window.cloneInto = function (obj) {
+            return obj
+        }
+    }
+}
+
+if (GM_info.scriptHandler === "Userscripts" || GM_info.scriptHandler === "Greasemonkey" || GM_info.scriptHandler === "OrangeMonkey" || GM_info.scriptHandler === "ScriptCat") {
+    initGmApiPolyfills()
 }
 
 const accountForceLightTheme = document.querySelector("html")?.getAttribute("data-bs-theme") === "light"
@@ -333,7 +370,7 @@ function isOHMServer() {
 }
 
 function isOsmServer() {
-    return !!osm_server && (isOHMServer() ? isDebug() : true)
+    return !!osm_server
 }
 
 const planetOrigin = "https://planet.maps.mail.ru"
@@ -368,6 +405,15 @@ const MAIN_OSMCHA = "https://osmcha.org"
 const OHM_OSMCHA = "https://osmcha.openhistoricalmap.org"
 
 const osmcha_server_origin = isOHMServer() ? OHM_OSMCHA : MAIN_OSMCHA
+
+const MAIN_OSM_REVERT = "https://revert.monicz.dev"
+const OHM_OSM_REVERT = "https://ohm-revert.monicz.dev"
+
+const MAIN_OSM_REVERT_NAME = "osm-revert"
+const OHM_OSM_REVERT_NAME = "ohm-revert"
+
+const osm_revert_origin = isOHMServer() ? OHM_OSM_REVERT : MAIN_OSM_REVERT
+const osm_revert_name = isOHMServer() ? OHM_OSM_REVERT_NAME : MAIN_OSM_REVERT_NAME
 
 /**
  * @typedef {{
@@ -577,7 +623,9 @@ function intoPageWithFun(obj) {
     return cloneInto(obj, getWindow(), { cloneFunctions: true })
 }
 
-let _isDebug = document.querySelector("head")?.getAttribute("data-user") === "11528195" || osm_server === local_server || osm_server === dev_server
+const dataUser = document.querySelector("head")?.getAttribute("data-user")
+// TrickyFoxy on osm.org and OHM
+let _isDebug = dataUser === "11528195" || dataUser === "15560" || osm_server === local_server || osm_server === dev_server
 
 function isDebug() {
     return _isDebug
@@ -594,7 +642,25 @@ function debug_alert() {
 
 //</editor-fold>
 
-if (isOsmServer() && location.pathname !== "/id" && !document.querySelector("#id-embed")) {
+function printScriptDebugInfo() {
+    console.log(`Script version: ${GM_info.script.version}`)
+    console.log(`Script manager: ${GM_info.scriptHandler}`)
+    console.debug(
+        "Settings:",
+        Object.entries(GM_config.fields).map(i => {
+            if (typeof i[1].value === "boolean" || typeof i[1].value === "number") {
+                return [i[0], i[1].value]
+            } else {
+                return [i[0], `length: ${i[1].value.length}`]
+            }
+        }),
+    )
+}
+
+setTimeout(printScriptDebugInfo, 2000)
+
+function injectMapHooks() {
+    console.log("injectMapHooks called")
     function mapHook() {
         console.log("start map intercepting")
         if (boWindowObject.L && boWindowObject.L.Map) {
@@ -615,12 +681,12 @@ if (isOsmServer() && location.pathname !== "/id" && !document.querySelector("#id
             boWindowObject.L.OSM.MaplibreGL.addInitHook(
                 exportFunction(function () {
                     // if (this._container?.id === "map") {
-                        if (!boGlobalThis.mapGL) {
-                            boGlobalThis.mapGL = intoPage([])
-                        }
-                        boGlobalThis.mapGL.push(this)
-                        boGlobalThis.mapGLIntercepted = true
-                        console.log("%cMapGL intercepted", "background: #000; color: #0f0")
+                    if (!boGlobalThis.mapGL) {
+                        boGlobalThis.mapGL = intoPage([])
+                    }
+                    boGlobalThis.mapGL.push(this)
+                    boGlobalThis.mapGLIntercepted = true
+                    console.log("%cMapGL intercepted", "background: #000; color: #0f0")
                     // }
                 }, boWindowObject),
             )
@@ -647,37 +713,21 @@ if (isOsmServer() && location.pathname !== "/id" && !document.querySelector("#id
 
         getMap = () => boWindowObject.map
     }
+}
 
-    // try {
-    //     interceptRectangle()
-    // } catch (e) {
-    // }
+function runOnDOMContentLoaded(callback) {
+    if (document.readyState === "loading") {
+        console.log("Waiting DOMContentLoaded...")
+        document.addEventListener("DOMContentLoaded", callback)
+    } else {
+        console.log("DOMContentLoaded has already happened. Run immediately")
+        callback()
+    }
+}
 
-    setTimeout(() => {
-        console.log(`Script version: ${GM_info.script.version}`)
-        console.debug(
-            "Settings:",
-            Object.entries(GM_config.fields).map(i => {
-                if (typeof i[1].value === "boolean" || typeof i[1].value === "number") {
-                    return [i[0], i[1].value]
-                } else {
-                    return [i[0], `length: ${i[1].value.length}`]
-                }
-            }),
-        )
-    }, 1500)
-} else if (isOsmServer() && ["/edit", "/id"].includes(location.pathname)) {
+function preventWhiteFlashesInIdEditor() {
     if (isDarkMode()) {
         if (location.pathname === "/edit") {
-            // document.querySelector("#id-embed").style.visibility = "hidden"
-            // window.addEventListener("message", (event) => {
-            //     console.log("making iD visible")
-            //     if (event.origin !== location.origin)
-            //         return;
-            //     if (event.data === "kek") {
-            //         document.querySelector("#id-embed").style.visibility = "visible"
-            //     }
-            // });
             injectCSSIntoOSMPage(
                 `@media ${mediaQueryForWebsiteTheme} {
                 #id-embed {
@@ -705,12 +755,14 @@ if (isOsmServer() && location.pathname !== "/id" && !document.querySelector("#id
                 }
             }`,
             )
-            // if (location.pathname === "/id") {
-            //     console.log("post")
-            //     window.parent.postMessage("kek", location.origin);
-            // }
         }
     }
+}
+
+if (isOsmServer() && location.pathname !== "/id" && !document.querySelector("#id-embed")) {
+    runOnDOMContentLoaded(injectMapHooks)
+} else if (isOsmServer() && ["/edit", "/id"].includes(location.pathname)) {
+    preventWhiteFlashesInIdEditor()
     GM_registerMenuCommand("JOSM!", function () {
         const iframe = GM_addElement("iframe", {
             src: "https://deevroman.github.io/web-josm",
@@ -1488,7 +1540,7 @@ function injectJSIntoPage(text) {
  * @param {string} text
  */
 function injectCSSIntoOSMPage(text) {
-    if (GM_info.scriptHandler === "FireMonkey" || GM_info.scriptHandler === "Userscripts" || GM_info.scriptHandler === "Greasemonkey" || isSafari) {
+    if ((GM_info.scriptHandler === "FireMonkey" && parseFloat(GM_info.version) < 3.0) || GM_info.scriptHandler === "Userscripts" || GM_info.scriptHandler === "Greasemonkey" || isSafari) {
         const styleElem = document.querySelector("style")
         if (!styleElem) {
             console.trace("<style> elem not found. Try wait this elem")
@@ -1617,9 +1669,7 @@ function copyAnimation(e, text) {
  * @return {Promise<Tampermonkey.Response>}
  */
 async function externalFetch(details) {
-    if (GM_info.scriptHandler !== "FireMonkey") {
-        return await GM.xmlHttpRequest(details)
-    } else {
+    if (GM_info.scriptHandler === "FireMonkey" && parseFloat(GM_info.version) < 3.0) {
         const res = await GM.fetch(details.url, details)
         if (details["responseType"] === "json") {
             res.response = res.json
@@ -1627,6 +1677,8 @@ async function externalFetch(details) {
             res.responseText = res.text
         }
         return res
+    } else {
+        return await GM.xmlHttpRequest(details)
     }
 }
 
@@ -1635,9 +1687,7 @@ async function externalFetch(details) {
  * @return {Promise<Tampermonkey.Response>}
  */
 async function externalFetchRetry(details) {
-    if (GM_info.scriptHandler !== "FireMonkey") {
-        return await _fetchRetry(GM.xmlHttpRequest, details)
-    } else {
+    if (GM_info.scriptHandler === "FireMonkey" && parseFloat(GM_info.version) < 3.0) {
         const res = await _fetchRetry(GM.fetch, details.url, details)
         if (details["responseType"] === "json") {
             res.response = res.json
@@ -1645,6 +1695,9 @@ async function externalFetchRetry(details) {
             res.responseText = res.text
         }
         return res
+    } else {
+        // https://github.com/erosman/firemonkey/issues/33
+        return await _fetchRetry(async (...args) => await GM.xmlHttpRequest(...args), details)
     }
 }
 
@@ -1725,6 +1778,7 @@ const fetchBlobWithCache = (() => {
         const promise = externalFetchRetry({
             url: url,
             responseType: "blob",
+            headers: options.headers ?? {},
         })
         cache.set(url, promise)
 
@@ -1869,6 +1923,56 @@ const originalFetchTextWithCache = (() => {
         }
     }
 })()
+
+function resourceCacher(url, storageKey, name, dateDelta, type) {
+    let database
+    async function load() {
+        const raw_data = (
+            await externalFetchRetry({
+                url: url,
+                responseType: type,
+            })
+        ).response
+        if (!raw_data) {
+            throw `${name} not downloaded`
+        }
+        database = raw_data
+        console.log(`${name} database updated`)
+        await GM.setValue(
+            storageKey,
+            JSON.stringify({
+                raw_data: raw_data,
+                cacheTime: new Date(),
+            }),
+        )
+    }
+    return {
+        get: () => database,
+        init: async function () {
+            if (database) return
+            const cache = await GM.getValue(storageKey, "")
+            if (database) return
+            if (cache) {
+                console.log(`${name} cached`)
+                const json = JSON.parse(cache)
+                const cacheTime = new Date(json["cacheTime"])
+                const timeLater = new Date(cacheTime.getTime() + dateDelta)
+                if (timeLater < new Date()) {
+                    console.log("but cache outdated")
+                    setTimeout(load, 0)
+                }
+                database = JSON.parse(cache)["raw_data"]
+                return
+            }
+            console.log(`loading ${name}`)
+            try {
+                await load()
+            } catch (e) {
+                console.log(`loading ${name} failed`, e)
+            }
+        },
+    }
+}
 
 //</editor-fold>
 
@@ -2761,6 +2865,100 @@ async function checkAAA(AAA, targetTime, targetChangesetID) {
     return foundedChangeset
 }
 
+/**
+ * @param {string} datetime
+ * @return {Promise<{user: string|null, uid: string|null}>}
+ */
+async function tryFindDeletedChangesetAuthorViaOverpass(datetime) {
+    let foundedChangesetXml
+    const match = location.pathname.match(/\/(node|way|relation|changeset)\/(\d+)/)
+    let [, type, objID] = match
+    if (type === "changeset") {
+        const ch = (await getChangeset(objID)).data
+        type = ch.querySelector(`[changeset="${objID}"]`).nodeName
+        objID = ch.querySelector(`[changeset="${objID}"]`).getAttribute("id")
+    }
+    if (new Date(datetime) > OVERPASS_NEW_ERA_DATE) {
+        if (type === "node") {
+            foundedChangesetXml = await getNodeViaOverpassXML(objID, datetime)
+        } else if (type === "way") {
+            foundedChangesetXml = await getWayViaOverpassXML(objID, datetime)
+        } else if (type === "relation") {
+            foundedChangesetXml = await getRelationViaOverpassXML(objID, datetime)
+        }
+    }
+    if (!foundedChangesetXml?.getAttribute("user")) {
+        foundedChangesetXml = null
+        console.log("Loading via overpass failed. Try via diffs")
+    }
+    return {
+        user: foundedChangesetXml?.getAttribute("user"),
+        uid: foundedChangesetXml?.getAttribute("uid"),
+    }
+}
+/**
+ * @param {string} datetime
+ * @param {number} targetChangesetID
+ * @return {Promise<{user: string|null, uid: string|null}>}
+ */
+async function tryFindDeletedChangesetAuthorViaDiffs(datetime, targetChangesetID) {
+    if (new Date(datetime) < OVERPASS_NEW_ERA_DATE) {
+        return { user: null, uid: null }
+    }
+    const response = await externalFetchRetry({
+        method: "GET",
+        url: planetOrigin + "/replication/changesets/",
+    })
+    const AAAHTML = new DOMParser().parseFromString(response.responseText, "text/html")
+    const targetTime = new Date(datetime)
+    targetTime.setSeconds(0)
+
+    const a = Array.from(AAAHTML.querySelector("pre").childNodes).slice(2).slice(0, -4)
+    a.push(...a.slice(-2))
+    let x = 0
+    for (x; x < a.length - 2; x += 2) {
+        const d = new Date(a[x + 1].textContent.trim().slice(0, -1).trim())
+        if (targetTime < d) break
+    }
+    let AAAs
+    if (x === 0) {
+        AAAs = [a[x].getAttribute("href"), a[x].getAttribute("href")]
+    } else {
+        AAAs = [a[x - 2].getAttribute("href"), a[x].getAttribute("href")]
+    }
+
+    let foundedChangeset = await checkAAA(AAAs[0], targetTime, targetChangesetID)
+    if (!foundedChangeset) {
+        foundedChangeset = await checkAAA(AAAs[1], targetTime, targetChangesetID)
+    }
+    return {
+        user: foundedChangeset?.getAttribute("user"),
+        uid: foundedChangeset?.getAttribute("uid"),
+    }
+}
+
+/**
+ * @param {string} datetime
+ * @param {number} targetChangesetID
+ * @return {Promise<{user: string|null, uid: string|null}>}
+ */
+async function tryFindDeletedChangesetAuthorViaWhosthat(datetime, targetChangesetID) {
+    const userID = (await loadChangesetMetadata(targetChangesetID)).uid
+
+    const res = await externalFetchRetry({
+        url: "https://whosthat.osmz.ru/whosthat.php?action=names&id=" + userID,
+        responseType: "json",
+    })
+    // FireMonkey compatibility https://github.com/erosman/firemonkey/issues/8
+    // but here need resolve problem with return promise
+    const userInfo = structuredClone(res.response)
+    if (userInfo?.[0]?.["names"]?.length > 1) {
+        // todo what if multiple names?
+        return { user: userInfo[0]["names"][0], uid: userID }
+    }
+    return { user: null, uid: null }
+}
+
 // tests
 // https://osm.org/way/488322838/history
 // https://osm.org/way/74034517/history
@@ -2768,71 +2966,30 @@ async function checkAAA(AAA, targetTime, targetChangesetID) {
 // https://osm.org/way/554280669/history
 // https://osm.org/node/4122049406 (/replication/changesets/005/638/ contains .tmp files)
 // https://osm.org/node/2/history (very hard)
+// https://osm.org/changeset/5427478
 async function findChangesetInDiff(e) {
     e.preventDefault()
     e.stopPropagation()
     e.target.style.cursor = "progress"
 
-    let foundedChangeset
-    try {
-        const match = location.pathname.match(/\/(node|way|relation|changeset)\/(\d+)/)
-        let [, type, objID] = match
-        if (type === "changeset") {
-            const ch = (await getChangeset(objID)).data
-            type = ch.querySelector(`[changeset="${objID}"]`).nodeName
-            objID = ch.querySelector(`[changeset="${objID}"]`).getAttribute("id")
-        }
-        if (type === "node") {
-            foundedChangeset = await getNodeViaOverpassXML(objID, e.target.datetime)
-        } else if (type === "way") {
-            foundedChangeset = await getWayViaOverpassXML(objID, e.target.datetime)
-        } else if (type === "relation") {
-            foundedChangeset = await getRelationViaOverpassXML(objID, e.target.datetime)
-        }
-        if (!foundedChangeset?.getAttribute("user")) {
-            foundedChangeset = null
-            console.log("Loading via overpass failed. Try via diffs")
-            throw ""
-        }
-    } catch {
-        const response = await externalFetchRetry({
-            method: "GET",
-            url: planetOrigin + "/replication/changesets/",
-        })
-        const parser = new DOMParser()
-        const AAAHTML = parser.parseFromString(response.responseText, "text/html")
-        const targetTime = new Date(e.target.datetime)
-        targetTime.setSeconds(0)
-        const targetChangesetID = e.target.value
-
-        const a = Array.from(AAAHTML.querySelector("pre").childNodes).slice(2).slice(0, -4)
-        a.push(...a.slice(-2))
-        let x = 0
-        for (x; x < a.length - 2; x += 2) {
-            const d = new Date(a[x + 1].textContent.trim().slice(0, -1).trim())
-            if (targetTime < d) break
-        }
-        let AAAs
-        if (x === 0) {
-            AAAs = [a[x].getAttribute("href"), a[x].getAttribute("href")]
-        } else {
-            AAAs = [a[x - 2].getAttribute("href"), a[x].getAttribute("href")]
-        }
-
-        foundedChangeset = await checkAAA(AAAs[0], targetTime, targetChangesetID)
-        if (!foundedChangeset) {
-            foundedChangeset = await checkAAA(AAAs[1], targetTime, targetChangesetID)
-        }
-        if (!foundedChangeset) {
-            alert(":(")
-            return
+    const changesetID = parseInt(e.target.value)
+    let foundedInfo = await tryFindDeletedChangesetAuthorViaOverpass(e.target.datetime)
+    if (!foundedInfo.user) {
+        foundedInfo = await tryFindDeletedChangesetAuthorViaDiffs(e.target.datetime, changesetID)
+        if (!foundedInfo.user) {
+            foundedInfo = await tryFindDeletedChangesetAuthorViaWhosthat(e.target.datetime, changesetID)
+            if (!foundedInfo.user) {
+                alert(":(")
+                e.target.style.cursor = "pointer"
+                return
+            }
         }
     }
-
+    let { user: foundedUser, uid: foundedUserUid } = foundedInfo
     const userInfo = document.createElement("a")
-    userInfo.setAttribute("href", "/user/" + foundedChangeset.getAttribute("user"))
+    userInfo.setAttribute("href", "/user/" + foundedUser)
     userInfo.style.cursor = "pointer"
-    userInfo.textContent = foundedChangeset.getAttribute("user")
+    userInfo.textContent = foundedUser
 
     e.target.before(document.createTextNode("\xA0"))
     e.target.before(userInfo)
@@ -2842,10 +2999,10 @@ async function findChangesetInDiff(e) {
     uid.style.cursor = "pointer"
     uid.title = "Click for copy user ID"
     uid.onclick = e => {
-        const text = foundedChangeset.getAttribute("uid")
+        const text = foundedUserUid
         navigator.clipboard.writeText(text).then(() => copyAnimation(e, text))
     }
-    uid.textContent = `${foundedChangeset.getAttribute("uid")}`
+    uid.textContent = foundedUserUid
 
     e.target.before(document.createTextNode("ID: "))
     e.target.before(uid)
@@ -2854,7 +3011,7 @@ async function findChangesetInDiff(e) {
     const webArchiveLink = document.createElement("a")
     webArchiveLink.textContent = "WebArchive"
     webArchiveLink.target = "_blank"
-    webArchiveLink.href = "https://web.archive.org/web/*/https://www.openstreetmap.org/user/" + foundedChangeset.getAttribute("user")
+    webArchiveLink.href = "https://web.archive.org/web/*/https://www.openstreetmap.org/user/" + foundedUser
     e.target.before(webArchiveLink)
     e.target.before(document.createTextNode("\xA0"))
 
@@ -3175,10 +3332,23 @@ function renderDirectionTag(lat, lon, values, color = c("#ff00e3")) {
         NNW: 337.0,
     }
     values.split(";").forEach(angleStr => {
-        const angle = cardinalToAngle[angleStr] !== undefined ? cardinalToAngle[angleStr] : parseFloat(angleStr)
-        if (!isNaN(angle)) {
-            drawRay(lat, lon, angle - 30, color)
-            drawRay(lat, lon, angle + 30, color)
+        if (angleStr.slice(1).includes("-")) {
+            if (angleStr === "0-360") {
+                return
+            }
+            const [firstAngleStr, remAngleStr] = angleStr.split("-")
+            const firstAngle = cardinalToAngle[firstAngleStr] !== undefined ? cardinalToAngle[firstAngleStr] : parseFloat(firstAngleStr)
+            const remAngle = cardinalToAngle[remAngleStr] !== undefined ? cardinalToAngle[remAngleStr] : parseFloat(remAngleStr)
+            if (!isNaN(firstAngle) && !isNaN(remAngle)) {
+                drawRay(lat, lon, firstAngle, color)
+                drawRay(lat, lon, remAngle, color)
+            }
+        } else {
+            const angle = cardinalToAngle[angleStr] !== undefined ? cardinalToAngle[angleStr] : parseFloat(angleStr)
+            if (!isNaN(angle)) {
+                drawRay(lat, lon, angle - 30, color)
+                drawRay(lat, lon, angle + 30, color)
+            }
         }
     })
 }
@@ -3253,7 +3423,7 @@ function blurSearchField() {
         // Sometimes it still doesn't help
         ;[50, 100, 250, 500].forEach(ms => {
             setTimeout(() => {
-                if (document.activeElement?.nodeName === "INPUT") {
+                if (document.activeElement?.nodeName === "INPUT" && document.activeElement.getAttribute("type") !== "radio") {
                     document.activeElement?.blur()
                 }
             }, ms)
@@ -3751,18 +3921,20 @@ function addRevertButton() {
         hideSearchForm()
         // sidebar.classList.add("changeset-header")
         const changeset_id = sidebar.innerHTML.match(/([0-9]+)/)[0]
-        const reverterTitle = "Open osm-revert\nShift + click for revert via JOSM\nPress R for partial revert"
+        const reverterTitle = `Open ${osm_revert_name}
+Shift + click for revert via JOSM
+Press R for partial revert`
         // prettier-ignore
         sidebar.innerHTML +=
-            ` <a href="https://revert.monicz.dev/?changesets=${changeset_id}" target=_blank rel="noreferrer" id=revert_button_class title="${reverterTitle}">↩️</a>
+            ` <a href="${osm_revert_origin}/?changesets=${changeset_id}" target=_blank rel="noreferrer" id=revert_button_class title="${reverterTitle}">↩️</a>
               <a href="${osmcha_server_origin}/changesets/${changeset_id}" id="osmcha_link" target="_blank" rel="noreferrer">${osmchaSvgLogo}</a>`
         changesetObjectsSelectionModeEnabled = false
         document.querySelector("#revert_button_class").onclick = async e => {
             if (changesetObjectsSelectionModeEnabled) {
                 e.preventDefault()
-                if (osm_server !== prod_server) {
+                if (osm_server !== prod_server && osm_server !== ohm_prod_server) {
                     e.preventDefault()
-                    alert("osm-revert works only for www.openstreetmap.org")
+                    alert(`${osm_revert_name} works only for www.OpenStreetMap.org and www.OpenHistoricalMap.org`)
                     return
                 }
 
@@ -3803,7 +3975,7 @@ function addRevertButton() {
                 }
 
                 window.open(
-                    "https://revert.monicz.dev/?" +
+                    `${osm_revert_origin}/?` +
                         new URLSearchParams({
                             changesets: changeset_id,
                             "query-filter": selector,
@@ -3813,10 +3985,10 @@ function addRevertButton() {
                 return
             }
             if (!e.shiftKey) {
-                if (osm_server !== prod_server) {
+                if (osm_server !== prod_server && osm_server !== ohm_prod_server) {
                     e.preventDefault()
                     alert(
-                        "osm-revert works only for www.openstreetmap.org\n\n" +
+                        "${osm_revert_name} works only for www.OpenStreetMap.org and www.OpenHistoricalMap.org\n\n" +
                             "But you can install reverter plugin in JOSM and use shift+click for other OSM servers.\n\n" +
                             "⚠️Change the osm server in the josm settings!",
                     )
@@ -3824,13 +3996,25 @@ function addRevertButton() {
                 return
             }
             e.preventDefault()
-            if (!(await validateOsmServerInJOSM())) {
-                return
-            }
-
-            if (osm_server !== prod_server) {
-                if (!confirm("⚠️This is not the main OSM server!\n\n⚠️To change the OSM server in the JOSM settings!")) {
+            if (!isOHMServer()) {
+                if (!(await validateOsmServerInJOSM())) {
                     return
+                }
+
+                if (osm_server !== prod_server) {
+                    if (!confirm("⚠️This is not the main OSM server!\n\n⚠️To change the OSM server in the JOSM settings!")) {
+                        return
+                    }
+                }
+            } else {
+                if (await validateOsmServerInJOSM()) {
+                    return
+                }
+
+                if (osm_server !== ohm_prod_server) {
+                    if (!confirm("⚠️This is not the OHM server!\n\n⚠️To change the OSM server in the JOSM settings!")) {
+                        return
+                    }
                 }
             }
             window.location = "http://127.0.0.1:8111/revert_changeset?id=" + changeset_id // todo open in new tab. It's broken in Firefox and open new window
@@ -4380,6 +4564,7 @@ function setupCompactChangesetsHistory() {
                     })
 
                     commentsBadge.firstElementChild.style.cursor = "pointer"
+                    commentsBadge.firstElementChild.style.overflow = "visible"
 
                     let state = commentsCount === 1 ? "" : "none"
                     commentsBadge.firstElementChild.onclick = () => {
@@ -5565,7 +5750,7 @@ function addGPXFiltersButtons() {
                         const trackForDisplay = document.implementation.createDocument(null, "gpx")
                         trackForDisplay.documentElement.appendChild(trk)
                         cleanAllObjects()
-                        displayGPXTrack(trackForDisplay)
+                        displayGPXTrack(trackForDisplay, "rgb(255,0,47)")
                     }
                     trackInfo.onclick = e => {
                         if (!e.altKey) {
@@ -5610,7 +5795,7 @@ function addGPXFiltersButtons() {
                                 throw `Unknown track #${trackID} format: ` + contentType
                             }
                             cleanAllObjects()
-                            displayGPXTrack(xml)
+                            displayGPXTrack(xml, "rgb(255,0,47)")
 
                             function hoverHandler() {
                                 bbox?.remove()
@@ -5625,7 +5810,7 @@ function addGPXFiltersButtons() {
                                     .addTo(getMap())
 
                                 cleanAllObjects()
-                                displayGPXTrack(xml)
+                                displayGPXTrack(xml, "rgb(255,0,47)")
                             }
                             trackInfo.onmouseenter = hoverHandler
                             downloadBtn.onmouseenter = hoverHandler
@@ -5705,9 +5890,11 @@ function addDeleteButton() {
     link.classList.add("delete_object_button_class")
     // skip deleted
     if (object_type === "node") {
-        if (document.querySelectorAll("#sidebar_content > div:first-of-type h4").length < 2 && document.querySelector("#element_versions_list > div .latitude") === null) {
+        if (document.querySelectorAll("#sidebar_content > div:first-of-type h4").length < 2 && document.querySelector("#sidebar_content > div .latitude") === null) {
             return
         }
+    } else if (object_type === "way") {
+
     } else if (object_type === "relation") {
         if (document.querySelectorAll("#sidebar_content > div:first-of-type h4").length < 2) {
             return
@@ -5887,7 +6074,7 @@ function addDeleteButton() {
 }
 
 function setupDeletor(path) {
-    if (!path.startsWith("/node/") && !path.startsWith("/relation/")) return
+    if (!path.startsWith("/node/") && /*!path.startsWith("/way/") &&*/ path.startsWith("/relation/")) return
     const timerId = setInterval(addDeleteButton, 100)
     setTimeout(() => {
         clearInterval(timerId)
@@ -6461,9 +6648,12 @@ async function setupNewContextMenuItems() {
 //<editor-fold desc="satellite switching">
 const OSMPrefix = "https://tile.openstreetmap.org/"
 let BaseLayerPrefix = OSMPrefix
+
 const ESRIPrefix = "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/"
+let ESRITemplate = ESRIPrefix + "{z}/{y}/{x}"
 const ESRIBetaPrefix = "https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/"
-let SatellitePrefix = ESRIPrefix
+let ESRIBetaTemplate = ESRIBetaPrefix + "{z}/{y}/{x}"
+
 const SAT_MODE = "🛰"
 const MAPNIK_MODE = "🗺️"
 let currentTilesMode = MAPNIK_MODE
@@ -6507,18 +6697,6 @@ function parseOSMGPSTileURL(url) {
     }
 }
 
-function parseESRITileURL(url) {
-    const match = url.match(new RegExp(`${SatellitePrefix}(\\d+)\\/(\\d+)\\/(\\d+)`))
-    if (!match) {
-        return false
-    }
-    return {
-        x: match[3],
-        y: match[2],
-        z: match[1],
-    }
-}
-
 function parseStravaTileURL(url) {
     const match = url.match(new RegExp(`${StravaPrefix}(\\d+)\\/(\\d+)\\/(\\d+)`))
     if (!match) {
@@ -6533,13 +6711,48 @@ function parseStravaTileURL(url) {
 
 let needStravaAuth = false
 
-async function bypassChromeCSPForImagesSrc(imgElem, url, isStrava = true) {
-    const res = await fetchBlobWithCache(url)
+const r2d = 180 / Math.PI
+
+function tile2lon(x, z) {
+    return (x / Math.pow(2, z)) * 360 - 180
+}
+
+function tile2lat(y, z) {
+    const n = Math.PI - (2 * Math.PI * y) / Math.pow(2, z)
+    return r2d * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)))
+}
+
+function tileToBBOX(tile) {
+    const e = tile2lon(tile[0] + 1, tile[2])
+    const w = tile2lon(tile[0], tile[2])
+    const s = tile2lat(tile[1] + 1, tile[2])
+    const n = tile2lat(tile[1], tile[2])
+    return [w, s, e, n]
+}
+
+function coord4326To3857(lon, lat) {
+    const X = 20037508.34
+    let long3857 = (lon * X) / 180
+    let lat3857 = parseFloat(lat) + 90
+    lat3857 = lat3857 * (Math.PI / 360)
+    lat3857 = Math.tan(lat3857)
+    lat3857 = Math.log(lat3857)
+    lat3857 = lat3857 / (Math.PI / 180)
+    lat3857 = (lat3857 * X) / 180
+    return [long3857, lat3857]
+}
+
+async function bypassCSPForImagesSrc(imgElem, url) {
+    const opt = {}
+    if (url.startsWith("https://tiles.openrailwaymap.org")) {
+        opt.headers = { Referer: "https://www.openrailwaymap.org/" }
+    }
+    const res = await fetchBlobWithCache(url, opt)
     if (res.status !== 200) {
         if (!GM_config.get("OverzoomForDataLayer")) {
             return
         }
-        if (isStrava && res.status === 403) {
+        if (res.status === 403 && url.includes("strava")) {
             if (!needStravaAuth) {
                 needStravaAuth = true
                 alert("Need login in Strava for access to heatmap")
@@ -6571,12 +6784,16 @@ async function bypassChromeCSPForImagesSrc(imgElem, url, isStrava = true) {
     })
     if (currentTilesMode === SAT_MODE || currentOverlayModeIsStrava) {
         imgElem.src = satTile
-        imgElem.setAttribute("real-url", url)
+        imgElem.setAttribute("custom-tile-url", url)
     }
 }
 
-let blankSuffix = ""
 let lastEsriZoom = 0
+let lastEsriDate = ""
+
+function updateShotEsriDateNeeded() {
+    return lastEsriZoom !== parseInt(getCurrentXYZ()[2]) && customLayerUrl === ESRITemplate
+}
 
 function addEsriDate() {
     console.debug("Updating imagery date")
@@ -6588,7 +6805,7 @@ function addEsriDate() {
         url: `https://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/4/query?returnGeometry=false&geometry='${centerPoint}'&inSR=4326&geometryType=esriGeometryPoint&outFields=*&f=json`,
         responseType: "json",
     }).then(res => {
-        if (currentTilesMode !== SAT_MODE || SatellitePrefix !== ESRIPrefix) {
+        if (currentTilesMode !== SAT_MODE || customLayerUrl !== ESRITemplate) {
             return
         }
         console.debug(res.response)
@@ -6597,39 +6814,24 @@ function addEsriDate() {
         if (result && result.SRC_DATE2) {
             const date = new Date(result.SRC_DATE2)
             const strDate = `${date.getUTCFullYear()}-${(date.getUTCMonth() + 1).toString().padStart(2, "0")}-${date.getUTCDate().toString().padStart(2, "0")}`
+            lastEsriDate = strDate
             getMap()?.attributionControl?.setPrefix(strDate + " ESRI")
+        } else if (result && !result.SRC_DATE2) {
+            lastEsriDate = ""
+            getMap()?.attributionControl?.setPrefix("ESRI")
         }
     })
 }
 
 function addEsriPrefix() {
-    if (SatellitePrefix === ESRIBetaPrefix) {
-        getMap()?.attributionControl?.setPrefix("ESRI Beta")
+    if (customLayerUrl === ESRIBetaTemplate) {
+        getMap()?.attributionControl?.setPrefix("ESRI beta")
     } else {
         getMap()?.attributionControl?.setPrefix("ESRI")
     }
-    if (SatellitePrefix === ESRIPrefix && isDebug()) {
+    if (customLayerUrl === ESRITemplate) {
         addEsriDate()
     }
-}
-
-function switchESRIbeta() {
-    const NewSatellitePrefix = SatellitePrefix === ESRIPrefix ? ESRIBetaPrefix : ESRIPrefix
-    document.querySelectorAll(".leaflet-tile").forEach(i => {
-        if (i.nodeName !== "IMG") {
-            return
-        }
-        const xyz = parseESRITileURL(!needBypassSatellite ? i.src : i.getAttribute("real-url") ?? "")
-        if (!xyz) return
-        const newUrl = NewSatellitePrefix + xyz.z + "/" + xyz.y + "/" + xyz.x + blankSuffix
-        if (!needBypassSatellite) {
-            i.src = newUrl
-        } else {
-            bypassChromeCSPForImagesSrc(i, newUrl)
-        }
-    })
-    SatellitePrefix = NewSatellitePrefix
-    addEsriPrefix()
 }
 
 const needBypassSatellite = !isFirefox || GM_info.scriptHandler === "Violentmonkey"
@@ -6644,8 +6846,8 @@ function tileErrorHandler(e, url = null) {
         }
         let tileURL = e?.currentTarget?.src?.match(/(tile|org)\/([0-9]+)/)
         if (!tileURL) {
-            tileURL = e.currentTarget.getAttribute("real-url").match(/(tile|org)\/([0-9]+)/)
-            console.log(e.currentTarget.getAttribute("real-url"))
+            tileURL = e.currentTarget.getAttribute("custom-tile-url").match(/(tile|org)\/([0-9]+)/)
+            console.log(e.currentTarget.getAttribute("custom-tile-url"))
         }
         const zoomStr = tileURL[2]
         if (zoomStr) {
@@ -6656,8 +6858,14 @@ function tileErrorHandler(e, url = null) {
     }
 }
 
-function makeSatelliteURL(x, y, z) {
-    return SatellitePrefix + z + "/" + y + "/" + x + blankSuffix
+function makeCustomTileUrl(template, xyz) {
+    if (!customLayerUrlIsWms) {
+        return template.replaceAll("{x}", xyz.x).replaceAll("{y}", xyz.y).replaceAll("{z}", xyz.z)
+    }
+    const bbox = tileToBBOX([parseInt(xyz.x), parseInt(xyz.y), parseInt(xyz.z)])
+    const a = coord4326To3857(bbox[0], bbox[1])
+    const b = coord4326To3857(bbox[2], bbox[3])
+    return template.replaceAll("{bbox-epsg-3857}", [...a, ...b].join(","))
 }
 
 const retina = window.retina || window.devicePixelRatio > 1
@@ -6678,87 +6886,555 @@ function makeOSMGPSURL(x, y, z) {
     return OSMGPSPrefix + z + "/" + x + "/" + y + ".png"
 }
 
-let vectorLayerOverlayUrl = null
-let lastVectorLayerOverlayUrl = null
+/** @type {string|null} */
+let customLayerUrl = null
+/** @type {boolean} */
+let customLayerUrlIsWms = false
+let lastCustomLayerUrl = null
+let customLayerUrlOrigin = null
+GM.getValue("lastCustomLayerUrl").then(res => (lastCustomLayerUrl = res))
 
-GM.getValue("lastVectorLayerOverlayUrl").then(res => (lastVectorLayerOverlayUrl = res))
+let lastVectorLayerStyleUrl = null
+let vectorLayerStyleUrlOrigin = null
+GM.getValue("lastVectorLayerStyleUrl").then(res => (lastVectorLayerStyleUrl = res))
 
-function vectorSwitch() {
-    const enabledLayers = new URLSearchParams(location.hash).get("layers")
-    if (!enabledLayers.includes("S") && !enabledLayers.includes("V") && !document.querySelector("#map canvas")) {
-        return
-    }
-    let vectorMap
+function findVectorMap() {
     for (const i of getWindow().mapGL) {
         if (i && i.getMaplibreMap?.()) {
-            vectorMap = i.getMaplibreMap()
-            break
+            return i.getMaplibreMap()
         }
-    }
-    if (!vectorMap) {
-        return
-    }
-    if (currentTilesMode === SAT_MODE) {
-        // vectorMap.addSource("satellite", {
-        //     type: "raster",
-        //     tiles: [`${SatellitePrefix}{z}/{y}/{x}`],
-        //     tileSize: 256,
-        //     attribution: "Esri",
-        // })
-        // vectorMap.addSource("satellite", {
-        //     type: "raster",
-        //     tiles: [`https://geoscribble.osmz.ru/wms?FORMAT=image/png&TRANSPARENT=TRUE&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&LAYERS=scribbles&STYLES=&SRS=EPSG:3857&WIDTH=512&HEIGHT=512&BBOX={bbox-epsg-3857}`],
-        //     tileSize: 512,
-        //     attribution: "geoscribble",
-        // })
-        // vectorMap.addSource("satellite", {
-        //     type: "raster",
-        //     tiles: [
-        //         `https://geoportal.dgu.hr/services/inspire/orthophoto_2021_2022/ows?FORMAT=image/png&TRANSPARENT=TRUE&VERSION=1.3.0&SERVICE=WMS&REQUEST=GetMap&LAYERS=OI.OrthoimageCoverage&STYLES=&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}`,
-        //     ],
-        //     tileSize: 256,
-        //     attribution: "geoportal.dgu.hr",
-        // })
-        if (vectorLayerOverlayUrl === null) {
-            vectorLayerOverlayUrl = prompt(
-                `Enter tile URL template for maplibre.js. Examples:
-
-https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}
-                
-https://geoportal.dgu.hr/services/inspire/orthophoto_2021_2022/ows?FORMAT=image/png&TRANSPARENT=TRUE&VERSION=1.3.0&SERVICE=WMS&REQUEST=GetMap&LAYERS=OI.OrthoimageCoverage&STYLES=&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}
-`,
-                lastVectorLayerOverlayUrl ?? "",
-            )
-            if (vectorLayerOverlayUrl) {
-                lastVectorLayerOverlayUrl = vectorLayerOverlayUrl
-                void GM.setValue("lastVectorLayerOverlayUrl", lastVectorLayerOverlayUrl)
-                getWindow().customLayer = new URL(vectorLayerOverlayUrl).origin
-            }
-        }
-        vectorMap.addSource("satellite", {
-            type: "raster",
-            tiles: [vectorLayerOverlayUrl],
-            tileSize: 256,
-            attribution: "geoportal.dgu.hr",
-        })
-        vectorMap.addLayer({
-            id: "satellite-layer",
-            type: "raster",
-            source: "satellite",
-        })
-    } else {
-        vectorMap.removeLayer("satellite-layer")
-        vectorMap.removeSource("satellite")
     }
 }
 
-function switchTiles() {
-    if (tilesObserver) {
-        tilesObserver?.disconnect()
+async function applyCustomVectorMapStyle(styleUrl, updateUrlInStorage = false) {
+    if (updateUrlInStorage) {
+        void GM.setValue("lastVectorLayerStyleUrl", (lastVectorLayerStyleUrl = styleUrl))
     }
-    currentTilesMode = invertTilesMode(currentTilesMode)
+    getWindow().customVectorStyleLayerOrigin = vectorLayerStyleUrlOrigin = new URL(styleUrl).origin
+    initCustomFetch()
+    findVectorMap().setStyle(styleUrl)
+}
+
+function applyCustomLayer(layerUrl, updateUrlInStorage = false) {
+    customLayerUrl = layerUrl
+    customLayerUrlIsWms = customLayerUrl.includes("{bbox-epsg-3857}")
+    if (updateUrlInStorage) {
+        void GM.setValue("lastCustomLayerUrl", (lastCustomLayerUrl = customLayerUrl))
+    }
+    getWindow().customLayerOrigin = customLayerUrlOrigin = new URL(customLayerUrl).origin
+}
+
+/**
+ * @return {string}
+ */
+function getCurrentLayers() {
+    return `; ${document.cookie}`.split(`; _osm_location=`).pop().split(";").shift().split("|").at(-1)
+}
+
+function vectorLayerEnabled() {
+    const layers = getCurrentLayers()
+    return layers.includes("S") || layers.includes("V")
+}
+
+// const localMapStylesURL = "http://localhost:7777/misc/assets/vector-map-styles.json"
+const githubMapStylesURL = `https://raw.githubusercontent.com/deevroman/better-osm-org/refs/heads/dev/misc/assets/vector-map-styles.json?bypasscache=${Math.random()}`
+
+const mapStylesDatabase = resourceCacher(githubMapStylesURL, "custom-vector-map-styles", "vector map styles list", 6 * 60 * 60 * 1000, "json")
+
+async function askCustomStyleUrl() {
+    if (!initCustomFetch) {
+        alert("Try reload page page without cache Ctrl + F5.\nOr use Firefox with ViolentMonkey ;-)")
+        return
+    }
+    if (document.querySelector(".vector-tiles-selector-popup")) {
+        document.querySelector(".vector-tiles-selector-popup").remove()
+        return
+    }
+    await mapStylesDatabase.init()
+    const options = mapStylesDatabase.get()?.styles ?? [
+        { label: "SomeoneElse's vector map style", value: "https://map.atownsend.org.uk/vector/style_svwd03.json", about: "https://github.com/SomeoneElseOSM/SomeoneElse-vector-web-display" },
+        {
+            label: "StreetComplete map style",
+            value: "https://raw.githubusercontent.com/streetcomplete/maplibre-streetcomplete-style/refs/heads/master/demo/streetcomplete.json",
+            about: "https://github.com/streetcomplete/maplibre-streetcomplete-style",
+        },
+        { label: "OpenFreeMap Positron", value: "https://tiles.openfreemap.org/styles/positron" },
+        { label: "VersaTiles Colorful (Shortbread)", value: "https://vector.openstreetmap.org/styles/shortbread/colorful.json", about: "https://github.com/versatiles-org/versatiles-style" },
+        { label: "VersaTiles Shadow", value: "https://vector.openstreetmap.org/styles/shortbread/shadow.json", about: "https://github.com/versatiles-org/versatiles-style" },
+        { label: "VersaTiles Graybeard", value: "https://vector.openstreetmap.org/styles/shortbread/graybeard.json", about: "https://github.com/versatiles-org/versatiles-style" },
+    ]
+    const popup = document.createElement("div")
+    popup.classList.add("vector-tiles-selector-popup")
+    const radioContainer = document.createElement("div")
+
+    injectCSSIntoOSMPage(`
+    .vector-tiles-selector-popup {
+        position: relative;
+        width: fit-content;
+        background: var(--bs-body-bg);
+        border: 1px solid rgba(204,204,204,0.5);
+        padding: 12px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,.2);
+        font-family: sans-serif;
+        z-index: 9999;
+    }
+    .vector-tiles-selector-popup label:hover {
+        background: light-dark("gray", "gray");
+    }
+`)
+
+    const h = document.createElement("h3")
+    h.style.display = "flex"
+    h.style.gap = "25px"
+    h.style.marginLeft = "auto"
+    h.textContent = "Setup custom style.json for MapLibre.js"
+    popup.appendChild(h)
+
+    const closeBtn = document.createElement("button")
+    closeBtn.classList.add("better-btn-close")
+    closeBtn.style.all = "unset"
+    closeBtn.style.cursor = "pointer"
+    closeBtn.innerHTML =
+        '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">' +
+        '  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>' +
+        "</svg>"
+    closeBtn.querySelector("svg").style.height = "1.5rem"
+    closeBtn.onclick = () => popup.remove()
+    h.append(closeBtn)
+
+    popup.appendChild(radioContainer)
+
+    const radiosName = `vector-styles-url`
+
+    function makeWrapper() {
+        const wrapper = document.createElement("label")
+        wrapper.style.display = "flex"
+        wrapper.style.paddingTop = "2px"
+        wrapper.style.paddingBottom = "2px"
+        wrapper.style.margin = "2px"
+        wrapper.style.gap = "4px"
+        return wrapper
+    }
+
+    function addRadio({ label, value, about }) {
+        const wrapper = makeWrapper()
+
+        const input = document.createElement("input")
+        input.type = "radio"
+        input.name = radiosName
+        wrapper.title = input.value = value
+
+        input.addEventListener("change", async () => {
+            if (input.checked) {
+                await applyCustomVectorMapStyle(value)
+                getMap()?.attributionControl?.setPrefix(label)
+            }
+        })
+
+        const externalLink = document.createElement("a")
+        externalLink.title = "Open map style home page"
+        externalLink.setAttribute("href", about)
+        externalLink.setAttribute("target", "_blank")
+        externalLink.innerHTML = externalLinkSvg
+        externalLink.style.marginLeft = "auto"
+        externalLink.style.marginRight = "2px"
+        externalLink.style.color = "gray"
+        externalLink.tabIndex = -1
+
+        const labelSpan = document.createElement("span")
+        labelSpan.textContent = label
+        wrapper.append(input, labelSpan, externalLink)
+        radioContainer.appendChild(wrapper)
+    }
+
+    options.forEach(addRadio)
+    {
+        const wrapper = makeWrapper()
+
+        const input = document.createElement("input")
+        input.type = "radio"
+        input.name = radiosName
+        input.value = ""
+
+        wrapper.append(input)
+        const urlInput = document.createElement("input")
+        urlInput.type = "text"
+        urlInput.placeholder = "example: https://vector.openstreetmap.org/styles/shortbread/neutrino.json"
+        urlInput.style.width = "100%"
+        if (lastVectorLayerStyleUrl) {
+            urlInput.value = lastVectorLayerStyleUrl
+        }
+        wrapper.append(urlInput)
+
+        input.onchange = async () => {
+            if (input.checked && urlInput.value.trim() !== "") {
+                await applyCustomVectorMapStyle(urlInput.value, true)
+            }
+        }
+
+        urlInput.onkeydown = async e => {
+            if (e.key === "Enter" && urlInput.value.trim() !== "") {
+                input.click()
+                await applyCustomVectorMapStyle(urlInput.value, true)
+                getMap()?.attributionControl?.setPrefix("Custom map style from " + escapeHtml(new URL(urlInput.value).host))
+            }
+        }
+
+        radioContainer.appendChild(wrapper)
+    }
+
+    const note = document.createElement("span")
+    note.style.color = "gray"
+    note.innerHTML =
+        "You can <a target='_blank' href='https://github.com/deevroman/better-osm-org/issues/new'>suggest</a> other styles. One of styles <a target='_blank' href='https://github.com/pnorman/maplibre-styles'>collection</a>"
+    popup.appendChild(note)
+    document.body.appendChild(popup)
+    popup.querySelector('label:has([href^="https://github.com/versatiles-org/versatiles-style"])')?.querySelector("input")?.focus()
+}
+
+async function askCustomTileUrl() {
+    if (document.querySelector(".map-layers-selector-popup")) {
+        document.querySelector(".map-layers-selector-popup").remove()
+        return
+    }
+    const options = [
+        {
+            label: "ESRI",
+            value: "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?blankTile=false",
+            about: "https://osm.wiki/Esri",
+        },
+        {
+            label: "ESRI beta (slow layer)",
+            value: "https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}?blankTile=false",
+            about: "https://osm.wiki/Esri",
+        },
+        {
+            label: "ESRI Wayback 2014",
+            value: "https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/10/{z}/{y}/{x}?blankTile=false",
+            about: "https://osm.wiki/Esri",
+        },
+        {
+            label: "OpenAerialMap Mosaic, by Kontur.io",
+            value: "https://apps.kontur.io/raster-tiler/oam/mosaic/{z}/{x}/{y}.png",
+            about: "https://www.kontur.io/solutions/global-orthomosaic-layer/",
+        },
+        // {
+        //     label: "GeoScribbles",
+        //     value: "https://geoscribble.osmz.ru/wms?FORMAT=image/png&TRANSPARENT=TRUE&VERSION=1.1.1&SERVICE=WMS&REQUEST=GetMap&LAYERS=scribbles&STYLES=&SRS=EPSG:3857&WIDTH=512&HEIGHT=512&BBOX={bbox-epsg-3857}",
+        //     about: "https://osm.wiki/GeoScribble",
+        //     forceVector: true,
+        // },
+        {
+            label: "OpenRailwayMap",
+            value: "https://tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png",
+            about: "https://www.openrailwaymap.org",
+            forceVector: true,
+        },
+        {
+            label: "Hrvatska GeoPortal",
+            value: "https://geoportal.dgu.hr/services/inspire/orthophoto_2021_2022/ows?FORMAT=image/png&TRANSPARENT=TRUE&VERSION=1.3.0&SERVICE=WMS&REQUEST=GetMap&LAYERS=OI.OrthoimageCoverage&STYLES=&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}",
+            about: "https://osm.wiki/GeoScribble",
+        },
+        // {
+        //     label: "OsmAnd HD tiles",
+        //     value: "https://tile.osmand.net/hd/{z}/{x}/{y}.png",
+        //     about: "https://osmand.net/map",
+        // },
+    ]
+    const popup = document.createElement("div")
+    popup.classList.add("map-layers-selector-popup")
+    const radioContainer = document.createElement("div")
+
+    injectCSSIntoOSMPage(`
+    .map-layers-selector-popup {
+        position: relative;
+        width: fit-content;
+        background: var(--bs-body-bg);
+        border: 1px solid rgba(204,204,204,0.5);
+        padding: 12px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,.2);
+        font-family: sans-serif;
+        z-index: 9999;
+    }
+    .map-layers-selector-popup label:hover {
+        background: light-dark("gray", "gray");
+    }
+`)
+
+    const h = document.createElement("h3")
+    h.style.display = "flex"
+    h.style.gap = "25px"
+    h.style.marginLeft = "auto"
+    h.textContent = "Setup custom map layers"
+    popup.appendChild(h)
+
+    const closeBtn = document.createElement("button")
+    closeBtn.classList.add("better-btn-close")
+    closeBtn.style.all = "unset"
+    closeBtn.style.cursor = "pointer"
+    closeBtn.innerHTML =
+        '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">' +
+        '  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>' +
+        "</svg>"
+    closeBtn.querySelector("svg").style.height = "1.5rem"
+    closeBtn.onclick = () => popup.remove()
+    h.append(closeBtn)
+
+    popup.appendChild(radioContainer)
+
+    const radiosName = `map-layer-url`
+
+    function makeWrapper() {
+        const wrapper = document.createElement("label")
+        wrapper.style.display = "flex"
+        wrapper.style.paddingTop = "2px"
+        wrapper.style.paddingBottom = "2px"
+        wrapper.style.margin = "2px"
+        wrapper.style.gap = "4px"
+        return wrapper
+    }
+
+    function addRadio({ label, value, about, forceVector }) {
+        const wrapper = makeWrapper()
+
+        const input = document.createElement("input")
+        input.type = "radio"
+        input.name = radiosName
+        wrapper.title = input.value = value
+
+        async function onChange() {
+            if (input.checked) {
+                if (forceVector && !vectorLayerEnabled()) {
+                    nextVectorLayer()
+                    await sleep(100)
+                }
+                applyCustomLayer(input.value)
+                switchTiles(currentTilesMode === MAPNIK_MODE)
+                getMap()?.attributionControl?.setPrefix(label)
+            }
+        }
+        input.addEventListener("change", onChange)
+        input.addEventListener("click", onChange)
+
+        const externalLink = document.createElement("a")
+        externalLink.title = "Open map layer home page"
+        externalLink.setAttribute("href", about)
+        externalLink.innerHTML = externalLinkSvg
+        externalLink.style.marginLeft = "auto"
+        externalLink.style.marginRight = "2px"
+        externalLink.style.color = "gray"
+        externalLink.tabIndex = -1
+
+        const labelSpan = document.createElement("span")
+        labelSpan.textContent = label
+        wrapper.append(input, labelSpan, externalLink)
+        radioContainer.appendChild(wrapper)
+    }
+
+    options.forEach(addRadio)
+    {
+        const wrapper = makeWrapper()
+
+        const input = document.createElement("input")
+        input.type = "radio"
+        input.name = radiosName
+        input.value = ""
+
+        wrapper.append(input)
+        const urlInput = document.createElement("input")
+        urlInput.type = "text"
+        urlInput.placeholder = "example: https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        urlInput.style.width = "100%"
+        if (lastCustomLayerUrl) {
+            urlInput.value = lastCustomLayerUrl
+        }
+        wrapper.append(urlInput)
+
+        input.onchange = async () => {
+            if (input.checked && urlInput.value.trim() !== "") {
+                applyCustomLayer(urlInput.value, true)
+                switchTiles(currentTilesMode === MAPNIK_MODE)
+            }
+        }
+
+        urlInput.onkeydown = async e => {
+            if (e.key === "Enter" && urlInput.value.trim() !== "") {
+                input.click()
+                applyCustomLayer(urlInput.value, true)
+                switchTiles(currentTilesMode === MAPNIK_MODE)
+                getMap()?.attributionControl?.setPrefix("Custom map style from " + escapeHtml(new URL(urlInput.value).host))
+            }
+        }
+
+        radioContainer.appendChild(wrapper)
+    }
+
+    const note = document.createElement("span")
+    note.style.color = "gray"
+    note.innerHTML =
+        "You can <a target='_blank' href='https://github.com/deevroman/better-osm-org/issues/new'>suggest</a> other layer. " + "One of <a href='https://github.com/osmlab/editor-layer-index'>layers collection</a>"
+    popup.appendChild(note)
+    document.body.appendChild(popup)
+    popup.querySelector('label:has([href^="https://osm.wiki/Esri"])')?.querySelector("input")?.focus()
+}
+
+function vectorSwitch() {
+    if (!vectorLayerEnabled()) {
+        return
+    }
+    const vectorMap = findVectorMap()
+    function addLayer() {
+        vectorMap.addSource(
+            "satellite",
+            intoPage({
+                type: "raster",
+                tiles: [customLayerUrl],
+                tileSize: 256,
+                attribution: "",
+            }),
+        )
+        vectorMap.addLayer(
+            intoPage({
+                id: "satellite-layer",
+                type: "raster",
+                source: "satellite",
+            }),
+        )
+    }
+    function removeLayer() {
+        try {
+            vectorMap.removeLayer("satellite-layer")
+            vectorMap.removeSource("satellite")
+        } catch (e) {}
+    }
     if (currentTilesMode === SAT_MODE) {
-        addEsriPrefix()
+        try {
+            removeLayer()
+            addLayer()
+        } catch (e) {
+            console.error(e)
+            // dirty hack for wait styles downloading
+            setTimeout(addLayer, 1000)
+        }
+    } else {
+        removeLayer()
+    }
+}
+
+let moveAndZoomForEsriDateObserverEnabled = false
+
+function addEsriShotDateCollector() {
+    if (moveAndZoomForEsriDateObserverEnabled) {
+        return
+    }
+    moveAndZoomForEsriDateObserverEnabled = true
+    try {
+        getMap().on(
+            "moveend zoomend",
+            intoPageWithFun(function () {
+                if (customLayerUrl.includes(ESRIPrefix) && updateShotEsriDateNeeded()) {
+                    addEsriDate()
+                }
+            }),
+        )
+    } catch (e) {
+        console.error(e)
+    }
+}
+
+function xyzFromTileElem(elem) {
+    if (elem.hasAttribute("x")) {
+        return {
+            x: elem.getAttribute("x"),
+            y: elem.getAttribute("y"),
+            z: elem.getAttribute("z"),
+        }
+    }
+}
+
+function replaceToSatTile(imgElem, xyz) {
+    const newUrl = makeCustomTileUrl(customLayerUrl, xyz)
+    if (imgElem.getAttribute("custom-tile-url") === newUrl) {
+        return
+    }
+    // unsafeWindow.L.DomEvent.off(i, "error") // todo добавить перехватчик 404
+    try {
+        imgElem.onerror = tileErrorHandler
+    } catch {
+        /* empty */
+    }
+    imgElem.setAttribute("custom-tile-url", newUrl)
+    if (!needBypassSatellite && !customLayerUrlIsWms) {
+        imgElem.src = newUrl
+    } else {
+        bypassCSPForImagesSrc(imgElem, newUrl)
+    }
+    if (imgElem.complete && !needBypassSatellite) {
+        imgElem.classList.add("no-invert")
+    } else {
+        imgElem.addEventListener(
+            "load",
+            e => {
+                e.target.classList.add("no-invert")
+            },
+            { once: true },
+        )
+    }
+}
+
+function replaceToBaseTile(imgElem, xyz) {
+    const newUrl = makeBaseLayerURL(xyz.x, xyz.y, xyz.z)
+    if (!imgElem.getAttribute("custom-tile-url")) {
+        return
+    }
+    imgElem.removeAttribute("custom-tile-url")
+    imgElem.src = newUrl
+    if (imgElem.complete) {
+        imgElem.classList.remove("no-invert")
+    } else {
+        imgElem.addEventListener(
+            "load",
+            e => {
+                e.target.classList.remove("no-invert")
+            },
+            { once: true },
+        )
+    }
+}
+
+function addXyzToTile(imgElem) {
+    const xyz = parseOSMTileURL(imgElem.src)
+    if (!xyz) {
+        return
+    }
+    imgElem.setAttribute("x", xyz.x)
+    imgElem.setAttribute("y", xyz.y)
+    imgElem.setAttribute("z", xyz.z)
+}
+
+function replaceTileSrc(imgElem) {
+    if (!imgElem.hasAttribute("x")) {
+        addXyzToTile(imgElem)
+    }
+    const xyz = xyzFromTileElem(imgElem)
+    if (!xyz) {
+        return
+    }
+    if (currentTilesMode === SAT_MODE) {
+        replaceToSatTile(imgElem, xyz)
+    } else {
+        replaceToBaseTile(imgElem, xyz)
+    }
+}
+
+function rasterSwitch() {
+    if (currentTilesMode === SAT_MODE) {
+        if (!customLayerUrl) {
+            applyCustomLayer(ESRITemplate)
+            addEsriPrefix()
+        }
     } else {
         getMap()?.attributionControl?.setPrefix("")
     }
@@ -6766,51 +7442,7 @@ function switchTiles() {
         if (i.nodeName !== "IMG") {
             return
         }
-        if (currentTilesMode === SAT_MODE) {
-            const xyz = parseOSMTileURL(i.src)
-            if (!xyz) return
-            // unsafeWindow.L.DomEvent.off(i, "error") // todo добавить перехватчик 404
-            try {
-                i.onerror = tileErrorHandler
-            } catch {
-                /* empty */
-            }
-            const newUrl = makeSatelliteURL(xyz.x, xyz.y, xyz.z)
-            if (!needBypassSatellite) {
-                i.src = newUrl
-            } else {
-                i.setAttribute("real-url", newUrl)
-            }
-            if (needBypassSatellite) {
-                bypassChromeCSPForImagesSrc(i, newUrl)
-            }
-            if (i.complete && !needBypassSatellite) {
-                i.classList.add("no-invert")
-            } else {
-                i.addEventListener(
-                    "load",
-                    e => {
-                        e.target.classList.add("no-invert")
-                    },
-                    { once: true },
-                )
-            }
-        } else {
-            const xyz = parseESRITileURL(!needBypassSatellite ? i.src : i.getAttribute("real-url") ?? "")
-            if (!xyz) return
-            i.src = makeBaseLayerURL(xyz.x, xyz.y, xyz.z)
-            if (i.complete) {
-                i.classList.remove("no-invert")
-            } else {
-                i.addEventListener(
-                    "load",
-                    e => {
-                        e.target.classList.remove("no-invert")
-                    },
-                    { once: true },
-                )
-            }
-        }
+        replaceTileSrc(i)
     })
     const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
@@ -6818,63 +7450,37 @@ function switchTiles() {
                 if (node.nodeName !== "IMG") {
                     return
                 }
+                replaceTileSrc(node)
                 if (currentTilesMode === SAT_MODE) {
-                    const xyz = parseOSMTileURL(node.src)
-                    if (!xyz) return
-                    // unsafeWindow.L.DomEvent.off(node, "error")
-                    try {
-                        node.onerror = tileErrorHandler
-                    } catch {
-                        /* empty */
-                    }
-                    const newURL = makeSatelliteURL(xyz.x, xyz.y, xyz.z)
-                    if (!needBypassSatellite) {
-                        node.src = newURL
-                    } else {
-                        node.src = "/dev/null"
-                    }
-                    node.setAttribute("real-url", newURL)
-                    if (needBypassSatellite) {
-                        bypassChromeCSPForImagesSrc(node, newURL)
-                    }
-                    if (node.complete) {
-                        node.classList.add("no-invert")
-                    } else {
-                        node.addEventListener(
-                            "load",
-                            e => {
-                                e.target.classList.add("no-invert")
-                            },
-                            { once: true },
-                        )
-                    }
                     setTimeout(() => {
-                        if (lastEsriZoom !== parseInt(getCurrentXYZ()[2]) && SatellitePrefix === ESRIPrefix && isDebug()) {
+                        if (updateShotEsriDateNeeded()) {
                             addEsriDate()
                         }
                     })
-                } else {
-                    const xyz = parseESRITileURL(!needBypassSatellite ? node.src : node.getAttribute("real-url"))
-                    if (!xyz) return
-                    node.src = makeBaseLayerURL(xyz.x, xyz.y, xyz.z)
-                    if (node.complete) {
-                        node.classList.remove("no-invert")
-                    } else {
-                        node.addEventListener(
-                            "load",
-                            e => {
-                                e.target.classList.remove("no-invert")
-                            },
-                            { once: true },
-                        )
-                    }
                 }
             })
         })
     })
     tilesObserver = observer
     observer.observe(document.body, { childList: true, subtree: true })
+}
+
+function switchTiles(invertMode = true) {
+    if (tilesObserver) {
+        tilesObserver?.disconnect()
+    }
+    addEsriShotDateCollector()
+    if (invertMode) {
+        currentTilesMode = invertTilesMode(currentTilesMode)
+    }
+    rasterSwitch()
     vectorSwitch()
+}
+
+function switchTilesAndButtons() {
+    switchTiles()
+    document.querySelectorAll(".turn-on-satellite").forEach(btn => (btn.textContent = invertTilesMode(currentTilesMode)))
+    document.querySelectorAll(".turn-on-satellite-from-pane").forEach(btn => (btn.textContent = invertTilesMode(currentTilesMode)))
 }
 
 let osmTilesObserver = undefined
@@ -6968,8 +7574,8 @@ function switchOverlayTiles() {
                 /* empty */
             }
             const newUrl = makeStravaURL(xyz.x, xyz.y, xyz.z)
-            i.setAttribute("real-url", newUrl)
-            bypassChromeCSPForImagesSrc(i, newUrl, true)
+            i.setAttribute("custom-tile-url", newUrl)
+            bypassCSPForImagesSrc(i, newUrl)
             if (i.complete) {
                 i.classList.add("no-invert")
             } else {
@@ -6982,7 +7588,7 @@ function switchOverlayTiles() {
                 )
             }
         } else {
-            const xyz = parseStravaTileURL(i.getAttribute("real-url") ?? "")
+            const xyz = parseStravaTileURL(i.getAttribute("custom-tile-url") ?? "")
             if (!xyz) return
             i.src = makeOSMGPSURL(xyz.x, xyz.y, xyz.z)
             if (i.complete) {
@@ -7015,8 +7621,8 @@ function switchOverlayTiles() {
                     }
                     const newURL = makeStravaURL(xyz.x, xyz.y, xyz.z)
                     node.src = "/dev/null"
-                    node.setAttribute("real-url", newURL)
-                    bypassChromeCSPForImagesSrc(node, newURL, true)
+                    node.setAttribute("custom-tile-url", newURL)
+                    bypassCSPForImagesSrc(node, newURL)
                     if (node.complete) {
                         node.classList.add("no-invert")
                     } else {
@@ -7029,7 +7635,7 @@ function switchOverlayTiles() {
                         )
                     }
                 } else {
-                    const xyz = parseStravaTileURL(node.getAttribute("real-url"))
+                    const xyz = parseStravaTileURL(node.getAttribute("custom-tile-url"))
                     if (!xyz) return
                     node.src = makeOSMGPSURL(xyz.x, xyz.y, xyz.z)
                     if (node.complete) {
@@ -7052,50 +7658,15 @@ function switchOverlayTiles() {
 }
 
 if (isOsmServer() && new URLSearchParams(location.search).has("sat-tiles")) {
-    switchTiles()
-    if (document.querySelector(".turn-on-satellite")) {
-        document.querySelector(".turn-on-satellite").textContent = invertTilesMode(currentTilesMode)
-    }
-    if (document.querySelector(".turn-on-satellite-from-pane")) {
-        document.querySelector(".turn-on-satellite-from-pane").textContent = invertTilesMode(currentTilesMode)
-    }
+    switchTilesAndButtons()
 }
 
-function addSatelliteLayers() {
-    const btnOnPane = document.createElement("span")
-    const btnOnNotePage = document.createElement("span")
-    if (!document.querySelector(".turn-on-satellite-from-pane")) {
-        const mapnikBtn = document.querySelector(".layers-ui label span")
-        if (mapnikBtn) {
-            if (!tilesObserver) {
-                btnOnPane.textContent = "🛰"
-            } else {
-                btnOnPane.textContent = invertTilesMode(currentTilesMode)
-            }
-            btnOnPane.style.cursor = "pointer"
-            btnOnPane.classList.add("turn-on-satellite-from-pane")
-            btnOnPane.title = "Switch between map and satellite images (S key)\nPress (Shift+S) for ESRI beta"
-            mapnikBtn.appendChild(document.createTextNode("\xA0"))
-            mapnikBtn.appendChild(btnOnPane)
-
-            btnOnPane.onclick = e => {
-                e.stopImmediatePropagation()
-                enableOverzoom()
-                if (e.shiftKey) {
-                    switchESRIbeta()
-                    return
-                }
-                switchTiles()
-                btnOnNotePage.textContent = invertTilesMode(currentTilesMode)
-                btnOnPane.textContent = invertTilesMode(currentTilesMode)
-            }
-        }
-    }
-    if (!location.pathname.includes("/note")) return
+function addSwitchTilesBtnOnNotePage() {
     if (document.querySelector(".turn-on-satellite")) return true
     if (!document.querySelector("#sidebar_content h4")) {
         return
     }
+    const btnOnNotePage = document.createElement("span")
     if (!tilesObserver) {
         btnOnNotePage.textContent = "🛰"
     } else {
@@ -7110,9 +7681,96 @@ function addSatelliteLayers() {
 
     btnOnNotePage.onclick = () => {
         enableOverzoom()
-        switchTiles()
-        btnOnNotePage.textContent = invertTilesMode(currentTilesMode)
+        switchTilesAndButtons()
+    }
+    btnOnNotePage.oncontextmenu = async e => {
+        e.preventDefault()
+        enableOverzoom()
+        await askCustomTileUrl()
+    }
+}
+
+function createSwitchTilesBtn() {
+    const btnOnPane = document.createElement("span")
+    if (!tilesObserver) {
+        btnOnPane.textContent = "🛰"
+    } else {
         btnOnPane.textContent = invertTilesMode(currentTilesMode)
+    }
+    btnOnPane.style.cursor = "pointer"
+    btnOnPane.classList.add("turn-on-satellite-from-pane")
+    btnOnPane.title = "Switch between map and satellite images (S key)\nPress Shift+S or click with Shift for set custom imagery\nOn mobile use long tap"
+    btnOnPane.onclick = async e => {
+        e.stopImmediatePropagation()
+        enableOverzoom()
+        if (e.shiftKey) {
+            await askCustomTileUrl()
+            return
+        }
+        switchTilesAndButtons()
+    }
+    btnOnPane.oncontextmenu = async e => {
+        e.preventDefault()
+        e.stopImmediatePropagation()
+        enableOverzoom()
+        await askCustomTileUrl()
+    }
+    return btnOnPane
+}
+
+function createCustomLayerBtn() {
+    const btn = document.createElement("span")
+    btn.classList.add("set-custom-layer-btn")
+    btn.textContent = " ⚙️"
+    btn.style.cursor = "pointer"
+    btn.title = "Set custom layer (Shift + S)\nbetter-osm-org feature"
+    btn.onclick = async () => {
+        enableOverzoom()
+        await askCustomTileUrl()
+    }
+    return btn
+}
+
+function addSwitchTilesButtonsOnPane() {
+    if (document.querySelector(".turn-on-satellite-from-pane")) {
+        return
+    }
+    const layers = Array.from(document.querySelectorAll(".layers-ui .base-layers label span"))
+    const mapnikBtn = layers[0]
+    if (mapnikBtn) {
+        const btnOnPane = createSwitchTilesBtn()
+        mapnikBtn.appendChild(document.createTextNode("\xA0"))
+        mapnikBtn.appendChild(btnOnPane)
+    }
+    const h2 = document.querySelector(".layers-ui h2")
+    if (h2 && !document.querySelector(".set-custom-layer-btn")) {
+        h2.appendChild(createCustomLayerBtn())
+    }
+    const omtBtn = layers.at(-1)
+    if (omtBtn) {
+        const btnOnPane = document.createElement("span")
+        btnOnPane.style.cursor = "pointer"
+        btnOnPane.textContent = "🎨"
+        btnOnPane.title = "Set custom vector style (Shift + V)"
+        btnOnPane.onmouseover = async () => {
+            await mapStylesDatabase.init()
+        }
+        btnOnPane.onclick = async e => {
+            await askCustomStyleUrl()
+        }
+        btnOnPane.oncontextmenu = async e => {
+            e.preventDefault()
+            await askCustomStyleUrl()
+        }
+        omtBtn.appendChild(document.createTextNode("\xA0"))
+        omtBtn.appendChild(btnOnPane)
+    }
+}
+
+function addSatelliteLayers() {
+    addSwitchTilesButtonsOnPane()
+    if (location.pathname.includes("/note")) {
+        addSwitchTilesBtnOnNotePage()
     }
 }
 
@@ -7458,7 +8116,7 @@ function makeLinksInVersionTagsClickable() {
             }
         } else if (key === "wikimedia_commons") {
             makeWikimediaCommonsValue(valueCell)
-        } else if (key === "direction" || key === "camera:direction") {
+        } else if (key === "direction" || key === "camera:direction" || key === "light:direction") {
             const coords = row.parentElement.parentElement.parentElement.parentElement.querySelector("span.latitude")
             if (coords) {
                 const lat = coords.textContent.replace(",", ".")
@@ -7488,7 +8146,7 @@ function makeLinksInVersionTagsClickable() {
                 }
             }
         } else if (["building", "building:part"].includes(key) || (key === "type" && valueCell.textContent === "building")) {
-            if (document.querySelector(".view-3d-link")) {
+            if (location.pathname.includes("/history") || document.querySelector(".view-3d-link")) {
                 return
             }
             const m = location.pathname.match(/\/(way|relation)\/(\d+)/)
@@ -7833,7 +8491,7 @@ function setupNodeVersionView() {
             versionDiv.querySelectorAll(".browse-tag-list tr").forEach(row => {
                 const key = row.querySelector("th")?.textContent?.toLowerCase()
                 if (!key) return
-                if (key === "direction" || key === "camera:direction") {
+                if (key === "direction" || key === "camera:direction" || key === "light:direction") {
                     renderDirectionTag(parseFloat(lat), parseFloat(lon), row.querySelector("td").textContent, c("#ff00e3"))
                     row.onmouseenter = () => {
                         renderDirectionTag(parseFloat(lat), parseFloat(lon), row.querySelector("td").textContent, c("#ff00e3"))
@@ -8106,7 +8764,7 @@ async function loadWayVersionNodes(wayID, version, changesetID = null) {
         return [targetVersion, await loadNodesViaHistoryCalls(targetVersion.nodes)]
     }
     // todo batchSize должен быть динамический
-    // Максимальная длина урла 8213 символов.
+    // Максимальная длина урла (согласно вики) 8213 символов.
     // 400 взято с запасом, что для точки нужно 20 символов
     // пример точки: 123456789012v1234,
     const batchSize = 410
@@ -8141,7 +8799,10 @@ async function loadWayVersionNodes(wayID, version, changesetID = null) {
     }
 
     const queryArgs = [""]
-    const maxQueryArgLen = 8213 - (osm_server.apiBase.length + "nodes.json?nodes=".length)
+    // OSM Wiki говорит, что можно 8213 символов
+    // на практике можно 8219 символов
+    // Однако для OHM можно только 8210 символов
+    const maxQueryArgLen = 8210 - (osm_server.apiBase.length + "nodes.json?nodes=".length)
     for (const lastVersion of longHistoryNodes) {
         for (let v = 1; v < lastVersion.version; v++) {
             // todo не нужно загружать версию, которая в текущем пакете правок (если уже успели его загрузить)
@@ -8168,7 +8829,8 @@ async function loadWayVersionNodes(wayID, version, changesetID = null) {
     // console.groupCollapsed(`w${wayID}v${version}`)
     await Promise.all(
         queryArgs.map(async args => {
-            const res = await fetchRetry(osm_server.apiBase + "nodes.json?nodes=" + args, { signal: getAbortController().signal })
+            const url = osm_server.apiBase + "nodes.json?nodes=" + args
+            const res = await fetchRetry(url, { signal: getAbortController().signal })
             if (res.status === 404) {
                 console.log("%c Some nodes was hidden. Start slow fetching :(", "background: #222; color: #bada55")
                 const newArgs = args.split(",").map(i => parseInt(i.match(/(\d+)v(\d+)/)[1]))
@@ -8179,7 +8841,8 @@ async function loadWayVersionNodes(wayID, version, changesetID = null) {
                     versions.push(...i)
                 })
             } else if (res.status === 414) {
-                console.error("hmm, the maximum length of the URI is incorrectly calculated")
+                console.error("hmm, the maximum length of the URI is incorrectly calculated", url.length)
+                console.error("url:", url)
                 console.trace()
             } else {
                 if (!res.ok) {
@@ -8598,7 +9261,7 @@ async function replaceDownloadWayButton(btn, wayID) {
         interVersionDiv.onclick = e => {
             resetMapHover()
             cleanAllObjects()
-            showWay(cloneInto(currentNodes, unsafeWindow), "#000000", e.isTrusted, darkModeForMap && isDarkMode())
+            showWay(currentNodes, "#000000", e.isTrusted, darkModeForMap && isDarkMode())
             currentNodes.forEach(node => {
                 if (node.tags && Object.keys(node.tags).filter(k => k !== "created_by" && k !== "source").length > 0) {
                     showNodeMarker(node.lat.toString(), node.lon.toString(), "rgb(161,161,161)", null, "customObjects", 3)
@@ -8879,7 +9542,7 @@ function setupWayVersionView() {
         } else {
             if (needShowWay) {
                 cleanAllObjects()
-                showWay(cloneInto(nodesList, unsafeWindow), "#000000", needFly, darkModeForMap && isDarkMode())
+                showWay(nodesList, "#000000", needFly, darkModeForMap && isDarkMode())
                 nodesList.forEach(node => {
                     if (node.tags && Object.keys(node.tags).filter(k => k !== "created_by" && k !== "source").length > 0) {
                         showNodeMarker(node.lat.toString(), node.lon.toString(), "rgb(161,161,161)", null, "customObjects", 3)
@@ -9494,7 +10157,7 @@ async function replaceDownloadRelationButton(btn, relationID) {
             const uniq_key = `${member.type} ${member.ref}`
             currentMembers.push(objectStates[uniq_key])
             if (member.type === "way") {
-                currentWaysNodes[member.ref] = cloneInto(
+                currentWaysNodes[member.ref] = intoPage(
                     objectStates[uniq_key].nodes.map(n => {
                         const objectState = objectStates[`node ${n}`]
                         if (!objectState) {
@@ -9502,7 +10165,6 @@ async function replaceDownloadRelationButton(btn, relationID) {
                         }
                         return objectState
                     }),
-                    unsafeWindow,
                 )
             }
             if (currentChanges[uniq_key] !== undefined) return
@@ -10476,7 +11138,7 @@ function addCommentsCount() {
             document.querySelectorAll(".changeset_num_comments").forEach(i => i.style.setProperty("display", "none", "important"))
         }
         const sectionSelector = isVersionPage() ? "#sidebar_content > div:first-of-type" : "#sidebar_content #element_versions_list > div"
-        const links = document.querySelectorAll(`${sectionSelector} div:first-of-type a[href^="/changeset"]:not(.comments-loaded):not(.comments-link)`)
+        const links = document.querySelectorAll(`${sectionSelector} div a[href^="/changeset"]:not(.comments-loaded):not(.comments-link):not([rel])`)
         await loadChangesetMetadatas(
             Array.from(links).map(i => {
                 i.classList.add("comments-loaded")
@@ -11809,7 +12471,7 @@ async function initCorporateMappersList() {
         console.log("corporate mappers cached")
         const json = JSON.parse(cache)
         const cacheTime = new Date(json["cacheTime"])
-        const threeDaysLater = new Date(cacheTime.getTime() + 3 * 24 * 60 * 60 * 1000)
+        const threeDaysLater = new Date(cacheTime.getTime() + 2 * 24 * 60 * 60 * 1000)
         if (threeDaysLater < new Date()) {
             console.log("but cache outdated")
             setTimeout(loadAndMakeCorporateMappersList, 0)
@@ -12492,7 +13154,7 @@ async function processObject(i, objType, prevVersion, targetVersion, lastVersion
                         }
                     } else if (left.type === "way") {
                         const [, currentNodesList] = await getWayNodesByTimestamp(targetTimestamp, left.ref)
-                        showActiveWay(cloneInto(currentNodesList, unsafeWindow))
+                        showActiveWay(currentNodesList)
                         const version = searchVersionByTimestamp(await getWayHistory(left.ref), targetTimestamp)
                         tagTd.title = ""
                         for (let tagsKey in version.tags ?? {}) {
@@ -12514,7 +13176,7 @@ async function processObject(i, objType, prevVersion, targetVersion, lastVersion
                         panTo(version.lat.toString(), version.lon.toString())
                     } else if (left.type === "way") {
                         const [, currentNodesList] = await getWayNodesByTimestamp(targetTimestamp, left.ref)
-                        showActiveWay(cloneInto(currentNodesList, unsafeWindow), c("#ff00e3"), true)
+                        showActiveWay(currentNodesList, c("#ff00e3"), true)
                     }
                 }
             }
@@ -12533,7 +13195,7 @@ async function processObject(i, objType, prevVersion, targetVersion, lastVersion
                         }
                     } else if (right.type === "way") {
                         const [, currentNodesList] = await getWayNodesByTimestamp(targetTimestamp, right.ref)
-                        showActiveWay(cloneInto(currentNodesList, unsafeWindow))
+                        showActiveWay(currentNodesList)
                         const version = searchVersionByTimestamp(await getWayHistory(right.ref), targetTimestamp)
                         tagTd2.title = ""
                         for (let tagsKey in version.tags ?? {}) {
@@ -12554,7 +13216,7 @@ async function processObject(i, objType, prevVersion, targetVersion, lastVersion
                         panTo(version.lat.toString(), version.lon.toString())
                     } else if (right.type === "way") {
                         const [, currentNodesList] = await getWayNodesByTimestamp(targetTimestamp, right.ref)
-                        showActiveWay(cloneInto(currentNodesList, unsafeWindow), c("#ff00e3"), true)
+                        showActiveWay(currentNodesList, c("#ff00e3"), true)
                     }
                 }
             }
@@ -12841,7 +13503,6 @@ function maxDate(t1, t2) {
  * @param {NodeVersion[]|WayVersion[]|RelationVersion[]} objHistory
  */
 async function processObjectInteractions(changesetID, objType, objectsInComments, i, prevVersion, targetVersion, lastVersion, objHistory) {
-    let changesetMetadata = changesetMetadatas[targetVersion.changeset]
     if (!GM_config.get("ShowChangesetGeometry")) {
         i.parentElement.parentElement.classList.add("processed-object")
         return
@@ -12873,14 +13534,14 @@ async function processObjectInteractions(changesetID, objType, objectsInComments
             if (targetVersion.visible === false) {
                 if (prevVersion.visible !== false) {
                     showActiveNodeMarker(prevVersion.lat.toString(), prevVersion.lon.toString(), c("#0022ff"))
-                    const direction = prevVersion.tags?.["direction"] ?? prevVersion.tags?.["camera:direction"]
+                    const direction = prevVersion.tags?.["direction"] ?? prevVersion.tags?.["camera:direction"] ?? prevVersion.tags?.["light:direction"]
                     if (direction) {
                         renderDirectionTag(prevVersion.lat, prevVersion.lon, direction, c("#0022ff"))
                     }
                 }
             } else {
                 showActiveNodeMarker(targetVersion.lat.toString(), targetVersion.lon.toString(), c("#ff00e3"))
-                const direction = targetVersion.tags?.["direction"] ?? targetVersion.tags?.["camera:direction"]
+                const direction = targetVersion.tags?.["direction"] ?? targetVersion.tags?.["camera:direction"] ?? targetVersion.tags?.["light:direction"]
                 if (direction) {
                     renderDirectionTag(targetVersion.lat, targetVersion.lon, direction, c("#ff00e3"))
                 }
@@ -12920,18 +13581,18 @@ async function processObjectInteractions(changesetID, objType, objectsInComments
                 )
                 showActiveNodeMarker(prevVersion.lat.toString(), prevVersion.lon.toString(), c("#0022ff"), true)
                 showActiveNodeMarker(targetVersion.lat.toString(), targetVersion.lon.toString(), c("#ff00e3"), false)
-                const direction = prevVersion.tags?.["direction"] ?? prevVersion.tags?.["camera:direction"]
+                const direction = prevVersion.tags?.["direction"] ?? prevVersion.tags?.["camera:direction"] ?? prevVersion.tags?.["light:direction"]
                 if (direction) {
                     renderDirectionTag(prevVersion.lat, prevVersion.lon, direction, c("#0022ff"))
                 }
-                const newDirection = targetVersion.tags?.["direction"] ?? targetVersion.tags?.["camera:direction"]
+                const newDirection = targetVersion.tags?.["direction"] ?? targetVersion.tags?.["camera:direction"] ?? targetVersion.tags?.["light:direction"]
                 if (direction) {
                     renderDirectionTag(targetVersion.lat, targetVersion.lon, newDirection, c("#ff00e3"))
                 }
             } else if (targetVersion.visible === false) {
                 panTo(prevVersion.lat.toString(), prevVersion.lon.toString(), 18, false)
                 showActiveNodeMarker(prevVersion.lat.toString(), prevVersion.lon.toString(), c("#0022ff"), true)
-                const direction = prevVersion.tags?.["direction"] ?? prevVersion.tags?.["camera:direction"]
+                const direction = prevVersion.tags?.["direction"] ?? prevVersion.tags?.["camera:direction"] ?? prevVersion.tags?.["light:direction"]
                 if (direction) {
                     renderDirectionTag(prevVersion.lat, prevVersion.lon, direction, c("#0022ff"))
                 }
@@ -12971,7 +13632,7 @@ async function processObjectInteractions(changesetID, objType, objectsInComments
                     panTo(targetVersion.lat.toString(), targetVersion.lon.toString(), 18, false)
                 }
                 showActiveNodeMarker(targetVersion.lat.toString(), targetVersion.lon.toString(), c("#ff00e3"), true)
-                const direction = targetVersion.tags?.["direction"] ?? targetVersion.tags?.["camera:direction"]
+                const direction = targetVersion.tags?.["direction"] ?? targetVersion.tags?.["camera:direction"] ?? targetVersion.tags?.["light:direction"]
                 if (direction) {
                     renderDirectionTag(targetVersion.lat, targetVersion.lon, direction, c("#ff00e3"))
                 }
@@ -13022,6 +13683,7 @@ async function processObjectInteractions(changesetID, objType, objectsInComments
         const res = await fetchJSONorResWithCache(osm_server.apiBase + objType + "/" + objID + "/full.json", { signal: getAbortController().signal })
         // todo по-хорошему нужно проверять, а не успела ли измениться история линии
         // будет более актуально после добавление предзагрузки
+        let changesetMetadata = changesetMetadatas[targetVersion.changeset]
         const nowDeleted = res instanceof Response
         const dashArray = nowDeleted ? "4, 4" : null
         let lineWidth = nowDeleted ? 4 : 3
@@ -13110,7 +13772,7 @@ async function processObjectInteractions(changesetID, objType, objectsInComments
 
             const nextVersion = upperBoundVersion(objHistory, targetVersion.version)
             const nextVersionTimestamp = nextVersion?.visible === false ? minusSecondInStringTimestamp(nextVersion?.timestamp) : nextVersion?.timestamp
-            if (!nextVersionTimestamp && !changesetMetadata) {
+            if (!changesetMetadata) {
                 changesetMetadata = await loadChangesetMetadata(parseInt(changesetID))
             }
             const notLater = !nextVersionTimestamp || new Date(nextVersionTimestamp) > new Date(changesetMetadata.closed_at) ? changesetMetadata.closed_at : nextVersionTimestamp
@@ -13154,25 +13816,25 @@ async function processObjectInteractions(changesetID, objType, objectsInComments
             document.querySelector("#element_versions_list > div.active-object")?.classList?.remove()
             i.parentElement.parentElement.classList.add("active-object")
 
-            showActiveWay(cloneInto(currentNodesList, unsafeWindow), c("#ff00e3"), currentNodesList.length !== 0, `${changesetID}w${objID}v${targetVersion.version}`)
+            showActiveWay(currentNodesList, c("#ff00e3"), currentNodesList.length !== 0, `${changesetID}w${objID}v${targetVersion.version}`)
 
             if (version > 1) {
                 // show prev version
                 const [, nodesHistory] = await loadWayVersionNodes(objID, version - 1)
                 const targetTimestamp = maxDate(prevVersion.timestamp, new Date(new Date(changesetMetadatas[targetVersion.changeset].created_at).getTime() - 1)).toISOString()
                 const nodesList = filterObjectListByTimestamp(nodesHistory, targetTimestamp)
-                showActiveWay(cloneInto(nodesList, unsafeWindow), "rgb(238,146,9)", currentNodesList.length === 0, `${changesetID}w${objID}v${targetVersion.version}`, false, 4, "4, 4")
+                showActiveWay(nodesList, "rgb(238,146,9)", currentNodesList.length === 0, `${changesetID}w${objID}v${targetVersion.version}`, false, 4, "4, 4")
 
-                showActiveWay(cloneInto(currentNodesList, unsafeWindow), c("#ff00e3"), false, `${changesetID}w${objID}v${targetVersion.version}`, false)
+                showActiveWay(currentNodesList, c("#ff00e3"), false, `${changesetID}w${objID}v${targetVersion.version}`, false)
             } else {
                 const targetTimestamp = new Date(new Date(changesetMetadatas[targetVersion.changeset].created_at).getTime() - 1).toISOString()
                 const prevVersion = searchVersionByTimestamp(await getWayHistory(objID), targetTimestamp)
                 if (prevVersion) {
                     const [, nodesHistory] = await loadWayVersionNodes(objID, prevVersion.version)
                     const nodesList = filterObjectListByTimestamp(nodesHistory, targetTimestamp)
-                    showActiveWay(cloneInto(nodesList, unsafeWindow), "rgb(238,146,9)", currentNodesList.length === 0, `${changesetID}w${objID}v${targetVersion.version}`, false, 4, "4, 4")
+                    showActiveWay(nodesList, "rgb(238,146,9)", currentNodesList.length === 0, `${changesetID}w${objID}v${targetVersion.version}`, false, 4, "4, 4")
                 }
-                showActiveWay(cloneInto(currentNodesList, unsafeWindow), c("#ff00e3"), false, `${changesetID}w${objID}v${targetVersion.version}`, false)
+                showActiveWay(currentNodesList, c("#ff00e3"), false, `${changesetID}w${objID}v${targetVersion.version}`, false)
             }
         }
         if (!changesetMetadata) {
@@ -13205,25 +13867,25 @@ async function processObjectInteractions(changesetID, objType, objectsInComments
         }
 
         async function mouseenterHandler() {
-            showActiveWay(cloneInto(currentNodesList, unsafeWindow))
+            showActiveWay(currentNodesList)
             resetMapHover()
             if (version > 1) {
                 // show prev version
                 const [, nodesHistory] = await loadWayVersionNodes(objID, version - 1)
                 const targetTimestamp = maxDate(prevVersion.timestamp, new Date(new Date(changesetMetadatas[targetVersion.changeset].created_at).getTime() - 1)).toISOString()
                 const nodesList = filterObjectListByTimestamp(nodesHistory, targetTimestamp)
-                showActiveWay(cloneInto(nodesList, unsafeWindow), "rgb(238,146,9)", false, `${changesetID}w${objID}v${targetVersion.version}`, false, 4, "4, 4")
+                showActiveWay(nodesList, "rgb(238,146,9)", false, `${changesetID}w${objID}v${targetVersion.version}`, false, 4, "4, 4")
 
-                showActiveWay(cloneInto(currentNodesList, unsafeWindow), c("#ff00e3"), false, `${changesetID}w${objID}v${targetVersion.version}`, false, lineWidth)
+                showActiveWay(currentNodesList, c("#ff00e3"), false, `${changesetID}w${objID}v${targetVersion.version}`, false, lineWidth)
             } else {
                 const targetTimestamp = new Date(new Date(changesetMetadatas[targetVersion.changeset].created_at).getTime() - 1).toISOString()
                 const prevVersion = searchVersionByTimestamp(await getWayHistory(objID), targetTimestamp)
                 if (prevVersion) {
                     const [, nodesHistory] = await loadWayVersionNodes(objID, prevVersion.version)
                     const nodesList = filterObjectListByTimestamp(nodesHistory, targetTimestamp)
-                    showActiveWay(cloneInto(nodesList, unsafeWindow), "rgb(238,146,9)", false, `${changesetID}w${objID}v${targetVersion.version}`, false, 4, "4, 4")
+                    showActiveWay(nodesList, "rgb(238,146,9)", false, `${changesetID}w${objID}v${targetVersion.version}`, false, 4, "4, 4")
                 }
-                showActiveWay(cloneInto(currentNodesList, unsafeWindow), c("#ff00e3"), false, `${changesetID}w${objID}v${targetVersion.version}`, false, lineWidth)
+                showActiveWay(currentNodesList, c("#ff00e3"), false, `${changesetID}w${objID}v${targetVersion.version}`, false, lineWidth)
             }
         }
 
@@ -13840,12 +14502,12 @@ function makeCrashReportText(err) {
     return `
   **Page:** ${location.origin}${location.pathname}
 
-  **Error:** \`${err.toString().replace("`", "\\`")}\`
+  **Error:** \`${err?.toString()?.replace("`", "\\`")}\`
 
   **StackTrace:**
 
   \`\`\`
-  ${err.stack.replace("`", "\\`").replaceAll(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/gm, "<hidden>")}
+  ${err?.stack?.replace("`", "\\`")?.replaceAll(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/gm, "<hidden>")}
   \`\`\`
 
   **Script handler:** \`${GM_info.scriptHandler} v${GM_info.version}\`
@@ -14018,6 +14680,7 @@ async function processQuickLookInSidebar(changesetID) {
         }
 
         // reorder non-interesting-objects
+        // todo potential crash
         const objectsList = document.querySelector(`[changeset-id="${changesetID}"]#changeset_${objType}s .list-unstyled li`).parentElement
         Array.from(document.querySelectorAll(`[changeset-id="${changesetID}"]#changeset_${objType}s .list-unstyled li.tags-uninterested-modified.location-modified`)).forEach(i => {
             objectsList.appendChild(i)
@@ -14366,11 +15029,12 @@ async function processQuickLookInSidebar(changesetID) {
             const nodesCount = changesetData.querySelectorAll(`node`)
             for (const i of changesetData.querySelectorAll(`node[version="1"]`)) {
                 const nodeID = i.getAttribute("id")
+                const nodeVersion = i.getAttribute("version")
                 if (!i.querySelector("tag")) {
                     if (i.getAttribute("visible") === "false") {
                         // todo
                     } else if (i.getAttribute("version") === "1" && !(await getChangeset(parseInt(changesetID))).nodesWithParentWays.has(parseInt(nodeID))) {
-                        showNodeMarker(i.getAttribute("lat"), i.getAttribute("lon"), "#00a500", `${changesetID}n${nodeID}v${targetVersion.version}`)
+                        showNodeMarker(i.getAttribute("lat"), i.getAttribute("lon"), "#00a500", `${changesetID}n${nodeID}v${nodeVersion}`)
                     }
                 }
             }
@@ -14463,7 +15127,7 @@ async function processQuickLookInSidebar(changesetID) {
                             // todo показать по ховеру прошлую версию?
                             // prettier-ignore
                             const line = displayWay(
-                                cloneInto(currentNodesList, unsafeWindow),
+                                currentNodesList,
                                 false,
                                 "rgba(55,55,55,0.5)",
                                 4,
@@ -14484,7 +15148,7 @@ async function processQuickLookInSidebar(changesetID) {
                                     if (e.relatedTarget?.parentElement === e.target) {
                                         return
                                     }
-                                    showActiveWay(cloneInto(currentNodesList, unsafeWindow))
+                                    showActiveWay(currentNodesList)
                                     resetMapHover()
                                     const targetTimestamp = new Date(new Date(changesetMetadatas[changesetID].created_at).getTime() - 1).toISOString()
                                     if (targetVersion.version > 1) {
@@ -14492,17 +15156,17 @@ async function processQuickLookInSidebar(changesetID) {
                                         const prevVersion = searchVersionByTimestamp(await getWayHistory(way.id), targetTimestamp)
                                         const [, nodesHistory] = await loadWayVersionNodes(objID, prevVersion.version)
                                         const nodesList = filterObjectListByTimestamp(nodesHistory, targetTimestamp)
-                                        showActiveWay(cloneInto(nodesList, unsafeWindow), "rgb(238,146,9)", false, `${changesetID}w${objID}v${targetVersion.version}`, false, 4, "4, 4")
+                                        showActiveWay(nodesList, "rgb(238,146,9)", false, `${changesetID}w${objID}v${targetVersion.version}`, false, 4, "4, 4")
 
-                                        // showActiveWay(cloneInto(currentNodesList, unsafeWindow), "rgba(55,55,55,0.5)", false, objID, false)
+                                        // showActiveWay(currentNodesList, "rgba(55,55,55,0.5)", false, objID, false)
                                     } else {
                                         const prevVersion = searchVersionByTimestamp(await getWayHistory(way.id), targetTimestamp)
                                         if (prevVersion) {
                                             const [, nodesHistory] = await loadWayVersionNodes(objID, prevVersion.version)
                                             const nodesList = filterObjectListByTimestamp(nodesHistory, targetTimestamp)
-                                            showActiveWay(cloneInto(nodesList, unsafeWindow), "rgb(238,146,9)", false, `${changesetID}w${objID}v${targetVersion.version}`, false, 4, "4, 4")
+                                            showActiveWay(nodesList, "rgb(238,146,9)", false, `${changesetID}w${objID}v${targetVersion.version}`, false, 4, "4, 4")
 
-                                            // showActiveWay(cloneInto(currentNodesList, unsafeWindow), "rgba(55,55,55,0.5)", false, objID, false)
+                                            // showActiveWay(currentNodesList, "rgba(55,55,55,0.5)", false, objID, false)
                                         }
                                     }
                                     const curVersion = searchVersionByTimestamp(await getNodeHistory(n), changesetMetadatas[changesetID].closed_at ?? new Date())
@@ -14561,7 +15225,7 @@ async function processQuickLookInSidebar(changesetID) {
                         labels: "bug,crash",
                     }).toString()
                 a.target = "_blank"
-                a.appendChild(document.createTextNode("Send Bug Report"))
+                a.appendChild(document.createTextNode("⚠️ Send Bug Report"))
                 a.title = "better-osm-org was unable to display some data"
                 return a
             }
@@ -14582,7 +15246,7 @@ async function processQuickLookInSidebar(changesetID) {
                     /* empty */
                 }
                 if (isDebug()) {
-                    alert("⚠ read logs.\nOnly the script developer should see this message")
+                    alert("⚠ read logs in browser console (F12).\nOnly the script developer should see this message")
                 }
                 // eslint-disable-next-line no-debugger
                 debugger
@@ -14961,14 +15625,14 @@ async function addHoverForNodesParents() {
             wayLi.onmouseenter = () => {
                 const currentNodesList = wayInfo.nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
                 const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-                showActiveWay(cloneInto(currentNodesList, unsafeWindow), color)
+                showActiveWay(currentNodesList, color)
             }
             wayLi.onclick = e => {
                 if (e.altKey) return
                 if (e.target.tagName === "A") return
                 const currentNodesList = wayInfo.nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
                 const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-                showActiveWay(cloneInto(currentNodesList, unsafeWindow), color, true)
+                showActiveWay(currentNodesList, color, true)
             }
             wayLi.ondblclick = zoomToCurrentObject
             if (wayInfo.tags) {
@@ -15375,7 +16039,7 @@ async function addHoverForRelationMembers() {
         wayLi.onmouseenter = () => {
             const currentNodesList = wayInfo.nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
             const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-            showActiveWay(cloneInto(currentNodesList, unsafeWindow), color)
+            showActiveWay(currentNodesList, color)
             bringRestrictionArrowsToFront()
         }
         wayLi.onclick = e => {
@@ -15383,7 +16047,7 @@ async function addHoverForRelationMembers() {
             if (e.target.tagName === "A") return
             const currentNodesList = wayInfo.nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
             const color = darkModeForMap || isDarkTiles() ? c("#ff00e3") : "#000000"
-            showActiveWay(cloneInto(currentNodesList, unsafeWindow), color, true)
+            showActiveWay(currentNodesList, color, true)
             bringRestrictionArrowsToFront()
         }
         wayLi.ondblclick = zoomToCurrentObject
@@ -15406,7 +16070,7 @@ async function addHoverForRelationMembers() {
                     showActiveNodeMarker(nodesMap[i.id].lat.toString(), nodesMap[i.id].lon.toString(), color, true, 6, 3)
                 } else if (i.type === "way") {
                     const currentNodesList = waysMap[i.id].nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
-                    showActiveWay(cloneInto(currentNodesList, unsafeWindow), color)
+                    showActiveWay(currentNodesList, color)
                 } else {
                     // todo
                 }
@@ -15424,7 +16088,7 @@ async function addHoverForRelationMembers() {
                     showActiveNodeMarker(nodesMap[i.id].lat.toString(), nodesMap[i.id].lon.toString(), color, true, 6, 3)
                 } else if (i.type === "way") {
                     const currentNodesList = waysMap[i.id].nodes.map(i => [nodesMap.get(i.toString()).lat, nodesMap.get(i.toString()).lon])
-                    showActiveWay(cloneInto(currentNodesList, unsafeWindow), color, true)
+                    showActiveWay(currentNodesList, color, true)
                 } else {
                     // todo
                 }
@@ -15895,23 +16559,145 @@ function setupMakeVersionPageBetter() {
 //</editor-fold>
 
 //<editor-fold desc="in-osm-page-code" defaultstate="collapsed">
-window.addEventListener("message", async e => {
-    if (e.origin !== location.origin) return
-    if (e.data.type !== "bypass_tiles_csp") {
-        return
-    }
-    window.postMessage(
-        {
-            type: "tile_data",
-            url: e.data.url,
-            data: await fetchBlobWithCache(e.data.url),
-        },
-        e.origin,
-    )
-})
 
-if (isOsmServer()) {
+function allowedCspBridgeOrigin(origin) {
+    return origin === prod_server.origin || origin === dev_server.origin || origin === ohm_prod_server.origin
+}
+
+function initCspBridge() {
+    window.addEventListener("message", async e => {
+        if (!customLayerUrlOrigin && !vectorLayerStyleUrlOrigin) {
+            return
+        }
+        if (e.origin !== location.origin) return
+        if (!allowedCspBridgeOrigin(e.origin)) return
+        if (e.data.type !== "bypass_csp") {
+            return
+        }
+        // console.log(e.data)
+        const opt = {}
+        if (e.data.url.startsWith("https://tiles.openrailwaymap.org")) {
+            opt.headers = { Referer: "https://www.openrailwaymap.org/" }
+        }
+        // fuck TM, need imitate Response
+        const res = await fetchBlobWithCache(e.data.url, opt)
+        window.postMessage(
+            {
+                type: "bypass_csp_response",
+                url: e.data.url,
+                data: {
+                    status: res.status,
+                    statusText: res.statusText,
+                    response: res.response,
+                },
+            },
+            e.origin,
+        )
+    })
+}
+
+let initCustomFetch
+
+function initMaplibreWorkerOverrider() {
+    window.addEventListener("message", async e => {
+        if (e.origin !== location.origin) {
+            return
+        }
+        if (e.data.type !== "create_worker") {
+            return
+        }
+        console.log("create_worker message")
+        const worker = boWindowObject.maplibreOverriddenWorker
+        worker.onmessage = intoPageWithFun(async e => {
+            if (e.data.type !== "bypass_csp") {
+                return
+            }
+            // console.log(e.data)
+            if (!customLayerUrlOrigin && !vectorLayerStyleUrlOrigin) {
+            } else {
+                const res = await GM.xmlHttpRequest({
+                    url: e.data.url,
+                    responseType: "blob",
+                    headers: {
+                        Origin: location.origin,
+                        Referer: location.origin + "/",
+                    },
+                })
+                worker.postMessage(
+                    cloneInto(
+                        {
+                            type: "bypass_csp_response",
+                            url: e.data.url,
+                            data: {
+                                status: res.status,
+                                statusText: res.statusText,
+                                response: res.response,
+                            },
+                        },
+                        boWindowObject,
+                    ),
+                )
+            }
+        })
+        initCustomFetch = () => {
+            worker.postMessage(intoPage({ type: "init_custom_fetch" }))
+        }
+        delete boWindowObject.maplibreOverriddenWorker
+        // лучше убрать воркер из глобального скоупа
+    })
+}
+if ([prod_server.origin, dev_server.origin, local_server.origin, ohm_prod_server.origin].includes(location.origin)) {
+    initCspBridge()
+    initMaplibreWorkerOverrider()
+}
+
+function runInOsmPageCode() {
     injectJSIntoPage(`
+    const OriginalBlob = window.Blob;
+    window.Blob = function Blob(parts = [], options = {}) {
+        if (parts?.[0]?.startsWith?.("var sharedModule = {};")) {
+            console.debug('Blob intercepted:', options, "len", parts[0].length);
+            window.maplibreWorkerSourceCode = parts[0]
+            window.Blob = OriginalBlob
+        }
+        return new OriginalBlob(parts, options);
+    };
+    window.Blob.prototype = OriginalBlob.prototype;
+
+    const OriginalWorker = window.Worker
+    window.Worker = function (url, options) {
+        const fetchCode = "const originalFetch = self.fetch;" +
+            "let customFetchEnabled = false;" +
+            "self.addEventListener('message', (e) => {" +
+            "    if (e.data.type !== 'init_custom_fetch') { return; } " +
+            "    customFetchEnabled = true;" +
+            "});" +
+            "self.fetch = async (...args) => {" +
+            "   if (!customFetchEnabled || args.length > 1) return await originalFetch(...args);" +
+            "   const url = args[0].url;" +
+            "   const resultCallback = new Promise((resolve, reject) => {" +
+            "       console.log('fetch in worker', url);" +
+            "       self.addEventListener('message', (e) => {" +
+            "           if (e.data.type !== 'bypass_csp_response') { return; } " +
+            "           if (e.data.url !== url) { return; }" +
+            "           resolve(e.data.data);" +
+            "       });" +
+            "   });" +
+            "   self.postMessage({ type: 'bypass_csp', url: url });" +
+            "   const res = await resultCallback;" +
+            "   return new Response(res.response, { status: res.status, statusText: res.statusText });" +
+            "};"
+        const proxyUrl = URL.createObjectURL(
+            new OriginalBlob([fetchCode + window.maplibreWorkerSourceCode], { type: "application/javascript" }),
+        )
+        console.count("newWorkerCounter")
+        const maplibreOverriddenWorker = new OriginalWorker(proxyUrl, options);
+        window.maplibreOverriddenWorker = maplibreOverriddenWorker
+        window.postMessage({ type: "create_worker" }, location.origin)
+
+        return maplibreOverriddenWorker
+    }
+        
     const originalFetch = window.fetch;
 
     window.fetchIntercepterScriptInited = true;
@@ -15925,8 +16711,9 @@ if (isOsmServer()) {
     window.notesClosedFilter = "";
     window.notesCommentsFilter = "";
     window.notesIDsFilter = new Set();
-    
-    window.customLayer = null
+
+    window.customLayerOrigin = null
+    window.customVectorStyleLayerOrigin = null
 
     // const cache = new Map();
 
@@ -15961,6 +16748,7 @@ if (isOsmServer()) {
                 if (response.status !== 200) {
                     return response
                 }
+                /** @type import('geojson').GeoJSON */
                 const originalJSON = await response.json();
                 originalJSON.features = originalJSON.features?.filter(note => {
                     if (window.notesCommentsFilter) {
@@ -16096,59 +16884,48 @@ if (isOsmServer()) {
                         headers: response.headers
                     });
                 }
-            } else if (window.mapGLIntercepted && (
-                args?.[0]?.url?.startsWith?.("https://server.arcgisonline.com/") 
-                || args?.[0]?.url?.startsWith?.("https://geoscribble.osmz.ru/")
-                || args?.[0]?.url?.startsWith?.("https://geoportal.dgu.hr/")
-                || window.customLayer && args?.[0]?.url?.startsWith?.(window.customLayer)
-            )) {
-                const tile_url = args[0].url
+            } else if (window.mapGLIntercepted && window.customLayerOrigin && args?.[0]?.url?.startsWith?.(window.customLayerOrigin)
+            || window.mapGLIntercepted && window.customVectorStyleLayerOrigin && (
+                    window.customVectorStyleLayerOrigin.startsWith("http://localhost") 
+                    || window.customVectorStyleLayerOrigin.startsWith("https://raw.githubusercontent.com") 
+                    || args?.[0]?.url?.startsWith?.(window.customVectorStyleLayerOrigin)
+                )) {
+                const resourceUrl = args?.[0]?.url
+                console.log("overridden fetch in page", window.customLayerOrigin, window.customVectorStyleLayerOrigin, resourceUrl)
                 const resultCallback = new Promise((resolve, reject) => {
                     window.addEventListener("message", e => {
                         if (e.origin !== location.origin) return
-                        if (e.data.type !== "tile_data") {
+                        if (e.data.type !== "bypass_csp_response") {
                             return
                         }
-                        if (e.data.url !== tile_url) {
+                        if (e.data.url !== resourceUrl) {
                             return
                         }
                         resolve(e.data.data)
                     })
                 })
-                window.postMessage({ "type": "bypass_tiles_csp", url: tile_url }, location.origin)
+                window.postMessage({ "type": "bypass_csp", url: resourceUrl }, location.origin)
                 const res = await resultCallback
                 return new Response(res.response, {
                     status: res.status,
                     statusText: res.statusText,
                 });
-            } else if (args?.[0]?.url === "https://vector.openstreetmap.org/demo/shortbread/colorful.json"
-                || args?.[0]?.url === "https://vector.openstreetmap.org/demo/shortbread/eclipse.json") {
+            } else if (args?.[0]?.url === "https://vector.openstreetmap.org/styles/shortbread/colorful.json"
+                || args?.[0]?.url === "https://vector.openstreetmap.org/styles/shortbread/eclipse.json") {
                 return originalFetch(...args);
-                console.log("vector tiles request", args)
-                if (!window.vectorStyle) {
-                    console.log("wait external vector style")
-                    await new Promise(r => setTimeout(r, 1000))
-                }
-                // debugger
-                const originalJSON = window.vectorStyle
-                // debugger
                 // const response = await originalFetch(...args);
                 // const originalJSON = await response.json();
                 // originalJSON.layers[originalJSON.layers.findIndex(i => i.id === "water-river")].paint['line-color'] = "red"
-                originalJSON.layers.forEach(i => {
-                    if (i.paint && i.paint['line-color']) {
-                        i.paint['line-color'] = "red"
-                    }
-                    if (i.paint && i.paint['fill-color']) {
-                        i.paint['fill-color'] = "black"
-                    }
-                })
-                // debugger
-                return new Response(JSON.stringify(originalJSON), {
-                    status: response.status,
-                    statusText: response.statusText,
-                    headers: response.headers
-                });
+                // originalJSON.layers.forEach(i => {
+                //     if (i.paint && i.paint['line-color']) {
+                //         i.paint['line-color'] = "red"
+                //     }
+                //     if (i.paint && i.paint['fill-color']) {
+                //         i.paint['fill-color'] = "black"
+                //     }
+                // })
+                // console.log(originalJSON)
+                // return new Response(JSON.stringify(originalJSON));
             } else if (args[0]?.includes?.("/members")) {
                 // console.log("freeeeeze", args[0])
                 // await new Promise(() => setTimeout(() => true, 1000 * 1000))
@@ -16440,9 +17217,14 @@ if (isOsmServer()) {
     `)
 }
 
+if (isOsmServer()) {
+    runInOsmPageCode()
+}
+
 //</editor-fold>
 
 //<editor-fold desc="/history, /user/*/history">
+const storagePrefix = (isOHMServer() ? "ohm-" : (location.origin === dev_server.origin ? "dev-" : ""))
 async function updateUserInfo(username) {
     void initCorporateMappersList()
     const res = await fetchJSONWithCache(
@@ -16485,7 +17267,7 @@ async function updateUserInfo(username) {
     if (firstChangesetID) {
         userInfo["firstChangesetID"] = firstChangesetID
     }
-    await GM.setValue("userinfo-" + username, JSON.stringify(userInfo))
+    await GM.setValue(storagePrefix + "userinfo-" + username, JSON.stringify(userInfo))
     return userInfo
 }
 
@@ -16498,7 +17280,7 @@ async function getCachedUserInfo(username) {
         console.trace("invalid username")
         return
     }
-    const localUserInfo = await GM.getValue("userinfo-" + username, "")
+    const localUserInfo = await GM.getValue(storagePrefix + "userinfo-" + username, "")
     if (localUserInfo) {
         const json = JSON.parse(localUserInfo)
         const cacheTime = new Date(json["cacheTime"])
@@ -16568,12 +17350,12 @@ function makeTopActionBar() {
     }
     const revertButton = document.createElement("button")
     revertButton.textContent = "↩️"
-    revertButton.title = "revert via osm-revert"
+    revertButton.title = `revert via ${osm_revert_name}`
     revertButton.onclick = () => {
         const ids = Array.from(document.querySelectorAll(".mass-action-checkbox:checked"))
             .map(i => i.value)
             .join(",")
-        open("https://revert.monicz.dev/?changesets=" + ids, "_blank")
+        open(`${osm_revert_origin}/?changesets=` + ids, "_blank")
     }
     const revertViaJOSMButton = document.createElement("button")
     revertViaJOSMButton.textContent = "↩️ via JOSM"
@@ -16629,12 +17411,12 @@ function makeBottomActionBar() {
     }
     const revertButton = document.createElement("button")
     revertButton.textContent = "↩️"
-    revertButton.title = "revert via osm-revert"
+    revertButton.title = `revert via ${osm_revert_name}`
     revertButton.onclick = () => {
         const ids = Array.from(document.querySelectorAll(".mass-action-checkbox:checked"))
             .map(i => i.value)
             .join(",")
-        window.location = "https://revert.monicz.dev/?changesets=" + ids
+        window.location = `${osm_revert_origin}/?changesets=` + ids
     }
     revertButton.classList.add("page-link")
     const viewChangesetsButton = document.createElement("button")
@@ -16957,20 +17739,6 @@ function makeUsernamesFilterable(usernameLink) {
     // }
 }
 
-function loadExternalVectorStyle() {
-    try {
-        externalFetchRetry({
-            url: "",
-            responseType: "json",
-        }).then(async res => {
-            getWindow().vectorStyle = await res.response
-        })
-    } catch (e) {}
-}
-
-if (isDebug()) {
-    // loadExternalVectorStyle()
-}
 function getScrollbarWidth() {
     const outer = document.createElement("div")
     outer.style.visibility = "hidden"
@@ -17584,7 +18352,7 @@ function makeChangesetsStat(changesets, filter) {
 }
 
 async function makeEditorNormalizer() {
-    const url = "https://raw.githubusercontent.com/deevroman/openstreetmap-statistics/refs/heads/master/src/replace_rules_created_by.json"
+    const url = "https://raw.githubusercontent.com/deevroman/openstreetmap-statistics/refs/heads/master/config/replace_rules_created_by.json"
     const rawReplaceRules = (
         await externalFetchRetry({
             url: url,
@@ -18340,7 +19108,32 @@ async function makeProfileForDeletedUser(user) {
     content.appendChild(div)
 }
 
+function addColorForActiveBlock() {
+    const blocksLink = document.querySelector('a[href$="/blocks"]')
+    if (blocksLink?.nextElementSibling?.textContent > 0) {
+        blocksLink.nextElementSibling.style.background = "rgba(255, 0, 0, 0.3)"
+        if (isDarkMode()) {
+            blocksLink.nextElementSibling.style.color = "white"
+        }
+        getCachedUserInfo(decodeURI(user)).then(userInfo => {
+            if (userInfo["blocks"]["received"]["active"] === 0) {
+                updateUserInfo(decodeURI(user))
+            }
+        })
+    } else if (blocksLink?.nextElementSibling?.textContent === "0") {
+        getCachedUserInfo(decodeURI(user)).then(userInfo => {
+            if (userInfo["blocks"]["received"]["active"] !== 0) {
+                updateUserInfo(decodeURI(user))
+            }
+        })
+    }
+}
+
 async function setupHDYCInProfile(path) {
+    addColorForActiveBlock()
+    if (isOHMServer()) {
+        return
+    }
     const match = path.match(/^\/user\/([^/]+)(\/|\/notes)?$/)
     if (!match || path.includes("/history")) {
         return
@@ -18370,23 +19163,6 @@ async function setupHDYCInProfile(path) {
             width: "100%",
             id: "hdyc-iframe",
             scrolling: "no",
-        })
-    }
-    if (document.querySelector('a[href$="/blocks"]')?.nextElementSibling?.textContent > 0) {
-        document.querySelector('a[href$="/blocks"]').nextElementSibling.style.background = "rgba(255, 0, 0, 0.3)"
-        if (isDarkMode()) {
-            document.querySelector('a[href$="/blocks"]').nextElementSibling.style.color = "white"
-        }
-        getCachedUserInfo(decodeURI(user)).then(userInfo => {
-            if (userInfo["blocks"]["received"]["active"] === 0) {
-                updateUserInfo(decodeURI(user))
-            }
-        })
-    } else if (document.querySelector('a[href$="/blocks"]')?.nextElementSibling?.textContent === "0") {
-        getCachedUserInfo(decodeURI(user)).then(userInfo => {
-            if (userInfo["blocks"]["received"]["active"] !== 0) {
-                updateUserInfo(decodeURI(user))
-            }
         })
     }
     const isDeletedUser = !document.querySelector(".user_image")
@@ -18457,7 +19233,7 @@ async function setupHDYCInProfile(path) {
                 }
                 if (userInfo.data[0]["names"].length > 1) {
                     userInfo["cacheTime"] = new Date()
-                    await GM.setValue("useridinfo-" + userID, JSON.stringify(userInfo))
+                    await GM.setValue(storagePrefix + "useridinfo-" + userID, JSON.stringify(userInfo))
 
                     const usernames = userInfo.data[0]["names"].filter(i => i !== decodeURI(user)).join(", ")
                     if (document.querySelector(".prev-usernames")) {
@@ -18468,7 +19244,7 @@ async function setupHDYCInProfile(path) {
             }
 
             async function getCachedUserIDInfo(userID) {
-                const localUserInfo = await GM.getValue("useridinfo-" + userID, "")
+                const localUserInfo = await GM.getValue(storagePrefix + "useridinfo-" + userID, "")
                 if (localUserInfo) {
                     setTimeout(updateUserIDInfo, 0, userID)
                     return JSON.parse(localUserInfo)
@@ -18732,6 +19508,7 @@ function simplifyHDCYIframe() {
  *  description: string,
  *  warn: string|undefined,
  *  onlyMobile: boolean|undefined,
+ *  disableOnOpenHistoricalMap: boolean|undefined,
  *  default: boolean|undefined,
  *  } } externalLink
  *  */
@@ -18784,16 +19561,13 @@ async function loadAndMakeExternalLinksDatabase() {
 async function initExternalLinksList() {
     if (externalLinksDatabase) return
     const cache = await GM.getValue("external-links", "")
-    // if (isDebug()) {
-    //     await loadAndMakeExternalLinksDatabase()
-    // }
     if (externalLinksDatabase) return
     if (cache) {
         console.log("external links cached")
         const json = JSON.parse(cache)
         const cacheTime = new Date(json["cacheTime"])
-        const threeDaysLater = new Date(cacheTime.getTime() + 6 * 60 * 60 * 1000)
-        if (threeDaysLater < new Date()) {
+        const sixHoursLater = new Date(cacheTime.getTime() + 6 * 60 * 60 * 1000)
+        if (sixHoursLater < new Date()) {
             console.log("but cache outdated")
             setTimeout(loadAndMakeExternalLinksDatabase, 0)
         }
@@ -19052,6 +19826,9 @@ async function loadCurrentLinksList() {
             if (link.onlyMobile) {
                 return isMobile
             }
+            if (link.disableOnOpenHistoricalMap && isOHMServer()) {
+                return
+            }
             return true
         })
         await GM.setValue("user-external-links", JSON.stringify(externalLinks))
@@ -19205,6 +19982,9 @@ function addOtherExternalLinks(editorsListUl) {
     }
     externalLinksDatabase.forEach(link => {
         if (link.onlyMobile && !isMobile) {
+            return
+        }
+        if (link.disableOnOpenHistoricalMap && isOHMServer()) {
             return
         }
         processExternalLink(link, false, editorsListUl, false)
@@ -19568,8 +20348,9 @@ const trackColors = ["rgb(255,0,47)", "rgb(0,34,255)", "rgb(64,255,0)", "#000000
 
 /**
  * @param {string|Document} xml
+ * @param {string|null} color
  */
-function displayGPXTrack(xml) {
+function displayGPXTrack(xml, color = null) {
     const doc = typeof xml === "string" ? new DOMParser().parseFromString(xml, "application/xml") : xml
 
     const popup = document.createElement("span")
@@ -19594,7 +20375,7 @@ function displayGPXTrack(xml) {
     console.time("start gpx track render")
     const min = Math.min
     const max = Math.max
-    const trackColor = trackColors[tracksCounter % trackColors.length]
+    const trackColor = color ?? trackColors[tracksCounter % trackColors.length]
     tracksCounter++
     trackMetadata = {
         min_lat: 10000000,
@@ -20510,6 +21291,7 @@ function renderOSMGeoJSON(xml, options = {}) {
         )
     }
     xml.querySelectorAll("[action=delete]").forEach(i => i.remove())
+    /** @type import('geojson').GeoJSON */
     const geojson = osmtogeojson(xml, { flatProperties: false })
     if (options["skip_tainted"]) {
         geojson.features = geojson.features.filter(f => !f.properties["tainted"])
@@ -20800,7 +21582,7 @@ async function setupDragAndDropViewers() {
 
 //<editor-fold desc="hotkeys">
 let hotkeysConfigured = false
-
+//TODO extract load functions
 /**
  * @param {number|null=} changeset_id
  * @return {Promise<ChangesetMetadata>}
@@ -20810,6 +21592,7 @@ async function loadChangesetMetadata(changeset_id = null) {
     if (!changeset_id) {
         const match = location.pathname.match(/changeset\/(\d+)/)
         if (!match) {
+            // console.trace("loadChangesetMetadata called without changeset_id and on not /changeset page")
             return
         }
         changeset_id = parseInt(match[1])
@@ -21038,16 +21821,21 @@ function runPositionTracker() {
 let newNotePlaceholder = null
 
 let overzoomObserver = null
+const blankSuffix = "?blankTile=false"
 
 function enableOverzoom() {
     if (!GM_config.get("OverzoomForDataLayer")) {
         return
     }
-    blankSuffix = "?blankTile=false"
-    console.log("Enabling overzoom for map layer")
-    if (overzoomObserver) {
-        overzoomObserver.disconnect()
+    if (customLayerUrl === ESRITemplate) {
+        customLayerUrl = ESRIPrefix + "{z}/{y}/{x}" + blankSuffix
+    } else if (customLayerUrl === ESRIBetaTemplate) {
+        customLayerUrl = ESRIBetaPrefix + "{z}/{y}/{x}" + blankSuffix
     }
+    ESRITemplate = ESRIPrefix + "{z}/{y}/{x}" + blankSuffix
+    ESRIBetaTemplate = ESRIBetaPrefix + "{z}/{y}/{x}" + blankSuffix
+    console.log("Enabling overzoom for map layer")
+    overzoomObserver?.disconnect()
 
     injectJSIntoPage(`
     (function () {
@@ -21083,6 +21871,13 @@ function disableOverzoom() {
     if (!GM_config.get("OverzoomForDataLayer")) {
         return
     }
+    if (customLayerUrl === ESRITemplate) {
+        customLayerUrl = ESRIPrefix + "{z}/{y}/{x}"
+    } else if (customLayerUrl === ESRIBetaTemplate) {
+        customLayerUrl = ESRIBetaPrefix + "{z}/{y}/{x}"
+    }
+    ESRITemplate = ESRIPrefix + "{z}/{y}/{x}"
+    ESRIBetaTemplate = ESRIBetaPrefix + "{z}/{y}/{x}"
     injectJSIntoPage(`
     (function () {
         map.options.maxZoom = 19
@@ -21091,6 +21886,7 @@ function disableOverzoom() {
         layers[0].options.maxZoom = 19
     })()
     `)
+    console.log("Overzoom disabled")
 }
 
 const ABORT_ERROR_PREV = "Abort requests for moving to prev changeset"
@@ -21750,7 +22546,7 @@ function zoomToCurrentObject(e) {
                             currentNodesList.forEach(coords => {
                                 nodesBag.push({
                                     lat: coords[0],
-                                    lon: coords[1]
+                                    lon: coords[1],
                                 })
                             })
                         } catch (e) {
@@ -21888,6 +22684,21 @@ function zoomToCurrentObject(e) {
     }
 }
 
+function nextVectorLayer() {
+    const currentLayersIsVector = vectorLayerEnabled()
+    const hashParams = new URLSearchParams(location.hash)
+    if (currentLayersIsVector) {
+        if (getCurrentLayers().includes("S")) {
+            hashParams.set("layers", (hashParams.get("layers") ?? "").replace("S", "").replace("V", "") + "M")
+        } else {
+            hashParams.set("layers", (hashParams.get("layers") ?? "").replace("V", "") + "S")
+        }
+    } else {
+        hashParams.set("layers", (hashParams.get("layers") ?? "") + "V")
+    }
+    location.hash = hashParams.toString()
+}
+
 function setupNavigationViaHotkeys() {
     if ("/id" === location.pathname || document.querySelector("#id-embed")) return
     updateCurrentObjectMetadata()
@@ -21916,7 +22727,7 @@ function setupNavigationViaHotkeys() {
                 }
             }
         }
-        if (["TEXTAREA", "INPUT", "SELECT"].includes(document.activeElement?.nodeName) && document.activeElement?.getAttribute("type") !== "checkbox") {
+        if (["TEXTAREA", "INPUT", "SELECT"].includes(document.activeElement?.nodeName) && document.activeElement?.getAttribute("type") !== "checkbox" && document.activeElement?.getAttribute("type") !== "radio") {
             return
         }
         if (document.activeElement?.getAttribute("contenteditable")) {
@@ -22043,24 +22854,14 @@ function setupNavigationViaHotkeys() {
                 Array.from(document.querySelectorAll(".overlay-layers label"))[2].click()
             }
         } else if (e.code === "KeyS") {
-            // satellite
             enableOverzoom()
             if (e.shiftKey) {
-                switchESRIbeta()
-                if (currentTilesMode !== SAT_MODE) {
-                    switchTiles()
-                }
+                askCustomTileUrl()
                 return
             } else if (e.altKey) {
                 bypassCaches()
             } else {
-                switchTiles()
-                if (document.querySelector(".turn-on-satellite")) {
-                    document.querySelector(".turn-on-satellite").textContent = invertTilesMode(currentTilesMode)
-                }
-                if (document.querySelector(".turn-on-satellite-from-pane")) {
-                    document.querySelector(".turn-on-satellite-from-pane").textContent = invertTilesMode(currentTilesMode)
-                }
+                switchTilesAndButtons()
             }
         } else if (e.code === "KeyE") {
             if (e.altKey) {
@@ -22106,7 +22907,10 @@ function setupNavigationViaHotkeys() {
                 document.querySelectorAll(`${selector} .browse-element-list li`).forEach(obj => {
                     const checkbox = document.createElement("input")
                     checkbox.type = "checkbox"
-                    checkbox.title = "Click with Shift for select range\nPress R for revert via osm-revert\nPress J for open objects in JOSM\nPress alt + J for open objects in Level0"
+                    checkbox.title = `Click with Shift for select range
+Press R for revert via ${osm_revert_name}
+Press J for open objects in JOSM
+Press alt + J for open objects in Level0`
                     checkbox.tabIndex = 0
                     checkbox.style.width = "18px"
                     checkbox.style.height = "18px"
@@ -22460,6 +23264,7 @@ function setupNavigationViaHotkeys() {
                 document.querySelectorAll(".sidebar-close-controls .btn-close").forEach(i => i?.click())
                 document.querySelector(".welcome .btn-close")?.click()
                 document.querySelector("#banner .btn-close")?.click()
+                document.querySelector(".better-btn-close")?.click()
             }
         } else if (e.code === "KeyT" && !e.altKey && !e.metaKey && !e.shiftKey && !e.ctrlKey) {
             if (location.pathname.includes("/user/") && !location.pathname.includes("/history")) {
@@ -22592,7 +23397,7 @@ function setupNavigationViaHotkeys() {
                     document
                         .querySelector('.user-menu [href^="/user/"]')
                         ?.getAttribute("href")
-                        ?.match(/\/user\/(.*)$/)?.[1] ?? ""
+                        ?.match(/\/user\/(.*)$/)?.[1] ?? "",
                 )
                 if (currentUser) {
                     message += currentUser.match(/^[a-zA-Z0-9_]+$/) ? `\n\tnode(user:${currentUser})` : `\n\tnode(user:"${currentUser}")`
@@ -22632,19 +23437,14 @@ End with ! for global search
                 document.querySelector("#edit_tab button").click()
             }
         } else if (e.code === "KeyV") {
-            const layers = `; ${document.cookie}`.split(`; _osm_location=`).pop().split(";").shift().split("|").at(-1)
-            const currentLayersIsVector = layers.includes("S") || layers.includes("V")
-            const hashParams = new URLSearchParams(location.hash)
-            if (currentLayersIsVector) {
-                if (layers.includes("S")) {
-                    hashParams.set("layers", (hashParams.get("layers") ?? "").replace("S", "").replace("V", "") + "M")
-                } else {
-                    hashParams.set("layers", (hashParams.get("layers") ?? "").replace("V", "") + "S")
+            if (e.shiftKey) {
+                if (!document.querySelector("#map canvas")) {
+                    Array.from(document.querySelectorAll(".layers-ui .base-layers label")).at(-2)?.click()
                 }
+                void askCustomStyleUrl()
             } else {
-                hashParams.set("layers", (hashParams.get("layers") ?? "") + "V")
+                nextVectorLayer()
             }
-            location.hash = hashParams.toString()
         } else {
             // console.log(e.key, e.code)
         }
@@ -22830,6 +23630,9 @@ function fixTagsPaste() {
             return
         }
         const raw = e.clipboardData.getData("text")
+        if (!raw.trim().match(/^[0-9_:a-zA-Z]+\s/)) {
+            return
+        }
         const fixedText = repairTags(raw)
         if (raw === fixedText) {
             return
@@ -23359,7 +24162,7 @@ function makeCommandsMenu() {
 
 //<editor-fold desc="main" defaultstate="collapsed">
 // TODO сначала проверить сайт, а после инициализировать GM_config и вызывать main
-function main() {
+function _main() {
     "use strict"
     if (GM_config.get("DebugMode")) {
         _isDebug = true
@@ -23401,33 +24204,37 @@ function main() {
     }
 }
 
+function main() {
+    performance.mark("BETTER_OSM_MAIN_CALL")
+    runOnDOMContentLoaded(_main)
+}
 //</editor-fold>
 
 // garbage collection for cached infos (user info, changeset history)
-setTimeout(async function () {
+async function runGC() {
     if (Math.random() > 0.5) return
-    if (!location.pathname.includes("/history") && !location.pathname.includes("/note")) return
+    if (!location.pathname.includes("/history") && !location.pathname.includes("/note") && !location.pathname.includes("/user")) return
     const lastGC = await GM.getValue("last-garbage-collection-time")
     console.debug("last-garbage-collection-time", new Date(lastGC))
     if (lastGC && new Date(lastGC).getTime() + 1000 * 60 * 60 * 24 * 2 > Date.now()) return
     await GM.setValue("last-garbage-collection-time", Date.now())
 
-    const keys = GM_listValues()
+    const keys = await GM.listValues()
     for (const i of keys) {
-        if (i.startsWith("userinfo-")) {
+        if (i.startsWith("userinfo-") || i.startsWith("ohm-userinfo-") || i.startsWith("dev-userinfo-")) {
             try {
                 const userinfo = JSON.parse(await GM.getValue(i))
                 if (userinfo.cacheTime && new Date(userinfo.cacheTime).getTime() + 1000 * 60 * 60 * 24 * 14 < Date.now()) {
-                    await GM_deleteValue(i)
+                    await GM.deleteValue(i)
                 }
             } catch {
                 /* empty */
             }
-        } else if (i.startsWith("useridinfo-")) {
+        } else if (i.startsWith("useridinfo-") || i.startsWith("ohm-useridinfo-") || i.startsWith("dev-useridinfo-")) {
             try {
                 const userIDInfo = JSON.parse(await GM.getValue(i))
                 if (userIDInfo.cacheTime && new Date(userIDInfo.cacheTime).getTime() + 1000 * 60 * 60 * 24 * 14 < Date.now()) {
-                    await GM_deleteValue(i)
+                    await GM.deleteValue(i)
                 }
             } catch {
                 /* empty */
@@ -23435,4 +24242,5 @@ setTimeout(async function () {
         }
     }
     console.log("Old cache cleaned")
-}, 1000 * 12)
+}
+setTimeout(runGC, 1000 * 12)

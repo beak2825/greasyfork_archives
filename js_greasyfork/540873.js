@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          TreeDibsMapper
 // @namespace     http://tampermonkey.net/
-// @version       3.11.10
+// @version       3.11.11
 // @description   Dibs, Faction-wide notes, and war management systems for Torn (PC AND TornPDA Support)
 // @author        TreeMapper [3573576]
 // @match         https://www.torn.com/loader.php?sid=attack&user2ID=*
@@ -154,7 +154,7 @@
 
     // Central configuration
     const config = {
-        VERSION: '3.11.10',
+        VERSION: '3.11.11',
         API_GET_URL: 'https://apiget-codod64xdq-uc.a.run.app',
         API_POST_URL: 'https://apipost-codod64xdq-uc.a.run.app',
         API_HTTP_GET_URL: 'https://us-central1-tornuserstracker.cloudfunctions.net/apiHttpGet',
@@ -1602,11 +1602,17 @@
                             // Lost a fight, standard Torn hospital phrasing
                             canonical = 'LostAttack';
                         } else {
-                            // Legacy abroad detection only if previous record indicates non-Torn destination
-                            if (prevRec && prevRec.dest && prevRec.dest !== 'Torn City') {
-                                canonical = 'HospitalAbroad';
-                                dest = prevRec.dest;
-                            }
+                            // If the description explicitly indicates an abroad hospital using
+                            // the strict "In a/an <adjective> hospital for <duration>" form,
+                            // treat that as HospitalAbroad. Do NOT fall back to prevRec.dest
+                            // here to avoid stale travel data causing mislabels.
+                            try {
+                                const hospDest = utils.parseHospitalAbroadDestination(rawDesc);
+                                if (hospDest) {
+                                    canonical = 'HospitalAbroad';
+                                    dest = hospDest;
+                                }
+                            } catch (_) { /* ignore parse failures */ }
                         }
                     } else { canonical = rawState; }
                     // Returning / landed recent logic
@@ -21468,7 +21474,10 @@
                             try { await api.post('deactivateDibsAndDealsForUser', { userId: state.user.tornId, factionId: state.user.factionId }); } catch(_) {}
                             await handlers.fetchGlobalData();
                         }
+                } else {
+                    state.user.hasReachedScoreCap = false;
                 }
+
                 utils.perf.stop('computeUserScoreCapCheck');
                 utils.perf.start('checkFactionScoreCap');
                 // FACTION CAP (authoritative lastRankWar.factions only) - banner removed
@@ -21541,11 +21550,61 @@
                     try { const st = state.rankedWarTableSnapshot && state.rankedWarTableSnapshot[noteTargetId]; if (st) noteTargetUsername = st.name || st.username || null; } catch(_) {}
                 }
                 const resp = await api.post('updateUserNote', { noteTargetId, noteContent: trimmedNew, factionId: state.user.factionId, noteTargetFactionId, noteTargetUsername });
-                
-                if (resp && resp.userNotes && Array.isArray(resp.userNotes)) {
-                    storage.updateStateAndStorage('userNotes', resp.userNotes);
-                } else {
-                    state.userNotes[noteTargetId] = { noteContent: trimmedNew, updated: Date.now(), updatedBy: state.user.tornId };
+
+                // Defensive handling: backend may return userNotes in different shapes
+                // (array or object). Normalize to a map and merge into local state to
+                // avoid accidentally replacing the entire store with an empty array.
+                try {
+                    const current = (state.userNotes && typeof state.userNotes === 'object') ? { ...state.userNotes } : {};
+                    if (resp && resp.userNotes) {
+                        // If backend returned an array, convert to map by id
+                        if (Array.isArray(resp.userNotes)) {
+                            const map = {};
+                            resp.userNotes.forEach(n => {
+                                if (!n) return;
+                                const id = n.id || n.userId || n.noteTargetId || n.targetId || null;
+                                if (!id) return;
+                                map[String(id)] = {
+                                    noteContent: (n.noteContent || n.content || '').toString(),
+                                    updated: n.updated || Date.now(),
+                                    updatedBy: n.updatedBy || null
+                                };
+                            });
+                            const merged = { ...current, ...map };
+                            storage.updateStateAndStorage('userNotes', merged);
+                        } else if (typeof resp.userNotes === 'object') {
+                            // Assume it's already a map; merge with existing
+                            const merged = { ...current, ...resp.userNotes };
+                            storage.updateStateAndStorage('userNotes', merged);
+                        } else {
+                            // Unexpected shape - fallback to per-key update
+                            if (trimmedNew === '') {
+                                if (current[noteTargetId]) delete current[noteTargetId];
+                                storage.updateStateAndStorage('userNotes', current);
+                            } else {
+                                current[noteTargetId] = { noteContent: trimmedNew, updated: Date.now(), updatedBy: state.user.tornId };
+                                storage.updateStateAndStorage('userNotes', current);
+                            }
+                        }
+                    } else {
+                        // No bulk data returned; perform local per-note update (or delete)
+                        if (trimmedNew === '') {
+                            if (current[noteTargetId]) delete current[noteTargetId];
+                        } else {
+                            current[noteTargetId] = { noteContent: trimmedNew, updated: Date.now(), updatedBy: state.user.tornId };
+                        }
+                        storage.updateStateAndStorage('userNotes', current);
+                    }
+                } catch (e) {
+                    // If normalization fails for any reason, fall back to safe per-key update
+                    try {
+                        if (trimmedNew === '') {
+                            if (state.userNotes && state.userNotes[noteTargetId]) delete state.userNotes[noteTargetId];
+                        } else {
+                            state.userNotes[noteTargetId] = { noteContent: trimmedNew, updated: Date.now(), updatedBy: state.user.tornId };
+                        }
+                        storage.updateStateAndStorage('userNotes', state.userNotes);
+                    } catch(_) { /* swallow */ }
                 }
 
                 if (!silent) ui.showMessageBox('[TDM] Note saved!', 'success');

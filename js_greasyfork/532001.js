@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Layout Fix
 // @namespace    http://tampermonkey.net/
-// @version      5.12
+// @version      5.13
 // @description  Forces a multi-column grid, hides ads & unwanted shelves, fixes layout bugs on channel pages & search, adjusts text/spacing, and optionally hides Shorts.
 // @author       Kalakaua
 // @match        https://www.youtube.com/*
@@ -279,8 +279,8 @@
         ytd-browse[page-subtype="subscriptions"] ytd-rich-item-renderer .yt-lockup-metadata-view-model__metadata {
              margin-top: ${gridChannelMarginTop} !important;
         }
-        ytd-browse[page-subtype="home"] ytd-rich-item-renderer .yt-content-metadata-view-model__metadata-row:first-of-type .yt-core-attributed-string a,
-        ytd-browse[page-subtype="subscriptions"] ytd-rich-item-renderer .yt-content-metadata-view-model__metadata-row:first-of-type .yt-core-attributed-string a {
+        ytd-browse[page-subtype="home"] ytd-rich-item-renderer .yt-content-metadata-view-model__metadata-row:first-of-type .yt-core-attributed-string > span,
+        ytd-browse[page-subtype="subscriptions"] ytd-rich-item-renderer .yt-content-metadata-view-model__metadata-row:first-of-type .yt-core-attributed-string > span {
              font-size: var(--gm-grid-channel-size) !important;
              line-height: 1.25em !important;
         }
@@ -753,8 +753,8 @@
     // === DELETE LEFTOVER "LOAD MORE" SPINNERS IN SEARCH RESULTS
     // ===================================================================
 
-    const continuationSelector = 'ytd-continuation-item-renderer'; 
-    const itemSectionSelector = 'ytd-item-section-renderer';       
+    const continuationSelector = 'ytd-continuation-item-renderer';
+    const itemSectionSelector = 'ytd-item-section-renderer';
 
     function cleanupStuckSpinners() {
         const allSpinners = document.querySelectorAll(continuationSelector);

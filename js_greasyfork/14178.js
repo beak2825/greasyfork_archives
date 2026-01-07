@@ -11,7 +11,7 @@
 // @license    GPL-3.0-only
 // @create     2015-11-25
 // @run-at     document-start
-// @version    27.18
+// @version    27.19
 // @connect    baidu.com
 // @connect    google.com
 // @connect    google.com.hk
@@ -48,9 +48,10 @@
 // @home-url   https://greasyfork.org/zh-TW/scripts/14178
 // @home-url2  https://github.com/langren1353/GM_script
 // @homepageURL  https://greasyfork.org/zh-TW/scripts/14178
-// @copyright  2015-2025, AC
-// @lastmodified  2025-10-22
+// @copyright  2015-2026, AC
+// @lastmodified  2026-01-06
 // @feedback-url  https://github.com/langren1353/GM_script
+// @note    2026.01-06-V27.19 修复百度、谷歌、必应的一些bug，增加页面加载动画，优化页面资源占用，避免大量的资源占用
 // @note    2025.10-22-V27.18 修复谷歌、百度在不同缩放屏幕下导致的错位问题
 // @note    2025.07-12-V27.17 修复谷歌单双列样式表问题、优化百度样式表；增加less.js资源，避免jsdelivr异常无法加载
 // @note    2025.06-04-V27.15 修复谷歌单列、双列显示问题；修复谷歌使用百度Icon问题
@@ -125,10 +126,8 @@
 // @resource  BgAutoFit          https://ibaidu.tujidu.com/newcss/BgAutoFit.less?t=27.14
 // @resource  HuaHua-ACDrakMode  https://ibaidu.tujidu.com/newcss/HuaHua-ACDrakMode.less?t=27.14
 // @resource  baiduLiteStyle     https://gitcode.net/-/snippets/1906/raw/master/LiteStyle.css?inline=false
-// @require   https://unpkg.com/less_browser_fix@4.2.2/dist/less.min.js
 // @require   https://registry.npmmirror.com/less_browser_fix/4.2.2/files/dist/less.min.js
-// @require   https://lib.baomitu.com/vue/3.2.31/vue.runtime.global.prod.min.js
-// @require   https://lf6-cdn-tos.bytecdntp.com/cdn/expire-10-y/vue/3.2.31/vue.runtime.global.prod.min.js
+// @require   https://registry.npmmirror.com/vue/3.5.26/files/dist/vue.runtime.global.prod.js
 // @noframes
 // @grant    GM_getValue
 // @grant    GM.getValue
@@ -149,16 +148,16 @@
 // ==/UserScript==
 ~(async () => {
   Object.defineProperty(console, 'mylog', {
-    value: function() {
-      if(CONST && CONST.curConfig) {
-        if(CONST.curConfig.isDevMode) {
+    value: function () {
+      if (CONST && CONST.curConfig) {
+        if (CONST.curConfig.isDevMode) {
           const error = new Error();
           const stackTrace = error.stack.split('\n')[2].trim(); // 获取调用栈信息
-          try{
+          try {
             const [targetLink] = /chrome-extension:\/\/(.*)/.exec(stackTrace) // 提取文件名和行号
             const data = [...arguments].join(' ').padEnd(60, ' ')
             console.log(data, `\t\t ${targetLink}`); // 结合自定义输出和调用栈信息
-          }catch (e){
+          } catch (e) {
             // console.error(error.stack)
             console.log('[log] -', ...arguments); // 如果没有匹配到文件名和行号，则只输出自定义信息
           }
@@ -168,19 +167,19 @@
       }
     },
   })
-  
+
   const { reactive, watch } = Vue;
   const MyApi = (() => {
     /**
      * @param cssText CSS的内容，如果是less的话，需要编译后的
      * @param className 新增的类名，或者是一堆类名（空格隔开）
      */
-    function addStyle(cssText, className = '', dataName){ // 添加CSS代码，不考虑文本载入时间，带有className
-      if(className) {
+    function addStyle(cssText, className = '', dataName) { // 添加CSS代码，不考虑文本载入时间，带有className
+      if (className) {
         const selectorName = (' ' + className).split(' ').join('.')
-        
+
         let oldNode = document.querySelector(selectorName)
-        if(!oldNode) {
+        if (!oldNode) {
           oldNode = document.createElement("style");
           oldNode.className = className;
           oldNode.dataset.name = dataName
@@ -207,10 +206,11 @@
      * @param callback 回调函数
      * @param catchCallback 异常的回调函数
      */
-    const safeFunc = (callback, catchCallback = () => {}) => {
-      try{
+    const safeFunc = (callback, catchCallback = () => {
+    }) => {
+      try {
         return callback()
-      }catch (e){
+      } catch (e) {
         console.mylog(e)
         return catchCallback()
       }
@@ -218,7 +218,7 @@
 
     const safeGetNodeFunc = (selector, callbackFunc) => {
       const node = document.querySelector(selector)
-      if(node) {
+      if (node) {
         callbackFunc(node)
       }
     }
@@ -232,9 +232,9 @@
      * @param timeout 查询超时，超时后停止
      * @param errCallback 查询超时后，回调
      */
-    const safeWaitFunc = async(selector, callbackFunc = node => {
+    const safeWaitFunc = async (selector, callbackFunc = node => {
     }, findTick = 200, clearAfterFind = true, timeout = 20000 * 1000, errCallback) => {
-      if(findTick < 20) findTick = 20
+      if (findTick < 20) findTick = 20
       let count = timeout / findTick
       let t_id = null
       const firstSuccess = await mainRunFunc()
@@ -300,15 +300,15 @@
      * @param baseUrl 默认网址来源
      * @returns {string} 变量结果Value
      */
-    function getUrlAttribute(baseUrl = location.href, attribute, needDecode = true){
+    function getUrlAttribute(baseUrl = location.href, attribute, needDecode = true) {
       const [, search = ''] = baseUrl.split("?");
       var searchValue = search.split("&");
       for (var i = 0; i < searchValue.length; i++) {
         var key_value = searchValue[i].split("=");
-        var reg = new RegExp("^"+attribute+"$");
+        var reg = new RegExp("^" + attribute + "$");
         if (reg.test(key_value[0])) {
           var searchWords = key_value[1];
-          return needDecode?decodeURIComponent(searchWords):searchWords;
+          return needDecode ? decodeURIComponent(searchWords) : searchWords;
         }
       }
     }
@@ -429,6 +429,7 @@
         return "";
       }
     }
+
     function getElementByXpath(e, t, r = document) {
       t = t || r;
       try {
@@ -480,7 +481,7 @@
     }
 
     function hideNode(node) {
-      if(node.hasAttribute('ac-ad-hide')) return
+      if (node.hasAttribute('ac-ad-hide')) return
       node.setAttribute('ac-ad-hide', '1')
       node.style = 'display: none !important;'
     }
@@ -488,12 +489,12 @@
     function safeRemove_xpath(xpathSelector, useHide) {
       safeFunc(() => {
         let removeNodes = getAllElements(xpathSelector);
-        if(useHide) {
-          for (let i = 0; i < removeNodes.length; i++){
+        if (useHide) {
+          for (let i = 0; i < removeNodes.length; i++) {
             hideNode(removeNodes[i])
           }
         } else {
-          for (let i = 0; i < removeNodes.length; i++){
+          for (let i = 0; i < removeNodes.length; i++) {
             removeNodes[i].remove() // 避免卡顿现象
           }
         }
@@ -540,14 +541,14 @@
         CONST.acpush_acremoveInit()
       }
     })
-    if(location.host.includes('tujidu.com') || location.host.includes('90dao.com') || location.host.includes('localhost')) {
+    if (location.host.includes('tujidu.com') || location.host.includes('90dao.com') || location.host.includes('localhost')) {
       unsafeWindow.AC_GM_Interface = {
         async get(key, dataStr) {
-          if(key.includes('op_')) {
-            const trueKey = tureKeyFix(key)
+          if (key.includes('op_')) {
+            const trueKey = trueKeyFix(key)
             const config = JSON.parse(await GM.getValue('ACConfig', '{}'))
             let res = config[trueKey] || JSON.parse(dataStr)
-            if(key.includes('common')) {
+            if (key.includes('common')) {
               res.version = GM_info.script.version
             }
             return res
@@ -556,8 +557,8 @@
           }
         },
         async save(key, dataObj) {
-          if(key.includes('op_')) {
-            const trueKey = tureKeyFix(key)
+          if (key.includes('op_')) {
+            const trueKey = trueKeyFix(key)
             const config = JSON.parse(await GM.getValue('ACConfig', '{}'))
             config[trueKey] = dataObj
             GM.setValue('ACConfig', JSON.stringify(config))
@@ -568,33 +569,32 @@
           }
         },
         async change(key, dataObj) {
-          const trueKey = tureKeyFix(key)
+          const trueKey = trueKeyFix(key)
           const Sync = JSON.parse(await GM.getValue('ACConfig', '{}'))
           Sync[trueKey] = dataObj
           GM.setValue('SyncConfig', JSON.stringify(Sync)) // 触发到Sync上，通过Sync通信
         },
       }
-      
-      function tureKeyFix(key) {
+
+      function trueKeyFix(key) {
         return key.replace(/^op_/, '').replace('duckgo', '')
       }
 
-      if(location.host.includes('localhost')) {
+      if (location.host.includes('localhost')) {
         unsafeWindow.isDevMode = true
       }
 
       throw new Error('90dao不需要执行其他函数，抛出异常表示结束')
     }
   }
-  
-  try{
+
+  try {
     setHostBind()
-  } catch (e)
-  {
+  } catch (e) {
     // 不再执行后续函数，停在这里了
     return;
   }
-  
+
   class SiteOptions {
     constructor(_gmInstance) {
       this.gmInstance = _gmInstance
@@ -615,11 +615,12 @@
           HT_insert: ["", 2], // 1 = beforebegin; 2 = beforeend
           replaceE: "",
           stylish: "",
-          afertPagerAutoCallFunc: (pageElements, scriptElements) => {} // 执行完脚本后，执行这个函数
+          afertPagerAutoCallFunc: (pageElements, scriptElements) => {
+          } // 执行完脚本后，执行这个函数
         }
       }
 
-      if(this['_s_' + this.siteName]) {
+      if (this['_s_' + this.siteName]) {
         this.useItem = Object.assign({
           pageNum: 1, // 页码
           pageUrl: '', // 下一页的地址
@@ -640,7 +641,7 @@
 
     _s_baidu() {
       if (this.useItem.SiteTypeID === 1) {
-        if(location.href.search(/(&|\?)(wd|word)=/) < 0) {
+        if (location.href.search(/(&|\?)(wd|word)=/) < 0) {
           console.mylog('禁用CSS的')
           this.gmInstance.curConfig.enableCSS = false
         }
@@ -667,11 +668,11 @@
 
     _s_bing() {
       // 图片站 、地图站、购物站
-      if(this.useItem.SiteTypeID === 5) {
+      if (this.useItem.SiteTypeID === 5) {
         if (location.href.search(/images\/search/) > 0) {
           console.mylog("特殊站,不加载样式，不添加menu");
           this.gmInstance.curConfig.enableCSS = false
-        } else if(location.href.search(/search/) > 0) {
+        } else if (location.href.search(/search/) > 0) {
           this.gmInstance.curConfig.enableCSS = true // 仅在搜索结果页，展示背景图即可
         } else {
           this.gmInstance.curConfig.enableCSS = false
@@ -699,7 +700,7 @@
     _s_google() {
       // 图片站 、地图站、购物站
       if (this.useItem.SiteTypeID === 4) {
-        if(location.href.search(/tbm=(isch|lcl|shop|flm)/) > 0) {
+        if (location.href.search(/tbm=(isch|lcl|shop|flm)/) > 0) {
           console.mylog("特殊站,不加载样式，不添加menu");
           this.gmInstance.curConfig.enableCSS = false
         }
@@ -718,16 +719,17 @@
           pageElement: "id('rso')|id('center_col')/style[contains(.,'relative')][id('rso')]",
           HT_insert: ["css;#res", 2], // 1 = beforebegin; 2 = beforeend
           replaceE: '//div[@id="navcnt"] | //div[@id="rcnt"]//div[@role="navigation"]',
-          afertPagerAutoCall: (pageElements, scriptElements) => {
+          afertPagerAutoCallFunc: (pageElements, scriptElements, toElement) => {
             // 插入scripts & style - 保证js加载
             scriptElements.forEach((one) => {
               const newScript = document.createElement('script')
-              newScript.textContent = one.textContent // 新建一个脚本，否则可能因为不执行导致失败
+              newScript.textContent = one.textContent
               newScript.type = one.type
               newScript.nonce = one.nonce
-              try{
+              try {
                 toElement.appendChild(newScript)
-              }catch (e){}
+              } catch (e) {
+              }
             })
           } // 执行完脚本后，执行这个函数
         }
@@ -735,7 +737,8 @@
     }
 
     _s_haosou() {
-      if (this.useItem.SiteTypeID === 3) {}
+      if (this.useItem.SiteTypeID === 3) {
+      }
       return {
         SiteTypeID: 3,
         MainType: ".res-list",
@@ -759,7 +762,8 @@
     }
 
     _s_duck() {
-      if (this.useItem.SiteTypeID === 10){}
+      if (this.useItem.SiteTypeID === 10) {
+      }
       return {
         SiteTypeID: 10,
         MainType: "#react-layout li",
@@ -795,7 +799,8 @@
     }
 
     _s_google_scholar() {
-      if (this.useItem.SiteTypeID === 4.1) {}
+      if (this.useItem.SiteTypeID === 4.1) {
+      }
 
       return {
         SiteTypeID: 4.1,
@@ -813,6 +818,7 @@
       }
     }
   }
+
   class BaseConfig {
     constructor(isEngine = true) {
       this.commonStyleEnable = true // 是否开启默认效果优化
@@ -820,7 +826,7 @@
       this.commonStyleLess = ''
 
       // 搜索引擎的逻辑
-      if(isEngine) {
+      if (isEngine) {
         this.adsStyleEnable = true // 是否开启默认效果优化
         this.adsStyleMode = '3' // 0-不带css；1-单列靠左；2-单列居中；3-双列居中
         this.HuYanMode = false // 护眼模式
@@ -837,22 +843,51 @@
       }
     }
   }
+
   class CSSAutoInsert {
     constructor() {
       this.hasChanged = false
       this.cssInsertSet = {}
+      this.isUpdating = false; // 是否已经调度了更新
+      this.isFirstRun = true;  // 标记是否为首次运行
+      this.updatePaused = false; // 是否暂停更新（用于批量原子更新）
+    }
 
-      MyApi.setIntervalRun(()=> {
-        if(this.hasChanged) {
-          this.hasChanged = false
-          this.doInsert()
+    _requestUpdate() {
+      if (this.isUpdating || this.updatePaused) return;
+
+      // 如果是首次运行，同步执行首次完整注入
+      if (this.isFirstRun) {
+        this.isFirstRun = false;
+        this.hasChanged = false;
+        this.doInsert();
+        return;
+      }
+
+      this.isUpdating = true;
+      requestAnimationFrame(() => {
+        if (this.hasChanged) {
+          this.hasChanged = false;
+          this.doInsert();
         }
-      }, 50)
+        this.isUpdating = false;
+      });
+    }
+
+    pause() {
+      this.updatePaused = true;
+    }
+
+    resume() {
+      this.updatePaused = false;
+      if (this.hasChanged) {
+        this._requestUpdate();
+      }
     }
 
     add(uniqueName, cssText) {
       uniqueName = 'AC-' + uniqueName // 加上特殊前缀，标志关键词
-      
+
       // 如果有，并且数据还一模一样，那么跳过；如果数据不一样，那么覆盖
       if (this.cssInsertSet[uniqueName] && this.cssInsertSet[uniqueName] === cssText) {
         return
@@ -860,19 +895,23 @@
       console.mylog('--->插入样式表:' + uniqueName)
       this.cssInsertSet[uniqueName] = `\n/************${uniqueName}*********/\n` + cssText
       this.hasChanged = true
+      this._requestUpdate();
     }
+
     remove(uniqueName) {
       uniqueName = 'AC-' + uniqueName // 加上特殊前缀，标志关键词
       if (this.cssInsertSet[uniqueName]) {
         console.mylog('--->移除样式表:' + uniqueName)
         delete this.cssInsertSet[uniqueName]
         this.hasChanged = true
+        this._requestUpdate();
       }
     }
 
     clear() {
       this.cssInsertSet = {}
       this.hasChanged = true
+      this._requestUpdate();
     }
 
     doInsert() {
@@ -881,14 +920,15 @@
       console.mylog('插入CSS完成')
     }
   }
+
   class ACGM {
-    constructor() {      
+    constructor() {
       this.initGM()
       this.bindGM()
     }
 
     async initACGM() {
-      
+
       let ACConfig = {}
       this.blockRuleList = []
       const DefaultConfig = {
@@ -951,6 +991,16 @@
         ...DefaultConfig.common,
         ...DefaultConfig.baidu
       }
+
+      // 增加加载动画元素 - 5档极速模式
+      const loader = document.createElement('div')
+      loader.className = 'ac-loading-spinner'
+      loader.innerHTML = '<div></div><div></div><div></div><div></div><div></div>';
+      // 改为等待 body 出现后注入，以此保证合法的 DOM 结构，且 20ms 的频率足以保证加载速度
+      MyApi.safeWaitFunc('body', (bodyNode) => {
+        bodyNode.insertBefore(loader, bodyNode.firstChild);
+      }, 20, true);
+
       this.sortIndex = 1
       this.bingScrollPos = 0
       this.ACConfig = Object.assign({}, DefaultConfig, ACConfig) // 作为临时修改用
@@ -975,7 +1025,7 @@
         huyanStyle: '',
         bgAutoFitStyle: '',
         darkModeStyle: '', // 暗黑护眼色
-        
+
         faviconStyle: '', // 动态插入的favicon的数据
       }
 
@@ -984,6 +1034,8 @@
         headLocked: true,
         pageLoadingLocked: false,
         isBlockChecking: false,
+        isFaviconChecking: false,
+        isCounterChecking: false,
         afterBlockChangeChecked: true, // 数据刷新后，是否检查过了，用于减少reg判定
       }
       // 数据先初始化
@@ -1008,7 +1060,7 @@
         GM.getValue = GM_getValue;
       }
       if (typeof GM_getResourceText === 'undefined') {
-        GM_getResourceText = async function(aResourceName) {
+        GM_getResourceText = async function (aResourceName) {
           // 如果没有这个接口，那就是没办法缓存这个数据，所以只能用本地的数据进行缓存了
           let res = await (await fetch(await GM.getResourceUrl(aResourceName))).text();
           let saveRes = await GM.getValue(aResourceName);
@@ -1023,10 +1075,10 @@
     }
 
     bindGM() {
-      GM_registerMenuCommand('AC-重定向脚本设置', function() {
+      GM_registerMenuCommand('AC-重定向脚本设置', function () {
         window.open(CONST.openSeetingsUrl)
       });
-      GM_registerMenuCommand('脚本重置 - 修复脚本', function() {
+      GM_registerMenuCommand('脚本重置 - 修复脚本', function () {
         GM.setValue('ACConfig', '{}');
         location.reload();
       });
@@ -1035,32 +1087,32 @@
     check90daoConn() {
       const storeValue = sessionStorage.getItem('access_90dao')
       this.openSeetingsUrl = storeValue || 'https://ac-baidu.tujidu.com/pages/custom/#' + CONST.options.siteName
-      
+
       if (!storeValue) {
         console.log('不存在自定义配置')
         GM_xmlhttpRequest({
           method: "HEAD",
           timeout: 3000,
           url: "https://ac-baidu.90dao.com/",
-          onload: ()=> {
+          onload: () => {
             this.openSeetingsUrl = 'https://ac-baidu.90dao.com/pages/custom/#' + CONST.options.siteName
             sessionStorage.setItem('access_90dao', this.openSeetingsUrl)
           },
-          onerror: ()=> {
+          onerror: () => {
             this.openSeetingsUrl = 'https://ibaidu.tujidu.com/pages/custom/#' + CONST.options.siteName
             sessionStorage.setItem('access_90dao', this.openSeetingsUrl)
           }
         });
       }
     }
-    
+
     saveConfig() {
       const commonConfig = this.ACConfig['common']
       const siteConfig = this.ACConfig[this.options.siteName]
-      for(const key in siteConfig) {
+      for (const key in siteConfig) {
         siteConfig[key] = this.curConfig[key]
       }
-      for(const key in commonConfig) {
+      for (const key in commonConfig) {
         commonConfig[key] = this.curConfig[key]
       }
       GM.setValue('ACConfig', JSON.stringify(this.ACConfig));
@@ -1073,16 +1125,16 @@
     renewConfig(newConfig) {
       const chooseCfg = newConfig[this.options.siteName]
       const commonCfg = newConfig['common']
-      if(chooseCfg) {
+      if (chooseCfg) {
         Object.assign(this.curConfig, chooseCfg)
       }
-      if(commonCfg) {
+      if (commonCfg) {
         Object.assign(this.curConfig, commonCfg)
       }
     }
 
     async loadStyleByName_WithLessCache(styleName) {
-      if(CONST.curConfig.isDevMode && CONST.curConfig.isLocalDevMode && CONST.curConfig.localDebugBaseUrl) {
+      if (CONST.curConfig.isDevMode && CONST.curConfig.isLocalDevMode && CONST.curConfig.localDebugBaseUrl) {
         const renderCSSKeyName = '__AC.RenderCSS__' + styleName
         return await setLocalLessData(renderCSSKeyName, getDebugStyle) // 不带缓存，随时刷新了
         // return await cacheStyle(renderCSSKeyName, getDebugStyle) // 带缓存，随时刷新了
@@ -1114,7 +1166,7 @@
       async function getDebugStyle() {
         const dataUrl = `${CONST.curConfig.localDebugBaseUrl}${styleName}.less`
         const [err, text] = await MyApi.http.get(dataUrl)
-        if(!err) {
+        if (!err) {
           return text
         } else {
           console.error('加载失败', dataUrl)
@@ -1156,7 +1208,7 @@
       if (this.curConfig.HuYanMode) {
         this.adsCSSList.huyanStyle = await this.getHuyanStyle()
       }
-      
+
       if (this.curConfig.isDarkModeEnable) {
         this.adsCSSList.darkModeStyle = await this.loadStyleByName_WithLessCache('HuaHua-ACDrakMode')
       }
@@ -1193,6 +1245,7 @@
           if (value < 0) return 0;
           return value;
         }
+
         // 按比例缩放 + 1/deltaY
         // HEX 2 RGB
         let rgb = oriRGB.replace("#", "");
@@ -1231,11 +1284,15 @@
 
     waitBodyHead() {
       // 永远执行
-      MyApi.safeWaitFunc(() => {return document.head}, () => {
+      MyApi.safeWaitFunc(() => {
+        return document.head
+      }, () => {
         console.mylog('解锁head')
         this.lock.headLocked = false
       })
-      MyApi.safeWaitFunc(() => {return document.body}, () => {
+      MyApi.safeWaitFunc(() => {
+        return document.body
+      }, () => {
         console.mylog('解锁body')
         this.lock.bodyLocked = false
       })
@@ -1243,19 +1300,19 @@
 
     addIntervalTrigger(site = '', waitAt = 'now', callback, interval_time = 0, runTimes = 1) {
       console.mylog('addIntervalTrigger', site, "------------", this.options.siteName)
-      if(site !== 'all' && this.options.siteName !== site) return
-      
+      if (site !== 'all' && this.options.siteName !== site) return
+
       let count = runTimes
       const intId = MyApi.setIntervalRun(async () => {
         count--
-        if(
+        if (
           !((waitAt === 'now') ||
             (waitAt === 'body' && !this.lock.bodyLocked) ||
             (waitAt === 'head' && !this.lock.headLocked))
         ) {
           return
         }
-        if(count >= 0) {
+        if (count >= 0) {
           await callback(count)
         } else {
           clearInterval(intId)
@@ -1278,7 +1335,8 @@
           return "已存在相同项"
         }
       }
-      function acremove (data) {
+
+      function acremove(data) {
         this.hasEdit = true
         let delId = this.findIndex(m => m === data);
         if (delId >= 0) {
@@ -1288,10 +1346,12 @@
         }
         return -1
       }
+
       function dataChangeCallback() {
         CONST.lock.afterBlockChangeChecked = false
         PageBlockFunc._updateRegListRule()
       }
+
       Object.defineProperty(CONST.blockRuleList, 'acpush', { value: acpush })
       Object.defineProperty(CONST.blockRuleList, 'acremove', { value: acremove })
     }
@@ -1303,7 +1363,7 @@
         'so.com': 'haosou',
       }
       let useRule = Object.keys(specialRule).find(one => location.host.includes(one))
-      if(!useRule) {
+      if (!useRule) {
         useRule = location.host.replace(/.*(baidu|google|bing|duck).*/, '$1')
       } else {
         return specialRule[useRule]
@@ -1311,7 +1371,7 @@
       return useRule
     }
   }
-  
+
   const CONST = new ACGM()
   await CONST.initACGM()
 
@@ -1319,10 +1379,11 @@
     constructor() {
       this.removeAds = this.removeAdFunc()
     }
+
     GoogleInBaiduMode() {
-      MyApi.safeGetNodeFunc("#logo img, #logocont img", function(node) {
+      MyApi.safeGetNodeFunc("#logo img, #logocont img", function (node) {
         let faNode = node.parentNode.parentNode;
-        if(faNode.hasAttribute('xchanged')) return
+        if (faNode.hasAttribute('xchanged')) return
         faNode.classList.add("baidu");
         faNode.setAttribute('xchanged', 1)
         node.removeAttribute("src");
@@ -1330,9 +1391,9 @@
         node.width = "125";
         node.removeAttribute("height");
       });
-      MyApi.safeGetNodeFunc("a#logo", function(node) {
+      MyApi.safeGetNodeFunc("a#logo", function (node) {
         let faNode = node.parentNode.parentNode;
-        if(faNode.hasAttribute('xchanged')) return
+        if (faNode.hasAttribute('xchanged')) return
         faNode.classList.add("baidu");
         faNode.setAttribute('xchanged', 1)
         node.querySelector('svg').style.display = 'none'
@@ -1341,30 +1402,30 @@
         newImage.width = "125"
         node.appendChild(newImage)
       });
-      MyApi.safeGetNodeFunc("img[alt='Google']", function(node) {
-        if(node.hasAttribute('xchanged')) return
+      MyApi.safeGetNodeFunc("img[alt='Google']", function (node) {
+        if (node.hasAttribute('xchanged')) return
         node.setAttribute('xchanged', 1)
         node.removeAttribute("srcset");
         node.src = "https://www.baidu.com/img/flexible/logo/pc/result.png";
         node.style.height = '72px'
         // node.style.marginTop = '-10px'
       });
-      MyApi.safeGetNodeFunc("form[role='search'] .logo img", function(node) {
-        if(node.hasAttribute('xchanged')) return
+      MyApi.safeGetNodeFunc("form[role='search'] .logo img", function (node) {
+        if (node.hasAttribute('xchanged')) return
         node.setAttribute('xchanged', 1)
         node.removeAttribute("srcset");
         node.src = "https://www.baidu.com/img/flexible/logo/pc/result.png";
         node.setAttribute("height", "30");
         // node.style.marginTop = '-10px'
       });
-      if(!document.title.includes('百度')) {
+      if (!document.title.includes('百度')) {
         document.title = document.title.replace(/^Google/, "百度一下，你就知道")
           .replace(/ - Google 搜索/, "_百度搜索")
           .replace(/ - Google Search/, "_百度搜索");
       }
-      MyApi.safeGetNodeFunc("head", function() {
+      MyApi.safeGetNodeFunc("head", function () {
         let linkTarget = document.querySelector("link[type='image/x-icon']");
-        if(linkTarget && linkTarget.href.includes('baidu')) {
+        if (linkTarget && linkTarget.href.includes('baidu')) {
           return
         }
         linkTarget = document.createElement('link')
@@ -1375,6 +1436,7 @@
         document.querySelector('link[rel="icon"]').href = 'https://www.baidu.com/favicon.ico'
       })
     }
+
     removeAdFunc() {
       function removeBaiduAd() {
         // 移除右侧栏广告
@@ -1394,11 +1456,13 @@
         MyApi.safeRemove_xpath("id('page-bd')/div[not(@class)]");
         MyApi.safeRemove_xpath("//div[@class='na-like-container']");
       }
+
       function removeGoogleAd() {
         MyApi.safeRemoveAd("#bottomads");
         MyApi.safeRemoveAd('div[aria-label="广告"]');
         MyApi.safeRemoveAd('div[aria-label="Ads"]');
       }
+
       function removeBingAd() {
         MyApi.safeRemoveAd(".b_ad");
         MyApi.safeRemove_xpath("id('b_results')/li[./div[@class='ad_fls']]");
@@ -1415,6 +1479,7 @@
         }) // 检查每一个p标签，里面存在before伪元素，且伪元素中是链接的，均为广告
         adList.forEach(one => one.remove())
       }
+
       function removeHaosouAd() {
         MyApi.safeRemoveAd("#so_kw-ad");
         MyApi.safeRemoveAd("#m-spread-left");
@@ -1431,27 +1496,29 @@
         removeHaosouAd
       }
     }
+
     InsertSettingMenu() {
       if (document.querySelector("#myuser") === null) {
         MyApi.safeWaitFunc("#u, #gb, #b_header>#id_h, #header_wrapper .js-hl-butto, .header--aside, #header .inner .menu", parent => {
-          
+
           parent.style = "width: auto;";
           let userAdiv = document.createElement("div");
           userAdiv.id = "myuser";
           userAdiv.innerHTML = `<input type='submit' class='myuserconfig' value='自定义'/><span class='ac-newversionDisplay' style='background-color: red;float: left;height: 8px;width: 8px;border-radius: 4px;display: none'>&nbsp;</span>`;
 
           parent.insertBefore(userAdiv, parent.childNodes[0]);
-          document.querySelector("#myuser .myuserconfig").addEventListener("click", function(e) {
+          document.querySelector("#myuser .myuserconfig").addEventListener("click", function (e) {
             window.open(CONST.openSeetingsUrl)
           }, true);
         }, 300)
       }
     }
+
     RedirectHandle() {
       // 处理主重定向
       if (CONST.options.useItem.SiteTypeID < 0) return;
       if (CONST.curConfig.isRedirectEnable) {
-        
+
         if (CONST.options.useItem.Stype_Normal) { // 如果定义了，那么就去处理重定向
           resetURLNormal();
         }
@@ -1465,11 +1532,11 @@
         let nodes = document.querySelectorAll("#page #page-bd #results .result:not([ac_redirectStatus])");
         for (let i = 0; i < nodes.length; i++) {
           let curNode = nodes[i];
-          MyApi.safeFunc(function() {
+          MyApi.safeFunc(function () {
             let curData = JSON.parse(curNode.dataset.log.replace(/'/gm, "\""));
             let trueLink = curData.mu;
             curNode.querySelector("article").setAttribute("rl-link-href", trueLink);
-            curNode.querySelectorAll("a").forEach(function(per) {
+            curNode.querySelectorAll("a").forEach(function (per) {
               per.setAttribute("href", trueLink);
             });
           });
@@ -1499,7 +1566,7 @@
         }
       }
 
-      function DealRedirect (request, curNodeHref, respText, RegText, hrefType) {
+      function DealRedirect(request, curNodeHref, respText, RegText, hrefType) {
         if (respText === null || typeof (respText) === "undefined") return;
         let resultResponseUrl = "";
         if (RegText != null) {
@@ -1535,6 +1602,7 @@
           }
         }
       }
+
       function resetURLNormal() {
         const mainList = document.querySelectorAll(CONST.options.useItem.MainType)
 
@@ -1549,12 +1617,12 @@
             curNode.setAttribute("ac_redirectStatus", "0");
 
             const linkNode = curNode.querySelector(CONST.options.useItem.Stype_Normal);
-            if(linkNode === null) {
+            if (linkNode === null) {
               continue
             }
 
             // 跳过特殊链接的处理
-            if(linkNode.href && (linkNode.href.startsWith('javascript') || linkNode.href.startsWith('#'))) {
+            if (linkNode.href && (linkNode.href.startsWith('javascript') || linkNode.href.startsWith('#'))) {
               continue
             }
 
@@ -1566,7 +1634,7 @@
             const isLinkNeedDeal = () => {
               // 如果当前节点存在mu参数，或者link节点存在data-mdurl，那么就算直接成功，不用重新请求一遍了
               let trueLink = curNode.getAttribute('mu') || linkNode.getAttribute('data-mdurl')
-              if(trueLink && !trueLink.includes('nourl')) {
+              if (trueLink && !trueLink.includes('nourl')) {
                 trueLink = getBaiduEncodingHandle(trueLink)
                 DealRedirect(null, linkHref, trueLink);
                 return true
@@ -1574,13 +1642,14 @@
             }
             const getBaiduEncodingHandle = (linkUrl) => {
               let resLink = linkUrl
-              if(CONST.options.useItem.SiteTypeID === CONST.options.baidu.SiteTypeID && linkUrl.includes('baidu.com')) {
+              if (CONST.options.useItem.SiteTypeID === CONST.options.baidu.SiteTypeID && linkUrl.includes('baidu.com')) {
                 const [, first = ''] = /(ie=[^&]+)/.exec(location.search) || []
                 resLink = linkUrl.replace(/(ie=[^&]+)/, first)
               }
               return resLink
             }
-            if(!isLinkNeedDeal()) {
+            // 如果不需要处理，那么跳过后续逻辑
+            if (!isLinkNeedDeal()) {
               continue
             }
             // 走接口重定向处理
@@ -1591,7 +1660,7 @@
               linkHref.search("bing.com/(ck|a|aclick)") > 0 ||
               linkHref.search("e.so.com/(search|eclk)") > 0
             ) {
-              (async function(c_curnode, c_curhref) {
+              (async function (c_curnode, c_curhref) {
                 let url = c_curhref.replace(/^http:/, "https:");
                 if (CONST.options.useItem.SiteTypeID === CONST.options.baidu.SiteTypeID && !url.includes("eqid")) {
                   // 如果是百度，并且没有带有解析参数，那么手动带上
@@ -1603,7 +1672,7 @@
                   headers: { "Accept": "*/*", "Referer": c_curhref.replace(/^http:/, "https:") },
                   method: "GET",
                   timeout: 8000,
-                  onload: function(response) { // MARK 有时候这个函数根本不进来 - 调试的问题 - timeout
+                  onload: function (response) { // MARK 有时候这个函数根本不进来 - 调试的问题 - timeout
                     if (response.responseText || response.responseHeaders) {
                       // 由于是特殊返回-并且好搜-搜狗-百度都是这个格式，故提出
                       DealRedirect(gmRequestNode, c_curhref, response.responseText, "URL='([^']+)'")
@@ -1624,6 +1693,7 @@
         if (hasDealHrefSet.size > 0 && mainList.length - hasDealHrefSet.size > 0) console.mylog("丢弃掉", mainList.length - hasDealHrefSet.size, "个重复链接");
       }
     }
+
     getTextHost(sbefore) {
       sbefore = (sbefore && sbefore.trim()).replace(/\s-\s\d{4}-\d{1,2}-\d{1,2}/, "") || "";
       let send;
@@ -1646,6 +1716,7 @@
       if (send.indexOf("↵") >= 0) return null;
       return send.trim();
     }
+
     getNodeHost(sitetpNode) {
       if (!sitetpNode) return {}
       if (CONST.options.useItem.SiteTypeID === CONST.options.baidu.SiteTypeID) {
@@ -1664,102 +1735,131 @@
         return { curHost: host, curUrl: host };
       }
     }
+
     addFavicon(citeList) {
-      const insertList = []
       if (CONST.options.useItem.SiteTypeID !== null) {
-        for (let index = 0; index < citeList.length; index++) {
-          if (null === citeList[index].getAttribute("ac_faviconStatus")) {
-            let curNode = citeList[index];
-            let targetNode = curNode;
-            let { curHost, curUrl } = PageFunc.getNodeHost(targetNode);
-            if (!curHost) { // 跳过解不出来的地址
-              continue;
-            } else {
-            }
-            let faviconUrl = curHost;
-            let II = 0;
-            for (; II <= 5; II++) {
-              targetNode = targetNode.parentNode;
-              if (targetNode != null && targetNode.querySelector(CONST.options.useItem.FaviconAddTo) != null) {
-                break;
-              }
-            }
-            if (targetNode.parentNode.hasAttribute('tpl') && targetNode.parentNode.getAttribute('tpl').includes('stock')) {
-              curNode.setAttribute("ac_faviconStatus", "-3");
-              continue
-            }
-            //console.mylog(index+"."+faviconUrl+"--"+II);
-            if (II <= 5) {
-              // 先用父节点判断一下是否存在img
-              let tmpHTML = targetNode.innerHTML;
-              let pos = tmpHTML.indexOf("fav-url")
-                & tmpHTML.indexOf("wr_fav")
-                & tmpHTML.indexOf("favurl")
-                & tmpHTML.indexOf("tit-ico")
-                & tmpHTML.indexOf("img_fav rms_img")
-                & tmpHTML.indexOf("c-tool-")
-                & tmpHTML.indexOf("span class=\"c-icon c-icon-")
-                & tmpHTML.indexOf("img class=\"xA33Gc")
-                & tmpHTML.indexOf("img class=\"XNo5Ab\""); // 谷歌图标
-              //他自己已经做了favicon了
-              if (pos > -1) {
-                curNode.setAttribute("ac_faviconStatus", "-2");
-                continue;
-              }
-              targetNode = targetNode.querySelector(CONST.options.useItem.FaviconAddTo);
-              let host = faviconUrl.replace(/[^.]+\.([^.]+)\.([^.]+)/, "$1.$2");
+        if (CONST.lock.isFaviconChecking) return;
+        CONST.lock.isFaviconChecking = true;
 
-              if (!targetNode.hasAttribute("data-favicon-t") && host.length >= 3) {
-                let faviconUrl = curNode.href || host
-                if (CONST.options.useItem.SiteTypeID === CONST.options.baidu.SiteTypeID && faviconUrl.includes("baidu.com/link")) {
-                  faviconUrl = host
+        const batchSize = 10; // 每一帧处理的数量，避免长时间锁定主线程
+        let currentIndex = 0;
+
+        const processBatch = () => {
+          const limit = Math.min(currentIndex + batchSize, citeList.length);
+          for (; currentIndex < limit; currentIndex++) {
+            if (null === citeList[currentIndex].getAttribute("ac_faviconStatus")) {
+              let curNode = citeList[currentIndex];
+              let targetNode = curNode;
+              let { curHost, curUrl = '' } = this.getNodeHost(targetNode);
+              if (!curHost) continue; // 跳过解不出来的地址
+
+              let II = 0;
+              for (; II <= 5; II++) {
+                targetNode = targetNode.parentNode;
+                if (targetNode != null && targetNode.querySelector(CONST.options.useItem.FaviconAddTo) != null) {
+                  break;
                 }
-
-                targetNode.setAttribute('data-favicon-t', faviconUrl)
-                insertList.push({
-                  tagName: targetNode.tagName.toLowerCase(),
-                  url: faviconUrl
-                })
               }
+              if (targetNode.parentNode.hasAttribute('tpl') && targetNode.parentNode.getAttribute('tpl').includes('stock')) {
+                curNode.setAttribute("ac_faviconStatus", "-3");
+                continue
+              }
+              //console.mylog(index+"."+faviconUrl+"--"+II);
+              if (II <= 5) {
+                // 先用父节点判断一下是否存在img
+                let tmpHTML = targetNode.innerHTML;
+                let pos = tmpHTML.indexOf("fav-url")
+                  & tmpHTML.indexOf("wr_fav")
+                  & tmpHTML.indexOf("favurl")
+                  & tmpHTML.indexOf("tit-ico")
+                  & tmpHTML.indexOf("img_fav rms_img")
+                  & tmpHTML.indexOf("c-tool-")
+                  & tmpHTML.indexOf("span class=\"c-icon c-icon-")
+                  & tmpHTML.indexOf("img class=\"xA33Gc")
+                  & tmpHTML.indexOf("img class=\"XNo5Ab\""); // 谷歌图标
+                //他自己已经做了favicon了
+                if (pos > -1) {
+                  curNode.setAttribute("ac_faviconStatus", "-2");
+                  continue;
+                }
+                targetNode = targetNode.querySelector(CONST.options.useItem.FaviconAddTo);
+                let host = curHost.replace(/[^.]+\.([^.]+)\.([^.]+)/, "$1.$2");
+
+                if (!targetNode.hasAttribute("data-favicon-t") && host.length >= 3) {
+                  let faviconUrl = curNode.href || host
+                  if (CONST.options.useItem.SiteTypeID === CONST.options.baidu.SiteTypeID && faviconUrl.includes("baidu.com/link")) {
+                    faviconUrl = host
+                  }
+
+                  targetNode.setAttribute('data-favicon-t', faviconUrl)
+                  CONST.cssFavionList.list.push({
+                    tagName: targetNode.tagName.toLowerCase(),
+                    url: faviconUrl
+                  })
+                }
+              }
+              citeList[currentIndex].setAttribute("ac_faviconStatus", "1");
+            }
+          }
+          if (currentIndex < citeList.length) {
+            requestAnimationFrame(processBatch);
+          }
+        };
+        requestAnimationFrame(processBatch);
+      } else {
+        CONST.lock.isFaviconChecking = false;
+      }
+    }
+
+    addCounter(citeList) {
+      if (CONST.lock.isCounterChecking) return;
+      CONST.lock.isCounterChecking = true;
+
+      const cssText = "font-style:normal;position:relative;z-index:1;margin-right:4px;display:inline-block;color:white;font-family:'微软雅黑';font-size:16px;text-align:center;width:22px;line-height:22px;border-radius:50%;";
+      const batchSize = 20;
+      let currentIndex = 0;
+
+      const processBatch = () => {
+        const limit = Math.min(currentIndex + batchSize, citeList.length);
+        for (; currentIndex < limit; currentIndex++) {
+          let cur = citeList[currentIndex];
+          const index = cur.getAttribute('SortIndex');
+          if (index === null || typeof (index) === "undefined") {
+            cur.setAttribute('SortIndex', CONST.sortIndex);
+            let ele = document.createElement('em');
+            ele.className = 'AC-CounterT';
+            ele.style = cssText;
+            ele.innerText = CONST.sortIndex;
+            let child = cur.firstElementChild;
+            if (child && child.nodeName === 'DIV') {
+              let emNode = child.querySelector('em');
+              if (emNode) emNode.parentNode.insertAdjacentElement('afterBegin', ele)
+            } else {
+              cur.insertAdjacentElement('afterBegin', ele);
+            }
+            CONST.sortIndex++;
+          } else {
+            const curCounter = cur.querySelector(".AC-CounterT")
+            if (!curCounter) continue
+            const oriIndex = curCounter.innerText
+            const checkValue = (currentIndex + 1) % 100;
+            // 数据值不同
+            // 数据没有被翻译
+            if (+index !== checkValue && !/^\d+$/.test(oriIndex)) { // 按需更新
+              curCounter.innerText = checkValue;
+              cur.setAttribute('SortIndex', checkValue);
             }
           }
         }
-      }
-      insertList.map(one => CONST.cssFavionList.list.push(one))
-    }
-    addCounter(citeList) {
-      const cssText = "font-style:normal;position:relative;z-index:1;margin-right:4px;display:inline-block;color:white;font-family:'微软雅黑';font-size:16px;text-align:center;width:22px;line-height:22px;border-radius:50%;";
-      for (let i = 0; i < citeList.length; i++) {
-        let cur = citeList[i];
-        const index = cur.getAttribute('SortIndex');
-        if (index === null || typeof (index) === "undefined") {
-          cur.setAttribute('SortIndex', CONST.sortIndex);
-          let ele = document.createElement('em');
-          ele.className = 'AC-CounterT';
-          ele.style = cssText;
-          ele.innerText = CONST.sortIndex;
-          let child = cur.firstElementChild;
-          if (child && child.nodeName === 'DIV') {
-            let emNode = child.querySelector('em');
-            if (emNode) emNode.parentNode.insertAdjacentElement('afterBegin', ele)
-          } else {
-            cur.insertAdjacentElement('afterBegin', ele);
-          }
-          CONST.sortIndex++;
+        if (currentIndex < citeList.length) {
+          requestAnimationFrame(processBatch);
         } else {
-          const curCounter = cur.querySelector(".AC-CounterT")
-          if (!curCounter) continue
-          const oriIndex = curCounter.innerText
-          const checkValue = (i + 1) % 100;
-          // 数据值不同
-          // 数据没有被翻译
-          if (+index !== checkValue && !/^\d+$/.test(oriIndex)) { // 按需更新
-            curCounter.innerText = checkValue;
-            cur.setAttribute('SortIndex', checkValue);
-          }
+          CONST.lock.isCounterChecking = false;
         }
-      }
+      };
+      requestAnimationFrame(processBatch);
     }
+
     acSetCookie(cname, cvalue, domain, exdays) {
       MyApi.safeFunc(() => {
         exdays = exdays || 30;
@@ -1770,20 +1870,22 @@
         document.cookie = cname + "=" + cvalue + "; " + domain + expires + ";path=/;SameSite=None;Secure";
       })
     }
+
     dataChangeFireCallback() {
-      // 数据有变更，那么尝试重新渲染状态
+      // 数据有变更，暂停自动注入，开启批量原子更新
+      CONST.cssAutoInsert.pause()
       CONST.cssAutoInsert.clear()
 
-      if(!CONST.curConfig.enableCSS) {
+      if (!CONST.curConfig.enableCSS) {
         MyApi.safeGetNodeFunc('#myuser', node => node.remove())
         return
       }
-      
+
       console.mylog('即将插入CSS1')
       if (CONST.curConfig.adsStyleEnable) {
         console.mylog('即将插入CSS2')
-        
-        if(+CONST.curConfig.adsStyleMode === 1) {
+
+        if (+CONST.curConfig.adsStyleMode === 1) {
           console.mylog('靠左优化模式')
           CONST.cssAutoInsert.add("expandPageStyle", CONST.adsCSSList.expandPageStyle)
           CONST.cssAutoInsert.add("leftCommonStyle", CONST.adsCSSList.leftCommonStyle)
@@ -1796,7 +1898,7 @@
           console.mylog('双列居中')
           CONST.cssAutoInsert.add("leftCommonStyle", CONST.adsCSSList.leftCommonStyle)
           CONST.cssAutoInsert.add("twoPageStyle", CONST.adsCSSList.twoPageStyle)
-        } else if (+CONST.curConfig.adsStyleMode === 4 ||+CONST.curConfig.adsStyleMode === 5) {
+        } else if (+CONST.curConfig.adsStyleMode === 4 || +CONST.curConfig.adsStyleMode === 5) {
           console.mylog('N列居中')
           CONST.cssAutoInsert.add("leftCommonStyle", CONST.adsCSSList.leftCommonStyle)
           CONST.cssAutoInsert.add("twoPageStyle", CONST.adsCSSList.twoPageStyle)
@@ -1806,30 +1908,81 @@
 
       CONST.cssAutoInsert.add("styleLogo", ".minidiv #logo img{width: 100px;height: unset;margin-top: 0.3rem;} body.purecss-mode:before{display: none;}")
       CONST.cssAutoInsert.add("specialBAIDU", ".opr-recommends-merge-imgtext{display:none!important;}.res_top_banner{display:none!important;}.headBlock, body>div.result-op{display:none;}")
-      CONST.cssAutoInsert.add("animationStyle", "@keyframes ani_leftToright{0%{transform:translateX(-32px);opacity:0.2;}20%{opacity:0.5;}30%{opacity:0.8;}100%{opacity:1;}}@keyframes ani_bottomTotop{0%{transform:translateY(32px);opacity:0.2;}20%{opacity:0.5;}30%{opacity:0.8;}100%{opacity:1;}}@-webkit-keyframes ani_topTobuttom{0%{transform:translateY(-32px);opacity:0.2;}20%{opacity:0.5;}30%{opacity:0.8;}100%{opacity:1;}}@-webkit-keyframes ani_hideToShow{0%{display:none;opacity:0.2;}20%{opacity:0.5;}30%{opacity:0.8;}100%{opacity:1;}}@-webkit-keyframes ani_showToHide{0%{display:none;opacity:1;}20%{opacity:0.8;}30%{opacity:0.5;}100%{opacity:0.3;}}.aniDelete{transition:all 0.15s cubic-bezier(0.4,0,1,1);opacity:0.1}")
+      CONST.cssAutoInsert.add("animationStyle", `
+        @keyframes ani_leftToright {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+        @keyframes ac-bar-fast {
+          0%, 100% { transform: scaleY(0.4); opacity: 0.5; }
+          50% { transform: scaleY(1.4); opacity: 1; }
+        }
+        .ac-loading-spinner {
+          position: fixed;
+          top: 220px; /* 避开搜索栏，对齐结果区上方 */
+          left: 0;
+          right: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 100000;
+          pointer-events: none;
+        }
+        .ac-loading-spinner div {
+          width: 4px;
+          height: 30px;
+          background-color: #4e6ef2;
+          border-radius: 2px;
+          animation: ac-bar-fast 0.3s ease-in-out infinite;
+        }
+        .ac-loading-spinner div:nth-child(2) { animation-delay: 0.05s; }
+        .ac-loading-spinner div:nth-child(3) { animation-delay: 0.1s; }
+        .ac-loading-spinner div:nth-child(4) { animation-delay: 0.15s; }
+        .ac-loading-spinner div:nth-child(5) { animation-delay: 0.20s; }
+        /* 兜底隐藏（页面整体就绪） */
+        .ac-ready .ac-loading-spinner { opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+        .ac-entry-ani {
+          animation: ani_topTobuttom 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        #ac-pager-loader {
+          position: fixed;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          padding: 8px 16px;
+          background: rgba(0, 0, 0, 0.7);
+          color: white;
+          border-radius: 20px;
+          font-size: 12px;
+          backdrop-filter: blur(5px);
+          z-index: 99999;
+          transition: opacity 0.3s;
+          pointer-events: none;
+        }
+      `)
       CONST.cssAutoInsert.add("menuBtn", ".achide{display:none;} .newFuncHighLight{color:red;font-weight: 100;background-color: yellow;font-weight: 600;}#sp-ac-container label{display:inline;}#u{width:319px}#u #myuser{display:inline-block;margin: 13px -10px 0 24px;}.site-wrapper #myuser,.sogou-set-box #myuser,#gbw #myuser{margin-right:15px;} #gb #myuser{margin-top:7px;} #myuser,#myuser .myuserconfig{padding:0;margin:0}#myuser{display:inline-block;}#myuser .myuserconfig{display:inline-block;line-height:1.5;background:#4e6ef2;color:#fff;font-weight:700;text-align:center;padding:6px;border:2px solid #E5E5E5;}#myuser .myuserconfig{box-shadow:0 0 10px 3px rgba(0,0,0,.1);border-radius: 6px}#myuser .myuserconfig:hover{background:#4662d9 !important;color:#fff;cursor:pointer;border:2px solid #73A6F8;} body[haosou] #myuser{margin-top:-10px}")
 
-      if(CONST.curConfig.baiduLiteEnable) {
+      if (CONST.curConfig.baiduLiteEnable) {
         CONST.cssAutoInsert.add("baiduLiteStyle", CONST.adsCSSList.baiduLiteStyle)
       }
-      
-      if(CONST.curConfig.HuYanMode) {
+
+      if (CONST.curConfig.HuYanMode) {
         CONST.cssAutoInsert.add("huYanStyle", CONST.adsCSSList.huyanStyle)
       }
-      if(CONST.curConfig.adsStyleEnable) {
+      if (CONST.curConfig.adsStyleEnable) {
         CONST.cssAutoInsert.add("adsBlockStyle", "#bottomads{display:none;} #content_left>div:not([id])>div[cmatchid], #content_left>div[id*='300']:not([class*='result']),#content_right td>div:not([id]),#content_right>br{position:absolute;top:-6666px;}")
       }
-      if(CONST.curConfig.BgEnable) {
+      if (CONST.curConfig.BgEnable) {
         const imageUrl = CONST.curConfig.BgUseUrl
-        if(imageUrl) {
+        if (imageUrl) {
           const bgCSS = `body:before{pointer-events: none;position: fixed;width: 100%;height: 100%;top: 0;left: 0;content: '';background-image: url('${imageUrl}');background-size: 100% auto;opacity: 0.6;}`
           CONST.cssAutoInsert.add("backGroundImage", bgCSS)
         }
-        if(CONST.curConfig.BgFit) {
+        if (CONST.curConfig.BgFit) {
           CONST.cssAutoInsert.add("bgFitStyle", CONST.adsCSSList.bgAutoFitStyle)
         }
       }
-      if(CONST.curConfig.isDarkModeEnable) {
+      if (CONST.curConfig.isDarkModeEnable) {
         CONST.cssAutoInsert.add("darkModeStyle", CONST.adsCSSList.darkModeStyle)
       }
       if (CONST.curConfig.isAutopage) {
@@ -1842,34 +1995,34 @@
           pre_gray: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAslJREFUeNrclTtMWmEUxz/uvTzlIUhpNMR0aGNjrNHSmHTqRJyadujQDbSGRwJUaYCmDizqUEw6ODVNGgbpYCfSpFINCQzFR9oyMXRsXFCsAXkIKNL/R7gGWxOsSdPEk5zc3O+e87vn+59zv0vIpbSJiQmyubn5LBKJpNbX11+4XC5Buxy2XYDNZiMOh2OW4ziPTCbTi8XikeHh4SsSieQTXnIxsN1uJ1ardVYgEDgPDw+V9Xqd1Go1Mcuyg7AuuVy+sra29ndgVEnGx8dnhEKhs1qtKgE/eXZ8fCzC+q3+/n6tSqVaSSQS5wM7nU5iMplmsF1XpVI5BeXt6OhIBFkGAe9SKpV/wNmzKjWbzRT6tFwuK86CUqPrkIVWPjQwMKBWKBSn4Ozv0LGxsRmRSDSFSjua0Do8TRWAS+B5+B68g/IhixCNvQPN1WjuieZsS/f1aNQ0wzBuaCqlUCQRtVr9Es1K4kVDWJNhrQjAIiqMlkqle804FnkjBoOhEzv4vrGxkW2ALRaLFrq+QoAV2nE8tLe3dzEYDE5vb2939vX1PcBkiKVSaQ1jForFYq+NRqMum83ebsYzmJq7sGu4xhkKxsDfB/AxnO860ev1oeXlZU8gEMgmk0kFqmw8o9dUKiWfn58vhMPh54h7S+OpQXNSLBYfejyeR1yzw9dbRon09PS8W11dnfL5fJl8Pk+0Wi3hk5vyCNBY4vV6f0Im9+joKJNOp818o8G70ah4aWnpIzSKYCa/dXd3B+PxuHNycjKzs7NzAms1+qFQy+VydDRz0WjUpdPp3tB8TFM0FAqFGxXPzc19plJrNJqraMoXt9tNt3Suc+Tg4ICeJfmFhQVLoVAwoKG7fr//B8cHAL6Fy9ZFDinaG/r5w77ya8y/OhEvKRhjtIup2YMTeBb3mXY53HnAmNkP+/v7NzHTTwAO4f79f/ud/RJgAOLcRNZqLojMAAAAAElFTkSuQmCC",
         };
         const cssText = ".sp-separator{grid-column: 1 / -1; line-height:1.8 !important;opacity:1 !important;position:relative !important;float:none !important;top:0 !important;left:0 !important;min-width:366px;width:auto;text-align:center !important;font-size:14px !important;display:block !important;padding:3px 0 !important;margin:5px 10px 8px;clear:both !important;border-style:solid !important;border-color:#cccccc !important;border-width:1px !important;-moz-border-radius:30px !important;border-radius:30px !important;background-color:#ffffff !important;}.sp-separator:hover{box-shadow:0 0 11px rgba(33,33,33,0.2);}#sp-separator-hover{display:none;}.sp-separator:hover #sp-separator-hover{display:block;}.sp-separator .sp-someinfo{position:absolute !important;right:10px !important;font-size:12px !important;font-style:italic !important;background:none !important;}.sp-separator span{vertical-align: middle;cursor: pointer;padding: 0;margin: 0 5px;display: inline-block; width:22px;height:22px;}.sp-separator a{margin:0 20px 0 -6px !important;display:inline !important;text-shadow:#fff 0 1px 0 !important;background:none !important;color:#595959 !important;}.sp-separator input{padding:0 !important;line-height:23px !important;}.sp-separator .sp-md-span{font-weight:bold !important;margin:0 20px !important;}#sp-sp-md-number{width:6ch !important;vertical-align:middle !important;display:inline-block !important;text-align:left !important;}" +
-          `.ac_sp_top{background-image:url('${ sepImgs.top }')}` +
-          `.ac_sp_pre{background-image:url('${ sepImgs.pre }')}` +
-          `.ac_sp_next{background-image:url('${ sepImgs.next }')}` +
-          `.ac_sp_bottom{background-image:url('${ sepImgs.bottom }')}` +
-          `.ac_sp_next_gray{background-image:url('${ sepImgs.next_gray }')}` +
-          `.ac_sp_pre_gray{background-image:url('${ sepImgs.pre_gray }')}`
+          `.ac_sp_top{background-image:url('${sepImgs.top}')}` +
+          `.ac_sp_pre{background-image:url('${sepImgs.pre}')}` +
+          `.ac_sp_next{background-image:url('${sepImgs.next}')}` +
+          `.ac_sp_bottom{background-image:url('${sepImgs.bottom}')}` +
+          `.ac_sp_next_gray{background-image:url('${sepImgs.next_gray}')}` +
+          `.ac_sp_pre_gray{background-image:url('${sepImgs.pre_gray}')}`
         CONST.cssAutoInsert.add("preloadAutoPage", cssText)
       }
-      if(CONST.curConfig.isBlockEnable) {
+      if (CONST.curConfig.isBlockEnable) {
         CONST.cssAutoInsert.add("customBlockStyle", "button.ghhider.ghhb[ac-user-alter='1']::before{content:'取消 - ';}#sp-ac-container .ac-block-item{color:#AAA;margin-left:48px;}#sp-ac-container .ac-block-itemdel{float:right;margin-left:0;padding:0 20px;cursor:pointer;}#sp-ac-container .ac-block-itemdel:hover{color:red;}#sp-ac-container .ac-block-high{color:#000;}.ac-blockList li:hover{background-color:#a3caff;color:white !important;cursor:pointer;} *[ac-needhide] *{display:none} *:not([ac-needhide]) .blockShow{display: none;} *[ac-needhide] .blockShow{display:unset;cursor:pointer;} *[ac-needhide] .blockShow:hover{border:1px solid #DDD}button.ghhider{color:#555;background-color:#fcfcfc;font-family:sans-serif;margin:auto 2px;border:1px solid #ccc;border-radius:4px;padding:2px 3px}button.ghhider{font-size:12px}button.ghhider:hover{color:#006aff;background:#fff} body[haosou] button.ghhider{vertical-align: super;} body[google] button.ghhider{vertical-align: top;}") // 公共自定义样式
       }
-      
-      if(CONST.curConfig.isFaviconEnable) {
+
+      if (CONST.curConfig.isFaviconEnable) {
         CONST.cssAutoInsert.add("faviconStyle", CONST.adsCSSList.faviconStyle) // 插入Favicon图标
       }
-      
-      if(CONST.curConfig.isBlockEnable || CONST.curConfig.isFaviconEnable) {
+
+      if (CONST.curConfig.isBlockEnable || CONST.curConfig.isFaviconEnable) {
         CONST.cssAutoInsert.add("lineTitleFix", 'body[haosou] .res-title {display: inline-flex;}') // 插入Favicon图标
       }
-      
-      if(CONST.curConfig.isALineDisable) {
+
+      if (CONST.curConfig.isALineDisable) {
         CONST.cssAutoInsert.add("alinkEnable", "a,a em{text-decoration:none !important}")
       }
-      
-      if(CONST.curConfig.isCounterEnable) {
+
+      if (CONST.curConfig.isCounterEnable) {
         CONST.cssAutoInsert.add("counterStyle", ".AC-CounterT{background:#FD9999}body  #sp-ac-container{position:fixed;top:3.9vw;right:8.8vw}")
       }
-      
+
       // if(CONST.options.useItem.SiteTypeID === CONST.options.google.SiteTypeID && CONST.curConfig.useBaiduLogo) {
       //   CONST.cssAutoInsert.add("useBaiduLogo", "") // 谷歌使用百度LOGO
       // }
@@ -1881,16 +2034,21 @@
       if (CONST.curConfig.customStyleEnable) {
         CONST.cssAutoInsert.add("customStyle", CONST.adsCSSList.customStyle) // 站点自定义样式
       }
+
+      // 批量处理完成，恢复并触发一次性同步/异步注入
+      CONST.cssAutoInsert.resume()
     }
+
     pagerBind() {
+      const that = this;
       const ShowPager = {
-        getFullHref: function(e) {
+        getFullHref: function (e) {
           if (e === null) return '';
           "string" != typeof e && (e = e.getAttribute("href"));
           var t = this.getFullHref.a;
           return t || (this.getFullHref.a = t = document.createElement("a")), t.href = e, t.href;
         },
-        createDocumentByString: function(str) {
+        createDocumentByString: function (str) {
           // string转为DOM
           if (!str) {
             console.error("[AC-Script]", 'No string found to be converted to DOM');
@@ -1945,7 +2103,7 @@
 
           return doc;
         },
-        loadMorePage: async function() {
+        loadMorePage: async function () {
           if (CONST.options.useItem.pager) {
             let curPageEle = MyApi.getElementByXpath(CONST.options.useItem.pager.nextLink);
             var url = this.getFullHref(curPageEle);
@@ -1962,14 +2120,25 @@
             }// 不会重复加载相同的页面
             console.log("加载翻页地址：" + url)
             CONST.options.useItem.pageUrl = url;
+            // 注入加载指示器
+            const loader = document.createElement('div');
+            loader.id = 'ac-pager-loader';
+            loader.innerText = '正在加载下一页...';
+            document.body.appendChild(loader);
+
             // 对url的数据进行读取
             CONST.options.useItem.pager.startFilter && curSite.pager.startFilter();
             GM_xmlhttpRequest({
               url: url,
               method: "GET",
               timeout: 5000,
-              onload: function(response) {
+              onload: function (response) {
                 try {
+                  const loader = document.getElementById('ac-pager-loader');
+                  if (loader) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.remove(), 300);
+                  }
                   var newBody = ShowPager.createDocumentByString(response.responseText);
 
                   const [Rule_insertTo = '', Rule_insertMode = 1] = CONST.options.useItem.pager.HT_insert || []
@@ -2004,32 +2173,34 @@
                     insertPager.innerHTML = `
                           <a class='sp-sp-nextlink' target='_blank'><b>第 <span style='color:#595959!important;'>ACX</span> 页</b></a>
                           <span id="sp-sp-gotop" class='ac_sp_top' title='去到顶部'></span>
-                          <span id="sp-sp-gopre" class='${ CONST.options.useItem.pageNum <= 2 ? "ac_sp_pre_gray" : "ac_sp_pre" }' title='上滚一页' ></span>
+                          <span id="sp-sp-gopre" class='${CONST.options.useItem.pageNum <= 2 ? "ac_sp_pre_gray" : "ac_sp_pre"}' title='上滚一页' ></span>
                           <span id="sp-sp-gonext" class='ac_sp_next_gray' title='下滚一页'></span>
                           <span id="sp-sp-gobottom" class='ac_sp_bottom' title='去到底部' ></span>`
                       .replace(/ACX/gm, CONST.options.useItem.pageNum);
 
-                    if(Rule_insertMode === 1) {
+                    if (Rule_insertMode === 1) {
                       toElement.parentNode.insertBefore(insertPager, toElement)
                       // 插入新页面元素
-                      pageElems.forEach(function(one) {
+                      pageElems.forEach(function (one) {
                         toElement.parentNode.insertBefore(one, toElement)
                       });
                     } else {
                       toElement.appendChild(insertPager)
 
-                      pageElems.forEach(function(one) {
+                      pageElems.forEach(function (one, idx) {
+                        one.classList.add('ac-entry-ani');
+                        one.style.animationDelay = (idx * 0.05) + 's';
                         toElement.appendChild(one)
                       });
                     }
 
-                    document.querySelectorAll(".sp-separator.AC:not([bind])").forEach(function(per) {
+                    document.querySelectorAll(".sp-separator.AC:not([bind])").forEach(function (per) {
                       per.setAttribute("bind", 1);
-                      per.addEventListener("click", PageFunc.ac_spfunc);
+                      per.addEventListener("click", that.ac_spfunc.bind(that));
                     });
 
-                    if(CONST.options.useItem.pager.afertPagerAutoCallFunc) {
-                      CONST.options.useItem.pager.afertPagerAutoCallFunc(pageElems, scriptElems)
+                    if (CONST.options.useItem.pager.afertPagerAutoCallFunc) {
+                      CONST.options.useItem.pager.afertPagerAutoCallFunc(pageElems, scriptElems, toElement)
                     }
 
                     // 替换待替换元素 - 一般是替换翻页的按钮
@@ -2056,7 +2227,7 @@
 
                 CONST.lock.pageLoadingLocked = false;
               },
-              onerror: function() {
+              onerror: function () {
                 CONST.lock.pageLoadingLocked = false;
               }
             });
@@ -2078,7 +2249,7 @@
                 if (!CONST.curConfig.optimizeDuck || +CONST.curConfig.adsStyleMode >= 3) { // 如果没有开启，那么手动翻页 || 如果是双列的时候，似乎并不会自动触发翻页效果
                   const node = document.querySelector("#links .result--more a")
                   node && node.click();
-                  setTimeout(function() {
+                  setTimeout(function () {
                     CONST.lock.pageLoadingLocked = false;
                   }, 5000);
                 }
@@ -2087,7 +2258,7 @@
                 if (CONST.options.useItem.pager && CONST.options.useItem.pager.stylish) {
                   CONST.cssAutoInsert.add('autoPager', CONST.options.useItem.pager.stylish)
                 } else {
-                  setTimeout(function() {
+                  setTimeout(function () {
                     CONST.lock.pageLoadingLocked = false;
                   }, 5000);
                   console.mylog('当前站点没有配置pager')
@@ -2098,16 +2269,19 @@
         }
       });
     }
-    windowscroll(fn = () => {}) {
+
+    windowscroll(fn = () => {
+    }) {
       let beforeScrollTop = document.documentElement.scrollTop
-      window.addEventListener("scroll", function(e) {
+      window.addEventListener("scroll", MyApi.throttle(function (e) {
         var afterScrollTop = document.documentElement.scrollTop,
           delta = afterScrollTop - beforeScrollTop;
         if (delta === 0) return false;
         fn(delta > 0 ? "down" : "up", e);
         beforeScrollTop = afterScrollTop;
-      }, false);
+      }, 50), false);
     }
+
     ac_spfunc(e) {
       console.error("这里有问题")
       e.stopPropagation();
@@ -2244,7 +2418,7 @@
 
       function getRelativeDiv(e) {
         var t = r.id;
-        return (t = t.replace(/(sp-separator-)(.+)/, (function(t, r, n) {
+        return (t = t.replace(/(sp-separator-)(.+)/, (function (t, r, n) {
           return r + String(Number(n) + ("pre" == e ? -1 : 1));
         }))) ? document.getElementById(t) : null;
       }
@@ -2254,10 +2428,16 @@
         r || (r = (r = Tween[TweenM[prefs.s_method]])[TweenEase[prefs.s_ease]] || r, sp_transition.TweenF = r);
         var n = 1e3 / prefs.s_FPS, a = 0, o = e, i = t - e, s = Math.ceil(prefs.s_duration / n),
           c = window.scrollX;
-        !function transition() {
+
+        function transition() {
           var e = Math.ceil(r(a, o, i, s));
-          window.scroll(c, e), a < s && (a++, setTimeout(transition, n));
-        }();
+          window.scroll(c, e);
+          if (a < s) {
+            a++;
+            requestAnimationFrame(transition);
+          }
+        }
+        requestAnimationFrame(transition);
       }
 
       function scrollIt(e, t) {
@@ -2291,13 +2471,14 @@
           scrollIt(window.scrollY, Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));
       }
     }
+
     bingAutoScrollFix() {
-      document.addEventListener('visibilitychange', function() {
+      document.addEventListener('visibilitychange', function () {
         if (document.visibilityState === 'hidden') {
           CONST.bingScrollPos = document.documentElement.scrollTop;
         } else if (document.visibilityState === 'visible') {
           setTimeout(() => {
-            if(CONST.bingScrollPos !== 0 && document.documentElement.scrollTop !== CONST.bingScrollPos) {
+            if (CONST.bingScrollPos !== 0 && document.documentElement.scrollTop !== CONST.bingScrollPos) {
               console.error('触发滚动条变更：', CONST.bingScrollPos, document.documentElement.scrollTop)
               document.documentElement.scrollTop = CONST.bingScrollPos
             }
@@ -2305,6 +2486,7 @@
         }
       });
     }
+
     bingFaviconPagerFix() {
       document.querySelectorAll('div.rms_iac').forEach(one => {
         const height = one.dataset.height
@@ -2312,12 +2494,13 @@
         const toClass = one.dataset.class
         const imgSrc = one.dataset.src
         const bm = one.dataset.bm
-        if(imgSrc) {
-          one.outerHTML = `<img src="${imgSrc}" height="${height}" width="${width}" data-priority="2" role="presentation" class="${toClass}" data-bm="${bm}">`  
+        if (imgSrc) {
+          one.outerHTML = `<img src="${imgSrc}" height="${height}" width="${width}" data-priority="2" role="presentation" class="${toClass}" data-bm="${bm}">`
         }
       })
     }
   }
+
   class PageBlockClass {
     constructor() {
       this.curSite = CONST.options.useItem
@@ -2328,9 +2511,17 @@
     async start() {
       const needCheckClass = (this.curSite.MainType + ',').split(',').join(":not([bhandle]),")
       let checkNodes = document.querySelectorAll(needCheckClass.substring(0, needCheckClass.length - 1));
+      let aniIndex = 0;
       for (let i = 0; i < checkNodes.length; i++) {
         let curNode = checkNodes[i];
         try {
+          if (curNode.hasAttribute('bhandle')) continue;
+
+          // 增加进入动画类，并错开延迟
+          curNode.classList.add('ac-entry-ani');
+          curNode.style.animationDelay = (aniIndex * 0.04) + 's';
+          aniIndex++;
+
           let faviconNode = curNode.querySelector(this.curSite.FaviconType);
           let host = PageFunc.getNodeHost(faviconNode).curHost;
           let faNode = curNode.querySelector(this.curSite.BlockType);
@@ -2342,10 +2533,10 @@
           if (faNode && !faNode.hasAttribute('hasInsert')) {
             faNode.setAttribute("hasInsert", "1");
             let insertTo = faNode.parentNode
-            if(CONST.options.useItem.SiteTypeID === CONST.options.google.SiteTypeID) {
+            if (CONST.options.useItem.SiteTypeID === CONST.options.google.SiteTypeID) {
               insertTo = faNode
             }
-            insertTo.insertAdjacentHTML("beforeend", `<button style='${ nodeStyle }' class='ghhider ghhb' href="${ faviconNode?.href || faviconNode?.innerText }" meta="${ host }" data-host="${ host }" title='${ this._getBlockBtnTitle(host) }'>block</button>`);
+            insertTo.insertAdjacentHTML("beforeend", `<button style='${nodeStyle}' class='ghhider ghhb' href="${faviconNode?.href || faviconNode?.innerText}" meta="${host}" data-host="${host}" title='${this._getBlockBtnTitle(host)}'>block</button>`);
           }
           curNode.setAttribute("bhandle", "1");
         } catch (e) {
@@ -2360,93 +2551,113 @@
       this._initListener();
       await this.renderDisplay()
     }
+
     async renderDisplay() {
       // 增加checking中的检查，避免多次重复调用，减少cpu消耗
       if (CONST.lock.isBlockChecking) return
       CONST.lock.isBlockChecking = true
 
       let checkNodes = document.querySelectorAll(this.curSite.MainType);
-      if([...checkNodes].every(one => one.dataset.checked) && CONST.lock.afterBlockChangeChecked) {
+      if ([...checkNodes].every(one => one.dataset.checked) && CONST.lock.afterBlockChangeChecked) {
         CONST.lock.isBlockChecking = false
         return
       }
-      const regList = this.regListRule
-      let flag = "ac-needhide";
-      for (let i = 0; i < checkNodes.length; i++) {
-        try {
-          let curNode = checkNodes[i];
-          if (curNode.querySelector("button[ac-user-alter]") != null) continue; // 用户手动点过显示的，那么跳过check
-          // 减少数据计算
-          let { curHost = "", curUrl = "" } = PageFunc.getNodeHost(curNode.querySelector(this.curSite.FaviconType));
-          if (!curHost) continue
-          let BlockBtn = curNode.querySelector(".ghhider.ghhb");
-          BlockBtn.dataset.host = BlockBtn.dataset.meta = curHost;
-          BlockBtn.title = this._getBlockBtnTitle(curHost);
-          // 减少数据计算
-          if (curHost && regList.findIndex(one => {
-            try {
-              return one.test(curHost || curUrl); // 耗时操作
-            } catch (e) {
-              return one === curHost;
-            }
-          }) >= 0) {
-            
-            
-            // 只检查在屏蔽表中的数据
-            if (!curNode.hasAttribute(flag)) {
-              curNode.setAttribute(flag, "1");
-              if (CONST.curConfig.isBlockResultDisplay) { // 对于不显示的数据可以进行移除操作
-                curNode.remove();
-                continue;
-              }
-              let curTitle = curNode.querySelector(this.curSite.BlockType);
-              curTitle = curTitle.innerText || curTitle.textContent;
 
-              (function(xcur) {
-                const blockShow = xcur.querySelector(".blockShow");
-                if(!blockShow) {
-                  curNode.insertAdjacentHTML("afterBegin", `<span class="blockShow" title="如果需要一直显示，请在自定义中DIY目录移除本地址">${ curTitle }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -block by ${ curHost }</span>`);
+      const regList = this.regListRule
+      const flag = "ac-needhide";
+      const isShowBlocked = CONST.curConfig.isBlockResultDisplay;
+
+      const batchSize = 10;
+      let currentIndex = 0;
+
+      const processBatch = () => {
+        const limit = Math.min(currentIndex + batchSize, checkNodes.length);
+        for (; currentIndex < limit; currentIndex++) {
+          try {
+            let curNode = checkNodes[currentIndex];
+            if (curNode.querySelector("button[ac-user-alter]") != null) continue; // 用户手动点过显示的，那么跳过check
+
+            // 减少数据计算
+            let { curHost = "", curUrl = "" } = PageFunc.getNodeHost(curNode.querySelector(this.curSite.FaviconType));
+            if (!curHost) continue;
+
+            let BlockBtn = curNode.querySelector(".ghhider.ghhb");
+            if (BlockBtn) {
+              BlockBtn.dataset.host = BlockBtn.dataset.meta = curHost;
+              BlockBtn.title = this._getBlockBtnTitle(curHost);
+            }
+
+            // 减少数据计算
+            const isBlocked = regList.some(one => {
+              try {
+                return one.test(curHost || curUrl); // 耗时操作
+              } catch (e) {
+                return one === curHost;
+              }
+            });
+
+            if (isBlocked) {
+              // 只检查在屏蔽表中的数据
+              if (!curNode.hasAttribute(flag)) {
+                curNode.setAttribute(flag, "1");
+                if (isShowBlocked) { // 对于不显示的数据可以进行移除操作
+                  curNode.remove();
+                  continue;
+                }
+                let curTitleNode = curNode.querySelector(this.curSite.BlockType);
+                let curTitle = curTitleNode ? (curTitleNode.innerText || curTitleNode.textContent) : "blocked";
+
+                const blockShow = curNode.querySelector(".blockShow");
+                if (!blockShow) {
+                  curNode.insertAdjacentHTML("afterBegin", `<span class="blockShow" title="如果需要一直显示，请在自定义中DIY目录移除本地址">${curTitle}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -block by ${curHost}</span>`);
                   // 已经屏蔽之后的内容，点击一下显示原始内容
-                  xcur.addEventListener("click", function(env) {
-                    if(!xcur.querySelector(".blockShow")) return
-                    xcur.querySelector("button.ghhider").setAttribute("ac-user-alter", "1"); // 这个属性用于保持在DOM更新时，按钮不变
-                    xcur.removeAttribute(flag);
-                    delete xcur.dataset.checked
-                    MyApi.safeFunc(function() {
-                      xcur.querySelector(".blockShow").remove();
-                    });
+                  curNode.addEventListener("click", function (env) {
+                    if (!curNode.querySelector(".blockShow")) return
+                    const btn = curNode.querySelector("button.ghhider");
+                    if (btn) btn.setAttribute("ac-user-alter", "1"); // 这个属性用于保持在DOM更新时，按钮不变
+                    curNode.removeAttribute(flag);
+                    delete curNode.dataset.checked
+                    const bs = curNode.querySelector(".blockShow");
+                    if (bs) bs.remove();
                     env.stopPropagation();
                     env.preventDefault()
                   });
                 }
-              })(curNode);
+              }
+            } else {
+              curNode.removeAttribute(flag);
             }
-          } else {
-            curNode.removeAttribute(flag);
-          }
-          curNode.dataset.checked = '1'
-        } catch (e) {}
-      }
-      CONST.lock.isBlockChecking = false
-      CONST.lock.afterBlockChangeChecked = true
+            curNode.dataset.checked = '1'
+          } catch (e) { }
+        }
+        if (currentIndex < checkNodes.length) {
+          requestAnimationFrame(processBatch);
+        } else {
+          CONST.lock.isBlockChecking = false
+          CONST.lock.afterBlockChangeChecked = true
+        }
+      };
+      requestAnimationFrame(processBatch);
     }
-    async _updateRegListRule() {
+
+    _updateRegListRule() {
       this.regListRule = CONST.blockRuleList.filter(one => one).map(one => {
-        try{
+        try {
           return new RegExp(one.replace("*", ".*"))
-        }catch (e){
+        } catch (e) {
           return one
         }
       })
     }
+
     _initListener() {
       let checkNodes = document.querySelectorAll("button.ghhider:not([acEnv])");
-
       checkNodes.forEach(one => {
         one.addEventListener("click", this._doHideEnv);
         one.setAttribute("acEnv", "0");
       })
     }
+
     _doHideEnv(env) {
       // 先插入数据---记得还要写入存储
       let node = env.sourceTarget || env.target;
@@ -2464,15 +2675,16 @@
       env.stopPropagation();
       env.preventDefault()
     }
+
     _getBlockBtnTitle(host) {
-      return `点击即可屏蔽 ${ host } 放开，需要在自定义中手动配置放开`;
+      return `点击即可屏蔽 ${host} 放开，需要在自定义中手动配置放开`;
     }
   }
 
   const PageFunc = new PageFuncClass()
   const PageBlockFunc = new PageBlockClass()
 
-  !await (async function() {
+  await (async function () {
     /***Google双列修复***/
     CONST.addIntervalTrigger('google', 'now', (counter) => {
       function findAndMarkP2Line() {
@@ -2480,12 +2692,17 @@
         function markFatherChild(child, father) {
           const child_checkedAttr = child.getAttribute('two-checked') || 0
           const father_checkedAttr = father.getAttribute('two-checked') || 0
-          
-          child.setAttribute('two-child', 1)
-          child.setAttribute('two-checked', +child_checkedAttr + 1)
-          father.setAttribute('two-father', 1)
-          father.setAttribute('two-checked', +father_checkedAttr + 1)
-          return father
+
+          const trueChild = child.querySelector('.A6K0A')
+          if(trueChild) {
+            trueChild.setAttribute('two-child', 1)
+            trueChild.setAttribute('two-checked', +child_checkedAttr + 1)
+            father.setAttribute('two-father', 1)
+            father.setAttribute('two-checked', +father_checkedAttr + 1)
+            return father
+          } else {
+            return null
+          }
         }
 
         // 检查的事preNode 和 curNode
@@ -2493,21 +2710,21 @@
         function getTrueFatherChild(preNode, curNode, fatherNode) {
           const minItemHeight = 60
           const father_curPossible = curNode.offsetHeight > minItemHeight && fatherNode.offsetHeight / curNode.offsetHeight > 1.5
-          const father_anotherPossible =  [...fatherNode.children].some(one => {
+          const father_anotherPossible = [...fatherNode.children].some(one => {
             return one !== curNode && one.offsetHeight > minItemHeight && fatherNode.offsetHeight / one.offsetHeight > 5;
           })
           const fatherNotMain = fatherNode.id === "cnt";
-          
+
           // 先检查当前父节点是否符合要求
           if (!fatherNotMain && father_curPossible && father_anotherPossible) {
-              return markFatherChild(curNode, fatherNode)
+            return markFatherChild(curNode, fatherNode)
           } else {
             const now_curPossible = preNode.offsetHeight > minItemHeight && curNode.offsetHeight / preNode.offsetHeight > 1.5
-            const now_anotherPossible =  [...curNode.children].some(one => {
+            const now_anotherPossible = [...curNode.children].some(one => {
               return one !== preNode && one.offsetHeight > minItemHeight && curNode.offsetHeight / one.offsetHeight > 5;
             })
             // 父节点不行的话，那么检查子节点是否符合要求
-            if(now_curPossible && now_anotherPossible) {
+            if (now_curPossible && now_anotherPossible) {
               return markFatherChild(preNode, curNode)
             }
             return null
@@ -2543,7 +2760,7 @@
       const valid = location.href.search(/(&|\?)(q|kw)=/) >= 0 ||
         document.querySelector(".g, div[two-father]")
 
-      if(counter % 4 === 0) {
+      if (counter % 4 === 0) {
         if (CONST.curConfig.useBaiduLogo) {
           PageFunc.GoogleInBaiduMode()
         }
@@ -2551,14 +2768,14 @@
           PageFunc.removeAds.removeGoogleAd()
         }
       }
-      
+
       if (!valid) {
         CONST.curConfig.enableCSS = false
         return
       }
       findAndMarkP2Line()
-      
-    }, 50, 10000000)
+
+    }, 150, 10000000)
     /***Baidu***/
     CONST.addIntervalTrigger('baidu', 'body', () => {
       // 没有(百度搜索结果的标志-[存在]百度的内容) return;
@@ -2582,13 +2799,13 @@
       } else {
         document.body.removeAttribute("news");
       }
-    }, 200, 10000000)
+    }, 300, 10000000)
     /***Haosou***/
     CONST.addIntervalTrigger('haosou', 'body', () => {
       if (CONST.curConfig.isAdsEnable) {
         PageFunc.removeAds.removeHaosouAd()
       }
-    }, 200, 10000000)
+    }, 300, 10000000)
     /***Bing***/
     CONST.addIntervalTrigger('bing', 'body', () => {
       if (CONST.curConfig.isAdsEnable) {
@@ -2596,11 +2813,11 @@
       }
       PageFunc.bingAutoScrollFix()
       PageFunc.bingFaviconPagerFix()
-    }, 200, 10000000)
+    }, 300, 10000000)
     /***DuckDuckgo***/
     CONST.addIntervalTrigger('duck', 'body', () => {
       if (CONST.curConfig.optimizeDuck) {
-        setTimeout(function() {
+        setTimeout(function () {
           MyApi.safeFunc(() => {
             DDG.settings.set("kn", 1, { // 新窗口打开页面
               saveToCloud: true,
@@ -2613,7 +2830,7 @@
           })
         }, 3000);
       }
-    }, 200, 10000000)
+    }, 300, 10000000)
     /***All***/
     CONST.addIntervalTrigger('all', 'body', () => {
       PageFunc.RedirectHandle()
@@ -2626,10 +2843,7 @@
         })
       }
       if (CONST.curConfig.isCounterEnable) {
-        // 延迟加载，避免页面出现js问题
-        setTimeout(() => {
-          PageFunc.addCounter(document.querySelectorAll(CONST.options.useItem.CounterType)); // 显示计数器
-        }, 800)
+        PageFunc.addCounter(document.querySelectorAll(CONST.options.useItem.CounterType)); // 显示计数器
       } else {
         document.querySelectorAll(".AC-CounterT").forEach(one => {
           one.parentElement.removeAttribute('SortIndex');
@@ -2649,7 +2863,7 @@
       if (CONST.curConfig.isBlockEnable && CONST.curConfig.isRedirectEnable) {
         PageBlockFunc.start()
       }
-    }, 200, 10000000)
+    }, 300, 10000000)
 
     // CONST.enableCSS = 如果生效，那么插入样式表，否则跳过样式表插入
     // CONST.curConfig = 网站配置，同步过来的，以及动态被修改的
@@ -2662,11 +2876,11 @@
         if (syncOptions.refreshUrl) MyApi.refreshAfter(500)
       })
       PageFunc.dataChangeFireCallback()
-      watch(CONST.curConfig, async() => {
+      watch(CONST.curConfig, async () => {
         await CONST.loadSiteCSS()
         PageFunc.dataChangeFireCallback()
       })
-      watch(CONST.cssFavionList, ()=> {
+      watch(CONST.cssFavionList, () => {
         const baseCSS = 'h3::before, h2::before {content: " ";display:inline-block} *[data-favicon-t]:before{width: 16px; height: 16px; margin-right: 4px; background-size: 100% 100%; vertical-align: text-top;}'
         CONST.adsCSSList.faviconStyle = Object.entries(CONST.cssFavionList.list).reduce((preCSS, cur) => {
           const [, { tagName = '', url = '' }] = cur
@@ -2677,7 +2891,7 @@
             // www.google.com/s2/favicons?domain=764350177.lofter.com
             //如果地址不正确，那么丢弃
             const imgUrl = "https://favicon.yandex.net/favicon/v2/" + url + "?size=32"
-            nowCSS = tagName + `[data-favicon-t='${ url }']:before{background-image: url('${ imgUrl }');}`
+            nowCSS = tagName + `[data-favicon-t='${url}']:before{background-image: url('${imgUrl}');}`
           }
           return preCSS + nowCSS
         }, baseCSS)
@@ -2689,6 +2903,10 @@
       if (!document.body.hasAttribute(insertName)) {
         document.body.setAttribute(insertName, '1')
         document.body.classList.add(insertName)
+        // 添加 ac-ready 类，允许静默样式淡出展示
+        setTimeout(() => {
+          document.body.classList.add('ac-ready')
+        }, 400)
       }
       PageFunc.InsertSettingMenu()
       if (CONST.curConfig.isAutopage) {

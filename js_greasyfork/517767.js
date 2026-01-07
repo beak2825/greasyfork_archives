@@ -14,7 +14,7 @@
 // @description:ko Twitter/X에서 마지막 읽기 위치를 추적하고 동기화합니다. 수동 및 자동 옵션 포함. 새로운 게시물을 확인하면서 현재 위치를 잃지 않도록 이상적입니다. 트윗 ID를 사용하여 정확한 위치 지정을 하고, 리포스트를 지원합니다。
 // @icon https://x.com/favicon.ico
 // @namespace http://tampermonkey.net/
-// @version 2026.1.3
+// @version 2026.1.6
 // @author Copiis
 // @license MIT
 // @match https://x.com/*
@@ -976,7 +976,7 @@
     function waitForNewPosts(callback) {
     const timelineContainer = document.querySelector('div[data-testid="primaryColumn"]') || document.body;
     let loadAttempts = 0;
-    const maxLoadAttempts = 60; // Reduziert auf 60 für schnellere Abbrüche
+    const maxLoadAttempts = 80; // Erhöht für längere Wartezeiten
     const initialPostCount = document.querySelectorAll('article').length;
     const initialCellCount = document.querySelectorAll('div[data-testid="cellInnerDiv"]').length;
     let callbackTriggered = false;
@@ -990,7 +990,7 @@
             observer.disconnect();
             setTimeout(() => {
                 callback();
-            }, 800); // Leichte Erhöhung der Verzögerung für stabile Ladezeiten
+            }, 1200); // Erhöhte Verzögerung für stabile Ladezeiten
         }
     });
     observer.observe(timelineContainer, {
@@ -1013,7 +1013,7 @@
             clearInterval(timeoutCheck);
             setTimeout(() => {
                 callback();
-            }, 800);
+            }, 1200);
         } else if (loadAttempts >= maxLoadAttempts) {
             console.warn("⚠️ Keine neuen Posts nach maximalen Versuchen geladen, starte Suche mit aktuellen Posts.");
             callbackTriggered = true;
@@ -1021,14 +1021,14 @@
             clearInterval(timeoutCheck);
             setTimeout(() => {
                 callback();
-            }, 800);
+            }, 1200);
         } else {
             const currentScrollHeight = document.body.scrollHeight || document.documentElement.scrollHeight;
             const viewportHeight = window.innerHeight;
-            const scrollStep = viewportHeight * 0.5; // Reduzierter Schritt (halb Viewport) gegen Overshooting
-            window.scrollBy({ top: scrollStep, behavior: "smooth" }); // By statt To, um nicht immer zum Ende zu springen
+            const scrollStep = viewportHeight * 0.6; // Leicht erhöhter Schritt gegen Stagnation
+            window.scrollBy({ top: scrollStep, behavior: "smooth" });
         }
-    }, 800); // Erhöhte Intervall-Zeit für weniger aggressive Scrolls
+    }, 1000); // Erhöhtes Intervall für weniger aggressive Scrolls
     window.addEventListener("unload", () => {
         observer.disconnect();
         clearInterval(timeoutCheck);
@@ -1232,7 +1232,7 @@
     let scrollCount = 0;
     const search = async () => {
         scrollCount++;
-        if (scrollCount > 100) {
+        if (scrollCount > 150) { // Erhöht auf 150 für längere Suchen
             console.warn("⚠️ Maximale Scroll-Versuche erreicht, starte Fallback.");
             showPopup("tweetIdNotFound", 5000);
             findAndSetClosestPost();
@@ -1260,8 +1260,8 @@
         let posts = getVisiblePosts().map(p => p.element);
         totalLoadedPosts = Array.from(document.querySelectorAll('article')).length;
         if (DEBUG) console.log(`🔍 Prüfe ${posts.length} sichtbare Posts (Gesamt: ${totalLoadedPosts}). Scroll-Versuch: ${stagnantScrollCount + 1}, Zyklusphase: ${scrollCyclePhase}`);
-        if (totalLoadedPosts > 1000) {
-            if (DEBUG) console.log("⚠️ Über 1000 Posts geladen – Suche abgebrochen.");
+        if (totalLoadedPosts > 1500) { // Erhöht auf 1500
+            if (DEBUG) console.log("⚠️ Über 1500 Posts geladen – Suche abgebrochen.");
             showPopup("tweetIdNotFound", 5000);
             findAndSetClosestPost();
             isSearching = false;
@@ -1291,8 +1291,8 @@
             lastScrollHeight = currentScrollHeight;
             let scrollStep = calculateScrollStep();
             window.scrollBy({ top: scrollStep, behavior: "smooth" });
-            await new Promise(resolve => setTimeout(resolve, 700)); // Erhöhte Wartezeit
-            requestAnimationFrame(() => setTimeout(search, 500)); // Erhöhte Verzögerung
+            await new Promise(resolve => setTimeout(resolve, 300)); // Reduziert von 700 auf 300ms
+            requestAnimationFrame(() => setTimeout(search, 300)); // Reduziert von 500 auf 300ms
             return;
         }
         posts.forEach(post => io.observe(post));
@@ -1379,21 +1379,21 @@
         lastScrollHeight = currentScrollHeight;
         let scrollStep = calculateScrollStep();
         window.scrollBy({ top: scrollStep, behavior: "smooth" });
-        await new Promise(resolve => setTimeout(resolve, 700)); // Erhöhte Wartezeit
-        requestAnimationFrame(() => setTimeout(search, 500)); // Erhöhte Verzögerung
+        await new Promise(resolve => setTimeout(resolve, 300)); // Reduziert von 700 auf 300ms
+        requestAnimationFrame(() => setTimeout(search, 300)); // Reduziert von 500 auf 300ms
     };
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 300)); // Reduziert von 500 auf 300ms
     search();
 }
 
     function calculateScrollStep() {
-    const baseStep = window.innerHeight;
+    const baseStep = window.innerHeight * 1.5; // Erhöht auf 1.5x Viewport für schnellere Sprünge
 
     let step;
     if (isSlowScrollMode) {
         step = baseStep * 0.5; // Präziser, kleiner Schritt
     } else {
-        step = baseStep * 2;   // Schneller, großer Schritt
+        step = baseStep * 3;   // Schneller, noch größerer Schritt (von 2x auf 3x)
     }
 
     // Richtung anwenden
@@ -1647,7 +1647,8 @@
         'button[role="button"][class*="css-175oi2r"]',
         'button[aria-label*="new posts"], button[aria-label*="neue beiträge"], button[aria-label*="nouveaux tweets"], button[aria-label*="nuevos tweets"], button[aria-label*="new tweets"]',
         'button[data-testid*="new-tweets"], button[data-testid*="new-posts"]',
-        'button span[class*="css-"][dir="ltr"]'
+        'button span[class*="css-"][dir="ltr"]',
+        'div[role="button"] span[data-testid*="new-tweet"], div[role="button"] span[aria-label*="posts"]' // Erweiterte Selektoren für robustere Erkennung
     ];
     let button = null;
     for (const selector of selectors) {
@@ -1685,6 +1686,14 @@
         const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true, view: window });
         indicator.dispatchEvent(clickEvent);
         console.log("✅ Fallback: Synthetischer Klick ausgelöst.");
+    } finally {
+        // Neu: Zusätzliche Verzögerung und Überprüfung, ob der Klick gewirkt hat
+        setTimeout(() => {
+            if (indicator && indicator.isConnected) {
+                console.warn("⚠️ Indikator noch sichtbar, wiederhole Klick.");
+                indicator.click(); // Wiederholung für Robustheit
+            }
+        }, 1000);
     }
 }
 

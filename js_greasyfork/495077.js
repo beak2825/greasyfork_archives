@@ -7,7 +7,7 @@
 // @author              冻猫, ryomahan
 // @include             *
 // @exclude             *www.w3school.com.cn*
-// @version             12.5
+// @version             12.6
 // @run-at              document-end
 // @license             MIT
 // @downloadURL https://update.greasyfork.org/scripts/495077/Maximize%20Video%28improve%29.user.js
@@ -558,7 +558,7 @@
         [
           "#htmlToothbrush #bodyToothbrush .parentToothbrush .bilibili-player-video {margin:0 !important;}",
           "#htmlToothbrush, #bodyToothbrush {overflow:hidden !important;zoom:100% !important;}",
-          "#htmlToothbrush #bodyToothbrush .parentToothbrush {overflow:visible !important;z-index:auto !important;transform:none !important;-webkit-transform-style:flat !important;transition:none !important;contain:none !important;}",
+          "#htmlToothbrush #bodyToothbrush .parentToothbrush {overflow:visible !important;z-index:99999 !important;transform:none !important;-webkit-transform-style:flat !important;transition:none !important;contain:none !important;}",
           "#htmlToothbrush #bodyToothbrush .absoluteToothbrush {position:absolute !important;}",
           "#htmlToothbrush #bodyToothbrush .playerToothbrush {position:fixed !important;top:0px !important;left:0px !important;width:100vw !important;height:100vh !important;max-width:none !important;max-height:none !important;min-width:0 !important;min-height:0 !important;margin:0 !important;padding:0 !important;z-index:2147483646 !important;border:none !important;background-color:#000 !important;transform:none !important;}",
           "#htmlToothbrush #bodyToothbrush .parentToothbrush video {object-fit:contain !important;}",

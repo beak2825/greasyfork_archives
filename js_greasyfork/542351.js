@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - en
-// @version         4.2.8.0
+// @version         4.2.8.1
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -1387,24 +1387,17 @@ else {
     hideDOMStyle(story_generic_iframe + ', ' + blocker + ', ' + overlays + ', ' + ads);
   } else if (window.location.hostname.endsWith('.com.au')) {
     // Australia News Corp
-    let au_news_corp_domains = ['adelaidenow.com.au', 'cairnspost.com.au', 'codesports.com.au', 'couriermail.com.au', 'dailytelegraph.com.au', 'geelongadvertiser.com.au', 'goldcoastbulletin.com.au', 'heraldsun.com.au', 'theaustralian.com.au', 'thechronicle.com.au', 'themercury.com.au', 'townsvillebulletin.com.au', 'weeklytimesnow.com.au'];
-    if (matchDomain(au_news_corp_domains) || matchDomain('ntnews.com.au')) {
+    let au_news_corp_domains = ['adelaidenow.com.au', 'cairnspost.com.au', 'codesports.com.au', 'couriermail.com.au', 'dailytelegraph.com.au', 'geelongadvertiser.com.au', 'goldcoastbulletin.com.au', 'heraldsun.com.au', 'ntnews.com.au', 'theaustralian.com.au', 'thechronicle.com.au', 'themercury.com.au', 'townsvillebulletin.com.au', 'weeklytimesnow.com.au'];
+    if (matchDomain(au_news_corp_domains)) {
       let url = window.location.href;
       if (window.location.pathname.startsWith('/subscribe/') && !url.includes('/digitalprinteditions')) {
         let og_url = document.querySelector('head > meta[property="og:url"][content]');
         if (og_url) {
-          let url_new = og_url.content;
-          if (matchDomain('ntnews.com.au')) {
-            let article = document.querySelector('div.dsf-article-preview');
-            if (article) {
-              article.before(googleSearchToolLink(url_new));
-            }
-          } else {
-            url_new += '?amp';
-            window.setTimeout(function () {
-              window.location.href = url_new;
-            }, 500);
-          }
+          let og_url_obj = new URL(decodeURIComponent(og_url.content));
+          let url_new = og_url_obj.origin + '/' + og_url_obj.pathname.replace(/^\//, '').replace(/\//g, '%2F');
+          window.setTimeout(function () {
+            window.location.href = url_new;
+          }, 500);
         }
       } else if (window.location.search.match(/[&\?]amp/)) {
         amp_unhide_subscr_section('[id^="ad-mrec-"]', false);

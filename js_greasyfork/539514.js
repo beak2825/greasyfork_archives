@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name               轻小说文库+
 // @namespace          https://greasyfork.org/users/667968-pyudng
-// @version            2.30.6
+// @version            2.31
 // @description        轻小说文库全方位体验改善，涵盖阅读、下载、书架、推荐、书评、账号、页面个性化等各种方面，你能想到的这里都有。没有？欢迎提出你的点子。
 // @author             PY-DNG
 // @license            GPL-3.0-or-later
@@ -746,7 +746,27 @@
                     },
                 },
                 Reader: {
-                    SideButton: '样式调节',
+                    Settings: {
+                        Label: '在线阅读',
+                        Enabled: '启用',
+                        ChapterAction: '章节操作按钮功能',
+                        ChapterActionOptions: [{
+                            label: '复制章节全文',
+                            value: 'copy'
+                        }, {
+                            label: '下载章节全文',
+                            value: 'download'
+                        }],
+                    },
+                    SideButton: {
+                        Styling: '样式调节',
+                        ChapterAction: {
+                            Copy: '复制本章内容',
+                            Copied: '已复制',
+                            Download: '下载本章',
+                            Downloaded: '已开始下载',
+                        },
+                    },
                     UI: {
                         Title: '阅读器样式调节',
                         Enabled: '启用样式调节',
@@ -1567,17 +1587,37 @@
                     },
                 },
                 Reader: {
-                    SideButton: '樣式調節',
+                    Settings: {
+                        Label: '線上閱讀',
+                        Enabled: '啟用',
+                        ChapterAction: '章節操作按鈕功能',
+                        ChapterActionOptions: [{
+                            label: '複製章節全文',
+                            value: 'copy'
+                        }, {
+                            label: '下載章節全文',
+                            value: 'download'
+                        }],
+                    },
+                    SideButton: {
+                        Styling: '樣式調節',
+                        ChapterAction: {
+                            Copy: '複製本章內容',
+                            Copied: '已複製',
+                            Download: '下載本章',
+                            Downloaded: '已開始下載',
+                        },
+                    },
                     UI: {
                         Title: '閱讀器樣式調節',
                         Enabled: '啟用樣式調節',
                         EnabledCaption: '啟用後將覆蓋文庫自帶樣式調節',
-                        FontFamily: '字型樣式',
-                        FontFamilyCaption: '可自行輸入字型名稱',
-                        FontSize: '字型大小',
+                        FontFamily: '字體樣式',
+                        FontFamilyCaption: '可自行輸入字體名稱',
+                        FontSize: '字體大小',
                         FontSizeSuffix: 'px',
-                        Color: '字型顏色',
-                        ColorCaption: '同時應用於標題和內文',
+                        Color: '字體顏色',
+                        ColorCaption: '同時應用於標題和正文',
                         ScrollSpeed: '滾動速度',
                         ScrollSpeedCaption: '雙擊螢幕以滾屏',
                         FontOptions: [{
@@ -1587,8 +1627,8 @@
                             label: '新細明體',
                             value: '新細明體',
                         }, {
-                            label: '微軟正黑體',
-                            value: 'Microsoft JhengHei, "微軟正黑體"',
+                            label: '微軟雅黑',
+                            value: 'Microsoft Yahei, "微軟雅黑"',
                         }, {
                             label: '黑體',
                             value: '黑體',
@@ -4098,16 +4138,13 @@
                 app.mount(container);
 
                 /**
-                 * 注册一个新按钮到侧边栏
+                 * 注册一个新按钮到侧边栏，或更新一个已有按钮
                  * 每次有新按钮注册或已有按钮移除都会重新排序所有按钮，保证顺序符合index升序
                  * @param {Button} button 
                  */
                 function registerButton(button) {
-                    // 检查id是否全局唯一
-                    Assert(
-                        !hasButton(button.id),
-                        `duplicate button id ${escJsStr(button.id)}`
-                    );
+                    // 如果按钮id已存在，则更新已有按钮
+                    if (hasButton(button.id)) return updateButton(button.id, button);
                     
                     // 先克隆button对象，防止后续外部代码修改产生影响
                     button = Object.assign({}, button);
@@ -20116,6 +20153,8 @@
                 const configs = require('configs');
                 /** @type {component} */
                 const component = require('component');
+                /** @type {sidepanel} */
+                const sidepanel = require('sidepanel');
 
                 GM_getValue = utils.defaultedGet({
                     /** @type {boolean} */
@@ -20130,7 +20169,29 @@
                     color: 'black',
                     /** @type {number} */
                     scroll_speed: 1,
+                    /** @type {'copy' | 'download'} 章节操作按钮的功能 */
+                    chapter_action: 'download',
                 }, GM_getValue);
+
+                const Settings = CONST.Text.Reader.Settings;
+                configs.registerConfig('reader', {
+                    label: Settings.Label,
+                    items: [{
+                        label: Settings.Enabled,
+                        type: 'boolean',
+                        key: 'enabled',
+                        get() { return GM_getValue('enabled'); },
+                        set(val) { GM_setValue('enabled', val); },
+                    }, {
+                        label: Settings.ChapterAction,
+                        type: 'select',
+                        options: Settings.ChapterActionOptions,
+                        key: 'chapter_action',
+                        get() { return GM_getValue('chapter_action'); },
+                        set(val) { GM_setValue('chapter_action', val); },
+                    }],
+                    GM_addValueChangeListener,
+                });
 
                 const pool_funcs = {
                     gui: {
@@ -20295,18 +20356,13 @@
                                     value: '/modules/article/reader.php'
                                 }])
                             ) {
-                                require('sidepanel', true).then(
-                                    /** @param {sidepanel} sidepanel */
-                                    sidepanel => {
-                                        sidepanel.registerButton({
-                                            id: 'autovote.show',
-                                            icon: 'format_size',
-                                            label: CONST.Text.Reader.SideButton,
-                                            index: 2,
-                                            callback: show,
-                                        });
-                                    }
-                                );
+                                sidepanel.registerButton({
+                                    id: 'autovote.show',
+                                    icon: 'format_size',
+                                    label: CONST.Text.Reader.SideButton.Styling,
+                                    index: 2,
+                                    callback: show,
+                                });
                             }
 
                             return { show, hide, };
@@ -20329,265 +20385,323 @@
                             /** @type {HTMLDivElement} */
                             const style_keys = ['enabled', 'font', 'font_size', 'color', 'scroll_speed'];
 
-                            // 平滑滚动控制器
-                            let controller = smoothScroll(utils.window);
-
                             const update = (key, old_val, new_val, remote) => utils.deepEqual(old_val, new_val) || applyEnhancement();
                             style_keys.forEach(key => GM_addValueChangeListener(key, update));
                             applyEnhancement();
 
                             function applyEnhancement() {
-                                // 样式调节
-                                const [enabled, font_family, font_size, color, scroll_speed] = style_keys.map(key => GM_getValue(key));
-                                enabled ?
-                                    addStyle(`
-                                        #contentmain {
-                                            font-family: ${ font_family };
-                                        }
-                                        #content {
-                                            font-size: ${ font_size }px !important;
-                                        }
-                                        #contentmain, #content {
-                                            color: ${ color } !important;
-                                        }
-                                    `, 'plus-reader-style') :
-                                    $('#plus-reader-style')?.remove();
-                                
-                                scroll_speed > 0 && controller.changeSpeed(scroll_speed);
-                                document.ondblclick = enabled ? beginScroll : utils.window.beginScroll;
-                                document.onmousedown = enabled ? stopScroll : utils.window.stopScroll;
+                                // 平滑滚动控制器
+                                let controller = smoothScroll(utils.window);
+                                const Reader = CONST.Text.Reader;
 
-                                function beginScroll() {
-                                    controller.start();
+                                [styling, pageDocButton].forEach(f => f());
+                                GM_addValueChangeListener('chapter_action', () => pageDocButton());
+
+                                /**
+                                 * 样式调节
+                                 */
+                                function styling() {
+                                    const [enabled, font_family, font_size, color, scroll_speed] = style_keys.map(key => GM_getValue(key));
+                                    enabled ?
+                                        addStyle(`
+                                            #contentmain {
+                                                font-family: ${ font_family };
+                                            }
+                                            #content {
+                                                font-size: ${ font_size }px !important;
+                                            }
+                                            #contentmain, #content {
+                                                color: ${ color } !important;
+                                            }
+                                        `, 'plus-reader-style') :
+                                        $('#plus-reader-style')?.remove();
+                                    
+                                    scroll_speed > 0 && controller.changeSpeed(scroll_speed);
+                                    document.ondblclick = enabled ? beginScroll : utils.window.beginScroll;
+                                    document.onmousedown = enabled ? stopScroll : utils.window.stopScroll;
+
+                                    function beginScroll() {
+                                        controller.start();
+                                    }
+
+                                    function stopScroll() {
+                                        controller.stop();
+                                    }
                                 }
 
-                                function stopScroll() {
-                                    controller.stop();
-                                }
-                            }
+                                /**
+                                 * 获取当前页面全文按钮  
+                                 * 复制到剪贴板 / 下载单章节文件
+                                 */
+                                function pageDocButton() {
+                                    /** @type {'copy' | 'download'} */
+                                    const action = GM_getValue('chapter_action');
+                                    sidepanel.registerButton({
+                                        id: 'chapter_action',
+                                        icon: ({
+                                            copy: 'copy_all',
+                                            download: 'download'
+                                        })[action],
+                                        label: ({
+                                            copy: Reader.SideButton.ChapterAction.Copy,
+                                            download: Reader.SideButton.ChapterAction.Download,
+                                        })[action],
+                                        index: 3,
+                                        callback() {
+                                            // 这里由于每次配置更新都会更新按钮，因此外层作用域中的action始终保持最新，无需重新获取
+                                            /** @type {string} */
+                                            const content = $('#content')?.innerText ?? '';
+                                            /** @type {string} */
+                                            const title = $('#title')?.innerText ?? '';
 
-                            /**
-                             * 平滑滚动元素的函数（支持HTMLElement和window）
-                             * @param {HTMLElement|Window} scrollTarget - 要滚动的元素或window对象
-                             * @param {number} [speedMultiplier=1] - 速度倍数，默认为1（适合阅读的速度）
-                             * @param {number} [direction=1] - 滚动方向，1表示向下，-1表示向上
-                             */
-                            function smoothScroll(scrollTarget, speedMultiplier = 1, direction = 1) {
-                                // 验证参数
-                                if (!(scrollTarget instanceof HTMLElement) && !(scrollTarget instanceof Window)) {
-                                    throw new Error('第一个参数必须是HTMLElement或window对象');
+                                            switch (action) {
+                                                case 'copy': {
+                                                    GM_setClipboard(content, 'text/plain');
+                                                    Quasar.Notify.create({
+                                                        type: 'success',
+                                                        message: Reader.SideButton.ChapterAction.Copied,
+                                                        group: 'reader.reader.chapteraction.done',
+                                                    });
+                                                    break;
+                                                }
+                                                case 'download': {
+                                                    const url = URL.createObjectURL(new Blob([content], { type: 'text/plain' }));
+                                                    dl_browser(url, title);
+                                                    Quasar.Notify.create({
+                                                        type: 'success',
+                                                        message: Reader.SideButton.ChapterAction.Downloaded,
+                                                        group: 'reader.reader.chapteraction.done',
+                                                    });
+                                                    break;
+                                                }
+                                            }
+                                        },
+                                    });
                                 }
-                                
-                                if (typeof speedMultiplier !== 'number' || speedMultiplier <= 0) {
-                                    throw new Error('速度倍数必须是大于0的数字');
-                                }
-                                
-                                // 状态变量
-                                let isScrolling = false;
-                                let animationId = null;
-                                const baseSpeed = 0.3; // 基础速度（像素/帧），适合阅读的速度
-                                
-                                // 用于处理小于1像素的移动
-                                let accumulatedDistance = 0;
-                                
-                                // 计算实际速度
-                                let actualSpeed = baseSpeed * speedMultiplier * direction;
-                                
-                                // 判断是否是window对象
-                                const isWindow = scrollTarget instanceof Window;
-                                
+
                                 /**
-                                 * 获取当前滚动位置
+                                 * 平滑滚动元素的函数（支持HTMLElement和window）
+                                 * @param {HTMLElement|Window} scrollTarget - 要滚动的元素或window对象
+                                 * @param {number} [speedMultiplier=1] - 速度倍数，默认为1（适合阅读的速度）
+                                 * @param {number} [direction=1] - 滚动方向，1表示向下，-1表示向上
                                  */
-                                function getScrollPosition() {
-                                    return isWindow ? scrollTarget.scrollY || scrollTarget.pageYOffset : scrollTarget.scrollTop;
-                                }
-                                
-                                /**
-                                 * 设置滚动位置
-                                 */
-                                function setScrollPosition(position) {
-                                    if (isWindow) {
-                                        scrollTarget.scrollTo(0, position);
-                                    } else {
-                                        scrollTarget.scrollTop = position;
-                                    }
-                                }
-                                
-                                /**
-                                 * 获取最大滚动位置
-                                 */
-                                function getMaxScroll() {
-                                    if (isWindow) {
-                                        return Math.max(
-                                            document.body.scrollHeight, 
-                                            document.documentElement.scrollHeight,
-                                            document.body.offsetHeight, 
-                                            document.documentElement.offsetHeight,
-                                            document.body.clientHeight, 
-                                            document.documentElement.clientHeight
-                                        ) - scrollTarget.innerHeight;
-                                    } else {
-                                        return scrollTarget.scrollHeight - scrollTarget.clientHeight;
-                                    }
-                                }
-                                
-                                /**
-                                 * 平滑滚动动画函数
-                                 */
-                                function smoothScroll() {
-                                    if (!isScrolling) return;
-                                    
-                                    // 获取当前滚动位置和最大滚动位置
-                                    const currentScroll = getScrollPosition();
-                                    const maxScroll = getMaxScroll();
-                                    
-                                    // 检查是否到达边界
-                                    if ((direction === 1 && currentScroll >= maxScroll) || 
-                                        (direction === -1 && currentScroll <= 0)) {
-                                        stop();
-                                        return;
+                                function smoothScroll(scrollTarget, speedMultiplier = 1, direction = 1) {
+                                    // 验证参数
+                                    if (!(scrollTarget instanceof HTMLElement) && !(scrollTarget instanceof Window)) {
+                                        throw new Error('第一个参数必须是HTMLElement或window对象');
                                     }
                                     
-                                    // 累积移动距离
-                                    accumulatedDistance += actualSpeed;
-                                    
-                                    // 只有当累积距离达到或超过1像素时才进行实际滚动
-                                    if (Math.abs(accumulatedDistance) >= 1) {
-                                        // 计算目标位置
-                                        let targetScroll = currentScroll + Math.round(accumulatedDistance);
-                                        
-                                        // 确保不会滚动超过边界
-                                        if (direction === 1) {
-                                            targetScroll = Math.min(targetScroll, maxScroll);
-                                        } else {
-                                            targetScroll = Math.max(targetScroll, 0);
-                                        }
-                                        
-                                        // 执行滚动
-                                        setScrollPosition(targetScroll);
-                                        
-                                        // 重置累积距离（减去已滚动的整数部分）
-                                        accumulatedDistance -= Math.round(accumulatedDistance);
-                                    }
-                                    
-                                    // 继续下一帧动画
-                                    animationId = requestAnimationFrame(smoothScroll);
-                                }
-                                
-                                /**
-                                 * 开始滚动
-                                 */
-                                function start() {
-                                    if (isScrolling) return;
-                                    
-                                    isScrolling = true;
-                                    accumulatedDistance = 0; // 重置累积距离
-                                    smoothScroll();
-                                }
-                                
-                                /**
-                                 * 停止滚动
-                                 */
-                                function stop() {
-                                    isScrolling = false;
-                                    if (animationId) {
-                                        cancelAnimationFrame(animationId);
-                                        animationId = null;
-                                    }
-                                    accumulatedDistance = 0; // 重置累积距离
-                                }
-                                
-                                /**
-                                 * 改变滚动速度
-                                 * @param {number} newSpeedMultiplier - 新的速度倍数
-                                 */
-                                function changeSpeed(newSpeedMultiplier) {
-                                    if (typeof newSpeedMultiplier !== 'number' || newSpeedMultiplier <= 0) {
+                                    if (typeof speedMultiplier !== 'number' || speedMultiplier <= 0) {
                                         throw new Error('速度倍数必须是大于0的数字');
                                     }
                                     
-                                    // 暂停当前滚动
-                                    const wasScrolling = isScrolling;
-                                    stop();
+                                    // 状态变量
+                                    let isScrolling = false;
+                                    let animationId = null;
+                                    const baseSpeed = 0.3; // 基础速度（像素/帧），适合阅读的速度
                                     
-                                    // 更新速度
-                                    speedMultiplier = newSpeedMultiplier;
-                                    actualSpeed = baseSpeed * speedMultiplier * direction;
+                                    // 用于处理小于1像素的移动
+                                    let accumulatedDistance = 0;
                                     
-                                    // 如果之前正在滚动，则重新开始
-                                    if (wasScrolling) {
-                                        start();
-                                    }
-                                }
-                                
-                                /**
-                                 * 改变滚动方向
-                                 * @param {number} newDirection - 新的滚动方向（1向下，-1向上）
-                                 */
-                                function changeDirection(newDirection) {
-                                    if (newDirection !== 1 && newDirection !== -1) {
-                                        throw new Error('方向必须是1（向下）或-1（向上）');
+                                    // 计算实际速度
+                                    let actualSpeed = baseSpeed * speedMultiplier * direction;
+                                    
+                                    // 判断是否是window对象
+                                    const isWindow = scrollTarget instanceof Window;
+                                    
+                                    /**
+                                     * 获取当前滚动位置
+                                     */
+                                    function getScrollPosition() {
+                                        return isWindow ? scrollTarget.scrollY || scrollTarget.pageYOffset : scrollTarget.scrollTop;
                                     }
                                     
-                                    // 暂停当前滚动
-                                    const wasScrolling = isScrolling;
-                                    stop();
-                                    
-                                    // 更新方向
-                                    direction = newDirection;
-                                    actualSpeed = baseSpeed * speedMultiplier * direction;
-                                    
-                                    // 如果之前正在滚动，则重新开始
-                                    if (wasScrolling) {
-                                        start();
-                                    }
-                                }
-                                
-                                /**
-                                 * 跳转到指定位置
-                                 * @param {number} position - 要跳转到的滚动位置
-                                 * @param {number} [duration=1000] - 跳转动画持续时间（毫秒）
-                                 */
-                                function scrollTo(position, duration = 1000) {
-                                    stop();
-                                    
-                                    const startPosition = getScrollPosition();
-                                    const distance = position - startPosition;
-                                    let startTime = null;
-                                    
-                                    function animateScroll(currentTime) {
-                                        if (!startTime) startTime = currentTime;
-                                        const elapsed = currentTime - startTime;
-                                        const progress = Math.min(elapsed / duration, 1);
-                                        
-                                        // 使用缓动函数
-                                        const ease = progress < 0.5 
-                                            ? 2 * progress * progress 
-                                            : -1 + (4 - 2 * progress) * progress;
-                                        
-                                        setScrollPosition(startPosition + distance * ease);
-                                        
-                                        if (progress < 1) {
-                                            requestAnimationFrame(animateScroll);
+                                    /**
+                                     * 设置滚动位置
+                                     */
+                                    function setScrollPosition(position) {
+                                        if (isWindow) {
+                                            scrollTarget.scrollTo(0, position);
+                                        } else {
+                                            scrollTarget.scrollTop = position;
                                         }
                                     }
                                     
-                                    requestAnimationFrame(animateScroll);
+                                    /**
+                                     * 获取最大滚动位置
+                                     */
+                                    function getMaxScroll() {
+                                        if (isWindow) {
+                                            return Math.max(
+                                                document.body.scrollHeight, 
+                                                document.documentElement.scrollHeight,
+                                                document.body.offsetHeight, 
+                                                document.documentElement.offsetHeight,
+                                                document.body.clientHeight, 
+                                                document.documentElement.clientHeight
+                                            ) - scrollTarget.innerHeight;
+                                        } else {
+                                            return scrollTarget.scrollHeight - scrollTarget.clientHeight;
+                                        }
+                                    }
+                                    
+                                    /**
+                                     * 平滑滚动动画函数
+                                     */
+                                    function smoothScroll() {
+                                        if (!isScrolling) return;
+                                        
+                                        // 获取当前滚动位置和最大滚动位置
+                                        const currentScroll = getScrollPosition();
+                                        const maxScroll = getMaxScroll();
+                                        
+                                        // 检查是否到达边界
+                                        if ((direction === 1 && currentScroll >= maxScroll) || 
+                                            (direction === -1 && currentScroll <= 0)) {
+                                            stop();
+                                            return;
+                                        }
+                                        
+                                        // 累积移动距离
+                                        accumulatedDistance += actualSpeed;
+                                        
+                                        // 只有当累积距离达到或超过1像素时才进行实际滚动
+                                        if (Math.abs(accumulatedDistance) >= 1) {
+                                            // 计算目标位置
+                                            let targetScroll = currentScroll + Math.round(accumulatedDistance);
+                                            
+                                            // 确保不会滚动超过边界
+                                            if (direction === 1) {
+                                                targetScroll = Math.min(targetScroll, maxScroll);
+                                            } else {
+                                                targetScroll = Math.max(targetScroll, 0);
+                                            }
+                                            
+                                            // 执行滚动
+                                            setScrollPosition(targetScroll);
+                                            
+                                            // 重置累积距离（减去已滚动的整数部分）
+                                            accumulatedDistance -= Math.round(accumulatedDistance);
+                                        }
+                                        
+                                        // 继续下一帧动画
+                                        animationId = requestAnimationFrame(smoothScroll);
+                                    }
+                                    
+                                    /**
+                                     * 开始滚动
+                                     */
+                                    function start() {
+                                        if (isScrolling) return;
+                                        
+                                        isScrolling = true;
+                                        accumulatedDistance = 0; // 重置累积距离
+                                        smoothScroll();
+                                    }
+                                    
+                                    /**
+                                     * 停止滚动
+                                     */
+                                    function stop() {
+                                        isScrolling = false;
+                                        if (animationId) {
+                                            cancelAnimationFrame(animationId);
+                                            animationId = null;
+                                        }
+                                        accumulatedDistance = 0; // 重置累积距离
+                                    }
+                                    
+                                    /**
+                                     * 改变滚动速度
+                                     * @param {number} newSpeedMultiplier - 新的速度倍数
+                                     */
+                                    function changeSpeed(newSpeedMultiplier) {
+                                        if (typeof newSpeedMultiplier !== 'number' || newSpeedMultiplier <= 0) {
+                                            throw new Error('速度倍数必须是大于0的数字');
+                                        }
+                                        
+                                        // 暂停当前滚动
+                                        const wasScrolling = isScrolling;
+                                        stop();
+                                        
+                                        // 更新速度
+                                        speedMultiplier = newSpeedMultiplier;
+                                        actualSpeed = baseSpeed * speedMultiplier * direction;
+                                        
+                                        // 如果之前正在滚动，则重新开始
+                                        if (wasScrolling) {
+                                            start();
+                                        }
+                                    }
+                                    
+                                    /**
+                                     * 改变滚动方向
+                                     * @param {number} newDirection - 新的滚动方向（1向下，-1向上）
+                                     */
+                                    function changeDirection(newDirection) {
+                                        if (newDirection !== 1 && newDirection !== -1) {
+                                            throw new Error('方向必须是1（向下）或-1（向上）');
+                                        }
+                                        
+                                        // 暂停当前滚动
+                                        const wasScrolling = isScrolling;
+                                        stop();
+                                        
+                                        // 更新方向
+                                        direction = newDirection;
+                                        actualSpeed = baseSpeed * speedMultiplier * direction;
+                                        
+                                        // 如果之前正在滚动，则重新开始
+                                        if (wasScrolling) {
+                                            start();
+                                        }
+                                    }
+                                    
+                                    /**
+                                     * 跳转到指定位置
+                                     * @param {number} position - 要跳转到的滚动位置
+                                     * @param {number} [duration=1000] - 跳转动画持续时间（毫秒）
+                                     */
+                                    function scrollTo(position, duration = 1000) {
+                                        stop();
+                                        
+                                        const startPosition = getScrollPosition();
+                                        const distance = position - startPosition;
+                                        let startTime = null;
+                                        
+                                        function animateScroll(currentTime) {
+                                            if (!startTime) startTime = currentTime;
+                                            const elapsed = currentTime - startTime;
+                                            const progress = Math.min(elapsed / duration, 1);
+                                            
+                                            // 使用缓动函数
+                                            const ease = progress < 0.5 
+                                                ? 2 * progress * progress 
+                                                : -1 + (4 - 2 * progress) * progress;
+                                            
+                                            setScrollPosition(startPosition + distance * ease);
+                                            
+                                            if (progress < 1) {
+                                                requestAnimationFrame(animateScroll);
+                                            }
+                                        }
+                                        
+                                        requestAnimationFrame(animateScroll);
+                                    }
+                                    
+                                    // 返回控制方法
+                                    return {
+                                        start,
+                                        stop,
+                                        changeSpeed,
+                                        changeDirection,
+                                        scrollTo,
+                                        get isScrolling() { return isScrolling; },
+                                        get speed() { return speedMultiplier; },
+                                        get direction() { return direction; },
+                                        get target() { return scrollTarget; }
+                                    };
                                 }
-                                
-                                // 返回控制方法
-                                return {
-                                    start,
-                                    stop,
-                                    changeSpeed,
-                                    changeDirection,
-                                    scrollTo,
-                                    get isScrolling() { return isScrolling; },
-                                    get speed() { return speedMultiplier; },
-                                    get direction() { return direction; },
-                                    get target() { return scrollTarget; }
-                                };
                             }
                         }
                     },

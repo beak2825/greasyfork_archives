@@ -2,7 +2,7 @@
 // //
 // @namespace    http://leopardindustries.net
 // @name         NewMetro UI for Netflix
-// @version      1.5.5
+// @version      1.5.7
 // @license      MIT
 // @match        https://www.netflix.com/*
 // @match        https://www.netflix.com/watch/*
@@ -13,7 +13,7 @@
 // @connect      corsproxy.io
 // @connect      omdbapi.com
 // @icon         https://i.postimg.cc/Twchqj2j/nf.png
-// @description  Metro UI Forever
+// @description  metro ui forever
 // //
 // @downloadURL https://update.greasyfork.org/scripts/543455/NewMetro%20UI%20for%20Netflix.user.js
 // @updateURL https://update.greasyfork.org/scripts/543455/NewMetro%20UI%20for%20Netflix.meta.js
@@ -879,6 +879,20 @@
         }
     }
 
+    function moveWatchDayMessage() {
+        const msg = document.querySelector('.supplemental-message.previewModal--supplemental-message');
+        if (msg && msg.textContent.includes('Finale')) {
+            msg.style.marginLeft = '28px';
+        }
+    }
+
+    function moveSeasonMessage() {
+        const msg = document.querySelector('.supplemental-message.previewModal--supplemental-message');
+        if (msg && msg.textContent.includes('Season')) {
+            msg.style.marginLeft = '28px';
+        }
+    }
+
     function moveTopMessage() {
         const msg = document.querySelector('.supplemental-message.previewModal--supplemental-message');
         if (msg && msg.textContent.includes('Today')) {
@@ -1201,11 +1215,13 @@
         moveNextDayMessage();
         addCaseToggleBtn();
         moveNewDayMessage();
+        moveWatchDayMessage();
+        moveSeasonMessage();
         checkTitleAndYear();
     }
 
     // Init Logic
-    checkStylver('1.2');
+    checkStylver('1.3');
 
     // Wait for button to start clock/weather
     const waitForButton = setInterval(() => {

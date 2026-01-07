@@ -1,18 +1,16 @@
 // ==UserScript==
 // @name         Neopets: Daily Quest Links
 // @namespace    https://github.com/saahphire/NeopetsUserscripts
-// @version      1.4.3
+// @version      1.2.0
 // @description  Adds links to quickly complete daily quests
 // @author       saahphire
 // @homepageURL  https://github.com/saahphire/NeopetsUserscripts
-// @homepage     https://github.com/saahphire/NeopetsUserscripts
 // @match        *://*.neopets.com/questlog/
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=neopets.com
 // @license      The Unlicense
 // @downloadURL https://update.greasyfork.org/scripts/549899/Neopets%3A%20Daily%20Quest%20Links.user.js
 // @updateURL https://update.greasyfork.org/scripts/549899/Neopets%3A%20Daily%20Quest%20Links.meta.js
 // ==/UserScript==
-
 /*
 •:•.•:•.•:•:•:•:•:•:•:••:•.•:•.•:•:•:•:•:•:•:•:•.•:•.•:•:•:•:•:•:•:••:•.•:•.•:•.•:•:•:•:•:•:•:•:•.•:•:•.•:•.••:•.•
 ..................................................................................................................
@@ -46,11 +44,6 @@ const links = {
   "Groom your Neopet":
     "https://www.neopets.com/safetydeposit.phtml?obj_name=&category=10",
   "Play a game": "https://www.neopets.com/games/favourites.phtml",
-  "Fish at Ye Olde Fishing Vortex": "https://www.neopets.com/water/fishing.phtml",
-  "Try on an NC Wearable": "https://ncmall.neopets.com/mall/search.phtml?type=browse&cat=43&page=1&limit=24",
-  "Fight in the Battledome": "https://www.neopets.com/dome/fight.phtml",
-  "Play with your Neopet": "https://www.neopets.com/safetydeposit.phtml?obj_name=&category=5",
-  "Read to your Neopet": "https://www.neopets.com/safetydeposit.phtml?obj_name=&category=6"
 };
 
 const makeLink = (quest) => {

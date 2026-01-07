@@ -3,7 +3,7 @@
 // @name:zh-CN   Fab Helper
 // @name:en      Fab Helper
 // @namespace    https://www.fab.com/
-// @version      3.5.1-20251228051304
+// @version      3.5.1-20260106032624
 // @description  Fab Helper 优化版 - 减少API请求，提高性能，增强稳定性，修复限速刷新
 // @description:zh-CN  Fab Helper 优化版 - 减少API请求，提高性能，增强稳定性，修复限速刷新
 // @description:en  Fab Helper Optimized - Reduced API requests, improved performance, enhanced stability, fixed rate limit refresh
@@ -873,7 +873,7 @@
     detectLanguage: /* @__PURE__ */ __name(() => {
       const oldLang = State.lang;
       State.lang = window.location.href.includes("/zh-cn/") ? "zh" : navigator.language.toLowerCase().startsWith("zh") ? "zh" : "en";
-      Utils.logger("info", `\u8BED\u8A00\u68C0\u6D4B: \u5730\u5740=${window.location.href}, \u68C0\u6D4B\u5230\u8BED\u8A00=${State.lang}${oldLang !== State.lang ? ` (\u4ECE${oldLang}\u5207\u6362)` : ""}`);
+      Utils.logger("debug", `\u8BED\u8A00\u68C0\u6D4B: \u5730\u5740=${window.location.href}, \u68C0\u6D4B\u5230\u8BED\u8A00=${State.lang}${oldLang !== State.lang ? ` (\u4ECE${oldLang}\u5207\u6362)` : ""}`);
       if (oldLang !== State.lang && State.UI && State.UI.container && UI) {
         Utils.logger("info", `\u8BED\u8A00\u5DF2\u5207\u6362\u5230${State.lang}\uFF0C\u6B63\u5728\u66F4\u65B0\u754C\u9762...`);
         UI.update();
@@ -1709,7 +1709,7 @@
       }
       State.isCheckingRateLimit = true;
       try {
-        Utils.logger("info", Utils.getText("log_rate_limit_check_start"));
+        Utils.logger("debug", Utils.getText("log_rate_limit_check_start"));
         const pageText = document.body.innerText || "";
         if (pageText.includes("Too many requests") || pageText.includes("rate limit") || pageText.match(/\{\s*"detail"\s*:\s*"Too many requests"\s*\}/i)) {
           Utils.logger("warn", "\u9875\u9762\u5185\u5BB9\u5305\u542B\u9650\u901F\u4FE1\u606F\uFF0C\u786E\u8BA4\u4ECD\u5904\u4E8E\u9650\u901F\u72B6\u6001");
@@ -1734,7 +1734,7 @@
             }
           }
         }
-        Utils.logger("info", Utils.getText("log_insufficient_info_status"));
+        Utils.logger("debug", Utils.getText("log_insufficient_info_status"));
         return State.appStatus === "NORMAL";
       } catch (e) {
         Utils.logger("error", `\u9650\u901F\u72B6\u6001\u68C0\u67E5\u5931\u8D25: ${e.message}`);
@@ -1760,15 +1760,15 @@
         if (savedCursor) {
           State.savedCursor = savedCursor;
           this._lastSeenCursor = savedCursor;
-          Utils.logger("info", `[Cursor] Initialized. Loaded saved cursor: ${savedCursor.substring(0, 30)}...`);
+          Utils.logger("debug", `[Cursor] Initialized. Loaded saved cursor: ${savedCursor.substring(0, 30)}...`);
         } else {
-          Utils.logger("info", `[Cursor] Initialized. No saved cursor found.`);
+          Utils.logger("debug", `[Cursor] Initialized. No saved cursor found.`);
         }
       } catch (e) {
         Utils.logger("warn", "[Cursor] Failed to restore cursor state:", e);
       }
       this.applyPatches();
-      Utils.logger("info", "[Cursor] Network interceptors applied.");
+      Utils.logger("debug", "[Cursor] Network interceptors applied.");
       this.setupSortMonitor();
     },
     // 添加监听URL变化的方法，检测排序方式变更
@@ -1817,7 +1817,7 @@
           const previousSort = State.currentSortOption;
           State.currentSortOption = matchedOption;
           GM_setValue("fab_helper_sort_option", State.currentSortOption);
-          Utils.logger("info", Utils.getText(
+          Utils.logger("debug", Utils.getText(
             "log_url_sort_changed",
             State.sortOptions?.[previousSort]?.name || previousSort,
             State.sortOptions?.[State.currentSortOption]?.name || State.currentSortOption
@@ -1858,7 +1858,7 @@
       if (!State.rememberScrollPosition || !State.savedCursor) return false;
       if (!url.includes("/i/listings/search")) return false;
       if (url.includes("aggregate_on=") || url.includes("count=0") || url.includes("in=wishlist")) return false;
-      Utils.logger("info", Utils.getText("page_patcher_match") + ` URL: ${url}`);
+      Utils.logger("debug", Utils.getText("page_patcher_match") + ` URL: ${url}`);
       return true;
     },
     getPatchedUrl(originalUrl) {
@@ -1866,8 +1866,8 @@
         const urlObj = new URL(originalUrl, window.location.origin);
         urlObj.searchParams.set("cursor", State.savedCursor);
         const modifiedUrl = urlObj.pathname + urlObj.search;
-        Utils.logger("info", `[Cursor] ${Utils.getText("cursor_injecting")}: ${originalUrl}`);
-        Utils.logger("info", `[Cursor] ${Utils.getText("cursor_patched_url")}: ${modifiedUrl}`);
+        Utils.logger("debug", `[Cursor] ${Utils.getText("cursor_injecting")}: ${originalUrl}`);
+        Utils.logger("debug", `[Cursor] ${Utils.getText("cursor_patched_url")}: ${modifiedUrl}`);
         this._patchHasBeenApplied = true;
         return modifiedUrl;
       }
@@ -2313,7 +2313,7 @@
       }
       State.db.todo = [];
       Utils.logger("info", Utils.getText("log_todo_cleared"));
-      Utils.logger("info", Utils.getText("log_scanning_items"));
+      Utils.logger("debug", Utils.getText("log_scanning_items"));
       const cards = document.querySelectorAll(Config.SELECTORS.card);
       const newlyAddedList = [];
       let alreadyInQueueCount = 0;
@@ -2344,7 +2344,7 @@
         newlyAddedList.push({ name, url, type: "detail", uid: url.split("/").pop() });
       });
       if (skippedCount > 0) {
-        Utils.logger("info", Utils.getText("log_skipped_unsettled", skippedCount));
+        Utils.logger("debug", Utils.getText("log_skipped_unsettled", skippedCount));
       }
       if (newlyAddedList.length > 0) {
         State.db.todo.push(...newlyAddedList);
@@ -2523,13 +2523,13 @@
           Utils.logger("info", Utils.getText("log_no_items_to_check"));
           return;
         }
-        Utils.logger("info", Utils.getText("log_checking_items", uidsFromVisibleCards.size, uidsFromFailedList.size));
+        Utils.logger("debug", Utils.getText("log_checking_items", uidsFromVisibleCards.size, uidsFromFailedList.size));
         const ownedUids = /* @__PURE__ */ new Set();
         for (let i = 0; i < allUidsToCheck.length; i += API_CHUNK_SIZE) {
           const chunk = allUidsToCheck.slice(i, i + API_CHUNK_SIZE);
           const apiUrl = new URL(API_ENDPOINT);
           chunk.forEach((uid) => apiUrl.searchParams.append("listing_ids", uid));
-          Utils.logger("info", Utils.getText("log_processing_batch", Math.floor(i / API_CHUNK_SIZE) + 1, chunk.length));
+          Utils.logger("debug", Utils.getText("log_processing_batch", Math.floor(i / API_CHUNK_SIZE) + 1, chunk.length));
           const response = await fetch(apiUrl.href, {
             headers: { "accept": "application/json, text/plain, */*", "x-csrftoken": csrfToken, "x-requested-with": "XMLHttpRequest" }
           });
@@ -2679,11 +2679,11 @@
         for (const task of todoList) {
           if (State.activeWorkers >= Config.MAX_CONCURRENT_WORKERS) break;
           if (inFlightUIDs.has(task.uid) || dispatchedUIDs.has(task.uid)) {
-            Utils.logger("info", Utils.getText("log_task_already_running", task.name));
+            Utils.logger("debug", Utils.getText("log_task_already_running", task.name));
             continue;
           }
           if (Database.isDone(task.url)) {
-            Utils.logger("info", Utils.getText("log_task_already_done", task.name));
+            Utils.logger("debug", Utils.getText("log_task_already_done", task.name));
             State.db.todo = State.db.todo.filter((t) => t.uid !== task.uid);
             Database.saveTodo();
             continue;
@@ -2697,7 +2697,7 @@
             startTime: Date.now(),
             instanceId: Config.INSTANCE_ID
           };
-          Utils.logger("info", Utils.getText("log_dispatching_worker", workerId.substring(0, 12), task.name));
+          Utils.logger("debug", Utils.getText("log_dispatching_worker", workerId.substring(0, 12), task.name));
           await GM_setValue(workerId, {
             task,
             instanceId: Config.INSTANCE_ID
@@ -2708,7 +2708,7 @@
           await new Promise((resolve) => setTimeout(resolve, 500));
         }
         if (dispatchedCount > 0) {
-          Utils.logger("info", Utils.getText("log_batch_dispatched", dispatchedCount));
+          Utils.logger("debug", Utils.getText("log_batch_dispatched", dispatchedCount));
         }
         if (!State.watchdogTimer && State.activeWorkers > 0) {
           TaskRunner2.runWatchdog();
@@ -2721,7 +2721,7 @@
     closeAllWorkerTabs: /* @__PURE__ */ __name(() => {
       const workerIds = Object.keys(State.runningWorkers);
       if (workerIds.length > 0) {
-        Utils.logger("info", Utils.getText("log_cleaning_workers_state", workerIds.length));
+        Utils.logger("debug", Utils.getText("log_cleaning_workers_state", workerIds.length));
         for (const workerId of workerIds) {
           GM_deleteValue(workerId);
         }
@@ -3185,7 +3185,7 @@
             }
           }, 2e3);
         } else if (State.appStatus === "NORMAL" && State.hiddenThisPageCount > 0) {
-          Utils.logger("info", Utils.getText("page_status_hidden_no_visible", State.hiddenThisPageCount));
+          Utils.logger("debug", Utils.getText("page_status_hidden_no_visible", State.hiddenThisPageCount));
         }
       }
     }, "checkVisibilityAndRefresh"),
@@ -3262,7 +3262,7 @@
           Utils.logger("info", Utils.getText("fab_dom_api_complete", confirmedOwned));
           Utils.logger("info", Utils.getText("fab_dom_refresh_complete", confirmedOwned));
         } else {
-          Utils.logger("info", Utils.getText("fab_dom_no_new_owned"));
+          Utils.logger("debug", Utils.getText("fab_dom_no_new_owned"));
         }
       } catch (error) {
         Utils.logger("error", Utils.getText("log_check_status_error", error.message));
@@ -4166,18 +4166,18 @@
       currentRefreshTimeout = null;
     }
     const seconds = delay ? (delay / 1e3).toFixed(1) : "\u672A\u77E5";
-    Utils.logger("info", `\u{1F504} ${reason}\u542F\u52A8\uFF01\u5C06\u5728 ${seconds} \u79D2\u540E\u5237\u65B0\u9875\u9762\u5C1D\u8BD5\u6062\u590D...`);
+    Utils.logger("debug", `\u{1F504} ${reason}\u542F\u52A8\uFF01\u5C06\u5728 ${seconds} \u79D2\u540E\u5237\u65B0\u9875\u9762\u5C1D\u8BD5\u6062\u590D...`);
     let remainingSeconds = Math.ceil(delay / 1e3);
     currentCountdownInterval = setInterval(() => {
       remainingSeconds--;
       if (remainingSeconds <= 0) {
         clearInterval(currentCountdownInterval);
         currentCountdownInterval = null;
-        Utils.logger("info", `\u23F1\uFE0F \u5012\u8BA1\u65F6\u7ED3\u675F\uFF0C\u6B63\u5728\u5237\u65B0\u9875\u9762...`);
+        Utils.logger("debug", `\u23F1\uFE0F \u5012\u8BA1\u65F6\u7ED3\u675F\uFF0C\u6B63\u5728\u5237\u65B0\u9875\u9762...`);
       } else {
-        Utils.logger("info", Utils.getText("auto_refresh_countdown", remainingSeconds));
+        Utils.logger("debug", Utils.getText("auto_refresh_countdown", remainingSeconds));
         if (!State.isRefreshScheduled) {
-          Utils.logger("info", `\u23F9\uFE0F \u68C0\u6D4B\u5230\u5237\u65B0\u5DF2\u88AB\u53D6\u6D88\uFF0C\u505C\u6B62\u5012\u8BA1\u65F6`);
+          Utils.logger("debug", `\u23F9\uFE0F \u68C0\u6D4B\u5230\u5237\u65B0\u5DF2\u88AB\u53D6\u6D88\uFF0C\u505C\u6B62\u5012\u8BA1\u65F6`);
           clearInterval(currentCountdownInterval);
           currentCountdownInterval = null;
           if (currentRefreshTimeout) {
@@ -4189,7 +4189,7 @@
         if (remainingSeconds % 3 === 0) {
           checkRateLimitStatus().then((isNotLimited) => {
             if (isNotLimited) {
-              Utils.logger("info", `\u23F1\uFE0F \u68C0\u6D4B\u5230API\u9650\u901F\u5DF2\u89E3\u9664\uFF0C\u53D6\u6D88\u5237\u65B0...`);
+              Utils.logger("debug", `\u23F1\uFE0F \u68C0\u6D4B\u5230API\u9650\u901F\u5DF2\u89E3\u9664\uFF0C\u53D6\u6D88\u5237\u65B0...`);
               clearInterval(currentCountdownInterval);
               currentCountdownInterval = null;
               if (currentRefreshTimeout) {
@@ -4384,7 +4384,7 @@
       setupXHRInterceptor();
       setupFetchInterceptor();
       setInterval(() => DataCache.cleanupExpired(), 6e4);
-      Utils.logger("info", "\u8BF7\u6C42\u62E6\u622A\u548C\u7F13\u5B58\u7CFB\u7EDF\u5DF2\u521D\u59CB\u5316");
+      Utils.logger("debug", "\u8BF7\u6C42\u62E6\u622A\u548C\u7F13\u5B58\u7CFB\u7EDF\u5DF2\u521D\u59CB\u5316");
     } catch (e) {
       Utils.logger("error", `\u521D\u59CB\u5316\u8BF7\u6C42\u62E6\u622A\u5668\u5931\u8D25: ${e.message}`);
     }
@@ -4398,7 +4398,7 @@
     }
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has("workerId")) {
-      Utils.logger("info", `\u5DE5\u4F5C\u6807\u7B7E\u9875DOM\u90E8\u5206\u521D\u59CB\u5316\uFF0C\u8DF3\u8FC7UI\u521B\u5EFA`);
+      Utils.logger("debug", `\u5DE5\u4F5C\u6807\u7B7E\u9875DOM\u90E8\u5206\u521D\u59CB\u5316\uFF0C\u8DF3\u8FC7UI\u521B\u5EFA`);
       State.hasRunDomPart = true;
       return;
     }
@@ -4441,7 +4441,7 @@
     }, "checkIsErrorPage");
     checkIsErrorPage(document.title, document.body.innerText || "");
     if (State.appStatus === "RATE_LIMITED") {
-      Utils.logger("info", Utils.getText("log_auto_resume_page_loading"));
+      Utils.logger("debug", Utils.getText("log_auto_resume_page_loading"));
       const isRecovered = await RateLimitManager.checkRateLimitStatus();
       if (isRecovered) {
         Utils.logger("info", Utils.getText("log_recovery_probe_success"));

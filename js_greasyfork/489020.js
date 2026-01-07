@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name XBVR Dark Edition
 // @namespace 7kt-xbvr
-// @version 1.1.6
+// @version 1.1.7
 // @license MIT
 // @description A dark style for XBVR web interface
 // @author 7KT-SWE
+// @icon https://7kt.se/xbvr.ico
 // @homepageURL https://7kt.se/
 // @supportURL https://openuserjs.org/scripts/arvid-demon/XBVR_Dark_Edition/issues
 // @grant GM_addStyle
@@ -680,6 +681,19 @@
   .table.is-hoverable tbody tr:not(.is-selected):hover, .table.is-hoverable.is-striped tbody tr:not(.is-selected):hover {
   	background-color: #2e2e2e !important;
 }
+  .b-table .table th.is-sortable .is-relative, .b-table .table th.is-sortable .th-wrap .is-relative {
+    position: relative !important;
+}
+  body {
+    font-size: 14px;
+}
+  .table td, .table th {
+    border:1px solid #dbdbdb;
+    border-width:0 0 1px;
+    padding:5px 5px;
+    vertical-align:top;
+}
+
 `;
   if (typeof GM_addStyle !== "undefined") {
     GM_addStyle(css);

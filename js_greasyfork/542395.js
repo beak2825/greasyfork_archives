@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Neodb + Anna + Libby Quick Redirect
 // @namespace    https://neodb.social/
-// @version      1.0
-// @author       AAA_aaa
+// @version      1.1.0
+// @author       ccccccccc
 // @description  Quick access buttons for Anna (ISBN/Title) and Libby (copies title)
 // @match        https://neodb.social/book/*
 // @grant        none
@@ -112,11 +112,11 @@
 
   // --- Add buttons ---
   if (isbn) {
-    const annaIsbnLink = `https://annas-archive.org/search?q=${isbn}`;
+    const annaIsbnLink = `https://annas-archive.se/search?q=${isbn}`;
     container.appendChild(createButton('Anna (ISBN)', annaIsbnLink));
   }
 
-  const annaTitleLink = `https://annas-archive.org/search?q=${encodeURIComponent(title)}`;
+  const annaTitleLink = `https://annas-archive.se/search?q=${encodeURIComponent(title)}`;
   container.appendChild(createButton('Anna (Title)', annaTitleLink));
   container.appendChild(createLibbyButton(title));
 

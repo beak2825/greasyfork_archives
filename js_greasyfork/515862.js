@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chase One-Click Offer Activator
 // @namespace    https://anhpham.dev/
-// @version      0.1
+// @version      0.2.1
 // @description  Adds a floating button to activate all offers on Chase's offer hub page with one click.
 // @author       Anh Pham
 // @license      MIT
@@ -48,17 +48,43 @@
 
   // Function to activate all offers
   function activateOffers() {
-    const offerButtons = document.querySelectorAll(
+    // The markup places the clickable behavior on a wrapper (role=button or data-cy="commerce-tile")
+    // while the selector targets an inner SVG. Some SVG elements may not have a .click() method,
+    // so find the nearest interactive ancestor and dispatch a MouseEvent for compatibility.
+    const svgButtons = document.querySelectorAll(
       '[data-cy="commerce-tile-button"]'
     );
-    offerButtons.forEach((btn) => btn.click());
-    alert(`Activated ${offerButtons.length} offers!`);
+    let activated = 0;
+    svgButtons.forEach((btn) => {
+      try {
+        const clickable =
+          btn.closest(
+            '[role="button"], [data-cy="commerce-tile"], button, a'
+          ) || btn;
+        clickable.dispatchEvent(
+          new MouseEvent("click", {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+          })
+        );
+        activated++;
+      } catch (e) {
+        console.error("Failed to activate offer element", btn, e);
+      }
+    });
+    alert(
+      `Activated ${activated} offers (found ${svgButtons.length} targets).`
+    );
   }
 
   // Show button only on the specific offer hub page
   function checkPage() {
+    // The UI may append query params to the hash (e.g. "#/dashboard/merchantOffers/offer-hub?accountId=...")
+    // so use startsWith and also check the full href as a fallback.
     const isOfferHub =
-      window.location.hash === "#/dashboard/merchantOffers/offer-hub";
+      window.location.hash.startsWith("#/dashboard/merchantOffers/offer-hub") ||
+      window.location.href.includes("/merchantOffers/offer-hub");
     button.style.display = isOfferHub ? "flex" : "none";
   }
 
@@ -67,6 +93,64 @@
 
   // Initial check in case the page loads directly to the offer hub
   checkPage();
+
+  // Setup SPA navigation observers: patch history API and observe DOM mutations
+  // to handle route changes that do not emit hashchange events.
+  let locationChangeTimeout = null;
+  function setupNavigationObservers() {
+    // Patch history methods to emit a custom event `locationchange`
+    const _pushState = history.pushState;
+    const _replaceState = history.replaceState;
+    history.pushState = function (...args) {
+      const ret = _pushState.apply(this, args);
+      window.dispatchEvent(new Event("locationchange"));
+      return ret;
+    };
+    history.replaceState = function (...args) {
+      const ret = _replaceState.apply(this, args);
+      window.dispatchEvent(new Event("locationchange"));
+      return ret;
+    };
+    // Back/forward navigation
+    window.addEventListener("popstate", () =>
+      window.dispatchEvent(new Event("locationchange"))
+    );
+
+    // Debounced handler for location changes
+    window.addEventListener("locationchange", () => {
+      if (locationChangeTimeout) clearTimeout(locationChangeTimeout);
+      locationChangeTimeout = setTimeout(() => {
+        checkPage();
+      }, 100);
+    });
+
+    // MutationObserver to detect when offer tiles or grid are added to the DOM
+    // This helps for pages that update content after navigation.
+    const observer = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        for (const node of m.addedNodes) {
+          if (!(node instanceof Element)) continue;
+          if (
+            node.matches?.(
+              '[data-cy="commerce-tile"], [data-cy="commerce-tile-button"], [data-testid="grid-items-container"]'
+            ) ||
+            node.querySelector?.(
+              '[data-cy="commerce-tile"], [data-cy="commerce-tile-button"], [data-testid="grid-items-container"]'
+            )
+          ) {
+            // Ensure the page visibility logic runs when new content appears
+            checkPage();
+            return;
+          }
+        }
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // Start observing SPA navigation and DOM changes
+  setupNavigationObservers();
 
   // Add click event listener to activate offers
   button.addEventListener("click", activateOffers);

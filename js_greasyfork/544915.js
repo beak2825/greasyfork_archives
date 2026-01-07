@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Bing Zen & Clean - 深度去广与极简美化 (精确置顶版 v18.8)
+// @name         Bing Zen & Clean - 深度去广与极简美化 (修复版 v18.9)
 // @namespace    http://tampermonkey.net/
-// @version      18.8
-// @description  移除广告/垃圾内容；修复首页无法居中；新增“链接级”精确置顶；原生搜索框居中美化。
+// @version      18.9
+// @description  移除广告/垃圾内容；修复背景不显示；修复搜索框文字无法居中；新增“链接级”精确置顶。
 // @author       You
 // @match        https://www.bing.com/search*
 // @match        https://cn.bing.com/search*
@@ -13,8 +13,8 @@
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/544915/Bing%20Zen%20%20Clean%20-%20%E6%B7%B1%E5%BA%A6%E5%8E%BB%E5%B9%BF%E4%B8%8E%E6%9E%81%E7%AE%80%E7%BE%8E%E5%8C%96%20%28%E7%B2%BE%E7%A1%AE%E7%BD%AE%E9%A1%B6%E7%89%88%20v188%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/544915/Bing%20Zen%20%20Clean%20-%20%E6%B7%B1%E5%BA%A6%E5%8E%BB%E5%B9%BF%E4%B8%8E%E6%9E%81%E7%AE%80%E7%BE%8E%E5%8C%96%20%28%E7%B2%BE%E7%A1%AE%E7%BD%AE%E9%A1%B6%E7%89%88%20v188%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/544915/Bing%20Zen%20%20Clean%20-%20%E6%B7%B1%E5%BA%A6%E5%8E%BB%E5%B9%BF%E4%B8%8E%E6%9E%81%E7%AE%80%E7%BE%8E%E5%8C%96%20%28%E4%BF%AE%E5%A4%8D%E7%89%88%20v189%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/544915/Bing%20Zen%20%20Clean%20-%20%E6%B7%B1%E5%BA%A6%E5%8E%BB%E5%B9%BF%E4%B8%8E%E6%9E%81%E7%AE%80%E7%BE%8E%E5%8C%96%20%28%E4%BF%AE%E5%A4%8D%E7%89%88%20v189%29.meta.js
 // ==/UserScript==
 
 (() => {
@@ -23,8 +23,8 @@
   // --- 配置常量 ---
   const CONFIG = {
     KEY_BG: 'bing_zen_bg_merged_v5',
-    KEY_BLOCK: 'bing_zen_block_merged_v5',     // 屏蔽列表（存域名）
-    KEY_FAV_URL: 'bing_zen_fav_url_v1',         // 置顶列表（存具体URL）- 新Key防止冲突
+    KEY_BLOCK: 'bing_zen_block_merged_v5',      // 屏蔽列表（存域名）
+    KEY_FAV_URL: 'bing_zen_fav_url_v1',         // 置顶列表（存具体URL）
     DEFAULT_BG: 'https://raw.githubusercontent.com/WJH-makers/markdown_photos/main/images/sea.png',
     CONTAINER_WIDTH: '820px',
     STYLE_ID: 'bing-zen-merged-style',
@@ -132,7 +132,23 @@
         backdrop-filter: blur(5px);
       }
       #sb_form .b_searchboxForm { flex: 1 !important; display: flex !important; align-items: center !important; height: 100% !important; border: none !important; margin: 0 !important; box-shadow: none !important;}
-      #sb_form_q { width: 100% !important; height: 100% !important; line-height: normal !important; border: none !important; background: transparent !important; outline: none !important; font-size: 16px !important; color: #333 !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; }
+
+      /* --- 修复搜索框居中问题：移除height 100%，让flex自动居中 --- */
+      #sb_form_q {
+          width: 100% !important;
+          height: auto !important; /* 关键修改 */
+          line-height: normal !important;
+          border: none !important;
+          background: transparent !important;
+          outline: none !important;
+          font-size: 16px !important;
+          color: #333 !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          box-shadow: none !important;
+          align-self: center !important; /* 辅助居中 */
+      }
+
       #sb_form .b_logoArea { display: none !important; }
       #sb_form .mic_cont, #sb_form #sb_clt, #sb_form #sb_search { display: flex !important; align-items: center; justify-content: center; height: 100% !important; position: static !important; margin: 0 4px !important; }
       #sb_form_go { display: block !important; position: static !important; }
@@ -147,6 +163,7 @@
         align-items: center !important;
         width: 100% !important;
         min-width: 0 !important;
+        background: none !important; /* 关键修改：移除 content 层的白色背景 */
       }
 
       /* 统一容器 */

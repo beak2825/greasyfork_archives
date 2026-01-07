@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AO3 FicTracker
 // @author       infiniMotis
-// @version      1.6.5.1
+// @version      1.6.6.2
 // @namespace    https://github.com/infiniMotis/AO3-FicTracker
 // @description  Track your favorite, finished, to-read and disliked fanfics on AO3 with sync across devices. Customizable tags and highlights make it easy to manage and spot your tracked works. Full UI customization on the preferences page.
 // @license      GNU GPLv3
@@ -128,6 +128,8 @@
         syncWidgetOpacity: .5,
         exportStatusesConfig: true,
         collapseAndHideOnBookmarks: false,
+        displayMyNotesButton: true
+
     };
 
     // Toggle debug info
@@ -140,7 +142,6 @@
 
     // Utility function to check if current page is users own bookmarks page
     function isOwnBookmarksPage() {
-        // TODO: use regex for precise detection
         const userMenu = document.querySelector('ul.menu.dropdown-menu');
         const username = userMenu?.previousElementSibling?.getAttribute('href')?.split('/').pop() ?? '';
         if (!username) return false;
@@ -167,6 +168,17 @@
         // Show modal using ao3modal
         ao3modal.show('#temp-content', modalTitle);
     }
+
+
+    function escapeHTML(str) {
+        return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
 
     // Utility class for injecting CSS
     class StyleManager {
@@ -404,7 +416,7 @@
         }
 
         // Save note
-        saveNote(workId, noteText) {
+        saveNote(workId, noteText, ficDetails) {
             const notes = this.getAllNotes();
             const date = new Date().toISOString();
             
@@ -412,9 +424,14 @@
                 delete notes[workId];
             } else {
                 notes[workId] = {
+                    ...notes[workId],
                     text: noteText,
-                    date
+                    date,
                 };
+
+                if (ficDetails && !('title' in notes[workId])) {
+                    Object.assign(notes[workId], ficDetails);
+                }
             }
 
             this.storageManager.setItem("FT_userNotes", JSON.stringify(notes));
@@ -438,12 +455,17 @@
         }
 
         // Generate note block HTML
-        generateNoteHtml(workId, isWorkPage = false) {
+        generateNoteHtml(workId, isWorkPage = false, isNoteAggregatorModal = false) {
             const note = this.getNote(workId);
             const noteText = note?.text || '';
             const noteDate = note?.date || '';
             const displayDate = noteDate ? new Date(noteDate).toLocaleDateString() : '';
             const detailsOpen = settings.expandUserNoteDetails ? 'open' : '';
+
+
+            // If note was deleted from note modal manager - leave empty space
+            if (!noteText && isNoteAggregatorModal === true)
+                return ''
 
             // If no note exists, show create button
             if (!noteText) {
@@ -459,11 +481,16 @@
                 `;
             }
 
+            let ficDetails;
+            if (isNoteAggregatorModal) {
+                ficDetails = this.getFicDetailsHTML(workId, note);
+            }
+
             return `
                 <div class="user-note-preview" data-work-id="${workId}" style="order: 999; flex-basis: 100%;">
                     <style>
                         @media screen and (max-width: 42em) {
-                            .user-note-preview[data-work-id="${workId}"] > div > div {
+                            .user-note-preview[data-work-id="${workId}"]>div>div {
                                 width: 100% !important;
                             }
                         }
@@ -474,33 +501,35 @@
                             <details ${detailsOpen} style="margin: 18px 0 1px 0;; border: 1px solid currentColor; border-radius: 4px; padding: 0;">
                                 <summary style="padding: 4px 6px; cursor: pointer; font-weight: bold; background: rgba(128,128,128,0.1); display: flex; justify-content: space-between; align-items: center;">
                                     <div style="display: flex; align-items: center; gap: 8px;">
-                                        <span>📝 Your Note</span>
+                                        <span>${isNoteAggregatorModal ? ficDetails.outerHTML : '📝 Your Note'}</span>
                                     </div>
                                     <div class="note-actions" style="display: flex; gap: 8px;">
                                         <button class="edit-note-btn" title="Edit Note" style="background: none; border: none; cursor: pointer;">✏️</button>
                                         <button class="delete-note-btn" title="Delete Note" style="background: none; border: none; cursor: pointer;">🗑️</button>
                                     </div>
                                 </summary>
-                        <div class="note-body" style="padding: 12px; border-top: 1px solid rgba(128,128,128,0.2); background: rgba(128,128,128,0.05);">
-                            <div style="line-height: 1.4; white-space: pre-wrap;">${noteText}</div>
-                            <div style="margin-top: 8px; font-size: 0.85em; opacity: 0.7;">
-                                📅 Last updated: ${displayDate} | 📏 ${noteText.length} characters
-                            </div>
+                                <div class="note-body" style="padding: 12px; border-top: 1px solid rgba(128,128,128,0.2); background: rgba(128,128,128,0.05);">
+                                    <div style="line-height: 1.4; white-space: pre-wrap;">${escapeHTML(noteText)}</div>
+                                    <div style="margin-top: 8px; font-size: 0.85em; opacity: 0.7;">
+                                        📅 Last updated: ${displayDate} | 📏 ${noteText.length} characters
+                                    </div>
+                                </div>
+                                <div class="note-edit-form" style="display: none; padding: 12px; border-top: 1px solid rgba(128,128,128,0.2); background: rgba(128,128,128,0.05);">
+                                    <textarea class="note-textarea" style="box-sizing: border-box; width: 100%; min-height: 100px; margin-bottom: 8px; padding: 8px; border: 1px solid rgba(128,128,128,0.2); border-radius: 4px;">${escapeHTML(noteText)}</textarea>
+                                    <div style="display: flex; gap: 8px; justify-content: flex-end;">
+                                        <button class="save-note-btn" style="cursor: pointer;">💾 Save</button>
+                                        <button class="cancel-edit-btn" style="cursor: pointer;">❌ Cancel</button>
+                                    </div>
+                                </div>
+                            </details>
                         </div>
-                        <div class="note-edit-form" style="display: none; padding: 12px; border-top: 1px solid rgba(128,128,128,0.2); background: rgba(128,128,128,0.05);">
-                            <textarea class="note-textarea" style="box-sizing: border-box; width: 100%; min-height: 100px; margin-bottom: 8px; padding: 8px; border: 1px solid rgba(128,128,128,0.2); border-radius: 4px;">${noteText}</textarea>
-                            <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                                <button class="save-note-btn" style="cursor: pointer;">💾 Save</button>
-                                <button class="cancel-edit-btn" style="cursor: pointer;">❌ Cancel</button>
-                            </div>
-                        </div>
-                    </details>
+                    </div>
                 </div>
             `;
         }
 
         // Setup event handlers
-        setupNoteHandlers(container, isWorkPage = false) {
+        setupNoteHandlers(container, isWorkPage = false, isNoteAggregatorModal = false) {
             container.addEventListener("click", (e) => {
                 const noteBlock = e.target.closest(".user-note-preview");
                 if (!noteBlock) return;
@@ -525,12 +554,13 @@
 
                 if (btn.classList.contains("save-note-btn")) {
                     const textarea = noteBlock.querySelector(".note-textarea");
-                    this.saveNote(workId, textarea.value);
-                    this.updateNoteDisplay(noteBlock, workId, isWorkPage);
+                    const ficDetails = this.getFicDetails(workId, isWorkPage);
+                    this.saveNote(workId, textarea.value, ficDetails);
+                    this.updateNoteDisplay(noteBlock, workId, isWorkPage, isNoteAggregatorModal);
                 }
 
                 if (btn.classList.contains("cancel-edit-btn")) {
-                    this.updateNoteDisplay(noteBlock, workId, isWorkPage);
+                    this.updateNoteDisplay(noteBlock, workId, isWorkPage, isNoteAggregatorModal);
                 }
 
                 if (btn.classList.contains("delete-note-btn")) {
@@ -538,7 +568,7 @@
                     e.preventDefault();
                     if (confirm("Delete this note?")) {
                         this.deleteNote(workId);
-                        this.updateNoteDisplay(noteBlock, workId, isWorkPage);
+                        this.updateNoteDisplay(noteBlock, workId, isWorkPage, isNoteAggregatorModal);
                     }
                 }
             });
@@ -566,11 +596,126 @@
         }
 
 
-        updateNoteDisplay(noteBlock, workId, isWorkPage = false) {
-            noteBlock.outerHTML = this.generateNoteHtml(workId, isWorkPage);
+        updateNoteDisplay(noteBlock, workId, isWorkPage = false, isNoteAggregatorModal = false) {
+            noteBlock.outerHTML = this.generateNoteHtml(workId, isWorkPage, isNoteAggregatorModal);
+        }
+
+
+        getFicDetails(workId, isWorkPage = false) {
+            if (isWorkPage) {
+                const title = document.querySelector('h2.title.heading').textContent.trim();
+                const author = document.querySelector('a[rel="author"]')?.textContent;
+                const fandom = document.querySelector('dd.fandom.tags ul a.tag').textContent;
+                return {title, author, fandom}
+            } else {              
+                const fic = document.querySelector(`li#work_${workId}, li.work-${workId}`);
+                if (!fic) return;  
+
+                const header = fic.querySelector('div.header.module');
+                const title = header.querySelector('a[href^="/works/"]').textContent;
+                const author = header.querySelector('a[rel="author"]')?.textContent;
+                // explicitly save only one fandom to avoid clutter
+                const fandom = header.querySelector('h5.fandoms.heading > a.tag').textContent;
+                return {title, author, fandom}
+            }
+        }
+
+
+        getFicDetailsHTML(workId, note) {
+            const container = document.createElement('span');
+
+            if (note.title) {
+                const fandomLink = document.createElement('a');
+                fandomLink.target = '_blank';
+                fandomLink.href = `/tags/${encodeURIComponent(note.fandom)}/works`;
+                fandomLink.textContent = note.fandom;
+
+                const workLink = document.createElement('a');
+                workLink.target = '_blank';
+                workLink.href = `/works/${workId}`;
+                workLink.textContent = note.title;
+
+                const authorLink = document.createElement('a');
+                authorLink.target = '_blank';
+                authorLink.href = `/users/${encodeURIComponent(note.author)}`;
+                authorLink.textContent = note.author;
+
+                container.append(fandomLink, ' - ', workLink, ' by ', authorLink);
+            } else {
+                // legacy fallback - only work link
+                const workLink = document.createElement('a');
+                workLink.target = '_blank';
+                workLink.href = `/works/${workId}`;
+                workLink.textContent = `Work #${workId}`;
+                container.append(workLink);
+            }
+
+            return container;
+        }
+
+
+        // Add sorting options later
+        getNotesSorted() {
+            const userNotesObj = this.getAllNotes();
+            const notesEntries = Object.entries(userNotesObj);
+            // sort by most recent
+            notesEntries.sort(([, noteA], [, noteB]) => new Date(noteB.date) - new Date(noteA.date));
+
+            return notesEntries;
+        }
+
+
+        // Retrieve an arr of notes html specifically for MyNotes manager
+        getNotesHTML(notesEntries) {
+            const htmlNotesList = notesEntries.map(([workId, note]) => {
+                return this.generateNoteHtml(workId, false, true);
+            });
+            return htmlNotesList;
+        }
+
+
+        getMyNotesModalHTML(htmlNotesList) {
+            const notesModalHTML = `
+                <div style="position: sticky;top: 0;z-index: 10;">
+                    <label for="notes_search">Search Notes:</label>
+                    <input type="search" id="ft_notes_search">
+                </div>
+                <div id='ft_notesList'>
+                    ${htmlNotesList.join("")}
+                </div>
+            `;
+            return notesModalHTML;
+        }
+
+
+        filterNotes(searchQuery) {
+            const sortedNotes = this.getNotesSorted();
+            const searchTokens = searchQuery
+                .trim()
+                .toLowerCase()
+                .split(/\s+/);
+
+            if (searchTokens.length === 0) return sortedNotes;
+
+            const filteredNotes = sortedNotes.filter(([, note]) => {
+                const noteTokens = [
+                    ...(note.title || '').toLowerCase().split(/\s+/),
+                    ...(note.author || '').toLowerCase().split(/\s+/),
+                    ...(note.fandom || '').toLowerCase().split(/\s+/),
+                    ...note.text.toLowerCase().split(/\s+/)
+                ];
+
+                // every search token must be present, ordering doent matter
+                return searchTokens.every(token =>
+                    noteTokens.some(word => word.startsWith(token))
+                );
+            });
+
+            return filteredNotes;
         }
     }
 
+    
     // Class for managing storage caching
     class StorageManager {
         // Store a value in local storage
@@ -1365,6 +1510,7 @@
             this.setupOnPageSorting();
         }
 
+
         // Retrieve stored IDs for different statuses
         loadStoredIds() {
             this.worksStoredIds = settings.statuses.reduce((acc, status) => {
@@ -1865,6 +2011,13 @@
                             <label for="toggle_displayUserNotes" 
                                 title="Shows the "Add note" button on each work card and your saved notes as collapsible sections">
                                 Display "Add Note" button and your notes in work cards
+                            </label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="toggle_displayMyNotesBtn" v-model="ficTrackerSettings.displayMyNotesButton">
+                            <label for="toggle_displayMyNotesBtn" 
+                                title="Show or hide the 'My Notes' button in the navigation bar for quick access/search">
+                                Display "My Notes" button at the navigation bar
                             </label>
                         </li>
                         <li>
@@ -2675,6 +2828,16 @@
             this.initStyles();
             this.addDropdownOptions();
             this.setupURLHandlers();
+
+            // Only initialize storages on global scope if My Notes manager enabled
+            if(settings.displayMyNotesButton) {
+                this.storageManager = new StorageManager();
+                if (settings.syncEnabled) {
+                    this.remoteSyncManager = new RemoteStorageSyncManager();
+                }
+                this.userNotesManager = new CustomUserNotesManager(this.storageManager, this.remoteSyncManager);
+                this.setupMyNotesButton();
+            }
         }
 
         // Method to merge settings / store the default ones
@@ -2777,6 +2940,45 @@
 
             DEBUG && console.log('[FicTracker] Successfully added dropdown options!');
         }
+
+
+        setupMyNotesButton() {
+            const topBar = document.querySelector('ul.primary.navigation.actions');
+            if (!topBar) return;
+        
+            const notesUI = `
+                <li class="dropdown" aria-haspopup="true">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="ft_my_notes">My Notes</a>
+                </li>
+            `;
+            topBar.insertAdjacentHTML('beforeend', notesUI);
+
+            const container = document.querySelector('div.content.userstuff');
+            this.userNotesManager.setupNoteHandlers(container, false, true);
+
+            document.querySelector('#ft_my_notes').addEventListener('click', () => {
+                const sortedNotes = this.userNotesManager.getNotesSorted();
+                const htmlNotesList = this.userNotesManager.getNotesHTML(sortedNotes);
+                const notesModalHTML = this.userNotesManager.getMyNotesModalHTML(htmlNotesList);
+
+                displayModal(`Total Notes: ${htmlNotesList.length}`, notesModalHTML);
+
+                document.querySelector('#ft_notes_search').addEventListener('input', (e) => {
+                    this.filterAndRenderNotesModal(e.target.value);
+                });
+            });
+        }
+
+
+        // Naive filtering, mb implement fuzzy later
+        filterAndRenderNotesModal(searchQuery) {
+            const filteredNotes = this.userNotesManager.filterNotes(searchQuery);
+            const htmlNotesList = this.userNotesManager.getNotesHTML(filteredNotes);
+            const container = document.querySelector('#ft_notesList');
+            container.innerHTML = htmlNotesList.join('');
+            //this.userNotesManager.setupNoteHandlers(container, false, true);
+        }
+
 
         // Setup URL handlers for different pages
         setupURLHandlers() {

@@ -4,16 +4,20 @@
 // @description    This script hides the annoying popups (the anti-adblock popup and others) that are shown in the web page.
 // @description:it Questo script nasconde i popup fastidiosi (il popup anti-adblock e altri) che vengono visualizzati nella pagina web.
 // @namespace      https://greasyfork.org/users/788550
-// @version        1.0.8
+// @version        1.1.2
 // @author         Cyrano68
 // @license        MIT
 // @match          https://*.anconatoday.it/*
-// @require        https://update.greasyfork.org/scripts/547732/1725674/BasicLib.js
-// @require        https://update.greasyfork.org/scripts/535551/1726151/HideAnnoyingPopupsLib.js
+// @require        https://update.greasyfork.org/scripts/547732/1728184/BasicLib.js
+// @require        https://update.greasyfork.org/scripts/535551/1728187/HideAnnoyingPopupsLib.js
 // @grant          none
 // @downloadURL https://update.greasyfork.org/scripts/545377/AnconaTodayit%3A%20Hide%20Annoying%20popups%20%28the%20anti-adblock%20popup%20and%20others%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/545377/AnconaTodayit%3A%20Hide%20Annoying%20popups%20%28the%20anti-adblock%20popup%20and%20others%29.meta.js
 // ==/UserScript==
+
+//
+// >>>FILENAME=AnconaToday_it_HideAnnoyingPopups.js<<<
+//
 
 // This is a IIFE (Immediately Invoked Function Expression).
 (function()
@@ -21,8 +25,7 @@
     "use strict";
 
     const blib = window.BasicLib;
-    //blib.setShowLogToScreen(true);
-    //blib.setMaxNumScreenLogs(200);
+    //blib.setShowLogToScreen(true, 200);
     blib.consoleLog(`CY==> AnconaToday_it_HideAnnoyingPopups: Using library 'BasicLib' (version: ${blib.getVersion()})`);
 
     const haplib = window.HideAnnoyingPopupsLib;

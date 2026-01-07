@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube - Proper Description
 // @namespace    q1k
-// @version      2.2.7
+// @version      2.2.8
 // @description  Watch page description below the video with proper open/close toggle, instead of a side bar.
 // @author       q1k
 // @match        *://www.youtube.com/*
@@ -78,7 +78,7 @@ ytd-watch-metadata #bottom-row #description-inner #description-interaction {/*cl
   display: none !important;
 }
 /*title and general look*/
-ytd-watch-metadata { margin-top: 0; padding-top: 20px;/*2rem;*/ padding-bottom: 16px; border-bottom: 1px solid var(--yt-spec-10-percent-layer); }
+ytd-watch-metadata { margin-top: 0; padding-top: 20px;/*2rem;*/ padding-bottom: 16px; border-bottom: 1px solid var(--yt-spec-outline); }
 ytd-watch-metadata #title h1 { font-family: 'Roboto',sans-serif; line-height: 2.6rem; font-weight: 400; font-size: 1.8rem; max-height: 5.2rem; }
 
 /*moved views/date from #bottom-row #info-container*/
@@ -95,7 +95,7 @@ ytd-watch-metadata #top-row > #info > * { /*moved views/date from #bottom-row #i
 /*ytd-watch-metadata #top-row > #info > *:nth-child(2) { font-size: 0; }
 ytd-watch-metadata #top-row > #info > *:nth-child(2):before { content: " • "; font-size: 1.4rem; user-select: none; }*/
 /*action buttons top-row*/
-ytd-watch-metadata #top-row { display: flex !important; align-items: center; margin: 0 !important; padding-bottom: 5px !important; border-bottom: 1px solid var(--yt-spec-10-percent-layer); /*dark: rgba(255, 255, 255, 0.2), light: rgba(0, 0, 0, 0.1)*/}
+ytd-watch-metadata #top-row { display: flex !important; align-items: center; margin: 0 !important; padding-bottom: 5px !important; border-bottom: 1px solid var(--yt-spec-outline); /*dark: rgba(255, 255, 255, 0.2), light: rgba(0, 0, 0, 0.1)*/}
 ytd-watch-metadata #top-row #actions { margin-top: 0; }
 ytd-watch-metadata #top-row #actions #menu ytd-menu-renderer { justify-content: flex-end !important; }
 
@@ -106,7 +106,7 @@ ytd-watch-metadata #owner { margin: 0 0 12px 0 !important; padding: 16px 0 0 0 !
 /*general bottom-row look and other fixes*/
 ytd-watch-metadata #bottom-row { margin: 0 !important; }
 ytd-watch-metadata #bottom-row #description-inner { margin: 0; }
-ytd-watch-metadata #bottom-row #description { cursor: auto; background: none !important; border-radius: 0; margin: 0 12px 0 0; margin: 0; /*padding-bottom: 1em;*/ /*border-bottom: 1px solid var(--yt-spec-10-percent-layer);*/ }
+ytd-watch-metadata #bottom-row #description { cursor: auto; background: none !important; border-radius: 0; margin: 0 12px 0 0; margin: 0; /*padding-bottom: 1em;*/ /*border-bottom: 1px solid var(--yt-spec-outline);*/ }
 /*hide tooltip when hovered date info */
 ytd-watch-metadata #bottom-row #description-inner > tp-yt-paper-tooltip[for="info"] { display: none; }
 ytd-watch-metadata #bottom-row ytd-text-inline-expander #snippet { -webkit-mask-image: none !important; mask-image: none !important; }

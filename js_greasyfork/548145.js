@@ -3,7 +3,7 @@
 // @name:en      Facebook Login Wall Remover
 // @name:zh-TW   Facebook 登入牆移除器
 // @name:ja      Facebook ログインウォールリムーバー
-// @version      0.4.1
+// @version      0.5.0
 // @description  This script improves the guest browsing experience on the Facebook desktop site. It aims to remove common interruptions and add helpful features for users who are not logged in.
 // @description:en [Desktop Site | Guest Mode Only] Removes login popups and banners, prevents page jumps, and automatically opens media in a new tab to prevent page deadlocks. Now features an integrated, intelligent permalink copier for any post. Automatically disables itself when a logged-in state is detected.
 // @description:zh-TW 這個腳本的用途是改善在 Facebook 桌面版網站上未登入狀態的瀏覽體驗。它會移除一些常見的干擾，並加入一些方便的功能。
@@ -71,6 +71,16 @@
                     '透明性に関する情報をすべて見る'
                 ]
             },
+            TEXT_EXPANDER: {
+                TARGETS: [
+                    "See more",
+                    "查看更多",
+                    "さらに表示"
+                ],
+                SCOPE_SELECTOR: 'div[role="article"]',
+                BUTTON_SELECTOR: 'div[role="button"]',
+                PROCESSED_ATTR: 'data-gm-expanded',
+            },
             LOGIN_STATE_MARKERS: {
                 LOGGED_OUT: [
                     { selector: 'form#login_form', reason: 'Primary login form element' },
@@ -125,8 +135,23 @@
                     hidePostStats: 'Hide post stats (Likes, Comments counts)',
                     autoUnmuteEnabled: 'Automatically unmute videos',
                     postNumberingEnabled: 'Display post order numbers on feed',
+                    expandContentEnabled: 'Auto-expand post content (See more)',
                     errorRecoveryEnabled: 'Auto-reload on error page (Button detection)',
                     transparencyButtonsEnabled: 'Show Page Transparency shortcuts (Bottom-Left)',
+                    idRevealerEnabled: 'Enable ID Revealer (Click Title)',
+                    idRevealerTooltip: 'Click to reveal Profile ID & Info',
+                    idRevealerLinkFormat: 'ID Link Format',
+                    idFormatUserID: 'User ID URL (facebook.com/id)',
+                    idFormatClassic: 'Classic (profile.php?id=)',
+                    idFormatUsername: 'Username (Current URL)',
+                    id_copy_all: 'Copy All Info',
+                    id_label_user: 'User ID',
+                    id_label_page: 'Page ID',
+                    id_label_meta: 'Profile ID',
+                    profile_name_label: 'Name',
+                    profile_url_label: 'Profile URL',
+                    copy_success_generic: '{label} Copied',
+                    all_copied: 'All Info Copied',
                     setVolumeLabel: 'Auto-unmute volume',
                     searchPlaceholder: 'Search...',
                     searchButton: 'Search',
@@ -205,6 +230,7 @@
                     copier_format_shortest: 'Shortest (fb.com, less compatible)',
                     tooltipAds: 'Go to Ad Library (About)',
                     tooltipTransparency: 'Go to Page transparency',
+                    notificationReelSearchError: 'Cannot get current page name for Reel search.',
                 },
                 'zh-TW': {
                     notificationDeadlock: '登入提示已隱藏，動態消息將無法載入新內容。\n【提示】為避免動態消息卡住，請養成用滑鼠中鍵在新分頁開啟連結的習慣。請重新整理頁面以繼續瀏覽。',
@@ -215,12 +241,27 @@
                     menuResetSettings: '🚨 重設所有設定',
                     autoOpenMediaInNewTab: '自動在新分頁開啟媒體 (防鎖定)',
                     showDeadlockNotification: '顯示頁面鎖定通知',
-                    hideUselessElements: '隱藏訪客專用介面元素',
+                    hideUselessElements: '隱藏對訪客無用的介面元素',
                     hidePostStats: '隱藏貼文統計數據 (讚數、留言數)',
                     autoUnmuteEnabled: '自動取消影片靜音',
                     postNumberingEnabled: '在動態消息上顯示貼文順序',
+                    expandContentEnabled: '自動展開貼文內容 (查看更多)',
                     errorRecoveryEnabled: '錯誤頁面自動恢復 (按鈕偵測)',
                     transparencyButtonsEnabled: '顯示粉絲專頁資訊透明度捷徑按鈕 (左下角)',
+                    idRevealerEnabled: '啟用 ID 顯示器 (點擊標題)',
+                    idRevealerTooltip: '點擊以顯示 Profile ID 與資訊',
+                    idRevealerLinkFormat: 'ID 連結格式',
+                    idFormatUserID: 'User ID 格式 (facebook.com/id)',
+                    idFormatClassic: '經典格式 (profile.php?id=)',
+                    idFormatUsername: '使用者名稱 (當前網址)',
+                    id_copy_all: '複製全部資訊',
+                    id_label_user: 'User ID',
+                    id_label_page: 'Page ID',
+                    id_label_meta: 'Profile ID',
+                    profile_name_label: '專頁名稱',
+                    profile_url_label: 'Profile URL',
+                    copy_success_generic: '已複製 {label}',
+                    all_copied: '全部資訊已複製',
                     setVolumeLabel: '自動音量大小',
                     searchPlaceholder: '搜尋...',
                     searchButton: '搜尋',
@@ -299,6 +340,7 @@
                     copier_format_shortest: '最短連結 (fb.com, 相容性較差)',
                     tooltipAds: '前往 廣告檔案庫 (關於)',
                     tooltipTransparency: '查看 粉絲專頁資訊透明度',
+                    notificationReelSearchError: '無法取得目前頁面名稱以進行連續短片搜尋。',
                 },
                 ja: {
                     notificationDeadlock: 'ログインプロンプトが非表示になりましたが、フィードは新しいコンテンツを読み込めなくなりました。\n【ヒント】フィードがロックされないように、新しいタブでリンクを開く（中央クリック）習慣を付けてください。閲覧を続けるには、このページをリロードしてください。',
@@ -313,8 +355,23 @@
                     hidePostStats: '投稿の統計データを非表示 (いいね！、コメント数)',
                     autoUnmuteEnabled: '動画のミュートを自動解除',
                     postNumberingEnabled: 'フィードに投稿順序番号を表示する',
+                    expandContentEnabled: '投稿の内容を自動的に展開 (さらに表示)',
                     errorRecoveryEnabled: 'エラーページ自動回復 (ボタン検出)',
                     transparencyButtonsEnabled: 'ページの透明性ショートカットを表示 (左下)',
+                    idRevealerEnabled: 'ID表示を有効にする（タイトルをクリック）',
+                    idRevealerTooltip: 'クリックしてプロフィールIDと情報を表示',
+                    idRevealerLinkFormat: 'IDリンク形式',
+                    idFormatUserID: 'User ID形式 (facebook.com/id)',
+                    idFormatClassic: 'クラシック (profile.php?id=)',
+                    idFormatUsername: 'ユーザー名 (現在のURL)',
+                    id_copy_all: 'すべての情報をコピー',
+                    id_label_user: 'User ID',
+                    id_label_page: 'Page ID',
+                    id_label_meta: 'Profile ID',
+                    profile_name_label: 'プロフィール名',
+                    profile_url_label: 'Profile URL',
+                    copy_success_generic: '{label}をコピーしました',
+                    all_copied: 'すべての情報をコピーしました',
                     setVolumeLabel: '自動音量',
                     searchPlaceholder: '検索...',
                     searchButton: '検索',
@@ -393,6 +450,7 @@
                     copier_format_shortest: '最短リンク (fb.com, 互換性低)',
                     tooltipAds: '広告ライブラリへ (情報)',
                     tooltipTransparency: 'ページの透明性を表示',
+                    notificationReelSearchError: 'リール検索のための現在のページ名を取得できません。',
                 },
             },
         },
@@ -496,9 +554,18 @@
                         { key: 'showDeadlockNotification', type: 'boolean', defaultValue: true, labelKey: 'showDeadlockNotification', group: 'general' },
                         { key: 'errorRecoveryEnabled', type: 'boolean', defaultValue: true, labelKey: 'errorRecoveryEnabled', group: 'general' },
                         { key: 'transparencyButtonsEnabled', type: 'boolean', defaultValue: true, labelKey: 'transparencyButtonsEnabled', group: 'general' },
+                        { key: 'idRevealerEnabled', type: 'boolean', defaultValue: true, labelKey: 'idRevealerEnabled', group: 'general' },
+                        {
+                            key: 'idRevealerLinkFormat', type: 'select', defaultValue: 'userid', labelKey: 'idRevealerLinkFormat',
+                            options: [
+                                { value: 'userid', labelKey: 'idFormatUserID' }, { value: 'classic', labelKey: 'idFormatClassic' }, { value: 'username', labelKey: 'idFormatUsername' }
+                            ],
+                            group: 'general'
+                        },
                         { key: 'autoUnmuteEnabled', type: 'boolean', defaultValue: true, labelKey: 'autoUnmuteEnabled', group: 'general' },
                         { key: 'autoUnmuteVolume', type: 'range', defaultValue: 25, labelKey: 'setVolumeLabel', options: { min: 0, max: 100, step: 5, unit: '%' }, group: 'general' },
                         { key: 'postNumberingEnabled', type: 'boolean', defaultValue: true, labelKey: 'postNumberingEnabled', group: 'general' },
+                        { key: 'expandContentEnabled', type: 'boolean', defaultValue: true, labelKey: 'expandContentEnabled', group: 'general' },
                     ];
                     const navigationSettings = [
                         { key: 'keyboardNavEnabled', type: 'boolean', defaultValue: true, labelKey: 'keyboardNavEnabled', group: 'navigation' },
@@ -561,6 +628,8 @@
                     const SI = this.app.modules.styleInjector;
                     const ER = this.app.modules.errorRecovery;
                     const TA = this.app.modules.transparencyActions;
+                    const CE = this.app.modules.contentExpander;
+                    const IR = this.app.modules.idRevealer;
                     switch (key) {
                         case 'permalinkCopierEnabled':
                             if (newValue) PC.init(this.app); else PC.deinit();
@@ -580,6 +649,12 @@
                             break;
                         case 'transparencyButtonsEnabled':
                             if (newValue) TA.init(this.app); else TA.deinit();
+                            break;
+                        case 'idRevealerEnabled':
+                            if (newValue) IR.init(this.app);
+                            break;
+                        case 'expandContentEnabled':
+                            if (newValue) CE.init(this.app);
                             break;
                     }
                 },
@@ -672,6 +747,8 @@
                     if (def.key === 'autoUnmuteVolume') wrapper.dataset.controls = 'autoUnmuteEnabled';
                     if (def.key.startsWith('keyNav')) wrapper.dataset.controls = 'keyboardNavEnabled';
                     if (def.group === 'permalink' && def.key !== 'permalinkCopierEnabled') wrapper.dataset.controls = 'permalinkCopierEnabled';
+                    if (def.key === 'idRevealerLinkFormat') wrapper.dataset.controls = 'idRevealerEnabled';
+
                     return wrapper;
                 },
                 _setupDependentControls(container) {
@@ -679,6 +756,7 @@
                         autoUnmuteEnabled: container.querySelector('#setting-autoUnmuteEnabled'),
                         keyboardNavEnabled: container.querySelector('#setting-keyboardNavEnabled'),
                         permalinkCopierEnabled: container.querySelector('#setting-permalinkCopierEnabled'),
+                        idRevealerEnabled: container.querySelector('#setting-idRevealerEnabled'),
                     };
                     const toggleGroup = (controller, isEnabled) => {
                         container.querySelectorAll(`[data-controls="${controller.id.substring(8)}"]`).forEach(control => {
@@ -812,7 +890,7 @@
                         `.gm-button-group button:not(:first-child) { margin-left: -1px; }`,
                         `.gm-button-group button:first-child { border-radius: 6px 0 0 6px; }`,
                         `.gm-button-group button:last-child { border-radius: 0 6px 6px 0; }`,
-                        `.gm-button-group button svg { width: 16px; height: 16px; fill: #65676B; }`,
+                        `.gm-button-group button svg { width: 20px; height: 20px; fill: #65676B; pointer-events: none; }`,
                         `.gm-button-group button.gm-pinned { background-color: #E7F3FF; }`,
                         `.gm-search-core-wrapper { flex-grow: 1; display: flex; justify-content: center; }`,
                         `.gm-search-component-wrapper { display: flex; align-items: center; border: 1px solid #CED0D4; border-radius: 18px; background-color: #F0F2F5; padding: 0; transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s; height: 36px; flex-grow: 1; max-width: 600px; }`,
@@ -836,6 +914,11 @@
                         `.gm-toast a:hover { opacity: 0.8; }`,
                         // --- Permalink Copier ---
                         `.${C.SELECTORS.PERMALINK_COPIER.BUTTON_CLASS} { --positive-background: #E7F3FF; --negative-background: #FDEDEE; --hover-overlay: rgba(0, 0, 0, 0.05); --secondary-text: #65676B; --media-inner-border: #CED0D4; }`,
+                        // --- Permalink Copier Icons & Animation ---
+                        `@keyframes gm-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`,
+                        `.gm-spin { animation: gm-spin 0.8s linear infinite; transform-origin: center; }`,
+                        `.gm-icon-wrapper { display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; }`,
+                        `.gm-icon-wrapper svg { display: block; }`,
                         // --- Transparency Buttons ---
                         `.gm-transparency-container { position: fixed; bottom: 20px; left: 20px; z-index: 9990; display: none; flex-direction: column; gap: 10px; }`,
                         `.gm-transparency-btn { width: 40px; height: 40px; border-radius: 50%; background-color: white; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.15); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: transform 0.1s; }`,
@@ -944,6 +1027,39 @@
                     const observer = new MutationObserver(throttledEngine);
                     observer.observe(document.documentElement, { childList: true, subtree: true });
                     throttledEngine();
+                }
+            },
+
+            contentExpander: {
+                app: null,
+                init(app) {
+                    this.app = app;
+                    if (!this.app.state.settings.expandContentEnabled) return;
+
+                    const C = this.app.config.TEXT_EXPANDER;
+                    
+                    const runExpander = () => {
+                        // Scope to article > button to prevent misclicks on sidebar/nav
+                        const selector = `${C.SCOPE_SELECTOR} ${C.BUTTON_SELECTOR}`;
+                        const candidates = document.querySelectorAll(selector);
+
+                        candidates.forEach(btn => {
+                            if (btn.hasAttribute(C.PROCESSED_ATTR)) return;
+                            // Ensure visibility
+                            if (btn.offsetParent === null) return;
+                            
+                            const text = btn.textContent.trim();
+                            if (C.TARGETS.includes(text)) {
+                                btn.setAttribute(C.PROCESSED_ATTR, 'true');
+                                btn.click();
+                            }
+                        });
+                    };
+
+                    const throttledRun = this.app.utils.throttle(runExpander, 500);
+                    const observer = new MutationObserver(throttledRun);
+                    observer.observe(document.body, { childList: true, subtree: true });
+                    runExpander();
                 }
             },
 
@@ -1056,7 +1172,7 @@
                                 if (loc.pathname.includes('profile.php')) {
                                     const params = new URLSearchParams(loc.search);
                                     targetUrl = `${loc.origin}${loc.pathname}?id=${params.get('id')}&sk=about_profile_transparency`;
-                                } else if (loc.pathname.startsWith('/people/')) {
+                                } else if (loc.pathname.startsWith('/people/') || loc.pathname.startsWith('/p/')) {
                                     const cleanPath = loc.pathname.replace(/\/$/, '');
                                     targetUrl = `${loc.origin}${cleanPath}/?sk=about_profile_transparency`;
                                 } else {
@@ -1132,7 +1248,10 @@
                     }
                 },
                 _initAdBlockerRemover() {
+                    let hasHandledWarning = false;
+                    let observer = null;
                     const cleanDialogs = () => {
+                        if (hasHandledWarning) return;
                         const dialogs = document.querySelectorAll('div[role="dialog"]');
                         for (const dialog of dialogs) {
                             if (dialog.dataset.gmProcessed) continue;
@@ -1151,11 +1270,13 @@
                                             if (layer) layer.style.display = 'none';
                                         }
                                     }, 300);
+                                    hasHandledWarning = true;
+                                    if (observer) { observer.disconnect(); observer = null; }
                                 }
                             }
                         }
                     };
-                    const observer = new MutationObserver(cleanDialogs);
+                    observer = new MutationObserver(cleanDialogs);
                     observer.observe(document.body, { childList: true, subtree: true });
                     cleanDialogs();
                 }
@@ -1186,6 +1307,285 @@
                                 }
                             }, C.POLL_INTERVAL);
                         }, C.INITIAL_DELAY);
+                    }
+                }
+            },
+
+            idRevealer: {
+                app: null,
+                activeBadge: null,
+                targetH1: null,
+
+                init(app) {
+                    this.app = app;
+                    // Gatekeeper
+                    if (!this.app.state.settings.idRevealerEnabled) return;
+
+                    // Observe DOM to inject triggers when H1 appears
+                    const observer = new MutationObserver(this.app.utils.throttle(() => this.inject(), 500));
+                    observer.observe(document.body, { childList: true, subtree: true });
+                    
+                    window.addEventListener('resize', () => this.updatePosition());
+                    window.addEventListener('scroll', () => this.updatePosition(), true);
+                    window.addEventListener('historyChange', () => this.closeBadge());
+                },
+
+                inject() {
+                    // [Fix] Exclude Group pages to prevent extracting random member IDs
+                    if (/\/groups\//.test(window.location.pathname)) return;
+
+                    const h1 = document.querySelector('h1:not([data-gm-id-revealer])');
+                    if (!h1) return;
+                    
+                    const T = this.app.state.T;
+                    h1.dataset.gmIdRevealer = 'true';
+                    
+                    // Visual cues for clickability
+                    h1.style.cursor = 'pointer';
+                    h1.title = T.idRevealerTooltip;
+                    
+                    h1.addEventListener('mouseover', () => {
+                        h1.style.textDecoration = 'underline';
+                        h1.style.textDecorationColor = 'rgba(0,0,0,0.3)';
+                    });
+                    h1.addEventListener('mouseout', () => {
+                        h1.style.textDecoration = 'none';
+                    });
+
+                    // Click: Toggle Badge
+                    h1.addEventListener('click', (e) => {
+                        e.stopPropagation(); 
+                        e.preventDefault();
+
+                        if (this.activeBadge && this.targetH1 === h1) {
+                            this.closeBadge();
+                        } else {
+                            this.showBadge(h1);
+                        }
+                    });
+                },
+
+                extractIds() {
+                    const ids = { metaId: null, userId: null, pageId: null };
+
+                    // 1. Meta Tags
+                    const metaSelectors = ['meta[property="al:android:url"]', 'meta[property="al:ios:url"]'];
+                    for (const sel of metaSelectors) {
+                        const meta = document.querySelector(sel);
+                        if (meta && meta.content) {
+                            const match = meta.content.match(/fb:\/\/profile\/(\d+)/);
+                            if (match && match[1]) ids.metaId = match[1];
+                        }
+                    }
+                    if (!ids.metaId) {
+                        const metaApp = document.querySelector('meta[name="apple-itunes-app"]');
+                        if (metaApp && metaApp.content) {
+                            const match = metaApp.content.match(/app-argument=fb:\/\/profile\/(\d+)/);
+                            if (match && match[1]) ids.metaId = match[1];
+                        }
+                    }
+
+                    // 2. JSON Scan
+                    const scripts = document.querySelectorAll('script[type="application/json"]');
+                    const reUserID = /"userID":"(\d+)"/;
+                    const reDelegate = /"delegate_page":\{[^{}]*"id":"(\d+)"/;
+                    const reAssoc = /"associated_page_id":"(\d+)"/;
+
+                    for (const script of scripts) {
+                        const content = script.textContent;
+                        if (!content) continue;
+
+                        if (!ids.userId) {
+                            const mUser = content.match(reUserID);
+                            if (mUser && mUser[1] !== '0') ids.userId = mUser[1];
+                        }
+                        if (!ids.pageId) {
+                            const mDel = content.match(reDelegate);
+                            if (mDel && mDel[1] && mDel[1] !== '0') ids.pageId = mDel[1];
+                            else {
+                                const mAssoc = content.match(reAssoc);
+                                if (mAssoc && mAssoc[1] && mAssoc[1] !== '0') ids.pageId = mAssoc[1];
+                            }
+                        }
+                        if (ids.userId && ids.pageId) break;
+                    }
+
+                    // Consolidate results with specific labels
+                    const T = this.app.state.T;
+                    const result = new Map();
+                    
+                    if (ids.metaId) result.set(T.id_label_meta, ids.metaId);
+                    if (ids.userId && ids.userId !== ids.metaId) result.set(T.id_label_user, ids.userId);
+                    if (ids.pageId && ids.pageId !== ids.metaId && ids.pageId !== ids.userId) result.set(T.id_label_page, ids.pageId);
+
+                    return result;
+                },
+
+                generateLink(id) {
+                    const format = this.app.state.settings.idRevealerLinkFormat;
+                    if (format === 'classic') return `https://www.facebook.com/profile.php?id=${id}`;
+                    if (format === 'username') {
+                        const url = new URL(window.location.href);
+                        url.search = ''; 
+                        return url.href.replace(/\/$/, '');
+                    }
+                    // 'userid' format: Standard User ID URL
+                    return `https://www.facebook.com/${id}`;
+                },
+
+                showBadge(h1) {
+                    this.closeBadge(); // Close existing if any
+
+                    const idMap = this.extractIds();
+                    if (idMap.size === 0) return;
+
+                    this.targetH1 = h1;
+                    this.createBadgeUI(h1, idMap);
+                    this.updatePosition();
+                },
+
+                // Helper to get text content excluding children like the verified badge
+                _extractText(node) {
+                    let text = '';
+                    for (const child of node.childNodes) {
+                        if (child.nodeType === Node.TEXT_NODE) {
+                            text += child.textContent;
+                        }
+                    }
+                    return text.trim();
+                },
+
+                createBadgeUI(h1, idMap) {
+                    const U = this.app.utils;
+                    const T = this.app.state.T;
+
+                    const container = U.createStyledElement('div', {
+                        position: 'fixed', zIndex: '99999', backgroundColor: '#FFFFFF',
+                        borderRadius: '8px', boxShadow: '0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1)',
+                        border: '1px solid rgba(0, 0, 0, 0.1)', padding: '12px',
+                        minWidth: '280px', maxWidth: '320px', display: 'flex', flexDirection: 'column', gap: '8px',
+                        fontFamily: 'Segoe UI, Helvetica, Arial, sans-serif', fontSize: '13px', color: '#050505',
+                        opacity: '0', transition: 'opacity 0.1s ease-out', pointerEvents: 'auto'
+                    }, { className: 'gm-id-revealer-badge' });
+
+                    // --- Header: Title + Close ---
+                    const header = U.createStyledElement('div', {
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                        marginBottom: '4px', borderBottom: '1px solid #DADDE1', paddingBottom: '8px'
+                    });
+                    header.append(
+                        U.createStyledElement('span', { fontWeight: '600', color: '#65676B' }, { textContent: 'ID Revealer' }),
+                        U.createStyledElement('div', {
+                            cursor: 'pointer', padding: '4px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                        }, {
+                            innerHTML: '<svg viewBox="0 0 24 24" width="16" height="16" fill="#65676B"><path d="M18.707 5.293a1 1 0 0 0-1.414 0L12 10.586 6.707 5.293a1 1 0 0 0-1.414 1.414L10.586 12l-5.293 5.293a1 1 0 0 0 1.414 1.414L12 13.414l5.293 5.293a1 1 0 0 0 1.414-1.414L13.414 12l5.293-5.293a1 1 0 0 0 0-1.414z"></path></svg>',
+                            on: {
+                                click: (e) => { e.stopPropagation(); this.closeBadge(); },
+                                mouseover: (e) => e.currentTarget.style.backgroundColor = '#F0F2F5',
+                                mouseout: (e) => e.currentTarget.style.backgroundColor = 'transparent'
+                            }
+                        })
+                    );
+                    container.appendChild(header);
+
+                    // --- Helper: Create Row ---
+                    const createRow = (label, text, copyMsgLabel = null, isLink = false) => {
+                        const row = U.createStyledElement('div', { 
+                            display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
+                            padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', transition: 'background-color 0.1s'
+                        }, {
+                            on: {
+                                click: () => {
+                                    GM_setClipboard(text);
+                                    const msg = T.copy_success_generic.replace('{label}', copyMsgLabel || label);
+                                    this.app.modules.toastNotifier.show(msg, 'success');
+                                },
+                                mouseover: (e) => e.currentTarget.style.backgroundColor = '#F0F2F5',
+                                mouseout: (e) => e.currentTarget.style.backgroundColor = 'transparent'
+                            }
+                        });
+
+                        row.append(
+                            U.createStyledElement('span', { color: '#65676B', fontWeight: '500', marginRight: '8px' }, { textContent: label }),
+                            U.createStyledElement('span', {
+                                color: isLink ? '#1877F2' : '#050505', fontWeight: isLink ? '400' : '600',
+                                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px', direction: 'ltr'
+                            }, { textContent: text, title: text })
+                        );
+                        return row;
+                    };
+
+                    // --- Content: Profile Name ---
+                    const profileName = this._extractText(h1);
+                    if (profileName) {
+                        container.appendChild(createRow(T.profile_name_label, profileName, T.profile_name_label));
+                    }
+
+                    // --- Content: IDs ---
+                    idMap.forEach((id, label) => {
+                        container.appendChild(createRow(label, id, label));
+                    });
+
+                    // --- Content: Profile URL ---
+                    const mainId = idMap.values().next().value;
+                    if (mainId) {
+                        const linkUrl = this.generateLink(mainId);
+                        container.appendChild(createRow(T.profile_url_label, linkUrl, T.profile_url_label, true));
+                        
+                        // --- Footer: Copy All ---
+                        const footer = U.createStyledElement('div', { marginTop: '8px', paddingTop: '8px', borderTop: '1px solid #DADDE1', textAlign: 'center' });
+                        const copyAllBtn = U.createStyledElement('button', {
+                            border: 'none', background: 'none', color: '#1877F2', fontWeight: '600', cursor: 'pointer', fontSize: '13px', width: '100%', padding: '4px'
+                        }, {
+                            textContent: T.id_copy_all,
+                            on: {
+                                click: (e) => {
+                                    e.stopPropagation();
+                                    const lines = [];
+                                    if(profileName) lines.push(`${T.profile_name_label}: ${profileName}`);
+                                    idMap.forEach((val, key) => lines.push(`${key}: ${val}`));
+                                    lines.push(`${T.profile_url_label}: ${linkUrl}`);
+                                    GM_setClipboard(lines.join('\n'));
+                                    this.app.modules.toastNotifier.show(T.all_copied, 'success');
+                                },
+                                mouseover: (e) => e.currentTarget.style.textDecoration = 'underline',
+                                mouseout: (e) => e.currentTarget.style.textDecoration = 'none'
+                            }
+                        });
+                        footer.appendChild(copyAllBtn);
+                        container.appendChild(footer);
+                    }
+
+                    document.body.appendChild(container);
+                    container.offsetHeight; // force reflow
+                    container.style.opacity = '1';
+                    this.activeBadge = container;
+                },
+
+                updatePosition() {
+                    if (!this.activeBadge || !this.targetH1) return;
+                    
+                    const rect = this.targetH1.getBoundingClientRect();
+                    const badgeRect = this.activeBadge.getBoundingClientRect();
+                    
+                    let top = rect.bottom + 8;
+                    let left = rect.left;
+                    const viewportWidth = window.innerWidth;
+                    const viewportHeight = window.innerHeight;
+
+                    if (left + badgeRect.width > viewportWidth) left = viewportWidth - badgeRect.width - 20;
+                    if (left < 0) left = 10;
+                    if (top + badgeRect.height > viewportHeight) top = rect.top - badgeRect.height - 8;
+
+                    this.activeBadge.style.top = `${top}px`;
+                    this.activeBadge.style.left = `${left}px`;
+                },
+                
+                closeBadge() {
+                    if (this.activeBadge) {
+                        this.activeBadge.remove();
+                        this.activeBadge = null;
+                        this.targetH1 = null;
                     }
                 }
             },
@@ -1270,7 +1670,7 @@
                         const useSmoothScroll = this.app.state.settings.enableSmoothScrolling;
                         const scrollBehavior = useSmoothScroll ? 'smooth' : 'auto';
                         if (alignment === 'top') {
-                            const searchBarHeight = this.app.modules.searchBar.getOccupiedHeight();
+                            const searchBarHeight = this.app.modules.searchBar ? this.app.modules.searchBar.getOccupiedHeight() : 0;
                             const postTop = targetPost.getBoundingClientRect().top + window.scrollY;
                             const targetY = postTop - searchBarHeight - 10;
                             window.scrollTo({
@@ -1459,12 +1859,24 @@
                     isAtTop: true, 
                 },
                 icons: {
-                    pinned: `<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="#1877F2" d="M7.084 11.457C5.782 12.325 5 12.709 5 14.274V15h7v7l.5 1 .5-1v-7h7v-.726c0-1.565-.782-1.95-2.084-2.817l-1.147-.765L15 4l1.522-.43A2.029 2.029 0 0 0 18 1.619V1H7v.618A2.029 2.029 0 0 0 8.478 3.57L10 4l-1.77 6.692zM16.93 12l.73.485c1 .659 1.28.866 1.332 1.515H6.009c.051-.65.332-.856 1.333-1.515L8.07 12zM8.75 2.608A1.033 1.033 0 0 1 8.075 2h8.852a1.033 1.033 0 0 1-.676.608L14.862 3h-4.724zM11.035 4h2.931l1.85 7h-6.63z"/></svg>`,
-                    unpinned: `<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path d="M20 14.274V15h-7v7l-.5 1-.5-1v-6.172L13.828 14h5.163c-.051-.65-.332-.856-1.333-1.515L16.93 12h-1.1l1.16-1.161.927.618c1.302.868 2.084 1.252 2.084 2.817zm2.4-10.966L3.307 22.399l-.707-.707L9.293 15H5v-.726c0-1.565.782-1.95 2.084-2.817l1.147-.765L10 4l-1.522-.43A2.029 2.029 0 0 1 7 1.619V1h11v.618a2.029 2.029 0 0 1-1.478 1.953L15 4l1.107 4.186L21.692 2.6zM10.137 3h4.724l1.388-.392A1.033 1.033 0 0 0 16.926 2H8.074a1.033 1.033 0 0 0 .676.608zm-.954 8h4.109l1.995-1.995L13.966 4h-2.931zm1.109 3l2-2H8.07l-.73.485c-1 .659-1.28.866-1.332 1.515z"/></svg>`,
-                    watch: `<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 576 512"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64s-64-28.7-64-64s28.7-64 64-64s64 28.7 64 64z"/></svg>`,
-                    events: `<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 448 512"><path d="M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zm329.7 103c-6.8-11.7-21.6-16-33.3-9.2s-16 21.6-9.2 33.3l32 55.4c6.8 11.7 21.6 16 33.3 9.2s16-21.6 9.2-33.3l-32-55.4z"/></svg>`,
-                    marketplace: `<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 576 512"><path d="M547.6 103.8L490.3 13.1C485.2 5 476.1 0 466.4 0H109.6C99.9 0 90.8 5 85.7 13.1L28.4 103.8c-7.9 12.8-1.2 29.8 15.3 35.4l2.5 1c4.2 1.7 8.8 2.6 13.5 2.6H491.3c4.7 0 9.3-1 13.5-2.6l2.5-1c16.5-5.6 23.2-22.6 15.3-35.4zM320 224v16c0 8.8-7.2 16-16 16s-16-7.2-16-16V224H160v16c0 8.8-7.2 16-16 16s-16-7.2-16-16V224H32v224c0 17.7 14.3 32 32 32h448c17.7 0 32-14.3 32-32V224H448v16c0 8.8-7.2 16-16 16s-16-7.2-16-16V224H320zM176 160H400c8.8 0 16-7.2 16-16s-7.2-16-16-16H176c-8.8 0-16 7.2-16 16s7.2 16 16 16z"/></svg>`,
-                    search: `<svg xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>`,
+                    pinned: `<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#1877F2" d="M16 11V5h1.5a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5H8v6l-2 3v2h5v6l1 1 1-1v-6h5v-2l-2-3z"></path></svg>`,
+                    
+                    // Inverted and hollow pin
+                    unpinned: `<svg viewBox="0 0 24 24" width="20" height="20"><g transform="rotate(180 12 12)"><path d="M16 11V5h1.5a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5H8v6l-2 3v2h5v6l1 1 1-1v-6h5v-2l-2-3z" style="fill:none; stroke:#65676B; stroke-width:1.5px;"></path></g></svg>`,
+                    
+                    // Hollow Watch icon
+                    watch: `<svg viewBox="0 0 24 24" width="20" height="20" style="fill:none; stroke:#65676B; stroke-width:1.8px; stroke-linecap:round; stroke-linejoin:round;"><rect x="2.5" y="5.5" width="19" height="13" rx="3" ry="3"></rect><path d="M10 9l5 3-5 3V9z"></path></svg>`,
+                    
+                    // Solid Calendar design
+                    events: `<svg viewBox="0 0 24 24" width="20" height="20"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5h5v5h-5v-5z"></path></svg>`,
+                    
+                    // User provided Marketplace icon (scaled)
+                    marketplace: `<svg viewBox="2 2 28 28" width="20" height="20"><path fill="#65676B" d="M28.908,12.571a.952.952,0,0,0-.1-.166,3.146,3.146,0,0,0-.118-.423c-.006-.016-.012-.032-.02-.048L25.917,5.6A1,1,0,0,0,25,5H7a1,1,0,0,0-.917.6l-2.77,6.381a2.841,2.841,0,0,0,0,2.083A4.75,4.75,0,0,0,6,16.609V27a1,1,0,0,0,1,1H25a1,1,0,0,0,1-1V16.609a4.749,4.749,0,0,0,2.687-2.543,2.614,2.614,0,0,0,.163-.655A1.057,1.057,0,0,0,28.908,12.571ZM13,26V20h2v6Zm4,0V20h2v6Zm7,0H21V19a1,1,0,0,0-1-1H12a1,1,0,0,0-1,1v7H8V17a5.2,5.2,0,0,0,4-1.8,5.339,5.339,0,0,0,8,0A5.2,5.2,0,0,0,24,17Zm2.837-12.7A3.015,3.015,0,0,1,24,15a2.788,2.788,0,0,1-3-2.5,1,1,0,0,0-2,0A2.788,2.788,0,0,1,16,15a2.788,2.788,0,0,1-3-2.5,1,1,0,0,0-2,0A2.788,2.788,0,0,1,8,15a3.016,3.016,0,0,1-2.838-1.7.836.836,0,0,1,0-.571L7.656,7H24.344l2.477,5.7A.858.858,0,0,1,26.837,13.3Z"/></svg>`,
+                    
+                    search: `<svg viewBox="0 0 24 24" width="18" height="18"><path d="M20.71 19.29l-3.4-3.39A7.92 7.92 0 0 0 19 11a8 8 0 1 0-8 8 7.92 7.92 0 0 0 4.9-1.69l3.39 3.4a1.002 1.002 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 11a6 6 0 1 1 6 6 6 6 0 0 1-6-6z"></path></svg>`,
+                    
+                    // Scaled gear icon
+                    settings: `<svg viewBox="0 0 24 24" width="20" height="20"><g transform="scale(0.85) translate(2.1, 2.1)"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84a.484.484 0 0 0-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.488.488 0 0 0-.59.22L2.74 8.87c-.12.19-.06.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"></path></g></svg>`
                 },
                 getOccupiedHeight() {
                     if (this.state.isPinned && this.elements.toolbar && this.elements.toolbar.style.visibility !== 'hidden') {
@@ -1577,7 +1989,10 @@
                 _createToolsGroup(elements) {
                     const U = this.app.utils;
                     elements.pinButton = U.createStyledElement('button', {}, { innerHTML: this.icons.unpinned + this.icons.pinned });
-                    elements.settingsButton = U.createStyledElement('button', {}, { textContent: '⚙️', title: 'Script Settings' });
+                    elements.settingsButton = U.createStyledElement('button', {}, { 
+                        innerHTML: this.icons.settings, 
+                        title: this.app.state.T.menuSettings 
+                    });
                     return U.createStyledElement('div', {}, { className: 'gm-button-group', children: [elements.pinButton, elements.settingsButton] });
                 },
                 _bindEvents() {
@@ -1664,7 +2079,7 @@
                     if (selectedScopeValue === 'reel_search') {
                         const pageName = this._getCurrentPageName();
                         if (!pageName) {
-                            this.app.modules.toastNotifier.show('Cannot get current page name for Reel search.', 'failure');
+                            this.app.modules.toastNotifier.show(T.notificationReelSearchError, 'failure');
                             return;
                         }
                         const combinedKeywords = keyword ? `${keyword} "${pageName}"` : `"${pageName}"`;
@@ -1746,10 +2161,151 @@
                 _onMouseLeave() { if (!this.state.isPinned && !this.elements.toolbar.contains(document.activeElement)) { this._hideBar(); if (!this.state.isAtTop) this.elements.hoverHint.classList.add('gm-visible'); } },
             },
 
-            keyboardNavigator: { app: null, activeKey: null, init(app) { this.app = app; if (!this.app.state.settings.keyboardNavEnabled) return; document.addEventListener('keydown', this.handleKeyDown.bind(this)); document.addEventListener('keyup', this.handleKeyUp.bind(this)); }, handleKeyDown(event) { if (event.key === this.activeKey) return; if (!this.app.utils.isFeedPage()) return; const target = event.target; if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return; const settings = this.app.state.settings; let direction = null; switch (event.key) { case settings.keyNavNextPrimary: case settings.keyNavNextSecondary: direction = 'next'; break; case settings.keyNavPrevPrimary: case settings.keyNavPrevSecondary: direction = 'prev'; break; } if (direction) { event.preventDefault(); this.activeKey = event.key; this.app.modules.postNavigatorCore.startContinuousNavigation(direction); } }, handleKeyUp(event) { if (event.key === this.activeKey) { this.activeKey = null; this.app.modules.postNavigatorCore.stopContinuousNavigation(); } } },
-            floatingNavigator: { app: null, container: null, isInitialized: false, init(app) { if (this.isInitialized) return; this.app = app; if (!this.app.state.settings.floatingNavEnabled) return; const T = this.app.state.T; const U = this.app.utils; const Core = this.app.modules.postNavigatorCore; this.container = U.createStyledElement('div', {}, { className: 'gm-floating-nav' }); const prevButton = U.createStyledElement('button', {}, { title: T.floatingNavPrevTooltip }); prevButton.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></svg>`; prevButton.addEventListener('mousedown', () => Core.startContinuousNavigation('prev')); prevButton.addEventListener('mouseleave', () => Core.stopContinuousNavigation()); const nextButton = U.createStyledElement('button', {}, { title: T.floatingNavNextTooltip }); nextButton.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"></path></svg>`; nextButton.addEventListener('mousedown', () => Core.startContinuousNavigation('next')); nextButton.addEventListener('mouseleave', () => Core.stopContinuousNavigation()); document.body.addEventListener('mouseup', () => Core.stopContinuousNavigation()); this.container.append(prevButton, nextButton); document.body.appendChild(this.container); this.updateVisibility(); window.addEventListener('historyChange', this.updateVisibility.bind(this)); new MutationObserver(U.throttle(this.updateVisibility.bind(this), 200)).observe(document.body, { childList: true, subtree: true }); this.isInitialized = true; }, deinit() { if (this.container) { this.container.remove(); this.container = null; } this.isInitialized = false; }, updateVisibility() { if (!this.container) return; const isVisible = this.app.utils.isFeedPage() && !document.querySelector(this.app.config.SELECTORS.GLOBAL.DIALOG); this.container.style.display = isVisible ? 'flex' : 'none'; } },
-            wheelNavigator: { app: null, isCoolingDown: false, init(app) { this.app = app; if (!this.app.state.settings.wheelNavEnabled) return; document.addEventListener('wheel', this.handleWheel.bind(this), { passive: false }); }, handleWheel(event) { if (this.isCoolingDown) return; if (!this.app.utils.isFeedPage() || document.querySelector(this.app.config.SELECTORS.GLOBAL.DIALOG)) return; const modifierKey = this.app.state.settings.wheelNavModifier; if (modifierKey !== 'none' && !event[modifierKey]) return; event.preventDefault(); event.stopPropagation(); const direction = event.deltaY > 0 ? 'next' : 'prev'; this.app.modules.postNavigatorCore.navigateToPost(direction); this.isCoolingDown = true; setTimeout(() => { this.isCoolingDown = false; }, this.app.state.settings.continuousNavInterval); } },
-            clickToFocusNavigator: { app: null, init(app) { this.app = app; const settings = this.app.state.settings; if (!settings.keyboardNavEnabled && !settings.floatingNavEnabled && !settings.wheelNavEnabled) return; document.body.addEventListener('click', this.handleClick.bind(this)); }, handleClick(event) { const target = event.target; if (target.closest('a, button, [role="button"], input, textarea') || window.getSelection().toString().length > 0) return; const post = target.closest('[role="article"][aria-posinset]'); if (!post) return; if (post.closest(this.app.config.SELECTORS.GLOBAL.DIALOG)) return; const Core = this.app.modules.postNavigatorCore; const C = this.app.config; const currentHighlighted = document.querySelector(`.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}`); if (currentHighlighted && currentHighlighted !== post) { currentHighlighted.classList.remove(C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS); } post.classList.add(C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS); const posts = Core.getSortedPosts(); const newIndex = posts.findIndex(p => p === post); if (newIndex !== -1) Core.currentPostIndex = newIndex; } },
+            keyboardNavigator: { 
+                app: null, 
+                activeKey: null, 
+                init(app) { 
+                    this.app = app; 
+                    if (!this.app.state.settings.keyboardNavEnabled) return; 
+                    document.addEventListener('keydown', this.handleKeyDown.bind(this)); 
+                    document.addEventListener('keyup', this.handleKeyUp.bind(this)); 
+                }, 
+                handleKeyDown(event) { 
+                    if (event.key === this.activeKey) return; 
+                    if (!this.app.utils.isFeedPage()) return; 
+                    const target = event.target; 
+                    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) return; 
+                    const settings = this.app.state.settings; 
+                    let direction = null; 
+                    switch (event.key) { 
+                        case settings.keyNavNextPrimary: 
+                        case settings.keyNavNextSecondary: 
+                            direction = 'next'; 
+                            break; 
+                        case settings.keyNavPrevPrimary: 
+                        case settings.keyNavPrevSecondary: 
+                            direction = 'prev'; 
+                            break; 
+                    } 
+                    if (direction) { 
+                        event.preventDefault(); 
+                        this.activeKey = event.key; 
+                        if (this.app.modules.postNavigatorCore) {
+                            this.app.modules.postNavigatorCore.startContinuousNavigation(direction); 
+                        }
+                    } 
+                }, 
+                handleKeyUp(event) { 
+                    if (event.key === this.activeKey) { 
+                        this.activeKey = null; 
+                        if (this.app.modules.postNavigatorCore) {
+                            this.app.modules.postNavigatorCore.stopContinuousNavigation(); 
+                        }
+                    } 
+                } 
+            },
+
+            floatingNavigator: { 
+                app: null, 
+                container: null, 
+                isInitialized: false, 
+                init(app) { 
+                    if (this.isInitialized) return; 
+                    this.app = app; 
+                    if (!this.app.state.settings.floatingNavEnabled) return; 
+                    const T = this.app.state.T; 
+                    const U = this.app.utils; 
+                    // Dynamic reference to avoid init order issues
+                    const getCore = () => this.app.modules.postNavigatorCore; 
+                    
+                    this.container = U.createStyledElement('div', {}, { className: 'gm-floating-nav' }); 
+                    
+                    const prevButton = U.createStyledElement('button', {}, { title: T.floatingNavPrevTooltip }); 
+                    prevButton.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></svg>`; 
+                    prevButton.addEventListener('mousedown', () => { const c = getCore(); if(c) c.startContinuousNavigation('prev'); }); 
+                    prevButton.addEventListener('mouseleave', () => { const c = getCore(); if(c) c.stopContinuousNavigation(); }); 
+                    
+                    const nextButton = U.createStyledElement('button', {}, { title: T.floatingNavNextTooltip }); 
+                    nextButton.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"></path></svg>`; 
+                    nextButton.addEventListener('mousedown', () => { const c = getCore(); if(c) c.startContinuousNavigation('next'); }); 
+                    nextButton.addEventListener('mouseleave', () => { const c = getCore(); if(c) c.stopContinuousNavigation(); }); 
+                    
+                    document.body.addEventListener('mouseup', () => { const c = getCore(); if(c) c.stopContinuousNavigation(); }); 
+                    
+                    this.container.append(prevButton, nextButton); 
+                    document.body.appendChild(this.container); 
+                    this.updateVisibility(); 
+                    window.addEventListener('historyChange', this.updateVisibility.bind(this)); 
+                    new MutationObserver(U.throttle(this.updateVisibility.bind(this), 200)).observe(document.body, { childList: true, subtree: true }); 
+                    this.isInitialized = true; 
+                }, 
+                deinit() { 
+                    if (this.container) { 
+                        this.container.remove(); 
+                        this.container = null; 
+                    } 
+                    this.isInitialized = false; 
+                }, 
+                updateVisibility() { 
+                    if (!this.container) return; 
+                    const isVisible = this.app.utils.isFeedPage() && !document.querySelector(this.app.config.SELECTORS.GLOBAL.DIALOG); 
+                    this.container.style.display = isVisible ? 'flex' : 'none'; 
+                } 
+            },
+
+            wheelNavigator: { 
+                app: null, 
+                isCoolingDown: false, 
+                init(app) { 
+                    this.app = app; 
+                    if (!this.app.state.settings.wheelNavEnabled) return; 
+                    document.addEventListener('wheel', this.handleWheel.bind(this), { passive: false }); 
+                }, 
+                handleWheel(event) { 
+                    if (this.isCoolingDown) return; 
+                    if (!this.app.utils.isFeedPage() || document.querySelector(this.app.config.SELECTORS.GLOBAL.DIALOG)) return; 
+                    const modifierKey = this.app.state.settings.wheelNavModifier; 
+                    if (modifierKey !== 'none' && !event[modifierKey]) return; 
+                    event.preventDefault(); 
+                    event.stopPropagation(); 
+                    const direction = event.deltaY > 0 ? 'next' : 'prev'; 
+                    if (this.app.modules.postNavigatorCore) {
+                        this.app.modules.postNavigatorCore.navigateToPost(direction); 
+                    }
+                    this.isCoolingDown = true; 
+                    setTimeout(() => { this.isCoolingDown = false; }, this.app.state.settings.continuousNavInterval); 
+                } 
+            },
+
+            clickToFocusNavigator: { 
+                app: null, 
+                init(app) { 
+                    this.app = app; 
+                    const settings = this.app.state.settings; 
+                    if (!settings.keyboardNavEnabled && !settings.floatingNavEnabled && !settings.wheelNavEnabled) return; 
+                    document.body.addEventListener('click', this.handleClick.bind(this)); 
+                }, 
+                handleClick(event) { 
+                    const target = event.target; 
+                    if (target.closest('a, button, [role="button"], input, textarea') || window.getSelection().toString().length > 0) return; 
+                    const post = target.closest('[role="article"][aria-posinset]'); 
+                    if (!post) return; 
+                    if (post.closest(this.app.config.SELECTORS.GLOBAL.DIALOG)) return; 
+                    
+                    const Core = this.app.modules.postNavigatorCore; 
+                    if (!Core) return;
+
+                    const C = this.app.config; 
+                    const currentHighlighted = document.querySelector(`.${C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS}`); 
+                    if (currentHighlighted && currentHighlighted !== post) { 
+                        currentHighlighted.classList.remove(C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS); 
+                    } 
+                    post.classList.add(C.SELECTORS.NAVIGATOR.HIGHLIGHT_CLASS); 
+                    const posts = Core.getSortedPosts(); 
+                    const newIndex = posts.findIndex(p => p === post); 
+                    if (newIndex !== -1) Core.currentPostIndex = newIndex; 
+                } 
+            },
 
             permalinkCopier: {
                 app: null,
@@ -1757,6 +2313,24 @@
                 isModalOpening: false,
                 observer: null,
                 boundHandleClick: null,
+                
+                // Updated: Colored SVG Icon definitions
+                icons: {
+                    // Smart Link: Magic stars in Golden Yellow
+                    smart: `<svg viewBox="0 0 32 32" width="16" height="16"><path fill="#F5C33B" d="M18,11a1,1,0,0,1-1,1,5,5,0,0,0-5,5,1,1,0,0,1-2,0,5,5,0,0,0-5-5,1,1,0,0,1,0-2,5,5,0,0,0,5-5,1,1,0,0,1,2,0,5,5,0,0,0,5,5A1,1,0,0,1,18,11Z"/><path fill="#F5C33B" d="M19,24a1,1,0,0,1-1,1,2,2,0,0,0-2,2,1,1,0,0,1-2,0,2,2,0,0,0-2-2,1,1,0,0,1,0-2,2,2,0,0,0,2-2,1,1,0,0,1,2,0,2,2,0,0,0,2,2A1,1,0,0,1,19,24Z"/><path fill="#F5C33B" d="M28,17a1,1,0,0,1-1,1,4,4,0,0,0-4,4,1,1,0,0,1-2,0,4,4,0,0,0-4-4,1,1,0,0,1,0-2,4,4,0,0,0,4-4,1,1,0,0,1,2,0,4,4,0,0,0,4,4A1,1,0,0,1,28,17Z"/></svg>`,
+                    
+                    // Direct Link: Chain link in Facebook Blue
+                    direct: `<svg viewBox="0 0 24 24" width="16" height="16"><path fill="#1877F2" d="M13.29 9.29l-4 4a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l4-4a1 1 0 0 0-1.42-1.42z"/><path fill="#1877F2" d="M12.28 17.4L11 18.67a4.2 4.2 0 0 1-5.58.4 4 4 0 0 1-.27-5.93l1.42-1.43a1 1 0 0 0 0-1.42 1 1 0 0 0-1.42 0l-1.27 1.28a6.15 6.15 0 0 0-.67 8.07 6.06 6.06 0 0 0 9.07.6l1.42-1.42a1 1 0 0 0-1.42-1.42z"/><path fill="#1877F2" d="M19.66 3.22a6.18 6.18 0 0 0-8.13.68L10.45 5a1.09 1.09 0 0 0-.17 1.61 1 1 0 0 0 1.42 0L13 5.3a4.17 4.17 0 0 1 5.57-.4 4 4 0 0 1 .27 5.95l-1.42 1.43a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l1.42-1.42a6.06 6.06 0 0 0-.6-9.06z"/></svg>`,
+                    
+                    // Processing: Spinner in Blue
+                    processing: `<svg viewBox="0 0 24 24" width="16" height="16" class="gm-spin"><path fill="#1877F2" d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z"></path></svg>`,
+                    
+                    // Success: Checkmark in Green
+                    success: `<svg viewBox="0 0 24 24" width="16" height="16"><path fill="#42B72A" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"></path></svg>`,
+                    
+                    // Failure: X mark in Red
+                    failure: `<svg viewBox="0 0 24 24" width="16" height="16"><path fill="#FA383E" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>`
+                },
 
                 init(app) {
                     if (!this.app) this.app = app;
@@ -1794,11 +2368,16 @@
                     console.log(`${this.app.config.LOG_PREFIX} [Copier] Initiating permalink fetch...`);
                     this.isProcessingClick = true;
                     button.style.pointerEvents = 'none';
+                    
+                    // Store original HTML (includes icon and potential text)
                     const originalContent = button.innerHTML;
                     const T = this.app.state.T;
                     const settings = this.app.state.settings;
 
-                    button.querySelector('span').textContent = '⏳';
+                    // Switch to processing state (SVG Spinner)
+                    const iconWrapper = button.querySelector('.gm-icon-wrapper');
+                    if (iconWrapper) iconWrapper.innerHTML = this.icons.processing;
+                    
                     if (settings.copier_showButtonText) {
                         button.querySelector('span:last-child').textContent = T.copier_processing;
                     }
@@ -1883,17 +2462,22 @@
                     const T = this.app.state.T;
                     const settings = this.app.state.settings;
 
-                    const iconText = status === 'success' ? '✅' : '❌';
-                    button.querySelector('span').textContent = iconText;
+                    // Switch to success/failure SVG
+                    const iconWrapper = button.querySelector('.gm-icon-wrapper');
+                    if (iconWrapper) iconWrapper.innerHTML = status === 'success' ? this.icons.success : this.icons.failure;
+
                     if (settings.copier_showButtonText) {
                         const labelText = status === 'success' ? T.copier_successPermalink : T.copier_failure;
                         button.querySelector('span:last-child').textContent = labelText;
                     }
+                    
+                    // Background color feedback
                     button.style.backgroundColor = status === 'success' ? 'var(--positive-background)' : 'var(--negative-background)';
 
                     await this.app.utils.delay(1200);
                     button.style.pointerEvents = 'auto';
                     button.style.backgroundColor = 'transparent';
+                    // Restore original state
                     button.innerHTML = originalContent;
                 },
 
@@ -1917,7 +2501,8 @@
                     const settings = this.app.state.settings;
                     const C = this.app.config.SELECTORS.PERMALINK_COPIER;
 
-                    const icon = isSmart ? '✨' : '🔗';
+                    // Use new SVG icons
+                    const iconSvg = isSmart ? this.icons.smart : this.icons.direct;
                     const title = isSmart ? T.copier_fetchPermalinkSmart : T.copier_fetchPermalinkDirect;
 
                     return this.app.utils.createStyledElement('div', {
@@ -1926,18 +2511,19 @@
                         transition: 'all 0.15s ease-out', userSelect: 'none',
                         ...(isDialog && { marginRight: '16px' }),
                         ...(settings.copier_showButtonText
-                            ? { padding: '4px 8px', borderRadius: '6px' }
+                            ? { padding: '4px 8px', borderRadius: '6px', display: 'flex', alignItems: 'center' } // Flex layout for Text mode
                             : { width: '28px', height: '28px', borderRadius: '50%', display: 'flex',
-                              alignItems: 'center', justifyContent: 'center', fontSize: '16px' }
+                              alignItems: 'center', justifyContent: 'center' }
                         )
                     }, {
                         className: C.BUTTON_CLASS,
                         role: 'button',
                         tabIndex: 0,
                         title,
+                        // Wrap SVG with gm-icon-wrapper
                         innerHTML: settings.copier_showButtonText
-                            ? `<span>${icon}</span><span style="margin-left: 5px;">${title}</span>`
-                            : `<span>${icon}</span>`,
+                            ? `<span class="gm-icon-wrapper">${iconSvg}</span><span style="margin-left: 5px; font-weight: 500; font-size: 13px;">${title}</span>`
+                            : `<span class="gm-icon-wrapper">${iconSvg}</span>`,
                         on: {
                             mouseover: (e) => { if (e.currentTarget.style.pointerEvents !== 'none') e.currentTarget.style.backgroundColor = 'var(--hover-overlay)'; },
                             mouseout: (e) => { if (e.currentTarget.style.pointerEvents !== 'none') e.currentTarget.style.backgroundColor = 'transparent'; }
@@ -2088,11 +2674,27 @@
                 },
                 getSourceUrlForWorker(postEl) { return this.getPermalinkFromTimestamp(postEl) || this.getAnyPostUrl(postEl); },
                 startObserver() { this.observer = new MutationObserver(mutations => mutations.forEach(m => m.addedNodes.forEach(n => this.scanNodeForPosts(n))) ); this.scanNodeForPosts(document.body); this.observer.observe(document.body, { childList: true, subtree: true }); }
-            },
+            }
         },
 
-        // ... Worker and Init remain the same, just included for completeness
         async handleWorkerTask() {
+            /* 
+               [Dev Note] Additional ID extraction paths for future reference:
+               - Post/Video Owner: "content_owner_id_new":"..."
+               - Target Page: "subscription_target_id":"..."
+               - Actor ID (Props): "props":{"actorID":"..."}
+               - Container ID: "container_id":"..."
+               - Selected ID: "selectedID":"..."
+               - User Object A: "user":{"profile_type_name_for_content":"PROFILE","id":"..."}
+               - User Object B: "result":{"data":{"user":{"id":"..."}
+               - Profile Owner: "profile_owner":{"id":"..."}
+               - Profile ID Var: "PROFILE","id":"..."
+               - Owning Profile: "owning_profile_id":"..."
+               - Page Insights: "page_insights"
+               - Actors (abbr): "actrs"
+               - Message Box: "message_box_id"
+               - Media Specific: "video_id", "photo_id"
+            */
             const urlParams = new URLSearchParams(window.location.search);
             const taskId = urlParams.get(this.config.WORKER_PARAM);
             if (!taskId) return;
@@ -2179,6 +2781,12 @@
                                 continue;
                             }
                              if (moduleName === 'transparencyActions' && !this.state.settings.transparencyButtonsEnabled) {
+                                continue;
+                            }
+                             if (moduleName === 'idRevealer' && !this.state.settings.idRevealerEnabled) {
+                                continue;
+                            }
+                             if (moduleName === 'contentExpander' && !this.state.settings.expandContentEnabled) {
                                 continue;
                             }
                             module.init(this);

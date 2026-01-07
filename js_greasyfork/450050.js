@@ -4,7 +4,7 @@
 // @description    This script hides the "ExitIntent" popup that sometimes is shown when you want to exit from the current page of the site.
 // @description:it Questo script nasconde il popup "ExitIntent" che a volte viene visualizzato quando si vuole uscire dalla pagina corrente del sito.
 // @namespace      https://greasyfork.org/users/788550
-// @version        1.1.5
+// @version        1.1.8
 // @author         Cyrano68
 // @license        MIT
 // @match          https://*.repubblica.it/*
@@ -14,14 +14,17 @@
 // @updateURL https://update.greasyfork.org/scripts/450050/Repubblicait%3A%20Hide%20the%20%22ExitIntent%22%20popup.meta.js
 // ==/UserScript==
 
+//
+// >>>FILENAME=Repubblica_it_HideExitIntent.js<<<
+//
+
 // This is a IIFE (Immediately Invoked Function Expression).
 (function()
 {
     "use strict";
 
     const blib = window.BasicLib;
-    //blib.setShowLogToScreen(true);
-    //blib.setMaxNumScreenLogs(200);
+    //blib.setShowLogToScreen(true, 200);
     blib.consoleLog(`CY==> Repubblica_it_HideExitIntentPopup: Using library 'BasicLib' (version: ${blib.getVersion()})`);
 
     var myVersion = GM_info.script.version;

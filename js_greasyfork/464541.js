@@ -4,7 +4,7 @@
 // @namespace            https://github.com/utags/links-helper
 // @homepageURL          https://github.com/utags/links-helper#readme
 // @supportURL           https://github.com/utags/links-helper/issues
-// @version              0.11.3
+// @version              0.11.4
 // @description          Open external links in a new tab, open internal links matching the specified rules in a new tab, convert text to hyperlinks, convert image links to image tags(<img>), parse Markdown style links and image tags, parse BBCode style links and image tags
 // @description:zh-CN    支持所有网站在新标签页中打开第三方网站链接（外链），在新标签页中打开符合指定规则的本站链接，解析文本链接为超链接，微信公众号文本转可点击的超链接，图片链接转图片标签，解析 Markdown 格式链接与图片标签，解析 BBCode 格式链接与图片标签
 // @icon                 https://wsrv.nl/?w=128&h=128&url=https%3A%2F%2Fraw.githubusercontent.com%2Futags%2Flinks-helper%2Frefs%2Fheads%2Fmain%2Fassets%2Ficon.png
@@ -1716,7 +1716,23 @@
   }
   var STOP_PROPAGATION_SITES = [".zhihu.com"]
   var BLACKLIST_CLASSES = ["bili-watch-later"]
-  var isBlacklisted = (el) => BLACKLIST_CLASSES.some((cls) => hasClass(el, cls))
+  var BLACKLIST_TEXT_REGEX =
+    /稍后再看|已添加|Save to Watch later|Added|稍後觀看|已新增|陣間至睇/
+  var isBlacklisted = (el) => {
+    if (BLACKLIST_CLASSES.some((cls) => hasClass(el, cls))) {
+      return true
+    }
+    const text = el.textContent
+    if (
+      text &&
+      text.length < 50 &&
+      hasClass(el, "b-tooltip-wrapper") &&
+      BLACKLIST_TEXT_REGEX.test(text)
+    ) {
+      return true
+    }
+    return false
+  }
   var handleLinkClick = (event, deps) => {
     if (
       event instanceof MouseEvent &&

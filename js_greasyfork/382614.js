@@ -2,7 +2,7 @@
 // @name         WME E95
 // @name:uk      WME 🇺🇦 E95
 // @name:ru      WME 🇺🇦 E95
-// @version      0.10.1
+// @version      0.10.2
 // @description  Setup road properties with templates
 // @description:uk Швидке налаштування атрибутів вулиці за шаблонами
 // @description:ru Настройка атрибутов улиц по шаблонам
@@ -187,7 +187,7 @@
   // Buttons:
   //   title - for buttons
   //   shortcut:
-  //    - keys for shortcuts, by default is Alt + (1..9)
+  //    - keys for shortcuts, by default, are Alt + (1..9)
   //    - https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
   //   options:
   //    - detectCity - try to detect the city name by closures segments
@@ -1036,7 +1036,7 @@
       let options = button.options
       let attributes = button.attributes
 
-      // Try to detect city, if needed
+      // Try to detect the city, if needed
       if (options.detectCity) {
         let cityId = null
         for (let i = 0, total = segments.length; i < total; i++) {
@@ -1102,13 +1102,14 @@
         streetId = getEmptyStreet(cityId)?.id
         this.log('clear city and use the empty city id: ' + cityId)
       } else if (cityIsEmpty && options.detectCity && options.cityId) {
-        // detect city option
+        // detect the city option
         cityId = options.cityId
         this.log('use the detected city id: ' + cityId)
       } else if (cityIsEmpty && options.detectCity) {
         // top city
-        cityId = this.wmeSDK.DataModel.Cities.getTopCity()?.id
-        this.log('use the top city if available: ' + cityId)
+        // cityId = this.wmeSDK.DataModel.Cities.getTopCity()?.id
+        // this.log('use the top city if available: ' + cityId)
+        this.log('city not detected, skip')
       }
 
       // empty city
@@ -1138,7 +1139,7 @@
         this.log('use current lock rank: ' + (attributes.lockRank + 1) + ' ⚠️')
       }
 
-      // use user lock rank, if it lower than we want to apply
+      // use user lock rank if it lower than we want to apply
       if (attributes.lockRank > this.wmeSDK.State.getUserInfo().rank) {
         attributes.lockRank = this.wmeSDK.State.getUserInfo().rank
         this.log('use user lock rank: ' + (attributes.lockRank + 1) + ' ⚠️')
@@ -1174,12 +1175,12 @@
       this.log('detect a city')
       let address = this.wmeSDK.DataModel.Segments.getAddress({ segmentId: segment.id })
 
-      // check city of the segment
+      // check the city of the segment
       if (address.city?.name && !address.city?.isEmpty) {
         return address.city.id
       }
 
-      // check city of the connected segments
+      // check the city of the connected segments
       let connected = []
 
       connected = connected.concat(this.wmeSDK.DataModel.Segments.getConnectedSegments({ segmentId: segment.id }))
@@ -1194,7 +1195,7 @@
       cities = [...new Set(cities)] // unique cities
 
       if (cities.length) {
-        return cities.shift() // use first one
+        return cities.shift() // use the first one
       }
       return null
     }

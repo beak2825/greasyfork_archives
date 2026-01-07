@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FaucetCrypto Auto Flow
 // @namespace    https://faucetcrypto.com/
-// @version      1.2
+// @version      1.3
 // @description  Detects faucet flow after captcha interaction
 // @author       Rubystance
 // @license      MIT

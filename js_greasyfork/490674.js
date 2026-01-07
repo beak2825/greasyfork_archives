@@ -4,7 +4,7 @@
 // @description    This script hides the annoying popups (the anti-adblock popup and others) that are shown in the web page.
 // @description:it Questo script nasconde i popup fastidiosi (il popup anti-adblock e altri) che vengono visualizzati nella pagina web.
 // @namespace      https://greasyfork.org/users/788550
-// @version        1.2.2
+// @version        1.2.8
 // @author         Cyrano68
 // @license        MIT
 // @match          https://*.repubblica.it/*
@@ -15,14 +15,17 @@
 // @updateURL https://update.greasyfork.org/scripts/490674/Repubblicait%3A%20Hide%20Annoying%20popups%20%28the%20anti-adblock%20popup%20and%20others%29.meta.js
 // ==/UserScript==
 
+//
+// >>>FILENAME=Repubblica_it_HideAnnoyingPopups.js<<<
+//
+
 // This is a IIFE (Immediately Invoked Function Expression).
 (function()
 {
     "use strict";
 
     const blib = window.BasicLib;
-    //blib.setShowLogToScreen(true);
-    //blib.setMaxNumScreenLogs(200);
+    //blib.setShowLogToScreen(true, 200);
     blib.consoleLog(`CY==> Repubblica_it_HideAnnoyingPopups: Using library 'BasicLib' (version: ${blib.getVersion()})`);
 
     const haplib = window.HideAnnoyingPopupsLib;
@@ -41,8 +44,8 @@
     //window.addEventListener("load", onWindowLoaded);
 
     const mutationObserverConfig = {subtree: true, childList: true};
-    const mutatedNodesConfig     = {selectors: ["div.fc-dialog-container", "div.video-frame__wrapper", "div#adagio-overlay-try-buy"]/*, onMutatedNode: onMutatedNode*/};
-    //const mutatedNodesConfig     = {selectors: ["div.fc-dialog-container", "div.video-frame__wrapper", "div#adagio-overlay-try-buy", "dialog#zephr-zone-popup"]/*, onMutatedNode: onMutatedNode*/};
+    const mutatedNodesConfig     = {selectors: ["div#iubenda-cs-banner", "div.cookiewall", "div.fc-dialog-container", "div.video-frame__wrapper", "div#adagio-overlay-try-buy"]/*, onMutatedNode: onMutatedNode*/};
+    //const mutatedNodesConfig     = {selectors: ["div#iubenda-cs-banner", "div.cookiewall", "div.fc-dialog-container", "div.video-frame__wrapper", "div#adagio-overlay-try-buy", "dialog#zephr-zone-popup"]/*, onMutatedNode: onMutatedNode*/};
     haplib.configure(mutationObserverConfig, mutatedNodesConfig);
 
     blib.consoleLog("CY==> Repubblica_it_HideAnnoyingPopups: Script loaded");

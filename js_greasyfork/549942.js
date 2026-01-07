@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name          AO3: Advanced Blocker
-// @version       4.0.1
+// @version       4.0.2
 // @description   Block works by tags, authors, titles, word counts, and more. Filter by language, completion status, and primary pairings with customizable highlighting.
 // @author        BlackBatCat
 // @match         *://archiveofourown.org/tags/*
@@ -98,7 +98,7 @@
     enableStrictTagBlocking: false,
     strictTagBlacklist: "",
     conditionalTagBlacklist: [],
-    _version: "4.0",
+    _version: "4.0.2",
   };
 
   const STORAGE_KEY = "ao3_advanced_blocker_config";
@@ -136,6 +136,8 @@
           ? value
           : value === null
           ? null
+          : typeof value === "number"
+          ? String(value)
           : String(DEFAULTS[field]);
     });
     const boolFields = [
@@ -236,11 +238,21 @@
 
   const STYLE = `
   html body .ao3-blocker-hidden { display: none; }
-  .ao3-blocker-cut { display: none; }
+  .ao3-blocker-cut {
+    display: block;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.25s ease, opacity 0.25s ease;
+  }
   .ao3-blocker-cut::after { clear: both; content: ''; display: block; }
   .ao3-blocker-reason { margin-left: 5px; }
   .ao3-blocker-hide-reasons .ao3-blocker-reason { display: none; }
-  .ao3-blocker-unhide .ao3-blocker-cut { display: block; }
+  .ao3-blocker-unhide .ao3-blocker-cut {
+    max-height: var(--ao3-blocker-cut-height, 2000px);
+    opacity: 1;
+    overflow: hidden;
+  }
   .ao3-blocker-fold {
     align-items: center; display: flex; justify-content: space-between !important;
     gap: 10px !important; width: 100% !important;
@@ -850,6 +862,14 @@
     const rawPrimaryRelationships = config.primaryRelationships;
     const rawPrimaryCharacters = config.primaryCharacters;
     const rawStrictTagBlacklist = config.strictTagBlacklist;
+    const rawMinWords = config.minWords;
+    const rawMaxWords = config.maxWords;
+    const rawMinChapters = config.minChapters;
+    const rawMaxChapters = config.maxChapters;
+    const rawMaxMonthsSinceUpdate = config.maxMonthsSinceUpdate;
+    const rawMaxCrossovers = config.maxCrossovers;
+    const rawPrimaryRelpad = config.primaryRelpad;
+    const rawPrimaryCharpad = config.primaryCharpad;
 
     // Check if cache is valid
     const cacheValid =
@@ -866,7 +886,15 @@
       window.ao3Blocker.config._rawPrimaryRelationships ===
         rawPrimaryRelationships &&
       window.ao3Blocker.config._rawPrimaryCharacters === rawPrimaryCharacters &&
-      window.ao3Blocker.config._rawStrictTagBlacklist === rawStrictTagBlacklist;
+      window.ao3Blocker.config._rawStrictTagBlacklist === rawStrictTagBlacklist &&
+      window.ao3Blocker.config._rawMinWords === rawMinWords &&
+      window.ao3Blocker.config._rawMaxWords === rawMaxWords &&
+      window.ao3Blocker.config._rawMinChapters === rawMinChapters &&
+      window.ao3Blocker.config._rawMaxChapters === rawMaxChapters &&
+      window.ao3Blocker.config._rawMaxMonthsSinceUpdate === rawMaxMonthsSinceUpdate &&
+      window.ao3Blocker.config._rawMaxCrossovers === rawMaxCrossovers &&
+      window.ao3Blocker.config._rawPrimaryRelpad === rawPrimaryRelpad &&
+      window.ao3Blocker.config._rawPrimaryCharpad === rawPrimaryCharpad;
 
     if (!cacheValid) {
       window.ao3Blocker.config = {
@@ -1039,6 +1067,14 @@
         _rawPrimaryRelationships: rawPrimaryRelationships,
         _rawPrimaryCharacters: rawPrimaryCharacters,
         _rawStrictTagBlacklist: rawStrictTagBlacklist,
+        _rawMinWords: rawMinWords,
+        _rawMaxWords: rawMaxWords,
+        _rawMinChapters: rawMinChapters,
+        _rawMaxChapters: rawMaxChapters,
+        _rawMaxMonthsSinceUpdate: rawMaxMonthsSinceUpdate,
+        _rawMaxCrossovers: rawMaxCrossovers,
+        _rawPrimaryRelpad: rawPrimaryRelpad,
+        _rawPrimaryCharpad: rawPrimaryCharpad,
       };
     }
     addStyle();
@@ -1302,7 +1338,7 @@
     const relPad = window.AO3MenuHelpers.createNumberInput({
       id: "primary-relpad-input",
       label: "Relationship Tag Window",
-      value: config.primaryRelpad || 1,
+      value: config._rawPrimaryRelpad || 1,
       min: 1,
       max: 10,
       tooltip: "Check only the first X relationship tags.",
@@ -1310,7 +1346,7 @@
     const charPad = window.AO3MenuHelpers.createNumberInput({
       id: "primary-charpad-input",
       label: "Character Tag Window",
-      value: config.primaryCharpad || 5,
+      value: config._rawPrimaryCharpad || 5,
       min: 1,
       max: 10,
       tooltip: "Check only the first X character tags.",
@@ -1340,7 +1376,7 @@
       window.AO3MenuHelpers.createNumberInput({
         id: "max-crossovers-input",
         label: "Max Fandoms",
-        value: config.maxCrossovers || "",
+        value: config._rawMaxCrossovers || "",
         min: 1,
         tooltip: "Hide works with more than this many fandoms.",
       }),
@@ -1351,7 +1387,7 @@
       window.AO3MenuHelpers.createNumberInput({
         id: "max-months-since-update-input",
         label: "Max Months Since Update",
-        value: config.maxMonthsSinceUpdate || "",
+        value: config._rawMaxMonthsSinceUpdate || "",
         min: 1,
         placeholder: "6",
         tooltip:
@@ -1369,7 +1405,7 @@
       window.AO3MenuHelpers.createTextInput({
         id: "min-words-input",
         label: "Min Words",
-        value: config.minWords || "",
+        value: config._rawMinWords || "",
         placeholder: "1000",
         tooltip: "Hide works under this many words.",
       }),
@@ -1380,7 +1416,7 @@
       window.AO3MenuHelpers.createTextInput({
         id: "max-words-input",
         label: "Max Words",
-        value: config.maxWords || "",
+        value: config._rawMaxWords || "",
         placeholder: "100000",
         tooltip: "Hide works over this many words.",
       }),
@@ -1396,7 +1432,7 @@
       window.AO3MenuHelpers.createNumberInput({
         id: "min-chapters-input",
         label: "Min Chapters",
-        value: config.minChapters || "",
+        value: config._rawMinChapters || "",
         min: 1,
         placeholder: "2",
         tooltip: "Hide works with fewer chapters. Set to 2 to skip oneshots.",
@@ -1408,7 +1444,7 @@
       window.AO3MenuHelpers.createNumberInput({
         id: "max-chapters-input",
         label: "Max Chapters",
-        value: config.maxChapters || "",
+        value: config._rawMaxChapters || "",
         min: 1,
         placeholder: "200",
         tooltip:
@@ -2033,10 +2069,16 @@
     const button = document.createElement("button");
     button.className = `${CSS_NAMESPACE}-toggle`;
     button.innerHTML = showIcon + "Show";
+    button.type = "button";
+    button.setAttribute("aria-expanded", "false");
     const unhideClassFragment = `${CSS_NAMESPACE}-unhide`;
     button.addEventListener("click", (event) => {
-      const work = event.target.closest(`.${CSS_NAMESPACE}-work`);
+      const buttonEl = event.currentTarget;
+      const work = buttonEl.closest(`.${CSS_NAMESPACE}-work`);
+      if (!work) return;
       const note = work.querySelector(`.${CSS_NAMESPACE}-note`);
+      const cut = work.querySelector(`.${CSS_NAMESPACE}-cut`);
+      if (!note) return;
       let message = note.innerHTML;
       const iconRegex = new RegExp(
         "<span[^>]*class=[\"']" +
@@ -2045,14 +2087,32 @@
         "i"
       );
       message = message.replace(iconRegex, "");
+      if (cut) {
+        const targetHeight = cut.scrollHeight;
+        cut.style.setProperty(
+          "--ao3-blocker-cut-height",
+          `${Math.max(targetHeight, 0)}px`
+        );
+      }
       if (work.classList.contains(unhideClassFragment)) {
         work.classList.remove(unhideClassFragment);
+        if (cut) cut.style.overflow = "hidden";
         note.innerHTML = `<span class="${CSS_NAMESPACE}-icon" style="display:inline-block;width:1.2em;height:1.2em;vertical-align:-0.15em;margin-right:0.3em;background-color:currentColor;mask:url('${ICON_HIDE}') no-repeat center/contain;-webkit-mask:url('${ICON_HIDE}') no-repeat center/contain;"></span>${message}`;
-        event.target.innerHTML = showIcon + "Show";
+        buttonEl.innerHTML = showIcon + "Show";
+        buttonEl.setAttribute("aria-expanded", "false");
       } else {
         work.classList.add(unhideClassFragment);
+        if (cut) {
+          cut.style.overflow = "hidden";
+          setTimeout(() => {
+            if (work.classList.contains(unhideClassFragment)) {
+              cut.style.overflow = "visible";
+            }
+          }, 260);
+        }
         note.innerHTML = `<span class="${CSS_NAMESPACE}-icon" style="display:inline-block;width:1.2em;height:1.2em;vertical-align:-0.15em;margin-right:0.3em;background-color:currentColor;mask:url('${ICON_EYE}') no-repeat center/contain;-webkit-mask:url('${ICON_EYE}') no-repeat center/contain;"></span>${message}`;
-        event.target.innerHTML = hideIcon + "Hide";
+        buttonEl.innerHTML = hideIcon + "Hide";
+        buttonEl.setAttribute("aria-expanded", "true");
       }
     });
     return button;
