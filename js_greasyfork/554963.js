@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name             Neopets: Fix Battledome Loading and Scrolling
 // @namespace        kmtxcxjx
-// @version          1.1.1
+// @version          1.1.2
 // @description      Fixes the Battledome's hang on loading when you click, and removes some elements above the battledome so it can be seen in full without scrolling
 // @match            *://www.neopets.com/dome/arena.phtml
 // @grant            none
@@ -53,7 +53,6 @@
                     // It's stuck - window.stop() fixes it (equivalent to pressing Esc key)
                     // This listener will call that only once the user clicks, then remove itself
                     document.addEventListener('click', stopOnClick);
-                    //window.stop();
                     return clearInterval(interval);
                 }
             }

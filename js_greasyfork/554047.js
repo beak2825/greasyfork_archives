@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube No Saturated Hover
 // @namespace    https://greasyfork.org/users/1476331-jon78
-// @version      1.2.2
+// @version      1.2.3
 // @description  Removes YouTube's 2025 saturated hover effects.
 // @author       jon78
 // @license      CC0
@@ -94,9 +94,10 @@ ytd-rich-grid-renderer #video-title,
   color: var(--yt-spec-text-secondary, var(--ytc-text-secondary)) !important;
 }
 
-/* Description */
-.yt-core-attributed-string--link-inherit-color:not(:has(a)) {
-    color: var(--yt-spec-text-primary, var(--ytc-text-primary)) !important;
+/* Watch page description */
+ytd-watch-metadata
+  .yt-core-attributed-string--link-inherit-color:not(:has(a)) {
+  color: var(--yt-spec-text-primary, var(--ytc-text-primary)) !important;
 }
 
 /* Collapsed description */
@@ -157,6 +158,13 @@ ytd-watch-metadata, .ytd-watch-metadata {
   background-color: var(--yt-spec-static-overlay-background-light, ${d ? "rgba(255,255,255,0.102)" : "rgba(0,0,0,0.051)"}) !important;
   border-radius: 8px !important;
   padding-bottom: 1px !important;
+}
+
+/* Home / rich grid metadata must stay secondary */
+.yt-content-metadata-view-model__metadata-text,
+.yt-content-metadata-view-model__metadata-text span,
+.yt-content-metadata-view-model__delimiter {
+  color: var(--yt-spec-text-secondary, var(--ytc-text-secondary)) !important;
 }
 `).trim();
   };

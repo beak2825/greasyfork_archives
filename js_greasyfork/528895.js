@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Fandom Focus
-// @version      2.1.5
+// @version      2.1.6
 // @description  Restore Fandom to a clean, readable, and distraction-free layout.
 // @icon         https://www.fandom.com/f2/assets/favicons/favicon.ico
 // @author       samerop
@@ -20,6 +20,7 @@
         #global-explore-navigation,
         #onetrust-consent-sdk,
         .page__right-rail,
+        #age-gate,
         .notifications-placeholder {
           display: none !important;
         }

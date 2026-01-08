@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Futbin Remove Ads
 // @namespace    https://www.iplaysoft.com
-// @version      0.6
+// @version      0.7
 // @description  Futbin Remove Ads!
 // @author       X-Force
 // @match        https://www.futbin.com/*
@@ -16,6 +16,7 @@
     'use strict';
     if(window.location.host=="www.futbin.com"){
         GM_addStyle ( `
+        #venatus-video-container,.sci-topbanner {display:none !important;}
     .vm-placement,.web-accessibility-menu,#av-container,.av-desktop {display:none !important;}
     .player-header-video-ad,.avp-in-read,.trc_related_container,.ad-container,.tf-v1-sidetab,.jpx-pu-wrapper,.jpx-pu-container {display:none !important;}
 ` );

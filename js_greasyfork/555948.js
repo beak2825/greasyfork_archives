@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CunyCrypt
-// @version      0.9.9
+// @version      0.9.12
 // @description  End-to-end encryption for Discord messages and files, but less obvious
 // @author       redcat (forked from NotTrueFalse)
 // @match        https://discord.com/*
@@ -504,7 +504,6 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
     let prefixurllenght = 24;
     let suffix = ">)";
     let randomtext = "";
-    var createPeerSelectorUI_selector;
 
     let text_pool = ["bruh",
 "wdym?",
@@ -1084,7 +1083,6 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
         try_hijack();
     });
 
-
     function restore_localstorage() {
         if (window.localStorage) {
             setTimeout(restore_localstorage, 100);
@@ -1099,7 +1097,6 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
         }
         Object.defineProperty(window, 'localStorage', getLocalStoragePropertyDescriptor());
     }
-
     restore_localstorage();
 
     function save_peers(peers) {
@@ -1219,12 +1216,12 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
                 const hintElement = document.getElementById('discrypt-selector-hint');
                 if (channel_id) {
                     selected_peer_channel_id = channel_id;
-                    hintElement.textContent = `✓ Encrypting for user ${channel_id}`;
+                    hintElement.textContent = `✓ Encrypting for peer ${channel_id}`;
                     hintElement.style.color = '#43b581';
                 } else {
                     selected_peer_channel_id = null;
-                    hintElement.textContent = 'Select a peer to encrypt messages';
-                    hintElement.style.color = '#99aab5';
+                    hintElement.textContent = '✗ Not encrypted';
+                    hintElement.style.color = '#b54843';
                 }
             });
             selector.appendChild(selectElement);
@@ -1248,7 +1245,9 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
 
             if (isDM) {
                 selected_peer_channel_id = channel_id;
-                selector.style.display = 'none';
+                selectElement.value = selected_peer_channel_id;
+                document.getElementById('discrypt-selector-hint').textContent = `✓ Encrypting for current channel`;
+                document.getElementById('discrypt-selector-hint').style.color = '#43b581';
             } else {
                 selected_peer_channel_id = null;
                 // Clear old options instead of using innerHTML
@@ -1270,10 +1269,12 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
 
                 if (selected_peer_channel_id && known_peer[selected_peer_channel_id]) {
                     selectElement.value = selected_peer_channel_id;
-                    document.getElementById('discrypt-selector-hint').textContent = `✓ Encrypting for user ${selected_peer_channel_id}`;
+                    document.getElementById('discrypt-selector-hint').textContent = `✓ Encrypting for peer ${selected_peer_channel_id}`;
                     document.getElementById('discrypt-selector-hint').style.color = '#43b581';
                 } else {
                     selected_peer_channel_id = null;
+                    document.getElementById('discrypt-selector-hint').textContent = `✗ Not encrypted`;
+                    document.getElementById('discrypt-selector-hint').style.color = '#b54843';
                 }
 
                 selector.style.display = 'block';
@@ -1328,8 +1329,7 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
             listItemWrapper.appendChild(wrapper);
             listItem.appendChild(listItemWrapper);
             ToolBar.appendChild(listItem);
-            createPeerSelectorUI_selector = createPeerSelectorUI();
-            wrapper.addEventListener('click', () => createPeerSelectorUI_selector.style.display = 'block');
+            createPeerSelectorUI();
             if (callback) callback();
         }
 
@@ -1850,6 +1850,7 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
                         currentObserver.disconnect();
                     }
                     lastChatContainer = newChatContainer;
+                    updatePeerSelector(get_url_channel_id());
                     currentObserver = observeMessages();
                 }
 

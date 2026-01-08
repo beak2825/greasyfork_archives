@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Geoguessr duel round analysis
 // @namespace    http://tampermonkey.net/
-// @version      0.2.0
+// @version      0.2.1
 // @description  Analyse duel round data on a map
 // @author       irrational
 // @match        https://www.geoguessr.com/*
@@ -423,18 +423,16 @@ const makeHeatLayer = (selectFeature = null) => {
         const selectGeom = selectFeature.getGeometry();
         if (controls.select == 'locs') {
             activeRoundIndexes = locIndex
-                .range(...ol.proj.transformExtent(selectGeom.getExtent(), 'EPSG:3857', 'EPSG:4326'));
-            activeRounds = activeRoundIndexes
-                .map((i) => allRounds[i])
-                .filter((round) =>
-                        selectGeom.intersectsCoordinate(ol.proj.fromLonLat([round.panorama.lng, round.panorama.lat])));
+                .range(...ol.proj.transformExtent(selectGeom.getExtent(), 'EPSG:3857', 'EPSG:4326'))
+                .filter((i) => selectGeom.intersectsCoordinate(ol.proj.fromLonLat([allRounds[i].panorama.lng,
+                                                                                   allRounds[i].panorama.lat])));
+            activeRounds = activeRoundIndexes.map((i) => allRounds[i]);
         } else if (controls.select == 'guesses') {
             activeRoundIndexes = guessIndex
-                .range(...ol.proj.transformExtent(selectGeom.getExtent(), 'EPSG:3857', 'EPSG:4326'));
-            activeRounds = activeRoundIndexes
-                .map((i) => allRounds[i])
-                .filter((round) =>
-                        selectGeom.intersectsCoordinate(ol.proj.fromLonLat([round.ourGuess.lng, round.ourGuess.lat])));
+                .range(...ol.proj.transformExtent(selectGeom.getExtent(), 'EPSG:3857', 'EPSG:4326'))
+                .filter((i) => selectGeom.intersectsCoordinate(ol.proj.fromLonLat([allRounds[i].ourGuess.lng,
+                                                                                   allRounds[i].ourGuess.lat])));
+            activeRounds = activeRoundIndexes.map((i) => allRounds[i]);
         }
     } else if (controls.filter == 'country') {
         // country filtering is only active when we are selecting locations

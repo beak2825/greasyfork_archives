@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Nurbo Mod
 // @namespace    http://youtube.com
-// @version      1.5.7.1
+// @version      1.5.8.0
 // @description  Macro: Shift=Insta, R=Reverse Insta, Space=Boost+Spike, B/C=4 Traps/Spikes.Bot Farmer: L=spawn alt, ,=delete alts, Z=repel bots, auto-mills and upgrades.
 // @icon         https://static.wikia.nocookie.net/moom/images/7/70/Cookie.png/revision/latest?cb=20190223141839
 // @author       Nurbo Mod
@@ -31,7 +31,9 @@
         id: null, x: null, y: null, dir: null, object: null,
         weapon: null, clan: null, isLeader: null,
         hat: null, accessory: null, isSkull: null,
-        health: 100
+        health: 100,
+        lastHealth: 100,
+        lastDamageTime: 0
     };
     let myPlayeroldx, myPlayeroldy;
     let automillx = 10, automilly = 10;
@@ -40,7 +42,7 @@
     const placementIntervals = {};
     let gInterval = null;
 
-    let autoaim = false; // Отключаем автоаим по умолчанию
+    let autoaim = false;
     let nearestEnemy = null, nearestEnemyAngle = 0, enemiesNear = [];
 
     let gameTick = 0, lastDamageTick = 0, damageTimes = 0, shame = 0, shameTime = 0, HP = 100;
@@ -48,18 +50,27 @@
     let hitBack = false;
     let primary = null;
 
-    // Auto Insta variables - КАК В x-RedDragon Client
+    // Auto Insta variables
     let autoInstaEnabled = false;
     let autoInstaDistance = 200;
     let autoInstaCooldown = 2000;
     let lastAutoInstaTime = 0;
     let autoInstaCheckInterval = null;
+    let autoInstaWeaponCooldown = {}; // Трекер кулдаунов оружий
 
     // Auto Spike Surround variables
     let autoSpikeSurroundEnabled = false;
     let spikeSurroundDistance = 50;
     let lastSpikeSurroundTime = 0;
     let spikeSurroundCooldown = 3000;
+
+    // НОВЫЕ ПЕРЕМЕННЫЕ
+    let spikeInstaEnabled = false; // Spike Insta при получении урона
+    let autoAccessoryEnabled = false; // Авто смена аксессуара 11 -> 19
+    let currentAccessory = 11; // Текущий аксессуар
+    let spikeInstaCooldown = 1000; // Кулдаун для Spike Insta
+    let lastSpikeInstaTime = 0;
+    let lastDamageSource = null; // Источник последнего урона
 
     // Menu variables
     let menuOpen = false;
@@ -118,35 +129,33 @@
         doNewSend(["z", [myPlayer.weapon, true]]);
     }
 
-    // ФУНКЦИЯ АВТОХИЛА ДЛЯ ГЛАВНОГО ИГРОКА
+    // ФУНКЦИЯ АВТОХИЛА
     function healMainPlayer(currentHealth) {
-    if (!autoHealEnabled || currentHealth >= 100) return; // Не хилим если здоровье 100 или больше
+        if (!autoHealEnabled || currentHealth >= 100) return;
 
-    let timeout = 115;
-    if (currentHealth <= 60) { // Быстрый хил только при очень низком здоровье (≤60)
-        timeout = 1;
-    };
-
-    setTimeout(() => {
-        if (!ws || ws.readyState !== WebSocket.OPEN) return;
-
-        // Используем яблоко (item 0)
-        doNewSend(["z", [0, null]]);
-        doNewSend(["F", [1, null]]);
-        doNewSend(["F", [0, null]]);
-        doNewSend(["z", [myPlayer.weapon, true]]);
-
-        // Если здоровье очень низкое (≤60), используем печеньку (item 1) сразу
+        let timeout = 115;
         if (currentHealth <= 60) {
-            setTimeout(() => {
-                doNewSend(["z", [1, null]]);
-                doNewSend(["F", [1, null]]);
-                doNewSend(["F", [0, null]]);
-                doNewSend(["z", [myPlayer.weapon, true]]);
-            }, 50);
+            timeout = 1;
         }
-    }, timeout);
-}
+
+        setTimeout(() => {
+            if (!ws || ws.readyState !== WebSocket.OPEN) return;
+
+            doNewSend(["z", [0, null]]);
+            doNewSend(["F", [1, null]]);
+            doNewSend(["F", [0, null]]);
+            doNewSend(["z", [myPlayer.weapon, true]]);
+
+            if (currentHealth <= 60) {
+                setTimeout(() => {
+                    doNewSend(["z", [1, null]]);
+                    doNewSend(["F", [1, null]]);
+                    doNewSend(["F", [0, null]]);
+                    doNewSend(["z", [myPlayer.weapon, true]]);
+                }, 50);
+            }
+        }, timeout);
+    }
 
     function isVisible(el) {
         return el && el.offsetParent !== null;
@@ -177,6 +186,7 @@
     function startPlacingStructure(key, itemId) {
         if (!placementIntervals[key]) placementIntervals[key] = setInterval(() => place(itemId), 50);
     }
+
     function stopPlacingStructure(key) {
         clearInterval(placementIntervals[key]);
         delete placementIntervals[key];
@@ -185,7 +195,6 @@
     function performGSequence() {
         if (!nearestEnemy) return;
 
-        // Проверяем расстояние до врага
         const dx = myPlayer.x - nearestEnemy[1];
         const dy = myPlayer.y - nearestEnemy[2];
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -245,77 +254,119 @@
         }
     }
 
-   function performNormalInsta() {
-    // Определяем угол атаки
-    let attackAngle;
-    if (nearestEnemy) {
-        // Если есть ближайший враг, используем его угол
-        const dx = myPlayer.x - nearestEnemy[1];
-        const dy = myPlayer.y - nearestEnemy[2];
-        const distance = Math.sqrt(dx * dx + dy * dy);
+    // ИСПРАВЛЕННАЯ ФУНКЦИЯ performNormalInsta
+    function performNormalInsta(useSecondary = true) {
+        // Определяем угол атаки
+        let attackAngle;
+        if (nearestEnemy) {
+            const dx = myPlayer.x - nearestEnemy[1];
+            const dy = myPlayer.y - nearestEnemy[2];
+            const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance > 250 && autoaim) {
-            // Если автоаим включен и враг дальше 250px, используем направление мыши
-            attackAngle = Math.atan2(mouseY - height / 2, mouseX - width / 2);
+            if (distance > 250 && autoaim) {
+                attackAngle = Math.atan2(mouseY - height / 2, mouseX - width / 2);
+            } else {
+                attackAngle = Math.atan2(nearestEnemy[2] - myPlayer.y, nearestEnemy[1] - myPlayer.x);
+            }
         } else {
-            // Используем угол к врагу
-            attackAngle = Math.atan2(nearestEnemy[2] - myPlayer.y, nearestEnemy[1] - myPlayer.x);
+            attackAngle = Math.atan2(mouseY - height / 2, mouseX - width / 2);
         }
-    } else {
-        // Если нет врага, используем направление мыши
-        attackAngle = Math.atan2(mouseY - height / 2, mouseX - width / 2);
-    }
 
-    storeEquip(0, 1);
-    setTimeout(() => {
-        const wasAutoaim = autoaim;
-        autoaim = true; // Включаем автоаим для точности атаки
-
-        // Устанавливаем направление атаки
-        doNewSend(["D", [attackAngle]]);
-
-        const primary = myPlayer.weapon;
-        const secondary = getSecondaryWeaponIndex();
-
-        doNewSend(["c", [0, 7, 0]]);
-        doNewSend(["z", [primary, true]]);
-        doNewSend(["F", [1, attackAngle]]);
-        setTimeout(() => doNewSend(["F", [0, attackAngle]]), 25);
-
+        storeEquip(0, 1);
         setTimeout(() => {
-            doNewSend(["c", [0, 53, 0]]);
-            doNewSend(["z", [secondary, true]]);
-            doNewSend(["F", [1, attackAngle]]);
-            setTimeout(() => doNewSend(["F", [0, attackAngle]]), 25);
+            const wasAutoaim = autoaim;
+            autoaim = true;
 
-            setTimeout(() => {
-                doNewSend(["c", [0, 6, 0]]);
+            doNewSend(["D", [attackAngle]]);
+
+            const primary = myPlayer.weapon;
+            const secondary = getSecondaryWeaponIndex();
+
+            // Проверяем кулдаун первого оружия
+            const primaryCooldown = autoInstaWeaponCooldown[primary] || 0;
+            const currentTime = Date.now();
+
+            if (currentTime - primaryCooldown < 2000) {
+                // Первое оружие еще на кулдауне - используем только второе
+                if (useSecondary) {
+                    doNewSend(["c", [0, 53, 0]]);
+                    doNewSend(["z", [secondary, true]]);
+                    doNewSend(["F", [1, attackAngle]]);
+                    setTimeout(() => doNewSend(["F", [0, attackAngle]]), 25);
+
+                    setTimeout(() => {
+                        doNewSend(["c", [0, 6, 0]]);
+                        doNewSend(["z", [primary, true]]);
+                        autoaim = wasAutoaim;
+                    }, 120);
+                }
+            } else {
+                // Оба оружия готовы - делаем полную инсту
+                doNewSend(["c", [0, 7, 0]]);
                 doNewSend(["z", [primary, true]]);
-                doNewSend(["z", [primary, true]]);
-                autoaim = wasAutoaim; // Восстанавливаем предыдущее состояние автоаима
+                doNewSend(["F", [1, attackAngle]]);
+                setTimeout(() => doNewSend(["F", [0, attackAngle]]), 25);
 
                 setTimeout(() => {
-                    storeEquip(11, 1);
-
-                    if (secondary === 15) {
+                    if (useSecondary) {
+                        doNewSend(["c", [0, 53, 0]]);
                         doNewSend(["z", [secondary, true]]);
-                        setTimeout(() => doNewSend(["z", [primary, true]]), 1900);
-                    } else if (secondary === 12) {
-                        doNewSend(["z", [secondary, true]]);
-                        setTimeout(() => doNewSend(["z", [primary, true]]), 1000);
-                    } else if (secondary === 13) {
-                        doNewSend(["z", [secondary, true]]);
-                        setTimeout(() => doNewSend(["z", [primary, true]]), 400);
+                        doNewSend(["F", [1, attackAngle]]);
+                        setTimeout(() => doNewSend(["F", [0, attackAngle]]), 25);
                     }
-                }, 170);
-            }, 120);
+
+                    setTimeout(() => {
+                        doNewSend(["c", [0, 6, 0]]);
+                        doNewSend(["z", [primary, true]]);
+                        doNewSend(["z", [primary, true]]);
+                        autoaim = wasAutoaim;
+
+                        setTimeout(() => {
+                            storeEquip(11, 1);
+
+                            if (useSecondary && secondary === 15) {
+                                doNewSend(["z", [secondary, true]]);
+                                setTimeout(() => doNewSend(["z", [primary, true]]), 1900);
+                            } else if (useSecondary && secondary === 12) {
+                                doNewSend(["z", [secondary, true]]);
+                                setTimeout(() => doNewSend(["z", [primary, true]]), 1000);
+                            } else if (useSecondary && secondary === 13) {
+                                doNewSend(["z", [secondary, true]]);
+                                setTimeout(() => doNewSend(["z", [primary, true]]), 400);
+                            }
+                        }, 170);
+                    }, useSecondary ? 120 : 0);
+                }, useSecondary ? 120 : 0);
+
+                // Записываем время использования оружия
+                autoInstaWeaponCooldown[primary] = currentTime;
+            }
         }, 120);
-    }, 120);
-}
+    }
+
+    // НОВАЯ ФУНКЦИЯ: Spike Insta (без мушкета)
+    function performSpikeInsta(damageSourceAngle) {
+        if (!spikeInstaEnabled) return;
+
+        const currentTime = Date.now();
+        if (currentTime - lastSpikeInstaTime < spikeInstaCooldown) return;
+
+        lastSpikeInstaTime = currentTime;
+
+        // Ставим шип в сторону источника урона
+        place(spikeType, damageSourceAngle);
+
+        // Делаем инсту без второго оружия
+        setTimeout(() => {
+            performNormalInsta(false); // false = без второго оружия
+        }, 100);
+
+
+    }
+
     function performReverseInsta() {
         if (!nearestEnemy) return;
 
-        // Проверяем расстояние до врага
         const dx = myPlayer.x - nearestEnemy[1];
         const dy = myPlayer.y - nearestEnemy[2];
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -369,6 +420,7 @@
         }, 100);
     }
 
+    // ИСПРАВЛЕННАЯ ФУНКЦИЯ checkAndPerformAutoInsta
     function checkAndPerformAutoInsta() {
         if (!autoInstaEnabled || !nearestEnemy || myPlayer.health < 50) return;
 
@@ -380,25 +432,24 @@
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance <= autoInstaDistance) {
-            performNormalInsta();
-            lastAutoInstaTime = Date.now();
-            doNewSend(["6", ["Auto-Insta активирована!"]]);
-        }
+            performNormalInsta(true);
+            lastAutoInstaTime = currentTime;
+                   }
     }
 
     function toggleAutoInsta() {
         autoInstaEnabled = !autoInstaEnabled;
         if (autoInstaEnabled) {
             if (!autoInstaCheckInterval) {
-                autoInstaCheckInterval = setInterval(checkAndPerformAutoInsta, 1000);
+                autoInstaCheckInterval = setInterval(checkAndPerformAutoInsta, 300);
             }
-            doNewSend(["6", ["Auto-Insta: ON (расстояние: " + autoInstaDistance + ")"]]);
+            doNewSend(["6", [" on "]]);
         } else {
             if (autoInstaCheckInterval) {
                 clearInterval(autoInstaCheckInterval);
                 autoInstaCheckInterval = null;
             }
-            doNewSend(["6", ["Auto-Insta: OFF"]]);
+            doNewSend(["6", [" off"]]);
         }
         updateMenu();
     }
@@ -409,16 +460,62 @@
         updateMenu();
     }
 
-    function toggleAimMode() {
-        autoaim = !autoaim;
-        doNewSend(["6", ["AutoAim: " + (autoaim ? "ON (250px)" : "OFF")]]);
+    // НОВАЯ ФУНКЦИЯ: Toggle Spike Insta
+    function toggleSpikeInsta() {
+        spikeInstaEnabled = !spikeInstaEnabled;
+        doNewSend(["6", ["SI " + (spikeInstaEnabled ? "On" : "off")]]);
         updateMenu();
     }
 
+    // НОВАЯ ФУНКЦИЯ: Toggle Auto Accessory
+    function toggleAutoAccessory() {
+        autoAccessoryEnabled = !autoAccessoryEnabled;
 
+        if (autoAccessoryEnabled) {
+            // Меняем monkey tail (11) на shadow wings (19)
+            currentAccessory = 19;
+            storeEquip(19, 1);
 
+        } else {
+            // Возвращаем monkey tail (11)
+            currentAccessory = 11;
+            storeEquip(11, 1);
 
-    // Функции для меню
+        }
+        updateMenu();
+    }
+
+    function toggleAimMode() {
+        autoaim = !autoaim;
+        doNewSend(["6", ["AA: " + (autoaim ? "O" : "off")]]);
+        updateMenu();
+    }
+
+    // ФУНКЦИЯ: Проверка движения игрока
+    function isPlayerMoving() {
+        return myPlayer.x !== myPlayeroldx || myPlayer.y !== myPlayeroldy;
+    }
+
+    // ФУНКЦИЯ: Обновление аксессуара в зависимости от состояния
+    function updateAccessoryBasedOnState() {
+        if (!autoAccessoryEnabled) return;
+
+        if (isPlayerMoving()) {
+            // Игрок движется - используем shadow wings (19)
+            if (currentAccessory !== 19) {
+                currentAccessory = 19;
+                storeEquip(19, 1);
+            }
+        } else {
+            // Игрок стоит - используем monkey tail (11)
+            if (currentAccessory !== 11) {
+                currentAccessory = 11;
+                storeEquip(11, 1);
+            }
+        }
+    }
+
+    // Обновление меню с новыми функциями
     function createMenu() {
         if (document.getElementById('nurbo-mod-menu')) return;
 
@@ -431,13 +528,11 @@
             background: rgba(0, 0, 0, 0.85);
             color: white;
             padding: 12px;
-
             z-index: 9999;
             font-family: 'Segoe UI', Arial, sans-serif;
             font-size: 13px;
-            min-width: 280px;
+            min-width: 300px;
             display: none;
-
         `;
 
         document.body.appendChild(menuElement);
@@ -453,7 +548,7 @@
         titleBar.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;';
 
         const title = document.createElement('div');
-        title.textContent = '⚡ Nurbo Mod v1.5.6.4';
+        title.textContent = '⚡ Nurbo Mod v1.5.8.0';
         title.style.cssText = 'font-size: 14px; font-weight: bold; color: #00ff00;';
 
         const closeBtn = document.createElement('button');
@@ -481,8 +576,9 @@
         const toggleSettings = [
             { name: 'Auto Insta', value: autoInstaEnabled, toggle: toggleAutoInsta, key: 'P' },
             { name: 'Auto Spike', value: autoSpikeSurroundEnabled, toggle: toggleAutoSpikeSurround, key: 'U' },
-            { name: 'Auto Aim (300px)', value: autoaim, toggle: toggleAimMode, key: 'O' },
-
+            { name: 'Spike Insta', value: spikeInstaEnabled, toggle: toggleSpikeInsta, key: 'I' },
+            { name: 'Auto Aim', value: autoaim, toggle: toggleAimMode, key: 'O' },
+            { name: 'Shadow Wings', value: autoAccessoryEnabled, toggle: toggleAutoAccessory, key: 'K' }
         ];
 
         toggleSettings.forEach(setting => {
@@ -607,7 +703,9 @@
             'N - Mill',
             'P - AutoInsta',
             'U - AutoSpike',
-            'O - AutoAim (300px)',
+            'I - Spike Insta',
+            'O - AutoAim',
+            'K - Shadow Wings',
             '[ ] - AutoDist',
             'ESC - Menu',
             '[L] - Send Alt',
@@ -654,7 +752,6 @@
         if (e.keyCode == 32 && document.activeElement.id.toLowerCase() !== "chatbox") {
             if (!nearestEnemy) return;
 
-            // Проверяем расстояние до врага
             const dx = myPlayer.x - nearestEnemy[1];
             const dy = myPlayer.y - nearestEnemy[2];
             const distance = Math.sqrt(dx * dx + dy * dy);
@@ -679,25 +776,21 @@
             }
         }
 
-        if (k === 'p') {
-            toggleAutoInsta();
-        }
+        // Новые хоткеи
+        if (k === 'p') toggleAutoInsta();
+        if (k === 'u') toggleAutoSpikeSurround();
+        if (k === 'i') toggleSpikeInsta(); // Новая клавиша для Spike Insta
+        if (k === 'o') toggleAimMode();
+        if (k === 'k') toggleAutoAccessory(); // Новая клавиша для Shadow Wings
 
-        if (k === 'u') {
-            toggleAutoSpikeSurround();
-        }
-
-        if (k === 'o') {
-            toggleAimMode();
-        }
-
-        // КЛАВИША H ДЛЯ АВТОХИЛА
         if (k === 'h') {
-               doNewSend(["6", ["kukareku"]]);
+            doNewSend(["6", ["kukareku"]]);
         }
- if (k === 'y') {
-               doNewSend(["6", ["y run?"]]);
+
+        if (k === 'y') {
+            doNewSend(["6", ["y run?"]]);
         }
+
         if (e.keyCode === 27) {
             toggleMenu();
         }
@@ -755,6 +848,44 @@
         }
     });
 
+    // ИСПРАВЛЕННАЯ ФУНКЦИЯ handleMessage для отслеживания урона
+    const originalHandleMessage = handleMessage;
+    handleMessage = function(m) {
+        let temp = msgpack5.decode(new Uint8Array(m.data));
+        let data = (temp.length > 1) ? [temp[0], ...temp[1]] : temp;
+        if (!data) return;
+
+        // Отслеживаем получение урона
+        if (data[0] === "O" && data[1] === myPlayer.id) {
+            const oldHealth = myPlayer.health;
+            myPlayer.health = data[2];
+
+            // Если здоровье уменьшилось - мы получили урон
+            if (myPlayer.health < oldHealth && myPlayer.health > 0) {
+                myPlayer.lastDamageTime = Date.now();
+
+                // Пытаемся определить источник урона
+                if (nearestEnemy && myPlayer.health < oldHealth) {
+                    lastDamageSource = Math.atan2(
+                        nearestEnemy[2] - myPlayer.y,
+                        nearestEnemy[1] - myPlayer.x
+                    );
+
+                    // Активируем Spike Insta
+                    performSpikeInsta(lastDamageSource);
+                }
+            }
+
+            // Вызов функции автохила
+            if (autoHealEnabled && myPlayer.health < 100) {
+                healMainPlayer(myPlayer.health);
+            }
+        }
+
+        // Вызываем оригинальную функцию
+        return originalHandleMessage(m);
+    };
+
     if (!WebSocket.prototype.__originalSend) {
         WebSocket.prototype.__originalSend = WebSocket.prototype.send;
         WebSocket.prototype.send = function (data) {
@@ -786,23 +917,19 @@
             }
 
             if (enemiesNear.length > 0) {
-                // Сортируем врагов по расстоянию
                 enemiesNear.sort((a, b) => {
                     const distA = Math.hypot(a[1] - myPlayer.x, a[2] - myPlayer.y);
                     const distB = Math.hypot(b[1] - myPlayer.x, b[2] - myPlayer.y);
                     return distA - distB;
                 });
 
-                // Берем ближайшего врага
                 nearestEnemy = enemiesNear[0];
 
-                // Проверяем расстояние до ближайшего врага
                 if (nearestEnemy) {
                     const dx = myPlayer.x - nearestEnemy[1];
                     const dy = myPlayer.y - nearestEnemy[2];
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
-                    // Если враг дальше 250px, сбрасываем целеполагание
                     if (distance > 300) {
                         nearestEnemy = null;
                     } else {
@@ -836,6 +963,9 @@
                 }
                 myPlayeroldx = myPlayer.x;
                 myPlayeroldy = myPlayer.y;
+
+                // Обновляем аксессуар при движении
+                updateAccessoryBasedOnState();
             }
         }
 
@@ -846,18 +976,18 @@
             shame = 0;
             HP = 100;
             shameTime = 0;
+            myPlayer.lastHealth = myPlayer.health;
             myPlayer.health = data[2];
 
-            // ВЫЗОВ ФУНКЦИИ АВТОХИЛА
             if (autoHealEnabled && myPlayer.health < 100) {
                 healMainPlayer(myPlayer.health);
             }
         }
     }
 
+    // Интервал для автоаима
     setInterval(() => {
         if (autoaim && nearestEnemy) {
-            // Двойная проверка расстояния перед автоаимом
             const dx = myPlayer.x - nearestEnemy[1];
             const dy = myPlayer.y - nearestEnemy[2];
             const distance = Math.sqrt(dx * dx + dy * dy);
@@ -866,7 +996,20 @@
                 doNewSend(["D", [nearestEnemyAngle]]);
             }
         }
-    }, 10);
+
+        // Обновляем аксессуар каждые 100мс
+        updateAccessoryBasedOnState();
+    }, 100);
+
+    // Очистка старых кулдаунов оружий
+    setInterval(() => {
+        const currentTime = Date.now();
+        for (const weapon in autoInstaWeaponCooldown) {
+            if (currentTime - autoInstaWeaponCooldown[weapon] > 5000) {
+                delete autoInstaWeaponCooldown[weapon];
+            }
+        }
+    }, 1000);
 
     // 🧠 Anti-Rotación
     Object.defineProperty(Object.prototype, "turnSpeed", {
@@ -1207,6 +1350,9 @@
     }, 1500);
 })();
 
+// Остальные части скрипта остаются без изменений...
+// [WeaponReloadPrediction, HealBarsBuildings, AutoVerifity, AutoReloadWeb и Bot система остаются без изменений]
+// [WeaponReloadPrediction, HealBarsBuildings, AutoVerifity, AutoReloadWeb и Bot система остаются без изменений]
 // Остальные части скрипта (WeaponReloadPrediction, HealBarsBuildings, AutoVerifity, AutoReloadWeb) остаются без изменений
 //WeaponReloadPrediction
 (function () {

@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         禁止新标签页打开链接
-// @name:en      No New Tab for Chinese Top Websites
+// @name:en      No New Tab for Some Websites
 // @namespace    http://tampermonkey.net/
-// @version      5.1
-// @description  让哔哩哔哩、微博、知乎、小红书所有链接在当前标签页打开
+// @version      5.2
+// @description  让哔哩哔哩、微博、知乎、小红书、Appstorrent、Skymods等网站所有链接在当前标签页打开
 // @description:en Force all Bilibili, Weibo, Zhihu, and RedNote links to open in the current tab
 // @author       ChingyuanCheng
 // @license      MIT
@@ -11,6 +11,9 @@
 // @match        *://*.weibo.com/*
 // @match        *://*.zhihu.com/*
 // @match        *://*.xiaohongshu.com/*
+// @match        *://*.smods.ru/*
+// @match        *://*.modsbase.com/*
+// @match        *://*.appstorrent.ru/*
 // @grant        none
 // @run-at       document-start
 // @downloadURL https://update.greasyfork.org/scripts/527007/%E7%A6%81%E6%AD%A2%E6%96%B0%E6%A0%87%E7%AD%BE%E9%A1%B5%E6%89%93%E5%BC%80%E9%93%BE%E6%8E%A5.user.js
@@ -35,7 +38,13 @@
                 u.hostname.endsWith('.zhihu.com') ||
                 u.hostname === 'zhihu.com' ||
                 u.hostname.endsWith('.xiaohongshu.com') ||
-                u.hostname === 'xiaohongshu.com'
+                u.hostname === 'xiaohongshu.com' ||
+                u.hostname.endsWith('.modsbase.com') ||
+                u.hostname === 'modsbase.com' ||
+                u.hostname.endsWith('.appstorrent.ru') ||
+                u.hostname === 'appstorrent.ru' ||
+                u.hostname.endsWith('.smods.ru') ||
+                u.hostname === 'smods.ru'
             );
         } catch {
             return false;
@@ -88,13 +97,13 @@
             try {
                 // url 可能为 undefined/null
                 if (typeof url === 'string' && isSupportedDomain(url)) {
-                    console.log('[NoNewTab] intercepted window.open -> navigating in-place:', url);
+                    // console.log('[NoNewTab] intercepted window.open -> navigating in-place:', url);
                     location.href = url;
                     return null;
                 }
                 // 若是 call window.open with a URL object
                 if (url && url.href && isSupportedDomain(url.href)) {
-                    console.log('[NoNewTab] intercepted window.open (URL object) -> navigating in-place:', url.href);
+                    // console.log('[NoNewTab] intercepted window.open (URL object) -> navigating in-place:', url.href);
                     location.href = url.href;
                     return null;
                 }
@@ -111,8 +120,6 @@
                 if (name === 'target' && value === '_blank' && this.tagName === 'A') {
                     const href = this.href || this.getAttribute('href') || this.getAttribute('data-href');
                     if (href && isSupportedDomain(href)) {
-                        // 移除 target，避免新标签
-                        // console.log('[NoNewTab] remove setAttribute target=_blank on', href);
                         return orig.call(this, name, ''); // set to empty (或直接 return 不设置)
                     }
                 }
@@ -214,14 +221,14 @@
                         // 劫持 B 站搜索（广泛匹配）
                         const keyword = tg.value || tg.textContent || '';
                         if (keyword.trim()) {
-                            // **修复点**：只有在 B 站域名下才把回车劫持到 B 站搜索
+                            // 只有在 B 站域名下才把回车劫持到 B 站搜索
                             if (IS_BILIBILI) {
                                 e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
                                 const searchUrl = `https://search.bilibili.com/all?keyword=${encodeURIComponent(keyword)}`;
                                 location.href = searchUrl;
                                 return;
                             } else {
-                                // 在非 B 站域名上不要干预，保留站点自身的搜索行为
+                                // 在非 B 站域名上不要干预
                                 return;
                             }
                         }
@@ -238,8 +245,6 @@
                     }
                 }
             }
-
-            // 另外阻止 Cmd/Ctrl+Enter/Cmd/Meta + click 打开新标签的情况由 click/auxclick 检测 ctrlKey/metaKey
         } catch (err) {}
     }
 
@@ -285,7 +290,7 @@
                             node.querySelectorAll && node.querySelectorAll('form[target="_blank"]').forEach(f => f.removeAttribute('target'));
                         });
                     }
-                    // 属性变更：如果某元素被设置了 target，移除（作为兜底）
+                    // 属性变更
                     if (m.type === 'attributes' && m.attributeName === 'target') {
                         const el = m.target;
                         if (el && el.tagName === 'A') {
@@ -304,18 +309,13 @@
         } catch (e) {}
     }
 
-    // 启动：观察 document 以及已存在的 shadow roots（如果有）
     function initObservers() {
-        // 先 attach document
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => observeRoot(document));
         } else {
             observeRoot(document);
         }
-
-        // 尝试扫描已存在的 ShadowRoots（某些站点预先渲染）
         try {
-            // 遍历所有元素，若存在 shadowRoot 则 observe
             document.querySelectorAll('*').forEach(el => {
                 if (el.shadowRoot) {
                     try { observeRoot(el.shadowRoot); } catch (e) {}
@@ -324,15 +324,9 @@
         } catch (e) {}
     }
 
-    // 初始化入口
     function init() {
-        // 立即挂载 document（capture handlers）
         attachRootListeners(document);
-
-        // Mutation / Shadow observer
         initObservers();
-
-        // 立即尝试清理当前已有的 target=_blank
         try {
             document.querySelectorAll && document.querySelectorAll('a[target="_blank"]').forEach(a => {
                 const href = a.href || a.getAttribute('href') || a.getAttribute('data-href');
@@ -346,7 +340,7 @@
     function hijackBilibiliSearch() {
         if (!IS_BILIBILI) return;
 
-        // 通过 capture 拦截回车（更宽泛匹配：placeholder/aria-label/role）
+        // 通过 capture 拦截回车
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.keyCode === 13) {
                 const target = e.target;
@@ -367,11 +361,15 @@
 
         // 搜索按钮点击（捕获）
         document.addEventListener('click', function(e) {
+            // 【重要修复】：如果点击的是输入框本身，绝对不要将其视为点击搜索按钮，避免聚焦输入框时页面刷新
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
             let target = e.target;
             while (target && target !== document) {
                 if (target.tagName === 'BUTTON' || (target.className && typeof target.className === 'string')) {
                     const cls = target.className || '';
-                    if (cls.includes('search') || cls.includes('search-btn') || cls.includes('nav-search-submit') || cls.includes('nav-search-btn')) {
+                    // 【重要修复】：移除过于宽泛的 "search" 匹配，只匹配明确的按钮类名，防止误匹配容器
+                    if (cls.includes('search-btn') || cls.includes('nav-search-submit') || cls.includes('nav-search-btn') || cls.includes('search-submit')) {
                         const form = target.closest('form');
                         const input = form ? form.querySelector('input') : document.querySelector('input[placeholder*="搜索"], input[aria-label*="搜索"]');
                         const keyword = input && input.value ? input.value.trim() : '';

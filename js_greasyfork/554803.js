@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Add/Edit: add Last Service button to some dates
 // @namespace    https://github.com/nate-kean/
-// @version      2025.12.8
+// @version      2026.1.8
 // @description  Add a button that sets its to the closest past Sunday or Wednesday, in the fields that are usually set to last service.
 // @author       Nate Kean
 // @match        https://jamesriver.fellowshiponego.com/members/edit/*
@@ -11,6 +11,7 @@
 // @license      MIT
 // @run-at       document-end
 // @require      https://update.greasyfork.org/scripts/554804/1689525/Nate%27s%20Day%20Button.js
+// @require      https://update.greasyfork.org/scripts/559387/1730426/getRelativeWeekday.js
 // @downloadURL https://update.greasyfork.org/scripts/554803/AddEdit%3A%20add%20Last%20Service%20button%20to%20some%20dates.user.js
 // @updateURL https://update.greasyfork.org/scripts/554803/AddEdit%3A%20add%20Last%20Service%20button%20to%20some%20dates.meta.js
 // ==/UserScript==
@@ -53,23 +54,6 @@
         "Rededication Date",
     ];
 
-	const Day = Object.freeze({
-		SUNDAY: 0,
-		MONDAY: 1,
-		TUESDAY: 2,
-		WEDNESDAY: 3,
-		THURSDAY: 4,
-		FRIDAY: 5,
-		SATURDAY: 6,
-	});
-
-	function getLastWeekday(targetDate, day) {
-		const currentWeekday = targetDate.getDay();
-		const daysToSubtract = (currentWeekday - day + 7) % 7;
-		const lastWeekdayDate = new Date(targetDate);
-		lastWeekdayDate.setDate(targetDate.getDate() - daysToSubtract);
-		return lastWeekdayDate;
-	}
 
     function isSameDate(a, b) {
         return (
@@ -98,8 +82,8 @@
 
 
     const today = new Date();
-    const lastSunday = getLastWeekday(today, Day.SUNDAY);
-    const lastWednesday = getLastWeekday(today, Day.WEDNESDAY);
+    const lastSunday =    getRelativeWeekday(today, DateDir.LAST, Day.SUNDAY,    true);
+    const lastWednesday = getRelativeWeekday(today, DateDir.LAST, Day.WEDNESDAY, true);
     const lastServiceDate = getLastServiceDate(today, lastSunday, lastWednesday);
     const buttonName = (isSameDate(today, lastServiceDate)) ? "Today" : "Last Service";
     const dateString = new Intl.DateTimeFormat("en-US", {

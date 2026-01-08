@@ -24,9 +24,9 @@
 // @connect      raw.githubusercontent.com
 // @namespace    Violentmonkey Scripts
 // @author       SedapnyaTidur
-// @version      1.0.11
+// @version      1.0.12
 // @license      MIT
-// @revision     1/7/2026, 2:41:00 PM
+// @revision     1/8/2026, 9:30:00 PM
 // @description  Redirects instance of Redlib that having an error or has a Anubis/Cerberus/Cloudflare/GoAway check to another instance. The CSP for websites must be removed/modified using an addon for this script to work. To have a better effect make sure to reorder this script so it runs as soon as possible.
 // @downloadURL https://update.greasyfork.org/scripts/559009/%5BRedlib%5D%20Error%20%20PoW%20Redirector.user.js
 // @updateURL https://update.greasyfork.org/scripts/559009/%5BRedlib%5D%20Error%20%20PoW%20Redirector.meta.js
@@ -39,7 +39,7 @@
   let currentURL = window.location.href, blocked = false, hasChecked = false, redirectIntervalId = 0;
 
   // To block redirections to Anubis/Cerberus/Cloudflare/GoAway.
-  const fetch = window.fetch;
+  const fetch_ = window.fetch;
   window.fetch = function(resource, options) {
     if (blocked) throw new Error();
     const url = (resource instanceof window.Request) ? resource.url : resource.toString();
@@ -47,37 +47,38 @@
       blocked = true;
       throw new Error();
     }
-    fetch.apply(this, arguments);
+    fetch_.apply(this, arguments);
   };
-  const parse = window.JSON.parse;
+  const parse_ = window.JSON.parse;
   window.JSON.parse = function(text, reviver) {
     if (blocked) throw new Error();
     if (/(?:^\{"(?:userAgent|audioBoolean|challenge)":|\/\.(?:within\.website|cerberus|well-known)\/)/.test(text)) {
       blocked = true;
       throw new Error();
     }
-    return parse.apply(this, arguments);
+    return parse_.apply(this, arguments);
   };
-  const replaceState = window.History.prototype.replaceState;
+  const replaceState_ = window.History.prototype.replaceState;
   window.History.prototype.replaceState = function(state, unused, url) {
     if (blocked) throw new Error();
     if (/(?:[?&]__(?:cf_chl|goaway)|\/\.(?:within\.website|cerberus|well-known)\/)/.test(url)) {
       blocked = true;
       throw new Error();
     }
-    return replaceState.apply(this, arguments);
+    return replaceState_.apply(this, arguments);
   };
-  const pushState = window.History.prototype.pushState;
+  const pushState_ = window.History.prototype.pushState;
   window.History.prototype.pushState = function(state, unused, url) {
     if (blocked) throw new Error();
     if (/(?:[?&]__(?:cf_chl|goaway)|\/\.(?:within\.website|cerberus|well-known)\/)/.test(url)) {
       blocked = true;
       throw new Error();
     }
-    return pushState.apply(this, arguments);
+    return pushState_.apply(this, arguments);
   };
+
   // failedHosts must be an array even though it is empty.
-  let { failedHosts, currentHost, deleteCookies, externalOrigins, hideSettings, lastUpdate, preferOrigins, redirectHost, updateFrequency, workingSite } = GM_getValues({
+  let { failedHosts, currentHost, deleteCookies, externalOrigins, hideSettings, lastUpdate, localOriginsFailedDate, preferOrigins, redirectHost, updateFrequency, workingSite } = GM_getValues({
     // Websites that always have a Anubis/Cerberus/GoAway check or redirect to Anubis/Cerberus/GoAway.
     failedHosts: [
       'redlib.thebunny.zone', // NOT RESPONDING IS SO PROBLEMATIC. NOT WORTH THE RISK.
@@ -89,6 +90,7 @@
     externalOrigins: undefined, // An array of origins from external source.
     hideSettings: true, // Hide settings in GM menu commands?
     lastUpdate: undefined, // When the external origins was updated.
+    localOriginsFailedDate: undefined, // Date of all local origins have failed.
     preferOrigins: 'external > local', // local, external, local > external, external > local.
     redirectHost: undefined, // Hostname that will be redirected to.
     updateFrequency: '30 minutes', // Update external origins when at least this much time has passed.
@@ -165,6 +167,19 @@
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}, ${date.getHours() % 12 || 12}:${('0' + date.getMinutes()).slice(-2)}:${('0' + date.getSeconds()).slice(-2)} ${date.getHours() > 11 ? 'PM' : 'AM'}`;
   };
 
+  const hasElapsed = function(updateFrequency, lastUpdate) {
+    if (!updateFrequency || !lastUpdate) return false;
+    const elapsed = updateFrequency.toLowerCase().replace(/[ s]/g, '').replace(/(mi|h|d|mo|y).*$/, field => {
+      return { minute:' 1',hour:' 60',day:' 1440',month:' 43829',year:' 525949' }[field]
+    }).split(' ').reduce((sum, value) => sum * Number(value), 1);
+    const values = lastUpdate.replace(/:[0-9]+\s+[APap][Mm]$/, '').split(/(?:\/|,\s+|:)/).map(Number);
+    const clock24 = (/[Pp][Mm]$/.test(lastUpdate) && values[3] !== 12) ? 12 : 0;
+    const past = (values[0] * 1440) + (values[1] * 43829) + (values[2] * 525949) + ((values[3] + clock24) * 60) + values[4];
+    const now = getDate(true); // Get current date in minutes as late as possible.
+    if (now - past >= elapsed) return true;
+    return false;
+  };
+
   const shouldUpdate = function(checkFailedOrigins) {
     if (!preferOrigins || !updateFrequency || preferOrigins === 'local') return false;
     if (checkFailedOrigins && preferOrigins === 'local > external') { // Have we tried all origins in localOrigins?
@@ -181,15 +196,7 @@
       }
     }
     if (!lastUpdate) return true;
-    const elapsed = updateFrequency.toLowerCase().replace(/[ s]/g, '').replace(/(mi|h|d|mo|y).*$/, field => {
-      return { minute:' 1',hour:' 60',day:' 1440',month:' 43829',year:' 525949' }[field]
-    }).split(' ').reduce((sum, value) => sum * Number(value), 1);
-    const values = lastUpdate.replace(/:[0-9]+\s+[APap][Mm]$/, '').split(/(?:\/|,\s+|:)/).map(Number);
-    const clock24 = (/[Pp][Mm]$/.test(lastUpdate) && values[3] !== 12) ? 12 : 0;
-    const past = (values[0] * 1440) + (values[1] * 43829) + (values[2] * 525949) + ((values[3] + clock24) * 60) + values[4];
-    const now = getDate(true); // Get current date in minutes as late as possible.
-    if (now - past >= elapsed) return true;
-    return false;
+    return hasElapsed(updateFrequency, lastUpdate);
   };
 
   // Download a json file. The returned javascript object/array/null have to be gotten using Promise.then.
@@ -200,7 +207,7 @@
         return;
       }
 
-      const configs = {
+      const config = {
         anonymous: true, // No cookies. Privacy.
         headers: {
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -243,7 +250,8 @@
           return this;
         },
       }.init();
-      downloader.instance = GM_xmlhttpRequest(configs);
+
+      downloader.instance = GM_xmlhttpRequest(config);
     });
   };
 
@@ -270,6 +278,7 @@
           resolve(false);
         }
       };
+
       // Cancel pending download.
       if (downloader.instance) {
         window.clearTimeout(downloader.timeoutId);
@@ -277,6 +286,7 @@
         downloader.instance = undefined;
         downloader.timeoutId = 0;
       }
+
       downloader.abort = false;
       download(url).then(setExternalOrigins);
     });
@@ -350,8 +360,9 @@
       // local, external, local > external, external > local.
       const listsOfOrigins = preferOrigins.split(' > ').map(prefer => { return (prefer === 'local') ? localOrigins : externalOrigins });
       let uptodate = null;
+
       for (let i = 0; i < listsOfOrigins.length; ++i) {
-        if (!listsOfOrigins[i]) {
+        if (!listsOfOrigins[i]) { // First time or force update.
           if (shouldUpdate(false)) uptodate = await getReblib();
           if (!externalOrigins) continue;
           listsOfOrigins[i] = externalOrigins;
@@ -372,12 +383,25 @@
             return;
           }
         }
-        if (!uptodate && listsOfOrigins[i] === externalOrigins) {
+        if (uptodate) continue;
+        if (listsOfOrigins[i] === externalOrigins) {
           listsOfOrigins[i] = undefined;
           externalOrigins = undefined;
           --i;
+        } else if (localOriginsFailedDate && hasElapsed('30 minutes', localOriginsFailedDate)) {
+          GM_deleteValue('localOriginsFailedDate');
+          const len = failedHosts.length;
+          for (const origin of localOrigins) {
+            const index = failedHosts.indexOf(origin.replace(/^https?:\/\/([^/]+).*$/, '$1'));
+            if (index > 0) failedHosts.splice(index, 1); // Exclude the first index.
+          }
+          if (len !== failedHosts.length) GM_setValue('failedHosts', failedHosts);
+          --i;
+        } else if (!localOriginsFailedDate) {
+          GM_setValue('localOriginsFailedDate', getDate(false));
         }
       }
+
       if (uptodate === false) { // JSON structure changed, file not found or download error.
         resolve(undefined);
         return;
@@ -390,6 +414,7 @@
     if (hasChecked) return;
     hasChecked = true;
     let retries = 1;
+
     for (const config of configs) {
       let target = document.body.querySelector(config.query);
       if (!target) continue;
@@ -437,7 +462,7 @@
         }
         if (!url) {
           h1_2.innerText = '💢 Failed to redirect!. All instances are broken.';
-          h1_2.innerText += (preferOrigins === 'local') ? '\nTry again later.' : `\nTry again after ${updateFrequency}.`;
+          h1_2.innerText += (preferOrigins === 'local') ? '\nTry again after 30 minutes.' : `\nTry again after ${updateFrequency}.`;
           style.textContent = style.textContent.replace(/rgb\(65,105,225\)/m, 'rgb(213,68,85)');
           target.replaceWith(div);
           return;
@@ -629,7 +654,7 @@
       object.title_ = object.title.replace('{}', object.choices[object.index]);
       if (!object.index) {
         object.options.autoClose = false;
-        GM_deleteValues(['currentHost','deleteCookies','externalOrigins','failedHosts','hideSettings','lastUpdate','preferOrigins','redirectHost','updateFrequency','workingSite']);
+        GM_deleteValues(['currentHost','deleteCookies','externalOrigins','failedHosts','hideSettings','lastUpdate','localOriginsFailedDate','preferOrigins','redirectHost','updateFrequency','workingSite']);
         deleteCookies = true;
         failedHosts = [
           'redlib.thebunny.zone',

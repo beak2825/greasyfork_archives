@@ -69,7 +69,7 @@
         const saved = localStorage.getItem(STORAGE_KEY) || '';
 
         const placeholder = document.createElement('option');
-        placeholder.textContent = 'Select faucet';
+        placeholder.textContent = 'CHOOSE FAUCET';
         placeholder.disabled = true;
         placeholder.selected = !saved;
         select.appendChild(placeholder);

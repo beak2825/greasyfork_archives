@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name             Neopets: HTML Game UI tweaks
 // @namespace        kmtxcxjx
-// @version          1.0.4
+// @version          1.0.5
 // @description      Moves elements around on various HTML-based games so the buttons to continue playing on each screen can be clicked without having to move the mouse on every new screen.
 // @match            *://www.neopets.com/games/slots.phtml*
 // @match            *://www.neopets.com/medieval/doubleornothing.phtml*
 // @match            *://www.neopets.com/medieval/cheeseroller.phtml
 // @match            *://www.neopets.com/medieval/kissthemortog.phtml*
 // @match            *://www.neopets.com/games/lottery.phtml
+// @match            *://www.neopets.com/games/maze/maze.phtml*
 // @grant            none
 // @run-at           document-end
 // @icon             https://images.neopets.com/games/aaa/dailydare/2012/post/theme-icon.png
@@ -19,8 +20,33 @@
 (function() {
     'use strict';
 
+    // FETCH
+    if (window.location.href.includes('://www.neopets.com/games/maze/maze.phtml')) {
+        // Map arrow key codes to direction names
+        const keyMap = {
+            'ArrowUp': 'North',
+            'ArrowDown': 'South',
+            'ArrowLeft': 'West',
+            'ArrowRight': 'East'
+        };
+
+        document.addEventListener('keydown', function(e) {
+            const direction = keyMap[e.key];
+            if (!direction) return; // Not an arrow key
+
+            // Find the <area> element with matching alt or title
+            const area = Array.from(document.querySelectorAll('map[name="navmap"] area'))
+            .find(a => a.alt === direction || a.title === direction);
+
+            if (area && area.href) {
+                window.location.href = area.href; // Navigate
+                e.preventDefault(); // Prevent scrolling
+            }
+        });
+    }
+
     // THE LOTTERY
-    if (window.location.href.includes('https://www.neopets.com/games/lottery.phtml')) {
+    if (window.location.href.includes('://www.neopets.com/games/lottery.phtml')) {
         const buyButton = document.querySelector('input[value="Buy a Lottery Ticket!"]');
         const p = document.querySelector('td.content table tbody tr td:nth-of-type(2) p:nth-of-type(3)');
         if (!buyButton || !p || !p.textContent.trim().startsWith('Ticket 1 : ')) return;

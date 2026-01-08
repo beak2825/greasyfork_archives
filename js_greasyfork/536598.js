@@ -3,7 +3,7 @@
 // @description     Adds native html controls to all videos (rewind, fullscreen, etc)
 // @description:ru  Добавляет дефолтные кнопки управления видео (перемотка, "на весь экран" и тд)
 // @namespace       http://tampermonkey.net/
-// @version         0.0.5
+// @version         0.0.6
 // @author          undfndusr
 // @match           *://*.instagram.com/*
 // @icon            https://www.google.com/s2/favicons?sz=64&domain=instagram.com
@@ -44,6 +44,7 @@
                 position: absolute;
                 top: 0;
                 right: 0;
+                height: fit-content;
                 z-index: 2;
             }
 

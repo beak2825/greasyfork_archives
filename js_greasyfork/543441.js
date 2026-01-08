@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JanitorAI - Text to Speech - Built-in/ElevenLabs/GeminiTTS
 // @namespace    http://tampermonkey.net/
-// @version      3.9.5
+// @version      3.9.6
 // @license      MIT
 // @description  Text to Speech (TTS) integration for JanitorAI using built-in voices, ElevenLabs TTS, and Gemini TTS with emotion analysis and audio segmentation.
 // @author       Zephyr (xzeph__ on Discord)
@@ -790,17 +790,17 @@ INPUT TEXT TO ANALYZE:
 
   // Extrae texto formateado a partir del nodo del mensaje (respeta cursivas, etc.)
   function extractFormattedMessageText(messageNode) {
-    // Find the message text container dynamically
-    // Structure: _messageBody_ > [_nameContainer_, textContainer]
-    // The text container is a direct child of _messageBody_ that is NOT _nameContainer_
     const messageBody = messageNode.querySelector(MESSAGE_BODY_SELECTOR);
     if (!messageBody) return "[No text found]";
 
-    // Find the text container: it's a div child of messageBody that is not the name container
+    // Encuentra el contenedor de texto: es un hijo div de messageBody que no es el contenedor de nombre ni el contenedor de think
     let textContainer = null;
     for (const child of messageBody.children) {
-      if (child.tagName === 'DIV' && !child.className.match(/_nameContainer_/)) {
-        // This should be the text container (has dynamic css-XXXXX class)
+      if (child.tagName === 'DIV' &&
+          !child.className.match(/_nameContainer_/) &&
+          !child.className.match(/_thinkTagContainer_/) &&
+          !child.className.match(/_ratingWrapper_/)) {
+        // Este debería ser el contenedor de texto
         textContainer = child;
         break;
       }
@@ -808,35 +808,70 @@ INPUT TEXT TO ANALYZE:
     if (!textContainer) return "[No text found]";
 
     let result = [];
-    // Find text blocks - they have class 'css-0' or are direct children with content
+
+    // Extrae texto de un elemento "parrafo", preservando formato
+    function extractParagraphText(p) {
+      let line = '';
+      p.childNodes.forEach(child => {
+        if (child.nodeType === Node.ELEMENT_NODE) {
+          if (child.tagName === 'EM') line += '_' + child.textContent + '_';
+          else if (child.tagName === 'STRONG') line += '**' + child.textContent + '**';
+          else if (child.tagName === 'CODE') line += '`' + child.textContent + '`';
+          else line += child.textContent;
+        } else if (child.nodeType === Node.TEXT_NODE) {
+          line += child.textContent;
+        }
+      });
+      return line.trim();
+    }
+
+    // Encuentra bloques de texto - tienen clase 'css-0' o similar, o son hijos directos con contenido
+    // Primero intenta encontrar bloques con clases que comienzan con css-
     const blocks = textContainer.querySelectorAll('[class^="css-"]');
-    blocks.forEach(block => {
-      const p = block.querySelector('p');
-      if (p) {
-        let line = '';
-        p.childNodes.forEach(child => {
-          if (child.nodeType === Node.ELEMENT_NODE) {
-            if (child.tagName === 'EM') line += '_' + child.textContent + '_';
-            else if (child.tagName === 'STRONG') line += '**' + child.textContent + '**';
-            else if (child.tagName === 'CODE') line += '`' + child.textContent + '`';
-            else line += child.textContent;
-          } else if (child.nodeType === Node.TEXT_NODE) {
-            line += child.textContent;
-          }
-        });
-        if (line.trim()) result.push(line.trim());
-        return;
-      }
-      const ul = block.querySelector('ul');
-      if (ul) {
-        ul.querySelectorAll('li').forEach(li => result.push('• ' + li.textContent.trim()));
-        return;
-      }
-      const code = block.querySelector('code');
-      if (code && !p) { result.push('`' + code.textContent.trim() + '`'); return; }
-      if (!block.textContent.trim()) return;
-      result.push(block.textContent.trim());
-    });
+    if (blocks.length > 0) {
+      blocks.forEach(block => {
+        // Skip if this block is inside a think container (nested case)
+        if (block.closest('[class*="_thinkTagContainer_"]')) return;
+
+        const p = block.querySelector('p');
+        if (p) {
+          const line = extractParagraphText(p);
+          if (line) result.push(line);
+          return;
+        }
+        const ul = block.querySelector('ul');
+        if (ul) {
+          ul.querySelectorAll('li').forEach(li => result.push('• ' + li.textContent.trim()));
+          return;
+        }
+        const code = block.querySelector('code');
+        if (code && !p) { result.push('`' + code.textContent.trim() + '`'); return; }
+        if (!block.textContent.trim()) return;
+        result.push(block.textContent.trim());
+      });
+    }
+
+    // Si no hay bloques css-, buscar párrafos directos
+    if (result.length === 0) {
+      const paragraphs = textContainer.querySelectorAll('p');
+      paragraphs.forEach(p => {
+        // Skip paragraphs inside think containers
+        if (p.closest('[class*="_thinkTagContainer_"]')) return;
+        const line = extractParagraphText(p);
+        if (line) result.push(line);
+      });
+    }
+
+    // Finalmente, usar textContent excluyendo think containers
+    if (result.length === 0) {
+      // Clona el contenedor y elimina elementos think antes de extraer texto
+      const clone = textContainer.cloneNode(true);
+      const thinkElements = clone.querySelectorAll('[class*="_thinkTagContainer_"], [class*="_thinkContent_"]');
+      thinkElements.forEach(el => el.remove());
+      const text = clone.textContent.trim();
+      if (text) result.push(text);
+    }
+
     return result.length ? result.join('\n') : "[No text found]";
   }
 
@@ -1002,14 +1037,14 @@ INPUT TEXT TO ANALYZE:
   const TTS_MENU_CSS = `
     /* === GLASSMORPHISM BASE VARIABLES === */
     .tts-modal-overlay {
-      --glass-bg: rgba(18, 18, 22, 0.78);
+      --glass-bg: rgba(0, 0, 0, 0.5);
       --glass-bg-light: rgba(30, 30, 36, 0.7);
       --glass-border: rgba(255, 255, 255, 0.08);
-      --glass-border-hover: rgba(176, 196, 222, 0.4);
-      --accent-primary: rgba(176, 196, 222, 0.9);
-      --accent-gradient: linear-gradient(135deg, rgba(176, 196, 222, 0.9), rgba(147, 197, 253, 0.8));
-      --accent-glow: 0 0 15px rgba(176, 196, 222, 0.4);
-      --accent-glow-strong: 0 0 20px rgba(176, 196, 222, 0.6), 0 0 40px rgba(176, 196, 222, 0.2);
+      --glass-border-hover: rgba(128, 90, 213, 0.5);
+      --accent-primary: rgba(128, 90, 213, 0.9);
+      --accent-gradient: linear-gradient(135deg, rgba(128, 90, 213, 0.9), rgba(159, 122, 234, 0.8));
+      --accent-glow: 0 0 15px rgba(128, 90, 213, 0.4);
+      --accent-glow-strong: 0 0 20px rgba(128, 90, 213, 0.6), 0 0 40px rgba(128, 90, 213, 0.2);
       --text-primary: rgba(255, 255, 255, 0.95);
       --text-secondary: rgba(200, 200, 220, 0.8);
       --text-muted: rgba(160, 160, 180, 0.7);
@@ -1021,10 +1056,8 @@ INPUT TEXT TO ANALYZE:
 
     /* === MODAL OVERLAY === */
     .tts-modal-overlay {
-      position: fixed; z-index: 9999; inset: 0;
+      position: fixed; z-index: 21474836; inset: 0;
       background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
       display: flex; align-items: center; justify-content: center;
       animation: ttsFadeIn 0.2s ease-out;
     }
@@ -1034,12 +1067,12 @@ INPUT TEXT TO ANALYZE:
     /* === MODAL CONTAINER === */
     .tts-modal-container {
       background: var(--glass-bg);
-      backdrop-filter: blur(var(--blur-amount));
-      -webkit-backdrop-filter: blur(var(--blur-amount));
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       border-radius: var(--radius-lg);
-      border: 1px solid var(--glass-border);
+      border: none;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      min-width: 480px; max-width: 95vw; min-height: 320px; max-height: 90vh; padding: 0;
+      width: 700px; max-width: 95vw; min-height: 320px; max-height: 90vh; padding: 0;
       display: flex; flex-direction: column; font-family: 'Segoe UI', system-ui, sans-serif;
       animation: ttsSlideUp 0.3s ease-out;
     }
@@ -1052,25 +1085,19 @@ INPUT TEXT TO ANALYZE:
     }
     .tts-modal-title {
       font-size: 1.35rem; font-weight: 600;
-      background: linear-gradient(135deg, #fff 0%, rgba(176, 196, 222, 1) 100%);
+      background: linear-gradient(135deg, rgba(200, 170, 255, 1) 0%, rgba(128, 90, 213, 1) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text; margin: 0;
-      text-shadow: 0 0 30px rgba(176, 196, 222, 0.3);
+      filter: drop-shadow(0 0 8px rgba(128, 90, 213, 0.4));
     }
     .tts-modal-close {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--glass-border);
+      background: transparent;
+      border: none;
       color: var(--text-secondary);
       font-size: 1.2rem; cursor: pointer;
       padding: 8px; border-radius: var(--radius-sm);
       transition: all 0.2s ease;
       display: flex; align-items: center; justify-content: center;
-    }
-    .tts-modal-close:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--glass-border-hover);
-      color: var(--text-primary);
-      box-shadow: var(--accent-glow);
     }
 
     /* === BODY === */
@@ -1078,12 +1105,13 @@ INPUT TEXT TO ANALYZE:
       padding: 24px 28px; display: flex; flex-direction: column; gap: 18px;
       overflow-y: auto;
       scrollbar-width: thin;
-      scrollbar-color: rgba(176, 196, 222, 0.3) transparent;
+      scrollbar-color: rgba(128, 90, 213, 0.3) transparent;
+      flex-grow: 1;
     }
     .tts-modal-body::-webkit-scrollbar { width: 6px; }
     .tts-modal-body::-webkit-scrollbar-track { background: transparent; }
-    .tts-modal-body::-webkit-scrollbar-thumb { background: rgba(176, 196, 222, 0.3); border-radius: 3px; }
-    .tts-modal-body::-webkit-scrollbar-thumb:hover { background: rgba(176, 196, 222, 0.5); }
+    .tts-modal-body::-webkit-scrollbar-thumb { background: rgba(128, 90, 213, 0.3); border-radius: 3px; }
+    .tts-modal-body::-webkit-scrollbar-thumb:hover { background: rgba(128, 90, 213, 0.5); }
 
     /* === CHECKBOXES === */
     .tts-checkbox-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px; }
@@ -1105,7 +1133,7 @@ INPUT TEXT TO ANALYZE:
       appearance: none; -webkit-appearance: none;
       width: 20px; height: 20px;
       background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(176, 196, 222, 0.3);
+      border: 2px solid rgba(128, 90, 213, 0.3);
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -1148,7 +1176,7 @@ INPUT TEXT TO ANALYZE:
     }
     .tts-slider {
       flex: 1; height: 6px;
-      background: linear-gradient(90deg, rgba(176, 196, 222, 0.2), rgba(176, 196, 222, 0.1));
+      background: linear-gradient(90deg, rgba(128, 90, 213, 0.2), rgba(128, 90, 213, 0.1));
       border-radius: 3px; outline: none; -webkit-appearance: none;
       cursor: pointer;
     }
@@ -1204,12 +1232,10 @@ INPUT TEXT TO ANALYZE:
       min-width: 120px; margin-bottom: 2px;
       cursor: pointer;
       transition: all 0.2s ease;
-      backdrop-filter: blur(4px);
     }
     .tts-dropdown:hover, .tts-dropdown:focus {
       border-color: var(--glass-border-hover);
       background: rgba(255, 255, 255, 0.08);
-      box-shadow: var(--accent-glow);
       outline: none;
     }
     .tts-dropdown option { background: #1e1f28; color: var(--text-primary); }
@@ -2332,7 +2358,7 @@ You are a professional voice actor specializing in realistic, naturalistic rolep
         // Wait for BOTH operations to complete in parallel
         console.log("⏳ [Gemini] Waiting for parallel operations to complete...");
         const [emotionSegments, ttsResult] = await Promise.all([emotionAnalysisPromise, ttsGenerationPromise]);
-        
+
         const parallelTotalTime = ((performance.now() - parallelStartTime) / 1000).toFixed(2);
         console.log(`⚡ [Gemini] ✓ PARALLEL execution completed in ${parallelTotalTime}s (vs sequential: would take ~${(parseFloat(parallelTotalTime) * 1.5).toFixed(2)}s)`);
 

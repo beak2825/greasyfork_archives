@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Scroll YouTube Shorts
 // @namespace    facelook.hk
-// @version      1.4
+// @version      1.5
 // @description  Automatically scrolls to the next YouTube short when the current one finishes or if a specific ad class is detected.
 // @author       FacelookHK
 // @match        https://www.youtube.com/shorts/*
@@ -87,6 +87,15 @@
         const adComponent = activeReel.querySelector('.ytwReelsAdCardButtonedViewModelHostIsClickableAdComponent');
         if (adComponent) {
             console.log("Ad class detected. Moving next immediately.");
+            paused = true;
+            moveToNextShort();
+            return;
+        }
+
+        // Check for sponsored badge
+        const sponsoredBadge = activeReel.querySelector('div.yt-badge-shape__text');
+        if (sponsoredBadge && sponsoredBadge.textContent.trim() === 'Sponsored') {
+            console.log("Sponsored video detected. Moving next immediately.");
             paused = true;
             moveToNextShort();
             return;

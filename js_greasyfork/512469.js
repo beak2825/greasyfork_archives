@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Declutter Pinterest
 // @namespace    August4067
-// @version      1.2.0
+// @version      1.2.1
 // @description  Removes intrusive Pinterest shopping promotions, ads, and clutter, and makes the website more user-friendly
 // @license      MIT
 // @match        https://www.pinterest.com/*
@@ -369,18 +369,38 @@ function removeShopByBanners() {
         'div[class="gcw zI7 iyn Hsu"]',
       );
       collapseElement(shopByBannerAtBottomOfBoard);
-    }
 
-    if (node[0].closest('div[data-test-id="base-board-pin-grid"]')) {
+      // Handle "More products" banner (text-based detection for resilience)
       var moreProductsBannerAtBottomOfBoard = node[0].querySelector("h2");
       if (
         moreProductsBannerAtBottomOfBoard &&
         moreProductsBannerAtBottomOfBoard.innerText
-          .trim()
+          ?.trim()
           .toLowerCase()
           .startsWith("more products")
       ) {
-        collapseElement(baseBoardPinGrid.querySelector('div[class="gcw zI7"]'));
+        // Traverse up from the h2 to find the direct child of base-board-pin-grid
+        // This ensures we hide only the "More products inspired by this board" section
+        var moreProductsContainer = node[0];
+        var maxIterations = 20; // Safety limit to prevent infinite loops
+        var iterations = 0;
+
+        while (
+          moreProductsContainer &&
+          moreProductsContainer.parentElement !== baseBoardPinGrid &&
+          iterations < maxIterations
+        ) {
+          moreProductsContainer = moreProductsContainer.parentElement;
+          iterations++;
+        }
+
+        // Only collapse if we successfully found the container
+        if (
+          moreProductsContainer &&
+          moreProductsContainer.parentElement === baseBoardPinGrid
+        ) {
+          collapseElement(moreProductsContainer);
+        }
       }
     }
 

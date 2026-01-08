@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         NIGGA CLIENT
 // @description  Cheat client for Deadshot.io
-// @author       levifrsn
+// @author       levifrsn63
 // @match        *://*deadshot.io/*
-// @license      MIT
+// @license      Nigga University
 // @run-at       document-start
-// @version      1.41.1
+// @version      1.67
 // @namespace https://greasyfork.org/users/
 // @downloadURL https://update.greasyfork.org/scripts/560838/NIGGA%20CLIENT.user.js
 // @updateURL https://update.greasyfork.org/scripts/560838/NIGGA%20CLIENT.meta.js
@@ -20,6 +20,10 @@ const loadSettings = () => {
         vertexThreshold: 300,
         visible: true,
         dot: true,
+        dotColor: "#ff0000",
+        dotSize: 6,
+        rgbDot: false,
+        firstUse: true,
     };
     try {
         return saved ? { ...defaults, ...JSON.parse(saved) } : defaults;
@@ -29,6 +33,67 @@ const loadSettings = () => {
 };
 
 const settings = loadSettings();
+
+const showWelcomePopup = () => {
+    const popup = document.createElement("div");
+    popup.style.cssText = `
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 350px; background: rgba(15, 15, 15, 0.95); color: #fff;
+        padding: 25px; border-radius: 12px; z-index: 2000000;
+        font-family: 'Segoe UI', sans-serif; border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.8); backdrop-filter: blur(15px);
+        text-align: center;
+    `;
+    popup.innerHTML = `
+        <h2 style="margin-top: 0; color: #6366f1; font-size: 20px;">NIGGA CLIENT</h2>
+        <div style="text-align: left; font-size: 13px; line-height: 1.4; color: #ccc;">
+            <p style="margin-bottom: 10px;">A powerful cheat client for Deadshot.io featuring rendering modifications and device spoofing.</p>
+
+            <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                <h3 style="margin: 0 0 8px 0; font-size: 14px; color: #6366f1; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;">Controls</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                    <div style="opacity: 0.8;"><b>[Q]</b> Wireframe</div>
+                    <div style="opacity: 0.8;"><b>[E]</b> ESP (Walls)</div>
+                    <div style="opacity: 0.8;"><b>[M]</b> Mobile Mode</div>
+                    <div style="opacity: 0.8;"><b>[O]</b> Crosshair Dot</div>
+                </div>
+                <div style="margin-top: 10px; padding: 8px; background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.4); border-radius: 4px; text-align: center;">
+                    <b style="color: #818cf8; font-size: 14px;">[P] Show / Hide Menu</b>
+                </div>
+            </div>
+
+            <p style="font-size: 11px; line-height: 1.4; color: #888; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 6px; border-left: 3px solid #444;">
+                <b>Note:</b> ESP is limited. Since WebGL games are precompiled, we primarily use vertex-based wireframe extraction for visibility through walls.
+            </p>
+        </div>
+        <button id="close-welcome" style="margin-top: 15px; width: 100%; padding: 12px; background: #6366f1; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; transition: all 0.2s;">
+            I Understand
+        </button>
+    `;
+    document.body.appendChild(popup);
+
+    document.getElementById("close-welcome").onclick = () => {
+        popup.remove();
+        settings.firstUse = false;
+        saveSettings();
+    };
+
+    // Increment counter API
+    fetch("https://api.counterapi.dev/v2/levis-team-2416/nigga-client142/up", {
+        headers: {
+            "Authorization": "Bearer ut_wzmwKqBRV8B5vA241hjxEGnxX9ifiSPoODgJ4Znd"
+        }
+    }).catch(err => console.error("Counter API failed", err));
+};
+
+if (settings.firstUse) {
+    const checkReady = setInterval(() => {
+        if (document.body) {
+            clearInterval(checkReady);
+            showWelcomePopup();
+        }
+    }, 100);
+}
 const saveSettings = () =>
     localStorage.setItem("NIGGA_client_settings", JSON.stringify(settings));
 
@@ -50,10 +115,11 @@ const createDot = () => {
     const dot = document.createElement("div");
     dot.id = "NIGGA-client-dot";
     dot.style.cssText = `
-        position: fixed; left: calc(50% + 1px); top: calc(50% + 1px);
-        width: 6px; height: 6px; border-radius: 50%; z-index: 1000000;
-        transform: translate(-50%, -50%); animation: rgbRotate 3s linear infinite;
-        pointer-events: none;
+        position: fixed; left: 50%; top: 50%;
+        width: ${settings.dotSize}px; height: ${settings.dotSize}px; border-radius: 50%; z-index: 1000000;
+        transform: translate(-50%, -50%); background: ${settings.rgbDot ? "none" : settings.dotColor};
+        animation: ${settings.rgbDot ? "rgbRotate 3s linear infinite" : "none"};
+        pointer-events: none; border: 1px solid rgba(0,0,0,0.5);
     `;
     const style = document.createElement("style");
     style.textContent = `
@@ -80,14 +146,14 @@ const updateDotVisibility = () => {
 
 const ui = document.createElement("div");
 ui.id = "NIGGA-client-ui";
-ui.style.cssText = `
-    position: fixed; top: 15px; right: 15px; width: 170px;
-    background: rgba(8, 8, 8, 0.65); color: #ccc;
-    font-family: 'Courier New', Courier, monospace; z-index: 1000001;
-    border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 0px; overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.4); backdrop-filter: blur(5px);
-    transition: opacity 0.2s; user-select: none;
-`;
+    ui.style.cssText = `
+        position: fixed; top: 15px; right: 15px; width: 190px;
+        background: rgba(10, 10, 10, 0.85); color: #efefef;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; z-index: 1000001;
+        border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5); backdrop-filter: blur(10px);
+        transition: opacity 0.2s; user-select: none;
+    `;
 
 let isDragging = false,
     dragOffset = { x: 0, y: 0 };
@@ -113,31 +179,44 @@ const updateUI = () => {
         `<span style="color: ${val ? "#3bb366" : "#cc3d3d"}">${val ? "ON" : "OFF"}</span>`;
 
     ui.innerHTML = `
-        <div id="ui-header" style="padding: 8px; background: rgba(15, 15, 15, 0.7); border-bottom: 1px solid rgba(255, 255, 255, 0.05); cursor: grab; display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 800; font-size: 10px; letter-spacing: 0.8px; opacity: 0.7;">NIGGA CLIENT :3</span>
-            <span style="font-size: 8px; opacity: 0.3;">v1.0</span>
+        <div id="ui-header" style="padding: 10px; background: rgba(30, 30, 30, 0.8); border-bottom: 1px solid rgba(255, 255, 255, 0.1); cursor: grab; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 800; font-size: 11px; letter-spacing: 1px; color: #fff;">NIGGA CLIENT</span>
+            <span style="font-size: 9px; opacity: 0.5;">v1.5</span>
         </div>
-        <div style="padding: 10px; display: flex; flex-direction: column; gap: 8px;">
-            <div style="display: flex; justify-content: space-between; font-size: 9px; opacity: 0.8;"><span>Wireframe [Q]</span> ${status(settings.wireframe)}</div>
-            <div style="display: flex; justify-content: space-between; font-size: 9px; opacity: 0.8;"><span>ESP [E]</span> ${status(settings.esp)}</div>
-            <div style="display: flex; justify-content: space-between; font-size: 9px; opacity: 0.8;"><span>Mobile [M]</span> ${status(settings.mobile)}</div>
-            <div style="display: flex; justify-content: space-between; font-size: 9px; opacity: 0.8;"><span>Dot [O]</span> ${status(settings.dot)}</div>
-            
-            <div style="margin-top: 1px; padding-top: 6px; border-top: 1px solid rgba(255, 255, 255, 0.03);">
-                <div style="display: flex; justify-content: space-between; font-size: 8px; margin-bottom: 3px; color: #777;">
+        <div style="padding: 12px; display: flex; flex-direction: column; gap: 10px;">
+            <div id="toggle-wireframe" style="display: flex; justify-content: space-between; font-size: 11px; cursor: pointer;"><span>Wireframe [Q]</span> ${status(settings.wireframe)}</div>
+            <div id="toggle-esp" style="display: flex; justify-content: space-between; font-size: 11px; cursor: pointer;"><span>ESP [E]</span> ${status(settings.esp)}</div>
+            <div id="toggle-mobile" style="display: flex; justify-content: space-between; font-size: 11px; cursor: pointer;"><span>Mobile [M]</span> ${status(settings.mobile)}</div>
+            <div id="toggle-dot" style="display: flex; justify-content: space-between; font-size: 11px; cursor: pointer;"><span>Dot [O]</span> ${status(settings.dot)}</div>
+            <div id="toggle-rgb-dot" style="display: flex; justify-content: space-between; font-size: 11px; cursor: pointer;"><span>RGB Dot</span> ${status(settings.rgbDot)}</div>
+
+            <div style="margin-top: 4px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.05);">
+                <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px; color: #aaa;">
                     <span>VERTICES</span>
-                    <span id="vt-val">${settings.vertexThreshold}</span>
+                    <span id="vt-val" style="color: #fff;">${settings.vertexThreshold}</span>
                 </div>
-                <input type="range" id="vt-slider" min="10" max="15000" value="${settings.vertexThreshold}" style="width: 100%; height: 2px; appearance: none; background: #222; outline: none; border-radius: 0px;">
+                <input type="range" id="vt-slider" min="10" max="15000" value="${settings.vertexThreshold}" style="width: 100%; height: 4px; appearance: none; background: #333; outline: none; border-radius: 2px;">
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #aaa;">
+                <span>DOT COLOR</span>
+                <input type="color" id="dot-color" value="${settings.dotColor}" style="border: none; width: 20px; height: 20px; background: none; cursor: pointer;">
+            </div>
+            <div style="margin-top: 2px;">
+                <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 5px; color: #aaa;">
+                    <span>DOT SIZE</span>
+                    <span id="ds-val" style="color: #fff;">${settings.dotSize}px</span>
+                </div>
+                <input type="range" id="ds-slider" min="1" max="20" value="${settings.dotSize}" style="width: 100%; height: 4px; appearance: none; background: #333; outline: none; border-radius: 2px;">
             </div>
         </div>
-        <div style="border-top: 1px solid rgba(255, 255, 255, 0.03); padding: 6px 10px; text-align: center; background: rgba(0,0,0,0.1);">
-            <div id="profile-toggle" style="color: #2a2a2a; cursor: pointer; font-size: 8px; transition: color 0.2s;">
+        <div style="border-top: 1px solid rgba(255, 255, 255, 0.05); padding: 8px 12px; text-align: center; background: rgba(0,0,0,0.2);">
+            <div id="profile-toggle" style="color: #6366f1; cursor: pointer; font-size: 10px; font-weight: bold;">
                 <span>levifrsn63</span>
             </div>
-            <div id="profile-links" style="display: none; margin-top: 6px; gap: 3px; flex-direction: column;">
-                <a href="https://greasyfork.org/en/users/1525503-levifrsn63" target="_blank" style="color: #666; text-decoration: none; font-size: 8px; padding: 3px; border: 1px solid rgba(255,255,255,0.03); background: rgba(255,255,255,0.01);">greasyfork</a>
-                <a href="https://github.com/levifrsn63" target="_blank" style="color: #666; text-decoration: none; font-size: 8px; padding: 3px; border: 1px solid rgba(255,255,255,0.03); background: rgba(255,255,255,0.01);">github</a>
+            <div id="profile-links" style="display: none; margin-top: 8px; gap: 5px; flex-direction: column;">
+                <a href="https://greasyfork.org/en/users/1525503-levifrsn63" target="_blank" style="color: #bbb; text-decoration: none; font-size: 9px; padding: 5px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); border-radius: 4px;">greasyfork</a>
+                <a href="https://github.com/levifrsn63" target="_blank" style="color: #bbb; text-decoration: none; font-size: 9px; padding: 5px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); border-radius: 4px;">github</a>
             </div>
         </div>
     `;
@@ -147,8 +226,6 @@ const updateUI = () => {
     profileToggle.onclick = () => {
         profileLinks.style.display =
             profileLinks.style.display === "none" ? "flex" : "none";
-        profileToggle.style.color =
-            profileLinks.style.display === "none" ? "#2a2a2a" : "#6366f1";
     };
 
     const slider = ui.querySelector("#vt-slider");
@@ -160,6 +237,63 @@ const updateUI = () => {
             saveSettings();
         };
     }
+
+    const dotColorPicker = ui.querySelector("#dot-color");
+    if (dotColorPicker) {
+        dotColorPicker.oninput = (e) => {
+            settings.dotColor = e.target.value;
+            saveSettings();
+            const dot = document.getElementById("NIGGA-client-dot");
+            if (dot) dot.style.background = settings.dotColor;
+        };
+    }
+
+    const dotSizeSlider = ui.querySelector("#ds-slider");
+    if (dotSizeSlider) {
+        dotSizeSlider.oninput = (e) => {
+            settings.dotSize = parseInt(e.target.value);
+            const valDisplay = ui.querySelector("#ds-val");
+            if (valDisplay) valDisplay.innerText = settings.dotSize + "px";
+            saveSettings();
+            const dot = document.getElementById("NIGGA-client-dot");
+            if (dot) {
+                dot.style.width = settings.dotSize + "px";
+                dot.style.height = settings.dotSize + "px";
+            }
+        };
+    }
+
+    ui.querySelector("#toggle-wireframe").onclick = () => {
+        settings.wireframe = !settings.wireframe;
+        saveSettings();
+        updateUI();
+    };
+    ui.querySelector("#toggle-esp").onclick = () => {
+        settings.esp = !settings.esp;
+        saveSettings();
+        updateUI();
+    };
+    ui.querySelector("#toggle-mobile").onclick = () => {
+        settings.mobile = !settings.mobile;
+        saveSettings();
+        location.reload();
+    };
+    ui.querySelector("#toggle-dot").onclick = () => {
+        settings.dot = !settings.dot;
+        saveSettings();
+        updateUI();
+        updateDotVisibility();
+    };
+    ui.querySelector("#toggle-rgb-dot").onclick = () => {
+        settings.rgbDot = !settings.rgbDot;
+        saveSettings();
+        updateUI();
+        const dot = document.getElementById("NIGGA-client-dot");
+        if (dot) {
+            dot.style.background = settings.rgbDot ? "none" : settings.dotColor;
+            dot.style.animation = settings.rgbDot ? "rgbRotate 3s linear infinite" : "none";
+        }
+    };
 };
 
 let glContext = null;
@@ -249,8 +383,8 @@ window.addEventListener("keyup", (e) => {
     };
     if (map[e.code]) {
         settings[map[e.code]] = !settings[map[e.code]];
-        if (e.code === "KeyM") return location.reload();
         saveSettings();
+        if (e.code === "KeyM") return location.reload();
         updateUI();
         updateDotVisibility();
     }

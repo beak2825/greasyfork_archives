@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BiliDynamicTop
 // @namespace    http://tampermonkey.net/
-// @version      0.6.1
+// @version      0.6.2
 // @description  Set top dynamic on detail page, for old page
 // @author       You
 // @match        https://t.bilibili.com/*
@@ -49,9 +49,9 @@ function getCookie(name) {
         console.log("not dynamic page");
         return;
     }
-    let selector = "#app > div.content > div.card > div.bili-dyn-item > div > div.bili-dyn-item__header > div.bili-dyn-item__more > div > div > div > div.bili-cascader__list > div.bili-cascader-options";
+    let selector = "#app > div.content > div.card > div.bili-dyn-item > div > div.bili-dyn-item__header > div.bili-dyn-item__more > div > div > div > div > div";
     if (typeOpus) {
-        selector = "#app > div.opus-detail > div.bili-opus-view > div.opus-module-author > div.opus-module-author__right > div.opus-module-author__more > div > div > div > div > div.bili-cascader-options";
+        selector = "#app > div.opus-detail > div.bili-opus-view > div.opus-module-author > div.opus-module-author__right > div.opus-module-author__more > div > div > div > div > div";
     }
     waitForKeyElements(selector ,(e)=>{
         let topButton = $(`<div class="bili-cascader-options__item"><div class="bili-cascader-options__item-custom"><div><div class="bili-cascader-options__item-label">置顶</div></div></div></div>`).click((self)=>{

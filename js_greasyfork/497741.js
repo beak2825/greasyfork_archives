@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pano Detective
 // @namespace    https://greasyfork.org/users/1179204
-// @version      2.5.6
+// @version      2.5.8
 // @description  Find the exact time a Google Street View image was taken (default coverage)
 // @author       KaKa
 // @include      *://maps.google.com/*
@@ -2045,6 +2045,29 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
         }
     }
 
+    function addUploadButtonToPage() {
+        const container = document.querySelector('.UL7Qtf');
+        if(!container || document.getElementById('mwstmm-main')) return;
+        const element = document.createElement('div');
+
+        element.id = 'mwstmm-main';
+
+        element.style.backgroundImage=`url(${saveUrl})`
+        element.setAttribute('data-text',"Save to MapMaking")
+
+        element.innerHTML = `
+        <div class="mwstmm-settings-option" id="mwstmm-opt-save-loc"/>`;
+
+        container.appendChild(element);
+        setTimeout(() => {
+            if(document.querySelector('.TrU0dc.NUqjXc')){
+                element.style.right='0.85rem'
+                element.style.top='4rem'
+            }}, 100)
+
+        createSettingsButtonSummaryEvents();
+    }
+
     function addNoteButtonToPage() {
         const container = document.querySelector('.UL7Qtf');
         if(!container || document.getElementById('note-btn')) return;
@@ -2205,36 +2228,62 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
         }
     }
 
-    function onPageLoad() {
-        if (pageLoaded) return;
-        pageLoaded = true;
-        const sceneFooter = document.getElementsByClassName('scene-footer')[0];
-        if (!sceneFooter) return;
+    function waitForElement(selector, callback) {
+        const el = document.querySelector(selector);
+        if (el) {
+            callback(el);
+            return;
+        }
 
-        document.addEventListener("keydown", onKeyDown,true);
-
-        const observer = new MutationObserver(function (mutationsList) {
-            const navigationDiv = document.querySelector("[role='navigation']");
-            if (navigationDiv) {
-                addCustomButton();
-                addSettingsButtonsToPage();
-                addNoteButtonToPage();
-                adSettingsButtonToPage();
-            } else {
-                const element = document.getElementById('mwstmm-main');
-                if (element) element.remove();
-                const btn = document.getElementById('note-btn');
-                if (btn) btn.remove();
-                const btn2 = document.getElementById('settings-btn');
-                if (btn2) btn2.remove();
+        const observer = new MutationObserver(() => {
+            const el = document.querySelector(selector);
+            if (el) {
+                observer.disconnect();
+                callback(el);
             }
         });
 
-        const config = { childList: true, subtree: true, attributes: true };
-
-        observer.observe(sceneFooter, config);
+        observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true,
+        });
     }
 
+    let sceneFooterObserver = null;
+
+    function onPageLoad() {
+        if (pageLoaded) return;
+        pageLoaded = true;
+
+        waitForElement("[role='contentinfo']", (sceneFooter) => {
+            document.addEventListener("keydown", onKeyDown, true);
+
+            if (sceneFooterObserver) {
+                sceneFooterObserver.disconnect();
+            }
+
+            sceneFooterObserver = new MutationObserver(() => {
+                const navigationDiv = document.querySelector("[role='navigation']");
+
+                if (navigationDiv) {
+                    addCustomButton();
+                    addUploadButtonToPage();
+                    addNoteButtonToPage();
+                    adSettingsButtonToPage();
+                } else {
+                    document.getElementById('mwstmm-main')?.remove();
+                    document.getElementById('note-btn')?.remove();
+                    document.getElementById('settings-btn')?.remove();
+                }
+            });
+
+            sceneFooterObserver.observe(sceneFooter, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+            });
+        });
+    }
     if (!pageLoaded) {
         window.addEventListener('load', onPageLoad);
     }

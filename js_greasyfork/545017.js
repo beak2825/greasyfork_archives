@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         AI Chat to Microsoft Word & Markdown
 // @namespace    https://greasyfork.org/
-// @version      2.0
-// @description  Export AI answers as Word, Markdown or Copy to Clipboard. Applied for ChatGPT, Gemini, Aistudio, Notebooklm, Grok, Claude, Mistral, Perplexity, Scienceos, Evidencehunt.
+// @version      2.1
+// @description  Export AI answers as Word, Markdown or Copy to Clipboard. Applied for ChatGPT, Gemini, Aistudio, Notebooklm, Grok, Claude, Mistral, Perplexity, Scienceos, Evidencehunt, Spacefrontiers.
 // @author       Bui Quoc Dung
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -14,6 +14,7 @@
 // @match        https://www.perplexity.ai/*
 // @match        https://app.scienceos.ai/*
 // @match        https://evidencehunt.com/*
+// @match        https://spacefrontiers.org/*
 // @grant        none
 // @require      https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.min.js
 // @require      https://unpkg.com/turndown/dist/turndown.js
@@ -104,6 +105,12 @@
             domain: 'evidencehunt.com',
             user: '.chat__message:has(.message__user-image) .message__content p',
             ai_response: '.chat__message:has(.message__eh-image) .message__content',
+            attach_to: null
+        },
+        spacefrontiers: {
+            domain: 'spacefrontiers.org',
+            user: '.inline.whitespace-pre-line',
+            ai_response: '.citation-processed-content',
             attach_to: null
         },
     };

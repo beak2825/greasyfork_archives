@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - fr
-// @version         4.2.8.0
+// @version         4.2.8.2
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -1093,21 +1093,121 @@ else if (matchDomain('capital.fr')) {
   hideDOMStyle(ads);
 }
 
-else if (matchDomain(['challenges.fr', 'sciencesetavenir.fr'])) {
-  if (window.location.pathname.endsWith('.amp')) {
-    amp_unhide_access_hide('="paywall.access OR cha.access"', '="NOT (paywall.access OR cha.access)"');
-  } else {
-    let content = document.querySelectorAll('.user-paying-content');
-    for (let elem of content) {
-      elem.classList.remove('user-paying-content');
-      elem.removeAttribute('hidden');
+else if (matchDomain('challenges.fr')) {
+  let paywall = document.querySelector('div.views-article__premium > img[alt="premium-icon"]');
+  if (paywall) {
+    paywall.removeAttribute('alt');
+    let article = document.querySelector('div.amorce');
+    if (article) {
+      let pars = article.querySelectorAll('div.text');
+      if (!pars.length)
+        pars = article.querySelectorAll('p[class], h2');
+      if (pars.length && pars.length < 4) {
+        let json_script = document.querySelector('script#__NUXT_DATA__');
+        if (json_script) {
+          try {
+            let json = JSON.parse(json_script.text);
+            let article_id_match = window.location.pathname.match(/_\d+$/);
+            if (article_id_match) {
+              let url_nuxt_alias = json.find(x => x && typeof x === 'object' && Object.keys(x).find(y => y.startsWith('alias-') && y.endsWith(article_id_match[0])));
+              if (!url_nuxt_alias)
+                refreshCurrentTab();
+            }
+            let audio_src = json.find(x => x && typeof x === 'string' && x.includes('.mp3'));
+            if (audio_src) {
+              let audio_tts = document.createElement('audio');
+              audio_tts.src = audio_src.split('?')[0];
+              audio_tts.setAttribute('controls', '');
+              article.before(audio_tts);
+            }
+            let pars_index = json.indexOf('article') + 1;
+            if (pars_index) {
+              for (let i = pars_index; i < json.length; i++) {
+                let par = json[i];
+                if (par && typeof par === 'object' && !Array.isArray(par)) {
+                  if (par.type) {
+                    let elem;
+                    let par_type = json[par.type];
+                    function addChildren(elem, children) {
+                      for (let child of children) {
+                        let child_par = json[child];
+                        if (child_par.type) {
+                          let child_type = json[child_par.type];
+                          if (child_type === 'text') {
+                            let item = document.createElement('span');
+                            let value = parseHtmlEntities(json[child_par.value].replace(/(\r?\n)+/g, ''));
+                            if (value) {
+                              item.innerText = value;
+                              elem.appendChild(item);
+                            }
+                          } else if (child_type === 'element') {
+                            addElement(elem, child_par);
+                          } else if (child_type === 'component') {
+                            if (child_par.props) {
+                              let item;
+                              let props = json[child_par.props];
+                              if (props.image) {
+                                let props_image = json[props.image];
+                                if (props_image.src) {
+                                  let src = json[props_image.src].split('?')[0];
+                                  let caption;
+                                  if (props_image.legend)
+                                    caption = json[props_image.legend] + (props_image.credits ? ' - ' + json[props_image.credits] : '');
+                                  item = makeFigure(src, caption);
+                                }
+                              } else if (props.link && props.htmlString) {
+                                item = document.createElement('a');
+                                item.href = json[props.link];
+                                item.innerText = 'Lire aussi: ' + json[props.htmlString];
+                              } else if (props.value) {
+                                let parser = new DOMParser();
+                                let doc = parser.parseFromString('<div>' + json[props.value] + '</div>', 'text/html');
+                                item = doc.querySelector('div');
+                              } else
+                                console.log(props);
+                              if (item)
+                                elem.appendChild(item);
+                            }
+                          } else
+                            console.log(child_par);
+                        }
+                      }
+                    }
+                    function addElement(elem, par) {
+                      if (par.tag && (json[par.tag] !== 'script') && par.children) {
+                        let elem_new = document.createElement(json[par.tag]);
+                        if (par.props) {
+                          let par_props = json[par.props];
+                          for (let prop in par_props) {
+                            elem_new.setAttribute(prop, json[par_props[prop]]);
+                          }
+                        }
+                        addChildren(elem_new, json[par.children]);
+                        elem.appendChild(elem_new);
+                      }
+                    }
+                    if (par_type === 'element') {
+                      elem = document.createElement('div');
+                      addElement(elem, par);
+                      window.setTimeout(function () {
+                        article.innerHTML = '';
+                        article.appendChild(elem);
+                      }, 1000);
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
     }
-    let paywall = document.querySelector('.temp-paywall');
-    removeDOMElement(paywall);
-    let amorce = 'div.amorce.manual';
-    let ads = 'div[class*="pub-container"], div[id^="moneytag-"], div.pub-banniere-haute';
-    hideDOMStyle(amorce + ', ' + ads);
   }
+  let ads = 'div.domain-ui-ad-placeholder, div.widget-poool-engage';
+  hideDOMStyle(ads);
 }
 
 else if (matchDomain('charliehebdo.fr')) {
@@ -2614,6 +2714,23 @@ else if (matchDomain('science-et-vie.com')) {
     let replaced_content = document.querySelector('div.i-amphtml-replaced-content');
     if (replaced_content)
       replaced_content.removeAttribute('class');
+  }
+}
+
+else if (matchDomain('sciencesetavenir.fr')) {
+  if (window.location.pathname.endsWith('.amp')) {
+    amp_unhide_access_hide('="paywall.access OR cha.access"', '="NOT (paywall.access OR cha.access)"');
+  } else {
+    let content = document.querySelectorAll('.user-paying-content');
+    for (let elem of content) {
+      elem.classList.remove('user-paying-content');
+      elem.removeAttribute('hidden');
+    }
+    let paywall = document.querySelector('.temp-paywall');
+    removeDOMElement(paywall);
+    let amorce = 'div.amorce.manual';
+    let ads = 'div[class*="pub-container"], div.banner';
+    hideDOMStyle(amorce + ', ' + ads);
   }
 }
 

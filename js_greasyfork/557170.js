@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Enhance Perplexity AI chat
 // @namespace    facelook.hk
-// @version      1.8
+// @version      1.10
 // @author       FacelookHK
 // @description  Increase the width of the conversation panel, replaces MCP button from MCP SuperAssistant extension, updates chip icon with model name matching sources button radius
 // @match        https://www.perplexity.ai/*
@@ -38,29 +38,50 @@
             line-height: 1 !important;
             white-space: nowrap !important;
         }
-  /* Firefox: show permanent tooltip on the chip button instead of changing it */
-  button[data-pplx-permatooltip="1"] {
-    position: relative !important;
-    overflow: visible !important;
-  }
+        /* Firefox: show permanent tooltip on the chip button instead of changing it */
+        button[data-pplx-permatooltip="1"] {
+            position: relative !important;
+            overflow: visible !important;
+        }
 
-button[data-pplx-permatooltip="1"]::after {
-  content: attr(data-pplx-permatooltip-text);
-  position: absolute;
-  left: 50%;
-  top: calc(100% + 6px);
-  transform: translate(-50%, 0);
+        button[data-pplx-permatooltip="1"]::after {
+        content: attr(data-pplx-permatooltip-text);
+        position: absolute;
+        left: 50%;
+        top: calc(100% + 6px);
+        transform: translate(-50%, 0);
 
-  background: rgba(17,17,17,0.95);
-  color: #fff;
-  font-size: 11px;
-  line-height: 1.2;
-  padding: 3px 6px;
-  border-radius: 6px;
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 9999;
-}
+        background: rgba(17,17,17,0.95);
+        color: #fff;
+        font-size: 11px;
+        line-height: 1.2;
+        padding: 3px 6px;
+        border-radius: 6px;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 9999;
+        }
+        #scroll-to-bottom-btn {
+            position: fixed !important;
+            bottom: 80px !important;
+            right: 20px !important;
+            width: 48px !important;
+            height: 48px !important;
+            border-radius: 50% !important;
+            background: #3C82F6 !important;
+            border: none !important;
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+            z-index: 10000 !important;
+            transition: all 0.3s ease !important;
+        }
+        #scroll-to-bottom-btn:hover {
+            background: #2563EB !important;
+            transform: scale(1.1) !important;
+        }
     `);
 
     function useHref(useEl) {
@@ -170,10 +191,10 @@ button[data-pplx-permatooltip="1"]::after {
     ];
     const layoutSelectors = [
         { sel: ".mx-auto.max-w-threadContentWidth", prop: "max-width", val: (artifact) => artifact ? "85%" : "65%" },
+        { sel: ".mx-auto.max-w-threadContentWidth", prop: "max-width", val: "100%", parentCheck: (el) => el.closest('[data-cplx-component="message-block-query"]') },
         { sel: ".md\\:max-w-threadContentWidth.md\\:mx-auto.md\\:w-full", prop: "margin-left", val: "unset" },
         { sel: ".max-w-threadContentWidth.relative.isolate", prop: "max-width", val: "unset" },
         { sel: ".max-w-\\[300px\\]", prop: "max-width", val: "90%" },
-        { sel: ".isolate.mx-auto.max-w-threadContentWidth", prop: "max-width", val: "unset" }
     ];
 
     function getVoiceButtonStyle() {
@@ -200,6 +221,7 @@ button[data-pplx-permatooltip="1"]::after {
         const artifactExists = document.getElementById("cplx-artifact");
         layoutSelectors.forEach(item => {
             document.querySelectorAll(item.sel).forEach(el => {
+                if (item.parentCheck && !item.parentCheck(el)) return;
                 const value = typeof item.val === "function" ? item.val(artifactExists) : item.val;
                 el.style.setProperty(item.prop, value, "important");
             });
@@ -270,4 +292,14 @@ button[data-pplx-permatooltip="1"]::after {
 
     // Start chip icon observer
     setTimeout(startObserver, 500);
+
+    // Scroll to bottom button
+    const scrollBtn = document.createElement('button');
+    scrollBtn.id = 'scroll-to-bottom-btn';
+    scrollBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>';
+    scrollBtn.onclick = () => {
+        const scrollContainer = document.querySelector('.scrollable-container') || document.documentElement;
+        scrollContainer.scrollTo({ top: scrollContainer.scrollHeight, behavior: 'smooth' });
+    };
+    document.body.appendChild(scrollBtn);
 })();

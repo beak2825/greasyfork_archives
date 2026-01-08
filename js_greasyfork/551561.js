@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Pixeldrain DL Bypass
 // @namespace       https://greasyfork.org/users/821661
-// @version         1.5.6bb
+// @version         1.5.7bb
 // @description     Adds direct-download buttons and links for Pixeldrain files using an alternate proxy — inspired by 'Pixeldrain Download Bypass' by hhoneeyy and MegaLime0
 // @author          hdyzen
 // @match           https://pixeldrain.com/*
@@ -30,11 +30,11 @@ const CONFIG = {
             label: "Direct download",
             state: false,
         },
-        showMediaWithPoxy: {
-            label: "Load media files with proxy",
-            state: false,
-            effect: registerMediaProxy,
-        },
+        // showMediaWithPoxy: {
+        //     label: "Load media files with proxy",
+        //     state: false,
+        //     effect: registerMediaProxy,
+        // },
         bypassVideoLogged: {
             label: "Bypass video logged restriction",
             state: true,

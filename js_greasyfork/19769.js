@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ao3 tweak formatting
 // @namespace    https://greasyfork.org/en/users/36620
-// @version      2.3.0
+// @version      2.4.0
 // @description  quick tools for text formatting
 // @author       scriptfairy
 // @include      /https?://archiveofourown\.org/.*works/\d+/
@@ -27,7 +27,11 @@ function stripAlign(ch) {
 }
 
 function stripItalics(ch) {
-    ch.innerHTML = ch.innerHTML.replace(/<em>/g,'').replace(/<\i>/g,'');
+    ch.innerHTML = ch.innerHTML.replace(/<em>/g,'').replace(/<i>/g,'');
+}
+
+function stripBold(ch) {
+    ch.innerHTML = ch.innerHTML.replace(/<strong>/g,'').replace(/<bold>/g, '');
 }
 
 function deAsterisk(ch) {
@@ -52,6 +56,7 @@ links.innerHTML = '<span id="tweakFormat" class="click">Tweak Format</span>'
     + '<li><a id="doubleBreak">insert line breaks</a></li>'
     + '<li><a id="stripAlign">align to default</a></li>'
     + '<li><a id="stripItalics">strip italics</a></li>'
+    + '<li><a id="stripBold">strip bold</a></li>'
     + '<li><a id="noEllipses">strip ellipses</a></li>'
     + '<li><a id="noTypewriter">remove double spaces</a></li>'
     + '<li><a id="deAsterisk">*word* to <em>word</em> (exp.)</a></li>'
@@ -71,6 +76,7 @@ chapter.parentNode.insertBefore(links, chapter);
 
 document.getElementById('deAsterisk').onclick = function() {deAsterisk(chapter);};
 document.getElementById('stripItalics').onclick = function() {stripItalics(chapter);};
+document.getElementById('stripBold').onclick = function() {stripBold(chapter);};
 document.getElementById('stripAlign').onclick = function() {stripAlign(chapter);};
 document.getElementById('doubleBreak').onclick = function() {doubleBreak(chapter);};
 document.getElementById('deSpace').onclick = function() {deSpace(chapter);};

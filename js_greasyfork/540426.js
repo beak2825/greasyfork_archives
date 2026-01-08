@@ -4,10 +4,10 @@
 // @description    This script hides the annoying popups (the warning-disconnection popu) that are shown in the web page.
 // @description:it Questo script nasconde i popup fastidiosi (il popup di avviso disconnessione) che vengono visualizzati nella pagina web.
 // @namespace      https://greasyfork.org/users/788550
-// @version        1.1.9
+// @version        1.2.1
 // @author         Cyrano68
 // @license        MIT
-// @match          https://*finecobank.com/*
+// @match          https://*.finecobank.com/*
 // @require        https://update.greasyfork.org/scripts/547732/1728184/BasicLib.js
 // @require        https://update.greasyfork.org/scripts/535551/1728187/HideAnnoyingPopupsLib.js
 // @grant          none
@@ -109,7 +109,7 @@
     }
 
     const mutationObserverConfig = {subtree: true, childList: true};
-    const mutatedNodesConfig     = {selectors: ["button.btn.btn-primary", "div#onetrust-consent-sdk"], onMutatedNode: onMutatedNode};
+    const mutatedNodesConfig     = {selectors: ["button.btn.btn-primary", "div#onetrust-consent-sdk", "div#onetrust-banner-sdk", "div.onetrust-pc-dark-filter"], onMutatedNode: onMutatedNode};
     haplib.configure(mutationObserverConfig, mutatedNodesConfig);
 
     blib.consoleLog("CY==> FinecoBank_com_HideAnnoyingPopups: Script loaded");

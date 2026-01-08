@@ -3,7 +3,7 @@
 // @name:zh         批量下载微博原图、视频、livephoto
 // @name:en         Batch Download Src Image From Weibo Card
 // @namespace       https://github.com/Jeffrey-deng/userscript
-// @version         2.3.6
+// @version         2.3.7
 // @description     一键打包下载微博中一贴的原图、视频、livephoto，收藏时本地自动备份
 // @description:zh  一键打包下载微博中一贴的原图、视频、livephoto，收藏时本地自动备份
 // @description:en  Batch download weibo's source image
@@ -45,6 +45,7 @@
 // ==/UserScript==
 
 // @更新日志
+// v.2.3.7      2026.1.9       1.修复批量下载问题
 // v.2.3.6      2025.4.8       1.更改依赖包cdn地址
 // v.2.3.5      2023.9.14      1.优化删除微博还原显示，不显示html代码而是显示解析值
 // v.2.3.4      2023.4.24      1.修复微博打包下载zip内，文件修改时间错位8个时区问题
@@ -2475,7 +2476,7 @@
         "findFeedCardItemList": function () {
             var cardList = $('#scroller').find('.vue-recycle-scroller__item-wrapper').children().filter(function (i, c) {
                 // c.getAttribute('style').indexOf('z-index: -1;') === -1
-                return c.firstChild.getAttribute('data-active') === "true"
+                return c.children[0].getAttribute('data-active') === "true"
             }).sort(function(l, r) {
                 let $l = $(l).children(0);
                 let $r = $(r).children(0);

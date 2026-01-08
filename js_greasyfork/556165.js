@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck
 // @namespace    Para_Thenics.torn.com
-// @version      1.00.002
+// @version      1.00.003
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -1965,6 +1965,14 @@ async function getPricesFromAPI() {
     "Stoke: 1 Hydrogen Tank",
     "Dampen: "
 ],
+        "Make a Killing": [
+          "Payout:345K",
+    "Profit/Nerve: ",
+    "Flamethrower: Yes",
+    "Place: 1 Gasoline, 2 Kerosene",
+    "Stoke: ",
+    "Dampen: "
+],
 "Marked for Salvation": [
     [
         "Payout:30K",
@@ -2530,11 +2538,11 @@ async function getPricesFromAPI() {
            ]
 ],
                 "Smoke Signals": [
-     "Try: add mag shavings",
-    "Payout: Failed",
+     "Try: Try 1 Diesel",
+    "Payout: 120K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
-    "Place: 2 Diesel",
+    "Place: 2 Diesel, 1 Magnesium Shavings",
     "Stoke: ",
     "Dampen: "
 ],
@@ -2544,7 +2552,7 @@ async function getPricesFromAPI() {
     "Ignite: Lighter",
     "Place: 2 Gasoline",
     "Stoke: ",
-    "Dampen: ? 1 Blanket?"
+    "Dampen: "
 ],
 "Smoldering Resentment": [
     [
@@ -2983,8 +2991,7 @@ async function getPricesFromAPI() {
     ]
 ],
      "Under the Table": [
-         "Try: 3 gas",
-     "Payout: 385K",
+      "Payout: 385K",
     "Profit/Nerve: ",
     "Flamethrower: Yes",
     "Place: 2 Gasoline ",

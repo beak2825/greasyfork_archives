@@ -4,10 +4,10 @@
 // @description    This script adds a button in the page "My Cards" of FinecoBank.com that allows to show the list (and the total amount) of the only credit card transactions.
 // @description:it Questo script aggiunge un bottone nella pagina "My Cards" di FinecoBank.com che consente di visualizzare la lista (e l'ammontare totale) delle sole operazioni con carta di credito.
 // @namespace      https://greasyfork.org/users/788550
-// @version        1.3.1
+// @version        1.3.2
 // @author         Cyrano68
 // @license        MIT
-// @match          https://finecobank.com/*
+// @match          https://*.finecobank.com/*
 // @require        https://update.greasyfork.org/scripts/547732/1728184/BasicLib.js
 // @grant          none
 // @downloadURL https://update.greasyfork.org/scripts/429518/FinecoBankcom%20MyCards%3A%20Show%20only%20the%20credit%20card%20transactions.user.js

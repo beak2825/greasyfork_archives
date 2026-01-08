@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Puzzle duel: Share message
 // @namespace    http://tampermonkey.net/
-// @version      2025-11-24
+// @version      2026-01-08
 // @description  Add a share button in the pop-up modal after finishing a puzzle.
 // @author       WYXkk
 // @match        https://puzzleduel.club/
@@ -16,40 +16,50 @@
 (function() {
     'use strict';
 
-    function addButton(startButton){
-        let frame=startButton.parentElement.parentElement.parentElement.parentElement;
-        let voteModal=startButton.previousElementSibling;
-        let voteFooter=voteModal.children[0].children[0].children[2];
-        voteFooter.innerHTML='<button type="button" class="btn btn-info">Share</button>'+voteFooter.innerHTML;
-        let shareButton=voteFooter.children[0];
-        let errorCount=-1;
-        let checkButton=startButton.parentElement.parentElement.nextElementSibling.nextElementSibling.children[0].children[0];
-        checkButton.addEventListener('click',()=>{errorCount+=1;})
+    function addButton(puzzle){
+        let voteSave=document.querySelector(puzzle.controls.voteSave);
+        const shareButton=document.createElement('button');
+        shareButton.type='button';
+        shareButton.className='btn btn-info';
+        shareButton.textContent='Share';
+        voteSave.before(shareButton);
+        let error=0;
+        let originalError=puzzle.showError;
+        puzzle.showError=function(...args){
+            error+=1;
+            return originalError.apply(this,args);
+        }
         function generateShareMessage(){
-            let context=frame.id.replace('Controls','');
+            let context=puzzle.controls.card.slice(1,-8);
             if(context) context=`[${context[0].toUpperCase()}${context.slice(1)}] `;
-            let puzzleType=frame.children[0].children[0].innerText;
-            let size=frame.nextElementSibling.nextElementSibling.nextElementSibling.innerText.match(/dimension\: \"(.*)\"/)[1];
-            let time=frame.children[2].children[2].children[0].children[1].innerText;
-            let err=errorCount==0?"":` (${errorCount} error${errorCount==1?'':'s'})`;
+            let puzzleType=document.querySelector(puzzle.controls.card).children[0].children[0].innerText;
+            let size=puzzle.dimension;
+            let time=document.querySelector(puzzle.controls.timer).innerText;
+            let err=error==0?"":` (${error} error${error==1?'':'s'})`;
             let link=window.location.href;
             return `${context}${puzzleType} (${size}): ${time}${err}\n${link}`;
         }
-        shareButton.onclick=()=>{
+        shareButton.addEventListener('click',()=>{
             let message=generateShareMessage();
             navigator.clipboard.writeText(message);
             shareButton.innerText='Copied!';
             setTimeout(()=>{shareButton.innerText='Share';},1500);
+        })
+    }
+
+    function prework(){
+        let originalStart=basePuzzle.prototype.start;
+        basePuzzle.prototype.start=function(...args){
+            addButton(this);
+            return originalStart.apply(this,args);
         }
     }
-    let interval=1000,tries=20;
-    function tryAddButton(remain){
-        if(remain==0) return;
-        let arr=document.getElementsByName('startBtn');
-        if(arr.length>0){
-            for(let i of arr) addButton(i);
+    let timer=setInterval(()=>{
+        if(basePuzzle){
+            if(basePuzzle.prototype.start){
+                clearInterval(timer);
+                prework();
+            }
         }
-        else setTimeout(()=>{tryAddButton(remain-1);},interval);
-    }
-    tryAddButton(tries);
+    },100);
 })();

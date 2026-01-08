@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Baidu Homepage Customization - Remove Ai
+// @name         Baidu Homepage Beautification
 // @namespace    http://tampermonkey.net/
-// @version      1.3
+// @version      1.3.1
 // @description  移除所有AI相关内容，只展示纯粹搜索工具
 // @author       GuoCS
 // @match        https://www.baidu.com/
 // @icon         https://www.baidu.com/favicon.ico
 // @run-at       document-start
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/430572/Baidu%20Homepage%20Customization%20-%20Remove%20Ai.user.js
-// @updateURL https://update.greasyfork.org/scripts/430572/Baidu%20Homepage%20Customization%20-%20Remove%20Ai.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/430572/Baidu%20Homepage%20Beautification.user.js
+// @updateURL https://update.greasyfork.org/scripts/430572/Baidu%20Homepage%20Beautification.meta.js
 // ==/UserScript==
 
 (function () {

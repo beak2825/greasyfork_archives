@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Diep.io+ (fixed Diep Console & Destroyer cooldown)
+// @name         Diep.io+ (fixed Destroyer Cooldown & Anti aim)
 // @namespace    http://tampermonkey.net/
-// @version      2.4.0.4
+// @version      2.4.1
 // @description  work in progress...
 // @author       r!PsAw
 // @match        https://diep.io/*
@@ -9,8 +9,8 @@
 // @grant        none
 // @license      Mi300 don't steal my scripts ;)
 // @run-at       document-start
-// @downloadURL https://update.greasyfork.org/scripts/502774/Diepio%2B%20%28fixed%20Diep%20Console%20%20Destroyer%20cooldown%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/502774/Diepio%2B%20%28fixed%20Diep%20Console%20%20Destroyer%20cooldown%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/502774/Diepio%2B%20%28fixed%20Destroyer%20Cooldown%20%20Anti%20aim%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/502774/Diepio%2B%20%28fixed%20Destroyer%20Cooldown%20%20Anti%20aim%29.meta.js
 // ==/UserScript==
 
 /*
@@ -365,7 +365,6 @@ class dimensions_converter {
 
 let dim_c = new dimensions_converter();
 
-
 //1. HOOKS & PROXIES
 
 //1.1 access Objects with useful client sided functions
@@ -388,16 +387,27 @@ function define_pf(obj, prop, path_arr){
     target[target_key] = obj[prop];
 }
 
+const mapN = {
+    _on_touch_start: '_on_touch_start',
+    _on_touch_end: '_on_touch_end',
+    _set_mouse_pos: '_set_mouse_pos',
+    _set_key_down: '_set_key_down',
+    _set_key_up: '_set_key_up',
+    _has_tank: '_has_tank',
+};
+//spawn _cpp__oe960b366917 $ka
+//move mouse? _cpp__o0e188399ce9 $ma
+
 function define_pf_for_N(){
     if(!window.N) return console.warn('%cwindow.N was not defined, quitting define_pf_for_N()...', 'color: red');
     const obj = window.N;
-    if(Object.keys(obj).length != 50) return setTimeout(define_pf_for_N, 100); //we hook into N before all keys are defined, that's why we need to wait here
-    define_pf(obj, '_on_touch_start', ['inputs_simulator', 'mouse', 'click']);
-    define_pf(obj, '_on_touch_end', ['inputs_simulator', 'mouse', 'unclick']);
-    define_pf(obj, '_set_mouse_pos', ['inputs_simulator', 'mouse', 'move']);
-    define_pf(obj, '_set_key_down', ['inputs_simulator', 'keys', 'press']);
-    define_pf(obj, '_set_key_up', ['inputs_simulator', 'keys', 'unpress']);
-    define_pf(obj, '_has_tank', ['state_getter', 'wasm_communicator', 'doesHaveTank']);
+    if(Object.keys(obj).length != 51) return setTimeout(define_pf_for_N, 100); //we hook into N before all keys are defined, that's why we need to wait here
+    define_pf(obj, mapN._on_touch_start, ['inputs_simulator', 'mouse', 'click']);
+    define_pf(obj, mapN._on_touch_end, ['inputs_simulator', 'mouse', 'unclick']);
+    define_pf(obj, mapN._set_mouse_pos, ['inputs_simulator', 'mouse', 'move']);
+    define_pf(obj, mapN._set_key_down, ['inputs_simulator', 'keys', 'press']);
+    define_pf(obj, mapN._set_key_up, ['inputs_simulator', 'keys', 'unpress']);
+    define_pf(obj, mapN._has_tank, ['state_getter', 'wasm_communicator', 'doesHaveTank']);
 }
 
 function define_pf_for_n(){
@@ -2540,7 +2550,9 @@ let times_watcher = {
 
 function draw_destroyer_cooldown(){
     let c = times_watcher.waiting? 'red' : 'lime' ;
-    ctx_arc(inputs.mouse.real.x, inputs.mouse.real.y, 50, 0, 2 * Math.PI, false, c, 'fill', 0.3);
+    const x = dim_c.window_2_canvas(inputs.mouse.real.x);
+    const y = dim_c.window_2_canvas(inputs.mouse.real.y);
+    ctx_arc(x, y, 50, 0, 2 * Math.PI, false, c, 'fill', 0.3);
 }
 
 function handle_cooldown(_cd){
@@ -2587,7 +2599,7 @@ function canvas_draw(){
 //999. update player values
 function update_player(){
     window.requestAnimationFrame(update_player);
-    console.log(player, predefined_functions.state_getter.wasm_communicator.doesHaveTank);
+    //console.log(player, predefined_functions.state_getter.wasm_communicator.doesHaveTank);
     if(predefined_functions.state_getter.wasm_communicator.doesHaveTank != null){
         player.inGame = predefined_functions.state_getter.wasm_communicator.doesHaveTank();
     }

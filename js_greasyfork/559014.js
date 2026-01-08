@@ -1,143 +1,143 @@
 // ==UserScript==
-// @name            YouTube Download Arrow on Video - y2meta
+// @name            YouTube toolkit
 // @namespace       http://tampermonkey.net/
-// @version         1.0
-// @description     Adds a square arrow download button on YouTube videos. Appears on hover. Automatically sends the URL to y2meta.
+// @version         1.4
+// @description     Adds download and transcript buttons below video info on YouTube
 // @author          Bui Quoc Dung
 // @match           *://*.youtube.com/*
 // @match           *://*y2meta-us.com/*
-// @run-at          document-start
+// @run-at          document-idle
 // @grant           GM_addStyle
-// @grant           GM_setValue
-// @grant           GM_getValue
-// @downloadURL https://update.greasyfork.org/scripts/559014/YouTube%20Download%20Arrow%20on%20Video%20-%20y2meta.user.js
-// @updateURL https://update.greasyfork.org/scripts/559014/YouTube%20Download%20Arrow%20on%20Video%20-%20y2meta.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/559014/YouTube%20toolkit.user.js
+// @updateURL https://update.greasyfork.org/scripts/559014/YouTube%20toolkit.meta.js
 // ==/UserScript==
-
 (function () {
     "use strict";
-
-    /* =============================================================
-       🔹 PART 1 — ADD DOWNLOAD BUTTON ON YOUTUBE VIDEO
-       ============================================================= */
-
     if (window.location.hostname.includes("youtube.com")) {
-
         const STYLES = `
-            #y2mate-download-container {
-                position: absolute;
-                top: 0;
-                left: 0;
-                z-index: 3000;
-                opacity: 0;
-                transition: opacity 0.3s ease;
-                pointer-events: none;
+            #download-container {
+                margin-top: 6px;
+                padding: 6px 0;
+                display: flex;
+                align-items: center;
+                gap: 6px;
             }
-
-            /* Show the button when hovering the video player */
-            .html5-video-player:hover #y2mate-download-container {
-                opacity: 0.6 !important;
-            }
-
-            .y2mate-download-btn {
-                pointer-events: auto;
-                position: absolute;
-                top: 12px;
-                left: 12px;
-                font-size: 22px;
-                background: rgba(0,0,0,0.65);
-                color: white;
-                padding: 6px 12px;
-                border-radius: 4px;  /* Square corners */
+            .download-btn, .transcript-btn {
+                font-size: 14px;
+                font-weight: 500;
+                background-color: transparent;
+                color: currentColor;
+                padding: 10px 15px;
+                border-radius: 18px;
                 border: none;
                 cursor: pointer;
-                backdrop-filter: blur(2px);
-
-            }
-
-            .y2mate-download-btn:hover {
-                background: rgba(255,255,255,0.9);
-                color: black;
-
+                font-family: "Roboto", "Arial", sans-serif;
             }
         `;
-
         GM_addStyle(STYLES);
 
         function createDownloadButton() {
-            if (document.querySelector(".y2mate-download-btn")) return null;
-
+            if (document.querySelector(".download-btn")) return null;
             const btn = document.createElement("button");
-            btn.className = "y2mate-download-btn";
-            btn.textContent = "↓";   
-
-
+            btn.className = "download-btn";
+            btn.textContent = "Download";
             btn.addEventListener("click", function () {
-                const url = window.location.href;
-                GM_setValue("ultimaUrlYoutube", url);
-
-                const newUrl = url.replace("www.youtube.com/", "y2meta-us.com/");
-                window.open(newUrl, "_blank");
+                const youtubeUrl = window.location.href.split('#')[0];
+                const y2metaUrl = "https://y2meta-us.com/#" + encodeURIComponent(youtubeUrl);
+                window.open(y2metaUrl, "_blank");
             });
-
             return btn;
         }
 
-        function addButtonToPlayer() {
-            const player = document.querySelector(".html5-video-player");
-            if (!player) return;
+        function createTranscriptButton() {
+            if (document.querySelector(".transcript-btn")) return null;
+            const btn = document.createElement("button");
+            btn.className = "transcript-btn";
+            btn.textContent = "Transcript";
+            btn.addEventListener("click", function () {
+                const youtubeUrl = window.location.href.split('#')[0];
+                const urlParams = new URLSearchParams(new URL(youtubeUrl).search);
+                const videoId = urlParams.get('v');
+                if (videoId) {
+                    const transcriptUrl = `https://youtubetotranscript.com/transcript?v=${videoId}`;
+                    window.open(transcriptUrl, "_blank");
+                }
+            });
+            return btn;
+        }
 
-            if (!document.querySelector("#y2mate-download-container")) {
-                const container = document.createElement("div");
-                container.id = "y2mate-download-container";
+        function addButtonBelowTopRow() {
+            const topRow = document.querySelector("#top-row.ytd-watch-metadata");
+            if (!topRow || document.querySelector("#download-container")) return;
+            const container = document.createElement("div");
+            container.id = "download-container";
 
-                const btn = createDownloadButton();
-                if (btn) container.appendChild(btn);
+            const downloadBtn = createDownloadButton();
+            const transcriptBtn = createTranscriptButton();
 
-                player.appendChild(container);
+            if (downloadBtn) {
+                container.appendChild(downloadBtn);
+            }
+            if (transcriptBtn) {
+                container.appendChild(transcriptBtn);
+            }
+
+            if (downloadBtn || transcriptBtn) {
+                topRow.parentNode.insertBefore(container, topRow.nextSibling);
             }
         }
 
         function init() {
             if (window.location.pathname.includes("/watch")) {
-                addButtonToPlayer();
+                addButtonBelowTopRow();
             }
         }
 
+        const observer = new MutationObserver(function(mutations) {
+            for (let mutation of mutations) {
+                if (mutation.target.id === 'top-row' ||
+                    mutation.target.closest('#top-row') ||
+                    mutation.target.querySelector('#top-row')) {
+                    init();
+                    break;
+                }
+            }
+        });
 
-        const observer = new MutationObserver(init);
-        observer.observe(document.documentElement, { childList: true, subtree: true });
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                const targetNode = document.querySelector('ytd-watch-flexy') || document.body;
+                observer.observe(targetNode, { childList: true, subtree: true });
+                init();
+            });
+        } else {
+            const targetNode = document.querySelector('ytd-watch-flexy') || document.body;
+            observer.observe(targetNode, { childList: true, subtree: true });
+            init();
+        }
+
         window.addEventListener("yt-navigate-finish", init);
-
-        init();
     }
 
-    /* =============================================================
-       🔹 PART 2 — AUTO-FILL URL AND AUTO-SUBMIT ON Y2META
-       ============================================================= */
-
     if (window.location.hostname.includes("y2meta-us.com")) {
-
         function autoFillAndSubmit() {
-            const url = GM_getValue("ultimaUrlYoutube", null);
-            if (!url) return;
-
+            const hash = window.location.hash;
+            if (!hash || hash.length <= 1) return;
+            const youtubeUrl = decodeURIComponent(hash.substring(1));
+            if (!youtubeUrl.includes("youtube.com/watch")) return;
             const input = document.querySelector("#txt-url");
             const button = document.querySelector("#btn-submit");
-
             if (input && button) {
-                input.value = url;
-
+                input.value = youtubeUrl;
                 input.dispatchEvent(new Event("input", { bubbles: true }));
-
-                setTimeout(() => button.click(), 300);
-                GM_setValue("ultimaUrlYoutube", "");
+                setTimeout(() => {
+                    button.click();
+                    history.replaceState(null, '', window.location.pathname + window.location.search);
+                }, 300);
             } else {
                 setTimeout(autoFillAndSubmit, 200);
             }
         }
-
         window.addEventListener("load", autoFillAndSubmit);
     }
-
 })();

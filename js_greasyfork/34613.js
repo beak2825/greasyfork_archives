@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name YouTube™ Multi Downloader (Desktop & Mobile) v10.4 🌐🚀💯 — YT Shorts, Videos & Music | ZERO ADS! 🚫🔥
-// @name:pt-BR YouTube™ Multi Downloader (PC & Celular) v10.4 🌐🚀💯 — YT Shorts, Vídeos & Music | ZERO ANÚNCIOS! 🚫🔥
+// @name YouTube™ Multi Downloader (Desktop & Mobile) v10.5 🌐🚀💯 — YT Shorts, Videos & Music | ZERO ADS! 🚫🔥
+// @name:pt-BR YouTube™ Multi Downloader (PC & Celular) v10.5 🌐🚀💯 — YT Shorts, Vídeos & Music | ZERO ANÚNCIOS! 🚫🔥
 // @description Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
 // @description:pt-BR Adicione um botão de download flutuante para vídeos, curtas e músicas do YouTube de alta qualidade. Rápido, fácil de usar e melhor de todos!
 // @description:ar Adds a floating download button for YouTube videos, shorts and music in high quality. Fast, easy to use and the best of all!
@@ -39,9 +39,9 @@
 // @homepageURL https://greasyfork.org/scripts/34613
 // @supportURL https://greasyfork.org/scripts/34613/feedback
 // @author Punisher
-// @version 10.4
-// @date 2026-01-07
-// @icon https://i.imgur.com/InuDDVK.png
+// @version 10.5
+// @date 2026-01-08
+// @icon https://iili.io/fOyuFFS.png
 // @compatible chrome
 // @compatible firefox
 // @compatible opera
@@ -52,13 +52,13 @@
 // @match https://music.youtube.com/*
 // @grant GM_addStyle
 // @run-at document-idle
-// @downloadURL https://update.greasyfork.org/scripts/34613/YouTube%E2%84%A2%20Multi%20Downloader%20%28Desktop%20%20Mobile%29%20v104%20%F0%9F%8C%90%F0%9F%9A%80%F0%9F%92%AF%20%E2%80%94%20YT%20Shorts%2C%20Videos%20%20Music%20%7C%20ZERO%20ADS%21%20%F0%9F%9A%AB%F0%9F%94%A5.user.js
-// @updateURL https://update.greasyfork.org/scripts/34613/YouTube%E2%84%A2%20Multi%20Downloader%20%28Desktop%20%20Mobile%29%20v104%20%F0%9F%8C%90%F0%9F%9A%80%F0%9F%92%AF%20%E2%80%94%20YT%20Shorts%2C%20Videos%20%20Music%20%7C%20ZERO%20ADS%21%20%F0%9F%9A%AB%F0%9F%94%A5.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/34613/YouTube%E2%84%A2%20Multi%20Downloader%20%28Desktop%20%20Mobile%29%20v105%20%F0%9F%8C%90%F0%9F%9A%80%F0%9F%92%AF%20%E2%80%94%20YT%20Shorts%2C%20Videos%20%20Music%20%7C%20ZERO%20ADS%21%20%F0%9F%9A%AB%F0%9F%94%A5.user.js
+// @updateURL https://update.greasyfork.org/scripts/34613/YouTube%E2%84%A2%20Multi%20Downloader%20%28Desktop%20%20Mobile%29%20v105%20%F0%9F%8C%90%F0%9F%9A%80%F0%9F%92%AF%20%E2%80%94%20YT%20Shorts%2C%20Videos%20%20Music%20%7C%20ZERO%20ADS%21%20%F0%9F%9A%AB%F0%9F%94%A5.meta.js
 // ==/UserScript==
-
+ 
 (function () {
     "use strict";
-
+ 
     const punisherURL = "//evdfrance.fr/convert/?id=";
     const playerBtnID = "ytDownloadBtn";
     const floatBtnID = "ytPunisherBtn";
@@ -78,7 +78,7 @@
             text-decoration: none;
         }
         #${floatBtnID} {
-            background: ${btnColor} url("https://i.imgur.com/kQ8CO1P.png") no-repeat center;
+            background: ${btnColor} url("https://iili.io/fObpSDv.png") no-repeat center;
             background-size: 65%;
             position: fixed;
             top: 70%;
@@ -96,12 +96,12 @@
             box-shadow: 0 6px 12px rgba(0,0,0,0.3);
         }
     `);
-
+ 
     const getVideoID = url => {
         const m = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})|\/shorts\/([0-9A-Za-z_-]{11})/);
         return m ? m[1] || m[2] : null;
     };
-
+ 
     const waitFor = selector =>
         new Promise(resolve => {
             const el = document.querySelector(selector);
@@ -115,18 +115,18 @@
             });
             obs.observe(document.documentElement, { childList: true, subtree: true });
         });
-
+ 
     let lastVideoId = null;
     async function addPlayerButton() {
         const vid = getVideoID(location.href);
         if (!vid || vid === lastVideoId) return;
         lastVideoId = vid;
-
+ 
         const container = location.hostname.includes("music.youtube.com")
             ? await waitFor("ytmusic-player-bar")
             : await waitFor("ytd-video-primary-info-renderer #top-level-buttons-computed");
         if (!container) return;
-
+ 
         let btn = document.getElementById(playerBtnID);
         if (!btn) {
             btn = document.createElement("a");
@@ -137,7 +137,7 @@
         }
         btn.href = punisherURL + vid;
     }
-
+ 
     function addFloatButton() {
         if (document.getElementById(floatBtnID)) return;
         const btn = document.createElement("button");
@@ -148,12 +148,12 @@
             x: Math.max(0, Math.min(x, innerWidth - btn.offsetWidth)),
             y: Math.max(0, Math.min(y, innerHeight - btn.offsetHeight))
         });
-
+ 
         const open = () => {
             const vid = getVideoID(location.href);
             if (vid) window.open(punisherURL + vid, "_blank");
         };
-
+ 
         const start = (x, y) => {
             dragging = true;
             const r = btn.getBoundingClientRect();
@@ -161,7 +161,7 @@
             oy = y - r.top;
             btn.style.cursor = "grabbing";
         };
-
+ 
         const move = (x, y) => {
             if (!dragging) return;
             const p = limit(x - ox, y - oy);
@@ -170,24 +170,24 @@
             btn.style.right = btn.style.bottom = "auto";
         };
         const end = () => dragging = false;
-
+ 
         btn.addEventListener("mousedown", e => start(e.clientX, e.clientY));
         document.addEventListener("mousemove", e => move(e.clientX, e.clientY));
         document.addEventListener("mouseup", end);
-
+ 
         btn.addEventListener("touchstart", e => start(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
         document.addEventListener("touchmove", e => move(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
         document.addEventListener("touchend", end);
-
+ 
         btn.addEventListener("click", () => !dragging && open());
         document.body.appendChild(btn);
     }
-
+ 
     const update = () => {
         addPlayerButton();
         addFloatButton();
     };
-
+ 
     let lastURL = location.href;
     setInterval(() => {
         if (location.href !== lastURL) {

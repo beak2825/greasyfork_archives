@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SillyTavern Mobile Suite (Smart Selector + Gemini Manager)
 // @namespace    http://tampermonkey.net/
-// @version      27.3
+// @version      28
 // @description  Tích hợp: Chọn Char/Scene, Quản lý Key Gemini & Auto Set First Message (Clean & Stable Code). Bổ sung hỗ trợ OpenRouter.
 // @author       You
 // @match        http://127.0.0.1:8000/*
@@ -710,9 +710,9 @@ TEXT: ${text.substring(0, 4000)}`;
             creatorGroup.append(btnRe, btnChar, btnScene, btnImport);
 
             // =========================================================================
-            //  NÚT: SET FIRST MESSAGE + AUTO RESET (ĐÃ FIX LỖI DUPLICATE/RACE CONDITION)
+            //  NÚT: SET FIRST MESSAGE (KHÔNG RESET NỮA)
             // =========================================================================
-            const btnFirst = createIconBtn('st-btn-chat', 'fa-quote-left', 'Set First Message & Reset', async () => {
+            const btnFirst = createIconBtn('st-btn-chat', 'fa-quote-left', 'Set First Message', async () => {
                 // Bước 1: Lấy nội dung Raw
                 const text = await getRawContentFromMessage(mesDiv);
                 if (!text) return;
@@ -723,40 +723,7 @@ TEXT: ${text.substring(0, 4000)}`;
                     const setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
                     setter.call(area, text);
                     area.dispatchEvent(new Event('input', { bubbles: true }));
-                    showSelectorToast("📝 Đã set First Message. Đang reset...", 'process');
-
-                    // Bước 3: Tìm nút Start New Chat
-                    const btnStart = document.getElementById('option_start_new_chat');
-                    if (btnStart) {
-                        btnStart.click();
-
-                        // [QUAN TRỌNG] Chờ popup hiện ra hoàn toàn
-                        await sleep(700);
-
-                        // Bước 4: Tích vào checkbox Delete Chat (nếu chưa tích)
-                        const chk = document.getElementById('del_chat_checkbox');
-                        if (chk && !chk.checked) {
-                            chk.click();
-                            // [QUAN TRỌNG] Chờ ST cập nhật state của checkbox
-                            await sleep(400);
-                        }
-
-                        // Bước 5: Tìm nút YES trong popup (kiểm tra visibility và text)
-                        const confirmButtons = document.querySelectorAll('.popup-button-ok');
-                        let yesBtn = Array.from(confirmButtons).find(b =>
-                            b.offsetParent !== null && (b.innerText.toUpperCase() === 'YES' || b.dataset.result === '1')
-                        );
-
-                        // Bước 6: Bấm xác nhận
-                        if (yesBtn) {
-                            yesBtn.click();
-                            showSelectorToast("✅ Đã reset thành công!", 'success');
-                        } else {
-                            console.warn("Không tìm thấy nút Yes hợp lệ trong popup");
-                        }
-                    } else {
-                        showSelectorToast("❌ Không thấy nút Start New Chat", 'error');
-                    }
+                    showSelectorToast("✅ Đã set First Message thành công!", 'success');
                 } else {
                     showSelectorToast("⚠️ Hãy mở thẻ nhân vật trước!", 'warn');
                 }

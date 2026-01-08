@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         USPS Address Validation - Add/Edit Page
 // @namespace    https://github.com/nate-kean/
-// @version      2025.12.3
+// @version      2026.01.08.2
 // @description  Integrate USPS address validation and autofill into the Address fields.
 // @author       Nate Kean
 // @match        https://jamesriver.fellowshiponego.com/members/add*
@@ -9,7 +9,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=fellowshiponego.com
 // @grant        none
 // @license      MIT
-// @require      https://update.greasyfork.org/scripts/555040/1707051/USPS%20Address%20Validation%20-%20Common.js
+// @require      https://update.greasyfork.org/scripts/555040/1730304/USPS%20Address%20Validation%20-%20Common.js
 // @downloadURL https://update.greasyfork.org/scripts/557826/USPS%20Address%20Validation%20-%20AddEdit%20Page.user.js
 // @updateURL https://update.greasyfork.org/scripts/557826/USPS%20Address%20Validation%20-%20AddEdit%20Page.meta.js
 // ==/UserScript==
@@ -33,19 +33,24 @@
 
 class AddEditPageController {
 	static #TYPING_WAIT_TIME_MS = 1_000;
-	static #ASCII_PATTERN = /[0-9A-Za-z]/;
+	// ASCII letters or the delete keys
+	static #ALLOWED_KEYS = /^([\x20-\x7E])|(Backspace)|(Delete)$/;
 
-	/**
-	 * @type {(keyof Fields)[]}
-	 */
+	/** @type {(keyof Fields)[]} */
 	static #REQUIRED_FIELD_NAMES = ["streetAddress", "city", "state"];
 
 	#panel;
 	#heading;
 	#validator;
 	#indicator;
-	#timeout;
+	/** @type {ReturnType<typeof setTimeout> | undefined} */
+	#timeout = undefined;
+	/** @type {Fields} */
 	#fields;
+	/** @type {HTMLSelectElement} */
+	#flagSelect;
+	/** @type {string[]} */
+	#streetAddressLines = [];
 
 	/**
 	 * @param {string} id
@@ -53,76 +58,117 @@ class AddEditPageController {
 	 * @param {string} headingSelector
 	 */
 	constructor(id, panelSelector, headingSelector) {
-		console.trace(id, panelSelector, headingSelector);
 		this.#panel = tryQuerySelector(document, panelSelector);
 		this.#heading = tryQuerySelector(document, headingSelector);
 		this.#validator = new Validator();
 		this.#indicator = new Indicator(this.#heading);
-		this.#timeout = 0;
+		this.#flagSelect = this.#getFlagSelect();
+
+		// "Starts with" selectors because the IDs are all "id" and "id2"
+		// between the two address panels
+		this.#fields = {
+			// Want to pass these as type parameters but casting is the best I
+			// can do without converting this whole thing to .ts
+			streetAddress:
+				/** @type {HTMLTextAreaElement} */
+				(tryQuerySelector(this.#panel, 'textarea[id^="address"')),
+			city:
+				/** @type {HTMLInputElement} */
+				(tryQuerySelector(this.#panel, 'input[id^="city"')),
+			state:
+				/** @type {HTMLInputElement} */
+				(tryQuerySelector(this.#panel, 'input[id^="state"')),
+			zip:
+				/** @type {HTMLInputElement} */
+				(tryQuerySelector(this.#panel, 'input[id^="zipcode"')),
+			country:
+				/** @type {HTMLInputElement} */
+				(tryQuerySelector(this.#panel, 'input[id^="country"')),
+		};
+
+		// Fill the address if the indicator is clicked
 		this.#indicator.button.addEventListener(
 			"click",
 			this.#fillPanel.bind(this),
 			{ passive: true },
 		);
+		// Listen for keyboard input in this controller's address panel
+		// @ts-ignore -- My TypeScript doesn't know keyup is a KeyboardEvent???
 		this.#panel.addEventListener(
 			"keyup",
 			this.#onKeypress.bind(this),
 			{ passive: true },
 		);
+		// Re-process the address if the Address Validation field changes
+		// This <select>'s jQuery brainworms make it fire through this instead
+		// of the vanilla "change" event
+		$(this.#flagSelect)
+			.chosen()
+			.on("change", this.#processQuery.bind(this));
 
-		// "Starts with" selectors because the IDs are "id" and "id2" between
-		// the two address panels
-		/**
-		 * @type {Fields}
-		 */
-		this.#fields = {
-			streetAddress: tryQuerySelector(this.#panel, 'textarea[id^="address"'),
-			city: tryQuerySelector(this.#panel, 'input[id^="city"'),
-			state: tryQuerySelector(this.#panel, 'input[id^="state"'),
-			zip: tryQuerySelector(this.#panel, 'input[id^="zipcode"'),
-			country: tryQuerySelector(this.#panel, 'input[id^="country"'),
-		};
-
-		this.#sendQuery();
+		this.#processQuery();
 		this.#tryAutofill(id);
 	}
 
+	/**
+	 * @returns {HTMLSelectElement}
+	 */
+	#getFlagSelect() {
+		let select;
+		for (const formGroup of document.querySelectorAll(".form-group")) {
+			if (
+				formGroup.querySelector("label")?.textContent.trim()
+				!== "Address Validation"
+			) {
+				continue;
+			}
+			// Would pass HTMLSelectElement as a type parameter here if JSDoc
+			// allowed it -- microsoft/TypeScript#27387
+			select = tryQuerySelector(formGroup, "select");
+			select.addEventListener("change", this.#processQuery.bind(this));
+		}
+		if (select === undefined) throw new Error("It's over");
+		// @ts-ignore -- ignoring a type error caused by the above shortfall
+		return select;
+	}
+
 	#fillPanel() {
-		console.trace(this.#indicator.status.code);
 		if (this.#indicator.status.code !== Validator.Code.CORRECTION) return;
 		const address = this.#indicator.status.address;
-		for (const key in address) {
-			if (key === "zip5") {
-				this.#fields.zip.value = `${address.zip5}-${address.zip4}`;
-				continue;
-			};
-			if (key === "zip4") continue;
-			// @ts-ignore -- types would fix this but it would be complicated
-			// and i don't want to do it in jsdoc
-			this.#fields[key].value = address[key];
+		if (this.#flagSelect.value === "") {
+			this.#fields.streetAddress.value = address.streetAddress;
+		} else {
+			this.#fields.streetAddress.value =
+				`${this.#streetAddressLines[0]}\n${address.streetAddress}`;
 		}
-		// If USPS recognizes an address, country is US
+		this.#fields.city.value = address.city;
+		this.#fields.state.value = address.state;
+		this.#fields.zip.value = `${address.zip5}-${address.zip4}`
+		// If USPS recognizes an address, we can safely assume the country is US
 		this.#fields.country.value = "US";
+
 		// Trigger F1 Primary address cascade
 		this.#fields.country.dispatchEvent(new Event("input"));
 		// Update the indicator
-		this.#sendQuery();
+		this.#processQuery();
 	}
 
-	#sendQuery() {
+	#processQuery() {
 		const address = this.#getEnteredAddress();
-		console.trace(address);
-		this.#validator.onNewAddressQuery(this.#indicator, address);
+		const heuristic = this.#doHeuristics(address);
+		address.streetAddress = this.#normalizeStreetAddressQuery(
+			address.streetAddress
+		);
 		this.#indicator.onTypingEnd();
+		this.#validator.onNewAddressQuery(this.#indicator, address, heuristic);
 	}
 
 	/**
-	 * @param {KeyboardEvent} evt
+	 * @param {Readonly<KeyboardEvent>} evt
 	 * @returns {Promise<void>}
 	 */
 	async #onKeypress(evt) {
-		console.trace(evt.key);
-		if (!AddEditPageController.#ASCII_PATTERN.test(evt.key)) return;
+		if (!AddEditPageController.#ALLOWED_KEYS.test(evt.key)) return;
 		console.debug(" ** Cooldown reset");
 		clearTimeout(this.#timeout);
 		this.#indicator.onTypingStart();
@@ -133,7 +179,7 @@ class AddEditPageController {
 			}
 		}
 		this.#timeout = setTimeout(
-			this.#sendQuery.bind(this),
+			this.#processQuery.bind(this),
 			AddEditPageController.#TYPING_WAIT_TIME_MS,
 		);
 	}
@@ -142,60 +188,39 @@ class AddEditPageController {
 	 * @returns {QueriedAddress}
 	 */
 	#getEnteredAddress() {
-		/**
-		 * @type {QueriedAddress}
-		 */
-		const address = {};
-		for (const key in this.#fields) {
-			if (key == "streetAddress") {
-				// @ts-ignore -- no the field definitely isnt null atp.
-				// and value exists on all these types of elements too
-				const lines = this.#fields.streetAddress.value.split("\n");
-				address.streetAddress = AddEditPageController.normalizeStreetAddressQuery(lines);
-				continue;
-			}
-			// @ts-ignore
-			address[key] = this.#fields[key].value;
-		}
-		// @ts-ignore
-		return address;
+		return {
+			streetAddress: this.#fields.streetAddress.value,
+			city:          this.#fields.city.value,
+			state:         this.#fields.state.value,
+			zip:           this.#fields.zip.value,
+			country:       this.#fields.country.value,
+		};
 	}
 
 	/**
-	 * @param {string[]} streetAddrLines
+	 * @param {string} streetAddress
+	 * @returns {string[]}
+	 */
+	static #makeStreetAddrLines(streetAddress) {
+		// Trim lines and remove blank lines.
+		return streetAddress
+			.split("\n")
+			.map(line => line.trim())
+			.filter(line => line.length > 0);
+	}
+
+	/**
+	 * @param {string} streetAddress
 	 * @returns {string}
 	 */
-	static normalizeStreetAddressQuery(streetAddrLines) {
-		// If the individual has an Address Validation flag, ignore the first
-		// line of the street address, because it's probably a message about the
-		// address.
-		const otherInfoFormGroups = document.querySelectorAll(
-			".additional-info-panel .form-group"
-		);
-		let iStartStreetAddr = 0;
-		if (streetAddrLines.length > 1) {
-			for (const formGroup of otherInfoFormGroups) {
-				const label = formGroup.querySelector("label");
-				if (label?.textContent.trim() !== "Address Validation") continue;
-				const select = formGroup.querySelector("select");
-				// This one is actually fine if it's set to None or not selected
-				if (select === null || select.selectedIndex <= 1) continue;
-				// Skip first line in the text box (the addr validation comment)
-				iStartStreetAddr = 1;
-				break;
-			}
+	#normalizeStreetAddressQuery(streetAddress) {
+		this.#streetAddressLines =
+			AddEditPageController.#makeStreetAddrLines(streetAddress);
+		if (this.#flagSelect.value === "") {
+			return this.#streetAddressLines.join(" ");
+		} else {
+			return this.#streetAddressLines.toSpliced(0, 1).join(" ");
 		}
-		// Construct the street address, ignoring beginning lines if the above
-		// block says to, and using spaces instead of <br />s or newlines.
-		let streetAddress = "";
-		for (let i = iStartStreetAddr; i < streetAddrLines.length; i++) {
-			const text = streetAddrLines[i];
-			streetAddress += text.trim();
-			if (i + 1 !== streetAddrLines.length) {
-				streetAddress += " ";
-			}
-		}
-		return streetAddress;
 	}
 
 	/**
@@ -207,8 +232,67 @@ class AddEditPageController {
 		if (request === null) return;
 		if (request !== id) return;
 		url.searchParams.delete("autofill-addr");
+		// Remove ?autofill-addr from the URL in your history so that this does
+		// not trigger again if you go back to this page
 		window.history.replaceState(null, "", url);
 		this.#fillPanel();
+	}
+
+	/**
+	 * @param {Readonly<QueriedAddress>} address
+	 * @returns {ValResult?}
+	 */
+	#doHeuristics(address) {
+		switch (this.#flagSelect.value) {
+		case "":
+			// There should not be an allcaps firstline
+			if (AddEditPageController.#hasAllCapsFirstLine(address)) {
+				return {
+					code: Validator.Code.CHECK_FAILED,
+					note: (
+						"Address's first line is in all caps, but the "
+						+ "Address Validation flag is not set."
+					),
+				};
+			}
+			return null;
+		case "INVALID ADDRESS":
+			// There should be an allcaps firstline
+			// And beyond that we should not bother validating the address
+			if (!AddEditPageController.#hasAllCapsFirstLine(address)) {
+				return {
+					code: Validator.Code.CHECK_FAILED,
+					note: (
+						"The Address Validation flag is set, but this "
+						+ "address's first line isn't all caps."
+					),
+				};
+			}
+			return { code: Validator.Code.MARKED_INVALID };
+		default:
+			// There should be an allcaps firstline
+			if (!AddEditPageController.#hasAllCapsFirstLine(address)) {
+				return {
+					code: Validator.Code.CHECK_FAILED,
+					note: (
+						"The Address Validation flag is set, but this "
+						+ "address's first line isn't all caps."
+					),
+				};
+			}
+			return null;
+		}
+	}
+
+	/**
+	 * @param {Readonly<QueriedAddress>} address
+	 * @returns {boolean}
+	 */
+	static #hasAllCapsFirstLine(address) {
+		const lines = AddEditPageController.#makeStreetAddrLines(
+			address.streetAddress,
+		);
+		return lines.length > 0 && lines[0] === lines[0].toUpperCase();
 	}
 }
 

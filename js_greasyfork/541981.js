@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Spotless for eBay
 // @namespace    https://github.com/OsborneLabs
-// @version      2.3.2
+// @version      2.3.3
 // @description  Hides sponsored listings, removes sponsored items, cleans links, & prevents tracking
 // @author       Osborne Labs
 // @license      GPL-3.0-only
@@ -718,7 +718,7 @@
                         }
                     }
                 }
-                enhanceSellerInfo();
+                enhancedSellerInfo();
                 removeSponsoredRibbons();
                 cleanListingURLs();
                 cleanGeneralURLs();
@@ -1066,7 +1066,7 @@
             'sponsored', 'anzeige', 'gesponsord', 'patrocinado',
             'sponsorisé', 'sponsorizzato', 'sponsorowane', '助贊'
         ];
-        const BLOCK_MEDIA_REGEX = /^https:\/\/video\.ebaycdn\.net\//i;
+        const CAROUSEL_BLOCK_MEDIA_REGEX = /^https:\/\/video\.ebaycdn\.net\//i;
         const normalizeText = text =>
             text.trim().normalize("NFKC").replace(/[\u200B-\u200D\u061C\uFEFF]/g, '').toLowerCase();
         const labelSponsored = carousel => {
@@ -1137,7 +1137,7 @@
                 const url = typeof input === 'string' ? input : input?.url;
                 if (
                     url &&
-                    BLOCK_MEDIA_REGEX.test(url) &&
+                    CAROUSEL_BLOCK_MEDIA_REGEX.test(url) &&
                     document.querySelector('.sponsored-hidden-carousel')
                 ) {
                     return Promise.reject();
@@ -1148,7 +1148,7 @@
             XMLHttpRequest.prototype.open = function(method, url, ...rest) {
                 if (
                     url &&
-                    BLOCK_MEDIA_REGEX.test(url) &&
+                    CAROUSEL_BLOCK_MEDIA_REGEX.test(url) &&
                     document.querySelector('.sponsored-hidden-carousel')
                 ) {
                     this.abort();
@@ -1169,8 +1169,8 @@
         const TELEMETRY_ATTRS_REGEX = [/^data-atf/i, /^data-gr\d$/i, /^data-s-[a-z0-9]+$/i];
         const TELEMETRY_ATTRS = new Set([
             '_sp', 'data-click', 'data-clientpresentationmetadata', 'data-config', 'data-defertimer',
-            'data-ebayui', 'data-operationid', 'data-testid', 'data-track', 'data-tracking', 'data-uvcc',
-            'data-uvccoptoutkey', 'data-vi-scrolltracking', 'data-vi-tracking', 'modulemeta'
+            'data-ebayui', 'data-hscroll', 'data-operationid', 'data-testid', 'data-track', 'data-tracking',
+            'data-uvcc', 'data-uvccoptoutkey', 'data-vi-scrolltracking', 'data-vi-tracking', 'modulemeta'
         ]);
         for (const el of context.querySelectorAll('*')) {
             if (el.hasAttribute('data-viewport')) {
@@ -1241,7 +1241,7 @@
         });
     }
 
-    function enhanceSellerInfo() {
+    function enhancedSellerInfo() {
         const listings = getListingElements();
         const hostname = window.location.hostname.replace(/^www\./, "");
         for (const listing of listings) {
@@ -1364,34 +1364,50 @@
 
     function cleanGeneralURLs() {
         const GENERAL_TRACKING_KEYWORDS = [
-            "_from", "_odkw", "_osacat", "_trksid", "campaign", "campid", "mkcid", "mkevt", "mkrid",
-            "promoted_items", "siteid", "source", "sr", "templateId", "toolid"
+            "_from", "_odkw", "_osacat", "_trksid", "campaign", "campid", "cspheader", "descgauge",
+            "domain", "excSoj", "excTrk", "lsite", "mkcid", "mkevt", "mkrid", "oneClk", "promoted_items",
+            "secureDesc", "siteid", "source", "sr", "templateId", "toolid"
         ];
-        document.querySelectorAll("a[href*='ebay.']").forEach(link => {
+        document.querySelectorAll("a[href]").forEach(link => {
             try {
                 const url = new URL(link.href);
-                if (!/(^|\.)ebay\.[a-z.]+$/i.test(url.hostname)) return;
-                if (/^\/sch\/[^/]+\/m\.html$/i.test(url.pathname)) {
-                    url.search = "";
-                } else {
-                    const params = url.searchParams;
-                    GENERAL_TRACKING_KEYWORDS.forEach(key => params.delete(key));
-                    for (const key of Array.from(params.keys())) {
-                        if (key.startsWith("utm_") || key.startsWith("_trk")) {
-                            params.delete(key);
-                        }
+                if (!url.hostname) return;
+                const params = url.searchParams;
+                GENERAL_TRACKING_KEYWORDS.forEach(key => params.delete(key));
+                for (const key of Array.from(params.keys())) {
+                    if (key.startsWith("utm_") || key.startsWith("_trk")) {
+                        params.delete(key);
                     }
                 }
                 const cleanURL = `${url.origin}${url.pathname}${url.search}${url.hash}`;
                 if (link.href !== cleanURL) link.href = cleanURL;
             } catch {}
         });
-        document.querySelectorAll("form[action*='ebay.'], form[action='/sch/i.html']").forEach(form => {
-            const cleanFormInputs = () => {
-                form.querySelectorAll(GENERAL_TRACKING_KEYWORDS.map(k => `[name='${k}']`).join(",")).forEach(input => input.remove());
-            };
-            cleanFormInputs();
-            form.addEventListener("submit", () => cleanFormInputs(), true);
+        document.querySelectorAll("iframe[src]").forEach(iframe => {
+            try {
+                const url = new URL(iframe.src);
+                const params = url.searchParams;
+                GENERAL_TRACKING_KEYWORDS.forEach(key => params.delete(key));
+                for (const key of Array.from(params.keys())) {
+                    if (key.startsWith("utm_") || key.startsWith("_trk")) {
+                        params.delete(key);
+                    }
+                }
+                iframe.src = `${url.origin}${url.pathname}${url.search}${url.hash}`;
+            } catch {}
+        });
+        document.querySelectorAll("form[action]").forEach(form => {
+            try {
+                const url = new URL(form.action);
+                const params = url.searchParams;
+                GENERAL_TRACKING_KEYWORDS.forEach(key => params.delete(key));
+                for (const key of Array.from(params.keys())) {
+                    if (key.startsWith("utm_") || key.startsWith("_trk")) {
+                        params.delete(key);
+                    }
+                }
+                form.action = `${url.origin}${url.pathname}${url.search}${url.hash}`;
+            } catch {}
         });
     }
 

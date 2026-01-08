@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name            player.serieturche.eu-watch_video
+// @run-at          document-start
 // @namespace       https://github.com/GavinBrelstaff
 // @description     Facilitates access to serieturche.eu
 // @description:it  Facilita l'accesso a serieturche.eu
 // @match           https://player.serieturche.eu/watch_video.php*
 // @grant           none
-// @version         1.4
+// @version         2.0
 // @license         GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html
 // @downloadURL https://update.greasyfork.org/scripts/561550/playerserieturcheeu-watch_video.user.js
 // @updateURL https://update.greasyfork.org/scripts/561550/playerserieturcheeu-watch_video.meta.js
@@ -20,7 +21,7 @@ new MutationObserver(async (mutations, observer) => {
         .flatMap(e => [...e.addedNodes])
         .filter(e => ((e.tagName == 'SCRIPT') )) //|| (e.tagName == 'IFRAME'))  )
 
-    for( el of els )
+    for( var el of els )
     {
 
         window.count++;

@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         Multiplayer Piano Optimizations [Sounds]
 // @namespace    https://tampermonkey.net/
-// @version      1.7.7
+// @version      1.7.8
 // @description  Play sounds when users join, leave, or mention you in Multiplayer Piano
 // @author       zackiboiz, cheezburger0, ccjit
 // @match        *://*.multiplayerpiano.com/*
 // @match        *://*.multiplayerpiano.net/*
-// @match        *://dev.multiplayerpiano.net/*
 // @match        *://*.multiplayerpiano.org/*
 // @match        *://*.multiplayerpiano.dev/*
 // @match        *://piano.mpp.community/*
@@ -161,18 +160,18 @@
             this.lastPlayed = {};
             this.audioCache = {};
 
-            this._loadSoundpacks();
+            this.loadSoundpacks();
             const sample = Object.values(this.soundpacks)[0] || {};
             this.soundTypes = Object.keys(sample).filter(k => !["NAME", "AUTHOR"].includes(k));
             this.savedVolumes = JSON.parse(localStorage.savedVolumes || "{}");
-            this._loadVolumesForPack();
+            this.#loadVolumesForPack();
 
             const stored = localStorage.currentSoundpack;
             this.currentSoundpack = (stored && this.soundpacks[stored]) ? stored : "";
             this.SOUNDS = this.soundpacks[this.currentSoundpack] || {};
 
-            this._loadVolumesForPack();
-            this._loadAssetsForCurrentPack();
+            this.#loadVolumesForPack();
+            this.#loadAssetsForCurrentPack();
             this.soundTypes.forEach(type => {
                 const $i = $(`#vol-${type}`);
                 if ($i.length) {
@@ -182,7 +181,7 @@
             });
         }
 
-        _loadVolumesForPack() {
+        #loadVolumesForPack() {
             const pack = localStorage.currentSoundpack;
             this.volumes = this.savedVolumes[pack] || {};
             this.soundTypes.forEach(t => {
@@ -190,7 +189,7 @@
             });
         }
 
-        _saveVolumesForPack() {
+        #saveVolumesForPack() {
             const pack = localStorage.currentSoundpack;
             this.savedVolumes[pack] = this.volumes;
             localStorage.savedVolumes = JSON.stringify(this.savedVolumes);
@@ -199,12 +198,12 @@
         setVolumeForType(type, volume) {
             if (!this.soundTypes.includes(type)) return;
             this.volumes[type] = volume;
-            this._saveVolumesForPack();
+            this.#saveVolumesForPack();
             const src = this.SOUNDS[type];
             if (this.audioCache[src]) this.audioCache[src].volume = volume;
         }
 
-        _loadSoundpacks() {
+        loadSoundpacks() {
             let saved = {};
             let shouldReset = false;
 
@@ -235,7 +234,7 @@
             localStorage.currentSoundpack = name;
             this.SOUNDS = this.soundpacks[name] || {};
 
-            this._loadVolumesForPack();
+            this.#loadVolumesForPack();
             this.soundTypes.forEach(type => {
                 const $i = $(`#vol-${type}`);
                 if ($i.length) {
@@ -245,8 +244,8 @@
                 }
             });
 
-            this._refreshDropdown();
-            this._loadAssetsForCurrentPack();
+            this.refreshDropdown();
+            this.#loadAssetsForCurrentPack();
         }
 
         saveSoundpack(obj, loading = false) {
@@ -275,7 +274,7 @@
             };
             localStorage.savedSoundpacks = JSON.stringify(this.soundpacks);
             if (!loading) alert(`Imported soundpack "${unique}".`);
-            this._refreshDropdown();
+            this.refreshDropdown();
         }
 
         deleteSoundpack(name) {
@@ -296,7 +295,7 @@
             this.setCurrentSoundpack(next);
         }
 
-        _loadAssetsForCurrentPack() {
+        #loadAssetsForCurrentPack() {
             this.audioCache = {};
             this.soundTypes.forEach(key => {
                 const base = this.SOUNDS[key];
@@ -327,7 +326,7 @@
             }
         }
 
-        _refreshDropdown() {
+        refreshDropdown() {
             const sel = document.querySelector("#soundpack-select");
             if (!sel) return;
             sel.innerHTML = "";
@@ -461,7 +460,7 @@
     function showModal() {
         if (MPP.chat) MPP.chat.blur();
         hideAllModals();
-        soundManager._refreshDropdown();
+        soundManager.refreshDropdown();
 
         const $vol = $("#volume-sliders").html(`<legend style="font-size: 18px; padding: 0 0.5em; white-space: nowrap;">Adjust volume</legend>`);
         soundManager.soundTypes.forEach(type => {
@@ -555,7 +554,7 @@
         localStorage.currentSoundpack = defaultName;
         localStorage.initializedSoundpacks = "false";
 
-        soundManager._loadSoundpacks();
+        soundManager.loadSoundpacks();
         soundManager.setCurrentSoundpack(defaultName);
 
         alert("Successfully reset your soundpacks!");

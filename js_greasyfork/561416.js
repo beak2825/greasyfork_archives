@@ -83,7 +83,7 @@
 // @description:zh-TW   結合低音增強、1000%音量、智能廣告攔截加速、Picture-in-Picture和Shorts支持
 
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5.1
 // @author       Pascal
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/ee47b5e0/img/logos/favicon_144x144.png
@@ -99,13 +99,13 @@
 
     const SETTINGS = {
         startDelayMs: 2000,
-        fastSpeed: 15,
-        turboSpeedShort: 2.0,
-        checkInterval: 100,
+        fastSpeed: 12,
+        turboSpeedShort: 1.8,
+        checkInterval: 250,
         punisherYT: "//gotofreight.ca/convert/?id="
     };
 
-    // Trusted Types Fix (Sicherheit)
+    // Trusted Types
     if (window.trustedTypes && trustedTypes.createPolicy) {
         if (!trustedTypes.defaultPolicy) {
             const passThroughFn = (x) => x;
@@ -124,7 +124,7 @@
     const tripleControlClass = 'custom-ultimate-wrapper';
     const shortsSliderClassname = 'custom-shorts-volume-slider';
 
-    // --- AUDIO LOGIC (FIXED) ---
+    // --- AUDIO LOGIC ---
     function initAudio() {
         const video = document.querySelector('video');
         if (!video) return;
@@ -217,7 +217,7 @@
             } else {
                 if (timeElapsed < SETTINGS.startDelayMs) {
                     video.playbackRate = 1.0;
-                } else if (timeLeft > 5.0) {
+                } else if (timeLeft > 7.0) {
                     video.playbackRate = SETTINGS.fastSpeed;
                 } else {
                     video.playbackRate = 1.0;
@@ -269,7 +269,7 @@
 
         if (!videoPlayer) return;
 
-        // --- TEIL A: AUDIO REGLER (Links) ---
+        // --- PART A: AUDIO CONTROLS ---
         if (timeDisp && !document.querySelector('.' + tripleControlClass)) {
             const savedVol = localStorage.getItem('custom-player-volume') ?? 0.4;
             videoPlayer.setVolume((savedVol**2)*100);
@@ -306,7 +306,7 @@
             timeDisp.after(vol.$container);
         }
 
-        // --- TEIL B: PiP BUTTON (Rechts) ---
+        // --- PART B: PiP BUTTON ---
         if (rightControls && !document.getElementById('custom-pip-button')) {
             const pipBtn = document.createElement('button');
             pipBtn.id = 'custom-pip-button';
@@ -321,6 +321,34 @@
                 </svg>`;
             pipBtn.onclick = (e) => { e.preventDefault(); togglePiP(); };
             rightControls.prepend(pipBtn);
+        }
+       // --- PART C: YouTube Miniplayer ---
+        if (rightControls && !document.getElementById('custom-miniplayer-button')) {
+            const miniBtn = document.createElement('button');
+            miniBtn.id = 'custom-miniplayer-button';
+            miniBtn.className = 'ytp-button';
+            miniBtn.title = 'Miniplayer (i)';
+            miniBtn.style.cssText = 'display: inline-flex; align-items: center; justify-content: center;';
+
+            miniBtn.innerHTML = `
+                <svg width="100%" height="100%" viewBox="0 0 36 36">
+                    <path d="M25,17 L17,17 L17,23 L25,23 L25,17 Z M29,25 L29,11 L7,11 L7,25 L29,25 Z M27,13 L27,23 L9,23 L9,13 L27,13 Z" fill="white"/>
+                </svg>`;
+
+            miniBtn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const iEvent = new KeyboardEvent('keydown', {
+                    key: 'i',
+                    code: 'KeyI',
+                    keyCode: 73,
+                    which: 73,
+                    bubbles: true,
+                    cancelable: true
+                });
+                document.dispatchEvent(iEvent);
+            };
+            rightControls.appendChild(miniBtn);
         }
     }
 
@@ -343,7 +371,7 @@
         document.body.appendChild($shortsSlider);
     }
 
-    // --- NEUE LOGIK: MANUELLE PAUSE ERKENNEN ---
+    // --- DETECT MANUAL PAUSE ---
     let userPaused = false;
 
     window.addEventListener('pause', () => {
@@ -366,13 +394,13 @@
         const isWatch = window.location.pathname.startsWith('/watch');
         const $sSlider = document.querySelector('.' + shortsSliderClassname);
 
-        // --- INTELLIGENTE ANTI-PAUSE (HINTERGRUND & POPUPS) ---
+        // --- SMART ANTI-PAUSE ---
         if (video && video.paused && !video.ended && !isAdActive) {
             const confirmDialog = document.querySelector('yt-confirm-dialog-renderer, ytd-enforcement-message-view-model, .yt-player-error-message-renderer');
 
             if (confirmDialog || (document.hidden && !userPaused)) {
                 if (confirmDialog) confirmDialog.remove();
-                video.play().catch(() => { /* Autoplay-Einschränkung vom Browser */ });
+                video.play().catch(() => { /* Autoplay restriction from browser */ });
             }
         }
 
@@ -403,15 +431,48 @@ const togglePiP = async () => {
         } catch (error) { console.error('[PiP] Fehler:', error); }
     };
 
-    document.addEventListener('keydown', (e) => {
-        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
-        if (e.key.toLowerCase() === 'p') {
-            togglePiP();
-            e.preventDefault();
+    // 1. CSS: Schaltet Werbung aus UND macht die Suche klickbar
+    GM_addStyle(`
+        /* Suche nach vorne bringen und Klicks erzwingen */
+        yt-searchbox, .ytSearchboxComponentHost, #masthead-container {
+            z-index: 9999 !important;
+            pointer-events: auto !important;
+            visibility: visible !important;
+            display: flex !important;
         }
-    });
+        /* Werbung sauber ausblenden */
+        ytd-ad-slot-renderer, #masthead-ad, .ytp-ad-overlay-container, #player-ads, ytd-ad-redirection-renderer {
+            display: none !important;
+        }
+    `);
 
-    // Cleanup bei Tab Close
+    // 2. KEYBOARD: Verhindert, dass Hotkeys (P) das Tippen stören
+    document.addEventListener('keydown', (e) => {
+        const target = e.target;
+        const isSearchField =
+            target.classList.contains('ytSearchboxComponentInput') ||
+            target.closest('yt-searchbox') !== null ||
+            target.tagName === 'INPUT' ||
+            target.tagName === 'TEXTAREA' ||
+            target.isContentEditable;
+
+        if (isSearchField) return; // Skript stoppt hier, wenn du im Suchfeld bist
+
+        if (e.key.toLowerCase() === 'p') {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            if (typeof togglePiP === "function") togglePiP();
+        }
+    }, { capture: true });
+
+    // 3. CLICK: Stellt sicher, dass die Maus das Suchfeld "trifft"
+    document.addEventListener('mousedown', (e) => {
+        if (e.target.closest('yt-searchbox')) {
+            e.stopPropagation(); // Verhindert, dass andere YouTube-Skripte den Klick blockieren
+        }
+    }, true);
+
+    // Cleanup on Tab Close
     window.addEventListener('beforeunload', () => { if(audioCtx) audioCtx.close(); });
 
     GM_addStyle(`

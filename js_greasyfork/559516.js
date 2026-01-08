@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          Bazaar Filler
 // @namespace     http://tampermonkey.net/
-// @version       4.7
+// @version       5.3 
 // @author        WTV1
 // @description   Advanced Bazaar Filler with Market and Bazaar Price Points + Fill All + Trade Fill + Visual Qty and Price currently on Bazaar
 // @match         https://www.torn.com/bazaar.php*
@@ -36,6 +36,7 @@
     loadSettings();
 
     const styleBlock = `
+        /* --- 4.7 CORE STYLES --- */
         .filler-header-links { float: right; margin-right: 10px; height: 34px; display: flex; align-items: center; }
         .fill-all-btn { cursor: pointer; margin-left: 15px; font-size: 12px; color: #7cfc00; text-transform: uppercase; font-weight: bold; }
         .fill-qty-btn { cursor: pointer; margin-left: 15px; font-size: 12px; color: #00aaff; text-transform: uppercase; font-weight: bold; }
@@ -55,9 +56,24 @@
 
         .row-fill-btn { padding: 0 8px; height: 24px; cursor: pointer; border: 1px solid #444; border-radius: 3px; background: #222; display: flex; align-items: center; justify-content: center; color: #7cfc00; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .item-toggle-btn { width: 24px; height: 24px; cursor: pointer; border: 1px solid #444; border-radius: 3px; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; color: #ffde00; font-size: 14px; font-weight: bold; }
-
         .filler-skip-checkbox { cursor: pointer; width: 20px; height: 20px; accent-color: #ff3b3b; margin: 0; opacity: 0.8; }
 
+        /* --- WEAPON & ARMOR OVERLAY FIXES --- */
+        .title-wrap { position: relative !important; }
+        .stat-row-filler-overlay {
+            position: absolute !important;
+            right: 45px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 5;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        .name-wrap.bold { display: flex !important; align-items: center; gap: 10px; width: 100%; }
+        .armor-inline-btns { display: flex; gap: 5px; align-items: center; }
+
+        /* --- POPUP STYLES --- */
         .draggable-popup { position: fixed !important; z-index: 999999998; background: #1a1a1a; color: #fff; border: 1px solid #444; border-radius: 5px; width: 220px; display: none; box-shadow: 0 8px 30px rgba(0,0,0,0.9); overflow: hidden; font-family: Arial, sans-serif; touch-action: none; }
         .popup-header { background: #222; padding: 12px; cursor: move; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; font-weight: bold; color: #ffde00; font-size: 12px; user-select: none; }
         .mv-banner { background: #111; padding: 6px; text-align: center; font-weight: bold; border-bottom: 1px solid #333; font-size: 11px; color: #fff; }
@@ -74,13 +90,12 @@
         .cfg-field input, .cfg-field select { background: #fff; color: #000; border: none; padding: 10px; border-radius: 2px; width: 100%; box-sizing: border-box; font-size: 14px; }
         .btn-save { width: 48%; background: #7cfc00; color: #000; border: none; padding: 12px; cursor: pointer; font-weight: bold; border-radius: 4px; }
         .btn-close { width: 48%; background: #333; color: #fff; border: none; padding: 12px; cursor: pointer; border-radius: 4px; margin-left: 4%; }
-        
+
         @keyframes bzSpin { from { transform: translateY(-50%) rotate(0deg); } to { transform: translateY(-50%) rotate(360deg); } }
         .bz-spinning { animation: bzSpin 0.8s linear infinite !important; opacity: 0.5 !important; pointer-events: none !important; }
     `;
     $("<style>").html(styleBlock).appendTo("head");
 
-    // Close logic (Identical to 3.9)
     $(document).on('touchstart mousedown', function (e) {
         if ($("#filler-config-modal").is(":visible") && !$(e.target).closest("#filler-config-modal, #f-cfg").length) $("#filler-config-modal").hide();
         if ($(".draggable-popup").is(":visible") && !$(e.target).closest(".draggable-popup, .item-toggle-btn").length) $(".draggable-popup").hide();
@@ -161,7 +176,7 @@
         }
         const rect = e.currentTarget.getBoundingClientRect();
         $popup.show().css({ top: Math.max(10, rect.top - 100), left: Math.max(10, rect.left - 230) });
-        $popup.find('.item-label').text(itemName.substring(0, 22));
+        $popup.find('.item-label').text(itemName.substring(0, 22)).attr('data-id', itemId);
         $popup.find('.popup-body').html(`<table class="market-table"><tr><th>Market</th><th>Bazaar</th></tr>` + Array(5).fill('<tr><td class="im-row">--</td><td class="bz-row">--</td></tr>').join('') + `</table>`);
 
         $popup.find('.fill-max-btn').off().on('touchstart click', function(ev) {
@@ -188,23 +203,25 @@
         const isManage = hash.includes('#/manage');
         const isAdd = hash.includes('#/add');
         if ($('input.torn-btn[value="CONFIRM"]').length > 0) {
-            $(".pc-filler-container, .fill-wrapper-left, .add-wrapper, .filler-header-links, .pda-skip-container").addClass("filler-force-hide"); return;
+            $(".pc-filler-container, .stat-row-filler-overlay, .fill-wrapper-left, .add-wrapper, .filler-header-links, .pda-skip-container, .armor-inline-btns").addClass("filler-force-hide"); return;
         } else {
-            $(".pc-filler-container, .fill-wrapper-left, .add-wrapper, .filler-header-links, .pda-skip-container").removeClass("filler-force-hide");
+            $(".pc-filler-container, .stat-row-filler-overlay, .fill-wrapper-left, .add-wrapper, .filler-header-links, .pda-skip-container, .armor-inline-btns").removeClass("filler-force-hide");
         }
         if (isPDA && !isAdd) return;
+
+        const isArmorCategory = $('.armour-category-icon').closest('li').hasClass('ui-state-active');
 
         const header = isManage ? $(".panelHeader___PHqEv:contains('Manage your Bazaar')") : $(".title-black:contains('Add items to your Bazaar')");
         if (header.length && $(".fill-all-btn").length === 0) {
             header.append(`<div class="filler-header-links"><a class="fill-qty-btn" id="f-qty">Fill Qty</a><a class="fill-all-btn" id="f-all">Fill All</a><a class="filler-nav-link" id="f-cfg">Settings</a></div>`);
             $("#f-cfg").on('touchstart click', (e) => { e.preventDefault(); $("#filler-config-modal").show(); });
-            
-            $("#f-all, #f-qty").on('touchstart click', function(e) { 
-                e.preventDefault(); 
+
+            $("#f-all, #f-qty").on('touchstart click', function(e) {
+                e.preventDefault();
                 const act = $(this).attr('id');
-                $("li:visible, [class*='listItem___'], [class*='row___']").each(function() { 
+                $("li:visible, [class*='listItem___'], [class*='row___']").each(function() {
                     const $r = $(this);
-                    if ($r.find('input').length > 0 && !$r.find('.filler-skip-checkbox').is(':checked')) { 
+                    if ($r.find('input').length > 0 && !$r.find('.filler-skip-checkbox').is(':checked')) {
                         if (act === 'f-all') {
                             const id = $r.find('img[src*="/items/"]').attr('src')?.match(/\/(\d+)\//)?.[1];
                             if (id) handleFillSingleRow($r, id, null);
@@ -212,8 +229,8 @@
                             const max = $r.find('[class*="amount"], .amount, .count').first().text().replace(/[^0-9]/g, '');
                             updateTornInput($r.find('input[placeholder*="Amount"], input[name="amount"], [aria-label="Amount"]'), max);
                         }
-                    } 
-                }); 
+                    }
+                });
             });
         }
 
@@ -226,6 +243,8 @@
             const isSkipped = settings.skippedItems[itemId] ? "checked" : "";
             const cbHTML = `<input type="checkbox" class="filler-skip-checkbox" data-id="${itemId}" ${isSkipped}>`;
 
+            const isWeapon = $row.find('i[class*="damage"], i[class*="accuracy"]').length > 0;
+
             if (isPDA && isAdd) {
                 $row.addClass("filler-relative");
                 $(`<div class="pda-skip-container">${cbHTML}</div>`).appendTo($row);
@@ -233,12 +252,29 @@
                 $fW.find('.row-fill-btn').on('touchstart click', (e) => { e.preventDefault(); handleFillSingleRow($row, itemId, $fW.find('.row-fill-btn')); });
                 $('<div class="add-wrapper"><div class="item-toggle-btn">$</div></div>').appendTo($row).on('touchstart click', (e) => { e.preventDefault(); e.stopPropagation(); showDualTable(e, $row, itemId, $row.find('[class*="name"]').first().text().trim()); });
             } else if (!isPDA) {
-                let $target = isAdd ? $row.find('.info-wrap') : $row.find('[class*="bonuses___pTH_L"]');
-                if ($target.length) {
-                    $target.css('display', 'flex');
-                    const $cont = $(`<div class="pc-filler-container">${cbHTML}</div>`).appendTo($target);
-                    const $f = $('<div class="row-fill-btn">FILL</div>').appendTo($cont).on('click', (e) => { e.stopPropagation(); handleFillSingleRow($row, itemId, $f); });
-                    $('<div class="item-toggle-btn">$</div>').appendTo($cont).on('click', (e) => { e.stopPropagation(); showDualTable(e, $row, itemId, $row.find('[class*="name"]').first().text().trim()); });
+                if (isArmorCategory) {
+                    const $nameTarget = $row.find('div.name-wrap.bold');
+                    if ($nameTarget.length) {
+                        const $cont = $('<div class="armor-inline-btns"></div>').appendTo($nameTarget);
+                        $cont.append(cbHTML);
+                        const $f = $('<div class="row-fill-btn">FILL</div>').appendTo($cont).on('click', (e) => { e.stopPropagation(); handleFillSingleRow($row, itemId, $f); });
+                        $('<div class="item-toggle-btn">$</div>').appendTo($cont).on('click', (e) => { e.stopPropagation(); showDualTable(e, $row, itemId, $nameTarget.text().trim()); });
+                    }
+                } else if (isWeapon) {
+                    const $target = $row.find('.title-wrap');
+                    if ($target.length) {
+                        const $cont = $(`<div class="stat-row-filler-overlay">${cbHTML}</div>`).appendTo($target);
+                        const $f = $('<div class="row-fill-btn">FILL</div>').appendTo($cont).on('click', (e) => { e.stopPropagation(); handleFillSingleRow($row, itemId, $f); });
+                        $('<div class="item-toggle-btn">$</div>').appendTo($cont).on('click', (e) => { e.stopPropagation(); showDualTable(e, $row, itemId, $row.find('[class*="name"]').first().text().trim()); });
+                    }
+                } else {
+                    let $target = isAdd ? $row.find('.info-wrap') : $row.find('[class*="bonuses___pTH_L"]');
+                    if ($target.length) {
+                        $target.css('display', 'flex');
+                        const $cont = $(`<div class="pc-filler-container">${cbHTML}</div>`).appendTo($target);
+                        const $f = $('<div class="row-fill-btn">FILL</div>').appendTo($cont).on('click', (e) => { e.stopPropagation(); handleFillSingleRow($row, itemId, $f); });
+                        $('<div class="item-toggle-btn">$</div>').appendTo($cont).on('click', (e) => { e.stopPropagation(); showDualTable(e, $row, itemId, $row.find('[class*="name"]').first().text().trim()); });
+                    }
                 }
             }
         });
@@ -269,7 +305,7 @@
     obs.observe(document.body, { childList: true, subtree: true });
     inject();
 
-    // RESTORED TRENDS
+    // --- TRENDS FIX ---
     (function() {
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxtyZmClPhnEbdX8vl00kwWAXheSSgLv620CVZOFOgJjoCT0_JhXcu4A2wtJ0u9mm1a/exec";
         let trendData = null;
@@ -278,11 +314,9 @@
         const trendObserver = new MutationObserver(() => {
             const $popup = $('.draggable-popup');
             const $mvLine = $popup.find('.mv-banner');
-            if ($popup.is(':visible') && $mvLine.length > 0 && $mvLine.find('.pro-trend').length === 0 && trendData) {
-                const itemName = $popup.find('.item-label').text().trim();
-                const $itemRow = $("li, [class*='listItem___']").filter(function() { return $(this).text().includes(itemName); });
-                const itemId = $itemRow.find('img[src*="/items/"]').attr('src')?.match(/\/(\d+)\//)?.[1];
-                if (itemId && trendData[itemId]) {
+            const itemId = $popup.find('.item-label').attr('data-id');
+            if ($popup.is(':visible') && $mvLine.length > 0 && $mvLine.find('.pro-trend').length === 0 && trendData && itemId) {
+                if (trendData[itemId]) {
                     const h = trendData[itemId].history, latest = h[h.length - 1], prev = h[h.length - 2] || latest, hi = Math.max(...h), lo = Math.min(...h);
                     const change = (((latest - prev) / prev) * 100).toFixed(2), col = change > 0 ? "#7cfc00" : (change < 0 ? "#ff3b3b" : "#aaa");
                     let stat = latest >= hi ? "🔥" : (latest <= lo ? "🧊" : "");
@@ -294,10 +328,10 @@
         trendObserver.observe(document.body, { childList: true, subtree: true });
     })();
 
-    // RESTORED TRADE FILL
+    // 4.7 TRADE FILL
     function injectTradeFill() {
         if (!window.location.href.includes('trade.php')) return;
-        const topFooter = $(".items-footer.clearfix").first(); 
+        const topFooter = $(".items-footer.clearfix").first();
         if (topFooter.length && !$("#trade-fill-qty-single").length) {
             const $btn = $('<a id="trade-fill-qty-single" style="cursor: pointer; margin-left: 15px; font-size: 12px; color: #00aaff; text-transform: uppercase; font-weight: bold; line-height: 24px;">Fill Qty</a>');
             topFooter.append($btn);
@@ -314,32 +348,32 @@
     tradeObs.observe(document.body, { childList: true, subtree: true });
     injectTradeFill();
 
-    // RESTORED STOCK INDICATOR WITH SPIN & LOCK
+    // --- STOCK INDICATOR FIX ---
     (function() {
         let myBazaarData = null, lastFetch = 0, isFetching = false;
         function updateStock() {
             const $p = $('.draggable-popup'), $h = $p.find('.popup-header');
             if ($p.is(':visible') && $h.length > 0) {
-                const name = $p.find('.item-label').text().trim(), $row = $("li, [class*='listItem___']").filter(function() { return $(this).text().includes(name); });
-                const id = $row.find('img[src*="/items/"]').attr('src')?.match(/\/(\d+)\//)?.[1];
-                if (myBazaarData) {
-                    let itm = id ? myBazaarData.find(i => String(i.ID || i.item_id) === String(id)) : myBazaarData.find(i => i.name.toLowerCase() === name.toLowerCase());
+                const itemId = $p.find('.item-label').attr('data-id');
+                const name = $p.find('.item-label').text().trim();
+                if (myBazaarData && itemId) {
+                    let itm = myBazaarData.find(i => String(i.ID || i.item_id) === String(itemId));
                     const txt = itm ? `On Bazaar: ${itm.quantity.toLocaleString()} @ $${itm.price.toLocaleString()}` : "On Bazaar: 0";
-                    if ($p.find('.my-stock-info').attr('data-item') !== name) {
+                    if ($p.find('.my-stock-info').attr('data-id') !== itemId) {
                         $p.find('.my-stock-info').remove();
-                        $h.after(`<div class="my-stock-info" data-item="${name}" style="background: #2a2a2a; color: #ffde00; padding: 6px 12px; font-size: 11px; border-bottom: 1px solid #444; text-align: center; font-weight: bold; position: relative; z-index: 10;">${txt}<span class="bz-manual-refresh" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px;">&#8635;</span></div>`);
+                        $h.after(`<div class="my-stock-info" data-id="${itemId}" style="background: #2a2a2a; color: #ffde00; padding: 6px 12px; font-size: 11px; border-bottom: 1px solid #444; text-align: center; font-weight: bold; position: relative; z-index: 10;">${txt}<span class="bz-manual-refresh" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px;">&#8635;</span></div>`);
                     }
                 }
             }
         }
         function fetchBZ(force = false) {
             if (!settings.apiKey || isFetching) return;
-            if (force || (Date.now() - lastFetch > 15000)) { 
+            if (force || (Date.now() - lastFetch > 15000)) {
                 isFetching = true; $('.bz-manual-refresh').addClass('bz-spinning');
                 GM_xmlhttpRequest({
                     method: "GET", url: `https://api.torn.com/user/?selections=bazaar&key=${settings.apiKey}`,
                     onload: (res) => {
-                        try { const json = JSON.parse(res.responseText); myBazaarData = Array.isArray(json.bazaar) ? json.bazaar : Object.values(json.bazaar || {}); lastFetch = Date.now(); $('.my-stock-info').attr('data-item', ''); updateStock(); } catch(e){}
+                        try { const json = JSON.parse(res.responseText); myBazaarData = Array.isArray(json.bazaar) ? json.bazaar : Object.values(json.bazaar || {}); lastFetch = Date.now(); $('.my-stock-info').attr('data-id', ''); updateStock(); } catch(e){}
                         isFetching = false; $('.bz-manual-refresh').removeClass('bz-spinning');
                     },
                     onerror: () => { isFetching = false; $('.bz-manual-refresh').removeClass('bz-spinning'); }

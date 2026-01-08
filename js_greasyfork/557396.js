@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Shoutbox Image Viewer & GIF Search
 // @namespace    foxbinner
-// @version      2.2.0
+// @version      2.3.0
 // @description  GIF Search & Direct Image Link Viewer. Adds a GIF button and converts text links (Tenor, Lightshot etc.) into inline thumbnails.
 // @author       foxbinner
 // @license      MIT
@@ -29,7 +29,7 @@
     const GifSearchModule = {
         config: {
             CLIENT_KEY: 'TBD_UserScript',
-            LIMIT: 20,
+            LIMIT: 24,
             NO_KEY_MSG: `
                 <div class="gif-error">
                     <div style="margin-bottom:5px; font-size:14px; color:#e74c3c;">API Key Missing</div>
@@ -46,7 +46,7 @@
             overlay: 'gif-modal-overlay',
             modalBox: 'gif-modal-box',
             searchInput: 'gif-search-input',
-            clearBtn: 'gif-clear-search', // NEW ID
+            clearBtn: 'gif-clear-search',
             results: 'gif-results-container',
             closeBtn: 'gif-close-btn'
         },
@@ -61,7 +61,6 @@
 
         addStyles() {
             const css = `
-                /* Button Style */
                 #${this.dom.triggerBtn} { cursor: pointer; margin: 0 2px; display: inline-block; vertical-align: bottom; }
                 .gif-icon-rect {
                     display: inline-block; background: #e0e0e0; color: #222; font-weight: 800; font-size: 11px;
@@ -70,7 +69,6 @@
                 }
                 #${this.dom.triggerBtn}:hover .gif-icon-rect { background: #14a76c; color: #fff; text-decoration: none; }
 
-                /* Modal Styles */
                 #${this.dom.overlay} {
                     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
                     background: rgba(0, 0, 0, 0.8); z-index: 9999;
@@ -86,28 +84,25 @@
                     align-items: center; background: #1a1a1a; border-radius: 8px 8px 0 0;
                 }
 
-                /* --- SEARCH INPUT WRAPPER --- */
                 .gif-search-wrapper {
                     flex: 1; position: relative; display: flex; align-items: center;
                 }
                 #${this.dom.searchInput} {
-                    width: 100%; height: 38px; padding: 0 30px 0 12px; /* Extra right padding for X */
+                    width: 100%; height: 38px; padding: 0 30px 0 12px;
                     border: 1px solid #444; border-radius: 4px;
                     background: #111; color: #fff; outline: none; box-sizing: border-box; font-size: 14px; margin: 0;
                 }
                 #${this.dom.searchInput}:focus { border-color: #14a76c; }
 
-                /* --- CLEAR BUTTON (X) --- */
                 #${this.dom.clearBtn} {
                     position: absolute; right: 8px;
                     color: #888; cursor: pointer; font-size: 18px; font-weight: bold;
-                    display: none; /* Hidden by default */
+                    display: none;
                     line-height: 1;
                     user-select: none;
                 }
                 #${this.dom.clearBtn}:hover { color: #fff; }
 
-                /* Close Button */
                 #${this.dom.closeBtn} {
                     flex: 0 0 38px; height: 38px; border: 1px solid #c0392b; background: #c0392b; color: white;
                     padding: 0; cursor: pointer; border-radius: 4px; font-weight: bold; display: flex;
@@ -130,7 +125,6 @@
                 .gif-item:hover { border-color: #14a76c; }
                 .gif-item img { width: 100%; height: 100%; object-fit: cover; }
 
-                /* Messages & Buttons */
                 .gif-loader, .gif-error { text-align: center; color: #888; padding: 20px; grid-column: 1 / -1; }
                 .gif-btn-small {
                     display: inline-block; padding: 6px 12px; cursor: pointer;
@@ -139,7 +133,6 @@
                 }
                 .gif-btn-small:hover { background: #118c5a; }
 
-                /* New Helper Styles */
                 .gif-help-text { font-size: 11px; color: #888; margin: 15px 0 5px; font-style: italic; }
                 .gif-link-btn {
                     display: inline-block; padding: 5px 10px;
@@ -178,7 +171,6 @@
         },
 
         buildUI(container) {
-            // UPDATED HTML STRUCTURE: Added wrapper and Clear Button
             const modalHtml = `
                 <div id="${this.dom.overlay}">
                     <div id="${this.dom.modalBox}">
@@ -217,7 +209,6 @@
                 if (e.target.id === this.dom.overlay) this.closeModal();
             });
 
-            // Delegate click for the "Set Key" button since it might be re-rendered
             document.getElementById(this.dom.results).addEventListener('click', (e) => {
                 if (e.target.id === 'gif-set-key-btn') this.promptForKey();
             });
@@ -225,13 +216,11 @@
             const input = document.getElementById(this.dom.searchInput);
             const clearBtn = document.getElementById(this.dom.clearBtn);
 
-            // INPUT EVENT: Search logic + Toggle Clear Button
             input.addEventListener('input', (e) => {
                 const val = e.target.value;
-                // Toggle clear button visibility
                 clearBtn.style.display = val.length > 0 ? 'block' : 'none';
 
-                clearTimeout(this.debounceTimer);
+                clearTimeout(this.debounceTimer); // Fixed: was clearTimeOut
                 this.debounceTimer = setTimeout(() => this.fetchGifs(val), 500);
             });
 
@@ -242,12 +231,11 @@
                 }
             });
 
-            // CLEAR BUTTON CLICK EVENT
             clearBtn.addEventListener('click', () => {
-                input.value = ''; // Clear text
-                clearBtn.style.display = 'none'; // Hide button
-                input.focus(); // Keep focus
-                this.fetchGifs(''); // Reset to featured GIFs
+                input.value = '';
+                clearBtn.style.display = 'none';
+                input.focus();
+                this.fetchGifs('');
             });
         },
 
@@ -257,7 +245,6 @@
             const clearBtn = document.getElementById(this.dom.clearBtn);
 
             input.focus();
-            // Check if clear button needs to show (if value persisted)
             clearBtn.style.display = input.value.length > 0 ? 'block' : 'none';
 
             if (!this.apiKey) {
@@ -275,9 +262,12 @@
             const shoutInput = document.querySelector(this.dom.shoutInput);
             if (!shoutInput) return;
 
+            const filename = url.split('/').pop() || 'image.gif';
+            const bbcode = `[url=${url}]${filename}[/url]`;
+
             const currentText = shoutInput.value;
             const prefix = currentText && !currentText.endsWith(' ') ? currentText + ' ' : currentText;
-            shoutInput.value = prefix + url + ' ';
+            shoutInput.value = prefix + bbcode + ' ';
 
             this.closeModal();
             shoutInput.focus();
@@ -291,9 +281,16 @@
             }
 
             container.innerHTML = '<div class="gif-loader">Loading...</div>';
+
             const type = query ? 'search' : 'featured';
             const qParam = query ? `&q=${encodeURIComponent(query)}` : '';
-            const url = `https://tenor.googleapis.com/v2/${type}?key=${this.apiKey}&client_key=${this.config.CLIENT_KEY}&limit=${this.config.LIMIT}&media_filter=minimal${qParam}`;
+
+            const now = new Date();
+            const dateKey = now.toISOString().split('T')[0];
+            const timeBlock = Math.floor(now.getHours() / 6);
+            const cacheKey = `${dateKey}-${timeBlock}`;
+
+            const url = `https://tenor.googleapis.com/v2/${type}?key=${this.apiKey}&client_key=${this.config.CLIENT_KEY}&limit=${this.config.LIMIT}&media_filter=minimal${qParam}&ts=${cacheKey}`;
 
             GM_xmlhttpRequest({
                 method: 'GET',
@@ -305,9 +302,8 @@
                         this.renderResults(data.results);
                     } catch (e) {
                         console.error(e);
-                        // Updated Error HTML to include the creation link as well
                         container.innerHTML = `
-                            <div class="gif-error">
+                             <div class="gif-error">
                                 <div style="margin-bottom:5px; font-size:14px; color:#e74c3c;">Error: Invalid Key</div>
                                 <button id="gif-set-key-btn" class="gif-btn-small">Change API Key</button>
                                 <div class="gif-help-text">It won't take more than 30 seconds</div>
@@ -351,7 +347,9 @@
             image: /https?:\/\/[^\s'"><]+\.(?:png|jpe?g|webp|gif)(?:\?[^\s'">]*)?(?=[^\w\-]|$)/gi,
             tenor: /https?:\/\/(?:c|media)\.tenor\.com\/[^\s'"><]+/gi,
             lightshot: /https?:\/\/prnt\.sc\/[a-zA-Z0-9\-_]+/gi,
-            ibb: /https?:\/\/ibb\.co\.com\/[a-zA-Z0-9\-_]+/gi
+            ibb: /https?:\/\/ibb\.co\.com\/[a-zA-Z0-9\-_]+/gi,
+            gifyu: /https?:\/\/gifyu\.com\/image\/[a-zA-Z0-9\-_]+/gi,
+            imgbox: /https?:\/\/imgbox\.com\/[a-zA-Z0-9\-_]+/gi
         },
 
         init() {
@@ -395,25 +393,30 @@
                 const text = textNode.nodeValue;
                 const r = this.regex;
 
-                if (!r.image.test(text) && !r.tenor.test(text) && !r.lightshot.test(text) && !r.ibb.test(text)) return;
+                if (!r.image.test(text) && !r.tenor.test(text) && !r.lightshot.test(text) &&
+                    !r.ibb.test(text) && !r.gifyu.test(text) && !r.imgbox.test(text)) return;
 
                 const frag = document.createDocumentFragment();
                 let lastIndex = 0;
 
-                // Reset regex indices
-                r.image.lastIndex = 0; r.tenor.lastIndex = 0; r.lightshot.lastIndex = 0; r.ibb.lastIndex = 0;
+                r.image.lastIndex = 0; r.tenor.lastIndex = 0; r.lightshot.lastIndex = 0;
+                r.ibb.lastIndex = 0; r.gifyu.lastIndex = 0; r.imgbox.lastIndex = 0;
 
                 while (true) {
                     const mImg = r.image.exec(text);
                     const mTen = r.tenor.exec(text);
                     const mLs = r.lightshot.exec(text);
                     const mIbb = r.ibb.exec(text);
+                    const mGifyu = r.gifyu.exec(text);
+                    const mImgbox = r.imgbox.exec(text);
 
                     const matches = [
                         { type: 'img', m: mImg },
                         { type: 'tn', m: mTen },
                         { type: 'ls', m: mLs },
-                        { type: 'ls', m: mIbb }
+                        { type: 'ls', m: mIbb },
+                        { type: 'ls', m: mGifyu },
+                        { type: 'ls', m: mImgbox }
                     ].filter(x => x.m).sort((a, b) => a.m.index - b.m.index);
 
                     if (matches.length === 0) break;
@@ -426,7 +429,6 @@
                         frag.appendChild(document.createTextNode(text.slice(lastIndex, m.index)));
                     }
 
-                    // Tenor specific fix for direct link detection within img regex
                     if (next.type === 'img' && url.match(/^https?:\/\/(?:www\.)?tenor\.com\//i)) {
                         next.type = 'ls';
                     }
@@ -439,7 +441,7 @@
                         lastIndex = m.index + url.length;
                     } else if (next.type === 'ls') {
                         const placeholder = document.createElement('span');
-                        const img = this.createImageElement(null, url); // No src yet
+                        const img = this.createImageElement(null, url);
                         img.alt = 'loading...';
 
                         placeholder.appendChild(document.createTextNode(' '));
@@ -461,7 +463,8 @@
                         lastIndex = m.index + url.length;
                     }
 
-                    r.image.lastIndex = lastIndex; r.tenor.lastIndex = lastIndex; r.lightshot.lastIndex = lastIndex; r.ibb.lastIndex = lastIndex;
+                    r.image.lastIndex = lastIndex; r.tenor.lastIndex = lastIndex; r.lightshot.lastIndex = lastIndex;
+                    r.ibb.lastIndex = lastIndex; r.gifyu.lastIndex = lastIndex; r.imgbox.lastIndex = lastIndex;
                 }
 
                 if (lastIndex < text.length) {
@@ -469,6 +472,28 @@
                 }
 
                 textNode.parentNode.replaceChild(frag, textNode);
+            });
+
+            const links = textField.querySelectorAll('a');
+            links.forEach(a => {
+                if (a.dataset.gifProcessed) return;
+
+                const href = a.href;
+
+                const isTenorGif = /^https:\/\/media\.tenor\.com\/.*\.gif$/i.test(href);
+
+                if (isTenorGif) {
+                    a.dataset.gifProcessed = "true";
+
+                    const img = this.createImageElement(href, href);
+
+                    a.innerHTML = '';
+                    a.appendChild(img);
+
+                    a.onclick = (e) => {
+                        e.preventDefault();
+                    };
+                }
             });
         },
 
@@ -516,7 +541,6 @@
 
         addClickHandlers() {
             document.querySelectorAll('.shout-text img[data-fullsrc]').forEach(img => {
-                // Ensure we don't double bind
                 if (img.dataset.bound) return;
                 img.dataset.bound = "true";
 

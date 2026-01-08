@@ -6,9 +6,9 @@
 // @grant           GM_setValue
 // @grant           GM_getValue
 // @grant           GM_addStyle
-// @run-at          document-start
+// @run-at          document-body
 // @noframes
-// @version         3.0.3
+// @version         3.0.7
 // @icon            https://cdn.jsdelivr.net/gh/zenstorage/Reddit-NSFW-Unblur/assets/icon.png
 // @author          hdyzen
 // @description     Unblur nsfw in Shreddit
@@ -18,84 +18,162 @@
 // @updateURL https://update.greasyfork.org/scripts/485608/Reddit%20NSFW%20Unblur.meta.js
 // ==/UserScript==
 
-const CONFIG = {
-    STATE: GM_getValue("autoUnblur", true),
-    UNBLUR_NSFW: GM_getValue("unblurNSFW", true),
-    UNBLUR_SPOILER: GM_getValue("unblurSpoiler", false),
-
-    ON_ELEMENTS: {
-        "#blocking-modal": (el) => el.remove(),
-        "#nsfw-qr-dialog": (el) => el.remove(),
-        "body > div[style*='backdrop-filter']": (el) => el.remove(),
-        "header.v2 nav:not(:has(> #unblur-toggles-wrapper-main))": initToggles,
-        "xpromo-nsfw-blocking-container": (el) => patchShadowForElement(el),
-    },
+const PREFS = {
+    enabled: GM_getValue("autoUnblur", true),
+    nsfw: GM_getValue("unblurNSFW", true),
+    spoiler: GM_getValue("unblurSpoiler", false),
 };
 
-if (CONFIG.STATE && CONFIG.UNBLUR_NSFW) {
-    CONFIG.ON_ELEMENTS["shreddit-blurred-container[reason='nsfw']:not([is-richtext-content])"] = (el) => (el.blurred = false);
-    CONFIG.ON_ELEMENTS["shreddit-blurred-container[reason='nsfw'][is-richtext-content]"] = (el) => el.replaceWith(el.querySelector("[property='schema:articleBody']"));
-}
-if (CONFIG.STATE && CONFIG.UNBLUR_SPOILER) {
-    CONFIG.ON_ELEMENTS["shreddit-blurred-container[reason='spoiler']:not([is-richtext-content])"] = (el) => (el.blurred = false);
-    CONFIG.ON_ELEMENTS["shreddit-blurred-container[reason='spoiler'][is-richtext-content]:not([mode='wrap'])"] = (el) =>
-        el.replaceWith(el.querySelector("[property='schema:articleBody']"));
-    CONFIG.ON_ELEMENTS["shreddit-blurred-container[reason='spoiler'][mode='wrap']"] = (el) => (el.blurred = false);
-    CONFIG.ON_ELEMENTS["shreddit-spoiler"] = (el) => (el.revealed = true);
-}
-CONFIG.CSS_SELECTOR = Object.keys(CONFIG.ON_ELEMENTS).join(",");
+const mutationsHandler = () => {
+    removeModal();
+    removeQRNSFW();
+    initToggles();
+    unblurPromo();
+
+    if (PREFS.enabled && (PREFS.nsfw || PREFS.spoiler)) {
+        unblurCards();
+        unblurPosts();
+    }
+    if (PREFS.enabled && PREFS.spoiler) unblurTextSpoiler();
+};
 
 const observer = new MutationObserver(mutationsHandler);
-observer.observe(document.documentElement, { childList: true, subtree: true });
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributeFilter: ["blurred", "reason"],
+});
 
-function mutationsHandler(mutations) {
-    for (const mutation of mutations) {
-        if (mutation.type === "attributes") {
-            onElement(mutation.target);
+function init() {
+    enableNSFWSearch();
+    handlePopupVisible();
+}
+init();
 
-            continue;
-        }
+function removeModal() {
+    const modal = document.querySelector("#blocking-modal");
+    if (modal) modal.remove();
 
-        for (const node of mutation.addedNodes) {
-            if (node.nodeType !== Node.ELEMENT_NODE) continue;
-            onElement(node);
+    const blur = document.querySelector("body > [style*='backdrop-filter']");
+    if (blur) blur.remove();
 
-            node.querySelectorAll(CONFIG.CSS_SELECTOR).forEach(onElement);
-        }
+    if (document.body && (document.body.style.pointerEvents || document.body.style.overflow)) {
+        document.body.style.removeProperty("overflow");
+        document.body.style.removeProperty("pointer-events");
     }
 }
 
-function onElement(node) {
-    for (const key in CONFIG.ON_ELEMENTS) {
-        if (!node.matches(key)) continue;
+function removeQRNSFW() {
+    const qr = document.querySelector("#nsfw-qr-dialog");
+    if (qr) qr.remove();
+}
 
-        CONFIG.ON_ELEMENTS[key](node);
+function unblurCards() {
+    const highlights = document.querySelectorAll("community-highlight-card[blurred]");
+    for (const highlight of highlights) {
+        if (highlight.hasAttribute("nsfw") && PREFS.nsfw) highlight.removeAttribute("blurred");
+        if (highlight.hasAttribute("spoiler") && PREFS.spoiler) highlight.removeAttribute("blurred");
+    }
+
+    const rights = document.querySelectorAll("reddit-pdp-right-rail-post [data-testid='post-thumbnail'] [icon-name]");
+    for (const right of rights) {
+        const type = right.getAttribute("icon-name");
+        const scrim = right.closest(".thumbnail-shadow");
+        const thumb = right.closest("[data-testid='post-thumbnail']");
+        const blur = thumb.querySelector("img[style*='blur']");
+
+        if (type === "nsfw-fill" && PREFS.nsfw) {
+            right.style.removeProperty("filter");
+            blur.style.removeProperty("filter");
+            scrim.remove();
+        }
+        if (type === "caution-fill" && PREFS.spoiler) {
+            right.style.removeProperty("filter");
+            blur.style.removeProperty("filter");
+            scrim.remove();
+        }
+    }
+
+    const medias = document.querySelectorAll("search-telemetry-tracker shreddit-blurred-container");
+    for (const media of medias) {
+        const nextElementIsSpoiler = media.nextElementSibling;
+
+        if (!nextElementIsSpoiler && PREFS.nsfw) media.blurred = false;
+        if (nextElementIsSpoiler && PREFS.spoiler) {
+            media.blurred = false;
+            nextElementIsSpoiler.remove();
+        }
+    }
+
+    const searchThumbs = document.querySelectorAll(`search-telemetry-tracker[data-faceplate-tracking-context*='"type":"thumbnail"']:has(.thumbnail-blur)`);
+    for (const searchThumb of searchThumbs) {
+        const data = searchThumb.getAttribute("data-faceplate-tracking-context");
+        const blur = searchThumb.querySelector(".thumbnail-blur");
+
+        if (data.includes('"nsfw":true') && PREFS.nsfw) blur.classList.remove("thumbnail-blur");
+        if (data.includes('"spoiler":true') && PREFS.spoiler) blur.classList.remove("thumbnail-blur");
     }
 }
 
-function patchShadowForElement(el) {
-    if (!el || !(el instanceof Element)) return;
+function unblurPosts() {
+    const posts = document.querySelectorAll("shreddit-blurred-container[reason]");
+    for (const post of posts) {
+        if (post.blurred === false) continue;
 
-    const originalAttachShadow = el.attachShadow;
+        const reason = post.getAttribute("reason");
+        post.blurred = !PREFS[reason];
+    }
+}
 
-    el.attachShadow = function (init) {
-        const shadow = originalAttachShadow.call(this, init);
+function unblurTextSpoiler() {
+    const spoilers = document.querySelectorAll("shreddit-spoiler");
+    for (const spoiler of spoilers) {
+        if (spoiler.revealed === true) continue;
+        spoiler.revealed = true;
+    }
+}
 
-        shadow.innerHTML += "<style>.prompt { display: none !important; } </style>";
+function unblurPromo() {
+    const promo = document.querySelector("xpromo-nsfw-blocking-container");
+    if (!promo) return;
 
-        return shadow;
+    const prompt = promo.shadowRoot.querySelector(".prompt");
+    if (prompt) prompt.remove();
+
+    const viewInApp = document.querySelector("xpromo-nsfw-blocking-container .viewInApp");
+    if (viewInApp) viewInApp.remove();
+}
+
+async function enableNSFWSearch() {
+    const over18 = await cookieStore.get("over18");
+    if (over18?.value === "1") return;
+
+    cookieStore.set({
+        name: "over18",
+        value: "1",
+        path: "/",
+        domain: "reddit.com",
+    });
+
+    const url = new URL(window.location.href);
+    if (url.pathname === "/search/") window.location.reload();
+}
+
+function handlePopupVisible() {
+    const handler = (e) => {
+        const wrapper = getWrapper();
+        if (!wrapper) return;
+
+        if (wrapper.classList.contains("open") && !wrapper.contains(e.target)) {
+            wrapper.classList.remove("open");
+        }
     };
+    document.body.addEventListener("click", handler, true);
 }
 
-// Run on init when page cached
-function runOnce() {
-    for (const key in CONFIG.ON_ELEMENTS) {
-        const el = document.querySelector(key);
-
-        if (el) CONFIG.ON_ELEMENTS[key](el);
-    }
+function getWrapper() {
+    return document.body.contains(window.wrapper) ? window.wrapper : document.querySelector("#unblur-toggles-wrapper-main");
 }
-runOnce();
 
 function createSecondaryToggle(id, labelText, initialState, onChangeHandler) {
     const label = document.createElement("label");
@@ -129,17 +207,21 @@ function updateStatusIndicator(el, isChecked) {
 
 function onMainToggleChange(el, isChecked) {
     GM_setValue("autoUnblur", isChecked);
-    CONFIG.STATE = isChecked;
+    PREFS.enabled = isChecked;
     updateStatusIndicator(el, isChecked);
 }
 
 function onSecondaryToggleChange(key, isChecked) {
     GM_setValue(key, isChecked);
-    CONFIG[key === "unblurNSFW" ? "UNBLUR_NSFW" : "UNBLUR_SPOILER"] = isChecked;
+    PREFS[key === "unblurNSFW" ? "nsfw" : "spoiler"] = isChecked;
 }
 
-function initToggles(navBar) {
-    if (!navBar) return;
+function initToggles() {
+    const wrapperExists = document.querySelector("#unblur-toggles-wrapper-main");
+    if (wrapperExists) return;
+
+    const nav = document.querySelector("header.v2 nav");
+    if (!nav) return;
 
     const wrapper = document.createElement("div");
     wrapper.id = "unblur-toggles-wrapper-main";
@@ -154,13 +236,13 @@ function initToggles(navBar) {
     const statusDiv = document.createElement("div");
     statusDiv.id = "status";
     statusContainer.appendChild(statusDiv);
-    updateStatusIndicator(statusDiv, CONFIG.STATE);
+    updateStatusIndicator(statusDiv, PREFS.enabled);
 
     const containerToggle = document.createElement("div");
     containerToggle.id = "container-toggle";
     containerToggle.innerHTML = `
         <label for="toggle">
-            <input id="toggle" name="toggle" type="checkbox" ${CONFIG.STATE ? "checked" : ""}>
+            <input id="toggle" name="toggle" type="checkbox" ${PREFS.enabled ? "checked" : ""}>
             <svg viewBox="0 0 24 24">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M13 3C13 2.44772 12.5523 2 12 2C11.4477 2 11 2.44772 11 3V12C11 12.5523 11.4477 13 12 13C12.5523 13 13 12.5523 13 12V3ZM8.6092 5.8744C9.09211 5.60643 9.26636 4.99771 8.99839 4.5148C8.73042 4.03188 8.12171 3.85763 7.63879 4.1256C4.87453 5.65948 3 8.61014 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 8.66747 19.1882 5.75928 16.5007 4.20465C16.0227 3.92811 15.4109 4.09147 15.1344 4.56953C14.8579 5.04759 15.0212 5.65932 15.4993 5.93586C17.5942 7.14771 19 9.41027 19 12C19 15.866 15.866 19 12 19C8.13401 19 5 15.866 5 12C5 9.3658 6.45462 7.06997 8.6092 5.8744Z"></path>
             </svg>
@@ -176,10 +258,10 @@ function initToggles(navBar) {
     const selectedOps = document.createElement("div");
     selectedOps.id = "selected-ops";
 
-    const nsfwToggle = createSecondaryToggle("toggle-nsfw", "Unblur NSFW", CONFIG.UNBLUR_NSFW, (isChecked) => onSecondaryToggleChange("unblurNSFW", isChecked));
+    const nsfwToggle = createSecondaryToggle("toggle-nsfw", "Unblur NSFW", PREFS.nsfw, (isChecked) => onSecondaryToggleChange("unblurNSFW", isChecked));
     selectedOps.appendChild(nsfwToggle);
 
-    const spoilerToggle = createSecondaryToggle("toggle-spoiler", "Unblur Spoiler", CONFIG.UNBLUR_SPOILER, (isChecked) => onSecondaryToggleChange("unblurSpoiler", isChecked));
+    const spoilerToggle = createSecondaryToggle("toggle-spoiler", "Unblur Spoiler", PREFS.spoiler, (isChecked) => onSecondaryToggleChange("unblurSpoiler", isChecked));
     selectedOps.appendChild(spoilerToggle);
 
     statusContainer.appendChild(selectedOps);
@@ -191,19 +273,22 @@ function initToggles(navBar) {
         if (e.target.id === "unblur-toggles-wrapper-main" || e.target.id === "popup-toggle") wrapper.classList.toggle("open");
     });
 
-    document.addEventListener("click", (e) => {
-        if (wrapper.classList.contains("open") && !wrapper.contains(e.target)) {
-            wrapper.classList.remove("open");
-        }
-    });
-
-    navBar.appendChild(wrapper);
+    nav.appendChild(wrapper);
+    window.wrapper = wrapper;
 }
 
 GM_addStyle(`
+    /* CSS Modal Fallback */
     body[style*='pointer-events'] {
-        pointer-events: initial !important;
-        overflow: initial !important;
+        pointer-events: revert !important;
+    }
+    body[style*='overflow'] {
+        overflow: revert !important;
+    }
+    #blocking-modal,
+    #nsfw-qr-dialog,
+    body > [style*="backdrop-filter"] {
+        display: none !important;
     }
     #unblur-toggles-wrapper-main {
         pointer-events: auto;
@@ -351,18 +436,5 @@ GM_addStyle(`
         #menu-unblur {
             margin-left: 0.5rem;
         }
-    }
-    /* NSFW Thumbs */
-    shreddit-pubsub-publisher img {
-        filter: none !important;
-    }
-    :is(shreddit-post[nsfw], [data-faceplate-tracking-context*='"nsfw":true']) :is(a[href], shreddit-pubsub-publisher) + .absolute {
-        display: none !important;
-    }
-    .sidebar-grid {
-        filter: none !important;
-    }
-    [data-testid="post-thumbnail"] [style*="blur("] {
-        filter: none !important;
     }
 `);

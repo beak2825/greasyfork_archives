@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            WME POI Shortcuts
 // @namespace       https://greasyfork.org/users/45389
-// @version         2025.12.27.01
+// @version         2026.01.08.01
 // @description     Various UI changes to make editing faster and easier.
 // @author          kid4rm90s & copilot
 // @include         /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
@@ -22,7 +22,7 @@ https: (function () {
   ('use strict');
 
   const updateMessage = `
-      <strong>Fixed :</strong><br> - Temporary fix for alerts not displaying properly.<br>
+      <strong>Fixed :</strong><br> - Added GoStation brand<br>
       <br>
   `;
   const scriptName = GM_info.script.name;
@@ -249,6 +249,17 @@ https: (function () {
           paymentMethods: ['ONLINE_PAYMENT', 'OTHER', 'DEBIT', 'APP'], // WME payment method item-ids
           aliases: ['EV Charging Station'],
           website: 'omodajaecoonepal.com/charging-stations-in-nepal',
+        },
+        {
+          primaryName: 'GoStation',
+          brand: 'GoStation',
+          networkName: 'GoStation', // WME dropdown item-id
+          costType: 'FEE', // FREE, FEE, or COST_TYPE_UNSPECIFIED
+          paymentMethods: ['ONLINE_PAYMENT', 'OTHER', 'DEBIT', 'APP'], // WME payment method item-ids
+          aliases: ['EV Charging Station'],
+          website: 'gogoronp-nebula.com',
+          openingHours: [{ days: [0, 1, 2, 3, 4, 5, 6], fromHour: '00:00', toHour: '00:00' }], // 24 hours, 7 days a week (days: 0=Sun, 1=Mon, ..., 6=Sat)
+          is24_7: true, // Flag for display purposes
         },
         {
           primaryName: 'Charging Station',
@@ -3102,6 +3113,8 @@ https: (function () {
   Logger.info(`${scriptName} initialized.`);
 
   /******************************************Changelogs***********************************************************
+    2026.01.08.01
+  - Added GoStation brand
   2025.12.27.01
   - Temporary fix for alerts not displaying properly.
   2025.11.25.02

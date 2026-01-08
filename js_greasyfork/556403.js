@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Makerworld Points Auto Logger + Viewer (Smart Panel + Toggle)
 // @namespace    http://tampermonkey.net/
-// @version      3.5
+// @version      3.6
 // @description  Log points daily, export only when value changes, show entries in small popup window with minimize/expand toggle
 // @match        https://makerworld.com/*
 // @grant        GM_download
@@ -316,13 +316,14 @@
         sortedLogs.forEach((entry, idx) => {
             let row = document.createElement("tr");
 
-            // Calculate daily gain (difference from previous entry)
+            // Calculate daily gain (difference from previous entry) — allow negative
             let gain = "";
             if (idx < sortedLogs.length - 1) {
                 let prevPoints = parseFloat(sortedLogs[idx + 1].points);
                 let currPoints = parseFloat(entry.points);
-                gain = (currPoints - prevPoints >= 0) ? (currPoints - prevPoints) : "";
+                gain = currPoints - prevPoints; // can be negative
             }
+
 
             [entry.date, entry.time, entry.points, gain].forEach(val => {
                 let td = document.createElement("td");

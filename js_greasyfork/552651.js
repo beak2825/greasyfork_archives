@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name             Neopets: Clickable Trophies
 // @namespace        kmtxcxjx
-// @version          1.0
+// @version          1.0.1
 // @description      Makes trophies on user lookups clickable links to their respective game
 // @match            *://www.neopets.com/userlookup*
 // @grant            none
@@ -29,9 +29,10 @@
         '58': 'https://www.neopets.com/games/lottery.phtml',
         '54': 'https://www.neopets.com/games/neggsweeper/index.phtml',
         '55': 'https://www.neopets.com/games/snowwars.phtml',
+        '67': 'https://www.neopets.com/games/pyramids/index.phtml',
         '68': 'https://www.neopets.com/games/pyramids/index.phtml',
         '75': 'https://www.neopets.com/halloween/braintree.phtml',
-        '76': 'https://www.neopets.com/games/pyramids/index.phtml',
+        '76': 'https://www.neopets.com/games/sakhmet_solitaire/index.phtml',
         '77': 'https://www.neopets.com/games/sakhmet_solitaire/index.phtml',
         '84': 'https://www.neopets.com/games/neggsweeper/index.phtml',
         '88': 'https://www.neopets.com/pirates/foodclub.phtml',

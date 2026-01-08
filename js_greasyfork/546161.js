@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT 对话导航
 // @namespace    http://tampermonkey.net/
-// @version      4.4.3
+// @version      4.6.6
 // @description  紧凑导航 + 实时定位；修复边界误判；底部纯箭头按钮；回到顶部/到底部单击即用；禁用面板内双击选中；快捷键 Cmd+↑/↓（Mac）或 Alt+↑/↓（Windows）；修复竞态条件和流式输出检测问题；加入标记点📌功能和收藏夹功能（4.0大更新）。感谢loongphy佬适配暗色模式（3.0）+适配左右侧边栏自动跟随（4.1）
 // @author       schweigen, loongphy(在3.0版本帮忙加入暗色模式，在4.1版本中帮忙适配左右侧边栏自动跟随)
 // @license      MIT
@@ -23,9 +23,11 @@
   'use strict';
 
   const CONFIG = { maxPreviewLength: 12, animation: 250, refreshInterval: 2000, forceRefreshInterval: 10000, anchorOffset: 8 };
+  const STOP_BTN_SELECTOR = '[data-testid="stop-button"]';
   const BOUNDARY_EPS = 28;
   const DEFAULT_FOLLOW_MARGIN = Math.max(CONFIG.anchorOffset || 8, 12);
   const DEBUG = false;
+  const TAIL_RECALC_TURNS = 2; // 仅重算末尾预览（流式输出期间变化最多）
   // 存储键与检查点状态
   const STORE_NS = 'cgpt-quicknav';
   const WIDTH_KEY = `${STORE_NS}:nav-width`;
@@ -45,19 +47,25 @@
   const SCROLL_LOCK_KEY = `${STORE_NS}:scroll-lock`;
   const SCROLL_LOCK_DRIFT = 16;
   const SCROLL_LOCK_IDLE_MS = 120;
+  const SCROLL_LOCK_INTENT_MS = 1200;
   let scrollLockEnabled = false;
   let scrollLockScrollEl = null;
   let scrollLockBoundTarget = null;
   let scrollLockLastUserTs = 0;
+  let scrollLockLastUserIntentTs = 0;
   let scrollLockLastMutationTs = 0;
   let scrollLockLastPos = 0;
   let scrollLockStablePos = 0; // 用户视角的基准位置
   let scrollLockRestoreTimer = 0;
   let scrollLockRestoring = false;
   let scrollLockGuardUntil = 0;
+  let scrollLockPointerActive = false;
+  let navAllowScrollDepth = 0;
   let ORIGINAL_SCROLL_INTO_VIEW = null;
   let ORIGINAL_SCROLL_TO = null;
   let ORIGINAL_SCROLL_BY = null;
+  let ORIGINAL_ELEM_SCROLL_TO = null;
+  let ORIGINAL_ELEM_SCROLL_BY = null;
 
   // 全局调试函数，用户可在控制台调用
   window.chatGptNavDebug = {
@@ -195,13 +203,27 @@
   let pending = false, rafId = null, idleId = null;
   let forceRefreshTimer = null;
   let lastTurnCount = 0;
+  let lastDomTurnCount = 0;
+  let lastDomFirstKey = '';
+  let lastDomLastKey = '';
   let TURN_SELECTOR = null;
   let scrollTicking = false;
+  let activeUpdateTimer = 0;
+  let lastScrollTs = 0;
   let currentActiveId = null;
+  let currentActiveTurnPos = 0; // 当前激活 turn 在 qsTurns() 里的位置，用于减少扫描
   let __cgptBooting = false;
   let refreshTimer = 0; // 新的尾随去抖定时器
+  let lastStopCheckTs = 0;
+  let lastHasStop = null;
 
-  function scheduleRefresh(ui, { delay = 80, force = false } = {}) {
+  // 性能缓存：避免长对话频繁扫描/强制重排
+  const previewCache = new Map(); // msgKey -> preview
+  const roleCache = new Map(); // msgKey -> 'user' | 'assistant'
+  const turnIdToPos = new Map(); // turnId -> position in cachedTurns
+  let cachedTurns = [];
+
+  function scheduleRefresh(ui, { delay = 80, force = false, soft = false } = {}) {
     if (force) {
       if (refreshTimer) { clearTimeout(refreshTimer); refreshTimer = 0; }
       run();
@@ -215,13 +237,13 @@
       pending = false; // 旧标志直接归零，防止误伤
       try {
         const oldCount = cacheIndex.length;
-        refreshIndex(ui);
+        refreshIndex(ui, { force, soft });
         const newCount = cacheIndex.length;
 
         // 如果刷新期间 turn 数变化，再来一次"收尾"（防抖窗口内很常见）
         if (newCount !== oldCount) {
           setTimeout(() => {
-            refreshIndex(ui);
+            refreshIndex(ui, { force: true });
             scheduleActiveUpdateNow();
           }, 120);
         } else {
@@ -231,6 +253,20 @@
         if (DEBUG || window.DEBUG_TEMP) console.error('scheduleRefresh error:', e);
       }
     }
+  }
+
+  function checkStreamingState(ui, force = false) {
+    const now = Date.now();
+    if (!force && now - lastStopCheckTs < 250) return lastHasStop;
+    lastStopCheckTs = now;
+    const hasStop = !!document.querySelector(STOP_BTN_SELECTOR);
+    if (lastHasStop === null) {
+      lastHasStop = hasStop;
+      return hasStop;
+    }
+    if (lastHasStop && !hasStop && ui) scheduleRefresh(ui, { force: true });
+    lastHasStop = hasStop;
+    return hasStop;
   }
 
   function init() {
@@ -310,6 +346,12 @@
       window.__cgptKeysBound = false;
       lastTurnCount = 0;
       TURN_SELECTOR = null; // 同时重置选择器缓存
+      previewCache.clear();
+      roleCache.clear();
+      turnIdToPos.clear();
+      cachedTurns = [];
+      lastDomTurnCount = 0;
+      currentActiveTurnPos = 0;
       setTimeout(init, 100);
     }
   }
@@ -323,7 +365,12 @@
   else init();
 
   function qsTurns(root = document) {
-    if (TURN_SELECTOR) return Array.from(root.querySelectorAll(TURN_SELECTOR));
+    if (TURN_SELECTOR) {
+      const els = root.querySelectorAll(TURN_SELECTOR);
+      if (els.length) return Array.from(els);
+      // 选择器失效则自动回退重选，避免每次 mutation 都清空缓存
+      TURN_SELECTOR = null;
+    }
     const selectors = [
       // 原有选择器
       'article[data-testid^="conversation-turn-"]',
@@ -411,15 +458,26 @@
 
   function getTextPreview(el) {
     if (!el) return '';
-    const text = (el.innerText || el.textContent || '').replace(/\s+/g, ' ').trim();
+    // 注意：innerText 会触发同步样式/布局计算（长对话非常慢），尽量只用 textContent
+    const text = (el.textContent || '').replace(/\s+/g, ' ').trim();
     if (!text) return '...';
     // 让 CSS 负责根据宽度省略，JS 只做上限裁剪以防极端超长文本
     const HARD_CAP = 600;
     return text.length > HARD_CAP ? text.slice(0, HARD_CAP) : text;
   }
 
-  function buildIndex() {
-    const turns = qsTurns();
+  function getTurnKey(el) {
+    if (!el) return '';
+    return el.getAttribute('data-message-id') || el.getAttribute('data-testid') || el.id || '';
+  }
+
+  function buildIndex(turnsOverride) {
+    const turns = turnsOverride || qsTurns();
+    cachedTurns = turns;
+    lastDomTurnCount = turns.length;
+    lastDomFirstKey = turns.length ? getTurnKey(turns[0]) : '';
+    lastDomLastKey = turns.length ? getTurnKey(turns[turns.length - 1]) : '';
+    turnIdToPos.clear();
     if (!turns.length) {
       if (DEBUG || window.DEBUG_TEMP) console.log('ChatGPT Navigation: 没有找到任何对话元素');
       return [];
@@ -431,19 +489,30 @@
     const list = [];
     for (let i = 0; i < turns.length; i++) {
       const el = turns[i];
-      el.setAttribute('data-cgpt-turn', '1');
+      if (el.getAttribute('data-cgpt-turn') !== '1') el.setAttribute('data-cgpt-turn', '1');
       const attrTestId = el.getAttribute('data-testid') || '';
+      if (!el.id) el.id = `cgpt-turn-${i + 1}`;
+      turnIdToPos.set(el.id, i);
 
-      const isUser = !!(
-        el.querySelector('[data-message-author-role="user"]') ||
-        el.querySelector('.text-message[data-author="user"]') ||
-        attrTestId.includes('user')
-      );
-      const isAssistant = !!(
-        el.querySelector('[data-message-author-role="assistant"]') ||
-        el.querySelector('.text-message[data-author="assistant"]') ||
-        attrTestId.includes('assistant')
-      );
+      const msgKey = getTurnKey(el);
+      let role = roleCache.get(msgKey) || '';
+
+      let isUser = role === 'user';
+      let isAssistant = role === 'assistant';
+      if (!isUser && !isAssistant) {
+        isUser = !!(
+          el.querySelector('[data-message-author-role="user"]') ||
+          el.querySelector('.text-message[data-author="user"]') ||
+          attrTestId.includes('user')
+        );
+        isAssistant = !!(
+          el.querySelector('[data-message-author-role="assistant"]') ||
+          el.querySelector('.text-message[data-author="assistant"]') ||
+          attrTestId.includes('assistant')
+        );
+        role = isUser ? 'user' : (isAssistant ? 'assistant' : '');
+        if (role) roleCache.set(msgKey, role);
+      }
 
       if (DEBUG && i < 3) {
         console.log(`ChatGPT Navigation Debug - 元素 ${i}:`, {
@@ -464,27 +533,30 @@
         });
       }
 
-      let block = null;
-      if (isUser) {
-        block = el.querySelector('[data-message-author-role="user"] .whitespace-pre-wrap, [data-message-author-role="user"] div[data-message-content-part], [data-message-author-role="user"] .prose, div[data-message-author-role="user"] p, .text-message[data-author="user"]');
-      } else if (isAssistant) {
-        block = el.querySelector('.deep-research-result, .border-token-border-sharp .markdown, [data-message-author-role="assistant"] .markdown, [data-message-author-role="assistant"] .prose, [data-message-author-role="assistant"] div[data-message-content-part], div[data-message-author-role="assistant"] p, .text-message[data-author="assistant"]');
-      } else {
+      if (!isUser && !isAssistant) {
         if (DEBUG && i < 5) console.log(`ChatGPT Navigation: 元素 ${i} 角色识别失败`);
         continue;
       }
 
-      const preview = getTextPreview(block);
+      const shouldRecalcPreview = i >= turns.length - TAIL_RECALC_TURNS;
+      let preview = previewCache.get(msgKey) || '';
+      if (!preview || shouldRecalcPreview) {
+        let block = null;
+        if (isUser) {
+          block = el.querySelector('[data-message-author-role="user"] .whitespace-pre-wrap, [data-message-author-role="user"] div[data-message-content-part], [data-message-author-role="user"] .prose, div[data-message-author-role="user"] p, .text-message[data-author="user"]');
+        } else {
+          block = el.querySelector('.deep-research-result, .border-token-border-sharp .markdown, [data-message-author-role="assistant"] .markdown, [data-message-author-role="assistant"] .prose, [data-message-author-role="assistant"] div[data-message-content-part], div[data-message-author-role="assistant"] p, .text-message[data-author="assistant"]');
+        }
+        preview = getTextPreview(block);
+        if (preview) previewCache.set(msgKey, preview);
+      }
       if (!preview) {
         if (DEBUG && i < 5) console.log(`ChatGPT Navigation: 元素 ${i} 无法提取预览文本`);
         continue;
       }
 
-      if (!el.id) el.id = `cgpt-turn-${i + 1}`;
-      const role = isUser ? 'user' : 'assistant';
       const seq = isUser ? ++u : ++a;
-      const msgKey = el.getAttribute('data-message-id') || el.getAttribute('data-testid') || el.id;
-      list.push({ id: el.id, key: msgKey, idx: i, role, preview, seq });
+      list.push({ id: el.id, key: msgKey, idx: i, role: isUser ? 'user' : 'assistant', preview, seq });
     }
 
     if (DEBUG) console.log(`ChatGPT Navigation: 成功识别 ${list.length} 个对话 (用户: ${u}, 助手: ${a})`);
@@ -1487,6 +1559,7 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
       return;
     }
     list.innerHTML = '';
+    const frag = document.createDocumentFragment();
     for (const item of next) {
       const node = document.createElement('div');
       const fav = favSet.has(item.key);
@@ -1501,9 +1574,14 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
         node.innerHTML = `<span class="compact-number">${item.idx + 1}.</span><span class="compact-text" title="${escapeAttr(item.preview)}">${escapeHtml(item.preview)}</span><button class="fav-toggle ${fav ? 'active' : ''}" type="button" title="收藏/取消收藏">★</button>`;
       }
       node.setAttribute('draggable', 'false');
-      list.appendChild(node);
+      frag.appendChild(node);
     }
+    list.appendChild(frag);
     queueScrollbarState();
+    // 重新渲染会丢失 active class：根据 currentActiveId 立即恢复一次，避免闪烁/丢失高亮
+    if (currentActiveId) {
+      try { setActiveTurn(currentActiveId); } catch {}
+    }
     if (!list._eventBound) {
       list.addEventListener('click', (e) => {
         // 行内收藏切换
@@ -1546,13 +1624,21 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     scheduleActiveUpdateNow();
   }
 
-  function refreshIndex(ui) {
-    const base = buildIndex();
+  function refreshIndex(ui, { soft = false, force = false } = {}) {
+    const turns = qsTurns();
+    const turnCount = turns.length;
+    const firstKey = turnCount ? getTurnKey(turns[0]) : '';
+    const lastKey = turnCount ? getTurnKey(turns[turnCount - 1]) : '';
+    const unchanged = turnCount === lastDomTurnCount && firstKey === lastDomFirstKey && lastKey === lastDomLastKey;
+    if (soft && !force && unchanged && cacheIndex.length && turnCount > 0) return false;
+
+    const base = buildIndex(turns);
     const next = composeWithPins(base);
     if (DEBUG) console.log('ChatGPT Navigation: turns', next.length, '(含📌)');
     lastTurnCount = next.length;
     cacheIndex = next;
     renderList(ui);
+    return true;
   }
 
   // 将📌插入到对应消息之后
@@ -1693,23 +1779,35 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     return best;
   }
 
-  function getScrollRoot(start) {
+  function isScrollableY(el) {
+    if (!el) return false;
+    const s = getComputedStyle(el);
+    if (s.overflowY !== 'auto' && s.overflowY !== 'scroll' && s.overflowY !== 'overlay') return false;
+    return el.scrollHeight > el.clientHeight + 1;
+  }
+
+  function findClosestScrollContainer(start) {
     let el = start || null;
     while (el && el !== document.documentElement && el !== document.body) {
-      const s = getComputedStyle(el);
-      if ((s.overflowY === 'auto' || s.overflowY === 'scroll') && el.scrollHeight > el.clientHeight + 1) return el;
+      if (isScrollableY(el)) return el;
       el = el.parentElement;
     }
+    return null;
+  }
+
+  function getScrollRoot(start) {
+    const closest = findClosestScrollContainer(start);
+    if (closest) return closest;
     const doc = document.scrollingElement || document.documentElement;
     const candidates = [
       document.querySelector('[data-testid="conversation-turns"]')?.parentElement,
-      document.querySelector('main[role="main"]'),
+      document.querySelector('main'),
+      document.querySelector('[role="main"]'),
       doc
     ];
     for (const c of candidates) {
       if (!c) continue;
-      const s = getComputedStyle(c);
-      if ((s.overflowY === 'auto' || s.overflowY === 'scroll') && c.scrollHeight > c.clientHeight + 1) return c;
+      if (isScrollableY(c)) return c;
     }
     return doc;
   }
@@ -1746,12 +1844,13 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
   function scrollToTurn(el) {
     const anchor = findTurnAnchor(el) || el;
     const margin = Math.max(0, getFixedHeaderHeight());
+    const behavior = scrollLockEnabled ? 'auto' : 'smooth';
     try {
       anchor.style.scrollMarginTop = margin + 'px';
-      allowNavScrollFor();
+      markNavScrollIntent(scrollLockEnabled ? 1600 : 800);
       requestAnimationFrame(() => {
-        allowNavScrollFor();
-        anchor.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'smooth' });
+        markNavScrollIntent(scrollLockEnabled ? 1600 : 800);
+        anchor.scrollIntoView({ block: 'start', inline: 'nearest', behavior });
         postScrollNudge(el);
       });
     } catch {
@@ -1760,9 +1859,9 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
       const isWindow = (scroller === document.documentElement || scroller === document.body);
       const base = isWindow ? window.scrollY : scroller.scrollTop;
       const top = base + anchor.getBoundingClientRect().top - scRect.top - margin;
-      allowNavScrollFor();
-      if (isWindow) window.scrollTo({ top, behavior: 'smooth' });
-      else scroller.scrollTo({ top, behavior: 'smooth' });
+      markNavScrollIntent(scrollLockEnabled ? 1600 : 800);
+      if (isWindow) window.scrollTo({ top, behavior });
+      else scroller.scrollTo({ top, behavior });
       postScrollNudge(el);
     }
     el.classList.add('highlight-pulse');
@@ -1771,7 +1870,7 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
   }
 
   function postScrollNudge(targetEl) {
-    allowNavScrollFor();
+    markNavScrollIntent(scrollLockEnabled ? 1200 : 600);
     let tries = 0;
     const step = () => {
       tries++;
@@ -1953,7 +2052,7 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
       if (el) {
         if (!el.id) el.id = `cgpt-turn-edge-${which}`;
         setActiveTurn(el.id);
-        allowNavScrollFor();
+        markNavScrollIntent(scrollLockEnabled ? 1600 : 800);
         scrollToTurn(el);
         return;
       }
@@ -1961,9 +2060,10 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     const sc = getScrollRoot(document.body);
     const isWindow = (sc === document.documentElement || sc === document.body || sc === (document.scrollingElement || document.documentElement));
     const top = which === 'top' ? 0 : Math.max(0, (isWindow ? document.body.scrollHeight : sc.scrollHeight) - (isWindow ? window.innerHeight : sc.clientHeight));
-    allowNavScrollFor();
-    if (isWindow) window.scrollTo({ top, behavior: 'smooth' });
-    else sc.scrollTo({ top, behavior: 'smooth' });
+    const behavior = scrollLockEnabled ? 'auto' : 'smooth';
+    markNavScrollIntent(scrollLockEnabled ? 1600 : 800);
+    if (isWindow) window.scrollTo({ top, behavior });
+    else sc.scrollTo({ top, behavior });
     scheduleActiveUpdateNow();
   }
 
@@ -2002,8 +2102,14 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
   }
 
   function observeChat(ui) {
-    const target = document.body; // 用稳定祖先，避免容器被重建后失联
+    const target = getTurnsContainer() || document.body;
+    if (ui._mo) {
+      try { ui._mo.disconnect(); } catch {}
+    }
     const mo = new MutationObserver((muts) => {
+      const isLongChat = (lastDomTurnCount || 0) > 120;
+      const hasStop = checkStreamingState(ui);
+      const useSoft = isLongChat && !!hasStop;
       // 只要涉及消息区域的变更，就触发去抖刷新
       for (const mut of muts) {
         const t = mut.target && mut.target.nodeType === 1 ? mut.target : null;
@@ -2017,10 +2123,8 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
           t.closest('[data-message-id]') ||
           t.closest('.markdown') || t.closest('.prose')
         ) {
-          // 避免 selector 过期：每次真正刷新前，清掉缓存
-          TURN_SELECTOR = null;
           handleScrollLockMutations(muts);
-          scheduleRefresh(ui, { delay: 80 });
+          scheduleRefresh(ui, { delay: isLongChat ? 200 : 80, soft: useSoft });
           return;
         }
       }
@@ -2041,8 +2145,10 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     // 定期兜底（10s 一次，别等 30s）
     if (forceRefreshTimer) clearInterval(forceRefreshTimer);
     forceRefreshTimer = setInterval(() => {
-      TURN_SELECTOR = null;
-      scheduleRefresh(ui, { force: true });
+      const hasStop = !!checkStreamingState(ui, true);
+      const count = qsTurns().length;
+      if (!hasStop && count === lastDomTurnCount) return;
+      scheduleRefresh(ui, { force: hasStop, soft: !hasStop && (lastDomTurnCount || 0) > 120 });
     }, 10000);
     ui._forceRefreshTimer = forceRefreshTimer;
   }
@@ -2072,8 +2178,11 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
   function getChatScrollContainer() {
     try {
       const turns = document.querySelector('[data-testid="conversation-turns"]');
-      const main = document.querySelector('main[role="main"]') || document.querySelector('[role="main"]');
-      const target = turns || main || document.body;
+      const msg = document.querySelector('[data-message-id]');
+      const main = document.querySelector('main') || document.querySelector('[role="main"]') || document.getElementById('main');
+      const target = turns || msg || main || document.body;
+      const closest = findClosestScrollContainer(target);
+      if (closest) return closest;
       return getScrollRoot(target);
     } catch { return getScrollRoot(document.body); }
   }
@@ -2101,15 +2210,28 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     window.__cgptNavAllowScroll = prev;
   }
 
-  function handleScrollLockUserScroll() {
+  function handleScrollLockUserScroll(evt) {
     const sc = scrollLockScrollEl || getChatScrollContainer();
     if (!sc) return;
     const now = Date.now();
     const pos = getScrollPos(sc);
     const guardActive = scrollLockEnabled && now < scrollLockGuardUntil;
+    const trusted = !!(evt && evt.isTrusted);
+    if (trusted) scrollLockLastUserIntentTs = now;
+    const recentUserIntent = trusted || (now - (scrollLockLastUserIntentTs || 0)) <= SCROLL_LOCK_INTENT_MS || !!scrollLockPointerActive;
+    const allowNav = !!window.__cgptNavAllowScroll;
 
-    // 若当前处于“回弹”窗口且是向下的自动滚动，立刻拉回
-    if (!scrollLockRestoring && guardActive && (now - scrollLockLastUserTs) > SCROLL_LOCK_IDLE_MS && pos > scrollLockStablePos + SCROLL_LOCK_DRIFT) {
+    // 用户主动滚动：先更新基准，避免被“回弹”误伤
+    const userLikely = allowNav || recentUserIntent || pos < scrollLockStablePos - SCROLL_LOCK_DRIFT;
+    if (userLikely) {
+      scrollLockLastUserTs = now;
+      scrollLockStablePos = pos;
+      scrollLockLastPos = pos;
+      return;
+    }
+
+    // 仅在“新回复变更窗口”内回弹，避免用户正常滚动抽搐
+    if (!scrollLockRestoring && scrollLockEnabled && guardActive && !allowNav && !recentUserIntent && pos > scrollLockStablePos + SCROLL_LOCK_DRIFT) {
       scrollLockRestoring = true;
       setScrollPos(sc, scrollLockStablePos);
       setTimeout(() => { scrollLockRestoring = false; }, 80);
@@ -2117,13 +2239,6 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     }
 
     if (scrollLockRestoring) return;
-
-    // 用户主动滚动：更新基准
-    const userLikely = !guardActive || (now - scrollLockLastMutationTs > 400) || pos < scrollLockStablePos - SCROLL_LOCK_DRIFT;
-    if (userLikely) {
-      scrollLockLastUserTs = now;
-      scrollLockStablePos = pos;
-    }
     scrollLockLastPos = pos;
   }
 
@@ -2154,9 +2269,106 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
   }
 
   function allowNavScrollFor(ms = 600) {
-    const prev = window.__cgptNavAllowScroll;
+    navAllowScrollDepth = Math.max(0, (navAllowScrollDepth || 0) + 1);
     window.__cgptNavAllowScroll = true;
-    setTimeout(() => { window.__cgptNavAllowScroll = prev; }, ms);
+    setTimeout(() => {
+      navAllowScrollDepth = Math.max(0, (navAllowScrollDepth || 0) - 1);
+      if (navAllowScrollDepth === 0) window.__cgptNavAllowScroll = false;
+    }, ms);
+  }
+
+  function markNavScrollIntent(ms = 1200) {
+    const now = Date.now();
+    scrollLockLastUserIntentTs = now;
+    scrollLockLastUserTs = now;
+    allowNavScrollFor(ms);
+    setTimeout(() => {
+      if (!scrollLockEnabled) return;
+      const sc = ensureScrollLockBindings();
+      if (!sc) return;
+      const pos = getScrollPos(sc);
+      scrollLockStablePos = pos;
+      scrollLockLastPos = pos;
+    }, Math.min(ms, 900));
+  }
+
+  function armScrollLockGuard(ms = 2000) {
+    if (!scrollLockEnabled) return;
+    const sc = ensureScrollLockBindings();
+    if (!sc) return;
+    const now = Date.now();
+    scrollLockLastMutationTs = now;
+    scrollLockGuardUntil = now + ms;
+    const pos = getScrollPos(sc);
+    scrollLockLastPos = pos;
+    scrollLockStablePos = pos;
+  }
+
+  function isConversationElement(el) {
+    try {
+      if (!el || el.nodeType !== 1) return false;
+      return !!el.closest(
+        '[data-testid="conversation-turns"], [data-message-author-role], [data-message-id], [data-testid^="conversation-turn-"], [data-testid*="conversation-turn"], main, #main, [role="main"]'
+      );
+    } catch { return false; }
+  }
+
+  function isProbablyScrollbarGrab(e, scroller) {
+    try {
+      if (!e || !scroller || isWindowScroller(scroller)) return false;
+      const rect = scroller.getBoundingClientRect();
+      const x = e.clientX, y = e.clientY;
+      if (!(x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom)) return false;
+      // 给滚动条留一个较宽的“可抓取区域”，避免 overlay scrollbar 抓不住
+      return x >= rect.right - 26;
+    } catch { return false; }
+  }
+
+  function bindScrollLockUserIntents() {
+    if (window.__cgptScrollLockUserIntentsBound) return;
+    window.__cgptScrollLockUserIntentsBound = true;
+
+    const ignoreIfInNav = (t) => !!(t && t.closest && t.closest('#cgpt-compact-nav'));
+    const mark = (e) => {
+      if (!scrollLockEnabled) return;
+      if (ignoreIfInNav(e?.target)) return;
+      scrollLockLastUserIntentTs = Date.now();
+    };
+
+    document.addEventListener('wheel', mark, { passive: true, capture: true });
+    document.addEventListener('touchstart', mark, { passive: true, capture: true });
+    document.addEventListener('touchmove', mark, { passive: true, capture: true });
+    document.addEventListener('keydown', (e) => {
+      try {
+        if (!scrollLockEnabled) return;
+        if (ignoreIfInNav(e?.target)) return;
+        const t = e.target;
+        if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+        const k = e.key;
+        if (k === 'PageDown' || k === 'PageUp' || k === 'End' || k === 'Home' || k === 'ArrowDown' || k === 'ArrowUp' || k === ' ') {
+          scrollLockLastUserIntentTs = Date.now();
+        }
+      } catch {}
+    }, true);
+
+    document.addEventListener('pointerdown', (e) => {
+      try {
+        if (!scrollLockEnabled) return;
+        if (ignoreIfInNav(e?.target)) return;
+        if (e.button !== 0) return;
+        const sc = scrollLockScrollEl || getChatScrollContainer();
+        if (sc && sc.contains && sc.contains(e.target)) {
+          scrollLockLastUserIntentTs = Date.now();
+        }
+        if (isProbablyScrollbarGrab(e, sc)) {
+          scrollLockPointerActive = true;
+          scrollLockLastUserIntentTs = Date.now();
+        }
+      } catch {}
+    }, true);
+    const clearPointer = () => { scrollLockPointerActive = false; };
+    document.addEventListener('pointerup', clearPointer, true);
+    document.addEventListener('pointercancel', clearPointer, true);
   }
 
   function shouldBlockScrollFor(target) {
@@ -2165,16 +2377,47 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     const sc = getChatScrollContainer();
     if (!sc) return false;
     if (scrollLockGuardUntil && Date.now() > scrollLockGuardUntil && (Date.now() - scrollLockLastUserTs) < 200) return false;
-    try { return sc.contains(target); } catch { return false; }
+    if (isWindowScroller(sc)) return isConversationElement(target);
+    try { return sc.contains(target); } catch { return isConversationElement(target); }
   }
 
-  function shouldBlockWindowScroll(nextTop) {
+  function getScrollTopFromArgs(args, current) {
+    if (args.length === 1 && args[0] && typeof args[0] === 'object') {
+      const top = args[0].top ?? args[0].y;
+      return Number.isFinite(top) ? top : current;
+    }
+    if (args.length >= 2) {
+      const top = args[1];
+      return Number.isFinite(top) ? top : current;
+    }
+    return current;
+  }
+
+  function getScrollDeltaFromArgs(args) {
+    if (args.length === 1 && args[0] && typeof args[0] === 'object') {
+      return args[0].top ?? args[0].y ?? 0;
+    }
+    if (args.length >= 2) return args[1] ?? 0;
+    return 0;
+  }
+
+  function shouldBlockScrollTop(scroller, nextTop) {
     if (!scrollLockEnabled || window.__cgptNavAllowScroll) return false;
-    const sc = getChatScrollContainer();
+    const sc = scroller || getChatScrollContainer();
     if (!sc) return false;
     const current = getScrollPos(sc);
     const targetTop = Number.isFinite(nextTop) ? nextTop : current;
     return targetTop > current + SCROLL_LOCK_DRIFT;
+  }
+
+  function shouldBlockWindowScroll(nextTop) {
+    return shouldBlockScrollTop(null, nextTop);
+  }
+
+  function shouldBlockElementScroll(el, nextTop) {
+    const sc = scrollLockScrollEl || getChatScrollContainer();
+    if (!sc || sc !== el) return false;
+    return shouldBlockScrollTop(sc, nextTop);
   }
 
   function installScrollGuards() {
@@ -2183,6 +2426,8 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     if (!ORIGINAL_SCROLL_INTO_VIEW) ORIGINAL_SCROLL_INTO_VIEW = Element.prototype.scrollIntoView;
     if (!ORIGINAL_SCROLL_TO) ORIGINAL_SCROLL_TO = window.scrollTo;
     if (!ORIGINAL_SCROLL_BY) ORIGINAL_SCROLL_BY = window.scrollBy;
+    if (!ORIGINAL_ELEM_SCROLL_TO) ORIGINAL_ELEM_SCROLL_TO = Element.prototype.scrollTo;
+    if (!ORIGINAL_ELEM_SCROLL_BY) ORIGINAL_ELEM_SCROLL_BY = Element.prototype.scrollBy;
 
     Element.prototype.scrollIntoView = function(options) {
       if (shouldBlockScrollFor(this)) return;
@@ -2190,24 +2435,38 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     };
 
     window.scrollTo = function(...args) {
-      if (args.length === 1 && args[0] && typeof args[0] === 'object') {
-        if (shouldBlockWindowScroll(args[0].top ?? args[0].y)) return;
-      } else if (args.length >= 2) {
-        if (shouldBlockWindowScroll(args[1])) return;
-      }
+      const targetTop = getScrollTopFromArgs(args, getScrollPos(getChatScrollContainer()));
+      if (shouldBlockWindowScroll(targetTop)) return;
       return ORIGINAL_SCROLL_TO.apply(window, args);
     };
 
     window.scrollBy = function(...args) {
       if (scrollLockEnabled && !window.__cgptNavAllowScroll) {
         // 只关心向下滚
-        let dy = 0;
-        if (args.length === 1 && args[0] && typeof args[0] === 'object') dy = args[0].top ?? args[0].y ?? 0;
-        else if (args.length >= 2) dy = args[1] ?? 0;
+        const dy = getScrollDeltaFromArgs(args);
         if (dy > SCROLL_LOCK_DRIFT) return;
       }
       return ORIGINAL_SCROLL_BY.apply(window, args);
     };
+
+    if (ORIGINAL_ELEM_SCROLL_TO) {
+      Element.prototype.scrollTo = function(...args) {
+        const current = getScrollPos(this);
+        const targetTop = getScrollTopFromArgs(args, current);
+        if (shouldBlockElementScroll(this, targetTop)) return;
+        return ORIGINAL_ELEM_SCROLL_TO.apply(this, args);
+      };
+    }
+
+    if (ORIGINAL_ELEM_SCROLL_BY) {
+      Element.prototype.scrollBy = function(...args) {
+        if (scrollLockEnabled && !window.__cgptNavAllowScroll) {
+          const dy = getScrollDeltaFromArgs(args);
+          if (dy > SCROLL_LOCK_DRIFT && shouldBlockElementScroll(this, getScrollPos(this) + dy)) return;
+        }
+        return ORIGINAL_ELEM_SCROLL_BY.apply(this, args);
+      };
+    }
   }
 
   function updateLockBtnState(nav) {
@@ -2239,6 +2498,7 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     scrollLockEnabled = loadScrollLockState();
     ensureScrollLockBindings();
     updateLockBtnState(ui.nav);
+    bindScrollLockUserIntents();
     const lockBtn = ui.nav.querySelector('.compact-lock');
     if (lockBtn) {
       lockBtn.addEventListener('click', (e) => {
@@ -2289,6 +2549,9 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     scrollLockRestoreTimer = setTimeout(() => {
       scrollLockRestoreTimer = 0;
       if (!scrollLockEnabled) return;
+      if (window.__cgptNavAllowScroll) return;
+      const intentGap = Date.now() - (scrollLockLastUserIntentTs || 0);
+      if (intentGap <= SCROLL_LOCK_INTENT_MS || scrollLockPointerActive) return;
       const sc = ensureScrollLockBindings();
       if (!sc) return;
       const current = getScrollPos(sc);
@@ -2605,23 +2868,47 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
 
   function startBurstRefresh(ui, ms = 6000, step = 160) {
     const end = Date.now() + ms;
-    const STOP_BTN = '[data-testid="stop-button"]'; // 生成中按钮
+    const isLongChat = (lastDomTurnCount || 0) > 120;
+    const tickStep = isLongChat ? Math.max(step, 700) : step;
     const tick = () => {
-      scheduleRefresh(ui, { force: true });
-      if (Date.now() < end && document.querySelector(STOP_BTN)) {
-        setTimeout(tick, step);
+      const hasStop = !!checkStreamingState(ui, true);
+      if (hasStop) {
+        if (isLongChat) scheduleRefresh(ui, { delay: 260, soft: true });
+        else scheduleRefresh(ui, { force: true });
+        if (Date.now() < end) setTimeout(tick, tickStep);
+        return;
       }
+      scheduleRefresh(ui, { force: true });
     };
     tick();
   }
 
   function watchSendEvents(ui) {
+    const isComposerForm = (form) => {
+      try {
+        if (!form || typeof form.querySelector !== 'function') return false;
+        return !!(form.querySelector('#prompt-textarea') || form.querySelector('textarea[name="prompt-textarea"]'));
+      } catch {
+        return false;
+      }
+    };
+
     // 点击发送按钮
     document.addEventListener('click', (e) => {
       if (e.target && e.target.closest && e.target.closest('[data-testid="send-button"]')) {
         if (DEBUG || window.DEBUG_TEMP) console.log('ChatGPT Navigation: 检测到发送按钮点击，启动突发刷新');
+        armScrollLockGuard(2200);
         startBurstRefresh(ui);
       }
+    }, true);
+
+    // 表单提交（覆盖 Enter 发送等路径）
+    document.addEventListener('submit', (e) => {
+      const form = e?.target;
+      if (!isComposerForm(form)) return;
+      if (DEBUG || window.DEBUG_TEMP) console.log('ChatGPT Navigation: 检测到表单提交，启动突发刷新');
+      armScrollLockGuard(2200);
+      startBurstRefresh(ui);
     }, true);
 
     // ⌘/Ctrl + Enter 发送
@@ -2631,6 +2918,7 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
       const isTextarea = t.tagName === 'TEXTAREA' || t.isContentEditable;
       if (isTextarea && e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
         if (DEBUG || window.DEBUG_TEMP) console.log('ChatGPT Navigation: 检测到快捷键发送，启动突发刷新');
+        armScrollLockGuard(2200);
         startBurstRefresh(ui);
       }
     }, true);
@@ -2648,9 +2936,18 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     if (scrollTicking) return;
     scrollTicking = true;
     requestAnimationFrame(() => {
-      updateActiveFromAnchor();
+      lastScrollTs = Date.now();
+      scheduleActiveUpdateDebounced();
       scrollTicking = false;
     });
+  }
+
+  function scheduleActiveUpdateDebounced(delay = 90) {
+    if (activeUpdateTimer) clearTimeout(activeUpdateTimer);
+    activeUpdateTimer = setTimeout(() => {
+      activeUpdateTimer = 0;
+      updateActiveFromAnchor();
+    }, delay);
   }
 
   function scheduleActiveUpdateNow() { requestAnimationFrame(updateActiveFromAnchor); }
@@ -2682,6 +2979,8 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
     if (nearNext) activeEl = nearNext;
 
     if (!activeEl) {
+      const sinceScroll = Date.now() - (lastScrollTs || 0);
+      if (sinceScroll < 160) return;
       const turns = qsTurns();
       for (const t of turns) { const r = t.getBoundingClientRect(); if (r.bottom >= y) { activeEl = t; break; } }
       if (!activeEl && turns.length) activeEl = turns[0];
@@ -2691,8 +2990,12 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
   }
 
   function findNearNextTop(y, eps) {
-    for (const item of cacheIndex) {
-      const el = document.getElementById(item.id);
+    const turns = cachedTurns && cachedTurns.length ? cachedTurns : qsTurns();
+    if (!turns || !turns.length) return null;
+    const start = Math.max(0, (currentActiveTurnPos || 0) - 3);
+    const maxChecks = 30;
+    for (let i = start, checked = 0; i < turns.length && checked < maxChecks; i++, checked++) {
+      const el = turns[i];
       if (!el) continue;
       const r = el.getBoundingClientRect();
       const d = r.top - y;
@@ -2703,19 +3006,30 @@ body[data-theme='light'] #cgpt-compact-nav { color-scheme: light; }
   }
 
   function setActiveTurn(id) {
-    if (!id || currentActiveId === id) return;
-    currentActiveId = id;
     const list = document.querySelector('#cgpt-compact-nav .compact-list');
-    if (!list) return;
-    list.querySelectorAll('.compact-item.active').forEach(n => n.classList.remove('active'));
-    const n = list.querySelector(`.compact-item[data-id="${id}"]`);
-    if (n) {
-      n.classList.add('active');
-      const r = n.getBoundingClientRect();
-      const lr = list.getBoundingClientRect();
-      if (r.top < lr.top) list.scrollTop += (r.top - lr.top - 4);
-      else if (r.bottom > lr.bottom) list.scrollTop += (r.bottom - lr.bottom + 4);
+    if (!id) return;
+    // 同一条目：如果 active class 仍然存在就直接返回；否则继续走恢复逻辑
+    if (currentActiveId === id && list) {
+      const existing = list.querySelector(`.compact-item[data-id="${id}"]`);
+      if (existing && existing.classList.contains('active')) return;
+    } else if (currentActiveId === id) {
+      return;
     }
+
+    currentActiveId = id;
+    currentActiveTurnPos = turnIdToPos.get(id) ?? currentActiveTurnPos;
+    if (!list) return;
+
+    const n = list.querySelector(`.compact-item[data-id="${id}"]`);
+    // 过滤模式下可能找不到对应项：清掉旧高亮，避免残留
+    list.querySelectorAll('.compact-item.active').forEach(node => node.classList.remove('active'));
+    if (!n) return;
+
+    n.classList.add('active');
+    const r = n.getBoundingClientRect();
+    const lr = list.getBoundingClientRect();
+    if (r.top < lr.top) list.scrollTop += (r.top - lr.top - 4);
+    else if (r.bottom > lr.bottom) list.scrollTop += (r.bottom - lr.bottom + 4);
   }
 
   function jumpActiveBy(delta) {

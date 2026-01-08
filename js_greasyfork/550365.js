@@ -1,17 +1,32 @@
 // ==UserScript==
 // @name         Ajuda Cart Batch Selector
 // @namespace    http://tampermonkey.net/
-// @version      0.9
-// @description  Select cart items based on layer rules with vertical and function selection and memory
+// @version      1.0
+// @description  Select cart items based on layer rules with vertical and function selection, memory, and usage tracking
 // @author       MajaBukvic
 // @match        https://ajuda.a2z.com/cms.html*
-// @grant        none
+// @grant        GM_xmlhttpRequest
+// @connect      *.sharepoint.com
 // @downloadURL https://update.greasyfork.org/scripts/550365/Ajuda%20Cart%20Batch%20Selector.user.js
 // @updateURL https://update.greasyfork.org/scripts/550365/Ajuda%20Cart%20Batch%20Selector.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
+
+    // ========================================
+    // CONFIGURATION
+    // ========================================
+    
+    const SCRIPT_NAME = 'Ajuda Cart Batch Selector';
+    const SCRIPT_VERSION = '1.0';
+    
+    // SharePoint tracking configuration
+    const TRACKING_CONFIG = {
+        enabled: true,
+        siteUrl: 'https://amazon.sharepoint.com/sites/amazonwatson', 
+        listName: 'TampermonkeyUsageLog'
+    };
 
     const COMMON_CONFIGS = {
         layers: {
@@ -163,6 +178,172 @@
     let selectedVertical = null;
     let selectedFunction = null;
 
+    // ========================================
+    // TRACKING FUNCTIONS
+    // ========================================
+
+    /**
+     * Get current username from the page or environment
+     */
+    function getCurrentUsername() {
+        // Try to get username from various sources
+        // Option 1: Check if there's a user element on the page
+        const userElement = document.querySelector('.user-name, .username, [data-username]');
+        if (userElement) {
+            return userElement.textContent.trim() || userElement.dataset.username;
+        }
+        
+        // Option 2: Check localStorage or sessionStorage
+        const storedUser = localStorage.getItem('ajuda_username') || sessionStorage.getItem('username');
+        if (storedUser) {
+            return storedUser;
+        }
+        
+        // Option 3: Return a default identifier
+        return 'Unknown User';
+    }
+
+    /**
+     * Log usage to SharePoint list
+     * @param {string} action - The action being tracked (e.g., 'script_loaded', 'primary_batch_selected')
+     * @param {object} additionalData - Any additional data to include
+     */
+    function trackUsage(action, additionalData = {}) {
+        if (!TRACKING_CONFIG.enabled) {
+            console.log('[Batch Selector] Tracking disabled');
+            return;
+        }
+
+        const trackingData = {
+            Title: `${SCRIPT_NAME} - ${action}`,
+            aflk: action,  // Action field
+            k3hk: window.location.href,  // PageURL field
+            pk8k: `${SCRIPT_NAME} v${SCRIPT_VERSION}`,  // ScriptName field
+            tg5f: getCurrentUsername(),  // Username field
+            ...additionalData
+        };
+
+        console.log('[Batch Selector] Tracking:', trackingData);
+
+        // Use GM_xmlhttpRequest for cross-origin requests
+        if (typeof GM_xmlhttpRequest !== 'undefined') {
+            sendToSharePoint(trackingData);
+        } else {
+            // Fallback: Try using fetch with credentials
+            sendToSharePointFetch(trackingData);
+        }
+    }
+
+    /**
+     * Send tracking data to SharePoint using GM_xmlhttpRequest
+     */
+    function sendToSharePoint(data) {
+        const listApiUrl = `${TRACKING_CONFIG.siteUrl}/_api/web/lists/getbytitle('${TRACKING_CONFIG.listName}')/items`;
+
+        // First, get the form digest value
+        GM_xmlhttpRequest({
+            method: 'POST',
+            url: `${TRACKING_CONFIG.siteUrl}/_api/contextinfo`,
+            headers: {
+                'Accept': 'application/json;odata=verbose',
+                'Content-Type': 'application/json;odata=verbose'
+            },
+            onload: function(response) {
+                try {
+                    const contextInfo = JSON.parse(response.responseText);
+                    const formDigest = contextInfo.d.GetContextWebInformation.FormDigestValue;
+
+                    // Now create the list item
+                    GM_xmlhttpRequest({
+                        method: 'POST',
+                        url: listApiUrl,
+                        headers: {
+                            'Accept': 'application/json;odata=verbose',
+                            'Content-Type': 'application/json;odata=verbose',
+                            'X-RequestDigest': formDigest
+                        },
+                        data: JSON.stringify({
+                            '__metadata': { 'type': 'SP.Data.TampermonkeyUsageLogListItem' },
+                            'Title': data.Title,
+                            'aflk': data.aflk,
+                            'k3hk': data.k3hk,
+                            'pk8k': data.pk8k,
+                            'tg5f': data.tg5f
+                        }),
+                        onload: function(createResponse) {
+                            if (createResponse.status >= 200 && createResponse.status < 300) {
+                                console.log('[Batch Selector] Usage tracked successfully');
+                            } else {
+                                console.warn('[Batch Selector] Failed to track usage:', createResponse.statusText);
+                            }
+                        },
+                        onerror: function(error) {
+                            console.warn('[Batch Selector] Error tracking usage:', error);
+                        }
+                    });
+                } catch (e) {
+                    console.warn('[Batch Selector] Error parsing context info:', e);
+                }
+            },
+            onerror: function(error) {
+                console.warn('[Batch Selector] Error getting form digest:', error);
+            }
+        });
+    }
+
+    /**
+     * Fallback: Send tracking data using fetch
+     */
+    function sendToSharePointFetch(data) {
+        const listApiUrl = `${TRACKING_CONFIG.siteUrl}/_api/web/lists/getbytitle('${TRACKING_CONFIG.listName}')/items`;
+
+        // Get form digest first
+        fetch(`${TRACKING_CONFIG.siteUrl}/_api/contextinfo`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json;odata=verbose',
+                'Content-Type': 'application/json;odata=verbose'
+            }
+        })
+        .then(response => response.json())
+        .then(contextInfo => {
+            const formDigest = contextInfo.d.GetContextWebInformation.FormDigestValue;
+
+            return fetch(listApiUrl, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json;odata=verbose',
+                    'Content-Type': 'application/json;odata=verbose',
+                    'X-RequestDigest': formDigest
+                },
+                body: JSON.stringify({
+                    '__metadata': { 'type': 'SP.Data.TampermonkeyUsageLogListItem' },
+                    'Title': data.Title,
+                    'aflk': data.aflk,
+                    'k3hk': data.k3hk,
+                    'pk8k': data.pk8k,
+                    'tg5f': data.tg5f
+                })
+            });
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('[Batch Selector] Usage tracked successfully (fetch)');
+            } else {
+                console.warn('[Batch Selector] Failed to track usage (fetch):', response.statusText);
+            }
+        })
+        .catch(error => {
+            console.warn('[Batch Selector] Error tracking usage (fetch):', error);
+        });
+    }
+
+    // ========================================
+    // LOCAL STORAGE FUNCTIONS
+    // ========================================
+
     function saveSelections(vertical, func) {
         localStorage.setItem('selectedVertical', vertical);
         localStorage.setItem('selectedFunction', func);
@@ -174,6 +355,10 @@
             function: localStorage.getItem('selectedFunction')
         };
     }
+
+    // ========================================
+    // UI FUNCTIONS
+    // ========================================
 
     function createBatchButton() {
         const button = document.createElement('button');
@@ -193,6 +378,10 @@
 
         button.addEventListener('click', handleBatchSelection);
     }
+
+    // ========================================
+    // BATCH SELECTION FUNCTIONS
+    // ========================================
 
     function parseObjectId(text) {
         const match = text.match(/([^\/]+)\/Published\/([^\/]+)\/([^\/]+)/);
@@ -214,10 +403,15 @@
         const groups = {};
 
         Array.from(rows).forEach(element => {
-            const blurbName = element.querySelector('td:nth-child(2) div:first-child').textContent;
-            const objInfo = parseObjectId(element.querySelector('.sub-text').textContent);
+            const blurbNameElement = element.querySelector('td:nth-child(2) div:first-child');
+            const subTextElement = element.querySelector('.sub-text');
+            
+            if (!blurbNameElement || !subTextElement) return;
+            
+            const blurbName = blurbNameElement.textContent;
+            const objInfo = parseObjectId(subTextElement.textContent);
 
-            if (objInfo && selectedFunction.layers.includes(objInfo.layer)) {
+            if (objInfo && selectedFunction && selectedFunction.layers.includes(objInfo.layer)) {
                 if (!groups[blurbName]) {
                     groups[blurbName] = {
                         versions: []
@@ -238,6 +432,7 @@
     function selectBatch(isPrimary) {
         const groups = groupBlurbs();
         const toSelect = new Set();
+        let selectedCount = 0;
 
         Object.entries(groups).forEach(([blurbName, group]) => {
             if (isPrimary) {
@@ -249,7 +444,7 @@
                     }
                 });
             } else {
-                // Secondary selection: select ALL layers in secondaryLayers, including primary layers if they're listed
+                // Secondary selection: select ALL layers in secondaryLayers
                 selectedFunction.secondaryLayers.forEach(layer => {
                     const layerVersions = group.versions.filter(v => v.layer === layer);
                     if (layerVersions.length > 0) {
@@ -267,12 +462,27 @@
         // Then select the ones we want
         toSelect.forEach(element => {
             let checkbox = element.querySelector('input[type="checkbox"]');
-            if (!checkbox.checked) simulateClick(checkbox);
+            if (checkbox && !checkbox.checked) {
+                simulateClick(checkbox);
+                selectedCount++;
+            }
         });
+
+        // Track the batch selection
+        const savedSelections = loadSelections();
+        trackUsage(isPrimary ? 'primary_batch_selected' : 'secondary_batch_selected', {
+            vertical: savedSelections.vertical,
+            function: savedSelections.function,
+            itemsSelected: selectedCount
+        });
+
+        return selectedCount;
     }
 
     function updateFunctionSelect(verticalKey) {
         const functionSelect = document.getElementById('functionSelect');
+        if (!functionSelect) return;
+        
         functionSelect.innerHTML = '';
         const savedSelections = loadSelections();
 
@@ -296,7 +506,11 @@
     }
 
     function handleBatchSelection() {
+        // Track dialog opened
+        trackUsage('batch_dialog_opened');
+
         const dialog = document.createElement('div');
+        dialog.id = 'batchSelectorDialog';
         dialog.style.cssText = `
             position: fixed;
             top: 50%;
@@ -305,40 +519,78 @@
             background: white;
             padding: 20px;
             border: 1px solid #ccc;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            z-index: 1001;
-            border-radius: 4px;
-            min-width: 300px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 10001;
+            border-radius: 8px;
+            min-width: 350px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         `;
 
         const savedSelections = loadSelections();
 
-        let html = `
+        const html = `
             <div style="margin-bottom: 15px;">
-                <label for="verticalSelect">Select Vertical:</label>
-                <select id="verticalSelect" class="form-control" style="margin-bottom: 10px;">
+                <h3 style="margin: 0 0 15px 0; color: #333; font-size: 16px;">
+                    📦 Batch Selector
+                </h3>
+                
+                <label for="verticalSelect" style="font-size: 13px; color: #555; display: block; margin-bottom: 5px;">
+                    Select Vertical:
+                </label>
+                <select id="verticalSelect" class="form-control" style="margin-bottom: 15px; width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
                     ${Object.entries(VERTICAL_CONFIGS).map(([key, config]) =>
-                                                           `<option value="${key}" ${savedSelections.vertical === key ? 'selected' : ''}>${config.name}</option>`
+                        `<option value="${key}" ${savedSelections.vertical === key ? 'selected' : ''}>${config.name}</option>`
                     ).join('')}
                 </select>
 
-                <label for="functionSelect">Select Function:</label>
-                <select id="functionSelect" class="form-control">
+                <label for="functionSelect" style="font-size: 13px; color: #555; display: block; margin-bottom: 5px;">
+                    Select Function:
+                </label>
+                <select id="functionSelect" class="form-control" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
                 </select>
             </div>
-            <div style="text-align: center;">
-                <button id="selectPrimary" class="btn btn-primary" style="margin: 5px;">Select Primary Batch</button><br>
-                <button id="selectSecondary" class="btn btn-info" style="margin: 5px;">Select Secondary Batch</button><br>
-                <button id="closeDialog" class="btn" style="margin: 5px;">Close</button>
+            
+            <div style="text-align: center; border-top: 1px solid #eee; padding-top: 15px;">
+                <button id="selectPrimary" class="btn btn-primary" style="margin: 5px; padding: 8px 20px; background: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    ✓ Select Primary Batch
+                </button>
+                <br>
+                <button id="selectSecondary" class="btn btn-info" style="margin: 5px; padding: 8px 20px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    ✓ Select Secondary Batch
+                </button>
+                <br>
+                <button id="closeDialog" class="btn" style="margin: 5px; padding: 8px 20px; background: #f5f5f5; color: #333; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
+                    Close
+                </button>
+            </div>
+            
+            <div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee; font-size: 10px; color: #999; text-align: center;">
+                ${SCRIPT_NAME} v${SCRIPT_VERSION}
             </div>
         `;
 
         dialog.innerHTML = html;
+        
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'batchSelectorOverlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+        `;
+        
+        document.body.appendChild(overlay);
         document.body.appendChild(dialog);
 
         const verticalSelect = document.getElementById('verticalSelect');
         updateFunctionSelect(savedSelections.vertical || verticalSelect.value);
 
+        // Event handlers
         verticalSelect.onchange = (e) => {
             selectedVertical = VERTICAL_CONFIGS[e.target.value];
             updateFunctionSelect(e.target.value);
@@ -353,8 +605,9 @@
 
         document.getElementById('selectPrimary').onclick = () => {
             if (selectedFunction) {
-                selectBatch(true);
-                dialog.remove();
+                const count = selectBatch(true);
+                closeDialog();
+                showNotification(`Selected ${count} primary items`, 'success');
             } else {
                 alert("Please select a vertical and function first.");
             }
@@ -362,38 +615,107 @@
 
         document.getElementById('selectSecondary').onclick = () => {
             if (selectedFunction) {
-                selectBatch(false);
-                dialog.remove();
+                const count = selectBatch(false);
+                closeDialog();
+                showNotification(`Selected ${count} secondary items`, 'success');
             } else {
                 alert("Please select a vertical and function first.");
             }
         };
 
-        document.getElementById('closeDialog').onclick = () => {
-            dialog.remove();
-        };
+        document.getElementById('closeDialog').onclick = closeDialog;
+        overlay.onclick = closeDialog;
 
+        function closeDialog() {
+            const dialogEl = document.getElementById('batchSelectorDialog');
+            const overlayEl = document.getElementById('batchSelectorOverlay');
+            if (dialogEl) dialogEl.remove();
+            if (overlayEl) overlayEl.remove();
+        }
+
+        // Initialize selections
         if (savedSelections.vertical) {
             selectedVertical = VERTICAL_CONFIGS[savedSelections.vertical];
-            selectedFunction = VERTICAL_CONFIGS[savedSelections.vertical].functions[savedSelections.function];
+            if (savedSelections.function && VERTICAL_CONFIGS[savedSelections.vertical].functions[savedSelections.function]) {
+                selectedFunction = VERTICAL_CONFIGS[savedSelections.vertical].functions[savedSelections.function];
+            }
         } else {
             selectedVertical = VERTICAL_CONFIGS[verticalSelect.value];
-            selectedFunction = VERTICAL_CONFIGS[verticalSelect.value].functions[document.getElementById('functionSelect').value];
+            const funcSelect = document.getElementById('functionSelect');
+            if (funcSelect && funcSelect.value) {
+                selectedFunction = VERTICAL_CONFIGS[verticalSelect.value].functions[funcSelect.value];
+            }
         }
     }
 
-    if (window.location.href.includes('ajuda.a2z.com/cms.html')) {
-        const observer = new MutationObserver((mutations, obs) => {
-            const bulkOperations = document.querySelector('.bulk-operations');
-            if (bulkOperations) {
-                createBatchButton();
-                obs.disconnect();
-            }
-        });
-
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
+    /**
+     * Show a notification toast
+     */
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+            color: white;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10002;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            animation: slideIn 0.3s ease;
+        `;
+        notification.textContent = message;
+        
+        // Add animation keyframes
+        if (!document.getElementById('batchSelectorStyles')) {
+            const style = document.createElement('style');
+            style.id = 'batchSelectorStyles';
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100px); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideIn 0.3s ease reverse';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
+
+    // ========================================
+    // INITIALIZATION
+    // ========================================
+
+    function initialize() {
+        if (window.location.href.includes('ajuda.a2z.com/cms.html')) {
+            // Track script loaded
+            trackUsage('script_loaded');
+
+            const observer = new MutationObserver((mutations, obs) => {
+                const bulkOperations = document.querySelector('.bulk-operations');
+                if (bulkOperations) {
+                    createBatchButton();
+                    obs.disconnect();
+                    console.log('[Batch Selector] Initialized successfully');
+                }
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
+    }
+
+    // Start the script
+    initialize();
+
 })();

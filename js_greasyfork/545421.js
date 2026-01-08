@@ -4,7 +4,7 @@
 // @name:zh-CN   Facebook 乾淨化 & 加宽贴文区 & 播放连续短片时隐藏影片标题
 // @name:ja      Facebookのクリーンアップ ＆ 投稿エリアの拡張 ＆ 連続ショート動画再生時のタイトル非表示
 // @namespace    http://tampermonkey.net/
-// @version      8.5
+// @version      8.9
 // @description  Remove unnecessary and rarely used feature buttons and elements from Facebook to make the entire page look cleaner and more streamlined, Widen the post area to improve the overall visual experience, Hide video titles during Facebook Reels playback.
 // @description:zh-TW 刪除FaceBook多餘、不常使用的功能按鈕和要素，使整個頁面看起來更加簡潔，加寬貼文區，讓整體觀感更好，播放連續短片時隱藏影片標題
 // @description:zh-CN 删除FaceBook多余、不常使用的功能按钮和要素，使整个页面看起来更加简洁，加宽贴文区，让整体观感更好，播放连续短片时隐藏影片标题
@@ -31,14 +31,11 @@
   // === 全域設定與狀態管理 ===
   const config = {
     autoExpandSidebar: GM_getValue('autoExpandSidebar', true),
-    disableVideoAutoplay: GM_getValue('disableVideoAutoplay', false),
-    postWidth: GM_getValue('postWidth', 1200),
-    runtimeAutoplayAllowed: false
+    postWidth: GM_getValue('postWidth', 1200)
   };
 
   const menuIds = {
     expand: null,
-    autoplay: null,
     width: null
   };
 
@@ -46,7 +43,6 @@
   function updateMenus() {
     if (typeof GM_unregisterMenuCommand !== 'undefined') {
       if (menuIds.expand) GM_unregisterMenuCommand(menuIds.expand);
-      if (menuIds.autoplay) GM_unregisterMenuCommand(menuIds.autoplay);
       if (menuIds.width) GM_unregisterMenuCommand(menuIds.width);
     }
 
@@ -55,13 +51,6 @@
       GM_setValue('autoExpandSidebar', config.autoExpandSidebar);
       updateMenus();
       if (config.autoExpandSidebar) tryExpandOnce();
-    });
-
-    menuIds.autoplay = GM_registerMenuCommand(`禁止影片自動播放：${config.disableVideoAutoplay ? "✅開啟" : "⛔關閉"}`, () => {
-      config.disableVideoAutoplay = !config.disableVideoAutoplay;
-      GM_setValue('disableVideoAutoplay', config.disableVideoAutoplay);
-      updateMenus();
-      if (config.disableVideoAutoplay) scanAndPauseVideos();
     });
 
     menuIds.width = GM_registerMenuCommand(`設定貼文區寬度 (目前: ${config.postWidth}px)`, () => {
@@ -80,112 +69,7 @@
 
   updateMenus();
 
-  // === 2. 禁止影片自動播放模組 ===
-  let scanAndPauseVideos;
-
-  (function preventVideoAutoplayModule() {
-    function isAllowedAutoplayPage() {
-      const url = location.href;
-      // 嚴格限定為 facebook 的網域路徑
-      return url.includes("facebook.com/watch") || url.includes("facebook.com/reel/");
-    }
-
-    function checkURLForAllowedPage() {
-      const currentlyAllowed = isAllowedAutoplayPage();
-      if (currentlyAllowed && !config.runtimeAutoplayAllowed) {
-        config.runtimeAutoplayAllowed = true;
-      } else if (!currentlyAllowed && config.runtimeAutoplayAllowed) {
-        config.runtimeAutoplayAllowed = false;
-      }
-    }
-
-    setInterval(checkURLForAllowedPage, 1000);
-    window.addEventListener('popstate', checkURLForAllowedPage);
-
-    function isReelsVideo(video) {
-      let el = video;
-      for (let i = 0; i < 10; i++) {
-        if (!el.parentElement) break;
-        el = el.parentElement;
-        if (el.innerHTML && (el.innerHTML.includes('/reel/') || el.innerHTML.includes('/reels/'))) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    let lastUserInteractionTime = 0;
-    ['click', 'keydown', 'mousedown'].forEach(eventType => {
-      document.addEventListener(eventType, () => {
-        lastUserInteractionTime = Date.now();
-      }, true);
-    });
-
-    function wasRecentlyInteracted() {
-      return Date.now() - lastUserInteractionTime < 1000;
-    }
-
-    scanAndPauseVideos = function() {
-      if (!config.disableVideoAutoplay || config.runtimeAutoplayAllowed) return;
-
-      const videos = document.querySelectorAll('video');
-      videos.forEach(video => {
-        if (isReelsVideo(video)) {
-          if (video.dataset.reelsProcessed) return;
-          video.dataset.reelsProcessed = "true";
-
-          function preventPlay(e) {
-            if (!config.disableVideoAutoplay || config.runtimeAutoplayAllowed) return;
-            if (!wasRecentlyInteracted()) {
-              e.preventDefault();
-              e.stopPropagation();
-              video.pause();
-              console.log('[FB Cleaner] 阻止自動播放');
-            }
-          }
-
-          video.addEventListener('play', preventPlay, true);
-          video.pause();
-          video.autoplay = false;
-          video.muted = true;
-          video.removeAttribute("autoplay");
-          video.removeAttribute("playsinline");
-
-          video.addEventListener('mouseenter', () => {
-             if (config.disableVideoAutoplay && !config.runtimeAutoplayAllowed && !wasRecentlyInteracted()) {
-               video.pause();
-             }
-          });
-          return;
-        }
-
-        if (!video.__autoplayChecked) {
-            video.__autoplayChecked = true;
-            if (!video.paused && !wasRecentlyInteracted()) {
-                video.pause();
-            }
-        }
-      });
-    };
-
-    document.addEventListener('play', (e) => {
-      if (!config.disableVideoAutoplay || config.runtimeAutoplayAllowed) return;
-      const video = e.target;
-      if (video.tagName === 'VIDEO') {
-        setTimeout(() => {
-          if (!wasRecentlyInteracted() && !video.paused) {
-            video.pause();
-          }
-        }, 100);
-      }
-    }, true);
-
-    scanAndPauseVideos();
-    const observer = new MutationObserver(scanAndPauseVideos);
-    observer.observe(document.body, { childList: true, subtree: true });
-  })();
-
-  // === 3. 第一階段：Facebook 清爽化 & 自動展開 ===
+  // === 2. 第一階段：Facebook 清爽化 & 自動展開 ===
   let tryExpandOnce;
 
   (function cleanerPhase() {
@@ -340,7 +224,7 @@
     observer.observe(document.body, { childList: true, subtree: true });
   })();
 
-  // === 4. 第二階段：加寬貼文顯示區域 ===
+  // === 3. 第二階段：加寬貼文顯示區域 ===
   function updateWidenStyle() {
       let styleWiden = document.getElementById('fb-cleaner-widen-style');
       if (!styleWiden) {
@@ -359,6 +243,11 @@
         }
         div.x193iq5w.xgmub6v { width: ${config.postWidth}px !important; }
         .xxc7z9f { max-width: 60px !important; }
+        /* 修正影片點擊層位移問題 */
+        .widened .x1yztbdb.x1n2onr6 {
+          width: 100% !important;
+          left: 0 !important;
+        }
       `;
   }
 
@@ -382,64 +271,68 @@
     widenObserver.observe(document.body, { childList: true, subtree: true });
   }
 
-  // === 5. 第三階段：Reels 影片標題穩定處理 ===
-  const videoTitleMap = new WeakMap();
+// === 4. 第三階段：Reels 影片標題穩定處理 ===
+
+  // 1. 定義隱藏樣式：移除 display: none，改用不影響佈局的隱藏方式
+  const styleReels = document.createElement('style');
+  styleReels.id = 'fb-reels-hide-style';
+  styleReels.textContent = `
+    .fb-script-hide-reels-title {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        transition: opacity 0.2s ease !important; /* 增加平滑感 */
+    }
+  `;
+  document.head.appendChild(styleReels);
+
+  const REELS_TITLE_SELECTOR = '.xw8ag78.x127lhb5.x1ey2m1c.x78zum5.xdt5ytf.xozqiw3.x1o0tod.x13a6bvl.x9zwxv7.x10l6tqk.xh8yej3';
 
   function monitorReelsPlayback() {
-    const videos = Array.from(document.querySelectorAll('video')).filter(v => v.offsetParent !== null);
-    videos.forEach(video => {
-      let record = videoTitleMap.get(video);
-      let titleBar = null;
+    // 1. 判斷當前是否在 Reels 頁面，如果不是，直接結束函數
+    // 這樣在瀏覽一般動態牆時，這段邏輯幾乎不佔用任何 CPU 資源
+    if (!location.href.includes('/reels/') && !location.href.includes('/reel/')) {
+      return;
+    }
 
-      function isInsideReels(video) {
-        let el = video;
-        for (let i = 0; i < 10; i++) {
-          if (!el.parentElement) break;
-          el = el.parentElement;
-          const classList = el.className || '';
-          if ((classList.includes('x1ey2m1c') && classList.includes('xh8yej3')) &&
-              (classList.includes('x13a6bvl') || classList.includes('xdhlvrg') || classList.includes('x10l6tqk'))) {
-            return true;
-          }
-        }
-        return false;
-      }
-      if (!isInsideReels(video)) return;
+    const allTitleBars = document.querySelectorAll(REELS_TITLE_SELECTOR);
+    // 2. 如果畫面上根本沒出現標題列（還沒讀取出來），也直接結束
+    if (allTitleBars.length === 0) return;
 
-      const needsRebind = !record || !record.titleBar?.isConnected;
-      if (needsRebind) {
-        let el = video;
-        for (let i = 0; i < 10; i++) {
-          if (!el.parentElement) break;
-          el = el.parentElement;
-          const candidates = el.querySelectorAll(
-            'div[class*="x1ey2m1c"][class*="x13a6bvl"], div[class*="x1ey2m1c"][class*="xdhlvrg"], div[class*="x1ey2m1c"][class*="xh8yej3"], div[class*="x1ey2m1c"][class*="x10l6tqk"]'
-          );
-          for (const c of candidates) {
-            const text = c.innerText?.trim();
-            const hasControlButtons = c.querySelector('button[aria-label*="暫停"]') || c.querySelector('button[aria-label*="播放"]') || c.querySelector('button[aria-label*="靜音"]') || c.querySelector('[role="slider"]');
-            if (text && text.length > 2 && c.offsetHeight > 0 && c.offsetWidth > 0 && !hasControlButtons) {
-              titleBar = c;
-              break;
-            }
-          }
-          if (titleBar) break;
-        }
-        if (titleBar) {
-          videoTitleMap.set(video, { titleBar, lastPaused: video.paused });
-          titleBar.style.display = video.paused ? "" : "none";
-        }
+    // 只有在以上條件都滿足時，才進行較耗資源的影片篩選與座標檢查
+    const allVideos = Array.from(document.querySelectorAll('video')).filter(v => {
+      return v.offsetWidth > 0 && !v.paused && !v.ended;
+    });
+
+    // ... 後續原本的標題判定與隱藏邏輯維持不變 ...
+    allTitleBars.forEach(titleBar => {
+      // (這裡接你原本的 tRect 取得與 isInsideVideo 判定邏輯)
+      let shouldHide = false;
+      const tRect = titleBar.getBoundingClientRect();
+      if (tRect.height === 0) return;
+
+      allVideos.forEach(video => {
+        const vRect = video.getBoundingClientRect();
+        const tCenterX = tRect.left + tRect.width / 2;
+        const tCenterY = tRect.top + tRect.height / 2;
+
+        const isInsideVideo = (
+          tCenterX > vRect.left && tCenterX < vRect.right &&
+          tCenterY > vRect.top && tCenterY < vRect.bottom
+        );
+        if (isInsideVideo) shouldHide = true;
+      });
+
+      if (shouldHide) {
+        if (!titleBar.classList.contains('fb-script-hide-reels-title')) titleBar.classList.add('fb-script-hide-reels-title');
       } else {
-        titleBar = record.titleBar;
-        const lastPaused = record.lastPaused;
-        const isPaused = video.paused;
-        if (isPaused !== lastPaused) {
-          titleBar.style.display = isPaused ? "" : "none";
-          videoTitleMap.set(video, { titleBar, lastPaused: isPaused });
-        }
+        if (titleBar.classList.contains('fb-script-hide-reels-title')) titleBar.classList.remove('fb-script-hide-reels-title');
       }
     });
   }
+  // 監測頻率
   setInterval(monitorReelsPlayback, 300);
 
+  // 點擊補強
+  window.addEventListener('click', () => setTimeout(monitorReelsPlayback, 100));
 })();

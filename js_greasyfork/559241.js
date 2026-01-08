@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Redirect to Beta Links
 // @namespace    https://github.com/kid4rm90s/WME-Redirect-to-Beta-Links
-// @version      2025-12-24.01
+// @version      2026.01.07.01
 // @description  Open all WME links in Beta WME
 // @author       kid4rm90s
 // @match        https://docs.google.com/spreadsheets/*
@@ -27,7 +27,8 @@
  
     // Convert WME link to beta version
     function convertToBetaLink(href) {
-        if (!href || !/.*\.waze\.com\/.*editor.*/i.test(href)) {
+        // Accept links with or without a subdomain (e.g., waze.com or www.waze.com)
+        if (!href || !/https?:\/\/(?:[\w-]+\.)?waze\.com\/.*editor.*/i.test(href)) {
             return null;
         }
         
@@ -40,8 +41,10 @@
             params.delete('zoomLevel');
             params.append('zoomLevel', 20);
  
-            // Change to beta WME
-            url.hostname = url.hostname.replace('www.', 'beta.');
+            // Change to beta WME; if no subdomain, force beta.waze.com
+            if (url.hostname.includes('waze.com')) {
+                url.hostname = 'beta.waze.com';
+            }
             return url.origin + url.pathname + '?' + params.toString();
         } catch (e) {
             return null;
@@ -50,7 +53,7 @@
  
     // Replace link hrefs in the DOM
     function replaceLinks() {
-        let wmeLinks = [...document.querySelectorAll('a')].filter(link => link.href && /.*\.waze\.com\/.*editor.*/i.test(link.href));
+        let wmeLinks = [...document.querySelectorAll('a')].filter(link => link.href && /https?:\/\/(?:[\w-]+\.)?waze\.com\/.*editor.*/i.test(link.href));
  
         wmeLinks.forEach(linkEl => {
             // Skip if already processed and marked

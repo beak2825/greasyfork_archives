@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        Nexus No Wait
-// @description Download from Nexusmods.com without wait and redirect (supports Manual/Vortex/MO2/NMM)
+// @description Skip Countdown (supports Manual/Vortex/MO2/NMM); File archive access; Skip Pop-up; 
 // @namespace   NexusNoWait
 // @include     https://www.nexusmods.com/*/mods/*
 // @run-at      document-idle
@@ -11,7 +11,7 @@
 // @grant       GM_setValue
 // @grant       GM_listValues
 // @grant       unsafeWindow
-// @version     2.10
+// @version     2.11
 // @downloadURL https://update.greasyfork.org/scripts/394039/Nexus%20No%20Wait.user.js
 // @updateURL https://update.greasyfork.org/scripts/394039/Nexus%20No%20Wait.meta.js
 // ==/UserScript==
@@ -308,7 +308,7 @@
     ajaxRequest({
       url: options.url,
       method: options.method || 'GET',
-      data: options.data,
+      ...(options.method !== 'GET' && { data: options.data }),
       headers: options.headers,
       onload: (response) => {
         if (response.status === 200) {
@@ -463,7 +463,7 @@
     }
   }
 
-  function makeDownloadRequest(params, successCallback) {
+  function makeManualRequest(params, successCallback) {
     var endpoint = params.prm ? 'Widgets/DownloadPopUp?' : 'Managers/Downloads?GenerateDownloadUrl';
     const data = (params.prm ? 'id=' : 'fid=') + params.fileId + '&game_id=' + params.gameId;
     if (params.prm) {
@@ -495,8 +495,37 @@
     });
   }
 
+    function makeNMMRequest(params, successCallback) {
+    makeRequest({
+      method: 'GET',
+      url: params.prm ? 'Widgets/DownloadPopUp?' : params.href,
+      headers: getRequestHeaders(),
+      success: (response) => {
+        try {
+          if (params.prm) {
+            successCallback(response, params);
+          } else {
+            var text = typeof response === 'object' ? JSON.stringify(response) : String(response);
+            console.log(text);
+            const matches = text.match(/['"]([^'"]*?key[^'"]*?)['"]/);
+            if (matches) {
+              successCallback(matches[1], params);
+            }
+          }
+        } catch (error) {
+          console.error('Nexus No Wait: JSON parse error', error);
+          ButtonState.error(params.button);
+        }
+      },
+      error: (error) => {
+        console.error('Nexus No Wait: Download request failed', error);
+        ButtonState.error(params.button);
+      },
+    });
+  }
+
   function processManualDownload(params) {
-    makeDownloadRequest(params, (data, params) => {
+    makeManualRequest(params, (data, params) => {
       const url = params.prm ? parsePrm(data) : data?.url;
       if (url) {
         ButtonState.success(params.button);
@@ -508,17 +537,29 @@
   }
 
   function processNMMDownload(params) {
-    makeDownloadRequest(params, (data, params) => {
-      params = extractParams(data, params);
-      const downloadUrl = makeURL(params);
-      if (downloadUrl) {
-        ButtonState.success(params.button);
-        window.location.href = downloadUrl;
-      } else {
-        ButtonState.error(params.button);
-        logError(params);
-      }
-    });
+    if (params.prm) {
+      makeManualRequest(params, (data, params) => {
+        params = extractParams(data, params);
+        const downloadUrl = makeURL(params);
+        if (downloadUrl) {
+          ButtonState.success(params.button);
+          window.location.href = downloadUrl;
+        } else {
+          ButtonState.error(params.button);
+          logError(params);
+        }
+      });
+    } else {
+      makeNMMRequest(params, (data, params) => {
+        if (data) {
+          ButtonState.success(params.button);
+          window.location.href = data;
+        } else {
+          ButtonState.error(params.button);
+          logError(params);
+        }
+      });
+    }
   }
 
   function handlePopupClose(button, fileId) {

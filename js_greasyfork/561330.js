@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Image-Search-Direct-View
 // @namespace    https://github.com/p65536
-// @version      1.0.0
+// @version      1.0.1
 // @license      MIT
 // @description  Adds a "View Image" button to Image Search results. [Supported sites: Bing / DuckDuckGo / Google]
 // @icon         https://raw.githubusercontent.com/p65536/p65536/main/images/isdv.svg
@@ -677,16 +677,8 @@
         try {
             return structuredClone(obj);
         } catch (e) {
-            Logger.error('CLONE FAILED', '', 'deepClone failed, falling back to shallow copy.', e);
-            // Fallback strategy: Shallow copy
-            if (Array.isArray(obj)) {
-                return /** @type {any} */ ([...obj]);
-            }
-            if (obj && typeof obj === 'object') {
-                return /** @type {any} */ ({ ...obj });
-            }
-            // Return original if primitive or special type
-            return obj;
+            Logger.error('CLONE FAILED', '', 'deepClone failed. Data contains non-clonable items.', e);
+            throw e;
         }
     }
 
@@ -871,7 +863,8 @@
         isUiWorkScheduled: false,
         _logAggregation: {},
         // prettier-ignore
-        _aggregatedEvents: new Set([]),
+        _aggregatedEvents: new Set([
+        ]),
         _aggregationDelay: 500, // ms
 
         /**

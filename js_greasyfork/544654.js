@@ -3,7 +3,7 @@
 // @description    This script is designed to bypass visual overlays and restrictive styles (such as paywalls or scrolling blocks) on glassdoor. Derived from https://update.greasyfork.org/scripts/531857/Glassdoor%20Paywall%20Remover%20Update.user.js
 // @author         Percio Andrade @ https://github.com/percioandrade
 // @author         Jason Axley
-// @version        1.1.2025-08-04
+// @version        1.2.2026-01-07
 // @include        http*://*.glassdoor.*
 // @namespace      http://axley.net
 // @license MIT    https://opensource.org/license/mit
@@ -81,6 +81,16 @@
         let buttons = document.querySelectorAll('.review-details_showMoreButton__N4hkO');
         for (let i=0; i < buttons.length; i++) {
             buttons[i].remove();
+        }
+
+        // They added some blur CSS, lol. And a button to "unlock" the content
+        let blurred = document.querySelectorAll('.review-details_blurred__k0zqy');
+        for (let i=0; i < blurred.length; i++) {
+            blurred[i].classList.remove('review-details_blurred__k0zqy')
+        }
+        let annoyingShareButtons = document.querySelectorAll('.review-details_unlockCtaOverlay__qlV4b');
+        for (let i=0; i < annoyingShareButtons.length; i++) {
+            annoyingShareButtons[i].remove();
         }
     };
 

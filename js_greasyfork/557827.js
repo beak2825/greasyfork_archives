@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         USPS Address Validation - View Page
 // @namespace    https://github.com/nate-kean/
-// @version      2025.12.11.1
+// @version      2026.01.08.1
 // @description  Integrate USPS address validation into the Address field.
 // @author       Nate Kean
 // @match        https://jamesriver.fellowshiponego.com/members/view/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=fellowshiponego.com
 // @grant        none
 // @license      MIT
-// @require      https://update.greasyfork.org/scripts/555040/1707051/USPS%20Address%20Validation%20-%20Common.js
+// @require      https://update.greasyfork.org/scripts/555040/1730304/USPS%20Address%20Validation%20-%20Common.js
 // @downloadURL https://update.greasyfork.org/scripts/557827/USPS%20Address%20Validation%20-%20View%20Page.user.js
 // @updateURL https://update.greasyfork.org/scripts/557827/USPS%20Address%20Validation%20-%20View%20Page.meta.js
 // ==/UserScript==
@@ -60,12 +60,10 @@
 
 	/**
 	 * @param {number} id
-	 * @param {Element} addressPanel
+	 * @param {Readonly<Element>} addressPanel
 	 * @param {string} targetSelector
 	 */
 	function addToAddressPanel(id, addressPanel, targetSelector) {
-		console.trace(id, addressPanel, targetSelector);
-
 		const validator = new Validator();
 		const indicator = new Indicator(
 			tryQuerySelector(addressPanel, targetSelector)
@@ -85,8 +83,10 @@
 		const streetAddress = normalizeStreetAddressQuery(streetAddrLines);
 		const line2 = detailsP.children[1].textContent.trim();
 		const line2Chunks = line2.split(",");
-		const city = line2Chunks[0];
-		const [state, zip] = line2Chunks[1].trim().split(" ");
+		const city = line2Chunks[0] ?? "";
+		let [state, zip] = line2Chunks[1].trim().split(" ");
+		state = state ?? "";
+		zip = zip ?? "";
 		const country = detailsP.children[2].textContent.trim();
 
 		validator.onNewAddressQuery(
@@ -94,20 +94,18 @@
 			{ streetAddress, city, state, zip, country },
 		);
 
+		// Act on the correction the indicator is suggesting.
 		indicator.button.addEventListener("click", () => {
-			// Act on the correction the indicator is suggesting.
 			if (indicator.status.code !== Validator.Code.CORRECTION) return;
-
-			// TODO(Nate): what in sam hill is .filter(Boolean)
-			const f1UID = window.location.pathname.split("/").filter(Boolean).pop();
-
-			window.location.href = `/members/edit/${f1UID}?autofill-addr=${id}#addresslabel1_chosen`;
+			const f1UID = window.location.pathname.split("/").at(-1);
+			window.location.href =
+				`/members/edit/${f1UID}?autofill-addr=${id}#addresslabel1_chosen`;
 		});
 	}
 
 
 	/**
-	 * @param {string[]} streetAddrLines
+	 * @param {Readonly<string[]>} streetAddrLines
 	 * @returns {string}
 	 */
 	function normalizeStreetAddressQuery(streetAddrLines) {
@@ -150,9 +148,7 @@
 
 	console.log("USPS Address Validator");
 
-	/**
-	 * @type {Element | undefined}
-	 */
+	/** @type {Element | undefined} */
 	let addressPanel;
 	try {
 		addressPanel = tryQuerySelector(

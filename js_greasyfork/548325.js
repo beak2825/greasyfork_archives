@@ -19,42 +19,42 @@
     toc.id = "gemini-toc";
     toc.style.cssText = `
             position: fixed;
-            top: 180px;
+            top: 50%;
+            transform: translateY(-50%);
             right: 2px;
-            width: 250px;
+            width: 8px;
             max-height: 70vh;
             background: rgba(255, 255, 255, 0.6);
             border: 1px solid #ddd;
             border-radius: 6px;
             padding: 8px;
             z-index: 10000;
-            opacity: 0.1;
-            transition: opacity 0.3s ease;
+            opacity: 0.3;
+            transition: opacity 0.1s ease;
             overflow-y: auto;
+            overflow-x: hidden;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         `;
 
-    // 添加标题
-    const title = document.createElement("h3");
-    title.textContent = "TOC";
-    title.style.cssText = `
-            margin: 0 0 6px 0;
-            font-size: 11px;
-            color: #666;
-            text-align: center;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 4px;
-            font-weight: 500;
-        `;
-    toc.appendChild(title);
-
     // 添加鼠标悬停效果
     toc.addEventListener("mouseenter", () => {
+      toc.style.width = "250px";
       toc.style.opacity = "1.0";
+      // 显示所有文本
+      const items = toc.querySelectorAll(".toc-item-text");
+      items.forEach((item) => {
+        item.style.opacity = "1";
+      });
     });
     toc.addEventListener("mouseleave", () => {
+      toc.style.width = "8px";
       toc.style.opacity = "0.3";
+      // 隐藏所有文本
+      const items = toc.querySelectorAll(".toc-item-text");
+      items.forEach((item) => {
+        item.style.opacity = "0";
+      });
     });
 
     document.body.appendChild(toc);
@@ -217,22 +217,24 @@
   function updateTOC(tocContainer) {
     const prompts = findUserPrompts();
 
-    // 清除现有内容（保留标题）
-    const title = tocContainer.querySelector("h3");
+    // 清除现有内容
     // 使用安全的DOM操作替代innerHTML
     while (tocContainer.firstChild) {
       tocContainer.removeChild(tocContainer.firstChild);
     }
-    tocContainer.appendChild(title);
 
     if (prompts.length === 0) {
       const noContent = document.createElement("div");
       noContent.textContent = "暂无对话内容";
+      noContent.className = "toc-item-text";
       noContent.style.cssText = `
                 color: #999;
                 font-style: italic;
                 text-align: center;
                 padding: 15px 0;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                white-space: nowrap;
             `;
       tocContainer.appendChild(noContent);
       return;
@@ -252,11 +254,19 @@
                 font-size: 12px;
                 line-height: 1.3;
                 border-left: 2px solid #4285f4;
+                min-height: 8px;
             `;
 
-      // 添加序号和文本
+      // 添加文本
       const itemText = document.createElement("span");
-      itemText.textContent = `${index + 1}. ${truncateText(prompt.text, 25)}`;
+      itemText.className = "toc-item-text";
+      itemText.textContent = truncateText(prompt.text, 25);
+      itemText.style.cssText = `
+                opacity: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            `;
       item.appendChild(itemText);
 
       // 添加悬停效果

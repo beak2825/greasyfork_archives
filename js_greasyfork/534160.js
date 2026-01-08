@@ -32,7 +32,7 @@
 // @run-at       document-end
 // @supportURL   https://github.com/johnsyweb/tampermonkey-parkrun/issues/
 // @tag          parkrun
-// @version      1.0.57
+// @version      1.0.61
 // @downloadURL https://update.greasyfork.org/scripts/534160/parkrun%20Wilson%20index%20display.user.js
 // @updateURL https://update.greasyfork.org/scripts/534160/parkrun%20Wilson%20index%20display.meta.js
 // ==/UserScript==

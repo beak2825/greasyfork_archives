@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         Multiplayer Piano Optimizations [Emotes]
 // @namespace    https://tampermonkey.net/
-// @version      1.7.0
+// @version      1.7.3
 // @description  Display emoticons and colors in chat!
 // @author       zackiboiz, ccjit
 // @match        *://multiplayerpiano.com/*
 // @match        *://*.multiplayerpiano.net/*
-// @match        *://dev.multiplayerpiano.net/*
 // @match        *://*.multiplayerpiano.org/*
 // @match        *://*.multiplayerpiano.dev/*
 // @match        *://piano.mpp.community/*
@@ -176,7 +175,7 @@
                         const img = entry.target;
                         const name = img.dataset.emote;
                         if (name) {
-                            this._setImgSrc(img, name);
+                            this.#setImgSrc(img, name);
                         }
                         try {
                             this.suggestionsObserver.unobserve(img);
@@ -192,17 +191,17 @@
 
         async init() {
             try {
-                await this._loadEmotesMeta();
-                this._buildTokenRegex();
-                this._initChatObserver();
-                this._replaceExistingMessages();
-                this._initSuggestionListeners();
+                await this.#loadEmotesMeta();
+                this.#buildTokenRegex();
+                this.#initChatObserver();
+                this.#replaceExistingMessages();
+                this.#initSuggestionListeners();
             } catch (err) {
                 console.error("EmotesManager failed:", err);
             }
         }
 
-        async _loadEmotesMeta() {
+        async #loadEmotesMeta() {
             const res = await fetch(`${this.baseUrl}/emotes/meta.jsonc?_=${Date.now()}`);
             if (!res.ok) throw new Error(`Failed to load emote metadata: ${res.status}`);
 
@@ -211,7 +210,7 @@
             this.emotes = JSON.parse(cleaned);
         }
 
-        _buildTokenRegex() {
+        #buildTokenRegex() {
             const tokens = Object.keys(this.emotes)
                 .map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
                 .sort((a, b) => b.length - a.length);
@@ -227,47 +226,27 @@
             this.combinedRegex = new RegExp(`:(${tokenList}):|;(${tokenList});`, "g");
         }
 
-        _tokenizeSegment(seg) {
-            const tokens = [];
-            let lastIndex = 0;
-            this.combinedRegex.lastIndex = 0;
-            let m;
-            while ((m = this.combinedRegex.exec(seg)) !== null) {
-                const matchIndex = m.index;
-                // check escaping
-                let k = matchIndex - 1, backCount = 0;
-                while (k >= 0 && seg[k] === "\\") {
-                    backCount++;
-                    k--;
-                }
-                if (backCount % 2 === 1) {
-                    const upTo = this.combinedRegex.lastIndex;
-                    if (upTo > lastIndex) tokens.push({ type: "text", text: seg.slice(lastIndex, upTo) });
-                    lastIndex = upTo;
-                    continue;
-                }
-
-                if (matchIndex > lastIndex) tokens.push({ type: "text", text: seg.slice(lastIndex, matchIndex) });
-                if (m[1]) tokens.push({ type: "normal", name: m[1] });
-                else if (m[2]) tokens.push({ type: "overlay", name: m[2] });
-                lastIndex = this.combinedRegex.lastIndex;
-            }
-            if (lastIndex < seg.length) tokens.push({ type: "text", text: seg.slice(lastIndex) });
-            return tokens;
-        }
-
-        _assignOverlays(tokens) {
+        #assignOverlays(tokens) {
             const assigned = {};
             const overlayConsumed = new Set();
             for (let i = 0; i < tokens.length; i++) {
                 const t = tokens[i];
                 if (t.type !== "overlay") continue;
                 let assignedTo = -1;
-                for (let j = i + 1; j < tokens.length; j++)
-                    if (tokens[j].type === "normal") { assignedTo = j; break; }
-                if (assignedTo === -1)
-                    for (let j = i - 1; j >= 0; j--)
-                        if (tokens[j].type === "normal") { assignedTo = j; break; }
+                for (let j = i + 1; j < tokens.length; j++) {
+                    if (tokens[j].type === "normal") {
+                        assignedTo = j;
+                        break;
+                    }
+                }
+                if (assignedTo === -1) {
+                    for (let j = i - 1; j >= 0; j--) {
+                        if (tokens[j].type === "normal") {
+                            assignedTo = j;
+                            break;
+                        }
+                    }
+                }
                 if (assignedTo !== -1) {
                     assigned[assignedTo] = assigned[assignedTo] || [];
                     assigned[assignedTo].push({ name: t.name, pos: i });
@@ -280,7 +259,7 @@
             return { assigned, overlayConsumed };
         }
 
-        async _getEmoteUrl(key) {
+        async #getEmoteUrl(key) {
             if (this.emoteUrls[key]) return this.emoteUrls[key];
             if (this.emotePromises[key]) return this.emotePromises[key];
 
@@ -305,7 +284,7 @@
             return promise;
         }
 
-        _createEmoteImg(token, { isBase = false, overlayClass = false, stack } = {}) {
+        #createEmoteImg(token, { isBase = false, overlayClass = false, stack } = {}) {
             const img = document.createElement("img");
             img.alt = img.title = (isBase ? `:${token}:` : `;${token};`);
             img.dataset.emote = token;
@@ -329,22 +308,22 @@
             return img;
         }
 
-        _setImgSrc(img, name) {
-            this._getEmoteUrl(name).then(url => {
+        #setImgSrc(img, name) {
+            this.#getEmoteUrl(name).then(url => {
                 if (url) img.src = url;
-            }).catch(() => {});
+            }).catch(() => { });
         }
 
-        _tryObserveOrSet(img, name) {
+        #tryObserveOrSet(img, name) {
             try {
                 this.suggestionsObserver.observe(img);
             } catch (e) {
-                this._setImgSrc(img, name);
+                this.#setImgSrc(img, name);
             }
         }
 
-        async _fitImgsToStack(imgs, stack) {
-            await this._waitForImgs(imgs);
+        async #fitImgsToStack(imgs, stack) {
+            await this.#waitForImgs(imgs);
             try {
                 const computedImgHeights = imgs.map(img => {
                     const h = parseFloat(getComputedStyle(img).height);
@@ -370,10 +349,10 @@
                     stack.style.width = `${Math.ceil(maxWidth)}px`;
                 }
                 stack.style.height = `${Math.ceil(targetHeight)}px`;
-            } catch (e) {}
+            } catch (e) { }
         }
 
-        _waitForImgs(imgs, timeout = 1200) {
+        #waitForImgs(imgs, timeout = 1200) {
             return Promise.all(imgs.map(img => new Promise(resolve => {
                 if (img.complete && (img.naturalWidth || img.naturalHeight)) return resolve();
                 const to = setTimeout(resolve, timeout);
@@ -388,7 +367,7 @@
             })));
         }
 
-        _initChatObserver() {
+        #initChatObserver() {
             const chatList = document.querySelector("#chat > ul");
             if (!chatList) return;
             const observer = new MutationObserver(mutations => {
@@ -396,7 +375,7 @@
                 mutations.forEach(m => m.addedNodes.forEach(node => {
                     if (node.nodeType === 1 && node.tagName === "LI") {
                         const msgEl = node.querySelector(".message");
-                        this._replaceEmotesInElement(msgEl);
+                        this.#replaceEmotesInElement(msgEl);
                         if (chatList.scrollHeight - chatList.scrollTop - chatList.clientHeight < 30) {
                             chatList.scrollTop = chatList.scrollHeight;
                         }
@@ -407,17 +386,17 @@
             observer.observe(chatList, { childList: true });
         }
 
-        _replaceExistingMessages() {
-            document.querySelectorAll("#chat > ul li .message").forEach(el => this._replaceEmotesInElement(el));
+        #replaceExistingMessages() {
+            document.querySelectorAll("#chat > ul li .message").forEach(el => this.#replaceEmotesInElement(el));
         }
 
-        _replaceEmotesInElement(el) {
+        #replaceEmotesInElement(el) {
             if (!el) return;
             const walk = node => {
                 if (node.nodeType === Node.ELEMENT_NODE && node.tagName.toLowerCase() === "code") return;
 
                 if (node.nodeType === Node.TEXT_NODE) {
-                    const frag = this._processTextSegment(node.textContent);
+                    const frag = this.#processTextSegment(node.textContent);
                     node.replaceWith(frag);
                 } else if (node.nodeType === Node.ELEMENT_NODE) {
                     Array.from(node.childNodes).forEach(walk);
@@ -426,29 +405,84 @@
             walk(el);
         }
 
-        _processTextSegment(rawText) {
+        #processTextSegment(rawText) {
+            const MAX_CONSECUTIVE_LINEBREAKS = 2;
+
+            const chars = [];
+            const escaped = [];
+
+            for (let i = 0; i < rawText.length; i++) {
+                const ch = rawText[i];
+                if (ch === "\\") {
+                    if (i + 1 < rawText.length) {
+                        const next = rawText[i + 1];
+                        if (next === "n") {
+                            chars.push("\n");
+                            escaped.push(false);
+                            i++;
+                        } else {
+                            chars.push(next);
+                            escaped.push(true);
+                            i++;
+                        }
+                    } else {
+                        chars.push("\\"); // put it back
+                    }
+                } else {
+                    chars.push(ch);
+                    escaped.push(false);
+                }
+            }
+
+            const segments = [];
+            let curChars = [];
+            let curEsc = [];
+            let consecutiveNewlines = 0;
+
+            for (let i = 0; i < chars.length; i++) {
+                const c = chars[i];
+                if (c === "\n") {
+                    consecutiveNewlines++;
+                    if (consecutiveNewlines <= MAX_CONSECUTIVE_LINEBREAKS) {
+                        segments.push({
+                            str: curChars.join(""),
+                            escFlags: curEsc.slice()
+                        });
+                        curChars = [];
+                        curEsc = [];
+                    }
+                } else {
+                    consecutiveNewlines = 0;
+                    curChars.push(c);
+                    curEsc.push(escaped[i]);
+                }
+            }
+
+            segments.push({
+                str: curChars.join(""),
+                escFlags: curEsc.slice()
+            });
+
             const frag = document.createDocumentFragment();
 
-            const segments = rawText.split(/(?<!\\)(?:\\\\)*\\n/);
-
             for (let segIdx = 0; segIdx < segments.length; segIdx++) {
-                const seg = segments[segIdx];
+                const { str: seg, escFlags } = segments[segIdx];
 
                 if (!this.combinedRegex) {
-                    this._appendTextWithColors(frag, seg);
+                    this.#appendTextWithColors(frag, seg);
                     if (segIdx < segments.length - 1) frag.appendChild(document.createElement("br"));
                     continue;
                 }
 
-                const tokens = this._tokenizeSegment(seg);
+                const tokens = this.#tokenizeSegment(seg, escFlags);
 
                 if (!tokens.some(t => t.type === "normal" || t.type === "overlay")) {
-                    this._appendTextWithColors(frag, seg);
+                    this.#appendTextWithColors(frag, seg);
                     if (segIdx < segments.length - 1) frag.appendChild(document.createElement("br"));
                     continue;
                 }
 
-                const { assigned, overlayConsumed } = this._assignOverlays(tokens);
+                const { assigned, overlayConsumed } = this.#assignOverlays(tokens);
 
                 const emittedNormals = new Set();
 
@@ -464,42 +498,41 @@
                         const overlays = (assigned[i] || []).slice();
                         overlays.sort((a, b) => a.pos - b.pos);
 
+                        if (!this.emotes.hasOwnProperty(baseName)) {
+                            frag.appendChild(document.createTextNode(`:${baseName}:`));
+                            continue;
+                        }
+
                         const stack = document.createElement("span");
                         stack.className = "emote-stack";
                         if (overlays.length > 0) stack.classList.add("stacked");
-                        stack.title = this._stackTitleFor(baseName, overlays);
+                        stack.title = this.#stackTitleFor(baseName, overlays);
 
-                        const baseImg = this._createEmoteImg(baseName, {
+                        const baseImg = this.#createEmoteImg(baseName, {
                             isBase: true,
                             stack
                         });
                         baseImg.classList.add("base");
 
                         const overlayImgs = overlays.map(o => {
-                            const img = this._createEmoteImg(o.name, {
+                            if (!this.emotes.hasOwnProperty(o.name)) return null; // skip missing overlay
+                            const img = this.#createEmoteImg(o.name, {
                                 isBase: false,
                                 overlayClass: true,
                                 stack
                             });
                             img.classList.add("overlay");
-
-                            return {
-                                img,
-                                name: o.name
-                            };
-                        });
+                            return { img, name: o.name };
+                        }).filter(Boolean);
 
                         stack.appendChild(baseImg);
                         for (const oi of overlayImgs) stack.appendChild(oi.img);
 
                         const imgsToWait = [baseImg, ...overlayImgs.map(x => x.img)];
 
-                        // set image sources (use cached fetch)
-                        this._setImgSrc(baseImg, baseName);
-                        for (const oi of overlayImgs) this._setImgSrc(oi.img, oi.name);
-
-                        // fit sizes via shared helper
-                        this._fitImgsToStack(imgsToWait, stack).catch(() => {});
+                        this.#setImgSrc(baseImg, baseName);
+                        for (const oi of overlayImgs) this.#setImgSrc(oi.img, oi.name);
+                        this.#fitImgsToStack(imgsToWait, stack).catch(() => { });
 
                         frag.appendChild(stack);
                     } else if (t.type === "overlay") {
@@ -508,19 +541,24 @@
                         const key = `standalone-${i}`;
                         if (assigned[key] && assigned[key].length) {
                             for (const ov of assigned[key]) {
+                                if (!this.emotes.hasOwnProperty(ov.name)) {
+                                    frag.appendChild(document.createTextNode(`;${ov.name};`));
+                                    continue;
+                                }
+
                                 const wrapper = document.createElement("span");
                                 wrapper.className = "emote-stack";
                                 wrapper.title = `;${ov.name};`;
 
-                                const img = this._createEmoteImg(ov.name, {
+                                const img = this.#createEmoteImg(ov.name, {
                                     isBase: true,
                                     stack: wrapper
                                 });
                                 img.classList.add("base"); // lone overlay behaves like a base
                                 wrapper.appendChild(img);
 
-                                this._setImgSrc(img, ov.name);
-                                this._fitImgsToStack([img], wrapper).catch(() => {});
+                                this.#setImgSrc(img, ov.name);
+                                this.#fitImgsToStack([img], wrapper).catch(() => { });
 
                                 wrapper.addEventListener("click", () => navigator.clipboard.writeText(wrapper.title));
                                 frag.appendChild(wrapper);
@@ -537,14 +575,61 @@
             return frag;
         }
 
-        _stackTitleFor(baseName, overlays) {
+        #tokenizeSegment(seg, segEsc) {
+            const out = [];
+            const chars = Array.from(seg);
+            let i = 0;
+            while (i < chars.length) {
+                const ch = chars[i];
+                const isEsc = !!segEsc[i];
+
+                if (!isEsc && (ch === ";" || ch === ":")) {
+                    const delim = ch;
+                    let j = i + 1;
+                    while (j < chars.length) {
+                        if (chars[j] === delim && !segEsc[j]) break;
+                        j++;
+                    }
+                    if (j < chars.length && j > i + 1) {
+                        const name = chars.slice(i + 1, j).join("");
+                        if (/^[^\s;:]+$/.test(name)) {
+                            out.push({
+                                type: delim === ":" ? "normal" : "overlay",
+                                name: name
+                            });
+                            i = j + 1;
+                            continue;
+                        }
+                    }
+                }
+
+                let start = i;
+                i++;
+                while (i < chars.length) {
+                    const c2 = chars[i];
+                    const esc2 = !!segEsc[i];
+                    if (!esc2 && (c2 === ";" || c2 === ":")) break;
+                    i++;
+                }
+
+                const text = chars.slice(start, i).join("");
+                out.push({
+                    type: "text",
+                    text: text
+                });
+            }
+
+            return out;
+        }
+
+        #stackTitleFor(baseName, overlays) {
             const parts = [];
             for (const ov of overlays) parts.push(`;${ov.name};`);
             parts.push(`:${baseName}:`);
             return parts.join(" ");
         }
 
-        _appendColor(frag, r, g, b, raw) {
+        #appendColor(frag, r, g, b, raw) {
             const hex = ((r << 16) | (g << 8) | b).toString(16).padStart(6, "0").toUpperCase();
             const span = document.createElement("span");
             span.style.display = "inline-block";
@@ -558,7 +643,7 @@
             frag.appendChild(span);
         }
 
-        _appendTextWithColors(frag, text) {
+        #appendTextWithColors(frag, text) {
             let buf = "";
             for (let i = 0; i < text.length;) {
                 const cp = text.codePointAt(i);
@@ -570,7 +655,7 @@
                     const g = ((nib >> 4) & 0xF) * 17;
                     const b = (nib & 0xF) * 17;
                     const raw = text.slice(i, i + chLen);
-                    this._appendColor(frag, r, g, b, raw);
+                    this.#appendColor(frag, r, g, b, raw);
                     i += chLen;
                 } else {
                     buf += String.fromCodePoint(cp);
@@ -580,7 +665,7 @@
             if (buf.length) frag.appendChild(document.createTextNode(buf));
         }
 
-        _initSuggestionListeners() {
+        #initSuggestionListeners() {
             const input = document.querySelector("#chat > input");
             const dd = this.dropdown;
             const OFFSET = this.DROPDOWN_OFFSET_PX;
@@ -641,7 +726,7 @@
                     item.style.cssText = "padding: 6px; cursor: pointer;";
 
                     const tokenText = mode === "overlay" ? `;${name};` : `:${name}:`;
-                    const img = this._createEmoteImg(name, { isBase: true });
+                    const img = this.#createEmoteImg(name, { isBase: true });
                     img.style.height = "1rem";
                     img.style.verticalAlign = "middle";
                     img.style.marginRight = "4px";
@@ -654,7 +739,7 @@
                     let label = "";
 
                     // lazy load or direct load
-                    this._tryObserveOrSet(img, name);
+                    this.#tryObserveOrSet(img, name);
                     let qi = 0;
                     for (const ch of name) {
                         if (qi < qLow.length && ch.toLowerCase() === qLow[qi]) {
@@ -688,7 +773,7 @@
                             }
                         }
 
-                        const escPrefix = `(?<![\\w])${delim}([^\\s${delim}]*)$`;
+                        const escPrefix = `(?<!\\\\)${delim}([^\\s${delim}]*)$`;
                         const re = new RegExp(escPrefix);
                         const newBefore = before.replace(re, insertion);
 
@@ -742,8 +827,8 @@
                 }
             };
 
-            const beforeReNormal = /(?<![\\\w]):([^:\s]*)$/;
-            const beforeReOverlay = /(?<![\\\w]);([^;\s]*)$/;
+            const beforeReNormal = /(?<![\\]):([^:\s]*)$/;
+            const beforeReOverlay = /(?<![\\]);([^;\s]*)$/;
 
             input.addEventListener("input", () => {
                 const val = input.value;

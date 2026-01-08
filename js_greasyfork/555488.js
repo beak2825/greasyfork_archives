@@ -133,13 +133,13 @@
 // @description:zh-TW   在所有 YouTube 頁面上阻止縮圖懸停預覽（WebP 與視頻）並停止頻道預告片（視頻＋音頻）。保留進度條、播放按鈕和靜態圖像。無需登錄或權限，頁面載入時即執行。
 // @namespace    https://openuserjs.org/users/miebie.1412
 // @author       miebie.1412
-// @version      1.7.5
+// @version      1.7.6
 // @match        https://*.youtube.com/*
 // @grant        none
 // @run-at       document-start
 // @license      MIT
 // @homepageURL  https://openuserjs.org/users/miebie.1412
-// @supportURL   https://openuserjs.org/scripts/miebie.1412/YouTube_-_Block_Autoplay_Preview_Thumbnail_Channel_Trailer/issues
+// @supportURL   https://openuserjs.org/scripts/miebie.1412/YouTube_-_Block_Autoplay_Preview_Thumbnail_and_Channel_Trailer/issues
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @downloadURL https://update.greasyfork.org/scripts/555488/YouTube%20-%20Block%20Autoplay%20Preview%20Thumbnail%20and%20Channel%20Trailer.user.js
 // @updateURL https://update.greasyfork.org/scripts/555488/YouTube%20-%20Block%20Autoplay%20Preview%20Thumbnail%20and%20Channel%20Trailer.meta.js

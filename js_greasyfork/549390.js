@@ -1,211 +1,192 @@
 // ==UserScript==
 // @name         B站网页版一键开播/关播 mod
 // @namespace    http://tampermonkey.net/
-// @version      1.6
+// @version      1.9
 // @description  在B站直播姬网页版添加按钮，动态获取RoomID和分区，选择后一键开播/关播，并用HTML展示结果及复制按钮（成功信息手动关闭）。已加入签名逻辑以避免风控。新增身份验证二维码展示功能。
 // @author       Owwk
 // @match        https://link.bilibili.com/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_registerMenuCommand
 // @connect      api.live.bilibili.com
-// @connect      api.qrserver.com
 // @require      https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/549390/B%E7%AB%99%E7%BD%91%E9%A1%B5%E7%89%88%E4%B8%80%E9%94%AE%E5%BC%80%E6%92%AD%E5%85%B3%E6%92%AD%20mod.user.js
 // @updateURL https://update.greasyfork.org/scripts/549390/B%E7%AB%99%E7%BD%91%E9%A1%B5%E7%89%88%E4%B8%80%E9%94%AE%E5%BC%80%E6%92%AD%E5%85%B3%E6%92%AD%20mod.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     let currentRoomInfo = null;
     let availableAreas = null;
     let csrfTokenCache = null;
-    let dedeUserIDCache = null; // 新增：缓存 DedeUserID
-    let resultBoxTimeoutId = null; // 用于存储结果显示框的定时器ID
+    let dedeUserIDCache = null;
+    let resultBoxTimeoutId = null;
+    let versionCache = null;
 
-    // 1. 函数：从 cookie 中获取 CSRF token (bili_jct)
-    function getCsrfToken() {
-        if (csrfTokenCache) return csrfTokenCache;
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            if (cookie.startsWith('bili_jct=')) {
-                csrfTokenCache = cookie.substring('bili_jct='.length);
-                return csrfTokenCache;
-            }
-        }
-        return null;
+    // --- 1. 指纹、菜单与持久化 (新增防风控核心) ---
+
+    function getFixedBuvid() {
+        let cachedBuvid = GM_getValue('bilibili_live_buvid_header', null);
+        if (cachedBuvid) return cachedBuvid;
+
+        const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        }).toUpperCase();
+        const padding = Math.floor(Math.random() * 90000) + 10000;
+        const newBuvid = `${uuid}${padding}user`;
+
+        GM_setValue('bilibili_live_buvid_header', newBuvid);
+        return newBuvid;
     }
 
-    // 新增：从 cookie 中获取 DedeUserID
-    function getDedeUserID() {
-        if (dedeUserIDCache) return dedeUserIDCache;
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            if (cookie.startsWith('DedeUserID=')) {
-                dedeUserIDCache = cookie.substring('DedeUserID='.length);
-                return dedeUserIDCache;
-            }
+    GM_registerMenuCommand("🔍 设置自定义 buvid 指纹", function() {
+        const current = GM_getValue('bilibili_live_buvid_header', getFixedBuvid());
+        const newVal = prompt("请输入稳定 buvid (留空则重置):", current);
+        if (newVal !== null) {
+            GM_setValue('bilibili_live_buvid_header', newVal.trim() === "" ? null : newVal.trim());
+            alert("设置已保存，请刷新页面。");
+            location.reload();
         }
-        return null;
+    });
+
+    // --- 2. 网络核心逻辑 (新增动态UA与去Referer) ---
+
+    function generateLivehimeUA(version, build) {
+        return `LiveHime/${version} os/Windows pc_app/livehime build/${build} osVer/10.0_x86_64`;
     }
 
-    // 辅助函数：发送API请求
     function makeApiRequest(options) {
         return new Promise((resolve, reject) => {
+            const buvidHeader = GM_getValue('bilibili_live_buvid_header', getFixedBuvid());
+            // 动态生成 UA，如果没有缓存版本则使用兜底稳定版
+            const ua = versionCache
+                ? generateLivehimeUA(versionCache.version, versionCache.build)
+                : 'LiveHime/7.11.3.8931 os/Windows pc_app/livehime build/8931 osVer/10.0_x86_64';
+
             GM_xmlhttpRequest({
                 ...options,
                 headers: {
                     'Content-Type': options.method === 'POST' ? 'application/x-www-form-urlencoded; charset=UTF-8' : undefined,
-                    'Referer': 'https://live.bilibili.com/p/html/web-hime/index.html',
-                    'Origin': 'https://live.bilibili.com',
+                    'User-Agent': ua,     // 模拟官方 UA
+                    'buvid': buvidHeader, // 注入指纹
+                    'Referer': '',        // 核心风控点：强制清空 Referer
                     ...(options.headers || {})
                 },
-                onload: function(response) {
+                onload: function (response) {
                     try {
                         const data = JSON.parse(response.responseText);
-                        // 对于关播重复请求，B站API会返回 code = 160000 （或 message "重复关播") 但实际上可能是成功关播或未直播状态，这里视为非严重错误。
                         if (data.code === 0 || (options.url.includes('stopLive') && (data.code === 160000 || data.msg === "重复关播"))) {
                             resolve(data);
                         } else {
-                            // 对于需要身份验证的错误码 60024，也需要特殊处理
                             if (data.code === 60024) {
-                                reject(new Error(`API Error (${options.url}): ${data.code} - 需要进行身份验证`));
+                                reject(new Error(`API Error: ${data.code} - 需要进行身份验证`));
                             } else {
-                                reject(new Error(`API Error (${options.url}): ${data.code} - ${data.message || data.msg || '未知API错误'}`));
+                                reject(new Error(`API Error: ${data.code} - ${data.message || data.msg || '未知API错误'}`));
                             }
                         }
                     } catch (e) {
-                        console.error("原始错误响应:", response.responseText);
-                        reject(new Error(`JSON解析错误 (${options.url}): ${e.message}`));
+                        reject(new Error(`JSON解析错误: ${e.message}`));
                     }
                 },
-                onerror: function(error) {
-                    reject(new Error(`请求错误 (${options.url}): ${JSON.stringify(error)}`));
-                },
-                ontimeout: function() {
-                    reject(new Error(`请求超时 (${options.url})`));
-                }
+                onerror: (err) => reject(new Error(`请求错误`)),
+                ontimeout: () => reject(new Error(`请求超时`))
             });
         });
     }
 
     async function fetchLatestLivehimeVersion() {
         const url = `https://api.live.bilibili.com/xlive/app-blink/v1/liveVersionInfo/getHomePageLiveVersion?system_version=2`;
-
         try {
-            const response = await makeApiRequest({
-                method: 'GET',
-                url: url
-            });
-            if (response.data && response.data.curr_version && response.data.build !== undefined) {
-                 console.log("获取到最新直播姬版本信息:", {
+            const response = await makeApiRequest({ method: 'GET', url: url });
+            if (response.data && response.data.curr_version) {
+                versionCache = {
                     version: response.data.curr_version,
-                    build: response.data.build
-                 });
-                return {
-                    version: response.data.curr_version,
-                    build: response.data.build.toString() // 确保 build 是字符串类型
+                    build: response.data.build.toString()
                 };
-            } else {
-                throw new Error("API响应中缺少版本或构建号信息，或数据格式不正确。");
+                return versionCache;
             }
+            throw new Error("版本数据不完整");
         } catch (error) {
-            displayResultMessage(`获取最新直播姬版本失败: ${error.message}`, 'error');
-            console.error('获取最新直播姬版本失败:', error);
-            throw error;
+            return { version: '7.11.3.8931', build: '8931' };
         }
     }
 
-    // 2. 函数：获取房间信息 (RoomID, 当前分区等)
+    // --- 3. 基础工具 ---
+
+    function getCsrfToken() {
+        if (csrfTokenCache) return csrfTokenCache;
+        const match = document.cookie.match(/bili_jct=([^;]+)/);
+        return match ? (csrfTokenCache = match[1]) : null;
+    }
+
+    function getDedeUserID() {
+        if (dedeUserIDCache) return dedeUserIDCache;
+        const match = document.cookie.match(/DedeUserID=([^;]+)/);
+        return match ? (dedeUserIDCache = match[1]) : null;
+    }
+
     async function fetchRoomInfo(forceRefresh = false) {
         if (currentRoomInfo && !forceRefresh) return currentRoomInfo.data;
-        try {
-            const response = await makeApiRequest({
-                method: 'GET',
-                url: 'https://api.live.bilibili.com/xlive/app-blink/v1/room/GetInfo?platform=pc'
-            });
-            currentRoomInfo = response;
-            return response.data;
-        } catch (error) {
-            displayResultMessage(`获取房间信息失败: ${error.message}`, 'error');
-            console.error('获取房间信息失败:', error);
-            throw error;
-        }
+        const response = await makeApiRequest({
+            method: 'GET',
+            url: 'https://api.live.bilibili.com/xlive/app-blink/v1/room/GetInfo?platform=pc'
+        });
+        currentRoomInfo = response;
+        return response.data;
     }
 
-    // 3. 函数：获取所有直播分区
     async function fetchAreaList() {
         if (availableAreas) return availableAreas.data;
-        try {
-            const response = await makeApiRequest({
-                method: 'GET',
-                url: 'https://api.live.bilibili.com/room/v1/Area/getList?show_pinyin=1'
-            });
-            availableAreas = response;
-            return response.data;
-        } catch (error) {
-            displayResultMessage(`获取分区列表失败: ${error.message}`, 'error');
-            console.error('获取分区列表失败:', error);
-            throw error;
-        }
+        const response = await makeApiRequest({
+            method: 'GET',
+            url: 'https://api.live.bilibili.com/room/v1/Area/getList?show_pinyin=1'
+        });
+        availableAreas = response;
+        return response.data;
     }
 
-    // 4. 函数：执行开播请求 (已更新为带签名的版本，并动态获取 version/build)
+    // --- 4. 核心开播流程 ---
+
     async function startLiveStream(roomId, areaV2) {
         const csrfToken = getCsrfToken();
-        const dedeUserID = getDedeUserID(); // 获取用户UID
+        const dedeUserID = getDedeUserID();
         if (!csrfToken || !dedeUserID) {
-            displayResultMessage('错误：无法获取到 CSRF token 或用户UID。请确保您已登录B站。', 'error');
+            displayResultMessage('错误：未登录或 CSRF 缺失', 'error');
             return;
         }
 
-        // 固定的 AppKey 和 AppSecret (Salt)
         const APP_KEY = 'aae92bc66f3edfab';
         const APP_SECRET = 'af125a0d5279fd576c1b4418a3e8276d';
 
-        // --- 获取最新版本和构建号 ---
-        let latestVersionInfo;
-        try {
-            latestVersionInfo = await fetchLatestLivehimeVersion();
-        } catch (error) {
-            // fetchLatestLivehimeVersion 已经显示了错误信息，此处只需中断
-            return;
-        }
+        // 获取最新版本以更新 UA
+        const vInfo = await fetchLatestLivehimeVersion();
 
-        const currentBuild = latestVersionInfo.build;
-        const currentVersion = latestVersionInfo.version; // startLive API通常不直接使用 version 字符串，只用 build
-
-        // 准备所有需要参与签名的参数
         const paramsToSign = new URLSearchParams();
-        //paramsToSign.append('access_key', ''); // 根据算法，此项为空
         paramsToSign.append('appkey', APP_KEY);
         paramsToSign.append('area_v2', areaV2);
-        paramsToSign.append('build', currentBuild);
-        paramsToSign.append('version', currentVersion);
+        paramsToSign.append('build', vInfo.build);
+        paramsToSign.append('version', vInfo.version);
         paramsToSign.append('csrf', csrfToken);
         paramsToSign.append('csrf_token', csrfToken);
         paramsToSign.append('platform', 'pc_link');
         paramsToSign.append('room_id', roomId);
         paramsToSign.append('ts', Math.floor(Date.now() / 1000).toString());
-
-        // 1. 对参数按 key 的字母顺序排序
+        paramsToSign.append('type', '2'); // 官方必传参数
         paramsToSign.sort();
 
-        // 2. 拼接成字符串并附加 AppSecret
-        const stringToSign = paramsToSign.toString() + APP_SECRET;
-
-        // 3. 计算 MD5 哈希值，得到 sign
-        const sign = md5(stringToSign);
-
-        // 最终要发送的表单数据是已排序的参数 + sign
-        const finalFormData = new URLSearchParams(paramsToSign); // 拷贝排序后的参数
+        const sign = md5(paramsToSign.toString() + APP_SECRET);
+        const finalFormData = new URLSearchParams(paramsToSign);
         finalFormData.append('sign', sign);
 
         console.log('发送开播请求，数据:', Object.fromEntries(finalFormData));
-        displayResultMessage('正在尝试开播，请稍候...', 'info', false); // 显示“正在尝试开播”信息，不自动关闭
+        displayResultMessage('正在尝试开播，请稍候...', 'info', false);
 
         try {
             const data = await makeApiRequest({
@@ -213,8 +194,8 @@
                 url: 'https://api.live.bilibili.com/room/v1/Room/startLive',
                 data: finalFormData.toString(),
             });
-            await fetchRoomInfo(true); // 强制刷新房间信息
 
+            await fetchRoomInfo(true);
             if (data.data && data.data.rtmp) {
                 const rtmpAddr = data.data.rtmp.addr;
                 const rtmpCode = data.data.rtmp.code;
@@ -245,29 +226,28 @@
                     </div>
                     <p style="font-size:0.9em; color: #555;">OBS等软件通常需要分别填写“服务器地址”和“串流密钥”。</p>
                 `;
-                displayResultMessage(messageHtml, 'success', false); // 成功信息不自动关闭
+                displayResultMessage(messageHtml, 'success', false);
             } else {
                 const errorDetail = `开播成功，但未找到完整的推流信息。API响应: <pre>${JSON.stringify(data, null, 2)}</pre>`;
-                displayResultMessage(errorDetail, 'warning', true, 10000); // 警告可以自动关闭
+                displayResultMessage(errorDetail, 'warning', true, 10000);
             }
-            hideAreaSelectionModal(); // 隐藏分区选择模态框
+            hideAreaSelectionModal();
         } catch (error) {
             console.error('开播失败:', error);
-            // 捕获身份验证错误码 60024
-            if (error.message.includes('60024')) { // 人脸验证错误
+            if (error.message.includes('60024')) {
                 const faceAuthUrl = `https://www.bilibili.com/blackboard/live/face-auth-middle.html?source_event=400&mid=${dedeUserID}`;
-                showAuthQRCodeModal(faceAuthUrl, roomId, areaV2); // 显示身份验证二维码模态框
-                displayResultMessage('需要进行身份验证。请使用B站App扫描二维码完成验证。', 'warning', false); // 验证提示不自动关闭
+                // 使用本地二维码生成逻辑
+                showAuthQRCodeModal(faceAuthUrl, roomId, areaV2);
+                displayResultMessage('需要进行身份验证。请使用B站App扫描二维码完成验证。', 'warning', false);
             } else {
-                displayResultMessage(`开播失败: ${error.message}`, 'error'); // 其他错误自动关闭
+                displayResultMessage(`开播失败: ${error.message}`, 'error');
             }
         }
     }
 
-    // 新增：执行关播请求的函数
     async function stopLiveStream() {
         const stopButton = document.getElementById('customStopLiveButton');
-        if(stopButton) {
+        if (stopButton) {
             stopButton.disabled = true;
             stopButton.textContent = '正在关播...';
         }
@@ -275,7 +255,7 @@
         const csrfToken = getCsrfToken();
         if (!csrfToken) {
             displayResultMessage('错误：无法获取到 CSRF token (bili_jct)。请确保您已登录B站。', 'error');
-            if(stopButton) {
+            if (stopButton) {
                 stopButton.disabled = false;
                 stopButton.textContent = '一键关播';
             }
@@ -287,7 +267,7 @@
             const roomData = await fetchRoomInfo();
             roomIdToStop = roomData.room_id;
         } catch (e) {
-            if(stopButton) {
+            if (stopButton) {
                 stopButton.disabled = false;
                 stopButton.textContent = '一键关播';
             }
@@ -296,7 +276,7 @@
 
         if (!roomIdToStop) {
             displayResultMessage('错误：无法获取房间ID以进行关播。', 'error');
-            if(stopButton) {
+            if (stopButton) {
                 stopButton.disabled = false;
                 stopButton.textContent = '一键关播';
             }
@@ -319,17 +299,17 @@
                 url: 'https://api.live.bilibili.com/room/v1/Room/stopLive',
                 data: formData.toString(),
             });
-            await fetchRoomInfo(true); // 强制刷新房间信息
+            await fetchRoomInfo(true);
 
             let message = `关播操作已发送。状态: ${data.data && data.data.status ? data.data.status : '未知'}`;
-            if (data.code === 160000 || data.msg === "重复关播") { // 之前 makeApiRequest 已经处理了，但为了更清晰地展示，这里再次判断
+            if (data.code === 160000 || data.msg === "重复关播") {
                 message = "当前直播间未在直播状态，或已成功关播。";
-                displayResultMessage(message, 'info'); // 状态信息自动关闭
+                displayResultMessage(message, 'info');
             } else if (data.code === 0) {
                 message = `关播成功！当前状态: ${data.data && data.data.status ? data.data.status : 'PREPARING'}`;
-                displayResultMessage(message, 'success'); // 成功信息自动关闭
+                displayResultMessage(message, 'success');
             } else {
-                 displayResultMessage(`关播响应异常: ${data.message || data.msg}`, 'warning');
+                displayResultMessage(`关播响应异常: ${data.message || data.msg}`, 'warning');
             }
             console.log('关播API响应:', data);
 
@@ -337,15 +317,15 @@
             displayResultMessage(`关播失败: ${error.message}`, 'error');
             console.error('关播失败:', error);
         } finally {
-            if(stopButton) {
+            if (stopButton) {
                 stopButton.disabled = false;
                 stopButton.textContent = '一键关播';
             }
         }
     }
 
+    // --- 5. UI 相关函数 (已完全恢复 v1.6 的结构和样式) ---
 
-    // 显示结果信息的函数
     function displayResultMessage(message, type = 'info', autoDismiss = true, duration = 5000) {
         let resultBox = document.getElementById('userscriptResultBox');
         if (!resultBox) {
@@ -355,10 +335,10 @@
 
             const closeButton = document.createElement('button');
             closeButton.id = 'resultBoxCloseButton';
-            closeButton.innerHTML = '×'; // HTML实体表示乘号 (X)
+            closeButton.innerHTML = '×';
             closeButton.onclick = () => {
                 resultBox.style.display = 'none';
-                if (resultBoxTimeoutId) clearTimeout(resultBoxTimeoutId); // 如果手动关闭，清除定时器
+                if (resultBoxTimeoutId) clearTimeout(resultBoxTimeoutId);
             };
             resultBox.appendChild(closeButton);
         }
@@ -367,20 +347,19 @@
         if (!messageContent) {
             messageContent = document.createElement('div');
             messageContent.className = 'message-content';
-             if (resultBox.firstChild && resultBox.firstChild.id === 'resultBoxCloseButton' && resultBox.firstChild.nextSibling) {
-                 resultBox.insertBefore(messageContent, resultBox.firstChild.nextSibling);
-             } else if (resultBox.firstChild && resultBox.firstChild.id === 'resultBoxCloseButton') { // 如果只有关闭按钮
-                 resultBox.appendChild(messageContent);
-             }
-             else { // 如果什么都没有
-                 resultBox.appendChild(messageContent);
-             }
+            if (resultBox.firstChild && resultBox.firstChild.id === 'resultBoxCloseButton' && resultBox.firstChild.nextSibling) {
+                resultBox.insertBefore(messageContent, resultBox.firstChild.nextSibling);
+            } else if (resultBox.firstChild && resultBox.firstChild.id === 'resultBoxCloseButton') {
+                resultBox.appendChild(messageContent);
+            } else {
+                resultBox.appendChild(messageContent);
+            }
         }
 
         messageContent.innerHTML = message;
-        resultBox.className = ''; // 清除现有类
-        resultBox.classList.add('userscript-result-box-base'); // 添加基础类
-        resultBox.classList.add(`userscript-result-box-${type}`); // 添加类型特定类
+        resultBox.className = '';
+        resultBox.classList.add('userscript-result-box-base');
+        resultBox.classList.add(`userscript-result-box-${type}`);
         resultBox.style.display = 'block';
 
         messageContent.querySelectorAll('.copy-btn').forEach(button => {
@@ -399,7 +378,6 @@
                         e.target.textContent = '复制失败';
                         setTimeout(() => { e.target.textContent = '复制'; }, 1500);
                     }
-                    // 清除选择
                     if (window.getSelection) {
                         window.getSelection().removeAllRanges();
                     } else if (document.selection) {
@@ -409,7 +387,7 @@
             };
         });
 
-        if (resultBoxTimeoutId) { // 清除任何现有定时器
+        if (resultBoxTimeoutId) {
             clearTimeout(resultBoxTimeoutId);
             resultBoxTimeoutId = null;
         }
@@ -421,20 +399,17 @@
         }
     }
 
-
-    // 新增：生成并显示身份验证二维码的模态框
+    // 修改版：使用本地生成二维码，但保留原有的 HTML 结构和样式
     function showAuthQRCodeModal(authUrl, roomId, areaV2) {
         let authModal = document.getElementById('authQRCodeModal');
         if (!authModal) {
-            // 创建身份验证模态框的HTML结构
             const modalHTML = `
                 <div id="authQRCodeModalOverlay"></div>
                 <div id="authQRCodeModal">
                     <h2>身份验证</h2>
                     <p>请使用B站App扫描下方二维码进行身份验证。</p>
                     <div id="qrCodeContainer">
-                        <img id="faceAuthQRCode" src="" alt="身份验证二维码">
-                    </div>
+                        </div>
                     <p class="small-text">（若二维码无法显示，请尝试复制链接在浏览器中打开：<a href="#" id="authUrlLink" target="_blank" rel="noopener noreferrer">点击此处</a>）</p>
                     <div id="authModalButtons">
                         <button id="authRetryBtn">我已验证，重新开播</button>
@@ -449,30 +424,34 @@
             document.getElementById('authQRCodeModalOverlay').addEventListener('click', hideAuthQRCodeModal);
         }
 
-        // 使用外部服务生成二维码图片URL
-        const qrCodeImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(authUrl)}`;
-        document.getElementById('faceAuthQRCode').src = qrCodeImageUrl;
+        // 清空容器，防止多次点击堆叠
+        const container = document.getElementById('qrCodeContainer');
+        container.innerHTML = '';
+        
+        // 本地生成二维码
+        new QRCode(container, {
+            text: authUrl,
+            width: 200,
+            height: 200,
+            correctLevel: QRCode.CorrectLevel.H
+        });
+        
         document.getElementById('authUrlLink').href = authUrl;
 
-        // 设置“我已验证，重新开播”按钮的点击事件
         document.getElementById('authRetryBtn').onclick = async () => {
             hideAuthQRCodeModal();
             displayResultMessage('身份验证成功，正在重新尝试开播...', 'info', false);
-            // 重新尝试开播，传递 roomId 和 areaV2
             await startLiveStream(roomId, areaV2);
         };
-        // 设置“取消”按钮的点击事件
         document.getElementById('authCancelBtn').onclick = () => {
-             hideAuthQRCodeModal();
-             displayResultMessage('已取消开播操作，身份验证未完成。', 'info');
+            hideAuthQRCodeModal();
+            displayResultMessage('已取消开播操作，身份验证未完成。', 'info');
         };
-
 
         authModal.style.display = 'block';
         document.getElementById('authQRCodeModalOverlay').style.display = 'block';
     }
 
-    // 新增：隐藏身份验证二维码模态框
     function hideAuthQRCodeModal() {
         const authModal = document.getElementById('authQRCodeModal');
         const authOverlay = document.getElementById('authQRCodeModalOverlay');
@@ -480,8 +459,6 @@
         if (authOverlay) authOverlay.style.display = 'none';
     }
 
-
-    // 5. 创建和管理分区选择模态框
     function createAreaSelectionModal() {
         if (document.getElementById('areaSelectionModal')) return;
 
@@ -508,11 +485,8 @@
         const parentSelect = document.getElementById('parentAreaSelect');
         parentSelect.addEventListener('change', () => {
             const selectedParentId = parentSelect.value;
-            // 确保 availableAreas 已加载
             if (availableAreas && availableAreas.data) {
                 populateSubAreas(selectedParentId, availableAreas.data);
-            } else {
-                console.warn("分区列表数据未加载，无法填充子分区。");
             }
         });
 
@@ -529,14 +503,10 @@
                     displayResultMessage('无法获取房间ID，请重试。', 'error');
                     return;
                 }
-            } catch (e) {
-                // fetchRoomInfo 已经显示错误信息，这里不用重复显示
-                return;
-            }
+            } catch (e) { return; }
 
             document.getElementById('confirmStartLiveBtn').disabled = true;
             document.getElementById('confirmStartLiveBtn').textContent = '处理中...';
-            // 调用开播函数，这里不需要 isRetry 参数，因为它只会在初次尝试或用户明确点击“重新开播”时被调用。
             await startLiveStream(roomData.room_id, selectedSubAreaId);
             document.getElementById('confirmStartLiveBtn').disabled = false;
             document.getElementById('confirmStartLiveBtn').textContent = '确认开播';
@@ -549,19 +519,14 @@
     function populateParentAreas(areas, defaultParentId) {
         const parentSelect = document.getElementById('parentAreaSelect');
         parentSelect.innerHTML = '<option value="">--请选择父分区--</option>';
-        if (!areas) {
-            console.error("无法填充父分区：分区数据为空。");
-            return;
-        }
+        if (!areas) return;
         areas.forEach(parentArea => {
             const option = document.createElement('option');
             option.value = parentArea.id;
             option.textContent = parentArea.name;
             parentSelect.appendChild(option);
         });
-        if (defaultParentId) {
-            parentSelect.value = defaultParentId;
-        }
+        if (defaultParentId) parentSelect.value = defaultParentId;
     }
 
     function populateSubAreas(parentId, allAreas, defaultSubId) {
@@ -578,9 +543,7 @@
                 subSelect.appendChild(option);
             });
         }
-        if (defaultSubId) {
-            subSelect.value = defaultSubId;
-        }
+        if (defaultSubId) subSelect.value = defaultSubId;
     }
 
     async function showAreaSelectionModal() {
@@ -591,23 +554,16 @@
         document.getElementById('areaSelectionModal').style.display = 'block';
 
         try {
-            // 确保在填充前获取数据。
-            // 这些调用会优先使用缓存数据，如果没有则进行请求。
             const roomData = await fetchRoomInfo();
             const areasData = await fetchAreaList();
 
             if (roomData && areasData) {
                 populateParentAreas(areasData, roomData.parent_id);
-                // 在父分区填充后，触发 change 事件
                 document.getElementById('parentAreaSelect').dispatchEvent(new Event('change'));
-                // 然后填充子分区，并可能设置默认值
                 populateSubAreas(roomData.parent_id, areasData, roomData.area_v2_id);
-            } else {
-                throw new Error("加载模态框所需数据失败。");
             }
         } catch (e) {
             console.error("显示分区选择模态框时出错:", e);
-            // fetch 函数可能已经显示了错误信息
             hideAreaSelectionModal();
         }
     }
@@ -619,8 +575,7 @@
         }
     }
 
-
-    // 6. 创建并添加主按钮到页面
+    // 6. 创建并添加主按钮到页面 (完全恢复 v1.6 的 IDs)
     function addActionButtons() {
         const startButton = document.createElement('button');
         startButton.id = 'customStartLiveAdvancedButton';
@@ -647,7 +602,7 @@
         console.log('B站开播/关播按钮已添加。');
     }
 
-    // 7. 添加CSS样式
+    // 7. 添加CSS样式 (完全使用 v1.6 的样式字符串)
     GM_addStyle(`
         #customStartLiveAdvancedButton, #customStopLiveButton {
             position: fixed;
@@ -910,9 +865,10 @@
             background-color: #f7f7f7;
             border-radius: 5px;
         }
-        #faceAuthQRCode {
-            width: 200px;
-            height: 200px;
+        /* 适配 QRCode.js 生成的 canvas/img */
+        #qrCodeContainer canvas, #qrCodeContainer img {
+            width: 200px !important;
+            height: 200px !important;
             display: block;
         }
         #authQRCodeModal p {
