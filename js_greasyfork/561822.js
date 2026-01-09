@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           AnnaRoblox's Auto Sign Up Filler
 // @namespace      https://www.github.com/AnnaRoblox
-// @version        1.0
+// @version        1.1
 // @description    Adds a UI to the Roblox create account page with persistent storage for birthday and password.
 // @author         AnnaRoblox
 // @match          https://www.roblox.com/CreateAccount*
@@ -182,6 +182,6 @@
     }
 
     window.addEventListener('load', function() {
-        setTimeout(injectUI, 2000);
+        setTimeout(injectUI, 20); // faster load time
     });
 })();

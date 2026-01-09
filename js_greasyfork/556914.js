@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QwenPersona
 // @namespace    https://www.kev1nweng.space
-// @version      1764268716
+// @version      1767977197
 // @description  一个便于用户自定义、保存并同步 Qwen Chat 自定义角色的 Tampermonkey 脚本。A Tampermonkey script for customizing user-defined personas in Qwen Chat.
 // @author       小翁同学 (kev1nweng)
 // @license      AGPL-3.0
@@ -13,6 +13,91 @@
 
 (function () {
   "use strict";
+
+  // ==================== Debug Helpers ====================
+  // Enable with: localStorage.setItem('qwen_persona_debug','1') then refresh.
+  // Disable with: localStorage.removeItem('qwen_persona_debug') then refresh.
+  const Debug = {
+    enabled: false,
+    _events: [],
+    _maxEvents: 250,
+    init() {
+      try {
+        this.enabled = localStorage.getItem("qwen_persona_debug") === "1";
+      } catch (e) {
+        this.enabled = false;
+      }
+    },
+    event(type, data = {}) {
+      try {
+        const entry = {
+          t: new Date().toISOString(),
+          type,
+          url: location.href,
+          ...data,
+        };
+        this._events.push(entry);
+        if (this._events.length > this._maxEvents) {
+          this._events.splice(0, this._events.length - this._maxEvents);
+        }
+      } catch (e) {}
+    },
+    getEvents() {
+      return this._events.slice();
+    },
+    log(...args) {
+      if (!this.enabled) return;
+      console.log("[QwenPersona][DBG]", ...args);
+    },
+    warn(...args) {
+      if (!this.enabled) return;
+      console.warn("[QwenPersona][DBG]", ...args);
+    },
+    table(obj) {
+      if (!this.enabled) return;
+      try {
+        console.table(obj);
+      } catch (e) {
+        console.log("[QwenPersona][DBG]", obj);
+      }
+    },
+    stack(label) {
+      if (!this.enabled) return;
+      try {
+        const err = new Error(label || "stack");
+        console.log("[QwenPersona][DBG] stack:", err.stack);
+      } catch (e) {}
+    },
+  };
+
+  Debug.init();
+
+  // Wrap persona-specific console logs so they only print when debug is enabled.
+  // This avoids silencing other scripts while keeping persona logs gated by Debug.enabled.
+  (function () {
+    const origLog = console.log.bind(console);
+    const origWarn = console.warn.bind(console);
+    console.log = function (...args) {
+      try {
+        const first = args[0];
+        if (typeof first === "string" && first.startsWith("[QwenPersona]")) {
+          if (Debug.enabled) origLog(...args);
+          return;
+        }
+      } catch (e) {}
+      origLog(...args);
+    };
+    console.warn = function (...args) {
+      try {
+        const first = args[0];
+        if (typeof first === "string" && first.startsWith("[QwenPersona]")) {
+          if (Debug.enabled) origWarn(...args);
+          return;
+        }
+      } catch (e) {}
+      origWarn(...args);
+    };
+  })();
 
   // ==================== Constants & Configuration ====================
   const CONSTANTS = {
@@ -45,21 +130,27 @@
       // Qwen UI Elements
       HEADER_DESKTOP: ".header-desktop",
       HEADER_LEFT: ".header-desktop .header-content .header-left",
-      MODEL_SELECTOR: '[class*="index-module__web-model-selector"]',
-      MODEL_SELECTOR_CONTENT: '[class*="index-module__model-selector-content"]',
+      MODEL_SELECTOR: '[class*="index-module__model-selector-text"]',
+      MODEL_SELECTOR_TRIGGER: '.header-left .ant-dropdown-trigger',
+      MODEL_SELECTOR_CONTENT: '[class*="index-module__model-selector-text"]',
       MODEL_SELECTOR_DROPDOWN:
-        '[class*="index-module__model-selector-dropdown"]',
-      MODEL_SELECTOR_ITEM: '[class*="index-module__model-selector-item"]',
-      MODEL_NAME_TEXT: '[class*="index-module__model-name-text"]',
+        '[class*="index-module__model-selector-popup"]',
+      MODEL_SELECTOR_DROPDOWN_SECONDARY:
+        '[class*="index-module__model-selector-popup-secondary"]',
+      MODEL_SELECTOR_ITEM: '[class*="index-module__model-item___"]',
+      MODEL_NAME_TEXT: '[class*="index-module__model-item-name___"]',
       MODEL_SELECTOR_VIEW_MORE:
-        '[class*="index-module__model-selector-view-more"]',
-      MODEL_VIEW_MORE_TEXT: '[class*="index-module__view-more-text"]',
+        '[class*="index-module__view-more___"]',
+      MODEL_VIEW_MORE_TEXT: '[class*="index-module__view-more-text___"]',
       ANT_DROPDOWN_TRIGGER: ".ant-dropdown-trigger",
       CHAT_INPUT_FEATURE_BTN: ".chat-input-feature-btn",
       CHAT_INPUT_FEATURE_TEXT: ".chat-input-feature-btn-text",
+      DEEP_THINKING_CONTAINER: ".chat-message-input-thinking-budget-btn",
       WEB_SEARCH_BTN: "button.websearch_button",
-      TEXTAREA: "textarea",
-      INPUT_CONTAINER: ".chat-message-input-container-inner",
+      TEXTAREA: "textarea#chat-input, textarea.chat-input, textarea",
+      INPUT_CONTAINER: ".prompt-input-container, .chat-input-container, .chat-message-input-container-inner",
+      CHAT_MESSAGE_INPUT: ".chat-message-input, #chat-message-input",
+      CHAT_PROMPT_INPUT_CONTAINER: ".chat-prompt-input-container, .chat-prompt-input",
 
       // Classes
       TRIGGER_COLLAPSED: "collapsed",
@@ -84,6 +175,9 @@
     editingPersona: null,
     lastUrl: location.href,
     chatPersonaMap: {},
+    // When Qwen creates a new chat, the URL->chatId mapping may lag the first request.
+    // We store a short-lived personaId here and bind it to the chatId once it appears.
+    pendingNewChatPersona: null, // { personaId, ts, reason }
   };
 
   // ==================== I18n Service ====================
@@ -123,6 +217,7 @@
         importFromUrl: "Import from URL",
         enterUrl: "Enter the URL of the persona configuration JSON:",
         importSuccess: "Personas imported successfully!",
+        nameRequired: "Please enter a Persona name",
         importError:
           "Failed to import personas. Please check the URL and JSON format.",
       },
@@ -155,6 +250,7 @@
         importFromUrl: "从 URL 导入",
         enterUrl: "请输入 Persona 配置 JSON 的 URL：",
         importSuccess: "Persona 导入成功！",
+        nameRequired: "请输入 Persona 名称",
         importError: "导入失败，请检查 URL 和 JSON 格式。",
       },
     },
@@ -291,7 +387,7 @@
                 position: relative;
                 display: flex;
                 align-items: center;
-                margin-left: 6px;
+                margin-right: 12px;
                 z-index: 100;
             }
 
@@ -876,11 +972,20 @@
             }
 
             /* Adjust model selector margin */
+            [class*="index-module__model-selector-text"],
             [class*="index-module__web-model-selector"] {
                 margin-left: 0;
             }
 
             /* Hide native model selector when agent is active */
+            body.persona-agent-active .header-left > .ant-dropdown-trigger {
+                display: none !important;
+            }
+
+            body.persona-agent-active [class*="index-module__model-selector-text"] {
+                display: none !important;
+            }
+
             body.persona-agent-active [class*="index-module__web-model-selector"] {
                 display: none !important;
             }
@@ -1466,12 +1571,18 @@
 
       const textareas = document.querySelectorAll(CONSTANTS.SELECTORS.TEXTAREA);
       textareas.forEach((t) => {
-        const container =
+        // Find the outermost chat-message-input container for visual effect
+        const outerContainer = t.closest(CONSTANTS.SELECTORS.CHAT_MESSAGE_INPUT);
+        // Also find the inner container for additional styling
+        const innerContainer =
           t.closest(CONSTANTS.SELECTORS.INPUT_CONTAINER) || t.parentElement;
+        // Find the prompt input container as well
+        const promptContainer = t.closest(CONSTANTS.SELECTORS.CHAT_PROMPT_INPUT_CONTAINER);
 
-        if (container) {
-          container.classList.add(CONSTANTS.SELECTORS.TRANSITION);
-        }
+        // Add transition class to all containers
+        [outerContainer, innerContainer, promptContainer].forEach((c) => {
+          if (c) c.classList.add(CONSTANTS.SELECTORS.TRANSITION);
+        });
 
         if (disabled) {
           if (!t.disabled) {
@@ -1480,8 +1591,13 @@
             t.disabled = true;
             t.classList.add(CONSTANTS.SELECTORS.INTERACTION_DISABLED);
 
-            if (container) {
-              container.classList.add(CONSTANTS.SELECTORS.INPUT_DISABLED);
+            // Apply disabled style to outermost container for best visual effect
+            if (outerContainer) {
+              outerContainer.classList.add(CONSTANTS.SELECTORS.INPUT_DISABLED);
+            } else if (promptContainer) {
+              promptContainer.classList.add(CONSTANTS.SELECTORS.INPUT_DISABLED);
+            } else if (innerContainer) {
+              innerContainer.classList.add(CONSTANTS.SELECTORS.INPUT_DISABLED);
             }
           }
         } else {
@@ -1493,9 +1609,10 @@
             t.placeholder = t.dataset.originalPlaceholder || "";
             t.classList.remove(CONSTANTS.SELECTORS.INTERACTION_DISABLED);
 
-            if (container) {
-              container.classList.remove(CONSTANTS.SELECTORS.INPUT_DISABLED);
-            }
+            // Remove disabled style from all containers
+            [outerContainer, innerContainer, promptContainer].forEach((c) => {
+              if (c) c.classList.remove(CONSTANTS.SELECTORS.INPUT_DISABLED);
+            });
           }
         }
       });
@@ -1514,14 +1631,21 @@
           headerLeft &&
           !document.getElementById(CONSTANTS.SELECTORS.CONTAINER)
         ) {
+          // Try to find the model selector trigger (new structure uses ant-dropdown-trigger)
+          const modelSelectorTrigger = headerLeft.querySelector(
+            CONSTANTS.SELECTORS.MODEL_SELECTOR_TRIGGER
+          );
           const modelSelector = headerLeft.querySelector(
             CONSTANTS.SELECTORS.MODEL_SELECTOR
           );
 
           const container = UI.createDropdownUI();
 
-          if (modelSelector) {
-            headerLeft.insertBefore(container, modelSelector);
+          // Insert before the model selector trigger or model selector text
+          if (modelSelectorTrigger) {
+            headerLeft.insertBefore(container, modelSelectorTrigger);
+          } else if (modelSelector) {
+            headerLeft.insertBefore(container, modelSelector.parentElement || modelSelector);
           } else {
             headerLeft.appendChild(container);
           }
@@ -1592,31 +1716,42 @@
             ${CONSTANTS.SELECTORS.MODEL_SELECTOR_DROPDOWN},
             .ant-dropdown,
             .ant-select-dropdown {
-                opacity: 0 !important;
-                pointer-events: none !important;
-                visibility: hidden !important;
-                display: none !important;
-                transition: none !important;
-                animation: none !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transition: none !important;
+            animation: none !important;
             }
         `;
       document.head.appendChild(hideStyle);
 
+      // Ensure the style has been applied before we open the dropdown.
+      // Without this, some browsers may show a 1-frame flash before the CSS takes effect.
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+
       try {
+        // Try to find the model selector trigger using multiple strategies
+        let modelTrigger = null;
+        
+        // Strategy 1: Find by model selector content
         const modelTriggerContent = document.querySelector(
           CONSTANTS.SELECTORS.MODEL_SELECTOR_CONTENT
         );
-
-        if (!modelTriggerContent) {
-          console.warn(
-            "[QwenPersona] Model selector trigger content not found"
+        if (modelTriggerContent) {
+          modelTrigger = modelTriggerContent.closest(
+            CONSTANTS.SELECTORS.ANT_DROPDOWN_TRIGGER
           );
-          return false;
         }
-
-        const modelTrigger = modelTriggerContent.closest(
-          CONSTANTS.SELECTORS.ANT_DROPDOWN_TRIGGER
-        );
+        
+        // Strategy 2: Find by header-left trigger directly
+        if (!modelTrigger) {
+          const headerLeft = document.querySelector(CONSTANTS.SELECTORS.HEADER_LEFT);
+          if (headerLeft) {
+            modelTrigger = headerLeft.querySelector(
+              CONSTANTS.SELECTORS.MODEL_SELECTOR_TRIGGER
+            );
+          }
+        }
 
         if (!modelTrigger) {
           console.warn("[QwenPersona] Model selector trigger not found");
@@ -1626,16 +1761,44 @@
         modelTrigger.click();
         console.log("[QwenPersona] Clicked model selector trigger");
 
+        const findModelInOpenDropdowns = () => {
+          // AntD dropdowns are typically rendered in portals under body.
+          // We search all open dropdown containers to catch both primary and secondary menus.
+          const candidates = Array.from(document.querySelectorAll(".ant-dropdown"));
+          for (const el of candidates) {
+            if (!el.querySelector(CONSTANTS.SELECTORS.MODEL_SELECTOR_ITEM)) continue;
+            const btn = ModelManager.findModelButton(el, modelId);
+            if (btn) return btn;
+          }
+
+          // Fallback: directly search all model selector popups if the container class differs.
+          const popups = Array.from(
+            document.querySelectorAll(CONSTANTS.SELECTORS.MODEL_SELECTOR_DROPDOWN)
+          );
+          for (const popup of popups) {
+            if (!popup.querySelector(CONSTANTS.SELECTORS.MODEL_SELECTOR_ITEM)) continue;
+            const btn = ModelManager.findModelButton(popup, modelId);
+            if (btn) return btn;
+          }
+
+          return null;
+        };
+
         const menuSelector = CONSTANTS.SELECTORS.MODEL_SELECTOR_DROPDOWN;
         let menu = await Utils.waitForElement(menuSelector, 2000);
         if (!menu) {
-          console.warn("[QwenPersona] Model selector menu not found");
-          return false;
+          // Also try .ant-dropdown as fallback
+          menu = await Utils.waitForElement('.ant-dropdown', 1000);
+          if (!menu) {
+            console.warn("[QwenPersona] Model selector menu not found");
+            return false;
+          }
         }
 
-        let modelButton = ModelManager.findModelButton(menu, modelId);
+        let modelButton = ModelManager.findModelButton(menu, modelId) || findModelInOpenDropdowns();
 
         if (!modelButton) {
+          // Look for the "展开更多模型" button which opens a secondary dropdown
           const expandBtn = menu.querySelector(
             CONSTANTS.SELECTORS.MODEL_SELECTOR_VIEW_MORE
           );
@@ -1645,19 +1808,54 @@
             const textEl = expandBtn.querySelector(
               CONSTANTS.SELECTORS.MODEL_VIEW_MORE_TEXT
             );
-            const text = textEl ? textEl.textContent : "";
+            const text = textEl ? textEl.textContent : expandBtn.textContent || "";
 
-            const isExpanded = text.includes("折叠");
+            const isExpanded = text.includes("折叠") || text.includes("收起");
             console.log("[QwenPersona] Menu expanded state:", isExpanded);
 
             if (!isExpanded) {
-              console.log("[QwenPersona] Clicking expand button...");
-              expandBtn.click();
-              await Utils.sleep(400);
+              console.log("[QwenPersona] Hovering over expand button to trigger secondary menu...");
+              
+              // The "展开更多模型" button triggers a secondary dropdown on hover/click
+              // It's wrapped in an ant-dropdown-trigger
+              const triggerWrapper = expandBtn.closest('.ant-dropdown-trigger') || expandBtn;
+              
+              // Trigger hover-based submenu (some builds require mouseover/mousemove).
+              triggerWrapper.dispatchEvent(
+                new MouseEvent("mouseenter", { bubbles: true })
+              );
+              triggerWrapper.dispatchEvent(
+                new MouseEvent("mouseover", { bubbles: true })
+              );
+              triggerWrapper.dispatchEvent(
+                new MouseEvent("mousemove", { bubbles: true })
+              );
+              await Utils.sleep(250);
 
-              menu = document.querySelector(menuSelector);
-              if (menu) {
-                modelButton = ModelManager.findModelButton(menu, modelId);
+              // Also click as a fallback (some builds open on click).
+              triggerWrapper.click();
+
+              // Wait briefly for the secondary dropdown to mount.
+              await Utils.waitForElement(
+                CONSTANTS.SELECTORS.MODEL_SELECTOR_DROPDOWN_SECONDARY,
+                1200
+              );
+              await Utils.sleep(200);
+
+              // Prefer searching the secondary menu first if present.
+              const secondaryMenu = document.querySelector(
+                CONSTANTS.SELECTORS.MODEL_SELECTOR_DROPDOWN_SECONDARY
+              );
+              if (secondaryMenu) {
+                console.log(
+                  "[QwenPersona] Found secondary menu, searching for model..."
+                );
+                modelButton = ModelManager.findModelButton(secondaryMenu, modelId);
+              }
+
+              // Robust fallback: search across all open dropdowns/popups.
+              if (!modelButton) {
+                modelButton = findModelInOpenDropdowns();
               }
             }
           } else {
@@ -1668,12 +1866,12 @@
         if (modelButton) {
           const itemContainer = modelButton.closest(
             CONSTANTS.SELECTORS.MODEL_SELECTOR_ITEM
-          );
+          ) || modelButton;
 
           if (
             itemContainer &&
             Array.from(itemContainer.classList).some((c) =>
-              c.includes("index-module__model-selector-item-selected")
+              c.includes("model-item-selected") || c.includes("model-selector-item-selected")
             )
           ) {
             console.log("[QwenPersona] Model already selected:", modelId);
@@ -1712,13 +1910,37 @@
         "items"
       );
 
-      const normalizedId = modelId.toLowerCase().replace(/[-_]/g, "");
+      const normalize = (s) =>
+        (s || "")
+          .toLowerCase()
+          .normalize("NFKC")
+          .replace(/\s+/g, "")
+          // Keep only a-z and 0-9 to ignore punctuation like '-', '.', '_' etc.
+          .replace(/[^a-z0-9]/g, "");
+
+      const normalizedId = normalize(modelId);
 
       for (const item of modelItems) {
-        const nameEl = item.querySelector(CONSTANTS.SELECTORS.MODEL_NAME_TEXT);
+        // Try multiple selectors for model name text
+        let nameEl = item.querySelector(CONSTANTS.SELECTORS.MODEL_NAME_TEXT);
+        if (!nameEl) {
+          // Fallback: look for any text element within the item
+          nameEl = item.querySelector('[class*="model-item-name"]') || 
+                   item.querySelector('[class*="model-name"]') ||
+                   item.querySelector('[class*="model-selector-item-name"]');
+        }
+        
+        // Get text from the first span child if present, otherwise use textContent
+        let modelName = '';
         if (nameEl) {
-          const modelName = nameEl.textContent.trim();
-          const normalizedName = modelName.toLowerCase().replace(/[-_]/g, "");
+          const spanEl = nameEl.querySelector('span');
+          modelName = spanEl ? spanEl.textContent.trim() : nameEl.textContent.trim();
+        } else {
+          modelName = item.textContent.trim();
+        }
+
+        if (modelName) {
+          const normalizedName = normalize(modelName);
 
           if (normalizedName === normalizedId) {
             console.log("[QwenPersona] Found exact match:", modelName);
@@ -1736,9 +1958,22 @@
       }
 
       for (const item of modelItems) {
-        const nameEl = item.querySelector(CONSTANTS.SELECTORS.MODEL_NAME_TEXT);
+        let nameEl = item.querySelector(CONSTANTS.SELECTORS.MODEL_NAME_TEXT);
+        if (!nameEl) {
+          nameEl = item.querySelector('[class*="model-item-name"]') || 
+                   item.querySelector('[class*="model-name"]') ||
+                   item.querySelector('[class*="model-selector-item-name"]');
+        }
+        
+        let modelName = '';
         if (nameEl) {
-          const modelName = nameEl.textContent.trim();
+          const spanEl = nameEl.querySelector('span');
+          modelName = spanEl ? spanEl.textContent.trim() : nameEl.textContent.trim();
+        } else {
+          modelName = item.textContent.trim();
+        }
+
+        if (modelName) {
           const mainPart = modelId
             .split("-")
             .slice(0, 2)
@@ -1789,6 +2024,17 @@
   // ==================== Feature Service ====================
   const FeatureManager = {
     findDeepThinkingButton() {
+      // First try to find within the new container structure
+      const thinkingContainer = document.querySelector(
+        CONSTANTS.SELECTORS.DEEP_THINKING_CONTAINER
+      );
+      if (thinkingContainer) {
+        const btn = thinkingContainer.querySelector(
+          CONSTANTS.SELECTORS.CHAT_INPUT_FEATURE_BTN
+        );
+        if (btn) return btn;
+      }
+
       const buttons = document.querySelectorAll(
         CONSTANTS.SELECTORS.CHAT_INPUT_FEATURE_BTN
       );
@@ -1800,7 +2046,15 @@
         ) {
           return btn;
         }
+        if (use &&
+          use.getAttribute("xlink:href")?.includes("icon-fill-deepthink-01")
+        ) {
+          return btn;
+        }
         if (btn.querySelector(".icon-line-deepthink-01")) {
+          return btn;
+        }
+        if (btn.querySelector(".icon-fill-deepthink-01")) {
           return btn;
         }
       }
@@ -1852,24 +2106,50 @@
     isFeatureButtonActive(button) {
       if (!button) return false;
 
+      // Check for common active states
       if (button.classList.contains("active")) return true;
+      if (button.classList.contains("checked")) return true;
       if (button.getAttribute("aria-pressed") === "true") return true;
       if (button.dataset.state === "active" || button.dataset.state === "on")
         return true;
+
+      // Check for disabled state (web search is disabled when deep thinking is active)
+      if (button.classList.contains("disabled")) return false;
+
+      // Check for fill icons (filled = active state)
+      const use = button.querySelector("use");
+      if (use) {
+        const href = use.getAttribute("xlink:href") || "";
+        if (href.includes("icon-fill-deepthink")) return true;
+        if (href.includes("icon-fill-globe")) return true;
+      }
 
       const icon = button.querySelector('i[class*="icon-"]');
       if (icon && icon.classList.contains("icon-fill-deepthink-01"))
         return true;
       if (icon && icon.classList.contains("icon-fill-globe-01")) return true;
 
+      // Check SVG icon within
+      const svg = button.querySelector("svg use");
+      if (svg) {
+        const href = svg.getAttribute("xlink:href") || "";
+        if (href.includes("fill")) return true;
+      }
+
+      // Check background color for active state
       const style = window.getComputedStyle(button);
       const bgColor = style.backgroundColor;
       if (
         bgColor &&
         bgColor !== "rgba(0, 0, 0, 0)" &&
-        bgColor !== "transparent"
+        bgColor !== "transparent" &&
+        bgColor !== "rgb(255, 255, 255)"
       ) {
-        // Active
+        // Has a background color, might be active
+        // Check if it matches the brand color pattern
+        if (bgColor.includes("97") || bgColor.includes("92") || bgColor.includes("237")) {
+          return true;
+        }
       }
 
       return false;
@@ -1944,11 +2224,30 @@
   const ChatManager = {
     getCurrentChatId(url = location.pathname) {
       const match = url.match(/\/(?:c|chat)\/([a-zA-Z0-9-]+)/);
-      return match ? match[1] : null;
+      const id = match ? match[1] : null;
+      if (!id) return null;
+
+      // Qwen often uses pseudo routes like /c/new for the start screen.
+      // Treat these as "no real chat" to avoid persisting mappings to a shared key.
+      const pseudoIds = new Set(["new", "create", "start", "home", "null", "undefined"]);
+      if (pseudoIds.has(id.toLowerCase())) {
+        Debug.log("getCurrentChatId pseudo route", { url, id });
+        return null;
+      }
+
+      Debug.log("getCurrentChatId", { url, id });
+
+      return id;
     },
 
     setPersonaForCurrentChat(personaId) {
       const chatId = ChatManager.getCurrentChatId();
+      Debug.log("setPersonaForCurrentChat", {
+        url: location.href,
+        chatId,
+        personaId,
+        selectedPersonaId: State.selectedPersonaId,
+      });
       if (chatId) {
         if (personaId) {
           State.chatPersonaMap[chatId] = personaId;
@@ -1962,6 +2261,11 @@
           "to persona",
           personaId
         );
+        Debug.log("chatPersonaMap[chatId] now", {
+          chatId,
+          mappedTo: State.chatPersonaMap[chatId] || null,
+          mapSize: Object.keys(State.chatPersonaMap || {}).length,
+        });
       }
     },
 
@@ -2028,6 +2332,25 @@
       const prevChatId = ChatManager.getCurrentChatId(State.lastUrl);
       const currChatId = ChatManager.getCurrentChatId(currentUrl);
 
+      Debug.event("url_change", {
+        lastUrl: State.lastUrl,
+        currentUrl,
+        prevChatId,
+        currChatId,
+        selectedPersonaId: State.selectedPersonaId,
+        pendingNewChatPersona: State.pendingNewChatPersona,
+      });
+
+      Debug.log("handleUrlChange ids", {
+        lastUrl: State.lastUrl,
+        currentUrl,
+        prevChatId,
+        currChatId,
+        selectedPersonaId: State.selectedPersonaId,
+        hasMappingForCurr: !!(currChatId && State.chatPersonaMap[currChatId]),
+        mapSize: Object.keys(State.chatPersonaMap || {}).length,
+      });
+
       if (
         !prevChatId &&
         currChatId &&
@@ -2040,6 +2363,38 @@
         );
         State.chatPersonaMap[currChatId] = State.selectedPersonaId;
         Storage.saveChatPersonaMap();
+        Debug.log("mapped new chat on navigation", {
+          currChatId,
+          mappedTo: State.selectedPersonaId,
+        });
+        Debug.event("map_new_chat_from_selection", {
+          currChatId,
+          mappedTo: State.selectedPersonaId,
+        });
+      }
+
+      // Bridge: if we just sent the first message of a new chat, bind the pending persona
+      // to the chatId once the URL shows it.
+      if (currChatId && !State.chatPersonaMap[currChatId] && State.pendingNewChatPersona) {
+        const ageMs = Date.now() - (State.pendingNewChatPersona.ts || 0);
+        if (ageMs >= 0 && ageMs < 15000) {
+          State.chatPersonaMap[currChatId] = State.pendingNewChatPersona.personaId;
+          Storage.saveChatPersonaMap();
+          Debug.log("bridged pending persona to chat", {
+            currChatId,
+            mappedTo: State.pendingNewChatPersona.personaId,
+            ageMs,
+            reason: State.pendingNewChatPersona.reason,
+          });
+          Debug.event("map_new_chat_from_pending", {
+            currChatId,
+            mappedTo: State.pendingNewChatPersona.personaId,
+            ageMs,
+            reason: State.pendingNewChatPersona.reason,
+          });
+        }
+        // Always clear after attempting to bind to avoid accidentally affecting later navigations.
+        State.pendingNewChatPersona = null;
       }
 
       State.lastUrl = currentUrl;
@@ -2050,6 +2405,10 @@
           UI.waitForNavbar();
         }
 
+        Debug.log("calling autoSelectPersonaForChat after navigation", {
+          url: location.href,
+          selectedPersonaId: State.selectedPersonaId,
+        });
         PersonaManager.autoSelectPersonaForChat();
       }, 300);
     },
@@ -2058,6 +2417,19 @@
   // ==================== Persona Manager ====================
   const PersonaManager = {
     selectPersona(id) {
+      Debug.event("select_persona", {
+        fromSelected: State.selectedPersonaId,
+        toSelected: id || null,
+        chatId: ChatManager.getCurrentChatId(),
+      });
+      Debug.log("selectPersona called", {
+        fromSelected: State.selectedPersonaId,
+        toSelected: id || null,
+        url: location.href,
+        chatId: ChatManager.getCurrentChatId(),
+      });
+      Debug.stack("selectPersona");
+
       State.selectedPersonaId = id || null;
       Storage.saveSelectedPersona();
       UI.updateTriggerUI();
@@ -2110,6 +2482,20 @@
         UI.updateTriggerUI();
       }
 
+      // Clean up any stored chat mappings pointing to this persona
+      try {
+        let changed = false;
+        for (const [chatId, personaId] of Object.entries(State.chatPersonaMap)) {
+          if (personaId === id) {
+            delete State.chatPersonaMap[chatId];
+            changed = true;
+          }
+        }
+        if (changed) Storage.saveChatPersonaMap();
+      } catch (e) {
+        // ignore cleanup failures
+      }
+
       UI.renderDropdownMenu();
       console.log("[QwenPersona] Deleted:", id);
     },
@@ -2135,7 +2521,7 @@
       ).checked;
 
       if (!name) {
-        alert("请输入 Persona 名称");
+        alert(I18n.t("nameRequired"));
         return;
       }
 
@@ -2214,9 +2600,27 @@
     autoSelectPersonaForChat() {
       const chatId = ChatManager.getCurrentChatId();
 
+      Debug.log("autoSelectPersonaForChat", {
+        url: location.href,
+        chatId,
+        selectedPersonaId: State.selectedPersonaId,
+        recordedPersonaId: chatId ? State.chatPersonaMap[chatId] : null,
+      });
+
       if (!chatId) {
-        if (State.selectedPersonaId) {
-          console.log("[QwenPersona] No chat ID (Home/New), resetting to None");
+        // New chat start page: Qwen currently uses the site root (/).
+        // On this screen we show "No Persona" by default (no per-chat mapping exists yet).
+        // This also avoids accidentally carrying persona selection across chats.
+        const isRootHome = location.pathname === "/" || location.pathname === "";
+        const isPseudoStart = /\/(?:c|chat)\/(new|create|start|home)(?:\/|$)/i.test(
+          location.pathname
+        );
+        if ((isRootHome || isPseudoStart) && State.selectedPersonaId) {
+          Debug.log("Home/New page detected, resetting persona to None", {
+            url: location.href,
+            pathname: location.pathname,
+            selectedPersonaId: State.selectedPersonaId,
+          });
           PersonaManager.selectPersona(null);
         }
         return;
@@ -2224,10 +2628,46 @@
 
       const recordedPersonaId = State.chatPersonaMap[chatId];
 
+      // New-chat bridge: if a first-message request happened recently, we may have a
+      // pending persona before the mapping is written. Prefer it over clearing selection.
+      if (!recordedPersonaId && State.pendingNewChatPersona) {
+        const ageMs = Date.now() - (State.pendingNewChatPersona.ts || 0);
+        if (ageMs >= 0 && ageMs < 15000) {
+          const pendingId = State.pendingNewChatPersona.personaId;
+          Debug.log("autoSelect: using pending persona bridge", {
+            chatId,
+            pendingId,
+            ageMs,
+            reason: State.pendingNewChatPersona.reason,
+          });
+          Debug.event("auto_select_from_pending", {
+            chatId,
+            pendingId,
+            ageMs,
+            reason: State.pendingNewChatPersona.reason,
+          });
+
+          // Persist mapping now.
+          State.chatPersonaMap[chatId] = pendingId;
+          Storage.saveChatPersonaMap();
+          State.pendingNewChatPersona = null;
+
+          if (pendingId && pendingId !== State.selectedPersonaId) {
+            PersonaManager.selectPersona(pendingId);
+          }
+          return;
+        }
+      }
+
       if (recordedPersonaId) {
         const personaExists = State.personas.find(
           (p) => p.id === recordedPersonaId
         );
+        Debug.log("autoSelect: mapping exists", {
+          chatId,
+          recordedPersonaId,
+          personaExists: !!personaExists,
+        });
         if (personaExists) {
           if (recordedPersonaId !== State.selectedPersonaId) {
             console.log(
@@ -2239,9 +2679,20 @@
             PersonaManager.selectPersona(recordedPersonaId);
           }
         } else {
+          // Mapping points to a deleted/nonexistent persona. Remove it to avoid repeated flips.
+          Debug.warn("autoSelect: mapping points to missing persona; deleting mapping", {
+            chatId,
+            recordedPersonaId,
+          });
+          delete State.chatPersonaMap[chatId];
+          Storage.saveChatPersonaMap();
           if (State.selectedPersonaId) PersonaManager.selectPersona(null);
         }
       } else {
+        Debug.log("autoSelect: no mapping for this chat", {
+          chatId,
+          selectedPersonaId: State.selectedPersonaId,
+        });
         if (State.selectedPersonaId) {
           console.log(
             "[QwenPersona] No mapping for this chat, resetting to None"
@@ -2306,6 +2757,36 @@
                 messageCount: body.messages ? body.messages.length : 0,
                 personaPrompt: !!persona.prompt,
               });
+
+              // If we are sending the first message of a new chat, remember which persona was active.
+              // The URL might change slightly later; we'll bind this persona to the new chatId on navigation.
+              if (isNewChat && persona && persona.id) {
+                State.pendingNewChatPersona = {
+                  personaId: persona.id,
+                  ts: Date.now(),
+                  reason: "first_message_new_chat_request",
+                };
+                Debug.event("pending_new_chat_persona_set", {
+                  personaId: persona.id,
+                  personaName: persona.name,
+                  url,
+                });
+
+                // If the chatId is already present in the URL, bind immediately.
+                // Some Qwen flows enter /c/<uuid> before the first completions request.
+                const currChatId = ChatManager.getCurrentChatId();
+                if (currChatId && !State.chatPersonaMap[currChatId]) {
+                  State.chatPersonaMap[currChatId] = persona.id;
+                  Storage.saveChatPersonaMap();
+                  Debug.event("map_new_chat_from_pending_immediate", {
+                    currChatId,
+                    mappedTo: persona.id,
+                    personaName: persona.name,
+                  });
+                  // Clear pending to avoid affecting later navigations.
+                  State.pendingNewChatPersona = null;
+                }
+              }
 
               if (persona.prompt && Array.isArray(body.messages)) {
                 const systemMsgIndex = body.messages.findIndex(
@@ -2441,6 +2922,29 @@
         Storage.loadPersonas();
         Storage.loadSelectedPersona();
         UI.updateTriggerUI();
+      },
+      debugDump: () => {
+        const chatId = ChatManager.getCurrentChatId();
+        const payload = {
+          url: location.href,
+          chatId,
+          selectedPersonaId: State.selectedPersonaId,
+          selectedPersonaName:
+            State.personas.find((p) => p.id === State.selectedPersonaId)?.name ||
+            null,
+          recordedPersonaId: chatId ? State.chatPersonaMap[chatId] : null,
+          recordedPersonaName:
+            chatId && State.chatPersonaMap[chatId]
+              ? State.personas.find((p) => p.id === State.chatPersonaMap[chatId])
+                  ?.name || null
+              : null,
+          pendingNewChatPersona: State.pendingNewChatPersona,
+          mapSize: Object.keys(State.chatPersonaMap || {}).length,
+          mapSample: Object.entries(State.chatPersonaMap || {}).slice(0, 10),
+          debugEvents: typeof Debug !== "undefined" ? Debug.getEvents() : [],
+        };
+        console.log("[QwenPersona] debugDump", payload);
+        return payload;
       },
     };
 

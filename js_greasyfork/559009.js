@@ -24,9 +24,9 @@
 // @connect      raw.githubusercontent.com
 // @namespace    Violentmonkey Scripts
 // @author       SedapnyaTidur
-// @version      1.0.12
+// @version      1.0.13
 // @license      MIT
-// @revision     1/8/2026, 9:30:00 PM
+// @revision     1/9/2026, 5:20:18 PM
 // @description  Redirects instance of Redlib that having an error or has a Anubis/Cerberus/Cloudflare/GoAway check to another instance. The CSP for websites must be removed/modified using an addon for this script to work. To have a better effect make sure to reorder this script so it runs as soon as possible.
 // @downloadURL https://update.greasyfork.org/scripts/559009/%5BRedlib%5D%20Error%20%20PoW%20Redirector.user.js
 // @updateURL https://update.greasyfork.org/scripts/559009/%5BRedlib%5D%20Error%20%20PoW%20Redirector.meta.js
@@ -36,7 +36,7 @@
   'use strict';
 
   const window = unsafeWindow;
-  let currentURL = window.location.href, blocked = false, hasChecked = false, redirectIntervalId = 0;
+  let currentURL = window.location.href, blocked = false, hasChecked = false, redirectIntervalId = 0, unload = false;
 
   // To block redirections to Anubis/Cerberus/Cloudflare/GoAway.
   const fetch_ = window.fetch;
@@ -80,17 +80,13 @@
   // failedHosts must be an array even though it is empty.
   let { failedHosts, currentHost, deleteCookies, externalOrigins, hideSettings, lastUpdate, localOriginsFailedDate, preferOrigins, redirectHost, updateFrequency, workingSite } = GM_getValues({
     // Websites that always have a Anubis/Cerberus/GoAway check or redirect to Anubis/Cerberus/GoAway.
-    failedHosts: [
-      'redlib.thebunny.zone', // NOT RESPONDING IS SO PROBLEMATIC. NOT WORTH THE RISK.
-      'lr.ptr.moe',
-      'oratrice.ptr.moe',
-    ],
+    failedHosts: [],
     currentHost: undefined, // Current website's hostname.
     deleteCookies: true, // Delete sessionStorage, localStorage & cookies before redirect?.
     externalOrigins: undefined, // An array of origins from external source.
     hideSettings: true, // Hide settings in GM menu commands?
     lastUpdate: undefined, // When the external origins was updated.
-    localOriginsFailedDate: undefined, // Date of all local origins have failed.
+    localOriginsFailedDate: undefined, // Date of when all local origins have failed.
     preferOrigins: 'external > local', // local, external, local > external, external > local.
     redirectHost: undefined, // Hostname that will be redirected to.
     updateFrequency: '30 minutes', // Update external origins when at least this much time has passed.
@@ -105,10 +101,13 @@
 
   // Unload the page: navigate, reload, back_forward.
   window.addEventListener('beforeunload', function(event) {
-    //if (currentHost) GM_deleteValues(['currentHost', 'redirectHost']); // Reload by user only not by a script.
-    window.clearInterval(redirectIntervalId);
+    unload = true;
     window.clearTimeout(downloader.timeoutId);
     if (downloader.instance) downloader.instance.abort();
+  }, true);
+
+  window.addEventListener('pagehide', function(event) {
+    if (unload) window.clearInterval(redirectIntervalId);
   }, true);
 
   const configs = [{
@@ -160,22 +159,21 @@
 
   // Day/Month/Year, Hours:Minutes:Seconds AM/PM
   // 7/12/2025, 4:43:36 PM
-  // Returns a date string like above or a decimal numbers for minutes.
-  const getDate = function(inMinutes) {
+  const getDate = function() {
     const date = new Date();
-    if (inMinutes) return (date.getFullYear() * 525949) + ((date.getMonth() + 1) * 43829) + (date.getDate() * 1440) + (date.getHours() * 60) + date.getMinutes();
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}, ${date.getHours() % 12 || 12}:${('0' + date.getMinutes()).slice(-2)}:${('0' + date.getSeconds()).slice(-2)} ${date.getHours() > 11 ? 'PM' : 'AM'}`;
   };
 
-  const hasElapsed = function(updateFrequency, lastUpdate) {
-    if (!updateFrequency || !lastUpdate) return false;
+  const hasElapsed = function(updateFrequency, lastCheckedDate) {
+    if (!updateFrequency || !lastCheckedDate) return false;
     const elapsed = updateFrequency.toLowerCase().replace(/[ s]/g, '').replace(/(mi|h|d|mo|y).*$/, field => {
       return { minute:' 1',hour:' 60',day:' 1440',month:' 43829',year:' 525949' }[field]
     }).split(' ').reduce((sum, value) => sum * Number(value), 1);
-    const values = lastUpdate.replace(/:[0-9]+\s+[APap][Mm]$/, '').split(/(?:\/|,\s+|:)/).map(Number);
-    const clock24 = (/[Pp][Mm]$/.test(lastUpdate) && values[3] !== 12) ? 12 : 0;
+    const values = lastCheckedDate.replace(/:[0-9]+\s+[APap][Mm]$/, '').split(/(?:\/|,\s+|:)/).map(Number);
+    const clock24 = (/[Pp][Mm]$/.test(lastCheckedDate) && values[3] !== 12) ? 12 : 0;
     const past = (values[0] * 1440) + (values[1] * 43829) + (values[2] * 525949) + ((values[3] + clock24) * 60) + values[4];
-    const now = getDate(true); // Get current date in minutes as late as possible.
+    const date = new Date();
+    const now = (date.getFullYear() * 525949) + ((date.getMonth() + 1) * 43829) + (date.getDate() * 1440) + (date.getHours() * 60) + date.getMinutes();
     if (now - past >= elapsed) return true;
     return false;
   };
@@ -237,7 +235,7 @@
         // Secondly, each response is a new object that does not shared across listeners. Adding new properties is useless.
         init: function() {
           this.onerror = this.onload = function(response) {
-            if (!response.response && response.status >= 500 && !downloader.abort && retries > 0) {
+            if (!response.response && !downloader.abort && retries > 0) {
               downloader.timeoutId = window.setTimeout(() => {
                 downloader.timeoutId = 0;
                 download(url, --retries, timeout, waitInterval).then(resolve);
@@ -271,7 +269,7 @@
           externalOrigins.push(instance.url);
         }
         if (externalOrigins.length) {
-          GM_setValues({ externalOrigins: externalOrigins, lastUpdate: getDate(false) });
+          GM_setValues({ externalOrigins: externalOrigins, lastUpdate: getDate() });
           resolve(true);
         } else {
           externalOrigins = undefined;
@@ -324,11 +322,13 @@
     return new Promise(async resolve => {
       const location = new URL(currentURL);
       const hostname = location.hostname;
+
       // Save the failed hostname first before trying to redirect.
       if (!failedHosts.includes(hostname)) {
         failedHosts.push(hostname);
         GM_setValue('failedHosts', failedHosts);
       }
+
       // This is a must. The "redir=" in query can cause an infinite redirectiom loop.
       // https://oratrice.ptr.moe/.within.website/?redir=https%3A%2F%2Flr.ptr.moe%2Fr%2Fworldnews%2Fnew%3F
       // https://snoo.habedieeh.re/.within.website/x/cmd/anubis/api/pass-challenge?response=00dfda4398a2cf0fe692db546fff4ff3922b44ac545845f9dd11938d82f0a38c&nonce=21&redir=https%3A%2F%2Fsnoo.habedieeh.re%2F&elapsedTime=193
@@ -345,18 +345,20 @@
       } else if (/[?&]__(?:cf_chl|goaway)/.test(location.search)) { // Cloudflare/GoAway
         currentURL = location.origin + location.pathname;
       }
+
       // Redirect to the last working website.
       if (workingSite && location.origin !== workingSite) {
         GM_setValues({
           currentHost: hostname,
-          // Why not just /^https?:\/\/(.+)$/ you asked? In case you edited/added new origins and put a slash at the end e.g. https://a.b.c/
           redirectHost: workingSite.replace(/^https?:\/\/([^/]+).*$/, '$1')
         });
-        currentHost = hostname; // For unload.
+        //currentHost = hostname; // For reload.
         resolve(currentURL.replace(/^https?:\/\/[^/]+/, workingSite));
         return;
       }
+
       if (workingSite) GM_deleteValue('workingSite');
+
       // local, external, local > external, external > local.
       const listsOfOrigins = preferOrigins.split(' > ').map(prefer => { return (prefer === 'local') ? localOrigins : externalOrigins });
       let uptodate = null;
@@ -370,35 +372,36 @@
           const len = failedHosts.length;
           for (const origin of externalOrigins) {
             const index = failedHosts.indexOf(origin.replace(/^https?:\/\/([^/]+).*$/, '$1'));
-            if (index > 0) failedHosts.splice(index, 1); // Exclude the first index.
+            if (index >= 0) failedHosts.splice(index, 1);
           }
           if (len !== failedHosts.length) GM_setValue('failedHosts', failedHosts);
         }
+
         for (const origin of listsOfOrigins[i]) {
           const host = origin.replace(/^https?:\/\/([^/]+).*$/, '$1');
           if (hostname !== host && !failedHosts.includes(host)) {
             GM_setValues({ currentHost: hostname, redirectHost: host });
-            currentHost = hostname; // For unload.
+            //currentHost = hostname; // For reload. Unused.
             resolve(currentURL.replace(/^https?:\/\/[^/]+/, origin));
             return;
           }
         }
+
         if (uptodate) continue;
         if (listsOfOrigins[i] === externalOrigins) {
-          listsOfOrigins[i] = undefined;
-          externalOrigins = undefined;
+          listsOfOrigins[i] = externalOrigins = undefined;
           --i;
         } else if (localOriginsFailedDate && hasElapsed('30 minutes', localOriginsFailedDate)) {
           GM_deleteValue('localOriginsFailedDate');
           const len = failedHosts.length;
           for (const origin of localOrigins) {
             const index = failedHosts.indexOf(origin.replace(/^https?:\/\/([^/]+).*$/, '$1'));
-            if (index > 0) failedHosts.splice(index, 1); // Exclude the first index.
+            if (index >= 0) failedHosts.splice(index, 1);
           }
           if (len !== failedHosts.length) GM_setValue('failedHosts', failedHosts);
           --i;
         } else if (!localOriginsFailedDate) {
-          GM_setValue('localOriginsFailedDate', getDate(false));
+          GM_setValue('localOriginsFailedDate', getDate());
         }
       }
 
@@ -421,59 +424,90 @@
       for (const text of config.texts) {
         if (!target.innerText.includes(text)) continue;
         window.stop();
+
         try { // Wakelock the screen. Don't let screen goes off. Can fail when being low on battery.
           await window.navigator.wakeLock.request('screen');
         } catch(e) {}
+
         const url = await getNewUrl();
-        const path = config.query.replace(':scope', ':root > body').replace(/ [^ ]+$/, ' div#redirector');
-        const div = document.createElement('div');
+
+        const container = document.createElement('redirector-dialog');
+        const wrapper = document.createElement('div');
         const h1_1 = document.createElement('h1');
         const h1_2 = document.createElement('h1');
         const h1_3 = document.createElement('h1');
+        const h1_4 = document.createElement('h1');
+        const h1_5 = document.createElement('h1');
         const style = document.createElement('style');
-        style.textContent = `${path + ' > *'} {
-          display: block !important;
-          font-family: sans-serif !important;
-          font-size: 32px !important;
-          font-weight: 700px !important;
-          margin: 0px !important;
-          text-align: center !important;
-        }
-        ${path + ' > :first-child'} {
-          color: rgb(172,157,83) !important;
-          overflow-wrap: break-word !important;
-        }
-        ${path + ' > :nth-child(2)'} {
-          color: rgb(65,105,225) !important;
-          overflow-wrap: break-word !important;
-        }
-        ${path + ' > :nth-child(3)'} {
-          color: rgb(210,210,210) !important;
-          text-shadow: -2px -2px 0 #000000, 2px -2px 0 #000000, -2px 2px 0 #000000, 2px 2px 0 #000000 !important;
-          word-break: break-all !important;
+
+        style.textContent = `redirector-dialog#redirector {
+          align-items: center;
+          background: rgba(0,0,0,0);
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          justify-content: center;
+          left: 0px;
+          position: fixed;
+          top: 0px;
+          width: 100%;
+          z-index: 2147483647;
+        } redirector-dialog#redirector > div {
+          align-items: center;
+          background: rgb(30,30,30);
+          border: 3px solid rgb(80,80,80);
+          border-radius: 10px;
+          display: flex;
+          flex-direction: column;
+          padding: 20px;
+        } redirector-dialog#redirector > div > * {
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          flex-wrap: wrap;
+          font-family: sans-serif;
+          font-size: 32px;
+          font-weight: 700px;
+          margin: 0px;
+          white-space: wrap;
+        } redirector-dialog#redirector > div > :first-child {
+          color: rgb(255,99,71);
+        } redirector-dialog#redirector > div > :nth-child(2) {
+          color: rgb(172,157,83);
+        } redirector-dialog#redirector > div > :nth-child(3) {
+          color: rgb(65,105,225);
+        } redirector-dialog#redirector > div > :nth-child(4) {
+          color: rgb(210,210,210);
+          text-shadow: -2px -2px 0 #000000, 2px -2px 0 #000000, -2px 2px 0 #000000, 2px 2px 0 #000000;
+        } redirector-dialog#redirector > div > :nth-child(5) {
+          color: rgb(213,68,85);
         }`;
+
         document.head.appendChild(style);
-        div.id = 'redirector';
-        div.appendChild(h1_1);
-        div.appendChild(h1_2);
-        div.appendChild(h1_3);
+        container.id = 'redirector';
+        wrapper.appendChild(h1_1);
+        wrapper.appendChild(h1_2);
+        wrapper.appendChild(h1_3);
+        wrapper.appendChild(h1_4);
+        wrapper.appendChild(h1_5);
+        container.appendChild(wrapper);
+        document.body.appendChild(container);
+
         if (url === undefined) {
-          h1_1.innerText = '⚠️ There was a problem getting alternative URLs of Reblib.';
+          h1_2.innerText = '⚠️ There was a problem getting alternative URLs of Reblib.';
         }
         if (!url) {
-          h1_2.innerText = '💢 Failed to redirect!. All instances are broken.';
-          h1_2.innerText += (preferOrigins === 'local') ? '\nTry again after 30 minutes.' : `\nTry again after ${updateFrequency}.`;
-          style.textContent = style.textContent.replace(/rgb\(65,105,225\)/m, 'rgb(213,68,85)');
-          target.replaceWith(div);
+          h1_5.innerText = '💢 Failed to redirect!. All instances are broken.';
+          h1_5.innerText += (preferOrigins === 'local') ? '\nTry again after 30 minutes.' : `\nTry again after ${updateFrequency}.`;
           return;
         }
-        h1_2.innerText = 'Redirecting to another instance...';
-        h1_3.innerText = `${url}`;
-        target.replaceWith(div);
+        h1_3.innerText = 'Redirecting to another instance...';
+        h1_4.innerText = `${url}`;
         expireCookies();
+
         redirectIntervalId = window.setInterval(past => { // For websites that are not responding.
           if (retries > 0) {
-            h1_1.innerText = `⚠️ To-be-redirected server is not responding after ${Math.abs((Date.now() - past) / 1000)} seconds. Retrying: ${retries--}`;
+            h1_1.innerText = `⚠️ To-be-redirected server is not responding after ${Math.ceil((Date.now() - past) / 1000)} seconds.\nTrying again ${retries--}x...`;
             window.location.replace(url);
           } else {
             window.clearInterval(redirectIntervalId);
@@ -487,6 +521,7 @@
             window.location.reload(); // Re-run the script.
           }
         }, 10000, Date.now()); // 10 seconds. Is it too long?
+
         window.location.replace(url);
         return;
       }
@@ -497,7 +532,7 @@
     GM_setValue('workingSite', workingSite);
     // Remove the hostname from failedHosts.
     const index = failedHosts.indexOf(window.location.hostname);
-    if (index > 0) {
+    if (index >= 0) {
       failedHosts.splice(index, 1);
       GM_setValue('failedHosts', failedHosts);
     }
@@ -510,8 +545,7 @@
       GM_setValue('failedHosts', failedHosts);
     }
     GM_deleteValues(['currentHost', 'redirectHost']);
-    currentHost = undefined; // For unload.
-    redirectHost = undefined;
+    currentHost = redirectHost = undefined;
   };
 
   // === Execute this statement as soon as possible. ===
@@ -618,7 +652,7 @@
       object.title_ = object.title.replace('{}', object.choices[object.index]);
       const index = failedHosts.indexOf(window.location.hostname);
       if (!object.index) {
-        if (index > 0) {
+        if (index >= 0) {
           failedHosts.splice(index, 1);
           GM_setValue('failedHosts', failedHosts);
         }
@@ -656,11 +690,7 @@
         object.options.autoClose = false;
         GM_deleteValues(['currentHost','deleteCookies','externalOrigins','failedHosts','hideSettings','lastUpdate','localOriginsFailedDate','preferOrigins','redirectHost','updateFrequency','workingSite']);
         deleteCookies = true;
-        failedHosts = [
-          'redlib.thebunny.zone',
-          'lr.ptr.moe',
-          'oratrice.ptr.moe',
-        ];
+        failedHosts = [];
         hideSettings = true;
         preferOrigins = 'external > local';
         updateFrequency = '30 minutes';

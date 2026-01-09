@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Telegram WebK Message Hider
 // @namespace    https://github.com/sinancetinkaya/Telegram-WebK-Message-Hider
-// @version      2025-02-15
+// @version      2026-01-09
 // @license      MIT
 // @description  Hides messages from unwanted users in Telegram groups
 // @author       sinancetinkaya
@@ -41,8 +41,8 @@
 
       // do not remove nodes because it messes with scrolling chat messages
       for (var i=0, max=all.length; i < max; i++) {
-        all[i].style.color = "black";
-        all[i].style.backgroundColor = "black";
+        all[i].style.opacity = 0;
+        //all[i].style.backgroundColor = "black";
       }
     }
 

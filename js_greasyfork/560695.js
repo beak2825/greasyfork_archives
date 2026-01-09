@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         SpotubeDL - Awesome Spotify Downloader
-// @description  Download Spotify Tracks, Albums, Playlists as MP3/OGG/OPUS with High Quality.
+// @description  Download Spotify Tracks, Albums, Playlists as MP3/OGG/Opus with High Quality.
 // @namespace    https://spotubedl.com/
 // @supportURL   https://spotubedl.com/
 // @homepageURL  https://spotubedl.com/
-// @version      1.1
+// @version      1.2
 // @author       afkarxyz
 // @match        *://open.spotify.com/*
 // @icon         data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMGJjN2QiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMyAxN2EzIDMgMCAxIDAgNiAwYTMgMyAwIDAgMCAtNiAwIiAvPjxwYXRoIGQ9Ik05IDE3di0xM2gxMHY4IiAvPjxwYXRoIGQ9Ik05IDhoMTAiIC8+PHBhdGggZD0iTTE5IDE2djYiIC8+PHBhdGggZD0iTTIyIDE5bC0zIDNsLTMgLTMiIC8+PC9zdmc+

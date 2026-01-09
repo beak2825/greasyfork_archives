@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         炼金模拟器 color
+// @name         MWIAlchemySimulator
 // @namespace    http://tampermonkey.net/
-// @version      v29
+// @version      v31
 // @description  这是炼金模拟器，包括了期望方差风险的估算，
 // @icon         https://www.milkywayidle.com/favicon.svg
 // @author       Redbean
@@ -18,8 +18,8 @@
 // @require      https://update.greasyfork.org/scripts/541343/1636422/alchemy-calculator.js
 // @require      https://update.greasyfork.org/scripts/541211/1646102/alchemy-data%20v250820.js
 // @grant        GM_addStyle
-// @downloadURL https://update.greasyfork.org/scripts/541503/%E7%82%BC%E9%87%91%E6%A8%A1%E6%8B%9F%E5%99%A8%20color.user.js
-// @updateURL https://update.greasyfork.org/scripts/541503/%E7%82%BC%E9%87%91%E6%A8%A1%E6%8B%9F%E5%99%A8%20color.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/541503/MWIAlchemySimulator.user.js
+// @updateURL https://update.greasyfork.org/scripts/541503/MWIAlchemySimulator.meta.js
 // ==/UserScript==
 
 (function() {
@@ -787,6 +787,7 @@ function copyToChat() {
                     <div class="result-value" id="Risk">0</div>
                 </div>
             </div>
+            <a href="https://my.feishu.cn/wiki/AJgjwyEpJioVa8kfAXmcrfERndb" target="_blank" title="帮助" style="color: white; text-align: right; display: block; text-decoration: none;">帮助</a>
             <input type="hidden" id="catalystPriceFetcher" value="不使用催化剂">
         </div>
         `;

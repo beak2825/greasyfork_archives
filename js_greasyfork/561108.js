@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Spelling Bee Definition Button
+// @name         NYT Spelling Bee Definition Button
 // @author       Minjae Kim
-// @version      1.20
+// @version      1.21
 // @description  Click on the words found to go to its definition on Merriam Webster
 // @match        https://www.nytimes.com/puzzles/spelling-bee
 // @icon         https://www.nytimes.com/games-assets/v2/assets/icons/spelling-bee.svg
@@ -9,8 +9,8 @@
 // @grant        none
 // @license      MIT
 // @namespace    https://greasyfork.org/en/users/1529082-minjae-kim
-// @downloadURL https://update.greasyfork.org/scripts/561108/Spelling%20Bee%20Definition%20Button.user.js
-// @updateURL https://update.greasyfork.org/scripts/561108/Spelling%20Bee%20Definition%20Button.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561108/NYT%20Spelling%20Bee%20Definition%20Button.user.js
+// @updateURL https://update.greasyfork.org/scripts/561108/NYT%20Spelling%20Bee%20Definition%20Button.meta.js
 // ==/UserScript==
 
 

@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         Allow PiP in Teams meetings
 // @namespace    https://rx.io/
-// @version      0.1
+// @version      0.2
 // @description  Enable Firefox native Picture-in-Picture in Teams Web share/video windows
 // @match        https://teams.microsoft.com/*
+// @match        https://teams.cloud.microsoft/*
 // @run-at       document-idle
 // @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/552472/Allow%20PiP%20in%20Teams%20meetings.user.js

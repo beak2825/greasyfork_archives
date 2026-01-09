@@ -3,7 +3,7 @@
 // @namespace     https://learnnatively.com
 // @description   Generate a list of everything you watched or read on Natively this year
 // @author        araigoshi
-// @version       1.0.9
+// @version       1.0.10
 // @match         https://learnnatively.com/*
 // @license       MIT
 // @grant         none
@@ -681,8 +681,8 @@
                 </div>
                 <div>
                     <p>Date range</p>
-                    <input type="date" id="recap-start-date" value="${jsToIsoDate(state.startDate)}" min="2000-01-01" max="2050-12-31" />
-                    <input type="date" id="recap-end-date" value="${jsToIsoDate(state.endDate)}" min="2000-01-01" max="2025-12-31" />
+                    <input type="date" id="recap-start-date" value="${jsToIsoDate(state.startDate)}" min="2000-01-01" max="2029-12-31" />
+                    <input type="date" id="recap-end-date" value="${jsToIsoDate(state.endDate)}" min="2000-01-01" max="2029-12-31" />
                     <p>Columns</p>
                     <input type="number" id="recap-columns" value="${state.settings.columns}" />
                     <a class="material-icons-outlined" id="recap-settings-link" href="#">settings</a>

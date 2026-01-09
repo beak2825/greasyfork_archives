@@ -3,7 +3,7 @@
 // @name:de            RYMLyricsViewer
 // @name:en            RYMLyricsViewer
 // @namespace          sun/userscripts
-// @version            1.1.2
+// @version            1.1.3
 // @description        Allows the viewing of song lyrics on Rate Your Music without a subscription.
 // @description:de     Erlaubt das Ansehen von Songtexten auf Rate Your Music ohne ein Abonnement.
 // @description:en     Allows the viewing of song lyrics on Rate Your Music without a subscription.
@@ -57,6 +57,7 @@
   observer.observe(frame, {
     attributes: true,
     childList: true,
+    subtree: true,
   });
 
   unsafeWindow.rym.request

@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         CunyCrypt
-// @version      0.9.12
+// @version      0.9.13
 // @description  End-to-end encryption for Discord messages and files, but less obvious
 // @author       redcat (forked from NotTrueFalse)
 // @match        https://discord.com/*
@@ -504,6 +504,7 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
     let prefixurllenght = 24;
     let suffix = ">)";
     let randomtext = "";
+    let userselectedpeer = false;
 
     let text_pool = ["bruh",
 "wdym?",
@@ -1215,10 +1216,12 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
                 const channel_id = e.target.value;
                 const hintElement = document.getElementById('discrypt-selector-hint');
                 if (channel_id) {
+                    userselectedpeer = true;
                     selected_peer_channel_id = channel_id;
                     hintElement.textContent = `✓ Encrypting for peer ${channel_id}`;
                     hintElement.style.color = '#43b581';
                 } else {
+                    userselectedpeer = false;
                     selected_peer_channel_id = null;
                     hintElement.textContent = '✗ Not encrypted';
                     hintElement.style.color = '#b54843';
@@ -1236,7 +1239,7 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
             return selector;
         }
 
-        function updatePeerSelector(channel_id) {
+        async function updatePeerSelector(channel_id) {
             const selector = document.getElementById('discrypt-peer-selector');
             const selectElement = document.getElementById('discrypt-peer-select');
 
@@ -1850,7 +1853,11 @@ Installation: Install as Tampermonkey userscript, then click the lock icon in Di
                         currentObserver.disconnect();
                     }
                     lastChatContainer = newChatContainer;
-                    updatePeerSelector(get_url_channel_id());
+                    const url_channel_id = get_url_channel_id();
+                    if (!userselectedpeer || Object.keys(known_peer).includes(url_channel_id)) {
+                        userselectedpeer = false;
+                        updatePeerSelector(url_channel_id);
+                    }
                     currentObserver = observeMessages();
                 }
 

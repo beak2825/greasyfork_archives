@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         GreasyFork用户主页显示该用户发布脚本数目、所有脚本的今日总安装次数和迄今总安装次数 
+// @name         【统计当页数据】GreasyFork用户主页显示该用户发布脚本数目、所有脚本的今日总安装次数和迄今总安装次数 
 // @name:zh-TW   GreasyFork用戶主頁顯示該用戶發佈腳本數目、所有腳本的今日總安裝次數和迄今總安裝次數
 // @name:en         Displays the number of scripts published by the user, the total number of installations
 // @description    在GreasyFork用户主页显示该用户发布脚本数目、所有脚本的今日总安装次数和迄今总安装次数。
@@ -79,8 +79,8 @@
 // @locale         ja   GreasyForkユーザーのホームページには、ユーザーが発行したスクリプトの数、すべてのスクリプトの今日の総インストール数、合計インストール数が表示されます。
 // @locale         ko  GreasyFork 사용자 홈 페이지에는 해당 사용자가 게시한 스크립트 수, 모든 스크립트의 오늘 총 설치 횟수 및 현재 총 설치 횟수가 표시됩니다.
 // @icon         https://greasyfork.org//vite/assets/blacklogo16-37ZGLlXh.png
-// @downloadURL https://update.greasyfork.org/scripts/482623/GreasyFork%E7%94%A8%E6%88%B7%E4%B8%BB%E9%A1%B5%E6%98%BE%E7%A4%BA%E8%AF%A5%E7%94%A8%E6%88%B7%E5%8F%91%E5%B8%83%E8%84%9A%E6%9C%AC%E6%95%B0%E7%9B%AE%E3%80%81%E6%89%80%E6%9C%89%E8%84%9A%E6%9C%AC%E7%9A%84%E4%BB%8A%E6%97%A5%E6%80%BB%E5%AE%89%E8%A3%85%E6%AC%A1%E6%95%B0%E5%92%8C%E8%BF%84%E4%BB%8A%E6%80%BB%E5%AE%89%E8%A3%85%E6%AC%A1%E6%95%B0.user.js
-// @updateURL https://update.greasyfork.org/scripts/482623/GreasyFork%E7%94%A8%E6%88%B7%E4%B8%BB%E9%A1%B5%E6%98%BE%E7%A4%BA%E8%AF%A5%E7%94%A8%E6%88%B7%E5%8F%91%E5%B8%83%E8%84%9A%E6%9C%AC%E6%95%B0%E7%9B%AE%E3%80%81%E6%89%80%E6%9C%89%E8%84%9A%E6%9C%AC%E7%9A%84%E4%BB%8A%E6%97%A5%E6%80%BB%E5%AE%89%E8%A3%85%E6%AC%A1%E6%95%B0%E5%92%8C%E8%BF%84%E4%BB%8A%E6%80%BB%E5%AE%89%E8%A3%85%E6%AC%A1%E6%95%B0.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/482623/%E3%80%90%E7%BB%9F%E8%AE%A1%E5%BD%93%E9%A1%B5%E6%95%B0%E6%8D%AE%E3%80%91GreasyFork%E7%94%A8%E6%88%B7%E4%B8%BB%E9%A1%B5%E6%98%BE%E7%A4%BA%E8%AF%A5%E7%94%A8%E6%88%B7%E5%8F%91%E5%B8%83%E8%84%9A%E6%9C%AC%E6%95%B0%E7%9B%AE%E3%80%81%E6%89%80%E6%9C%89%E8%84%9A%E6%9C%AC%E7%9A%84%E4%BB%8A%E6%97%A5%E6%80%BB%E5%AE%89%E8%A3%85%E6%AC%A1%E6%95%B0%E5%92%8C%E8%BF%84%E4%BB%8A%E6%80%BB%E5%AE%89%E8%A3%85%E6%AC%A1%E6%95%B0.user.js
+// @updateURL https://update.greasyfork.org/scripts/482623/%E3%80%90%E7%BB%9F%E8%AE%A1%E5%BD%93%E9%A1%B5%E6%95%B0%E6%8D%AE%E3%80%91GreasyFork%E7%94%A8%E6%88%B7%E4%B8%BB%E9%A1%B5%E6%98%BE%E7%A4%BA%E8%AF%A5%E7%94%A8%E6%88%B7%E5%8F%91%E5%B8%83%E8%84%9A%E6%9C%AC%E6%95%B0%E7%9B%AE%E3%80%81%E6%89%80%E6%9C%89%E8%84%9A%E6%9C%AC%E7%9A%84%E4%BB%8A%E6%97%A5%E6%80%BB%E5%AE%89%E8%A3%85%E6%AC%A1%E6%95%B0%E5%92%8C%E8%BF%84%E4%BB%8A%E6%80%BB%E5%AE%89%E8%A3%85%E6%AC%A1%E6%95%B0.meta.js
 // ==/UserScript==
 
 

@@ -3,7 +3,7 @@
 // @name:de            Collapsit
 // @name:en            Collapsit
 // @namespace          sun/userscripts
-// @version            1.0.20
+// @version            1.0.21
 // @description        Enables collapsing (and expanding) of comments on Removeddit.
 // @description:de     Ermöglicht das Ein- und Ausklappen von Kommentaren auf Removeddit.
 // @description:en     Enables collapsing (and expanding) of comments on Removeddit.
@@ -34,7 +34,7 @@
   document.addEventListener("click", (event) => {
     if (event.target?.matches(".comment-head .author:not(.comment-author)")) {
       event.preventDefault();
-      if (event.target.textContent === "[–]") {
+      if (event.target.textContent === "[\u2013]") {
         for (const x of Array.from(
           event.target.parentNode.parentNode.children,
         ).slice(1))
@@ -45,7 +45,7 @@
           event.target.parentNode.parentNode.children,
         ).slice(1))
           x.style.display = "";
-        event.target.textContent = "[–]";
+        event.target.textContent = "[\u2013]";
       }
     }
   });

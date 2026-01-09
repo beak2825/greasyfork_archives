@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Better osm.org
 // @name:ru         Better osm.org
-// @version         1.5.0
+// @version         1.5.2
 // @changelog       v1.5.0: Shift + S: custom map layers, Shift + V: custom vector map styles, date for ESRI layer
 // @changelog       v1.5.0: KeyV: switch between raster and vector styles, render light:direction=* and direction=12-34
 // @changelog       v1.5.0: Initial OpenHistoricalMap support: changeset viewer
@@ -86,6 +86,7 @@
 // @match        https://wiki.openstreetmap.org/wiki/Proposal:*
 // @exclude      https://taginfo.openstreetmap.org/embed/*
 // @match        https://github.com/openstreetmap/openstreetmap-website/issues/new*
+// @match        https://github.com/deevroman/better-osm-org/issues/new*
 // @license      WTFPL
 // @namespace    https://github.com/deevroman/better-osm-org
 // @supportURL   https://github.com/deevroman/better-osm-org/issues
@@ -135,6 +136,7 @@
 // @connect      panoramax.mapcomplete.org
 // @connect      panoramax.multimob.be
 // @connect      panoramax.liswu.me
+// @connect      panoramax.osm-hr.org
 // @connect      westnordost.de
 // @connect      streetcomplete.app
 // @comment      for downloading gps-tracks — osm stores tracks in AWS
@@ -218,6 +220,27 @@ if ((location.origin + location.pathname).startsWith("https://github.com/openstr
     setTimeout(tryAddWarnAboutScriptIntoOsmOrgRepo, 100)
     throw "skip better-osm-org run on GitHub"
 }
+
+function tryAddScriptInfo() {
+    if (document.querySelector(".better-osm-org-rich-textarea")) {
+        return
+    }
+    const textarea = document.querySelector('[class*="CreateIssueForm"] textarea')
+    if (!textarea) return
+    if (textarea.value.trim() !== "") return
+    textarea.value += `\n\n\nScript version: \`${GM_info.script.version}\`
+Script manager: \`${GM_info.scriptHandler}\`
+User Agent: \`${navigator.userAgent}\``
+    textarea.classList.add("better-osm-org-rich-textarea")
+    textarea.dispatchEvent(new Event("input", { bubbles: true }))
+}
+
+if ((location.origin + location.pathname).startsWith("https://github.com/deevroman/better-osm-org/issues/new")) {
+    setInterval(tryAddScriptInfo, 3000)
+    setTimeout(tryAddScriptInfo, 1000)
+    throw "skip better-osm-org run on GitHub"
+}
+
 
 if (location.search.includes("&kek")) {
     throw "better-osm-org disable via url param"
@@ -414,6 +437,9 @@ const OHM_OSM_REVERT_NAME = "ohm-revert"
 
 const osm_revert_origin = isOHMServer() ? OHM_OSM_REVERT : MAIN_OSM_REVERT
 const osm_revert_name = isOHMServer() ? OHM_OSM_REVERT_NAME : MAIN_OSM_REVERT_NAME
+
+const MAIN_PANORAMAX_DISCOVERY_SERVER = "https://api.panoramax.xyz"
+const panoramaxDiscoveryServer = MAIN_PANORAMAX_DISCOVERY_SERVER
 
 /**
  * @typedef {{
@@ -4410,6 +4436,35 @@ ${copyAnimationStyles}
         /* background: rgba(255, 0, 0, 0.3); */
         background: transparent;
     }
+    
+    .is-loading {
+      position: relative;
+      pointer-events: none;
+    }
+    
+    .is-loading {
+      position: relative;
+      pointer-events: none;
+    }
+    
+    .is-loading::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        light-dark(rgba(153,212,255,0.4), rgba(255,255,255,.4)),
+        transparent
+      );
+      animation: sweep 1s infinite;
+    }
+    
+    @keyframes sweep {
+      from { transform: translateX(-100%); }
+      to   { transform: translateX(100%); }
+    }
+
     `
 
 let styleForSidebarApplied = false
@@ -6198,7 +6253,9 @@ function addPOIMoverItem(measuringMenuItem) {
         if (!match) return
         const object_type = match[1]
         const object_id = match[2]
-        const auth = makeAuth()
+        if (osmEditAuth === null) {
+            osmEditAuth = makeAuth()
+        }
         if (!confirm("⚠️ move node?")) {
             return
         }
@@ -6206,7 +6263,7 @@ function addPOIMoverItem(measuringMenuItem) {
         const newLon = getMap().osm_contextmenu._$element.data("lng")
         console.log("Opening changeset")
         const rawObjectInfo = await (
-            await auth.fetch(osm_server.apiBase + object_type + "/" + object_id, {
+            await osmEditAuth.fetch(osm_server.apiBase + object_type + "/" + object_id, {
                 method: "GET",
                 prefix: false,
             })
@@ -6229,35 +6286,14 @@ function addPOIMoverItem(measuringMenuItem) {
         objectInfo.querySelector("node").setAttribute("lat", newLat)
         objectInfo.querySelector("node").setAttribute("lon", newLon)
 
-        const changesetTags = {
-            created_by: `better osm.org v${GM_info.script.version}`,
-            comment: "Moving node",
-        }
-
-        const changesetPayload = document.implementation.createDocument(null, "osm")
-        const cs = changesetPayload.createElement("changeset")
-        changesetPayload.documentElement.appendChild(cs)
-        tagsToXml(changesetPayload, cs, changesetTags)
-        const chPayloadStr = new XMLSerializer().serializeToString(changesetPayload)
-
-        const changesetId = await auth
-            .fetch(osm_server.apiBase + "changeset/create", {
-                method: "PUT",
-                prefix: false,
-                body: chPayloadStr,
-            })
-            .then(res => {
-                if (res.ok) return res.text()
-                throw new Error(res)
-            })
-        console.log(changesetId)
+        const changesetId = await openOsmChangeset("Moving node")
 
         try {
             objectInfo.children[0].children[0].setAttribute("changeset", changesetId)
 
             const objectInfoStr = new XMLSerializer().serializeToString(objectInfo).replace(/xmlns="[^"]+"/, "")
             console.log(objectInfoStr)
-            await auth
+            await osmEditAuth
                 .fetch(osm_server.apiBase + object_type + "/" + object_id, {
                     method: "PUT",
                     prefix: false,
@@ -6270,7 +6306,7 @@ function addPOIMoverItem(measuringMenuItem) {
                     throw new Error(text)
                 })
         } finally {
-            await auth.fetch(osm_server.apiBase + "changeset/" + changesetId + "/close", {
+            await osmEditAuth.fetch(osm_server.apiBase + "changeset/" + changesetId + "/close", {
                 method: "PUT",
                 prefix: false,
             })
@@ -6943,7 +6979,15 @@ const mapStylesDatabase = resourceCacher(githubMapStylesURL, "custom-vector-map-
 
 async function askCustomStyleUrl() {
     if (!initCustomFetch) {
-        alert("Try reload page page without cache Ctrl + F5.\nOr use Firefox with ViolentMonkey ;-)")
+        alert(
+            "Try reload page page without cache Ctrl + F5.\n" +
+                "Or:\n" +
+                "1. In TamperMonkey settings enable Advanced Config Mode\n" +
+                '2. In TamperMonkey settings change "Content Script API" to "UserScript API Dynamic"\n' +
+                "More info: https://c.osm.org/t/121670/208\n" +
+                "\n" +
+                "Or use Firefox with ViolentMonkey ;-)",
+        )
         return
     }
     if (document.querySelector(".vector-tiles-selector-popup")) {
@@ -7067,13 +7111,15 @@ async function askCustomStyleUrl() {
         }
         wrapper.append(urlInput)
 
-        input.onchange = async () => {
+        input.onchange = async e => {
+            if (!e.isTrusted) return
             if (input.checked && urlInput.value.trim() !== "") {
                 await applyCustomVectorMapStyle(urlInput.value, true)
             }
         }
 
         urlInput.onkeydown = async e => {
+            if (!e.isTrusted) return
             if (e.key === "Enter" && urlInput.value.trim() !== "") {
                 input.click()
                 await applyCustomVectorMapStyle(urlInput.value, true)
@@ -7252,7 +7298,8 @@ async function askCustomTileUrl() {
         }
         wrapper.append(urlInput)
 
-        input.onchange = async () => {
+        input.onchange = async e => {
+            if (!e.isTrusted) return
             if (input.checked && urlInput.value.trim() !== "") {
                 applyCustomLayer(urlInput.value, true)
                 switchTiles(currentTilesMode === MAPNIK_MODE)
@@ -7260,6 +7307,7 @@ async function askCustomTileUrl() {
         }
 
         urlInput.onkeydown = async e => {
+            if (!e.isTrusted) return
             if (e.key === "Enter" && urlInput.value.trim() !== "") {
                 input.click()
                 applyCustomLayer(urlInput.value, true)
@@ -7808,6 +7856,55 @@ function makeElementHistoryCompact(forceState = null) {
     document.querySelector(".compact-toggle-btn").innerHTML = shouldBeCompact ? expandModeSvg : compactModeSvg
 }
 
+function addPanoramaxPicIntoA(uuid, a, panoramaxServer) {
+    const imgSrc = `${panoramaxServer}/api/pictures/${uuid}/sd.jpg`
+    if (isSafari) {
+        fetchImageWithCache(imgSrc).then(async imgData => {
+            const img = document.createElement("img")
+            img.src = imgData
+            img.style.width = "100%"
+            a.appendChild(img)
+        })
+    } else {
+        const img = GM_addElement("img", {
+            src: imgSrc,
+            // crossorigin: "anonymous"
+        })
+        img.onerror = () => {
+            img.style.display = "none"
+        }
+        img.onload = () => {
+            img.style.width = "100%"
+        }
+        a.appendChild(img)
+    }
+    setTimeout(async () => {
+        const res = (
+            await externalFetchRetry({
+                url: `${panoramaxServer}/api/search?limit=1&ids=${uuid}`,
+                responseType: "json",
+            })
+        ).response
+        if (!res["error"] && res["features"].length > 0) {
+            a.onmouseenter = () => {
+                const lat = res["features"][0]["geometry"]["coordinates"][1]
+                const lon = res["features"][0]["geometry"]["coordinates"][0]
+                const raw_angle = res["features"][0]["properties"]["exif"]["Exif.GPSInfo.GPSImgDirection"]
+                const angle = raw_angle?.includes("/") ? raw_angle.split("/")[0] / raw_angle.split("/")[1] : parseFloat(raw_angle)
+
+                showActiveNodeMarker(lat, lon, "#0022ff", true)
+
+                if (angle) {
+                    drawRay(lat, lon, angle - 30, "#0022ff")
+                    drawRay(lat, lon, angle + 30, "#0022ff")
+                }
+            }
+        } else {
+            console.error(res)
+        }
+    })
+}
+
 // https://osm.org/node/12559772251
 // https://osm.org/node/10588878341
 // https://osm.org/way/1264114016
@@ -7826,59 +7923,21 @@ function makePanoramaxValue(elem) {
         const browseSection = elem?.parentElement?.parentElement?.parentElement?.parentElement?.parentElement
         const lat = browseSection?.querySelector(".latitude")?.textContent?.replace(",", ".")
         const lon = browseSection?.querySelector(".longitude")?.textContent?.replace(",", ".")
-        a.href = "https://api.panoramax.xyz/#focus=pic&pic=" + match.replaceAll("&amp;", "&") + (lat ? `&map=16/${lat}/${lon}` : "")
+        a.href = `${panoramaxDiscoveryServer}/#focus=pic&pic=` + match.replaceAll("&amp;", "&") + (lat ? `&map=16/${lat}/${lon}` : "")
         return a.outerHTML
     })
-    elem.querySelectorAll('a:not(.added-preview-img)[href^="https://api.panoramax.xyz/"]').forEach(a => {
+    elem.querySelectorAll(`a:not(.added-preview-img)[href^="${MAIN_PANORAMAX_DISCOVERY_SERVER}/"]`).forEach(a => {
         a.classList.add("added-preview-img")
-        const uuid = a.textContent.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/)
+        const uuid = a.textContent.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/)?.[0]
         if (!uuid) {
             return
         }
-        const imgSrc = `https://api.panoramax.xyz/api/pictures/${uuid}/sd.jpg`
-        if (isSafari) {
-            fetchImageWithCache(imgSrc).then(async imgData => {
-                const img = document.createElement("img")
-                img.src = imgData
-                img.style.width = "100%"
-                a.appendChild(img)
-            })
+        if (lastUploadedPanoramaxPicture?.uuid === uuid) {
+            console.log(lastUploadedPanoramaxPicture)
+            addPanoramaxPicIntoA(uuid, a, lastUploadedPanoramaxPicture.instance)
         } else {
-            const img = GM_addElement("img", {
-                src: imgSrc,
-                // crossorigin: "anonymous"
-            })
-            img.onerror = () => {
-                img.style.display = "none"
-            }
-            img.onload = () => {
-                img.style.width = "100%"
-            }
-            a.appendChild(img)
+            addPanoramaxPicIntoA(uuid, a, panoramaxDiscoveryServer)
         }
-        setTimeout(async () => {
-            const res = (
-                await externalFetchRetry({
-                    url: `https://api.panoramax.xyz/api/search?limit=1&ids=${uuid}`,
-                    responseType: "json",
-                })
-            ).response
-            if (!res["error"]) {
-                a.onmouseenter = () => {
-                    const lat = res["features"][0]["geometry"]["coordinates"][1]
-                    const lon = res["features"][0]["geometry"]["coordinates"][0]
-                    const raw_angle = res["features"][0]["properties"]["exif"]["Exif.GPSInfo.GPSImgDirection"]
-                    const angle = raw_angle?.includes("/") ? raw_angle.split("/")[0] / raw_angle.split("/")[1] : parseFloat(raw_angle)
-
-                    showActiveNodeMarker(lat, lon, "#0022ff", true)
-
-                    if (angle) {
-                        drawRay(lat, lon, angle - 30, "#0022ff")
-                        drawRay(lat, lon, angle + 30, "#0022ff")
-                    }
-                }
-            }
-        })
     })
     elem.onclick = e => {
         e.stopImmediatePropagation()
@@ -15599,6 +15658,294 @@ function setupChangesetQuickLook(path) {
 
 //</editor-fold>
 
+//<editor-fold desc="panoramax-upload" defaultstate="collapsed">
+
+async function getPanoramaxToken() {
+    const res = await externalFetch({
+        url: `${panoramaxInstance}/api/users/me/tokens`,
+        responseType: "json",
+    })
+    if (!res.response?.[0]?.links?.[0]?.href) {
+        alert("Please, login to Panoramax")
+        window.open(panoramaxInstance, "_blank")
+        return
+    }
+    const res1 = await externalFetch({
+        url: res.response[0].links[0].href,
+        responseType: "json",
+    })
+    console.log("Panoramax token obtained")
+    return res1.response.jwt_token
+}
+
+async function createUploadSet(apiUrl, token, title) {
+    const response = await externalFetch({
+        url: `${apiUrl}/api/upload_sets`,
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "User-Agent": `better osm.org v${GM_info.script.version}`,
+        },
+        data: JSON.stringify({
+            title: title,
+            estimated_nb_files: 1,
+        }),
+        responseType: "json",
+    })
+
+    if (response.status !== 200) {
+        throw new Error(`Failed to create upload set: HTTP ${response.status}\n\n${response.response?.details?.error}`)
+    }
+
+    const data = await response.response
+    return data.id || data.upload_set_id
+}
+
+async function uploadPhotoToSet(apiUrl, token, uploadSetId, file) {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const response = await externalFetch({
+        url: `${apiUrl}/api/upload_sets/${uploadSetId}/files`,
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        responseType: "json",
+        data: formData,
+    })
+
+    if (response.status < 200 || response.status >= 300) {
+        console.error(response)
+        throw new Error(`Photo upload failed, HTTP ${response.status}:\n\n${response.response?.details?.error}\n\nFull log in browser console (F12)`)
+    }
+
+    return await response.response
+}
+
+async function completeUploadSet(apiUrl, token, uploadSetId) {
+    const response = await externalFetch({
+        url: `${apiUrl}/api/upload_sets/${uploadSetId}/complete`,
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        responseType: "json",
+    })
+
+    if (response.status !== 200) {
+        throw new Error("Failed to complete upload set: " + response.status)
+    }
+
+    return await response.response
+}
+
+let panoramaxInstance = "https://panoramax.openstreetmap.fr"
+let lastUploadedPanoramaxPicture
+
+GM.getValue("panoramaxInstance").then(res => {
+    panoramaxInstance = res ?? "https://panoramax.openstreetmap.fr"
+})
+GM.getValue("lastUploadedPanoramaxPicture").then(res => {
+    if (res) {
+        lastUploadedPanoramaxPicture = JSON.parse(res)
+    }
+})
+
+async function uploadImage(token, file, title) {
+    const uploadSetId = await createUploadSet(panoramaxInstance, token, title)
+    console.log("Upload set created:", uploadSetId, "Uploading...")
+
+    const uploadRes = await uploadPhotoToSet(panoramaxInstance, token, uploadSetId, file)
+    console.log("Uploaded file:", uploadRes, "Finishing...")
+
+    try {
+        const completeRes = await completeUploadSet(panoramaxInstance, token, uploadSetId)
+        console.log("Upload set completed:", completeRes)
+    } catch (e) {}
+
+    return uploadRes.picture_id
+}
+
+async function openOsmChangeset(comment) {
+    const changesetTags = {
+        created_by: `better osm.org v${GM_info.script.version}`,
+        comment: comment,
+    }
+
+    const changesetPayload = document.implementation.createDocument(null, "osm")
+    const cs = changesetPayload.createElement("changeset")
+    changesetPayload.documentElement.appendChild(cs)
+    tagsToXml(changesetPayload, cs, changesetTags)
+    const chPayloadStr = new XMLSerializer().serializeToString(changesetPayload)
+
+    const changesetId = await osmEditAuth
+        .fetch(osm_server.apiBase + "changeset/create", {
+            method: "PUT",
+            prefix: false,
+            body: chPayloadStr,
+        })
+        .then(res => {
+            if (res.ok) return res.text()
+            throw new Error(res)
+        })
+    console.log("Open changeset", changesetId)
+    return changesetId
+}
+
+async function addPanoramaxTag(pictureId, object_type, object_id) {
+    const rawObjectInfo = await (
+        await osmEditAuth.fetch(osm_server.apiBase + object_type + "/" + object_id, {
+            method: "GET",
+            prefix: false,
+        })
+    ).text()
+    const objectInfo = new DOMParser().parseFromString(rawObjectInfo, "text/xml")
+    const newTag = objectInfo.createElement("tag")
+    newTag.setAttribute("k", "panoramax")
+    newTag.setAttribute("v", pictureId)
+    objectInfo.querySelector("tag").after(newTag)
+
+    const changesetId = await openOsmChangeset("Add Panoramax image")
+    try {
+        objectInfo.children[0].children[0].setAttribute("changeset", changesetId)
+
+        const objectInfoStr = new XMLSerializer().serializeToString(objectInfo).replace(/xmlns="[^"]+"/, "")
+        console.log(objectInfoStr)
+        await osmEditAuth
+            .fetch(osm_server.apiBase + object_type + "/" + object_id, {
+                method: "PUT",
+                prefix: false,
+                body: objectInfoStr,
+            })
+            .then(async res => {
+                const text = await res.text()
+                if (res.ok) return text
+                alert(text)
+                throw new Error(text)
+            })
+    } finally {
+        await osmEditAuth.fetch(osm_server.apiBase + "changeset/" + changesetId + "/close", {
+            method: "PUT",
+            prefix: false,
+        })
+    }
+}
+
+function addUploadPanoramaxBtn() {
+    if (!isDebug() && !isMobile) return
+    if (!location.pathname.match(/\/(node|way|relation)\/[0-9]+\/?$/)) {
+        return
+    }
+    if (document.querySelector(".upload-to-panoramax")) {
+        return
+    }
+    if (
+        !document.querySelector(':where(a[href^="https://wiki.openstreetmap.org/wiki/Key:shop"], a[href^="https://wiki.openstreetmap.org/wiki/Key:amenity"], a[href^="https://wiki.openstreetmap.org/wiki/Key:tourism"])')
+    ) {
+        return
+    }
+    if (document.querySelector('a[href^="https://wiki.openstreetmap.org/wiki/Key:panoramax"]')) {
+        return
+    }
+    const wrapper = document.createElement("div")
+    wrapper.style.setProperty("padding-bottom", "1px", "important")
+    const firstBlock = document.createElement("div")
+    const secondBlock = document.createElement("div")
+    secondBlock.style.paddingTop = "5px"
+    wrapper.appendChild(firstBlock)
+    wrapper.appendChild(secondBlock)
+
+    firstBlock.appendChild(document.createTextNode("Upload photo to Panoramax"))
+
+    const fileInput = document.createElement("input")
+    fileInput.type = "file"
+    if (!isMobile) {
+        fileInput.accept = "image/*"
+    }
+    fileInput.onchange = () => {
+        uploadImgBtn.style.removeProperty("display")
+        instanceInput.style.removeProperty("display")
+        instanceInput.value = panoramaxInstance
+    }
+    firstBlock.appendChild(fileInput)
+
+    const uploadImgBtn = document.createElement("button")
+    uploadImgBtn.style.all = "unset"
+    uploadImgBtn.style.cursor = "pointer"
+    uploadImgBtn.classList.add("upload-to-panoramax", "bi", "bi-upload")
+    uploadImgBtn.style.display = "none"
+    uploadImgBtn.style.paddingLeft = "10px"
+    uploadImgBtn.onclick = async () => {
+        if (osmEditAuth === null) {
+            osmEditAuth = makeAuth()
+        }
+        new URL(instanceInput.value)
+        void GM.setValue("panoramaxInstance", (panoramaxInstance = instanceInput.value))
+        if (!fileInput.files.length) {
+            return alert("Select file")
+        }
+        wrapper.classList.add("is-loading")
+        uploadImgBtn.style.display = "none"
+        const file = fileInput.files[0]
+        let metadata
+        if (file.type.startsWith("image/jpeg")) {
+            metadata = EXIF.readFromBinaryFile(await file.arrayBuffer())
+            console.log(metadata)
+            console.log(metadata.DateTime, metadata.GPSLatitude, metadata.GPSLongitude)
+        }
+        // TODO add client side validation
+        try {
+            const [, object_type, object_id] = location.pathname.match(/\/(node|way|relation)\/([0-9]+)/)
+            const token = await getPanoramaxToken()
+            if (!token) {
+                return
+            }
+            const uuid = await uploadImage(token, file, `Upload from better-osm-org for ${object_type}/${object_id}`)
+            await addPanoramaxTag(uuid, object_type, object_id)
+            await GM.setValue("lastUploadedPanoramaxPicture", JSON.stringify({ uuid: uuid, instance: panoramaxInstance }))
+            await sleep(1000)
+            location.reload()
+        } catch (err) {
+            console.error(err)
+            alert(`Error: ${err.message}\n\n` + metadata ? `Info from EXIF:\nDateTime: ${metadata.DateTime}\nLat: ${metadata.GPSLatitude}\nLon: ${metadata.GPSLongitude}`: "")
+        } finally {
+            wrapper.classList.remove("is-loading")
+        }
+    }
+
+    document.querySelector("#sidebar_content").appendChild(wrapper)
+
+    const datalistInstances = document.createElement("datalist")
+    datalistInstances.id = "panoramax-instances"
+    ;[
+        // prettier-ignore
+        "https://panoramax.openstreetmap.fr",
+        "https://panoramax.ign.fr",
+        "https://panoramax.mapcomplete.org",
+        "https://panoramax.multimob.be",
+        "https://panoramax.liswu.me",
+        "https://panoramax.osm-hr.org",
+    ].forEach(i => {
+        const opt = document.createElement("option")
+        opt.value = i
+        datalistInstances.appendChild(opt)
+    })
+
+    const instanceInput = document.createElement("input")
+    instanceInput.type = "url"
+    instanceInput.style.display = "none"
+    instanceInput.style.width = "300px"
+    instanceInput.setAttribute("list", "panoramax-instances")
+    secondBlock.appendChild(instanceInput)
+    secondBlock.appendChild(datalistInstances)
+    secondBlock.appendChild(uploadImgBtn)
+}
+
+//</editor-fold>
+
 //<editor-fold desc="object-version-page" defaultstate="collapsed">
 
 async function addHoverForNodesParents() {
@@ -16538,6 +16885,7 @@ function makeVersionPageBetter() {
     void addHoverForNodesParents()
     void addHoverForWayNodes()
     void addHoverForRelationMembers()
+    addUploadPanoramaxBtn()
     // костыль для KeyK/L и OSM tags editor
     document.querySelector("#sidebar_content > div:first-of-type")?.classList?.add("browse-section")
     document.querySelectorAll("#element_versions_list > div").forEach(i => i.classList.add("browse-section"))
@@ -19675,7 +20023,7 @@ function addDropdownStyle() {
         display: none !important;
     }
     
-    ul:not(.editing) .delete-link-btn {
+    ul:not(.editing) .delete-link-btn, ul:not(.editing) .move-up-link-btn, ul:not(.editing) .move-down-link-btn {
         display: none !important;
     }
     
@@ -19690,7 +20038,7 @@ function addDropdownStyle() {
         color: var(--bs-body-color) !important;
     }
     
-    .delete-link-btn {
+    .delete-link-btn, .move-up-link-btn, .move-down-link-btn {
         all: unset;
         cursor: pointer;
         margin-left: 4px;
@@ -19818,7 +20166,7 @@ let dropdownObserver = null
 
 async function loadCurrentLinksList() {
     const raw_data = await GM.getValue("user-external-links")
-    if (!raw_data/* || isDebug()*/) {
+    if (!raw_data /* || isDebug()*/) {
         externalLinks = externalLinksDatabase.filter(link => {
             if (!link.default) {
                 return false
@@ -19853,7 +20201,7 @@ function makeUrlFromTemplate(template) {
     })
 }
 
-function processExternalLink(link, firstRun, editorsListUl, isUserLink) {
+function processExternalLink(link, firstRun, editorsListUl, isUserLink, index) {
     if (link.name === "-" && firstRun) {
         const hr = document.createElement("hr")
         hr.style.margin = "0px"
@@ -19912,6 +20260,21 @@ function processExternalLink(link, firstRun, editorsListUl, isUserLink) {
             const deleteBtn = makeDeleteLinkBtn(link.name, newElem)
             deleteBtn.style.marginLeft = "auto"
             a.after(deleteBtn)
+
+            const moveDownBtn = makeMoveDownLinkBtn(link.name, newElem)
+            moveDownBtn.style.marginLeft = "auto"
+            a.after(moveDownBtn)
+            if (index + 1 === externalLinks.length) {
+                moveDownBtn.style.visibility = "hidden"
+            }
+
+            const moveUpBtn = makeMoveUpLinkBtn(link.name, newElem)
+            moveUpBtn.style.marginLeft = "auto"
+            a.after(moveUpBtn)
+            if (index === 0) {
+                moveUpBtn.style.visibility = "hidden"
+            }
+
             a.style.display = "flex"
             a.style.alignItems = "baseline"
         } else {
@@ -19946,6 +20309,11 @@ function processExternalLink(link, firstRun, editorsListUl, isUserLink) {
         if (resultBox && resultBox.textContent !== errorText) {
             resultBox.textContent = ` (${e})`
         }
+        newElem.onclick = e => {
+            if (newElem.classList.contains("invalid-external-link")) {
+                e.preventDefault()
+            }
+        }
         return
     } finally {
         if (!alreadyAdded) {
@@ -19963,7 +20331,7 @@ function processExternalLink(link, firstRun, editorsListUl, isUserLink) {
     }
     newElem.classList.remove("invalid-external-link")
     const a = newElem.querySelector("a")
-    if (a.href !== actualHref) {
+    if (a.href !== actualHref && !a.classList.contains("in-editing")) {
         a.href = actualHref
         a.title = link.template
         if (resultBox) {
@@ -19973,7 +20341,7 @@ function processExternalLink(link, firstRun, editorsListUl, isUserLink) {
 }
 
 function addUserExternalLinks(firstRun, editorsListUl) {
-    externalLinks.forEach(link => processExternalLink(link, firstRun, editorsListUl, true))
+    externalLinks.forEach((link, index) => processExternalLink(link, firstRun, editorsListUl, true, index))
 }
 
 function addOtherExternalLinks(editorsListUl) {
@@ -19989,6 +20357,52 @@ function addOtherExternalLinks(editorsListUl) {
         }
         processExternalLink(link, false, editorsListUl, false)
     })
+}
+
+function makeMoveUpLinkBtn(nameValue, addItemLi) {
+    const upBtn = document.createElement("button")
+    upBtn.classList.add("move-up-link-btn", "bi", "bi-chevron-up")
+    upBtn.title = "move up link"
+    upBtn.onclick = async e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const currentLinkIndex = externalLinks.findIndex(i => i.name === nameValue)
+        if (currentLinkIndex === -1) {
+            throw "not found" + nameValue
+        }
+        if (currentLinkIndex === 0) {
+            return
+        }
+        addItemLi.parentNode.insertBefore(addItemLi, addItemLi.previousElementSibling)
+        const tmp = externalLinks[currentLinkIndex]
+        externalLinks[currentLinkIndex] = externalLinks[currentLinkIndex - 1]
+        externalLinks[currentLinkIndex - 1] = tmp
+        await GM.setValue("user-external-links", JSON.stringify(externalLinks))
+    }
+    return upBtn
+}
+
+function makeMoveDownLinkBtn(nameValue, addItemLi) {
+    const downBtn = document.createElement("button")
+    downBtn.classList.add("move-down-link-btn", "bi", "bi-chevron-down")
+    downBtn.title = "move down link"
+    downBtn.onclick = async e => {
+        e.preventDefault()
+        e.stopPropagation()
+        const currentLinkIndex = externalLinks.findIndex(i => i.name === nameValue)
+        if (currentLinkIndex === -1) {
+            throw "not found" + nameValue
+        }
+        if (currentLinkIndex + 1 === externalLinks.length) {
+            return
+        }
+        addItemLi.parentNode.insertBefore(addItemLi.nextElementSibling, addItemLi)
+        const tmp = externalLinks[currentLinkIndex]
+        externalLinks[currentLinkIndex] = externalLinks[currentLinkIndex + 1]
+        externalLinks[currentLinkIndex + 1] = tmp
+        await GM.setValue("user-external-links", JSON.stringify(externalLinks))
+    }
+    return downBtn
 }
 
 function makeDeleteLinkBtn(nameValue, addItemLi) {
@@ -20014,12 +20428,12 @@ function makeExternalLinkEditable(targetLi, editorsListUl, nameValue = "", templ
     addItemA.classList.add("add-item-a")
     addItemA.onclick = e => {
         if (addItemA.classList.contains("in-editing")) {
-            e.preventDefault()
+            // e.preventDefault()
             e.stopPropagation()
             e.stopImmediatePropagation()
         }
     }
-    addItemA.href = ""
+    addItemA.removeAttribute("href")
     addItemLi.appendChild(addItemA)
 
     const deleteBtn = makeDeleteLinkBtn(nameValue, addItemLi)
@@ -21156,29 +21570,7 @@ function renderOSMGeoJSON(xml, options = {}) {
                         return tagsHint !== "" ? tagsHint.slice(0, 255) : `Update tags of ${object_type} ${object_id}`
                     }
 
-                    const changesetTags = {
-                        created_by: `better osm.org v${GM_info.script.version}`,
-                        comment: makeComment(object_type, object_id, prevTags, newTags),
-                    }
-
-                    const changesetPayload = document.implementation.createDocument(null, "osm")
-                    const cs = changesetPayload.createElement("changeset")
-                    changesetPayload.documentElement.appendChild(cs)
-                    tagsToXml(changesetPayload, cs, changesetTags)
-                    const chPayloadStr = new XMLSerializer().serializeToString(changesetPayload)
-
-                    const changesetId = await osmEditAuth
-                        .fetch(osm_server.apiBase + "changeset/create", {
-                            method: "PUT",
-                            prefix: false,
-                            body: chPayloadStr,
-                        })
-                        .then(res => {
-                            if (res.ok) return res.text()
-                            throw new Error(res)
-                        })
-                    console.log(changesetId)
-
+                    const changesetId = await openOsmChangeset(makeComment(object_type, object_id, prevTags, newTags))
                     try {
                         objectInfo.children[0].children[0].setAttribute("changeset", changesetId)
 
@@ -23047,7 +23439,7 @@ Press alt + J for open objects in Level0`
                     window.open("https://level0.osmz.ru/?" + new URLSearchParams({
                         url: [
                             Array.from(nodes).map(i => "n" + i).join(","),
-                            Array.from(ways).map(i => "w" + i).join(","),
+                            Array.from(ways).map(i => "w" + i + (e.shiftKey ? "!" : "")).join(","),
                             Array.from(relations).map(i => "r" + i).join(",")
                         ].join(",").replace(/,,/, ",").replace(/,$/, "").replace(/^,/, "")
                     }).toString())

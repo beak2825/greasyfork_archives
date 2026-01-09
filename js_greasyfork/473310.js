@@ -8,6 +8,7 @@
 // @match        *://*.duolingo.cn/*
 // @icon         https://www.duolingopro.net/static/favicons/duo/128/light/primary.png
 // @grant        GM_log
+// @antifeature  payment
 // @downloadURL https://update.greasyfork.org/scripts/473310/Duolingo%20PRO.user.js
 // @updateURL https://update.greasyfork.org/scripts/473310/Duolingo%20PRO.meta.js
 // ==/UserScript==

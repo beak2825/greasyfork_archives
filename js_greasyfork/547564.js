@@ -1,17 +1,15 @@
 // ==UserScript==
-// @name         Contentful Entry ID Extractor
+// @name         Contentful Entry ID Extractor (Class Inheritance)
 // @namespace    http://tampermonkey.net/
-// @version      1.7
-// @description  Adds a native-looking button to copy entry IDs on any Contentful space's entries list.
-// @author       Your Name or Handle
+// @version      3.0
+// @description  Inherits native Contentful classes for 100% color/style match.
+// @author       @lfernandezcall
 // @match        https://app.contentful.com/spaces/*
-// @homepageURL  https://github.com/YourUsername/contentful-id-extractor
-// @supportURL   https://github.com/YourUsername/contentful-id-extractor/issues
 // @grant        GM_addStyle
 // @grant        GM_setClipboard
-// @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/547564/Contentful%20Entry%20ID%20Extractor.user.js
-// @updateURL https://update.greasyfork.org/scripts/547564/Contentful%20Entry%20ID%20Extractor.meta.js
+// @license     MIT
+// @downloadURL https://update.greasyfork.org/scripts/547564/Contentful%20Entry%20ID%20Extractor%20%28Class%20Inheritance%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/547564/Contentful%20Entry%20ID%20Extractor%20%28Class%20Inheritance%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -20,57 +18,77 @@
     const BUTTON_ID = 'copy-entry-ids-btn';
     const targetUrlRegex = /^\/spaces\/[^/]+\/environments\/[^/]+\/views\/entries$/;
 
-    // Function to add the button to the page
     const addButton = () => {
         if (document.getElementById(BUTTON_ID)) return;
 
+        // Target the button group
+        const buttonGroup = document.querySelector('[data-test-id="cf-ui-button-group"]');
+        if (!buttonGroup) return;
+
+        // Target 'Add entry' to insert before it
+        const addEntryBtn = buttonGroup.querySelector('[data-test-id="create-entry-button-menu-trigger"]');
+        if (!addEntryBtn) return;
+
+        // Minimal style just for the wrapper gap and icon spacing
         GM_addStyle(`
-            #${BUTTON_ID} {
-                position: fixed; bottom: 20px; right: 20px; z-index: 9999;
-                align-items: center; justify-content: center; display: inline-flex;
-                background-color: var(--color-blue-base, #0059c8);
-                color: var(--color-white, #fff);
-                font-family: var(--font-stack-primary, sans-serif);
-                font-size: var(--font-size-m, 0.875rem);
-                font-weight: var(--font-weight-demi-bold, 600);
-                line-height: 1; padding: 12px 18px; border: 1px solid transparent;
-                border-radius: 6px; cursor: pointer;
-                transition: background-color 0.2s ease; white-space: nowrap;
+            #${BUTTON_ID}-wrapper {
+                display: flex;
+                align-items: center;
             }
-            #${BUTTON_ID}:hover { background-color: var(--color-blue-dark, #0041ab); }
-            #${BUTTON_ID}:active { background-color: var(--blue600, #0059c8); }
-            #${BUTTON_ID} > span {
-                display: inline-block; max-width: 100%; overflow: hidden;
-                text-overflow: ellipsis; vertical-align: middle;
+            #${BUTTON_ID} svg {
+                margin-right: 0.5rem;
+                flex-shrink: 0;
             }
         `);
 
+        // Create wrapper using the native span structure
+        const wrapper = document.createElement('span');
+        wrapper.id = `${BUTTON_ID}-wrapper`;
+        wrapper.className = 'css-79elbk';
+
+        // Create the button using the NATIVE class
         const copyButton = document.createElement('button');
         copyButton.id = BUTTON_ID;
         copyButton.type = 'button';
+        copyButton.className = 'css-1odbk7n'; // Native button class
 
-        const buttonTextSpan = document.createElement('span');
-        buttonTextSpan.textContent = '📋 Copy Entry IDs';
-        copyButton.appendChild(buttonTextSpan);
+        // Create the text span using the NATIVE class
+        copyButton.innerHTML = `
+            <span class="css-3u52eb">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 256 256">
+                    <path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path>
+                </svg>
+            </span>
+            <span class="css-40g50j">Copy IDs</span>
+        `;
 
-        document.body.appendChild(copyButton);
+        wrapper.appendChild(copyButton);
 
-        copyButton.addEventListener('click', () => {
+        // Insert 'Copy IDs' before 'Add entry'
+        buttonGroup.insertBefore(wrapper, addEntryBtn);
+
+        // Click Logic
+        copyButton.addEventListener('click', (e) => {
+            e.preventDefault();
             const links = document.querySelectorAll('tr[data-test-id="entry-row"] td[data-test-id="name"] a');
-            if (links.length === 0) {
-                alert('No entry IDs found on the page.');
-                return;
-            }
-            // **FIXED LINE**
-            const ids = Array.from(links).map(link => link.getAttribute('href').split('/').pop());
-            const idString = ids.join('\n');
-            GM_setClipboard(idString, 'text');
-            alert(`${ids.length} entry IDs copied to clipboard!`);
+            if (links.length === 0) return;
+
+            const ids = Array.from(links).map(link => {
+                const href = link.getAttribute('href');
+                return href ? href.split('/').pop() : '';
+            }).filter(id => id !== '');
+
+            GM_setClipboard(ids.join('\n'), 'text');
+
+            // Feedback
+            const textSpan = copyButton.querySelector('.css-40g50j');
+            textSpan.textContent = 'Copied!';
+            setTimeout(() => { textSpan.textContent = 'Copy IDs'; }, 1500);
         });
     };
 
     const removeButton = () => {
-        const button = document.getElementById(BUTTON_ID);
+        const button = document.getElementById(`${BUTTON_ID}-wrapper`);
         if (button) button.remove();
     };
 
@@ -84,7 +102,5 @@
 
     const observer = new MutationObserver(toggleButtonVisibility);
     observer.observe(document.body, { childList: true, subtree: true });
-
     toggleButtonVisibility();
-
 })();

@@ -1,9 +1,23 @@
 // ==UserScript==
 // @name         Terabox Premium Unlocker
 // @namespace    terabox.lovedolove
-// @version      1.0.3
+// @version      1.0.4
 // @description  Enables all VIP (Premium) features on Terabox by simulating an active premium membership.
-// @match        https://dm.terabox.com/*
+// @match        *://www.terabox.com/*
+// @match        *://terabox.com/*
+// @match        *://dm.terabox.com/*
+// @match        *://*.terabox.com/*
+// @match        *://*.teraboxapp.com/*
+// @match        *://*.terabox.link/*
+// @match        *://*.1024tera.com/*
+// @match        *://*.momerybox.com/*
+// @match        *://*.nephobox.com/*
+// @match        *://*.freeterabox.com/*
+// @match        *://*.yartera.com/*
+// @match        *://*.4funbox.com/*
+// @match        *://*.mirrobox.com/*
+// @match        *://*.gibibox.com/*
+// @match        *://*.tibibox.com/*
 // @require      https://update.greasyfork.org/scripts/455943/1270016/ajaxHooker.js
 // @icon         https://greasyfork.s3.us-east-2.amazonaws.com/vtcn761um75q267xs2zgfsa9wlig
 // @homepage     https://greasyfork.org/en/scripts/543870-terabox-premium-unlocker
@@ -17,6 +31,18 @@
 /* global ajaxHooker*/
 (function () {
   "use strict";
+
+  // Auto-redirect to www.terabox.com from alternative domains
+  const validDomains = ["www.terabox.com", "terabox.com", "dm.terabox.com"];
+  const currentHostname = location.hostname;
+
+  if (!validDomains.includes(currentHostname)) {
+    const url = new URL(location.href);
+    url.protocol = "https:";
+    url.hostname = "www.terabox.com";
+    location.replace(url.href);
+    return; // Stop execution after redirect
+  }
 
   // Hooking AJAX request to unlock premium
   ajaxHooker.hook((request) => {

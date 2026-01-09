@@ -11,7 +11,7 @@
 // @name:zh-SG   OPGG界面优化与交互优化
 // @name:zh-TW   OPGG 介面優化與互動優化
 // @namespace    http://tampermonkey.net/
-// @version      2.0.1
+// @version      2.0.2
 // @description  OPGG的英雄分析页面和游戏模式页面的元素排版优化、英雄分析页面点击英雄名字链接跳转方式改为'新建标签页打开'
 // @description:en     Optimize the layout of elements on OPGG’s Champions page and Game modes page, and change the champion name links on the Champions page so they open in a new tab.
 // @description:en-GB  Optimize the layout of elements on OPGG’s Champions page and Game modes page, and change the champion name links on the Champions page so they open in a new tab.
@@ -119,19 +119,34 @@
     }
 
     // ==========================================
-    // 4. 点击拦截逻辑 (Event Hot Path)
+    // 4. 点击拦截逻辑 (Event Hot Path) - 已修复筛选栏误触问题
     // ==========================================
     function handleClick(e) {
-        // 【性能关键】快速检查：利用缓存变量判断。
-        // 如果当前不是 champions 页面，直接结束函数，不进行任何 DOM 遍历。
+        // 1. 性能优化：非英雄页面直接退出
         if (_currentType !== 'champions') return;
 
-        // 只有确定在 champions 页面，才开始查找 DOM
-        // closest 是原生 C++ 实现，速度很快，但能省则省
+        // 2. 查找最近的链接元素
         const link = e.target.closest('a');
         if (!link || !link.href) return;
 
-        // 检查父级容器：精准匹配 class
+        // =========================================================
+        // 【关键修复】 排除位置筛选栏 (Position Filter)
+        // =========================================================
+        // 筛选按钮通常是 /champions?position=xxx 或者 /champions
+        // 真正的英雄详情页通常是 /champions/aatrox/build...
+        // 逻辑：如果 URL 中不包含具体的英雄名（路径太短）或者包含 position 参数，则认为是筛选按钮，放行。
+
+        const urlObj = new URL(link.href);
+        const isPositionFilter = urlObj.searchParams.has('position'); // 检查是否有 ?position=top 等参数
+        const isBasePage = urlObj.pathname === '/champions' || urlObj.pathname === '/champions/'; // 检查是否只是点了“全部”
+
+        // 如果是筛选按钮，或者是基础页面链接，直接忽略，不执行新标签页逻辑
+        if (isPositionFilter || isBasePage) return;
+
+        // =========================================================
+
+        // 3. 检查是否在特定的布局容器中 (原脚本逻辑，作为辅助检查)
+        // 注意：虽然筛选栏也符合这个 class，但上面的 URL 检查已经把它排除了
         const targetContainer = link.closest('.flex.flex-row-reverse.gap-2');
 
         if (targetContainer) {

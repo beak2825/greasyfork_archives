@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         New Userscript
 // @namespace    http://tampermonkey.net/
-// @version      1.7
+// @version      1.9
 // @description  This makes HRMS more user friendly and easy to use
 // @author       You
 // @match        https://hrms.indianrail.gov.in/HRMS/*
@@ -146,38 +146,40 @@
     }
 
 	else if (currentUrl === "https://hrms.indianrail.gov.in/HRMS/groupb-my-inbox/groupb-flow") {
-
+                exit();
 		setTimeout(function() {
 			if($($("#remarksHistoryTable tbody tr td")[0]).text() == "1") window.location.assign("https://hrms.indianrail.gov.in/HRMS/groupb-my-inbox");
-			$("select#action").val(1).trigger('change'); 
-			$("textarea#remarks").val("Examine");
-			var dept = $("#applicationBaiscDetailTable tbody tr td:nth-child(9)").text();
-			if (dept.indexOf("OPERATING") == 0) {
-				var chos = 'DSIOGM';
-			}
-			else if (dept.indexOf("COMMERCIAL") == 0) {
-				var chos = 'YCQDBU';
-			}
+			else {
+				$("select#action").val(1).trigger('change'); 
+				$("textarea#remarks").val("Examine");
+				var dept = $("#applicationBaiscDetailTable tbody tr td:nth-child(9)").text();
+				if (dept.indexOf("OPERATING") == 0) {
+					var chos = 'DSIOGM';
+				}
+				else if (dept.indexOf("COMMERCIAL") == 0) {
+					var chos = 'YCQDBU';
+				}
 
-			else if (dept.indexOf("ELECTRICAL") == 0) {
-				var chos = 'GRUUNU';
-			}
-			else if (dept.indexOf("MECHANICAL") == 0) {
-				var chos = 'MJBMPA';
-			}
+				else if (dept.indexOf("ELECTRICAL") == 0) {
+					var chos = 'GRUUNU';
+				}
+				else if (dept.indexOf("MECHANICAL") == 0) {
+					var chos = 'MJBMPA';
+				}
 
-			$('#forwardTo').append($('<option>', {value:chos})); 
-			$("#forwardTo").val(chos);
-					setTimeout(function() {
-				$("#submitApplicationBtn").click();
-					}, 1000);
-			}, 1000);
+				$('#forwardTo').append($('<option>', {value:chos})); 
+				$("#forwardTo").val(chos);
+						setTimeout(function() {
+					$("#submitApplicationBtn").click();
+						}, 1000);
+			}
+		}, 1000);
 
 
 	}
 
         else if (currentUrl.indexOf("https://hrms.indianrail.gov.in/HRMS/groupb-my-inbox") == 0) {
-
+                exit();
 		setTimeout(function() {
 			$("#groupBPendingAppnListTable tr td:last-child a")[Math.floor(Math.random() * $("#groupBPendingAppnListTable tr").length)].click();
 		}, 1000);
@@ -366,6 +368,10 @@
     window.delay = function (ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
+
+	window.exit = function () {
+		throw new Error('This is not an error. This is just to abort javascript');
+	} 
 });
 
 

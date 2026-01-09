@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name        Youtube seek buttons
-// @match       https://www.youtube.com/watch*
+// @name        Youtube Seek Buttons
+// @match       https://www.youtube.com/*
 // @grant       none
-// @version     1.1
+// @version     1.2
 // @author      Duki
 // @description Add backward/forward buttons to the player bar
 // @license     Unlicense
 // @namespace   https://greasyfork.org/users/1412820
-// @downloadURL https://update.greasyfork.org/scripts/560017/Youtube%20seek%20buttons.user.js
-// @updateURL https://update.greasyfork.org/scripts/560017/Youtube%20seek%20buttons.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560017/Youtube%20Seek%20Buttons.user.js
+// @updateURL https://update.greasyfork.org/scripts/560017/Youtube%20Seek%20Buttons.meta.js
 // ==/UserScript==
 
 const skips = [0, 1, 5, 10];
@@ -28,7 +28,7 @@ style.innerHTML = `
 
     #seek-button:hover {
         /* nested trick to select parent, see https://youtu.be/hiwvjsmD2iY?t=375 */
-        :has(&) #seek-container {
+        :has(&) #seek-container { 
             display: flex;
         }
     }

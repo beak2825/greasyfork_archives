@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name          Magnet Link to Real-Debrid
-// @version       2.8.0
+// @version       2.8.1
 // @description   Automatically send magnet links to Real-Debrid
 // @author        Journey Over
 // @license       MIT
@@ -225,6 +225,10 @@
               if (response.status === 204 || !response.responseText) return resolve({});
               try {
                 const parsed = JSON.parse(response.responseText.trim());
+                logger.debug('[Real-Debrid API] Parsed response:', parsed);
+                if (parsed.error) {
+                  return reject(new RealDebridError(parsed.error, response.status, parsed.error_code));
+                }
                 return resolve(parsed);
               } catch (error) {
                 logger.error('[Real-Debrid API] Failed to parse JSON response', error);
@@ -454,7 +458,7 @@
 
       const addResult = await this.#realDebridApi.addMagnet(magnetLink);
       if (!addResult || typeof addResult.id === 'undefined') {
-        throw new RealDebridError('Failed to add magnet');
+        throw new RealDebridError(`Failed to add magnet: ${JSON.stringify(addResult)}`);
       }
       const torrentId = addResult.id;
 

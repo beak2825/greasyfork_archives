@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Bypass Paywalls Clean - en
-// @version         4.2.8.1
+// @version         4.2.8.4
 // @description     Bypass Paywalls of news sites
 // @author          magnolia1234
 // @homepageURL     https://gitflic.ru/project/magnolia1234/bypass-paywalls-clean-filters
@@ -1700,30 +1700,37 @@ else if (matchDomain('decanter.com')) {
 }
 
 else if (matchDomain('fnlondon.com')) {
-  func_post = function () {
-    if (mobile) {
-      let lazy_images = document.querySelectorAll('picture > img[loading="lazy"][style]');
-      for (let elem of lazy_images) {
-        elem.style = 'width: 95%;';
-        elem.parentNode.removeAttribute('style');
+  let paywall = document.querySelector('div#cx-snippet');
+  if (paywall) {
+    removeDOMElement(paywall);
+    window.setTimeout(function () {
+      let article_sel = 'article section';
+      let article = document.querySelector(article_sel);
+      if (article) {
+        addStyle(article_sel + ' p {margin: 20px 0px !important;}');
+        let article_id_dom = document.querySelector('head > meta[name="article.id"][content]');
+        if (article_id_dom) {
+          let article_id = article_id_dom.content;
+          let url_src = 'https://fn.djmedia.djservices.io/apps/finnews/theaters/top-stories?screen_ids=' + article_id;
+          let x_access_token = cs_param['x-access-token'] || "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJBVVRIX1BIUkFTRV9QUk9EX0lPUyI6IlZlRXRaemRIaGF4bzhKRWpzaHlEIn0.bxWGVMaft1RN0_qWAnzoNBLx12sc0Jt4rLBaoG5n08AQTS9RibwlJlZrqUca_tm0lSCwl3Z1ehJcVepVH_YcNgRJsujt49JVFSGBO8B69zFDERS05x2RM_n0k8Jg9cyErhfsgWTsb8ObR6iRhHmw702_VcEzJrmdXwq44Bw3NgkBPOgIAZn37SA7hx__gvd8Hdxd5LLgZwxXTG1kWFW4S--vf4CxUt-uEY94m1VqaUyyMTEMvXTmktS2wReBH8mawDvBdyBDkQrPx7oaFP1zq4h-B1mQCj_wMRfR-QUls6BTpBPQUjO02FaTf-2RbHzAYn3xTpmxs0GE12iD4QBSbg";
+          getExtFetch(url_src, '', {"app-identifier": "com.news.screens", "device-type": "phone", "x-access-token": x_access_token}, fix_dowjones_fetch, data_ext_fetch_id++, [article]);
+        }
       }
-    }
+    }, 1000);
   }
-  let url = window.location.href;
-  getArchive(url, 'div[data-testid="articleSignInSubscribeWrapper"]', '', 'article');
-  let fade = 'div#cx-snippet';
-  hideDOMStyle(fade);
   function fnlondon_main(node) {
     window.setTimeout(function () {
       let signin_links = node.querySelectorAll('a[href^="https://www.fnlondon.com/client/login?target="]');
       for (let elem of signin_links) {
-        elem.href = '#';//elem.href.split('target=')[1].split('&')[0];
+        elem.href = '#'; //decodeURIComponent(elem.href.split('target=')[1].split('&')[0]);
         elem.innerText = 'Open';
         elem.addEventListener('click', function () { window.location.reload(); });
       }
     }, 500);
   }
   waitDOMElement('div[id^="continuous_article_"]', 'DIV', fnlondon_main, true);
+  let ads = 'div.grid__rail_top';
+  hideDOMStyle(ads);
 }
 
 else if (matchDomain('ft.com')) {
@@ -2404,9 +2411,8 @@ else if (matchDomain('barrons.com')) {
     elem.innerText = 'Open';
     elem.target = '_top';
   }
-  let ads = document.querySelectorAll('div[class] > div.uds-ad-container');
-  for (let ad of ads)
-    hideDOMElement(ad.parentNode);
+  let ads = 'div[class]:has(> div.uds-ad-container)';
+  hideDOMStyle(ads);
 }
 
 else if (matchDomain('benzinga.com')) {
@@ -3074,7 +3080,7 @@ else if (matchDomain('economictimes.indiatimes.com')) {
     let content = document.querySelector('div.content1, div.artText');
     let full_text = document.querySelector('div.paywall.p1');
     if (content && full_text) {
-      if (!(full_text.innerText.includes('!function()') && full_text.innerText.includes('datawrapper-height')))
+      if (!full_text.innerText.includes('["datawrapper-height"]'))
         content.innerText = full_text.innerText;
       else {
         let amphtml = document.querySelector('head > link[rel="amphtml"]');
@@ -3604,6 +3610,22 @@ else if (matchDomain('interestingengineering.com')) {
   addStyle('body {overflow: auto !important; position: relative !important; top: unset !important;}');
   let banners = 'main > div[class*="t-hidden"], div.t-bg-black';
   hideDOMStyle(banners);
+}
+
+else if (matchDomain('investors.com')) {
+  func_post = function () {
+    let videos = document.querySelectorAll('div.jwp-placement[data-jw-video_url]');
+    for (let video of videos) {
+      let video_new = document.createElement('video');
+      video_new.src = video.getAttribute('data-jw-video_url');
+      video_new.setAttribute('controls', '');
+      video_new.style = 'width: 100%;';
+      video.parentNode.replaceChild(video_new, video);
+    }
+  }
+  getJsonUrl('div.investors-paywall-overlay', '', 'div.investors-paywall-excerpt');
+  let ads = 'div.ads, div.headerAds';
+  hideDOMStyle(ads);
 }
 
 else if (matchDomain('ipolitics.ca')) {
@@ -5738,7 +5760,7 @@ else if (matchDomain(ke_nation_media_domains)) {
   hideDOMStyle(banners);
 }
 
-else if ((domain = matchDomain(usa_gannett_domains)) || document.querySelector('head > link[href*=".gannettdigital.com/"], head > link[href*=".gannett-cdn.com/"]')) {
+else if ((domain = matchDomain(usa_gannett_domains)) || document.querySelector('head > link[href*="/gannett_net.js"], footer a[href^="https://www.gannett.com"]')) {
   if (!domain)
     domain = window.location.hostname.replace(/^(www|amp|eu)\./, '');
   setCookie('firefly_akamai_meter', '', domain, '/', 0);
@@ -5840,7 +5862,7 @@ else if (matchDomain(usa_mcc_domains) || document.querySelector('head > link[hre
       }
     }, 1000);
   }
-  let ads = 'div[data-type="ad"], div.vf-promo, div#ymovrly';
+  let ads = 'div[data-type="ad"], div.vf-promo, div#ymovrly, div.ad__slot--wrapper, connatix-video-ad, px-sellwild';
   hideDOMStyle(ads);
 }
 
@@ -5991,12 +6013,40 @@ function fix_dowjones_fetch(url_src, data, article) {
           if (par_class)
             elem.className = par_class;
           if (par.type === 'body') {
-            if (par.body && par.styleID.match(/(default|bodyFrame)/)) {
+            if (par.body && par.styleID.match(/(default|bodyFrame|article-body)/)) {
               if (body_first && intro) {
                 elem = intro;
                 body_first = false;
-              } else
-                elem.innerText = par.body.text.replace(/\s_/g, '');
+              } else if (par.body.text) {
+                if (par.body.additions) {
+                  let items = par.body.additions.filter(x => x.type === 'link' && x.value && x.hasOwnProperty('rangeStart') && x.rangeLength);
+                  if (items.length) {
+                    function addLink(item, body_part, start_index) {
+                      item.rangeStart = item.rangeStart - start_index;
+                      let start = body_part.substring(0, item.rangeStart);
+                      let middle = body_part.substring(item.rangeStart, item.rangeStart + item.rangeLength);
+                      let end = body_part.substring(item.rangeStart + item.rangeLength);
+                      let sub_elem = document.createElement('a');
+                      sub_elem.href = item.value;
+                      sub_elem.innerText = middle;
+                      sub_elem.style = 'text-decoration: underline;';
+                      elem.append(document.createTextNode(start.replace(/\s_/g, '')), sub_elem, document.createTextNode(end.replace(/\s_/g, '')));
+                    }
+                    let start_index = end_index = 0;
+                    for (let item of items) {
+                      end_index = start_index + item.rangeStart + item.rangeLength;
+                      let body_part = par.body.text.substring(start_index, end_index);
+                      addLink(item, body_part, start_index);
+                      start_index = end_index;
+                    }
+                    if (end_index) {
+                      elem.appendChild(document.createTextNode(par.body.text.substring(end_index).replace(/\s_/g, '')));
+                    }
+                  } else
+                    elem.innerText = par.body.text.replace(/\s_/g, '');
+                } else
+                  elem.innerText = par.body.text.replace(/\s_/g, '');
+              }
             }
           } else if (par.type === 'listelement') {
             if (par.body)
@@ -6061,7 +6111,7 @@ function fix_dowjones_fetch(url_src, data, article) {
                sub_elem.style = 'width: 100%; height: 400px;';
                elem.appendChild(sub_elem);
              }
-          } else if (!['ad', 'audioplayer', 'authorBios', 'byline', 'caption', 'columnistHeader', 'divider', 'inlineComment', 'paywall-promotion', 'pullquotebody', 'scrollinggallery', 'sectionTitle', 'tags', 'title', 'verticalContainer', 'webview'].includes(par.type)) {
+          } else if (!['ad', 'audioplayer', 'authorBios', 'byline', 'caption', 'columnistHeader', 'divider', 'inlineComment', 'paywall-promotion', 'pullquote', 'pullquotebody', 'scrollinggallery', 'sectionTitle', 'tagCloud', 'tags', 'title', 'verticalContainer', 'webview'].includes(par.type)) {
             console.log(par);
           }
           if (elem.hasChildNodes())

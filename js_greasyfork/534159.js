@@ -31,7 +31,7 @@
 // @run-at       document-end
 // @supportURL   https://github.com/johnsyweb/tampermonkey-parkrun/issues/
 // @tag          parkrun
-// @version      1.0.61
+// @version      1.0.63
 // @downloadURL https://update.greasyfork.org/scripts/534159/parkrun%20Volunteer%20Days%20Display.user.js
 // @updateURL https://update.greasyfork.org/scripts/534159/parkrun%20Volunteer%20Days%20Display.meta.js
 // ==/UserScript==

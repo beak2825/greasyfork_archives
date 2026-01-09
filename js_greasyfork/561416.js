@@ -83,7 +83,7 @@
 // @description:zh-TW   結合低音增強、1000%音量、智能廣告攔截加速、Picture-in-Picture和Shorts支持
 
 // @namespace    http://tampermonkey.net/
-// @version      1.5.1
+// @version      1.5.2
 // @author       Pascal
 // @match        https://www.youtube.com/*
 // @icon         https://www.youtube.com/s/desktop/ee47b5e0/img/logos/favicon_144x144.png
@@ -384,41 +384,92 @@
         userPaused = false;
     }, true);
 
-    // --- MAIN LOOP ---
+   // --- MAIN LOOP ---
     function runChecks() {
+        applyPremiumLogo(); // Jetzt global aktiv
         handleAds();
-        applyPremiumLogo();
 
-        const video = document.querySelector('video');
         const isShorts = window.location.pathname.startsWith('/shorts');
         const isWatch = window.location.pathname.startsWith('/watch');
+        const video = document.querySelector('video');
         const $sSlider = document.querySelector('.' + shortsSliderClassname);
 
-        // --- SMART ANTI-PAUSE ---
-        if (video && video.paused && !video.ended && !isAdActive) {
-            const confirmDialog = document.querySelector('yt-confirm-dialog-renderer, ytd-enforcement-message-view-model, .yt-player-error-message-renderer');
-
-            if (confirmDialog || (document.hidden && !userPaused)) {
-                if (confirmDialog) confirmDialog.remove();
-                video.play().catch(() => { /* Autoplay restriction from browser */ });
-            }
+        if (isWatch) {
+            if (!document.getElementById('dwnldBtn')) setupDownloader();
+            if (!document.querySelector('.' + tripleControlClass)) setupUI();
         }
 
-        if (isWatch) { setupUI(); setupDownloader(); }
-        if (isShorts) { setupShortsUI(); if ($sSlider) $sSlider.style.display = 'block'; }
-        else if ($sSlider) { $sSlider.style.display = 'none'; }
+        if (isShorts) {
+            setupShortsUI();
+            if ($sSlider) $sSlider.style.display = 'block';
+        } else if ($sSlider) {
+            $sSlider.style.display = 'none';
+        }
+
+        if (video && video.paused && !video.ended && !isAdActive) {
+            const confirmDialog = document.querySelector('yt-confirm-dialog-renderer, ytd-enforcement-message-view-model, .yt-player-error-message-renderer');
+            if (confirmDialog) {
+                confirmDialog.remove();
+                video.play().catch(() => {});
+            }
+        }
     }
 
     setInterval(runChecks, SETTINGS.checkInterval);
-    const observer = new MutationObserver(runChecks);
-    const startObserver = setInterval(() => {
-        if (document.body) {
-            observer.observe(document.body, { childList: true, subtree: true });
-            clearInterval(startObserver);
-        }
-    }, 500);
 
-const togglePiP = async () => {
+    // RADIKALER FIX: Wir machen ALLES über der Suche "unsichtbar" für Klicks
+    GM_addStyle(`
+        /* Suche und Header radikal nach vorne holen */
+        ytd-masthead, #masthead-container {
+            z-index: 50000 !important;
+            pointer-events: auto !important;
+        }
+
+        /* Das Suchfeld selbst muss ALLES überlagern */
+        #search-form, yt-searchbox, .ytSearchboxComponentInputBox, input.ytSearchboxComponentInput {
+            z-index: 60000 !important;
+            pointer-events: auto !important;
+            position: relative !important;
+        }
+
+        /* Overlays, die YouTube oft drüberlegt, deaktivieren */
+        .ytp-ad-overlay-container,
+        tp-yt-iron-overlay-backdrop,
+        #interaction-overlay {
+            display: none !important;
+            pointer-events: none !important;
+        }
+    `);
+
+    // GHOST-CLICK: Schickt Klicks durch Overlays direkt ans Suchfeld
+    document.addEventListener('mousedown', (e) => {
+        // Wir prüfen, ob der Klick an der POSITION des Suchfelds passiert ist
+        const searchBox = document.querySelector('input.ytSearchboxComponentInput, #search-form input');
+        if (!searchBox) return;
+
+        const rect = searchBox.getBoundingClientRect();
+        const isInSearchX = e.clientX >= rect.left && e.clientX <= rect.right;
+        const isInSearchY = e.clientY >= rect.top && e.clientY <= rect.bottom;
+
+        if (isInSearchX && isInSearchY) {
+            // Wenn wir hier sind, hat der User auf das Suchfeld geklickt,
+            // aber vielleicht hat ein Overlay den Klick abgefangen.
+            searchBox.focus();
+            e.stopPropagation();
+        }
+    }, true);
+
+    document.addEventListener('keydown', (e) => {
+        const isSearchField = e.target.tagName === 'INPUT' || e.target.closest('yt-searchbox');
+        if (isSearchField) return;
+        if (e.key.toLowerCase() === 'p') {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            if (typeof togglePiP === "function") togglePiP();
+        }
+    }, { capture: true });
+
+    const togglePiP = async () => {
         const video = document.querySelector('video');
         if (!video) return;
         try {
@@ -431,48 +482,6 @@ const togglePiP = async () => {
         } catch (error) { console.error('[PiP] Fehler:', error); }
     };
 
-    // 1. CSS: Schaltet Werbung aus UND macht die Suche klickbar
-    GM_addStyle(`
-        /* Suche nach vorne bringen und Klicks erzwingen */
-        yt-searchbox, .ytSearchboxComponentHost, #masthead-container {
-            z-index: 9999 !important;
-            pointer-events: auto !important;
-            visibility: visible !important;
-            display: flex !important;
-        }
-        /* Werbung sauber ausblenden */
-        ytd-ad-slot-renderer, #masthead-ad, .ytp-ad-overlay-container, #player-ads, ytd-ad-redirection-renderer {
-            display: none !important;
-        }
-    `);
-
-    // 2. KEYBOARD: Verhindert, dass Hotkeys (P) das Tippen stören
-    document.addEventListener('keydown', (e) => {
-        const target = e.target;
-        const isSearchField =
-            target.classList.contains('ytSearchboxComponentInput') ||
-            target.closest('yt-searchbox') !== null ||
-            target.tagName === 'INPUT' ||
-            target.tagName === 'TEXTAREA' ||
-            target.isContentEditable;
-
-        if (isSearchField) return; // Skript stoppt hier, wenn du im Suchfeld bist
-
-        if (e.key.toLowerCase() === 'p') {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            if (typeof togglePiP === "function") togglePiP();
-        }
-    }, { capture: true });
-
-    // 3. CLICK: Stellt sicher, dass die Maus das Suchfeld "trifft"
-    document.addEventListener('mousedown', (e) => {
-        if (e.target.closest('yt-searchbox')) {
-            e.stopPropagation(); // Verhindert, dass andere YouTube-Skripte den Klick blockieren
-        }
-    }, true);
-
-    // Cleanup on Tab Close
     window.addEventListener('beforeunload', () => { if(audioCtx) audioCtx.close(); });
 
     GM_addStyle(`

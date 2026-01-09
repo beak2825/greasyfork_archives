@@ -208,6 +208,28 @@
     throw new Error('not string')
   }
 
+  function createDelayedNextClicker(delayMinMs = 1000, delayMaxMs = 2000) {
+    let timeoutId = null;
+
+    return function scheduleClickNext() {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+
+      timeoutId = setTimeout(() => {
+        const nextBtn = Array.from(document.querySelectorAll('.btn.btn-main')).find(
+          btn => btn.textContent.trim().toLowerCase() === 'next'
+        );
+        if (nextBtn) {
+          console.log('Clicking Next button after delay');
+          nextBtn.click();
+        }
+        timeoutId = null;
+      }, delayMinMs + Math.random() * (delayMaxMs - delayMinMs));
+    };
+  }
+
   (async () => {
     // Load React, ReactDOM
     await Promise.all([
@@ -229,6 +251,7 @@
 
     // Create global state instance
     const globalState = createGlobalState();
+    const scheduleClickNext = createDelayedNextClicker(1000, 2000)
 
     function UtteranceList({ utterances, onPlay }) {
       return (
@@ -365,15 +388,9 @@
 
           if (stateType === "found") {
             if (foundAllowedCountry === null) {
-              // Country not in allowed list - skip
               console.log('Playing skip audio and clicking next');
               if (isStateChangeSoundEnabled) { playAudio(audioSkip); }
-              const nextBtn = Array.from(document.querySelectorAll('.btn.btn-main')).find(
-                btn => btn.textContent.trim().toLowerCase() === 'next'
-              );
-              if (nextBtn) {
-                nextBtn.click();
-              }
+              scheduleClickNext(); // new delayed + debounced click
             }
           }
         })
@@ -400,7 +417,7 @@
           unsubscribe();
           unsubscribeDistinct();
         }
-      }, [port, sessionId, allowedCountriesText, isStateChangeSoundEnabled]);
+      }, [port, sessionId, allowedCountriesText, sendAutoplayOnNewFoundUser, isStateChangeSoundEnabled]);
 
       // Save port if valid (simple numeric check)
       const onPortChange = (e) => {
@@ -609,7 +626,19 @@
     const buttonsWrapper = await waitForElement('.chat-container > .buttons > .buttons__wrapper', 30000)
     const container = document.createElement('div');
     buttonsWrapper.appendChild(container);
-    ReactDOM.createRoot(container).render(React.createElement(ControlPanel));
+
+    if (ReactDOM.createRoot) {
+      // React 18+
+      ReactDOM.createRoot(container).render(
+        React.createElement(ControlPanel)
+      );
+    } else {
+      // React 17 or older UMD
+      ReactDOM.render(
+        React.createElement(ControlPanel),
+        container
+      );
+    }
 
     // Remove navbar if present
     const hpNavbar = document.getElementById('hpNavbar');

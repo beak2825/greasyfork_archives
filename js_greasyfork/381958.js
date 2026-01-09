@@ -2,7 +2,7 @@
 // @name         Gitlab Issues Track
 // @namespace    http://tampermonkey.net/
 // @homepage     https://github.com/Priestch/savior
-// @version      0.3.20
+// @version      0.4.0
 // @description  Savior of bug track in Gitlab issue!
 // @author       Priestch
 // @match        https://gitpd.paodingai.com/*/issues/*
@@ -142,7 +142,8 @@
       author: '',
       link: '',
       checked: false,
-      description: '',
+      title: '',
+      body: '',
       priority: 'C',
       domWrapper,
       id: '',
@@ -152,26 +153,38 @@
   }
 
   function parseTask(taskContainer) {
-    const timelineContent = taskContainer.querySelector('.timeline .timeline-entry-inner .timeline-content');
-    const commentWrapper = timelineContent.querySelector('.timeline-discussion-body');
-    const taskDomList = commentWrapper.querySelectorAll('.note-body .task-list');
-    if (taskDomList.length === 0) {
-      return null
+    // 适配 GitLab 18.x: 寻找任务列表项
+    const taskCheckbox = taskContainer.querySelector('input[data-testid="task-list-item-checkbox"], input.task-list-item-checkbox');
+    if (!taskCheckbox) {
+      // 兼容旧版本
+      if (!taskContainer.querySelector('.task-list')) return null;
     }
-    const task = createTask(timelineContent);
-    task.author = timelineContent.querySelector('.note-header .note-header-author-name').textContent;
-    task.link = parseLink(timelineContent);
-    if (taskDomList.length > 1) {
-      console.error(formatTask(task));
+
+    const task = createTask(taskContainer);
+    task.author = taskContainer.querySelector('.note-header-author-name')?.textContent.trim() || '';
+    task.link = taskContainer.querySelector('[data-testid="copy-link-action"]')?.dataset.clipboardText || '';
+
+    if (taskCheckbox) {
+      task.checked = taskCheckbox.checked;
+      // 寻找任务标题，通常是复选框旁边的内容
+      task.title = taskCheckbox.closest('li')?.textContent.trim() || '';
+    } else {
+      // 兼容旧版本逻辑
+      const taskItem = taskContainer.querySelector('.task-list-item');
+      const oldInput = taskItem?.querySelector('input');
+      if (oldInput) {
+        task.checked = oldInput.checked;
+        task.title = taskItem.textContent.trim();
+      }
     }
-    const taskItem = taskDomList[0].querySelector('.task-list-item');
-    const taskInput = taskItem.querySelector('input');
-    task.checked = taskInput.checked;
-    task.description = taskInput.nextSibling.textContent.trim();
-    const idMatchResult = task.description.match(/^(\d+)\.?/);
-    if (idMatchResult) {
-      task.id = idMatchResult[1];
-      task.description = task.description.replace(/^(\d+)\./, '').trim();
+    // 获取整个评论内容
+    const noteText = taskContainer.querySelector('.note-text');
+    task.body = noteText ? noteText.textContent.trim() : '';
+    // 只取首行匹配 ID
+    const firstLine = task.title.split('\n')[0];
+    const idMatch = firstLine.match(/^(\d+)\.?\s*/) || firstLine.match(/(TC-\d+)/i);
+    if (idMatch) {
+      task.id = idMatch[1].toUpperCase();
     }
     const priorityPattern = /([ABCD]).*bug/;
     const noteCommentEl = taskContainer.querySelector('.note-comment');
@@ -201,22 +214,19 @@
   }
 
   function collectTasks() {
-    const noteList = document.querySelectorAll('.main-notes-list > .note:not(.system-note)');
-    const filtered = Array.from(noteList).filter((item) => item.querySelector('.timeline-entry-inner .timeline-content'));
+    // 适配 GitLab 18.x: 寻找所有普通评论
+    const noteList = document.querySelectorAll('[id^="note_"]:not(.system-note)');
     const tasks = [];
 
-    for (let i = 0; i < filtered.length; i++) {
-      const taskContainer = filtered[i];
-      let task;
+    for (let i = 0; i < noteList.length; i++) {
+      const taskContainer = noteList[i];
       try {
-        task = parseTask(taskContainer);
-        if (task) {
+        const task = parseTask(taskContainer);
+        if (task && (task.checked || task.confirmChecked || taskContainer.querySelector('.task-list, [data-testid="task-list-item-checkbox"]'))) {
           tasks.push(task);
         }
       } catch (e) {
-        console.error(e);
-        console.log('Error occurred when parseTask: ', taskContainer);
-        continue
+        console.error('Error occurred when parseTask: ', e, taskContainer);
       }
     }
     return tasks;
@@ -224,11 +234,18 @@
 
   function getReply(replayDom) {
     let noteContentSelector = '.timeline-content .note-body .note-text';
+    // 适配 GitLab 18.x 可能的新选择器
+    if (!replayDom.querySelector(noteContentSelector)) {
+      noteContentSelector = '.note-text';
+    }
     let noteHeaderSelector = '.timeline-content .note-header';
+    if (!replayDom.querySelector(noteHeaderSelector)) {
+      noteHeaderSelector = '.note-header';
+    }
     let noteHeaderDom = replayDom.querySelector(noteHeaderSelector);
     return {
-      author: noteHeaderDom.querySelector('.note-header-author-name').textContent.trim(),
-      content: replayDom.querySelector(noteContentSelector).textContent,
+      author: noteHeaderDom?.querySelector('.note-header-author-name')?.textContent.trim() || '',
+      content: replayDom.querySelector(noteContentSelector)?.textContent.trim() || '',
     }
   }
 
@@ -236,7 +253,8 @@
     if (task.replies.length > 0) {
       let lastIndex = task.replies.length - 1;
       let reply = task.replies[lastIndex];
-      return TEST_USERS.includes(reply.author) && reply.content === '验证已修复'
+      // 增强判定：支持包含“验证已修复”即可
+      return TEST_USERS.includes(reply.author) && reply.content.includes('验证已修复')
     } else {
       return false
     }
@@ -358,7 +376,7 @@
     const tasks = collectTasks();
     console.log(tasks);
     const rows = [];
-    const keys = ['id', 'description', 'checked', 'priority', 'author', 'link'];  // from task key
+    const keys = ['id', 'title', 'body', 'checked', 'priority', 'author', 'link'];  // from task key
     rows.push(keys);
     for (let i = 0; i < tasks.length; i++) {
       const task = tasks[i];
@@ -498,17 +516,17 @@
   }
 
   GM_addStyle(`
-  .notes .note .timeline-content.collapse-item {
+  .notes .note.collapse-item .timeline-content {
     height: 100px;
     background-color: #67c23a;
     overflow: hidden;
   }
 
-  .notes .note .timeline-content.collapse-item * {
+  .notes .note.collapse-item .timeline-content * {
     background-color: #67c23a;
   }
 
-  .notes-list .note .timeline-content.highest-level-bug:not(.collapse-item) {
+  .notes-list .note.highest-level-bug:not(.collapse-item) .timeline-content {
     background: #f56c6c;
   }
 

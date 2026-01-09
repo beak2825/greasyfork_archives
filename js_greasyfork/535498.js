@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pixel Games SpammerBot
 // @namespace    http://tampermonkey.net/
-// @version      1.30.0
+// @version      1.31.0
 // @license      Spaimic
 // @description  Spam Every Pixel Game with this.
 // @match        https://pixelplanet.fun/
@@ -9,6 +9,7 @@
 // @match        https://pixelya.fun/
 // @match        https://canvaspix.fun/
 // @match        https://yourpixel.fun/
+// @match        https://pixunivers.fun/
 // @match        http://94.154.34.121:5000/
 // @match        https://94.154.34.121/
 

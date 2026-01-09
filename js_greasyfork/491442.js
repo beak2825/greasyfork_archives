@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stats Xente Script
 // @namespace    http://tampermonkey.net/
-// @version      0.181
+// @version      0.182
 // @description  Stats Xente Script for inject own data on Managerzone site
 // @author       xente
 // @match        https://www.managerzone.com/*
@@ -74,8 +74,7 @@
         if(!first_of_month){
             day = String(hoy.getDate()).padStart(2, '0');
         }
-        let formated_date = `${year}-${month}-${day}`;
-        return formated_date
+        return `${year}-${month}-${day}`
     }
 
 
@@ -311,7 +310,7 @@
                     }
 
                     if(changeDates===false){
-                        if (fechaComparar >= fechaInicio && fechaComparar <= fechaFin) {
+                        if(fechaComparar >= fechaInicio && fechaComparar <= fechaFin) {
                             flagCount=true;
                         } else {
                             flagCount=false;
@@ -326,12 +325,8 @@
                 let score=element0.querySelectorAll(".bold.score-cell-wrapper.textCenter.flex-grow-0")
                 if(score.length>0){
                     let isHome=false;
-                    let isAway=false;
-
                     let tactics=element0.querySelectorAll(".gradientSunriseIcon");
-
                     let tactic_name=tactics[0].innerHTML
-
                     if (!tacticsMap.has(tactic_name)) {
                         tacticsMap.set(tactic_name, { pj: 0, g: 0,e:0,p: 0,gf:0,gc:0,diff:0});
                     }
@@ -344,12 +339,6 @@
                     }
 
                     let away=element0.querySelectorAll(".away-team-column.flex-grow-1");
-                    let asAw= away[0].getElementsByTagName("a")
-                    if (asAw[0].innerHTML.includes("<strong>")) {
-                        isAway=true;
-                    }
-
-
                     let as= score[0].getElementsByTagName("a");
                     let [homeGoals, awayGoals] = (as[1].innerText.split(" - ").map(Number))
                     if(isHome){
@@ -373,7 +362,7 @@
                             tacticsMap.set(tactic_name,actualTactic)
                         }
 
-                        if(homeGoals==awayGoals){
+                        if(homeGoals===awayGoals){
                             let actualTactic = tacticsMap.get(tactic_name);
                             actualTactic.pj += 1;
                             actualTactic.e += 1;
@@ -405,7 +394,7 @@
                             tacticsMap.set(tactic_name,actualTactic)
                         }
 
-                        if(homeGoals==awayGoals){
+                        if(homeGoals===awayGoals){
                             let actualTactic = tacticsMap.get(tactic_name);
                             actualTactic.pj += 1;
                             actualTactic.e += 1;
@@ -444,7 +433,7 @@
             document.getElementById("changeTactic").innerHTML = "";
             for (let key of tacticsMap.keys()) {
                 let option = document.createElement("option");
-                if(actual_tactic == key){
+                if(actual_tactic === key){
                     option.selected=true;
                 }
                 option.value = key;
@@ -456,7 +445,7 @@
 
         let styleTable = " style='margin: 0 auto; display:none; text-align:center;'";
         let styleIcon = ""
-        let styleSep = " style='display:none;'";;
+        let styleSep = " style='display:none;'";
         if (GM_getValue("show_tactic_filter") === true) {
             styleTable = " style='margin: 0 auto; text-align:center;'";
             styleIcon = " active"
@@ -526,7 +515,7 @@
             tables.insertAdjacentHTML('afterend',txt);
         }
 
-        document.getElementById("filterStx").addEventListener("click", function(event) {
+        document.getElementById("filterStx").addEventListener("click", function() {
             changeDates=false
             tactisResumeData()
             changeDates=true
@@ -543,11 +532,11 @@
             tactisResultsResume(valorSeleccionado)
         });
 
-        document.getElementById("initial_date_stx").addEventListener("change", function(event) {
+        document.getElementById("initial_date_stx").addEventListener("change", function() {
             filter_initial_date=document.getElementById("initial_date_stx").value
         });
 
-        document.getElementById("final_date_stx").addEventListener("change", function(event) {
+        document.getElementById("final_date_stx").addEventListener("change", function() {
             filter_final_date=document.getElementById("final_date_stx").value
         });
 
@@ -610,7 +599,7 @@
             headers: {
                 "Content-Type": "application/json"
             },
-            onerror: function(err) {
+            onerror: function() {
                 notifySnackBarError("Detailed Teams");
             },
             onload: function (response) {
@@ -639,9 +628,6 @@
                 teamTable+='<th>Age</th>'
                 teamTable+='<th style="border-top-right-radius: 5px;">Players</th>'
                 teamTable+='</tr></thead><tbody>'
-
-
-
 
                 let valor=new Intl.NumberFormat(window.userLocal).format(Math.round(jsonResponse[aux]['valor']))
                 let valorLM="-"
@@ -730,7 +716,7 @@
 
                 document.getElementById("leaguesMapButton").addEventListener('click', function () {
                     let path="lecturaGraficoPaises"
-                    if(window.sport=="hockey"){
+                    if(window.sport==="hockey"){
                         path="lecturaGraficoPaisesHockey"
 
                     }
@@ -741,7 +727,7 @@
 
                 document.getElementById("eloMapButton").addEventListener('click', function () {
                     let path="lecturaGraficoPaises"
-                    if(window.sport=="hockey"){
+                    if(window.sport==="hockey"){
                         path="lecturaGraficoPaisesHockey"
 
                     }
@@ -867,7 +853,6 @@
                 notifySnackBarError("Detailed Teams");
             },
             onload: function (response) {
-
                 let jsonResponse = JSON.parse(response.responseText);
                 let aux=jsonResponse["username"]
                 let top="TOP 11"
@@ -1333,7 +1318,7 @@ self.onmessage = function (e) {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    onerror: function(err) {
+                    onerror: function() {
                         notifySnackBarError("Predictor Event");
                     },
                     onload: function (response) {
@@ -1412,7 +1397,7 @@ self.onmessage = function (e) {
             tables[table_id].querySelectorAll('tr').forEach(row => {
                 let tds = row.querySelectorAll('td');
                 let newCell = document.createElement('td'); // Crear una nueva celda
-                if(cont==0){
+                if(cont===0){
                     newCell.textContent = 'Team ID';
                 }else{
                     let team_data=extractTeamData(tds[3].getElementsByTagName("a"));
@@ -1450,9 +1435,6 @@ self.onmessage = function (e) {
                             headers: {
                                 "Content-Type": "application/json"
                             },
-                            onerror: function(err) {
-                                notifySnackBarError("Manager Data");
-                            },
                             onload: function (response) {
                                 let parser = new DOMParser();
                                 let xmlDoc = parser.parseFromString(response.responseText, "text/xml");
@@ -1461,6 +1443,7 @@ self.onmessage = function (e) {
 
                             },
                             onerror: function () {
+                                notifySnackBarError("Manager Data");
                                 reject("none");
                             }
                         });
@@ -1471,9 +1454,7 @@ self.onmessage = function (e) {
                             spans[0].innerHTML=flag+" "+spans[0].innerHTML
                         }
                         newCell.textContent = teamCountry.toLowerCase(); // Aquí insertas el valor recibido
-                    }).catch(err => {
-                        newCell.textContent = 'Error';
-                    });
+                    }).catch(()=>{newCell.textContent = 'Error';});
                 }
 
 
@@ -1558,7 +1539,6 @@ self.onmessage = function (e) {
                     getDeviceFormat()
                     if(window.stx_device==="computer"){
                         style="width:65%;"
-
                         style2="<center>"
                     }
                     table+='<div style="display: block;justify-content: center;align-items: center;max-height: 100%; text-align: center;">'
@@ -1580,7 +1560,7 @@ self.onmessage = function (e) {
                     for (let i = 0; i < lista.length; i++) {
                         var tmp_cat=lista[i]
                         var bottomStyle=""
-                        if(i==0){
+                        if(i===0){
                             table+="<th style='border-top-left-radius: 5px; background-color: "+GM_getValue("bg_native")+"; color: "+GM_getValue("color_native")+";'>Senior</th>"
                         }else{
                             if(tmp_cat==="U18"){
@@ -1905,7 +1885,7 @@ self.onmessage = function (e) {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                onerror: function (err) {notifySnackBarError("Clash ELO Matches")},
+                onerror: function () {notifySnackBarError("Clash ELO Matches")},
                 onload: function (response) {
 
                     let jsonResponse = JSON.parse(response.responseText);
@@ -2329,7 +2309,7 @@ self.onmessage = function (e) {
             headers: {
                 "Content-Type": "application/json"
             },
-            onerror: function(err) {
+            onerror: function() {
                 notifySnackBarError("ELO Values");
             },
             onload: function (response) {
@@ -2529,7 +2509,7 @@ self.onmessage = function (e) {
             headers: {
                 "Content-Type": "application/json"
             },
-            onerror: function(err) {
+            onerror: function() {
                 notifySnackBarError("Detailed Teams");
             },
             onload: function (response) {
@@ -2781,7 +2761,7 @@ self.onmessage = function (e) {
             headers: {
                 "Content-Type": "application/json"
             },
-            onerror: function (err) {notifySnackBarError("ELO Played Matches")},
+            onerror: function () {notifySnackBarError("ELO Played Matches")},
             onload: function (response) {
                 let jsonResponse = JSON.parse(response.responseText);
                 let elems = document.getElementsByClassName("bold score-cell-wrapper textCenter flex-grow-0");
@@ -2847,7 +2827,7 @@ self.onmessage = function (e) {
             headers: {
                 "Content-Type": "application/json"
             },
-            onerror: function(err) {
+            onerror: function() {
                 notifySnackBarError("Federations Data");
             },
             onload: function (response) {
@@ -2855,7 +2835,7 @@ self.onmessage = function (e) {
 
 
 
-                let contenidoNuevo = "</br></br><table style='width:45%; margin: 0 auto; table-layout:unset;' class='hitlist challenges-list' style='border-collapse:collapse; margin: 0 auto; padding: 7px;'><thead><tr>"
+                let contenidoNuevo = "</br></br><table class='hitlist challenges-list' style='width:45%; margin: 0 auto; table-layout:unset; border-collapse:collapse; margin: 0 auto; padding: 7px;'><thead><tr>"
                 contenidoNuevo+="<th style='border-top-left-radius: 5px; padding: 5px; font-weight: bold;'>Clash Compare</td>"
                 contenidoNuevo+="<th style='border-top-right-radius: 5px; padding: 5px; font-weight: bold;'>Clash Matcher</td></tr>"
                 contenidoNuevo+="</thead><tr><td style='border-bottom-left-radius: 5px; background-color:#ffffe5; padding: 5px;'><img alt='' id=clashCompare src='https://www.statsxente.com/MZ1/View/Images/clash_compare.png' style='width:45px; height:45px; cursor:pointer;'/></center></td>"
@@ -3151,7 +3131,7 @@ self.onmessage = function (e) {
             headers: {
                 "Content-Type": "application/json"
             },
-            onerror: function(err) {
+            onerror: function() {
                 notifySnackBarError("Players stats");
             },
             onload: function (response) {
@@ -3235,13 +3215,27 @@ self.onmessage = function (e) {
                         //Played Matches
                         tds[keyTable1].innerHTML=jsonResponse[cont]["numPartidos"]
 
-
-
-                        if((valor.includes("*"))||(valor.includes("/"))||(valor.includes("nota"))){
-
-                            tds[keyTable].innerHTML=jsonResponse[cont][valor].toFixed(2)
+                        if(valor=="pos/numPartidos"){
+                            let parsedValue=jsonResponse[cont][valor]
+                            const minutos = Math.floor(parsedValue / 60);
+                            const restoSegundos = parsedValue % 60;
+                            const posesion = `${String(minutos).padStart(2, '0')}:${String(restoSegundos).padStart(2, '0')}`;
+                            tds[keyTable].innerHTML=posesion
                         }else{
-                            tds[keyTable].innerHTML=jsonResponse[cont][valor]
+
+                            if(valor.includes("mins")){
+                                tds[keyTable].innerHTML=jsonResponse[cont][valor]
+                            }else{
+
+
+                                if((valor.includes("*"))||(valor.includes("/"))||(valor.includes("nota"))||(valor.includes("dist"))){
+
+                                    tds[keyTable].innerHTML=jsonResponse[cont][valor].toFixed(2)
+                                }else{
+                                    tds[keyTable].innerHTML=jsonResponse[cont][valor]
+                                }
+                            }
+
                         }
 
 
@@ -3290,7 +3284,7 @@ self.onmessage = function (e) {
             headers: {
                 "Content-Type": "application/json"
             },
-            onerror: function(err) {
+            onerror: function() {
                 notifySnackBarError("Teams");
             },
             onload: function (response) {
@@ -3616,8 +3610,14 @@ self.onmessage = function (e) {
                     if (teams_stats[id] === undefined) {
                         valor = -1
                     } else {
+
                         let parsedValue=evaluarExpresion(document.getElementById("statsSelect").value,teams_stats[id])
                         valor = new Intl.NumberFormat(window.userLocal).format(Number.parseFloat(parsedValue).toFixed(2))
+                        if(document.getElementById("statsSelect").value=="pos/numPartidos"){
+                            const minutos = Math.floor(parsedValue / 60);
+                            const restoSegundos = parsedValue % 60;
+                            valor=`${String(minutos).padStart(2, '0')}:${String(restoSegundos).padStart(2, '0')}`;
+                        }
 
                     }
 
@@ -4868,7 +4868,7 @@ self.onmessage = function (e) {
         links.forEach(function(link) {
             let icon = link.querySelector("i");
             if (icon && icon.textContent.trim() === "2D") {
-                link.addEventListener("click", function(event) {
+                link.addEventListener("click", function() {
 
 
                     let overlay = document.getElementById('game-overlay-close');
@@ -4886,7 +4886,7 @@ self.onmessage = function (e) {
 
                             div.insertAdjacentHTML('beforeend', button);
                             let elemento = document.getElementById('showHeatMap');
-                            elemento.addEventListener('click', function(event) {
+                            elemento.addEventListener('click', function() {
                                 let mapaGoles = {};
                                 let mapaPenalties = {};
                                 let mapaCards = {};
@@ -4918,7 +4918,7 @@ self.onmessage = function (e) {
                                                 for (let j = 0; j < goles.length; j++) {
                                                     let gol = goles[j];
                                                     let toDecrement=-3;
-                                                    if(window.sport=="soccer"){toDecrement=0}
+                                                    if(window.sport==="soccer"){toDecrement=0}
                                                     mapaGoles[nombre].push({
                                                         frame: gol.getAttribute("frame")-toDecrement,
                                                         time: gol.getAttribute("time")
@@ -4933,7 +4933,7 @@ self.onmessage = function (e) {
                                                 for (let j = 0; j < penalties.length; j++) {
                                                     let penalty = penalties[j];
                                                     let toDecrement=0;
-                                                    if(window.sport=="soccer"){toDecrement=4}
+                                                    if(window.sport==="soccer"){toDecrement=4}
                                                     mapaPenalties[nombre].push({
                                                         frame: penalty.getAttribute("frame")-toDecrement,
                                                         time: penalty.getAttribute("time")
@@ -4947,7 +4947,7 @@ self.onmessage = function (e) {
                                                 for (let j = 0; j < cards.length; j++) {
                                                     let card = cards[j];
                                                     let toDecrement=0;
-                                                    if(window.sport=="soccer"){toDecrement=10}
+                                                    if(window.sport==="soccer"){toDecrement=10}
                                                     mapaCards[nombre].push({
                                                         frame: card.getAttribute("frame")-toDecrement,
                                                         time: card.getAttribute("time"),type:card.getAttribute("type")
@@ -4961,7 +4961,7 @@ self.onmessage = function (e) {
                                                 for (let j = 0; j < saves.length; j++) {
                                                     let save = saves[j];
                                                     let toDecrement=-2;
-                                                    if(window.sport=="soccer"){
+                                                    if(window.sport==="soccer"){
                                                         toDecrement=-2
                                                         mapaSaves[nombre].push({
                                                             frame: save.getAttribute("frame")-toDecrement,
@@ -4985,7 +4985,7 @@ self.onmessage = function (e) {
                                                 for (let j = 0; j < misses.length; j++) {
                                                     let miss = misses[j];
                                                     let toDecrement=0;
-                                                    if(window.sport=="soccer"){toDecrement=6}
+                                                    if(window.sport==="soccer"){toDecrement=6}
                                                     mapaMisses[nombre].push({
                                                         frame: miss.getAttribute("frame")-toDecrement,
                                                         time: miss.getAttribute("time")
@@ -5073,7 +5073,7 @@ self.onmessage = function (e) {
             return classes.length === 3 && classes.includes("hitlist") && classes.includes("statsLite") && classes.includes("marker");
         });
         let tfoot=statsTable[0].getElementsByTagName("tfoot")
-        if(tfoot.length==0){
+        if(tfoot.length===0){
 
 
             GM_xmlhttpRequest({
@@ -5322,7 +5322,7 @@ self.onmessage = function (e) {
                     teamTable+='</tbody></table></div>'
 
                     divsConAltura15px[m].insertAdjacentHTML('afterend',teamTable);
-                    if(window.sport=="soccer"){
+                    if(window.sport==="soccer"){
                         (function (currentId,lang) {
                             document.getElementById("spy_" + currentId).addEventListener('click', function () {
                                 let urlParamsAux = new URLSearchParams(window.location.search);
@@ -8826,7 +8826,4 @@ cursor:pointer;
         }
         return parseFloat(numStr.replace(',', '.'));
     }
-
-
-
 })();

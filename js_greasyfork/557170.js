@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Enhance Perplexity AI chat
 // @namespace    facelook.hk
-// @version      1.10
+// @version      1.11
 // @author       FacelookHK
 // @description  Increase the width of the conversation panel, replaces MCP button from MCP SuperAssistant extension, updates chip icon with model name matching sources button radius
 // @match        https://www.perplexity.ai/*
@@ -61,6 +61,27 @@
         pointer-events: none;
         z-index: 9999;
         }
+        #scroll-to-top-btn {
+            position: fixed !important;
+            bottom: 140px !important;
+            right: 20px !important;
+            width: 48px !important;
+            height: 48px !important;
+            border-radius: 50% !important;
+            background: #72AEFD !important;
+            border: none !important;
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+            z-index: 10000 !important;
+            transition: all 0.3s ease !important;
+        }
+        #scroll-to-top-btn:hover {
+            background: #5A9AEB !important;
+            transform: scale(1.1) !important;
+        }
         #scroll-to-bottom-btn {
             position: fixed !important;
             bottom: 80px !important;
@@ -68,7 +89,7 @@
             width: 48px !important;
             height: 48px !important;
             border-radius: 50% !important;
-            background: #3C82F6 !important;
+            background: #72AEFD !important;
             border: none !important;
             cursor: pointer !important;
             display: flex !important;
@@ -79,7 +100,7 @@
             transition: all 0.3s ease !important;
         }
         #scroll-to-bottom-btn:hover {
-            background: #2563EB !important;
+            background: #5A9AEB !important;
             transform: scale(1.1) !important;
         }
     `);
@@ -292,6 +313,16 @@
 
     // Start chip icon observer
     setTimeout(startObserver, 500);
+
+    // Scroll to top button
+    const scrollTopBtn = document.createElement('button');
+    scrollTopBtn.id = 'scroll-to-top-btn';
+    scrollTopBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+    scrollTopBtn.onclick = () => {
+        const scrollContainer = document.querySelector('.scrollable-container') || document.documentElement;
+        scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    document.body.appendChild(scrollTopBtn);
 
     // Scroll to bottom button
     const scrollBtn = document.createElement('button');

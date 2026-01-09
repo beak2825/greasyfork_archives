@@ -3,7 +3,7 @@
 // @description  Automatically claims 10 minute reloads on Stake.com by sequentially clicking VIP Reward → Claim Reload → Return to Rewards. The script starts after a short page-load delay, mimics human behavior with user customizable random delays, occasional skipped cycles, and subtle mouse/scroll movements. WANT MORE STAKE BONUS CODE AUTO-CLAIM TOOLS? GO TO https://codestats.gg
 // @author       CHUBB
 // @namespace    https://codestats.gg
-// @version      1.0.0
+// @version      1.1.2
 // @match        https://stake.com/*
 // @match        https://stake.us/*
 // @match        https://stake.ac/*
@@ -24,6 +24,26 @@
 // @match        https://stake1021.com/*
 // @match        https://stake1022.com/*
 // @match        https://stake.br/*
+// @exclude      https://stake.com/settings/offers*
+// @exclude      https://stake.us/settings/offers*
+// @exclude      https://stake.ac/settings/offers*
+// @exclude      https://stake.games/settings/offers*
+// @exclude      https://stake.bet/settings/offers*
+// @exclude      https://stake.pet/settings/offers*
+// @exclude      https://stake.mba/settings/offers*
+// @exclude      https://stake.jp/settings/offers*
+// @exclude      https://stake.bz/settings/offers*
+// @exclude      https://stake.ceo/settings/offers*
+// @exclude      https://stake.krd/settings/offers*
+// @exclude      https://staketr.com/settings/offers*
+// @exclude      https://stake1001.com/settings/offers*
+// @exclude      https://stake1002.com/settings/offers*
+// @exclude      https://stake1003.com/settings/offers*
+// @exclude      https://stake1004.com/settings/offers*
+// @exclude      https://stake1005.com/settings/offers*
+// @exclude      https://stake1021.com/settings/offers*
+// @exclude      https://stake1022.com/settings/offers*
+// @exclude      https://stake.br/settings/offers*
 // @run-at       document-idle
 // @license      MIT
 // @connect      stake.com
@@ -123,45 +143,53 @@ function setupHUD() {
     `;
 
     hud.innerHTML = `
-        <b><a href="https://codestats.gg" target="_blank" rel="noopener noreferrer" style="color: #0f0; text-decoration: underline;">CodeStats.gg</a> Stake Reload Bot v1.0.0</b>
-        <div style="margin: 8px 0; padding: 8px; background: rgba(0,255,0,0.1); border-radius: 4px;">
-            <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 8px;">
-                <button id="goToVip" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">🏆 VIP</button>
-                <button id="toggleBtn" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">${config.enabled ? "PAUSE" : "START"}</button>
-                <span>Status: <span id="statusText">${config.enabled ? "RUNNING" : "PAUSED"}</span></span>
-            </div>
-            <div style="margin-bottom: 8px;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <div>
-                        <label style="display: block; margin-bottom: 2px;">Min Time:</label>
-                        <div style="display: flex; gap: 5px; align-items: center;">
-                            <input type="number" id="minHours" value="${Math.floor(config.minMinutes / 60)}" min="0" max="23" style="width: 50px; padding: 2px; background: #000; color: #0f0; border: 1px solid #0f0; border-radius: 2px;">
-                            <span style="color: #0f0;">h</span>
-                            <input type="number" id="minMinutes" value="${config.minMinutes % 60}" min="0" max="59" style="width: 50px; padding: 2px; background: #000; color: #0f0; border: 1px solid #0f0; border-radius: 2px;">
-                            <span style="color: #0f0;">m</span>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <b><a href="https://codestats.gg" target="_blank" rel="noopener noreferrer" style="color: #0f0; text-decoration: underline;">CodeStats.gg</a> Stake Reload Bot v1.1.2</b>
+            <button id="minimizeBtn" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">−</button>
+        </div>
+        <div id="mainContent">
+            <div style="margin: 8px 0; padding: 8px; background: rgba(0,255,0,0.1); border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 8px;">
+                    <button id="goToVip" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">🏆 VIP</button>
+                    <button id="toggleBtn" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">${config.enabled ? "PAUSE" : "START"}</button>
+                    <span>Status: <span id="statusText">${config.enabled ? "RUNNING" : "PAUSED"}</span></span>
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 2px;">Min Time:</label>
+                            <div style="display: flex; gap: 5px; align-items: center;">
+                                <input type="number" id="minHours" value="${Math.floor(config.minMinutes / 60)}" min="0" max="23" style="width: 50px; padding: 2px; background: #000; color: #0f0; border: 1px solid #0f0; border-radius: 2px;">
+                                <span style="color: #0f0;">h</span>
+                                <input type="number" id="minMinutes" value="${config.minMinutes % 60}" min="0" max="59" style="width: 50px; padding: 2px; background: #000; color: #0f0; border: 1px solid #0f0; border-radius: 2px;">
+                                <span style="color: #0f0;">m</span>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <label style="display: block; margin-bottom: 2px;">Max Time:</label>
-                        <div style="display: flex; gap: 5px; align-items: center;">
-                            <input type="number" id="maxHours" value="${Math.floor(config.maxMinutes / 60)}" min="0" max="23" style="width: 50px; padding: 2px; background: #000; color: #0f0; border: 1px solid #0f0; border-radius: 2px;">
-                            <span style="color: #0f0;">h</span>
-                            <input type="number" id="maxMinutes" value="${config.maxMinutes % 60}" min="0" max="59" style="width: 50px; padding: 2px; background: #000; color: #0f0; border: 1px solid #0f0; border-radius: 2px;">
-                            <span style="color: #0f0;">m</span>
+                        <div>
+                            <label style="display: block; margin-bottom: 2px;">Max Time:</label>
+                            <div style="display: flex; gap: 5px; align-items: center;">
+                                <input type="number" id="maxHours" value="${Math.floor(config.maxMinutes / 60)}" min="0" max="23" style="width: 50px; padding: 2px; background: #000; color: #0f0; border: 1px solid #0f0; border-radius: 2px;">
+                                <span style="color: #0f0;">h</span>
+                                <input type="number" id="maxMinutes" value="${config.maxMinutes % 60}" min="0" max="59" style="width: 50px; padding: 2px; background: #000; color: #0f0; border: 1px solid #0f0; border-radius: 2px;">
+                                <span style="color: #0f0;">m</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <button id="applySettings" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 3px; cursor: pointer; font-weight: bold;">Apply Settings</button>
             </div>
-            <button id="applySettings" style="padding: 4px 8px; background: #0f0; color: #000; border: none; border-radius: 3px; cursor: pointer; font-weight: bold;">Apply Settings</button>
+            <div id="hudLog" style="max-height: 80px; overflow-y: auto;"></div>
+            <div id="hudTimer" style="font-weight: bold; color: #ff0;"></div>
         </div>
-        <div id="hudLog" style="max-height: 80px; overflow-y: auto;"></div>
-        <div id="hudTimer" style="font-weight: bold; color: #ff0;"></div>
     `;
 
     document.body.appendChild(hud);
 
     // Setup event listeners
     document.getElementById("toggleBtn").addEventListener("click", toggleBot);
+    document
+        .getElementById("minimizeBtn")
+        .addEventListener("click", toggleMinimize);
     document
         .getElementById("applySettings")
         .addEventListener("click", applySettings);
@@ -198,6 +226,26 @@ function toggleBot() {
             currentTimer = null;
         }
         document.getElementById("hudTimer").textContent = "Bot paused";
+    }
+}
+
+function toggleMinimize() {
+    const mainContent = document.getElementById("mainContent");
+    const minimizeBtn = document.getElementById("minimizeBtn");
+    const hud = document.getElementById("autoReloadHUD");
+
+    if (mainContent.style.display === "none") {
+        // Restore to original size
+        mainContent.style.display = "block";
+        hud.style.width = "600px";
+        hud.style.maxHeight = "300px";
+        minimizeBtn.textContent = "−";
+    } else {
+        // Minimize
+        mainContent.style.display = "none";
+        hud.style.width = "200px";
+        hud.style.maxHeight = "40px";
+        minimizeBtn.textContent = "+";
     }
 }
 
@@ -294,37 +342,58 @@ updateInputFieldsFromConfig();
 
 // ===== CLAIM FUNCTION =====
 async function claimReload() {
-    simulateMouseMove();
+    try {
+        simulateMouseMove();
 
-    await orderedClick('button[data-testid="progress-tab"]');
-    await orderedClick('button[data-testid="rewards-tab"]');
-    await orderedClick('button[data-testid="vip-reward-claim-reload"]');
+        // Less clicks with latest Stake update.
+        // await orderedClick('button[data-testid="progress-tab"]');
+        // await orderedClick('button[data-testid="rewards-tab"]');
+        await orderedClick('button[data-testid="vip-reward-claim-reload"]');
 
-    // The MONEY button
-    const claimSuccess = await orderedClick(
-        'button[data-testid="claim-reload"]',
-    );
-
-    if (claimSuccess) {
-        // If we successfully clicked claim, we *must* try to wrap up
-        const finalStep = await orderedClick(
-            'button[data-testid="return-to-rewards"]',
+        // The MONEY button
+        const claimSuccess = await orderedClick(
+            'button[data-testid="claim-reload"]',
         );
-        if (!finalStep) {
-            logHUD("Claimed reload but couldn't return → reloading page...");
-            window.location.href = `${window.location.origin}/?tab=progress&modal=vip`;
-            return;
-        }
-    }
 
-    simulateMouseMove();
-    logHUD("Finished reload attempt.");
+        if (claimSuccess) {
+            // If we successfully clicked claim, we *must* try to wrap up
+            const finalStep = await orderedClick(
+                'button[data-testid="return-to-rewards"]',
+            );
+            if (!finalStep) {
+                logHUD(
+                    "Claimed reload but couldn't return → reloading page...",
+                );
+                window.location.href = `${window.location.origin}/?tab=progress&modal=vip`;
+                return false; // Signal that page is reloading
+            }
+        }
+
+        simulateMouseMove();
+        logHUD("Finished reload attempt.");
+        return true; // Signal success
+    } catch (error) {
+        logHUD(`Error during claim: ${error.message}`);
+        console.error("claimReload error:", error);
+        return true; // Still return true to continue the cycle
+    }
 }
 
 // ===== CYCLE FUNCTION =====
 function startCycle() {
     if (!config.enabled) {
+        logHUD("Bot is paused - timer not started");
         return;
+    }
+
+    // Clear any existing timers to prevent duplicates
+    if (currentTimer) {
+        clearInterval(currentTimer);
+        currentTimer = null;
+    }
+    if (currentTimeout) {
+        clearTimeout(currentTimeout);
+        currentTimeout = null;
     }
 
     const min = config.minMinutes * 60 * 1000;
@@ -332,6 +401,10 @@ function startCycle() {
     const delay = Math.floor(Math.random() * (max - min + 1)) + min;
 
     let endTime = Date.now() + delay;
+
+    // Update timer display immediately
+    updateTimer(delay);
+
     currentTimer = setInterval(() => {
         let remaining = endTime - Date.now();
         if (remaining <= 0) {
@@ -356,8 +429,18 @@ function startCycle() {
 
     currentTimeout = setTimeout(async () => {
         currentTimeout = null;
-        await claimReload();
-        startCycle();
+        try {
+            const shouldContinue = await claimReload();
+            // Only start next cycle if we didn't trigger a page reload
+            if (shouldContinue !== false) {
+                startCycle();
+            }
+        } catch (error) {
+            logHUD(`Cycle error: ${error.message} - restarting cycle...`);
+            console.error("startCycle error:", error);
+            // Always restart the cycle even on error
+            startCycle();
+        }
     }, delay);
 }
 
@@ -394,7 +477,19 @@ function wait(ms) {
     logHUD(`First attempt in ${(firstDelay / 1000).toFixed(1)}s`);
 
     setTimeout(async () => {
-        await claimReload();
-        startCycle();
+        try {
+            const shouldContinue = await claimReload();
+            // Only start cycle if we didn't trigger a page reload
+            if (shouldContinue !== false) {
+                startCycle();
+            }
+        } catch (error) {
+            logHUD(
+                `First run error: ${error.message} - starting cycle anyway...`,
+            );
+            console.error("firstRun error:", error);
+            // Start cycle even if first claim failed
+            startCycle();
+        }
     }, firstDelay);
 })();

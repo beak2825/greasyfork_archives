@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pano Detective
 // @namespace    https://greasyfork.org/users/1179204
-// @version      2.5.8
+// @version      2.5.9
 // @description  Find the exact time a Google Street View image was taken (default coverage)
 // @author       KaKa
 // @include      *://maps.google.com/*
@@ -899,7 +899,7 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
 
         container.appendChild(element);
         setTimeout(() => {
-            if(document.querySelector('.TrU0dc.NUqjXc')){
+            if(document.querySelector('[aria-label="Share"]')){
                 element.style.right='0.85rem'
                 element.style.top='4rem'
             }}, 100)
@@ -2060,7 +2060,7 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
 
         container.appendChild(element);
         setTimeout(() => {
-            if(document.querySelector('.TrU0dc.NUqjXc')){
+            if(document.querySelector('[aria-label="Share"]')){
                 element.style.right='0.85rem'
                 element.style.top='4rem'
             }}, 100)
@@ -2086,7 +2086,7 @@ div[class^="result-list_listItemWrapper__"] .mwstmm-settings-option {
             await generateUpdateReportText()
         });
         setTimeout(() => {
-            if(document.querySelector('.TrU0dc.NUqjXc')){
+            if(document.querySelector('[aria-label="Share"]')){
                 element.style.right='4rem'
                 element.style.top='4rem'
             }}, 100)

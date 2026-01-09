@@ -2,7 +2,7 @@
 // @name         Block Youtube Users
 // @namespace    https://codeberg.org/schegge
 // @description  Hide videos of blacklisted users/channels and comments
-// @version      2.6.2.4
+// @version      2.6.2.5
 // @author       Schegge
 // @compatible   firefox
 // @match        https://www.youtube.com/*
@@ -134,8 +134,8 @@ if (typeof window != "undefined" && ('trustedTypes' in window) && ('createPolicy
 
    document.head.insertAdjacentHTML('beforeend', `<style>
       [data-block="yes"] { display: none!important; }
-      .byu-add { float: left; margin-right: .4em; cursor: pointer; color: var(--yt-brand-youtube-red, red); font-size: .9em; background-color: var(--yt-spec-badge-chip-background); border-radius: 100%; width: 1.6em; text-align: center; font-weight: lighter; }
-      #byu-icon { display: inline-block; position: relative; text-align: center; width: 40px; height: 24px; margin: 0 8px; font-weight: 100; }
+      .byu-add { float: left; margin-right: .4em; cursor: pointer; color: var(--yt-brand-youtube-red, red); background-color: var(--yt-spec-additive-background); border-radius: 100%; font-size: 1em; width: 1.4em; height: 1.4em; line-height: 1.4em; text-align: center; font-weight: lighter; }
+      #byu-icon { display: inline-block; position: relative; text-align: center; width: 40px; height: 24px; margin: 0 8px; font-weight: 400; color: var(--yt-spec-text-primary); }
       #byu-icon span { color: var(--yt-spec-icon-active-other); cursor: pointer; font-size: 20px; vertical-align: middle; }
       #byu-options { width: 400px; max-width: 80vw; display: flex; flex-flow: row wrap; align-items: baseline; position: fixed; right: 1em; padding: 1em; text-align: center; font-size: 1.2em;  color: var(--yt-spec-text-primary); background-color: var(--yt-spec-menu-background); z-index: 99999; border-radius: 1em; box-shadow: 0 .3em 2em 0 var(--yt-spec-static-overlay-background-light); }
       #byu-options div { width: 33%; flex-grow: 1; box-sizing: border-box; padding: .6em; }
@@ -143,10 +143,10 @@ if (typeof window != "undefined" && ('trustedTypes' in window) && ('createPolicy
       #byu-pause { cursor: pointer; }
       #byu-options .byu-textarea { width: 100%; }
       #byu-options .byu-textarea span { width: 100%; text-align: center; font-weight: bold; }
-      #byu-options .byu-textarea textarea { line-height: 1.2em; resize: vertical; width: 100%; padding: .4em; color: var(--yt-spec-text-primary); background-color: var(--yt-spec-badge-chip-background); box-sizing: border-box; border: 0; border-radius: 1em; }
+      #byu-options .byu-textarea textarea { line-height: 1.2em; resize: vertical; width: 100%; padding: .4em; color: var(--yt-spec-text-primary); background-color: var(--yt-spec-additive-background); box-sizing: border-box; border: 0; border-radius: 1em; }
       #byu-options .byu-textarea textarea#byu-blacklist { height: 8em; }
       #byu-options .byu-textarea textarea#byu-whitelist { height: 4em; }
-      #byu-options input { color: var(--yt-spec-text-primary); background-color: var(--yt-spec-badge-chip-background); border: 0; padding: 0 2px; height: 1.6em; line-height: 1em; vertical-align: middle; box-sizing: border-box; margin: 0; border-radius: .5em; }
+      #byu-options input { color: var(--yt-spec-text-primary); background-color: var(--yt-spec-additive-background); border: 0; padding: 0 2px; height: 1.6em; line-height: 1em; vertical-align: middle; box-sizing: border-box; margin: 0; border-radius: .5em; }
       #byu-sep { width: 1em; }
       #byu-timer { width: 4.5em; }
       #byu-video-page-black { font-size: 1.2em; padding: var(--yt-button-padding); background: var(--yt-brand-youtube-red, red); color: #fff; border-radius: 2em; margin-right: .8em; font-weight: bold; }
@@ -375,6 +375,7 @@ if (typeof window != "undefined" && ('trustedTypes' in window) && ('createPolicy
          ytd-rich-section-renderer:has(ytd-rich-shelf-renderer[is-shorts]),
          a[title="Shorts"],
          ytd-rich-item-renderer:has(a[href^="/shorts/"]),
+         ytd-compact-video-renderer:has(a[href^="/shorts/"]), 
          ytd-video-renderer:has(a.yt-simple-endpoint[href*="shorts"]),
          grid-shelf-view-model:has(ytm-shorts-lockup-view-model) {
             display: none !important;
@@ -389,8 +390,8 @@ if (typeof window != "undefined" && ('trustedTypes' in window) && ('createPolicy
 
    /* NEW VERSION NOTIFICATION */
 
-   if (Values.storageVer !== '2.6.2.4') {
-      Values.storageVer = '2.6.2.4';
+   if (Values.storageVer !== '2.6.2.5') {
+      Values.storageVer = '2.6.2.5';
       GM.setValue('byuver', Values.storageVer);
 
       /*GM.notification({

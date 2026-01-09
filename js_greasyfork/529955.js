@@ -2,13 +2,16 @@
 // @name         NeoDB 安娜档案搜索
 // @name:en      annas archive for NeoDB
 // @namespace    http://tampermonkey.net/
-// @version      0.1.1
+// @version      0.2.0
 // @description  在 NeoDB 书籍页面添加安娜档案搜索结果
 // @description:en  dispaly annas archive search result on NeoDB
 // @author       lozhang
 // @match        https://neodb.social/book/*
 // @grant        GM_xmlhttpRequest
-// @connect      zh.annas-archive.org
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_registerMenuCommand
+// @connect      *
 // @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/529955/NeoDB%20%E5%AE%89%E5%A8%9C%E6%A1%A3%E6%A1%88%E6%90%9C%E7%B4%A2.user.js
 // @updateURL https://update.greasyfork.org/scripts/529955/NeoDB%20%E5%AE%89%E5%A8%9C%E6%A1%A3%E6%A1%88%E6%90%9C%E7%B4%A2.meta.js
@@ -17,6 +20,29 @@
 
 (function() {
     'use strict';
+
+    // 默认域名配置
+    const DEFAULT_DOMAIN = 'zh.annas-archive.se';
+
+    // 获取当前配置的域名
+    function getDomain() {
+        return GM_getValue('annas_archive_domain', DEFAULT_DOMAIN);
+    }
+
+    // 注册菜单命令
+    GM_registerMenuCommand('⚙️ 设置 Anna\'s Archive 域名', () => {
+        const currentDomain = getDomain();
+        const newDomain = prompt('请输入 Anna\'s Archive 域名（如 zh.annas-archive.se）：', currentDomain);
+        if (newDomain && newDomain.trim()) {
+            GM_setValue('annas_archive_domain', newDomain.trim());
+            alert('域名已更新为: ' + newDomain.trim() + '\n刷新页面生效');
+        }
+    });
+
+    GM_registerMenuCommand('🔄 重置域名为默认值', () => {
+        GM_setValue('annas_archive_domain', DEFAULT_DOMAIN);
+        alert('域名已重置为: ' + DEFAULT_DOMAIN + '\n刷新页面生效');
+    });
 
     // 主函数
     function main() {
@@ -62,7 +88,8 @@
 
     // 在安娜档案搜索
     function searchAnnasArchive(bookTitle) {
-        const searchUrl = `https://zh.annas-archive.org/search?q=${encodeURIComponent(bookTitle)}`;
+        const domain = getDomain();
+        const searchUrl = `https://${domain}/search?q=${encodeURIComponent(bookTitle)}`;
 
         GM_xmlhttpRequest({
             method: 'GET',
@@ -91,23 +118,28 @@
     // 从安娜档案页面提取搜索结果
     function extractSearchResults(doc) {
         const results = [];
-        const resultElements = doc.querySelector('#aarecord-list').querySelectorAll('div');
+        const resultElements = doc.querySelectorAll('.js-aarecord-list-outer > div.flex.border-b');
 
         resultElements.forEach(element => {
-            const titleElement = element.querySelector('h3');
+            // 标题 - 带有 js-vim-focus 类的 a 标签
+            const titleElement = element.querySelector('a.js-vim-focus');
             if (!titleElement) return;
 
+            // 链接
             const linkElement = element.querySelector('a[href^="/md5/"]');
             if (!linkElement) return;
 
-            const formatElement = element.querySelector('.text-xs');
-            const authorElement = element.querySelector('.italic');
+            // 格式 - 包含语言、格式、大小的 div
+            const formatDiv = element.querySelector('.text-gray-800.font-semibold.text-sm');
+
+            // 作者 - 带有 user-edit 图标的链接
+            const authorLink = element.querySelector('a[href^="/search?q="] span[class*="user-edit"]');
 
             const result = {
                 title: titleElement.textContent.trim(),
-                link: 'https://zh.annas-archive.org' + linkElement.getAttribute('href'),
-                format: formatElement ? formatElement.textContent.trim() : '未知格式',
-                author: authorElement ? authorElement.textContent.trim() : '未知作者'
+                link: `https://${getDomain()}${linkElement.getAttribute('href')}`,
+                format: formatDiv ? formatDiv.textContent.split('·').slice(0, 3).join('·').trim() : '未知格式',
+                author: authorLink ? authorLink.parentElement.textContent.trim() : '未知作者'
             };
 
             results.push(result);
@@ -121,56 +153,46 @@
         // 创建结果容器
         const container = document.createElement('div');
         container.className = 'annas-archive-results';
-        container.style.margin = '20px 0';
-        container.style.padding = '15px';
-        container.style.border = '1px solid #ddd';
-        container.style.borderRadius = '5px';
-        container.style.backgroundColor = '#f9f9f9';
+        container.style.cssText = 'margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; font-size: 14px;';
 
         // 添加标题
         const title = document.createElement('h3');
         title.textContent = '安娜档案搜索结果';
-        title.style.marginBottom = '15px';
+        title.style.cssText = 'margin: 0 0 10px 0; font-size: 16px;';
         container.appendChild(title);
 
         // 添加搜索链接
         const searchLink = document.createElement('a');
         searchLink.href = searchUrl;
-        searchLink.textContent = '在安娜档案中查看完整搜索结果';
+        searchLink.textContent = '查看完整结果 →';
         searchLink.target = '_blank';
-        searchLink.style.display = 'inline-block';
-        searchLink.style.marginBottom = '15px';
+        searchLink.style.cssText = 'display: block; margin-bottom: 10px; color: #0066cc; font-size: 13px;';
         container.appendChild(searchLink);
 
         // 如果没有结果
         if (results.length === 0) {
             const noResults = document.createElement('p');
             noResults.textContent = '未找到相关结果';
+            noResults.style.color = '#666';
             container.appendChild(noResults);
         } else {
             // 创建结果列表
             const resultsList = document.createElement('ul');
-            resultsList.style.listStyleType = 'none';
-            resultsList.style.padding = '0';
+            resultsList.style.cssText = 'list-style-type: none; padding: 0; margin: 0;';
 
             results.forEach(result => {
                 const listItem = document.createElement('li');
-                listItem.style.marginBottom = '10px';
-                listItem.style.padding = '10px';
-                listItem.style.border = '1px solid #eee';
-                listItem.style.borderRadius = '3px';
+                listItem.style.cssText = 'margin-bottom: 8px; padding: 8px; border: 1px solid #eee; border-radius: 4px; background: #fff;';
 
                 const resultTitle = document.createElement('a');
                 resultTitle.href = result.link;
                 resultTitle.textContent = result.title;
                 resultTitle.target = '_blank';
-                resultTitle.style.fontWeight = 'bold';
-                resultTitle.style.display = 'block';
+                resultTitle.style.cssText = 'font-weight: bold; display: block; color: #333; text-decoration: none; margin-bottom: 4px; line-height: 1.3;';
                 listItem.appendChild(resultTitle);
 
                 const resultDetails = document.createElement('div');
-                resultDetails.style.fontSize = '0.9em';
-                resultDetails.style.color = '#666';
+                resultDetails.style.cssText = 'font-size: 12px; color: #666; line-height: 1.4;';
                 resultDetails.textContent = `${result.author} | ${result.format}`;
                 listItem.appendChild(resultDetails);
 
@@ -180,12 +202,12 @@
             container.appendChild(resultsList);
         }
 
-        // 将结果添加到页面
-        const contentContainer = document.querySelector('#item-primary-action') || document.querySelector('main');
-        if (contentContainer) {
-            contentContainer.appendChild(container);
+        // 插入到页面右侧边栏
+        const sidebar = document.querySelector('#item-sidebar');
+        if (sidebar) {
+            sidebar.appendChild(container);
         } else {
-            // 如果找不到合适的容器，添加到 body
+            // 备选：添加到 body
             document.body.appendChild(container);
         }
     }

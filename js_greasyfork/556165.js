@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck
 // @namespace    Para_Thenics.torn.com
-// @version      1.00.003
+// @version      1.00.004
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -444,6 +444,14 @@ async function getPricesFromAPI() {
     "Profit/Nerve: ",
     "Flamethrower: Yes",
     "Place: 4 Gasoline",
+    "Stoke: ",
+    "Dampen: "
+],
+                "Beggars Can't be Choosers": [
+      "Payout: 480K",
+    "Profit/Nerve: ",
+    "Flamethrower: Yes",
+    "Place: 5 Gasoline, 2 Thermite",
     "Stoke: ",
     "Dampen: "
 ],
@@ -1142,11 +1150,10 @@ async function getPricesFromAPI() {
 ],
 "End of the Line": [
     [
-    "Payout: 39K",
-    "Try: 3 Gasoline",
+    "Payout: 100K",
     "Profit/Nerve: ",
     "Flamethrower: No",
-    "Place: 2 Gasoline ",
+    "Place: 5 Gasoline ",
     "Stoke: ",
     "Dampen: "
 ],
@@ -2644,13 +2651,23 @@ async function getPricesFromAPI() {
     "Stoke: 1 Flamethrower",
     ]
     ],
-"Supermarket Sweep": [
+        "Supermarket Sweep": [
+            [
+    "Payout: 265K",
+    "Profit/Nerve:",
+    "Flamethrower: No",
+    "Place: 5 Gasoline",
+    "Stoke: 1 Lighter",
+    "Dampen: "
+],
+ [
     "Payout: 265K",
     "Profit/Nerve:",
     "Flamethrower: Yes",
     "Place: 5 Gasoline",
     "Stoke: ",
     "Dampen: "
+     ]
 ],
 "Swansong": [
     "Payout: 27K",
@@ -2879,7 +2896,7 @@ async function getPricesFromAPI() {
     "Dampen: "
 ],
         "The Smoking Gun": [
-    "Payout: 480K",
+    "Payout: 470K",
     "Profit/Nerve: ",
     "Ignite: Lighter",
     "Place: 4 Kerosene",

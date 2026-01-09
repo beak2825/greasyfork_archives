@@ -1,15 +1,14 @@
 // ==UserScript==
 // @name         Dragon Cave - Large Dragons
 // @namespace    https://github.com/BleatBytes/DragCave-Large-Dragons
-// @version      v1.8
+// @version      v1.9
 // @description  Makes dragons in Dragon Cave appear larger on their View page, on a User's page, and on a user's Dragons page.
 // @author       Valen
 // @match        *://dragcave.net/account
-// @match        *://dragcave.net/view/*
-// @match        *://dragcave.net/user/*
-// @match        *://dragcave.net/dragons
-// @match        *://dragcave.net/dragons/*
-// @match        *://dragcave.net/group/*
+// @match        *://dragcave.net/view*
+// @match        *://dragcave.net/user*
+// @match        *://dragcave.net/dragons*
+// @match        *://dragcave.net/group*
 // @icon         https://icons.duckduckgo.com/ip2/dragcave.net.ico
 // @grant        GM_addStyle
 // @grant        GM_getValue
@@ -34,7 +33,7 @@ const themeObjs = [
     { title:"1960s", keyword: "six", button1: "#782e15", button2: "#782e15", buttontxt: "#f9f9f9", collp1: "#fff0", collp2: "#6e2910", collptxt: "#000", border: "#fff0" },
 ];
 
-const init = function() {
+const initMem = function() {
     let $localRef = refObjs;
     for(let i = 0; i < $localRef.length; i++) {
         let $this = $localRef[i];
@@ -145,11 +144,11 @@ async function setHTMLInputs() {
     let $mobile = document.querySelector('body').classList.contains('mobile');
     let $ul = await setHTML();
     let $il = refObjs;
-    let $command;
 
     for(let i = 0; i < $il.length; i++) {
         let $this = $il[i];
         let $li = document.createElement('li');
+        let $command;
         let $input = function(){
             let aux = document.createElement('input');
             aux.classList.add("LDinput");
@@ -157,7 +156,6 @@ async function setHTMLInputs() {
                 aux.type = "checkbox";
                 aux.name = $this.name;
                 aux.checked = GM_getValue($this.name, $this.default);
-
                 $command = $this.name;
                 $li.dataset.role = $this.name;
             } else if (typeof GM_getValue($this.name) == 'number') {
@@ -242,7 +240,7 @@ async function setHTMLSelect() {
         $select.append($op)
     };
 
-GM_addStyle(`
+    GM_addStyle(`
 #largeDragons {
   border: 2px solid ${$current.border};
 }
@@ -290,131 +288,85 @@ GM_addStyle(`
     $container.classList.add("_7i_5");
     $container.append($explanation, $selspan);
     $li.append($container);
-}
-
-function viewBig(){
-    let $N;
-    const calcAt = function(n, param){
-        let ele = document.querySelector('img[class="spr _6i_2"]');
-        let ret;
-        if (ele.hasAttribute(param) == false){
-            let newImg = new Image();
-            newImg.onload = function(){
-                if (param.test(/(width)/)) {
-                    ret = this.width;
-                } else if (param.test(/(height)/)) {
-                    ret = this.height;
-                };
-            };
-            newImg.src = ele.src;
-        } else {
-            ret = ele.getAttribute(param);
-        }
-        return ret * n;
-    };
-
-    const adultN = GM_getValue("viewSize1");
-    const babyN = GM_getValue("viewSize2");
-    let tinyBabies = function() {
-        if (babyN <= 1) {
-            return true
-        } else {
-            return false
-        }
-    }();
-    let growthCheck = document.querySelector("._6i_0 section > p").textContent.match(/(will die)/);
-
-    if (growthCheck && (tinyBabies == false)){ // <- Si es un bebé y no se quieren bebés chicos
-        $N = babyN;
-        GM_addStyle(`
-        img[class='spr _6i_2'] {
-            width: ${calcAt($N, "width")}px!important;
-            height: ${calcAt($N, "height")}px!important;
-            image-rendering: crisp-edges;
-        };
-    `);
-    } else if (!growthCheck) { // <- Si es un adulto
-        $N = adultN;
-        GM_addStyle(`
-        img[class='spr _6i_2'] {
-            width: ${calcAt($N, "width")}px!important;
-            height: ${calcAt($N, "height")}px!important;
-            image-rendering: crisp-edges;
-        };
-    `);
-    };
 };
 
-function listBig(){
-    let imgs;
-    if (location.href.match(/\/(dragons)$/) || location.href.match(/\/(dragons)\S+/)) {
-        imgs = document.querySelectorAll("#dragonlist img[class='_11_2']");
-    } else if (location.href.match(/\/(user)\S+/)) {
-        imgs = document.querySelectorAll("._1l_0 img[class='_11_2']");
-    } else if (location.href.match(/\/(group)\S+/)) {
-        imgs = document.querySelectorAll("#udragonlist img[class='_11_2']");
-    };
-
+function genEnlarge(el, n) {
     let w;
     let h;
-    const adultN = GM_getValue("listSize1");
-    const babyN = GM_getValue("listSize2");
-    let tinyBabies = function() {
-        if (babyN <= 1) {
-            return true
-        } else {
-            return false
-        }
-    }(); // <- Makes eggs and hatchlings appear small on Dragons and User pages. Turns to "false" automatically when the baby size multiplier is equal or smaller than 1.
-
-    for(var i=0; i < imgs.length; i++){
-        let ele = imgs[i];
-        if (ele.hasAttribute('width') || ele.hasAttribute('height')){
-            w = ele.getAttribute('width');
-            h = ele.getAttribute('height');
-            ele.setAttribute('width', w * adultN);
-            ele.setAttribute('height', h * adultN);
-        } else if (tinyBabies != true) {
-            let newImg = new Image();
-            newImg.onload = function(){
-                const imageWidth = this.width;
-                const imageHeight = this.height;
-                ele.setAttribute('width', imageWidth * babyN);
-                ele.setAttribute('height', imageHeight * babyN);
-            };
-            newImg.src = ele.src;
-        } else {
-            continue
+    if (el.hasAttribute('width') && el.hasAttribute('height')){
+        w = el.getAttribute('width');
+        h = el.getAttribute('height');
+        el.setAttribute('width', w * n);
+        el.setAttribute('height', h * n);
+    } else {
+        let newImg = new Image();
+        newImg.onload = function(){
+            const imgWidth = this.width;
+            const imgHeight = this.height;
+            el.setAttribute('width', imgWidth * n);
+            el.setAttribute('height', imgHeight * n);
         };
+        newImg.src = el.src;
     };
-
-    GM_addStyle(`
-        #dragonlist img[class='_11_2'], ._1l_0 img[class='_11_2'], #udragonlist img[class='_11_2']{
-            image-rendering: crisp-edges;
-        };
-    `);
 };
 
 const exec = function() {
-    if (location.href.match(/\/(account)$/)) {
-        setHTMLSelect();
+    let views = GM_getValue("viewCheck");
+    let lists = GM_getValue("listCheck");
+
+    switch(true) {
+        case /\/(account)$/.test(location.href):
+            setHTMLSelect()
+            break;
+        case (views == true && /\/(view)\S+/.test(location.href)):
+            turnBig("img[class='spr _6i_2']", "viewSize1", "viewSize2");
+            break;
+        //case ((GM_getValue("listCheck") && document.querySelector('body').classList.contains('mobile') == false)) && :
+        case (lists == true && document.querySelector('body').classList.contains('mobile') == false) && /\/(dragons)(\S+){0,}/.test(location.href):
+            turnBig("#dragonlist img[class='_11_2']", "listSize1", "listSize2");
+            break;
+        case (lists == true && document.querySelector('body').classList.contains('mobile') == false) && /\/(user)(\S+){0,}/.test(location.href):
+            //await fakeID(); // <- Haciendo trampa (?
+            turnBig("._1l_0 img[class='_11_2']", "listSize1", "listSize2");
+            break;
+        case (lists == true && document.querySelector('body').classList.contains('mobile') == false) && /\/(group)\/\d+/.test(location.href):
+            turnBig("#udragonlist img[class='_11_2']", "listSize1", "listSize2");
+            break;
+        default:
+            console.log(`${GM_info.script.name}: no valid action (can't find dragon/s to resize.)`);
     }
-    if ((GM_getValue("listCheck") && document.querySelector('body').classList.contains('mobile') == false) && (location.href.match(/\/(dragons)$/) || location.href.match(/\/(dragons)\S+/) || location.href.match(/\/(user)\S+/) || location.href.match(/\/(group)\S+/) )) {
-        if (document.readyState !== 'loading') {
-            listBig();
-        } else {
-            document.addEventListener('DOMContentLoaded', function() {
-                listBig();
-            });
-        };
-    };
-    if ((GM_getValue("viewCheck")) && location.href.match(/\/(view)\S+/)){
-        if (document.readyState !== 'loading') {
-            viewBig();
-        } else {
-            document.addEventListener('DOMContentLoaded', function() {
-                viewBig();
-            });
-        };
-    };
 }();
+
+async function turnBig(imgselector, adult, baby) {
+    let regex = /^(((h|H)atchling)|((e|E)gg))/
+    let dragons = await Array.from(document.querySelectorAll(imgselector));
+    console.log(imgselector, "/", dragons)
+    let adultN = GM_getValue(adult);
+    let babyN = GM_getValue(baby);
+
+    if (dragons[0].closest("table") == null) { // <- Sólo va a ser null si se está en /view/
+        dragons = dragons.reduce(x => x);
+        let growthCheck = document.querySelector("._6i_0 section > p").textContent.match(regex);
+
+        if ( !growthCheck && (1 <= adultN)){ // <- Si es un adulto con valor mayor o igual a 1
+            genEnlarge(dragons, adultN);
+        } else if (growthCheck && (1 <= babyN)) { // <- Si es un bebé con valor mayor o igual a 1
+            genEnlarge(dragons, babyN);
+        };
+    } else { // <- Asumiendo que se trata de una página con elementos de tabla (/dragons/, /group/, etc etc)
+        let table = dragons[0].closest("table");
+
+        for (var i = 1, row; row = table.rows[i]; i++) {
+            let img = row.cells[0].querySelector("img");
+            let age = row.cells[2].textContent;
+            let ageCheck = age.match(regex);
+
+            if ( !ageCheck && (1 <= adultN)){ // <- Si es un adulto con valor mayor o igual a 1
+                genEnlarge(img, adultN);
+            } else if (ageCheck && (1 <= babyN)) { // <- Si es un bebé con valor mayor o igual a 1
+                genEnlarge(img, babyN);
+            };
+        };
+    };
+    GM_addStyle(`${imgselector} { image-rendering: crisp-edges; }`);
+};

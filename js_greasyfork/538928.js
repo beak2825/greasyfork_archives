@@ -5,7 +5,7 @@
 // @match       https://www.cuberealm.io/*
 // @run-at      document-start
 // @grant       none
-// @version     1.2.4
+// @version     1.2.5
 // @author      Thibb1
 // @description Cuberealm extender Kb+, adds helpful features like Zoom and friend/enemy list
 // @license     GPL
@@ -593,7 +593,7 @@ function delFriend(name) {
   const index = friends.indexOf(name);
   if (index > -1) {
     friends.splice(index, 1);
-    setData("Kb+_friends", enemies);
+    setData("Kb+_friends", friends);
     sendMessage(`Removed ${name} from friends list`, Colors.GREEN);
   } else {
     sendMessage(`${name} is not in your friends list`, Colors.YELLOW);

@@ -6,7 +6,8 @@
 // @author       MajaBukvic
 // @match        https://ajuda.a2z.com/cms.html*
 // @grant        GM_xmlhttpRequest
-// @connect      *.sharepoint.com
+// @grant        unsafeWindow
+// @connect      amazon.sharepoint.com
 // @downloadURL https://update.greasyfork.org/scripts/550365/Ajuda%20Cart%20Batch%20Selector.user.js
 // @updateURL https://update.greasyfork.org/scripts/550365/Ajuda%20Cart%20Batch%20Selector.meta.js
 // ==/UserScript==
@@ -24,7 +25,7 @@
     // SharePoint tracking configuration
     const TRACKING_CONFIG = {
         enabled: true,
-        siteUrl: 'https://amazon.sharepoint.com/sites/amazonwatson', 
+        siteUrl: 'https://amazon.sharepoint.com/sites/amazonwatson',
         listName: 'TampermonkeyUsageLog'
     };
 
@@ -182,32 +183,18 @@
     // TRACKING FUNCTIONS
     // ========================================
 
-    /**
-     * Get current username from the page or environment
-     */
     function getCurrentUsername() {
-        // Try to get username from various sources
-        // Option 1: Check if there's a user element on the page
         const userElement = document.querySelector('.user-name, .username, [data-username]');
         if (userElement) {
             return userElement.textContent.trim() || userElement.dataset.username;
         }
-        
-        // Option 2: Check localStorage or sessionStorage
         const storedUser = localStorage.getItem('ajuda_username') || sessionStorage.getItem('username');
         if (storedUser) {
             return storedUser;
         }
-        
-        // Option 3: Return a default identifier
         return 'Unknown User';
     }
 
-    /**
-     * Log usage to SharePoint list
-     * @param {string} action - The action being tracked (e.g., 'script_loaded', 'primary_batch_selected')
-     * @param {object} additionalData - Any additional data to include
-     */
     function trackUsage(action, additionalData = {}) {
         if (!TRACKING_CONFIG.enabled) {
             console.log('[Batch Selector] Tracking disabled');
@@ -216,34 +203,24 @@
 
         const trackingData = {
             Title: `${SCRIPT_NAME} - ${action}`,
-            aflk: action,  // Action field
-            k3hk: window.location.href,  // PageURL field
-            pk8k: `${SCRIPT_NAME} v${SCRIPT_VERSION}`,  // ScriptName field
-            tg5f: getCurrentUsername(),  // Username field
+            aflk: action,
+            k3hk: unsafeWindow.location.href,
+            pk8k: `${SCRIPT_NAME} v${SCRIPT_VERSION}`,
+            tg5f: getCurrentUsername(),
             ...additionalData
         };
 
         console.log('[Batch Selector] Tracking:', trackingData);
-
-        // Use GM_xmlhttpRequest for cross-origin requests
-        if (typeof GM_xmlhttpRequest !== 'undefined') {
-            sendToSharePoint(trackingData);
-        } else {
-            // Fallback: Try using fetch with credentials
-            sendToSharePointFetch(trackingData);
-        }
+        sendToSharePoint(trackingData);
     }
 
-    /**
-     * Send tracking data to SharePoint using GM_xmlhttpRequest
-     */
     function sendToSharePoint(data) {
+        const contextUrl = `${TRACKING_CONFIG.siteUrl}/_api/contextinfo`;
         const listApiUrl = `${TRACKING_CONFIG.siteUrl}/_api/web/lists/getbytitle('${TRACKING_CONFIG.listName}')/items`;
 
-        // First, get the form digest value
         GM_xmlhttpRequest({
             method: 'POST',
-            url: `${TRACKING_CONFIG.siteUrl}/_api/contextinfo`,
+            url: contextUrl,
             headers: {
                 'Accept': 'application/json;odata=verbose',
                 'Content-Type': 'application/json;odata=verbose'
@@ -253,7 +230,6 @@
                     const contextInfo = JSON.parse(response.responseText);
                     const formDigest = contextInfo.d.GetContextWebInformation.FormDigestValue;
 
-                    // Now create the list item
                     GM_xmlhttpRequest({
                         method: 'POST',
                         url: listApiUrl,
@@ -288,55 +264,6 @@
             onerror: function(error) {
                 console.warn('[Batch Selector] Error getting form digest:', error);
             }
-        });
-    }
-
-    /**
-     * Fallback: Send tracking data using fetch
-     */
-    function sendToSharePointFetch(data) {
-        const listApiUrl = `${TRACKING_CONFIG.siteUrl}/_api/web/lists/getbytitle('${TRACKING_CONFIG.listName}')/items`;
-
-        // Get form digest first
-        fetch(`${TRACKING_CONFIG.siteUrl}/_api/contextinfo`, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Accept': 'application/json;odata=verbose',
-                'Content-Type': 'application/json;odata=verbose'
-            }
-        })
-        .then(response => response.json())
-        .then(contextInfo => {
-            const formDigest = contextInfo.d.GetContextWebInformation.FormDigestValue;
-
-            return fetch(listApiUrl, {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Accept': 'application/json;odata=verbose',
-                    'Content-Type': 'application/json;odata=verbose',
-                    'X-RequestDigest': formDigest
-                },
-                body: JSON.stringify({
-                    '__metadata': { 'type': 'SP.Data.TampermonkeyUsageLogListItem' },
-                    'Title': data.Title,
-                    'aflk': data.aflk,
-                    'k3hk': data.k3hk,
-                    'pk8k': data.pk8k,
-                    'tg5f': data.tg5f
-                })
-            });
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('[Batch Selector] Usage tracked successfully (fetch)');
-            } else {
-                console.warn('[Batch Selector] Failed to track usage (fetch):', response.statusText);
-            }
-        })
-        .catch(error => {
-            console.warn('[Batch Selector] Error tracking usage (fetch):', error);
         });
     }
 
@@ -388,10 +315,13 @@
         return match ? { id: match[1], layer: match[2], locale: match[3] } : null;
     }
 
+    /**
+     * FIXED: Use unsafeWindow for proper window reference
+     */
     function simulateClick(element) {
         if (!element) return;
         const event = new MouseEvent('click', {
-            view: window,
+            view: unsafeWindow,
             bubbles: true,
             cancelable: true
         });
@@ -436,7 +366,6 @@
 
         Object.entries(groups).forEach(([blurbName, group]) => {
             if (isPrimary) {
-                // Primary selection: ONLY select primary layers
                 selectedFunction.primaryLayers.forEach(layer => {
                     const layerVersions = group.versions.filter(v => v.layer === layer);
                     if (layerVersions.length > 0) {
@@ -444,7 +373,6 @@
                     }
                 });
             } else {
-                // Secondary selection: select ALL layers in secondaryLayers
                 selectedFunction.secondaryLayers.forEach(layer => {
                     const layerVersions = group.versions.filter(v => v.layer === layer);
                     if (layerVersions.length > 0) {
@@ -470,11 +398,7 @@
 
         // Track the batch selection
         const savedSelections = loadSelections();
-        trackUsage(isPrimary ? 'primary_batch_selected' : 'secondary_batch_selected', {
-            vertical: savedSelections.vertical,
-            function: savedSelections.function,
-            itemsSelected: selectedCount
-        });
+        trackUsage(isPrimary ? 'primary_batch_selected' : 'secondary_batch_selected');
 
         return selectedCount;
     }
@@ -506,7 +430,6 @@
     }
 
     function handleBatchSelection() {
-        // Track dialog opened
         trackUsage('batch_dialog_opened');
 
         const dialog = document.createElement('div');
@@ -551,15 +474,15 @@
             </div>
             
             <div style="text-align: center; border-top: 1px solid #eee; padding-top: 15px;">
-                <button id="selectPrimary" class="btn btn-primary" style="margin: 5px; padding: 8px 20px; background: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <button id="selectPrimary" type="button" class="btn btn-primary" style="margin: 5px; padding: 8px 20px; background: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer;">
                     ✓ Select Primary Batch
                 </button>
                 <br>
-                <button id="selectSecondary" class="btn btn-info" style="margin: 5px; padding: 8px 20px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <button id="selectSecondary" type="button" class="btn btn-info" style="margin: 5px; padding: 8px 20px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer;">
                     ✓ Select Secondary Batch
                 </button>
                 <br>
-                <button id="closeDialog" class="btn" style="margin: 5px; padding: 8px 20px; background: #f5f5f5; color: #333; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
+                <button id="closeDialog" type="button" class="btn" style="margin: 5px; padding: 8px 20px; background: #f5f5f5; color: #333; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;">
                     Close
                 </button>
             </div>
@@ -571,7 +494,6 @@
 
         dialog.innerHTML = html;
         
-        // Create overlay
         const overlay = document.createElement('div');
         overlay.id = 'batchSelectorOverlay';
         overlay.style.cssText = `
@@ -590,7 +512,6 @@
         const verticalSelect = document.getElementById('verticalSelect');
         updateFunctionSelect(savedSelections.vertical || verticalSelect.value);
 
-        // Event handlers
         verticalSelect.onchange = (e) => {
             selectedVertical = VERTICAL_CONFIGS[e.target.value];
             updateFunctionSelect(e.target.value);
@@ -633,7 +554,6 @@
             if (overlayEl) overlayEl.remove();
         }
 
-        // Initialize selections
         if (savedSelections.vertical) {
             selectedVertical = VERTICAL_CONFIGS[savedSelections.vertical];
             if (savedSelections.function && VERTICAL_CONFIGS[savedSelections.vertical].functions[savedSelections.function]) {
@@ -648,9 +568,6 @@
         }
     }
 
-    /**
-     * Show a notification toast
-     */
     function showNotification(message, type = 'info') {
         const notification = document.createElement('div');
         notification.style.cssText = `
@@ -665,27 +582,24 @@
             z-index: 10002;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 13px;
-            animation: slideIn 0.3s ease;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(100px);
         `;
         notification.textContent = message;
         
-        // Add animation keyframes
-        if (!document.getElementById('batchSelectorStyles')) {
-            const style = document.createElement('style');
-            style.id = 'batchSelectorStyles';
-            style.textContent = `
-                @keyframes slideIn {
-                    from { transform: translateX(100px); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-        
         document.body.appendChild(notification);
         
+        // Animate in
         setTimeout(() => {
-            notification.style.animation = 'slideIn 0.3s ease reverse';
+            notification.style.opacity = '1';
+            notification.style.transform = 'translateX(0)';
+        }, 10);
+        
+        // Animate out and remove
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(100px)';
             setTimeout(() => notification.remove(), 300);
         }, 3000);
     }
@@ -695,8 +609,7 @@
     // ========================================
 
     function initialize() {
-        if (window.location.href.includes('ajuda.a2z.com/cms.html')) {
-            // Track script loaded
+        if (unsafeWindow.location.href.includes('ajuda.a2z.com/cms.html')) {
             trackUsage('script_loaded');
 
             const observer = new MutationObserver((mutations, obs) => {
@@ -715,7 +628,6 @@
         }
     }
 
-    // Start the script
     initialize();
 
 })();

@@ -3,7 +3,7 @@
 // @name:de            TracklistToRYM
 // @name:en            TracklistToRYM
 // @namespace          sun/userscripts
-// @version            1.51.0
+// @version            1.51.1
 // @description        Imports an album's tracklist from various sources into Rate Your Music.
 // @description:de     Importiert die Tracklist eines Albums von verschiedenen Quellen in Rate Your Music.
 // @description:en     Imports an album's tracklist from various sources into Rate Your Music.
@@ -2162,7 +2162,7 @@
   }
 
   function parseAlbum(album) {
-    return album.trim().replace(/^–\s/, "");
+    return album.trim().replace(/^\u2013\s/, "");
   }
 
   function parseArtist(artist) {

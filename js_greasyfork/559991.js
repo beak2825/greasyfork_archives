@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OnlyFaucet – Auto Login + Faucet Panel + Smart Captcha + Auto Claim
 // @namespace    https://onlyfaucet.com/
-// @version      1.1
+// @version      1.4
 // @description  Auto login, instant faucet navigation panel, smart captcha detection (with or without checkbox), auto claim after captcha success or direct availability
 // @author       Rubystance
 // @license      MIT
@@ -13,6 +13,22 @@
 
 (function () {
     'use strict';
+
+    const MAX_CLAIMS = 60;
+    let claimCount = 0;
+    let claimLocked = false;
+
+    function canClaim() {
+        if (claimLocked) return false;
+
+        if (claimCount >= MAX_CLAIMS) {
+            claimLocked = true;
+            console.warn('🛑 Claim limit reached (60). Reload or change page to continue.');
+            alert('🛑 Claim limit reached (60).\nReload or change the page to continue.');
+            return false;
+        }
+        return true;
+    }
 
     const EMAIL = 'YOUR_FAUCETPAY_EMAIL_HERE'; // << YOUR_FAUCETPAY_EMAIL
 
@@ -44,7 +60,6 @@
         ['POL','https://onlyfaucet.com/faucet/currency/pol'],
     ];
 
-    // Use referral link only once
     if (!localStorage.getItem(REF_STORAGE_KEY)) {
         localStorage.setItem(REF_STORAGE_KEY, 'true');
         if (location.href === 'https://onlyfaucet.com/' || location.href === 'https://onlyfaucet.com') {
@@ -63,7 +78,7 @@
             } else if (Date.now() - start > timeout) {
                 clearInterval(interval);
             }
-        }, 300);
+        }, 1000);
     }
 
     function autoLogin() {
@@ -136,7 +151,14 @@
     }
 
     function clickClaimButton() {
+        if (!canClaim()) return;
+
         const interval = setInterval(() => {
+            if (!canClaim()) {
+                clearInterval(interval);
+                return;
+            }
+
             const button = document.querySelector('#subbutt');
             if (!button) return;
 
@@ -152,13 +174,26 @@
                 button.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
                 button.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
                 button.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+                claimCount++;
+                console.log(`✅ Claim ${claimCount} / ${MAX_CLAIMS}`);
+
+                if (claimCount >= MAX_CLAIMS) {
+                    claimLocked = true;
+                    alert('🛑 60 claims reached.\nReload or change the page to continue.');
+                }
+
                 clearInterval(interval);
             }
-        }, 300);
+        }, 1000);
     }
 
     function smartCaptchaFlow() {
+        if (!canClaim()) return;
+
         waitFor('#subbutt', () => {
+            if (!canClaim()) return;
+
             if (captchaExists()) {
                 clickCaptchaCheckbox();
                 observeCaptchaAndClaim();

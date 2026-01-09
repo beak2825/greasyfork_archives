@@ -9,12 +9,12 @@
 // @antifeature:zh-TW payment  腳本會請求第三方收費題庫進行答題，您可以選擇付費或停用答案功能
 // @antifeature:en payment  The script will request a third-party paid question bank to answer questions. You can choose to pay or disable the answering function.
 // @namespace    申禅姌
-// @version      2.7.1
+// @version      2.7.2
 // @author       申禅姌
 // @run-at       document-end
 // @storageName  申禅姌
 // @match        *://*/*
-// @icon         https://d2.ananas.chaoxing.com/download/e1cd575a26bef1be8eac7bc240bd0066?at_=1758127482630&ak_=37ec368f380c0277e2dce6806ad21e84&ad_=95e8da3baa643c7dc2bb08acba4b6b6e
+// @icon         https://f12.cx/favicon.png
 // @grant        unsafeWindow
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue

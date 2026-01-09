@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         YouTube Theater Fill (Brave) — v3.2 clean + OSD
+// @name         YouTube Theater Fill (Brave) — v3.3 clean + OSD
 // @namespace    https://greasyfork.org/users/1533208
-// @version      3.2-stable
-// @description  Minimal, stability-first build for Brave: auto-enable Theater and fill viewport height with clean letterboxing. 
+// @version      3.3-stable
+// @description  Stability-first build for Brave: prefer native theater toggle + fill viewport height with clean letterboxing.
 // @author       Martin (Left234) & Lina
 // @license      MIT
 // @match        https://*.youtube.com/*
@@ -10,13 +10,12 @@
 // @exclude      https://music.youtube.com/*
 // @run-at       document-start
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/554496/YouTube%20Theater%20Fill%20%28Brave%29%20%E2%80%94%20v32%20clean%20%2B%20OSD.user.js
-// @updateURL https://update.greasyfork.org/scripts/554496/YouTube%20Theater%20Fill%20%28Brave%29%20%E2%80%94%20v32%20clean%20%2B%20OSD.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/554496/YouTube%20Theater%20Fill%20%28Brave%29%20%E2%80%94%20v33%20clean%20%2B%20OSD.user.js
+// @updateURL https://update.greasyfork.org/scripts/554496/YouTube%20Theater%20Fill%20%28Brave%29%20%E2%80%94%20v33%20clean%20%2B%20OSD.meta.js
 // ==/UserScript==
 (() => {
   "use strict";
 
-  const VERSION  = "3.0-stripped-beta";
   const CLASS    = "ytf-fill";
   const COVER    = "ytf-cover-header";
   const STYLE_ID = "ytf-fill-style";
@@ -52,9 +51,11 @@ body.${CLASS} ytd-app { position: static !important; }
 /* Size the main host containers to the usable viewport */
 body.${CLASS} ytd-watch-flexy[theater] #player-theater-container.ytd-watch-flexy,
 body.${CLASS} ytd-watch-flexy[theater] #player-full-bleed-container.ytd-watch-flexy,
+body.${CLASS} ytd-watch-flexy[theater] #player-full-bleed-container,
 body.${CLASS} ytd-watch-flexy[theater] #full-bleed-container.ytd-watch-flexy,
 body.${CLASS} ytd-watch-grid[theater]   #player-theater-container.ytd-watch-grid,
 body.${CLASS} ytd-watch-grid[theater]   #player-full-bleed-container.ytd-watch-grid,
+body.${CLASS} ytd-watch-grid[theater]   #player-full-bleed-container,
 body.${CLASS} ytd-watch-grid[theater]   #full-bleed-container.ytd-watch-grid {
   height: calc(var(--ytf-viewport, 100vh) - var(--ytf-offset, 56px)) !important;
   max-height: calc(var(--ytf-viewport, 100vh) - var(--ytf-offset, 56px)) !important;
@@ -150,21 +151,23 @@ ytd-watch-grid[theater]   #player-theater-container.ytd-watch-grid {
     try { LS_THEATER_PREF_KEYS.forEach(k => localStorage.setItem(k, "DEFAULT_ON")); } catch {}
   }
 
-  function ensureTheater(flexy) {
-    if (!flexy) return;
+  // Prefer native theater toggle (same pathway as pressing 'T')
+  function ensureTheaterNative() {
     setTheaterPref();
-    if (!flexy.hasAttribute("theater")) {
-      try { flexy.setAttribute("theater", ""); } catch {}
-      try { flexy.theater = true; } catch {}
-      queueMicrotask(() => {
-        const stillNot = !$("ytd-watch-flexy[theater], ytd-watch-grid[theater]");
-        if (stillNot) { const btn = document.querySelector(".ytp-size-button"); if (btn) btn.click(); }
-      });
-    }
+    const isTheater = !!$("ytd-watch-flexy[theater], ytd-watch-grid[theater]");
+    if (isTheater) return;
+
+    const btn = document.querySelector(".ytp-size-button");
+    if (btn) btn.click();
   }
 
   function whenFlexy(cb) {
-    const tryNow = () => { const el = $("ytd-watch-flexy, ytd-watch-grid"); if (!el) return false; cb(el); return true; };
+    const tryNow = () => {
+      const el = $("ytd-watch-flexy, ytd-watch-grid");
+      if (!el) return false;
+      cb(el);
+      return true;
+    };
     if (tryNow()) return;
     const mo = new MutationObserver(() => { if (tryNow()) mo.disconnect(); });
     mo.observe(document.documentElement, { childList: true, subtree: true });
@@ -176,34 +179,24 @@ ytd-watch-grid[theater]   #player-theater-container.ytd-watch-grid {
               document.mozFullScreenElement ||
               document.msFullscreenElement);
   }
-  function onFullscreenChange(){ if (document.body) { document.body.classList.toggle(COVER, isFullscreen()); updateOffset(); } }
-
-  // Strip inline styles that can persist across SPA transitions and cause corner/tiny/offset issues.
-  function normalizePlayerSizing(){
-    const player    = document.getElementById('movie_player');
-    const container = player?.querySelector('.html5-video-container');
-    const video     = player?.querySelector('video.html5-main-video');
-    if (!player || !container || !video) return;
-
-    [player, container, video].forEach(el => {
-      ['width','height','left','top','right','bottom','transform'].forEach(p => { try { el.style.removeProperty(p); } catch {} });
-    });
-
-    try {
-      container.style.position = 'absolute';
-      container.style.inset = '0';
-      video.style.width = '100%';
-      video.style.height = '100%';
-      video.style.objectFit = 'contain';
-      video.style.objectPosition = 'center center';
-    } catch {}
+  function onFullscreenChange(){
+    if (!document.body) return;
+    document.body.classList.toggle(COVER, isFullscreen());
+    updateOffset();
   }
 
   function apply(){
     if (!document.body) return;
     if (!onWatch()) { document.body.classList.remove(CLASS, COVER); return; }
     document.body.classList.add(CLASS);
-    whenFlexy(flexy => { ensureTheater(flexy); updateOffset(); normalizePlayerSizing(); });
+
+    whenFlexy(() => {
+      // Run theater enable on next frame so the player is fully attached.
+      requestAnimationFrame(() => {
+        ensureTheaterNative();
+        updateOffset();
+      });
+    });
   }
 
   // ---------- init ----------
@@ -214,15 +207,16 @@ ytd-watch-grid[theater]   #player-theater-container.ytd-watch-grid {
     apply();
     updateOffset();
 
-    // Minimal, stability-first hooks only
     document.addEventListener("yt-navigate-finish", apply);
     window.addEventListener("load", apply);
     window.addEventListener("resize", updateOffset);
+
     document.addEventListener("fullscreenchange", onFullscreenChange);
     document.addEventListener("webkitfullscreenchange", onFullscreenChange);
     document.addEventListener("mozfullscreenchange", onFullscreenChange);
     document.addEventListener("MSFullscreenChange", onFullscreenChange);
   });
+
   // ---- Minimal Volume OSD + Arrow Up/Down hotkeys (no layout changes) ----
   (function ytfMinimalVolumeOSD(){
     const VOL_STEP = 0.05;
@@ -234,8 +228,7 @@ ytd-watch-grid[theater]   #player-theater-container.ytd-watch-grid {
       if (el.isContentEditable) return true;
       const t = el.tagName;
       if (!t) return false;
-      const edit = /^(INPUT|TEXTAREA|SELECT)$/i.test(t);
-      return edit || !!el.closest('input, textarea, select, [contenteditable="true"]');
+      return /^(INPUT|TEXTAREA|SELECT)$/i.test(t) || !!el.closest('input, textarea, select, [contenteditable="true"]');
     }
 
     function getVideo(){
@@ -265,7 +258,7 @@ ytd-watch-grid[theater]   #player-theater-container.ytd-watch-grid {
       const r = v.getBoundingClientRect();
       if (!r.width || !r.height) return;
       const x = r.left + r.width / 2;
-      const y = r.top + r.height * 0.382; // golden-ish
+      const y = r.top + r.height * 0.382;
       osd.style.left = x + "px";
       osd.style.top  = y + "px";
     }
@@ -293,7 +286,6 @@ ytd-watch-grid[theater]   #player-theater-container.ytd-watch-grid {
         if (newVol !== v.volume){
           if (v.muted && newVol > 0) v.muted = false;
           v.volume = newVol;
-          // let YouTube react naturally; do not touch layout/containers
           v.dispatchEvent(new Event('volumechange'));
           show(Math.round(newVol * 100));
         }
@@ -307,7 +299,6 @@ ytd-watch-grid[theater]   #player-theater-container.ytd-watch-grid {
       }
     }
 
-    // Bind once DOM is interactive; capture phase to win over page handlers
     const bind = () => { window.addEventListener("keydown", onKey, true); };
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bind, { once: true });
     else bind();
@@ -320,91 +311,3 @@ ytd-watch-grid[theater]   #player-theater-container.ytd-watch-grid {
   })();
 
 })();
-
-
-/* === YTF Experimental: Idle Boot + Black-Frame Nudge (v3.2) === */
-(function ytfIdleBootNudge(){
-  "use strict";
-  let armed = false;
-  let kicked = false;
-
-  function getVideo(){
-    return document.querySelector("video.html5-main-video") ||
-           document.querySelector("#movie_player video") ||
-           document.querySelector("ytd-player video") ||
-           document.querySelector("video");
-  }
-  function isPaintLikely(v){
-    try {
-      if (!v) return false;
-      const r = v.getBoundingClientRect();
-      return r && r.width > 40 && r.height > 40 && v.readyState >= 2 && v.videoWidth > 0;
-    } catch { return false; }
-  }
-  function displayFlip(v){
-    const prev = v.style.display || "";
-    v.style.display = "none";
-    window.dispatchEvent(new Event("resize"));
-    requestAnimationFrame(() => {
-      v.style.display = prev || "block";
-      window.dispatchEvent(new Event("resize"));
-    });
-  }
-  function tinySeekKick(v){
-    try { v.currentTime = Math.max(0, v.currentTime + 0.001); } catch {}
-  }
-
-  function lateKick(){
-    if (kicked) return;
-    const v = getVideo();
-    if (!v) return;
-    if (isPaintLikely(v)) return;
-    displayFlip(v);
-    setTimeout(() => {
-      if (!isPaintLikely(v)) tinySeekKick(v);
-    }, 120);
-    kicked = true;
-  }
-
-  function bindVideoOnce(v){
-    if (!v) return;
-    const start = () => {
-      setTimeout(lateKick, 150);
-      setTimeout(lateKick, 600);
-      setTimeout(lateKick, 1400);
-    };
-    ["loadedmetadata","loadeddata","playing","resize"].forEach(ev => {
-      try { v.addEventListener(ev, start, { once: true }); } catch {}
-    });
-    setTimeout(start, 800);
-  }
-
-  function run(){
-    if (armed) return;
-    if (document.visibilityState !== "visible"){
-      const onVis = () => {
-        if (document.visibilityState === "visible"){
-          document.removeEventListener("visibilitychange", onVis);
-          run();
-        }
-      };
-      document.addEventListener("visibilitychange", onVis);
-      return;
-    }
-    const v = getVideo();
-    if (!v){
-      setTimeout(run, 300);
-      return;
-    }
-    armed = true;
-    bindVideoOnce(v);
-  }
-
-  window.addEventListener("pageshow", () => { kicked = false; armed = false; run(); });
-  if ("requestIdleCallback" in window){
-    requestIdleCallback(run, { timeout: 1200 });
-  } else {
-    setTimeout(run, 400);
-  }
-})();
-

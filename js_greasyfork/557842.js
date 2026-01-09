@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Grok Auto-Retry + Prompt Snippets + History + Favorites (v36 - History Nav)
+// @name         Grok Auto-Retry + Prompt Snippets + History + Favorites (v41 - Edited Image History )
 // @namespace    http://tampermonkey.net/
-// @version      36
-// @description  Navigation arrows cycle through permanent prompt history with clear at end
+// @version      41
+// @description  Navigation arrows cycle through permanent prompt history. Adds Edited Image history + favorites. Fixes wrong tiny up-arrow "Make video" button click in Image Extend/Edit mode.
 // @author       You
 // @license      MIT
 // @match        https://grok.com/*
@@ -12,23 +12,26 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_setClipboard
-// @downloadURL https://update.greasyfork.org/scripts/557842/Grok%20Auto-Retry%20%2B%20Prompt%20Snippets%20%2B%20History%20%2B%20Favorites%20%28v36%20-%20History%20Nav%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/557842/Grok%20Auto-Retry%20%2B%20Prompt%20Snippets%20%2B%20History%20%2B%20Favorites%20%28v36%20-%20History%20Nav%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/557842/Grok%20Auto-Retry%20%2B%20Prompt%20Snippets%20%2B%20History%20%2B%20Favorites%20%28v41%20-%20Edited%20Image%20History%20%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/557842/Grok%20Auto-Retry%20%2B%20Prompt%20Snippets%20%2B%20History%20%2B%20Favorites%20%28v41%20-%20Edited%20Image%20History%20%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
     // --- CONFIGURATION ---
-    // User provided selector for video:
     const TARGET_TEXTAREA_SELECTOR = 'textarea[aria-label="Make a video"]';
+
     // Image selectors
-    const IMAGE_EDITOR_SELECTOR = 'textarea[aria-label="Type to edit image..."]';
-    const IMAGE_PROMPT_SELECTOR = 'textarea[aria-label="Image prompt"]';
+    const IMAGE_EDITOR_SELECTOR  = 'textarea[aria-label="Type to edit image..."]';
+    const IMAGE_PROMPT_SELECTOR  = 'textarea[aria-label="Image prompt"]';
     const IMAGE_IMAGINE_SELECTOR = 'p[data-placeholder="Type to imagine"]';
 
+    // Image Extend/Edit Mode Indicator
+    const IMAGE_EDIT_EXIT_SELECTOR = 'button[aria-label="Exit extend mode"]';
+
     // Buttons
-    const RETRY_BUTTON_SELECTOR = 'button[aria-label="Make video"]';
+    const RETRY_BUTTON_SELECTOR        = 'button[aria-label="Make video"]';
     const IMAGE_EDITOR_BUTTON_SELECTOR = 'button[aria-label="Generate"]';
     const IMAGE_SUBMIT_BUTTON_SELECTOR = 'button[aria-label="Submit"]';
 
@@ -49,12 +52,14 @@
     // --- DEFAULT SNIPPETS ---
     const DEFAULT_SNIPPETS = [
         {
-            id: 'b1', label: 'Anime Stickers (Provocative)',
-            text: 'Surrounding the central image: thick decorative border made of overlapping colorful anime-style stickers featuring nude anime girls with exaggerated proportions in various provocative poses. Each sticker has a white outline and slight drop shadow. The stickers completely frame all four edges of the image with some overlap into the main content.'
+            id: 'b1',
+            label: 'Anime Stickers (Provocative - Adults)',
+            text: 'Surrounding the central image: thick decorative border made of overlapping colorful anime-style stickers featuring adult anime women with exaggerated proportions in various provocative poses. Each sticker has a white outline and slight drop shadow. The stickers completely frame all four edges of the image with some overlap into the main content.'
         },
         {
-            id: 'b2', label: 'Anime Stickers (SFW)',
-            text: 'Surrounding the central image: thick decorative border made of overlapping colorful anime-style stickers featuring anime girls with exaggerated proportions in various poses. Each sticker has a white outline and slight drop shadow. The stickers completely frame all four edges of the image with some overlap into the main content.'
+            id: 'b2',
+            label: 'Anime Stickers (SFW)',
+            text: 'Surrounding the central image: thick decorative border made of overlapping colorful anime-style stickers featuring anime women in various poses. Each sticker has a white outline and slight drop shadow. The stickers completely frame all four edges of the image with some overlap into the main content.'
         },
         { id: '1', label: 'Motion: Slow Mo', text: 'slow motion, high frame rate, smooth movement' },
         { id: '2', label: 'Style: Photorealistic', text: 'photorealistic, 8k resolution, highly detailed, unreal engine 5 render' },
@@ -62,21 +67,27 @@
     ];
 
     // --- LOAD SAVED SETTINGS ---
-    let maxRetries = GM_getValue('maxRetries', 5);
-    let uiToggleKey = GM_getValue('uiToggleKey', 'h');
-    let autoClickEnabled = GM_getValue('autoClickEnabled', true);
-    let isUiVisible = GM_getValue('isUiVisible', true);
-    let savedSnippets = GM_getValue('savedSnippets', DEFAULT_SNIPPETS);
-    let videoPromptHistory = GM_getValue('videoPromptHistory', []);
-    let imagePromptHistory = GM_getValue('imagePromptHistory', []);
-    let videoFavorites = GM_getValue('videoFavorites', []);
-    let imageFavorites = GM_getValue('imageFavorites', []);
-    let panelSize = GM_getValue('panelSize', { width: '300px', height: '460px' });
+    let maxRetries        = GM_getValue('maxRetries', 5);
+    let uiToggleKey       = GM_getValue('uiToggleKey', 'h');
+    let autoClickEnabled  = GM_getValue('autoClickEnabled', true);
+    let isUiVisible       = GM_getValue('isUiVisible', true);
+
+    let savedSnippets        = GM_getValue('savedSnippets', DEFAULT_SNIPPETS);
+
+    let videoPromptHistory   = GM_getValue('videoPromptHistory', []);
+    let imagePromptHistory   = GM_getValue('imagePromptHistory', []);
+    let editedPromptHistory  = GM_getValue('editedPromptHistory', []); // NEW: Edited Image prompts
+
+    let videoFavorites       = GM_getValue('videoFavorites', []);
+    let imageFavorites       = GM_getValue('imageFavorites', []);
+    let editedFavorites      = GM_getValue('editedFavorites', []);     // NEW: Edited Image favorites
+
+    let panelSize            = GM_getValue('panelSize', { width: '300px', height: '460px' });
 
     // --- LOAD SAVED POSITIONS ---
     let mainPos = GM_getValue('pos_main', { top: 'auto', left: 'auto', bottom: '20px', right: '20px' });
-    let libPos = GM_getValue('pos_lib', { top: '100px', left: '100px' });
-    let favPos = GM_getValue('pos_fav', { top: '120px', left: '120px' });
+    let libPos  = GM_getValue('pos_lib',  { top: '100px', left: '100px' });
+    let favPos  = GM_getValue('pos_fav',  { top: '120px', left: '120px' });
     let histPos = GM_getValue('pos_hist', { top: '140px', left: '140px' });
 
     let isRetryEnabled = true;
@@ -89,20 +100,20 @@
     let observerThrottle = false;
     let moderationDetected = false;
     let processingModeration = false;
-    let currentHistoryTab = 'video';
-    let currentFavoritesTab = 'video';
+
+    let currentHistoryTab = 'video';       // 'video' | 'image' | 'edited'
+    let currentFavoritesTab = 'video';     // 'video' | 'image' | 'edited'
     let currentEditingFavId = null;
+
     let lastModerationCheck = 0;
     let errorWaitInterval = null;
 
     // --- HISTORY NAVIGATION VARIABLES ---
-    let historyNavIndex = -1; // -1 means current (not navigating), 0+ means position in history
+    let historyNavIndex = -1;
 
     // --- DEBUG LOGGER ---
     function debugLog(...args) {
-        if (DEBUG_MODE) {
-            console.log('[Grok Tools]', ...args);
-        }
+        if (DEBUG_MODE) console.log('[Grok Tools]', ...args);
     }
 
     // --- STYLES ---
@@ -259,7 +270,7 @@
         }
         .gl-close:hover { color: #f0f0f0; }
 
-        /* History Tab Styles */
+        /* History/Favorites Tab Styles */
         .history-tabs { display: flex; background: #0f0f0f; border-bottom: 1px solid #2a2a2a; }
         .history-tab {
             flex: 1; padding: 10px; text-align: center; cursor: pointer;
@@ -325,7 +336,6 @@
     const panel = document.createElement('div');
     panel.id = 'grok-control-panel';
 
-    // Apply saved position
     if (mainPos.top !== 'auto') {
         panel.style.top = mainPos.top;
         panel.style.left = mainPos.left;
@@ -340,7 +350,7 @@
     panel.innerHTML = `
         <div id="grok-resize-handle" title="Drag to Resize"></div>
         <div class="grok-header" id="grok-main-header">
-            <span class="grok-title">Grok Tools v34</span>
+            <span class="grok-title">Grok Tools v41</span>
             <button id="grok-toggle-btn" class="grok-toggle-btn">ON</button>
         </div>
         <div class="grok-controls">
@@ -412,6 +422,7 @@
         <div class="history-tabs">
             <div class="history-tab active" data-tab="video">🎥 Video</div>
             <div class="history-tab" data-tab="image">🖼️ Image</div>
+            <div class="history-tab" data-tab="edited">🖌️ Edited</div>
         </div>
         <div class="gl-view-list" id="favorites-view-list">
             <div class="gl-list-content" id="favorites-list-container"></div>
@@ -443,6 +454,7 @@
         <div class="history-tabs">
             <div class="history-tab active" data-tab="video">🎥 Video</div>
             <div class="history-tab" data-tab="image">🖼️ Image</div>
+            <div class="history-tab" data-tab="edited">🖌️ Edited</div>
         </div>
         <div class="gl-view-list" id="history-view-list">
             <div class="gl-list-content" id="history-list-container"></div>
@@ -473,7 +485,6 @@
     `;
     document.body.appendChild(historyModal);
 
-
     // --- DRAGGABLE FUNCTIONALITY ---
     function makeDraggable(element, handleSelector, saveKey) {
         const handle = element.querySelector(handleSelector);
@@ -485,7 +496,7 @@
             let maxZ = 99990;
             allModals.forEach(el => {
                 const z = parseInt(window.getComputedStyle(el).zIndex) || 0;
-                if(z > maxZ) maxZ = z;
+                if (z > maxZ) maxZ = z;
             });
             element.style.zIndex = maxZ + 1;
 
@@ -509,7 +520,6 @@
             if (!isDragging) return;
             const dx = e.clientX - startX;
             const dy = e.clientY - startY;
-
             element.style.left = `${initialLeft + dx}px`;
             element.style.top = `${initialTop + dy}px`;
         });
@@ -529,7 +539,6 @@
     makeDraggable(modal, '#lib-header', 'pos_lib');
     makeDraggable(favoritesModal, '#fav-header', 'pos_fav');
     makeDraggable(historyModal, '#hist-header', 'pos_hist');
-
 
     // --- RESIZE LOGIC ---
     const resizeHandle = document.getElementById('grok-resize-handle');
@@ -620,18 +629,13 @@
         let maxZ = 99990;
         allModals.forEach(el => {
             const z = parseInt(window.getComputedStyle(el).zIndex) || 0;
-            if(z > maxZ) maxZ = z;
+            if (z > maxZ) maxZ = z;
         });
         targetModal.style.zIndex = maxZ + 1;
-
-        if (targetModal.classList.contains('active')) {
-            targetModal.classList.remove('active');
-        } else {
-            targetModal.classList.add('active');
-        }
+        targetModal.classList.toggle('active');
     }
 
-    // Helper to find the active grok input easily
+    // Find active Grok input
     function getGrokInput() {
         return document.querySelector(TARGET_TEXTAREA_SELECTOR) ||
                document.querySelector(IMAGE_EDITOR_SELECTOR) ||
@@ -641,6 +645,96 @@
         return document.querySelector(IMAGE_IMAGINE_SELECTOR);
     }
 
+    // --- FIX: correct buttons in Extend/Edit mode ---
+    const IMAGE_EDIT_EXIT_XPATH = '/html/body/div[2]/div[2]/div/div/div/div/main/article/div[2]/div[1]/div/div[1]/div/button';
+
+    function findByXPath(xpath) {
+        try {
+            return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        } catch {
+            return null;
+        }
+    }
+
+    function isElementVisible(el) {
+        if (!el) return false;
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') return false;
+        const r = el.getBoundingClientRect();
+        return r.width > 0 && r.height > 0;
+    }
+
+    function getMakeVideoButtonsVisible() {
+        return Array.from(document.querySelectorAll('button[aria-label="Make video"]')).filter(isElementVisible);
+    }
+
+    // Tiny up-arrow submit in extend/edit
+    function isUpArrowSubmitButton(btn) {
+        return !!btn?.querySelector('path[d^="M5 11L12 4"]');
+    }
+
+    function getLargestByArea(buttons) {
+        let best = null;
+        let bestArea = -1;
+        for (const b of buttons) {
+            const r = b.getBoundingClientRect();
+            const area = r.width * r.height;
+            if (area > bestArea) {
+                bestArea = area;
+                best = b;
+            }
+        }
+        return best;
+    }
+
+    function getSmallestByArea(buttons) {
+        let best = null;
+        let bestArea = Infinity;
+        for (const b of buttons) {
+            const r = b.getBoundingClientRect();
+            const area = r.width * r.height;
+            if (area < bestArea) {
+                bestArea = area;
+                best = b;
+            }
+        }
+        return best;
+    }
+
+    function getExitExtendModeButton() {
+        return document.querySelector(IMAGE_EDIT_EXIT_SELECTOR) || findByXPath(IMAGE_EDIT_EXIT_XPATH);
+    }
+
+    function isImageEditMode() {
+        return !!getExitExtendModeButton();
+    }
+
+    function clickExitExtendMode() {
+        const btn = getExitExtendModeButton();
+        if (btn && !btn.disabled) {
+            btn.click();
+            return true;
+        }
+        return false;
+    }
+
+    // Real video Make video button (avoid tiny up-arrow if possible)
+    function getVideoMakeVideoButton() {
+        const btns = getMakeVideoButtonsVisible();
+        const nonArrow = btns.filter(b => !isUpArrowSubmitButton(b));
+        if (nonArrow.length) return getLargestByArea(nonArrow);
+        return getLargestByArea(btns);
+    }
+
+    // Up-arrow submit button in extend/edit
+    function getImageEditSubmitButton() {
+        const btns = getMakeVideoButtonsVisible();
+        const arrow = btns.find(isUpArrowSubmitButton);
+        if (arrow) return arrow;
+        const smallest = getSmallestByArea(btns);
+        if (smallest) return smallest;
+        return document.querySelector(IMAGE_SUBMIT_BUTTON_SELECTOR);
+    }
 
     // --- HISTORY NAVIGATION LOGIC ---
     const promptBox = document.getElementById('grok-panel-prompt');
@@ -648,19 +742,18 @@
     const btnHistNext = document.getElementById('btn-hist-next');
     const histNavCounter = document.getElementById('hist-nav-counter');
 
-    // Combined history from both video and image, sorted by timestamp
     function getCombinedHistory() {
         const combined = [
             ...videoPromptHistory.map(h => ({...h, source: 'video'})),
-            ...imagePromptHistory.map(h => ({...h, source: 'image'}))
+            ...imagePromptHistory.map(h => ({...h, source: 'image'})),
+            ...editedPromptHistory.map(h => ({...h, source: 'edited'})),
         ];
-        // Sort by timestamp descending (newest first)
         return combined.sort((a, b) => b.timestamp - a.timestamp);
     }
 
     function updateHistoryNavButtons() {
         const history = getCombinedHistory();
-        
+
         if (history.length === 0) {
             btnHistPrev.disabled = true;
             btnHistNext.disabled = true;
@@ -668,22 +761,31 @@
             return;
         }
 
-        // If we're at -1 (current/not navigating)
         if (historyNavIndex === -1) {
             btnHistPrev.disabled = false;
-            btnHistNext.disabled = false; // Allow clearing
+            btnHistNext.disabled = false;
             histNavCounter.textContent = 'current';
         } else {
-            // We're navigating history
             btnHistPrev.disabled = (historyNavIndex >= history.length - 1);
             btnHistNext.disabled = false;
             histNavCounter.textContent = `${historyNavIndex + 1}/${history.length}`;
         }
     }
 
+    function syncPromptToSite(value) {
+        const grokTA = getGrokInput();
+        const imagineP = getGrokImagine();
+        if (grokTA) nativeValueSet(grokTA, value);
+        else if (imagineP) {
+            imagineP.textContent = value;
+            if (imagineP.classList.contains('is-empty') && value) imagineP.classList.remove('is-empty');
+            else if (!value) imagineP.classList.add('is-empty');
+        }
+    }
+
     function navigateHistory(direction) {
         const history = getCombinedHistory();
-        
+
         if (history.length === 0) {
             updateStatus('No history available', 'warning');
             setTimeout(() => updateStatus('Ready'), 2000);
@@ -691,58 +793,33 @@
         }
 
         if (direction === -1) {
-            // Going backwards (older)
-            if (historyNavIndex === -1) {
-                // Start from the beginning
-                historyNavIndex = 0;
-            } else if (historyNavIndex < history.length - 1) {
-                historyNavIndex++;
-            } else {
-                // Already at the oldest
-                return;
-            }
-            
+            if (historyNavIndex === -1) historyNavIndex = 0;
+            else if (historyNavIndex < history.length - 1) historyNavIndex++;
+            else return;
+
             promptBox.value = history[historyNavIndex].text;
-            
+
         } else if (direction === 1) {
-            // Going forwards (newer) or clearing
             if (historyNavIndex === -1) {
-                // Already at current - clear the prompt
                 promptBox.value = '';
                 updateStatus('Cleared', 'warning');
                 setTimeout(() => updateStatus('Ready'), 1500);
             } else if (historyNavIndex === 0) {
-                // Next would be "current" - go to current
                 historyNavIndex = -1;
                 promptBox.value = '';
             } else {
-                // Move to newer prompt
                 historyNavIndex--;
                 promptBox.value = history[historyNavIndex].text;
             }
         }
 
         updateHistoryNavButtons();
-        
-        // Sync to website input if user wants
-        const grokTA = getGrokInput();
-        const imagineP = getGrokImagine();
-        if (grokTA) {
-            nativeValueSet(grokTA, promptBox.value);
-        } else if (imagineP) {
-            imagineP.textContent = promptBox.value;
-            if (imagineP.classList.contains('is-empty') && promptBox.value) {
-                imagineP.classList.remove('is-empty');
-            } else if (!promptBox.value) {
-                imagineP.classList.add('is-empty');
-            }
-        }
+        syncPromptToSite(promptBox.value);
     }
 
     btnHistPrev.addEventListener('click', () => navigateHistory(-1));
     btnHistNext.addEventListener('click', () => navigateHistory(1));
 
-    // Keyboard Shortcuts for Nav (Alt+Left / Alt+Right) inside prompt box
     promptBox.addEventListener('keydown', (e) => {
         if (e.altKey && e.key === 'ArrowLeft') {
             e.preventDefault();
@@ -754,65 +831,87 @@
         }
     });
 
-    // When user types in prompt box, reset navigation to "current"
     promptBox.addEventListener('input', () => {
         if (document.activeElement === promptBox) {
-            // User is typing, reset to current
             historyNavIndex = -1;
             updateHistoryNavButtons();
-            
-            const grokTA = getGrokInput();
-            const imagineP = getGrokImagine();
-
             lastTypedPrompt = promptBox.value;
-
-            if (grokTA) {
-                nativeValueSet(grokTA, lastTypedPrompt);
-                resetState("Ready");
-            } else if (imagineP) {
-                imagineP.textContent = lastTypedPrompt;
-                if (imagineP.classList.contains('is-empty') && lastTypedPrompt) imagineP.classList.remove('is-empty');
-                resetState("Ready");
-            }
+            syncPromptToSite(lastTypedPrompt);
+            resetState("Ready");
         }
     });
 
-
-    // --- STATE MANAGEMENT (Favorites/Permanent History) ---
+    // --- STATE MANAGEMENT ---
     function addToHistory(prompt, type) {
         if (!prompt || !prompt.trim()) return;
-        const arr = type === 'image' ? imagePromptHistory : videoPromptHistory;
+
+        let arr;
+        if (type === 'image') arr = imagePromptHistory;
+        else if (type === 'edited') arr = editedPromptHistory;
+        else arr = videoPromptHistory;
+
         const filtered = arr.filter(item => item.text !== prompt);
-        filtered.unshift({ id: Date.now().toString(), text: prompt, timestamp: Date.now(), type: type });
+        filtered.unshift({ id: Date.now().toString(), text: prompt, timestamp: Date.now(), type });
+
         const limited = filtered.slice(0, MAX_HISTORY_ITEMS);
 
-        if (type === 'image') { imagePromptHistory = limited; GM_setValue('imagePromptHistory', imagePromptHistory); }
-        else { 
-            videoPromptHistory = limited; 
+        if (type === 'image') {
+            imagePromptHistory = limited;
+            GM_setValue('imagePromptHistory', imagePromptHistory);
+        } else if (type === 'edited') {
+            editedPromptHistory = limited;
+            GM_setValue('editedPromptHistory', editedPromptHistory);
+        } else {
+            videoPromptHistory = limited;
             GM_setValue('videoPromptHistory', videoPromptHistory);
-            // Reset navigation when new history is added
-            historyNavIndex = -1;
-            updateHistoryNavButtons();
         }
+
+        historyNavIndex = -1;
+        updateHistoryNavButtons();
+    }
+
+    function getFavoritesArrayByType(type) {
+        if (type === 'image') return imageFavorites;
+        if (type === 'edited') return editedFavorites;
+        return videoFavorites;
+    }
+
+    function setFavoritesArrayByType(type, newArr) {
+        if (type === 'image') {
+            imageFavorites = newArr;
+            GM_setValue('imageFavorites', imageFavorites);
+            return;
+        }
+        if (type === 'edited') {
+            editedFavorites = newArr;
+            GM_setValue('editedFavorites', editedFavorites);
+            return;
+        }
+        videoFavorites = newArr;
+        GM_setValue('videoFavorites', videoFavorites);
     }
 
     function addToFavorites(prompt, type) {
         if (!prompt || !prompt.trim()) return;
-        const arr = type === 'image' ? imageFavorites : videoFavorites;
+
+        const arr = getFavoritesArrayByType(type);
+
         if (arr.some(item => item.text === prompt)) {
             updateStatus(`Already in favorites!`, 'error');
             setTimeout(() => updateStatus('Ready'), 2000);
             return;
         }
-        arr.unshift({
+
+        const next = [{
             id: Date.now().toString(),
             text: prompt,
             label: prompt.length > 40 ? prompt.substring(0, 40) + '...' : prompt,
             timestamp: Date.now(),
-            type: type
-        });
-        if (type === 'image') GM_setValue('imageFavorites', arr);
-        else GM_setValue('videoFavorites', arr);
+            type
+        }, ...arr];
+
+        setFavoritesArrayByType(type, next);
+
         updateStatus(`Added to favorites! ❤️`);
         setTimeout(() => updateStatus('Ready'), 2000);
     }
@@ -823,8 +922,10 @@
             savedSnippets,
             videoPromptHistory,
             imagePromptHistory,
+            editedPromptHistory,
             videoFavorites,
             imageFavorites,
+            editedFavorites,
             settings: {
                 maxRetries,
                 uiToggleKey,
@@ -832,7 +933,7 @@
                 panelSize,
                 mainPos, libPos, favPos, histPos
             },
-            version: 34
+            version: 41
         };
     }
 
@@ -840,10 +941,15 @@
         if (!data) return alert("Invalid data");
         try {
             if (data.savedSnippets) GM_setValue('savedSnippets', data.savedSnippets);
+
             if (data.videoPromptHistory) GM_setValue('videoPromptHistory', data.videoPromptHistory);
             if (data.imagePromptHistory) GM_setValue('imagePromptHistory', data.imagePromptHistory);
+            if (data.editedPromptHistory) GM_setValue('editedPromptHistory', data.editedPromptHistory);
+
             if (data.videoFavorites) GM_setValue('videoFavorites', data.videoFavorites);
             if (data.imageFavorites) GM_setValue('imageFavorites', data.imageFavorites);
+            if (data.editedFavorites) GM_setValue('editedFavorites', data.editedFavorites);
+
             if (data.settings) {
                 const s = data.settings;
                 if (s.maxRetries) GM_setValue('maxRetries', s.maxRetries);
@@ -851,7 +957,11 @@
                 if (s.autoClickEnabled !== undefined) GM_setValue('autoClickEnabled', s.autoClickEnabled);
                 if (s.panelSize) GM_setValue('panelSize', s.panelSize);
                 if (s.mainPos) GM_setValue('pos_main', s.mainPos);
+                if (s.libPos) GM_setValue('pos_lib', s.libPos);
+                if (s.favPos) GM_setValue('pos_fav', s.favPos);
+                if (s.histPos) GM_setValue('pos_hist', s.histPos);
             }
+
             alert("Import successful! Reloading page...");
             location.reload();
         } catch (e) {
@@ -873,9 +983,7 @@
     });
 
     const fileInput = document.getElementById('grok-import-file');
-    document.getElementById('btn-import-all').addEventListener('click', () => {
-        fileInput.click();
-    });
+    document.getElementById('btn-import-all').addEventListener('click', () => fileInput.click());
 
     fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -887,14 +995,13 @@
                 if (confirm("This will overwrite your current saved snippets/history/favorites. Continue?")) {
                     restoreData(json);
                 }
-            } catch (err) {
+            } catch {
                 alert("Invalid JSON file.");
             }
         };
         reader.readAsText(file);
         fileInput.value = '';
     });
-
 
     // --- RENDER FUNCTIONS (Snippets/Favorites/History) ---
     function renderSnippets() {
@@ -905,15 +1012,20 @@
             el.className = 'gl-item';
             el.innerHTML = `
                 <div class="gl-item-text"><b>${escapeHtml(item.label)}</b><span>${escapeHtml(item.text)}</span></div>
-                <div class="gl-item-actions"><button class="gl-icon-btn gl-btn-edit">✎</button><button class="gl-icon-btn gl-btn-del">🗑</button></div>`;
+                <div class="gl-item-actions"><button class="gl-icon-btn gl-btn-edit">✎</button><button class="gl-icon-btn gl-btn-del">🗑</button></div>
+            `;
+
             el.querySelector('.gl-item-text').addEventListener('click', () => {
                 const cur = promptBox.value;
                 const newText = cur + (cur && !cur.endsWith(' ') ? ' ' : '') + item.text;
                 promptBox.value = newText;
+                lastTypedPrompt = newText;
                 historyNavIndex = -1;
                 updateHistoryNavButtons();
+                syncPromptToSite(newText);
                 modal.classList.remove('active');
             });
+
             el.querySelector('.gl-btn-edit').addEventListener('click', (e) => { e.stopPropagation(); showEditor(item); });
             el.querySelector('.gl-btn-del').addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -961,10 +1073,16 @@
     });
 
     // Favorites
+    function getFavoritesArrayByTab(tab) {
+        if (tab === 'image') return imageFavorites;
+        if (tab === 'edited') return editedFavorites;
+        return videoFavorites;
+    }
+
     function renderFavorites() {
         const listContainer = document.getElementById('favorites-list-container');
         listContainer.innerHTML = '';
-        const favArray = currentFavoritesTab === 'image' ? imageFavorites : videoFavorites;
+        const favArray = getFavoritesArrayByTab(currentFavoritesTab);
 
         if (favArray.length === 0) {
             listContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#555;">No favorites</div>`;
@@ -980,23 +1098,34 @@
                     <span>${escapeHtml(item.text)}</span>
                     <div class="history-item-time">${formatTimestamp(item.timestamp)}</div>
                 </div>
-                <div class="gl-item-actions"><button class="gl-icon-btn fav-btn-edit">✎</button><button class="gl-icon-btn fav-btn-del">🗑</button></div>`;
+                <div class="gl-item-actions">
+                    <button class="gl-icon-btn fav-btn-edit">✎</button>
+                    <button class="gl-icon-btn fav-btn-del">🗑</button>
+                </div>
+            `;
+
             el.querySelector('.gl-item-text').addEventListener('click', () => {
                 promptBox.value = item.text;
+                lastTypedPrompt = item.text;
                 historyNavIndex = -1;
                 updateHistoryNavButtons();
+                syncPromptToSite(item.text);
                 favoritesModal.classList.remove('active');
             });
+
             el.querySelector('.fav-btn-edit').addEventListener('click', (e) => { e.stopPropagation(); editFavorite(item); });
             el.querySelector('.fav-btn-del').addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (confirm(`Remove favorite?`)) {
-                    if (currentFavoritesTab === 'image') imageFavorites = imageFavorites.filter(h => h.id !== item.id);
-                    else videoFavorites = videoFavorites.filter(h => h.id !== item.id);
-                    GM_setValue(currentFavoritesTab === 'image' ? 'imageFavorites' : 'videoFavorites', currentFavoritesTab === 'image' ? imageFavorites : videoFavorites);
-                    renderFavorites();
-                }
+                if (!confirm(`Remove favorite?`)) return;
+
+                let arr = getFavoritesArrayByTab(currentFavoritesTab).filter(h => h.id !== item.id);
+                if (currentFavoritesTab === 'video') setFavoritesArrayByType('video', arr);
+                else if (currentFavoritesTab === 'image') setFavoritesArrayByType('image', arr);
+                else setFavoritesArrayByType('edited', arr);
+
+                renderFavorites();
             });
+
             listContainer.appendChild(el);
         });
     }
@@ -1014,17 +1143,23 @@
         document.getElementById('favorites-view-viewer').classList.remove('active');
         document.getElementById('favorites-view-list').style.display = 'flex';
     });
+
     document.getElementById('btn-fav-viewer-save').addEventListener('click', () => {
         const newLabel = document.getElementById('fav-edit-label').value.trim() || "Untitled";
         const newText = document.getElementById('favorites-viewer-text').value.trim();
         if (!newText || !currentEditingFavId) return;
 
-        let favArray = currentFavoritesTab === 'image' ? imageFavorites : videoFavorites;
+        const favArray = getFavoritesArrayByTab(currentFavoritesTab);
         const idx = favArray.findIndex(f => f.id === currentEditingFavId);
         if (idx !== -1) {
             favArray[idx].label = newLabel;
             favArray[idx].text = newText;
-            GM_setValue(currentFavoritesTab === 'image' ? 'imageFavorites' : 'videoFavorites', favArray);
+
+            // Save back
+            if (currentFavoritesTab === 'video') setFavoritesArrayByType('video', favArray);
+            else if (currentFavoritesTab === 'image') setFavoritesArrayByType('image', favArray);
+            else setFavoritesArrayByType('edited', favArray);
+
             renderFavorites();
             document.getElementById('btn-fav-viewer-back').click();
         }
@@ -1040,20 +1175,47 @@
     });
 
     // History
+    function getHistoryArrayByTab(tab) {
+        if (tab === 'image') return imagePromptHistory;
+        if (tab === 'edited') return editedPromptHistory;
+        return videoPromptHistory;
+    }
+
+    function saveHistoryArrayByTab(tab, arr) {
+        if (tab === 'image') {
+            imagePromptHistory = arr;
+            GM_setValue('imagePromptHistory', imagePromptHistory);
+            return;
+        }
+        if (tab === 'edited') {
+            editedPromptHistory = arr;
+            GM_setValue('editedPromptHistory', editedPromptHistory);
+            return;
+        }
+        videoPromptHistory = arr;
+        GM_setValue('videoPromptHistory', videoPromptHistory);
+    }
+
     function renderHistory() {
         const listContainer = document.getElementById('history-list-container');
         listContainer.innerHTML = '';
-        const historyArray = currentHistoryTab === 'image' ? imagePromptHistory : videoPromptHistory;
 
+        const historyArray = getHistoryArrayByTab(currentHistoryTab);
         if (historyArray.length === 0) {
             listContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#555;">No history</div>`;
             return;
         }
 
+        const favArray =
+            currentHistoryTab === 'video' ? videoFavorites :
+            currentHistoryTab === 'image' ? imageFavorites :
+            editedFavorites;
+
         historyArray.forEach(item => {
             const el = document.createElement('div');
             el.className = 'gl-item';
-            const isFavorited = (currentHistoryTab === 'image' ? imageFavorites : videoFavorites).some(f => f.text === item.text);
+
+            const isFavorited = favArray.some(f => f.text === item.text);
 
             el.innerHTML = `
                 <div class="gl-item-text">
@@ -1064,19 +1226,24 @@
                     <button class="gl-icon-btn history-btn-fav ${isFavorited ? 'favorite' : ''}">❤️</button>
                     <button class="gl-icon-btn history-btn-view">👁</button>
                     <button class="gl-icon-btn history-btn-del">🗑</button>
-                </div>`;
+                </div>
+            `;
 
             el.querySelector('.gl-item-text').addEventListener('click', () => {
                 promptBox.value = item.text;
+                lastTypedPrompt = item.text;
                 historyNavIndex = -1;
                 updateHistoryNavButtons();
+                syncPromptToSite(item.text);
                 historyModal.classList.remove('active');
             });
+
             el.querySelector('.history-btn-fav').addEventListener('click', (e) => {
                 e.stopPropagation();
                 addToFavorites(item.text, item.type);
                 renderHistory();
             });
+
             el.querySelector('.history-btn-view').addEventListener('click', (e) => {
                 e.stopPropagation();
                 document.getElementById('history-view-list').style.display = 'none';
@@ -1084,18 +1251,16 @@
                 document.getElementById('history-viewer-text').value = item.text;
                 document.getElementById('history-viewer-time').textContent = formatTimestamp(item.timestamp);
             });
+
             el.querySelector('.history-btn-del').addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (currentHistoryTab === 'image') {
-                    imagePromptHistory = imagePromptHistory.filter(h => h.id !== item.id);
-                    GM_setValue('imagePromptHistory', imagePromptHistory);
-                } else {
-                    videoPromptHistory = videoPromptHistory.filter(h => h.id !== item.id);
-                    GM_setValue('videoPromptHistory', videoPromptHistory);
-                    updateHistoryNavButtons();
-                }
+                const newArr = historyArray.filter(h => h.id !== item.id);
+                saveHistoryArrayByTab(currentHistoryTab, newArr);
+                historyNavIndex = -1;
+                updateHistoryNavButtons();
                 renderHistory();
             });
+
             listContainer.appendChild(el);
         });
     }
@@ -1104,26 +1269,26 @@
         document.getElementById('history-view-viewer').classList.remove('active');
         document.getElementById('history-view-list').style.display = 'flex';
     });
+
     document.getElementById('btn-viewer-use').addEventListener('click', () => {
         const text = document.getElementById('history-viewer-text').value;
         promptBox.value = text;
+        lastTypedPrompt = text;
         historyNavIndex = -1;
         updateHistoryNavButtons();
+        syncPromptToSite(text);
         historyModal.classList.remove('active');
         document.getElementById('btn-viewer-back').click();
     });
-    
+
     // Create new prompt functionality
     document.getElementById('btn-create-history-prompt').addEventListener('click', () => {
-        debugLog('Create new prompt clicked');
         document.getElementById('history-view-list').style.display = 'none';
         const creatorView = document.getElementById('history-view-creator');
         creatorView.classList.add('active');
         creatorView.style.display = 'flex';
         document.getElementById('history-creator-text').value = '';
-        setTimeout(() => {
-            document.getElementById('history-creator-text').focus();
-        }, 100);
+        setTimeout(() => document.getElementById('history-creator-text').focus(), 100);
     });
 
     document.getElementById('btn-creator-cancel').addEventListener('click', () => {
@@ -1141,28 +1306,21 @@
             return;
         }
 
-        // Save to the current tab's history
         addToHistory(text, currentHistoryTab);
-        
+
         updateStatus(`Saved to ${currentHistoryTab} history!`);
         setTimeout(() => updateStatus('Ready'), 2000);
-        
-        // Go back to list view
+
         document.getElementById('btn-creator-cancel').click();
         renderHistory();
     });
-    
+
     document.getElementById('btn-clear-history').addEventListener('click', () => {
-        if(confirm('Clear history for this tab?')) {
-            if(currentHistoryTab === 'image') { imagePromptHistory=[]; GM_setValue('imagePromptHistory', []); }
-            else { 
-                videoPromptHistory=[]; 
-                GM_setValue('videoPromptHistory', []); 
-                historyNavIndex = -1;
-                updateHistoryNavButtons();
-            }
-            renderHistory();
-        }
+        if (!confirm('Clear history for this tab?')) return;
+        saveHistoryArrayByTab(currentHistoryTab, []);
+        historyNavIndex = -1;
+        updateHistoryNavButtons();
+        renderHistory();
     });
 
     historyModal.querySelectorAll('.history-tab').forEach(tab => {
@@ -1174,25 +1332,23 @@
         });
     });
 
-
     // --- BUTTON EVENT LISTENERS ---
     document.getElementById('btn-open-library').addEventListener('click', () => {
         toggleModal(modal);
-        if(modal.classList.contains('active')) renderSnippets();
+        if (modal.classList.contains('active')) renderSnippets();
     });
     document.getElementById('btn-open-favorites').addEventListener('click', () => {
         toggleModal(favoritesModal);
-        if(favoritesModal.classList.contains('active')) renderFavorites();
+        if (favoritesModal.classList.contains('active')) renderFavorites();
     });
     document.getElementById('btn-open-history').addEventListener('click', () => {
         toggleModal(historyModal);
-        if(historyModal.classList.contains('active')) renderHistory();
+        if (historyModal.classList.contains('active')) renderHistory();
     });
 
     modal.querySelector('.gl-close').addEventListener('click', () => modal.classList.remove('active'));
     favoritesModal.querySelector('.favorites-close').addEventListener('click', () => favoritesModal.classList.remove('active'));
     historyModal.querySelector('.history-close').addEventListener('click', () => historyModal.classList.remove('active'));
-
 
     // --- STRICT SYNC & CAPTURE LOGIC ---
 
@@ -1211,33 +1367,69 @@
         }
     }, { capture: true, passive: true });
 
-    // Generate Button Logic
-    document.getElementById('btn-generate').addEventListener('click', () => {
-        let type = 'video';
+    // --- Generate Button Logic (v41: edited history + button fix) ---
+    let exitingExtendMode = false;
+
+    function detectContextType() {
+        // Video wins if the video textarea exists
+        if (document.querySelector(TARGET_TEXTAREA_SELECTOR)) return 'video';
+        // Edited if extend/edit mode is active
+        if (isImageEditMode()) return 'edited';
+        // Otherwise image if image inputs exist
+        if (document.querySelector(IMAGE_PROMPT_SELECTOR) || document.querySelector(IMAGE_IMAGINE_SELECTOR)) return 'image';
+        // Fallback
+        return 'video';
+    }
+
+    function doGenerateNow() {
+        const type = detectContextType();
+
         const vidEl = document.querySelector(TARGET_TEXTAREA_SELECTOR);
         const imgEl = document.querySelector(IMAGE_PROMPT_SELECTOR);
         const imgIm = document.querySelector(IMAGE_IMAGINE_SELECTOR);
 
-        if (vidEl) {
-            type = 'video';
-        } else if (imgEl || imgIm) {
-            type = 'image';
+        const grokTA = vidEl || document.querySelector(IMAGE_EDITOR_SELECTOR) || imgEl;
+        const imagineP = imgIm;
+
+        // If trying VIDEO but extend/edit is active and we only see the up-arrow submit,
+        // exit extend mode first, then try again.
+        if (type === 'video' && isImageEditMode()) {
+            const candidate = getVideoMakeVideoButton();
+            if (!candidate || isUpArrowSubmitButton(candidate)) {
+                if (!exitingExtendMode && clickExitExtendMode()) {
+                    exitingExtendMode = true;
+                    updateStatus('Exiting extend mode...', 'warning');
+                    setTimeout(() => {
+                        exitingExtendMode = false;
+                        doGenerateNow();
+                    }, 250);
+                    return;
+                }
+            }
         }
 
-        const grokTA = vidEl || document.querySelector(IMAGE_EDITOR_SELECTOR) || imgEl;
-        const realBtn = document.querySelector(RETRY_BUTTON_SELECTOR) ||
-                        document.querySelector(IMAGE_EDITOR_BUTTON_SELECTOR) ||
-                        document.querySelector(IMAGE_SUBMIT_BUTTON_SELECTOR);
-        const imagineP = imgIm;
+        let realBtn = null;
+
+        if (type === 'video') {
+            // Prefer any "Edit" video button if present (keeps your old logic)
+            const allVideoBtns = getMakeVideoButtonsVisible();
+            const editBtn = allVideoBtns.find(b => (b.textContent || '').includes('Edit'));
+            realBtn = editBtn || getVideoMakeVideoButton();
+        } else if (type === 'edited') {
+            // Extend/edit submit is the up-arrow "Make video"
+            realBtn = getImageEditSubmitButton();
+        } else {
+            // Normal image generation
+            realBtn = document.querySelector(IMAGE_EDITOR_BUTTON_SELECTOR) ||
+                      document.querySelector(IMAGE_SUBMIT_BUTTON_SELECTOR);
+        }
 
         if (!realBtn) return updateStatus("Button not found", "error");
 
         const promptVal = promptBox.value.trim();
-        if (promptVal) {
-            addToHistory(promptVal, type);
-        }
+        if (promptVal) addToHistory(promptVal, type);
 
-        // FORCE SYNC NOW
+        // Force sync now
         if (grokTA) nativeValueSet(grokTA, promptBox.value);
         else if (imagineP) imagineP.textContent = promptBox.value;
 
@@ -1245,25 +1437,36 @@
             if (!realBtn.disabled) {
                 realBtn.click();
                 lastGenerationTimestamp = Date.now();
-                updateStatus("Generation Started...");
+                updateStatus(type === 'video' ? 'Generation Started...' : 'Submitted...');
             } else {
                 updateStatus("Grok button disabled/processing.", "error");
             }
         }, 50);
-    });
+    }
 
-    // Image Capture (For clicks outside panel)
+    document.getElementById('btn-generate').addEventListener('click', doGenerateNow);
+
+    // Capture prompts when user clicks submit buttons outside the panel
     document.addEventListener('mousedown', (e) => {
         const submitBtn = e.target.closest('button[aria-label="Submit"]');
+        const makeVideoBtn = e.target.closest('button[aria-label="Make video"]');
+
+        const val = (promptBox.value.trim() || lastTypedPrompt.trim());
+        if (val.length <= 2) return;
+
+        // Normal image submit
         if (submitBtn) {
-            const val = promptBox.value.trim() || lastTypedPrompt.trim();
-            if (val.length > 2) {
-                addToHistory(val, 'image');
-                updateStatus("Prompt captured!");
-            }
+            addToHistory(val, isImageEditMode() ? 'edited' : 'image');
+            updateStatus("Prompt captured!");
+            return;
+        }
+
+        // Extend/edit up-arrow submit (aria-label="Make video")
+        if (makeVideoBtn && isImageEditMode() && isUpArrowSubmitButton(makeVideoBtn)) {
+            addToHistory(val, 'edited');
+            updateStatus("Edited prompt captured!");
         }
     }, true);
-
 
     // --- MODERATION & RETRY LOGIC ---
     function checkForModerationContent() {
@@ -1313,10 +1516,21 @@
         if (now - lastGenerationTimestamp < GENERATION_COOLDOWN_MS) return;
 
         const grokTA = getGrokInput();
-        const btn = document.querySelector(RETRY_BUTTON_SELECTOR) ||
-                    document.querySelector(IMAGE_EDITOR_BUTTON_SELECTOR) ||
-                    document.querySelector(IMAGE_SUBMIT_BUTTON_SELECTOR);
         const imagineP = getGrokImagine();
+
+        let btn = null;
+        const isVideoContext = !!document.querySelector(TARGET_TEXTAREA_SELECTOR);
+
+        if (isVideoContext) {
+            btn = getVideoMakeVideoButton();
+            if (isImageEditMode() && (!btn || isUpArrowSubmitButton(btn))) {
+                if (clickExitExtendMode()) updateStatus('Exiting extend mode...', 'warning');
+                return;
+            }
+        } else {
+            if (isImageEditMode()) btn = getImageEditSubmitButton();
+            else btn = document.querySelector(IMAGE_EDITOR_BUTTON_SELECTOR) || document.querySelector(IMAGE_SUBMIT_BUTTON_SELECTOR);
+        }
 
         if ((grokTA || imagineP) && lastTypedPrompt) {
             if (grokTA) nativeValueSet(grokTA, lastTypedPrompt);
@@ -1361,7 +1575,6 @@
     });
 
     observer.observe(document.body, { childList: true, subtree: true, attributes: true, characterData: true });
-
 
     // --- TOGGLES & SETTINGS ---
     const toggleBtn = document.getElementById('grok-toggle-btn');
@@ -1410,6 +1623,6 @@
     // Initialize navigation buttons
     updateHistoryNavButtons();
 
-    debugLog('Grok Tools v34 Initialized - History Navigation Active');
+    debugLog('Grok Tools v41 Initialized - Edited History + Edited Favorites + Button Fix');
 
 })();

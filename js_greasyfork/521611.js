@@ -16,7 +16,7 @@
 // @grant        GM.setClipboard
 // @grant        GM.openInTab
 
-// @version     3.1
+// @version     3.5
 // @author      wish?
 // @description 9/30/2024, 9:45:17 PM
 
@@ -94,8 +94,8 @@
 // 	const _innerConsole = console;
 
 // 	consoleMethods.forEach((method) => {
-// 		if (unsafeWindow.console[method]) {
-// 			Object.defineProperty(unsafeWindow.console, method, {
+// 		if (window.console[method]) {
+// 			Object.defineProperty(window.console, method, {
 // 				configurable: false,
 // 				get: (...args) => {
 // 					return _innerConsole[method].bind(_innerConsole);
@@ -155,10 +155,10 @@
 			let offsetX, offsetY;
 			element.addEventListener("mousedown", function (e) {
 				const dragElement = function (e) {
-					const x = ((e.clientX - offsetX) / unsafeWindow.innerWidth) * 100;
-					const y = ((e.clientY - offsetY) / unsafeWindow.innerHeight) * 100;
-					const maxX = 100 - (element.offsetWidth / unsafeWindow.innerWidth) * 100;
-					const maxY = 100 - (element.offsetHeight / unsafeWindow.innerHeight) * 100;
+					const x = ((e.clientX - offsetX) / window.innerWidth) * 100;
+					const y = ((e.clientY - offsetY) / window.innerHeight) * 100;
+					const maxX = 100 - (element.offsetWidth / window.innerWidth) * 100;
+					const maxY = 100 - (element.offsetHeight / window.innerHeight) * 100;
 					element.style.left = `${Math.max(0, Math.min(x, maxX))}%`;
 					element.style.top = `${Math.max(0, Math.min(y, maxY))}%`;
 				};
@@ -233,8 +233,8 @@
 	const getScrambled = () => Array.from({ length: 10 }, () => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join("");
 	const createAnonFunction = function (name, func) {
 		const funcName = getScrambled();
-		unsafeWindow[funcName] = func;
-		unsafeWindow[funcName] = function () {
+		window[funcName] = func;
+		window[funcName] = function () {
 			try {
 				return func.apply(this, arguments);
 			} catch (error) {
@@ -242,7 +242,7 @@
 			}
 		};
 
-		F[name] = unsafeWindow[funcName];
+		F[name] = window[funcName];
 		functionNames[name] = funcName;
 	};
 
@@ -293,14 +293,14 @@
 			return _apc.call(this, node);
 		};
 
-		const proto = unsafeWindow.HTMLScriptElement.prototype;
+		const proto = window.HTMLScriptElement.prototype;
 		const existing = Object.getOwnPropertyDescriptor(proto, "textContent");
 
-		const original = existing || Object.getOwnPropertyDescriptor(unsafeWindow.Node.prototype, "textContent");
+		const original = existing || Object.getOwnPropertyDescriptor(window.Node.prototype, "textContent");
 
 		Object.defineProperty(proto, "textContent", {
 			get: function () {
-				// if (this === unsafeWindow.document.currentScript) {
+				// if (this === window.document.currentScript) {
 				//     prompt("[Hook] document.currentScript.textContent accessed");
 				//     debugger; // <-- triggers breakpoint
 				// };
@@ -471,7 +471,7 @@
                 ping: patterns.ping.exec(js),
                 fps: patterns.fps.exec(js),
 			};
-			unsafeWindow.H = H;
+			window.H = H;
 
 			let injectionString = "";
 
@@ -526,10 +526,10 @@
 					return varName.replace("$", "\\$");
 				};
 				const FUNCTIONPARAM = new RegExp("function " + f(H._connectFail) + "\\(([a-zA-Z$_]+)\\)").exec(js)[1];
-				modifyJS(
-					f(H.SCENE) + "." + f(H.render),
-					`window["${functionNames.retrieveFunctions}"]({${injectionString}},true)||${f(H.SCENE)}.render`
-				);
+				// modifyJS(
+				// 	f(H.SCENE) + "." + f(H.render),
+				// 	`window["${functionNames.retrieveFunctions}"]({${injectionString}},true)||${f(H.SCENE)}.render`
+				// );
                 modifyJS(H.extra.ping[0],
                     `${H.extra.ping[1]}window.${functionNames.FakePing}(${H.extra.ping[2]}),`
                 );
