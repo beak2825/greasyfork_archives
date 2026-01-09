@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DemonicScans Unified Automator
 // @namespace    https://github.com/wverri/autods
-// @version      0.7.20-alpha
+// @version      0.9.3-alpha
 // @description  Consolidated automation suite for DemonicScans: wave battles, PvP, farming, UI enhancements, and image blocking.
 // @author       Willian Verri
 // @match        https://demonicscans.org/*
@@ -48,39 +48,20 @@ var version = GM_info.script.version;
         },
         wave: {
             enabled: true,
-            monsterNames: ['Bonecrusher'],  // Legacy - kept for backward compatibility
-            priorityMode: 'lowest_hp',
-            minMobHp: 100000,
+            parallelAttacks: 10,
+            skillId: -2,
+            minDelayBetweenAttacks: 30,
+            damageTarget: 3000000,
+            autoFSP: true,
+            minStaminaForFSP: 100,
+            lootDeadBeforeFSP: true,
             monsterFilter: {
-                maxHp: 0,
-                minDamage: 0,
-                includeNames: [],  // Whitelist - only target these names
+                includeNames: [],  // Whitelist - only target these names (empty = all)
                 excludeNames: []   // Blacklist - skip these names
-            },
-            loot: {
-                enabled: true,
-                parallelOperations: 3
-            },
-            maxConcurrentBattles: 5,
-            maxBattlesReloadMs: 30000,
-            ultraFastMode: false,
-            ultraFastConfig: {
-                parallelAttacks: 10,
-                skillId: -2,
-                minDelayBetweenAttacks: 30,
-                damageTarget: 3000000,
-                autoFSP: true,
-                minStaminaForFSP: 100,
-                lootDeadBeforeFSP: true,
-                monsterFilter: {
-                    includeNames: [],  // Whitelist - only target these names (empty = all)
-                    excludeNames: []   // Blacklist - skip these names
-                }
             }
         },
         dungeonWave: {
             // enabled: true,  // ← ADICIONAR ISTO - necessário para module activation
-            monsterNames: [],  // Legacy - kept for backward compatibility
             priorityMode: 'lowest_hp',
             minMobHp: 4000000,
             monsterFilter: {
@@ -244,7 +225,7 @@ var version = GM_info.script.version;
             }
         },
         ultraFastStamina: {
-            enabled: false,
+            enabled: true,  // Default: true - stamina icon always visible
             batchSize: 10,  // Number of chapters to react to simultaneously
             delayBetweenBatches: 1000,  // Delay between batches (ms)
             reactionType: '1'  // Reaction type: '1' (👍), '2' (❤️), '3' (😂), '4' (😮), '5' (😢)
@@ -254,7 +235,6 @@ var version = GM_info.script.version;
             maxParallelBattles: 5,  // Number of monsters to attack simultaneously
             attacksPerMonster: 3,  // Number of attacks per monster before checking
             delayBetweenBatches: 2000,  // Delay between batches (ms)
-            monsterNames: [],  // Legacy - kept for backward compatibility
             monsterFilter: {
                 maxHp: 0,
                 minDamage: 0,
@@ -281,6 +261,7 @@ var version = GM_info.script.version;
             minDelayBetweenAttacks: 50,  // Minimum delay between attack rounds (ms)
             autoStaminaPotion: true,  // Automatically use stamina potions when low
             minStaminaForPotion: 100,  // Use potion if stamina below this value
+            lootDeadBeforeFSP: true,  // Try looting dead monsters before FSP during boss farm (may trigger level up)
             checkInterval: 300000,  // 5 minutes (300000ms) - wait time if no bosses found
             bossNames: ['General', 'Seraph', 'King', 'Empress', 'Bastion', 'Oathkeeper']  // Boss keywords to search for
         },
@@ -290,7 +271,6 @@ var version = GM_info.script.version;
     });
 
     const LEVELS = ['debug', 'info', 'warn', 'error'];
-    const NUMBER_FORMAT = new Intl.NumberFormat('en-US');
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, Math.max(0, ms)));
@@ -317,7 +297,11 @@ var version = GM_info.script.version;
      * Legacy wrapper for backward compatibility with existing code
      */
     function numberFromText(text) {
-        // Create temporary service instance (will be replaced by context.numbers at runtime)
+        // Use global context if available
+        if (typeof window !== 'undefined' && window.autoDSServices?.context?.numbers) {
+            return window.autoDSServices.context.numbers.parse(text);
+        }
+        // Fallback
         const tempService = createNumberFormattingService();
         return tempService.parse(text);
     }
@@ -327,19 +311,13 @@ var version = GM_info.script.version;
      * Legacy wrapper for backward compatibility with existing code
      */
     function formatNumber(value) {
-        // Create temporary service instance (will be replaced by context.numbers at runtime)
+        // Use global context if available
+        if (typeof window !== 'undefined' && window.autoDSServices?.context?.numbers) {
+            return window.autoDSServices.context.numbers.format(value);
+        }
+        // Fallback
         const tempService = createNumberFormattingService();
         return tempService.format(value);
-    }
-
-    /**
-     * @deprecated Use context.numbers.calculateDamageVsDefense() instead
-     * Legacy wrapper for backward compatibility with existing code
-     */
-    function calculateDamageVsDefense(attack, defense) {
-        // Create temporary service instance (will be replaced by context.numbers at runtime)
-        const tempService = createNumberFormattingService();
-        return tempService.calculateDamageVsDefense(attack, defense);
     }
 
     function calculateExpectedDungeonDamage(currentHP, maxHP) {
@@ -467,36 +445,7 @@ var version = GM_info.script.version;
         });
     }
 
-    /**
-     * @deprecated Use context.notifications.error() instead
-     * Legacy function kept for backward compatibility
-     * Will be removed in Phase 4
-     * 
-     * Show error notification (loot errors)
-     * @param {string} message - Error message
-     * @param {number} duration - Display duration in milliseconds
-     * @param {Object} logger - Logger instance (optional)
-     */
-    function showErrorNotification(message, duration = 10000, logger = null) {
-        // If running in context with notifications service, use it
-        if (typeof window !== 'undefined' && window.autoDSServices?.context?.notifications) {
-            window.autoDSServices.context.notifications.error(message, duration);
-            return;
-        }
-        
-        // Fallback to native notification if available
-        if (typeof window !== 'undefined' && typeof window.showNotification === 'function') {
-            window.showNotification(message, 'error');
-            return;
-        }
-        
-        // Last resort: console.error
-        if (logger) {
-            logger.error(`🚫 ERRO DE LOOT: ${message}`);
-        } else {
-            console.error(`[AutoDS] ERRO DE LOOT: ${message}`);
-        }
-    }
+    // showErrorNotification removed in Phase 1 cleanup
 
     function ensureLayoutStyles(doc) {
         if (!doc) return;
@@ -1124,48 +1073,6 @@ var version = GM_info.script.version;
         return keys.reduceRight((acc, key) => ({ [key]: acc }), value);
     }
 
-    function pickTarget(candidates, mode = 'lowest_hp') {
-        if (!Array.isArray(candidates) || candidates.length === 0) return null;
-        const pool = [...candidates];
-        switch (mode) {
-            case 'highest_hp':
-                pool.sort((a, b) => (b.hp ?? 0) - (a.hp ?? 0));
-                return pool[0];
-            case 'random':
-                return pool[Math.floor(Math.random() * pool.length)];
-            case 'first':
-                pool.sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
-                return pool[0];
-            case 'lowest_hp':
-            default:
-                pool.sort((a, b) => (a.hp ?? Infinity) - (b.hp ?? Infinity));
-                return pool[0];
-        }
-    }
-
-    function resolveAttackButton(dom, battleConfig = {}, isPvP = false) {
-        // For PvP battles, always use Power Slash (data-skill-id="-1")
-        if (isPvP) {
-            const powerSlash = dom.query('.attack-btn[data-skill-id="-1"]:not([disabled])')
-                || dom.query('button[data-skill-id="-1"]:not([disabled])');
-            if (powerSlash) return powerSlash;
-        }
-
-        const desiredSkillId = battleConfig.attackSkillId ?? 0;
-        if (Number.isFinite(desiredSkillId)) {
-            const targeted = dom.query(`.attack-btn[data-skill-id="${desiredSkillId}"]:not([disabled])`)
-                || dom.query(`button[data-skill-id="${desiredSkillId}"]:not([disabled])`);
-            if (targeted) return targeted;
-        }
-
-        // Prefer non-disabled buttons
-        const fallback = dom.query('.attack-btn:not([disabled])')
-            || dom.query('button.attack-btn:not([disabled])')
-            || dom.query('.attack-btn')
-            || dom.query('button.attack-btn');
-        return fallback || null;
-    }
-
     function selectSmartSkill(currentDamage, targetDamage, skillsConfig) {
         // Calculate remaining damage needed to reach target
         const remainingDamage = targetDamage - currentDamage;
@@ -1188,88 +1095,6 @@ var version = GM_info.script.version;
         return skills[skills.length - 1]; // Returns Slash (skillId: 0, damageLimit: 0)
     }
 
-    function resolveSmartAttackButton(dom, currentDamage, targetDamage, battleConfig = {}) {
-        const smartConfig = battleConfig.smartDamage;
-
-        if (!smartConfig || !smartConfig.enabled || !smartConfig.skills) {
-            // Fallback to regular skill selection if smart damage is disabled
-            return resolveAttackButton(dom, battleConfig, false);
-        }
-
-        // Select the optimal skill based on remaining damage
-        const selectedSkill = selectSmartSkill(currentDamage, targetDamage, smartConfig.skills);
-
-        if (!selectedSkill) {
-            return null; // Target already reached
-        }
-
-        // Try to find the button for the selected skill
-        const skillButton = dom.query(`.attack-btn[data-skill-id="${selectedSkill.skillId}"]`)
-            || dom.query(`button[data-skill-id="${selectedSkill.skillId}"]`);
-
-        if (skillButton && !skillButton.disabled) {
-            return { button: skillButton, skill: selectedSkill };
-        }
-
-        // If the optimal skill button is not available, try the next best option
-        const skills = Object.values(smartConfig.skills)
-            .sort((a, b) => b.damageLimit - a.damageLimit)
-            .filter(s => s.skillId !== selectedSkill.skillId);
-
-        for (const skill of skills) {
-            const btn = dom.query(`.attack-btn[data-skill-id="${skill.skillId}"]`)
-                || dom.query(`button[data-skill-id="${skill.skillId}"]`);
-            if (btn && !btn.disabled && skill.damageLimit <= (targetDamage - currentDamage)) {
-                return { button: btn, skill };
-            }
-        }
-
-        // Last resort: use Slash (lowest damage)
-        const slashSkill = Object.values(smartConfig.skills).find(s => s.damageLimit === 0);
-        const slashButton = dom.query(`.attack-btn[data-skill-id="${slashSkill?.skillId ?? 0}"]`)
-            || dom.query('button[data-skill-id="0"]');
-
-        if (slashButton) {
-            return { button: slashButton, skill: slashSkill };
-        }
-
-        // Ultimate fallback
-        return { button: resolveAttackButton(dom, battleConfig, false), skill: null };
-    }
-
-    function readBattleStats(dom) {
-        // Damage: regular battles use #yourDamageValue, dungeon pages use #myDmg
-        const damageNode = dom.query('#yourDamageValue, #myDmg, .your-damage, [data-player-damage], #damageText, .damage-text');
-        let damageText = '';
-        if (damageNode) {
-            damageText = damageNode.getAttribute?.('data-player-damage') ?? damageNode.textContent ?? '';
-        }
-        // Create temp service for legacy function
-        const tempNumbers = createNumberFormattingService();
-        const damage = tempNumbers.parse(damageText) ?? 0;
-
-        // Monster HP: #hpText contains the formatted HP text (e.g., "❤️ 24,067,289 / 24,570,000 HP")
-        const hpNode = dom.query('#hpText, .monster-hp, .hp-text, [data-monster-hp]');
-        let monsterHp = null;
-        let monsterMaxHp = null;
-
-        if (hpNode) {
-            const hpText = hpNode.textContent ?? '';
-            // Extract current HP and max HP from text like "❤️ 24,067,289 / 24,570,000 HP"
-            const tempNumbers = createNumberFormattingService();
-            const parts = hpText.split('/');
-            if (parts.length >= 2) {
-                monsterHp = tempNumbers.parse(parts[0]);
-                monsterMaxHp = tempNumbers.parse(parts[1]);
-            } else {
-                // Fallback: try to get single HP value
-                monsterHp = tempNumbers.parse(hpText);
-            }
-        }
-
-        return { damage, monsterHp, monsterMaxHp };
-    }
-
     function queryXPathFirst(xpath, root = document) {
         try {
             const result = document.evaluate(xpath, root, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
@@ -1278,24 +1103,6 @@ var version = GM_info.script.version;
             console.warn('[AutoDS][xpath] Failed to evaluate', xpath, error);
             return null;
         }
-    }
-
-    async function waitForSelector(selector, { timeout = 5000, interval = 100, root = document } = {}) {
-        const end = Date.now() + timeout;
-        while (Date.now() < end) {
-            const node = root.querySelector(selector);
-            if (node) return node;
-            await sleep(interval);
-        }
-        return null;
-    }
-
-    async function waitForAny(selectors, options = {}) {
-        for (const selector of selectors) {
-            const node = await waitForSelector(selector, options);
-            if (node) return node;
-        }
-        return null;
     }
 
     function parseGaugeText(text) {
@@ -1378,152 +1185,6 @@ var version = GM_info.script.version;
         }
 
         return null;
-    }
-
-    // REMOVED: joinBattleDirectly() - replaced by context.http.joinBattle() (Phase 2 Migration)
-    // REMOVED: joinDungeonBattleDirectly() - replaced by context.http.joinDungeonBattle() (Phase 2 Migration)
-    // REMOVED: lootMonsterDirectly() - replaced by context.http.lootMonster() (Phase 2 Migration)
-    // REMOVED: lootGuildDungeonDirectly() - replaced by context.http.lootGuildDungeon() (Phase 2 Migration)
-
-    // DEPRECATED: Legacy wrappers for backward compatibility
-    // All code should migrate to context.userSession methods
-    // These wrappers will be removed in Phase 4
-    
-    /**
-     * @deprecated Use context.userSession.getUserId() instead
-     * Legacy wrapper for backward compatibility with existing code
-     * 
-     * Get user ID from cookie (demon cookie).
-     * @returns {string|null} User ID or null if not found
-     */
-    function getUserIdFromCookie() {
-        try {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; demon=`);
-            if (parts.length === 2) {
-                const userId = parts.pop().split(';').shift();
-                return userId || null;
-            }
-        } catch (error) {
-            console.warn('[AutoDS] Failed to read userId from cookie:', error);
-        }
-        return null;
-    }
-
-    /**
-     * @deprecated Use context.userSession.ensureUserId() instead
-     * Legacy wrapper for backward compatibility with existing code
-     * 
-     * Auto-detect and update user ID in config if not set.
-     * Should be called during bootstrap or module activation.
-     * @param {object} context - Context object with config
-     * @returns {string|null} User ID (detected or existing)
-     */
-    function ensureUserId(context) {
-        // If context has userSession service, use it (Phase 3+)
-        if (context?.userSession?.ensureUserId) {
-            return context.userSession.ensureUserId();
-        }
-        
-        // Fallback to legacy implementation (before Phase 3)
-        if (!context || !context.config || typeof context.config.get !== 'function') {
-            console.warn('[AutoDS] ensureUserId: context.config inválido');
-            return null;
-        }
-
-        const cfg = context.config.get();
-        
-        if (cfg.core?.userId) {
-            return cfg.core.userId;
-        }
-
-        // Try userSession service first, fallback to cookie parsing
-        const tempService = context.userSession || { getUserId: () => {
-            try {
-                const cookie = document.cookie.split(';').find(c => c.trim().startsWith('demon='));
-                return cookie ? cookie.split('=')[1]?.trim() : null;
-            } catch { return null; }
-        }};
-        const userId = tempService.getUserId();
-        
-        if (userId) {
-            if (context.logger && typeof context.logger.info === 'function') {
-                context.logger.info(`🔍 User ID auto-detectado: ${userId}`);
-            }
-            if (typeof context.config.update === 'function') {
-                context.config.update({ core: { userId } });
-            }
-            return userId;
-        } else {
-            if (context.logger && typeof context.logger.warn === 'function') {
-                context.logger.warn('⚠️ User ID não encontrado. Auto-join e outras funções podem não funcionar.');
-            }
-            return null;
-        }
-    }
-
-    /**
-     * @deprecated Use context.userSession.startAutoDetect() instead
-     * Legacy wrapper for backward compatibility with existing code
-     * 
-     * Periodically check and update user ID if missing.
-     * Useful for detecting login after script loads.
-     * @param {object} context - Context object
-     * @param {number} intervalMs - Check interval in milliseconds (default: 5000)
-     */
-    function startUserIdAutoDetect(context, intervalMs = 5000) {
-        // If context has userSession service, use it (Phase 3+)
-        if (context?.userSession?.startAutoDetect) {
-            return context.userSession.startAutoDetect(intervalMs);
-        }
-        
-        // Fallback to legacy implementation (before Phase 3)
-        if (!context || !context.config || typeof context.config.get !== 'function') {
-            console.warn('[AutoDS] startUserIdAutoDetect: context.config inválido');
-            return null;
-        }
-
-        const checkUserId = () => {
-            try {
-                const cfg = context.config.get();
-                
-                if (!cfg.core?.userId) {
-                    const tempService = context.userSession || { getUserId: () => {
-                        try {
-                            const cookie = document.cookie.split(';').find(c => c.trim().startsWith('demon='));
-                            return cookie ? cookie.split('=')[1]?.trim() : null;
-                        } catch { return null; }
-                    }};
-                    const userId = tempService.getUserId();
-                    if (userId) {
-                        if (context.logger && typeof context.logger.info === 'function') {
-                            context.logger.info(`✅ User ID detectado após login: ${userId}`);
-                        }
-                        if (typeof context.config.update === 'function') {
-                            context.config.update({ core: { userId } });
-                        }
-                        
-                        if (context.events && typeof context.events.emit === 'function') {
-                            context.events.emit('autods:userId:detected', { userId });
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error('[AutoDS] Erro no checkUserId:', error);
-            }
-        };
-
-        checkUserId();
-
-        const intervalId = setInterval(checkUserId, intervalMs);
-
-        if (!context.scheduler) {
-            context.scheduler = { intervals: [] };
-        }
-        context.scheduler.intervals = context.scheduler.intervals || [];
-        context.scheduler.intervals.push(intervalId);
-
-        return intervalId;
     }
 
     /**
@@ -2098,67 +1759,6 @@ var version = GM_info.script.version;
         }
     }
 
-    /**
-     * Performance profiling utility
-     * Measures execution time of operations for optimization
-     * 
-     * @example
-     * performanceProfiler.start('attack-loop');
-     * await doAttacks();
-     * performanceProfiler.end('attack-loop', logger); // Logs: ⏱️ [PERF] attack-loop: 1234.56ms
-     */
-    const performanceProfiler = {
-        timers: new Map(),
-        
-        /**
-         * Start timing an operation
-         * @param {string} label - Unique label for this timer
-         */
-        start(label) {
-            this.timers.set(label, performance.now());
-        },
-        
-        /**
-         * End timing and optionally log result
-         * @param {string} label - Timer label
-         * @param {Object} logger - Optional logger to output result
-         * @returns {number|null} Duration in milliseconds, or null if timer not found
-         */
-        end(label, logger = null) {
-            const start = this.timers.get(label);
-            if (!start) return null;
-            
-            const duration = performance.now() - start;
-            this.timers.delete(label);
-            
-            if (logger) {
-                logger.debug(`⏱️ [PERF] ${label}: ${duration.toFixed(2)}ms`);
-            }
-            
-            return duration;
-        },
-        
-        /**
-         * Wrap an async function with automatic timing
-         * @param {string} label - Timer label
-         * @param {function} fn - Async function to wrap
-         * @param {Object} logger - Optional logger
-         * @returns {function} Wrapped function
-         */
-        measure(label, fn, logger = null) {
-            return async (...args) => {
-                this.start(label);
-                try {
-                    const result = await fn(...args);
-                    this.end(label, logger);
-                    return result;
-                } catch (error) {
-                    this.end(label, logger);
-                    throw error;
-                }
-            };
-        }
-    };
 
     function createLogger(level = 'info', floaterConfig = {}) {
         let currentLevel = level;
@@ -2304,36 +1904,6 @@ var version = GM_info.script.version;
     }
 
     function createConfig(storage, events) {
-        function importLegacyFarming(config, savedExists) {
-            // NOTE: Legacy farming import disabled in v0.8.0-alpha
-            // The 'farm' section was removed as part of UI redesign
-            // All farming functionality consolidated into ultraFast* modules
-            if (typeof window === 'undefined' || !window.localStorage) return false;
-            let changed = false;
-            try {
-                const legacy = window.localStorage;
-                // Legacy farm configuration is no longer supported
-                // This function is kept for backward compatibility but does nothing
-                // Users should use ultraFast* configuration instead
-            } catch (error) {
-                console.warn('[AutoDS][config] Legacy farming import failed', error);
-            }
-            return changed;
-        }
-
-        function syncLegacyFarming(config) {
-            // NOTE: Legacy farming sync disabled in v0.8.0-alpha
-            // The 'farm' section was removed as part of UI redesign
-            // This function is kept for backward compatibility but does nothing
-            if (typeof window === 'undefined' || !window.localStorage) return;
-            try {
-                // Legacy farm configuration sync is no longer supported
-                // No action needed
-            } catch (error) {
-                // Silently ignore legacy sync errors
-            }
-        }
-
         function importLegacyPvP(config, savedExists) {
             if (typeof window === 'undefined' || !window.localStorage) return false;
             let changed = false;
@@ -2402,12 +1972,10 @@ var version = GM_info.script.version;
             if (saved) {
                 config = deepMerge(config, saved);
             }
-            const farmingChanged = importLegacyFarming(config, Boolean(saved));
             const pvpChanged = importLegacyPvP(config, Boolean(saved));
-            if (!saved && (farmingChanged || pvpChanged)) {
+            if (!saved && pvpChanged) {
                 storage.set('config', config);
             }
-            syncLegacyFarming(config);
             syncLegacyPvP(config);
             return config;
         }
@@ -2417,7 +1985,6 @@ var version = GM_info.script.version;
         function save(newConfig) {
             cache = deepMerge({}, newConfig);
             storage.set('config', cache);
-            syncLegacyFarming(cache);
             syncLegacyPvP(cache);
             events?.emit('autods:config:updated', { config: get() });
         }
@@ -3817,7 +3384,7 @@ var version = GM_info.script.version;
                     let damage = 0;
                     const damageEl = document.querySelector('#yourDamageValue, [data-your-damage], .your-damage-value');
                     if (damageEl?.textContent) {
-                        damage = numberFromText(damageEl.textContent) || 0;
+                        damage = context.numbers.parse(damageEl.textContent) || 0;
                     }
                     
                     // Fallback: scan for "DMG: X" text only if selector failed
@@ -5649,6 +5216,11 @@ var version = GM_info.script.version;
                 return checkStaminaFullInternal();
             },
             
+            // 🆕 Expor getPlayerExpInfo para uso externo (evitar duplicação)
+            getPlayerExpInfo() {
+                return getPlayerExpInfo();
+            },
+            
             // Utility: reset initial XP (call before starting new loot session)
             resetLevelUpCheck() {
                 initialExpInfo = getPlayerExpInfo();
@@ -7006,8 +6578,8 @@ var version = GM_info.script.version;
 
     // --- Feature Module Skeletons --------------------------------------------------------
 
-    const waveModule = {
-        id: 'waveAutomation',
+    const ultraFastWaveModule = {
+        id: 'ultraFastWave',
         match: ({ location }) => /active_wave\.php/i.test(location.pathname),
         init() {
             this.state = {
@@ -7029,50 +6601,27 @@ var version = GM_info.script.version;
             const cfgRoot = context.config.get();
             const cfgWave = cfgRoot.wave;
             
-            // Log detailed guard condition checks
-            context.logger?.info?.('[WaveModule] activate() chamado | core.enabled=' + cfgRoot.core?.enabled + ' | wave=' + (cfgWave ? 'existe' : 'null') + ' | wave.enabled=' + cfgWave?.enabled);
-            
             if (!cfgRoot.core.enabled) {
-                context.logger?.info?.('[WaveModule] ❌ Guard falhou: core.enabled=false');
                 if (this.state) this.state.running = false;
                 return;
             }
             
-            if (!cfgWave) {
-                context.logger?.info?.('[WaveModule] ❌ Guard falhou: wave config não existe');
+            if (!cfgWave || cfgWave.enabled === false) {
                 if (this.state) this.state.running = false;
                 return;
             }
-            
-            if (cfgWave.enabled === false) {
-                context.logger?.info?.('[WaveModule] ❌ Guard falhou: wave.enabled=false');
-                if (this.state) this.state.running = false;
-                return;
-            }
-            
-            context.logger?.info?.('[WaveModule] ✅ Guardas passadas! Continuando...');
             
             if (!this.state) this.init(context);
-            if (this.state.running) {
-                context.logger?.info?.('[WaveModule] ⚠️ Já está rodando (state.running=true)');
-                return;
-            }
+            if (this.state.running) return;
             
             this.state.running = true;
-            context.logger?.info?.('[WaveModule] Estado: running=true, iniciando async loop...');
+            context.logger.info('⚡ Ultra Fast Wave - iniciando loop eterno');
 
             (async () => {
                 try {
-                    // Check if Ultra Fast Mode is enabled
-                    context.logger?.info?.('[WaveModule] Verificando modo: ultraFastMode=' + cfgWave.ultraFastMode);
-                    if (cfgWave.ultraFastMode) {
-                        context.logger.info('⚡ Wave Ultra Fast Mode ativo - iniciando loop eterno');
-                        await this.runUltraFastLoop(context);
-                    } else {
-                        await this.runLoop(context);
-                    }
+                    await this.runUltraFastLoop(context);
                 } catch (error) {
-                    context.logger.error('Falha na rotina de ondas', error);
+                    context.logger.error('Falha no Ultra Fast Wave', error);
                 } finally {
                     this.state.running = false;
                 }
@@ -7115,9 +6664,9 @@ var version = GM_info.script.version;
                 }
                 
                 const cfg = context.config.get();
-                logger.debug(`[UltraFastLoop] Iteração ${loopCount}: core=${cfg.core?.enabled}, wave.enabled=${cfg.wave?.enabled}, ultraFast=${cfg.wave?.ultraFastMode}`);
+                logger.debug(`[UltraFastLoop] Iteração ${loopCount}: core=${cfg.core?.enabled}, wave.enabled=${cfg.wave?.enabled}`);
                 
-                if (!cfg.core.enabled || cfg.wave?.enabled === false || !cfg.wave?.ultraFastMode) {
+                if (!cfg.core.enabled || cfg.wave?.enabled === false) {
                     logger.info(`⚡ Ultra Fast Wave desativado via configuração (iteração ${loopCount}).`);
                     break;
                 }
@@ -7132,23 +6681,22 @@ var version = GM_info.script.version;
                     }
                 }
                 
-                const ultraCfg = cfg.wave.ultraFastConfig || {};
-                
                 // 1. Check stamina
                 const currentStamina = context.stamina.getCurrent();
-                const skillId = ultraCfg.skillId ?? -2;
+                const skillId = cfg.wave.skillId ?? -2;
                 const skillCost = context.combat.getSkillCost(skillId);
                 
                 if (currentStamina < skillCost) {
                     // Check if should use FSP
-                    if ((ultraCfg.autoFSP || ultraCfg.lootDeadBeforeFSP) && currentStamina < (ultraCfg.minStaminaForFSP || 100)) {
+                    if ((cfg.wave.autoFSP || cfg.wave.lootDeadBeforeFSP || cfg.wave.lootSpecialBossBeforeFSP) && currentStamina < (cfg.wave.minStaminaForFSP || 100)) {
                         logger.info(`⏳ Stamina insuficiente (${currentStamina}/${skillCost}). Tentando recuperar...`);
                         
                         // 🆕 Verificar se já tentamos loot dead e devemos ir direto para FSP
                         const skipLootDead = sessionStorage.getItem('autods_skip_loot_dead_use_fsp');
+                        const skipLootSpecialBoss = sessionStorage.getItem('autods_skip_loot_special_boss_use_fsp');
                         
-                        // 🆕 ANTES de usar FSP, tentar lootar dead monsters para possível level up
-                        if (ultraCfg.lootDeadBeforeFSP !== false && !skipLootDead) {
+                        // 🆕 PRIORIDADE 1: ANTES de usar FSP, tentar lootar dead monsters normais para possível level up
+                        if (cfg.wave.lootDeadBeforeFSP !== false && !skipLootDead) {
                             logger.info('💀 [LOOT DEAD] Tentando lootar dead monsters...');
                             const deadMonstersLooted = await this.tryLootDeadMonstersBeforeFSP(context);
                             
@@ -7161,29 +6709,55 @@ var version = GM_info.script.version;
                                     await this.ensureAliveMonstersView(context);
                                     continue; // Continuar loop sem usar FSP
                                 }
-                                logger.info(`💀 [LOOT DEAD] Stamina ainda baixa (${newStamina}). Tentando FSP...`);
+                                logger.info(`💀 [LOOT DEAD] Stamina ainda baixa (${newStamina}). Tentando special bosses...`);
+                            } else {
+                                logger.info(`💀 [LOOT DEAD] Retornou false (sem loot). Continuando para special bosses...`);
                             }
                             // Se retornou false, a flag já foi setada dentro da função
                             // A página pode ter recarregado, então este código pode não executar
                         } else if (skipLootDead) {
-                            logger.info('💀 [LOOT DEAD] Flag detectada - pulando loot dead, indo direto para FSP...');
+                            logger.info('💀 [LOOT DEAD] Flag detectada - pulando loot dead, indo para special bosses ou FSP...');
                             // Limpar flag após usar
                             sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
                         }
                         
+                        // 🆕 PRIORIDADE 2: Tentar lootar SPECIAL BOSSES (100B+ HP) para possível level up
+                        logger.debug(`👑 [CHECK] Verificando condições para loot special boss: cfg.lootSpecialBossBeforeFSP=${cfg.wave.lootSpecialBossBeforeFSP}, skipFlag=${!!skipLootSpecialBoss}`);
+                        if (cfg.wave.lootSpecialBossBeforeFSP !== false && !skipLootSpecialBoss) {
+                            logger.info('👑 [SPECIAL BOSS LOOT] Tentando lootar special bosses...');
+                            const specialBossRecovered = await this.tryLootSpecialBosses(context, skillCost);
+                            
+                            if (specialBossRecovered) {
+                                logger.info('🎉 [SPECIAL BOSS LOOT] Stamina recuperada após loot de special boss!');
+                                // Limpar AMBAS as flags para poder tentar novamente no próximo ciclo
+                                sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
+                                sessionStorage.removeItem('autods_skip_loot_special_boss_use_fsp');
+                                await this.ensureAliveMonstersView(context);
+                                continue; // Continuar loop sem usar FSP
+                            }
+                            logger.info('👑 [SPECIAL BOSS LOOT] Stamina não recuperou. Tentando FSP...');
+                        } else if (skipLootSpecialBoss) {
+                            logger.info('👑 [SPECIAL BOSS LOOT] Flag detectada - pulando loot special boss, indo para FSP...');
+                            // Limpar flag após usar
+                            sessionStorage.removeItem('autods_skip_loot_special_boss_use_fsp');
+                        } else {
+                            logger.info('👑 [SPECIAL BOSS LOOT] Pulado - configuração desabilitada ou flag ativa');
+                        }
+                        
                         // Tentar usar FSP
-                        logger.info(`💊 [FSP] autoFSP=${ultraCfg.autoFSP} - Verificando opção FSP...`);
-                        if (!ultraCfg.autoFSP) {
+                        logger.info(`💊 [FSP] autoFSP=${cfg.wave.autoFSP} - Verificando opção FSP...`);
+                        if (!cfg.wave.autoFSP) {
                             logger.info('💊 [FSP] autoFSP está DESATIVADO. Não usará FSP.');
                         } else {
                             logger.info('💊 [FSP] Usando Full Stamina Potion...');
                             const fspUsed = await context.inventory.useFullStaminaPotion();
                             if (fspUsed) {
                                 logger.info('💊 [FSP] FSP usada com sucesso! Recarregando página...');
-                                // Limpar flag ao usar FSP com sucesso
+                                // Limpar AMBAS as flags ao usar FSP com sucesso (reset completo)
                                 sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
+                                sessionStorage.removeItem('autods_skip_loot_special_boss_use_fsp');
                                 await sleep(500);
-                                window.location.reload();
+                                window.location.href = window.location.href;
                                 return;
                             } else {
                                 logger.info('💊 [FSP] Falha ao usar FSP ou sem FSP disponível.');
@@ -7191,12 +6765,19 @@ var version = GM_info.script.version;
                         }
                     }
                     
+                    // 🆕 Após todo o processo de stamina recovery, limpar flags para próxima tentativa
+                    // Isso permite tentar loot dead/special boss novamente após aguardar regeneração
+                    logger.debug('🔄 Limpando flags de loot para permitir nova tentativa após regeneração...');
+                    sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
+                    sessionStorage.removeItem('autods_skip_loot_special_boss_use_fsp');
+                    
                     // Wait for stamina regen
                     logger.info(`⏳ Stamina baixa (${currentStamina}). Aguardando regeneração...`);
                     await sleep(30000); // 30s wait
                     continue;
                 }
                 
+                await this.switchToAliveMonstersView(context);
                 // 2. Scan ALL eligible targets (not joined yet)
                 const newTargets = this.scanUltraFastTargets(context, cfg);
                 
@@ -7210,7 +6791,7 @@ var version = GM_info.script.version;
                     
                     // Refresh to check for new targets
                     await sleep(5000);
-                    window.location.reload();
+                    window.location.href = window.location.href;
                     continue;
                 }
                 
@@ -7218,7 +6799,7 @@ var version = GM_info.script.version;
                 if (newTargets.length === 0 && ongoingCount === 0) {
                     logger.debug('Nenhum alvo disponível. Aguardando 15s...');
                     await sleep(15000);
-                    window.location.reload();
+                    window.location.href = window.location.href;
                     continue;
                 }
                 
@@ -7235,7 +6816,7 @@ var version = GM_info.script.version;
                     
                     // Wait and reload to check if some battles completed
                     await sleep(10000);
-                    window.location.reload();
+                    window.location.href = window.location.href;
                     continue;
                 }
                 
@@ -7267,7 +6848,7 @@ var version = GM_info.script.version;
                 
                 // 9. Refresh page to continue loop
                 await sleep(2000);
-                window.location.reload();
+                window.location.href = window.location.href;
             }
             
             // Log final stats
@@ -7347,9 +6928,8 @@ var version = GM_info.script.version;
                 // 🆕 Setar flag ANTES de voltar para alive view (pois pode recarregar)
                 logger.info('💀 [LOOT DEAD] Setando flag para usar FSP após reload...');
                 sessionStorage.setItem('autods_skip_loot_dead_use_fsp', 'true');
-                logger.info('💀 [LOOT DEAD] Voltando para alive view...');
-                await this.switchToAliveMonstersView(context);
-                await sleep(1000);
+                // NÃO voltar para alive view aqui - deixar para tryLootSpecialBosses decidir
+                logger.info('💀 [LOOT DEAD] Mantendo dead view para possível loot de special bosses...');
                 return false;
             }
             
@@ -7359,15 +6939,192 @@ var version = GM_info.script.version;
             const looted = await this.executeQuickDeadLoot(context);
             logger.info(`💀 [LOOT DEAD] Loot executado: ${looted ? 'SUCESSO' : 'FALHA'}`);
             
-            // 4. Voltar para alive monsters view
-            logger.info('💀 [LOOT DEAD] Voltando para alive monsters view...');
+            // 🆕 Se SUCESSO, voltar para alive view
+            if (looted) {
+                logger.info('💀 [LOOT DEAD] Voltando para alive monsters view após sucesso...');
+                await this.switchToAliveMonstersView(context);
+                await sleep(1000);
+                return true;
+            }
+            
+            // 🆕 Se falhou (todos bosses filtrados), setar flag e MANTER dead view
+            logger.info('💀 [LOOT DEAD] Setando flag para pular loot dead na próxima tentativa...');
+            sessionStorage.setItem('autods_skip_loot_dead_use_fsp', 'true');
+            logger.info('💀 [LOOT DEAD] Mantendo dead view para possível loot de special bosses...');
+            
+            // NÃO voltar para alive view - deixar tryLootSpecialBosses fazer isso
+            // Isso evita reload desnecessário entre as duas tentativas de loot
+            
+            return false;
+        },
+        
+        /**
+         * Tenta lootar SPECIAL BOSSES (100B+ HP) um por vez para recuperar stamina via level up
+         * @param {Object} context - Script context
+         * @param {number} skillCost - Stamina cost needed
+         * @returns {Promise<boolean>} - true se stamina recuperou, false caso contrário
+         */
+        async tryLootSpecialBosses(context, skillCost) {
+            const { logger, notifications, numbers } = context;
+            
+            const BOSS_HP_THRESHOLD = 100_000_000_000; // 100B
+            
+            // 🆕 CAPTURAR EXP E STAMINA INICIAIS (antes de qualquer loot)
+            const initialStamina = context.stamina.getCurrent();
+            const initialExpInfo = context.loot.getPlayerExpInfo(); // Reutilizar função do lootService
+            
+            if (!initialExpInfo) {
+                logger.warn('⚠️ [SPECIAL BOSS LOOT] Não foi possível obter informações de EXP iniciais');
+                sessionStorage.setItem('autods_skip_loot_special_boss_use_fsp', 'true');
+                return false;
+            }
+            
+            logger.info(`👑 [SPECIAL BOSS LOOT] Estado inicial: Stamina=${initialStamina}, EXP=${numbers.format(initialExpInfo.currentExp)}/${numbers.format(initialExpInfo.maxExp)} (${initialExpInfo.percent.toFixed(2)}%)`);
+            
+            // Variável para simular acúmulo de EXP
+            let simulatedCurrentExp = initialExpInfo.currentExp;
+            
+            // 1. Verificar se já está em dead monsters view (pode ter vindo de tryLootDeadMonstersBeforeFSP)
+            if (!this.isDeadMonstersView()) {
+                logger.info('👑 [SPECIAL BOSS LOOT] Alternando para view de dead monsters...');
+                const switchedToDead = await this.switchToDeadMonstersView(context);
+                if (!switchedToDead) {
+                    logger.warn('⚠️ [SPECIAL BOSS LOOT] Não foi possível mudar para view de dead monsters');
+                    sessionStorage.setItem('autods_skip_loot_special_boss_use_fsp', 'true');
+                    await this.switchToAliveMonstersView(context);
+                    return false;
+                }
+            } else {
+                logger.info('👑 [SPECIAL BOSS LOOT] Já está em dead monsters view - continuando...');
+            }
+            
+            // 2. Aguardar e fazer retry para detectar dead monsters
+            logger.info('👑 [SPECIAL BOSS LOOT] Aguardando página atualizar...');
+            const maxRetries = 5;
+            const retryDelays = [1000, 1500, 2000, 3000, 4000];
+            
+            let specialBossCards = [];
+            
+            for (let retryIdx = 0; retryIdx < maxRetries; retryIdx++) {
+                await sleep(retryDelays[retryIdx]);
+                
+                // Procurar dead monsters
+                let cards = Array.from(document.querySelectorAll('.monster-card[data-dead="1"]'));
+                if (cards.length === 0) {
+                    cards = Array.from(document.querySelectorAll('.monster-card'));
+                    cards = cards.filter(card => {
+                        const hpText = card.textContent || '';
+                        return hpText.includes('0 /') || /HP[:\s]*0[^0-9]/.test(hpText);
+                    });
+                }
+                
+                // Filtrar APENAS special bosses (100B+ HP)
+                specialBossCards = [];
+                for (const card of cards) {
+                    const hpRow = Array.from(card.querySelectorAll('.stat-row')).find(row => row.querySelector('.stat-icon.hp'));
+                    const hpValueNode = hpRow?.querySelector('.stat-value');
+                    const hpText = hpValueNode?.textContent ?? '';
+                    const hpMatch = hpText.match(/(\d{1,3}(?:,\d{3})*|\d+)\s*\/\s*(\d{1,3}(?:,\d{3})*|\d+)/);
+                    const hp = hpMatch ? numberFromText(hpMatch[2]) : null;
+                    
+                    // APENAS special bosses (100B+)
+                    if (hp && hp >= BOSS_HP_THRESHOLD) {
+                        const nameElement = card.querySelector('h3, .monster-name, .card-title');
+                        const monsterName = nameElement ? nameElement.textContent.trim() : 'Unknown';
+                        
+                        let monsterId = card.getAttribute('data-monster-id');
+                        if (!monsterId) {
+                            const link = card.querySelector('a[href*="battle.php"]');
+                            if (link) {
+                                const match = link.href.match(/[?&]id=(\d+)/);
+                                monsterId = match ? match[1] : null;
+                            }
+                        }
+                        
+                        if (monsterId) {
+                            specialBossCards.push({ monsterId, name: monsterName, hp });
+                        }
+                    }
+                }
+                
+                logger.debug(`👑 [SPECIAL BOSS LOOT] Tentativa ${retryIdx + 1}/${maxRetries}: ${specialBossCards.length} special bosses encontrados`);
+                
+                if (specialBossCards.length > 0) {
+                    logger.info(`👑 [SPECIAL BOSS LOOT] ✅ Special bosses detectados na tentativa ${retryIdx + 1}`);
+                    break;
+                }
+            }
+            
+            if (specialBossCards.length === 0) {
+                logger.info('👑 [SPECIAL BOSS LOOT] Nenhum special boss para lootar.');
+                sessionStorage.setItem('autods_skip_loot_special_boss_use_fsp', 'true');
+                await this.switchToAliveMonstersView(context);
+                await sleep(1000);
+                return false;
+            }
+            
+            logger.info(`👑 [SPECIAL BOSS LOOT] ${specialBossCards.length} special bosses disponíveis - looteando UM POR VEZ...`);
+            
+            // 3. Lootar special bosses UM POR VEZ, verificando stamina após cada loot
+            const userId = context.userSession.getUserId();
+            if (!userId) {
+                logger.error('❌ [SPECIAL BOSS LOOT] User ID não encontrado');
+                sessionStorage.setItem('autods_skip_loot_special_boss_use_fsp', 'true');
+                await this.switchToAliveMonstersView(context);
+                return false;
+            }
+            
+            let looted = 0;
+            for (const boss of specialBossCards) {
+                logger.info(`👑 [SPECIAL BOSS LOOT] Looteando ${boss.name} (${formatNumber(boss.hp)} HP)...`);
+                
+                try {
+                    const result = await context.http.lootMonster(boss.monsterId, userId);
+                    
+                    if (result.success) {
+                        looted++;
+                        
+                        // 🆕 EXTRAIR EXP GANHO DA RESPOSTA
+                        const expGained = result.data?.rewards?.exp || 0;
+                        
+                        logger.info(`✅ [SPECIAL BOSS LOOT] ${boss.name} looteado! +${numbers.format(expGained)} EXP`);
+                        notifications.success(`👑 ${boss.name} looteado! +${numbers.format(expGained)} EXP`, 2000);
+                        
+                        // 🆕 SIMULAR ACÚMULO DE EXP
+                        simulatedCurrentExp += expGained;
+                        
+                        // 🆕 DETECTAR LEVEL UP (EXP ultrapassou o máximo)
+                        const leveledUp = simulatedCurrentExp >= initialExpInfo.maxExp;
+                        
+                        if (leveledUp) {
+                            logger.info(`🎉 [SPECIAL BOSS LOOT] LEVEL UP DETECTADO! (${numbers.format(initialExpInfo.currentExp)} + ${numbers.format(expGained)} >= ${numbers.format(initialExpInfo.maxExp)})`);
+                            logger.info(`🎉 [SPECIAL BOSS LOOT] Stamina recuperada após ${looted} loot(s)! Voltando para wave...`);
+                            notifications.success(`🎉 Level up! Stamina recuperada após ${looted} special boss(es)`, 3000);
+                            await this.switchToAliveMonstersView(context);
+                            await sleep(1000);
+                            return true;
+                        }
+                        
+                        // Log progress
+                        const expNeeded = initialExpInfo.maxExp - simulatedCurrentExp;
+                        logger.info(`👑 [SPECIAL BOSS LOOT] Progresso: ${numbers.format(simulatedCurrentExp)}/${numbers.format(initialExpInfo.maxExp)} (faltam ${numbers.format(expNeeded)} XP para level up)`);
+                    } else {
+                        logger.warn(`⚠️ [SPECIAL BOSS LOOT] Falha ao lootar ${boss.name}: ${result.message}`);
+                    }
+                } catch (error) {
+                    logger.error(`❌ [SPECIAL BOSS LOOT] Erro ao lootar ${boss.name}:`, error);
+                }
+                
+                // Delay entre loots (1 segundo)
+                await sleep(1000);
+            }
+            
+            // Se chegou aqui, looteou todos mas stamina não recuperou
+            logger.info(`👑 [SPECIAL BOSS LOOT] ${looted} special boss(es) looteado(s), mas stamina não recuperou.`);
+            sessionStorage.setItem('autods_skip_loot_special_boss_use_fsp', 'true');
             await this.switchToAliveMonstersView(context);
             await sleep(1000);
-            
-            // 5. NÃO recarregar aqui - deixar o código principal decidir
-            // A stamina será verificada após retornar
-            
-            return looted;
+            return false;
         },
         
         /**
@@ -7498,11 +7255,20 @@ var version = GM_info.script.version;
         /**
          * Executa loot rápido nos dead monsters visíveis
          * ✨ Delega para ultraFastLootModule para reutilizar toda a lógica paralela
+         * 🆕 Agora com detecção de level up para parar quando stamina recupera
          */
         async executeQuickDeadLoot(context) {
-            const { logger } = context;
+            const { logger, numbers } = context;
             
             const BOSS_HP_THRESHOLD = 100_000_000_000;
+            
+            // 🆕 CAPTURAR EXP INICIAL (antes de qualquer loot)
+            const initialExpInfo = context.loot.getPlayerExpInfo();
+            let simulatedCurrentExp = initialExpInfo?.currentExp || 0;
+            
+            if (initialExpInfo) {
+                logger.info(`💀 [LOOT DEAD] Estado inicial: EXP=${numbers.format(initialExpInfo.currentExp)}/${numbers.format(initialExpInfo.maxExp)} (${initialExpInfo.percent.toFixed(2)}%)`);
+            }
             
             // Encontrar dead monsters
             let cards = Array.from(document.querySelectorAll('.monster-card[data-dead="1"]'));
@@ -7566,53 +7332,73 @@ var version = GM_info.script.version;
             
             logger.info(`💰 [LOOT] ${lootTargets.length} dead monsters para lootar (${bossesFiltered} bosses filtrados)`);
             
-            // Delegar para ultraFastLootModule que já tem toda a lógica paralela
-            const ultraFastLootModule = context.moduleRegistry.getModule('ultraFastLoot');
-            if (ultraFastLootModule && typeof ultraFastLootModule.lootBatchParallel === 'function') {
-                // Usar módulo para loot paralelo
-                const summary = ultraFastLootModule.createLootSummary();
-                const batchSize = context.config.get().ultraFastLoot?.maxParallelLoots || 10;
+            // 🆕 Lootar em BATCHES com verificação de level up APÓS cada batch
+            const userId = context.userSession.getUserId();
+            if (!userId) {
+                logger.error('❌ [LOOT] User ID não encontrado');
+                return false;
+            }
+            
+            const batchSize = context.config.get().ultraFastLoot?.maxParallelLoots || 10;
+            let totalLooted = 0;
+            
+            // Processar em batches
+            for (let i = 0; i < lootTargets.length; i += batchSize) {
+                const batch = lootTargets.slice(i, i + batchSize);
                 
-                // Processar em batches
-                for (let i = 0; i < lootTargets.length; i += batchSize) {
-                    const batch = lootTargets.slice(i, i + batchSize);
-                    await ultraFastLootModule.lootBatchParallel(context, batch, summary);
-                    
-                    // Delay entre batches
-                    if (i + batchSize < lootTargets.length) {
-                        await sleep(context.config.get().ultraFastLoot?.delayBetweenLoots || 100);
+                logger.debug(`💀 [LOOT] Batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(lootTargets.length / batchSize)}: ${batch.length} monsters`);
+                
+                // Lootar batch em PARALELO
+                const promises = batch.map(target => 
+                    context.http.lootMonster(target.monsterId, userId)
+                        .then(result => ({ target, result }))
+                        .catch(error => ({ target, result: { success: false, message: error.message } }))
+                );
+                
+                const results = await Promise.all(promises);
+                
+                // 🆕 ACUMULAR EXP DO BATCH
+                let batchExpGained = 0;
+                let batchSuccessCount = 0;
+                
+                for (const { target, result } of results) {
+                    if (result.success) {
+                        batchSuccessCount++;
+                        const expGained = result.data?.rewards?.exp || 0;
+                        batchExpGained += expGained;
+                        logger.debug(`✅ ${target.name}: +${numbers.format(expGained)} EXP`);
                     }
                 }
                 
-                logger.info(`🎉 [LOOT] CONCLUÍDO: ${summary.drops}/${lootTargets.length} loots bem-sucedidos`);
-                if (context.loot?.showDetailedModal) {
-                    context.loot.showDetailedModal(summary, 'Dead Monsters Quick Loot');
+                totalLooted += batchSuccessCount;
+                logger.info(`💀 [LOOT] Batch completo: ${batchSuccessCount}/${batch.length} loots, +${numbers.format(batchExpGained)} EXP`);
+                
+                // 🆕 VERIFICAR LEVEL UP APÓS BATCH (se temos info inicial)
+                if (initialExpInfo && batchExpGained > 0) {
+                    simulatedCurrentExp += batchExpGained;
+                    
+                    const leveledUp = simulatedCurrentExp >= initialExpInfo.maxExp;
+                    
+                    if (leveledUp) {
+                        logger.info(`🎉 [LOOT DEAD] LEVEL UP DETECTADO! (EXP acumulado: ${numbers.format(simulatedCurrentExp)} >= ${numbers.format(initialExpInfo.maxExp)})`);
+                        logger.info(`🎉 [LOOT DEAD] Stamina recuperada após ${totalLooted} loot(s)! Parando...`);
+                        context.notifications.success(`🎉 Level up! Stamina recuperada após ${totalLooted} dead monster(s)`, 3000);
+                        return true; // Retorna sucesso para que volte ao farming
+                    }
+                    
+                    // Log progress
+                    const expNeeded = initialExpInfo.maxExp - simulatedCurrentExp;
+                    logger.debug(`💀 [LOOT] Progresso: ${numbers.format(simulatedCurrentExp)}/${numbers.format(initialExpInfo.maxExp)} (faltam ${numbers.format(expNeeded)} XP)`);
                 }
                 
-                return summary.drops > 0;
-            } else {
-                // Fallback: usar loot service se ultraFastLootModule não disponível
-                logger.warn('⚠️ [LOOT] ultraFastLootModule não disponível, usando fallback...');
-                
-                const userId = context.userSession.getUserId();
-                if (!userId) {
-                    logger.error('❌ [LOOT] User ID não encontrado');
-                    return false;
+                // Delay entre batches
+                if (i + batchSize < lootTargets.length) {
+                    await sleep(context.config.get().ultraFastLoot?.delayBetweenLoots || 100);
                 }
-                
-                const summary = await context.loot.lootMultiple(lootTargets, userId, {
-                    batchSize: context.config.get().ultraFastLoot?.maxParallelLoots || 10,
-                    checkLevelUp: true,
-                    checkStamina: true
-                });
-                
-                logger.info(`🎉 [LOOT] CONCLUÍDO: ${summary.drops}/${lootTargets.length} loots bem-sucedidos`);
-                if (context.loot?.showDetailedModal) {
-                    context.loot.showDetailedModal(summary, 'Dead Monsters Quick Loot');
-                }
-                
-                return summary.drops > 0;
             }
+            
+            logger.info(`🎉 [LOOT DEAD] CONCLUÍDO: ${totalLooted}/${lootTargets.length} loots bem-sucedidos`);
+            return totalLooted > 0;
         },
         
         /**
@@ -7626,16 +7412,14 @@ var version = GM_info.script.version;
         scanUltraFastTargets(context, cfg) {
             const { logger } = context;
             
-            // Extract filters from ultraFastConfig (or fallback to wave.monsterFilter for backward compat)
-            const ultraCfg = cfg.wave?.ultraFastConfig || {};
-            const monsterFilter = ultraCfg.monsterFilter || cfg.wave?.monsterFilter || {};
+            const monsterFilter = cfg.wave?.monsterFilter || {};
             const includeNames = Array.isArray(monsterFilter.includeNames) ? monsterFilter.includeNames.filter(Boolean) : [];
             const excludeNames = Array.isArray(monsterFilter.excludeNames) ? monsterFilter.excludeNames.filter(Boolean) : [];
             
             // Use Monster Scanner Service with include names (backward compat)
             const monsters = context.monsterScanner.scanWaveMonsters({
                 monsterNames: includeNames.length > 0 ? includeNames : undefined,
-                minHp: cfg.wave.minMobHp,
+                minHp: 0, // Ultra Fast doesn't filter by HP
                 onlyNotJoined: true, // Ultra Fast only attacks new targets
                 onlyAlive: true // Skip dead monsters
             });
@@ -7669,15 +7453,8 @@ var version = GM_info.script.version;
                 button: monster.card?.querySelector('#join-battle, button.btn-join, .join-btn button, button.join-btn, .join-btn, button')
             }));
             
-            // Sort by priority
-            const mode = cfg.wave.priorityMode || 'lowest_hp';
-            if (mode === 'lowest_hp') {
-                targets.sort((a, b) => (a.hp || 0) - (b.hp || 0));
-            } else if (mode === 'highest_hp') {
-                targets.sort((a, b) => (b.hp || 0) - (a.hp || 0));
-            } else if (mode === 'random') {
-                targets.sort(() => Math.random() - 0.5);
-            }
+            // Ultra Fast always uses lowest_hp priority
+            targets.sort((a, b) => (a.hp || 0) - (b.hp || 0));
             
             return targets;
         },
@@ -7867,10 +7644,9 @@ var version = GM_info.script.version;
         
         async attackUltraFastBattles(context, targets, cfg) {
             const { logger } = context;
-            const ultraCfg = cfg.wave.ultraFastConfig || {};
-            const skillId = ultraCfg.skillId ?? -2;
-            const parallelAttacks = ultraCfg.parallelAttacks || 10;
-            const baseDamageTarget = ultraCfg.damageTarget || 3000000;
+            const skillId = cfg.wave.skillId ?? -2;
+            const parallelAttacks = cfg.wave.parallelAttacks || 10;
+            const baseDamageTarget = cfg.wave.damageTarget || 3000000;
             const skillCosts = { '0': 1, '-1': 10, '-2': 50, '-3': 100, '-4': 200 };
             const skillCost = skillCosts[skillId.toString()] || 1;
             
@@ -7934,7 +7710,7 @@ var version = GM_info.script.version;
                     const skipLootDead = sessionStorage.getItem('autods_skip_loot_dead_use_fsp');
                     
                     // 🆕 Tentar loot de dead monsters para possível level up
-                    if (ultraCfg.lootDeadBeforeFSP !== false && !skipLootDead) {
+                    if (cfg.wave.lootDeadBeforeFSP !== false && !skipLootDead) {
                         logger.info('💀 [LOOT DEAD] Tentando lootar dead monsters...');
                         const looted = await this.tryLootDeadMonstersBeforeFSP(context);
                         if (looted) {
@@ -7958,8 +7734,8 @@ var version = GM_info.script.version;
                     
                     // Tentar usar FSP se stamina ainda insuficiente
                     if (currentStamina < skillCost) {
-                        logger.info(`💊 [FSP] autoFSP=${ultraCfg.autoFSP} - Verificando opção FSP...`);
-                        if (!ultraCfg.autoFSP) {
+                        logger.info(`💊 [FSP] autoFSP=${cfg.wave.autoFSP} - Verificando opção FSP...`);
+                        if (!cfg.wave.autoFSP) {
                             logger.info('💊 [FSP] autoFSP está DESATIVADO. Não usará FSP.');
                         } else {
                             logger.info('💊 [FSP] Usando Full Stamina Potion...');
@@ -7968,7 +7744,7 @@ var version = GM_info.script.version;
                                 logger.info('💊 [FSP] FSP usada com sucesso! Recarregando página...');
                                 sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
                                 await sleep(500);
-                                window.location.reload();
+                                window.location.href = window.location.href;
                                 return;
                             } else {
                                 logger.info('💊 [FSP] Falha ao usar FSP ou sem FSP disponível.');
@@ -8084,7 +7860,7 @@ var version = GM_info.script.version;
                 }
                 
                 // Small delay between rounds
-                await sleep(ultraCfg.minDelayBetweenAttacks || 30);
+                await sleep(cfg.wave.minDelayBetweenAttacks || 30);
             }
             
             // Summary
@@ -8097,10 +7873,9 @@ var version = GM_info.script.version;
         
         async attackOngoingBattles(context, cfg) {
             const { logger, dom } = context;
-            const ultraCfg = cfg.wave.ultraFastConfig || {};
-            const skillId = ultraCfg.skillId ?? -2;
-            const parallelAttacks = ultraCfg.parallelAttacks || 10;
-            const baseDamageTarget = ultraCfg.damageTarget || 3000000;
+            const skillId = cfg.wave.skillId ?? -2;
+            const parallelAttacks = cfg.wave.parallelAttacks || 10;
+            const baseDamageTarget = cfg.wave.damageTarget || 3000000;
             const skillCosts = { '0': 1, '-1': 10, '-2': 50, '-3': 100, '-4': 200 };
             const skillCost = skillCosts[skillId.toString()] || 1;
             
@@ -8191,7 +7966,7 @@ var version = GM_info.script.version;
                     const skipLootDead = sessionStorage.getItem('autods_skip_loot_dead_use_fsp');
                     
                     // 🆕 Tentar loot de dead monsters para possível level up
-                    if (ultraCfg.lootDeadBeforeFSP !== false && !skipLootDead) {
+                    if (cfg.wave.lootDeadBeforeFSP !== false && !skipLootDead) {
                         logger.info('💀 [LOOT DEAD] Tentando lootar dead monsters...');
                         const looted = await this.tryLootDeadMonstersBeforeFSP(context);
                         if (looted) {
@@ -8211,8 +7986,8 @@ var version = GM_info.script.version;
                     }
                     
                     // Tentar usar FSP se disponível
-                    logger.info(`💊 [FSP] autoFSP=${ultraCfg.autoFSP} - Verificando opção FSP...`);
-                    if (!ultraCfg.autoFSP) {
+                    logger.info(`💊 [FSP] autoFSP=${cfg.wave.autoFSP} - Verificando opção FSP...`);
+                    if (!cfg.wave.autoFSP) {
                         logger.info('💊 [FSP] autoFSP está DESATIVADO. Não usará FSP.');
                     } else {
                         logger.info('💊 [FSP] Usando Full Stamina Potion...');
@@ -8221,7 +7996,7 @@ var version = GM_info.script.version;
                             logger.info('💊 [FSP] FSP usada com sucesso! Recarregando página...');
                             sessionStorage.removeItem('autods_skip_loot_dead_use_fsp');
                             await sleep(500);
-                            window.location.reload();
+                            window.location.href = window.location.href;
                             return;
                         } else {
                             logger.info('💊 [FSP] Falha ao usar FSP ou sem FSP disponível.');
@@ -8303,7 +8078,7 @@ var version = GM_info.script.version;
                     logger.debug(`  Rodada ${rounds}: ${successCount} hits, +${formatNumber(totalBatchDamage)} dano (${duration}ms)`);
                 }
                 
-                await sleep(ultraCfg.minDelayBetweenAttacks || 30);
+                await sleep(cfg.wave.minDelayBetweenAttacks || 30);
             }
             
             // Summary
@@ -8313,257 +8088,6 @@ var version = GM_info.script.version;
                 }
             }
         },
-        
-        async runLoop(context) {
-            const { logger } = context;
-            while (/active_wave\.php/i.test(context.location.pathname)) {
-                const currentUrl = context.window?.location?.href || window.location.href;
-                if (currentUrl && this.state.lastWaveUrl !== currentUrl) {
-                    this.state.lastWaveUrl = currentUrl;
-                    context.storage.set(STORAGE_KEYS.lastWaveUrl, currentUrl);
-                }
-
-                const cfg = context.config.get();
-                if (!cfg.core.enabled || cfg.wave?.enabled === false) {
-                    logger.info('Automação de ondas desativada via configuração.');
-                    break;
-                }
-
-                const waitingStamina = await this.ensureStamina(context, cfg);
-                if (waitingStamina) {
-                    continue;
-                }
-
-                const result = this.scanAndJoin(context, cfg);
-                if (result === 'joined') {
-                    await sleepRandom(cfg.battle?.delayBaseMs ?? 1200, cfg.battle?.delayVariation ?? 0.25, cfg.battle?.randomizeDelays ?? true);
-                    break; // Navegação para a batalha assume o controle.
-                }
-
-                // ⚠️ SAFE MODE: Mais de 10 continues, aguardar sem fazer joins
-                if (result?.status === 'safeMode') {
-                    const safeWaitInterval = 10000; // 10 segundos
-                    logger.warn(`⏳ Safe Mode ativo: ${result.continueCount} batalhas simultâneas. Aguardando ${Math.round(safeWaitInterval / 1000)}s...`);
-                    context.events.emit('autods:wave:safeMode', {
-                        continueCount: result.continueCount,
-                        waitInterval: safeWaitInterval,
-                        timestamp: Date.now()
-                    });
-                    await sleep(safeWaitInterval);
-                    context.window.location.reload();
-                    return;
-                }
-
-                if (result?.status === 'maxBattles' || result === 'maxBattles') {
-                    const reloadInterval = cfg.wave?.maxBattlesReloadMs ?? 30000; // 30 segundos padrão
-                    context.events.emit('autods:wave:maxBattles', {
-                        continueCount: result.continueCount || 5,
-                        limit: cfg.wave.maxConcurrentBattles ?? 5,
-                        reloadInterval,
-                        timestamp: Date.now()
-                    });
-                    logger.info(`Aguardando ${Math.round(reloadInterval / 1000)}s antes de recarregar a página...`);
-                    await sleepRandom(reloadInterval, 0.1, true);
-                    context.events.emit('autods:wave:reloading', { timestamp: Date.now() });
-                    logger.info('Recarregando página para verificar batalhas disponíveis...');
-                    context.window.location.reload();
-                    return; // Aguarda o reload
-                }
-
-                logger.debug('Nenhum alvo elegível. Nova varredura em 15s.');
-                await sleepRandom(15000, cfg.battle?.delayVariation ?? 0.25, cfg.battle?.randomizeDelays ?? true);
-            }
-        },
-        async ensureStamina(context, cfg) {
-            if (!cfg.stamina) return false;
-            const staminaNode = context.dom.query('#stamina_span, [data-player-stamina]');
-            if (!staminaNode) return false;
-            const staminaText = staminaNode.getAttribute?.('data-player-stamina') ?? staminaNode.textContent ?? '';
-            const currentStamina = numberFromText(staminaText);
-            const threshold = cfg.stamina.minThreshold ?? 0;
-            if (currentStamina !== null && currentStamina < threshold) {
-                if (!this.state.staminaWaiting) {
-                    context.logger.warn(`Stamina baixa (${formatNumber(currentStamina)} < ${formatNumber(threshold)}). Aguardando regeneração.`);
-                    this.state.staminaWaiting = true;
-                }
-                await sleepRandom(cfg.stamina.checkIntervalMs ?? 300000, 0.05, true);
-                return true;
-            }
-            if (this.state.staminaWaiting) {
-                context.logger.info('Stamina recuperada; retomando varredura de ondas.');
-                this.state.staminaWaiting = false;
-            }
-            return false;
-        },
-        scanAndJoin(context, cfg) {
-            const { logger, dom } = context;
-            const cards = dom.queryAll('.monster-card');
-            if (!cards.length) {
-                logger.debug('Nenhum card de monstro encontrado na tela de ondas.');
-                return 'noEligible';
-            }
-
-            const continueCount = cards.reduce((count, card) => {
-                // Updated selector to include new button structure
-                const button = card.querySelector('#join-battle, button.btn-join, .join-btn button, button.join-btn, .join-btn, button');
-                if (button && /continue/i.test(button.textContent || '')) {
-                    return count + 1;
-                }
-                return count;
-            }, 0);
-
-            const limit = cfg.wave.maxConcurrentBattles ?? 5;
-            
-            // ⚠️ SEGURANÇA: Se mais de 10 continues, apenas verificar dano (não fazer joins)
-            if (continueCount > 10) {
-                logger.warn(`⚠️ MUITAS BATALHAS ATIVAS (${continueCount} > 10)! Modo seguro: aguardando completar batalhas.`);
-                logger.info('💡 Não será feito join em novos monstros para evitar sobrecarga do servidor.');
-                return { status: 'safeMode', continueCount };
-            }
-            
-            if (continueCount >= limit) {
-                if (!this.state.notifiedMaxBattles) {
-                    logger.info(`Máximo de batalhas simultâneas em andamento (${continueCount}/${limit}).`);
-                    this.state.notifiedMaxBattles = true;
-                }
-                return { status: 'maxBattles', continueCount };
-            }
-            this.state.notifiedMaxBattles = false;
-
-            // Parse monsterNames from CSV format (string) to array
-            let monsterNamesList = [];
-            if (cfg.wave.monsterNames) {
-                if (Array.isArray(cfg.wave.monsterNames)) {
-                    // Already an array
-                    monsterNamesList = cfg.wave.monsterNames.filter(Boolean);
-                } else if (typeof cfg.wave.monsterNames === 'string') {
-                    // Parse CSV string: split by newlines or commas
-                    monsterNamesList = cfg.wave.monsterNames
-                        .split(/[\n,]+/)
-                        .map(s => s.trim())
-                        .filter(s => s.length > 0);
-                }
-            }
-
-            const filters = Array.isArray(monsterNamesList)
-                ? monsterNamesList.filter(Boolean).map(name => name.toLowerCase())
-                : [];
-
-            const candidates = cards.map((card, index) => {
-                const nameNode = card.querySelector('h3, h4, .monster-name, .card-title');
-                const rawName = nameNode ? nameNode.textContent.trim() : 'Unknown';
-                const hpNode = card.querySelector('[data-stat="hp"], .hp-text, .hp-value, .monster-hp, .hp-bar + div, .hp');
-                const hpText = hpNode ? hpNode.getAttribute?.('data-current-hp') ?? hpNode.textContent ?? '' : '';
-                const hp = numberFromText(hpText);
-                // Updated selector to include new button structure: .btn-join, #join-battle
-                const button = card.querySelector('#join-battle, button.btn-join, .join-btn button, button.join-btn, .join-btn, button');
-                const link = card.querySelector('a[href*="battle.php"][href*="id="]');
-                const action = button || link;
-                const actionType = button ? (/(?:\bcontinue\b)/i.test(button.textContent || '') ? 'continue' : 'join') : 'link';
-                return {
-                    card,
-                    index,
-                    name: rawName,
-                    nameLower: rawName.toLowerCase(),
-                    hp,
-                    action,
-                    actionType
-                };
-            }).filter(monster => {
-                if (!monster.action) return false;
-                if (monster.actionType === 'continue') return false;
-                if (filters.length && !filters.some(filter => monster.nameLower.includes(filter))) return false;
-                if (monster.hp !== null && cfg.wave.minMobHp && monster.hp < cfg.wave.minMobHp) return false;
-                return true;
-            });
-
-            if (!candidates.length) {
-                logger.debug('Nenhum monstro elegível após aplicar filtros de nome/HP.');
-                return 'noEligible';
-            }
-
-            const target = pickTarget(candidates, cfg.wave.priorityMode);
-            if (!target) {
-                logger.debug('Nenhum alvo selecionado pelo modo de prioridade.');
-                return 'noEligible';
-            }
-
-            logger.info(`Entrando em ${target.name} (HP ~ ${formatNumber(target.hp)})`);
-            context.events.emit('autods:wave:join', {
-                monster: target.name,
-                hp: target.hp,
-                timestamp: Date.now()
-            });
-            const waveUrl = context.window?.location?.href || window.location.href;
-            if (waveUrl) {
-                this.state.lastWaveUrl = waveUrl;
-                context.storage.set(STORAGE_KEYS.lastWaveUrl, waveUrl);
-            }
-
-            // Join battle directly via API if possible
-            const userId = cfg.core?.userId;
-            const link = target.card.querySelector('a[href*="battle.php"][href*="id="]');
-            const battleUrl = link?.href;
-            const monsterIdMatch = battleUrl?.match(/[?&]id=(\d+)/);
-            const monsterId = monsterIdMatch ? monsterIdMatch[1] : null;
-
-            if (userId && monsterId) {
-                (async () => {
-                    try {
-                        logger.info(`🎯 Tentando join direto na batalha ${monsterId}...`);
-                        const result = await context.http.joinBattle(monsterId, userId);
-                        
-                        // VERIFICAÇÃO INTELIGENTE: Se Cloudflare bloqueou, usar método tradicional
-                        if (result.cloudflareBlock) {
-                            logger.warn(`⚠️ Cloudflare bloqueou requisição direta. Usando método tradicional (click).`);
-                            if (target.action instanceof HTMLElement) {
-                                target.action.click();
-                            } else if (battleUrl) {
-                                window.location.href = battleUrl;
-                            }
-                            return;
-                        }
-                        
-                        if (result.success) {
-                            logger.info(`✅ ${result.message}`);
-                            // Navigate to battle page after successful join
-                            if (battleUrl) {
-                                window.location.href = battleUrl;
-                            } else if (target.action instanceof HTMLElement) {
-                                target.action.click();
-                            }
-                        } else {
-                            logger.warn(`⚠️ Join direto falhou: ${result.message}. Usando método tradicional.`);
-                            // Fallback to traditional join
-                            if (target.action instanceof HTMLElement) {
-                                target.action.click();
-                            } else if (battleUrl) {
-                                window.location.href = battleUrl;
-                            }
-                        }
-                    } catch (error) {
-                        logger.error(`Erro no join direto: ${error.message}`);
-                        // Fallback to traditional join
-                        if (target.action instanceof HTMLElement) {
-                            target.action.click();
-                        } else if (battleUrl) {
-                            window.location.href = battleUrl;
-                        }
-                    }
-                })();
-            } else {
-                // No userId or monsterId, use traditional method
-                logger.debug(`Usando método tradicional (userId: ${userId}, monsterId: ${monsterId})`);
-                if (target.action instanceof HTMLElement) {
-                    target.action.click();
-                } else if (target.action && typeof target.action.href === 'string') {
-                    window.location.href = target.action.href;
-                }
-            }
-
-            this.state.lastTarget = { name: target.name, hp: target.hp, timestamp: Date.now() };
-            return 'joined';
-        }
     };
 
     const waveUiModule = {
@@ -9082,358 +8606,6 @@ var version = GM_info.script.version;
         }
     };
 
-    const dungeonWaveModule = {
-        id: 'dungeonWaveAutomation',
-        match: ({ location }) => /guild_dungeon_location\.php/i.test(location.pathname),
-        init() {
-            this.state = {
-                running: false,
-                processedMonsters: new Set(),
-                lastScanTime: 0,
-                staminaWaiting: false
-            };
-        },
-        activate(context) {
-            const cfgRoot = context.config.get();
-            const cfgDungeonWave = cfgRoot.dungeonWave;
-            if (!cfgRoot.core.enabled || !cfgDungeonWave || cfgDungeonWave.enabled === false) {
-                if (this.state) {
-                    this.state.running = false;
-                }
-                return;
-            }
-            if (!this.state) this.init(context);
-            if (this.state.running) return;
-            this.state.running = true;
-
-            (async () => {
-                try {
-                    await this.runLoop(context);
-                } catch (error) {
-                    context.logger.error('Falha na rotina de dungeon wave', error);
-                } finally {
-                    this.state.running = false;
-                }
-            })();
-        },
-        async runLoop(context) {
-            const { logger } = context;
-            while (/guild_dungeon_location\.php/i.test(context.location.pathname)) {
-                const cfg = context.config.get();
-                if (!cfg.core.enabled || cfg.dungeonWave?.enabled === false) {
-                    logger.info('Automação de dungeon wave desativada via configuração.');
-                    break;
-                }
-
-                // Verificar stamina mínima antes de tentar entrar em batalha
-                const staminaBlocking = await this.ensureStamina(context, cfg);
-                if (staminaBlocking) {
-                    continue; // Aguardar stamina regenerar
-                }
-
-                // Configurar o damage target do battleModule dinamicamente
-                const currentMonsterName = this.state.currentMonsterName || '';
-                const damageTarget = /magus/i.test(currentMonsterName) ? 1000000 : 3000000;
-
-                // Atualizar config temporariamente para o battleModule
-                if (cfg.battle) {
-                    cfg.battle.minDamageTarget = damageTarget;
-                }
-
-                const result = this.scanAndJoin(context, cfg);
-                if (result === 'joined') {
-                    // Aguardar um pouco antes de verificar novamente
-                    await sleepRandom(cfg.battle?.delayBaseMs ?? 1200, cfg.battle?.delayVariation ?? 0.25, cfg.battle?.randomizeDelays ?? true);
-                    continue; // Volta para verificar se retornou à página de location
-                }
-
-                if (result === 'noEligible') {
-                    logger.debug('Nenhum alvo elegível no dungeon. Nova varredura em 15s.');
-                    await sleepRandom(15000, 0.25, true);
-                    continue;
-                }
-
-                if (result === 'complete') {
-                    logger.info('Todos os monstros elegíveis foram processados.');
-                    break;
-                }
-
-                await sleepRandom(2000, 0.25, true);
-            }
-        },
-        async ensureStamina(context, cfg) {
-            if (!cfg.stamina) return false;
-            const staminaNode = context.dom.query('#stamina_span, [data-player-stamina]');
-            if (!staminaNode) return false;
-            const staminaText = staminaNode.getAttribute?.('data-player-stamina') ?? staminaNode.textContent ?? '';
-            const currentStamina = numberFromText(staminaText);
-            const threshold = cfg.stamina.minThreshold ?? 0;
-            if (currentStamina !== null && currentStamina < threshold) {
-                if (!this.state.staminaWaiting) {
-                    context.logger.warn(`[Dungeon] Stamina baixa (${formatNumber(currentStamina)} < ${formatNumber(threshold)}). Aguardando regeneração.`);
-                    this.state.staminaWaiting = true;
-                }
-                await sleepRandom(cfg.stamina.checkIntervalMs ?? 300000, 0.05, true);
-                // Recarregar a página após aguardar
-                context.logger.info('[Dungeon] Recarregando página para atualizar stamina...');
-                context.window.location.reload();
-                return true;
-            }
-            if (this.state.staminaWaiting) {
-                context.logger.info('[Dungeon] Stamina recuperada; retomando varredura de dungeon.');
-                this.state.staminaWaiting = false;
-            }
-            return false;
-        },
-        scanAndJoin(context, cfg) {
-            const { logger, dom } = context;
-
-            // Encontrar todos os cards de monstros
-            const monsterCards = dom.queryAll('.mon');
-            if (!monsterCards.length) {
-                logger.debug('Nenhum card de monstro encontrado na página de dungeon.');
-                return 'noEligible';
-            }
-
-            // Preparar filtro de nomes (nova estrutura: includeNames e excludeNames)
-            const monsterFilter = cfg.dungeonWave?.monsterFilter || {};
-            let includeNames = Array.isArray(monsterFilter.includeNames) 
-                ? monsterFilter.includeNames.filter(Boolean).map(name => name.toLowerCase())
-                : [];
-            let excludeNames = Array.isArray(monsterFilter.excludeNames) 
-                ? monsterFilter.excludeNames.filter(Boolean).map(name => name.toLowerCase())
-                : [];
-            
-            // Fallback: Parse from old CSV format (dungeonWave.monsterNames)
-            if (includeNames.length === 0 && cfg.dungeonWave?.monsterNames) {
-                const csv = String(cfg.dungeonWave.monsterNames).trim();
-                if (csv) {
-                    includeNames = csv
-                        .split(/[\n,]+/)
-                        .map(s => s.trim())
-                        .filter(s => s.length > 0)
-                        .map(name => name.toLowerCase());
-                }
-            }
-            
-            // Log active filters
-            if (includeNames.length > 0) {
-                logger.info(`[DungeonWave] ✓ Incluindo APENAS: ${includeNames.join(', ')}`);
-            }
-            if (excludeNames.length > 0) {
-                logger.info(`[DungeonWave] ✗ Excluindo: ${excludeNames.join(', ')}`);
-            }
-
-            const candidates = [];
-
-            for (const card of monsterCards) {
-                // Verificar se tem pill "not joined"
-                const pills = card.querySelectorAll('.pill');
-                const hasNotJoined = Array.from(pills).some(pill => /not joined/i.test(pill.textContent));
-
-                if (!hasNotJoined) continue;
-
-                // Verificar se NÃO está morto (não tem class "dead")
-                if (card.classList.contains('dead')) continue;
-
-                // Extrair nome do monstro
-                const nameNode = card.querySelector('div[style*="font-weight:700"]');
-                if (!nameNode) continue;
-                
-                // Pegar apenas o texto do elemento, ignorando os filhos (pill)
-                // O nome está diretamente no final do elemento após a div.row
-                const nameText = Array.from(nameNode.childNodes)
-                    .filter(node => node.nodeType === Node.TEXT_NODE)
-                    .map(node => node.textContent.trim())
-                    .join(' ')
-                    .trim();
-                
-                const monsterName = nameText || nameNode.textContent.replace(/\s*(not joined|dead)\s*/gi, '').trim();
-                
-                // Extrair HP atual ANTES do log
-                const hpNode = card.querySelector('.muted');
-                const hpText = hpNode ? hpNode.textContent : '';
-                const hpMatch = hpText.match(/([\d,.]+)\s*\/\s*([\d,.]+)\s*HP/);
-
-                let currentHp = null;
-                if (hpMatch) {
-                    currentHp = numberFromText(hpMatch[1]);
-                }
-                
-                logger.debug(`[DungeonWave] Card encontrado: "${monsterName}" (HP: ${currentHp ? formatNumber(currentHp) : 'N/A'})`);
-
-                // Filtro de nome - Include (se configurado, APENAS esses)
-                if (includeNames.length > 0) {
-                    const nameLower = monsterName.toLowerCase();
-                    const matchesInclude = includeNames.some(filter => nameLower.includes(filter));
-                    if (!matchesInclude) {
-                        logger.debug(`[DungeonWave] "${monsterName}" não está na lista de inclusão [${includeNames.join(', ')}] - ignorado`);
-                        continue;
-                    }
-                }
-
-                // Filtro de nome - Exclude (pular esses)
-                if (excludeNames.length > 0) {
-                    const nameLower = monsterName.toLowerCase();
-                    const matchesExclude = excludeNames.some(filter => nameLower.includes(filter));
-                    if (matchesExclude) {
-                        logger.debug(`[DungeonWave] "${monsterName}" está na lista de exclusão [${excludeNames.join(', ')}] - ignorado`);
-                        continue;
-                    }
-                }
-
-                // Filtro: HP atual maior que configurado
-                const minHp = cfg.dungeonWave?.minMobHp ?? 4000000;
-                if (currentHp === null || currentHp < minHp) {
-                    logger.debug(`[DungeonWave] "${monsterName}": HP ${formatNumber(currentHp)} < ${formatNumber(minHp)} - ignorado`);
-                    continue;
-                }
-
-                // Encontrar botão "Fight" ou link de luta (suporta múltiplos formatos)
-                // NOTE: Guild dungeons use battle.php?dgmid=X, not dungeon_battle.php
-                const fightLink = card.querySelector('a.btn[href*="battle.php"], a.btn[href*="dgmid"], button.btn-join, #join-battle');
-                if (!fightLink) {
-                    logger.debug(`[DungeonWave] "${monsterName}": Nenhum link de luta encontrado - ignorado`);
-                    continue;
-                }
-                
-                logger.debug(`[DungeonWave] ✓ "${monsterName}" adicionado aos candidatos (HP: ${formatNumber(currentHp)})`);
-
-                candidates.push({
-                    card,
-                    name: monsterName,
-                    hp: currentHp,
-                    action: fightLink,
-                    isMagus: /magus/i.test(monsterName)
-                });
-            }
-
-            if (!candidates.length) {
-                const hasNameFilter = includeNames.length > 0 || excludeNames.length > 0;
-                const msg = hasNameFilter
-                    ? 'Nenhum monstro elegível com os filtros configurados.'
-                    : 'Nenhum monstro elegível após aplicar filtros de HP/status.';
-                logger.debug(msg);
-                return 'complete';
-            }
-            
-            logger.info(`[DungeonWave] 🎯 ${candidates.length} candidato(s) encontrado(s) após filtros`);
-
-            // Aplicar modo de prioridade
-            const priorityMode = cfg.dungeonWave?.priorityMode ?? 'lowest_hp';
-            let target;
-
-            switch (priorityMode) {
-                case 'highest_hp':
-                    target = candidates.sort((a, b) => b.hp - a.hp)[0];
-                    break;
-                case 'lowest_hp':
-                    target = candidates.sort((a, b) => a.hp - b.hp)[0];
-                    break;
-                case 'random':
-                    target = candidates[Math.floor(Math.random() * candidates.length)];
-                    break;
-                case 'first':
-                default:
-                    target = candidates[0];
-                    break;
-            }
-
-            const damageTarget = target.isMagus
-                ? (cfg.dungeonWave?.magusDamageTarget ?? 1000000)
-                : (cfg.dungeonWave?.defaultDamageTarget ?? 3000000);
-
-            logger.info(`Entrando em ${target.name} (HP: ${formatNumber(target.hp)}, Meta de Dano: ${formatNumber(damageTarget)}, Prioridade: ${priorityMode})`);
-
-            // Salvar nome do monstro atual para configurar damage target
-            this.state.currentMonsterName = target.name;
-
-            context.events.emit('autods:dungeonWave:join', {
-                monster: target.name,
-                hp: target.hp,
-                damageTarget: damageTarget,
-                priorityMode: priorityMode,
-                timestamp: Date.now()
-            });
-
-            // Join dungeon battle directly via API
-            const battleUrl = target.action?.href;
-            
-            // Extract dgmid and instance_id from URL
-            let dgmid = null;
-            let instanceId = null;
-            
-            if (battleUrl) {
-                const dgmidMatch = battleUrl.match(/[?&]dgmid=(\d+)/);
-                const instanceMatch = battleUrl.match(/[?&]instance_id=(\d+)/);
-                
-                if (dgmidMatch) {
-                    dgmid = dgmidMatch[1];
-                }
-                if (instanceMatch) {
-                    instanceId = instanceMatch[1];
-                }
-            }
-
-            if (dgmid && instanceId) {
-                (async () => {
-                    try {
-                        logger.info(`🎯 Tentando join direto no dungeon battle (dgmid: ${dgmid}, instance: ${instanceId})...`);
-                        const userId = getUserIdFromCookie() || context.config.get().core.userId;
-                        const result = await context.http.joinDungeonBattle(dgmid, instanceId, userId);
-                        
-                        // VERIFICAÇÃO INTELIGENTE: Se Cloudflare bloqueou, usar método tradicional
-                        if (result.cloudflareBlock) {
-                            logger.warn(`⚠️ Cloudflare bloqueou requisição direta. Usando método tradicional (click).`);
-                            if (target.action instanceof HTMLElement) {
-                                target.action.click();
-                            } else if (battleUrl) {
-                                window.location.href = battleUrl;
-                            }
-                            return;
-                        }
-                        
-                        if (result.success) {
-                            logger.info(`✅ ${result.message}`);
-                            // Navigate to battle page after successful join
-                            if (battleUrl) {
-                                window.location.href = battleUrl;
-                            } else if (target.action instanceof HTMLElement) {
-                                target.action.click();
-                            }
-                        } else {
-                            logger.warn(`⚠️ Dungeon join direto falhou: ${result.message}. Usando método tradicional.`);
-                            // Fallback to traditional join
-                            if (target.action instanceof HTMLElement) {
-                                target.action.click();
-                            } else if (battleUrl) {
-                                window.location.href = battleUrl;
-                            }
-                        }
-                    } catch (error) {
-                        logger.error(`Erro no dungeon join direto: ${error.message}`);
-                        // Fallback to traditional join
-                        if (target.action instanceof HTMLElement) {
-                            target.action.click();
-                        } else if (battleUrl) {
-                            window.location.href = battleUrl;
-                        }
-                    }
-                })();
-            } else {
-                // No dgmid or instanceId, use traditional method
-                logger.debug(`Usando método tradicional (dgmid: ${dgmid}, instanceId: ${instanceId})`);
-                if (target.action instanceof HTMLElement) {
-                    target.action.click();
-                } else if (target.action && typeof target.action.href === 'string') {
-                    window.location.href = target.action.href;
-                }
-            }
-
-            return 'joined';
-        }
-    };
-
     /**
      * Special Boss Farm Module
      * Dedicated module for farming special bosses (General, King, Empress, Bastion)
@@ -9511,7 +8683,7 @@ var version = GM_info.script.version;
                     this.state.lastCheckTime = Date.now();
                     await sleep(waitTime);
                     logger.info('👑 Recarregando página para verificar novamente...');
-                    window.location.reload();
+                    window.location.href = window.location.href;
                     return;
                 }
 
@@ -9541,13 +8713,13 @@ var version = GM_info.script.version;
                     this.state.lastCheckTime = Date.now();
                     await sleep(waitTime);
                     logger.info('👑 Recarregando página para verificar novamente...');
-                    window.location.reload();
+                    window.location.href = window.location.href;
                     return;
                 } else {
                     // Had work - reload quickly to check for more
                     logger.info('👑 Bosses processados. Recarregando para verificar novamente...');
                     await sleep(2000);
-                    window.location.reload();
+                    window.location.href = window.location.href;
                     return;
                 }
             }
@@ -9639,7 +8811,7 @@ var version = GM_info.script.version;
             const joinedBosses = [];
             
             // Get user ID
-            const userId = ensureUserId(context);
+            const userId = context.userSession.ensureUserId(context);
             if (!userId) {
                 logger.error('👑 User ID não encontrado! Não é possível entrar nas batalhas via API.');
                 return [];
@@ -9742,37 +8914,62 @@ var version = GM_info.script.version;
                     if (currentStamina < skillCost) {
                         logger.info(`⏳ Stamina insuficiente (${currentStamina}/${skillCost}) - tratando...`);
                         
-                        // Try to use stamina potion if enabled and low
+                        // PRIORIDADE 1: Tentar lootar dead monsters antes de FSP (se configurado)
+                        if (cfg.lootDeadBeforeFSP !== false && currentStamina < (cfg.minStaminaForPotion || 100)) {
+                            logger.info('💀 [SPECIAL BOSS] Tentando lootar dead monsters antes de usar FSP...');
+                            
+                            // Usar função do ultraFastWaveModule se disponível
+                            const waveModule = context.moduleRegistry?.getModule('ultraFastWave');
+                            if (waveModule && typeof waveModule.tryLootDeadMonstersBeforeFSP === 'function') {
+                                const deadLooted = await waveModule.tryLootDeadMonstersBeforeFSP(context);
+                                
+                                if (deadLooted) {
+                                    const newStamina = context.stamina.getCurrent();
+                                    logger.info(`💀 [SPECIAL BOSS] Loot concluído! Nova stamina: ${newStamina}`);
+                                    
+                                    if (newStamina >= skillCost) {
+                                        logger.info('🎉 [SPECIAL BOSS] Stamina recuperada via loot! Continuando farm...');
+                                        await waveModule.ensureAliveMonstersView(context);
+                                        continue;
+                                    }
+                                    logger.info(`💀 [SPECIAL BOSS] Stamina ainda baixa (${newStamina}). Tentando FSP...`);
+                                }
+                            } else {
+                                logger.warn('⚠️ [SPECIAL BOSS] ultraFastWaveModule não disponível para loot dead.');
+                            }
+                        }
+                        
+                        // PRIORIDADE 2: Try to use stamina potion if enabled and low
                         if (cfg.autoStaminaPotion && currentStamina < (cfg.minStaminaForPotion || 100)) {
-                            logger.info('💊 Tentando usar Full Stamina Potion...');
+                            logger.info('💊 [SPECIAL BOSS] Tentando usar Full Stamina Potion...');
                             
                             try {
                                 const fspUsed = await context.inventory.useFullStaminaPotion();
                                 
                                 if (fspUsed) {
-                                    logger.info('✅ Full Stamina Potion usada com sucesso! Recarregando página...');
+                                    logger.info('✅ [SPECIAL BOSS] Full Stamina Potion usada com sucesso! Recarregando página...');
                                     bossState.potionsUsed++;
                                     this.state.stats.potionsUsed++;
                                     
                                     // Reload to sync stamina
                                     await sleep(1000);
-                                    window.location.reload();
+                                    window.location.href = window.location.href;
                                     return { hadWork: true };
                                 } else {
-                                    logger.info('💊 Full Stamina Potion: Sem poções disponíveis ou erro');
+                                    logger.info('💊 [SPECIAL BOSS] Full Stamina Potion: Sem poções disponíveis ou erro');
                                 }
                             } catch (error) {
-                                logger.warn('💊 Erro ao tentar usar poção:', error.message);
+                                logger.warn('💊 [SPECIAL BOSS] Erro ao tentar usar poção:', error.message);
                             }
                         }
                         
-                        // If potion failed or disabled: wait for stamina regen (30s, same as wave module)
-                        logger.info(`⏳ Aguardando regeneração de stamina (30s)...`);
+                        // PRIORIDADE 3: If potion failed or disabled: wait for stamina regen (30s, same as wave module)
+                        logger.info(`⏳ [SPECIAL BOSS] Aguardando regeneração de stamina (30s)...`);
                         await sleep(30000);
                         currentStamina = context.stamina.getCurrent();
                         
                         if (currentStamina < skillCost) {
-                            logger.warn(`⚠️ Stamina AINDA insuficiente (${currentStamina}/${skillCost}) após aguardar. Pulando ${boss.name}.`);
+                            logger.warn(`⚠️ [SPECIAL BOSS] Stamina AINDA insuficiente (${currentStamina}/${skillCost}) após aguardar. Pulando ${boss.name}.`);
                             break; // Skip this boss, try next in loop
                         }
                     }
@@ -9854,7 +9051,7 @@ var version = GM_info.script.version;
                     // 🆕 Stamina insuficiente - recarregar página
                     logger.warn(`⚠️ [BossAttack] Stamina insuficiente! Recarregando página...`);
                     await sleep(1000);
-                    window.location.reload();
+                    window.location.href = window.location.href;
                     return { totalDamage, successCount, lastStamina };
                 }
             }
@@ -9866,16 +9063,16 @@ var version = GM_info.script.version;
             const { logger } = context;
             logger.info(`🔍 Verificando dano atual de ${bosses.length} boss(es)...`);
 
-            // Use fetchBattleDamage from waveModule (better: tries card data first, then HTTP fallback)
-            const waveModule = context.moduleRegistry.getModule('waveAutomation');
-            if (!waveModule) {
-                logger.warn('⚠️ waveModule não disponível para fetchBattleDamage');
+            // Use fetchBattleDamage from ultraFastWaveModule (better: tries card data first, then HTTP fallback)
+            const ultraFastWaveModule = context.moduleRegistry.getModule('ultraFastWave');
+            if (!ultraFastWaveModule) {
+                logger.warn('⚠️ ultraFastWaveModule não disponível para fetchBattleDamage');
                 return;
             }
 
-            // Fetch damages in parallel using waveModule's optimized method
+            // Fetch damages in parallel using ultraFastWaveModule's optimized method
             const results = await Promise.all(
-                bosses.map(boss => waveModule.fetchBattleDamage(context, boss.monsterId))
+                bosses.map(boss => ultraFastWaveModule.fetchBattleDamage(context, boss.monsterId))
             );
 
             // Map results back to boss objects
@@ -9901,1412 +9098,10 @@ var version = GM_info.script.version;
         }
     };
 
-    const battleModule = {
-        id: 'battleAutomation',
-        match: ({ location }) => {
-            const path = location.pathname;
-            // Match battle.php and dungeon_battle.php, but NOT pvp_battle.php
-            return (/battle\.php/i.test(path) || /dungeon_battle\.php/i.test(path)) && !/pvp.*battle/i.test(path);
-        },
-        init() {
-            this.state = {
-                running: false,
-                lastLoggedDamage: null,
-                lastPhase: 1,
-                lastMonsterImage: null,
-                phaseChangeDetectedAt: null,
-                lastMonsterHp: null
-            };
-        },
-        checkInvalidMonsterToast(context) {
-            // Check for "Invalid Monster" error in toast/notification elements
-            const toastSelectors = [
-                '.toast-container .toast',
-                '.notification',
-                '.alert',
-                '#system_message',
-                '.error-message',
-                '.Toastify__toast',
-                '[role="alert"]',
-                '.swal2-popup',
-                '.swal2-html-container'
-            ];
-
-            for (const selector of toastSelectors) {
-                const elements = document.querySelectorAll(selector);
-                for (const el of elements) {
-                    const text = (el.textContent || '').toLowerCase();
-                    if (text.includes('invalid monster') || text.includes('invalid_monster')) {
-                        context.logger.warn('🚫 Toast "Invalid Monster" detectado!', { text: el.textContent });
-                        return true;
-                    }
-                }
-            }
-            return false;
-        },
-        detectMonsterPhase(context) {
-            // Detect if monster is in golden phase (phase > 1)
-            // Golden phase adds CSS class .monster-hp-wrap--gold to the HP container
-            const hpWrap = document.querySelector('.monster-hp-wrap');
-            if (!hpWrap) return { phase: 1, isGolden: false, changed: false };
-
-            const isGolden = hpWrap.classList.contains('monster-hp-wrap--gold');
-
-            // Try to extract phase from phase-announce banner
-            const phaseAnnounce = document.querySelector('.phase-announce-inner');
-            let phaseNumber = 1;
-            if (phaseAnnounce) {
-                const text = phaseAnnounce.textContent || '';
-                const match = text.match(/PHASE\s+(\d+)/i);
-                if (match) {
-                    phaseNumber = parseInt(match[1], 10) || 1;
-                }
-            }
-
-            // If golden class present but no phase detected, assume phase 2+
-            if (isGolden && phaseNumber === 1) {
-                phaseNumber = 2;
-            }
-
-            // Detect phase change by comparing with last known phase
-            let changed = false;
-            if (this.state && this.state.lastPhase !== phaseNumber) {
-                changed = true;
-                context.logger.info(`🔄 PHASE CHANGE DETECTADA! ${this.state.lastPhase} → ${phaseNumber}`);
-            }
-
-            // Also detect by image change
-            const monsterImage = document.querySelector('#monsterImage, .monster_image');
-            if (monsterImage && this.state) {
-                const currentSrc = monsterImage.src || '';
-                if (this.state.lastMonsterImage && this.state.lastMonsterImage !== currentSrc) {
-                    changed = true;
-                    context.logger.info(`🖼️ Imagem do monstro mudou (phase change)`);
-                }
-                this.state.lastMonsterImage = currentSrc;
-            }
-
-            // Update state
-            if (this.state && changed) {
-                this.state.lastPhase = phaseNumber;
-                this.state.phaseChangeDetectedAt = Date.now();
-                this.state.lastLoggedDamage = null; // Reset damage tracking
-            }
-
-            return { phase: phaseNumber, isGolden, changed };
-        },
-        getSkillStaminaCost(button) {
-            // Extract stamina cost from button text or data attribute
-            if (!button) return 0;
-
-            // Try data attribute first
-            const dataStamina = button.dataset?.staminaCost || button.getAttribute('data-stamina-cost');
-            if (dataStamina) {
-                const cost = parseInt(dataStamina, 10);
-                if (!isNaN(cost)) return cost;
-            }
-
-            // Extract from button text/name (e.g., "Power Slash (10 STAMINA)")
-            const buttonText = button.dataset?.skillName || button.getAttribute('data-skill-name') || button.textContent || '';
-            const match = buttonText.match(/\((\d+)\s*STAMINA\)/i);
-            if (match) {
-                const cost = parseInt(match[1], 10);
-                if (!isNaN(cost)) return cost;
-            }
-
-            // Default: Slash costs 0 stamina
-            return 0;
-        },
-        // REMOVED: getCurrentStamina() - use context.stamina.getCurrent() instead
-        checkStaminaForAttack_OLD_REMOVE_ME(context, button) {
-            const { dom } = context;
-
-            // PRIMARY SELECTOR REMOVED - use context.stamina
-            const staminaSpan = dom.query('#stamina_span');
-            if (staminaSpan) {
-                const text = staminaSpan.textContent || '';
-                const value = numberFromText(text.trim());
-                if (value !== null) {
-                    context.logger.debug(`Stamina lida de #stamina_span: ${value}`);
-                    return value;
-                }
-            }
-
-            // Fallback: try parent element .gtb-value and parse "X / Y" format
-            const gtbValue = dom.query('.gtb-value');
-            if (gtbValue) {
-                const text = gtbValue.textContent || '';
-                const parts = text.split('/');
-                if (parts.length >= 1) {
-                    const current = numberFromText(parts[0]);
-                    if (current !== null) {
-                        context.logger.debug(`Stamina lida de .gtb-value: ${current}`);
-                        return current;
-                    }
-                }
-            }
-
-            // Additional fallback selectors
-            const selectors = [
-                '[data-stamina]',
-                '.stamina-value',
-                '#staminaText',
-                '.stamina-text'
-            ];
-
-            for (const selector of selectors) {
-                const element = dom.query(selector);
-                if (!element) continue;
-
-                // Try to extract current stamina value
-                const dataValue = element.dataset?.stamina || element.dataset?.current || element.getAttribute('data-current');
-                if (dataValue) {
-                    const value = numberFromText(dataValue);
-                    if (value !== null) {
-                        context.logger.debug(`Stamina lida de ${selector}: ${value}`);
-                        return value;
-                    }
-                }
-
-                // Parse text content
-                const text = element.textContent || '';
-                const parts = text.split('/');
-                if (parts.length >= 1) {
-                    const current = numberFromText(parts[0]);
-                    if (current !== null) {
-                        context.logger.debug(`Stamina lida de ${selector}: ${current}`);
-                        return current;
-                    }
-                }
-            }
-
-            context.logger.warn('DEPRECATED: Use context.stamina.getCurrent()');
-            return 0;
-        },
-        checkStaminaForAttack(context, button) {
-            const staminaCost = this.getSkillStaminaCost(button);
-            const currentStamina = context.stamina.getCurrent();
-
-            context.logger.debug(`Verificação de stamina: Atual=${currentStamina}, Custo=${staminaCost}`);
-
-            if (currentStamina < staminaCost) {
-                context.logger.warn(`⚠️ Stamina insuficiente! Atual: ${currentStamina}, Necessário: ${staminaCost}`);
-                return false;
-            }
-
-            return true;
-        },
-        canAttackNow() {
-            // Check if 1 second has passed since last attack (cooldown)
-            try {
-                const cookieStr = document.cookie;
-                const match = cookieStr.match(/last_attack=(\d+)/);
-                if (!match) return { ok: true, now: Date.now(), waitMs: 0 };
-
-                const lastAttack = parseInt(match[1], 10);
-                const now = Date.now();
-                const elapsed = now - lastAttack;
-                const cooldown = 1000; // 1 second
-
-                if (elapsed < cooldown) {
-                    return { ok: false, now, waitMs: cooldown - elapsed };
-                }
-
-                return { ok: true, now, waitMs: 0 };
-            } catch (error) {
-                return { ok: true, now: Date.now(), waitMs: 0 };
-            }
-        },
-        setLastAttackTime() {
-            // Set cookie with current timestamp
-            const now = Date.now();
-            document.cookie = `last_attack=${now}; path=/; max-age=86400`;
-            return now;
-        },
-        activate(context) {
-            const cfgRoot = context.config.get();
-            const cfgBattle = cfgRoot.battle;
-            if (!cfgRoot.core.enabled || !cfgBattle || cfgBattle.enabled === false) {
-                if (this.state) {
-                    this.state.running = false;
-                }
-                return;
-            }
-            if (!this.state) this.init(context);
-            if (this.state.running) return;
-            this.state.running = true;
-            this.state.lastLoggedDamage = null;
-            this.state.lastPhase = 1;
-            this.state.lastMonsterImage = null;
-            this.state.phaseChangeDetectedAt = null;
-            this.state.lastMonsterHp = null;
-
-            (async () => {
-                try {
-                    await this.runBattle(context);
-                } catch (error) {
-                    context.logger.error('Falha na rotina de batalha', error);
-                } finally {
-                    this.state.running = false;
-                }
-            })();
-        },
-        async checkAndUseHeal(context) {
-            const { logger, dom, config } = context;
-            
-            // Check if player is down
-            const downMessages = dom.queryAll('.battle-actions-body, .alert, .message, .notification, .toast, .battle-message, [class*="message"], [class*="alert"], [class="battle-actions-body"]');
-            let isDown = false;
-            
-            for (const msg of downMessages) {
-                const text = (msg.textContent || '').toLowerCase();
-                if (text.includes('you are down') || text.includes('heal to keep fighting')) {
-                    isDown = true;
-                    logger.warn('⚠️ Player está DOWN! Tentando usar heal potion...');
-                    break;
-                }
-            }
-            
-            if (!isDown) return false;
-            
-            // Try to use heal potion
-            const healPotionBtn = dom.query('#usePotionBtn');
-            if (!healPotionBtn) {
-                logger.error('❌ Botão de heal potion não encontrado');
-                return false;
-            }
-            
-            if (healPotionBtn.disabled) {
-                logger.warn('⚠️ Botão de heal potion está desabilitado');
-                return false;
-            }
-            
-            try {
-                logger.info('💚 Usando Heal Potion...');
-                
-                // Get user ID from userSession service
-                const userId = context.userSession.getUserId();
-                
-                if (!userId) {
-                    logger.error('❌ User ID não encontrado para usar heal potion');
-                    return false;
-                }
-                
-                // Send heal potion request
-                const formData = new URLSearchParams();
-                formData.set('user_id', userId);
-                
-                const response = await fetch('https://demonicscans.org/use_heal_potion.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    credentials: 'include',
-                    body: formData.toString()
-                });
-                
-                if (!response.ok) {
-                    logger.error(`❌ Erro ao usar heal potion: HTTP ${response.status}`);
-                    return false;
-                }
-                
-                const text = await response.text();
-                const lower = text.trim().toLowerCase();
-                
-                if (lower.includes('success') || lower.includes('healed') || lower.includes('restored')) {
-                    logger.info('✅ Heal Potion usada com sucesso!');
-                    
-                    // Emit event
-                    context.events.emit('autods:battle:healUsed', {
-                        userId,
-                        timestamp: Date.now()
-                    });
-                    
-                    // Wait for heal to apply
-                    await sleep(1500);
-                    return true;
-                } else {
-                    logger.warn(`⚠️ Resposta inesperada ao usar heal potion: ${text.substring(0, 100)}`);
-                    return false;
-                }
-            } catch (error) {
-                logger.error(`❌ Erro ao usar heal potion: ${error.message}`);
-                return false;
-            }
-        },
-        
-        /**
-         * Get current monster name from battle page
-         * @param {object} context - Context object
-         * @returns {string|null} Monster name or null
-         */
-        getCurrentMonsterName(context) {
-            const { dom } = context;
-            
-            // Try multiple selectors (battle.php and dungeon pages)
-            const selectors = [
-                '.card-title',           // Guild dungeon
-                '.panel strong',         // Regular dungeon
-                '.monster-name',         // Battle page
-                '.battle-monster-name',  // Alternative
-                '[data-monster-name]'    // Data attribute
-            ];
-            
-            for (const selector of selectors) {
-                const node = dom.query(selector);
-                if (node) {
-                    const name = node.textContent?.trim() || node.getAttribute?.('data-monster-name')?.trim();
-                    if (name) return name;
-                }
-            }
-            
-            // Try to extract from page title
-            const titleMatch = document.title.match(/Battle:\s*(.+?)(?:\s*-|$)/i);
-            if (titleMatch) return titleMatch[1].trim();
-            
-            return null;
-        },
-        
-        async runBattle(context) {
-            const { logger, dom } = context;
-
-            // Check for "Invalid Monster" toast immediately on page load
-            if (this.checkInvalidMonsterToast(context)) {
-                logger.warn('⚠️ Invalid Monster detectado ao entrar na página de batalha - voltando');
-                this.returnToWave(context, 'invalid_monster_initial');
-                return;
-            }
-
-            const joinResult = await this.tryJoinBattle(context);
-            if (joinResult === 'blocked') {
-                this.returnToWave(context, 'battleLimit');
-                return;
-            }
-            
-            let shouldReturnToWave = false;
-            let returnReason = null;
-            let attackButton = null; // Declare outside loop for stamina tracking
-            const delayBase = context.config.get().battle?.delayBaseMs ?? 1000;
-            const variation = context.config.get().battle?.delayVariation ?? 0.3;
-            const randomize = context.config.get().battle?.randomizeDelays ?? true;
-
-            // Detectar se está em dungeon_battle OU battle.php com instance_id (guild dungeons)
-            const isDungeonBattle = /dungeon_battle\.php/i.test(context.location.pathname) 
-                || (context.location.search && context.location.search.includes('instance_id'));
-            let dungeonMonsterName = null;
-            if (isDungeonBattle) {
-                // Log tipo de dungeon detectado
-                const isGuildDungeon = context.location.search && context.location.search.includes('instance_id');
-                if (isGuildDungeon) {
-                    logger.debug(`🏰 Guild Dungeon Battle detectado (instance_id presente na URL)`);
-                }
-                
-                // Buscar o nome do monstro na card-title (guild dungeons) ou panel strong (dungeons normais)
-                const monsterNameNode = dom.query('.card-title, .panel strong');
-                if (monsterNameNode) {
-                    dungeonMonsterName = monsterNameNode.textContent.trim();
-                    logger.debug(`Batalha de dungeon detectada: ${dungeonMonsterName}`);
-                } else {
-                    logger.warn('Não foi possível extrair nome do monstro da página de dungeon');
-                }
-            }
-            
-            while (/battle\.php|dungeon_battle\.php/i.test(context.location.pathname)) {
-                // Check for "Invalid Monster" toast during battle loop
-                if (this.checkInvalidMonsterToast(context)) {
-                    logger.warn('⚠️ Invalid Monster detectado durante a batalha - voltando');
-                    this.returnToWave(context, 'invalid_monster_during_battle');
-                    return;
-                }
-
-                const cfg = context.config.get();
-                if (!cfg.core.enabled || cfg.battle?.enabled === false) {
-                    context.logger.info('Automação de batalha desativada via configuração.');
-                    break;
-                }
-
-                // Check if player is down and needs heal
-                const healUsed = await this.checkAndUseHeal(context);
-                if (healUsed) {
-                    // Wait a moment after healing before continuing
-                    await sleepRandom(1500, 0.2, cfg.battle?.randomizeDelays ?? true);
-                }
-
-                // CRITICAL: Check if we still need to join the battle
-                const joinButton = dom.query('#join-battle, button.btn-join, button.join-battle');
-                if (joinButton && !joinButton.disabled) {
-                    logger.info('Botão de join ainda presente. Tentando entrar na batalha...');
-                    const retryJoin = await this.tryJoinBattle(context);
-                    if (retryJoin === 'blocked') {
-                        this.returnToWave(context, 'battleLimit');
-                        return;
-                    }
-                    // Wait for page reload after join
-                    await sleepRandom(2000, 0.2, true);
-                    continue;
-                }
-
-                // Use Battle Stats Service
-                const stats = context.battleStats.getCurrent();
-                
-                // Detect HP increase (monster respawned in new phase)
-                if (this.state.lastMonsterHp !== null && stats.monsterHp !== null) {
-                    if (stats.monsterHp > this.state.lastMonsterHp + 1000000) {
-                        logger.info(`🔄 HP aumentou significativamente! ${formatNumber(this.state.lastMonsterHp)} → ${formatNumber(stats.monsterHp)} (PHASE CHANGE)`);
-                        this.state.lastMonsterHp = stats.monsterHp;
-                        this.state.lastLoggedDamage = null;
-
-                        // Wait for phase change to stabilize
-                        await sleepRandom(2000, 0.3, cfg.battle?.randomizeDelays ?? true);
-                        continue;
-                    }
-                }
-                this.state.lastMonsterHp = stats.monsterHp;
-
-                // Detect monster phase
-                const phaseInfo = this.detectMonsterPhase(context);
-
-                // If phase just changed, give it a moment to stabilize
-                if (phaseInfo.changed) {
-                    logger.info(`⏸️ Aguardando estabilização após phase change...`);
-                    context.events.emit('autods:battle:phaseChange', {
-                        oldPhase: this.state.lastPhase - 1,
-                        newPhase: phaseInfo.phase,
-                        timestamp: Date.now()
-                    });
-
-                    // Wait for page to update
-                    await sleepRandom(2000, 0.3, cfg.battle?.randomizeDelays ?? true);
-
-                    // Re-read stats after phase change (using Phase 3 service)
-                    const updatedStats = context.battleStats.getCurrent();
-                    logger.info(`📊 Stats pós-phase change: Dano=${context.numbers.format(updatedStats.damage)}, HP=${context.numbers.format(updatedStats.monsterHp || 0)}`);
-
-                    // Continue to next iteration
-                    continue;
-                }
-
-                if (this.state.lastLoggedDamage !== stats.damage) {
-                    const hpDisplay = stats.monsterHp === null ? 'desconhecido' : formatNumber(stats.monsterHp);
-                    const phaseIndicator = phaseInfo.isGolden ? `⭐ Phase ${phaseInfo.phase}` : '';
-                    logger.debug(`Dano atual: ${formatNumber(stats.damage)} | HP restante: ${hpDisplay} ${phaseIndicator}`);
-                    this.state.lastLoggedDamage = stats.damage;
-                }
-
-                if (stats.monsterHp !== null && stats.monsterHp <= 0) {
-                    // Check if this is a phase change (HP went to 0 but will respawn)
-                    // Wait a moment and check again
-                    await sleep(1500);
-                    const recheckStats = context.battleStats.getCurrent();
-                    const recheckPhase = this.detectMonsterPhase(context);
-
-                    if (recheckStats.monsterHp > 0 || recheckPhase.changed) {
-                        logger.info('🔄 Monstro ressuscitou em nova phase! Continuando batalha...');
-                        // Phase change will be handled in the next iteration
-                        continue;
-                    }
-
-                    logger.info('💀 Monstro derrotado definitivamente. Encerrando automação da batalha.');
-                    context.events.emit('autods:battle:complete', {
-                        damage: stats.damage,
-                        monsterHp: stats.monsterHp,
-                        reason: 'enemyDefeated',
-                        timestamp: Date.now()
-                    });
-                    shouldReturnToWave = true;
-                    returnReason = 'enemyDefeated';
-                    break;
-                }
-
-                // Calcular targetDamage: usar configuração de dungeon se aplicável
-                let targetDamage = cfg.battle?.minDamageTarget ?? 0;
-                
-                // Dungeon Override
-                if (isDungeonBattle && cfg.dungeonWave?.enabled !== false) {
-                    const isMagus = dungeonMonsterName && /magus/i.test(dungeonMonsterName);
-                    logger.debug(`🎯 Dungeon Monster: "${dungeonMonsterName}" | É Magus? ${isMagus ? 'SIM' : 'NÃO'}`);
-                    if (isMagus) {
-                        targetDamage = cfg.dungeonWave?.magusDamageTarget ?? 1000000;
-                        damageSource = 'dungeonMagus';
-                        logger.info(`⚔️ Usando dano alvo Magus: ${formatNumber(targetDamage)}`);
-                    } else {
-                        targetDamage = cfg.dungeonWave?.defaultDamageTarget ?? 3000000;
-                        damageSource = 'dungeonDefault';
-                        logger.info(`⚔️ Usando dano alvo padrão dungeon: ${formatNumber(targetDamage)}`);
-                    }
-                }
-                if (targetDamage > 0 && stats.damage >= targetDamage) {
-                    logger.info(`Meta de dano atingida (${formatNumber(stats.damage)} >= ${formatNumber(targetDamage)}).`);
-                    context.events.emit('autods:battle:complete', {
-                        damage: stats.damage,
-                        monsterHp: stats.monsterHp,
-                        reason: 'targetDamage',
-                        targetDamage,
-                        timestamp: Date.now()
-                    });
-                    shouldReturnToWave = true;
-                    returnReason = 'targetDamage';
-                    break;
-                }
-
-                // Check damage BEFORE attack to prevent unnecessary clicks
-                const statsBeforeAttack = context.battleStats.getCurrent();
-                if (targetDamage > 0 && statsBeforeAttack.damage >= targetDamage) {
-                    logger.info(`Meta de dano já atingida antes do ataque (${formatNumber(statsBeforeAttack.damage)} >= ${formatNumber(targetDamage)}).`);
-                    context.events.emit('autods:battle:complete', {
-                        damage: statsBeforeAttack.damage,
-                        monsterHp: statsBeforeAttack.monsterHp,
-                        reason: 'targetDamage',
-                        targetDamage,
-                        timestamp: Date.now()
-                    });
-                    shouldReturnToWave = true;
-                    returnReason = 'targetDamage';
-                    break;
-                }
-
-                // Select attack button with Smart Damage if enabled
-                let attackResult;
-                let selectedSkill = null;
-
-                if (cfg.battle?.smartDamage?.enabled && targetDamage > 0) {
-                    // Use Smart Damage to select optimal skill
-                    attackResult = resolveSmartAttackButton(dom, stats.damage, targetDamage, cfg.battle);
-                    if (!attackResult || !attackResult.button) {
-                        logger.warn('Smart Damage: Nenhum botão de ataque encontrado.');
-
-                        // Check if we're stuck on join screen
-                        const stuckOnJoin = dom.query('#join-battle, button.btn-join, button.join-battle');
-                        if (stuckOnJoin) {
-                            logger.warn('Ainda na tela de join. Aguardando reload...');
-                            await sleepRandom(2000, 0.2, true);
-                            continue;
-                        }
-
-                        logger.warn('Nenhum botão disponível. Encerrando loop.');
-                        break;
-                    }
-                    selectedSkill = attackResult.skill;
-                } else {
-                    // Use regular attack button selection
-                    const button = resolveAttackButton(dom, cfg.battle);
-                    if (!button) {
-                        logger.warn('Botão de ataque não encontrado.');
-
-                        // Check if we're stuck on join screen
-                        const stuckOnJoin = dom.query('#join-battle, button.btn-join, button.join-battle');
-                        if (stuckOnJoin) {
-                            logger.warn('Ainda na tela de join. Aguardando reload...');
-                            await sleepRandom(2000, 0.2, true);
-                            continue;
-                        }
-
-                        logger.warn('Nenhum botão disponível. Encerrando loop.');
-                        break;
-                    }
-                    attackResult = { button };
-                }
-
-                attackButton = attackResult.button; // Update attackButton (declared outside loop)
-                if (!attackButton) {
-                    logger.warn('Botão de ataque não disponível. Encerrando loop.');
-                    break;
-                }
-
-                // Check if button is disabled or loading
-                if (attackButton.disabled || attackButton.classList.contains('is-loading')) {
-                    logger.debug('Botão de ataque desabilitado ou em carregamento. Aguardando...');
-                    await sleepRandom(500, 0.2, cfg.battle?.randomizeDelays ?? true);
-                    continue;
-                }
-
-                // Check if we have enough stamina for the selected attack
-                const hasEnoughStamina = this.checkStaminaForAttack(context, attackButton);
-                if (!hasEnoughStamina) {
-                    const skillName = attackButton.dataset?.skillName || attackButton.getAttribute('data-skill-name') || 'Unknown';
-                    const staminaCost = this.getSkillStaminaCost(attackButton);
-                    const currentStamina = context.stamina.getCurrent();
-
-                    logger.warn(`❌ Stamina insuficiente para ${skillName}`);
-                    logger.info(`Stamina atual: ${currentStamina} | Necessário: ${staminaCost}`);
-
-                    context.events.emit('autods:battle:stopped', {
-                        reason: 'insufficientStamina',
-                        currentStamina,
-                        requiredStamina: staminaCost,
-                        skillName,
-                        timestamp: Date.now()
-                    });
-
-                    // VERIFICAÇÃO INTELIGENTE: Só voltar para wave se autoBoss estiver ativo
-                    // Caso contrário, apenas parar o loop e ficar na página de batalha
-                    const isAutoBossActive = cfg.autoBoss?.enabled === true;
-                    
-                    if (isAutoBossActive) {
-                        logger.info('🔄 Auto Boss ativo: voltando para wave...');
-                        shouldReturnToWave = true;
-                        returnReason = 'insufficientStamina';
-                    } else {
-                        logger.info('⏸️ Parando batalha (permanecendo na página). Recarregue para retomar com stamina recuperada.');
-                        context.notifications.staminaLow(currentStamina, skillCost);
-                        // Apenas sair do loop sem chamar returnToWave
-                        shouldReturnToWave = false;
-                    }
-                    break;
-                }
-
-                // Check cooldown before attacking
-                const cooldownCheck = this.canAttackNow();
-                if (!cooldownCheck.ok) {
-                    const waitSecs = Math.ceil(cooldownCheck.waitMs / 1000);
-                    logger.debug(`⏳ Aguardando cooldown... ${waitSecs}s`);
-                    await sleep(cooldownCheck.waitMs);
-                }
-
-                // attackUnlockerModule handles button unlocking globally
-                // Click the button and set last attack time
-                attackButton.click();
-                this.setLastAttackTime();
-
-                const skillRef = attackButton.dataset?.skillId ?? attackButton.getAttribute?.('data-skill-id') ?? 'default';
-
-                if (selectedSkill) {
-                    const remainingDamage = targetDamage - stats.damage;
-                    logger.info(`Smart Damage: ${selectedSkill.name} selecionado (limite: ${formatNumber(selectedSkill.damageLimit)}, faltam: ${formatNumber(remainingDamage)})`);
-                } else {
-                    logger.debug(`Ataque disparado (skill ${skillRef}).`);
-                }
-
-                await sleepRandom(delayBase, variation, randomize);
-
-                // Check damage AFTER attack to prevent overshooting
-                const statsAfterAttack = context.battleStats.getCurrent();
-                logger.debug(`Verificação pós-ataque: dano=${formatNumber(statsAfterAttack.damage)}, meta=${formatNumber(targetDamage)}`);
-
-                if (targetDamage > 0 && statsAfterAttack.damage >= targetDamage) {
-                    logger.info(`Meta de dano atingida após ataque (${formatNumber(statsAfterAttack.damage)} >= ${formatNumber(targetDamage)}).`);
-                    context.events.emit('autods:battle:complete', {
-                        damage: statsAfterAttack.damage,
-                        monsterHp: statsAfterAttack.monsterHp,
-                        reason: 'targetDamage',
-                        targetDamage,
-                        timestamp: Date.now()
-                    });
-                    shouldReturnToWave = true;
-                    returnReason = 'targetDamage';
-                    break;
-                } else if (targetDamage > 0) {
-                    logger.debug(`Continuando batalha: ${formatNumber(statsAfterAttack.damage)} < ${formatNumber(targetDamage)}`);
-                }
-            }
-
-            if (shouldReturnToWave) {
-                await sleep(600);
-                this.returnToWave(context, returnReason);
-            }
-        },
-        async tryJoinBattle(context) {
-            const { dom, logger } = context;
-
-            const limiterNotice = Array.from(document.querySelectorAll('.alert, .notification, .message, #system_message'))
-                .find(el => /only join 5 monsters/i.test(el.textContent || ''));
-            if (limiterNotice) {
-                logger.warn('Limite de batalhas simultâneas atingido (mensagem do sistema).');
-                context.events.emit('autods:battle:blocked', { timestamp: Date.now() });
-                return 'blocked';
-            }
-
-            // New button structure: #join-battle (primary), or fallback to old selectors
-            const joinButton = dom.query('#join-battle, button.btn-join, button.join-battle');
-            if (!joinButton) {
-                logger.debug('Botão de join não encontrado - assumindo que já está na batalha.');
-                return 'noop';
-            }
-            if (joinButton.disabled) {
-                logger.debug('Botão de join desabilitado - aguardando disponibilidade.');
-                return 'noop';
-            }
-
-            // Extract monster_id from URL
-            const battleUrl = context.window?.location?.href || window.location.href;
-            const monsterIdMatch = battleUrl.match(/[?&]id=(\d+)/);
-            const monsterId = monsterIdMatch ? monsterIdMatch[1] : null;
-
-            // Get user_id from config or auto-detect
-            const cfg = context.config.get();
-            let userId = cfg.core?.userId || cfg.userId || cfg.wave?.userId || cfg.battle?.userId;
-
-            // Try to auto-detect userId from page elements
-            if (!userId) {
-                // Try common selectors where user ID might be stored
-                const userIdElement = dom.query('[data-user-id], [data-userid], #user_id, #userId, .user-id');
-                if (userIdElement) {
-                    userId = userIdElement.dataset?.userId
-                        || userIdElement.dataset?.userid
-                        || userIdElement.getAttribute('data-user-id')
-                        || userIdElement.getAttribute('data-userid')
-                        || userIdElement.value
-                        || userIdElement.textContent?.trim();
-
-                    if (userId) {
-                        logger.info(`User ID auto-detectado: ${userId}`);
-                        // Save it to config for future use
-                        context.config.update({ core: { userId } });
-                    }
-                }
-            }
-
-            // If we have both IDs, use AJAX request (new site behavior)
-            if (monsterId && userId) {
-                try {
-                    logger.info(`Enviando requisição AJAX para entrar na batalha (monster_id: ${monsterId}, user_id: ${userId}).`);
-
-                    // Use HTTP service with Cloudflare bypass
-                    const result = await context.http.joinBattle(monsterId, userId);
-                    const msg = result.message || '';
-                    
-                    // VERIFICAÇÃO INTELIGENTE: Detectar bloqueio Cloudflare
-                    const isCloudflareBlock = msg.includes('Cloudflare') || msg.includes('cf-') || msg.includes('Just a moment');
-                    const is403Forbidden = response.status === 403;
-                    const is500Error = response.status >= 500;
-                    
-                    if (isCloudflareBlock || is403Forbidden || is500Error) {
-                        const reason = isCloudflareBlock ? 'Cloudflare protection' : `HTTP ${response.status}`;
-                        logger.warn(`⚠️ Requisição AJAX bloqueada por ${reason}. Usando fallback (click).`);
-                        // Usar método tradicional (click no botão)
-                        joinButton.click();
-                        context.events.emit('autods:battle:join', { 
-                            method: 'fallback-click',
-                            reason: reason,
-                            timestamp: Date.now() 
-                        });
-                        return 'clicked';
-                    }
-                    
-                    const success = msg.toLowerCase().startsWith('you have successfully');
-
-                    if (success) {
-                        logger.info('Entrada na batalha confirmada via AJAX.');
-                        context.events.emit('autods:battle:join', {
-                            monsterId,
-                            userId,
-                            timestamp: Date.now()
-                        });
-
-                        // Wait a bit before reloading
-                        await sleepRandom(900, 0.2, true);
-
-                        // Reload the page to reflect the battle state
-                        window.location.reload();
-                        return 'joined';
-                    } else {
-                        logger.warn(`Falha ao entrar na batalha via AJAX: ${msg.substring(0, 200)}`);
-
-                        // Check if it's the "already joined" or "max battles" message
-                        if (/only join 5 monsters/i.test(msg)) {
-                            context.events.emit('autods:battle:blocked', { timestamp: Date.now() });
-                            return 'blocked';
-                        }
-
-                        // Fallback para click se AJAX falhou
-                        logger.info('Usando fallback (click) após falha AJAX.');
-                        joinButton.click();
-                        context.events.emit('autods:battle:join', { 
-                            method: 'fallback-click-after-failure',
-                            timestamp: Date.now() 
-                        });
-                        return 'clicked';
-                    }
-                } catch (error) {
-                    logger.error('Erro na requisição AJAX de entrada na batalha:', error);
-                    // Fallback to clicking the button if AJAX fails
-                    logger.info('Usando fallback (click) após erro AJAX.');
-                    joinButton.click();
-                    context.events.emit('autods:battle:join', { 
-                        method: 'fallback-click-after-error',
-                        timestamp: Date.now() 
-                    });
-                    return 'clicked';
-                }
-            } else {
-                if (!userId) {
-                    logger.warn('User ID não encontrado. Configure manualmente em core.userId ou o script tentará clicar no botão.');
-                }
-            }
-
-            // Fallback: click the button (old behavior or if IDs not found)
-            logger.info('Acionando botão de entrada na batalha (fallback).');
-            joinButton.click();
-            context.events.emit('autods:battle:join', { timestamp: Date.now() });
-            await sleepRandom(1500, 0.2, true);
-            return 'joined';
-        },
-        returnToWave(context, reason = 'unknown') {
-            // LOG DETALHADO: Capturar stack trace para debug
-            const stack = new Error().stack;
-            const callerLine = stack?.split('\n')[2]?.trim() || 'unknown';
-            context.logger.info(`🔄 returnToWave chamado | Motivo: ${reason} | Chamador: ${callerLine}`);
-            
-            // Special handling for dungeon battles - return to previous page
-            const cfg = context.config.get();
-            const isDungeonBattle = /dungeon_battle\.php/i.test(window.location.pathname) 
-                || (window.location.search && window.location.search.includes('instance_id'));
-            
-            if (isDungeonBattle) {
-                const isGuildDungeon = window.location.search && window.location.search.includes('instance_id');
-                if (isGuildDungeon) {
-                    context.logger.info(`🏰 Retornando para a localização da Guild Dungeon [motivo: ${reason}].`);
-                } else {
-                    context.logger.info(`Retornando para a página anterior do dungeon [motivo: ${reason}].`);
-                }
-                try {
-                    window.history.back();
-                    return;
-                } catch (error) {
-                    context.logger.warn('Não foi possível voltar à página anterior. Permanecendo na página atual.', error);
-                    return;
-                }
-            }
-
-            // Normal battle.php handling - return to wave
-            const origin = context.window?.location?.origin || window.location?.origin || 'https://demonicscans.org';
-            const stored = context.storage.get(STORAGE_KEYS.lastWaveUrl, null);
-            const configured = context.config.get().wave?.returnUrl;
-            const fallback = configured || '/active_wave.php';
-            let destination = typeof stored === 'string' && stored.trim().length ? stored : fallback;
-
-            try {
-                const url = new URL(destination, origin);
-                
-                if (/active_wave\.php/i.test(window.location.pathname) && window.location.href === url.href) {
-                    context.logger.debug(`Já está em ${url.href}, não é necessário redirecionar.`);
-                    return;
-                }
-                context.logger.info(`Retornando para a wave (${url.href}) [motivo: ${reason}].`);
-                window.location.href = url.href;
-            } catch (error) {
-                context.logger.warn('URL da wave inválida, utilizando fallback padrão.', { destination, error });
-                try {
-                    const fallbackUrl = new URL('/active_wave.php', origin);
-                    window.location.href = fallbackUrl.href;
-                } catch (innerError) {
-                    context.logger.error('Falha ao redirecionar para a wave.', innerError);
-                }
-            }
-        }
-    };
-
-    // ========================================
-    // FARMING MODULE (Energy farming)
-    // ========================================
-    const farmingModule = {
-        id: 'energyFarm',
-        match: ({ location }) => {
-            const path = location.pathname.toLowerCase();
-            return path === '/' || path === '/index.php' || path === '/signin.php' || path === '/bookmarks.php' || /\/manga\//.test(path) || /\/title\//.test(path) || /\/chapter\//.test(path);
-        },
-        init(context) {
-            this.state = {
-                running: false,
-                loginAttempted: false,
-                resumeHandled: false,
-                automationDisabled: false,
-                redirectingToLogin: false,
-                missingStaminaCount: 0,  // Contador de falhas consecutivas de missing-stamina
-                lastStaminaCheck: 0  // Timestamp da última verificação
-            };
-            context.logger.debug('energyFarm module initialised');
-        },
-        activate(context) {
-            // DISABLED in v0.8.0-alpha: Energy farming module no longer supported
-            // The 'farm' section was completely removed as part of UI redesign
-            // Use ultraFast* modules instead for all farming automation
-            return;
-        },
-        async run(context) {
-            const path = context.location.pathname.toLowerCase();
-            const isLogged = this.isLoggedIn();
-
-            context.logger.info(`🔍 [DEBUG] ========== farmingModule.run ==========`);
-            context.logger.info(`🔍 [DEBUG] Página: ${path}, Logado: ${isLogged}`);
-            context.logger.debug(`[Farming] Página: ${path}, Logado: ${isLogged}`);
-
-            // Handle signin page FIRST - highest priority (antes de resumeIfNeeded!)
-            if (path === '/signin.php') {
-                // If already logged in on signin page, try to resume or go home
-                if (isLogged) {
-                    context.logger.info('[Farming] Já está logado em /signin.php. Tentando retomar...');
-                    if (this.resumeIfNeeded(context)) {
-                        context.logger.debug('[Farming] Redirecionando para página salva');
-                        return;
-                    }
-                    // No resume URL, go home
-                    this.navigateHome(context);
-                    return;
-                }
-                // Otherwise try auto-login or wait
-                context.logger.info('[Farming] Detectada página de signin - tentando login automático');
-                await this.handleSignin(context);
-                return;
-            }
-
-            // Handle bookmarks redirect from signin (already logged in scenario)
-            if (path === '/bookmarks.php') {
-                context.logger.info('[Farming] Redirecionado para bookmarks. Tentando retomar...');
-                if (this.resumeIfNeeded(context)) {
-                    context.logger.debug('[Farming] Redirecionando para página salva');
-                    return;
-                }
-                // No resume URL, go home
-                this.navigateHome(context);
-                return;
-            }
-
-            // Now check resume for other pages
-            if (this.resumeIfNeeded(context)) {
-                context.logger.debug('[Farming] Redirecionando para página salva');
-                return; // Redirecting to resume page
-            }
-
-            // Ensure user is logged in before proceeding
-            if (!this.ensureLogin(context)) {
-                context.logger.debug('[Farming] Usuário não está logado, aguardando login');
-                return;
-            }
-
-            // Check if farming is still enabled
-            if (!context.config.get().farm.enabled) {
-                context.logger.debug('[Farming] Farming desabilitado no config');
-                return;
-            }
-
-            // Route-specific handlers
-            // CRITICAL: Check /chapter/ BEFORE /title/ because URLs like /title/.../chapter/1 contain both
-            if (/\/chapter\//.test(path)) {
-                context.logger.info('🔍 [DEBUG] Detectado página de capítulo! Iniciando handleChapterPage');
-                context.logger.debug('[Farming] Processando página de capítulo');
-                await this.handleChapterPage(context);
-                return;
-            }
-
-            if (path === '/' || path === '/index.php') {
-                context.logger.debug('[Farming] Processando homepage');
-                await this.handleHomepage(context);
-                return;
-            }
-
-            if (/\/title\//.test(path) || /\/manga\//.test(path)) {
-                context.logger.debug('[Farming] Processando página de mangá');
-                await this.handleMangaPage(context);
-                return;
-            }
-
-            context.logger.info(`🔍 [DEBUG] Nenhuma rota matched. Path: ${path}`);
-            context.logger.debug('[Farming] Nenhuma ação necessária nesta rota.', { path });
-        },
-        ensureLogin(context) {
-            if (this.isLoggedIn()) {
-                this.state.redirectingToLogin = false; // Reset flag when logged in
-                return true;
-            }
-
-            const currentPath = context.location.pathname.toLowerCase();
-
-            // Don't redirect if already on signin or bookmarks (redirect page)
-            if (currentPath === '/signin.php' || currentPath === '/bookmarks.php') {
-                return false;
-            }
-
-            // Prevent multiple redirects in quick succession
-            if (this.state.redirectingToLogin) {
-                context.logger.debug('Já está redirecionando para login, aguardando...');
-                return false;
-            }
-
-            // Save current location for resume after login
-            const { resumeAfterLogin } = context.config.get().farm;
-            if (resumeAfterLogin !== false) {
-                sessionStorage.setItem('autods.farm.resume', context.window.location.href);
-                context.logger.debug('Salvando página atual para retomar após login.', { current: context.window.location.href });
-            }
-
-            this.state.redirectingToLogin = true;
-            context.logger.warn('Usuário não autenticado. Redirecionando para a página de login.');
-            context.window.location.href = 'https://demonicscans.org/signin.php';
-            return false;
-        },
-        isLoggedIn() {
-            // Verificar se existe link de signout (mais confiável)
-            const signoutLink = document.querySelector('a[href*="signout"], a[href*="logout"]');
-            if (signoutLink) return true;
-
-            // Verificar se NÃO está na página de signin (se não tem formulário de login, provavelmente está logado)
-            const loginForm = document.querySelector('#login-container, form[action*="signin"], form[action*="login"]');
-            if (!loginForm && window.location.pathname !== '/signin.php') return true;
-
-            // Verificações adicionais
-            return Boolean(
-                document.querySelector('[data-user-id]') ||
-                document.querySelector('.user-info, .user-avatar, .account-box, #user_dropdown, .user-menu, .gtb-user') ||
-                document.querySelector('a[href*="bookmarks"]')
-            );
-        },
-        resumeIfNeeded(context) {
-            if (this.state.resumeHandled) return false;
-            this.state.resumeHandled = true;
-            const resumeUrl = sessionStorage.getItem('autods.farm.resume');
-            if (!resumeUrl) return false;
-
-            // Already at the resume destination
-            if (resumeUrl === context.window.location.href) {
-                sessionStorage.removeItem('autods.farm.resume');
-                context.logger.debug('Já está na página de retomada. Limpando flag.');
-                return false;
-            }
-
-            // Redirect to saved page
-            sessionStorage.removeItem('autods.farm.resume');
-            context.logger.info('Retomando farming após login bem-sucedido.', { resumeUrl });
-            context.window.location.href = resumeUrl;
-            return true; // Indica que está redirecionando
-        },
-        async handleSignin(context) {
-            context.logger.info('[Farming] Processando página de signin');
-
-            // Verificar se já está logado (pode ter feito login manual)
-            if (this.isLoggedIn()) {
-                context.logger.info('[Farming] Login já efetuado, retomando farming');
-                this.resumeIfNeeded(context);
-                return;
-            }
-
-            const cfg = context.config.get().farm;
-            
-            // Verificar se credenciais estão configuradas
-            const credentials = cfg.credentials || {};
-            const hasCredentials = credentials.email && credentials.password;
-
-            if (!hasCredentials) {
-                context.logger.warn('⚠️ [Farming] Credenciais não configuradas. Aguardando login manual...');
-                context.logger.warn('Configure as credenciais no painel ou faça login manualmente.');
-                
-                // Aguardar e verificar periodicamente se o login foi feito manualmente
-                await sleep(3000);
-                if (this.isLoggedIn()) {
-                    context.logger.info('[Farming] Login manual detectado! Retomando farming...');
-                    this.resumeIfNeeded(context);
-                } else {
-                    // Tentar novamente após 5 segundos
-                    context.window.setTimeout(() => this.handleSignin(context), 5000);
-                }
-                return;
-            }
-
-            // Verificar se já tentou fazer login (evitar loops)
-            if (this.state.loginAttempted) {
-                context.logger.debug('[Farming] Login já foi tentado, aguardando resultado');
-                
-                // Aguardar e verificar se o login foi bem-sucedido
-                await sleep(3000);
-                if (this.isLoggedIn()) {
-                    context.logger.info('[Farming] Login bem-sucedido! Retomando farming...');
-                    this.state.loginAttempted = false; // Reset para próxima vez
-                    this.resumeIfNeeded(context);
-                } else {
-                    context.logger.error('[Farming] Login falhou. Aguardando intervenção manual...');
-                    this.state.loginAttempted = false; // Reset para permitir nova tentativa
-                    await sleep(5000);
-                    // Tentar novamente
-                    this.handleSignin(context);
-                }
-                return;
-            }
-
-            // Buscar formulário de login
-            const form = document.querySelector('#login-container form, form[action*="signin"], form[action*="login"], form[action*="auth"]');
-            if (!form) {
-                context.logger.warn('[Farming] Formulário de login não encontrado. Aguardando...');
-                await sleep(2000);
-                this.handleSignin(context);
-                return;
-            }
-
-            // Buscar campos de email e senha
-            const emailInput = form.querySelector('input[type="email"], input[name="email"], input[name*="email" i]');
-            const passwordInput = form.querySelector('input[type="password"], input[name="password"], input[name*="pass" i]');
-            const submitButton = form.querySelector('button[type="submit"], input[type="submit"], input[name="submit"]');
-
-            if (!emailInput || !passwordInput) {
-                context.logger.warn('[Farming] Campos de email ou senha não encontrados.');
-                return;
-            }
-
-            // Preencher credenciais
-            context.logger.info('[Farming] Preenchendo credenciais de login...');
-            emailInput.value = credentials.email;
-            passwordInput.value = credentials.password;
-            
-            // Marcar que tentou fazer login
-            this.state.loginAttempted = true;
-
-            // Aguardar um pouco antes de submeter (parecer mais humano)
-            await sleep(500);
-
-            // Submeter formulário
-            context.logger.info('[Farming] Enviando formulário de login...');
-            if (submitButton) {
-                submitButton.click();
-            } else if (typeof form.requestSubmit === 'function') {
-                form.requestSubmit();
-            } else {
-                form.submit();
-            }
-
-            // Aguardar redirect e verificar se login foi bem-sucedido
-            await sleep(3000);
-            
-            // Se ainda estiver na página de signin após 3s, pode ter havido erro
-            if (context.location.pathname.toLowerCase() === '/signin.php') {
-                context.logger.warn('[Farming] Ainda na página de signin após submeter. Verificando erro...');
-                
-                const errorElement = document.querySelector('.error, .alert-danger, .login-error, p.error');
-                if (errorElement && errorElement.textContent.trim()) {
-                    context.logger.error(`[Farming] Erro de login: ${errorElement.textContent.trim()}`);
-                    context.logger.error('[Farming] Verifique suas credenciais na configuração.');
-                    this.state.loginAttempted = false;
-                    return;
-                }
-            }
-        },
-        async handleHomepage(context) {
-            context.logger.info('Farming: selecionando mangá aleatório.');
-            const anchor = await waitForAny([
-                '.owl-item .owl-element a[href*="/manga/"]',
-                '.owl-carousel a[href*="/manga/"]',
-                '.featured-slider a[href*="/manga/"]',
-                'a[href*="/manga/"]'
-            ], { timeout: 10000, interval: 200 });
-
-            if (!anchor) {
-                context.logger.warn('Não foi possível localizar mangás na página inicial para iniciar o farming. Nova tentativa após recarregar.');
-                context.window.setTimeout(() => context.window.location.reload(), 4000);
-                return;
-            }
-
-            const candidates = Array.from(document.querySelectorAll('.owl-item .owl-element a[href*="/manga/"]'));
-            const pool = candidates.length ? candidates : [anchor];
-            const target = pool[Math.floor(Math.random() * pool.length)];
-            if (!target || !target.href) {
-                context.logger.warn('Link de mangá inválido.');
-                return;
-            }
-            context.logger.info(`Farming: navegando para ${target.href}`);
-            context.window.location.href = target.href;
-        },
-        async handleMangaPage(context) {
-            context.logger.info('Farming: localizando último capítulo disponível.');
-            const list = await waitForAny([
-                '#chapters-list li a',
-                '.chapters-list li a',
-                '.chapter-list a',
-                '.listing-chapters a'
-            ], { timeout: 10000, interval: 200 });
-
-            if (!list) {
-                context.logger.warn('Lista de capítulos não encontrada. Tentando novamente em breve.');
-                context.window.setTimeout(() => this.handleMangaPage(context), 2000);
-                return;
-            }
-
-            const chapters = Array.from(document.querySelectorAll('#chapters-list li a, .chapters-list li a, .chapter-list a, .listing-chapters a'));
-            const last = chapters.length ? chapters[chapters.length - 1] : list;
-            if (!last || !last.href) {
-                context.logger.warn('Não foi possível identificar o link do último capítulo.');
-                return;
-            }
-            context.logger.info(`Farming: abrindo capítulo ${last.href}`);
-            context.window.location.href = last.href;
-        },
-        async handleChapterPage(context) {
-            context.logger.info('🔍 [DEBUG] ========== INICIANDO handleChapterPage ==========');
-            context.logger.info(`🔍 [DEBUG] URL atual: ${context.window.location.href}`);
-            context.logger.debug('[Farming] Iniciando processamento de página de capítulo');
-
-            const limitCheck = this.checkFarmingLimits(context);
-            context.logger.info(`🔍 [DEBUG] Limite check - allowed: ${limitCheck.allowed}, reason: ${limitCheck.reason || 'nenhum'}`);
-
-            if (!limitCheck.allowed) {
-                context.logger.debug(`[Farming] Limite atingido: ${limitCheck.reason}`);
-                if (limitCheck.disable) {
-                    this.disableAutomation(context, limitCheck.reason);
-                }
-                if (limitCheck.nextDelay) {
-                    context.window.setTimeout(() => this.handleChapterPage(context), limitCheck.nextDelay);
-                }
-                return;
-            }
-
-            context.logger.info('🔍 [DEBUG] Limites OK, tentando clicar na reação...');
-            context.logger.debug('[Farming] Tentando clicar na reação...');
-            const clicked = await this.clickReaction(context);
-            context.logger.info(`🔍 [DEBUG] Resultado do clickReaction: ${clicked}`);
-
-            if (!clicked) {
-                if (!this.ensureLogin(context)) {
-                    context.logger.warn('[Farming] Usuário não logado, redirecionando...');
-                    return;
-                }
-                context.logger.warn('[Farming] Não foi possível encontrar o botão de reação. Tentando novamente em 4s.');
-                context.window.setTimeout(() => this.handleChapterPage(context), 4000);
-                return;
-            }
-
-            context.logger.debug('[Farming] Reação clicada, aguardando antes de avançar...');
-            await sleepRandom(1500, 0.25, true);
-            this.goNextChapter(context);
-        },
-        getStamina() {
-            return readGauge([
-                '#stamina_span',
-                '[data-player-stamina]',
-                '.gtb-stat[data-stat="stamina"] .gtb-value',
-                '.stamina .current'
-            ], {
-                xpath: [
-                    '//*[@id="discuscontainer"]/div[1]/div[1]/div[2]/span[1]/span'
-                ]
-            });
-        },
-        getFarmEnergy() {
-            return readGauge([
-                '#farm_span',
-                '[data-player-farm]',
-                '.gtb-stat[data-stat="farm"] .gtb-value',
-                '.farm .current'
-            ], {
-                xpath: [
-                    '//*[@id="discuscontainer"]/div[1]/div[1]/div[2]/span[2]/span'
-                ]
-            });
-        },
-        checkFarmingLimits(context) {
-            // DISABLED in v0.8.0-alpha: Farm configuration no longer supported
-            // This function is kept for backward compatibility but always returns disabled
-            return { allowed: false, reason: 'energy-farming-disabled' };
-        },
-        disableAutomation(context, reason) {
-            if (this.state.automationDisabled) return;
-            this.state.automationDisabled = true;
-            context.logger.info(`Desativando automação de farming: ${reason}`);
-            context.config.update({ farm: { enabled: false } });
-            context.events.emit('autods:farm:disabled', { reason, timestamp: Date.now() });
-        },
-        async clickReaction(context) {
-            context.logger.info('🔍 [DEBUG] Iniciando clickReaction...');
-
-            // Wait for page to fully load
-            await sleepRandom(800, 0.2, true);
-
-            // Debug: Check for chapter-reactions container
-            const container = document.querySelector('.chapter-reactions');
-            context.logger.info(`🔍 [DEBUG] Container .chapter-reactions encontrado: ${!!container}`);
-
-            if (container) {
-                context.logger.info(`🔍 [DEBUG] Container HTML: ${container.outerHTML.substring(0, 200)}...`);
-
-                // Check for all reaction elements
-                const allReactions = container.querySelectorAll('.reaction');
-                context.logger.info(`🔍 [DEBUG] Quantidade de .reaction encontrados: ${allReactions.length}`);
-
-                allReactions.forEach((reaction, index) => {
-                    context.logger.info(`🔍 [DEBUG] Reaction ${index}: data-reaction="${reaction.getAttribute('data-reaction')}", text="${reaction.textContent.trim()}"`);
-                });
-            }
-
-            // New reaction system uses div.reaction with data-reaction attributes
-            let reactionDiv = document.querySelector('.chapter-reactions .reaction[data-reaction]');
-            context.logger.info(`🔍 [DEBUG] Reaction div encontrado: ${!!reactionDiv}`);
-
-            if (!reactionDiv) {
-                // Try alternative selectors with debug
-                const altSelectors = [
-                    '.reaction[data-reaction]',
-                    'div[data-reaction]',
-                    '[data-reaction]'
-                ];
-
-                for (const selector of altSelectors) {
-                    const alt = document.querySelector(selector);
-                    if (alt) {
-                        context.logger.info(`🔍 [DEBUG] Encontrado com seletor alternativo: ${selector}`);
-                        reactionDiv = alt;
-                        break;
-                    }
-                }
-
-                if (!reactionDiv) {
-                    context.logger.warn('❌ Elemento de reação não encontrado em nenhum seletor.');
-                    return false;
-                }
-            }
-
-            context.logger.info(`🔍 [DEBUG] Reaction selecionado: data-reaction="${reactionDiv.getAttribute('data-reaction')}", class="${reactionDiv.className}"`);
-            context.logger.info(`🔍 [DEBUG] Reaction HTML: ${reactionDiv.outerHTML}`);
-
-            // Scroll into view and click
-            reactionDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            context.logger.info('🔍 [DEBUG] ScrollIntoView executado');
-
-            await sleepRandom(300, 0.1, true);
-
-            context.logger.info('🔍 [DEBUG] Executando click...');
-            reactionDiv.click();
-
-            context.logger.info('✅ Reação do capítulo acionada para farming.');
-            return true;
-        },
-        goNextChapter(context) {
-            // Try multiple selectors for next chapter button (from Smol script)
-            const selectors = [
-                'body > div.chapter-info > div > a.nextchap',  // Smol's selector
-                'a.nextchap',
-                'a[rel="next"]',
-                '.next-chapter',
-                '.chapter-nav .next a',
-                '.chapter-navigation .next',
-                'a[href*="/chapter/"][class*="next" i]'
-            ];
-
-            let link = null;
-            for (const selector of selectors) {
-                link = document.querySelector(selector);
-                if (link && link.href) {
-                    context.logger.debug(`Próximo capítulo encontrado via: ${selector}`);
-                    break;
-                }
-            }
-
-            if (link && link.href) {
-                context.logger.info(`➡️ Avançando para o próximo capítulo: ${link.href}`);
-                context.events.emit('autods:farm:chapter', { timestamp: Date.now(), href: link.href });
-                context.window.location.href = link.href;
-                return;
-            }
-
-            context.logger.warn('❌ Próximo capítulo não encontrado. Reiniciando ciclo no dashboard.');
-            this.navigateHome(context);
-        },
-        navigateHome(context) {
-            if (context.location.pathname === '/' || context.location.pathname === '/index.php') {
-                return;
-            }
-            context.window.location.href = 'https://demonicscans.org';
-        }
-    };
-
     // ============================================================================
-    // ULTRA FAST FARM MODULE - Parallel batch operations for maximum speed
+    // ULTRA FAST ATTACK MODULE - Parallel batch operations for maximum speed
     // ============================================================================
+    
     const ultraFastAttackModule = {
         id: 'ultraFastAttack',
         match: ({ location }) => /active_wave\.php/i.test(location.pathname),
@@ -11406,7 +9201,7 @@ var version = GM_info.script.version;
                 logger.info('💡 Aguarde completar algumas batalhas antes de iniciar Ultra Fast Farm.');
                 if (cfg.autoReturnToWave) {
                     await sleep(2000);
-                    window.location.reload();
+                    window.location.href = window.location.href;
                 }
                 return;
             }
@@ -11428,7 +9223,7 @@ var version = GM_info.script.version;
                 logger.info('❌ Nenhum mob disponível para farm ultra rápido');
                 if (cfg.autoReturnToWave) {
                     await sleep(2000);
-                    window.location.reload();
+                    window.location.href = window.location.href;
                 }
                 return;
             }
@@ -12004,16 +9799,6 @@ var version = GM_info.script.version;
                     logger.info(`🔍 Filtros ativos: ${activeFilters.join(' | ')}`);
                 }
 
-                // Reset level up check with initial XP
-                loot.resetLevelUpCheck();
-                
-                const initialExpInfo = loot.checkLevelUp();
-                if (initialExpInfo.oldExp) {
-                    const expToLevelUp = initialExpInfo.oldExp.maxExp - initialExpInfo.oldExp.currentExp;
-                    logger.info(`📊 XP atual: ${numbers.format(initialExpInfo.oldExp.currentExp)} / ${numbers.format(initialExpInfo.oldExp.maxExp)} (${initialExpInfo.oldExp.percent.toFixed(1)}%)`);
-                    logger.info(`📊 Falta ${numbers.format(expToLevelUp)} XP para subir de nível`);
-                }
-
                 // Scan eligible monsters
                 const targets = await this.scanLootTargets(context);
                 
@@ -12057,6 +9842,14 @@ var version = GM_info.script.version;
                     messages: []
                 };
                 
+                // 🆕 CAPTURAR EXP INICIAL (antes de qualquer loot) para simulação
+                const initialExpInfo = loot.getPlayerExpInfo();
+                let simulatedCurrentExp = initialExpInfo?.currentExp || 0;
+                
+                if (initialExpInfo) {
+                    logger.info(`💀 [UltraFastLoot] Estado inicial: EXP=${numbers.format(initialExpInfo.currentExp)}/${numbers.format(initialExpInfo.maxExp)} (${initialExpInfo.percent.toFixed(2)}%)`);
+                }
+                
                 // Loot em lotes com verificação de level up robusta
                 const batchSize = cfg.maxParallelLoots || 5;
                 let levelUpDetected = false;
@@ -12071,21 +9864,37 @@ var version = GM_info.script.version;
                     const batch = targets.slice(i, i + batchSize);
                     logger.debug(`📦 Processando batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(targets.length / batchSize)} (${batch.length} mobs)...`);
                     
+                    // Capturar EXP antes do batch
+                    const expBeforeBatch = summary.exp;
+                    
                     // Fazer loot do batch
                     await this.lootBatchParallel(context, batch, summary);
                     looted += batch.length;
                     
-                    // ✅ Verificar level up APÓS cada batch
-                    const levelUpInfo = loot.checkLevelUp();
-                    if (levelUpInfo.leveledUp) {
-                        logger.warn(`🎉 LEVEL UP DETECTADO! Nível anterior: ${levelUpInfo.oldExp?.level || '?'} → Novo nível: ${levelUpInfo.newExp?.level || '?'}`);
-                        logger.warn(`📊 XP novo: ${numbers.format(levelUpInfo.newExp?.currentExp || 0)} / ${numbers.format(levelUpInfo.newExp?.maxExp || 0)}`);
-                        levelUpDetected = true;
-                        break; // Parar imediatamente
+                    // 🆕 CALCULAR EXP GANHO NO BATCH
+                    const batchExpGained = summary.exp - expBeforeBatch;
+                    
+                    // 🆕 VERIFICAR LEVEL UP APÓS BATCH (simulação matemática)
+                    if (initialExpInfo && batchExpGained > 0) {
+                        simulatedCurrentExp += batchExpGained;
+                        
+                        const leveledUp = simulatedCurrentExp >= initialExpInfo.maxExp;
+                        
+                        if (leveledUp) {
+                            logger.warn(`🎉 LEVEL UP DETECTADO! (EXP acumulado: ${numbers.format(simulatedCurrentExp)} >= ${numbers.format(initialExpInfo.maxExp)})`);
+                            logger.warn(`📊 Batch ganhou ${numbers.format(batchExpGained)} EXP → Total: ${numbers.format(simulatedCurrentExp)}`);
+                            notifications.success(`🎉 Level up! Stamina recuperada após ${looted} loot(s)`, 3000);
+                            levelUpDetected = true;
+                            break; // Parar imediatamente
+                        }
+                        
+                        // Log progress
+                        const expNeeded = initialExpInfo.maxExp - simulatedCurrentExp;
+                        logger.debug(`💀 [UltraFastLoot] Progresso: ${numbers.format(simulatedCurrentExp)}/${numbers.format(initialExpInfo.maxExp)} (faltam ${numbers.format(expNeeded)} XP)`);
                     }
                     
                     // Mostrar progresso
-                    logger.debug(`✅ Batch completo - Total looted: ${looted}/${targets.length}`);
+                    logger.debug(`✅ Batch completo - Total looted: ${looted}/${targets.length}, Batch EXP: +${numbers.format(batchExpGained)}`);
                     
                     // Pequena pausa entre batches (evitar rate limit)
                     await new Promise(resolve => setTimeout(resolve, 200));
@@ -12328,14 +10137,14 @@ var version = GM_info.script.version;
                         if (result.items && result.items.length > 0) {
                             result.items.forEach(item => {
                                 // 🆕 Debug: Log estrutura do item
-                                console.log('[UltraFastLoot] Processing item:', item);
+                                context.logger.debug('[UltraFastLoot] Processing item:', item);
                                 
                                 // API retorna campos em MAIÚSCULAS: ITEM_ID, NAME, RARITY, QUANTITY
                                 const itemName = item.NAME || item.name || 'Unknown Item';
                                 const itemRarity = (item.RARITY || item.rarity || 'COMMON').toLowerCase();
                                 const itemQty = item.QUANTITY || item.quantity || 1;
                                 
-                                console.log('[UltraFastLoot] Parsed item:', { itemName, itemRarity, itemQty });
+                                context.logger.debug('[UltraFastLoot] Parsed item:', { itemName, itemRarity, itemQty });
                                 
                                 const itemKey = `${itemName}|${itemRarity}`;
                                 const existing = summary.items.get(itemKey);
@@ -12919,6 +10728,9 @@ var version = GM_info.script.version;
         }
     };
 
+    // ============================================================================
+    // ULTRA FAST DUNGEON ATTACK MODULE - Parallel dungeon attack
+    // ============================================================================
     const ultraFastDungeonModule = {
         id: 'ultraFastDungeon',
         match: ({ location }) => /guild_dungeon_location\.php/i.test(location.pathname),
@@ -13540,414 +11352,11 @@ var version = GM_info.script.version;
         }
     };
 
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // 🚀 PVP MODULE - Ultra Fast PvP automation via API direct attacks
+    // ═══════════════════════════════════════════════════════════════════════════════
     const pvpModule = {
         id: 'pvpAutomation',
-        match: ({ location }) => {
-            const path = location.pathname;
-            // Match pvp.php and pvp_battle.php
-            return /pvp(\/|\.php|_battle)/i.test(path);
-        },
-        init(context) {
-            const persistedMode = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('autods.pvp.mode') : null;
-            const persistedRemaining = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('autods.pvp.remaining') : null;
-            this.state = {
-                active: true,
-                mode: persistedMode || null,
-                remaining: persistedRemaining !== null ? parseInt(persistedRemaining, 10) : null,
-                lastBattle: null
-            };
-            if (Number.isNaN(this.state.remaining)) {
-                this.state.remaining = null;
-            }
-            context.logger.debug('pvpAutomation module initialised');
-        },
-        activate(context) {
-            const cfgRoot = context.config.get();
-            const cfg = cfgRoot.pvp;
-            
-            // If ultraFastMode is enabled, skip this module (use ultraFastPvpModule instead)
-            if (cfg?.ultraFastMode) {
-                context.logger.debug('[pvpAutomation] Ultra Fast Mode enabled, deferring to ultraFastPvpModule');
-                return;
-            }
-            
-            if (!cfgRoot.core.enabled || !cfg?.enabled) {
-                this.stop(context, 'disabled');
-                return;
-            }
-            if (!this.state) this.init(context);
-            this.ensureStateForConfig(cfg);
-            const path = context.location.pathname.toLowerCase();
-            if (path.includes('pvp_battle')) {
-                this.handleBattle(context).catch(error => context.logger.error('Erro na rotina PvP (batalha)', error));
-            } else if (path.includes('pvp.php')) {
-                this.handleLobby(context).catch(error => context.logger.error('Erro na rotina PvP (lobby)', error));
-            } else {
-                context.logger.debug('PvP: nenhuma automação para esta rota.', { path });
-            }
-        },
-        ensureStateForConfig(cfg) {
-            if (!this.state) return;
-            if (cfg.autoMode === 'limited') {
-                const limited = Math.max(0, cfg.limitedBattles ?? 0);
-                if (this.state.mode !== 'limited') {
-                    this.state.mode = 'limited';
-                    this.state.remaining = limited;
-                } else if (this.state.remaining === null) {
-                    this.state.remaining = limited;
-                } else if (this.state.remaining > limited) {
-                    this.state.remaining = limited;
-                }
-            } else {
-                this.state.mode = 'all';
-                this.state.remaining = null;
-            }
-            this.persistState();
-        },
-        persistState() {
-            if (typeof sessionStorage === 'undefined') return;
-            try {
-                if (this.state?.mode) {
-                    sessionStorage.setItem('autods.pvp.mode', this.state.mode);
-                } else {
-                    sessionStorage.removeItem('autods.pvp.mode');
-                }
-                if (this.state?.mode === 'limited' && this.state.remaining !== null) {
-                    sessionStorage.setItem('autods.pvp.remaining', String(this.state.remaining));
-                } else {
-                    sessionStorage.removeItem('autods.pvp.remaining');
-                }
-            } catch (error) {
-                console.warn('[AutoDS][pvp] Failed to persist session state', error);
-            }
-        },
-        stop(context, reason) {
-            if (!this.state) return;
-            if (this.state.active) {
-                context.logger.info(`PvP automation pausada${reason ? `: ${reason}` : ''}`);
-            }
-            this.state.active = false;
-            this.persistState();
-        },
-        async handleLobby(context) {
-            const cfg = context.config.get().pvp;
-            
-            // Check PvP Tokens first
-            const tokens = this.getPvPTokens();
-            if (tokens) {
-                context.logger.debug(`PvP: Tokens detected - ${tokens.current}/${tokens.max}`);
-                
-                if (tokens.current === 0) {
-                    context.logger.warn('⚠️ PvP: Sem tokens disponíveis (0/' + tokens.max + '). Pausando automação.');
-                    this.stop(context, 'sem tokens PvP');
-                    
-                    // Show notification to user
-                    context.notifications.autoPaused('no PvP tokens available');
-                    return;
-                }
-                
-                // Warn if tokens are low
-                if (tokens.current < 3) {
-                    context.logger.warn(`⚠️ PvP: Tokens baixos (${tokens.current}/${tokens.max})`);
-                }
-            }
-            
-            const coins = this.getCoins();
-            if (coins === null) {
-                context.logger.warn('PvP: não foi possível determinar a quantidade de moedas.');
-                this.stop(context, 'moedas desconhecidas');
-                return;
-            }
-            if (coins <= 0) {
-                this.stop(context, 'sem moedas PvP');
-                return;
-            }
-            if (cfg.autoMode === 'limited') {
-                this.state.remaining = Math.max(0, this.state.remaining ?? cfg.limitedBattles ?? 0);
-                if (this.state.remaining <= 0) {
-                    this.stop(context, 'limite diário de batalhas atingido');
-                    return;
-                }
-            }
-
-            const startControl = this.findStartControl();
-            if (!startControl) {
-                context.logger.warn('PvP: botão ou link para iniciar batalha não encontrado.');
-                return;
-            }
-
-            this.state.active = true;
-            if (cfg.autoMode === 'limited') {
-                this.state.remaining = Math.max(0, (this.state.remaining ?? 1) - 1);
-            }
-            this.persistState();
-
-            context.logger.info('PvP: iniciando batalha automática.');
-            this.triggerControl(startControl);
-            await sleepRandom(cfg.lobbyDelayMs ?? 1200, 0.25, true);
-            context.events.emit('autods:pvp:battleStart', { timestamp: Date.now() });
-        },
-        findStartControl() {
-            const selectors = [
-                '#btnStartTop',
-                '#btnStartBottom',
-                'form[action*="pvp_battle"] button[type="submit"]',
-                'form[action*="pvpBattle"] button[type="submit"]',
-                '.hero-btn[href*="pvp_battle"]',
-                'a.hero-btn[href*="pvp_battle"]',
-                'a[href*="pvp_battle.php"]',
-                'button[href*="pvp_battle.php"]',
-                'button.start-battle',
-                'button[name*="pvp_start" i]',
-                'button[data-action*="pvp" i]'
-            ];
-            for (const selector of selectors) {
-                const node = document.querySelector(selector);
-                if (node) return node;
-            }
-            return null;
-        },
-        triggerControl(node) {
-            if (!node) return;
-            if (node.tagName === 'A' && node.href) {
-                window.location.href = node.href;
-                return;
-            }
-            if (typeof node.click === 'function') {
-                node.click();
-                return;
-            }
-            const form = node.closest('form');
-            if (form) {
-                if (typeof form.requestSubmit === 'function') {
-                    form.requestSubmit(node);
-                } else {
-                    form.submit();
-                }
-            }
-        },
-        getCoins() {
-            const gauges = readGauge(
-                ['#pvp-coins', '[data-pvp-coins]', '.pvp-coins .value', '.pvp-coins', '#pvpCoins'],
-                {}
-            );
-            if (gauges && gauges.current !== null) {
-                return gauges.current;
-            }
-            const candidates = Array.from(document.querySelectorAll('span, strong, b, div, td, p'))
-                .slice(0, 500)
-                .filter(node => /pvp\s*coins?/i.test(node.textContent || ''));
-            for (const node of candidates) {
-                const value = numberFromText(node.textContent);
-                if (value !== null) return value;
-            }
-            return null;
-        },
-        getPvPTokens() {
-            // Try reading PvP Tokens gauge (format: "⚔️ 0/30")
-            const gauges = readGauge(
-                ['[data-pvp-tokens]', '.pvp-tokens', '#pvpTokens', '.pvp-token-count'],
-                { parse: true }
-            );
-            if (gauges && gauges.current !== null) {
-                return gauges;
-            }
-            
-            // Fallback: search for "PvP Token" or "Token" text
-            const candidates = Array.from(document.querySelectorAll('span, strong, b, div, td, p'))
-                .slice(0, 500)
-                .filter(node => /pvp\s*token/i.test(node.textContent || ''));
-            
-            for (const node of candidates) {
-                const text = node.textContent || '';
-                // Look for pattern like "0/30" or "0 / 30"
-                const match = text.match(/(\d+)\s*\/\s*(\d+)/);
-                if (match) {
-                    return {
-                        current: parseInt(match[1], 10),
-                        max: parseInt(match[2], 10),
-                        percent: (parseInt(match[1], 10) / parseInt(match[2], 10)) * 100
-                    };
-                }
-            }
-            
-            return null;
-        },
-        async handleBattle(context) {
-            const cfg = context.config.get().pvp;
-            context.logger.info('PvP: controle automático de batalha iniciado.');
-            while (/pvp_battle/.test(context.location.pathname)) {
-                const freshCfg = context.config.get().pvp;
-                if (!freshCfg.enabled) {
-                    this.stop(context, 'config desabilitada em batalha');
-                    break;
-                }
-
-                if (this.shouldSurrender(freshCfg)) {
-                    if (this.performSurrender(context)) {
-                        await sleepRandom(1500, 0.2, true);
-                        break;
-                    }
-                }
-
-                const result = this.checkBattleResult();
-                if (result.done) {
-                    await this.finishBattle(context, freshCfg);
-                    break;
-                }
-
-                const attackButton = resolveAttackButton(context.dom, freshCfg, true);
-                if (attackButton) {
-                    // Double-check: verify modal hasn't appeared just before attacking
-                    const preAttackCheck = this.checkBattleResult();
-                    if (preAttackCheck.done) {
-                        context.logger.info('PvP: modal de fim detectado antes do ataque. Parando.');
-                        await this.finishBattle(context, freshCfg);
-                        break;
-                    }
-
-                    // attackUnlockerModule handles button unlocking globally
-                    // Just click the button directly
-                    attackButton.click();
-                    context.logger.debug('PvP: ataque disparado (Power Slash).');
-
-                    // Wait for attack animation/response
-                    await sleepRandom(freshCfg.attackDelayMs ?? 1500, freshCfg.attackVariation ?? 0.25, true);
-
-                    // Check again after attack - modal may have appeared during cooldown
-                    const postAttackCheck = this.checkBattleResult();
-                    if (postAttackCheck.done) {
-                        context.logger.info('PvP: batalha finalizada após último ataque.');
-                        await this.finishBattle(context, freshCfg);
-                        break;
-                    }
-                } else {
-                    // No attack button available, wait and check again
-                    await sleepRandom(freshCfg.attackDelayMs ?? 1500, freshCfg.attackVariation ?? 0.25, true);
-                }
-            }
-        },
-        shouldSurrender(cfg) {
-            if (!cfg.autoSurrender) return false;
-            const myHp = readGauge([
-                '#myHpText',
-                '#player_hp',
-                '.player-hp .current',
-                '.player-hp',
-                '[data-player-hp]'
-            ], {});
-            if (!myHp || myHp.current === null || !myHp.max) return false;
-            const percent = (myHp.current / myHp.max) * 100;
-            return percent <= (cfg.autoSurrenderThreshold ?? 10);
-        },
-        performSurrender(context) {
-            const surrenderButton = document.querySelector('#btnSurrender, button[name="surrender" i], .btn-surrender, button[data-action="surrender" i]');
-            if (surrenderButton && !surrenderButton.disabled) {
-                surrenderButton.click();
-                context.logger.warn('PvP: HP crítico detectado. Rendição automática executada.');
-                context.events.emit('autods:pvp:surrender', { timestamp: Date.now() });
-                return true;
-            }
-            return false;
-        },
-        checkBattleResult() {
-            // Priority 1: Check for end modal with ID #endModal (most specific)
-            const endModal = document.querySelector('#endModal');
-            if (endModal) {
-                // Use computed style since display can be changed via JS (not inline style)
-                const computedStyle = window.getComputedStyle(endModal);
-                const isVisible = computedStyle.display !== 'none' &&
-                                 computedStyle.display !== '' &&
-                                 endModal.offsetParent !== null;
-
-                // Also check if #endBody has content (populated after battle ends)
-                const endBody = document.querySelector('#endBody');
-                const hasContent = endBody && endBody.textContent && endBody.textContent.trim().length > 0;
-
-                if (isVisible || hasContent) {
-                    return { done: true, node: endModal, type: 'modal' };
-                }
-            }
-
-            // Priority 2: Check for other result indicators
-            const victoryNode = document.querySelector('.battle-result, .result-box, .pvp-result, #battle-result, .battle-summary');
-            if (victoryNode) {
-                return { done: true, node: victoryNode, type: 'result' };
-            }
-
-            // Priority 3: Check for generic modals with battle end content
-            const genericModal = document.querySelector('.modal, .end-modal, [data-modal], .battle-end');
-            if (genericModal && genericModal.style.display !== 'none' && /victory|defeat|win|lose|ended/i.test(genericModal.textContent || '')) {
-                return { done: true, node: genericModal, type: 'modal' };
-            }
-
-            // Priority 4: Check HP status (both must be checked)
-            const enemyHp = readGauge([
-                '#enemyHpText',
-                '#enemy_hp',
-                '.enemy-hp .current',
-                '.enemy-hp',
-                '[data-enemy-hp]'
-            ], {});
-
-            const myHp = readGauge([
-                '#myHpText',
-                '#player_hp',
-                '.player-hp .current',
-                '.player-hp',
-                '[data-player-hp]'
-            ], {});
-
-            // Only consider battle done if HP reaches zero AND modal appears
-            // Don't return done based on HP alone to avoid premature detection
-            if ((enemyHp && enemyHp.current !== null && enemyHp.current <= 0) ||
-                (myHp && myHp.current !== null && myHp.current <= 0)) {
-                // HP reached zero, but wait for modal confirmation in next loop
-                return { done: false, hpZero: true };
-            }
-
-            return { done: false };
-        },
-        async finishBattle(context, cfg) {
-            context.logger.info('PvP: batalha concluída. Aguardando modal de resultado...');
-            context.events.emit('autods:pvp:battleEnd', { timestamp: Date.now() });
-
-            // Wait for modal to fully appear and be readable (1.5 seconds)
-            await sleepRandom(1500, 0.3, true);
-
-            // Check if modal is still visible using computed style
-            const endModal = document.querySelector('#endModal');
-            if (endModal) {
-                const computedStyle = window.getComputedStyle(endModal);
-                const isVisible = computedStyle.display !== 'none';
-                if (isVisible) {
-                    context.logger.info('PvP: modal de resultado exibido. Retornando ao lobby.');
-                } else {
-                    context.logger.warn('PvP: modal não visível, retornando ao lobby de qualquer forma.');
-                }
-            } else {
-                context.logger.warn('PvP: modal #endModal não encontrado, retornando ao lobby de qualquer forma.');
-            }
-
-            const returnLink = document.querySelector('a[href*="pvp.php" i]');
-            if (returnLink) {
-                context.logger.info('PvP: clicando no link de retorno ao lobby.');
-                this.triggerControl(returnLink);
-            } else {
-                context.logger.info('PvP: redirecionando para lobby via URL.');
-                context.window.location.href = 'https://demonicscans.org/pvp.php';
-            }
-
-            // Small delay before next battle
-            await sleepRandom(cfg.cooldownBetweenBattlesMs ?? 2200, 0.2, true);
-        }
-    };
-
-    // ═══════════════════════════════════════════════════════════════════════════════
-    // 🚀 ULTRA FAST PVP MODULE - Maximum speed PvP automation
-    // ═══════════════════════════════════════════════════════════════════════════════
-    const ultraFastPvpModule = {
-        id: 'ultraFastPvp',
         match: ({ location }) => {
             const path = location.pathname.toLowerCase();
             return path.includes('pvp.php') || path.includes('pvp_battle');
@@ -13972,9 +11381,9 @@ var version = GM_info.script.version;
             if (context.events && typeof context.events.on === 'function') {
                 context.events.on('autods:config:updated', () => {
                     const cfg = context.config.get().pvp;
-                    if (cfg?.ultraFastMode && this.match({ location: context.location })) {
+                    if (cfg?.enabled && this.match({ location: context.location })) {
                         // Re-activate the module when config changes to enabled
-                        context.logger.info('[UltraFastPvP] Config changed - re-activating module');
+                        context.logger.info('[PvP] Config changed - re-activating module');
                         this.activate(context);
                     }
                 });
@@ -13997,18 +11406,18 @@ var version = GM_info.script.version;
                 const path = context.location.pathname.toLowerCase();
                 
                 // Log FIRST - so user always sees the module is being activated
-                context.logger.debug(`[UltraFastPvP] Module activated on ${path}`);
-                context.logger.debug(`[UltraFastPvP] Config state - core.enabled=${cfgRoot.core?.enabled}, ultraFastMode=${cfg?.ultraFastMode}`);
+                context.logger.debug(`[PvP] Module activated on ${path}`);
+                context.logger.debug(`[PvP] Config state - core.enabled=${cfgRoot.core?.enabled}, pvp.enabled=${cfg?.enabled}`);
                 
                 // Check if core automation is enabled
                 if (!cfgRoot.core.enabled) {
-                    context.logger.debug('[UltraFastPvP] Core automation disabled globally');
+                    context.logger.debug('[PvP] Core automation disabled globally');
                     return;
                 }
                 
-                // Check if Ultra Fast Mode is enabled (main control)
-                if (!cfg?.ultraFastMode) {
-                    context.logger.debug('[UltraFastPvP] Ultra Fast Mode disabled - enable in UI');
+                // Check if PvP automation is enabled
+                if (!cfg?.enabled) {
+                    context.logger.debug('[PvP] PvP automation disabled - enable in UI');
                     return;
                 }
                 
@@ -14047,8 +11456,8 @@ var version = GM_info.script.version;
             const { logger } = context;
             const cfg = context.config.get().pvp;
             
-            if (!cfg?.ultraFastMode) {
-                logger.info('[UltraFastPvP] ultraFastMode desativado, abortando');
+            if (!cfg?.enabled) {
+                logger.info('[PvP] automation desativado, abortando');
                 return;
             }
             
@@ -14068,8 +11477,8 @@ var version = GM_info.script.version;
                 
                 // Check if Ultra Fast Mode is still enabled
                 const freshCfg = context.config.get().pvp;
-                if (!freshCfg?.ultraFastMode) {
-                    logger.info('⏸️ Ultra Fast PvP disabled via config');
+                if (!freshCfg?.enabled) {
+                    logger.info('⏸️ PvP disabled via config');
                     break;
                 }
                 
@@ -14093,7 +11502,7 @@ var version = GM_info.script.version;
                     
                     // Reload the page
                     logger.info('🔄 Recarregando página...');
-                    window.location.reload();
+                    window.location.href = window.location.href;
                     return;
                 }
                 
@@ -14211,13 +11620,6 @@ var version = GM_info.script.version;
             
             // Main attack loop - attack until battle ends
             while (this.state.running) {
-                // Check if Ultra Fast Mode is still enabled
-                const freshCfg = context.config.get().pvp;
-                if (!freshCfg?.ultraFastMode) {
-                    logger.info('⏸️ Ultra Fast PvP disabled via config, stopping');
-                    break;
-                }
-                
                 // Check if we're still on battle page
                 const currentPath = window.location.pathname.toLowerCase();
                 if (!currentPath.includes('pvp_battle')) {
@@ -14461,7 +11863,6 @@ var version = GM_info.script.version;
 
                         // Override lockAttackButtons with no-op
                         // window.lockAttackButtons = function(lock) {
-                        //     console.log('[AutoDS] 🔓 Attack lock bypassed (lockAttackButtons neutralized)');
                         //     // Do nothing - attacks remain unlocked
                         // };
 
@@ -14472,14 +11873,13 @@ var version = GM_info.script.version;
                             if (delay === 1000 && typeof fn === 'function') {
                                 const fnStr = fn.toString();
                                 if (fnStr.includes('disabled') || fnStr.includes('lockAttack')) {
-                                    // console.log('[AutoDS] 🔓 Intercepted delayed unlock, executing immediately');
+                                    // delay = 0; // Execute immediately
                                     delay = 0; // Execute immediately
                                 }
                             }
                             return originalSetTimeout.call(window, fn, delay, ...args);
                         };
 
-                        console.log('[AutoDS] ✅ Global attack bypass injected');
                     })();
                 `;
                 document.documentElement.appendChild(script);
@@ -14542,10 +11942,6 @@ var version = GM_info.script.version;
             context.logger.info('✅ Interceptor de cliques instalado');
         }
     };
-
-    // DEPRECATED: autoJoinBattleModule removed in v0.1.29-alpha
-    // Functionality replaced by directJoinButtonsModule which injects explicit "⚡ Join Now" buttons
-    // instead of intercepting native button clicks (better UX, no conflicts)
 
     /**
      * Module to inject "Join Now" and "Fight Now" buttons
@@ -15409,28 +12805,6 @@ var version = GM_info.script.version;
         }
     };
 
-    function normaliseHref(href, origin = window.location?.origin || 'https://demonicscans.org') {
-        if (!href) return '/';
-        try {
-            const url = new URL(href, origin);
-            return url.pathname || '/';
-        } catch (error) {
-            if (href.startsWith('/')) return href;
-            return `/${href}`;
-        }
-    }
-
-    function prettifyLabel(pathname) {
-        if (!pathname || pathname === '/') return 'Início';
-        const base = pathname.split('?')[0].split('#')[0];
-        const parts = base.split('/').filter(Boolean);
-        if (!parts.length) return 'Início';
-        const last = parts[parts.length - 1];
-        const cleaned = last.replace(/\.[^/.]+$/, '').replace(/[_-]+/g, ' ').trim();
-        if (!cleaned) return pathname;
-        return cleaned.replace(/\b\w/g, char => char.toUpperCase());
-    }
-
     const floatingHelpersModule = {
         id: 'floatingHelpers',
         match: () => true,
@@ -15534,11 +12908,9 @@ var version = GM_info.script.version;
                 container.appendChild(this.createLootBox(context, cfg));
             }
 
-            // Adicionar botão de Ultra Fast Stamina
-            if (cfg.ultraFastStamina?.enabled) {
-                console.log('[FloatingHelpers] Adding stamina box');
-                container.appendChild(this.createStaminaBox(context, cfg));
-            }
+            // Adicionar botão de Ultra Fast Stamina (sempre visível)
+            console.log('[FloatingHelpers] Adding stamina box (always visible)');
+            container.appendChild(this.createStaminaBox(context, cfg));
 
             // Adicionar botão de Ultra Fast Attack
             if (cfg.ultraFastAttack?.enabled) {
@@ -16055,8 +13427,8 @@ var version = GM_info.script.version;
             // 4 botões principais: Farm, Dungeon, PvP, Boss
             const buttons = [
                 { id: 'dungeon', label: 'Dungeon', emoji: '🏰', config: 'ultraFastDungeon.enabled' },
-                { id: 'farm', label: 'Farm', emoji: '⚔️', config: 'wave.ultraFastMode' },
-                { id: 'pvp', label: 'PvP', emoji: '🏆', config: 'pvp.ultraFastMode' },
+                { id: 'farm', label: 'Farm', emoji: '⚔️', config: 'wave.enabled' },
+                { id: 'pvp', label: 'PvP', emoji: '🏆', config: 'pvp.enabled' },
                 { id: 'boss', label: 'Boss', emoji: '👑', config: 'specialBossFarm.enabled' }
             ];
 
@@ -16129,36 +13501,33 @@ var version = GM_info.script.version;
                         }
                         
                         const cfg = context.config.get();
-                        const waveEnabled = cfg.wave?.ultraFastMode || false;
+                        const waveEnabled = cfg.wave?.enabled || false;
                         const newValue = !waveEnabled;  // Toggle
                         
                         if (newValue) {
                             // ATIVAR Farm
                             context.logger.info('[FloatingHelpers] 🚀 Iniciando Ultra Fast Farm (loop contínuo)...');
                             
-                            // Atualizar config: ativar core, wave.enabled E ultraFastMode
+                            // Atualizar config: ativar core, wave.enabled
                             context.config.update({
                                 core: { enabled: true },
                                 wave: {
-                                    enabled: true,
-                                    ultraFastMode: true
+                                    enabled: true
                                 }
                             });
                             
                             // Reset e ativar o módulo
                             setTimeout(() => {
-                                const waveModule = context.moduleRegistry?.getModule('waveAutomation');
-                                if (waveModule) {
+                                const ultraFastWaveModule = context.moduleRegistry?.getModule('ultraFastWave');
+                                if (ultraFastWaveModule) {
                                     // Reset state
-                                    if (waveModule.state) {
-                                        waveModule.state.running = false;
-                                        waveModule.state.staminaWaiting = false;
-                                        waveModule.state.notifiedMaxBattles = false;
+                                    if (ultraFastWaveModule.state) {
+                                        ultraFastWaveModule.state.running = false;
                                     }
                                     
                                     // Activate
-                                    if (typeof waveModule.activate === 'function') {
-                                        waveModule.activate(context);
+                                    if (typeof ultraFastWaveModule.activate === 'function') {
+                                        ultraFastWaveModule.activate(context);
                                         context.logger.info('[FloatingHelpers] ✅ Ultra Fast Farm iniciado!');
                                     }
                                 }
@@ -16168,8 +13537,7 @@ var version = GM_info.script.version;
                             context.logger.info('[FloatingHelpers] ⏹️ Parando Ultra Fast Farm...');
                             context.config.update({
                                 wave: {
-                                    enabled: false,
-                                    ultraFastMode: false
+                                    enabled: false
                                 }
                             });
                             context.logger.info('[FloatingHelpers] ✅ Ultra Fast Farm parado!');
@@ -16592,7 +13960,7 @@ var version = GM_info.script.version;
 
                     // Recarregar página para sincronizar (igual ao jogo)
                     setTimeout(() => {
-                        location.reload();
+                        location.href = location.href;
                     }, 500);
                 } else {
                     throw new Error(responseText.slice(0, 200) || 'Failed to use item.');
@@ -16604,7 +13972,7 @@ var version = GM_info.script.version;
         },
         startExpPotionTimer(context) {
             this.state.expPotionEndTime = Date.now() + (60 * 60 * 1000); // 1 hora
-            localStorage.setItem(this.POTION_STORAGE_KEY, this.state.expPotionEndTime.toString());
+            context.storage.set(this.POTION_STORAGE_KEY, this.state.expPotionEndTime.toString());
 
             if (this.state.expPotionTimer) {
                 clearInterval(this.state.expPotionTimer);
@@ -16641,7 +14009,7 @@ var version = GM_info.script.version;
                 this.state.expPotionTimer = null;
             }
             this.state.expPotionEndTime = null;
-            localStorage.removeItem(this.POTION_STORAGE_KEY);
+            context.storage.remove(this.POTION_STORAGE_KEY);
 
             const timerElement = document.querySelector('.exp-potion-timer');
             if (timerElement) {
@@ -16649,7 +14017,7 @@ var version = GM_info.script.version;
             }
         },
         restoreExpPotionTimer(context) {
-            const stored = localStorage.getItem(this.POTION_STORAGE_KEY);
+            const stored = context.storage.get(this.POTION_STORAGE_KEY);
             if (!stored) return;
 
             const endTime = parseInt(stored, 10);
@@ -16660,7 +14028,7 @@ var version = GM_info.script.version;
                 }, 1000);
                 this.updateExpPotionTimer(context);
             } else {
-                localStorage.removeItem(this.POTION_STORAGE_KEY);
+                context.storage.remove(this.POTION_STORAGE_KEY);
             }
         },
         // REMOVED: fetchInventoryData() - use context.inventory.fetchInventoryData() instead
@@ -16723,8 +14091,8 @@ var version = GM_info.script.version;
             const expMatch = bodyText.match(/EXP[:\s]*([\d,]+)\s*\/\s*([\d,]+)/i);
             
             if (expMatch) {
-                const currentExp = numberFromText(expMatch[1]);
-                const maxExp = numberFromText(expMatch[2]);
+                const currentExp = context.numbers.parse(expMatch[1]);
+                const maxExp = context.numbers.parse(expMatch[2]);
                 
                 if (currentExp !== null && maxExp !== null && maxExp > 0) {
                     const percent = (currentExp / maxExp) * 100;
@@ -16776,7 +14144,7 @@ var version = GM_info.script.version;
 
             if (!userId) {
                 context.logger.warn('User ID não configurado. Tentando detectar...');
-                ensureUserId(context);
+                context.userSession.ensureUserId(context);
                 userId = context.config.get().core?.userId;
             }
 
@@ -18920,6 +16288,19 @@ var version = GM_info.script.version;
             this.bind(context);
             this.render(context);
             
+            // Render Profile Manager in the Profiles tab
+            setTimeout(() => {
+                const pmContainer = container.querySelector('#autods-profile-manager-container');
+                if (pmContainer && context.profileManager) {
+                    try {
+                        context.profileManager.renderUI(pmContainer);
+                        context.logger.debug('Profile Manager UI renderizado com sucesso');
+                    } catch (e) {
+                        context.logger.warn('Erro ao renderizar Profile Manager UI', e);
+                    }
+                }
+            }, 100);
+            
             // Restore dropdown states after DOM is fully ready
             requestAnimationFrame(() => {
                 this.restoreDropdownStates(context);
@@ -18950,6 +16331,7 @@ var version = GM_info.script.version;
 
                         <!-- Tab Navigation -->
                         <div class="autods-tabs-main">
+                            <button class="autods-tab" data-tab="profiles">📁 Perfis</button>
                             <button class="autods-tab active" data-tab="quick">🎯 Rápido</button>
                             <button class="autods-tab" data-tab="ultrafastfarm">⚔️ Ultra Fast Farm</button>
                             <button class="autods-tab" data-tab="specialboss">👑 Special Boss</button>
@@ -18977,7 +16359,7 @@ var version = GM_info.script.version;
                                         </div>
                                         <div class="autods-status-item">
                                             <label class="autods-checkbox">
-                                                <input type="checkbox" data-config="wave.ultraFastMode" data-label="Ultra Fast Wave" data-toast="0" />
+                                                <input type="checkbox" data-config="wave.enabled" data-label="Ultra Fast Wave" data-toast="0" />
                                                 <span>⚡ Ultra Fast Farm</span>
                                             </label>
                                         </div>
@@ -18989,8 +16371,8 @@ var version = GM_info.script.version;
                                         </div>
                                         <div class="autods-status-item">
                                             <label class="autods-checkbox">
-                                                <input type="checkbox" data-config="pvp.ultraFastMode" data-label="Ultra Fast PvP" data-toast="0" />
-                                                <span>🏆 Ultra Fast PvP</span>
+                                                <input type="checkbox" data-config="pvp.enabled" data-label="PvP" data-toast="0" />
+                                                <span>🏆 PvP</span>
                                             </label>
                                         </div>
                                         <div class="autods-status-item">
@@ -19007,7 +16389,7 @@ var version = GM_info.script.version;
                             <div class="autods-tab-content" data-tab-content="ultrafastfarm">
                                 <h4 style="margin-bottom: 16px; color: var(--accent-primary);">⚔️ Ultra Fast Farm</h4>
                                 <label class="autods-checkbox">
-                                    <input type="checkbox" data-config="wave.ultraFastMode" data-label="Ultra Fast Wave" data-toast="0" />
+                                    <input type="checkbox" data-config="wave.enabled" data-label="Ultra Fast Wave" data-toast="0" />
                                     <span>⚡ Ativar Ultra Fast Mode</span>
                                 </label>
                                 <p class="autods-info" style="font-size:11px;">Modo paralelo de ataques rápidos após entrar na batalha.</p>
@@ -19015,13 +16397,13 @@ var version = GM_info.script.version;
                                 <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">🎯 Filtro de Monstros</h6>
                                 <label class="autods-field">
                                     <span>Incluir (Whitelist)</span>
-                                    <textarea data-config="wave.ultraFastConfig.monsterFilter.includeNames" data-config-format="csv" data-label="Incluir Monstros" placeholder="Deixar vazio para incluir todos. Um nome por linha. Ex:
+                                    <textarea data-config="wave.monsterFilter.includeNames" data-config-format="csv" data-label="Incluir Monstros" placeholder="Deixar vazio para incluir todos. Um nome por linha. Ex:
 Orc Warrior
 Troll Brawler" rows="2"></textarea>
                                 </label>
                                 <label class="autods-field">
                                     <span>Excluir (Blacklist)</span>
-                                    <textarea data-config="wave.ultraFastConfig.monsterFilter.excludeNames" data-config-format="csv" data-label="Excluir Monstros" placeholder="Monstros a ignorar. Um nome por linha. Ex:
+                                    <textarea data-config="wave.monsterFilter.excludeNames" data-config-format="csv" data-label="Excluir Monstros" placeholder="Monstros a ignorar. Um nome por linha. Ex:
 Mini Boss
 Event Monster" rows="2"></textarea>
                                 </label>
@@ -19030,7 +16412,7 @@ Event Monster" rows="2"></textarea>
                                 <div class="autods-field-row">
                                     <label class="autods-field autods-field-small">
                                         <span>Skill</span>
-                                        <select data-config="wave.ultraFastConfig.skillId" data-config-format="int" data-label="Ultra Fast Skill">
+                                        <select data-config="wave.skillId" data-config-format="int" data-label="Ultra Fast Skill">
                                             <option value="0">Slash (1)</option>
                                             <option value="-1">Power (10)</option>
                                             <option value="-2">Heroic (50)</option>
@@ -19040,34 +16422,39 @@ Event Monster" rows="2"></textarea>
                                     </label>
                                     <label class="autods-field autods-field-small">
                                         <span>Dano Alvo</span>
-                                        <input type="number" data-config="wave.ultraFastConfig.damageTarget" data-config-format="int" data-label="Dano Alvo" min="100000" step="100000" />
+                                        <input type="number" data-config="wave.damageTarget" data-config-format="int" data-label="Dano Alvo" min="100000" step="100000" />
                                     </label>
                                 </div>
                                 <div class="autods-field-row">
                                     <label class="autods-field autods-field-small">
                                         <span>Ataques //</span>
-                                        <input type="number" data-config="wave.ultraFastConfig.parallelAttacks" data-config-format="int" data-label="Ataques Paralelos" min="1" max="20" />
+                                        <input type="number" data-config="wave.parallelAttacks" data-config-format="int" data-label="Ataques Paralelos" min="1" max="20" />
                                     </label>
                                     <label class="autods-field autods-field-small">
                                         <span>Delay (ms)</span>
-                                        <input type="number" data-config="wave.ultraFastConfig.minDelayBetweenAttacks" data-config-format="int" data-label="Delay" min="10" step="10" />
+                                        <input type="number" data-config="wave.minDelayBetweenAttacks" data-config-format="int" data-label="Delay" min="10" step="10" />
                                     </label>
                                 </div>
                                 
                                 <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">💊 Auto Full Stamina Potion</h6>
                                 <label class="autods-checkbox">
-                                    <input type="checkbox" data-config="wave.ultraFastConfig.autoFSP" data-label="Auto FSP" data-toast="0" />
+                                    <input type="checkbox" data-config="wave.autoFSP" data-label="Auto FSP" data-toast="0" />
                                     <span>💊 Auto FSP quando stamina baixa</span>
                                 </label>
                                 <label class="autods-field autods-field-small">
                                     <span>Stamina Mín para FSP</span>
-                                    <input type="number" data-config="wave.ultraFastConfig.minStaminaForFSP" data-config-format="int" data-label="Stamina Mín FSP" min="0" step="10" />
+                                    <input type="number" data-config="wave.minStaminaForFSP" data-config-format="int" data-label="Stamina Mín FSP" min="0" step="10" />
                                 </label>
                                 <label class="autods-checkbox">
-                                    <input type="checkbox" data-config="wave.ultraFastConfig.lootDeadBeforeFSP" data-label="Loot Dead antes FSP" data-toast="0" />
+                                    <input type="checkbox" data-config="wave.lootDeadBeforeFSP" data-label="Loot Dead antes FSP" data-toast="0" />
                                     <span>💀 Lootar Dead Monsters antes de usar FSP</span>
                                 </label>
                                 <p class="autods-info" style="font-size:10px;margin-top:4px;">Tenta lootar dead monsters para recuperar stamina via level up antes de gastar FSP.</p>
+                                <label class="autods-checkbox">
+                                    <input type="checkbox" data-config="wave.lootSpecialBossBeforeFSP" data-label="Loot Special Boss antes FSP" data-toast="0" />
+                                    <span>👑 Lootar Special Bosses (100B+ HP) antes de usar FSP</span>
+                                </label>
+                                <p class="autods-info" style="font-size:10px;margin-top:4px;">Após lootar dead monsters normais, tenta lootar special bosses (100B+) um por vez para recuperar stamina via level up. Ordem: dead normal → special boss → FSP.</p>
                             </div>
 
                             <!-- Tab: Special Boss Farm -->
@@ -19115,6 +16502,13 @@ Event Monster" rows="2"></textarea>
                                     <span>Stamina Mín</span>
                                     <input type="number" data-config="specialBossFarm.minStaminaForPotion" data-config-format="int" data-label="Min Stamina" min="0" step="10" />
                                 </label>
+                                
+                                <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">💀 Configuração de Loot</h6>
+                                <label class="autods-checkbox">
+                                    <input type="checkbox" data-config="specialBossFarm.lootDeadBeforeFSP" data-label="Loot Dead antes FSP Boss" data-toast="0" />
+                                    <span>💀 Lootar Dead Monsters antes de usar FSP</span>
+                                </label>
+                                <p class="autods-info" style="font-size:10px;margin-top:4px;">Durante farm de bosses, tenta lootar dead monsters para recuperar stamina via level up antes de gastar FSP.</p>
                                 
                                 <h6 style="margin-top:10px;margin-bottom:6px;font-size:11px;color:#aaa;">⏱️ Tempo de Espera</h6>
                                 <label class="autods-field">
@@ -19416,11 +16810,12 @@ Magus" rows="2"></textarea>
 
                             <!-- Tab: PvP -->
                             <div class="autods-tab-content" data-tab-content="pvp">
-                                <h4 style="margin-bottom: 16px; color: var(--accent-primary);">🏆 Ultra Fast PvP</h4>
+                                <h4 style="margin-bottom: 16px; color: var(--accent-primary);">🏆 PvP (Ultra Fast Mode)</h4>
+                                <p class="autods-info" style="font-size:11px; margin-bottom: 12px;">Automação completa de PvP com ataques via API direto.</p>
                                 
                                 <label class="autods-checkbox" style="background: linear-gradient(135deg, #2a1a3a 0%, #1a2a3a 100%); padding: 8px; border-radius: 6px; border: 1px solid #8af; margin-bottom: 12px;">
-                                    <input type="checkbox" data-config="pvp.ultraFastMode" data-label="Ultra Fast PvP" data-toast="0" />
-                                    <span>⚡ Ultra Fast Mode (API direto)</span>
+                                    <input type="checkbox" data-config="pvp.enabled" data-label="PvP" data-toast="0" />
+                                    <span>⚡ Ativar PvP Automation</span>
                                 </label>
                                 
                                 <div class="autods-field-row">
@@ -19438,7 +16833,7 @@ Magus" rows="2"></textarea>
                                 </div>
                                 
                                 <div class="autods-subsection">
-                                    <h5>⚡ Ultra Fast Config</h5>
+                                    <h5>⚡ Configurações de Combate</h5>
                                     <div class="autods-field-row">
                                         <label class="autods-field">
                                             <span>Skill</span>
@@ -19614,6 +17009,17 @@ Magus" rows="2"></textarea>
                                         <input type="checkbox" data-config="core.unlockAttackButtons" data-label="Unlock Attack Buttons" data-toast="0" />
                                         <span>Sempre desbloquear botões de ataque</span>
                                     </label>
+                                </div>
+                            </div>
+
+                            <!-- Tab: Profiles -->
+                            <div class="autods-tab-content" data-tab-content="profiles">
+                                <h4 style="margin-bottom: 16px; color: var(--accent-primary);">📁 Gerenciador de Perfis</h4>
+                                <p class="autods-info" style="font-size: 12px; margin-bottom: 16px;">
+                                    Salve e carregue diferentes configurações de automação.
+                                </p>
+                                <div id="autods-profile-manager-container" style="margin-top: 8px;">
+                                    <!-- Profile Manager será renderizado aqui -->
                                 </div>
                             </div>
 
@@ -20838,7 +18244,7 @@ Magus" rows="2"></textarea>
                         
                         // Wait for server to process, then reload
                         await sleep(500);
-                        window.location.reload();
+                        window.location.href = window.location.href;
                         return;
                     } else {
                         this.showToast(context, 'error', 'Ultra Fast Boss', 'HP zerado e sem Heal Potions!');
@@ -20892,7 +18298,7 @@ Magus" rows="2"></textarea>
                         sessionStorage.setItem('UltraFastBoss_Progress', JSON.stringify(progress));
                         
                         this.addLog('info', '🔄 Recarregando página para sincronizar stamina...');
-                        window.location.reload();
+                        window.location.href = window.location.href;
                         return;
                     } else {
                         this.showToast(context, 'error', 'Ultra Fast Boss', 'Falha ao usar poção!');
@@ -21439,8 +18845,6 @@ Magus" rows="2"></textarea>
             this.syncConfigInputs(config);
         }
     };
-
-    // REMOVIDO: Quest Widget (fetch bloqueado pelo site - HTTP 403)
 
     // Guild Dungeon Loot All Button
     function addGuildDungeonLootAllButton() {
@@ -22824,6 +20228,388 @@ Magus" rows="2"></textarea>
         }
     };
 
+    // Profile Manager Service (Phase 4)
+    function createProfileManager(context) {
+        const STORAGE_KEY = 'autods.profiles';
+        let uiContainer = null;  // Armazenar referência do container renderizado
+        
+        /**
+         * Filter config keys to exclude system-level configs
+         * @param {string} key - Config key (e.g., 'wave.enabled', 'ui.theme')
+         * @returns {boolean} - True if should be included in profile
+         */
+        function shouldIncludeConfigKey(key) {
+            if (!key) return false;
+            if (key.startsWith('ui.')) return false;
+            if (key.startsWith('core.')) return false;
+            if (key.startsWith('credentials.')) return false;
+            return true;
+        }
+        
+        /**
+         * Extract saveable config from context.config.get()
+         * @returns {Object} - Filtered config object
+         */
+        function extractSaveableConfig() {
+            const fullConfig = context.config.get();
+            const saveableConfig = {};
+            
+            // Iterate through all top-level config keys
+            Object.keys(fullConfig).forEach(topKey => {
+                if (shouldIncludeConfigKey(topKey)) {
+                    saveableConfig[topKey] = JSON.parse(JSON.stringify(fullConfig[topKey]));
+                }
+            });
+            
+            return saveableConfig;
+        }
+        
+        /**
+         * Apply loaded config to context.config and trigger UI update
+         * @param {Object} profileConfig - Config object to apply
+         */
+        function applyLoadedConfig(profileConfig) {
+            // Deep merge into current config
+            const currentConfig = context.config.get();
+            
+            Object.keys(profileConfig).forEach(topKey => {
+                if (shouldIncludeConfigKey(topKey)) {
+                    currentConfig[topKey] = JSON.parse(JSON.stringify(profileConfig[topKey]));
+                }
+            });
+            
+            // Save merged config using save() method
+            context.config.save(currentConfig);
+            
+            // Note: config.save() already emits 'autods:config:updated' event
+            // UI will update automatically via existing event listeners
+        }
+        
+        function loadProfilesData() {
+            try {
+                const data = GM_getValue(STORAGE_KEY, '{}');
+                return JSON.parse(data);
+            } catch (e) {
+                context.logger.error('Erro ao carregar perfis', e);
+                return {};
+            }
+        }
+        
+        function saveProfilesData(profiles) {
+            try {
+                GM_setValue(STORAGE_KEY, JSON.stringify(profiles));
+            } catch (e) {
+                context.logger.error('Erro ao salvar perfis', e);
+            }
+        }
+        
+        function loadProfilesInSelect(container = uiContainer) {
+            // Procurar o select dentro do container que foi passado (ou usar o armazenado)
+            if (!container) {
+                context.logger.warn('Container não encontrado para loadProfilesInSelect');
+                return;
+            }
+            
+            const select = container.querySelector('#autods-profile-select');
+            if (!select) {
+                context.logger.warn('Select de perfis não encontrado no container');
+                return;
+            }
+            
+            const profiles = loadProfilesData();
+            select.innerHTML = '<option value="">-- Selecione um perfil --</option>';
+            
+            Object.keys(profiles).sort().forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                select.appendChild(option);
+            });
+        }
+        
+        function triggerInputChange(input) {
+            const event = new Event('change', { bubbles: true });
+            input.dispatchEvent(event);
+        }
+        
+        return {
+            saveProfile(profileName) {
+                if (!profileName || profileName.length > 100) {
+                    return { success: false, error: 'Nome inválido (máx 100 caracteres)' };
+                }
+                
+                try {
+                    const profiles = loadProfilesData();
+                    const configData = extractSaveableConfig();
+                    
+                    profiles[profileName] = {
+                        timestamp: Date.now(),
+                        data: configData,
+                        version: context.version
+                    };
+                    
+                    saveProfilesData(profiles);
+                    loadProfilesInSelect();
+                    
+                    const configKeys = Object.keys(configData);
+                    context.logger.info(`💾 Perfil '${profileName}' salvo com sucesso (${configKeys.length} módulos)`);
+                    context.notifications?.success(`Perfil '${profileName}' salvo! (${configKeys.length} módulos)`);
+                    
+                    return {
+                        success: true,
+                        profileName,
+                        itemsCount: configKeys.length
+                    };
+                } catch (e) {
+                    context.logger.error('Erro ao salvar perfil', e);
+                    return { success: false, error: e.message };
+                }
+            },
+            
+            loadProfile(profileName) {
+                try {
+                    const profiles = loadProfilesData();
+                    const profile = profiles[profileName];
+                    
+                    if (!profile) {
+                        context.logger.warn(`Perfil '${profileName}' não encontrado`);
+                        return { success: false, error: 'Perfil não encontrado' };
+                    }
+                    
+                    // Apply config data
+                    applyLoadedConfig(profile.data);
+                    
+                    // Force update of floating helpers to reflect new config
+                    const floatingHelpersModule = context.moduleRegistry.getModule('floatingHelpers');
+                    if (floatingHelpersModule && floatingHelpersModule.state?.container) {
+                        const cfg = context.config.get();
+                        context.logger.debug('🔄 Atualizando Floating Helpers após carregar perfil');
+                        
+                        // Recreate entire container to reflect all changes
+                        floatingHelpersModule.createFloatingContainer(context, cfg);
+                    }
+                    
+                    const configKeys = Object.keys(profile.data);
+                    context.logger.info(`📂 Perfil '${profileName}' carregado com sucesso (${configKeys.length} módulos)`);
+                    context.notifications?.success(`Perfil '${profileName}' carregado! (${configKeys.length} módulos)`);
+                    
+                    return {
+                        success: true,
+                        profileName,
+                        applied: configKeys.length,
+                        errors: 0
+                    };
+                } catch (e) {
+                    context.logger.error('Erro ao carregar perfil', e);
+                    return { success: false, error: e.message };
+                }
+            },
+            
+            deleteProfile(profileName) {
+                const profiles = loadProfilesData();
+                delete profiles[profileName];
+                saveProfilesData(profiles);
+                loadProfilesInSelect();
+                
+                context.logger.info(`🗑️ Perfil '${profileName}' deletado`);
+                context.notifications?.success(`Perfil '${profileName}' deletado!`);
+                
+                return { success: true, profileName };
+            },
+            
+            listProfiles() {
+                const profiles = loadProfilesData();
+                return Object.keys(profiles).sort().map(name => ({
+                    name,
+                    timestamp: profiles[name].timestamp,
+                    version: profiles[name].version || 'unknown',
+                    modulesCount: Object.keys(profiles[name].data || {}).length
+                }));
+            },
+            
+            hasProfile(profileName) {
+                const profiles = loadProfilesData();
+                return profileName in profiles;
+            },
+            
+            exportProfile(profileName) {
+                const profiles = loadProfilesData();
+                return profiles[profileName] || null;
+            },
+            
+            importProfile(profileName, data) {
+                const profiles = loadProfilesData();
+                profiles[profileName] = data;
+                saveProfilesData(profiles);
+                loadProfilesInSelect();
+                return { success: true };
+            },
+            
+            clearAllProfiles() {
+                GM_setValue(STORAGE_KEY, '{}');
+                loadProfilesInSelect();
+                return { success: true, message: 'Todos os perfis deletados' };
+            },
+            
+            renderUI(container) {
+                if (!container) {
+                    context.logger.warn('Container para Profile Manager não encontrado');
+                    return;
+                }
+                
+                // Armazenar referência do container para uso posterior
+                uiContainer = container;
+                
+                const html = `
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; gap: 4px;">
+                            <input id="autods-profile-name" type="text" placeholder="Nome do novo perfil..." 
+                                   style="flex: 1; padding: 6px 8px; background: #1a1a2e; color: #aaa; border: 1px solid #333; border-radius: 4px; font-size: 12px;" />
+                            <button id="autods-profile-save" style="padding: 6px 12px; background: #2a6a2a; border: 1px solid #4a8; color: #8f8; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">💾 Salvar</button>
+                        </div>
+                        
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <select id="autods-profile-select" style="flex: 1; padding: 6px 8px; background: #1a1a2e; color: #aaa; border: 1px solid #333; border-radius: 4px; font-size: 12px;">
+                                <option value="">-- Selecione um perfil --</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <button id="autods-profile-load" style="padding: 6px 12px; background: #2a4a6a; border: 1px solid #4a9eff; color: #8af; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">📂 Carregar</button>
+                            <button id="autods-profile-delete" style="padding: 6px 12px; background: #6a2a2a; border: 1px solid #f88; color: #f88; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">🗑️ Delete</button>
+                        </div>
+                        
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <button id="autods-profile-export" style="flex: 1; padding: 6px 12px; background: #4a2a6a; border: 1px solid #a8f; color: #d8f; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">📤 Exportar</button>
+                            <button id="autods-profile-import" style="flex: 1; padding: 6px 12px; background: #2a4a4a; border: 1px solid #4fa; color: #8fa; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px;">📥 Importar</button>
+                        </div>
+                        
+                        <input id="autods-profile-import-file" type="file" accept=".json" style="display: none;" />
+                    </div>
+                `;
+                
+                container.innerHTML = html;
+                
+                // Usar setTimeout para garantir que o DOM foi renderizado
+                setTimeout(() => {
+                    const nameInput = container.querySelector('#autods-profile-name');
+                    const saveBtn = container.querySelector('#autods-profile-save');
+                    const select = container.querySelector('#autods-profile-select');
+                    const loadBtn = container.querySelector('#autods-profile-load');
+                    const deleteBtn = container.querySelector('#autods-profile-delete');
+                    const exportBtn = container.querySelector('#autods-profile-export');
+                    const importBtn = container.querySelector('#autods-profile-import');
+                    const importFile = container.querySelector('#autods-profile-import-file');
+                    
+                    context.logger.debug('Profile Manager inputs found:', {
+                        nameInput: !!nameInput,
+                        saveBtn: !!saveBtn,
+                        select: !!select,
+                        loadBtn: !!loadBtn,
+                        deleteBtn: !!deleteBtn,
+                        exportBtn: !!exportBtn,
+                        importBtn: !!importBtn
+                    });
+                    
+                    loadProfilesInSelect();
+                    
+                    saveBtn?.addEventListener('click', () => {
+                        const name = nameInput.value.trim();
+                        if (name) {
+                            this.saveProfile(name);
+                            nameInput.value = '';
+                        }
+                    });
+                    
+                    loadBtn?.addEventListener('click', () => {
+                        const name = select.value;
+                        if (name) {
+                            this.loadProfile(name);
+                        }
+                    });
+                    
+                    deleteBtn?.addEventListener('click', () => {
+                        const name = select.value;
+                        if (name && confirm(`Confirmar exclusão de '${name}'?`)) {
+                            this.deleteProfile(name);
+                        }
+                    });
+                    
+                    // Export profile to JSON file
+                    exportBtn?.addEventListener('click', () => {
+                        const name = select.value;
+                        if (!name) {
+                            context.notifications?.warn('Selecione um perfil para exportar');
+                            return;
+                        }
+                        
+                        const profileData = this.exportProfile(name);
+                        if (!profileData) {
+                            context.notifications?.error('Perfil não encontrado');
+                            return;
+                        }
+                        
+                        // Create JSON blob and download
+                        const json = JSON.stringify(profileData, null, 2);
+                        const blob = new Blob([json], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `autods-profile-${name}-${Date.now()}.json`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        
+                        context.logger.info(`📤 Perfil '${name}' exportado para JSON`);
+                        context.notifications?.success(`Perfil '${name}' exportado!`);
+                    });
+                    
+                    // Import profile from JSON file
+                    importBtn?.addEventListener('click', () => {
+                        importFile?.click();
+                    });
+                    
+                    importFile?.addEventListener('change', (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            try {
+                                const profileData = JSON.parse(event.target.result);
+                                
+                                // Validate profile structure
+                                if (!profileData.data || !profileData.timestamp) {
+                                    context.notifications?.error('Arquivo de perfil inválido');
+                                    return;
+                                }
+                                
+                                // Ask for new profile name
+                                const newName = prompt('Nome para o perfil importado:', file.name.replace(/\.json$/, '').replace(/^autods-profile-/, ''));
+                                if (!newName) return;
+                                
+                                // Import profile
+                                this.importProfile(newName, profileData);
+                                
+                                // Update UI
+                                loadProfilesInSelect();
+                                select.value = newName;
+                                
+                                context.logger.info(`📥 Perfil '${newName}' importado de JSON`);
+                                context.notifications?.success(`Perfil '${newName}' importado com sucesso!`);
+                            } catch (err) {
+                                context.logger.error('Erro ao importar perfil:', err);
+                                context.notifications?.error(`Erro ao importar: ${err.message}`);
+                            }
+                        };
+                        reader.readAsText(file);
+                        
+                        // Reset input to allow re-importing the same file
+                        e.target.value = '';
+                    });
+                }, 50);
+            }
+        };
+    }
+
     function bootstrap() {
         const storage = createStorage({ namespace: STORAGE_NAMESPACE });
         const events = createEventBus();
@@ -22878,7 +20664,6 @@ Magus" rows="2"></textarea>
             http,
             notifications,
             // Phase 3 utilities
-            profiler: performanceProfiler
         };
         
         // Initialize Phase 3 Services (Battle stats, monster scanning, user session, number formatting)
@@ -22893,6 +20678,9 @@ Magus" rows="2"></textarea>
         // Initialize Damage Calculator services (Phase 1 - Data extraction & calculations)
         context.dataExtractor = createDataExtractorService(context);
         context.damageCalculator = createDamageCalculatorService(context);
+        
+        // Initialize Profile Manager (Phase 4)
+        context.profileManager = createProfileManager(context);
         
         // Expose services globally for console testing
         // Use unsafeWindow to ensure it's accessible in browser console
@@ -22909,27 +20697,22 @@ Magus" rows="2"></textarea>
         moduleRegistry.register(floatingHelpersModule);  // Floating helpers for potions and loot
         moduleRegistry.register(damageCalculatorModule);  // Damage calculator widget (stats/pets/inventory pages)
         moduleRegistry.register(attackUnlockerModule);  // Always active on battle pages
-        // moduleRegistry.register(autoJoinBattleModule);  // DEPRECATED v0.1.29 - replaced by directJoinButtonsModule
         moduleRegistry.register(directJoinButtonsModule);  // "Join Now" / "Fight Now" buttons (always visible)
         moduleRegistry.register(dungeonLootHelperModule);  // Loot buttons on dungeon locations
         moduleRegistry.register(collectionsOrganizerModule);  // Organize collections page (claimed at bottom)
         moduleRegistry.register(imageBlockModule);
-        moduleRegistry.register(ultraFastPvpModule);  // Ultra Fast PvP - fastest possible attacks via GM_xmlhttpRequest
-        moduleRegistry.register(pvpModule);  // PvP normal mode (fallback if ultra fast disabled)
+        moduleRegistry.register(pvpModule);  // PvP - Ultra Fast automation via API direct attacks
         moduleRegistry.register(waveUiModule);  // Wave UI enhancements (independent of automation)
         moduleRegistry.register(ultraFastAttackModule);  // Ultra Fast Attack - parallel batch operations
         moduleRegistry.register(ultraFastLootModule);  // Ultra Fast Loot - parallel loot collection
         moduleRegistry.register(ultraFastStaminaModule);  // Ultra Fast Stamina - parallel chapter reactions
         moduleRegistry.register(ultraFastDungeonModule);  // Ultra Fast Dungeon - smart damage dungeon farming
         moduleRegistry.register(specialBossFarmModule);  // Special Boss Farm - dedicated farm for General/King/Empress/Bastion
-        moduleRegistry.register(waveModule);
-        moduleRegistry.register(dungeonWaveModule);  // Dungeon location automation
+        moduleRegistry.register(ultraFastWaveModule);
         moduleRegistry.register(autoBossModule);  // AutoBoss - high-damage boss farming
-        moduleRegistry.register(battleModule);
-        // NOTE: farmingModule disabled in v0.8.0-alpha (farm section removed from config)
 
         moduleRegistry.initAll(context);
-        context.modulesCount = 19;  // Updated count (removed farmingModule)
+        context.modulesCount = 18;  // Updated count after removing duplicate PvP module
         
         // Auto-detect user ID from cookie and start monitoring (Phase 3 service)
         context.userSession.ensureUserId();

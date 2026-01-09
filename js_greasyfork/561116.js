@@ -23,8 +23,8 @@
     // Define all available themes
     const themes = {
         rainbow: {
-            name: '🌈 Rainbow',
-            icon: '⭐',
+            name: '🌈 Rainbow 1',
+            icon: '',
             background: `linear-gradient(90deg,
                 rgba(255, 0, 0, 0.3),
                 rgba(255, 165, 0, 0.3),
@@ -39,35 +39,48 @@
             textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
             iconAnimation: 'star-sparkle 1.5s infinite ease-in-out'
         },
+        neon: {
+            name: '⚡ Rainbow 2',
+            icon: '',
+            background: `linear-gradient(90deg,
+                rgba(0, 255, 255, 0.3),
+                rgba(255, 0, 255, 0.3),
+                rgba(255, 255, 0, 0.3),
+                rgba(0, 255, 255, 0.3))`,
+            animation: 'neon-pulse 2.5s ease-in-out infinite',
+            textColor: '#fff',
+            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
+            iconAnimation: 'neon-flicker 1s infinite ease-in-out'
+        },
         gold: {
             name: '💰 Gold Rush',
-            icon: '💎',
+            icon: '💰',
             background: `linear-gradient(135deg,
                 rgba(255, 215, 0, 0.4),
                 rgba(255, 193, 37, 0.4),
                 rgba(218, 165, 32, 0.4),
                 rgba(255, 215, 0, 0.4))`,
             animation: 'gold-shine 3s ease-in-out infinite',
-            textColor: '#000',
-            textShadow: '1px 1px 3px rgba(255, 215, 0, 0.8)',
+            textColor: '#fff',
+            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
             iconAnimation: 'gem-spin 2s linear infinite'
         },
         silver: {
-            name: '🥈 Silver Streak',
-            icon: '💫',
+            name: '🥈 Light Green',
+            icon: '',
             background: `linear-gradient(135deg,
                 rgba(192, 192, 192, 0.4),
                 rgba(211, 211, 211, 0.4),
                 rgba(169, 169, 169, 0.4),
                 rgba(192, 192, 192, 0.4))`,
             animation: 'silver-gleam 4s ease-in-out infinite',
-            textColor: '#000',
-            textShadow: '1px 1px 2px rgba(192, 192, 192, 0.8)',
+            textColor: '#fff',
+            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
             iconAnimation: 'star-twinkle 1.2s infinite ease-in-out'
         },
         celebrate: {
             name: '🎉 Celebrate',
-            icon: '🎊',
+            icon: '',
             background: `linear-gradient(45deg,
                 rgba(255, 20, 147, 0.4),
                 rgba(255, 105, 180, 0.4),
@@ -76,59 +89,46 @@
                 rgba(255, 20, 147, 0.4))`,
             animation: 'party-pulse 2s ease-in-out infinite',
             textColor: '#fff',
-            textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
+            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
             iconAnimation: 'party-bounce 0.8s infinite ease-in-out'
-        },
-        neon: {
-            name: '⚡ Neon Nights',
-            icon: '✨',
-            background: `linear-gradient(90deg,
-                rgba(0, 255, 255, 0.3),
-                rgba(255, 0, 255, 0.3),
-                rgba(255, 255, 0, 0.3),
-                rgba(0, 255, 255, 0.3))`,
-            animation: 'neon-pulse 2.5s ease-in-out infinite',
-            textColor: '#fff',
-            textShadow: '0 0 10px rgba(0, 255, 255, 0.8)',
-            iconAnimation: 'neon-flicker 1s infinite ease-in-out'
         },
         fire: {
             name: '🔥 Fire Storm',
-            icon: '🔥',
+            icon: '',
             background: `linear-gradient(0deg,
                 rgba(255, 0, 0, 0.4),
                 rgba(255, 69, 0, 0.4),
                 rgba(255, 140, 0, 0.4),
                 rgba(255, 215, 0, 0.4))`,
-            animation: 'fire-flicker 1.5s ease-in-out infinite',
+            animation: 'fire-flicker 3s ease-in-out infinite',
             textColor: '#fff',
-            textShadow: '0 0 8px rgba(255, 69, 0, 0.8)',
+            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
             iconAnimation: 'fire-dance 0.6s infinite ease-in-out'
         },
         ice: {
             name: '❄️ Ice Crystal',
-            icon: '❄️',
+            icon: '',
             background: `linear-gradient(135deg,
                 rgba(173, 216, 230, 0.4),
                 rgba(176, 224, 230, 0.4),
                 rgba(135, 206, 250, 0.4),
                 rgba(173, 216, 230, 0.4))`,
             animation: 'ice-shimmer 3s ease-in-out infinite',
-            textColor: '#000',
-            textShadow: '1px 1px 3px rgba(173, 216, 230, 0.8)',
+           textColor: '#78AAFF',
+            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
             iconAnimation: 'ice-rotate 4s linear infinite'
         },
         stealth: {
-            name: '🌑 Stealth Mode',
-            icon: '👁️',
+            name: '🌑 Neon Camo',
+            icon: '',
             background: `linear-gradient(135deg,
                 rgba(40, 40, 40, 0.6),
                 rgba(60, 60, 60, 0.6),
                 rgba(30, 30, 30, 0.6),
                 rgba(40, 40, 40, 0.6))`,
             animation: 'stealth-fade 3s ease-in-out infinite',
-            textColor: '#0f0',
-            textShadow: '0 0 5px rgba(0, 255, 0, 0.5)',
+            textColor: '#0AF019',
+            textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
             iconAnimation: 'eye-blink 3s infinite ease-in-out'
         }
     };
@@ -232,9 +232,9 @@
         }
 
         .dollar-icon {
-            position: absolute !important;
-            right: 10px !important;
-            top: 10px !important;
+            position: fixed;
+            right: 10px;
+            top: 10px;
             font-size: 20px !important;
             pointer-events: none !important;
             z-index: 15 !important;
@@ -290,21 +290,21 @@
         }
 
         .theme-option.active {
-            background: #0a0;
-            border-color: #0f0;
+            background: #2741A1;
+            border-color: #163EDB;
             font-weight: bold;
         }
 
         #toggle-menu {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 55px;
+            right: 5px;
             background: linear-gradient(135deg, #4a4a4a, #5a5a5a, #4a4a4a);
-            color: #8B7500;
+            color: #BA9C00;
             border: 2px solid #666;
             border-radius: 50%;
-            width: 55px;
-            height: 55px;
+            width: 44px;
+            height: 44px;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;

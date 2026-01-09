@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name               LANraragi 推荐栏
 // @namespace     https://github.com/Kelcoin
-// @version            1.2
+// @version            1.3
 // @description     基于标签为 LANraragi 阅读器下方推荐区：猜你喜欢 & 同作者
 // @author             Kelcoin
 // @match              *://*/reader?id=*
@@ -34,21 +34,50 @@
         // 如果 likeNamespaces 里一个都没有，就退而求其次
         likeFallbackNamespaces: ['character', 'parody'],
 
-        // 高权重标签：命中这些标签会获得更高的权重分数 (原 HIGH_WEIGHT_TAGS)
-        highWeightTags: [
-            'female:netorare', 'female:mind control', 'female:corruption',
-            'female:tomboy', 'female:big breast', 'female:swimsuit',
-            'female:pantyhose', 'female:stockings', 'female:lolicon',
-            'female:harem', 'female:futanari', 'female:anal',
-            'female:public use', 'female:bbw', 'female:yuri',
-            'female:anal intercourse', 'female:paizuri', 'female:dark skin',
-            'female:huge breasts', 'female:dickgirl on female', 'female:hairy',
-            'male:netorare', 'male:tomgirl', 'male:harem',
-            'male:shotacon', 'male:gender change', 'male:virginity',
-            'mixed:incest', 'mixed:group'
-        ],
+        // 自定义权重 可自行按照偏好新增和修改
+        customhWeightTags: {
+            'female:netorare': 5,
+            'female:mind control': 3,
+            'female:corruption': 3,
+            'female:tomboy': 5,
+            'female:big breast': 2,
+            'female:pantyhose': 2,
+            'female:stockings': 2,
+            'female:lolicon': 5,
+            'female:harem': 5,
+            'female:futanari': 5,
+            'female:anal': 3,
+            'female:public use': 5,
+            'female:bbw': 5,
+            'female:yuri': 5,
+            'female:anal intercourse': 3,
+            'female:paizuri': 2,
+            'female:dark skin': 2,
+            'female:huge breasts': 3,
+            'female:dickgirl on female': 3,
+            'female:hairy': 3,
+            'male:netorare': 5,
+            'male:tomgirl': 5,
+            'male:harem': 5,
+            'male:shotacon': 2,
+            'male:gender change': 5,
+            'male:virginity': 2,
+            'mixed:incest': 5,
+            'mixed:group': 2,
+            'parody:': 2,
+            'character:': 2,
+            'cosplayer:': 3,
+            'group:': 0.1,
+            'artist:': 0.1,
+            'category:': 0.1,
+            'language:': 0,
+            'uploader:': 0,
+            'timestamp:': 0,
+            'source:': 0,
+            'dateadded:': 0
+        },
 
-        // 推荐缓存时间（毫秒），默认 24 小时
+        // 缓存时间（毫秒），默认 24 小时
         cacheExpiry: 24 * 60 * 60 * 1000,
 
         // Search API 基础路径（相对当前站点）
@@ -63,6 +92,32 @@
     // ==========================================
     const style = document.createElement('style');
         style.textContent = `
+        .lrr-rec-progress {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.65);
+            padding: 2px 6px;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+            z-index: 2;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            pointer-events: none;
+        }
+
+        .lrr-rec-progress.prog-new {
+            background: rgba(46, 204, 113, 0.85); /* Green */
+            color: #fff;
+        }
+
+        .lrr-rec-progress.prog-end {
+            background: rgba(52, 73, 94, 0.85); /* Dark Blue/Gray */
+            color: #bdc3c7;
+        }
+
         #lrr-rec-app-wrapper {
             width: 100%;
             margin: 24px 0 0 0;
@@ -342,22 +397,6 @@
         }
     }
 
-    // --- 高权重标签表 ---
-    // 在相似度判定时，命中这些标签会获得更高的权重分数
-    // 你可以在这里添加你认为更能决定相似度的标签（如特定角色、特定play等）
-    const HIGH_WEIGHT_TAGS = new Set([
-        'female:netorare', 'female:mind control', 'female:corruption',
-        'female:tomboy', 'female:big breast', 'female:swimsuit',
-        'female:pantyhose', 'female:stockings', 'female:lolicon',
-        'female:harem', 'female:futanari', 'female:anal',
-        'female:public use', 'female:bbw', 'female:yuri',
-        'female:anal intercourse', 'female:paizuri', 'female:dark skin',
-        'female:huge breasts', 'female:dickgirl on female', 'female:hairy',
-        'male:netorare', 'male:tomgirl', 'male:harem',
-        'male:shotacon', 'male:gender change', 'male:virginity',
-        'mixed:incest', 'mixed:group'
-    ]);
-
     // 从 DOM 获取当前归档标签 + 显示文本
     function getCurrentArchiveTags() {
         const tagElements = document.querySelectorAll('#tagContainer .gt a');
@@ -478,27 +517,57 @@
     }
 
     // --- 相似度计算函数 ---
-    function calculateArchiveSimilarity(sourceTagsLower, candidateTagsStr, highWeightSet) {
-        if (!candidateTagsStr) return 0;
+    function calculateArchiveSimilarity(sourceTagsLower, archive, customWeightMap) {
+        const tagsStr = archive.tags;
+        if (!tagsStr) return 0;
 
-        const candidateTags = candidateTagsStr.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+        const candidateTags = tagsStr.split(',');
+        const len = candidateTags.length;
+
         let totalScore = 0;
 
-        candidateTags.forEach(tag => {
+        const hasWeightMap = !!customWeightMap;
+
+        for (let i = 0; i < len; i++) {
+            const rawTag = candidateTags[i];
+            if (!rawTag) continue;
+
+            const tag = rawTag.trim().toLowerCase();
+            if (!tag) continue;
+
             if (sourceTagsLower.has(tag)) {
-                // 1. 计算原始得分
-                let rawPoints = 1; // 基础分
-                if (highWeightSet && highWeightSet.has(tag)) {
-                    rawPoints += 3; // 高权重额外加分
+                let rawPoints = 1;
+
+                if (hasWeightMap) {
+                    const exactWeight = customWeightMap[tag];
+
+                    if (exactWeight !== undefined) {
+                        rawPoints = exactWeight;
+                    } else {
+                        const colonIndex = tag.indexOf(':');
+                        if (colonIndex > 0) {
+                            const namespaceKey = tag.slice(0, colonIndex + 1);
+                            const nsWeight = customWeightMap[namespaceKey];
+
+                            if (nsWeight !== undefined) {
+                                rawPoints = nsWeight;
+                            }
+                        }
+                    }
                 }
 
-                // 2. 生成随机系数 (0.85 ~ 1.15)
-                const randomFactor = 0.85 + (Math.random() * 0.3);
-
-                // 3. 累加经随机浮动处理后的分数
-                totalScore += rawPoints * randomFactor;
+                totalScore += rawPoints * (0.8 + Math.random() * 0.4);
             }
-        });
+        }
+
+        if (totalScore === 0) return 0;
+
+        const pagecount = +archive.pagecount;
+        const progress = +archive.progress;
+
+        if (pagecount > 0 && progress >= pagecount) {
+            totalScore *= 0.5;
+        }
 
         return totalScore;
     }
@@ -611,7 +680,7 @@
 
         if (picked.length === 0) return '';
 
-        // 排布优化：长标签优先，便于“下行更满”
+        // 长标签优先，便于“下行更满”
         picked.sort((a, b) => b.length - a.length);
 
         // —— 分成最多两行 —— //
@@ -688,11 +757,25 @@
             matchedSet || new Set()
         );
 
+        // 阅读进度显示逻辑
+        const pagecount = parseInt(archive.pagecount, 10) || 0;
+        const progress = parseInt(archive.progress, 10) || 0;
+        let progressHtml = '';
+
+        if (progress === 0) {
+            progressHtml = `<span class="lrr-rec-progress prog-new">未读</span>`;
+        } else if (pagecount > 0 && progress >= pagecount) {
+            progressHtml = `<span class="lrr-rec-progress prog-end">已读</span>`;
+        } else if (pagecount > 0) {
+            progressHtml = `<span class="lrr-rec-progress">${progress}/${pagecount}</span>`;
+        }
+
         return `
     <div class="lrr-rec-card" data-arcid="${id}">
         <a href="${readerUrl}" title="${title}">
             <div class="lrr-rec-thumb">
                 <img src="${thumbUrl}" loading="lazy" alt="" class="lrr-rec-thumb-img" onerror="this.removeAttribute('onerror'); this.src='/img/no_thumb.png';">
+                ${progressHtml}
                 <div class="lrr-rec-tags">
                     ${tagsHtml}
                 </div>
@@ -777,20 +860,8 @@
                 viewArtist.classList.remove('lrr-rec-view-hidden');
             }
         };
-        btnSim.onclick = () => switchTab('sim');
-        btnArtist.onclick = () => switchTab('artist');
 
-        const enableHorizontalScroll = (el) => {
-            el.addEventListener('wheel', (evt) => {
-                if (evt.deltaY !== 0) {
-                    evt.preventDefault();
-                    el.scrollLeft += evt.deltaY;
-                }
-            }, { passive: false });
-        };
-        enableHorizontalScroll(viewSim);
-        enableHorizontalScroll(viewArtist);
-
+        // --- 点击标签时若面板收起则自动展开 ---
         const togglePanel = () => {
             const isCollapsed = container.classList.contains('collapsed');
             if (isCollapsed) {
@@ -803,6 +874,42 @@
                 container.style.maxHeight = '';
             }
         };
+
+        // 点击 Tab 按钮逻辑：
+        btnSim.onclick = () => {
+            const isCollapsed = container.classList.contains('collapsed');
+            const isActive = btnSim.classList.contains('active');
+
+            if (!isCollapsed && isActive) {
+                togglePanel(); // 收起
+            } else {
+                if (isCollapsed) togglePanel(); // 展开
+                switchTab('sim');
+            }
+        };
+
+        btnArtist.onclick = () => {
+            const isCollapsed = container.classList.contains('collapsed');
+            const isActive = btnArtist.classList.contains('active');
+
+            if (!isCollapsed && isActive) {
+                togglePanel(); // 收起
+            } else {
+                if (isCollapsed) togglePanel(); // 展开
+                switchTab('artist');
+            }
+        };
+
+        const enableHorizontalScroll = (el) => {
+            el.addEventListener('wheel', (evt) => {
+                if (evt.deltaY !== 0) {
+                    evt.preventDefault();
+                    el.scrollLeft += evt.deltaY;
+                }
+            }, { passive: false });
+        };
+        enableHorizontalScroll(viewSim);
+        enableHorizontalScroll(viewArtist);
 
         headerBar.addEventListener('click', (e) => {
             if (e.target.closest('.lrr-rec-tab-btn')) return;
@@ -818,8 +925,8 @@
         const sourceCategoryLower = sourceData.categoriesLower;
         const sourceDisplayTextMap = sourceData.displayTextMap;
 
-        // 将 Config 中的高权重标签转为 Set，提升查找性能
-        const highWeightSet = new Set(CONFIG.highWeightTags || []);
+        // 获取 Config 中的自定义权重标签对象 (Map结构)
+        const customWeightMap = CONFIG.customhWeightTags || {};
 
         logDebug('Current tags:', sourceData);
 
@@ -837,7 +944,7 @@
         let remainingTotal = CONFIG.totalLimit;
 
         // ==========================================
-        // 核心构建逻辑 (修改为返回数据而非直接操作 DOM，以便缓存)
+        // 核心构建逻辑
         // ==========================================
 
         async function buildYouMayLikeData() {
@@ -876,6 +983,7 @@
             if (!queryTags || queryTags.length === 0) return [];
 
             const allResultsMap = new Map();
+            // 需要获取 pagecount 和 progress，API 默认已返回
             for (const tag of queryTags) {
                 const filter = `${tag}$`;
                 const data = await searchArchives(filter);
@@ -888,9 +996,9 @@
             let allResults = Array.from(allResultsMap.values());
             if (allResults.length === 0) return [];
 
-            // 计算相似度 (传入 highWeightSet)
+            // 计算相似度，传入整个 arc 对象(含阅读进度) 以及 customWeightMap(自定义权重)
             allResults.forEach(arc => {
-                arc._simScore = calculateArchiveSimilarity(sourceTagsLower, arc.tags || '', highWeightSet);
+                arc._simScore = calculateArchiveSimilarity(sourceTagsLower, arc, customWeightMap);
             });
 
             const sameCategory = [];
@@ -1037,8 +1145,7 @@
             if (CONFIG.autoExpand) {
                 if (container.classList.contains('collapsed')) {
                     container.classList.remove('collapsed');
-                    // 优先显示同作者（如果有），否则显示猜你喜欢 (根据逻辑需求调整，此处保持优先 Sim，除非用户点击)
-                    // 如果你想让同作者有数据时优先切过去，可以在这里判断。目前逻辑保持默认 Sim。
+                    // 优先显示同作者
                     const activeTarget = btnArtist.classList.contains('active') ? 'artist' : 'sim';
                     switchTab(activeTarget);
                     container.style.maxHeight = '';

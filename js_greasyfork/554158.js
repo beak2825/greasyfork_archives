@@ -1,15 +1,16 @@
 // ==UserScript==
 // @name         精斗云全能助手
 // @namespace    http://tampermonkey.net/
-// @version      3.3
-// @description  自动登录、自动点击提示弹窗、增强多账套页面功能（防卡版）
+// @version      3.8.1
+// @description  自动登录、自动点击提示弹窗、增强多账套页面功能（防卡版）+ 空单元格标红 + 去公司前缀
 // @author       YUE
 // @icon         https://vip1-hz.jdy.com/favicon.ico
 // @match        https://www.jdy.com/login*
 // @match        *://service.jdy.com/*
 // @match        https://*.jdy.com/mulAcct/*
 // @match        https://vip*.jdy.com/*
-// @grant        none
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @run-at       document-end
 // @downloadURL https://update.greasyfork.org/scripts/554158/%E7%B2%BE%E6%96%97%E4%BA%91%E5%85%A8%E8%83%BD%E5%8A%A9%E6%89%8B.user.js
 // @updateURL https://update.greasyfork.org/scripts/554158/%E7%B2%BE%E6%96%97%E4%BA%91%E5%85%A8%E8%83%BD%E5%8A%A9%E6%89%8B.meta.js
@@ -19,23 +20,14 @@
     'use strict';
     const url = location.href;
 
-    // ========== 小提示泡泡 ==========
+    // ========== 公共工具函数：小提示泡泡 ==========
     function showStatus(text, color = '#409EFF') {
         const tip = document.createElement('div');
         tip.textContent = text;
         Object.assign(tip.style, {
-            position: 'fixed',
-            top: '10px',
-            right: '10px',
-            background: color,
-            color: '#fff',
-            padding: '5px 10px',
-            borderRadius: '6px',
-            fontSize: '14px',
-            fontWeight: 'bold',
-            zIndex: 999999,
-            boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-            transition: 'opacity 1s',
+            position: 'fixed', top: '10px', right: '10px', background: color, color: '#fff',
+            padding: '5px 10px', borderRadius: '6px', fontSize: '14px', fontWeight: 'bold',
+            zIndex: 999999, boxShadow: '0 2px 6px rgba(0,0,0,0.2)', transition: 'opacity 1s',
         });
         document.body.appendChild(tip);
         setTimeout(() => tip.style.opacity = '0', 4000);
@@ -46,183 +38,381 @@
     // 模块一：自动登录（登录页）
     // ======================================================
     if (url.includes("https://www.jdy.com/login")) {
-        showStatus('精斗云自动登录模块已启用', '#2ecc71');
         console.log("🔐【模块一】自动登录启动");
-
-        const yourUsername = "13088860223"; // 👈 账号
-        const yourPassword = "Kq123456.";   // 👈 密码
-        const clickDelay = 800;              // 延迟点击登录(ms)
+        const storedUser = GM_getValue('jdy_username', '');
+        const storedPass = GM_getValue('jdy_password', '');
+        const clickDelay = 800;
 
         window.addEventListener('load', function() {
             const usernameInput = document.getElementById('login_username');
             const passwordInput = document.getElementById('login_pwd');
             const agreementCheckbox = document.getElementById('reg_agreement');
-            const loginBtnActive = document.getElementById('login_btn');
-            const loginBtnGray = document.getElementById('login_btn_gray');
-            if (!usernameInput || !passwordInput || !agreementCheckbox || (!loginBtnActive && !loginBtnGray)) return;
+            const loginBtns = [document.getElementById('login_btn'), document.getElementById('login_btn_gray')];
 
-            usernameInput.value = yourUsername;
-            passwordInput.value = yourPassword;
-            usernameInput.dispatchEvent(new Event('input', { bubbles: true }));
-            passwordInput.dispatchEvent(new Event('input', { bubbles: true }));
-            passwordInput.focus(); passwordInput.blur();
-            if (!agreementCheckbox.checked) agreementCheckbox.click();
-            console.log("✅ 已填写账号密码并勾选协议");
-
-            setTimeout(() => {
-                let btn = document.getElementById('login_btn') || document.getElementById('login_btn_gray');
-                if (btn && btn.offsetParent !== null) {
-                    btn.click();
-                    console.log("🚀 已点击登录按钮");
+            loginBtns.forEach(btn => {
+                if(btn) {
+                    btn.addEventListener('mousedown', () => {
+                        if(usernameInput.value && passwordInput.value) {
+                            GM_setValue('jdy_username', usernameInput.value);
+                            GM_setValue('jdy_password', passwordInput.value);
+                        }
+                    });
                 }
-            }, clickDelay);
+            });
+
+            if (!usernameInput || !passwordInput || !agreementCheckbox) return;
+
+            if (storedUser && storedPass) {
+                showStatus('正在自动登录...', '#2ecc71');
+                usernameInput.value = storedUser;
+                passwordInput.value = storedPass;
+                usernameInput.dispatchEvent(new Event('input', { bubbles: true }));
+                passwordInput.dispatchEvent(new Event('input', { bubbles: true }));
+                passwordInput.focus(); passwordInput.blur();
+                if (!agreementCheckbox.checked) agreementCheckbox.click();
+                setTimeout(() => {
+                    let btn = document.getElementById('login_btn') || document.getElementById('login_btn_gray');
+                    if (btn && btn.offsetParent !== null) btn.click();
+                }, clickDelay);
+            }
         });
     }
 
     // ======================================================
-    // 模块二：自动点击“确定”和“进入使用”（工作台）
+    // 模块二：自动点击“确定”和“进入使用”
     // ======================================================
     else if (url.includes("service.jdy.com")) {
-        showStatus('金蝶工作台弹窗自动点击已启用', '#e67e22');
-        console.log("🪄【模块二】自动点击模块启动");
-
         setInterval(() => {
             const okBtn = document.querySelector('button.kd-btn-primary span');
-            if (okBtn && okBtn.textContent.includes('确定')) {
-                okBtn.click();
-                console.log('✅ 已自动点击「确定」按钮');
-            }
+            if (okBtn && okBtn.textContent.includes('确定')) okBtn.click();
             const enterBtn = document.querySelector('button.serviceStartStatus__Zssvi span');
-            if (enterBtn && enterBtn.textContent.includes('进入使用')) {
-                enterBtn.click();
-                console.log('✅ 已自动点击「进入使用」按钮');
-            }
+            if (enterBtn && enterBtn.textContent.includes('进入使用')) enterBtn.click();
         }, 1000);
     }
 
     // ======================================================
-    // 模块三：多账套增强（高亮 + 排序 + 屏蔽）
+    // 模块三：多账套增强
     // ======================================================
-    else if (/https:\/\/.*\.jdy\.com\/mulAcct\//.test(url) || /https:\/\/vip.*\.jdy\.com\//.test(url)) {
-        showStatus('多账套增强模块已启用', '#3498db');
-        console.log("📦【模块三】多账套增强模块启动（防卡版）");
+    if (/https:\/\/.*\.jdy\.com\/mulAcct\//.test(url) || /https:\/\/vip.*\.jdy\.com\//.test(url)) {
+        if (!window.hasMulAcctLoaded) {
+            window.hasMulAcctLoaded = true;
+            const style = document.createElement('style');
+            style.textContent = `
+                .customerbox_li.expired .innerWrap { box-shadow:0 0 8px rgba(0,0,0,.2)!important;border-radius:4px; }
+                .customerbox_li.expired .innerWrap .df { color:#000!important;font-weight:bold; }
+                .customerbox_li .company-name { color:#db2d55!important;font-weight:normal!important; }
+                .priority-tag { margin-left:6px;padding:1px 4px;border-radius:4px;font-size:12px;font-weight:bold;color:#fff; }
+                .priority-high { background:#e74c3c; }
+                .priority-mid { background:#f39c12; }
+                .priority-low { background:#7f8c8d; }
+                .glyphicon.glyphicon-pencil.edit, .glyphicon.glyphicon-paperclip, .customerbox_li.row.add, .customerbox_li.blocked { display:none !important; }
+            `;
+            document.head.appendChild(style);
 
-        const style = document.createElement('style');
-        style.textContent = `
-            .customerbox_li.expired .innerWrap { box-shadow:0 0 8px rgba(0,0,0,.2)!important;border-radius:4px; }
-            .customerbox_li.expired .innerWrap .df { color:#000!important;font-weight:bold; }
-            .customerbox_li .company-name { color:#db2d55!important;font-weight:normal!important; }
-            .priority-tag { margin-left:6px;padding:1px 4px;border-radius:4px;font-size:12px;font-weight:bold;color:#fff; }
-            .priority-high { background:#e74c3c; }
-            .priority-mid { background:#f39c12; }
-            .priority-low { background:#7f8c8d; }
-            .glyphicon.glyphicon-pencil.edit,
-            .glyphicon.glyphicon-paperclip,
-            .customerbox_li.row.add { display:none !important; }
-            .customerbox_li.blocked { display:none !important; }
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth() + 1;
+            const priorityMap = {
+                "高": ["深圳老友福合康管理有限公司"],
+                "中": ["深圳市福田区园岭街道老有福居家养老服务站", "广东好尔美康颐智能科技有限公司", "深圳市美伦堡实业发展有限公司", "深圳市星河优拓科技有限公司"],
+                "低": ["深圳市艾理森投资有限公司", "深圳市麻雀云食餐饮科技有限公司", "深圳市一手餐饮管理有限公司", "深圳市崇升投资有限公司", "深圳市福凯成供应链有限公司", "深圳宏福堂中医综合诊所", "深圳市嘉盛投资有限公司", "深圳市福田区麻小雀社区盒饭餐饮店（个体工商户）", "深圳市天天过年智慧新零售有限公司", "深圳行多多旅游有限公司", "深圳联合航空有限公司", "深圳老友福适老家居有限公司", "深圳市利兹堡健康管理有限公司", "深圳星耀传媒文化有限公司", "深圳市元智源味餐饮管理有限公司"]
+            };
+            const blockedCompanies = ["深圳市天天过年智慧新零售有限公司","深圳市福田区麻小雀社区盒饭餐饮店（个体工商户）", "深圳市艾理森投资有限公司", "深圳市美伦堡实业发展有限公司", "深圳星耀传媒文化有限公司"];
+            
+            function getPriority(name) {
+                if (priorityMap["高"].includes(name)) return 1;
+                if (priorityMap["中"].includes(name)) return 2;
+                if (priorityMap["低"].includes(name)) return 3;
+                return 4;
+            }
+            function createPriorityTag(level) {
+                const span = document.createElement("span");
+                span.classList.add("priority-tag");
+                if (level === 1) { span.textContent = "[高]"; span.classList.add("priority-high"); }
+                else if (level === 2) { span.textContent = "[中]"; span.classList.add("priority-mid"); }
+                else if (level === 3) { span.textContent = "[低]"; span.classList.add("priority-low"); }
+                else return null;
+                return span;
+            }
+            function getDynamicColor(year, month) {
+                const currentDate = currentYear * 12 + currentMonth;
+                const accountDate = year * 12 + month;
+                const diff = accountDate - currentDate;
+                if (diff >= 0) return '#ffffff';
+                if (year !== currentYear) {
+                    const opacity = Math.min(0.1 + Math.abs(diff) * 0.05, 0.8);
+                    return `rgba(100,100,255,${opacity})`;
+                } else {
+                    const opacity = Math.min(0.1 + Math.abs(diff) * 0.1, 0.8);
+                    return `rgba(255,100,100,${opacity})`;
+                }
+            }
+            function parsePeriod(acc) {
+                const el = acc.querySelector('.df');
+                if (!el) return 999999;
+                const match = el.textContent.trim().match(/会计期间：(\d{4})-(\d{1,2})/);
+                if (!match) return 999999;
+                return parseInt(match[1], 10) * 12 + parseInt(match[2], 10);
+            }
+            let isProcessing = false;
+            let lastRun = 0;
+            function processAccounts() {
+                const now = Date.now();
+                if (isProcessing || now - lastRun < 1500) return;
+                isProcessing = true;
+                lastRun = now;
+                const accounts = document.querySelectorAll('.customerbox_li:not(.add)');
+                accounts.forEach(acc => {
+                    const nameEl = acc.querySelector('.companyName');
+                    if (!nameEl) return;
+                    const name = nameEl.textContent.trim();
+                    if (blockedCompanies.includes(name)) { acc.classList.add('blocked'); return; }
+                    nameEl.classList.add('company-name');
+                    if (!nameEl.nextElementSibling?.classList.contains("priority-tag")) {
+                        const tag = createPriorityTag(getPriority(name));
+                        if (tag) nameEl.after(tag);
+                    }
+                    const match = acc.querySelector('.df')?.textContent.match(/会计期间：(\d{4})-(\d{1,2})/);
+                    if (match) {
+                        const color = getDynamicColor(+match[1], +match[2]);
+                        const wrap = acc.querySelector('.innerWrap');
+                        if (wrap) { acc.classList.add('expired'); wrap.style.backgroundColor = color; }
+                    }
+                });
+                const container = document.querySelector('.customerbox');
+                if (container) {
+                    const sorted = Array.from(container.querySelectorAll('.customerbox_li:not(.add):not(.blocked)')).sort((a,b)=>{
+                        const nameA = a.querySelector('.companyName')?.textContent.trim() || "";
+                        const nameB = b.querySelector('.companyName')?.textContent.trim() || "";
+                        const priA = getPriority(nameA), priB = getPriority(nameB);
+                        if (priA !== priB) return priA - priB;
+                        return parsePeriod(a) - parsePeriod(b);
+                    });
+                    sorted.forEach(el => container.appendChild(el));
+                }
+                isProcessing = false;
+            }
+            const listContainer = document.querySelector('.customerbox');
+            if (listContainer) {
+                const observer = new MutationObserver(() => processAccounts());
+                observer.observe(listContainer, { childList: true, subtree: true });
+            }
+            setTimeout(processAccounts, 1500);
+        }
+    }
+
+    // ======================================================
+    // 模块四：空单元格标红（增强版 + 静默模式）
+    // ======================================================
+    function highlightEmptyCells() {
+        try {
+            const highlightedCells = new Set();
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                try {
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    processDocument(doc, highlightedCells);
+                } catch (e) {}
+            });
+            processDocument(document, highlightedCells);
+            if (highlightedCells.size > 0) console.log(`✅ 空单元格标红：${highlightedCells.size} 个`);
+        } catch (e) {}
+    }
+
+    function processDocument(doc, highlightedCells) {
+        const rows = doc.querySelectorAll('[role="row"]');
+        if (rows.length === 0) return;
+        rows.forEach(row => {
+            const explanationCell = row.querySelector('div[col-id="explanation"].ag-cell-value');
+            if (explanationCell && (explanationCell.textContent.trim() === '期初余额' || explanationCell.textContent.trim() === '合计')) return;
+            const accountCell = row.querySelector('div[col-id="accountId"].ag-cell-value');
+            if (!accountCell) return;
+            const isEmpty = accountCell.textContent.trim() === '' && accountCell.innerHTML.trim() === '';
+            if (isEmpty) {
+                accountCell.style.backgroundColor = '#ffcccc';
+                accountCell.style.color = '#d32f2f';
+                accountCell.title = '账户对方科目为空';
+                highlightedCells.add(accountCell);
+            } else {
+                accountCell.style.backgroundColor = '';
+                accountCell.style.color = '';
+                accountCell.title = '';
+            }
+        });
+    }
+
+    function initHighlightEnhanced() {
+        setTimeout(highlightEmptyCells, 6000);
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) setTimeout(highlightEmptyCells, 500);
+        });
+        const observer = new MutationObserver(function() { highlightEmptyCells(); });
+        observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+        setInterval(highlightEmptyCells, 3000);
+    }
+
+    // ======================================================
+    // 模块五：点击展开后 - 隐藏账套ID + 移除公司名称前缀
+    // ======================================================
+    function removeCompanyPrefixes() {
+        try {
+            const prefixRegex = /^[A-Za-z0-9]+\s+/;
+            const companyNameEls = document.querySelectorAll('.ellipsis');
+            companyNameEls.forEach(el => {
+                const originalText = el.textContent.trim();
+                if (prefixRegex.test(originalText)) el.textContent = originalText.replace(prefixRegex, '');
+            });
+        } catch (e) {}
+    }
+
+    function hideAccountIdElements() {
+        try {
+            document.querySelectorAll('.accountItemNum--3AkC5').forEach(el => {
+                if (el.style.display !== 'none') el.style.display = 'none';
+            });
+        } catch (e) {}
+    }
+
+    function handleAccountItems() {
+        hideAccountIdElements();
+        removeCompanyPrefixes();
+    }
+
+    function monitorArrowClicks() {
+        document.addEventListener('click', function(e) {
+            const targetArrow = e.target.closest('.iconArrow--3kCFm');
+            if (targetArrow) setTimeout(handleAccountItems, 300);
+        });
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                const activeArrows = document.querySelectorAll('.iconArrow--3kCFm.active--2XJET');
+                if (activeArrows.length > 0) handleAccountItems();
+            });
+        });
+        observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+        setInterval(handleAccountItems, 1000);
+    }
+
+    // ======================================================
+    // 模块六（最终方案）：居中弹窗式账号配置
+    // ======================================================
+    function initConfigButton() {
+        // 创建弹窗样式
+        const modalCss = `
+            #jdy_modal_overlay {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.5); z-index: 999999;
+                display: none; justify-content: center; align-items: center;
+            }
+            #jdy_modal_content {
+                background: #fff; width: 320px; padding: 20px;
+                border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            }
+            #jdy_modal_title { font-size: 16px; font-weight: bold; margin-bottom: 20px; color: #303133; }
+            #jdy_modal_content label { display: block; margin-bottom: 8px; font-size: 13px; color: #606266; }
+            #jdy_modal_content input {
+                width: 100%; height: 36px; line-height: 36px; box-sizing: border-box;
+                border: 1px solid #dcdfe6; border-radius: 4px; padding: 0 10px;
+                margin-bottom: 15px; outline: none; font-size: 14px;
+            }
+            #jdy_modal_content input:focus { border-color: #409eff; }
+            .jdy_modal_btns { text-align: right; margin-top: 10px; }
+            .jdy_modal_btn {
+                padding: 8px 15px; border-radius: 3px; cursor: pointer; border: none; font-size: 13px; margin-left: 10px;
+            }
+            .btn-cancel { background: #f4f4f5; color: #909399; }
+            .btn-save { background: #409eff; color: #fff; }
+            .btn-save:hover { background: #66b1ff; }
         `;
+        const style = document.createElement('style');
+        style.textContent = modalCss;
         document.head.appendChild(style);
 
-        const now = new Date();
-        const currentYear = now.getFullYear();
-        const currentMonth = now.getMonth() + 1;
+        // 创建弹窗 HTML
+        const modalHtml = `
+            <div id="jdy_modal_overlay">
+                <div id="jdy_modal_content">
+                    <div id="jdy_modal_title">配置自动登录</div>
+                    <label>账号</label>
+                    <input type="text" id="jdy_modal_user" placeholder="请输入登录账号">
+                    <label>密码</label>
+                    <input type="password" id="jdy_modal_pass" placeholder="●●●●●●">
+                    <div class="jdy_modal_btns">
+                        <button class="jdy_modal_btn btn-cancel" id="jdy_modal_close">取消</button>
+                        <button class="jdy_modal_btn btn-save" id="jdy_modal_save">保存</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-        const priorityMap = {
-            "高": ["深圳老友福合康管理有限公司"],
-            "中": ["深圳市福田区园岭街道老有福居家养老服务站", "广东好尔美康颐智能科技有限公司", "深圳市美伦堡实业发展有限公司", "深圳市星河优拓科技有限公司"],
-            "低": ["深圳市艾理森投资有限公司", "深圳市麻雀云食餐饮科技有限公司", "深圳市一手餐饮管理有限公司", "深圳市崇升投资有限公司", "深圳市福凯成供应链有限公司", "深圳宏福堂中医综合诊所", "深圳市嘉盛投资有限公司", "深圳市福田区麻小雀社区盒饭餐饮店（个体工商户）", "深圳市天天过年智慧新零售有限公司", "深圳行多多旅游有限公司", "深圳联合航空有限公司", "深圳老友福适老家居有限公司", "深圳市利兹堡健康管理有限公司", "深圳星耀传媒文化有限公司", "深圳市元智源味餐饮管理有限公司"]
+        const addBtn = () => {
+            if (document.getElementById('jdy_helper_config_btn')) return;
+
+            const rightContent = document.querySelector('.contentRight--2qRsL');
+            if (rightContent) {
+                // 1. 创建按钮容器
+                const container = document.createElement('div');
+                container.id = 'jdy_helper_config_btn';
+                container.className = 'headerLinkBtn--3YfZE';
+                // 强制样式：保持你的5格距离
+                container.style.cssText = `
+                    display: inline-flex !important; align-items: center !important; height: 100% !important;
+                    margin-left: 20px !important; margin-right: 15px !important; cursor: pointer !important;
+                `;
+                container.innerHTML = '⚙️ 账号配置';
+
+                // 2. 点击触发弹窗
+                container.onclick = (e) => {
+                    e.stopPropagation();
+                    const overlay = document.getElementById('jdy_modal_overlay');
+                    if (overlay) {
+                        overlay.style.display = 'flex'; // 显示弹窗
+                        // 填充数据
+                        document.getElementById('jdy_modal_user').value = GM_getValue('jdy_username', '');
+                        document.getElementById('jdy_modal_pass').value = GM_getValue('jdy_password', '');
+                    }
+                };
+
+                // 插入按钮
+                rightContent.insertBefore(container, rightContent.firstChild);
+            }
         };
-        const blockedCompanies = ["深圳市天天过年智慧新零售有限公司","深圳市福田区麻小雀社区盒饭餐饮店（个体工商户）", "深圳市艾理森投资有限公司", "深圳市美伦堡实业发展有限公司", "深圳星耀传媒文化有限公司"];
 
-        function getPriority(name) {
-            if (priorityMap["高"].includes(name)) return 1;
-            if (priorityMap["中"].includes(name)) return 2;
-            if (priorityMap["低"].includes(name)) return 3;
-            return 4;
-        }
+        // 绑定弹窗内部按钮事件
+        setTimeout(() => {
+            const overlay = document.getElementById('jdy_modal_overlay');
+            const saveBtn = document.getElementById('jdy_modal_save');
+            const closeBtn = document.getElementById('jdy_modal_close');
 
-        function createPriorityTag(level) {
-            const span = document.createElement("span");
-            span.classList.add("priority-tag");
-            if (level === 1) { span.textContent = "[高]"; span.classList.add("priority-high"); }
-            else if (level === 2) { span.textContent = "[中]"; span.classList.add("priority-mid"); }
-            else if (level === 3) { span.textContent = "[低]"; span.classList.add("priority-low"); }
-            else return null;
-            return span;
-        }
+            // 关闭功能
+            const closeModal = () => { if(overlay) overlay.style.display = 'none'; };
+            if(closeBtn) closeBtn.onclick = closeModal;
+            if(overlay) overlay.onclick = (e) => { if(e.target === overlay) closeModal(); }; // 点击遮罩关闭
 
-        function getDynamicColor(year, month) {
-            const currentDate = currentYear * 12 + currentMonth;
-            const accountDate = year * 12 + month;
-            const diff = accountDate - currentDate;
-            if (diff >= 0) return '#ffffff';
-            if (year !== currentYear) {
-                const opacity = Math.min(0.1 + Math.abs(diff) * 0.05, 0.8);
-                return `rgba(100,100,255,${opacity})`;
-            } else {
-                const opacity = Math.min(0.1 + Math.abs(diff) * 0.1, 0.8);
-                return `rgba(255,100,100,${opacity})`;
+            // 保存功能
+            if(saveBtn) {
+                saveBtn.onclick = () => {
+                    const u = document.getElementById('jdy_modal_user').value;
+                    const p = document.getElementById('jdy_modal_pass').value;
+                    GM_setValue('jdy_username', u);
+                    GM_setValue('jdy_password', p);
+                    showStatus('✅ 账号密码已保存', '#67c23a');
+                    closeModal();
+                };
             }
-        }
+        }, 1000);
 
-        function parsePeriod(acc) {
-            const el = acc.querySelector('.df');
-            if (!el) return 999999;
-            const match = el.textContent.trim().match(/会计期间：(\d{4})-(\d{1,2})/);
-            if (!match) return 999999;
-            return parseInt(match[1], 10) * 12 + parseInt(match[2], 10);
-        }
+        setTimeout(addBtn, 1500);
+        setInterval(addBtn, 2000);
+    }
 
-        let isProcessing = false;
-        let lastRun = 0;
-
-        function processAccounts() {
-            const now = Date.now();
-            if (isProcessing || now - lastRun < 1500) return;
-            isProcessing = true;
-            lastRun = now;
-
-            const accounts = document.querySelectorAll('.customerbox_li:not(.add)');
-            accounts.forEach(acc => {
-                const nameEl = acc.querySelector('.companyName');
-                if (!nameEl) return;
-                const name = nameEl.textContent.trim();
-                if (blockedCompanies.includes(name)) { acc.classList.add('blocked'); return; }
-                nameEl.classList.add('company-name');
-                if (!nameEl.nextElementSibling?.classList.contains("priority-tag")) {
-                    const tag = createPriorityTag(getPriority(name));
-                    if (tag) nameEl.after(tag);
-                }
-                const match = acc.querySelector('.df')?.textContent.match(/会计期间：(\d{4})-(\d{1,2})/);
-                if (match) {
-                    const color = getDynamicColor(+match[1], +match[2]);
-                    const wrap = acc.querySelector('.innerWrap');
-                    if (wrap) { acc.classList.add('expired'); wrap.style.backgroundColor = color; }
-                }
-            });
-
-            // 排序
-            const container = document.querySelector('.customerbox');
-            if (container) {
-                const sorted = Array.from(container.querySelectorAll('.customerbox_li:not(.add):not(.blocked)')).sort((a,b)=>{
-                    const nameA = a.querySelector('.companyName')?.textContent.trim() || "";
-                    const nameB = b.querySelector('.companyName')?.textContent.trim() || "";
-                    const priA = getPriority(nameA), priB = getPriority(nameB);
-                    if (priA !== priB) return priA - priB;
-                    return parsePeriod(a) - parsePeriod(b);
-                });
-                sorted.forEach(el => container.appendChild(el));
-            }
-
-            isProcessing = false;
-        }
-
-        const listContainer = document.querySelector('.customerbox');
-        if (listContainer) {
-            const observer = new MutationObserver(() => processAccounts());
-            observer.observe(listContainer, { childList: true, subtree: true });
-        }
-        setTimeout(processAccounts, 1500);
+    // 执行逻辑
+    if (!url.includes("/login")) {
+        initHighlightEnhanced();
+        setTimeout(monitorArrowClicks, 2000);
+        initConfigButton();
     }
 
 })();

@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         商品AI分析工具
 // @namespace    http://tampermonkey.net/
-// @version      3.0.0
+// @version      4.0.0
 // @description  在商品列表中添加AI分析按钮，调用API展示商品详情
 // @author       You
 // @match        https://zhenghedata.com/product/search*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        GM_registerMenuCommand
 // @connect      api.tikhub.io
 // @connect      generativelanguage.googleapis.com
 // @connect      *
@@ -16,22 +17,123 @@
 // @updateURL https://update.greasyfork.org/scripts/550932/%E5%95%86%E5%93%81AI%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
-    // 配置API Token
-    const API_TOKEN = 'xu0LZERIwnlzijlR82qAlUUI9ikXuozSuZMr2za5lltN6A4uTsB++B+7Lg==';
+    // API 配置
     const API_BASE_URL = 'https://api.tikhub.io/api/v1/tiktok/shop/web/fetch_product_detail_v3';
     const REVIEWS_API_URL = 'https://api.tikhub.io/api/v1/tiktok/shop/web/fetch_product_reviews_v2';
     const REVIEWS_V1_API_URL = 'https://api.tikhub.io/api/v1/tiktok/shop/web/fetch_product_reviews_v1';
-    const GEMINI_API_KEY = 'AIzaSyCUiAyaJ3Q10i0owL2zPVbxrHkUoVE-Pxo'; // TODO: 替换为实际的Gemini API Key
+    // const GEMINI_API_KEY = ''; // 已改为动态配置
     const GEMINI_MODEL = 'gemini-2.5-pro';
     const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
     const MAX_VOC_REVIEWS = 100;
 
     // 获取API Token
     function getApiToken() {
-        return API_TOKEN;
+        return GM_getValue('api_token', '');
+    }
+
+    // 获取Gemini API Key
+    function getGeminiApiKey() {
+        return GM_getValue('gemini_api_key', '');
+    }
+
+    // 显示全局设置弹窗
+    function showGlobalSettingsDialog() {
+        const dialog = document.createElement('div');
+        dialog.id = 'global-settings-dialog';
+        dialog.style.cssText = `
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.5); z-index: 10020;
+            display: flex; align-items: center; justify-content: center;
+        `;
+
+        const content = document.createElement('div');
+        content.style.cssText = `
+            background: #fff; border-radius: 8px; padding: 24px;
+            width: 500px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        `;
+
+        content.innerHTML = `
+            <h3 style="margin: 0 0 20px 0; font-size: 18px; color: #262626; border-bottom: 1px solid #e8e8e8; padding-bottom: 12px;">设置 API Token</h3>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 500;">TikHub API Token:</label>
+                <input type="text" id="setting-api-token" style="width: 100%; padding: 8px; border: 1px solid #d9d9d9; border-radius: 4px;" placeholder="请输入 Tikhub API Token">
+                <p style="margin: 4px 0 0; color: #8c8c8c; font-size: 12px;">用于获取商品详情和评论数据</p>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Gemini API Key:</label>
+                <input type="text" id="setting-gemini-key" style="width: 100%; padding: 8px; border: 1px solid #d9d9d9; border-radius: 4px;" placeholder="请输入 Google Gemini API Key">
+                <p style="margin: 4px 0 0; color: #8c8c8c; font-size: 12px;">用于生成商品分析和VOC报告</p>
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px;">
+                <button id="setting-cancel" style="padding: 8px 16px; border: 1px solid #d9d9d9; background: #fff; border-radius: 4px; cursor: pointer;">取消</button>
+                <button id="setting-save" style="padding: 8px 16px; border: none; background: #1890ff; color: #fff; border-radius: 4px; cursor: pointer;">保存</button>
+            </div>
+        `;
+
+        dialog.appendChild(content);
+        document.body.appendChild(dialog);
+
+        // Fill existing values
+        const tokenInput = content.querySelector('#setting-api-token');
+        const keyInput = content.querySelector('#setting-gemini-key');
+
+        tokenInput.value = getApiToken();
+        keyInput.value = getGeminiApiKey();
+
+        // Events
+        const close = () => document.body.removeChild(dialog);
+
+        content.querySelector('#setting-cancel').onclick = close;
+        content.querySelector('#setting-save').onclick = () => {
+            GM_setValue('api_token', tokenInput.value.trim());
+            GM_setValue('gemini_api_key', keyInput.value.trim());
+            showToast('设置已保存');
+            close();
+        };
+
+        dialog.onclick = (e) => { if (e.target === dialog) close(); };
+    }
+
+    function showToast(msg) {
+        const toast = document.createElement('div');
+        toast.textContent = msg;
+        toast.style.cssText = `
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); color: #fff; padding: 8px 16px;
+            border-radius: 4px; z-index: 10030; font-size: 14px;
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => document.body.removeChild(toast), 2000);
+    }
+
+    function initSettings() {
+        // Register menu command
+        if (typeof GM_registerMenuCommand !== 'undefined') {
+            GM_registerMenuCommand('设置 API Token', showGlobalSettingsDialog);
+        }
+
+        // Add floating button
+        const fab = document.createElement('div');
+        fab.innerHTML = `<svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="color: #fff;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>`;
+        fab.style.cssText = `
+            position: fixed; bottom: 20px; right: 20px;
+            width: 48px; height: 48px; border-radius: 50%;
+            background: #1890ff; box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 9999;
+            transition: transform 0.3s;
+        `;
+        fab.title = "设置 API Token";
+        fab.onmouseover = () => fab.style.transform = 'scale(1.1)';
+        fab.onmouseout = () => fab.style.transform = 'scale(1)';
+        fab.onclick = showGlobalSettingsDialog;
+        document.body.appendChild(fab);
     }
 
     // 从data-row-key中提取商品ID
@@ -388,7 +490,7 @@
                     <div class="error" style="display: none;">
                         <p class="error-message"></p>
                     </div>
-
+                    
                     <!-- AI商品分析模块 - 放在产品详情上方 -->
                     <div class="ai-product" style="display: none;">
                         <div class="ai-product-header">
@@ -405,7 +507,7 @@
                             <div class="ai-product-result" style="display:none; white-space:pre-wrap; line-height:1.6; color:#262626;"></div>
                         </div>
                     </div>
-
+                    
                     <div class="product-info"></div>
                 </div>
             </div>
@@ -706,9 +808,9 @@
                 margin-bottom: 12px;
             }
 
-            .ai-product-header h4 {
-                margin: 0;
-                font-size: 16px;
+            .ai-product-header h4 { 
+                margin: 0; 
+                font-size: 16px; 
                 font-weight: 600;
                 color: #262626;
             }
@@ -726,8 +828,8 @@
             .ai-product-run:hover {
                 background: #40a9ff;
             }
-            .ai-product-run:disabled {
-                opacity: 0.6;
+            .ai-product-run:disabled { 
+                opacity: 0.6; 
                 cursor: not-allowed;
                 background: #d9d9d9;
             }
@@ -1122,12 +1224,12 @@
                 <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #595959;">
                     需要获取的有效评论数（有文本内容的评论）：
                 </label>
-                <input
-                    type="number"
-                    id="voc-target-count-input"
-                    value="100"
-                    min="1"
-                    max="1000"
+                <input 
+                    type="number" 
+                    id="voc-target-count-input" 
+                    value="100" 
+                    min="1" 
+                    max="1000" 
                     style="width: 100%; padding: 8px 12px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 14px;"
                 >
                 <p style="margin: 8px 0 0 0; font-size: 12px; color: #8c8c8c;">
@@ -1588,7 +1690,7 @@
                     'Content-Type': 'application/json'
                 },
                 timeout: 30000,
-                onload: function(response) {
+                onload: function (response) {
                     let payload = null;
                     try {
                         payload = JSON.parse(response.responseText);
@@ -1615,11 +1717,11 @@
                     const reason = buildErrorMessage(response, payload, '获取评论失败');
                     reject(new Error(reason));
                 },
-                onerror: function(error) {
+                onerror: function (error) {
                     const reason = buildErrorMessage(error, null, '获取评论失败');
                     reject(new Error(reason));
                 },
-                ontimeout: function() {
+                ontimeout: function () {
                     reject(new Error('评论请求超时，请稍后重试'));
                 }
             });
@@ -1738,7 +1840,7 @@
                     'Content-Type': 'application/json'
                 },
                 timeout: 30000,
-                onload: function(response) {
+                onload: function (response) {
                     let payload = null;
                     try {
                         payload = JSON.parse(response.responseText);
@@ -1767,11 +1869,11 @@
                     const reason = buildErrorMessage(response, payload, '获取评论失败');
                     reject(new Error(reason));
                 },
-                onerror: function(error) {
+                onerror: function (error) {
                     const reason = buildErrorMessage(error, null, '获取评论失败');
                     reject(new Error(reason));
                 },
-                ontimeout: function() {
+                ontimeout: function () {
                     reject(new Error('评论请求超时，请稍后重试'));
                 }
             });
@@ -2157,7 +2259,7 @@
     }
 
     function requestGeminiAnalysis(prompt) {
-        const apiKey = (GEMINI_API_KEY || '').trim();
+        const apiKey = (getGeminiApiKey() || '').trim();
         if (!apiKey) {
             return Promise.reject(new Error('请先配置Gemini API Key'));
         }
@@ -2168,7 +2270,7 @@
             generationConfig: {
                 temperature: 0.3,
                 topP: 0.9,
-                maxOutputTokens: 8192  // 增加到8192，支持更详细的VOC分析输出
+                maxOutputTokens: 65536  // 增加到8192，支持更详细的VOC分析输出
             }
         };
 
@@ -2182,7 +2284,7 @@
                 },
                 data: JSON.stringify(body),
                 timeout: 90000,  // 增加到90秒，VOC分析可能需要更长时间
-                onload: function(response) {
+                onload: function (response) {
                     let payload = null;
                     try {
                         payload = JSON.parse(response.responseText);
@@ -2227,11 +2329,11 @@
                     const reason = payload?.error?.message || buildErrorMessage(response, payload, 'Gemini分析失败');
                     reject(new Error(reason));
                 },
-                onerror: function(error) {
+                onerror: function (error) {
                     const reason = buildErrorMessage(error, null, 'Gemini请求失败');
                     reject(new Error(reason));
                 },
-                ontimeout: function() {
+                ontimeout: function () {
                     reject(new Error('Gemini请求超时，请稍后重试'));
                 }
             });
@@ -2315,7 +2417,7 @@
     }
 
     function requestGeminiAnalysisWithParts(parts) {
-        const apiKey = (GEMINI_API_KEY || '').trim();
+        const apiKey = (getGeminiApiKey() || '').trim();
         if (!apiKey) {
             return Promise.reject(new Error('请先配置Gemini API Key'));
         }
@@ -2335,7 +2437,7 @@
                 headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
                 data: JSON.stringify(body),
                 timeout: 60000,  // 增加超时时间到60秒，因为图片处理可能需要更长时间
-                onload: function(response) {
+                onload: function (response) {
                     let payload = null;
                     try { payload = JSON.parse(response.responseText); } catch (err) {
                         reject(new Error('解析Gemini响应失败: ' + err.message));
@@ -2371,15 +2473,15 @@
                     }
                     reject(new Error(payload?.error?.message || 'Gemini分析失败'));
                 },
-                onerror: function(error) { reject(new Error(buildErrorMessage(error, null, 'Gemini请求失败'))); },
-                ontimeout: function() { reject(new Error('Gemini请求超时，请稍后重试')); }
+                onerror: function (error) { reject(new Error(buildErrorMessage(error, null, 'Gemini请求失败'))); },
+                ontimeout: function () { reject(new Error('Gemini请求超时，请稍后重试')); }
             });
         });
     }
 
     // 使用结构化输出的请求函数
     function requestGeminiStructuredAnalysis(parts, schema) {
-        const apiKey = (GEMINI_API_KEY || '').trim();
+        const apiKey = (getGeminiApiKey() || '').trim();
         if (!apiKey) {
             return Promise.reject(new Error('请先配置Gemini API Key'));
         }
@@ -2401,7 +2503,7 @@
                 headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
                 data: JSON.stringify(body),
                 timeout: 60000,
-                onload: function(response) {
+                onload: function (response) {
                     let payload = null;
                     try { payload = JSON.parse(response.responseText); } catch (err) {
                         reject(new Error('解析Gemini响应失败: ' + err.message));
@@ -2448,8 +2550,8 @@
                     }
                     reject(new Error(payload?.error?.message || 'Gemini分析失败'));
                 },
-                onerror: function(error) { reject(new Error(buildErrorMessage(error, null, 'Gemini请求失败'))); },
-                ontimeout: function() { reject(new Error('Gemini请求超时，请稍后重试')); }
+                onerror: function (error) { reject(new Error(buildErrorMessage(error, null, 'Gemini请求失败'))); },
+                ontimeout: function () { reject(new Error('Gemini请求超时，请稍后重试')); }
             });
         });
     }
@@ -2478,7 +2580,7 @@
         return new Promise((resolve) => {
             GM_xmlhttpRequest({
                 method: 'GET', url, responseType: 'arraybuffer', timeout: 20000,
-                onload: function(resp) {
+                onload: function (resp) {
                     try {
                         const mime = guessMimeTypeFromHeadersOrUrl(resp.responseHeaders, url);
                         const b64 = arrayBufferToBase64(resp.response);
@@ -2487,8 +2589,8 @@
                         resolve(null);
                     }
                 },
-                onerror: function() { resolve(null); },
-                ontimeout: function() { resolve(null); }
+                onerror: function () { resolve(null); },
+                ontimeout: function () { resolve(null); }
             });
         });
     }
@@ -2960,7 +3062,7 @@
                 ${productBase.images && productBase.images.length > 0 ? `
                     <div class="product-images">
                         ${productBase.images.slice(0, 6).map(img => `
-                            <img src="${img.url_list[0]}" class="product-image-thumb"
+                            <img src="${img.url_list[0]}" class="product-image-thumb" 
                                  onclick="window.open('${img.url_list[0]}', '_blank')" />
                         `).join('')}
                     </div>
@@ -3127,7 +3229,7 @@
                 'Content-Type': 'application/json'
             },
             timeout: 30000,
-            onload: function(response) {
+            onload: function (response) {
                 const statusOk = response.status >= 200 && response.status < 300;
                 let data = null;
                 try {
@@ -3147,11 +3249,11 @@
                 const reason = buildErrorMessage(response, data, '获取商品信息失败');
                 showError(reason);
             },
-            onerror: function(error) {
+            onerror: function (error) {
                 const reason = buildErrorMessage(error, null, '请求失败');
                 showError(reason);
             },
-            ontimeout: function() {
+            ontimeout: function () {
                 showError('请求超时，请重试');
             }
         });
@@ -3406,8 +3508,8 @@
             }
         } else if (actionCell) {
             const actionDiv = actionCell.querySelector('div[style*="white-space"]') ||
-                              actionCell.querySelector('div:last-child') ||
-                              actionCell;
+                actionCell.querySelector('div:last-child') ||
+                actionCell;
             if (!actionDiv) {
                 return;
             }
@@ -3448,6 +3550,7 @@
 
     // 初始化：创建侧边栏并添加按钮
     function init() {
+        initSettings();
         // 创建侧边栏
         createSidebar();
 
@@ -3475,9 +3578,9 @@
         }
 
         // 监听表格变化（用于动态加载的商品）
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                mutation.addedNodes.forEach(function(node) {
+        const observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                mutation.addedNodes.forEach(function (node) {
                     if (node.nodeType === 1) {
                         // 检查是否是表格行
                         if (node.tagName === 'TR' && node.hasAttribute('data-row-key')) {

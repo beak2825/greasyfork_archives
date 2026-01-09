@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LIMS 메인 대시보드 - LRS 수행팀
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.1.1
 // @description  LRS 수행팀 전용 (PacBio / ONT) 실시간 작업 현황 + Demulti 실시간 알림
 // @author       김재형
 // @match        https://lims3.macrogen.com/main.do*
@@ -373,50 +373,49 @@
     }
 
     function processDemultiData(data, currentCounts) {
-        // 고유 키 생성 함수 (PLATE ID + CELL)
-        const getCellKey = (item) => `${item.insId}_${item.celPosition}`;
+        // 고유 키 생성 함수 (DATA ID[Raw Dir] + CELL 위치 조합으로 충돌 원천 봉쇄)
+        const getCellKey = (item) => {
+            const runId = item.imprtId || item.insId || '';
+            const cellPos = item.celPosition || '';
+            if (!runId && !cellPos) return null;
+            return `${runId}|${cellPos}`; // 구분자를 | 로 변경하여 ID 내 언더바(_) 혼동 방지
+        };
 
         const runningItems = data.filter(item => item.demStatNm === 'Running');
         const holdItems = data.filter(item => item.demStatNm === 'Hold compl.');
         const cfmdItems = data.filter(item => item.demStatNm === 'cfmd');
 
-        // 현재 상태별 Cell 키 목록
-        const currentlyRunningKeys = runningItems.map(getCellKey);
-        const currentlyHoldKeys = holdItems.map(getCellKey);
+        const currentlyRunningKeys = runningItems.map(getCellKey).filter(k => k);
+        const currentlyHoldKeys = holdItems.map(getCellKey).filter(k => k);
 
         const prevRunningKeys = GM_getValue(RUNNING_LIST_KEY, []);
         const prevHoldKeys = GM_getValue(HOLD_LIST_KEY, []);
 
-        // 알림 1: Running → cfmd 직행
-        prevRunningKeys.forEach(oldKey => {
-            const currentItem = data.find(item => getCellKey(item) === oldKey);
-            if (currentItem && currentItem.demStatNm === 'cfmd') {
-                GM_notification({
-                    title: "🚀 디멀티플렉싱 완료!",
-                    text: `PLATE: ${currentItem.insId}\nCELL: ${currentItem.celPosition}\n작업이 완료되었습니다.`,
-                    onclick: () => window.focus()
-                });
-            }
-        });
+        // 알림 처리 로직 통합 및 강화
+        const notifyIfCompleted = (prevKeys, statusLabel) => {
+            prevKeys.forEach(oldKey => {
+                if (!oldKey) return;
+                const currentItem = data.find(item => getCellKey(item) === oldKey);
+                // 이전 상태가 리스트에 있었는데 현재 cfmd 상태라면 알림
+                if (currentItem && currentItem.demStatNm === 'cfmd') {
+                    GM_notification({
+                        title: `🚀 디멀티플렉싱 완료! (${statusLabel})`,
+                        text: `PLATE: ${currentItem.insId || '-'}\nCELL: ${currentItem.celPosition || '-'}\nRUN: ${currentItem.imprtId || 'N/A'}\n작업이 완료되었습니다.`,
+                        onclick: () => window.focus()
+                    });
+                }
+            });
+        };
 
-        // 알림 2: Hold compl. → cfmd
-        prevHoldKeys.forEach(oldKey => {
-            const currentItem = data.find(item => getCellKey(item) === oldKey);
-            if (currentItem && currentItem.demStatNm === 'cfmd') {
-                GM_notification({
-                    title: "🚀 디멀티플렉싱 완료!",
-                    text: `PLATE: ${currentItem.insId}\nCELL: ${currentItem.celPosition}\n대기 중이던 작업이 완료되었습니다.`,
-                    onclick: () => window.focus()
-                });
-            }
-        });
+        if (prevRunningKeys.length > 0) notifyIfCompleted(prevRunningKeys, "Running");
+        if (prevHoldKeys.length > 0) notifyIfCompleted(prevHoldKeys, "Hold");
 
         // 다음 비교를 위해 현재 상태 저장
         GM_setValue(RUNNING_LIST_KEY, currentlyRunningKeys);
         GM_setValue(HOLD_LIST_KEY, currentlyHoldKeys);
 
-        // UI 표시용
-        const uniqueRunningPlateCount = [...new Set(currentlyRunningKeys.map(key => key.split('_')[0]))].length;
+        // UI 표시용 (Running은 Run단위, Hold/Completed는 Cell단위 수량 표시)
+        const uniqueRunningPlateCount = [...new Set(runningItems.map(item => item.imprtId || item.insId))].length;
         currentCounts['status-dem-run'] = uniqueRunningPlateCount;
         currentCounts['status-dem-hold'] = holdItems.length;
         currentCounts['status-dem-cfmd'] = cfmdItems.length;
@@ -486,7 +485,7 @@
                 📊 LRS 실시간 상세 현황
                 <span id="modal-update-time" style="font-size: 13px; color: #94a3b8; font-weight: normal;"></span>
             </h2>
-
+            
             <!-- (1) LIB 상세 -->
             <div style="background: #efefff; padding: 25px; border-radius: 20px; border: 2px solid #4834d4; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(72, 52, 212, 0.1);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 3px solid #fff; padding-bottom: 12px;">
@@ -534,7 +533,7 @@
             </div>
 
             <div style="margin-top: 25px; text-align: center;">
-                <button id="modal-refresh-btn" style="padding: 12px 60px; background: #4834d4; color: #fff; border: none; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(72, 52, 212, 0.3);">지금 즉시 새로고침</button>
+                <button id="modal-refresh-btn" style="padding: 12px 60px; background: #efefff; color: #4834d4; border: 2px solid #4834d4; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 15px rgba(72, 52, 212, 0.1);">지금 즉시 새로고침</button>
             </div>
         `;
 
@@ -593,4 +592,3 @@
     if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); }
     else { setTimeout(init, 200); }
 })();
-

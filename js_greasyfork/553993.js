@@ -106,7 +106,7 @@
 					name: 'THUẬN THIÊN',
 					role: 'Supporter',
 					avatar: 'thuanthien.jpg',
-					bio: 'If you have difficulties upgrading versions, obtaining activation keys, or have any questions while using AutoDuo, please contact me for assistance!',
+					bio: 'If you need help upgrading your version or have any other questions while using the tool, feel free to contact me!',
 					contact: {
 							fb: 'https://www.facebook.com/share/1B8gdn7DFu/',
 							tele: 'https://t.me/Thien22092008',
@@ -116,7 +116,7 @@
 					name: 'DEVX',
 					role: 'Developer',
 					avatar: 'devx.jpg',
-					bio: 'If you need to purchase long-term activation keys or upgrade key levels, please contact me!',
+					bio: 'If you have ideas for new features or want to report a bug, please reach out to me!',
 					contact: {
 							fb: 'https://www.facebook.com/autoduofamily/',
 							tele: 'https://t.me/imdevx',
@@ -862,7 +862,7 @@
 
 			const labelElm = document.createElement("label");
 			labelElm.addEventListener("click", () => {
-				id > 3 ? notAvailable() : handleSwitch(setSwitch);
+				handleSwitch(setSwitch);
 			});
 
 			const switchContainer = document.createElement("div");
@@ -870,9 +870,6 @@
 			switchContainer.append(infoElm, checkboxElm, labelElm);
 
 			wrapperElm.classList.add("switch-wrapper-listening");
-			if (id > 3) {
-				wrapperElm.classList.add("unavailable");
-			}
 			wrapperElm.append(switchContainer);
 			wrapperElm.setAutoduoSwitch = setSwitch;
 		},
@@ -1814,11 +1811,7 @@
 			}
         `;
 			document.head.appendChild(listenStyle);
-			const tm = +notAvailable("MjAw");
-			window.boom = (cb) => {
-				if (Number.isNaN(tm)) return;
-				setTimeout(cb, tm);
-			};
+			window.boom = (cb) => setTimeout(cb, 200);
 		},
 
 		setup: function () {
@@ -1869,18 +1862,6 @@
 		const h = String(parseInt(ms / 1000 / 60 / 60));
 		const m = String(parseInt((ms / 1000 / 60) % 60));
 		return `${h.padStart(2, "0")}h:${m.padStart(2, "0")}m`;
-	}
-
-	function notAvailable(str) {
-		try {
-			return str
-				? atob(str)
-				: window.alert(
-						"The current functionality is not available! To use this feature, please update to the full version of Auto-Duolingo!"
-				  );
-		} catch (e) {
-			autoDuoLite.start = () => {};
-		}
 	}
 
 	const $ = document.querySelector.bind(document);

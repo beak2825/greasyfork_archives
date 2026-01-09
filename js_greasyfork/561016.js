@@ -1,16 +1,16 @@
 // ==UserScript==
 // @name         哔哩哔哩过滤评论区
-// @namespace    https://github.com/girl-dream/
-// @version      1.1.2
 // @description  根据关键词过滤评论区
+// @version      1.1.4
 // @author       girl-dream
+// @license      The Unlicense
+// @namespace    https://github.com/girl-dream/
 // @match        https://www.bilibili.com/video/*
 // @icon         https://www.bilibili.com/favicon.ico
-// @run-at       document-start
-// @license      The Unlicense
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
+// @run-at       document-start
 // @downloadURL https://update.greasyfork.org/scripts/561016/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E8%BF%87%E6%BB%A4%E8%AF%84%E8%AE%BA%E5%8C%BA.user.js
 // @updateURL https://update.greasyfork.org/scripts/561016/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E8%BF%87%E6%BB%A4%E8%AF%84%E8%AE%BA%E5%8C%BA.meta.js
 // ==/UserScript==
@@ -57,7 +57,7 @@
             <p style="color: var(--brt-placeholder-color, var(--text3, #9499a0)); font-size: 14px; margin-bottom: 15px;">
                 每行一个关键词/正则表达式,评论包含任意关键词即被过滤
             </p>
-            <textarea id="keywords-input" 
+            <textarea id="keywords-input"
                      style="width: 90%;
                      background: var(--bg2);
                             height: 200px;
@@ -129,41 +129,39 @@
         })
     }
 
-    const feed = await isElementLoaded('#feed', await f('bili-comments'))
-    feed.children.forEach(async (node) => {
+    // 检测评论并删除
+    const dom = async (node) => {
         if (Boolean(node.shadowRoot)) {
-            let text = (await f('#comment', node.shadowRoot)).querySelector('#content bili-rich-text').shadowRoot.querySelector('span').innerHTML
-            if (keyWords.some((item) => {
-                if (item.startsWith('/') && item.lastIndexOf('/') > 0 && eval(item) instanceof RegExp) {
-                    return eval(item).test(text)
-                } else {
-                    return text.includes(item)
+            let text = (await f('#comment', node.shadowRoot)).querySelector('#content bili-rich-text').shadowRoot.querySelector('span')
+            if (text) {
+                text = text.textContent
+                if (keyWords.some((item) => {
+                    if (item.startsWith('/') && item.lastIndexOf('/') > 0 && eval(item) instanceof RegExp) {
+                        return eval(item).test(text)
+                    } else {
+                        return text.includes(item)
+                    }
+                })) {
+                    node.remove()
                 }
-            })) {
-                node.remove()
             }
         }
+    }
+
+    // 初次加载
+    const feed = await isElementLoaded('#feed', await f('bili-comments'))
+    feed.children.forEach(async (node) => {
+        dom(node)
     })
 
+    // 监听新评论
     let observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             mutation.addedNodes.forEach(async (node) => {
-                if (Boolean(node.shadowRoot)) {
-                    let text = (await f('#comment', node.shadowRoot)).querySelector('#content bili-rich-text').shadowRoot.querySelector('span').innerHTML
-                    if (keyWords.some((item) => {
-                        if (item.startsWith('/') && item.lastIndexOf('/') > 0 && eval(item) instanceof RegExp) {
-                            return eval(item).test(text)
-                        } else {
-                            return text.includes(item)
-                        }
-                    })) {
-                        node.remove()
-                    }
-                }
+                dom(node)
             })
         })
     })
 
     observer.observe(feed, { childList: true, subtree: true, characterData: true })
 })();
-

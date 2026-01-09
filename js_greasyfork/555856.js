@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Euridis - Script Trame d'Entretien Tool4Staffing
 // @namespace    http://tampermonkey.net/
-// @version      4.1
+// @version      4.2
 // @description  Ajoute un formulaire structuré pour la trame d'entretien Euridis dans Tool4Staffing + Remplace les badges de scoring par des émojis + Historique des versions
 // @author       Euridis Business School
 // @match        https://eureka.tool4staffing.com/*
@@ -691,7 +691,7 @@
                     DOMCache.invalidate(`#control_group_${CONFIG.form.targetField}`);
                     DOMCache.invalidate('#form_edit_agents');
                 }
-                
+
                 const obsGroup = document.querySelector(`#control_group_${CONFIG.form.targetField}`);
                 if (obsGroup) {
                     const lbl = obsGroup.querySelector(`.readonly-label[for="${CONFIG.form.targetField}"]`);
@@ -1408,7 +1408,7 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
             DOMCache.invalidate();
             ContentModule.refreshSnapshots();
             const obs = ContentModule.readObservations(true);
-            
+
             if (obs?.includes(CONFIG.text.markerPrefix)) {
                 const parsed = DataModule.parseObservations(obs);
                 if (parsed) {
@@ -1420,7 +1420,7 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
                     return;
                 }
             }
-            
+
             State.isApplying = true;
             DataModule.ensureDefaultCheckboxes();
             State.isApplying = false;
@@ -1436,10 +1436,10 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
             if (DetectionModule.isInEditMode()) return;
             State.hasUserOpened = true;
             StylesModule.inject(); create(); syncContext();
-            
+
             // Attendre le chargement des données avant d'ouvrir
             await reloadFormData();
-            
+
             const panel = document.getElementById(CONFIG.dom.panelId);
             if (!panel) return;
             resetSize(panel); setupResize();
@@ -1817,16 +1817,16 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
         const extractBool = (label) => {
             const val = extract(label);
             if (!val) return undefined;
-            
+
             // Détecter les émojis
             if (val.includes('✅')) return true;
             if (val.includes('❌')) return false;
-            
+
             // Fallback: recherche textuelle
             const norm = val.replace(/[^\w]/g, ' ').trim().toLowerCase();
             if (norm.includes('oui') || norm.includes('true')) return true;
             if (norm.includes('non') || norm.includes('false')) return false;
-            
+
             return undefined;
         };
 
@@ -1836,7 +1836,7 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
             let regex = new RegExp(`${escapeRegExp(headerNew)}\\s*([\\s\\S]*?)(?=\\n► |\\n■ |$)`, 'i');
             let m = regex.exec(block);
             if (m) return m[1].trim();
-            
+
             // Fallback: ancien format (====)
             const headerOld = `==== ${title} ====`;
             regex = new RegExp(`${escapeRegExp(headerOld)}\\s*([\\s\\S]*?)(?=\\n==== |$)`, 'i');
@@ -1847,10 +1847,10 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
         const extractNotes = (secBlock, stopList) => {
             if (!secBlock) return '';
             const lines = secBlock.split('\n').map(l => l.trim()).filter(l => l);
-            
+
             // Chercher la ligne "Notes :"
             const start = lines.findIndex(l => /^notes\s*:?\s*$/i.test(l));
-            
+
             if (start === -1) {
                 // Si pas de ligne "Notes :", prendre tout le contenu sauf les lignes de stop
                 const collected = [];
@@ -1864,7 +1864,7 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
                 const content = collected.join('\n').trim();
                 return content === '—' || content === '-' ? '' : content;
             }
-            
+
             // Collecter les lignes après "Notes :"
             const collected = [];
             for (let i = start + 1; i < lines.length; i++) {
@@ -1927,29 +1927,29 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
         // Parse pré-requis BTS CI
         const anglaisBTS = extractBool('Anglais \\(B1/B2\\)') || extractBool('Anglais');
         if (typeof anglaisBTS === 'boolean') { data.anglaisBTS = anglaisBTS; hasValue = true; }
-        
+
         const espagnolBTS = extractBool('Espagnol \\(A2/B1\\)') || extractBool('Espagnol');
         if (typeof espagnolBTS === 'boolean') { data.espagnolBTS = espagnolBTS; hasValue = true; }
-        
+
         // Parse pré-requis Bachelor/Mastère
         const anglaisBachelor = extractBool('Niveau anglais Bachelor') || extractBool('Bachelor : niveau A2 en anglais');
         if (typeof anglaisBachelor === 'boolean') { data.anglaisBachelor = anglaisBachelor; hasValue = true; }
-        
+
         let anglaisMastere = extractBool('Niveau anglais Mastère \\(B1/B2\\)');
         if (typeof anglaisMastere !== 'boolean') anglaisMastere = extractBool('Niveau anglais Mastere \\(B1/B2\\)');
         if (typeof anglaisMastere !== 'boolean') anglaisMastere = extractBool('Niveau anglais Mastère');
         if (typeof anglaisMastere !== 'boolean') anglaisMastere = extractBool('Niveau anglais Mastere');
         if (typeof anglaisMastere === 'boolean') { data.anglaisMastere = anglaisMastere; hasValue = true; }
-        
+
         let technologie = extractBool('Intéressé par les nouvelles technologies');
         if (typeof technologie !== 'boolean') technologie = extractBool('Interessé par les nouvelles technologies');
         if (typeof technologie === 'boolean') { data.technologie = technologie; hasValue = true; }
-        
+
         let commerce = extractBool('Intéressé par le commerce, la vente et la négociation');
         if (typeof commerce !== 'boolean') commerce = extractBool('Intéressé par le commerce');
         if (typeof commerce !== 'boolean') commerce = extractBool('Interessé par le commerce');
         if (typeof commerce === 'boolean') { data.commerce = commerce; hasValue = true; }
-        
+
         let bureautique = extractBool('Maîtrise de la bureautique et d\'internet');
         if (typeof bureautique !== 'boolean') bureautique = extractBool('Maîtrise de la bureautique');
         if (typeof bureautique !== 'boolean') bureautique = extractBool('Maitrise de la bureautique');
@@ -2518,12 +2518,12 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
         const shouldShowCountdown = (status) => {
             if (!status) return true; // Par défaut, afficher le décompte
             const normalizedStatus = status.toLowerCase().trim();
-            
+
             // Vérifier si le statut est explicitement exclu
             if (EXCLUDED_STATUSES.some(excluded => normalizedStatus.includes(excluded))) {
                 return false;
             }
-            
+
             // Par défaut, afficher le décompte pour tous les autres statuts
             return true;
         };
@@ -2569,7 +2569,7 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
 
                 // Vérifier le statut du candidat
                 const status = getStatusFromRow(cell);
-                
+
                 // Si le statut ne nécessite pas de décompte, vider le label
                 if (!shouldShowCountdown(status)) {
                     // Ne rien afficher si déjà traité ou vide
@@ -2667,10 +2667,10 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
                     }
                 }
             }, true);
-            
+
             // Attendre que le contenu soit chargé
             await PanelModule.waitForObservationsContent();
-            
+
             ContentModule.refreshSnapshots();
             const obs = ContentModule.readObservations();
             if (obs?.includes(CONFIG.text.markerPrefix)) {
@@ -2740,9 +2740,9 @@ body.euridis-modal-open .editBtn::after{content:'';position:absolute;inset:0;bac
             // Modules périodiques
             ScoringModule.replace(); ScoringModule.startObserver();
             PhoneModule.standardize(); PhoneModule.startObserver();
-            // DateRemainingModule.replace(); DateRemainingModule.startObserver();
+            DateRemainingModule.replace(); DateRemainingModule.startObserver();
             setTimeout(FormationModule.inject, 500); FormationModule.startObserver();
-            setInterval(() => { ScoringModule.replace(); PhoneModule.standardize(); FormationModule.inject(); /* DateRemainingModule.replace(); */ }, CONFIG.timing.periodic);
+            setInterval(() => { ScoringModule.replace(); PhoneModule.standardize(); FormationModule.inject(); DateRemainingModule.replace(); }, CONFIG.timing.periodic);
         };
 
         return { init };

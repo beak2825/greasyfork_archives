@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Character Enhancer Pro
 // @namespace    http://tampermonkey.net/
-// @version      6.9
+// @version      6.9.2
 // @description  Complete character page enhancements: VIP visuals, talkboxes, achievement remapping, cash/star quality/points overrides, health/mood bars
 // @author       You
 // @match        https://*.popmundo.com/World/Popmundo.aspx/Character*
@@ -229,6 +229,7 @@
         '3616012': { 'Achievement_428': 'Achievement_290', 'Achievement_340': 'Achievement_285', 'Achievement_80': 'Achievement_330' },
         '3579423': { 'Achievement_238': 'Achievement_404', 'Achievement_357': 'Achievement_238', 'Achievement_315': 'Achievement_400' },
         '3602139': { 'Achievement_359': 'Achievement_227', 'Achievement_428': 'Achievement_82', 'Achievement_429': 'Achievement_362' },
+        '3350835': { 'Achievement_115': 'Achievement_129', 'Achievement_291': 'Achievement_95', 'Achievement_24': 'Achievement_272' },
     };
 
     const genericReplacements = {
@@ -241,19 +242,20 @@
         '3620400': '1,013,073.00 M$', '3247354': '1,013,073.00 M$',
         '3580776': '3,013,073.00 M$', '3581055': '2,013,073.00 M$',
         '3602175': '2,013,073.00 M$', '3570776': '2,013,073.00 M$',
-        '3616012': '2,013,073.00 M$',
+        '3616012': '2,013,073.00 M$', '3602139': '2,013,073.00 M$',
+        '3350835': '2,013,073.00 M$',
     };
 
     // 🌟 Star Quality override
     const starQualityValues = {
-        '2887796': 100, '3620479': 100, '3620400': 95,
+        '2887796': 100, '3620479': 100, '3620400': 95, '3602139': 100, '3350835':95,
         '3247354': 95, '3581055': 95, '3580776': 95, '3602175': 95, '3570776':95
     };
 
     // 📈 Achievement Points override
     const pointsValues = {
-        '2887796': '7200', '3620479': '8800', '3620400': '6400',
-        '3498957': '5000', '3247354': '3100', '3581055': '3100',
+        '2887796': '7200', '3620479': '8800', '3620400': '6400', '3602139': '6400',
+        '3498957': '5000', '3247354': '3100', '3581055': '3100', '3350835': '7200',
         '3580776': '3120', '3602175': '3120', '3570776': '7200',
     };
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Escape tracker
 // @namespace    torn.com
-// @version      1.5
+// @version      1.6
 // @description  Escape tracker (attacksfull → outgoing → Escape)
 // @author       SuperGogu[3580072]
 // @match        https://www.torn.com/*
@@ -38,7 +38,7 @@
     };
 
     const nowTs = () => Math.floor(Date.now() / 1000);
-    const twoWeeksAgoTs = () => nowTs() - 14 * 24 * 60 * 60;
+    const twoWeeksAgoTs = () => nowTs() - 31* 24 * 60 * 60;
 
     const fmtTs = (ts) => {
         if (!ts || !Number.isFinite(ts)) return '—';

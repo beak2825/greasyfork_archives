@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LANraragi 阅读模式
 // @namespace    https://github.com/Kelcoin
-// @version      4.2
+// @version      4.5.1
 // @description  为 LANraragi 阅读器添加阅读模式
 // @author       Kelcoin
 // @match        *://*/reader?id=*
@@ -19,26 +19,28 @@
     // -------- 配置与常量 --------
     const BUTTON_ID = 'lrr-reading-toggle-btn';
     const THUMB_BUTTON_ID = 'lrr-reading-thumb-btn';
+    const AUTO_BTN_ID = 'lrr-reading-auto-btn';
     const PAGE_INDICATOR_ID = 'lrr-reading-page-indicator';
-    const HITAREA_ID = 'lrr-reading-hitarea';        // 右侧热区
-    const LEFT_HITAREA_ID = 'lrr-reading-left-hitarea'; // 左侧热区
-    const STYLE_ID = 'lrr-reading-style-v2';
+    const HITAREA_ID = 'lrr-reading-hitarea';
+    const STYLE_ID = 'lrr-reading-style-v4';
     const BODY_READING_CLASS = 'lrr-reading-mode';
     const SETTINGS_MODAL_ID = 'lrr-reading-settings-modal';
 
     // 交互参数
     const MAX_DRAG_RATIO = 1.0;
-    const CLICK_THRESHOLD_RATIO = 0.01;
-    const SWIPE_THRESHOLD_RATIO = 0.15;
+    const CLICK_THRESHOLD_RATIO = 0.01;  //点击翻页灵敏度
+    const SWIPE_THRESHOLD_RATIO = 0.1;   //滑动翻页灵敏度
     const CORNER_HEIGHT_RATIO = 0.15;
-    const CORNER_WIDTH_RATIO = 0.2;
+    const DOUBLE_TAP_DELAY = 250; // 双击判定最大间隔 (毫秒)
+    const ZOOM_ANIM_SPEED = '0.2s'; // 缩放动画耗时 (秒)
 
     // 默认设置
     const DEFAULT_SETTINGS = {
         autoEnter: false,
-        btnPosition: 'right', // 'right' | 'left'
+        btnPosition: 'right',
         pageGap: 0,
-        thumbLayout: 'mirror' // 'mirror' (对侧) | 'stacked' (同侧上方)
+        expandDirection: 'up', // 默认向上展开
+        autoTurnInterval: 3
     };
 
     let userSettings = { ...DEFAULT_SETTINGS };
@@ -52,11 +54,29 @@
         rafId: null,
         isTouch: false
     };
-    let btnHideTimer = null; // 统一管理按钮隐藏定时器
+    let btnHideTimer = null;
     let lastScrollTop = 0;
     let originalApplyContainerWidth = null;
     let originalGoToPage = null;
     let readingSessionId = 0;
+    let indicatorHideTimer = null;
+    let inputBlockUntil = 0;
+    let imgResizeObserver = null;
+
+    // 自动翻页状态
+    let autoTurnState = {
+        active: false,
+        timer: null
+    };
+
+    // 缩放状态管理
+    let zoomState = {
+        scale: 1,
+        panX: 0,
+        panY: 0,
+        initialDistance: 0,
+        initialScale: 1
+    };
 
     // 数据缓存
     let archiveData = {
@@ -65,7 +85,7 @@
     };
 
     // ==========================================
-    // 设置管理
+    //                 设置管理
     // ==========================================
 
     function loadSettings() {
@@ -74,7 +94,6 @@
             if (stored) {
                 userSettings = { ...DEFAULT_SETTINGS, ...JSON.parse(stored) };
             } else {
-                // 迁移旧版配置
                 const oldAuto = localStorage.getItem('lrr_auto_read');
                 if (oldAuto) userSettings.autoEnter = oldAuto === '1';
             }
@@ -86,48 +105,53 @@
     function saveSettings() {
         try {
             localStorage.setItem('lrr_reading_settings', JSON.stringify(userSettings));
-            // 同时也维护旧版key以防回退
             localStorage.setItem('lrr_auto_read', userSettings.autoEnter ? '1' : '0');
         } catch (e) { }
         applyLayoutSettings();
+        // 如果正在自动翻页，更新间隔
+        if (autoTurnState.active) {
+            stopAutoTurn();
+            startAutoTurn();
+        }
     }
 
-    // 应用布局设置（按钮位置、间距）
+    // 应用布局设置
     function applyLayoutSettings() {
         const mainBtn = document.getElementById(BUTTON_ID);
         const thumbBtn = document.getElementById(THUMB_BUTTON_ID);
+        const autoBtn = document.getElementById(AUTO_BTN_ID);
         const display = document.getElementById('display');
+        const hitArea = document.getElementById(HITAREA_ID);
 
-        if (mainBtn && thumbBtn) {
-            // 清除之前的定位样式
-            mainBtn.style.left = ''; mainBtn.style.right = ''; mainBtn.style.bottom = '';
-            thumbBtn.style.left = ''; thumbBtn.style.right = ''; thumbBtn.style.bottom = '';
+        const oldAutoHit = document.getElementById('lrr-reading-auto-hitarea');
+        if (oldAutoHit) oldAutoHit.style.display = 'none';
 
-            const isRight = userSettings.btnPosition === 'right';
-            const isStacked = userSettings.thumbLayout === 'stacked';
+        const isRight = userSettings.btnPosition === 'right';
 
-            // 1. 设置主按钮位置 (始终在底部30px)
+        // 1. 设置按钮锚点
+        [mainBtn, thumbBtn, autoBtn].forEach(btn => {
+            if (!btn) return;
+            btn.style.left = ''; btn.style.right = ''; btn.style.top = ''; btn.style.bottom = '';
+            btn.style.transform = '';
+
+            btn.style.bottom = '30px';
             if (isRight) {
-                mainBtn.style.right = '15px';
+                btn.style.right = '15px';
             } else {
-                mainBtn.style.left = '15px';
+                btn.style.left = '15px';
             }
-            mainBtn.style.bottom = '30px';
+        });
 
-            // 2. 设置缩略图按钮位置
-            if (isStacked) {
-                // 同侧堆叠模式：位置同主按钮，但高度增加
-                if (isRight) thumbBtn.style.right = '15px';
-                else thumbBtn.style.left = '15px';
-                
-                // 主按钮30px底 + 48px高 + 间距(约15px) -> 约95px
-                thumbBtn.style.bottom = '95px';
+        // 2. 动态设置热区位置
+        if (hitArea) {
+            // 先重置，防止 CSS 干扰
+            hitArea.style.left = 'auto';
+            hitArea.style.right = 'auto';
+
+            if (isRight) {
+                hitArea.style.right = '0';
             } else {
-                // 镜像模式：在另一侧，高度同主按钮
-                if (isRight) thumbBtn.style.left = '15px';
-                else thumbBtn.style.right = '15px';
-                
-                thumbBtn.style.bottom = '30px';
+                hitArea.style.left = '0';
             }
         }
 
@@ -136,8 +160,13 @@
         }
     }
 
+    // 监听窗口大小变化以调整布局
+    window.addEventListener('resize', () => {
+        requestAnimationFrame(applyLayoutSettings);
+    });
+
     // ==========================================
-    // 数据获取与环境检测
+    //             数据获取与环境检测
     // ==========================================
 
     function getArchiveId() {
@@ -171,7 +200,6 @@
     function hookReaderFunctions(enableHook) {
         if (typeof Reader === 'undefined') return;
 
-        // === 关闭 hook（退出阅读模式时用）===
         if (enableHook === false) {
             if (originalApplyContainerWidth) {
                 Reader.applyContainerWidth = originalApplyContainerWidth;
@@ -184,36 +212,25 @@
             return;
         }
 
-        // === 开启 hook（进入阅读模式时用）===
-
-        // 1) hook applyContainerWidth：在阅读模式中阻止它乱调图片/容器，退出后彻底还原
         if (Reader.applyContainerWidth && !originalApplyContainerWidth) {
             originalApplyContainerWidth = Reader.applyContainerWidth;
             Reader.applyContainerWidth = function() {
-                // 阅读模式下，由我们的 CSS 接管图片/容器尺寸，不让原生逻辑插手
                 if (document.body.classList.contains(BODY_READING_CLASS)) {
                     $(".reader-image, .sni").attr("style", "");
                     return;
                 }
-                // 非阅读模式下：完全走原生逻辑
                 return originalApplyContainerWidth.apply(this, arguments);
             };
         }
 
-        // 2) hook goToPage：阅读模式下增加“等图片加载完成再刷新自定义 UI”
         if (Reader.goToPage && !originalGoToPage) {
             originalGoToPage = Reader.goToPage.bind(Reader);
             Reader.goToPage = function(pageIndex) {
                 originalGoToPage(pageIndex);
-
-                // 非阅读模式：完全不追加逻辑
                 if (!isReadingMode || !isReadingMode()) return;
-
                 waitForPageImageLoaded(pageIndex).then((loaded) => {
-                    // 会话已结束或图片没成功加载：直接退出
                     if (!isReadingMode || !isReadingMode()) return;
                     if (!loaded) return;
-
                     const info = getPageInfo();
                     updatePageIndicator();
                     updateGhosts(info);
@@ -240,101 +257,55 @@
         return false;
     }
 
-    // 等待指定页的主图加载完成后再继续（带会话防护）
-    // 依赖全局变量：let readingSessionId = 0; （每次进入阅读模式递增，在退出时设为 0）
     function waitForPageImageLoaded(pageIndex, timeout = 5000) {
-        // 记录调用时所属的阅读会话 id
         const sessionId = typeof readingSessionId !== 'undefined' ? readingSessionId : 0;
-
         return new Promise((resolve) => {
-            // 如果调用时就已经不在有效阅读会话中，直接视为失败/取消
             if (!sessionId || sessionId !== readingSessionId || !document.body.classList.contains(BODY_READING_CLASS)) {
-                resolve(false);
-                return;
+                resolve(false); return;
             }
-
             const display = document.getElementById('display');
-            if (!display) {
-                resolve(false);
-                return;
-            }
+            if (!display) { resolve(false); return; }
 
             const targetUrl = getPageUrl(pageIndex);
-            if (!targetUrl) {
-                resolve(false);
-                return;
-            }
+            if (!targetUrl) { resolve(false); return; }
 
-            // 当前 Reader 主图（单页或双页）
-            const mainImg =
-                document.getElementById('img') ||
-                display.querySelector('img.reader-image');
-
-            if (!mainImg) {
-                resolve(false);
-                return;
-            }
+            const mainImg = document.getElementById('img') || display.querySelector('img.reader-image');
+            if (!mainImg) { resolve(false); return; }
 
             const isTargetSrc = () => {
                 const src = mainImg.currentSrc || mainImg.src || '';
-                return src === targetUrl ||
-                       src.startsWith(targetUrl) ||
-                       targetUrl.startsWith(src);
+                return src === targetUrl || src.startsWith(targetUrl) || targetUrl.startsWith(src);
             };
 
-            // 已是目标图且加载完
             if (isTargetSrc() && mainImg.complete && mainImg.naturalWidth > 0) {
-                // 只有在会话仍然有效且仍在阅读模式时才算成功
                 if (sessionId && sessionId === readingSessionId && document.body.classList.contains(BODY_READING_CLASS)) {
                     resolve(true);
-                } else {
-                    resolve(false);
-                }
+                } else { resolve(false); }
                 return;
             }
 
             let done = false;
-
             const cleanup = () => {
                 if (done) return;
                 done = true;
                 mainImg.removeEventListener('load', onLoad);
                 mainImg.removeEventListener('error', onError);
             };
-
             const onLoad = () => {
-                // 会话已失效或已退出阅读模式：视为取消
                 if (!sessionId || sessionId !== readingSessionId || !document.body.classList.contains(BODY_READING_CLASS)) {
-                    cleanup();
-                    resolve(false);
-                    return;
+                    cleanup(); resolve(false); return;
                 }
-
-                if (isTargetSrc()) {
-                    cleanup();
-                    resolve(true);
-                }
+                if (isTargetSrc()) { cleanup(); resolve(true); }
             };
-
-            const onError = () => {
-                cleanup();
-                resolve(false);
-            };
+            const onError = () => { cleanup(); resolve(false); };
 
             mainImg.addEventListener('load', onLoad);
             mainImg.addEventListener('error', onError);
 
-            // 超时兜底，防止卡死
             setTimeout(() => {
                 if (done) return;
                 cleanup();
-
-                // 超时时如果会话已失效或已退出阅读模式，同样视为取消，不触发任何后续刷新
-                if (!sessionId || sessionId !== readingSessionId || !document.body.classList.contains(BODY_READING_CLASS)) {
-                    resolve(false);
-                } else {
-                    resolve(false);
-                }
+                resolve(false);
             }, timeout);
         });
     }
@@ -355,8 +326,12 @@
     }
 
     // ==========================================
-    // 核心工具函数
+    //                 核心工具函数
     // ==========================================
+
+    function clamp(val, min, max) {
+        return Math.min(Math.max(val, min), max);
+    }
 
     function looksLikeReader() {
         return /reader|read|id=/.test(location.href) || !!document.querySelector('#reader, .reader');
@@ -366,19 +341,169 @@
         return document.body.classList.contains(BODY_READING_CLASS);
     }
 
+    function checkIndicatorOverlap() {
+        const indicator = document.getElementById(PAGE_INDICATOR_ID);
+        const display = document.getElementById('display');
+        const img = display ? (display.querySelector('img.reader-image') || document.getElementById('img')) : null;
+
+        if (!indicator || !img) return;
+
+        const r1 = indicator.getBoundingClientRect();
+        const r2 = img.getBoundingClientRect();
+
+        let renderRect = { left: r2.left, right: r2.right, top: r2.top, bottom: r2.bottom };
+
+        if (img.naturalWidth && img.naturalHeight) {
+            const imgRatio = img.naturalWidth / img.naturalHeight;
+            const boxRatio = r2.width / r2.height;
+
+            if (imgRatio < boxRatio) {
+                const renderWidth = r2.height * imgRatio;
+                const gap = (r2.width - renderWidth) / 2;
+                renderRect.left = r2.left + gap;
+                renderRect.right = r2.right - gap;
+            } else if (imgRatio > boxRatio) {
+                const renderHeight = r2.width / imgRatio;
+                const gap = (r2.height - renderHeight) / 2;
+                renderRect.top = r2.top + gap;
+                renderRect.bottom = r2.bottom - gap;
+            }
+        }
+
+        const noOverlap = (
+            r1.right < renderRect.left ||
+            r1.left > renderRect.right ||
+            r1.bottom < renderRect.top ||
+            r1.top > renderRect.bottom
+        );
+
+        if (noOverlap) { indicator.classList.add('safe-zone'); }
+        else { indicator.classList.remove('safe-zone'); }
+    }
+
     function updatePageIndicator() {
         const info = getPageInfo();
         const el = document.getElementById(PAGE_INDICATOR_ID);
+
         if (info && el) el.textContent = `${info.current} / ${info.total}`;
 
         if (isReadingMode()) {
+            if (zoomState.scale > 1.01) {
+                if (el) {
+                    el.classList.remove('visible');
+                    el.classList.remove('safe-zone');
+                    // 确保样式立即生效，防止闪烁
+                    el.style.opacity = '0';
+                }
+                return;
+            } else {
+                // 非缩放模式，恢复 opacity 控制权给 CSS 类
+                if (el) el.style.opacity = '';
+            }
+
+            const display = document.getElementById('display');
+            const targetImg = display ? (display.querySelector('img.reader-image') || document.getElementById('img')) : null;
+            if (imgResizeObserver && targetImg) {
+                imgResizeObserver.disconnect();
+                imgResizeObserver.observe(targetImg);
+                if(display) imgResizeObserver.observe(display);
+            }
+
+            requestAnimationFrame(checkIndicatorOverlap);
+
+            // 显示页码
+            if (el) el.classList.add('visible');
+
+            if (indicatorHideTimer) clearTimeout(indicatorHideTimer);
+            indicatorHideTimer = setTimeout(() => {
+                if (el) el.classList.remove('visible');
+            }, 1000);
+
             updateGhosts(info);
             hookReaderFunctions();
         }
     }
 
     // ==========================================
-    // 样式注入
+    //               自动翻页功能
+    // ==========================================
+
+    function scheduleNextAutoTurn() {
+        if (autoTurnState.timer) clearTimeout(autoTurnState.timer);
+        if (!autoTurnState.active) return;
+
+        const interval = Math.max(1, userSettings.autoTurnInterval || 3) * 1000;
+
+        autoTurnState.timer = setTimeout(() => {
+            if (!autoTurnState.active) return;
+            const info = getPageInfo();
+            if (info.current < info.total) {
+                executePageTurn('next');
+            } else {
+                stopAutoTurn();
+            }
+        }, interval);
+    }
+
+    function startAutoTurn() {
+        if (autoTurnState.active) return;
+
+        autoTurnState.active = true;
+        updateAutoTurnBtnState();
+
+        const indicator = document.getElementById(PAGE_INDICATOR_ID);
+        if (indicator) {
+            indicator.textContent = "▶ 自动翻页开启";
+            indicator.classList.add('visible');
+            setTimeout(() => {
+                 if(indicator.textContent === "▶ 自动翻页开启") {
+                     updatePageIndicator();
+                 }
+            }, 1500);
+        }
+        scheduleNextAutoTurn();
+    }
+
+    function stopAutoTurn() {
+        autoTurnState.active = false;
+        if (autoTurnState.timer) {
+            clearTimeout(autoTurnState.timer);
+            autoTurnState.timer = null;
+        }
+        updateAutoTurnBtnState();
+
+        const indicator = document.getElementById(PAGE_INDICATOR_ID);
+        if (indicator && isReadingMode()) {
+            indicator.textContent = "■ 自动翻页停止";
+            indicator.classList.add('visible');
+            setTimeout(() => {
+                 if(indicator.textContent === "■ 自动翻页停止") {
+                     updatePageIndicator();
+                 }
+            }, 1000);
+        }
+    }
+
+    function toggleAutoTurn() {
+        if (autoTurnState.active) stopAutoTurn();
+        else startAutoTurn();
+    }
+
+    function updateAutoTurnBtnState() {
+        const btn = document.getElementById(AUTO_BTN_ID);
+        if (!btn) return;
+        btn.innerHTML = autoTurnState.active ? '■' : '▶';
+        if (autoTurnState.active) {
+            btn.style.borderColor = '#4CAF50';
+            btn.style.color = '#4CAF50';
+        } else {
+            btn.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+            btn.style.color = 'rgba(255, 255, 255, 0.95)';
+        }
+    }
+
+    // ==========================================
+    //                  样式注入
     // ==========================================
 
     function injectStyle() {
@@ -386,6 +511,10 @@
         const style = document.createElement('style');
         style.id = STYLE_ID;
         style.textContent = `
+                body.${BODY_READING_CLASS} div.sni img {
+                    border-radius: 0 !important;
+                }
+
                 body.${BODY_READING_CLASS},
                 html.${BODY_READING_CLASS} {
                     overflow: hidden !important;
@@ -433,7 +562,6 @@
                     overflow-y: auto !important;
                 }
 
-                /* 强制修复缩略图点击 */
                 body.${BODY_READING_CLASS} #archivePagesOverlay .quick-thumbnail,
                 body.${BODY_READING_CLASS} #archivePagesOverlay .quick-thumbnail * {
                     pointer-events: auto !important;
@@ -461,10 +589,11 @@
                     left: 0 !important;
                     right: 0 !important;
                     top: 0 !important;
-                    transform: translateX(0); will-change: transform;
+                    transform: translateX(0);
+                    /* 移除 will-change: transform，避免缩放时的模糊问题 */
                     cursor: grab; pointer-events: auto !important;
                     overflow: visible !important;
-                    /* Gap dynamic via JS */
+                    transform-origin: center center; /* 确保缩放中心 */
                 }
                 body.${BODY_READING_CLASS} #display:active { cursor: grabbing; }
 
@@ -486,14 +615,9 @@
                 }
 
                 body.${BODY_READING_CLASS} .sni {
-                    padding: 0 !important;
-                    margin: 0 !important;
-                    width: auto !important;
-                    max-width: none !important;
-                    display: contents !important;
+                    padding: 0 !important; margin: 0 !important; width: auto !important; max-width: none !important; display: contents !important;
                 }
 
-                /* 幽灵页 */
                 .lrr-ghost-side {
                     position: absolute; top: 0;
                     width: 100vw; height: 100vh;
@@ -502,443 +626,153 @@
                 }
                 .lrr-ghost-left { left: -100vw; }
                 .lrr-ghost-right { left: 100vw; }
-
                 .lrr-ghost-container {
-                    display: flex; flex-direction: row;
-                    justify-content: center; align-items: center;
-                    width: 100%; height: 100%;
+                    display: flex; flex-direction: row; justify-content: center; align-items: center; width: 100%; height: 100%;
                 }
                 .lrr-ghost-container.single-view .lrr-ghost-img { max-width: 100vw !important; max-height: 100vh !important; }
                 .lrr-ghost-container.double-view .lrr-ghost-img { max-width: 50vw !important; max-height: 100vh !important; }
                 .lrr-ghost-text { color: #444; font-size: 20px; font-weight: bold; text-align: center; }
 
-                /* 浮动按钮样式（统一玻璃风格） */
-                #${BUTTON_ID}, #${THUMB_BUTTON_ID} {
+                /* 按钮通用样式 */
+                #${BUTTON_ID}, #${THUMB_BUTTON_ID}, #${AUTO_BTN_ID} {
                     position: fixed;
-                    z-index: 200000;
-                    bottom: 30px;
-                    width: 48px;
-                    height: 48px;
-                    border-radius: 999px;
-                    background: var(--glass-bg, rgba(28, 30, 36, 0.96));
-                    border: 1px solid var(--glass-border, rgba(140,160,190,0.28));
-                    backdrop-filter: blur(8px);
-                    color: var(--text-primary, #e3e9f3);
-                    font-size: 22px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    box-shadow: var(--shadow-soft, 0 10px 28px -8px rgba(5,10,25,0.72));
-                    transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1));
-
-                    -webkit-user-select: none;
-                    user-select: none;
-                    -webkit-touch-callout: none;
-                    touch-action: manipulation;
+                    z-index: 200001; /* 必须高于热区(199999) */
+                    width: 48px; height: 48px; border-radius: 50%;
+                    display: flex; align-items: center; justify-content: center;
+                    cursor: pointer; font-size: 20px;
+                    background: rgba(0, 0, 0, 0.6);
+                    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    color: rgba(255, 255, 255, 0.95);
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    /* 统一过渡动画 */
+                    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease, visibility 0.3s;
+                    -webkit-user-select: none; user-select: none;
+                    -webkit-touch-callout: none; touch-action: manipulation;
                     -webkit-tap-highlight-color: transparent;
                 }
-                #${BUTTON_ID}:hover,
-                #${THUMB_BUTTON_ID}:hover {
-                    background: var(--glass-bg-hover, rgba(40,43,52,0.98));
-                    box-shadow: var(--shadow-hover, 0 14px 34px -6px rgba(5,12,32,0.9));
-                    transform: translateY(-2px);
-                }
-                #${BUTTON_ID}:active,
-                #${THUMB_BUTTON_ID}:active {
-                    transform: scale(0.94);
-                    background: rgba(50,50,50,0.9);
-                    box-shadow: var(--shadow-card, 0 4px 18px rgba(0,0,0,0.36));
+
+                @media (hover: hover) {
+                    #${BUTTON_ID}:hover, #${THUMB_BUTTON_ID}:hover, #${AUTO_BTN_ID}:hover {
+                        background: rgba(50, 50, 50, 0.9);
+                        border-color: rgba(255, 255, 255, 0.6);
+                        z-index: 200002;
+                    }
                 }
 
-                #${THUMB_BUTTON_ID} {
-                    font-size: 18px;
-                    opacity: 0;
-                    pointer-events: none;
-                    visibility: hidden;
+                #${BUTTON_ID}:active, #${THUMB_BUTTON_ID}:active, #${AUTO_BTN_ID}:active {
+                    background: rgba(20, 20, 20, 0.9);
+                    transform: scale(0.95);
                 }
 
-                /* 阅读模式隐藏状态：完全移除交互 */
+                /* 默认隐藏子按钮，层级稍低但需高于热区 */
+                #${THUMB_BUTTON_ID}, #${AUTO_BTN_ID} {
+                    opacity: 0; pointer-events: none; visibility: hidden;
+                }
+
+                /* 阅读模式 */
                 body.${BODY_READING_CLASS} #${BUTTON_ID},
-                body.${BODY_READING_CLASS} #${THUMB_BUTTON_ID} {
-                    opacity: 0;
-                    pointer-events: none;
-                    visibility: hidden;
+                body.${BODY_READING_CLASS} #${THUMB_BUTTON_ID},
+                body.${BODY_READING_CLASS} #${AUTO_BTN_ID} {
+                    opacity: 0; pointer-events: none; visibility: hidden;
                 }
 
-                /* 非阅读模式下主按钮显示 */
+                /* 非阅读模式 */
                 body:not(.${BODY_READING_CLASS}) #${BUTTON_ID} {
-                    opacity: 1 !important;
-                    pointer-events: auto !important;
-                    visibility: visible !important;
+                    opacity: 1 !important; pointer-events: auto !important; visibility: visible !important; transform: none !important;
                 }
                 body:not(.${BODY_READING_CLASS}) #${BUTTON_ID}.hide-on-scroll {
-                    transform: translateY(100px);
-                    opacity: 0 !important;
+                    transform: translateY(100px); opacity: 0 !important;
                 }
 
-                /* 触摸热区 */
-                #${HITAREA_ID}, #${LEFT_HITAREA_ID} {
-                    position: fixed; bottom: 0; z-index: 199999;
-                    width: 15vw; height: 15vh;
+                /* 热区样式 */
+                #${HITAREA_ID} {
+                    position: fixed;
+                    bottom: 0;
+                    z-index: 199999;
+                    width: 15vw;
+                    height: 15vh;
                     background: transparent;
                     pointer-events: none;
                 }
-                #${HITAREA_ID} { right: 0; }
-                #${LEFT_HITAREA_ID} { left: 0; }
-                body.${BODY_READING_CLASS} #${HITAREA_ID},
-                body.${BODY_READING_CLASS} #${LEFT_HITAREA_ID} { pointer-events: auto; }
+                body.${BODY_READING_CLASS} #${HITAREA_ID} { pointer-events: auto; }
 
-                /* 页码指示器：默认按手机端来设计 */
+                /* 页码指示器 */
                 #${PAGE_INDICATOR_ID} {
-                    position: fixed;
-                    z-index: 200000;
-
-                    left: 50%;
-                    transform: translateX(-50%);
-                    bottom: calc(env(safe-area-inset-bottom, 0px) + 15px);
-
-                    background: rgba(0,0,0,0.5);
-                    color: #fff;
-                    padding: 2px 8px;
-                    border-radius: 10px;
-                    font-size: 12px;
-                    pointer-events: none;
-                    opacity: 0;
-                    transition: opacity 0.3s;
-                    white-space: nowrap;
-                    text-align: center;
+                    position: fixed; z-index: 200000;
+                    left: 50%; transform: translateX(-50%);
+                    bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+                    background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+                    border: 1px solid rgba(255, 255, 255, 0.15); color: rgba(255, 255, 255, 0.95);
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.6); box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    padding: 1px 8px; border-radius: 20px;
+                    font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: 0.5px;
+                    pointer-events: none; opacity: 0; visibility: hidden;
+                    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s;
                 }
-
-                /* 阅读模式下显示 */
-                body.${BODY_READING_CLASS} #${PAGE_INDICATOR_ID} {
-                    opacity: 1;
+                body.${BODY_READING_CLASS} #${PAGE_INDICATOR_ID}.visible {
+                    opacity: 1 !important; visibility: visible !important; transition: opacity 0.1s ease-out;
                 }
-
-                /* 宽屏 / 桌面端：右下角显示，避免挡住图片中轴线 */
-                @media (min-width: 960px) {
-                    #${PAGE_INDICATOR_ID} {
-                        left: auto;
-                        transform: none;
-                        right: 16px;
-                        bottom: 6px;
-                    }
+                body.${BODY_READING_CLASS} #${PAGE_INDICATOR_ID}.safe-zone {
+                    opacity: 1; visibility: visible; transition: opacity 0.3s ease-in;
                 }
+                @media (min-width: 960px) { #${PAGE_INDICATOR_ID} { left: auto; transform: none; right: 10px; bottom: 2px; } }
+                @media (orientation: landscape) and (min-width: 720px) { #${PAGE_INDICATOR_ID} { left: auto; transform: none; right: 10px; bottom: 2px; } }
 
-                /* 可选：横屏但不是特别宽的设备（如平板 / 横屏手机），也用右下角 */
-                @media (orientation: landscape) and (min-width: 720px) {
-                    #${PAGE_INDICATOR_ID} {
-                        left: auto;
-                        transform: none;
-                        right: 16px;
-                        bottom: 6px;
-                    }
-                }
-
-                /* 遮罩层保持不变 */
                 .lrr-thumb-backdrop {
-                    position: fixed;
-                    inset: 0;
-                    background: rgba(0,0,0,0.7);
-                    z-index: 2147483646;
-                    backdrop-filter: blur(2px);
+                    position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2147483646; backdrop-filter: blur(2px);
                 }
 
-                /* --- 设置面板样式（玻璃卡片 + 分区布局） --- */
                 #${SETTINGS_MODAL_ID} {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100vw;
-                    height: 100vh;
-                    background: rgba(0,0,0,0.5);
-                    z-index: 200001;
-                    display: none;
-                    align-items: center;
-                    justify-content: center;
-                    backdrop-filter: blur(6px);
-
-                    -webkit-user-select: none !important;
-                    user-select: none !important;
+                    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+                    background: rgba(0,0,0,0.5); z-index: 200001; display: none;
+                    align-items: center; justify-content: center; backdrop-filter: blur(6px);
+                    -webkit-user-select: none !important; user-select: none !important;
                 }
-
                 .lrr-settings-content {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 14px;
-
-                    background: var(--glass-bg, rgba(28,30,36,0.96));
-                    color: var(--text-primary, #e3e9f3);
-                    width: 320px;
-                    max-width: calc(100vw - 32px);
-                    padding: 18px 18px 14px;
+                    display: flex; flex-direction: column; gap: 14px;
+                    background: var(--glass-bg, rgba(28,30,36,0.96)); color: var(--text-primary, #e3e9f3);
+                    width: 320px; max-width: calc(100vw - 32px); padding: 18px 18px 14px;
                     border-radius: var(--radius-lg, 16px);
                     border: 1px solid var(--glass-border, rgba(140,160,190,0.28));
                     box-shadow: var(--shadow-soft, 0 10px 28px -8px rgba(5,10,25,0.72));
                     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-                    box-sizing: border-box;
-                    text-align: left; /* 整体文本左对齐 */
+                    box-sizing: border-box; text-align: left;
                 }
-
-                .lrr-settings-header {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    gap: 10px;
-                    padding-bottom: 10px;
-                    border-bottom: 1px solid rgba(120, 135, 160, 0.38);
-                    text-align: left;
-                }
-
-                .lrr-settings-header-main {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 2px;
-                    text-align: left;
-                }
-
-                .lrr-settings-title {
-                    font-size: 15px;
-                    font-weight: 600;
-                    color: var(--text-primary, #e3e9f3);
-                    text-align: left;
-                }
-
-                .lrr-settings-subtitle {
-                    font-size: 11px;
-                    color: var(--text-secondary, #a7b1c2);
-                    opacity: 0.9;
-                    text-align: left;
-                }
-
-                .lrr-settings-close {
-                    cursor: pointer;
-                    font-size: 18px;
-                    line-height: 1;
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 999px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: var(--text-secondary, #a7b1c2);
-                    background: transparent;
-                    transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1));
-                }
-
-                .lrr-settings-close:hover {
-                    background: rgba(255,255,255,0.06);
-                    color: var(--text-primary, #e3e9f3);
-                }
-
-                /* 分组布局：开关一组，输入/选择一组 */
-                .lrr-settings-body {
-                    display: grid;
-                    grid-template-columns: 1fr;
-                    gap: 10px 16px;
-                    max-height: min(60vh, 420px);
-                    padding-right: 2px;
-                    margin-right: -4px;
-                    overflow-y: auto;
-                }
-
-                /* 标记为开关项的放在左侧列，输入/选择项放在右侧列（宽屏时） */
-                @media (min-width: 560px) {
-                    .lrr-settings-body {
-                        grid-template-columns: repeat(2, minmax(0, 1fr));
-                    }
-
-                    .lrr-setting-item--switch,
-                    .lrr-setting-item--toggle {
-                        grid-column: 1;
-                    }
-
-                    .lrr-setting-item--field,
-                    .lrr-setting-item--input,
-                    .lrr-setting-item--select {
-                        grid-column: 2;
-                    }
-                }
-
-                .lrr-settings-section {
-                    padding-top: 8px;
-                    margin-top: 2px;
-                    border-top: 1px solid rgba(120, 135, 160, 0.26);
-                    text-align: left;
-                }
-
-                .lrr-settings-section-title {
-                    font-size: 12px;
-                    font-weight: 600;
-                    letter-spacing: 0.02em;
-                    text-transform: uppercase;
-                    color: var(--text-secondary, #a7b1c2);
-                    margin-bottom: 6px;
-                    text-align: left;
-                }
-
-                .lrr-setting-item {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 4px;
-                    padding: 6px 0;
-                    text-align: left;
-                }
-
-                .lrr-setting-label-row {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    gap: 8px;
-                    text-align: left;
-                }
-
-                .lrr-setting-label {
-                    font-size: 13px;
-                    color: var(--text-primary, #e3e9f3);
-                    text-align: left;
-                }
-
-                .lrr-setting-hint {
-                    font-size: 11px;
-                    color: var(--text-secondary, #a7b1c2);
-                    opacity: 0.9;
-                    text-align: left;
-                }
-
-                .lrr-setting-input-row {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    gap: 10px;
-                    margin-top: 2px;
-                    text-align: left;
-                }
-
-                /* 开关 */
-                .lrr-switch {
-                    position: relative;
-                    display: inline-flex;
-                    align-items: center;
-                    width: 40px;
-                    height: 20px;
-                }
-                .lrr-switch input {
-                    opacity: 0;
-                    width: 0;
-                    height: 0;
-                }
-                .lrr-slider {
-                    position: absolute;
-                    cursor: pointer;
-                    inset: 0;
-                    background-color: #444b57;
-                    border-radius: 20px;
-                    transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1));
-                    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4);
-                }
-                .lrr-slider:before {
-                    position: absolute;
-                    content: "";
-                    height: 16px;
-                    width: 16px;
-                    left: 2px;
-                    bottom: 2px;
-                    background-color: #fafbff;
-                    border-radius: 50%;
-                    transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1));
-                    box-shadow: 0 2px 6px rgba(0,0,0,0.45);
-                }
-                input:checked + .lrr-slider {
-                    background: linear-gradient(135deg, var(--accent-color, #4a9ff0), #6cc9ff);
-                    box-shadow: 0 0 0 1px rgba(74,159,240,0.6);
-                }
-                input:checked + .lrr-slider:before {
-                    transform: translateX(20px);
-                }
-
-                /* 选择器与输入框 */
-                .lrr-select,
-                .lrr-input {
-                    background: rgba(18, 20, 26, 0.9);
-                    color: var(--text-primary, #e3e9f3);
-                    border: 1px solid rgba(114, 132, 160, 0.7);
-                    padding: 5px 8px;
-                    border-radius: var(--radius-sm, 6px);
-                    width: 100%;
-                    box-sizing: border-box;
-                    font-size: 12px;
-                    outline: none;
-                    transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1));
-                    text-align: left; /* 输入框文本左对齐 */
-                }
-
-                /* 选择框内文字单独居中对齐 */
-                .lrr-select {
-                    text-align: center;
-                    text-align-last: center;
-                }
-
-                .lrr-select:focus,
-                .lrr-input:focus {
-                    border-color: var(--accent-color, #4a9ff0);
-                    box-shadow: 0 0 0 1px rgba(74,159,240,0.65);
-                    background: rgba(22, 25, 32, 0.98);
-                }
-
-                .lrr-select::placeholder,
-                .lrr-input::placeholder {
-                    color: rgba(160, 172, 192, 0.8);
-                }
-
-                /* 数字输入框：强制纯文本样式，去掉右侧加减按钮 */
-                .lrr-input[type="number"] {
-                    -moz-appearance: textfield;
-                }
-                .lrr-input[type="number"]::-webkit-inner-spin-button,
-                .lrr-input[type="number"]::-webkit-outer-spin-button {
-                    -webkit-appearance: none;
-                    margin: 0;
-                }
-
-                /* 底部轻量说明区域（可选） */
-                .lrr-settings-footer {
-                    margin-top: 4px;
-                    padding-top: 8px;
-                    border-top: 1px dashed rgba(120, 135, 160, 0.26);
-                    font-size: 10px;
-                    color: var(--text-secondary, #a7b1c2);
-                    display: flex;
-                    justify-content: space-between;
-                    gap: 8px;
-                    opacity: 0.9;
-                    text-align: left;
-                }
-
-                @media (max-width: 480px) {
-                    .lrr-settings-content {
-                        width: calc(100vw - 24px);
-                        padding: 16px 14px 12px;
-                        border-radius: 14px;
-                    }
-                    .lrr-settings-body {
-                        max-height: min(65vh, 460px);
-                        grid-template-columns: 1fr;
-                    }
-                }
+                .lrr-settings-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(120, 135, 160, 0.38); text-align: left; }
+                .lrr-settings-close { cursor: pointer; font-size: 18px; line-height: 1; width: 24px; height: 24px; border-radius: 999px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary, #a7b1c2); background: transparent; transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)); }
+                .lrr-settings-close:hover { background: rgba(255,255,255,0.06); color: var(--text-primary, #e3e9f3); }
+                .lrr-settings-body { display: grid; grid-template-columns: 1fr; gap: 10px 16px; max-height: min(60vh, 420px); padding-right: 2px; margin-right: -4px; overflow-y: auto; }
+                .lrr-setting-item { display: flex; flex-direction: column; gap: 4px; padding: 6px 0; text-align: left; }
+                .lrr-setting-label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: left; }
+                .lrr-setting-label { font-size: 13px; color: var(--text-primary, #e3e9f3); text-align: left; }
+                .lrr-setting-input-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 2px; text-align: left; }
+                .lrr-switch { position: relative; display: inline-flex; align-items: center; width: 40px; height: 20px; }
+                .lrr-switch input { opacity: 0; width: 0; height: 0; }
+                .lrr-slider { position: absolute; cursor: pointer; inset: 0; background-color: #444b57; border-radius: 20px; transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)); box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4); }
+                .lrr-slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: #fafbff; border-radius: 50%; transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)); box-shadow: 0 2px 6px rgba(0,0,0,0.45); }
+                input:checked + .lrr-slider { background: linear-gradient(135deg, var(--accent-color, #4a9ff0), #6cc9ff); box-shadow: 0 0 0 1px rgba(74,159,240,0.6); }
+                input:checked + .lrr-slider:before { transform: translateX(20px); }
+                .lrr-select, .lrr-input { background: rgba(18, 20, 26, 0.9); color: var(--text-primary, #e3e9f3); border: 1px solid rgba(114, 132, 160, 0.7); padding: 5px 8px; border-radius: var(--radius-sm, 6px); width: 100%; box-sizing: border-box; font-size: 12px; outline: none; transition: var(--transition-smooth, all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)); text-align: left; }
+                .lrr-select { text-align: center; text-align-last: center; }
+                .lrr-select:focus, .lrr-input:focus { border-color: var(--accent-color, #4a9ff0); box-shadow: 0 0 0 1px rgba(74,159,240,0.65); background: rgba(22, 25, 32, 0.98); }
+                .lrr-select::placeholder, .lrr-input::placeholder { color: rgba(160, 172, 192, 0.8); }
+                .lrr-input[type="number"] { -moz-appearance: textfield; }
+                .lrr-input[type="number"]::-webkit-inner-spin-button, .lrr-input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+                @media (max-width: 480px) { .lrr-settings-content { width: calc(100vw - 24px); padding: 16px 14px 12px; border-radius: 14px; } .lrr-settings-body { max-height: min(65vh, 460px); grid-template-columns: 1fr; } }
             `;
         document.head.appendChild(style);
     }
 
 
     // ==========================================
-    // 逻辑函数 - 设置面板
+    //                设置面板
     // ==========================================
 
     function openSettingsModal() {
         let modal = document.getElementById(SETTINGS_MODAL_ID);
-        
-        // 定义关闭逻辑，确保恢复全局选中状态
+
         const closeSettings = () => {
             if (modal) {
                 modal.style.display = 'none';
@@ -968,67 +802,158 @@
                     </div>
 
                     <div class="lrr-setting-item">
-                        <span class="lrr-setting-label">阅读模式按钮位置</span>
-                        <select class="lrr-select" id="lrr-cfg-pos">
-                            <option value="right">右下角 (默认)</option>
-                            <option value="left">左下角</option>
-                        </select>
-                    </div>
-
-                    <div class="lrr-setting-item">
-                        <div class="lrr-setting-input-row">
-                            <span class="lrr-setting-label" style="margin:0">缩略图按钮: 显示在主按钮上方</span>
-                            <label class="lrr-switch">
-                                <input type="checkbox" id="lrr-cfg-stacked">
-                                <span class="lrr-slider"></span>
-                            </label>
-                        </div>
-                        <div style="font-size:12px; color:#888; margin-top:4px;">关闭则默认显示在主按钮对侧</div>
+                        <span class="lrr-setting-label">自动翻页间隔 (秒)</span>
+                        <input type="number" class="lrr-input" id="lrr-cfg-interval" min="1" max="60" placeholder="3">
                     </div>
 
                     <div class="lrr-setting-item">
                         <span class="lrr-setting-label">双页间距 (px)</span>
                         <input type="number" class="lrr-input" id="lrr-cfg-gap" min="0" max="100">
                     </div>
+
+                    <div class="lrr-setting-item">
+                        <span class="lrr-setting-label">按钮展开方向</span>
+                        <select class="lrr-select" id="lrr-cfg-expand">
+                            <option value="up">朝上方展开</option>
+                            <option value="side">朝侧方展开</option>
+                        </select>
+                    </div>
+
+                    <div class="lrr-setting-item">
+                        <span class="lrr-setting-label">阅读模式按钮位置</span>
+                        <select class="lrr-select" id="lrr-cfg-pos">
+                            <option value="right">右下角</option>
+                            <option value="left">左下角</option>
+                        </select>
+                    </div>
                 </div>
             `;
             document.body.appendChild(modal);
 
-            // 绑定事件
             modal.querySelector('.lrr-settings-close').addEventListener('click', closeSettings);
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) closeSettings();
-            });
+            modal.addEventListener('click', (e) => { if (e.target === modal) closeSettings(); });
 
             const elAuto = document.getElementById('lrr-cfg-auto');
             const elPos = document.getElementById('lrr-cfg-pos');
             const elGap = document.getElementById('lrr-cfg-gap');
-            const elStacked = document.getElementById('lrr-cfg-stacked');
+            const elExpand = document.getElementById('lrr-cfg-expand');
+            const elInterval = document.getElementById('lrr-cfg-interval');
 
             elAuto.addEventListener('change', (e) => { userSettings.autoEnter = e.target.checked; saveSettings(); });
             elPos.addEventListener('change', (e) => { userSettings.btnPosition = e.target.value; saveSettings(); });
             elGap.addEventListener('change', (e) => { userSettings.pageGap = parseInt(e.target.value) || 0; saveSettings(); });
-            elStacked.addEventListener('change', (e) => { 
-                userSettings.thumbLayout = e.target.checked ? 'stacked' : 'mirror'; 
-                saveSettings(); 
+            elInterval.addEventListener('change', (e) => {
+                let val = parseFloat(e.target.value);
+                if (isNaN(val) || val < 1) val = 1;
+                userSettings.autoTurnInterval = val;
+                saveSettings();
+            });
+            elExpand.addEventListener('change', (e) => {
+                userSettings.expandDirection = e.target.value;
+                saveSettings();
             });
         }
 
-        // 同步当前值
+        // 同步 UI
         document.getElementById('lrr-cfg-auto').checked = userSettings.autoEnter;
         document.getElementById('lrr-cfg-pos').value = userSettings.btnPosition;
         document.getElementById('lrr-cfg-gap').value = userSettings.pageGap;
-        document.getElementById('lrr-cfg-stacked').checked = userSettings.thumbLayout === 'stacked';
+        document.getElementById('lrr-cfg-interval').value = userSettings.autoTurnInterval || 3;
+        document.getElementById('lrr-cfg-expand').value = userSettings.expandDirection || 'up';
 
         modal.style.display = 'flex';
-        // 打开时强制禁止全局选中，防止背景被选中
         document.body.style.userSelect = 'none';
         document.body.style.webkitUserSelect = 'none';
     }
 
     // ==========================================
-    // 逻辑函数 - 交互控制
+    //                 交互控制
     // ==========================================
+
+    // 热区触发入口
+    function handleZoneTrigger() {
+        if (Date.now() < inputBlockUntil) return;
+        showControls();
+    }
+
+    // 显示控件并执行展开动画
+    function showControls() {
+        if (!isReadingMode()) return;
+
+        const mainBtn = document.getElementById(BUTTON_ID);
+        const thumbBtn = document.getElementById(THUMB_BUTTON_ID);
+        const autoBtn = document.getElementById(AUTO_BTN_ID);
+        const buttons = [mainBtn, thumbBtn, autoBtn];
+
+        // 1. 设置可见性、重置动画曲线
+        buttons.forEach(btn => {
+            if (!btn) return;
+            btn.style.visibility = 'visible';
+            btn.style.zIndex = '200001';
+
+            btn.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease, visibility 0.3s';
+
+            btn.style.pointerEvents = 'auto';
+            btn.style.opacity = '1';
+        });
+
+        // 2. 计算展开位置
+        const step = 63;
+        const dir = userSettings.expandDirection;
+        const pos = userSettings.btnPosition;
+
+        if (mainBtn) mainBtn.style.transform = 'translate(0, 0) scale(1)';
+
+        [thumbBtn, autoBtn].forEach((btn, index) => {
+            if (!btn) return;
+            const distance = step * (index + 1);
+            let x = 0, y = 0;
+
+            if (dir === 'side') {
+                x = (pos === 'right') ? -distance : distance;
+            } else {
+                y = -distance;
+            }
+
+            btn.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+        });
+
+        // 3. 重置隐藏定时器
+        if (btnHideTimer) clearTimeout(btnHideTimer);
+        btnHideTimer = setTimeout(hideControls, 2500);
+    }
+
+    // 隐藏控件并收回动画
+    function hideControls() {
+        if (!isReadingMode()) return;
+
+        const btns = [
+            document.getElementById(BUTTON_ID),
+            document.getElementById(THUMB_BUTTON_ID),
+            document.getElementById(AUTO_BTN_ID)
+        ];
+
+        btns.forEach(btn => {
+            if (!btn) return;
+
+            // --- 设置收起专用动画 ---
+            btn.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease-out, visibility 0.3s';
+
+            // 执行收回
+            btn.style.transform = 'translate(0, 0) scale(0.8)';
+            btn.style.opacity = '0';
+            btn.style.pointerEvents = 'none';
+        });
+
+        // 等待最长的动画时间 (0.3s) 结束后完全隐藏
+        setTimeout(() => {
+            btns.forEach(btn => {
+                if (btn && btn.style.opacity === '0') {
+                    btn.style.visibility = 'hidden';
+                }
+            });
+        }, 300);
+    }
 
     function preventContextMenu(e) {
         e.preventDefault(); e.stopPropagation(); return false;
@@ -1045,12 +970,15 @@
     function handleCaptureClick(e) {
         if (!isReadingMode()) return;
 
-        // 修复核心：如果点击发生在缩略图覆盖层或遮罩上，直接放行，不要拦截
         if (e.target.closest('#archivePagesOverlay') || e.target.closest('.lrr-thumb-backdrop')) {
             return;
         }
 
-        if (e.target.closest(`#${BUTTON_ID}`) || e.target.closest(`#${THUMB_BUTTON_ID}`) || e.target.closest(`#${HITAREA_ID}`) || e.target.closest(`#${LEFT_HITAREA_ID}`) || e.target.closest(`#${SETTINGS_MODAL_ID}`)) {
+        if (e.target.closest(`#${BUTTON_ID}`) ||
+            e.target.closest(`#${THUMB_BUTTON_ID}`) ||
+            e.target.closest(`#${AUTO_BTN_ID}`) ||
+            e.target.closest(`#${HITAREA_ID}`) ||
+            e.target.closest(`#${SETTINGS_MODAL_ID}`)) {
             return;
         }
 
@@ -1140,148 +1068,43 @@
             if (overlay) {
                 overlay.style.setProperty('display', 'block', 'important');
                 ensureThumbBackdrop();
-                
-                // 覆盖层点击事件拦截（捕获阶段）
+
                 if (!overlay._hasDelegatedClick) {
                     overlay.addEventListener('click', function(e) {
                         const thumb = e.target.closest('.quick-thumbnail');
-                        
-                        // 1. 处理缩略图点击
+
                         if (thumb) {
                             e.preventDefault();
                             e.stopPropagation();
-                            e.stopImmediatePropagation(); // 阻止其他监听器
+                            e.stopImmediatePropagation();
 
                             const pageAttr = thumb.getAttribute('page');
                             if (pageAttr !== null) {
                                 const pageIndex = parseInt(pageAttr, 10);
-
-                                // 调用 LRR 原生翻页
-                                // 保持你当前的约定：直接传 pageIndex
                                 if (typeof Reader !== 'undefined' && Reader.goToPage) {
                                     Reader.goToPage(pageIndex);
                                 }
-
-                                // 立即关闭覆盖层
                                 closeThumbnailOverlay();
-
-                                // 关键变化：不再立即 mock 刷新，而是等待目标页图片真正加载完成
                                 waitForPageImageLoaded(pageIndex).then(() => {
                                     const info = getPageInfo();
                                     updatePageIndicator();
                                     updateGhosts(info);
                                 });
-
                                 return;
                             }
                         }
 
-                        // 2. 处理背景或其他点击（关闭面板）
                         if (e.target.closest('.id3') || e.target.tagName === 'A' || e.target.tagName === 'IMG') {
                             if (!thumb) {
                                 setTimeout(closeThumbnailOverlay, 50);
                             }
                         }
-                    }, true); // 使用捕获阶段
-                    
+                    }, true);
                     overlay._hasDelegatedClick = true;
                 }
             }
         }, 100);
     }
-
-    // -------- 按钮显隐与布局逻辑 --------
-
-    // 显示指定按钮（并确保可点击），随后自动隐藏
-    function tempShowButton(elementId) {
-        const btn = document.getElementById(elementId);
-        if (!btn) return;
-        // 只有阅读模式下需要动态显隐
-        if (isReadingMode()) {
-            // 如果当前是隐藏状态（opacity为0或未设置），则视为刚出现
-            const isHidden = btn.style.opacity === '0' || btn.style.opacity === '';
-            
-            btn.style.visibility = 'visible';
-            btn.style.opacity = '1';
-
-            if (isHidden) {
-                // 刚出现时禁止交互
-                btn.style.pointerEvents = 'none';
-                // 350ms 后恢复交互
-                if (btn._warmupTimer) clearTimeout(btn._warmupTimer);
-                btn._warmupTimer = setTimeout(() => {
-                    // 确保此时按钮仍然应该是显示状态
-                    if (btn.style.opacity === '1') {
-                        btn.style.pointerEvents = 'auto';
-                    }
-                }, 350);
-            }
-            // 如果不是刚出现（已经是1了），保持原状（由之前的 timer 负责开启 interaction，或者已经开启）
-        }
-
-        // 使用全局Timer防止闪烁
-        if (btnHideTimer) clearTimeout(btnHideTimer);
-        btnHideTimer = setTimeout(() => {
-            if (isReadingMode()) {
-                const b1 = document.getElementById(BUTTON_ID);
-                const b2 = document.getElementById(THUMB_BUTTON_ID);
-                
-                // 辅助隐藏函数：先淡出，动画结束后彻底隐藏
-                const hide = (el) => {
-                    if (!el) return;
-                    el.style.opacity = '0';
-                    el.style.pointerEvents = 'none';
-                    // 延迟 300ms (CSS transition time) 后设置 visibility: hidden
-                    // 这样可以确保移动端不会误触不可见的元素
-                    setTimeout(() => {
-                        if (el.style.opacity === '0') {
-                            el.style.visibility = 'hidden';
-                        }
-                    }, 300);
-                };
-
-                hide(b1);
-                hide(b2);
-            }
-        }, 2500);
-    }
-
-    // 触发右侧区域逻辑
-    function handleRightAreaTrigger() {
-        const isStacked = userSettings.thumbLayout === 'stacked';
-        if (isStacked) {
-            // 堆叠模式：如果主按钮在右侧，则显示两个；否则显示空（或看需求，这里假设堆叠都在同一侧显示）
-            if (userSettings.btnPosition === 'right') {
-                tempShowButton(BUTTON_ID);
-                tempShowButton(THUMB_BUTTON_ID);
-            } else {
-                // 主按钮在左，右侧无按钮
-            }
-        } else {
-            // 镜像模式
-            if (userSettings.btnPosition === 'right') tempShowButton(BUTTON_ID);
-            else tempShowButton(THUMB_BUTTON_ID);
-        }
-    }
-
-    // 触发左侧区域逻辑
-    function handleLeftAreaTrigger() {
-        const isStacked = userSettings.thumbLayout === 'stacked';
-        if (isStacked) {
-            // 堆叠模式：如果主按钮在左侧，则显示两个
-            if (userSettings.btnPosition === 'left') {
-                tempShowButton(BUTTON_ID);
-                tempShowButton(THUMB_BUTTON_ID);
-            } else {
-                // 主按钮在右，左侧无按钮
-            }
-        } else {
-            // 镜像模式
-            if (userSettings.btnPosition === 'right') tempShowButton(THUMB_BUTTON_ID);
-            else tempShowButton(BUTTON_ID);
-        }
-    }
-
 
     // -------- 翻页逻辑 --------
 
@@ -1327,6 +1150,10 @@
         setTimeout(() => {
             updatePageIndicator();
             attachDragEvents();
+
+            if (autoTurnState.active) {
+                scheduleNextAutoTurn();
+            }
         }, 150);
     }
 
@@ -1357,9 +1184,6 @@
         return true;
     }
 
-    // ==========================================
-    // 逻辑函数 (Ghost, Index Calc 等)
-    // ==========================================
     function getCurrentPageIndices(info) {
        const pages = (typeof Reader !== 'undefined' && Reader.pages) || archiveData.pages || [];
        const imgs = document.querySelectorAll('#display img.reader-image');
@@ -1430,7 +1254,6 @@
        let logicalNextIndices = [];
        let logicalPrevIndices = [];
 
-       // 获取用户设置的 preloadCount，限制在 1-10 之间
        let nextLimit = 10;
        try {
            const storedLimit = parseInt(localStorage.getItem('preloadCount') || '10', 10);
@@ -1442,17 +1265,14 @@
        if (double) {
            const currentIndices = getCurrentPageIndices(info);
            if (currentIndices.length === 0) {
-               // Fallback if autodetection fails
                if (idx === 0) {
-                    // Next (dynamic)
                     let nextCursor = 1;
                     while (logicalNextIndices.length < nextLimit && nextCursor < total) {
                         logicalNextIndices.push(nextCursor);
                         nextCursor++;
                     }
                } else if (idx === 1) {
-                   logicalPrevIndices = [0]; // Prev 始终为 1-2 张
-                   // Next (dynamic)
+                   logicalPrevIndices = [0];
                    let nextCursor = idx + 2;
                    while (logicalNextIndices.length < nextLimit && nextCursor < total) {
                        logicalNextIndices.push(nextCursor);
@@ -1460,7 +1280,6 @@
                    }
                } else {
                    logicalPrevIndices = [idx - 2, idx - 1].filter(i => i >= 0);
-                   // Next (dynamic)
                    let nextCursor = idx + 2;
                    while (logicalNextIndices.length < nextLimit && nextCursor < total) {
                         logicalNextIndices.push(nextCursor);
@@ -1486,7 +1305,6 @@
                    if (nextStart === 0) {
                        logicalNextIndices = [0];
                    } else {
-                       // Next Loop (dynamic)
                        let cursor = nextStart;
                        while(logicalNextIndices.length < nextLimit && cursor < total) {
                             if (cursor >= 0) logicalNextIndices.push(cursor);
@@ -1496,14 +1314,11 @@
                }
            }
        } else {
-           // Single Page Mode
-           // Next Loop
            let cursor = idx + 1;
            while(logicalNextIndices.length < nextLimit && cursor < total) {
                logicalNextIndices.push(cursor);
                cursor++;
            }
-           // Prev Fixed
            if (idx - 1 >= 0) logicalPrevIndices = [idx - 1];
        }
 
@@ -1513,42 +1328,35 @@
        const createGhostContent = (indices) => {
            const validIndices = indices.filter(i => i >= 0 && i < total);
            if (validIndices.length === 0) return `<div class="lrr-ghost-text"></div>`;
-           
+
            let html = '';
-           // Container class determines flex-basis (50% or 100%)
-           // 这里我们只关心“可见”的幽灵页是否是双页，预加载的那些不应该影响布局
            const visibleCount = double ? 2 : 1;
-           // 只要有至少两个有效索引，我们就先用 double-view 的容器样式（让每个图占50%）
-           // 然后在下面把多余的图隐藏掉
-           const isVisualDouble = double && validIndices.length > 1; 
+           const isVisualDouble = double && validIndices.length > 1;
            const containerClass = isVisualDouble ? 'double-view' : 'single-view';
-           
+
            html += `<div class="lrr-ghost-container ${containerClass}">`;
            let sortedIndices = [...validIndices];
-           
-           // Sort order
+
            if (manga && isVisualDouble) {
                sortedIndices.sort((a, b) => b - a);
            } else {
                sortedIndices.sort((a, b) => a - b);
            }
-           
+
            sortedIndices.forEach((pageIdx, loopIndex) => {
                const url = getPageUrl(pageIdx);
                if (!url) return;
-               
+
                let sizeStyle = '';
                if (baseWidth && baseHeight) {
                    sizeStyle = `width:${baseWidth}px; height:${baseHeight}px; max-width:none; max-height:none;`;
                }
 
-               // 核心逻辑：只显示前1或2张（作为即时视觉反馈），后续图片设为display:none进行静默预加载
                let visibilityStyle = '';
                if (loopIndex >= visibleCount) {
                    visibilityStyle = 'display: none !important;';
                }
 
-               // 自动重载脚本：加载失败后1秒重试
                const onErrorScript = "this.onerror=null; setTimeout(()=>{ const curr = this.src; this.src = ''; this.src = curr; }, 1000);";
 
                html += `<img src="${url}" class="reader-image lrr-ghost-img" fetchpriority="low" ` +
@@ -1565,50 +1373,282 @@
 
 
     // ==========================================
-    // 拖拽事件处理
+    //                 拖拽事件处理
     // ==========================================
 
+    // 应用缩放和位移
+    function applyZoomTransform(display, tempDiffX = 0, tempDiffY = 0) {
+        if (!display) return;
+
+        // 获取当前视口尺寸
+        const vw = window.innerWidth || document.documentElement.clientWidth;
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+
+        // 计算当前缩放下的最大允许位移量 (边界限制)
+        const maxPanX = Math.max(0, (vw * zoomState.scale - vw) / 2);
+        const maxPanY = Math.max(0, (vh * zoomState.scale - vh) / 2);
+
+        // 计算目标位置（基础偏移 + 临时拖拽偏移）
+        let targetX = zoomState.panX + tempDiffX;
+        let targetY = zoomState.panY + tempDiffY;
+
+        // 强制限制在边界内
+        targetX = clamp(targetX, -maxPanX, maxPanX);
+        targetY = clamp(targetY, -maxPanY, maxPanY);
+
+        if (zoomState.scale > 1.01) {
+            display.style.transform = `translate(${targetX}px, ${targetY}px) scale(${zoomState.scale})`;
+        } else {
+             if (tempDiffX !== 0 && zoomState.scale === 1) {
+                 display.style.transform = `translateX(${tempDiffX}px)`;
+             } else {
+                 display.style.transform = `translateX(0px)`;
+             }
+        }
+
+        return { x: targetX, y: targetY }; // 返回修正后的坐标供状态更新
+    }
+
+
+    function resetZoom() {
+        zoomState.scale = 1;
+        zoomState.panX = 0;
+        zoomState.panY = 0;
+        const display = document.getElementById('display');
+        if (display) {
+            display.style.transition = `transform ${ZOOM_ANIM_SPEED} ease-out`;
+            display.style.transform = 'translateX(0px)';
+        }
+
+        const el = document.getElementById(PAGE_INDICATOR_ID);
+        if (el) {
+            el.style.opacity = '';
+        }
+    }
+
+    function handleDblClick(e) {
+        if (!isReadingMode()) return;
+
+        // 兼容 TouchEvent 和 MouseEvent 获取坐标
+        let clientX;
+        if (e.type === 'touchstart' && e.touches.length > 0) {
+            clientX = e.touches[0].clientX;
+        } else if (e.clientX) {
+            clientX = e.clientX;
+        } else {
+            clientX = window.innerWidth / 2;
+        }
+
+        // 逻辑：已经放大时 -> 缩小
+        if (zoomState.scale > 1.01) {
+            if (e.preventDefault) e.preventDefault();
+            resetZoom();
+            return;
+        }
+
+        let rectWidth = window.innerWidth;
+        let rectLeft = 0;
+        const display = document.getElementById('display');
+        const imgEl = display ? (display.querySelector('img.reader-image') || document.getElementById('img')) : null;
+
+        if (imgEl && imgEl.tagName === 'IMG') {
+            const rect = imgEl.getBoundingClientRect();
+            rectWidth = rect.width;
+            rectLeft = rect.left;
+        }
+
+        const ratio = (clientX - rectLeft) / rectWidth;
+
+        // 逻辑：双击中间 -> 放大
+        if (ratio >= 0.35 && ratio <= 0.65) {
+            if (e.preventDefault) e.preventDefault();
+
+            zoomState.scale = 2.5;
+            zoomState.panX = 0;
+            zoomState.panY = 0;
+
+            const ind = document.getElementById(PAGE_INDICATOR_ID);
+            if (ind) {
+                ind.classList.remove('visible');
+                ind.style.opacity = '0';
+            }
+
+            requestAnimationFrame(() => {
+                if (display) display.style.transition = `transform ${ZOOM_ANIM_SPEED} ease-out`;
+                applyZoomTransform(display);
+            });
+        }
+    }
+
+    // 桌面端滚轮缩放
+    function handleWheel(e) {
+        if (!isReadingMode()) return;
+        e.preventDefault();
+
+        const display = document.getElementById('display');
+        if (!display) return;
+
+        const delta = e.deltaY * -0.002;
+        let newScale = zoomState.scale + delta;
+
+        if (newScale < 1) newScale = 1;
+        if (newScale > 5) newScale = 5;
+
+        if (Math.abs(newScale - zoomState.scale) > 0.01) {
+            zoomState.scale = newScale;
+
+            if (zoomState.scale <= 1.01) {
+                zoomState.scale = 1;
+                zoomState.panX = 0;
+                zoomState.panY = 0;
+                resetZoom();
+            } else {
+                const ind = document.getElementById(PAGE_INDICATOR_ID);
+                if (ind) {
+                    ind.classList.remove('visible');
+                    ind.style.opacity = '0';
+                }
+            }
+
+            display.style.transition = 'transform 0.1s ease-out';
+            const corrected = applyZoomTransform(display);
+            zoomState.panX = corrected.x;
+            zoomState.panY = corrected.y;
+        }
+    }
+
+    // 拖拽与交互事件绑定
     function attachDragEvents() {
         const display = document.getElementById('display');
         if (!display) return;
-        if (display._lrrDragBound) return;
+
+        let lastTapTime = 0;
+
+        if (display._lrrDragBound) {
+            display.removeEventListener('wheel', handleWheel);
+            display.addEventListener('wheel', handleWheel, { passive: false });
+            display.removeEventListener('dblclick', handleDblClick);
+            display.addEventListener('dblclick', handleDblClick);
+            return;
+        }
+
+        display.addEventListener('wheel', handleWheel, { passive: false });
+        display.addEventListener('dblclick', handleDblClick);
 
         const start = (e) => {
             if (!isReadingMode()) return;
+            if (e.touches && e.touches.length > 2) return;
             const overlay = document.getElementById('archivePagesOverlay');
             if (overlay && overlay.style.display === 'block') return;
-
             if (!e.target.closest('#display')) return;
+
+            // --- 兼容变量：Touch 双击检测 ---
+            if (e.type === 'touchstart' && e.touches.length === 1) {
+                const currentTime = Date.now();
+                const tapLength = currentTime - lastTapTime;
+
+                // 使用 DOUBLE_TAP_DELAY 变量
+                if (tapLength < DOUBLE_TAP_DELAY && tapLength > 0) {
+                    e.preventDefault();
+                    handleDblClick(e);
+
+                    lastTapTime = 0;
+                    dragState.active = false;
+                    return;
+                }
+                lastTapTime = currentTime;
+            }
+
+            if (autoTurnState.active && autoTurnState.timer) {
+                clearTimeout(autoTurnState.timer);
+            }
 
             dragState.active = true;
             dragState.targetImg = e.target;
             dragState.isTouch = e.type.startsWith('touch');
-            const px = dragState.isTouch ? e.touches[0].clientX : e.clientX;
-            dragState.startX = px;
-            dragState.currentX = px;
+
+            // 拖拽开始时移除动画，保证跟手
+            display.style.transition = 'none';
+
+            if (dragState.isTouch && e.touches.length === 2) {
+                const t1 = e.touches[0];
+                const t2 = e.touches[1];
+                zoomState.initialDistance = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+                zoomState.initialScale = zoomState.scale;
+                return;
+            }
+
+            const clientX = dragState.isTouch ? e.touches[0].clientX : e.clientX;
+            const clientY = dragState.isTouch ? e.touches[0].clientY : e.clientY;
+
+            dragState.startX = clientX;
+            dragState.currentX = clientX;
+            dragState.startY = clientY;
+            dragState.currentY = clientY;
+
+            dragState.startPanX = zoomState.panX;
+            dragState.startPanY = zoomState.panY;
 
             if (dragState.rafId) cancelAnimationFrame(dragState.rafId);
             dragState.rafId = null;
-            display.style.transition = 'none';
         };
 
         const move = (e) => {
             if (!dragState.active) return;
-            if (dragState.isTouch && e.cancelable) e.preventDefault();
+            if (dragState.isTouch && e.cancelable && (!e.touches || e.touches.length < 2)) {
+                e.preventDefault();
+            }
 
-            const px = dragState.isTouch ? e.touches[0].clientX : e.clientX;
-            dragState.currentX = px;
+            if (dragState.isTouch && e.touches && e.touches.length === 2) {
+                if (e.cancelable) e.preventDefault();
+
+                const t1 = e.touches[0];
+                const t2 = e.touches[1];
+                const currentDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+                if (zoomState.initialDistance > 0) {
+                    let newScale = zoomState.initialScale * (currentDist / zoomState.initialDistance);
+                    if (newScale < 1) newScale = 1;
+                    if (newScale > 5) newScale = 5;
+
+                    zoomState.scale = newScale;
+
+                    if (newScale > 1.01) {
+                         const ind = document.getElementById(PAGE_INDICATOR_ID);
+                         if (ind) {
+                             ind.classList.remove('visible');
+                             ind.style.opacity = '0';
+                         }
+                    }
+
+                    requestAnimationFrame(() => {
+                        const corrected = applyZoomTransform(display);
+                    });
+                }
+                return;
+            }
+
+            const clientX = dragState.isTouch ? e.touches[0].clientX : e.clientX;
+            const clientY = dragState.isTouch ? e.touches[0].clientY : e.clientY;
+
+            dragState.currentX = clientX;
+            dragState.currentY = clientY;
 
             if (!dragState.rafId) {
                 dragState.rafId = requestAnimationFrame(() => {
-                    const gesture = dragState.currentX - dragState.startX;
-                    const width = window.innerWidth || 1;
+                    const diffX = dragState.currentX - dragState.startX;
+                    const diffY = dragState.currentY - dragState.startY;
 
-                    let ratio = gesture / width;
-                    if (ratio > MAX_DRAG_RATIO) ratio = MAX_DRAG_RATIO;
-                    if (ratio < -MAX_DRAG_RATIO) ratio = -MAX_DRAG_RATIO;
-
-                    if (display) display.style.transform = `translateX(${ratio * width}px)`;
+                    if (zoomState.scale > 1.05) {
+                         const estimatedPanX = dragState.startPanX + diffX;
+                         const estimatedPanY = dragState.startPanY + diffY;
+                         applyZoomTransform(display, estimatedPanX - zoomState.panX, estimatedPanY - zoomState.panY);
+                    } else {
+                        const width = window.innerWidth || 1;
+                        let ratio = diffX / width;
+                        if (ratio > MAX_DRAG_RATIO) ratio = MAX_DRAG_RATIO;
+                        if (ratio < -MAX_DRAG_RATIO) ratio = -MAX_DRAG_RATIO;
+                        display.style.transform = `translateX(${ratio * width}px)`;
+                    }
                     dragState.rafId = null;
                 });
             }
@@ -1619,6 +1659,34 @@
             dragState.active = false;
             if (dragState.rafId) cancelAnimationFrame(dragState.rafId);
             dragState.rafId = null;
+
+            if (autoTurnState.active) startAutoTurn();
+
+            // --- 放大模式结束逻辑 ---
+            if (zoomState.scale > 1.05) {
+                const diffX = dragState.currentX - dragState.startX;
+                const diffY = dragState.currentY - dragState.startY;
+
+                let finalX = dragState.startPanX + diffX;
+                let finalY = dragState.startPanY + diffY;
+
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                const maxPanX = Math.max(0, (vw * zoomState.scale - vw) / 2);
+                const maxPanY = Math.max(0, (vh * zoomState.scale - vh) / 2);
+
+                zoomState.panX = clamp(finalX, -maxPanX, maxPanX);
+                zoomState.panY = clamp(finalY, -maxPanY, maxPanY);
+
+                display.style.transition = `transform ${ZOOM_ANIM_SPEED} cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+                applyZoomTransform(display);
+
+                return;
+            }
+
+            if (zoomState.scale !== 1) {
+                resetZoom();
+            }
 
             const width = window.innerWidth || 1;
             const gesture = dragState.currentX - dragState.startX;
@@ -1632,13 +1700,10 @@
                 });
             };
 
-            // 点击判断 (移动微小)
             if (absRatio < CLICK_THRESHOLD_RATIO) {
                 resetPosition();
                 const didFlip = handleClickFlip(dragState.targetImg, dragState.startX, info);
-                if (dragState.isTouch && didFlip) {
-                      if (e && e.cancelable) e.preventDefault();
-                }
+                if (dragState.isTouch && didFlip && e.cancelable) e.preventDefault();
                 return;
             }
 
@@ -1647,7 +1712,6 @@
                 return;
             }
 
-            // 滑动翻页
             let intent;
             if (isMangaMode()) {
                  intent = gesture > 0 ? 'next' : 'prev';
@@ -1665,18 +1729,21 @@
             }
 
             requestAnimationFrame(() => {
-                display.style.transition = 'transform 0.25s ease-out';
+                display.style.transition = 'transform 0.2s ease-out';
                 const exitX = (gesture < 0 ? -1 : 1) * width;
                 display.style.transform = `translateX(${exitX}px)`;
             });
 
             setTimeout(() => {
+                const nextIndex = intent === 'next' ? info.index + 1 : info.index - 1;
                 executePageTurn(intent);
-                display.style.transition = 'none';
-                display.style.transform = 'translateX(0px)';
-                void display.offsetWidth;
-                display.style.transition = 'transform 0.2s ease-out';
-            }, 250);
+                waitForPageImageLoaded(nextIndex, 2000).then(() => {
+                    display.style.transition = 'none';
+                    display.style.transform = 'translateX(0px)';
+                    void display.offsetWidth;
+                    display.style.transition = 'transform 0.2s ease-out';
+                });
+            }, 200);
         };
 
         display.addEventListener('mousedown', start);
@@ -1704,101 +1771,117 @@
         window.removeEventListener('touchmove', h.move);
         window.removeEventListener('touchend', h.end);
 
+        display.removeEventListener('wheel', handleWheel);
+        display.removeEventListener('dblclick', handleDblClick); // 解绑双击
+
         display.style.transform = '';
         display.style.transition = '';
         display._lrrDragBound = false;
         delete display._lrrDragHandlers;
+
+        // 重置缩放状态
+        zoomState = { scale: 1, panX: 0, panY: 0, initialDistance: 0, initialScale: 1 };
 
         const ghosts = display.querySelectorAll('.lrr-ghost-side');
         ghosts.forEach(el => el.remove());
     }
 
     function setReadingMode(enable) {
-        // 切换阅读模式标记（控制整页 CSS）
         document.body.classList.toggle(BODY_READING_CLASS, enable);
         document.documentElement.classList.toggle(BODY_READING_CLASS, enable);
 
         const btn = document.getElementById(BUTTON_ID);
         const tb = document.getElementById(THUMB_BUTTON_ID);
+        const autoBtn = document.getElementById(AUTO_BTN_ID);
 
-        // 按钮状态（无论进/出模式都要更新）
         if (btn) {
-            // 进入模式：✕，退出模式：📖
-            btn.innerHTML = enable ? '✕' : '📖';
-            // 非阅读模式下根据自动进入状态调整边框颜色
+            btn.innerHTML = enable ? '✕' : '⌘';
             btn.style.borderColor = userSettings.autoEnter ? '#4CAF50' : 'rgba(255,255,255,0.3)';
             btn.classList.remove('hide-on-scroll');
         }
 
         if (enable) {
-            // === 进入阅读模式 ===
-
-            // 先挂上 hook：拦截 applyContainerWidth / goToPage
+            inputBlockUntil = Date.now() + 500;
             hookReaderFunctions(true);
-
-            // 应用阅读模式布局（你的自定义 flex/fixed/全屏等）
-            if (typeof applyLayoutSettings === 'function') {
-                applyLayoutSettings();
-            }
-
+            applyLayoutSettings();
             initPageData();
 
-            // 进入阅读模式后隐藏按钮
-            if (btn) {
-                btn.style.opacity = '0';
-                btn.style.pointerEvents = 'none';
-                btn.style.visibility = 'hidden';
-            }
-            if (tb) {
-                tb.style.opacity = '0';
-                tb.style.pointerEvents = 'none';
-                tb.style.visibility = 'hidden';
-            }
+            // 进入阅读模式时
+            [btn, tb, autoBtn].forEach(el => {
+                if (el) {
+                    el.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease, visibility 0.3s';
+                    el.style.opacity = '0';
+                    el.style.pointerEvents = 'none';
+                    el.style.visibility = 'hidden';
+                    el.style.transform = 'translate(0, 0) scale(1)';
+                }
+            });
+
             if (btnHideTimer) clearTimeout(btnHideTimer);
 
             updatePageIndicator();
             attachDragEvents();
             setupClickBlocker(true);
 
-            // 清理 Reader 在主图上的内联样式，让阅读模式 CSS 接管
             const mainImg = document.getElementById('img');
             const dblImg = document.getElementById('img_doublepage');
             [mainImg, dblImg].forEach(el => { if (el) el.removeAttribute('style'); });
 
+            if (imgResizeObserver) imgResizeObserver.disconnect();
+            const display = document.getElementById('display');
+            const targetImg = display ? (display.querySelector('img.reader-image') || document.getElementById('img')) : null;
+
+            if (window.ResizeObserver && targetImg) {
+                imgResizeObserver = new ResizeObserver(() => {
+                    requestAnimationFrame(checkIndicatorOverlap);
+                });
+                imgResizeObserver.observe(targetImg);
+                if(display) imgResizeObserver.observe(display);
+            }
+
             updateGhosts(getPageInfo());
+            setTimeout(checkIndicatorOverlap, 50);
+
         } else {
-            // === 退出阅读模式 ===
+            // --- 退出阅读模式逻辑 ---
+            stopAutoTurn();
 
             if (btnHideTimer) clearTimeout(btnHideTimer);
+            if (imgResizeObserver) {
+                imgResizeObserver.disconnect();
+                imgResizeObserver = null;
+            }
 
-            // 主按钮恢复，缩略图按钮隐藏
+            // 1. 主按钮
             if (btn) {
+                btn.style.transition = ''; // 清除内联 transition，使用 CSS 默认
                 btn.style.opacity = '1';
                 btn.style.pointerEvents = 'auto';
                 btn.style.visibility = 'visible';
+                btn.style.transform = '';
             }
-            if (tb) {
-                tb.style.opacity = '0';
-                tb.style.pointerEvents = 'none';
-                tb.style.visibility = 'hidden';
-            }
+
+            // 2. 子按钮
+            [tb, autoBtn].forEach(el => {
+                if (el) {
+                    el.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease-out, visibility 0.3s';
+
+                    // 执行收回动作
+                    el.style.transform = 'translate(0, 0) scale(0.8)';
+                    el.style.opacity = '0';
+                    el.style.pointerEvents = 'none';
+                    // 不立即设置 visibility: hidden，让 CSS transition 处理完
+                }
+            });
 
             detachDragEvents();
             setupClickBlocker(false);
             closeThumbnailOverlay();
-
-            // 关键：先彻底取消对 Reader 的 hook，
-            // 让后续的 applyContainerWidth / goToPage 完全走原生逻辑
             hookReaderFunctions(false);
 
-            // 此时 BODY_READING_CLASS 已经移除，CSS 回到原生 reader 样式
-            // 这里调用一次原生 applyContainerWidth，由 LRR 自己恢复图片和容器尺寸
             if (typeof Reader !== 'undefined' && typeof Reader.applyContainerWidth === 'function') {
                 Reader.applyContainerWidth();
             }
-
-            // 不要再额外改 #i3/#display 的宽度或样式，
-            // 避免再次叠加你自己的布局规则和 LRR 的布局规则。
         }
     }
 
@@ -1809,23 +1892,13 @@
 
         const btn = document.createElement('div');
         btn.id = BUTTON_ID;
-        btn.innerHTML = '📖';
+        btn.innerHTML = '⌘';
         btn.title = '切换阅读模式 (长按设置)';
-        
-        // 修改点：拦截按钮上的右键/长按菜单，防止移动端误触
-        btn.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        });
 
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            setReadingMode(!isReadingMode());
-        });
+        btn.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); return false; });
+        btn.addEventListener('click', (e) => { e.stopPropagation(); setReadingMode(!isReadingMode()); });
 
         let pressTimer;
-        // 长按改为打开设置
         const startPress = () => pressTimer = setTimeout(openSettingsModal, 800);
         const cancelPress = () => clearTimeout(pressTimer);
         btn.addEventListener('mousedown', startPress);
@@ -1837,42 +1910,40 @@
         const thumbBtn = document.createElement('div');
         thumbBtn.id = THUMB_BUTTON_ID;
         thumbBtn.innerHTML = '☰';
-        
-        // 缩略图按钮也添加同样的防护
-        thumbBtn.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        });
+        thumbBtn.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); return false; });
+        thumbBtn.addEventListener('click', (e) => { e.stopPropagation(); openThumbnailOverlay(); });
 
-        thumbBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            openThumbnailOverlay();
-        });
+        const autoBtn = document.createElement('div');
+        autoBtn.id = AUTO_BTN_ID;
+        autoBtn.innerHTML = '▶';
+        autoBtn.title = '开启/关闭自动翻页';
+        autoBtn.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); return false; });
+        autoBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleAutoTurn(); });
 
         const indicator = document.createElement('div');
         indicator.id = PAGE_INDICATOR_ID;
 
-        const hitRight = document.createElement('div'); hitRight.id = HITAREA_ID;
-        const hitLeft = document.createElement('div'); hitLeft.id = LEFT_HITAREA_ID;
+        // 唯一的底部热区
+        const hitArea = document.createElement('div');
+        hitArea.id = HITAREA_ID;
 
-        document.body.append(btn, thumbBtn, indicator, hitRight, hitLeft);
+        document.body.append(btn, thumbBtn, autoBtn, indicator, hitArea);
 
-        // 热区触发逻辑：根据位置设置代理到不同按钮
-        hitRight.addEventListener('click', (e) => { e.stopPropagation(); handleRightAreaTrigger(); });
-        hitLeft.addEventListener('click', (e) => { e.stopPropagation(); handleLeftAreaTrigger(); });
+        // --- 使用元素直接监听替代坐标计算 ---
+        const triggerAction = () => handleZoneTrigger();
 
-        window.addEventListener('mousemove', (e) => {
-            if (!isReadingMode()) return;
-            const isBottom = e.clientY > window.innerHeight * (1 - CORNER_HEIGHT_RATIO);
-            if (!isBottom) return;
+        // 1. 热区点击事件 (通用)
+        hitArea.addEventListener('click', (e) => { e.stopPropagation(); triggerAction(); });
 
-            const isLeft = e.clientX < window.innerWidth * CORNER_WIDTH_RATIO;
-            const isRight = e.clientX > window.innerWidth * (1 - CORNER_WIDTH_RATIO);
+        if (window.matchMedia('(hover: hover)').matches) {
+            hitArea.addEventListener('mouseenter', triggerAction);
+            hitArea.addEventListener('mousemove', triggerAction);
 
-            if (isLeft) handleLeftAreaTrigger();
-            else if (isRight) handleRightAreaTrigger();
-        });
+            [btn, thumbBtn, autoBtn].forEach(el => {
+                el.addEventListener('mouseenter', triggerAction);
+                el.addEventListener('mousemove', triggerAction);
+            });
+        }
 
         window.addEventListener('scroll', handleScroll);
     }
@@ -1883,7 +1954,6 @@
         createControls();
         initPageData();
 
-        // 首次加载应用布局设置
         applyLayoutSettings();
 
         if (userSettings.autoEnter && !isReadingMode()) setTimeout(() => setReadingMode(true), 500);

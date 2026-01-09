@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub RSS & Inoreader Helper
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.0
 // @description  在 GitHub 项目页显示可选的 RSS 地址，并一键订阅
 // @author       GeBron
 // @match        https://github.com/*/*

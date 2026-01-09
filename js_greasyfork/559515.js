@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         C6自动回复兼容免代
 // @namespace    http://tampermonkey.net/
-// @version      4.3.2
+// @version      4.3.3
 // @description  懂的自然懂
 // @match        http*://*/htm_data/*/*/*
 // @match        http*://*/htm_mob/*/*/*
@@ -37,8 +37,33 @@ let totalReplies = 0;
 let accounts = GM_getValue("reply_accounts", []);
 if (!Array.isArray(accounts)) accounts = [];
 
-let savedTids = GM_getValue("saved_tids", []);
-if (!Array.isArray(savedTids)) savedTids = [];
+// 获取今天日期字符串
+function getTodayStr() {
+    const d = new Date();
+    return d.getFullYear() + '-' + 
+           (d.getMonth() + 1).toString().padStart(2, '0') + '-' + 
+           d.getDate().toString().padStart(2, '0');
+}
+
+// 初始化 saved_tids，检查是否是当天的数据
+function initSavedTids() {
+    const today = getTodayStr();
+    const savedData = GM_getValue("saved_tids", { date: "", tids: [] });
+    
+    // 如果是旧数据或者不是今天的数据，则清空
+    if (savedData.date !== today) {
+        return { date: today, tids: [] };
+    }
+    
+    // 兼容旧版本的数据格式（数组）
+    if (Array.isArray(savedData)) {
+        return { date: today, tids: savedData };
+    }
+    
+    return savedData;
+}
+
+let savedTidsData = initSavedTids();
 
 const UI = {};
 
@@ -72,6 +97,28 @@ function clearAllTimers() {
 function formatTime(dateObj) {
     if (!(dateObj instanceof Date)) return "";
     return dateObj.toLocaleTimeString();
+}
+
+// 获取当前 saved_tids 数组
+function getSavedTids() {
+    const today = getTodayStr();
+    if (savedTidsData.date !== today) {
+        savedTidsData = { date: today, tids: [] };
+        GM_setValue("saved_tids", savedTidsData);
+    }
+    return savedTidsData.tids;
+}
+
+// 添加到 saved_tids
+function addToSavedTids(tidUid) {
+    const today = getTodayStr();
+    if (savedTidsData.date !== today) {
+        savedTidsData = { date: today, tids: [] };
+    }
+    if (!savedTidsData.tids.includes(tidUid)) {
+        savedTidsData.tids.push(tidUid);
+        GM_setValue("saved_tids", savedTidsData);
+    }
 }
 
 /* ===== 下注助手：解析表格 ===== */
@@ -155,6 +202,7 @@ async function fetchTodayOpenTids(cookieVal, uaVal, uid) {
     const blocks = html.match(/<td class="tal"[\s\S]*?<\/td>/gi) || [];
     const now = new Date();
     const tids = [];
+    const currentSavedTids = getSavedTids(); // 获取当天已保存的tid
 
     for (const block of blocks) {
         if (!block.includes("[開盤]")) continue;
@@ -176,14 +224,15 @@ async function fetchTodayOpenTids(cookieVal, uaVal, uid) {
         if (!timeMatch) continue;
         const endTime = new Date(timeMatch[1].replace(/-/g, "/"));
 
-        if (endTime > now && !savedTids.includes(`${tid}_${uid}`)) {
+        // 检查是否已下注（使用当天数据）
+        const tidUid = `${tid}_${uid}`;
+        if (endTime > now && !currentSavedTids.includes(tidUid)) {
             tids.push({ tid, url: realPath });
         }
     }
 
     return tids;
 }
-
 
 /* ===== 访问 tid 页面并生成随机下注内容 ===== */
 async function fetchTidBetPreview(item, ck, ua, betPoints) {
@@ -236,7 +285,6 @@ async function fetchTidBetPreview(item, ck, ua, betPoints) {
     return { tid: item.tid, title, betText };
 }
 
-
 /* ===== 批量下注执行 ===== */
 async function startBatchBetting(list, ck, ua, uid) {
     if (!list || list.length === 0) {
@@ -271,9 +319,8 @@ async function startBatchBetting(list, ck, ua, uid) {
             try {
                 await sendReply("23", item.tid, item.content, ck, ua, verify, index);
                 successCount++;
-                // 改造：保存 tid+uid
-                savedTids.push(`${item.tid}_${uid}`);
-                GM_setValue("saved_tids", savedTids);
+                // 保存到当天的记录中
+                addToSavedTids(`${item.tid}_${uid}`);
             } catch (e) {
                 addLog(`❌ 下注失败 tid=${item.tid}`);
                 failCount++;
@@ -285,6 +332,7 @@ async function startBatchBetting(list, ck, ua, uid) {
 
     next();
 }
+
 /* =========================================================
    统一 headers 构造函数
    ========================================================= */
@@ -476,6 +524,7 @@ async function getVerify(fid, tid, cookieVal, uaVal, callback) {
         callback(null);
     }
 }
+
 /* =========================================================
    ⑤ UI 构建模块 + 事件绑定
    ========================================================= */
@@ -835,7 +884,6 @@ function insertUI() {
     refreshAccountSelect();
 });
 
-
     UI.deleteAccountBtn.addEventListener("click", () => {
         const name = UI.accountSelect.value;
         if (!name) return;
@@ -902,6 +950,7 @@ function insertUI() {
 
     fetchPageTimeOnOpen();
 }
+
 /* ===== 批量下注预览弹窗 ===== */
 function showBetPreviewPopup(previews, onConfirm) {
     const old = document.getElementById("betPreviewPopup");
@@ -934,11 +983,15 @@ function showBetPreviewPopup(previews, onConfirm) {
     let uidToName = GM_getValue("uidToName", {});
     if (typeof uidToName !== "object") uidToName = {};
 
+    // 使用当天的已保存 tid
+    const currentSavedTids = getSavedTids();
+    
     previews.forEach(p => {
         const box = document.createElement("div");
         box.style.cssText = "margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid #ccc;";
 
-        const betUids = savedTids
+        // 从当天的记录中查找已下注的 uid
+        const betUids = currentSavedTids
             .filter(s => s.startsWith(p.tid + "_"))
             .map(s => s.split("_")[1]);
 
@@ -993,7 +1046,6 @@ function showBetPreviewPopup(previews, onConfirm) {
 
     document.body.appendChild(wrap);
 }
-
 
 /* =========================================================
    ⑥ 停止任务
@@ -1102,6 +1154,7 @@ async function fetchUserProfile(cookieVal, uaVal) {
     addLog(`✔ 获取账号成功：${username || "未知"} (UID: ${uid || "未知"})`);
     return { username, uid, title };
 }
+
 /* =========================================================
    统一 CK / UA 获取逻辑（双模式）
    ========================================================= */
@@ -1284,6 +1337,7 @@ function finishTask() {
 
     clearAllTimers();
 }
+
 /* =========================================================
    ⑬ 脚本入口
    ========================================================= */

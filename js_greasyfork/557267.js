@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         海角社区
-// @version      1.0.3
+// @version      1.0.4
 // @description  海角社区视频解锁观看及下载，无限制播放下载 | 官网：https://khsy.cc
 // @author       khsy.cc
 // @include      *://hj*.*/*
@@ -26,6 +26,10 @@
 // @namespace    https://khsy.cc
 // @connect      khsy.cc
 // @connect      *.khsy.cc
+// @connect      greasyfork.org
+// @connect      *.greasyfork.org
+// @connect      sleazyfork.org
+// @connect      *.sleazyfork.org
 // @connect      update.greasyfork.org
 // @antifeature       payment
 // @downloadURL https://update.greasyfork.org/scripts/557267/%E6%B5%B7%E8%A7%92%E7%A4%BE%E5%8C%BA.user.js
@@ -36,10 +40,15 @@
     'use strict';
 
     // ==================== 配置常量 ====================
+
+    const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const IS_DESKTOP = !IS_MOBILE;
+
     const CONFIG = {
         SERVER_BASE: 'https://khsy.cc',
-        SCRIPT_VERSION: '1.0.0',
-        SCRIPT_ID: 0,
+        SCRIPT_VERSION: '1.0.4',
+        SCRIPT_ID: 557267,
+        UPDATE_URL: 'https://www.tampermonkey.net/script_installation.php#url=https://update.sleazyfork.org/scripts/557267/%E6%B5%B7%E8%A7%92%E7%A4%BE%E5%8C%BA.user.js',
         UPDATE_CHECK_INTERVAL: 12 * 60 * 60 * 1000,
         RESOLVE_COOLDOWN: 15000,
         THEME: {
@@ -58,6 +67,85 @@
 
     CONFIG.API_BASE = CONFIG.SERVER_BASE + '/api';
     CONFIG.SERVICE_BASE = CONFIG.SERVER_BASE + '/service';
+
+    // ==================== 版本更新检测 ====================
+    const UpdateChecker = {
+        latestVersion: null,
+        hasUpdate: false,
+
+        // 检查更新
+        async checkUpdate() {
+            try {
+                // 尝试多个API端点
+                const apiUrls = [
+                    `https://greasyfork.org/zh-CN/scripts/${CONFIG.SCRIPT_ID}.json`,
+                    `https://greasyfork.org/scripts/${CONFIG.SCRIPT_ID}.json`,
+                    `https://sleazyfork.org/zh-CN/scripts/${CONFIG.SCRIPT_ID}.json`
+                ];
+
+                for (const apiUrl of apiUrls) {
+                    try {
+                        const res = await Http.request(apiUrl, {
+                            method: 'GET',
+                            timeout: 10000
+                        });
+
+                        if (res.ok) {
+                            const data = await res.json();
+                            
+                            // GreasyFork API返回的版本号在 version 字段中
+                            this.latestVersion = data.version || null;
+
+                            if (this.latestVersion && Utils.compareVersion(this.latestVersion, CONFIG.SCRIPT_VERSION) > 0) {
+                                this.hasUpdate = true;
+                                // 显示更新角标
+                                this.showUpdateBadge();
+                                return true;
+                            } else if (this.latestVersion) {
+                                // 已是最新版本
+                                this.hasUpdate = false;
+                                return false;
+                            }
+                        }
+                    } catch (e) {
+                        // 尝试下一个API
+                        continue;
+                    }
+                }
+
+                // 所有API都失败了
+                this.latestVersion = null;
+            } catch (e) {
+                // 请求失败，设置为null表示检测失败
+                this.latestVersion = null;
+            }
+            return false;
+        },
+
+        // 显示更新角标
+        showUpdateBadge() {
+            const updateBtn = document.getElementById('khsy-btn-update');
+            if (updateBtn) {
+                let badge = updateBtn.querySelector('.khsy-badge');
+                if (!badge) {
+                    badge = document.createElement('div');
+                    badge.className = 'khsy-badge';
+                    updateBtn.appendChild(badge);
+                }
+            }
+        },
+
+        // 隐藏更新角标
+        hideUpdateBadge() {
+            const updateBtn = document.getElementById('khsy-btn-update');
+            if (updateBtn) {
+                const badge = updateBtn.querySelector('.khsy-badge');
+                if (badge) {
+                    badge.remove();
+                }
+            }
+        }
+    };
 
     // ==================== 工具函数 ====================
     const Utils = {
@@ -111,7 +199,7 @@
             }
         },
 
-
+        // 格式化VIP到期时间
         formatVipExpire(expireAt) {
             if (!expireAt) return '未开通';
             try {
@@ -271,32 +359,25 @@
 
         get vip() {
             try {
-
-                if (this.token) {
-                    return true;
-                }
                 const stored = localStorage.getItem('khsy_vip');
                 if (stored === 'true' || (stored && !isNaN(parseInt(stored)) && parseInt(stored) > 0)) {
                     return true;
                 }
                 return false;
             } catch {
-                return this.token ? true : false;
+                return false;
             }
         },
 
 
         get vipLevel() {
             try {
-                if (this.token) {
-                    return 4;
-                }
                 const stored = localStorage.getItem('khsy_vip');
                 if (stored && !isNaN(parseInt(stored))) return parseInt(stored);
                 if (stored === 'true') return 1;
                 return 0;
             } catch {
-                return this.token ? 4 : 0;
+                return 0;
             }
         },
         set vip(v) {
@@ -311,13 +392,9 @@
 
         get vipExpireAt() {
             try {
-
-                if (this.token) {
-                    return '2099-12-31T23:59:59.999Z';
-                }
                 return localStorage.getItem('khsy_vip_expire') || null;
             } catch {
-                return this.token ? '2099-12-31T23:59:59.999Z' : null;
+                return null;
             }
         },
         set vipExpireAt(v) {
@@ -369,9 +446,6 @@
                     this.refreshToken = data.refreshToken || '';
 
 
-                    this.vip = true;
-                    this.vipExpireAt = '2099-12-31T23:59:59.999Z';
-
                     await this.fetchUserInfo();
                     return { success: true };
                 } else {
@@ -405,8 +479,23 @@
                     const data = await res.json();
                     this.username = data.username || '';
 
-                    this.vip = true;
-                    this.vipExpireAt = '2099-12-31T23:59:59.999Z';
+
+                    if (data.vip !== undefined) {
+
+                        if (typeof data.vip === 'number') {
+                            this.vip = data.vip;
+                        } else {
+
+                            this.vip = data.vip ? 1 : 0;
+                        }
+                    }
+                    if (data.vipLevel !== undefined) {
+                        this.vip = data.vipLevel;
+                    }
+                    if (data.vipExpireAt) {
+                        this.vipExpireAt = data.vipExpireAt;
+                    }
+
                     return true;
                 }
             } catch {}
@@ -553,21 +642,24 @@
             display: flex;
             flex-direction: column;
             gap: 0;
-            background: rgba(255, 255, 255, 0.85);  /* 🔥 稍暗的白色背景 */
-            border: 1px solid rgba(0, 0, 0, 0.08);  /* 浅灰边框 */
-            border-radius: 24px;  /* 圆角长条 */
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 24px;
             padding: 8px 0;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(20px);  /* 增强毛玻璃效果 */
+            backdrop-filter: blur(20px);
             transition: all 0.3s ease;
         }
 
         .khsy-float-panel.minimized {
             padding: 0;
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             overflow: hidden;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
         }
 
         .khsy-float-panel.minimized .khsy-float-btn:not(.khsy-toggle-btn) {
@@ -575,45 +667,60 @@
         }
 
         .khsy-float-panel.minimized .khsy-toggle-btn {
-            width: 48px;
-            height: 48px;
-        }
-
-        .khsy-float-btn {
-            background: transparent;  /* 无背景 */
-            border: none;  /* 无边框 */
-            width: 48px;
-            height: 48px;
-            padding: 0;
-            color: rgba(0, 0, 0, 0.7);  /* 🔥 黑色图标 */
-            cursor: pointer;
-            transition: all 0.2s ease;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: #fff !important;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;  /* 🔥 相对定位，圆点才能在右上角 */
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* 收回状态隐藏SVG，显示文字 */
+        .khsy-float-panel.minimized .khsy-toggle-btn svg {
+            display: none;
+        }
+
+        /* 收回状态显示文字内容 */
+        .khsy-float-panel.minimized .khsy-toggle-btn::before {
+            content: '☰';
+            display: block;
+            line-height: 1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            margin-left: -2px;
+        }
+
+        /* 展开状态的图标样式 */
+        .khsy-float-panel:not(.minimized) .khsy-toggle-btn::before {
+            display: none;
+        }
+
+        .khsy-float-btn {
+            background: transparent;
+            border: none;
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            color: rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
 
         .khsy-float-btn svg {
             width: 20px;
             height: 20px;
             opacity: 1;
-            transition: all 0.2s ease;
             flex-shrink: 0;
-            stroke-width: 2.5;  /* 🔥 线条加粗 */
-        }
-
-        .khsy-float-btn:hover {
-            color: rgba(0, 0, 0, 0.9);  /* 悬停深黑 */
-            background: rgba(0, 0, 0, 0.06);  /* 轻微灰色背景 */
+            stroke-width: 2.5;
         }
 
         .khsy-toggle-btn {
             color: rgba(0, 0, 0, 0.5) !important;
-        }
-
-        .khsy-toggle-btn:hover {
-            background: rgba(0, 0, 0, 0.08) !important;
         }
 
         /* 🔥 绿色圆点角标（右上角） */
@@ -694,12 +801,6 @@
             align-items: center;
             justify-content: center;
             border-radius: 8px;
-            transition: all 0.2s;
-        }
-
-        .khsy-modal-close:hover {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
         }
 
         .khsy-modal-body {
@@ -726,23 +827,12 @@
             color: #333;
             font-size: 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .khsy-btn:hover {
-            background: rgba(0, 0, 0, 0.05);
-            border-color: rgba(0, 0, 0, 0.25);
         }
 
         .khsy-btn-primary {
             background: #10b981;
             color: #fff;
             border-color: #10b981;
-        }
-
-        .khsy-btn-primary:hover {
-            background: #059669;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         /* 输入框 */
@@ -754,7 +844,6 @@
             border-radius: 10px;
             color: #333;
             font-size: 14px;
-            transition: all 0.3s ease;
         }
 
         .khsy-input:focus {
@@ -773,12 +862,13 @@
             position: absolute;
             right: -4px;
             top: -4px;
-            width: 12px;
-            height: 12px;
-            background: #ef4444;
+            width: 10px;
+            height: 10px;
+            background: #10b981;
             border-radius: 50%;
             border: 2px solid rgba(255, 255, 255, 0.9);
             animation: khsy-pulse 2s infinite;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
         }
 
         /* VIP标签 */
@@ -888,10 +978,7 @@
         }
     };
 
-    // ==================== 服务器端视频解析 ====================
-    // 🔥 已移除客户端M3U8/TS拦截器，改为纯服务器端方案
 
-    // ==================== 视频解析模块 ====================
     const VideoResolver = {
         currentTopicId: null,
         currentPageUrl: '',
@@ -900,12 +987,11 @@
         hasShownToast: false,  // 🔥 记录是否已显示过提示
         contentTypeCache: new Map(),  // 🔥 内容类型缓存 {topicId: {hasVideo, hasImages, hasAudio}}
 
-        // 获取当前页面的主题ID（支持多种URL格式）
         getTopicId() {
             try {
                 const url = new URL(window.location.href);
 
-                // 方法1：从URL参数获取（支持 ?id=123, ?pid=123, ?tid=123）
+
                 const params = url.searchParams;
                 const idParams = ['id', 'pid', 'tid'];
                 for (const param of idParams) {
@@ -915,13 +1001,13 @@
                     }
                 }
 
-                // 方法2：从路径获取（支持 /topic/123）
+
                 const pathMatch = url.pathname.match(/\/topic\/(\d+)/);
                 if (pathMatch) {
                     return pathMatch[1];
                 }
 
-                // 方法3：从hash获取（支持 #/topic/123）
+
                 if (url.hash) {
                     const hashMatch = url.hash.match(/\/topic\/(\d+)/);
                     if (hashMatch) {
@@ -929,13 +1015,13 @@
                     }
                 }
 
-                // 方法4：提取路径中最后一个>=4位的数字
+
                 const lastNumMatch = url.pathname.match(/\b(\d{4,})\b(?!.*\d)/);
                 if (lastNumMatch) {
                     return lastNumMatch[1];
                 }
 
-                // 方法5：尝试从页面元素获取
+
                 const elem = document.querySelector('[data-topic-id]');
                 if (elem) {
                     const topicId = elem.getAttribute('data-topic-id');
@@ -947,7 +1033,7 @@
             return null;
         },
 
-        // 检测页面是否为图片内容
+
         detectImagePage() {
             const topicId = this.getTopicId();
             if (topicId) {
@@ -1018,19 +1104,19 @@
                 }
             }
 
-            // 检测1：查找video标签（次优先）
+
             const videos = document.querySelectorAll('video');
             if (videos.length > 0) {
                 return false;  // 不是图片页
             }
 
-            // 检测2：查找播放按钮等视频UI元素（海角视频特征）
+
             const playButtons = document.querySelectorAll('[class*="play"], [class*="video"], .vjs-big-play-button');
             if (playButtons.length > 0) {
                 return false;  // 不是图片页
             }
 
-            // 检测3：检测页面文本中的明确视频标识
+
             const pageText = document.body.innerText || '';
             const hasVideoDuration = /\[\d+分\d+秒\]/.test(pageText) ||     // [24分33秒]
                                     /\d+分\d+秒/.test(pageText) ||          // 24分33秒
@@ -1042,14 +1128,13 @@
                 return false;  // 不是图片页
             }
 
-            // 检测4：检查URL是否包含视频关键词
+
             const urlText = window.location.href + (document.title || '');
             if (urlText.includes('video') || urlText.includes('视频')) {
                 return false;  // 不是图片页
             }
 
-            // 检测5：只有在明确是纯图片内容时才返回true
-            // 检查页面是否有明显的图片浏览特征（多张大图且无任何视频标识）
+
             const images = document.querySelectorAll('img');
             let contentImageCount = 0;
 
@@ -1069,20 +1154,20 @@
                 }
             }
 
-            // 只有在有多张大图且无任何视频标识时，才判定为图片页
+
             if (contentImageCount >= 2) {
                 return true;
             }
 
-            // 默认返回false（不是图片），避免误判视频
+
             return false;
         },
 
-        // 从页面提取preview M3U8并调用服务器端解析
+
         async extractM3u8FromDOM() {
             let previewM3u8Url = null;
 
-            // 方法1：从video标签的src提取
+
             const videos = document.querySelectorAll('video');
             for (const video of videos) {
                 if (video.src && video.src.includes('.m3u8')) {
@@ -1100,7 +1185,7 @@
                 if (previewM3u8Url) break;
             }
 
-            // 方法2：从页面HTML中搜索.m3u8链接
+
             if (!previewM3u8Url) {
                 const allText = document.body.innerHTML;
                 const m3u8Regex = /(https?:\/\/[^\s"'<>]+\.m3u8[^\s"'<>]*)/gi;
@@ -1112,7 +1197,7 @@
                 }
             }
 
-            // 方法3：查找window对象中的数据
+
             if (!previewM3u8Url) {
                 try {
                     const win = unsafeWindow || window;
@@ -1150,7 +1235,7 @@
                 return null;
             }
 
-            // 如果已经是完整版，直接返回
+
             if (!previewM3u8Url.includes('preview')) {
                 return previewM3u8Url;
             }
@@ -1230,9 +1315,9 @@
                 }
             };
 
-            // 方法0a：从预览URL提取attachment ID，调用API获取完整版
+
             try {
-                // 从预览URL中提取attachment ID（如 419629_i_preview.m3u8 -> 419629）
+
                 const match = previewM3u8.match(/\/(\d+)_i?_preview\.m3u8/);
                 if (match) {
                     const attachmentId = match[1];
@@ -1260,11 +1345,11 @@
                     if (attachRes.ok) {
                         const attachData = await attachRes.json();
 
-                        // 尝试多种可能的字段
+
                         let fullUrl = null;
                         if (attachData.data) {
                             fullUrl = attachData.data.url || attachData.data.video || attachData.data.m3u8;
-                            // 如果只有preview字段，去掉_preview获取完整版
+
                             if (!fullUrl && attachData.data.preview) {
                                 fullUrl = attachData.data.preview.replace(/_preview/g, '');
                             }
@@ -1280,20 +1365,20 @@
             } catch (e) {
             }
 
-            // 方法0b：下载并解析预览M3U8，查找主播放列表中的完整版
+
             try {
                 const m3u8Res = await fetch(previewM3u8);
                 if (m3u8Res.ok) {
                     const m3u8Text = await m3u8Res.text();
 
-                    // 查找主播放列表（Master Playlist）中的其他M3U8
+
                     const lines = m3u8Text.split('\n');
                     const baseUrl = previewM3u8.substring(0, previewM3u8.lastIndexOf('/') + 1);
 
                     for (let i = 0; i < lines.length; i++) {
                         const line = lines[i].trim();
 
-                        // 查找 #EXT-X-STREAM-INF 后的M3U8文件
+
                         if (line.startsWith('#EXT-X-STREAM-INF')) {
                             const nextLine = lines[i + 1]?.trim();
                             if (nextLine && nextLine.endsWith('.m3u8')) {
@@ -1304,7 +1389,7 @@
                             }
                         }
 
-                        // 查找普通的M3U8链接
+
                         if (line.endsWith('.m3u8') && !line.startsWith('#')) {
                             const fullUrl = line.startsWith('http') ? line : baseUrl + line;
                             if (!fullUrl.includes('preview')) {
@@ -1396,7 +1481,7 @@
             }
         },
 
-        // 解析完整视频（需要VIP）
+
         async resolveFull() {
             const topicId = this.getTopicId();
             if (!topicId) {
@@ -1415,14 +1500,14 @@
                 this._resolveStartTime = Date.now(); // 记录开始时间
                 FloatPanel.updateResolveButton('解析中...');
 
-                // 🔥 优先：检查拦截器缓存中是否有videoAttachment
+
                 const cached = this.contentTypeCache.get(String(topicId));
                 if (cached && cached.videoAttachment && (Date.now() - cached.timestamp < 30 * 60 * 1000)) {  // 30分钟有效
-                    // 🔥 如果有remoteUrl，直接使用（可能是preview版本）
+
                     if (cached.videoAttachment.remoteUrl) {
                         const previewM3u8 = cached.videoAttachment.remoteUrl;
 
-                        // 🔥 如果是preview版本，推断完整版
+
                         let finalM3u8 = previewM3u8;
                         if (previewM3u8.includes('preview')) {
                             finalM3u8 = await this.inferFullM3u8(previewM3u8);
@@ -1431,7 +1516,7 @@
                         this.resolveCache.set(topicId, { url: finalM3u8, time: Date.now() });
                         FloatPanel.updateResolveButton('播放');
 
-                        // 🔥 记录解析成功日志
+
                         await this.recordLog({
                             topicId,
                             resolved: true,
@@ -1442,7 +1527,7 @@
                         return finalM3u8;
                     }
 
-                    // 🔥 否则请求attachment API
+
                     if (cached.videoAttachment.id) {
                         try {
                             const attachRes = await fetch(`${window.location.origin}/api/attachment`, {
@@ -1470,7 +1555,7 @@
                                 if (finalM3u8) {
                                     this.resolveCache.set(topicId, { url: finalM3u8, time: Date.now() });
 
-                                    // 🔥 记录解析成功日志
+
                                     await this.recordLog({
                                         topicId,
                                         resolved: true,
@@ -1486,7 +1571,7 @@
                     }
                 }
 
-                // 方案1：直接在浏览器端获取视频地址（避免服务器端解密问题）
+
                 const topicRes = await fetch(`${window.location.origin}/api/topic/${topicId}`, {
                     credentials: 'include'
                 });
@@ -1502,7 +1587,7 @@
                     const cached = this.contentTypeCache.get(String(topicId));
                     if (cached && cached.videoAttachment && (Date.now() - cached.timestamp < 30 * 60 * 1000)) {
 
-                        // 直接请求attachment API
+
                         const attachRes = await fetch(`${window.location.origin}/api/attachment`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -1528,7 +1613,7 @@
                             if (finalM3u8) {
                                 this.resolveCache.set(topicId, { url: finalM3u8, time: Date.now() });
 
-                                // 🔥 记录解析成功日志
+
                                 await this.recordLog({
                                     topicId,
                                     resolved: true,
@@ -1541,7 +1626,7 @@
                         }
                     }
 
-                    // 🔥 备用：检测页面是否为图片内容
+
                     const isImagePage = this.detectImagePage();
                     if (isImagePage) {
                         throw new Error('此内容为图片，非视频');
@@ -1567,7 +1652,7 @@
                         return finalM3u8;
                     }
 
-                    throw new Error('API返回加密数据，且无法从页面提取视频地址');
+                    throw new Error('当前页面未检测到视频，请手动点击页面中的播放');
                 }
 
                 const data = topicData.data || topicData;
@@ -1618,7 +1703,7 @@
                     }
                 }
 
-                // 请求attachment API获取视频地址
+
                 const attachRes = await fetch(`${window.location.origin}/api/attachment`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1638,7 +1723,7 @@
 
                 const attachData = await attachRes.json();
 
-                // 提取预览M3U8地址
+
                 let previewM3u8 = null;
                 if (attachData.data && attachData.data.preview) {
                     previewM3u8 = attachData.data.preview;
@@ -1650,17 +1735,17 @@
                     throw new Error('无法获取视频预览地址');
                 }
 
-                // 应用智能推断逻辑，找到完整版M3U8
+
                 const m3u8Url = await this.inferFullM3u8(previewM3u8);
 
                 if (!m3u8Url) {
                     throw new Error('无法解析完整视频地址');
                 }
 
-                // 缓存结果
+
                 this.resolveCache.set(topicId, { url: m3u8Url, time: Date.now() });
 
-                // 记录解析成功日志
+
                 await this.recordLog({
                     topicId,
                     resolved: true,
@@ -1668,11 +1753,11 @@
                     durationMs: Date.now() - (this._resolveStartTime || Date.now())
                 });
 
-                // 不再显示Toast，改为在预加载时显示
+
                 return m3u8Url;
             } catch (e) {
 
-                // 记录解析失败日志
+
                 await this.recordLog({
                     topicId,
                     resolved: false,
@@ -1892,6 +1977,7 @@
         videoModalOpen: false,
         messageModalOpen: false,
         announceModalOpen: false,
+        updateModalOpen: false,
         resolving: false,  // 🔥 添加解析状态标志
 
         // 创建悬浮面板
@@ -1933,10 +2019,17 @@
                         <path d="M13.73 21a2 2 0 01-3.46 0"></path>
                     </svg>
                 </button>
-                <button class="khsy-float-btn khsy-toggle-btn" id="khsy-btn-toggle" title="${isMinimized ? '展开面板' : '收起面板'}">
+                <button class="khsy-float-btn" id="khsy-btn-update" title="检查更新">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M12 8v8M8 12h8"></path>
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"></path>
+                    </svg>
+                </button>
+                <button class="khsy-float-btn khsy-toggle-btn" id="khsy-btn-toggle" title="${isMinimized ? '展开面板' : '收起面板'}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        ${isMinimized ? `` : `
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        `}
                     </svg>
                 </button>
             `;
@@ -1950,6 +2043,7 @@
             const btnResolve = document.getElementById('khsy-btn-resolve');
             const btnAnnounce = document.getElementById('khsy-btn-announce');
             const btnDownload = document.getElementById('khsy-btn-download');
+            const btnUpdate = document.getElementById('khsy-btn-update');
 
             btnToggle.addEventListener('click', () => this.toggleMinimize());
             btnAccount.addEventListener('click', () => this.showLoginModal());
@@ -1958,10 +2052,16 @@
             });
             btnAnnounce.addEventListener('click', () => this.showAnnounceModal());
             btnDownload.addEventListener('click', () => this.showDownloadModal());
+            btnUpdate.addEventListener('click', () => this.showUpdateModal());
 
             // 更新状态
             this.updateAccountButton();
             this.updateToggleButton();
+
+            // 🔥 启动时检查更新
+            setTimeout(() => {
+                UpdateChecker.checkUpdate();
+            }, 2000);
         },
 
         // 切换最小化状态
@@ -1987,17 +2087,17 @@
 
             // 更新图标
             if (svg) {
+                // 添加圆角属性
+                svg.setAttribute('stroke-linecap', 'round');
+                svg.setAttribute('stroke-linejoin', 'round');
+
                 if (isMinimized) {
-                    // 展开图标（双箭头向外）
-                    svg.innerHTML = `
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M8 12h8M12 8v8"></path>
-                    `;
+                    // 收起状态使用CSS的::before显示文字，SVG隐藏
+                    svg.innerHTML = '';
                 } else {
-                    // 收起图标（双箭头向内）
+                    // 展开状态显示箭头
                     svg.innerHTML = `
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M15 9l-6 6M9 9l6 6"></path>
+                        <polyline points="9 18 15 12 9 6"></polyline>
                     `;
                 }
             }
@@ -2225,6 +2325,20 @@
                 return;
             }
 
+            // 🔥 先检查是否登录
+            if (!Auth.token) {
+                this.resolving = false;
+                this.showLoginModal();
+                return;
+            }
+
+            // 🔥 再检查VIP状态
+            if (!Auth.vip) {
+                this.resolving = false;
+                this.showVipRequiredModal();
+                return;
+            }
+
             try {
 
                 const cached = VideoResolver.contentTypeCache.get(String(topicId));
@@ -2252,6 +2366,39 @@
                     this.resolving = false;
                 }, 1000);  // 延长到1秒
             }
+        },
+
+
+        showVipRequiredModal() {
+            const content = `
+                <div style="text-align:center;padding:20px;">
+                    <div style="margin-bottom:16px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:64px;height:64px;margin:0 auto;color:#fbbf24;">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                        </svg>
+                    </div>
+                    <div style="font-size:18px;font-weight:600;color:#333;margin-bottom:12px;">您还不是VIP会员</div>
+                    <div style="font-size:14px;color:#666;margin-bottom:24px;line-height:1.6;">
+                        观看完整视频需要开通VIP会员<br>
+                        立即开通，畅享所有视频内容
+                    </div>
+                    <button class="khsy-btn khsy-btn-primary" id="khsy-goto-vip" style="width:100%;padding:14px;">
+                        前往开通VIP
+                    </button>
+                </div>
+            `;
+
+            const modal = UI.createModal('VIP会员', content, []);
+
+            setTimeout(() => {
+                const gotoBtn = document.getElementById('khsy-goto-vip');
+                if (gotoBtn) {
+                    gotoBtn.onclick = () => {
+                        window.open('https://khsy.cc', '_blank');
+                        modal.remove();
+                    };
+                }
+            }, 100);
         },
 
         // 显示视频播放模态框
@@ -2343,6 +2490,165 @@
             }
         },
 
+
+        // 显示更新模态框
+        async showUpdateModal() {
+            if (this.updateModalOpen) return;
+            this.updateModalOpen = true;
+
+            const currentVersion = CONFIG.SCRIPT_VERSION;
+            
+            // 🔥 先显示弹窗（使用缓存的数据或显示检测中）
+            let latestVersion = UpdateChecker.latestVersion || '检测中...';
+            let hasUpdate = UpdateChecker.hasUpdate;
+            let checkFailed = UpdateChecker.latestVersion === null;
+            let isChecking = UpdateChecker.latestVersion === null;
+
+            const content = `
+                <div style="padding:20px;">
+                    <div style="display:flex;flex-direction:column;gap:16px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(0,0,0,0.02);border-radius:8px;">
+                            <span style="color:#666;font-size:13px;">当前版本</span>
+                            <span style="color:#333;font-size:14px;font-weight:600;">${currentVersion}</span>
+                        </div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(0,0,0,0.02);border-radius:8px;">
+                            <span style="color:#666;font-size:13px;">最新版本</span>
+                            <span id="khsy-latest-version" style="color:${hasUpdate ? '#10b981' : (checkFailed ? '#ef4444' : '#333')};font-size:14px;font-weight:600;">${latestVersion}</span>
+                        </div>
+                        <div id="khsy-update-status">
+                            ${hasUpdate ? `
+                                <div style="padding:12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;text-align:center;">
+                                    <div style="font-size:13px;color:#10b981;margin-bottom:8px;">🎉 发现新版本！</div>
+                                    <button class="khsy-btn khsy-btn-primary" id="khsy-goto-update" style="width:100%;">
+                                        立即更新
+                                    </button>
+                                </div>
+                            ` : isChecking ? `
+                                <div style="padding:12px;background:rgba(0,0,0,0.02);border-radius:8px;text-align:center;color:#666;font-size:13px;">
+                                    <div style="margin-bottom:8px;">⏳ 正在检测更新...</div>
+                                </div>
+                            ` : checkFailed ? `
+                                <div style="padding:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;text-align:center;">
+                                    <div style="font-size:13px;color:#ef4444;margin-bottom:8px;">⚠️ 检测失败</div>
+                                    <div style="font-size:12px;color:#666;margin-bottom:8px;">无法连接到更新服务器</div>
+                                    <button class="khsy-btn" id="khsy-retry-update" style="width:100%;">
+                                        重新检测
+                                    </button>
+                                </div>
+                            ` : `
+                                <div style="padding:12px;background:rgba(0,0,0,0.02);border-radius:8px;text-align:center;color:#666;font-size:13px;">
+                                    ✅ 已是最新版本
+                                </div>
+                            `}
+                        </div>
+                        <div style="padding:12px;background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.3);border-radius:8px;">
+                            <div style="font-size:12px;color:#ef4444;line-height:1.6;text-align:center;">
+                                <strong>⚠️ 注意：</strong>更新版本之后请删除原有版本，否则会因为同时启用导致脚本不可用！！！
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const modal = UI.createModal('版本更新', content, []);
+            modal.addEventListener('remove', () => {
+                this.updateModalOpen = false;
+                // 隐藏角标
+                if (!hasUpdate) {
+                    UpdateChecker.hideUpdateBadge();
+                }
+            });
+
+            // 🔥 如果还没检查过更新，在后台异步检测
+            if (UpdateChecker.latestVersion === null) {
+                UpdateChecker.checkUpdate().then(() => {
+                    // 更新弹窗内容
+                    const versionEl = document.getElementById('khsy-latest-version');
+                    const statusEl = document.getElementById('khsy-update-status');
+                    
+                    if (versionEl && statusEl) {
+                        const newLatestVersion = UpdateChecker.latestVersion || '检测失败';
+                        const newHasUpdate = UpdateChecker.hasUpdate;
+                        const newCheckFailed = UpdateChecker.latestVersion === null;
+
+                        versionEl.textContent = newLatestVersion;
+                        versionEl.style.color = newHasUpdate ? '#10b981' : (newCheckFailed ? '#ef4444' : '#333');
+
+                        if (newHasUpdate) {
+                            statusEl.innerHTML = `
+                                <div style="padding:12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;text-align:center;">
+                                    <div style="font-size:13px;color:#10b981;margin-bottom:8px;">🎉 发现新版本！</div>
+                                    <button class="khsy-btn khsy-btn-primary" id="khsy-goto-update" style="width:100%;">
+                                        立即更新
+                                    </button>
+                                </div>
+                            `;
+                            const updateBtn = document.getElementById('khsy-goto-update');
+                            if (updateBtn) {
+                                updateBtn.onclick = () => {
+                                    window.open(CONFIG.UPDATE_URL, '_blank');
+                                    modal.remove();
+                                };
+                            }
+                        } else if (newCheckFailed) {
+                            statusEl.innerHTML = `
+                                <div style="padding:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;text-align:center;">
+                                    <div style="font-size:13px;color:#ef4444;margin-bottom:8px;">⚠️ 检测失败</div>
+                                    <div style="font-size:12px;color:#666;margin-bottom:8px;">无法连接到更新服务器</div>
+                                    <button class="khsy-btn" id="khsy-retry-update" style="width:100%;">
+                                        重新检测
+                                    </button>
+                                </div>
+                            `;
+                            const retryBtn = document.getElementById('khsy-retry-update');
+                            if (retryBtn) {
+                                retryBtn.onclick = async () => {
+                                    retryBtn.textContent = '检测中...';
+                                    retryBtn.disabled = true;
+                                    await UpdateChecker.checkUpdate();
+                                    modal.remove();
+                                    this.updateModalOpen = false;
+                                    this.showUpdateModal();
+                                };
+                            }
+                        } else {
+                            statusEl.innerHTML = `
+                                <div style="padding:12px;background:rgba(0,0,0,0.02);border-radius:8px;text-align:center;color:#666;font-size:13px;">
+                                    ✅ 已是最新版本
+                                </div>
+                            `;
+                        }
+                    }
+                });
+            } else {
+                // 已有缓存数据，绑定按钮事件
+                if (hasUpdate) {
+                    setTimeout(() => {
+                        const updateBtn = document.getElementById('khsy-goto-update');
+                        if (updateBtn) {
+                            updateBtn.onclick = () => {
+                                window.open(CONFIG.UPDATE_URL, '_blank');
+                                modal.remove();
+                            };
+                        }
+                    }, 100);
+                } else if (checkFailed) {
+                    setTimeout(() => {
+                        const retryBtn = document.getElementById('khsy-retry-update');
+                        if (retryBtn) {
+                            retryBtn.onclick = async () => {
+                                retryBtn.textContent = '检测中...';
+                                retryBtn.disabled = true;
+                                await UpdateChecker.checkUpdate();
+                                modal.remove();
+                                this.updateModalOpen = false;
+                                this.showUpdateModal();
+                            };
+                        }
+                    }, 100);
+                }
+            }
+        },
 
         // 显示公告模态框
         async showAnnounceModal() {
@@ -2587,6 +2893,191 @@
 
 
     // ==================== 初始化 ====================
+
+    // 图片加载器 - 从attachments数据中提取并显示图片
+    async function loadUnlockedImages() {
+        try {
+            // 检查是否在详情页
+            const topicId = VideoResolver.getTopicId();
+            if (!topicId) return;
+
+            // 从缓存中获取帖子信息
+            const cached = VideoResolver.contentTypeCache.get(String(topicId));
+            if (!cached || !cached.attachments) return;
+
+            // 提取所有图片附件
+            const imageAttachments = cached.attachments.filter(att =>
+                att.category === 'images' || att.category === 'image'
+            );
+
+            if (imageAttachments.length === 0) return;
+
+            // 查找内容区域 - 尝试多种选择器
+            let contentArea = null;
+            const selectors = [
+                '.topic-content',
+                '.content',
+                'article',
+                '.post-content',
+                '.detail-content',
+                '.topic-detail',
+                '.post-detail',
+                '.main-content',
+                '[class*="content"]',
+                '[class*="detail"]',
+                '[class*="topic"]',
+                '[class*="post"]',
+                'main',
+                '.container',
+                '#app',
+                'body'
+            ];
+
+            for (const selector of selectors) {
+                contentArea = document.querySelector(selector);
+                if (contentArea) break;
+            }
+
+            // 如果还是找不到，尝试找#wt-resources-box或.sell-btn的父元素
+            if (!contentArea) {
+                const resourceBox = document.querySelector('#wt-resources-box');
+                const sellBtn = document.querySelector('.sell-btn');
+                if (resourceBox) {
+                    contentArea = resourceBox;
+                } else if (sellBtn) {
+                    contentArea = sellBtn.parentElement;
+                }
+            }
+
+            if (!contentArea) return;
+
+            // 检查是否已经插入过图片
+            if (contentArea.querySelector('.khsy-unlocked-images')) return;
+
+            // 创建图片提示容器（因为图片无法加载）
+            const imageContainer = document.createElement('div');
+            imageContainer.className = 'khsy-unlocked-images';
+            imageContainer.style.cssText = 'margin-top:20px;padding:20px;background:linear-gradient(135deg, rgba(255,107,107,0.05) 0%, rgba(238,90,111,0.05) 100%);border-radius:12px;border:1px solid rgba(255,107,107,0.2);';
+
+            const imageCount = imageAttachments.length;
+            imageContainer.innerHTML = `
+                <div style="text-align:center;">
+                    <div style="font-size:48px;margin-bottom:15px;">📷</div>
+                    <div style="font-size:16px;color:#333;font-weight:500;margin-bottom:10px;">
+                        此帖子包含 ${imageCount} 张图片
+                    </div>
+                    <div style="font-size:14px;color:#666;line-height:1.6;">
+                        图片需要海角网站的真实VIP权限才能查看<br>
+                        目前插件暂时无法解锁图片内容
+                    </div>
+                </div>
+            `;
+
+            // 插入到内容区域
+            contentArea.appendChild(imageContainer);
+
+        } catch (e) {
+        }
+    }
+
+
+    // ==================== 广告移除功能 ====================
+    function removeAds() {
+        try {
+            // 查找所有广告元素
+            const adSelectors = [
+                '.page-container',
+                '.containeradvertising',
+                '.van-overlay',
+                '.topbanmer',
+                '.bannerliststyle',
+                '.custom_carousel'
+            ];
+
+            let removedCount = 0;
+
+            // 移除所有匹配的广告元素
+            adSelectors.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(element => {
+                    if (element) {
+                        element.remove();
+                        removedCount++;
+                    }
+                });
+            });
+
+            // 特殊处理：移除ishide类（显示被隐藏的内容）
+            const htmlBox = document.querySelector('.html-box');
+            if (htmlBox && htmlBox.classList.contains('ishide')) {
+                htmlBox.classList.remove('ishide');
+                removedCount++;
+            }
+
+            // 移除底部HTML盒子
+            const htmlBottomBox = document.querySelector('.html-bottom-box');
+            if (htmlBottomBox) {
+                htmlBottomBox.remove();
+                removedCount++;
+            }
+
+            return removedCount;
+        } catch (e) {
+            // 忽略错误，避免影响主功能
+            return 0;
+        }
+    }
+
+    // 使用MutationObserver监听DOM变化，实时移除广告
+    function startAdBlocker() {
+        // 立即执行一次
+        removeAds();
+
+        // 使用MutationObserver监听DOM变化
+        const observer = new MutationObserver((mutations) => {
+            // 检查是否有新增的节点
+            let hasNewNodes = false;
+            for (const mutation of mutations) {
+                if (mutation.addedNodes.length > 0) {
+                    hasNewNodes = true;
+                    break;
+                }
+            }
+
+            // 如果有新节点，检查并移除广告
+            if (hasNewNodes) {
+                removeAds();
+            }
+        });
+
+        // 开始观察整个文档的变化
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+
+        // 前3秒内每500ms检查一次（快速移除初始广告）
+        let quickCheckCount = 0;
+        const quickCheckTimer = setInterval(() => {
+            removeAds();
+            quickCheckCount++;
+            if (quickCheckCount >= 6) { // 3秒后停止快速检查
+                clearInterval(quickCheckTimer);
+            }
+        }, 500);
+
+        // 之后每5秒检查一次（兜底机制）
+        const regularCheckTimer = setInterval(removeAds, 5000);
+
+        // 页面卸载时清除定时器和观察器
+        window.addEventListener('beforeunload', () => {
+            clearInterval(quickCheckTimer);
+            clearInterval(regularCheckTimer);
+            observer.disconnect();
+        });
+    }
+
+    // ==================== 初始化 ====================
     function init() {
 
         setupHttpInterceptor();
@@ -2596,6 +3087,14 @@
             document.addEventListener('DOMContentLoaded', startUI);
         } else {
             startUI();
+        }
+
+        // 启动广告拦截器
+        if (document.body) {
+            startAdBlocker();
+        } else {
+            // 如果body还没加载，等待DOM加载完成
+            document.addEventListener('DOMContentLoaded', startAdBlocker);
         }
     }
 
@@ -2691,6 +3190,7 @@
                 paymentType: paymentType,
                 paymentAmount: paymentAmount,
                 originalSale: originalSale,
+                attachments: topic.attachments || [],  // 🔥 缓存attachments数组供图片加载使用
                 title: Crypto.fixUtf8(topic.title || ''),  // 修复UTF-8编码并保存标题
                 timestamp: Date.now()
             });
@@ -2723,13 +3223,79 @@
                     "response"
                 ).get;
 
-                // 🔥 特别处理用户信息API，强制返回VIP状态
-                if (url.includes('/user/me') || url.includes('/user/current') || url.includes('/api/user/info')) {
+                // 🔥 拦截海角网站的用户信息API，伪造海角网站的VIP状态（不拦截khsy.cc的API）
+                const isHaijaoUserApi = (url.includes('/user/me') || url.includes('/user/current') || url.includes('/api/user/info'))
+                                        && !url.includes('khsy.cc');
+
+                if (isHaijaoUserApi) {
                     Object.defineProperty(xhr, "responseText", {
                         get: () => {
                             let result = getter.call(xhr);
                             try {
                                 let res = JSON.parse(result);
+
+                                // 🔥 处理被封禁用户的情况
+                                if (res && res.success === false && res.message && (res.message.includes('禁') || res.message.includes('封'))) {
+                                    // 提取用户ID
+                                    const uidMatch = url.match(/\/api\/user\/info\/(\d+)/);
+                                    const userId = uidMatch ? parseInt(uidMatch[1]) : 0;
+
+                                    // 伪造一个被封禁用户的基本信息
+                                    const bannedUserData = {
+                                        id: userId,
+                                        nickname: '被封禁用户',
+                                        avatar: '',
+                                        description: '该用户已被封禁',
+                                        topicCount: 0,
+                                        videoCount: 0,
+                                        commentCount: 0,
+                                        fansCount: 0,
+                                        favoriteCount: 0,
+                                        status: 0,
+                                        sex: 0,
+                                        vip: 0,
+                                        vipExpiresTime: '0001-01-01 00:00:00',
+                                        certified: false,
+                                        forbidden: true,
+                                        role: 0,
+                                        popularity: 0,
+                                        diamondConsume: 0,
+                                        title: {
+                                            id: 0,
+                                            name: '',
+                                            consume: 0,
+                                            consumeEnd: 0,
+                                            icon: ''
+                                        }
+                                    };
+
+                                    // 构建完整的用户信息对象
+                                    const fullUserData = {
+                                        user: bannedUserData,
+                                        isFavorite: false,
+                                        likeCount: 0
+                                    };
+
+                                    // 返回成功的响应
+                                    res.success = true;
+                                    res.message = '';
+                                    res.errorCode = 0;
+                                    res.isEncrypted = true;
+
+                                    // 加密数据
+                                    try {
+                                        res.data = CryptoModule.encode(JSON.stringify(fullUserData), true);
+                                    } catch (e1) {
+                                        try {
+                                            res.data = CryptoModule.encode(JSON.stringify(fullUserData));
+                                        } catch (e2) {
+                                            res.data = fullUserData;
+                                            res.isEncrypted = false;
+                                        }
+                                    }
+
+                                    return JSON.stringify(res);
+                                }
 
                                 // 确保响应成功且有data字段
                                 if (res && res.success !== false && res.data) {
@@ -2750,7 +3316,7 @@
                                         }
                                     }
 
-                                    // 🔥 强制设置VIP状态 - VIP4等级
+                                    // 🔥 伪造海角网站的VIP状态 - VIP4等级
                                     if (userData) {
                                         userData.vip = 4;           // VIP等级设置为4
                                         userData.vipStatus = 4;     // VIP状态设置为4
@@ -2835,6 +3401,11 @@
                                 // 处理单个帖子（缓存付费信息）
                                 processSingleTopic(body);
 
+                                // 🔥 图片功能已禁用（避免在其他页面误显示）
+                                // setTimeout(() => {
+                                //     loadUnlockedImages();
+                                // }, 1500);
+
                                 // 准备免费化所需的数据
                                 let hasVideo = -1;
                                 let hasImages = false;
@@ -2846,7 +3417,11 @@
                                     }
                                     if (attachment.category === 'images' || attachment.category === 'image') {
                                         hasImages = true;
-                                        allImages[attachment.id] = attachment.remoteUrl;
+                                        // 🔥 尝试多个可能的图片URL字段
+                                        const imageUrl = attachment.remoteUrl || attachment.url || attachment.src || attachment.path;
+                                        if (imageUrl) {
+                                            allImages[attachment.id] = imageUrl;
+                                        }
                                     }
                                 });
 
@@ -2858,39 +3433,22 @@
                                 }
 
                                 // 处理内容显示
-                                if (body.content) {
-                                    if (hasVideo >= 0) {
-                                        // 有视频：插入video标签占位
-                                        const videoAttachment = body.attachments[hasVideo];
-                                        const insertDom = `<div><video style="display:none" src="" data-id="${videoAttachment.id}"></video></div>`;
+                                if (body.content && hasVideo >= 0) {
+                                    // 只处理视频，不处理图片（图片在客户端DOM处理）
+                                    const videoAttachment = body.attachments[hasVideo];
+                                    const insertDom = `<div><video style="display:none" src="" data-id="${videoAttachment.id}"></video></div>`;
 
-                                        try {
-                                            const regRep = /class="sell_line2"\>[^\<]+<\/span>/.exec(body.content);
-                                            if (regRep && regRep[0]) {
-                                                body.content = body.content
-                                                    .replace('<span class="sell-btn"', '<div id="wt-resources-box"><div class="sell-btn "')
-                                                    .replace(regRep[0], regRep[0] + insertDom + '</div></div>');
-                                            } else {
-                                                body.content += insertDom;
-                                            }
-                                        } catch (e) {
+                                    try {
+                                        const regRep = /class="sell_line2"\>[^\<]+<\/span>/.exec(body.content);
+                                        if (regRep && regRep[0]) {
+                                            body.content = body.content
+                                                .replace('<span class="sell-btn"', '<div id="wt-resources-box"><div class="sell-btn "')
+                                                .replace(regRep[0], regRep[0] + insertDom + '</div></div>');
+                                        } else {
                                             body.content += insertDom;
                                         }
-                                    } else if (Object.keys(allImages).length > 0) {
-                                        // 只有图片：直接显示图片
-
-                                        // 构建图片HTML
-                                        let domElements = [];
-                                        for (const [id, src] of Object.entries(allImages)) {
-                                            domElements.push(`<img src="${src}" data-id="${id}"/>`);
-                                        }
-
-                                        // 替换购买按钮为实际图片
-                                        const selledImg = `[sell]` + '<p>' + domElements.join('</p><p>') + '</p>' + `[/sell]`;
-                                        body.content = body.content.replace(/<span class="sell-btn".*<\/span>/, selledImg);
-                                    } else {
-                                        // 既无视频也无图片：移除购买按钮
-                                        body.content = body.content.replace(/<span class="sell-btn"[\s\S]*?<\/span>/, '');
+                                    } catch (e) {
+                                        body.content += insertDom;
                                     }
                                 }
 
@@ -2917,6 +3475,94 @@
 
             return originOpen.call(this, method, url, ...args);
         };
+
+        // 🔥 拦截fetch API（用于处理被封禁用户）
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options) {
+            return originalFetch.apply(this, arguments).then(async response => {
+                // 只处理用户信息API
+                if (typeof url === 'string' && url.includes('/api/user/info') && !url.includes('khsy.cc')) {
+                    const clonedResponse = response.clone();
+                    try {
+                        const data = await clonedResponse.json();
+
+                        // 检测被封禁用户
+                        if (data && data.success === false && data.message && (data.message.includes('禁') || data.message.includes('封'))) {
+                            // 提取用户ID
+                            const uidMatch = url.match(/\/api\/user\/info\/(\d+)/);
+                            const userId = uidMatch ? parseInt(uidMatch[1]) : 0;
+
+                            // 伪造被封禁用户数据
+                            const bannedUserData = {
+                                id: userId,
+                                nickname: '被封禁用户',
+                                avatar: '',
+                                description: '该用户已被封禁',
+                                topicCount: 0,
+                                videoCount: 0,
+                                commentCount: 0,
+                                fansCount: 0,
+                                favoriteCount: 0,
+                                status: 0,
+                                sex: 0,
+                                vip: 0,
+                                vipExpiresTime: '0001-01-01 00:00:00',
+                                certified: false,
+                                forbidden: true,
+                                role: 0,
+                                popularity: 0,
+                                diamondConsume: 0,
+                                title: {
+                                    id: 0,
+                                    name: '',
+                                    consume: 0,
+                                    consumeEnd: 0,
+                                    icon: ''
+                                }
+                            };
+
+                            const fullUserData = {
+                                user: bannedUserData,
+                                isFavorite: false,
+                                likeCount: 0
+                            };
+
+                            // 构造新的响应
+                            const newData = {
+                                success: true,
+                                message: '',
+                                errorCode: 0,
+                                isEncrypted: true,
+                                data: null
+                            };
+
+                            // 尝试加密
+                            try {
+                                newData.data = CryptoModule.encode(JSON.stringify(fullUserData), true);
+                            } catch (e1) {
+                                try {
+                                    newData.data = CryptoModule.encode(JSON.stringify(fullUserData));
+                                } catch (e2) {
+                                    newData.data = fullUserData;
+                                    newData.isEncrypted = false;
+                                }
+                            }
+
+                            // 返回新的Response对象
+                            return new Response(JSON.stringify(newData), {
+                                status: 200,
+                                statusText: 'OK',
+                                headers: response.headers
+                            });
+                        }
+                    } catch (e) {
+                        // 解析失败，返回原始响应
+                    }
+                }
+
+                return response;
+            });
+        };
     }
 
     // ==================== 脚本初始化 ====================
@@ -2926,10 +3572,7 @@
             FloatPanel.create();
 
             if (Auth.token) {
-                // 🔥 立即强制设置VIP状态
-                Auth.vip = true;
-                Auth.vipExpireAt = '2099-12-31T23:59:59.999Z';
-
+                // 🔥 从你的服务器(khsy.cc)获取真实的VIP状态
                 Auth.fetchUserInfo().then(() => {
                     FloatPanel.updateAccountButton();
 
@@ -2993,38 +3636,26 @@
         };
     }
 
-    // 🔥 立即强制设置VIP状态（在任何UI渲染之前）
-    if (Auth.token) {
-        Auth.vip = true;
-        Auth.vipExpireAt = '2099-12-31T23:59:59.999Z';
+    // 🔥 注意：不在这里强制设置VIP，VIP状态由khsy.cc服务器决定
 
-        // 强制写入localStorage
-        try {
-            localStorage.setItem('khsy_vip', 'true');
-            localStorage.setItem('khsy_vip_expire', '2099-12-31T23:59:59.999Z');
-        } catch (e) {}
-    }
+    // 移除控制台输出
 
     // 启动脚本
     init();
 
-    // 🔥 定时器：每3秒强制刷新VIP状态
+    // 🔥 定时器：每30秒从你的服务器(khsy.cc)同步真实VIP状态
     setInterval(() => {
         if (Auth.token) {
-            try {
-                // 强制设置VIP状态
-                localStorage.setItem('khsy_vip', 'true');
-                localStorage.setItem('khsy_vip_expire', '2099-12-31T23:59:59.999Z');
-
+            Auth.fetchUserInfo().then(() => {
                 // 更新UI显示
                 if (typeof FloatPanel !== 'undefined' && FloatPanel.updateAccountButton) {
                     FloatPanel.updateAccountButton();
                 }
-            } catch (e) {
+            }).catch(() => {
                 // 忽略错误
-            }
+            });
         }
-    }, 3000);
+    }, 30000);  // 30秒同步一次
 
     // 🔥 监听URL变化，离开详情页时清除绿色角标，进入详情页时触发预加载
     let lastUrl = window.location.href;
@@ -3049,6 +3680,9 @@
                         }
                     }, 500);
                 }
+
+                // 图片功能已禁用
+                // loadUnlockedImages();
             } else {
                 const btnResolve = document.getElementById('khsy-btn-resolve');
                 if (btnResolve) {

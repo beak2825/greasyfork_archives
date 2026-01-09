@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         WME Amtliche Hausnummern Import
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      4.3.3
-// @description  Massenimport von Hausnummern aus amtlichen Quellen (ALKIS, OpenData, WFS) - ALLE 16 Bundesländer + AT + CH
+// @version      4.5.0
+// @description  Massenimport von Hausnummern aus amtlichen Quellen (ALKIS, OpenData, WFS) - ALLE 16 Bundesländer + AT + CH + Speicher-Fehler Analyse + Geschwindigkeits-Einstellungen
 // @author       Hiwi234
 // @match        https://www.waze.com/editor*
 // @match        https://www.waze.com/*/editor*
@@ -49,7 +49,7 @@ const OFFICIAL_DATA_SOURCES = {
         },
         bayern: {
             name: 'Bayern OpenData',
-            type: 'WFS', 
+            type: 'WFS',
             url: 'https://geoservices.bayern.de/od/wfs/ogc_adress_wfs',
             typeName: 'ogc_adress_wfs:adressen',
             srsName: 'EPSG:4326',
@@ -239,7 +239,7 @@ const CONFIG = {
     },
     import: {
         batchSize: 100,  // 100 HN pro Scroll-Batch
-        parallelImports: 5,  // 5 HN gleichzeitig importieren
+        parallelImports: 5,  // 5 HN gleichzeitig importieren (AKTIV)
         maxHouseNumbers: 500,
         duplicateCheck: true,
         maxSegmentDistance: 50,
@@ -250,6 +250,15 @@ const CONFIG = {
     search: {
         defaultRadius: 500,
         maxRadius: 2000
+    },
+    // Geschwindigkeits-Einstellungen (anpassbar über UI)
+    speed: {
+        initialLoadDelay: 1200,    // Wartezeit beim Start (vorher 4000ms)
+        centeringDelay: 1200,      // Wartezeit nach Karten-Zentrierung
+        reloadDelay: 300,          // Wartezeit nach HN-Reload
+        batchDelay: 150,           // Pause nach jedem Batch
+        parallelBatchSize: 10,     // Max HN pro parallelem Batch
+        useParallelImport: true    // Parallele Verarbeitung aktiviert
     }
 };
 
@@ -258,13 +267,16 @@ const CONFIG = {
 // ============================================================================
 let wmeSDK = null;
 let W = null;
-let isImporting = false;
 let loadedData = [];
 let importStats = { total: 0, processed: 0, successful: 0, failed: 0, skipped: 0, errors: [] };
 
 // WICHTIG: Globales Tracking aller importierten HN in dieser Session
 // Key: "nummer_lat_lon" (gerundet auf 4 Dezimalstellen)
 const globalImportedHN = new Map();
+
+// Tracking für PENDING HN (noch nicht gespeichert) - für Fehler-Analyse
+// Wird bei jedem Import gefüllt, bei erfolgreichem Speichern geleert
+const pendingHouseNumbers = new Map(); // Key: "nummer_segmentId" -> {number, street, lat, lon, segmentId, timestamp}
 
 // Detaillierter Import-Report
 let importReport = {
@@ -276,6 +288,1120 @@ let importReport = {
     tooFarAway: [],                 // Segment zu weit entfernt
     startTime: null,
     endTime: null
+};
+
+// ============================================================================
+// SPEICHER-FEHLER HANDLER - Fängt WME Save-Fehler ab und analysiert sie
+// ============================================================================
+const SaveErrorHandler = {
+    // Bekannte Fehlertypen und ihre Beschreibungen
+    ERROR_TYPES: {
+        DUPLICATE_HN: {
+            patterns: [
+                /house\s*number.*already\s*exists/i,
+                /hausnummer.*existiert.*bereits/i,
+                /duplicate.*house\s*number/i,
+                /hn.*already.*exists/i,
+                /number.*already.*assigned/i
+            ],
+            description: 'Hausnummer existiert bereits',
+            icon: '🔄',
+            autoFixable: true,
+            autoFixAction: 'remove_duplicate'
+        },
+        HN_TOO_FAR: {
+            patterns: [
+                /house\s*number.*too\s*far/i,
+                /hausnummer.*zu\s*weit/i,
+                /distance.*exceeds/i,
+                /too\s*far\s*from\s*segment/i,
+                /point.*outside.*range/i
+            ],
+            description: 'Hausnummer zu weit vom Segment entfernt',
+            icon: '📏',
+            autoFixable: true,
+            autoFixAction: 'snap_to_segment'
+        },
+        HN_IN_PLACE: {
+            patterns: [
+                /house\s*number.*in\s*place/i,
+                /hausnummer.*im\s*place/i,
+                /address.*point.*venue/i,
+                /hn.*exists.*venue/i
+            ],
+            description: 'Hausnummer existiert bereits in einem Place',
+            icon: '🏪',
+            autoFixable: false
+        },
+        SEGMENT_LOCKED: {
+            patterns: [
+                /segment.*locked/i,
+                /segment.*gesperrt/i,
+                /insufficient.*rank/i,
+                /permission.*denied/i,
+                /not.*authorized/i
+            ],
+            description: 'Segment ist gesperrt (höherer Rang erforderlich)',
+            icon: '🔒',
+            autoFixable: false
+        },
+        INVALID_NUMBER: {
+            patterns: [
+                /invalid.*house\s*number/i,
+                /ungültige.*hausnummer/i,
+                /number.*format/i,
+                /invalid.*format/i
+            ],
+            description: 'Ungültiges Hausnummern-Format',
+            icon: '❌',
+            autoFixable: false
+        },
+        NETWORK_ERROR: {
+            patterns: [
+                /network.*error/i,
+                /timeout/i,
+                /connection.*failed/i,
+                /server.*error/i,
+                /500|502|503|504/
+            ],
+            description: 'Netzwerk-/Server-Fehler',
+            icon: '🌐',
+            autoFixable: false
+        },
+        UNKNOWN: {
+            patterns: [],
+            description: 'Unbekannter Fehler',
+            icon: '❓',
+            autoFixable: false
+        }
+    },
+
+    // Gesammelte Fehler aus dem letzten Speichervorgang
+    lastSaveErrors: [],
+
+    // Cooldown um Loops zu verhindern
+    lastErrorScan: 0,
+    errorScanCooldown: 2000, // 2 Sekunden Cooldown
+
+    // Fehler-Statistiken
+    errorStats: {
+        totalSaves: 0,
+        successfulSaves: 0,
+        failedSaves: 0,
+        errorsByType: {}
+    },
+
+    // Initialisierung - Event-Listener registrieren
+    init() {
+        // IMMER den DOM-Observer starten (für WME-Dialoge)
+        this.initFallback();
+
+        if (!wmeSDK?.Events) {
+            console.log(`${SCRIPT_NAME}: SaveErrorHandler - SDK Events nicht verfügbar, nur DOM-Fallback aktiv`);
+            return;
+        }
+
+        // wme-save-finished Event zusätzlich registrieren
+        try {
+            wmeSDK.Events.on({
+                eventName: 'wme-save-finished',
+                eventHandler: (event) => this.handleSaveFinished(event)
+            });
+            console.log(`${SCRIPT_NAME}: SaveErrorHandler initialisiert (SDK Events + DOM Fallback)`);
+        } catch (e) {
+            console.log(`${SCRIPT_NAME}: SaveErrorHandler SDK-Fehler:`, e);
+        }
+    },
+
+    // Fallback: Überwache DOM für Fehlermeldungen
+    initFallback() {
+        // MutationObserver für WME Fehlermeldungen
+        const observer = new MutationObserver((mutations) => {
+            // Cooldown prüfen um Loops zu verhindern
+            const now = Date.now();
+            if (now - this.lastErrorScan < this.errorScanCooldown) {
+                return;
+            }
+
+            for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        // Nur scannen wenn es wie ein Dialog/Modal aussieht
+                        const isDialog = node.matches?.('[role="dialog"], [role="alertdialog"], [class*="modal"], [class*="dialog"], .wz-dialog, .wz-modal');
+                        const hasDialogChild = node.querySelector?.('[role="dialog"], [role="alertdialog"], [class*="modal"], [class*="dialog"]');
+
+                        if (isDialog || hasDialogChild) {
+                            this.lastErrorScan = now;
+                            this.scanElementForErrors(node);
+                        }
+                    }
+                }
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+        console.log(`${SCRIPT_NAME}: SaveErrorHandler initialisiert (DOM Fallback)`);
+    },
+
+    // Scannt ein Element und seine Kinder nach Fehlermeldungen
+    scanElementForErrors(element) {
+        if (!element) return;
+
+        const elementText = element.textContent || element.innerText || '';
+
+        // Nur verarbeiten wenn es wirklich nach einem Fehler-Dialog aussieht
+        if (!this.looksLikeError(elementText)) {
+            return;
+        }
+
+        // Fehler extrahieren
+        this.extractAndParseWMEError(element);
+    },
+
+    // Prüft ob ein Text wie eine Fehlermeldung aussieht
+    looksLikeError(text) {
+        if (!text || text.length < 5) return false;
+        const lowerText = text.toLowerCase();
+        return lowerText.includes('fehler') ||
+               lowerText.includes('error') ||
+               lowerText.includes('existiert bereits') ||
+               lowerText.includes('already exists') ||
+               lowerText.includes('zu weit') ||
+               lowerText.includes('too far') ||
+               lowerText.includes('gesperrt') ||
+               lowerText.includes('locked') ||
+               lowerText.includes('speichern');
+    },
+
+    // Extrahiert Fehlerdetails aus WME-Dialog
+    extractAndParseWMEError(element) {
+        const fullText = element.textContent || element.innerText || '';
+
+        // Parse WME-spezifisches Format: "Hausnummer existiert bereits 2 Fehler"
+        const countMatch = fullText.match(/(\d+)\s*Fehler/i) || fullText.match(/(\d+)\s*error/i);
+        const errorCount = countMatch ? parseInt(countMatch[1]) : 1;
+
+        // Erkenne den Fehlertyp aus dem Text
+        let errorType = 'UNKNOWN';
+        let errorMessage = fullText.substring(0, 100); // Kürzen
+
+        if (/existiert\s*bereits|already\s*exists|duplicate/i.test(fullText)) {
+            errorType = 'DUPLICATE_HN';
+            errorMessage = `Hausnummer existiert bereits (${errorCount}x)`;
+        } else if (/zu\s*weit|too\s*far|distance/i.test(fullText)) {
+            errorType = 'HN_TOO_FAR';
+            errorMessage = `Hausnummer zu weit entfernt (${errorCount}x)`;
+        } else if (/gesperrt|locked|permission|rank/i.test(fullText)) {
+            errorType = 'SEGMENT_LOCKED';
+            errorMessage = `Segment gesperrt (${errorCount}x)`;
+        } else if (/ungültig|invalid|format/i.test(fullText)) {
+            errorType = 'INVALID_NUMBER';
+            errorMessage = `Ungültiges Format (${errorCount}x)`;
+        }
+
+        // Prüfe ob wir diesen Fehler schon haben (verhindert Duplikate)
+        const existingError = this.lastSaveErrors.find(e =>
+            e.type === errorType && e.source === 'WME-Dialog'
+        );
+
+        if (existingError) {
+            // Bereits erfasst, nicht nochmal hinzufügen
+            return;
+        }
+
+        // Einen Fehler-Eintrag für diesen Typ erstellen (nicht für jeden einzelnen)
+        const errorObj = {
+            type: errorType,
+            config: this.ERROR_TYPES[errorType],
+            originalMessage: errorMessage,
+            details: { count: errorCount },
+            timestamp: new Date(),
+            source: 'WME-Dialog'
+        };
+
+        this.lastSaveErrors.push(errorObj);
+        this.errorStats.errorsByType[errorType] = (this.errorStats.errorsByType[errorType] || 0) + errorCount;
+
+        console.log(`${SCRIPT_NAME}: WME-Dialog Fehler erkannt:`, errorType, errorCount);
+
+        // Fehler-Button aktualisieren (ohne Modal zu öffnen)
+        const errorBtn = document.getElementById('btn-show-save-errors');
+        if (errorBtn) {
+            const totalErrors = this.lastSaveErrors.reduce((sum, e) => sum + (e.details?.count || 1), 0);
+            errorBtn.style.display = 'inline-block';
+            errorBtn.textContent = `❌ ${totalErrors} Fehler`;
+        }
+    },
+
+    // Save-Finished Event Handler
+    handleSaveFinished(event) {
+        this.errorStats.totalSaves++;
+        const detail = event?.detail || event;
+        const success = detail?.success ?? true;
+
+        if (success) {
+            this.errorStats.successfulSaves++;
+            this.lastSaveErrors = [];
+
+            // Pending HN leeren bei erfolgreichem Speichern
+            const savedCount = pendingHouseNumbers.size;
+            pendingHouseNumbers.clear();
+
+            // Fehler-Button verstecken bei Erfolg
+            const errorBtn = document.getElementById('btn-show-save-errors');
+            if (errorBtn) {
+                errorBtn.style.display = 'none';
+            }
+
+            log(`✅ Speichern erfolgreich (${savedCount} HN)`, 'success');
+            return;
+        }
+
+        this.errorStats.failedSaves++;
+
+        // Fehler aus verschiedenen Quellen sammeln
+        this.collectErrors(detail);
+
+        // Fehler anzeigen
+        if (this.lastSaveErrors.length > 0) {
+            this.showErrorSummary();
+        }
+    },
+
+    // Fehler aus verschiedenen Quellen sammeln
+    collectErrors(detail) {
+        this.lastSaveErrors = [];
+
+        // 1. Fehler aus Event-Detail
+        if (detail?.errors) {
+            const errors = Array.isArray(detail.errors) ? detail.errors : [detail.errors];
+            errors.forEach(err => this.parseAndCategorizeError(err));
+        }
+
+        // 2. Fehler aus W.model.actionManager
+        try {
+            if (W?.model?.actionManager) {
+                const actions = W.model.actionManager.getActions?.() || [];
+                for (const action of actions) {
+                    if (action?.error || action?.lastError) {
+                        this.parseAndCategorizeError(action.error || action.lastError);
+                    }
+                }
+            }
+        } catch (e) {}
+
+        // 3. Fehler aus DOM (WME Fehlermeldungen) - erweiterte Suche
+        try {
+            // Alle möglichen Fehler-Container
+            const selectors = [
+                '.save-error',
+                '.error-message',
+                '[class*="save"][class*="error"]',
+                // WME Modal/Dialog
+                '.wz-dialog',
+                '.wz-modal',
+                '[class*="modal-content"]',
+                '[class*="dialog-content"]',
+                '[role="dialog"]',
+                '[role="alertdialog"]',
+                // Toast/Notification
+                '[class*="toast"]',
+                '[class*="notification"]',
+                '[class*="alert"]'
+            ];
+
+            const errorElements = document.querySelectorAll(selectors.join(', '));
+            errorElements.forEach(el => {
+                const text = el.textContent || el.innerText;
+                if (text && this.looksLikeError(text)) {
+                    this.extractAndParseWMEError(el);
+                }
+            });
+        } catch (e) {
+            console.log(`${SCRIPT_NAME}: Fehler beim DOM-Scan:`, e);
+        }
+
+        // 4. Suche nach dem spezifischen WME Fehler-Dialog (Screenshot-basiert)
+        try {
+            // Der Dialog hat "Fehler beim Speichern" als Titel
+            const allElements = document.querySelectorAll('*');
+            for (const el of allElements) {
+                const text = el.textContent || '';
+                if (text.includes('Fehler beim Speichern') || text.includes('Hausnummer existiert bereits')) {
+                    this.extractAndParseWMEError(el);
+                    break;
+                }
+            }
+        } catch (e) {}
+    },
+
+    // Fehler parsen und kategorisieren
+    parseAndCategorizeError(errorInput) {
+        const errorText = typeof errorInput === 'string'
+            ? errorInput
+            : errorInput?.message || errorInput?.toString() || '';
+
+        if (!errorText.trim()) return;
+
+        // Prüfe gegen bekannte Fehlermuster
+        let errorType = 'UNKNOWN';
+        let matchedPattern = null;
+
+        for (const [type, config] of Object.entries(this.ERROR_TYPES)) {
+            if (type === 'UNKNOWN') continue;
+
+            for (const pattern of config.patterns) {
+                if (pattern.test(errorText)) {
+                    errorType = type;
+                    matchedPattern = pattern;
+                    break;
+                }
+            }
+            if (errorType !== 'UNKNOWN') break;
+        }
+
+        // Extrahiere Details (Hausnummer, Straße, etc.)
+        const details = this.extractErrorDetails(errorText);
+
+        const errorObj = {
+            type: errorType,
+            config: this.ERROR_TYPES[errorType],
+            originalMessage: errorText,
+            details: details,
+            timestamp: new Date(),
+            matchedPattern: matchedPattern?.toString()
+        };
+
+        // Duplikate vermeiden
+        const isDuplicate = this.lastSaveErrors.some(e =>
+            e.type === errorObj.type &&
+            e.originalMessage === errorObj.originalMessage
+        );
+
+        if (!isDuplicate) {
+            this.lastSaveErrors.push(errorObj);
+
+            // Statistik aktualisieren
+            this.errorStats.errorsByType[errorType] = (this.errorStats.errorsByType[errorType] || 0) + 1;
+        }
+    },
+
+    // Details aus Fehlermeldung extrahieren
+    extractErrorDetails(errorText) {
+        const details = {};
+
+        // Hausnummer extrahieren
+        const hnMatch = errorText.match(/(?:house\s*number|hausnummer|hn)[:\s]*["']?(\d+[a-zA-Z]?)["']?/i) ||
+                        errorText.match(/["'](\d+[a-zA-Z]?)["']/);
+        if (hnMatch) details.houseNumber = hnMatch[1];
+
+        // Straßenname extrahieren
+        const streetMatch = errorText.match(/(?:street|straße|strasse)[:\s]*["']?([^"'\n,]+)["']?/i);
+        if (streetMatch) details.street = streetMatch[1].trim();
+
+        // Segment-ID extrahieren
+        const segmentMatch = errorText.match(/segment[:\s#]*(\d+)/i);
+        if (segmentMatch) details.segmentId = segmentMatch[1];
+
+        // Distanz extrahieren
+        const distanceMatch = errorText.match(/(\d+(?:\.\d+)?)\s*(?:m|meter|metres)/i);
+        if (distanceMatch) details.distance = parseFloat(distanceMatch[1]);
+
+        return details;
+    },
+
+    // Fehler-Zusammenfassung anzeigen
+    showErrorSummary() {
+        if (this.lastSaveErrors.length === 0) {
+            log('Keine Fehler zum Anzeigen', 'info');
+            return;
+        }
+
+        // Fehler-Button sichtbar machen
+        const errorBtn = document.getElementById('btn-show-save-errors');
+        if (errorBtn) {
+            const totalErrors = this.lastSaveErrors.reduce((sum, e) => sum + (e.details?.count || 1), 0);
+            errorBtn.style.display = 'inline-block';
+            errorBtn.textContent = `❌ ${totalErrors} Fehler`;
+        }
+
+        // Gruppiere Fehler nach Typ
+        const grouped = {};
+        for (const error of this.lastSaveErrors) {
+            if (!grouped[error.type]) {
+                grouped[error.type] = [];
+            }
+            grouped[error.type].push(error);
+        }
+
+        // Log-Ausgabe
+        const totalErrors = this.lastSaveErrors.reduce((sum, e) => sum + (e.details?.count || 1), 0);
+        log(`❌ Speichern fehlgeschlagen: ${totalErrors} Fehler`, 'error');
+
+        // Detaillierte Ausgabe pro Typ
+        for (const [type, errors] of Object.entries(grouped)) {
+            const config = this.ERROR_TYPES[type];
+            const typeCount = errors.reduce((sum, e) => sum + (e.details?.count || 1), 0);
+            log(`${config.icon} ${config.description}: ${typeCount}x`, 'warning');
+        }
+
+        // Modal anzeigen
+        this.showErrorModal(grouped);
+    },
+
+    // Fehler-Modal anzeigen
+    showErrorModal(groupedErrors) {
+        // Hole alle pending HN für die Fehler-Zuordnung
+        const pendingList = Array.from(pendingHouseNumbers.values());
+
+        // Versuche Fehler den pending HN zuzuordnen
+        const hnWithErrors = this.matchErrorsToHN(pendingList, groupedErrors);
+
+        // Prüfe ob Modal bereits existiert
+        let modal = document.getElementById('hn-save-error-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'hn-save-error-modal';
+            modal.innerHTML = `
+                <div class="hn-modal-overlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:10000;display:flex;align-items:center;justify-content:center;">
+                    <div class="hn-modal-content" style="background:#fff;border-radius:8px;max-width:800px;width:95%;max-height:85vh;overflow:auto;box-shadow:0 4px 20px rgba(0,0,0,0.3);">
+                        <div class="hn-modal-header" style="padding:15px 20px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center;background:#f44336;color:white;border-radius:8px 8px 0 0;">
+                            <h3 style="margin:0;font-size:16px;">❌ Speicher-Fehler Analyse</h3>
+                            <button id="btn-close-save-error" style="background:none;border:none;color:white;font-size:20px;cursor:pointer;">&times;</button>
+                        </div>
+                        <div id="save-error-content" style="padding:20px;max-height:60vh;overflow-y:auto;"></div>
+                        <div class="hn-modal-footer" style="padding:15px 20px;border-top:1px solid #ddd;display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;">
+                            <div style="display:flex;gap:10px;">
+                                <button id="btn-auto-fix-duplicates" class="btn btn-warning" title="Entfernt alle Duplikat-HN automatisch">🔧 Duplikate entfernen</button>
+                                <button id="btn-remove-all-pending" class="btn btn-danger" title="Alle pending HN aus Änderungen entfernen">🗑️ Alle entfernen</button>
+                            </div>
+                            <div style="display:flex;gap:10px;">
+                                <button id="btn-copy-errors" class="btn btn-secondary">📋 Kopieren</button>
+                                <button id="btn-dismiss-errors" class="btn btn-primary">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // Event-Listener
+            modal.querySelector('#btn-close-save-error').addEventListener('click', () => modal.style.display = 'none');
+            modal.querySelector('#btn-dismiss-errors').addEventListener('click', () => modal.style.display = 'none');
+            modal.querySelector('.hn-modal-overlay').addEventListener('click', (e) => {
+                if (e.target.classList.contains('hn-modal-overlay')) modal.style.display = 'none';
+            });
+            modal.querySelector('#btn-copy-errors').addEventListener('click', () => this.copyErrorsToClipboard());
+            modal.querySelector('#btn-remove-all-pending').addEventListener('click', () => this.removeAllPendingHN());
+            modal.querySelector('#btn-auto-fix-duplicates').addEventListener('click', () => this.autoFixDuplicates());
+        }
+
+        // Inhalt generieren
+        const content = modal.querySelector('#save-error-content');
+        const totalErrors = this.lastSaveErrors.reduce((sum, e) => sum + (e.details?.count || 1), 0);
+        const pendingCount = pendingList.length;
+        const actionCount = W?.model?.actionManager?.getActions()?.length || 0;
+
+        // Zähle Fehlertypen aus den Fehlern selbst
+        let duplicateErrorCount = 0;
+        let lockedErrorCount = 0;
+        let otherErrorCount = 0;
+
+        for (const [type, errors] of Object.entries(groupedErrors)) {
+            const count = errors.reduce((sum, e) => sum + (e.details?.count || 1), 0);
+            if (type === 'DUPLICATE_HN') duplicateErrorCount = count;
+            else if (type === 'SEGMENT_LOCKED') lockedErrorCount = count;
+            else if (type !== 'UNKNOWN') otherErrorCount += count;
+        }
+
+        let html = `
+            <div style="margin-bottom:15px;">
+                <p style="margin:0 0 10px;color:#666;">
+                    <strong>${totalErrors}</strong> Fehler beim Speichern.
+                    ${actionCount > 0 ? `<br><small>${actionCount} ausstehende Änderungen im Editor.</small>` : ''}
+                </p>
+                <div style="display:flex;gap:15px;flex-wrap:wrap;">
+                    ${duplicateErrorCount > 0 ? `<span style="padding:4px 10px;background:#ffcdd2;border-radius:4px;font-size:12px;">🔄 ${duplicateErrorCount} Duplikate</span>` : ''}
+                    ${lockedErrorCount > 0 ? `<span style="padding:4px 10px;background:#ffe0b2;border-radius:4px;font-size:12px;">🔒 ${lockedErrorCount} Gesperrt</span>` : ''}
+                    ${otherErrorCount > 0 ? `<span style="padding:4px 10px;background:#e0e0e0;border-radius:4px;font-size:12px;">❓ ${otherErrorCount} Andere</span>` : ''}
+                </div>
+            </div>
+        `;
+
+        // Fehler-Details anzeigen
+        html += `<div style="margin-bottom:15px;">`;
+        for (const [type, errors] of Object.entries(groupedErrors)) {
+            const config = this.ERROR_TYPES[type];
+            const errorCount = errors.reduce((sum, e) => sum + (e.details?.count || 1), 0);
+            const bgColor = type === 'DUPLICATE_HN' ? '#ffebee' : type === 'SEGMENT_LOCKED' ? '#fff3e0' : '#f5f5f5';
+            const borderColor = type === 'DUPLICATE_HN' ? '#f44336' : type === 'SEGMENT_LOCKED' ? '#ff9800' : '#9e9e9e';
+
+            html += `
+                <div style="padding:10px;background:${bgColor};border-radius:4px;margin-bottom:8px;border-left:4px solid ${borderColor};">
+                    <strong>${config.icon} ${config.description}</strong>
+                    <span style="background:#e0e0e0;padding:2px 8px;border-radius:10px;font-size:11px;margin-left:5px;">${errorCount}x</span>
+                    ${type === 'DUPLICATE_HN' ? '<span style="color:#4CAF50;font-size:11px;margin-left:10px;">✓ Auto-Fix: Alle Änderungen rückgängig machen</span>' : ''}
+                    <div style="font-size:11px;color:#666;margin-top:5px;">
+                        ${errors[0]?.originalMessage || ''}
+                    </div>
+                </div>
+            `;
+        }
+        html += `</div>`;
+
+        // Tabelle nur anzeigen wenn pending HN vorhanden
+        if (pendingCount > 0) {
+            // Versuche Fehler den pending HN zuzuordnen
+            const hnWithErrors = this.matchErrorsToHN(pendingList, groupedErrors);
+
+            // Sortiere: Fehler zuerst, dann OK
+            const sortedHN = [...hnWithErrors].sort((a, b) => {
+                if (a.errorType && !b.errorType) return -1;
+                if (!a.errorType && b.errorType) return 1;
+                return 0;
+            });
+
+            html += `
+                <div style="margin-bottom:15px;">
+                    <div style="font-weight:bold;margin-bottom:8px;">📋 Pending Hausnummern (${sortedHN.length})</div>
+                    <div style="max-height:300px;overflow-y:auto;border:1px solid #ddd;border-radius:4px;">
+                        <table style="width:100%;font-size:11px;border-collapse:collapse;">
+                            <thead style="position:sticky;top:0;background:#f5f5f5;">
+                                <tr>
+                                    <th style="padding:6px;text-align:left;border-bottom:2px solid #ddd;">Status</th>
+                                    <th style="padding:6px;text-align:left;border-bottom:2px solid #ddd;">HN</th>
+                                    <th style="padding:6px;text-align:left;border-bottom:2px solid #ddd;">Straße</th>
+                                    <th style="padding:6px;text-align:left;border-bottom:2px solid #ddd;">Koordinaten</th>
+                                    <th style="padding:6px;text-align:center;border-bottom:2px solid #ddd;">Aktion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+
+            sortedHN.forEach((hn, idx) => {
+                const lat = hn.lat?.toFixed(6) || '?';
+                const lon = hn.lon?.toFixed(6) || '?';
+
+                let statusIcon = '✓';
+                let statusColor = '#c8e6c9';
+
+                if (hn.errorType === 'DUPLICATE_HN') {
+                    statusIcon = '🔄';
+                    statusColor = '#ffcdd2';
+                } else if (hn.errorType === 'SEGMENT_LOCKED') {
+                    statusIcon = '🔒';
+                    statusColor = '#ffe0b2';
+                } else if (hn.errorType) {
+                    statusIcon = '❓';
+                    statusColor = '#e0e0e0';
+                }
+
+                html += `
+                    <tr style="border-bottom:1px solid #eee;background:${idx % 2 ? '#fafafa' : 'white'};">
+                        <td style="padding:5px;text-align:center;background:${statusColor};">${statusIcon}</td>
+                        <td style="padding:5px;"><strong>${hn.number}</strong></td>
+                        <td style="padding:5px;">${hn.street || '-'}</td>
+                        <td style="padding:5px;font-family:monospace;font-size:10px;">${lat}, ${lon}</td>
+                        <td style="padding:5px;text-align:center;white-space:nowrap;">
+                            <button class="btn-goto-hn" data-lat="${hn.lat}" data-lon="${hn.lon}"
+                                    style="background:#2196F3;color:white;border:none;border-radius:3px;padding:3px 8px;cursor:pointer;font-size:11px;"
+                                    title="Zur Position springen">📍</button>
+                            <button class="btn-remove-hn" data-number="${hn.number}" data-segment="${hn.segmentId}"
+                                    style="background:#f44336;color:white;border:none;border-radius:3px;padding:3px 8px;cursor:pointer;font-size:11px;margin-left:3px;"
+                                    title="Diese HN entfernen">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table></div></div>`;
+        }
+
+        // Tipps
+        html += `
+            <div style="padding:10px;background:#e3f2fd;border-radius:4px;font-size:12px;">
+                <strong>💡 Tipps:</strong>
+                <ul style="margin:5px 0 0 20px;padding:0;">
+                    <li><strong>🔧 Duplikate entfernen:</strong> Macht alle Änderungen rückgängig - beim erneuten Import werden Duplikate übersprungen</li>
+                    <li><strong>📍 Zur Position:</strong> Springt zur HN um sie manuell zu prüfen/korrigieren</li>
+                    <li><strong>🔒 Gesperrt:</strong> Diese Segmente haben einen höheren Lock-Level - HN können nicht importiert werden</li>
+                </ul>
+            </div>
+        `;
+
+        content.innerHTML = html;
+
+        // Event-Listener für die Buttons in der Tabelle
+        content.querySelectorAll('.btn-goto-hn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const lat = parseFloat(e.target.dataset.lat);
+                const lon = parseFloat(e.target.dataset.lon);
+                this.jumpToLocation(lat, lon);
+            });
+        });
+
+        content.querySelectorAll('.btn-remove-hn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const number = e.target.dataset.number;
+                const segmentId = e.target.dataset.segment;
+                this.removePendingHN(number, segmentId);
+                e.target.closest('tr')?.remove();
+            });
+        });
+
+        // Auto-Fix Button nur anzeigen wenn Duplikate vorhanden
+        const autoFixBtn = modal.querySelector('#btn-auto-fix-duplicates');
+        autoFixBtn.style.display = duplicateErrorCount > 0 ? 'inline-block' : 'none';
+
+        // Remove-All Button nur anzeigen wenn Actions vorhanden
+        const removeAllBtn = modal.querySelector('#btn-remove-all-pending');
+        removeAllBtn.style.display = actionCount > 0 ? 'inline-block' : 'none';
+
+        modal.style.display = 'block';
+    },
+
+    // Versuche Fehler den pending HN zuzuordnen
+    matchErrorsToHN(pendingList, groupedErrors) {
+        // Kopiere pending Liste mit Fehler-Info
+        const result = pendingList.map(hn => ({ ...hn, errorType: null }));
+
+        // Wenn wir Duplikat-Fehler haben, markiere HN die wahrscheinlich Duplikate sind
+        const duplicateErrors = groupedErrors['DUPLICATE_HN'] || [];
+        const duplicateCount = duplicateErrors.reduce((sum, e) => sum + (e.details?.count || 1), 0);
+
+        // Wenn Anzahl Fehler = Anzahl pending, sind wahrscheinlich alle betroffen
+        // Ansonsten versuchen wir die ersten X zu markieren (nicht ideal, aber besser als nichts)
+        if (duplicateCount > 0) {
+            // Markiere die ersten X als potentielle Duplikate
+            for (let i = 0; i < Math.min(duplicateCount, result.length); i++) {
+                result[i].errorType = 'DUPLICATE_HN';
+            }
+        }
+
+        // Gesperrte Segmente
+        const lockedErrors = groupedErrors['SEGMENT_LOCKED'] || [];
+        const lockedCount = lockedErrors.reduce((sum, e) => sum + (e.details?.count || 1), 0);
+        if (lockedCount > 0) {
+            let marked = 0;
+            for (let i = 0; i < result.length && marked < lockedCount; i++) {
+                if (!result[i].errorType) {
+                    result[i].errorType = 'SEGMENT_LOCKED';
+                    marked++;
+                }
+            }
+        }
+
+        // Andere Fehler
+        for (const [type, errors] of Object.entries(groupedErrors)) {
+            if (type === 'DUPLICATE_HN' || type === 'SEGMENT_LOCKED' || type === 'UNKNOWN') continue;
+            const count = errors.reduce((sum, e) => sum + (e.details?.count || 1), 0);
+            let marked = 0;
+            for (let i = 0; i < result.length && marked < count; i++) {
+                if (!result[i].errorType) {
+                    result[i].errorType = type;
+                    marked++;
+                }
+            }
+        }
+
+        return result;
+    },
+
+    // Auto-Fix: Entferne alle Duplikat-HN
+    async autoFixDuplicates() {
+        const pendingList = Array.from(pendingHouseNumbers.values());
+        const grouped = {};
+        for (const error of this.lastSaveErrors) {
+            if (!grouped[error.type]) grouped[error.type] = [];
+            grouped[error.type].push(error);
+        }
+
+        const hnWithErrors = this.matchErrorsToHN(pendingList, grouped);
+        const duplicates = hnWithErrors.filter(h => h.errorType === 'DUPLICATE_HN');
+
+        if (duplicates.length === 0) {
+            log('Keine Duplikate zum Entfernen gefunden', 'info');
+            return;
+        }
+
+        log(`🔧 Entferne ${duplicates.length} Duplikate...`, 'info');
+
+        // Einfachste Methode: Alle Actions rückgängig machen
+        // Das ist zuverlässiger als einzelne zu suchen
+        if (W?.model?.actionManager) {
+            const actionCount = W.model.actionManager.getActions().length;
+
+            if (actionCount > 0) {
+                // Bestätigungsdialog
+                const confirmed = confirm(
+                    `${duplicates.length} Duplikate gefunden.\n\n` +
+                    `Um diese zu entfernen, werden ALLE ${actionCount} ausstehenden Änderungen rückgängig gemacht.\n\n` +
+                    `Fortfahren?`
+                );
+
+                if (!confirmed) {
+                    log('Auto-Fix abgebrochen', 'info');
+                    return;
+                }
+
+                // Alle Undo
+                let undone = 0;
+                for (let i = 0; i < actionCount; i++) {
+                    try {
+                        W.model.actionManager.undo();
+                        undone++;
+                    } catch (e) {
+                        break;
+                    }
+                }
+
+                // Pending Map leeren
+                pendingHouseNumbers.clear();
+                this.lastSaveErrors = [];
+
+                log(`✓ ${undone} Änderungen rückgängig gemacht`, 'success');
+                log(`💡 Tipp: Import erneut starten - Duplikate werden jetzt übersprungen`, 'info');
+            }
+        }
+
+        // Modal schließen
+        const modal = document.getElementById('hn-save-error-modal');
+        if (modal) modal.style.display = 'none';
+
+        // Fehler-Button verstecken
+        const errorBtn = document.getElementById('btn-show-save-errors');
+        if (errorBtn) errorBtn.style.display = 'none';
+    },
+
+    // Zur Position springen
+    jumpToLocation(lat, lon) {
+        try {
+            // Konvertiere zu Web Mercator
+            const mercX = lon * 20037508.34 / 180;
+            const mercY = Math.log(Math.tan((90 + lat) * Math.PI / 360)) / (Math.PI / 180) * 20037508.34 / 180;
+
+            if (W?.map?.setCenter) {
+                W.map.setCenter({ lon: mercX, lat: mercY });
+            }
+
+            // Zoom auf Level 20 für beste Sicht
+            if (W?.map?.olMap?.zoomTo) {
+                W.map.olMap.zoomTo(20);
+            } else if (W?.map?.zoomTo) {
+                W.map.zoomTo(20);
+            }
+
+            log(`📍 Springe zu ${lat.toFixed(6)}, ${lon.toFixed(6)}`, 'info');
+
+            // Modal schließen
+            const modal = document.getElementById('hn-save-error-modal');
+            if (modal) modal.style.display = 'none';
+
+        } catch (e) {
+            log(`Fehler beim Springen: ${e.message}`, 'error');
+        }
+    },
+
+    // Einzelne pending HN entfernen
+    removePendingHN(number, segmentId) {
+        try {
+            // Aus pending Map entfernen
+            const key = `${number}_${segmentId}`;
+            const hnData = pendingHouseNumbers.get(key);
+            pendingHouseNumbers.delete(key);
+
+            // Versuche die Action aus dem ActionManager zu entfernen
+            if (W?.model?.actionManager) {
+                const actions = W.model.actionManager.getActions();
+                console.log(`${SCRIPT_NAME}: Suche HN ${number} in ${actions.length} Actions...`);
+
+                // Durchsuche alle Actions von hinten nach vorne
+                for (let i = actions.length - 1; i >= 0; i--) {
+                    const action = actions[i];
+                    let actionNumber = null;
+                    let actionSegmentId = null;
+
+                    // Verschiedene Wege um die HN-Nummer aus der Action zu extrahieren
+                    // WME speichert Actions unterschiedlich je nach Version
+
+                    // Methode 1: Direkt auf action
+                    if (action?.number) actionNumber = action.number;
+                    if (action?.segmentId) actionSegmentId = action.segmentId;
+
+                    // Methode 2: In houseNumber Objekt
+                    if (action?.houseNumber?.number) actionNumber = action.houseNumber.number;
+                    if (action?.houseNumber?.segmentId) actionSegmentId = action.houseNumber.segmentId;
+
+                    // Methode 3: In attributes
+                    if (action?.attributes?.number) actionNumber = action.attributes.number;
+                    if (action?.attributes?.segID) actionSegmentId = action.attributes.segID;
+
+                    // Methode 4: In object.attributes
+                    if (action?.object?.attributes?.number) actionNumber = action.object.attributes.number;
+                    if (action?.object?.attributes?.segID) actionSegmentId = action.object.attributes.segID;
+
+                    // Methode 5: In newAttributes
+                    if (action?.newAttributes?.number) actionNumber = action.newAttributes.number;
+
+                    // Methode 6: Action-Name prüfen
+                    const actionName = action?.constructor?.name || action?.type || action?.actionName || '';
+                    const isHNAction = actionName.toLowerCase().includes('housenumber') ||
+                                       actionName.toLowerCase().includes('hn') ||
+                                       actionName.includes('AddHouseNumber');
+
+                    // Debug: Erste paar Actions loggen
+                    if (i >= actions.length - 3) {
+                        console.log(`${SCRIPT_NAME}: Action[${i}]: type=${actionName}, number=${actionNumber}, segId=${actionSegmentId}`);
+                    }
+
+                    // Prüfe ob diese Action zu unserer HN gehört
+                    const numberMatch = String(actionNumber) === String(number);
+                    const segmentMatch = !segmentId || String(actionSegmentId) === String(segmentId);
+
+                    if (numberMatch && (segmentMatch || isHNAction)) {
+                        console.log(`${SCRIPT_NAME}: Gefunden! Entferne Action[${i}] für HN ${number}`);
+
+                        // Undo bis zu dieser Action
+                        const undoCount = actions.length - i;
+                        for (let j = 0; j < undoCount; j++) {
+                            try {
+                                W.model.actionManager.undo();
+                            } catch (e) {
+                                console.log(`${SCRIPT_NAME}: Undo fehlgeschlagen:`, e);
+                                break;
+                            }
+                        }
+
+                        log(`🗑️ HN ${number} entfernt (${undoCount} Undo)`, 'success');
+                        return true;
+                    }
+                }
+
+                // Alternative: Wenn wir die Action nicht finden, versuche über das Model
+                console.log(`${SCRIPT_NAME}: Action nicht gefunden, versuche Model-Methode...`);
+
+                // Versuche HN direkt aus dem Model zu löschen
+                if (W?.model?.segmentHouseNumbers && hnData) {
+                    try {
+                        const existingHN = W.model.segmentHouseNumbers.getByAttributes({
+                            segID: parseInt(segmentId),
+                            number: String(number)
+                        });
+
+                        if (existingHN && existingHN.length > 0) {
+                            // Versuche DeleteHouseNumber Action
+                            const pageRequire = unsafeWindow?.require || W?.require;
+                            if (pageRequire) {
+                                try {
+                                    const DeleteHouseNumber = pageRequire('Waze/Action/DeleteHouseNumber');
+                                    if (DeleteHouseNumber) {
+                                        const deleteAction = new DeleteHouseNumber(existingHN[0]);
+                                        W.model.actionManager.add(deleteAction);
+                                        log(`🗑️ HN ${number} gelöscht (Delete Action)`, 'success');
+                                        return true;
+                                    }
+                                } catch (e) {
+                                    console.log(`${SCRIPT_NAME}: DeleteHouseNumber nicht verfügbar:`, e);
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.log(`${SCRIPT_NAME}: Model-Methode fehlgeschlagen:`, e);
+                    }
+                }
+            }
+
+            log(`⚠️ HN ${number} aus Tracking entfernt (Action nicht gefunden)`, 'warning');
+            return false;
+        } catch (e) {
+            log(`Fehler beim Entfernen: ${e.message}`, 'error');
+            console.error(`${SCRIPT_NAME}: removePendingHN Fehler:`, e);
+            return false;
+        }
+    },
+
+    // Alle pending HN entfernen (komplettes Undo)
+    removeAllPendingHN() {
+        try {
+            const count = pendingHouseNumbers.size;
+
+            if (!W?.model?.actionManager) {
+                log('ActionManager nicht verfügbar', 'error');
+                return;
+            }
+
+            // Zähle wie viele Actions wir haben
+            const actionCount = W.model.actionManager.getActions().length;
+            log(`🔧 Entferne ${actionCount} Actions...`, 'info');
+
+            // Alle Undo-Aktionen ausführen
+            let undone = 0;
+            for (let i = 0; i < actionCount; i++) {
+                try {
+                    W.model.actionManager.undo();
+                    undone++;
+                } catch (e) {
+                    console.log(`${SCRIPT_NAME}: Undo ${i} fehlgeschlagen:`, e);
+                    break;
+                }
+            }
+
+            // Pending Map leeren
+            pendingHouseNumbers.clear();
+
+            // Auch globalImportedHN für diese Session leeren (optional)
+            // globalImportedHN.clear();
+
+            log(`🗑️ ${undone} Actions rückgängig gemacht`, 'success');
+
+            // Modal schließen
+            const modal = document.getElementById('hn-save-error-modal');
+            if (modal) modal.style.display = 'none';
+
+            // Fehler-Button verstecken
+            const errorBtn = document.getElementById('btn-show-save-errors');
+            if (errorBtn) errorBtn.style.display = 'none';
+
+            // Fehler zurücksetzen
+            this.lastSaveErrors = [];
+
+        } catch (e) {
+            log(`Fehler beim Entfernen: ${e.message}`, 'error');
+            console.error(`${SCRIPT_NAME}: removeAllPendingHN Fehler:`, e);
+        }
+    },
+
+    // Fehler in Zwischenablage kopieren
+    copyErrorsToClipboard() {
+        let text = `WME Speicher-Fehler Report (${new Date().toLocaleString()})\n`;
+        text += `${'='.repeat(50)}\n\n`;
+
+        const grouped = {};
+        for (const error of this.lastSaveErrors) {
+            if (!grouped[error.type]) grouped[error.type] = [];
+            grouped[error.type].push(error);
+        }
+
+        for (const [type, errors] of Object.entries(grouped)) {
+            const config = this.ERROR_TYPES[type];
+            text += `${config.icon} ${config.description} (${errors.length}x)\n`;
+            text += `${'-'.repeat(40)}\n`;
+
+            errors.forEach(err => {
+                let line = '  • ';
+                if (err.details.houseNumber) line += `HN: ${err.details.houseNumber} `;
+                if (err.details.street) line += `Straße: ${err.details.street} `;
+                if (err.details.distance) line += `Distanz: ${err.details.distance}m `;
+                if (err.details.segmentId) line += `Segment: ${err.details.segmentId} `;
+                text += line.trim() + '\n';
+                text += `    Original: ${err.originalMessage}\n`;
+            });
+            text += '\n';
+        }
+
+        navigator.clipboard.writeText(text).then(() => {
+            log('Fehler in Zwischenablage kopiert', 'success');
+        }).catch(() => {
+            log('Kopieren fehlgeschlagen', 'error');
+        });
+    },
+
+    // Auto-Fix für behebbare Fehler
+    async autoFixErrors() {
+        const fixableErrors = this.lastSaveErrors.filter(e => e.config.autoFixable);
+        if (fixableErrors.length === 0) {
+            log('Keine automatisch behebbaren Fehler', 'info');
+            return;
+        }
+
+        log(`🔧 Starte Auto-Korrektur für ${fixableErrors.length} Fehler...`, 'info');
+
+        let fixed = 0;
+        let failed = 0;
+
+        for (const error of fixableErrors) {
+            try {
+                const result = await this.applyAutoFix(error);
+                if (result) {
+                    fixed++;
+                } else {
+                    failed++;
+                }
+            } catch (e) {
+                console.error(`${SCRIPT_NAME}: Auto-Fix Fehler:`, e);
+                failed++;
+            }
+        }
+
+        log(`🔧 Auto-Korrektur: ${fixed} behoben, ${failed} fehlgeschlagen`, fixed > 0 ? 'success' : 'warning');
+
+        // Modal schließen
+        const modal = document.getElementById('hn-save-error-modal');
+        if (modal) modal.style.display = 'none';
+
+        // Hinweis zum erneuten Speichern
+        if (fixed > 0) {
+            log('💾 Bitte erneut speichern um Korrekturen zu übernehmen', 'info');
+        }
+    },
+
+    // Einzelnen Auto-Fix anwenden
+    async applyAutoFix(error) {
+        switch (error.config.autoFixAction) {
+            case 'remove_duplicate':
+                return this.fixRemoveDuplicate(error);
+            case 'snap_to_segment':
+                return this.fixSnapToSegment(error);
+            default:
+                return false;
+        }
+    },
+
+    // Fix: Duplikat entfernen (Undo der Action)
+    fixRemoveDuplicate(error) {
+        try {
+            if (!W?.model?.actionManager) return false;
+
+            const actions = W.model.actionManager.getActions() || [];
+
+            // Finde die Action für diese Hausnummer
+            for (let i = actions.length - 1; i >= 0; i--) {
+                const action = actions[i];
+                const actionHN = action?.houseNumber?.number || action?.object?.attributes?.number;
+
+                if (actionHN && error.details.houseNumber &&
+                    String(actionHN).toLowerCase() === String(error.details.houseNumber).toLowerCase()) {
+                    // Undo dieser Action
+                    W.model.actionManager.undo();
+                    log(`🔧 Duplikat-Action für HN ${error.details.houseNumber} rückgängig gemacht`, 'success');
+                    return true;
+                }
+            }
+            return false;
+        } catch (e) {
+            console.error(`${SCRIPT_NAME}: fixRemoveDuplicate Fehler:`, e);
+            return false;
+        }
+    },
+
+    // Fix: Hausnummer näher ans Segment verschieben
+    fixSnapToSegment(error) {
+        // Diese Funktion ist komplexer und erfordert Zugriff auf die HN-Geometrie
+        // Für jetzt nur ein Hinweis
+        log(`⚠️ HN ${error.details.houseNumber || '?'} muss manuell näher ans Segment verschoben werden`, 'warning');
+        return false;
+    },
+
+    // Statistiken zurücksetzen
+    resetStats() {
+        this.errorStats = {
+            totalSaves: 0,
+            successfulSaves: 0,
+            failedSaves: 0,
+            errorsByType: {}
+        };
+        this.lastSaveErrors = [];
+    }
 };
 
 // ============================================================================
@@ -302,7 +1428,7 @@ class RateLimiter {
 
         const now = Date.now();
         this.history = this.history.filter(t => now - t < 1000);
-        
+
         if (this.history.length >= this.maxPerSecond) {
             setTimeout(() => this.process(), 200);
             return;
@@ -323,7 +1449,6 @@ class RateLimiter {
     }
 }
 
-const rateLimiter = new RateLimiter(CONFIG.rateLimiting.maxRequestsPerSecond, CONFIG.rateLimiting.maxConcurrentRequests);
 
 // ============================================================================
 // KOORDINATEN-UTILITIES (SDK-kompatibel)
@@ -358,14 +1483,14 @@ const CoordUtils = {
             if (wmeSDK && wmeSDK.Map) {
                 const center = wmeSDK.Map.getMapCenter();
                 const zoom = wmeSDK.Map.getZoomLevel();
-                
+
                 if (center && center.lon !== undefined && center.lat !== undefined) {
                     // Radius basierend auf Zoom-Level berechnen
                     const radiusMeters = Math.max(100, 50000 / Math.pow(2, zoom - 10));
                     return this.getBBoxFromCenter(center.lon, center.lat, Math.min(radiusMeters, CONFIG.search.maxRadius));
                 }
             }
-            
+
             // Fallback: W.map verwenden
             if (W && W.map) {
                 const extent = W.map.getExtent();
@@ -377,10 +1502,10 @@ const CoordUtils = {
                         lat = 180 / Math.PI * (2 * Math.atan(Math.exp(lat * Math.PI / 180)) - Math.PI / 2);
                         return { lon, lat };
                     };
-                    
+
                     const bl = toWGS84(extent.left, extent.bottom);
                     const tr = toWGS84(extent.right, extent.top);
-                    
+
                     return {
                         minLon: bl.lon,
                         minLat: bl.lat,
@@ -489,7 +1614,7 @@ class OfficialDataFetcher {
             });
 
             const url = `${source.url}?${params.toString()}`;
-            
+
             try {
                 const result = await this.makeWFSRequest(url, source);
                 if (result && result.length > 0) {
@@ -510,11 +1635,11 @@ class OfficialDataFetcher {
     // NRW ALKIS Gebäude - spezielle Behandlung für Polygon-Geometrien mit lagebeztxt
     async fetchNRWALKIS(source, bbox) {
         log(`NRW ALKIS Request: ${source.name}`, 'info');
-        
+
         // BBOX für EPSG:25832 (UTM Zone 32N) - NRW natives CRS
         // Konvertiere WGS84 zu ungefähren UTM-Koordinaten
         const utmBbox = this.wgs84ToUTM32(bbox);
-        
+
         const params = new URLSearchParams({
             service: 'WFS',
             version: '2.0.0',
@@ -527,7 +1652,7 @@ class OfficialDataFetcher {
         });
 
         const url = `${source.url}?${params.toString()}`;
-        
+
         return new Promise((resolve) => {
             GM_xmlhttpRequest({
                 method: 'GET',
@@ -570,22 +1695,22 @@ class OfficialDataFetcher {
             const lonRad = lon * Math.PI / 180;
             const latRad = lat * Math.PI / 180;
             const lon0 = 9 * Math.PI / 180; // Zone 32 Mittelmeridian
-            
+
             const N = a / Math.sqrt(1 - e2 * Math.sin(latRad) * Math.sin(latRad));
             const T = Math.tan(latRad) * Math.tan(latRad);
             const C = e2 / (1 - e2) * Math.cos(latRad) * Math.cos(latRad);
             const A = Math.cos(latRad) * (lonRad - lon0);
             const M = a * ((1 - e2/4 - 3*e2*e2/64) * latRad - (3*e2/8 + 3*e2*e2/32) * Math.sin(2*latRad));
-            
+
             const x = k0 * N * (A + (1-T+C)*A*A*A/6) + 500000;
             const y = k0 * (M + N * Math.tan(latRad) * (A*A/2 + (5-T+9*C+4*C*C)*A*A*A*A/24));
-            
+
             return { x, y };
         };
-        
+
         const min = toUTM(bbox.minLon, bbox.minLat);
         const max = toUTM(bbox.maxLon, bbox.maxLat);
-        
+
         return {
             minX: min.x,
             minY: min.y,
@@ -602,7 +1727,7 @@ class OfficialDataFetcher {
 
         // Finde alle GebaeudeBauwerk Features
         const features = doc.getElementsByTagNameNS('*', 'GebaeudeBauwerk');
-        
+
         for (const feature of features) {
             // lagebeztxt enthält die Adresse(n) - kann mehrere durch Trennzeichen getrennt enthalten
             const lagebeztxt = this.getElementText(feature, 'lagebeztxt');
@@ -614,15 +1739,15 @@ class OfficialDataFetcher {
 
             // Adressen aus lagebeztxt parsen (Format: "Straße Hausnummer" oder "Straße Hausnummer, Straße2 Hausnummer2")
             const addresses = this.parseLagebeztxt(lagebeztxt);
-            
+
             for (const addr of addresses) {
                 if (addr.number) {
                     // Hausnummern aufteilen falls mehrere
                     const numbers = this.splitAndValidateHouseNumbers(addr.number);
-                    
+
                     // Positionen versetzen wenn mehrere HN aus einem Bereich
                     const positions = this.spreadPositions(centroid.lon, centroid.lat, numbers.length);
-                    
+
                     for (let idx = 0; idx < numbers.length; idx++) {
                         houseNumbers.push({
                             number: numbers[idx],
@@ -644,20 +1769,20 @@ class OfficialDataFetcher {
         if (count <= 1) {
             return [{ lon: baseLon, lat: baseLat }];
         }
-        
+
         const positions = [];
         // Versatz: ca. 3 Meter pro HN (0.00003° ≈ 3m)
         const offset = 0.00003;
         // Verteile entlang einer Linie (leicht diagonal)
         const startOffset = -((count - 1) / 2) * offset;
-        
+
         for (let i = 0; i < count; i++) {
             positions.push({
                 lon: baseLon + startOffset + (i * offset),
                 lat: baseLat + (startOffset + (i * offset)) * 0.3 // Leicht diagonal
             });
         }
-        
+
         return positions;
     }
 
@@ -674,9 +1799,9 @@ class OfficialDataFetcher {
         const posListEl = feature.getElementsByTagNameNS('*', 'posList')[0];
         const posEl = feature.getElementsByTagNameNS('*', 'pos')[0];
         const coordsEl = feature.getElementsByTagNameNS('*', 'coordinates')[0];
-        
+
         let coords = [];
-        
+
         if (posListEl) {
             // GML 3.x posList Format: "lat1 lon1 lat2 lon2 ..."
             const values = posListEl.textContent.trim().split(/\s+/).map(parseFloat);
@@ -705,7 +1830,7 @@ class OfficialDataFetcher {
         // Centroid berechnen
         const sumLat = coords.reduce((s, c) => s + c.lat, 0);
         const sumLon = coords.reduce((s, c) => s + c.lon, 0);
-        
+
         const lat = sumLat / coords.length;
         const lon = sumLon / coords.length;
 
@@ -736,10 +1861,10 @@ class OfficialDataFetcher {
             // "Musterstraße 123a"
             // "Am Markt 5-7"
             // "Straße des 17. Juni 100"
-            
+
             // Regex: Alles bis zur letzten Zahl(engruppe) ist Straße
             const match = part.match(/^(.+?)\s+(\d+[\d\s\-\/a-zA-Z]*)$/);
-            
+
             if (match) {
                 addresses.push({
                     street: match[1].trim(),
@@ -784,7 +1909,7 @@ class OfficialDataFetcher {
                                 resolve(xmlResult);
                             } catch (xmlError) {
                                 // Prüfe ob es eine WFS Exception ist
-                                if (response.responseText.includes('ExceptionReport') || 
+                                if (response.responseText.includes('ExceptionReport') ||
                                     response.responseText.includes('ServiceException')) {
                                     console.log(`${SCRIPT_NAME}: WFS Exception für ${source.name}`);
                                 }
@@ -815,16 +1940,16 @@ class OfficialDataFetcher {
     parseGeoJSON(data, source) {
         const houseNumbers = [];
         const features = data.features || data.featureMembers || [];
-        
+
         for (const feature of features) {
             const hn = this.extractHouseNumber(feature, source);
             if (hn) {
                 // Hausnummer validieren und ggf. aufteilen
                 const numbers = this.splitAndValidateHouseNumbers(hn.number);
-                
+
                 // Positionen versetzen wenn mehrere HN aus einem Bereich
                 const positions = this.spreadPositions(hn.lon, hn.lat, numbers.length);
-                
+
                 for (let idx = 0; idx < numbers.length; idx++) {
                     houseNumbers.push({
                         ...hn,
@@ -835,7 +1960,7 @@ class OfficialDataFetcher {
                 }
             }
         }
-        
+
         return houseNumbers;
     }
 
@@ -873,7 +1998,7 @@ class OfficialDataFetcher {
         let lat = null;
 
         // Hausnummer finden
-        const numberFields = ['hausnummer', 'hausnr', 'hnr', 'number', 'housenumber', 
+        const numberFields = ['hausnummer', 'hausnr', 'hnr', 'number', 'housenumber',
                              'house_number', 'HNR', 'HAUSNUMMER', 'locatorDesignator',
                              'ad:locatorDesignator', 'nummer'];
         for (const field of numberFields) {
@@ -893,7 +2018,7 @@ class OfficialDataFetcher {
         }
 
         // Straßenname finden
-        const streetFields = ['strassenname', 'strasse', 'street', 'streetname', 
+        const streetFields = ['strassenname', 'strasse', 'street', 'streetname',
                              'str_name', 'STRASSENNAME', 'thoroughfare', 'strnam'];
         for (const field of streetFields) {
             if (props[field]) {
@@ -922,7 +2047,7 @@ class OfficialDataFetcher {
         if (lon === null || lat === null) {
             const lonFields = ['lon', 'longitude', 'x', 'rechtswert', 'east', 'lng'];
             const latFields = ['lat', 'latitude', 'y', 'hochwert', 'north'];
-            
+
             for (const field of lonFields) {
                 if (props[field] !== undefined) { lon = parseFloat(props[field]); break; }
             }
@@ -961,13 +2086,13 @@ class OfficialDataFetcher {
 
         const number = getText(['hausnummer', 'hausnr', 'hnr', 'HNR', 'locatorDesignator', 'nummer']);
         const street = getText(['strassenname', 'strasse', 'STR_NAME', 'thoroughfare', 'strnam']);
-        
+
         // Koordinaten aus GML
         let lon = null, lat = null;
         const posEl = element.getElementsByTagNameNS('*', 'pos')[0] ||
                      element.getElementsByTagNameNS('*', 'coordinates')[0] ||
                      element.getElementsByTagNameNS('*', 'posList')[0];
-        
+
         if (posEl) {
             const coords = posEl.textContent.trim().split(/[\s,]+/).map(parseFloat);
             if (coords.length >= 2) {
@@ -1039,7 +2164,7 @@ class OfficialDataFetcher {
 
     parseOverpassResponse(data) {
         const houseNumbers = [];
-        
+
         for (const element of data.elements || []) {
             const tags = element.tags || {};
             const rawNumber = tags['addr:housenumber'];
@@ -1058,10 +2183,10 @@ class OfficialDataFetcher {
                 // Hausnummern aufteilen und validieren
                 const numbers = this.splitAndValidateHouseNumbers(rawNumber);
                 const street = tags['addr:street'] || 'Unbekannt';
-                
+
                 // Positionen versetzen wenn mehrere HN aus einem Bereich
                 const positions = this.spreadPositions(lon, lat, numbers.length);
-                
+
                 for (let idx = 0; idx < numbers.length; idx++) {
                     houseNumbers.push({
                         number: numbers[idx],
@@ -1080,25 +2205,25 @@ class OfficialDataFetcher {
     // Hausnummern aufteilen und validieren
     splitAndValidateHouseNumbers(rawNumber) {
         if (!rawNumber) return [];
-        
+
         const results = [];
         const raw = String(rawNumber).trim();
-        
+
         // Verschiedene Trennzeichen: Komma, Semikolon, Schrägstrich, "und", "&"
         // Beispiele: "201, 203", "1;3;5", "10/12", "5 und 7", "3&5"
         const parts = raw.split(/[,;\/&]|\s+und\s+|\s+and\s+/i);
-        
+
         for (let part of parts) {
             part = part.trim();
             if (!part) continue;
-            
+
             // Prüfe auf Bereich (z.B. "1-5", "10 - 12")
             const rangeMatch = part.match(/^(\d+)\s*[-–—]\s*(\d+)([a-zA-Z]?)$/);
             if (rangeMatch) {
                 const start = parseInt(rangeMatch[1]);
                 const end = parseInt(rangeMatch[2]);
                 const suffix = rangeMatch[3] || '';
-                
+
                 // Nur kleine Bereiche expandieren (max 10 Nummern)
                 if (end > start && (end - start) <= 10) {
                     // Prüfe ob gerade oder ungerade Sequenz
@@ -1112,28 +2237,28 @@ class OfficialDataFetcher {
                     continue;
                 }
             }
-            
+
             // Einzelne Hausnummer validieren
             if (this.isValidHouseNumber(part)) {
                 results.push(part);
             }
         }
-        
+
         return results;
     }
 
     // Hausnummer validieren (Waze-kompatibel)
     isValidHouseNumber(number) {
         if (!number) return false;
-        
+
         const num = String(number).trim();
-        
+
         // Leere oder zu lange Nummern ablehnen
         if (num.length === 0 || num.length > 10) return false;
-        
+
         // Muss mit einer Ziffer beginnen
         if (!/^\d/.test(num)) return false;
-        
+
         // Erlaubte Formate:
         // - Nur Ziffern: "123"
         // - Ziffern + Buchstabe: "123a", "123A"
@@ -1141,15 +2266,15 @@ class OfficialDataFetcher {
         // - Ziffern + Schrägstrich + Ziffern: "123/1" (Nebeneingänge)
         const validPattern = /^\d+[a-zA-Z]?\d*$/;
         const validWithSlash = /^\d+\/\d+[a-zA-Z]?$/;
-        
+
         if (validPattern.test(num) || validWithSlash.test(num)) {
             return true;
         }
-        
+
         // Ungültige Zeichen oder Formate
         // Ablehnen: Kommas, Semikolons, Leerzeichen, Bindestriche (außer in Bereichen)
         if (/[,;\s]/.test(num)) return false;
-        
+
         return false;
     }
 
@@ -1189,7 +2314,7 @@ class OfficialDataFetcher {
             if (lon >= 6.1 && lon <= 8.5 && lat >= 48.9 && lat <= 50.9) return 'germany.rlp';
             // Saarland
             if (lon >= 6.3 && lon <= 7.4 && lat >= 49.1 && lat <= 49.7) return 'germany.saarland';
-            
+
             // Fallback: OSM verwenden
             return null;
         }
@@ -1234,16 +2359,16 @@ class WMEHouseNumberManager {
     getElementMapCoordinates(element) {
         try {
             if (!element || !W?.map) return null;
-            
+
             // Methode 1: Aus SVG transform-Attribut
-            const transform = element.getAttribute('transform') || 
+            const transform = element.getAttribute('transform') ||
                              element.parentElement?.getAttribute('transform');
             if (transform) {
                 const translateMatch = transform.match(/translate\s*\(\s*([-\d.]+)\s*[,\s]\s*([-\d.]+)\s*\)/);
                 if (translateMatch) {
                     const x = parseFloat(translateMatch[1]);
                     const y = parseFloat(translateMatch[2]);
-                    
+
                     // Prüfe ob Web Mercator (große Zahlen)
                     if (Math.abs(x) > 180 || Math.abs(y) > 90) {
                         const lon = x * 180 / 20037508.34;
@@ -1253,14 +2378,14 @@ class WMEHouseNumberManager {
                     return { lon: x, lat: y };
                 }
             }
-            
+
             // Methode 2: Aus data-Attributen
             const dataLon = element.getAttribute('data-lon') || element.getAttribute('data-x');
             const dataLat = element.getAttribute('data-lat') || element.getAttribute('data-y');
             if (dataLon && dataLat) {
                 return { lon: parseFloat(dataLon), lat: parseFloat(dataLat) };
             }
-            
+
             // Methode 3: Aus Bildschirmposition via OpenLayers
             const rect = element.getBoundingClientRect();
             if (rect && W.map.olMap) {
@@ -1269,7 +2394,7 @@ class WMEHouseNumberManager {
                     const mapRect = mapEl.getBoundingClientRect();
                     const pixelX = rect.left + rect.width/2 - mapRect.left;
                     const pixelY = rect.top + rect.height/2 - mapRect.top;
-                    
+
                     // Pixel zu Kartenkoordinaten
                     if (W.map.olMap.getLonLatFromPixel) {
                         const lonLat = W.map.olMap.getLonLatFromPixel({ x: pixelX, y: pixelY });
@@ -1282,7 +2407,7 @@ class WMEHouseNumberManager {
                     }
                 }
             }
-            
+
             return null;
         } catch (e) {
             return null;
@@ -1299,10 +2424,10 @@ class WMEHouseNumberManager {
         // Alle Maps zurücksetzen
         this.existingHouseNumbers.clear();
         this.existingByCoords.clear();
-        
+
         let loadedCount = 0;
         let coordsCount = 0;
-        
+
         // Helper zum Hinzufügen MIT Koordinaten
         const addHN = (number, segId, lon = null, lat = null) => {
             if (!number || segId === null || segId === undefined) return;
@@ -1312,7 +2437,7 @@ class WMEHouseNumberManager {
             if (!this.existingHouseNumbers.has(key)) {
                 this.existingHouseNumbers.set(key, true);
                 loadedCount++;
-                
+
                 // Koordinaten speichern für Distanz-Prüfung
                 if (lon !== null && lat !== null && !isNaN(lon) && !isNaN(lat)) {
                     const coordKey = `${numStr}_${lat.toFixed(4)}_${lon.toFixed(4)}`;
@@ -1321,14 +2446,14 @@ class WMEHouseNumberManager {
                 }
             }
         };
-        
+
         // Helper: Koordinaten aus HN-Objekt extrahieren (VERBESSERT)
         const getHNCoords = (hn, segment = null) => {
             if (!hn) return { lon: null, lat: null };
-            
+
             let lon = null, lat = null;
             const attrs = hn.attributes || hn;
-            
+
             // METHODE A: geometry.coordinates (GeoJSON) - SDK Format
             if (hn.geometry?.coordinates?.length >= 2) {
                 lon = hn.geometry.coordinates[0];
@@ -1366,26 +2491,26 @@ class WMEHouseNumberManager {
                     lat = coords.lat;
                 }
             }
-            
+
             return { lon, lat };
         };
-        
+
         try {
             // METHODE 1: W.model.houseNumbers - Hauptquelle
             if (W?.model?.houseNumbers) {
                 const hnObjects = W.model.houseNumbers.objects || {};
                 const segments = W.model.segments?.objects || {};
-                
+
                 for (const id in hnObjects) {
                     const hn = hnObjects[id];
                     const attrs = hn?.attributes || hn;
                     const number = attrs?.number || attrs?.houseNumber;
                     const segId = attrs?.segID || attrs?.segmentId;
-                    
+
                     // Segment für Koordinaten-Berechnung holen
                     const segment = segId ? segments[segId] : null;
                     const coords = getHNCoords(hn, segment);
-                    
+
                     addHN(number, segId, coords.lon, coords.lat);
                 }
                 console.log(`${SCRIPT_NAME}: W.model.houseNumbers: ${Object.keys(hnObjects).length} HN`);
@@ -1411,12 +2536,12 @@ class WMEHouseNumberManager {
             if (W?.model?.segments) {
                 const segments = W.model.segments.getObjectArray();
                 let segHNCount = 0;
-                
+
                 for (const seg of segments) {
                     if (!seg?.attributes) continue;
                     const segId = seg.attributes.id;
                     const houseNumbers = seg.attributes.houseNumbers || [];
-                    
+
                     for (const hn of houseNumbers) {
                         const number = hn?.number || hn?.houseNumber;
                         const coords = getHNCoords(hn, seg);
@@ -1432,22 +2557,22 @@ class WMEHouseNumberManager {
         }
 
         log(`${this.existingHouseNumbers.size} existierende HN geladen (${this.existingByCoords.size} mit Koordinaten)`, 'info');
-        
+
         // Debug: Zeige Statistik
         console.log(`${SCRIPT_NAME}: Koordinaten-Quote: ${this.existingByCoords.size}/${this.existingHouseNumbers.size} (${Math.round(100*this.existingByCoords.size/Math.max(1,this.existingHouseNumbers.size))}%)`);
-        
+
         if (this.existingByCoords.size > 0) {
             const sample = [...this.existingByCoords.entries()].slice(0, 3);
             console.log(`${SCRIPT_NAME}: Sample HN:`, sample);
         }
-        
+
         return this.existingHouseNumbers.size;
     }
-    
+
     // Punkt auf Segment bei gegebener Fraktion berechnen
     getPointOnSegment(segment, fraction) {
         if (!segment || fraction === undefined) return null;
-        
+
         try {
             let geom = null;
             if (typeof segment.getGeometry === 'function') {
@@ -1457,9 +2582,9 @@ class WMEHouseNumberManager {
             } else if (segment.attributes?.geometry) {
                 geom = segment.attributes.geometry;
             }
-            
+
             if (!geom) return null;
-            
+
             // Koordinaten extrahieren
             let coords = [];
             if (geom.coordinates) {
@@ -1469,9 +2594,9 @@ class WMEHouseNumberManager {
             } else if (geom.components) {
                 coords = geom.components.map(c => [c.x, c.y]);
             }
-            
+
             if (coords.length < 2) return null;
-            
+
             // Gesamtlänge berechnen
             let totalLength = 0;
             const segLengths = [];
@@ -1483,29 +2608,29 @@ class WMEHouseNumberManager {
                 segLengths.push(len);
                 totalLength += len;
             }
-            
+
             // Position bei Fraktion finden
             const targetDist = fraction * totalLength;
             let accDist = 0;
-            
+
             for (let i = 0; i < segLengths.length; i++) {
                 if (accDist + segLengths[i] >= targetDist) {
                     const t = (targetDist - accDist) / segLengths[i];
                     let x = coords[i][0] + t * (coords[i+1][0] - coords[i][0]);
                     let y = coords[i][1] + t * (coords[i+1][1] - coords[i][1]);
-                    
+
                     // Prüfe ob Web Mercator (große Zahlen) -> konvertieren
                     if (Math.abs(x) > 180 || Math.abs(y) > 90) {
                         const lon = x * 180 / 20037508.34;
                         const lat = 180 / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / 20037508.34)) - Math.PI / 2);
                         return { lon, lat };
                     }
-                    
+
                     return { lon: x, lat: y };
                 }
                 accDist += segLengths[i];
             }
-            
+
             // Fallback: Letzter Punkt
             const last = coords[coords.length - 1];
             if (Math.abs(last[0]) > 180) {
@@ -1515,7 +2640,7 @@ class WMEHouseNumberManager {
                 };
             }
             return { lon: last[0], lat: last[1] };
-            
+
         } catch (e) {
             return null;
         }
@@ -1540,30 +2665,30 @@ class WMEHouseNumberManager {
     streetNameSimilarity(name1, name2) {
         const n1 = this.normalizeStreetName(name1);
         const n2 = this.normalizeStreetName(name2);
-        
+
         if (!n1 || !n2) return 0;
         if (n1 === n2) return 1;
-        
+
         // Prüfe ob einer im anderen enthalten ist
         if (n1.includes(n2) || n2.includes(n1)) return 0.9;
-        
+
         // Levenshtein-ähnliche Berechnung (vereinfacht)
         const longer = n1.length > n2.length ? n1 : n2;
         const shorter = n1.length > n2.length ? n2 : n1;
-        
+
         if (longer.length === 0) return 1;
-        
+
         // Gemeinsame Zeichen am Anfang
         let commonPrefix = 0;
         for (let i = 0; i < shorter.length; i++) {
             if (shorter[i] === longer[i]) commonPrefix++;
             else break;
         }
-        
+
         // Wenn mindestens 60% der kürzeren Zeichenkette übereinstimmt
         const prefixRatio = commonPrefix / shorter.length;
         if (prefixRatio >= 0.6) return 0.7 + (prefixRatio * 0.3);
-        
+
         // Wort-basierter Vergleich
         const words1 = n1.split(' ');
         const words2 = n2.split(' ');
@@ -1573,14 +2698,14 @@ class WMEHouseNumberManager {
                 matchingWords++;
             }
         }
-        
+
         return matchingWords / Math.max(words1.length, words2.length);
     }
 
     // Straßenname aus Segment holen
     getSegmentStreetName(segment) {
         if (!segment?.attributes) return null;
-        
+
         // Primärer Straßenname
         const primaryStreet = segment.attributes.primaryStreetID;
         if (primaryStreet && W?.model?.streets) {
@@ -1589,17 +2714,17 @@ class WMEHouseNumberManager {
                 return street.attributes.name;
             }
         }
-        
+
         // Alternativer Name direkt im Segment
         if (segment.attributes.streetName) {
             return segment.attributes.streetName;
         }
-        
+
         // Über Address
         if (segment.attributes.address?.street?.name) {
             return segment.attributes.address.street.name;
         }
-        
+
         return null;
     }
 
@@ -1625,7 +2750,7 @@ class WMEHouseNumberManager {
 
         // GeoJSON Point für die Hausnummer-Position erstellen
         const hnPoint = { type: 'Point', coordinates: [lon, lat] };
-        
+
         // Versuche OpenLayers Geometrie zu erstellen für präzisere Distanzberechnung
         let olPoint = null;
         try {
@@ -1649,7 +2774,7 @@ class WMEHouseNumberManager {
 
             // Distanz berechnen
             let distance = Infinity;
-            
+
             try {
                 if (olPoint && typeof segment.getOLGeometry === 'function') {
                     const segOLGeom = segment.getOLGeometry();
@@ -1664,7 +2789,7 @@ class WMEHouseNumberManager {
                     }
                 }
             } catch (e) {}
-            
+
             // Fallback: Manuelle WGS84 Distanzberechnung
             if (distance === Infinity) {
                 let geom = null;
@@ -1683,14 +2808,14 @@ class WMEHouseNumberManager {
                     distance = this.pointToGeometryDistanceWGS84(lon, lat, geom);
                 }
             }
-            
+
             if (distance === Infinity || distance > maxDistance) continue;
-            
+
             // Straßenname und Ähnlichkeit berechnen
             const segmentStreetName = this.getSegmentStreetName(segment);
-            const similarity = streetName && segmentStreetName ? 
+            const similarity = streetName && segmentStreetName ?
                 this.streetNameSimilarity(streetName, segmentStreetName) : 0;
-            
+
             candidates.push({
                 segment,
                 distance,
@@ -1712,18 +2837,18 @@ class WMEHouseNumberManager {
 
         // Sortiere nach Distanz
         candidates.sort((a, b) => a.distance - b.distance);
-        
+
         const nearest = candidates[0];
-        
+
         // ===== KREUZUNGS-LOGIK =====
-        // Wenn mehrere Segmente sehr nah beieinander sind (Kreuzung), 
+        // Wenn mehrere Segmente sehr nah beieinander sind (Kreuzung),
         // bevorzuge das mit passendem Straßennamen
         if (streetName && candidates.length > 1) {
             // Finde alle Segmente innerhalb des Kreuzungs-Radius vom nächsten
-            const nearbySegments = candidates.filter(c => 
+            const nearbySegments = candidates.filter(c =>
                 c.distance <= nearest.distance + junctionRadius
             );
-            
+
             if (nearbySegments.length > 1) {
                 // Mehrere Segmente in der Nähe = wahrscheinlich Kreuzung
                 // Sortiere nach: 1. Namens-Match, 2. Ähnlichkeit, 3. Distanz
@@ -1739,16 +2864,16 @@ class WMEHouseNumberManager {
                     // Bei ähnlicher Ähnlichkeit: kürzere Distanz
                     return a.distance - b.distance;
                 });
-                
+
                 const best = nearbySegments[0];
-                
+
                 // Logging für Kreuzungs-Entscheidung
                 if (best.segment !== nearest.segment) {
                     console.log(`${SCRIPT_NAME}: Kreuzung erkannt! ` +
                         `Nächstes: ${nearest.streetName || 'unbekannt'} (${nearest.distance.toFixed(1)}m), ` +
                         `Gewählt: ${best.streetName || 'unbekannt'} (${best.distance.toFixed(1)}m, ${Math.round(best.similarity*100)}% Match)`);
                 }
-                
+
                 if (returnDetails) {
                     return {
                         segment: best.segment,
@@ -1765,7 +2890,7 @@ class WMEHouseNumberManager {
                 return best.segment;
             }
         }
-        
+
         // ===== STANDARD-LOGIK (kein Kreuzungs-Fall) =====
         // Wenn ein Segment mit passendem Namen existiert und nicht zu weit weg ist
         if (streetName) {
@@ -1789,7 +2914,7 @@ class WMEHouseNumberManager {
                 }
             }
         }
-        
+
         // Fallback: Nächstes Segment verwenden
         if (returnDetails) {
             return {
@@ -1802,7 +2927,7 @@ class WMEHouseNumberManager {
                 reason: nearest.nameMatch ? 'matched' : (streetName ? 'name_mismatch' : 'matched')
             };
         }
-        
+
         return nearest.segment;
     }
 
@@ -1810,7 +2935,7 @@ class WMEHouseNumberManager {
     pointToGeometryDistanceWGS84(pointLon, pointLat, geometry) {
         // Koordinaten aus GeoJSON extrahieren
         let coordinates = [];
-        
+
         if (geometry.coordinates && geometry.coordinates.length > 0) {
             // GeoJSON Format: [[lon, lat], [lon, lat], ...]
             coordinates = geometry.coordinates;
@@ -1842,7 +2967,7 @@ class WMEHouseNumberManager {
         for (let i = 0; i < coordinates.length - 1; i++) {
             const a = coordinates[i];
             const b = coordinates[i + 1];
-            
+
             if (!a || !b || a.length < 2 || b.length < 2) continue;
 
             // Punkt-zu-Segment Distanz berechnen
@@ -1877,7 +3002,7 @@ class WMEHouseNumberManager {
     projectPointOnGeometry(pointLon, pointLat, geometry) {
         // Koordinaten aus Geometrie extrahieren (wie in pointToGeometryDistanceWGS84)
         let coordinates = [];
-        
+
         if (geometry.coordinates && geometry.coordinates.length > 0) {
             coordinates = geometry.coordinates;
         } else if (geometry.getVertices) {
@@ -1908,7 +3033,7 @@ class WMEHouseNumberManager {
         for (let i = 0; i < coordinates.length - 1; i++) {
             const a = coordinates[i];
             const b = coordinates[i + 1];
-            
+
             if (!a || !b || a.length < 2 || b.length < 2) continue;
 
             // Projektion berechnen
@@ -1928,16 +3053,16 @@ class WMEHouseNumberManager {
 
             // Distanz zur Projektion berechnen
             const dist = CoordUtils.distance(pointLat, pointLon, projY, projX);
-            
+
             if (dist < minDist) {
                 minDist = dist;
                 bestProjection = { lon: projX, lat: projY };
             }
         }
 
-        return { 
-            lon: bestProjection.lon, 
-            lat: bestProjection.lat, 
+        return {
+            lon: bestProjection.lon,
+            lat: bestProjection.lat,
             projected: true,
             originalLon: pointLon,
             originalLat: pointLat,
@@ -1948,20 +3073,20 @@ class WMEHouseNumberManager {
     // Prüfen ob Hausnummer bereits existiert (VEREINFACHT UND ROBUSTER)
     isDuplicate(number, segmentId, lon = null, lat = null) {
         if (!CONFIG.import.duplicateCheck) return false;
-        
+
         const numberStr = String(number).trim().toLowerCase();
         const segIdStr = String(segmentId);
         const DUPLICATE_DISTANCE = CONFIG.import.duplicateRadius || 20; // Meter
-        
+
         // ===== METHODE 0: GLOBALE SESSION-MAP (WICHTIGSTE!) =====
         // Prüft gegen ALLE in dieser Browser-Session importierten HN
         if (lon !== null && lat !== null) {
             for (const [key, data] of globalImportedHN.entries()) {
                 if (!data || data.lon === undefined || data.lat === undefined) continue;
-                
+
                 const existingNumber = String(data.number || '').toLowerCase();
                 if (existingNumber !== numberStr) continue;
-                
+
                 const dist = CoordUtils.distance(lat, lon, data.lat, data.lon);
                 if (dist < DUPLICATE_DISTANCE) {
                     console.log(`${SCRIPT_NAME}: Duplikat via globalImportedHN: ${numberStr} (${dist.toFixed(1)}m)`);
@@ -1969,28 +3094,28 @@ class WMEHouseNumberManager {
                 }
             }
         }
-        
+
         // ===== METHODE 1: Session-Tracking (Manager-Level) =====
         if (lon !== null && lat !== null) {
             for (const [existingKey, coords] of this.importedThisSession.entries()) {
                 if (!coords || coords.lon === undefined || coords.lat === undefined) continue;
-                
+
                 const existingNumber = coords.number || existingKey.split('_')[0];
                 if (existingNumber !== numberStr) continue;
-                
+
                 const dist = CoordUtils.distance(lat, lon, coords.lat, coords.lon);
                 if (dist < DUPLICATE_DISTANCE) {
                     return true;
                 }
             }
         }
-        
+
         // ===== METHODE 2: Key-basierte Prüfung (Nummer + Segment) =====
         const key = `${numberStr}_${segIdStr}`;
         if (this.existingHouseNumbers.has(key)) {
             return true;
         }
-        
+
         // ===== METHODE 2.5: W.model.segmentHouseNumbers.getByAttributes (WICHTIG!) =====
         // Dies ist die Hauptmethode, die WME selbst verwendet
         try {
@@ -2007,37 +3132,37 @@ class WMEHouseNumberManager {
         } catch (e) {
             // Ignorieren
         }
-        
+
         // ===== METHODE 3: Prüfe gegen existierende HN mit Koordinaten =====
         if (lon !== null && lat !== null && this.existingByCoords.size > 0) {
             for (const [existingKey, coords] of this.existingByCoords.entries()) {
                 if (!coords || coords.lon === undefined || coords.lat === undefined) continue;
-                
+
                 const existingNumber = coords.number || existingKey.split('_')[0];
                 if (existingNumber !== numberStr) continue;
-                
+
                 const dist = CoordUtils.distance(lat, lon, coords.lat, coords.lon);
                 if (dist < DUPLICATE_DISTANCE) {
                     return true;
                 }
             }
         }
-        
+
         // ===== METHODE 4: Live-Prüfung ALLER HN im Model =====
         if (lon !== null && lat !== null) {
             try {
                 const hnObjects = W?.model?.houseNumbers?.objects || {};
                 const segments = W?.model?.segments?.objects || {};
-                
+
                 for (const id in hnObjects) {
                     const hn = hnObjects[id];
                     const attrs = hn?.attributes || hn;
                     const existingNum = String(attrs?.number || attrs?.houseNumber || '').trim().toLowerCase();
-                    
+
                     if (existingNum !== numberStr) continue;
-                    
+
                     let existingLon = null, existingLat = null;
-                    
+
                     if (attrs?.fractionPoint?.x !== undefined) {
                         existingLon = attrs.fractionPoint.x * 180 / 20037508.34;
                         existingLat = 180 / Math.PI * (2 * Math.atan(Math.exp(attrs.fractionPoint.y * Math.PI / 20037508.34)) - Math.PI / 2);
@@ -2048,7 +3173,7 @@ class WMEHouseNumberManager {
                             existingLat = coords.lat;
                         }
                     }
-                    
+
                     if (existingLon !== null && existingLat !== null) {
                         const dist = CoordUtils.distance(lat, lon, existingLat, existingLon);
                         if (dist < DUPLICATE_DISTANCE) {
@@ -2060,7 +3185,7 @@ class WMEHouseNumberManager {
                 // Ignorieren
             }
         }
-        
+
         // ===== METHODE 5: Live-Prüfung über SDK =====
         try {
             if (wmeSDK?.DataModel?.HouseNumbers?.getBySegmentId) {
@@ -2077,7 +3202,7 @@ class WMEHouseNumberManager {
         } catch (e) {
             // Ignorieren
         }
-        
+
         // ===== METHODE 6: Prüfe pending Actions =====
         try {
             if (W?.model?.actionManager) {
@@ -2086,7 +3211,7 @@ class WMEHouseNumberManager {
                     if (action?.houseNumber || action?.object?.type === 'houseNumber') {
                         const actionHN = action.houseNumber || action.object;
                         const actionNum = String(actionHN?.number || actionHN?.attributes?.number || '').trim().toLowerCase();
-                        
+
                         // Prüfe nach Nummer (nicht nur Segment, da HN auf verschiedenen Segmenten sein können)
                         if (actionNum === numberStr) {
                             // Prüfe Koordinaten wenn verfügbar
@@ -2104,7 +3229,7 @@ class WMEHouseNumberManager {
         } catch (e) {
             // Ignorieren
         }
-        
+
         return false;
     }
 
@@ -2114,22 +3239,22 @@ class WMEHouseNumberManager {
         const segIdStr = String(segmentId);
         const key = `${numberStr}_${segIdStr}`;
         this.existingHouseNumbers.set(key, true);
-        
+
         // Session-Tracking mit Koordinaten
         if (lon !== null && lat !== null) {
             const coordKey = `${numberStr}_${lat.toFixed(4)}_${lon.toFixed(4)}`;
             const coordData = { lon, lat, segmentId: segIdStr, number: numberStr };
             this.importedThisSession.set(coordKey, coordData);
-            
+
             // WICHTIG: Auch in GLOBALE Map eintragen (überlebt resetSessionTracking)
             globalImportedHN.set(coordKey, coordData);
         }
     }
-    
+
     // Projizierte Position auf Segment berechnen
     getProjectedPositionOnSegment(lon, lat, segment) {
         if (!segment) return null;
-        
+
         try {
             let geom = null;
             if (typeof segment.getGeometry === 'function') {
@@ -2139,9 +3264,9 @@ class WMEHouseNumberManager {
             } else if (segment.attributes?.geometry) {
                 geom = segment.attributes.geometry;
             }
-            
+
             if (!geom) return null;
-            
+
             return this.projectPointOnGeometry(lon, lat, geom);
         } catch (e) {
             return null;
@@ -2192,7 +3317,7 @@ class WMEHouseNumberManager {
                     const attrs = hn?.attributes || hn;
                     const hnSegId = attrs?.segID || attrs?.segmentId;
                     if (String(hnSegId) !== String(segmentId)) continue;
-                    
+
                     const existingNum = String(attrs?.number || '').trim().toLowerCase();
                     if (existingNum === numberLower) {
                         this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
@@ -2222,7 +3347,7 @@ class WMEHouseNumberManager {
             if (!data || data.lon === undefined || data.lat === undefined) continue;
             const existingNumber = String(data.number || '').toLowerCase();
             if (existingNumber !== numberLower) continue;
-            
+
             const dist = CoordUtils.distance(houseNumber.lat, houseNumber.lon, data.lat, data.lon);
             if (dist < FINAL_CHECK_DISTANCE) {
                 return { success: false, reason: 'duplicate' };
@@ -2239,7 +3364,7 @@ class WMEHouseNumberManager {
                     type: 'Point',
                     coordinates: [houseNumber.lon, houseNumber.lat]
                 };
-                
+
                 // DEBUG: Erste 5 Hausnummern loggen
                 if (importStats.successful < 5) {
                     console.log(`${SCRIPT_NAME}: HN ${numberStr} @ ${houseNumber.lat.toFixed(5)}, ${houseNumber.lon.toFixed(5)} (Dist: ${segmentDistance?.toFixed(0) || '?'}m)`);
@@ -2247,6 +3372,17 @@ class WMEHouseNumberManager {
 
                 // Als importiert markieren (mit Original-Koordinaten)
                 this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
+
+                // Als PENDING markieren für Fehler-Tracking (wird bei erfolgreichem Save gelöscht)
+                const pendingKey = `${numberStr}_${segmentId}`;
+                pendingHouseNumbers.set(pendingKey, {
+                    number: numberStr,
+                    street: houseNumber.street || 'Unbekannt',
+                    lat: houseNumber.lat,
+                    lon: houseNumber.lon,
+                    segmentId: segmentId,
+                    timestamp: Date.now()
+                });
 
                 try {
                     await wmeSDK.DataModel.HouseNumbers.addHouseNumber({
@@ -2268,7 +3404,7 @@ class WMEHouseNumberManager {
                     }
                 }
             }
-            
+
             // METHODE 2: Native Waze Action verwenden (Fallback)
             const pageRequire = unsafeWindow?.require || W?.require;
             if (pageRequire) {
@@ -2278,16 +3414,16 @@ class WMEHouseNumberManager {
                         // Konvertiere WGS84 zu Web Mercator für OpenLayers
                         const mercatorX = houseNumber.lon * 20037508.34 / 180;
                         const mercatorY = Math.log(Math.tan((90 + houseNumber.lat) * Math.PI / 360)) / (Math.PI / 180) * 20037508.34 / 180;
-                        
+
                         // OpenLayers Point erstellen
                         const OL = unsafeWindow?.OpenLayers || window.OpenLayers;
                         if (OL) {
                             const olPoint = new OL.Geometry.Point(mercatorX, mercatorY);
-                            
+
                             // Action erstellen und ausführen
                             const action = new AddHouseNumber(segment, numberStr, olPoint);
                             W.model.actionManager.add(action);
-                            
+
                             this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
                             return { success: true, segmentId: segmentId, method: 'native_action' };
                         }
@@ -2299,13 +3435,13 @@ class WMEHouseNumberManager {
 
             // Kein SDK verfügbar
             return { success: false, reason: 'SDK nicht verfügbar' };
-            
+
         } catch (error) {
             const errorMsg = error.message || String(error);
-            
+
             // Prüfe ob es ein "already exists" Fehler ist - das ist ein Duplikat!
             // Verschiedene Sprachen und Varianten abfangen
-            if (errorMsg.includes('already exists') || 
+            if (errorMsg.includes('already exists') ||
                 errorMsg.includes('bereits existiert') ||
                 errorMsg.includes('existiert bereits') ||
                 errorMsg.includes('Hausnummer existiert') ||
@@ -2316,7 +3452,7 @@ class WMEHouseNumberManager {
                 this.markAsImported(numberStr, segmentId, houseNumber.lon, houseNumber.lat);
                 return { success: false, reason: 'duplicate' };
             }
-            
+
             // Andere Fehler loggen (nur einmal pro Fehlertyp)
             if (!this._loggedErrors) this._loggedErrors = new Set();
             if (!this._loggedErrors.has(errorMsg)) {
@@ -2357,7 +3493,7 @@ class ImportController {
                 `Trotzdem jetzt importieren?\n` +
                 `(Kann zu Duplikaten führen!)`
             );
-            
+
             if (!proceed) {
                 return { total: 0, successful: 0, failed: 0, skipped: 0, aborted: true };
             }
@@ -2370,14 +3506,14 @@ class ImportController {
         log('Scanne existierende Hausnummern...', 'info');
         updateProgress('Scanne HN...');
         const scannedHN = this.scanVisibleHouseNumbers();
-        
+
         // Zähle Positionen
         let totalPositions = 0;
         for (const positions of scannedHN.values()) {
             totalPositions += positions.length;
         }
         log(`${scannedHN.size} HN-Nummern gefunden (${totalPositions} Positionen)`, 'info');
-        
+
         // Warnung wenn keine HN gefunden wurden aber Segmente mit hasHNs existieren
         if (totalPositions === 0) {
             const segments = W?.model?.segments?.getObjectArray?.() || [];
@@ -2391,11 +3527,11 @@ class ImportController {
         // ===== SCHRITT 2: Quelldaten gegen gescannte HN filtern =====
         const deduplicatedHN = this.filterAgainstExisting(houseNumbers, scannedHN);
         const removedDuplicates = houseNumbers.length - deduplicatedHN.length;
-        
+
         if (removedDuplicates > 0) {
             log(`${removedDuplicates} Duplikate entfernt (bereits in WME)`, 'success');
         }
-        
+
         if (deduplicatedHN.length === 0) {
             log('Alle Hausnummern existieren bereits!', 'success');
             this.isRunning = false;
@@ -2430,15 +3566,15 @@ class ImportController {
 
         // Session-Tracking zurücksetzen für neuen Import
         wmeManager.resetSessionTracking();
-        
+
         // Gescannte HN zum Session-Tracking hinzufügen
         for (const [key, positions] of scannedHN.entries()) {
             for (const pos of positions) {
                 const coordKey = `${key}_${pos.lat.toFixed(4)}_${pos.lon.toFixed(4)}`;
-                wmeManager.importedThisSession.set(coordKey, { 
-                    number: key, 
-                    lat: pos.lat, 
-                    lon: pos.lon 
+                wmeManager.importedThisSession.set(coordKey, {
+                    number: key,
+                    lat: pos.lat,
+                    lon: pos.lon
                 });
             }
         }
@@ -2446,72 +3582,73 @@ class ImportController {
         // Batch-Verarbeitung MIT SCROLLING
         const batchSize = options.batchSize || CONFIG.import.batchSize;
         const scrollDuringImport = options.scrollDuringImport ?? true;
-        
+
         // Tracking für Auto-Pause (verhindert Überspringen bei parallelen Imports)
         let lastPauseAt = 0;
-        
+
         // Sortiere HN nach Position für effizientes Scrolling (Cluster zusammen)
         const sortedHN = [...deduplicatedHN].sort((a, b) => {
             // Sortiere nach lat, dann lon (von oben-links nach unten-rechts)
             if (Math.abs(a.lat - b.lat) > 0.0003) return b.lat - a.lat;
             return a.lon - b.lon;
         });
-        
+
         // Viewport-Tracking für intelligentes Scrolling
         let lastCenterLat = null;
         let lastCenterLon = null;
-        
+
         // BATCH-Verarbeitung: Sammle HN im sicheren Bereich, dann parallel verarbeiten
         let i = 0;
         while (i < sortedHN.length && !this.shouldStop) {
             const hn = sortedHN[i];
-            
+
             // Prüfe ob Zentrierung nötig ist
             const needsCenter = scrollDuringImport && this.needsCenteringForHN(hn, lastCenterLat, lastCenterLon);
-            
+
             if (needsCenter) {
                 try {
                     // Zentriere Karte auf die aktuelle HN
                     const mercX = hn.lon * 20037508.34 / 180;
                     const mercY = Math.log(Math.tan((90 + hn.lat) * Math.PI / 360)) / (Math.PI / 180) * 20037508.34 / 180;
-                    
+
                     if (W?.map?.setCenter) {
                         W.map.setCenter({ lon: mercX, lat: mercY });
                     }
-                    
+
                     lastCenterLat = hn.lat;
                     lastCenterLon = hn.lon;
-                    
-                    // Warte bis WME die HN für diesen Bereich geladen hat
-                    await this.sleep(1200);
-                    
+
+                    // Warte bis WME die HN für diesen Bereich geladen hat (konfigurierbar)
+                    await this.sleep(CONFIG.speed.centeringDelay);
+
                     // HN neu laden für diesen Bereich
                     wmeManager.loadExistingHouseNumbers();
-                    
-                    await this.sleep(300);
+
+                    await this.sleep(CONFIG.speed.reloadDelay);
                 } catch (e) {
                     // Ignorieren
                 }
             }
-            
-            // Sammle alle HN die im sicheren Bereich liegen (max 10 für parallele Verarbeitung)
+
+            // Sammle alle HN die im sicheren Bereich liegen (konfigurierbare Batch-Größe)
+            const maxBatchSize = CONFIG.speed.useParallelImport ? CONFIG.speed.parallelBatchSize : 1;
             const safeBatch = [];
-            while (i < sortedHN.length && safeBatch.length < 10 && !this.shouldStop) {
+            while (i < sortedHN.length && safeBatch.length < maxBatchSize && !this.shouldStop) {
                 const currentHN = sortedHN[i];
-                
+
                 // Prüfe ob diese HN noch im sicheren Bereich liegt
                 if (safeBatch.length > 0 && this.needsCenteringForHN(currentHN, lastCenterLat, lastCenterLon)) {
                     break; // Nächste HN braucht neue Zentrierung
                 }
-                
+
                 // Prüfe ob HN bereits importiert wurde
                 const numLower = String(currentHN.number).trim().toLowerCase();
                 let skipThis = false;
-                
+
                 for (const [key, data] of globalImportedHN.entries()) {
                     if (!data || data.lon === undefined || data.lat === undefined) continue;
                     if (String(data.number || '').toLowerCase() !== numLower) continue;
-                    
+
                     const dist = CoordUtils.distance(currentHN.lat, currentHN.lon, data.lat, data.lon);
                     if (dist < 20) {
                         importStats.skipped++;
@@ -2519,41 +3656,49 @@ class ImportController {
                         break;
                     }
                 }
-                
+
                 if (!skipThis) {
                     safeBatch.push(currentHN);
                 }
                 i++;
             }
-            
+
             // Parallele Verarbeitung des Safe-Batches
             if (safeBatch.length > 0) {
-                await Promise.all(safeBatch.map(h => this.processHouseNumber(h)));
-                
-                // Kurze Pause nach Batch
-                await this.sleep(150);
+                if (CONFIG.speed.useParallelImport) {
+                    // Parallele Verarbeitung
+                    await Promise.all(safeBatch.map(h => this.processHouseNumber(h)));
+                } else {
+                    // Sequentielle Verarbeitung
+                    for (const h of safeBatch) {
+                        await this.processHouseNumber(h);
+                    }
+                }
+
+                // Kurze Pause nach Batch (konfigurierbar)
+                await this.sleep(CONFIG.speed.batchDelay);
             }
-            
+
             // Auto-Pause: Prüfe ob nächster Schwellenwert erreicht
             if (CONFIG.import.autoPauseEnabled && CONFIG.import.autoPauseAfter > 0) {
                 const pauseInterval = CONFIG.import.autoPauseAfter;
                 const nextPauseAt = lastPauseAt + pauseInterval;
-                
+
                 if (importStats.successful >= nextPauseAt) {
                     lastPauseAt = Math.floor(importStats.successful / pauseInterval) * pauseInterval;
-                    
+
                     log(`⏸️ Auto-Pause nach ${importStats.successful} Imports - Bitte jetzt SPEICHERN!`, 'warning');
                     updateProgress(`⏸️ PAUSE - Speichern! Dann "Fortfahren" klicken`);
-                    
+
                     // Nicht-blockierende Pause - warte auf Button-Klick
                     await this.waitForUserContinue(importStats.successful);
-                    
+
                     if (this.shouldStop) {
                         log('Import vom Benutzer abgebrochen', 'warning');
                     }
                 }
             }
-            
+
             // Progress Update
             updateProgress();
         }
@@ -2564,7 +3709,7 @@ class ImportController {
 
         return importStats;
     }
-    
+
     // Aktuellen Zoom-Level holen
     getCurrentZoom() {
         try {
@@ -2580,13 +3725,13 @@ class ImportController {
         } catch (e) {}
         return 0;
     }
-    
+
     // Aktuellen Viewport (Kartenausschnitt) holen
     getCurrentViewport() {
         try {
             let bounds = null;
             let center = null;
-            
+
             // Versuche Bounds zu bekommen
             if (W?.map?.olMap?.getExtent) {
                 const extent = W.map.olMap.getExtent();
@@ -2600,7 +3745,7 @@ class ImportController {
                     };
                 }
             }
-            
+
             // Versuche Center zu bekommen
             if (W?.map?.olMap?.getCenter) {
                 const c = W.map.olMap.getCenter();
@@ -2611,7 +3756,7 @@ class ImportController {
                     };
                 }
             }
-            
+
             if (bounds && center) {
                 return {
                     ...bounds,
@@ -2624,35 +3769,35 @@ class ImportController {
         } catch (e) {}
         return null;
     }
-    
+
     // Prüft ob eine HN Zentrierung benötigt (außerhalb des sicheren Bereichs)
     needsCenteringForHN(hn, lastCenterLat, lastCenterLon) {
         // Wenn noch nie zentriert wurde, immer zentrieren
         if (lastCenterLat === null || lastCenterLon === null) {
             return true;
         }
-        
+
         // Berechne Distanz zum letzten Zentrum
         const distLat = Math.abs(hn.lat - lastCenterLat);
         const distLon = Math.abs(hn.lon - lastCenterLon);
-        
+
         // Sicherer Bereich: ca. 30% des typischen Viewports in jede Richtung
         // Bei Zoom 19 ist der Viewport ca. 0.002° breit/hoch
         // Sicherer Bereich = 0.0006° (30% von 0.002°)
         const safeRadius = 0.0006;
-        
+
         // Wenn HN außerhalb des sicheren Bereichs liegt, zentrieren
         if (distLat > safeRadius || distLon > safeRadius) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     // Scanne ALLE sichtbaren Hausnummern und sammle ihre Koordinaten
     scanVisibleHouseNumbers() {
         const result = new Map(); // number (lowercase) -> Array von {lat, lon}
-        
+
         const addPosition = (number, lat, lon) => {
             if (!number || lat === null || lon === null || isNaN(lat) || isNaN(lon)) return;
             const numStr = String(number).trim().toLowerCase();
@@ -2661,12 +3806,12 @@ class ImportController {
             }
             result.get(numStr).push({ lat, lon });
         };
-        
+
         try {
             // ===== QUELLE 0: DOM-BASIERTE ERKENNUNG (WICHTIGSTE!) =====
             // WME rendert HN als SVG-Text oder HTML-Elemente auf der Karte
             let count0 = 0;
-            
+
             // Methode A: SVG Text-Elemente im Map-Container
             const mapContainer = document.getElementById('map') || document.querySelector('.olMap') || document.querySelector('[class*="map"]');
             if (mapContainer) {
@@ -2684,7 +3829,7 @@ class ImportController {
                         }
                     }
                 }
-                
+
                 // Methode B: Suche nach HN-spezifischen Elementen
                 const hnElements = mapContainer.querySelectorAll(
                     '[class*="house-number"], [class*="houseNumber"], [class*="hn-"], ' +
@@ -2701,32 +3846,32 @@ class ImportController {
                     }
                 }
             }
-            
+
             // Methode C: OpenLayers Vector Layer Features
             if (W?.map?.olMap?.layers) {
                 for (const layer of W.map.olMap.layers) {
                     // Suche nach HouseNumbers Layer oder anderen relevanten Layern
                     const layerName = layer?.name || layer?.CLASS_NAME || '';
                     const layerId = layer?.id || '';
-                    
+
                     // Erweiterte Layer-Suche
-                    const isHNLayer = layerName.toLowerCase().includes('house') || 
+                    const isHNLayer = layerName.toLowerCase().includes('house') ||
                         layerName.toLowerCase().includes('hn') ||
                         layerId.toLowerCase().includes('house') ||
                         layerName.toLowerCase().includes('address') ||
                         layerName.toLowerCase().includes('label');
-                    
+
                     if (layer?.features && layer.features.length > 0) {
                         for (const feature of layer.features) {
                             const attrs = feature?.attributes || feature?.data || {};
-                            const number = attrs.number || attrs.houseNumber || attrs.hn || 
+                            const number = attrs.number || attrs.houseNumber || attrs.hn ||
                                           attrs.label || attrs.text || attrs.name;
-                            
+
                             // Prüfe ob es eine gültige Hausnummer ist
                             if (!number || !/^\d+[a-zA-Z]?$/.test(String(number).trim())) continue;
-                            
+
                             let lat = null, lon = null;
-                            
+
                             // Geometrie aus Feature
                             if (feature.geometry) {
                                 if (feature.geometry.x !== undefined && feature.geometry.y !== undefined) {
@@ -2738,7 +3883,7 @@ class ImportController {
                                     lat = feature.geometry.coordinates[1];
                                 }
                             }
-                            
+
                             if (lat !== null && lon !== null) {
                                 addPosition(number, lat, lon);
                                 count0++;
@@ -2748,7 +3893,7 @@ class ImportController {
                 }
             }
             console.log(`${SCRIPT_NAME}: Scan DOM/OpenLayers: ${count0} HN`);
-            
+
             // ===== QUELLE 0.5: W.model.segmentHouseNumbers (WICHTIG!) =====
             // Dies ist die Hauptquelle für geladene HN in WME
             let count05 = 0;
@@ -2756,17 +3901,17 @@ class ImportController {
                 try {
                     const segHNObjects = W.model.segmentHouseNumbers.objects || {};
                     const segments = W?.model?.segments?.objects || {};
-                    
+
                     for (const id in segHNObjects) {
                         const hn = segHNObjects[id];
                         const attrs = hn?.attributes || hn;
                         const number = attrs?.number;
                         const segId = attrs?.segID;
-                        
+
                         if (!number) continue;
-                        
+
                         let lat = null, lon = null;
-                        
+
                         // Methode A: fractionPoint (Web Mercator)
                         if (attrs?.fractionPoint?.x !== undefined) {
                             lon = attrs.fractionPoint.x * 180 / 20037508.34;
@@ -2780,7 +3925,7 @@ class ImportController {
                                 lon = coords.lon;
                             }
                         }
-                        
+
                         if (lat !== null && lon !== null) {
                             addPosition(number, lat, lon);
                             count05++;
@@ -2791,20 +3936,20 @@ class ImportController {
                 }
             }
             console.log(`${SCRIPT_NAME}: Scan W.model.segmentHouseNumbers: ${count05} HN`);
-            
+
             // ===== QUELLE 1: W.model.houseNumbers.objects =====
             const hnObjects = W?.model?.houseNumbers?.objects || {};
             const segments = W?.model?.segments?.objects || {};
             let count1 = 0;
-            
+
             for (const id in hnObjects) {
                 const hn = hnObjects[id];
                 const attrs = hn?.attributes || hn;
                 const number = attrs?.number || attrs?.houseNumber;
                 const segId = attrs?.segID || attrs?.segmentId;
-                
+
                 let lat = null, lon = null;
-                
+
                 // Methode A: fractionPoint (Web Mercator -> WGS84)
                 if (attrs?.fractionPoint?.x !== undefined && attrs?.fractionPoint?.y !== undefined) {
                     lon = attrs.fractionPoint.x * 180 / 20037508.34;
@@ -2818,14 +3963,14 @@ class ImportController {
                         lon = coords.lon;
                     }
                 }
-                
+
                 if (lat !== null && lon !== null) {
                     addPosition(number, lat, lon);
                     count1++;
                 }
             }
             console.log(`${SCRIPT_NAME}: Scan W.model.houseNumbers: ${count1} HN mit Koordinaten`);
-            
+
             // ===== QUELLE 2: SDK getAll =====
             if (wmeSDK?.DataModel?.HouseNumbers?.getAll) {
                 try {
@@ -2850,7 +3995,7 @@ class ImportController {
                     console.log(`${SCRIPT_NAME}: Scan SDK getAll: ${count2} HN mit Koordinaten`);
                 } catch (e) {}
             }
-            
+
             // ===== QUELLE 3: Segment.attributes.houseNumbers =====
             let count3 = 0;
             const allSegments = W?.model?.segments?.getObjectArray?.() || Object.values(W?.model?.segments?.objects || {});
@@ -2858,7 +4003,7 @@ class ImportController {
                 if (!seg?.attributes) continue;
                 const segHN = seg.attributes.houseNumbers || [];
                 const segId = seg.attributes.id;
-                
+
                 // Segment-Geometrie für Koordinaten-Berechnung
                 let geom = null;
                 try {
@@ -2866,13 +4011,13 @@ class ImportController {
                     else if (seg.geometry) geom = seg.geometry;
                     else if (seg.attributes.geometry) geom = seg.attributes.geometry;
                 } catch (e) {}
-                
+
                 for (const hn of segHN) {
                     const number = hn?.number || hn?.houseNumber;
                     if (!number) continue;
-                    
+
                     let lat = null, lon = null;
-                    
+
                     // Berechne Position aus fraction
                     if (geom && hn.fraction !== undefined) {
                         const coords = wmeManager.getPointOnSegment(seg, hn.fraction);
@@ -2881,7 +4026,7 @@ class ImportController {
                             lon = coords.lon;
                         }
                     }
-                    
+
                     if (lat !== null && lon !== null) {
                         addPosition(number, lat, lon);
                         count3++;
@@ -2889,7 +4034,7 @@ class ImportController {
                 }
             }
             console.log(`${SCRIPT_NAME}: Scan Segment.houseNumbers: ${count3} HN`);
-            
+
             // ===== QUELLE 4: Globale Import-Map =====
             let count4 = 0;
             for (const [key, data] of globalImportedHN.entries()) {
@@ -2899,7 +4044,7 @@ class ImportController {
                 }
             }
             console.log(`${SCRIPT_NAME}: Scan globalImportedHN: ${count4} HN`);
-            
+
             // ===== QUELLE 5: Pending Actions (noch nicht gespeicherte HN) =====
             let count5 = 0;
             try {
@@ -2908,17 +4053,17 @@ class ImportController {
                     for (const action of actions) {
                         // Suche nach AddHouseNumber Actions
                         const actionType = action?.type || action?.actionType || action?.constructor?.name || '';
-                        if (actionType.toLowerCase().includes('housenumber') || 
+                        if (actionType.toLowerCase().includes('housenumber') ||
                             actionType.toLowerCase().includes('hn')) {
-                            
+
                             const hn = action?.houseNumber || action?.object || action?.attributes;
                             if (!hn) continue;
-                            
+
                             const number = hn?.number || hn?.attributes?.number;
                             if (!number) continue;
-                            
+
                             let lat = null, lon = null;
-                            
+
                             // Koordinaten aus verschiedenen Quellen
                             if (hn?.point?.coordinates) {
                                 lon = hn.point.coordinates[0];
@@ -2927,7 +4072,7 @@ class ImportController {
                                 lon = hn.geometry.coordinates[0];
                                 lat = hn.geometry.coordinates[1];
                             }
-                            
+
                             if (lat !== null && lon !== null) {
                                 addPosition(number, lat, lon);
                                 count5++;
@@ -2937,26 +4082,26 @@ class ImportController {
                 }
             } catch (e) {}
             console.log(`${SCRIPT_NAME}: Scan Pending Actions: ${count5} HN`);
-            
+
             // ===== QUELLE 6: Venues/Places mit Hausnummern =====
             let count6 = 0;
             try {
                 const venues = W?.model?.venues?.getObjectArray?.() || Object.values(W?.model?.venues?.objects || {});
                 for (const venue of venues) {
                     const attrs = venue?.attributes || venue;
-                    
+
                     // Hausnummer aus Adresse
-                    const houseNumber = attrs?.houseNumber || attrs?.streetNumber || 
+                    const houseNumber = attrs?.houseNumber || attrs?.streetNumber ||
                                        attrs?.address?.houseNumber || attrs?.address?.streetNumber;
-                    
+
                     if (!houseNumber) continue;
-                    
+
                     // Nur gültige Hausnummern (beginnt mit Ziffer)
                     const numStr = String(houseNumber).trim();
                     if (!/^\d/.test(numStr)) continue;
-                    
+
                     let lat = null, lon = null;
-                    
+
                     // Koordinaten aus Venue-Geometrie
                     if (attrs?.geometry?.coordinates) {
                         // Point oder Polygon Centroid
@@ -2986,7 +4131,7 @@ class ImportController {
                             }
                         } catch (e) {}
                     }
-                    
+
                     if (lat !== null && lon !== null) {
                         addPosition(numStr, lat, lon);
                         count6++;
@@ -2996,21 +4141,21 @@ class ImportController {
                 console.log(`${SCRIPT_NAME}: Venue-Scan Fehler:`, e);
             }
             console.log(`${SCRIPT_NAME}: Scan Venues mit HN: ${count6}`);
-            
+
         } catch (e) {
             console.error(`${SCRIPT_NAME}: Fehler beim Scannen:`, e);
         }
-        
+
         // Statistik ausgeben
         let totalPositions = 0;
         for (const positions of result.values()) {
             totalPositions += positions.length;
         }
         console.log(`${SCRIPT_NAME}: Gesamt: ${result.size} verschiedene HN-Nummern, ${totalPositions} Positionen`);
-        
+
         return result;
     }
-    
+
     // Quelldaten gegen existierende HN filtern
     filterAgainstExisting(houseNumbers, existingHN) {
         const DUPLICATE_DISTANCE = CONFIG.import.duplicateRadius || 20; // Meter
@@ -3019,18 +4164,18 @@ class ImportController {
         let removedByWME = 0;
         let removedBySource = 0;
         let removedByGlobal = 0;
-        
+
         for (const hn of houseNumbers) {
             const numberStr = String(hn.number).trim().toLowerCase();
             let isDuplicate = false;
-            
+
             // PRÜFUNG 0: Gegen GLOBALE Import-Map (alle bisherigen Imports)
             if (!isDuplicate) {
                 for (const [key, data] of globalImportedHN.entries()) {
                     if (!data || data.lon === undefined || data.lat === undefined) continue;
                     const existingNumber = String(data.number || '').toLowerCase();
                     if (existingNumber !== numberStr) continue;
-                    
+
                     const dist = CoordUtils.distance(hn.lat, hn.lon, data.lat, data.lon);
                     if (dist < DUPLICATE_DISTANCE) {
                         isDuplicate = true;
@@ -3039,7 +4184,7 @@ class ImportController {
                     }
                 }
             }
-            
+
             // PRÜFUNG 1: Gegen existierende HN in WME
             if (!isDuplicate) {
                 const existingPositions = existingHN.get(numberStr) || [];
@@ -3052,7 +4197,7 @@ class ImportController {
                     }
                 }
             }
-            
+
             // PRÜFUNG 2: Gegen bereits verarbeitete Quelldaten (innerhalb dieses Imports)
             if (!isDuplicate) {
                 const seenPositions = seen.get(numberStr) || [];
@@ -3065,7 +4210,7 @@ class ImportController {
                     }
                 }
             }
-            
+
             if (!isDuplicate) {
                 // Zur seen-Liste hinzufügen
                 if (!seen.has(numberStr)) {
@@ -3075,9 +4220,9 @@ class ImportController {
                 result.push(hn);
             }
         }
-        
+
         console.log(`${SCRIPT_NAME}: Deduplizierung: ${removedByGlobal} via Global, ${removedByWME} via WME, ${removedBySource} via Quelldaten`);
-        
+
         return result;
     }
 
@@ -3085,8 +4230,8 @@ class ImportController {
         try {
             // Nächstes Segment finden MIT Details
             const findResult = wmeManager.findNearestSegment(
-                houseNumber.lon, 
-                houseNumber.lat, 
+                houseNumber.lon,
+                houseNumber.lat,
                 houseNumber.street,
                 true // returnDetails = true
             );
@@ -3096,9 +4241,9 @@ class ImportController {
 
             if (!segment) {
                 importStats.skipped++;
-                
+
                 const streetName = houseNumber.street || 'Unbekannt';
-                
+
                 // Unterscheide zwischen "zu weit" und "nicht gefunden"
                 if (reason === 'too_far') {
                     // Segment existiert, aber zu weit entfernt
@@ -3110,7 +4255,7 @@ class ImportController {
                         distance: findResult.distance,
                         nearestStreet: findResult.nearestName
                     });
-                    
+
                     if (importStats.errors.length < 5) {
                         console.log(`${SCRIPT_NAME}: Zu weit (${findResult.distance?.toFixed(0)}m) für ${houseNumber.number} (${streetName}), nächste Straße: ${findResult.nearestName || 'unbekannt'}`);
                     }
@@ -3130,7 +4275,7 @@ class ImportController {
                         lat: houseNumber.lat,
                         lon: houseNumber.lon
                     });
-                    
+
                     if (importStats.errors.length < 5) {
                         console.log(`${SCRIPT_NAME}: Kein Segment für ${houseNumber.number} (${streetName}) bei ${houseNumber.lat.toFixed(5)}, ${houseNumber.lon.toFixed(5)}`);
                     }
@@ -3154,7 +4299,7 @@ class ImportController {
                         lon: houseNumber.lon
                     });
                 }
-                
+
                 // Hausnummer hinzufügen - MIT Distanz für Validierung
                 const result = await wmeManager.addHouseNumber(houseNumber, segment, findResult.distance);
 
@@ -3243,7 +4388,7 @@ class ImportController {
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-    
+
     // Nicht-blockierende Pause - zeigt Buttons im UI
     waitForUserContinue(importedCount) {
         return new Promise((resolve) => {
@@ -3265,7 +4410,7 @@ class ImportController {
                 <button id="hn-pause-continue" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-right: 10px; font-weight: bold;">▶️ Fortfahren</button>
                 <button id="hn-pause-stop" style="background: #dc3545; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">⏹️ Stopp</button>
             `;
-            
+
             // Füge zum Log-Bereich hinzu (korrekter ID: hn-log)
             const logContainer = document.getElementById('hn-log');
             if (logContainer && logContainer.parentElement) {
@@ -3277,16 +4422,16 @@ class ImportController {
                     container.appendChild(pauseDiv);
                 }
             }
-            
+
             // Event-Handler
             const continueBtn = document.getElementById('hn-pause-continue');
             const stopBtn = document.getElementById('hn-pause-stop');
-            
+
             const cleanup = () => {
                 const overlay = document.getElementById('hn-import-pause-overlay');
                 if (overlay) overlay.remove();
             };
-            
+
             if (continueBtn) {
                 continueBtn.onclick = () => {
                     cleanup();
@@ -3294,7 +4439,7 @@ class ImportController {
                     resolve();
                 };
             }
-            
+
             if (stopBtn) {
                 stopBtn.onclick = () => {
                     cleanup();
@@ -3317,7 +4462,7 @@ let logElement = null;
 function log(message, type = 'info') {
     const time = new Date().toLocaleTimeString();
     console.log(`[${SCRIPT_NAME}] [${type.toUpperCase()}] ${message}`);
-    
+
     if (logElement) {
         const entry = document.createElement('div');
         entry.className = `log-${type}`;
@@ -3332,7 +4477,7 @@ function updateProgress() {
 
     const progressBar = document.getElementById('hn-progress-bar');
     const progressText = document.getElementById('hn-progress-text');
-    
+
     if (progressBar) progressBar.style.width = `${percentage}%`;
     if (progressText) progressText.textContent = `${percentage}%`;
 
@@ -3340,7 +4485,7 @@ function updateProgress() {
     const statSuccess = document.getElementById('stat-success');
     const statSkipped = document.getElementById('stat-skipped');
     const statFailed = document.getElementById('stat-failed');
-    
+
     if (statTotal) statTotal.textContent = importStats.total;
     if (statSuccess) statSuccess.textContent = importStats.successful;
     if (statSkipped) statSkipped.textContent = importStats.skipped;
@@ -3352,13 +4497,13 @@ function onImportComplete() {
     const btnStop = document.getElementById('btn-stop-import');
     const btnSave = document.getElementById('btn-save-changes');
     const btnReport = document.getElementById('btn-show-report');
-    
+
     if (btnStart) btnStart.disabled = false;
     if (btnStop) btnStop.disabled = true;
     if (btnSave) btnSave.disabled = importStats.successful === 0;
     if (btnReport) btnReport.disabled = false;
 
-    log(`Import abgeschlossen: ${importStats.successful} erfolgreich, ${importStats.skipped} übersprungen, ${importStats.failed} Fehler`, 
+    log(`Import abgeschlossen: ${importStats.successful} erfolgreich, ${importStats.skipped} übersprungen, ${importStats.failed} Fehler`,
         importStats.failed > 0 ? 'warning' : 'success');
 
     // Missing Streets Zusammenfassung
@@ -3401,8 +4546,8 @@ function onImportComplete() {
     }
 
     // Hinweis auf Report-Button
-    if (importReport.missingStreets.size > 0 || importReport.duplicates.length > 0 || 
-        importReport.failed.length > 0 || importReport.tooFarAway.length > 0 || 
+    if (importReport.missingStreets.size > 0 || importReport.duplicates.length > 0 ||
+        importReport.failed.length > 0 || importReport.tooFarAway.length > 0 ||
         importReport.streetMismatch.length > 0) {
         log(`📊 Klicke "Report" für detaillierte Übersicht`, 'info');
     }
@@ -3418,11 +4563,11 @@ function createUI(tabPane) {
                 #hn-import-container h4 { margin: 12px 0 6px; color: #333; border-bottom: 1px solid #2196F3; padding-bottom: 4px; font-size: 13px; }
                 #hn-import-container .form-group { margin-bottom: 10px; }
                 #hn-import-container label { display: block; margin-bottom: 3px; font-weight: bold; }
-                #hn-import-container input, #hn-import-container select, #hn-import-container textarea { 
-                    width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px; font-size: 11px; box-sizing: border-box; 
+                #hn-import-container input, #hn-import-container select, #hn-import-container textarea {
+                    width: 100%; padding: 5px; border: 1px solid #ccc; border-radius: 3px; font-size: 11px; box-sizing: border-box;
                 }
-                #hn-import-container .btn { 
-                    padding: 6px 10px; border: none; border-radius: 3px; cursor: pointer; font-size: 11px; font-weight: bold; margin: 2px 2px 2px 0; 
+                #hn-import-container .btn {
+                    padding: 6px 10px; border: none; border-radius: 3px; cursor: pointer; font-size: 11px; font-weight: bold; margin: 2px 2px 2px 0;
                 }
                 #hn-import-container .btn-primary { background: #2196F3; color: white; }
                 #hn-import-container .btn-success { background: #4CAF50; color: white; }
@@ -3485,7 +4630,7 @@ function createUI(tabPane) {
                 <button id="btn-show-bbox" class="btn btn-secondary">📍 Bereich</button>
                 <button id="btn-debug-segments" class="btn btn-secondary">🔧 Debug</button>
             </div>
-            
+
             <div id="zoom-warning" style="display:none; background:#fff3cd; border:1px solid #ffc107; padding:8px; border-radius:4px; margin-bottom:10px;">
                 <strong>⚠️ Zoom zu niedrig!</strong><br>
                 <small>Für Duplikat-Erkennung: Zoom 19+, dann durch den Bereich scrollen.</small>
@@ -3515,6 +4660,53 @@ function createUI(tabPane) {
                 <label><input type="checkbox" id="hn-auto-scan" checked> 🔄 Auto-Scan (Zoom 19 vor Import)</label>
                 <div style="font-size:9px;color:#666;margin-left:18px;">Scrollt automatisch durch den Bereich um existierende HN zu laden</div>
             </div>
+            <div class="form-group">
+                <label><input type="checkbox" id="hn-auto-pause" checked> ⏸️ Auto-Pause zum Speichern</label>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:4px;margin-left:18px;">
+                    <span style="font-size:10px;">Nach</span>
+                    <input type="range" id="hn-auto-pause-count" min="50" max="500" step="10" value="50" style="flex:1;">
+                    <span id="auto-pause-count-val" style="font-size:10px;min-width:35px;">50</span>
+                    <span style="font-size:10px;">HN</span>
+                </div>
+            </div>
+
+            <h4>⚡ Geschwindigkeit</h4>
+            <div class="form-group">
+                <label><input type="checkbox" id="hn-parallel-import" checked> 🚀 Parallele Verarbeitung</label>
+                <div style="font-size:9px;color:#666;margin-left:18px;">Mehrere HN gleichzeitig importieren (schneller)</div>
+            </div>
+            <div class="form-group">
+                <label>Geschwindigkeits-Profil:</label>
+                <select id="hn-speed-profile">
+                    <option value="safe">🐢 Sicher (langsam, stabil)</option>
+                    <option value="normal" selected>⚖️ Normal (ausgewogen)</option>
+                    <option value="fast">🐇 Schnell (riskanter)</option>
+                    <option value="turbo">🚀 Turbo (max. Speed)</option>
+                    <option value="custom">⚙️ Benutzerdefiniert</option>
+                </select>
+            </div>
+            <div id="hn-speed-custom" style="display:none; background:#f5f5f5; padding:8px; border-radius:4px; margin-top:5px;">
+                <div class="form-group" style="margin-bottom:5px;">
+                    <label style="font-size:10px;">Start-Wartezeit: <span id="speed-initial-val">1200</span>ms</label>
+                    <input type="range" id="hn-speed-initial" min="500" max="4000" step="100" value="1200" style="width:100%;">
+                </div>
+                <div class="form-group" style="margin-bottom:5px;">
+                    <label style="font-size:10px;">Zentrierung-Delay: <span id="speed-center-val">1200</span>ms</label>
+                    <input type="range" id="hn-speed-center" min="300" max="2000" step="100" value="1200" style="width:100%;">
+                </div>
+                <div class="form-group" style="margin-bottom:5px;">
+                    <label style="font-size:10px;">Reload-Delay: <span id="speed-reload-val">300</span>ms</label>
+                    <input type="range" id="hn-speed-reload" min="50" max="500" step="50" value="300" style="width:100%;">
+                </div>
+                <div class="form-group" style="margin-bottom:5px;">
+                    <label style="font-size:10px;">Batch-Pause: <span id="speed-batch-val">150</span>ms</label>
+                    <input type="range" id="hn-speed-batch" min="0" max="500" step="25" value="150" style="width:100%;">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label style="font-size:10px;">Batch-Größe: <span id="speed-batchsize-val">10</span> HN</label>
+                    <input type="range" id="hn-speed-batchsize" min="1" max="50" step="1" value="10" style="width:100%;">
+                </div>
+            </div>
 
             <h4>🚀 Import</h4>
             <div class="form-group">
@@ -3523,16 +4715,17 @@ function createUI(tabPane) {
                 <button id="btn-save-changes" class="btn btn-primary" disabled>💾 Speichern</button>
                 <button id="btn-show-report" class="btn btn-secondary" disabled>📊 Report</button>
             </div>
-            
+
             <div class="form-group">
                 <button id="btn-verify-hn" class="btn btn-warning" title="Prüft sichtbare HN auf Duplikate">🔍 Verifizieren</button>
+                <button id="btn-show-save-errors" class="btn btn-danger" title="Zeigt letzte Speicher-Fehler" style="display:none;">❌ Fehler</button>
             </div>
 
             <div class="progress-container">
                 <div id="hn-progress-bar" class="progress-bar"></div>
                 <span id="hn-progress-text" class="progress-text">0%</span>
             </div>
-            
+
             <div class="stats-grid">
                 <div class="stat-item"><div id="stat-total" class="stat-value">0</div><div class="stat-label">Gesamt</div></div>
                 <div class="stat-item"><div id="stat-success" class="stat-value" style="color:#4CAF50;">0</div><div class="stat-label">OK</div></div>
@@ -3565,7 +4758,7 @@ function createUI(tabPane) {
 
     // Event Listeners
     attachEventListeners();
-    
+
     log('UI initialisiert', 'success');
 }
 
@@ -3575,6 +4768,91 @@ function attachEventListeners() {
         const manualSection = document.getElementById('manual-input-section');
         if (manualSection) {
             manualSection.style.display = e.target.value === 'manual' ? 'block' : 'none';
+        }
+    });
+
+    // ========== GESCHWINDIGKEITS-EINSTELLUNGEN ==========
+
+    // Geschwindigkeits-Profile
+    const speedProfiles = {
+        safe:   { initial: 3000, center: 2000, reload: 500, batch: 300, batchSize: 5, parallel: true },
+        normal: { initial: 1200, center: 1200, reload: 300, batch: 150, batchSize: 10, parallel: true },
+        fast:   { initial: 800,  center: 800,  reload: 150, batch: 75,  batchSize: 15, parallel: true },
+        turbo:  { initial: 500,  center: 500,  reload: 100, batch: 50,  batchSize: 20, parallel: true }
+    };
+
+    // Profil-Auswahl
+    document.getElementById('hn-speed-profile')?.addEventListener('change', (e) => {
+        const profile = e.target.value;
+        const customPanel = document.getElementById('hn-speed-custom');
+
+        if (profile === 'custom') {
+            customPanel.style.display = 'block';
+        } else {
+            customPanel.style.display = 'none';
+            const p = speedProfiles[profile];
+            if (p) {
+                CONFIG.speed.initialLoadDelay = p.initial;
+                CONFIG.speed.centeringDelay = p.center;
+                CONFIG.speed.reloadDelay = p.reload;
+                CONFIG.speed.batchDelay = p.batch;
+                CONFIG.speed.parallelBatchSize = p.batchSize;
+                CONFIG.speed.useParallelImport = p.parallel;
+
+                // UI aktualisieren
+                document.getElementById('hn-speed-initial').value = p.initial;
+                document.getElementById('speed-initial-val').textContent = p.initial;
+                document.getElementById('hn-speed-center').value = p.center;
+                document.getElementById('speed-center-val').textContent = p.center;
+                document.getElementById('hn-speed-reload').value = p.reload;
+                document.getElementById('speed-reload-val').textContent = p.reload;
+                document.getElementById('hn-speed-batch').value = p.batch;
+                document.getElementById('speed-batch-val').textContent = p.batch;
+                document.getElementById('hn-speed-batchsize').value = p.batchSize;
+                document.getElementById('speed-batchsize-val').textContent = p.batchSize;
+                document.getElementById('hn-parallel-import').checked = p.parallel;
+
+                log(`⚡ Geschwindigkeits-Profil: ${profile}`, 'info');
+            }
+        }
+    });
+
+    // Parallele Verarbeitung Toggle
+    document.getElementById('hn-parallel-import')?.addEventListener('change', (e) => {
+        CONFIG.speed.useParallelImport = e.target.checked;
+        log(`🚀 Parallele Verarbeitung: ${e.target.checked ? 'AN' : 'AUS'}`, 'info');
+    });
+
+    // Auto-Pause Einstellungen
+    document.getElementById('hn-auto-pause')?.addEventListener('change', (e) => {
+        CONFIG.import.autoPauseEnabled = e.target.checked;
+        log(`⏸️ Auto-Pause: ${e.target.checked ? 'AN' : 'AUS'}`, 'info');
+    });
+
+    document.getElementById('hn-auto-pause-count')?.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        document.getElementById('auto-pause-count-val').textContent = val;
+        CONFIG.import.autoPauseAfter = val;
+    });
+
+    // Custom Slider Event-Listener
+    const sliderConfig = [
+        { id: 'hn-speed-initial', valId: 'speed-initial-val', configKey: 'initialLoadDelay' },
+        { id: 'hn-speed-center', valId: 'speed-center-val', configKey: 'centeringDelay' },
+        { id: 'hn-speed-reload', valId: 'speed-reload-val', configKey: 'reloadDelay' },
+        { id: 'hn-speed-batch', valId: 'speed-batch-val', configKey: 'batchDelay' },
+        { id: 'hn-speed-batchsize', valId: 'speed-batchsize-val', configKey: 'parallelBatchSize' }
+    ];
+
+    sliderConfig.forEach(({ id, valId, configKey }) => {
+        const slider = document.getElementById(id);
+        const valSpan = document.getElementById(valId);
+        if (slider && valSpan) {
+            slider.addEventListener('input', (e) => {
+                const val = parseInt(e.target.value);
+                valSpan.textContent = val;
+                CONFIG.speed[configKey] = val;
+            });
         }
     });
 
@@ -3597,20 +4875,20 @@ function attachEventListeners() {
 
     // Daten abrufen
     document.getElementById('btn-fetch-data')?.addEventListener('click', fetchData);
-    
+
     // Zoom-Warnung aktualisieren
     const updateZoomWarning = () => {
         const warning = document.getElementById('zoom-warning');
         if (!warning) return;
-        
+
         let zoom = 0;
         try {
             zoom = wmeSDK?.Map?.getZoomLevel?.() || W?.map?.getZoom?.() || 0;
         } catch (e) {}
-        
+
         warning.style.display = zoom < 19 ? 'block' : 'none';
     };
-    
+
     // Zoom-Warnung bei Kartenänderung aktualisieren
     setInterval(updateZoomWarning, 2000);
     updateZoomWarning();
@@ -3644,17 +4922,33 @@ function attachEventListeners() {
         importController.stopImport();
     });
 
-    // Speichern
-    document.getElementById('btn-save-changes')?.addEventListener('click', () => {
+    // Speichern - mit verbesserter Fehlerbehandlung
+    document.getElementById('btn-save-changes')?.addEventListener('click', async () => {
         if (W?.model?.actionManager) {
             const count = W.model.actionManager.getActions().length;
             if (count > 0) {
-                const saveBtn = document.querySelector('.save-button:not(.disabled), button.save-button:not([disabled])');
-                if (saveBtn) {
-                    saveBtn.click();
-                    log(`${count} Änderungen werden gespeichert...`, 'info');
+                log(`💾 Speichere ${count} Änderungen...`, 'info');
+
+                // Methode 1: SDK verwenden (bevorzugt - hat bessere Fehlerbehandlung)
+                if (wmeSDK?.Editing?.save) {
+                    try {
+                        await wmeSDK.Editing.save();
+                        // Erfolg wird über wme-save-finished Event gemeldet
+                    } catch (saveError) {
+                        // Fehler wird auch über Event gemeldet, aber hier zusätzlich loggen
+                        console.log(`${SCRIPT_NAME}: SDK Save Fehler:`, saveError);
+                        SaveErrorHandler.parseAndCategorizeError(saveError);
+                        SaveErrorHandler.showErrorSummary();
+                    }
                 } else {
-                    log('Speichern-Button nicht gefunden', 'warning');
+                    // Methode 2: Fallback - WME Save Button klicken
+                    const saveBtn = document.querySelector('.save-button:not(.disabled), button.save-button:not([disabled])');
+                    if (saveBtn) {
+                        saveBtn.click();
+                        log(`${count} Änderungen werden gespeichert...`, 'info');
+                    } else {
+                        log('Speichern-Button nicht gefunden', 'warning');
+                    }
                 }
             } else {
                 log('Keine Änderungen zum Speichern', 'info');
@@ -3664,25 +4958,39 @@ function attachEventListeners() {
 
     // Report anzeigen
     document.getElementById('btn-show-report')?.addEventListener('click', showReport);
-    
+
     // Verifizieren Button
     document.getElementById('btn-verify-hn')?.addEventListener('click', verifyHouseNumbers);
-    
+
+    // Speicher-Fehler Button
+    document.getElementById('btn-show-save-errors')?.addEventListener('click', () => {
+        if (SaveErrorHandler.lastSaveErrors.length > 0) {
+            const grouped = {};
+            for (const error of SaveErrorHandler.lastSaveErrors) {
+                if (!grouped[error.type]) grouped[error.type] = [];
+                grouped[error.type].push(error);
+            }
+            SaveErrorHandler.showErrorModal(grouped);
+        } else {
+            log('Keine Speicher-Fehler vorhanden', 'info');
+        }
+    });
+
     // Report schließen
     document.getElementById('btn-close-report')?.addEventListener('click', () => {
         document.getElementById('hn-report-modal').style.display = 'none';
     });
-    
+
     // Report Modal schließen bei Klick außerhalb
     document.getElementById('hn-report-modal')?.addEventListener('click', (e) => {
         if (e.target.id === 'hn-report-modal') {
             e.target.style.display = 'none';
         }
     });
-    
+
     // Report exportieren
     document.getElementById('btn-export-report')?.addEventListener('click', exportReportCSV);
-    
+
     // Report kopieren
     document.getElementById('btn-copy-report')?.addEventListener('click', copyReportToClipboard);
 }
@@ -3692,7 +5000,7 @@ function attachEventListeners() {
 // ============================================================================
 function verifyHouseNumbers() {
     log('Starte Verifizierung...', 'info');
-    
+
     // Zoom-Level prüfen
     let currentZoom = 0;
     try {
@@ -3702,23 +5010,23 @@ function verifyHouseNumbers() {
             currentZoom = W.map.getZoom();
         }
     } catch (e) {}
-    
+
     console.log(`${SCRIPT_NAME}: Aktueller Zoom: ${currentZoom}`);
-    
+
     if (currentZoom < 19) {
         log(`⚠️ Zoom ${currentZoom} - bitte auf 19+ zoomen!`, 'warning');
         alert(`⚠️ Zoom-Level zu niedrig!\n\nAktuell: Zoom ${currentZoom}\nBenötigt: Zoom 19 oder höher\n\nHausnummern werden erst ab Zoom 19 geladen.`);
         return;
     }
-    
+
     const DUPLICATE_DISTANCE = 30; // Meter
     const duplicates = [];
     const allHN = new Map(); // number -> Array von {lat, lon, segmentId, streetName}
-    
+
     try {
         let totalHN = 0;
         let withCoords = 0;
-        
+
         // METHODE 1: HouseNumbers Layer aus WME Map
         // Die HN werden in einem separaten Layer gerendert, nicht in segment.attributes
         if (W?.map?.getLayerByUniqueName) {
@@ -3726,15 +5034,15 @@ function verifyHouseNumbers() {
                 const hnLayer = W.map.getLayerByUniqueName('houseNumbers');
                 if (hnLayer?.features) {
                     console.log(`${SCRIPT_NAME}: HN Layer gefunden mit ${hnLayer.features.length} Features`);
-                    
+
                     for (const feature of hnLayer.features) {
                         const attrs = feature?.attributes || {};
                         const number = attrs.number || attrs.houseNumber;
                         if (!number) continue;
-                        
+
                         totalHN++;
                         let lat = null, lon = null;
-                        
+
                         // Koordinaten aus Feature-Geometrie
                         if (feature.geometry) {
                             if (feature.geometry.x !== undefined && feature.geometry.y !== undefined) {
@@ -3746,7 +5054,7 @@ function verifyHouseNumbers() {
                                 lat = feature.geometry.coordinates[1];
                             }
                         }
-                        
+
                         if (lat !== null && lon !== null) {
                             withCoords++;
                             const numStr = String(number).trim().toLowerCase();
@@ -3759,15 +5067,15 @@ function verifyHouseNumbers() {
                 console.log(`${SCRIPT_NAME}: HN Layer Fehler:`, e);
             }
         }
-        
+
         // METHODE 2: DOM-basiert - HN Labels auf der Karte finden
         if (withCoords === 0) {
             console.log(`${SCRIPT_NAME}: Versuche DOM-basierte HN-Erkennung...`);
-            
+
             // HN werden als SVG Text oder div Elements gerendert
             const hnElements = document.querySelectorAll('.house-number, .house-number-marker, [class*="houseNumber"], text.house-number');
             console.log(`${SCRIPT_NAME}: ${hnElements.length} HN DOM-Elemente gefunden`);
-            
+
             // Auch in SVG suchen
             const svgTexts = document.querySelectorAll('svg text');
             for (const text of svgTexts) {
@@ -3782,18 +5090,18 @@ function verifyHouseNumbers() {
                 }
             }
         }
-        
+
         // METHODE 3: Aus den geladenen Segmenten die HN mit Positionen berechnen
         if (withCoords === 0) {
             console.log(`${SCRIPT_NAME}: Versuche Segment-basierte HN-Erkennung...`);
             const segments = W?.model?.segments?.getObjectArray() || [];
-            
+
             for (const segment of segments) {
                 if (!segment?.attributes) continue;
-                
+
                 const segId = segment.attributes.id;
                 const houseNumbers = segment.attributes.houseNumbers || [];
-                
+
                 // Straßenname
                 let streetName = null;
                 const primaryStreetID = segment.attributes.primaryStreetID;
@@ -3801,7 +5109,7 @@ function verifyHouseNumbers() {
                     const street = W.model.streets.getObjectById(primaryStreetID);
                     streetName = street?.attributes?.name || null;
                 }
-                
+
                 // Segment-Geometrie
                 let geom = null;
                 try {
@@ -3809,19 +5117,19 @@ function verifyHouseNumbers() {
                     else if (segment.geometry) geom = segment.geometry;
                     else if (segment.attributes.geometry) geom = segment.attributes.geometry;
                 } catch (e) {}
-                
+
                 for (const hn of houseNumbers) {
                     const number = hn?.number || hn?.houseNumber;
                     if (!number) continue;
-                    
+
                     totalHN++;
                     let lat = null, lon = null;
-                    
+
                     if (geom && hn.fraction !== undefined) {
                         const coords = calculatePointOnGeometry(geom, hn.fraction);
                         if (coords) { lon = coords.lon; lat = coords.lat; }
                     }
-                    
+
                     if (lat !== null && lon !== null) {
                         withCoords++;
                         const numStr = String(number).trim().toLowerCase();
@@ -3831,69 +5139,69 @@ function verifyHouseNumbers() {
                 }
             }
         }
-        
+
         // METHODE 4: Aus dem Manager die Session-Imports prüfen
         if (withCoords === 0 && wmeManager.importedThisSession.size > 0) {
             console.log(`${SCRIPT_NAME}: Verwende Session-Tracking (${wmeManager.importedThisSession.size} Einträge)`);
-            
+
             for (const [key, data] of wmeManager.importedThisSession.entries()) {
                 totalHN++;
                 if (data.lat && data.lon) {
                     withCoords++;
                     const numStr = String(data.number).trim().toLowerCase();
                     if (!allHN.has(numStr)) allHN.set(numStr, []);
-                    allHN.get(numStr).push({ 
-                        lat: data.lat, 
-                        lon: data.lon, 
-                        segmentId: data.segmentId, 
-                        number: data.number, 
-                        streetName: data.street 
+                    allHN.get(numStr).push({
+                        lat: data.lat,
+                        lon: data.lon,
+                        segmentId: data.segmentId,
+                        number: data.number,
+                        streetName: data.street
                     });
                 }
             }
         }
-        
+
         // METHODE 5: Globale Import-Map (alle Imports dieser Browser-Session)
         if (withCoords === 0 && globalImportedHN.size > 0) {
             console.log(`${SCRIPT_NAME}: Verwende globale Import-Map (${globalImportedHN.size} Einträge)`);
-            
+
             for (const [key, data] of globalImportedHN.entries()) {
                 totalHN++;
                 if (data.lat && data.lon) {
                     withCoords++;
                     const numStr = String(data.number).trim().toLowerCase();
                     if (!allHN.has(numStr)) allHN.set(numStr, []);
-                    allHN.get(numStr).push({ 
-                        lat: data.lat, 
-                        lon: data.lon, 
-                        segmentId: data.segmentId, 
-                        number: data.number, 
-                        streetName: null 
+                    allHN.get(numStr).push({
+                        lat: data.lat,
+                        lon: data.lon,
+                        segmentId: data.segmentId,
+                        number: data.number,
+                        streetName: null
                     });
                 }
             }
         }
-        
+
         console.log(`${SCRIPT_NAME}: ${totalHN} HN gefunden, ${withCoords} mit Koordinaten`);
         log(`${withCoords} Hausnummern gescannt`, 'info');
-        
+
         if (withCoords === 0) {
             log('⚠️ Keine HN mit Koordinaten gefunden!', 'warning');
             alert('⚠️ Keine Hausnummern zum Verifizieren gefunden!\n\nMögliche Ursachen:\n• Keine HN im sichtbaren Bereich\n• HN-Daten noch nicht geladen\n\nTipp: Führe erst einen Import durch, dann verifiziere.');
             return;
         }
-        
+
         // Prüfe auf Duplikate (gleiche Nummer in der Nähe)
         for (const [numStr, positions] of allHN.entries()) {
             if (positions.length < 2) continue;
-            
+
             for (let i = 0; i < positions.length; i++) {
                 for (let j = i + 1; j < positions.length; j++) {
                     const dist = CoordUtils.distance(
                         positions[i].lat, positions[i].lon,
                         positions[j].lat, positions[j].lon
                     );
-                    
+
                     if (dist < DUPLICATE_DISTANCE) {
                         duplicates.push({
                             number: positions[i].number,
@@ -3906,7 +5214,7 @@ function verifyHouseNumbers() {
                 }
             }
         }
-        
+
         // Ergebnis anzeigen
         if (duplicates.length === 0) {
             log(`✅ Keine Duplikate gefunden! (${withCoords} HN geprüft)`, 'success');
@@ -3915,7 +5223,7 @@ function verifyHouseNumbers() {
             log(`⚠️ ${duplicates.length} Duplikate gefunden!`, 'warning');
             showVerificationReport(duplicates, withCoords);
         }
-        
+
     } catch (e) {
         log(`Fehler bei Verifizierung: ${e.message}`, 'error');
         console.error(`${SCRIPT_NAME}: Verifizierung Fehler:`, e);
@@ -3925,7 +5233,7 @@ function verifyHouseNumbers() {
 // Punkt auf Geometrie bei gegebener Fraktion berechnen (für Verifizierung)
 function calculatePointOnGeometry(geom, fraction) {
     if (!geom || fraction === undefined) return null;
-    
+
     try {
         // Koordinaten extrahieren
         let coords = [];
@@ -3936,9 +5244,9 @@ function calculatePointOnGeometry(geom, fraction) {
         } else if (geom.components) {
             coords = geom.components.map(c => [c.x, c.y]);
         }
-        
+
         if (coords.length < 2) return null;
-        
+
         // Gesamtlänge berechnen
         let totalLength = 0;
         const segLengths = [];
@@ -3950,32 +5258,32 @@ function calculatePointOnGeometry(geom, fraction) {
             segLengths.push(len);
             totalLength += len;
         }
-        
+
         if (totalLength === 0) return null;
-        
+
         // Position bei Fraktion finden
         const targetDist = fraction * totalLength;
         let accDist = 0;
-        
+
         for (let i = 0; i < segLengths.length; i++) {
             if (accDist + segLengths[i] >= targetDist || i === segLengths.length - 1) {
                 const t = segLengths[i] > 0 ? (targetDist - accDist) / segLengths[i] : 0;
                 const clampedT = Math.max(0, Math.min(1, t));
                 let x = coords[i][0] + clampedT * (coords[i+1][0] - coords[i][0]);
                 let y = coords[i][1] + clampedT * (coords[i+1][1] - coords[i][1]);
-                
+
                 // Prüfe ob Web Mercator (große Zahlen) -> konvertieren zu WGS84
                 if (Math.abs(x) > 180 || Math.abs(y) > 90) {
                     const lon = x * 180 / 20037508.34;
                     const lat = 180 / Math.PI * (2 * Math.atan(Math.exp(y * Math.PI / 20037508.34)) - Math.PI / 2);
                     return { lon, lat };
                 }
-                
+
                 return { lon: x, lat: y };
             }
             accDist += segLengths[i];
         }
-        
+
         return null;
     } catch (e) {
         console.error(`${SCRIPT_NAME}: calculatePointOnGeometry Fehler:`, e);
@@ -3992,18 +5300,18 @@ function showVerificationReport(duplicates, totalHN) {
         console.log(`${SCRIPT_NAME}: Duplikate:`, duplicates);
         return;
     }
-    
+
     let html = `
         <div style="background:#fff3cd; padding:10px; border-radius:5px; margin-bottom:15px;">
             <strong>🔍 Verifizierungs-Ergebnis</strong><br>
             <span style="color:#856404;">⚠️ ${duplicates.length} mögliche Duplikate gefunden</span><br>
             <small>${totalHN} Hausnummern geprüft | Duplikat-Radius: 30m</small>
         </div>
-        
+
         <div style="background:#ffebee; padding:10px; border-radius:5px; max-height:400px; overflow-y:auto;">
             <strong>Gefundene Duplikate:</strong><br><br>
     `;
-    
+
     // Gruppiere nach Hausnummer
     const byNumber = new Map();
     for (const dup of duplicates) {
@@ -4013,14 +5321,14 @@ function showVerificationReport(duplicates, totalHN) {
         }
         byNumber.get(num).push(dup);
     }
-    
+
     // Sortiere nach Hausnummer
     const sortedNumbers = [...byNumber.keys()].sort((a, b) => {
         const numA = parseInt(a) || 0;
         const numB = parseInt(b) || 0;
         return numA - numB;
     });
-    
+
     for (const num of sortedNumbers) {
         const dups = byNumber.get(num);
         const streetName = dups[0]?.streetName || '';
@@ -4028,24 +5336,24 @@ function showVerificationReport(duplicates, totalHN) {
         html += `<strong style="color:#d32f2f;">HN ${num}</strong>`;
         if (streetName) html += ` <small style="color:#666;">(${streetName})</small>`;
         html += ` - ${dups.length}x doppelt<br>`;
-        
+
         for (const dup of dups) {
             html += `<small style="color:#666;">`;
             html += `📍 ${dup.pos1.lat.toFixed(5)}, ${dup.pos1.lon.toFixed(5)} ↔ `;
             html += `${dup.pos2.lat.toFixed(5)}, ${dup.pos2.lon.toFixed(5)} `;
             html += `(${dup.distance.toFixed(1)}m)</small><br>`;
         }
-        
+
         html += `</div>`;
     }
-    
+
     html += `
         </div>
         <div style="margin-top:15px; padding:10px; background:#e3f2fd; border-radius:5px;">
             <strong>💡 Tipp:</strong> Zoome zu den Koordinaten und lösche die doppelten Hausnummern manuell.
         </div>
     `;
-    
+
     content.innerHTML = html;
     modal.style.display = 'flex';
 }
@@ -4057,18 +5365,18 @@ function showReport() {
     if (!modal || !content) return;
 
     let html = '';
-    
+
     // Zusammenfassung
-    const duration = importReport.endTime && importReport.startTime ? 
+    const duration = importReport.endTime && importReport.startTime ?
         Math.round((importReport.endTime - importReport.startTime) / 1000) : 0;
-    
+
     const sourceDups = importReport.sourceDuplicatesRemoved || 0;
-    
+
     html += `
         <div style="background:#e3f2fd; padding:10px; border-radius:5px; margin-bottom:15px;">
             <strong>📈 Zusammenfassung</strong><br>
-            <span style="color:#4CAF50;">✓ ${importStats.successful} erfolgreich</span> | 
-            <span style="color:#FF9800;">⏭️ ${importStats.skipped} übersprungen</span> | 
+            <span style="color:#4CAF50;">✓ ${importStats.successful} erfolgreich</span> |
+            <span style="color:#FF9800;">⏭️ ${importStats.skipped} übersprungen</span> |
             <span style="color:#f44336;">✗ ${importStats.failed} Fehler</span><br>
             <small>Dauer: ${duration}s | Gesamt: ${importStats.total}${sourceDups > 0 ? ` | ${sourceDups} Quelldaten-Duplikate entfernt` : ''}</small>
         </div>
@@ -4081,18 +5389,18 @@ function showReport() {
                 <strong style="color:#f44336;">📍 Straßen ohne Segment (${importReport.missingStreets.size})</strong>
                 <div style="background:#ffebee; padding:8px; border-radius:4px; margin-top:5px; max-height:150px; overflow-y:auto;">
         `;
-        
+
         // Sortiere nach Anzahl der Hausnummern (absteigend)
         const sortedStreets = [...importReport.missingStreets.entries()]
             .sort((a, b) => b[1].length - a[1].length);
-        
+
         for (const [street, addresses] of sortedStreets) {
             const numbers = addresses.map(a => a.number).sort((a, b) => {
                 const numA = parseInt(a) || 0;
                 const numB = parseInt(b) || 0;
                 return numA - numB;
             }).join(', ');
-            
+
             html += `
                 <div style="margin-bottom:5px; padding:4px; background:white; border-radius:3px;">
                     <strong>${street}</strong> <span style="color:#666;">(${addresses.length})</span><br>
@@ -4100,7 +5408,7 @@ function showReport() {
                 </div>
             `;
         }
-        
+
         html += '</div></div>';
     }
 
@@ -4111,7 +5419,7 @@ function showReport() {
                 <strong style="color:#FF9800;">🔄 Übersprungene Duplikate (${importReport.duplicates.length})</strong>
                 <div style="background:#fff3e0; padding:8px; border-radius:4px; margin-top:5px; max-height:100px; overflow-y:auto;">
         `;
-        
+
         // Gruppiere nach Straße
         const dupByStreet = new Map();
         for (const dup of importReport.duplicates) {
@@ -4119,11 +5427,11 @@ function showReport() {
             if (!dupByStreet.has(street)) dupByStreet.set(street, []);
             dupByStreet.get(street).push(dup.number);
         }
-        
+
         for (const [street, numbers] of dupByStreet) {
             html += `<div><strong>${street}:</strong> ${numbers.join(', ')}</div>`;
         }
-        
+
         html += '</div></div>';
     }
 
@@ -4134,7 +5442,7 @@ function showReport() {
                 <strong style="color:#4CAF50;">✓ Erfolgreich importiert (${importReport.successful.length})</strong>
                 <div style="background:#e8f5e9; padding:8px; border-radius:4px; margin-top:5px; max-height:100px; overflow-y:auto;">
         `;
-        
+
         // Gruppiere nach Straße
         const successByStreet = new Map();
         for (const item of importReport.successful) {
@@ -4142,12 +5450,12 @@ function showReport() {
             if (!successByStreet.has(street)) successByStreet.set(street, []);
             successByStreet.get(street).push(item.number);
         }
-        
+
         for (const [street, numbers] of successByStreet) {
             const sortedNumbers = numbers.sort((a, b) => (parseInt(a) || 0) - (parseInt(b) || 0));
             html += `<div><strong>${street}:</strong> ${sortedNumbers.join(', ')}</div>`;
         }
-        
+
         html += '</div></div>';
     }
 
@@ -4158,15 +5466,15 @@ function showReport() {
                 <strong style="color:#f44336;">✗ Fehlgeschlagen (${importReport.failed.length})</strong>
                 <div style="background:#ffebee; padding:8px; border-radius:4px; margin-top:5px; max-height:100px; overflow-y:auto;">
         `;
-        
+
         for (const item of importReport.failed.slice(0, 20)) {
             html += `<div><strong>${item.number}</strong> (${item.street}): ${item.reason}</div>`;
         }
-        
+
         if (importReport.failed.length > 20) {
             html += `<div style="color:#666;">... und ${importReport.failed.length - 20} weitere</div>`;
         }
-        
+
         html += '</div></div>';
     }
 
@@ -4177,10 +5485,10 @@ function showReport() {
                 <strong style="color:#9C27B0;">📏 Zu weit entfernt (${importReport.tooFarAway.length})</strong>
                 <div style="background:#f3e5f5; padding:8px; border-radius:4px; margin-top:5px; max-height:120px; overflow-y:auto;">
         `;
-        
+
         // Sortiere nach Distanz (absteigend)
         const sorted = [...importReport.tooFarAway].sort((a, b) => (b.distance || 0) - (a.distance || 0));
-        
+
         for (const item of sorted.slice(0, 15)) {
             html += `
                 <div style="margin-bottom:3px; padding:3px; background:white; border-radius:2px; font-size:11px;">
@@ -4189,11 +5497,11 @@ function showReport() {
                 </div>
             `;
         }
-        
+
         if (importReport.tooFarAway.length > 15) {
             html += `<div style="color:#666; font-size:10px;">... und ${importReport.tooFarAway.length - 15} weitere</div>`;
         }
-        
+
         html += '</div></div>';
     }
 
@@ -4205,26 +5513,26 @@ function showReport() {
                 <div style="background:#fbe9e7; padding:8px; border-radius:4px; margin-top:5px; max-height:120px; overflow-y:auto;">
                     <small style="color:#666; display:block; margin-bottom:5px;">Diese wurden trotzdem importiert, aber der Straßenname im WME weicht ab:</small>
         `;
-        
+
         for (const item of importReport.streetMismatch.slice(0, 15)) {
             const similarity = item.similarity ? `${Math.round(item.similarity * 100)}%` : '?';
             html += `
                 <div style="margin-bottom:3px; padding:3px; background:white; border-radius:2px; font-size:11px;">
-                    <strong>${item.number}</strong>: "${item.requestedStreet}" → "${item.foundStreet}" 
+                    <strong>${item.number}</strong>: "${item.requestedStreet}" → "${item.foundStreet}"
                     <span style="color:#999;">(${similarity} ähnlich, ${item.distance?.toFixed(0) || '?'}m)</span>
                 </div>
             `;
         }
-        
+
         if (importReport.streetMismatch.length > 15) {
             html += `<div style="color:#666; font-size:10px;">... und ${importReport.streetMismatch.length - 15} weitere</div>`;
         }
-        
+
         html += '</div></div>';
     }
 
     // Falls alles leer
-    if (importReport.missingStreets.size === 0 && importReport.duplicates.length === 0 && 
+    if (importReport.missingStreets.size === 0 && importReport.duplicates.length === 0 &&
         importReport.successful.length === 0 && importReport.failed.length === 0 &&
         importReport.tooFarAway.length === 0 && importReport.streetMismatch.length === 0) {
         html = '<div style="text-align:center; padding:20px; color:#666;">Noch kein Import durchgeführt</div>';
@@ -4237,40 +5545,40 @@ function showReport() {
 // Report als CSV exportieren
 function exportReportCSV() {
     let csv = 'Typ;Straße;Hausnummer;Lat;Lon;Distanz;WME-Straße;Grund\n';
-    
+
     // Missing Streets
     for (const [street, addresses] of importReport.missingStreets) {
         for (const addr of addresses) {
             csv += `Kein Segment;${street};${addr.number};${addr.lat};${addr.lon};;; Straße nicht gefunden\n`;
         }
     }
-    
+
     // Zu weit entfernt
     for (const item of importReport.tooFarAway) {
         csv += `Zu weit;${item.street};${item.number};${item.lat};${item.lon};${item.distance?.toFixed(0) || ''};${item.nearestStreet || ''};Über 100m entfernt\n`;
     }
-    
+
     // Straßenname abweichend
     for (const item of importReport.streetMismatch) {
         csv += `Name abweichend;${item.requestedStreet};${item.number};${item.lat};${item.lon};${item.distance?.toFixed(0) || ''};${item.foundStreet};Importiert aber Name anders\n`;
     }
-    
+
     // Duplikate
     for (const item of importReport.duplicates) {
         csv += `Duplikat;${item.street};${item.number};${item.lat};${item.lon};;;Bereits vorhanden\n`;
     }
-    
+
     // Erfolgreich
     for (const item of importReport.successful) {
         const matchStatus = item.nameMatch ? 'OK' : 'Name abweichend';
         csv += `Erfolgreich;${item.street};${item.number};${item.lat};${item.lon};${item.distance?.toFixed(0) || ''};${item.segmentStreet || ''};Segment ${item.segmentId} (${matchStatus})\n`;
     }
-    
+
     // Fehlgeschlagen
     for (const item of importReport.failed) {
         csv += `Fehler;${item.street};${item.number};${item.lat};${item.lon};;;${item.reason}\n`;
     }
-    
+
     // Download
     const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -4279,7 +5587,7 @@ function exportReportCSV() {
     a.download = `hausnummern-import-${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    
+
     log('Report als CSV exportiert', 'success');
 }
 
@@ -4289,7 +5597,7 @@ function copyReportToClipboard() {
     text += `Erfolgreich: ${importStats.successful}\n`;
     text += `Übersprungen: ${importStats.skipped}\n`;
     text += `Fehler: ${importStats.failed}\n\n`;
-    
+
     if (importReport.missingStreets.size > 0) {
         text += '--- STRASSEN OHNE SEGMENT ---\n';
         for (const [street, addresses] of importReport.missingStreets) {
@@ -4298,7 +5606,7 @@ function copyReportToClipboard() {
         }
         text += '\n';
     }
-    
+
     if (importReport.duplicates.length > 0) {
         text += '--- DUPLIKATE ---\n';
         const dupByStreet = new Map();
@@ -4312,7 +5620,7 @@ function copyReportToClipboard() {
         }
         text += '\n';
     }
-    
+
     navigator.clipboard.writeText(text).then(() => {
         log('Report in Zwischenablage kopiert', 'success');
     }).catch(() => {
@@ -4386,7 +5694,7 @@ function parseManualData() {
 
     try {
         let data;
-        
+
         // JSON versuchen
         try {
             data = JSON.parse(text);
@@ -4394,10 +5702,10 @@ function parseManualData() {
             // CSV parsen
             const lines = text.split('\n').filter(l => l.trim());
             if (lines.length < 2) throw new Error('Mindestens Header + 1 Zeile erforderlich');
-            
+
             const headers = lines[0].split(/[,;\t]/).map(h => h.trim().toLowerCase());
             data = [];
-            
+
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].split(/[,;\t]/).map(v => v.trim());
                 const obj = {};
@@ -4411,23 +5719,23 @@ function parseManualData() {
         // Normalisieren und Hausnummern validieren/aufteilen
         const normalized = [];
         let skippedInvalid = 0;
-        
+
         for (const item of data) {
             const rawNumber = String(item.number || item.hausnummer || item.hnr || '').trim();
             const street = String(item.street || item.strasse || 'Unbekannt').trim();
             const lon = parseFloat(item.lon || item.longitude || item.x);
             const lat = parseFloat(item.lat || item.latitude || item.y);
-            
+
             if (isNaN(lon) || isNaN(lat)) continue;
-            
+
             // Hausnummern aufteilen und validieren
             const validNumbers = dataFetcher.splitAndValidateHouseNumbers(rawNumber);
-            
+
             if (validNumbers.length === 0) {
                 skippedInvalid++;
                 continue;
             }
-            
+
             for (const num of validNumbers) {
                 normalized.push({
                     number: num,
@@ -4459,20 +5767,20 @@ function parseManualData() {
 function showPreview(data) {
     const info = document.getElementById('hn-preview-info');
     const table = document.getElementById('hn-preview-table');
-    
+
     if (info) info.innerHTML = `<strong>${data.length}</strong> Hausnummern geladen`;
-    
+
     if (table) {
         const preview = data.slice(0, 10);
         let html = '<table class="preview-table"><thead><tr><th>Nr</th><th>Straße</th><th>Koordinaten</th></tr></thead><tbody>';
-        
+
         for (const item of preview) {
             html += `<tr><td>${item.number}</td><td>${item.street}</td><td>${item.lat.toFixed(4)}, ${item.lon.toFixed(4)}</td></tr>`;
         }
-        
+
         html += '</tbody></table>';
         if (data.length > 10) html += `<div style="font-size:9px;color:#666;margin-top:3px;">... und ${data.length - 10} weitere</div>`;
-        
+
         table.innerHTML = html;
     }
 }
@@ -4482,11 +5790,11 @@ function showPreview(data) {
 // ============================================================================
 async function autoScanArea(bbox) {
     log('🔄 Auto-Scan: Lade Hausnummern im Bereich...', 'info');
-    
+
     // Ursprüngliche Position und Zoom speichern
     let originalCenter = null;
     let originalZoom = 0;
-    
+
     try {
         // Zoom über olMap holen (wie im Quick Zoom Script)
         if (W?.map?.olMap?.getZoom) {
@@ -4496,7 +5804,7 @@ async function autoScanArea(bbox) {
         } else if (W?.map?.getZoom) {
             originalZoom = W.map.getZoom();
         }
-        
+
         // Center holen
         if (W?.map?.getCenter) {
             const center = W.map.getCenter();
@@ -4513,27 +5821,27 @@ async function autoScanArea(bbox) {
     } catch (e) {
         console.error(`${SCRIPT_NAME}: Fehler beim Speichern der Position:`, e);
     }
-    
+
     console.log(`${SCRIPT_NAME}: Original Position: ${originalCenter?.lat?.toFixed(5)}, ${originalCenter?.lon?.toFixed(5)} @ Zoom ${originalZoom}`);
-    
+
     // Auf Zoom 19 wechseln (HN werden ab Zoom 19 geladen)
     const targetZoom = 19;
     const needsZoomChange = originalZoom !== targetZoom;
-    
+
     try {
         // Erst zum Zentrum des BBox
         const centerLon = (bbox.minLon + bbox.maxLon) / 2;
         const centerLat = (bbox.minLat + bbox.maxLat) / 2;
-        
+
         // WGS84 zu Web Mercator
         const mercX = centerLon * 20037508.34 / 180;
         const mercY = Math.log(Math.tan((90 + centerLat) * Math.PI / 360)) / (Math.PI / 180) * 20037508.34 / 180;
-        
+
         // Center setzen
         if (W?.map?.setCenter) {
             W.map.setCenter({ lon: mercX, lat: mercY });
         }
-        
+
         // Zoom über olMap setzen (wie im Quick Zoom Script)
         if (W?.map?.olMap?.zoomTo) {
             W.map.olMap.zoomTo(targetZoom);
@@ -4549,72 +5857,72 @@ async function autoScanArea(bbox) {
     } catch (e) {
         console.error(`${SCRIPT_NAME}: Fehler beim Zoom:`, e);
     }
-    
+
     // Warte kurz bis Karte geladen
     await sleep(500);
-    
+
     // Grid-Scan: Bereich in Kacheln aufteilen und durchscrollen
     // Bei Zoom 19 ist der sichtbare Bereich ca. 200m x 150m
     const tileSize = 0.0015; // ca. 150m in Grad
     const tilesX = Math.ceil((bbox.maxLon - bbox.minLon) / tileSize);
     const tilesY = Math.ceil((bbox.maxLat - bbox.minLat) / tileSize);
     const totalTiles = tilesX * tilesY;
-    
+
     // Maximal 25 Tiles scannen (sonst zu lange)
     const maxTiles = 25;
     const skipFactor = totalTiles > maxTiles ? Math.ceil(totalTiles / maxTiles) : 1;
-    
+
     log(`Scanne ${Math.min(totalTiles, maxTiles)} Positionen...`, 'info');
     console.log(`${SCRIPT_NAME}: Grid ${tilesX}x${tilesY} = ${totalTiles} Tiles, Skip: ${skipFactor}`);
-    
+
     let scannedTiles = 0;
     let hnBefore = wmeManager.existingHouseNumbers.size;
-    
+
     for (let y = 0; y < tilesY && scannedTiles < maxTiles; y++) {
         for (let x = 0; x < tilesX && scannedTiles < maxTiles; x++) {
             // Skip-Logik für große Bereiche
             if ((y * tilesX + x) % skipFactor !== 0) continue;
-            
+
             const tileCenterLon = bbox.minLon + (x + 0.5) * tileSize;
             const tileCenterLat = bbox.minLat + (y + 0.5) * tileSize;
-            
+
             try {
                 // WGS84 zu Web Mercator
                 const mercX = tileCenterLon * 20037508.34 / 180;
                 const mercY = Math.log(Math.tan((90 + tileCenterLat) * Math.PI / 360)) / (Math.PI / 180) * 20037508.34 / 180;
-                
+
                 if (W?.map?.setCenter) {
                     W.map.setCenter({ lon: mercX, lat: mercY });
                 }
-                
+
                 // Kurz warten damit Daten laden
                 await sleep(300);
-                
+
                 scannedTiles++;
             } catch (e) {
                 // Ignorieren und weitermachen
             }
         }
     }
-    
+
     // Existierende HN neu laden
     wmeManager.loadExistingHouseNumbers();
     const hnAfter = wmeManager.existingHouseNumbers.size;
-    
+
     log(`✅ Scan fertig: ${hnAfter} HN geladen (+${hnAfter - hnBefore} neu)`, 'success');
-    
+
     // Zurück zur ursprünglichen Position und Zoom
     if (originalCenter) {
         try {
             await sleep(200);
-            
+
             const mercX = originalCenter.lon * 20037508.34 / 180;
             const mercY = Math.log(Math.tan((90 + originalCenter.lat) * Math.PI / 360)) / (Math.PI / 180) * 20037508.34 / 180;
-            
+
             if (W?.map?.setCenter) {
                 W.map.setCenter({ lon: mercX, lat: mercY });
             }
-            
+
             // Zoom wiederherstellen über olMap (wie im Quick Zoom Script)
             if (originalZoom && originalZoom !== targetZoom) {
                 if (W?.map?.olMap?.zoomTo) {
@@ -4628,7 +5936,7 @@ async function autoScanArea(bbox) {
             console.error(`${SCRIPT_NAME}: Fehler beim Zurücksetzen:`, e);
         }
     }
-    
+
     return hnAfter;
 }
 
@@ -4647,14 +5955,14 @@ async function startImport() {
     // Original-Position und Zoom speichern (für Wiederherstellung NACH Import)
     let originalCenter = null;
     let originalZoom = 0;
-    
+
     try {
         if (W?.map?.olMap?.getZoom) {
             originalZoom = W.map.olMap.getZoom();
         } else if (W?.map?.getZoom) {
             originalZoom = W.map.getZoom();
         }
-        
+
         if (W?.map?.getCenter) {
             const center = W.map.getCenter();
             if (center) {
@@ -4665,12 +5973,12 @@ async function startImport() {
             }
         }
     } catch (e) {}
-    
+
     console.log(`${SCRIPT_NAME}: Original Zoom: ${originalZoom}`);
-    
+
     // Auto-Scan Checkbox prüfen
     const autoScanEnabled = document.getElementById('hn-auto-scan')?.checked ?? true;
-    
+
     // BBox aus den zu importierenden Daten berechnen
     let dataBBox = null;
     if (loadedData.length > 0) {
@@ -4681,49 +5989,50 @@ async function startImport() {
             maxLat: Math.max(...loadedData.map(d => d.lat))
         };
     }
-    
+
     // Bei Auto-Scan: Auf Zoom 19 wechseln und DORT BLEIBEN für den Import
     if (autoScanEnabled && dataBBox) {
         log('🔄 Wechsle auf Zoom 19 für Import...', 'info');
         document.getElementById('btn-start-import').disabled = true;
-        
+
         try {
             // Auf Zoom 19 wechseln (HN werden nur bei Zoom 19+ geladen)
             const targetZoom = 19;
-            
+
             // Zum Zentrum des Import-Bereichs
             const centerLon = (dataBBox.minLon + dataBBox.maxLon) / 2;
             const centerLat = (dataBBox.minLat + dataBBox.maxLat) / 2;
             const mercX = centerLon * 20037508.34 / 180;
             const mercY = Math.log(Math.tan((90 + centerLat) * Math.PI / 360)) / (Math.PI / 180) * 20037508.34 / 180;
-            
+
             if (W?.map?.setCenter) {
                 W.map.setCenter({ lon: mercX, lat: mercY });
             }
-            
+
             if (W?.map?.olMap?.zoomTo) {
                 W.map.olMap.zoomTo(targetZoom);
             } else if (W?.map?.zoomTo) {
                 W.map.zoomTo(targetZoom);
             }
-            
+
             log(`Zoom ${originalZoom} → ${targetZoom}`, 'info');
-            
-            // 4 Sekunden warten bis WME die Hausnummern geladen hat!
-            log('⏳ Warte 4s auf HN-Laden...', 'info');
-            await sleep(4000);
-            
+
+            // Wartezeit auf HN-Laden (konfigurierbar)
+            const loadDelay = CONFIG.speed.initialLoadDelay;
+            log(`⏳ Warte ${(loadDelay/1000).toFixed(1)}s auf HN-Laden...`, 'info');
+            await sleep(loadDelay);
+
             // Existierende HN laden
             wmeManager.loadExistingHouseNumbers();
             log(`${wmeManager.existingHouseNumbers.size} existierende HN geladen`, 'info');
-            
+
         } catch (e) {
             log(`Zoom-Fehler: ${e.message}`, 'warning');
             console.error(`${SCRIPT_NAME}: Zoom-Fehler:`, e);
         }
     } else if (originalZoom < 17) {
         log(`⚠️ Zoom-Level ${originalZoom} ist zu niedrig!`, 'warning');
-        
+
         if (!confirm(`Zoom-Level ${originalZoom} ist niedrig und Auto-Scan ist deaktiviert.\n\nExistierende Hausnummern werden möglicherweise nicht erkannt.\n\nTrotzdem fortfahren?`)) {
             return;
         }
@@ -4745,25 +6054,25 @@ async function startImport() {
     } catch (error) {
         log(`Import-Fehler: ${error.message}`, 'error');
     }
-    
+
     // NACH dem Import: Zurück zum Original-Zoom
     if (autoScanEnabled && originalCenter && originalZoom && originalZoom !== 19) {
         try {
             await sleep(500);
-            
+
             const mercX = originalCenter.lon * 20037508.34 / 180;
             const mercY = Math.log(Math.tan((90 + originalCenter.lat) * Math.PI / 360)) / (Math.PI / 180) * 20037508.34 / 180;
-            
+
             if (W?.map?.setCenter) {
                 W.map.setCenter({ lon: mercX, lat: mercY });
             }
-            
+
             if (W?.map?.olMap?.zoomTo) {
                 W.map.olMap.zoomTo(originalZoom);
             } else if (W?.map?.zoomTo) {
                 W.map.zoomTo(originalZoom);
             }
-            
+
             log(`Zurück zu Zoom ${originalZoom}`, 'info');
         } catch (e) {
             console.error(`${SCRIPT_NAME}: Fehler beim Zurücksetzen:`, e);
@@ -4785,14 +6094,14 @@ async function initializeScript() {
     try {
         if (unsafeWindow.SDK_INITIALIZED) {
             await unsafeWindow.SDK_INITIALIZED;
-            
+
             if (unsafeWindow.getWmeSdk) {
                 wmeSDK = unsafeWindow.getWmeSdk({
                     scriptId: SCRIPT_ID,
                     scriptName: SCRIPT_NAME
                 });
                 console.log(`${SCRIPT_NAME}: WME SDK initialisiert`);
-                
+
                 // Event-Listener für Hausnummern-Tracking registrieren
                 try {
                     wmeSDK.Events.on({
@@ -4817,36 +6126,49 @@ async function initializeScript() {
                 } catch (evtErr) {
                     console.log(`${SCRIPT_NAME}: Event-Listener Fehler:`, evtErr);
                 }
+
+                // SaveErrorHandler initialisieren für Speicher-Fehler Tracking
+                try {
+                    SaveErrorHandler.init();
+                } catch (saveErr) {
+                    console.log(`${SCRIPT_NAME}: SaveErrorHandler Fehler:`, saveErr);
+                }
             }
         }
     } catch (e) {
         console.log(`${SCRIPT_NAME}: SDK nicht verfügbar, verwende W.userscripts API`);
+        // Auch ohne SDK den SaveErrorHandler mit Fallback initialisieren
+        try {
+            SaveErrorHandler.init();
+        } catch (saveErr) {
+            console.log(`${SCRIPT_NAME}: SaveErrorHandler Fallback Fehler:`, saveErr);
+        }
     }
 
     // Sidebar Tab registrieren gemäß API Dokumentation
     try {
         const { tabLabel, tabPane } = W.userscripts.registerSidebarTab(SCRIPT_ID);
-        
+
         tabLabel.innerText = '🏠 HN';
         tabLabel.title = 'Amtliche Hausnummern Import';
 
         // Warte bis Element im DOM ist
         await W.userscripts.waitForElementConnected(tabPane);
-        
+
         // UI erstellen
         createUI(tabPane);
-        
+
         console.log(`${SCRIPT_NAME}: Sidebar Tab registriert`);
     } catch (e) {
         console.error(`${SCRIPT_NAME}: Sidebar-Fehler:`, e);
-        
+
         // Fallback: Versuche erneut nach kurzer Wartezeit
         setTimeout(() => {
             try {
                 const { tabLabel, tabPane } = W.userscripts.registerSidebarTab(SCRIPT_ID + '-retry');
                 tabLabel.innerText = '🏠 HN';
                 tabLabel.title = 'Amtliche Hausnummern Import';
-                
+
                 tabPane.addEventListener('element-connected', () => {
                     createUI(tabPane);
                 }, { once: true });
@@ -4891,28 +6213,28 @@ function bootstrap() {
 // Debug-Funktion für Segmente
 function debugSegments() {
     log('=== DEBUG HAUSNUMMERN ===', 'info');
-    
+
     // Hausnummern aus verschiedenen Quellen zählen
     let sdkCount = 0;
     let modelCount = 0;
     let segmentHNCount = 0;
     let segmentHNModelCount = 0;
     let withCoords = 0;
-    
+
     // WICHTIG: W.model.segmentHouseNumbers (Hauptquelle!)
     if (W?.model?.segmentHouseNumbers) {
         try {
-            const segHNArray = W.model.segmentHouseNumbers.getObjectArray ? 
-                W.model.segmentHouseNumbers.getObjectArray() : 
+            const segHNArray = W.model.segmentHouseNumbers.getObjectArray ?
+                W.model.segmentHouseNumbers.getObjectArray() :
                 Object.values(W.model.segmentHouseNumbers.objects || {});
             segmentHNModelCount = segHNArray.length;
-            
+
             if (segHNArray.length > 0) {
                 const sample = segHNArray[0];
                 const attrs = sample?.attributes || sample;
                 log(`segmentHouseNumbers Sample: number=${attrs?.number}, segID=${attrs?.segID}`, 'info');
                 log(`segmentHouseNumbers Keys: ${Object.keys(attrs || {}).join(', ')}`, 'info');
-                
+
                 // Teste getByAttributes
                 if (W.model.segmentHouseNumbers.getByAttributes && attrs?.segID && attrs?.number) {
                     const found = W.model.segmentHouseNumbers.getByAttributes({
@@ -4927,7 +6249,7 @@ function debugSegments() {
         }
     }
     log(`W.model.segmentHouseNumbers: ${segmentHNModelCount}`, 'info');
-    
+
     // SDK HouseNumbers
     if (wmeSDK?.DataModel?.HouseNumbers?.getAll) {
         try {
@@ -4949,23 +6271,23 @@ function debugSegments() {
         }
     }
     log(`SDK HouseNumbers.getAll(): ${sdkCount}`, 'info');
-    
+
     // W.model.houseNumbers - DETAILLIERT
     if (W?.model?.houseNumbers) {
         try {
-            const hnArray = W.model.houseNumbers.getObjectArray ? 
-                W.model.houseNumbers.getObjectArray() : 
+            const hnArray = W.model.houseNumbers.getObjectArray ?
+                W.model.houseNumbers.getObjectArray() :
                 Object.values(W.model.houseNumbers.objects || {});
             modelCount = hnArray.length;
-            
+
             if (hnArray.length > 0) {
                 const sample = hnArray[0];
                 const attrs = sample?.attributes || sample;
-                
+
                 log(`Model Sample Obj Keys: ${Object.keys(sample || {}).slice(0, 15).join(', ')}`, 'info');
                 log(`Model Sample Attr Keys: ${Object.keys(attrs || {}).join(', ')}`, 'info');
                 log(`Model Sample: number=${attrs?.number}, segID=${attrs?.segID}`, 'info');
-                
+
                 // Geometrie suchen
                 if (attrs?.geometry) {
                     log(`Attr.geometry: ${JSON.stringify(attrs.geometry).slice(0, 150)}`, 'info');
@@ -4988,7 +6310,7 @@ function debugSegments() {
                         log(`getGeometry() Fehler: ${e.message}`, 'error');
                     }
                 }
-                
+
                 // Alle Attribute ausgeben
                 log(`Alle Attrs: ${JSON.stringify(attrs).slice(0, 300)}`, 'info');
             }
@@ -4997,11 +6319,11 @@ function debugSegments() {
         }
     }
     log(`W.model.houseNumbers: ${modelCount} (${withCoords} mit Geometrie-Info)`, 'info');
-    
+
     // Geladene HN im Manager
     log(`Manager existingHouseNumbers: ${wmeManager.existingHouseNumbers.size}`, 'info');
     log(`Manager existingByCoords: ${wmeManager.existingByCoords.size}`, 'info');
-    
+
     // Segmente mit HN
     if (W?.model?.segments) {
         const segments = W.model.segments.getObjectArray();
@@ -5017,9 +6339,9 @@ function debugSegments() {
         }
     }
     log(`Segment.attributes.houseNumbers: ${segmentHNCount}`, 'info');
-    
+
     log('=== DEBUG SEGMENTE ===', 'info');
-    
+
     if (!W?.model?.segments) {
         log('W.model.segments nicht verfügbar!', 'error');
         return;
@@ -5035,7 +6357,7 @@ function debugSegments() {
 
     for (const seg of segments) {
         if (!seg?.attributes) continue;
-        
+
         const rt = seg.attributes.roadType;
         typeCounts[rt] = (typeCounts[rt] || 0) + 1;
 
@@ -5070,15 +6392,15 @@ function debugSegments() {
                 if (geom.getVertices) verts = geom.getVertices();
                 if (verts.length === 0 && geom.components) verts = geom.components;
                 if (verts.length === 0 && geom.coordinates) verts = geom.coordinates;
-                
+
                 log(`Vertices (getVertices): ${geom.getVertices ? geom.getVertices().length : 'N/A'}`, 'info');
                 log(`Components: ${geom.components ? geom.components.length : 'N/A'}`, 'info');
                 log(`Coordinates: ${geom.coordinates ? geom.coordinates.length : 'N/A'}`, 'info');
-                
+
                 // Geometrie-Typ und Struktur
                 log(`Geom Type: ${geom.type || geom.CLASS_NAME || 'unbekannt'}`, 'info');
                 log(`Geom Keys: ${Object.keys(geom).slice(0, 10).join(', ')}`, 'info');
-                
+
                 // GeoJSON Geometrie aus attributes?
                 if (sampleSegment.attributes.geometry) {
                     const attrGeom = sampleSegment.attributes.geometry;
@@ -5106,7 +6428,7 @@ function debugSegments() {
         if (wmeSDK.DataModel?.HouseNumbers) {
             log(`addHouseNumber: ${typeof wmeSDK.DataModel.HouseNumbers.addHouseNumber}`, 'info');
             log(`getAll: ${typeof wmeSDK.DataModel.HouseNumbers.getAll}`, 'info');
-            
+
             // Teste getAll
             if (wmeSDK.DataModel.HouseNumbers.getAll) {
                 try {
@@ -5118,17 +6440,17 @@ function debugSegments() {
             }
         }
     }
-    
+
     // Prüfe W.model.houseNumbers
     if (W?.model?.houseNumbers) {
-        const hnCount = W.model.houseNumbers.getObjectArray ? 
-            W.model.houseNumbers.getObjectArray().length : 
+        const hnCount = W.model.houseNumbers.getObjectArray ?
+            W.model.houseNumbers.getObjectArray().length :
             Object.keys(W.model.houseNumbers.objects || {}).length;
         log(`W.model.houseNumbers: ${hnCount} Einträge`, 'info');
     } else {
         log('W.model.houseNumbers: nicht verfügbar', 'warning');
     }
-    
+
     // Prüfe Action-Klassen
     if (W?.Action) {
         const actions = Object.keys(W.Action).filter(k => k.toLowerCase().includes('house'));
@@ -5136,11 +6458,11 @@ function debugSegments() {
     } else {
         log('W.Action nicht verfügbar', 'error');
     }
-    
+
     // Versuche require aus Page-Kontext
     const pageRequire = unsafeWindow?.require || W?.require;
     log(`Page require: ${pageRequire ? 'verfügbar' : 'nicht verfügbar'}`, pageRequire ? 'success' : 'warning');
-    
+
     if (pageRequire) {
         try {
             const AddHN = pageRequire('Waze/Action/AddHouseNumber');
@@ -5153,7 +6475,7 @@ function debugSegments() {
     // Prüfe OpenLayers
     const OL = unsafeWindow?.OpenLayers || OpenLayers;
     log(`OpenLayers: ${OL ? 'verfügbar' : 'nicht verfügbar'}`, OL ? 'success' : 'error');
-    
+
     // ===== NEUE DEBUG: Alle Layer auflisten =====
     log('=== LAYER ANALYSE ===', 'info');
     if (W?.map?.olMap?.layers) {
@@ -5165,7 +6487,7 @@ function debugSegments() {
             const visibility = layer?.visibility ? 'sichtbar' : 'versteckt';
             if (featureCount > 0 || name.toLowerCase().includes('house') || name.toLowerCase().includes('label')) {
                 log(`Layer: ${name} (${featureCount} Features, ${visibility})`, 'info');
-                
+
                 // Sample Feature
                 if (layer.features && layer.features.length > 0) {
                     const sample = layer.features[0];
@@ -5175,7 +6497,7 @@ function debugSegments() {
             }
         }
     }
-    
+
     // ===== NEUE DEBUG: DOM-Elemente scannen =====
     log('=== DOM SCAN ===', 'info');
     const mapContainer = document.getElementById('map') || document.querySelector('.olMap');
@@ -5193,7 +6515,7 @@ function debugSegments() {
             }
         }
         log(`SVG Text-Elemente (HN-Format): ${hnTexts}`, 'info');
-        
+
         // HN-spezifische Klassen
         const hnClasses = mapContainer.querySelectorAll('[class*="house"], [class*="hn-"], [class*="number"]');
         log(`Elemente mit house/hn/number Klasse: ${hnClasses.length}`, 'info');
@@ -5203,7 +6525,7 @@ function debugSegments() {
             }
         }
     }
-    
+
     log('=== DEBUG ENDE ===', 'info');
 }
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         enhanced ersetzer
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      1.5.1
+// @version      1.5.3
 // @description  Fügt Schnellbuttons für häufige Ersetzungen hinzu + Klickbare Fehler-Icons mit Clipboard-Funktion + Maskierungs-Tool + History-Panel
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/kalif/artikel/ersetzer*
@@ -6024,11 +6024,80 @@ $matchrule_untested =~ s/.*//;` },
     fixPointerEvents();
     fixInitialBadgeText(); // Badge-Text korrigieren beim Laden
 
+    // Fokus auf ACE-Editor setzen und behalten während die Seite lädt
+    function focusAceEditor() {
+        const editor = getAceEditor();
+        if (editor) {
+            editor.focus();
+            return true;
+        }
+        return false;
+    }
+
+    // Fokus-Keeper: Halte den Fokus auf dem Editor bis die Seite fertig geladen ist
+    let focusKeeperActive = true;
+    const focusKeeperInterval = setInterval(() => {
+        if (focusKeeperActive) {
+            focusAceEditor();
+        }
+    }, 500);
+
+    // Nach dem Badge-Fix (Seite geladen) den Focus-Keeper stoppen
+    // aber den Fokus ein letztes Mal setzen
+    const stopFocusKeeper = () => {
+        focusKeeperActive = false;
+        clearInterval(focusKeeperInterval);
+        document.removeEventListener('click', onUserInteraction);
+        document.removeEventListener('focusin', onUserInteraction);
+    };
+
+    // Stoppe Focus-Keeper wenn User mit anderen Elementen interagiert
+    const onUserInteraction = (e) => {
+        if (!focusKeeperActive) return;
+
+        const target = e.target;
+        const aceEditor = document.querySelector('#ace-editor');
+
+        // Ignoriere Klicks im ACE-Editor
+        if (aceEditor && aceEditor.contains(target)) return;
+
+        // Ignoriere Klicks auf die Panel-Icons (diese sollen funktionieren)
+        if (target.closest('.gutter-panel-icons')) return;
+
+        // Bei Interaktion mit Buttons, Selects, Inputs etc. Focus-Keeper stoppen
+        const interactiveElements = ['BUTTON', 'SELECT', 'INPUT', 'TEXTAREA', 'A', 'LABEL'];
+        const isInteractive = interactiveElements.includes(target.tagName) ||
+                             target.closest('button, select, input, textarea, a, .dropdown, .form-select, .btn');
+
+        if (isInteractive) {
+            stopFocusKeeper();
+        }
+    };
+
+    document.addEventListener('click', onUserInteraction);
+    document.addEventListener('focusin', onUserInteraction);
+
+    // Speziell: Abbrechen-Button beobachten
+    const watchCancelButton = () => {
+        const cancelBtn = document.querySelector('button.btn-danger');
+        if (cancelBtn && !cancelBtn.dataset.focusKeeperWatched) {
+            cancelBtn.dataset.focusKeeperWatched = 'true';
+            cancelBtn.addEventListener('click', () => {
+                stopFocusKeeper();
+            });
+        }
+    };
+    watchCancelButton();
+    setTimeout(watchCancelButton, 500);
+    setTimeout(watchCancelButton, 1000);
+
     // MutationObserver um auf Badge zu warten (Seite kann bis zu 1 Minute laden)
     if (!badgeFixApplied) {
         const badgeObserver = new MutationObserver(() => {
             if (fixInitialBadgeText()) {
                 badgeObserver.disconnect();
+                // Seite ist geladen, Focus-Keeper kann stoppen
+                setTimeout(stopFocusKeeper, 1000);
             }
         });
         badgeObserver.observe(document.body, {
@@ -6036,9 +6105,18 @@ $matchrule_untested =~ s/.*//;` },
             subtree: true,
             characterData: true
         });
-        // Timeout nach 2 Minuten um Observer zu stoppen
-        setTimeout(() => badgeObserver.disconnect(), 120000);
+        // Timeout nach 2 Minuten um Observer und Focus-Keeper zu stoppen
+        setTimeout(() => {
+            badgeObserver.disconnect();
+            stopFocusKeeper();
+        }, 120000);
+    } else {
+        // Badge bereits gefixed, stoppe Focus-Keeper nach kurzer Zeit
+        setTimeout(stopFocusKeeper, 2000);
     }
+
+    // Initialer Fokus
+    setTimeout(focusAceEditor, 100);
 
     // Styles für unsichtbare Tooltips hinzufügen
     addSilentTooltipStyles();

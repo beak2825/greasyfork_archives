@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         SchoodingPlus
 // @namespace    http://tampermonkey.net/
-// @version      2025-09-27
-// @description  userscript pour schooding
+// @version      2026-01-09
+// @description  try to take over the world!
 // @author       PieroLB
 // @match        https://www.schooding.fr/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=schooding.fr
@@ -272,7 +272,7 @@ class Code {
     fetchGPT() {
         return new Promise((resolve) => {
             const apiKey =
-                  "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";
+                  "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";
             fetch("https://api.openai.com/v1/chat/completions", {
                 method: "POST",
                 headers: {
@@ -387,7 +387,7 @@ class QCM {
     fetchGPT() {
         return new Promise((resolve) => {
             const apiKey =
-                  "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";
+                  "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";
             fetch("https://api.openai.com/v1/chat/completions", {
                 method: "POST",
                 headers: {

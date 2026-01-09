@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Custom LEADERBOARD 🧬
 // @namespace   https://popmundo.com/
-// @version     2.0.2
+// @version     2.0.5
 // @description Replaces achievement table with custom leaderboard per Social Club, injects styled family tree, and adds online/inactivity/death status checking
 // @author      chk
 // @match       https://*.popmundo.com/World/Popmundo.aspx/SocialClub/AchievementPoints/*
@@ -167,6 +167,7 @@
             {id: "3579423", name: "Yuzu Bunny 月"},
             {id: "3247354", name: "Koko Koharu"},
             {id: "3602175", name: "Ruby Ross"},
+            {id: "3350835", name: "Yuu Izumi 左"},
             {id: "3602139", name: "Nova Xie"},
             {id: "3620400", name: "Chuu Xxnana"},
             {id: "3620479", name: "Yuqi Kawai 㡺"},
@@ -449,15 +450,15 @@
       font-family: "Bahnschrift", sans-serif;
       font-size: 11px;
       font-weight: 500;
-      background-color: #eae6f9;
+      background-color: rgb(241, 245, 249);
       color: #333;
       border: 1px solid #ccc;
       border-radius: 6px;
       cursor: pointer;
       transition: background-color 0.2s ease;
     `;
-        const onMouseOver = '#dcd6f0';
-        const onMouseOut = '#eae6f9';
+        const onMouseOver = 'rgb(45, 212, 191)';
+        const onMouseOut = 'rgb(241, 245, 249)';
 
         // Helper to create buttons
         const createButton = (id, text, clickHandler) => {

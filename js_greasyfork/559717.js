@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Xvideo破解VIP视频免费看
 // @namespace    xvideo_vip_video_free_see
-// @version      2.0.2
+// @version      2.0.3
 // @description  来不及解释了，快上车！！！
 // @author       w2f
 // @match        https://d34vyrelvmcjzt.cloudfront.net/*
+// @match        https://d1ibyof3mbdf0n.cloudfront.net/*
 // @include      /^http(s)?:\/\/p\w+\.cloudfront\.(com|net|cc)/
 // @icon         https://d34vyrelvmcjzt.cloudfront.net/logo.png
 // @license      MIT
@@ -107,7 +108,7 @@
             // 发送消息
             const res = SbCLi.sendMessage({
                 url: window.location.href,
-                content: document.querySelector("div.video-title")?.innerText,
+                content: document.querySelector("div.video-title")?.innerText || document.querySelector("div.collect-title h5")?.innerText,
                 video_url: location.origin +window.real_m3u8_url,
                 image_url: null,
             });

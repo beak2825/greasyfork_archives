@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TOS Filters
 // @namespace    tos-filters
-// @version      1.0.0
+// @version      1.1.0
 // @description  Torrent Filter Userscript
 // @match        https://theoldschool.cc/torrents/similar/*
 // @license      MIT
@@ -13,35 +13,81 @@
 "use strict";
 (() => {
   // src/parser.ts
+  var LANGUAGE_PATTERNS = [
+    ["MULTI", /\bMULTI\b/i],
+    ["TRUEFRENCH", /\bTRUEFRENCH\b/i],
+    ["VFF", /\bVFF\b/i],
+    ["VFQ", /\bVFQ\b/i],
+    ["VFI", /\bVFI\b/i],
+    ["VF2", /\bVF2\b/i],
+    ["VF", /\bVF\b(?![FQI2])/i],
+    ["FRENCH", /(?<!TRUE|SUB)\bFRENCH\b/i],
+    ["VOSTFR", /\b(VOSTFR|SUBFRENCH)\b/i]
+  ];
+  function parseSeasons(title) {
+    const rangeMatch = title.match(/S(\d{1,2})-S(\d{1,2})(?![0-9])/i);
+    if (rangeMatch) {
+      const start = parseInt(rangeMatch[1], 10);
+      const end = parseInt(rangeMatch[2], 10);
+      const seasons = [];
+      for (let s = start; s <= end; s++) seasons.push(s);
+      return seasons;
+    }
+    const singleMatch = title.match(/S(\d{1,2})(?![0-9])/i);
+    if (singleMatch) {
+      return [parseInt(singleMatch[1], 10)];
+    }
+    return [];
+  }
+  function parseEpisodes(title) {
+    const episodes = /* @__PURE__ */ new Set();
+    const rangeMatches = title.matchAll(/E(\d{1,4})-E(\d{1,4})/gi);
+    for (const match of rangeMatches) {
+      const start = parseInt(match[1], 10);
+      const end = parseInt(match[2], 10);
+      for (let e = start; e <= end; e++) {
+        episodes.add(e);
+      }
+    }
+    if (episodes.size > 0) return [...episodes];
+    const singleMatches = title.matchAll(/E(\d{1,4})(?![0-9-])/gi);
+    for (const match of singleMatches) {
+      episodes.add(parseInt(match[1], 10));
+    }
+    return [...episodes];
+  }
   function parseTitle(title) {
-    const seasonMatch = title.match(/S(\d{1,2})(?![0-9])/i);
-    const episodeMatch = title.match(/E(\d{1,2})(?![0-9])/i);
+    const seasons = parseSeasons(title);
+    const episodes = parseEpisodes(title);
     const codecMatch = title.match(/\b(H\.?264|X\.?264|H\.?265|X\.?265|HEVC|AV1)\b/i);
     const codec = codecMatch ? normalizeCodec(codecMatch[1]) : "Unknown";
     const teamMatch = title.match(/-([A-Za-z0-9]+)$/);
     const team = teamMatch ? teamMatch[1] : "NOTAG";
     const isIntegrale = /\bINTEGRALE\b/i.test(title) || /\bCOMPLETE\b/i.test(title);
-    const season = seasonMatch ? parseInt(seasonMatch[1], 10) : null;
-    const episode = episodeMatch ? parseInt(episodeMatch[1], 10) : null;
     let collection;
     if (isIntegrale) {
       collection = "int\xE9grale";
-    } else if (episode !== null) {
+    } else if (episodes.length > 0) {
       collection = "\xE9pisode";
-    } else {
+    } else if (seasons.length > 0) {
       collection = "saison";
+    } else {
+      collection = "int\xE9grale";
     }
-    return { season, episode, codec, team, collection };
+    const hasHDR = /\bHDR(10)?(\+|Plus)?\b/i.test(title);
+    const hasDV = /\b(DV|DoVi|Dolby[.\s]?Vision)\b/i.test(title);
+    const hasAtmos = /\bAtmos\b/i.test(title);
+    const hasSDR = /\bSDR\b/i.test(title) || !hasHDR && !hasDV;
+    const qualities = [];
+    if (hasHDR) qualities.push("HDR");
+    if (hasDV) qualities.push("DV");
+    if (hasSDR) qualities.push("SDR");
+    if (hasAtmos) qualities.push("Atmos");
+    const languages = LANGUAGE_PATTERNS.filter(([, pattern]) => pattern.test(title)).map(([lang]) => lang);
+    return { seasons, episodes, codec, team, collection, hasHDR, hasDV, hasSDR, hasAtmos, qualities, languages };
   }
   function normalizeCodec(codec) {
-    const upper = codec.toUpperCase().replace(/\./g, "");
-    if (upper === "H264") return "H264";
-    if (upper === "X264") return "X264";
-    if (upper === "H265") return "H265";
-    if (upper === "X265") return "X265";
-    if (upper === "HEVC") return "HEVC";
-    if (upper === "AV1") return "AV1";
-    return upper;
+    return codec.toUpperCase().replace(/\./g, "");
   }
   function parseSize(sizeText) {
     const match = sizeText.match(/([\d.]+)\s*(GiB|MiB|TiB|GB|MB|TB)/i);
@@ -66,9 +112,12 @@
     const normalized = typeText.trim().toLowerCase();
     if (normalized.includes("remux")) return "Remux";
     if (normalized.includes("encode")) return "Encode";
-    if (normalized.includes("webrip")) return "WEBRip";
     if (normalized.includes("web")) return "WEB";
+    if (normalized.includes("dvdr")) return "DVDR";
+    if (normalized.includes("dvd")) return "DVD";
+    if (normalized.includes("hdtv")) return "HDTV";
     if (normalized.includes("full disc") || normalized.includes("fulldisc")) return "Full Disc";
+    if (normalized.includes("3d")) return "3D";
     return "Unknown";
   }
   function parseTorrentRow(tr) {
@@ -106,8 +155,8 @@
       resolution,
       codec: parsed.codec,
       collection: parsed.collection,
-      season: parsed.season,
-      episode: parsed.episode,
+      seasons: parsed.seasons,
+      episodes: parsed.episodes,
       team: parsed.team,
       size: sizeText,
       sizeBytes,
@@ -117,7 +166,13 @@
       date,
       freeleech,
       highspeed,
-      downloadUrl
+      downloadUrl,
+      hasHDR: parsed.hasHDR,
+      hasDV: parsed.hasDV,
+      hasSDR: parsed.hasSDR,
+      hasAtmos: parsed.hasAtmos,
+      qualities: parsed.qualities,
+      languages: parsed.languages
     };
   }
   function getAllTorrents() {
@@ -133,6 +188,25 @@
   }
 
   // src/filters.ts
+  var RESOLUTION_ORDER = { "2160p": 1, "1080p": 2, "720p": 3, "480p": 4 };
+  var QUALITY_ORDER = { HDR: 1, DV: 2, SDR: 3, Atmos: 4 };
+  var LANGUAGE_ORDER = {
+    MULTI: 1,
+    TRUEFRENCH: 2,
+    VFF: 3,
+    VFQ: 4,
+    VFI: 5,
+    VF2: 6,
+    VF: 7,
+    FRENCH: 8,
+    VOSTFR: 9
+  };
+  function sortByOrder(items, order) {
+    return [...items].sort((a, b) => (order[a] ?? 99) - (order[b] ?? 99));
+  }
+  function excludeUnknown(items) {
+    return [...items].filter((c) => c !== "Unknown");
+  }
   function createDefaultFilterState() {
     return {
       types: /* @__PURE__ */ new Set(),
@@ -140,31 +214,64 @@
       codecs: /* @__PURE__ */ new Set(),
       teams: /* @__PURE__ */ new Set(),
       resolutions: /* @__PURE__ */ new Set(),
-      seasons: /* @__PURE__ */ new Set()
+      seasons: /* @__PURE__ */ new Set(),
+      qualities: /* @__PURE__ */ new Set(),
+      languages: /* @__PURE__ */ new Set(),
+      searchTerm: ""
     };
   }
-  function applyFilters(torrents, state) {
+  function matchesSearch(torrent, term) {
+    if (!term) return true;
+    const termLower = term.toLowerCase();
+    if (torrent.title.toLowerCase().includes(termLower)) return true;
+    const seasonMatch = term.match(/S(\d{1,2})/i);
+    const episodeMatch = term.match(/E(\d{1,4})/i);
+    if (seasonMatch || episodeMatch) {
+      const searchSeason = seasonMatch ? parseInt(seasonMatch[1], 10) : null;
+      const searchEpisode = episodeMatch ? parseInt(episodeMatch[1], 10) : null;
+      const seasonOk = searchSeason === null || torrent.seasons.includes(searchSeason);
+      const episodeOk = searchEpisode === null || torrent.episodes.includes(searchEpisode);
+      return seasonOk && episodeOk;
+    }
+    return false;
+  }
+  function hideRedundantSdrOption(qualities) {
+    if (!qualities.has("HDR") && !qualities.has("DV")) {
+      qualities.delete("SDR");
+    }
+  }
+  function applyFiltersExcluding(torrents, state, exclude) {
     return torrents.filter((torrent) => {
-      if (state.types.size > 0 && !state.types.has(torrent.type)) {
+      if (!matchesSearch(torrent, state.searchTerm)) return false;
+      if (exclude !== "types" && state.types.size > 0 && !state.types.has(torrent.type)) {
         return false;
       }
-      if (state.collections.size > 0 && !state.collections.has(torrent.collection)) {
+      if (exclude !== "collections" && state.collections.size > 0 && !state.collections.has(torrent.collection)) {
         return false;
       }
-      if (state.codecs.size > 0 && !state.codecs.has(torrent.codec)) {
+      if (exclude !== "codecs" && state.codecs.size > 0 && !state.codecs.has(torrent.codec)) {
         return false;
       }
-      if (state.teams.size > 0 && !state.teams.has(torrent.team)) {
+      if (exclude !== "teams" && state.teams.size > 0 && !state.teams.has(torrent.team)) {
         return false;
       }
-      if (state.resolutions.size > 0 && !state.resolutions.has(torrent.resolution)) {
+      if (exclude !== "resolutions" && state.resolutions.size > 0 && !state.resolutions.has(torrent.resolution)) {
         return false;
       }
-      if (state.seasons.size > 0 && (torrent.season === null || !state.seasons.has(torrent.season))) {
+      if (exclude !== "seasons" && state.seasons.size > 0 && !torrent.seasons.some((s) => state.seasons.has(s))) {
+        return false;
+      }
+      if (exclude !== "qualities" && state.qualities.size > 0 && !torrent.qualities.some((q) => state.qualities.has(q))) {
+        return false;
+      }
+      if (exclude !== "languages" && state.languages.size > 0 && !torrent.languages.some((l) => state.languages.has(l))) {
         return false;
       }
       return true;
     });
+  }
+  function applyFilters(torrents, state) {
+    return applyFiltersExcluding(torrents, state, null);
   }
   function extractFilterOptions(torrents) {
     const types = /* @__PURE__ */ new Set();
@@ -173,76 +280,88 @@
     const teams = /* @__PURE__ */ new Set();
     const resolutions = /* @__PURE__ */ new Set();
     const seasons = /* @__PURE__ */ new Set();
+    const qualities = /* @__PURE__ */ new Set();
+    const languages = /* @__PURE__ */ new Set();
     for (const torrent of torrents) {
       types.add(torrent.type);
       collections.add(torrent.collection);
       codecs.add(torrent.codec);
       teams.add(torrent.team);
       resolutions.add(torrent.resolution);
-      if (torrent.season !== null) {
-        seasons.add(torrent.season);
+      for (const s of torrent.seasons) {
+        seasons.add(s);
       }
+      for (const q of torrent.qualities) qualities.add(q);
+      for (const lang of torrent.languages) languages.add(lang);
     }
+    hideRedundantSdrOption(qualities);
     return {
       types: [...types].sort(),
       collections: [...collections].sort(),
-      codecs: [...codecs].sort(),
+      codecs: excludeUnknown(codecs).sort(),
       teams: [...teams].sort(),
-      resolutions: sortResolutions([...resolutions]),
-      seasons: [...seasons].sort((a, b) => a - b)
+      resolutions: sortByOrder([...resolutions], RESOLUTION_ORDER),
+      seasons: [...seasons].sort((a, b) => a - b),
+      qualities: sortByOrder([...qualities], QUALITY_ORDER),
+      languages: sortByOrder([...languages], LANGUAGE_ORDER)
     };
   }
   function computeAvailableOptions(torrents, state) {
-    const filterWithout = (exclude) => {
-      return torrents.filter((torrent) => {
-        if (exclude !== "types" && state.types.size > 0 && !state.types.has(torrent.type)) {
-          return false;
-        }
-        if (exclude !== "collections" && state.collections.size > 0 && !state.collections.has(torrent.collection)) {
-          return false;
-        }
-        if (exclude !== "codecs" && state.codecs.size > 0 && !state.codecs.has(torrent.codec)) {
-          return false;
-        }
-        if (exclude !== "teams" && state.teams.size > 0 && !state.teams.has(torrent.team)) {
-          return false;
-        }
-        if (exclude !== "resolutions" && state.resolutions.size > 0 && !state.resolutions.has(torrent.resolution)) {
-          return false;
-        }
-        if (exclude !== "seasons" && state.seasons.size > 0 && (torrent.season === null || !state.seasons.has(torrent.season))) {
-          return false;
-        }
-        return true;
-      });
+    const available = {
+      types: /* @__PURE__ */ new Set(),
+      collections: /* @__PURE__ */ new Set(),
+      codecs: /* @__PURE__ */ new Set(),
+      teams: /* @__PURE__ */ new Set(),
+      resolutions: /* @__PURE__ */ new Set(),
+      seasons: /* @__PURE__ */ new Set(),
+      qualities: /* @__PURE__ */ new Set(),
+      languages: /* @__PURE__ */ new Set()
     };
-    const typesFiltered = filterWithout("types");
-    const collectionsFiltered = filterWithout("collections");
-    const codecsFiltered = filterWithout("codecs");
-    const teamsFiltered = filterWithout("teams");
-    const resolutionsFiltered = filterWithout("resolutions");
-    const seasonsFiltered = filterWithout("seasons");
-    return {
-      types: new Set(typesFiltered.map((t) => t.type)),
-      collections: new Set(collectionsFiltered.map((t) => t.collection)),
-      codecs: new Set(codecsFiltered.map((t) => t.codec)),
-      teams: new Set(teamsFiltered.map((t) => t.team)),
-      resolutions: new Set(resolutionsFiltered.map((t) => t.resolution)),
-      seasons: new Set(seasonsFiltered.filter((t) => t.season !== null).map((t) => t.season))
-    };
-  }
-  function sortResolutions(resolutions) {
-    const order = {
-      "2160p": 1,
-      "1080p": 2,
-      "720p": 3,
-      "480p": 4
-    };
-    return resolutions.sort((a, b) => {
-      const orderA = order[a] ?? 99;
-      const orderB = order[b] ?? 99;
-      return orderA - orderB;
-    });
+    for (const torrent of torrents) {
+      if (!matchesSearch(torrent, state.searchTerm)) continue;
+      const matchType = state.types.size === 0 || state.types.has(torrent.type);
+      const matchCollection = state.collections.size === 0 || state.collections.has(torrent.collection);
+      const matchCodec = state.codecs.size === 0 || state.codecs.has(torrent.codec);
+      const matchTeam = state.teams.size === 0 || state.teams.has(torrent.team);
+      const matchResolution = state.resolutions.size === 0 || state.resolutions.has(torrent.resolution);
+      const matchSeason = state.seasons.size === 0 || torrent.seasons.some((s) => state.seasons.has(s));
+      const matchQuality = state.qualities.size === 0 || torrent.qualities.some((q) => state.qualities.has(q));
+      const matchLanguage = state.languages.size === 0 || torrent.languages.some((l) => state.languages.has(l));
+      if (matchCollection && matchCodec && matchTeam && matchResolution && matchSeason && matchQuality && matchLanguage) {
+        available.types.add(torrent.type);
+      }
+      if (matchType && matchCodec && matchTeam && matchResolution && matchSeason && matchQuality && matchLanguage) {
+        available.collections.add(torrent.collection);
+      }
+      if (matchType && matchCollection && matchTeam && matchResolution && matchSeason && matchQuality && matchLanguage) {
+        if (torrent.codec !== "Unknown") {
+          available.codecs.add(torrent.codec);
+        }
+      }
+      if (matchType && matchCollection && matchCodec && matchResolution && matchSeason && matchQuality && matchLanguage) {
+        available.teams.add(torrent.team);
+      }
+      if (matchType && matchCollection && matchCodec && matchTeam && matchSeason && matchQuality && matchLanguage) {
+        available.resolutions.add(torrent.resolution);
+      }
+      if (matchType && matchCollection && matchCodec && matchTeam && matchResolution && matchQuality && matchLanguage) {
+        for (const s of torrent.seasons) {
+          available.seasons.add(s);
+        }
+      }
+      if (matchType && matchCollection && matchCodec && matchTeam && matchResolution && matchSeason && matchLanguage) {
+        for (const q of torrent.qualities) {
+          available.qualities.add(q);
+        }
+      }
+      if (matchType && matchCollection && matchCodec && matchTeam && matchResolution && matchSeason && matchQuality) {
+        for (const lang of torrent.languages) {
+          available.languages.add(lang);
+        }
+      }
+    }
+    hideRedundantSdrOption(available.qualities);
+    return available;
   }
 
   // src/ui/common.ts
@@ -346,19 +465,40 @@
   .tos-filter-overflow-toggle:hover {
     opacity: 0.9;
   }
+  .tos-results-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-top: 8px;
+  }
+  .tos-search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .tos-search-icon {
+    position: absolute;
+    left: 8px;
+    opacity: 0.4;
+    font-size: 12px;
+    pointer-events: none;
+  }
+  .tos-search-input {
+    padding: 4px 8px 4px 28px;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+    background: var(--data-table-th-bg);
+    color: var(--body-fg);
+    min-width: 250px;
+  }
+  .tos-search-input::placeholder {
+    color: var(--body-fg);
+    opacity: 0.4;
+  }
 `;
-  function createFilterSectionBase(config) {
-    const { title, options, activeSet, onChange, collapsible = false, threshold = 10 } = config;
-    const section = createElement("div", { class: "tos-filter-section" });
-    const header = createElement("div", { class: "tos-filter-section-header" });
-    const titleEl = createElement("span", { class: "tos-filter-section-title" }, [title]);
-    header.appendChild(titleEl);
-    section.appendChild(header);
-    const shouldCollapse = collapsible && options.length > threshold;
-    const optionsContainer = createElement("div", {
-      class: `tos-filter-options ${shouldCollapse ? "tos-collapsed" : ""}`
-    });
-    const optionElements = /* @__PURE__ */ new Map();
+  function createFilterOptions(options, activeSet, onChange, container) {
+    const elements = /* @__PURE__ */ new Map();
     for (const opt of options) {
       const label = createElement("label", {
         class: `tos-filter-option ${activeSet.has(opt) ? "active" : ""}`
@@ -372,9 +512,37 @@
       });
       label.appendChild(checkbox);
       label.appendChild(span);
-      optionsContainer.appendChild(label);
-      optionElements.set(opt, label);
+      container.appendChild(label);
+      elements.set(opt, label);
     }
+    return elements;
+  }
+  function createUpdateAvailable(elements) {
+    return (available) => {
+      for (const [opt, label] of elements) {
+        const isAvailable = available.has(opt);
+        const isActive = label.classList.contains("active");
+        label.classList.toggle("disabled", !isAvailable && !isActive);
+      }
+    };
+  }
+  function createSectionWithHeader(title) {
+    const section = createElement("div", { class: "tos-filter-section" });
+    const header = createElement("div", { class: "tos-filter-section-header" });
+    const titleEl = createElement("span", { class: "tos-filter-section-title" }, [title]);
+    header.appendChild(titleEl);
+    section.appendChild(header);
+    const optionsContainer = createElement("div", { class: "tos-filter-options" });
+    return { section, optionsContainer };
+  }
+  function createFilterSectionBase(config) {
+    const { title, options, activeSet, onChange, collapsible = false, threshold = 10 } = config;
+    const { section, optionsContainer } = createSectionWithHeader(title);
+    const shouldCollapse = collapsible && options.length > threshold;
+    if (shouldCollapse) {
+      optionsContainer.classList.add("tos-collapsed");
+    }
+    const optionElements = createFilterOptions(options, activeSet, onChange, optionsContainer);
     section.appendChild(optionsContainer);
     if (shouldCollapse) {
       let expanded = false;
@@ -388,20 +556,24 @@
       });
       section.appendChild(toggleBtn);
     }
-    const updateAvailable = (available) => {
-      for (const [opt, label] of optionElements) {
-        const isAvailable = available.has(opt);
-        const isActive = label.classList.contains("active");
-        label.classList.toggle("disabled", !isAvailable && !isActive);
-      }
-    };
-    return { element: section, updateAvailable };
+    return { element: section, updateAvailable: createUpdateAvailable(optionElements) };
   }
   function createFilterSection(title, options, activeSet, onChange) {
     return createFilterSectionBase({ title, options, activeSet, onChange });
   }
   function createCollapsibleFilterSection(title, options, activeSet, onChange, threshold = 10) {
     return createFilterSectionBase({ title, options, activeSet, onChange, collapsible: true, threshold });
+  }
+  function createCombinedCodecQualitySection(codecs, qualities, codecSet, qualitySet, onCodecChange, onQualityChange) {
+    const { section, optionsContainer } = createSectionWithHeader("Codec");
+    const codecElements = createFilterOptions(codecs, codecSet, onCodecChange, optionsContainer);
+    const qualityElements = createFilterOptions(qualities, qualitySet, onQualityChange, optionsContainer);
+    section.appendChild(optionsContainer);
+    return {
+      element: section,
+      updateCodecsAvailable: createUpdateAvailable(codecElements),
+      updateQualitiesAvailable: createUpdateAvailable(qualityElements)
+    };
   }
   function createResultsCount(count, total) {
     return createElement("div", { class: "tos-results-count" }, [
@@ -490,7 +662,15 @@
   var currentSortKey = "created_at";
   var currentSortOrder = "desc";
   var containerEl = null;
+  var lastSortKey = null;
+  var lastSortOrder = null;
+  var lastFilteredIds = null;
+  var cachedSorted = [];
   function sortTorrents(torrents, key, order) {
+    const filteredIds = torrents.map((t) => t.id).join(",");
+    if (key === lastSortKey && order === lastSortOrder && filteredIds === lastFilteredIds) {
+      return cachedSorted;
+    }
     const sorted = [...torrents];
     const multiplier = order === "asc" ? 1 : -1;
     sorted.sort((a, b) => {
@@ -519,14 +699,15 @@
       }
       return comparison * multiplier;
     });
+    lastSortKey = key;
+    lastSortOrder = order;
+    lastFilteredIds = filteredIds;
+    cachedSorted = sorted;
     return sorted;
   }
   function renderRows(torrents) {
     if (!containerEl) return;
-    containerEl.innerHTML = "";
-    for (const torrent of torrents) {
-      containerEl.appendChild(torrent.element);
-    }
+    containerEl.replaceChildren(...torrents.map((t) => t.element));
   }
   function updateSortIndicators(key, order) {
     const headers = document.querySelectorAll("th[data-tos-sort]");
@@ -559,8 +740,9 @@
       });
       let typeSection;
       let collectionSection;
-      let codecSection;
+      let codecQualitySection;
       let resolutionSection;
+      let languageSection;
       let teamSection;
       const seasonOptionElements = /* @__PURE__ */ new Map();
       const controller = createFilterController(torrents, (filtered) => {
@@ -572,8 +754,10 @@
         const available = computeAvailableOptions(torrents, controller.state);
         typeSection?.updateAvailable(available.types);
         collectionSection?.updateAvailable(available.collections);
-        codecSection?.updateAvailable(available.codecs);
+        codecQualitySection?.updateCodecsAvailable(available.codecs);
+        codecQualitySection?.updateQualitiesAvailable(available.qualities);
         resolutionSection?.updateAvailable(available.resolutions);
+        languageSection?.updateAvailable(available.languages);
         teamSection?.updateAvailable(available.teams);
         for (const [season, label] of seasonOptionElements) {
           const isAvailable = available.seasons.has(season);
@@ -581,6 +765,10 @@
           label.classList.toggle("disabled", !isAvailable && !isActive);
         }
       });
+      const createToggleHandler = (set) => (v, checked) => {
+        checked ? set.add(v) : set.delete(v);
+        controller.update();
+      };
       const sortHeaders = thead.querySelectorAll("th[wire\\:click]");
       sortHeaders.forEach((th) => {
         const wireClick = th.getAttribute("wire:click");
@@ -608,10 +796,7 @@
       });
       filterWrapperEl = createElement("div", { class: "tos-filter-wrapper tos-filter-panel" });
       const filterContainer = createElement("div", { class: "tos-filter-container" });
-      typeSection = createFilterSection("Type", options.types, controller.state.types, (v, checked) => {
-        checked ? controller.state.types.add(v) : controller.state.types.delete(v);
-        controller.update();
-      });
+      typeSection = createFilterSection("Type", options.types, controller.state.types, createToggleHandler(controller.state.types));
       filterContainer.appendChild(typeSection.element);
       if (options.seasons.length > 0) {
         const seasonOptionsContainer = createElement("div", { class: "tos-filter-options" });
@@ -655,34 +840,54 @@
         collectionSection.element.appendChild(seasonOptionsContainer);
         filterContainer.appendChild(collectionSection.element);
       }
-      codecSection = createFilterSection("Codec", options.codecs, controller.state.codecs, (v, checked) => {
-        checked ? controller.state.codecs.add(v) : controller.state.codecs.delete(v);
-        controller.update();
-      });
-      filterContainer.appendChild(codecSection.element);
+      codecQualitySection = createCombinedCodecQualitySection(
+        options.codecs,
+        options.qualities,
+        controller.state.codecs,
+        controller.state.qualities,
+        createToggleHandler(controller.state.codecs),
+        createToggleHandler(controller.state.qualities)
+      );
+      filterContainer.appendChild(codecQualitySection.element);
       resolutionSection = createFilterSection(
         "R\xE9solution",
         options.resolutions,
         controller.state.resolutions,
-        (v, checked) => {
-          checked ? controller.state.resolutions.add(v) : controller.state.resolutions.delete(v);
-          controller.update();
-        }
+        createToggleHandler(controller.state.resolutions)
       );
       filterContainer.appendChild(resolutionSection.element);
+      languageSection = createFilterSection("Langue", options.languages, controller.state.languages, createToggleHandler(controller.state.languages));
+      filterContainer.appendChild(languageSection.element);
       teamSection = createCollapsibleFilterSection(
         "Team",
         options.teams,
         controller.state.teams,
-        (v, checked) => {
-          checked ? controller.state.teams.add(v) : controller.state.teams.delete(v);
-          controller.update();
-        }
+        createToggleHandler(controller.state.teams)
       );
       filterContainer.appendChild(teamSection.element);
       filterWrapperEl.appendChild(filterContainer);
+      const resultsRow = createElement("div", { class: "tos-results-row" });
+      const searchWrapper = createElement("div", { class: "tos-search-wrapper" });
+      const searchIcon = createElement("i", { class: "tos-search-icon fas fa-search" });
+      const searchInput = createElement("input", {
+        type: "text",
+        class: "tos-search-input",
+        placeholder: "Rechercher"
+      });
+      let searchTimeout = null;
+      searchInput.addEventListener("input", () => {
+        if (searchTimeout) clearTimeout(searchTimeout);
+        searchTimeout = window.setTimeout(() => {
+          controller.state.searchTerm = searchInput.value;
+          controller.update();
+        }, 300);
+      });
+      searchWrapper.appendChild(searchIcon);
+      searchWrapper.appendChild(searchInput);
+      resultsRow.appendChild(searchWrapper);
       resultsEl = createResultsCount(torrents.length, torrents.length);
-      filterWrapperEl.appendChild(resultsEl);
+      resultsRow.appendChild(resultsEl);
+      filterWrapperEl.appendChild(resultsRow);
       table.parentElement?.insertBefore(filterWrapperEl, table);
       updateSortIndicators(currentSortKey, currentSortOrder);
       controller.update();
@@ -690,9 +895,15 @@
   };
 
   // src/main.ts
+  var earlyStyle = document.createElement("style");
+  earlyStyle.textContent = `
+  section.panelV2 { display: none !important; }
+`;
+  document.head.appendChild(earlyStyle);
   function init() {
     const torrents = getAllTorrents();
     if (torrents.length === 0) {
+      earlyStyle.remove();
       console.log("[TOS Filters] No torrents found on this page");
       return;
     }

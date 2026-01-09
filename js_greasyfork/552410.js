@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Интерфейс
 // @namespace    http://tampermonkey.net/
-// @version      3.1
+// @version      3.2
 // @author       Невезение
 // @match        *://patron.kinwoods.com/game/*
 // @grant        GM_getValue
@@ -20,22 +20,20 @@
         /* ===== ЦВЕТА ===== */
 
         :root {
-            --color-shadow: #00000040;
-            --color-panel-beige: #c1bca9;
-            --color-action-bg: #dadbcc;
-            --color-white: #fff;
-            --color-chat-time: #000;
+            --color-shadow: #00000026;
         }
 
         /* ===== СВЕТЛАЯ ТЕМА ===== */
 
         :root {
-            --color-panel-beige: #c1bca9;
+            --color-bg: #e9eadb;
             --color-action-bg: #dadbcc;
-            --color-white: #fff;
-            --color-chat-time: #000;
             --color-black: #000000;
             --color-border-light: #c1bca9;
+        }
+
+        body {
+            background-color: var(--color-bg) !important;;
         }
 
         .game-left, .game-right {
@@ -43,24 +41,19 @@
         }
 
         .infoline {
-            background-color: var(--color-panel-beige) !important;
-            outline: 3px solid var(--color-panel-beige) !important;
+            background-color: var(--bg-light) !important;
+            outline: 3px solid var(--bg-light) !important;
         }
 
         button.action {
-            border: 5px solid var(--color-panel-beige);
+            border: 5px solid var(--color-border-light);
         }
 
         button.action {
             background-color: var(--color-action-bg);
         }
 
-        .cell-move-name {
-            background: var(--color-white) !important;
-        }
-
         span.sendTime {
-            color: var(--color-chat-time);
             filter: contrast(1) brightness(0.5);
             opacity: .3;
         }
@@ -72,7 +65,7 @@
 
         .links a {
             color: var(--color-black);
-            background: var(--color-action-bg);
+            background: var(--color-bg);
             border-radius: 5px;
             border: 1px solid var(--color-border-light);
         }
@@ -81,57 +74,56 @@
 
         :root {
             /* Фоновые цвета */
-            --color-bg-1: #0a0a08;          /* basic-attack */
-            --color-bg-2: #161414;          /* границы, divide-line */
-            --color-bg-3: #1c1c16;          /* инфолиния, кнопки */
-            --color-bg-4: #22231b;          /* body, ячейки */
-            --color-bg-5: #2a2b20;          /* бордеры */
-            --color-bg-6: #303226;          /* ховер */
-            --color-bg-7: #36372a;          /* фон чата */
+            --color-bg-1: #12120f;          /* basic-attack - чёрный оливковый */
+            --color-bg-2: #161414;          /* границы, divide-line - тёмный кофейный */
+            --color-bg-3: #1c1c16;          /* инфолиния, кнопки - тёмный оливковый */
+            --color-bg-4: #22231b;          /* body, ячейки - светло-оливковый */
+            --color-bg-5: #2a2b20;          /* бордеры 1 - серо-оливковый */
+            --color-bg-6: #161611;          /* бордеры 2 - чёрный зелёный */
+            --color-bg-7: #303226;          /* ховер - серо-зелёный */
+            --color-bg-8: #36372a;          /* фон чата - светло-серо-зелёный */
 
             /* Акцентные цвета */
-            --color-accent-1: #401010;      /* бой, ошибки */
-            --color-accent-2: #632209;      /* активные флаги */
-            --color-accent-3: #3e4a1a;      /* диалоги, действия */
-            --color-accent-4: #698f19;      /* активные кнопки */
-            --color-accent-5: #0d5652;      /* инфо сообщения */
-            --color-accent-6: #cd8532;      /* мастер рамка */
+            --color-accent-1: #401010;      /* бой, ошибки - тёмный бордовый */
+            --color-accent-2: #632209;      /* активные флаги - коричнево-красный */
+            --color-accent-3: #3e4a1a;      /* диалоги, действия - тёмный оливково-зелёный */
+            --color-accent-4: #698f19;      /* активные кнопки чата - яркий зелёный */
+            --color-accent-5: #0d5652;      /* информационные сообщения - тёмный бирюзовый */
+            --color-accent-6: #cd8532;      /* рамка мастерства способностей - золотисто-оранжевый */
 
             /* Цвета текста */
-            --color-text-1: #b5af94;        /* основной текст */
-            --color-text-2: #87826c;        /* второстепенный текст */
+            --color-text-1: #b5af94;        /* основной текст - светлый бежево-серый */
+            --color-text-2: #87826c;        /* второстепенный текст - серо-бежевый */
 
             /* Градиенты */
-            --gradient-1: linear-gradient(135deg, #632209, #8b3323);
-            --gradient-2: linear-gradient(135deg, #8c7a2d, #cd8532);
-            --gradient-3: linear-gradient(90deg, #7aa99a, #196f32);
-            --gradient-4: linear-gradient(90deg, #b08930, #874725);
-            --gradient-5: linear-gradient(90deg, #c8f738, #5e8f04);
-            --gradient-6: radial-gradient(#231d1a, #352515, #000);
-            --gradient-7: radial-gradient(#1a1f23, #202f3b, #000);
+            --gradient-1: linear-gradient(135deg, #632209, #8b3323);  /* акцентный красно-коричневый */
+            --gradient-2: linear-gradient(135deg, #8c7a2d, #cd8532);  /* золотистый */
+            --gradient-3: linear-gradient(90deg, #7aa99a, #196f32);   /* природный зелено-бирюзовый */
+            --gradient-4: linear-gradient(90deg, #b08930, #874725);   /* медно-коричневый */
+            --gradient-5: linear-gradient(90deg, #c8f738, #5e8f04);   /* ярко-зелёный */
+            --gradient-6: radial-gradient(#231d1a, #352515, #000);    /* тёмный радиальный */
+            --gradient-7: radial-gradient(#1a1f23, #202f3b, #000);    /* синеватый радиальный */
 
             /* Цвета из градиентов */
-            --color-gradient-1: #8b3323;
-            --color-gradient-2: #8c7a2d;
-            --color-gradient-3: #7aa99a;
-            --color-gradient-4: #196f32;
-            --color-gradient-5: #b08930;
-            --color-gradient-6: #874725;
-            --color-gradient-7: #18af2b;
-            --color-gradient-8: #306f19;
-            --color-gradient-9: #231d1a;
-            --color-gradient-10: #352515;
-            --color-gradient-11: #1a1f23;
-            --color-gradient-12: #202f3b;
+            --color-gradient-1: #8b3323;    /* тёмно-красный */
+            --color-gradient-2: #8c7a2d;    /* оливковый */
+            --color-gradient-3: #7aa99a;    /* бирюзовый */
+            --color-gradient-4: #196f32;    /* тёмно-зелёный */
+            --color-gradient-5: #b08930;    /* золотой */
+            --color-gradient-6: #874725;    /* коричневый */
+            --color-gradient-7: #18af2b;    /* ярко-зелёный */
+            --color-gradient-8: #306f19;    /* травяной зелёный */
+            --color-gradient-9: #231d1a;    /* тёмно-коричневый */
+            --color-gradient-10: #352515;   /* коричневый средний */
+            --color-gradient-11: #1a1f23;   /* тёмный синеватый */
+            --color-gradient-12: #202f3b;   /* синевато-серый */
 
             /* Фильтр для иконок */
-            --filter-icon: brightness(0) saturate(100%) invert(88%) sepia(11%) saturate(384%) hue-rotate(5deg) brightness(91%) contrast(93%);
+            --filter-icon: brightness(0) saturate(100%) invert(88%) sepia(11%) saturate(384%) hue-rotate(5deg) brightness(91%) contrast(93%); /* цвет иконок */
 
-            /* Старые переменные для совместимости */
+            /* Замена базовых */
             --text-primary: var(--color-text-1) !important;
-            --chat-line-background-color: var(--color-bg-7) !important;
             --smell-light: var(--color-bg-3) !important;
-            --color-chat-time: var(--color-text-1);
         }
 
         body {
@@ -160,10 +152,7 @@
         .links a {
             color: var(--color-text-2);
             background: var(--color-bg-4);
-            padding: 3px;
-            border-radius: 10px;
             border: 1px solid var(--color-bg-5);
-            text-decoration: none;
         }
 
             /* Строка действий: Переходов, Боя; Активность фракции */
@@ -234,7 +223,7 @@
         }
 
         .mess-container:nth-of-type(2n):not(.mess-container.error):not(.mess-container.info) {
-            background-color: var(--color-bg-7) !important;
+            background-color: var(--color-bg-8) !important;
         }
 
         .mess-container:not(:first-of-type) {
@@ -288,7 +277,7 @@
         }
 
         #gamechat-input button:hover, button.eatButton:hover {
-            background-color: var(--color-bg-6) !important;
+            background-color: var(--color-bg-7) !important;
         }
 
         #gamechat-input button.mode-active {
@@ -306,7 +295,7 @@
         }
 
         span.sendTime {
-            color: var(--color-chat-time);
+            color: var(--color-text-1);
             filter: contrast(1) brightness(0.5);
             opacity: .3;
         }
@@ -336,7 +325,7 @@
         }
 
         button.slot-item.relative.selected {
-            background-color: var(--color-bg-6) !important;
+            background-color: var(--color-bg-7) !important;
         }
 
         .slots.flex-row {
@@ -355,7 +344,7 @@
         }
 
         button.craft-flag.active {
-            background-color: var(--color-bg-6) !important;
+            background-color: var(--color-bg-7) !important;
         }
 
         button.craft-flag img.size100 {
@@ -398,7 +387,7 @@
         }
 
         .slot.master {
-            border: 1px solid #161611 !important;
+            border: 1px solid var(--color-bg-6) !important;
             background-color: var(--color-bg-4) !important;
         }
 
@@ -501,18 +490,21 @@
             z-index: 9999999 !important;
         }
 
-        //* ===== ГЛАВНЫЕ КОНТЕЙНЕРЫ ===== */
+        /* ===== ГЛАВНЫЕ КОНТЕЙНЕРЫ ===== */
 
-        .game-left, .game-right {
+        .game-left,
+        .game-right {
             z-index: unset !important;
             min-width: 100% !important;
+            height: fit-content !important;
         }
 
         .game-container {
             transform: scale(0.9) !important;
             transform-origin: top center;
-            margin-top: auto !important;
             place-items: center;
+            margin-top: 0 !important;
+            margin-bottom: -15% !important;
         }
 
         /* ===== ИГРОВОЕ ПОЛЕ ===== */
@@ -543,6 +535,7 @@
 
         .links a {
             padding: 0 3px;
+            border-radius: 10px;
             text-decoration: none;
         }
 
@@ -793,6 +786,10 @@
             border-radius: 5px;
         }
 
+        img.report-img {
+            width: 11px;
+        }
+
         /* ===== ПАНЕЛЬ АКТИВНОСТИ ===== */
 
         button.finish:hover {
@@ -848,6 +845,9 @@
             word-break: break-word;
         }
 
+        .test {
+            height: 0 !important;
+        }
     `)
 
     setTimeout(() => {

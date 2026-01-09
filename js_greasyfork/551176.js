@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Chibi Client
-// @version      1.7
+// @version      1.7.1
 // @description  Chibi Client <3
 // @author       NND
 // @match        https://starblast.io/
@@ -48,7 +48,7 @@ window.toggleStrafe = function() {
 // === Chibi Client Access System (Persistent Key + Device, Multi-Tab) ===
 (async () => {
   const KEYS_URL = "https://raw.githubusercontent.com/NNDsb/Test/main/keys.json";
-  const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1424362994233774100/-rr1ZOgstNLnrRpxAOtmz2Bo5LnmasSRXWtb9VujelvtM0Yhu_xt4-OZJMDepUrJYiWH";
+  const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1458484408196665394/cslR1H_EzGYQC5UHk2-Xeztdp5OVT96RdRCzuZ87icEzSqdlk4zqQZ7wrAwtJybXb11p";
 
   // --- Local Storage Manager ---
   const LocalManager = (() => {

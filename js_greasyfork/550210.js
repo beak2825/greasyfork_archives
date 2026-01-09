@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bob-monkey
 // @namespace    yuns
-// @version      0.3.0
+// @version      0.3.1
 // @description  个人图方便的用户脚本
 // @license      MIT
 // @icon         https://vitejs.dev/logo.svg
@@ -25,7 +25,7 @@ System.addImportMap({ imports: {"react":"user:react","react-dom":"user:react-dom
 System.set("user:react", (()=>{const _=React;('default' in _)||(_.default=_);return _})());
 System.set("user:react-dom", (()=>{const _=ReactDOM;('default' in _)||(_.default=_);return _})());
 
-System.register("./__entry.js", ['./__monkey.entry-C861eHez.js'], (function (exports, module) {
+System.register("./__entry.js", ['./__monkey.entry-Do5kDvO7.js'], (function (exports, module) {
 	'use strict';
 	return {
 		setters: [null],
@@ -37,7 +37,7 @@ System.register("./__entry.js", ['./__monkey.entry-C861eHez.js'], (function (exp
 	};
 }));
 
-System.register("./__monkey.entry-C861eHez.js", [], (function (exports, module) {
+System.register("./__monkey.entry-Do5kDvO7.js", [], (function (exports, module) {
   'use strict';
   return {
     execute: (function () {
@@ -864,7 +864,7 @@ System.register("./__monkey.entry-C861eHez.js", [], (function (exports, module) 
         return internalModule;
       }
       async function getUserscripts() {
-        const modules = /* @__PURE__ */ Object.assign({ "../scripts/deepwiki/ask-helpers/index.tsx": () => __vitePreload(() => module.import('./index-x4q3Smvi-6uMtfr8F.js'), void 0 ), "../scripts/deepwiki/links/index.tsx": () => __vitePreload(() => module.import('./index-MGGvtlUx-B4Ye-nFh.js'), void 0 ), "../scripts/github/deepwiki-shortcut/index.tsx": () => __vitePreload(() => module.import('./index-DphQOT6P-CrHToCgi.js'), void 0 ) });
+        const modules = /* @__PURE__ */ Object.assign({ "../scripts/deepwiki/ask-helpers/index.tsx": () => __vitePreload(() => module.import('./index-BMAj-RSn-DI1Tn32F.js'), void 0 ), "../scripts/deepwiki/links/index.tsx": () => __vitePreload(() => module.import('./index-CkULu9En-BLPqOFyQ.js'), void 0 ), "../scripts/github/deepwiki-shortcut/index.tsx": () => __vitePreload(() => module.import('./index-DBZ7OgX5-cE94ITPY.js'), void 0 ) });
         const userscripts = await Promise.all(Object.values(modules).map((item) => item()));
         return userscripts.map((UserscriptItem, index) => {
           const userscript = interopDefault(UserscriptItem);
@@ -900,7 +900,7 @@ System.register("./__monkey.entry-C861eHez.js", [], (function (exports, module) 
   };
 }));
 
-System.register("./index-x4q3Smvi-6uMtfr8F.js", ['./__monkey.entry-C861eHez.js', './shadow-root-MMfNJZ9x-CgzQPqnG.js', 'react', 'react-dom'], (function (exports, module) {
+System.register("./index-BMAj-RSn-DI1Tn32F.js", ['./__monkey.entry-Do5kDvO7.js', './shadow-root-BMUw5zlh-BKoNBgZT.js', 'react', 'react-dom'], (function (exports, module) {
   'use strict';
   var __vitePreload, createShadowRootUi, reactRenderInShadowRoot;
   return {
@@ -920,7 +920,7 @@ System.register("./index-x4q3Smvi-6uMtfr8F.js", ['./__monkey.entry-C861eHez.js',
             onMount: (container, shadowRoot, shadowHost) => {
               return reactRenderInShadowRoot(
                 { uiContainer: container, shadow: shadowRoot, shadowHost },
-                () => __vitePreload(() => module.import('./app-Du6W_Wf1-CvQ9nKNt.js'), void 0 )
+                () => __vitePreload(() => module.import('./app-hgT7VJyS-C3LdUcY7.js'), void 0 )
               );
             }
           }
@@ -934,7 +934,7 @@ System.register("./index-x4q3Smvi-6uMtfr8F.js", ['./__monkey.entry-C861eHez.js',
   };
 }));
 
-System.register("./index-MGGvtlUx-B4Ye-nFh.js", ['./__monkey.entry-C861eHez.js', './shadow-root-MMfNJZ9x-CgzQPqnG.js', 'react', 'react-dom'], (function (exports, module) {
+System.register("./index-CkULu9En-BLPqOFyQ.js", ['./__monkey.entry-Do5kDvO7.js', './shadow-root-BMUw5zlh-BKoNBgZT.js', 'react', 'react-dom'], (function (exports, module) {
   'use strict';
   var __vitePreload, createShadowRootUi, reactRenderInShadowRoot;
   return {
@@ -954,7 +954,7 @@ System.register("./index-MGGvtlUx-B4Ye-nFh.js", ['./__monkey.entry-C861eHez.js',
             onMount: (container, shadowRoot, shadowHost) => {
               return reactRenderInShadowRoot(
                 { uiContainer: container, shadow: shadowRoot, shadowHost },
-                () => __vitePreload(() => module.import('./app-CPuoIhgc-tw8J-GLF.js'), void 0 )
+                () => __vitePreload(() => module.import('./app-BOdAUOYY-CCNVGikS.js'), void 0 )
               );
             }
           }
@@ -968,7 +968,7 @@ System.register("./index-MGGvtlUx-B4Ye-nFh.js", ['./__monkey.entry-C861eHez.js',
   };
 }));
 
-System.register("./index-DphQOT6P-CrHToCgi.js", ['./__monkey.entry-C861eHez.js', './shadow-root-MMfNJZ9x-CgzQPqnG.js', 'react', 'react-dom'], (function (exports, module) {
+System.register("./index-DBZ7OgX5-cE94ITPY.js", ['./__monkey.entry-Do5kDvO7.js', './shadow-root-BMUw5zlh-BKoNBgZT.js', 'react', 'react-dom'], (function (exports, module) {
   'use strict';
   var __vitePreload, createShadowRootUi, reactRenderInShadowRoot;
   return {
@@ -988,7 +988,7 @@ System.register("./index-DphQOT6P-CrHToCgi.js", ['./__monkey.entry-C861eHez.js',
             onMount: (container, shadowRoot, shadowHost) => {
               return reactRenderInShadowRoot(
                 { uiContainer: container, shadow: shadowRoot, shadowHost },
-                () => __vitePreload(() => module.import('./app-BP0IUOvJ-Diu99_XF.js'), void 0 )
+                () => __vitePreload(() => module.import('./app-DVtg5u2v-BIT7yoTu.js'), void 0 )
               );
             }
           }
@@ -1002,7 +1002,7 @@ System.register("./index-DphQOT6P-CrHToCgi.js", ['./__monkey.entry-C861eHez.js',
   };
 }));
 
-System.register("./shadow-root-MMfNJZ9x-CgzQPqnG.js", ['react', 'react-dom', './__monkey.entry-C861eHez.js'], (function (exports, module) {
+System.register("./shadow-root-BMUw5zlh-BKoNBgZT.js", ['react', 'react-dom', './__monkey.entry-Do5kDvO7.js'], (function (exports, module) {
   'use strict';
   var React__default, React__default__default, useEffect, require$$0, createPortal, logger;
   return {
@@ -1703,7 +1703,7 @@ System.register("./shadow-root-MMfNJZ9x-CgzQPqnG.js", ['react', 'react-dom', './
   };
 }));
 
-System.register("./app-Du6W_Wf1-CvQ9nKNt.js", ['./shadow-root-MMfNJZ9x-CgzQPqnG.js', './ui-CzhZDFv6-B3kyCEf2.js', './client-KAL8RE9f-JeXNrSwN.js', 'react', 'react-dom', './__monkey.entry-C861eHez.js'], (function (exports, module) {
+System.register("./app-hgT7VJyS-C3LdUcY7.js", ['./shadow-root-BMUw5zlh-BKoNBgZT.js', './ui-DoCdov6p-DKNDveHL.js', './client-KAL8RE9f-JeXNrSwN.js', 'react', 'react-dom', './__monkey.entry-Do5kDvO7.js'], (function (exports, module) {
   'use strict';
   var createShadowRootUi, reactRenderInShadowRoot, jsxRuntimeExports, useCreateUis, isRepoPage, _GM_getValue, _GM_setValue, useState, useRef, useEffect;
   return {
@@ -2053,7 +2053,7 @@ System.register("./app-Du6W_Wf1-CvQ9nKNt.js", ['./shadow-root-MMfNJZ9x-CgzQPqnG.
   };
 }));
 
-System.register("./app-CPuoIhgc-tw8J-GLF.js", ['./shadow-root-MMfNJZ9x-CgzQPqnG.js', './ui-CzhZDFv6-B3kyCEf2.js', 'react', './client-KAL8RE9f-JeXNrSwN.js', 'react-dom', './__monkey.entry-C861eHez.js'], (function (exports, module) {
+System.register("./app-BOdAUOYY-CCNVGikS.js", ['./shadow-root-BMUw5zlh-BKoNBgZT.js', './ui-DoCdov6p-DKNDveHL.js', 'react', './client-KAL8RE9f-JeXNrSwN.js', 'react-dom', './__monkey.entry-Do5kDvO7.js'], (function (exports, module) {
   'use strict';
   var jsxRuntimeExports, createShadowRootUi, reactRenderInShadowRoot, useShadowModal, useCreateUis, useState, useRef, useMemo, useEffect, isRepoPage, _GM_getValue, _GM_setValue;
   return {
@@ -2292,9 +2292,9 @@ System.register("./client-KAL8RE9f-JeXNrSwN.js", [], (function (exports, module)
   };
 }));
 
-System.register("./app-BP0IUOvJ-Diu99_XF.js", ['./shadow-root-MMfNJZ9x-CgzQPqnG.js', './ui-CzhZDFv6-B3kyCEf2.js', 'react', 'react-dom', './__monkey.entry-C861eHez.js'], (function (exports, module) {
+System.register("./app-DVtg5u2v-BIT7yoTu.js", ['./shadow-root-BMUw5zlh-BKoNBgZT.js', './ui-DoCdov6p-DKNDveHL.js', 'react', 'react-dom', './__monkey.entry-Do5kDvO7.js'], (function (exports, module) {
   'use strict';
-  var createShadowRootUi, reactRenderInShadowRoot, jsxRuntimeExports, useCreateUis;
+  var createShadowRootUi, reactRenderInShadowRoot, jsxRuntimeExports, useCreateUis, useEffect;
   return {
     setters: [module => {
       createShadowRootUi = module.c;
@@ -2302,13 +2302,22 @@ System.register("./app-BP0IUOvJ-Diu99_XF.js", ['./shadow-root-MMfNJZ9x-CgzQPqnG.
       jsxRuntimeExports = module.j;
     }, module => {
       useCreateUis = module.u;
-    }, null, null, null],
+    }, module => {
+      useEffect = module.useEffect;
+    }, null, null],
     execute: (function () {
 
       exports("default", App);
 
+      const selector = '[data-testid="top-nav-center"] > nav > ol > li:nth-of-type(2)';
       function App() {
-        useCreateUis("nav context-region-crumb:nth-of-type(2)", async (element) => {
+        useEffect(() => {
+          const target = document.querySelector(selector);
+          if (!target) {
+            console.warn("DeepWiki shortcut: target element not found");
+          }
+        }, []);
+        useCreateUis(selector, async (element) => {
           return createShadowRootUi({
             name: "deepwiki-shortcut-item",
             position: "inline",
@@ -2360,7 +2369,7 @@ System.register("./app-BP0IUOvJ-Diu99_XF.js", ['./shadow-root-MMfNJZ9x-CgzQPqnG.
   };
 }));
 
-System.register("./ui-CzhZDFv6-B3kyCEf2.js", ['./shadow-root-MMfNJZ9x-CgzQPqnG.js', 'react'], (function (exports, module) {
+System.register("./ui-DoCdov6p-DKNDveHL.js", ['./shadow-root-BMUw5zlh-BKoNBgZT.js', 'react'], (function (exports, module) {
   'use strict';
   var createShadowRootUi, reactRenderInShadowRoot, jsxRuntimeExports, useRef, useEffect, useMemo, React__default__default;
   return {

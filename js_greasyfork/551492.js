@@ -2,7 +2,7 @@
 // @name         ShikiUtilsRECODE
 // @icon         https://raw.githubusercontent.com/shikigraph/Fumo/refs/heads/main/Fumo.png
 // @namespace    http://tampermonkey.net/
-// @version      5.2
+// @version      5.4.000000000000000000000000000000000000000001
 // @description  Полезные утилиты для шикимори + GUI
 // @author       LifeH
 // @match        https://shikimori.one/*
@@ -22,6 +22,7 @@
 // @updateURL https://update.greasyfork.org/scripts/551492/ShikiUtilsRECODE.meta.js
 // ==/UserScript==
 (function () {
+  ("use strict");
   (function notice() {
     const NOTICE_KEY_OLD = "ShikiUtils_4.0_-notice";
     localStorage.removeItem(NOTICE_KEY_OLD);
@@ -124,7 +125,7 @@
 
   let username = null;
   let userId = null;
-  const userDataEl = document.querySelector("[data-user]"); //todo переделать под whoami
+  const userDataEl = document.querySelector("[data-user]");
   function updateUserData() {
     if (userDataEl) {
       try {
@@ -152,21 +153,48 @@
     return userId;
   }
 
-  ("use strict");
+  let siteLocale = null;
+  const localeEl = document.querySelector("[data-locale]");
+
+  function updateSiteLocale() {
+    if (localeEl) {
+      try {
+        siteLocale = localeEl.getAttribute("data-locale") || null;
+        sessionStorage.setItem("siteLocale", siteLocale);
+      } catch (err) {
+        console.error("[updateSiteLocale]:", err);
+        siteLocale = sessionStorage.getItem("siteLocale") || null;
+      }
+    } else {
+      siteLocale = sessionStorage.getItem("siteLocale") || siteLocale;
+    }
+  }
+
+  function getSiteLocale() {
+    updateSiteLocale();
+    return siteLocale;
+  }
+
+
+
+  const base = location.origin;
+
   GM_registerMenuCommand("Настройки", () => {
     try {
-      window.location.href = `https://shikimori.one/${getUsername()}/edit/misc`;
-    } catch (err) {
-      console.error("[ShikiUtils]", err);
+      location.href = `${base}/${getUsername()}/edit/misc`;
+    } catch (e) {
+      console.error("[ShikiUtils]", e);
     }
   });
+
   GM_registerMenuCommand("Топик", () => {
     try {
-      window.location.href = `https://shikimori.one/forum/site/610497`;
-    } catch (err) {
-      console.error("[ShikiUtils]", err);
+      location.href = `${base}/forum/site/610497`;
+    } catch (e) {
+      console.error("[ShikiUtils]", e);
     }
   });
+
   const cssCopyIcon = `<svg width="16px" height="16px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-220.000000, -1239.000000)" fill="#000000"><g id="icons" transform="translate(56.000000, 160.000000)"> <path d="M183.7248,1085.149 L178.2748,1079.364 C178.0858,1079.165 177.8238,1079.001 177.5498,1079.001 L165.9998,1079.001 C164.8958,1079.001 163.9998,1080.001 163.9998,1081.105 L163.9998,1088.105 C163.9998,1088.657 164.4478,1089.105 164.9998,1089.105 C165.5528,1089.105 165.9998,1088.657 165.9998,1088.105 L165.9998,1082.105 C165.9998,1081.553 166.4478,1081.001 166.9998,1081.001 L175.9998,1081.001 L175.9998,1085.105 C175.9998,1086.21 176.8958,1087.001 177.9998,1087.001 L181.9998,1087.001 L181.9998,1088.105 C181.9998,1088.657 182.4478,1089.105 182.9998,1089.105 C183.5528,1089.105 183.9998,1088.657 183.9998,1088.105 L183.9998,1085.838 C183.9998,1085.581 183.9018,1085.335 183.7248,1085.149 L183.7248,1085.149 Z M182.9998,1091.001 L179.9998,1091.001 C178.8958,1091.001 177.9998,1092.001 177.9998,1093.105 L177.9998,1094.105 C177.9998,1095.21 178.8958,1096.001 179.9998,1096.001 L181.4998,1096.001 C181.7758,1096.001 181.9998,1096.224 181.9998,1096.501 C181.9998,1096.777 181.7758,1097.001 181.4998,1097.001 L178.9998,1097.001 C178.4528,1097.001 178.0098,1097.493 178.0028,1098.04 C178.0098,1098.585 178.4528,1099.001 178.9998,1099.001 L181.9998,1099.001 L182.0208,1099.001 C183.1138,1099.001 183.9998,1098.219 183.9998,1097.126 L183.9998,1096.084 C183.9998,1094.991 183.1138,1094.001 182.0208,1094.001 L181.9998,1094.001 L180.4998,1094.001 C180.2238,1094.001 179.9998,1093.777 179.9998,1093.501 C179.9998,1093.224 180.2238,1093.001 180.4998,1093.001 L182.9998,1093.001 C183.5528,1093.001 183.9998,1092.605 183.9998,1092.053 L183.9998,1092.027 C183.9998,1091.474 183.5528,1091.001 182.9998,1091.001 L182.9998,1091.001 Z M177.9998,1098.053 C177.9998,1098.048 178.0028,1098.044 178.0028,1098.04 C178.0028,1098.035 177.9998,1098.031 177.9998,1098.027 L177.9998,1098.053 Z M175.9998,1091.001 L172.9998,1091.001 C171.8958,1091.001 170.9998,1092.001 170.9998,1093.105 L170.9998,1094.105 C170.9998,1095.21 171.8958,1096.001 172.9998,1096.001 L174.4998,1096.001 C174.7758,1096.001 174.9998,1096.224 174.9998,1096.501 C174.9998,1096.777 174.7758,1097.001 174.4998,1097.001 L171.9998,1097.001 C171.4528,1097.001 171.0098,1097.493 171.0028,1098.04 C171.0098,1098.585 171.4528,1099.001 171.9998,1099.001 L174.9998,1099.001 L175.0208,1099.001 C176.1138,1099.001 176.9998,1098.219 176.9998,1097.126 L176.9998,1096.084 C176.9998,1094.991 176.1138,1094.001 175.0208,1094.001 L174.9998,1094.001 L173.4998,1094.001 C173.2238,1094.001 172.9998,1093.777 172.9998,1093.501 C172.9998,1093.224 173.2238,1093.001 173.4998,1093.001 L175.9998,1093.001 C176.5528,1093.001 176.9998,1092.605 176.9998,1092.053 L176.9998,1092.027 C176.9998,1091.474 176.5528,1091.001 175.9998,1091.001 L175.9998,1091.001 Z M170.9998,1098.053 C170.9998,1098.048 171.0028,1098.044 171.0028,1098.04 C171.0028,1098.035 170.9998,1098.031 170.9998,1098.027 L170.9998,1098.053 Z M169.9998,1092.027 L169.9998,1092.053 C169.9998,1092.605 169.5528,1093.001 168.9998,1093.001 L167.9998,1093.001 C166.7858,1093.001 165.8238,1094.083 166.0278,1095.336 C166.1868,1096.32 167.1108,1097.001 168.1068,1097.001 L168.9998,1097.001 C169.5528,1097.001 169.9998,1097.474 169.9998,1098.027 L169.9998,1098.053 C169.9998,1098.605 169.5528,1099.001 168.9998,1099.001 L168.1718,1099.001 C166.0828,1099.001 164.2168,1097.473 164.0188,1095.393 C163.7918,1093.008 165.6608,1091.001 167.9998,1091.001 L168.9998,1091.001 C169.5528,1091.001 169.9998,1091.474 169.9998,1092.027 L169.9998,1092.027 Z" id="file_css-[#1767]"> </path> </g> </g> </g> </g></svg>`;
   const CopyIcon = `<svg width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M17.5 14H19C20.1046 14 21 13.1046 21 12V5C21 3.89543 20.1046 3 19 3H12C10.8954 3 10 3.89543 10 5V6.5M5 10H12C13.1046 10 14 10.8954 14 12V19C14 20.1046 13.1046 21 12 21H5C3.89543 21 3 20.1046 3 19V12C3 10.8954 3.89543 10 5 10Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></g></svg>`;
   const TreeIcon = `<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools --><svg fill="#000000" width="16px" height="16px" viewBox="0 0 256 256" id="Flat" xmlns="http://www.w3.org/2000/svg"><path d="M156,92V80H144a16.01833,16.01833,0,0,0-16,16v64a16.01833,16.01833,0,0,0,16,16h12V164a16.01833,16.01833,0,0,1,16-16h40a16.01833,16.01833,0,0,1,16,16v40a16.01833,16.01833,0,0,1-16,16H172a16.01833,16.01833,0,0,1-16-16V192H144a32.03635,32.03635,0,0,1-32-32V136H84v8a16.01833,16.01833,0,0,1-16,16H36a16.01833,16.01833,0,0,1-16-16V112A16.01833,16.01833,0,0,1,36,96H68a16.01833,16.01833,0,0,1,16,16v8h28V96a32.03635,32.03635,0,0,1,32-32h12V52a16.01833,16.01833,0,0,1,16-16h40a16.01833,16.01833,0,0,1,16,16V92a16.01833,16.01833,0,0,1-16,16H172A16.01833,16.01833,0,0,1,156,92Z"/></svg>`;
@@ -411,6 +439,52 @@ z-index:2;`,
         },
       },
     },
+    switchBtn: {
+      enabled: true,
+      title: "Domain switch button",
+      description: "Кнопка для смены домена",
+      settings: {
+        DisplayMode: {
+          type: "mode",
+          title: "Режим",
+          options: ["glyph", "icon"],
+          value: "icon",
+        },
+        btnTitle: {
+          value: "Сменить домен",
+          title: "Title кнопки",
+          description: "Подсказка при наведении",
+        },
+        btnStyles: {
+          dependsOn: { key: "DisplayMode", value: "icon" },
+          type: "css",
+          title: "Стили кнопки",
+          description: "",
+          value: `position:absolute;
+right:-22px;
+bottom:2px;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:4px;
+opacity:.7;
+cursor:pointer;
+z-index:10;
+`,
+        },
+        svgIcon: {
+          dependsOn: { key: "DisplayMode", value: "icon" },
+          title: "SVG иконка",
+          description: "HTML/SVG код иконки",
+          value: `
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M18 10L21 7M21 7L18 4M21 7H7M6 14L3 17M3 17L6 20M3 17H17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+      `,
+        },
+      },
+    },
     CATFilters: { type: "category", name: "Filters" },
     ShikiRating: {
       enabled: true,
@@ -652,7 +726,7 @@ cursor: pointer;
 z-index: 1000;`,
         },
       },
-    }, 
+    },
     CATMisc: { type: "category", name: "Misc" },
     PGPModule: {
       enabled: true,
@@ -885,7 +959,7 @@ margin-left: 5px;`,
           type: "css",
           title: 'Стиль для надписи под рейтингом (тип отображения "stars")',
           value:
-            `text-align: center;
+            `text-align: left;
 color: #7b8084;
 font-size: 12px;`,
           category: "AniList/Shikimori",
@@ -1026,11 +1100,23 @@ e8rLFxkB8jYz9AInwe7lRlFPNKHv/Qy51vo4nn5yKQ8=
   function getOriginalTitle() {
     const titleElement = document.querySelector(".head h1");
     if (!titleElement) return null;
+
     const separator = titleElement.querySelector(".b-separator.inline");
     if (!separator) return null;
-    const originalTitle = separator.nextSibling?.textContent?.trim();
+
+    const locale = getSiteLocale();
+
+    let originalTitle = null;
+
+    if (locale === "en") {
+      originalTitle = separator.previousSibling?.textContent?.trim();
+    } else {
+      originalTitle = separator.nextSibling?.textContent?.trim();
+    }
+
     return originalTitle || null;
   }
+
   async function generateKeys(name, email, passphrase) {
     const keys = await openpgp.generateKey({
       type: "ecc",
@@ -1775,66 +1861,66 @@ e8rLFxkB8jYz9AInwe7lRlFPNKHv/Qy51vo4nn5yKQ8=
       checkboxContainerSelector: null,
     });
   }
-function FavoritesHelper() {
-  const favurl = location.pathname.endsWith("/favorites");
-  const favblock = document.querySelector(".block.is-own-profile");
+  function FavoritesHelper() {
+    const favurl = location.pathname.endsWith("/favorites");
+    const favblock = document.querySelector(".block.is-own-profile");
 
-  if (!favurl || !favblock) {
-    return;
-  }
-  function processItem(item) {
-    if (item.querySelector(".shiki-utils-favorites-delete-btn")) return;
-
-    const classList = item.classList;
-
-    let type = null;
-    if (classList.contains("c-anime")) type = "Anime";
-    else if (classList.contains("c-manga")) type = "Manga";
-    else if (classList.contains("c-character")) type = "Character";
-    else if (classList.contains("c-person")) type = "Person";
-
-    if (!type) return;
-
-    const id = item.id;
-    if (!id) return;
-
-    const fakeBtn = document.createElement("span");
-    fakeBtn.className = "shiki-utils-favorites-delete-btn";
-    fakeBtn.setAttribute("data-delete-url", `https://shikimori.one/api/favorites/${type}/${id}`);
-    fakeBtn.style.display = "none";
-
-    item.appendChild(fakeBtn);
-  }
-
-  document.querySelectorAll(".c-column.b-catalog_entry").forEach(processItem);
-
-  const obs = new MutationObserver(muts => {
-    for (const m of muts) {
-      m.addedNodes.forEach(node => {
-        if (node.nodeType === 1) {
-          if (node.matches(".c-column.b-catalog_entry")) {
-            processItem(node);
-          } else {
-            node.querySelectorAll?.(".c-column.b-catalog_entry").forEach(processItem);
-          }
-        }
-      });
+    if (!favurl || !favblock) {
+      return;
     }
-  });
+    function processItem(item) {
+      if (item.querySelector(".shiki-utils-favorites-delete-btn")) return;
 
-  obs.observe(document.body, { childList: true, subtree: true });
+      const classList = item.classList;
+
+      let type = null;
+      if (classList.contains("c-anime")) type = "Anime";
+      else if (classList.contains("c-manga")) type = "Manga";
+      else if (classList.contains("c-character")) type = "Character";
+      else if (classList.contains("c-person")) type = "Person";
+
+      if (!type) return;
+
+      const id = item.id;
+      if (!id) return;
+
+      const fakeBtn = document.createElement("span");
+      fakeBtn.className = "shiki-utils-favorites-delete-btn";
+      fakeBtn.setAttribute("data-delete-url", `https://shikimori.one/api/favorites/${type}/${id}`);
+      fakeBtn.style.display = "none";
+
+      item.appendChild(fakeBtn);
+    }
+
+    document.querySelectorAll(".c-column.b-catalog_entry").forEach(processItem);
+
+    const obs = new MutationObserver(muts => {
+      for (const m of muts) {
+        m.addedNodes.forEach(node => {
+          if (node.nodeType === 1) {
+            if (node.matches(".c-column.b-catalog_entry")) {
+              processItem(node);
+            } else {
+              node.querySelectorAll?.(".c-column.b-catalog_entry").forEach(processItem);
+            }
+          }
+        });
+      }
+    });
+
+    obs.observe(document.body, { childList: true, subtree: true });
 
     helperBuilder({
-    configKey: "FavoritesHelperConfig",
-    itemSelector: ".c-column.b-catalog_entry",
-    checkboxClass: "favorites-checkbox",
-    deleteButtonSelector: ".shiki-utils-favorites-delete-btn",
-    deleteMethod: "DELETE",
-    deleteUrlAttr: "data-delete-url",
-    showOnHover: false,
-    checkboxContainerSelector: null,
-  });
-}
+      configKey: "FavoritesHelperConfig",
+      itemSelector: ".c-column.b-catalog_entry",
+      checkboxClass: "favorites-checkbox",
+      deleteButtonSelector: ".shiki-utils-favorites-delete-btn",
+      deleteMethod: "DELETE",
+      deleteUrlAttr: "data-delete-url",
+      showOnHover: false,
+      checkboxContainerSelector: null,
+    });
+  }
 
   //! %=================== Buttons ====================%
 
@@ -1911,6 +1997,7 @@ function FavoritesHelper() {
       if (mainControls) mainControls.appendChild(button);
     });
   }
+  //* %=================== CommTreeBtn ====================%
   function CommTreeBtn() {
     //todo совместимость с рип 
     const cfg = config.CommTreeBtn.settings;
@@ -2124,7 +2211,6 @@ function FavoritesHelper() {
       }, 2000);
     });
   }
-
   //* %=================== User CSS Copy Btn ===================%
   async function UserCssCopyBtn() {
     const cfg = config.UserCssCopyBtn.settings;
@@ -2294,6 +2380,70 @@ function FavoritesHelper() {
       }
     });
   }
+  //* %=================== switchBtn ===================%
+  function switchBtn() {
+    const cfg = config.switchBtn.settings;
+    const logo = document.querySelector(".logo-container");
+    if (!logo || logo.querySelector(".switch-button")) return;
+
+    try {
+      const button = btnBuilder({
+        tag: "span",
+        classes: ["switch-button"],
+        title: cfg.btnTitle?.value,
+        onClick: (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          location.href = location.href.replace(
+            location.hostname,
+            location.hostname.endsWith(".rip") ? "shikimori.one" : "shikimori.rip"
+          );
+        },
+      });
+
+      button.style.cssText = cfg.btnStyles?.value;
+      logo.style.position = "relative";
+
+      const DisplayMode = cfg.DisplayMode.value
+
+      if (DisplayMode === "glyph") {
+        const glyphs = document.querySelectorAll(".glyph, .glyph.glyph-logged-out");
+        if (!glyphs.length) return;
+
+        glyphs.forEach((glyph) => {
+          glyph.style.cursor = "pointer";
+          glyph.title = cfg.btnTitle?.value || "";
+
+          if (!glyph.dataset.shikiutils) {
+            glyph.addEventListener("click", (event) => {
+              event.preventDefault();
+              event.stopPropagation();
+
+              location.href = location.href.replace(
+                location.hostname,
+                location.hostname.endsWith(".rip") ? "shikimori.one" : "shikimori.rip"
+              );
+            });
+            glyph.dataset.shikiutils = "true";
+          }
+        });
+
+      } else {
+        if (cfg.svgIcon?.value) {
+          const svgWrapper = document.createElement("span");
+          svgWrapper.innerHTML = cfg.svgIcon.value;
+          button.appendChild(svgWrapper);
+        }
+      }
+
+      logo.appendChild(button);
+    } catch (err) {
+      console.error("[ShikiUtils] switchBtn:", err);
+    }
+  }
+
+
+
 
   //! %=================== Misc ====================%
 
@@ -3060,7 +3210,6 @@ function FavoritesHelper() {
           <div class="score-notice">${notice}</div>
         </div>
       `;
-
         const customLabel = document.createElement("p");
         customLabel.className = "score shiki-label";
         customLabel.style = cfg.originalScoreStyles?.value;
@@ -3164,6 +3313,7 @@ function FavoritesHelper() {
 
             scoreBlock.append(aniRate);
             scoreBlock.append(aniLabel);
+            aniRate.append
           } else { //* хедлайн 
             const subheadlines = document.querySelectorAll(".block .subheadline");
             let targetSubheadline = null;
@@ -4738,6 +4888,7 @@ function FavoritesHelper() {
     if (config.UserCssCopyBtn.enabled) UserCssCopyBtn();
     if (config.UserIdCopyBtn.enabled) UserIdCopyBtn();
     if (config.ClubCssCopyBtn.enabled) ClubCssCopyBtn();
+    if (config.switchBtn.enabled) switchBtn();
 
     if (config.CommCopyBtn.enabled) CommCopyBtn();
     if (config.ImageIdCopyBtn.enabled) ImageIdCopyBtn();
@@ -4756,6 +4907,7 @@ function FavoritesHelper() {
     if (config.PGPModule.enabled) PGPModule();
     if (config.pollsHelper.enabled) pollsHelper();
     if (config.FavoritesHelperConfig.enabled) FavoritesHelper();
+
 
     domObserver();
   }
@@ -4922,13 +5074,12 @@ function FavoritesHelper() {
     }, 200);
   }
 
-
   ready(() => {
     createGUI();
     runFunctions();
     feedbackPage();
     updateUserData();
-    
+
   });
 
   document.addEventListener("turbolinks:load", () => {

@@ -31,28 +31,73 @@ function injectStyles() {
    【共通設定】
    ========================================================================== 
 */
-/* 1. 不要な裏画像などを削除 (全レイアウト共通) */
-.dj-img2, .dj-img-back { display: none !important; }
-.dj-img1 { transform: none !important; }
 
-/* 2. カスタムレイアウト適用時のみ、画像の強制変形(遠近法など)を解除する
-      ※ .layout-compact または .layout-grid クラスがある時だけ適用。
-      ※ これによりデフォルトの「リスト」表示はHitomi本来のCSSが維持されます。
-*/
+/* 不要な裏画像などを削除 (全レイアウト共通) */
+.dj-img2, .cg-img2, .anime-img2, .dj-img-back, hr.unread { display: none !important; }
+.dj-img1, .cg-img1, .anime-img1 { transform: none !important; background-color: transparent; border: none; }
 
-.gallery-content.layout-grid .dj-img1 {
-    clip-path: none !important;
-    width: 100% !important;
-    height: 100% !important;
-    position: static !important;
-    margin: 0 !important;
-    object-fit: cover;
+/* --- リスト表示（デフォルト）時の画像中央寄せ --- */
+.gallery-content:not(.layout-grid) .dj-img-cont {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important; /* 上下も中央にする場合 */
 }
-.gallery-content.layout-grid .dj-img-cont {
-    width: 100% !important;
-    height: 100% !important;
-    overflow: hidden;
-    position: relative !important;
+
+/* ★追加: PC表示(768px以上)の時だけ、リスト表示の画像コンテナを親要素の下端に移動させる */
+@media (min-width: 768px) {
+    /* 親要素(カード全体)を配置の基準点にする */
+    .gallery-content:not(.layout-grid) > div {
+        position: relative !important;
+    }
+
+    /* 画像コンテナを絶対配置で「下端」に固定する */
+    .gallery-content:not(.layout-grid) .dj-img-cont {
+        position: absolute !important;
+        bottom: 0 !important;
+        top: auto !important; /* 元のCSSによる上部固定を解除 */
+    }
+}
+
+/* ★追加: スマホ表示(767px以下): 上下位置維持＋左右中央＋画像フィット */
+@media (max-width: 767px) {
+    /* コンテナ: 位置調整とFlexbox化 */
+    .gallery-content:not(.layout-grid) .dj-img-cont {
+        width: 100% !important;
+        /* --- 位置調整 (上下維持・左右中央) --- */
+        float: none !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        right: auto !important;
+        margin: 0 !important;
+        
+        /* --- 画像フィット用 (グリッドから流用) --- */
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    /* 画像ラッパー: サイズ制限解除と最大化 */
+    .gallery-content:not(.layout-grid) .dj-img1,
+    .gallery-content:not(.layout-grid) .cg-img1
+    .gallery-content:not(.layout-grid) .anime-img1 {
+        width: 100% !important;
+        height: 100% !important;
+
+        /* ★重要: 幅の制限を解除 */
+        max-width: none !important;
+        min-width: 0 !important;
+
+        position: static !important;
+        margin: 0 !important;
+    }
+}
+
+/* ★追加: 画像の絶対配置(position: absolute)を解除してFlexアイテムとして認識させる */
+.gallery-content:not(.layout-grid) .dj-img1,
+.gallery-content:not(.layout-grid) .cg-img1,
+.gallery-content:not(.layout-grid) .anime-img1 {
+    position: static !important;
+    margin: 0 auto !important;
 }
 
 /* 
@@ -64,12 +109,11 @@ function injectStyles() {
 /* --- グリッド全体の定義 --- */
 .gallery-content.layout-grid {
     display: grid !important;
-    /* 4列固定 */
-    grid-template-columns: repeat(4, 1fr) !important;
+    /* ★変更: CSS変数で列数を制御 (デフォルトは4) */
+    grid-template-columns: repeat(var(--grid-cols, 4), 1fr) !important;
     gap: 16px;
 }
-@media (max-width: 768px) { .gallery-content.layout-grid { grid-template-columns: repeat(3, 1fr) !important; } }
-@media (max-width: 480px) { .gallery-content.layout-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+@media (max-width: 480px) { .gallery-content.layout-grid { grid-template-columns: repeat(var(--grid-cols, 3), 1fr) !important; } } 
 
 /* --- 個別カード --- */
 .gallery-content.layout-grid > div {
@@ -83,8 +127,10 @@ function injectStyles() {
     position: relative !important; /* 位置リセット */
 }
 
+
+
 /* --- 画像エリア --- */
-.gallery-content.layout-grid .dj-img-cont{
+.gallery-content.layout-grid .dj-img-cont {
     width: 100% !important;
     height: auto !important;
     aspect-ratio: 3 / 3;
@@ -94,12 +140,40 @@ function injectStyles() {
     /* 画像を中央配置 */
     display: flex !important;
     justify-content: center;
-    align-items: start;
+    align-items: center;
+
+    overflow: hidden;
+    position: relative !important;
+    
+    /* ★追加: 元のCSSによる位置ズレ(top)を強制的にリセットして上端にピッタリくっつける */
+    top: 0 !important;
+    left: 0 !important; /* ← これで横ズレが直ります */
 }
-.gallery-content.layout-grid .dj-img1 {
-    /* 共通設定で変形は解除済み */
+
+.gallery-content.layout-grid .dj-img1,
+.gallery-content.layout-grid .cg-img1,
+.gallery-content.layout-grid .anime-img1  {
+    clip-path: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    object-fit: fill;
     position: static !important;
 }
+
+.gallery-content.layout-grid .dj-img1 img,
+.gallery-content.layout-grid .cg-img1 img,
+.gallery-content.layout-grid .anime-img1 img {
+    width: 100% !important;
+    height: 100% !important;
+    /* 枠の中で比率を保って全体を表示 */
+    object-fit: contain !important;
+}
+
+
+
 
 /* --- テキストエリア (.dj-content) --- */
 /* Hitomiデフォルトの margin-left: 100px 等を解除して表示させる */
@@ -109,6 +183,7 @@ function injectStyles() {
     float: none !important;
     min-height: 0 !important;
 }
+
 
 /* 不要な詳細情報は隠す */
 .gallery-content.layout-grid table,
@@ -122,7 +197,7 @@ function injectStyles() {
 .gallery-content.layout-grid .artist-list {
     position: static !important;
     margin: 0 !important;
-    padding: 5px 5px !important; /* 左詰めPadding 5px */
+    padding-left: 5px !important; /* 左詰めPadding 5px */
     width: auto !important;
     text-align: left !important; /* 左詰め */
     float: none !important;
@@ -132,9 +207,8 @@ function injectStyles() {
 /* タイトル (上) */
 .gallery-content.layout-grid h1 {
     line-height: 1.4;
-    margin-top: 6px !important;
+    margin-top: 0 !important;
     overflow: hidden;
-    order: 1; /* Flexbox順序指定: 上 */
 }
 
 /* 作者名 (下) */
@@ -142,7 +216,6 @@ function injectStyles() {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    order: 2; /* Flexbox順序指定: 下 */
 }
 
 /* ==========================================================================
@@ -284,6 +357,161 @@ input:checked + .slider:before { transform: translateX(18px); }
 .layout-option:hover { background-color: #f9fafb; }
 .layout-option.active { background-color: #e0e7ff; color: #4f46e5; font-weight: bold; }
 .layout-option svg { flex-shrink: 0; }
+
+/* --- 既存の style.innerHTML の末尾に追加・置換 --- */
+
+/* グリッド列数選択UI (New Design) */
+.grid-col-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 100%;
+    margin-left: auto; /* 右寄せ */
+    padding-left: 8px;
+}
+
+/* グレーの縦棒と数値表示 */
+.grid-current-val {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 24px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #6b7280;
+    border-left: 1px solid #b5b6bb; /* うっすらとした縦棒 */
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.layout-option:hover .grid-current-val {
+    border-left-color: #9b9da1; /* 親ホバー時に少し濃く */
+}
+.grid-current-val:hover {
+    color: #4f46e5;
+    background-color: rgba(0,0,0,0.02);
+}
+
+/* サブメニュー (ドロップダウン) */
+.grid-submenu {
+    display: none;
+    position: absolute;
+    top: 100%; /* 親の下に表示 */
+    right: -15px; /* 親ドロップダウンの右端に合わせる微調整 */
+    background: white;
+    min-width: 50px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    border: 1px solid #f3f4f6;
+    z-index: 101;
+    padding: 4px;
+    flex-direction: column;
+    gap: 2px;
+}
+.grid-submenu.show {
+    display: flex;
+    animation: fadeIn 0.1s ease;
+}
+
+/* サブメニューの各項目 */
+.grid-submenu-item {
+    padding: 6px 0;
+    text-align: center;
+    font-size: 12px;
+    color: #4b5563;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+.grid-submenu-item:hover {
+    background-color: #f3f4f6;
+    color: #111;
+}
+.grid-submenu-item.active {
+    background-color: #e0e7ff;
+    color: #4f46e5;
+    font-weight: bold;
+}
+
+/* スマホ対応: 767px以下では列数4と5を非表示にする */
+@media (max-width: 767px) {
+    .grid-submenu-item[data-val="4"],
+    .grid-submenu-item[data-val="5"] {
+        display: none;
+    }
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+
+/* 作品詳細ページ: プレビューエリアのマージン調整 */
+.gallery-preview.lillie {
+    margin-top: 40px !important;
+}
+
+/* サムネイル画像: 親要素に合わせてリサイズし、はみ出さずに収める */
+.thumbnail-container img {
+    width: 100% !important;
+    height: 100% !important;
+    /* ★追加: 元のCSSによるサイズ制限を解除 */
+    max-width: none !important;
+    max-height: none !important;
+    object-fit: contain !important;
+}
+
+/* スライダーUIのスタイル */
+.thumbnail-slider-wrapper {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 20px auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 20px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    
+    /* ★追加: パディングを含めて幅を計算させることで、スマホでの横はみ出しを防ぐ */
+    box-sizing: border-box; 
+}
+
+.thumbnail-slider-label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #4b5563;
+    white-space: nowrap;
+}
+
+/* スライダー本体 */
+.thumbnail-slider {
+    flex: 1;
+    cursor: pointer;
+    height: 6px;
+    -webkit-appearance: none;
+    
+    /* ★変更: 背景をグラデーションにして中央に目盛り(縦線)を描画 */
+    /* 左から49.5%までグレー、49.5%~50.5%を濃いグレー(線)、残りをグレーにする */
+    background: linear-gradient(to right, #e5e7eb 0%, #e5e7eb 49.5%, #9ca3af 49.5%, #9ca3af 50.5%, #e5e7eb 50.5%, #e5e7eb 100%);
+    
+    border-radius: 3px;
+    outline: none;
+}
+.thumbnail-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #4f46e5;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.thumbnail-slider::-webkit-slider-thumb:hover {
+    background: #4338ca;
+}
+
+
         `;
         document.head.appendChild(style);
     }

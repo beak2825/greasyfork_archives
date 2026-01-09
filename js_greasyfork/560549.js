@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SubHD字幕列表优化
 // @namespace    https://greasyfork.org/zh-CN/users/1553511
-// @version      1.2.0
+// @version      1.3.0
 // @description  1.合集置顶。2.添加字幕排序功能，可按下载量和上传时间排序
 // @author       Ling77
 // @license      MIT
@@ -20,7 +20,6 @@
 // ==/UserScript==
 
 (function() {
-  'use strict';
   let CONFIG = {
     defaultSort: 'default'
   };
@@ -134,8 +133,17 @@
     const children = Array.from(container.children);
     const blocks = [];
     let current = null;
+    const subtitleInfo = container.querySelector(':scope > .rounded-top');
+    const isMovie = subtitleInfo && !subtitleInfo.nextElementSibling.classList.contains('f12');
     children.forEach(el => {
-      if (el.classList.contains('f12') && el.textContent.includes('集')) {
+      if (isMovie && el === subtitleInfo) {
+        current = {
+          title: subtitleInfo,
+          rows: [],
+          hrs: []
+        };
+        blocks.push(current);
+      } else if (!isMovie && el.classList.contains('f12') && el.textContent.includes('集')) {
         current = {
           title: el,
           rows: [],
@@ -146,7 +154,7 @@
     });
     return blocks;
   }
-  function sortEpisodes(type) {
+  function sortSubtitles(type) {
     const container = document.querySelector('.bg-white.shadow-sm.rounded-3.mb-5');
     if (!container) return;
     const blocks = getEpisodeBlocks(container);
@@ -168,14 +176,14 @@
   function insertButtons(container) {
     const btnBox = document.createElement('div');
     btnBox.className = 'clearfix';
-    btnBox.innerHTML = `\n      <div class="float-start p-3">\n        <a class="btn btn-sm f12 me-1 btn-light" id="btn-default">默认排序</a>\n        <a class="btn btn-sm f12 me-1 btn-light" id="btn-download">按下载量排序</a>\n        <a class="btn btn-sm f12 me-1 btn-light" id="btn-time">按时间排序</a>\n      </div>\n      <div class="float-end p-3">\n        <a class="btn btn-sm f12 btn-outline-secondary" style="font-size: 1.3em" id="btn-setting">⚙️</a>\n      </div>\n    `;
+    btnBox.innerHTML = `\n      <div class="float-start p-3">\n        <a class="btn btn-sm f12 me-1 btn-light" id="btn-default">${SortLabel.default.long}</a>\n        <a class="btn btn-sm f12 me-1 btn-light" id="btn-download">${SortLabel.download.long}</a>\n        <a class="btn btn-sm f12 me-1 btn-light" id="btn-time">${SortLabel.time.long}</a>\n      </div>\n      <div class="float-end p-3">\n        <a class="btn btn-sm f12 btn-outline-secondary" style="font-size: 1.3em" id="btn-setting">⚙️</a>\n      </div>\n    `;
     container.prepend(btnBox);
     document.getElementById('btn-default').onclick = () => {
       localStorage.setItem('refreshedBy1553511', true);
       location.reload();
     };
-    document.getElementById('btn-download').onclick = () => sortEpisodes('download');
-    document.getElementById('btn-time').onclick = () => sortEpisodes('time');
+    document.getElementById('btn-download').onclick = () => sortSubtitles('download');
+    document.getElementById('btn-time').onclick = () => sortSubtitles('time');
     document.getElementById('btn-setting').onclick = () => settings.open();
   }
   function init() {
@@ -187,7 +195,7 @@
     if (localStorage.getItem('refreshedBy1553511')) {
       setActiveButton('default');
       localStorage.removeItem('refreshedBy1553511');
-    } else if (CONFIG.defaultSort === 'download') sortEpisodes('download'); else if (CONFIG.defaultSort === 'time') sortEpisodes('time'); else setActiveButton('default');
+    } else if (CONFIG.defaultSort === 'download') sortSubtitles('download'); else if (CONFIG.defaultSort === 'time') sortSubtitles('time'); else setActiveButton('default');
   }
   init();
 })();

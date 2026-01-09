@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter Home Lock Following
 // @namespace    http://tampermonkey.net/
-// @version      0.9.4
+// @version      0.9.5
 // @description  Xのホームを常に「フォロー中」に固定し、おすすめ(For You)を実質的に無効化する
 // @match        https://x.com/*
 // @match        https://twitter.com/*
@@ -97,6 +97,7 @@
 
     /**********************************************************
      * Following タブ強制クリック（HomeTimeline 限定）
+     * ※ Twitter for コントロールパネルの修正を踏襲
      **********************************************************/
     const enforceFollowingTab = () => {
         if (
@@ -109,15 +110,19 @@
         );
         if (!tablist) return;
 
-        const tabs = tablist.children;
-        if (tabs.length < 2) return;
+        // For You（1番目）
+        const forYouTab = tablist.querySelector(
+            'div:nth-child(1) > [role="tab"]'
+        );
 
-        const forYouTab = tabs[0].querySelector('[role="tab"]');
-        const followingTab = tabs[1].querySelector('[role="tab"]');
+        // Following（2番目）※ Sort（人気 / 最新）導入後もここは不変
+        const followingTab = tablist.querySelector(
+            'div:nth-child(2) > [role="tab"]'
+        );
 
         if (
-            forYouTab?.getAttribute('aria-selected') === 'true'
-            && followingTab
+            forYouTab?.getAttribute('aria-selected') === 'true' &&
+            followingTab
         ) {
             console.log('[X-Following] switch to Following tab');
             followingTab.click();

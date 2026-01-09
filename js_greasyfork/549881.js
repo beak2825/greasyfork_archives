@@ -2,7 +2,7 @@
 // @name            YouTube Helper API
 // @author          ElectroKnight22
 // @namespace       electroknight22_helper_api_namespace
-// @version         0.9.7
+// @version         0.9.7.1
 // @license         MIT
 // @description     A helper api for YouTube scripts that provides easy and consistent access for commonly needed functions, objects, and values.
 // ==/UserScript==
@@ -74,7 +74,7 @@ const youtubeHelperApi = (function () {
         },
 
         rebuild() {
-            this.log = [];
+            const levelLoggers = {};
             Object.entries(this.state.levels).forEach(([name, config]) => {
                 const isActive = this.state.enabled && this.state.level >= config.val;
                 const func = isActive
@@ -82,7 +82,11 @@ const youtubeHelperApi = (function () {
                     : () => {};
 
                 this[`log${name}`] = func;
-                this.log[config.val] = func;
+                levelLoggers[config.val] = func;
+            });
+            this.log = (...args) => levelLoggers[1](...args);
+            Object.entries(levelLoggers).forEach(([level, func]) => {
+                this.log[level] = func;
             });
         },
     };
@@ -366,6 +370,40 @@ const youtubeHelperApi = (function () {
             gmType: gmStorageType,
         };
     })();
+
+    const publicApi = {
+        get instance() {
+            return readOnlyInstance;
+        },
+        get player() {
+            return readOnlyPlayer;
+        },
+        get video() {
+            return readOnlyVideo;
+        },
+        get chat() {
+            return readOnlyChat;
+        },
+        get page() {
+            return readOnlyPage;
+        },
+        POSSIBLE_RESOLUTIONS,
+        updateAdState,
+        fallbackUpdateAdState,
+        getOptimalResolution,
+        setPlaybackResolution,
+        saveToStorage,
+        loadFromStorage,
+        loadAndCleanFromStorage,
+        deleteFromStorage,
+        listFromStorage,
+        reloadVideo,
+        reloadToCurrentProgress,
+        gmCapabilities,
+        apiProxy,
+        debug,
+        eventTarget: privateEventTarget,
+    };
 
     async function _getSyncedStorageData(storageKey) {
         if (storageApi.gmType === 'none') return await storageApi.getValue(storageKey, null);
@@ -848,40 +886,6 @@ const youtubeHelperApi = (function () {
             }
 
             initializeApiState();
-
-            const publicApi = {
-                get instance() {
-                    return readOnlyInstance;
-                },
-                get player() {
-                    return readOnlyPlayer;
-                },
-                get video() {
-                    return readOnlyVideo;
-                },
-                get chat() {
-                    return readOnlyChat;
-                },
-                get page() {
-                    return readOnlyPage;
-                },
-                POSSIBLE_RESOLUTIONS,
-                updateAdState,
-                fallbackUpdateAdState,
-                getOptimalResolution,
-                setPlaybackResolution,
-                saveToStorage,
-                loadFromStorage,
-                loadAndCleanFromStorage,
-                deleteFromStorage,
-                listFromStorage,
-                reloadVideo,
-                reloadToCurrentProgress,
-                gmCapabilities,
-                apiProxy,
-                debug,
-                eventTarget: privateEventTarget,
-            };
 
             if (initFlags.supportsCryptography) registerInstance(publicApi);
 

@@ -5,7 +5,7 @@
 // @author                                      Zbouibe
 // @copyright                                   2026 Zbouibe
 // @license                                     All Rights Reserved
-// @version                                     1.0.0
+// @version                                     1.0.1
 // @description                                 Zbouibe's User eXperience
 // @description:en                              Zbouibe's User eXperience
 // @icon                                        data:image/png;base64,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
@@ -34,10 +34,18 @@
 // @updateURL https://update.greasyfork.org/scripts/561159/WME%20ZUX.meta.js
 // ==/UserScript==
 
-(function () {
+!function () {return; const btn = document.createElement('button'); btn.textContent = '...'; btn.disabled = true; Object.assign(btn.style, { position: 'fixed', top: '10px', left: '50%', zIndex: '9999', cursor: 'pointer' }); btn.addEventListener('click', () => { mainActivity(); btn.remove(); }); setTimeout(() => { btn.disabled = false; btn.textContent = 'ZUX'; }, 5000); document.body.appendChild(btn); }()
+
+mainActivity();
+function mainActivity() {
     "use strict";
+
+    GM_addStyle(`@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css');`);
+
     //#region .Variables Globales
-    let wmeSDK, wmeMap = [], currentLoc = [], debug = true;
+    let wmeSDK,
+        wmeMap = [],
+        debug = true;
 
     let // NOTES
         currentCategory;
@@ -55,13 +63,11 @@
         errBanCounter;
 
     let // CADASTRE
-        currentTimeout,
         LAYER_TYPE = "parcelles",
         pointLayer,
         isScriptActive,
         arePolygonsVisible = true,
         codeQCommune = "";
-
 
     let // UI
         ui_undoAll = true,
@@ -71,12 +77,10 @@
         ui_city = true,
         ui_counter = true,
         ui_lines = true,
-        ui_speed = true,
-
-        showSpeedControl = true,
-        showTypesControl = true,
-        showAdressCtrl = true,
-        showHnControl = true;
+        ui_SpeedControl = true,
+        ui_TypesControl = true,
+        ui_AdressControl = true,
+        ui_NumberControl = true;
 
     let // MASS DELETE
         del_rpp,
@@ -88,61 +92,145 @@
 
     //#region .INITIALISATION
     unsafeWindow.SDK_INITIALIZED.then(() => {
-        _setLog("Initialisation en cours");
+        _setLog("▶️ Initialisation en cours");
+
         wmeSDK = getWmeSdk({ scriptId: "zux_250816", scriptName: "zux" });
-        _setLog("Récuperation du SDK", wmeSDK);
+        _setLog("⏬ Récuperation du SDK", wmeSDK);
 
-        wmeSDK.Events.on({ eventName: "wme-map-move", eventHandler: () => { wmeEvents("wme-map-move"); } });
-        wmeSDK.Events.on({ eventName: "wme-map-move-end", eventHandler: () => { wmeEvents("wme-map-move-end") } });
-        wmeSDK.Events.on({ eventName: 'wme-save-finished', eventHandler: (e) => { if (e.success) wmeEvents("wme-save-finished") } });
-        wmeSDK.Events.on({ eventName: "wme-feature-editor-opened", eventHandler: (e) => { if (e.featureType === "segment") wmeEvents("wme-feature-editor-opened") } });
+        // Évènements WME
+        _setLog("🔄️ Enregistrement des évènements WME");
+        wmeSDK.Events.on({ eventName: "wme-map-move-end", eventHandler: () => { init_WzEvents("map-move-end") } });
+        wmeSDK.Events.on({ eventName: 'wme-save-finished', eventHandler: (e) => { if (e.success) init_WzEvents("save-finished") } });
+        wmeSDK.Events.on({ eventName: "wme-feature-editor-opened", eventHandler: (e) => { if (e.featureType === "segment") init_WzEvents("feature-editor-opened") } });
 
-        wmeMap.mapCenter = wmeSDK.Map.getMapCenter(); wmeMap.zoomLevel = wmeSDK.Map.getZoomLevel();
-        wmeMap.mapExtent = (([l, b, r, t]) => ({ left: l, bottom: b, right: r, top: t }))(wmeSDK.Map.getMapExtent());
-        _setLog("Information de la carte affiché : ", wmeMap);
+        // Récupération des infos de la carte
+        const map = wmeSDK.Map, mapExtent = map.getMapExtent();
+        wmeMap.mapCenter = map.getMapCenter(); wmeMap.zoomLevel = map.getZoomLevel();
+        wmeMap.mapExtent = { left: mapExtent[0], bottom: mapExtent[1], right: mapExtent[2], top: mapExtent[3] };
+        _setLog("ℹ️🌐 Information de la carte WME : ", wmeMap);
 
-        _getCurrentLocation();
+        init_Sidebar();
+        ui_SetLocationInfo();
+    });
 
+    function init_Sidebar() {
+        _setLog("▶️ Initialisation de la sidebar");
         wmeSDK.Sidebar.registerScriptTab().then((t) => {
             t.tabLabel.innerText = "ZUX";
             t.tabLabel.title = "Zbouibe's User eXperience";
             t.tabPane.innerHTML = `
-                <div id="zux-tabs-menu">
-                    <div id="zux-tabs-extended-menu"></div>
-                    <div id="zux-tabs-extend-menu"><</div>
+                <div id="zux-tabs-menu" style="position:absolute;right:-105px;opacity:.5;display:flex;align-items:center;gap:5px;">
+                    <div id="zux-tabs-extended-menu" style="user-select:none;font-size:12px;"></div>
+                    <div id="zux-tabs-extend-menu" style="background:#fff;border-radius:5px;height:50px;width:20px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:bold;cursor:pointer;user-select:none;"><</div>
                 </div>
-                <div id="zux-alert"></div>
-                <div id="zux-tabs-content" style="height:70dvh"></div>
+                <div id="zux-tabs-content" style="min-height:70dvh"></div>
             `;
 
-            [{
-                title: "Notes", svg: `M360 160L280 160C266.7 160 256 149.3 256 136C256 122.7 266.7 112 280 112L360 112C373.3 112 384 122.7 384 136C384 149.3 373.3 160 360 160zM360 208C397.1 208 427.6 180 431.6 144L448 144C456.8 144 464 151.2 464 160L464 512C464 520.8 456.8 528 448 528L192 528C183.2 528 176 520.8 176 512L176 160C176 151.2 183.2 144 192 144L208.4 144C212.4 180 242.9 208 280 208L360 208zM419.9 96C407 76.7 385 64 360 64L280 64C255 64 233 76.7 220.1 96L192 96C156.7 96 128 124.7 128 160L128 512C128 547.3 156.7 576 192 576L448 576C483.3 576 512 547.3 512 512L512 160C512 124.7 483.3 96 448 96L419.9 96z`,
+            [{ // Notes
+                title: "Notes", icon: `<i class="fa-regular fa-clipboard" style="font-size:17px;"></i>`,
                 content: `
-                    <div id="noteList">
-                        <div id="note-categories">
-                            <div id="zux-tab-note-faire">Faire</div>
-                            <div id="zux-tab-note-surv">Surveiller</div>
-                            <div id="zux-tab-note-autre">Autres</div>
+                    <div id="noteList" style="overflow: auto;  height: 50dvh;">
+                        <div id="note-categories" style="display: flex;  justify-content: space-between;  font-weight: bold;  text-align: center;">
+                            <div id="zux-tab-note-faire" class="zux-tab-note" style="width: 100%;padding:10px;cursor:pointer;border-bottom:2px solid #fff;user-select:none;">Faire</div>
+                            <div id="zux-tab-note-surv" class="zux-tab-note" style="width: 100%;padding:10px;cursor:pointer;border-bottom:2px solid #fff;user-select:none;">Surveiller</div>
+                            <div id="zux-tab-note-autre" class="zux-tab-note" style="width: 100%;padding:10px;cursor:pointer;border-bottom:2px solid #fff;user-select:none;">Autres</div>
                         </div>
-                        <div id="zux-tab-note-ajouter">+</div>
+                        <div id="zux-tab-note-ajouter" style="text-align: center;  font-size: 20px;  border-top: 1px solid #e1e1e1ff;  border-bottom: 1px solid #e1e1e1ff;  cursor: pointer;  padding: 10px;">+</div>
                     </div>
-                `
-            }, {
-                title: "Adresses", svg: `M576 112C576 100.9 570.3 90.6 560.8 84.8C551.3 79 539.6 78.4 529.7 83.4L413.5 141.5L234.1 81.6C226 78.9 217.3 79.5 209.7 83.3L81.7 147.3C70.8 152.8 64 163.9 64 176L64 528C64 539.1 69.7 549.4 79.2 555.2C88.7 561 100.4 561.6 110.3 556.6L226.4 498.5L399.7 556.3C395.4 549.9 391.2 543.2 387.1 536.4C376.1 518.1 365.2 497.1 357.1 474.6L255.9 440.9L255.9 156.4L383.9 199.1L383.9 298.4C414.9 262.6 460.9 240 511.9 240C534.5 240 556.1 244.4 575.9 252.5L576 112zM512 288C445.7 288 392 340.8 392 405.9C392 474.8 456.1 556.3 490.6 595.2C502.2 608.2 521.9 608.2 533.5 595.2C568 556.3 632.1 474.8 632.1 405.9C632.1 340.8 578.4 288 512.1 288zM472 408C472 385.9 489.9 368 512 368C534.1 368 552 385.9 552 408C552 430.1 534.1 448 512 448C489.9 448 472 430.1 472 408z`,
+                `,
+                id: []
+            }, { // Adresses
+                title: "Adresses", icon: `<i class="fa-regular fa-house" style="font-size:17px;"></i>`,
                 content: `
                     <span id="load-address">Adresses affichées : 0</span>
                     <hr>
                     <div id="zux-ban-check-1"></div>
                     <hr>
                     <div id="zux-ban-check-2"></div>
-                    <div id="ban-add-button">
-                        <div id="ban-left-button">
-                            <button id="zux-tab-ban-ajouter-hn" class="zux-button">Ajouter HN</button>
-                            <button id="zux-tab-ban-auto-hn" class="zux-button">A</button>
+                    <style>
+                        .zux-button {
+                            background: #0099ff;
+                            color: #ffffff;
+                            border-radius: 20px;
+                            height: 40px;
+                            border: none;
+                            padding: 12px;
+                            font-weight: bold;
+                            display: flex;
+                            align-items: center;
+                        }
+
+                        .zux-button:hover {
+                            background: #0585dc;
+                        }
+
+                        .zux-button:active {
+                            background: #0a71b7;
+                        }
+                        .zux-btn-red-1 {
+                            cursor: pointer;
+                            color: #e42828;
+                            padding: 0 15px;
+                            border-radius: 100px;
+                            height: 40px;
+                            font-size: 13px;
+                            font-weight: 500;
+                            display: flex;
+                            align-items: center;
+                            background-color: #f2f4f7;
+                            border: 1px solid white;
+                            width: fit-content;
+                            user-select: none;
+                        }
+
+                        .zux-btn-red-1:hover {
+                            background-color: #f3edf0;
+                        }
+
+                        .zux-btn-red-1:active {
+                            background-color: #f3e3e6;
+                        }
+
+                        .zux-btn-red-1:focus:hover {
+                            border: 1px solid #e42828;
+                        }
+
+                        .zux-btn-1 {
+                            cursor: pointer;
+                            color: #0075e3;
+                            padding: 0 12px;
+                            border-radius: 100px;
+                            height: 40px;
+                            font-size: 13px;
+                            font-weight: 500;
+                            display: flex;
+                            align-items: center;
+                            background-color: #f2f4f7;
+                            border: 1px solid white;
+                            width: fit-content;
+                            user-select: none;
+                        }
+
+                        .zux-btn-1:hover {
+                            background-color: #e9f0f7;
+                        }
+
+                        .zux-btn-1:active {
+                            background-color: #d1e7f8;
+                        }
+
+                        .zux-btn-1:focus:hover {
+                            border: 1px solid #0075e3;
+                        }
+                    </style>
+                    <div id="ban-add-button"style="display: flex;  gap: 10px;  margin-top: 10px;  justify-content: space-between;">
+                        <div id="ban-left-button" style="display: flex;  gap: 2px;">
+                            <button id="zux-tab-ban-ajouter-hn" class="zux-button" style="border-radius: 25px 0px 0px 25px;">Ajouter HN</button>
+                            <button id="zux-tab-ban-auto-hn" class="zux-button" style="border-radius: 0px 25px 25px 0px;  background: none;  color: black;  border: 3px solid #09f;  padding: 7px;">A</button>
                         </div>
-                        <div id="ban-right-button">
-                            <button id="zux-tab-ban-ajouter-rpp" class="zux-button">Ajouter RPP</button>
-                            <button id="zux-tab-ban-auto-rpp" class="zux-button">A</button>
+                        <div id="ban-right-button" style="display: flex;  gap: 2px;">
+                            <button id="zux-tab-ban-ajouter-rpp" class="zux-button" style="border-radius: 25px 0px 0px 25px;">Ajouter RPP</button>
+                            <button id="zux-tab-ban-auto-rpp" class="zux-button" style="border-radius: 0px 25px 25px 0px;  background: none;  color: black;  border: 3px solid #09f;  padding: 7px;">A</button>
                         </div>
                     </div><br>
                     <div id="ban-add-info">
@@ -157,9 +245,9 @@
                     <div style="padding:10px;">
                         <button id="upload-btn" class="zux-button">📂 Importer un fichier CSV BAN</button>
                         <input type="file" id="csv-input" accept=".csv" style="display:none;">
-                        <select id="commune-select"></select>
-                        <select id="voie-select"></select>
-                        <div id="list-ban"></div>
+                        <select id="commune-select" style="display: none;  margin-bottom: 10px;  padding: 5px;  width: 100%;  font-family: monospace;"></select>
+                        <select id="voie-select" style="display: none;  margin-bottom: 10px;  padding: 5px;  width: 100%;  font-family: monospace;"></select>
+                        <div id="list-ban" style="border: 1px solid #ccc;  background: #fafafa;  max-height: 550px;  overflow: auto;  font-family: monospace;  white-space: nowrap;  padding: 10px;"></div>
                     </div>
                 `,
                 id: [
@@ -169,11 +257,11 @@
                     { type: "check", container: "zux-ban-check-2", text: "Ajout uniquement dans une zone déssiné", id: "zux-tab-ban-zone" },
                     { type: "check", container: "zux-ban-check-2", text: "Ajout uniquement sur la rue survolée", id: "zux-tab-ban-rue" },
                 ]
-            }, {
-                title: "Gomme", svg: `M210.5 480L333.5 480L398.8 414.7L225.3 241.2L98.6 367.9L210.6 479.9zM256 544L210.5 544C193.5 544 177.2 537.3 165.2 525.3L49 409C38.1 398.1 32 383.4 32 368C32 352.6 38.1 337.9 49 327L295 81C305.9 70.1 320.6 64 336 64C351.4 64 366.1 70.1 377 81L559 263C569.9 273.9 576 288.6 576 304C576 319.4 569.9 334.1 559 345L424 480L544 480C561.7 480 576 494.3 576 512C576 529.7 561.7 544 544 544L256 544z`,
+            }, { // Gomme
+                title: "Gomme", icon: `<i class="fa-solid fa-eraser" style="font-size:17px;"></i>`,
                 content: `
                     <span>Choisissez les éléments à supprimer:</span>
-                    <div id="zux-md-del"><div class="controls-container" style="display:none;"></div></div><br>
+                    <div id="zux-md-del" style="display: flex; justify-content: space-between;"><div class="controls-container" style="display:none;"></div></div><br>
                     <div id="zux-md-pref"></div>
                     <button id="clearBtn" class="zux-btn-red-1">
                         <i class="w-icon w-icon-trash" slot="left-icon"></i>
@@ -187,8 +275,8 @@
                     { type: "chip", container: "zux-md-del", text: "Segment", id: "zux-tab-md-segment" },
                     { type: "check", container: "zux-md-pref", text: "Supprimer la zone d'une note", id: "zux-tab-md-zone" },
                 ]
-            }, {
-                title: "Cadastre", svg: `M296.5 69.2C311.4 62.3 328.6 62.3 343.5 69.2L562.1 170.2C570.6 174.1 576 182.6 576 192C576 201.4 570.6 209.9 562.1 213.8L343.5 314.8C328.6 321.7 311.4 321.7 296.5 314.8L77.9 213.8C69.4 209.8 64 201.3 64 192C64 182.7 69.4 174.1 77.9 170.2L296.5 69.2zM112.1 282.4L276.4 358.3C304.1 371.1 336 371.1 363.7 358.3L528 282.4L562.1 298.2C570.6 302.1 576 310.6 576 320C576 329.4 570.6 337.9 562.1 341.8L343.5 442.8C328.6 449.7 311.4 449.7 296.5 442.8L77.9 341.8C69.4 337.8 64 329.3 64 320C64 310.7 69.4 302.1 77.9 298.2L112 282.4zM77.9 426.2L112 410.4L276.3 486.3C304 499.1 335.9 499.1 363.6 486.3L527.9 410.4L562 426.2C570.5 430.1 575.9 438.6 575.9 448C575.9 457.4 570.5 465.9 562 469.8L343.4 570.8C328.5 577.7 311.3 577.7 296.4 570.8L77.9 469.8C69.4 465.8 64 457.3 64 448C64 438.7 69.4 430.1 77.9 426.2z`,
+            }, { // Cadastre
+                title: "Cadastre", icon: `<i class="fa-solid fa-layer-group" style="font-size:17px;"></i>`,
                 content: `
                     <div id="zux-tab-cadastre-pref"></div>
                     <div id="zux-tab-cadastre-select-1"><div style="color:#202124;font-size:12px;font-weight:500;margin-bottom: 8px;">Types disponibles</div></div>
@@ -198,10 +286,11 @@
                         <div id="commune-dropdown"></div>
                     </div>
                     <br><br>
-                    <div class="moButtons">
+                    <div class="moButtons" style="display: flex;  gap: 10px;">
                         <div id="zux-tab-cadastre-add-layer" class="zux-button">Afficher le cadastres</div>
-                        <div id="clear-layer" class="zux-button" onclick="clearLayer()">Nettoyer</div>
+                        <div id="zux-cadastre-clear" class="zux-button">Nettoyer</div>
                     </div><br>
+                    <b>Attention, le système n'est pas optimisé et la modification est directe</b>
                     <strong>Remplissage</strong><br>
                     <div class="divInv">
                         <div>Couleur</div>
@@ -251,8 +340,8 @@
                     { type: "option", select: "zux-tab-cadastre-category-select", value: "subdivisions_fiscales", text: "Subdivisions fiscales" },
                     { type: "option", select: "zux-tab-cadastre-category-select", value: "prefixes_sections", text: "Préfixes sections" }
                 ]
-            }, {
-                title: "Interface", svg: `M512 160L512 416L128 416L128 160L512 160zM128 96C92.7 96 64 124.7 64 160L64 416C64 451.3 92.7 480 128 480L272 480L256 528L184 528C170.7 528 160 538.7 160 552C160 565.3 170.7 576 184 576L456 576C469.3 576 480 565.3 480 552C480 538.7 469.3 528 456 528L384 528L368 480L512 480C547.3 480 576 451.3 576 416L576 160C576 124.7 547.3 96 512 96L128 96z`,
+            }, { // Interface
+                title: "Interface", icon: `<i class="fa-solid fa-display" style="font-size:17px;"></i>`,
                 content: `
                     <div id="zux-ui-checkbox"></div>
                 `,
@@ -265,249 +354,298 @@
                     { type: "check", container: "zux-ui-checkbox", text: "Compteur d'édition", id: "zux-tab-ui-counter" },
                     { type: "check", container: "zux-ui-checkbox", text: "Ligne de connexion", id: "zux-tab-ui-lines" },
                 ]
-            }].forEach(t => {
-                // TITLE
-                const title = document.createElement("div");
-                title.id = "zux-tab-" + t.title + "-title";
-                title.className = "zux-tab-menu-title"
-                title.innerHTML = t.title;
-                title.onclick = () => {
-                    $all(".zux-tab-menu-title").forEach(t => {
-                        t.style.color = "#55595e";
-                        t.style.backgroundColor = null;
+            }, { // Infobulle
+                title: "Infobulle", icon: `<i class="fa-solid fa-circle-info" style="font-size:17px;"></i>`,
+                content: `
+                    <i class="fa-solid fa-spinner fa-spin-pulse" style="width:100%;font-size:100px;"></i>
+                    <button id="bouton_secret">Bouton secret, ne pas appuyer</button>
+                `,
+                id: []
+            }, { // Chat
+                title: "Chat", icon: `<i class="fa-solid fa-headset" style="font-size:17px;"></i>`,
+                content: `
+                    <input type="search" placeholder="Effectuez une recherche Waze" id="zux-chat-input" style="width:100%;border-radius:100px;padding:5px 10px;border:1px solid #ccc;outline: none;margin-bottom:10px;">
+                    <div id="chat_container" style="width:100%;height:100%"></div>
+                `,
+                id: []
+            }].forEach((el, i, arr) => {
+                // Création des boutons du menu
+                const div = document.createElement("div");
+                div.id = "zux-tab-" + el.title + "-title";
+                div.className = "zux-tab-menu-title";
+                div.innerText = el.title;
+                Object.assign(div.style, { width: "75px", height: "75px", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", background: "#fff", color: "#55595e", cursor: "pointer" });
+                if (i === 0) div.style.borderRadius = "10px 10px 0 0";
+                if (i === arr.length - 1) div.style.borderRadius = "0 0 10px 10px";
+                div.insertAdjacentHTML('afterbegin', el.icon);
+                div.addEventListener("mouseenter", () => { if (div.className !== "zux-tab-menu-title-active") div.style.backgroundColor = "#f6f6f6"; });
+                div.addEventListener("mouseleave", () => { if (div.className !== "zux-tab-menu-title-active") div.style.backgroundColor = "#fff"; });
+                div.addEventListener("click", () => {
+                    // Gestion des boutons
+                    $all(".zux-tab-menu-title-active").forEach(el => { el.className = "zux-tab-menu-title"; });
+                    $all(".zux-tab-menu-title").forEach(el => { Object.assign(el.style, { color: "#55595e", backgroundColor: "#fff" }); });
+                    Object.assign(div.style, { color: "#0075e3", backgroundColor: "#e5f1fc" });
+                    div.className = "zux-tab-menu-title-active";
+
+                    // Génération des éléments
+                    $id("zux-tabs-content").innerHTML = el.content;
+                    el.id.forEach(eli => {
+                        switch (eli.type) {
+                            case "check": genWzCheck(eli.text, eli.container, eli.id); break;
+                            case "chip": genWzChip(eli.text, eli.container, eli.id); break;
+                            case "select": genWzSelect(eli.container, eli.id, eli.value); break;
+                            case "option": genWzOption(eli.text, eli.value, eli.select); break;
+                        }
                     });
-                    $all(".zux-tab-menu-title path").forEach(t => t.setAttribute("fill", "#55595e"));
-                    $all("#" + title.id + " path").forEach(t => t.setAttribute("fill", "#0075e3"));
-                    title.style.color = "#0075e3";
-                    title.style.backgroundColor = "#e5f1fc";
 
-                    $all(".zux-tab-content").forEach(c => c.style.display = "none");
-                    $id("zux-tab-" + t.title + "-content").style.display = "block";
-                };
-                //$id("zux-tabs-title").append(title);
-                $id("zux-tabs-extended-menu").append(title);
+                    // Gestion des évènements par onglet
+                    switch (el.title) {
+                        case "Notes":
+                            $all(".zux-tab-note").forEach(el => {
+                                el.addEventListener("mouseenter", () => el.style.backgroundColor = "#f5fafe");
+                                el.addEventListener("mouseleave", () => el.style.backgroundColor = "#fff");
+                                el.addEventListener("click", () => {
+                                    // Gestion des boutons
+                                    $all(".zux-tab-note").forEach(e => { Object.assign(e.style, { color: "#55595e", borderBottom: "2px solid #fff" }); });
+                                    Object.assign(el.style, { color: "#09f", borderBottom: "2px solid #09f" });
+                                });
+                            });
 
-                // SVG
-                let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-                svg.setAttribute("viewBox", "0 0 640 640");
-                svg.style.height = "24px";
+                            $id("zux-tab-note-faire").addEventListener("click", () => showNotes("faire"));
+                            $id("zux-tab-note-surv").addEventListener("click", () => showNotes("surv"));
+                            $id("zux-tab-note-autre").addEventListener("click", () => showNotes("autre"));
+                            $id("zux-tab-note-ajouter").addEventListener("click", () => addNote());
+                            break;
+                        case "Adresses":
+                            $id("zux-tab-ban-afficher").addEventListener("change", ($) => {
+                                showAdress = $.target.checked;
+                                showAdress ? showAddress() : removeLayer();
+                            });
 
-                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                path.setAttribute("d", t.svg);
-                path.setAttribute("fill", "#55595e");
+                            $id("zux-tab-ban-surlign").addEventListener("change", ($) => hlStreet = $.target.checked);
+                            $id("zux-tab-ban-dessin").addEventListener("change", ($) => polyStreet = $.target.checked);
 
-                svg.append(path);
-                title.prepend(svg)
+                            $id("zux-tab-ban-zone").addEventListener("change", ($) => addAddressOnArea = $.target.checked);
+                            $id("zux-tab-ban-rue").addEventListener("change", ($) => addOnStreet = $.target.checked);
 
-                // CONTENT
-                const content = document.createElement("div");
-                content.id = "zux-tab-" + t.title + "-content";
-                content.className = "zux-tab-content"
-                content.innerHTML = t.content;
-                content.style.display = "none";
-                $id("zux-tabs-content").append(content);
+                            $id("zux-tab-ban-ajouter-hn").addEventListener("click", () => getAddressInExtend("hn"));
+                            $id("zux-tab-ban-ajouter-rpp").addEventListener("click", () => getAddressInExtend("rpp"));
 
-                if (t.id) {
-                    t.id.forEach(el => {
-                        if (el.type === "check") createWzCheckbox(el.text, el.container, el.id);
-                        if (el.type === "chip") createWzChip(el.text, el.container, el.id);
-                        if (el.type === "select") createWzSelect(el.container, el.id, el.value);
-                        if (el.type === "option") createWzOption(el.text, el.value, el.select);
-                    });
-                }
+                            $id("zux-tab-ban-auto-hn").addEventListener("click", ($) => {
+                                autoAddHn = !autoAddHn;
+                                $.target.style.backgroundColor = autoAddHn ? "#09f" : "#fff";
+                                $.target.style.color = autoAddHn ? "#fff" : "#000";
+                            });
+
+                            $id("zux-tab-ban-auto-rpp").addEventListener("click", ($) => {
+                                autoAddRpp = !autoAddRpp;
+                                $.target.style.backgroundColor = autoAddRpp ? "#09f" : "#fff";
+                                $.target.style.color = autoAddRpp ? "#fff" : "#000";
+                            });
+
+                            $id("ban-add-info-clear").addEventListener("click", ($) => { errBanCounter = 0, $.target.innerHTML = "" });
+                            break;
+                        case "Gomme":
+                            $id("zux-tab-md-rpp").addEventListener("click", ($) => { del_rpp = $.target.checked });
+                            $id("zux-tab-md-hn").addEventListener("click", ($) => { del_hn = $.target.checked });
+                            $id("zux-tab-md-poi").addEventListener("click", ($) => { del_poi = $.target.checked });
+                            $id("zux-tab-md-segment").addEventListener("click", ($) => { del_segment = $.target.checked });
+                            $id("zux-tab-md-zone").addEventListener("click", ($) => { del_onlyArea = $.target.checked });
+                            $id("clearBtn").addEventListener("click", () => { del_clear() });
+                            break;
+                        case "Cadastre":
+                            $id("zux-tab-cadastre-category-select").addEventListener("change", ($) => { LAYER_TYPE = $.target.value; });
+                            $id("zux-tab-cadastre-active").addEventListener("change", ($) => isScriptActive = $.target.checked, populateCommuneDropdown());
+                            $id("zux-tab-cadastre-polygons").addEventListener("change", ($) => arePolygonsVisible = $.target.checked, togglePolygonVisibility());
+                            $id("zux-tab-cadastre-add-layer").addEventListener("click", () => { if (isScriptActive) getCadastreData(codeQCommune); });
+                            $id("zux-cadastre-clear").addEventListener("click", () => { clearLayer(); });
+
+                            ["fillColor", "fillOpacity", "strokeColor", "strokeWidth", "pointColor", "pointSize", "pointOpacity"].forEach(el => {
+                                $id(el).addEventListener("input", () => applyStyles());
+                            });
+
+                            break;
+                        case "Interface":
+                            ["undoAll", "links", "zoom", "crosshair", "city", "counter", "lines"].forEach(el => {
+                                $id("zux-tab-ui-" + el).addEventListener("change", e => {
+                                    unsafeWindow["ui_" + el] = e.target.checked;
+                                });
+                            });
+                            break;
+                        case "Infobulle":
+                            $id("bouton_secret").addEventListener("click", () => useless(1));
+                            break;
+                        case "Chat":
+                            $id("zux-chat-input").addEventListener("keydown", (e) => {
+                                if (e.key === "Enter") chat_SetChat(e.target.value);
+                            });
+                            break;
+                    }
+                });
+                $id("zux-tabs-extended-menu").append(div);
             });
 
+            // Gestion du menu extensible
             $id("zux-tabs-extend-menu").addEventListener("click", ($) => {
-                if ($.target.innerText === "<") {
-                    $.target.innerText = ">";
-                    $id("zux-tabs-extended-menu").style.opacity = "0";
-                    $id("zux-tabs-extended-menu").style.pointerEvents = "none";
-                    $id("zux-tabs-menu").style.right = "-25px";
-                } else if ($.target.innerText === ">") {
-                    $.target.innerText = "<";
-                    $id("zux-tabs-extended-menu").style.opacity = "1";
-                    $id("zux-tabs-extended-menu").style.pointerEvents = "auto";
-                    $id("zux-tabs-menu").style.right = "-105px";
-                }
+                const open = $.target.innerText === ">";
+                $.target.innerText = open ? "<" : ">";
+                $id("zux-tabs-extended-menu").style.opacity = open ? "1" : "0";
+                $id("zux-tabs-extended-menu").style.pointerEvents = open ? "auto" : "none";
+                $id("zux-tabs-menu").style.right = open ? "-105px" : "-25px";
             });
 
-            (function () {// Note
-                $id("zux-tab-note-faire").addEventListener("click", () => showNotes("faire"));
-                $id("zux-tab-note-surv").addEventListener("click", () => showNotes("surv"));
-                $id("zux-tab-note-autre").addEventListener("click", () => showNotes("autre"));
-                $id("zux-tab-note-ajouter").addEventListener("click", () => addNote());
+            const menu = $id("zux-tabs-menu");
+            menu.addEventListener("mouseenter", () => menu.style.opacity = "1");
+            menu.addEventListener("mouseleave", () => menu.style.opacity = "0.5");
 
-            })();
-
-            (function () {// Adresse
-                $id("zux-tab-ban-afficher").addEventListener("change", ($) => {
-                    showAdress = $.target.checked;
-                    showAdress ? showAddress() : removeLayer();
-                });
-
-                $id("zux-tab-ban-surlign").addEventListener("change", ($) => hlStreet = $.target.checked);
-                $id("zux-tab-ban-dessin").addEventListener("change", ($) => polyStreet = $.target.checked);
-
-                $id("zux-tab-ban-zone").addEventListener("change", ($) => addAddressOnArea = $.target.checked);
-                $id("zux-tab-ban-rue").addEventListener("change", ($) => addOnStreet = $.target.checked);
-
-                $id("zux-tab-ban-ajouter-hn").addEventListener("click", () => getAddressInExtend("hn"));
-                $id("zux-tab-ban-ajouter-rpp").addEventListener("click", () => getAddressInExtend("rpp"));
-
-                $id("zux-tab-ban-auto-hn").addEventListener("click", ($) => {
-                    autoAddHn = !autoAddHn;
-                    $.target.style.backgroundColor = autoAddHn ? "#09f" : "#fff";
-                    $.target.style.color = autoAddHn ? "#fff" : "#000";
-                });
-
-                $id("zux-tab-ban-auto-rpp").addEventListener("click", ($) => {
-                    autoAddRpp = !autoAddRpp;
-                    $.target.style.backgroundColor = autoAddRpp ? "#09f" : "#fff";
-                    $.target.style.color = autoAddRpp ? "#fff" : "#000";
-                });
-
-                $id("ban-add-info-clear").addEventListener("click", ($) => { errBanCounter = 0, $.target.innerHTML = "" });
-            })();
-
-            (function () {// Gomme
-                $id("zux-tab-md-rpp").addEventListener("click", ($) => { del_rpp = $.target.checked });
-                $id("zux-tab-md-hn").addEventListener("click", ($) => { del_hn = $.target.checked });
-                $id("zux-tab-md-poi").addEventListener("click", ($) => { del_poi = $.target.checked });
-                $id("zux-tab-md-segment").addEventListener("click", ($) => { del_segment = $.target.checked });
-                $id("zux-tab-md-zone").addEventListener("click", ($) => { del_onlyArea = $.target.checked });
-                $id("clearBtn").addEventListener("click", () => { del_clear() });
-
-            })();
-
-            (function () {// Cadastre
-                $id("zux-tab-cadastre-category-select").addEventListener("change", ($) => {
-                    LAYER_TYPE = $.target.value;
-                    _setLog("Type cadastre : " + $.target.value);
-                });
-                $id("zux-tab-cadastre-active").addEventListener("change", ($) => isScriptActive = $.target.checked, populateCommuneDropdown());
-                $id("zux-tab-cadastre-polygons").addEventListener("change", ($) => arePolygonsVisible = $.target.checked, togglePolygonVisibility());
-                $id("zux-tab-cadastre-add-layer").addEventListener("click", () => {
-                    if (isScriptActive) !codeQCommune ? _showAlert(1, 4, "alert") : _showAlert(1, 0, "info"), getCadastreData(codeQCommune);
-                    else _showAlert(1, 2, "alert");
-                });
-            })();
-
-            (function () {// Interface
-                ["undoAll", "links", "zoom", "crosshair", "city", "counter", "lines"].forEach(el => {
-                    $id("zux-tab-ui-" + el).addEventListener("change", e => {
-                        unsafeWindow["ui_" + el] = e.target.checked;
-                    });
-                });
-            })();
+            _setLog("✅ Sidebar initialisée", t);
         });
-    });
+    }
 
-    function wmeEvents(event) {
-        switch (event) {
-            case "wme-map-move-end":
-                _setLog("wme-map-move-end");
-                wmeMap.mapCenter = wmeSDK.Map.getMapCenter(); wmeMap.zoomLevel = wmeSDK.Map.getZoomLevel();
-                wmeMap.mapExtent = (([l, b, r, t]) => ({ left: l, bottom: b, right: r, top: t }))(wmeSDK.Map.getMapExtent());
-                _setLog("Information de la carte affiché : ", wmeMap)
-
-                _getCurrentLocation();
-
-                // CADASTRE
-                populateCommuneDropdown();
-
-                showAddress();
+    function useless(step) {
+        // Cette fonction est INDISPENSABLE au bon fonctionnement du code.
+        // Si tu pense la comprendre, tu te méprend.
+        switch (step) {
+            case 1:
+                GM_notification({
+                    title: "Bonne nouvelle !",
+                    text: "Félicitation, vous venez de gagner la somme incroyable de 1 000 000€ !\nCliquez ici pour en profiter.",
+                    image: "https://cdn-icons-png.flaticon.com/512/7460/7460812.png",
+                    onclick: (event) => useless(2)
+                });
                 break;
-            case "wme-save-finished": _setLog("wme-save-finished"); setEditCounter(); break;
-            case "wme-feature-editor-opened": _setLog("wme-feature-editor-opened"); setEditPanel(); break;
+            case 2:
+                GM_notification({
+                    title: "Opération en cours...",
+                    text: "Veuillez patienter, le transfert est en cours.",
+                    timeout: 5000,
+                    image: "https://cdn-icons-png.flaticon.com/512/75/75622.png",
+                    ondone: (event) => useless(3)
+                });
+                break;
+            case 3:
+                GM_notification({
+                    title: "Opération en cours...",
+                    text: "Oups ! Une erreur est survenue lors du transfert.\nCliquez ici pour ressayer.",
+                    timeout: 10000,
+                    image: "https://cdn-icons-png.flaticon.com/512/75/75622.png",
+                    onclick: (event) => useless(2)
+                });
+                break;
         }
     }
 
-    function createWzCheckbox(text, container, id) {
-        const wazeCheckbox = document.createElement("div");
-        wazeCheckbox.className = "controls-container";
-        wazeCheckbox.innerHTML = `
-                    <wz-checkbox id="${id}">
-                        <template>
-                            <span tabindex="0">
-                                <label class="wz-checkbox" tabindex="-1">
-                                    <input type="checkbox">
-                                        <div class="border">
-                                            <div class="fill"></div>
-                                            <div class="mask"></div>
-                                        </div>
-                                        <slot></slot>
-                                </label>
-                            </span>
-                        </template>` + text + `
-                        <input type="checkbox" style="display:none;visibility:hidden;">
-                    </wz-checkbox>
-                    `;
-        $id(container).append(wazeCheckbox);
+    function init_WzEvents(event) {
+        switch (event) {
+            case "map-move-end":
+                // Récupération des infos de la carte
+                const map = wmeSDK.Map, mapExtent = map.getMapExtent();
+                wmeMap.mapCenter = map.getMapCenter(); wmeMap.zoomLevel = map.getZoomLevel();
+                wmeMap.mapExtent = { left: mapExtent[0], bottom: mapExtent[1], right: mapExtent[2], top: mapExtent[3] };
+                _setLog("ℹ️🌐 Information de la carte WME : ", wmeMap);
+
+                ui_SetLocationInfo();
+
+                // CADASTRE
+                populateCommuneDropdown();
+                setConnectionLines();
+
+                showAddress();
+                break;
+            case "save-finished":
+                setEditCounter();
+                break;
+            case "feature-editor-opened":
+                setEditPanel();
+                break;
+        }
     }
 
-    function createWzChip(text, container, id) {
-        const wazeCheckbox = document.createElement("div");
-        wazeCheckbox.className = "controls-container";
-        wazeCheckbox.innerHTML = `
-                    <wz-checkable-chip size="md" id="${id}">
-                        <template>
-                            <div tabindex="0" class="wz-chip md outline">
-                                <span class="text">
-                                    <slot></slot>
-                                </span>
-                            </div>
-                        </template>`+ text + `
-                    </wz-checkable-chip>
-                    `;
-        $id(container).append(wazeCheckbox);
+    function genWzCheck(text, container, id) {
+        const div = document.createElement("div");
+        div.className = "controls-container";
+        div.innerHTML = `
+            <wz-checkbox id="${id}">
+                <template>
+                    <span tabindex="0">
+                        <label class="wz-checkbox" tabindex="-1">
+                            <input type="checkbox">
+                                <div class="border">
+                                    <div class="fill"></div>
+                                    <div class="mask"></div>
+                                </div>
+                                <slot></slot>
+                        </label>
+                    </span>
+                </template>${text}
+            <input type="checkbox" style="display:none;visibility:hidden;">
+            </wz-checkbox>
+        `;
+        $id(container).append(div);
     }
 
-    function createWzSelect(container, id, value) {
+    function genWzChip(text, container, id) {
+        const div = document.createElement("div");
+        div.className = "controls-container";
+        div.innerHTML = `
+            <wz-checkable-chip size="md" id="${id}">
+                <template>
+                    <div tabindex="0" class="wz-chip md outline">
+                        <span class="text">
+                            <slot></slot>
+                        </span>
+                    </div>
+                </template>${text}
+            </wz-checkable-chip>
+        `;
+        $id(container).append(div);
+    }
+
+    function genWzSelect(container, id, value) {
         const sel = document.createElement("wz-select");
         sel.id = id;
         sel.setAttribute("value", value);
         sel.innerHTML = `
-                    <template shadowrootmode="open">
-                        <div class="wz-select">
-                            <div class="select-wrapper" id="select-wrapper">
-                                <div tabindex="0" class="select-box">
-                                    <div class="selected-value-wrapper">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M12 15C11.73 15 11.48 14.89 11.29 14.71L7.32998 10.71C6.93998 10.32 6.93998 9.69 7.32998 9.3C7.71998 8.91 8.34998 8.91 8.73998 9.3L12 12.58L15.29 9.29C15.68 8.9 16.31 8.9 16.7 9.29C17.09 9.68 17.09 10.31 16.7 10.7L12.7 14.7C12.52 14.89 12.27 15 12 15Z">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <wz-menu>
-                                    <template shadowrootmode="open">
-                                        <div class="upper-menu wz-menu">
-                                            <div class="options-container" style="display: contents;">
-                                                <div class="options-wrapper" tabindex="0"></div>
-                                            </div>
-                                        </div>
-                                    </template>
-                                    <slot></slot>
-                                </wz-menu>
+            <template shadowrootmode = "open">
+                <div class="wz-select">
+                    <div class="select-wrapper" id="select-wrapper">
+                        <div tabindex="0" class="select-box">
+                            <div class="selected-value-wrapper">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M12 15C11.73 15 11.48 14.89 11.29 14.71L7.32998 10.71C6.93998 10.32 6.93998 9.69 7.32998 9.3C7.71998 8.91 8.34998 8.91 8.73998 9.3L12 12.58L15.29 9.29C15.68 8.9 16.31 8.9 16.7 9.29C17.09 9.68 17.09 10.31 16.7 10.7L12.7 14.7C12.52 14.89 12.27 15 12 15Z">
+                                    </path>
+                                </svg>
                             </div>
                         </div>
-                    </template>
-                    `;
+                        <wz-menu>
+                            <template shadowrootmode="open">
+                                <div class="upper-menu wz-menu">
+                                    <div class="options-container" style="display: contents;">
+                                        <div class="options-wrapper" tabindex="0"></div>
+                                    </div>
+                                </div>
+                            </template>
+                            <slot></slot>
+                        </wz-menu>
+                    </div>
+                </div>
+            </template >
+        `;
         $id(container).append(sel);
     }
 
-    function createWzOption(text, value, select) {
+    function genWzOption(text, value, select) {
         const option = document.createElement("wz-option");
         option.setAttribute("value", value);
 
         const tpl = document.createElement("template");
         tpl.setAttribute("shadowrootmode", "open");
         tpl.innerHTML = `
-                    <div class="wz-menu-item">
-                        <slot></slot>
-                    </div>
-                    `;
+            <div class="wz-menu-item">
+                <slot></slot>
+            </div >
+        `;
 
         option.append(tpl, document.createTextNode(text));
         $id(select).append(option);
@@ -529,61 +667,6 @@
         else console.error(prefix, stylePrefix, ...args);
     }
 
-    function _showAlert(isVisible, alertIndex, type = "alert") {
-        const zuxAlert = $sel("#zux-alert");
-        if (!zuxAlert) return setTimeout(_showAlert, 500);
-
-        const phrases = [
-            "Données en cours de chargement !", // 0
-            "Aucun type séléctionné !", // 1
-            "Le script n'est pas activé !", // 2
-            "L'affichage est désactivé !", // 3
-            "Aucune commune séléctionnée !", // 4
-            "Sélectionnez une note !", // 5
-        ];
-
-        if (currentTimeout) {
-            clearTimeout(currentTimeout);
-            currentTimeout = null;
-        }
-
-        if (isVisible) {
-            if (type === "alert") {
-                zuxAlert.innerHTML = `
-                    <div><i class="fa-solid fa-triangle-exclamation" style="height: 50px; margin-right: 10px;"></i></div>
-                    <div>${phrases[alertIndex]}</div>`;
-            } else {
-                zuxAlert.innerHTML = `
-                    <div><div class="loader"></div></div>
-                    <div>${phrases[alertIndex]}</div>
-                `;
-            }
-
-            zuxAlert.style.display = "flex";
-
-            if (type === "alert") {
-                currentTimeout = setTimeout(() => {
-                    zuxAlert.innerHTML = "";
-                    zuxAlert.style.display = "none";
-                    currentTimeout = null;
-                }, 1000);
-            }
-        } else { zuxAlert.innerHTML = ""; zuxAlert.style.display = "none"; }
-    }
-
-    function _createWebRequest(url) {
-        return new Promise((resolve, reject) => {
-            GM_xmlhttpRequest({
-                method: "GET", url: url,
-                onload: function (response) {
-                    if (response.status === 200) try { resolve(JSON.parse(response.responseText)); } catch (e) { reject(e); }
-                    else reject(response.status);
-                },
-                onerror: function (err) { reject(err); }
-            });
-        });
-    }
-
     function _inPoly(point, vs, mode = "some") {
         if (!del_onlyArea) return true;
 
@@ -602,50 +685,59 @@
         return inside;
     }
 
-    async function _getCurrentLocation() {
-        try {
-            let data = await _createWebRequest(`https://data.geopf.fr/geocodage/reverse?lon=${wmeMap.mapCenter.lon}&lat=${wmeMap.mapCenter.lat}&index=poi&limit=4&returntruegeometry=false&category=administratif`);
-            data.features.forEach(f => {
-                const p = f.properties;
-                const cats = p.category || [];
+    function _SetWebRequest(url) {
+        const uuid = crypto.randomUUID();
+        _setLog("➡️🌐 Requête web " + uuid + " : ", url);
 
-                // Commune (ville)
-                if (cats.includes("commune")) {
-                    currentLoc.city = {
-                        code: p.citycode?.[0] || null,
-                        name: p.toponym || p.name?.[0] || null,
-                        postcode: p.postcode?.[0] || null
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                onload: function (response) {
+                    if (response.status === 200) {
+                        try {
+                            const json = JSON.parse(response.responseText);
+                            _setLog("🌐➡️ Réponse web " + uuid + " : ", json);
+                            resolve(json);
+                        } catch (e) {
+                            reject(e);
+                        }
+                    } else {
+                        _setLog("🌐❌ Erreur " + uuid + " : ", response.status);
+                        reject(response.status);
                     }
-
-                }
-
-                // Département
-                if (cats.includes("département")) {
-                    currentLoc.department = {
-                        code: p.citycode?.[0] || null,
-                        name: p.toponym || p.name?.[0] || null
-                    }
-                }
-
-                // Région
-                if (cats.includes("région")) {
-                    currentLoc.region = {
-                        code: p.citycode?.[0] || null,
-                        name: p.toponym || p.name?.[0] || null
-                    }
+                },
+                onerror: function (err) {
+                    _setLog("🌐❌ Erreur " + uuid + " : ", err);
+                    reject(err);
                 }
             });
-        } catch (e) { _setLog(e) }
+        });
+    }
 
-        try {
-            let data = await _createWebRequest(`https://data.geopf.fr/geocodage/reverse?lon=${wmeMap.mapCenter.lon}&lat=${wmeMap.mapCenter.lat}&index=address&limit=1&returntruegeometry=false`);
-            data = data.features[0]?.properties;
-            currentLoc.street = {
-                housenumber: data?.housenumber,
-                name: data?.street
-            }
-        } catch (e) { _setLog(e) }
-        _setLog("currentLoc : ", currentLoc);
+    async function _GetWorldLocation() {
+        const uuid = crypto.randomUUID();
+        _setLog("🌍📍 Récupération les infos de la localisation " + uuid);
+
+        const url = `https://data.geopf.fr/geocodage/reverse?lon=${wmeMap.mapCenter.lon}&lat=${wmeMap.mapCenter.lat}&index={index}&limit=4&category=administratif`;
+        let currentLoc = {}, data;
+
+        // Récupération des POI
+        data = await _SetWebRequest(url.replace("{index}", "poi"));
+        data.features.forEach(f => {
+            const p = f.properties, cats = p.category || [];
+            if (cats.includes("commune")) currentLoc.city = { code: p.citycode?.[0] || null, name: p.toponym || p.name?.[0] || null, postcode: p.postcode?.[0] || null };
+            if (cats.includes("département")) currentLoc.department = { code: p.citycode?.[0] || null, name: p.toponym || p.name?.[0] || null };
+            if (cats.includes("région")) currentLoc.region = { code: p.citycode?.[0] || null, name: p.toponym || p.name?.[0] || null };
+        });
+
+        // Récupération de l'adresse
+        data = await _SetWebRequest(url.replace("{index}", "address"));
+        data = data.features[0]?.properties;
+        currentLoc.street = { housenumber: data?.housenumber, name: data?.street };
+
+        _setLog("🌍📍 Localisation " + uuid + " : ", currentLoc);
+        return currentLoc;
     }
     //#endregion
 
@@ -691,12 +783,17 @@
             // --- construction DOM ---
             const noteContent = document.createElement("div");
             noteContent.className = "noteContent";
+            noteContent.style.display = "flex";
+            noteContent.style.justifyContent = "space-between";
+            noteContent.style.alignItems = "center";
+            noteContent.style.borderBottom = "1px solid #e1e1e1ff";
+            noteContent.style.padding = "10px";
             noteContent.id = "note_" + n.id;
             noteContent.innerHTML = `
                     <div>
                         <span>${n.content}</span>
                         <br>
-                            <i>${formatDate()} - ${timeAgo()}</i>
+                            <i style="color:#aaa">${formatDate()} - ${timeAgo()}</i>
                     </div>
                     <i class="w-icon w-icon-recenter" id="noteCoords_${n.id}" style="cursor:pointer;"></i>
                     `;
@@ -756,6 +853,12 @@
     function enableCustomContextMenu() {
         const menu = document.createElement("div");
         menu.id = "zux-context-menu";
+        menu.style.position = "absolute";
+        menu.style.zIndex = "10000";
+        menu.style.display = "none";
+        menu.style.borderRadius = "5px";
+        menu.style.background = "white";
+        menu.style.boxShadow = "0 0 5px rgba(0, 0, 0, 0.75)";
         document.body.appendChild(menu);
 
         function showMenu(x, y, target) {
@@ -766,11 +869,15 @@
 
             const action1 = document.createElement("div");
             action1.textContent = "Modifier";
+            action1.style.cursor = "pointer";
+            action1.style.padding = "10px";
             action1.addEventListener("click", () => saveNotes("edit", target.id));
             menu.appendChild(action1);
 
             const action2 = document.createElement("div");
             action2.textContent = "Supprimer";
+            action2.style.cursor = "pointer";
+            action2.style.padding = "10px";
             action2.addEventListener("click", () => saveNotes("del", target.id));
             menu.appendChild(action2);
         }
@@ -835,12 +942,13 @@
         });
     }
 
-    function addLayer(data, type) {
+    async function addLayer(data, type) {
         removeLayer();
         const currentHNKeys = new Set(
             currentHN.map(({ number, street, city }) => `${normalize(number)}|` + `${normalize(street)}|` + `${normalize(city)}`)
         );
 
+        const currentLoc = await _GetWorldLocation();
         const streetCurrNorm = normalize(currentLoc.street.name);
         const vectorLayer = new OpenLayers.Layer.Vector("address_layer");
         const polygonPoints = [];
@@ -1027,9 +1135,9 @@
                     if (!building) {
                         addAddress(type, ban_lon, ban_lat, number, streetName, cityName, ban_lon, ban_lat);
                         $id("ban-add-info-list").innerHTML += `
-                    <div id="${ban_lon} ${ban_lat}">
-                        <b>Aucun batiment trouvé</b><br>
-                            <span>${number} ${streetName}</span><br>
+                            <div id="${ban_lon} ${ban_lat}"style="cursor: pointer;  border-radius: 10px;  box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);  padding: 10px;  background-color: rgb(255, 200, 0);">
+                                <b>Aucun batiment trouvé</b><br>
+                                <span>${number} ${streetName}</span><br>
                                 <span>${cityName}</span>
                             </div><br>
                                 `;
@@ -1254,8 +1362,8 @@
             v = dm.Venues, s = dm.Segments, hn = dm.HouseNumbers,
             mc = del_onlyArea ? dm.MapComments.getById({ mapCommentId: sel.ids[0].toString() }).geometry.coordinates[0] : null;
 
-        if (del_onlyArea && !sel) { _showAlert(true, 5, "alert"); return; };
-        if (!del_rpp && !del_hn && !del_poi && !del_segment) { _showAlert(true, 1, "alert"); return; };
+        if (del_onlyArea && !sel) return;
+        if (!del_rpp && !del_hn && !del_poi && !del_segment) return;
 
         if (del_rpp) { v.getAll().forEach(($) => { if ($.isResidential && _inPoly($.geometry.coordinates, mc)) v.deleteVenue({ venueId: $.id }); }); };
         if (del_hn) {
@@ -1278,11 +1386,12 @@
         pointLayer.setVisibility(arePolygonsVisible);
     }
 
-    function populateCommuneDropdown() {
+    async function populateCommuneDropdown() {
         if (!isScriptActive) return;
         const dropdown = $id("commune-dropdown");
         dropdown.innerHTML = "";
 
+        const currentLoc = await _GetWorldLocation();
         const foundCity = document.createElement("div");
         foundCity.textContent = currentLoc.city.name;
         foundCity.className = "cityName";
@@ -1294,28 +1403,22 @@
         elements.forEach((element) => {
             element.style.cursor = "pointer";
             element.addEventListener("click", () => {
-                $all(".cityName").forEach((cityElement) => {
-                    cityElement.style.fontWeight = "normal";
+                $all(".cityName").forEach((el) => {
+                    el.style.fontWeight = "normal";
                 });
                 element.style.fontWeight = "bold";
                 codeQCommune = element.id;
+                _setLog("🏙️ Commune sélectionnée :", element.textContent, codeQCommune);
             });
         });
     }
 
-    function getCadastreData(codeCommune) {
+    async function getCadastreData(codeCommune) {
         if (!isScriptActive) return;
+        _setLog("📥 Récupération des données du cadastre pour la commune :", codeCommune);
 
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: `https://cadastre.data.gouv.fr/bundler/cadastre-etalab/communes/${codeCommune}/geojson/${LAYER_TYPE}CADASTRE_API_URL.replace`,
-            onload: (response) => {
-                try {
-                    const data = JSON.parse(response.responseText);
-                    if (data.features && data.features.length > 0) displayParcels(data.features);
-                } catch ($) { }
-            },
-        });
+        const data = await _SetWebRequest(`https://cadastre.data.gouv.fr/bundler/cadastre-etalab/communes/${codeCommune}/geojson/${LAYER_TYPE}`);
+        if (data.features && data.features.length > 0) displayParcels(data.features);
     }
 
     function displayParcels(parcels) {
@@ -1371,8 +1474,6 @@
         });
 
         togglePolygonVisibility();
-        if (arePolygonsVisible) _showAlert(0, 0, "info");
-        else _showAlert(1, 3, "alert");
     }
 
     function applyStyles() {
@@ -1382,10 +1483,10 @@
         const strokeColor = $id("strokeColor").value;
         const strokeWidth = parseInt($id("strokeWidth").value, 10);
         const pointSize = parseInt($id("pointSize").value, 10);
-        updateLayerStyles(fillColor, fillOpacity, strokeColor, strokeWidth, pointSize);
+        updateLayerStyle(fillColor, fillOpacity, strokeColor, strokeWidth, pointSize);
     }
 
-    function updateLayerStyles(fillColor, fillOpacity, strokeColor, strokeWidth, pointSize,) {
+    function updateLayerStyle(fillColor, fillOpacity, strokeColor, strokeWidth, pointSize,) {
         if (!pointLayer) return;
 
         // Appliquer les nouveaux styles
@@ -1400,6 +1501,97 @@
         });
         pointLayer.styleMap = updatedStyleMap;
         pointLayer.redraw(); // Redessine la couche pour appliquer les nouveaux styles
+    }
+
+    function setConnectionLines() {
+        if (!ui_lines) return;
+
+        let hn = [];
+
+        // Venues
+        wmeSDK.DataModel.Venues.getAll().forEach(v => {
+            if (
+                !v.navigationPoints ||
+                !v.navigationPoints.length ||
+                !v.navigationPoints[0].point ||
+                !v.navigationPoints[0].point.coordinates
+            ) return;
+
+            hn.push({
+                lon: v.geometry.coordinates[0],
+                lat: v.geometry.coordinates[1],
+                fpLon: v.navigationPoints[0].point.coordinates[0],
+                fpLat: v.navigationPoints[0].point.coordinates[1],
+                isForced: false
+            });
+        });
+
+        // House Numbers
+        wmeSDK.DataModel.HouseNumbers
+            .fetchHouseNumbers({
+                segmentIds: wmeSDK.DataModel.Segments.getAll().map(s => s.id)
+            })
+            .then(list => {
+
+                list.forEach(h => {
+                    if (
+                        !h.fractionPoint ||
+                        !h.fractionPoint.coordinates
+                    ) return;
+
+                    hn.push({
+                        lon: h.geometry.coordinates[0],
+                        lat: h.geometry.coordinates[1],
+                        fpLon: h.fractionPoint.coordinates[0],
+                        fpLat: h.fractionPoint.coordinates[1],
+                        isForced: h.isForced === true
+                    });
+                });
+
+                const layerLines = new OpenLayers.Layer.Vector("zux_lines", {
+                    styleMap: new OpenLayers.StyleMap(
+                        new OpenLayers.Style(
+                            {
+                                strokeWidth: 2,
+                                strokeOpacity: 1,
+                                strokeDashstyle: "dash",
+                                strokeColor: "${getColor}"
+                            },
+                            {
+                                context: {
+                                    getColor: function (feature) {
+                                        return feature.attributes.isForced ? "red" : "white";
+                                    }
+                                }
+                            }
+                        )
+                    )
+                });
+
+                hn.forEach(p => {
+                    if (
+                        p.lon == null || p.lat == null ||
+                        p.fpLon == null || p.fpLat == null
+                    ) return;
+
+                    layerLines.addFeatures(
+                        new OpenLayers.Feature.Vector(
+                            new OpenLayers.Geometry.LineString([
+                                new OpenLayers.Geometry.Point(p.lon, p.lat)
+                                    .transform("EPSG:4326", W.map.getProjectionObject()),
+                                new OpenLayers.Geometry.Point(p.fpLon, p.fpLat)
+                                    .transform("EPSG:4326", W.map.getProjectionObject())
+                            ]),
+                            {
+                                isForced: p.isForced
+                            }
+                        )
+                    );
+                });
+
+                W.map.getLayersByName("zux_lines").forEach(l => W.map.removeLayer(l));
+                W.map.addLayer(layerLines);
+            });
     }
     //#endregion
 
@@ -1495,81 +1687,94 @@
         parent.style.gap = "10px";
     })();
 
-    (async function setCityDetails() {
+    async function ui_SetLocationInfo() {
         if (!ui_city) return;
+        _setLog("🌍ℹ️ Mise à jour des infos de localisation étendues");
 
         const parent = $sel(".location-info-region");
-        if (!parent) return setTimeout(setCityDetails, 500);
+        if (!parent) return setTimeout(ui_SetLocationInfo, 500);
+        parent.style.display = "flex";
+        parent.style.gap = "25px";
 
-        const div = document.createElement("div");
-        parent.append(div);
+        let div = $id("zux-location-extended");
+        if (!div) {
+            div = document.createElement("div");
+            div.id = "zux-location-extended";
+            parent.append(div);
+        }
 
-        ["city", "department", "region"].forEach($ => {
-            let a = $id(".zux-location-extended-" + $);
+        const currentLoc = await _GetWorldLocation(),
+            api = `https://api-lannuaire.service-public.gouv.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?`,
+            dataCity = await _SetWebRequest(api + `where=${encodeURIComponent(`pivot LIKE "mairie" AND pivot LIKE "${currentLoc.city.code}"`)}&limit=1`),
+            dataDep = await _SetWebRequest(api + `where=${encodeURIComponent(`pivot LIKE "cg" AND nom LIKE "${currentLoc.department.name}"`)}&limit=1`),
+            dataReg = await _SetWebRequest(api + `where=${encodeURIComponent(`pivot LIKE "cr" AND nom LIKE "${currentLoc.region.name}"`)}&limit=1`);
+
+        ["city", "department", "region"].forEach(el => {
+            let a = $id("zux-location-extended-" + el);
             if (!a) {
                 a = document.createElement("a");
-                a.id = "zux-location-extended-" + $;
+                a.id = "zux-location-extended-" + el;
                 a.target = "_blank";
-                a.style.fontWeight = "400";
-                a.style.color = "#fff";
-                a.style.fontSize = "15px";
-                a.style.textDecoration = "none";
+                Object.assign(a.style, { color: "#fff", fontSize: "15px", fontWeight: "400", textDecoration: "none" });
 
-                a.onmouseover = e => e.target.style.color = "#cff";
-                a.onmouseleave = e => e.target.style.color = "#fff";
+                a.addEventListener("mouseenter", (e) => { e.target.style.color = "#cff"; });
+                a.addEventListener("mouseleave", (e) => { e.target.style.color = "#fff"; });
 
                 div.append(a);
             }
+
+            switch (el) {
+                case "city":
+                    a.href = JSON.parse(dataCity.results[0].site_internet)[0].valeur;
+                    a.innerText = currentLoc.city.name + ` (${currentLoc.city.postcode}), `;
+                    break;
+                case "department":
+                    a.href = JSON.parse(dataDep.results[0].site_internet)[0].valeur;
+                    a.innerText = currentLoc.department.name + `, `;
+                    break;
+                case "region":
+                    a.href = JSON.parse(dataReg.results[0].site_internet)[0].valeur;
+                    a.innerText = currentLoc.region.name;
+                    break;
+            }
         });
+        _setLog("🌍ℹ️ Mise à jour des infos de localisation terminée");
+    };
 
-        let dataCity = await _createWebRequest(`https://api-lannuaire.service-public.gouv.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?where=pivot%20LIKE%20%22mairie%22%20AND%20suggest(adresse%2C%22code_postal%20${currentLoc.city.postcode}%22)&limit=1`)
-        let dataDep = await _createWebRequest(`https://api-lannuaire.service-public.gouv.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?where=pivot%20LIKE%20%22cg%22%20AND%20suggest(adresse%2C%22code_postal%20${currentLoc.city.postcode}%22)&limit=1`)
-        let dataReg = await _createWebRequest(`https://api-lannuaire.service-public.gouv.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?where=pivot%20LIKE%20%22cr%22%20AND%20suggest(adresse%2C%22code_postal%20${currentLoc.city.postcode}%22)&limit=1`)
-
-        setTimeout(() => {
-            $id("zux-location-extended-city").innerText = `${currentLoc.city.name} (${currentLoc.city.postcode}), `;
-            $id("zux-location-extended-city").href = JSON.parse(dataCity.results[0].site_internet)[0].valeur;
-            $id("zux-location-extended-department").innerText = `${currentLoc.department.name}, `;
-            $id("zux-location-extended-department").href = JSON.parse(dataDep.results[0].site_internet)[0].valeur;
-            $id("zux-location-extended-region").innerText = `${currentLoc.region.name}`;
-            $id("zux-location-extended-region").href = JSON.parse(dataReg.results[0].site_internet)[0].valeur;
-        }, 1000);
-    })();
-
-    (function setEditCounter() {
+    (function ui_setEditCounter() {
         if (!ui_counter) return;
 
-        const $ = $sel(".secondary-toolbar-actions.user-toolbar");
-        let userName;
-        try { userName = wmeSDK.State.getUserInfo().userName; } catch (e) { }
-        if (!$ || !userName) return setTimeout(setEditCounter, 500);
+        const parent = $sel(".secondary-toolbar-actions.user-toolbar");
+        if (!parent) return setTimeout(ui_setEditCounter, 500);
+        const userName = wmeSDK.State.getUserInfo().userName;
 
-        let $$ = $id("zux-edit-counter");
+        let div = $id("zux-edit-counter");
+        if (!div) {
+            div = document.createElement("a");
+            Object.assign(div.style, { color: "#3c4043", fontSize: "15px", fontWeight: "bold", textDecoration: "none", marginRight: "10px" });
+            parent.insertBefore(div, parent.children[1]);
+        }
+
         wmeSDK.DataModel.Users.getUserProfile({ userName: userName }).then(profile => {
-            if (!$$) {
-                $$ = document.createElement("a");
-                $$.id = "zux-edit-counter";
-                $$.href = "https://www.waze.com/fr/user/editor/" + userName;
-                $$.style.color = "#3c4043";
-                $$.style.fontSize = "15px";
-                $$.style.fontWeight = "bold";
-                $$.style.textDecoration = "none";
-                $$.style.marginRight = "10px"
-
-                $.insertBefore($$, $.children[1]);
-            }
-            $$.textContent = profile.dailyEditCount[profile.dailyEditCount.length - 1] + " - " + profile.totalEditCount;
+            div.href = "https://www.waze.com/fr/user/editor/" + userName;
+            div.innerText = profile.dailyEditCount[profile.dailyEditCount.length - 1] + " - " + profile.totalEditCount;
         });
     })();
 
     // Différé
     function setEditPanel() {
-        if (!showSpeedControl && !showTypesControl && !showAdressCtrl && !showHnControl) return;
+        if (!ui_SpeedControl && !ui_TypesControl && !ui_AdressControl && !ui_NumberControl) return;
         if (!$id("edit-panel")) return setTimeout(setEditPanel, 500);
 
         (function () {// Vitesse
             const div = document.createElement("div");
             div.id = "zux-speed-control";
+            div.style.display = "flex";
+            div.style.flexWrap = "wrap";
+            div.style.justifyContent = "space-between";
+            div.style.alignContent = "space-between";
+            div.style.height = "110px";
+            div.style.marginBottom = "10px";
             [[null, "/6/6e/France_road_sign_B31"], [10, "/2/28/France_road_sign_B14_%2810%29"],
             [20, "/1/14/France_road_sign_B52"], [30, "/5/51/France_road_sign_B30_%2830%29"],
             [50, "/e/e2/France_road_sign_B14_%2850%29"], [70, "/4/46/France_road_sign_B14_%2870%29"],
@@ -1577,6 +1782,9 @@
             [110, "/f/ff/France_road_sign_B14_%28110%29"], [130, "/f/f1/France_road_sign_B14_%28130%29"]
             ].forEach(([speed, imageUrl]) => {
                 const img = document.createElement("img");
+                img.style.cursor = "pointer";
+                img.style.height = "50px";
+                img.style.width = "50px";
                 img.src = "https://upload.wikimedia.org/wikipedia/commons/" + imageUrl + ".svg";
                 img.onclick = () => updateSegment("speed", speed);
                 div.appendChild(img);
@@ -1587,6 +1795,10 @@
         (function () {// Type
             const div = document.createElement("div");
             div.id = "zux-type-control";
+            div.style.display = "flex";
+            div.style.flexWrap = "wrap";
+            div.style.marginBottom = "10px";
+            div.style.gap = "2px";
             const categoriesMap = {};
             [["Étroite", 22, "street", "#64799a"], ["Ferry", 15, "other", "#6bb0b7"],
             ["Autoroute", 3, "axes", "#c577d2"], ["Majeure", 6, "axes", "#45b8d1"],
@@ -1600,13 +1812,26 @@
                 if (!categoriesMap[cat]) {
                     const catDiv = document.createElement("div");
                     catDiv.id = cat;
+                    catDiv.style.display = "flex";
+                    catDiv.style.gap = "2px";
                     div.appendChild(catDiv);
                     categoriesMap[cat] = catDiv;
                 }
                 const span = document.createElement("span");
                 span.innerText = str;
                 span.style.backgroundColor = color;
+                span.style.cursor = "pointer";
+                span.style.padding = "1px 7px";
+                span.style.borderRadius = "100px";
+                span.style.display = "flex";
+                span.style.fontSize = "12px";
+                span.style.fontWeight = "500";
+                span.style.alignItems = "center";
+                span.style.justifyContent = "center";
+                span.style.border = "1px solid #d5d7db";
                 span.onclick = () => updateSegment("type", num);
+                span.onmouseover = e => e.target.style.borderColor = "#777";
+                span.onmouseleave = e => e.target.style.borderColor = "#fff";
                 categoriesMap[cat].appendChild(span);
             });
             $sel(".road-type-select").prepend(div);
@@ -1616,6 +1841,13 @@
             const addressDiv = $sel(".address-edit-view .preview");
             const addressControl = document.createElement("div");
             addressControl.id = "zux-address-control";
+            addressControl.style.display = "flex";
+            addressControl.style.flexWrap = "wrap";
+            addressControl.style.justifyContent = "space-between";
+            addressControl.style.alignContent = "space-between";
+            addressControl.style.alignItems = "center";
+            addressControl.style.marginBottom = "10px";
+
             [["Adresse"], ["Rue"], ["Ville"]].forEach(([name]) => {
                 const btn = document.createElement("div");
                 btn.className = "zux-btn-red-1";
@@ -1651,6 +1883,10 @@
         (function () {// Numéro
             const hnDiv = document.createElement("div");
             hnDiv.id = "zux-number-control";
+            hnDiv.style.display = "flex";
+            hnDiv.style.gap = "5px";
+            hnDiv.style.marginTop = "5px";
+            hnDiv.style.alignItems = "center";
 
             [["Numéro seg.", "hnSeg"], ["Numéro rue", "hnStreet"]].forEach(([label, type]) => {
                 const btn = document.createElement("div");
@@ -1722,452 +1958,52 @@
             });
         }
     };
-
-    // a modifier de categorie
-    (function setConnectionLines() {
-        return
-        if (!ui_lines) return;
-        let hn = [];
-
-        wmeSDK.DataModel.Venues.getAll().forEach($ => {
-            hn.push({
-                lon: $.geometry.coordinates[0],
-                lat: $.geometry.coordinates[1],
-                fpLon: $.navigationPoints[0].point.coordinates[0],
-                fpLat: $.navigationPoints[0].point.coordinates[1]
-            })
-        });
-
-        wmeSDK.DataModel.HouseNumbers.fetchHouseNumbers({ segmentIds: wmeSDK.DataModel.Segments.getAll().map($ => $.id) }).then($ => {
-            $.forEach($ => {
-                hn.push({
-                    number: $.houseNumber,
-                    lon: $.geometry.coordinates[0],
-                    lat: $.geometry.coordinates[1],
-                    fpLon: $.fractionPoint.coordinates[0],
-                    fpLat: $.fractionPoint.coordinates[1],
-                    isForced: $.isForced,
-                    updatedBy: $.updatedBy
-                });
-            });
-
-            const layerLines = new OpenLayers.Layer.Vector("zux_lines", {
-                styleMap: new OpenLayers.StyleMap({
-                    "default": new OpenLayers.Style({ strokeWidth: 2, strokeOpacity: 1, strokeDashstyle: "dash", strokeColor: isForced ? "red" : "white" })
-                })
-            });
-
-            array.forEach($ => {
-                layerLines.addFeatures(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString([
-                    new OpenLayers.Geometry.Point($.lon, $.lat).transform("EPSG:4326", W.map.getProjectionObject()),
-                    new OpenLayers.Geometry.Point($.fpLon, $.fpLat).transform("EPSG:4326", W.map.getProjectionObject())]), { isForced: $.isForced }));
-            });
-
-            W.map.getLayersByName("zux_lines").forEach(($) => W.map.removeLayer($));
-            W.map.addLayer(layerLines);
-        })
-    })();
     //#endregion
-})();
 
-GM_addStyle(`
-#zux-alert {
-  display: none;
-  align-items: center;
-  border: 1px solid;
-  margin-right: 15px;
-  padding: 10px;
-  background-color: #0099ff;
-  font-weight: bold;
-  color: white;
-  border-radius: 10px;
+    //#region _Chat
+    function chat_SetChat(query) {
+        const uuid = crypto.randomUUID();
+        _setLog("🌐➡️ Requête web " + uuid + " : " + query);
+        const params = new URLSearchParams({
+            q: "site:waze.com/discuss " + query,
+            country: 'FR',
+            search_lang: 'fr',
+            ui_lang: 'fr-FR',
+            safesearch: 'off'
+        });
+        GM_xmlhttpRequest({
+            method: "GET",
+            headers: { 'Accept': 'application/json', 'Accept-Encoding': 'gzip', 'x-subscription-token': 'BSAbY77H0PFhog5lwWOvWNraf3qPF6p' },
+            url: `https://api.search.brave.com/res/v1/web/search?${params}`,
+            onload: function (response) {
+                $id("chat_container").innerHTML = null;
+                const json = JSON.parse(response.responseText).web.results;
+                json.forEach(el => {
+                    const div = document.createElement("div");
+                    div.style.padding = "10px";
+                    div.style.cursor = "pointer";
+                    div.href = el.url;
+                    div.target = "_blank";
+                    div.addEventListener("mouseenter", (e) => e.target.style.backgroundColor = "#eee");
+                    div.addEventListener("mouseleave", (e) => e.target.style.backgroundColor = null);
+                    div.addEventListener("click", () => window.open(el.url, "_blank"));
+                    $id("chat_container").append(div);
+
+                    const h6 = document.createElement("h6");
+                    h6.style.marginTop = "0";
+                    h6.innerHTML = el.title;
+                    div.append(h6);
+
+                    const span = document.createElement("span");
+                    span.innerHTML = el.description;
+                    div.append(span);
+                });
+                _setLog("🌐➡️ Réponse web " + uuid + " : ", json);
+            },
+            onerror: function (err) {
+                _setLog("🌐❌ Erreur " + uuid + " : ", err);
+            }
+        });
+    }
+    //#endregion
 }
-
-.loader {
-  border: 10px solid #f3f3f3;
-  border-top: 10px solid #333;
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  animation: spin 1s linear infinite;
-  margin-right: 10px;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Menu clic droit */
-#zux-context-menu {
-  position: absolute;
-  z-index: 10000;
-  display: none;
-  border-radius: 5px;
-  background: white;
-  box-shadow: 0 0 5px rgb(0 0 0 / 75%);
-}
-
-#zux-context-menu div {
-  cursor: pointer;
-  padding: 10px;
-}
-
-#zux-context-menu div:hover {
-  background: #f6f6f6;
-  border-radius: 5px;
-}
-
-/* Menu principal */
-#zux-tabs-menu {
-  position: absolute;
-  right: -105px;
-  opacity: .5;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-#zux-tabs-menu:hover {
-  opacity: 1;
-}
-
-#zux-tabs-extended-menu {
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.2px;
-}
-
-#zux-tabs-extended-menu>:first-child {
-  border-radius: 5px 5px 0 0;
-}
-
-#zux-tabs-extended-menu>:last-child {
-  border-radius: 0 0 5px 5px;
-}
-
-.zux-tab-menu-title {
-  width: 75px;
-  height: 75px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  background: #fff;
-  color: #55595e;
-}
-
-.zux-tab-menu-title:hover {
-  background-color: #f6f6f6;
-}
-
-#zux-tabs-extend-menu {
-  background: #fff;
-  border-radius: 5px;
-  height: 50px;
-  width: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
-  user-select: none;
-}
-
-/* Boutons globale */
-.zux-button {
-  background: #0099ff;
-  color: #ffffff;
-  border-radius: 20px;
-  height: 40px;
-  border: none;
-  padding: 12px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-}
-
-.zux-button:hover {
-  background: #0585dc;
-}
-
-.zux-button:active {
-  background: #0a71b7;
-}
-
-.zux-btn-red-1 {
-  cursor: pointer;
-  color: #e42828;
-  padding: 0 15px;
-  border-radius: 100px;
-  height: 40px;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  background-color: #f2f4f7;
-  border: 1px solid white;
-  width: fit-content;
-  user-select: none;
-}
-
-.zux-btn-red-1:hover {
-  background-color: #f3edf0;
-}
-
-.zux-btn-red-1:active {
-  background-color: #f3e3e6;
-}
-
-.zux-btn-red-1:focus:hover {
-  border: 1px solid #e42828;
-}
-
-.zux-btn-1 {
-  cursor: pointer;
-  color: #0075e3;
-  padding: 0 12px;
-  border-radius: 100px;
-  height: 40px;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  background-color: #f2f4f7;
-  border: 1px solid white;
-  width: fit-content;
-  user-select: none;
-}
-
-.zux-btn-1:hover {
-  background-color: #e9f0f7;
-}
-
-.zux-btn-1:active {
-  background-color: #d1e7f8;
-}
-
-.zux-btn-1:focus:hover {
-  border: 1px solid #0075e3;
-}
-
-/* NOTES  */
-.noteContent {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #e1e1e1ff;
-  padding: 10px;
-}
-
-#note-categories {
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-  text-align: center;
-}
-
-#note-categories div {
-  width: 100%;
-  padding: 10px;
-  cursor: pointer;
-}
-
-#note-categories div:hover {
-  background: #f5fafe;
-}
-
-#note-categories div:active {
-  background: #e5f1fc;
-}
-
-#noteList {
-  overflow: auto;
-  height: 50dvh;
-}
-
-#zux-tab-note-ajouter {
-  text-align: center;
-  font-size: 20px;
-  border-top: 1px solid #e1e1e1ff;
-  border-bottom: 1px solid #e1e1e1ff;
-  cursor: pointer;
-  padding: 10px;
-}
-
-#zux-tab-note-ajouter:hover {
-  background: #f6f6f6;
-}
-
-.noteContent:hover {
-  background: #f6f6f6;
-}
-
-.noteCoords {
-  cursor: pointer;
-  margin-left: 10px;
-  width: 15px;
-  height: 15px;
-}
-
-.noteContent i {
-  color: #afafaf;
-}
-
-/* BAN  */
-#list-ban {
-  border: 1px solid #ccc;
-  background: #fafafa;
-  max-height: 550px;
-  overflow: auto;
-  font-family: monospace;
-  white-space: nowrap;
-  padding: 10px;
-}
-
-#voie-select,
-#commune-select {
-  display: none;
-  margin-bottom: 10px;
-  padding: 5px;
-  width: 100%;
-  font-family: monospace;
-}
-
-#ban-add-button {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-  justify-content: space-between
-}
-
-#ban-left-button,
-#ban-right-button {
-  display: flex;
-  gap: 2px;
-}
-
-#zux-tab-ban-ajouter-hn,
-#zux-tab-ban-ajouter-rpp {
-  border-radius: 25px 0px 0px 25px;
-}
-
-#zux-tab-ban-auto-hn,
-#zux-tab-ban-auto-rpp {
-  border-radius: 0px 25px 25px 0px;
-  background: none;
-  color: black;
-  border: 3px solid #0099ff;
-  padding: 7px;
-}
-
-#ban-add-info div {
-  cursor: pointer;
-  border-radius: 10px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
-  padding: 10px;
-  background-color: rgb(255, 200, 0);
-}
-
-/* CADASTRE */
-.moButtons {
-  display: flex;
-  gap: 10px;
-}
-
-.divInv {
-  display: flex;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
-  align-items: center;
-}
-
-.divInv input {
-  margin-right: 10px;
-}
-
-/* UI  */
-.location-info-region {
-  display: flex;
-  gap: 25px;
-}
-
-.extMapLink {
-  font-size: 11px;
-  text-decoration: none;
-}
-
-#zux-speed-control {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-content: space-between;
-  height: 110px;
-  margin-bottom: 10px;
-}
-
-#zux-speed-control img {
-  cursor: pointer;
-  height: 50px;
-  width: 50px;
-}
-
-#zux-type-control {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-  gap: 2px;
-}
-
-#zux-type-control div {
-  display: flex;
-  gap: 2px;
-}
-
-#zux-type-control span {
-  cursor: pointer;
-  padding: 1px 7px;
-  border-radius: 100px;
-  display: flex;
-  font-size: 12px;
-  font-weight: 500;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #d5d7db;
-}
-
-#zux-type-control span:hover {
-  border-color: #717377ff;
-}
-
-#zux-address-control {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-#zux-number-control {
-  display: flex;
-  gap: 5px;
-  margin-top: 5px;
-  align-items: center;
-}
-
-/* MASS DELETE  */
-#zux-md-del {
-  display: flex;
-  justify-content: space-between;
-}
-`)

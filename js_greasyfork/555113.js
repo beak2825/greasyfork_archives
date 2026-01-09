@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Linux.do 实时最新帖子悬浮窗
 // @namespace    https://linux.do/
-// @version      0.3
-// @description  图片灯箱; L站 打新小助手; 新增AI总结功能; 新增跳转原帖功能。
+// @version      0.4
+// @description  图片灯箱; L站 打新小助手; 新增AI总结功能; 新增跳转原帖功能; 修复无限加载问题
 // @match        https://linux.do/*
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
@@ -247,11 +247,29 @@
     timeEl.textContent = new Date().toLocaleTimeString();
   }
 
+  // ★★★ 修复重点：添加 Header 和 CSRF Token ★★★
   async function poll(){
     if (polling) return; polling=true;
     try{
-      const r = await fetch('/latest.json?_=' + Date.now(), {credentials:'same-origin'});
+      // 获取当前页面的 csrf token
+      const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
+      // 添加 Headers
+      const r = await fetch('/latest.json?_=' + Date.now(), {
+          credentials: 'same-origin',
+          headers: {
+              'X-CSRF-Token': csrf,
+              'X-Requested-With': 'XMLHttpRequest',
+              'Accept': 'application/json'
+          }
+      });
       if (r.status===429) throw {rate:true};
+
+      // 检查返回内容类型，防止 HTML 报错
+      const contentType = r.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") === -1) {
+         throw new Error("Received non-JSON response (possibly WAF or Auth check)");
+      }
+
       const data = await r.json();
       const topics = (data?.topic_list?.topics||[]).map(t=>({
         id:t.id, title:t.title, created_at:t.created_at
@@ -272,6 +290,7 @@
       }
       pollDelay = S.poll; // reset
     }catch(e){
+      console.error('LD悬浮窗列表刷新错误:', e); // 打印错误
       pollDelay = Math.min(30000, Math.max(pollDelay*2, S.poll*2));
     }finally{
       polling=false;
@@ -299,8 +318,17 @@
       summaryBox.className = '';
   }
 
+  // ★★★ 修复重点：同样为内容获取添加 Headers ★★★
   async function fetchTopic(id){
-    const r = await fetch(`/t/${id}.json?include_raw=0&_=${Date.now()}`, {credentials:'same-origin'});
+    const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
+    const r = await fetch(`/t/${id}.json?include_raw=0&_=${Date.now()}`, {
+        credentials:'same-origin',
+        headers: {
+              'X-CSRF-Token': csrf,
+              'X-Requested-With': 'XMLHttpRequest',
+              'Accept': 'application/json'
+        }
+    });
     if (r.status===429) throw {rate:true};
     if (!r.ok) throw new Error('HTTP '+r.status);
     return r.json();

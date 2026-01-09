@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         纯净抖音直播
 // @namespace    http://tampermonkey.net/
-// @version      1.2.3
+// @version      1.2.4
 // @description  自动关闭聊天窗口，自动关闭礼物特效，隐藏礼物栏，强制关闭送礼信息，自动关闭 tooltip
 // @match        https://live.douyin.com/*
 // @author       Augkit
@@ -353,7 +353,7 @@
             // 1. 获取当前画质
             const currentQualityEl = document.querySelector('[data-e2e="quality"]');
             if (!currentQualityEl) return false;
-            
+
             const currentQuality = currentQualityEl.textContent.trim();
             if (!currentQuality) return false;
 
@@ -369,18 +369,27 @@
             const firstOption = qualityOptions[0];
             const firstOptionText = firstOption.textContent.trim();
 
-            // 5. 如果第一个选项与当前画质不同，则点击
-            if (firstOptionText && firstOptionText !== currentQuality) {
-                clickElement(firstOption);
-                console.log(`[自动切换画质] 从 "${currentQuality}" 切换到 "${firstOptionText}"`);
-                
+            // 5. 如果第一个选项是"自动"，则点击第二个选项（如果存在）
+            let targetOption = firstOption;
+            let targetQuality = firstOptionText;
+
+            if (firstOptionText.includes('自动') && qualityOptions.length > 1) {
+                targetOption = qualityOptions[1];
+                targetQuality = targetOption.textContent.trim();
+            }
+
+            // 6. 如果目标选项与当前画质不同，则点击
+            if (targetQuality && targetQuality !== currentQuality) {
+                clickElement(targetOption);
+                console.log(`[自动切换画质] 从 "${currentQuality}" 切换到 "${targetQuality}"`);
+
                 // 标记已切换并断开观察器
                 hasSwitchedQuality = true;
                 if (qualityObserver) {
                     qualityObserver.disconnect();
                     qualityObserver = null;
                 }
-                
+
                 return true;
             }
 

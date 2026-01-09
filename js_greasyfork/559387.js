@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         getRelativeWeekday
 // @namespace    https://github.com/nate-kean/
-// @version      2025.12.21
+// @version      2026.1.8
 // @description  Library for getting dates in the weeks around another date
 // @author       Nate Kean
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
@@ -83,7 +83,7 @@ function getRelativeWeekday(
 				// ago instead
 				daysForward = 7;
 			}
-			result.setDate(result.getDate() + daysForward);
+			result.setDate(result.getDate() - daysForward);
 			return result;
 		}
 

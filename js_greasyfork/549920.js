@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name               Script Notifier
 // @namespace          http://github.com/0H4S
-// @version            1.8
+// @version            2.0
 // @author             OHAS
 // @description        Sistema de notificação para UserScripts.
 // @license            CC-BY-NC-ND-4.0
@@ -27,7 +27,6 @@
     - Greasy Fork:  https://greasyfork.org/users/1464180
 
     This software is provided "as is", without warranty of any kind. The author is not liable for any damages arising from its use.
-    eslint-disable
 */
 
 class ScriptNotifier {
@@ -48,7 +47,56 @@ class ScriptNotifier {
         this.currentUsageCount           = 0;
         this.uiStrings                   = {};
         this.icons                       = this._getIcons();
+        this.mediaCache                  = new Map();
         this.scriptPolicy                = this._createPolicy();
+    }
+    _fetchResourceAsBlobUrl(url) {
+        if (this.mediaCache.has(url)) {
+            return this.mediaCache.get(url);
+        }
+        const fetchPromise = new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: url,
+                responseType: 'blob',
+                anonymous: true,
+                onload: (response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        const blobUrl = URL.createObjectURL(response.response);
+                        resolve(blobUrl);
+                    } else {
+                        this.mediaCache.delete(url);
+                        reject(new Error(`HTTP error ${response.status}`));
+                    }
+                },
+                onerror: (err) => {
+                    this.mediaCache.delete(url);
+                    reject(err);
+                }
+            });
+        });
+        this.mediaCache.set(url, fetchPromise);
+        return fetchPromise;
+    }
+    async _processMediaInContainer(container) {
+        const mediaElements = [
+            ...container.querySelectorAll('img[src^="http"]'),
+            ...container.querySelectorAll('video[src^="http"], source[src^="http"]')
+        ];
+        const processElement = async (el) => {
+            const originalUrl = el.src || el.getAttribute('src');
+            if (!originalUrl) return;
+            try {
+                const blobUrl = await this._fetchResourceAsBlobUrl(originalUrl);
+                el.src = blobUrl;
+                if (el.tagName === 'SOURCE') {
+                    const videoParent = el.closest('video');
+                    if (videoParent) videoParent.load();
+                }
+            } catch (e) {
+            }
+        };
+        await Promise.all(mediaElements.map(processElement));
     }
     async _incrementUsageCount() {
         let count = await GM_getValue(this.USAGE_COUNT_KEY, 0);
@@ -74,10 +122,7 @@ class ScriptNotifier {
             method: 'GET',
             url: `${this.NOTIFICATIONS_URL}?t=${new Date().getTime()}`,
             onload: async (response) => {
-                if (response.status < 200 || response.status >= 300) {
-                    console.error(`Script Notifier: Falha ao buscar notificações. Status: ${response.status}`);
-                    return;
-                }
+                if (response.status < 200 || response.status >= 300) {return;}
                 let jsonString;
                 const isGistPage = this.NOTIFICATIONS_URL.includes('gist.github.com/') && !this.NOTIFICATIONS_URL.includes('usercontent');
                 if (isGistPage) {
@@ -88,15 +133,9 @@ class ScriptNotifier {
                             : response.responseText;
                         const doc = parser.parseFromString(trustedHtml, 'text/html');
                         const codeLines = doc.querySelectorAll('table.highlight .blob-code-inner');
-                        if (codeLines.length === 0) {
-                            console.error('Script Notifier: A página Gist foi encontrada, mas nenhum conteúdo pôde ser extraído.');
-                            return;
-                        }
+                        if (codeLines.length === 0) {return;}
                         jsonString = Array.from(codeLines).map(line => line.innerText).join('\n');
-                    } catch (e) {
-                        console.error('Script Notifier: Falha ao analisar a página Gist.', e);
-                        return;
-                    }
+                    } catch (e) {return;}
                 } else {
                     jsonString = response.responseText;
                 }
@@ -157,17 +196,12 @@ class ScriptNotifier {
                         if (notification.targetHostname && window.location.hostname !== notification.targetHostname) return false;
                         return true;
                     });
-
                     notificationsToDisplay.forEach((notification, index) => {
                         setTimeout(() => this.displayNotification(notification), index * 200);
                     });
-                } catch (e) {
-                    console.error('Script Notifier: Falha ao analisar o JSON das notificações.', e);
-                }
+                } catch (e) {}
             },
-            onerror: (error) => {
-                console.error('Script Notifier: Erro de rede ao buscar as notificações.', error);
-            }
+            onerror: () => {}
         });
     }
     async displayNotification(notification) {
@@ -195,6 +229,11 @@ class ScriptNotifier {
         const imageOrIconHTML = notification.imageUrl ?
             `<img src="${notification.imageUrl}" class="notification-image" alt="Notification Image">` :
             `<div class="notification-icon">${iconHTML}</div>`;
+        let expandButtonHTML = '';
+        if (notification.expanded && notification.expanded.content) {
+            const expandIconSVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>`;
+            expandButtonHTML = `<button class="expand-button" title="${this._getUIText('expandButtonTitle')}">${expandIconSVG}</button>`;
+        }
         const closeIconSVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>`;
         const notificationHTML = `
           ${imageOrIconHTML}
@@ -202,7 +241,10 @@ class ScriptNotifier {
               <h3 class="notification-title">${this._prepareMessageHTML(title)}</h3>
               <div class="notification-message">${this._prepareMessageHTML(message)}</div>
           </div>
-          <button class="dismiss-button" title="${this._getUIText('closeButtonTitle')}">${closeIconSVG}</button>
+          <div class="notification-actions">
+            ${expandButtonHTML}
+            <button class="dismiss-button" title="${this._getUIText('closeButtonTitle')}">${closeIconSVG}</button>
+          </div>
         `;
         this._setSafeInnerHTML(container, notificationHTML);
         if (notification.buttons && notification.buttons.length > 0) {
@@ -210,11 +252,74 @@ class ScriptNotifier {
             container.querySelector('.notification-content').appendChild(buttonsContainer);
         }
         this.shadowRoot.appendChild(container);
+        this._processMediaInContainer(container);
         this.activeNotifications.push({ id: notification.id, element: container, isNew: true });
         this._updateNotificationPositions();
         container.querySelector('.dismiss-button').onclick = (e) => {
             e.stopPropagation();
             this._dismissNotification(notification.id);
+        };
+        const expandBtn = container.querySelector('.expand-button');
+        if (expandBtn) {
+            expandBtn.onclick = (e) => {
+                e.stopPropagation();
+                this._openExpandedView(notification);
+            };
+        }
+    }
+    _openExpandedView(notification) {
+        this._ensureHostElement();
+        if (this.shadowRoot.getElementById('sn-expanded-modal')) return;
+        const modalOverlay = document.createElement('div');
+        modalOverlay.id = 'sn-expanded-modal';
+        modalOverlay.className = 'modal-overlay';
+        const expandedData = notification.expanded || {};
+        const expandedContent = this._getTranslatedText(expandedData.content) || "Conteúdo indisponível.";
+        const title = this._getTranslatedText(expandedData.title) || this._getTranslatedText(notification.title);
+        const closeIconSVG = `<svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>`;
+        const modalHTML = `
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h2 class="modal-title">${this._prepareMessageHTML(title)}</h2>
+                    <button class="modal-close-btn" title="Fechar">${closeIconSVG}</button>
+                </div>
+                <div class="modal-body">
+                    ${expandedContent}
+                </div>
+            </div>
+        `;
+        this._setSafeInnerHTML(modalOverlay, modalHTML);
+        this.shadowRoot.appendChild(modalOverlay);
+        this._processMediaInContainer(modalOverlay);
+        requestAnimationFrame(() => { modalOverlay.classList.add('animate-in'); });
+        const closeModal = () => {
+            modalOverlay.classList.remove('animate-in');
+            modalOverlay.classList.add('animate-out');
+            setTimeout(() => modalOverlay.remove(), 300);
+        };
+        const closeBtn = modalOverlay.querySelector('.modal-close-btn');
+        closeBtn.onclick = closeModal;
+        const modalBody = modalOverlay.querySelector('.modal-body');
+        modalBody.onclick = (e) => {
+            if (e.target.tagName === 'IMG') {
+                e.stopPropagation();
+                this._openLightbox(e.target.src);
+            }
+        };
+    }
+    _openLightbox(imgSrc) {
+        const lightbox = document.createElement('div');
+        lightbox.className = 'lightbox-overlay';
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.className = 'lightbox-img';
+        lightbox.appendChild(img);
+        this.shadowRoot.appendChild(lightbox);
+        requestAnimationFrame(() => lightbox.classList.add('visible'));
+        lightbox.onclick = (e) => {
+            e.stopPropagation();
+            lightbox.classList.remove('visible');
+            setTimeout(() => lightbox.remove(), 300);
         };
     }
     _createButtons(buttonDataArray, notificationId) {
@@ -286,7 +391,6 @@ class ScriptNotifier {
         const parts1 = v1.split('.').map(part => parseInt(part, 10) || 0);
         const parts2 = v2.split('.').map(part => parseInt(part, 10) || 0);
         const maxLength = Math.max(parts1.length, parts2.length);
-
         for (let i = 0; i < maxLength; i++) {
             const p1 = parts1[i] || 0;
             const p2 = parts2[i] || 0;
@@ -371,7 +475,9 @@ class ScriptNotifier {
     }
     async _registerUserCommands() {
         const notificationsEnabled = await GM_getValue(this.NOTIFICATIONS_ENABLED_KEY, true);
-        const toggleCommandText = notificationsEnabled ? this._getUIText('disableNotificationsCmd') : this._getUIText('enableNotificationsCmd');
+        const toggleCommandText = notificationsEnabled
+            ? this._getUIText('disableNotificationsCmd')
+            : this._getUIText('enableNotificationsCmd');
         GM_registerMenuCommand(this._getUIText('showAllNotificationsCmd'), () => this.forceShowAllNotifications());
         GM_registerMenuCommand(toggleCommandText, async () => {
             const currentState = await GM_getValue(this.NOTIFICATIONS_ENABLED_KEY, true);
@@ -530,6 +636,45 @@ class ScriptNotifier {
                 'ug':    '✅ ئۇقتۇرۇشلارنى قوزغىتىش',
                 'vi':    '✅ Bật thông báo'
             },
+            expandButtonTitle: {
+                'pt-BR': 'Expandir',
+                'zh-CN': '展开',
+                'ckb':   'بەرینکردنەوە',
+                'ar':    'توسيع',
+                'be':    'Разгарнуць',
+                'bg':    'Разширяване',
+                'cs':    'Rozbalit',
+                'da':    'Udvid',
+                'de':    'Erweitern',
+                'el':    'Επέκταση',
+                'en':    'Expand',
+                'eo':    'Etendi',
+                'es':    'Expandir',
+                'fi':    'Laajenna',
+                'fr':    'Développer',
+                'he':    'הexpand',
+                'hr':    'Proširi',
+                'hu':    'Kibontás',
+                'id':    'Perluas',
+                'it':    'Espandi',
+                'ja':    '展開',
+                'ka':    'გაშლა',
+                'ko':    '확장',
+                'mr':    'विस्तार करा',
+                'nb':    'Utvid',
+                'nl':    'Uitvouwen',
+                'pl':    'Rozwiń',
+                'ro':    'Extinde',
+                'ru':    'Развернуть',
+                'sk':    'Rozbaliť',
+                'sr':    'Proširi',
+                'sv':    'Expandera',
+                'th':    'ขยาย',
+                'tr':    'Genişlet',
+                'uk':    'Розгорнути',
+                'ug':    'كېڭەيتىش',
+                'vi':    'Mở rộng',
+            },
             closeButtonTitle: {
                 'pt-BR': 'Fechar',
                 'zh-CN': '关闭',
@@ -590,8 +735,9 @@ class ScriptNotifier {
                 --sn-color-link-underline: currentColor;
                 --sn-color-dismiss: #999;
                 --sn-color-dismiss-hover: #ff4d4d;
+                --sn-color-expand-hover: #007bff;
                 --sn-shadow-default: 0 8px 20px rgba(0, 0, 0, 0.15);
-                --sn-shadow-button-hover: 0 4px 10px rgba(0,0,0,0.2);
+                --sn-shadow-button-hover: 0 4px 10px rgba(0, 0, 0, 0.2);
                 --sn-card-background: rgba(0, 0, 0, 0.05);
                 --sn-card-border: #ccc;
                 --sn-scrollbar-track: #f1f1f1;
@@ -626,8 +772,9 @@ class ScriptNotifier {
                     --sn-color-link-underline: currentColor;
                     --sn-color-dismiss: #aaa;
                     --sn-color-dismiss-hover: #ff4d4d;
+                    --sn-color-expand-hover: #3b82f6;
                     --sn-shadow-default: 0 8px 20px rgba(0, 0, 0, 0.5);
-                    --sn-shadow-button-hover: 0 4px 12px rgba(0,0,0,0.4);
+                    --sn-shadow-button-hover: 0 4px 12px rgba(0, 0, 0, 0.4);
                     --sn-card-background: rgba(0, 0, 0, 0.1);
                     --sn-card-border: #555;
                     --sn-scrollbar-track: #444;
@@ -671,6 +818,8 @@ class ScriptNotifier {
                 opacity: 0;
                 transform: translateX(120%);
                 will-change: transform, opacity, top;
+                align-items: flex-start;
+                padding-right: 8px;
             }
 
             .notification-container.animate-in {
@@ -745,7 +894,8 @@ class ScriptNotifier {
             }
 
             .notification-message blockquote {
-                margin: 0.5em 0; padding: 0.5em 1em;
+                margin: 0.5em 0;
+                padding: 0.5em 1em;
                 border-radius: 0;
                 background-color: var(--sn-card-background);
                 border-left: 4px solid var(--sn-card-border);
@@ -763,20 +913,27 @@ class ScriptNotifier {
                 text-decoration-color: var(--sn-color-link-underline);
             }
 
-            .dismiss-button {
+            .dismiss-button,
+            .expand-button {
                 background: none;
                 border: none;
                 color: var(--sn-color-dismiss);
                 cursor: pointer;
-                padding: 0;
-                margin-left: 10px;
-                align-self: flex-start;
-                transition: color var(--sn-animation-duration-fast) ease, transform var(--sn-animation-duration-medium) cubic-bezier(0.25, 0.1, 0.25, 1.5);
-                width: var(--sn-icon-size);
-                height: var(--sn-icon-size);
+                padding: 4px;
+                width: 28px;
+                height: 28px;
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
+                border-radius: 50%;
+                transition: background-color 0.2s, color 0.2s, transform 0.2s;
+                align-self: flex-start;
+            }
+
+            .dismiss-button:hover,
+            .expand-button:hover {
+                background-color: rgba(0, 0, 0, 0.05);
+                transform: scale(1.1);
             }
 
             .dismiss-button:hover {
@@ -784,8 +941,200 @@ class ScriptNotifier {
                 transform: rotate(90deg);
             }
 
-            .dismiss-button:active {
-                transform: rotate(90deg) scale(0.9);
+            .expand-button:hover {
+                color: var(--sn-color-expand-hover);
+            }
+
+            .notification-actions {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 4px;
+                margin-left: 8px;
+                flex-shrink: 0;
+            }
+
+            .expand-button:active {
+                transform: scale(0.95);
+            }
+
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: rgba(0, 0, 0, 0.75);
+                z-index: 2147483648;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                visibility: hidden;
+                backdrop-filter: blur(4px);
+                transition: opacity 0.3s ease, visibility 0.3s;
+            }
+
+            .modal-overlay.animate-in {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .modal-overlay.animate-out {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+            .modal-card {
+                background-color: var(--sn-color-background);
+                color: var(--sn-color-text-primary);
+                width: 90%;
+                max-width: 700px;
+                max-height: 85vh;
+                border-radius: 16px;
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                transform: scale(0.9);
+                opacity: 0;
+                transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .modal-overlay.animate-in .modal-card {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            .modal-overlay.animate-out .modal-card {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            .modal-header {
+                padding: 15px 20px;
+                border-bottom: 1px solid var(--sn-color-border);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                background: linear-gradient(to bottom, var(--sn-color-background), rgba(0, 0, 0, 0.02));
+            }
+
+            .modal-title {
+                margin: 0;
+                font-size: 18px;
+                font-weight: 700;
+                text-align: center;
+            }
+
+            .modal-close-btn {
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                cursor: pointer;
+                color: var(--sn-color-dismiss);
+                padding: 5px;
+                border-radius: 50%;
+                transition: all 0.2s;
+                display: flex;
+            }
+
+            .modal-close-btn:hover {
+                background-color: rgba(0, 0, 0, 0.1);
+                color: var(--sn-color-dismiss-hover);
+            }
+
+            .modal-body {
+                padding: 30px;
+                overflow-y: auto;
+                font-size: 16px;
+                line-height: 1.7;
+                text-align: left;
+            }
+
+            .modal-body>*:first-child {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+            }
+
+            .modal-body>*:last-child {
+                margin-bottom: 0 !important;
+                padding-bottom: 0 !important;
+            }
+
+            .modal-body img,
+            .modal-body video {
+                display: block;
+                margin: 20px auto;
+                max-width: 100%;
+                max-height: 300px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .modal-body img {
+                cursor: zoom-in;
+                transition: transform 0.2s;
+            }
+
+            .modal-body img:hover {
+                transform: scale(1.01);
+            }
+
+            .lightbox-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.95);
+                z-index: 2147483649;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                cursor: zoom-out;
+            }
+
+            .lightbox-overlay.visible {
+                opacity: 1;
+            }
+
+            .lightbox-img {
+                max-width: 95vw;
+                max-height: 95vh;
+                object-fit: contain;
+                border-radius: 4px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+                transform: scale(0.9);
+                transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1);
+            }
+
+            .lightbox-overlay.visible .lightbox-img {
+                transform: scale(1);
+            }
+
+            .modal-body::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            .modal-body::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .modal-body::-webkit-scrollbar-thumb {
+                background: #bbb;
+                border-radius: 4px;
+            }
+
+            .modal-body::-webkit-scrollbar-thumb:hover {
+                background: #999;
             }
 
             .notification-buttons {
@@ -804,7 +1153,7 @@ class ScriptNotifier {
                 font-size: var(--sn-font-size-body);
                 font-weight: 500;
                 cursor: pointer;
-                transition: transform var(--sn-animation-duration-fast) ease-in-out, box-shadow var(--sn-animation-duration-fast) ease-in-out, background-color var(--sn-animation-duration-fast) ease-in-out,filter var(--sn-animation-duration-fast) ease-in-out, color var(--sn-animation-duration-fast) ease-in-out;
+                transition: transform var(--sn-animation-duration-fast) ease-in-out, box-shadow var(--sn-animation-duration-fast) ease-in-out, background-color var(--sn-animation-duration-fast) ease-in-out, filter var(--sn-animation-duration-fast) ease-in-out, color var(--sn-animation-duration-fast) ease-in-out;
             }
 
             .notification-button:hover {

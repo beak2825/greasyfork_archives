@@ -291,60 +291,137 @@
         const container = document.querySelector('.gallery-content');
         if (!container) return;
 
-        // クラスのリセット
         container.classList.remove('layout-grid');
 
-        // モード適用
         if (mode === 'grid') {
             container.classList.add('layout-grid');
-        } 
-        // 'list' の場合はクラスなし（デフォルト）
+            // グリッドモードになったら列数を適用
+            applyGridColumns();
+        }
 
-        // 設定保存
-        Storage.updateState('layoutMode', mode); // ※Storage側でstates内ではなくルートのlayoutModeを更新するように修正が必要だが、
-                                                 // Storage-5.0.jsのupdateStateはstates下を更新する仕様。
-                                                 // layoutModeはConfig扱いにするか、例外的に処理するか。
-                                                 // ここでは簡易的にStorageの汎用保存機能がないため、
-                                                 // Storageライブラリに `updateLayoutMode` を追加するのがベストだが、
-                                                 // 既存Storage変更最小限のため、GM_setValueを直接呼ぶか、
-                                                 // Storageに `updateRootSetting` 的なものを追加する。
-                                                 
-        // ★修正: Storage-5.0.js に layoutMode 保存用の関数がないため、
-        // ここで直接 GM_setValue するか、Storageを拡張する。
-        // 今回は Logic 内で完結させるため、Storage経由で保存するヘルパーを想定して呼び出す。
-        // 下記の `saveLayoutMode` を使用。
-        saveLayoutMode(mode);
-    }
-
-    function saveLayoutMode(mode) {
-        const settings = Storage.loadSettings();
-        settings.layoutMode = mode;
-        // Storage._save は非公開なので、Storage.updateConfig を流用するか、
-        // Storageライブラリに手を入れるのが筋だが、
-        // ここでは「Storage-5.0.js」の変更は最小限という前提なので、
-        // Storage.updateConfig を使って layoutMode も保存できるように
-        // Storage側を少し修正するのが安全。
-        // -> Storage-5.0.js の updateConfig は excludeList と externalSites しか受け取らない。
-        // -> 仕方ないので、Storage.updateAllStates を悪用せず、
-        //    Storageライブラリに `updateLayoutMode` を追加することを推奨するが、
-        //    Logicから直接 GM_setValue はできない（@grantがない場合）。
-        //    => Mainスクリプトには @grant GM_setValue がある。
-        //    => Storageライブラリに `saveSettings` (全体保存) が公開されていない。
-        
-        // ★解決策: Storage-5.0.js に `updateLayoutMode` を追加してください（後述）。
         if (Storage.updateLayoutMode) {
             Storage.updateLayoutMode(mode);
         }
     }
 
-    // グローバル公開に追加
-    window.HitomiFilterLogic = {
-        // ... (既存)
-        applyLayout, // 追加
-        // ...
-    };
+    // ★変更: ターゲットを「消えゆくgallery-content」から「不滅のdocumentElement」に変更
+    function applyGridColumns() {
+        const settings = Storage.loadSettings();
+        const cols = settings.gridColumns || 4;
+        
+        // <html>タグにCSS変数をセットする。
+        // これにより、gallery-contentがHitomiによって書き換えられても、
+        // 設定値は維持され、自動的に継承される。
+        document.documentElement.style.setProperty('--grid-cols', String(cols));
+    }
 
-    // グローバル公開
+    function changeGridColumns(cols) {
+        const val = parseInt(cols, 10);
+        
+        // 永続化
+        if (Storage.updateGridColumns) {
+            Storage.updateGridColumns(val);
+        }
+        
+        // 即時反映 (applyGridColumnsを呼ぶだけでOK)
+        applyGridColumns();
+    }
+
+    // ★変更: ブラックリストに含まれるタグをハイライト＆先頭へ移動＆強制表示する関数
+    function highlightExcludedTags() {
+        const settings = Storage.loadSettings();
+        const excludeList = settings.excludeList;
+        if (!excludeList || excludeList.length === 0) return;
+
+        const excludeSet = new Set(excludeList);
+        
+        const targetUls = document.querySelectorAll('.relatedtags ul:not(.htf-processed)');
+
+        targetUls.forEach(ul => {
+            ul.classList.add('htf-processed');
+
+            const items = Array.from(ul.querySelectorAll('li'));
+            const matchedItems = [];
+
+            items.forEach(li => {
+                const a = li.querySelector('a');
+                if (!a) return;
+
+                const href = decodeURIComponent(a.getAttribute('href'));
+                const match = href.match(/\/tag\/(.+)-all\.html/);
+                
+                if (match) {
+                    const tagName = match[1];
+                    // ★追加: URL内のスペースをアンダースコアに変換したバージョンも作成
+                    // (例: "dickgirl on female" -> "dickgirl_on_female")
+                    const tagNameUnderscored = tagName.replace(/ /g, '_');
+                    
+                    // ブラックリストと照合 (オリジナル と アンダースコア版 の両方をチェック)
+                    let isMatch = excludeSet.has(tagName) || excludeSet.has(tagNameUnderscored);
+                    
+                    if (!isMatch && !tagName.includes(':')) {
+                        isMatch = excludeSet.has(`tag:${tagName}`) || excludeSet.has(`tag:${tagNameUnderscored}`);
+                    }
+
+                    if (isMatch) {
+                        matchedItems.push(li);
+                        li.classList.remove('hidden-list-item');
+                        a.style.backgroundColor = '#c70000ff';
+                    }
+                }
+            });
+
+            for (let i = matchedItems.length - 1; i >= 0; i--) {
+                ul.prepend(matchedItems[i]);
+            }
+        });
+    }
+
+    // -------------------------------------------------------------------------
+    //  Thumbnail Resizer Logic (Detail Page)
+    // -------------------------------------------------------------------------
+
+    // 初期化: 元のサイズを記録し、保存された倍率を適用する
+    function initThumbnailResizer() {
+        const containers = document.querySelectorAll('.thumbnail-container');
+        if (containers.length === 0) return;
+        
+        containers.forEach(div => {
+            // 既に記録済みならスキップ
+            if (div.dataset.origW) return;
+            
+            // HTMLのstyle属性から元のサイズを取得 (例: width: 96.5px)
+            const wStr = div.style.width;
+            const hStr = div.style.height;
+            
+            if (wStr && hStr) {
+                div.dataset.origW = parseFloat(wStr);
+                div.dataset.origH = parseFloat(hStr);
+            }
+        });
+        
+        // 保存された設定を適用
+        const settings = Storage.loadSettings();
+        const scale = settings.thumbnailScale || 1.0;
+        applyThumbnailScale(scale);
+    }
+
+    // 倍率を適用する関数
+    function applyThumbnailScale(scale) {
+        const containers = document.querySelectorAll('.thumbnail-container');
+        containers.forEach(div => {
+            const w = parseFloat(div.dataset.origW);
+            const h = parseFloat(div.dataset.origH);
+            
+            if (!isNaN(w) && !isNaN(h)) {
+                // 元の比率を維持したまま倍率を掛ける
+                div.style.width = (w * scale) + 'px';
+                div.style.height = (h * scale) + 'px';
+            }
+        });
+    }
+
+    // グローバル公開に追加
     window.HitomiFilterLogic = {
         toggleState,
         toggleLanguage,
@@ -359,7 +436,12 @@
         applySeriesFilter,
         resetSeriesFilter,
         addExternalSearchButtons,
-        applyLayout // 追加
+        applyLayout,
+        changeGridColumns,
+        applyGridColumns, // ★追加: Mainスクリプトから呼べるようにする
+        highlightExcludedTags, // ★追加
+        initThumbnailResizer, // ★追加
+        applyThumbnailScale   // ★追加
     };
-
+    
 })(window);

@@ -3,7 +3,7 @@
 // @name:en             F95 Helper
 // @namespace           https://greasyfork.org/users/1215910
 // @icon                https://www.google.com/s2/favicons?sz=64&domain=f95zone.to
-// @version             5.1.1
+// @version             5.2.0
 // @description         ①F95页面标签汉化，黑白名单。②F95、VNDB、SteamDB页面提取游戏信息。③在三个网站之间智能跳转。④自定义本地游戏信息。⑤独立管理我的游戏库。⑥分享游戏数据。（更详细的功能请见页面介绍和代码内的注释）
 // @description:en      This plugin is designed for Chinese players. Some of its features may not be suitable for native English speakers. Of course, if you like the other features, feel free to take the code and use it.
 // @author              诉语
@@ -22,72 +22,6 @@
 // @updateURL https://update.greasyfork.org/scripts/550171/%E3%80%90%E8%87%AA%E7%94%A8%E3%80%91F95%E5%8A%A9%E6%89%8B.meta.js
 // ==/UserScript==
 
-
-// 更新时间：2025-12-29
-// 更新内容：这里只列出最近的更新内容，更早的更新内容请翻阅历史版本。
-// 　　　　　v5.0.0 大型更新。
-// 　　　　　       1、数据库重构：大幅扩展本地存储的数据结构，新增游戏类型細分、画风、引擎、汉化详情等十余个字段。
-// 　　　　　       2、新增管理页面：提供“我的游戏库”独立页面用来管理保存的数据（入口在油猴菜单，也可以通过 https://f95zone.to/game 访问），功能强大，详情自行体验。
-// 　　　　　       3、档案管理：彻底重做“编辑数据”窗口。采用三栏宽屏布局，支持全字段编辑，新增评分、游玩状态、多维度评价（优点/缺点/简评）记录。
-// 　　　　　       4、智能锁定：引入字段级锁定机制。用户手动修改过的数据会自动加锁，防止被网页抓取的更新覆盖，同时支持手动切换锁定状态。
-// 　　　　　       5、数据安全：新增本地数据的导入/导出功能（JSON格式），方便备份和分享。
-// 　　　　　       6、交互优化：将“复制信息”按钮升级为“保存信息”，点击后默认保存信息到数据库，但不会复制到剪切板（如需复制，在设置中切换为“讲介士”样式）。注意，“收集癖”样式已被删除。
-// 　　　　　       7、分享游戏：允许将某个游戏数据通过代码分享给别人。
-// 　　　　　       8、其他：还有好多改动都没写，确实是忘了。
-// 　　　　　       本次更新代码改动量巨大，出现 Bug 在所难免，请多多反馈，这对我非常重要。
-// 　　　　　v5.0.1 修复Bug。修复了分享游戏功能丢失评论的问题。
-// 　　　　　v5.1.0 小型更新。
-// 　　　　　       1、现在可自动在F95页面和SteamDB页面获取音声信息。
-// 　　　　　       2、为所有页面新增“我的游戏库”按钮入口。
-// 　　　　　       3、可以通过配置全局常量 LIB_FILTER_SETTINGS 来预筛选“我的游戏库”中游戏，配置UI暂时没做，需要在脚本中修改。
-// 　　　　　       4、其他细节修改略。
-// 　　　　　v5.1.1 小型更新。
-// 　　　　　       1、现在可自动在F95页面获取马赛克信息。
-// 　　　　　       2、紧急修复了steamDB按钮的Bug。
-
-
-// 其他计划：增加tag字段，GameInfo自动爬取f95的标签，同时增加openEditWindow适配。
-// 其他计划：GameInfo自动爬取Patreon等地址……
-// 其他计划：让颜色随着评分和人数的增加发生变化。
-
-// 其他计划：同名不同系列想办法分开（目前db的example name 1会导向example name）。
-
-/*
-函数维护查找项：
-function generateShareData      分享游戏：生成分享字符串
-function parseShareData         分享游戏：解析分享字符串
-function importShareDataToDB    分享游戏：导入分享数据到数据库
-
-function initLibraryPage        页面UI函数：我的游戏库
-function openSettings           窗口UI函数：插件设置
-function openEditWindow         窗口UI函数：编辑本地游戏数据
-function createButtonUI         核心UI函数：注入CSS、通用按钮及容器
-function buttonTooltip          窗口UI函数：飘窗
-
-function getLocalInfo           提取本地存储的游戏信息
-function dataCompare            比较函数。对比本地存储信息和实时页面信息。
-function updateLocalDatabase    数据更新函数。根据来源站点，智能合并信息到本地数据库。
-
-function f95Buttons             F95按钮
-function copyButtonClick        F95按钮内部辅助函数：处理复制按钮的点击事件逻辑
-function f95GameInfo            提取F95页面的游戏信息
-function vndbButtons            VNDB按钮
-function vndbGameInfo           提取VNDB页面的游戏信息
-function vndbMatchDB            由VNDB页面获取f95ThreadId。从本地数据库中匹配。
-function steamdbButtons         SteamDB按钮
-function steamdbGameInfo        提取SteamDB页面的游戏信息
-function steamdbMatchDB         由SteamDB页面获取f95ThreadId。从本地数据库中匹配。
-
-function promptForF95Id         点击补充信息按钮时，当自动匹配失败（找不到matchedF95ThreadId），通过弹窗询问用户手动输入 F95 ID
-
-// 广播数据更新事件
-window.dispatchEvent(new CustomEvent('f95_db_updated'));
-
-// 新增字段需要调整的地方：
-数据结构 (getDataTemplate)、分享功能字段表 (generateShareData)、本地更新规则 (updateLocalDatabase)、窗口配置 (openEditWindow)
-// 新增爬虫需要调整的地方：
-爬虫函数 (xxxGameInfo)、本地更新规则 (updateLocalDatabase)
-*/
 
 (function() {
     'use strict';
@@ -125,6 +59,60 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
         // gameDevStatus: ['弃坑'],     // 屏蔽：开发进度为 '弃坑' 的游戏
         // gameCGEngine: ['AI'],        // 屏蔽：CG引擎为 'AI' 的游戏
     };
+
+    // ==================== 更新日志数据 ====================
+    const CHANGELOGS = [
+        {
+            version: '5.2.0',
+            date: '2026-01-09',
+            content: [
+                '【新增】新增字段“NTR题材”，并自动从F95页面获取。',
+                '【新增】新增更新内容提示。',
+                '【其他】脚本评论区分享了《My Cute Roommate》的[自制汉化包](https://greasyfork.org/scripts/550171/discussions/317833)，分享过期记得提醒我。',
+            ]
+        },
+        {
+            version: '5.1.1',
+            date: '2025-12-29',
+            content: [
+                '【新增】新增字段“马赛克”，并自动从F95页面获取。',
+                '【修复】紧急修复了steamDB按钮的Bug。'
+            ]
+        },
+        {
+            version: '5.1.0',
+            date: '2025-12-31',
+            content: [
+                '【新增】新增字段“音声信息”，并自动从F95页面和SteamDB页面获取。',
+                '【新增】为所有页面新增“我的游戏库”按钮入口。',
+                '【新增】可以通过配置全局常量 LIB_FILTER_SETTINGS 来预筛选“我的游戏库”中的游戏。不过配置UI暂时没做，需要在脚本中修改。',
+                '【修复】其他细节优化和bug修复略。',
+            ]
+        },
+        {
+            version: '5.0.1',
+            date: '2025-12-29',
+            content: [
+                '【修复】修复了分享游戏功能丢失评论的问题。',
+            ]
+        },
+        {
+            version: '5.0.0',
+            date: '2025-12-29',
+            content: [
+                '【新增】数据库重构，新增字段。大幅扩展本地存储的数据结构，新增游戏类型細分、画风、引擎、汉化详情等十余个字段。',
+                '【新增】新增“我的游戏库”管理页面。提供该独立页面用来管理保存的数据，功能强大，详情自行体验。',
+                '【优化】彻底重做“编辑数据”页面。现采用三栏宽屏布局，支持全字段编辑，新增评分、游玩状态、多维度评价（优点/缺点/简评）记录。',
+                '【新增】新增字段的智能锁定机制。用户手动修改过的数据会自动加锁，防止被网页抓取的更新覆盖，同时支持手动切换锁定状态。',
+                '【新增】新增数据导入/导出功能。导入/导出的格式为JSON文件。',
+                '【优化】优化“复制信息”按钮。将“复制信息”按钮升级为“保存信息”，点击后默认保存信息到数据库，但不会复制到剪切板（如需复制，在设置中切换为“讲介士”样式）。',
+                '【新增】新增游戏分享功能。允许将某个游戏数据通过神秘代码分享给别人，[示例](https://greasyfork.org/scripts/550171/discussions/317833)。',
+                '【删除】“收集癖”样式已被删除。',
+                '【其他】大量细节优化和bug修复不一而足。',
+                '本次更新代码改动量巨大，出现 Bug 在所难免，请多多反馈，这对我非常重要。',
+            ]
+        },
+    ];
 
 
     // ==================== 中英对照词典 ====================
@@ -323,6 +311,7 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
         if (v >= 50) return '☆';
         return '数据错误！';
     }
+
     // 音声 (gameAudioId) 选项及分组逻辑
     const GAME_AUDIO_OPTS = [
         {v:null, t:'（未知）'},
@@ -349,11 +338,90 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
         if (v >= 33) return '☆'; // 完美音声 (中文 or ASMR)
         return '数据错误！';
     }
-    // ▲待修改。f95GameInfo等函数爬取信息时，无音声时赋值为0，有音声时赋值为10(当前功能未实现)
-    // ▲待修改。buttonTooltip和openEditWindow函数显示信息时，同样使用上述分组（当前功能未实现）
+    // ▲待修改。上面两个函数是用来给游戏库UI备用的，目前没使用
 
+    // 游戏题材-NTR (gameThemeNTR) 选项及分组逻辑
+    const GAME_THEME_NTR_OPTS = [
+        // NTL：淫人妻
+        // NTRS：绿帽癖
+        // NTR：被寝取
+        // 其他：包含多种情形
+        {v:null, t:'（未知）'},
+        {v:0,t:'纯爱'},
+        {v:10,t:'NTL'},
+        {v:20,t:'NTRS'},
+        {v:21,t:'NTRS-可规避'},
+        {v:32,t:'NTR-纯正单线'},
+        {v:30,t:'NTR'},
+        {v:31,t:'NTR-可规避'},
+        {v:31,t:'NTR-轻微'},
+        {v:32,t:'NTR-纯正单线'},
+        {v:90,t:'其他'},
+    ];
+    const GAME_THEME_NTR_MAP = {
+        // keywords1: 用于判断 gameThemeNTR 分类的F95网站标签
+        // keywords2: 用于判断 gameThemeNTR 分类的其他网站标签/关键词
+        // notes: 用于提供给用户备注的标签
+        '10': {
+            keywords1: [], // F95没有合适的标签，需要手动输入
+            keywords2: ['netori'],
+            notes: ['付种', '催眠', '目前犯']
+        },
+        '20': {
+            keywords1: ['swinging'],
+            keywords2: ['netorase', 'swinging', 'sharing', 'hotwife', '借种', '公用化', '露出'],
+            notes: ['借种', '换妻/分享', '淫妻', '露出', '妓院']
+        },
+        '21': {
+            keywords1: [],
+            keywords2: [],
+            notes: ['借种', '换妻/分享', '淫妻', '露出', '妓院']
+        },
+        '22': {
+            keywords1: [],
+            keywords2: [],
+            notes: ['借种', '换妻/分享', '淫妻', '露出', '妓院']
+        },
+        '30': {
+            // 虽然广义上的 NTR netorare 可能为 NTRS ，但是这里一律按狭义理解
+            keywords1: ['netorare'],
+            keywords2: ['netorare', 'NTR', '牛头人', '绿帽', '隐奸', '败北'],
+            notes: ['隐奸', '催眠', '目前犯']
+        },
+        '31': {
+            keywords1: [],
+            keywords2: [],
+            notes: ['隐奸', '催眠', '目前犯']
+        },
+        '32': {
+            keywords1: [],
+            keywords2: [],
+            notes: ['隐奸', '催眠', '目前犯']
+        },
+        '90': {
+            keywords1: [],
+            keywords2: [],
+            notes: []
+        },
+        // 这里列举一些不能区分 NTRS 与 NTR 的 keywords 备用
+        // keywords1: ['corruption', 'prostitution', 'voyeurism', 'cheating'],
+        // keywords2: ['cuckold', 'cuckolding', ],
+    };
 
+    // ==================== SVG图标资源 ====================
+    const ICONS = {
+        // 锁 (闭合) - 用于编辑窗口锁定字段
+        LOCK: `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>`,
+        
+        // 锁 (打开) - 用于编辑窗口解锁字段
+        UNLOCK: `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/></svg>`,
 
+        // 铃铛 (无点) - 用于无新消息
+        BELL: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>`,
+
+        // 铃铛 (带红点) - 用于有新消息
+        BELL_DOT: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path><circle cx="18" cy="5" r="3" fill="#ff4d4f" stroke="none"></circle></svg>`
+    };
 
     // ==================== 初始化变量 ====================
     let Like = GM_getValue('喜好的标签', '');
@@ -439,13 +507,15 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
             gameType: null,         // 游戏大类
             gameGenre: null,        // 游戏小类
             gameCGArtStyle: null,   // 游戏画风。数值，枚举值：null-(未知), 1-美式, 2-日式, 3-亚洲, 4-中式, 5-韩式, 6-真人
-            gameCGType: null,       // CG类型。字符串，枚举值：3D动态,2D动态,2D静态,像素动态
+            gameCGType: null,       // CG类型。字符串，枚举值（允许其他值）：3D动态,2D动态,2D静态,像素动态, ...
             gameCGEngine: null,     // 游戏CG引擎。字符串，枚举值（允许其他值）：Daz, I社, Live2D, Spine, VAM, 手绘, 软绘, AI, 未知软件, ...
             gameCGMosaic: null,     // 马赛克。数值，枚举值：0-无码, 1-有码
             gameChineseId: null,    // 中文。数值，枚举值见 GAME_CHINESE_OPTS
-            gameChineseNote: null,  // 中文备注
+            gameChineseNote: null,  // 中文 的备注信息
             gameAudioId: null,      // 游戏音声。数值，枚举值见 GAME_AUDIO_OPTS
-            gameAudioNote: null,    // 游戏音声备注
+            gameAudioNote: null,    // 游戏音声 的备注信息
+            gameThemeNtrId: null,   // 游戏题材-NTR。数值，枚举值见 GAME_THEME_NTR_OPTS
+            gameThemeNtrNote: null, // 游戏题材-NTR 的备注信息
 
             f95VoteCount: null,     // F95 评分人数
             f95AvgScore: null,      // F95 评分。一位小数的字符串。
@@ -500,9 +570,9 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
         const copy = (keys) => keys.forEach(k => { if (gameData[k] !== undefined) exportObj[k] = gameData[k]; });
 
         if (fields.basic) copy(['gameName1', 'gameName2', 'gameName3', 'gameDev', 'gameVersion', 'gameDevStatus', 'gameReleaseDate']);
-        if (fields.ids)   copy(['f95ThreadId', 'steamId', 'vndbId', 'f95AvgScore', 'f95VoteCount', 'steamAvgScore', 'steamVoteCount', 'vndbAvgScore', 'vndbVoteCount']); // 评分也算作ID关联的公共数据
+        if (fields.ids)   copy(['f95ThreadId', 'steamId', 'vndbId', 'f95AvgScore', 'f95VoteCount', 'steamAvgScore', 'steamVoteCount', 'vndbAvgScore', 'vndbVoteCount']);
         if (fields.links) copy(['gameOfficialLinks', 'gameDownloadLinks']);
-        if (fields.props) copy(['gameType', 'gameGenre', 'gameEngine', 'gameCGArtStyle', 'gameCGType', 'gameCGEngine', 'gameCGMosaic', 'gameChineseId', 'gameChineseNote', 'gameAudioId', 'gameAudioNote']);
+        if (fields.props) copy(['gameType', 'gameGenre', 'gameEngine', 'gameCGArtStyle', 'gameCGType', 'gameCGEngine', 'gameCGMosaic', 'gameChineseId', 'gameChineseNote', 'gameAudioId', 'gameAudioNote', 'gameThemeNtrId', 'gameThemeNtrNote']);
         if (fields.playStatus) copy(['userPlayStatus', 'userFinishDate']);
         if (fields.comments) copy(['userScore', 'userCommentSummary', 'userCommentPros', 'userCommentCons', 'userCommentOther']);
 
@@ -681,6 +751,7 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
 
                 <!-- 右上角功能按钮 -->
                 <div class="tool-btn-group">
+                    <button id="btnChangelog" class="icon-btn" title="更新日志">${ICONS.BELL}</button>
                     <button id="btnSettings" class="icon-btn" title="插件设置">⚙️</button>
                     <div class="dropdown">
                         <button class="icon-btn" title="数据管理">💾</button>
@@ -755,7 +826,30 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
         };
 
         // --- 事件绑定 ---
-
+        // 0. 更新日志按钮
+        const btnChangelog = document.getElementById('btnChangelog');
+        const currentVer = GM_info.script.version;
+        const lastReadVer = GM_getValue('lastReadVersion', '0.0.0');
+        const hasNewVersion = compareVersions(currentVer, lastReadVer) > 0; // 判断是否有新版本
+        if (hasNewVersion) {
+            btnChangelog.classList.add('has-new');
+            btnChangelog.title = `更新日志 (有新版本 v${currentVer})`;
+        }
+        if (hasNewVersion) {
+            btnChangelog.innerHTML = ICONS.BELL_DOT;
+            btnChangelog.title = `更新日志 (有新版本 v${currentVer})`;
+            btnChangelog.classList.add('has-new');
+        }
+        btnChangelog.onclick = () => {
+            openChangelogWindow(currentVer, lastReadVer);
+            if (btnChangelog.classList.contains('has-new')) {
+                btnChangelog.innerHTML = ICONS.BELL;
+                btnChangelog.classList.remove('has-new');
+                btnChangelog.title = "更新日志";
+                GM_setValue('lastReadVersion', currentVer);
+            }
+        };
+        
         // 1. 设置按钮
         document.getElementById('btnSettings').onclick = openSettings;
 
@@ -1085,8 +1179,9 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
 
             // 汉化状态处理逻辑
             const cid = g.gameChineseId;
-            const note = g.gameChineseNote ? `\n备注: ${g.gameChineseNote}` : ''; // 读取备注
-            const chTitle = getChineseText(cid) + note; // 中文情况+备注
+            const note1 = `【汉化水平】\n${getChineseText(cid)}`;
+            const note2 = g.gameChineseNote ? `\n【备注】\n${g.gameChineseNote}` : '';
+            const chTitle = note1 + note2; // 中文情况+备注
             let chText = getAdvancedChineseGroup(cid); // 标识 ?/✘/✔/☆
             let chColor = '';
             let chWeight = 'normal';
@@ -1302,6 +1397,117 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
             }
         };
     }
+    
+    // 窗口UI函数：更新日志
+    function openChangelogWindow(currentVer, lastReadVer) {
+        if (document.getElementById('changelogWindow')) return;
+
+        // 1. 分离 未读日志 和 历史日志
+        const newLogs = [];
+        const historyLogs = [];
+
+        CHANGELOGS.forEach(log => {
+            // 如果日志版本 > 上次已读版本，且 <= 当前版本 (防止未来版本泄露，虽然一般不会)
+            if (compareVersions(log.version, lastReadVer) > 0 && compareVersions(log.version, currentVer) <= 0) {
+                newLogs.push(log);
+            } else {
+                historyLogs.push(log);
+            }
+        });
+        
+        // 特殊情况处理：如果是初次安装(lastReadVer为0)，或者没有检测到新日志，
+        // 为了避免打开空窗口，可以将最新一条日志强制显示在"新日志"区域，或者只显示历史。
+        // 这里采用策略：如果 newLogs 为空，则显示提示文本。
+
+        // 2. 构建窗口 UI
+        const overlay = document.createElement('div');
+        overlay.id = 'changelogWindow';
+        Object.assign(overlay.style, {
+            position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+            background: 'rgba(0,0,0,0.6)', zIndex: 20020, display: 'flex',
+            alignItems: 'center', justifyContent: 'center'
+        });
+
+        const win = document.createElement('div');
+        Object.assign(win.style, {
+            background: '#2c2c2c', border: '1px solid #555', width: '600px', maxHeight: '80vh',
+            borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.8)',
+            color: '#eee', fontFamily: '"Segoe UI", sans-serif', display: 'flex', flexDirection: 'column'
+        });
+
+        // 辅助：生成日志列表HTML
+        const renderLogsHtml = (logs) => {
+            if (logs.length === 0) return '<div style="color:#888; padding:10px; font-style:italic;">暂无内容</div>';
+            return logs.map(log => `
+                <div style="margin-bottom: 15px; border-left: 3px solid #007bff; padding-left: 10px;">
+                    <div style="font-weight: bold; font-size: 15px; color: #fff; display: flex; align-items: baseline; gap: 10px;">
+                        <span>v${log.version}</span>
+                        <span style="font-size: 12px; color: #aaa; font-weight: normal;">${log.date}</span>
+                    </div>
+                    <ul style="margin: 5px 0 0 20px; padding: 0; font-size: 13px; color: #ddd; list-style-type: disc;">
+                        ${log.content.map(txt => `<li style="margin-bottom: 2px;">${parseLogLinks(txt)}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        };
+
+        win.innerHTML = `
+            <div style="padding: 15px 20px; background: #202020; border-bottom: 1px solid #444; font-weight: bold; font-size: 16px; display: flex; justify-content: space-between;">
+                <span>脚本更新日志</span>
+                <span id="clCloseX" style="cursor: pointer; color: #aaa;">✘</span>
+            </div>
+            
+            <div style="padding: 20px; overflow-y: auto; flex: 1;">
+                <!-- 新版本区域 -->
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 14px; color: #28a745; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 5px;">
+                        最新更新 (v${currentVer})
+                    </div>
+                    <div id="clNewContainer">
+                        ${newLogs.length > 0 ? renderLogsHtml(newLogs) : '<div style="color:#aaa; font-size:13px;">当前已是最新版本，暂无未读更新。</div>'}
+                    </div>
+                </div>
+
+                <!-- 历史版本按钮 -->
+                <button id="clHistoryBtn" style="width: 100%; padding: 8px; background: #333; border: 1px solid #555; color: #ccc; cursor: pointer; border-radius: 4px; font-size: 13px; transition: background 0.2s;">
+                    🕒 查看往期更新
+                </button>
+
+                <!-- 历史版本区域 (默认隐藏) -->
+                <div id="clHistoryContainer" style="display: none; margin-top: 20px; padding-top: 10px; border-top: 1px dashed #444;">
+                    <div style="font-size: 14px; color: #888; font-weight: bold; margin-bottom: 10px;">
+                        历史版本
+                    </div>
+                    ${renderLogsHtml(historyLogs)}
+                </div>
+            </div>
+
+            <div style="padding: 12px 20px; background: #202020; border-top: 1px solid #444; text-align: right;">
+                <button id="clCloseBtn" class="btn btn-primary">关闭 (Close)</button>
+            </div>
+        `;
+
+        overlay.appendChild(win);
+        document.body.appendChild(overlay);
+
+        // 事件绑定
+        const closeFunc = () => overlay.remove();
+        document.getElementById('clCloseBtn').onclick = closeFunc;
+        document.getElementById('clCloseX').onclick = closeFunc;
+
+        // 展开历史
+        const historyBtn = document.getElementById('clHistoryBtn');
+        const historyContainer = document.getElementById('clHistoryContainer');
+        historyBtn.onclick = () => {
+            if (historyContainer.style.display === 'none') {
+                historyContainer.style.display = 'block';
+                historyBtn.textContent = '▲ 收起往期更新';
+            } else {
+                historyContainer.style.display = 'none';
+                historyBtn.textContent = '🕒 查看往期更新';
+            }
+        };
+    }
 
     // 窗口UI函数：编辑本地游戏数据
     function openEditWindow(threadId) {
@@ -1322,8 +1528,8 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
         const isLocked = (field) => lockedFields.includes(field);
 
         // SVG 图标定义
-        const iconLock = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>`;
-        const iconUnlock = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/></svg>`;
+        const iconLock = ICONS.LOCK;
+        const iconUnlock = ICONS.UNLOCK;
 
         const editWindow = document.createElement('div');
         editWindow.id = 'editWindow';
@@ -1411,7 +1617,8 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
             </style>
         `;
 
-        // === 核心辅助函数：生成控件 HTML ===
+
+        // 核心辅助函数：生成控件 HTML
         // id: 字段ID
         // label: 标签文字 (如果 config.noRow=true 则忽略)
         // value: 当前值
@@ -1479,22 +1686,154 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
             `;
         }
 
-        // 辅助函数：生成备注按钮及隐藏输入框
+        // 辅助UI函数：备注按钮
         // id: 备注字段的ID (如 'gameChineseNote')
         // value: 当前备注值
         // label: 提示文本 (如 '汉化组信息')
-        function createNoteBtn(id, value, label) {
+        // linkedSelectId: 可选，关联的下拉框ID (用于NTR等需要读取选项Map的场景)
+        function createNoteBtn(id, value, label, linkedSelectId = null) {
             const hasVal = !!value;
             const btnStyle = hasVal ? 'color:#ffc107;' : 'color:#666;'; // 有值高亮
-            const title = hasVal ? `备注: ${value}` : `添加备注 (${label})`;
+            const title = hasVal ? `${value}` : `添加备注 (${label})`;
+            
+            // 将 linkedSelectId 存入 data 属性
+            const linkedAttr = linkedSelectId ? `data-linked="${linkedSelectId}"` : '';
 
             return `
-                <button type="button" class="btn-note-toggle" data-for="${id}" title="${title}"
+                <button type="button" class="btn-note-toggle" data-for="${id}" ${linkedAttr} title="${title}"
                         style="background:none; border:none; cursor:pointer; font-size:16px; padding:0 6px; line-height:1; ${btnStyle}">
                     📝
                 </button>
                 <input type="hidden" id="${id}" value="${value || ''}">
             `;
+        }
+        
+        // 辅助UI函数：备注按钮的编辑器窗口 (支持快捷标签)
+        function openNoteEditor(title, initialValue, quickTags, onSave) {
+            const overlay = document.createElement('div');
+            Object.assign(overlay.style, {
+                position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+                background: 'rgba(0,0,0,0.6)', zIndex: 20010, display: 'flex',
+                alignItems: 'center', justifyContent: 'center'
+            });
+
+            const win = document.createElement('div');
+            Object.assign(win.style, {
+                background: '#333', border: '1px solid #555', width: '400px',
+                borderRadius: '6px', boxShadow: '0 5px 25px rgba(0,0,0,0.8)',
+                color: '#eee', fontFamily: 'sans-serif', overflow: 'hidden', display:'flex', flexDirection:'column'
+            });
+
+            // 生成快捷标签HTML
+            let tagsHtml = '';
+            if (quickTags && quickTags.length > 0) {
+                tagsHtml = `<div style="padding:10px; border-bottom:1px solid #444; background:#2a2a2a; display:flex; flex-wrap:wrap; gap:6px;">`;
+                tagsHtml += `<div style="width:100%; font-size:12px; color:#aaa; margin-bottom:4px;">快捷标签 (点击添加/移除):</div>`;
+                tagsHtml += quickTags.map(tag => 
+                    `<button class="quick-tag-btn" data-tag="${tag}" style="padding:4px 8px; font-size:12px; background:#444; border:1px solid #555; color:#ccc; border-radius:12px; cursor:pointer;">${tag}</button>`
+                ).join('');
+                tagsHtml += `</div>`;
+            }
+
+            win.innerHTML = `
+                <div style="padding:10px 15px; background:#222; border-bottom:1px solid #444; font-weight:bold;">${title}</div>
+                ${tagsHtml}
+                <div style="padding:15px; flex:1;">
+                    <textarea id="noteEditorInput" style="width:100%; height:80px; background:#222; border:1px solid #555; color:#fff; padding:8px; border-radius:4px; resize:none;">${initialValue || ''}</textarea>
+                </div>
+                <div style="padding:10px 15px; background:#222; border-top:1px solid #444; text-align:right;">
+                    <button id="noteSaveBtn" class="btn btn-primary" style="padding:4px 12px; font-size:13px;">确定</button>
+                    <button id="noteCancelBtn" class="btn btn-secondary" style="padding:4px 12px; font-size:13px; margin-left:8px;">取消</button>
+                </div>
+            `;
+
+            overlay.appendChild(win);
+            document.body.appendChild(overlay);
+
+            const input = win.querySelector('#noteEditorInput');
+            const close = () => overlay.remove();
+
+            // 快捷标签点击逻辑 (基于前缀匹配)
+            win.querySelectorAll('.quick-tag-btn').forEach(btn => {
+                btn.onclick = () => {
+                    const tag = btn.dataset.tag;
+                    let fullText = input.value;
+                    
+                    const PREFIX = '标签：';
+                    const SUFFIX = '。';
+                    const SEPARATOR = '，';
+                    const LINE_BREAK = '\n';
+                    
+                    // 1. 分离首行和剩余内容
+                    // 注意：这里按第一个换行符分割，如果没有换行符，则整个文本视为第一行
+                    let firstLine = fullText;
+                    let restText = '';
+                    const breakIndex = fullText.indexOf(LINE_BREAK);
+                    
+                    if (breakIndex !== -1) {
+                        firstLine = fullText.substring(0, breakIndex);
+                        restText = fullText.substring(breakIndex + 1); // 不包含换行符本身，后续拼接时补上
+                    }
+
+                    // 2. 判断首行是否为标签行
+                    // 条件：以 PREFIX 开头，且以 SUFFIX 结尾
+                    let isTagLine = firstLine.startsWith(PREFIX) && firstLine.endsWith(SUFFIX);
+                    
+                    let currentTags = [];
+                    
+                    if (isTagLine) {
+                        // 提取中间的内容：去除前缀和后缀
+                        const content = firstLine.substring(PREFIX.length, firstLine.length - SUFFIX.length);
+                        if (content.trim()) {
+                            currentTags = content.split(/，|,|;|；/).map(s => s.trim()).filter(Boolean);
+                        }
+                    } else {
+                        // 如果不是标签行，则说明整个 firstLine 其实是正文的一部分
+                        // 把它归还给 restText（如果有 restText，要补回换行符；如果没有，直接作为 restText）
+                        if (breakIndex !== -1) {
+                            restText = firstLine + LINE_BREAK + restText;
+                        } else {
+                            restText = firstLine;
+                        }
+                        // 此时标签列表为空
+                        currentTags = [];
+                    }
+
+                    // 3. 增删逻辑
+                    if (currentTags.includes(tag)) {
+                        currentTags = currentTags.filter(t => t !== tag);
+                    } else {
+                        currentTags.push(tag);
+                    }
+
+                    // 4. 重组文本
+                    let newFirstLine = '';
+                    if (currentTags.length > 0) {
+                        newFirstLine = PREFIX + currentTags.join(SEPARATOR) + SUFFIX;
+                        
+                        // 拼接：标签行 + 换行 + 正文
+                        // 注意处理正文为空的情况，避免多余的换行
+                        if (restText) {
+                            input.value = newFirstLine + LINE_BREAK + restText;
+                        } else {
+                            input.value = newFirstLine;
+                        }
+                    } else {
+                        // 标签被清空，只保留正文
+                        input.value = restText;
+                    }
+
+                    input.focus(); // 保持焦点
+                };
+            });
+
+            document.getElementById('noteSaveBtn').onclick = () => {
+                onSave(input.value.trim());
+                close();
+            };
+            document.getElementById('noteCancelBtn').onclick = close;
+            
+            setTimeout(() => input.focus(), 50); // 自动聚焦
         }
 
         // 辅助函数：生成评分行 (复用 createField)
@@ -1687,7 +2026,7 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
                                 locked: isLocked('gameChineseId'),
                                 noRow: true
                             })}
-                            ${createNoteBtn('gameChineseNote', data.gameChineseNote, '汉化信息')}
+                            ${createNoteBtn('gameChineseNote', data.gameChineseNote, '汉化作者等信息')}
                         </div>
                     </div>
 
@@ -1700,7 +2039,21 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
                                 locked: isLocked('gameAudioId'),
                                 noRow: true
                             })}
-                            ${createNoteBtn('gameAudioNote', data.gameAudioNote, 'CV信息')}
+                            ${createNoteBtn('gameAudioNote', data.gameAudioNote, '声优等信息')}
+                        </div>
+                    </div>
+
+                    <div class="edit-row">
+                        <label>NTR 题材</label>
+                        <div style="flex:1; display:flex; align-items:center;">
+                            ${createField('gameThemeNtrId', '', data.gameThemeNtrId, {
+                                type: 'select',
+                                options: GAME_THEME_NTR_OPTS,
+                                locked: isLocked('gameThemeNtrId'),
+                                noRow: true
+                            })}
+                            <!-- 传入 linkedSelectId='gameThemeNtrId' 以启用快捷标签功能 -->
+                            ${createNoteBtn('gameThemeNtrNote', data.gameThemeNtrNote, 'NTR类型备注', 'gameThemeNtrId')}
                         </div>
                     </div>
 
@@ -1769,25 +2122,38 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
         editWindow.querySelectorAll('.btn-note-toggle').forEach(btn => {
             btn.onclick = () => {
                 const inputId = btn.getAttribute('data-for');
+                const linkedSelectId = btn.getAttribute('data-linked');
                 const input = document.getElementById(inputId);
                 if (!input) return;
 
                 const oldVal = input.value;
-                // 从 title 中提取提示信息，或者写死通用的
-                const promptText = btn.title.includes('添加备注') ? btn.title : '请输入备注内容：';
+                const titleText = btn.title.includes('添加备注') ? '编辑备注' : btn.title;
+                
+                // 获取快捷标签数组
+                let quickTags = [];
+                if (linkedSelectId) {
+                    const selectEl = document.getElementById(linkedSelectId);
+                    if (selectEl) {
+                        const selectedVal = selectEl.value;
+                        // 尝试从 GAME_THEME_NTR_MAP 中获取 notes
+                        if (GAME_THEME_NTR_MAP && GAME_THEME_NTR_MAP[selectedVal]) {
+                            quickTags = GAME_THEME_NTR_MAP[selectedVal].notes || [];
+                        }
+                    }
+                }
 
-                const newVal = prompt(promptText, oldVal);
-                if (newVal !== null) { // 只有非取消才更新
-                    input.value = newVal.trim();
+                // 打开自定义编辑器
+                openNoteEditor(titleText, oldVal, quickTags, (newVal) => {
+                    input.value = newVal;
                     // 更新按钮视觉状态
                     if (input.value) {
                         btn.style.color = '#ffc107';
-                        btn.title = `备注: ${input.value}`;
+                        btn.title = `${input.value}`;
                     } else {
                         btn.style.color = '#666';
-                        btn.title = `添加备注`; // 简化的 Title
+                        btn.title = `添加备注`;
                     }
-                }
+                });
             };
         });
 
@@ -1931,6 +2297,8 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
                 updatedInfo.gameChineseNote = val('gameChineseNote');
                 updatedInfo.gameAudioId = nullableInt('gameAudioId');
                 updatedInfo.gameAudioNote = val('gameAudioNote');
+                updatedInfo.gameThemeNtrId = nullableInt('gameThemeNtrId');
+                updatedInfo.gameThemeNtrNote = val('gameThemeNtrNote');
                 updatedInfo.gameCGArtStyle = nullableInt('gameCGArtStyle');
                 updatedInfo.gameCGType = val('gameCGType');
                 updatedInfo.gameCGEngine = val('gameCGEngine');
@@ -2505,49 +2873,51 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
                 case 'f95':
                     siteName = 'F95页面';
                     rules = {
-                        gameName1: 'local', // 避免修改用户改好的游戏名
-                        gameDev: 'local', // 作者名不要动
+                        f95VoteCount: 'live',       // 必须更新
+                        f95AvgScore: 'live',        // 必须更新
+                        steamId: 'local',           // 不会变
+                        vndbId: 'local',            // 不会变
+                        gameName1: 'local',         // 避免修改用户改好的游戏名
+                        gameDev: 'local',           // 作者名不要动
                         gameVersion: 'live',
                         gameDevStatus: 'live',
                         gameReleaseDate: 'live',
                         gameType: 'local',
                         gameEngine: 'local',
                         gameCGType: 'local',
-                        gameCGEngine: 'live', // 有AI CG标签时会跟进
+                        gameCGEngine: 'live',       // 有AI CG标签时会跟进
                         gameCGMosaic: 'local',
-                        steamId: 'local', // 不会变
-                        vndbId: 'local', // 不会变
-                        f95VoteCount: 'live',
-                        f95AvgScore: 'live',
-                        gameChineseId: 'local', // 可靠性低
-                        gameAudioId: 'local', // 可靠性低
+                        gameChineseId: 'local',     // 可靠性低
+                        gameAudioId: 'local',       // 可靠性低
+                        gameThemeNtrId: 'local',    // 可靠性低
+                        gameThemeNtrNote: 'local',  // 可靠性低
                     };
                     break;
                 case 'vndb':
                     siteName = 'VNDB页面';
                     rules = {
-                        gameName1: 'local', // 可靠性低
-                        gameName2: 'local', // 可靠性低
-                        gameName3: 'local', // 可靠性低
-                        gameDev: 'local', // 可靠性低
-                        gameChineseId: 'local', // 可靠性低
-                        vndbId: 'live',
-                        vndbVoteCount: 'live',
-                        vndbAvgScore: 'live',
+                        vndbId: 'live',             // 必须更新
+                        vndbVoteCount: 'live',      // 必须更新
+                        vndbAvgScore: 'live',       // 必须更新
+                        gameName1: 'local',         // 可靠性低
+                        gameName2: 'local',         // 可靠性低
+                        gameName3: 'local',         // 可靠性低
+                        gameDev: 'local',           // 可靠性低
+                        gameChineseId: 'local',     // 可靠性低
                     };
                     break;
                 case 'steamdb':
                     siteName = 'SteamDB页面';
                     rules = {
-                        gameName1: 'live', // 可靠性高
-                        gameName2: 'live', // 可靠性高
-                        gameDev: 'live', // 可靠性高
-                        gameEngine: 'live', // 可靠性高
-                        steamId: 'live',
-                        steamVoteCount: 'live',
-                        steamAvgScore: 'live',
-                        gameChineseId: 'live', // 可靠性高
-                        gameAudioId: 'live', // 可靠性高
+                        steamId: 'live',            // 必须更新
+                        steamVoteCount: 'live',     // 必须更新
+                        steamAvgScore: 'live',      // 必须更新
+                        gameName1: 'live',          // 可靠性高
+                        gameName2: 'live',          // 可靠性高
+                        gameDev: 'live',            // 可靠性高
+                        gameEngine: 'live',         // 可靠性高
+                        gameChineseId: 'live',      // 可靠性高
+                        gameAudioId: 'live',        // 可靠性高
                     };
                     break;
                 default:
@@ -2822,21 +3192,22 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
      */
     function f95GameInfo() {
         // 所有输出变量
-        let f95ThreadId = null; // F95的帖ID
-        let gameName1 = null; // 游戏名1
-        let gameVersion = null; // 游戏版本
-        let gameDevStatus = '更新中'; // 开发进度
-        let gameReleaseDate = null; // 更新日期
-        let gameDev = null; // 游戏作者
-        let gameEngine = null; // 游戏引擎
-        let gameType = null; // 游戏大类
-        let gameCGEngine = null; // CG引擎
-        let gameCGMosaic = null; // 马赛克
-        let f95VoteCount = null; // 评分数量
-        let f95AvgScore = null; // 平均得分 (10分制)
-        let steamId = null; // Steam ID
-        let gameChineseId = null; // 是否有中文
-        let gameAudioId = null; // 音声
+        let f95ThreadId = null;         // F95的帖ID
+        let gameName1 = null;           // 游戏名1
+        let gameVersion = null;         // 游戏版本
+        let gameDevStatus = '更新中';   // 开发进度
+        let gameReleaseDate = null;     // 更新日期
+        let gameDev = null;             // 游戏作者
+        let gameEngine = null;          // 游戏引擎
+        let gameType = null;            // 游戏大类
+        let gameCGEngine = null;        // CG引擎
+        let gameCGMosaic = null;        // 马赛克
+        let f95VoteCount = null;        // 评分数量
+        let f95AvgScore = null;         // 平均得分 (10分制)
+        let steamId = null;             // Steam ID
+        let gameChineseId = null;       // 中文
+        let gameAudioId = null;         // 音声
+        let gameThemeNtrId = null;      // 游戏题材-NTR
 
         let extractedDlsiteUrl = null; // 临时变量，用于存储提取到的 dlsite 地址
 
@@ -2976,23 +3347,35 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
             }
         }
 
-        // 音声、马赛克、游戏CG引擎
+        // 音声、马赛克、游戏CG引擎、NTR
         gameAudioId = 0; // 没有 voiced 标签时，认为无音声
         gameCGMosaic = 0; // 没有 censored 标签时，认为无码
+        const foundNtrIds = new Set(); // 临时存储匹配到的NTR ID集合
         document.querySelectorAll('span.js-tagList a').forEach(el => {
+            const href = el.href ? el.href.toLowerCase() : '';
             // gameAudioId
-            if (el.href && el.href.toLowerCase().includes('/tags/voiced/')) {
-                gameAudioId = 10;
-            }
+            if (href.includes('/tags/voiced/')) { gameAudioId = 10; }
             // gameCGMosaic
-            if (el.href && el.href.toLowerCase().includes('/tags/censored/')) {
-                gameCGMosaic = 1;
-            }
+            if (href.includes('/tags/censored/')) { gameCGMosaic = 1; }
             // gameCGEngine
-            if (el.href && el.href.toLowerCase().includes('/tags/ai-cg/')) {
-                gameCGEngine = 'AI'; // 仅当有 AI 标签时，才会修改 gameCGEngine
+            if (href.includes('/tags/ai-cg/')) { gameCGEngine = 'AI'; } // 仅当有 AI 标签时，才会修改 gameCGEngine
+            // gameThemeNtrId
+            for (const [idStr, config] of Object.entries(GAME_THEME_NTR_MAP)) {
+                // 遍历 MAP，检查 keywords1
+                if (config.keywords1 && config.keywords1.length > 0) {
+                    // 检查当前链接是否包含任何一个关键词 (例如 /tags/netorare/)
+                    const isMatch = config.keywords1.some(kw => href.includes('/tags/' + kw.toLowerCase() + '/'));
+                    if (isMatch) {
+                        foundNtrIds.add(parseInt(idStr));
+                    }
+                }
             }
         });
+        // NTR 优先级判定: 30(NTR) > 20(NTRS) > 10(NTL) > 90(其他)
+        if (foundNtrIds.has(30)) gameThemeNtrId = 30;
+        else if (foundNtrIds.has(20)) gameThemeNtrId = 20;
+        else if (foundNtrIds.has(10)) gameThemeNtrId = 10;
+        else if (foundNtrIds.has(90)) gameThemeNtrId = 90;
 
         // F95评分数量、F95平均得分
         const pageActionContainer = document.querySelector('.p-title-pageAction');
@@ -3050,21 +3433,22 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
 
         const result = {
             f95ThreadId, 
-            gameEngine, 
-            gameType, 
+            f95VoteCount, 
+            f95AvgScore, 
+            steamId, 
             gameName1, 
             gameDev, 
             gameVersion, 
             gameReleaseDate, 
-            gameChineseId, 
+            gameEngine, 
+            gameType, 
             gameCGEngine, 
             gameCGMosaic,
             gameDevStatus, 
-            f95VoteCount, 
-            f95AvgScore, 
-            steamId, 
             gameOfficialLinks,
+            gameChineseId, 
             gameAudioId,
+            gameThemeNtrId,
         };
         console.log('[F95助手] 提取的F95信息:', result);
         return result;
@@ -3737,6 +4121,33 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
 
 
     // -------------------- 辅助函数 --------------------
+    // 当前URL是否包含传递的字符串
+    function isURL(x) {
+        return window.location.href.indexOf(x) != -1;
+    }
+    // 游戏标题标准化
+    // 例："A Game: The New Chapter [v2.0 Final]" 会变成 "a game the new chapter"。
+    function normalizeName(name) {
+        if (!name) return '';
+        let norm = name
+            .split('|')[0] // 如果包含 |, 只取第一部分作为主要名称进行比较
+            // ▲待修改，最好能比较所有别名
+            .toLowerCase() // 全部转为小写，这是所有比较的基础
+            .replace(/\*$/, '') // 移除末尾可能的 * (表示非官方)
+            .replace(/\s*\[.*?\]/g, '') // 移除所有方括号及其内容 (例如 [v1.0], [Completed])
+            .replace(/\s*\(.*?\)/g, '') // 移除所有圆括号及其内容 (例如 (Full Release))
+            .replace(/[-\s]\s*(season|part|chapter|episode|book)\s*(\d+|final)/g, '') // 移除类似 season 1、- season final 之类的后缀
+            .replace(/-\s*(final|complete|demo|test)/g, '') // 移除类似 - final 之类的后缀
+            .replace(/\s+(final|demo)/g, '') // 移除类似 final 之类的后缀（这一步需要小心，最好不要随意添加）
+            .replace(/[^\p{L}\p{N}]/gu, '') // 只保留文字(Letter)、数字(Number)
+            .trim();
+        return norm;
+    }
+    // 作者名字标准化
+    function normalizeAuthor(author) {
+        if (!author) return '';
+        return author.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+    }
     /**
      * 点击补充信息按钮时，当自动匹配失败（找不到matchedF95ThreadId），通过弹窗询问用户手动输入 F95 ID
      * @returns {string|null} 如果用户输入了有效的纯数字ID，则返回该ID字符串，否则返回 null
@@ -3757,17 +4168,6 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
             alert('输入的ID格式无效，必须是纯数字。');
             return null; // 验证失败
         }
-    }
-    /**
-     * 检查字符串是否包含关键词列表中的任何一个关键词（关键词由英文逗号分隔，忽略大小写）
-     * @param {string} text - 被检查的源字符串 (例如: 'Male Protagonist')。
-     * @param {string} keywords - 关键词列表 (例如: 'male protag, animated')。
-     * @returns {boolean} 如果 text 包含了任何一个关键词，则返回 true，否则返回 false。
-     */
-    function includesAnyIgnoreCase(text, keywords) {
-        if (!keywords) return false;
-        const textLower = text.toLowerCase();
-        return keywords.split(',').some(kw => textLower.includes(kw.trim().toLowerCase()));
     }
     // 使指定的 HTML 元素可以通过一个“把手”元素进行拖拽
     function makeDraggable(elmnt, handle) {
@@ -3800,50 +4200,42 @@ window.dispatchEvent(new CustomEvent('f95_db_updated'));
         }
     }
     /**
-     * 从完整的DLsite URL中提取产品ID (例如 RJ123456)
-     * @param {string} url - 完整的DLsite URL
-     * @returns {string} 如果成功提取则返回产品ID，否则返回 null
+     * 标签：检查字符串是否包含关键词列表中的任何一个关键词（关键词由英文逗号分隔，忽略大小写）
+     * @param {string} text - 被检查的源字符串 (例如: 'Male Protagonist')。
+     * @param {string} keywords - 关键词列表 (例如: 'male protag, animated')。
+     * @returns {boolean} 如果 text 包含了任何一个关键词，则返回 true，否则返回 false。
      */
+    function includesAnyIgnoreCase(text, keywords) {
+        if (!keywords) return false;
+        const textLower = text.toLowerCase();
+        return keywords.split(',').some(kw => textLower.includes(kw.trim().toLowerCase()));
+    }
+    // 更新日志：版本号比较 (1: v1>v2, -1: v1<v2, 0: v1=v2)
+    function compareVersions(v1, v2) {
+        if (!v1 || !v2) return 0;
+        const p1 = v1.split('.').map(Number);
+        const p2 = v2.split('.').map(Number);
+        for (let i = 0; i < Math.max(p1.length, p2.length); i++) {
+            const n1 = p1[i] || 0;
+            const n2 = p2[i] || 0;
+            if (n1 > n2) return 1;
+            if (n1 < n2) return -1;
+        }
+        return 0;
+    }
+    // 更新日志：解析日志中的链接 [文本](url)
+    function parseLogLinks(text) {
+        // 匹配 [text](url) 格式
+        return text.replace(/\[(.*?)\]\((.*?)\)/g, (match, txt, url) => {
+            return `<a href="${url}" target="_blank" style="color:#58a6ff; text-decoration:none; border-bottom:1px dashed #58a6ff;">${txt}</a>`;
+        });
+    }
+    // DLsite URL中提取RJ号 (例如 RJ123456)
     function extractDlsiteId(url) {
         if (!url) {
             return null;
         }
         const match = url.match(/product_id\/([A-Z]{2}\d+)/); // 正则表达式查找 "product_id/" 后面的两位大写字母+数字的组合
         return match ? match[1] : null;
-    }
-    /**
-     * 游戏标题标准化
-     * @param {string} title - 原始标题
-     * @returns {string} 清洗和简化后的标题
-     * 例如, "A Game: The New Chapter [v2.0 Final]" 会变成 "a game the new chapter"。
-     */
-    function normalizeName(name) {
-        if (!name) return '';
-        let norm = name
-            .split('|')[0] // 如果包含 |, 只取第一部分作为主要名称进行比较
-            // ▲待修改，最好能比较所有别名
-            .toLowerCase() // 全部转为小写，这是所有比较的基础
-            .replace(/\*$/, '') // 移除末尾可能的 * (表示非官方)
-            .replace(/\s*\[.*?\]/g, '') // 移除所有方括号及其内容 (例如 [v1.0], [Completed])
-            .replace(/\s*\(.*?\)/g, '') // 移除所有圆括号及其内容 (例如 (Full Release))
-            .replace(/[-\s]\s*(season|part|chapter|episode|book)\s*(\d+|final)/g, '') // 移除类似 season 1、- season final 之类的后缀
-            .replace(/-\s*(final|complete|demo|test)/g, '') // 移除类似 - final 之类的后缀
-            .replace(/\s+(final|demo)/g, '') // 移除类似 final 之类的后缀（这一步需要小心，最好不要随意添加）
-            .replace(/[^\p{L}\p{N}]/gu, '') // 只保留文字(Letter)、数字(Number)
-            .trim();
-        return norm;
-    }
-    /**
-     * 作者名字标准化
-     * @param {string} author - 原始作者名
-     * @returns {string} 清洗和简化后的名字
-     */
-    function normalizeAuthor(author) {
-        if (!author) return '';
-        return author.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
-    }
-    // 当前URL是否包含传递的字符串
-    function isURL(x) {
-        return window.location.href.indexOf(x) != -1;
     }
 })();

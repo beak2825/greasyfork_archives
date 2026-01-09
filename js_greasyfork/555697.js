@@ -1,17 +1,21 @@
 // ==UserScript==
 // @name               NedFox Auto KHR
 // @namespace          NedFoxAutoKHR
-// @version            5
+// @version            5.2.3
 // @description        Auto-Proceed Nedfox steps in the packing portal
 // @author             Kevin van der Bij
 // @license MIT
 // @match              https://retailvista.net/bztrs/*
+// @match              file:///C:/Users/Kevin/OneDrive%20-%20Kampeerhal%20Roden%20B.V/Backoffice/Tampermonkey/*
 // @icon               https://www.kampeerhalroden.nl/media/e9/9d/08/1703346720/favicon.ico
 // @grant              GM_xmlhttpRequest
 // @grant              GM_addStyle
+// @grant              GM_addValueChangeListener
+// @grant              GM_setValue
+// @grant              GM_getValue
+// @grant              window.focus
 // @connect            kampeerhalroden.nl
 // @require            https://update.greasyfork.org/scripts/383527/701631/Wait_for_key_elements.js
-// @require            https://retailvista.net/bztrs/packingportal/lib/jquery/dist/jquery.min.js
 // @downloadURL https://update.greasyfork.org/scripts/555697/NedFox%20Auto%20KHR.user.js
 // @updateURL https://update.greasyfork.org/scripts/555697/NedFox%20Auto%20KHR.meta.js
 // ==/UserScript==
@@ -20,6 +24,7 @@
 ToDo:
 1. Repeat barcode / print all (singleline?) orders of product
 2. Refactor!
+3. Rethink/Look at list view, which order to select first (oldest or singleline)
 */
 
 /* globals jQuery, $, waitForKeyElements */
@@ -33,8 +38,7 @@ ToDo:
     // Get the path for the current window location
     var path = window.location.pathname;
 
-    // Enable christmas theme
-    merryChristmas();
+    console.log(path)
 
     // Ensure localstorage does not get too large
     manageLocalStorage();
@@ -58,32 +62,201 @@ ToDo:
             createCommentBox();
             clearAllParcelItems();
             saveLastOpenReservation();
+            autoFillParcel();
             break;
 
         case /bztrs\/packingportal\/CompleteReservations.*/.test(path):
-            // Save current reservation as last completed.
-            saveLastCompletedReservation();
-
-            // Click button to complete the process and go back to first step once it appears
-            proceedStep("#ReservationContainer > div:nth-child(11) > div > button");
+            completeReservation();
             break;
 
         case /bztrs\/packingportal.*/.test(path):
             addLastReservationButtons();
+            processOrderSelection();
 
             // Select the barcode field in the first step
-            waitForKeyElements("#Productbarcode", (element) => {
-                element.focus();
-                return false;
+            waitForKeyElements("#Productbarcode", (elements) => {
+                elements[0].focus();
             });
-
-            // Automatically select first order in list of multiple orders
-            proceedStep(".card:nth-child(1) .btn");
             break;
 
-        default:
-            alert("Location switch fail!");
+        case /\/C:\/Users\/Kevin\/OneDrive%20-%20Kampeerhal%20Roden%20B.V\/Backoffice\/Tampermonkey\/TestPages.*/.test(path):
+            //completeReservation();
+            //processOrderSelection();
             break;
+    }
+
+    function completeReservation() {
+        // Save current reservation as last completed.
+        saveLastCompletedReservation();
+
+        let completionSuccess = document.querySelector("#Reservation_Status").value == "ClosedByInvoiceSale" ? true : false;
+        
+        // Update mass complete status
+        updateMassComplete(completionSuccess);
+
+        // Click button to complete the process and go back to first step once it appears
+        if (completionSuccess == true) {
+            proceedStep("#ReservationContainer > div:nth-child(11) > div > button");
+        }
+    }
+
+    function processOrderSelection() {
+        // Wait for the modal to exist before we start processing
+        waitForKeyElements("#productReservationsModal", (modal) => {
+            let reservations = [];
+
+            let singleLineReservationsElement = modal[0].querySelector(".singleline-reservations");
+            
+            // Process all of the needed info for single line reservations
+            if (singleLineReservationsElement) {
+                for (let reservation of singleLineReservationsElement.children) {
+                    
+                    let reservationNumber = Array.from(reservation.querySelector(".col-4").children).find(child => /Reservering:.*/.test(child.innerText)).innerText.split(": ").pop();
+
+                    reservations.push({
+                        reservationNumber: reservationNumber,
+                        type: "singleLine",
+                        ref: reservation
+                    });
+                }
+            }
+
+            let validReservationsElement = modal[0].querySelector(".valid-reservations");
+            
+            // Process all of the needed info for multi line reservations
+            if (validReservationsElement) {
+                for (let reservation of validReservationsElement.children) {
+                    
+                    let reservationNumber = Array.from(reservation.querySelector(".col-4").children).find(child => /Reservering:.*/.test(child.innerText)).innerText.split(": ").pop();
+
+                    reservations.push({
+                        reservationNumber: reservationNumber,
+                        type: "multiLine",
+                        ref: reservation
+                    });
+                }
+            }
+
+            let singleLineReservations = reservations.filter((reservation) => reservation.type == "singleLine");
+
+            let massCompleteThreshold = 3;
+
+            console.log(singleLineReservations.length);
+            console.log(massCompleteThreshold);
+
+            // If the amount of single line orders is past the threshold, create the mass complete button
+            if (singleLineReservations.length >= massCompleteThreshold) {
+                var massCompleteButton = document.createElement("button");
+                massCompleteButton.setAttribute("class", "btn btn-primary");
+                massCompleteButton.setAttribute("style", "height:40px;");
+                massCompleteButton.innerText = "Massa voltooien";
+
+                massCompleteButton.onclick = function(){
+                    startMassComplete(singleLineReservations)
+                    massCompleteButton.disabled = true;
+                };
+
+                modal[0].querySelector("div > div > div.modal-body > div > div > div:nth-child(3)").append(massCompleteButton);
+            }
+            
+            // Open the first reservation in the array
+            if (singleLineReservations.length < massCompleteThreshold) {
+                reservations[0].ref.querySelector(".btn").click();
+            }
+        })
+    }
+
+    function startMassComplete(reservations) {
+        for(let reservation of reservations) {
+            // Create element displaying status
+            let status = document.createElement("div");
+            status.setAttribute("id", "status_" + reservation.reservationNumber);
+            status.innerText = "Bezig..."
+
+            // Find the open button, open the window and remove the element
+            let button = reservation.ref.querySelector("div > div.col-2 > div > a");
+            button.setAttribute("target", "_blank");
+
+            window.open(button.href);
+
+            button.after(status);
+            button.remove();
+
+            // Set the status to uncompleted
+            reservation.status = 0;
+        }
+        
+        window.focus();
+
+        GM_setValue("NKHR_MassCompleteStatus", JSON.stringify(reservations))
+        monitorMassComplete();
+    }
+
+    // Checks to see if any of the mass orders have been completed and sets the status element
+    async function monitorMassComplete() {
+        setInterval(function(){
+            let status = JSON.parse(GM_getValue("NKHR_MassCompleteStatus", "[{}]"));
+
+            for (let reservation of status) {
+                let statusElement = document.querySelector("#status_" + reservation.reservationNumber);
+                
+                if (statusElement) {
+                    switch(reservation.status){
+                        case 1:
+                            statusElement.innerText = "Voltooid";
+                            break;
+
+                        case 2:
+                            statusElement.innerText = "Fout";
+                            break;
+                    }
+                }
+            }
+        }, 200);
+    }
+
+    function updateMassComplete(completionSuccess) {
+        let reservationNumber = document.querySelector("#Reservation_ReservationNumber").value;
+
+        // Get the status value and parse it
+        var status = JSON.parse(GM_getValue("NKHR_MassCompleteStatus", "[{}]"));
+        
+        // Add the listener so the status value gets updated automatically
+        GM_addValueChangeListener("NKHR_MassCompleteStatus", function(key, oldValue, newValue, remote) {
+            status = JSON.parse(newValue);
+        })
+
+        // Check if the current order is tracked by masscomplete status
+        if (status.find((reservation) => reservation.reservationNumber == reservationNumber)) {
+            // Get the status again to be sure that we are working on the latest value
+            status = JSON.parse(GM_getValue("NKHR_MassCompleteStatus", "[{}]"));
+            
+            // Set the status value for the current reservation
+            status.find((reservation) => reservation.reservationNumber == reservationNumber).status = completionSuccess ? 1 : 2;
+
+            // Write the value to storage
+            GM_setValue("NKHR_MassCompleteStatus", JSON.stringify(status))
+        }
+    }
+
+    function autoFillParcel() {
+        let reservationNumber = document.getElementById("Reservation_ReservationNumber").value;
+
+        let status = JSON.parse(GM_getValue("NKHR_MassCompleteStatus"));
+
+        waitForKeyElements("#productList", (productList) => {
+            // Check if the current reservation is being tracked by masscomplete
+            if (status.find((reservation) => reservation.reservationNumber == reservationNumber)) {
+                let productItems = Array.from(productList[0].querySelector("div > div > table > tbody").children);
+                
+                // iterate over the product list
+                for (let i = 1; i < productItems.length; i++) {
+                    // Set the barcode input and click the button to scan
+                    document.querySelector("#productBarcode").value = productItems[i].children[2].innerText;
+                    document.querySelector("#verifyProduct").click();
+                }
+            }
+        })
     }
 
     // Function that waits for element to exist and executes a click
@@ -359,76 +532,6 @@ ToDo:
         var reservationDetails = { id: reservationID, number: reservationNumber };
 
         localStorage.setItem("NKHR_LastCompletedReservationDetails", JSON.stringify(reservationDetails));
-    }
-
-    // Enable christmas theming for the portal
-    function merryChristmas(){
-        // Christmas snowflakes
-        $("body").append ( `
-        <style>
-            /* customizable snowflake styling */
-            .snowflake {
-              color: #fff;
-              font-size: 1em;
-              font-family: Arial, sans-serif;
-              text-shadow: 0 0 5px #000;
-            }
-
-            .snowflake,.snowflake .inner{animation-iteration-count:infinite;animation-play-state:running}@keyframes snowflakes-fall{0%{transform:translateY(0)}100%{transform:translateY(110vh)}}@keyframes snowflakes-shake{0%,100%{transform:translateX(0)}50%{transform:translateX(80px)}}.snowflake{position:fixed;top:-10%;z-index:9999;-webkit-user-select:none;user-select:none;cursor:default;pointer-events:none;animation-name:snowflakes-shake;animation-duration:3s;animation-timing-function:ease-in-out}.snowflake .inner{animation-duration:10s;animation-name:snowflakes-fall;animation-timing-function:linear}.snowflake:nth-of-type(0){left:1%;animation-delay:0s}.snowflake:nth-of-type(0) .inner{animation-delay:0s}.snowflake:first-of-type{left:10%;animation-delay:1s}.snowflake:first-of-type .inner,.snowflake:nth-of-type(8) .inner{animation-delay:1s}.snowflake:nth-of-type(2){left:20%;animation-delay:.5s}.snowflake:nth-of-type(2) .inner,.snowflake:nth-of-type(6) .inner{animation-delay:6s}.snowflake:nth-of-type(3){left:30%;animation-delay:2s}.snowflake:nth-of-type(11) .inner,.snowflake:nth-of-type(3) .inner{animation-delay:4s}.snowflake:nth-of-type(4){left:40%;animation-delay:2s}.snowflake:nth-of-type(10) .inner,.snowflake:nth-of-type(4) .inner{animation-delay:2s}.snowflake:nth-of-type(5){left:50%;animation-delay:3s}.snowflake:nth-of-type(5) .inner{animation-delay:8s}.snowflake:nth-of-type(6){left:60%;animation-delay:2s}.snowflake:nth-of-type(7){left:70%;animation-delay:1s}.snowflake:nth-of-type(7) .inner{animation-delay:2.5s}.snowflake:nth-of-type(8){left:80%;animation-delay:0s}.snowflake:nth-of-type(9){left:90%;animation-delay:1.5s}.snowflake:nth-of-type(9) .inner{animation-delay:3s}.snowflake:nth-of-type(10){left:25%;animation-delay:0s}.snowflake:nth-of-type(11){left:65%;animation-delay:2.5s}
-        </style>
-
-        <div class="snowflakes" aria-hidden="true">
-          <div class="snowflake">
-            <div class="inner">❅</div>
-          </div>
-          <div class="snowflake">
-            <div class="inner">❅</div>
-          </div>
-          <div class="snowflake">
-            <div class="inner">❅</div>
-          </div>
-          <div class="snowflake">
-            <div class="inner">❅</div>
-          </div>
-          <div class="snowflake">
-            <div class="inner">❅</div>
-          </div>
-          <div class="snowflake">
-            <div class="inner">❅</div>
-          </div>
-          <div class="snowflake">
-            <div class="inner">❅</div>
-          </div>
-          <div class="snowflake">
-            <div class="inner">❅</div>
-          </div>
-          <div class="snowflake">
-            <div class="inner">❅</div>
-          </div>
-          <div class="snowflake">
-            <div class="inner">❅</div>
-          </div>
-          <div class="snowflake">
-            <div class="inner">❅</div>
-          </div>
-          <div class="snowflake">
-            <div class="inner">❅</div>
-          </div>
-        </div>
-    ` );
-
-        // Santa image
-        $("body").append (
-            '<img id="christmasImage" src="https://i.pinimg.com/originals/fc/15/63/fc15634baf60b9b5c3f80e439978efb0.gif">'
-        );
-
-        $("#christmasImage").css ( {
-            position:   "fixed",
-            width:      "128px",
-            height:     "128px",
-            bottom:        "60px",
-            right:       "0px"
-        } );
     }
 
     // ||| SHOPWARE INTEGRATION FUNCTIONS |||

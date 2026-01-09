@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bilibili导出直播消费记录
 // @namespace    https://github.com/qianjiachun
-// @version      2025.10.20.02
+// @version      2026.01.05.01
 // @description  B站导出直播消费记录
 // @author       小淳
 // @match        *://link.bilibili.com/p/center/index*
@@ -150,6 +150,32 @@ function initStyles() {
     #date-range-dialog .button-group {
       display: flex; gap: 10px; margin-top: 10px;
     }
+    #date-range-dialog .speed-config {
+      display: flex; align-items: center; gap: 10px; margin-top: 10px;
+      font-size: 13px;
+    }
+    #date-range-dialog .speed-config input {
+      width: 80px; padding: 4px 8px;
+    }
+    #download-partial-button {
+      height: 20px;
+      width: auto;
+      padding: 0 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #00a67e;
+      border-radius: 12px;
+      color: #fff;
+      font-family: PingFang SC;
+      font-size: 11px;
+      cursor: pointer;
+      margin-left: 6px;
+      transition: all 0.3s ease;
+    }
+    #download-partial-button:hover {
+      background: #008c6a;
+    }
   `;
   document.head.appendChild(style);
 }
@@ -177,13 +203,36 @@ async function init() {
     }
 
     // 显示时间范围选择对话框
-    showDateRangeDialog(async (minMonth) => {
+    showDateRangeDialog(async (minMonth, requestDelay, savedProgress) => {
       // 显示加载状态
       const originalText = exportButton.innerHTML;
       const originalClass = exportButton.className;
       exportButton.innerHTML = "<span>导出中...</span>";
       exportButton.className = originalClass + " progress";
       exportButton.disabled = true;
+
+      // 创建"下载已获数据"按钮
+      let downloadPartialButton = document.querySelector("#download-partial-button");
+      if (!downloadPartialButton) {
+        downloadPartialButton = document.createElement("div");
+        downloadPartialButton.className = "pay-button";
+        downloadPartialButton.id = "download-partial-button";
+        downloadPartialButton.innerHTML = `<span>下载已获数据</span>`;
+        const dom = document.querySelector(".bettery-block");
+        if (dom) dom.appendChild(downloadPartialButton);
+      }
+
+      // 用于存储当前正在获取的数据
+      let currentRecords = [];
+
+      downloadPartialButton.onclick = () => {
+        if (currentRecords.length > 0) {
+          exportToExcel(currentRecords);
+          alert(`已下载当前获取的 ${currentRecords.length} 条记录`);
+        } else {
+          alert("暂无数据可下载");
+        }
+      };
 
       try {
         // 获取所有消费记录，带进度回调和时间限制
@@ -192,8 +241,12 @@ async function init() {
           (progress) => {
             const monthDisplay = progress.currentMonth !== "未知" ? ` (${progress.currentMonth})` : "";
             exportButton.innerHTML = `<span>获取中... 第${progress.currentPage}页 (${progress.currentRecords}条)${monthDisplay}</span>`;
+            // 更新当前记录供"下载已获数据"按钮使用
+            currentRecords = progress.allRecords || [];
           },
-          minMonth
+          minMonth,
+          requestDelay,
+          savedProgress
         );
 
         if (records.length === 0) {
@@ -206,6 +259,10 @@ async function init() {
 
         // 导出到Excel
         exportToExcel(records);
+
+        // 清除进度
+        localStorage.removeItem("export_progress");
+
         alert(`✅ 导出成功！共导出 ${records.length} 条记录\n时间范围：${minMonth} 及之后`);
       } catch (error) {
         console.error("导出失败:", error);
@@ -214,6 +271,8 @@ async function init() {
         if (error.message.includes("未登录") || error.message.includes("code")) {
           alert("❌ 登录已过期，请重新登录");
           showLoginDialog();
+          // 清除进度
+          localStorage.removeItem("export_progress");
         } else {
           alert(`❌ 导出失败: ${error.message}`);
         }
@@ -222,6 +281,11 @@ async function init() {
         exportButton.innerHTML = originalText;
         exportButton.className = originalClass;
         exportButton.disabled = false;
+
+        // 移除"下载已获数据"按钮
+        if (downloadPartialButton && downloadPartialButton.parentNode) {
+          downloadPartialButton.parentNode.removeChild(downloadPartialButton);
+        }
       }
     });
   });
@@ -236,6 +300,9 @@ function showDateRangeDialog(callback) {
   const now = new Date();
   const currentMonth = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, "0")}`;
 
+  // 获取保存的速度配置，默认500ms
+  const savedDelay = localStorage.getItem("export_request_delay") || "500";
+
   dialog.innerHTML = `
     <div class="dialog-mask"></div>
     <div class="dialog-box">
@@ -245,8 +312,13 @@ function showDateRangeDialog(callback) {
         例如：选择2025-02，则导出2025年2月及之后的数据
       </p>
       <input id="date-range-input" type="month" value="${currentMonth}" />
+      <div class="speed-config">
+        <label>请求间隔(ms):</label>
+        <input id="speed-config-input" type="number" min="0" max="5000" step="100" value="${savedDelay}" />
+        <span style="font-size: 11px; color: #999;">建议: 500</span>
+      </div>
       <div class="button-group">
-      <button id="date-range-cancel">取消</button>
+        <button id="date-range-cancel">取消</button>
         <button id="date-range-confirm">确认导出</button>
       </div>
     </div>
@@ -254,22 +326,55 @@ function showDateRangeDialog(callback) {
   document.body.appendChild(dialog);
 
   const input = dialog.querySelector("#date-range-input");
+  const speedInput = dialog.querySelector("#speed-config-input");
   const confirmBtn = dialog.querySelector("#date-range-confirm");
   const cancelBtn = dialog.querySelector("#date-range-cancel");
 
   cancelBtn.onclick = () => dialog.remove();
 
-  confirmBtn.onclick = () => {
+  confirmBtn.onclick = async () => {
     const selectedMonth = input.value;
     if (!selectedMonth) {
       alert("请选择月份");
       return;
     }
 
+    const requestDelay = parseInt(speedInput.value) || 500;
+    if (requestDelay < 0 || requestDelay > 5000) {
+      alert("请求间隔应在0-5000ms之间");
+      return;
+    }
+
+    // 保存速度配置
+    localStorage.setItem("export_request_delay", requestDelay.toString());
+
     // 将YYYY-MM格式转换为YYYYMM格式
     const monthCode = selectedMonth.replace("-", "");
+
+    // 检查是否有未完成的导出任务
+    const savedProgress = localStorage.getItem("export_progress");
+    if (savedProgress) {
+      const progress = JSON.parse(savedProgress);
+      const continueExport = confirm(
+        `检测到上次未完成的导出任务：\n` +
+          `时间范围：${progress.minMonth}\n` +
+          `已获取：${progress.recordCount}条记录\n` +
+          `下一页ID：${progress.nextId}\n\n` +
+          `是否继续上次的任务？\n点击"确定"继续，"取消"则重新开始`
+      );
+
+      if (continueExport) {
+        dialog.remove();
+        callback(progress.minMonth, requestDelay, progress);
+        return;
+      } else {
+        // 清除旧的进度
+        localStorage.removeItem("export_progress");
+      }
+    }
+
     dialog.remove();
-    callback(monthCode);
+    callback(monthCode, requestDelay, null);
   };
 }
 
@@ -547,18 +652,39 @@ async function getPayRecords(accessKey, nextId = "") {
 }
 
 /* -------------------- 获取所有消费记录数据 -------------------- */
-async function getAllPayRecords(accessKey, progressCallback, minMonth = null) {
+async function getAllPayRecords(
+  accessKey,
+  progressCallback,
+  minMonth = null,
+  requestDelay = 500,
+  savedProgress = null
+) {
   const allRecords = [];
   const existingIds = new Set(); // 在循环外部创建Set，提高性能
   let nextId = "";
   let hasMore = true;
   let pageCount = 0;
 
+  // 如果有保存的进度，从断点继续
+  if (savedProgress) {
+    // 恢复已有的记录
+    if (savedProgress.records && Array.isArray(savedProgress.records)) {
+      allRecords.push(...savedProgress.records);
+      // 重建existingIds Set
+      savedProgress.records.forEach((record) => existingIds.add(record.id));
+    }
+    nextId = savedProgress.nextId || "";
+    pageCount = savedProgress.pageCount || 0;
+    console.log(`从断点继续：已有${allRecords.length}条记录，从第${pageCount + 1}页开始`);
+  }
+
   while (hasMore) {
     pageCount++;
     const response = await getPayRecords(accessKey, nextId);
 
     if (response.code !== 0) {
+      // 保存当前进度
+      saveProgress(minMonth, allRecords, nextId, pageCount);
       throw new Error(`获取数据失败: ${response.message}`);
     }
 
@@ -572,13 +698,28 @@ async function getAllPayRecords(accessKey, progressCallback, minMonth = null) {
         return true; // 新记录，保留
       });
       allRecords.push(...newRecords);
+
+      // 检查是否还有更多数据
+      const hasNextPage = response.data.params && response.data.params.next_id;
+      if (hasNextPage) {
+        nextId = response.data.params.next_id;
+      } else {
+        hasMore = false;
+      }
+
+      // 保存进度（只在有下一页时保存）
+      if (hasNextPage) {
+        saveProgress(minMonth, allRecords, nextId, pageCount);
+      }
+
       // 更新进度
       if (progressCallback) {
         progressCallback({
           currentPage: pageCount,
           currentRecords: allRecords.length,
           pageRecords: newRecords.length,
-          currentMonth: response.data.params?.month || "未知"
+          currentMonth: response.data.params?.month || "未知",
+          allRecords: allRecords // 传递所有记录供"下载已获数据"使用
         });
       }
 
@@ -592,13 +733,9 @@ async function getAllPayRecords(accessKey, progressCallback, minMonth = null) {
         }
       }
 
-      // 检查是否还有更多数据
-      if (response.data.params && response.data.params.next_id) {
-        nextId = response.data.params.next_id;
-        // 添加延迟避免请求过快
-        await sleep(500);
-      } else {
-        hasMore = false;
+      // 添加延迟避免请求过快
+      if (hasMore && hasNextPage) {
+        await sleep(requestDelay);
       }
     } else {
       hasMore = false;
@@ -606,6 +743,23 @@ async function getAllPayRecords(accessKey, progressCallback, minMonth = null) {
   }
 
   return allRecords;
+}
+
+/* -------------------- 保存导出进度 -------------------- */
+function saveProgress(minMonth, records, nextId, pageCount) {
+  try {
+    const progress = {
+      minMonth,
+      records,
+      nextId,
+      pageCount,
+      recordCount: records.length,
+      timestamp: Date.now()
+    };
+    localStorage.setItem("export_progress", JSON.stringify(progress));
+  } catch (e) {
+    console.warn("保存进度失败（可能是localStorage空间不足）:", e);
+  }
 }
 
 /* -------------------- 导出Excel功能 -------------------- */

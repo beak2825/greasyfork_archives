@@ -2,7 +2,8 @@
 // @name        TimeTable History Integration
 // @description Integrate Timetable History with other sources
 // @match       http://timetablehistory.com/times.aspx*
-// @version 0.0.1.20251015161224
+// @match       https://timetables.trainsplit.com/times.aspx*
+// @version 0.0.1.20260105152828
 // @namespace https://greasyfork.org/users/1526162
 // @downloadURL https://update.greasyfork.org/scripts/552698/TimeTable%20History%20Integration.user.js
 // @updateURL https://update.greasyfork.org/scripts/552698/TimeTable%20History%20Integration.meta.js
@@ -31,9 +32,9 @@
 
     let button2 = document.createElement("a")
     button2.setAttribute("class","btn")
-    button2.setAttribute("href","https://railchecker.app/service/" + year + "-" + month + "-" + day + "/" + serviceId + "/")
+    button2.setAttribute("href","https://timetables-beta.trainsplit.com/times.aspx?uid=" + serviceId + "&date=" + year + month + day)
     button2.setAttribute("target","_blank")
-    let text2  = document.createTextNode("Open RailChecker")
+    let text2  = document.createTextNode("Open Darwin")
 
     let button3 = document.createElement("a")
     button3.setAttribute("class","btn")

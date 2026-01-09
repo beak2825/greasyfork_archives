@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         WM Norway + Sweden — gulesider + 1881 + ratsit + mrkoll + BE loader
+// @name         NOR-SWE Data Scraper + BE Loader 
 // @namespace    qc-automation
-// @version      2.0.22
+// @version      2.0.26
 // @description  Scrape (ratsit/mrkoll/gulesider/1881) → last-only cache → BE fill (address, phones, spouse & DOB, positions). Liquidity parser for events. Diacritics normalized at scrape + fill. Robust UI injection. Black pop-ups preserved (ratsit/mrkoll) with Save to cache button.
 // @match        https://www.gulesider.no/*
 // @match        https://www.1881.no/*
@@ -13,8 +13,8 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_setClipboard
-// @downloadURL https://update.greasyfork.org/scripts/561657/WM%20Norway%20%2B%20Sweden%20%E2%80%94%20gulesider%20%2B%201881%20%2B%20ratsit%20%2B%20mrkoll%20%2B%20BE%20loader.user.js
-// @updateURL https://update.greasyfork.org/scripts/561657/WM%20Norway%20%2B%20Sweden%20%E2%80%94%20gulesider%20%2B%201881%20%2B%20ratsit%20%2B%20mrkoll%20%2B%20BE%20loader.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561657/NOR-SWE%20Data%20Scraper%20%2B%20BE%20Loader.user.js
+// @updateURL https://update.greasyfork.org/scripts/561657/NOR-SWE%20Data%20Scraper%20%2B%20BE%20Loader.meta.js
 // ==/UserScript==
 
 (function(){
@@ -86,6 +86,17 @@
     const fixDateSE=(txt)=>{ const mon={januari:'01',februari:'02',mars:'03',april:'04',maj:'05',juni:'06',juli:'07',augusti:'08',september:'09',oktober:'10',november:'11',december:'12'}; const m=String(txt||'').toLowerCase().match(/(\d{1,2})\s+([a-zåäö]+)\s+(\d{4})/); return m?`${String(m[1]).padStart(2,'0')}/${mon[m[2]]}/${m[3]}`:''; };
     const capitalize=(s)=>!s?s:(s[0].toUpperCase()+s.slice(1));
 
+    /* >>> CHANGE START: helper to match labels that contain both first & last name (diacritics normalized) <<< */
+    const nameParts=(nm)=>fixSpecialChars(String(nm||'')).toLowerCase().split(/\s+/).filter(Boolean);
+    const labelContainsFirstAndLast=(label, recName)=>{
+      const h=fixSpecialChars(String(label||'')).toLowerCase();
+      const parts=nameParts(recName);
+      const first=parts[0]||'', last=parts[parts.length-1]||'';
+      if(!first || !last) return false;
+      return h.includes(first) && h.includes(last);
+    };
+    /* >>> CHANGE END <<< */
+
     function extractRatsitRecord(){
       const rec={ country:'SWE', id:'', name:'', address1:'', postcode:'', city:'', countyRaw:'',
         spouse:'', dob:'', phones:[], positionsBlock:'', sources:{addrPhoneSrc:'ratsit.se'}, displayAddressLines:'', updatedAt:todayDDMMYYYY() };
@@ -104,20 +115,27 @@
       const lm=(document.body.innerText||'').match(/Län:\s*([^\n(]+)/i); if(lm) rec.countyRaw=cleanSE(lm[1].trim());
       rec.address1=street; rec.postcode=postal; rec.city=cleanSE(rec.city); rec.displayAddressLines=makeDisplayAddress(rec.address1, rec.postcode, rec.city);
 
+      /* >>> CHANGE START: relaxed phone matching to allow "Mattias Giovanni Fili" while still excluding spouse like "Sarah Fili" <<< */
       const nameTxt=rec.name, phones=new Set();
       qa('a[href^="tel:"]').forEach(a=>{
         const parentDiv=a.closest('div');
         if(parentDiv){
           const strong=parentDiv.querySelector('strong');
-          if(strong && strong.innerText.trim() && strong.innerText.trim()!==nameTxt) return;
+          // If a label exists, require it to contain BOTH first & last names of the record (any order)
+          if(strong && strong.innerText.trim() && !labelContainsFirstAndLast(strong.innerText.trim(), nameTxt)) return;
         }
-        let p=a;
+        // Fallback: check up to 5 ancestors — accept if the text contains either the exact record name or BOTH first & last names
+        let p=a, ok=false;
         for(let i=0;i<5;i++){
           p=p.parentElement; if(!p) break;
-          if(p.innerText.includes(nameTxt)){ const fixed=fixPhoneSE(text(a)); if(fixed) phones.add(fixed); break; }
+          const parentText=String(p.innerText||'');
+          if(parentText.includes(nameTxt) || labelContainsFirstAndLast(parentText, nameTxt)){ ok=true; break; }
         }
+        if(parentDiv && parentDiv.querySelector('strong')) ok = true; // already passed label check
+        if(ok){ const fixed=fixPhoneSE(text(a)); if(fixed) phones.add(fixed); }
       });
       rec.phones=Array.from(phones);
+      /* >>> CHANGE END <<< */
 
       const mSp=(document.body.innerText||'').match(/är gift med\s+([^\n]+)/i);
       if(mSp){ const spouseFirst=capitalize(cleanSE(mSp[1].trim().split(' ')[0])); rec.spouse=spouseFirst; }
@@ -204,7 +222,12 @@
     const COLOR_POPUP_BG='#1a1a1a', COLOR_EDIT_BG='#353840';
     const cleanSE=(s)=>fixSpecialChars(String(s||'')).trim(), fixCitySE=(s)=>String(s||'').replace(/Göteborg/gi,'Gothenburg');
     const fixPhoneSE=(raw)=>{ const d=String(raw||'').replace(/\D/g,'').replace(/^46/,'').replace(/^0/,''); if(!d||d.length<=5) return ''; if(d.length<=7) return `(0)${d.slice(0,1)} ${d.slice(1)}`; return `(0)${d.slice(0,2)} ${d.slice(2)}`; };
-    const fixDateSE=(txt)=>{ const mon={januari:'01',februari:'02',mars:'03',april:'04',maj:'05',juni:'06',juli:'07',augusti:'08',september:'09',oktober:'10',november:'11',december:'12'}; const m=String(txt||'').toLowerCase().match(/(\d{1,2})\s+([a-zåäö]+)\s+(\d{4})/); return m?`${String(m[1]).padStart(2,'0')}/${mon[m[2]]}/${m[3]}`:''; };
+    // *** FIXED: properly capture day, month (Swedish), and year ***
+    const fixDateSE=(txt)=>{
+      const mon={januari:'01',februari:'02',mars:'03',april:'04',maj:'05',juni:'06',juli:'07',augusti:'08',september:'09',oktober:'10',november:'11',december:'12'};
+      const m=String(txt||'').toLowerCase().match(/(\d{1,2})\s+([a-zåäö]+)\s+(\d{4})/);
+      return m ? `${String(m[1]).padStart(2,'0')}/${mon[m[2]]||''}/${m[3]}` : '';
+    };
 
     function extractMrkollRecord(){
       const rec={ country:'SWE', id:'', name:'', address1:'', postcode:'', city:'', countyRaw:'',
@@ -396,6 +419,13 @@
       }
     }
 
+    /* >>> CHANGE START: specific setter to target only share_percentshares (needed for 'stake sale for') <<< */
+    function setStakePercentSharesOnly(v){
+      const el=q(`input[name="share_percentshares"]`)||byId('share_percentshares');
+      if(el){ el.value=String(v||''); el.dispatchEvent(new Event('input',{bubbles:true})); el.dispatchEvent(new Event('change',{bubbles:true})); }
+    }
+    /* >>> CHANGE END <<< */
+
     /* Address fill (NO) — gated by hasAddress */
     async function fillAddressFromRecordNO(rec){
       if(!rec) return;
@@ -585,15 +615,39 @@
 
         // stake (preserve decimals)
         let stakePercent=null; {
-          const m=lower.match(/stake\s*[:=]?\s*([\d.,]+)\s*%?/);
-          if(m){ const num=parseFloat(m[1].replace(/,/g,'')); if(!isNaN(num)) stakePercent=num; }
+          // Accept both "stake 33.333" and "original stake 33.333"
+          let m = lower.match(/stake\s*[:=]?\s*([\d.,]+)\s*%?/);
+          if (!m) m = lower.match(/original\s+stake\s*[:=]?\s*([\d.,]+)\s*%?/);
+          if (m) {
+            const num = parseFloat(m[1].replace(/,/g,''));
+            if (!isNaN(num)) stakePercent = num;
+          }
         }
+
+        /* >>> CHANGE START: parse "for X stake" amount (allow 'assumed' + tolerant wording + fallback) <<< */
+        let forStake = null; {
+          // Accept: "for assumed 49 stake [sold/retained]" and variants like "for 49% stake", "for 49 per cent stake", "for 49 pct stake"
+          const explicit = lower.match(/\bfor\s+(?:assumed\s+)?([\d.,]+)\s*(?:%|pct|pc|percent|per\s*cent)?\s+(?:of\s+)?(?:the\s+)?(?:original\s+)?stake\b/);
+          if (explicit) {
+            const num = parseFloat(explicit[1].replace(/,/g,''));
+            if (!isNaN(num)) forStake = num;
+          }
+          // Fallback: infer from liq note phrasing: "assuming they sold/retained 49 per cent of their original stake"
+          if (forStake == null) {
+            const inferred = lower.match(/\bassuming\s+they\s+(?:sold|retained)\s+([\d.,]+)\s*(?:%|pct|pc|percent|per\s*cent)\s+(?:of\s+)?(?:their\s+)?(?:original\s+)?stake\b/);
+            if (inferred) {
+              const num = parseFloat(inferred[1].replace(/,/g,''));
+              if (!isNaN(num)) forStake = num;
+            }
+          }
+        }
+        /* >>> CHANGE END <<< */
 
         // currency + value (millions)
         let currencyCode='', amount=null, unit='m'; {
           let m=s.match(/value\s+([A-Z]{3})\s+([\d.,]+)\s*(bn|billion|billions|m|mn|million|millions)?/i);
           if(!m) m=s.match(/\b([A-Z]{3})\s+([\d.,]+)\s*(bn|billion|billions|m|mn|million|millions)\b/i);
-          if(!m){ const m2=s.match(/value\s+([\d.,]+)\s*(bn|billion|billions|m|mn|million|millions)\s+([A-Z]{3})/i); if(m2) m=[m2[0],m2[3],m2[1],m2[2]]; }
+          if(!m){ const m2=s.match(/value\s+([\d.,]+)\s*(bn|billion|billions)\s+([A-Z]{3})/i); if(m2) m=[m2[0],m2[3],m2[1],m2[2]]; }
           if(m){
             const cur=m[1].toUpperCase(); if(CURRENCY_ALLOWED.has(cur)) currencyCode=cur;
             amount=parseFloat(String(m[2]).replace(/,/g,'')); const u=(m[3]||'m').toLowerCase(); unit=/bn|billion/.test(u)?'bn':'m';
@@ -619,8 +673,17 @@
           if(m) liqNote=m[1].trim();
         }
 
+        /* >>> CHANGE START: determine assumption (sold vs retained) <<< */
+        let assumedMode=''; // 'sold' | 'retained' | ''
+        if(/potential stake sale/.test(evtLower)) assumedMode='retained';
+        else if(/stake sale/.test(evtLower)) assumedMode='sold';
+        const noteLower=liqNote.toLowerCase();
+        if(/assuming they retained/.test(noteLower)) assumedMode='retained';
+        if(/assuming they sold/.test(noteLower)) assumedMode='sold';
+        /* >>> CHANGE END <<< */
+
         const valueMillions=(typeof amount==='number' && !isNaN(amount)) ? (unit==='bn'? amount*1000 : amount) : null;
-        return { typeCode, stakePercent, currencyCode, valueMillions, stakeSource, liqSource, liqNote };
+        return { typeCode, stakePercent, currencyCode, valueMillions, stakeSource, liqSource, liqNote, forStake, assumedMode };
       };
 
       const truncate4=(n)=> (typeof n!=='number'||!isFinite(n)) ? '' : String(Math.floor(n*10000)/10000);
@@ -628,13 +691,108 @@
       const extractStakeSentences=(note)=>{ const raw=String(note||'').replace(/\r\n/g,'\n').replace(/\r/g,'\n'); const matches=[]; const re=/(^|[\s"'`])((?:Stake|Shares)\s+held[^\n\.]*\.?)/gi; let m; while((m=re.exec(raw))!==null){ const s=(m[2]||'').trim(); if(s) matches.push(s); } return matches; };
 
       const apply=(parsed)=>{
-        const {typeCode,stakePercent,currencyCode,valueMillions,stakeSource,liqSource,liqNote}=parsed||{};
+        const {typeCode,stakePercent,currencyCode,valueMillions,stakeSource,liqSource,liqNote,forStake,assumedMode}=parsed||{};
         const appt=getAppt(); if(!appt) toast('⚠️ Appointment date missing or invalid (dd/mm/yyyy). Fill it first.');
 
         const typeSel=byId('newwealth_typecode'); if(typeSel && typeCode) selectDropdownByValue(typeSel,typeCode);
 
         const stakeUnavailable=/size of stake held not available|exact breakdown of ownership not available/i.test(liqNote||'');
 
+        /* >>> CHANGE START: special handling when "for X stake" is present <<< */
+        let usedStakePercent = (typeof stakePercent==='number' && !isNaN(stakePercent)) ? stakePercent : null;
+        let computedStakeTrunc = null;
+
+        if(!stakeUnavailable && forStake!=null && usedStakePercent!=null){
+          const computedRaw = (usedStakePercent/100) * forStake; // e.g. 33.333/100 * 49
+          const computedNum = Math.floor(computedRaw*10000)/10000; // numeric truncation
+          computedStakeTrunc = computedNum;
+
+          // Fill stake % fields per your rules
+          if(typeCode==='stakesale'){
+            // Case: "stake sale for 49 stake" — ONLY share_percentshares
+            setStakePercentSharesOnly(computedStakeTrunc);
+          } else if(typeCode==='potstakesale'){
+            // Case: "potential stake sale for 51 stake" — BOTH percentshares and stake
+            setAnyStakePercent(computedStakeTrunc);
+          } else {
+            // Other event types (if ever used with "for") — default to BOTH for consistency
+            setAnyStakePercent(computedStakeTrunc);
+          }
+
+          // Currency selection unchanged
+          const currSel=byId('newwealth_currencycode'); if(currSel && currencyCode) selectDropdownByValue(currSel,currencyCode);
+
+          // Exact worth based on computed stake (truncated)
+          if(typeCode!=='capraises' && typeof valueMillions==='number'){
+            const exactWorth = truncate4((computedStakeTrunc/100) * valueMillions);
+            setAnyExactWorthMillions(exactWorth);
+          }
+
+          // Share source (unchanged behavior, based on stakeSource + appointment)
+          const atTxt=appt?` as at ${appt}.`:'';
+          const finalStakeSource=fixSpecialChars((stakeSource||'proff.no').trim());
+          const shareSourceText=appt?`${finalStakeSource}${atTxt}`:finalStakeSource;
+          setInputByName('share_sourcetext', shareSourceText);
+          setInputByName('share_sourcenotes', shareSourceText);
+          setInputByName('share_sourcenote', shareSourceText);
+          setInputByName('share_sourcenotes_text', shareSourceText);
+          setInputValue('share_sourcenotes', shareSourceText);
+
+          // Share notes: Assumed sold/retained + picked Stake held... sentence
+          let assumptionPrefix = '';
+          if(assumedMode==='sold') assumptionPrefix='Assumed sold.';
+          else if(assumedMode==='retained') assumptionPrefix='Assumed retained.';
+          const stakeSentences=extractStakeSentences(liqNote||'');
+          const heldSentence = stakeSentences.length ? stakeSentences[0] : '';
+          const finalShareNotes = fixSpecialChars([assumptionPrefix, heldSentence].filter(Boolean).join(' ')).trim();
+
+          if(finalShareNotes){
+            setInputByName('share_sharenotes', finalShareNotes);
+          }
+
+          // Liq source (unchanged behavior)
+          const finalLiqSource=fixSpecialChars((liqSource||stakeSource||'').trim());
+          if(finalLiqSource){
+            const liqSourceText=appt?`${finalLiqSource}${atTxt}`:finalLiqSource;
+            setInputByName('newwealth_sourcetext', liqSourceText);
+            setInputByName('newwealth_sourcenotes', liqSourceText);
+            setInputByName('newwealth_sourcenote', liqSourceText);
+            setInputByName('newwealth_sourcenotes_text', liqSourceText);
+            setInputValue('newwealth_sourcenotes', liqSourceText);
+          }
+
+          // Liquidity notes (unchanged — full note into newwealth_notes)
+          if(liqNote){
+            const noteEl=byId('newwealth_notes');
+            if(noteEl){
+              noteEl.value=fixSpecialChars(String(liqNote).trim());
+              noteEl.dispatchEvent(new Event('input',{bubbles:true}));
+              noteEl.dispatchEvent(new Event('change',{bubbles:true}));
+            }
+          }
+          const displayChk=byId('newwealth_notes_displayflag'); if(displayChk){ displayChk.checked=true; displayChk.dispatchEvent(new Event('change',{bubbles:true})); }
+
+          // Dates (unchanged behavior)
+          const lastUpdateEl=byId('detail_dtsLastUpdate')||q('input[name="detail_dtsLastUpdate"]'), allocatedEl=q('input[name="share_dtsallocated"]');
+          if(appt){
+            if(lastUpdateEl){
+              lastUpdateEl.value=appt;
+              lastUpdateEl.dispatchEvent(new Event('input',{bubbles:true}));
+              lastUpdateEl.dispatchEvent(new Event('change',{bubbles:true}));
+            }
+            if(allocatedEl){
+              allocatedEl.value=appt;
+              allocatedEl.dispatchEvent(new Event('input',{bubbles:true}));
+              allocatedEl.dispatchEvent(new Event('change',{bubbles:true}));
+            }
+          }
+
+          toast('✅ stake and liq event filled (FOR stake logic applied)');
+          return; // prevent default path from overriding
+        }
+        /* >>> CHANGE END <<< */
+
+        // ===== Default path (unchanged) =====
         if(typeof stakePercent==='number' && !isNaN(stakePercent) && !stakeUnavailable){
           setAnyStakePercent(stakePercent);
         }

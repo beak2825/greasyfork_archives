@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Arson bang for buck custom
+// @name         Arson bang for buck custom underko
 // @namespace    custom.Para_Thenics.torn.com
-// @version      0.0.1
+// @version      0.0.3
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
-// @downloadURL https://update.greasyfork.org/scripts/561508/Arson%20bang%20for%20buck%20custom.user.js
-// @updateURL https://update.greasyfork.org/scripts/561508/Arson%20bang%20for%20buck%20custom.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561508/Arson%20bang%20for%20buck%20custom%20underko.user.js
+// @updateURL https://update.greasyfork.org/scripts/561508/Arson%20bang%20for%20buck%20custom%20underko.meta.js
 // ==/UserScript==
  
 // forked from https://greasyfork.org/en/scripts/556165-arson-bang-for-buck
@@ -73,7 +73,6 @@
     PER_ITEM: 5,
   };
 
-  // Scenario definitions - add your scenarios here
   const ARSON_SCENARIOS = [
     {name: "A Fungus Among Us", payout: 38000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "A Fungus Among Us", payout: 34000, ignition: "flamethrower", materials: {gasoline: 1}},
@@ -81,8 +80,12 @@
     {name: "A Problem Shared", payout: 180000, ignition: "lighter", materials: {gasoline: 6}, stoke: {gasoline: 1}},
     {name: "A Problem Shared", payout: 180000, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}},
 
+    {name: "All Mouth and Trousers", payout: 81000, ignition: "lighter", materials: {gasoline: 3}, evidence: {diamondRing: 1}},
+
     {name: "Arson Around", payout: 110000, ignition: "lighter", materials: {gasoline: 2}, evidence: {toothbrush: 1}},
     {name: "Arson Around", payout: 110000, ignition: "flamethrower", materials: {gasoline: 2}, evidence: {toothbrush: 1}, stoke: {flamethrower: 1}},
+
+    {name: "Beggars Can't be Choosers", payout: 480000, ignition: "flamethrower", materials: {gasoline: 5, thermite: 2}},
 
     {name: "Blown to High Heaven", payout: 0, ignition: "lighter"},
 
@@ -219,7 +222,7 @@
     {name: "Emotional Wreck", payout: 140000, ignition: "lighter", materials: {gasoline: 6}},
     {name: "Emotional Wreck", payout: 140000, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}},
 
-    {name: "End of the Line", payout: 39000, ignition: "lighter", materials: {gasoline: 2}, notes: "Try 3 gasoline"},
+    {name: "End of the Line", payout: 100000, ignition: "lighter", materials: {gasoline: 5}},
     {name: "End of the Line", payout: 78000, ignition: "flamethrower", materials: {gasoline: 3}},
 
     {name: "Faction Fiction", payout: 64500, ignition: "lighter", materials: {gasoline: 4}},
@@ -380,6 +383,8 @@
     {name: "Lover's Quarrel", payout: 39000, ignition: "flamethrower", materials: {gasoline: 2}},
 
     {name: "Low Rent", payout: 120000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
+    
+    {name: "Make a Killing", payout: 345000, ignition: "flamethrower", materials: {gasoline: 1, kerosene: 2}},
 
     {name: "Marked for Salvation", payout: 30000, ignition: "lighter", materials: {hydrogenTank: 1}},
     {name: "Marked for Salvation", payout: 80000, ignition: "flamethrower", materials: {kerosene: 1}},
@@ -493,9 +498,9 @@
     {name: "Smoke Out", payout: 10000, ignition: "lighter", materials: {gasoline: 1}, evidence: {cannabis: 1}},
     {name: "Smoke Out", payout: 21000, ignition: "flamethrower", materials: {gasoline: 1}, evidence: {cannabis: 1}},
 
-    {name: "Smoke Signals", payout: 0, ignition: "flamethrower", materials: {diesel: 2}, notes: "Failed, try add mag shavings"},
+    {name: "Smoke Signals", payout: 120000, ignition: "flamethrower", materials: {diesel: 2, magnesiumShavings: 1}},
 
-    {name: "Smoke Without Fire", payout: 200000, ignition: "lighter", materials: {gasoline: 2}, notes: "Maybe 1 blanket dampen"},
+    {name: "Smoke Without Fire", payout: 200000, ignition: "lighter", materials: {gasoline: 2}},
 
     {name: "Smoldering Resentment", payout: 0, ignition: "lighter"},
     {name: "Smoldering Resentment", payout: 10000, ignition: "flamethrower", materials: {gasoline: 1}},
@@ -517,6 +522,7 @@
     {name: "Stroke of Fortune", payout: 120000, ignition: "lighter", materials: {gasoline: 6}},
     {name: "Stroke of Fortune", payout: 120000, ignition: "flamethrower", materials: {gasoline: 3}, stoke: {flamethrower: 1}},
 
+    {name: "Supermarket Sweep", payout: 265000, ignition: "lighter", materials: {gasoline: 5}, stoke: {lighter: 1}},
     {name: "Supermarket Sweep", payout: 265000, ignition: "flamethrower", materials: {gasoline: 5}},
 
     {name: "Swansong", payout: 27000, ignition: "lighter", materials: {kerosene: 1}},
@@ -561,7 +567,7 @@
 
     {name: "The Savage Beast", payout: 170000, ignition: "lighter", materials: {gasoline: 3}},
 
-    {name: "The Smoking Gun", payout: 480000, ignition: "lighter", materials: {kerosene: 4}},
+    {name: "The Smoking Gun", payout: 470000, ignition: "lighter", materials: {kerosene: 4}},
 
     {name: "The Waiting Game", payout: 120000, ignition: "lighter", materials: {gasoline: 1}},
 
@@ -582,7 +588,7 @@
     {name: "Uber Heats", payout: 78000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Uber Heats", payout: 59000, ignition: "flamethrower", materials: {gasoline: 2}},
 
-    {name: "Under the Table", payout: 385000, ignition: "flamethrower", materials: {gasoline: 2}, stoke: {flamethrower: 1}, notes: "Try 3 gas"},
+    {name: "Under the Table", payout: 385000, ignition: "flamethrower", materials: {gasoline: 2}, stoke: {flamethrower: 1}},
 
     {name: "Unpopular Mechanics", payout: 4500, ignition: "lighter", materials: {gasoline: 1}},
     {name: "Unpopular Mechanics", payout: 8600, ignition: "flamethrower", materials: {gasoline: 1}},
@@ -616,17 +622,24 @@
     {name: "You're Fired!", payout: 150000, ignition: "lighter", materials: {gasoline: 4}, evidence: {lipstick: 1}}
   ];
 
+  const LOCAL_STORAGE_KEYS = {
+    TORN_API_KEY: "ABFB_tornApiKey",
+    ITEM_VALUES: "ABFB_itemValues",
+    HIGHLIGHT_THRESHOLDS: "ABFB_highlightValues",
+    LAST_API_UPDATE: "ABFB_lastApiUpdate"
+  }
+
   // ============================================================================
   // STATE MANAGEMENT
   // ============================================================================
 
-  let apiKey = localStorage.getItem("tornApiKey") || "";
+  let apiKey = localStorage.getItem(LOCAL_STORAGE_KEYS.TORN_API_KEY) || "";
   let itemValues = {};
   let highlightThresholds = { ...DEFAULT_HIGHLIGHT_THRESHOLDS };
-  let lastApiUpdate = parseInt(localStorage.getItem("lastApiUpdate") || "0");
+  let lastApiUpdate = parseInt(localStorage.getItem(LOCAL_STORAGE_KEYS.LAST_API_UPDATE) || "0");
 
   function loadItemValues() {
-    const savedValues = localStorage.getItem("itemValues");
+    const savedValues = localStorage.getItem(LOCAL_STORAGE_KEYS.ITEM_VALUES);
     if (savedValues) {
       try {
         const parsedValues = JSON.parse(savedValues);
@@ -645,18 +658,18 @@
   }
 
   function saveItemValues() {
-    localStorage.setItem("itemValues", JSON.stringify(itemValues));
+    localStorage.setItem(LOCAL_STORAGE_KEYS.ITEM_VALUES, JSON.stringify(itemValues));
     lastApiUpdate = Date.now();
-    localStorage.setItem("lastApiUpdate", lastApiUpdate.toString());
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LAST_API_UPDATE, lastApiUpdate.toString());
   }
 
   function saveLastApiUpdate() {
     lastApiUpdate = Date.now();
-    localStorage.setItem("lastApiUpdate", lastApiUpdate.toString());
+    localStorage.setItem(LOCAL_STORAGE_KEYS.LAST_API_UPDATE, lastApiUpdate.toString());
   }
 
   function loadHighlightThresholds() {
-    const savedThresholds = localStorage.getItem("highlightValues");
+    const savedThresholds = localStorage.getItem(LOCAL_STORAGE_KEYS.HIGHLIGHT_THRESHOLDS);
     if (savedThresholds) {
       try {
         highlightThresholds = JSON.parse(savedThresholds);
@@ -668,7 +681,7 @@
   }
 
   function saveHighlightThresholds() {
-    localStorage.setItem("highlightValues", JSON.stringify(highlightThresholds));
+    localStorage.setItem(LOCAL_STORAGE_KEYS.HIGHLIGHT_THRESHOLDS, JSON.stringify(highlightThresholds));
   }
 
   function shouldUpdatePrices() {
@@ -711,7 +724,7 @@
     document.getElementById("saveApiKeyBtn").addEventListener("click", () => {
       const inputKey = document.getElementById("apiKeyInput").value.trim();
       if (inputKey) {
-        localStorage.setItem("tornApiKey", inputKey);
+        localStorage.setItem(LOCAL_STORAGE_KEYS.TORN_API_KEY, inputKey);
         apiKey = inputKey;
         container.remove();
         alert("API key saved successfully!");
@@ -781,23 +794,6 @@
       }
     }
   }
-
-  // ============================================================================
-  // PAGE DETECTION
-  // ============================================================================
-
-  function isArsonPage() {
-    const arsonTitle = document.querySelector('.heading___dOsMq');
-    return arsonTitle && arsonTitle.textContent.trim() === "Arson";
-  }
-
-  // Exit early if not on Arson page
-  if (!isArsonPage()) {
-    console.log("[ArsonBangForBuck] Not on Arson page, script inactive.");
-    return;
-  }
-
-  console.log("[ArsonBangForBuck] Arson page detected, initializing...");
 
   // ============================================================================
   // CALCULATION UTILITIES
@@ -1149,7 +1145,7 @@
       if (!selectedScenario) return;
 
       const tooltip = createTooltipElement(selectedScenario, sectionElement, sectionElement);
-
+      
       // Desktop hover target (larger area)
       const hoverTarget = sectionElement.querySelector(
         ".crimeOptionSection___hslpu.flexGrow___S5IUQ.titleSection___CiZ8O"
@@ -1162,6 +1158,17 @@
       if (hoverTarget) {
         hoverTarget.addEventListener("mouseenter", () => showTooltip(tooltip, hoverTarget));
         hoverTarget.addEventListener("mouseleave", () => hideTooltip(tooltip));
+
+        const profitPerNerve = calculateProfitPerNerve(selectedScenario);
+        if (profitPerNerve !== null) {
+          // add simple text to hover target
+          const profitSpan = document.createElement("span");
+          profitSpan.style.marginLeft = "8px";
+          profitSpan.style.fontWeight = "normal";
+          profitSpan.style.fontSize = "10px";
+          profitSpan.textContent = `(${(profitPerNerve / 1000).toFixed(1)}K PN)`;
+          hoverTarget.appendChild(profitSpan);
+        }
       }
 
       // Mobile click behavior
@@ -1454,7 +1461,7 @@
     apiButton.onclick = () => {
       const newApiKey = prompt("Enter your new Torn API key:");
       if (newApiKey && newApiKey.trim() !== "") {
-        localStorage.setItem("tornApiKey", newApiKey.trim());
+        localStorage.setItem(LOCAL_STORAGE_KEYS.TORN_API_KEY, newApiKey.trim());
         apiKey = newApiKey.trim();
         alert("API key updated successfully!");
       } else {
@@ -1651,6 +1658,15 @@
   }
 
   // ============================================================================
+  // PAGE DETECTION
+  // ============================================================================
+
+  function isArsonPage() {
+    const arsonTitle = document.querySelector('.heading___dOsMq');
+    return arsonTitle && arsonTitle.textContent.trim() === "Arson";
+  }
+
+  // ============================================================================
   // DOM OBSERVER & MAIN LOOP
   // ============================================================================
 
@@ -1667,6 +1683,14 @@
     }
 
     debounceTimer = setTimeout(() => {
+      // Exit early if not on Arson page
+      if (!isArsonPage()) {
+        console.log("[ArsonBangForBuck] Not on Arson page, script inactive.");
+        return;
+      }
+
+      console.log("[ArsonBangForBuck] Arson page detected, initializing...");
+
       attachTooltipToScenario();
       createSettingsPanel();
       enhanceCollectButtons();

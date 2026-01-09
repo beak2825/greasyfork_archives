@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Archive_ReupBank
 // @namespace    Archive_ReupBank
-// @version      3.4.0
+// @version      3.5.1
 // @description  Reup les images noelshack + renvoyer image
 // @author       969-6261
 // @icon         https://images.emojiterra.com/openmoji/v16.0/128px/1f501.png
@@ -147,19 +147,26 @@ if (location.hostname === 'www.jeuxvideo.com' || location.protocol === 'file:') 
             }
             //2) ALTERE BLOB ⚠️
             if (DEGRADE_BLOB === "1") {
-                alert("⚠️ LOSSY MODE ACTIVATED : le blob va être altéré");
-                const tweak=b=>new Promise(r=>{
-                   let i=new Image(),c=document.createElement('canvas'),x=c.getContext('2d');
-                   i.onload=()=>{
-                      c.width=i.width;c.height=i.height;x.drawImage(i,0,0);
-                      x.fillStyle='rgba(.01,0,.01,.01)';
-                      x.fillRect(0,0,1,1);
-                      x.fillRect(1,1,1,1); // 👈 2 pixels
-                      c.toBlob(r,'image/png');
-                   };
-                   i.src=URL.createObjectURL(b);
-                });
-                blob = await tweak(blob);
+               alert("⚠️ LOSSY MODE ACTIVATED : le blob va être altéré");
+               const applyLossy = async (blobOrg) => {
+                   return new Promise(resolve => {
+                       const img = document.createElement('img');
+                       const canvas = document.createElement('canvas');
+                       const ctx = canvas.getContext('2d');
+                       img.onload = () => {
+                           canvas.width = img.width;
+                           canvas.height = img.height;
+                           ctx.drawImage(img, 0, 0);
+                           // Altération volontaire (2 pixels)
+                           ctx.fillStyle = 'rgba(1, 0, 1, 0.01)'; // modifie l'image à 1%
+                           ctx.fillRect(0, 0, 1, 1); // HAUT GAUCHE
+                           ctx.fillRect(img.width - 1, 0, 1, 1); // HAUT DROITE
+                           canvas.toBlob(resolve, 'image/png');
+                       };
+                       img.src = URL.createObjectURL(blobOrg);
+                   });
+               };
+               blob = await applyLossy(blob);
             }
 
             formData.append('domain', 'https://www.jeuxvideo.com');

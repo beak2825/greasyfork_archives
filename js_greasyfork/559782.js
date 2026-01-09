@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         知乎AI总结助手
 // @namespace    http://tampermonkey.net/
-// @version      1.1.0
+// @version      1.2.1
 // @description  为知乎文章、问题、回答添加AI总结功能，调用ChatGPT进行智能总结
 // @author       Summer121
 // @match        https://*.zhihu.com/*
@@ -19,6 +19,15 @@
     'use strict';
 
     const STYLES = `
+        :root {
+            --zhihu-ai-primary-color: #667eea;
+            --zhihu-ai-secondary-color: #764ba2;
+        }
+        .Question-sideColumn--sticky { display: none !important; }
+        .zhihu-ai-side-panel { left: 100%; margin-left: 30px; width: 400px; z-index: 1; background: white; border-radius: 8px; box-shadow: 0 2px 16px rgba(0, 0, 0, 0.1); transition: opacity 0.3s ease; }
+        .zhihu-ai-side-panel.short { position: absolute; top: 0; height: 15vh; overflow-y: auto; }
+        .zhihu-ai-side-panel.long { position: absolute; top: -15px; max-height: calc(100vh - 90px); overflow-y: auto; }
+        .zhihu-ai-side-panel.question-fixed { position: fixed; top: 135px; right: auto; left: 65%; margin-left: 0; max-height: calc(100vh - 120px); overflow-y: auto; z-index: 1; }
         .zhihu-ai-summary-btn { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; margin-right: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3); flex-shrink: 0; }
         .zhihu-ai-summary-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4); }
         .zhihu-ai-summary-btn:active { transform: translateY(0); }
@@ -26,11 +35,11 @@
         .zhihu-ai-summary-btn .icon { width: 16px; height: 16px; }
         .zhihu-ai-summary-btn-question { flex-shrink: 0; align-self: flex-start; margin-top: 15px; }
         .zhihu-ai-summary-btn-answer { margin-left: 8px !important; margin-right: 0; padding: 4px 12px; font-size: 13px; border-radius: 16px; display: inline-flex; vertical-align: middle; }
-        .zhihu-ai-answer-result { margin: 16px 0 20px 0; padding: 16px 20px; background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%); border-left: 3px solid #667eea; border-radius: 6px; box-shadow: 0 1px 4px rgba(102, 126, 234, 0.08); }
-        .zhihu-ai-answer-result-header { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #667eea; }
-        .zhihu-ai-answer-result-header svg { width: 16px; height: 16px; flex-shrink: 0; }
-        .zhihu-ai-answer-result-body { line-height: 1.7; color: #555; font-size: 14px; }
-        .zhihu-ai-answer-result-close { margin-left: auto; background: none; border: none; color: #999; cursor: pointer; font-size: 18px; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.2s; }
+        .zhihu-ai-answer-result { padding: 20px; background: white; overflow-y: auto; }
+        .zhihu-ai-answer-result-header { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 2px solid #f0f0f0; font-size: 15px; font-weight: 600; color: #667eea; }
+        .zhihu-ai-answer-result-header svg { width: 18px; height: 18px; flex-shrink: 0; }
+        .zhihu-ai-answer-result-body { line-height: 1.8; color: #555; font-size: 14px; }
+        .zhihu-ai-answer-result-close { margin-left: auto; background: none; border: none; color: #999; cursor: pointer; font-size: 20px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.2s; }
         .zhihu-ai-answer-result-close:hover { background: rgba(0, 0, 0, 0.05); color: #666; }
         .zhihu-ai-article-result { margin: 24px 0; padding: 20px 24px; background: linear-gradient(135deg, #667eea12 0%, #764ba212 100%); border-left: 4px solid #667eea; border-radius: 8px; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1); animation: slideDown 0.3s ease; }
         .zhihu-ai-article-result-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 16px; font-weight: 600; color: #667eea; }
@@ -38,7 +47,7 @@
         .zhihu-ai-article-result-body { line-height: 1.8; color: #444; font-size: 15px; }
         .zhihu-ai-article-result-close { margin-left: auto; background: none; border: none; color: #999; cursor: pointer; font-size: 20px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.2s; }
         .zhihu-ai-article-result-close:hover { background: rgba(0, 0, 0, 0.05); color: #666; }
-        .zhihu-ai-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 10000; animation: fadeIn 0.3s ease; }
+        .zhihu-ai-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .zhihu-ai-modal-content { background: white; border-radius: 12px; padding: 24px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -103,7 +112,7 @@
         .zhihu-ai-answer-result-body h2, .zhihu-ai-article-result-body h2, .zhihu-ai-inline-body h2 { font-size: 16px; font-weight: 600; color: #444; margin: 14px 0 8px 0; padding-bottom: 6px; border-bottom: 1px solid #e8e8e8; }
         .zhihu-ai-answer-result-body h3, .zhihu-ai-article-result-body h3, .zhihu-ai-inline-body h3 { font-size: 15px; font-weight: 600; color: #555; margin: 12px 0 6px 0; }
         .zhihu-ai-answer-result-body p, .zhihu-ai-article-result-body p, .zhihu-ai-inline-body p { margin: 8px 0; line-height: 1.8; }
-        .zhihu-ai-answer-result-body strong, .zhihu-ai-article-result-body strong, .zhihu-ai-inline-body strong { font-weight: 600; color: #333; }
+        .zhihu-ai-answer-result-body strong, .zhihu-ai-article-result-body strong, .zhihu-ai-inline-body strong { font-weight: 600; color: var(--zhihu-ai-primary-color); }
         .zhihu-ai-answer-result-body em, .zhihu-ai-article-result-body em, .zhihu-ai-inline-body em { font-style: italic; color: #666; }
         .zhihu-ai-answer-result-body ul, .zhihu-ai-article-result-body ul, .zhihu-ai-inline-body ul { margin: 10px 0; padding-left: 24px; list-style-type: disc; }
         .zhihu-ai-answer-result-body ol, .zhihu-ai-article-result-body ol, .zhihu-ai-inline-body ol { margin: 10px 0; padding-left: 24px; list-style-type: decimal; }
@@ -282,7 +291,7 @@
 
             if (accounts.length === 0) {
                 const legacyKey = GM_getValue('OPENAI_API_KEY', '');
-                const legacyUrl = GM_getValue('OPENAI_API_URL', 'https://wzw.de5.net/v1/chat/completions');
+                const legacyUrl = GM_getValue('OPENAI_API_URL', 'https://api.openai.com/v1/chat/completions');
                 const legacyModel = GM_getValue('OPENAI_MODEL', 'gpt-4.1-mini');
 
                 if (legacyKey) {
@@ -301,7 +310,7 @@
                     this.model = defaultAccount.model;
                 } else {
                     this.apiKey = '';
-                    this.apiUrl = 'https://wzw.de5.net/v1/chat/completions';
+                    this.apiUrl = 'https://api.openai.com/v1/chat/completions';
                     this.model = 'gpt-4.1-mini';
                 }
             } else {
@@ -437,54 +446,116 @@
         createResultContainer(type) {
             const container = document.createElement('div');
             const modelName = this.apiClient.model || 'AI';
-            const config = {
-                answer: { className: 'zhihu-ai-answer-result', title: `AI 回答总结 (${modelName})`, closeClass: 'zhihu-ai-answer-result-close', bodyClass: 'zhihu-ai-answer-result-body', headerClass: 'zhihu-ai-answer-result-header' },
-                article: { className: 'zhihu-ai-article-result', title: `AI 文章总结 (${modelName})`, closeClass: 'zhihu-ai-article-result-close', bodyClass: 'zhihu-ai-article-result-body', headerClass: 'zhihu-ai-article-result-header' },
-                question: { className: 'zhihu-ai-inline-result', title: `AI 智能总结 (${modelName})`, closeClass: 'zhihu-ai-inline-close', bodyClass: 'zhihu-ai-inline-body', headerClass: 'zhihu-ai-inline-header' }
-            }[type];
+            const titleMap = {
+                answer: `AI 回答总结 (${modelName})`,
+                article: `AI 文章总结 (${modelName})`,
+                question: `AI 问题总结 (${modelName})`
+            };
 
-            container.className = config.className;
+            container.className = 'zhihu-ai-answer-result';
             container.innerHTML = `
-                <div class="${config.headerClass}">
+                <div class="zhihu-ai-answer-result-header">
                     <svg viewBox="0 0 1024 1024" fill="currentColor"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path d="M464 336a48 48 0 1 0 96 0 48 48 0 1 0-96 0z m72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg>
-                    <span>${config.title}</span>
-                    <button class="${config.closeClass}" title="关闭">×</button>
+                    <span class="zhihu-ai-result-title">${titleMap[type]}</span>
+                    <button class="zhihu-ai-answer-result-close" title="关闭">×</button>
                 </div>
-                <div class="${config.bodyClass}">
+                <div class="zhihu-ai-answer-result-body">
                     <div class="zhihu-ai-inline-loading"><div class="zhihu-ai-inline-spinner"></div><span>AI正在分析内容，请稍候...</span></div>
                 </div>
             `;
-            container.querySelector(`.${config.closeClass}`).addEventListener('click', () => container.remove());
+            container.querySelector('.zhihu-ai-answer-result-close').addEventListener('click', () => container.remove());
             return container;
         }
 
-        async showInlineSummary(contentOrPromise, type, displayElement, insertTarget) {
-            const container = this.createResultContainer(type);
-            if (type === 'answer') {
-                const richContent = insertTarget.querySelector('.RichContent-inner');
-                if (richContent) richContent.insertBefore(container, richContent.firstChild);
-            } else if (type === 'article') {
-                const articleContent = insertTarget.querySelector('.Post-RichTextContainer');
-                if (articleContent) articleContent.parentElement.insertBefore(container, articleContent);
-            } else {
-                insertTarget.parentElement.insertBefore(container, insertTarget.nextSibling);
+        async showInlineSummary(contentOrPromise, type, displayElement, insertTarget, existingContainer = null, authorName = null) {
+            const container = existingContainer || this.createResultContainer(type);
+            const content = contentOrPromise instanceof Promise ? await contentOrPromise : contentOrPromise;
+
+            if (authorName && type === 'answer') {
+                container._authorName = authorName;
             }
 
-            const body = container.querySelector(`.${type === 'answer' ? 'zhihu-ai-answer-result-body' : type === 'article' ? 'zhihu-ai-article-result-body' : 'zhihu-ai-inline-body'}`);
-            const content = contentOrPromise instanceof Promise ? await contentOrPromise : contentOrPromise;
+            if (type === 'answer' || type === 'question' || type === 'article') {
+                this.createAnswerSidePanel(container, insertTarget, type);
+            }
+
+            const body = container.querySelector('.zhihu-ai-answer-result-body');
             let accumulated = '';
 
-            this.apiClient.streamCall(
-                content,
-                type,
-                chunk => {
-                    accumulated += chunk;
-                    const escaped = accumulated.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
-                    body.innerHTML = `<div style="white-space: pre-wrap;">${escaped}<span class="zhihu-ai-streaming-cursor"></span></div>`;
-                },
-                () => { body.innerHTML = MarkdownParser.parse(accumulated); },
-                error => { body.innerHTML = `<div class="zhihu-ai-inline-error">${error.message}</div>`; }
-            );
+            const authorPrefix = (type === 'answer' && authorName) ? `**对 ${authorName} 的回答进行AI总结**\n\n` : '';
+
+            return new Promise((resolve, reject) => {
+                this.apiClient.streamCall(
+                    content,
+                    type,
+                    chunk => {
+                        accumulated += chunk;
+                        const fullText = authorPrefix + accumulated;
+                        const escaped = fullText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+                        body.innerHTML = `<div style="white-space: pre-wrap;">${escaped}<span class="zhihu-ai-streaming-cursor"></span></div>`;
+                    },
+                    () => {
+                        const fullText = authorPrefix + accumulated;
+                        body.innerHTML = MarkdownParser.parse(fullText);
+                        resolve(container);
+                    },
+                    error => {
+                        body.innerHTML = `<div class="zhihu-ai-inline-error">${error.message}</div>`;
+                        reject(error);
+                    }
+                );
+            });
+        }
+
+        createAnswerSidePanel(container, answerElement, panelType = 'answer') {
+            const panel = document.createElement('div');
+            panel.className = 'zhihu-ai-side-panel';
+            panel.appendChild(container);
+
+            if (panelType === 'question') {
+                panel.classList.add('question-fixed');
+                document.body.appendChild(panel);
+            } else {
+                if (!answerElement.style.position || answerElement.style.position === 'static') {
+                    answerElement.style.position = 'relative';
+                }
+
+                const elementHeight = answerElement.offsetHeight;
+                const minPanelHeight = window.innerHeight * 0.15;
+                const maxPanelHeight = window.innerHeight - 90;
+
+                if (elementHeight < maxPanelHeight) {
+                    panel.classList.add('short');
+                    const panelHeight = Math.max(minPanelHeight, elementHeight);
+                    panel.style.height = 'auto';
+                    panel.style.maxHeight = `${panelHeight}px`;
+                } else {
+                    panel.classList.add('long');
+                }
+
+                answerElement.appendChild(panel);
+
+                if (panelType === 'article') {
+                    panel.style.top = 0;
+                    panel.style.left = '67%';
+                }
+            }
+
+            panel.style.display = 'block';
+            panel.style.opacity = '1';
+
+            const closeBtn = container.querySelector('.zhihu-ai-answer-result-close');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    panel.remove();
+                    if (panelType === 'article') {
+                        const rightPanel = document.querySelector('.Post-Row-Content-right');
+                        if (rightPanel) rightPanel.style.display = '';
+                    }
+                });
+            }
+
+            return panel;
         }
 
         createConfigButton() {
@@ -527,13 +598,13 @@
                                 <div class="zhihu-ai-config-item">
                                     <label class="zhihu-ai-config-label" style="display: flex; align-items: center; cursor: pointer;">
                                         <input type="checkbox" id="zhihu-ai-auto-summarize" ${autoSummarize ? 'checked' : ''} style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                        <span>自动总结(页面加载后自动调用AI总结)</span>
+                                        <span>自动总结(页面加载后自动调用AI总结文章和问题中的各个回答)</span>
                                     </label>
                                 </div>
                                 <div class="zhihu-ai-config-item">
                                     <label class="zhihu-ai-config-label">回答最少字数:</label>
                                     <input type="number" class="zhihu-ai-config-input" id="zhihu-ai-min-answer-length" value="${minAnswerLength}" min="0" placeholder="200" style="width: 100%;">
-                                    <div style="margin-top: 6px; font-size: 12px; color: #666;">回答字数少于此值时,不自动总结,仅显示提示信息</div>
+                                    <div style="margin-top: 6px; font-size: 12px; color: #666;">回答字数少于此值时,不自动总结,仅显示提示信息(手动点击仍可总结)</div>
                                 </div>
                                 <div class="zhihu-ai-config-item">
                                     <button class="zhihu-ai-config-save" id="save-settings-btn">保存设置</button>
@@ -778,10 +849,39 @@
                 const authorHead = document.querySelector('.AuthorInfo-head');
                 if (!authorHead) return;
 
+                const articleContainer = document.querySelector('.Post-Row-Content') ||
+                                       document.querySelector('.Post-Row-Content-left') ||
+                                       authorHead.closest('article') ||
+                                       authorHead.closest('.Post-Main');
+
                 const button = this.ui.createButton(async () => {
-                    const content = ContentExtractor.extractArticle();
-                    if (content.content) this.ui.showInlineSummary(content, 'article', null, authorHead.closest('article'));
-                    else alert('未能提取到文章内容');
+                    const existingPanel = articleContainer.querySelector('.zhihu-ai-side-panel');
+                    if (existingPanel) {
+                        existingPanel.remove();
+                    }
+
+                    button.classList.add('loading');
+
+                    try {
+                        const content = ContentExtractor.extractArticle();
+                        if (!content.content) {
+                            alert('未能提取到文章内容');
+                            button.classList.remove('loading');
+                            return;
+                        }
+
+                        const rightPanel = document.querySelector('.Post-Row-Content-right');
+                        if (rightPanel) rightPanel.style.display = 'none';
+
+                        const container = this.ui.createResultContainer('article');
+
+                        await this.ui.showInlineSummary(content, 'article', null, articleContainer, container);
+
+                    } catch (error) {
+                        console.error('生成文章总结失败:', error);
+                    } finally {
+                        button.classList.remove('loading');
+                    }
                 });
                 button.classList.add('zhihu-ai-summary-btn-article', 'zhihu-ai-summary-btn-answer');
                 authorHead.appendChild(button);
@@ -796,18 +896,34 @@
                 const titleElement = titleElements[1];
                 if (!titleElement || document.querySelector('.zhihu-ai-summary-btn-question')) return;
 
-                const wrapper = document.createElement('div');
-                wrapper.className = 'zhihu-ai-title-wrapper';
-                wrapper.style.cssText = 'display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap;';
+                const questionContainer = document.querySelector('.QuestionHeader') ||
+                                        document.querySelector('.Question-mainColumn') ||
+                                        titleElement.closest('.QuestionHeader-content');
 
                 const button = this.ui.createButton(async () => {
-                    const content = await ContentExtractor.extractQuestion();
-                    this.ui.showInlineSummary(content, 'question', null, wrapper);
+                    const existingPanel = document.querySelector('.zhihu-ai-side-panel.question-fixed');
+                    if (existingPanel) {
+                        existingPanel.remove();
+                    }
+
+                    button.classList.add('loading');
+
+                    try {
+                        const content = await ContentExtractor.extractQuestion();
+                        const container = this.ui.createResultContainer('question');
+
+                        await this.ui.showInlineSummary(content, 'question', null, questionContainer, container);
+
+                    } catch (error) {
+                        console.error('生成问题总结失败:', error);
+                    } finally {
+                        button.classList.remove('loading');
+                    }
                 });
                 button.classList.add('zhihu-ai-summary-btn-question');
-                wrapper.appendChild(button);
-                titleElement.parentElement.insertBefore(wrapper, titleElement);
-                wrapper.appendChild(titleElement);
+
+                const titleParent = titleElement.parentElement;
+                titleParent.insertBefore(button, titleElement);
             }, 2000);
 
             this.addAnswerButtons();
@@ -824,34 +940,66 @@
                 const authorHead = answerItem.querySelector('.AuthorInfo-head');
                 if (!authorHead) return;
 
-                const button = this.ui.createButton(async () => {
-                    const content = await ContentExtractor.extractAnswer(answerItem);
-                    if (!content.content) {
-                        alert('未能提取到回答内容');
-                        return;
+                const authorLink = answerItem.querySelector('.AuthorInfo-head a.UserLink-link');
+                const authorName = authorLink ? authorLink.innerText.trim() : '匿名用户';
+
+                const button = this.ui.createButton(async (event) => {
+                    const existingPanel = answerItem.querySelector('.zhihu-ai-side-panel');
+                    if (existingPanel) {
+                        existingPanel.remove();
                     }
 
-                    const minAnswerLength = GM_getValue('MIN_ANSWER_LENGTH', 200);
-                    const contentLength = content.content.length;
+                    const isManualClick = event && event.isTrusted !== false;
+                    button.classList.add('loading');
 
-                    if (contentLength < minAnswerLength) {
+                    try {
+                        const content = await ContentExtractor.extractAnswer(answerItem);
+
                         const container = this.ui.createResultContainer('answer');
-                        const richContent = answerItem.querySelector('.RichContent-inner');
-                        if (richContent) richContent.insertBefore(container, richContent.firstChild);
+                        container._authorName = authorName;
 
-                        const body = container.querySelector('.zhihu-ai-answer-result-body');
-                        body.innerHTML = `<div style="color: #666; margin-bottom: -15px;">
-                            <p>当回答少于 ${minAnswerLength} 字（当前 ${contentLength} 字）时，不会自动总结，但仍可手动进行总结。</p>
-                        </div>`;
-                        return;
+                        if (!content.content) {
+                            const panel = this.ui.createAnswerSidePanel(container, answerItem, 'answer');
+                            const body = container.querySelector('.zhihu-ai-answer-result-body');
+                            body.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; text-align: center; color: #666; line-height: 1.8;">
+                                <div>
+                                    <div style="font-size: 15px; font-weight: 500; margin-bottom: 8px;">未提取到回答内容</div>
+                                    <div style="font-size: 13px; color: #999;">无法进行AI总结</div>
+                                </div>
+                            </div>`;
+                            button.classList.remove('loading');
+                            return;
+                        }
+
+                        const minAnswerLength = GM_getValue('MIN_ANSWER_LENGTH', 200);
+                        const contentLength = content.content.length;
+
+                        if (!isManualClick && contentLength < minAnswerLength) {
+                            const panel = this.ui.createAnswerSidePanel(container, answerItem, 'answer');
+                            const body = container.querySelector('.zhihu-ai-answer-result-body');
+                            body.innerHTML = `<div style="display: flex; align-items: center; justify-content: center; height: 100%; text-align: center; color: #666; line-height: 1.8;">
+                                <div>
+                                    <div style="font-size: 15px; font-weight: 500; margin-bottom: 8px;">回答内容较短</div>
+                                    <div style="font-size: 14px;">回答少于 ${minAnswerLength} 字（当前 ${contentLength} 字）</div>
+                                    <div style="font-size: 13px; color: #999; margin-top: 8px;">可手动点击AI总结按钮触发总结</div>
+                                </div>
+                            </div>`;
+                            button.classList.remove('loading');
+                            return;
+                        }
+
+                        await this.ui.showInlineSummary(content, 'answer', null, answerItem, container, authorName);
+
+                    } catch (error) {
+                        console.error('生成总结失败 - 作者:', authorName, 'Error:', error);
+                    } finally {
+                        button.classList.remove('loading');
                     }
-
-                    this.ui.showInlineSummary(content, 'answer', null, answerItem);
                 });
                 button.classList.add('zhihu-ai-summary-btn-answer');
                 authorHead.appendChild(button);
 
-                if (autoSummarize && !answerItem.querySelector('.zhihu-ai-answer-result')) {
+                if (autoSummarize) {
                     setTimeout(() => button.click(), 1000 + index * 500);
                 }
             });

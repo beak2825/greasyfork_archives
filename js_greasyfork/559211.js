@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name       wos
 // @namespace  npm/vite-plugin-monkey
-// @version    2025.12.17
+// @version    2026.1.8
 // @icon       https://webofscience.clarivate.cn/wos/static/favicon.png
 // @match      https://webofscience.clarivate.cn/wos/woscc/summary/*/relevance/*
 // @require    https://cdn.jsdelivr.net/npm/vue@3.5.25/dist/vue.global.prod.js
 // @grant      GM_addStyle
 // @grant      GM_xmlhttpRequest
+// @license    MIT
 // @description WOS数据库下载器
-// @license MIT
 // @downloadURL https://update.greasyfork.org/scripts/559211/wos.user.js
 // @updateURL https://update.greasyfork.org/scripts/559211/wos.meta.js
 // ==/UserScript==
@@ -81,7 +81,7 @@
         }
       }, 1e3);
       function openNewWindow() {
-        const url = `http://10.4.136.103:8002/?qid=${params.QID}&sid=${params.SID}&size=${params.Size}&type=${params.Type}`;
+        const url = `http://127.0.0.1:8000/?qid=${params.QID}&sid=${params.SID}&size=${params.Size}&type=${params.Type}`;
         const width = 1200;
         const height = 800;
         const left = (window.screen.width - width) / 2;

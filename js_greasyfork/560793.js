@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Map Comment Shapes
 // @namespace    https://greasyfork.org/de/users/863740-horst-wittlich
-// @version      2026.01.08
+// @version      2026.01.10
 // @author       Hiwi234
 // @description  Erstelle Map Comments mit vordefinierten Formen (Kreis, Quadrat, etc.) im Waze Map Editor
 // @include      https://www.waze.com/editor*
@@ -57,6 +57,7 @@
             titlePlaceholder: 'Titel (max 30 Zeichen)',
             descPlaceholder: 'Beschreibung (optional)',
             expiresIn: 'Ablauf in:',
+            noExpiration: 'Kein Ablaufdatum',
             days: 'Tagen',
             templates: 'Vorlagen:',
             selectTemplate: '-- Vorlage wählen --',
@@ -238,6 +239,7 @@
             titlePlaceholder: 'Title (max 30 chars)',
             descPlaceholder: 'Description (optional)',
             expiresIn: 'Expires in:',
+            noExpiration: 'No expiration',
             days: 'days',
             templates: 'Templates:',
             selectTemplate: '-- Select template --',
@@ -414,6 +416,7 @@
             titlePlaceholder: 'Titolo (max 30 caratteri)',
             descPlaceholder: 'Descrizione (opzionale)',
             expiresIn: 'Scade tra:',
+            noExpiration: 'Nessuna scadenza',
             days: 'giorni',
             templates: 'Modelli:',
             selectTemplate: '-- Seleziona modello --',
@@ -588,6 +591,7 @@
             titlePlaceholder: 'Título (máx 30 caracteres)',
             descPlaceholder: 'Descripción (opcional)',
             expiresIn: 'Expira en:',
+            noExpiration: 'Sin fecha de caducidad',
             days: 'días',
             templates: 'Plantillas:',
             selectTemplate: '-- Seleccionar plantilla --',
@@ -762,6 +766,7 @@
             titlePlaceholder: 'Titre (max 30 caractères)',
             descPlaceholder: 'Description (optionnel)',
             expiresIn: 'Expire dans:',
+            noExpiration: 'Pas de date d\'expiration',
             days: 'jours',
             templates: 'Modèles:',
             selectTemplate: '-- Choisir modèle --',
@@ -936,6 +941,7 @@
             titlePlaceholder: 'Titel (max 30 tekens)',
             descPlaceholder: 'Beschrijving (optioneel)',
             expiresIn: 'Verloopt over:',
+            noExpiration: 'Geen vervaldatum',
             days: 'dagen',
             templates: 'Sjablonen:',
             selectTemplate: '-- Kies sjabloon --',
@@ -1163,6 +1169,7 @@
         defaultSubject: '',
         defaultBody: '',
         expirationDays: 30,
+        noExpiration: false,
         dynamicSize: true,
         templates: [], // Gespeicherte Vorlagen: [{name, subject, body}]
         customShapes: [] // Eigene Formen: [{name, coords}] - coords sind normalisiert (-1 bis 1)
@@ -1638,6 +1645,7 @@
             _settings.defaultSubject = document.getElementById('mcs-subject')?.value || '';
             _settings.defaultBody = document.getElementById('mcs-body')?.value || '';
             _settings.expirationDays = parseInt(document.getElementById('mcs-expiration')?.value) || 30;
+            _settings.noExpiration = document.getElementById('mcs-no-expiration')?.checked ?? false;
             _settings.dynamicSize = document.getElementById('mcs-dynamic')?.checked ?? true;
             localStorage.setItem('WME_MapCommentShapes', JSON.stringify(_settings));
         } catch (e) {
@@ -1715,6 +1723,9 @@
                         <input type="text" id="mcs-subject" maxlength="30" placeholder="${t('titlePlaceholder')}" class="mcs-input">
                         <textarea id="mcs-body" rows="2" maxlength="2000" placeholder="${t('descPlaceholder')}" class="mcs-textarea"></textarea>
                         <div class="mcs-field-row">
+                            <label class="mcs-checkbox"><input type="checkbox" id="mcs-no-expiration"> ${t('noExpiration')}</label>
+                        </div>
+                        <div class="mcs-field-row" id="mcs-expiration-row">
                             <label>${t('expiresIn')}</label>
                             <input type="number" id="mcs-expiration" min="1" max="365" value="30" class="mcs-input-num"> ${t('days')}
                         </div>
@@ -2017,6 +2028,15 @@
         // Converter buttons
         document.getElementById('mcs-convert-place')?.addEventListener('click', convertToPlace);
 
+        // No expiration checkbox
+        document.getElementById('mcs-no-expiration')?.addEventListener('change', (e) => {
+            const expirationRow = document.getElementById('mcs-expiration-row');
+            if (expirationRow) {
+                expirationRow.style.display = e.target.checked ? 'none' : 'flex';
+            }
+            saveSettings();
+        });
+
         ['mcs-radius', 'mcs-subject', 'mcs-body', 'mcs-expiration'].forEach(id => {
             document.getElementById(id)?.addEventListener('change', saveSettings);
         });
@@ -2028,6 +2048,13 @@
         if (el('mcs-subject')) el('mcs-subject').value = _settings.defaultSubject;
         if (el('mcs-body')) el('mcs-body').value = _settings.defaultBody;
         if (el('mcs-expiration')) el('mcs-expiration').value = _settings.expirationDays;
+        if (el('mcs-no-expiration')) {
+            el('mcs-no-expiration').checked = _settings.noExpiration;
+            const expirationRow = el('mcs-expiration-row');
+            if (expirationRow) {
+                expirationRow.style.display = _settings.noExpiration ? 'none' : 'flex';
+            }
+        }
         if (el('mcs-dynamic')) {
             el('mcs-dynamic').checked = _settings.dynamicSize;
             const radiusRow = el('mcs-radius-row');
@@ -3663,8 +3690,13 @@
     function getCommentData() {
         const subject = document.getElementById('mcs-subject')?.value || 'Map Comment';
         const body = document.getElementById('mcs-body')?.value || '';
-        const days = parseInt(document.getElementById('mcs-expiration')?.value) || 30;
-        const endDate = Date.now() + (days * 24 * 60 * 60 * 1000);
+        const noExpiration = document.getElementById('mcs-no-expiration')?.checked;
+        
+        let endDate = null;
+        if (!noExpiration) {
+            const days = parseInt(document.getElementById('mcs-expiration')?.value) || 30;
+            endDate = Date.now() + (days * 24 * 60 * 60 * 1000);
+        }
 
         return { subject, body, endDate };
     }
@@ -3732,12 +3764,19 @@
 
             console.log(`${SCRIPT_NAME} - Creating map comment with geometry:`, JSON.stringify(cleanGeometry));
 
-            const result = sdk.DataModel.MapComments.addComment({
+            // Erstelle Kommentar-Daten (ohne endDate wenn permanent)
+            const commentData = {
                 geometry: cleanGeometry,
                 subject: String(subject).substring(0, 30),
-                body: String(body).substring(0, 2000),
-                endDate: Number(endDate)
-            });
+                body: String(body).substring(0, 2000)
+            };
+            
+            // Nur endDate hinzufügen wenn es gesetzt ist (nicht null = permanent)
+            if (endDate !== null) {
+                commentData.endDate = Number(endDate);
+            }
+
+            const result = sdk.DataModel.MapComments.addComment(commentData);
 
             if (result) {
                 updateStatus('✅ ' + t('commentCreatedId', { id: result.id }));
@@ -3939,8 +3978,6 @@
         `;
         document.head.appendChild(style);
     }
-
-    // ============ START ============
 
     init();
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name NedFox KHR Style
 // @namespace NedFoxKHR
-// @version 1.0.5
+// @version 1.0.6
 // @description Customize pack&ship style
 // @author Kevin van der Bij
 // @license MIT
@@ -105,8 +105,7 @@ if (location.href.startsWith("https://retailvista.net/bztrs/packingportal")) {
           /* these numbers match the new image's dimensions */
           padding-left: 244px !important;
           padding-top: 120px !important;
-          /* background: url("https://i.imgur.com/SDrWPUV.png") no-repeat !important; */
-          background: url("https://i.imgur.com/FOuD402.png") no-repeat !important;
+          background: url("https://i.imgur.com/SDrWPUV.png") no-repeat !important;
       }
       img.nfLogoSmall {
           height: 0 !important;

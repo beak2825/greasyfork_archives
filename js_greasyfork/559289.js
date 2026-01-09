@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Kitty Buttercup FAM Tree 🧬
 // @namespace http://tampermonkey.net/
-// @version 3.9
+// @version 3.9.3
 // @description Inject all custom groups (RIIZE to Kawate) into Kitty Buttercup's family tree, with ID on hover
 // @match https://*.popmundo.com/World/Popmundo.aspx/Character/FamilyTree/2887796
 // @match https://*.popmundo.com/World/Popmundo.aspx/Character/FamilyTree/3065847
@@ -103,6 +103,7 @@
         [3247354, "Kitti Gillis", 21, "https://i.imgur.com/Hn5ojCP.png"],
         [3602175, "Ruby Ross", 14, "https://res.cloudinary.com/dlgjqlsb3/image/upload/v1767283608/6_upaeug.jpg"],
         [3616694, "Betty Doty", 22, "https://i.imgur.com/JwXJnox.png"],
+        [3350835, "Yuu Izumi 左", 18, "https://i.imgur.com/EtkRmfU.jpeg"],
         [3602139, "Nova Xie", 19, "https://res.cloudinary.com/dlgjqlsb3/image/upload/v1767283497/3_vrvv93.jpg"],
         [3616012, "Tomie Xie", 19, "https://images2.imgbox.com/69/93/4tnIOc3m_o.png"],
     ];

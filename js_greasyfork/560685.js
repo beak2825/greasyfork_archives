@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         第一师范学院缓考补考成绩自动填报助手
 // @namespace    http://tampermonkey.net/
-// @version      4.0
+// @version      4.1
 // @description  适配缓考补考成绩录入页面，支持灵活的Excel列顺序和行顺序，自动识别可编辑的成绩字段
 // @author       SoyaBean
 // @match        https://jwgl.hnfnu.edu.cn:9080/eams/teach/grade/delaymakeup/teacher-manage!inputReady.action*
@@ -488,6 +488,9 @@
             showStatus('请先选择Excel文件！', 'error');
             return;
         }
+
+        // 清空已有excelDate
+        excelData = null
 
         if (!excelData) {
             try {

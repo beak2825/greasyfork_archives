@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Gemini to Notion Exporter
 // @namespace    http://tampermonkey.net/
-// @version      13.8
+// @version      13.9
 // @license      MIT
-// @description  Gemini 导出：智能图片去水印后归位 (支持 PicList/PicGo)+隐私开关+单个对话导出
+// @description  Gemini 导出：智能图片去水印后归位 (支持 PicList/PicGo)+隐私开关+单个对话导出+多代码块列表修复
 // @author       Wyih with Gemini Thought Partner
 // @match        https://gemini.google.com/*
 // @connect      api.notion.com
@@ -571,15 +571,19 @@
             }
 
             if (isElement && (n.nodeName === 'RESPONSE-ELEMENT' || n.nodeName === 'LINK-BLOCK')) {
-                const hasImg = !!n.querySelector('img');
-                if (hasImg) {
+                // 修复：除了检查图片，也要检查是否包含表格 (table) 或 代码块 (pre)
+                const shouldExpand = !!n.querySelector('img') || !!n.querySelector('table') || !!n.querySelector('pre'); 
+                
+                if (shouldExpand) {
                     flush();
+                    // 递归处理内部结构，这样表格就会被当作 Block 处理，而不是纯文本
                     blocks.push(...processNodesToBlocks(n.childNodes, isGeminiSource));
                 } else {
                     buf.push(n);
                 }
                 return;
             }
+
             // --- 行内元素缓冲 ---
             if (n.nodeType === 3 || ['B', 'I', 'CODE', 'SPAN', 'A', 'STRONG', 'EM', 'MAT-ICON'
             ].includes(n.nodeName)) {

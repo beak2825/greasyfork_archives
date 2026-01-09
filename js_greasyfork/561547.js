@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name            player.serieturche.eu-e
+// @run-at          document-start
 // @namespace       https://github.com/GavinBrelstaff
 // @description     Facilitates access to serieturche.eu
 // @description:it  Facilita l'accesso a serieturche.eu
@@ -7,7 +8,7 @@
 // @require         https://cdn.jsdelivr.net/npm/video.js@8.23.4/dist/video.min.js
 // @require         https://cdn.jsdelivr.net/npm/videojs-hotkeys@0.2.30/videojs.hotkeys.js
 // @grant           none
-// @version         1.3
+// @version         2.9.1
 // @license         GPL version 3 or any later version; http://www.gnu.org/copyleft/gpl.html
 // @downloadURL https://update.greasyfork.org/scripts/561547/playerserieturcheeu-e.user.js
 // @updateURL https://update.greasyfork.org/scripts/561547/playerserieturcheeu-e.meta.js
@@ -28,7 +29,7 @@ new MutationObserver(async (mutations, observer) => {
         .flatMap(e => [...e.addedNodes])
         .filter(e => e.tagName == 'SCRIPT')
 
-    for( el of els )
+    for( var el of els )
     {
         window.count++;
         var safe = false;
@@ -54,7 +55,9 @@ new MutationObserver(async (mutations, observer) => {
             str  = el.innerHTML.substring(0,80).replace(/\s*/g,'');
             if( str.startsWith('if(self!=top){mediaplayerdiv2') )
             {  // create video ready for loading m3u8_url
-               el.innerHTML = el.innerHTML.substr(18).replace('<video','<video controls="true"');
+//             el.innerHTML = el.innerHTML.substr(18).replace('<video','<video controls="true"');
+               el.innerHTML = `mediaplayerdiv2.innerHTML =
+'<video id="olvideo" controls="true" style="background-color: black; display: block !important;" class="video-js vjs-default-skin lazyload" width="100%" height="100%" crossorigin="anonymous" preload="auto" x-webkit-airplay="allow" controlslist="nodownload" playsinline loading="lazy"><p style="color: white">Aspetta e poi clic sul CAPTCHA ...</p></video>'`;
                safe = true;
             }
             else
@@ -281,6 +284,7 @@ function fetch_md5( hash_image, x, y ) // from click or algorithm
           else if( data.obf_link && data.obf_link != '#' )
           {
             console.log('SUCCESS: obf_link: ' + data.obf_link );
+            document.getElementById('olvideo').style.visibility = 'visible';
          // localStorage.setItem(hash_image, {'x': x, 'y': y});  // store successful click
             const m3u8_url = "https:" + decrypt( data.obf_link ) + '.mp4.m3u8';
             console.log('m3u8_url: ' + m3u8_url );
@@ -382,7 +386,10 @@ const mypid = setInterval(function() // Polling for window.code parameters
     console.log('adbn     = ' + window.adbn );
 
      clearInterval(mypid);
-     // document.getElementById('olvideo').style.visibility = 'hidden';
+     //tidy up initial graphics
+     document.getElementById('body').style.backgroundColor = 'black';
+     document.getElementById('olvideo').style.visibility = 'hidden';
+     document.querySelector('img[src*=duckduckgogg]').remove();
      fetch_player_image();  // start the fetching algorithm
   }
 }, 500); // every 0.5 sec

@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Torn Profile Link Formatter 2.0
 // @namespace    Torn.com
-// @version      1.6.29
+// @version      1.6.30
 // @description  Adds a copy button next to user names on profile, faction, and ranked war pages for easy sharing.
-// @author       SuperGogu[3580072]
+// @author       SuperGogu[3580072] - modified by
 // @match        https://www.torn.com/profiles.php?XID=*
 // @match        https://www.torn.com/factions.php*
 // @grant        GM_addStyle
@@ -52,6 +52,18 @@
     border-radius: 4px;
 }
 
+/* Enemy faction profile (factions.php?step=profile&ID=...) members list: place 📄 next to Level */
+.gnsc-faction-enemy li.table-row .table-cell.lvl { position: relative !important; overflow: visible !important; }
+.gnsc-faction-enemy li.table-row .table-cell.lvl .gnsc-list-btn {
+    display: inline-block !important;
+    margin-left: 3px !important;
+    z-index: 2147483647 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    background: rgba(0,0,0,0.25);
+    border-radius: 4px;
+}
+
 `);
     }
 
@@ -62,8 +74,11 @@ function setPageFlags() {
     const isRank = h.includes('/war/rank');
     const isChain = h.includes('/war/chain');
     const isWarView = !isRank && !isChain && /\/war\/\d+/.test(h);
+    const params = new URLSearchParams(window.location.search);
+    const isEnemyFactionProfile = window.location.pathname.includes('factions.php') && params.get('step') === 'profile' && params.has('ID') && !/\/war\//.test(h);
     document.documentElement.classList.toggle('gnsc-war-rank', isRank);
     document.documentElement.classList.toggle('gnsc-war-view', isWarView);
+    document.documentElement.classList.toggle('gnsc-faction-enemy', isEnemyFactionProfile);
 }
 
 
@@ -178,12 +193,33 @@ function initChainAttackList() {
         const isWarRank = hash.includes('/war/rank');
         const isWarChain = hash.includes('/war/chain');
         const isWarView = !isWarRank && !isWarChain && /\/war\/\d+/.test(hash);
+        const params = new URLSearchParams(window.location.search);
+        const isEnemyFactionProfile = window.location.pathname.includes('factions.php') && params.get('step') === 'profile' && params.has('ID') && !/\/war\//.test(hash);
 
         members.forEach(member => {
-            if (member.querySelector('.gnsc-list-btn')) return;
+            const existingBtn = member.querySelector('.gnsc-list-btn');
 
             const nameLink = member.querySelector('a[href*="profiles.php"]');
             if (!nameLink) return;
+
+            const pickTargetContainer = () => {
+                if (isWarRank || isWarView) {
+                    return member.querySelector('.level.left, .level');
+                }
+                if (isEnemyFactionProfile) {
+                    return member.querySelector('.table-cell.lvl, .table-cell.lvlCol___kf6Ag, .lvlCol___kf6Ag, .table-cell[class*="lvlCol___"]');
+                }
+                return null;
+            };
+
+            const targetContainer = pickTargetContainer();
+
+            if (existingBtn) {
+                if (targetContainer && !targetContainer.contains(existingBtn)) {
+                    targetContainer.appendChild(existingBtn);
+                }
+                return;
+            }
 
             const button = document.createElement('span');
             button.className = 'gnsc-list-btn';
@@ -191,16 +227,12 @@ function initChainAttackList() {
             button.title = 'Copy Formatted Link';
             button.addEventListener('click', (e) => handleListCopyClick(e, button, member));
 
-            if (isWarRank || isWarView) {
-                const levelEl = member.querySelector('.level.left, .level');
-                if (levelEl) {
-                    levelEl.appendChild(button);
-                } else {
-                    nameLink.insertAdjacentElement('afterend', button);
-                }
-            } else {
-                nameLink.insertAdjacentElement('afterend', button);
+            if (targetContainer) {
+                targetContainer.appendChild(button);
+                return;
             }
+
+            nameLink.insertAdjacentElement('afterend', button);
         });
     }
 

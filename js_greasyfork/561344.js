@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         密码管理器 (坚果云同步)
+// @name         密码管理器
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.5.1
 // @description  密码管理器，支持坚果云WebDAV同步、自动填充、备注功能
 // @author       yoke0104x
 // @match        *://*/*
@@ -14,8 +14,8 @@
 // @license      MIT
 // @connect      dav.jianguoyun.com
 // @run-at       document-idle
-// @downloadURL https://update.greasyfork.org/scripts/561344/%E5%AF%86%E7%A0%81%E7%AE%A1%E7%90%86%E5%99%A8%20%28%E5%9D%9A%E6%9E%9C%E4%BA%91%E5%90%8C%E6%AD%A5%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561344/%E5%AF%86%E7%A0%81%E7%AE%A1%E7%90%86%E5%99%A8%20%28%E5%9D%9A%E6%9E%9C%E4%BA%91%E5%90%8C%E6%AD%A5%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561344/%E5%AF%86%E7%A0%81%E7%AE%A1%E7%90%86%E5%99%A8.user.js
+// @updateURL https://update.greasyfork.org/scripts/561344/%E5%AF%86%E7%A0%81%E7%AE%A1%E7%90%86%E5%99%A8.meta.js
 // ==/UserScript==
 
 (function() {
@@ -133,7 +133,7 @@
             if (!silent) showToast('请先在设置中配置坚果云账号', 'error');
             return;
         }
-        
+
         const passwords = getPasswords();
         const data = JSON.stringify(passwords);
         const encrypted = encrypt(data, config.encryptKey);
@@ -150,7 +150,7 @@
             if (!silent) showToast('请先在设置中配置坚果云账号', 'error');
             return null;
         }
-        
+
         const data = await webdavRequest('GET', WEBDAV_FILE);
 
         if (data) {
@@ -395,13 +395,13 @@
             box-shadow: 0 4px 14px rgba(76,175,80,0.4);
         }
         .pm-quick-btn.pm-visible { opacity: 1; }
-        
+
         /* 设置页面样式 */
         .pm-modal-content small {
             display: block; color: #999; font-size: 12px;
             margin-top: -8px; margin-bottom: 12px;
         }
-        
+
         /* 表单网格布局 */
         .pm-form-grid {
             display: grid; grid-template-columns: 1fr 1fr;
@@ -410,7 +410,7 @@
         .pm-form-group { margin-bottom: 0; }
         .pm-form-group label { margin-top: 0; }
         .pm-form-full { margin-top: 16px; }
-        
+
         /* 确认弹窗 */
         .pm-confirm-box {
             background: #fff; border-radius: 16px; padding: 32px;
@@ -420,7 +420,7 @@
         .pm-confirm-msg { font-size: 16px; color: #333; margin-bottom: 24px; font-weight: 500; }
         .pm-confirm-actions { display: flex; gap: 12px; justify-content: center; }
         .pm-confirm-actions .pm-btn { margin: 0; min-width: 100px; }
-        
+
         /* 保存密码提示 */
         .pm-save-prompt {
             position: fixed; top: 20px; right: 20px; z-index: 9999999;
@@ -463,14 +463,69 @@
         });
     }
 
+    // 导出密码为 CSV
+    function exportToCSV(list) {
+        if (list.length === 0) {
+            showToast('没有可导出的密码', 'error');
+            return;
+        }
+
+        // CSV 表头
+        const headers = ['标题', '网址', '用户名', '密码', '备注'];
+
+        // 转换数据为 CSV 格式
+        const csvContent = [
+            headers.join(','),
+            ...list.map(item => {
+                // 处理包含逗号、引号、换行的字段
+                const escapeCSV = (str) => {
+                    if (!str) return '';
+                    str = String(str);
+                    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                        return `"${str.replace(/"/g, '""')}"`;
+                    }
+                    return str;
+                };
+
+                return [
+                    escapeCSV(item.title || ''),
+                    escapeCSV(item.url || ''),
+                    escapeCSV(item.username || ''),
+                    escapeCSV(item.password || ''),
+                    escapeCSV(item.note || '')
+                ].join(',');
+            })
+        ].join('\n');
+
+        // 添加 BOM 以支持中文
+        const BOM = '\uFEFF';
+        const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+
+        // 生成文件名
+        const hostname = new URL(location.href).hostname;
+        const isCurrentSite = list.length < getPasswords().length;
+        const filename = isCurrentSite
+            ? `passwords_${hostname}_${new Date().toISOString().slice(0, 10)}.csv`
+            : `passwords_all_${new Date().toISOString().slice(0, 10)}.csv`;
+
+        // 下载文件
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(link.href);
+
+        showToast(`已导出 ${list.length} 条密码`);
+    }
+
     function createModal(content) {
         const modal = document.createElement('div');
         modal.className = 'pm-modal';
         modal.innerHTML = `<div class="pm-modal-content"><button class="pm-close-btn">×</button>${content}</div>`;
-        
+
         // 只能通过关闭按钮关闭
         modal.querySelector('.pm-close-btn').addEventListener('click', () => modal.remove());
-        
+
         document.body.appendChild(modal);
         return modal;
     }
@@ -489,12 +544,12 @@
             </div>
         `;
         document.body.appendChild(modal);
-        
+
         modal.querySelector('#pm-confirm-yes').addEventListener('click', () => {
             modal.remove();
             onConfirm();
         });
-        
+
         modal.querySelector('#pm-confirm-no').addEventListener('click', () => {
             modal.remove();
         });
@@ -514,7 +569,7 @@
                 }
             }
         }
-        
+
         const passwords = getPasswords();
         const matched = matchPasswords(location.href);
         const config = getConfig();
@@ -538,9 +593,9 @@
             tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
 
             if (tabName === 'matched') {
-                renderPasswordList(tabContent, matched, true, modal);
+                renderPasswordList(tabContent, matched, 'matched', modal);
             } else if (tabName === 'all') {
-                renderPasswordList(tabContent, passwords, false, modal);
+                renderPasswordList(tabContent, passwords, 'all', modal);
             } else if (tabName === 'settings') {
                 renderSettings(tabContent, config, modal);
             }
@@ -553,107 +608,201 @@
         renderTab('matched');
     }
 
-    function renderPasswordList(container, list, showFill, modal) {
+    function renderPasswordList(container, list, tabType, modal) {
         // 移除已有的 footer
         const modalContent = modal.querySelector('.pm-modal-content');
         const existingFooter = modalContent.querySelector('.pm-modal-footer');
         if (existingFooter) existingFooter.remove();
-        
-        if (list.length === 0) {
+
+        // 如果是全部密码，添加搜索和筛选
+        let filteredList = list;
+        if (tabType === 'all') {
+            // 提取所有域名和自定义分类
+            const domainCategories = list.map(p => {
+                try {
+                    return new URL(p.url).hostname;
+                } catch {
+                    return null;
+                }
+            }).filter(Boolean);
+
+            const customCategories = list.map(p => p.category).filter(Boolean);
+
+            const categories = ['全部',
+                ...new Set([...customCategories, ...domainCategories])
+            ].sort();
+
             container.innerHTML = `
-                <p style="color:#999; text-align:center; padding: 30px 0;">暂无密码记录</p>
-            `;
-        } else {
-            container.innerHTML = `
-                <div class="pm-card-grid">
-                    ${list.map((p, i) => `
-                        <div class="pm-card" data-index="${i}">
-                            <div class="pm-card-header">
-                                <div class="pm-card-title">${p.title || p.url}</div>
-                                <div class="pm-card-user">${p.username}</div>
-                            </div>
-                            ${p.note ? `<div class="pm-note">📝 ${p.note}</div>` : ''}
-                            <div class="pm-card-actions">
-                                <button class="pm-btn pm-btn-primary pm-btn-sm pm-fill" data-idx="${i}">填充</button>
-                                <button class="pm-btn pm-btn-secondary pm-btn-sm pm-edit" data-idx="${i}">编辑</button>
-                                <button class="pm-btn pm-btn-danger pm-btn-sm pm-del" data-idx="${i}">删除</button>
-                            </div>
-                        </div>
-                    `).join('')}
+                <div style="padding: 16px 0; position: sticky; top: 0; background: #fafafa; z-index: 10; margin: 0 -28px; padding: 16px 28px;">
+                    <input class="pm-input" id="pm-search" placeholder="🔍 搜索标题、用户名、网址..." style="margin: 0 0 12px 0;">
+                    <select class="pm-input" id="pm-category" style="margin: 0;">
+                        ${categories.map(c => `<option value="${c}">${c}</option>`).join('')}
+                    </select>
                 </div>
+                <div id="pm-list-container"></div>
             `;
+
+            const searchInput = container.querySelector('#pm-search');
+            const categorySelect = container.querySelector('#pm-category');
+            const listContainer = container.querySelector('#pm-list-container');
+
+            function updateList() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedCategory = categorySelect.value;
+
+                filteredList = list.filter(p => {
+                    // 搜索过滤
+                    const matchSearch = !searchTerm ||
+                        (p.title || '').toLowerCase().includes(searchTerm) ||
+                        (p.username || '').toLowerCase().includes(searchTerm) ||
+                        (p.url || '').toLowerCase().includes(searchTerm) ||
+                        (p.note || '').toLowerCase().includes(searchTerm) ||
+                        (p.category || '').toLowerCase().includes(searchTerm);
+
+                    // 分类过滤
+                    let matchCategory = true;
+                    if (selectedCategory !== '全部') {
+                        // 先匹配自定义分类
+                        if (p.category && p.category === selectedCategory) {
+                            matchCategory = true;
+                        } else {
+                            // 再匹配域名
+                            try {
+                                const hostname = new URL(p.url).hostname;
+                                matchCategory = hostname === selectedCategory;
+                            } catch {
+                                matchCategory = false;
+                            }
+                        }
+                    }
+
+                    return matchSearch && matchCategory;
+                });
+
+                renderList(listContainer, filteredList);
+            }
+
+            searchInput.addEventListener('input', updateList);
+            categorySelect.addEventListener('change', updateList);
+
+            renderList(listContainer, filteredList);
+        } else {
+            // 当前网站不需要搜索筛选
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <p style="color:#999; text-align:center; padding: 30px 0;">暂无密码记录</p>
+                `;
+            } else {
+                renderList(container, list);
+            }
         }
-        
+
+        function renderList(targetContainer, dataList) {
+            if (dataList.length === 0) {
+                targetContainer.innerHTML = `
+                    <p style="color:#999; text-align:center; padding: 30px 0;">没有匹配的密码</p>
+                `;
+            } else {
+                targetContainer.innerHTML = `
+                    <div class="pm-card-grid">
+                        ${dataList.map((p, i) => {
+                            const originalIndex = list.indexOf(p);
+                            return `
+                                <div class="pm-card" data-index="${originalIndex}">
+                                    <div class="pm-card-header">
+                                        <div class="pm-card-title">${p.title || p.url}</div>
+                                        <div class="pm-card-user">${p.username}</div>
+                                        ${p.category ? `<div style="font-size: 11px; color: #4CAF50; margin-top: 2px;">🏷️ ${p.category}</div>` : ''}
+                                    </div>
+                                    ${p.note ? `<div class="pm-note">📝 ${p.note}</div>` : ''}
+                                    <div class="pm-card-actions">
+                                        <button class="pm-btn pm-btn-primary pm-btn-sm pm-fill" data-idx="${originalIndex}">填充</button>
+                                        <button class="pm-btn pm-btn-secondary pm-btn-sm pm-edit" data-idx="${originalIndex}">编辑</button>
+                                        <button class="pm-btn pm-btn-danger pm-btn-sm pm-del" data-idx="${originalIndex}">删除</button>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+
+            // 绑定事件
+            targetContainer.querySelectorAll('.pm-fill').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.idx);
+                    fillPassword(list[idx]);
+                });
+            });
+
+            targetContainer.querySelectorAll('.pm-edit').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.idx);
+                    const passwords = getPasswords();
+                    const realIdx = passwords.findIndex(p => p.id === list[idx].id);
+                    showAddEdit(passwords[realIdx], realIdx);
+                });
+            });
+
+            targetContainer.querySelectorAll('.pm-del').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.idx);
+                    const item = list[idx];
+
+                    showConfirm(`确定删除「${item.title || item.username}」吗？`, async () => {
+                        const passwords = getPasswords();
+                        const realIdx = passwords.findIndex(p => p.id === item.id);
+                        passwords.splice(realIdx, 1);
+                        setPasswords(passwords);
+                        showToast('已删除');
+
+                        // 自动同步到云端
+                        const cfg = getConfig();
+                        if (cfg.webdavUser && cfg.webdavPass) {
+                            try {
+                                await uploadToCloud(true);
+                            } catch (e) {
+                                console.log('[密码管理器] 自动同步失败:', e);
+                            }
+                        }
+
+                        // 直接刷新当前列表
+                        const newList = tabType === 'matched' ? matchPasswords(location.href) : getPasswords();
+                        renderPasswordList(container, newList, tabType, modal);
+
+                        // 更新标签页数字
+                        const matched = matchPasswords(location.href);
+                        const all = getPasswords();
+                        const tabs = modal.querySelectorAll('.pm-tab');
+                        tabs[0].textContent = `当前网站 (${matched.length})`;
+                        tabs[1].textContent = `全部密码 (${all.length})`;
+                    });
+                });
+            });
+        }
+
         // 添加固定底部
         const footer = document.createElement('div');
         footer.className = 'pm-modal-footer';
-        footer.innerHTML = `<button class="pm-btn pm-btn-primary" id="pm-add-new">+ 添加密码</button>`;
+        footer.innerHTML = `
+            <button class="pm-btn pm-btn-primary" id="pm-add-new">+ 添加密码</button>
+            <button class="pm-btn pm-btn-secondary" id="pm-export-csv">📥 导出 CSV</button>
+        `;
         modalContent.appendChild(footer);
 
         // 绑定事件
         footer.querySelector('#pm-add-new')?.addEventListener('click', () => showAddEdit());
-
-        container.querySelectorAll('.pm-fill').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const idx = parseInt(btn.dataset.idx);
-                fillPassword(list[idx]);
-            });
-        });
-
-        container.querySelectorAll('.pm-edit').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const idx = parseInt(btn.dataset.idx);
-                const passwords = getPasswords();
-                const realIdx = passwords.findIndex(p => p.id === list[idx].id);
-                showAddEdit(passwords[realIdx], realIdx);
-            });
-        });
-
-        container.querySelectorAll('.pm-del').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const idx = parseInt(btn.dataset.idx);
-                const item = list[idx];
-                
-                showConfirm(`确定删除「${item.title || item.username}」吗？`, async () => {
-                    const passwords = getPasswords();
-                    const realIdx = passwords.findIndex(p => p.id === item.id);
-                    passwords.splice(realIdx, 1);
-                    setPasswords(passwords);
-                    showToast('已删除');
-                    
-                    // 自动同步到云端
-                    const cfg = getConfig();
-                    if (cfg.webdavUser && cfg.webdavPass) {
-                        try {
-                            await uploadToCloud(true);
-                        } catch (e) {
-                            console.log('[密码管理器] 自动同步失败:', e);
-                        }
-                    }
-                    
-                    // 直接刷新当前列表，不重新打开弹窗
-                    const newList = showFill ? matchPasswords(location.href) : getPasswords();
-                    renderPasswordList(container, newList, showFill, modal);
-                    
-                    // 更新标签页数字
-                    const matched = matchPasswords(location.href);
-                    const all = getPasswords();
-                    const tabs = modal.querySelectorAll('.pm-tab');
-                    tabs[0].textContent = `当前网站 (${matched.length})`;
-                    tabs[1].textContent = `全部密码 (${all.length})`;
-                });
-            });
-        });
+        footer.querySelector('#pm-export-csv')?.addEventListener('click', () => exportToCSV(list));
     }
 
     function renderSettings(container, config, modal) {
         // 设置页面需要特殊处理，底部按钮要固定
         const modalContent = modal.querySelector('.pm-modal-content');
-        
+
         // 移除已有的 footer
         const existingFooter = modalContent.querySelector('.pm-modal-footer');
         if (existingFooter) existingFooter.remove();
-        
+
         container.innerHTML = `
             <div style="padding: 16px 0;">
                 <label>WebDAV 地址</label>
@@ -670,7 +819,7 @@
                 <input class="pm-input" id="pm-encrypt-key" type="password" value="${config.encryptKey || ''}" placeholder="用于加密云端数据">
             </div>
         `;
-        
+
         // 添加固定底部
         const footer = document.createElement('div');
         footer.className = 'pm-modal-footer';
@@ -735,8 +884,15 @@
                     </div>
                     <div class="pm-form-group">
                         <label>密码</label>
-                        <input class="pm-input" id="pm-password" type="password" value="${item?.password || ''}" placeholder="请输入密码">
+                        <div style="position: relative;">
+                            <input class="pm-input" id="pm-password" type="password" value="${item?.password || ''}" placeholder="请输入密码" style="padding-right: 40px;">
+                            <button type="button" class="pm-toggle-password" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); border: none; background: none; cursor: pointer; font-size: 18px; padding: 4px 8px; color: #666;">👁️</button>
+                        </div>
                     </div>
+                </div>
+                <div class="pm-form-group pm-form-full">
+                    <label>分类</label>
+                    <input class="pm-input" id="pm-category" value="${item?.category || ''}" placeholder="例如：工作、个人、社交（可选）">
                 </div>
                 <div class="pm-form-group pm-form-full">
                     <label>备注</label>
@@ -744,7 +900,7 @@
                 </div>
             </div>
         `);
-        
+
         // 添加底部按钮
         const modalContent = modal.querySelector('.pm-modal-content');
         const footer = document.createElement('div');
@@ -755,10 +911,23 @@
         `;
         modalContent.appendChild(footer);
 
+        // 密码显示/隐藏切换
+        const toggleBtn = modal.querySelector('.pm-toggle-password');
+        const passwordInput = modal.querySelector('#pm-password');
+        toggleBtn.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleBtn.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                toggleBtn.textContent = '👁️';
+            }
+        });
+
         footer.querySelector('#pm-save').addEventListener('click', async () => {
             const username = modal.querySelector('#pm-username').value.trim();
             const password = modal.querySelector('#pm-password').value;
-            
+
             if (!username) {
                 showToast('请输入用户名', 'error');
                 modal.querySelector('#pm-username').focus();
@@ -769,7 +938,7 @@
                 modal.querySelector('#pm-password').focus();
                 return;
             }
-            
+
             const passwords = getPasswords();
             const newItem = {
                 id: item?.id || Date.now().toString(),
@@ -777,6 +946,7 @@
                 url: modal.querySelector('#pm-url').value,
                 username: username,
                 password: password,
+                category: modal.querySelector('#pm-category').value.trim(),
                 note: modal.querySelector('#pm-note').value,
                 updatedAt: new Date().toISOString()
             };
@@ -789,7 +959,7 @@
 
             setPasswords(passwords);
             showToast(isEdit ? '已更新' : '已添加');
-            
+
             // 自动同步到云端
             const config = getConfig();
             if (config.webdavUser && config.webdavPass) {
@@ -799,7 +969,7 @@
                     console.log('[密码管理器] 自动同步失败:', e);
                 }
             }
-            
+
             modal.remove();
             showMainPanel(true); // 跳过同步，因为刚刚已经同步过了
         });
@@ -812,7 +982,7 @@
 
     // ==================== 自动填充 ====================
     function fillPassword(item, targetPasswordInput = null) {
-        
+
         let passwordInput = targetPasswordInput;
         let usernameInput = null;
 
@@ -836,7 +1006,7 @@
         // 直接用 DOM 顺序找密码框前面的输入框
         const allInputs = Array.from(document.querySelectorAll('input'));
         const passwordIndex = allInputs.indexOf(passwordInput);
-        
+
         for (let i = passwordIndex - 1; i >= 0; i--) {
             const input = allInputs[i];
             if (input.closest('.pm-modal')) continue;
@@ -873,11 +1043,11 @@
         // 先清空
         input.value = '';
         input.focus();
-        
+
         // 使用 native setter 绕过框架拦截
         const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
         nativeInputValueSetter.call(input, value);
-        
+
         // 触发各种事件
         input.dispatchEvent(new Event('input', { bubbles: true }));
         input.dispatchEvent(new Event('change', { bubbles: true }));
@@ -981,7 +1151,7 @@
 
             async function showDropdown() {
                 closeDropdown();
-                
+
                 // 先尝试从云端同步
                 const cfg = getConfig();
                 if (cfg.webdavUser && cfg.webdavPass) {
@@ -991,7 +1161,7 @@
                         console.log('[密码管理器] 云端同步失败:', e);
                     }
                 }
-                
+
                 const matched = matchPasswords(location.href);
                 const all = getPasswords();
 
@@ -1002,6 +1172,12 @@
                     <div class="pm-dropdown-header">
                         <div class="pm-dropdown-tab active" data-tab="matched">当前网站 (${matched.length})</div>
                         <div class="pm-dropdown-tab" data-tab="all">全部 (${all.length})</div>
+                    </div>
+                    <div id="pm-dropdown-filters" style="display: none; padding: 8px; border-bottom: 1px solid #eee;">
+                        <input type="text" id="pm-dropdown-search" placeholder="🔍 搜索..." style="width: 100%; padding: 6px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px; margin-bottom: 6px;">
+                        <select id="pm-dropdown-category" style="width: 100%; padding: 6px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px;">
+                            <option value="全部">全部分类</option>
+                        </select>
                     </div>
                     <div class="pm-dropdown-list"></div>
                 `;
@@ -1015,11 +1191,86 @@
 
                 const listContainer = dropdown.querySelector('.pm-dropdown-list');
                 const tabs = dropdown.querySelectorAll('.pm-dropdown-tab');
+                const filtersDiv = dropdown.querySelector('#pm-dropdown-filters');
+                const searchInput = dropdown.querySelector('#pm-dropdown-search');
+                const categorySelect = dropdown.querySelector('#pm-dropdown-category');
+
+                let currentTab = 'matched';
+                let currentList = matched;
 
                 function switchTab(tabName) {
+                    currentTab = tabName;
                     tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabName));
-                    renderDropdownList(listContainer, tabName === 'matched' ? matched : all);
+
+                    // 全部标签页显示筛选，当前网站隐藏
+                    if (tabName === 'all') {
+                        filtersDiv.style.display = 'block';
+                        currentList = all;
+
+                        // 更新分类选项（包含自定义分类和域名）
+                        const domainCategories = all.map(p => {
+                            try {
+                                return new URL(p.url).hostname;
+                            } catch {
+                                return null;
+                            }
+                        }).filter(Boolean);
+
+                        const customCategories = all.map(p => p.category).filter(Boolean);
+
+                        const categories = ['全部',
+                            ...new Set([...customCategories, ...domainCategories])
+                        ].sort();
+
+                        categorySelect.innerHTML = categories.map(c =>
+                            `<option value="${c}">${c}</option>`
+                        ).join('');
+
+                        updateFilteredList();
+                    } else {
+                        filtersDiv.style.display = 'none';
+                        currentList = matched;
+                        renderDropdownList(listContainer, matched);
+                    }
                 }
+
+                function updateFilteredList() {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    const selectedCategory = categorySelect.value;
+
+                    const filtered = all.filter(p => {
+                        // 搜索过滤
+                        const matchSearch = !searchTerm ||
+                            (p.title || '').toLowerCase().includes(searchTerm) ||
+                            (p.username || '').toLowerCase().includes(searchTerm) ||
+                            (p.url || '').toLowerCase().includes(searchTerm) ||
+                            (p.category || '').toLowerCase().includes(searchTerm);
+
+                        // 分类过滤
+                        let matchCategory = true;
+                        if (selectedCategory !== '全部') {
+                            // 先匹配自定义分类
+                            if (p.category && p.category === selectedCategory) {
+                                matchCategory = true;
+                            } else {
+                                // 再匹配域名
+                                try {
+                                    const hostname = new URL(p.url).hostname;
+                                    matchCategory = hostname === selectedCategory;
+                                } catch {
+                                    matchCategory = false;
+                                }
+                            }
+                        }
+
+                        return matchSearch && matchCategory;
+                    });
+
+                    renderDropdownList(listContainer, filtered);
+                }
+
+                searchInput.addEventListener('input', updateFilteredList);
+                categorySelect.addEventListener('change', updateFilteredList);
 
                 tabs.forEach(tab => {
                     tab.addEventListener('click', (e) => {
@@ -1056,7 +1307,7 @@
 
     // ==================== 登录检测与保存提示 ====================
     let lastFilledCredentials = null;
-    
+
     // 记录填充的凭据
     function recordCredentials(username, password) {
         lastFilledCredentials = {
@@ -1067,25 +1318,34 @@
         };
         console.log('[密码管理器] 记录凭据:', username);
     }
-    
+
     // 显示保存密码提示
     function showSavePrompt() {
         if (!lastFilledCredentials) return;
         if (Date.now() - lastFilledCredentials.time > 300000) return; // 超过5分钟不提示
-        
+
         // 移除已有的提示
         document.querySelector('.pm-save-prompt')?.remove();
-        
+
         const { username, password, url } = lastFilledCredentials;
-        
-        // 检查是否已存在相同的密码
+
+        // 检查是否已存在相同的密码（只比较用户名和域名）
         const passwords = getPasswords();
-        const exists = passwords.some(p => p.username === username && p.url === url);
+        const currentHost = new URL(url).hostname;
+        const exists = passwords.some(p => {
+            try {
+                const savedHost = new URL(p.url).hostname;
+                return p.username === username && savedHost === currentHost;
+            } catch {
+                return p.username === username && p.url === url;
+            }
+        });
         if (exists) {
+            console.log('[密码管理器] 密码已存在，不提示');
             lastFilledCredentials = null;
             return;
         }
-        
+
         const prompt = document.createElement('div');
         prompt.className = 'pm-save-prompt';
         prompt.innerHTML = `
@@ -1093,6 +1353,7 @@
                 <div class="pm-save-prompt-text">🔐 是否保存此密码？</div>
                 <div class="pm-save-prompt-user">${username}</div>
                 <input class="pm-input pm-save-input" id="pm-save-title" placeholder="名称（可选）" value="${document.title || ''}">
+                <input class="pm-input pm-save-input" id="pm-save-category" placeholder="分类（可选）">
                 <input class="pm-input pm-save-input" id="pm-save-note" placeholder="说明（可选）">
                 <div class="pm-save-prompt-actions">
                     <button class="pm-btn pm-btn-primary pm-btn-sm" id="pm-save-yes">保存</button>
@@ -1101,11 +1362,12 @@
             </div>
         `;
         document.body.appendChild(prompt);
-        
+
         prompt.querySelector('#pm-save-yes').addEventListener('click', async () => {
             const title = prompt.querySelector('#pm-save-title').value || document.title || url;
+            const category = prompt.querySelector('#pm-save-category').value || '';
             const note = prompt.querySelector('#pm-save-note').value || '';
-            
+
             const passwords = getPasswords();
             passwords.push({
                 id: Date.now().toString(),
@@ -1113,51 +1375,52 @@
                 url: url,
                 username: username,
                 password: password,
+                category: category,
                 note: note,
                 updatedAt: new Date().toISOString()
             });
             setPasswords(passwords);
             showToast('密码已保存');
-            
+
             // 自动同步
             const cfg = getConfig();
             if (cfg.webdavUser && cfg.webdavPass) {
                 try { await uploadToCloud(true); } catch (e) {}
             }
-            
+
             prompt.remove();
             lastFilledCredentials = null;
         });
-        
+
         prompt.querySelector('#pm-save-no').addEventListener('click', () => {
             prompt.remove();
             lastFilledCredentials = null;
         });
-        
+
         // 15秒后自动消失
         setTimeout(() => {
             prompt.remove();
         }, 15000);
     }
-    
+
     // 监听登录行为
     function setupLoginDetection() {
         // 监听所有按钮和提交按钮的点击
         document.addEventListener('click', (e) => {
             const btn = e.target.closest('button, input[type="submit"], [role="button"]');
             if (!btn) return;
-            
+
             const btnText = (btn.textContent || btn.value || '').toLowerCase();
             if (!btnText.includes('登') && !btnText.includes('login') && !btnText.includes('sign')) return;
-            
+
             // 查找页面上的密码框
             const passwordInput = document.querySelector('input[type="password"]:not([style*="display: none"])');
             if (!passwordInput || !passwordInput.value) return;
-            
+
             // 找用户名输入框
             const allInputs = Array.from(document.querySelectorAll('input:not([type="hidden"]):not([type="password"]):not([type="submit"]):not([type="button"])'));
             const pwdIndex = Array.from(document.querySelectorAll('input')).indexOf(passwordInput);
-            
+
             let usernameInput = null;
             for (let i = pwdIndex - 1; i >= 0; i--) {
                 const input = document.querySelectorAll('input')[i];
@@ -1169,17 +1432,17 @@
                     }
                 }
             }
-            
+
             if (usernameInput && usernameInput.value && passwordInput.value) {
                 recordCredentials(usernameInput.value, passwordInput.value);
-                
+
                 // 延迟显示保存提示（等待登录请求完成）
                 setTimeout(() => {
                     showSavePrompt();
                 }, 2000);
             }
         }, true);
-        
+
         // 监听表单提交
         document.addEventListener('submit', (e) => {
             const form = e.target;
@@ -1200,18 +1463,18 @@
                 }
             }
         }, true);
-        
+
         // 监听回车键提交
         document.addEventListener('keydown', (e) => {
             if (e.key !== 'Enter') return;
-            
+
             const passwordInput = document.querySelector('input[type="password"]:not([style*="display: none"])');
             if (!passwordInput || !passwordInput.value) return;
             if (document.activeElement !== passwordInput && document.activeElement.type !== 'text' && document.activeElement.type !== 'email') return;
-            
+
             const allInputs = Array.from(document.querySelectorAll('input'));
             const pwdIndex = allInputs.indexOf(passwordInput);
-            
+
             let usernameInput = null;
             for (let i = pwdIndex - 1; i >= 0; i--) {
                 const input = allInputs[i];
@@ -1221,7 +1484,7 @@
                     break;
                 }
             }
-            
+
             if (usernameInput && usernameInput.value && passwordInput.value) {
                 recordCredentials(usernameInput.value, passwordInput.value);
                 setTimeout(showSavePrompt, 2000);
@@ -1243,7 +1506,7 @@
         setTimeout(addQuickFillButton, 500);
     });
     observer.observe(document.body, { childList: true, subtree: true });
-    
+
     // 启动登录检测
     setupLoginDetection();
 

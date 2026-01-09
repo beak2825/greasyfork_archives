@@ -1,13 +1,13 @@
 // ==UserScript==
-// @name         Reporte Vacunación MSPAS (V58 - Lógica Delta Snapshot)
+// @name         Reporte Vacunación MSPAS (V61 - Anti-Freeze Paginado)
 // @namespace    http://tampermonkey.net/
-// @version      58.0
-// @description  V57 + Lógica Delta: Compara el estado inicial del Grid vs el final para detectar cambios exactos (dosis nuevas, revacunaciones). Soluciona duplicados entre PCs.
+// @version      61.0
+// @description  V60 + Paginación en Dashboard: Soluciona el congelamiento al ver historiales masivos mostrando los datos por páginas de 50 registros. Lógica de Data-ID intacta.
 // @author       Gemini AI
 // @match        *://*.oraclecloudapps.com/ords/r/vacunacion/vacunacion/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/557433/Reporte%20Vacunaci%C3%B3n%20MSPAS%20%28V58%20-%20L%C3%B3gica%20Delta%20Snapshot%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/557433/Reporte%20Vacunaci%C3%B3n%20MSPAS%20%28V58%20-%20L%C3%B3gica%20Delta%20Snapshot%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/557433/Reporte%20Vacunaci%C3%B3n%20MSPAS%20%28V61%20-%20Anti-Freeze%20Paginado%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/557433/Reporte%20Vacunaci%C3%B3n%20MSPAS%20%28V61%20-%20Anti-Freeze%20Paginado%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -38,7 +38,7 @@
 
     // --- VARIABLES GLOBALES DE ESTADO ---
     let cuiActualSesion = "";
-    // NUEVO: Mapa para guardar la "FOTO" inicial del grid al cargar el paciente
+    // MAPA para guardar la FOTO EXACTA usando el data-id como llave
     let snapshotGridInicial = new Map();
 
     // ========================================================================
@@ -52,8 +52,6 @@
             localStorage.setItem('reporte_regular_diario', '[]');
             localStorage.setItem('reporte_vacunacion_diario', '[]');
             localStorage.setItem('mspas_fecha_activa', hoy);
-
-            // Avisamos al panel para que ponga contadores a 0
             window.dispatchEvent(new Event('storage'));
         }
     }
@@ -172,12 +170,10 @@
     }
 
     // ========================================================================
-    // 4. NUEVA LÓGICA DE SNAPSHOT (COMPARACIÓN DELTA) - V58 CORE
+    // 4. NUEVA LÓGICA BLINDADA CON DATA-ID (CORE V60/V61)
     // ========================================================================
 
-    // Función auxiliar para leer una fila y generar su estado único
-    function leerFilaGrid(fila) {
-        // Intentamos obtener el ID único de la fila (data-id)
+    function leerEstadoFila(fila) {
         let rowId = fila.getAttribute('data-id');
 
         const celdas = fila.querySelectorAll('td');
@@ -185,47 +181,43 @@
 
         const nombreVacuna = celdas[0].innerText.trim();
         const dosis = celdas[1].innerText.trim();
-        const fechaAdmin = celdas[3].innerText.trim(); // Asumimos columna 4 es fecha
-        const textoFila = fila.innerText;
+        const fechaAdmin = celdas[3].innerText.trim(); 
+        const textoFila = fila.innerText || "";
 
-        // Si no hay data-id, creamos uno sintético basado en Nombre+Dosis (para identificar la fila)
         if (!rowId) {
             rowId = `${nombreVacuna}|${dosis}`;
         }
 
-        // Determinamos el estado: ¿Está administrada?
-        // Condición estricta: Debe decir Administrada y tener fecha, y NO decir "No administrada"
-        const estaAdministrada = (textoFila.includes("Administrada") && !textoFila.includes("No administrada") && fechaAdmin.length > 5);
+        const textoLimpio = textoFila.replace(/\s+/g, ' ').trim();
+        const estaAdministrada = (textoLimpio.includes("Administrada") && !textoLimpio.includes("No administrada") && fechaAdmin.length > 5);
 
         return {
-            id: rowId, // Identificador de la FILA (no cambia aunque cambie el contenido)
+            id: rowId, 
             nombre: nombreVacuna,
             dosis: dosis,
             fecha: fechaAdmin,
             administrada: estaAdministrada,
-            firma: estaAdministrada ? `${fechaAdmin}|ADMIN` : "VACIO" // Firma del estado actual
+            firma: estaAdministrada ? `SI|${fechaAdmin}` : "NO"
         };
     }
 
-    // 1. Tomar la FOTO INICIAL (Al cargar paciente o después de guardar)
     function tomarSnapshotGrid() {
-        snapshotGridInicial.clear();
         const gridBody = document.querySelector('#regular_ig_grid_vc .a-GV-bdy');
-        if (!gridBody) return;
-
+        if (!gridBody) { setTimeout(tomarSnapshotGrid, 500); return; }
+        
         const filas = Array.from(gridBody.querySelectorAll('tr.a-GV-row'));
+        if (filas.length === 0) { setTimeout(tomarSnapshotGrid, 500); return; }
+
+        snapshotGridInicial.clear();
+        
         filas.forEach(fila => {
-            const datos = leerFilaGrid(fila);
-            if (datos) {
-                // Guardamos el estado actual de esta fila en el mapa
-                snapshotGridInicial.set(datos.id, datos.firma);
+            const estado = leerEstadoFila(fila);
+            if (estado) {
+                snapshotGridInicial.set(estado.id, estado.firma);
             }
         });
-        // console.log("📸 Snapshot Inicial Tomado:", snapshotGridInicial);
     }
 
-    // 2. Detectar CAMBIOS (Al dar clic en Guardar)
-    // Compara el Grid ACTUAL vs el Snapshot INICIAL
     function detectarCambiosVsSnapshot() {
         const gridBody = document.querySelector('#regular_ig_grid_vc .a-GV-bdy');
         if (!gridBody) return [];
@@ -235,23 +227,19 @@
         const cambiosDetectados = [];
 
         filas.forEach(fila => {
-            const datosActuales = leerFilaGrid(fila);
-            if (!datosActuales) return;
+            const estadoActual = leerEstadoFila(fila);
+            if (!estadoActual) return;
 
-            // Buscamos cómo estaba esta fila al principio
-            const firmaInicial = snapshotGridInicial.get(datosActuales.id) || "VACIO";
+            const firmaInicial = snapshotGridInicial.get(estadoActual.id);
+            const firmaVieja = firmaInicial || "NO";
 
-            // LÓGICA DE ORO:
-            // Si AHORA está administrada...
-            // Y ANTES (en el snapshot) NO lo estaba (o tenía otra fecha/estado)...
-            // ¡ENTONCES ES UN NUEVO INGRESO!
-            if (datosActuales.administrada) {
-                if (datosActuales.firma !== firmaInicial) {
-                    const hash = `${cuiActual}|${datosActuales.nombre}|${datosActuales.dosis}|${datosActuales.fecha}`;
+            if (estadoActual.administrada) {
+                if (firmaVieja === "NO" || estadoActual.firma !== firmaVieja) {
+                    const hash = `${cuiActual}|${estadoActual.nombre}|${estadoActual.dosis}|${estadoActual.fecha}`;
 
                     cambiosDetectados.push({
-                        nombre: `${datosActuales.nombre} ${datosActuales.dosis}`,
-                        fecha: datosActuales.fecha,
+                        nombre: `${estadoActual.nombre} ${estadoActual.dosis}`,
+                        fecha: estadoActual.fecha,
                         hash: hash
                     });
                 }
@@ -325,12 +313,9 @@
         const historialGlobal = obtenerHistorialHashes();
 
         if (Array.isArray(pendiente.datos)) {
-            // REGULAR (LÓGICA DELTA PURA)
+            // REGULAR (LÓGICA DELTA)
             let guardadosCount = 0;
             pendiente.datos.forEach(v => {
-                // Aquí ya vienen filtrados por la lógica de Snapshot,
-                // pero hacemos un doble check con el historial global por seguridad extrema
-                // (aunque la logica Snapshot permite revacunar, el historial global evita duplicados EXACTOS de fecha/vacuna)
                 if (!historialGlobal.has(v.hash)) {
                     const reg = { ...datosBase, vacuna: v.nombre, fecha_vacuna: v.fecha, hash: v.hash };
                     guardarRegistro(reg, 'regular');
@@ -341,10 +326,8 @@
             if (guardadosCount > 0) {
                 mostrarNotificacion(`✅ REGISTRADO EXCEL: ${datosBase.nombre} (${guardadosCount} nuevas)`, "#27ae60", 6000);
             } else {
-                mostrarNotificacion(`ℹ️ Datos actualizados en MSPAS`, "#2980b9", 3000);
+                mostrarNotificacion(`ℹ️ Actualizado en MSPAS (Sin cambios nuevos)`, "#2980b9", 3000);
             }
-            // CRÍTICO: Actualizar el Snapshot inmediatamente después de guardar exitosamente
-            // para que los nuevos cambios pasen a ser el nuevo "Estado Inicial"
             setTimeout(tomarSnapshotGrid, 1000);
 
         } else {
@@ -400,25 +383,19 @@
     // ========================================================================
 
     setInterval(() => {
-        // Monitor cambio de día
         chequearCambioDia();
 
-        // Monitor CUI para resetear Snapshot
         const cuiElement = document.getElementById(ID_CUI_DISPLAY);
         if (cuiElement) {
             const cuiLeido = cuiElement.innerText.trim();
             if (cuiLeido !== "" && cuiLeido !== cuiActualSesion) {
                 cuiActualSesion = cuiLeido;
-                // Nueva persona detectada, limpiamos snapshot y esperamos a que cargue el grid
                 snapshotGridInicial.clear();
-                // Damos un tiempo prudente para que el grid cargue (1.5s suele bastar)
-                setTimeout(tomarSnapshotGrid, 2000);
-                // Intento secundario por si el internet es lento
-                setTimeout(tomarSnapshotGrid, 5000);
+                setTimeout(tomarSnapshotGrid, 1000);
+                setTimeout(tomarSnapshotGrid, 3000);
             }
         }
 
-        // Monitor Otras Vacunas (sin cambios)
         const inputFecha = document.getElementById(ID_FECHA_INPUT);
         const selectVacuna = document.getElementById(ID_VACUNA_SELECT);
         if (inputFecha && selectVacuna) {
@@ -436,7 +413,6 @@
         }
     }, 500);
 
-    // Monitor Regular (Botón Confirmar)
     const obsPopup = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.addedNodes.length) {
@@ -446,16 +422,9 @@
                     btnConfirmar.style.border = "3px solid #3498db";
 
                     btnConfirmar.addEventListener('click', function() {
-                        // AQUÍ ES DONDE OCURRE LA MAGIA DELTA
-                        // En lugar de leer todo, detectamos cambios vs snapshot
                         const vacunasNuevas = detectarCambiosVsSnapshot();
-
                         if (vacunasNuevas.length > 0) {
                             agendarGuardado(vacunasNuevas, 'regular');
-                        } else {
-                            // Si no detectó cambios nuevos, puede que sea solo una edición de algo que ya guardamos
-                            // O el usuario solo dio clic sin cambiar nada. No hacemos nada.
-                            // console.log("No se detectaron cambios nuevos respecto al estado inicial");
                         }
                     });
                 }
@@ -466,7 +435,7 @@
 
 
     // ========================================================================
-    // 7. DASHBOARD PANEL V57 (FIX: IFRAME CHECK + LOGIC INTACT)
+    // 7. DASHBOARD PANEL V61 (PAGINACIÓN + FULL ARMOR)
     // ========================================================================
     const PANEL_ID = "mspas_panel_v56_fixed";
 
@@ -480,7 +449,7 @@
         panel.id = PANEL_ID;
         panel.style = "position: fixed; bottom: 10px; left: 10px; background: #2c3e50; color: white; padding: 10px; z-index: 99999; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.5); font-family: Arial; font-size: 11px; width: 230px; border: 2px solid #3498db;";
         panel.innerHTML = `
-            <div style="font-weight:bold; border-bottom:1px solid #aaa; margin-bottom:5px;">💉 V58 Delta Fix
+            <div style="font-weight:bold; border-bottom:1px solid #aaa; margin-bottom:5px;">💉 V61 Anti-Freeze
             <button id="btnAbrirDash" style="background:#8e44ad; color:white; width:100%; border:none; padding:5px; margin-bottom:5px; cursor:pointer; font-weight:bold; border-radius:4px;">🖥️ ABRIR DASHBOARD</button>
             <div style="font-size:10px; color:#bdc3c7;">Servicio: <span id="lblServicio" style="color:white; font-weight:bold;">...</span></div>
 
@@ -588,7 +557,7 @@
 
 
     // ========================================================================
-    // DASHBOARD HTML (CON SELECTOR DE VISTA + BORRADO INTELIGENTE)
+    // DASHBOARD HTML (PAGINADO)
     // ========================================================================
     function abrirDashboard() {
         const win = window.open("", "Dashboard_MSPAS_Master_V56", "width=1350,height=900");
@@ -597,10 +566,10 @@
         win.focus();
         if(win.document.body.innerHTML.length > 100) return;
 
-        const htmlContent = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>🖥️ Dashboard V57</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:#2c3e50;color:#ecf0f1;font-family:'Segoe UI',sans-serif}.section-card{background:#34495e;border-radius:10px;padding:15px;margin-bottom:20px;box-shadow:0 4px 6px rgba(0,0,0,0.3)}.card-header-custom{border-bottom:2px solid #7f8c8d;padding-bottom:10px;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center}.table{color:#ecf0f1;font-size:0.85rem}.table thead{background:#2c3e50;position:sticky;top:0;z-index:2}.table-hover tbody tr:hover{color:#fff;background:#576574}.stat-box{background:rgba(0,0,0,0.2);border-radius:5px;padding:5px 10px;text-align:center;min-width:70px}.stat-num{font-size:1.1rem;font-weight:bold}.search-bar{width:300px}.filter-group{display:flex;gap:5px;align-items:center}.filter-count{font-size:0.9rem;font-weight:bold;padding:2px 8px;border-radius:4px}.dropdown-menu{max-height:250px;overflow-y:auto;background:#2c3e50;border:1px solid #7f8c8d;color:#ecf0f1}.dropdown-item:hover{background:#34495e;color:white}.form-check-input:checked{background-color:#3498db;border-color:#3498db} .nav-tabs .nav-link { color: #bdc3c7; } .nav-tabs .nav-link.active { background-color: #34495e; border-color: #7f8c8d #7f8c8d #34495e; color: #3498db; font-weight: bold; }</style></head><body>
+        const htmlContent = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>🖥️ Dashboard V61</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"><style>body{background:#2c3e50;color:#ecf0f1;font-family:'Segoe UI',sans-serif}.section-card{background:#34495e;border-radius:10px;padding:15px;margin-bottom:20px;box-shadow:0 4px 6px rgba(0,0,0,0.3)}.card-header-custom{border-bottom:2px solid #7f8c8d;padding-bottom:10px;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center}.table{color:#ecf0f1;font-size:0.85rem}.table thead{background:#2c3e50;position:sticky;top:0;z-index:2}.table-hover tbody tr:hover{color:#fff;background:#576574}.stat-box{background:rgba(0,0,0,0.2);border-radius:5px;padding:5px 10px;text-align:center;min-width:70px}.stat-num{font-size:1.1rem;font-weight:bold}.search-bar{width:300px}.filter-group{display:flex;gap:5px;align-items:center}.filter-count{font-size:0.9rem;font-weight:bold;padding:2px 8px;border-radius:4px}.dropdown-menu{max-height:250px;overflow-y:auto;background:#2c3e50;border:1px solid #7f8c8d;color:#ecf0f1}.dropdown-item:hover{background:#34495e;color:white}.form-check-input:checked{background-color:#3498db;border-color:#3498db} .nav-tabs .nav-link { color: #bdc3c7; } .nav-tabs .nav-link.active { background-color: #34495e; border-color: #7f8c8d #7f8c8d #34495e; color: #3498db; font-weight: bold; } .btn-page { background: #576574; color: white; border: none; padding: 2px 8px; font-size: 0.8rem; margin: 0 2px; } .btn-page:disabled { opacity: 0.5; cursor: not-allowed; }</style></head><body>
         <div class="container-fluid pt-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="m-0">Dashboard V57</h3>
+                <h3 class="m-0">Dashboard V61</h3>
                 <div class="input-group search-bar mx-3">
                     <input type="text" id="searchInput" class="form-control bg-dark text-white border-secondary" placeholder="Buscar por Nombre o CUI..." onkeyup="refrescarTablas()">
                 </div>
@@ -617,7 +586,7 @@
                     <button onclick="cargarDatos()" class="btn btn-sm btn-outline-light">🔄 Refrescar Datos</button>
                 </div>
             </div>
-
+            
             <div class="row">
                 <div class="col-lg-6">
                     <div class="section-card" style="border-top:4px solid #3498db">
@@ -632,12 +601,14 @@
                         <div class="mb-2 text-end">
                             <span id="regViendo" class="filter-count bg-info text-dark">Viendo: 0</span>
                         </div>
-                        <div class="table-responsive" style="max-height:600px;overflow-y:auto">
+                        <div class="table-responsive" style="max-height:550px;overflow-y:auto">
                             <table class="table table-hover table-sm" id="tableReg">
                                 <thead><tr><th>#</th><th>Hora</th><th>Servicio</th><th>Paciente</th><th>Vacuna / Fecha</th><th>Acción</th></tr></thead>
                                 <tbody id="bodyRegular"></tbody>
                             </table>
                         </div>
+                        <div id="pag_regular" class="text-center mt-2">
+                            </div>
                     </div>
                 </div>
 
@@ -654,19 +625,21 @@
                         <div class="mb-2 text-end">
                             <span id="otrViendo" class="filter-count bg-warning text-dark">Viendo: 0</span>
                         </div>
-                        <div class="table-responsive" style="max-height:600px;overflow-y:auto">
+                        <div class="table-responsive" style="max-height:550px;overflow-y:auto">
                             <table class="table table-hover table-sm" id="tableOtr">
                                 <thead><tr><th>#</th><th>Hora</th><th>Servicio</th><th>Paciente</th><th>Vacuna / Fecha</th><th>Acción</th></tr></thead>
                                 <tbody id="bodyOtras"></tbody>
                             </table>
                         </div>
+                        <div id="pag_otras" class="text-center mt-2">
+                            </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="modal fade" id="editModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content text-dark"><div class="modal-header bg-warning"><h5 class="modal-title">Editar</h5><button type="button" class="btn-close" onclick="cerrarModal()"></button></div><div class="modal-body"><input type="hidden" id="editType"><input type="hidden" id="editIndex"><div class="mb-2"><label>Paciente:</label><input type="text" id="editNombre" class="form-control" readonly></div><div class="mb-2"><label>Vacuna:</label><input type="text" id="editVacuna" class="form-control"></div><div class="mb-2"><label>Fecha:</label><input type="date" id="editFecha" class="form-control"></div></div><div class="modal-footer"><button class="btn btn-primary" onclick="guardarEdicion()">Guardar</button></div></div></div></div>
-
+        
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             let dataReg = [], dataOtr = [];
@@ -674,6 +647,11 @@
             let viewMode = 'hoy'; // Default view
             const URL_SHEET = "${URL_GOOGLE_SHEET}";
             const KEY_HISTORIAL = "mspas_historial_hashes_v1";
+
+            // CONFIG PAGINACION
+            const ITEMS_PER_PAGE = 50; 
+            let currentPageReg = 1;
+            let currentPageOtr = 1;
 
             let activeFilters = {
                 regular: { vacuna: 'ALL', fecha_vacuna: 'ALL', servicio: 'ALL' },
@@ -697,13 +675,15 @@
 
             function cambiarVista(mode) {
                 viewMode = mode;
+                currentPageReg = 1; // Reset pagina
+                currentPageOtr = 1;
                 refrescarTablas();
             }
 
             function cargarDatos(){
                 const servicio = localStorage.getItem('mspas_servicio_actual')||"N/A";
                 document.getElementById('servName').innerText = servicio;
-
+                
                 dataReg = safeLoad('reporte_regular_diario');
                 dataOtr = safeLoad('reporte_vacunacion_diario');
                 acumReg = safeLoad('reporte_regular_acumulado');
@@ -743,7 +723,7 @@
                 const otrAll = safeLoad('reporte_vacunacion_acumulado');
                 const pendReg = regAll.filter(r => !r.synced);
                 const pendOtr = otrAll.filter(r => !r.synced);
-
+                
                 const payload = [
                     ...pendReg.map(r => ({...r, esquema: 'regular'})),
                     ...pendOtr.map(r => ({...r, esquema: 'otras'}))
@@ -806,7 +786,7 @@
                             <label class="form-check-label text-white fw-bold" for="all_\${groupId}">Seleccionar Todo</label>
                         </div>
                         <div id="list_\${groupId}" style="max-height: 150px; overflow-y: auto;">\`;
-                if (unicos.length === 0) { html += \`<div class="text-white small p-1">Sin datos aún</div>\`; }
+                if (unicos.length === 0) { html += \`<div class="text-white small p-1">Sin datos aún</div>\`; } 
                 else {
                     unicos.forEach((val, idx) => {
                         const chkId = \`chk_\${groupId}_\${idx}\`;
@@ -837,19 +817,21 @@
             window.confirmarFiltro = function(tipo, campo, groupId) {
                 const containerList = document.getElementById(\`list_\${groupId}\`);
                 const masterCheck = document.getElementById('all_' + groupId);
-                if (masterCheck && masterCheck.checked) { activeFilters[tipo][campo] = 'ALL'; }
+                if (masterCheck && masterCheck.checked) { activeFilters[tipo][campo] = 'ALL'; } 
                 else if (containerList) {
                     const checkedBoxes = containerList.querySelectorAll('.item-check:checked');
                     activeFilters[tipo][campo] = (checkedBoxes.length===0) ? [] : Array.from(checkedBoxes).map(cb => String(cb.value));
                 }
+                currentPageReg = 1; currentPageOtr = 1; // Reset page on filter
                 renderizarTabla(tipo);
                 const btnToggle = document.getElementById(groupId);
                 if(btnToggle) { bootstrap.Dropdown.getOrCreateInstance(btnToggle).hide(); }
             };
 
+            // FUNCION MAESTRA DE RENDERIZADO (CON PAGINACION)
             function renderizarTabla(tipo) {
                 const term = document.getElementById('searchInput').value.toLowerCase();
-
+                
                 let rawData;
                 if (viewMode === 'hoy') {
                     rawData = (tipo === 'regular') ? dataReg : dataOtr;
@@ -859,7 +841,7 @@
 
                 let indexedData = rawData.map((item, idx) => ({...item, originalIndex: idx}));
                 const filtros = activeFilters[tipo];
-
+                
                 let filtered = indexedData.filter(item => {
                     const matchText = (item.nombre && item.nombre.toLowerCase().includes(term)) || (item.cui && item.cui.includes(term));
                     const matchVac = filtros.vacuna === 'ALL' ? true : (Array.isArray(filtros.vacuna) ? filtros.vacuna.includes(String(item.vacuna)) : false);
@@ -867,27 +849,56 @@
                     const matchSer = filtros.servicio === 'ALL' ? true : (Array.isArray(filtros.servicio) ? filtros.servicio.includes(String(item.servicio)) : false);
                     return matchText && matchVac && matchFec && matchSer;
                 });
+                
+                // --- PAGINACION LOGIC ---
+                const page = (tipo === 'regular') ? currentPageReg : currentPageOtr;
+                const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+                const start = (page - 1) * ITEMS_PER_PAGE;
+                const end = start + ITEMS_PER_PAGE;
+                const pageData = filtered.slice().reverse().slice(start, end);
 
                 const spanViendo = document.getElementById(tipo === 'regular' ? 'regViendo' : 'otrViendo');
                 spanViendo.innerText = \`Viendo: \${filtered.length}\`;
+                
                 const tbody = document.getElementById(tipo === 'regular' ? 'bodyRegular' : 'bodyOtras');
                 tbody.innerHTML = '';
-
-                filtered.slice().reverse().forEach((reg, i) => {
+                
+                // Renderizar solo la página actual
+                pageData.forEach((reg, i) => {
                     let statusDot = '🔴'; if (reg.synced) statusDot = '🟢'; else if (reg.wasEdited) statusDot = '🟡';
-                    const row = \`<tr><td>\${filtered.length - i} \${statusDot}</td><td><small>\${reg.hora}</small></td><td><small class="text-info">\${reg.servicio || '-'}</small></td><td><small>\${reg.cui}</small><br><strong>\${reg.nombre}</strong></td><td>\${reg.vacuna}<br><span class="badge bg-secondary">\${reg.fecha_vacuna}</span></td><td><button class="btn btn-warning btn-sm py-0" onclick="abrirEdit('\${tipo}', \${reg.originalIndex})">✎</button> <button class="btn btn-danger btn-sm py-0" onclick="borrar('\${tipo}', \${reg.originalIndex})">×</button></td></tr>\`;
+                    const realIndex = filtered.length - start - i; // Calculo visual inverso
+                    const row = \`<tr><td>\${realIndex} \${statusDot}</td><td><small>\${reg.hora}</small></td><td><small class="text-info">\${reg.servicio || '-'}</small></td><td><small>\${reg.cui}</small><br><strong>\${reg.nombre}</strong></td><td>\${reg.vacuna}<br><span class="badge bg-secondary">\${reg.fecha_vacuna}</span></td><td><button class="btn btn-warning btn-sm py-0" onclick="abrirEdit('\${tipo}', \${reg.originalIndex})">✎</button> <button class="btn btn-danger btn-sm py-0" onclick="borrar('\${tipo}', \${reg.originalIndex})">×</button></td></tr>\`;
                     tbody.innerHTML += row;
                 });
+
+                // Renderizar controles de paginación
+                const divPag = document.getElementById(tipo === 'regular' ? 'pag_regular' : 'pag_otras');
+                divPag.innerHTML = \`
+                    <button class="btn-page" \${page===1?'disabled':''} onclick="cambiarPagina('\${tipo}', -1)">◀ Ant</button>
+                    <span class="text-white small mx-2">Pág \${page} de \${totalPages}</span>
+                    <button class="btn-page" \${page>=totalPages?'disabled':''} onclick="cambiarPagina('\${tipo}', 1)">Sig ▶</button>
+                \`;
             }
+
+            window.cambiarPagina = function(tipo, delta) {
+                if (tipo === 'regular') {
+                    currentPageReg += delta;
+                    if(currentPageReg < 1) currentPageReg = 1;
+                } else {
+                    currentPageOtr += delta;
+                    if(currentPageOtr < 1) currentPageOtr = 1;
+                }
+                renderizarTabla(tipo);
+            };
 
             function borrar(tipo, index){
                 if(!confirm("¿Borrar este registro?\\n(Esto permitirá volver a guardarlo si lo reingresa)")) return;
                 const keyDiario = tipo === 'regular' ? 'reporte_regular_diario' : 'reporte_vacunacion_diario';
                 const keyAcum = tipo === 'regular' ? 'reporte_regular_acumulado' : 'reporte_vacunacion_acumulado';
-
-                let diario = safeLoad(keyDiario);
+                
+                let diario = safeLoad(keyDiario); 
                 let acumulado = safeLoad(keyAcum);
-
+                
                 let target;
                 if (viewMode === 'hoy') {
                     target = diario[index];
@@ -909,28 +920,28 @@
 
                     const idxD = diario.findIndex(r => r.cui === target.cui && r.hora === target.hora && r.vacuna === target.vacuna);
                     if (idxD !== -1) diario.splice(idxD, 1);
-
+                    
                     const idxA = acumulado.findIndex(r => r.cui === target.cui && r.hora === target.hora && r.vacuna === target.vacuna);
                     if (idxA !== -1) acumulado.splice(idxA, 1);
-
+                    
                     localStorage.setItem(keyDiario, JSON.stringify(diario));
                     localStorage.setItem(keyAcum, JSON.stringify(acumulado));
                     window.dispatchEvent(new Event('storage'));
-                    cargarDatos();
+                    cargarDatos(); 
                 }
             }
 
             let modal;
             function abrirEdit(tipo, index){
-                const keyTarget = (viewMode === 'hoy') ?
+                const keyTarget = (viewMode === 'hoy') ? 
                     (tipo === 'regular' ? 'reporte_regular_diario' : 'reporte_vacunacion_diario') :
                     (tipo === 'regular' ? 'reporte_regular_acumulado' : 'reporte_vacunacion_acumulado');
-
+                
                 const data = safeLoad(keyTarget);
                 const reg = data[index];
-
+                
                 document.getElementById('editType').value = tipo;
-                document.getElementById('editIndex').value = index;
+                document.getElementById('editIndex').value = index; 
                 document.getElementById('editNombre').value = reg.nombre;
                 document.getElementById('editVacuna').value = reg.vacuna;
                 let fechaIso = "";
@@ -958,7 +969,7 @@
 
                 const keyDiario = tipo === 'regular' ? 'reporte_regular_diario' : 'reporte_vacunacion_diario';
                 const keyAcum = tipo === 'regular' ? 'reporte_regular_acumulado' : 'reporte_vacunacion_acumulado';
-                let diario = safeLoad(keyDiario);
+                let diario = safeLoad(keyDiario); 
                 let acumulado = safeLoad(keyAcum);
 
                 let target;
@@ -970,10 +981,10 @@
 
                 if (target) {
                     const actualizarItem = (item) => {
-                        if (item.synced === true) {
-                            alert("⚠️ Registro editado. Se re-enviará a Drive.");
-                            item.synced = false;
-                            item.wasEdited = true;
+                        if (item.synced === true) { 
+                            alert("⚠️ Registro editado. Se re-enviará a Drive."); 
+                            item.synced = false; 
+                            item.wasEdited = true; 
                         }
                         item.vacuna = nVacuna;
                         item.fecha_vacuna = nFechaFinal;
@@ -1016,7 +1027,7 @@
                }
            }
        } catch (e) {}
-
+       
        const inputServicioManual = document.getElementById(ID_INPUT_SERVICIO_PARAM);
        if (inputServicioManual) {
            const btnGuardarParam = Array.from(document.querySelectorAll("button")).find(b => b.innerText.trim() === "Guardar");

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          Bazaar Scanner Holy grail V2 by srsbsns
 // @namespace     https://weav3r.dev/
-// @version       5.1
+// @version       5.2
 // @description   Shows bazaar deals with NPC profit - click item eye button to see profitable deals
 // @author        Modified for NPC Profit
 // @match         https://www.torn.com/*
@@ -39,7 +39,7 @@
             top: 20px;
             width: 180px;
             background: #1a1a1a;
-            border: 2px solid #1E3078;
+            border: 2px solid #696969;
             border-radius: 8px;
             padding: 12px;
             color: #fff;
@@ -60,7 +60,7 @@
         }
 
         #bazaar-sidebar::-webkit-scrollbar-thumb {
-            background: #1E078A;
+            background: #292929;
             border-radius: 4px;
         }
 
@@ -68,10 +68,10 @@
         .bz-header {
             font-size: 16px;
             font-weight: bold;
-            color: #FFD700;
+            color: #001975;
             margin-bottom: 8px;
             padding-bottom: 8px;
-            border-bottom: 2px solid #FFD700;
+            border-bottom: 2px solid #6E6E6E;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -92,7 +92,7 @@
         }
 
         .bz-close-btn {
-            background: #d9534f;
+            background: #A33C39;
             border: none;
             color: white;
             padding: 4px 10px;
@@ -104,7 +104,7 @@
         }
 
         .bz-close-btn:hover {
-            background: #c9302c;
+            background: #9E2724;
         }
 
         /* NPC Info */
@@ -115,7 +115,7 @@
             padding: 8px;
             background: #252525;
             border-radius: 4px;
-            border: 1px solid #FFD700;
+            border: 1px solid #6E6E6E;
         }
 
         .bz-npc-price {
@@ -163,7 +163,7 @@
             color: #FFF;
             margin: 12px 0 8px 0;
             padding-bottom: 4px;
-            border-bottom: 1px solid #FFD700;
+            border-bottom: 1px solid #6E6E6E;
         }
 
         .bz-listing {
@@ -566,8 +566,8 @@
         });
 
         // Combine: profitable deals first, then cheapest regular deals
-        const sortedListings = [...profitableListings.slice(0, 5), ...otherListings.slice(0, 5)];
-        const top5 = sortedListings.slice(0, 5);
+        const sortedListings = [...profitableListings.slice(0, 10), ...otherListings.slice(0, 10)];
+        const top5 = sortedListings.slice(0, 10);
 
         // NPC Info - Always show if we have NPC prices loaded
         let npcInfoHTML = '';
@@ -646,7 +646,7 @@
                     profitHTML = `<span class="bz-profit ${profitClass}">${sign}${percent}%</span>`;
                 }
 
-                const bazaarLink = `https://www.torn.com/bazaar.php?userId=${listing.player_id}&highlightItem=${itemId}#/`;
+                const bazaarLink = `https://www.torn.com/bazaar.php?userId=${listing.player_id}#/`;
 
                 listingsHTML += `
                     <div class="bz-listing ${visitedClass} ${profitableClass}" data-player-id="${listing.player_id}" data-url="${bazaarLink}">
@@ -789,24 +789,6 @@
 
 })();
 
-// Green Highlight (unchanged)
-(function() {
-    const params = new URLSearchParams(window.location.search);
-    const itemIdToHighlight = params.get('highlightItem');
-    if (!itemIdToHighlight) return;
-
-    const observer = new MutationObserver(() => {
-        const imgs = document.querySelectorAll('img');
-        imgs.forEach(img => {
-            if (img.src.includes(`/images/items/${itemIdToHighlight}/`)) {
-                img.closest('div')?.style.setProperty('outline', '3px solid green', 'important');
-                img.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        });
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-})();
 // =====================================================
 // BAZAAR FAVOURITES MODULE (With Lock Toggle)
 // =====================================================
@@ -850,7 +832,7 @@
             'Proda Sunglasses', 'Snorkel', 'Speedo', 'Sports Shades', 'Trench Coat', 'Wetsuit'
         ],
         'Armor': [
-            'Bulletproof vest', 'Chain Mail', 'Construction Helmet', 'Flak Jacket', 'Full Body Armor',
+            'Bulletproof Vest', 'Chain Mail', 'Construction Helmet', 'Flak Jacket', 'Full Body Armor',
             'Hiking Boots', 'Kevlar Gloves', 'Leather Boots', 'Leather Helmet', 'Leather Gloves',
             'Leather Vest', 'Leather Pants', 'Outer Tactical Vest', 'Police Vest', 'Safety Boots',
             'WWII Helmet'
@@ -905,38 +887,118 @@
         if (document.getElementById('bz-fav-btn')) return;
 
         GM_addStyle(`
-            #bz-fav-btn {
-                position: fixed; right: 5px; top: 5px; width: 44px; height: 44px;
-                background: #342B99; color: #000; font-weight: bold; border-radius: 50%;
-                display: flex; align-items: center; justify-content: center;
-                cursor: pointer; z-index: 9999;
-            }
-            #bz-fav-panel {
-                position: fixed; right: 50px; top: 10px; width: 144px;
-                background: #1a1a1a; border: 2px solid #202966; border-radius: 8px;
-                padding: 4px; color: #fff; display: none; z-index: 9999;
-                max-height: 575px; overflow-y: auto;
-            }
-            .bz-header-controls { display: flex; gap: 4px; margin-bottom: 8px; }
-            .bz-ctrl-btn {
-                flex: 1; text-align: center; padding: 4px;
-                border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold;
-            }
-            #bz-clear-all { background: #434C66; color: white; }
-            #bz-lock-btn.locked { background: #992b2b; color: white; }
-            #bz-lock-btn.unlocked { background: #2b9943; color: white; }
+    /* The main container - Added Shadow and consistent padding */
+    #bz-fav-panel {
+        position: fixed;
+        right: 50px;
+        top: 10px;
+        width: 144px;
+        background: #1a1a1a;
+        border: 2px solid #696969; /* Outline matching Sidebar 1 */
+        border-radius: 8px;
+        padding: 12px; /* Increased to match Sidebar 1 padding */
+        color: #fff;
+        display: none;
+        z-index: 9999;
+        max-height: 575px;
+        overflow-y: auto;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4); /* The gold glow from Sidebar 1 */
+    }
 
-            .bz-fav-category-header {
-                background: #202966; color: #FFD700; padding: 4px 8px;
-                font-size: 11px; font-weight: bold; text-transform: uppercase;
-                margin-top: 5px; border-radius: 2px; border-left: 3px solid #FFD700;
-            }
-            .bz-fav-item {
-                display: flex; justify-content: space-between; align-items: center;
-                padding: 6px; border-bottom: 1px solid #333; cursor: pointer; font-size: 12px;
-            }
-            .bz-fav-remove { color: #575A66; margin-left: 8px; }
-        `);
+    /* Scrollbar Styling - Copied directly from Sidebar 1 */
+    #bz-fav-panel::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #bz-fav-panel::-webkit-scrollbar-thumb {
+        background: #292929;
+        border-radius: 4px;
+    }
+
+    /* Floating Button - Added subtle glow to match theme */
+    #bz-fav-btn {
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    width: 30px;
+    height: 30px;
+
+    /* Matching the Sidebar 1 Background and Border */
+    background: #1a1a1a;
+    border: 2px solid #696969;
+    border-radius: 8px; /* Square with rounded corners */
+
+    /* Matching the Gold theme */
+    color: #FFD700;
+    font-weight: bold;
+    font-size: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999;
+
+    /* Matching the Sidebar 1 Glow */
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+    transition: all 0.2s ease;
+}
+
+#bz-fav-btn:hover {
+    /* Subtle highlight effect from the sidebar items */
+    background: #252525;
+    border-color: #FFD700;
+    transform: scale(1.05);
+}
+
+    .bz-header-controls { display: flex; gap: 4px; margin-bottom: 8px; }
+
+    .bz-ctrl-btn {
+        flex: 1; text-align: center; padding: 4px;
+        border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold;
+        border: 1px solid #444; /* Added outline to buttons */
+    }
+
+    #bz-clear-all { background: #434C66; color: white; }
+    #bz-lock-btn.locked { background: #992b2b; color: white; }
+    #bz-lock-btn.unlocked { background: #2b9943; color: white; }
+
+    /* Category Headers - Matched border-bottom style */
+    .bz-fav-category-header {
+        background: #202966;
+        color: #FFD700;
+        padding: 4px 8px;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-top: 5px;
+        border-radius: 2px;
+        border-left: 3px solid #FFD700;
+        border-bottom: 1px solid #6E6E6E; /* Matches item separators in sidebar 1 */
+    }
+
+    /* Items - Added hover effect similar to Sidebar 1 listings */
+    .bz-fav-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px;
+        border-bottom: 1px solid #333;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s;
+    }
+
+    .bz-fav-item:hover {
+        background: #252525;
+        color: #FFD700;
+        transform: translateX(2px);
+    }
+
+    .bz-fav-remove { color: #575A66; margin-left: 8px; }
+    .bz-fav-remove:hover { color: #A33C39; }
+`);
 
         const btn = document.createElement('div');
         btn.id = 'bz-fav-btn';

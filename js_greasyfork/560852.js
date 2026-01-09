@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         新球体育网欧赔分析
 // @namespace    http://dol.freevar.com/
-// @version      0.1
+// @version      0.2
 // @description  新球体育网（球探）手机端网页，比赛的分析页面里按开盘顺序列出所有公司，选择所需的公司列出各个时间点的欧赔作对比。
 // @author       Dolphin
 // @match        https://m.titan007.com/analy/Analysis/*
@@ -222,7 +222,7 @@
         const selectedCompanies = new Set();
 
         // 红色字体公司列表
-        const redCompanies = ['Pinnacle', '1xBet', 'Marathonbet', '18Bet', 'Bet365', 'EasyBets', 'Wewbet', '188Bet', 'HK Jockey Club', 'Vcbet', 'Interwetten', '10BET', '12bet', 'Sbobet'];
+        const redCompanies = ['Pinnacle', '1xBet', 'Marathonbet', '18Bet', 'Bet 365', 'Easybets', 'Wewbet', '188bet', 'HK Jockey Club', 'Vcbet', 'Interwetten', '10BET', 'Fonbet', 'Sbobet', 'prism', 'Ladbrokes'];
 
         companies.forEach(company => {
             if (!company.name) return;

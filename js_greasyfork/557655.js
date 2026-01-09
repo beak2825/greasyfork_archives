@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         GM_API测试
+// @name         GM_API
 // @namespace    http://tampermonkey.net/
-// @version      1.0.4
+// @version      1.0.5
 // @description  将GM_API暴露到全局,可以在控制台的GMAPI中直接调用
 // @grant      GM.addElement
 // @grant      GM.addStyle
@@ -71,8 +71,8 @@
 // @connect     *
 // @storageName   CCIC_Claim
 
-// @downloadURL https://update.greasyfork.org/scripts/557655/GM_API%E6%B5%8B%E8%AF%95.user.js
-// @updateURL https://update.greasyfork.org/scripts/557655/GM_API%E6%B5%8B%E8%AF%95.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/557655/GM_API.user.js
+// @updateURL https://update.greasyfork.org/scripts/557655/GM_API.meta.js
 // ==/UserScript==
 
 
@@ -475,6 +475,134 @@ async function GMfetch(url, data = "", json = "", headers = {}) {
     });
 }
 
+
+const requests = {
+    /**
+     * 核心请求函数
+     * @param {string} method - HTTP请求方法（GET, POST, PUT, DELETE等）
+     * @param {string} url - 请求的URL地址
+     * @param {Object} kwargs - 请求配置对象，可包含以下属性：
+     *   - params: {Object} URL查询参数对象
+     *   - headers: {Object} 请求头对象
+     *   - data: {*} 请求体数据
+     *   - json: {Object} JSON格式请求体数据
+     *   - timeout: {number} 请求超时时间
+     *   - cookies: {Object} 请求Cookie对象
+     * @returns {Promise} 返回Promise对象，解析为Python风格的响应对象
+     */
+    request: function (method, url, kwargs = {}) {
+        return new Promise((resolve, reject) => {
+            // 1. 处理 URL 参数 (params={a:1, b:2} -> ?a=1&b=2)
+            if (kwargs.params) {
+                const params = new URLSearchParams(kwargs.params);
+                if (url.includes('?')) {
+                    url += '&' + params.toString();
+                } else {
+                    url += '?' + params.toString();
+                }
+            }
+
+            // 2. 处理 headers
+            let headers = kwargs.headers || {};
+
+            // 3. 处理数据体 (data vs json)
+            let data = kwargs.data || null;
+
+            // 模拟 Python requests.post(url, json={...}) 的行为
+            if (kwargs.json) {
+                headers['Content-Type'] = 'application/json';
+                data = JSON.stringify(kwargs.json);
+            }
+            // 模拟 Python requests.post(url, data={...}) 默认表单行为
+            else if (data && typeof data === 'object' && !(data instanceof FormData) && !(data instanceof Blob)) {
+                // 如果没指定 Content-Type，且是普通对象，转为表单格式
+                if (!headers['Content-Type']) {
+                    headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                    data = new URLSearchParams(data).toString();
+                }
+            }
+
+            // 4. 发送请求
+            GM_xmlhttpRequest({
+                method: method.toUpperCase(),
+                url: url,
+                headers: headers,
+                data: data,
+                timeout: kwargs.timeout || 0,
+                cookie: kwargs.cookies ? Object.entries(kwargs.cookies).map(([k, v]) => `${k}=${v}`).join('; ') : undefined,
+
+                onload: (response) => {
+                    // 5. 封装 Response 对象，使其像 Python
+                    const pyResponse = {
+                        // 原始属性
+                        finalUrl: response.finalUrl,
+                        headers: response.responseHeaders, // 这是一个字符串，如果需要字典需额外解析
+
+                        // Python 风格属性
+                        status_code: response.status,
+                        text: response.responseText,
+                        content: response.response, // 二进制或其他类型
+                        ok: response.status >= 200 && response.status < 300,
+                        url: response.finalUrl,
+
+                        // 方法
+                        json: function () {
+                            try {
+                                return JSON.parse(this.text);
+                            } catch (e) {
+                                console.error("Response is not valid JSON");
+                                return {};
+                            }
+                        },
+                        blob: () => new Blob([response.response]),
+                        html: () => new DOMParser().parseFromString(response.responseText, "text/html"),
+                        raise_for_status: function () {
+                            if (!this.ok) {
+                                throw new Error(`HTTPError: ${this.status_code} Client Error`);
+                            }
+                        }
+                    };
+                    resolve(pyResponse);
+                },
+                onerror: (err) => reject(err),
+                ontimeout: () => reject(new Error('Timeout'))
+            });
+        });
+    },
+
+    /**
+     * GET请求快捷方法
+     * @param {string} url - 请求的URL地址
+     * @param {Object} kwargs - 请求配置对象
+     * @returns {Promise} 返回Promise对象
+     */
+    get: (url, kwargs) => requests.request('GET', url, kwargs),
+
+    /**
+     * POST请求快捷方法
+     * @param {string} url - 请求的URL地址
+     * @param {Object} kwargs - 请求配置对象
+     * @returns {Promise} 返回Promise对象
+     */
+    post: (url, kwargs) => requests.request('POST', url, kwargs),
+
+    /**
+     * PUT请求快捷方法
+     * @param {string} url - 请求的URL地址
+     * @param {Object} kwargs - 请求配置对象
+     * @returns {Promise} 返回Promise对象
+     */
+    put: (url, kwargs) => requests.request('PUT', url, kwargs),
+
+    /**
+     * DELETE请求快捷方法
+     * @param {string} url - 请求的URL地址
+     * @param {Object} kwargs - 请求配置对象
+     * @returns {Promise} 返回Promise对象
+     */
+    delete: (url, kwargs) => requests.request('DELETE', url, kwargs),
+};
+
 function elmGetter() {
     const win = window.unsafeWindow || document.defaultView || window;
     const doc = win.document;
@@ -825,6 +953,7 @@ GMAPI.window = window;
 GMAPI.SupabaseClient = SupabaseClient;
 GMAPI.GMfetch = GMfetch;
 GMAPI.httpRequest = httpRequest;
+GMAPI.requests = requests;
 GMAPI.elmGetter=elmGetter()
 
 

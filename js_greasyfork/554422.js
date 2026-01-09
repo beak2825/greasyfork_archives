@@ -1494,7 +1494,7 @@ if (typeof window.LecteurMedia === 'undefined') {
                             if (settings.twitterFullHeight) tweetEmbed.classList.add('vxtwitter-full-height');
                             tweetEmbed.innerHTML = parentTweetHtml + mainTweetHtml;
 
-                            // --- GESTION DES VIDÉOS (CASCADE DE SAUVETAGE) ---
+                            // GESTION DES VIDÉOS (CASCADE DE SAUVETAGE)
                             const videos = tweetEmbed.querySelectorAll('.vxtwitter-video');
                             
                             videos.forEach(videoElement => {
@@ -1520,7 +1520,7 @@ if (typeof window.LecteurMedia === 'undefined') {
                                     videoElement.style.height = '100%';
                                     videoElement.style.objectFit = 'cover';
 
-                                    // 1. FIX LAYOUT : Si natif OK, on relâche tout pour s'adapter au contenu
+                                    // FIX LAYOUT : Si natif OK, on relâche tout pour s'adapter au contenu
                                     videoElement.addEventListener('loadeddata', () => {
                                         if (!videoElement.src.startsWith('blob:')) {
                                             console.log("[Twitter] Lecture native réussie.");
@@ -1556,7 +1556,7 @@ if (typeof window.LecteurMedia === 'undefined') {
                                     }
                                 };
 
-                                // --- ÉTAPE 3 : BLOB GM ---
+                                //  BLOB GM
                                 const triggerStep3_Blob = () => {
                                     try {
                                         console.log("[Twitter] Tentative 3 : Blob GM...");
@@ -1569,7 +1569,7 @@ if (typeof window.LecteurMedia === 'undefined') {
                                                 </div>
                                             </div>`;
                                         
-                                        // Pendant le chargement, on garde le ratio initial (propre)
+                                        // Pendant le chargement, on garde le ratio initial
                                         if (aspectRatioStyle) wrapper.style.cssText += aspectRatioStyle;
 
                                         const progressSpan = wrapper.querySelector('.dl-progress');
@@ -1606,7 +1606,7 @@ if (typeof window.LecteurMedia === 'undefined') {
                                                         newVideo.style.cssText = "width:100%; height:auto; max-height:550px; display:block; margin:0 auto;";
                                                         
                                                         wrapper.appendChild(newVideo);
-                                                        newVideo.play().catch(() => {});
+                                                       // newVideo.play().catch(() => {});
                                                     } else {
                                                         console.warn("[Twitter] Echec Blob HTTP " + response.status);
                                                         enableFallback();
@@ -1618,7 +1618,7 @@ if (typeof window.LecteurMedia === 'undefined') {
                                     } catch (e) { enableFallback(); }
                                 };
 
-                                // --- ÉTAPE 2 : IFRAME SANDBOX ---
+                                // IFRAME SANDBOX
                                 const triggerStep2_Iframe = () => {
                                     try {
                                         console.log("[Twitter] Tentative 2 : Iframe...");
@@ -1658,7 +1658,7 @@ if (typeof window.LecteurMedia === 'undefined') {
                                                 </style>
                                             </head>
                                             <body>
-                                                <video controls autoplay playsinline loop poster="${sanitizeUrl(posterUrl)}">
+                                                <video controls playsinline loop poster="${sanitizeUrl(posterUrl)}">
                                                     <source src="${sanitizeUrl(originalUrl)}" type="video/mp4">
                                                 </video>
                                                 <script>
@@ -4471,6 +4471,10 @@ if (typeof window.LecteurMedia === 'undefined') {
                     'image.noelshack.com'
                 ];
 
+                const forceCardDomains = [
+                    '6play.fr', 'm6.fr', 'tf1.fr', 'france.tv', 'canalplus.com', 'arte.tv'
+                ];
+
                 if (isHandledByOther || excludedDomains.some(d => urlToCheck.includes(d)) || /\.(jpg|jpeg|png|gif|webp|bmp|mp4|webm|mov|ogg|pdf)$/i.test(href)) {
                     return null;
                 }
@@ -4609,17 +4613,33 @@ if (typeof window.LecteurMedia === 'undefined') {
                             const UA_STD = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36';
                             const UA_BOT = 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
 
-                            const performRequest = async (userAgent) => {
+                            const performRequest = async (userAgent, useRange = true) => {
+                                const headers = {
+                                    'User-Agent': userAgent,
+                                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8'
+                                };
+                                
+                                if (useRange) {
+                                    headers['Range'] = 'bytes=0-150000';
+                                }
+
                                 const response = await LecteurMedia.compatibleHttpRequest({
                                     method: 'GET', url: href, timeout: 6000,
-                                    headers: {
-                                        'User-Agent': userAgent,
-                                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-                                        'Range': 'bytes=0-150000' 
-                                    }
+                                    headers: headers
                                 });
+
+                                console.log(`[ArticlePreview] (${userAgent}) Statut ${response.status} pour ${href}`);
+                                console.log("response : ", response);
+
+                                if (response.status === 403) throw new Error("ACCESS_DENIED");
                                 if (response.status === 404 || response.status === 410) throw new Error("HTTP_DEAD_LINK");
-                                if (response.status >= 400) throw new Error("NETWORK_ERROR");
+                                if (response.status === 0 || response.status >= 400) {
+                                     if (useRange && (response.status === 0 || response.status === 416)) {
+                                         throw new Error("RANGE_FAILED");
+                                     }
+                                     throw new Error("NETWORK_ERROR");
+                                }
+
 
                                 //  DETECTION FICHIER DIRECT (IMAGE/VIDEO) VIA HEADER
                                 const ct = (response.responseHeaders || '').match(/content-type:\s*([^;\r\n]*)/i);
@@ -4635,6 +4655,8 @@ if (typeof window.LecteurMedia === 'undefined') {
 
                                 const parser = new DOMParser();
                                 const doc = parser.parseFromString(response.responseText, 'text/html');
+
+                                const shouldForceCard = forceCardDomains.some(d => urlObj.hostname.includes(d));
 
                                 // RECHERCHE OEMBED
                                 const oembedLink = doc.querySelector('link[type="application/json+oembed"], link[type="text/json+oembed"]');
@@ -4704,17 +4726,40 @@ if (typeof window.LecteurMedia === 'undefined') {
 
                             let standardData = null;
                             try {
-                                standardData = await performRequest(UA_STD);
-                                if (standardData.type === 'rich_oembed' || standardData.type === 'direct_image' || standardData.image || standardData.description) return standardData;
-                            } catch (stdError) {
-                                if (stdError.message === "HTTP_DEAD_LINK") return { title: "Page introuvable (404)", description: "Le lien semble mort.", image: null, isDead: true };
+                                standardData = await performRequest(UA_STD, true);
+                            } catch (err) {
+                                // Si erreur Range OU Network Error, on retente sans Range
+                                if (err.message === "RANGE_FAILED" || err.message === "NETWORK_ERROR") {
+                                    try {
+                                        // console.log("[ArticlePreview] Retry sans Range (Standard)...");
+                                        standardData = await performRequest(UA_STD, false);
+                                    } catch(e) { /* Fail again */ }
+                                } else if (err.message !== "HTTP_DEAD_LINK" && err.message !== "ACCESS_DENIED") {
+                                    // Autres erreurs, on laisse couler
+                                } else {
+                                    throw err; 
+                                }
                             }
 
+                            if (standardData && (standardData.type === 'rich_oembed' || standardData.type === 'direct_image' || standardData.image || standardData.description)) {
+                                return standardData;
+                            }
+
+                            // TENTATIVE BOT (Avec Range)
                             try {
-                                const botData = await performRequest(UA_BOT);
-                                return botData;
+                                return await performRequest(UA_BOT, true);
                             } catch (botError) {
+                                // Si erreur Range OU Network Error, on retente sans Range
+                                if (botError.message === "RANGE_FAILED" || botError.message === "NETWORK_ERROR") {
+                                    try {
+                                        // console.log("[ArticlePreview] Retry sans Range (Bot)...");
+                                        return await performRequest(UA_BOT, false);
+                                    } catch(e) { /* Fail */ }
+                                }
+                                
                                 if (botError.message === "HTTP_DEAD_LINK") return { title: "Page introuvable (404)", description: "Le lien semble mort.", image: null, isDead: true };
+                                if (botError.message === "ACCESS_DENIED") return { title: "Accès protégé", description: "Ce site bloque les lecteurs externes (DataDome).", image: null, isDead: 'forbidden' };
+                                
                                 if (standardData) return standardData;
                                 throw botError;
                             }
@@ -8126,8 +8171,7 @@ if (typeof window.LecteurMedia === 'undefined') {
                 const requestOptions = {
                     ...options,
                     onload: (response) => {
-                        // Parfois GM renvoie le status 0 ou null en cas d'erreur interne
-                        if (response.status === 0) {
+                        if (response.status === 0 && !response.responseHeaders) {
                             reject(new Error("NETWORK_ERROR"));
                         } else {
                             resolve(response);

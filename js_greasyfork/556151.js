@@ -6,6 +6,7 @@
 // @author       You
 // @match        https://sr.mihoyo.com/cloud/*
 // @match        https://sr.mihoyo.com/cloud/#/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=sr.mihoyo.com
 // @license      MIT
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/556151/%E6%98%9F%E7%A9%B9%E4%BA%91%E6%B8%B8%E6%88%8F%E9%98%B2%E7%A6%BB%E7%BA%BF.user.js

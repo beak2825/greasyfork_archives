@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name			Mortal 인터페이스 개선 및 기능 개선
-// @name:ko			Mortal 인터페이스 개선 및 기능 개선
+// @name			Mortal 인터페이스 개선 및 기능 개선 v2.3
+// @name:ko			Mortal 인터페이스 개선 및 기능 개선 v2.3
 // @description		Improve the appearance of mortal killerducky GUI
 // @description:ko	UI 개선, 배경·패 뒷면 커스텀, 악수율·패효율 계산 추가
-// @version			2.0.2
+// @version			2.3
 // @namespace		Mortal Appearance
 // @author			CiterR
 // @icon			https://mjai.ekyu.moe/favicon-32x32.png
@@ -13,8 +13,8 @@
 // @grant			GM_getValue
 // @grant			unsafeWindow
 // @license 		MIT
-// @downloadURL https://update.greasyfork.org/scripts/555606/Mortal%20%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EA%B0%9C%EC%84%A0%20%EB%B0%8F%20%EA%B8%B0%EB%8A%A5%20%EA%B0%9C%EC%84%A0.user.js
-// @updateURL https://update.greasyfork.org/scripts/555606/Mortal%20%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EA%B0%9C%EC%84%A0%20%EB%B0%8F%20%EA%B8%B0%EB%8A%A5%20%EA%B0%9C%EC%84%A0.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/555606/Mortal%20%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EA%B0%9C%EC%84%A0%20%EB%B0%8F%20%EA%B8%B0%EB%8A%A5%20%EA%B0%9C%EC%84%A0%20v23.user.js
+// @updateURL https://update.greasyfork.org/scripts/555606/Mortal%20%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%20%EA%B0%9C%EC%84%A0%20%EB%B0%8F%20%EA%B8%B0%EB%8A%A5%20%EA%B0%9C%EC%84%A0%20v23.meta.js
 // ==/UserScript==
 
 /*
@@ -24,206 +24,41 @@
 ☑3. 패효율 툴팁이 mouseout 이벤트 미응답 시 잔존하는 문제
 
 -------------------------- TODO ---------------------------
-  1. 7대칠(七対) 경우 제외하기
+  1. 치또이(七対) 경우 제외하기
   2. 계산 개선(성능 허용 시)
-  3. 일향청(一向聴) 좋은 형의 비율 계산
+  3. 이샨텐(一向聴) 좋은 형의 비율 계산
 ☑4. 악수율 계산 시작 방식 최적화
-  5. 먹·빵(치·퐁) 시 패효율 계산 추가
+  5. 치·퐁 시 패효율 계산 추가
 */
-
+'use strict';
 //--------------------------------------------  CSS Part should start here  --------------------------------------------//
-
 function mortalAddStyle() {
-    let css = `
-	/*스크립트 내 모든 URL은 사용자에게 노출되지 않음*/
+    const css = `
+    /* ===== 기능 의존 최소 CSS ===== */
 
-    .grid-main {
-      background-position: center;/*테이블 배경 중앙 정렬*/
-      /*background-position-x: 0px;/*수평 조정*/
-      /*background-position-y: 0px;/*수직 조정*/
-      /*background-size: 145%; /*배경 크기 조절*/
-      border-radius: 15px;
-      border: 2px solid pink;
-    }/*테이블 배경 추가*/
-
-    .grid-info {
-      border: 2px;
-      border-color: white;
-      border-style: solid;
-      border-radius: 24px;
-      background: #004452; //#93adae; //점수판
-      z-index: 3; /*완료/화면 상단 3D 효과와 조합*/
-    }/*중앙 정보판*/
-
-    .killer-call-img {
-      position: relative;
-      top: 50px;
-      scale: 1.2;
-    }/*Mortal 표시 이미지 조정*/
-
-	html {
-	  height: 98%;
-	}/*스크롤바 방지*/
-
-    body {
-      /*background: white;  background: linear-gradient(90deg, #2351ff8a, #0bfff7, #fff, #e7eaa7c9, #ff3e4f);  */
-	  background: linear-gradient( #002229 );
-      height: 98%;
-    }/*페이지 배경 색 변경*/
-
-	.outer {
-	  margin-left: -100px;
-	}/*메인 페이지 좌측 오프셋*/
-
-	.opt-info {
-	  margin-left: 90px;
-	}/*옵션 정보 판 오프셋*/
-
-	.opt-info table {
-	  border-radius: 15px;
-	  background: #74abb6;
-	  box-shadow: 1px -1px 1px 1px #f6f6f6;
-	}/*옵션 테이블 스타일*/
-
-    .grid-hand {
-      background: hsl(0deg 0% 100% / 0%);
-    }/*상대 손패 영역 투명화*/
-
-    .grid-hand-p3 {
-      height: 530px;
-    }/*윗 플레이어(上家)鸣牌 위치 조정*/
-
-    .grid-hand-p0-container{
-      background: hsl(0deg 0% 100% / 0%);
-      scale: 1.15;
-      width: 555px;   /*손패 폭 축소(겹침 방지)*/
-	  position: relative;
-	  left: -15px;
-	  top: 50px;
-    }/*자기 손패 영역 투명화 및 확대*/
-
-    .tileImg{
-      border-radius: 4px;
-      /*border-top: 3px groove #bbc9d9;/*牌顶部 3D 효과(비활성)*/
-    }/*마작패 스타일: 모서리 둥글게*/
-
-    .killer-call-bars > svg > rect, .discard-bars > svg > rect {
-      rx: 2px;
-    }/*진행바 사각형 둥글게*/
-
-    main{
-      /*scale: 1.2;*/
-      top: 50px;
-      position: relative;
-    }/*메인 페이지 위치*/
-
-    .info-doras {
-      scale: 1.4;
-    }/*도라 표시 확대*/
-
-    .info-round {
-      background: hsl(192.97deg 17.21% 42.16%);
-      border-color: transparent;
-      border-radius: 15px;
-    }/*라운드 전환기*/
-
-    .info-this-round-modal{
-      background: hsl(190deg 100% 20%);
-      border-width: 3px;
-      border-radius: 10px;
-      border-style:solid;
-      border-color:unset;
-    }/*대국 리포터*/
-
-    .close {
-      background: red;
-      scale: 1.2;
-      border: 0px;
-      border-radius: 50%;
-      right: 5px;
-      width: 20px;
-      height: 20px;
-    }/*리포터 닫기 버튼*/
-
-    .killer-call-bars{
-      scale: 1.5;
-      position: relative;
-      left: 20px;
-      top: 20px;
-      border-radius: 20px;
-      background:hsl(190deg 31.45% 58.49%);
-	  box-shadow: 1px 1px 1px 1px #f6f6f6;
-    }/*컷(추천) 바 확대*/
-
-    .killer-call-bars > svg > text:nth-child(2) {
-      fill: #f72727;
-    }/*첫 선택 빨강 표시*/
-
-    .sidebar{
-      margin-left: 60px;
-      justify-content: flex-start;
-      align-content; center;
-      flex-direction: column;
+    /* discard / killer bar SVG rect 둥글기 (JS 색칠 로직 의존) */
+    .killer-call-bars > svg > rect,
+    .discard-bars > svg > rect {
+        rx: 2px;
     }
-    .sidebar > * {
-      margin:5px;
-    }/*우측 사이드바 스타일*/
 
-    .controls {
-      background: hsl(190deg 49.75% 89.34% / 36%);
-      border-radius: 20px;
-      height: 325px;
-	  box-shadow:  1px 1px 1px 1px #f6f6f6;
-    }/*컨트롤 패널*/
-
-    .controls > * {
-      margin: 5px;
-      color: black;
-      border-color: white;
-      border-radius: 15px;
-      background: #74abb6;
-	  width: 115px;
-    }/*컨트롤 버튼 스타일*/
-
-    .tileImg:hover {
-        background: #cdcbcb;
-    }/*호버 시 패 표시*/
-
-    .modal, button {
-      border-radius: 10px;
-    }/*옵션/어바웃 모달*/
-
-	#about-modal {
-    background: linear-gradient(45deg, hsl(190deg 100% 20%), hsl(190 100% 30% / 1), hsl(190 100% 40% / 1));
-	}/*어바웃 배경*/
-
-	.newSetting {
-		height: 50px;
-		width: 150px;
-	}/*신규 버튼 크기*/
-
-    .opt-info table .tileImg {
-		width: calc(var(--tile-img-width)*0.7);
-		height: auto;
-		position: relative;
-		top: 5px;
-    }/*Mortal 추천패 이미지 크기 조정*/
-
-    .wider-table td {
-		height: 36px;
-		padding-top: 2px;
-		padding-bottom: 2px;
-    }/*행 높이 조정*/
-
-    #about-body-0 > li:last-child > span {
-        display: none;
+    /* 툴팁이 뒤로 안 가게 */
+    .hoverInfo {
+        z-index: 9999;
+        pointer-events: none;
     }
-    #about-body-0 > li:last-child:after {
-      content: '버그가 있으면 이 스크립트를 비활성화하세요 / Disable Script When BUG';
-    }/*알림 텍스트*/
- `
-    GM_addStyle(css)
+
+    /* 옵션 테이블 colorize 로직 안정화 */
+    .opt-info table tr:last-child td:first-child {
+        border-bottom-left-radius: 15px;
+    }
+    .opt-info table tr:last-child td:last-child {
+        border-bottom-right-radius: 15px;
+    }
+    `;
+    GM_addStyle(css);
 }
+
 //--------------------------------------------  CSS Part should end here  --------------------------------------------//
 
 
@@ -256,8 +91,8 @@ function listenerAdder(strips) { //진행 바 상대 높이 계산 및 툴팁 �
 			let tooltip = document.createElement('div');
 			tooltip.className = 'hoverInfo';
 			tooltip.style.position = 'absolute';
-			tooltip.style.backgroundColor = '#7dbcc980';
-			tooltip.style.border = '1px solid white';
+		//	tooltip.style.backgroundColor = '#7dbcc980';
+			//tooltip.style.border = '1px solid white';
 			tooltip.style.padding = '5px';
 			tooltip.style.borderRadius = '5px';
 			tooltip.textContent = (realProb * 100).toFixed(2) + '%';
@@ -277,6 +112,7 @@ function listenerAdder(strips) { //진행 바 상대 높이 계산 및 툴팁 �
 		e.addEventListener('mouseover', showHoverWin);
 	});
 };
+
 
 function mortalOptionColorize(errTolerance = [ 1, 5, 10, -1 ]) { //마지막 파라미터 -1은 절대값 모드, >0은 비율 모드
 	let actionTable = document.querySelector(".opt-info > table:last-child");
@@ -360,6 +196,9 @@ function mortalOptionColorize(errTolerance = [ 1, 5, 10, -1 ]) { //마지막 파
 		}
 	}
 
+
+updateLogoByBadMove(colorChoice);
+
 	let playerSelectInMain = document.querySelectorAll('.discard-bars-svg > rect[width="20"]');
 	 switch (colorChoice) {
 		case 0 :
@@ -419,7 +258,7 @@ function backgroundSetting(){
 	backgroundImg.onerror = ()=> {
 		console.log('배경 이미지 로드 실패');
 		const gridMain = document.querySelector('.grid-main');
-		if (gridMain) gridMain.style.background = '#285a63'; //작탁 기본 색상
+		//if (gridMain) gridMain.style.background = '#285a63'; //작탁 기본 색상 #285a63
 	}
 }
 
@@ -444,30 +283,168 @@ function tileBackSetting(){
     let tilebackStyle = `img[src="media/Regular_shortnames/back.svg"]{\n      			content: url('${tileBackURL}');\n\t\t\t}`
     GM_addStyle(tilebackStyle);
 }
+// 악수 등급별 로고 (설정용, 초기값은 빈 문자열)
+const DEFAULT_BAD_MOVE_LOGO = {
+	0: '', // 빨강
+	1: '', // 주황
+	2: ''  // 파랑
+};
 
-function logoSetting(){
-	let buttonBox = document.querySelector('.buttonBox-div');
-	if (!buttonBox) return;
-    let setLogoButton = document.createElement('button');
-	let logoURL = GM_getValue('logoURL', '');
-	setLogoButton.className = 'newSetting';
-	buttonBox.appendChild(setLogoButton);
-	setLogoButton.textContent = '이미지 변경';
-	setLogoButton.addEventListener('click', ()=>{
-		let inputURL = prompt('이미지 URL을 입력하세요', logoURL || '');
-		if (inputURL !== null) {
-			logoURL = inputURL.trim();
-			GM_setValue('logoURL', logoURL); //로고 URL 저장
-		}
-		let logoImg = document.querySelector('.killer-call-img');
-		if (logoImg) logoImg.src = logoURL || '';
-	});
-    if (logoURL) {
-        let logoStyle = `
-		.killer-call-img {\n\t\tcontent: url('${logoURL}');\n      	position: relative;\n      \ttop: 50px;\n      \tscale: 1.2;\n    }`;
-		GM_addStyle(logoStyle);
-    }
+// 최초 1회만 초기화
+if (!GM_getValue('badMoveLogoMap')) {
+	GM_setValue('badMoveLogoMap', DEFAULT_BAD_MOVE_LOGO);
 }
+
+function applyBaseLogo() {
+	const logoImg = document.querySelector('.killer-call-img');
+	if (!logoImg) return;
+
+	// 진짜 원본 로고 1회 백업
+	if (!logoImg.dataset.originalSrc) {
+		logoImg.dataset.originalSrc = logoImg.src;
+	}
+
+	const manualLogo = GM_getValue('logoURL', '');
+
+	if (manualLogo) {
+		logoImg.src = manualLogo;
+	} else {
+		// 수동 로고 없으면 게임 원본
+		logoImg.src = logoImg.dataset.originalSrc;
+	}
+}
+function updateLogoByBadMove(colorChoice) {
+	const logoImg = document.querySelector('.killer-call-img');
+	if (!logoImg) return;
+
+	const logoMap = GM_getValue('badMoveLogoMap', {});
+	const badLogo = logoMap[colorChoice];
+
+	if (badLogo) {
+		// ✅ 악수 발생 → 악수 로고
+		logoImg.src = badLogo;
+	} else {
+		// ✅ 악수 아님 → 항상 기본 로고
+		applyBaseLogo();
+	}
+}
+
+function logoSetting() {
+	const buttonBox = document.querySelector('.buttonBox-div');
+	if (!buttonBox) return;
+
+	const logoImg = document.querySelector('.killer-call-img');
+	if (!logoImg) return;
+
+
+	/* ===== 버튼 ===== */
+	const baseBtn = document.createElement('button');
+	baseBtn.className = 'newSetting';
+	baseBtn.textContent = '기본 로고 변경';
+	buttonBox.appendChild(baseBtn);
+
+	const badBtn = document.createElement('button');
+	badBtn.className = 'newSetting';
+	badBtn.textContent = '악수 로고 설정';
+	buttonBox.appendChild(badBtn);
+
+	/* ===== 최초 기본 로고 적용 ===== */
+	applyBaseLogo();
+
+	/* ===== 기본 로고 설정 ===== */
+	baseBtn.addEventListener('click', () => {
+		const input = prompt(
+			'기본으로 사용할 로고 이미지 URL\n(비우면 게임 기본 로고)',
+			GM_getValue('logoURL', '')
+		);
+		if (input === null) return;
+
+		GM_setValue('logoURL', input.trim());
+		applyBaseLogo();
+	});
+
+	/* ===== 악수 로고 설정 ===== */
+    buttonBox.style.position = 'relative';
+
+
+badBtn.addEventListener('click', () => {
+    // 이미 열려있으면 중복 방지
+    if (document.querySelector('.badmove-logo-modal')) return;
+
+    const logoMap = GM_getValue('badMoveLogoMap', {});
+
+    // 모달 배경
+    const overlay = document.createElement('div');
+    overlay.className = 'badmove-logo-modal';
+   overlay.style.cssText = `
+   position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background: rgba(0,0,0,0.6) !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        z-index: 2147483647 !important; /* 최상위 */
+`;
+
+    // 모달 본체
+    const panel = document.createElement('div');
+   panel.style.cssText = `
+    background: #111;
+    padding: 12px;
+    border-radius: 8px;
+    width: 400px;
+    color: #fff;
+    z-index: 2147483648 !important; /* overlay보다 위 */
+    box-shadow: 0 0 10px #000;
+`;
+
+    panel.innerHTML = `
+        <h3 style="margin-top:0;">악수 로고 설정 URL </h3>
+        <label>🔴 빨강</label>
+        <input id="bm0" style="width:100%; margin-bottom:8px;" value="${logoMap[0] || ''}">
+        <label>🟠 주황</label>
+        <input id="bm1" style="width:100%; margin-bottom:8px;" value="${logoMap[1] || ''}">
+        <label>🔵 파랑</label>
+        <input id="bm2" style="width:100%; margin-bottom:12px;" value="${logoMap[2] || ''}">
+        <div style="text-align:right;">
+            <button id="ok">확인</button>
+            <button id="cancel">취소</button>
+        </div>
+    `;
+
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
+
+    const close = () => overlay.remove();
+
+    panel.querySelector('#ok').onclick = () => {
+        GM_setValue('badMoveLogoMap', {
+            0: panel.querySelector('#bm0').value.trim(),
+            1: panel.querySelector('#bm1').value.trim(),
+            2: panel.querySelector('#bm2').value.trim()
+        });
+        close();
+        alert('악수 로고 설정 완료');
+    };
+
+    panel.querySelector('#cancel').onclick = close;
+});
+
+
+}
+
+
+
+//---------로고 세팅 끝-----------
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.efficency-call-div')) {
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+    }
+}, true);
 
 function optInfoSwitch(){
 	let buttonBox = document.querySelector('.buttonBox-div');
@@ -508,20 +485,19 @@ function fullScreenEnlarge(){
 	let defaultScale = parseFloat(scale[0]);
 	let fullScreenScale = parseFloat(scale[1]);
 
-	addEventListener('keydown', (e)=>{ //F11 전체화면 토글
-		if (e.key === 'F11') {
-			event.preventDefault();
-			document.documentElement.requestFullscreen();
-		}
-	});
-	addEventListener('fullscreenchange',()=>{
-		let mainInFull = document.querySelector('main');
-		if (!document.fullscreen) {
-			if (mainInFull) { mainInFull.style.scale = `${defaultScale}`; mainInFull.style.top = '50px'; }
-		} else {
-			if (mainInFull) { mainInFull.style.scale = `${fullScreenScale}`; mainInFull.style.top = '110px'; }
-		}
-	});
+	//addEventListener('keydown', (e)=>{ //F11 전체화면 토글
+	//		event.preventDefault();
+	//		document.documentElement.requestFullscreen();
+	//	}
+//});
+	//addEventListener('fullscreenchange',()=>{
+	//	let mainInFull = document.querySelector('main');
+	//	if (!document.fullscreen) {
+	//		if (mainInFull) { mainInFull.style.scale = `${defaultScale}`; mainInFull.style.top = '50px'; }
+	//	} else {
+	//		if (mainInFull) { mainInFull.style.scale = `${fullScreenScale}`; mainInFull.style.top = '110px'; }
+	//	}
+//	});
 	const logoImg = document.querySelector('.killer-call-img');
 	if (logoImg) {
 		logoImg.addEventListener('click', ()=>{
@@ -615,30 +591,29 @@ function setMainAreaEnlarge() {
 	let scaleArray = scaleStr.split(',');
 
     const mainElem = document.querySelector('main');
-    if (mainElem) mainElem.style.scale = `${scaleArray[0]}`; //초기 확대 적용
+   // if (mainElem) mainElem.style.scale = `${scaleArray[0]}`; //초기 확대 적용
 
 	scaleButton.className = 'newSetting';
 	buttonBox.appendChild(scaleButton);
-	scaleButton.textContent = '화면 확대 배율';
-	scaleButton.addEventListener('click', ()=>{
-		let explainText ='확대 배율 조합을 입력하세요 (쉼표로 구분, 새로고침 후 적용)\n' +
-						'첫번째: 비전체화면 배율\n' +
-						'두번째: 전체화면 배율'
-		let inputStr = prompt(explainText, scaleStr);
-		if (inputStr !== null) {
-            let input = inputStr.replace('，',',');
-            let numArray = input.split(',');
-            let newScaleArray = numArray.map(Number);
-			if (newScaleArray.length !== 2 || newScaleArray.some(isNaN)) {
-                alert('매개변수 수가 올바르지 않습니다!');
-                return;
-            }
-			GM_setValue('scaleStr', inputStr);
-            scaleStr = inputStr;
-            scaleArray = scaleStr.split(',');
-            if (mainElem) mainElem.style.scale = `${scaleArray[0]}`;
-		}
-	});
+	//scaleButton.textContent = '화면 확대 배율';
+	//scaleButton.addEventListener('click', ()=>{
+	//	let explainText ='확대 배율 조합을 입력하세요 (쉼표로 구분, 새로고침 후 적용)\n' +
+	//					'첫번째: 비전체화면 배율\n' +
+	//					'두번째: 전체화면 배율'
+	//	let inputStr = prompt(explainText, scaleStr);
+	//	if (inputStr !== null) {
+    //        let input = inputStr.replace('，',',');
+    //        let numArray = input.split(',');
+     //       let newScaleArray = numArray.map(Number);
+	//		if (newScaleArray.length !== 2 || newScaleArray.some(isNaN)) {
+    //            alert('매개변수 수가 올바르지 않습니다!');
+    //        }
+	//		GM_setValue('scaleStr', inputStr);
+    //        scaleStr = inputStr;
+   //         scaleArray = scaleStr.split(',');
+   //         if (mainElem) mainElem.style.scale = `${scaleArray[0]}`;
+	//	}
+	//});
 	return scaleArray;
 }
 
@@ -807,7 +782,7 @@ function addDoraFlash(doraIndicators, state) {
 			.tileDiv:has(.tileImg.rotate.float) {
 				overflow:visible;
 			}
-			/*자기 자가그(暗杠) dora 표시 수정*/
+			/* dora 표시 수정*/
 			`;
 		GM_addStyle(rotatedDoraFix);
     }
@@ -1097,45 +1072,56 @@ function addEffCardset(ukeireSet, shantenCnt) {
 	if (!effWindow) return;
 	effWindow.innerHTML = '';
 
-	let shantenText = `${shantenCnt}  샨텐`; // 向听`;
-	if(!shantenCnt) shantenText = '텐파이'; // '听牌';
-	let showShanten = document.createElement('text');
+	/* 샨텐 표시 */
+	let shantenText = `${shantenCnt} 샨텐`;
+	if (!shantenCnt) shantenText = '텐파이';
+
+	let showShanten = document.createElement('div');
 	showShanten.textContent = shantenText;
 	showShanten.style.textAlign = 'center';
 	showShanten.style.width = '100%';
-	showShanten.marginTop = '1%';
+	showShanten.style.marginTop = '2%';
 	effWindow.appendChild(showShanten);
 
 	for (let ukeInfo of ukeireSet) {
 		let pai = ukeInfo.pai;
 		let tile = document.createElement('img');
-		let leftText = ukeInfo.left.leftNor.toString().padStart(2, '0') + ':'
-					+ ukeInfo.left.leftPure.toString().padStart(2, '0');
-		let showLeftText = document.createElement('text');
 		let wrapDiv = document.createElement('div');
+
+		let leftText =
+			ukeInfo.left.leftNor.toString().padStart(2, '0') + ':' +
+			ukeInfo.left.leftPure.toString().padStart(2, '0');
+
+		let showLeftText = document.createElement('span');
 
 		tile.src = `media/Regular_shortnames/${pai}.svg`;
 		tile.className = 'tileImg effTile';
+
+		showLeftText.textContent = leftText;
 		showLeftText.style.fontSize = 'xx-small';
 		showLeftText.style.lineHeight = '2';
 		showLeftText.style.marginLeft = '2px';
-		showLeftText.textContent = leftText;
+
 		wrapDiv.style.display = 'flex';
 		wrapDiv.style.marginLeft = '3%';
 		wrapDiv.style.marginTop = '1%';
 
-		tile.addEventListener('mouseover', ()=> {
+		/* ===============================
+		   hover 패 표시 (겹침 안전 처리)
+		   =============================== */
+		tile.addEventListener('mouseover', () => {
 			let effHover = document.createElement('div');
+			effHover.className = 'eff-hover';
 
 			let hoverPai, cnt = 0;
 			for (let i = 1; i <= 4; i++) {
 				for (let j = 1; j <= 9; j++) {
 					if (!ukeInfo.uke[i][j]) continue;
-					switch(i) {
-						case 1: hoverPai = j.toString() + 'm'; break;
-						case 2: hoverPai = j.toString() + 'p'; break;
-						case 3: hoverPai = j.toString() + 's'; break;
-						case 4: hoverPai = j.toString() + 'z'; break;
+					switch (i) {
+						case 1: hoverPai = j + 'm'; break;
+						case 2: hoverPai = j + 'p'; break;
+						case 3: hoverPai = j + 's'; break;
+						case 4: hoverPai = j + 'z'; break;
 					}
 					cnt++;
 					let hoverTile = document.createElement('img');
@@ -1145,17 +1131,30 @@ function addEffCardset(ukeireSet, shantenCnt) {
 				}
 			}
 
-			let posParent = effWindow.getBoundingClientRect();
-			let maxWidthcCnt = Math.min(13, cnt);
-			let posX = ( posParent.left + posParent.right - (standardTileWidth + 4) * maxWidthcCnt ) / 2;
-			let posY = posParent.top - Math.ceil(cnt / 13) * (standardTileHeight + 4) - 10;
-			effHover.style.width = `${maxWidthcCnt * (standardTileWidth + 4)}px`;
-			effHover.style.left = `${posX}px`
-			effHover.style.top = `${posY}px`
-			effHover.className = 'eff-hover';
+			/* === 위치 계산 (패효율 기준, 로고 무시) === */
+			const effRect = effWindow.getBoundingClientRect();
+			const maxCols = Math.min(13, cnt);
+			const rows = Math.ceil(cnt / maxCols);
+
+			const hoverWidth = maxCols * (standardTileWidth + 4);
+			const hoverHeight = rows * (standardTileHeight + 4);
+
+			const posX = effRect.left + (effRect.width - hoverWidth) / 2;
+			let posY = effRect.top - hoverHeight - 12;
+
+			/* 화면 위로 나가면 아래로 */
+			if (posY < 0) {
+				posY = effRect.bottom + 12;
+			}
+
+			effHover.style.width = `${hoverWidth}px`;
+			effHover.style.left = `${posX}px`;
+			effHover.style.top = `${posY}px`;
+			effHover.style.zIndex = 9999; // ★ 로고 포함 전부 위
+
 			document.body.appendChild(effHover);
 
-			const deleteEffHover = ()=>{
+			const deleteEffHover = () => {
 				effHover.remove();
 				tile.removeEventListener('mouseout', deleteEffHover);
 			};
@@ -1171,82 +1170,138 @@ function addEffCardset(ukeireSet, shantenCnt) {
 function addEffWindow() {
 	let buttonBox = document.querySelector('.buttonBox-div');
 	if (!buttonBox) return;
+
 	let efficencySwitch = document.createElement('button');
 	let effEnable = GM_getValue('effEnable', true);
 
 	efficencySwitch.className = 'newSetting';
 	buttonBox.appendChild(efficencySwitch);
 
-	if (!effEnable) {
-		efficencySwitch.textContent = '패효율 계산 켜기';
-	} else {
-		efficencySwitch.textContent = '패효율 계산 끄기';
+	function updateText() {
+		efficencySwitch.textContent = effEnable
+			? '패효율 계산 끄기'
+			: '패효율 계산 켜기';
 	}
+	updateText();
 
-	efficencySwitch.addEventListener('click', ()=>{
+	efficencySwitch.addEventListener('click', () => {
 		effEnable = !effEnable;
-		if (!effEnable) {
-			efficencySwitch.textContent = '패효율 계산 켜기';
-		} else {
-			efficencySwitch.textContent = '패효율 계산 끄기';
-		}
 		GM_setValue('effEnable', effEnable);
+		updateText();
+
+		if (effEnable) {
+			createEffDiv();
+		} else {
+			removeEffDiv();
+		}
 	});
-	if (!effEnable) return;
+
+	if (effEnable) createEffDiv();
+}
+
+function createEffDiv() {
+	if (document.querySelector('.efficency-call-div')) return;
+
+	let killerCallDiv = document.querySelector('.killer-call-div');
+	if (!killerCallDiv) return;
 
 	let effDiv = document.createElement('div');
-	let killerCallDiv = document.querySelector('.killer-call-div');
-	let effCss = `
-		.efficency-call-div {
-			scale: 1.4;
-			width: calc(var(--zoom)*245px);
-			height: calc(var(--zoom)*110px);
-			background: hsl(190deg 31.45% 58.49%);
-			box-shadow:  1px 1px 1px 1px #f6f6f6;
-			border-radius: 20px;
-			margin-top: 34%;
-			margin-left: 14%;
-			display: flex;
-			flex-wrap: wrap;
-			align-content: flex-start;
-		}
+	effDiv.className = 'efficency-call-div';
 
-		.eff-hover {
-			position: absolute;
-			display: flex;
-			flex-wrap: wrap;
-			scale: 1.5;
-			background: #00c0ff80;
-			box-shadow: 0px 0px 5px 5px #0090ff;
-			border-radius: 5px;
-		}
+	/* 전체화면 토글 차단 */
+	effDiv.addEventListener('click', (e) => {
+		e.stopPropagation();
+		e.stopImmediatePropagation();
+	});
 
-		.effTile {
-			filter: none;
-			width: ${standardTileWidth}px;
-			height: ${standardTileHeight}px;
-			box-shadow: inset 0 0 2px #880000;
-			margin-left: 3%;
-		}
+	/* ===== 로고 + 패효율 겹침 방지 & 우선순위 CSS ===== */
+	GM_addStyle(`
+	.killer-call-div {
+		position: relative;
+		overflow: visible !important;
+	}
 
-		.hoverTile {
-			filter: none;
-			width: ${standardTileWidth}px;
-			height: ${standardTileHeight}px;
-			box-shadow: inset 0 0 2px #880000;
-		}
-	`;
-	GM_addStyle(effCss);
+	/* 로고 (패효율보다 아래) */
+	.killer-call-img.eff-overlay-logo {
+		position: absolute;
+		top: 35%;
+		right: 60%;
+
+		width:  110px !important; //크기
+		height: auto !important;
+
+		z-index: 10;              /* 패효율보다 낮음 */
+		pointer-events: none;
+	}
+
+	/* 패효율 (항상 위) */
+	.efficency-call-div {
+		scale: 1.4;
+		width: calc(var(--zoom)*245px);
+		height: calc(var(--zoom)*110px);
+
+		border-radius: 20px;
+		margin-top: 34%;
+		margin-left: 14%;
+
+		position: relative;
+		z-index: 20;              /* 로고보다 위 */
+
+		padding-top: 26px;        /* 로고 영역 확보 → 물리적 겹침 방지 */
+
+		display: flex;
+		flex-wrap: wrap;
+		align-content: flex-start;
+	}
+
+	.eff-hover {
+		position: absolute;
+		display: flex;
+		flex-wrap: wrap;
+		scale: 1.5;
+		background: #00c0ff80;
+		box-shadow: 0px 0px 5px 5px #0090ff;
+		border-radius: 5px;
+	}
+
+	.effTile {
+		filter: none;
+		width: ${standardTileWidth}px;
+		height: ${standardTileHeight}px;
+		box-shadow: inset 0 0 2px #880000;
+		margin-left: 3%;
+	}
+
+	.hoverTile {
+		filter: none;
+		width: ${standardTileWidth}px;
+		height: ${standardTileHeight}px;
+	}
+	`);
+
+	/* === 로고를 killer-call-div에 겹치지 않게 배치 === */
+	let logoImg = document.querySelector('.killer-call-img');
+	if (logoImg) {
+		logoImg.classList.add('eff-overlay-logo');
+		killerCallDiv.appendChild(logoImg);
+	}
+
+	killerCallDiv.appendChild(effDiv);
+}
+function removeEffDiv() {
+	let effDiv = document.querySelector('.efficency-call-div');
+	if (effDiv) effDiv.remove();
 
 	let logoImg = document.querySelector('.killer-call-img');
-	if (logoImg) logoImg.style.display = 'none';
-	effDiv.addEventListener('click', ()=>{
-		if (!document.fullscreen) document.documentElement.requestFullscreen();
-		else document.exitFullscreen();
-	});
-	effDiv.className = 'efficency-call-div';
-	if (killerCallDiv) killerCallDiv.appendChild(effDiv);
+	let killerCallDiv = document.querySelector('.killer-call-div');
+
+	if (logoImg && killerCallDiv) {
+		logoImg.classList.remove('eff-overlay-logo');
+		killerCallDiv.prepend(logoImg);
+	}
 }
+
+/* ================= 실제 패효율 창 생성 ================= */
 
 //--------------------------------------------  Extra Functions should end here  --------------------------------------------//
 
@@ -1276,3 +1331,4 @@ function addEffWindow() {
 
     //-------------------------------------------- Main Code should end here  --------------------------------------------//
 })();
+

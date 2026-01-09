@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         视频网页全屏
 // @namespace    npm/vite-plugin-monkey
-// @version      3.8.4
+// @version      3.8.7
 // @author       Feny
 // @description  快捷键：P-网页全屏，Enter-全屏；支持侧边点击切换网页全屏；支持自动网页全屏
 // @license      GPL-3.0-only
@@ -19,7 +19,7 @@
 // @updateURL https://update.greasyfork.org/scripts/559570/%E8%A7%86%E9%A2%91%E7%BD%91%E9%A1%B5%E5%85%A8%E5%B1%8F.meta.js
 // ==/UserScript==
 
-(n=>{const o=Symbol("styleAdded"),t=document.createElement("style");t.textContent=n,window.gmStyle=t,document.addEventListener("addStyle",r=>{const{shadowRoot:e}=r.detail;e[o]||e instanceof Document||(e.prepend(t.cloneNode(!0)),e[o]=!0)}),(GM_addStyle??(()=>document.head.append(t.cloneNode(!0))))(n)})(' @charset "UTF-8";::part(webFullscreen),[part*=webFullscreen],body[part*=webFullscreen] [part*=webFullscreen]{top:0!important;left:0!important;margin:0!important;padding:0!important;zoom:normal!important;border:none!important;width:100vw!important;height:100vh!important;position:fixed!important;transform:none!important;max-width:none!important;max-height:none!important;border-radius:0!important;transition:none!important;z-index:2147483646!important;background-color:#000!important;flex-direction:column!important;overflow:hidden!important;display:flex!important}[part*=webFullscreen]~*:not(.monkey-web-fullscreen){display:none!important}[part*=webFullscreen] video,body[part*=webFullscreen] [part*=webFullscreen] video{top:0!important;left:0!important;width:100vw!important;border:none!important;height:clamp(100vh - 100%,100vh,100%)!important;object-fit:contain!important}.video-edge-click{cursor:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAaBJREFUSEutlL8vBEEcxT9fpxSdVtQkGqqrHP8CoqDXSZTC7VpcRa3SCBJEclcgEQmNShDFKVRXKSj8atmv7Gbvsrd2Zydhus2+75v33rwZwXKpx0UAlTIlmxGxAQUY9dCI2GrGCvRn4tCu8CJLTCadmBTrCgcoPfGY2hRHgAmEwyR5FnHWzK8osoDq0hdm7NJoujEJSc24NdDJgCzwkHbAWqGfL+pp7kIBWa1QjyEpc2NqjQlj3QrbWjZxucQty3CHsMU3u+LylreRRDdqJAa8xmdaXB7D/rp00cFngmgPZUccTrM2SCNu4FNKnP42ykwKSdCQbaAqZe7i/3OjCFWvUsTnKsf+GUKVb2ri8mRFHJIvc48wmJct8AHMZdetQn+8w+oxC2xaEAeQdfMFgeFml7VCD188G4hfgRpKVRxq1lc6euECxYHy+LpEOKHAcdyh9SMU5TyGcN5GqyyKw1rSSTux4dlsPTzLXCEUo+93fEbF5dZIbHMw6jEPbIRY5UgcxtPmrOvWUuzQS4E60IUyJQ77/0IcZe0C3eKE6lPXDznkqgSwYj+tAAAAAElFTkSuQmCC),pointer!important;left:0!important;top:6%!important;width:25px!important;height:70%!important;position:absolute!important;z-index:2147483647!important;background-color:transparent!important;user-select:none!important;opacity:0!important}.video-edge-click.right{right:0!important;left:auto!important} ');
+(n=>{const o=Symbol("styleAdded"),t=document.createElement("style");t.textContent=n,window.gmStyle=t,document.addEventListener("addStyle",r=>{const{shadowRoot:e}=r.detail;e[o]||e instanceof Document||(e.prepend(t.cloneNode(!0)),e[o]=!0)}),(GM_addStyle??(()=>document.head.append(t.cloneNode(!0))))(n)})(' @charset "UTF-8";[gm_webfullscreen],body[gm_webfullscreen] [gm_webfullscreen]{top:0!important;left:0!important;margin:0!important;padding:0!important;zoom:normal!important;border:none!important;width:100vw!important;height:100vh!important;position:fixed!important;transform:none!important;max-width:none!important;max-height:none!important;border-radius:0!important;transition:none!important;z-index:2147483646!important;background-color:#000!important;flex-direction:column!important;overflow:hidden!important;display:flex!important}[gm_webfullscreen]~*:not(.monkey-web-fullscreen){display:none!important}[gm_webfullscreen] video,body[gm_webfullscreen] [gm_webfullscreen] video{top:0!important;left:0!important;width:100vw!important;border:none!important;height:clamp(100vh - 100%,100vh,100%)!important;object-fit:contain!important}.video-edge-click{cursor:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0IArs4c6QAAAaBJREFUSEutlL8vBEEcxT9fpxSdVtQkGqqrHP8CoqDXSZTC7VpcRa3SCBJEclcgEQmNShDFKVRXKSj8atmv7Gbvsrd2Zydhus2+75v33rwZwXKpx0UAlTIlmxGxAQUY9dCI2GrGCvRn4tCu8CJLTCadmBTrCgcoPfGY2hRHgAmEwyR5FnHWzK8osoDq0hdm7NJoujEJSc24NdDJgCzwkHbAWqGfL+pp7kIBWa1QjyEpc2NqjQlj3QrbWjZxucQty3CHsMU3u+LylreRRDdqJAa8xmdaXB7D/rp00cFngmgPZUccTrM2SCNu4FNKnP42ykwKSdCQbaAqZe7i/3OjCFWvUsTnKsf+GUKVb2ri8mRFHJIvc48wmJct8AHMZdetQn+8w+oxC2xaEAeQdfMFgeFml7VCD188G4hfgRpKVRxq1lc6euECxYHy+LpEOKHAcdyh9SMU5TyGcN5GqyyKw1rSSTux4dlsPTzLXCEUo+93fEbF5dZIbHMw6jEPbIRY5UgcxtPmrOvWUuzQS4E60IUyJQ77/0IcZe0C3eKE6lPXDznkqgSwYj+tAAAAAElFTkSuQmCC),pointer!important;left:0!important;top:6%!important;width:25px!important;height:70%!important;position:absolute!important;z-index:2147483647!important;background-color:transparent!important;user-select:none!important;opacity:0!important}.video-edge-click.right{right:0!important;left:auto!important} ');
 
 (function () {
   'use strict';
@@ -73,7 +73,7 @@
     EMPTY: "",
     HALF_SEC: 500,
     ONE_SEC: 1e3,
-    webFull: "webFullscreen",
+    webFull: "gm_webfullscreen",
     MSG_SOURCE: "SCRIPTS_VIDEO_FULLSCREEN"
   });
   const Tools = {
@@ -88,6 +88,7 @@
     getIFrames: () => querySelectorAll("iframe:not([src=''], [src='#'], [id='buffer'], [id='install'])"),
     isVisible: (el) => !!(el && getComputedStyle(el).visibility !== "hidden" && (el.offsetWidth || el.offsetHeight)),
     preventDefault: (event) => event.preventDefault() & event.stopPropagation() & event.stopImmediatePropagation(),
+    attr: (el, name, val) => el && name && el[val ? "setAttribute" : "removeAttribute"](name, val),
     emitEvent: (type, detail = {}) => document.dispatchEvent(new CustomEvent(type, { detail })),
     isInputable: (el) => ["INPUT", "TEXTAREA"].includes(el?.tagName) || el?.isContentEditable,
     sendToIFrames(data) {
@@ -110,11 +111,6 @@
       const keyList = keys.length > 0 ? keys : ["default"];
       keyList.forEach((key) => this.limitCountMap.set(key, 0));
     },
-    getCenterPoint(element) {
-      if (!element) return { centerX: 0, centerY: 0 };
-      const { top, left, width, height } = this.getElementRect(element);
-      return { centerX: left + width / 2, centerY: top + height / 2 };
-    },
     pointInElement(pointX, pointY, element) {
       if (!element) return false;
       const { top, left, right, bottom } = this.getElementRect(element);
@@ -134,32 +130,10 @@
       }
       return parents;
     },
-    getParts: (node) => node.getAttribute("part")?.split(/\s+/) ?? [],
-    setPart(node, value) {
-      if (!isElement(node)) return;
-      node.setAttribute("part", [.../* @__PURE__ */ new Set([...this.getParts(node), value])].join(" "));
-    },
-    delPart(node, value) {
-      if (!isElement(node)) return;
-      const parts = this.getParts(node).filter((v) => v !== value);
-      node.setAttribute("part", parts.join(" "));
-    },
-    safeHTML(htmlStr) {
-      if (!window.trustedTypes?.createPolicy) return htmlStr;
-      const policy = trustedTypes.defaultPolicy ?? trustedTypes.createPolicy("default", { createHTML: (input) => input });
-      return policy.createHTML(htmlStr);
-    },
     cloneAttrs(source, target, ...attrs) {
       attrs.flat().forEach((attr) => {
         const value = source.getAttribute(attr);
         if (value) target.setAttribute(attr, value);
-      });
-    },
-    cloneStyle(source, target, ...names) {
-      const computedStyle = window.getComputedStyle(source);
-      names.flat().forEach((name) => {
-        const value = computedStyle.getPropertyValue(name);
-        if (value) target.style.setProperty(name, value);
       });
     },
     setStyle(eles, prop, val, priority) {
@@ -201,9 +175,8 @@
   const Listen = {
     noVideo: () => !window.videoInfo && !window.topWin,
     isBackgroundVideo: (video) => video?.muted && video?.loop,
-    getVideo: () => Tools.querys(":is(video, fake-video):not([loop])").find(Tools.isVisible),
     init(isNonFirst = false) {
-      this.body = document.body;
+      this.docElement = document.documentElement;
       this.setupKeydownListener();
       this.setupMouseMoveListener();
       this.setupFullscreenListener();
@@ -216,7 +189,7 @@
     },
     setupDocumentObserver() {
       new MutationObserver(() => {
-        if (this.body === document.body) return;
+        if (this.docElement === document.documentElement) return;
         this.init(true), document.head.append(gmStyle.cloneNode(true));
       }).observe(document, { childList: true });
     },
@@ -236,13 +209,13 @@
     },
     setupMouseMoveListener() {
       const handle = ({ type, clientX, clientY }) => {
-        if (Tools.isThrottle(type, 300)) return;
-        const video = this.getVideoForCoordinate(clientX, clientY);
+        if (Tools.isThrottle(type)) return;
+        const video = this.getVideoForCoord(clientX, clientY);
         video && this.createEdgeClickElement(video);
       };
       document.addEventListener("mousemove", handle, { passive: true });
     },
-    getVideoForCoordinate(clientX, clientY) {
+    getVideoForCoord(clientX, clientY) {
       return Tools.querys("video").find((video) => Tools.pointInElement(clientX, clientY, video));
     },
     createEdgeClickElement(video) {
@@ -266,7 +239,7 @@
       container.prepend(video.lArea, video.rArea);
     },
     getEdgeClickContainer(video) {
-      if (this.fsWrapper) return video.closest(`[part="${Consts.webFull}"]`) ?? this.fsWrapper;
+      if (this.fsWrapper) return video.closest(`[${Consts.webFull}]`) ?? this.fsWrapper;
       const parentNode = video.parentNode;
       const sroot = video.getRootNode() instanceof ShadowRoot;
       return sroot ? parentNode : this.findVideoParentContainer(parentNode, void 0, false);
@@ -297,7 +270,7 @@
     },
     handleMessage(data) {
       if (!data?.source?.includes(Consts.MSG_SOURCE)) return;
-      if (data?.videoInfo) return this.setParentWinVideoInfo(data.videoInfo);
+      if (data?.videoInfo) return this.syncVideoToParentWin(data.videoInfo);
       if ("isFullscreen" in data) this.isFullscreen = data.isFullscreen;
       if (data?.topWin) window.topWin = this.topWin = data.topWin;
       this.processEvent(data);
@@ -320,12 +293,11 @@
         if (!video || video.hasAttribute("received")) return;
         this.setupVideoListeners(video), video.setAttribute("received", true);
         Tools.microTask(() => this.createEdgeClickElement(video));
-        if (!this.player) this.setCurrentVideo(video);
       });
     },
     loadedmetadata(video) {
       this.initVideoProps(video);
-      if (!this.player) this.playing(video);
+      if (!this.player) this.setCurrentVideo(video);
     },
     timeupdate(video) {
       if (isNaN(video.duration)) return;
@@ -346,12 +318,12 @@
       this.setVideoInfo(video);
     },
     setVideoInfo(video) {
-      const videoInfo = { ...Tools.getCenterPoint(video), isLive: video.duration === Infinity };
-      this.setParentWinVideoInfo(videoInfo);
+      const videoInfo = { isLive: video.duration === Infinity };
+      this.syncVideoToParentWin(videoInfo);
     },
-    setParentWinVideoInfo(videoInfo) {
+    syncVideoToParentWin(videoInfo) {
       window.videoInfo = this.videoInfo = videoInfo;
-      if (!Tools.isTopWin()) return Tools.postMessage(window.parent, { videoInfo: { ...videoInfo, iframeSrc: location.href } });
+      if (!Tools.isTopWin()) return Tools.postMessage(window.parent, { videoInfo: { ...videoInfo, iFrame: location.href } });
       Tools.microTask(() => this.setupScriptMenuCommand());
       this.sendTopWinInfo();
     },
@@ -369,8 +341,8 @@
       this.storage = { getItem: _GM_getValue, setItem: _GM_setValue };
     }
     #getFinalKey(suffix) {
-      if ([null, void 0].includes(suffix)) throw new Error("键名后缀不能为空");
-      return suffix.startsWith(this.name) ? suffix : this.name + suffix;
+      if (!suffix) throw new Error(`${this.name} 后缀不能为空！`);
+      return this.name + suffix;
     }
     set(value, key) {
       this.storage.setItem(this.#getFinalKey(key), value);
@@ -384,7 +356,7 @@
     IS_AUTO: new BasicStorage("IS_AUTO_", false, Boolean),
     DETACH_THRESHOLD: new BasicStorage("DETACH_THRESHOLD_", 20, Number),
     CUSTOM_CONTAINER: new BasicStorage("CUSTOM_CONTAINER_", ""),
-    IGNORE_URLS: new BasicStorage("IGNORE_URLS", "")
+    IGNORE_URLS: new BasicStorage("IGNORE_URLS_", "")
   };
   const WebFull = {
     toggleFullscreen() {
@@ -404,7 +376,7 @@
       const parents = Tools.getParents(container, true);
       container instanceof HTMLIFrameElement || parents.length < Storage.DETACH_THRESHOLD.get(location.host) ? parents.forEach((el) => {
         Tools.emitEvent("addStyle", { shadowRoot: el.getRootNode() });
-        Tools.setPart(el, Consts.webFull);
+        Tools.attr(el, Consts.webFull, true);
       }) : this.detachForFullscreen();
       this.ensureWebFullscreen();
     },
@@ -413,36 +385,30 @@
       this.fsParent = Tools.getParent(this.fsWrapper);
       this.fsPlaceholder = document.createElement("div");
       Tools.cloneAttrs(this.fsWrapper, this.fsPlaceholder, ["id", "class", "style"]);
-      Tools.cloneStyle(this.fsWrapper, this.fsPlaceholder, ["position", "width", "height"]);
       this.fsParent.replaceChild(this.fsPlaceholder, this.fsWrapper);
       document.body.insertAdjacentElement("beforeend", this.fsWrapper);
       this.fsWrapper.querySelector("video")?.play();
-      Tools.setPart(this.fsWrapper, Consts.webFull);
+      Tools.attr(this.fsWrapper, Consts.webFull, true);
     },
     exitWebFullscreen() {
       if (!this.fsWrapper) return;
       const { scrollY } = this.fsWrapper;
-      Tools.setStyle(document.documentElement, "scroll-behavior", "auto", "important");
+      Tools.setStyle(this.docElement, "scroll-behavior", "auto", "important");
       if (this.fsParent?.contains(this.fsPlaceholder)) this.fsParent?.replaceChild(this.fsWrapper, this.fsPlaceholder);
-      Tools.querys(`[part*=${Consts.webFull}]`).forEach((el) => Tools.delPart(el, Consts.webFull));
-      requestAnimationFrame(() => (Tools.scrollTop(scrollY), Tools.setStyle(document.documentElement, "scroll-behavior")));
+      Tools.querys(`[${Consts.webFull}]`).forEach((el) => Tools.attr(el, Consts.webFull));
+      requestAnimationFrame(() => (Tools.scrollTop(scrollY), Tools.setStyle(this.docElement, "scroll-behavior")));
       this.videoParents.clear();
       this.fsPlaceholder = this.fsWrapper = this.fsParent = null;
     },
     getVideoHostContainer() {
       if (this.player) return this.getVideoContainer();
-      const videoIFrame = this.getVideoIFrame();
-      if (videoIFrame) return videoIFrame;
-      const ifrs = Tools.getIFrames();
-      const { centerX, centerY } = this?.videoInfo ?? {};
-      return ifrs.length <= 1 ? ifrs[0] : ifrs.find((el) => Tools.isVisible(el) && Tools.pointInElement(centerX, centerY, el));
+      return this.getVideoIFrame() ?? Tools.getIFrames().find(Tools.isVisible);
     },
     getVideoIFrame() {
-      if (!this?.videoInfo?.iframeSrc) return null;
-      const { pathname, search } = new URL(this.videoInfo.iframeSrc);
-      const decoded = decodeURI(search);
-      const partial = decoded.slice(0, decoded.length * 0.8);
-      return Tools.query(`iframe[src*="${pathname + partial}"]`) ?? Tools.query(`iframe[src*="${pathname}"]`);
+      if (!this.videoInfo?.iFrame) return null;
+      const { pathname, search } = new URL(this.videoInfo.iFrame);
+      const partial = ((s) => s.slice(0, s.length * 0.8))(decodeURIComponent(search));
+      return Tools.query(`iframe[src*="${pathname + partial}"]`);
     },
     getVideoContainer() {
       const selector = Storage.CUSTOM_CONTAINER.get(this.topWin?.host)?.trim();
@@ -484,9 +450,10 @@
       const { viewWidth, viewHeight } = this.topWin;
       const elements = [...this.videoParents].reverse();
       for (const element of elements) {
+        if (!this.fsWrapper.contains(element)) continue;
         const { offsetWidth: width, offsetHeight: height } = this.player;
         if (width === viewWidth && height === viewHeight && element.offsetHeight === viewHeight) continue;
-        Tools.setPart(element, Consts.webFull);
+        Tools.attr(element, Consts.webFull, true);
       }
     }
   };
@@ -498,10 +465,10 @@
       this.dispatchShortcutKey(Consts.P);
     },
     async isWebFull(video) {
-      const isWebFull = video.offsetWidth >= this.topWin.viewWidth;
-      if (!isWebFull) return false;
+      const { viewWidth } = this.topWin;
+      if (video.offsetWidth < viewWidth) return false;
       await Tools.sleep(Consts.HALF_SEC);
-      return video.offsetWidth >= this.topWin.viewWidth;
+      return video.offsetWidth >= viewWidth;
     }
   };
   const Ignore = {

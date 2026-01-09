@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         SIGSA 5a - Generador PDF (V37.4 Final - Fix Redondeo Kilos)
+// @name         SIGSA 5a - Generador PDF (V37.5 Final - Fix Redondeo Kilos)
 // @namespace    http://tampermonkey.net/
-// @version      37.4
+// @version      37.5
 // @description  Versión definitiva. Fix: Cálculo de Kilos usa redondeo a 2 decimales para coincidir con límite superior TAB.
 // @author       Jonatan Hernandez & Gemini AI
 // @match        *://*.mspas.gob.gt/*/Sigsa5a/*
@@ -9,8 +9,8 @@
 // @match        *://*.mspas.gob.gt/Sigsa5a/*
 // @match        *://*.mspas.gob.gt/sigsa5a/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/557251/SIGSA%205a%20-%20Generador%20PDF%20%28V374%20Final%20-%20Fix%20Redondeo%20Kilos%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/557251/SIGSA%205a%20-%20Generador%20PDF%20%28V374%20Final%20-%20Fix%20Redondeo%20Kilos%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/557251/SIGSA%205a%20-%20Generador%20PDF%20%28V375%20Final%20-%20Fix%20Redondeo%20Kilos%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/557251/SIGSA%205a%20-%20Generador%20PDF%20%28V375%20Final%20-%20Fix%20Redondeo%20Kilos%29.meta.js
 // ==/UserScript==
 
 (function() {
@@ -1068,7 +1068,7 @@
                     if(val) {
                         doc.setFontSize(7); doc.setTextColor(Palette.TEXT_LABEL); doc.text(lbl, xMom+20, cy);
                         doc.setFontSize(9); doc.setTextColor(Palette.TEXT_PRIMARY);
-                        const lines = doc.splitTextToSize(formatName(val), wMom - 40);
+                        const lines = doc.splitTextToSize(val.trim(), wMom - 40);
                         doc.text(lines, xMom+20, cy+12);
 
                         // RESTAURADO Y MEJORADO: IMPRIMIR FECHA NACIMIENTO + EDAD

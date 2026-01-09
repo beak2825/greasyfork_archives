@@ -392,11 +392,12 @@
      * @param {string} errorMsg 错误信息
      * @param {HTMLElement} linkElement 链接元素
      */
-    const updatePriceDisplay = (placeholder, priceData, errorMsg = 'SteamPY Key价加载失败', linkElement) => {
+    const updatePriceDisplay = (placeholder, priceData, errorMsg = 'SteamPY Key价加载失败', linkElement, includeInQuote = true) => {
         placeholder.className = 'steampy-key-price-container';
         const quoteElement = findParentQuote(linkElement);
 
-        if (quoteElement && quotePrices.has(quoteElement)) {
+        // 如果需要将当前链接从引用块价格中移除（避免重复）
+        if (includeInQuote && quoteElement && quotePrices.has(quoteElement)) {
             const prices = quotePrices.get(quoteElement);
             const newPrices = prices.filter(p => p.link !== linkElement);
             quotePrices.set(quoteElement, newPrices);
@@ -405,7 +406,7 @@
         if (!priceData || !priceData.success || !priceData.result || !priceData.result.content || priceData.result.content.length === 0) {
             placeholder.innerHTML = ` | <span class="steampy-error">${errorMsg}</span>`;
 
-            if (quoteElement) {
+            if (includeInQuote && quoteElement) {
                 const prices = quotePrices.get(quoteElement) || [];
                 prices.push({ link: linkElement, price: 0 });
                 quotePrices.set(quoteElement, prices);
@@ -430,7 +431,7 @@
             </a>
         `;
 
-        if (quoteElement) {
+        if (includeInQuote && quoteElement) {
             const prices = quotePrices.get(quoteElement) || [];
             prices.push({ link: linkElement, price: numericPrice });
             quotePrices.set(quoteElement, prices);
@@ -518,7 +519,7 @@
      * @param {HTMLElement} placeholder 占位符元素
      * @param {HTMLElement} linkElement 链接元素
      */
-    const getPriceWithCacheAndSubId = async (appId, placeholder, linkElement) => {
+    const getPriceWithCacheAndSubId = async (appId, placeholder, linkElement, includeInQuote = true) => {
 
 
         try {
@@ -529,17 +530,17 @@
 
                 priceData = cachedData;
             } else {
-                updatePriceDisplay(placeholder, null, '获取价格中...', linkElement);
+                    updatePriceDisplay(placeholder, null, '获取价格中...', linkElement, includeInQuote);
                 console.log(`[SteamPY价格脚本] 获取价格（AppID: ${appId}）`);
                 priceData = await fetchGamePrice(linkElement.href);
                 if (priceData.success) {
                     CacheUtils.setCache(appId, priceData);
                 }
             }
-            updatePriceDisplay(placeholder, priceData, "", linkElement);
+            updatePriceDisplay(placeholder, priceData, "", linkElement, includeInQuote);
         } catch (err) {
             console.error(`[SteamPY价格脚本] 价格获取失败（AppID: ${appId}）：`, err);
-            updatePriceDisplay(placeholder, null, `获取价格失败: ${err.message}`, linkElement);
+            updatePriceDisplay(placeholder, null, `获取价格失败: ${err.message}`, linkElement, includeInQuote);
         }
     };
 
@@ -629,12 +630,47 @@
     };
 
     /**
+     * 对任意 Steam 商店链接启用鼠标悬停抓取（不计入引用块总价）
+     */
+    const addHoverFetchForSteamLinks = () => {
+        document.addEventListener('mouseover', (event) => {
+            const target = event.target;
+            if (!target) return;
+            const link = (target.closest && target.closest('a[href*="store.steampowered.com/app/"]')) || null;
+            if (!link) return;
+
+            const nextSibling = link.nextElementSibling;
+            if (nextSibling && (nextSibling.classList.contains('steampy-key-price-container') || nextSibling.classList.contains('steampy-key-price-placeholder'))) {
+                return;
+            }
+
+            const appId = link.dataset.appId || extractAppIdFromUrl(link.href);
+            if (!appId) return;
+            link.dataset.appId = appId;
+
+            if (link.dataset.steampyHoverFetched === '1') return;
+            link.dataset.steampyHoverFetched = '1';
+
+            const placeholder = createPricePlaceholder();
+            try {
+                link.parentNode.insertBefore(placeholder, link.nextSibling);
+            } catch (e) {
+                return;
+            }
+
+            // 不将该链接计入引用块总价（includeInQuote = false）
+            getPriceWithCacheAndSubId(appId, placeholder, link, false);
+        }, { capture: true });
+    };
+
+    /**
      * 主初始化函数
      */
     const init = () => {
         CacheUtils.cleanExpiredCache();
         injectStyles();
         initQuoteTotals();
+        addHoverFetchForSteamLinks();
 
         const steamLinks = getAllSteamLinks();
         if (steamLinks.length === 0) {

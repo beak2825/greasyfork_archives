@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              LANraragi 现代主题
 // @namespace    https://github.com/Kelcoin
-// @version           3.3.2
+// @version           3.3.3
 // @description    更现代化、简介、美观的 LANraragi 主题
 // @author            Kelcoin
 // @include           https://lanraragi*/*
@@ -52,17 +52,17 @@
     .tippy-content .caption {
         padding: 0 !important;
         margin: 0 !important;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        backdrop-filter: none !important;
+        background: transparent !important; 
+        border: none !important;            
+        box-shadow: none !important;        
+        backdrop-filter: none !important;   
     }
 
     .tippy-content .caption img {
-        border-radius: 4px !important;
+        border-radius: 4px !important;      
         max-width: 100% !important;
         height: auto !important;
-        display: block !important;
+        display: block !important;          
     }
 
     .stdbtn,
@@ -92,9 +92,9 @@
         outline: none !important;
     }
 
-    .tippy-content div.gt,
-    .id1 div.gt,
-    .caption-tags div.gt {
+    .tippy-content div.gt,   
+    .id1 div.gt,             
+    .caption-tags div.gt {   
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -573,7 +573,7 @@
         width: 95% !important;
         margin: 20px auto !important;
         padding: 30px 40px !important;
-        background: var(--glass-bg) !important;
+        background: var(--glass-bg) !important; 
         border-radius: var(--radius-lg) !important;
         box-shadow: var(--shadow-card) !important;
         border: 1px solid var(--glass-border) !important;
@@ -655,8 +655,8 @@
         box-sizing: border-box !important;
     }
 
-    .stdinput,
-    #editArchiveForm input[type="text"],
+    .stdinput, 
+    #editArchiveForm input[type="text"], 
     #editArchiveForm textarea,
     #editArchiveForm select {
         width: 100% !important;
@@ -672,7 +672,7 @@
         box-shadow: none !important;
     }
 
-    .stdinput:focus,
+    .stdinput:focus, 
     #editArchiveForm textarea:focus,
     #editArchiveForm select:focus {
         border-color: var(--accent-color) !important;
@@ -805,7 +805,7 @@
         padding: 0 5px !important;
         height: 30px !important;
         color: #fff !important;
-        field-sizing: content !important;
+        field-sizing: content !important; 
     }
 
     .tagger-new input:focus {
@@ -862,7 +862,7 @@
     }
 
     #plugin-block .plugin-row {
-        display: inline-flex;
+        display: inline-flex; 
         align-items: center;
         justify-content: center;
         gap: 8px;
@@ -871,7 +871,7 @@
     .plugin-row {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: center; 
         gap: 8px;
     }
 
@@ -1010,11 +1010,11 @@
         width: 100% !important;
         float: none !important;
         display: block !important;
-        max-width: 1200px !important;
+        max-width: 1200px !important; 
     }
 
     form#editPluginForm .left-column {
-        margin: 0 auto 0 auto !important;
+        margin: 0 auto 0 auto !important; 
     }
 
     form#editPluginForm .right-column {
@@ -1158,7 +1158,7 @@
         display: none !important;
     }
 
-    #editConfigForm table,
+    #editConfigForm table, 
     #editConfigForm tbody {
         display: block !important;
         width: 100% !important;
@@ -1471,7 +1471,7 @@
     }
 
     .collapsible-body {
-        text-align: center !important;
+        text-align: center !important; 
     }
 
     .collapsible-body > h1.ih {
@@ -1507,7 +1507,7 @@
         flex-direction: column !important;
         align-items: center !important;
         width: 95% !important;
-        max-width: 1200px !important;
+        max-width: 1200px !important; 
         margin: 20px auto !important;
     }
 
@@ -1572,11 +1572,11 @@
     }
 
     div.ido:has(> #editConfigForm) > .left-column .logo-container,
-    div.ido:has(> #editConfigForm) > .left-column h1,
+    div.ido:has(> #editConfigForm) > .left-column h1, 
     div.ido:has(> #editConfigForm) > .left-column h2,
     div.ido:has(> #editConfigForm) > .left-column br,
     div.ido.admin-settings-mode > .left-column .logo-container,
-    div.ido.admin-settings-mode > .left-column h1,
+    div.ido.admin-settings-mode > .left-column h1, 
     div.ido.admin-settings-mode > .left-column h2,
     div.ido.admin-settings-mode > .left-column br {
         display: none !important;
@@ -1589,7 +1589,7 @@
         color: var(--text-primary) !important;
         height: 48px !important;
         padding: 0 20px !important;
-        margin: 0 !important;
+        margin: 0 !important; 
         flex: 1 1 18% !important;
         min-width: 140px !important;
         background: rgba(30, 35, 45, 0.6) !important;
@@ -1616,8 +1616,8 @@
     div.ido.admin-settings-mode > .left-column #duplicate { order: 2; }
 
     div.ido:has(> #editConfigForm) > .left-column #save,
-    div.ido.admin-settings-mode > .left-column #save {
-        order: 3;
+    div.ido.admin-settings-mode > .left-column #save { 
+        order: 3; 
         #background: rgba(74, 159, 240, 0.15) !important;
         border-color: var(--accent-color) !important;
         font-weight: bold !important;
@@ -1637,7 +1637,7 @@
     .config-td {
         display: flex !important;
         flex-direction: row !important;
-        align-items: flex-start !important;
+        align-items: flex-start !important; 
         justify-content: flex-start !important;
         flex-wrap: nowrap !important;
         gap: 20px !important;
@@ -1647,11 +1647,11 @@
     }
 
     .config-control-wrapper {
-        flex: 0 0 auto !important;
-        width: 240px !important;
+        flex: 0 0 auto !important; 
+        width: 240px !important;   
         max-width: 240px !important;
         display: flex !important;
-        align-items: center !important;
+        align-items: center !important; 
         min-height: 38px !important;
         position: relative !important;
     }
@@ -1663,7 +1663,7 @@
     .config-control-wrapper:has(textarea) {
         width: 100% !important;
         max-width: 100% !important;
-        flex-direction: column !important;
+        flex-direction: column !important; 
         align-items: flex-start !important;
         gap: 8px !important;
     }
@@ -1678,7 +1678,7 @@
         font-size: 14px !important;
         line-height: 1.6 !important;
         color: var(--text-secondary) !important;
-        padding-top: 4px !important;
+        padding-top: 4px !important; 
         cursor: text !important;
     }
 
@@ -1753,16 +1753,16 @@
 
     .config-td {
         display: flex !important;
-        align-items: center !important;
-        gap: 15px !important;
+        align-items: center !important; 
+        gap: 15px !important;           
     }
 
     .config-desc-text {
-        font-size: 14px !important;
+        font-size: 14px !important;     
         color: var(--text-secondary) !important;
         line-height: 1.4 !important;
-        cursor: default !important;
-        flex: 1;
+        cursor: default !important;     
+        flex: 1;                        
         text-align: left;
     }
 
@@ -1779,13 +1779,13 @@
         box-shadow: var(--shadow-hover) !important;
         padding: 6px 0 !important;
         font-family: inherit !important;
-        min-width: 140px !important;
+        min-width: 140px !important; 
     }
 
     .context-menu-item {
         background: transparent !important;
         color: var(--text-primary) !important;
-        padding: 10px 16px !important;
+        padding: 10px 16px !important; 
         line-height: 1.5 !important;
         font-size: 14px !important;
         transition: all 0.1s ease;
@@ -1812,7 +1812,7 @@
     }
 
     .context-menu-item.context-menu-icon {
-        background-image: none !important;
+        background-image: none !important; 
     }
 
     .context-menu-item > span {
@@ -1861,7 +1861,7 @@
         width: auto !important;
         min-width: 320px !important;
         max-width: 480px !important;
-        display: grid !important;
+        display: grid !important; 
     }
 
     div.swal2-popup .swal2-range,
@@ -1927,14 +1927,14 @@
         box-shadow: none !important;
         transition: var(--transition-smooth) !important;
         outline: none !important;
-        margin: 0 !important;
+        margin: 0 !important; 
     }
 
     .swal2-styled.swal2-cancel {
         background: rgba(12, 14, 20, 0.6) !important;
         border-color: var(--glass-border) !important;
         color: var(--text-primary) !important;
-        font-size: 0 !important;
+        font-size: 0 !important; 
     }
 
     .swal2-styled.swal2-cancel::after {
@@ -1982,8 +1982,8 @@
     }
 
     #DataTables_Table_0 {
-        border-collapse: separate !important;
-        border-spacing: 0 6px !important;
+        border-collapse: separate !important; 
+        border-spacing: 0 6px !important;     
         #margin-top: 10px !important;
         background: transparent !important;
     }
@@ -2005,8 +2005,8 @@
         position: absolute;
         z-index: -1;
         top: 0;
-        bottom: 0;
-        left: 0;
+        bottom: 0; 
+        left: 0; 
         right: 10px;
         background: rgba(12, 14, 20, 0.4) !important;
         border-bottom: 1px solid var(--glass-border) !important;
@@ -2019,23 +2019,23 @@
 
     #DataTables_Table_0 tbody tr {
         background: var(--glass-bg) !important;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px); 
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         transition: transform 0.2s ease, background 0.2s ease !important;
     }
 
     #DataTables_Table_0 tbody tr:hover {
         background: var(--glass-bg-hover) !important;
-        transform: scale(1.005) !important;
+        transform: scale(1.005) !important; 
         z-index: 5;
         position: relative;
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-        border: 1px solid var(--accent-color) !important;
+        border: 1px solid var(--accent-color) !important; 
     }
 
     #DataTables_Table_0 td {
         padding: 12px 16px !important;
-        border: none !important;
+        border: none !important; 
         vertical-align: middle !important;
         color: var(--text-secondary) !important;
         font-size: 0.9rem !important;
@@ -2044,7 +2044,7 @@
     #DataTables_Table_0 tbody tr td:first-child {
         border-top-left-radius: 8px;
         border-bottom-left-radius: 8px;
-        border-left: 1px solid var(--glass-border);
+        border-left: 1px solid var(--glass-border); 
     }
     #DataTables_Table_0 tbody tr td:last-child {
         border-top-right-radius: 8px;
@@ -2102,7 +2102,7 @@
 
     #DataTables_Table_0 td.title {
         position: relative;
-        max-width: 40vw;
+        max-width: 40vw; 
         overflow: hidden;
     }
 
@@ -2110,7 +2110,7 @@
         display: block !important;
         width: 90%;
         white-space: nowrap !important;
-        overflow: hidden !important;
+        overflow: hidden !important;  
         text-overflow: ellipsis !important;
         padding-right: 10px;
     }
@@ -2125,11 +2125,11 @@
 
     .dataTables_wrapper .dataTables_paginate {
         display: flex !important;
-        justify-content: center !important;
+        justify-content: center !important; 
         align-items: center !important;
         width: 100% !important;
-        float: none !important;
-        margin-top: 20px !important;
+        float: none !important; 
+        margin-top: 20px !important; 
         padding: 0 !important;
         text-align: center !important;
     }
@@ -2204,7 +2204,7 @@
 
     #urlForm {
         width: 100% !important;
-        min-height: 240px !important;
+        min-height: 240px !important; 
         box-sizing: border-box !important;
         margin: 10px 0 20px 0 !important;
         padding: 16px !important;
@@ -2219,7 +2219,7 @@
         font-size: 13px !important;
         line-height: 1.6 !important;
         white-space: pre !important;
-        overflow-x: auto !important;
+        overflow-x: auto !important; 
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
         outline: none !important;
     }
@@ -2228,7 +2228,7 @@
         background-color: rgba(12, 14, 20, 0.8) !important;
         color: #e3e9f3 !important;
         border-color: #4a9ff0 !important;
-        box-shadow:
+        box-shadow: 
             0 0 0 3px rgba(74, 159, 240, 0.15),
             inset 0 2px 6px rgba(0, 0, 0, 0.5) !important;
     }
@@ -2246,6 +2246,31 @@
     }
     #urlForm::-webkit-scrollbar-corner {
         background: transparent;
+    }
+
+    #i2 > *:not(#archive-title) {
+        display: none !important;
+    }
+
+    #toggle-full-screen {
+        display: none !important;
+    }
+
+    .toggle-auto-next-page {
+        display: none !important;
+    }
+
+    .page-link[value="left"],
+    .page-link[value="right"] {
+        display: none !important;
+    }
+
+    .file-info {
+        display: none !important;
+    }
+
+    #i7 {
+        display: none !important;
     }
 
     @media (min-width: 768px) {
@@ -2363,7 +2388,7 @@
             position: relative !important;
             left: 31% !important;
             transform: translateX(-50%) !important;
-            white-space: nowrap !important;
+            white-space: nowrap !important; 
         }
 
         #thumbnail-crop:checked ~ label[for="thumbnail-crop"] {
@@ -2416,7 +2441,7 @@
 
     .table-options .thumbnail-options,
     .table-options > div:last-child {
-        display: inline-flex;
+        display: inline-flex; 
         align-items: center;
         gap: 10px;
         white-space: nowrap;
@@ -2766,12 +2791,13 @@
         width: 100% !important;
         height: 240px !important;
         overflow: hidden !important;
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
         margin-bottom: 6px !important;
-        background: transparent !important;
+        background: transparent !important; 
         #box-shadow: none !important;
         border: none !important;
         border-radius: var(--radius-sm);
-        position: relative !important;
+        position: relative !important; 
     }
 
     div.id3 a {
@@ -2799,12 +2825,12 @@
     }
 
     body.crop-mode div.id3 img {
-        object-fit: cover !important;
+        object-fit: cover !important;     
         object-position: top center !important;
-        width: 100% !important;
-        height: 100% !important;
-        max-width: none !important;
-        max-height: none !important;
+        width: 100% !important;          
+        height: 100% !important;         
+        max-width: none !important;       
+        max-height: none !important;      
     }
 
     div.id4 {
@@ -2881,27 +2907,27 @@
         background-color: transparent !important;
         box-shadow: none !important;
         border: none !important;
-        width: auto !important;
-        max-width: 95vw !important;
+        width: auto !important; 
+        max-width: 95vw !important; 
     }
 
     div[id^="tippy-"] .tippy-content {
         position: relative !important;
         z-index: 1 !important;
         overflow: hidden !important;
-
+        
         background: var(--glass-bg) !important;
         border: 1px solid var(--glass-border) !important;
         box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6) !important;
         backdrop-filter: blur(16px) !important;
         -webkit-backdrop-filter: blur(16px) !important;
-
+        
         border-radius: 10px !important;
         padding: 6px !important;
         text-align: left !important;
         width: fit-content !important;
         height: fit-content !important;
-        max-width: 450px !important;
+        max-width: 450px !important; 
     }
 
     .tippy-box > .tippy-content::before {
@@ -2972,7 +2998,7 @@
     div[id^="tippy-"] .tippy-content div.gt {
         display: inline-flex !important;
         align-items: center !important;
-        padding: 2 6px !important;
+        padding: 2 6px !important; 
         margin: 1px 2px !important;
         min-height: 21px !important;
         background: rgba(10, 12, 18, 0.7) !important;
@@ -3039,6 +3065,10 @@
     }
 
     @media (max-width: 768px) {
+        div.sni img {
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+        }
+
         .tippy-box {
             max-width: 96vw !important;
         }
@@ -3102,7 +3132,7 @@
         }
 
         #archivePagesOverlay .stdbtn {
-            margin: 0 !important;
+            margin: 0 !important; 
         }
 
         #archivePagesOverlay #tagContainer br {
@@ -3149,13 +3179,13 @@
 
         #archivePagesOverlay #tagContainer > div > div[style*="inline-block"] {
             display: flex !important;
-            flex-direction: row !important;
+            flex-direction: row !important; 
             flex-wrap: wrap !important;
             justify-content: center !important;
             width: 100% !important;
             gap: 4px !important;
             margin-top: 10px !important;
-            margin-left: auto !important;
+            margin-left: auto !important; 
             margin-right: auto !important;
         }
 
@@ -3301,13 +3331,13 @@
 
         #DataTables_Table_0 tbody tr {
             display: flex !important;
-            flex-direction: row !important;
-            flex-wrap: wrap !important;
+            flex-direction: row !important; 
+            flex-wrap: wrap !important;     
             align-items: flex-start !important;
             align-content: flex-start !important;
             position: relative !important;
             height: auto !important;
-            min-height: 90px !important;
+            min-height: 90px !important;   
             margin-bottom: 12px !important;
             padding: 12px 12px 12px 12px !important;
 
@@ -3329,18 +3359,18 @@
         }
 
         #DataTables_Table_0 td.title {
-            flex: 1 1 100% !important;
+            flex: 1 1 100% !important; 
             width: 100% !important;
             max-width: 100% !important;
-            order: 1 !important;
+            order: 1 !important;       
             margin-bottom: 10px !important;
-            padding-right: 50px !important;
+            padding-right: 50px !important; 
             padding-left: 2px !important;
-            display: block !important;
+            display: block !important; 
         }
 
         #DataTables_Table_0 td.title a {
-            white-space: normal !important;
+            white-space: normal !important; 
             font-size: 1rem !important;
             font-weight: 600 !important;
             line-height: 1.4 !important;
@@ -3350,11 +3380,11 @@
 
         #DataTables_Table_0 td.customheader1,
         #DataTables_Table_0 td.customheader2 {
-            flex: 0 0 50% !important;
+            flex: 0 0 50% !important;   
             width: 50% !important;
             max-width: 50% !important;
-            order: 2 !important;
-            display: flex !important;
+            order: 2 !important;        
+            display: flex !important;   
             align-items: center !important;
 
             font-size: 0.8rem !important;
@@ -3374,12 +3404,12 @@
         }
 
         #DataTables_Table_0 td.tags {
-            flex: 1 1 100% !important;
+            flex: 1 1 100% !important; 
             width: 100% !important;
-            order: 3 !important;
+            order: 3 !important;       
             margin-top: 4px !important;
             display: block !important;
-            overflow: hidden !important;
+            overflow: hidden !important; 
         }
 
         #DataTables_Table_0 td.tags {
@@ -3387,7 +3417,7 @@
             flex-wrap: nowrap !important;
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
+            scrollbar-width: none; 
         }
         #DataTables_Table_0 td.tags::-webkit-scrollbar { display: none; }
 
@@ -3581,7 +3611,7 @@
                 padding: 0 !important;
                 margin: 0 !important;
                 border: none !important;
-                text-align: center !important;
+                text-align: center !important; 
             }
 
             div.ido.admin-login-mode tr:first-child td:first-child {
@@ -3602,7 +3632,7 @@
                 box-shadow: inset 0 2px 4px rgba(0,0,0,0.2) !important;
                 margin-bottom: 20px !important;
                 text-align: center !important;
-                box-sizing: border-box !important;
+                box-sizing: border-box !important; 
             }
 
             div.ido.admin-login-mode input[type="password"]::placeholder {
@@ -3626,7 +3656,7 @@
 
             div.ido.admin-login-mode input[type="submit"] {
                 width: 100% !important;
-                min-width: 120px !important;
+                min-width: 120px !important; 
                 height: 44px !important;
                 background: var(--accent-color) !important;
                 color: #fff !important;
@@ -3638,7 +3668,7 @@
                 transition: all 0.2s ease !important;
                 box-shadow: 0 4px 12px rgba(74, 159, 240, 0.3) !important;
                 margin-top: 5px !important;
-                appearance: none !important;
+                appearance: none !important; 
                 -webkit-appearance: none !important;
             }
 
@@ -3770,7 +3800,7 @@
         const leftColumn = document.querySelector('.left-column');
         if (leftColumn) {
             Array.from(leftColumn.childNodes).forEach(node => {
-                if (node.nodeType === 3) {
+                if (node.nodeType === 3) { 
                     node.remove();
                 }
             });
@@ -3834,7 +3864,7 @@
             } else {
                 optionsPanel.classList.remove('scroll-hidden');
             }
-            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;  
         }, { passive: true });
     }
 
@@ -3847,7 +3877,7 @@
             if (td.querySelector('#shinobu-ok') || td.querySelector('#shinobu-ko') || td.innerHTML.includes('PID:')) {
                 td.dataset.isStatusRow = "true";
                 td.dataset.layoutFixed = 'true';
-                return;
+                return; 
             }
 
             const controlWrapper = document.createElement('div');
@@ -3864,7 +3894,7 @@
                 }
 
                 if (node.nodeName === 'BR') {
-                    return;
+                    return; 
                 }
 
                 const isControl = ['INPUT', 'SELECT', 'TEXTAREA'].includes(node.nodeName);
@@ -3880,7 +3910,7 @@
                 }
             });
 
-            td.innerHTML = '';
+            td.innerHTML = '';  
             td.appendChild(controlWrapper);
             td.appendChild(descWrapper);
 
@@ -3983,7 +4013,7 @@
         });
 
         (function fixPluginSection() {
-            const pluginCell = document.getElementById('plugin_table');
+            const pluginCell = document.getElementById('plugin_table');   
             const pluginSelect = document.getElementById('plugin');
             const runButton = document.getElementById('run-plugin');
             const helpButton = document.getElementById('show-help');
@@ -4105,8 +4135,8 @@
                 subtree: true
             });
         }
-        setTimeout(() => {
-            document.body.classList.add("panel-ready");
+        setTimeout(() => { 
+            document.body.classList.add("panel-ready"); 
         }, 500);
     }
 

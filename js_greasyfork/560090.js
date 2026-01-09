@@ -7,9 +7,8 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
-// @version     1.02更新复制，更新慢病健康教育处方20250702，20251114
+// @version     1.03
 // @author      万水千山总能旗开得胜
-// @license MIT
 // @description 2025/2/4 18:31:26
 // @downloadURL https://update.greasyfork.org/scripts/560090/%E9%98%B3%E5%85%89%E5%8A%A9%E6%89%8B%E6%AD%A3%E5%BC%8F%E7%89%88.user.js
 // @updateURL https://update.greasyfork.org/scripts/560090/%E9%98%B3%E5%85%89%E5%8A%A9%E6%89%8B%E6%AD%A3%E5%BC%8F%E7%89%88.meta.js
@@ -542,6 +541,70 @@
   function akabotang() {
 
     const TARGET_TEXT2 = '13.阿卡波糖';
+    let clicked2 = false;
+
+    const clickSaveSpan2 = () => {
+        if (clicked2) return;
+
+        // 主文档检测
+        const spans2 = [...document.querySelectorAll('span')];
+        const saveSpan2 = spans2.find(span2 =>
+            span2.textContent.trim() === TARGET_TEXT2 &&
+            getComputedStyle(span2).display !== 'none' &&
+            span2.offsetParent !== null
+        );
+
+        if (saveSpan2) {
+            saveSpan2.click();
+            console.log('SPAN保存按钮已点击（仅一次）');
+            clicked2 = true;
+        }
+    };
+
+    // 初始检测
+    clickSaveSpan2();
+
+    // 短时间监听DOM变化（3秒后自动停止）
+    const observer2 = new MutationObserver(clickSaveSpan2);
+    observer2.observe(document.body, { subtree: true, childList: true });
+    setTimeout(() => observer2.disconnect(), 3000);
+};
+//设定共同操作保存操作lvbigelei()，为阿卡波糖片医嘱点击使用
+  function lvbigelei() {
+
+    const TARGET_TEXT2 = '15.氯吡格雷';
+    let clicked2 = false;
+
+    const clickSaveSpan2 = () => {
+        if (clicked2) return;
+
+        // 主文档检测
+        const spans2 = [...document.querySelectorAll('span')];
+        const saveSpan2 = spans2.find(span2 =>
+            span2.textContent.trim() === TARGET_TEXT2 &&
+            getComputedStyle(span2).display !== 'none' &&
+            span2.offsetParent !== null
+        );
+
+        if (saveSpan2) {
+            saveSpan2.click();
+            console.log('SPAN保存按钮已点击（仅一次）');
+            clicked2 = true;
+        }
+    };
+
+    // 初始检测
+    clickSaveSpan2();
+
+    // 短时间监听DOM变化（3秒后自动停止）
+    const observer2 = new MutationObserver(clickSaveSpan2);
+    observer2.observe(document.body, { subtree: true, childList: true });
+    setTimeout(() => observer2.disconnect(), 3000);
+};
+//设定共同操作保存操作jiushisuanmei()，为阿卡波糖片医嘱点击使用
+  function jiushisuanmei() {
+
+    const TARGET_TEXT2 = '8.酒石酸';
     let clicked2 = false;
 
     const clickSaveSpan2 = () => {
@@ -1340,7 +1403,7 @@ const createTooltip = () => {
         }
         .triple5 {
 
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    /*background: linear-gradient(135deg, #667eea, #764ba2);*/
     color="white";
     width="70px"
     height="30px"
@@ -1415,7 +1478,7 @@ const createTooltip = () => {
         //triple5.textContent = 'Triple5';
         triple5.id="xmg-container"
         triple5.innerText="口服药";
-        //triple5.style.background="#ebb563";//颜色弄得差不多吧
+        triple5.style.background="#ebb669";//颜色弄得差不多吧
         triple5.style.color="white";
         triple5.style.width="70px"
         triple5.style.height="30px"
@@ -1559,6 +1622,272 @@ const createTooltip = () => {
     }
 
         submenu.append(triple6, triple7, triple8,triple9,triple9,triple10,triple11,triple12,triple13,triple14,triple15,triple16,triple1,triple2);
+        container.append(triple5, submenu);
+
+        return container;
+    };
+
+    // 主执行函数
+    const init = () => {
+        try {
+            const target = document.querySelector("#pane-DOC_ORD > div:nth-child(2) > div > div > div");
+            if (target && target.parentElement) {
+                const buttonGroup = createButtonGroup();
+                target.parentElement.appendChild(buttonGroup);
+                console.log('Triple按钮组已成功添加');
+            }
+        } catch (e) {
+            console.error('Triple按钮添加失败:', e);
+        }
+    };
+
+    // 延迟执行确保DOM加载完成
+    setTimeout(init, 100);
+})();
+
+
+ //口服药2
+      (function() {
+    'use strict';
+
+    // 添加CSS样式
+    GM_addStyle(`
+        .triple-container {
+            position: relative;
+            display: inline-block;
+            margin: 0px;/*四周边距*/
+            z-index: 9999;
+        }
+        .triple5 {
+
+    /*background: linear-gradient(135deg, #667eea, #00f2fe);*/
+    color="white";
+    width="70px"
+    height="30px"
+
+    border = '0.1px solid white';// 边框大小为1像素，实线，白色
+          border-radius: 3px;
+          /*padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);*/
+        }
+        .triple5:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        .triple-submenu {
+          z-index: 9999;
+            position: absolute;
+            /*bottom: -0px;*/
+            /*top: 0%;  关键修改：改为从父元素底部开始计算 */
+            left: 0;
+            display: none;
+            flex-direction: column;/*按钮从上到下排列*/
+            gap: 1px;/*按钮之间的距离*/
+            background: white;
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            min-width: 140px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+          /*margin-top: 5px;  添加与按钮的间距 */
+        }
+        .triple-container:hover .triple-submenu {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .triple6, .triple7{
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 13px;
+          z-index: 9999;
+        }
+        .triple6:hover, .triple7:hover{
+            transform: translateX(5px);
+            opacity: 0.9;
+        }
+    `);
+
+    // 创建按钮组件
+    const createButtonGroup = () => {
+        const container = document.createElement('div');
+        container.className = 'triple-container';
+        container.id="xmg-container"
+
+        const triple5 = document.createElement('button');
+        triple5.className = 'triple5';
+        //triple5.textContent = 'Triple5';
+
+        triple5.id="xmg-container"
+        triple5.innerText="口服药2";
+        triple5.style.background="#ebb483";//颜色弄得差不多吧
+        triple5.style.color="white";
+        triple5.style.width="70px"
+        triple5.style.height="30px"
+        triple5.style.borderRadius = '3px'
+        triple5.style.border = '0.1px solid white';
+
+        const submenu = document.createElement('div');
+        submenu.className = 'triple-submenu';
+        submenu.id="xmg-container"
+
+        const triple6 = document.createElement('button');
+        triple6.className = 'triple6';
+        triple6.textContent = '氯吡格雷';
+        triple6.id="xmg-container"
+      triple6.onclick=function(){
+      mubanyinyong()
+        document.querySelector("#tab-1285303").click();//点击个人
+        setTimeout(function () {
+          lvbigelei()
+          lvbigelei()
+        }, 200 )
+      }
+
+        const triple7 = document.createElement('button');
+        triple7.className = 'triple7';
+        triple7.textContent = '酒石酸美';
+        triple7.id="xmg-container"
+      triple7.onclick=function(){
+      mubanyinyong()
+        document.querySelector("#tab-1285303").click();//点击个人
+        setTimeout(function () {
+          jiushisuanmei()
+          jiushisuanmei()
+        }, 200 )
+        }
+
+        const triple8 = document.createElement('button');
+        triple8.className = 'triple8';
+        triple8.textContent = '恩格列净';
+        triple8.id="xmg-container"
+      triple8.onclick=function(){
+      document.querySelector("body > div.quote-template-modal.v-transfer-dom > div.ivu-modal-wrap.undefined.sun-responsive-modal > div > div > div.ivu-modal-body > div > div > div.leftTreeClass > div.el-scrollbar > div.el-scrollbar__wrap > div > div > div:nth-child(1) > div.el-tree-node__children > div:nth-child(12) > div.el-tree-node__content > span.el-tree-node__label").click()
+      document.querySelector("body > div.quote-template-modal.v-transfer-dom > div.ivu-modal-wrap.undefined.sun-responsive-modal > div > div > div.ivu-modal-body > div > div > div.leftTreeClass > div.el-scrollbar > div.el-scrollbar__wrap > div > div > div:nth-child(1) > div.el-tree-node__children > div:nth-child(12) > div.el-tree-node__content > span.el-tree-node__label").click()
+    }
+      const triple9 = document.createElement('button');
+        triple9.className = 'triple9';
+        triple9.textContent = '阿司匹林';
+        triple9.id="xmg-container"
+      triple9.onclick=function(){
+      document.querySelector("body > div.quote-template-modal.v-transfer-dom > div.ivu-modal-wrap.undefined.sun-responsive-modal > div > div > div.ivu-modal-body > div > div > div.leftTreeClass > div.el-scrollbar > div.el-scrollbar__wrap > div > div > div:nth-child(1) > div.el-tree-node__children > div:nth-child(13) > div.el-tree-node__content > span.el-tree-node__label").click()
+      document.querySelector("body > div.quote-template-modal.v-transfer-dom > div.ivu-modal-wrap.undefined.sun-responsive-modal > div > div > div.ivu-modal-body > div > div > div.leftTreeClass > div.el-scrollbar > div.el-scrollbar__wrap > div > div > div:nth-child(1) > div.el-tree-node__children > div:nth-child(13) > div.el-tree-node__content > span.el-tree-node__label").click()
+    }
+      const triple10 = document.createElement('button');
+        triple10.className = 'triple10';
+        triple10.textContent = '阿托伐';
+        triple10.id="xmg-container"
+      triple10.onclick=function(){
+      document.querySelector("body > div.quote-template-modal.v-transfer-dom > div.ivu-modal-wrap.undefined.sun-responsive-modal > div > div > div.ivu-modal-body > div > div > div.leftTreeClass > div.el-scrollbar > div.el-scrollbar__wrap > div > div > div:nth-child(1) > div.el-tree-node__children > div:nth-child(14) > div.el-tree-node__content > span.el-tree-node__label").click()
+      document.querySelector("body > div.quote-template-modal.v-transfer-dom > div.ivu-modal-wrap.undefined.sun-responsive-modal > div > div > div.ivu-modal-body > div > div > div.leftTreeClass > div.el-scrollbar > div.el-scrollbar__wrap > div > div > div:nth-child(1) > div.el-tree-node__children > div:nth-child(14) > div.el-tree-node__content > span.el-tree-node__label").click()
+    }
+      const triple11 = document.createElement('button');
+        triple11.className = 'triple11';
+        triple11.textContent = '丹参片';
+        triple11.id="xmg-container"
+      triple11.onclick=function(){
+      mubanyinyong()
+        document.querySelector("#tab-1285303").click();//点击个人
+        setTimeout(function () {
+          danshenpian()
+      danshenpian()
+        }, 200 )
+
+    }
+      const triple12 = document.createElement('button');
+        triple12.className = 'triple12';
+        triple12.textContent = '奥美拉唑';
+        triple12.id="xmg-container"
+        triple12.onclick=function(){
+      mubanyinyong()
+          document.querySelector("#tab-1285303").click();//点击个人
+        setTimeout(function () {
+          aomeilazuo()
+      aomeilazuo()
+        }, 200 )
+    }
+      const triple13 = document.createElement('button');
+        triple13.className = 'triple13';
+        triple13.textContent = '氨氯地平片';
+        triple13.id="xmg-container"
+        triple13.onclick=function(){
+      mubanyinyong()
+          document.querySelector("#tab-1285303").click();//点击个人
+        setTimeout(function () {
+          anlvdiping()
+          anlvdiping()
+        }, 200 )
+    }
+      const triple14 = document.createElement('button');
+        triple14.className = 'triple14';
+        triple14.textContent = '琥珀酸美';
+        triple14.id="xmg-container"
+        triple14.onclick=function(){
+      mubanyinyong()
+          document.querySelector("#tab-1285303").click();//点击个人
+        setTimeout(function () {
+          huposuanmei()
+          huposuanmei()
+        }, 200 )
+    }
+      const triple15 = document.createElement('button');
+        triple15.className = 'triple15';
+        triple15.textContent = '硝苯（控）';
+        triple15.id="xmg-container"
+        triple15.onclick=function(){
+      mubanyinyong()
+          document.querySelector("#tab-1285303").click();//点击个人
+        setTimeout(function () {
+          xiaokong()
+          xiaokong()
+        }, 200 )
+    }
+      const triple16 = document.createElement('button');
+        triple16.className = 'triple16';
+        triple16.textContent = '阿卡波糖';
+        triple16.id="xmg-container"
+        triple16.onclick=function(){
+      mubanyinyong()
+          document.querySelector("#tab-1285303").click();//点击个人
+        setTimeout(function () {
+          akabotang()
+          akabotang()
+        }, 200 )
+    }
+      const triple1 = document.createElement('button');
+        triple1.className = 'triple1';
+        triple1.textContent = '输液';
+        triple1.id="xmg-container"
+      triple1.onclick=function(){
+      document.querySelector("body > div.quote-template-modal.v-transfer-dom > div.ivu-modal-wrap.undefined.sun-responsive-modal > div > div > div.ivu-modal-body > div > div > div.leftTreeClass > div.el-scrollbar > div.el-scrollbar__wrap > div > div > div:nth-child(1) > div.el-tree-node__children > div:nth-child(9) > div.el-tree-node__content > span.el-tree-node__label").click()
+      document.querySelector("body > div.quote-template-modal.v-transfer-dom > div.ivu-modal-wrap.undefined.sun-responsive-modal > div > div > div.ivu-modal-body > div > div > div.leftTreeClass > div.el-scrollbar > div.el-scrollbar__wrap > div > div > div:nth-child(1) > div.el-tree-node__children > div:nth-child(9) > div.el-tree-node__content > span.el-tree-node__label").click()
+    }
+      const triple2 = document.createElement('button');
+        triple2.className = 'triple2';
+        triple2.textContent = '发热小针';
+        triple2.id="xmg-container"
+      triple2.onclick=function(){
+      document.querySelector("body > div.quote-template-modal.v-transfer-dom > div.ivu-modal-wrap.undefined.sun-responsive-modal > div > div > div.ivu-modal-body > div > div > div.leftTreeClass > div.el-scrollbar > div.el-scrollbar__wrap > div > div > div:nth-child(1) > div.el-tree-node__children > div:nth-child(15) > div.el-tree-node__content > span.el-tree-node__label").click()
+      document.querySelector("body > div.quote-template-modal.v-transfer-dom > div.ivu-modal-wrap.undefined.sun-responsive-modal > div > div > div.ivu-modal-body > div > div > div.leftTreeClass > div.el-scrollbar > div.el-scrollbar__wrap > div > div > div:nth-child(1) > div.el-tree-node__children > div:nth-child(15) > div.el-tree-node__content > span.el-tree-node__label").click()
+    }
+
+        submenu.append(triple6, triple7);
         container.append(triple5, submenu);
 
         return container;

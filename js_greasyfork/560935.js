@@ -1,33 +1,39 @@
 // ==UserScript==
-// @name         HALO Armory Tracker Pro (Alien UI) - V2 Enhanced - FIXED
+// @name         HALO Armory Tracker Pro (Alien UI) - Torn Log ID Fix
 // @namespace    http://tampermonkey.net/
-// @version      HALO.5.9
-// @description  Faction armory tracker with V2 countdown scheduler and alien UI - Fixed medical items, V2 mutex, price protection
+// @version      HALO.6.1
+// @description  Faction armory tracker with Torn log ID deduplication
 // @author       Nova
 // @match        https://www.torn.com/*
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM_deleteValue
 // @connect      api.torn.com
-// @downloadURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20V2%20Enhanced%20-%20FIXED.user.js
-// @updateURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20V2%20Enhanced%20-%20FIXED.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20Torn%20Log%20ID%20Fix.user.js
+// @updateURL https://update.greasyfork.org/scripts/560935/HALO%20Armory%20Tracker%20Pro%20%28Alien%20UI%29%20-%20Torn%20Log%20ID%20Fix.meta.js
 // ==/UserScript==
 
 (function(){
 "use strict";
 
 /* ---------- DEBUG MODE ---------- */
-const DEBUG_MODE = false; // Set to true for troubleshooting
+const DEBUG_MODE = false;
 
 /* ---------- CONFIG ---------- */
 const factionIds = ["48418"];
-const REFRESH_MS = 45000; // V1: 45 seconds
-const V2_INTERVAL_MS = 6 * 60 * 60 * 1000; // V2: 6 hours
-const PRICE_CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+const REFRESH_MS = 45000;
+const V2_INTERVAL_MS = 6 * 60 * 60 * 1000;
+const PRICE_CACHE_TTL = 30 * 60 * 1000;
 const PROCESSED_LOGS_PRUNE_DAYS = 7;
 const V2_MARKERS_PRUNE_DAYS = 3;
 const MAX_V2_PAGES = 20;
-const ZERO_BALANCE_ARCHIVE_DAYS = 30; // Archive users after 30 days inactive
+
+/* ---------- RETENTION SETTINGS ---------- */
+const ACTIVE_STORAGE_DAYS = 90;
+const ARCHIVE_SUMMARY_DAYS = 730;
+const ZERO_BALANCE_ARCHIVE_DAYS = 30;
+const AUTO_CLEANUP_CHECK_DAYS = 7;
 
 /* ---------- FACTION RULES ---------- */
 const FREE_ITEMS = [
@@ -35,14 +41,13 @@ const FREE_ITEMS = [
     "lollipop", "sweet hearts", "blood bag", "empty blood bag"
 ];
 
-// UPDATED: Correct Torn item names
 const MEDICAL_ITEMS = [
-    "first aid kit",        // Torn: "First Aid Kit"
-    "small first aid kit",  // Torn: "Small First Aid Kit"
-    "morphine",             // Torn: "Morphine"
-    "ipecac syrup",         // Torn: "Ipecac Syrup"
-    "neumune tablet",       // Torn: "Neumune Tablet"
-    "antidote"              // Torn: "Antidote"
+    "first aid kit",
+    "small first aid kit",
+    "morphine",
+    "ipecac syrup",
+    "neumune tablet",
+    "antidote"
 ];
 
 const STANDARD_DEPOSIT_RATE = 0.90;
@@ -51,29 +56,51 @@ const STANDARD_USE_RATE = 0.95;
 const MEDICAL_EXCESS_RATE = 1.00;
 const BLOOD_BAG_FILL_CREDIT = 200;
 const DAILY_MEDICAL_LIMIT = 100000;
-const LOAN_DISCOUNT_RATE = 0.50;
 
-// XANAX BASELINE PRICE - For USE only
 const XANAX_BASELINE_PRICE = 815000;
+
+/* ---------- STORAGE KEYS ---------- */
+const STORAGE_KEYS = {
+    FACTION_API_KEY: "FACTION_API_KEY",
+    MARKET_API_KEY: "MARKET_API_KEY",
+    USED_ITEMS: "usedItems",
+    DEPOSITS: "deposits",
+    PROCESSED_LOGS: "processedLogs",
+    MED_WINDOWS: "medWindows",
+    BEER_WINDOWS: "beerWindows",
+    ARCHIVED_USERS: "archivedUsers",
+    V2_STATS: "v2Stats",
+    V2_SCHEDULE: "v2Schedule",
+    ITEM_CACHE: "itemCache",
+    PRICE_CACHE: "priceCache",
+    ARCHIVE_METADATA: "archiveMetadata",
+    LAST_CLEANUP: "lastCleanup",
+    MIGRATED_TO_LOG_IDS: "migratedToLogIds"
+};
 
 /* ---------- V2 MUTEX ---------- */
 let v2Lock = { active: false, expires: 0 };
 
 /* ---------- ENHANCED STORAGE ---------- */
-let factionKey = GM_getValue("FACTION_API_KEY","");
-let marketKey  = GM_getValue("MARKET_API_KEY","");
+let factionKey = GM_getValue(STORAGE_KEYS.FACTION_API_KEY, "");
+let marketKey = GM_getValue(STORAGE_KEYS.MARKET_API_KEY, "");
 
-let usedItems     = GM_getValue("usedItems", {});
-let deposits      = GM_getValue("deposits", {});
-let processedLogs = GM_getValue("processedLogs", {});
-let medWindows    = GM_getValue("medWindows", {});
-let beerWindows   = GM_getValue("beerWindows", {});
+let usedItems = GM_getValue(STORAGE_KEYS.USED_ITEMS, {});
+let deposits = GM_getValue(STORAGE_KEYS.DEPOSITS, {});
+let processedLogs = GM_getValue(STORAGE_KEYS.PROCESSED_LOGS, {});
+let medWindows = GM_getValue(STORAGE_KEYS.MED_WINDOWS, {});
+let beerWindows = GM_getValue(STORAGE_KEYS.BEER_WINDOWS, {});
 
-// Archive for zero-balance users
-let archivedUsers = GM_getValue("archivedUsers", {});
+let archivedUsers = GM_getValue(STORAGE_KEYS.ARCHIVED_USERS, {});
+let archiveMetadata = GM_getValue(STORAGE_KEYS.ARCHIVE_METADATA, {
+    lastCleanup: 0,
+    totalCompressed: 0,
+    tier1Count: 0,
+    tier2Count: 0,
+    tier3Count: 0
+});
 
-// V2 Scheduling system
-let v2Stats = GM_getValue("v2Stats", { 
+let v2Stats = GM_getValue(STORAGE_KEYS.V2_STATS, { 
     recovered: 0, 
     lastRun: 0, 
     totalPages: 0, 
@@ -81,18 +108,51 @@ let v2Stats = GM_getValue("v2Stats", {
     totalRuns: 0
 });
 
-let v2Schedule = GM_getValue("v2Schedule", { 
+let v2Schedule = GM_getValue(STORAGE_KEYS.V2_SCHEDULE, { 
     lastFetch: 0,
     nextScheduled: 0,
     overdueCount: 0,
     lastCheck: 0
 });
 
-// Item and price caching
-let itemCache     = GM_getValue("itemCache", {});
-let priceCache    = GM_getValue("priceCache", {});
+let itemCache = GM_getValue(STORAGE_KEYS.ITEM_CACHE, {});
+let priceCache = GM_getValue(STORAGE_KEYS.PRICE_CACHE, {});
+let lastCleanup = GM_getValue(STORAGE_KEYS.LAST_CLEANUP, 0);
+
 let itemsMapCache = null;
 let nameToIdCache = {};
+
+/* ---------- MIGRATION TO TORN LOG IDS ---------- */
+function migrateToLogIds() {
+    const migrated = GM_getValue(STORAGE_KEYS.MIGRATED_TO_LOG_IDS, false);
+    if (migrated) return;
+    
+    console.log("HALO: Migrating to Torn log ID system...");
+    let migratedCount = 0;
+    
+    // Convert old v1: and v2: prefixed entries to Torn IDs
+    Object.keys(processedLogs).forEach(oldKey => {
+        if (oldKey.startsWith('v1:') || oldKey.startsWith('v2:')) {
+            const tornId = oldKey.split(':')[1];
+            if (tornId && !processedLogs[tornId]) {
+                processedLogs[tornId] = processedLogs[oldKey];
+                migratedCount++;
+            }
+        }
+    });
+    
+    // Remove old prefixed entries
+    Object.keys(processedLogs).forEach(key => {
+        if (key.startsWith('v1:') || key.startsWith('v2:')) {
+            delete processedLogs[key];
+        }
+    });
+    
+    GM_setValue(STORAGE_KEYS.PROCESSED_LOGS, processedLogs);
+    GM_setValue(STORAGE_KEYS.MIGRATED_TO_LOG_IDS, true);
+    
+    console.log(`HALO: Migration completed. Migrated ${migratedCount} log entries.`);
+}
 
 /* ---------- DEBUG LOGGING ---------- */
 function debugLog(...args) {
@@ -135,7 +195,10 @@ function formatTimeDate(ts){
     return `${hours}:${minutes}, ${day}.${month}`;
 }
 
-// FIXED: All string comparisons now case-insensitive
+function daysAgo(timestamp) {
+    return (Date.now() - timestamp) / (1000 * 60 * 60 * 24);
+}
+
 function isFree(itemName){
     const lowerName = itemName.toLowerCase();
     return FREE_ITEMS.some(freeItem => lowerName.includes(freeItem));
@@ -179,7 +242,7 @@ async function fetchAllItems(){
             nameToIdCache[normalize(itemName)] = itemId;
         });
         
-        GM_setValue("itemCache", itemCache);
+        GM_setValue(STORAGE_KEYS.ITEM_CACHE, itemCache);
         return itemsMapCache;
     } catch (error) {
         console.error("HALO: Error fetching items:", error);
@@ -211,7 +274,6 @@ async function resolveItemId(itemName){
     return null;
 }
 
-// FIXED: Median of lowest 3 listings for price manipulation protection
 async function resolvePriceWithCache(itemId, itemName){
     const now = Date.now();
     
@@ -229,20 +291,17 @@ async function resolvePriceWithCache(itemId, itemName){
             return null;
         }
         
-        // Filter out single-item listings (troll protection)
         const validListings = listings.filter(l => l.quantity > 1);
         const listingsToUse = validListings.length > 0 ? validListings : listings;
         
-        // Sort by price
         listingsToUse.sort((a,b)=> (a.price||a.cost||0)-(b.price||b.cost||0));
         
         let price;
         
-        // Take median of lowest 3 listings for manipulation protection
         if(listingsToUse.length >= 3) {
             const lowestThree = listingsToUse.slice(0, 3);
             lowestThree.sort((a,b) => (a.price||a.cost||0) - (b.price||b.cost||0));
-            price = lowestThree[1].price || lowestThree[1].cost; // Median (middle of 3)
+            price = lowestThree[1].price || lowestThree[1].cost;
             debugLog(`Price median: ${itemName} - prices:`, lowestThree.map(l => l.price || l.cost), `selected: ${price}`);
         } else {
             price = listingsToUse[0].price || listingsToUse[0].cost;
@@ -255,7 +314,7 @@ async function resolvePriceWithCache(itemId, itemName){
                 price: price,
                 timestamp: now
             };
-            GM_setValue("priceCache", priceCache);
+            GM_setValue(STORAGE_KEYS.PRICE_CACHE, priceCache);
         }
         
         return price;
@@ -277,23 +336,22 @@ function cleanupPriceCache() {
     }
     
     if(cleaned > 0) {
-        GM_setValue("priceCache", priceCache);
+        GM_setValue(STORAGE_KEYS.PRICE_CACHE, priceCache);
         console.log(`HALO: Cleaned ${cleaned} expired price cache entries`);
     }
 }
 
 /* ---------- WINDOWS ---------- */
-// FIXED: Medical tracking logic - returns true if OVER limit
 function processMedicalUse(user, value, ts){
     const day = dayFromLog(ts);
     medWindows[user] ??= {};
     medWindows[user][day] ??= 0;
     medWindows[user][day] += value;
-    GM_setValue("medWindows", medWindows);
+    GM_setValue(STORAGE_KEYS.MED_WINDOWS, medWindows);
     
     const isOverLimit = medWindows[user][day] > DAILY_MEDICAL_LIMIT;
     debugLog(`Medical window: ${user} on ${day} = $${medWindows[user][day]}, over limit: ${isOverLimit}`);
-    return isOverLimit; // Returns TRUE if OVER the limit
+    return isOverLimit;
 }
 
 /* ---------- NET VALUE ---------- */
@@ -304,11 +362,148 @@ function getNetValue(user){
     return Math.round(dep - use);
 }
 
-/* ---------- ARCHIVE SYSTEM ---------- */
+/* ---------- SMART ARCHIVING SYSTEM ---------- */
+function compressUserData(userData, compressionLevel) {
+    const compressed = {
+        user: userData.user,
+        lastActivity: userData.lastActivity,
+        compressedDate: Date.now(),
+        compressionLevel: compressionLevel
+    };
+    
+    switch(compressionLevel) {
+        case 1:
+            compressed.monthly = {};
+            const itemsByMonth = {};
+            
+            for(const [key, entry] of Object.entries(userData.deposits || {})) {
+                const month = new Date(entry.last * 1000).toISOString().slice(0, 7);
+                itemsByMonth[month] = itemsByMonth[month] || { deposits: 0, uses: 0 };
+                itemsByMonth[month].deposits += entry.price * entry.count;
+            }
+            
+            for(const [key, entry] of Object.entries(userData.usedItems || {})) {
+                const month = new Date(entry.last * 1000).toISOString().slice(0, 7);
+                itemsByMonth[month] = itemsByMonth[month] || { deposits: 0, uses: 0 };
+                itemsByMonth[month].uses += entry.price * entry.count;
+            }
+            
+            compressed.monthly = itemsByMonth;
+            compressed.balance = getNetValue(userData.user);
+            break;
+            
+        case 2:
+            compressed.yearly = {};
+            const itemsByYear = {};
+            
+            for(const [key, entry] of Object.entries(userData.deposits || {})) {
+                const year = new Date(entry.last * 1000).getFullYear();
+                itemsByYear[year] = itemsByYear[year] || { deposits: 0, uses: 0 };
+                itemsByYear[year].deposits += entry.price * entry.count;
+            }
+            
+            for(const [key, entry] of Object.entries(userData.usedItems || {})) {
+                const year = new Date(entry.last * 1000).getFullYear();
+                itemsByYear[year] = itemsByYear[year] || { deposits: 0, uses: 0 };
+                itemsByYear[year].uses += entry.price * entry.count;
+            }
+            
+            compressed.yearly = itemsByYear;
+            compressed.balance = getNetValue(userData.user);
+            break;
+    }
+    
+    return compressed;
+}
+
+function runSmartCleanup() {
+    const now = Date.now();
+    
+    if (lastCleanup && daysAgo(lastCleanup) < AUTO_CLEANUP_CHECK_DAYS) {
+        return { tier1ToTier2: 0, tier2ToTier3: 0, purged: 0 };
+    }
+    
+    console.log("HALO: Running smart cleanup...");
+    lastCleanup = now;
+    GM_setValue(STORAGE_KEYS.LAST_CLEANUP, lastCleanup);
+    
+    let tier1ToTier2 = 0;
+    let tier2ToTier3 = 0;
+    let purged = 0;
+    
+    const users = [...new Set([...Object.keys(usedItems), ...Object.keys(deposits)])];
+    
+    for(const user of users) {
+        const lastActivity = getUserLastActivity(user);
+        const daysInactive = daysAgo(lastActivity);
+        const netValue = getNetValue(user);
+        
+        if ((daysInactive > ACTIVE_STORAGE_DAYS || (netValue === 0 && daysInactive > ZERO_BALANCE_ARCHIVE_DAYS)) && 
+            !archivedUsers[user]) {
+            
+            const userData = {
+                user: user,
+                deposits: deposits[user] || {},
+                usedItems: usedItems[user] || {},
+                lastActivity: lastActivity
+            };
+            
+            archivedUsers[user] = compressUserData(userData, 1);
+            
+            delete deposits[user];
+            delete usedItems[user];
+            tier1ToTier2++;
+            
+            debugLog(`Archived user ${user} to Tier 2`);
+        }
+    }
+    
+    const usersToPurge = [];
+    for(const [user, archive] of Object.entries(archivedUsers)) {
+        if (archive.compressionLevel === 1 && daysAgo(archive.compressedDate) > ARCHIVE_SUMMARY_DAYS) {
+            archivedUsers[user] = compressUserData({
+                user: user,
+                deposits: {},
+                usedItems: {},
+                lastActivity: archive.lastActivity
+            }, 2);
+            
+            tier2ToTier3++;
+            debugLog(`Compressed archive for ${user} to Tier 3`);
+        }
+        
+        if (archive.compressionLevel === 2 && getNetValue(user) === 0 && 
+            daysAgo(archive.lastActivity) > (ARCHIVE_SUMMARY_DAYS * 2)) {
+            usersToPurge.push(user);
+        }
+    }
+    
+    for(const user of usersToPurge) {
+        delete archivedUsers[user];
+        purged++;
+    }
+    
+    archiveMetadata.lastCleanup = now;
+    archiveMetadata.totalCompressed = (archiveMetadata.totalCompressed || 0) + tier1ToTier2 + tier2ToTier3;
+    archiveMetadata.tier1Count = users.length;
+    archiveMetadata.tier2Count = Object.keys(archivedUsers).filter(u => archivedUsers[u].compressionLevel === 1).length;
+    archiveMetadata.tier3Count = Object.keys(archivedUsers).filter(u => archivedUsers[u].compressionLevel === 2).length;
+    
+    if (tier1ToTier2 > 0 || tier2ToTier3 > 0 || purged > 0) {
+        GM_setValue(STORAGE_KEYS.DEPOSITS, deposits);
+        GM_setValue(STORAGE_KEYS.USED_ITEMS, usedItems);
+        GM_setValue(STORAGE_KEYS.ARCHIVED_USERS, archivedUsers);
+        GM_setValue(STORAGE_KEYS.ARCHIVE_METADATA, archiveMetadata);
+        
+        console.log(`HALO: Cleanup completed: ${tier1ToTier2} to Tier 2, ${tier2ToTier3} to Tier 3, ${purged} purged`);
+    }
+    
+    return { tier1ToTier2, tier2ToTier3, purged };
+}
+
 function getUserLastActivity(user){
     let lastActivity = 0;
     
-    // Check deposits
     for(const k in deposits[user] || {}) {
         const entry = deposits[user][k];
         if(entry.last && entry.last > lastActivity) {
@@ -316,7 +511,6 @@ function getUserLastActivity(user){
         }
     }
     
-    // Check used items
     for(const k in usedItems[user] || {}) {
         const entry = usedItems[user][k];
         if(entry.last && entry.last > lastActivity) {
@@ -324,46 +518,7 @@ function getUserLastActivity(user){
         }
     }
     
-    return lastActivity * 1000; // Convert to milliseconds
-}
-
-function archiveZeroBalanceUsers(){
-    const now = Date.now();
-    let archived = 0;
-    
-    const users = [...new Set([...Object.keys(usedItems), ...Object.keys(deposits)])];
-    
-    for(const user of users) {
-        const net = getNetValue(user);
-        const lastActivity = getUserLastActivity(user);
-        const daysInactive = (now - lastActivity) / (24 * 60 * 60 * 1000);
-        
-        if(net === 0 && daysInactive > ZERO_BALANCE_ARCHIVE_DAYS) {
-            // Archive user data
-            archivedUsers[user] = {
-                deposits: deposits[user] || {},
-                usedItems: usedItems[user] || {},
-                archivedAt: now,
-                lastActivity: lastActivity
-            };
-            
-            // Remove from active storage
-            delete deposits[user];
-            delete usedItems[user];
-            archived++;
-            
-            debugLog(`Archived zero-balance user: ${user} (inactive ${Math.round(daysInactive)} days)`);
-        }
-    }
-    
-    if(archived > 0) {
-        GM_setValue("deposits", deposits);
-        GM_setValue("usedItems", usedItems);
-        GM_setValue("archivedUsers", archivedUsers);
-        console.log(`HALO: Archived ${archived} zero-balance users`);
-    }
-    
-    return archived;
+    return lastActivity * 1000;
 }
 
 /* ---------- V1 LOGS FETCH ---------- */
@@ -422,10 +577,9 @@ async function fetchAllV2Logs(sinceTimestamp = 0){
         }
         
         for(const log of data.news){
-            // FIXED: Namespace log IDs to prevent collisions
-            const namespacedId = `v2:${log.id}`;
-            if(!processedLogs[namespacedId]){
-                allLogs.push({...log, namespacedId});
+            const tornId = String(log.id);
+            if(!processedLogs[tornId]){
+                allLogs.push({...log, tornId});
                 recovered++;
             }
         }
@@ -449,11 +603,11 @@ async function fetchAllV2Logs(sinceTimestamp = 0){
 
 /* ---------- LOG PROCESSING ---------- */
 async function processLogEntry(logId, entry, source = 'v1'){
-    // FIXED: Namespace processed log IDs
-    const namespacedId = source === 'v1' ? `v1:${logId}` : `v2:${logId}`;
+    // Use Torn ID directly (without v1: or v2: prefix)
+    const tornId = String(logId);
     
-    if(processedLogs[namespacedId]) {
-        debugLog(`Skipping already processed log: ${namespacedId}`);
+    if(processedLogs[tornId]) {
+        debugLog(`Skipping already processed log ID: ${tornId} (from ${processedLogs[tornId].source})`);
         return null;
     }
     
@@ -476,7 +630,6 @@ async function processLogEntry(logId, entry, source = 'v1'){
     const use = text.match(/^(.+?) used (?:one of the faction's |a |)(.+?) items?\.?$/i)
              || text.match(/^(.+?) used (.+?)\.?$/i);
     const filled = text.match(/^(.+?) filled one of the faction's (.+?) items?\.?$/i);
-    const loan = text.match(/^(.+?) loaned (\d+)\s*[x×]?\s*(.+?) to themselves from the faction armory$/i);
     
     let result = null;
     
@@ -540,30 +693,11 @@ async function processLogEntry(logId, entry, source = 'v1'){
             };
         }
     }
-    else if(loan){
-        const user = loan[1].trim();
-        const count = parseInt(loan[2],10) || 1;
-        const itemName = normalize(loan[3]);
-        
-        if(isFree(itemName)){
-            debugLog(`Skipping free loan item: ${itemName} for ${user}`);
-            return null;
-        }
-        
-        result = {
-            type: 'use',
-            user: user,
-            action: 'loan',
-            itemName: itemName,
-            count: count,
-            isHalfPrice: true,
-            source: source
-        };
-    }
     
     if(result){
-        result.logId = namespacedId; // Use namespaced ID
+        result.tornId = tornId;
         result.timestamp = timestamp;
+        result.rawText = text;
         debugLog(`Parsed ${source} log:`, result);
     }
     
@@ -573,13 +707,13 @@ async function processLogEntry(logId, entry, source = 'v1'){
 async function processParsedResult(result){
     if(!result) return;
     
-    const { user, action, itemName, count, logId, timestamp, source, isHalfPrice, isBloodBagFill } = result;
+    const { user, action, itemName, count, tornId, timestamp, source, isBloodBagFill } = result;
     
-    debugLog(`Processing: ${user} ${action} ${count}x ${itemName}`);
+    debugLog(`Processing: ${user} ${action} ${count}x ${itemName} (ID: ${tornId})`);
     
     const itemId = await resolveItemId(itemName);
     if(!itemId) {
-        console.warn(`HALO: Could not process log ${logId} - unknown item: ${itemName}`);
+        console.warn(`HALO: Could not process log ${tornId} - unknown item: ${itemName}`);
         return;
     }
     
@@ -602,22 +736,18 @@ async function processParsedResult(result){
         
         let adjustedPrice = marketPrice;
         
-        // FIXED: Medical logic - track all medical items, only charge if over limit
         if(isMedical(displayName)){
             debugLog(`Medical item detected: ${displayName}`);
             const isOverMedicalLimit = processMedicalUse(user, marketPrice, timestamp);
             
             if(isOverMedicalLimit){
-                // Over limit - charge at 100%
                 adjustedPrice = Math.round(marketPrice * MEDICAL_EXCESS_RATE);
                 debugLog(`Medical OVER limit: charging $${adjustedPrice}`);
             } else {
-                // Under limit - FREE
                 adjustedPrice = 0;
                 debugLog(`Medical UNDER limit: FREE (daily total: $${medWindows[user]?.[dayFromLog(timestamp)] || 0})`);
             }
         }
-        // Apply Xanax baseline for USE only (after use rate)
         else if(action === 'use' && isXanax(displayName)){
             adjustedPrice *= STANDARD_USE_RATE;
             if(adjustedPrice < XANAX_BASELINE_PRICE) {
@@ -627,13 +757,8 @@ async function processParsedResult(result){
         } else if(action === 'deposit' || action === 'filled'){
             adjustedPrice *= isXanax(displayName) ? XANAX_DEPOSIT_RATE : STANDARD_DEPOSIT_RATE;
             debugLog(`Deposit rate applied: $${adjustedPrice}`);
-        } else if(action === 'use' || action === 'loan'){
+        } else if(action === 'use'){
             adjustedPrice *= STANDARD_USE_RATE;
-            
-            if(isHalfPrice){
-                adjustedPrice *= LOAN_DISCOUNT_RATE;
-                debugLog(`Loan discount applied: $${adjustedPrice}`);
-            }
         }
         
         price = Math.round(adjustedPrice);
@@ -649,8 +774,7 @@ async function processParsedResult(result){
             last: timestamp,
             itemId: itemId,
             itemName: displayName,
-            source: source,
-            isHalfPrice: isHalfPrice || false
+            source: source
         };
         deposits[user][key].count += count;
         deposits[user][key].last = timestamp;
@@ -663,37 +787,35 @@ async function processParsedResult(result){
             last: timestamp,
             itemId: itemId,
             itemName: displayName,
-            source: source,
-            isHalfPrice: isHalfPrice || false
+            source: source
         };
         usedItems[user][key].count += count;
         usedItems[user][key].last = timestamp;
         debugLog(`Added use: ${user} -${count}x ${displayName} @ $${price}`);
     }
     
-    processedLogs[logId] = {
+    processedLogs[tornId] = {
         source: source,
-        timestamp: timestamp
+        timestamp: timestamp,
+        processedAt: Date.now()
     };
     
     if(source === 'v2'){
         v2Stats.recovered++;
         v2Stats.lastRun = Date.now();
-        GM_setValue("v2Stats", v2Stats);
-        debugLog(`V2 recovered log: ${logId}`);
+        GM_setValue(STORAGE_KEYS.V2_STATS, v2Stats);
+        debugLog(`V2 recovered log: ${tornId}`);
     }
 }
 
 /* ---------- V2 COUNTDOWN SCHEDULER ---------- */
 async function runV2CatchUp(){
-    // FIXED: V2 mutex to prevent overlapping runs
     const now = Date.now();
     if (v2Lock.active && now < v2Lock.expires) {
         console.log("HALO: V2 already running, skipping");
         return;
     }
     
-    // Set mutex lock (expires in 10 minutes in case of crash)
     v2Lock = { active: true, expires: now + (10 * 60 * 1000) };
     
     try {
@@ -701,16 +823,13 @@ async function runV2CatchUp(){
         
         console.log("HALO: Running V2 catch-up...");
         
-        // Update schedule BEFORE running (in case of crash)
         v2Schedule.lastFetch = now;
         v2Schedule.nextScheduled = v2Schedule.lastFetch + V2_INTERVAL_MS;
         v2Schedule.lastCheck = now;
-        GM_setValue("v2Schedule", v2Schedule);
+        GM_setValue(STORAGE_KEYS.V2_SCHEDULE, v2Schedule);
         
-        // Get last V2 fetch timestamp
         let sinceTime = v2Stats.lastRun ? Math.floor(v2Stats.lastRun / 1000) : 0;
         
-        // If first run or very old, go back 24 hours
         if(sinceTime === 0 || (now - v2Stats.lastRun) > 86400000) {
             sinceTime = Math.floor(now / 1000) - 86400;
             console.log(`HALO: First V2 run or large gap, fetching from ${new Date(sinceTime * 1000).toLocaleString()}`);
@@ -726,40 +845,35 @@ async function runV2CatchUp(){
                 }
             }
             
-            // Update stats
             v2Stats.lastRun = Date.now();
             v2Stats.totalPages += result.pages;
             v2Stats.truncated = v2Stats.truncated || result.truncated;
             v2Stats.totalRuns = (v2Stats.totalRuns || 0) + 1;
             
-            GM_setValue("v2Stats", v2Stats);
-            GM_setValue("usedItems", usedItems);
-            GM_setValue("deposits", deposits);
-            GM_setValue("processedLogs", processedLogs);
+            GM_setValue(STORAGE_KEYS.V2_STATS, v2Stats);
+            GM_setValue(STORAGE_KEYS.USED_ITEMS, usedItems);
+            GM_setValue(STORAGE_KEYS.DEPOSITS, deposits);
+            GM_setValue(STORAGE_KEYS.PROCESSED_LOGS, processedLogs);
             
             console.log(`HALO: V2 completed. Recovered ${result.recovered} logs.`);
         } else {
             console.log("HALO: No new logs via V2");
         }
         
-        // Update schedule AFTER successful completion
         v2Schedule.lastFetch = Date.now();
         v2Schedule.nextScheduled = v2Schedule.lastFetch + V2_INTERVAL_MS;
         v2Schedule.overdueCount = 0;
         v2Schedule.lastCheck = Date.now();
-        GM_setValue("v2Schedule", v2Schedule);
+        GM_setValue(STORAGE_KEYS.V2_SCHEDULE, v2Schedule);
         
-        // Run maintenance
         pruneProcessedLogs();
         cleanupPriceCache();
-        archiveZeroBalanceUsers();
+        runSmartCleanup();
         
-        // Update UI
         renderPanel();
     } catch (error) {
         console.error("HALO: V2 catch-up error:", error);
     } finally {
-        // Always release mutex
         v2Lock = { active: false, expires: 0 };
     }
 }
@@ -767,21 +881,17 @@ async function runV2CatchUp(){
 function initializeV2Scheduler(){
     const now = Date.now();
     
-    // Initialize schedule if first time
     if(v2Schedule.lastFetch === 0) {
-        v2Schedule.lastFetch = now - V2_INTERVAL_MS; // Pretend it ran 6 hours ago
-        v2Schedule.nextScheduled = now; // Schedule for now
+        v2Schedule.lastFetch = now - V2_INTERVAL_MS;
+        v2Schedule.nextScheduled = now;
         v2Schedule.overdueCount = 0;
         v2Schedule.lastCheck = now;
-        GM_setValue("v2Schedule", v2Schedule);
+        GM_setValue(STORAGE_KEYS.V2_SCHEDULE, v2Schedule);
         
         console.log("HALO: Initialized V2 scheduler");
     }
     
-    // Check if overdue and run immediately if needed
     checkV2Schedule();
-    
-    // Start monitoring
     monitorV2Schedule();
 }
 
@@ -790,23 +900,20 @@ function checkV2Schedule(){
     const overdue = now - v2Schedule.nextScheduled;
     
     v2Schedule.lastCheck = now;
-    GM_setValue("v2Schedule", v2Schedule);
+    GM_setValue(STORAGE_KEYS.V2_SCHEDULE, v2Schedule);
     
     if(overdue > 0) {
-        // We're overdue!
         const overdueMinutes = Math.round(overdue / 60000);
         console.log(`HALO: V2 overdue by ${overdueMinutes} minutes`);
         
         v2Schedule.overdueCount++;
         v2Schedule.nextScheduled = now + V2_INTERVAL_MS;
-        GM_setValue("v2Schedule", v2Schedule);
+        GM_setValue(STORAGE_KEYS.V2_SCHEDULE, v2Schedule);
         
-        // Show warning if severely overdue
         if(overdueMinutes > 30) {
             showWarning(`V2 overdue by ${overdueMinutes} minutes! Running catch-up...`, 15000);
         }
         
-        // Run V2
         setTimeout(() => runV2CatchUp(), 1000);
         
         return true;
@@ -820,12 +927,9 @@ function monitorV2Schedule(){
     const timeUntilNext = v2Schedule.nextScheduled - now;
     
     if(timeUntilNext <= 0) {
-        // Time's up - check and run
         checkV2Schedule();
-        // Check again in 1 minute
         setTimeout(monitorV2Schedule, 60000);
     } else {
-        // Schedule check for when it's due (or 1 minute as safety)
         const checkTime = Math.min(timeUntilNext, 60000);
         setTimeout(monitorV2Schedule, checkTime);
     }
@@ -837,7 +941,7 @@ function pruneProcessedLogs(){
     let pruned = 0;
     
     Object.keys(processedLogs).forEach(logId => {
-        if(processedLogs[logId].timestamp * 1000 < pruneTime) {
+        if(processedLogs[logId].processedAt < pruneTime) {
             delete processedLogs[logId];
             pruned++;
         }
@@ -864,9 +968,9 @@ function pruneProcessedLogs(){
     }
     
     if(pruned > 0){
-        GM_setValue("processedLogs", processedLogs);
-        GM_setValue("deposits", deposits);
-        GM_setValue("usedItems", usedItems);
+        GM_setValue(STORAGE_KEYS.PROCESSED_LOGS, processedLogs);
+        GM_setValue(STORAGE_KEYS.DEPOSITS, deposits);
+        GM_setValue(STORAGE_KEYS.USED_ITEMS, usedItems);
         console.log(`HALO: Pruned ${pruned} old processed logs`);
     }
 }
@@ -875,11 +979,9 @@ function pruneProcessedLogs(){
 async function loadLogs(){
     if(!factionKey || !marketKey) return;
     
-    // Update last check time
     v2Schedule.lastCheck = Date.now();
-    GM_setValue("v2Schedule", v2Schedule);
+    GM_setValue(STORAGE_KEYS.V2_SCHEDULE, v2Schedule);
     
-    // Process V1 logs
     let v1Logs = {};
     for(const id of factionIds){
         Object.assign(v1Logs, await fetchFactionLogsV1(id));
@@ -898,16 +1000,16 @@ async function loadLogs(){
         }
     }
     
-    GM_setValue("usedItems", usedItems);
-    GM_setValue("deposits", deposits);
-    GM_setValue("processedLogs", processedLogs);
+    GM_setValue(STORAGE_KEYS.USED_ITEMS, usedItems);
+    GM_setValue(STORAGE_KEYS.DEPOSITS, deposits);
+    GM_setValue(STORAGE_KEYS.PROCESSED_LOGS, processedLogs);
     
     renderPanel();
 }
 
-/* ---------- UI ---------- */
+/* ---------- UI STYLES ---------- */
 GM_addStyle(`
-/* Compact Panel with Better Size */
+/* Existing styles remain the same */
 #armoryPanel {
     position: fixed;
     bottom: 0;
@@ -957,7 +1059,6 @@ GM_addStyle(`
     100% { filter: hue-rotate(360deg); }
 }
 
-/* Minimal Header - Smaller heading */
 .panel-header {
     background: linear-gradient(90deg, 
         rgba(10, 20, 30, 0.95) 0%, 
@@ -1012,7 +1113,6 @@ GM_addStyle(`
     filter: drop-shadow(0 0 4px #00ffea);
 }
 
-/* No header buttons at all */
 .header-controls {
     display: none;
 }
@@ -1024,7 +1124,6 @@ GM_addStyle(`
     background: rgba(0, 5, 10, 0.8);
 }
 
-/* Compact Stats Grid - 4 columns */
 .stats-slim {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1086,7 +1185,6 @@ GM_addStyle(`
     line-height: 1.1;
 }
 
-/* Rec Data - Orange style - UPDATED LABEL */
 .rec-data-stat {
     background: linear-gradient(135deg, 
         rgba(255, 153, 0, 0.15) 0%, 
@@ -1103,7 +1201,6 @@ GM_addStyle(`
     color: #ffcc88 !important;
 }
 
-/* V2 last run info */
 .v2-last-run {
     font-size: 9px;
     color: rgba(255, 153, 0, 0.8);
@@ -1112,7 +1209,6 @@ GM_addStyle(`
     font-family: 'Courier New', monospace;
 }
 
-/* V2 indicators */
 .v2-indicator {
     color: #ff9900 !important;
     margin-left: 4px;
@@ -1120,20 +1216,11 @@ GM_addStyle(`
     vertical-align: super;
 }
 
-.loan-indicator {
-    color: #ffcc00 !important;
-    margin-left: 4px;
-    font-size: 10px;
-    vertical-align: super;
-}
-
-/* V2 item background */
 .item-v2 {
     background: rgba(255, 153, 0, 0.08) !important;
     border-left: 2px solid rgba(255, 153, 0, 0.4) !important;
 }
 
-/* API Toggle - simple */
 .api-toggle {
     background: rgba(0, 255, 234, 0.1);
     border: 1px solid rgba(0, 255, 234, 0.25);
@@ -1199,7 +1286,77 @@ GM_addStyle(`
         inset 0 0 8px rgba(0, 255, 234, 0.1);
 }
 
-/* Users List */
+.storage-toggle {
+    background: rgba(100, 255, 200, 0.1);
+    border: 1px solid rgba(100, 255, 200, 0.25);
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 9px;
+    color: #64ffc8;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.storage-toggle:hover {
+    background: rgba(100, 255, 200, 0.15);
+}
+
+.storage-manager {
+    display: none;
+    background: rgba(0, 20, 40, 0.9);
+    border: 1px solid rgba(100, 255, 200, 0.3);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.storage-stats {
+    font-size: 9px;
+    color: #64ffc8;
+    margin-bottom: 8px;
+}
+
+.storage-stats div {
+    margin-bottom: 3px;
+}
+
+.cleanup-btn {
+    background: linear-gradient(135deg, 
+        #ff416c 0%, 
+        #ff4b2b 100%);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Orbitron', monospace;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.cleanup-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255, 65, 108, 0.6);
+}
+
+.cleanup-btn.optimize {
+    background: linear-gradient(135deg, 
+        #00ffea 0%, 
+        #00ccaa 100%);
+}
+
 .users-slim {
     background: rgba(0, 5, 10, 0.6);
     border-radius: 6px;
@@ -1384,7 +1541,6 @@ GM_addStyle(`
     100% { transform: rotate(360deg); }
 }
 
-/* Debug toggle */
 .debug-toggle {
     position: absolute;
     top: 5px;
@@ -1395,7 +1551,6 @@ GM_addStyle(`
     z-index: 100;
 }
 
-/* Bubble Button */
 #bubbleBtn {
     position: fixed;
     bottom: 15px;
@@ -1454,7 +1609,6 @@ GM_addStyle(`
     border-radius: 3px;
 }
 
-/* Warning messages */
 .halo-warning {
     background: linear-gradient(135deg, 
         rgba(255, 100, 0, 0.2) 0%, 
@@ -1514,13 +1668,9 @@ function renderItemListCompact(items, isUsed = false) {
         if (isUsed) itemClass += " item-used-slim";
         if (v.source === 'v2') itemClass += " item-v2";
         
-        // Build indicators like in HALO.5
         let indicators = '';
         if (v.source === 'v2') {
             indicators += '<span class="v2-indicator" title="Recovered via V2 backup">↻</span>';
-        }
-        if (v.isHalfPrice) {
-            indicators += '<span class="loan-indicator" title="Loan (50% price)">📜</span>';
         }
         
         return `
@@ -1546,10 +1696,8 @@ function updateStats() {
     document.getElementById("statUsers").textContent = activeUsers;
     document.getElementById("statLogs").textContent = totalProcessed;
     document.getElementById("statCache").textContent = cachedPrices;
-    // UPDATED: Changed label from "RECOVERED" to "V2 LOGS"
     document.getElementById("statRecData").textContent = v2Recovered;
     
-    // Update V2 last run time
     const lastRunElement = document.getElementById("v2LastRun");
     if(lastRunElement){
         if(v2Stats.lastRun > 0){
@@ -1563,18 +1711,37 @@ function updateStats() {
             lastRunElement.textContent = "V2: Never run";
         }
     }
+    
+    updateStorageStats();
+}
+
+function updateStorageStats() {
+    const storageStats = document.getElementById("storageStats");
+    if (!storageStats) return;
+    
+    const activeCount = [...new Set([...Object.keys(usedItems), ...Object.keys(deposits)])].length;
+    const archiveCount = Object.keys(archivedUsers).length;
+    const tier2Count = Object.values(archivedUsers).filter(a => a.compressionLevel === 1).length;
+    const tier3Count = Object.values(archivedUsers).filter(a => a.compressionLevel === 2).length;
+    
+    storageStats.innerHTML = `
+        <div>Active: ${activeCount} users</div>
+        <div>Archived: ${archiveCount} users</div>
+        <div>Tier 2: ${tier2Count} (monthly)</div>
+        <div>Tier 3: ${tier3Count} (yearly)</div>
+        <div>Last cleanup: ${lastCleanup ? new Date(lastCleanup).toLocaleDateString() : 'Never'}</div>
+    `;
 }
 
 function sortUsers(users) {
-    // Always sort by highest debt (negative values first, then positive)
     return users.sort((a, b) => {
         const netA = getNetValue(a);
         const netB = getNetValue(b);
         
-        if (netA < 0 && netB < 0) return netA - netB; // Both negative, lowest first
-        if (netA < 0) return -1; // A negative, B positive
-        if (netB < 0) return 1;  // A positive, B negative
-        return netB - netA; // Both positive, highest first
+        if (netA < 0 && netB < 0) return netA - netB;
+        if (netA < 0) return -1;
+        if (netB < 0) return 1;
+        return netB - netA;
     });
 }
 
@@ -1595,7 +1762,6 @@ function renderPanel() {
         return;
     }
     
-    // Always sort by highest debt
     users = sortUsers(users);
 
     div.innerHTML = users.map(u => {
@@ -1641,8 +1807,8 @@ function renderPanel() {
             if (confirm(`CLEAR BALANCE FOR ${user}?`)) {
                 delete usedItems[user];
                 delete deposits[user];
-                GM_setValue("usedItems", usedItems);
-                GM_setValue("deposits", deposits);
+                GM_setValue(STORAGE_KEYS.USED_ITEMS, usedItems);
+                GM_setValue(STORAGE_KEYS.DEPOSITS, deposits);
                 renderPanel();
             }
         };
@@ -1656,7 +1822,7 @@ const panel = document.createElement("div");
 panel.id = "armoryPanel";
 panel.innerHTML = `
 <div class="panel-header">
-    <h1>HALO ARMORY V2.9</h1>
+    <h1>HALO ARMORY v6.1</h1>
     ${DEBUG_MODE ? '<div class="debug-toggle" title="Debug Mode Active">DEBUG</div>' : ''}
 </div>
 <div class="panel-content">
@@ -1675,10 +1841,19 @@ panel.innerHTML = `
         </div>
         <div class="stat-slim rec-data-stat">
             <div class="stat-slim-number" id="statRecData">0</div>
-            <div class="stat-slim-label">V2 LOGS</div> <!-- UPDATED LABEL -->
+            <div class="stat-slim-label">V2 LOGS</div>
         </div>
     </div>
     <div class="v2-last-run" id="v2LastRun"></div>
+
+    <div class="storage-toggle" id="storageToggle">
+        STORAGE MANAGER
+    </div>
+    <div class="storage-manager" id="storageManager">
+        <div class="storage-stats" id="storageStats"></div>
+        <button class="cleanup-btn optimize" id="runCleanup">RUN CLEANUP NOW</button>
+        <button class="cleanup-btn" id="forceCleanup">FORCE CLEANUP</button>
+    </div>
 
     <div class="api-toggle" id="apiToggle">
         API CONFIG
@@ -1699,6 +1874,7 @@ document.body.appendChild(bubble);
 
 let minimized = true;
 let apiExpanded = false;
+let storageExpanded = false;
 
 /* ---------- UI INTERACTIONS ---------- */
 bubble.onclick = () => {
@@ -1718,20 +1894,52 @@ document.getElementById("apiToggle").onclick = () => {
     apiFields.style.display = apiExpanded ? "block" : "none";
 };
 
+document.getElementById("storageToggle").onclick = () => {
+    storageExpanded = !storageExpanded;
+    const storageToggle = document.getElementById("storageToggle");
+    const storageManager = document.getElementById("storageManager");
+    
+    storageToggle.classList.toggle("expanded", storageExpanded);
+    storageManager.style.display = storageExpanded ? "block" : "none";
+    
+    if (storageExpanded) {
+        updateStorageStats();
+    }
+};
+
+document.getElementById("runCleanup").onclick = () => {
+    const result = runSmartCleanup();
+    showWarning(`Cleanup completed: ${result.tier1ToTier2} to Tier 2, ${result.tier2ToTier3} to Tier 3`, 5000);
+    updateStorageStats();
+    renderPanel();
+};
+
+document.getElementById("forceCleanup").onclick = () => {
+    if (confirm("Force cleanup will aggressively compress old data. This cannot be undone. Continue?")) {
+        lastCleanup = 0;
+        GM_setValue(STORAGE_KEYS.LAST_CLEANUP, lastCleanup);
+        const result = runSmartCleanup();
+        showWarning(`Force cleanup completed: ${result.tier1ToTier2 + result.tier2ToTier3} users compressed`, 5000);
+        updateStorageStats();
+        renderPanel();
+    }
+};
+
 document.getElementById("factionKeyInput").onchange = e => {
     factionKey = e.target.value.trim();
-    GM_setValue("FACTION_API_KEY", factionKey);
+    GM_setValue(STORAGE_KEYS.FACTION_API_KEY, factionKey);
     loadLogs();
 };
 
 document.getElementById("marketKeyInput").onchange = e => {
     marketKey = e.target.value.trim();
-    GM_setValue("MARKET_API_KEY", marketKey);
+    GM_setValue(STORAGE_KEYS.MARKET_API_KEY, marketKey);
     loadLogs();
 };
 
 /* ---------- INITIALIZATION ---------- */
-// Auto-show panel if no API keys are set
+migrateToLogIds(); // Run migration first
+
 if (!factionKey || !marketKey) {
     panel.style.display = "block";
     minimized = false;
@@ -1741,23 +1949,15 @@ if (!factionKey || !marketKey) {
 }
 
 /* ---------- START SYSTEMS ---------- */
-// Initialize V2 scheduler
 setTimeout(initializeV2Scheduler, 2000);
-
-// Start V1 interval (45 seconds)
 setInterval(loadLogs, REFRESH_MS);
 
-// Run maintenance every hour
 setInterval(() => {
     cleanupPriceCache();
     pruneProcessedLogs();
-    archiveZeroBalanceUsers();
+    runSmartCleanup();
 }, 60 * 60 * 1000);
 
-// Initial load
-loadLogs();
-
-// Emergency check: if V2 hasn't run in over 7 hours, run it now
 setTimeout(() => {
     const now = Date.now();
     if(v2Stats.lastRun && (now - v2Stats.lastRun) > (7 * 60 * 60 * 1000)) {
@@ -1765,5 +1965,11 @@ setTimeout(() => {
         setTimeout(runV2CatchUp, 3000);
     }
 }, 5000);
+
+loadLogs();
+
+if (daysAgo(lastCleanup) > AUTO_CLEANUP_CHECK_DAYS) {
+    setTimeout(() => runSmartCleanup(), 10000);
+}
 
 })();

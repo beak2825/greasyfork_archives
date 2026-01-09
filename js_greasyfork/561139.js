@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         WME Thailand Tambon
 // @namespace    https://github.com/wazeth/
-// @version      1.0
+// @version      1.0.1
 // @description  แสดงขอบเขตตำบล
 // @author       Waze Thailand
 // @match        https://*.waze.com/*/editor*
@@ -117,25 +117,23 @@
         tabLabel.innerHTML = '<span>🇹🇭</span>';
         tabLabel.title = SCRIPT_TITLE;
 
-        tabPane.innerHTML = `
-            <div>
-                <h3 style="margin-bottom: 10px;">${SCRIPT_TITLE}</h3>
-                <p class="text-muted" style="font-size: 12px;">
-                    กรุงเทพฯ: แสดงเขต<br/>
-                    พื้นที่อื่น: แสดงตำบล, อำเภอ
-                    <ul>
-                       <li>ลำดับที่ปรากฏในตัวเลือกเรียงตามรหัสจังหวัด</li>
-                       <li>ความเร็วในการเรียกข้อมูลจะขึ้นอยู่กับความเร็วอินเตอร์เน็ต และขนาดพื้นที่</li>
+tabPane.innerHTML = `
+            <div style="padding: 5px 10px; box-sizing: border-box;">
+                <h3 style="margin-bottom: 15px; text-align: center;">${SCRIPT_TITLE}</h3>
+                
+                <div style="margin-bottom: 10px; font-size: 12px; color: #666;">
+                    <strong>คำแนะนำ:</strong>
+                    <ul style="padding-left: 20px; margin-top: 5px;">
+                       <li>กรุงเทพฯ: แสดงเขต</li>
+                       <li>ต่างจังหวัด: แสดงตำบล/อำเภอ</li>
+                       <li>ความเร็วขึ้นอยู่กับขนาดพื้นที่และเน็ต</li>
                     </ul>
-                </p>
+                </div>
 
                 <div class="form-group">
-                    <label for="tb-province-input">จังหวัด:</label>
-
+                    <label for="tb-province-input" style="font-weight: bold;">จังหวัด:</label>
                     <input list="tb-provinces-list" id="tb-province-input" class="form-control" placeholder="-- พิมพ์หรือคลิกเพื่อเลือก --" style="width: 100%; margin-bottom: 10px;">
-                    <datalist id="tb-provinces-list">
-                        </datalist>
-
+                    <datalist id="tb-provinces-list"></datalist>
                 </div>
 
                 <div style="margin-top: 15px;">
@@ -158,7 +156,7 @@
                 </div>
 
                 <hr style="margin: 15px 0;"/>
-                <div id="tb-status" style="font-size:11px; color:#666;">สถานะ: พร้อมใช้งาน</div>
+                <div id="tb-status" style="font-size:11px; color:#666; text-align: center;">สถานะ: พร้อมใช้งาน</div>
             </div>
         `;
 

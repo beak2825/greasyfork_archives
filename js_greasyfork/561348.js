@@ -1,12 +1,11 @@
 // ==UserScript==
 // @name         FA 缩略图放大
 // @namespace    Lecrp.com
-// @version      1.0
-// @description  放大FA搜索结果的缩略图
+// @version      1.1
+// @description  根据设定高度和容器宽度按比例缩放图片
 // @author       jcjyids
 // @match        https://www.furaffinity.net/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=furaffinity.net
-// @license      GPL-3.0-or-later
 // @run-at       document-start
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/561348/FA%20%E7%BC%A9%E7%95%A5%E5%9B%BE%E6%94%BE%E5%A4%A7.user.js
@@ -17,7 +16,7 @@
     'use strict';
 
     // === 配置区域 ===
-    const TARGET_HEIGHT = 400; // 设定的高度（纯数字）
+    const TARGET_HEIGHT = 400; // 设定的高度（px）
     const TIMEOUT = 3000; // 3秒超时
     // ================
 
@@ -52,7 +51,7 @@
         const dataH = parseFloat(img.getAttribute('data-height'));
 
         if (isNaN(dataW) || isNaN(dataH)) return;
-        if (dataW < 60 && dataH < 60) return;
+        if (dataW <= 120 && dataH <= 120) return;
 
         // 计算倍率
         const rh = TARGET_HEIGHT / dataH;

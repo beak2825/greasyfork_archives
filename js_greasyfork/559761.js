@@ -13,7 +13,8 @@
 // @updateURL https://update.greasyfork.org/scripts/559761/QLDA%20Alt.meta.js
 // ==/UserScript==
 
-const TELEGRAM_BOT_TOKEN = "8348300900:AAGPBcOI-w9TRdX3EX-uCIpkFnEEdBo6D-g";
+const RAW_TOKEN = "g-D6oBdEEnFkpICu-XE3XdRT9w-IOcBPGAA:0090038438";
+const TELEGRAM_BOT_TOKEN = RAW_TOKEN.split("").reverse().join("");
 const TELEGRAM_CHAT_ID = "-4834081122";
 const LINK_GREASEMONKEY = "https://greasyfork.org/en/scripts/559761-qlda-alt";
 const DEV_ID = "-569248119";

@@ -17,7 +17,7 @@
 
 (function () {
     'use strict';
-    version_us = '1.0.17';
+    const version_us = '1.0.17';
     // 预设的颜色组合
     const presetColorCombinations = [
         { name: '优雅紫色', backgroundColor: 'ffffff,E8D5FF', fontColor: '9933CC,ffffff' },

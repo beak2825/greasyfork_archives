@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CP-首充统计
 // @namespace    http://tampermonkey.net/
-// @version      0.1.9
+// @version      0.2.1
 // @description  首充脚本界面显示
 // @author       Cisco
 // @match        https://7777m.topcms.org/*

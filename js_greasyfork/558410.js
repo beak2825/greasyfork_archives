@@ -210,7 +210,7 @@ function addCostumeLayer(costumeUrl) {
             </div>
         </div>
         <div style="margin-left: 10px;">
-            <button class="remove-layer-btn" data-layer-id="${layerId}" title="Удалить слой" style="background-color: #a00000; color: white; border: none; padding: 3px 5px; cursor: pointer; line-height: 1; border-radius: 3px;">✖</button>
+            <button class="remove-layer-btn" data-layer-id="${layerId}" title="Удалить слой" style="background-color: #a00000; color: white; border: none; padding: 3px 5px 0 5px; cursor: pointer; line-height: 1; border-radius: 3px;">✖</button>
         </div>
     `;
     controllerPanel.prepend(controller);

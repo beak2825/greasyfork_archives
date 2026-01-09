@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         enhanced artikel-edit
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      0.7.6
+// @version      0.9.0
 // @description  Klon-Artikel Info | Vergleichslinks | Clone-Optionen | Grid Divider | Created-From-Info | Einstellungsmenü
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/kalif/artikel?id=*
@@ -63,7 +63,7 @@
 
     // ===== GLOBAL ERROR HANDLER für DOM-Manipulations-Fehler =====
     // Fängt "removeChild" und "insertBefore" Fehler ab, die durch React-Updates während unserer DOM-Manipulationen entstehen
-
+    
     // Patche Node.prototype.insertBefore um Fehler abzufangen
     const originalInsertBefore = Node.prototype.insertBefore;
     Node.prototype.insertBefore = function(newNode, referenceNode) {
@@ -269,8 +269,8 @@
                 hlink: true,
                 comment: true,
                 eprel: false,
-                images: false,
-                links: false,
+                images: true,
+                links: true,
                 autoActivateEnabled: true
             };
             if (!stored) return defaults;
@@ -282,8 +282,8 @@
                 hlink: true,
                 comment: true,
                 eprel: false,
-                images: false,
-                links: false,
+                images: true,
+                links: true,
                 autoActivateEnabled: true
             };
         }
@@ -305,16 +305,13 @@
             gridDivider: true,
             cloneApplyChanges: true,
             cloneBlockBeforeUnload: true,
-            titlebarCreatedFromInTitlebar: false,
+            titlebarCreatedFromInTitlebar: true,
             imageViewerMode: true,
             imageViewerModeNoHoverAnimation: true,
-            previewSearchField: true,
-            previewSearchFieldInDescHeader: true,
-            previewSearchDescriptionLines: true,
-            previewSearchDescriptionLinesInDescHeader: true,
-            headerSeparatorLine: true,
+            previewSectionSearchOverlay: true,
+            previewSectionSearchTrigger: 'mousewheel', // 'mousewheel', 'ctrlf', 'both'
             titlebarIdLinkToArticleEdit: true,
-            titlebarRemoveHerstellerLink: false,
+            titlebarRemoveHerstellerLink: true,
             titlebarIdCopyIcon: true,
             titlebarCloneButton: false,
             titlebarSaveButton: false,
@@ -322,18 +319,19 @@
             titlebarPasteButton: false,
             sidebarToggleButtonInHeadbar: false,
             sidebarAutoCollapse: false,
+            sidebarAutoCollapseMode: 'always', // 'always' oder 'maxWidth'
+            sidebarAutoCollapseMaxWidth: 2560,
             titlebarReloadButton: false,
             commentFieldCollapsed: true,
             mpnOverlayButton: true,
             herstellerlinkOverlayButton: true,
             herstellerlinkCaseButton: true,
-            matchruleContainerReorder: false,
-            bezeichnungKvHinweisEntfernen: false,
-            linksCountDisplay: false,
-            linksAddArticleIds: false,
-            imageGalleryHoverPreview: false,
-            titlebarDatasheets: false,
-            hideImagePreviewThumbnails: false
+            matchruleContainerReorder: true,
+            bezeichnungKvHinweisEntfernen: true,
+            linksCountDisplay: true,
+            linksAddArticleIds: true,
+            imageGalleryHoverPreview: true,
+            titlebarDatasheets: true
         };
         try {
             const stored = localStorage.getItem('geizhals-other-settings-config');
@@ -1044,7 +1042,7 @@
 
         // 1e. Matchrule-Feld auslesen
         let matchruleValue = '';
-        const matchruleField = document.querySelector('input[name="matchrule"]') ||
+        const matchruleField = document.querySelector('input[name="matchrule"]') || 
                                document.querySelector('textarea[name="matchrule"]');
         if (matchruleField) {
             matchruleValue = matchruleField.value || '';
@@ -1391,37 +1389,37 @@
 
                     // Funktion zum Setzen des Matchrule-Werts
                     const setMatchruleValue = async () => {
-                        const matchruleField = document.querySelector('input[name="matchrule"]') ||
+                        const matchruleField = document.querySelector('input[name="matchrule"]') || 
                                                document.querySelector('textarea[name="matchrule"]');
 
                         if (matchruleField) {
                             const isTextarea = matchruleField.tagName === 'TEXTAREA';
                             const nativeValueSetter = Object.getOwnPropertyDescriptor(
-                                isTextarea ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype,
+                                isTextarea ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype, 
                                 'value'
                             ).set;
 
                             // Focus setzen
                             matchruleField.focus();
-
+                            
                             // Wert mit nativem Setter setzen
                             nativeValueSetter.call(matchruleField, matchruleValue);
-
+                            
                             // Mehrere Event-Typen dispatchen für React-Kompatibilität
                             matchruleField.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
                             matchruleField.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
                             matchruleField.dispatchEvent(new Event('blur', { bubbles: true, cancelable: true }));
-
+                            
                             // Auch KeyboardEvent simulieren (manche React-Versionen brauchen das)
                             matchruleField.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'a' }));
                             matchruleField.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, cancelable: true, key: 'a' }));
-
+                            
                             // Zusätzlich: Setze auch das value-Attribut direkt
                             matchruleField.value = matchruleValue;
-
+                            
                             // Nochmal Input-Event
                             matchruleField.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-
+                            
                             return true;
                         }
                         return false;
@@ -1438,7 +1436,7 @@
                     // Drittes Setzen (falls applyMatchruleContainerReorder das Feld ersetzt hat)
                     await setMatchruleValue();
                     await new Promise(resolve => setTimeout(resolve, 300));
-
+                    
                     // Viertes Setzen - nochmals für den Fall dass die Textarea gerade erst erstellt wurde
                     await setMatchruleValue();
 
@@ -1726,7 +1724,7 @@
 
         cloneModeSettings.forEach(setting => {
             const wrapper = createOtherSettingRow(setting);
-
+            
             // Special handling for cloneApplyChanges - add info button
             if (setting.key === 'cloneApplyChanges') {
                 const infoButton = document.createElement('button');
@@ -1824,7 +1822,7 @@
 
                 wrapper.appendChild(infoButton);
             }
-
+            
             checkboxContainer.appendChild(wrapper);
         });
 
@@ -1930,11 +1928,11 @@
 
             const label = document.createElement('label');
             label.style.cssText = `cursor: ${toggleInput.checked ? 'pointer' : 'not-allowed'}; margin: 0; ${!toggleInput.checked ? 'opacity: 0.5; color: #999;' : ''}`;
-
+            
             // Label mit "(Standard: aktiv/inaktiv)" - "aktiv" fett
             const labelText = document.createTextNode(cb.label + ' (Standard: ');
             label.appendChild(labelText);
-
+            
             if (cb.defaultActive) {
                 const boldSpan = document.createElement('strong');
                 boldSpan.textContent = 'aktiv';
@@ -2040,17 +2038,10 @@
                 updateTitlebarSettingsUI();
                 updateOtherSettingsUI();
             }
-            if (key === 'previewSearchField' || key === 'previewSearchFieldInDescHeader' ||
-                key === 'previewSearchDescriptionLines' || key === 'previewSearchDescriptionLinesInDescHeader') {
-                const existingDescHeaderContainer = document.getElementById('geizhals-desc-header-search-container');
-                if (existingDescHeaderContainer) existingDescHeaderContainer.remove();
-            }
             updateTitlebarSettingsUI();
             updateOtherSettingsUI();
             applyImageViewerBehavior();
-            applyPreviewSearchField();
-            applyDescriptionHeaderSearchField();
-            applyHeaderSeparatorLine();
+            applyPreviewSectionSearchOverlay();
             applyTitlebarIdLink();
             applyTitlebarRemoveHerstellerLink();
             applyTitlebarIdCopyIcon();
@@ -2069,7 +2060,6 @@
             applyBezeichnungKvHinweisEntfernen();
             applyLinksCountDisplay();
             applyLinksAddArticleIds();
-            applyHideImagePreviewThumbnails();
             applyTitlebarDatasheets();
         };
 
@@ -2342,17 +2332,10 @@
                 updateTitlebarSettingsUI();
                 updateOtherSettingsUI();
             }
-            if (key === 'previewSearchField' || key === 'previewSearchFieldInDescHeader' ||
-                key === 'previewSearchDescriptionLines' || key === 'previewSearchDescriptionLinesInDescHeader') {
-                const existingDescHeaderContainer = document.getElementById('geizhals-desc-header-search-container');
-                if (existingDescHeaderContainer) existingDescHeaderContainer.remove();
-            }
             updateTitlebarSettingsUI();
             updateOtherSettingsUI();
             applyImageViewerBehavior();
-            applyPreviewSearchField();
-            applyDescriptionHeaderSearchField();
-            applyHeaderSeparatorLine();
+            applyPreviewSectionSearchOverlay();
             applyTitlebarIdLink();
             applyTitlebarRemoveHerstellerLink();
             applyTitlebarIdCopyIcon();
@@ -2371,28 +2354,22 @@
             applyBezeichnungKvHinweisEntfernen();
             applyLinksCountDisplay();
             applyLinksAddArticleIds();
-            applyHideImagePreviewThumbnails();
             applyTitlebarDatasheets();
         };
 
         // Sonstige Einstellungen
         const otherSettingsList = [
             { id: 'gridDivider', label: 'Bereichstrenner verschiebbar (bei geteilter Ansicht)', key: 'gridDivider' },
-            { id: 'previewSearchField', label: 'Preview-Suchfeld für Bezeichnungszeilen', key: 'previewSearchField' },
-            { id: 'previewSearchFieldInDescHeader', label: 'Suchfeld in Beschreibungs-Header', key: 'previewSearchFieldInDescHeader', dependsOn: 'previewSearchField' },
-            { id: 'previewSearchDescriptionLines', label: 'Preview-Suchfeld für Beschreibungszeilen', key: 'previewSearchDescriptionLines' },
-            { id: 'previewSearchDescriptionLinesInDescHeader', label: 'Suchfeld in Beschreibungs-Header', key: 'previewSearchDescriptionLinesInDescHeader', dependsOn: 'previewSearchDescriptionLines' },
-            { id: 'headerSeparatorLine', label: 'Trennlinie unter Preview- und Beschreibungs-Header', key: 'headerSeparatorLine' },
-            { id: 'sidebarAutoCollapse', label: 'Seitenleiste automatisch ein-/ausklappen', key: 'sidebarAutoCollapse' },
-            { id: 'commentFieldCollapsed', label: 'Hinweis-Feld: Höhe begrenzen', key: 'commentFieldCollapsed' },
-            { id: 'matchruleContainerReorder', label: 'Matchrule-Feld: Mehrzeilig + Volle Breite', key: 'matchruleContainerReorder' },
-            { id: 'mpnOverlayButton', label: 'Button: Overlay für MPN', key: 'mpnOverlayButton' },
-            { id: 'herstellerlinkOverlayButton', label: 'Button: Overlay für Herstellerlinks', key: 'herstellerlinkOverlayButton' },
-            { id: 'herstellerlinkCaseButton', label: 'Button: Case Converter für Herstellerlinks', key: 'herstellerlinkCaseButton' },
             { id: 'bezeichnungKvHinweisEntfernen', label: 'Bezeichnung: Hinweis "Bezeichnung wird über KV generiert!" entfernen', key: 'bezeichnungKvHinweisEntfernen' },
             { id: 'linksCountDisplay', label: 'Testberichte & weiterführende Links: Anzahl der Verlinkungen anzeigen', key: 'linksCountDisplay' },
             { id: 'linksAddArticleIds', label: 'Testberichte & weiterführende Links: Button für "Artikel-ID(s) nachtragen"', key: 'linksAddArticleIds' },
-            { id: 'hideImagePreviewThumbnails', label: 'Bilder-Vorschau unter Hauptbild ausblenden', key: 'hideImagePreviewThumbnails' }
+            { id: 'matchruleContainerReorder', label: 'Matchrule-Feld: Mehrzeilig + Volle Breite', key: 'matchruleContainerReorder' },
+            { id: 'commentFieldCollapsed', label: 'Hinweis-Feld: Höhe begrenzen', key: 'commentFieldCollapsed' },
+            { id: 'previewSectionSearchOverlay', label: 'Suchfeld für Artikelvorschau / Eingabemaske', key: 'previewSectionSearchOverlay', hasDropdown: true },
+            { id: 'mpnOverlayButton', label: 'Button: MPN(s) bearbeiten', key: 'mpnOverlayButton' },
+            { id: 'herstellerlinkOverlayButton', label: 'Button: Herstellerlinks bearbeiten', key: 'herstellerlinkOverlayButton' },
+            { id: 'herstellerlinkCaseButton', label: 'Button: Case Converter für Herstellerlinks', key: 'herstellerlinkCaseButton' },
+            { id: 'sidebarAutoCollapse', label: 'Seitenleiste automatisch ein-/ausklappen', key: 'sidebarAutoCollapse' }
         ];
 
         otherSettingsList.forEach(setting => {
@@ -2606,6 +2583,150 @@
                     backdrop.addEventListener('click', closeTooltip);
                 });
                 wrapper.appendChild(infoButton);
+                
+                // Wrapper auf flex-wrap umstellen für Radio-Buttons in neuer Zeile
+                wrapper.style.flexWrap = 'wrap';
+                
+                // Radio-Buttons für Modus-Auswahl (unter der Checkbox)
+                const radioContainer = document.createElement('div');
+                radioContainer.id = 'sidebarAutoCollapseRadioContainer';
+                radioContainer.style.cssText = `
+                    width: 100%;
+                    margin-left: 1.5rem;
+                    margin-top: 0.5rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.4rem;
+                `;
+                
+                // Radio 1: Immer
+                const radio1Wrapper = document.createElement('div');
+                radio1Wrapper.style.cssText = 'display: flex; align-items: center; gap: 0.4rem;';
+                
+                const radio1 = document.createElement('input');
+                radio1.type = 'radio';
+                radio1.name = 'sidebarAutoCollapseMode';
+                radio1.value = 'always';
+                radio1.id = 'sidebarAutoCollapseMode_always';
+                radio1.checked = otherSettings.sidebarAutoCollapseMode === 'always' || !otherSettings.sidebarAutoCollapseMode;
+                radio1.style.cursor = 'pointer';
+                
+                const label1 = document.createElement('label');
+                label1.textContent = 'Immer';
+                label1.htmlFor = 'sidebarAutoCollapseMode_always';
+                label1.style.cssText = 'cursor: pointer; margin: 0;';
+                
+                radio1Wrapper.appendChild(radio1);
+                radio1Wrapper.appendChild(label1);
+                
+                // Radio 2: Nur bis max. Fensterbreite
+                const radio2Wrapper = document.createElement('div');
+                radio2Wrapper.style.cssText = 'display: flex; align-items: center; gap: 0.4rem;';
+                
+                const radio2 = document.createElement('input');
+                radio2.type = 'radio';
+                radio2.name = 'sidebarAutoCollapseMode';
+                radio2.value = 'maxWidth';
+                radio2.id = 'sidebarAutoCollapseMode_maxWidth';
+                radio2.checked = otherSettings.sidebarAutoCollapseMode === 'maxWidth';
+                radio2.style.cursor = 'pointer';
+                
+                const label2 = document.createElement('label');
+                label2.textContent = 'Nur bis max. Fensterbreite (in Pixel):';
+                label2.htmlFor = 'sidebarAutoCollapseMode_maxWidth';
+                label2.style.cssText = 'cursor: pointer; margin: 0;';
+                
+                const maxWidthInput = document.createElement('input');
+                maxWidthInput.type = 'number';
+                maxWidthInput.id = 'sidebarAutoCollapseMaxWidth';
+                maxWidthInput.value = otherSettings.sidebarAutoCollapseMaxWidth || 2560;
+                maxWidthInput.min = '1';
+                maxWidthInput.step = '1';
+                maxWidthInput.style.cssText = `
+                    width: 80px;
+                    padding: 0.2rem 0.4rem;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 0.875rem;
+                    margin-left: 0.5rem;
+                `;
+                
+                // Aktuelle Fensterbreite anzeigen (in physischen Pixeln)
+                const currentWidthDisplay = document.createElement('span');
+                currentWidthDisplay.id = 'sidebarAutoCollapseCurrentWidth';
+                currentWidthDisplay.style.cssText = `
+                    margin-left: 0.5rem;
+                    color: #888;
+                    font-size: 0.8rem;
+                `;
+                const updateCurrentWidthDisplay = () => {
+                    const physicalWidth = Math.floor(window.innerWidth * window.devicePixelRatio);
+                    currentWidthDisplay.textContent = `(aktuell: ${physicalWidth}px)`;
+                };
+                updateCurrentWidthDisplay();
+                // Update bei Fenstergrößenänderung
+                window.addEventListener('resize', updateCurrentWidthDisplay);
+                
+                radio2Wrapper.appendChild(radio2);
+                radio2Wrapper.appendChild(label2);
+                radio2Wrapper.appendChild(maxWidthInput);
+                radio2Wrapper.appendChild(currentWidthDisplay);
+                
+                // Funktion zum Aktualisieren des Radio-States
+                const updateRadioState = () => {
+                    const isMainCheckboxChecked = checkbox.checked;
+                    
+                    // Radio-Buttons nur aktiv wenn Hauptcheckbox aktiv
+                    radio1.disabled = !isMainCheckboxChecked;
+                    radio2.disabled = !isMainCheckboxChecked;
+                    label1.style.opacity = isMainCheckboxChecked ? '1' : '0.5';
+                    label2.style.opacity = isMainCheckboxChecked ? '1' : '0.5';
+                    label1.style.cursor = isMainCheckboxChecked ? 'pointer' : 'default';
+                    label2.style.cursor = isMainCheckboxChecked ? 'pointer' : 'default';
+                    radio1.style.cursor = isMainCheckboxChecked ? 'pointer' : 'default';
+                    radio2.style.cursor = isMainCheckboxChecked ? 'pointer' : 'default';
+                    
+                    // Input-Feld nur aktiv wenn Radio 2 ausgewählt UND Hauptcheckbox aktiv
+                    const isMaxWidthActive = isMainCheckboxChecked && radio2.checked;
+                    maxWidthInput.disabled = !isMaxWidthActive;
+                    maxWidthInput.style.opacity = isMaxWidthActive ? '1' : '0.5';
+                };
+                
+                // Event-Handler für Hauptcheckbox
+                checkbox.addEventListener('change', updateRadioState);
+                
+                radio1.addEventListener('change', () => {
+                    if (radio1.checked) {
+                        otherSettings.sidebarAutoCollapseMode = 'always';
+                        saveOtherSettingsConfig(otherSettings);
+                        updateRadioState();
+                    }
+                });
+                
+                radio2.addEventListener('change', () => {
+                    if (radio2.checked) {
+                        otherSettings.sidebarAutoCollapseMode = 'maxWidth';
+                        saveOtherSettingsConfig(otherSettings);
+                        updateRadioState();
+                    }
+                });
+                
+                maxWidthInput.addEventListener('change', () => {
+                    const value = parseInt(maxWidthInput.value, 10);
+                    if (value && value > 0) {
+                        otherSettings.sidebarAutoCollapseMaxWidth = value;
+                        saveOtherSettingsConfig(otherSettings);
+                    } else {
+                        maxWidthInput.value = otherSettings.sidebarAutoCollapseMaxWidth || 2560;
+                    }
+                });
+                
+                // Initial state
+                updateRadioState();
+                
+                radioContainer.appendChild(radio1Wrapper);
+                radioContainer.appendChild(radio2Wrapper);
+                wrapper.appendChild(radioContainer);
             }
 
             // Special handling for matchruleContainerReorder - add info button
@@ -2701,6 +2822,44 @@
                 wrapper.appendChild(infoButton);
             }
 
+            // Special handling for previewSectionSearchOverlay - add trigger dropdown
+            if (setting.key === 'previewSectionSearchOverlay') {
+                const dropdown = document.createElement('select');
+                dropdown.id = 'previewSectionSearchTrigger';
+                dropdown.style.cssText = `
+                    margin-left: 0.5rem;
+                    padding: 0.2rem 0.4rem;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 0.875rem;
+                    cursor: pointer;
+                `;
+                
+                const options = [
+                    { value: 'mousewheel', label: 'Mausrad-Button' },
+                    { value: 'ctrlf', label: 'STRG+F' },
+                    { value: 'both', label: 'Mausrad-Button oder STRG+F' }
+                ];
+                
+                options.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt.value;
+                    option.textContent = opt.label;
+                    if (otherSettings.previewSectionSearchTrigger === opt.value) {
+                        option.selected = true;
+                    }
+                    dropdown.appendChild(option);
+                });
+                
+                dropdown.addEventListener('change', () => {
+                    otherSettings.previewSectionSearchTrigger = dropdown.value;
+                    saveOtherSettingsConfig(otherSettings);
+                    if (commonChangeCallback) commonChangeCallback('previewSectionSearchTrigger', dropdown.value);
+                });
+                
+                wrapper.appendChild(dropdown);
+            }
+
             otherSettingsContainer.appendChild(wrapper);
         });
     }
@@ -2713,9 +2872,7 @@
         if (cloneConfig.autoActivateEnabled === false) {
             // Nur die anderen Funktionen ausführen
             applyImageViewerBehavior();
-            applyPreviewSearchField();
-            applyDescriptionHeaderSearchField();
-            applyHeaderSeparatorLine();
+            applyPreviewSectionSearchOverlay();
             applyCommentFieldCollapse();
             applyTitlebarIdLink();
             applyTitlebarRemoveHerstellerLink();
@@ -2765,9 +2922,7 @@
         setTimeout(applyCheckboxes, 600);
 
         applyImageViewerBehavior();
-        applyPreviewSearchField();
-        applyDescriptionHeaderSearchField();
-        applyHeaderSeparatorLine();
+        applyPreviewSectionSearchOverlay();
         applyCommentFieldCollapse();
         applyTitlebarIdLink();
         applyTitlebarRemoveHerstellerLink();
@@ -2856,397 +3011,6 @@
             }
 
             setupImageViewer();
-        } catch (e) {
-            // Fehler ignorieren
-        }
-    }
-
-    // ===== APPLY PREVIEW SEARCH FIELD =====
-    function applyPreviewSearchField() {
-        try {
-            const otherSettings = getOtherSettingsConfig();
-
-            // Wenn Suchfeld bereits existiert, nichts tun (verhindert Blinken)
-            const existingSearchField = document.getElementById('geizhals-preview-search-field');
-            if (existingSearchField) {
-                return;
-            }
-
-            if (!otherSettings.previewSearchField && !otherSettings.previewSearchDescriptionLines) {
-                requestAnimationFrame(() => clearPreviewHighlights());
-                return;
-            }
-
-            // Warte kurz und suche dann nach dem Header
-            setTimeout(() => {
-
-            // Suche alle sticky headers
-            const stickyHeaders = document.querySelectorAll('div.d-flex.justify-content-between.position-sticky');
-
-            let headerContainer = null;
-
-            // Finde den Header mit dem mode=desc Link (Artikelvorschau-Sektion)
-            for (let header of stickyHeaders) {
-                // Neue Struktur: Suche nach Link mit mode=desc
-                const descLink = header.querySelector('a[href*="mode=desc"]');
-                if (descLink) {
-                    headerContainer = header;
-                    break;
-                }
-                // Fallback: Alte Struktur mit h5 "Artikelvorschau"
-                const h5 = header.querySelector('h5');
-                if (h5 && h5.textContent.includes('Artikelvorschau')) {
-                    headerContainer = header;
-                    break;
-                }
-            }
-
-            if (!headerContainer) {
-                return;
-            }
-
-            // Prüfe ob bereits ein Suchfeld existiert
-            if (headerContainer.querySelector('#geizhals-preview-search-field')) {
-                return;
-            }
-
-            // Entferne das h5 "Artikelvorschau" Element wenn eine der Funktionen aktiv ist (falls vorhanden)
-            const h5Element = headerContainer.querySelector('h5');
-            if (h5Element && (otherSettings.previewSearchField || otherSettings.previewSearchDescriptionLines)) {
-                h5Element.remove();
-            }
-
-            // Erstelle Input-Element Container
-            const searchInputWrapper = document.createElement('div');
-            searchInputWrapper.id = 'geizhals-preview-search-field';
-            searchInputWrapper.style.cssText = `
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                gap: 0.5rem;
-                flex: 1;
-                margin-left: auto;
-            `;
-
-            // Erstelle Bezeichnungszeilen Suchfeld wenn aktiv
-            if (otherSettings.previewSearchField) {
-                const searchInput = document.createElement('input');
-                searchInput.type = 'text';
-                searchInput.id = 'geizhals-preview-search-field-lines';
-                searchInput.placeholder = 'Bezeichnungszeilen durchsuchen...';
-                searchInput.style.cssText = `
-                    padding: 0.4rem 0.6rem;
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                    font-size: 0.875rem;
-                    width: 300px;
-                `;
-
-                searchInputWrapper.appendChild(searchInput);
-
-                // Blockiere Enter-Taste (verhindert Formular-Submit)
-                searchInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-                });
-
-                // Event-Listener für Input
-                searchInput.addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.trim();
-                    applyPreviewHighlights(searchTerm, 'lines');
-                    // Sync mit Description Header Suchfeld
-                    const descHeaderField = document.getElementById('geizhals-desc-header-search-field');
-                    if (descHeaderField && descHeaderField.value !== e.target.value) {
-                        descHeaderField.value = e.target.value;
-                    }
-                    // Wenn beide aktiv sind und hier wird geschrieben: leere description fields
-                    if (otherSettings.previewSearchDescriptionLines && searchTerm) {
-                        const descriptionField = document.getElementById('geizhals-preview-search-field-description');
-                        if (descriptionField && descriptionField.value) {
-                            descriptionField.value = '';
-                        }
-                        const descHeaderDescField = document.getElementById('geizhals-desc-header-search-field-description');
-                        if (descHeaderDescField && descHeaderDescField.value) {
-                            descHeaderDescField.value = '';
-                        }
-                    }
-                });
-            }
-
-            // Erstelle Beschreibungszeilen Suchfeld wenn aktiv
-            if (otherSettings.previewSearchDescriptionLines) {
-                const searchInput = document.createElement('input');
-                searchInput.type = 'text';
-                searchInput.id = 'geizhals-preview-search-field-description';
-                searchInput.placeholder = 'Beschreibungszeilen durchsuchen...';
-                searchInput.style.cssText = `
-                    padding: 0.4rem 0.6rem;
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                    font-size: 0.875rem;
-                    width: 300px;
-                `;
-
-                searchInputWrapper.appendChild(searchInput);
-
-                // Blockiere Enter-Taste (verhindert Formular-Submit)
-                searchInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-                });
-
-                // Event-Listener für Input
-                searchInput.addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.trim();
-                    applyPreviewHighlights(searchTerm, 'description');
-                    // Sync mit Description Header Suchfeld
-                    const descHeaderField = document.getElementById('geizhals-desc-header-search-field-description');
-                    if (descHeaderField && descHeaderField.value !== e.target.value) {
-                        descHeaderField.value = e.target.value;
-                    }
-                    // Wenn beide aktiv sind und hier wird geschrieben: leere lines fields
-                    if (otherSettings.previewSearchField && searchTerm) {
-                        const linesField = document.getElementById('geizhals-preview-search-field-lines');
-                        if (linesField && linesField.value) {
-                            linesField.value = '';
-                        }
-                        const descHeaderLinesField = document.getElementById('geizhals-desc-header-search-field');
-                        if (descHeaderLinesField && descHeaderLinesField.value) {
-                            descHeaderLinesField.value = '';
-                        }
-                    }
-                });
-            }
-
-            // Finde den btn-group und füge die Suchleiste danach ein (Buttons sind jetzt links)
-            try {
-                const btnGroup = headerContainer.querySelector('.btn-group, .section__header__buttons');
-                if (btnGroup && btnGroup.parentElement && btnGroup.parentElement.isConnected) {
-                    // Prüfe ob nextSibling existiert und zum gleichen Parent gehört
-                    if (btnGroup.nextSibling) {
-                        btnGroup.parentElement.insertBefore(searchInputWrapper, btnGroup.nextSibling);
-                    } else {
-                        btnGroup.parentElement.appendChild(searchInputWrapper);
-                    }
-                } else if (headerContainer && headerContainer.isConnected) {
-                    headerContainer.appendChild(searchInputWrapper);
-                }
-            } catch (insertError) {
-                // Silently ignore insertBefore errors
-            }
-        }, 500);
-        } catch (e) {
-            // Fehler ignorieren
-        }
-    }
-
-    // ===== APPLY DESCRIPTION HEADER SEARCH FIELD =====
-    function applyDescriptionHeaderSearchField() {
-        try {
-            const otherSettings = getOtherSettingsConfig();
-
-            // Wenn Container bereits existiert, nichts tun
-            const existingContainer = document.getElementById('geizhals-desc-header-search-container');
-            if (existingContainer) {
-                return;
-            }
-
-        // Mindestens eine der Header-Optionen muss aktiv sein
-        const showLinesField = otherSettings.previewSearchField && otherSettings.previewSearchFieldInDescHeader;
-        const showDescField = otherSettings.previewSearchDescriptionLines && otherSettings.previewSearchDescriptionLinesInDescHeader;
-
-        if (!showLinesField && !showDescField) {
-            return;
-        }
-
-        // Warte kurz und suche dann nach dem Beschreibung Header
-        setTimeout(() => {
-            // Suche nach dem h5 "Beschreibung" Element
-            const allH5 = document.querySelectorAll('h5.pt-1.mb-0');
-            let beschreibungH5 = null;
-
-            for (let h5 of allH5) {
-                if (h5.textContent.trim() === 'Beschreibung') {
-                    beschreibungH5 = h5;
-                    break;
-                }
-            }
-
-            if (!beschreibungH5) return;
-
-            // Prüfe ob bereits ein Container existiert
-            const parentContainer = beschreibungH5.parentElement;
-            if (!parentContainer || parentContainer.querySelector('#geizhals-desc-header-search-container')) {
-                return;
-            }
-
-            // Erstelle Container für beide Suchfelder
-            const searchContainer = document.createElement('div');
-            searchContainer.id = 'geizhals-desc-header-search-container';
-            searchContainer.style.cssText = `
-                display: flex;
-                gap: 0.5rem;
-                margin-left: 1rem;
-                align-items: center;
-            `;
-
-            // Erstelle Bezeichnungszeilen Suchfeld wenn aktiv
-            if (showLinesField) {
-                const linesSearchInput = document.createElement('input');
-                linesSearchInput.type = 'text';
-                linesSearchInput.id = 'geizhals-desc-header-search-field';
-                linesSearchInput.placeholder = 'Bezeichnungszeilen...';
-                linesSearchInput.style.cssText = `
-                    padding: 0.3rem 0.5rem;
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                    font-size: 0.8rem;
-                    width: 160px;
-                `;
-
-                // Blockiere Enter-Taste
-                linesSearchInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-                });
-
-                // Event-Listener für Input - synchronisiert mit dem anderen Suchfeld
-                linesSearchInput.addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.trim();
-                    applyPreviewHighlights(searchTerm, 'lines');
-                    // Sync mit Preview Suchfeld
-                    const previewField = document.getElementById('geizhals-preview-search-field-lines');
-                    if (previewField && previewField.value !== e.target.value) {
-                        previewField.value = e.target.value;
-                    }
-                    // Wenn description search aktiv: leere description fields
-                    const otherSettings = getOtherSettingsConfig();
-                    if (otherSettings.previewSearchDescriptionLines && searchTerm) {
-                        const descriptionField = document.getElementById('geizhals-preview-search-field-description');
-                        if (descriptionField && descriptionField.value) {
-                            descriptionField.value = '';
-                        }
-                        const descHeaderDescField = document.getElementById('geizhals-desc-header-search-field-description');
-                        if (descHeaderDescField && descHeaderDescField.value) {
-                            descHeaderDescField.value = '';
-                        }
-                    }
-                });
-
-                searchContainer.appendChild(linesSearchInput);
-            }
-
-            // Erstelle Beschreibungszeilen Suchfeld wenn aktiv
-            if (showDescField) {
-                const descSearchInput = document.createElement('input');
-                descSearchInput.type = 'text';
-                descSearchInput.id = 'geizhals-desc-header-search-field-description';
-                descSearchInput.placeholder = 'Beschreibungszeilen...';
-                descSearchInput.style.cssText = `
-                    padding: 0.3rem 0.5rem;
-                    border: 1px solid #ddd;
-                    border-radius: 4px;
-                    font-size: 0.8rem;
-                    width: 160px;
-                `;
-
-                // Blockiere Enter-Taste
-                descSearchInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-                });
-
-                // Event-Listener für Input - synchronisiert mit dem anderen Suchfeld
-                descSearchInput.addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.trim();
-                    applyPreviewHighlights(searchTerm, 'description');
-                    // Sync mit Preview Suchfeld
-                    const previewField = document.getElementById('geizhals-preview-search-field-description');
-                    if (previewField && previewField.value !== e.target.value) {
-                        previewField.value = e.target.value;
-                    }
-                    // Wenn lines search aktiv: leere lines fields
-                    const otherSettings = getOtherSettingsConfig();
-                    if (otherSettings.previewSearchField && searchTerm) {
-                        const linesField = document.getElementById('geizhals-preview-search-field-lines');
-                        if (linesField && linesField.value) {
-                            linesField.value = '';
-                        }
-                        const descHeaderLinesField = document.getElementById('geizhals-desc-header-search-field');
-                        if (descHeaderLinesField && descHeaderLinesField.value) {
-                            descHeaderLinesField.value = '';
-                        }
-                    }
-                });
-
-                searchContainer.appendChild(descSearchInput);
-            }
-
-            // Füge Container nach dem h5 ein
-            beschreibungH5.insertAdjacentElement('afterend', searchContainer);
-        }, 500);
-        } catch (e) {
-            // Fehler ignorieren
-        }
-    }
-
-    // ===== APPLY HEADER SEPARATOR LINE =====
-    function applyHeaderSeparatorLine() {
-        try {
-            const otherSettings = getOtherSettingsConfig();
-
-            // Erstelle oder aktualisiere Style
-            let style = document.getElementById('geizhals-header-separator-style');
-
-            if (otherSettings.headerSeparatorLine) {
-                if (!style) {
-                    style = document.createElement('style');
-                    style.id = 'geizhals-header-separator-style';
-                    document.head.appendChild(style);
-                }
-                style.textContent = `
-                    .geizhals-header-with-separator {
-                        border-bottom: 2px solid #555 !important;
-                        padding-bottom: 2px !important;
-                    }
-                `;
-
-                // Finde und markiere die spezifischen Header
-                // 1. Preview-Header (enthält Link zu mode=desc)
-                const allStickyHeaders = document.querySelectorAll('.d-flex.justify-content-between.position-sticky');
-                allStickyHeaders.forEach(header => {
-                    // Preview-Header: Hat Link zu mode=desc
-                    const modeDescLink = header.querySelector('a[href*="mode=desc"]');
-                    if (modeDescLink) {
-                        header.classList.add('geizhals-header-with-separator');
-                        return;
-                    }
-
-                    // Beschreibungs-Header: Hat h5 mit Text "Beschreibung"
-                    const h5 = header.querySelector('h5');
-                    if (h5 && h5.textContent.trim() === 'Beschreibung') {
-                        header.classList.add('geizhals-header-with-separator');
-                    }
-                });
-            } else {
-                // Entferne Style wenn Option deaktiviert
-                if (style) {
-                    style.remove();
-                }
-                // Entferne Klasse von allen Elementen
-                const markedHeaders = document.querySelectorAll('.geizhals-header-with-separator');
-                markedHeaders.forEach(header => {
-                    header.classList.remove('geizhals-header-with-separator');
-                });
-            }
         } catch (e) {
             // Fehler ignorieren
         }
@@ -4093,7 +3857,7 @@
     function applyHerstellerlinkCaseButton() {
         try {
             const otherSettings = getOtherSettingsConfig();
-
+            
             // Finde das Herstellerlink-Formular
             const hlinkForm = document.getElementById('section_form_hlink');
             if (!hlinkForm) return;
@@ -4389,13 +4153,13 @@
             // Finde das Input-Element ODER die bereits existierende Textarea
             let matchruleInput = matchruleForm.querySelector('input[name="matchrule"]');
             const existingTextarea = matchruleForm.querySelector('textarea[name="matchrule"]');
-
+            
             // Wenn bereits eine Textarea existiert (von uns erstellt), verwende deren Wert
             if (existingTextarea && !matchruleInput) {
                 // Bereits modifiziert, nichts tun
                 return;
             }
-
+            
             if (!matchruleInput) return;
 
             // Finde das h5 Element mit dem Matchrule-Link
@@ -4573,21 +4337,21 @@
     function applyBezeichnungKvHinweisEntfernen() {
         try {
             const otherSettings = getOtherSettingsConfig();
-
+            
             // Finde das Bezeichnung-Formular
             const bezeichnungForm = document.querySelector('form#section_form_bezeichnung');
             if (!bezeichnungForm) return;
-
+            
             // Finde das small-Element mit dem Kommentar
             const smallElement = bezeichnungForm.querySelector('small.d-flex');
             if (!smallElement) return;
-
+            
             // Prüfe ob der Text "Bezeichnung wird über KV generiert" enthält
             const textContent = smallElement.textContent || '';
             const containsKvHinweis = textContent.includes('Bezeichnung wird über KV generiert');
-
+            
             if (!containsKvHinweis) return;
-
+            
             if (otherSettings.bezeichnungKvHinweisEntfernen) {
                 // Verstecke das Element
                 smallElement.style.display = 'none';
@@ -4609,65 +4373,65 @@
     function applyLinksCountDisplay() {
         try {
             const otherSettings = getOtherSettingsConfig();
-
+            
             // Finde die Links-Sektion
             const linksForm = document.getElementById('section_form_links');
             if (!linksForm) return;
-
+            
             // Wenn deaktiviert, entferne vorhandene Count-Anzeigen
             if (!otherSettings.linksCountDisplay) {
                 const existingCounts = linksForm.querySelectorAll('.geizhals-link-count');
                 existingCounts.forEach(el => el.remove());
                 return;
             }
-
+            
             // Prüfe ob bereits läuft
             if (linksCountDisplayRunning) return;
-
+            
             // Finde alle Bleistift-Links in der Tabelle
             const pencilLinks = linksForm.querySelectorAll('a[href*="kalif/artikel/link?id="]');
             if (pencilLinks.length === 0) return;
-
+            
             // Prüfe ob bereits alle Counts geladen wurden
             const existingCounts = linksForm.querySelectorAll('.geizhals-link-count');
             if (existingCounts.length >= pencilLinks.length) return;
-
+            
             linksCountDisplayRunning = true;
-
+            
             // Für jeden Link die Anzahl der Verlinkungen laden
             let pendingLoads = pencilLinks.length;
-
+            
             const finishAllLoads = () => {
                 pendingLoads--;
                 if (pendingLoads <= 0) linksCountDisplayRunning = false;
             };
-
+            
             pencilLinks.forEach((link, index) => {
                 // Prüfe ob für diesen Link bereits ein Count existiert
                 if (link.parentElement.querySelector('.geizhals-link-count')) {
                     finishAllLoads();
                     return;
                 }
-
+                
                 const url = link.href;
-
+                
                 // Erstelle iframe - muss JavaScript ausführen können für React-SPA
                 const iframe = document.createElement('iframe');
                 iframe.style.cssText = 'position: absolute; left: -9999px; top: -9999px; width: 800px; height: 600px; visibility: hidden;';
                 iframe.src = url;
-
+                
                 let checkCount = 0;
                 const maxChecks = 50; // Max 5 Sekunden warten (50 x 100ms)
-
+                
                 const checkForContent = () => {
                     checkCount++;
                     try {
                         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-
+                        
                         // Suche nach "Artikelauswahl (X)"
                         const h5Elements = iframeDoc.querySelectorAll('h5');
                         let count = null;
-
+                        
                         for (const h5 of h5Elements) {
                             const text = h5.textContent || '';
                             const match = text.match(/Artikelauswahl\s*\((\d+)\)/);
@@ -4676,20 +4440,21 @@
                                 break;
                             }
                         }
-
+                        
                         if (count !== null) {
                             // Füge die Anzahl neben dem Bleistift-Icon ein
                             const countSpan = document.createElement('span');
                             countSpan.className = 'geizhals-link-count';
                             countSpan.textContent = `(${count})`;
-                            countSpan.style.cssText = 'margin-left: 0.25rem; font-size: 0.85em; color: #666;';
-
-                            // Prüfe ob bereits eingefügt und mache Parent nowrap
+                            countSpan.style.cssText = 'margin-left: 2px; font-size: 0.85em; color: #666;';
+                            
+                            // Prüfe ob bereits eingefügt und mache Parent nowrap + dynamische Breite
                             if (!link.parentElement.querySelector('.geizhals-link-count')) {
                                 link.parentElement.style.whiteSpace = 'nowrap';
+                                link.parentElement.style.width = 'auto';
                                 link.parentElement.appendChild(countSpan);
                             }
-
+                            
                             iframe.remove();
                             finishAllLoads();
                         } else if (checkCount < maxChecks) {
@@ -4708,20 +4473,20 @@
                         }
                     }
                 };
-
+                
                 iframe.onload = () => {
                     // Warte kurz damit React rendern kann
                     setTimeout(checkForContent, 200);
                 };
-
+                
                 iframe.onerror = () => {
                     iframe.remove();
                     finishAllLoads();
                 };
-
+                
                 document.body.appendChild(iframe);
             });
-
+            
         } catch (e) {
             linksCountDisplayRunning = false;
         }
@@ -4731,115 +4496,43 @@
     function applyLinksAddArticleIds() {
         try {
             const otherSettings = getOtherSettingsConfig();
-
+            
             // Finde die Links-Sektion
             const linksForm = document.getElementById('section_form_links');
             if (!linksForm) return;
-
+            
             // Entferne vorhandenen Button
             const existingButton = linksForm.querySelector('.geizhals-add-article-ids-btn');
             if (existingButton) existingButton.remove();
-
+            
             if (!otherSettings.linksAddArticleIds) return;
-
+            
             // Finde den Header
             const header = linksForm.querySelector('h5.pt-1.mb-0');
             if (!header) return;
-
+            
             // Finde den übergeordneten flex-Container und die Button-Gruppe
             const headerContainer = header.parentElement;
             const btnGroup = headerContainer ? headerContainer.querySelector('.section__header__buttons') : null;
-
+            
             // Erstelle Button
             const addButton = document.createElement('button');
             addButton.type = 'button';
             addButton.className = 'geizhals-add-article-ids-btn btn btn-outline-primary btn-sm';
             addButton.textContent = 'Artikel-ID(s) nachtragen';
             addButton.style.cssText = 'font-size: 0.85rem; padding: 0.2rem 0.6rem; margin-right: 0.5rem;';
-
+            
             addButton.addEventListener('click', () => {
                 openAddArticleIdsOverlay();
             });
-
+            
             // Füge Button vor der Button-Gruppe ein (rechtsbündig)
             if (btnGroup) {
                 btnGroup.parentElement.insertBefore(addButton, btnGroup);
             } else {
                 header.appendChild(addButton);
             }
-
-        } catch (e) {
-            // Fehler ignorieren
-        }
-    }
-
-    function applyHideImagePreviewThumbnails() {
-        try {
-            const otherSettings = getOtherSettingsConfig();
-
-            // Prüfe ob wir auf der richtigen URL sind (nur ?id=<id>, nicht mode= oder clone=)
-            const url = new URL(window.location.href);
-            if (!url.pathname.endsWith('/kalif/artikel')) return;
-
-            const params = url.searchParams;
-            const hasId = params.has('id');
-            const hasMode = params.has('mode');
-            const hasClone = params.has('clone') || params.has('clone_id');
-
-            // Nur wenn id vorhanden und kein mode/clone Parameter
-            if (!hasId || hasMode || hasClone) return;
-
-            // 1. Finde und verstecke den Thumbnail-Container unter dem Hauptbild
-            const thumbnailContainers = document.querySelectorAll('div.d-flex.mw-100');
-
-            thumbnailContainers.forEach(container => {
-                // Prüfe ob es der richtige Container ist (enthält Link zu mode=image und pix_image_section)
-                const imageLink = container.querySelector('a[href*="mode=image"]');
-                const pixInput = container.querySelector('#pix_image_section');
-
-                if (imageLink && pixInput) {
-                    if (otherSettings.hideImagePreviewThumbnails) {
-                        container.style.display = 'none';
-                    } else {
-                        container.style.display = '';
-                    }
-                }
-            });
-
-            // 2. Finde das Grid-Layout und passe es an
-            const gridSections = document.querySelectorAll('section.d-grid.align-items-start.gap-0');
-
-            gridSections.forEach(section => {
-                // Prüfe ob es das richtige Grid ist (hat grid-template-columns: 1fr 2fr)
-                const style = section.getAttribute('style') || '';
-                if (style.includes('grid-template-columns')) {
-                    // Prüfe ob es den Bilder-Container und pane__top enthält
-                    const imageContainer = section.querySelector('div.px-2.pt-2.pb-1.bg-white.position-relative');
-                    const paneTop = section.querySelector('div.pane__top');
-
-                    if (imageContainer && paneTop) {
-                        if (otherSettings.hideImagePreviewThumbnails) {
-                            // Finde das Hauptbild um die Breite zu ermitteln
-                            const mainImage = imageContainer.querySelector('img[src*="pix_original"]');
-                            if (mainImage && mainImage.offsetWidth > 0) {
-                                // Setze min-width basierend auf dem Bild (+ Padding)
-                                const minWidth = mainImage.offsetWidth + 20; // 20px für Padding
-                                imageContainer.style.minWidth = `${minWidth}px`;
-                            } else {
-                                // Fallback: mindestens 150px
-                                imageContainer.style.minWidth = '150px';
-                            }
-                            // Ändere Grid auf auto 1fr - Bilder-Container nur so breit wie nötig
-                            section.style.gridTemplateColumns = 'auto 1fr';
-                        } else {
-                            // Zurücksetzen auf Original
-                            section.style.gridTemplateColumns = '';
-                            imageContainer.style.minWidth = '';
-                        }
-                    }
-                }
-            });
-
+            
         } catch (e) {
             // Fehler ignorieren
         }
@@ -4860,12 +4553,12 @@
             // Prüfe ob wir auf der richtigen URL sind (nur ?id=<id>, nicht mode= oder clone=)
             const url = new URL(window.location.href);
             if (!url.pathname.endsWith('/kalif/artikel')) return;
-
+            
             const params = url.searchParams;
             const hasId = params.has('id');
             const hasMode = params.has('mode');
             const hasClone = params.has('clone') || params.has('clone_id');
-
+            
             // Nur wenn id vorhanden und kein mode/clone Parameter
             if (!hasId || hasMode || hasClone) return;
 
@@ -4967,7 +4660,7 @@
         if (existingOverlay) existingOverlay.remove();
         const existingBackdrop = document.getElementById('geizhals-add-article-ids-backdrop');
         if (existingBackdrop) existingBackdrop.remove();
-
+        
         // Backdrop
         const backdrop = document.createElement('div');
         backdrop.id = 'geizhals-add-article-ids-backdrop';
@@ -4980,7 +4673,7 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 9999998;
         `;
-
+        
         // Overlay
         const overlay = document.createElement('div');
         overlay.id = 'geizhals-add-article-ids-overlay';
@@ -4997,7 +4690,7 @@
             max-width: 500px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         `;
-
+        
         overlay.innerHTML = `
             <h5 style="margin: 0 0 1rem 0; border-bottom: 2px solid #0d6efd; padding-bottom: 0.5rem;">Artikel-ID(s) nachtragen</h5>
             <div style="margin-bottom: 1rem;">
@@ -5022,16 +4715,16 @@
                 <button type="button" id="geizhals-article-ids-save" class="btn btn-primary btn-sm" disabled>Speichern</button>
             </div>
         `;
-
+        
         document.body.appendChild(backdrop);
         document.body.appendChild(overlay);
-
+        
         const input = overlay.querySelector('#geizhals-article-ids-input');
         const saveButton = overlay.querySelector('#geizhals-article-ids-save');
         const cancelButton = overlay.querySelector('#geizhals-article-ids-cancel');
         const statusDiv = overlay.querySelector('#geizhals-article-ids-status');
         const statusText = overlay.querySelector('#geizhals-article-ids-status-text');
-
+        
         // Validierung
         const validateInput = () => {
             const value = input.value.trim();
@@ -5044,71 +4737,71 @@
             saveButton.disabled = !isValid;
             return isValid;
         };
-
+        
         input.addEventListener('input', validateInput);
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && validateInput()) {
                 saveButton.click();
             }
         });
-
+        
         // Abbrechen
         const closeOverlay = () => {
             overlay.remove();
             backdrop.remove();
         };
-
+        
         cancelButton.addEventListener('click', closeOverlay);
         backdrop.addEventListener('click', closeOverlay);
-
+        
         // Speichern
         saveButton.addEventListener('click', async () => {
             const ids = input.value.trim().split(/\s+/).filter(id => id);
             if (ids.length === 0) return;
-
+            
             // Deaktiviere Buttons
             saveButton.disabled = true;
             cancelButton.disabled = true;
             input.disabled = true;
-
+            
             // Zeige Status
             statusDiv.style.display = 'block';
-
+            
             // Finde alle Bleistift-Links
             const linksForm = document.getElementById('section_form_links');
             const pencilLinks = linksForm ? linksForm.querySelectorAll('a[href*="kalif/artikel/link?id="]') : [];
-
+            
             if (pencilLinks.length === 0) {
                 statusText.textContent = 'Keine Links gefunden!';
                 setTimeout(closeOverlay, 2000);
                 return;
             }
-
+            
             const totalLinks = pencilLinks.length;
             let processedLinks = 0;
-
+            
             // Verarbeite alle Links sequentiell
             for (const link of pencilLinks) {
                 processedLinks++;
                 statusText.textContent = `Link ${processedLinks}/${totalLinks} wird verarbeitet...`;
-
+                
                 try {
                     await processLinkWithIds(link.href, ids);
                     statusText.textContent = `Link ${processedLinks}/${totalLinks} gespeichert`;
                 } catch (e) {
                     statusText.textContent = `Link ${processedLinks}/${totalLinks} - Fehler`;
                 }
-
+                
                 // Kurze Pause zwischen den Links
                 await new Promise(resolve => setTimeout(resolve, 500));
             }
-
+            
             statusText.textContent = `Fertig! ${totalLinks} Links verarbeitet.`;
-
+            
             // Schließe Overlay nach kurzer Pause
             setTimeout(closeOverlay, 1500);
         });
-
+        
         // Fokus auf Input
         input.focus();
     }
@@ -5118,23 +4811,23 @@
             const iframe = document.createElement('iframe');
             iframe.style.cssText = 'position: absolute; left: -9999px; top: -9999px; width: 1200px; height: 800px; visibility: hidden;';
             iframe.src = url;
-
+            
             let checkCount = 0;
             const maxChecks = 100; // Max 10 Sekunden warten
-
+            
             const checkForReactSelect = () => {
                 checkCount++;
                 try {
                     const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
                     const iframeWin = iframe.contentWindow;
-
+                    
                     // Suche nach dem React-Select Input für "Einen Artikel oder mehrere (mit IDs) hinzufügen"
                     let reactSelectInput = null;
                     let container = null;
-
+                    
                     // Finde das richtige React-Select (das mit "Einen Artikel oder mehrere")
                     const allPlaceholders = iframeDoc.querySelectorAll('div[id$="-placeholder"]');
-
+                    
                     for (const ph of allPlaceholders) {
                         if (ph.textContent && ph.textContent.includes('Artikel oder mehrere')) {
                             container = ph.closest('.css-b62m3t-container');
@@ -5144,51 +4837,51 @@
                             }
                         }
                     }
-
+                    
                     if (reactSelectInput) {
                         // IDs als String vorbereiten
                         const idsString = ids.join(' ');
-
+                        
                         // Klicke auf den Container um das Dropdown zu öffnen
                         const controlDiv = container.querySelector('[class*="-control"]');
-
+                        
                         if (controlDiv) {
                             controlDiv.dispatchEvent(new iframeWin.MouseEvent('mousedown', { bubbles: true, cancelable: true }));
                         }
-
+                        
                         setTimeout(() => {
                             // Fokussiere das Input
                             reactSelectInput.focus();
-
+                            
                             // Versuche direkt den Text zu schreiben durch Zwischenablage
                             navigator.clipboard.writeText(idsString).then(() => {
                                 // Fokus nochmal setzen
                                 reactSelectInput.focus();
-
+                                
                                 // Simuliere Paste-Event
                                 const dt = new DataTransfer();
                                 dt.setData('text/plain', idsString);
-
+                                
                                 const pasteEvent = new iframeWin.ClipboardEvent('paste', {
                                     bubbles: true,
                                     cancelable: true,
                                     clipboardData: dt
                                 });
-
+                                
                                 reactSelectInput.dispatchEvent(pasteEvent);
-
+                                
                                 // Auch execCommand versuchen
                                 iframeDoc.execCommand('insertText', false, idsString);
-
+                                
                             }).catch(() => {
                                 // Fallback: execCommand
                                 reactSelectInput.focus();
                                 iframeDoc.execCommand('insertText', false, idsString);
                             });
-
+                            
                             // Delay basierend auf Anzahl der IDs
                             const delay = Math.max(2000, ids.length * 400);
-
+                            
                             setTimeout(() => {
                                 // Enter drücken um die IDs zu übernehmen
                                 reactSelectInput.dispatchEvent(new iframeWin.KeyboardEvent('keydown', {
@@ -5199,17 +4892,17 @@
                                     bubbles: true,
                                     cancelable: true
                                 }));
-
+                                
                                 // Warte und prüfe ob Speichern-Button aktiviert wurde
                                 let saveCheckCount = 0;
                                 const maxSaveChecks = 50;
-
+                                
                                 const checkSaveButton = () => {
                                     saveCheckCount++;
                                     // Finde den richtigen Speichern-Button in der expanded-actions Toolbar
                                     const expandedActions = iframeDoc.querySelector('.expanded-actions');
                                     const saveButton = expandedActions ? expandedActions.querySelector('button.btn-success:not([disabled])') : null;
-
+                                    
                                     if (saveButton) {
                                         saveButton.click();
                                         setTimeout(() => {
@@ -5223,11 +4916,11 @@
                                         resolve();
                                     }
                                 };
-
+                                
                                 setTimeout(checkSaveButton, 500);
                             }, delay);
                         }, 300);
-
+                        
                     } else if (checkCount < maxChecks) {
                         setTimeout(checkForReactSelect, 100);
                     } else {
@@ -5243,265 +4936,802 @@
                     }
                 }
             };
-
+            
             iframe.onload = () => {
                 setTimeout(checkForReactSelect, 300);
             };
-
+            
             iframe.onerror = () => {
                 iframe.remove();
                 reject(new Error('iframe load error'));
             };
-
+            
             document.body.appendChild(iframe);
         });
     }
 
-    // Debounce für Preview Highlights - wartet auf React-Updates
-    let highlightDebounceTimer = null;
-    function applyPreviewHighlightsDebounced(searchTerm, type = "lines") {
-        if (highlightDebounceTimer) {
-            clearTimeout(highlightDebounceTimer);
-        }
-        highlightDebounceTimer = setTimeout(() => {
-            requestAnimationFrame(() => {
-                applyPreviewHighlightsInternal(searchTerm, type);
-            });
-        }, 50);
-    }
 
-    // Wrapper-Funktion die zur debounced Version weiterleitet
-    function applyPreviewHighlights(searchTerm, type = "lines") {
-        applyPreviewHighlightsDebounced(searchTerm, type);
-    }
+    // ===== PREVIEW SECTION SEARCH OVERLAY (Neue Version) =====
+    let previewSectionSearchActive = false;
+    let previewSectionSearchCurrentIndex = -1;
+    let previewSectionSearchMatches = [];
 
-    function applyPreviewHighlightsInternal(searchTerm, type = "lines") {
+    function applyPreviewSectionSearchOverlay() {
         try {
-            clearPreviewHighlights();
-        } catch (e) {
-            // Fehler beim Aufräumen ignorieren
-        }
+            const otherSettings = getOtherSettingsConfig();
 
-        if (!searchTerm) {
+            // Entferne existierende Event-Listener
+            const existingHandler = window._geizhalsPreviewSectionSearchHandler;
+            if (existingHandler) {
+                document.removeEventListener('mousedown', existingHandler);
+                window._geizhalsPreviewSectionSearchHandler = null;
+            }
+            
+            const existingCtrlFHandler = window._geizhalsPreviewSectionCtrlFHandler;
+            if (existingCtrlFHandler) {
+                document.removeEventListener('keydown', existingCtrlFHandler, true);
+                window._geizhalsPreviewSectionCtrlFHandler = null;
+            }
+            
+            const existingMouseMoveHandler = window._geizhalsPreviewSectionMouseMoveHandler;
+            if (existingMouseMoveHandler) {
+                document.removeEventListener('mousemove', existingMouseMoveHandler);
+                window._geizhalsPreviewSectionMouseMoveHandler = null;
+            }
+
+            if (!otherSettings.previewSectionSearchOverlay) {
+                return;
+            }
+
+            // Prüfe ob wir auf der richtigen URL sind
+            const url = new URL(window.location.href);
+            if (!url.pathname.endsWith('/kalif/artikel')) return;
+            
+            const triggerMode = otherSettings.previewSectionSearchTrigger || 'mousewheel';
+            
+            // Speichere Mausposition für STRG+F
+            let lastMouseX = 0;
+            let lastMouseY = 0;
+            let hoveredSection = null;
+            let hoveredSectionType = null;
+            
+            const mouseMoveHandler = (e) => {
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                
+                // Prüfe ob Maus über einer relevanten Section ist
+                const target = document.elementFromPoint(e.clientX, e.clientY);
+                if (target) {
+                    const section = target.closest('section.section');
+                    if (section) {
+                        const formDesc = section.querySelector('form#section_form_desc');
+                        const header = section.querySelector('h5');
+                        const isArticlePreview = formDesc || (header && header.textContent.includes('Artikelvorschau'));
+                        
+                        const formData = section.querySelector('form#section_form_data');
+                        const isDataSection = formData || (header && header.textContent.includes('Beschreibung'));
+                        
+                        if (isArticlePreview) {
+                            hoveredSection = section;
+                            hoveredSectionType = 'preview';
+                        } else if (isDataSection) {
+                            hoveredSection = section;
+                            hoveredSectionType = 'data';
+                        } else {
+                            hoveredSection = null;
+                            hoveredSectionType = null;
+                        }
+                    } else {
+                        hoveredSection = null;
+                        hoveredSectionType = null;
+                    }
+                }
+            };
+            
+            // Nur mousemove tracken wenn STRG+F aktiv ist
+            if (triggerMode === 'ctrlf' || triggerMode === 'both') {
+                document.addEventListener('mousemove', mouseMoveHandler);
+                window._geizhalsPreviewSectionMouseMoveHandler = mouseMoveHandler;
+            }
+
+            // Event-Listener für Mausrad-Button (mittlere Maustaste)
+            if (triggerMode === 'mousewheel' || triggerMode === 'both') {
+                const mouseHandler = (e) => {
+                    // button === 1 ist die mittlere Maustaste (Mausrad-Klick)
+                    if (e.button === 1) {
+                        // Prüfe ob der Klick über einer relevanten Section war
+                        const target = e.target;
+                        const section = target.closest('section.section');
+                        
+                        if (section) {
+                            // Prüfe ob es die Artikelvorschau-Section ist (hat form#section_form_desc oder h5 mit "Artikelvorschau")
+                            const formDesc = section.querySelector('form#section_form_desc');
+                            const header = section.querySelector('h5');
+                            const isArticlePreview = formDesc || (header && header.textContent.includes('Artikelvorschau'));
+                            
+                            // Prüfe ob es die Eingabemaske-Section ist (hat form#section_form_data oder h5 mit "Beschreibung")
+                            const formData = section.querySelector('form#section_form_data');
+                            const isDataSection = formData || (header && header.textContent.includes('Beschreibung'));
+                            
+                            if (isArticlePreview) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                openPreviewSectionSearchOverlay(e.clientX, e.clientY, section, 'preview');
+                            } else if (isDataSection) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                openPreviewSectionSearchOverlay(e.clientX, e.clientY, section, 'data');
+                            }
+                        }
+                    }
+                };
+
+                window._geizhalsPreviewSectionSearchHandler = mouseHandler;
+                document.addEventListener('mousedown', mouseHandler);
+            }
+            
+            // Event-Listener für STRG+F
+            if (triggerMode === 'ctrlf' || triggerMode === 'both') {
+                const ctrlFHandler = (e) => {
+                    // Prüfe ob Overlay bereits offen ist
+                    if (document.getElementById('geizhals-preview-section-search-overlay')) {
+                        return;
+                    }
+                    
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                        // Prüfe ob Maus über einer relevanten Section ist
+                        if (hoveredSection && hoveredSectionType) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openPreviewSectionSearchOverlay(lastMouseX, lastMouseY, hoveredSection, hoveredSectionType);
+                        }
+                    }
+                };
+                
+                window._geizhalsPreviewSectionCtrlFHandler = ctrlFHandler;
+                document.addEventListener('keydown', ctrlFHandler, true);
+            }
+
+        } catch (e) {
+            // Fehler ignorieren
+        }
+    }
+
+    function openPreviewSectionSearchOverlay(mouseX, mouseY, targetSection, sectionType) {
+        // Prüfe ob Overlay bereits offen ist
+        if (document.getElementById('geizhals-preview-section-search-overlay')) {
             return;
         }
 
-        // Erstelle Style wenn nicht vorhanden
-        if (!document.getElementById('geizhals-highlight-styles')) {
+        previewSectionSearchActive = true;
+        previewSectionSearchCurrentIndex = -1;
+        previewSectionSearchMatches = [];
+
+        // Speichere die Ziel-Section und den Typ für die Suche
+        window._geizhalsPreviewSectionSearchTarget = targetSection;
+        window._geizhalsPreviewSectionSearchType = sectionType;
+
+        // Blockiere native Browser-Suche (Strg+F) während Overlay aktiv ist
+        const blockBrowserSearch = (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                e.stopPropagation();
+                const searchInput = document.getElementById('geizhals-preview-section-search-input');
+                if (searchInput) searchInput.focus();
+            }
+        };
+        window._geizhalsPreviewSectionBlockSearch = blockBrowserSearch;
+        document.addEventListener('keydown', blockBrowserSearch, true);
+
+        // Erstelle Backdrop
+        const backdrop = document.createElement('div');
+        backdrop.id = 'geizhals-preview-section-search-backdrop';
+        backdrop.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 9999998;
+        `;
+
+        // Berechne Position - Cursor zeigt auf Mitte der oberen Kante
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const overlayWidth = 400;
+        
+        let left = mouseX;
+        let top = mouseY;
+        
+        if (left + (overlayWidth / 2) > viewportWidth - 10) {
+            left = viewportWidth - (overlayWidth / 2) - 10;
+        }
+        if (left - (overlayWidth / 2) < 10) {
+            left = (overlayWidth / 2) + 10;
+        }
+        if (top + 150 > viewportHeight - 10) {
+            top = viewportHeight - 150 - 10;
+        }
+        if (top < 10) {
+            top = 10;
+        }
+
+        // Bestimme Titel und Placeholder basierend auf sectionType
+        const titleText = sectionType === 'data' ? 'Suche in Eingabemaske' : 'Suche in Artikelvorschau';
+        const placeholderText = sectionType === 'data' 
+            ? 'Labels, Werte & Überschriften durchsuchen...' 
+            : 'Bezeichnungs- & Beschreibungszeilen durchsuchen...';
+
+        // Erstelle Overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'geizhals-preview-section-search-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: ${top}px;
+            left: ${left}px;
+            transform: translateX(-50%);
+            background: white;
+            border: 3px solid #0d6efd;
+            border-radius: 8px;
+            padding: 1rem;
+            z-index: 9999999;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            min-width: 400px;
+        `;
+
+        // Erstelle Titel
+        const title = document.createElement('div');
+        title.textContent = titleText;
+        title.style.cssText = 'font-weight: bold; margin-bottom: 0.5rem; color: #0d6efd;';
+        overlay.appendChild(title);
+
+        // Erstelle Suchfeld
+        const searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.id = 'geizhals-preview-section-search-input';
+        searchInput.placeholder = placeholderText;
+        searchInput.style.cssText = `
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid #0d6efd;
+            border-radius: 4px;
+            font-size: 1rem;
+            outline: none;
+            box-sizing: border-box;
+        `;
+        overlay.appendChild(searchInput);
+
+        // Erstelle Status-Anzeige
+        const statusDiv = document.createElement('div');
+        statusDiv.id = 'geizhals-preview-section-search-status';
+        statusDiv.style.cssText = 'margin-top: 0.5rem; font-size: 0.85rem; color: #666;';
+        statusDiv.textContent = 'Enter = nächster Treffer | Esc = schließen';
+        overlay.appendChild(statusDiv);
+
+        // Event-Listener für Input
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.trim();
+            performPreviewSectionSearch(searchTerm);
+        });
+
+        // Event-Listener für Tasten
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                e.stopPropagation();
+                jumpToNextPreviewSectionMatch();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                closePreviewSectionSearchOverlay();
+            }
+        });
+
+        // Klick auf Backdrop schließt Overlay
+        backdrop.addEventListener('click', (e) => {
+            if (e.target === backdrop) {
+                closePreviewSectionSearchOverlay();
+            }
+        });
+
+        // Füge zum DOM hinzu
+        document.body.appendChild(backdrop);
+        document.body.appendChild(overlay);
+
+        // Fokussiere Eingabefeld
+        setTimeout(() => searchInput.focus(), 50);
+    }
+
+    function performPreviewSectionSearch(searchTerm) {
+        // Lösche vorherige Highlights
+        clearPreviewSectionHighlights();
+        previewSectionSearchMatches = [];
+        previewSectionSearchCurrentIndex = -1;
+
+        if (!searchTerm) {
+            updatePreviewSectionSearchStatus(0);
+            return;
+        }
+
+        const targetSection = window._geizhalsPreviewSectionSearchTarget;
+        const sectionType = window._geizhalsPreviewSectionSearchType;
+        if (!targetSection) return;
+
+        // Erstelle Style
+        let highlightStyle = document.getElementById('geizhals-preview-section-highlight-styles');
+        if (!highlightStyle) {
+            highlightStyle = document.createElement('style');
+            highlightStyle.id = 'geizhals-preview-section-highlight-styles';
+            document.head.appendChild(highlightStyle);
+        }
+        highlightStyle.textContent = `
+            .geizhals-ps-match {
+                outline: 3px solid red !important;
+                padding: 2px !important;
+                background: yellow !important;
+            }
+            .geizhals-ps-current-match.geizhals-ps-match {
+                background: #EF0FFF !important;
+                outline: 3px solid red !important;
+            }
+            mark.geizhals-ps-text-match {
+                background: yellow;
+                color: inherit;
+                padding: 0;
+                border-radius: 2px;
+                outline: 2px solid red;
+            }
+            mark.geizhals-ps-text-match.geizhals-ps-current-match {
+                background: #EF0FFF !important;
+            }
+        `;
+
+        const searchTermLower = searchTerm.toLowerCase();
+        
+        // Hilfsfunktion: Markiere gefundenen Text in einem Element
+        function highlightTextInElement(element, searchTerm) {
+            const searchTermLower = searchTerm.toLowerCase();
+            const marks = [];
+            
+            // Rekursiv durch alle Textknoten gehen
+            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+            const textNodes = [];
+            let node;
+            while (node = walker.nextNode()) {
+                if (node.textContent.toLowerCase().includes(searchTermLower)) {
+                    textNodes.push(node);
+                }
+            }
+            
+            textNodes.forEach(textNode => {
+                const text = textNode.textContent;
+                const lowerText = text.toLowerCase();
+                let lastIndex = 0;
+                const fragments = [];
+                let index;
+                
+                while ((index = lowerText.indexOf(searchTermLower, lastIndex)) !== -1) {
+                    // Text vor dem Match
+                    if (index > lastIndex) {
+                        fragments.push(document.createTextNode(text.substring(lastIndex, index)));
+                    }
+                    
+                    // Der gematchte Text in einem Mark-Element
+                    const mark = document.createElement('mark');
+                    mark.className = 'geizhals-ps-text-match geizhals-ps-match';
+                    mark.textContent = text.substring(index, index + searchTerm.length);
+                    fragments.push(mark);
+                    marks.push(mark);
+                    
+                    lastIndex = index + searchTerm.length;
+                }
+                
+                // Restlicher Text nach dem letzten Match
+                if (lastIndex < text.length) {
+                    fragments.push(document.createTextNode(text.substring(lastIndex)));
+                }
+                
+                // Ersetze den Textknoten durch die Fragments
+                if (fragments.length > 0) {
+                    const parent = textNode.parentNode;
+                    fragments.forEach(fragment => {
+                        parent.insertBefore(fragment, textNode);
+                    });
+                    parent.removeChild(textNode);
+                }
+            });
+            
+            return marks;
+        }
+
+        if (sectionType === 'preview') {
+            // Suche in der Artikelvorschau (Tabellen-Struktur)
+            const tbody = targetSection.querySelector('table tbody');
+            if (!tbody) return;
+
+            const allRows = tbody.querySelectorAll('tr');
+            allRows.forEach((row) => {
+                const tds = row.querySelectorAll('td');
+                if (tds.length >= 3) {
+                    // Dritte Spalte (Index 2) - Bezeichnung
+                    const labelCell = tds[2];
+                    const labelSpan = labelCell.querySelector('span');
+                    if (labelSpan && labelSpan.textContent.toLowerCase().includes(searchTermLower)) {
+                        const marks = highlightTextInElement(labelSpan, searchTerm);
+                        marks.forEach(mark => {
+                            previewSectionSearchMatches.push({ element: mark, type: 'label' });
+                        });
+                    }
+                    
+                    // Vierte Spalte (Index 3) - Wert (wenn vorhanden)
+                    if (tds.length >= 4) {
+                        const valueCell = tds[3];
+                        const textContent = valueCell.textContent;
+                        if (textContent.toLowerCase().includes(searchTermLower)) {
+                            const marks = highlightTextInElement(valueCell, searchTerm);
+                            marks.forEach(mark => {
+                                previewSectionSearchMatches.push({ element: mark, type: 'value' });
+                            });
+                        }
+                    }
+                }
+            });
+        } else if (sectionType === 'data') {
+            // Suche in der Eingabemaske
+
+            // 1. Suche in Gruppen-Überschriften (fw-bold row-background Elemente wie "KVM-Switch", "Beleuchtung" etc.)
+            const groupHeaders = targetSection.querySelectorAll('.fw-bold.row-background');
+            groupHeaders.forEach((header) => {
+                if (header.textContent.toLowerCase().includes(searchTermLower)) {
+                    const marks = highlightTextInElement(header, searchTerm);
+                    marks.forEach(mark => {
+                        previewSectionSearchMatches.push({ element: mark, type: 'group-header' });
+                    });
+                }
+            });
+
+            // 2. Suche in Template-Row Überschriften (strong-Elemente)
+            const templateRows = targetSection.querySelectorAll('.template-row');
+            templateRows.forEach((row) => {
+                const strongEl = row.querySelector('strong');
+                if (strongEl && strongEl.textContent.toLowerCase().includes(searchTermLower)) {
+                    const marks = highlightTextInElement(strongEl, searchTerm);
+                    marks.forEach(mark => {
+                        previewSectionSearchMatches.push({ element: mark, type: 'header' });
+                    });
+                }
+            });
+
+            // 3. Suche in Labels (.form-label)
+            const labels = targetSection.querySelectorAll('label.form-label');
+            labels.forEach((label) => {
+                if (label.textContent.toLowerCase().includes(searchTermLower)) {
+                    const marks = highlightTextInElement(label, searchTerm);
+                    marks.forEach(mark => {
+                        previewSectionSearchMatches.push({ element: mark, type: 'label' });
+                    });
+                }
+            });
+
+            // 4. Suche in Input-Feldern (Werte) - excludiere hidden inputs und React-Select combobox inputs
+            // Input-Felder werden als Ganzes markiert (Text ist im value-Attribut, nicht im DOM)
+            const inputs = targetSection.querySelectorAll('input.form-control:not([type="hidden"]):not([role="combobox"]), input.input-numeric:not([type="hidden"])');
+            inputs.forEach((input) => {
+                if (input.value && input.value.toLowerCase().includes(searchTermLower)) {
+                    input.classList.add('geizhals-ps-match');
+                    previewSectionSearchMatches.push({ element: input, type: 'input-value' });
+                }
+            });
+
+            // 5. Suche in Select-Feldern (ausgewählte Option mit Wert)
+            // Select-Felder werden als Ganzes markiert
+            const selects = targetSection.querySelectorAll('select.form-select, select.input-numeric');
+            selects.forEach((select) => {
+                const selectedOption = select.options[select.selectedIndex];
+                // Prüfe ob eine Option mit Wert ausgewählt ist
+                if (selectedOption && selectedOption.value && selectedOption.text.toLowerCase().includes(searchTermLower)) {
+                    select.classList.add('geizhals-ps-match');
+                    previewSectionSearchMatches.push({ element: select, type: 'select-value' });
+                }
+            });
+
+            // 6. Suche in React-Select Komponenten (Single-Select Werte)
+            // Verwendet Attribut-Selektor da CSS-Klassen dynamisch generiert werden
+            const reactSelectSingleValues = targetSection.querySelectorAll('[class*="-singleValue"]');
+            reactSelectSingleValues.forEach((valueEl) => {
+                if (valueEl.textContent.toLowerCase().includes(searchTermLower)) {
+                    const marks = highlightTextInElement(valueEl, searchTerm);
+                    marks.forEach(mark => {
+                        previewSectionSearchMatches.push({ element: mark, type: 'react-select-value' });
+                    });
+                }
+            });
+
+            // 7. Suche in React-Select Multi-Select Werten
+            // Die Multi-Value Elemente sind divs innerhalb von [class*="-multiValue"]
+            const reactSelectMultiContainers = targetSection.querySelectorAll('[class*="-multiValue"]');
+            reactSelectMultiContainers.forEach((container) => {
+                // Das erste div-Kind enthält den Text
+                const valueEl = container.querySelector('div');
+                if (valueEl && valueEl.textContent.toLowerCase().includes(searchTermLower)) {
+                    valueEl.classList.add('geizhals-ps-match');
+                    previewSectionSearchMatches.push({ element: valueEl, type: 'react-select-multi-value' });
+                }
+            });
+
+            // 8. Suche in Textarea-Feldern (z.B. Matchrule, Hinweis)
+            const textareas = targetSection.querySelectorAll('textarea.form-control');
+            textareas.forEach((textarea) => {
+                if (textarea.value && textarea.value.toLowerCase().includes(searchTermLower)) {
+                    textarea.classList.add('geizhals-ps-match');
+                    previewSectionSearchMatches.push({ element: textarea, type: 'textarea-value' });
+                }
+            });
+        }
+
+        updatePreviewSectionSearchStatus(previewSectionSearchMatches.length);
+
+        // Automatisch zum ersten Treffer scrollen wenn vorhanden
+        if (previewSectionSearchMatches.length > 0) {
+            previewSectionSearchCurrentIndex = 0;
+            scrollToPreviewSectionMatch(previewSectionSearchMatches[0].element);
+            updatePreviewSectionSearchStatus(previewSectionSearchMatches.length, 1);
+        }
+    }
+
+    function jumpToNextPreviewSectionMatch() {
+        if (previewSectionSearchMatches.length === 0) return;
+
+        // Entferne vorherige aktuelle Markierung
+        const previousCurrent = document.querySelector('.geizhals-ps-current-match');
+        if (previousCurrent) {
+            previousCurrent.classList.remove('geizhals-ps-current-match');
+        }
+
+        previewSectionSearchCurrentIndex = (previewSectionSearchCurrentIndex + 1) % previewSectionSearchMatches.length;
+        const match = previewSectionSearchMatches[previewSectionSearchCurrentIndex];
+        scrollToPreviewSectionMatch(match.element);
+        updatePreviewSectionSearchStatus(previewSectionSearchMatches.length, previewSectionSearchCurrentIndex + 1);
+    }
+
+    function scrollToPreviewSectionMatch(element) {
+        if (!element) return;
+
+        // Entferne vorherige aktuelle Markierung und inline-style
+        const previousCurrent = document.querySelector('.geizhals-ps-current-match');
+        if (previousCurrent) {
+            previousCurrent.classList.remove('geizhals-ps-current-match');
+            previousCurrent.style.backgroundColor = '';
+        }
+
+        // Markiere aktuellen Treffer (nur Klasse, Farbe kommt nach Scroll)
+        element.classList.add('geizhals-ps-current-match');
+
+        // Berechne Overlay-Höhe um Überlappung zu vermeiden
+        const searchOverlay = document.getElementById('geizhals-preview-section-search-overlay');
+        let overlayBottom = 0;
+        if (searchOverlay) {
+            const overlayRect = searchOverlay.getBoundingClientRect();
+            overlayBottom = overlayRect.bottom + 30; // 30px Abstand unter dem Overlay
+        }
+
+        // Scrolle Element in den sichtbaren Bereich
+        element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+
+        // Nach dem Scroll prüfen ob Element vom Overlay überdeckt wird
+        setTimeout(() => {
+            const elementRect = element.getBoundingClientRect();
+            
+            // Wenn Element-Oberkante unter der Overlay-Unterkante liegt, ist alles OK
+            // Wenn nicht, müssen wir nachjustieren
+            if (elementRect.top < overlayBottom) {
+                // Element wird vom Overlay überdeckt - scrolle nach unten
+                const adjustment = overlayBottom - elementRect.top + 10;
+                window.scrollBy({
+                    top: -adjustment,
+                    behavior: 'smooth'
+                });
+                
+                // Setze Hintergrundfarbe erst nach der Korrektur
+                setTimeout(() => {
+                    element.style.backgroundColor = '#EF0FFF';
+                }, 350);
+            } else {
+                // Setze Hintergrundfarbe jetzt (Scroll ist fertig)
+                element.style.backgroundColor = '#EF0FFF';
+            }
+        }, 350);
+    }
+    
+    function createHighlightOverlay(element, overlayId) {
+        // Entferne existierendes Overlay
+        const existing = document.getElementById(overlayId);
+        if (existing) existing.remove();
+        
+        const rect = element.getBoundingClientRect();
+        
+        const overlay = document.createElement('div');
+        overlay.id = overlayId;
+        overlay.style.cssText = `
+            position: fixed;
+            top: ${rect.top}px;
+            left: ${rect.left}px;
+            width: ${rect.width}px;
+            height: ${rect.height}px;
+            background: #EF0FFF;
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 9999990;
+            border-radius: 2px;
+        `;
+        document.body.appendChild(overlay);
+        
+        // Speichere Element-Referenz für Updates
+        overlay._targetElement = element;
+    }
+    
+    function updateHighlightOverlayPosition(element, overlayId) {
+        const overlay = document.getElementById(overlayId);
+        if (!overlay || !element) return;
+        
+        const rect = element.getBoundingClientRect();
+        overlay.style.top = `${rect.top}px`;
+        overlay.style.left = `${rect.left}px`;
+        overlay.style.width = `${rect.width}px`;
+        overlay.style.height = `${rect.height}px`;
+    }
+
+    function updatePreviewSectionSearchStatus(total, current = null) {
+        const statusDiv = document.getElementById('geizhals-preview-section-search-status');
+        if (!statusDiv) return;
+
+        if (total === 0) {
+            statusDiv.textContent = 'Keine Treffer | Enter = nächster Treffer | Esc = schließen';
+            statusDiv.style.color = '#666';
+        } else if (current !== null) {
+            statusDiv.textContent = `Treffer ${current} von ${total} | Enter = nächster | Esc = schließen`;
+            statusDiv.style.color = '#0d6efd';
+        } else {
+            statusDiv.textContent = `${total} Treffer gefunden | Enter = nächster | Esc = schließen`;
+            statusDiv.style.color = '#28a745';
+        }
+    }
+
+    function clearPreviewSectionHighlights() {
+        try {
+            // Entferne Mark-Elemente und stelle ursprünglichen Text wieder her
+            const markElements = document.querySelectorAll('mark.geizhals-ps-text-match');
+            markElements.forEach(mark => {
+                try {
+                    if (!document.contains(mark)) return;
+                    // Entferne inline-style
+                    mark.style.backgroundColor = '';
+                    const parent = mark.parentNode;
+                    const textNode = document.createTextNode(mark.textContent);
+                    parent.replaceChild(textNode, mark);
+                    // Normalisiere den Parent um benachbarte Textknoten zu vereinen
+                    parent.normalize();
+                } catch (e) {
+                    // Element wurde bereits vom DOM entfernt, ignorieren
+                }
+            });
+            
+            const matchedElements = document.querySelectorAll('.geizhals-ps-match');
+            matchedElements.forEach(el => {
+                try {
+                    if (!document.contains(el)) return;
+                    el.classList.remove('geizhals-ps-match', 'geizhals-ps-current-match');
+                    el.style.backgroundColor = '';
+                } catch (e) {
+                    // Element wurde bereits vom DOM entfernt, ignorieren
+                }
+            });
+        } catch (outerError) {
+            // Gesamte Funktion fehlgeschlagen, ignorieren
+        }
+    }
+
+    function closePreviewSectionSearchOverlay() {
+        previewSectionSearchActive = false;
+        previewSectionSearchCurrentIndex = -1;
+        previewSectionSearchMatches = [];
+        window._geizhalsPreviewSectionSearchTarget = null;
+        window._geizhalsPreviewSectionSearchType = null;
+
+        // Entferne Browser-Suche Blockierung
+        if (window._geizhalsPreviewSectionBlockSearch) {
+            document.removeEventListener('keydown', window._geizhalsPreviewSectionBlockSearch, true);
+            window._geizhalsPreviewSectionBlockSearch = null;
+        }
+
+        const backdrop = document.getElementById('geizhals-preview-section-search-backdrop');
+        const overlay = document.getElementById('geizhals-preview-section-search-overlay');
+
+        if (backdrop) backdrop.remove();
+        if (overlay) overlay.remove();
+
+        // Fade-Out Style hinzufügen wenn nicht vorhanden
+        if (!document.getElementById('geizhals-ps-fadeout-styles')) {
             const style = document.createElement('style');
-            style.id = 'geizhals-highlight-styles';
+            style.id = 'geizhals-ps-fadeout-styles';
             style.textContent = `
-                .geizhals-match-parent {
-                    background: yellow !important;
-                    outline: 3px solid red !important;
-                    padding: 2px !important;
+                .geizhals-ps-highlight-fadeout-filled {
+                    animation: geizhals-ps-fadeout-filled 1s ease-out forwards !important;
                 }
-                .geizhals-match-parent-description {
-                    background: #E0F8FF !important;
-                    outline: 2px solid #0099CC !important;
-                    padding: 2px !important;
+                .geizhals-ps-highlight-fadeout-other {
+                    animation: geizhals-ps-fadeout-other 1s ease-out forwards !important;
                 }
-                .geizhals-no-match-lines {
-                    opacity: 0.4 !important;
-                    filter: grayscale(50%) !important;
-                    transition: opacity 0.2s, filter 0.2s !important;
+                @keyframes geizhals-ps-fadeout-filled {
+                    0% { background: #EF0FFF; outline: 3px solid red; }
+                    70% { background: #EF0FFF; outline: 3px solid red; }
+                    100% { background: transparent; outline: 3px solid transparent; }
                 }
-                .geizhals-no-match-description {
-                    opacity: 0.4 !important;
-                    filter: grayscale(50%) !important;
-                    transition: opacity 0.2s, filter 0.2s !important;
+                @keyframes geizhals-ps-fadeout-other {
+                    0% { background: yellow; outline: 3px solid red; }
+                    70% { background: yellow; outline: 3px solid red; }
+                    100% { background: transparent; outline: 3px solid transparent; }
+                }
+                mark.geizhals-ps-text-fadeout-current {
+                    animation: geizhals-ps-text-fadeout-current 1s ease-out forwards !important;
+                }
+                mark.geizhals-ps-text-fadeout-other {
+                    animation: geizhals-ps-text-fadeout-other 1s ease-out forwards !important;
+                }
+                @keyframes geizhals-ps-text-fadeout-current {
+                    0% { background: #EF0FFF; outline: 2px solid red; }
+                    70% { background: #EF0FFF; outline: 2px solid red; }
+                    100% { background: transparent; outline: 2px solid transparent; }
+                }
+                @keyframes geizhals-ps-text-fadeout-other {
+                    0% { background: yellow; outline: 2px solid red; }
+                    70% { background: yellow; outline: 2px solid red; }
+                    100% { background: transparent; outline: 2px solid transparent; }
                 }
             `;
             document.head.appendChild(style);
         }
 
-        let matchCount = 0;
+        // Markierte Elemente finden und Fadeout anwenden
+        const matchedElements = document.querySelectorAll('.geizhals-ps-match:not(mark)');
+        const markElements = document.querySelectorAll('mark.geizhals-ps-text-match');
+        
+        matchedElements.forEach(el => {
+            const isCurrent = el.classList.contains('geizhals-ps-current-match');
+            el.classList.remove('geizhals-ps-match', 'geizhals-ps-current-match');
+            // Entferne inline-style damit Animation greift
+            el.style.backgroundColor = '';
+            el.classList.add(isCurrent ? 'geizhals-ps-highlight-fadeout-filled' : 'geizhals-ps-highlight-fadeout-other');
+        });
+        
+        markElements.forEach(el => {
+            const isCurrent = el.classList.contains('geizhals-ps-current-match');
+            el.classList.remove('geizhals-ps-match', 'geizhals-ps-current-match', 'geizhals-ps-text-match');
+            // Entferne inline-style damit Animation greift
+            el.style.backgroundColor = '';
+            el.classList.add(isCurrent ? 'geizhals-ps-text-fadeout-current' : 'geizhals-ps-text-fadeout-other');
+        });
 
-        if (type === "lines") {
-            // Filter Bezeichnungszeilen (mit SVG-Icons auf der linken Seite)
-            const allArrowSvgs = document.querySelectorAll('svg.bi-arrow-right-short');
-
-            allArrowSvgs.forEach((svg, idx) => {
-                let parent = svg.parentElement;
-                let textContent = '';
-
-                while (parent && !textContent.trim()) {
-                    textContent = parent.textContent;
-                    if (textContent.trim() && textContent.length < 500) {
-                        break;
-                    }
-                    parent = parent.parentElement;
-                }
-
-                if (textContent.toLowerCase().includes(searchTerm.toLowerCase())) {
-                    matchCount++;
-                    let directParent = svg.parentElement;
-                    directParent.classList.add('geizhals-match-parent');
-
-                    // CSS-only Highlighting über die Klasse (keine DOM-Änderung, React-kompatibel)
-                    let container = directParent.parentElement;
-                    if (container) {
-                        let textSpans = container.querySelectorAll('span.p-1');
-                        textSpans.forEach(span => {
-                            if (span.textContent.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                span.classList.add('geizhals-match-parent');
-                            }
-                        });
-                    }
-                }
+        // Nach 1 Sekunde Fadeout-Klassen entfernen und Mark-Elemente durch Text ersetzen
+        setTimeout(() => {
+            document.querySelectorAll('.geizhals-ps-highlight-fadeout-filled, .geizhals-ps-highlight-fadeout-other').forEach(el => {
+                el.classList.remove('geizhals-ps-highlight-fadeout-filled', 'geizhals-ps-highlight-fadeout-other');
             });
-
-            // Wenn keine Treffer: Preview-Bereich ausgrauen
-            const previewContainer = document.querySelector('.preview');
-            if (previewContainer) {
-                if (matchCount === 0) {
-                    previewContainer.classList.add('geizhals-no-match-lines');
-                } else {
-                    previewContainer.classList.remove('geizhals-no-match-lines');
-                }
-            }
-
-        } else if (type === "description") {
-
-            // Filter Beschreibungszeilen (letzte Spalte der Tabelle)
-            const previewSection = document.querySelector('section.section form');
-            if (!previewSection) return;
-
-            // Debug: Schaue wo die Tabelle wirklich ist
-            const anyTable = document.querySelector('table');
-
-            const tableInSection = document.querySelector('section.section table');
-
-            const tableInForm = previewSection.querySelector('table');
-
-            // Versuche mit verschiedenen Wegen
-            const previewDiv = previewSection.querySelector('.preview');
-
-            if (previewDiv) {
-                const tableInPreview = previewDiv.querySelector('table tbody');
-            }
-
-            // Finde die tbody auf jede mögliche Weise
-            let tbody = previewSection.querySelector('table tbody');
-            if (!tbody) {
-                tbody = document.querySelector('section.section table tbody');
-            }
-            if (!tbody) {
-                tbody = document.querySelector('table tbody');
-            }
-
-            if (!tbody) {
-                return;
-            }
-
-            // Alle Reihen in der Tabelle
-            const allRows = tbody.querySelectorAll('tr');
-
-            const descriptionCells = [];
-            allRows.forEach((row, idx) => {
-                const tds = row.querySelectorAll('td');
-                if (tds.length > 0) {
-                    const lastTd = tds[tds.length - 1];
-                    descriptionCells.push(lastTd);
-                }
-            });
-
-
-            descriptionCells.forEach((cell, idx) => {
-                const textContent = cell.textContent;
-
-                if (textContent.toLowerCase().includes(searchTerm.toLowerCase())) {
-                    matchCount++;
-                    cell.classList.add('geizhals-match-parent-description');
-
-                    // CSS-only Highlighting über die Klasse (keine DOM-Änderung, React-kompatibel)
-                }
-            });
-
-            // Wenn keine Treffer: Preview-Bereich ausgrauen
-            const previewContainer = document.querySelector('.preview');
-            if (previewContainer) {
-                if (matchCount === 0) {
-                    previewContainer.classList.add('geizhals-no-match-description');
-                } else {
-                    previewContainer.classList.remove('geizhals-no-match-description');
-                }
-            }
-        }
-
-        // Scrolle zum ersten Treffer wenn nicht sichtbar (mit kleinem Delay für DOM-Update)
-        setTimeout(() => scrollToFirstMatch(type), 50);
-    }
-
-    // Scrollt zum ersten gefundenen Treffer
-    function scrollToFirstMatch(type) {
-        try {
-            // Finde den ersten Treffer basierend auf Typ
-            let firstMatch = null;
-
-            if (type === 'lines') {
-                firstMatch = document.querySelector('.geizhals-match-parent');
-            } else if (type === 'description') {
-                firstMatch = document.querySelector('.geizhals-match-parent-description');
-            }
-
-            if (!firstMatch) return;
-
-            // Prüfe ob Element im Viewport sichtbar ist
-            const rect = firstMatch.getBoundingClientRect();
-            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-
-            const isVisible = (
-                rect.top >= 0 &&
-                rect.bottom <= windowHeight
-            );
-
-            if (!isVisible) {
-                // Scrolle zum Element
-                firstMatch.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                    inline: 'nearest'
-                });
-            }
-        } catch (e) {
-            // Element nicht mehr im DOM, ignorieren
-        }
-    }
-
-    function clearPreviewHighlights() {
-        try {
-            // Entferne die match-parent Klasse von allen Elementen
-            const matchedElements = document.querySelectorAll('.geizhals-match-parent');
-            matchedElements.forEach(el => {
+            
+            // Entferne Mark-Elemente und stelle ursprünglichen Text wieder her
+            document.querySelectorAll('mark.geizhals-ps-text-fadeout-current, mark.geizhals-ps-text-fadeout-other').forEach(mark => {
                 try {
-                    if (!document.contains(el)) return;
-                    el.classList.remove('geizhals-match-parent');
+                    const parent = mark.parentNode;
+                    const textNode = document.createTextNode(mark.textContent);
+                    parent.replaceChild(textNode, mark);
+                    parent.normalize();
                 } catch (e) {
-                    // Element wurde bereits vom DOM entfernt, ignorieren
+                    // Ignorieren
                 }
             });
-
-            // Entferne description match-parent Klasse
-            const descriptionMatchedElements = document.querySelectorAll('.geizhals-match-parent-description');
-            descriptionMatchedElements.forEach(el => {
-                try {
-                    if (!document.contains(el)) return;
-                    el.classList.remove('geizhals-match-parent-description');
-                } catch (e) {
-                    // Element wurde bereits vom DOM entfernt, ignorieren
-                }
-            });
-
-            // Entferne no-match Ausgrauung vom Preview-Bereich
-            const previewContainer = document.querySelector('.preview');
-            if (previewContainer) {
-                previewContainer.classList.remove('geizhals-no-match-lines');
-                previewContainer.classList.remove('geizhals-no-match-description');
-            }
-        } catch (outerError) {
-            // Gesamte Funktion fehlgeschlagen, ignorieren
-        }
+        }, 1000);
     }
 
     // ===== APPLY TITLEBAR ID LINK =====
@@ -5596,7 +5826,7 @@
                 textSpan.className = 'geizhals-hersteller-text';
                 textSpan.dataset.geizhalsOriginalHref = herstellerLink.href;
                 textSpan.dataset.geizhalsOriginalText = herstellerLink.textContent;
-
+                
                 // Behalte die Farbe bei
                 textSpan.style.cssText = 'color: var(--bs-primary-bg-subtle);';
 
@@ -5610,7 +5840,7 @@
                     link.textContent = textSpan.dataset.geizhalsOriginalText || textSpan.textContent;
                     link.className = 'text-decoration-underline';
                     link.style.cssText = 'color: var(--bs-primary-bg-subtle);';
-
+                    
                     textSpan.replaceWith(link);
                 }
             }
@@ -5746,24 +5976,24 @@
             // Prüfe ob wir auf der richtigen URL sind (nur ?id=<id>, nicht mode= oder clone=)
             const url = new URL(window.location.href);
             if (!url.pathname.endsWith('/kalif/artikel')) return;
-
+            
             const params = url.searchParams;
             const hasId = params.has('id');
             const hasMode = params.has('mode');
             const hasClone = params.has('clone') || params.has('clone_id');
-
+            
             // Nur wenn id vorhanden und kein mode/clone Parameter
             if (!hasId || hasMode || hasClone) return;
-
+            
             const articleId = params.get('id');
             if (!articleId) return;
 
             // Prüfe ob Container bereits existiert
             const existingContainer = document.querySelector('.geizhals-image-gallery-container');
-            if (existingContainer) {
-                // Container existiert bereits - nichts tun
-                return;
-            }
+            if (existingContainer) return;
+            
+            // Prüfe ob bereits am Laden
+            if (imageGalleryLoading) return;
 
             // Finde die Titelleiste
             const headbar = document.querySelector('.pane__headbar');
@@ -5780,15 +6010,116 @@
             const varianteDiv = gridDivs[1];
             if (!varianteDiv) return;
 
-            // Lade Bilder aus iframe (nur wenn nicht bereits am Laden)
-            if (!imageGalleryLoading) {
-                imageGalleryLoading = true;
-                loadImagesFromIframe(articleId, varianteDiv);
+            // Extrahiere Bildanzahl aus der Seite (z.B. "Bilder (9)")
+            let imageCount = 0;
+            const bilderHeader = document.querySelector('h6.d-inline');
+            if (bilderHeader && bilderHeader.textContent.includes('Bilder')) {
+                const match = bilderHeader.textContent.match(/\((\d+)\)/);
+                if (match) {
+                    imageCount = parseInt(match[1], 10);
+                }
             }
+
+            // Zeige sofort Platzhalter an
+            if (imageCount > 0) {
+                createGalleryPlaceholders(imageCount, varianteDiv);
+            }
+
+            // Lade Bilder aus iframe - IMMER, auch wenn imageCount 0 ist
+            imageGalleryLoading = true;
+            
+            // Failsafe: Reset imageGalleryLoading nach 20 Sekunden falls es hängen bleibt
+            setTimeout(() => {
+                if (imageGalleryLoading) {
+                    imageGalleryLoading = false;
+                }
+            }, 20000);
+            
+            // Verzögertes Laden um das Rendern der Seite nicht zu blockieren
+            setTimeout(() => {
+                requestAnimationFrame(() => {
+                    loadImagesFromIframe(articleId, varianteDiv);
+                });
+            }, 100);
 
         } catch (e) {
             imageGalleryLoading = false;
         }
+    }
+
+    function createGalleryPlaceholders(count, varianteDiv) {
+        // Entferne existierende Container
+        document.querySelectorAll('.geizhals-image-gallery-container').forEach(el => el.remove());
+        document.querySelectorAll('.geizhals-image-gallery-overlay').forEach(el => el.remove());
+
+        // Finde varianteDiv neu falls nötig
+        if (!varianteDiv || !varianteDiv.isConnected) {
+            const headbar = document.querySelector('.pane__headbar');
+            if (headbar) {
+                const grid = headbar.querySelector('.d-grid');
+                if (grid) {
+                    const gridDivs = grid.querySelectorAll(':scope > div');
+                    if (gridDivs.length >= 2) {
+                        varianteDiv = gridDivs[1];
+                    }
+                }
+            }
+        }
+        
+        if (!varianteDiv) return;
+
+        // Erstelle Container für die Bildergalerie
+        const galleryContainer = document.createElement('div');
+        galleryContainer.className = 'geizhals-image-gallery-container';
+        galleryContainer.style.cssText = `
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            margin-left: 0.5rem;
+        `;
+
+        // Erstelle Platzhalter-Kästchen
+        for (let i = 0; i < count; i++) {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'geizhals-image-placeholder';
+            placeholder.style.cssText = `
+                width: 25px;
+                height: 25px;
+                border: 1px solid #fff;
+                border-radius: 2px;
+                background: linear-gradient(90deg, #444 25%, #555 50%, #444 75%);
+                background-size: 200% 100%;
+                animation: shimmer 1.5s infinite;
+            `;
+            galleryContainer.appendChild(placeholder);
+        }
+
+        // Zeige Anzahl
+        const countLabel = document.createElement('span');
+        countLabel.textContent = `(${count})`;
+        countLabel.style.cssText = 'color: #ccc; font-size: 0.75rem; margin-left: 4px;';
+        galleryContainer.appendChild(countLabel);
+
+        // Füge Shimmer-Animation hinzu (falls noch nicht vorhanden)
+        if (!document.getElementById('geizhals-shimmer-style')) {
+            const style = document.createElement('style');
+            style.id = 'geizhals-shimmer-style';
+            style.textContent = `
+                @keyframes shimmer {
+                    0% { background-position: -200% 0; }
+                    100% { background-position: 200% 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Füge Galerie in Titelleiste ein
+        const hasVariante = varianteDiv.textContent.includes('Variante:');
+        if (hasVariante) {
+            varianteDiv.style.display = 'flex';
+            varianteDiv.style.alignItems = 'center';
+        }
+        varianteDiv.appendChild(galleryContainer);
     }
 
     function loadImagesFromIframe(articleId, varianteDiv) {
@@ -5801,7 +6132,8 @@
         const iframe = document.createElement('iframe');
         imageGalleryIframe = iframe;
         iframe.style.cssText = 'position: absolute; left: -9999px; top: -9999px; width: 1200px; height: 800px; visibility: hidden;';
-        iframe.src = `https://opus.geizhals.at/kalif/artikel?id=${articleId}&mode=image`;
+        // Cache-Busting mit Timestamp um immer frische Daten zu laden
+        iframe.src = `https://opus.geizhals.at/kalif/artikel?id=${articleId}&mode=image&_t=${Date.now()}`;
 
         let checkCount = 0;
         const maxChecks = 150; // Max 15 Sekunden warten
@@ -5823,7 +6155,7 @@
                 // Suche nach allen Bildern mit pix_original im gesamten Dokument
                 const images = iframeDoc.querySelectorAll('img[src*="pix_original"]');
                 const currentImageCount = images.length;
-
+                
                 // Warte bis die Bildanzahl stabil ist (5 aufeinanderfolgende gleiche Werte)
                 if (currentImageCount === lastImageCount) {
                     stableCount++;
@@ -5845,7 +6177,7 @@
                     imageGalleryIframe = null;
                     createGalleryUI(imageUrls, varianteDiv);
                     iframe.remove();
-                }
+                } 
                 // Keine Bilder, aber genug gewartet und stabil
                 else if (currentImageCount === 0 && stableCount >= 5 && checkCount >= minChecksBeforeEmpty) {
                     imageGalleryLoading = false;
@@ -5896,7 +6228,7 @@
         };
 
         document.body.appendChild(iframe);
-
+        
         // Fallback: Starte Check auch ohne onload nach 1 Sekunde
         setTimeout(() => {
             if (checkCount === 0 && imageGalleryIframe === iframe) {
@@ -5909,6 +6241,24 @@
         // Entferne existierende Galerien
         document.querySelectorAll('.geizhals-image-gallery-container').forEach(el => el.remove());
         document.querySelectorAll('.geizhals-image-gallery-overlay').forEach(el => el.remove());
+
+        // Speichere originale URLs für späteren Zugriff auf Originalauflösung
+        const originalImageUrls = imageUrls ? [...imageUrls] : [];
+        
+        // Konvertiere immer zu externen URLs (Webversion)
+        if (imageUrls && imageUrls.length > 0) {
+            // Konvertiere interne URLs zu externen URLs
+            // Intern: https://opus.geizhals.at/pix_original/db/44/db448d54184c37f9
+            // Extern: https://gzhls.at/pix/db/44/db448d54184c37f9-l.webp
+            imageUrls = imageUrls.map(url => {
+                if (url.includes('opus.geizhals.at/pix_original/')) {
+                    return url
+                        .replace('opus.geizhals.at/pix_original/', 'gzhls.at/pix/')
+                        .replace(/^https?:\/\//, 'https://') + '-l.webp';
+                }
+                return url;
+            });
+        }
 
         // Finde das varianteDiv neu (falls React neu gerendert hat)
         let varianteDiv = varianteDivOriginal;
@@ -5925,7 +6275,7 @@
                 }
             }
         }
-
+        
         if (!varianteDiv) {
             return;
         }
@@ -5953,6 +6303,7 @@
             border-radius: 4px;
             padding: 4px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
         `;
         document.body.appendChild(overlay);
 
@@ -5963,9 +6314,389 @@
             noImages.style.cssText = 'color: #888; font-size: 0.8rem; font-style: italic;';
             galleryContainer.appendChild(noImages);
         } else {
+            // Variable zum Tracken des gepinnten Thumbnails
+            let pinnedThumb = null;
+            
+            // Funktion zum Erstellen des X-Buttons
+            const createCloseButton = () => {
+                const closeBtn = document.createElement('button');
+                closeBtn.innerHTML = '×';
+                closeBtn.className = 'geizhals-overlay-close-btn';
+                closeBtn.style.cssText = `
+                    position: absolute;
+                    top: 8px;
+                    right: 8px;
+                    width: 28px;
+                    height: 28px;
+                    border: none;
+                    background: rgba(220, 53, 69, 0.9);
+                    color: white;
+                    font-size: 20px;
+                    line-height: 1;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    pointer-events: auto;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: background 0.2s;
+                `;
+                closeBtn.addEventListener('mouseenter', () => {
+                    closeBtn.style.background = 'rgba(220, 53, 69, 1)';
+                });
+                closeBtn.addEventListener('mouseleave', () => {
+                    closeBtn.style.background = 'rgba(220, 53, 69, 0.9)';
+                });
+                return closeBtn;
+            };
+            
+            // Funktion zum Schließen des gepinnten Overlays
+            const closePinnedOverlay = () => {
+                if (pinnedThumb) {
+                    pinnedThumb.style.borderColor = '#fff';
+                    pinnedThumb.style.borderWidth = '1px';
+                    pinnedThumb.style.transform = 'scale(1)';
+                    pinnedThumb.style.zIndex = '';
+                    pinnedThumb.style.position = '';
+                    pinnedThumb = null;
+                }
+                // Entferne globale Event-Handler
+                if (overlay._handleWheel) {
+                    overlay.removeEventListener('wheel', overlay._handleWheel);
+                    overlay._handleWheel = null;
+                }
+                if (overlay._handleMouseMove) {
+                    document.removeEventListener('mousemove', overlay._handleMouseMove);
+                    overlay._handleMouseMove = null;
+                }
+                if (overlay._handleMouseUp) {
+                    document.removeEventListener('mouseup', overlay._handleMouseUp);
+                    overlay._handleMouseUp = null;
+                }
+                overlay.style.display = 'none';
+                // Entferne X-Button und Reset-Button falls vorhanden
+                const existingCloseBtn = overlay.querySelector('.geizhals-overlay-close-btn');
+                if (existingCloseBtn) existingCloseBtn.remove();
+                const existingResetBtn = overlay.querySelector('.geizhals-overlay-reset-btn');
+                if (existingResetBtn) existingResetBtn.remove();
+            };
+            
+            // Funktion zum Anzeigen des Overlays
+            const showOverlay = (thumb, imgUrl, isPinned) => {
+                // Finde die Unterkante der Titelleiste/Miniaturbilder
+                const headbar = document.querySelector('.pane__headbar');
+                const headbarBottom = headbar ? headbar.getBoundingClientRect().bottom : 50;
+                
+                // Berechne verfügbare Höhe für das Overlay (unterhalb Titelleiste bis Viewport-Ende)
+                const viewportHeight = window.innerHeight;
+                // 20px Padding (5 oben Abstand, 10 unten Abstand) + 8px Overlay-Padding (4px oben/unten) + 4px Border
+                const availableHeight = viewportHeight - headbarBottom - 32;
+
+                // Erstelle neues Overlay-Bild mit dynamischer max-height
+                overlay.innerHTML = '';
+                const overlayImg = document.createElement('img');
+                overlayImg.src = imgUrl;
+                overlayImg.style.cssText = `display: block; max-width: 1500px; max-height: ${availableHeight}px;`;
+                overlayImg.draggable = false; // Verhindere natives Bild-Dragging
+                overlay.appendChild(overlayImg);
+                
+                // Füge X-Button und Resize-Handle hinzu wenn gepinnt
+                if (isPinned) {
+                    // Zoom-Funktionalität - sofort aktiv wenn gepinnt
+                    let zoomLevel = 1;
+                    let translateX = 0;
+                    let translateY = 0;
+                    let isDragging = false;
+                    let dragStartX = 0;
+                    let dragStartY = 0;
+                    let dragStartTranslateX = 0;
+                    let dragStartTranslateY = 0;
+                    
+                    // Funktion zum Aktualisieren der Bild-Transformation
+                    const updateTransform = () => {
+                        overlayImg.style.transformOrigin = '0 0';
+                        overlayImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${zoomLevel})`;
+                        // Zeige Reset-Button wenn gezoomt oder verschoben
+                        const resetBtn = overlay.querySelector('.geizhals-overlay-reset-btn');
+                        if (zoomLevel !== 1 || translateX !== 0 || translateY !== 0) {
+                            if (resetBtn) {
+                                resetBtn.style.display = 'flex';
+                            }
+                        }
+                    };
+                    
+                    // Mausrad-Handler für Zoom an Cursor-Position
+                    const handleWheel = (e) => {
+                        e.preventDefault();
+                        
+                        const rect = overlay.getBoundingClientRect();
+                        // Cursor-Position relativ zum Overlay
+                        const cursorX = e.clientX - rect.left;
+                        const cursorY = e.clientY - rect.top;
+                        
+                        const oldZoom = zoomLevel;
+                        const zoomSpeed = 0.1;
+                        
+                        if (e.deltaY < 0) {
+                            // Zoom in
+                            zoomLevel = Math.min(5, zoomLevel + zoomSpeed);
+                        } else {
+                            // Zoom out
+                            zoomLevel = Math.max(0.5, zoomLevel - zoomSpeed);
+                        }
+                        
+                        // Berechne den Bildpunkt unter dem Cursor (vor dem Zoom)
+                        const imagePointX = (cursorX - translateX) / oldZoom;
+                        const imagePointY = (cursorY - translateY) / oldZoom;
+                        
+                        // Neue Translation, damit der gleiche Bildpunkt unter dem Cursor bleibt
+                        translateX = cursorX - imagePointX * zoomLevel;
+                        translateY = cursorY - imagePointY * zoomLevel;
+                        
+                        updateTransform();
+                    };
+                    
+                    // Drag-Start
+                    const handleMouseDown = (e) => {
+                        if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+                        if (e.target.classList.contains('geizhals-overlay-resize-handle')) return;
+                        
+                        isDragging = true;
+                        dragStartX = e.clientX;
+                        dragStartY = e.clientY;
+                        dragStartTranslateX = translateX;
+                        dragStartTranslateY = translateY;
+                        overlayImg.style.cursor = 'grabbing';
+                        e.preventDefault();
+                    };
+                    
+                    // Drag-Move
+                    const handleMouseMove = (e) => {
+                        if (!isDragging) return;
+                        
+                        const deltaX = e.clientX - dragStartX;
+                        const deltaY = e.clientY - dragStartY;
+                        
+                        translateX = dragStartTranslateX + deltaX;
+                        translateY = dragStartTranslateY + deltaY;
+                        
+                        updateTransform();
+                    };
+                    
+                    // Drag-End
+                    const handleMouseUp = () => {
+                        if (isDragging) {
+                            isDragging = false;
+                            overlayImg.style.cursor = 'grab';
+                        }
+                    };
+                    
+                    // Setze Cursor auf grab
+                    overlayImg.style.cursor = 'grab';
+                    
+                    overlay.addEventListener('wheel', handleWheel, { passive: false });
+                    overlay.addEventListener('mousedown', handleMouseDown);
+                    document.addEventListener('mousemove', handleMouseMove);
+                    document.addEventListener('mouseup', handleMouseUp);
+                    
+                    // Speichere Handler-Referenzen für Cleanup
+                    overlay._handleWheel = handleWheel;
+                    overlay._handleMouseMove = handleMouseMove;
+                    overlay._handleMouseUp = handleMouseUp;
+                    
+                    const closeBtn = createCloseButton();
+                    closeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        closePinnedOverlay();
+                    });
+                    overlay.appendChild(closeBtn);
+                    
+                    // Reset-Button erstellen (links neben X-Button)
+                    const resetBtn = document.createElement('button');
+                    resetBtn.className = 'geizhals-overlay-reset-btn';
+                    resetBtn.textContent = 'Reset';
+                    resetBtn.style.cssText = `
+                        position: absolute;
+                        top: 8px;
+                        right: 44px;
+                        height: 28px;
+                        padding: 0 10px;
+                        border: none;
+                        background: rgba(40, 167, 69, 0.9);
+                        color: white;
+                        font-size: 12px;
+                        line-height: 1;
+                        cursor: pointer;
+                        border-radius: 4px;
+                        pointer-events: auto;
+                        display: none;
+                        align-items: center;
+                        justify-content: center;
+                        transition: background 0.2s;
+                        white-space: nowrap;
+                    `;
+                    resetBtn.addEventListener('mouseenter', () => {
+                        resetBtn.style.background = 'rgba(40, 167, 69, 1)';
+                    });
+                    resetBtn.addEventListener('mouseleave', () => {
+                        resetBtn.style.background = 'rgba(40, 167, 69, 0.9)';
+                    });
+                    
+                    // Reset-Button Klick-Handler
+                    resetBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        zoomLevel = 1;
+                        translateX = 0;
+                        translateY = 0;
+                        overlayImg.style.transform = '';
+                        overlayImg.style.transformOrigin = '';
+                        resetBtn.style.display = 'none';
+                    });
+                    
+                    overlay.appendChild(resetBtn);
+                    
+                    // Resize-Handle erstellen (unten rechts)
+                    const resizeHandle = document.createElement('div');
+                    resizeHandle.className = 'geizhals-overlay-resize-handle';
+                    resizeHandle.style.cssText = `
+                        position: absolute;
+                        bottom: 0;
+                        right: 0;
+                        width: 20px;
+                        height: 20px;
+                        cursor: nwse-resize;
+                        pointer-events: auto;
+                        background: linear-gradient(135deg, transparent 50%, rgba(220, 53, 69, 0.8) 50%);
+                        border-bottom-right-radius: 4px;
+                    `;
+                    
+                    // Resize-Logik
+                    let isResizing = false;
+                    let startX, startY, startWidth, startHeight, aspectRatio;
+                    
+                    const onResizeStart = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        isResizing = true;
+                        
+                        // Reset Zoom und Translation beim Resize
+                        if (zoomLevel !== 1 || translateX !== 0 || translateY !== 0) {
+                            zoomLevel = 1;
+                            translateX = 0;
+                            translateY = 0;
+                            overlayImg.style.transform = '';
+                            overlayImg.style.transformOrigin = '';
+                            resetBtn.style.display = 'none';
+                        }
+                        
+                        startX = e.clientX || e.touches[0].clientX;
+                        startY = e.clientY || e.touches[0].clientY;
+                        startWidth = overlayImg.offsetWidth;
+                        startHeight = overlayImg.offsetHeight;
+                        aspectRatio = startWidth / startHeight;
+                        
+                        document.addEventListener('mousemove', onResizeMove);
+                        document.addEventListener('mouseup', onResizeEnd);
+                        document.addEventListener('touchmove', onResizeMove);
+                        document.addEventListener('touchend', onResizeEnd);
+                    };
+                    
+                    const onResizeMove = (e) => {
+                        if (!isResizing) return;
+                        e.preventDefault();
+                        
+                        const clientX = e.clientX || e.touches[0].clientX;
+                        const clientY = e.clientY || e.touches[0].clientY;
+                        
+                        const deltaX = clientX - startX;
+                        const deltaY = clientY - startY;
+                        
+                        // Verwende die größere Änderung für proportionale Skalierung
+                        let newWidth, newHeight;
+                        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                            newWidth = Math.max(100, startWidth + deltaX);
+                            newHeight = newWidth / aspectRatio;
+                        } else {
+                            newHeight = Math.max(100, startHeight + deltaY);
+                            newWidth = newHeight * aspectRatio;
+                        }
+                        
+                        // Begrenze auf max-Werte
+                        const maxWidth = window.innerWidth - 40;
+                        const maxHeight = viewportHeight - headbarBottom - 32;
+                        
+                        if (newWidth > maxWidth) {
+                            newWidth = maxWidth;
+                            newHeight = newWidth / aspectRatio;
+                        }
+                        if (newHeight > maxHeight) {
+                            newHeight = maxHeight;
+                            newWidth = newHeight * aspectRatio;
+                        }
+                        
+                        overlayImg.style.width = `${newWidth}px`;
+                        overlayImg.style.height = `${newHeight}px`;
+                        overlayImg.style.maxWidth = 'none';
+                        overlayImg.style.maxHeight = 'none';
+                    };
+                    
+                    const onResizeEnd = () => {
+                        isResizing = false;
+                        document.removeEventListener('mousemove', onResizeMove);
+                        document.removeEventListener('mouseup', onResizeEnd);
+                        document.removeEventListener('touchmove', onResizeMove);
+                        document.removeEventListener('touchend', onResizeEnd);
+                    };
+                    
+                    resizeHandle.addEventListener('mousedown', onResizeStart);
+                    resizeHandle.addEventListener('touchstart', onResizeStart);
+                    
+                    overlay.appendChild(resizeHandle);
+                    overlay.style.pointerEvents = 'auto';
+                } else {
+                    overlay.style.pointerEvents = 'none';
+                }
+
+                // Position berechnen
+                const rect = thumb.getBoundingClientRect();
+                
+                // Overlay sichtbar machen
+                overlay.style.display = 'block';
+
+                // Warte auf Bild-Laden für korrekte Größe
+                const positionOverlay = () => {
+                    const viewportWidth = window.innerWidth;
+                    const overlayWidth = overlay.offsetWidth;
+                    
+                    const minTop = headbarBottom + 5; // Mindest-Abstand zur Titelleiste
+
+                    // Position unter dem Thumbnail, zentriert
+                    let left = rect.left + (rect.width / 2) - (overlayWidth / 2);
+                    let top = minTop; // Immer direkt unterhalb der Titelleiste
+
+                    // Prüfe ob Overlay aus dem Viewport ragt (horizontal)
+                    if (left < 10) left = 10;
+                    if (left + overlayWidth > viewportWidth - 10) {
+                        left = viewportWidth - overlayWidth - 10;
+                    }
+
+                    overlay.style.left = `${left}px`;
+                    overlay.style.top = `${top}px`;
+                };
+
+                if (overlayImg.complete) {
+                    positionOverlay();
+                } else {
+                    overlayImg.onload = positionOverlay;
+                }
+            };
+            
             imageUrls.forEach((imgUrl, index) => {
                 const thumb = document.createElement('img');
                 thumb.src = imgUrl;
+                thumb.loading = 'lazy';
+                thumb.dataset.originalUrl = originalImageUrls[index]; // Speichere originale URL
+                thumb.dataset.externalUrl = imgUrl; // Speichere externe URL
                 thumb.style.cssText = `
                     width: 25px;
                     height: 25px;
@@ -5973,64 +6704,46 @@
                     border: 1px solid #fff;
                     border-radius: 2px;
                     cursor: pointer;
-                    transition: transform 0.1s, border-color 0.1s;
+                    transition: transform 0.1s, border-color 0.1s, border-width 0.1s;
                 `;
                 thumb.title = `Bild ${index + 1} von ${imageUrls.length}`;
 
                 thumb.addEventListener('mouseenter', () => {
+                    // Nur Hover-Effekt wenn nicht gepinnt oder dieses Bild gepinnt ist
+                    if (pinnedThumb && pinnedThumb !== thumb) {
+                        // Ein anderes Bild ist gepinnt - nur leichten Hover-Effekt
+                        thumb.style.transform = 'scale(1.1)';
+                        thumb.style.zIndex = '10';
+                        thumb.style.position = 'relative';
+                        return;
+                    }
+                    
                     thumb.style.borderColor = '#0d6efd';
                     thumb.style.transform = 'scale(1.1)';
                     thumb.style.zIndex = '10';
                     thumb.style.position = 'relative';
 
-                    // Erstelle neues Overlay-Bild
-                    overlay.innerHTML = '';
-                    const overlayImg = document.createElement('img');
-                    overlayImg.src = imgUrl;
-                    overlayImg.style.cssText = 'display: block; max-width: 1500px; max-height: 1500px;';
-                    overlay.appendChild(overlayImg);
-
-                    // Position berechnen
-                    const rect = thumb.getBoundingClientRect();
-
-                    // Overlay sichtbar machen
-                    overlay.style.display = 'block';
-
-                    // Warte auf Bild-Laden für korrekte Größe
-                    const positionOverlay = () => {
-                        const viewportWidth = window.innerWidth;
-                        const viewportHeight = window.innerHeight;
-                        const overlayWidth = overlay.offsetWidth;
-                        const overlayHeight = overlay.offsetHeight;
-
-                        // Position unter dem Thumbnail, zentriert
-                        let left = rect.left + (rect.width / 2) - (overlayWidth / 2);
-                        let top = rect.bottom + 10;
-
-                        // Prüfe ob Overlay aus dem Viewport ragt
-                        if (left < 10) left = 10;
-                        if (left + overlayWidth > viewportWidth - 10) {
-                            left = viewportWidth - overlayWidth - 10;
-                        }
-
-                        // Wenn unten kein Platz, zeige oben
-                        if (top + overlayHeight > viewportHeight - 10) {
-                            top = rect.top - overlayHeight - 10;
-                            if (top < 10) top = 10;
-                        }
-
-                        overlay.style.left = `${left}px`;
-                        overlay.style.top = `${top}px`;
-                    };
-
-                    if (overlayImg.complete) {
-                        positionOverlay();
-                    } else {
-                        overlayImg.onload = positionOverlay;
+                    // Zeige Overlay nur wenn nicht gepinnt
+                    if (!pinnedThumb) {
+                        showOverlay(thumb, imgUrl, false);
                     }
                 });
 
                 thumb.addEventListener('mouseleave', () => {
+                    // Wenn dieses Bild gepinnt ist, nichts tun
+                    if (pinnedThumb === thumb) {
+                        return;
+                    }
+                    
+                    // Wenn ein anderes Bild gepinnt ist, nur Hover-Effekt zurücksetzen
+                    if (pinnedThumb) {
+                        thumb.style.transform = 'scale(1)';
+                        thumb.style.zIndex = '';
+                        thumb.style.position = '';
+                        return;
+                    }
+                    
+                    // Kein Bild gepinnt - normale Hover-Logik
                     thumb.style.borderColor = '#fff';
                     thumb.style.transform = 'scale(1)';
                     thumb.style.zIndex = '';
@@ -6040,7 +6753,39 @@
 
                 thumb.addEventListener('click', (e) => {
                     e.preventDefault();
-                    window.open(imgUrl, '_blank');
+                    e.stopPropagation();
+                    
+                    // Prüfe ob Bild vollständig geladen ist
+                    if (!thumb.complete || thumb.naturalWidth === 0) {
+                        // Bild noch nicht geladen - nichts tun
+                        return;
+                    }
+                    
+                    // Wenn dieses Bild bereits gepinnt ist -> Schließen
+                    if (pinnedThumb === thumb) {
+                        closePinnedOverlay();
+                        return;
+                    }
+                    
+                    // Wenn ein anderes Bild gepinnt ist -> Umschalten
+                    if (pinnedThumb) {
+                        pinnedThumb.style.borderColor = '#fff';
+                        pinnedThumb.style.borderWidth = '1px';
+                        pinnedThumb.style.transform = 'scale(1)';
+                        pinnedThumb.style.zIndex = '';
+                        pinnedThumb.style.position = '';
+                    }
+                    
+                    // Dieses Bild pinnen
+                    pinnedThumb = thumb;
+                    thumb.style.borderColor = 'red';
+                    thumb.style.borderWidth = '3px';
+                    thumb.style.transform = 'scale(1.1)';
+                    thumb.style.zIndex = '10';
+                    thumb.style.position = 'relative';
+                    
+                    // Overlay mit X-Button anzeigen (mit Originalauflösung)
+                    showOverlay(thumb, thumb.dataset.originalUrl, true);
                 });
 
                 galleryContainer.appendChild(thumb);
@@ -6201,9 +6946,18 @@
             imageGalleryLoading = false;
             document.querySelectorAll('.geizhals-image-gallery-container').forEach(el => el.remove());
             document.querySelectorAll('.geizhals-image-gallery-overlay').forEach(el => el.remove());
+            if (imageGalleryIframe) {
+                imageGalleryIframe.remove();
+                imageGalleryIframe = null;
+            }
 
             // Reset Datenblatt-Favicons bei URL-Wechsel
             document.querySelectorAll('.geizhals-datasheet-favicons').forEach(el => el.remove());
+
+            // Reset Preview Section Suche bei URL-Wechsel
+            if (typeof closePreviewSectionSearchOverlay === 'function') {
+                closePreviewSectionSearchOverlay();
+            }
 
             // Reset Grid-Divider bei URL-Wechsel (damit es auf neuer Seite neu initialisiert wird)
             const existingGridDivider = document.querySelector('.grid-divider-overlay');
@@ -6234,11 +6988,6 @@
             if (existingCloneBtn) existingCloneBtn.remove();
             const existingCopyIcons = document.querySelectorAll('.geizhals-titlebar-copy-icon');
             existingCopyIcons.forEach(icon => icon.remove());
-            const existingSearchField = document.getElementById('geizhals-preview-search-field');
-            if (existingSearchField) existingSearchField.remove();
-            const existingDescHeaderSearchContainer = document.getElementById('geizhals-desc-header-search-container');
-            if (existingDescHeaderSearchContainer) existingDescHeaderSearchContainer.remove();
-            requestAnimationFrame(() => clearPreviewHighlights());
 
             const hasModeParam = Array.from(urlParams.keys()).some(key =>
                 key === 'mode' || key.includes('mode')
@@ -6247,18 +6996,30 @@
             const hasIdParam = urlParams.has('id');
             const isClean = isCleanArticleUrl();
             const otherSettings = getOtherSettingsConfig();
+            
             // Auto-collapse on clean URLs with id parameter if setting is enabled (not on clone_id URLs)
             if (isClean && hasIdParam && !hasCloneId && otherSettings.sidebarAutoCollapse) {
-                // Mehrere Versuche mit steigenden Verzögerungen für robusteres Einklappen
-                const collapseDelays = [100, 500, 1000, 2000, 3500, 5000];
-                collapseDelays.forEach(delay => {
-                    setTimeout(() => {
-                        const sidebarBtn = getSidebarButton();
-                        if (sidebarBtn && !isSidebarCollapsed()) {
-                            sidebarBtn.click();
-                        }
-                    }, delay);
-                });
+                // Prüfe ob Modus 'maxWidth': nur einklappen wenn Fensterbreite <= maxWidth
+                // Verwende physische Pixel (innerWidth * devicePixelRatio) für korrekte Berechnung bei HiDPI-Displays
+                const currentWidth = Math.floor(window.innerWidth * window.devicePixelRatio);
+                const maxWidth = otherSettings.sidebarAutoCollapseMaxWidth || 2560;
+                
+                const shouldCollapse = otherSettings.sidebarAutoCollapseMode === 'maxWidth' 
+                    ? currentWidth <= maxWidth
+                    : true; // 'always' Modus
+                    
+                if (shouldCollapse) {
+                    // Mehrere Versuche mit steigenden Verzögerungen für robusteres Einklappen
+                    const collapseDelays = [100, 500, 1000, 2000, 3500, 5000];
+                    collapseDelays.forEach(delay => {
+                        setTimeout(() => {
+                            const sidebarBtn = getSidebarButton();
+                            if (sidebarBtn && !isSidebarCollapsed()) {
+                                sidebarBtn.click();
+                            }
+                        }, delay);
+                    });
+                }
             }
             // Auto-expand on mode URLs if sidebar is collapsed
             if (hasModeParam) {
@@ -6286,6 +7047,15 @@
             setTimeout(applyDomDependentFeatures, 600);
             setTimeout(applyDomDependentFeatures, 1000);
             setTimeout(applyDomDependentFeatures, 2000);
+            setTimeout(applyDomDependentFeatures, 3500);
+            setTimeout(applyDomDependentFeatures, 5000);
+            
+            // Expliziter Aufruf für Bildergalerie mit verschiedenen Verzögerungen
+            if (otherSettings.imageGalleryHoverPreview && !hasModeParam && !hasCloneId) {
+                setTimeout(applyImageGalleryHoverPreview, 500);
+                setTimeout(applyImageGalleryHoverPreview, 1500);
+                setTimeout(applyImageGalleryHoverPreview, 3000);
+            }
 
             // Aktualisiere clonedFromId und wende Clone-Optionen an wenn nötig
             (async () => {
@@ -6766,7 +7536,7 @@
         const buttons = actionPane.querySelectorAll('button.btn');
         for (const btn of buttons) {
             // Check for text "Speichern" or SVG icon
-            if (btn.textContent.trim() === 'Speichern' ||
+            if (btn.textContent.trim() === 'Speichern' || 
                 btn.querySelector('svg.bi-floppy2')) {
                 return btn;
             }
@@ -6880,7 +7650,7 @@
                     const pasteBtn = document.getElementById('geizhals-paste-btn');
                     const saveBtn = document.getElementById('geizhals-save-btn');
                     const cloneBtn = document.getElementById('geizhals-clone-btn');
-
+                    
                     if (pasteBtn && pasteBtn.parentElement === navbarNav && pasteBtn.nextSibling) {
                         navbarNav.insertBefore(reloadBtn, pasteBtn.nextSibling);
                     } else if (pasteBtn && pasteBtn.parentElement === navbarNav) {
@@ -6913,7 +7683,7 @@
 
         const links = actionPane.querySelectorAll('a.btn.btn-dark');
         for (const link of links) {
-            if (link.textContent.trim() === 'Neu laden' ||
+            if (link.textContent.trim() === 'Neu laden' || 
                 link.querySelector('svg.bi-arrow-clockwise')) {
                 return link;
             }
@@ -7038,7 +7808,7 @@
 
         const buttons = actionPane.querySelectorAll('button.btn');
         for (const btn of buttons) {
-            if (btn.textContent.trim() === 'Einfügen' ||
+            if (btn.textContent.trim() === 'Einfügen' || 
                 btn.querySelector('svg.bi-clipboard')) {
                 return btn;
             }
@@ -7160,7 +7930,7 @@
 
         const buttons = actionPane.querySelectorAll('button.btn');
         for (const btn of buttons) {
-            if (btn.textContent.trim() === 'Kopieren' ||
+            if (btn.textContent.trim() === 'Kopieren' || 
                 btn.querySelector('svg.bi-copy')) {
                 return btn;
             }
@@ -8068,16 +8838,27 @@
                 if (hasIdParam && !hasCloneId) {
                     const otherSettings = getOtherSettingsConfig();
                     if (otherSettings.sidebarAutoCollapse) {
-                        // Mehrere Versuche mit steigenden Verzögerungen für robusteres Einklappen
-                        const collapseDelays = [300, 800, 1500, 2500, 4000];
-                        collapseDelays.forEach(delay => {
-                            setTimeout(() => {
-                                const sidebarBtn = getSidebarButton();
-                                if (sidebarBtn && !isSidebarCollapsed()) {
-                                    sidebarBtn.click();
-                                }
-                            }, delay);
-                        });
+                        // Prüfe ob Modus 'maxWidth': nur einklappen wenn Fensterbreite <= maxWidth
+                        // Verwende physische Pixel (innerWidth * devicePixelRatio) für korrekte Berechnung bei HiDPI-Displays
+                        const currentWidth = Math.floor(window.innerWidth * window.devicePixelRatio);
+                        const maxWidth = otherSettings.sidebarAutoCollapseMaxWidth || 2560;
+                        
+                        const shouldCollapse = otherSettings.sidebarAutoCollapseMode === 'maxWidth' 
+                            ? currentWidth <= maxWidth
+                            : true; // 'always' Modus
+                            
+                        if (shouldCollapse) {
+                            // Mehrere Versuche mit steigenden Verzögerungen für robusteres Einklappen
+                            const collapseDelays = [300, 800, 1500, 2500, 4000];
+                            collapseDelays.forEach(delay => {
+                                setTimeout(() => {
+                                    const sidebarBtn = getSidebarButton();
+                                    if (sidebarBtn && !isSidebarCollapsed()) {
+                                        sidebarBtn.click();
+                                    }
+                                }, delay);
+                            });
+                        }
                     }
                 }
             }
@@ -8174,7 +8955,13 @@
 
             // Image Gallery Hover Preview
             if (otherSettings.imageGalleryHoverPreview) {
-                if (!document.querySelector('.geizhals-image-gallery-container') && !imageGalleryLoading) {
+                // Prüfe ob URL korrekt ist (kein mode/clone Parameter)
+                const url = new URL(window.location.href);
+                const hasMode = url.searchParams.has('mode');
+                const hasClone = url.searchParams.has('clone') || url.searchParams.has('clone_id');
+                const containerExists = document.querySelector('.geizhals-image-gallery-container');
+                
+                if (!hasMode && !hasClone && !containerExists) {
                     applyImageGalleryHoverPreview();
                 }
             }
@@ -8201,13 +8988,15 @@
             applyImageViewerBehavior();
 
             // Preview Search Field
-            applyPreviewSearchField();
+
+            // Global Search Overlay
+
+            // Preview Section Search Overlay
+            applyPreviewSectionSearchOverlay();
 
             // Description Header Search Field
-            applyDescriptionHeaderSearchField();
 
             // Header Separator Line
-            applyHeaderSeparatorLine();
 
             // Comment Field Collapse
             applyCommentFieldCollapse();
@@ -8232,9 +9021,6 @@
 
             // Links Add Article IDs Button
             applyLinksAddArticleIds();
-
-            // Hide Image Preview Thumbnails
-            applyHideImagePreviewThumbnails();
 
             // Grid Divider - wird angezeigt wenn secondary pane vorhanden ist (Vergleichsansicht)
             if (otherSettings.gridDivider) {

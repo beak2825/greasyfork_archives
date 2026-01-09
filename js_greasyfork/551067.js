@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name          【过滤】网页标题中的消息通知
+// @name          【网页标题】消息通知过滤
 // @namespace     https://github.com/realSilasYang
 // @version       2025-12-29
 // @description   移除标题开头的 (xxx) 格式的通知。默认关闭，需在要启用的网站上打开脚本管理器，手动该网站添加到应用范围。
@@ -11,8 +11,8 @@
 // @grant         GM_registerMenuCommand
 // @run-at        document-start
 // @match         *://*/*
-// @downloadURL https://update.greasyfork.org/scripts/551067/%E3%80%90%E8%BF%87%E6%BB%A4%E3%80%91%E7%BD%91%E9%A1%B5%E6%A0%87%E9%A2%98%E4%B8%AD%E7%9A%84%E6%B6%88%E6%81%AF%E9%80%9A%E7%9F%A5.user.js
-// @updateURL https://update.greasyfork.org/scripts/551067/%E3%80%90%E8%BF%87%E6%BB%A4%E3%80%91%E7%BD%91%E9%A1%B5%E6%A0%87%E9%A2%98%E4%B8%AD%E7%9A%84%E6%B6%88%E6%81%AF%E9%80%9A%E7%9F%A5.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/551067/%E3%80%90%E7%BD%91%E9%A1%B5%E6%A0%87%E9%A2%98%E3%80%91%E6%B6%88%E6%81%AF%E9%80%9A%E7%9F%A5%E8%BF%87%E6%BB%A4.user.js
+// @updateURL https://update.greasyfork.org/scripts/551067/%E3%80%90%E7%BD%91%E9%A1%B5%E6%A0%87%E9%A2%98%E3%80%91%E6%B6%88%E6%81%AF%E9%80%9A%E7%9F%A5%E8%BF%87%E6%BB%A4.meta.js
 // ==/UserScript==
 
 (function() {

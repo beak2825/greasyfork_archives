@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            HWH Tweaker
 // @namespace       http://tampermonkey.net/
-// @version         5.8.9
+// @version         5.9.4
 // @description     Extension for HeroWarsHelper by ZingerY - Adds adventure path editor, custom buttons, and tweaks
 // @author          AI Assistant
 // @license         MIT
@@ -16,7 +16,7 @@
 
 
 // Configuration at the top of the script
-const TWEAKER_VERSION = '5.8.9'
+const TWEAKER_VERSION = '5.9.4'
 const DEBUG_MODE = localStorage.getItem('hwh_debug_mode') === 'true';
 const TOURNAMENT_RETENTION_DAYS = 7;
 const TOURNAMENT_RETENTION_MS = TOURNAMENT_RETENTION_DAYS * 24 * 60 * 60 * 1000;
@@ -26,6 +26,7 @@ const HEROIC_OVERRIDE_MISSION_KEY = 'hwh_heroic_override_mission';
 const ARENA_STATS_ENABLED_KEY = 'hwh_arena_stats_enabled';
 const WINTERFEST_GIFT_CACHE_KEY = 'hwh_winterfest_gift_cache';
 const WINTERFEST_CACHE_DAYS = 14; // Keep cache for 2 weeks after event ends
+const XP_POTION_KEEP_KEY = 'hwh_xp_potion_keep_amount';
 
 // Inject consolidated styles
 if (!document.getElementById('twk-styles')) {
@@ -3774,6 +3775,49 @@ ${eightCoinLines.join('\n')}`;
     // COMPLETE ADVENTURE EXTENSION - COPY THIS ENTIRE SECTION
     // Replace your entire initializeAdventureExtension function with this
     // ================================================================
+    let lastManualPath = '';
+    // Make popup draggable by its header
+    function makeDraggable(popupElement, headerSelector = null) {
+        const header = headerSelector ? popupElement.querySelector(headerSelector) : popupElement.firstElementChild;
+        if (!header) return;
+
+        header.style.cursor = 'move';
+        header.title = 'Drag to move';
+
+        let isDragging = false;
+        let startX, startY, startLeft, startTop;
+
+        // Convert from right-positioned to left-positioned for dragging
+        const rect = popupElement.getBoundingClientRect();
+        popupElement.style.right = 'auto';
+        popupElement.style.left = rect.left + 'px';
+        popupElement.style.top = rect.top + 'px';
+        popupElement.style.transform = 'none';
+
+        header.addEventListener('mousedown', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT') return;
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            startLeft = popupElement.offsetLeft;
+            startTop = popupElement.offsetTop;
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+            popupElement.style.left = (startLeft + dx) + 'px';
+            popupElement.style.top = (startTop + dy) + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+    }
+
+
 
     function initializeAdventureExtension() {
         if (!HWHClasses || !HWHClasses.executeAdventure) {
@@ -4016,6 +4060,7 @@ ${eightCoinLines.join('\n')}`;
                     `;
 
                     document.body.appendChild(stopPopupDiv);
+                    makeDraggable(stopPopupDiv);
 
                     // Drag functionality
                     const header = stopPopupDiv.querySelector('#stop-popup-header');
@@ -4082,11 +4127,12 @@ ${eightCoinLines.join('\n')}`;
             return new Promise((resolve) => {
                 const backdrop = document.createElement('div');
                 backdrop.style.cssText = `
-                    position: fixed;
-                    top: 0; left: 0; width: 100%; height: 100%;
-                    background: rgba(0,0,0,0.7);
-                    z-index: 1000000;
-                `;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: transparent;
+    pointer-events: none;
+    z-index: 1000000;
+`;
 
                 const popup = document.createElement('div');
                 popup.style.cssText = `
@@ -4188,6 +4234,7 @@ ${eightCoinLines.join('\n')}`;
 
                 document.body.appendChild(backdrop);
                 document.body.appendChild(popup);
+                makeDraggable(popup);
 
                 function cleanup() {
                     backdrop.remove();
@@ -4219,30 +4266,101 @@ ${eightCoinLines.join('\n')}`;
                 // Manual path button
                 popup.querySelector('#storm-manual-btn').onclick = async () => {
                     cleanup();
-                    const answer = await HWHFuncs.popup.confirm(
-                        'Enter Storm path manually:',
-                        [
-                            {
-                                msg: 'Start',
-                                placeholder: '1,2,3,4,5,6',
-                                isInput: true
-                            },
-                            {
-                                msg: 'Cancel',
-                                result: false,
-                                isCancel: true
-                            }
-                        ]
-                    );
 
-                    if (!answer) {
+                    const manualPopup = document.createElement('div');
+                    manualPopup.style.cssText = `
+        position: fixed;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        width: 350px;
+        background: linear-gradient(135deg, #1a1a2a 0%, #2a2a3a 100%);
+        border: 3px solid #4a6a8a;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        z-index: 999999;
+        font-family: Arial, sans-serif;
+        pointer-events: auto;
+    `;
+
+                    manualPopup.innerHTML = `
+        <div style="padding: 10px; background: rgba(70,100,140,0.3); border-bottom: 2px solid #4a6a8a;">
+            <h3 style="margin: 0; color: #7fbfff; font-size: 14px; text-align: center; font-weight: bold;">
+                🔢 Enter Storm Path Manually
+            </h3>
+        </div>
+        <div style="padding: 12px;">
+            <div style="color: #aaa; font-size: 11px; margin-bottom: 8px; padding: 6px; background: rgba(70,100,140,0.2); border-left: 3px solid #7fbfff; border-radius: 3px;">
+                💡 Start with your <span style="color: #4ae29a;">current position</span>, then each node to visit
+            </div>
+            <input id="storm-manual-path-input" type="text" placeholder="1,2,3,4,5,6" value="${lastManualPath}" style="
+                width: 100%;
+                padding: 10px;
+                background: rgba(0,0,0,0.5);
+                border: 1px solid #4a6a8a;
+                color: #4ae29a;
+                border-radius: 4px;
+                font-family: monospace;
+                font-size: 14px;
+                box-sizing: border-box;
+            ">
+        </div>
+        <div style="padding: 8px; background: rgba(70,100,140,0.3); border-top: 2px solid #4a6a8a; display: flex; gap: 6px;">
+            <button id="storm-manual-start-btn" style="
+                flex: 1;
+                padding: 8px;
+                background: #3a5a7a;
+                color: #7fbfff;
+                border: 2px solid #7fbfff;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 12px;
+            ">▶️ Start</button>
+            <button id="storm-manual-cancel-btn" style="
+                flex: 1;
+                padding: 8px;
+                background: #4a2a2a;
+                color: #ff9999;
+                border: 2px solid #8b4444;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 12px;
+            ">✖ Cancel</button>
+        </div>
+    `;
+
+                    document.body.appendChild(manualPopup);
+                    makeDraggable(manualPopup);
+
+                    const input = manualPopup.querySelector('#storm-manual-path-input');
+                    input.focus();
+                    input.select();
+
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            manualPopup.querySelector('#storm-manual-start-btn').click();
+                        }
+                    });
+
+                    manualPopup.querySelector('#storm-manual-start-btn').onclick = () => {
+                        const answer = input.value.trim();
+                        lastManualPath = answer;
+                        manualPopup.remove();
+                        if (!answer) {
+                            resolve(false);
+                        } else {
+                            const pathArray = parsePath(answer);
+                            resolve(pathArray);
+                        }
+                    };
+
+                    manualPopup.querySelector('#storm-manual-cancel-btn').onclick = () => {
+                        manualPopup.remove();
                         resolve(false);
-                    } else {
-                        const pathArray = parsePath(answer);
-                        resolve(pathArray);
-                    }
+                    };
                 };
-
                 popup.querySelector('#storm-cancel').onclick = () => {
                     cleanup();
                     resolve(false);
@@ -4333,7 +4451,8 @@ ${eightCoinLines.join('\n')}`;
                     stopBackdrop.style.cssText = `
                         position: fixed;
                         top: 0; left: 0; width: 100%; height: 100%;
-                        background: rgba(0,0,0,0.5);
+                        background: transparent;
+                        pointer-events: none;
                         z-index: 999998;
                     `;
 
@@ -4387,6 +4506,7 @@ ${eightCoinLines.join('\n')}`;
 
                     document.body.appendChild(stopBackdrop);
                     document.body.appendChild(stopPopupDiv);
+                    makeDraggable(stopPopupDiv);
 
                     function stopCleanup() {
                         stopBackdrop.remove();
@@ -4482,15 +4602,15 @@ ${eightCoinLines.join('\n')}`;
 
                 const backdrop = document.createElement('div');
                 backdrop.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 999998;
-                pointer-events: auto;
-            `;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: transparent;
+pointer-events: none;
+z-index: 999998;
+`;
 
                 const title = isMap13
                 ? `Adventure 13 - Map ${mapNumber}`
@@ -4626,6 +4746,7 @@ ${eightCoinLines.join('\n')}`;
                 // ADD THESE TWO LINES:
                 document.body.appendChild(backdrop);
                 document.body.appendChild(popupDiv);
+                makeDraggable(popupDiv);
 
 
                 // ADD THIS DEBUG LINE:
@@ -4665,28 +4786,100 @@ ${eightCoinLines.join('\n')}`;
                 };
                 document.getElementById('path-manual-btn').onclick = async () => {
                     cleanup();
-                    const answer = await HWHFuncs.popup.confirm(
-                        'Enter path manually:',
-                        [
-                            {
-                                msg: 'Start',
-                                placeholder: '1,2,3,4,5,6',
-                                isInput: true
-                            },
-                            {
-                                msg: 'Cancel',
-                                result: false,
-                                isCancel: true
-                            }
-                        ]
-                    );
 
-                    if (!answer) {
+                    const manualPopup = document.createElement('div');
+                    manualPopup.style.cssText = `
+        position: fixed;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        width: 350px;
+        background: linear-gradient(135deg, #1a1410 0%, #2a1f18 100%);
+        border: 3px solid #8b6914;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        z-index: 999999;
+        font-family: Arial, sans-serif;
+        pointer-events: auto;
+    `;
+
+                    manualPopup.innerHTML = `
+        <div style="padding: 10px; background: rgba(139,105,20,0.3); border-bottom: 2px solid #8b6914;">
+            <h3 style="margin: 0; color: #ffd700; font-size: 14px; text-align: center; font-weight: bold;">
+                🔢 Enter Path Manually
+            </h3>
+        </div>
+        <div style="padding: 12px;">
+            <div style="color: #aaa; font-size: 11px; margin-bottom: 8px; padding: 6px; background: rgba(139,105,20,0.2); border-left: 3px solid #ffd700; border-radius: 3px;">
+                💡 Start with your <span style="color: #4ae29a;">current position</span>, then each node to visit
+            </div>
+            <input id="manual-path-input" type="text" placeholder="1,2,3,4,5,6" value="${lastManualPath}" style="
+                width: 100%;
+                padding: 10px;
+                background: rgba(0,0,0,0.5);
+                border: 1px solid #5a4a2a;
+                color: #4ae29a;
+                border-radius: 4px;
+                font-family: monospace;
+                font-size: 14px;
+                box-sizing: border-box;
+            ">
+        </div>
+        <div style="padding: 8px; background: rgba(139,105,20,0.3); border-top: 2px solid #8b6914; display: flex; gap: 6px;">
+            <button id="manual-start-btn" style="
+                flex: 1;
+                padding: 8px;
+                background: #8b6914;
+                color: #ffd700;
+                border: 2px solid #ffd700;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 12px;
+            ">▶️ Start</button>
+            <button id="manual-cancel-btn" style="
+                flex: 1;
+                padding: 8px;
+                background: #8b4049;
+                color: #ffd700;
+                border: 2px solid #d46a6a;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 12px;
+            ">✖ Cancel</button>
+        </div>
+    `;
+
+                    document.body.appendChild(manualPopup);
+                    makeDraggable(manualPopup);
+
+                    const input = manualPopup.querySelector('#manual-path-input');
+                    input.focus();
+                    input.select();  // Select existing text so user can easily replace or continue
+
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            manualPopup.querySelector('#manual-start-btn').click();
+                        }
+                    });
+
+                    manualPopup.querySelector('#manual-start-btn').onclick = () => {
+                        const answer = input.value.trim();
+                        lastManualPath = answer;
+                        manualPopup.remove();
+                        if (!answer) {
+                            resolve(false);
+                        } else {
+                            const pathArray = parsePath(answer);
+                            resolve(pathArray);
+                        }
+                    };
+
+                    manualPopup.querySelector('#manual-cancel-btn').onclick = () => {
+                        manualPopup.remove();
                         resolve(false);
-                    } else {
-                        const pathArray = parsePath(answer);  // <-- USE THE LOCAL parsePath FUNCTION
-                        resolve(pathArray);
-                    }
+                    };
                 };
             });
         }
@@ -4743,7 +4936,8 @@ ${eightCoinLines.join('\n')}`;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+background: transparent;
+                        pointer-events: none;
             z-index: 999998;
         `;
 
@@ -4817,6 +5011,7 @@ ${eightCoinLines.join('\n')}`;
 
                 document.body.appendChild(backdrop);
                 document.body.appendChild(popupDiv);
+                makeDraggable(popupDiv);
 
                 function cleanup() {
                     backdrop.remove();
@@ -5097,6 +5292,7 @@ ${eightCoinLines.join('\n')}`;
                 renderIndividual();
                 document.body.appendChild(backdrop);
                 document.body.appendChild(popupDiv);
+                makeDraggable(popupDiv);
 
                 document.getElementById('adv-individual-btn').onclick = () => switchMode('individual');
                 document.getElementById('adv-bulk-btn').onclick = () => switchMode('bulk');
@@ -5278,7 +5474,8 @@ ${eightCoinLines.join('\n')}`;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: transparent;
+                    pointer-events: none;
             z-index: 1000000;
         `;
 
@@ -5390,9 +5587,13 @@ ${eightCoinLines.join('\n')}`;
                 function getPathCount(advId) {
                     try {
                         const saved = localStorage.getItem(`adventureCustomPaths:${advId}`);
-                        if (!saved) return 0;
-                        const data = JSON.parse(saved);
-                        return data.paths.filter(p => p && p.trim()).length;
+                        if (saved) {
+                            const data = JSON.parse(saved);
+                            return data.paths.filter(p => p && p.trim()).length;
+                        }
+                        // Check Solfors defaults
+                        const solforsPaths = window.SOLFORS_PATHS?.[advId] || {};
+                        return Object.keys(solforsPaths).length;
                     } catch (e) {
                         return 0;
                     }
@@ -5426,9 +5627,10 @@ ${eightCoinLines.join('\n')}`;
 
                 document.body.appendChild(backdrop);
                 document.body.appendChild(popupDiv);
+                makeDraggable(popupDiv);
 
                 // Adventure button handlers
-                DOMCache.getAll('adventureButtons', '.adventure-btn').forEach(btn => {
+                popupDiv.querySelectorAll('.adventure-btn').forEach(btn => {
                     btn.onmouseenter = () => btn.style.background = 'rgba(139,105,20,0.3)';
                     btn.onmouseleave = () => btn.style.background = 'rgba(255,255,255,0.05)';
                     btn.onclick = async () => {
@@ -5440,7 +5642,7 @@ ${eightCoinLines.join('\n')}`;
                 });
 
                 // Map button handlers
-                DOMCache.getAll('mapButtons', '.map-btn').forEach(btn => {
+                popupDiv.querySelectorAll('.map-btn').forEach(btn => {
                     btn.onmouseenter = () => btn.style.background = 'rgba(139,105,20,0.3)';
                     btn.onmouseleave = () => btn.style.background = 'rgba(255,255,255,0.05)';
                     btn.onclick = async () => {
@@ -5560,11 +5762,12 @@ ${eightCoinLines.join('\n')}`;
                 return new Promise((resolve) => {
                     const backdrop = document.createElement('div');
                     backdrop.style.cssText = `
-                    position: fixed;
-                    top: 0; left: 0; width: 100%; height: 100%;
-                    background: rgba(0,0,0,0.7);
-                    z-index: 1000000;
-                `;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: transparent;
+    pointer-events: none;
+    z-index: 1000000;
+`;
 
                     const popupDiv = document.createElement('div');
                     popupDiv.style.cssText = `
@@ -5657,6 +5860,7 @@ ${eightCoinLines.join('\n')}`;
 
                     document.body.appendChild(backdrop);
                     document.body.appendChild(popupDiv);
+                    makeDraggable(popupDiv);
 
                     function cleanup() {
                         backdrop.remove();
@@ -6895,19 +7099,44 @@ ${eightCoinLines.join('\n')}`;
             let player = getPlayer();
             let invMedClass = selfGame['game.mediator.gui.popup.inventory.PlayerInventoryPopupMediator'];
             let mediator = new invMedClass(player);
+            let proto = invMedClass.prototype;
 
             // Dynamically find the filter property from get_currentFilter getter
-            let propsObj = invMedClass.prototype.__properties__;
+            let propsObj = proto.__properties__;
             let getterMethodName = Object.entries(propsObj).find(e => e[1] === 'get_currentFilter')?.[0];
+            let filterProp = null;
             if (getterMethodName) {
-                let getterFunc = invMedClass.prototype[getterMethodName].toString();
+                let getterFunc = proto[getterMethodName].toString();
                 let filterPropMatch = getterFunc.match(/return\s+this\.(\w+)/);
                 if (filterPropMatch) {
-                    mediator[filterPropMatch[1]] = filter;
+                    filterProp = filterPropMatch[1];
+                    mediator[filterProp] = filter;
                 }
             }
 
             mediator.open();
+
+            // Find and call the refresh method to update content
+            if (filterProp) {
+                let refreshMethod = null;
+                for (let key of Object.getOwnPropertyNames(proto)) {
+                    if (typeof proto[key] === 'function') {
+                        let str = proto[key].toString();
+                        let pattern = new RegExp('this\\.' + filterProp + '=[^,]+,this\\.(\\w+)\\(\\)');
+                        let match = str.match(pattern);
+                        if (match) {
+                            refreshMethod = match[1];
+                            break;
+                        }
+                    }
+                }
+                if (refreshMethod) {
+                    setTimeout(() => {
+                        try { mediator[refreshMethod](); } catch(e) {}
+                    }, 150);
+                }
+            }
+
             debugLog('Opened Inventory - ' + filter + ' tab');
             if (HWHFuncs && HWHFuncs.setProgress) {
                 HWHFuncs.setProgress('Opened Inventory - ' + filter + ' tab', true);
@@ -7266,6 +7495,7 @@ ${eightCoinLines.join('\n')}`;
     // Click the Outland, Tower, Expeditions, Minions buttons from HWH
     // ============================================================================
 
+
     // Helper to find and click action popup button by name (I18N key match)
     window.clickActionButtonByName = function(targetName) {
         try {
@@ -7352,6 +7582,8 @@ ${eightCoinLines.join('\n')}`;
         return clickActionButtonByName('Tidy') || clickActionButtonByName('TIDY');
     };
 
+
+
     // ================================================================
     // OTHERS MENU BUTTON WRAPPERS (name-based)
     // ================================================================
@@ -7420,6 +7652,437 @@ ${eightCoinLines.join('\n')}`;
         return clickOthersButtonByName('Power') || clickOthersButtonByName('HERO_POWER');
     };
 
+    // ================================================================
+    // GIFT OF ELEMENTS BUYER
+    // ================================================================
+    const GOE_POWER_PER_LEVEL = [22,22,22,22,22,66,66,66,66,66,110,110,110,110,110,154,154,154,154,154,198,198,198,198,198,242,242,242,242,242];
+
+    window.showGoEBuyer = function() {
+        const existing = document.getElementById('goe-popup');
+        if (existing) existing.remove();
+
+        const popup = document.createElement('div');
+        popup.id = 'goe-popup';
+        popup.innerHTML = `
+            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999999; display: flex; align-items: center; justify-content: center;">
+                <div style="background: linear-gradient(180deg, #1a0f08 0%, #2a1810 100%); border: 3px solid #8b6914; border-radius: 10px; padding: 15px; min-width: 360px; color: #ffd700;">
+                    <h3 style="margin: 0 0 12px 0; text-align: center; border-bottom: 1px solid #8b6914; padding-bottom: 8px; font-size: 16px;">
+                        ⚡ Gift of Elements
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+                        <button id="goe-spend" style="padding: 10px; background: #2a5a2a; border: 2px solid #1a4a1a; border-radius: 5px; color: white; cursor: pointer; font-weight: bold; font-size: 13px;"
+                            title="Spend a specified number of Sparks of Power to upgrade heroes' Gift of Elements levels evenly">
+                            ⚡ Spend Sparks
+                        </button>
+                        <button id="goe-power" style="padding: 10px; background: #2a5a2a; border: 2px solid #1a4a1a; border-radius: 5px; color: white; cursor: pointer; font-weight: bold; font-size: 13px;"
+                            title="Upgrade Gift of Elements until you gain a target amount of hero power">
+                            🎯 Get Power
+                        </button>
+                        <button id="goe-reset" style="padding: 10px; background: #4a3010; border: 2px solid #8b6914; border-radius: 5px; color: #ffd700; cursor: pointer; font-weight: bold; font-size: 13px;"
+                            title="Reset Gift of Elements for heroes at levels 1-29 (preserves level 30 heroes)">
+                            🔄 Reset 1-29
+                        </button>
+                        <button id="goe-reset30" style="padding: 10px; background: #c41e3a; border: 2px solid #8b0000; border-radius: 5px; color: white; cursor: pointer; font-weight: bold; font-size: 13px;"
+                            title="Reset ALL Gift of Elements including level 30 heroes (starts with weakest)">
+                            💀 Reset Lv30
+                        </button>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <button id="goe-close" style="padding: 8px 24px; background: #4a3010; border: 1px solid #8b6914; border-radius: 4px; color: #ffd700; cursor: pointer; font-size: 13px;">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+
+        popup.querySelector('#goe-close').onclick = () => popup.remove();
+        popup.querySelector('#goe-spend').onclick = async () => { popup.remove(); await goeSpendSparks(); };
+        popup.querySelector('#goe-power').onclick = async () => { popup.remove(); await goeGetPower(); };
+        popup.querySelector('#goe-reset').onclick = async () => { popup.remove(); await goeReset(); };
+        popup.querySelector('#goe-reset30').onclick = async () => { popup.remove(); await goeReset30(); };
+
+        popup.firstElementChild.onclick = (e) => { if (e.target === popup.firstElementChild) popup.remove(); };
+    };
+
+    function goeResultPopup(title, message) {
+        const existing = document.getElementById('goe-result-popup');
+        if (existing) existing.remove();
+
+        const popup = document.createElement('div');
+        popup.id = 'goe-result-popup';
+        popup.innerHTML = `
+            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999999; display: flex; align-items: center; justify-content: center;">
+                <div style="background: linear-gradient(180deg, #1a0f08 0%, #2a1810 100%); border: 3px solid #8b6914; border-radius: 10px; padding: 15px; min-width: 300px; max-width: 380px; color: #ffd700;">
+                    <h3 style="margin: 0 0 12px 0; text-align: center; border-bottom: 1px solid #8b6914; padding-bottom: 8px; font-size: 16px;">${title}</h3>
+                    <div style="margin-bottom: 15px; color: #ccc; font-size: 14px; text-align: center; line-height: 1.5;">${message}</div>
+                    <div style="text-align: center;">
+                        <button id="goe-result-ok" style="padding: 10px 30px; background: #8b6914; border: 2px solid #ffd700; border-radius: 5px; color: #fff; cursor: pointer; font-weight: bold; font-size: 14px;">OK</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(popup);
+        popup.querySelector('#goe-result-ok').onclick = () => popup.remove();
+        popup.firstElementChild.onclick = (e) => { if (e.target === popup.firstElementChild) popup.remove(); };
+    }
+
+    function goeInputPopup(title, message, defaultValue, buttonText, buttonColor = 'green', calcFn = null) {
+        return new Promise((resolve) => {
+            const existing = document.getElementById('goe-input-popup');
+            if (existing) existing.remove();
+
+            const colors = {
+                green: { bg: '#2a5a2a', border: '#1a4a1a', text: 'white' },
+                blue: { bg: '#4a3010', border: '#8b6914', text: '#ffd700' },
+                red: { bg: '#c41e3a', border: '#8b0000', text: 'white' }
+            };
+            const c = colors[buttonColor] || colors.green;
+
+            const popup = document.createElement('div');
+            popup.id = 'goe-input-popup';
+            popup.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999999; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: linear-gradient(180deg, #1a0f08 0%, #2a1810 100%); border: 3px solid #8b6914; border-radius: 10px; padding: 15px; min-width: 340px; color: #ffd700;">
+                        <h3 style="margin: 0 0 12px 0; text-align: center; border-bottom: 1px solid #8b6914; padding-bottom: 8px; font-size: 16px;">${title}</h3>
+                        <div style="margin-bottom: 12px; color: #ccc; font-size: 14px; text-align: center; line-height: 1.4;">${message}</div>
+                        <input type="number" id="goe-input-value" value="${defaultValue}" style="width: 100%; padding: 10px; background: #1a0f08; border: 1px solid #8b6914; border-radius: 4px; color: #ffd700; font-size: 14px; text-align: center; box-sizing: border-box; margin-bottom: 10px;">
+                        <div id="goe-cost-display" style="margin-bottom: 12px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 5px; font-size: 13px; text-align: center; color: #ccc; display: none;"></div>
+                        <div style="display: flex; gap: 8px;">
+                            <button id="goe-input-cancel" style="flex: 1; padding: 10px; background: #4a3010; border: 1px solid #8b6914; border-radius: 5px; color: #ffd700; cursor: pointer; font-size: 13px;">Cancel</button>
+                            <button id="goe-input-ok" style="flex: 1; padding: 10px; background: ${c.bg}; color: ${c.text}; border: 2px solid ${c.border}; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 13px;">${buttonText}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(popup);
+
+            const input = popup.querySelector('#goe-input-value');
+            const costDisplay = popup.querySelector('#goe-cost-display');
+            input.focus();
+            input.select();
+
+            if (calcFn) {
+                costDisplay.style.display = 'block';
+                const updateCost = () => {
+                    const val = +input.value || 0;
+                    costDisplay.innerHTML = calcFn(val);
+                };
+                updateCost();
+                input.addEventListener('input', updateCost);
+            }
+
+            const close = (value) => { popup.remove(); resolve(value); };
+
+            popup.querySelector('#goe-input-cancel').onclick = () => close(null);
+            popup.querySelector('#goe-input-ok').onclick = () => close(+input.value);
+            input.onkeydown = (e) => { if (e.key === 'Enter') close(+input.value); if (e.key === 'Escape') close(null); };
+            popup.firstElementChild.onclick = (e) => { if (e.target === popup.firstElementChild) close(null); };
+        });
+    }
+
+    function goeConfirmPopup(title, message, buttons) {
+        return new Promise((resolve) => {
+            const existing = document.getElementById('goe-confirm-popup');
+            if (existing) existing.remove();
+
+            const colors = {
+                green: { bg: '#2a5a2a', border: '#1a4a1a', text: 'white' },
+                blue: { bg: '#4a3010', border: '#8b6914', text: '#ffd700' },
+                red: { bg: '#c41e3a', border: '#8b0000', text: 'white' }
+            };
+
+            const buttonsHTML = buttons.map((btn, i) => {
+                const c = colors[btn.color] || colors.green;
+                return `<button id="goe-confirm-btn-${i}" style="flex: 1; padding: 10px; background: ${c.bg}; color: ${c.text}; border: 2px solid ${c.border}; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 13px;">${btn.text}</button>`;
+            }).join('');
+
+            const popup = document.createElement('div');
+            popup.id = 'goe-confirm-popup';
+            popup.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 999999; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: linear-gradient(180deg, #1a0f08 0%, #2a1810 100%); border: 3px solid #8b6914; border-radius: 10px; padding: 15px; min-width: 320px; color: #ffd700;">
+                        <h3 style="margin: 0 0 12px 0; text-align: center; border-bottom: 1px solid #8b6914; padding-bottom: 8px; font-size: 16px;">${title}</h3>
+                        <div style="margin-bottom: 15px; color: #ccc; font-size: 14px; text-align: center; line-height: 1.4;">${message}</div>
+                        <div style="display: flex; gap: 8px;">${buttonsHTML}</div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(popup);
+
+            const close = (value) => { popup.remove(); resolve(value); };
+
+            buttons.forEach((btn, i) => {
+                popup.querySelector(`#goe-confirm-btn-${i}`).onclick = () => close(btn.value);
+            });
+            popup.firstElementChild.onclick = (e) => { if (e.target === popup.firstElementChild) close(null); };
+        });
+    }
+
+    function goeCalcSparksCost(heroes, sparksToSpend, gold, titanGiftLib) {
+        let tempSparks = sparksToSpend;
+        let tempGold = 0;
+        let upgrades = 0;
+        let powerGain = 0;
+
+        for (let lvl = heroes[0].titanGiftLevel; lvl < 30 && tempSparks > 0; lvl++) {
+            for (const hero of heroes) {
+                if (hero.titanGiftLevel > lvl) continue;
+                const cost = titanGiftLib[lvl + 1]?.cost;
+                if (!cost || tempSparks < cost.consumable[24]) break;
+                tempSparks -= cost.consumable[24];
+                tempGold += cost.gold;
+                powerGain += GOE_POWER_PER_LEVEL[lvl];
+                upgrades++;
+            }
+        }
+
+        const goldOk = tempGold <= gold;
+        return `💰 Gold: <span style="color:${goldOk ? '#4ae29a' : '#ff6b6b'}">${tempGold.toLocaleString()}</span> / ${gold.toLocaleString()}<br>⚡ Power: +${powerGain.toLocaleString()} · 📈 ${upgrades} upgrades`;
+    }
+
+    function goeCalcPowerCost(heroes, targetPower, sparks, gold, titanGiftLib) {
+        let tempSparks = sparks;
+        let tempGold = 0;
+        let currentPower = 0;
+        let upgrades = 0;
+
+        for (let lvl = heroes[0].titanGiftLevel; lvl < 30 && currentPower < targetPower; lvl++) {
+            for (const hero of heroes) {
+                if (hero.titanGiftLevel > lvl) continue;
+                const cost = titanGiftLib[lvl + 1]?.cost;
+                if (!cost || tempSparks < cost.consumable[24]) break;
+                tempSparks -= cost.consumable[24];
+                tempGold += cost.gold;
+                currentPower += GOE_POWER_PER_LEVEL[lvl];
+                upgrades++;
+                if (currentPower >= targetPower) break;
+            }
+        }
+
+        const goldOk = tempGold <= gold;
+        return `💰 Gold: <span style="color:${goldOk ? '#4ae29a' : '#ff6b6b'}">${tempGold.toLocaleString()}</span> / ${gold.toLocaleString()}<br>✨ Sparks: ${(sparks - tempSparks).toLocaleString()} · 📈 ${upgrades} upgrades`;
+    }
+
+    async function goeSpendSparks() {
+        try {
+            const { setProgress } = HWHFuncs;
+            const [heroGetAll, inventory, user] = await Caller.send(['heroGetAll', 'inventoryGet', 'userGetInfo']);
+
+            let heroes = Object.values(heroGetAll).sort((a, b) => a.titanGiftLevel - b.titanGiftLevel);
+            const titanGiftLib = lib.getData('titanGift');
+            let sparks = inventory.consumable[24] || 0;
+            const maxSparks = sparks;
+            let gold = user.gold;
+
+            if (user.level < 30) { goeResultPopup('⚠️ Error', 'Need team level 30'); return; }
+            if (heroes[0].titanGiftLevel >= 30) { goeResultPopup('✅ Complete', 'All heroes at max GoE level'); return; }
+
+            const calcFn = (val) => goeCalcSparksCost(heroes, val, gold, titanGiftLib);
+
+            const value = await goeInputPopup(
+                '⚡ Spend Sparks',
+                `Available: <span style="color:#4ae29a">${sparks.toLocaleString()}</span> Sparks of Power`,
+                sparks, 'Spend', 'green', calcFn
+            );
+
+            if (!value || value <= 0 || value > maxSparks) { if (value) goeResultPopup('⚠️ Error', 'Invalid amount'); return; }
+
+            await goeProcessUpgrades(heroes, value, gold, titanGiftLib, null);
+        } catch (e) {
+            goeResultPopup('❌ Error', `Failed to load data<br><span style="color:#ff6b6b">${e.message || 'Unknown error'}</span>`);
+        }
+    }
+
+    async function goeGetPower() {
+        try {
+            const { setProgress } = HWHFuncs;
+            const [heroGetAll, inventory, user] = await Caller.send(['heroGetAll', 'inventoryGet', 'userGetInfo']);
+
+            let heroes = Object.values(heroGetAll).sort((a, b) => a.titanGiftLevel - b.titanGiftLevel);
+            const titanGiftLib = lib.getData('titanGift');
+            let sparks = inventory.consumable[24] || 0;
+            let gold = user.gold;
+
+            if (user.level < 30) { goeResultPopup('⚠️ Error', 'Need team level 30'); return; }
+            if (heroes[0].titanGiftLevel >= 30) { goeResultPopup('✅ Complete', 'All heroes at max GoE level'); return; }
+
+            // Calculate max possible power
+            let tempSparks = sparks;
+            let maxPower = 0;
+            for (let lvl = heroes[0].titanGiftLevel; lvl < 30; lvl++) {
+                for (const hero of heroes) {
+                    if (hero.titanGiftLevel > lvl) continue;
+                    const cost = titanGiftLib[lvl + 1]?.cost;
+                    if (!cost || tempSparks < cost.consumable[24]) break;
+                    tempSparks -= cost.consumable[24];
+                    maxPower += GOE_POWER_PER_LEVEL[lvl];
+                }
+            }
+
+            const calcFn = (val) => goeCalcPowerCost(heroes, val, sparks, gold, titanGiftLib);
+
+            const value = await goeInputPopup(
+                '🎯 Get Power',
+                `Max available: <span style="color:#4ae29a">${maxPower.toLocaleString()}</span> hero power`,
+                maxPower, 'Upgrade', 'green', calcFn
+            );
+
+            if (!value || value <= 0 || value > maxPower) { if (value) goeResultPopup('⚠️ Error', 'Invalid amount'); return; }
+
+            await goeProcessUpgrades(heroes, sparks, gold, titanGiftLib, value);
+        } catch (e) {
+            goeResultPopup('❌ Error', `Failed to load data<br><span style="color:#ff6b6b">${e.message || 'Unknown error'}</span>`);
+        }
+    }
+
+    async function goeProcessUpgrades(heroes, sparks, gold, titanGiftLib, targetPower) {
+        const { setProgress } = HWHFuncs;
+        const startPower = heroes.reduce((sum, h) => sum + h.power, 0);
+        let calls = [], upgrades = 0, currentPower = 0;
+        let currentLevel = heroes[0].titanGiftLevel;
+
+        // Pre-calculate total gold needed
+        let tempSparks = sparks, tempGold = 0, tempPower = 0;
+        for (let lvl = currentLevel; lvl < 30; lvl++) {
+            for (const hero of heroes) {
+                if (hero.titanGiftLevel > lvl) continue;
+                const cost = titanGiftLib[lvl + 1]?.cost;
+                if (!cost || tempSparks < cost.consumable[24]) break;
+                tempSparks -= cost.consumable[24];
+                tempGold += cost.gold;
+                tempPower += GOE_POWER_PER_LEVEL[lvl];
+                if (targetPower && tempPower >= targetPower) break;
+            }
+            if (targetPower && tempPower >= targetPower) break;
+        }
+
+        if (tempGold > gold) {
+            goeResultPopup('⚠️ Not Enough Gold', `Need <span style="color:#ff6b6b">${tempGold.toLocaleString()}</span> gold<br>Have <span style="color:#4ae29a">${gold.toLocaleString()}</span>`);
+            return;
+        }
+
+        setProgress('⚡ Upgrading Gift of Elements...', false);
+
+        try {
+            let running = true;
+            while (running) {
+                for (const hero of heroes) {
+                    if (currentLevel >= 30) { running = false; break; }
+                    if (hero.titanGiftLevel > currentLevel) break;
+
+                    const cost = titanGiftLib[hero.titanGiftLevel + 1]?.cost;
+                    if (!cost || sparks < cost.consumable[24] || gold < cost.gold) { running = false; break; }
+
+                    calls.push({ name: 'heroTitanGiftLevelUp', args: { heroId: hero.id } });
+                    sparks -= cost.consumable[24];
+                    gold -= cost.gold;
+                    currentPower += GOE_POWER_PER_LEVEL[hero.titanGiftLevel];
+
+                    if (targetPower && currentPower >= targetPower) { running = false; break; }
+                }
+
+                if (calls.length > 0) {
+                    await Caller.send(calls);
+                    upgrades += calls.length;
+                    const heroData = await Caller.send('heroGetAll');
+                    heroes = Object.values(heroData).sort((a, b) => a.titanGiftLevel - b.titanGiftLevel);
+                    calls = [];
+                    currentLevel++;
+                    setProgress(`⚡ GoE level ${currentLevel} · ${upgrades} upgrades`, false);
+                }
+            }
+
+            const endPower = heroes.reduce((sum, h) => sum + h.power, 0);
+            setProgress('', true);
+            goeResultPopup('✅ Complete', `Upgraded <span style="color:#4ae29a">${upgrades}</span> times<br>Power gained: <span style="color:#4ae29a">+${(endPower - startPower).toLocaleString()}</span>`);
+        } catch (e) {
+            setProgress('', true);
+            goeResultPopup('❌ Error', `Failed after ${upgrades} upgrades<br><span style="color:#ff6b6b">${e.message || 'Unknown error'}</span>`);
+        }
+    }
+
+    async function goeReset() {
+        try {
+            const [heroGetAll, user] = await Caller.send(['heroGetAll', 'userGetInfo']);
+            const heroes = Object.values(heroGetAll).sort((a, b) => a.titanGiftLevel - b.titanGiftLevel);
+
+            if (user.level < 30) { goeResultPopup('⚠️ Error', 'Need team level 30'); return; }
+
+            let minLevel = 0;
+            for (const h of heroes) { if (h.titanGiftLevel > 0 && h.titanGiftLevel < 30) { minLevel = h.titanGiftLevel; break; } }
+            if (minLevel === 0) { goeResultPopup('⚠️ Error', 'Nothing to reset (all at 0 or 30)'); return; }
+
+            const value = await goeInputPopup(
+                '🔄 Reset GoE 1-29',
+                'Reset up to level:<br><span style="color:#999">Range: 1-29 (preserves level 30)</span>',
+                minLevel, 'Reset', 'blue'
+            );
+
+            if (!value || value < 1 || value > 29) { if (value) goeResultPopup('⚠️ Error', 'Invalid level (1-29)'); return; }
+
+            const calls = heroes
+            .filter(h => h.titanGiftLevel > 0 && h.titanGiftLevel <= value && h.titanGiftLevel < 30)
+            .map(h => ({ name: 'heroTitanGiftDrop', args: { heroId: h.id } }));
+
+            if (calls.length === 0) { goeResultPopup('⚠️ Error', 'No heroes in that range'); return; }
+
+            await Caller.send(calls);
+            goeResultPopup('✅ Reset Complete', `Reset <span style="color:#4ae29a">${calls.length}</span> heroes`);
+        } catch (e) {
+            goeResultPopup('❌ Error', `Reset failed<br><span style="color:#ff6b6b">${e.message || 'Unknown error'}</span>`);
+        }
+    }
+
+    async function goeReset30() {
+        try {
+            const [heroGetAll, user] = await Caller.send(['heroGetAll', 'userGetInfo']);
+
+            if (user.level < 30) { goeResultPopup('⚠️ Error', 'Need team level 30'); return; }
+
+            const heroes1to29 = Object.values(heroGetAll).filter(h => h.titanGiftLevel > 0 && h.titanGiftLevel < 30);
+            const heroes30 = Object.values(heroGetAll).filter(h => h.titanGiftLevel === 30).sort((a, b) => a.power - b.power);
+
+            if (heroes30.length === 0 && heroes1to29.length === 0) { goeResultPopup('⚠️ Error', 'Nothing to reset'); return; }
+
+            let count30 = heroes30.length;
+            if (heroes30.length === 0) {
+                const proceed = await goeConfirmPopup(
+                    '🔄 No Level 30',
+                    'No heroes at level 30.<br>Reset lower levels instead?',
+                    [{ text: 'Cancel', value: false, color: 'red' }, { text: 'Reset <30', value: true, color: 'blue' }]
+                );
+                if (!proceed) return;
+                count30 = 0;
+            } else {
+                count30 = await goeInputPopup(
+                    '💀 Reset Level 30',
+                    `<span style="color:#4ae29a">${heroes30.length}</span> heroes at lv30<br><span style="color:#ff6b6b">Weakest first</span> · Lower levels auto-reset`,
+                    heroes30.length, 'Reset', 'red'
+                );
+                if (!count30 || count30 < 0 || count30 > heroes30.length) { if (count30) goeResultPopup('⚠️ Error', 'Invalid count'); return; }
+            }
+
+            const calls = [
+                ...heroes1to29.map(h => ({ name: 'heroTitanGiftDrop', args: { heroId: h.id } })),
+                ...heroes30.slice(0, count30).map(h => ({ name: 'heroTitanGiftDrop', args: { heroId: h.id } }))
+            ];
+
+            if (calls.length === 0) { goeResultPopup('⚠️ Error', 'Nothing to reset'); return; }
+
+            await Caller.send(calls);
+            goeResultPopup('✅ Reset Complete', `Reset <span style="color:#4ae29a">${calls.length}</span> heroes<br>(${count30} were lv30)`);
+        } catch (e) {
+            goeResultPopup('❌ Error', `Reset failed<br><span style="color:#ff6b6b">${e.message || 'Unknown error'}</span>`);
+        }
+    }
 
     // Power Tournament with time range buckets - UPDATED VERSION with daily caching
     window.goPowerTournament = async function() {
@@ -11180,17 +11843,85 @@ scrollbar-color: #8b6914 #1a0f08;
         const isMax = filledCount === 6;
         return isMax ? '<span class="twk-green">✓</span>' : `<span class="twk-dim">${filledCount}/6</span>`;
     }
-
-    function getSkinsDisplay(skins) {
+    function getSkinsDisplay(skins, heroId) {
         if (!skins || typeof skins !== 'object') return '-';
-        // Exclude cosmetic skins (IDs 352, 357, 358 - stuck at level 1)
-        const cosmeticSkins = ['352', '357', '358'];
-        const skinEntries = Object.entries(skins).filter(([id]) => !cosmeticSkins.includes(id));
-        const total = skinEntries.length;
-        const maxed = skinEntries.filter(([, v]) => v >= 60).length;
-        const allMaxed = total > 0 && maxed === total;
-        return allMaxed ? `<span class="twk-green">✓${total}</span>` : `<span class="twk-dim">${maxed}/${total}</span>`;
+
+        // Check if skin has real stat bonuses (not cosmetic)
+        const hasRealStats = (skinId) => {
+            const skin = lib?.data?.skin?.[skinId];
+            const bonus = skin?.statData?.levels?.[1]?.statBonus || {};
+            return Object.keys(bonus).some(k => k.length > 0);
+        };
+
+        // Split owned skins into: stat skins vs cosmetic
+        const skinEntries = Object.entries(skins);
+        const statOwned = skinEntries.filter(([id]) => hasRealStats(id));
+        const cosmeticOwned = skinEntries.filter(([id]) => !hasRealStats(id));
+        const ownedIds = skinEntries.map(([id]) => parseInt(id));
+
+        const owned = statOwned.length;
+        const maxed = statOwned.filter(([, v]) => v >= 60).length;
+        const cosmeticOwnedCount = cosmeticOwned.length;
+
+        // Get available skins from lib
+        let available = owned;
+        let unownedEventSkins = 0;
+        let unownedCosmeticSkins = 0;
+        try {
+            if (lib?.data?.skin) {
+                const allSkins = Object.values(lib.data.skin).filter(s => s.heroId === heroId && s.enabled === 1);
+
+                const statSkins = allSkins.filter(s => {
+                    const bonus = s.statData?.levels?.[1]?.statBonus || {};
+                    return Object.keys(bonus).some(k => k.length > 0);
+                });
+
+                const cosmeticSkins = allSkins.filter(s => {
+                    const bonus = s.statData?.levels?.[1]?.statBonus || {};
+                    return !Object.keys(bonus).some(k => k.length > 0);
+                });
+
+                // Available = obtainable stat skins + event stat skins you own
+                const obtainableCount = statSkins.filter(s => !s.notObtainable).length;
+                const ownedEventCount = statSkins.filter(s => s.notObtainable && ownedIds.includes(s.id)).length;
+                available = obtainableCount + ownedEventCount;
+                // Unowned event = stat skins with notObtainable that you don't own
+                unownedEventSkins = statSkins.filter(s => s.notObtainable && !ownedIds.includes(s.id)).length;
+                // Unowned cosmetic = cosmetic skins you don't own
+                unownedCosmeticSkins = cosmeticSkins.filter(s => !ownedIds.includes(s.id)).length;
+            }
+        } catch(e) {}
+
+        const allMaxed = owned > 0 && maxed === owned && owned >= available;
+        let display;
+        if (allMaxed) {
+            display = `<span class="twk-green">✓${owned}</span>`;
+        } else if (owned >= available) {
+            display = `<span class="twk-dim">${maxed}/${owned}</span>`;
+        } else {
+            display = `<span class="twk-dim">${maxed}/${owned}/${available}</span>`;
+        }
+
+        // Orange: unowned event stat skins
+        if (unownedEventSkins > 0) {
+            display += `<span style="color:#ff8c00;">+${unownedEventSkins}</span>`;
+        }
+
+        // Gray: unowned cosmetic skins
+        if (unownedCosmeticSkins > 0) {
+            display += `<span style="color:#888;">+${unownedCosmeticSkins}</span>`;
+        }
+
+        // Cyan: owned cosmetic skins
+        if (cosmeticOwnedCount > 0) {
+            display += `<span style="color:#00bfff;">+${cosmeticOwnedCount}</span>`;
+        }
+
+        return display;
     }
+
+
+
 
     function getArtifactStarsDisplay(artifacts) {
         if (!artifacts || !Array.isArray(artifacts)) return '-';
@@ -11291,7 +12022,7 @@ scrollbar-color: #8b6914 #1a0f08;
                     name: getName(h.id, 'hero'),
                     color: getColorDisplay(h.color),
                     items: getItemsDisplay(h.slots),
-                    skins: getSkinsDisplay(h.skins),
+                    skins: getSkinsDisplay(h.skins, h.id),
                     artStars: getArtifactStarsDisplay(h.artifacts),
                     artLevels: getArtifactLevelsDisplay(h.artifacts),
                     skills: getSkillsDisplay(h.skills, h.level),
@@ -11627,12 +12358,7 @@ scrollbar-color: #8b6914 #1a0f08;
             const levelDisplay = titan.level >= 130 ? '<span class="twk-green">✓</span>' : `<span class="twk-dim">${titan.level}</span>`;
             const starsDisplay = titan.star >= 6 ? '<span class="twk-green">✓</span>' : `<span class="twk-gold">${titan.star}</span>`;
 
-            let skinsDisplay = '-';
-            if (titan.skins && typeof titan.skins === 'object') {
-                const skinVals = Object.values(titan.skins);
-                const maxed = skinVals.filter(s => s >= 60).length;
-                skinsDisplay = maxed === skinVals.length && skinVals.length > 0 ? '<span class="twk-green">✓</span>' : `<span class="twk-dim">${maxed}/${skinVals.length}</span>`;
-            }
+            const skinsDisplay = getSkinsDisplay(titan.skins, titan.id);
 
             const arts = titan.artifacts || [];
             const artStarsMaxed = arts.length >= 3 && arts.every(a => a.star >= 6);
@@ -14720,6 +15446,72 @@ display: flex; flex-direction: column;
                     return { success: false, items: 'Error: ' + error.message, count: 0, hasItems: false };
                 }
             },
+            sellXPPotions: async () => {
+                try {
+                    debugLog('🧪 Starting XP Potion sale...');
+                    const SendFunction = getSend();
+
+                    const keepLargest = parseInt(localStorage.getItem(XP_POTION_KEEP_KEY)) || 484;
+
+                    const XP_POTIONS = [
+                        { libId: 9, keep: 0, name: 'Small' },
+                        { libId: 10, keep: 0, name: 'Medium' },
+                        { libId: 11, keep: 0, name: 'Large' },
+                        { libId: 12, keep: keepLargest, name: 'Huge' }
+                    ];
+
+                    const invResponse = await SendFunction(JSON.stringify({
+                        calls: [{ name: 'inventoryGet', args: {}, ident: 'inventory' }]
+                    }));
+
+                    const inventory = invResponse?.results?.[0]?.result?.response;
+                    const consumables = inventory?.consumable || {};
+
+                    const sellCalls = [];
+                    const potionInfo = [];
+
+                    for (const potion of XP_POTIONS) {
+                        const owned = consumables[potion.libId] || 0;
+                        const toSell = Math.max(0, owned - potion.keep);
+
+                        if (toSell > 0) {
+                            sellCalls.push({
+                                name: 'inventorySell',
+                                args: { type: 'consumable', libId: potion.libId, amount: toSell, fragment: false },
+                                ident: `sell_potion_${potion.libId}`
+                            });
+                            potionInfo.push({ libId: potion.libId, name: potion.name, amount: toSell });
+                            debugLog(`🧪 Will sell ${toSell}x ${potion.name} XP potions`);
+                        }
+                    }
+
+                    if (!sellCalls.length) {
+                        return { success: true, items: 'No XP potions to sell', count: 0, hasItems: false };
+                    }
+
+                    if (HWHFuncs?.setProgress) HWHFuncs.setProgress(`🧪 Selling ${sellCalls.length} potion types...`, false);
+
+                    const sellResponse = await SendFunction(JSON.stringify({ calls: sellCalls }));
+                    let totalGold = 0;
+
+                    sellResponse?.results?.forEach(r => {
+                        if (r?.result?.response?.gold) totalGold += r.result.response.gold;
+                    });
+
+                    const totalPotions = potionInfo.reduce((sum, p) => sum + p.amount, 0);
+
+                    return {
+                        success: true,
+                        items: totalGold > 0 ? `${totalPotions} potions → +${totalGold.toLocaleString()} gold` : 'No gold received',
+                        count: totalPotions,
+                        hasItems: totalGold > 0,
+                        rewards: totalGold > 0 ? { '🪙 Gold': { amount: totalGold, source: 'XP' } } : {}
+                    };
+                } catch (error) {
+                    console.error('Sell XP Potions error:', error);
+                    return { success: false, items: 'Error: ' + error.message, count: 0, hasItems: false };
+                }
+            },
             autoUseInventory: async () => {
                 let wasCountControl = false;
                 try {
@@ -15242,6 +16034,14 @@ display: flex; flex-direction: column;
                 icon: '📱',
                 label: 'Sell Titan Soul Coins → Gold',
                 desc: 'Buy gold from Titan Soul Shop',
+                group: 'collect',
+                default: false,
+                disabled: false
+            },
+            sellXPPotions: {
+                icon: '🧪',
+                label: 'Sell XP Potions → Gold',
+                desc: `Sell excess XP potions (keeps ${localStorage.getItem(XP_POTION_KEEP_KEY) || 484} Huge)`,
                 group: 'collect',
                 default: false,
                 disabled: false
@@ -16713,10 +17513,21 @@ ${preTasks.length ? `
 
             '</div>' + // end left column
 
-            // RIGHT COLUMN - Future Preferences
+            // RIGHT COLUMN - Collect More Preferences
             '<div class="twk-panel">' +
-            '<h3 style="margin: 0 0 15px 0; color: #4ae29a; text-align: center;">📋 Other Preferences</h3>' +
-            '<div style="font-size: 12px; color: #999; text-align: center; padding: 20px;">More preferences coming soon...</div>' +
+            '<h3 style="margin: 0 0 15px 0; color: #4ae29a; text-align: center;">📦 Collect More</h3>' +
+
+            // XP Potion Keep Amount
+            '<div class="twk-mb-15">' +
+            '<label style="display: block; margin-bottom: 8px; font-weight: bold; font-size: 13px;">🧪 Sell XP Potions:</label>' +
+            '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">' +
+            '<label style="min-width: 100px; font-size: 12px;">Keep Huge:</label>' +
+            '<input type="number" id="xp-potion-keep" min="0" max="9999" value="' + (localStorage.getItem(XP_POTION_KEEP_KEY) || '484') + '"' +
+            ' style="width: 70px; padding: 4px; background: #1a1a1a; color: #ffd700; border: 1px solid #8b6914; border-radius: 3px; font-size: 12px;">' +
+            '</div>' +
+            '<div style="font-size: 10px; color: #999; line-height: 1.3;">Sells all Small/Medium/Large potions.<br>Keeps this many Huge (libId 12).<br>Default: 484 (for hero 1→130)</div>' +
+            '</div>' +
+
             '</div>' + // end right column
 
             '</div>' + // end grid
@@ -17145,7 +17956,17 @@ ${preTasks.length ? `
             };
         }
 
-        // Close handler
+        // XP Potion Keep handler
+        const xpPotionKeepInput = popup.querySelector('#xp-potion-keep');
+        if (xpPotionKeepInput) {
+            xpPotionKeepInput.onchange = () => {
+                const val = parseInt(xpPotionKeepInput.value);
+                if (!isNaN(val) && val >= 0) {
+                    localStorage.setItem(XP_POTION_KEEP_KEY, val.toString());
+                    debugLog('🧪 XP potion keep amount set to:', val);
+                }
+            };
+        }
 
         // Close handler
         const closeDialog = function() {
@@ -25381,6 +26202,12 @@ Win Rate: <span class="twk-gold">${grandWinRate}%</span>
                 icon: '💎',
                 color: '',
                 description: 'Glyph & Gift of Elements'
+            },
+            'GoE': {
+                action: () => window.showGoEBuyer(),
+                icon: '⚡',
+                color: 'pink',
+                description: 'Gift of Elements Buyer - Spend Sparks / Get Power / Reset'
             },
 
 

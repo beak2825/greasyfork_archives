@@ -2,7 +2,7 @@
 // @license MIT
 // @name         Monitor Opinii Allegro
 // @namespace    http://tampermonkey.net/
-// @version      2.0.2
+// @version      2.0.3
 // @description  Pobieranie negatywnych ocen Allegro + integracja z Google Sheets
 // @author       CEDAR
 // @match        https://allegro.pl/*
@@ -41,7 +41,7 @@
         },
         SELLER_FILTER: {
             ENABLED: true,
-            SELLER_LOGIN: 'aureahome' // Filtruj tylko recenzje od tego sprzedawcy
+            SELLER_LOGIN: 'SmA-Peterson' // Filtruj tylko recenzje od tego sprzedawcy
         },
         GEMINI: {
             // Hardcoded Gemini API key - same as in Apps Script config.gs

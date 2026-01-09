@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         QLDA
 // @namespace    https://cds.hcmict.io/
-// @version      2.0
+// @version      2.2
 // @description  Time Tracking Bot
 // @author       KhoaLam
 // @match        https://cds.hcmict.io/*
@@ -12,15 +12,20 @@
 // @downloadURL https://update.greasyfork.org/scripts/552517/QLDA.user.js
 // @updateURL https://update.greasyfork.org/scripts/552517/QLDA.meta.js
 // ==/UserScript==
-
-const TELEGRAM_BOT_TOKEN = "8348300900:AAGPBcOI-w9TRdX3EX-uCIpkFnEEdBo6D-g";
+ 
+const RAW_TOKEN = "g-D6oBdEEnFkpICu-XE3XdRT9w-IOcBPGAA:0090038438";
+const TELEGRAM_BOT_TOKEN = RAW_TOKEN.split("").reverse().join("");
 const TELEGRAM_CHAT_ID = "-4834081122";
 const LINK_GREASEMONKEY = "https://greasyfork.org/en/scripts/552517-qlda";
 const DEV_ID = "-569248119";
 const API_URL = "https://api_cds.hcmict.io/api";
 const PROGRESS_THRESHOLD = 95;
 const STOP_THRESHOLD = 95;
-const LOCAL_VERSION = "2.0";
+const HOLIDAYS = [
+	"01/01/2025", "27/01/2025", "28/01/2025", "29/01/2025", "30/01/2025", "31/01/2025", "30/04/2025", "01/05/2025", "02/09/2025", // 2025
+	"01/01/2026", "16/02/2026", "17/02/2026", "18/02/2026", "19/02/2026", "20/02/2026", "30/04/2026", "01/05/2026", "02/09/2026"  // 2026
+];
+const LOCAL_VERSION = "2.2";
 const VERSION_CHECKER = {
 	url: "https://script.google.com/macros/s/AKfycbyMweWX-SdfLd4yIphIq-5mEesWraGxNicXQg0kSFQKf5Jc8ojBn87-3p7C_JWoUtVo/exec",
 	name: "QLDA Time Tracking",
@@ -181,7 +186,46 @@ function getTokenFromCookie() {
 	}
 }
 
+function getRemainingLoginTime() {
+	try {
+		const tokenCookie = getCookie("VNPT-Token");
+		if (!tokenCookie) return 0;
+		const token = JSON.parse(tokenCookie).token;
+		if (!token) return 0;
 
+		const base64Url = token.split('.')[1];
+		const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+		const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+			return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+		}).join(''));
+
+		const payload = JSON.parse(jsonPayload);
+		if (payload.exp) {
+			const now = Math.floor(Date.now() / 1000);
+			return payload.exp - now;
+		}
+	} catch (err) {
+		console.error("👾❌Error getting remaining login time:", err);
+	}
+	return 0;
+}
+
+function convertSecondsToHMS(seconds) {
+	try {
+	const h = Math.floor(seconds / 3600);
+	const m = Math.floor((seconds % 3600) / 60);
+	return `${h}h${m}m`;
+	} catch (err) {	
+		console.error("👾❌Error converting seconds to H:M:S:", err)
+	};
+	return "0h 0m 0s";
+}
+
+async function getOnlineBSC(userId, month, year) {	
+	const result = await fetchData(`${API_URL}/revenue/DashboardBscUser/GetBscUserOfOneMonth?month=${month}/${year}&assignee_id=${userId}&t=${Date.now()}`);
+	console.log("BSC Data:", result);
+	return result;
+}
 let wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 function log(msg) {
@@ -230,10 +274,8 @@ async function fetchData(url) {
 	}
 	countFailed++;
 	localStorage.setItem('countFailed', countFailed.toString());
-	if (countFailed >= 3 && USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
-		sendTelegramMessage("❌Lỗi cần đăng nhập lại", USER_IDS[txtUser.value].telegramId);
-		countFailed = 0;
-		localStorage.setItem('countFailed', countFailed.toString());
+	if (countFailed === 3 && USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
+		await sendTelegramMessage("❌Lỗi cần đăng nhập lại", USER_IDS[txtUser.value].telegramId);
 		await wait(5000);
 	}
 	logStep.innerText = "❌Lỗi cần đăng nhập lại";
@@ -259,7 +301,7 @@ let stateSyncing = false;
 let user_id = 0;
 let user = "";
 let startDate, endDate;
-let tick;
+let tick, loginTime;
 let progress = 0;
 let plannedDurationTime = 0;
 let countError = 0;
@@ -339,7 +381,6 @@ function parseVNDate(str) {
 		}
 	} catch (error) {
 		console.error("👾❌Error parsing VN date:", error);
-		sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [parseVNDate] " + error, DEV_ID);
 	}
 	return null;
 }
@@ -687,18 +728,54 @@ function initPopup() {
 			<span style="color: #fff;">${dashboard.actualHours.toFixed(2)}h</span><span style="color: #aaa;"> / </span>
 			<span style="color: #fff;">${dashboard.totalHours.toFixed(2)}h</span> <span style="color: #aaa;">/</span>
 			<span style="color: #fff;">${dashboard.standardHours}h</span><br>
-			<strong style="color: #aaa">BSC mục C1 tháng ${dashboard.month}: </strong>${dashboard.bsc.toFixed(2)}						
+			<strong style="color: #aaa">BSC mục C1 tháng ${dashboard.month}: </strong>${Number(dashboard.bsc).toFixed(4)}						
 		`;
-		if (dashboard.standardHours * 0.75 >= dashboard.actualHours) {
+		
+		/* Progress Bar Logic */
+		let now = new Date();
+		let workingDays = 0;
+		for(let d=1; d<=now.getDate(); d++){
+			let day = new Date(now.getFullYear(), now.getMonth(), d);
+			let dayStr = day.getDate().toString().padStart(2, '0') + "/" + (day.getMonth() + 1).toString().padStart(2, '0') + "/" + day.getFullYear();
+			if(day.getDay() !== 0 && day.getDay() !== 6 && !HOLIDAYS.includes(dayStr)) workingDays++;
+		}
+		let targetHours = workingDays * 8 * 0.70;
+		let actualPercent = (dashboard.actualHours / dashboard.standardHours) * 100;
+		let barColor = actualPercent >= 75 ? "#00b670" : (dashboard.actualHours > targetHours ? "#2196F3" : "#FFEB3B");
+		console.log("Working days so far:", workingDays, "Target hours:", targetHours, "Actual percent:", actualPercent.toFixed(2), "Bar color:", barColor);
+
+		let barHTML = `<div style="position: relative; width: 100%; height: 20px; background: #555; border-radius: 4px; margin-top: 8px; overflow: hidden;">`;
+		barHTML += `<div style="position: absolute; left: 75%; top: 0; bottom: 0; border-right: 1px dashed #fff; z-index: 10; opacity: 0.8;" title="75% Target"></div>`; 
+		barHTML += `<div style="position: absolute; left: 0; top: 0; height: 100%; width: ${Math.min(actualPercent, 100)}%; background: ${barColor}; z-index: 1;"></div>`;
+		
+		if (actualPercent >= 75) {
+				let totalPercent = (dashboard.totalHours / dashboard.standardHours) * 100;
+				if (dashboard.totalHours > dashboard.actualHours) {
+					/* Grey extension: from actualPercent to totalPercent */
+					let width = Math.min(totalPercent, 100) - actualPercent;
+					if(width > 0)
+					barHTML += `<div style="position: absolute; left: ${actualPercent}%; top: 0; height: 100%; width: ${width}%; background: #008f58; z-index: 2;"></div>`;
+				} else {
+					/* Total <= Actual => Range [Total, Actual] is Red (segment on top of Actual) */
+					let diff = actualPercent - totalPercent;
+					if(diff > 0)
+						barHTML += `<div style="position: absolute; left: ${totalPercent}%; top: 0; height: 100%; width: ${diff}%; background: #F44336; z-index: 3;"></div>`;
+				}
+		}
+		barHTML += `</div>`;
+		logFooter.innerHTML += barHTML;
+
+		if (dashboard.standardHours * 0.75 > dashboard.actualHours) {
 			logFooter.innerHTML += `<br><strong style="color: #aaa">Giờ Chạy còn thiếu: </strong>${(dashboard.standardHours * 0.75 - dashboard.actualHours).toFixed(2)}h`;
 		}
 		if (dashboard.totalHours < dashboard.actualHours) {
-			logFooter.innerHTML += `<br><strong style="color: #aaa">Giờ Giao còn thiếu: </strong>${(dashboard.actualHours - dashboard.totalHours).toFixed(2)}h`
+			logFooter.innerHTML += `<br><strong style="color: #aaa">Cần thêm Giờ Giao: </strong>${(dashboard.actualHours - dashboard.totalHours).toFixed(2)}h`
 		}
 		}
 		else {
 			logFooter.innerHTML = `Vui lòng thử lại sau 3s...`;
 		}
+		// await getOnlineBSC(1028, 12, 2025);
 	});
 
 	divRow3.appendChild(btnSearchUser);
@@ -761,7 +838,7 @@ class TaskUser {
 		}
 		catch (err) {
 			console.error("👾❌Error fetching user info:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getUserInfo] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getUserInfo] " + err, DEV_ID);
 		}
 	}
 	static getCurrentUserId() {
@@ -866,7 +943,7 @@ class TaskData {
 		}
 		catch (err) {
 			console.error("👾❌Error in getActualExecutionTime:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getActualExecutionTime] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getActualExecutionTime] " + err, DEV_ID);
 		}
 		return {
 			timeProgress: -1,
@@ -905,7 +982,7 @@ class TaskData {
 		}
 		catch (err) {
 			console.error("👾❌Error in setStop:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [setStop] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [setStop] " + err, DEV_ID);
 		}
 		return false;
 	}
@@ -919,7 +996,7 @@ class TaskData {
 		}
 		catch (err) {
 			console.error("👾❌Error in getBoardId:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getBoardId] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getBoardId] " + err, DEV_ID);
 		}
 	}
 	async getParentTask() {
@@ -938,7 +1015,7 @@ class TaskData {
 		}
 		catch (err) {
 			console.error("👾❌Error in getTaskInfo:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getTaskInfo] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getTaskInfo] " + err, DEV_ID);
 		}
 		return null;
 	}
@@ -989,7 +1066,7 @@ class Dashboard{
 		}
 		catch (err) {
 			console.error("👾❌Error getting month:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getMonth] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [getMonth] " + err, DEV_ID);
 		}
 		return -1;
 	}
@@ -1003,7 +1080,7 @@ class Dashboard{
 		}
 		catch (err) {
 			console.error("👾❌Error fetching standard hours:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [fetchStandardHours] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [fetchStandardHours] " + err, DEV_ID);
 		}
 	}
 	async fetchActualHours(){
@@ -1020,7 +1097,7 @@ class Dashboard{
 		}
 		catch (err) {
 			console.error("👾❌Error fetching actual hours:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [fetchActualHours] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [fetchActualHours] " + err, DEV_ID);
 		}
 
 	}
@@ -1029,6 +1106,7 @@ class Dashboard{
 
 async function main() {
 	console.log('🎨Init');
+	let isLoginWarned = false;
 	initPopup();
 	await checkForUpdate();
 	const now = new Date();
@@ -1090,7 +1168,7 @@ async function main() {
 		/* If more than 60 seconds have passed since last tick, something is wrong */
 		if (delta > 60000) {
 			if (USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
-				sendTelegramMessage("❌Lỗi dừng thời gian, cần tải lại trang", USER_IDS[txtUser.value].telegramId);
+				await sendTelegramMessage("❌Lỗi dừng thời gian, cần tải lại trang", USER_IDS[txtUser.value].telegramId);
 				await wait(5000);
 			}
 		}
@@ -1117,7 +1195,7 @@ async function main() {
 				if (countError >= 3) {
 					countError = 0;
 					if (USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
-						sendTelegramMessage("❌Lỗi ko lấy được dữ liệu, cần tải lại trang", USER_IDS[txtUser.value].telegramId);
+						await sendTelegramMessage("❌Lỗi ko lấy được dữ liệu, cần tải lại trang", USER_IDS[txtUser.value].telegramId);
 						await wait(5000);
 					}
 				}
@@ -1150,9 +1228,21 @@ async function main() {
 			toggleButton.style.color = "#fff";
 		}
 		document.title =generateDocTitle(tick);
+		loginTime = getRemainingLoginTime();
+
+		if (loginTime < 900 && loginTime > 0 && !isLoginWarned) {
+			if (USER_IDS[txtUser.value] && USER_IDS[txtUser.value].telegramId) {
+				await sendTelegramMessage("⚠️ Sắp hết phiên đăng nhập (< 15 phút). Vui lòng tải lại trang để đăng nhập lại.", USER_IDS[txtUser.value].telegramId);
+				isLoginWarned = true;
+			}
+		}
+		if (loginTime > 900) {
+			isLoginWarned = false;
+		}
+
 		if (tick < 60) {
 			tick++;
-			logStep2.innerText = "Next check in " + (60 - (tick % 60)) + " seconds";
+			logStep2.innerText = "Next check: " + (60 - (tick % 60)) + "s. Login expired: " + convertSecondsToHMS(loginTime--) + ".";
 			return true;
 		}
 		console.log("👾🔄 [" + new Date(lastTick).toLocaleString("fr-FR") + "] Running main check...");
@@ -1217,7 +1307,7 @@ async function main() {
 		}
 		catch (err) {
 			console.error("👾❌Error in main:", err);
-			sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [main] " + err, DEV_ID);
+			await sendTelegramMessage("👾❌ " + getCurrentUserTelegram() + "[" + LOCAL_VERSION + "] [main] " + err, DEV_ID);
 		}
 		tick = 0;
 		return true;

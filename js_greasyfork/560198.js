@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         98助手
 // @namespace    duang_duang
-// @version      2.0.2
+// @version      2.1.0
 // @description  98tang 隐藏已访问链接，支持拖拽UI、隐藏/透明度/显示切换
 // @author       q
 // @match        *://*/*
@@ -312,6 +312,87 @@
             var id = this.getIdByUrl(url, "tid=", /tid=(\d+)/);
             return id;
         },
+        // 处理单个帖子元素（可能是 tr 或 tbody）
+        processItem: async function(item) {
+            // 避免重复处理
+            if (item.dataset.processed) return;
+            
+            let a = item.querySelector("a.xst") || item.querySelector("a.z") || (item.querySelectorAll("a")[1]);
+            
+            // 排除一些非帖子链接
+            if (!a || a.href.indexOf("tid=") === -1) return;
+            
+            item.dataset.processed = "true";
+            let id = this.getId(a.href);
+            
+            if (id) {
+                // 绑定点击事件
+                a.addEventListener("mousedown", (e) => {
+                    // 只处理左键(0)和中键(1)
+                    if (e.button !== 0 && e.button !== 1) return;
+
+                    dbTools.add(id);
+                    
+                    // 延迟执行隐藏逻辑
+                    setTimeout(() => {
+                        this.applyVisitedState(item);
+                        hiddenCount++;
+                        uiTools.updateCount();
+                    }, 1000);
+                });
+
+                // 检查是否已读
+                const hasVisited = await dbTools.has(id);
+                if (hasVisited) {
+                    this.applyVisitedState(item);
+                    hiddenCount++;
+                    uiTools.updateCount();
+                }
+            }
+        },
+
+        // 应用已读状态（隐藏/变色等）
+        applyVisitedState: function(item) {
+            // 1. 标记当前元素 (通常是 tr 或 tbody)
+            item.classList.add(visitedClass);
+            
+            // 2. 如果当前元素在 tbody 中，也标记 tbody (适配部分 Discuz 结构)
+            if (item.tagName === 'TR' && item.parentElement.tagName === 'TBODY') {
+                item.parentElement.classList.add(visitedClass);
+            }
+
+            // 3. 查找并处理关联的预览图 (imagePreviewTbody)
+            // 预览图通常紧跟在帖子 tbody 后面，或者在 tr 后面
+            let nextEl = item.nextElementSibling || (item.parentElement ? item.parentElement.nextElementSibling : null);
+            
+            // 辅助函数：检查是否是预览图容器
+            const isPreview = (el) => el && el.id === 'imagePreviewTbody';
+
+            if (isPreview(nextEl)) {
+                nextEl.classList.add(visitedClass);
+            } else {
+                // 如果当前没有预览图，可能是 AJAX 还没加载，需要监听父容器
+                const parent = item.parentElement?.parentElement || item.parentElement; // table 或 tbody
+                if (parent) {
+                    const observer = new MutationObserver((mutations) => {
+                        mutations.forEach((mutation) => {
+                            mutation.addedNodes.forEach((node) => {
+                                if (node.nodeType === 1 && isPreview(node)) {
+                                    // 检查这个新插入的预览图是否属于当前帖子
+                                    // 通常通过位置判断：它是 item 的下一个兄弟
+                                    if (node === item.nextElementSibling || (item.parentElement && node === item.parentElement.nextElementSibling)) {
+                                        node.classList.add(visitedClass);
+                                        observer.disconnect(); // 找到后停止监听
+                                    }
+                                }
+                            });
+                        });
+                    });
+                    observer.observe(parent, { childList: true });
+                }
+            }
+        },
+
         // 隐藏列表中的已读项
         hideVisited: async function () {
             // 如果是详情页，不执行隐藏，但要记录ID
@@ -330,34 +411,26 @@
 
             // 列表页处理逻辑
             if (document.URL.indexOf("forum.php") > -1) {
-                // 首页/板块列表
-                const rows = document.querySelectorAll("table tr, #waterfall li");
+                // 1. 处理静态存在的帖子
+                const processAll = () => {
+                    // 兼容 tbody 和 tr 两种结构
+                    // Discuz 默认列表通常是 table > tbody[id^="normalthread_"] > tr
+                    // 瀑布流模式是 li
+                    const items = document.querySelectorAll("tbody[id^='normalthread_'] tr, table tr th.common, #waterfall li");
+                    items.forEach(item => this.processItem(item));
+                };
                 
-                for (let item of rows) {
-                    let a = item.querySelector("a.xst") || item.querySelector("a.z") || (item.querySelectorAll("a")[1]);
-                    
-                    // 排除一些非帖子链接
-                    if (!a || a.href.indexOf("tid=") === -1) continue;
+                processAll();
 
-                    let id = this.getId(a.href);
-                    if (id) {
-                        // 绑定点击事件，点击即记录
-                        a.addEventListener("mousedown", () => {
-                            dbTools.add(id);
-                            item.classList.add(visitedClass); // 立即标记
-                            hiddenCount++;
-                            uiTools.updateCount();
-                        });
-
-                        // 检查是否已读
-                        const hasVisited = await dbTools.has(id);
-                        if (hasVisited) {
-                            item.classList.add(visitedClass);
-                            hiddenCount++;
-                        }
-                    }
+                // 2. 监听整个列表容器，处理 AJAX 加载的新帖子 (翻页/自动加载)
+                const listContainer = document.querySelector("#threadlisttableid") || document.querySelector("#waterfall");
+                if (listContainer) {
+                    const listObserver = new MutationObserver((mutations) => {
+                        // 简单粗暴：有变化就重新扫描一遍，processItem 内部有防重机制
+                        processAll();
+                    });
+                    listObserver.observe(listContainer, { childList: true, subtree: true });
                 }
-                uiTools.updateCount();
             } 
         },
         start: async function () {

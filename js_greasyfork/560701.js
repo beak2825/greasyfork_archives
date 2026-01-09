@@ -7,7 +7,7 @@
 // @grant        GM_setValue
 // @description 미결재 문서 존재 여부만 확인하여 알림 제공 (단일 알림, 설정 UI 포함)
 // @license      MIT
-// @version      3.0
+// @version      3.1
 // @namespace    https://greasyfork.org/users/1554043
 // @downloadURL https://update.greasyfork.org/scripts/560701/ERP%20%EA%B2%B0%EC%9E%AC%20%EB%8F%84%EC%B0%A9%20%EC%95%8C%EB%A6%BC%20%28api%20%EC%83%81%ED%83%9C%20%EC%B2%B4%ED%81%AC%20%2B%20%EA%B3%A0%EC%A0%95%20UI%20%2B%20%EC%84%A4%EC%A0%95%29.user.js
 // @updateURL https://update.greasyfork.org/scripts/560701/ERP%20%EA%B2%B0%EC%9E%AC%20%EB%8F%84%EC%B0%A9%20%EC%95%8C%EB%A6%BC%20%28api%20%EC%83%81%ED%83%9C%20%EC%B2%B4%ED%81%AC%20%2B%20%EA%B3%A0%EC%A0%95%20UI%20%2B%20%EC%84%A4%EC%A0%95%29.meta.js
@@ -15,6 +15,9 @@
 
 (function () {
   'use strict';
+
+  // ⭐ 모든 ERP 팝업 차단 (결재함, 결재본문 포함)
+  if (location.pathname.includes('/pop/')) return;
 
   // iframe 실행 차단 (중복 인스턴스 방지)
   if (window.top !== window.self) return;

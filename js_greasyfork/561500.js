@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         B站直播m3u8提取器
 // @namespace    http://tampermonkey.net/
-// @version      1.1
-// @description  直播页面右侧悬浮按钮，点击即可将M3U8链接写入剪贴板，以便在potplayer中播放
+// @version      1.3
+// @description  直播页面右侧吸附按钮，点击即可将M3U8链接写入剪贴板，以便在potplayer中播放
 // @author       Rasury & Gemini
 // @match        *://live.bilibili.com/*
 // @icon         https://static.hdslb.com/images/favicon.ico
@@ -27,7 +27,7 @@
     function isStrictGotcha(urlStr) {
         try {
             const url = new URL(urlStr);
-            // 必须在 hostname (域名) 部分包含 gotcha 
+            // 必须在 hostname (域名) 部分包含 gotcha
             return url.hostname.includes("gotcha");
         } catch (e) {
             return false;
@@ -72,7 +72,7 @@
         });
         notice.textContent = message;
         setTimeout(() => { notice.style.top = '0px'; }, 10);
-        setTimeout(() => { notice.style.top = '-110px'; }, isSuccess ? 2000 : 4000);
+        setTimeout(() => { notice.style.top = '-110px'; }, isSuccess ? 8000 : 8000);
     }
 
     // 点击
@@ -91,7 +91,7 @@
         GM_setClipboard(finalUrl);
 
         if (isStrictGotcha(finalUrl)) {
-            showToast("✅ Gotcha链接已写入剪贴板");
+            showToast("✅ 已写入剪贴板，部分节点可能无法播放，遇到问题请刷新直播间重新抓取");
         } else {
             showToast("❌ 非Gotcha线路，请刷新页面、切换画质或线路后重试", false);
         }

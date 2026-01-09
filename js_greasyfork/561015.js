@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         B站视频倍速器
 // @namespace    https://github.com/codertesla/bilibili-video-speed-controller-userscript
-// @version      1.1.0
+// @version      1.2.0
 // @description  自由设定 Bilibili 视频的默认播放速度。支持记住设置、自动应用、手动倍速检测。
 // @author       codertesla
 // @match        *://*.bilibili.com/video/*
@@ -587,6 +587,424 @@
         }
     }
 
+    // ==================== 悬浮设置面板 ====================
+    class SettingsPanel {
+        constructor(controller) {
+            this.controller = controller;
+            this.panel = null;
+            this.isVisible = false;
+            this.isDragging = false;
+            this.dragOffset = { x: 0, y: 0 };
+            this.storageKeys = {
+                position: 'panelPosition'
+            };
+            this.injectStyles();
+        }
+
+        injectStyles() {
+            GM_addStyle(`
+                .speed-panel-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.3);
+                    z-index: 999998;
+                    opacity: 0;
+                    transition: opacity 0.2s ease;
+                    pointer-events: none;
+                }
+                .speed-panel-overlay.visible {
+                    opacity: 1;
+                    pointer-events: auto;
+                }
+                .speed-panel {
+                    position: fixed;
+                    z-index: 999999;
+                    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                    border-radius: 12px;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+                    min-width: 280px;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    color: #fff;
+                    opacity: 0;
+                    transform: scale(0.95) translateY(-10px);
+                    transition: opacity 0.2s ease, transform 0.2s ease;
+                    pointer-events: none;
+                    user-select: none;
+                }
+                .speed-panel.visible {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                    pointer-events: auto;
+                }
+                .speed-panel-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 14px 16px;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                    cursor: move;
+                    background: rgba(255, 255, 255, 0.03);
+                    border-radius: 12px 12px 0 0;
+                }
+                .speed-panel-title {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #00a1d6;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+                .speed-panel-title::before {
+                    content: '⚡';
+                }
+                .speed-panel-close {
+                    width: 24px;
+                    height: 24px;
+                    border: none;
+                    background: rgba(255, 255, 255, 0.1);
+                    color: #999;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 16px;
+                    transition: all 0.15s ease;
+                }
+                .speed-panel-close:hover {
+                    background: rgba(255, 82, 82, 0.2);
+                    color: #ff5252;
+                }
+                .speed-panel-body {
+                    padding: 20px 16px;
+                }
+                .speed-display {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                .speed-display-value {
+                    font-size: 36px;
+                    font-weight: 700;
+                    background: linear-gradient(135deg, #00a1d6, #00d4aa);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                    line-height: 1.2;
+                }
+                .speed-display-label {
+                    font-size: 12px;
+                    color: #888;
+                    margin-top: 4px;
+                }
+                .speed-slider-container {
+                    margin-bottom: 20px;
+                }
+                .speed-slider {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 100%;
+                    height: 6px;
+                    border-radius: 3px;
+                    background: linear-gradient(90deg, rgba(0, 161, 214, 0.3) 0%, rgba(0, 161, 214, 0.3) var(--progress), rgba(255, 255, 255, 0.1) var(--progress), rgba(255, 255, 255, 0.1) 100%);
+                    outline: none;
+                    cursor: pointer;
+                }
+                .speed-slider::-webkit-slider-thumb {
+                    -webkit-appearance: none;
+                    appearance: none;
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #00a1d6, #00d4aa);
+                    cursor: pointer;
+                    box-shadow: 0 2px 8px rgba(0, 161, 214, 0.4);
+                    transition: transform 0.15s ease, box-shadow 0.15s ease;
+                }
+                .speed-slider::-webkit-slider-thumb:hover {
+                    transform: scale(1.15);
+                    box-shadow: 0 4px 12px rgba(0, 161, 214, 0.6);
+                }
+                .speed-slider::-moz-range-thumb {
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #00a1d6, #00d4aa);
+                    cursor: pointer;
+                    border: none;
+                    box-shadow: 0 2px 8px rgba(0, 161, 214, 0.4);
+                }
+                .speed-slider-labels {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: 8px;
+                    font-size: 11px;
+                    color: #666;
+                }
+                .speed-presets {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 8px;
+                }
+                .speed-preset-btn {
+                    padding: 10px 8px;
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    background: rgba(255, 255, 255, 0.05);
+                    color: #ccc;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 13px;
+                    font-weight: 500;
+                    transition: all 0.15s ease;
+                }
+                .speed-preset-btn:hover {
+                    background: rgba(0, 161, 214, 0.15);
+                    border-color: rgba(0, 161, 214, 0.3);
+                    color: #00a1d6;
+                }
+                .speed-preset-btn.active {
+                    background: linear-gradient(135deg, rgba(0, 161, 214, 0.25), rgba(0, 212, 170, 0.25));
+                    border-color: #00a1d6;
+                    color: #00d4aa;
+                }
+                .speed-panel-footer {
+                    padding: 12px 16px;
+                    border-top: 1px solid rgba(255, 255, 255, 0.1);
+                    display: flex;
+                    justify-content: center;
+                    gap: 16px;
+                }
+                .speed-footer-hint {
+                    font-size: 11px;
+                    color: #666;
+                }
+            `);
+        }
+
+        createPanel() {
+            if (this.panel) return;
+
+            // Create overlay
+            this.overlay = document.createElement('div');
+            this.overlay.className = 'speed-panel-overlay';
+            this.overlay.addEventListener('click', () => this.hide());
+
+            // Create panel
+            this.panel = document.createElement('div');
+            this.panel.className = 'speed-panel';
+            this.panel.innerHTML = `
+                <div class="speed-panel-header">
+                    <div class="speed-panel-title">B站视频倍速器</div>
+                    <button class="speed-panel-close">✕</button>
+                </div>
+                <div class="speed-panel-body">
+                    <div class="speed-display">
+                        <div class="speed-display-value">${this.controller.currentSpeed.toFixed(2)}x</div>
+                        <div class="speed-display-label">当前播放速度</div>
+                    </div>
+                    <div class="speed-slider-container">
+                        <input type="range" class="speed-slider" 
+                               min="${SPEED_SETTINGS.MIN}" 
+                               max="${SPEED_SETTINGS.MAX}" 
+                               step="0.05" 
+                               value="${this.controller.currentSpeed}">
+                        <div class="speed-slider-labels">
+                            <span>${SPEED_SETTINGS.MIN}x</span>
+                            <span>1.0x</span>
+                            <span>2.0x</span>
+                            <span>${SPEED_SETTINGS.MAX}x</span>
+                        </div>
+                    </div>
+                    <div class="speed-presets">
+                        ${SPEED_SETTINGS.PRESETS.map(speed => `
+                            <button class="speed-preset-btn ${speed === this.controller.currentSpeed ? 'active' : ''}" 
+                                    data-speed="${speed}">${speed}x</button>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="speed-panel-footer">
+                    <span class="speed-footer-hint">拖动标题栏可移动面板</span>
+                </div>
+            `;
+
+            document.body.appendChild(this.overlay);
+            document.body.appendChild(this.panel);
+
+            this.setupEventListeners();
+            this.restorePosition();
+            this.updateSliderProgress();
+        }
+
+        setupEventListeners() {
+            // Close button
+            const closeBtn = this.panel.querySelector('.speed-panel-close');
+            closeBtn.addEventListener('click', () => this.hide());
+
+            // Slider
+            const slider = this.panel.querySelector('.speed-slider');
+            slider.addEventListener('input', (e) => {
+                const speed = parseFloat(e.target.value);
+                this.controller.setSpeed(speed);
+                this.updateSpeedDisplay();
+                this.updatePresetButtons();
+                this.updateSliderProgress();
+            });
+
+            // Preset buttons
+            const presetBtns = this.panel.querySelectorAll('.speed-preset-btn');
+            presetBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const speed = parseFloat(btn.dataset.speed);
+                    this.controller.setSpeed(speed);
+                    this.updateSpeedDisplay();
+                    this.updateSlider();
+                    this.updatePresetButtons();
+                });
+            });
+
+            // Drag functionality
+            const header = this.panel.querySelector('.speed-panel-header');
+            header.addEventListener('mousedown', (e) => this.startDrag(e));
+            document.addEventListener('mousemove', (e) => this.drag(e));
+            document.addEventListener('mouseup', () => this.endDrag());
+
+            // Keyboard shortcut to close
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && this.isVisible) {
+                    this.hide();
+                }
+            });
+        }
+
+        startDrag(e) {
+            if (e.target.classList.contains('speed-panel-close')) return;
+            this.isDragging = true;
+            const rect = this.panel.getBoundingClientRect();
+            this.dragOffset = {
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top
+            };
+            this.panel.style.transition = 'none';
+        }
+
+        drag(e) {
+            if (!this.isDragging) return;
+            const x = Math.max(0, Math.min(window.innerWidth - this.panel.offsetWidth, e.clientX - this.dragOffset.x));
+            const y = Math.max(0, Math.min(window.innerHeight - this.panel.offsetHeight, e.clientY - this.dragOffset.y));
+            this.panel.style.left = `${x}px`;
+            this.panel.style.top = `${y}px`;
+            this.panel.style.right = 'auto';
+            this.panel.style.bottom = 'auto';
+        }
+
+        endDrag() {
+            if (!this.isDragging) return;
+            this.isDragging = false;
+            this.panel.style.transition = '';
+            this.savePosition();
+        }
+
+        savePosition() {
+            const rect = this.panel.getBoundingClientRect();
+            Storage.set(this.storageKeys.position, JSON.stringify({
+                x: rect.left,
+                y: rect.top
+            }));
+        }
+
+        restorePosition() {
+            try {
+                const saved = Storage.get(this.storageKeys.position, null);
+                if (saved) {
+                    const pos = JSON.parse(saved);
+                    const x = Math.max(0, Math.min(window.innerWidth - this.panel.offsetWidth, pos.x));
+                    const y = Math.max(0, Math.min(window.innerHeight - this.panel.offsetHeight, pos.y));
+                    this.panel.style.left = `${x}px`;
+                    this.panel.style.top = `${y}px`;
+                } else {
+                    // Default position: center of screen
+                    this.panel.style.left = '50%';
+                    this.panel.style.top = '50%';
+                    this.panel.style.transform = 'translate(-50%, -50%)';
+                }
+            } catch {
+                this.panel.style.left = '50%';
+                this.panel.style.top = '50%';
+                this.panel.style.transform = 'translate(-50%, -50%)';
+            }
+        }
+
+        updateSpeedDisplay() {
+            const display = this.panel.querySelector('.speed-display-value');
+            if (display) {
+                display.textContent = `${this.controller.currentSpeed.toFixed(2)}x`;
+            }
+        }
+
+        updateSlider() {
+            const slider = this.panel.querySelector('.speed-slider');
+            if (slider) {
+                slider.value = this.controller.currentSpeed;
+                this.updateSliderProgress();
+            }
+        }
+
+        updateSliderProgress() {
+            const slider = this.panel.querySelector('.speed-slider');
+            if (slider) {
+                const progress = ((this.controller.currentSpeed - SPEED_SETTINGS.MIN) / (SPEED_SETTINGS.MAX - SPEED_SETTINGS.MIN)) * 100;
+                slider.style.setProperty('--progress', `${progress}%`);
+            }
+        }
+
+        updatePresetButtons() {
+            const btns = this.panel.querySelectorAll('.speed-preset-btn');
+            btns.forEach(btn => {
+                const speed = parseFloat(btn.dataset.speed);
+                btn.classList.toggle('active', Math.abs(speed - this.controller.currentSpeed) < 0.01);
+            });
+        }
+
+        show() {
+            if (!this.panel) {
+                this.createPanel();
+            }
+            this.updateSpeedDisplay();
+            this.updateSlider();
+            this.updatePresetButtons();
+            
+            // Reset transform if using center positioning
+            if (this.panel.style.transform.includes('translate')) {
+                const rect = this.panel.getBoundingClientRect();
+                this.panel.style.left = `${rect.left}px`;
+                this.panel.style.top = `${rect.top}px`;
+                this.panel.style.transform = '';
+            }
+            
+            requestAnimationFrame(() => {
+                this.overlay.classList.add('visible');
+                this.panel.classList.add('visible');
+            });
+            this.isVisible = true;
+        }
+
+        hide() {
+            if (this.overlay) this.overlay.classList.remove('visible');
+            if (this.panel) this.panel.classList.remove('visible');
+            this.isVisible = false;
+        }
+
+        toggle() {
+            if (this.isVisible) {
+                this.hide();
+            } else {
+                this.show();
+            }
+        }
+    }
+
     // ==================== 平台检测与配置 ====================
     function detectPlatform() {
         const hostname = window.location.hostname;
@@ -621,13 +1039,13 @@
 
     // ==================== 油猴菜单命令 ====================
     function registerMenuCommands(controller) {
-        const platformName = 'B站';
-
+        // 创建设置面板
+        const settingsPanel = new SettingsPanel(controller);
 
         // 显示当前状态
         GM_registerMenuCommand(`📊 当前状态: ${controller.enabled ? controller.currentSpeed + 'x' : '已禁用'}`, () => {
             const status = controller.getStatus();
-            alert(`${platformName} 视频倍速控制器\n\n` +
+            alert(`B站视频倍速控制器\n\n` +
                   `状态: ${status.enabled ? '启用' : '禁用'}\n` +
                   `当前速度: ${status.currentSpeed}x\n` +
                   `检测到视频: ${status.videoCount} 个`);
@@ -638,27 +1056,9 @@
             controller.setEnabled(!controller.enabled);
         });
 
-        // 常用速度选项
-        SPEED_SETTINGS.PRESETS.forEach(speed => {
-            const mark = speed === controller.currentSpeed ? '✓ ' : '  ';
-            GM_registerMenuCommand(`${mark}设置为 ${speed}x`, () => {
-                controller.setSpeed(speed);
-                controller.setEnabled(true);
-            });
-        });
-
-        // 自定义速度
-        GM_registerMenuCommand('🎚️ 自定义速度...', () => {
-            const input = prompt(`请输入播放速度 (${MIN_SPEED} - ${MAX_SPEED}):`, controller.currentSpeed.toString());
-            if (input !== null) {
-                const speed = parseFloat(input);
-                if (DOMUtils.isValidSpeed(speed)) {
-                    controller.setSpeed(speed);
-                    controller.setEnabled(true);
-                } else {
-                    alert(`无效的速度值！请输入 ${MIN_SPEED} 到 ${MAX_SPEED} 之间的数字。`);
-                }
-            }
+        // 打开设置面板
+        GM_registerMenuCommand('⚙️ 打开设置面板', () => {
+            settingsPanel.show();
         });
     }
 

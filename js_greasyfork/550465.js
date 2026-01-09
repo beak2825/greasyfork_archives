@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Timers & Reminders
 // @namespace    dev.chib.Timers&Reminders
-// @version      1.37.5
+// @version      1.4
 // @description  Floating timers, + checklist 🐸✌️
 // @author       Chib
 // @match        https://www.torn.com/*
@@ -1559,6 +1559,69 @@ let chainTimerEndStored = GM_getValue("chainTimerEnd", 0);
         }
     }
     window.updateChainTimerFromDom = updateChainTimerFromDom;
+})();
+
+(function addTargetNoteDateButton() {
+    const descSelector = 'p.description';
+    const inputSelector =
+        'p.description ~ input.input-text, p.description ~ textarea.input-text, ' +
+        '.add-user input.input-text, .add-user textarea.input-text, ' +
+        'input.input-text.m-top8.m-bottom10, textarea.input-text.m-top8.m-bottom10';
+
+    function attach() {
+        const input = document.querySelector(inputSelector);
+        if (!input || input.dataset.dateBtnAdded) return;
+
+        const desc = document.querySelector(descSelector);
+        const label = desc?.querySelector('span') || desc;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = 'date';
+        btn.title = "Insert today's date";
+        btn.style.cssText = [
+            'background:none',
+            'border:none',
+            'padding:0',
+            'margin-left:80px',
+            'font-size:12px',
+            'font-weight:bold',
+            'text-transform:uppercase',
+            'color:#9ab',
+            'cursor:pointer',
+            'line-height:1.1',
+            'letter-spacing:0.4px',
+            'display:inline-block',
+            'vertical-align:baseline'
+        ].join(';');
+
+        btn.addEventListener('click', () => {
+            const now = new Date();
+            const stamp = `${now.getDate()}.${now.getMonth() + 1}.${now.getFullYear()}`;
+            const existing = input.value.trim();
+            input.value = existing ? `${existing} ${stamp}` : stamp;
+            input.focus();
+        });
+
+        if (label) {
+            label.insertAdjacentElement('afterend', btn);
+        } else {
+            // fallback
+            btn.style.marginLeft = '6px';
+            input.insertAdjacentElement('afterend', btn);
+        }
+        input.dataset.dateBtnAdded = '1';
+    }
+    attach();
+    const mo = new MutationObserver(() => attach());
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    if (Array.isArray(typeof __observers !== 'undefined' && __observers)) {
+        __observers.push(mo);
+    } else {
+        window.addEventListener('beforeunload', () => mo.disconnect());
+        window.addEventListener('unload', () => mo.disconnect());
+    }
 })();
 
 // ---------- Cleanup on unload ----------

@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         SOOP: 채팅 락 (응원봉 용도)
 // @namespace    melderland-chat-lock
-// @version      2025-09-30.8
-// @description  입력창 문구 잠금 + 전송 후 자동 복원 + 아프리카 복붙 활성화 + 0.7s 쿨다운(잠금 사용 시).
+// @version      2025-09-30.9
+// @description  입력창 문구 잠금 + 전송 후 자동 복원 + 아프리카 복붙 활성화 + 2.6s 쿨다운(잠금 사용 시).
 // @match        https://play.sooplive.co.kr/*
 // @match        https://www.sooplive.co.kr/*
 // @grant        none
@@ -16,7 +16,7 @@
 
   // ---------- config ----------
   const OFFSET_Y = -12;           // UI Y 위치 (px, 위로 올리려면 음수)
-  const CHEER_COOLDOWN_MS = 1100;  // 쿨다운(ms) — 응원봉모드(=잠금 사용 시) 전송 간 최소 간격
+  const CHEER_COOLDOWN_MS = 2600;  // 쿨다운(ms) — 응원봉모드(=잠금 사용 시) 전송 간 최소 간격
 
   // ---------- state ----------
   const ROOM_KEY = location.hostname + location.pathname;

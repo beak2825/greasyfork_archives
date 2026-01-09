@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Live.hockey.no – tabulka zápasů
 // @namespace    http://tampermonkey.net/
-// @version      2.3
+// @version      2.4
 // @description  Vytváří tabulku zápasů z proklikaných zápasů
 // @author       LM
 // @match        https://live.hockey.no/*
@@ -250,7 +250,7 @@
             addCell(tr, m.away);
             addCell(tr, m.matchId);
 
-            const lm  = makeLivematchUrl(m.matchId, m.matchDate);
+            const lm  = makeLivematchUrl(m.matchId, m.matchDate, 3);
             const pbp = makePlayByPlayUrl(m.matchId, m.matchDate);
 
             // POŘADÍ: Hokej (play-by-play), Statistiky (livematch)
@@ -288,7 +288,7 @@
     // URL GENERATORS (RAW matchDate)
     // --------------------------------------------------------------
 
-    function makeLivematchUrl(matchId, matchDate) {
+    function makeLivematchUrl(matchId, matchDate, tab) {
         const params = new URLSearchParams(location.search);
         const seasonId = params.get('seasonId') || '';
         const tournamentId = params.get('tournamentId') || '';
@@ -301,13 +301,14 @@
         url += 'matchId=' + encodeURIComponent(matchId);
 
         // matchDate necháme raw kvůli dvojtečkám
-        if (matchDate) url += '&matchDate=' + matchDate + '&tab=3';
+        if (matchDate) url += '&matchDate=' + matchDate;
+
+        if (tab) url += '&tab=' + tab;
 
         return url;
     }
 
     function makePlayByPlayUrl(matchId, matchDate) {
-        return makeLivematchUrl(matchId, matchDate) + '&tab=1';
+        return makeLivematchUrl(matchId, matchDate, 1);
     }
-
 })();

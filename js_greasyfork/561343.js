@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         海角社区
-// @version      1.0.2
-// @description  🔥 解锁海角社区全部付费视频（包括短视频、封禁用户视频），去广告、自动展开帖子，不限次数观看、下载视频，可复制观看链接
+// @version      1.0.4
+// @description  🔥 解锁海角社区全部付费视频（包括短视频,封禁用户视频），去弹窗、去广告、自动展开帖子，不限量观看、下载视频，可复制播放链接
 // @namespace    海角社区
 // @author       fanqiechaodan
 // @match        *://*/videoplay/*
@@ -21,10 +21,8 @@
 // @updateURL https://update.greasyfork.org/scripts/561343/%E6%B5%B7%E8%A7%92%E7%A4%BE%E5%8C%BA.meta.js
 // ==/UserScript==
 
-
 (function () {
     'use strict';
-
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     let foundUrl = '';
     let isCopied = false;
@@ -34,7 +32,6 @@
     let m3u8Content = '';
     let isMember = false;
     function createStatusPanel() {
-
         const floatBtn = document.createElement('button');
         floatBtn.id = 'tsDetectorFloatBtn';
         floatBtn.textContent = '航海家';
@@ -70,7 +67,6 @@
             transition: all 0.3s ease;
             display: ${isMobile ? 'none' : 'block'};
         `;
-
         panel.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                 <strong>航海家</strong>
@@ -178,13 +174,19 @@
         }
         #modal-header {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
+            padding: 8px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction:column;
         }
         #modal-title {
+            background-image: linear-gradient(45deg, #ff9500, #ff3300);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
             font-weight: 600;
             font-size: 20px;
             margin: 0;
@@ -216,23 +218,24 @@
             height: 40px;
             border: none;
             cursor: pointer;
-            background-color: #e64340;
+            background-color: #308ee3;
             color: #fff;
             font-weight: 600;
             box-sizing: border-box;
         }
         #loginButton:hover {
-            background-color: #d43936;
+            background-color: #308ee3;
         }
         #registerLink {
             text-align: center;
+            color: #888a91;
         }
-        #registerLink .a {
+        #registerLink a {
             cursor: pointer;
-            color: #0066cc;
+            color: #2f78f5;
         }
-        #registerLink .a:hover {
-            color: #004999;
+        #registerLink a:hover {
+            color: #2f78f5;
         }
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
@@ -256,7 +259,6 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-
         .toast.show {
             opacity: 1;
         }
@@ -271,6 +273,7 @@
             <div id="modal-content">
               <div id="modal-header">
                 <h4 id="modal-title">枸杞快跑</h4>
+                <div>专注海角</div>
               </div>
               <div id="modal-body">
                 <form id="loginForm">
@@ -326,7 +329,6 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
     }
     async function login(userName, passwords) {
         if (!userName || !passwords) {
-            alert('请输入用户名和密码');
             return;
         }
         const password = await rsaEncrypt(passwords);
@@ -346,7 +348,6 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
                     timeout: 30000,
                     onload: (response) => {
                         try {
-
                             if (response.status < 200 || response.status >= 300) {
                                 reject(new Error(`请求失败，状态码：${response.status}`));
                                 return;
@@ -487,13 +488,10 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
                             });
                             isMember = true;
                             if (res.success == false) {
-
                                 localStorage.
                                 removeItem('token');
-
                             } else if (res.code !== 200) {
                                 isMember = false;
-
                                 resolve("请先点击播放按钮开通会员");
                             }
                             m3u8Content = content;
@@ -700,61 +698,35 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
                 document.removeEventListener('keydown', handleEscKey);
             }
         };
-        document.addEventListener('keydown', handleEscKey);
-        document.body.appendChild(videoContainer);
-        videoContainer.addEventListener('click', (e) => {
-            if (e.target === videoContainer) {
-
-            }
-        });
     }
 
     const BASE_URL = 'https://gqkl.yidajichang.top';
     const REGISTER_URL = 'https://gqkp.yidajichang.top';
-
-    function removeAds() {
-        const adElement1 = document.querySelectorAll('.page-container');
-        const adElement2 = document.querySelectorAll('.containeradvertising');
-        const adElement3 = document.querySelectorAll('.van-overlay');
-        const adElement4 = document.querySelectorAll('.topbanmer');
-        const adElement5 = document.querySelectorAll('.bannerliststyle');
-        const adElement6 = document.querySelector('.html-box');
-        const adElement7 = document.querySelector('.html-bottom-box');
-        const adElement8 = document.querySelector('.custom_carousel');
-        const adElement9 = document.querySelector('.btnbox');
-
-        if (adElement1.length > 0) adElement1.forEach(el => el.remove());
-        if (adElement2.length > 0) adElement2.forEach(el => el.remove());
-        if (adElement3.length > 0) adElement3.forEach(el => el.remove());
-        if (adElement4.length > 0) adElement4.forEach(el => el.remove());
-        if (adElement5.length > 0) adElement5.forEach(el => el.remove());
-        if (adElement6) adElement6.classList.remove("ishide");
-        if (adElement7) adElement7.remove();
-        if (adElement8) adElement8.remove();
-        if (adElement9) adElement9.remove();
-
-        const allElementsGone =
-              adElement1.length === 0 &&
-              adElement2.length === 0 &&
-              adElement3.length === 0 &&
-              adElement4.length === 0 &&
-              adElement5.length === 0 &&
-              !adElement6 &&
-              !adElement7 &&
-              !adElement8 &&
-              !adElement9;
-
-        if (allElementsGone) {
-            clearInterval(adCheckTimer);
+    function removeDialog() {
+        const dialog = document.querySelector('[role="dialog"].luodiconfirm');
+        if (dialog && dialog.style.display !== 'none') {
+            dialog.querySelector('.van-dialog__confirm')?.click();
+            document.body.style.overflow = 'auto !important';
+            dialog.remove();
         }
     }
-    let adCheckTimer;
+    function removeAds() {
+        const removeSelectors = {
+            multi: ['.page-container', '.containeradvertising', '.van-overlay', '.topbanmer', '.bannerliststyle'],
+            single: ['.custom_carousel', '.btnbox', '.addbox','.html-bottom-box']
+        };
+        removeSelectors.multi.forEach(sel => document.querySelectorAll(sel).forEach(el => el.remove()));
+        removeSelectors.single.forEach(sel => document.querySelector(sel)?.remove());
+        document.querySelector('.html-box')?.classList.remove("ishide");
+    }
     function startObserver() {
         const observer = new MutationObserver((mutations) => {
-            mutations.forEach(() => removeAds());
+            mutations.forEach(() => {removeAds(); removeDialog();});
         });
-        observer.observe(document.body, { childList: true, subtree: true });
+        observer.observe(document.body, { childList: true, subtree: true});
         removeAds();
+        removeDialog();
+        const stopObserve = () => observer.disconnect();
     }
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", startObserver);
@@ -762,17 +734,12 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
         startObserver();
     }
 
-    window.addEventListener('beforeunload', () => {
-        if (adCheckTimer) clearInterval(adCheckTimer);
-    });
-
     function copyToClipboard(text) {
         try {
             if (typeof GM_setClipboard === 'function') {
                 GM_setClipboard(text);
                 return;
             }
-
             const textarea = document.createElement('textarea');
             textarea.value = text;
             textarea.style.position = 'fixed';
@@ -813,7 +780,6 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
                 const previewUrl = rawPreviewUrl ? rawPreviewUrl.trim() : '';
                 const currentFoundUrl = foundUrl ? foundUrl.trim() : '';
                 if (previewUrl && currentFoundUrl === '') {
-
                     addUrlAndPlay(previewUrl);
                     detectionStopped = true;
                 }
@@ -831,24 +797,18 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
     function listenSpaRouteChange() {
         const observer = new MutationObserver(function (mutations) {
             mutations.forEach(function (mutation) {
-
                 if (window.location.href !== observer.oldUrl) {
                     observer.oldUrl = window.location.href;
                     reInit();
                 }
             });
         });
-
-
         observer.observe(document.body, { childList: true, subtree: true });
         observer.oldUrl = window.location.href;
     }
     function getPreviewUrl() {
-
-
         const previewBtn = document.querySelector(".preview-btn");
         if (!previewBtn) {
-
             return;
         }
         const m3u8Url = previewBtn.getAttribute('data-url');
@@ -859,17 +819,14 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
         return m3u8Url;
     }
     function initNetworkMonitoring() {
-
         const originalFetch = window.fetch;
         const originalXhrOpen = XMLHttpRequest.prototype.open;
         const originalXhrSend = XMLHttpRequest.prototype.send;
-
 
         XMLHttpRequest.prototype.open = function (...args) {
             if (detectionStopped) {
                 return originalXhrOpen.apply(this, args);
             }
-
             try {
                 const url = args[1] || this.url;
                 if (url && url.toLowerCase().endsWith('.m3u8')) {
@@ -879,7 +836,6 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
             } catch (e) {
                 console.error('XHR监控错误:', e);
             }
-
             return originalXhrOpen.apply(this, args);
         };
     }
@@ -888,7 +844,6 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe6NimtgRabrvb66gFDFigTiaA5kDGsHLxzT
             createStatusPanel();
             initNetworkMonitoring();
         }, 1000);
-
         if (isMobile) {
             setTimeout(() => {
                 if (getPreviewUrl()) {

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Clean up reservations list for printing tags
 // @namespace    https://github.com/laurenipsum/TTL
-// @version      1.1
+// @version      1.1.2
 // @description  Modify the TTL myTurn reservations list for display and for printing reservation tags
 // @author       ipsum
 // @match        https://tacomatoollibrary.myturn.com/library/orgInventory/listReservations*
@@ -58,7 +58,7 @@
     css += ".hidden-xs, .hidden-sm, .hidden-md { display: none; }\n\n";
 
     css += "/* make reservation notes bigger */\n";
-    css += "div.reservation-notes { font-size: 15px !important; }\n\n";
+    css += "div.reservation-notes { font-size: 20px !important; }\n\n";
 
     css += "/* print stylesheet only */\n";
     css += "@media print {\n\n";

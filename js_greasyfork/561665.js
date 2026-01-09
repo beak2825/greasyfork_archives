@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  解决Gemini自拦截限制字数问题，支持纯回车清空
-// @author       Azikaban & Gemini AI
+// @author       Human & Gemini AI
 // @match        *://gemini.google.com/*
 // @grant        none
 // @run-at       document-start

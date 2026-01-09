@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnimeStars Card Master (fork)
 // @namespace    AnimeStars.org
-// @version      1.20
+// @version      1.22.1
 // @description  1) Показывает спрос на карты.
 // @description  2) Показывает дубликаты карт.
 // @description  3) Отправляет карты в "Не нужное".
@@ -35,6 +35,7 @@
 // @grant        GM_listValues
 // @grant        GM_registerMenuCommand
 // @grant        GM_addValueChangeListener
+// @grant        GM_removeValueChangeListener
 // @grant        unsafeWindow
 // @exclude      *://*/*emotions.php*
 // @grant        GM_openInTab
@@ -91,6 +92,8 @@ async function runMainScript() {
     const WISHLIST_HIGHLIGHT_TRADES_ENABLED_KEY = 'ascm_wishlistHighlightTradesEnabled_v1';
     const WISHLIST_PROTECTION_ENABLED_KEY = 'ascm_wishlistProtectionEnabled_v1';
 	const HIGHLIGHT_READY_STARS_ENABLED_KEY = 'ascm_highlightReadyStarsEnabled_v1';
+	const HIGHLIGHT_PHANTOM_STARS_ENABLED_KEY = 'ascm_highlightPhantomStarsEnabled_v1';
+    const STARS_FILTERS_UI_ENABLED_KEY = 'ascm_starsFiltersUiEnabled_v1';
     let activeWishlistSet = null; // Будет содержать Set с ID карт из списка желаний
     let isHighlightingWishlist = false;
     let isWishlistScanning = false; // Флаг для предотвращения одновременного запуска сканирования
@@ -355,14 +358,42 @@ async function runMainScript() {
 		{ anime_id: '2903', s: 1, min_ep: 1, max_ep: 25, t_title: 'AniLibria.TV', t_id: '610' }, // https://animestars.org/aniserials/video/seinen/2903-vedmnadzor-2025.html
 		{ anime_id: '1392', s: 1, min_ep: 1, max_ep: 25, t_title: 'AniDUB', t_id: '609' }, // https://animestars.org/aniserials/video/drama/1392-letnee-vremja-2022.html
     ];
+
+	// -------------------- МОДУЛЬ: ПРОДВИНУТАЯ ПЕРЕПЛАВКА (V1.0) --------------------
+	const REMELT_DASHBOARD_VISIBLE_KEY = 'ascm_remelt_dashboard_visible_v1';
+	const REMELT_AUTO_QUEST_CHECK_KEY = 'ascm_remelt_auto_quest_check_v1';
+    const REMELT_SETTINGS_KEY = 'ascm_remelt_settings_v1';
+    const REMELT_CACHE_PREFIX = 'ascm_remelt_cache_rank_';
+    let isRemeltScanning = false;
+    let remeltScanStopFlag = false;
+    let remeltInventoryMap = new Map(); // URL -> [id1, id2, ...]
+    let remeltQuestStatus = { done: false, text: 'Не проверено', lastCheck: 0 };
     
+	// -------------------- МОДУЛЬ: НАСТРОЙКИ ПЕРЕПЛАВКИ (ПО РАНГАМ) --------------------
+    const REMELT_CONFIG_DEFAULTS = {
+        'a': { keep: 1, melts: 5, autoStop: true, modal: true, pause: 3, want_en: true, want_min: 0, want_max: 30, trade_en: false, trade_min: 0, trade_max: 0, own_en: true, own_min: 500, own_max: 0, my_wish_en: true, other_wish_en: true },
+        'b': { keep: 1, melts: 10, autoStop: true, modal: true, pause: 3, want_en: true, want_min: 0, want_max: 50, trade_en: false, trade_min: 0, trade_max: 0, own_en: true, own_min: 500, own_max: 0, my_wish_en: true, other_wish_en: true },
+        'c': { keep: 1, melts: 10, autoStop: true, modal: true, pause: 3, want_en: true, want_min: 0, want_max: 50, trade_en: false, trade_min: 0, trade_max: 0, own_en: true, own_min: 500, own_max: 0, my_wish_en: true, other_wish_en: true },
+        'd': { keep: 1, melts: 10, autoStop: true, modal: true, pause: 3, want_en: true, want_min: 0, want_max: 50, trade_en: false, trade_min: 0, trade_max: 0, own_en: true, own_min: 500, own_max: 0, my_wish_en: true, other_wish_en: true },
+        'e': { keep: 1, melts: 10, autoStop: true, modal: true, pause: 3, want_en: true, want_min: 0, want_max: 50, trade_en: false, trade_min: 0, trade_max: 0, own_en: true, own_min: 500, own_max: 0, my_wish_en: true, other_wish_en: true },
+        'global_speeds': { scan: 100, my: 1000, other: 1000 }
+    };
+    const REMELT_RANK_COLORS = { 'a': '#d93134', 'b': '#2094e4', 'c': '#019145', 'd': '#a09b91', 'e': '#9c6f51' };
+    let remeltLiveTimerId = null; // Для живого обновления времени "X мин. назад"
+
+	// -------------------- МОДУЛЬ: ПЕРЕПЛАВКА (СПИСКИ ЖЕЛАНИЙ) --------------------
+    const REMELT_MY_WISH_PREFIX = 'ascm_remelt_mywish_rank_';
+    const REMELT_TWIN_WISH_PREFIX = 'ascm_remelt_twinwish_rank_';
+    let myWishlistSet = new Set();
+    let twinWishlistSet = new Set();
+	
 	// -------------------- МОДУЛЬ: КОНСТАНТЫ КЛУБНОГО МЕНЕДЖЕРА --------------------
 	const CLUB_MANAGER_SETTINGS_KEY = 'ascm_club_manager_settings_v1';
     const CLUB_MANAGER_DEFAULT = {
         enabled: true,
         startTime: "21:00",
         endTime: "21:05",
-        clickInterval: 30,
+        clickInterval: 50,
         reminderMinutes: 1, 
         logLevel: 1,
         // Новые параметры:
@@ -380,12 +411,14 @@ async function runMainScript() {
 // ##################################################
 // ФункцияSCC Log: Консоль + Пуш (дублирует всё в логи браузера)
 async function sccLog(message, type = 'info', forceConsole = false) {
-	const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
-	if (forceConsole || sets.logLevel >= 2) {
-		const colors = { success: '#43b581', error: '#ff4d4d', warning: '#faa61a', info: '#00ffff' };
-		console.log(`%c[ACM Log] ${message}`, `color: ${colors[type] || '#fff'}; font-weight: bold;`);
-	}
-	if (type !== 'debug') safeDLEPushCall(type === 'warning' ? 'warn' : type, message);
+    const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+    // Если включена полная отладка (3), пишем всё в консоль безусловно
+    if (forceConsole || sets.logLevel >= 2 || (sets.logLevel == 3)) {
+        const colors = { success: '#43b581', error: '#ff4d4d', warning: '#faa61a', info: '#00ffff', debug: '#bb86fc' };
+        console.log(`%c[ACM Log] ${message}`, `color: ${colors[type] || '#fff'}; font-weight: bold;`);
+    }
+    // В пуши (уведомления на экране) дебаг-логи не шлем, чтобы не спамить
+    if (type !== 'debug') safeDLEPushCall(type === 'warning' ? 'warn' : type, message);
 }
 
 // ##################################################
@@ -994,7 +1027,7 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             currentNotificationElement.style.opacity = '0.85';
             setTimeout(() => { if (currentNotificationElement) currentNotificationElement.style.opacity = '1'; }, 100);
         }
-        const displayDuration = type === 'error' ? 5000 : (type === 'warning' ? 4000 : 3500);
+        const displayDuration = isSticky ? 999999 : (type === 'error' ? 5000 : (type === 'warning' ? 4000 : 3500));
         currentNotificationTimeout = setTimeout(() => {
             if (currentNotificationElement) {
                 currentNotificationElement.style.transition = `top ${NOTIFICATION_ANIMATION_DURATION_MS}ms cubic-bezier(0.68, -0.55, 0.27, 1.55)`;
@@ -1439,24 +1472,315 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                     border: 0px solid #4CAF50 !important;
                     transition: none !important;
             }
-			@keyframes readyStarPulse {
-                0% { 
-                    box-shadow: inset 0 0 15px #00ff00, 0 0 10px #00ff00; 
-                }
-                50% { 
-                    box-shadow: inset 0 0 40px #00ff00, 0 0 25px #00ff00, 0 0 35px #ffffff; 
-                }
-                100% { 
-                    box-shadow: inset 0 0 15px #00ff00, 0 0 10px #00ff00; 
-                }
+			/* Анимация рамки карты - стала более плавной (2.5 сек вместо 1.5) */
+            @keyframes ascmReadyBorder {
+                0%, 100% { border-color: #00ff00; box-shadow: 0 0 6px #00ff00; opacity: 0.9; }
+                50% { border-color: #43b581; box-shadow: 0 0 12px #00ff00; opacity: 1; }
             }
             .ready-to-star-highlight {
-                animation: readyStarPulse 1.5s infinite ease-in-out !important;
-                outline: 3px solid #00ff00 !important;
-                outline-offset: -3px;
+                border: 2px solid #00ff00 !important;
+                animation: ascmReadyBorder 2.5s infinite ease-in-out !important;
                 position: relative;
                 z-index: 5;
             }
+            /* Фантомный индикатор звезды (Стиль как на скрине + прицел 11px) */
+            .ascm-phantom-star {
+                position: absolute;
+                right: 11px;  /* Идеальное среднее значение по горизонтали */
+                z-index: 110;
+                background: #00ff00;
+                border: 1.5px solid #fff;
+                border-radius: 50%;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 11px; 
+                box-shadow: 0 0 10px #00ff00, inset 0 0 5px rgba(255,255,255,0.5);
+                pointer-events: none;
+                width: 21px;
+                height: 21px;
+                animation: ascmStarBlink 2s infinite ease-in-out;
+            }
+            @keyframes ascmStarBlink {
+                0%, 100% { transform: scale(0.95); opacity: 0.6; filter: brightness(0.8); }
+                50% { transform: scale(1.05); opacity: 1; filter: brightness(1.2); }
+            }
+            /* ХИТБОКС: Область звезд для вызова тултипа */
+            .ascm-star-hitbox {
+                position: absolute;
+                top: 5%;
+                right: 0;
+                width: 45px;
+                height: 45%; 
+                z-index: 120;
+                cursor: help;
+                background: transparent !important;
+            }
+            /* Всплывающая подсказка звезд */
+            .ascm-star-tooltip {
+                position: fixed;
+                background: rgba(10, 10, 15, 0.98);
+                border: 1px solid #00ff00;
+                border-radius: 8px;
+                padding: 12px;
+                color: #fff;
+                font-size: 12px;
+                z-index: 2147483647;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+                pointer-events: none;
+                display: none;
+                min-width: 200px;
+                backdrop-filter: blur(8px);
+                line-height: 1.4;
+            }
+            .ascm-star-tooltip .ready { color: #00ff00; font-weight: bold; }
+            .ascm-star-tooltip .missing { color: #ff4d4d; }
+            .ascm-star-tooltip .obtained { color: #4caf50; opacity: 0.6; }
+			/* Панель звездных фильтров */
+            .ascm-stars-filter-bar {
+                display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+                background: rgba(30, 31, 34, 0.7); padding: 10px; border-radius: 8px;
+                border: 1px solid #4a2f3a; margin-bottom: 15px; align-items: center;
+            }
+            .ascm-stars-filter-bar button {
+                background: #424549; color: #ccc; border: 1px solid #555;
+                padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;
+                transition: all 0.2s; font-weight: 500;
+            }
+            .ascm-stars-filter-bar button:hover { background: #52565a; color: #fff; }
+            .ascm-stars-filter-bar button.active { background: #00ff00; color: #000; border-color: #fff; }
+            .ascm-stars-filter-bar select {
+                background-color: #1e1f22 !important;
+                color: #00ff00 !important;
+                border: 1px solid #555 !important;
+                padding: 6px 28px 6px 12px !important;
+                border-radius: 6px !important;
+                font-size: 12px !important;
+                cursor: pointer !important;
+                outline: none !important;
+                /* Увеличили ширину, чтобы влез текст со скобками */
+                min-width: 220px; 
+                appearance: none !important;
+                -webkit-appearance: none !important;
+                -moz-appearance: none !important;
+                background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300ff00%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%0-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E") !important;
+                background-repeat: no-repeat !important;
+                background-position: right 10px top 50% !important;
+                background-size: 10px auto !important;
+                transition: border-color 0.2s;
+            }
+            .ascm-stars-filter-bar select:hover {
+                border-color: #00ff00 !important;
+            }
+            .ascm-stars-filter-bar span { font-weight: bold; }
+            .ascm-stars-info-note { 
+                font-size: 11px; color: #aaa; width: 100%; text-align: center; 
+                margin-top: 8px; padding-top: 5px; border-top: 1px dashed #444; 
+            }
+            .ascm-stars-info-note b { color: #faa61a; } /* Оранжевый для "Внимание" */
+            .ascm-stars-info-note span { color: #00ff00; } /* Зеленый для инфо о сохранении */
+			/* Кнопка быстрого повышения звезд */
+            .levelup-meta-item {
+                background-color: rgba(67, 181, 129, 0.1) !important;
+                border: 1.5px solid #43b581 !important;
+                color: #00ff00 !important;
+                width: 36px !important;
+                height: 36px !important;
+                min-width: 36px !important;
+                padding: 0 !important;
+                border-radius: 50% !important;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s ease;
+                cursor: pointer;
+            }
+            .levelup-meta-item:hover {
+                background-color: #43b581 !important;
+                color: white !important;
+                box-shadow: 0 0 12px #00ff00;
+            }
+            /* Стили для звезды и +1 внутри кнопки */
+            .levelup-meta-item .main-star {
+                font-size: 15px;
+            }
+            .levelup-meta-item .plus-text {
+                font-size: 10px;
+                font-weight: 900;
+                margin-left: 1px;
+                margin-right: -2px;
+                color: #fff;
+                text-shadow: 1px 1px 2px #000;
+            }
+			
+			/* Панель переплавки - V3.1 Final UI */
+            .ascm-remelt-dashboard {
+                background: rgba(20, 22, 25, 0.98); border: 1px solid #4a2f3a;
+                border-radius: 12px; padding: 15px; margin: 15px 0;
+                display: flex; flex-direction: column; gap: 12px; position: relative;
+            }
+            .ascm-remelt-row { display: flex; gap: 8px; align-items: stretch; width: 100%; justify-content: space-between; }
+            /* Стили для блокировки панели переплавки, когда не выбран ранг или включены замки */
+			.ascm-remelt-dashboard.disabled::after {
+				content: attr(data-reason);
+				position: absolute;
+				top: 0; left: 0; width: 100%; height: 100%;
+				background: rgba(0, 0, 0, 0.9);
+				color: #fff;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				text-align: center;
+				font-weight: bold;
+				font-size: 16px;
+				z-index: 200;
+				border-radius: 12px;
+				padding: 20px;
+				box-sizing: border-box;
+				border: 2px dashed #444;
+			}
+			.ascm-remelt-dashboard.disabled {
+				pointer-events: none;
+				user-select: none;
+			}
+
+            /* БОЛЬШИЕ КНОПКИ */
+            .ascm-remelt-btn-big {
+                flex: 1 !important; background: #2b2d31 !important; border: 1px solid #444 !important; 
+                border-radius: 8px !important; padding: 10px 5px !important; cursor: pointer !important; 
+                display: flex !important; flex-direction: column !important; 
+                align-items: center !important; justify-content: center !important; gap: 4px !important;
+                min-height: 80px !important; color: #ffffff !important; box-sizing: border-box !important;
+            }
+            .ascm-remelt-btn-big:hover { border-color: #00ff00 !important; background: #35383e !important; }
+            .ascm-remelt-btn-big .title { font-size: 11px !important; font-weight: 900 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; }
+            .ascm-remelt-btn-big .subtitle { font-size: 11px !important; color: #aaa !important; font-weight: bold !important; text-align: center; }
+
+            /* Слайдеры и их значения */
+            .ascm-btn-slider-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: 4px; }
+            .ascm-btn-slider-container input { width: 100% !important; cursor: pointer !important; accent-color: #772ce8; }
+            .ascm-btn-slider-val { font-size: 13px !important; color: #772ce8 !important; font-weight: 900 !important; font-family: monospace; }
+
+            /* Кнопка Квеста */
+            .ascm-remelt-btn-big.quest-btn-special.ready { border-color: #faa61a !important; }
+            .ascm-remelt-btn-big.quest-btn-special.ready .title:nth-child(2) { color: #faa61a !important; }
+            .ascm-remelt-btn-big.quest-btn-special.done { border-color: #00ff00 !important; background: rgba(0, 255, 0, 0.05) !important; }
+            .ascm-remelt-btn-big.quest-btn-special.done .title:nth-child(2) { color: #00ff00 !important; }
+
+            /* Исключения */
+            .ascm-remelt-exceptions-box {
+                display: flex; flex-direction: column; align-items: center; gap: 5px;
+                padding: 6px 14px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid #444;
+            }
+            .ascm-remelt-exceptions-box label { font-size: 9px; color: #aaa; font-weight: 900; text-transform: uppercase; }
+			
+			/* Единый стиль контейнеров-коробочек */
+            .ascm-remelt-group { 
+                display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+                padding: 5px 8px; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid #444;
+                min-height: 58px; box-sizing: border-box; 
+            }
+            .ascm-remelt-group label { font-size: 10px; color: #aaa; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; cursor: default; }
+			
+			/* Кнопки внутри блока Плавки */
+            .ascm-remelt-small-btn { 
+                background: #9e294f; border: none; color: #fff; border-radius: 4px; 
+                padding: 0 6px; cursor: pointer; font-size: 10px; font-weight: bold; height: 26px;
+                transition: background 0.2s;
+            }
+            .ascm-remelt-small-btn:hover { background: #c83a54; }
+			
+			/* Обновление высоты для правого блока (спрос) */
+            .ascm-remelt-row-boxed { 
+                background: rgba(255,255,255,0.03); padding: 5px 10px; border-radius: 10px; border: 1px solid #444; 
+                display: flex; gap: 8px; min-height: 58px; align-items: center;
+            }
+			
+			.ascm-remelt-label-row { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 5px; }
+            .ascm-remelt-label-row label { font-size: 10px; color: #888; font-weight: 900; text-transform: uppercase; cursor: default; letter-spacing: 0.5px; }
+
+            .ascm-remelt-field { 
+                background: #000 !important; border: 1px solid #555 !important; color: #43b581 !important; 
+                border-radius: 5px !important; font-size: 13px !important; 
+                text-align: center; font-weight: bold; width: 60px !important; height: 32px !important; outline: none;
+            }
+            .ascm-remelt-custom-checkbox {
+                width: 30px; height: 15px; background: #444; border-radius: 10px; 
+                position: relative; cursor: pointer; transition: 0.3s; border: 1px solid #666;
+            }
+            .ascm-remelt-custom-checkbox::before { content: ''; position: absolute; width: 11px; height: 11px; left: 2px; top: 1px; background: #fff; border-radius: 50%; transition: 0.3s; }
+            .ascm-remelt-custom-checkbox.active { background: #772ce8; border-color: #bc95ff; }
+            .ascm-remelt-custom-checkbox.active::before { left: 15px; background: #00ff00; }
+
+            .ascm-remelt-btn-start { 
+                flex-grow: 1 !important; background: linear-gradient(145deg, #43b581, #2e7d32) !important;
+                justify-content: center !important; font-size: 15px !important; border-radius: 8px !important;
+                color: white !important; font-weight: bold !important; cursor: pointer !important; min-height: 52px !important; border: none !important;
+            }
+			.ascm-remelt-btn-start:hover { 
+                filter: brightness(1.1); 
+                box-shadow: 0 0 12px rgba(67, 181, 129, 0.4); 
+            }
+            .ascm-remelt-btn-reset { 
+                width: 55px !important; background: #9e294f !important; color: #fff !important; 
+                border-radius: 8px !important; cursor: pointer !important; font-size: 22px !important; 
+                display: flex !important; align-items: center !important; justify-content: center !important; min-height: 52px !important; border: none !important;
+            }
+			.ascm-remelt-btn-reset:hover { 
+                background: #c83a54 !important; 
+                box-shadow: 0 0 12px rgba(200, 58, 84, 0.4); 
+            }
+            .ascm-remelt-calc-box {
+                width: 50% !important; background: rgba(0,0,0,0.6) !important; padding: 0 20px !important; border-radius: 8px;
+                border-left: 4px solid #faa61a !important; display: flex !important; align-items: center !important; justify-content: center !important;
+                font-size: 14px !important; color: #fff !important; box-sizing: border-box !important; min-height: 52px !important; text-align: center !important;
+            }
+			
+			/* Стили для всплывающей кнопки СТОП поверх всех окон */
+            #ascm-remelt-floating-stop {
+                position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+                z-index: 2147483647 !important; /* Поверх всех модалок */
+                background: linear-gradient(145deg, #e74c3c, #c0392b);
+                color: white; padding: 15px 40px; border-radius: 12px;
+                font-weight: bold; cursor: pointer; border: 3px solid #fff;
+                box-shadow: 0 0 30px rgba(0,0,0,1); display: flex; flex-direction: column;
+                align-items: center; justify-content: center; transition: all 0.2s;
+            }
+            #ascm-remelt-floating-stop:hover { filter: brightness(1.2); transform: translateX(-50%) scale(1.05); }
+            #ascm-remelt-floating-stop span:first-child { font-size: 18px; letter-spacing: 1px; }
+            #ascm-remelt-floating-prog { font-size: 14px; margin-top: 5px; opacity: 0.9; }
+			
+			/* Стили для менеджера в шахте */
+			.ascm-shahta-dash {
+				background: rgba(20, 22, 25, 0.95); border: 1px solid #4a2f3a;
+				border-radius: 10px; padding: 12px; margin-top: 10px;
+				display: flex; flex-direction: column; gap: 8px; width: 100%; box-sizing: border-box;
+			}
+			.ascm-shahta-row { display: flex; gap: 8px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+			.ascm-shahta-item { 
+				background: #2b2d31; border: 1px solid #444; border-radius: 6px; 
+				padding: 6px 10px; display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 80px;
+			}
+			.ascm-shahta-item label { font-size: 9px; color: #aaa; text-transform: uppercase; font-weight: 800; margin-bottom: 4px; }
+			.ascm-shahta-input { 
+				background: #111; border: 1px solid #555; color: #fff; text-align: center; 
+				border-radius: 4px; font-size: 12px; width: 100%; box-sizing: border-box; padding: 2px;
+			}
+
+			/* Иконка сброса дня в табло */
+			.cm-reset-icon {
+				cursor: pointer; font-size: 14px; margin-left: 8px; color: #888;
+				transition: all 0.2s ease; vertical-align: middle;
+			}
+			.cm-reset-icon:hover { color: #f57c00; transform: rotate(30deg) scale(1.2); }
+
+			/* Кнопка-переключатель панели (пламя) */
+			#ascm-shahta-toggle-flame {
+				background: #2b2d31; border: 1px solid #444; border-radius: 50%;
+				width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center;
+				justify-content: center; transition: all 0.3s ease; margin: 10px auto 0;
+			}
         `);
         // =================================================================================================
         // НОВЫЕ СТИЛИ ДЛЯ ВСПЛЫВАЮЩЕГО TOOLTIP'А (АКТИВАЦИЯ ПО КЛИКУ)
@@ -1572,9 +1896,21 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 const clock = `${String(mskNow.getUTCHours()).padStart(2,'0')}:${String(mskNow.getUTCMinutes()).padStart(2,'0')}:${String(mskNow.getUTCSeconds()).padStart(2,'0')}`;
                 info.innerHTML = `
                     <div style="font-size: 13px; color: #999;">Ваш клуб: <b style="color: #43b581;">${foundId ? '№' + foundId : 'Не найден'}</b></div>
-                    <div style="font-size: 13px; color: #999;">Статус дня: <b style="color: ${isDone ? '#43b581' : '#faa61a'}">${isDone ? 'ВЫПОЛНЕНО' : 'ОЖИДАНИЕ'}</b></div>
+                    <div style="font-size: 13px; color: #999; display: flex; align-items: center; justify-content: center;">
+                        Статус дня: <b style="color: ${isDone ? '#43b581' : '#faa61a'}; margin-left: 5px;">${isDone ? 'ВЫПОЛНЕНО' : 'ОЖИДАНИЕ'}</b>
+                        <i class="fas fa-sync-alt cm-reset-icon" id="cm-inline-reset" title="Сбросить статус дня"></i>
+                    </div>
                     <div id="cm-live-clock" style="font-family: monospace; font-size: 20px; color: #fff; margin-top: 5px;">${clock}</div>
                 `;
+                // Навешиваем событие на иконку
+                const resetIcon = document.getElementById('cm-inline-reset');
+                if (resetIcon) {
+                    resetIcon.onclick = async () => {
+                        await GM_deleteValue('ascm_lastTurboTriggerDate');
+                        sccLog("Статус дня сброшен вручную", 'warning', true);
+                        updateUIHeaders();
+                    };
+                }
             }
         };
         const saveLive = async (prop, val, label) => {
@@ -1646,7 +1982,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                     </div>
                 </div>
                 <div class="modal-footer" style="display: flex; gap: 5px;">
-                    <button id="cm-reset-status" class="action-btn" style="background: #e67e22; flex: 1.2;">СБРОС ДНЯ</button>
                     <button id="cm-default" class="action-btn" style="background: #4e5058; flex: 1;">ДЕФОЛТ</button>
                     <button id="cm-back" class="action-btn back-btn" style="background: #2f3136; flex: 1.2;">НАЗАД В МЕНЮ</button>
                 </div>
@@ -1697,10 +2032,19 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         wrapper.querySelector('#cm-reload-int').onchange = (e) => saveLive('reloadInterval', parseInt(e.target.value), 'Интервал релоада');
         wrapper.querySelector('#cm-interval').oninput = (e) => { wrapper.querySelector('#cm-interval-val').textContent = e.target.value + ' мс'; };
         wrapper.querySelector('#cm-interval').onchange = (e) => saveLive('clickInterval', parseInt(e.target.value), 'Скорость вклада');
-        wrapper.querySelector('#cm-reset-status').onclick = async () => {
-            await GM_deleteValue('ascm_lastTurboTriggerDate');
-            sccLog('Статус дня обнулен!', 'info'); updateUIHeaders();
+		
+		const modalIntervalSlider = wrapper.querySelector('#cm-interval');
+        const modalIntervalValue = wrapper.querySelector('#cm-interval-val');
+
+        // Живое обновление текста при движении ползунка в модалке
+        modalIntervalSlider.oninput = (e) => { 
+            modalIntervalValue.textContent = e.target.value + ' мс'; 
         };
+        // Сохранение и старт синхронизации при отпускании ползунка
+        modalIntervalSlider.onchange = (e) => {
+            saveLive('clickInterval', parseInt(e.target.value), 'Скорость вклада');
+        };
+		
         wrapper.querySelector('#cm-default').onclick = async () => {
             await GM_setValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
             await GM_deleteValue('ascm_lastTurboTriggerDate');
@@ -1719,7 +2063,20 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             wrapper.querySelector('#cm-interval-val').textContent = d.clickInterval + ' мс';
             sccLog('Настройки сброшены!', 'warning'); updateUIHeaders();
         };
-        const close = () => { clearInterval(clockInt); wrapper.remove(); };
+		
+		// ПРАВКА: Слушатель для синхронизации слайдера внутри открытого модального окна
+        const modalSyncId = GM_addValueChangeListener(CLUB_MANAGER_SETTINGS_KEY, (key, oldV, newV, remote) => {
+                const mSlider = wrapper.querySelector('#cm-interval');
+                const mDisplay = wrapper.querySelector('#cm-interval-val');
+                if (mSlider) mSlider.value = newV.clickInterval;
+                if (mDisplay) mDisplay.textContent = newV.clickInterval + ' мс';
+        });
+		
+        const close = () => { 
+            clearInterval(clockInt); 
+            GM_removeValueChangeListener(modalSyncId); // Удаляем слушатель при закрытии
+            wrapper.remove(); 
+        };
         wrapper.querySelector('#cm-close-x').onclick = close;
         wrapper.querySelector('#cm-back').onclick = () => { close(); unsafeWindow.openMasterSettingsModal(); };
         wrapper.querySelector('.acm-modal-backdrop').onclick = close;
@@ -1883,7 +2240,13 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             <span>СБОРЩИК КАРТ</span>
             <span class="btn-state"></span>
             </button>
-            <span class="info-icon" data-info="Собирает карты с нескольких аккаунтов и отображает в удобном интерфейсе.">i</span>
+			<span class="info-icon" data-info="Собирает карты с нескольких аккаунтов и отображает в удобном интерфейсе.">i</span>
+            </div>
+			<div class="master-setting-row">
+                <button class="master-settings-button" id="master_open_remelt_settings" style="background: linear-gradient(145deg, #9e294f, #6e1d37); border: 1px solid #c83a54;">
+                    <span>ПЕРЕПЛАВКА</span>
+                </button>
+                <span class="info-icon" data-info="Настройки продвинутой панели переплавки и фильтров.">i</span>
             </div>
             <button class="action-btn close-btn" id="master_settings_close_btn" style="width: 100%; margin-top: 15px; padding: 10px; font-size: 1em; display: block;">
             Закрыть
@@ -1910,6 +2273,11 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 unsafeWindow.safeDLEPushCall('info', `Сборщик карт ${newState ? 'включен' : 'выключен'}. Перезагрузка...`);
             }
             setTimeout(() => window.location.reload(), 1500);
+        };
+		// Обработчик открытия под-меню настроек переплавки
+        document.getElementById('master_open_remelt_settings').onclick = () => {
+            closeModal();
+            unsafeWindow.openRemeltSettingsSubModal();
         };
         document.getElementById('master_open_wishlist_settings').onclick = () => {
             closeModal();
@@ -1977,6 +2345,10 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         document.getElementById('master_open_autodemand_pack').onclick = () => { closeModal(); if (typeof unsafeWindow.autoDemand_openSettingsModal === 'function') unsafeWindow.autoDemand_openSettingsModal(); };
         document.getElementById('master_open_autodemand_trade').onclick = () => { closeModal(); if (typeof unsafeWindow.autoDemandTrade_openSettingsModal === 'function') unsafeWindow.autoDemandTrade_openSettingsModal(); };
         document.getElementById('master_open_display').onclick = () => { closeModal(); if (typeof unsafeWindow.openDisplaySettingsModal === 'function') unsafeWindow.openDisplaySettingsModal(); };
+		document.getElementById('master_open_remelt_settings').onclick = () => { 
+            closeModal(); 
+            unsafeWindow.openRemeltSettingsSubModal(); 
+        };
         document.getElementById('master_toggle_clubs_btn').onclick = async () => {
             const newState = !(await GM_getValue(GO_TO_CLUBS_BTN_ENABLED_KEY, false));
             await GM_setValue(GO_TO_CLUBS_BTN_ENABLED_KEY, newState);
@@ -3127,8 +3499,10 @@ async function sccLog(message, type = 'info', forceConsole = false) {
         // ##################################################
         function ensureDbLoaded() {
             if (isDatabaseReady && databaseReadyPromise) {
-                return databaseReadyPromise;
+                // Сначала сбрасываем таймер выгрузки, чтобы база оставалась в ОЗУ
                 resetGlobalDbUnloadTimer();
+                // Затем возвращаем статус готовности
+                return databaseReadyPromise;
             }
             if (databaseReadyPromise) {
                 return databaseReadyPromise;
@@ -5909,6 +6283,49 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             };
         }
 
+	// Функция открывает модальное окно с настройками модуля продвинутой переплавки (скрытие/показ панели)
+	unsafeWindow.openRemeltSettingsSubModal = async function() {
+        const isVisible = await GM_getValue(REMELT_DASHBOARD_VISIBLE_KEY, true);
+        const wrapper = document.createElement('div');
+        wrapper.id = 'acm_modal_wrapper';
+        wrapper.innerHTML = `
+            <div class="acm-modal-backdrop"></div>
+            <div class="acm-modal" style="width: 400px;">
+                <div class="modal-header"><h2>Настройки переплавки</h2></div>
+                <div class="setting-row">
+                        <span>Отображать панель фильтров</span>
+                        <label class="protector-toggle-switch">
+                            <input type="checkbox" id="remelt-dash-toggle" ${isVisible ? 'checked' : ''}>
+                            <span class="protector-toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-row" style="margin-top: 10px;">
+                        <span>Автопроверка квеста при загрузке</span>
+                        <label class="protector-toggle-switch">
+                            <input type="checkbox" id="remelt-quest-auto-toggle" ${await GM_getValue(REMELT_AUTO_QUEST_CHECK_KEY, true) ? 'checked' : ''}>
+                            <span class="protector-toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="remelt-sub-back" class="action-btn back-btn">Назад</button>
+                </div>
+            </div>`;
+        document.body.appendChild(wrapper);
+        const closeModal = () => wrapper.remove();
+        wrapper.querySelector('.acm-modal-backdrop').onclick = closeModal;
+        wrapper.querySelector('#remelt-sub-back').onclick = () => { closeModal(); unsafeWindow.openMasterSettingsModal(); };
+        
+        wrapper.querySelector('#remelt-dash-toggle').onchange = async (e) => {
+            const val = e.target.checked;
+            await GM_setValue(REMELT_DASHBOARD_VISIBLE_KEY, val);
+            unsafeWindow.syncRemeltVisibility(val);
+        };
+		wrapper.querySelector('#remelt-quest-auto-toggle').onchange = async (e) => {
+            await GM_setValue(REMELT_AUTO_QUEST_CHECK_KEY, e.target.checked);
+        };
+    };
+
         // ##################################################
         // # Запускает процесс массового добавления карт со страницы в список "Готов обменять".
         // ##################################################
@@ -8266,39 +8683,6 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             }
         }
 	
-	// Подсвечивает карты в инвентаре, готовые к повышению звездного уровня.
-    // Условия срабатывания: в URL есть sort=stars и число дублей в .dupl-count >= необходимому числу.
-	async function highlightReadyToStarCards() {
-        const isEnabled = await GM_getValue(HIGHLIGHT_READY_STARS_ENABLED_KEY, true);
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        // Условие 1: Включено в настройках и в URL есть sort=stars
-        if (!isEnabled || urlParams.get('sort') !== 'stars') {
-            document.querySelectorAll('.ready-to-star-highlight').forEach(el => el.classList.remove('ready-to-star-highlight'));
-            return;
-        }
-
-        const cards = document.querySelectorAll('.anime-cards__item');
-        cards.forEach(card => {
-            const countEl = card.querySelector('.dupl-count');
-            if (countEl) {
-                const text = countEl.textContent.trim(); // "22/25"
-                const parts = text.split('/');
-                if (parts.length === 2) {
-                    const current = parseInt(parts[0], 10);
-                    const required = parseInt(parts[1], 10);
-
-                    // Условие 2: Сравнение чисел
-                    if (!isNaN(current) && !isNaN(required) && current >= required) {
-                        card.classList.add('ready-to-star-highlight');
-                    } else {
-                        card.classList.remove('ready-to-star-highlight');
-                    }
-                }
-            }
-        });
-    }
-    unsafeWindow.highlightReadyToStarCards = highlightReadyToStarCards;
 
         // ##################################################
         // # Получает имя текущего залогиненного пользователя из разных мест на странице.
@@ -10143,7 +10527,268 @@ async function sccLog(message, type = 'info', forceConsole = false) {
 // КОНЕЦ БЛОКА СОРТИРОВКИ ПО СПРОСУ (ИНВЕНТАРЬ/ТРЕЙДЫ)
 // ##################################################
 
-        // ##################################################
+	// ##################################################
+    // МОДУЛЬ: ИНТЕРФЕЙС УПРАВЛЕНИЯ ЗВЕЗДАМИ (v1.2 Persistence)
+    // ##################################################
+    // Создает панель фильтров и сортировок для раздела "По звездам".
+    // Умеет сохранять состояние между страницами и удалять себя при выключении в настройках.
+    async function initStarsAdvancedInterface() {
+        const isUiEnabled = await GM_getValue(STARS_FILTERS_UI_ENABLED_KEY, true);
+        const urlParams = new URLSearchParams(window.location.search);
+        const existingUi = document.getElementById('ascm-stars-ui');
+        
+        // Сброс памяти, если мы ушли из звезд
+        if (!document.referrer.includes('sort=stars') && urlParams.get('sort') === 'stars' && !sessionStorage.getItem('ascm_stars_navigated')) {
+            sessionStorage.removeItem('ascm_stars_ui_state');
+        }
+        if (urlParams.get('sort') === 'stars') sessionStorage.setItem('ascm_stars_navigated', 'true');
+
+        // ЛОГИКА УДАЛЕНИЯ (если выключили в настройках)
+        if (!isUiEnabled || urlParams.get('sort') !== 'stars') {
+            if (existingUi) {
+                existingUi.remove();
+                document.querySelectorAll('.anime-cards__item-wrapper').forEach(wrp => wrp.style.display = '');
+            }
+            return;
+        }
+
+        if (existingUi) return;
+
+        const filterControls = document.querySelector('.card-filter-form__controls');
+        if (!filterControls) return;
+
+        const ui = document.createElement('div');
+        ui.id = 'ascm-stars-ui';
+        ui.className = 'ascm-stars-filter-bar';
+        
+        ui.innerHTML = `
+            <div style="display:flex; gap:10px; align-items:center;">
+                <button id="ascm-filter-ready" title="Только те, кто готов к апу прямо сейчас">Готовы к Апу</button>
+                <button id="ascm-filter-max" title="Только те, кому хватает карт до 5 звезд">Хватает на 5★</button>
+            </div>
+            <div style="width: 1px; height: 24px; background: #555; margin: 0 15px;"></div>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <span style="font-size:11px; color:#888; text-transform:uppercase;">Сортировка:</span>
+                <select id="ascm-sort-missing">
+                    <option value="none">По близости к 5★ (нет)</option>
+                    <option value="asc">Сначала близкие к 5★</option>
+                    <option value="desc">Сначала далекие от 5★</option>
+                </select>
+                <select id="ascm-sort-rank">
+                    <option value="none">По рангу (нет)</option>
+                    <option value="desc">Ранг: S → E</option>
+                    <option value="asc">Ранг: E → S</option>
+                </select>
+            </div>
+            <div class="ascm-stars-info-note">⚠️ <b>Внимание:</b> Анализ только <i>текущей</i> страницы. Готовые карты могут быть на других страницах пагинации! (<span>Фильтры сохраняются при переходе</span>)</div>
+        `;
+        filterControls.parentNode.insertBefore(ui, filterControls);
+
+        const container = document.querySelector('.anime-cards--full-page');
+        const originalOrder = Array.from(container.querySelectorAll('.anime-cards__item-wrapper'));
+        const starReqs = { 's': [1,1,1,1,2], 'a': [4,8,12,16,20], 'b': [5,10,15,20,25], 'c': [10,15,20,25,30], 'd': [10,15,20,25,30], 'e': [10,15,20,25,30] };
+        const rankPower = { 's': 6, 'a': 5, 'b': 4, 'c': 3, 'd': 2, 'e': 1 };
+
+        const updateView = (saveToSession = true) => {
+            const state = {
+                ready: ui.querySelector('#ascm-filter-ready').classList.contains('active'),
+                max: ui.querySelector('#ascm-filter-max').classList.contains('active'),
+                missing: ui.querySelector('#ascm-sort-missing').value,
+                rank: ui.querySelector('#ascm-sort-rank').value
+            };
+            if (saveToSession) sessionStorage.setItem('ascm_stars_ui_state', JSON.stringify(state));
+
+            let processing = [...originalOrder];
+            processing.forEach(wrp => {
+                const card = wrp.querySelector('.anime-cards__item');
+                const duplEl = card.querySelector('.dupl-count');
+                const rank = (card.dataset.rank || 'e').toLowerCase();
+                const stars = parseInt(card.dataset.stars) || 0;
+                const have = parseInt(duplEl.textContent.split('/')[0]) || 0;
+                const reqTable = starReqs[rank];
+                let costToMax = 0;
+                for(let i = stars; i < 5; i++) costToMax += reqTable[i];
+                
+                wrp._starsData = {
+                    ready: have >= (reqTable[stars] || 999),
+                    readyMax: have >= costToMax,
+                    missing: Math.max(0, costToMax - have),
+                    rankVal: rankPower[rank] || 0
+                };
+                let vis = true;
+                if (state.ready && !wrp._starsData.ready) vis = false;
+                if (state.max && !wrp._starsData.readyMax) vis = false;
+                wrp.style.display = vis ? '' : 'none';
+            });
+
+            if (state.missing !== 'none' || state.rank !== 'none') {
+                processing.sort((a, b) => {
+                    if (state.missing !== 'none') {
+                        const diff = a._starsData.missing - b._starsData.missing;
+                        if (diff !== 0) return state.missing === 'asc' ? diff : -diff;
+                    }
+                    if (state.rank !== 'none') {
+                        const diff = a._starsData.rankVal - b._starsData.rankVal;
+                        if (diff !== 0) return state.rank === 'asc' ? diff : -diff;
+                    }
+                    return 0;
+                });
+                processing.forEach(wrp => container.appendChild(wrp));
+            } else {
+                originalOrder.forEach(wrp => container.appendChild(wrp));
+            }
+        };
+
+        const saved = JSON.parse(sessionStorage.getItem('ascm_stars_ui_state') || 'null');
+        if (saved) {
+            if (saved.ready) ui.querySelector('#ascm-filter-ready').classList.add('active');
+            if (saved.max) ui.querySelector('#ascm-filter-max').classList.add('active');
+            ui.querySelector('#ascm-sort-missing').value = saved.missing;
+            ui.querySelector('#ascm-sort-rank').value = saved.rank;
+            updateView(false);
+        }
+
+        ui.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON') { e.target.classList.toggle('active'); updateView(); } });
+        ui.querySelectorAll('select').forEach(s => s.onchange = () => updateView());
+    }
+    unsafeWindow.initStarsAdvancedInterface = initStarsAdvancedInterface;
+	
+	// ##################################################
+    // МОДУЛЬ: АНАЛИЗАТОР ЗВЕЗДНОГО УРОВНЯ (v2.9.2 FIXED)
+    // ##################################################
+    // Подсвечивает карты, готовые к повышению звездного уровня.
+    // Рамка и фантомные звезды работают независимо друг от друга.
+    async function highlightReadyToStarCards() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // 1. Всегда чистим старые элементы и рамки перед перерасчетом
+            document.querySelectorAll('.ascm-phantom-star, .ascm-star-hitbox').forEach(el => el.remove());
+            document.querySelectorAll('.ready-to-star-highlight').forEach(el => el.classList.remove('ready-to-star-highlight'));
+
+            // 2. Получаем настройки (теперь они независимы)
+            const showBorder = await GM_getValue(HIGHLIGHT_READY_STARS_ENABLED_KEY, true);
+            const showPhantoms = await GM_getValue(HIGHLIGHT_PHANTOM_STARS_ENABLED_KEY, true);
+
+            // Если оба выключены или мы не в разделе звезд — выходим
+            if ((!showBorder && !showPhantoms) || urlParams.get('sort') !== 'stars') return;
+
+            const starReqs = {
+                's': [1, 1, 1, 1, 2], 'a': [4, 8, 12, 16, 20], 'b': [5, 10, 15, 20, 25],
+                'c': [10, 15, 20, 25, 30], 'd': [10, 15, 20, 25, 30], 'e': [10, 15, 20, 25, 30]
+            };
+
+            // ТВОЙ ВЕРТИКАЛЬНЫЙ ПРИЦЕЛ (от 1-й до 5-й звезды сверху вниз)
+            const starYPos = [37.0, 29.0, 21.0, 13.0, 5.0];
+
+            const cards = document.querySelectorAll('.anime-cards__item');
+
+            cards.forEach((card) => {
+                const duplEl = card.querySelector('.dupl-count');
+                if (!duplEl) return;
+
+                const rank = (card.dataset.rank || 'e').toLowerCase();
+                const currentStars = parseInt(card.dataset.stars) || 0;
+                const reqTable = starReqs[rank] || starReqs['e'];
+
+                const [haveDups] = duplEl.textContent.trim().split('/').map(n => parseInt(n, 10));
+                if (isNaN(haveDups)) return;
+
+                let levelsPossible = 0;
+                let tempHave = haveDups;
+                let tooltipLines = [];
+                let totalMissing = 0;
+
+                for (let i = 0; i < 5; i++) {
+                    const starNum = i + 1;
+                    const cost = reqTable[i];
+                    if (starNum <= currentStars) {
+                        tooltipLines.push(`<span class="obtained">★ ${starNum}: Получено</span>`);
+                    } else {
+                        if (tempHave >= cost) {
+                            levelsPossible++;
+                            tempHave -= cost;
+                            tooltipLines.push(`<span class="ready">★ ${starNum}: ГОТОВО (нужно ${cost})</span>`);
+                        } else {
+                            const missing = cost - tempHave;
+                            totalMissing += missing;
+                            tooltipLines.push(`★ ${starNum}: Не хватает <b class="missing">${missing}</b>`);
+                            tempHave = 0;
+                        }
+                    }
+                }
+
+                // ПРИМЕНЕНИЕ ПОДСВЕТКИ И ФАНТОМОВ
+                if (levelsPossible > 0) {
+                    if (showBorder) card.classList.add('ready-to-star-highlight');
+                    
+                    if (showPhantoms) {
+                        for (let j = 0; j < levelsPossible; j++) {
+                            const starIdx = currentStars + j;
+                            if (starIdx < 5) {
+                                const phantom = document.createElement('div');
+                                phantom.className = 'ascm-phantom-star';
+                                phantom.innerHTML = '★';
+                                phantom.style.top = starYPos[starIdx] + '%';
+                                card.appendChild(phantom);
+                            }
+                        }
+                    }
+                } else {
+                    card.classList.remove('ready-to-star-highlight');
+                }
+
+                // Создаем хитбокс
+                const hitbox = document.createElement('div');
+                hitbox.className = 'ascm-star-hitbox';
+                card.appendChild(hitbox);
+
+                const tooltipHtml = `
+                    <div style="text-align:center; border-bottom:1px solid #444; margin-bottom:5px; padding-bottom:5px;">
+                        <b>${card.dataset.name}</b>
+                    </div>
+                    ${tooltipLines.join('<br>')}
+                    <div style="margin-top:8px; border-top:1px solid #444; padding-top:5px; font-weight:bold; text-align:center;">
+                        Итого до 5★: <span class="${totalMissing === 0 ? 'ready' : 'missing'}">${totalMissing === 0 ? 'ГОТОВО!' : totalMissing + ' шт.'}</span>
+                    </div>
+                `;
+
+                const tId = 'ascm-star-tooltip-el';
+                const hideT = () => { const t = document.getElementById(tId); if (t) t.style.display = 'none'; };
+
+                hitbox.onmouseenter = () => {
+                    let t = document.getElementById(tId);
+                    if (!t) {
+                        t = document.createElement('div');
+                        t.id = tId;
+                        t.className = 'ascm-star-tooltip';
+                        document.body.appendChild(t);
+                    }
+                    t.innerHTML = tooltipHtml;
+                    t.style.display = 'block';
+                };
+
+                hitbox.onmousemove = (e) => {
+                    const t = document.getElementById(tId);
+                    if (t && t.style.display === 'block') {
+                        let x = e.clientX + 25;
+                        let y = e.clientY - 20;
+                        if (x + t.offsetWidth > window.innerWidth) x = e.clientX - t.offsetWidth - 25;
+                        if (y + t.offsetHeight > window.innerHeight) y = e.clientY - t.offsetHeight - 10;
+                        t.style.left = x + 'px'; t.style.top = y + 'px';
+                    }
+                };
+
+                hitbox.onmouseleave = hideT;
+                card.onmouseleave = hideT;
+            });
+        } catch (e) {
+            console.error('[ACM StarHelper Error]', e);
+        }
+    }
+	unsafeWindow.highlightReadyToStarCards = highlightReadyToStarCards
+	
+		// ##################################################
         // # Основная функция инициализации, которая запускает все модули и добавляет все элементы UI на страницу.
         // ##################################################
         async function doActualInitialization() {
@@ -10179,6 +10824,10 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                         console.log(`[Wishlist] Загружен активный список желаний для "${targetUserForWishlist}" (${activeWishlistSet.size} карт).`);
                     }
                 }
+            }
+            // Инициализация продвинутых фильтров звезд (v1.21)
+            if (typeof initStarsAdvancedInterface === 'function') {
+                initStarsAdvancedInterface();
             }
             const isFreshnessCheckActive = await GM_getValue(FRESHNESS_TRADE_ACTIVE_KEY, false);
             if (freshnessOverlayEnabled && (!isSpecificTradeOfferPage() || isFreshnessCheckActive)) {
@@ -10232,8 +10881,13 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                     }
                     if (typeof highlightTargetUserWishlist === 'function') {
                         highlightTargetUserWishlist();
-                        unsafeWindow.highlightNoSRankDecks();
-						unsafeWindow.highlightReadyToStarCards();
+                        if (typeof unsafeWindow.highlightNoSRankDecks === 'function') {
+                            unsafeWindow.highlightNoSRankDecks();
+                        }
+                        // Безопасный вызов нашей новой функции
+                        if (typeof highlightReadyToStarCards === 'function') {
+                            highlightReadyToStarCards(); 
+                        }
                     }
                 };
                 setTimeout(processCardChanges);
@@ -10251,10 +10905,21 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                     '.card-awakening-list' // Список карт для пробуждения
                 ];
                 const observerCallback = (mutationsList) => {
+                    // Проверяем, являются ли изменения делом рук нашего скрипта
+                    const isInternalChange = Array.from(mutationsList).every(m => {
+                        const nodes = [...m.addedNodes, ...m.removedNodes];
+                        return nodes.every(n => n.classList && (n.classList.contains('ascm-phantom-star') || n.classList.contains('ascm-star-hitbox')));
+                    });
+
+                    // Если это наши звезды или хитбоксы - ничего не делаем, чтобы не вызвать бесконечный цикл
+                    if (isInternalChange) return;
+
                     const hasRelevantChanges = mutationsList.some(m => m.type === 'childList' && (m.addedNodes.length > 0 || m.removedNodes.length > 0));
                     if (hasRelevantChanges) {
                         clearTimeout(smartObserverTimeout);
-                        smartObserverTimeout = setTimeout(processCardChanges);
+                        smartObserverTimeout = setTimeout(() => {
+                            processCardChanges();
+                        }, 500); // Увеличили задержку до 500мс для стабильности
                     }
                 };
                 targetSelectors.forEach(selector => {
@@ -11517,6 +12182,13 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 }
                 createToggleButton();
             })();
+			
+			// Инициализация модуля переплавки
+            if (isRemeltPage()) {
+                initRemeltAdvancedDashboard();
+            }
+			
+			initShahtaDashboard()
         }
 
 
@@ -12381,91 +13053,91 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             window.addEventListener('keydown', universalAudioUnlock, { capture: true });
 
 			// ##################################################
-			// Реализует логику "выборов" (БЕЗ ПРИОРИТЕТА ПО ТИПУ СТРАНИЦЫ)
+			// Реализует логику "выборов" лидера. Добавлена защита от перехвата при перезагрузке (Reload Lock).
 			// ##################################################
 			async function tryToBecomeLeaderWatch() {
 				if (unsafeWindow.isElectionInProgress) return;
 				unsafeWindow.isElectionInProgress = true;
 
 				const now = Date.now();
-				const LEADER_DEAD_TIMEOUT = 15000; // Порог смерти лидера
 				const currentLeaderJSON = localStorage.getItem(LEADER_KEY_WATCH);
-				const reloadLock = localStorage.getItem('ascm_reload_fix_lock');
 				
+				// ПРАВКА: Проверяем ГЛОБАЛЬНЫЙ замок шахты в GM_storage
+				const shahtaLock = await GM_getValue('ascm_shahta_occupied_lock', null);
+                if (shahtaLock) {
+                    // Если замок стоит на ДРУГОЙ вкладке и он свежий (менее 25 сек)
+                    if (shahtaLock.id !== tabIdWatch && (now - shahtaLock.ts < 25000)) {
+                        // Мы НЕ ПЫТАЕМСЯ стать лидером и НЕ ПЕРЕХОДИМ в шахту
+                        isLeaderWatch = false;
+                        unsafeWindow.isElectionInProgress = false;
+                        updateLeaderLockButtonView();
+                        return; 
+                    }
+                }
+
 				let currentLeader = null;
 				try { currentLeader = JSON.parse(currentLeaderJSON); } catch(e) {}
 
-				const isLeaderAlive = currentLeader && (now - currentLeader.time <= LEADER_DEAD_TIMEOUT);
+				const isLeaderAlive = currentLeader && (now - currentLeader.time <= 15000);
+				const iAmVisible = document.visibilityState === 'visible';
 				const iAmInBoost = window.location.href.includes('/clubs/boost/');
 
-				// ПРИОРИТЕТ ШАХТЫ: Уступаем, только если лидер ЖИВ и реально бустит.
-				if (isLeaderAlive && !iAmInBoost) {
-					const otherIsBoosting = currentLeader.isBoosting === true && currentLeader.id !== tabIdWatch;
-					const otherIsReloading = reloadLock && JSON.parse(reloadLock).id !== tabIdWatch;
-
-					if (otherIsBoosting || otherIsReloading) {
-						isLeaderWatch = false;
-						unsafeWindow.isElectionInProgress = false;
-						updateLeaderLockButtonView();
-						return; 
-					}
+				// Если кто-то уже реально вносит вклад — не перехватываем
+				if (isLeaderAlive && currentLeader.id !== tabIdWatch && currentLeader.isBoosting === true) {
+					isLeaderWatch = false;
+					unsafeWindow.isElectionInProgress = false;
+					updateLeaderLockButtonView();
+					return; 
 				}
 				
 				const lockedId = await GM_getValue(LEADER_LOCK_KEY, null);
 
-				// --- 1. ПРОВЕРКА ЗАМКА ---
+				// Приоритет 1: Жесткий замок (Leader Lock)
 				if (lockedId) {
 					if (lockedId === tabIdWatch) {
-						// Если замок стоит на МНЕ — я становлюсь лидером немедленно.
 						becomeLeader();
 						updateLeaderLockButtonView();
 						unsafeWindow.isElectionInProgress = false;
 						return;
+					} else if (isLeaderAlive) {
+						if (isLeaderWatch) stopBeingLeader();
+						updateLeaderLockButtonView();
+						unsafeWindow.isElectionInProgress = false;
+						return;
 					} else {
-						// Если замок стоит на ДРУГОМ, и он жив — я обязан уступить.
-						if (isLeaderAlive) {
-							if (isLeaderWatch) stopBeingLeader();
-							updateLeaderLockButtonView();
-							unsafeWindow.isElectionInProgress = false;
-							return;
-						} else {
-							// Лидер с замком мертв, сбрасываем замок и запускаем выборы.
-							console.warn("[Лидерство] Обнаружен мертвый лидер с замком. Снимаю замок и провожу выборы.");
-							await GM_deleteValue(LEADER_LOCK_KEY);
-							// Продолжаем выполнение кода для проведения выборов (пункт 2)
-						}
+						await GM_deleteValue(LEADER_LOCK_KEY);
 					}
 				}
 
-				// --- 2. СТАНДАРТНЫЕ ВЫБОРЫ (по timestamp) ---
+				// Приоритет 2: Активное окно (если лидер мертв или не я)
+				if (iAmVisible && (!isLeaderAlive || currentLeader.id !== tabIdWatch)) {
+					becomeLeader();
+					updateLeaderLockButtonView();
+					unsafeWindow.isElectionInProgress = false;
+					return;
+				}
+
+				// Приоритет 3: Стандартная очередь по "возрасту" вкладки
 				if (currentLeader && currentLeader.id === tabIdWatch) {
-					// Я уже лидер, просто обновляю пульс (логика внутри becomeLeader)
 					becomeLeader();
 				} else if (!isLeaderAlive) {
-					// Лидер мертв, пытаюсь захватить. Приоритет отдается старейшей вкладке (меньший tabTimestamp)
 					const electionDelay = Math.random() * 500 + 100;
 					setTimeout(() => {
 						const check = localStorage.getItem(LEADER_KEY_WATCH);
 						let leaderAgain = null;
 						try { leaderAgain = JSON.parse(check); } catch(e) {}
 
-						// Захватываю, если: 1) Лидер мертв, ИЛИ 2) Я старше (меньший timestamp).
-						if (!leaderAgain || (Date.now() - leaderAgain.time > LEADER_DEAD_TIMEOUT) || (tabTimestamp < leaderAgain.timestamp)) {
+						if (!leaderAgain || (Date.now() - leaderAgain.time > 15000) || (tabTimestamp < leaderAgain.timestamp)) {
 							becomeLeader();
 						} else if (isLeaderWatch) {
 							 stopBeingLeader();
 						}
-
 						updateLeaderLockButtonView();
 						unsafeWindow.isElectionInProgress = false;
 					}, electionDelay);
 					return;
-
-				} else {
-					// Лидер жив (currentLeader.id !== tabIdWatch). Проверяю, не должен ли я уступить.
-					if (isLeaderWatch) {
-						 stopBeingLeader();
-					}
+				} else if (isLeaderWatch) {
+					stopBeingLeader();
 				}
 
 				updateLeaderLockButtonView();
@@ -12584,87 +13256,46 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                         const boostUrl = `/clubs/boost/?id=${clubId}`;
                         const isBoostPage = window.location.href.includes(boostUrl);
 
+                        // СТРОГИЙ РАСЧЕТ МСК (UTC+3)
+                        const nowUTC = new Date();
+                        const mskH = (nowUTC.getUTCHours() + 3) % 24;
+                        const mskM = nowUTC.getUTCMinutes();
+                        const mskS = nowUTC.getUTCSeconds();
+
                         const startTimeInSeconds = (sH * 3600) + (sM * 60);
-                        const currentTimeInSeconds = (curH * 3600) + (curM * 60) + curS;
-                        const forcedEndSeconds = startTimeInSeconds + ((sets.retryDuration || 2) * 60);
-                        const isInForcedWindow = currentTimeInSeconds >= startTimeInSeconds && currentTimeInSeconds <= forcedEndSeconds;
+                        const endTimeInSeconds = (eH * 3600) + (eM * 60);
+                        const currentTimeInSeconds = (mskH * 3600) + (mskM * 60) + mskS;
 
-                        // 1. ЛОГИКА В ШАХТЕ (Охота за кнопкой)
-                        if (isBoostPage && currentTimeInSeconds >= startTimeInSeconds && currentTimeInSeconds <= (eH * 3600 + eM * 60)) {
-                            // Фиксируем лидерство жестко
-                            await GM_setValue(LEADER_LOCK_KEY, tabIdWatch);
-                            
-                            const btn = document.querySelector('.club__boost-btn') || document.querySelector('.club__boost__refresh-btn');
-                            const isAlreadyOn = await GM_getValue('boosterState', false);
-                            const lastAction = parseInt(sessionStorage.getItem('ascm_last_hunter_ts') || '0');
-
-                            const limitEl = document.querySelector('.boost-limit');
-                            let limitReached = false;
-                            if (limitEl && limitEl.parentElement) {
-                                const m = limitEl.parentElement.textContent.match(/(\d+)\s*\/\s*(\d+)/);
-                                if (m && parseInt(m[1]) >= parseInt(m[2])) limitReached = true;
-                            }
-
-                            if (btn) {
-                                // Если Турбо выключено и мы в окне — ВКЛЮЧАЕМ ЕГО
-                                if (!isAlreadyOn && (nowTs - lastAction >= (sets.retryInterval || 5) * 1000)) {
-                                    const modeText = isInForcedWindow ? "ФОРС-РЕЖИМ" : "ОБЫЧНЫЙ";
-                                    sccLog(`Активация Турбо (${modeText}). Лимит=${limitReached}`, 'info', true);
-                                    sessionStorage.setItem('ascm_last_hunter_ts', nowTs);
-
-                                    // Вместо одиночного btn.click() имитируем нажатие на кнопку ТУРБО-ВКЛАД
-                                    const turboBtn = document.getElementById('turboBoosterBtn');
-                                    if (turboBtn) {
-                                        turboBtn.click();
-                                    } else {
-                                        // Если кнопки Турбо нет (другая страница), просто жмем кнопку вноса
-                                        btn.click();
-                                    }
-                                    
-                                    setTimeout(async () => {
-                                        if (await GM_getValue('boosterState', false)) {
-                                            sccLog("ТУРБО ЗАПУЩЕНО!", 'success', true);
-                                            // В Форс-режиме НЕ помечаем день как выполненный, чтобы он не заснул
-                                            if (!isInForcedWindow) GM_setValue('ascm_lastTurboTriggerDate', today);
-                                        }
-                                    }, 2000);
-                                }
-                            } else {
-                                // Если кнопки нет вообще — релоад
-                                if (!isAlreadyOn && (nowTs - lastAction >= (sets.reloadInterval || 10) * 1000)) {
-                                    sccLog("Кнопка не найдена. Перезагрузка страницы...", 'warning', true);
-                                    sessionStorage.setItem('ascm_last_hunter_ts', nowTs);
-                                    
-                                    // СТАВИМ БРОНИРОВАННЫЙ ЗАМОК ПЕРЕД РЕЛОАДОМ
-                                    await GM_setValue(LEADER_LOCK_KEY, tabIdWatch);
-                                    localStorage.setItem('ascm_reload_fix_lock', JSON.stringify({id: tabIdWatch, ts: Date.now()}));
-                                    
-                                    location.reload();
-                                }
-                            }
-                            GM_deleteValue('ascm_global_countdown'); 
+                        if (isBoostPage && isLeaderWatch) {
+							if (unsafeWindow.ascm_reload_timer_running) return;
+                            await performShahtaHunterSearch(sets, currentTimeInSeconds, startTimeInSeconds, endTimeInSeconds, today);
                         }
                         
-                        // 2. ПРОВЕРКА ВРЕМЕНИ ДЛЯ РЕДИРЕКТА
-						const isVisible = document.visibilityState === 'visible';
-						const leaderDataJSON = localStorage.getItem(LEADER_KEY_WATCH);
-						let otherIsBoosting = false;
-						try { 
-							const ld = JSON.parse(leaderDataJSON || '{}');
-							// Проверяем, не бустит ли КТО-УГОДНО в системе прямо сейчас
-							if (ld.isBoosting === true && ld.id !== tabIdWatch) otherIsBoosting = true;
-						} catch(e) {}
+                        // 2. ПРОВЕРКА ВРЕМЕНИ ДЛЯ РЕДИРЕКТА (ИСПРАВЛЕНО)
+                        if (!isBoostPage) {
+                            const shahtaLock = await GM_getValue('ascm_shahta_occupied_lock', null);
+                            const isShahtaBusy = shahtaLock && (Date.now() - shahtaLock.ts < 25000);
 
-						const reloadLock = localStorage.getItem('ascm_reload_fix_lock');
+                            // Если шахта уже занята кем-то другим — мы вообще не шлем сигналы перехода
+                            if (isShahtaBusy && shahtaLock.id !== tabIdWatch) {
+                                if (sets.logLevel == 3) sccLog(`DEBUG: Переход заблокирован. Шахта под контролем: ${shahtaLock.id}`, 'debug');
+                                return; 
+                            }
 
-						if (!isBoostPage && !otherIsBoosting && !reloadLock && (isLeaderWatch || isVisible)) {
-							// Переходим только если НИКТО в системе еще не начал буст
-							const diff = startTimeInSeconds - currentTimeInSeconds;
+                            const diff = startTimeInSeconds - currentTimeInSeconds;
+
                             if (diff > 0 && diff <= (sets.reminderMinutes * 60)) {
-                                await GM_setValue('ascm_global_countdown', { endTs: Date.now() + (diff * 1000), boostUrl, logLvl: sets.logLevel });
-                            } else if (diff <= 0 && currentTimeInSeconds <= forcedEndSeconds) {
-                                sccLog("ВРЕМЯ ПРИШЛО. Сигнал на переход в шахту...", 'info', true);
-                                await GM_setValue('ascm_redirect_signal', { ts: Date.now(), url: boostUrl });
+                                await GM_setValue('ascm_global_countdown', { 
+                                    endTs: Date.now() + (diff * 1000), 
+                                    boostUrl, 
+                                    forceUpdate: Math.random() 
+                                });
+                            } 
+                            else if (diff <= 0 && currentTimeInSeconds <= (eH * 3600 + eM * 60)) {
+                                if (isLeaderWatch || isVisible) {
+                                    sccLog("Время пришло. Генерирую сигнал перехода.", 'success', true);
+                                    await GM_setValue('ascm_redirect_signal', { ts: Date.now(), url: boostUrl, force: true });
+                                }
                             }
                         }
                     }
@@ -14167,6 +14798,34 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                         const contentObserver = new MutationObserver((innerMutations, observer) => {
                             const modalContent = addedNode.querySelector('#card-modal .modal__content');
                             if (modalContent) {
+                                // Наш новый блок:
+                                const giftCard = modalContent.querySelector('#modal-gift-card');
+                                if (giftCard) {
+                                    (async () => {
+                                        const showDemandInGift = await GM_getValue('ascm_showDemandInGift', true); // Опция спроса в подарке
+                                        if (showDemandInGift) {
+                                            const img = giftCard.querySelector('.anime-cards__placeholder img');
+                                            const imgSrc = img?.getAttribute('src');
+                                            if (imgSrc) {
+                                                // Используем поиск по картинке из основной базы
+                                                await ensureDbLoaded();
+                                                const compositeKey = normalizeImagePath(imgSrc);
+                                                const foundId = cardImageIndex.get(compositeKey);
+                                                if (foundId) {
+                                                    const infoBox = giftCard.querySelector('.anime-cards__info');
+                                                    // Создаем контейнер для статистики
+                                                    const statsContainer = document.createElement('div');
+                                                    statsContainer.className = 'ca-card-demand-stats';
+                                                    statsContainer.style.marginTop = '10px';
+                                                    infoBox.appendChild(statsContainer);
+                                                    // Вызываем штатную функцию обновления инфо
+                                                    await updateCardInfo(foundId, giftCard, false);
+                                                }
+                                            }
+                                        }
+                                    })();
+                                }
+                                // Продолжение старого кода:
                                 addButtonsToModal(modalContent);
                                 observer.disconnect();
                             }
@@ -14205,6 +14864,115 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             GM_addValueChangeListener(LEADER_LOCK_KEY, () => {
                 if (typeof updateLeaderLockButtonView === 'function') updateLeaderLockButtonView();
             });
+        }
+    }
+
+	// Умная функция повышения уровня v3.1 (Фикс обработки ответа и авто-обновление DOM)
+    async function performQuickLevelUp(starsPageUrl, targetImgSrc, cardName, btnElement) {
+        const user_hash = unsafeWindow.dle_login_hash;
+        const username = asbm_getUsername();
+        
+        // Ищем карту на фоновой странице по имени
+        const modalContainer = document.getElementById('card-modal');
+        const nameInModal = modalContainer ? modalContainer.querySelector('.anime-cards__name')?.textContent.trim() : cardName;
+        const cardItem = Array.from(document.querySelectorAll('.anime-cards__item')).find(c => c.dataset.name === nameInModal);
+
+        if (!user_hash || !starsPageUrl || !targetImgSrc || !cardItem || !username) {
+            safeDLEPushCall('error', 'Ошибка: данные для обновления не собраны.');
+            return;
+        }
+
+        const cardId = cardItem.dataset.id; 
+        const originalIcon = btnElement.innerHTML;
+        btnElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        btnElement.style.pointerEvents = 'none';
+
+        try {
+            // ШАГ 1: Получаем верный owner_id со страницы звезд
+            const pageRes = await fetch(starsPageUrl);
+            const html = await pageRes.text();
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const targetCard = Array.from(doc.querySelectorAll('.card-stars-list__card')).find(el => {
+                const img = el.querySelector('img');
+                return img && img.getAttribute('src') === targetImgSrc;
+            });
+
+            const realOwnerId = targetCard ? targetCard.dataset.id : null;
+            if (!realOwnerId) throw new Error("ID не найден на странице звезд.");
+
+            // ШАГ 2: Запрос на повышение уровня
+            const response = await fetch("/engine/ajax/controller.php?mod=cards_ajax", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                body: new URLSearchParams({
+                    mod: 'cards_ajax', action: 'stars_levelup', owner_id: realOwnerId, with_risk: '0', user_hash: user_hash
+                }).toString()
+            });
+
+            const result = await response.json();
+            
+            // ИСПРАВЛЕННОЕ УСЛОВИЕ: проверяем наличие поля result.ok
+            if (result.ok) {
+                const successMsg = result.ok;
+                console.log(`%c[ACM LevelUp] Успех: ${successMsg}`, "color: #00ff00; font-weight: bold;");
+                safeDLEPushCall('success', successMsg);
+                
+                // ШАГ 3: Фоновое получение новых данных этой карты из инвентаря
+                const refreshUrl = `/user/cards/?name=${encodeURIComponent(username)}&card_id=${cardId}&sort=stars`;
+                const invRes = await fetch(refreshUrl);
+                const invHtml = await invRes.text();
+                const invDoc = new DOMParser().parseFromString(invHtml, 'text/html');
+                
+                // Ищем обновленную карточку в полученном коде
+                const updatedCardSource = invDoc.querySelector(`.anime-cards__item[data-id="${cardId}"]`);
+                
+                if (updatedCardSource) {
+                    const newImgSrc = updatedCardSource.dataset.image;
+                    const newDupsText = updatedCardSource.querySelector('.dupl-count')?.textContent || "";
+                    const newStars = updatedCardSource.dataset.stars;
+                    const newOwnerId = updatedCardSource.dataset.ownerId;
+
+                    // Обновляем визуальную часть на странице
+                    const mainImg = cardItem.querySelector('img');
+                    if (mainImg) {
+                        mainImg.src = newImgSrc;
+                        mainImg.dataset.src = newImgSrc;
+                    }
+                    
+                    cardItem.dataset.image = newImgSrc;
+                    cardItem.dataset.stars = newStars;
+                    cardItem.dataset.ownerId = newOwnerId;
+                    
+                    const duplCountEl = cardItem.querySelector('.dupl-count');
+                    if (duplCountEl) duplCountEl.textContent = newDupsText;
+
+                    console.log(`[ACM LevelUp] Карта "${cardName}" обновлена: ${newStars}/5★, дубли: ${newDupsText}`);
+                    
+                    // Пересчитываем рамки и фантомные звезды
+                    setTimeout(() => {
+                        if (typeof highlightReadyToStarCards === 'function') highlightReadyToStarCards();
+                    }, 300);
+                }
+
+                // Закрываем модалку сайта
+                if (typeof unsafeWindow.jQuery !== 'undefined') {
+                    unsafeWindow.jQuery('.ui-dialog-content').dialog('close');
+                }
+
+            } else {
+                // Если сервер прислал ошибку (например, {error: "..."})
+                const errorMsg = result.error || result.text || 'Неизвестная ошибка сервера';
+                console.warn(`[ACM LevelUp] Сервер вернул ошибку: ${errorMsg}`);
+                safeDLEPushCall('warning', errorMsg);
+                btnElement.innerHTML = originalIcon;
+                btnElement.style.pointerEvents = 'auto';
+            }
+
+        } catch (error) {
+            console.error('[ACM LevelUp Error]', error);
+            safeDLEPushCall('error', `Ошибка: ${error.message}`);
+            btnElement.innerHTML = originalIcon;
+            btnElement.style.pointerEvents = 'auto';
         }
     }
 
@@ -14351,13 +15119,52 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             setTimeout(() => { lockButton.style.pointerEvents = 'auto'; }, 1500);
         });
         const starButton = metaContainer.querySelector('.star-meta-item');
-        if (starButton) {
-            metaContainer.insertBefore(lockButton, starButton);
-        } else {
-            const rankElement = metaContainer.querySelector('.ncard__meta-item.ncard__rank');
-            if (rankElement) metaContainer.insertBefore(lockButton, rankElement);
-            else metaContainer.appendChild(lockButton);
+        
+        // Вставляем замок
+        if (starButton) metaContainer.insertBefore(lockButton, starButton);
+        else metaContainer.appendChild(lockButton);
+
+        // --- НОВЫЙ БЛОК: Кнопка "Быстрый Ап" ---
+        const urlParams = new URLSearchParams(window.location.search);
+        // Условие 1: Мы в режиме сортировки по звездам
+        if (urlParams.get('sort') === 'stars') {
+            // Ищем на странице карточку с таким же именем, чтобы проверить, "готова" ли она
+            const cardOnPage = Array.from(document.querySelectorAll('.anime-cards__item')).find(c => 
+                c.dataset.name === modalContent.querySelector('div.anime-cards__name')?.textContent.trim()
+            );
+
+            // Условие 2: Нам хватает дублей (проверка по классу подсветки)
+            if (cardOnPage && cardOnPage.classList.contains('ready-to-star-highlight')) {
+                const cardName = cardOnPage.dataset.name;
+                const starsUrl = starButton ? starButton.href : null;
+                // Получаем относительный путь картинки (как в твоем HTML коде)
+                const imgTag = cardOnPage.querySelector('img');
+                const targetImgSrc = imgTag ? imgTag.getAttribute('src') : null;
+
+                const levelUpBtn = document.createElement('button');
+                levelUpBtn.className = 'ncard__meta-item levelup-meta-item';
+                levelUpBtn.title = `БЕЗОПАСНЫЙ АП: Поднять звезду для "${cardName}"`;
+                
+                levelUpBtn.innerHTML = `
+                    <i class="fas fa-star main-star"></i>
+                    <span class="plus-text">+1</span>
+                `;
+                
+                levelUpBtn.onclick = (e) => {
+                    e.preventDefault();
+                    if (starsUrl && targetImgSrc) {
+                        performQuickLevelUp(starsUrl, targetImgSrc, cardName, levelUpBtn);
+                    } else {
+                        safeDLEPushCall('error', 'Не удалось определить параметры карты');
+                    }
+                };
+
+                if (starButton) starButton.after(levelUpBtn);
+                else metaContainer.appendChild(levelUpBtn);
+            }
         }
+        // ---------------------------------------
+
         updateButtonView('initial');
     }
 
@@ -17015,6 +17822,12 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             return;
         }
         isWishlistScanning = true;
+    
+		// ПРАВКА: Если мы начинаем новый скан, очищаем кеш старого твина для всех рангов сразу
+		['a','b','c','d','e'].forEach(r => GM_deleteValue(REMELT_TWIN_WISH_PREFIX + r));
+		if (typeof unsafeWindow.updateRemeltCacheTimers === 'function') {
+			unsafeWindow.updateRemeltCacheTimers();
+		}
         console.log(`[Wishlist Scanner] Запуск сканирования для пользователя: ${username}`);
         await GM_deleteValue(WISHLIST_SCAN_STOP_KEY);
         const previousTarget = await GM_getValue(WISHLIST_TARGET_USER_KEY, null);
@@ -17041,9 +17854,23 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 if (!response.ok) throw new Error(`Ошибка сети: ${response.status}`);
                 const htmlText = await response.text();
                 const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+
+                // ПРОВЕРКА: Существует ли пользователь (анализ сообщения об ошибке сайта)
+                const errorMsg = doc.querySelector('.message-info__content');
+                if (errorMsg && errorMsg.textContent.includes('не существует')) {
+                    throw new Error('USER_NOT_FOUND'); // Специальный код ошибки
+                }
+
                 const cardsOnPage = doc.querySelectorAll('.anime-cards__item');
+
+                // ПРОВЕРКА: Пустой список (только на 1 странице)
                 if (currentPage === 1 && cardsOnPage.length === 0) {
-                    throw new Error('У пользователя пустой список желаний или такого пользователя не существует.');
+                    const emptyIndicator = doc.querySelector('.not-found .info-text');
+                    if (emptyIndicator && emptyIndicator.textContent.includes('пустой')) {
+                        console.log('[Wishlist Scanner] Список пуст. Завершаю успешно с 0 карт.');
+                        break; // Выходим из цикла, сохранятся пустые данные
+                    }
+                    throw new Error('UNKNOWN_RESPONSE');
                 }
                 cardsOnPage.forEach(cardEl => { if (cardEl.dataset.id) cardIdSet.add(cardEl.dataset.id); });
                 if (currentPage === 1) {
@@ -17063,6 +17890,12 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 activeWishlistSet = new Set(wishlistData.cardIds);
                 console.log(`[Wishlist Scanner] Данные для "${username}" (${cardIdSet.size} карт) сохранены.`);
                 safeDLEPushCall('success', `Список желаний для "${username}" успешно отсканирован.`);
+				
+				// ОБНОВЛЕНИЕ ПАНЕЛИ ПЕРЕПЛАВКИ ОНЛАЙН
+				if (typeof unsafeWindow.updateRemeltCacheTimers === 'function') {
+					unsafeWindow.updateRemeltCacheTimers();
+				}
+			
                 const button = document.getElementById('wishlistScannerBtn');
                 if (button) {
                     button.style.background = 'linear-gradient(145deg, #28a745, #1e7e34)';
@@ -17080,9 +17913,17 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 }
             }
         } catch (error) {
-            console.error('[Wishlist Scanner] Ошибка сканирования:', error);
-            safeDLEPushCall('error', `Ошибка: ${error.message}`);
-        } finally {
+			// Если это наша запланированная ошибка, не спамим красным в консоль
+			if (error.message === 'USER_NOT_FOUND') {
+				safeDLEPushCall('error', 'Ошибка: Данного пользователя не существует.');
+			} else if (error.message === 'UNKNOWN_RESPONSE') {
+				safeDLEPushCall('error', 'Ошибка: Не удалось прочитать список карт.');
+			} else {
+				// Для реально неожиданных ошибок (сети и т.д.) оставляем лог
+				console.error('[Wishlist Scanner] Критическая ошибка:', error);
+				safeDLEPushCall('error', `Ошибка: ${error.message}`);
+			}
+		} finally {
             isWishlistScanning = false;
             await GM_deleteValue(WISHLIST_SCAN_STATE_KEY);
             await GM_deleteValue(WISHLIST_SCAN_STOP_KEY);
@@ -17177,6 +18018,20 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                                 <span>Подсвечивать готовые карты</span>
                                 <label class="protector-toggle-switch">
                                     <input type="checkbox" id="ready-stars-glow-toggle">
+                                    <span class="protector-toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row" style="margin-bottom: 10px;">
+                                <span>Показывать мигающие звезды (фантомы)</span>
+                                <label class="protector-toggle-switch">
+                                    <input type="checkbox" id="phantom-stars-toggle">
+                                    <span class="protector-toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row" style="margin-bottom: 10px;">
+                                <span>Показывать панель фильтров звезд</span>
+                                <label class="protector-toggle-switch">
+                                    <input type="checkbox" id="stars-ui-toggle">
                                     <span class="protector-toggle-slider"></span>
                                 </label>
                             </div>
@@ -17290,14 +18145,18 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             scanButton.style.background = '';
             scanButton.disabled = false;
             scanButton.onclick = async () => {
-                if (isWishlistScanning) return;
-                const userInput = usernameInput.value.trim();
-                if (!userInput) { safeDLEPushCall('error', 'Введите имя пользователя.'); return; }
-                scanButton.disabled = true;
-                scanButton.textContent = 'Запуск...';
-                scanButton.style.background = 'linear-gradient(145deg, #e67e22, #d35400)';
-                await scanWishlist(userInput);
-            };
+			if (isWishlistScanning) return;
+			const userInput = usernameInput.value.trim();
+			if (!userInput) { safeDLEPushCall('error', 'Введите имя пользователя.'); return; }
+			scanButton.disabled = true;
+			scanButton.textContent = 'Запуск...';
+			scanButton.style.background = 'linear-gradient(145deg, #e67e22, #d35400)';
+			
+			await scanWishlist(userInput);
+			
+			// ПРАВКА: Обновляем текст в окне настроек сразу после завершения скана
+			await setIdleState(); 
+		};
             clearButton.disabled = false;
         };
         const updateScanProgress = (scanState) => {
@@ -17350,14 +18209,17 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             const confirmation = await protector_customConfirm('Вы уверены, что хотите очистить текущую цель сканера?');
             if (confirmation) {
                 await GM_deleteValue(WISHLIST_TARGET_USER_KEY);
+                // Удаляем кеш твина для переплавки (все ранги)
+                ['a','b','c','d','e'].forEach(r => GM_deleteValue(REMELT_TWIN_WISH_PREFIX + r));
+
                 activeWishlistSet = null;
-                safeDLEPushCall('info', 'Цель для сканера желаний очищена.');
-                document.querySelectorAll('.wishlist-highlight-pack, .wishlist-highlight-inventory').forEach(card => {
-                    card.classList.remove('wishlist-highlight-pack', 'wishlist-highlight-inventory');
-                    card.querySelector('.wishlist-indicator-icon')?.remove();
-                });
-                const button = document.getElementById('wishlistScannerBtn');
-                if (button) button.style.background = 'linear-gradient(145deg, rgb(166, 100, 110), rgb(222, 0, 5))';
+                safeDLEPushCall('info', 'Цель очищена.');
+                
+                // ОБНОВЛЕНИЕ ПАНЕЛИ ПЕРЕПЛАВКИ ОНЛАЙН
+                if (typeof unsafeWindow.updateRemeltCacheTimers === 'function') {
+                    unsafeWindow.updateRemeltCacheTimers();
+                }
+
                 await setIdleState();
             }
         };
@@ -17508,16 +18370,49 @@ async function sccLog(message, type = 'info', forceConsole = false) {
                 }
             }
         });
-		// Инициализация переключателя подсветки звезд
+		
+		// 1. Тумблер: Подсвечивать готовые карты (Рамка)
         const readyStarsToggle = wrapper.querySelector('#ready-stars-glow-toggle');
         if (readyStarsToggle) {
+            // Загружаем состояние конкретно этого тумблера
             readyStarsToggle.checked = await GM_getValue(HIGHLIGHT_READY_STARS_ENABLED_KEY, true);
             readyStarsToggle.addEventListener('change', async () => {
                 await GM_setValue(HIGHLIGHT_READY_STARS_ENABLED_KEY, readyStarsToggle.checked);
+                // Просто вызываем общую функцию — она сама разберется, что рисовать
+                highlightReadyToStarCards();
+                safeDLEPushCall('info', 'Настройка рамки сохранена!');
+            });
+        }
+
+        // 2. Тумблер: Фантомные звезды
+        const phantomsToggle = wrapper.querySelector('#phantom-stars-toggle');
+        if (phantomsToggle) {
+            phantomsToggle.checked = await GM_getValue(HIGHLIGHT_PHANTOM_STARS_ENABLED_KEY, true);
+            phantomsToggle.addEventListener('change', async () => {
+                await GM_setValue(HIGHLIGHT_PHANTOM_STARS_ENABLED_KEY, phantomsToggle.checked);
                 if (typeof unsafeWindow.highlightReadyToStarCards === 'function') {
-                    unsafeWindow.highlightReadyToStarCards();
+                    highlightReadyToStarCards();
                 }
-                safeDLEPushCall('info', 'Настройка звездной подсветки сохранена!');
+                safeDLEPushCall('info', 'Настройка фантомов сохранена!');
+            });
+        }
+
+        // 3. Тумблер: Панель фильтров
+        const starsUiToggle = wrapper.querySelector('#stars-ui-toggle');
+        if (starsUiToggle) {
+            starsUiToggle.checked = await GM_getValue(STARS_FILTERS_UI_ENABLED_KEY, true);
+            starsUiToggle.addEventListener('change', async () => {
+                await GM_setValue(STARS_FILTERS_UI_ENABLED_KEY, starsUiToggle.checked);
+                if (!starsUiToggle.checked) {
+                    const panel = document.getElementById('ascm-stars-ui');
+                    if (panel) panel.remove();
+                    document.querySelectorAll('.anime-cards__item-wrapper').forEach(wrp => wrp.style.display = '');
+                } else {
+                    if (typeof unsafeWindow.initStarsAdvancedInterface === 'function') {
+                        unsafeWindow.initStarsAdvancedInterface();
+                    }
+                }
+                safeDLEPushCall('info', starsUiToggle.checked ? 'Панель звезд активирована' : 'Пане_ль звезд скрыта');
             });
         }
         setIdleState();
@@ -17828,52 +18723,69 @@ async function sccLog(message, type = 'info', forceConsole = false) {
     GM_addValueChangeListener('ascm_global_countdown', (key, oldV, newV, remote) => {
         if (!newV) { if (localCountdownInt) clearInterval(localCountdownInt); return; }
         if (localCountdownInt) clearInterval(localCountdownInt);
+        
         localCountdownInt = setInterval(() => {
             const left = Math.round((newV.endTs - Date.now()) / 1000);
-            if (newV.logLvl >= 3) console.log(`[ACM] До редиректа: ${left}с`);
             if (left > 0) {
                 const html = `<div style="font-size:13px; margin-bottom:5px;">🏆 ДО КЛУБНЫХ ВЗНОСОВ: <b>${left}с</b></div>
                     <div style="display:flex; gap:5px; justify-content:center;">
                         <button onclick="location.href='${newV.boostUrl}'" style="background:#43b581; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:10px;">В ШАХТУ! ⚒️</button>
                         <button id="acm-stop-all" style="background:#4e5058; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:10px;">ФИЛОНИТЬ 💤</button>
                     </div>`;
+                
+                // ПРАВКА: Сбрасываем флаг липкости, чтобы уведомление менеджера точно вылезло
+                isStickyNotificationActive = false; 
                 showNotification(html, 'warning', true);
+                
                 const b = document.getElementById('acm-stop-all');
-                if (b) b.onclick = () => { GM_deleteValue('ascm_global_countdown'); GM_setValue('ascm_lastTurboTriggerDate', 'cancelled'); };
-            } else { clearInterval(localCountdownInt); }
+                if (b) b.onclick = () => { 
+                    GM_deleteValue('ascm_global_countdown'); 
+                    GM_setValue('ascm_lastTurboTriggerDate', new Date(Date.now() + 3*3600*1000).toISOString().split('T')[0]); 
+                };
+            } else { 
+                clearInterval(localCountdownInt); 
+                isStickyNotificationActive = false;
+            }
         }, 1000);
     });
 
+    // Слушатель сигнала на принудительный переход в шахту (С БРОНИРОВАНИЕМ)
     GM_addValueChangeListener('ascm_redirect_signal', async (key, oldV, newV, remote) => {
         if (!newV) return;
 
-        // --- НОВОЕ: Если я УЖЕ в шахте, я немедленно удаляю сигнал, 
-        // чтобы другие вкладки его не увидели и не прыгали сюда же.
+        // Если я уже в шахте — просто удаляем сигнал
         if (window.location.href.includes('/clubs/boost/')) {
             await GM_deleteValue('ascm_redirect_signal');
-            
-            // Если я активен (видим), фиксирую лидерство за собой
-            if (document.visibilityState === 'visible') {
-                await GM_setValue(LEADER_LOCK_KEY, tabIdWatch);
-                if (typeof tryToBecomeLeaderWatch === 'function') tryToBecomeLeaderWatch();
-            }
             return; 
         }
 
-        // Если я НЕ в шахте, но я Видим (активен), я перехожу и удаляю сигнал
-        if (document.visibilityState === 'visible') {
-            sccLog("Приоритетный переход в шахту из активной вкладки.", 'info', true);
+        // ПРАВКА: Проверяем, не занята ли шахта ПРЯМО СЕЙЧАС другой вкладкой
+        const shahtaLock = await GM_getValue('ascm_shahta_occupied_lock', null);
+        if (shahtaLock && shahtaLock.id !== tabIdWatch && (Date.now() - shahtaLock.ts < 25000)) {
+            console.log("[ACM] Отмена перехода: шахта уже под контролем вкладки " + shahtaLock.id);
+            return;
+        }
+
+        const executeJump = async (reason) => {
+            // ПЕРЕД ПРЫЖКОМ СТАВИМ ЗАМОК (Бронируем шахту за собой)
+            await GM_setValue('ascm_shahta_occupied_lock', { id: tabIdWatch, ts: Date.now() });
             await GM_setValue(LEADER_LOCK_KEY, tabIdWatch); 
+            
+            sccLog(`Автопереход в шахту (${reason})`, 'success', true);
             await GM_deleteValue('ascm_redirect_signal'); 
             window.location.href = newV.url;
+        };
+
+        if (document.visibilityState === 'visible') {
+            await executeJump("Активное окно");
         } 
-        // Если я в фоне и я Лидер, я жду 6 сек (даю шанс активной вкладке)
         else if (isLeaderWatch) {
             setTimeout(async () => {
-                const stillNeeded = await GM_getValue('ascm_redirect_signal');
-                if (stillNeeded) { 
-                    await GM_deleteValue('ascm_redirect_signal'); 
-                    window.location.href = stillNeeded.url; 
+                const signalStillExists = await GM_getValue('ascm_redirect_signal');
+                // Проверяем замок еще раз перед тем как лидер прыгнет сам
+                const stillNoLock = !(await GM_getValue('ascm_shahta_occupied_lock'));
+                if (signalStillExists && stillNoLock) {
+                    await executeJump("Подстраховка лидера");
                 }
             }, 6000);
         }
@@ -17888,6 +18800,1186 @@ async function sccLog(message, type = 'info', forceConsole = false) {
             }
         }
     });
+
+	/** 
+     * МОДУЛЬ: ПРОДВИНУТАЯ ПЕРЕПЛАВКА (V1.1)
+     * Включает: скан кеша, фильтры спроса, проверку квеста и автоматизацию.
+     */
+
+    // 1. Вспомогательная функция: Поиск кандидатов с возвратом полных метаданных для логирования
+    async function getMeltCandidates() {
+        const keepCount = parseInt(document.getElementById('ascm-remelt-keep').value) || 0;
+        const f = {
+            want: { en: document.getElementById('ascm-remelt-want-en').classList.contains('active'), min: parseInt(document.getElementById('ascm-remelt-want-min').value) || 0, max: parseInt(document.getElementById('ascm-remelt-want-max').value) || 999999 },
+            trade: { en: document.getElementById('ascm-remelt-trade-en').classList.contains('active'), min: parseInt(document.getElementById('ascm-remelt-trade-min').value) || 0, max: parseInt(document.getElementById('ascm-remelt-trade-max').value) || 999999 },
+            own: { en: document.getElementById('ascm-remelt-owners-en').classList.contains('active'), min: parseInt(document.getElementById('ascm-remelt-owners-min').value) || 0, max: parseInt(document.getElementById('ascm-remelt-owners-max').value) || 999999 },
+            my_wish: document.getElementById('ascm-remelt-my-wish-en').classList.contains('active'),
+            twin_wish: document.getElementById('ascm-remelt-other-wish-en').classList.contains('active')
+        };
+
+        let candidates = [];
+        await ensureDbLoaded();
+		
+		// ПРАВКА: Обновляем списки исключений перед подбором карт для плавки
+        const meltRankForExcl = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
+        if (meltRankForExcl) {
+            const myMeltData = await GM_getValue(REMELT_MY_WISH_PREFIX + meltRankForExcl);
+            const twinMeltData = await GM_getValue(REMELT_TWIN_WISH_PREFIX + meltRankForExcl);
+            myWishlistSet = new Set(myMeltData?.ids?.map(String) || []);
+            twinWishlistSet = new Set(twinMeltData?.ids?.map(String) || []);
+        }
+
+        remeltInventoryMap.forEach((data, url) => {
+            if (!data.ids || data.ids.length <= keepCount) return;
+
+            const compositeKey = normalizeImagePath(url);
+            const typeId = cardImageIndex ? cardImageIndex.get(compositeKey) : null;
+
+            if (typeId) {
+                const typeIdStr = typeId.toString();
+                if (f.my_wish && myWishlistSet.has(typeIdStr)) return;
+                if (f.twin_wish && twinWishlistSet.has(typeIdStr)) return;
+            }
+
+            // Используем данные, собранные при сканировании (теперь они там будут)
+            const d = data.demand || { needCount: 0, tradeCount: 0, popularityCount: 0 };
+            
+            // ПРАВКА: Гарантируем, что фильтры работают с числами
+            const needNum = parseInt(d.needCount) || 0;
+            const tradeNum = parseInt(d.tradeCount) || 0;
+            const popNum = parseInt(d.popularityCount) || 0;
+
+            const passWant = !f.want.en || (needNum >= f.want.min && needNum <= f.want.max);
+            const passTrade = !f.trade.en || (tradeNum >= f.trade.min && tradeNum <= f.trade.max);
+            const passOwn = !f.own.en || (popNum >= f.own.min && popNum <= f.own.max);
+
+            if (passWant && passTrade && passOwn) {
+                const meta = cardDatabaseMap.get(typeId) || { name: 'Неизвестно', animeName: 'Неизвестно' };
+                data.ids.slice(keepCount).forEach(id => {
+                    candidates.push({ id, typeId, name: meta.name, anime: meta.animeName, rank: (meta.rank || '?').toUpperCase(), demand: d });
+                });
+            }
+        });
+
+        return candidates.sort((a, b) => a.demand.needCount - b.demand.needCount);
+    }
+
+	/**
+     * Создает окно результата и сразу внедряет туда спрос
+     */
+    async function ascm_showGiftModal(card) {
+        const rankNames = { 'sss': 'пробужденная', 'ass': 'космическая', 's': 'мифическая', 'a': 'легендарная', 'b': 'эпическая', 'c': 'редкая', 'd': 'необычная', 'e': 'обычная' };
+        const rankName = rankNames[card.rank.toLowerCase()] || 'неизвестная';
+        
+        const modalHtml = `
+            <div class="modal" id="modal-gift-card" tabindex="-1">
+                <div class="modal__inner">
+                    <div class="modal__content">
+                        <div class="modal__body">
+                            <div class="anime-cards__container">
+                                <div class="anime-cards__header" style="background-image: url(${card.image});"></div>
+                                <div class="anime-cards__wrapper">
+                                    <div class="anime-cards__placeholder"><img src="${card.image}" alt="Карточка"></div>
+                                    <div class="anime-cards__info">
+                                        <div class="anime-cards__rank rank-${card.rank}">${rankName}</div>
+                                        <div class="anime-cards__name">${card.name}</div>
+                                        <div class="anime-cards__text">Поздравляем! Ты открыл новую карту. Она добавлена в коллекцию.</div>
+                                        <!-- Сюда будет вставлен спрос -->
+                                        <div id="ascm-gift-demand-container"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+        if (unsafeWindow.jQuery('#card-modal').length) unsafeWindow.jQuery('#card-modal').remove();
+        unsafeWindow.jQuery('body').prepend("<div id='card-modal' title='Информация о карточке' class='ui-dialog-content ui-widget-content' style='display:none'></div>");
+        
+        const $modal = unsafeWindow.jQuery('#card-modal');
+        $modal.dialog({
+            autoOpen: true, width: 500, height: 620, resizable: false,
+            dialogClass: "modalfixed",
+            close: function() { $modal.dialog('destroy').remove(); }
+        });
+        
+        $modal.html(modalHtml);
+
+        // ВНЕДРЕНИЕ СПРОСА
+        const compositeKey = normalizeImagePath(card.image);
+        const typeId = cardImageIndex.get(compositeKey);
+        if (typeId) {
+            const container = $modal.find('#ascm-gift-demand-container')[0];
+            if (container) {
+                // Вызываем штатную функцию обновления инфо
+                await updateCardInfo(typeId, container, false);
+                console.log(`[ACM Remelt] Спрос для новой карты (ID: ${typeId}) добавлен в окно.`);
+            }
+        }
+    }
+
+    // 2. Основной цикл автоматической плавки (V1.6 - Исправленная)
+    async function startRemeltLoop() {
+        if (isProcessCardsRunning) { shouldStopProcessing = true; return; }
+
+        const limitInput = document.getElementById('ascm-remelt-limit');
+        let meltsLeft = parseInt(limitInput.value) || 0;
+        const totalToMelt = meltsLeft;
+        const autostopEn = document.getElementById('ascm-remelt-stop-quest').classList.contains('active');
+        const showModal = document.getElementById('ascm-remelt-show-modal').classList.contains('active');
+        const delay = (parseInt(document.getElementById('ascm-remelt-delay').value) || 3) * 1000;
+        const startBtn = document.getElementById('ascm-remelt-start-btn');
+        const activeRank = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
+
+        if (meltsLeft <= 0) return safeDLEPushCall('info', 'Укажите количество плавок.');
+        if (remeltInventoryMap.size === 0) return safeDLEPushCall('warning', 'Сначала выполните АНАЛИЗ КЕША.');
+
+        isProcessCardsRunning = true; shouldStopProcessing = false;
+        startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ОСТАНОВИТЬ';
+        // ПРАВКА: Перебиваем !important в CSS
+        startBtn.style.setProperty('background', 'linear-gradient(145deg, #e74c3c, #c0392b)', 'important');
+
+        const stopUI = document.createElement('div');
+        stopUI.id = 'ascm-remelt-floating-stop';
+        // ПРАВКА: Добавляем ID для прогресса, чтобы он обновлялся
+        stopUI.innerHTML = `<span>СТОП ПЛАВКА</span> <div id="ascm-remelt-floating-prog">0 / ${totalToMelt}</div>`;
+        document.body.appendChild(stopUI);
+        stopUI.onclick = () => { shouldStopProcessing = true; stopUI.textContent = "ОСТАНОВКА..."; };
+
+        let successCounter = 0;
+        let questAlreadyDoneAtStart = false; 
+
+        try {
+            // 1. ОБЯЗАТЕЛЬНАЯ ПРОВЕРКА ПЕРЕД ПЕРВОЙ ПЛАВКОЙ
+            await checkRemeltQuest();
+            if (remeltQuestStatus.done) {
+                questAlreadyDoneAtStart = true;
+                if (autostopEn) { sccLog("Задание уже было выполнено! Автостоп.", 'warning', true); return; }
+                else { sccLog("Задание уже выполнено. Повторных проверок не будет.", 'info', true); }
+            }
+
+            while (meltsLeft > 0 && !shouldStopProcessing) {
+                // (Блок подготовки кандидатов и сам сетевой запрос плавки остается без изменений)
+                const candidates = await getMeltCandidates();
+                if (candidates.length < 3) { sccLog("Недостаточно подходящих карт.", 'error', true); break; }
+
+                const batchMeta = candidates.slice(0, 3);
+                
+                // Контрольный лог
+                console.group(`%c[ACM Remelt] Плавка №${successCounter + 1}`, "color: #faa61a; font-weight: bold;");
+                batchMeta.forEach((c, i) => {
+                    console.log(`${i+1}. [ID: ${c.id} | Type: ${c.typeId}] %c${c.name} (${c.rank}) %c| Х: ${c.demand.needCount}, О: ${c.demand.tradeCount}, В: ${c.demand.popularityCount}`, "color: #00ff00; font-weight: bold;", "color: #aaa; font-size: 10px;");
+                });
+                console.groupEnd();
+
+                const params = new URLSearchParams();
+                params.append('action', 'remelt_card');
+                params.append('user_hash', unsafeWindow.dle_login_hash);
+                batchMeta.forEach(c => params.append('card_ids[]', c.id));
+
+                const res = await fetch("/engine/ajax/controller.php?mod=cards_ajax", {
+                    method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
+                    body: params.toString()
+                });
+
+                const data = await res.json();
+                if (data.card) {
+                    successCounter++;
+                    sccLog(`Успех №${successCounter}! Получена: ${data.card.name}`, 'success', true);
+                    if (showModal) ascm_showGiftModal(data.card);
+
+                    // УДАЛЕНИЕ ИЗ КЕША
+                    const meltedIds = batchMeta.map(c => c.id);
+                    remeltInventoryMap.forEach((obj) => {
+                        meltedIds.forEach(id => {
+                            const idx = obj.ids.indexOf(id);
+                            if (idx > -1) obj.ids.splice(idx, 1);
+                        });
+                    });
+
+                    // Сохраняем кеш в GM (чтобы не возвращались при F5)
+                    const cached = await GM_getValue(REMELT_CACHE_PREFIX + activeRank);
+                    if (cached) { cached.map = Array.from(remeltInventoryMap.entries()); cached.count -= 3; await GM_setValue(REMELT_CACHE_PREFIX + activeRank, cached); }
+					
+					updateRemeltCacheTimers();
+
+                    meltsLeft--; limitInput.value = meltsLeft;
+                    document.getElementById('ascm-remelt-floating-prog').textContent = `${successCounter} / ${totalToMelt}`;
+                    updateRemeltCalculation();
+					
+					// ПРАВКА: Умная проверка квеста ПОСЛЕ плавки
+                    // Проверяем только если на старте квест НЕ был выполнен и в процессе еще не подтвердили выполнение
+                    if (!questAlreadyDoneAtStart && !remeltQuestStatus.done) {
+                        await checkRemeltQuest();
+                        if (remeltQuestStatus.done) {
+                            sccLog("Задание выполнено в процессе плавки!", 'success', true);
+                            if (autostopEn) { shouldStopProcessing = true; } 
+                            else { sccLog("Продолжаю плавку без дальнейших проверок квеста.", 'info', true); }
+                        }
+                    }
+
+                    if (meltsLeft > 0 && !shouldStopProcessing) await sleep(delay);
+                } else { sccLog(data.error || 'Ошибка плавки', 'error', true); break; }
+            }
+        } finally {
+            isProcessCardsRunning = false;
+            startBtn.innerHTML = '🔥 НАЧАТЬ ПЛАВИТЬ';
+            // ПРАВКА: Возвращаем исходный градиент через !important
+            startBtn.style.setProperty('background', 'linear-gradient(145deg, #43b581, #2e7d32)', 'important');
+            stopUI.remove();
+        }
+    }
+	
+    /**
+     * Сканнер с обновлением информационного блока под кнопкой
+     */
+    async function checkRemeltQuest() {
+        const username = asbm_getUsername();
+        if (!username) return;
+        const btn = document.getElementById('ascm-remelt-quest-refresh');
+        const statusEl = document.getElementById('ascm-remelt-quest-status');
+        const timeEl = document.getElementById('ascm-remelt-quest-time');
+        
+        if (btn) btn.style.backgroundColor = '#5865f2'; 
+
+        try {
+            const url = `${window.location.origin}/user/${encodeURIComponent(username)}/`;
+            const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+            const quests = doc.querySelectorAll('.shop__get-coins li');
+            let found = false;
+
+            for (let li of quests) {
+                if (li.textContent.includes('Выполнить 10 ковок')) {
+                    const isDone = li.classList.contains('reward-activated');
+                    remeltQuestStatus = { done: isDone, timestamp: Date.now() };
+                    found = true; break;
+                }
+            }
+
+            if (btn) {
+                btn.className = 'ascm-remelt-btn-big quest-btn-special ' + (remeltQuestStatus.done ? 'done' : 'ready');
+                btn.style.backgroundColor = '';
+            }
+            if (statusEl) statusEl.textContent = remeltQuestStatus.done ? "ВЫПОЛНЕН" : "НЕ ВЫПОЛНЕН";
+            if (timeEl) timeEl.textContent = "только что";
+
+            sccLog(`Задание "10 ковок": ${remeltQuestStatus.done ? 'ВЫПОЛНЕНО' : 'НЕТ'}`, remeltQuestStatus.done ? 'success' : 'warning', true);
+        } catch (e) { console.error(e); }
+    }
+	
+	/**
+     * Глобальные функции синхронизации времени и счетчиков кеша
+     */
+    async function updateRemeltCacheTimers() {
+        const rank = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
+        if (!rank) return;
+
+        const setInfo = (id, cached, label) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (cached) {
+                const color = REMELT_RANK_COLORS[rank] || '#fff';
+                el.innerHTML = `<b style="color:${color}">${rank.toUpperCase()}</b>: ${cached.count} карт<br>${getRelativeTimeString(cached.timestamp)}`;
+            } else el.innerHTML = label;
+        };
+
+        setInfo('ascm-info-main', await GM_getValue(REMELT_CACHE_PREFIX + rank), "Нажмите");
+        setInfo('ascm-info-mywish', await GM_getValue(REMELT_MY_WISH_PREFIX + rank), "Не просканировано");
+        
+        const twinName = await GM_getValue(WISHLIST_TARGET_USER_KEY, "");
+        const otherBtnTitle = document.getElementById('ascm-title-otherwish');
+        if (otherBtnTitle) otherBtnTitle.innerHTML = twinName ? `ЛИСТ "ХОЧУ" ${twinName.toUpperCase()} <i class="fal fa-leaf"></i>` : `ЛИСТ "ХОЧУ" ТВИНА <i class="fal fa-leaf"></i>`;
+        
+        // Скрываем данные кеша твина, если его имя удалено из настроек
+        const twinCache = twinName ? await GM_getValue(REMELT_TWIN_WISH_PREFIX + rank) : null;
+        setInfo('ascm-info-otherwish', twinCache, twinName ? `Цель: <b>${twinName}</b>` : "Не задан");
+
+        // ОБНОВЛЕНИЕ ВРЕМЕНИ КВЕСТА
+        const timeQuest = document.getElementById('ascm-remelt-quest-time');
+        if (timeQuest && remeltQuestStatus.timestamp) {
+            timeQuest.textContent = getRelativeTimeString(remeltQuestStatus.timestamp);
+        }
+    }
+	unsafeWindow.updateRemeltCacheTimers = updateRemeltCacheTimers;
+	
+    /**
+     * Безопасный расчет плавок (с фиксом TypeError)
+     */
+    async function updateRemeltCalculationInternal(targetMap) {
+        const statsEl = document.getElementById('ascm-remelt-calc-result');
+        if (!statsEl) return;
+        
+        if (!targetMap || targetMap.size === 0) {
+            statsEl.innerHTML = `<span style="color: #888;">Для расчета выполните "Анализ кеша"</span>`;
+            return;
+        }
+
+        // КРИТИЧЕСКИЙ ФИКС: Если база выгружена — подгружаем её немедленно
+        if (!cardImageIndex || !isDatabaseReady) {
+            await ensureDbLoaded();
+        }
+
+        const keep = parseInt(document.getElementById('ascm-remelt-keep').value) || 0;
+        const getMin = (id) => { const v = document.getElementById(id).value; return (v === "") ? 0 : parseInt(v); };
+		const getMax = (id) => { const v = document.getElementById(id).value; return (v === "") ? 999999 : parseInt(v); };
+
+        const f = {
+            want: { en: document.getElementById('ascm-remelt-want-en').classList.contains('active'), min: getMin('ascm-remelt-want-min'), max: getMax('ascm-remelt-want-max') },
+            trade: { en: document.getElementById('ascm-remelt-trade-en').classList.contains('active'), min: getMin('ascm-remelt-trade-min'), max: getMax('ascm-remelt-trade-max') },
+            own: { en: document.getElementById('ascm-remelt-owners-en').classList.contains('active'), min: getMin('ascm-remelt-owners-min'), max: getMax('ascm-remelt-owners-max') },
+            my_wish: document.getElementById('ascm-remelt-my-wish-en').classList.contains('active'),
+            twin_wish: document.getElementById('ascm-remelt-other-wish-en').classList.contains('active')
+        };
+
+        let totalMeltable = 0;
+		
+		// ПРАВКА: Обновляем списки исключений для текущего ранга перед расчётом
+        const curRankForExcl = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
+        if (curRankForExcl) {
+            const myData = await GM_getValue(REMELT_MY_WISH_PREFIX + curRankForExcl);
+            const twinData = await GM_getValue(REMELT_TWIN_WISH_PREFIX + curRankForExcl);
+            myWishlistSet = new Set(myData?.ids?.map(String) || []);
+            twinWishlistSet = new Set(twinData?.ids?.map(String) || []);
+        }
+		
+        targetMap.forEach((data, url) => {
+            if (!data || !data.ids) return;
+
+            // 1. ПОЛУЧЕНИЕ TYPE ID ДЛЯ ПРОВЕРКИ ХОЧУ
+            const compositeKey = normalizeImagePath(url);
+            const typeId = cardImageIndex ? cardImageIndex.get(compositeKey) : null;
+            
+            if (typeId) {
+                const typeIdStr = typeId.toString();
+                if (f.my_wish && myWishlistSet.has(typeIdStr)) return;
+                if (f.twin_wish && twinWishlistSet.has(typeIdStr)) return;
+            }
+
+            // 2. ПРОВЕРКА ДУБЛЕЙ
+            if (data.ids.length <= keep) return;
+            
+            // 3. ПРОВЕРКА СПРОСА
+            // Используем данные, собранные при сканировании (теперь они там будут)
+            const d = data.demand || { needCount: 0, tradeCount: 0, popularityCount: 0 };
+            
+            // ПРАВКА: Гарантируем, что фильтры работают с числами
+            const needNum = parseInt(d.needCount) || 0;
+            const tradeNum = parseInt(d.tradeCount) || 0;
+            const popNum = parseInt(d.popularityCount) || 0;
+
+            const passWant = !f.want.en || (needNum >= f.want.min && needNum <= f.want.max);
+            const passTrade = !f.trade.en || (tradeNum >= f.trade.min && tradeNum <= f.trade.max);
+            const passOwn = !f.own.en || (popNum >= f.own.min && popNum <= f.own.max);
+
+            if (passWant && passTrade && passOwn) {
+                // ПРАВКА: Прибавляем количество лишних карт (все что сверх "Дублей") к общему счетчику
+                totalMeltable += (data.ids.length - keep);
+            }
+        });
+
+        const possible = Math.floor(totalMeltable / 3);
+        statsEl.innerHTML = `Готово к плавке: &nbsp; <b style="color:#00ff00; font-size:16px;">${possible} шт.</b> &nbsp; <span style="color:#aaa; font-size:11px;">(из ${totalMeltable} доступных карт)</span>`;
+    }
+	
+    // Глобальная обертка для расчета
+    function updateRemeltCalculation() { updateRemeltCalculationInternal(remeltInventoryMap); }
+
+	// Сохранение настроек фильтров для текущего ранга
+    async function saveRemeltRankSettings() {
+        const rank = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
+        if (!rank) return;
+        const settings = {
+            keep: document.getElementById('ascm-remelt-keep').value,
+            melts: document.getElementById('ascm-remelt-limit').value,
+            pause: document.getElementById('ascm-remelt-delay').value,
+            autoStop: document.getElementById('ascm-remelt-stop-quest').classList.contains('active'),
+            modal: document.getElementById('ascm-remelt-show-modal').classList.contains('active'),
+            my_wish_en: document.getElementById('ascm-remelt-my-wish-en').classList.contains('active'),
+            other_wish_en: document.getElementById('ascm-remelt-other-wish-en').classList.contains('active'),
+            want_en: document.getElementById('ascm-remelt-want-en').classList.contains('active'),
+            want_min: document.getElementById('ascm-remelt-want-min').value,
+            want_max: document.getElementById('ascm-remelt-want-max').value,
+            trade_en: document.getElementById('ascm-remelt-trade-en').classList.contains('active'),
+            trade_min: document.getElementById('ascm-remelt-trade-min').value,
+            trade_max: document.getElementById('ascm-remelt-trade-max').value,
+            own_en: document.getElementById('ascm-remelt-owners-en').classList.contains('active'),
+            own_min: document.getElementById('ascm-remelt-owners-min').value,
+            own_max: document.getElementById('ascm-remelt-owners-max').value
+        };
+        await GM_setValue(`ascm_remelt_rank_cfg_${rank}`, settings);
+    }
+
+	/**
+     * Превращает разницу во времени в строку "X д. Y ч. Z мин. назад"
+     */
+    function getRelativeTimeString(timestamp) {
+        if (!timestamp) return "никогда";
+        const diff = Date.now() - timestamp;
+        const mins = Math.floor(diff / 60000);
+        if (mins < 1) return "только что";
+        if (mins < 60) return `${mins} мин. назад`;
+        const hours = Math.floor(mins / 60);
+        if (hours < 24) return `${hours} ч. ${mins % 60} мин. назад`;
+        const days = Math.floor(hours / 24);
+        return `${days} д. ${hours % 24} ч. назад`;
+    }
+
+    /**
+     * Загрузка настроек ранга с учетом умных дефолтов
+     */
+    async function loadRemeltRankSettings(rank) {
+        // Берем настройки именно для этого ранга из констант
+        const def = REMELT_CONFIG_DEFAULTS[rank] || REMELT_CONFIG_DEFAULTS['b'];
+        const cfg = await GM_getValue(`ascm_remelt_rank_cfg_${rank}`, {});
+        const speeds = await GM_getValue('ascm_remelt_global_speeds', REMELT_CONFIG_DEFAULTS.global_speeds);
+
+        const setV = (id, key) => { 
+            const el = document.getElementById(id); 
+            if(el) el.value = (cfg[key] !== undefined) ? cfg[key] : def[key]; 
+        };
+        const setC = (id, key) => { 
+            const el = document.getElementById(id); 
+            if(el) el.classList.toggle('active', (cfg[key] !== undefined) ? cfg[key] : def[key]); 
+        };
+
+        setV('ascm-remelt-keep', 'keep'); setV('ascm-remelt-limit', 'melts'); setV('ascm-remelt-delay', 'pause');
+        setC('ascm-remelt-stop-quest', 'autoStop'); setC('ascm-remelt-show-modal', 'modal');
+        setC('ascm-remelt-my-wish-en', 'my_wish_en'); setC('ascm-remelt-other-wish-en', 'other_wish_en');
+        
+        setV('ascm-remelt-want-min', 'want_min'); setV('ascm-remelt-want-max', 'want_max'); setC('ascm-remelt-want-en', 'want_en');
+        setV('ascm-remelt-trade-min', 'trade_min'); setV('ascm-remelt-trade-max', 'trade_max'); setC('ascm-remelt-trade-en', 'trade_en');
+        setV('ascm-remelt-owners-min', 'own_min'); setV('ascm-remelt-owners-max', 'own_max'); setC('ascm-remelt-owners-en', 'own_en');
+        
+        // Глобальные скорости
+        const s = (id, sid, val) => { 
+            const slider = document.getElementById(id);
+            const valDisp = document.getElementById(sid);
+            if (slider) slider.value = val; 
+            if (valDisp) valDisp.textContent = val + ' мс'; 
+        };
+        s('ascm-remelt-scan-spd', 'ascm-val-scan-spd', speeds.scan);
+        s('ascm-remelt-my-spd', 'ascm-val-my-spd', speeds.my);
+        s('ascm-remelt-other-spd', 'ascm-val-other-spd', speeds.other);
+		
+		// Логика ограничения для ранга А (макс 5 плавок)
+        const limitInp = document.getElementById('ascm-remelt-limit');
+        if (rank === 'a' && limitInp) {
+            limitInp.classList.add('rank-a-limit');
+            limitInp.setAttribute('max', '5');
+            // Если значение больше 5 или пустое — сбрасываем на 5
+            if (parseInt(limitInp.value) > 5 || limitInp.value === "") limitInp.value = 5;
+        } else if (limitInp) {
+            limitInp.classList.remove('rank-a-limit');
+            limitInp.removeAttribute('max');
+        }
+    }
+	
+	/**
+     * Сканер списка желаний: теперь сохраняет Type ID для точной фильтрации
+     */
+    async function scanWishlistForRemelt(isTwin = false) {
+        const activeRank = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
+        if (!activeRank) return safeDLEPushCall('error', 'Сначала выберите ранг (A-E)');
+
+        let username = isTwin ? await GM_getValue(WISHLIST_TARGET_USER_KEY, "") : asbm_getUsername();
+        if (isTwin && !username) {
+            safeDLEPushCall('warning', 'Имя твина не задано. Открываю настройки...');
+            return openWishlistSettingsModal();
+        }
+
+        if (isRemeltScanning) { remeltScanStopFlag = true; return; }
+        isRemeltScanning = true; remeltScanStopFlag = false;
+
+        const btnId = isTwin ? 'ascm-remelt-otherwish-btn' : 'ascm-remelt-mywish-btn';
+        const infoId = isTwin ? 'ascm-info-otherwish' : 'ascm-info-mywish';
+        const spdId = isTwin ? 'ascm-remelt-other-spd' : 'ascm-remelt-my-spd'; // Берем скорость из слайдера
+        
+        const btn = document.getElementById(btnId);
+        const infoBlock = document.getElementById(infoId);
+        const delay = parseInt(document.getElementById(spdId).value) || 1000;
+        
+        btn.style.background = '#5865f2';
+
+        let currentPage = 1, totalPages = 1, foundTypeIds = new Set();
+
+        try {
+            await ensureDbLoaded();
+            while (!remeltScanStopFlag) {
+                const url = `/user/cards/need/?name=${encodeURIComponent(username)}&rank=${activeRank}&page=${currentPage}`;
+                if (infoBlock) infoBlock.innerHTML = `Скан стр. ${currentPage}...<br>~${Math.round((totalPages - currentPage + 1) * (delay/1000))} сек.`;
+
+                const response = await fetch(url);
+                const htmlText = await response.text();
+                const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+                
+                if (currentPage === 1) {
+                    const pagin = doc.querySelector('.pagination__pages');
+                    if (pagin) {
+                        const pages = Array.from(pagin.querySelectorAll('a, span')).map(el => parseInt(el.textContent.trim())).filter(n => !isNaN(n));
+                        totalPages = pages.length > 0 ? Math.max(...pages) : 1;
+                    }
+                }
+
+                const cards = doc.querySelectorAll('.anime-cards__item');
+                for (let cardEl of cards) {
+                    const typeId = await getCardId(cardEl, 'type', true);
+                    if (typeId) foundTypeIds.add(typeId.toString());
+                }
+
+                if (currentPage >= totalPages) break;
+                currentPage++;
+                await sleep(delay); 
+            }
+
+            if (!remeltScanStopFlag) {
+                const mskTime = getMoscowTime(true);
+                const storageKey = (isTwin ? REMELT_TWIN_WISH_PREFIX : REMELT_MY_WISH_PREFIX) + activeRank;
+                await GM_setValue(storageKey, { ids: Array.from(foundTypeIds), timestamp: Date.now(), timeFormatted: mskTime, count: foundTypeIds.size, user: username });
+                updateRemeltCacheTimers();
+                sccLog(`Лист ХОЧУ (${username}) обновлен!`, 'success', true);
+            }
+        } finally {
+            isRemeltScanning = false; btn.style.background = '';
+            updateRemeltCalculation();
+        }
+    }
+	
+	/**
+     * Сканнер инвентаря для переплавки: использует задержку из слайдера и обновляет инфо-блоки
+     */
+    async function scanRemeltInventoryForRank(rank) {
+        if (isRemeltScanning) { remeltScanStopFlag = true; return; }
+        isRemeltScanning = true; remeltScanStopFlag = false;
+        
+        const btn = document.getElementById('ascm-remelt-scan-btn');
+        const infoMain = document.getElementById('ascm-info-main');
+        const delay = parseInt(document.getElementById('ascm-remelt-scan-spd').value) || 500;
+        
+        btn.style.background = '#5865f2';
+        
+        let currentPage = 1, totalPages = 0, tempMap = new Map(), totalFound = 0;
+
+        try {
+            await ensureDbLoaded();
+            while (!remeltScanStopFlag) {
+                await ensureDbLoaded(); // Поддержание базы в ОЗУ
+                const response = await fetch("/engine/ajax/controller.php?mod=cards_filter", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'X-Requested-With': 'XMLHttpRequest' },
+                    body: new URLSearchParams({ action: 'search_remelt', rank: rank, search: '', locked: '0', sort: 'date', page: currentPage, user_hash: unsafeWindow.dle_login_hash }).toString()
+                });
+                const data = await response.json();
+                if (!data.html) break;
+                if (currentPage === 1) {
+                    totalPages = data.count_pages || 1;
+                    console.log(`[Remelt Scan] Старт анализа ${rank.toUpperCase()}: ${totalPages} стр.`);
+                }
+
+                if (infoMain) infoMain.innerHTML = `Скан: <b>${currentPage}</b> / <b>${totalPages}</b><br>~${Math.round((totalPages - currentPage) * (delay/1000))} сек.`;
+
+                const doc = new DOMParser().parseFromString(`<div>${data.html}</div>`, 'text/html');
+                const remeltItems = doc.querySelectorAll('.remelt__inventory-item');
+                
+                // ПРАВКА: Используем цикл for...of вместо forEach, чтобы await работал корректно
+                for (const el of remeltItems) {
+                    const id = el.dataset.id, img = el.querySelector('img')?.getAttribute('src');
+                    if (id && img) {
+                        if (!tempMap.has(img)) {
+                            const typeId = cardImageIndex.get(normalizeImagePath(img));
+                            let cachedDemand = null;
+                            if (typeId) {
+                                cachedDemand = await getCache('cardId: ' + typeId);
+                            }
+                            tempMap.set(img, { ids: [], demand: cachedDemand || {needCount:0,tradeCount:0,popularityCount:0} });
+                        }
+                        tempMap.get(img).ids.push(id); totalFound++;
+                    }
+                }
+
+                remeltInventoryMap = tempMap;
+                updateRemeltCalculation();
+                if (!data.next_page || currentPage >= totalPages) break;
+                currentPage++; await sleep(delay);
+            }
+            const mskFull = getMoscowTime(true);
+            remeltInventoryMap = tempMap;
+            await GM_setValue(REMELT_CACHE_PREFIX + rank, { map: Array.from(tempMap.entries()), timeFormatted: mskFull, timestamp: Date.now(), count: totalFound });
+            
+            updateRemeltCacheTimers();
+            sccLog(`Анализ ${rank.toUpperCase()} готов! Найдено: ${totalFound} карт.`, 'success', true);
+        } finally {
+            isRemeltScanning = false; btn.style.background = '';
+        }
+    }
+
+	// МОДУЛЬ: Инициализация Dashboard переплавки V2.1
+    async function initRemeltAdvancedDashboard() {
+        if (!isRemeltPage()) return;
+        
+        // Загружаем настройки ДО отрисовки
+        const isVisible = await GM_getValue(REMELT_DASHBOARD_VISIBLE_KEY, true);
+        const isQuestCheckEnabled = await GM_getValue(REMELT_AUTO_QUEST_CHECK_KEY, true);
+        const anchor = document.querySelector('.justify-center1');
+        if (!anchor || document.getElementById('ascm-remelt-dashboard')) return;
+
+        const dashboard = document.createElement('div');
+        dashboard.id = 'ascm-remelt-dashboard';
+        dashboard.className = 'ascm-remelt-dashboard';
+		dashboard.style.display = isVisible ? 'flex' : 'none';
+        
+        dashboard.innerHTML = `
+            <!-- ВЕРХНИЙ РЯД -->
+            <div class="ascm-remelt-row">
+                <div id="ascm-remelt-scan-btn" class="ascm-remelt-btn-big" title="Анализ страниц инвентаря текущего ранга">
+                    <span class="title" style="color:#5865f2;">Анализ Кеша</span>
+                    <span id="ascm-info-main" class="subtitle">Нажмите</span>
+                    <div class="ascm-btn-slider-container">
+                        <input type="range" id="ascm-remelt-scan-spd" min="100" max="3000" step="100">
+                        <span class="ascm-btn-slider-val" id="ascm-val-scan-spd">--- мс</span>
+                    </div>
+                </div>
+                <div id="ascm-remelt-mywish-btn" class="ascm-remelt-btn-big" title="Анализ вашего списка 'ХОЧУ'">
+                    <span class="title" style="color:#019145;">Мой лист "ХОЧУ" <i class="fal fa-leaf"></i></span>
+                    <span id="ascm-info-mywish" class="subtitle">---</span>
+                    <div class="ascm-btn-slider-container">
+                        <input type="range" id="ascm-remelt-my-spd" min="100" max="3000" step="100">
+                        <span class="ascm-btn-slider-val" id="ascm-val-my-spd">--- мс</span>
+                    </div>
+                </div>
+                <div id="ascm-remelt-otherwish-btn" class="ascm-remelt-btn-big" title="Анализ списка 'ХОЧУ' твина">
+                    <span class="title" style="color:#772ce8;" id="ascm-title-otherwish">Лист "ХОЧУ" ТВИНА <i class="fal fa-leaf"></i></span>
+                    <span id="ascm-info-otherwish" class="subtitle">---</span>
+                    <div class="ascm-btn-slider-container">
+                        <input type="range" id="ascm-remelt-other-spd" min="100" max="3000" step="100">
+                        <span class="ascm-btn-slider-val" id="ascm-val-other-spd">--- мс</span>
+                    </div>
+                </div>
+                <div id="ascm-remelt-quest-refresh" class="ascm-remelt-btn-big quest-btn-special ready" title="Нажмите для обновления статуса задания">
+                    <span class="title">ДНЕВНОЙ КВЕСТ: ВЫПОЛНИТЬ 10 КОВОК</span>
+                    <div id="ascm-remelt-quest-status" class="title" style="font-size:15px !important; margin: 2px 0;">?</div>
+                    <span id="ascm-remelt-quest-time" class="subtitle">--:--:-- назад</span>
+                </div>
+            </div>
+
+            <!-- СРЕДНИЙ РЯД -->
+            <div class="ascm-remelt-row" style="align-items: stretch; gap: 6px;">
+                <div class="ascm-remelt-group" title="Сколько оставить карт этого типа в инвентаре">
+                    <label>Дубли</label>
+                    <input type="number" id="ascm-remelt-keep" class="ascm-remelt-field" min="0" style="height: 26px; width: 50px !important;">
+                </div>
+
+                <div class="ascm-remelt-group" title="Число плавок (1 плавка = 3 карты)">
+                    <label>Плавки</label>
+                    <div style="display: flex; gap: 3px; align-items: center;">
+                        <button id="ascm-remelt-min-btn" class="ascm-remelt-small-btn">1</button>
+                        <input type="number" id="ascm-remelt-limit" class="ascm-remelt-field" min="1" style="height: 26px; width: 45px !important;">
+                        <button id="ascm-remelt-max-btn" class="ascm-remelt-small-btn">MAX</button>
+                    </div>
+                </div>
+
+                <div class="ascm-remelt-group" title="Автоматически остановить плавку, если квест выполнен">
+                    <label>Автостоп</label>
+                    <div id="ascm-remelt-stop-quest" class="ascm-remelt-custom-checkbox"></div>
+                </div>
+
+                <div class="ascm-remelt-group" title="Показывать окно с полученной картой после каждой плавки">
+                    <label>Модалка</label>
+                    <div id="ascm-remelt-show-modal" class="ascm-remelt-custom-checkbox"></div>
+                </div>
+
+                <div class="ascm-remelt-group" title="Задержка между плавками (секунды)">
+                    <label>Пауза</label>
+                    <input type="number" id="ascm-remelt-delay" class="ascm-remelt-field" min="1" style="height: 26px; width: 40px !important;">
+                </div>
+                
+				<div class="ascm-remelt-exceptions-box" style="min-height: 58px; justify-content: center;">
+                    <label style="font-size: 10px; margin-bottom: 4px;">Исключения <i class="fal fa-leaf" style="color: #43b581; margin-left: 2px;"></i></label>
+                    <div style="display:flex; gap:16px;">
+                        <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+                            <span style="font-size:9px; color:#aaa; font-weight:bold; text-transform:uppercase;">мой</span>
+                            <div id="ascm-remelt-my-wish-en" class="ascm-remelt-custom-checkbox" style="width:24px; height:12px;"></div>
+                        </div>
+                        <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+                            <span style="font-size:9px; color:#aaa; font-weight:bold; text-transform:uppercase;">твин</span>
+                            <div id="ascm-remelt-other-wish-en" class="ascm-remelt-custom-checkbox" style="width:24px; height:12px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ascm-remelt-row-boxed">
+                    <div class="ascm-remelt-group" style="background:none; border:none; padding:0; min-height: auto;">
+                        <div class="ascm-remelt-label-row"><label>ХОТЯТ</label><div id="ascm-remelt-want-en" class="ascm-remelt-custom-checkbox"></div></div>
+                        <div style="display:flex; gap:2px;"><input type="number" id="ascm-remelt-want-min" class="ascm-remelt-field" placeholder="min" style="height: 24px; width: 45px !important;"><input type="number" id="ascm-remelt-want-max" class="ascm-remelt-field" placeholder="max" style="height: 24px; width: 45px !important;"></div>
+                    </div>
+                    <div class="ascm-remelt-group" style="background:none; border:none; padding:0; min-height: auto;">
+                        <div class="ascm-remelt-label-row"><label>ОБМЕН</label><div id="ascm-remelt-trade-en" class="ascm-remelt-custom-checkbox"></div></div>
+                        <div style="display:flex; gap:2px;"><input type="number" id="ascm-remelt-trade-min" class="ascm-remelt-field" placeholder="min" style="height: 24px; width: 45px !important;"><input type="number" id="ascm-remelt-trade-max" class="ascm-remelt-field" placeholder="max" style="height: 24px; width: 45px !important;"></div>
+                    </div>
+                    <div class="ascm-remelt-group" style="background:none; border:none; padding:0; min-height: auto;">
+                        <div class="ascm-remelt-label-row"><label>ВЛАДЕЛЬЦЕВ</label><div id="ascm-remelt-owners-en" class="ascm-remelt-custom-checkbox"></div></div>
+                        <div style="display:flex; gap:2px;"><input type="number" id="ascm-remelt-owners-min" class="ascm-remelt-field" placeholder="min" style="height: 24px; width: 45px !important;"><input type="number" id="ascm-remelt-owners-max" class="ascm-remelt-field" placeholder="max" style="height: 24px; width: 45px !important;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ascm-remelt-row">
+                <div id="ascm-remelt-calc-result" class="ascm-remelt-calc-box">Загрузка данных...</div>
+                <button id="ascm-remelt-start-btn" class="ascm-remelt-btn-start">🔥 НАЧАТЬ ПЛАВИТЬ</button>
+                <button id="ascm-remelt-reset-btn" class="ascm-remelt-btn-reset" title="Сбросить ВСЁ к дефолтным настройкам (включая скорости)"><i class="fas fa-trash-alt"></i></button>
+            </div>
+            <div style="font-size:14px; color:#faa61a; font-weight:bold; margin-top:5px;">⚠️ Первыми плавятся карты с самым низким спросом (Хотят). Скорость «ХОЧУ» менее 1000 мс опасна баном IP!</div>
+        `;
+		
+		// ФУНКЦИЯ СИНХРОНИЗАЦИИ ВИДИМОСТИ
+        unsafeWindow.syncRemeltVisibility = (isVisible) => {
+            const dash = document.getElementById('ascm-remelt-dashboard');
+            const flameBtn = document.getElementById('ascm-remelt-toggle-flame');
+            if (dash) dash.style.display = isVisible ? 'flex' : 'none';
+            if (flameBtn) {
+                flameBtn.innerHTML = isVisible ? '<i class="fas fa-fire"></i>' : '<i class="fal fa-fire-alt"></i>';
+                flameBtn.style.color = isVisible ? '#ff5722' : '#888';
+                flameBtn.style.borderColor = isVisible ? '#ff5722' : '#444';
+                flameBtn.style.boxShadow = isVisible ? '0 0 10px rgba(255, 87, 34, 0.4)' : 'none';
+            }
+        };
+
+        // СОЗДАНИЕ КНОПКИ-ОГОНЬКА
+        const rankList = document.querySelector('.remelt__rank-list');
+        if (rankList && !document.getElementById('ascm-remelt-toggle-flame')) {
+            const flameBtn = document.createElement('button');
+            flameBtn.id = 'ascm-remelt-toggle-flame';
+            flameBtn.className = 'remelt__rank-item'; // используем класс сайта для стиля
+            flameBtn.style.cssText = 'margin-left: 10px; transition: all 0.3s ease; width: 40px;';
+            flameBtn.title = 'Показать/Скрыть продвинутую панель';
+            
+            flameBtn.onclick = async () => {
+                const current = await GM_getValue(REMELT_DASHBOARD_VISIBLE_KEY, true);
+                const next = !current;
+                await GM_setValue(REMELT_DASHBOARD_VISIBLE_KEY, next);
+                unsafeWindow.syncRemeltVisibility(next);
+            };
+            rankList.appendChild(flameBtn);
+        }
+
+        // ПРИМЕНЕНИЕ ТЕКУЩЕГО СОСТОЯНИЯ ПРИ ЗАГРУЗКЕ
+        const savedVisible = await GM_getValue(REMELT_DASHBOARD_VISIBLE_KEY, true);
+        setTimeout(() => unsafeWindow.syncRemeltVisibility(savedVisible), 100);
+
+        anchor.parentNode.insertBefore(dashboard, anchor);
+
+        // --- ЛОГИКА СЛАЙДЕРОВ СКОРОСТИ ---
+        const setupSlider = (id, valId, key) => {
+            const slider = document.getElementById(id);
+            const display = document.getElementById(valId);
+            if (!slider || !display) return;
+            slider.oninput = () => {
+                display.innerHTML = `<b style="font-size:13px;">${slider.value} мс</b>`;
+            };
+            slider.onchange = async () => {
+                const speeds = await GM_getValue('ascm_remelt_global_speeds', REMELT_CONFIG_DEFAULTS.global_speeds);
+                speeds[key] = parseInt(slider.value);
+                await GM_setValue('ascm_remelt_global_speeds', speeds);
+                sccLog(`Скорость "${key}" сохранена: ${slider.value} мс`, 'info', true);
+            };
+            slider.onclick = (e) => e.stopPropagation();
+        };
+        setupSlider('ascm-remelt-scan-spd', 'ascm-val-scan-spd', 'scan');
+        setupSlider('ascm-remelt-my-spd', 'ascm-val-my-spd', 'my');
+        setupSlider('ascm-remelt-other-spd', 'ascm-val-other-spd', 'other');
+
+        // Слушатели инпутов (с запретом отрицательных чисел и уведомлениями)
+        dashboard.querySelectorAll('.ascm-remelt-field').forEach(el => {
+            el.oninput = () => {
+                // ПРАВКА: Если это поле спроса и значение стало 0 или меньше — очищаем его.
+                // Поле "Дубли" (ascm-remelt-keep) игнорируем, там 0 — валидное число.
+                if (el.id !== 'ascm-remelt-keep' && el.value !== "" && parseInt(el.value) <= 0) {
+                    el.value = "";
+                } else if (el.value !== "" && parseInt(el.value) < 0) {
+                    // Для поля "Дубли" просто не даем уйти в минус
+                    el.value = 0;
+                }
+                updateRemeltCalculation();
+            };
+            el.onchange = () => {
+                const group = el.closest('.ascm-remelt-group');
+                const label = group ? group.querySelector('label')?.textContent : "Настройка";
+                const val = el.value === "" ? "0" : el.value;
+                
+                // Лог в консоль + Пуш
+                sccLog(`Изменено: ${label} -> ${val}`, 'info', true);
+                
+                saveRemeltRankSettings();
+                updateRemeltCalculation();
+            };
+        });
+
+        // Слушатели чекбоксов
+        dashboard.querySelectorAll('.ascm-remelt-custom-checkbox').forEach(el => {
+            el.onclick = () => {
+                el.classList.toggle('active');
+                const group = el.closest('.ascm-remelt-group') || el.closest('.ascm-remelt-exceptions-box');
+                const label = group?.querySelector('label')?.textContent || group?.querySelector('.main-label')?.textContent || "Опция";
+                sccLog(`${label}: ${el.classList.contains('active') ? 'ВКЛ' : 'ВЫКЛ'}`, 'info', true);
+                saveRemeltRankSettings();
+                updateRemeltCalculation();
+            };
+        });
+
+        // Кнопки
+        dashboard.querySelector('#ascm-remelt-quest-refresh').onclick = checkRemeltQuest;
+        dashboard.querySelector('#ascm-remelt-start-btn').onclick = startRemeltLoop;
+        dashboard.querySelector('#ascm-remelt-scan-btn').onclick = () => {
+            const r = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
+            if (r) scanRemeltInventoryForRank(r);
+        };
+        dashboard.querySelector('#ascm-remelt-mywish-btn').onclick = () => scanWishlistForRemelt(false);
+        dashboard.querySelector('#ascm-remelt-otherwish-btn').onclick = () => scanWishlistForRemelt(true);
+        
+        dashboard.querySelector('#ascm-remelt-min-btn').onclick = () => { document.getElementById('ascm-remelt-limit').value = 1; updateRemeltCalculation(); saveRemeltRankSettings(); };
+        dashboard.querySelector('#ascm-remelt-max-btn').onclick = () => {
+            const possibleText = document.getElementById('ascm-remelt-calc-result').querySelector('b')?.textContent;
+            const rank = document.querySelector('.remelt__rank-item--active')?.dataset.rank;
+            if (possibleText) {
+                let val = parseInt(possibleText);
+                if (rank === 'a' && val > 5) val = 5;
+                document.getElementById('ascm-remelt-limit').value = val;
+            }
+            updateRemeltCalculation(); saveRemeltRankSettings();
+        };
+
+        // КНОПКА ПОЛНОГО СБРОСА
+        dashboard.querySelector('#ascm-remelt-reset-btn').onclick = async () => {
+            const rank = document.querySelector('.remelt__rank-item--active')?.dataset.rank || 'e';
+            const def = REMELT_CONFIG_DEFAULTS[rank];
+            
+            // 1. Сброс полей текущего ранга
+            document.getElementById('ascm-remelt-keep').value = def.keep;
+            document.getElementById('ascm-remelt-limit').value = def.melts;
+            document.getElementById('ascm-remelt-delay').value = def.pause;
+			
+			// ПРАВКА: Сброс 4-х состояний из констант (автостоп, модалка, исключения)
+            document.getElementById('ascm-remelt-stop-quest').classList.toggle('active', !!def.autoStop);
+            document.getElementById('ascm-remelt-show-modal').classList.toggle('active', !!def.modal);
+            document.getElementById('ascm-remelt-my-wish-en').classList.toggle('active', !!def.my_wish_en);
+            document.getElementById('ascm-remelt-other-wish-en').classList.toggle('active', !!def.other_wish_en);
+            
+            const keys = ['want', 'trade', 'own'];
+            keys.forEach(k => {
+                const prefix = (k === 'own') ? 'owners' : k;
+                document.getElementById(`ascm-remelt-${prefix}-min`).value = (def[k+'_min'] === 0) ? '' : def[k+'_min'];
+                document.getElementById(`ascm-remelt-${prefix}-max`).value = (def[k+'_max'] === 0) ? '' : def[k+'_max'];
+                document.getElementById(`ascm-remelt-${prefix}-en`).classList.toggle('active', !!def[k+'_en']);
+            });
+
+            // 2. Сброс глобальных скоростей
+            await GM_setValue('ascm_remelt_global_speeds', REMELT_CONFIG_DEFAULTS.global_speeds);
+
+            // Принудительное обновление текста скоростей в кнопках (крупный шрифт)
+            const gs = REMELT_CONFIG_DEFAULTS.global_speeds;
+            document.getElementById('ascm-remelt-scan-spd').value = gs.scan;
+            document.getElementById('ascm-val-scan-spd').innerHTML = `<b style="font-size:13px;">${gs.scan} мс</b>`;
+            document.getElementById('ascm-remelt-my-spd').value = gs.my;
+            document.getElementById('ascm-val-my-spd').innerHTML = `<b style="font-size:13px;">${gs.my} мс</b>`;
+            document.getElementById('ascm-remelt-other-spd').value = gs.other;
+            document.getElementById('ascm-val-other-spd').innerHTML = `<b style="font-size:13px;">${gs.other} мс</b>`;
+
+            updateRemeltCalculation();
+            await saveRemeltRankSettings();
+            sccLog('Все настройки и скорости сброшены к заводским', 'success', true);
+        };
+
+        const updateUI = async () => {
+            // Очищаем предыдущую причину
+            dashboard.removeAttribute('data-reason');
+
+            const activeRankEl = document.querySelector('.remelt__rank-item--active');
+            const rank = activeRankEl?.dataset.rank || "";
+            
+            const activeLockBtn = document.querySelector('.remelt__lock-item--active');
+            // Режим "разблокированные карты" на сайте имеет data-locked="0"
+            const isUnlockedActive = activeLockBtn?.dataset.locked === "0";
+            
+            let reason = "";
+            // Если датасет ранг пустой или кнопка "ВСЕ" (у которой нет data-rank)
+            const isRankSelected = (rank !== "" && rank !== "all");
+
+            if (!isRankSelected) {
+                reason = "ДЛЯ РАБОТЫ ВЫБЕРИТЕ КОНКРЕТНЫЙ РАНГ (A, B, C, D или E)";
+            } else if (!isUnlockedActive) {
+                reason = "ВКЛЮЧИТЕ РЕЖИМ 'РАЗБЛОКИРОВАННЫЕ КАРТЫ' (ЛЕВАЯ КНОПКА С ОТКРЫТЫМ ЗАМКОМ)";
+            }
+
+            if (reason !== "") {
+                dashboard.classList.add('disabled');
+                dashboard.setAttribute('data-reason', reason);
+                // Очищаем результат расчета, так как плавка невозможна
+                const calcRes = document.getElementById('ascm-remelt-calc-result');
+                if (calcRes) calcRes.innerHTML = `<span style="color: #666;">Плавка недоступна</span>`;
+                return;
+            }
+
+            // Если блокировок нет — активируем и загружаем данные
+            dashboard.classList.remove('disabled');
+            await loadRemeltRankSettings(rank);
+            const cached = await GM_getValue(REMELT_CACHE_PREFIX + rank);
+            if (cached && Array.isArray(cached.map)) remeltInventoryMap = new Map(cached.map);
+            else remeltInventoryMap = new Map();
+            
+            updateRemeltCacheTimers(); 
+            updateRemeltCalculation();
+        }; // Вот теперь функция закрыта корректно
+		
+        /**
+         * Наблюдатель за переключением вкладок рангов и кнопок замков.
+         * Следит СТРОГО за списком кнопок сайта, чтобы избежать бесконечного цикла и зависания.
+         */
+        const remeltFiltersObserver = new MutationObserver(() => {
+            // Вызываем обновление UI только если панель не находится в процессе изменения
+            if (!dashboard.classList.contains('updating')) {
+                updateUI();
+            }
+        });
+
+        const rankListContainer = document.querySelector('.remelt__rank-list');
+        if (rankListContainer) {
+            remeltFiltersObserver.observe(rankListContainer, { 
+                attributes: true, 
+                subtree: true, 
+                attributeFilter: ['class'] 
+            });
+        }
+
+        // Первичный запуск при загрузке
+        updateUI(); 
+        
+        // ПРАВКА: Запрос квеста только если меню включено И опция активна
+        if (isVisible && isQuestCheckEnabled) {
+            checkRemeltQuest();
+        }
+    } // Конец функции initRemeltAdvancedDashboard
+
+	// Функция выполняет поиск кнопки вноса, логирует процесс и планирует перезагрузку при неудаче
+	async function performShahtaHunterSearch(sets, currentTimeInSeconds, startTimeInSeconds, endTimeInSeconds, today) {
+		// ПРАВКА: Сразу ставим флаг поиска, чтобы heartbeat не мешал
+		if (unsafeWindow.ascm_reload_timer_running || unsafeWindow.ascm_is_searching) return;
+		
+		const isInsideBoostTime = currentTimeInSeconds >= startTimeInSeconds && currentTimeInSeconds <= endTimeInSeconds;
+		if (!isInsideBoostTime) return;
+
+		unsafeWindow.ascm_is_searching = true;
+		const btn = document.querySelector('.club__boost-btn') || document.querySelector('.club__boost__refresh-btn');
+		const isAlreadyOn = await GM_getValue('boosterState', false);
+		const lastAction = parseInt(sessionStorage.getItem('ascm_last_hunter_ts') || '0');
+
+		if (btn && btn.offsetParent !== null) {
+			sccLog("Кнопка вноса НАЙДЕНА.", 'success', true);
+			unsafeWindow.ascm_is_searching = false;
+			
+			const limitEl = document.querySelector('.boost-limit');
+			let limitReached = false;
+			if (limitEl && limitEl.parentElement) {
+				const m = limitEl.parentElement.textContent.match(/(\d+)\s*\/\s*(\d+)/);
+				if (m && parseInt(m[1]) >= parseInt(m[2])) limitReached = true;
+			}
+
+			const forcedEndSeconds = startTimeInSeconds + ((sets.retryDuration || 2) * 60);
+			const isInForcedWindow = currentTimeInSeconds <= forcedEndSeconds;
+
+			if (limitReached && !isInForcedWindow) {
+				sccLog("Лимит 600/600 достигнут. Завершение дня.", 'success', true);
+				await GM_setValue('ascm_lastTurboTriggerDate', today);
+				await GM_deleteValue('ascm_shahta_occupied_lock');
+				return;
+			}
+
+			if (!isAlreadyOn) {
+				sccLog("Активирую Турбо-вклад...", 'success', true);
+				sessionStorage.setItem('ascm_last_hunter_ts', Date.now());
+				const turboBtn = document.getElementById('turboBoosterBtn');
+				if (turboBtn) turboBtn.click(); else btn.click();
+			}
+		} else {
+			// КНОПКА НЕ НАЙДЕНА - ЛОГИКА РЕЛОАДА
+			unsafeWindow.ascm_is_searching = false;
+
+			if (Date.now() - lastAction >= (sets.reloadInterval || 10) * 1000) {
+				unsafeWindow.ascm_reload_timer_running = true;
+				let secondsLeft = 10; // Фиксируем 10 секунд на пуш
+
+				// Расчет диапазона Форс-режима для пуша
+				const [sH, sM] = sets.startTime.split(':').map(Number);
+				const endMins = sH * 60 + sM + (sets.retryDuration || 2);
+				const fEndStr = `${String(Math.floor(endMins / 60) % 24).padStart(2, '0')}:${String(endMins % 60).padStart(2, '0')}`;
+				const forceRange = `${sets.startTime} — ${fEndStr}`;
+
+				const updateReloadUI = () => {
+                const counterEl = document.getElementById('ascm-reload-counter-val');
+                
+                // Если элемент уже создан, обновляем только цифру
+                if (counterEl) {
+                    counterEl.textContent = secondsLeft + 'с';
+                    return;
+                }
+
+                // Изящная, центрированная и компактная разметка
+                const html = `
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 5px; width: 100%;">
+                        <div style="font-size: 13px; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-spinner fa-spin" style="color: #ffd700; font-size: 14px;"></i> ПОИСК КНОПКИ...
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 6px; margin: 2px 0;">
+                            <div style="font-size: 11px; color: #fff; opacity: 0.9;">Активен до: <b style="color: #00ff00; font-size: 12px;">${sets.endTime} (МСК)</b></div>
+                        </div>
+
+                        <div style="font-size: 10px; font-weight: bold; color: #ddd; text-transform: uppercase; margin-top: 5px;">
+                            Перезагрузка страницы через:
+                        </div>
+                        
+                        <div id="ascm-reload-counter-val" style="font-size: 56px; font-weight: 900; color: #fff; font-family: 'Consolas', monospace; line-height: 1; margin: 0; text-shadow: 0 0 20px rgba(255,255,255,0.5);">${secondsLeft}с</div>
+                        
+                        <div style="font-size: 9px; color: #fff; opacity: 0.6; font-style: italic; margin-top: 4px;">
+                            Период поиска: ${sets.startTime} — ${sets.endTime}
+                        </div>
+                    </div>
+                `;
+
+                isStickyNotificationActive = false;
+                showNotification(html, 'error', true);
+
+                // ПРАВКА: Убираем лишние поля внешнего контейнера, чтобы он "облепил" наш компактный текст
+                if (currentNotificationElement) {
+                    currentNotificationElement.style.padding = '12px 15px';
+                    currentNotificationElement.style.minWidth = '220px';
+                    currentNotificationElement.style.width = 'auto';
+                }
+            };
+
+            console.log(`[ACM Hunter] Кнопка не найдена. Релоад через ${secondsLeft}с. Окно вкладов до ${sets.endTime}`);
+            
+            const countdownId = setInterval(async () => {
+                secondsLeft--;
+                if (secondsLeft > 0) {
+                    updateReloadUI();
+                } else {
+                    clearInterval(countdownId);
+                    sccLog("Время поиска: кнопка не появилась, перезагрузка...", 'warning', true);
+                    
+                    await GM_setValue('ascm_shahta_occupied_lock', { id: tabIdWatch, ts: Date.now() });
+                    sessionStorage.setItem('ascm_last_hunter_ts', Date.now());
+                    location.reload();
+                }
+            }, 1000);
+
+            updateReloadUI(); // Первый запуск
+			}
+		}
+	}
+
+	// Функция создает в интерфейсе шахты (вклад в клуб) компактную панель управления скоростью Турбо-вклада
+	async function initShahtaDashboard() {
+		const isShahta = window.location.href.includes('/clubs/boost/');
+		if (!isShahta) return;
+		// Находим блок с правилами (rules), чтобы вставиться НАД ним
+		const anchor = document.querySelector('.club-boost__inner-align-left');
+		if (!anchor || document.getElementById('ascm-shahta-dash')) return;
+
+		const sets = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+		const isVisible = await GM_getValue('ascm_shahta_dash_visible', true);
+
+		const dash = document.createElement('div');
+		dash.id = 'ascm-shahta-dash';
+		dash.className = 'ascm-shahta-dash';
+		dash.style.display = isVisible ? 'flex' : 'none';
+
+		// Вспомогательная функция для генерации HTML-содержимого панели
+        const renderInputs = () => {
+            return `
+                <div style="text-align: center; margin-bottom: 5px;">
+                    <span style="font-size: 11px; color: #aaa; font-weight: 800; text-transform: uppercase;">Скорость ТУРБО: <b id="shahta-val-display" style="color: #bc95ff;">${sets.clickInterval} мс</b></span>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="range" id="shahta-speed-slider" min="15" max="100" step="5" value="${sets.clickInterval}" style="flex: 1;">
+                    <button id="shahta-default-btn" class="ascm-remelt-small-btn" style="height: 22px; background: #4e5058;">ДЕФОЛТ</button>
+                </div>
+            `;
+        };
+
+        dash.innerHTML = renderInputs();
+        
+        // ПРАВКА: Вставляем панель ПЕРЕД (before) блоком правил, чтобы она была выше
+        anchor.before(dash);
+
+        // Кнопка-пламя для сворачивания
+        const flameBtn = document.createElement('button');
+        flameBtn.id = 'ascm-shahta-toggle-flame';
+        flameBtn.innerHTML = isVisible ? '<i class="fas fa-fire" style="color:#ff5722;"></i>' : '<i class="fal fa-fire" style="color:#888;"></i>';
+        
+        // Вставляем кнопку-огонек ПЕРЕД панелью (самый верхний элемент)
+        dash.before(flameBtn);
+
+		const slider = document.getElementById('shahta-speed-slider');
+		const display = document.getElementById('shahta-val-display');
+
+		// Живое обновление текста при движении ползунка
+		slider.oninput = () => { display.textContent = slider.value + ' мс'; };
+		
+		// Сохранение настроек при отпускании ползунка
+		slider.onchange = async () => {
+			const s = await GM_getValue(CLUB_MANAGER_SETTINGS_KEY, CLUB_MANAGER_DEFAULT);
+			s.clickInterval = parseInt(slider.value);
+			await GM_setValue(CLUB_MANAGER_SETTINGS_KEY, s);
+			sccLog(`Скорость вклада обновлена: ${s.clickInterval} мс`, 'success', true);
+		};
+
+		// Кнопка возврата к настройкам по умолчанию из констант скрипта
+		document.getElementById('shahta-default-btn').onclick = async () => {
+			const defaultVal = CLUB_MANAGER_DEFAULT.clickInterval;
+			slider.value = defaultVal;
+			display.textContent = defaultVal + ' мс';
+			// Вызываем сохранение
+			slider.onchange();
+		};
+
+		// Логика сворачивания панели по клику на пламя
+		flameBtn.onclick = async () => {
+			const nowVis = dash.style.display !== 'none';
+			dash.style.display = nowVis ? 'none' : 'flex';
+			flameBtn.innerHTML = !nowVis ? '<i class="fas fa-fire" style="color:#ff5722;"></i>' : '<i class="fal fa-fire" style="color:#888;"></i>';
+			await GM_setValue('ascm_shahta_dash_visible', !nowVis);
+		};
+		
+		// ПРАВКА: Запуск поиска кнопки сразу после инициализации, если вкладка - Лидер
+		if (isLeaderWatch) {
+			const nowUTC = new Date();
+			const mskH = (nowUTC.getUTCHours() + 3) % 24;
+			const mskM = nowUTC.getUTCMinutes();
+			const mskS = nowUTC.getUTCSeconds();
+			const currentTime = (mskH * 3600) + (mskM * 60) + mskS;
+			const [sH, sM] = sets.startTime.split(':').map(Number);
+			const [eH, eM] = sets.endTime.split(':').map(Number);
+			
+			performShahtaHunterSearch(sets, currentTime, (sH * 3600 + sM * 60), (eH * 3600 + eM * 60), 
+				new Date(Date.now() + 3*3600*1000).toISOString().split('T')[0]);
+		}
+		
+		// Обновляет слайдер на странице в реальном времени, даже если изменения внесены в модальном окне или другой вкладке.
+		GM_addValueChangeListener(CLUB_MANAGER_SETTINGS_KEY, (key, oldV, newV, remote) => {
+			const syncSlider = document.getElementById('shahta-speed-slider');
+			const syncDisplay = document.getElementById('shahta-val-display');
+			
+			// Обновляем значение ползунка
+			if (syncSlider && syncSlider.value != newV.clickInterval) {
+				syncSlider.value = newV.clickInterval;
+			}
+			// Обновляем текстовое отображение "мс"
+			if (syncDisplay) {
+				syncDisplay.textContent = newV.clickInterval + ' мс';
+			}
+		});
+	}
 
 } // Конец функции runMainScript
 runMainScript();

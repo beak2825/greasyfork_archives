@@ -1,17 +1,17 @@
 // ==UserScript==
-// @name         XenForo – Application Tags & VPN/IP Check + Filter + API Status + IP Redirect2
+// @name         XenForo – Application Tags & VPN/IP Check + Filter + API Status + IP Redirect2 (Auto-Reason)
 // @namespace    https://tampermonkey.net/
-// @version      1.1
-// @description  Marks application blocks, checks IPs for VPN/proxy usage, includes filters and API status, and redirects IP links to whatismyipaddress.com (with custom color and priority logic for Female, VPN, ALT, Too Short).
+// @version      1.2
+// @description  Marks application blocks, checks IPs, filters, and auto-fills rejection reasons for VPN/Short apps.
 // @author       You
 // @match        https://looksmax.org/approval-queue/*
 // @match        https://looksmax.org/members/*/warn*
 // @icon         https://www.google.com/s2/favicons?domain=looksmax.org
 // @grant        GM_xmlhttpRequest
 // @connect      proxycheck.io
-// @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/555740/XenForo%20%E2%80%93%20Application%20Tags%20%20VPNIP%20Check%20%2B%20Filter%20%2B%20API%20Status%20%2B%20IP%20Redirect2.user.js
-// @updateURL https://update.greasyfork.org/scripts/555740/XenForo%20%E2%80%93%20Application%20Tags%20%20VPNIP%20Check%20%2B%20Filter%20%2B%20API%20Status%20%2B%20IP%20Redirect2.meta.js
+// @license      MIT
+// @downloadURL https://update.greasyfork.org/scripts/555740/XenForo%20%E2%80%93%20Application%20Tags%20%20VPNIP%20Check%20%2B%20Filter%20%2B%20API%20Status%20%2B%20IP%20Redirect2%20%28Auto-Reason%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/555740/XenForo%20%E2%80%93%20Application%20Tags%20%20VPNIP%20Check%20%2B%20Filter%20%2B%20API%20Status%20%2B%20IP%20Redirect2%20%28Auto-Reason%29.meta.js
 // ==/UserScript==
 
 (async function() {
@@ -24,7 +24,8 @@
   const messagesMap = new Map();
   window.__highlightMessageMap = messagesMap;
 
-(function insertDirectFilterMenu() {
+  // --- Insert Filter Menu ---
+  (function insertDirectFilterMenu() {
     const filterBar = document.querySelector('.block-filterBar');
     if (!filterBar) return;
 
@@ -110,9 +111,11 @@
     const aAuto = document.createElement('a');
     aAuto.href = "#";
     aAuto.className = "filterBar-filterToggle";
-    aAuto.textContent = "Auto Select";
+    aAuto.textContent = "Auto Select";
     aAuto.addEventListener('click', e => {
         e.preventDefault();
+        // Existing auto-select logic merely selects the radio,
+        // the text filling is now handled in the main loop automatically.
         messagesMap.forEach((labels, message) => {
             if (labels.includes("FEMALE") || labels.includes("VPN") || labels.includes("TOO SHORT")) {
                 const radioReject = message.querySelector('input[type="radio"][value="reject"]');
@@ -149,8 +152,7 @@
     }
 
     checkFirstIP();
-})();
-
+  })();
 
   function checkVPN(ip) {
     return new Promise(resolve => {
@@ -177,7 +179,7 @@
     });
   }
 
-async function highlightApplications() {
+  async function highlightApplications() {
     const messages = document.querySelectorAll('.message');
     for (const message of messages) {
         let highlightColor = null;
@@ -232,49 +234,76 @@ async function highlightApplications() {
                 }
             }
         }
-if (isFemale) {
-    const extraCell = message.querySelector('.message-cell--extra');
-    if (extraCell && !extraCell.querySelector('.foid-ban-btn')) {
 
-        const userLink = message.querySelector('.message-userDetails a.username');
-        if (!userLink) return;
+        // --- NEW LOGIC FOR FILLING REJECTION REASON ---
+        // Find the radio button for reject and the text input
+        const rejectRadio = message.querySelector('input[type="radio"][value="reject"]');
+        // This selector looks for any input where the name starts with "reason[user]"
+        const rejectInput = message.querySelector('input[name^="reason[user]"]');
 
-        const profilePath = userLink.getAttribute('href');
+        if (rejectRadio && rejectInput) {
+            // Priority: VPN takes precedence over Too Short
+            if (isVpnProxy) {
+                rejectRadio.checked = true;
+                // Dispatch change event so the UI knows it's clicked (enabling the text box)
+                rejectRadio.dispatchEvent(new Event('change', { bubbles: true }));
 
-const btn = document.createElement('button');
-btn.type = "button";
-btn.textContent = "Ban";
-btn.className = "foid-ban-btn";
+                rejectInput.value = "Registrations made using VPNs are not allowed.";
+                rejectInput.dispatchEvent(new Event('input', { bubbles: true }));
 
-btn.style.marginTop = "8px";
-btn.style.background = "#701010";
-btn.style.color = "#fff";
-btn.style.fontWeight = "bold";
-btn.style.borderRadius = "4px";
-btn.style.border = "1px solid #400";
-btn.style.padding = "6px 10px";
-btn.style.cursor = "pointer";
-btn.style.boxShadow = "none";
-btn.style.backgroundImage = "none";
+            } else if (isTooShort) {
+                rejectRadio.checked = true;
+                rejectRadio.dispatchEvent(new Event('change', { bubbles: true }));
 
-btn.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+                rejectInput.value = "We kindly ask that you submit a more detailed application.";
+                rejectInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        }
+        // ----------------------------------------------
 
-    localStorage.setItem('foidBanTrigger', "1");
+        if (isFemale) {
+            const extraCell = message.querySelector('.message-cell--extra');
+            if (extraCell && !extraCell.querySelector('.foid-ban-btn')) {
 
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = profilePath + 'warn';
+                const userLink = message.querySelector('.message-userDetails a.username');
+                if (!userLink) return;
 
-    document.body.appendChild(iframe);
-    setTimeout(() => iframe.remove(), 15000);
-});
+                const profilePath = userLink.getAttribute('href');
 
+                const btn = document.createElement('button');
+                btn.type = "button";
+                btn.textContent = "Ban";
+                btn.className = "foid-ban-btn";
 
-        extraCell.appendChild(btn);
-    }
-}
+                btn.style.marginTop = "8px";
+                btn.style.background = "#701010";
+                btn.style.color = "#fff";
+                btn.style.fontWeight = "bold";
+                btn.style.borderRadius = "4px";
+                btn.style.border = "1px solid #400";
+                btn.style.padding = "6px 10px";
+                btn.style.cursor = "pointer";
+                btn.style.boxShadow = "none";
+                btn.style.backgroundImage = "none";
+
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    localStorage.setItem('foidBanTrigger', "1");
+
+                    const iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    iframe.src = profilePath + 'warn';
+
+                    document.body.appendChild(iframe);
+                    setTimeout(() => iframe.remove(), 15000);
+                });
+
+                extraCell.appendChild(btn);
+            }
+        }
+
         if (isFemale) {
             highlightColor = "rgba(255,182,193,0.2)";
             boxShadowColor = "rgba(255,105,180,0.25)";
@@ -343,7 +372,7 @@ btn.addEventListener('click', (e) => {
             });
         }
     }
-}
+  }
 
   document.addEventListener('DOMContentLoaded', highlightApplications);
   const observer = new MutationObserver(highlightApplications);
@@ -351,7 +380,9 @@ btn.addEventListener('click', (e) => {
     childList: true,
     subtree: true
   });
-(function () {
+
+  // --- Ban Trigger Logic ---
+  (function () {
     if (!location.href.includes('/warn')) return;
 
     const trigger = localStorage.getItem('foidBanTrigger');
@@ -376,5 +407,5 @@ btn.addEventListener('click', (e) => {
             (await wait('.formSubmitRow-controls button[type="submit"]')).click();
         }, 400);
     })();
-})();
+  })();
 })();

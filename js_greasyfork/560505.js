@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              [MAKHACHKALA] | Скрипт для Кураторов Форума [Для телефона]
 // @namespace         https://forum.blackrussia.online
-// @version           1.2.0
+// @version           1.2.3
 // @author            Limma_Prokuror from MAKHACHKALA 
 // @connection        https://vk.ru/prokurotura05
 // @updateversion     Создан 28.12.2025
@@ -34,6 +34,17 @@
  {
     title: '------> Самые Активные <------',
     dpstyle: 'padding: 6px 16px; font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; color: #000000; text-shadow: 0 0 3px #000000; background: linear-gradient(to bottom, #00FFFF, #7FFFD4); border: none; border-radius: 10px; box-shadow: 0 0 8px rgba(102, 205, 170), inset 0 1px 1px rgba(0, 139, 139), 0 2px 0 #008B8B, 0 3px 5px rgba(0, 0, 0, 0.2); cursor: pointer; transition: all 0.1s ease; line-height: 1;'
+},
+{
+    title: 'Приветствие + свой текст',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid; border-color: rgba(255, 0, 0, 0.8); font-family: UtromPressKachat',
+    content: 
+          '[CENTER][SIZE=4][FONT=Verdana][color=#7FFFD4]Доброго времени суток, уважаемый(-ая)[/COLOR]<br> {{ user.mention }}!<br><br>' +
+          '[url=https://postimg.cc/14M7JHxP][img]https://i.postimg.cc/fTh4W2B3/RLwzo.png[/img][/url]<br><br>' +
+          '(Свой текст)<br><br>' +
+          '[url=https://postimg.cc/14M7JHxP][img]https://i.postimg.cc/fTh4W2B3/RLwzo.https://i.postimg.cc/fTh4W2B3/RLwzo.png  [/img][/url]<br><br>' +
+          'Приятной игры на [COLOR=red]BLACK RUSSIA[/COLOR].<br><br>' +
+          'С уважением, [COLOR=red]администрация [COLOR=rgb(65, 168, 95)]MAKHACHKALA[/COLOR][/FONT][/SIZE][/CENTER]'
 },
 {
     title: 'Заместителю Главного Администратора [by limma]',
@@ -80,17 +91,6 @@
  {
     title: '------> Раздел Жалоб на игроков <------',
     dpstyle: 'padding: 6px 16px; font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; color: #000000; text-shadow: 0 0 3px #000000; background: linear-gradient(to bottom, #00FFFF, #7FFFD4); border: none; border-radius: 10px; box-shadow: 0 0 8px rgba(102, 205, 170), inset 0 1px 1px rgba(0, 139, 139), 0 2px 0 #008B8B, 0 3px 5px rgba(0, 0, 0, 0.2); cursor: pointer; transition: all 0.1s ease; line-height: 1;'
-},
-{
-    title: 'Приветствие + свой текст',
-    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid; border-color: rgba(255, 0, 0, 0.8); font-family: UtromPressKachat',
-    content: 
-          '[CENTER][SIZE=4][FONT=Verdana][color=#7FFFD4]Доброго времени суток, уважаемый(-ая)[/COLOR]<br> {{ user.mention }}!<br><br>' +
-          '[url=https://postimg.cc/14M7JHxP][img]https://i.postimg.cc/fTh4W2B3/RLwzo.png[/img][/url]<br><br>' +
-          '(Свой текст)<br><br>' +
-          '[url=https://postimg.cc/14M7JHxP][img]https://i.postimg.cc/fTh4W2B3/RLwzo.https://i.postimg.cc/fTh4W2B3/RLwzo.png  [/img][/url]<br><br>' +
-          'Приятной игры на [COLOR=red]BLACK RUSSIA[/COLOR].<br><br>' +
-          'С уважением, [COLOR=red]администрация [COLOR=rgb(65, 168, 95)]MAKHACHKALA[/COLOR][/FONT][/SIZE][/CENTER]'
 },
 {
     title: 'ГКФ ',
@@ -766,6 +766,20 @@
 {
     title: '------> Правила Текстового Чата <------',
     dpstyle: 'padding: 6px 16px; font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; color: #000000; text-shadow: 0 0 3px #000000; background: linear-gradient(to bottom, #00FFFF, #7FFFD4); border: none; border-radius: 10px; box-shadow: 0 0 8px rgba(102, 205, 170), inset 0 1px 1px rgba(0, 139, 139), 0 2px 0 #008B8B, 0 3px 5px rgba(0, 0, 0, 0.2); cursor: pointer; transition: all 0.1s ease; line-height: 1;'
+},
+{
+    title: 'Оск в ООС',
+    dpstyle: 'border-radius: 13px; margin-right: 5px; border: 2px solid; border-color: rgba(127, 199, 255, 0.8); font-family: UtromPressKachat',
+    content:
+          '[CENTER][SIZE=4][FONT=Verdana][color=#7FFFD4]Доброго времени суток, уважаемый(-ая)[/COLOR]<br> {{ user.mention }}.<br><br>' +
+          '[url=https://postimg.cc/14M7JHxP][img]https://i.postimg.cc/fTh4W2B3/RLwzo.png  [/img][/url]<br><br>' +
+          'Нарушитель будет наказан по пункту правил:<br>[QUOTE] 3.03. Любые формы оскорблений, издевательств, расизма, дискриминации, религиозной враждебности, сексизма в OOC чате запрещены | [COLOR=rgb(255, 0, 0)]Mute 30 минут.[/COLOR][/QUOTE]<br><br>' +
+          '[url=https://postimg.cc/14M7JHxP][img]https://i.postimg.cc/fTh4W2B3/RLwzo.png  [/img][/url]<br><br>' +
+          '[COLOR=rgb(0, 255, 0)][ICODE]Одобрено[/ICODE][/COLOR]<br><br>' +
+          'Приятной игры на [COLOR=red]BLACK RUSSIA.[/COLOR]<br>' +
+          'С уважением, [COLOR=red]администрация MAKHACHKALA![/COLOR][/FONT][/SIZE][/CENTER]',
+    prefix: ACCEPT_PREFIX,
+    status: false,
 },
 {
     title: 'CapsLock',

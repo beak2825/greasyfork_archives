@@ -1,126 +1,68 @@
 // ==UserScript==
-// @name         Weibo/Sina Image Lightbox (Live Photo Fixed)
+// @name         Weibo Media Lightbox (Ultimate Fix v2.2)
 // @namespace    http://tampermonkey.net/
-// @version      1.5
-// @description  支持微博主页/搜索页/Live图，自动解析.mov实况图地址，类似X.com的全屏幻灯片模式
+// @version      2.2
+// @description  微博全能看图模式：深度挖掘混合媒体、多视频、Live Photo。支持数据解密获取视频地址。
 // @author       You
+// @license      MIT
 // @match        *://weibo.com/*
 // @match        *://s.weibo.com/*
 // @match        *://d.weibo.com/*
 // @include      *
 // @grant        GM_addStyle
 // @run-at       document-end
-// @license MIT
-// @downloadURL https://update.greasyfork.org/scripts/561666/WeiboSina%20Image%20Lightbox%20%28Live%20Photo%20Fixed%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/561666/WeiboSina%20Image%20Lightbox%20%28Live%20Photo%20Fixed%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561666/Weibo%20Media%20Lightbox%20%28Ultimate%20Fix%20v22%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561666/Weibo%20Media%20Lightbox%20%28Ultimate%20Fix%20v22%29.meta.js
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // 注入CSS样式
+    // --------------------------------------------------------
+    // 1. CSS 样式 (保持暗黑风格)
+    // --------------------------------------------------------
     const style = `
         #ws-lightbox-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.95);
-            z-index: 999999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            user-select: none;
-            backdrop-filter: blur(5px);
-            opacity: 0;
-            transition: opacity 0.2s ease;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.98); z-index: 2147483647;
+            display: flex; justify-content: center; align-items: center;
+            user-select: none; opacity: 0; transition: opacity 0.2s ease;
             pointer-events: none;
         }
-        #ws-lightbox-overlay.ws-active {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        #ws-lightbox-overlay.ws-active { opacity: 1; pointer-events: auto; }
         .ws-media-content {
-            max-width: 95vw;
-            max-height: 95vh;
-            object-fit: contain;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            transition: transform 0.2s ease;
-            transform: scale(0.95);
+            max-width: 100vw; max-height: 100vh; width: auto; height: auto;
+            object-fit: contain; transition: transform 0.2s ease;
         }
-        #ws-lightbox-overlay.ws-active .ws-media-content {
-            transform: scale(1);
-        }
-        .ws-hidden-media {
-            display: none !important;
-        }
+        .ws-hidden { display: none !important; }
         .ws-nav-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: none;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            font-size: 30px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-            outline: none;
-            z-index: 1000001;
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(40, 40, 40, 0.5); color: white; border: none;
+            width: 50px; height: 50px; border-radius: 50%; font-size: 24px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s; z-index: 10000001;
         }
-        .ws-nav-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
+        .ws-nav-btn:hover { background: rgba(80, 80, 80, 0.8); }
         #ws-prev { left: 20px; }
         #ws-next { right: 20px; }
+        #ws-top-bar {
+            position: absolute; top: 0; left: 0; width: 100%; height: 60px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; z-index: 10000002;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+        }
         #ws-close {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 20px;
-            z-index: 1000002;
+            color: white; font-size: 24px; cursor: pointer; width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center; border-radius: 50%;
         }
-        #ws-close:hover { background: rgba(255, 255, 255, 0.4); }
-        #ws-counter {
-            position: absolute;
-            top: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #ddd;
-            font-family: sans-serif;
-            background: rgba(0,0,0,0.6);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            z-index: 1000001;
-        }
+        #ws-close:hover { background: rgba(255,255,255,0.2); }
+        #ws-counter { color: #ddd; font-family: sans-serif; font-size: 16px; font-weight: bold; }
         #ws-loading {
-            position: absolute;
-            color: white;
-            font-size: 14px;
-            display: none;
+            position: absolute; color: white; font-size: 14px; display: none;
+            z-index: 10000000; pointer-events: none;
         }
         /* 鼠标样式 */
-        .woo-picture-slot img, 
-        .media-piclist li, .media-piclist i,
-        [node-type="fl_pic_list"] li, [node-type="fl_pic_list"] i {
-             cursor: zoom-in !important;
-        }
+        .woo-picture-slot img, .media-piclist img, .vjs-poster img, img[src*="sinaimg.cn"] { cursor: zoom-in; }
     `;
 
     if (typeof GM_addStyle !== 'undefined') {
@@ -131,249 +73,309 @@
         document.head.appendChild(styleEl);
     }
 
-    // 全局变量
-    let currentImages = [];
+    // --------------------------------------------------------
+    // 2. 状态管理
+    // --------------------------------------------------------
+    let currentMediaList = [];
     let currentIndex = 0;
-    let overlay, imgElement, videoElement, counter, prevBtn, nextBtn, loadingText;
+    let ui = {};
     let savedScrollTop = 0;
 
+    // --------------------------------------------------------
+    // 3. UI 初始化
+    // --------------------------------------------------------
     function initUI() {
         if (document.getElementById('ws-lightbox-overlay')) return;
 
-        overlay = document.createElement('div');
+        const overlay = document.createElement('div');
         overlay.id = 'ws-lightbox-overlay';
-
         overlay.innerHTML = `
-            <div id="ws-close" title="Close (ESC)">✕</div>
-            <div id="ws-counter"></div>
+            <div id="ws-top-bar">
+                <div id="ws-close" title="Close (ESC)">✕</div>
+                <div id="ws-counter"></div>
+                <div style="width:40px"></div>
+            </div>
             <div id="ws-loading">Loading...</div>
-            <button id="ws-prev" class="ws-nav-btn" title="Previous (←)">‹</button>
-            <button id="ws-next" class="ws-nav-btn" title="Next (→)">›</button>
-            <img id="ws-lightbox-img" class="ws-media-content" src="" alt="">
-            <video id="ws-lightbox-video" class="ws-media-content ws-hidden-media" autoplay loop playsinline controls></video>
+            <button id="ws-prev" class="ws-nav-btn">‹</button>
+            <button id="ws-next" class="ws-nav-btn">›</button>
+            <img id="ws-img-view" class="ws-media-content ws-hidden" src="">
+            <video id="ws-video-view" class="ws-media-content ws-hidden" autoplay loop playsinline controls referrerpolicy="no-referrer"></video>
         `;
-
         document.body.appendChild(overlay);
 
-        imgElement = document.getElementById('ws-lightbox-img');
-        videoElement = document.getElementById('ws-lightbox-video');
-        counter = document.getElementById('ws-counter');
-        prevBtn = document.getElementById('ws-prev');
-        nextBtn = document.getElementById('ws-next');
-        loadingText = document.getElementById('ws-loading');
-        const closeBtn = document.getElementById('ws-close');
+        ui = {
+            overlay: overlay,
+            img: document.getElementById('ws-img-view'),
+            video: document.getElementById('ws-video-view'),
+            counter: document.getElementById('ws-counter'),
+            prev: document.getElementById('ws-prev'),
+            next: document.getElementById('ws-next'),
+            close: document.getElementById('ws-close'),
+            loading: document.getElementById('ws-loading')
+        };
 
-        closeBtn.addEventListener('click', closeLightbox);
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) closeLightbox();
+        ui.close.addEventListener('click', closeLightbox);
+        ui.overlay.addEventListener('click', (e) => {
+            if (e.target === ui.overlay || e.target === document.getElementById('ws-top-bar')) closeLightbox();
         });
-        prevBtn.addEventListener('click', (e) => { e.stopPropagation(); showPrev(); });
-        nextBtn.addEventListener('click', (e) => { e.stopPropagation(); showNext(); });
+        ui.prev.addEventListener('click', (e) => { e.stopPropagation(); changeSlide(-1); });
+        ui.next.addEventListener('click', (e) => { e.stopPropagation(); changeSlide(1); });
 
         document.addEventListener('keydown', (e) => {
-            if (!overlay.classList.contains('ws-active')) return;
-            e.stopPropagation();
+            if (!ui.overlay.classList.contains('ws-active')) return;
+            if (['ArrowLeft', 'ArrowRight', ' ', 'Enter', 'Escape'].includes(e.key)) {
+                e.preventDefault(); e.stopPropagation();
+            }
             switch(e.key) {
                 case 'Escape': closeLightbox(); break;
-                case 'ArrowLeft': showPrev(); break;
-                case 'ArrowRight': showNext(); break;
-                case ' ':
-                case 'Enter': e.preventDefault(); break;
+                case 'ArrowLeft': changeSlide(-1); break;
+                case 'ArrowRight': changeSlide(1); break;
             }
         }, true);
     }
 
+    // --------------------------------------------------------
+    // 4. 深度解析工具 (Deep Mining)
+    // --------------------------------------------------------
+
     function getHighResUrl(url) {
         if (!url) return '';
-        return url.replace(/\/(orj360|mw690|thumb150|small|bmiddle|mw1024|wap180|thumbnail)\//, '/mw2000/');
+        // 替换所有常见的缩略图规则为高清规则 (mw2000)
+        return url.replace(/\/(orj480|orj360|mw690|thumb150|small|bmiddle|mw1024|wap180|thumbnail|crop\.[^/]+)\//, '/mw2000/');
     }
 
-    function parseActionData(str) {
-        if (!str) return {};
+    // 解析 action-data 字符串，提取 video_src, gif_url 等
+    function parseActionData(element) {
+        if (!element) return {};
+        const actionDataStr = element.getAttribute('action-data');
+        if (!actionDataStr) return {};
+        
         const res = {};
-        str.split('&').forEach(pair => {
+        actionDataStr.split('&').forEach(pair => {
             const [key, val] = pair.split('=');
             if (key) res[key] = decodeURIComponent(val || '');
         });
         return res;
     }
 
-    function showImage(index) {
-        if (index < 0) index = currentImages.length - 1;
-        if (index >= currentImages.length) index = 0;
+    // --------------------------------------------------------
+    // 5. 核心：超级媒体提取器
+    // --------------------------------------------------------
+    function extractMediaInfo(img) {
+        let videoSrc = null;
+        let isLivePhoto = false;
+        const highResSrc = getHighResUrl(img.src);
 
-        currentIndex = index;
-        const item = currentImages[currentIndex];
+        // 查找相关容器
+        const itemInlineBlock = img.closest('.woo-box-item-inlineBlock') || img.closest('li') || img.parentElement;
+        const videoJsContainer = img.closest('.video-js');
+        const feedVideoContainer = img.closest('[class*="_feedVideo_"]'); // 微博新版视频容器
 
-        counter.textContent = `${currentIndex + 1} / ${currentImages.length}`;
-
-        // 按钮显示
-        if (currentImages.length <= 1) {
-            prevBtn.style.display = 'none';
-            nextBtn.style.display = 'none';
-        } else {
-            prevBtn.style.display = 'flex';
-            nextBtn.style.display = 'flex';
+        // >>> 策略 1: 查找显式的 <video> 标签 (针对已加载的视频)
+        if (videoJsContainer || feedVideoContainer) {
+            const container = videoJsContainer || feedVideoContainer;
+            const videoEl = container.querySelector('video');
+            if (videoEl && videoEl.src && !videoEl.src.startsWith('blob:')) {
+                videoSrc = videoEl.src;
+            }
         }
 
-        loadingText.style.display = 'block';
+        // >>> 策略 2: 挖掘 action-data (针对混合宫格、搜索结果视频)
+        if (!videoSrc) {
+            // 尝试从当前 item 向上找 action-data
+            // 很多时候 video_src 藏在 li 标签或 div._item_... 上
+            const dataContainer = img.closest('[action-data]');
+            if (dataContainer) {
+                const data = parseActionData(dataContainer);
+                if (data.video_src) videoSrc = data.video_src;
+                else if (data.gif_url) videoSrc = data.gif_url; // 动图也是视频
+                else if (data.mp4_url) videoSrc = data.mp4_url;
+            }
+        }
+
+        // >>> 策略 3: 挖掘 video-sources 属性 (旧版兼容)
+        if (!videoSrc) {
+            videoSrc = img.getAttribute('video-sources') || img.getAttribute('data-mp4');
+        }
+
+        // >>> 策略 4: 检测 Live Photo 标记 (并推导地址)
+        // 你的截图显示 Live 标记在 woo-box-item-inlineBlock 内部
+        if (!videoSrc) {
+            if (itemInlineBlock) {
+                // 查找包含 "Live" 文本的元素 或 特定的 Live 图标类名
+                const liveTag = Array.from(itemInlineBlock.querySelectorAll('*')).find(el => 
+                    el.innerText === 'Live' || 
+                    el.className.includes('_live_') || 
+                    el.className.includes('tag_live')
+                );
+
+                if (liveTag) {
+                    isLivePhoto = true;
+                    // Live Photo 命名规则推导
+                    try {
+                        const urlObj = new URL(highResSrc);
+                        const pathParts = urlObj.pathname.split('/');
+                        const filename = pathParts[pathParts.length - 1].split('.')[0];
+                        // 构造 Live 视频地址 (海外源，需翻墙，但配合 onerror 降级完美)
+                        videoSrc = `https://us.sinaimg.cn/${filename}.mov`;
+                    } catch(e) {}
+                }
+            }
+        }
+
+        // >>> 协议修复
+        if (videoSrc && videoSrc.startsWith('//')) videoSrc = 'https:' + videoSrc;
+
+        return {
+            src: highResSrc,
+            videoSrc: videoSrc,
+            isLive: isLivePhoto
+        };
+    }
+
+    // --------------------------------------------------------
+    // 6. 显示与播放逻辑
+    // --------------------------------------------------------
+    function showMedia(index) {
+        if (index < 0) index = currentMediaList.length - 1;
+        if (index >= currentMediaList.length) index = 0;
+        currentIndex = index;
+
+        const item = currentMediaList[currentIndex];
+        ui.counter.textContent = `${currentIndex + 1} / ${currentMediaList.length}`;
+
+        // 重置状态
+        ui.loading.style.display = 'none';
+        ui.img.classList.add('ws-hidden');
+        ui.video.classList.add('ws-hidden');
+        ui.video.pause();
+        ui.video.removeAttribute('src'); // 彻底清除旧源
 
         if (item.videoSrc) {
-            // --- 视频模式 ---
-            imgElement.classList.add('ws-hidden-media');
-            videoElement.classList.remove('ws-hidden-media');
+            // === 视频/Live 模式 ===
+            ui.loading.style.display = 'block';
+            ui.video.classList.remove('ws-hidden');
             
-            // 避免重复加载
-            if (videoElement.src !== item.videoSrc) {
-                videoElement.src = item.videoSrc;
-                videoElement.poster = item.highResSrc;
-            }
-            videoElement.oncanplay = () => { loadingText.style.display = 'none'; };
-            videoElement.play().catch(e => console.log('Autoplay prevented', e));
+            ui.video.poster = item.src; // 使用高清图做封面，体验无缝
+            ui.video.src = item.videoSrc;
 
-        } else {
-            // --- 图片模式 ---
-            videoElement.classList.add('ws-hidden-media');
-            videoElement.pause();
-            videoElement.src = '';
-            imgElement.classList.remove('ws-hidden-media');
-
-            imgElement.style.opacity = '0.5';
-            const tempImg = new Image();
-            tempImg.onload = () => {
-                imgElement.src = item.highResSrc;
-                imgElement.style.opacity = '1';
-                loadingText.style.display = 'none';
+            // 错误处理 (关键)：如果视频加载失败 (比如Live图被墙)，瞬间切回图片
+            ui.video.onerror = () => {
+                console.warn('[WeiboLightbox] Video load error, fallback to image:', item.videoSrc);
+                ui.loading.style.display = 'none';
+                ui.video.classList.add('ws-hidden');
+                ui.img.classList.remove('ws-hidden');
+                ui.img.src = item.src;
             };
-            tempImg.src = item.highResSrc;
+
+            ui.video.oncanplay = () => { ui.loading.style.display = 'none'; };
+            
+            const playPromise = ui.video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(e => {
+                    // 自动播放失败通常是因为浏览器策略，保持 Loading 消失，显示控件让用户点
+                    ui.loading.style.display = 'none';
+                });
+            }
+        } else {
+            // === 纯图模式 ===
+            ui.img.classList.remove('ws-hidden');
+            ui.img.src = item.src;
+        }
+
+        // 导航按钮状态
+        if (currentMediaList.length <= 1) {
+            ui.prev.style.display = 'none';
+            ui.next.style.display = 'none';
+        } else {
+            ui.prev.style.display = 'flex';
+            ui.next.style.display = 'flex';
         }
     }
 
-    function showPrev() { showImage(currentIndex - 1); }
-    function showNext() { showImage(currentIndex + 1); }
+    function changeSlide(dir) { showMedia(currentIndex + dir); }
 
-    function openLightbox(index, mediaList) {
-        savedScrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-        currentImages = mediaList;
-        currentIndex = index;
-        overlay.classList.add('ws-active');
+    function openLightbox(index, list) {
+        savedScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        currentMediaList = list;
+        ui.overlay.classList.add('ws-active');
         document.body.style.overflow = 'hidden';
-        showImage(index);
+        showMedia(index);
     }
 
     function closeLightbox() {
-        overlay.classList.remove('ws-active');
+        ui.overlay.classList.remove('ws-active');
         document.body.style.overflow = '';
-        videoElement.pause();
-        videoElement.src = '';
-        imgElement.src = '';
-        setTimeout(() => {
-            window.scrollTo(0, savedScrollTop);
-        }, 0);
+        ui.video.pause();
+        ui.video.removeAttribute('src');
+        ui.img.src = '';
+        setTimeout(() => window.scrollTo(0, savedScrollTop), 0);
     }
 
-    // --- 主逻辑 ---
+    // --------------------------------------------------------
+    // 7. 点击监听 (入口)
+    // --------------------------------------------------------
     document.addEventListener('click', function(e) {
         let target = e.target;
 
-        // 蒙版穿透处理
-        if (target.tagName === 'I' && (
-            target.classList.contains('picture-cover') || 
-            target.classList.contains('hoverMask') || 
-            target.classList.contains('woo-picture-hoverMask')
-        )) {
-            const siblingImg = target.parentElement.querySelector('img');
-            if (siblingImg) target = siblingImg;
+        // 处理点击了播放按钮、遮罩层等情况，寻找最近的图片
+        if (target.tagName !== 'IMG') {
+            // 尝试向下找
+            let img = target.querySelector('img');
+            // 尝试向上找容器再找图片 (比如点击了播放图标 <i>)
+            if (!img) {
+                const wrapper = target.closest('.woo-picture-main') || target.closest('.vjs-poster') || target.closest('.video-js');
+                if (wrapper) img = wrapper.querySelector('img');
+            }
+            if (img) target = img;
         }
 
         if (target.tagName !== 'IMG') return;
+        if (!target.src.includes('sinaimg.cn') || target.width < 50) return;
 
-        const src = target.src;
-        if (!src || !src.includes('sinaimg.cn') || target.width < 50) return;
+        // 确定 Feed 容器
+        const feedContainer = target.closest('.wbpro-feed-content') || 
+                              target.closest('[class*="feed-content"]') ||
+                              target.closest('.vue-recycle-scroller__item-view') || 
+                              target.closest('[node-type="fl_pic_list"]') ||
+                              target.closest('.card-wrap');
 
-        // 确定容器
-        const feedContent = target.closest('.wbpro-feed-content') || 
-                            target.closest('[class*="feed-content"]') ||
-                            target.closest('.vue-recycle-scroller__item-view') ||
-                            target.closest('[node-type="fl_pic_list"]') || 
-                            target.closest('.media-piclist') ||
-                            target.closest('.card-wrap');
-
-        if (feedContent) {
+        if (feedContainer) {
             e.preventDefault();
             e.stopPropagation();
             e.stopImmediatePropagation();
 
-            // 收集图片
-            const allImgElements = Array.from(feedContent.querySelectorAll('img[src*="sinaimg.cn"]'));
-
-            let galleryElements = allImgElements.filter(img => {
-                if (img.clientWidth < 80 && img.clientHeight < 80) return false;
-                if (img.closest('.woo-picture-slot') || img.classList.contains('woo-picture-img')) return true;
-                if (img.closest('li[action-type="fl_pics"]')) return true;
-                if (img.nextElementSibling && img.nextElementSibling.classList.contains('picture-cover')) return true;
-                if (feedContent.getAttribute('node-type') === 'fl_pic_list' || feedContent.classList.contains('media-piclist')) return true;
-                return false;
+            // 1. 收集容器内所有有效的“媒体封面图”
+            const allImgs = Array.from(feedContainer.querySelectorAll('img[src*="sinaimg.cn"]'));
+            
+            // 2. 筛选
+            const galleryImgs = allImgs.filter(img => {
+                if (img.clientWidth < 50) return false; // 忽略头像
+                // 必须在特定的内容结构中
+                return img.closest('.woo-picture-slot') || // 普通/Live宫格
+                       img.closest('.woo-picture-img') ||  // 单图
+                       img.closest('.vjs-poster') ||       // 视频封面
+                       img.closest('[class*="_feedVideo_"]') || // 视频容器
+                       img.closest('li[action-type="fl_pics"]'); // 搜索页
             });
 
-            if (galleryElements.length === 0) {
-                 galleryElements = allImgElements.filter(img => img.clientWidth > 50);
+            // 如果没找到（比如结构变了），兜底使用所有大图
+            const finalImgs = galleryImgs.length > 0 ? galleryImgs : allImgs.filter(i => i.clientWidth > 100);
+
+            // 3. 提取每一项的媒体信息 (Video/Live/Image)
+            const mediaList = finalImgs.map(img => extractMediaInfo(img));
+
+            // 4. 定位当前点击的图片
+            let clickIndex = finalImgs.indexOf(target);
+            if (clickIndex === -1) {
+                // 如果 DOM 引用对不上，尝试匹配 src
+                clickIndex = finalImgs.findIndex(i => i.src === target.src);
             }
 
-            // 构建数据，核心更新在这里
-            const mediaList = galleryElements.map(img => {
-                const highResSrc = getHighResUrl(img.src);
-                let videoSrc = null;
-
-                // --- 1. 检查搜索页 data-gifviedo / action-data ---
-                const dataGifVideo = img.getAttribute('data-gifviedo');
-                if (dataGifVideo && dataGifVideo.length > 5) videoSrc = dataGifVideo;
-
-                if (!videoSrc) {
-                    const parentLi = img.closest('li');
-                    if (parentLi) {
-                        const actionData = parseActionData(parentLi.getAttribute('action-data'));
-                        if (actionData.gif_url) videoSrc = actionData.gif_url;
-                        else if (actionData.video_src) videoSrc = actionData.video_src;
-                    }
-                }
-
-                // --- 2. 检查主页 video-sources (旧版或部分动态) ---
-                if (!videoSrc) {
-                    videoSrc = img.getAttribute('video-sources') || img.getAttribute('data-mp4');
-                }
-
-                // --- 3. 核心：检查是否为 Live 图 (针对你提供的 HTML) ---
-                // 查找 img 所在的 item 容器，再找是否有 Live 标签
-                if (!videoSrc) {
-                    const itemContainer = img.closest('.woo-box-item-inlineBlock');
-                    if (itemContainer) {
-                        // 你的 HTML 中 Live 标签类名是 _tag_a2k8z_59 _live_a2k8z_73
-                        // 但哈希值可能变，所以用部分匹配
-                        const hasLiveTag = itemContainer.querySelector('[class*="_live_"]');
-                        if (hasLiveTag) {
-                            // 提取文件名
-                            const urlObj = new URL(highResSrc);
-                            // 路径通常是 /mw2000/文件名.jpg
-                            const filename = urlObj.pathname.split('/').pop().split('.')[0];
-                            
-                            // 构造 .mov 地址 (这是微博 Live 图最常用的原始文件库)
-                            videoSrc = `https://us.sinaimg.cn/${filename}.mov`;
-                        }
-                    }
-                }
-
-                // 协议修复
-                if (videoSrc && videoSrc.startsWith('//')) {
-                    videoSrc = 'https:' + videoSrc;
-                }
-
-                return { highResSrc, videoSrc };
-            });
-
-            const clickIndex = galleryElements.indexOf(target);
-            initUI();
-            openLightbox(clickIndex === -1 ? 0 : clickIndex, mediaList);
+            if (mediaList.length > 0) {
+                initUI();
+                openLightbox(clickIndex === -1 ? 0 : clickIndex, mediaList);
+            }
         }
     }, true);
 

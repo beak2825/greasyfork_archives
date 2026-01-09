@@ -1,191 +1,197 @@
 // ==UserScript==
-// @name         Torn Utilities + More Legible Names (Nova Edition)
-// @namespace    nova.torn.utilities.combo
-// @version      3.1
-// @description  Combines Torn Utilities (Last Action + Faction Inactivity) with clearer, larger player name text on honor bars.
-// @author       Nova & GingerBeardMan & TheFoxMan
+// @name         Faction Inactivity + Legible Names Combo
+// @namespace    https://www.torn.com/profiles.php?XID=1936821
+// @version      1.6.1
+// @description  Highlight inactive faction members + better player name visibility
+// @author       TheFoxMan [1936821] + Nova
 // @match        https://www.torn.com/*
+// @run-at       document-end
+// @license      Apache License 2.0
 // @grant        none
-// @license      Apache 2.0 + GNU GPLv3
-// @downloadURL https://update.greasyfork.org/scripts/554129/Torn%20Utilities%20%2B%20More%20Legible%20Names%20%28Nova%20Edition%29.user.js
-// @updateURL https://update.greasyfork.org/scripts/554129/Torn%20Utilities%20%2B%20More%20Legible%20Names%20%28Nova%20Edition%29.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/554129/Faction%20Inactivity%20%2B%20Legible%20Names%20Combo.user.js
+// @updateURL https://update.greasyfork.org/scripts/554129/Faction%20Inactivity%20%2B%20Legible%20Names%20Combo.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
 
     //////////////////////////////////////////////////////////////////////
-    // PART 1 — TORN UTILITIES: LAST ACTION + FACTION INACTIVITY
+    // PART 1 — FACTION INACTIVITY HIGHLIGHT (TheFoxMan's Working Version)
     //////////////////////////////////////////////////////////////////////
 
-    const APIKEY_STORAGE = 'tornApiKey';
+    // PUT YOUR ACTUAL API KEY HERE (Replace ###PDA-APIKEY### with your key)
+    const APIKEY = "###PDA-APIKEY###";
+    const APICOMMENT = "FactionLastAction";
+
     const activityHighlights = [
-        [1, 1, '#FFFFFF40'],
-        [2, 4, '#ff990060'],
-        [5, 6, '#FF000060'],
-        [7, 999, '#cc00ff60']
+        [1, 1, "#FFFFFF80"],
+        [2, 4, "#ff990080"],
+        [5, 6, "#FF000080"],
+        [7, 999, "#cc00ff80"]
     ];
 
-    const { fetch: origFetch } = window;
-
-    function isDarkMode() {
-        return document.documentElement.classList.contains('dark-mode')
-            || document.body.classList.contains('dark-mode')
-            || window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // Define find helpers if they don't exist
+    if (!document.find) {
+        Object.defineProperties(Document.prototype, {
+            find: {
+                value(selector) {
+                    return document.querySelector(selector);
+                },
+                enumerable: false
+            },
+            findAll: {
+                value(selector) {
+                    return document.querySelectorAll(selector);
+                },
+                enumerable: false
+            }
+        });
     }
 
-    function convert(seconds) {
-        const d = Math.floor(seconds / 86400);
-        const h = Math.floor((seconds % 86400) / 3600);
-        const m = Math.floor((seconds % 3600) / 60);
-        const s = seconds % 60;
-        return [d && `${d}d`, h && `${h}h`, m && `${m}m`, `${s}s`].filter(Boolean).join(' ');
+    if (!Element.prototype.find) {
+        Object.defineProperties(Element.prototype, {
+            find: {
+                value(selector) {
+                    return this.querySelector(selector);
+                },
+                enumerable: false
+            },
+            findAll: {
+                value(selector) {
+                    return this.querySelectorAll(selector);
+                },
+                enumerable: false
+            }
+        });
     }
 
-    async function getApiKey() {
-        let key = localStorage.getItem(APIKEY_STORAGE);
-        if (!key) {
-            key = prompt('Enter your Torn API key (Display or Faction permission only):');
-            if (key) localStorage.setItem(APIKEY_STORAGE, key);
-        }
-        return key;
-    }
-
-    // Mini-profile monitor (always active)
-    window.fetch = async (...args) => {
-        const [url] = args;
-        const response = await origFetch(...args);
-
-        if (typeof url === 'string' && url.includes('page.php?sid=UserMiniProfile')) {
-            response.clone().json().then(body => {
-                const seconds = body?.user?.lastAction?.seconds;
-                if (seconds !== undefined) insertMiniProfile(seconds);
-            }).catch(console.error);
-        }
-
-        return response;
-    };
-
-    function insertMiniProfile(seconds) {
-        const root = $('#profile-mini-root');
-        const icons = $('.icons', root);
-        if (icons.length > 0) {
-            $('.laction', root).remove();
-            const textColor = isDarkMode() ? '#ccc' : '#333';
-            const text = convert(seconds);
-            const html = `
-                <p class='laction'
-                   style='font-size:11px;
-                          color:${textColor};
-                          float:right;
-                          margin:2px 5px 0 0;
-                          font-family:"Verdana", "Arial", sans-serif;'>
-                    Last Action: ${text}
-                </p>`;
-            icons.append(html);
-        } else {
-            setTimeout(insertMiniProfile, 300, seconds);
-        }
-    }
-
-    function defineFindHelpers() {
-        if (!document.find)
-            Object.defineProperties(Document.prototype, {
-                find: { value: document.querySelector, enumerable: false },
-                findAll: { value: document.querySelectorAll, enumerable: false }
-            });
-
-        if (!Element.prototype.find)
-            Object.defineProperties(Element.prototype, {
-                find: { value: Element.prototype.querySelector, enumerable: false },
-                findAll: { value: Element.prototype.querySelectorAll, enumerable: false }
-            });
-    }
-
-    defineFindHelpers();
-
-    function waitFor(sel, parent = document) {
-        return new Promise(resolve => {
-            const check = setInterval(() => {
+    async function waitFor(sel, parent = document) {
+        return new Promise((resolve) => {
+            const intervalID = setInterval(() => {
                 const el = parent.find(sel);
                 if (el) {
-                    clearInterval(check);
                     resolve(el);
+                    clearInterval(intervalID);
                 }
-            }, 400);
+            }, 500);
         });
     }
 
-    async function showFactionLastAction() {
-        await waitFor('.faction-info-wrap .members-list .table-body');
-
-        const key = await getApiKey();
-        const factionID = document.find('#view-wars')?.parentElement?.getAttribute('href')?.match(/\d+/)?.[0];
-        const apiUrl = `https://api.torn.com/faction/${factionID || ''}?selections=basic&key=${key}`;
-        const data = await (await fetch(apiUrl)).json();
-
-        document.findAll('.faction-info-wrap .members-list .table-body > li').forEach(row => {
-            const profileID = parseInt(row.find("a[href*='profiles.php']").getAttribute("href").split("XID=")[1]);
-            const member = data.members?.[profileID];
-            if (!member) return;
-
-            const rel = member.last_action.relative;
-            const ts = member.last_action.timestamp;
-            const days = Math.floor((Date.now() / 1000 - ts) / 86400);
-
-            let color;
-            activityHighlights.forEach(rule => {
-                if (rule[0] <= days && days <= rule[1]) color = rule[2];
-            });
-
-            row.setAttribute('data-last-action', rel);
-            if (color) row.style.backgroundColor = color;
-        });
-    }
-
-    document.head.insertAdjacentHTML('beforeend', `
-        <style>
+    // Add styles for faction inactivity
+    document.head.insertAdjacentHTML(
+        "beforeend",
+        `<style>
             .faction-info-wrap .members-list .table-body > li::after {
                 display: block;
                 content: attr(data-last-action);
+                color: #fff;
                 font-size: 11px;
-                color: ${isDarkMode() ? '#bbb' : '#444'};
-                margin-left: 8px;
+                margin-top: 2px;
+                opacity: 0.9;
             }
-        </style>`);
+        </style>`
+    );
 
-    function monitorFactionPage() {
-        if (window.location.href.includes('factions.php')) {
-            showFactionLastAction();
+    // Check if we should run the faction script
+    function shouldRunFactionScript() {
+        const url = window.location.href;
+        return url.includes("factions.php") && 
+               (url.includes("step=your") || url.includes("step=profile"));
+    }
+
+    async function showLastAction() {
+        try {
+            // Wait for the faction members list
+            await waitFor(".faction-info-wrap .members-list .table-body");
+
+            // Check if already processed
+            if (document.find(".faction-info-wrap .members-list .table-body > li[data-last-action]")) {
+                return;
+            }
+
+            // Get faction ID from the view-wars link
+            const viewWarsLink = document.find("#view-wars");
+            let factionID = null;
+            
+            if (viewWarsLink && viewWarsLink.parentElement) {
+                const href = viewWarsLink.parentElement.getAttribute("href");
+                if (href) {
+                    const match = href.match(/\d+/);
+                    factionID = match ? match[0] : null;
+                }
+            }
+
+            // Fetch faction data
+            const apiUrl = `https://api.torn.com/faction/${factionID || ""}?selections=basic&key=${APIKEY}&comment=${APICOMMENT}`;
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            // Process each member row
+            document.findAll(".faction-info-wrap .members-list .table-body > li").forEach((row) => {
+                try {
+                    const profileLink = row.find("a[href*='profiles.php']");
+                    if (!profileLink) return;
+                    
+                    const profileID = parseInt(profileLink.getAttribute("href").split("XID=")[1]);
+                    
+                    if (!data.members || !data.members[profileID]) return;
+
+                    // Add last action data
+                    row.setAttribute("data-last-action", data.members[profileID].last_action.relative);
+
+                    // Calculate days inactive
+                    const numberOfDays = Math.floor((Date.now() / 1000 - data.members[profileID].last_action.timestamp) / (24 * 60 * 60));
+
+                    // Apply highlight color
+                    let color = null;
+                    activityHighlights.forEach((rule) => {
+                        if (rule[0] <= numberOfDays && numberOfDays <= rule[1]) {
+                            color = rule[2];
+                        }
+                    });
+
+                    if (color) {
+                        row.style.backgroundColor = color;
+                    }
+                    
+                } catch (e) {
+                    console.error("Error processing member row:", e);
+                }
+            });
+
+            console.log("[Faction Inactivity] Processed faction members");
+            
+        } catch (error) {
+            console.error("[Faction Inactivity] Error:", error);
         }
     }
 
-    let lastURL = location.href;
-    new MutationObserver(() => {
-        const currentURL = location.href;
-        if (currentURL !== lastURL) {
-            lastURL = currentURL;
-            monitorFactionPage();
+    // Initialize faction script
+    (function initFactionScript() {
+        if (shouldRunFactionScript()) {
+            // Initial run
+            setTimeout(showLastAction, 1000);
+            
+            // Listen for hash changes (Torn's navigation)
+            window.addEventListener("hashchange", () => {
+                if (shouldRunFactionScript()) {
+                    setTimeout(showLastAction, 500);
+                }
+            });
         }
-    }).observe(document, { subtree: true, childList: true });
-
-    setInterval(() => {
-        if (document.querySelector('.faction-info-wrap .members-list .table-body')) {
-            showFactionLastAction();
-        }
-    }, 15000);
-
-    console.log('%c[Torn Utilities]', 'color:#4CAF50', 'Loaded');
+    })();
 
     //////////////////////////////////////////////////////////////////////
-    // PART 2 — TORN: MORE LEGIBLE PLAYER NAMES
+    // PART 2 — MORE LEGIBLE PLAYER NAMES
     //////////////////////////////////////////////////////////////////////
 
+    // Load the Manrope font
     const fontLink = document.createElement('link');
     fontLink.href = 'https://fonts.googleapis.com/css2?family=Manrope:wght@700&display=swap';
     fontLink.rel = 'stylesheet';
     document.head.appendChild(fontLink);
 
+    // Add styles for legible names
     const style = document.createElement('style');
     style.textContent = `
         .custom-honor-text {
@@ -206,16 +212,57 @@
             justify-content: center;
             z-index: 10 !important;
         }
-        .honor-text-svg { display: none !important; }
-        .outline-black { text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000 !important; }
-        .outline-blue { text-shadow: -1px -1px 0 #310AF5, 1px -1px 0 #310AF5, -1px 1px 0 #310AF5, 1px 1px 0 #310AF5 !important; }
-        .outline-red { text-shadow: -1px -1px 0 #ff4d4d, 1px -1px 0 #ff4d4d, -1px 1px 0 #ff4d4d, 1px 1px 0 #ff4d4d !important; }
-        .outline-green { text-shadow: -1px -1px 0 #3B9932, 1px -1px 0 #3B9932, -1px 1px 0 #3B9932, 1px 1px 0 #3B9932 !important; }
-        .outline-orange { text-shadow: -1px -1px 0 #ff9c40, 1px -1px 0 #ff9c40, -1px 1px 0 #ff9c40, 1px 1px 0 #ff9c40 !important; }
-        .outline-purple { text-shadow: -1px -1px 0 #c080ff, 1px -1px 0 #c080ff, -1px 1px 0 #c080ff, 1px 1px 0 #c080ff !important; }
+        .honor-text-svg { 
+            display: none !important; 
+        }
+        
+        /* Text outline classes */
+        .outline-black { 
+            text-shadow: 
+                -1px -1px 0 #000, 
+                1px -1px 0 #000, 
+                -1px 1px 0 #000, 
+                1px 1px 0 #000 !important; 
+        }
+        .outline-blue { 
+            text-shadow: 
+                -1px -1px 0 #310AF5, 
+                1px -1px 0 #310AF5, 
+                -1px 1px 0 #310AF5, 
+                1px 1px 0 #310AF5 !important; 
+        }
+        .outline-red { 
+            text-shadow: 
+                -1px -1px 0 #ff4d4d, 
+                1px -1px 0 #ff4d4d, 
+                -1px 1px 0 #ff4d4d, 
+                1px 1px 0 #ff4d4d !important; 
+        }
+        .outline-green { 
+            text-shadow: 
+                -1px -1px 0 #3B9932, 
+                1px -1px 0 #3B9932, 
+                -1px 1px 0 #3B9932, 
+                1px 1px 0 #3B9932 !important; 
+        }
+        .outline-orange { 
+            text-shadow: 
+                -1px -1px 0 #ff9c40, 
+                1px -1px 0 #ff9c40, 
+                -1px 1px 0 #ff9c40, 
+                1px 1px 0 #ff9c40 !important; 
+        }
+        .outline-purple { 
+            text-shadow: 
+                -1px -1px 0 #c080ff, 
+                1px -1px 0 #c080ff, 
+                -1px 1px 0 #c080ff, 
+                1px 1px 0 #c080ff !important; 
+        }
     `;
     document.head.appendChild(style);
 
+    // Determine which outline class to use
     function getOutlineClass(wrap) {
         if (wrap.classList.contains('admin')) return 'outline-red';
         if (wrap.classList.contains('officer')) return 'outline-green';
@@ -225,24 +272,42 @@
         return 'outline-black';
     }
 
+    // Replace the SVG text with custom HTML text
     function replaceHonorText() {
         document.querySelectorAll('.honor-text-wrap').forEach(wrap => {
+            // Hide the SVG
             const sprite = wrap.querySelector('.honor-text-svg');
-            const existing = wrap.querySelector('.custom-honor-text');
-            if (sprite) sprite.style.display = 'none';
-            if (existing) return;
-            const text = wrap.getAttribute('data-title') || wrap.getAttribute('aria-label') || wrap.innerText || '';
+            if (sprite) {
+                sprite.style.display = 'none';
+            }
+            
+            // Skip if already has custom text
+            if (wrap.querySelector('.custom-honor-text')) return;
+            
+            // Get the player name
+            const text = wrap.getAttribute('data-title') || 
+                        wrap.getAttribute('aria-label') || 
+                        wrap.textContent || '';
+            
             const cleaned = text.trim().toUpperCase();
             if (!cleaned) return;
+            
+            // Create the custom text element
             const div = document.createElement('div');
             div.className = `custom-honor-text ${getOutlineClass(wrap)}`;
             div.textContent = cleaned;
+            
             wrap.appendChild(div);
         });
     }
 
+    // Initial replacement
     replaceHonorText();
-    new MutationObserver(replaceHonorText).observe(document.body, { childList: true, subtree: true });
+    
+    // Watch for dynamic content
+    const observer = new MutationObserver(replaceHonorText);
+    observer.observe(document.body, { childList: true, subtree: true });
 
-    console.log('%c[Legible Names]', 'color:#1E90FF', 'Loaded');
+    console.log("[Legible Player Names] Loaded");
+
 })();

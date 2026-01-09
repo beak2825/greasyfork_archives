@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         移花宫增强
 // @namespace    http://tampermonkey.net/
-// @version      0.9
+// @version      0.11
 // @description  优化显示
 // @author       You
 // @match        https://yhg007.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=yhg007.com
 // @grant        GM_addStyle
+// @require      https://update.greasyfork.org/scripts/555706/1694621/GM_SelectToSearch.js
 // @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/551545/%E7%A7%BB%E8%8A%B1%E5%AE%AB%E5%A2%9E%E5%BC%BA.user.js
 // @updateURL https://update.greasyfork.org/scripts/551545/%E7%A7%BB%E8%8A%B1%E5%AE%AB%E5%A2%9E%E5%BC%BA.meta.js
@@ -63,7 +64,10 @@
     files[0].$el.style["font-weight"] = "bold";
 
     const $bar = $item.querySelector(".sbar");
-    const getSubItem = (i) => ({ $el: $bar.children[i], text: $bar.children[i].querySelector("b").textContent.trim() });
+    const getSubItem = (i) => ({
+      $el: $bar.children[i],
+      text: $bar.children[i].querySelector("b").textContent.trim(),
+    });
     return {
       $el: $item,
       title: {
@@ -71,7 +75,10 @@
         text: $title.textContent.trim(),
       },
       files,
-      magnet: { $el: $bar.children[0], text: $bar.children[0].querySelector("a").href },
+      magnet: {
+        $el: $bar.children[0],
+        text: $bar.children[0].querySelector("a").href,
+      },
       addDate: getSubItem(1),
       size: getSubItem(2),
       lastDownloadDate: getSubItem(3),
@@ -80,8 +87,10 @@
   });
 
   const testTitle = (item, rule) => rule.test(item.title.text);
-  const testFile = (item, rule) => item.files.some((file) => rule.test(file.filename));
-  const testItem = (item, rule) => testTitle(item, rule) || testFile(item, rule);
+  const testFile = (item, rule) =>
+    item.files.some((file) => rule.test(file.filename));
+  const testItem = (item, rule) =>
+    testTitle(item, rule) || testFile(item, rule);
 
   items.forEach((item) => {
     // 过滤
@@ -118,7 +127,8 @@
   function setLastVisitItem($item) {
     if ($lastVisitItem) $lastVisitItem.classList.remove("last-visit");
     $lastVisitItem = $item.closest(".ssbox");
-    localStorage.lastVisitItem = $lastVisitItem.querySelector(".title>h3>a").href;
+    localStorage.lastVisitItem =
+      $lastVisitItem.querySelector(".title>h3>a").href;
     $lastVisitItem.classList.add("last-visit");
   }
 
@@ -127,7 +137,10 @@
   const $searchBox = document.querySelector(".sort-box");
   if ($pager && $searchBox) {
     const $pagerClone = $pager.cloneNode(true);
-    $searchBox.parentNode.insertBefore($pagerClone, $searchBox.nextElementSibling);
+    $searchBox.parentNode.insertBefore(
+      $pagerClone,
+      $searchBox.nextElementSibling
+    );
   }
 
   // 搜索标题
@@ -136,11 +149,17 @@
       setLastVisitItem($h3);
     }
 
-    const text = $h3.textContent.replace(/\.(720p|1080p|2160p|4k)\..*/i, "").trim();
+    const text = $h3.textContent
+      .replace(/\.(720p|1080p|2160p|4k)\..*/i, "")
+      .trim();
     const $box = document.createElement("div");
     $box.style.float = "right";
-    $box.appendChild(createLink("[Google]", `https://www.google.co.jp/search?q=${text}`));
-    $box.appendChild(createLink("[Image]", `https://www.google.co.jp/search?tbm=isch&q=${text}`));
+    $box.appendChild(
+      createLink("[Google]", `https://www.google.com/search?q=${text}`)
+    );
+    $box.appendChild(
+      createLink("[Image]", `https://www.google.com/search?tbm=isch&q=${text}`)
+    );
     $h3.appendChild($box);
   });
 
@@ -173,6 +192,21 @@
     });
     return $a;
   }
+
+  window.GM_SelectToSearch([
+    {
+      label: `Google`,
+      url: "https://www.google.com/search?q=%s",
+    },
+    {
+      label: `Google Image`,
+      url: "https://www.google.com/search?tbm=isch&q=%s",
+    },
+    {
+      label: `<img src="https://www.voidtools.com/favicon.ico"> ES`,
+      url: "es:%s",
+    },
+  ]);
 
   GM_addStyle(`
     .ssbox.last-visit {

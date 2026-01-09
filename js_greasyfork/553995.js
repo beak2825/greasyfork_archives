@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name               Duolingo DuoFarmer
 // @namespace          https://duo-farmer.vercel.app
-// @version            1.3.12
+// @version            1.3.14.1
 // @author             Lamduck
 // @description        DuoFarmer is a tool that helps you farm XP, farm Streak, farm Gems or even repair frozen streak on Duolingo!.
 // @description:en     DuoFarmer is a tool that helps you farm XP, farm Streak, farm Gems or even repair frozen streak on Duolingo!.
@@ -39,8 +39,8 @@
 // @license            CC BY-NC-SA 4.0
 // @icon               https://www.google.com/s2/favicons?sz=64&domain=duolingo.com
 // @match              https://*.duolingo.com/*
-// @grant              GM_log
 // @run-at             document-start
+// @antifeature        ads  This script have some promote link to my other website like telegram chat, homepage,...
 // @downloadURL https://update.greasyfork.org/scripts/528621/Duolingo%20DuoFarmer.user.js
 // @updateURL https://update.greasyfork.org/scripts/528621/Duolingo%20DuoFarmer.meta.js
 // ==/UserScript==
@@ -208,8 +208,7 @@
       <button id="start-btn">Start</button>
       <button id="stop-btn" hidden>Stop</button>
     </div>
-    <div id="notify">Getting user info, please wait until it's done.<br /> If it takes too long, please refresh the
-      page.</div>
+    <div id="log-container"></div>
   </div>
   <div id="footer">
     <span class="label">If info is wrong, reload the page!</span>
@@ -342,7 +341,7 @@
           <code id="feature-guide">
             <p><b>- Enable Duolingo Max Patch:</b> Bypass subscription check to get Duolingo Max!, thanks <a href="https://github.com/apersongithub/Duolingo-Unlimited-Hearts" target="_blank">apersongithub</a>.</p>
             <p><b>- Auto start farming onload:</b> Start farming default selected option automatically when the page loads. <br></p>
-            <p><b>- Repair streak:</b> Fills missing streak days from account creation date to now, it's also break all the frozen streak.<br></p>
+            <p><b>- Repair streak:</b> Fills missing streak days from account creation date (or start streak date) to now, it's also break all the frozen streak.<br></p>
             <p><b>- Blank page (best performance):</b> Duolingo's error page with minimal load. It will have 100% power for farming 😎.<br></p>
             <p><b>- Public/Private:</b> Toggle account visibility. Private = hidden from leaderboards. (Recommended to use private) <br></p>
           </code>
@@ -366,19 +365,7 @@
   </div>
 </div>
 <div id="floating-btn">🐸</div>`;
-  const cssText = "#action-row{width:90%;display:flex;justify-content:space-between;align-items:center;margin:8px 0;gap:8px}#blank-page-link{margin-bottom:8px;color:#fce6ff;font-weight:700;font-style:italic}#body{min-height:40vh;max-height:100%;min-width:0;background:#282828;display:flex;align-items:center;justify-content:center;width:100%;overflow-y:auto;flex:1;flex-direction:column}#body .label{font-size:1.2em}#body h3{margin:0;color:#fff;font-size:1.1em;font-weight:700;letter-spacing:1px}#container{width:90vw;max-width:800px;min-height:40vh;max-height:90vh;background:#222;color:#fff;border-radius:10px;box-shadow:0 2px 12px #0008;font-family:sans-serif;font-size:.9em;display:flex;flex-direction:column;align-items:center;justify-content:center;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;box-sizing:border-box}#floating-btn{position:fixed;bottom:10%;right:2%;width:40px;height:40px;background:#35bd00;border-radius:50%;box-shadow:0 2px 8px #0000004d;z-index:10000;cursor:pointer;display:flex;align-items:center;justify-content:center}#footer{height:30px;background:#222;display:flex;align-items:center;justify-content:space-evenly;border-bottom-left-radius:10px;border-bottom-right-radius:10px;width:100%}#footer a,#footer span{text-decoration:none;color:#00aeff;font-size:1em;font-weight:700;font-style:italic}#header{height:60px;background:#333;display:flex;align-items:center;justify-content:space-between;border-top-left-radius:10px;border-top-right-radius:10px;width:100%;position:relative}#header .label{font-size:1.4em;font-weight:600;color:#fff}#header-left{display:flex;align-items:center}#header-left img{width:32px;height:32px;margin-right:8px;vertical-align:middle}#notify{width:90%;max-width:90%;min-height:10vh;margin:8px 0;padding:8px 12px;border-radius:6px;background:#333;color:#c8ff00;font-size:1em;word-wrap:break-word}#overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000c;z-index:9998;pointer-events:all}#select-option{width:90%;max-width:90%;margin-right:8px;padding:8px 12px;border-radius:6px;border:1px solid #444;background:#232323;color:#fff;font-size:1em;outline:none}#settings-btn{position:absolute;right:20px;background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:5px;border-radius:3px}#settings-btn:hover{background:#555}#settings-container{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:10000;display:flex;align-items:center;justify-content:center;background:#000c}#start-btn,#stop-btn{width:auto;margin-left:0;padding:8px 18px;border-radius:6px;border:none;background:#229100;color:#fff;font-size:1em;font-weight:700;cursor:pointer;box-shadow:0 2px 8px #0003}#stop-btn{background:#af0303}.modal-body{min-height:25vh;max-height:100%;min-width:0;background:#282828;display:flex;align-items:center;justify-content:flex-start;width:100%;overflow-y:auto;flex:1;flex-direction:column;padding:20px}.modal-close{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:5px;border-radius:3px}.modal-close:hover{background:#555}.modal-content{width:90vw;max-width:800px;min-height:25vh;max-height:70vh;background:#222;color:#fff;border-radius:10px;box-shadow:0 2px 12px #0008;font-family:sans-serif;font-size:.9em;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;box-sizing:border-box}.modal-footer{height:60px;background:#333;display:flex;align-items:center;justify-content:flex-end;padding:5px 20px;border-top:1px solid #444;border-bottom-left-radius:10px;border-bottom-right-radius:10px;width:100%}.modal-header{height:60px;background:#333;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-top-left-radius:10px;border-top-right-radius:10px;width:100%}.modal-header .label{font-weight:700}.save-btn{padding:8px 10px;border-radius:6px;border:none;background:#229100;color:#fff;font-weight:bolder;cursor:pointer}.setting-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;padding:10px;background:#333;border-radius:5px}.setting-item a{color:#4caf50;font-style:italic;text-decoration:none;margin-left:auto;font-size:.9em}.setting-item a:hover{color:#66bb6a;text-decoration:underline}.setting-item input:not([type=checkbox]){width:120px;padding:8px 12px;margin-left:auto;border-radius:6px;border:1px solid #444;background:#232323;color:#fff;font-size:1em;outline:none}.setting-item input[type=checkbox]{width:18px;height:18px;margin-left:auto;cursor:pointer;accent-color:#229100}.setting-item input[type=number]{width:120px;padding:8px 12px;margin-left:auto;border-radius:6px;border:1px solid #444;background:#232323;color:#fff;font-size:1em;text-align:center;outline:none}.setting-item input[type=number]:focus{border-color:#229100}.setting-item select{width:120px;padding:8px 12px;margin-left:auto;border-radius:6px;border:1px solid #444;background:#232323;color:#fff;font-size:1em;outline:none;cursor:pointer}.setting-item span{flex:1;margin-right:10px}.setting-item .setting-btn{padding:6px 12px;margin-left:auto;background:#555;border:1px solid #666;border-radius:4px;color:#fff;font-size:.9em;cursor:pointer}.settings-group{width:100%;margin-bottom:30px}.settings-group h3{margin:0 0 15px;color:#fff;font-size:16px;border-bottom:1px solid #444;padding-bottom:5px}.blur{filter:blur(4px)}code{background:#333;margin:10px 0;padding:8px 12px;border-left:#229100 3px solid;font-family:monospace;line-height:1.5em;display:block;border-radius:2px}.disable-btn{background:#52454560!important;cursor:not-allowed!important}.disabled{background:#26202060!important;color:#888!important;cursor:not-allowed!important;pointer-events:none!important}.hidden{display:none!important}.label{font-size:1em}.muted{color:#555!important;font-size:smaller!important}.table{width:100%;background:#232323;color:#fff;border-radius:8px;padding:8px 12px;text-align:center;table-layout:fixed}.table th,.table td{padding:9px 12px;text-align:center;border-bottom:1px solid #444;width:1%}.table tbody tr:last-child td{border-bottom:none}";
-  const log = (message) => {
-    if (typeof GM_log !== "undefined") {
-      GM_log(message);
-    } else {
-      console.log("[DuoFarmer]", message);
-    }
-  };
-  const logError = (error, context = "") => {
-    const message = (error == null ? void 0 : error.message) || (error == null ? void 0 : error.toString()) || "Unknown error";
-    const fullMessage = context ? `[${context}] ${message}` : message;
-    log(fullMessage);
-  };
+  const cssText = "#action-row{width:90%;display:flex;justify-content:space-between;align-items:center;margin:8px 0;gap:8px}#blank-page-link{margin-bottom:8px;color:#fce6ff;font-weight:700;font-style:italic}#body{min-height:40vh;max-height:100%;min-width:0;background:#282828;display:flex;align-items:center;justify-content:center;width:100%;overflow-y:auto;flex:1;flex-direction:column}#body .label{font-size:1.2em}#body h3{margin:0;color:#fff;font-size:1.1em;font-weight:700;letter-spacing:1px}#container{width:90vw;max-width:800px;min-height:40vh;max-height:90vh;background:#222;color:#fff;border-radius:10px;box-shadow:0 2px 12px #0008;font-family:sans-serif;font-size:.9em;display:flex;flex-direction:column;align-items:center;justify-content:center;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;box-sizing:border-box}#floating-btn{position:fixed;bottom:10%;right:2%;width:40px;height:40px;background:#35bd00;border-radius:50%;box-shadow:0 2px 8px #0000004d;z-index:10000;cursor:pointer;display:flex;align-items:center;justify-content:center}#footer{height:30px;background:#222;display:flex;align-items:center;justify-content:space-evenly;border-bottom-left-radius:10px;border-bottom-right-radius:10px;width:100%}#footer a,#footer span{text-decoration:none;color:#00aeff;font-size:1em;font-weight:700;font-style:italic}#header{height:60px;background:#333;display:flex;align-items:center;justify-content:space-between;border-top-left-radius:10px;border-top-right-radius:10px;width:100%;position:relative}#header .label{font-size:1.4em;font-weight:600;color:#fff}#header-left{display:flex;align-items:center}#header-left img{width:32px;height:32px;margin-right:8px;vertical-align:middle}#log-container{width:90%;max-width:90%;height:300px;margin:8px 0;padding:8px 12px;border-radius:6px;background:#1a1a1a;color:#c8ff00;font-family:monospace;overflow-y:auto;overflow-x:hidden;word-wrap:break-word;-webkit-user-select:text;user-select:text}#log-container div{padding:2px 0;border-bottom:1px solid #333}#overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000c;z-index:9998;pointer-events:all}#select-option{width:90%;max-width:90%;margin-right:8px;padding:8px 12px;border-radius:6px;border:1px solid #444;background:#232323;color:#fff;font-size:1em;outline:none}#settings-btn{position:absolute;right:20px;background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:5px;border-radius:3px}#settings-btn:hover{background:#555}#settings-container{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:10000;display:flex;align-items:center;justify-content:center;background:#000c}#start-btn,#stop-btn{width:auto;margin-left:0;padding:8px 18px;border-radius:6px;border:none;background:#229100;color:#fff;font-size:1em;font-weight:700;cursor:pointer;box-shadow:0 2px 8px #0003}#stop-btn{background:#af0303}.modal-body{min-height:25vh;max-height:100%;min-width:0;background:#282828;display:flex;align-items:center;justify-content:flex-start;width:100%;overflow-y:auto;flex:1;flex-direction:column;padding:20px}.modal-close{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:5px;border-radius:3px}.modal-close:hover{background:#555}.modal-content{width:90vw;max-width:800px;min-height:25vh;max-height:70vh;background:#222;color:#fff;border-radius:10px;box-shadow:0 2px 12px #0008;font-family:sans-serif;font-size:.9em;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;box-sizing:border-box}.modal-footer{height:60px;background:#333;display:flex;align-items:center;justify-content:flex-end;padding:5px 20px;border-top:1px solid #444;border-bottom-left-radius:10px;border-bottom-right-radius:10px;width:100%}.modal-header{height:60px;background:#333;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-top-left-radius:10px;border-top-right-radius:10px;width:100%}.modal-header .label{font-weight:700}.save-btn{padding:8px 10px;border-radius:6px;border:none;background:#229100;color:#fff;font-weight:bolder;cursor:pointer}.setting-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;padding:10px;background:#333;border-radius:5px}.setting-item a{color:#4caf50;font-style:italic;text-decoration:none;margin-left:auto;font-size:.9em}.setting-item a:hover{color:#66bb6a;text-decoration:underline}.setting-item input:not([type=checkbox]){width:120px;padding:8px 12px;margin-left:auto;border-radius:6px;border:1px solid #444;background:#232323;color:#fff;font-size:1em;outline:none}.setting-item input[type=checkbox]{width:18px;height:18px;margin-left:auto;cursor:pointer;accent-color:#229100}.setting-item input[type=number]{width:120px;padding:8px 12px;margin-left:auto;border-radius:6px;border:1px solid #444;background:#232323;color:#fff;font-size:1em;text-align:center;outline:none}.setting-item input[type=number]:focus{border-color:#229100}.setting-item select{width:120px;padding:8px 12px;margin-left:auto;border-radius:6px;border:1px solid #444;background:#232323;color:#fff;font-size:1em;outline:none;cursor:pointer}.setting-item span{flex:1;margin-right:10px}.setting-item .setting-btn{padding:6px 12px;margin-left:auto;background:#555;border:1px solid #666;border-radius:4px;color:#fff;font-size:.9em;cursor:pointer}.settings-group{width:100%;margin-bottom:30px}.settings-group h3{margin:0 0 15px;color:#fff;font-size:16px;border-bottom:1px solid #444;padding-bottom:5px}.blur{filter:blur(4px)}code{background:#333;margin:10px 0;padding:8px 12px;border-left:#229100 3px solid;font-family:monospace;line-height:1.5em;display:block;border-radius:2px}.disable-btn{background:#52454560!important;cursor:not-allowed!important}.disabled{background:#26202060!important;color:#888!important;cursor:not-allowed!important;pointer-events:none!important}.hidden{display:none!important}.label{font-size:1em}.muted{color:#555!important;font-size:smaller!important}.table{width:100%;background:#232323;color:#fff;border-radius:8px;padding:8px 12px;text-align:center;table-layout:fixed}.table th,.table td{padding:9px 12px;text-align:center;border-bottom:1px solid #444;width:1%}.table tbody tr:last-child td{border-bottom:none}";
   const delay = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
   };
@@ -745,295 +732,21 @@ Copy to clipboard?`) && navigator.clipboard.writeText(token);
       });
     }
   }
-  const safeCall = (callback, ...args) => callback == null ? void 0 : callback(...args);
-  const handleFarmingError = (error, context, callbacks) => {
-    const message = (error == null ? void 0 : error.status) ? `Error ${error.status}! Please report in telegram group!` : `Error in ${context}: ${(error == null ? void 0 : error.message) || error}`;
-    safeCall(callbacks.onError, message);
-    return message;
-  };
-  const FARMING_STRATEGIES = {
-    gem: (apiService, config, callbacks) => new GemFarming(apiService, config, callbacks),
-    xp: (apiService, config, callbacks) => new XpFarming(apiService, config, callbacks),
-    streak: (apiService, config, callbacks) => new StreakFarming(apiService, config, callbacks)
-  };
-  class GemFarming {
-    constructor(apiService, config, callbacks) {
-      this.apiService = apiService;
-      this.config = config;
-      this.callbacks = callbacks;
-      this.gemFarmed = 30;
-    }
-    async start(userInfo) {
-      while (this.config.isRunning) {
-        try {
-          await this.apiService.farmGemOnce(userInfo);
-          safeCall(this.callbacks.onUpdate, "gem", this.gemFarmed);
-          await this.callbacks.delay(this.config.delayTime);
-        } catch (error) {
-          handleFarmingError(error, "gemFarming", this.callbacks);
-          await this.callbacks.delay(this.config.retryTime);
-        }
-      }
-    }
+  let logContainer = null;
+  const MAX_LOGS = 500;
+  function initLog(shadowRoot) {
+    logContainer = shadowRoot.getElementById("log-container");
   }
-  class XpFarming {
-    constructor(apiService, config, callbacks) {
-      this.apiService = apiService;
-      this.config = config;
-      this.callbacks = callbacks;
+  function log(message) {
+    if (!logContainer) return;
+    const line = document.createElement("div");
+    const time = (/* @__PURE__ */ new Date()).toLocaleTimeString();
+    line.textContent = `[${time}] ${message}`;
+    logContainer.appendChild(line);
+    if (logContainer.children.length > MAX_LOGS) {
+      logContainer.removeChild(logContainer.firstChild);
     }
-    async start(value, amount, config = {}, userInfo) {
-      while (this.config.isRunning) {
-        try {
-          const response = await this.apiService.farmSessionOnce(config);
-          if (response.status > 400) {
-            safeCall(this.callbacks.onError, `Something went wrong! Please try again later.`);
-            await this.callbacks.delay(this.config.retryTime);
-            continue;
-          }
-          const responseData = await response.json();
-          const xpFarmed = (responseData == null ? void 0 : responseData.awardedXp) || (responseData == null ? void 0 : responseData.xpGain) || 0;
-          safeCall(this.callbacks.onUpdate, "xp", xpFarmed);
-          await this.callbacks.delay(this.config.delayTime);
-        } catch (error) {
-          handleFarmingError(error, "xpFarming", this.callbacks);
-          await this.callbacks.delay(this.config.retryTime);
-        }
-      }
-    }
-  }
-  class StreakFarming {
-    constructor(apiService, config, callbacks) {
-      this.apiService = apiService;
-      this.config = config;
-      this.callbacks = callbacks;
-      this.SECONDS_PER_DAY = 86400;
-      this.SESSION_DURATION_SECONDS = 60;
-    }
-    async start(value = "farm", userInfo) {
-      const method = value === "repair" ? this.repair.bind(this) : this.farm.bind(this);
-      await method(userInfo);
-    }
-    async farm(userInfo) {
-      const hasStreak = !!userInfo.streakData.currentStreak;
-      const startStreakDate = hasStreak ? userInfo.streakData.currentStreak.startDate : /* @__PURE__ */ new Date();
-      const startFarmStreakTimestamp = toTimestamp(startStreakDate);
-      let currentTimestamp = hasStreak ? startFarmStreakTimestamp - this.SECONDS_PER_DAY : startFarmStreakTimestamp;
-      while (this.config.isRunning) {
-        try {
-          const sessionRes = await this.apiService.farmSessionOnce({
-            startTime: currentTimestamp,
-            endTime: currentTimestamp + this.SESSION_DURATION_SECONDS
-          });
-          if (sessionRes) {
-            currentTimestamp -= this.SECONDS_PER_DAY;
-            safeCall(this.callbacks.onUpdate, "streak", 1);
-            await this.callbacks.delay(this.config.delayTime);
-          } else {
-            safeCall(this.callbacks.onError, "Failed to farm streak session, I'm trying again...");
-            await this.callbacks.delay(this.config.retryTime);
-            continue;
-          }
-        } catch (error) {
-          handleFarmingError(error, "farmStreak", this.callbacks);
-          await this.callbacks.delay(this.config.retryTime);
-          continue;
-        }
-      }
-    }
-    validateRepair(userInfo) {
-      const creationDate = userInfo.creationDate;
-      const currentStreak = userInfo.streak || 0;
-      const currentTime = getCurrentUnixTimestamp();
-      const daysSinceCreation = daysBetween(creationDate, currentTime);
-      const maxPossibleStreak = daysSinceCreation + 1;
-      const missingStreaks = maxPossibleStreak - currentStreak;
-      if (currentStreak >= maxPossibleStreak) {
-        return {
-          valid: false,
-          message: `Current streak (${currentStreak}) is greater than or equal to maximum possible streak (${maxPossibleStreak}). No repair needed.`
-        };
-      }
-      if (missingStreaks <= 0) {
-        return {
-          valid: false,
-          message: "No missing streaks to repair."
-        };
-      }
-      return {
-        valid: true,
-        missingStreaks,
-        endTimestamp: creationDate,
-        maxPossibleStreak
-      };
-    }
-    async repair(userInfo) {
-      const validation = this.validateRepair(userInfo);
-      if (!validation.valid) {
-        safeCall(this.callbacks.onNotify, validation.message);
-        safeCall(this.callbacks.onStop);
-        return;
-      }
-      const { missingStreaks, maxPossibleStreak, endTimestamp } = validation;
-      if (!confirm(`This feature will repair ${missingStreaks} missing streaks, so your streak will be ${maxPossibleStreak} days. Are you sure you want to continue?`)) {
-        const message = `Streak repair cancelled.`;
-        safeCall(this.callbacks.onNotify, message);
-        safeCall(this.callbacks.onStop);
-        return;
-      }
-      safeCall(this.callbacks.onNotify, `Repairing ${missingStreaks} missing streaks...`);
-      const hasStreak = !!userInfo.streakData.currentStreak;
-      const startStreakDate = hasStreak ? userInfo.streakData.currentStreak.startDate : /* @__PURE__ */ new Date();
-      const startFarmStreakTimestamp = toTimestamp(startStreakDate);
-      let repairTimestamp = hasStreak ? startFarmStreakTimestamp - this.SECONDS_PER_DAY : startFarmStreakTimestamp;
-      let repairedCount = 0;
-      while (this.config.isRunning && repairTimestamp >= endTimestamp && repairedCount < missingStreaks) {
-        try {
-          const sessionRes = await this.apiService.farmSessionOnce({
-            startTime: repairTimestamp,
-            endTime: repairTimestamp + this.SESSION_DURATION_SECONDS
-          });
-          if (sessionRes) {
-            repairTimestamp -= this.SECONDS_PER_DAY;
-            safeCall(this.callbacks.onUpdate, "streak", 1);
-            repairedCount += 1;
-            await this.callbacks.delay(this.config.delayTime);
-          } else {
-            safeCall(this.callbacks.onError, "Failed to repair streak session, I'm trying again...");
-            await this.callbacks.delay(this.config.retryTime);
-            continue;
-          }
-        } catch (error) {
-          handleFarmingError(error, "repairStreak", this.callbacks);
-          await this.callbacks.delay(this.config.retryTime);
-          continue;
-        }
-      }
-      if (repairedCount >= missingStreaks || repairTimestamp < endTimestamp) {
-        const message = `Streak repair completed. Repaired ${repairedCount} day(s).`;
-        safeCall(this.callbacks.onNotify, message);
-        safeCall(this.callbacks.onStop);
-      }
-    }
-  }
-  class FarmingController {
-    constructor(apiService, config, callbacks) {
-      this.apiService = apiService;
-      this.config = config;
-      this.callbacks = callbacks;
-      this.isRunning = false;
-      this.autoStopTimerId = null;
-      this.currentFarming = null;
-    }
-    getIsRunning() {
-      return this.isRunning;
-    }
-    setIsRunning(running) {
-      this.isRunning = running;
-      if (!running && this.autoStopTimerId) {
-        clearTimeout(this.autoStopTimerId);
-        this.autoStopTimerId = null;
-      }
-    }
-    startAutoStopTimer(autoStopTimeMinutes) {
-      if (autoStopTimeMinutes > 0) {
-        this.autoStopTimerId = setTimeout(() => {
-          const message = `Auto-stopped by setting (stop after ${autoStopTimeMinutes} minutes).`;
-          safeCall(this.callbacks.onNotify, message);
-          safeCall(this.callbacks.onAlert, message);
-          this.stop();
-        }, autoStopTimeMinutes * 60 * 1e3);
-      }
-    }
-    async start(option, userInfo) {
-      if (this.isRunning) {
-        return;
-      }
-      this.setIsRunning(true);
-      this.startAutoStopTimer(this.config.autoStopTime);
-      const { type, value, amount, config } = option;
-      try {
-        const strategy = FARMING_STRATEGIES[type];
-        if (!strategy) {
-          throw new Error(`Unknown farming type: ${type}`);
-        }
-        this.currentFarming = strategy(this.apiService, this.config, this.callbacks);
-        if (type === "xp") {
-          await this.currentFarming.start(value, amount, config, userInfo);
-        } else if (type === "streak") {
-          await this.currentFarming.start(value, userInfo);
-        } else {
-          await this.currentFarming.start(userInfo);
-        }
-      } catch (error) {
-        handleFarmingError(error, "FarmingController.start", this.callbacks);
-      } finally {
-        this.setIsRunning(false);
-      }
-    }
-    stop() {
-      this.setIsRunning(false);
-      this.currentFarming = null;
-    }
-  }
-  class UserManager {
-    constructor(callbacks) {
-      this.userInfo = null;
-      this.callbacks = callbacks;
-    }
-    setUserInfo(userInfo) {
-      this.userInfo = userInfo;
-      if (this.callbacks.onUserInfoUpdate) {
-        this.callbacks.onUserInfoUpdate(this.userInfo);
-      }
-    }
-    getUserInfo() {
-      return this.userInfo;
-    }
-    updateFarmResult(type, farmedAmount) {
-      if (!this.userInfo) {
-        return;
-      }
-      switch (type) {
-        case "gem":
-          this.userInfo = { ...this.userInfo, gems: this.userInfo.gems + farmedAmount };
-          if (this.callbacks.onNotify) {
-            this.callbacks.onNotify(`You got ${farmedAmount} gem!!!`);
-          }
-          break;
-        case "xp":
-          this.userInfo = { ...this.userInfo, totalXp: this.userInfo.totalXp + farmedAmount };
-          if (this.callbacks.onNotify) {
-            this.callbacks.onNotify(`You got ${farmedAmount} XP!!!`);
-          }
-          break;
-        case "streak":
-          this.userInfo = { ...this.userInfo, streak: this.userInfo.streak + farmedAmount };
-          if (this.callbacks.onNotify) {
-            this.callbacks.onNotify(`You got ${farmedAmount} streak! (maybe some xp too, idk)`);
-          }
-          break;
-      }
-      if (this.callbacks.onUserInfoUpdate) {
-        this.callbacks.onUserInfoUpdate(this.userInfo);
-      }
-    }
-  }
-  function generateFarmOptions(userInfo) {
-    const skillId = extractSkillId(userInfo.currentCourse || {});
-    return [
-      { type: "separator", label: "⟡ GEM FARMING ⟡", value: "", disabled: true },
-      { type: "gem", label: "Gem 30", value: "fixed", amount: 30 },
-      { type: "separator", label: "⟡ XP FARMING ⟡", value: "", disabled: true },
-      { type: "xp", label: "XP 10", value: "xp", amount: 10, config: {} },
-      { type: "xp", label: "XP 20", value: "xp", amount: 20, config: { updateSessionPayload: { hasBoost: true } } },
-      { type: "xp", label: "XP 40", value: "xp", amount: 40, config: { updateSessionPayload: { hasBoost: true, type: "TARGET_PRACTICE" } } },
-      { type: "xp", label: "XP 50", value: "xp", amount: 50, config: { updateSessionPayload: { enableBonusPoints: true, hasBoost: true, happyHourBonusXp: 10, type: "TARGET_PRACTICE" } } },
-      { type: "xp", label: "XP 110", value: "xp", amount: 110, config: { sessionPayload: { type: "UNIT_TEST", skillIds: skillId ? [skillId] : [] }, updateSessionPayload: { type: "UNIT_TEST", hasBoost: true, happyHourBonusXp: 10, pathLevelSpecifics: { unitIndex: 0 } } }, disabled: !skillId },
-      { type: "separator", label: "⟡ STREAK FARMING ⟡", value: "", disabled: true },
-      { type: "streak", label: "Unlimited Streak", value: "farm" },
-      { type: "streak", label: "Repair Streak", value: "repair" }
-    ];
+    logContainer.scrollTop = logContainer.scrollHeight;
   }
   function getElements(shadowRoot) {
     return {
@@ -1043,7 +756,7 @@ Copy to clipboard?`) && navigator.clipboard.writeText(token);
       floatingBtn: shadowRoot.getElementById("floating-btn"),
       container: shadowRoot.getElementById("container"),
       overlay: shadowRoot.getElementById("overlay"),
-      notify: shadowRoot.getElementById("notify"),
+      logContainer: shadowRoot.getElementById("log-container"),
       username: shadowRoot.getElementById("username"),
       from: shadowRoot.getElementById("from"),
       learn: shadowRoot.getElementById("learn"),
@@ -1097,6 +810,7 @@ Copy to clipboard?`) && navigator.clipboard.writeText(token);
       if (settingsContainer) {
         settingsContainer.style.display = "none";
       }
+      initLog(this.shadowRoot);
       const requiredElements = [
         "start-btn",
         "stop-btn",
@@ -1104,7 +818,7 @@ Copy to clipboard?`) && navigator.clipboard.writeText(token);
         "floating-btn",
         "container",
         "overlay",
-        "notify"
+        "log-container"
       ];
       for (const id of requiredElements) {
         if (!this.shadowRoot.getElementById(id)) {
@@ -1247,10 +961,7 @@ Copy to clipboard?`) && navigator.clipboard.writeText(token);
       elements.settingsClose.addEventListener("click", settingsModal.hide);
     }
     updateNotify(message) {
-      const elements = getElements(this.shadowRoot);
-      const now = (/* @__PURE__ */ new Date()).toLocaleTimeString();
-      elements.notify.innerText = `[${now}] ` + message;
-      log(`[${now}] ${message}`);
+      log(message);
     }
     updateUserInfo(userInfo, skillId, sub) {
       var _a;
@@ -1309,11 +1020,355 @@ Copy to clipboard?`) && navigator.clipboard.writeText(token);
         elements.username.classList.add("blur");
       }
       if (settings.keepScreenOn && "wakeLock" in navigator) {
-        navigator.wakeLock.request("screen").then((wakeLock) => {
+        navigator.wakeLock.request("screen").then(() => {
           log("Screen wake lock active");
         });
       }
     }
+  }
+  const safeCall = (callback, ...args) => callback == null ? void 0 : callback(...args);
+  const handleFarmingError = (error, context, callbacks) => {
+    const message = (error == null ? void 0 : error.status) ? `Error ${error.status}! Please report in telegram group!` : `Error in ${context}: ${(error == null ? void 0 : error.message) || error}`;
+    safeCall(callbacks.onError, message);
+    return message;
+  };
+  const FARMING_STRATEGIES = {
+    gem: (apiService, config, callbacks) => new GemFarming(apiService, config, callbacks),
+    xp: (apiService, config, callbacks) => new XpFarming(apiService, config, callbacks),
+    streak: (apiService, config, callbacks) => new StreakFarming(apiService, config, callbacks)
+  };
+  class GemFarming {
+    constructor(apiService, config, callbacks) {
+      this.apiService = apiService;
+      this.config = config;
+      this.callbacks = callbacks;
+      this.gemFarmed = 30;
+    }
+    async start(userInfo) {
+      while (this.config.isRunning) {
+        try {
+          await this.apiService.farmGemOnce(userInfo);
+          safeCall(this.callbacks.onUpdate, "gem", this.gemFarmed);
+          await this.callbacks.delay(this.config.delayTime);
+        } catch (error) {
+          handleFarmingError(error, "gemFarming", this.callbacks);
+          await this.callbacks.delay(this.config.retryTime);
+        }
+      }
+    }
+  }
+  class XpFarming {
+    constructor(apiService, config, callbacks) {
+      this.apiService = apiService;
+      this.config = config;
+      this.callbacks = callbacks;
+    }
+    async start(value, amount, config = {}, userInfo) {
+      while (this.config.isRunning) {
+        try {
+          const response = await this.apiService.farmSessionOnce(config);
+          if (response.status > 400) {
+            safeCall(this.callbacks.onError, `Something went wrong! Please try again later.`);
+            await this.callbacks.delay(this.config.retryTime);
+            continue;
+          }
+          const responseData = await response.json();
+          const xpFarmed = (responseData == null ? void 0 : responseData.awardedXp) || (responseData == null ? void 0 : responseData.xpGain) || 0;
+          safeCall(this.callbacks.onUpdate, "xp", xpFarmed);
+          await this.callbacks.delay(this.config.delayTime);
+        } catch (error) {
+          handleFarmingError(error, "xpFarming", this.callbacks);
+          await this.callbacks.delay(this.config.retryTime);
+        }
+      }
+    }
+  }
+  class StreakFarming {
+    constructor(apiService, config, callbacks) {
+      this.apiService = apiService;
+      this.config = config;
+      this.callbacks = callbacks;
+      this.SECONDS_PER_DAY = 86400;
+      this.SESSION_DURATION_SECONDS = 60;
+    }
+    async start(value = "farm", userInfo) {
+      const method = value === "repair" ? this.repair.bind(this) : this.farm.bind(this);
+      await method(userInfo);
+    }
+    async farm(userInfo) {
+      const hasStreak = !!userInfo.streakData.currentStreak;
+      const startStreakDate = hasStreak ? userInfo.streakData.currentStreak.startDate : /* @__PURE__ */ new Date();
+      const startFarmStreakTimestamp = toTimestamp(startStreakDate);
+      let currentTimestamp = hasStreak ? startFarmStreakTimestamp - this.SECONDS_PER_DAY : startFarmStreakTimestamp;
+      while (this.config.isRunning) {
+        try {
+          const sessionRes = await this.apiService.farmSessionOnce({
+            startTime: currentTimestamp,
+            endTime: currentTimestamp + this.SESSION_DURATION_SECONDS
+          });
+          if (sessionRes) {
+            currentTimestamp -= this.SECONDS_PER_DAY;
+            safeCall(this.callbacks.onUpdate, "streak", 1);
+            await this.callbacks.delay(this.config.delayTime);
+          } else {
+            safeCall(this.callbacks.onError, "Failed to farm streak session, I'm trying again...");
+            await this.callbacks.delay(this.config.retryTime);
+            continue;
+          }
+        } catch (error) {
+          handleFarmingError(error, "farmStreak", this.callbacks);
+          await this.callbacks.delay(this.config.retryTime);
+          continue;
+        }
+      }
+    }
+    validateRepair(userInfo) {
+      var _a, _b;
+      const creationDate = userInfo.creationDate;
+      const currentStreak = userInfo.streak || 0;
+      const currentTime = getCurrentUnixTimestamp();
+      const hasStreak = !!((_b = (_a = userInfo.streakData) == null ? void 0 : _a.currentStreak) == null ? void 0 : _b.startDate);
+      const startStreakDate = hasStreak ? userInfo.streakData.currentStreak.startDate : null;
+      const startStreakTimestamp = startStreakDate ? toTimestamp(startStreakDate) : null;
+      let baseTimestamp;
+      let baseSource;
+      if (startStreakTimestamp && startStreakTimestamp < creationDate) {
+        baseTimestamp = startStreakTimestamp;
+        baseSource = "startStreakDate";
+      } else {
+        baseTimestamp = creationDate;
+        baseSource = "creationDate";
+      }
+      const daysSinceBase = daysBetween(baseTimestamp, currentTime);
+      const maxPossibleStreak = daysSinceBase + 1;
+      const missingStreaks = maxPossibleStreak - currentStreak;
+      log(`[RepairStreak] validateRepair - creationDate: ${creationDate}`);
+      log(`[RepairStreak] validateRepair - startStreakDate: ${startStreakDate}`);
+      log(`[RepairStreak] validateRepair - startStreakTimestamp: ${startStreakTimestamp}`);
+      log(`[RepairStreak] validateRepair - baseTimestamp: ${baseTimestamp} (source: ${baseSource})`);
+      log(`[RepairStreak] validateRepair - currentStreak: ${currentStreak}`);
+      log(`[RepairStreak] validateRepair - currentTime: ${currentTime}`);
+      log(`[RepairStreak] validateRepair - daysSinceBase: ${daysSinceBase}`);
+      log(`[RepairStreak] validateRepair - maxPossibleStreak: ${maxPossibleStreak}`);
+      log(`[RepairStreak] validateRepair - missingStreaks: ${missingStreaks}`);
+      if (currentStreak >= maxPossibleStreak) {
+        return {
+          valid: false,
+          message: `Current streak (${currentStreak}) is greater than or equal to maximum possible streak (${maxPossibleStreak}). No repair needed.`
+        };
+      }
+      if (missingStreaks <= 0) {
+        return {
+          valid: false,
+          message: "No missing streaks to repair."
+        };
+      }
+      return {
+        valid: true,
+        missingStreaks,
+        endTimestamp: baseTimestamp,
+        maxPossibleStreak
+      };
+    }
+    async repair(userInfo) {
+      const validation = this.validateRepair(userInfo);
+      if (!validation.valid) {
+        safeCall(this.callbacks.onNotify, validation.message);
+        safeCall(this.callbacks.onStop);
+        return;
+      }
+      const { endTimestamp } = validation;
+      const currentStreak = userInfo.streak || 0;
+      const currentTime = getCurrentUnixTimestamp();
+      const hasStreak = !!userInfo.streakData.currentStreak;
+      const startStreakDate = hasStreak ? userInfo.streakData.currentStreak.startDate : null;
+      const startFarmStreakTimestamp = startStreakDate ? toTimestamp(startStreakDate) : null;
+      let actualMaxPossibleStreak;
+      let actualEndTimestamp;
+      if (startFarmStreakTimestamp) {
+        actualMaxPossibleStreak = daysBetween(startFarmStreakTimestamp, currentTime) + 1;
+        actualEndTimestamp = startFarmStreakTimestamp;
+        log(`[RepairStreak] repair - using startStreakDate for maxPossibleStreak`);
+      } else {
+        actualMaxPossibleStreak = validation.maxPossibleStreak;
+        actualEndTimestamp = endTimestamp;
+        log(`[RepairStreak] repair - using creationDate for maxPossibleStreak`);
+      }
+      const actualMissingStreaks = actualMaxPossibleStreak - currentStreak;
+      if (!confirm(`This feature will run ${actualMaxPossibleStreak} sessions to repair ${actualMissingStreaks} missing streaks. Your streak will be ${actualMaxPossibleStreak} days. Are you sure you want to continue?`)) {
+        const message = `Streak repair cancelled.`;
+        safeCall(this.callbacks.onNotify, message);
+        safeCall(this.callbacks.onStop);
+        return;
+      }
+      safeCall(this.callbacks.onNotify, `Starting repair: ${actualMaxPossibleStreak} sessions to run...`);
+      let repairTimestamp = currentTime - this.SECONDS_PER_DAY;
+      let repairedCount = 0;
+      log(`[RepairStreak] repair - hasStreak: ${hasStreak}`);
+      log(`[RepairStreak] repair - startStreakDate: ${startStreakDate} (type: ${typeof startStreakDate})`);
+      log(`[RepairStreak] repair - startFarmStreakTimestamp: ${startFarmStreakTimestamp}`);
+      log(`[RepairStreak] repair - currentStreak: ${currentStreak}`);
+      log(`[RepairStreak] repair - actualMaxPossibleStreak: ${actualMaxPossibleStreak}`);
+      log(`[RepairStreak] repair - actualMissingStreaks: ${actualMissingStreaks}`);
+      log(`[RepairStreak] repair - repairTimestamp (start): ${repairTimestamp}`);
+      log(`[RepairStreak] repair - actualEndTimestamp: ${actualEndTimestamp}`);
+      log(`[RepairStreak] repair - isRunning: ${this.config.isRunning}`);
+      log(`[RepairStreak] repair - condition check: repairTimestamp >= actualEndTimestamp = ${repairTimestamp >= actualEndTimestamp}`);
+      log(`[RepairStreak] repair - condition check: repairedCount < actualMaxPossibleStreak = ${repairedCount < actualMaxPossibleStreak}`);
+      while (this.config.isRunning && repairTimestamp >= actualEndTimestamp && repairedCount < actualMaxPossibleStreak) {
+        try {
+          const sessionRes = await this.apiService.farmSessionOnce({
+            startTime: repairTimestamp,
+            endTime: repairTimestamp + this.SESSION_DURATION_SECONDS
+          });
+          if (sessionRes) {
+            repairTimestamp -= this.SECONDS_PER_DAY;
+            repairedCount += 1;
+            safeCall(this.callbacks.onNotify, `Repairing ${repairedCount} / ${actualMaxPossibleStreak} streaks...`);
+            await this.callbacks.delay(this.config.delayTime);
+          } else {
+            safeCall(this.callbacks.onError, "Failed to repair streak session, I'm trying again...");
+            await this.callbacks.delay(this.config.retryTime);
+            continue;
+          }
+        } catch (error) {
+          handleFarmingError(error, "repairStreak", this.callbacks);
+          await this.callbacks.delay(this.config.retryTime);
+          continue;
+        }
+      }
+      log(`[RepairStreak] repair - loop ended`);
+      log(`[RepairStreak] repair - final repairTimestamp: ${repairTimestamp}`);
+      log(`[RepairStreak] repair - final repairedCount: ${repairedCount}`);
+      log(`[RepairStreak] repair - isRunning after loop: ${this.config.isRunning}`);
+      if (repairedCount > 0) {
+        safeCall(this.callbacks.onUpdate, "streak", actualMissingStreaks);
+      }
+      if (repairedCount >= actualMaxPossibleStreak || repairTimestamp < actualEndTimestamp) {
+        const message = `Streak repair completed. Repaired ${repairedCount} day(s). Your streak is now ${actualMaxPossibleStreak}.`;
+        safeCall(this.callbacks.onNotify, message);
+        safeCall(this.callbacks.onStop);
+      }
+    }
+  }
+  class FarmingController {
+    constructor(apiService, config, callbacks) {
+      this.apiService = apiService;
+      this.config = config;
+      this.callbacks = callbacks;
+      this.isRunning = false;
+      this.autoStopTimerId = null;
+      this.currentFarming = null;
+    }
+    getIsRunning() {
+      return this.isRunning;
+    }
+    setIsRunning(running) {
+      this.isRunning = running;
+      if (!running && this.autoStopTimerId) {
+        clearTimeout(this.autoStopTimerId);
+        this.autoStopTimerId = null;
+      }
+    }
+    startAutoStopTimer(autoStopTimeMinutes) {
+      if (autoStopTimeMinutes > 0) {
+        this.autoStopTimerId = setTimeout(() => {
+          const message = `Auto-stopped by setting (stop after ${autoStopTimeMinutes} minutes).`;
+          safeCall(this.callbacks.onNotify, message);
+          safeCall(this.callbacks.onAlert, message);
+          this.stop();
+        }, autoStopTimeMinutes * 60 * 1e3);
+      }
+    }
+    async start(option, userInfo) {
+      if (this.isRunning) {
+        return;
+      }
+      this.setIsRunning(true);
+      this.startAutoStopTimer(this.config.autoStopTime);
+      const { type, value, amount, config } = option;
+      try {
+        const strategy = FARMING_STRATEGIES[type];
+        if (!strategy) {
+          throw new Error(`Unknown farming type: ${type}`);
+        }
+        this.currentFarming = strategy(this.apiService, this.config, this.callbacks);
+        if (type === "xp") {
+          await this.currentFarming.start(value, amount, config, userInfo);
+        } else if (type === "streak") {
+          await this.currentFarming.start(value, userInfo);
+        } else {
+          await this.currentFarming.start(userInfo);
+        }
+      } catch (error) {
+        handleFarmingError(error, "FarmingController.start", this.callbacks);
+      } finally {
+        this.setIsRunning(false);
+      }
+    }
+    stop() {
+      this.setIsRunning(false);
+      this.currentFarming = null;
+    }
+  }
+  class UserManager {
+    constructor(callbacks) {
+      this.userInfo = null;
+      this.callbacks = callbacks;
+    }
+    setUserInfo(userInfo) {
+      this.userInfo = userInfo;
+      if (this.callbacks.onUserInfoUpdate) {
+        this.callbacks.onUserInfoUpdate(this.userInfo);
+      }
+    }
+    getUserInfo() {
+      return this.userInfo;
+    }
+    updateFarmResult(type, farmedAmount) {
+      if (!this.userInfo) {
+        return;
+      }
+      switch (type) {
+        case "gem":
+          this.userInfo = { ...this.userInfo, gems: this.userInfo.gems + farmedAmount };
+          if (this.callbacks.onNotify) {
+            this.callbacks.onNotify(`You got ${farmedAmount} gem!!!`);
+          }
+          break;
+        case "xp":
+          this.userInfo = { ...this.userInfo, totalXp: this.userInfo.totalXp + farmedAmount };
+          if (this.callbacks.onNotify) {
+            this.callbacks.onNotify(`You got ${farmedAmount} XP!!!`);
+          }
+          break;
+        case "streak":
+          this.userInfo = { ...this.userInfo, streak: this.userInfo.streak + farmedAmount };
+          if (this.callbacks.onNotify) {
+            this.callbacks.onNotify(`You got ${farmedAmount} streak! (maybe some xp too, idk)`);
+          }
+          break;
+      }
+      if (this.callbacks.onUserInfoUpdate) {
+        this.callbacks.onUserInfoUpdate(this.userInfo);
+      }
+    }
+  }
+  function generateFarmOptions(userInfo) {
+    const skillId = extractSkillId(userInfo.currentCourse || {});
+    return [
+      { type: "separator", label: "⟡ GEM FARMING ⟡", value: "", disabled: true },
+      { type: "gem", label: "Gem 30", value: "fixed", amount: 30 },
+      { type: "separator", label: "⟡ XP FARMING ⟡", value: "", disabled: true },
+      { type: "xp", label: "XP 10", value: "xp", amount: 10, config: {} },
+      { type: "xp", label: "XP 20", value: "xp", amount: 20, config: { updateSessionPayload: { hasBoost: true } } },
+      { type: "xp", label: "XP 40", value: "xp", amount: 40, config: { updateSessionPayload: { hasBoost: true, type: "TARGET_PRACTICE" } } },
+      { type: "xp", label: "XP 50", value: "xp", amount: 50, config: { updateSessionPayload: { enableBonusPoints: true, hasBoost: true, happyHourBonusXp: 10, type: "TARGET_PRACTICE" } } },
+      { type: "xp", label: "XP 110", value: "xp", amount: 110, config: { sessionPayload: { type: "UNIT_TEST", skillIds: skillId ? [skillId] : [] }, updateSessionPayload: { type: "UNIT_TEST", hasBoost: true, happyHourBonusXp: 10, pathLevelSpecifics: { unitIndex: 0 } } }, disabled: !skillId },
+      { type: "separator", label: "⟡ STREAK FARMING ⟡", value: "", disabled: true },
+      { type: "streak", label: "Unlimited Streak", value: "farm" },
+      { type: "streak", label: "Repair Streak", value: "repair" }
+    ];
   }
   initPatcher();
   function setupCallbacks(userManager, farmingController, uiHandlers, skillId, sub) {
@@ -1410,9 +1465,12 @@ Copy to clipboard?`) && navigator.clipboard.writeText(token);
       uiHandlers.updateUserInfo(userInfo, skillId, sub);
       uiHandlers.setupEventListeners();
       uiHandlers.loadSavedSettings(savedSettings);
-      uiHandlers.updateNotify('Duofarmer ready! For safety, I suggest that you use 2nd accounts.\nRecommended to use "Blank page" for best performance (check in setting)');
+      uiHandlers.updateNotify("Duofarmer ready! If you get bugs or wanna request new features, tell me in telegram group!");
+      uiHandlers.updateNotify("Don't abuse hacking to avoid account ban.");
+      uiHandlers.updateNotify('Recommended to use "Blank page" for best performance (check in settings)');
+      uiHandlers.updateNotify("Recommended to set account private (check in settings)");
     } catch (err) {
-      logError(err, "Duofarmer init error!");
+      log(`Duofarmer init error: ${(err == null ? void 0 : err.message) || err}`);
     }
   })();
 

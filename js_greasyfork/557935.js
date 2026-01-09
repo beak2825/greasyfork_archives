@@ -61,7 +61,7 @@
     input[type="number"], input[type="text"], textarea, select, input[type="date"], input[type="time"] { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
     textarea { resize: vertical; min-height: 120px; }
     .action-buttons { display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap; align-items: center; justify-content: center; }
-    .action-buttons button { display: inline-flex; align-items: center; justify-content: center; flex-grow: 0; padding: 5px 10px; border: 1px solid #555; border-radius: 4px; font-weight: bold; font-size: 11px; cursor: pointer; transition: all 0.2s; background: linear-gradient(to bottom, #f7f7f7, #e3e3e3); color: #333; text-shadow: 1px 1px 1px #fff; white-space: nowrap; }
+    .action-buttons button { display: inline-flex; align-items: center; justify-content: center; flex-grow: 0; padding: 5px 10px; border: 1px solid #555; border-radius: 4px; font-weight: normal; font-size: 11px; cursor: pointer; transition: all 0.2s; background: linear-gradient(to bottom, #f7f7f7, #e3e3e3); color: #333; text-shadow: 1px 1px 1px #fff; white-space: nowrap; }
     .action-buttons button:hover { background: linear-gradient(to bottom, #e3e3e3, #d1d1d1); border-color: #333; }
     .btn-group-nowrap { display: flex; gap: 8px; flex-wrap: nowrap; }
     button:disabled { background: #e9ecef !important; border-color: #ccc !important; color: #999 !important; cursor: not-allowed; opacity: 0.7; }
@@ -548,7 +548,7 @@
             <div id="scan-status" style="margin-top:10px; font-size:11px; color:var(--pm-muted); min-height:18px;"></div>
           </div>
         </div>
-        
+
         <div style="text-align:center; margin-top:10px; border-top:1px solid #e5e7eb; padding-top:5px;">
            <span style="font-size:10px; color:#9ca3af; font-family:monospace;">Developed by Chris Popper</span>
         </div>

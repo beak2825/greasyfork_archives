@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Ranged Way Idle
-// @version      6.16
+// @version      6.20
 // @author       AlphB
 // @description  一些超级有用的MWI的QoL功能
 // @match        https://*.milkywayidle.com/*
@@ -14,6 +14,7 @@
 // @grant        GM_notification
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM_info
 // @icon         https://tupian.li/images/2025/09/30/68dae3cf1fa7e.png
 // @license      CC-BY-NC-SA-4.0
 // @namespace    http://tampermonkey.net/
@@ -162,7 +163,7 @@
     };
 
     const globalVariables = {
-        scriptVersion: "6.16",
+        scriptVersion: GM_info?.script?.version || "6.20",
         marketAPIUrl: "https://www.milkywayidle.com/game_data/marketplace.json",
         initCharacterData: null,
         documentObserver: null,
@@ -2833,7 +2834,7 @@
                                     const imName = globalVariables.imListingsOwnerMap[listingId];
                                     realNameNode.textContent = ownName || imName || I18N("unknownRealName");
                                     // 是自己的已删除单，或者非自己的单子且非IM的单子，显示为灰色
-                                    if ((getStorage("ranged_way_idle_deleted_listings") || []).includes(listingId) || (!ownName && !imName)) {
+                                    if (((getStorage("ranged_way_idle_deleted_listings") || []).map(id => Number(id))).includes(listingId) || (!ownName && !imName)) {
                                         realNameNode.style.color = "#7F7F7F";
                                     }
                                     if (ownName) {
@@ -2842,7 +2843,7 @@
                                             globalVariables.imListingsToDeleteAllow = true;
                                             delete globalVariables.imListingsOwnerMap[listingId];
                                             const localSet = getStorage("ranged_way_idle_deleted_listings") || [];
-                                            localSet.push(listingId);
+                                            localSet.push(listingId.toString());
                                             setStorage("ranged_way_idle_deleted_listings", localSet);
                                         }
                                     }
@@ -2889,13 +2890,13 @@
                                     const realNameNode = document.createElement("td");
                                     realNameNode.textContent = globalVariables.initCharacterData.character.name;
                                     realNameNode.classList.add("RangedWayIdleEstimateListingCreateTime");
-                                    if ((getStorage("ranged_way_idle_deleted_listings") || []).includes(listing.id)) realNameNode.style.color = "#7F7F7F";
+                                    if ((getStorage("ranged_way_idle_deleted_listings") || []).map(id => Number(id)).includes(listing.id)) realNameNode.style.color = "#7F7F7F";
                                     realNameNode.onclick = () => {
                                         globalVariables.imListingsToDeleteSet.add(listing.id);
                                         globalVariables.imListingsToDeleteAllow = true;
                                         delete globalVariables.imListingsOwnerMap[listing.id];
                                         const localSet = getStorage("ranged_way_idle_deleted_listings") || [];
-                                        localSet.push(listing.id);
+                                        localSet.push(listing.id.toString());
                                         setStorage("ranged_way_idle_deleted_listings", localSet);
                                     }
                                     row.insertBefore(realNameNode, row.lastChild);
@@ -3796,16 +3797,17 @@
                             if (permissionLevel === 5) {
                                 modalTabs.setTabVisibility('tab4', true);
                             }
-                            new Set(Object.keys((getStorage("ranged_way_idle_market_listings") || {})[globalVariables.initCharacterData.character.id] || {})).forEach(listingId => {
-                                globalVariables.imListingsToDeleteSet.add(listingId);
-                            });
-                            const currentShowedListing = new Set(Object.keys(globalVariables.allListings)).difference(new Set((getStorage("ranged_way_idle_deleted_listings") || [])));
-                            currentShowedListing.forEach(listingId => globalVariables.imListingsToDeleteSet.delete(listingId));
-                            setStorage("ranged_way_idle_deleted_listings", Array.from(
-                                new Set(getStorage("ranged_way_idle_deleted_listings") || [])
-                                    .difference(new Set(Object.keys((getStorage("ranged_way_idle_market_listings") || {})[globalVariables.initCharacterData.character.id] || {})))
-                                    .difference(new Set(Object.keys(globalVariables.allListings)))
-                            ));
+                            const localDeletedListings = new Set((getStorage("ranged_way_idle_deleted_listings") || []).map(id => id.toString()).filter(str => /^[1-9]\d*$/.test(str.trim())));
+                            const currentAllListings = new Set(Object.keys(globalVariables.allListings));
+                            const allHistoryListings = new Set(Object.keys((getStorage("ranged_way_idle_market_listings") || {})[globalVariables.initCharacterData.character.id]));
+                            const currentShowedListing = currentAllListings.difference(localDeletedListings);
+                            // 30天内所有单 - (现存单子 - 记录的已删除单) = 30天内所有单 - 现存公开单 = 所有已结束单 | 现存已隐藏单    告知服务器删除
+                            allHistoryListings.difference(currentShowedListing).forEach(id => globalVariables.imListingsToDeleteSet.add(id));
+                            // 记录的已删除单 & 30天内所有单 -> 记录的已删除单
+                            // 即移除超过30的单子
+                            // 不使用 记录的已删除单 & 现存单子 ，为避免本次告知服务器删除失败，导致单子无限滞留在服务器
+                            setStorage("ranged_way_idle_deleted_listings", [...localDeletedListings].filter(id => allHistoryListings.has(id)));
+                            // 上传现存公开单
                             for (const id of currentShowedListing) {
                                 const listing = globalVariables.allListings[id];
                                 if (imConfigs["upload-listings-item-info"]) {
@@ -3879,8 +3881,8 @@
                             globalVariables.imListingsCreateTimeData = obj.result;
                         } else if (obj.type === "delete_listing_reply") {
                             if (obj.success) {
-                                obj.allListingId.forEach(listingId => globalVariables.imListingsToDeleteSet.delete(listingId));
-                                setStorage("ranged_way_idle_deleted_listings", Array.from(new Set(getStorage("ranged_way_idle_deleted_listings") || []).union(new Set(obj.allListingId))));
+                                obj.allListingId.forEach(listingId => globalVariables.imListingsToDeleteSet.delete(listingId.toString()));
+                                setStorage("ranged_way_idle_deleted_listings", Array.from(new Set(getStorage("ranged_way_idle_deleted_listings") || []).union(new Set(obj.allListingId.map(id=>id.toString())))));
                                 document.querySelectorAll(".RangedWayIdleEstimateListingCreateTimeSet").forEach(node => node.classList.remove("RangedWayIdleEstimateListingCreateTimeSet"));
                             }
                         }
@@ -3962,7 +3964,7 @@
                     } else if (obj.type === "market_listings_updated") {
                         for (const id of (
                             new Set(Object.keys(globalVariables.allListings))
-                                .difference(new Set(getStorage("ranged_way_idle_deleted_listings") || []))
+                                .difference(new Set((getStorage("ranged_way_idle_deleted_listings") || []).map(id=>id.toString())))
                                 .difference(globalVariables.imListingsToDeleteSet)
                                 .difference(hasUploadedListingIds)
                         )) {

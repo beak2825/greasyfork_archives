@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         TGFC论坛WAP助手
 // @namespace    http://tampermonkey.net/
-// @version      0.5.3
-// @description  TGFC论坛WAP版增强助手：自动切换旧版模板、URL参数自定义、用户屏蔽与关键词过滤、Tag标签管理、楼主高亮、快速链接、卡片式美化布局、Markdown渲染
+// @version      0.5.6
+// @description  TGFC论坛WAP版增强：热门话题、关注话题、用户屏蔽、Tag标签、楼主高亮、快速链接、卡片式美化、Markdown渲染、URL参数自定义、静默引用
 // @author       Heiren + AI
 // @match        https://wap.tgfcer.com/*
 // @match        https://club.tgfcer.com/wap/*
@@ -310,6 +310,7 @@
                 hideList: cfg.hideList !== false,
                 hideContent: cfg.hideContent !== false,
                 showBlockTip: cfg.showBlockTip !== false,
+                silentQuote: cfg.silentQuote === true,
                 pageWidth: cfg.pageWidth || defaultCfg.pageWidth,
                 bgColor: cfg.bgColor || defaultCfg.bgColor,
                 font: cfg.font || defaultCfg.font,
@@ -866,7 +867,7 @@
             font-size: 9px !important;
         }
 
-        .tgfc-wap-tags, .tgfc-wap-tag-item, .tgfc-wap-ban-btn, .tgfc-wap-set-btn, .tgfc-op-badge, .tgfc-md-btn {
+        .tgfc-wap-tags, .tgfc-wap-tag-item, .tgfc-wap-ban-btn, .tgfc-wap-set-btn, .tgfc-wap-only-btn, .tgfc-op-badge, .tgfc-md-btn {
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -891,6 +892,10 @@
         .tgfc-wap-set-btn {
             padding: 0 4px !important; font-size: 10px !important;
             color: #fff !important; background: #3498db !important; border-radius: 3px !important; cursor: pointer !important; text-decoration: none !important;
+        }
+        .tgfc-wap-only-btn {
+            padding: 0 4px !important; font-size: 10px !important;
+            color: #fff !important; background: #9b59b6 !important; border-radius: 3px !important; cursor: pointer !important; text-decoration: none !important;
         }
 
         .tgfc-op-badge {
@@ -1253,6 +1258,64 @@
         .tgfc-md-content a:hover { text-decoration: underline; }
         .tgfc-md-bold { font-weight: 600; }
         .tgfc-md-italic { font-style: italic; }
+
+        /* === 十大话题面板 === */
+        .tgfc-wap-top10-panel { margin: 8px 5px; border: 1px solid #ddd; border-radius: 6px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
+        .tgfc-wap-top10-header { display: flex; align-items: center; justify-content: center; padding: 2px 8px; background: linear-gradient(135deg, #3498db, #2980b9); color: #fff !important; cursor: pointer; user-select: none; position: relative; }
+        .tgfc-wap-top10-header:hover { background: linear-gradient(135deg, #2980b9, #1f6dad); }
+        .tgfc-wap-top10-title { font-size: 12px; font-weight: 600; color: #fff !important; }
+        .tgfc-wap-top10-right { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 4px; }
+        .tgfc-wap-top10-tabs { display: flex; align-items: center; gap: 2px; }
+        .tgfc-wap-top10-tab { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff !important; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: 500; }
+        .tgfc-wap-top10-tab:hover { background: rgba(255,255,255,0.25); }
+        .tgfc-wap-top10-tab.active { background: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.8); font-weight: 600; }
+        .tgfc-wap-top10-status { font-size: 9px; color: #fff !important; }
+        .tgfc-wap-top10-refresh { background: transparent; border: none; color: #fff !important; width: 20px; height: 20px; cursor: pointer; font-size: 12px; padding: 0; }
+        .tgfc-wap-top10-refresh:hover { opacity: 0.8; }
+        .tgfc-wap-top10-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .tgfc-wap-top10-body.expanded { max-height: 400px; overflow-y: auto; }
+        .tgfc-wap-top10-list { list-style: none; margin: 0; padding: 0; }
+        .tgfc-wap-top10-list li { display: flex; align-items: center; padding: 6px 10px; border-bottom: 1px solid #f0f0f0; }
+        .tgfc-wap-top10-list li:last-child { border-bottom: none; }
+        .tgfc-wap-top10-list li:hover { background: #fffbf0; }
+        .tgfc-wap-top10-rank { min-width: 18px; height: 18px; line-height: 18px; text-align: center; border-radius: 50%; font-size: 10px; font-weight: 600; margin-right: 6px; }
+        .tgfc-wap-top10-rank.gold { background: linear-gradient(135deg, #ffd700, #ffb300); color: #7a5c00; }
+        .tgfc-wap-top10-rank.silver { background: linear-gradient(135deg, #c0c0c0, #a0a0a0); color: #444; }
+        .tgfc-wap-top10-rank.bronze { background: linear-gradient(135deg, #cd7f32, #a0522d); color: #fff; }
+        .tgfc-wap-top10-rank.normal { background: #f0f0f0; color: #666; }
+        .tgfc-wap-top10-link { flex: 1; color: #333; text-decoration: none; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .tgfc-wap-top10-link:visited { color: #888; }
+        .tgfc-wap-top10-link:hover { color: #e74c3c; }
+        .tgfc-wap-top10-replies { font-size: 10px; color: #e74c3c; font-weight: 600; margin-left: 6px; white-space: nowrap; }
+        .tgfc-wap-top10-author { font-size: 10px; color: #888; margin-left: 6px; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .tgfc-wap-top10-empty { padding: 12px; text-align: center; color: #999; font-size: 11px; }
+        .tgfc-wap-top10-loading { padding: 10px; text-align: center; font-size: 11px; color: #666; }
+
+        /* === 关注话题面板 === */
+        .tgfc-wap-followed-panel { margin: 8px 5px; border: 1px solid #ddd; border-radius: 6px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
+        .tgfc-wap-followed-header { display: flex; align-items: center; justify-content: center; padding: 2px 8px; background: linear-gradient(135deg, #2ecc71, #27ae60); color: #fff !important; cursor: pointer; user-select: none; }
+        .tgfc-wap-followed-header:hover { background: linear-gradient(135deg, #27ae60, #1e8449); }
+        .tgfc-wap-followed-title { font-size: 12px; font-weight: 600; color: #fff !important; }
+        .tgfc-wap-followed-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .tgfc-wap-followed-body.expanded { max-height: 300px; overflow-y: auto; }
+        .tgfc-wap-followed-list { list-style: none; margin: 0; padding: 0; }
+        .tgfc-wap-followed-list li { display: flex; align-items: center; padding: 5px 10px; border-bottom: 1px solid #f0f0f0; }
+        .tgfc-wap-followed-list li:last-child { border-bottom: none; }
+        .tgfc-wap-followed-list li:hover { background: #fffbf0; }
+        .tgfc-wap-followed-rank { min-width: 18px; height: 18px; line-height: 18px; text-align: center; border-radius: 50%; font-size: 10px; font-weight: 600; margin-right: 6px; background: #f0f0f0; color: #666; }
+        .tgfc-wap-followed-link { flex: 1; color: #0077cc; font-weight: bold; text-decoration: none; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .tgfc-wap-followed-link:visited { color: #888; }
+        .tgfc-wap-followed-link:hover { color: #e74c3c; }
+        .tgfc-wap-followed-author { font-size: 10px; color: #666; margin-left: 6px; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .tgfc-wap-followed-unfollow { font-size: 12px; color: #ccc; margin-left: 6px; cursor: pointer; padding: 2px 4px; }
+        .tgfc-wap-followed-unfollow:hover { color: #e74c3c; }
+        .tgfc-wap-followed-date { font-size: 10px; color: #999; margin-left: 4px; white-space: nowrap; }
+
+        /* === 关注按钮（内容页） === */
+        .tgfc-wap-follow-btn { display: inline-block; font-size: 11px; font-weight: bold; padding: 1px 6px; cursor: pointer; margin-left: 6px; border-radius: 3px; border: 1px solid #2196F3; background: #2196F3; color: #fff; vertical-align: middle; position: relative; top: -1px; }
+        .tgfc-wap-follow-btn:hover { background: #1976D2; border-color: #1976D2; }
+        .tgfc-wap-follow-btn.followed { background: #999; border-color: #999; color: #fff; }
+        .tgfc-wap-follow-btn.followed:hover { background: #777; border-color: #777; }
     `;
 
         // --- 核心逻辑 ---
@@ -1497,6 +1560,54 @@
             // 顺序控制铆点
             let anchor = authorLink.nextSibling;
 
+            // 1.5. "只看" 按钮 (ID 右侧, Tag 左侧)
+            // 解析 UID
+            let uid = null;
+            if (authorLink.href) {
+                const uidMatch = authorLink.href.match(/uid=(\d+)/);
+                if (uidMatch) uid = uidMatch[1];
+                else if (authorLink.href.includes('viewpro')) {
+                    // 尝试从 viewpro 链接提取 (HTML结构通常是 index.php?action=viewpro&uid=xxx)
+                    const u = new URL(authorLink.href, location.href);
+                    uid = u.searchParams.get('uid');
+                }
+            }
+
+            if (uid && !container.querySelector('.tgfc-wap-only-btn')) {
+                const onlyBtn = document.createElement('a');
+                onlyBtn.className = 'tgfc-wap-only-btn';
+                onlyBtn.textContent = '只看';
+
+                // 构建 URL
+                // 基础: same action (thread), same tid
+                // 附加: authorid=uid
+                // 继承/合并: 用户设置的 urlParams (vt, tp, pp 等)
+                const currentUrl = new URL(location.href);
+                const currentTid = currentUrl.searchParams.get('tid') || getThreadId();
+
+                if (currentTid) {
+                    const targetUrl = new URL(currentUrl.origin + currentUrl.pathname);
+                    targetUrl.searchParams.set('action', 'thread');
+                    targetUrl.searchParams.set('tid', currentTid);
+                    targetUrl.searchParams.set('authorid', uid);
+
+                    // 合并用户配置参数
+                    const userParams = cfg.urlParams || {};
+                    Object.keys(userParams).forEach(k => {
+                        if (userParams[k]) targetUrl.searchParams.set(k, userParams[k]);
+                    });
+                    // 特殊处理 iam 数组
+                    if (Array.isArray(userParams.iam) && userParams.iam.length > 0) {
+                        targetUrl.searchParams.set('iam', userParams.iam.join(','));
+                    }
+
+                    onlyBtn.href = targetUrl.toString();
+
+                    authorLink.parentNode.insertBefore(onlyBtn, anchor);
+                    anchor = onlyBtn.nextElementSibling || onlyBtn.nextSibling;
+                }
+            }
+
             // 设置按钮 (ID 右侧)
             if (!container.querySelector('.tgfc-wap-set-btn')) {
                 const s = document.createElement('a');
@@ -1735,7 +1846,7 @@
                                 }
                                 n = n.nextElementSibling;
                             }
-                            if (toHide.length > 0) createBlockedTip(toHide[0], authorName, toHide, '#楼主', null);
+                            if (toHide.length > 0) createBlockedTip(toHide[0], authorName, toHide, '#主楼', null);
 
                         } else if (cfg.highlighted && cfg.highlighted[authorName]) {
                             const style = cfg.highlighted[authorName];
@@ -2038,11 +2149,11 @@
                             }
                         }
 
-                        // 创建顶楼信息条 - 格式与其他楼一致：#楼主 用户名
+                        // 创建顶楼信息条 - 格式与其他楼一致：#主楼 用户名
                         const authorBar = document.createElement('div');
                         authorBar.className = 'tgfc-op-infobar infobar';
-                        // 将 "作者:" 替换为 "#楼主" 楼层号格式，与其他楼层统一
-                        authorBar.innerHTML = authorLine.replace(/作者[:：]/, '<b style="margin-right:3px;font-size:12px">#楼主</b>');
+                        // 将 "作者:" 替换为 "#主楼" 楼层号格式，与其他楼层统一
+                        authorBar.innerHTML = authorLine.replace(/作者[:：]/, '<b style="margin-right:3px;font-size:12px">#主楼</b>');
                         authorBar.style.cssText = 'border:1px solid #ddd;border-bottom:none;border-radius:6px 6px 0 0;margin:8px 5px 0 5px;padding:6px 8px;background:#fafafa;display:flex;align-items:center;gap:2px;font-size:14px;';
                         firstP.parentNode.insertBefore(authorBar, firstP.nextSibling);
                     }
@@ -2182,6 +2293,636 @@
                 lastSticky.classList.add('tgfc-sticky-end');
             }
         }
+
+        // ==========================================
+        // 模块: 今日十大话题 (WAP 版)
+        // ==========================================
+        const TOP10_CACHE_KEY = 'tgfc_wap_top10_cache';
+        const TOP10_CACHE_DURATION = 5 * 60 * 1000; // 5分钟缓存
+        const TOP10_COLLAPSED_KEY = 'tgfc_wap_top10_collapsed';
+
+        const TOP10_MODES = {
+            today: { label: '今日', pages: 6, days: 0 },
+            yesterday: { label: '昨日', pages: 10, days: 1 },
+            week: { label: '本周', pages: 25, days: 7 },
+            month: { label: '本月', pages: 85, days: 30 }
+        };
+
+        function isWapForumListPage() {
+            return location.href.includes('action=forum');
+        }
+
+        function getWapForumId() {
+            const url = new URL(location.href);
+            return url.searchParams.get('fid');
+        }
+
+        function getDateStr(daysAgo = 0) {
+            const now = new Date();
+            now.setDate(now.getDate() - daysAgo);
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            return [
+                `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+                `${year}-${month}-${day}`,
+                `${String(year).slice(2)}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+                `${String(year).slice(2)}-${month}-${day}`
+            ];
+        }
+
+        function getDateRange(days) {
+            const dates = [];
+            for (let i = 0; i <= days; i++) {
+                dates.push(...getDateStr(i));
+            }
+            return dates;
+        }
+
+        function getTop10Cache(fid, mode) {
+            const key = `${fid}_${mode}`;
+            const todayStr = getDateStr(0)[0];
+
+            // 尝试 GM_getValue
+            try {
+                if (typeof GM_getValue === 'function') {
+                    const raw = GM_getValue(TOP10_CACHE_KEY, '{}');
+                    // 如果返回了 undefined，说明 GM 函数不可用，降级
+                    if (raw !== undefined) {
+                        const cache = typeof raw === 'string' ? JSON.parse(raw) : raw;
+                        const data = cache[key];
+                        if (data && data.date === todayStr && Date.now() - data.timestamp < TOP10_CACHE_DURATION) {
+                            return data.threads;
+                        }
+                    }
+                }
+            } catch (e) { }
+
+            // localStorage 降级
+            try {
+                const raw = localStorage.getItem(TOP10_CACHE_KEY);
+                if (raw) {
+                    const cache = JSON.parse(raw);
+                    const data = cache[key];
+                    if (data && data.date === todayStr && Date.now() - data.timestamp < TOP10_CACHE_DURATION) {
+                        return data.threads;
+                    }
+                }
+            } catch (e) { }
+            return null;
+        }
+
+        function setTop10Cache(fid, mode, threads) {
+            const key = `${fid}_${mode}`;
+            const cacheData = {
+                date: getDateStr(0)[0],
+                timestamp: Date.now(),
+                threads: threads
+            };
+
+            // 尝试 GM
+            try {
+                if (typeof GM_getValue === 'function' && typeof GM_setValue === 'function') {
+                    const raw = GM_getValue(TOP10_CACHE_KEY, '{}');
+                    const cache = typeof raw === 'string' ? JSON.parse(raw) : raw;
+                    cache[key] = cacheData;
+                    GM_setValue(TOP10_CACHE_KEY, JSON.stringify(cache));
+                }
+            } catch (e) { }
+
+            // localStorage 降级
+            try {
+                let cache = {};
+                const raw = localStorage.getItem(TOP10_CACHE_KEY);
+                if (raw) cache = JSON.parse(raw);
+                cache[key] = cacheData;
+                localStorage.setItem(TOP10_CACHE_KEY, JSON.stringify(cache));
+            } catch (e) { }
+        }
+
+        function buildWapForumPageUrl(fid, page) {
+            const cfg = getConfig();
+            const params = cfg.urlParams || {};
+            let url = `https://${location.hostname}/wap/index.php?action=forum&fid=${fid}&page=${page}`;
+            if (params.vt) url += `&vt=${params.vt}`;
+            if (params.tp) url += `&tp=${params.tp}`;
+            return url;
+        }
+
+        function parseWapForumPageThreads(doc) {
+            const threads = [];
+            doc.querySelectorAll('.dTitle').forEach(item => {
+                // 跳过置顶帖
+                if (item.textContent.includes('[顶]') || item.textContent.includes('[锁][顶]')) return;
+
+                const authorSpan = item.querySelector('.author');
+                if (!authorSpan) return;
+
+                // WAP 格式: [作者/回复数/浏览数/最后回复者]
+                const authorText = authorSpan.textContent.trim();
+                // 解析 [xxx/123/456/yyy] 格式
+                const match = authorText.match(/^\[([^\/]+)\/(\d+)\/(\d+)\/([^\]]+)\]$/);
+                if (!match) return;
+
+                const author = match[1].trim();
+                const replies = parseInt(match[2]) || 0;
+                const views = parseInt(match[3]) || 0;
+
+                const titleLink = item.querySelector('.title a');
+                if (!titleLink) return;
+
+                const href = titleLink.href;
+                const tidMatch = href.match(/tid=(\d+)/);
+                if (!tidMatch) return;
+
+                threads.push({
+                    tid: tidMatch[1],
+                    title: titleLink.textContent.trim().replace(/^\[[^\]]+\]\s*/, ''),
+                    url: href,
+                    replies: replies,
+                    views: views,
+                    author: author
+                });
+            });
+            return threads;
+        }
+
+        async function fetchWapThreads(fid, forceRefresh = false) {
+            // WAP 版没有日期信息，固定抓取前3页，按回复数排序
+            const maxPages = 3;
+
+            const allThreads = [];
+            const seenTids = new Set();
+
+            for (let page = 1; page <= maxPages; page++) {
+                try {
+                    let doc;
+                    // 刷新时强制从网络获取，不使用当前 document
+                    if (!forceRefresh && page === 1 && location.href.includes(`fid=${fid}`) && !location.href.includes('page=')) {
+                        doc = document;
+                    } else {
+                        const pageUrl = buildWapForumPageUrl(fid, page);
+                        const html = await new Promise((resolve, reject) => {
+                            GM_xmlhttpRequest({
+                                method: 'GET',
+                                url: pageUrl,
+                                overrideMimeType: 'text/html; charset=gbk',
+                                onload: (resp) => resolve(resp.responseText),
+                                onerror: reject
+                            });
+                        });
+                        const parser = new DOMParser();
+                        doc = parser.parseFromString(html, 'text/html');
+                    }
+
+                    const pageThreads = parseWapForumPageThreads(doc);
+
+                    pageThreads.forEach(t => {
+                        if (!seenTids.has(t.tid)) {
+                            seenTids.add(t.tid);
+                            allThreads.push(t);
+                        }
+                    });
+
+                    if (page > 1) await new Promise(r => setTimeout(r, 100));
+                } catch (e) {
+                    console.error('[TGFC WAP] 抓取版面页面失败:', page, e);
+                }
+            }
+
+            allThreads.sort((a, b) => b.replies - a.replies);
+            return allThreads.slice(0, 20);
+        }
+
+        function renderTop10List(container, threads) {
+            if (!threads || threads.length === 0) {
+                container.innerHTML = '<div class="tgfc-wap-top10-empty">暂无热门话题</div>';
+                return;
+            }
+
+            const ol = document.createElement('ol');
+            ol.className = 'tgfc-wap-top10-list';
+
+            threads.forEach((t, i) => {
+                const li = document.createElement('li');
+
+                const rankSpan = document.createElement('span');
+                rankSpan.className = 'tgfc-wap-top10-rank';
+                if (i === 0) rankSpan.classList.add('gold');
+                else if (i === 1) rankSpan.classList.add('silver');
+                else if (i === 2) rankSpan.classList.add('bronze');
+                else rankSpan.classList.add('normal');
+                rankSpan.textContent = i + 1;
+
+                const link = document.createElement('a');
+                link.className = 'tgfc-wap-top10-link';
+                link.href = t.url;
+                link.textContent = t.title;
+                link.title = t.title;
+
+                const repliesSpan = document.createElement('span');
+                repliesSpan.className = 'tgfc-wap-top10-replies';
+                repliesSpan.textContent = `${t.replies}回`;
+
+                const authorSpan = document.createElement('span');
+                authorSpan.className = 'tgfc-wap-top10-author';
+                authorSpan.textContent = t.author;
+
+                li.appendChild(rankSpan);
+                li.appendChild(link);
+                li.appendChild(repliesSpan);
+                li.appendChild(authorSpan);
+                ol.appendChild(li);
+            });
+
+            container.innerHTML = '';
+            container.appendChild(ol);
+        }
+
+        function initWapTop10Panel() {
+            if (!isWapForumListPage()) return;
+            const fid = getWapForumId();
+            if (!fid) return;
+
+            const wrap = document.querySelector('.wrap');
+            if (!wrap) return;
+            if (document.getElementById('tgfc-wap-top10-panel')) return;
+
+            let isCollapsed = true;
+            try {
+                // 优先尝试读取 GM 数据
+                let gmVal;
+                if (typeof GM_getValue === 'function') {
+                    gmVal = GM_getValue(TOP10_COLLAPSED_KEY, 'true');
+                }
+
+                // 如果 GM 返回了有效值 (string)，使用它
+                if (gmVal !== undefined && gmVal !== null) {
+                    isCollapsed = gmVal === 'true';
+                } else {
+                    // 否则 (GM 不存在或返回 undefined)，降级到 localStorage
+                    // 注意：localStorage 默认认为 collapsed=true (除非明确 stored='false')
+                    isCollapsed = localStorage.getItem(TOP10_COLLAPSED_KEY) !== 'false';
+                }
+            } catch (e) {
+                try { isCollapsed = localStorage.getItem(TOP10_COLLAPSED_KEY) !== 'false'; } catch (e2) { }
+            }
+
+            const panel = document.createElement('div');
+            panel.id = 'tgfc-wap-top10-panel';
+            panel.className = 'tgfc-wap-top10-panel';
+            panel.innerHTML = `
+                <div class="tgfc-wap-top10-header">
+                    <span class="tgfc-wap-top10-title">🔥 热门话题</span>
+                    <div class="tgfc-wap-top10-right">
+                        <span class="tgfc-wap-top10-status"></span>
+                        <button class="tgfc-wap-top10-refresh" title="刷新">🔄</button>
+                    </div>
+                </div>
+                <div class="tgfc-wap-top10-body ${isCollapsed ? '' : 'expanded'}">
+                    <div class="tgfc-wap-top10-loading">加载中...</div>
+                </div>
+            `;
+
+            const firstDTitle = wrap.querySelector('.dTitle');
+            if (firstDTitle) {
+                firstDTitle.parentNode.insertBefore(panel, firstDTitle);
+            } else {
+                wrap.appendChild(panel);
+            }
+
+            const header = panel.querySelector('.tgfc-wap-top10-header');
+            const body = panel.querySelector('.tgfc-wap-top10-body');
+            const status = panel.querySelector('.tgfc-wap-top10-status');
+            const refreshBtn = panel.querySelector('.tgfc-wap-top10-refresh');
+
+            header.onclick = (e) => {
+                if (e.target === refreshBtn) return;
+                body.classList.toggle('expanded');
+                const newState = body.classList.contains('expanded') ? 'false' : 'true';
+                try {
+                    if (typeof GM_setValue === 'function') GM_setValue(TOP10_COLLAPSED_KEY, newState);
+                } catch (e) { }
+                try { localStorage.setItem(TOP10_COLLAPSED_KEY, newState); } catch (e) { }
+            };
+
+            refreshBtn.onclick = (e) => {
+                e.stopPropagation();
+                body.innerHTML = '<div class="tgfc-wap-top10-loading">刷新中...</div>';
+                fetchWapThreads(fid, true).then(threads => {
+                    setTop10Cache(fid, 'hot', threads);
+                    renderTop10List(body, threads);
+                    status.textContent = '';
+                });
+            };
+
+            displayTop10Data(fid, body, status);
+        }
+
+        function displayTop10Data(fid, container, statusEl) {
+            const cached = getTop10Cache(fid, 'hot');
+            if (cached) {
+                statusEl.textContent = '';
+                renderTop10List(container, cached);
+            } else {
+                statusEl.textContent = '加载中...';
+                container.innerHTML = '<div class="tgfc-wap-top10-loading">加载中...</div>';
+                fetchWapThreads(fid).then(threads => {
+                    setTop10Cache(fid, 'hot', threads);
+                    statusEl.textContent = '';
+                    renderTop10List(container, threads);
+                });
+            }
+        }
+
+        // ==========================================
+        // 模块: 关注话题 (WAP 版)
+        // ==========================================
+        const FOLLOWED_THREADS_KEY = 'tgfc_followed_threads';
+        const FOLLOWED_COLLAPSED_KEY = 'tgfc_wap_followed_collapsed';
+
+        function getFollowedThreads() {
+            let threads = [];
+            // 1. 尝试 GM_getValue
+            try {
+                if (typeof GM_getValue === 'function') {
+                    const raw = GM_getValue(FOLLOWED_THREADS_KEY, '[]');
+                    // 只有当 raw 有效且不是 undefined/null 时才解析
+                    if (raw !== undefined && raw !== null) {
+                        const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+                        if (Array.isArray(parsed)) {
+                            return parsed; // 成功拿到数组，直接返回
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log('[TGFC WAP] GM_getValue failed:', e);
+            }
+
+            // 2. localStorage 降级
+            try {
+                const raw = localStorage.getItem(FOLLOWED_THREADS_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (Array.isArray(parsed)) threads = parsed;
+                }
+            } catch (e) {
+                console.log('[TGFC WAP] localStorage failed:', e);
+            }
+
+            // 3. 最后的保底：返回空数组（如果前面都失败了）
+            if (!Array.isArray(threads)) return [];
+            return threads;
+        }
+
+        function saveFollowedThreads(threads) {
+            const data = JSON.stringify(threads);
+            try {
+                if (typeof GM_setValue === 'function') {
+                    GM_setValue(FOLLOWED_THREADS_KEY, data);
+                }
+            } catch (e) { }
+            // localStorage 降级
+            try {
+                localStorage.setItem(FOLLOWED_THREADS_KEY, data);
+            } catch (e) { }
+        }
+
+        function addFollowedThread(thread) {
+            const threads = getFollowedThreads();
+            if (threads.some(t => t.tid === thread.tid)) return false;
+            threads.push({
+                ...thread,
+                addedAt: Date.now()
+            });
+            saveFollowedThreads(threads);
+            return true;
+        }
+
+        function removeFollowedThread(tid) {
+            let threads = getFollowedThreads();
+            threads = threads.filter(t => t.tid !== tid);
+            saveFollowedThreads(threads);
+        }
+
+        function isThreadFollowed(tid) {
+            return getFollowedThreads().some(t => t.tid === tid);
+        }
+
+        function getFollowedThreadsByFid(fid) {
+            return getFollowedThreads()
+                .filter(t => {
+                    if (!t.fid) return true;
+                    return String(t.fid) === String(fid);
+                })
+                .sort((a, b) => b.addedAt - a.addedAt);
+        }
+
+        function initWapFollowButton() {
+            if (!location.href.includes('action=thread')) return;
+
+            const wrap = document.querySelector('.wrap');
+            if (!wrap) {
+                console.log('[TGFC WAP] Follow: wrap not found');
+                return;
+            }
+
+            const existingBtn = wrap.querySelector('.tgfc-wap-follow-btn');
+            if (existingBtn) return;
+
+            const tid = getThreadId();
+            if (!tid) return;
+
+            const fid = new URL(location.href).searchParams.get('fid') || '';
+
+            // 尝试多种方式提取标题
+            let title = '';
+            // 方法1: 从页面 title 获取（格式通常是 "标题-TGFC俱乐部"）
+            if (document.title) {
+                title = document.title.replace(/-TGFC.*$/, '').replace(/-TGbus.*$/, '').trim();
+            }
+            // 方法2: 从页面内容中提取
+            if (!title) {
+                const titleMatch = wrap.textContent.match(/标题[:：]\s*([^\n]+)/);
+                if (titleMatch) title = titleMatch[1].trim();
+            }
+
+            // 提取发帖日期（格式: 时间:26-01-07 16:31）
+            let postDate = '';
+            const dateMatch = wrap.textContent.match(/时间[:：]\s*(\d{2,4}-\d{1,2}-\d{1,2})/);
+            if (dateMatch) postDate = dateMatch[1];
+
+            let author = getThreadOP() || '';
+
+            // 找到标题行，使用多种方式尝试
+            const firstP = wrap.querySelector('p');
+            if (!firstP) {
+                console.log('[TGFC WAP] Follow button: firstP not found');
+                return;
+            }
+
+            // 尝试找到标题的 <b> 标签
+            let insertTarget = firstP.querySelector('b');
+
+            // 备选方案：找到包含"标题:"的文本后的元素
+            if (!insertTarget) {
+                // 遍历 firstP 的子节点找到标题位置
+                const walker = document.createTreeWalker(firstP, NodeFilter.SHOW_TEXT, null, false);
+                let node;
+                while (node = walker.nextNode()) {
+                    if (node.textContent.includes('标题:') || node.textContent.includes('标题：')) {
+                        // 在标题文本后插入
+                        insertTarget = node;
+                        break;
+                    }
+                }
+            }
+
+            if (!insertTarget) {
+                console.log('[TGFC WAP] Follow button: insertTarget not found');
+                return;
+            }
+
+            const btn = document.createElement('span');
+            btn.className = 'tgfc-wap-follow-btn';
+
+            const updateBtn = () => {
+                if (isThreadFollowed(tid)) {
+                    btn.textContent = '已关注';
+                    btn.classList.add('followed');
+                } else {
+                    btn.textContent = '关注';
+                    btn.classList.remove('followed');
+                }
+            };
+            updateBtn();
+
+            btn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (isThreadFollowed(tid)) {
+                    if (confirm('确定取消关注此话题？')) {
+                        removeFollowedThread(tid);
+                        updateBtn();
+                    }
+                } else {
+                    addFollowedThread({
+                        tid: tid,
+                        title: title,
+                        url: location.href.split('#')[0],
+                        fid: fid,
+                        author: author,
+                        postDate: postDate
+                    });
+                    updateBtn();
+                }
+            };
+
+            // 插入到目标元素之后
+            if (insertTarget.nodeType === Node.TEXT_NODE) {
+                // 文本节点，在其后面插入
+                insertTarget.parentNode.insertBefore(btn, insertTarget.nextSibling);
+            } else {
+                // 元素节点，在其后面插入
+                insertTarget.parentNode.insertBefore(btn, insertTarget.nextSibling);
+            }
+        }
+
+        function renderFollowedSection(fid) {
+            const threads = getFollowedThreadsByFid(fid);
+
+            const oldPanel = document.getElementById('tgfc-wap-followed-panel');
+            if (oldPanel) oldPanel.remove();
+
+            if (threads.length === 0) return;
+
+            const wrap = document.querySelector('.wrap');
+            if (!wrap) return;
+
+            let isCollapsed = false;
+            try {
+                let gmVal;
+                if (typeof GM_getValue === 'function') {
+                    gmVal = GM_getValue(FOLLOWED_COLLAPSED_KEY, 'false');
+                }
+
+                if (gmVal !== undefined && gmVal !== null) {
+                    isCollapsed = gmVal === 'true';
+                } else {
+                    isCollapsed = localStorage.getItem(FOLLOWED_COLLAPSED_KEY) === 'true';
+                }
+            } catch (e) {
+                try { isCollapsed = localStorage.getItem(FOLLOWED_COLLAPSED_KEY) === 'true'; } catch (e2) { }
+            }
+
+            const panel = document.createElement('div');
+            panel.id = 'tgfc-wap-followed-panel';
+            panel.className = 'tgfc-wap-followed-panel';
+
+            let listHtml = threads.map((t, i) => {
+                const authorHtml = t.author ? `<span class="tgfc-wap-followed-author">${t.author}</span>` : '';
+                const dateHtml = t.postDate ? `<span class="tgfc-wap-followed-date">${t.postDate}</span>` : '';
+                return `
+                <li>
+                    <span class="tgfc-wap-followed-rank">${i + 1}</span>
+                    <a href="${t.url}" class="tgfc-wap-followed-link" title="${t.title}">${t.title}</a>
+                    ${authorHtml}${dateHtml}
+                    <span class="tgfc-wap-followed-unfollow" data-tid="${t.tid}" title="取消关注">×</span>
+                </li>`;
+            }).join('');
+
+            panel.innerHTML = `
+                <div class="tgfc-wap-followed-header">
+                    <span class="tgfc-wap-followed-title">⭐ 我的关注 (${threads.length})</span>
+                </div>
+                <div class="tgfc-wap-followed-body ${isCollapsed ? '' : 'expanded'}">
+                    <ul class="tgfc-wap-followed-list">${listHtml}</ul>
+                </div>
+            `;
+
+            const header = panel.querySelector('.tgfc-wap-followed-header');
+            const body = panel.querySelector('.tgfc-wap-followed-body');
+            header.onclick = () => {
+                body.classList.toggle('expanded');
+                const newState = body.classList.contains('expanded') ? 'false' : 'true';
+                try {
+                    if (typeof GM_setValue === 'function') GM_setValue(FOLLOWED_COLLAPSED_KEY, newState);
+                } catch (e) { }
+                try { localStorage.setItem(FOLLOWED_COLLAPSED_KEY, newState); } catch (e) { }
+            };
+
+            panel.querySelectorAll('.tgfc-wap-followed-unfollow').forEach(btn => {
+                btn.onclick = function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const tid = this.dataset.tid;
+                    if (confirm('确定取消关注此话题？')) {
+                        removeFollowedThread(tid);
+                        renderFollowedSection(fid);
+                    }
+                };
+            });
+
+            const top10Panel = document.getElementById('tgfc-wap-top10-panel');
+            if (top10Panel && top10Panel.nextSibling) {
+                top10Panel.parentNode.insertBefore(panel, top10Panel.nextSibling);
+            } else {
+                const firstDTitle = wrap.querySelector('.dTitle');
+                if (firstDTitle) {
+                    firstDTitle.parentNode.insertBefore(panel, firstDTitle);
+                } else {
+                    wrap.appendChild(panel);
+                }
+            }
+        }
+
+        function initWapFollowedPanel() {
+            if (!isWapForumListPage()) return;
+            const fid = getWapForumId();
+            if (!fid) return;
+            renderFollowedSection(fid);
+        }
+
 
         // 快速链接下拉菜单
         function injectQuickAccessBar() {
@@ -2412,7 +3153,7 @@
             const tagCount = Object.keys(cfg.highlighted || {}).length;
 
             p.innerHTML = `
-            <div style="text-align:center;font-size:14px;font-weight:bold;margin-bottom:6px">WAP助手设置 <span style="font-size:10px;color:#fff;font-weight:normal;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;margin-left:4px">v0.5.3</span></div>
+            <div style="text-align:center;font-size:14px;font-weight:bold;margin-bottom:6px">WAP助手设置 <span style="font-size:10px;color:#fff;font-weight:normal;background:rgba(0,0,0,0.3);padding:1px 5px;border-radius:3px;margin-left:4px">v0.5.6</span></div>
             
             <div style="font-size:11px;line-height:1.4">
                 <!-- 屏蔽 ID -->
@@ -2458,6 +3199,14 @@
                     <div style="display:flex;align-items:center;gap:6px">
                         <input type="checkbox" id="tg-show-tip" ${cfg.showBlockTip ? 'checked' : ''} style="margin:0">
                         <label for="tg-show-tip" style="font-size:10px;color:#666">显示屏蔽提示 (关闭后被屏蔽内容完全消失)</label>
+                    </div>
+                </div>
+                
+                <!-- 静默引用开关 -->
+                <div style="margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #eee">
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <input type="checkbox" id="tg-silent-quote" ${cfg.silentQuote ? 'checked' : ''} style="margin:0">
+                        <label for="tg-silent-quote" style="font-size:10px;color:#666">静默引用 (引用回复时默认不通知对方)</label>
                     </div>
                 </div>
                 
@@ -2695,6 +3444,7 @@
                 newCfg.blocked = blocked;
                 newCfg.blockedKeywords = kws;
                 newCfg.showBlockTip = showBlockTip;
+                newCfg.silentQuote = document.getElementById('tg-silent-quote').checked;
                 newCfg.pageWidth = pageWidth;
                 newCfg.bgColor = bgColor;
                 newCfg.font = font;
@@ -2710,8 +3460,22 @@
             p.style.display = 'block';
         }
 
+        // 静默引用：在引用回复页面自动取消"通知对方"的勾选
+        function applySilentQuote() {
+            const cfg = getConfig();
+            if (!cfg.silentQuote) return;
+
+            // 查找引用回复表单中的"通知对方"复选框
+            // 根据 HTML: <input type="checkbox" name="sendreasonpm" value="1" checked="checked"/>
+            const notifyCheckbox = document.querySelector('input[name="sendreasonpm"]');
+            if (notifyCheckbox && notifyCheckbox.checked) {
+                notifyCheckbox.checked = false;
+                console.log('[TGFC WAP] 静默引用：已取消通知对方');
+            }
+        }
+
         function start() {
-            console.log('[TGFC WAP] v0.5.3 启动');
+            console.log('[TGFC WAP] v0.5.5 启动');
             GM_addStyle(css);
             applyDisplaySettings();
             applyUrlParams();
@@ -2721,6 +3485,14 @@
             try { beautifyContentPage(); } catch (e) { console.error('[TGFC WAP] beautifyContentPage 错误:', e); }
             try { fixListPaging(); } catch (e) { console.error('[TGFC WAP] fixListPaging 错误:', e); }
             try { injectQuickAccessBar(); } catch (e) { console.error('[TGFC WAP] injectQuickAccessBar 错误:', e); }
+
+            // 十大话题和关注话题面板 (列表页)
+            try { initWapTop10Panel(); } catch (e) { console.error('[TGFC WAP] initWapTop10Panel 错误:', e); }
+            try { initWapFollowedPanel(); } catch (e) { console.error('[TGFC WAP] initWapFollowedPanel 错误:', e); }
+            // 关注按钮 (内容页)
+            try { initWapFollowButton(); } catch (e) { console.error('[TGFC WAP] initWapFollowButton 错误:', e); }
+            // 静默引用 (引用回复页面)
+            try { applySilentQuote(); } catch (e) { console.error('[TGFC WAP] applySilentQuote 错误:', e); }
 
             // 美化完成后再创建按钮和绑定事件
             fetchThreadOP().then(() => process());

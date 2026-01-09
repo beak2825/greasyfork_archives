@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         微信读书-章节内容复制
 // @namespace    http://tampermonkey.net/
-// @version      20251209
+// @version      20260108
 // @description  支持快速复制微信读书章节内容，HTML/Markdown任意格式，可一键抓取当前页，适用于epub和txt格式
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=weread.qq.com
 // @author       You
@@ -472,33 +472,6 @@
 
     let params = {}
 
-    /*
-    {
-        "bookId": "26211970",
-        "book": {
-            "appId": "wb182564874663h194243764",
-            "bookVersion": 0,
-            "reviewId": "",
-            "chapterUid": 4,
-            "chapterOffset": 563,
-            "chapterIdx": 4,
-            "updateTime": 1764814675,
-            "synckey": 1114604009,
-            "summary": "统，老师们普遍以理论概念为主进行教授，比",
-            "repairOffsetTime": 0,
-            "readingTime": 356,
-            "progress": 0,
-            "isStartReading": 1,
-            "ttsTime": 0,
-            "startReadingTime": 1764814167,
-            "installId": "",
-            "recordReadingTime": 0
-        },
-        "canFreeRead": 0,
-        "timestamp": 1764814870
-    }
-
-     */
     var readProgress = null
 
     var contents = {
@@ -539,11 +512,7 @@
 
             params = JSON.parse(this._requestBody)
 
-            // 监听 load 事件来获取响应
-            // this.addEventListener('load', function () {
-            //     // 如果需要，可以将响应体保存到变量中
-            //     this._responseBody = this.responseText;
-            // });
+
 
             // 监听 error 事件
             this.addEventListener('error', function () {
@@ -564,50 +533,6 @@
         return originalSend.apply(this, arguments);
     };
 
-    console.log('✅ XHR 拦截器已安装，正在监听:', targetPattern);
-
-    // 保存原始的 atob 函数
-    // const originalAtob = window.atob;
-    // const originalBtoa = window.btoa;
-
-    // 重写 atob 函数
-    // window.atob = function (encodedString) {
-    //     console.group('🔍 atob 函数被调用');
-    //     //  console.log('📥 输入参数:', encodedString);
-    //
-    //     // 调用原始函数
-    //     const result = originalAtob.apply(this, arguments);
-    //
-    //     //  console.log('📤 解码结果:', result);
-    //
-    //     // 获取调用栈信息
-    //     const stackTrace = new Error().stack;
-    //     //  console.log('📋 调用栈:', stackTrace);
-    //
-    //     console.groupEnd();
-    //
-    //     return result;
-    // };
-
-    // window.btoa = function (decodedString) {
-    //     console.group('🔍 btoa 函数被调用');
-    //     // console.log('📥 输入参数:', decodedString);
-    //
-    //     // 调用原始函数
-    //     const result = originalBtoa.apply(this, arguments);
-    //
-    //     // console.log('📤 解码结果:', result);
-    //
-    //     // 获取调用栈信息
-    //     const stackTrace = new Error().stack;
-    //     // console.log('📋 调用栈:', stackTrace);
-    //
-    //     console.groupEnd();
-    //
-    //     return result;
-    // };
-
-    console.log('✅ btoa 监听器已安装');
 
     class EpubBuilder {
         constructor(options = {}) {
@@ -768,357 +693,16 @@
     }
 
 
-    async function test(){
-
-      const book = new EpubBuilder({
-        title: "我的 EPUB",
-        author: "作者A",
-        fileName: "mybook.epub"
-      });
-
-      book.addChapter("前言", "<p>这是第一章内容。</p>");
-      book.addChapter("第二章", "<h2>正文</h2><p>更多内容。</p>");
-
-      await book.save();
-    }
-
-    // const $test = $(`<button id="test-btn">测试</button>`).appendTo("body")
-
-    // $test.on('click', ()=>test())
-
-    // function initUI() {
-    //
-    //     // 创建样式
-    //     $('<style>').text(`
-    //     #test-btn {
-    //
-    //         position: fixed;
-    //         top: 50px;
-    //         right: 20px;
-    //         z-index: 9999;
-    //         border: none;
-    //         border-radius: 20px;
-    //         padding: 5px;
-    //         cursor: pointer;
-    //         background: #28a745;
-    //         color: #fff;
-    //         font-size: 14px;
-    //         box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    //     }
-    //
-    //     #simple-copy-btn, .copy-md  {
-    //         border: none;
-    //         border-radius: 5px;
-    //         padding: 5px;
-    //         font-size: 14px;
-    //         /* transition: all 0.3s ease; */
-    //
-    //     }
-    //
-    //     #simple-copy-btn, .copy-md {
-    //         background: #aeb4ba;
-    //         color: white;
-    //     }
-    //
-    //     #simple-copy-btn:hover, .copy-md:hover {
-    //         background: #6c737c;
-    //     }
-    //
-    //     /* 新增：章节列表按钮 */
-    //     #chapter-list-btn {
-    //         position: fixed;
-    //         top: 140px;
-    //         right: 20px;
-    //         z-index: 9999;
-    //         border: none;
-    //         border-radius: 20px;
-    //         padding: 5px;
-    //         cursor: pointer;
-    //         background: #28a745;
-    //         color: #fff;
-    //         font-size: 14px;
-    //         box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    //         width: max-content;   /* 按文字内容自动定宽，不会被拉伸 */
-    //         display: inline-block;
-    //         white-space: nowrap;  /* 禁止换行 */
-    //     }
-    //
-    //     /* 章节弹窗 */
-    //     #chapter-list-panel {
-    //         position: fixed;
-    //         top: 200px;
-    //         right: 20px;
-    //         max-width: 250px;
-    //         max-height: 60vh;
-    //         overflow-y: auto;
-    //         background: #fff;
-    //         color: #333;
-    //         border-radius: 10px;
-    //         padding: 10px;
-    //         box-shadow: 0 2px 20px rgba(0,0,0,0.3);
-    //         z-index: 99999;
-    //         display: none;
-    //     }
-    //
-    //     #chapter-list-panel .header {
-    //         display: flex;
-    //         justify-content: space-between;
-    //         font-weight: bold;
-    //         margin-bottom: 8px;
-    //     }
-    //
-    //     #chapter-list-panel .close {
-    //         cursor: pointer;
-    //         color: #999;
-    //         font-size: 16px;
-    //     }
-    //
-    //     #chapter-list-panel ul {
-    //         list-style: none;
-    //         padding: 0;
-    //         margin: 0;
-    //     }
-    //
-    //     #chapter-list-panel li {
-    //         padding: 6px 4px;
-    //         border-bottom: 1px solid #eaeaea;
-    //         cursor: pointer;
-    //     }
-    //
-    //     #chapter-list-panel li:hover {
-    //         background: #f6f6f6;
-    //     }
-    //
-    //     #chapter-list-panel li {
-    //         padding: 6px 4px;
-    //         border-bottom: 1px solid #eaeaea;
-    //         cursor: pointer;
-    //         display: flex;
-    //         justify-content: space-between;
-    //         align-items: center;
-    //     }
-    //
-    //     .copy-ch-btn, .copy-ch-btn-loaded {
-    //         border: none;
-    //         background: #aeb4ba;
-    //         color: white;
-    //         border-radius: 6px;
-    //         padding: 2px 6px;
-    //         cursor: pointer;
-    //         font-size: 12px;
-    //     }
-    //
-    //     .copy-ch-btn-loaded {
-    //         background: green;
-    //     }
-    //
-    //     .copy-ch-btn:hover {
-    //         background: #6c737c;
-    //     }
-    //
-    //     #__global_toast {
-    //         position: fixed;
-    //         left: 50%;
-    //         top: 80px;
-    //         transform: translateX(-50%);
-    //         background: rgba(0,0,0,0.75);
-    //         color: #fff;
-    //         padding: 10px 20px;
-    //         border-radius: 8px;
-    //         font-size: 14px;
-    //         z-index: 999999;
-    //         opacity: 0;
-    //         pointer-events: none;
-    //         transition: opacity .3s ease, transform .3s ease;
-    //     }
-    //
-    //     #__global_toast.show {
-    //         opacity: 1;
-    //         transform: translateX(-50%) translateY(-10px);
-    //     }
-    //
-    //
-    // `).appendTo('head');
-    //
-    //
-    //     // ========== 新增：章节按钮 ==========
-    //     const $chapterBtn = $(`<button id="chapter-list-btn">📚 章节</button>`);
-    //
-    //     // 添加到 body
-    //     $('body').append($chapterBtn);
-    //
-    //     // 监听元素，调置 .chapter-list-panel 背景色
-    //     // readerControls_item dark / readerControls_item white
-    //
-    //     const dark = $('.readerControls_item.dark')
-    //     const white = $('.readerControls_item.white')
-    //
-    //     let myStyle = {}
-    //
-    //     if(white) {
-    //         myStyle = {
-    //             'color': '#262628',
-    //             'backgroundColor': '#1c1c1d',
-    //         }
-    //     } else if (dark) {
-    //         myStyle = {
-    //             'color': '#1c1c1d',
-    //             'backgroundColor': '#fff',
-    //         }
-    //
-    //     }
-    //
-    //     // ========== 新增：章节列表弹窗 DOM ==========
-    //     const $panel = $(`
-    //         <div id="chapter-list-panel">
-    //             <div style="margin-bottom: 10px;">
-    //                 <span>当前页</span>
-    //                 <button id="simple-copy-btn">.html/.epub</button>
-    //                 <button class="wx-reader-btn copy-md"><span class="icon">📄</span> .md</button>
-    //             </div>
-    //             <div class="header">
-    //                 <span>章节列表</span>
-    //                 <span class="close">✖</span>
-    //             </div>
-    //
-    //             <div class="format-box">
-    //                 格式：
-    //                 <label>
-    //                     <span>md</span><input type="checkbox" class="fmt" value="md" checked/>
-    //                 </label>
-    //                 <label>
-    //                     <span>html</span><input type="checkbox" class="fmt" value="html"/>
-    //                 </label>
-    //             </div>
-    //
-    //             <ul></ul>
-    //         </div>
-    //     `);
-    //     $('body').append($panel);
-    //
-    //     // ========== 原按钮 ==========
-    //     const $btnCurrentPage = $("#simple-copy-btn")
-    //     const $copyMdBtn = $(`.copy-md`)
-    //
-    //
-    //
-    //     new DragElement('#chapter-list-btn', {
-    //       saveKey: 'simple-copy-btn-pos'
-    //     });
-    //
-    //
-    //     // ========== 章节渲染函数 ==========
-    //
-    //     function renderChapters(chapters) {
-    //         const $ul = $panel.find("ul");
-    //         $ul.empty();
-    //         const bid = bookInfo.book.bookId
-    //         chapters.forEach(ch => {
-    //
-    //             let clicked, copyBtnCls
-    //             if (clickedChapters.has(ch.chapterUid)) {
-    //                 clicked = '✔'
-    //                 copyBtnCls = 'copy-ch-btn-loaded'
-    //             } else {
-    //                 clicked = '📋'
-    //                 copyBtnCls = ''
-    //             }
-    //
-    //             $ul.append(`
-    //                 <li class="chapter-item" data-id="${ch.chapterUid}">
-    //                     <span class="chapter-title">${ch.title}</span>
-    //                     <button class="copy-ch-btn ${copyBtnCls}" data-id="${ch.chapterUid}" data-title="${ch.title}">
-    //                         ${clicked}
-    //                     </button>
-    //                 </li>
-    //             `);
-    //         });
-    //
-    //         // 绑定复制按钮（避免 li 点击事件触发）
-    //         $(".copy-ch-btn").on("click", function (e) {
-    //             e.stopPropagation();
-    //
-    //             const $btn = $(this);
-    //             const original = $btn.text();   // 保存原图标
-    //             $btn.text("⏳");                // 切换为加载图标
-    //
-    //             // 当前选择格式
-    //             const fmt = $(".fmt:checked").val() || "html";
-    //             const chapterId = $(this).data("id");
-    //
-    //             // console.log("点击章节：", chapterId, "格式：", fmt);
-    //
-    //             try {
-    //                 getTexts(fmt, bid, chapterId)
-    //                     .then(content => {
-    //                         copyToClipboard(content, "");
-    //                     })
-    //                     .catch(err => {
-    //                         console.error("❌ 出错:", err);
-    //                         showToast("加载失败");
-    //                     })
-    //                     .finally(() => {
-    //                         // 2 秒后恢复按钮图标
-    //                         setTimeout(() => {
-    //                             if (clickedChapters.has(chapterId)) {
-    //                                 $btn.text('✔').css('background', 'green')
-    //                             } else {
-    //                                 $btn.text(original);
-    //                             }
-    //                         }, 2000);
-    //                     });
-    //
-    //             } catch (error) {
-    //                 console.error("❌ 数据处理出错:", error);
-    //                 alert("数据处理出错: " + error.message);
-    //
-    //                 // 出错时也恢复图标
-    //                 setTimeout(() => {
-    //                     $btn.text(original);
-    //                 }, 2000);
-    //             }
-    //         });
-    //
-    //     }
-    //
-    //     // ========== 点击章节按钮 → 打开列表 ==========
-    //     $chapterBtn.on("click", () => {
-    //         renderChapters(bookInfo.updated);
-    //         $panel.show();
-    //     });
-    //
-    //     // 点击关闭
-    //     $panel.find(".close").on("click", () => {
-    //         $panel.hide();
-    //     });
-    //
-    //     // 原绑定
-    //     $btnCurrentPage.on('click', handleCurrentPage);
-    //     $copyMdBtn.on('click', handleCopyMarkdown);
-    //
-    //     // 格式 checkbox 互斥
-    //     $(document).on("change", ".fmt", function () {
-    //         $(".fmt").not(this).prop("checked", false);
-    //
-    //         // 至少保证一个被选
-    //         if (!$(".fmt:checked").length) {
-    //             $(this).prop("checked", true);
-    //         }
-    //     });
-    // }
-
     function setMode() {
 
-        // 先判断当前是深色还是浅色（注意要用 .length 判断）
         const isDarkMode = $('.readerControls_item.dark').length > 0;
         const isLightMode = $('.readerControls_item.white').length > 0;
 
-        // 定义一套默认配色（浅色）
         let vars = {
-
             '--btn-bg': '#d3cfcf',
             '--btn-fg': '#212121',
 
+            '--btn-bg-hover': '#bfbaba',
 
             '--btn-sec-bg': '#aeb4ba',
             '--btn-sec-bg-hover': '#6c737c',
@@ -1130,13 +714,14 @@
             '--panel-hover-bg': '#f6f6f6',
 
             '--copy-loaded-bg': 'green',
-        }
+        };
 
-        // 如果是深色模式，换一套颜色
         if (!isDarkMode && isLightMode) {
             vars = {
                 '--btn-bg': '#343635',
                 '--btn-fg': '#dcd6d6',
+
+                '--btn-bg-hover': '#4b4f4d',
 
                 '--btn-sec-bg': '#4b5563',
                 '--btn-sec-bg-hover': '#6b7280',
@@ -1151,17 +736,23 @@
             };
         }
 
-        // ⭐ 关键：把变量写入 documentElement（相当于 :root）
-        const root = document.documentElement;
-        for (const [key, value] of Object.entries(vars)) {
-            root.style.setProperty(key, value);
-        }
+        // 写入 CSS 变量
+        Object.entries(vars).forEach(([k, v]) => {
+            document.documentElement.style.setProperty(k, v);
+        });
     }
 
+
     function initUI() {
+
+        let chapterPanelVisible = false;
+        let chapterListRendered = false;
+        let chapterScrollTop = 0;
+
+
         setMode()
-    // 创建样式（使用 CSS 变量）
-    $('<style id="my-reader-style">').text(`
+        // 创建样式（使用 CSS 变量）
+        $('<style id="my-reader-style">').text(`
         #test-btn {
             position: fixed;
             top: 50px;
@@ -1198,7 +789,7 @@
             z-index: 9999;
             border: none;
             border-radius: 20px;
-            padding: 5px;
+            padding: 5px 10px;
             cursor: pointer;
             background: var(--btn-bg);
             color: var(--btn-fg);
@@ -1207,6 +798,10 @@
             width: max-content;
             display: inline-block;
             white-space: nowrap;
+        }
+        
+        #chapter-list-btn:hover {
+            background: var(--btn-sec-bg-hover)
         }
 
         /* 章节弹窗 */
@@ -1257,6 +852,61 @@
         #chapter-list-panel li:hover {
             background: var(--panel-hover-bg);
         }
+        
+        .chapter-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 6px 8px;
+          line-height: 1.6;
+          border-radius: 6px;
+        }
+        
+        .chapter-title {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        
+        /* ===== 分层 ===== */
+        
+        /* level 1：最上层 */
+        .chapter-item.level-1 {
+          font-size: 15px;
+          font-weight: 600;
+        }
+        
+        /* level 2 */
+        .chapter-item.level-2 {
+          font-size: 14px;
+        }
+        
+        /* level 3 */
+        .chapter-item.level-3 {
+          font-size: 13.5px;
+        }
+        
+        /* level 4 */
+        .chapter-item.level-4 {
+          font-size: 13px;
+        }
+        
+        /* hover */
+        .chapter-item:hover {
+          background: #f6f7f9;
+        }
+        
+        .chapter-item {
+          --indent: 8px;
+          margin-left: var(--indent);
+        }
+        
+        .chapter-item.level-0 { --indent: 8px; }
+        .chapter-item.level-1 { --indent: 8px; }
+        .chapter-item.level-2 { --indent: 16px; }
+        .chapter-item.level-3 { --indent: 24px; }
+        .chapter-item.level-4 { --indent: 32px; }
+
 
         .copy-ch-btn, .copy-ch-btn-loaded {
             border: none;
@@ -1291,6 +941,54 @@
             pointer-events: none;
             transition: opacity .3s ease, transform .3s ease;
         }
+        
+        .format-box {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 14px;
+        }
+        
+        .format-label {
+          color: #666;
+          margin-right: 4px;
+        }
+        
+        .fmt-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 2px 5px;
+          border: 1px solid #ddd;
+          border-radius: 6px;
+          cursor: pointer;
+          user-select: none;
+          transition: all .2s ease;
+        }
+        
+        /* hover 效果 */
+        .fmt-item:hover {
+          border-color: #999;
+          background: #f5f5f5;
+        }
+        
+        /* 选中态 */
+        .fmt-item input:checked + span {
+          font-weight: 600;
+        }
+        
+        /* 选中时整体高亮 */
+        .fmt-item:has(input:checked) {
+          border-color: #409eff;
+          background: #ecf5ff;
+          color: #409eff;
+        }
+        
+        /* checkbox 微调 */
+        .fmt-item input {
+          margin: 0;
+        }
+
 
         #__global_toast.show {
             opacity: 1;
@@ -1299,135 +997,184 @@
     `).appendTo('head');
 
 
-    // ========== 新增：章节按钮 ==========
-    const $chapterBtn = $(`<button id="chapter-list-btn">📚 章节</button>`);
-    $('body').append($chapterBtn);
+        // ========== 新增：章节按钮 ==========
+        const $chapterBtn = $(`<button id="chapter-list-btn">📚 章节</button>`);
+        $('body').append($chapterBtn);
 
-    // ========== 章节列表弹窗 DOM ==========
-    const $panel = $(`
+        // ========== 章节列表弹窗 DOM ==========
+        const $panel = $(`
         <div id="chapter-list-panel">
-            <div style="margin-bottom: 10px;">
-                <span>当前页</span>
-                <button id="simple-copy-btn">.html/.epub</button>
-                <button class="wx-reader-btn copy-md"><span class="icon">📄</span> .md</button>
+            <div style="margin-bottom: 10px;" >
+<!--                <span>复制当前页</span>-->
+                <button class="wx-reader-btn copy-md"><span class="icon">复制当前页 📄</span></button>
             </div>
             <div class="header">
                 <span>章节列表</span>
-                <span class="close">✖</span>
             </div>
-
+            
             <div class="format-box">
-                格式：
-                <label>
-                    <span>md</span><input type="checkbox" class="fmt" value="md" checked/>
-                </label>
-                <label>
-                    <span>html</span><input type="checkbox" class="fmt" value="html"/>
-                </label>
+              <span class="format-label">格式：</span>
+            
+              <label class="fmt-item">
+                <input type="checkbox" class="fmt" value="md" checked />
+                <span>MD</span>
+              </label>
+            
+              <label class="fmt-item">
+                <input type="checkbox" class="fmt" value="html" />
+                <span>HTML</span>
+              </label>
             </div>
 
             <ul></ul>
         </div>
     `);
-    $('body').append($panel);
+        $('body').append($panel);
 
-    const $btnCurrentPage = $("#simple-copy-btn");
-    const $copyMdBtn     = $(".copy-md");
+        // const $btnCurrentPage = $("#simple-copy-btn");
+        const $copyMdBtn = $(".copy-md");
 
-    new DragElement('#chapter-list-btn', {
-        saveKey: 'simple-copy-btn-pos'
-    });
-
-    // ========== 章节渲染函数 ==========
-    function renderChapters(chapters) {
-        const $ul = $panel.find("ul");
-        $ul.empty();
-        const bid = bookInfo.book.bookId;
-
-        chapters.forEach(ch => {
-            let clicked, copyBtnCls;
-            if (clickedChapters.has(ch.chapterUid)) {
-                clicked = '✔';
-                copyBtnCls = 'copy-ch-btn-loaded';
-            } else {
-                clicked = '📋';
-                copyBtnCls = '';
-            }
-
-            $ul.append(`
-                <li class="chapter-item" data-id="${ch.chapterUid}">
-                    <span class="chapter-title">${ch.title}</span>
-                    <button class="copy-ch-btn ${copyBtnCls}" data-id="${ch.chapterUid}" data-title="${ch.title}">
-                        ${clicked}
-                    </button>
-                </li>
-            `);
+        new DragElement('#chapter-list-btn', {
+            saveKey: 'simple-copy-btn-pos'
         });
 
-        $(".copy-ch-btn").on("click", function (e) {
-            e.stopPropagation();
+        // ========== 章节渲染函数 ==========
+        function renderChapters(chapters) {
+            const $ul = $panel.find("ul");
+            $ul.empty();
+            const bid = bookInfo.book.bookId;
 
-            const $btn = $(this);
-            const original = $btn.text();
-            $btn.text("⏳");
+            chapters.forEach(ch => {
+                let clicked, copyBtnCls;
+                if (clickedChapters.has(ch.chapterUid)) {
+                    clicked = '✔';
+                    copyBtnCls = 'copy-ch-btn-loaded';
+                } else {
+                    clicked = '📋';
+                    copyBtnCls = '';
+                }
+                let title = ch.title
 
+                const level = ch.level ?? -1
+
+                if(bookInfo.book.format === 'txt') {
+                    title = `第${ch.chapterIdx}章 ${ch.title}`
+                }
+
+                $ul.append(`
+                    <li class="chapter-item level-${level}" data-id="${ch.chapterUid}">
+                        <span class="chapter-title">${title}</span>
+                        <button class="copy-ch-btn ${copyBtnCls}" data-id="${ch.chapterUid}" data-title="${ch.title}">
+                            ${clicked}
+                        </button>
+                    </li>
+                `);
+            });
+
+            $(".copy-ch-btn").on("click", function (e) {
+                e.stopPropagation();
+
+                const $btn = $(this);
+                const original = $btn.text();
+                $btn.text("⏳");
+
+                const fmt = $(".fmt:checked").val() || "html";
+                const chapterId = $(this).data("id");
+
+                try {
+                    getTexts(fmt, bid, chapterId)
+                        .then(content => {
+                            copyToClipboard(content, "");
+                        })
+                        .catch(err => {
+                            console.error("❌ 出错:", err);
+                            showToast("加载失败");
+                        })
+                        .finally(() => {
+                            setTimeout(() => {
+                                if (clickedChapters.has(chapterId)) {
+                                    $btn.text('✔').addClass('copy-ch-btn-loaded');
+                                } else {
+                                    $btn.text(original);
+                                }
+                            }, 2000);
+                        });
+
+                } catch (error) {
+                    console.error("❌ 数据处理出错:", error);
+                    alert("数据处理出错: " + error.message);
+
+                    setTimeout(() => {
+                        $btn.text(original);
+                    }, 2000);
+                }
+            });
+        }
+
+        // ========== 点击章节按钮 → 打开列表 ==========
+        let isOpen = false
+        $chapterBtn.on("click", function(){
+            setMode();
+
+            if(isOpen) {
+                $(this).text('📚 章节')
+            } else {
+                $(this).text('📚 关闭')
+            }
+            isOpen = ! isOpen
+
+            // === toggle 逻辑 ===
+            if (chapterPanelVisible) {
+                // 关闭前记住滚动位置
+                chapterScrollTop = $panel.scrollTop();
+                $panel.hide();
+                chapterPanelVisible = false;
+                return;
+            }
+
+            // === 第一次才渲染章节 ===
+            if (!chapterListRendered) {
+                renderChapters(bookInfo.updated);
+                chapterListRendered = true;
+            }
+
+            $panel.show();
+
+            // === 恢复滚动位置（下一帧，确保 DOM 已显示）===
+            requestAnimationFrame(() => {
+                $panel.scrollTop(chapterScrollTop);
+            });
+
+            chapterPanelVisible = true;
+        });
+
+
+        // 点击关闭
+        $panel.find(".close").on("click", () => {
+            chapterScrollTop = $panel.scrollTop();
+            $panel.hide();
+            chapterPanelVisible = false;
+        });
+
+        // 原绑定
+        // $btnCurrentPage.on('click', copyHtml);
+        $copyMdBtn.on('click', function () {
             const fmt = $(".fmt:checked").val() || "html";
-            const chapterId = $(this).data("id");
+            if(fmt === 'html') {
+                copyHtml()
+            } else {
+                copyMarkdown()
+            }
+        });
 
-            try {
-                getTexts(fmt, bid, chapterId)
-                    .then(content => {
-                        copyToClipboard(content, "");
-                    })
-                    .catch(err => {
-                        console.error("❌ 出错:", err);
-                        showToast("加载失败");
-                    })
-                    .finally(() => {
-                        setTimeout(() => {
-                            if (clickedChapters.has(chapterId)) {
-                                $btn.text('✔').addClass('copy-ch-btn-loaded');
-                            } else {
-                                $btn.text(original);
-                            }
-                        }, 2000);
-                    });
-
-            } catch (error) {
-                console.error("❌ 数据处理出错:", error);
-                alert("数据处理出错: " + error.message);
-
-                setTimeout(() => {
-                    $btn.text(original);
-                }, 2000);
+        // 格式 checkbox 互斥
+        $(document).on("change", ".fmt", function () {
+            $(".fmt").not(this).prop("checked", false);
+            if (!$(".fmt:checked").length) {
+                $(this).prop("checked", true);
             }
         });
     }
-
-    // ========== 点击章节按钮 → 打开列表 ==========
-    $chapterBtn.on("click", () => {
-        setMode()
-        renderChapters(bookInfo.updated);
-        $panel.show();
-    });
-
-    // 点击关闭
-    $panel.find(".close").on("click", () => {
-        $panel.hide();
-    });
-
-    // 原绑定
-    $btnCurrentPage.on('click', handleCurrentPage);
-    $copyMdBtn.on('click', handleCopyMarkdown);
-
-    // 格式 checkbox 互斥
-    $(document).on("change", ".fmt", function () {
-        $(".fmt").not(this).prop("checked", false);
-        if (!$(".fmt:checked").length) {
-            $(this).prop("checked", true);
-        }
-    });
-}
 
 
     initUI()
@@ -1497,11 +1244,10 @@
     }
 
 
-    function handleCurrentPage() {
+    function copyHtml() {
         try {
-            getTexts('html').then(content => {
-
-                copyToClipboard(content, '#simple-copy-btn')
+            getTexts('html',).then(content => {
+                copyToClipboard(content, '.copy-md')
             })
 
 
@@ -1512,7 +1258,7 @@
     }
 
     // 按钮点击处理函数
-    function handleCopyMarkdown() {
+    function copyMarkdown() {
         getTexts('md').then(content => {
             // console.log(content)
             if (content) {
@@ -1558,9 +1304,9 @@
             [bid, cid] = getCurrentBook()
 
             if(!bid || !cid) {
-                    await reqProgress(bid)
+                await reqProgress(bid)
 
-                const chapterIdx = readProgress.book.chapterIdx
+                const chapterIdx = readProgress.book?.chapterIdx ?? bookInfo.updated[1].chapterIdx
 
                 bookInfo.updated.forEach(c => {
                     if (chapterIdx === c.chapterIdx) {
@@ -1603,6 +1349,28 @@
             return html;
         }
 
+        // ========= 预处理：删除 body 内的 style =========
+        try {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const body = doc.body;
+
+            if (body) {
+                // 删除所有内联 style 属性
+                body.querySelectorAll('[style]').forEach(el => {
+                    el.removeAttribute('style');
+                });
+
+                // 删除 body 内的 <style> 标签
+                body.querySelectorAll('style').forEach(el => el.remove());
+            }
+
+            html = body ? body.innerHTML : html;
+        } catch (e) {
+            console.warn('清理 body style 失败，继续原始 HTML', e);
+        }
+        // ========= 预处理结束 =========
+
         const defaultOptions = {
             headingStyle: 'atx',
             hr: '---',
@@ -1614,50 +1382,58 @@
             linkReferenceStyle: 'full'
         };
 
-        const turndownService = new TurndownService({...defaultOptions, ...options});
+        const turndownService = new TurndownService({
+            ...defaultOptions,
+            ...options
+        });
 
-        // 添加自定义规则
+        // 高亮
         turndownService.addRule('wereadHighlight', {
-            filter: function (node) {
+            filter(node) {
                 return node.nodeName === 'SPAN' &&
                     node.className &&
                     node.className.includes('highlight');
             },
-            replacement: function (content) {
+            replacement(content) {
                 return `**${content}**`;
             }
         });
 
+        // 笔记
         turndownService.addRule('wereadNote', {
-            filter: function (node) {
+            filter(node) {
                 return node.nodeName === 'DIV' &&
                     node.className &&
                     node.className.includes('note');
             },
-            replacement: function (content) {
+            replacement(content) {
                 return `> ${content}`;
             }
         });
 
+        // 章节
         turndownService.addRule('wereadChapter', {
-            filter: function (node) {
-                return node.nodeName === 'H1' || node.nodeName === 'H2' ||
+            filter(node) {
+                return node.nodeName === 'H1' ||
+                    node.nodeName === 'H2' ||
                     (node.className && node.className.includes('chapter'));
             },
-            replacement: function (content, node) {
-                const level = node.nodeName === 'H1' ? 1 :
-                    node.nodeName === 'H2' ? 2 : 2;
+            replacement(content, node) {
+                const level =
+                    node.nodeName === 'H1' ? 1 :
+                        node.nodeName === 'H2' ? 2 : 2;
                 return `${'#'.repeat(level)} ${content}\n\n`;
             }
         });
 
         try {
-            return turndownService.turndown(html);
+            return turndownService.turndown(html).replace(/^\uFEFF/, '');
         } catch (error) {
             console.error('HTML转Markdown出错:', error);
             return html;
         }
     }
+
 
     /**
      * 修复 HTML 字符串：如果 <html> 含 xmlns，则：

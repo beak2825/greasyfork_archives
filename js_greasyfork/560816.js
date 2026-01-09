@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Custom and nearest events
+// @name         Custom and nearest Torn events
 // @namespace    http://tampermonkey.net/
-// @version      2.0.0
+// @version      2.0.1
 // @description  Description
 // @author       ljovcheg  [3191064] 
 // @license MIT
@@ -13,19 +13,16 @@
 // @grant        GM_xmlhttpRequest
 // @match        https://www.torn.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
-// @connect      https://www.level5.ee
-// @license      Fontawesome inside
+// @connect      https://tornscripts.co.za
 
 
-// @downloadURL https://update.greasyfork.org/scripts/560816/Custom%20and%20nearest%20events.user.js
-// @updateURL https://update.greasyfork.org/scripts/560816/Custom%20and%20nearest%20events.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560816/Custom%20and%20nearest%20Torn%20events.user.js
+// @updateURL https://update.greasyfork.org/scripts/560816/Custom%20and%20nearest%20Torn%20events.meta.js
 // ==/UserScript==
 
 (function () {
     'use strict';
-
-    const SCRIPT_VERSION = '2.0.0';
-
+    const SCRIPT_VERSION = '2.0.1';
     if (typeof GM_info !== 'undefined' &&
         GM_info &&
         GM_info.script &&
@@ -33,35 +30,16 @@
         if (GM_info.script.version !== SCRIPT_VERSION) message('Incorrect version', true);
     }
 
-    function message(msg, error = false) {
-        let func = 'log';
-        if (error) func = 'warn';
-        console[func](`[CTE]`, msg);
-    }
-
-
-    const TC_CLOCK_TOOLTIP_WIDTH = '180px';
-    const TC_CLOCK_TOOLTIP_LEFT = '-85px';
-
-
-
-    //----- DIV HOLDERS ----------------------------------------------------------
-
-    let DIVS = {
-        cte_clock_holder: null,         // main tooltip holder for border and bg color
-        cte_clock_icon: null,           // event icon in tooltip
-        cte_clock_events_holder: null,   // events list in tooltip
-        torn_clock: null,
-    }
-
+    message(`CTE v ${SCRIPT_VERSION}`);
 
 
     //----- SETTINGS -------------------------------------------------------------
 
-    const ICON_ERROR = 'fa-triangle-exclamation';
-    const ICON_EVENT_DEFAULT = 'fa-bell'
-    const ICON_LOADING = 'fa-spinner'
-
+    const ICONS_DEFAULT = {
+        error: 'fa-triangle-exclamation',
+        loading: 'fa-spinner',
+        event: 'fa-bell'
+    }
     const TORN_EVENTS_ICONS = [
         { "Awareness Awareness Week": "fa-eye" },
         { "Weekend Road Trip": "fa-gauge-high" },
@@ -87,104 +65,762 @@
     ]
 
     const STORAGE_NAME = 'cte_settings';
-    const UPDATE_INTERVAL = 1800; //30min 
-    const DEFAULT_SETTINGS = {
-        apiKey: '',
-        lasetUpdate: null,
-        tooltipExpanded: true,
-        tornEvents: [],
-        hostedEvents: [],
-        watchEvents: [],
-        participateCTE: false
+    const UPDATE_INTERVAL = 1800;
+    let SETTINGS = {}
+    let GLOBAL_DIVS = {};
+
+    let allEvents = {}; // holder for all events
+
+    let timeHandler; // holder for setTimeout to clear
+
+    let TOOLTIP_ACTIONS = {
+        clear() {
+            GLOBAL_DIVS.cte_clock_holder?.attr('class', 'cte_clock_holder no-select');
+            GLOBAL_DIVS.cte_clock_icon?.attr('class', `fa-solid`);
+            GLOBAL_DIVS.cte_clock_events_holder?.html('')
+        },
+        loading(html) {
+            clearTimeout(timeHandler);
+            this.clear();
+
+            this.small('...');
+            GLOBAL_DIVS.cte_clock_events_holder?.text(html);
+            GLOBAL_DIVS.cte_clock_icon?.attr('class', `fa-solid ${ICONS_DEFAULT.loading} loading-spin`);
+        },
+        error(html) {
+            this.clear();
+            GLOBAL_DIVS.cte_clock_holder?.addClass('cte_clock_error')
+            GLOBAL_DIVS.cte_clock_icon?.attr('class', `fa-solid ${ICONS_DEFAULT.error}`);
+            GLOBAL_DIVS.cte_clock_events_holder?.html(html);
+            this.small('error');
+        },
+        active(icon = '') {
+            GLOBAL_DIVS.cte_clock_holder?.attr('class', 'cte_clock_holder no-select cte_clock_active');
+            this.icon(icon);
+        },
+        icon(icon = '') {
+            GLOBAL_DIVS.cte_clock_icon?.attr('class', `fa-solid ${icon}`);
+        },
+        html(data) {
+            GLOBAL_DIVS.cte_clock_events_holder?.html(data);
+        },
+        small(value) {
+            GLOBAL_DIVS.cte_clock?.text(value);
+        }
     }
-    let SETTINGS = DEFAULT_SETTINGS
-
-    let allEvents = {}; // Torn events and competitions, custom events.
-    let calendarElementsSet = false;
 
 
-    let timeHandler;
+    function initStorage() {
+        SETTINGS = GM_getValue(STORAGE_NAME, {});
+        if (SETTINGS.apiKey) return;
 
-    function saveSettings() {
-        GM_setValue(STORAGE_NAME, SETTINGS);
-        console.log("save settings", SETTINGS);
+        // detect if no api key presented, try to get apikey from ols version
+        let oldApiKey = GM_getValue('timer_api_key', null);
+        if (oldApiKey) SETTINGS.apiKey = oldApiKey;
+
+
     }
+    initStorage();
 
 
-    function init_tooltip() {
-        const tc_clock_tooltip = document.querySelector('.tc-clock-tooltip');
-        const server_date_time = document.querySelector('.server-date-time');
-        DIVS.torn_clock = $("button[class*='tc_clock']");
-        DIVS.torn_clock.addClass('cte_torn_clock_error');
-        if (tc_clock_tooltip && server_date_time) {
+    //  generate tooltip
+    generateTooltip();
 
-            //  TORN clock tooltip
-            tc_clock_tooltip.innerHTML = '';
-            tc_clock_tooltip.style.width = TC_CLOCK_TOOLTIP_WIDTH;
-            tc_clock_tooltip.style.left = TC_CLOCK_TOOLTIP_LEFT;
-            tc_clock_tooltip.style.padding = 0;
+    function detectOpenPages() {
 
-            DIVS.cte_clock_holder = $('<div>', {
-                id: 'cte_clock_holder',
-                class: 'cte_clock_holder no-select',
-            }).appendTo(tc_clock_tooltip).on("click", function () {
-                // toggleEventsHolderVisibility();
+        //  detect for preferences/settings and calendar pages
 
-                let element = DIVS.cte_clock_events_holder;
-                element.toggle();
-                SETTINGS.tooltipExpanded = $(element).is(":visible");
-                saveSettings();
-
-            });;
-
-            server_date_time.style.marginLeft = '5px';
-            $(server_date_time).appendTo(DIVS.cte_clock_holder)
-
-            DIVS.cte_clock_icon = $('<i>', {
-                class: `fa-solid ${ICON_LOADING} loading-spin`,
-            }).prependTo(DIVS.cte_clock_holder);
-
-            DIVS.cte_clock_events_holder = $('<div>', {
-                class: `cte_clock_events_holder`,
-                html: 'loading data...' // <div class='cte_clock_event'><div class="cte_clock_event_title">Elimination</div>in 1 day</div>
-            }).appendTo(DIVS.cte_clock_holder);
+        if (window.location.href.toLowerCase().indexOf('preferences.php') !== -1) generateSettings();
+        if (window.location.href.toLowerCase().indexOf('calendar.php') !== -1) generateCalendar();
+    }
+    detectOpenPages();
 
 
-            //  detect if tooltip shod be expanded
-            if (!SETTINGS.tooltipExpanded) {
-                DIVS.cte_clock_events_holder.hide();
-            }
-            TOOLTIP_ACTIONS.clear();
-            /*
+    //  GATHER ALL DATA   -------------------------------------------------------------
+
+
+    function gatherData() {
+        clearTimeout(timeHandler);
+        TOOLTIP_ACTIONS.loading();
+
+        //  Detecting if apiKey is available
+
+        if (!SETTINGS.apiKey) {
             TOOLTIP_ACTIONS.error($('<div>', {
-                text: "There was an error, try again",
+                html: "Api key not set<br/>Click <u>here</u> to open settings",
             }).on("click", function (e) {
                 e.stopPropagation();
-                alert('test ok ')
+                window.open('preferences.php', '_self');
             }));
-            */
-            /*
-            let test = $('<div>', {
-                text: "There was an error, try again",
-            }).appendTo(DIVS.cte_clock_events_holder).on("click", function (e) {
-                e.stopPropagation();
-                alert('test ok ')
-            });;
-
-            $("#target")
-            */
+            return;
         }
-    };
-    function toggleEventsHolderVisibility() {
-        let element = DIVS.cte_clock_events_holder;
-        element.toggle();
-        SETTINGS.tooltipExpanded = $(element).is(":visible");
-        saveSettings();
+
+        let currentTimeStamp = Math.round(Date.now() / 1000);
+
+
+        //  Check if fetch is needed
+
+        if (!SETTINGS.tornEvents || SETTINGS.tornEvents.length === 0 || !SETTINGS.lasetUpdate || currentTimeStamp - SETTINGS.lasetUpdate > UPDATE_INTERVAL) {
+            fetchData();
+            return;
+        };
+
+
+        //  Prepearing events list 
+
+        allEvents = {};
+        let preSortedEvents = [];
+        let unSortedEvents = (SETTINGS.watchEvents ?? []).concat(SETTINGS.tornEvents ?? []);
+
+
+
+
+        for (let i = 0; i < unSortedEvents.length; i++) {
+            let tornEvent = unSortedEvents[i];
+            let start = tornEvent.start;
+            let end = tornEvent.end;
+            if (tornEvent.fixed_start_time === false) {
+                let isOneDayEvent = ((end - start) / 86400) < 1;
+                // if it's a one day event with user start time add one day before and after.
+                // Wtf Torn team, why not just put normal start/end timestamps into API? o_O
+                if (isOneDayEvent) {
+                    start = start - 86400;
+                    end = end + 86400;
+                }
+
+                //  add user event start time
+                start = setTimeOnUnix(start, SETTINGS.userStartTime || "00:00");
+                end = setTimeOnUnix(end, SETTINGS.userStartTime || "00:00");
+
+            }
+            let event = {
+                title: tornEvent.title,
+                icon: (tornEvent.custom) ? tornEvent.icon : getEventIcon(tornEvent.title),
+                start: start,
+                end: end,
+                originalInfo: tornEvent,
+                custom: tornEvent.custom || false
+            }
+
+            preSortedEvents.push(event);
+        }
+
+        allEvents = getUpcomingEventsSorted(preSortedEvents);
+
+        let html = '';
+        let smallText = '';
+
+        if (allEvents.ongoing_events.length > 0) {
+
+            let icon = allEvents.ongoing_events[0].icon || ICONS_DEFAULT.event;
+
+            TOOLTIP_ACTIONS.active(icon);
+
+            //  There's one or more ongoing events. Showing ongoing + overlaping
+            for (let i = 0; i < allEvents.ongoing_events.length; i++) {
+                let event = allEvents.ongoing_events[i];
+                let secondsLeft = secondsToTime(event.end - currentTimeStamp);
+
+                html += `<div class='cte_clock_event'><div class="cte_clock_event_title">${event.title}</div>ends in ${secondsLeft}</div>`;
+
+                if (i === 0) smallText = secondsLeft;
+            }
+            for (let i = 0; i < allEvents.overlapping_events.length; i++) {
+                let event = allEvents.overlapping_events[i];
+                let secondsLeft = secondsToTime(event.start - currentTimeStamp);
+
+                html += `<div class='cte_clock_event'><div class="cte_clock_event_title">${event.title}</div>starts in ${secondsLeft}</div>`;
+            }
+
+        } else {
+            let icon = allEvents.future_events[0].icon || ICONS_DEFAULT.event;
+            TOOLTIP_ACTIONS.icon(icon);
+
+            //  Showing frist future event
+            let event = allEvents.future_events[0];
+            let secondsLeft = secondsToTime(event.start - currentTimeStamp);
+            smallText = secondsLeft;
+            html += `<div class='cte_clock_event'><div class="cte_clock_event_title">${event.title}</div>starts in ${secondsLeft}</div>`;
+        }
+
+        TOOLTIP_ACTIONS.small(smallText)
+        TOOLTIP_ACTIONS.html(html)
+
+        timeHandler = setTimeout(() => {
+            gatherData();
+        }, 1000);
+
     }
 
-    function init_settings_holder() {
+    gatherData();
 
+
+
+
+    //  GENERATE TOOLTIP    -------------------------------------------------------------
+
+    function generateTooltip() {
+        if ($('.cte_clock_holder').length > 0) return; // CTE clock somehowreaydy exists abort the mission
+
+        message('generating tooltip');
+
+
+        let tc_clock_tooltip = $('.tc-clock-tooltip');  // Torn clock tooltip
+        let server_date_time = $('.server-date-time');  // Torn server time 
+        if (!server_date_time.length === 0 || !tc_clock_tooltip.length === 0) {
+            message('tc_clock_tooltip or server_date_time missing');
+            return;
+        }
+
+        tc_clock_tooltip.html('');
+
+        let cte_clock_holder = $('<div>', {
+            id: 'cte_clock_holder',
+            class: 'cte_clock_holder no-select cte_clock_active',
+        }).appendTo(tc_clock_tooltip).on("click", function () {
+            toggleTooltip();
+        });
+
+        server_date_time.appendTo(cte_clock_holder);
+
+        let s = $('<span>', {
+            class: 'cte_clock',
+        }).appendTo(cte_clock_holder);
+
+        let cte_clock_icon = $('<i>', {
+            class: `fa-solid ${ICONS_DEFAULT.loading} loading-spin`,
+        }).prependTo(s);
+        let cte_clock = $('<span>', {
+            text: "test"
+        }).appendTo(s);
+
+        let cte_clock_events_holder = $('<div>', {
+            class: `cte_clock_events_holder`,
+            text: 'loading' // <div class='cte_clock_event'><div class="cte_clock_event_title">Elimination</div>in 1 day</div>
+        }).appendTo(cte_clock_holder);
+
+
+
+        GLOBAL_DIVS.cte_clock_holder = cte_clock_holder;
+        GLOBAL_DIVS.cte_clock = cte_clock;
+        GLOBAL_DIVS.cte_clock_icon = cte_clock_icon;
+        GLOBAL_DIVS.tc_clock_tooltip = tc_clock_tooltip;
+        GLOBAL_DIVS.cte_clock_events_holder = cte_clock_events_holder;
+
+        if (!SETTINGS.tooltipExpanded) cte_clock_events_holder.hide();
+        if (SETTINGS.hideSmallTimer === true) cte_clock.hide();
+
+
+
+    }
+    function toggleTooltip() {
+        GLOBAL_DIVS.cte_clock_events_holder.toggle();
+        let isVisible = GLOBAL_DIVS.cte_clock_events_holder.is(":visible");
+        SETTINGS.tooltipExpanded = isVisible;
+        saveSettings();
+
+        if (isVisible) gatherData();
+        return;
+    }
+
+
+    //  GENERATE SETTINGS   -------------------------------------------------------------
+
+    function generateSettings() {
+        message('Generating settings')
+        $(".cte_settings_holder").remove();
+
+        let cte_settings_holder = $('<div>', {
+            class: `cte_settings_holder`,
+            html: `
+                <div class="cte_title">Custom and nearest Torn events | ${SCRIPT_VERSION}</div>
+                API key: <button class="cte_apiKey_button cte_apiKey"> </button>
+               
+                <!--<button class="cte_fetch_button"><i class="fa-solid fa-rotate"></i></button>-->
+
+                <!--<button class="cte_gatherdata_button">gather data</button>-->
+                <div style="padding: 10px 0;">
+                    Use limited key. Or click here to generate custom (torn calendar, user calendar) api key
+                </div>
+                <div>
+                    <input type="checkbox" id="cte_participiate_checkbox" name="cte_participiate_checkbox" ${(SETTINGS.participateCTE) ? 'checked' : ''} />
+                    <label for="cte_participiate_checkbox">Participate in CTE</label>
+                </div>
+
+                <!--
+                <div>
+                    <input type="checkbox" id="cte_smallTimer_checkbox" name="cte_smallTimer_checkbox" ${(SETTINGS.hideSmallTimer) ? 'checked' : ''} />
+                    <label for="cte_smallTimer_checkbox">Hide small timer</label>
+                </div>
+                -->
+            `
+        }).appendTo('.content-wrapper');
+
+        function displayApiKey(div) {
+            let key = '';
+            if (SETTINGS.apiKey === null || SETTINGS.apiKey === '' || !SETTINGS.apiKey) {
+                key = 'Api key not set';
+            } else {
+                key = "************" + SETTINGS.apiKey.slice(12);
+            }
+            div.text(key);
+        }
+
+        let cte_apiKey = $(".cte_apiKey");
+        let cte_apiKey_button = $(".cte_apiKey_button");
+        let cte_fetch_button = $(".cte_fetch_button");
+        let cte_participiate_checkbox = $("#cte_participiate_checkbox");
+        let cte_smallTimer_checkbox = $("#cte_smallTimer_checkbox");
+
+        displayApiKey(cte_apiKey)
+
+        cte_apiKey_button.on("click", function (e) {
+            let w = prompt("Enter api key. Leave balnk to remove it");
+            if (w || w === "") {
+                if (w.length > 0 && w.length !== 16) {
+                    alert('Api key must be 16 chars');
+                    return;
+                }
+                SETTINGS.apiKey = w;
+                displayApiKey(cte_apiKey);
+                saveSettings();
+                fetchData();
+            }
+        });
+
+        cte_fetch_button.on("click", function (e) {
+            fetchData();
+        });
+
+
+
+        cte_participiate_checkbox.change(async function (e) {
+            e.stopPropagation();
+
+            if (!this.checked) {
+
+                let q = confirm("Disabling participation will remove all your hosted and watch events from server");
+                if (q) {
+                    TOOLTIP_ACTIONS.loading('removing CTE data...')
+                    let answer = await CTE_fetch({ action: "removeall" });
+                    if (answer.success === true) {
+                        $("#cteData").remove();
+                        if (SETTINGS.hostedEvents) delete SETTINGS.hostedEvents;
+                        if (SETTINGS.watchEvents) delete SETTINGS.watchEvents;
+                        gatherData();
+                    } else {
+                        alert('Error just happened. See the log and contact developer');
+                        message(answer);
+                        this.checked = true;
+                        //gatherData();
+                        return;
+                    }
+                } else {
+                    this.checked = true;
+                    return;
+                }
+
+            } else {
+                let answer = await CTE_fetch();
+                if (answer.success === true) {
+                    SETTINGS.hostedEvents = answer.hostedEvents ?? [];
+                    SETTINGS.watchEvents = answer.watchEvents ?? [];
+                    saveSettings();
+                    gatherData();
+                }
+                generateCTEdisplay();
+            }
+
+            SETTINGS.participateCTE = this.checked;
+            saveSettings();
+        });
+
+        cte_smallTimer_checkbox.change(async function (e) {
+            if (this.checked) {
+                GLOBAL_DIVS.cte_clock.hide();
+            } else {
+                GLOBAL_DIVS.cte_clock.show();
+            }
+            SETTINGS.hideSmallTimer = this.checked;
+            saveSettings();
+        });
+        if (SETTINGS.participateCTE) generateCTEdisplay();
+    }
+
+
+    //  GENERATE CTE WINDOW   -------------------------------------------------------------
+
+    function generateCTEdisplay() {
+        $("#cteData").remove();
+        message('Generating CTE display');
+
+        let currentTimeStamp = Math.round(Date.now() / 1000);
+
+        let cteData = $('<div>', {
+            id: 'cteData',
+            html: `
+                <button class='cteData_header cteData_header_addHost'><i class="fa-solid fa-plus"></i> Hosted events</button>
+                <ul class="cte_hostedEvents_holder"></ul>
+                
+                <button style="margin-top:20px"class='cteData_header cteData_header_addWatch'><i class="fa-solid fa-plus"></i> Watched events</button>
+                <ul class="cte_watchEvents_holder"></ul>             
+            `
+        }).appendTo($('.cte_settings_holder'));
+
+        //  WATCH EVENTS
+        let cte_watchEvents_holder = $(".cte_watchEvents_holder");
+        let watchEvents = SETTINGS.watchEvents ?? [];
+        for (let i = 0; i < watchEvents.length; i++) {
+            let event = watchEvents[i];
+            let ul = $('<ul>', {
+                class: 'cteData_event',
+                html: fillEvent(event)
+            }).appendTo(cte_watchEvents_holder);
+        }
+
+        //  HOSTED EVENTS
+        let cte_hostedEvents_holder = $(".cte_hostedEvents_holder");
+        let hostedEvents = SETTINGS.hostedEvents ?? [];
+        for (let i = 0; i < hostedEvents.length; i++) {
+            let event = hostedEvents[i];
+            let ul = $('<ul>', {
+                class: 'cteData_event',
+                html: fillEvent(event, true),
+                eventid: event.id
+            }).appendTo(cte_hostedEvents_holder);
+            ul.attr('eventID', event.ud);
+        }
+
+
+        $(".cteEventDelete").on("click", async function (e) {
+            let eventID = $(this).attr('eventid');
+            let host = $(this).attr('host');
+
+            let q = confirm(`Delete event?`);
+            if (!q) return;
+
+            TOOLTIP_ACTIONS.loading('deleting CTE event...')
+            let answer = await CTE_fetch({
+                action: "deleteevent",
+                id: eventID,
+                host: host
+            });
+
+            if (answer.success) {
+
+                let cteData = await CTE_fetch();
+                SETTINGS.hostedEvents = cteData.hostedEvents ?? [];
+                SETTINGS.watchEvents = cteData.watchEvents ?? [];
+                saveSettings();
+                gatherData();
+                $(".cteHostEvent").remove();
+
+                detectOpenPages();
+
+            } else {
+                alert(`Error! ${answer.message}`);
+                message(answer);
+                gatherData();
+            }
+
+        });
+        $(".cteEventEdit").on("click", function (e) {
+            let eventID = $(this).attr('eventid');
+            //TODO
+        });
+        $(".cteEventShare").on("click", function (e) {
+            let eventID = $(this).attr('eventid');
+            //event://sdasjdhasd
+
+            navigator.clipboard.writeText(`event://${eventID}`);
+            alert('Event share link has been copied to the clipboard')
+        });
+        $(".cteEventCopy").on("click", function (e) {
+            let eventID = $(this).attr('eventid');
+            //event://sdasjdhasd
+
+            navigator.clipboard.writeText(`${eventID}`);
+            alert('Event id has been copied to the clipboard')
+
+        });
+
+
+
+        function fillEvent(event, host = false) {
+
+            let start = event.start;
+            let end = event.end;
+            let duration = getDatesBetween(start, end).length;
+            let eventStatus = '';
+            if (currentTimeStamp > start && currentTimeStamp < end) {
+                eventStatus = `ends ${unixSecondsToGMT(event.end)}`;
+            } else if (currentTimeStamp < start) {
+                eventStatus = `starts ${unixSecondsToGMT(event.start)}`
+            } else {
+                eventStatus = 'finished';
+            }
+            //let eventStatus = (currentTimeStamp > start) ? `ends ${unixSecondsToGMT(event.end)}` : `starts ${unixSecondsToGMT(event.start)}`
+            //secondsLeft = `ends in ${secondsToTime(event.end - currentTimeStamp)}`;
+
+            let controls = `
+                <i class="fa-solid fa-trash-can cteEventDelete" eventID="${event.id}" host=${host}></i>
+                <!--<i class="fa-solid fa-pen-to-square cteEventEdit" eventID="${event.id}"></i>-->
+                <i class="fa-solid fa-share-from-square cteEventShare" eventID="${event.id}"></i>
+                <i class="fa-solid fa-clipboard cteEventCopy" eventID="${event.id}"></i>
+            `;
+
+            //if (!host) controls = `<i class="fa-solid fa-trash-can cteEventDelete" eventID="${event.id}"></i>`;
+
+            let html = `
+                <div class="cte_row">
+                    <div class="cte_col">${event.title}</div>
+                    <div class="cte_col">${eventStatus}</div>
+                    <div class="cte_col cte_col_controls">
+                        ${(controls)}
+                    </div>
+                </div>
+            `
+
+
+
+            //html = `${event.title} ${duration} day${duration > 1 ? "s" : ""} event | ${eventStatus}`;
+
+            return html;
+        }
+
+        $(".cteData_header_addWatch").on("click", function (e) {
+            let w = prompt("Enter event id");
+            if (w) {
+                addEventToWatch(w);
+            }
+        });
+        $(".cteData_header_addHost").on("click", function (e) {
+            generateHostNewEventWindow();
+        });
+
+
+    }
+
+
+    async function generateHostNewEventWindow(data = {}) {
+        let timestamp = Math.floor(Date.now() / 3600000) * 3600; // current time with 0 seconds
+
+        let editing = data.editing ?? false;
+        let eventID = data.eventID;
+        let eventName = data.name ?? "";
+        let eventIcon = data.name ?? ICONS_DEFAULT.event;
+        let eventStart = data.start ?? timestamp;
+        let eventEnd = data.end ?? timestamp + (15 * 60); // adding 15 mins by default
+
+        function timeStampManipulation(value, format = 'todate') {
+            if (format === 'todate') {
+                const date = new Date(value * 1000);
+
+                const dd = String(date.getUTCDate()).padStart(2, '0');
+                const mm = String(date.getUTCMonth() + 1).padStart(2, '0');
+                const yyyy = String(date.getUTCFullYear())
+
+                const hh = String(date.getUTCHours()).padStart(2, '0');
+                const min = String(date.getUTCMinutes()).padStart(2, '0');
+
+                return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+            } else {
+
+                const [date, time] = value.split("T");
+                const [year, month, day] = date.split("-").map(Number);
+                const [hour, minute] = time.split(":").map(Number);
+
+                const unixSecondsGMT = Math.floor(
+                    Date.UTC(year, month - 1, day, hour, minute) / 1000
+                );
+
+                return unixSecondsGMT;
+            }
+        }
+
+
+        //message(timeStampManipulation(1767713160));
+        //message(timeStampManipulation('2026-01-06T15:26', 'tounix'))
+
+        let cteData = $('<div>', {
+            class: 'cteHostEvent',
+            html: `
+
+                    <div class="cteHostEvent_form">
+                        <div class="cte_row">
+                            <div class="cte_col">
+                                <label for="cteHost_inputEventName">Event name</label>
+                                <input type="text" id="cteHost_inputEventName" value="${eventName}">
+                            </div>
+                            <div class="cte_col">
+                                <label for="cteHost_inputEventIcon">Event icon (use Fontawesome)</label>
+                                <input type="text" id="cteHost_inputEventIcon" value="${eventIcon}"  list="fa-icons">
+                                <i class="cteHost_eventIcon fa-solid ${eventIcon}"></i>
+                            </div>
+                            <div class="cte_col">
+                                <label for="cteHost_inputEventStart">Start TCT</label>
+                                <input type="datetime-local" id="cteHost_inputEventStart" value='${timeStampManipulation(eventStart, 'todate')}'>
+                            </div>
+                            <div class="cte_col">
+                                <label for="cteHost_inputEventEnd">End</label>
+                                <input type="datetime-local" id="cteHost_inputEventEnd" value='${timeStampManipulation(eventEnd, 'todate')}'>
+                            </div>
+                        </div>
+
+                        <div class="cteHostEvent_form_footer cte_row">
+                            <div>
+                                <button class='cteHost_save cte_button_blue'>${(editing) ? 'Save' : 'Add'}</button>
+                            </div>
+                            <div>
+                                <button class='cteHost_close'>Close</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    
+
+                    <datalist id="fa-icons">
+                        <option value="fa-home"></option>
+                        <option value="fa-pluss"></option>
+                        <option value="Mint"></option>
+                        <option value="Strawberry"></option>
+                        <option value="Vanilla"></option>
+                    </datalist>
+
+
+            `
+        }).appendTo($('#cteData'));
+
+        $("#cteHost_inputEventIcon").on("input", function (e) {
+            $('.cteHost_eventIcon').attr('class', 'cteHost_eventIcon fa-solid ');
+            $('.cteHost_eventIcon').addClass($(this).val().toLowerCase())
+
+            //detect if icon exists
+
+            const el = $('.cteHost_eventIcon')[0];
+            const style = getComputedStyle(el, '::before');
+            const content = style.content;
+
+            let isIcon = content && content !== 'none' && content !== '""';
+
+            if (!isIcon) $('.cteHost_eventIcon').addClass(ICONS_DEFAULT.event)
+        });
+
+        $(".cteHost_close").on("click", function (e) {
+            $(".cteHostEvent").remove();
+        });
+
+        $(".cteHost_save").on("click", async function (e) {
+            const eventNameInput = $("#cteHost_inputEventName").val();
+            const eventIconInput = $(".cteHost_eventIcon").attr('class').split(' ').pop();
+            const eventStartInput = (timeStampManipulation($("#cteHost_inputEventStart").val(), 'tounix'));
+            const eventEndInput = (timeStampManipulation($("#cteHost_inputEventEnd").val(), 'tounix'));
+
+
+            const dif = eventEndInput - eventStartInput;
+            if (dif < 0) {
+                alert(`Woah, something wrong with start and end time`);
+                return;
+            }
+            if (eventNameInput.length > 30) {
+                alert(`Event name is too ling. Should be 30 or less chars. Atm it's ${eventNameInput.length}`);
+                return;
+            }
+            if (eventNameInput.trim().length === 0) {
+                alert(`Event name can't be empty`);
+                return;
+            }
+
+            $(this).prop("disabled", true);
+
+            TOOLTIP_ACTIONS.loading('hosting CTE event...')
+            let answer = await CTE_fetch({
+                action: "hostevent", data: {
+                    name: eventNameInput,
+                    icon: eventIconInput,
+                    start: eventStartInput,
+                    end: eventEndInput,
+                    id: eventID
+                }
+            });
+            $(this).prop("disabled", false);
+            if (answer.success) {
+
+                let cteData = await CTE_fetch();
+                SETTINGS.hostedEvents = cteData.hostedEvents ?? [];
+                SETTINGS.watchEvents = cteData.watchEvents ?? [];
+                saveSettings();
+                gatherData();
+                $(".cteHostEvent").remove();
+
+                detectOpenPages();
+
+            } else {
+                alert(`Error! ${answer.message}`);
+                message(answer);
+                gatherData();
+            }
+
+            //fetchData();
+            //gatherData();
+            /*
+            if (answer.success === true) {
+                $("#cteData").remove();
+                if (SETTINGS.hostedEvents) delete SETTINGS.hostedEvents;
+                if (SETTINGS.watchEvents) delete SETTINGS.watchEvents;
+                gatherData();
+            */
+
+        });
+
+
+
+    }
+
+    async function addEventToWatch(id) {
+        if (!SETTINGS.participateCTE) return;
+
+        TOOLTIP_ACTIONS.loading('adding CTE event...');
+        let answer = await CTE_fetch({ action: "addwatch", id: id });
+        let success = false;
+        if (answer.success === true) {
+            message('SUCCESS -- answer ---');
+            message(answer);
+
+
+            let cteData = await CTE_fetch();
+            SETTINGS.hostedEvents = cteData.hostedEvents ?? [];
+            SETTINGS.watchEvents = cteData.watchEvents ?? [];
+            saveSettings();
+            message("--- answer 2 ---")
+            message(cteData);
+
+            success = true;
+
+        } else {
+            let msg = 'Error just happened. See the log and contact developer';
+            if (answer.message) msg = answer.message
+            alert(`Error!\n${msg}`);
+            message(answer);
+        }
+
+        message("--- settings before gather ---");
+        message(SETTINGS);
+
+        gatherData();
+
+        if (success) detectOpenPages();
+    }
+
+
+
+    //  GENERATE CALENDAR    -------------------------------------------------------------
+
+    function generateCalendar() {
+        if (!SETTINGS.watchEvents || SETTINGS.watchEvents.length === 0) return;
         const monthTitleTextMap = new WeakMap();
+
 
         const observer = new MutationObserver(mutations => {
             let foundPropperDiv = false;
@@ -197,13 +833,13 @@
 
                         // 1) div with class 'calendar___KkLtY' appears
                         if (el.matches('div.calendar___KkLtY') || el.querySelector('div.calendar___KkLtY')) {
-                            console.log('calendar___KkLtY appeared:', el);
+                            //message('calendar___KkLtY appeared:', el);
                             foundPropperDiv = true;
                         }
 
                         // 2) div with class 'month-view' appears
                         if (el.matches('div.month-view') || el.querySelector('div.month-view')) {
-                            console.log('month-view appeared:', el);
+                            //message('month-view appeared:', el);
                             foundPropperDiv = true;
                         }
 
@@ -243,514 +879,401 @@
                     }
 
                     if (oldText !== newText) {
-                        console.log('monthTitle___ulJOS text changed:', {
+                        /*
+                        message('monthTitle___ulJOS text changed:', {
                             from: oldText,
                             to: newText,
                             element: monthTitleEl
                         });
+                        */
                         monthTitleTextMap.set(monthTitleEl, newText);
                         foundPropperDiv = true;
                     }
                 }
             }
             if (foundPropperDiv) {
+
+                //  MANIPULATE WITH CALENDAR
+
                 setCalendarElements();
             }
         });
 
+        'content-wrapper'
+        const calendarRoot = document.querySelector('.content-wrapper');
+
+        if (calendarRoot) {
+            observer.observe(calendarRoot, {
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+        }
+        /*
         observer.observe(document.body, {
             childList: true,
             subtree: true,
-            attributes: true,
+            // attributes: true,
             characterData: true
-        });
-
-
-        let cte_settings_holder = $('<div>', {
-            class: `cte_settings_holder`,
-            html: `
-                <span class='cte_apiKey'></span>
-                <button class="cte_apiKey_button">set</button>
-                <button class="cte_fetch_button">fetch</button>
-
-                <button class="cte_gatherdata_button">gather data</button>
-
-                <div>
-                    <input type="checkbox" id="cte_participiate_checkbox" name="cte_participiate_checkbox" ${(SETTINGS.participateCTE) ? 'checked' : ''} />
-                    <label for="cte_participiate_checkbox">Participate in CTE</label>
-                </div>
-            `
-        }).prependTo('.content-wrapper');
-
-        let cte_apiKey = $(".cte_apiKey");
-        let cte_apiKey_button = $(".cte_apiKey_button");
-        let cte_fetch_button = $(".cte_fetch_button");
-        let cte_participiate_checkbox = $("#cte_participiate_checkbox");
-        displayApiKey(cte_apiKey)
-
-        cte_apiKey_button.on("click", function (e) {
-            let w = prompt("Enter api key. Leave balnk to remove it");
-            if (w || w === "") {
-                if (w.length > 0 && w.length !== 16) {
-                    alert('Api key must be 16 chars');
-                    return;
-                }
-                SETTINGS.apiKey = w;
-                displayApiKey(cte_apiKey);
-                saveSettings();
-                fetchData();
-            }
-        });
-
-        cte_fetch_button.on("click", function (e) {
-            fetchData();
-        });
-
-        $(".cte_gatherdata_button").on("click", function (e) {
-            gatherData();
-        });
-
-
-
-
-        cte_participiate_checkbox.change(async function (e) {
-            e.stopPropagation();
-
-            if (!this.checked) {
-
-                let q = confirm("Disabling participation will remove all your hosted and watch events from server");
-                if (q) {
-                    TOOLTIP_ACTIONS.loading('loading cte...')
-
-                    let answer = await CTE_fetch({ action: "removeall" });
-                    console.log(answer)
-                    if (answer.success) {
-                        $("#cteData").remove();
-                        SETTINGS.hostedEvents = [];
-                        SETTINGS.watchEvents = [];
-                        gatherData();
-                    } else {
-                        alert('Error just happened. See the log and contact developer');
-                        console.log(answer);
-                        this.checked = true;
-                        //gatherData();
-                        return;
-                    }
-
-
-                } else {
-                    this.checked = true;
-                    return;
-                }
-
-            } else {
-                generateCTEdisplay();
-            }
-
-            SETTINGS.participateCTE = this.checked;
-            setCalendarElements();
-            saveSettings();
-
-            /*
-            if (this.checked) {
-                generateCTEdisplay();
-                //fetchData();
-            } else {
-                $("#cteData").remove();
-            }
-            SETTINGS.participateCTE = this.checked;
-            saveSettings();
-            */
-        });
-
-        if (SETTINGS.participateCTE) generateCTEdisplay();
-    }
-    function setCalendarElements() {
-        console.log("setting calendar elements");
-        //gatherData();
-
-        //removeing existing elements
-
-        $(".cte_calendar_active").prop("onclick", null).off("click");
-        $(".cte_calendar_active").removeClass('cte_calendar_active');
-
-
-        function unixToID(timestampInSeconds) {
-            const date = new Date(timestampInSeconds * 1000);
-
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-            const year = date.getFullYear();
-
-            return `${day}${month}${year}`;
-        }
-
-        function getDatesBetween(startUnix, endUnix) {
-            const dates = [];
-
-            // Convert seconds → milliseconds
-            let current = new Date(startUnix * 1000);
-            const end = new Date(endUnix * 1000);
-
-            while (current <= end) {
-                const dd = String(current.getDate()).padStart(2, "0");
-                const mm = String(current.getMonth() + 1).padStart(2, "0");
-                const yyyy = current.getFullYear();
-
-                dates.push(`${dd}${mm}${yyyy}`);
-
-                // Move to next day
-                current.setDate(current.getDate() + 1);
-            }
-
-            return dates;
-        }
-
-
-        const customEvents = [
-            ...allEvents.ongoing_events,
-            ...allEvents.future_events,
-            ...allEvents.overlapping_events
-        ].filter(event => event.custom === true);
-
-        for (let i = 0; i < customEvents.length; i++) {
-            let event = customEvents[i];
-            let start = event.start;
-            let end = event.end;
-            let id = unixToID(start);
-
-            let activeDates = getDatesBetween(start, end);
-            console.log(activeDates)
-            for (let d = 0; d < activeDates.length; d++) {
-                let div = $(`[id*="${activeDates[d]}"]`);
-                if (div.length === 0) continue;
-
-                //let numberWrapper = div.find(`[class*="numberWrapper"]`);
-                //if (numberWrapper.length === 0) continue;
-                //numberWrapper.addClass('cte_calendar_active')
-                //numberWrapper.css('color', 'red')
-                div.addClass('cte_calendar_active');
-                div.attr('cte-event-name', event.title);
-
-                div.on("click", function (e) {
-                    e.stopPropagation();
-                    console.log(this)
-                });
-            }
-
-            //console.log(getDatesBetween(start, end))
-
-            /*
-            let div = $(`[id*="${id}"]`);
-            if (div.length === 0) continue;
-
-            let numberWrapper = div.find(`[class*="numberWrapper"]`);
-            if (numberWrapper.length === 0) continue;
-            
-            numberWrapper.css('color', 'red')
-            */
-            //console.log(numberWrapper)
-        }
-
-        // console.log(customEvents)
-
-    }
-    function generateCTEdisplay() {
-
-        $("#cteData").remove();
-        //TODO
-
-        let holder = $('<div>', {
-            id: 'cteData',
-            html: 'loading data...' // <div class='cte_clock_event'><div class="cte_clock_event_title">Elimination</div>in 1 day</div>
-        }).appendTo($('.cte_settings_holder'));
-
-
-
-
-        if (!SETTINGS.watchEvents) SETTINGS.watchEvents = []; //TODO 
-        if (!SETTINGS.tornEvents) SETTINGS.tornEvents = [];
-
-        //  DUMMY CUSTOM TEST EVENS
-
-        SETTINGS.watchEvents = [];
-
-        SETTINGS.watchEvents.push({
-            title: "dummy1 in 30 2025 long long name hello world",
-            start: 1766052800, //1767052800,
-            end: 1767139199,
-            custom: true,
-        });
-
-        gatherData();
-        /*
-        SETTINGS.watchEvents.push({
-            title: "dummy2 in 2026",
-            start: 1767192310,
-            end: 1769870710,
-            custom: true,
         });
         */
 
-    }
-    function displayApiKey(div) {
-        let key = '';
-        if (SETTINGS.apiKey === null || SETTINGS.apiKey === '') {
-            key = 'Api key not set';
-        } else {
-            key = "************" + SETTINGS.apiKey.slice(12);
+        function setCalendarElements() {
+
+            $(".cte_calendar_active").prop("onclick", null).off("click");
+            $(".cte_calendar_active").removeClass('cte_calendar_active');
+            $(".cte_calendar_active_overlap").removeClass('cte_calendar_active_overlap');
+
+
+            function unixToID(timestampInSeconds) {
+                const date = new Date(timestampInSeconds * 1000);
+
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                const year = date.getFullYear();
+
+                return `${day}${month}${year}`;
+            }
+
+
+
+
+            const customEvents = [
+                ...allEvents.ongoing_events,
+                ...allEvents.future_events,
+                ...allEvents.overlapping_events
+            ].filter(event => event.custom === true);
+
+            for (let i = 0; i < customEvents.length; i++) {
+                let event = customEvents[i];
+                let start = event.start;
+                let end = event.end;
+                let id = unixToID(start);
+
+                let activeDates = getDatesBetween(start, end);
+                message(activeDates)
+                for (let d = 0; d < activeDates.length; d++) {
+                    let div = $(`[id*="${activeDates[d]}"]`).first();
+                    if (div.length === 0) continue;
+
+                    //let numberWrapper = div.find(`[class*="numberWrapper"]`);
+                    //if (numberWrapper.length === 0) continue;
+                    //numberWrapper.addClass('cte_calendar_active')
+                    //numberWrapper.css('color', 'red')
+                    if (!div.hasClass('cte_calendar_active')) {
+                        div.addClass('cte_calendar_active');
+                        div.attr('cte-event-name', event.title);
+
+                        div.on("click", function (e) {
+                            /*
+                            if ($(".cte_calendar_event_info").length > 0) {
+                                $(".cte_calendar_event_info").remove();
+                                return;
+                            }
+                            */
+
+                            $(".cte_calendar_event_info").remove();
+
+                            e.stopPropagation();
+                            let attr = $(this).attr("cte-event-name").split(";").join('\n');
+                            alert(`Custom events:\n${attr}`)
+                            /*
+                            message(this);
+                            let pos = $(this).position();
+
+                            let holder = $('<div>', {
+                                class: 'cte_calendar_event_info',
+
+                                html: 'loading data...'
+                            }).appendTo($(".calendar-container"));
+
+                            /*
+                            let left = pos.left - 158;
+                            if (left < 0) left = 0;
+
+                            holder.css('left', `${left}px`)
+                            */
+                        });
+                    } else {
+                        div.addClass('cte_calendar_active_overlap');
+                        let oldattr = div.attr('cte-event-name')
+                        div.attr('cte-event-name', `${oldattr};${event.title}`);
+                    }
+
+                }
+
+                //message(getDatesBetween(start, end))
+
+                /*
+                let div = $(`[id*="${id}"]`);
+                if (div.length === 0) continue;
+    
+                let numberWrapper = div.find(`[class*="numberWrapper"]`);
+                if (numberWrapper.length === 0) continue;
+                
+                numberWrapper.css('color', 'red')
+                */
+                //message(numberWrapper)
+            }
+
+            // message(customEvents)
+
         }
-        div.text(key);
     }
 
+    function getDatesBetween(startUnix, endUnix) {
+        const dates = [];
 
-    const TOOLTIP_ACTIONS = {
-        clear() {
-            DIVS.cte_clock_holder.attr('class', 'cte_clock_holder no-select');
-            DIVS.cte_clock_icon.attr('class', `fa-solid`);
-            DIVS.cte_clock_events_holder.html('');
+        // Convert seconds → milliseconds
+        let current = new Date(startUnix * 1000);
+        const end = new Date(endUnix * 1000);
 
-        },
-        loading(msg = 'syncing...') {
-            clearTimeout(timeHandler);
-            TOOLTIP_ACTIONS.clear();
-            DIVS.cte_clock_icon.attr('class', `fa-solid ${ICON_LOADING} loading-spin`);
-            DIVS.cte_clock_events_holder.html(msg)
-        },
-        error(html = '') {
-            TOOLTIP_ACTIONS.clear();
-            DIVS.cte_clock_holder.addClass('cte_clock_error')
-            DIVS.cte_clock_icon.attr('class', `fa-solid ${ICON_ERROR}`);
-            DIVS.cte_clock_events_holder.html(html)
-        },
-        active(icon = '') {
-            DIVS.cte_clock_holder.attr('class', 'cte_clock_holder no-select cte_clock_active');
-            DIVS.cte_clock_icon.attr('class', `fa-solid ${icon}`);
+        while (current <= end) {
+            const dd = String(current.getDate()).padStart(2, "0");
+            const mm = String(current.getMonth() + 1).padStart(2, "0");
+            const yyyy = current.getFullYear();
 
-        },
-        icon(icon = '') {
-            DIVS.cte_clock_icon.attr('class', `fa-solid ${icon}`);
-        },
-        html(data) {
-            DIVS.cte_clock_events_holder.html(data)
-        }
-    }
+            dates.push(`${dd}${mm}${yyyy}`);
 
-
-
-    function init() {
-        SETTINGS = GM_getValue(STORAGE_NAME, DEFAULT_SETTINGS);
-        console.log("loaded settings", SETTINGS);
-        init_tooltip();
-        if (window.location.href.toLowerCase().indexOf('calendar.php') !== -1) {
-            init_settings_holder();
+            // Move to next day
+            current.setDate(current.getDate() + 1);
         }
 
-
-
-
-        /*
-       preSortedEvents.push({
-           title: "dummy3 overlaping",
-           start: 1766962080,
-           end: 1767139199
-       });
-       */
-
-        gatherData();
+        return dates;
     }
-    init();
 
-    async function gatherData() {
-        TOOLTIP_ACTIONS.clear(); //TODO check maybe need to remove if flickering
-        clearTimeout(timeHandler);
 
-        if (!SETTINGS.apiKey) {
-            TOOLTIP_ACTIONS.error($('<div>', {
-                html: "Api key not set<br/>Click here to open settings",
-            }).on("click", function (e) {
+    //  LINK DETECTOR    -------------------------------------------------------------
+
+
+
+
+
+
+    // You provide this somewhere globally:
+    function onEventClicked(eventId, el) {
+        let w = confirm(`Add event ${eventId} to your watch list?`);
+        if (w) {
+            addEventToWatch(eventId);
+        }
+        //message("Event clicked:", eventId, el);
+    }
+
+    (() => {
+        // Match event:// then "payload" until whitespace or common punctuation terminators
+        // You can tweak the stop chars based on your content.
+        const EVENT_RE = /event:\/\/([^\s<>"'`)\]}.,!?;:]+)/g;
+
+        // Prevent re-processing inside these tags
+        const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "TEXTAREA", "INPUT", "BUTTON", "A"]);
+
+        function isSkippableNode(node) {
+            const p = node.parentElement;
+            if (!p) return true;
+            return SKIP_TAGS.has(p.tagName) || p.closest("[data-eventlink-processed] button");
+        }
+
+        function makeButton(eventId) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            //btn.textContent = `event://${eventId}`;
+            btn.textContent = `Add to CTE: ${eventId}`;
+            btn.className = "cte_event_quicklink";
+            btn.dataset.eventId = eventId;
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
                 e.stopPropagation();
-                window.open('calendar.php', '_self');
-            }));
-            return;
+                onEventClicked(eventId, btn);
+            });
+            return btn;
         }
+
+        function processTextNode(textNode) {
+            if (!textNode || textNode.nodeType !== Node.TEXT_NODE) return;
+            if (isSkippableNode(textNode)) return;
+
+            const text = textNode.nodeValue;
+            if (!text || !text.includes("event://")) return;
+
+            EVENT_RE.lastIndex = 0;
+            let match;
+            let lastIdx = 0;
+
+            const frag = document.createDocumentFragment();
+            let replaced = false;
+
+            while ((match = EVENT_RE.exec(text)) !== null) {
+                replaced = true;
+
+                const fullMatchStart = match.index;
+                const fullMatchEnd = EVENT_RE.lastIndex;
+                const eventId = match[1];
+
+                // text before match
+                if (fullMatchStart > lastIdx) {
+                    frag.appendChild(document.createTextNode(text.slice(lastIdx, fullMatchStart)));
+                }
+
+                // the button for this event://...
+                frag.appendChild(makeButton(eventId));
+
+                lastIdx = fullMatchEnd;
+            }
+
+            if (!replaced) return;
+
+            // remaining text after last match
+            if (lastIdx < text.length) {
+                frag.appendChild(document.createTextNode(text.slice(lastIdx)));
+            }
+
+            // Replace the original text node
+            const parent = textNode.parentNode;
+            if (parent) parent.replaceChild(frag, textNode);
+        }
+
+        function walkAndProcess(root) {
+            // TreeWalker over text nodes only
+            const walker = document.createTreeWalker(
+                root,
+                NodeFilter.SHOW_TEXT,
+                {
+                    acceptNode(node) {
+                        if (!node.nodeValue || !node.nodeValue.includes("event://")) {
+                            return NodeFilter.FILTER_REJECT;
+                        }
+                        if (isSkippableNode(node)) return NodeFilter.FILTER_REJECT;
+                        return NodeFilter.FILTER_ACCEPT;
+                    },
+                }
+            );
+
+            const toProcess = [];
+            let n;
+            while ((n = walker.nextNode())) toProcess.push(n);
+            toProcess.forEach(processTextNode);
+        }
+        if (SETTINGS.participateCTE === true) {
+            // Initial pass
+            walkAndProcess(document.body);
+
+            // Watch for new content (ticker/chat)
+            const obs = new MutationObserver((mutations) => {
+                for (const m of mutations) {
+                    // new nodes added
+                    for (const node of m.addedNodes) {
+                        if (node.nodeType === Node.TEXT_NODE) {
+                            processTextNode(node);
+                        } else if (node.nodeType === Node.ELEMENT_NODE) {
+                            // Avoid repeatedly processing the same subtree too aggressively
+                            walkAndProcess(node);
+                        }
+                    }
+
+                    // text changed
+                    if (m.type === "characterData" && m.target?.nodeType === Node.TEXT_NODE) {
+                        processTextNode(m.target);
+                    }
+                }
+            });
+
+
+            obs.observe(document.body, {
+                subtree: true,
+                childList: true,
+                characterData: true,
+            });
+
+            // Optional: expose a manual re-scan hook
+            window.rescanEventLinks = () => walkAndProcess(document.body);
+        }
+
+    })();
+
+
+
+
+    /************************************************************************************************
+        MAIN FUNCTIONS
+    *************************************************************************************************/
+
+    async function fetchData() {
 
         let currentTimeStamp = Math.round(Date.now() / 1000);
 
-        if (!SETTINGS.tornEvents || SETTINGS.tornEvents.length === 0 || !SETTINGS.lasetUpdate || currentTimeStamp - SETTINGS.lasetUpdate > UPDATE_INTERVAL) {
-            fetchData();
+        let fetchInterval = 1; //TODO
+        if (currentTimeStamp - SETTINGS.lasetUpdate <= fetchInterval) {
+            message(`You need wait ${fetchInterval - (currentTimeStamp - SETTINGS.lasetUpdate)} second(s) before manual fetch`, true)
             return;
         }
 
-        allEvents = {};
+        //----- FETCH TORN CALENDAR -----------------------------------------
 
-        let preSortedEvents = [];
+        message('fetching Torn data...')
+        TOOLTIP_ACTIONS.loading('fetching Torn data...');
 
+        const calendarData = await GM_fetch({ url: `https://api.torn.com/v2/torn/?selections=calendar&key=${SETTINGS.apiKey}` });
 
-
-        let unSortedEvents = SETTINGS.watchEvents.concat(SETTINGS.tornEvents);
-
-
-
-
-        for (let i = 0; i < unSortedEvents.length; i++) {
-            let tornEvent = unSortedEvents[i];
-            let start = tornEvent.start;
-            let end = tornEvent.end;
-            if (tornEvent.fixed_start_time === false) {
-                let isOneDayEvent = ((end - start) / 86400) < 1;
-                // if it's a one day event with user start time add one day before and after.
-                // Wtf Torn team, why not just put normal start/end timestamps into API? o_O
-                if (isOneDayEvent) {
-                    start = start - 86400;
-                    end = end + 86400;
-                }
-
-                //  add user event start time
-                start = setTimeOnUnix(start, SETTINGS.userStartTime || "00:00");
-                end = setTimeOnUnix(end, SETTINGS.userStartTime || "00:00");
-
-            }
-            let event = {
-                title: tornEvent.title,
-                icon: getEventIcon(tornEvent.title),
-                start: start,
-                end: end,
-                originalInfo: tornEvent,
-                custom: tornEvent.custom || false
-            }
-
-            preSortedEvents.push(event);
+        if (calendarData.error) {
+            TOOLTIP_ACTIONS.error(calendarData.error.error);
+            return;
         }
 
 
-        allEvents = getUpcomingEventsSorted(preSortedEvents);
-
-        let html = '';
-
-
-        if (allEvents.ongoing_events.length > 0) {
-            let icon = allEvents.ongoing_events[0].icon || ICON_EVENT_DEFAULT;
-
-
-
-            TOOLTIP_ACTIONS.active(icon);
-
-            //  There's one ore more ongoing events. Showing ongoing + overlaping
-            for (let i = 0; i < allEvents.ongoing_events.length; i++) {
-                let event = allEvents.ongoing_events[i];
-                let secondsLeft = secondsToTime(event.end - currentTimeStamp);
-
-                html += `<div class='cte_clock_event'><div class="cte_clock_event_title">${event.title}</div>ends in ${secondsLeft}</div>`;
-            }
-            for (let i = 0; i < allEvents.overlapping_events.length; i++) {
-                let event = allEvents.overlapping_events[i];
-                let secondsLeft = secondsToTime(event.start - currentTimeStamp);
-
-                html += `<div class='cte_clock_event'><div class="cte_clock_event_title">${event.title}</div>starts in ${secondsLeft}</div>`;
-            }
-
+        let json = calendarData.calendar;
+        if (json.events && json.competitions) {
+            SETTINGS.tornEvents = json["events"].concat(json.competitions);
         } else {
-            let icon = allEvents.future_events[0].icon || ICON_EVENT_DEFAULT;
-            TOOLTIP_ACTIONS.icon(icon);
-
-            //  Showing frist future event
-
-            let event = allEvents.future_events[0];
-            let secondsLeft = secondsToTime(event.start - currentTimeStamp);
-
-            html += `<div class='cte_clock_event'><div class="cte_clock_event_title">${event.title}</div>starts in ${secondsLeft}</div>`;
+            SETTINGS.tornEvents = json.events;
         }
 
-        TOOLTIP_ACTIONS.html(html)
-
-        /*
-        let sha = await sha256("hello world");
-        console.log("SHA", sha)
-        */
-
-        timeHandler = setTimeout(() => {
-            gatherData(); //TODO
-        }, 1000);
 
 
+        //----- FETCH USER CALENDAR -----------------------------------------
 
+        message('fetching Torn user data...');
+        TOOLTIP_ACTIONS.loading('fetching Torn user data...');
 
-        /*
-        for (let i = 0; i < SETTINGS.tornEvents.length; i++) {
-            let tornEvent = SETTINGS.tornEvents[i];
-
-            DIVS.cte_clock_icon = $('<div>', {
-                html: `
-                    <i class="fa-solid ${getEventIcon(tornEvent.title)}"></i>
-                    <b>${tornEvent.title}</b>
-                    
-                `,
-            }).appendTo($("#inner"));
-        }
-        */
-
-
-    }
-
-    function getUpcomingEventsSorted(events) {
-        const now = Math.floor(Date.now() / 1000); // GMT/UTC in seconds
-
-        const ongoing_events = [];
-        const future_events = [];
-        const overlapping_events = [];
-
-        // Ignore fully past events
-        const nonPast = events.filter(e => e.end >= now);
-
-        // First: ongoing events
-        for (const e of nonPast) {
-            if (e.start <= now && now <= e.end) {
-                ongoing_events.push(e);
-            }
+        const userData = await GM_fetch({ url: `https://api.torn.com/v2/user/?selections=calendar&key=${SETTINGS.apiKey}` });
+        if (userData.error) {
+            TOOLTIP_ACTIONS.error(userData.error.error);
+            return;
         }
 
-        // Future events (start in the future)
-        const futureCandidates = nonPast.filter(e => e.start > now);
+        currentTimeStamp = Math.round(Date.now() / 1000);
+        SETTINGS.lasetUpdate = currentTimeStamp;
+        SETTINGS.userStartTime = userData.calendar.start_time;
 
-        for (const e of futureCandidates) {
-            // Does this event start during another event?
-            const overlaps = nonPast.some(other =>
-                other !== e &&
-                other.start <= e.start &&
-                e.start <= other.end
-            );
 
-            if (overlaps) {
-                overlapping_events.push(e);
+        //----- FETCH CTE  -----------------------------------------
+
+
+        if (SETTINGS.participateCTE) {
+            message('fetching CTE data...');
+            TOOLTIP_ACTIONS.loading('fetching CTE data...');
+            let shaKey = await sha256(SETTINGS.apiKey)
+            //const cteData =  await GM_fetch(`https://level5.ee/warehouse/torn/cte/index.php`, 'POST', { action: "test" }, { 'Authorization': `Bearer ${shaKey}` });
+            const cteData = await CTE_fetch();
+            if (cteData.success === true) {
+                message("success");
+                message(cteData)
+                SETTINGS.hostedEvents = cteData.hostedEvents ?? [];
+                SETTINGS.watchEvents = cteData.watchEvents ?? [];
             } else {
-                future_events.push(e);
+                TOOLTIP_ACTIONS.error('Error fetching CTE');
+                message(['ERROR in fetchData() for CTE', cteData], true);
+                return;
             }
+
+
         }
 
-        // Sort each category by start time
-        ongoing_events.sort((a, b) => a.start - b.start);
-        future_events.sort((a, b) => a.start - b.start);
-        overlapping_events.sort((a, b) => a.start - b.start);
 
-        return { ongoing_events, future_events, overlapping_events };
-    }
 
-    function getEventIcon(eventName) {
-        eventName = eventName.toLowerCase();
 
-        for (const obj of TORN_EVENTS_ICONS) {
-            const key = Object.keys(obj)[0];
-            if (eventName.includes(key.toLowerCase())) {
-                return obj[key];
-            }
-        }
-        return null; // no match
-    }
-
-    function TCTtoSeconds(str) {
-        const m = str.match(/^(\d{1,2}):(\d{2})/);
-        return m ? (+m[1] * 3600) + (+m[2] * 60) : null;
+        saveSettings();
+        gatherData();
+        //detectOpenPages(); //TODO
     }
 
     function setTimeOnUnix(unixTime, timeString) {
@@ -774,6 +1297,25 @@
         return Math.floor(date.getTime() / 1000);
 
     }
+
+    function unixSecondsToGMT(unixSeconds) {
+        const date = new Date(unixSeconds * 1000);
+
+        const dd = String(date.getUTCDate()).padStart(2, '0');
+        // const mm = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const mmm = String(date.getUTCMonth())
+        const yyyy = String(date.getUTCFullYear())
+
+        const hh = String(date.getUTCHours()).padStart(2, '0');
+        const min = String(date.getUTCMinutes()).padStart(2, '0');
+        const ss = String(date.getUTCSeconds()).padStart(2, '0');
+
+        let mm_names = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+
+
+        return `${dd} ${mm_names[mmm]} ${hh}:${min}:${ss}`;
+    }
+
     function secondsToTime(totalSeconds) {
         const days = Math.floor(totalSeconds / 86400); // 1 day = 86400 seconds
         totalSeconds %= 86400;
@@ -808,67 +1350,86 @@
         }
     }
 
-    async function fetchData() {
-        let currentTimeStamp = Math.round(Date.now() / 1000);
+    function getUpcomingEventsSorted(events) {
+        const now = Math.floor(Date.now() / 1000); // UTC seconds
 
-        let fetchInterval = 1; //TODO
-        if (currentTimeStamp - SETTINGS.lasetUpdate <= fetchInterval) {
-            message(`You need wait ${fetchInterval - (currentTimeStamp - SETTINGS.lasetUpdate)} second(s) before manual fetch`, true)
-            return;
+        const ongoing_events = [];
+        const future_events = [];
+        const overlapping_events = [];
+
+        // Ignore fully past events
+        const nonPast = events.filter(e => e.end >= now);
+
+        // Ongoing events
+        for (const e of nonPast) {
+            if (e.start <= now && now <= e.end) {
+                ongoing_events.push(e);
+            }
         }
 
-        //----- FETCH TORN CALENDAR -----------------------------------------
+        // Future events (start in the future)
+        const futureCandidates = nonPast.filter(e => e.start > now);
 
-        TOOLTIP_ACTIONS.loading('fetching Torn data...');
+        for (const e of futureCandidates) {
+            // Only consider overlaps with ONGOING events
+            const overlapsOngoing = ongoing_events.some(ongoing =>
+                ongoing.start <= e.start && e.start <= ongoing.end
+                // equivalently: e.start <= ongoing.end (since ongoing.start <= now < e.start)
+            );
 
-        const calendarData = await GM_fetch(`https://api.torn.com/v2/torn/?selections=calendar&key=${SETTINGS.apiKey}`);
-        if (calendarData.error) {
-            TOOLTIP_ACTIONS.error(calendarData.error.error);
-            clearTimeout(timeHandler);
-            return;
+            if (overlapsOngoing) overlapping_events.push(e);
+            else future_events.push(e);
         }
 
-        let json = calendarData.calendar;
-        if (json.events && json.competitions) {
-            SETTINGS.tornEvents = json["events"].concat(json.competitions);
-        } else {
-            SETTINGS.tornEvents = json.events;
-        }
+        // Sort each category by start time
+        ongoing_events.sort((a, b) => a.start - b.start);
+        future_events.sort((a, b) => a.start - b.start);
+        overlapping_events.sort((a, b) => a.start - b.start);
 
-
-
-        //----- FETCH USER CALENDAR -----------------------------------------
-
-        TOOLTIP_ACTIONS.loading('fetching Torn user data...');
-
-        const userData = await GM_fetch(`https://api.torn.com/v2/user/?selections=calendar&key=${SETTINGS.apiKey}`);
-        if (userData.error) {
-            TOOLTIP_ACTIONS.error(userData.error.error);
-            clearTimeout(timeHandler);
-            return;
-        }
-
-        currentTimeStamp = Math.round(Date.now() / 1000);
-        SETTINGS.lasetUpdate = currentTimeStamp;
-        SETTINGS.userStartTime = userData.calendar.start_time;
-
-        //console.log(calendarData, userData)
-
-        //----- FETCH CTE  -----------------------------------------
-
-        if (SETTINGS.participateCTE) {
-            TOOLTIP_ACTIONS.loading('fetching CTE data...');
-            let shaKey = await sha256(SETTINGS.apiKey)
-            //const cteData =  await GM_fetch(`https://level5.ee/warehouse/torn/cte/index.php`, 'POST', { action: "test" }, { 'Authorization': `Bearer ${shaKey}` });
-            const cteData = await CTE_fetch();
-            console.log("CTEDATA", cteData)
-            //TODO
-        }
-
-
-        saveSettings();
-        gatherData();
+        return { ongoing_events, future_events, overlapping_events };
     }
+
+
+
+    function getEventIcon(eventName) {
+        eventName = eventName.toLowerCase();
+
+        for (const obj of TORN_EVENTS_ICONS) {
+            const key = Object.keys(obj)[0];
+            if (eventName.includes(key.toLowerCase())) {
+                return obj[key];
+            }
+        }
+        return null;
+    }
+
+    function saveSettings() {
+        //message("SAVING SETTINGS", SETTINGS)
+        GM_setValue(STORAGE_NAME, SETTINGS);
+    }
+    function message(msg, error = false) {
+        let func = 'log';
+        let spec = false;
+        if (error === true) func = 'warn';
+        if (error && typeof error === 'string') {
+            func = error;
+            spec = true;
+        }
+
+        if (func === 'log' || func === 'warn') {
+            console[func](`%cCTE`, 'background: #212c37; color: white;padding:5px; border-radius:3px;', msg);
+        } else {
+            console.log(`%c↓ CTE ↓`, 'background: #212c37; color: white;padding:5px; border-radius:3px;');
+            console[func](msg);
+        }
+
+
+
+        //console[func](`%cCTE`, 'background: #212c37; color: white;padding:5px; border-radius:3px;', msg);
+
+    }
+
+
 
     async function sha256(str) {
         const buf = new TextEncoder().encode(str);
@@ -880,7 +1441,17 @@
 
 
 
-    async function GM_fetch(url, method = 'GET', data = {}, headers = {}) {
+
+    async function GM_fetch(options) {
+
+        let url = options.url || null;
+        let method = options.method || 'GET';
+        let data = options.data || {};
+        let headers = options.headers || {};
+
+        if (url === null) return ({ error: true });
+
+
         return new Promise((resolve, reject) => {
             GM_xmlhttpRequest({
                 method: method,
@@ -893,6 +1464,7 @@
                 onload: function (response) {
                     try {
                         if (!response || !response.responseText) {
+                            message(response)
                             return reject(new Error("Empty response"));
                         }
                         const json = JSON.parse(response.responseText);
@@ -910,8 +1482,8 @@
     }
 
     async function CTE_fetch(data = {}) {
-        let url = `https://level5.ee/warehouse/torn/cte/index.php`;
-        let method = 'POST';
+        //let url = `https://level5.ee/warehouse/torn/cte/index.php`;
+        let url = `https://cte.tornscripts.co.za/`;
 
         let shaKey = await sha256(SETTINGS.apiKey)
 
@@ -919,37 +1491,128 @@
             'Authorization': `Bearer ${shaKey}`
         }
 
-        let cteData = await GM_fetch(url, method, data, headers);
+        let cteData = await GM_fetch({
+            url: url,
+            method: 'POST',
+            data: data,
+            headers: headers
+        });
+
+
         return cteData;
 
     }
 
 
     GM_addStyle(`
-        
-        .d .toolbar .tc-clock.sticky .tc-clock-tooltip {
+        /*  OVERWRITE TORN STYLE    */
+
+        .tc-clock-tooltip{
+            width: max-content !important;
+            left: calc(100% + 60px) !important;
+            transform: translateX(-100%);
+            padding: 0 !important;
+        }
+         .d .toolbar .tc-clock.sticky .tc-clock-tooltip {
             left: unset !important;
+            transform: translateX(0);
+        }
+        .cte_title{
+            font-weight: bold;
+            color: orange;
+            margin-bottom: 20px;
         }
         .cte_clock_holder{
-            transition: background-color 0.2s;
-            margin: 2px 2px;
-            padding: 2px;
+            margin: 2px;
             border-radius: 5px;
+            padding: 2px 6px;
             cursor: pointer;
+        }
 
+        .cte_clock{
+            margin-left: 5px;
+            padding-left: 5px;
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: normal;
+        }
+
+        .fa-solid{
+            margin-right: 4px;
+        }
+
+
+         .cte_clock_events_holder{
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: block;
+            padding: 3px 0;
+            font-weight: normal;
+            margin-top: 3px;
+        }
+
+
+
+
+
+
+
+
+        /*
+        :root {
+            --cte_main_padding_left: 7px;
+        }
+        .tc-clock-tooltip{
+            width: max-content !important;
+            left: calc(100% + 60px) !important;
+            transform: translateX(-100%);
+            padding: 0 !important;
+            padding-left: var(--cte_main_padding_left) !important;
+        }
+        .d .toolbar .tc-clock.sticky .tc-clock-tooltip {
+            left: unset !important;
+            transform: translateX(0);
+        }
+        
+        .fa-solid{
+            margin-right: 4px;
+        }
+        .cte_clock_holder{
+            display: inline-block;
+            margin-left: 6px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-top: 1px;
+            margin-bottom: 1px;
+            margin-right: 1px;
+            position:relative;
+            min-width: 20px;
+
+            font-weight: normal;
+            text-shadow: none;
+        }
+        .cte_clock_holder:before{
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            width: 1px;
+            background-color: rgba(255,255,255,0.4);
+            left: -1px;
+            transform: translateY(30%);
+            height: 60%;
         }
         .cte_clock_events_holder{
             border-top: 1px solid rgba(255, 255, 255, 0.2);
-            display: inline-block;
-            width: 100%;
-
-            
-            margin-top: 3px;
-            
+            display: block;
+            margin-right: var(--cte_main_padding_left);
+            padding: 3px 0;
             font-weight: normal;
-            text-shadow: none;
-            color: #cfcfcfff;
         }
+            */
+
+
+
+
+
 
         .cte_clock_event{
             line-height: 13px;
@@ -968,9 +1631,11 @@
             white-space: nowrap;
             overflow: hidden;
             padding: 2px;
+            max-width: 240px;
         }
 
-        .tc-clock-tooltip:hover .cte_clock_holder{
+        /* .tc-clock-tooltip:hover .cte_clock_holder{ */
+        .cte_clock_holder:hover{
             background-color: rgba(28, 26, 26, 1) !important;
         }
         .cte_clock_icon{
@@ -995,9 +1660,227 @@
 
         .cte_calendar_active{
             /*border: 1px solid red !important;*/
-            background-color: rgba(127, 156, 0, 1) !important;
+            background-color: rgba(182, 201, 99, 0.3) !important;
+            box-shadow: 0px 0px 0px 1px #66761f inset;
+            border-radius: 5px;
+        }
+            
+        .cte_calendar_active:hover{
+            background-color: rgba(182, 201, 99, 0.9) !important;
+        }
+        
+        body.dark-mode .cte_calendar_active {
+            background-color: rgba(77, 90, 22, 0.4) !important;
+        }
+        body.dark-mode .cte_calendar_active:hover {
+             background-color: rgba(182, 201, 99, 0.5) !important;
+        }
+      
+        .cte_calendar_active_overlap{
+            /*position: relative;*/
+
+            box-shadow: 0px 0px 0px 3px #66761f inset;
+        }
+
+        .cte_calendar_event_info{
+            padding: 2px 2px 10px;
+            position: absolute;
+            width: 316px;
+            position: absolute;
+            background-color: var(--calendar-tooltip-bg);
+            border-radius: 5px;
+            z-index: 99999;
+            box-shadow: var(--calendar-tooltip-box-shadow);
+            margin-top: 10px;
+        }
+        .cte_calendar_event_info:after{
+            content: "";
+            position: absolute;
+            bottom: -6px;           /* adjust position as needed */
+            left: 50%;
+            transform: translateX(-50%);
+
+            width: 0;
+            height: 0;
+
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #000; 
+        }
+        /*
+         .cte_calendar_active_overlap:after{
+            content: "";
+            position: absolute;
+            right: 4px;   
+            bottom: 4px;  
+
+            width: 0;
+            height: 0;
+
+            border-left: 10px solid transparent;
+            border-top: 10px solid transparent;
+            border-right: 0;
+            border-bottom: 10px solid #000;
+        }
+        */
+       
+        
+        
+        .cte_settings_holder{
+            padding: 10px;
+            background-color: #131a2a;
+            margin-top: 10px;
+            border-radius: 5px;
+            color: lightgray;
+        }
+        .cte_settings_holder button{
+            border: 1px solid rgba(0,0,0,0.5);  
+            padding: 10px; 
+            background-color: #3a4246;
+            border-radius: 4px;
+            color: rgba(255, 255, 255, 0.8);
         }
        
+        .cte_button_blue{
+            background-color: #3d84a8 !important;
+        }
+        .cte_settings_holder button:hover{
+            background-color: #000 !important;
+        }
+        
+        
+        #cteData{
+            border-top: 1px solid rgba(132, 137, 140, 1);
+            margin-top: 10px;
+            padding-top: 10px;
+            position: relative;
+        }
+
+
+
+        #cteData *{
+            box-sizing:border-box;
+        }
+
+        .cteData_event{
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-bottom: 2px;
+        }
+
+        .cte_col_controls{
+             flex-direction: row-reverse !important;
+            /*justify-content: space-between;*/
+            gap: 40px;
+        }
+        .cteHostEvent{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            background-color: rgba(19, 26, 42, 0.9);
+        }
+        .cteHostEvent_form{
+            margin: 5px;
+            padding: 5px;
+            padding-top: 10px;
+            background-color: #2c3244;
+            border: 1px solid #4a5060;
+            
+            border-radius: 3px;
+        }
+        .cteHostEvent_form_footer{
+            padding-top: 15px;
+            padding-bottom: 10px;
+            justify-content: center;
+        }
+
+        .cteHost_title{
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 6px;
+        }
+
+
+        .cteHostEvent_form label{
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .cteHostEvent_form input, .cteHostEvent_form select{
+            width: 100%;
+            padding: 5px;
+            font-size: 12px;
+            border: 0;
+            background-color: rgba(255,255,255,0.4);
+            color: #000;
+        }
+        .cteHostEvent_form input:focus, .cteHostEvent_form select:focus{
+            background-color: rgba(255,255,255,0.8);
+        }
+        #cteHost_inputEventIcon{
+            padding-left: 25px;
+            
+        }
+
+        .cteHost_eventIcon{
+            position: absolute;
+            padding: 22px 10px;
+            color: #000;
+        }
+
+
+        .cte_row {
+            display: flex;
+            gap: 16px; /* space between columns */
+            flex-wrap: wrap; /* IMPORTANT */
+        }
+
+        .cte_col {
+            flex: 1; /* each column takes equal width */
+            display: flex;
+            flex-direction: column;
+        }
+        .cte_col--full {
+            flex: 0 0 100%;
+            width: 100%;
+        }
+
+        .cteHost_save, .cteHost_close{
+            width: 100%;
+            min-width: 170px;
+        }
+
+     
+
+        /* Small screens (mobile) */
+        @media (max-width: 768px) {
+            .cte_row {
+                flex-direction: column;
+            }
+                .cte_col {
+                    width: 100%;
+                }
+        }
+
+
+  
+        .cteData_header{
+            font-weight: bold;
+            margin: 8px 0px;
+        }
+        .cte_event_quicklink{
+            color: #74c0fc;
+            border: none !important;
+            background-color: #444040;
+            padding: 3px 12px;
+            border-radius: 4px;
+        }
+        .cte_event_quicklink:hover{
+             background-color: #000000ff;
+             color: #ffffffff;
+        }
         .no-select{
             -webkit-user-select: none;
             -moz-user-select: none;

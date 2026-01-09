@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [MWI]Talent Market
 // @namespace    http://tampermonkey.net/
-// @version      1.3.0
+// @version      1.3.3
 // @description  MWI Talent Market(www.papiyas.chat)，游戏页面内嵌网站弹窗，支持一键导入角色信息生成名片上传
 // @author       SHIIN
 // @match        https://www.milkywayidle.com/*
@@ -19,7 +19,7 @@
 // @connect      tupian.li
 // @require      https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.2/math.js
-// @resource     cardStyles https://papiyas.chat/static/js/mwi-card-styles.css?v=1.3.0
+// @resource     cardStyles https://papiyas.chat/static/js/mwi-card-styles.css?v=1.3.3
 // @downloadURL https://update.greasyfork.org/scripts/559347/%5BMWI%5DTalent%20Market.user.js
 // @updateURL https://update.greasyfork.org/scripts/559347/%5BMWI%5DTalent%20Market.meta.js
 // ==/UserScript==
@@ -315,6 +315,155 @@
         .mwi-character-info-top {
             overflow: visible !important;
             max-width: none !important;
+        }
+        .tm-btn-refresh {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: none !important;
+            border-radius: 6px !important;
+            padding: 6px 12px !important;
+            height: 32px !important;
+        }
+        .tm-btn-refresh:hover {
+            background: rgba(255, 255, 255, 0.3) !important;
+        }
+    `);
+    
+    GM_addStyle(`
+        #buildscore-settings-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999999;
+            pointer-events: none;
+        }
+        .bs-dialog-container {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 24px;
+            min-width: 320px;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .bs-dialog-title {
+            margin: 0 0 16px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .bs-dialog-checkbox-row {
+            margin-bottom: 12px;
+        }
+        .bs-dialog-checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .bs-dialog-checkbox {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+        }
+        .bs-dialog-description {
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: white;
+            line-height: 1.5;
+        }
+        .bs-dialog-input-group {
+            margin-bottom: 16px;
+        }
+        .bs-dialog-label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 16px;
+            color: white;
+        }
+        .bs-dialog-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            background: #0f172a;
+            color: white;
+            box-sizing: border-box;
+        }
+        .bs-dialog-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .bs-dialog-btn-cancel {
+            padding: 8px 16px;
+            border: 1px solid #475569;
+            background: transparent;
+            color: #94a3b8;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .bs-dialog-btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .bs-dialog-btn-save {
+            padding: 8px 16px;
+            border: none;
+            background: #66CCFF;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .bs-dialog-btn-save:hover {
+            background: #4db8e8;
+        }
+        .bs-dialog-btn-save:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        #bs-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 9999999999;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            animation: bsToastIn 0.3s ease;
+        }
+        #bs-toast.success {
+            background: #28a745;
+            border: none;
+            color: white;
+        }
+        #bs-toast.error {
+            background: #dc3545;
+            border: none;
+            color: white;
+        }
+        #bs-toast.warning {
+            background: #ffc107;
+            border: none;
+            color: #333;
+        }
+        @keyframes bsToastIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
         }
     `);
     
@@ -1426,6 +1575,13 @@
                 if (jsonObj && jsonObj.marketData) {
                     jsonObj.marketData["/items/coin"] = { 0: { a: 1, b: 1 } };
                     jsonObj.marketData["/items/task_token"] = { 0: { a: 0, b: 0 } };
+                    jsonObj.marketData["/items/cowbell"] = { 0: { a: 0, b: 0 } };
+                    jsonObj.marketData["/items/small_treasure_chest"] = { 0: { a: 0, b: 0 } };
+                    jsonObj.marketData["/items/medium_treasure_chest"] = { 0: { a: 0, b: 0 } };
+                    jsonObj.marketData["/items/large_treasure_chest"] = { 0: { a: 0, b: 0 } };
+                    jsonObj.marketData["/items/basic_task_badge"] = { 0: { a: 0, b: 0 } };
+                    jsonObj.marketData["/items/advanced_task_badge"] = { 0: { a: 0, b: 0 } };
+                    jsonObj.marketData["/items/expert_task_badge"] = { 0: { a: 0, b: 0 } };
                     cachedMarketData = jsonObj;
                     marketDataTimestamp = now;
                     localStorage.setItem("MWITools_marketAPI_timestamp", now.toString());
@@ -1674,6 +1830,60 @@
             return best;
         }
 
+        async function findBestEnhanceStratWithPhiMirror(itemHrid, stopAt) {
+            const marketData = await fetchMarketData();
+            if (!marketData || !itemDetailMap) return null;
+
+            let best = await findBestEnhanceStrat(itemHrid, stopAt);
+            if (!best) return best;
+
+            const pMirrorHrid = "/items/philosophers_mirror";
+            const pMirrorCost = getItemMarketPrice(pMirrorHrid, marketData);
+            if (pMirrorCost <= 0) return best;
+
+            if (stopAt <= 3) return best;
+
+            const keyRefined = "_refined";
+            const isRefined = itemHrid.includes(keyRefined);
+            const baseItemHrid = isRefined ? itemHrid.replace(keyRefined, "") : itemHrid;
+
+            const lowerBest = {};
+            const lowestAt = 9;
+            for (let i = lowestAt; i < stopAt; i++) {
+                lowerBest[i] = await findBestEnhanceStrat(baseItemHrid, i);
+            }
+
+            let refinedCost = 0;
+            if (isRefined && actionDetailMap) {
+                const itemDetail = itemDetailMap[itemHrid];
+                if (itemDetail) {
+                    const actionHrid = getActionHridFromItemName(itemDetail.name);
+                    if (actionHrid && actionDetailMap[actionHrid]?.inputItems) {
+                        for (const item of actionDetailMap[actionHrid].inputItems) {
+                            refinedCost += getItemMarketPrice(item.itemHrid, marketData) * item.count;
+                        }
+                    }
+                }
+            }
+
+            const fibonacci = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181];
+
+            for (let protectAt = lowestAt + 1; protectAt < stopAt; protectAt++) {
+                if (!lowerBest[protectAt] || !lowerBest[protectAt - 1]) continue;
+
+                const baseCount = fibonacci[stopAt - protectAt + 1];
+                const inputCount = fibonacci[stopAt - protectAt];
+                const protectCount = baseCount + inputCount - 1;
+
+                const totalCost = baseCount * lowerBest[protectAt].totalCost + inputCount * lowerBest[protectAt - 1].totalCost + pMirrorCost * protectCount + refinedCost;
+
+                if (totalCost < best.totalCost) {
+                    best = { protectAt, totalCost };
+                }
+            }
+            return best;
+        }
+
         async function calculateEquipmentScore(characterItems) {
             const marketData = await fetchMarketData();
             if (!marketData || !characterItems) return 0;
@@ -1686,7 +1896,7 @@
                 const prices = marketData.marketData[item.itemHrid];
 
                 if (enhanceLevel > 1) {
-                    const best = await findBestEnhanceStrat(item.itemHrid, enhanceLevel);
+                    const best = await findBestEnhanceStratWithPhiMirror(item.itemHrid, enhanceLevel);
                     if (best) {
                         totalValue += item.count * best.totalCost;
                     }
@@ -2458,7 +2668,10 @@
             <div class="tm-overlay">
                 <div class="tm-container">
                     <div class="tm-header">
-                        <button class="tm-btn-refresh" title="${t.refresh}">${t.refresh}</button>
+                        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+                            <button class="tm-btn-refresh" title="${t.refresh}">${t.refresh}</button>
+                            <button class="tm-btn-settings" title="${isZH ? '战力分自动更新设置' : 'BuildScore Auto-Update Settings'}" style="background:${GM_getValue('mwi_buildscore_auto_enabled', false) && GM_getValue('mwi_buildscore_password', null) ? '#166534' : '#334155'};color:${GM_getValue('mwi_buildscore_auto_enabled', false) && GM_getValue('mwi_buildscore_password', null) ? '#86efac' : '#94a3b8'};border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-size:12px;">${GM_getValue('mwi_buildscore_auto_enabled', false) && GM_getValue('mwi_buildscore_password', null) ? (isZH ? '已启用自动更新' : 'Auto: ON') : (isZH ? '未启用自动更新' : 'Auto: OFF')}</button>
+                        </div>
                         <div class="tm-title">
                             <h2>${t.title}</h2>
                         </div>
@@ -2581,6 +2794,11 @@
         });
         modal.querySelector('.tm-btn-refresh').addEventListener('click', () => {
             refreshIframe();
+        });
+        modal.querySelector('.tm-btn-settings').addEventListener('click', () => {
+            if (typeof BuildScoreAutoUpdater !== 'undefined') {
+                BuildScoreAutoUpdater.showSettingsDialog();
+            }
         });
     }
     function updateIframeViewportInfo(iframe, width, height, LAYOUT_CONFIG) {
@@ -3546,12 +3764,313 @@
             `;
             setTimeout(() => {
                 progressOverlay.remove();
-                window._MWI_UPLOAD_IN_PROGRESS = false;
             }, 3000);
             throw error;
         }
     }
     WebSocketHook.install();
+        
+    const BuildScoreAutoUpdater = {
+        INTERVAL: 60 * 60 * 1000,
+        timer: null,
+        lastUpdate: 0,
+        enabled: false,
+        password: null,
+        initTimeout: null,
+        
+        init() {
+            this.enabled = GM_getValue('mwi_buildscore_auto_enabled', false);
+            this.password = GM_getValue('mwi_buildscore_password', null);
+            if (this.enabled && this.password) {
+                this.start();
+                if (this.initTimeout) clearTimeout(this.initTimeout);
+                this.initTimeout = setTimeout(() => {
+                    if (DataStore.isLoaded && DataStore.buildScore) {
+                        this.sendBuildScoreUpdate();
+                    }
+                }, 5000);
+            }
+        },
+        
+        setPassword(pwd) {
+            this.password = pwd;
+            GM_setValue('mwi_buildscore_password', pwd);
+        },
+        
+        enable() {
+            this.enabled = true;
+            GM_setValue('mwi_buildscore_auto_enabled', true);
+            this.start();
+        },
+            
+        disable() {
+            this.enabled = false;
+            GM_setValue('mwi_buildscore_auto_enabled', false);
+            this.stop();
+        },
+            
+        sendBuildScoreUpdate() {
+            if (!this.enabled || !this.password) {
+                return false;
+            }
+            if (!DataStore.isLoaded || !DataStore.characterName || !DataStore.buildScore) {
+                return false;
+            }
+            const gameMode = DataStore.gameMode;
+            const isIronman = gameMode && (gameMode === 'IRONMAN' || gameMode.toLowerCase().includes('iron'));
+            const apiEndpoint = isIronman 
+                ? `${SITE_URL}/api/ic/ranking/${encodeURIComponent(DataStore.characterName)}/buildscore`
+                : `${SITE_URL}/api/ranking/${encodeURIComponent(DataStore.characterName)}/buildscore`;
+            
+            const simdata = WebSocketHook.generateSimulatorData();
+            const self = this;
+            
+            GM_xmlhttpRequest({
+                method: 'PATCH',
+                url: apiEndpoint,
+                headers: { 'Content-Type': 'application/json' },
+                data: JSON.stringify({ 
+                    buildScore: DataStore.buildScore, 
+                    password: this.password,
+                    simdata: simdata ? JSON.stringify(simdata) : null
+                }),
+                onload: function(response) {
+                    if (response.status >= 200 && response.status < 300) {
+                        self.lastUpdate = Date.now();
+                    } else {
+                        try {
+                            const result = JSON.parse(response.responseText);
+                            if (result.code === 'ERR-WRONG-PWD') {
+                                self.disable();
+                            }
+                        } catch (e) {}
+                    }
+                },
+                onerror: function() {}
+            });
+            return true;
+        },
+        
+        start() {
+            if (this.timer) return;
+            if (!this.enabled || !this.password) return;
+            this.timer = setInterval(() => {
+                if (DataStore.isLoaded && DataStore.buildScore) {
+                    this.sendBuildScoreUpdate();
+                }
+            }, this.INTERVAL);
+        },
+        
+        stop() {
+            if (this.timer) {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+        },
+        
+        showSettingsDialog() {
+            const isZH = !['en'].some(lang => localStorage.getItem("i18nextLng")?.toLowerCase()?.startsWith(lang));
+            const existing = document.getElementById('buildscore-settings-dialog');
+            if (existing) existing.remove();
+            
+            const currentEnabled = GM_getValue('mwi_buildscore_auto_enabled', false);
+            this.enabled = currentEnabled;
+            
+            const dialog = document.createElement('div');
+            dialog.id = 'buildscore-settings-dialog';
+            dialog.innerHTML = `
+                <div class="bs-dialog-container">
+                    <h3 class="bs-dialog-title">${isZH ? '模拟器数据自动更新' : 'Simulator Data Auto-Update'}</h3>
+                    <div class="bs-dialog-checkbox-row">
+                        <label class="bs-dialog-checkbox-label">
+                            <input type="checkbox" id="bs-auto-enabled" class="bs-dialog-checkbox" ${currentEnabled ? 'checked' : ''}>
+                            <span>${isZH ? '启用自动更新' : 'Enable auto-update'}</span>
+                        </label>
+                    </div>
+                    <div class="bs-dialog-description">
+                        ${isZH ? '启用并保存简历密码后，会定时自动获取模拟器数据上传更新到人才市场<br><br>注：名片图片仍需手动重新导入生成提交<br>如果没有提交过简历请先投递简历此设置才生效' : 'After enabling and saving resume password, simulator data will be automatically uploaded to talent market<br><br>Note: Card images still need to be manually re-imported and submitted<br>If you have not submitted a resume yet, please submit one first for this setting to take effect'}
+                    </div>
+                    <div class="bs-dialog-input-group">
+                        <label class="bs-dialog-label">${isZH ? '简历密码' : 'Resume Password'}</label>
+                        <input type="password" id="bs-password" class="bs-dialog-input" autocomplete="new-password" placeholder="${this.password ? (isZH ? '已保存' : 'Saved') : (isZH ? '请输入简历密码' : 'Enter resume password')}">
+                    </div>
+                    <div class="bs-dialog-buttons">
+                        <button id="bs-cancel" class="bs-dialog-btn-cancel">${isZH ? '取消' : 'Cancel'}</button>
+                        <button id="bs-save" class="bs-dialog-btn-save">${isZH ? '保存' : 'Save'}</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(dialog);
+            const self = this;
+            dialog.querySelector('#bs-cancel').onclick = () => dialog.remove();
+            dialog.querySelector('#bs-save').onclick = async () => {
+                const enabled = dialog.querySelector('#bs-auto-enabled').checked;
+                const pwd = dialog.querySelector('#bs-password').value;
+                const saveBtn = dialog.querySelector('#bs-save');
+                
+                if (enabled) {
+                    const passwordToUse = pwd || self.password;
+                    if (!passwordToUse) {
+                        self.showToast(isZH ? '请先输入密码' : 'Please enter password', 'warning');
+                        return;
+                    }
+                    
+                    let charName = DataStore.characterName;
+                    if (!charName) {
+                        const nameEl = document.querySelector('.CharacterName_characterName__2FqyZ') || 
+                                      document.querySelector('[class*="CharacterName_characterName"]');
+                        if (nameEl) {
+                            charName = nameEl.textContent?.trim();
+                            if (charName) DataStore.characterName = charName;
+                        }
+                    }
+                    
+                    if (!charName) {
+                        self.showToast(isZH ? '无法获取角色名，请刷新页面重试' : 'Cannot get character name, please refresh', 'warning');
+                        return;
+                    }
+                    
+                    if (!DataStore.buildScore || DataStore.buildScore <= 0) {
+                        self.showToast(isZH ? '数据未加载，请刷新页面再尝试' : 'BuildScore not loaded, please wait for game data', 'warning');
+                        return;
+                    }
+                    
+                    saveBtn.disabled = true;
+                    saveBtn.textContent = isZH ? '验证中...' : 'Verifying...';
+                    
+                    const gameMode = DataStore.gameMode;
+                    const isIronman = gameMode && (gameMode === 'IRONMAN' || gameMode.toLowerCase().includes('iron'));
+                    const apiEndpoint = isIronman 
+                        ? `${SITE_URL}/api/ic/ranking/${encodeURIComponent(charName)}/buildscore`
+                        : `${SITE_URL}/api/ranking/${encodeURIComponent(charName)}/buildscore`;
+                    
+                    GM_xmlhttpRequest({
+                        method: 'PATCH',
+                        url: apiEndpoint,
+                        headers: { 'Content-Type': 'application/json' },
+                        data: JSON.stringify({ buildScore: DataStore.buildScore || 0, password: passwordToUse }),
+                        onload: function(response) {
+                            try {
+                                const result = JSON.parse(response.responseText);
+                                if (response.status >= 200 && response.status < 300) {
+                                    self.setPassword(passwordToUse);
+                                    self.enable();
+                                    self.updateButtonText();
+                                    self.showToast(isZH ? '自动更新已启用' : 'Auto-update enabled', 'success');
+                                    dialog.remove();
+                                } else if (result.code === 'ERR-WRONG-PWD') {
+                                    self.showToast(isZH ? '密码不正确' : 'Incorrect password', 'error');
+                                    saveBtn.disabled = false;
+                                    saveBtn.textContent = isZH ? '保存' : 'Save';
+                                } else if (result.code === 'ERR-RATE-LIMIT') {
+                                    self.setPassword(passwordToUse);
+                                    self.enable();
+                                    self.updateButtonText();
+                                    self.showToast(isZH ? '自动更新已启用' : 'Auto-update enabled (rate limited, will update later)', 'success');
+                                    dialog.remove();
+                                } else if (result.code === 'ERR-NO-PWD-SET') {
+                                    self.showToast(isZH ? '该用户未设置简历密码，请先确定已提交过简历' : 'No password set, please set one on website first', 'error');
+                                    saveBtn.disabled = false;
+                                    saveBtn.textContent = isZH ? '保存' : 'Save';
+                                } else if (response.status === 404) {
+                                    self.showToast(isZH ? '用户记录不存在，请先提交简历' : 'User not found, please submit resume first', 'error');
+                                    saveBtn.disabled = false;
+                                    saveBtn.textContent = isZH ? '保存' : 'Save';
+                                } else {
+                                    self.showToast(isZH ? '验证失败: ' + result.message : 'Verification failed: ' + result.message, 'error');
+                                    saveBtn.disabled = false;
+                                    saveBtn.textContent = isZH ? '保存' : 'Save';
+                                }
+                            } catch (e) {
+                                self.showToast(isZH ? '响应解析错误' : 'Response parse error', 'error');
+                                saveBtn.disabled = false;
+                                saveBtn.textContent = isZH ? '保存' : 'Save';
+                            }
+                        },
+                        onerror: function() {
+                            self.showToast(isZH ? '网络错误，请重试' : 'Network error, please try again', 'error');
+                            saveBtn.disabled = false;
+                            saveBtn.textContent = isZH ? '保存' : 'Save';
+                        }
+                    });
+                } else {
+                    self.disable();
+                    self.updateButtonText();
+                    dialog.remove();
+                }
+            };
+            dialog.onclick = (e) => { if (e.target === dialog) dialog.remove(); };
+        },
+        
+        updateButtonText() {
+            const btn = document.querySelector('.tm-btn-settings');
+            if (!btn) return;
+            const isZH = !['en'].some(lang => localStorage.getItem("i18nextLng")?.toLowerCase()?.startsWith(lang));
+            if (this.enabled && this.password) {
+                btn.textContent = isZH ? '已启用自动更新' : 'Auto: ON';
+                btn.style.background = '#166534';
+                btn.style.color = '#86efac';
+            } else {
+                btn.textContent = isZH ? '未启用自动更新' : 'Auto: OFF';
+                btn.style.background = '#334155';
+                btn.style.color = '#94a3b8';
+            }
+        },
+        
+        showToast(message, type = 'success') {
+            const existing = document.getElementById('bs-toast');
+            if (existing) existing.remove();
+            
+            const toast = document.createElement('div');
+            toast.id = 'bs-toast';
+            toast.className = type;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%,-50%) scale(0.9)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    };
+    
+    window.MWI_INTEGRATED.showBuildScoreSettings = () => BuildScoreAutoUpdater.showSettingsDialog();
+    
+    window.addEventListener('mwi_buildscore_updated', () => {
+        BuildScoreAutoUpdater.init();
+    });
+    
+    // Fallback to get character name from DOM
+    const tryGetCharacterNameFromDOM = () => {
+        if (DataStore.characterName) return DataStore.characterName;
+        const nameEl = document.querySelector('.CharacterName_characterName__2FqyZ') || 
+                      document.querySelector('[class*="CharacterName_characterName"]');
+        if (nameEl) {
+            const name = nameEl.textContent?.trim();
+            if (name) {
+                DataStore.characterName = name;
+                return name;
+            }
+        }
+        return null;
+    };
+    
+    // Initialize auto-updater when data is loaded
+    let initRetryCount = 0;
+    const initAutoUpdater = () => {
+        if (DataStore.isLoaded && DataStore.characterName) {
+            BuildScoreAutoUpdater.init();
+        } else {
+            tryGetCharacterNameFromDOM();
+            initRetryCount++;
+            if (initRetryCount < 30) {
+                setTimeout(initAutoUpdater, 2000);
+            }
+        }
+    };
+    setTimeout(initAutoUpdater, 3000);
+    
     (function loadCachedClientData() {
         const cachedData = localStorage.getItem("initClientData");
         if (cachedData) {

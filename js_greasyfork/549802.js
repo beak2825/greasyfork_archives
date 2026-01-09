@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         便捷搜索栏
 // @namespace    http://tampermonkey.net/
-// @version      0.24
+// @version      0.25
 // @description  便于搜索常用网站
 // @author       ssnangua
 // @match        https://*/*
@@ -58,7 +58,7 @@
       {
         title: "中文字幕",
         icon: icons.chinese,
-        url: `https://www.google.co.jp/search?q=%s+中文字幕`,
+        url: `https://www.google.com/search?q=%s+中文字幕`,
       },
       {
         title: "gcbt",
@@ -85,18 +85,18 @@
       {
         title: "Google",
         icon: icons.google,
-        url: `https://www.google.co.jp/search?q=%s`,
+        url: `https://www.google.com/search?q=%s`,
       },
       {
         title: "Google图片",
         icon: icons.google_image,
-        url: `https://www.google.co.jp/search?tbm=isch&q=%s`,
+        url: `https://www.google.com/search?tbm=isch&q=%s`,
         empty: "https://www.google.com/imghp",
       },
       {
         title: "btorzx",
         icon: icons.btorzx,
-        url: `https://www.google.co.jp/search?q=site%3Abt.orzx.im+%s+.ass`,
+        url: `https://www.google.com/search?q=site%3Abt.orzx.im+%s+.ass`,
         empty: "https://bt.orzx.im/",
       },
       {

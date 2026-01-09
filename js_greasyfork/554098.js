@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         到店取组合脚本（互联）
 // @namespace    http://tampermonkey.net/
-// @version      5.4.3
+// @version      5.4.4.1
 // @description  泡泡玛特库存监测和下单助手的组合脚本，支持模式切换 [v5.4.3新增: 支付流程自动处理错误弹窗并重试,最多3次] [v5.4.2修复: 详情模式支付流程添加确认弹窗处理，与下单模式保持一致] [v5.4.1关键修复: 店铺列表在所有模式下都能恢复，解决切换模式后店铺列表丢失问题] [v5.4.0状态持久化: 刷新页面保持详情模式/刷新间隔等所有设置；详情模式启动优化-自动跳过当前店铺避免重复检测] [v5.2.0重大重构: 统一店铺切换逻辑-购物车和详情页模式共用同一套店铺遍历、选择、切换逻辑，只在检测和下单环节有区别]
 // @author       You
 // @match        https://www.popmart.com/hk/largeShoppingCart
 // @match        https://www.popmart.com/hk/order-confirmation?isStore=true
 // @match        https://www.popmart.com/hk/largeShoppingCart?origin=pickup
 // @match        https://www.popmart.com/hk/store-pickup/*
+// @match        https://www.popmart.com/hk/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
@@ -3145,6 +3146,19 @@
         }
     }
 
+    function clickAllPayButtons() {
+        const btn1 = document.querySelector('.index_placeOrderBtn__30ZOe');
+        const btn2 = document.querySelector('.placeOrderBtn');
+        let clicked = false;
+        if (btn1) { btn1.click(); clicked = true; }
+        if (btn2) { btn2.click(); clicked = true; }
+        return clicked;
+    }
+
+    function arePayButtonsGone() {
+        return !document.querySelector('.index_placeOrderBtn__30ZOe') && !document.querySelector('.placeOrderBtn');
+    }
+
     async function executePaymentProcess(currentSubmitSpeed, currentDurationSeconds) {
         addLog(`开始支付流程 (速度:${currentSubmitSpeed}ms, 时长:${currentDurationSeconds}秒)`);
         order_startTime = Date.now();
@@ -3158,14 +3172,13 @@
         const remainingTimeInterval = setInterval(updateRemainingTimeDisplay, 100);
 
         while (Date.now() < endTime && order_isRunning) {
-            const payButton = document.querySelector('.index_placeOrderBtn__30ZOe');
-            if (!payButton) {
+            const clicked = clickAllPayButtons();
+            if (!clicked) {
                 addLog('✓ 下单成功! 按钮已消失');
                 sendOrderSuccessMessage();
                 orderSucceeded = true;
                 break;
             }
-            payButton.click();
 
             // 点击后立即检测并处理二次确认弹窗
             const hasModal = await handleStoreConfirmModal();
@@ -3195,8 +3208,7 @@
                 // 没有弹窗
             }
 
-            const payButtonAfter = document.querySelector('.index_placeOrderBtn__30ZOe');
-            if (!payButtonAfter) {
+            if (arePayButtonsGone()) {
                 addLog('✓ 下单成功! 按钮已消失');
                 sendOrderSuccessMessage();
                 orderSucceeded = true;
@@ -3261,12 +3273,11 @@
         try {
             // 第1次点击
             addLog('→ 第1次点击');
-            const payButton1 = document.querySelector('.index_placeOrderBtn__30ZOe');
-            if (!payButton1) {
+            const clicked1 = clickAllPayButtons();
+            if (!clicked1) {
                 addLog('✗ 支付按钮未找到', true);
                 return;
             }
-            payButton1.click();
 
             // 发送点击进度
             broadcastClickProgress(1, ORDER_CONFIG.AUTO_CLICK_COUNT);
@@ -3282,7 +3293,7 @@
             }
 
             // 检查按钮是否消失（成功）
-            if (!document.querySelector('.index_placeOrderBtn__30ZOe')) {
+            if (arePayButtonsGone()) {
                 addLog('✓ 下单成功！支付按钮已消失');
                 sendOrderSuccessMessage();
                 return;
@@ -3294,13 +3305,12 @@
 
             // 第2次点击
             addLog('→ 第2次点击');
-            const payButton2 = document.querySelector('.index_placeOrderBtn__30ZOe');
-            if (!payButton2) {
+            const clicked2 = clickAllPayButtons();
+            if (!clicked2) {
                 addLog('✓ 下单成功！支付按钮已消失');
                 sendOrderSuccessMessage();
                 return;
             }
-            payButton2.click();
 
             // 发送点击进度
             broadcastClickProgress(2, ORDER_CONFIG.AUTO_CLICK_COUNT);
@@ -3316,7 +3326,7 @@
             }
 
             // 最终检查
-            if (!document.querySelector('.index_placeOrderBtn__30ZOe')) {
+            if (arePayButtonsGone()) {
                 addLog('✓ 下单成功！支付按钮已消失');
                 sendOrderSuccessMessage();
             } else {
@@ -5347,177 +5357,7 @@
         return false;
     }
 
-    // v5.4.3: 处理店铺确认弹窗
-    async function handleStoreConfirmModal() {
-        // 等待弹窗出现
-        await new Promise(resolve => setTimeout(resolve, 200));
 
-        // 查找确认弹窗
-        const modal = document.querySelector('.ant-modal-content');
-        if (!modal) {
-            return false;
-        }
-
-        // 查找确认按钮(可能是"确认"、"确定"等文本)
-        const confirmBtn = modal.querySelector('.ant-btn-primary');
-        if (confirmBtn) {
-            console.log('检测到确认弹窗,点击确认按钮');
-            confirmBtn.click();
-            await new Promise(resolve => setTimeout(resolve, 300));
-            return true;
-        }
-
-        return false;
-    }
-
-    // v5.4.3: 处理错误弹窗并自动重试支付
-    async function handleErrorModalsAndRetry(maxRetries = 3) {
-        let retryCount = 0;
-
-        while (retryCount < maxRetries) {
-            // 等待弹窗可能出现
-            await new Promise(resolve => setTimeout(resolve, 300));
-
-            // 检测是否有弹窗
-            const modal = document.querySelector('.ant-modal-content');
-            if (!modal) {
-                // 没有弹窗,返回成功
-                return { hasError: false, retryCount };
-            }
-
-            // 提取弹窗内容
-            const modalBody = modal.querySelector('.ant-modal-body');
-            const errorMessage = modalBody ? modalBody.textContent.trim() : '';
-
-            console.log(`检测到错误弹窗 (第${retryCount + 1}次): ${errorMessage}`);
-
-            // 关闭弹窗 - 优先点击关闭按钮
-            const closeBtn = modal.querySelector('.ant-modal-close');
-            if (closeBtn) {
-                console.log('点击关闭按钮');
-                closeBtn.click();
-            } else {
-                // 如果没有关闭按钮,点击OK按钮
-                const okBtn = modal.querySelector('.ant-btn-primary');
-                if (okBtn) {
-                    console.log('点击OK按钮');
-                    okBtn.click();
-                }
-            }
-
-            // 等待弹窗关闭
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            // 重新点击支付按钮
-            const payBtn = document.querySelector('.index_placeOrderBtn__30ZOe');
-            if (payBtn) {
-                console.log(`重新点击支付按钮 (第${retryCount + 1}次重试)`);
-                payBtn.click();
-
-                // 等待处理
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
-                retryCount++;
-            } else {
-                // 支付按钮消失,可能已成功
-                console.log('支付按钮已消失,可能支付成功');
-                return { hasError: false, retryCount, reason: '支付按钮消失' };
-            }
-        }
-
-        // 达到最大重试次数
-        return { hasError: true, retryCount, reason: '达到最大重试次数' };
-    }
-
-    // v5.4.2: 执行支付流程（优化：添加确认弹窗处理）
-    async function executePaymentProcess() {
-        console.log('开始支付流程...');
-
-        const payBtn = document.querySelector('.index_placeOrderBtn__30ZOe');
-        if (!payBtn) {
-            console.error('找不到支付按钮');
-            return { success: false, reason: '找不到支付按钮' };
-        }
-
-        // 第1次点击支付按钮
-        console.log('点击支付按钮（第1次）...');
-        payBtn.click();
-
-        // v5.4.2: 立即处理确认弹窗
-        const hasModal1 = await handleStoreConfirmModal();
-        if (hasModal1) {
-            console.log('已处理确认弹窗（第1次点击后）');
-        }
-
-        // 检测错误
-        await new Promise(resolve => setTimeout(resolve, 500));
-        let errorNotification = document.querySelector('.ant-notification-notice');
-        if (errorNotification) {
-            const errorMsg = errorNotification.textContent;
-            console.warn('第1次点击检测到错误:', errorMsg);
-            // 移除错误通知
-            errorNotification.remove();
-        }
-
-        // 检查是否已成功（按钮消失）
-        if (!document.querySelector('.index_placeOrderBtn__30ZOe')) {
-            console.log('✓ 支付成功！（第1次点击后按钮已消失）');
-            return { success: true, reason: '支付成功' };
-        }
-
-        // 等待1秒后第2次点击
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // 第2次点击支付按钮
-        console.log('点击支付按钮（第2次）...');
-        const payBtn2 = document.querySelector('.index_placeOrderBtn__30ZOe');
-        if (!payBtn2) {
-            console.log('✓ 支付成功！（第2次点击前按钮已消失）');
-            return { success: true, reason: '支付成功' };
-        }
-        payBtn2.click();
-
-        // v5.4.2: 再次处理确认弹窗
-        const hasModal2 = await handleStoreConfirmModal();
-        if (hasModal2) {
-            console.log('已处理确认弹窗（第2次点击后）');
-        }
-
-        // v5.4.3: 处理错误弹窗并自动重试
-        console.log('检测是否有错误弹窗...');
-        const retryResult = await handleErrorModalsAndRetry(3);
-
-        if (retryResult.hasError) {
-            console.error(`支付失败: ${retryResult.reason} (重试${retryResult.retryCount}次)`);
-            return { success: false, reason: retryResult.reason };
-        }
-
-        if (retryResult.retryCount > 0) {
-            console.log(`经过${retryResult.retryCount}次重试后继续检测...`);
-        }
-
-        // 等待2秒检测最终结果
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        console.log('等待2秒检测最终结果...');
-
-        // 检查是否有错误提示
-        errorNotification = document.querySelector('.ant-notification-notice');
-        if (errorNotification) {
-            const errorMsg = errorNotification.textContent;
-            console.error('支付失败:', errorMsg);
-            return { success: false, reason: errorMsg };
-        }
-
-        // 最终检查按钮是否消失
-        if (!document.querySelector('.index_placeOrderBtn__30ZOe')) {
-            console.log('✓ 支付成功！（按钮已消失）');
-            return { success: true, reason: '支付成功' };
-        }
-
-        // 按钮仍存在，但无错误提示
-        console.log('✓ 支付完成（无错误提示）');
-        return { success: true, reason: '支付完成' };
-    }
 
     // v5.2.0: 详情页下单流程（不含店铺切换，由主循环统一处理）
     async function executeDetailPageCheckoutFlow() {
@@ -5888,5 +5728,30 @@
         }
     }
 
-    window.addEventListener('load', () => { setTimeout(init, 3000); });
+    // ==================== 启动逻辑优化 ====================
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            // 确保body已存在
+            if (document.body) {
+                init();
+            } else {
+                // 极少数情况body还没准备好
+                const observer = new MutationObserver(() => {
+                    if (document.body) {
+                        observer.disconnect();
+                        init();
+                    }
+                });
+                observer.observe(document.documentElement, { childList: true });
+            }
+        });
+    } else {
+        // DOM已准备好，直接运行
+        if (document.body) {
+            init();
+        } else {
+            // 理论上不会走到这里，但为了保险
+            window.addEventListener('DOMContentLoaded', init);
+        }
+    }
 })();

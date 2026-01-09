@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          open2ch バルサンアシスタント
 // @namespace     https://greasyfork.org/ja/users/864059
-// @version       1.4.8
+// @version       1.4.9
 // @description   おーぷん2chで!バルサンの予約投稿を支援し、他者によるバルサン投稿を検知して重複を防ぎます。
 // @author        七色の彩り
 // @match         https://*.open2ch.net/test/read.cgi/*
@@ -268,12 +268,12 @@
         } else {
             // ライトテーマ用のスタイル
             ui.css({
-                'background-color': 'rgba(255, 255, 255, 0.8)',
-                'color': '#212529', // 濃い黒
-                'box-shadow': '0 2px 10px rgba(0, 0, 0, 0.2)'
+                'background-color': 'rgb(255, 255, 255)',
+                'opacity': '0.9',
+                'color': 'black',
             });
             summary.css('color', '#0056b3'); // 濃い青
-            ui.find('p, label').css('color', '#212529');
+            ui.find('p, label').css('color', 'black');
         }
     }
     // --- UI要素を生成し、ページに追加する関数 ---
@@ -295,13 +295,11 @@
                 position: 'fixed',
                 top: '33px',
                 right: '10px',
-                zIndex: '9999',
-                backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                borderRadius: '5px',
-                padding: '5px',
+                zIndex: '21',
+                border: '0.1px solid rgb(204, 204, 204)',
+                borderRadius: '3px',
+                padding: '3px',
                 boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-                fontFamily: '"Noto Sans JP", sans-serif',
-                color: '#333',
                 width: 'auto',
                 maxWidth: '280px',
                 cursor: 'pointer'
@@ -770,6 +768,18 @@
             .css('background-color', newButtonColor); // 💡 背景色も更新する
 
         adjustUIColorsForTheme();
+        // 次回の更新間隔を決定する
+        let nextInterval = 1000 * 60; // 基本は1分
+
+        // 超過しているかチェック (diffHours が BASE_INTERVAL_HOURS を超えていたら)
+        if (diffHours !== null && diffHours >= BASE_INTERVAL_HOURS) {
+            nextInterval = 1000 * 60 * 60; // 超過後は1時間おき
+            console.log(`バルサンアシスタント: 超過中のため、次回のUI更新は1時間後です。`);
+        }
+
+        // 既存のタイマーがあれば一度クリアして再設定
+        if (window.valsanUITimer) clearTimeout(window.valsanUITimer);
+        window.valsanUITimer = setTimeout(updateUI, nextInterval);
     }
 
     // --- 予約を設定する関数 ---
@@ -1259,7 +1269,6 @@
             }, 1000); // 1秒遅延
 
             startMonitoringNewPosts();
-            setInterval(updateUI, 1000 * 60);
         } else {
             console.log('対象外のスレッドタイトルのため、Open2ch バルサンアシスタントは起動しません。');
         }

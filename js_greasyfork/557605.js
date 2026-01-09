@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT to Notion Exporter
 // @namespace    http://tampermonkey.net/
-// @version      2.15
+// @version      2.16
 // @license      MIT
 // @description  ChatGPT 导出到 Notion：智能图片归位 (支持 PicList/PicGo)+隐私开关+单个对话导出
 // @author       Wyih
@@ -376,19 +376,80 @@
         const blocks = [];
         const buf = [];
 
+        // === [FIX] Table support (keep inline equations inside cells) ===
+        const processedTables = new WeakSet();
+
+        function toNonEmptyCellRichText(rt) {
+            // Notion table_row.cells expects arrays; keep empty cell stable
+            return (rt && rt.length) ? rt : [{ type: "text", text: { content: "" } }];
+        }
+
+        function tableElementToNotionBlock(tableEl) {
+            // Collect rows in visual order
+            const rows = Array.from(tableEl.querySelectorAll('tr'));
+            if (!rows.length) return null;
+
+            const firstRowCells = Array.from(rows[0].children || []).filter(el => el && (el.nodeName === 'TD' || el.nodeName === 'TH'));
+            const hasColumnHeader = firstRowCells.some(c => c.nodeName === 'TH');
+            const hasRowHeader = rows.some(r => {
+                const first = Array.from(r.children || []).find(el => el && (el.nodeName === 'TD' || el.nodeName === 'TH'));
+                return first && first.nodeName === 'TH';
+            });
+
+            const rowBlocks = rows.map(r => {
+                const cells = Array.from(r.children || []).filter(el => el && (el.nodeName === 'TD' || el.nodeName === 'TH'));
+                const richCells = cells.map(cell => toNonEmptyCellRichText(parseInlineNodes(Array.from(cell.childNodes))));
+                return {
+                    object: "block",
+                    type: "table_row",
+                    table_row: { cells: richCells }
+                };
+            });
+
+            const tableWidth = Math.max(1, ...rowBlocks.map(rb => rb.table_row.cells.length));
+
+            return {
+                object: "block",
+                type: "table",
+                table: {
+                    table_width: tableWidth,
+                    has_column_header: !!hasColumnHeader,
+                    has_row_header: !!hasRowHeader,
+                    children: rowBlocks
+                }
+            };
+        }
+
         const flush = () => {
             if (!buf.length) return;
             const rt = parseInlineNodes(buf);
             // 如果 rt 为空 (比如buf里全是空格被过滤掉了)，则不生成 block，防止空行
             if (!rt.length) { buf.length = 0; return; }
+
             for (let i = 0; i < rt.length; i += 90) {
-                blocks.push({ object: "block", type: "paragraph", paragraph: { rich_text: rt.slice(i, i + 90) } });
+                blocks.push({
+                    object: "block",
+                    type: "paragraph",
+                    paragraph: { rich_text: rt.slice(i, i + 90) }
+                });
             }
             buf.length = 0;
         };
 
         Array.from(nodes).forEach(n => {
             if (['SCRIPT', 'STYLE', 'SVG'].includes(n.nodeName)) return;
+
+            // [FIX] Convert tables as a single Notion table block
+            if (n.nodeType === 1 && ['TABLE', 'TBODY', 'THEAD', 'TFOOT'].includes(n.nodeName)) {
+                const tableEl = (n.nodeName === 'TABLE') ? n : (n.closest && n.closest('table'));
+                if (tableEl && !processedTables.has(tableEl)) {
+                    processedTables.add(tableEl);
+                    flush();
+                    const tblk = tableElementToNotionBlock(tableEl);
+                    if (tblk) blocks.push(tblk);
+                    return; // don't recurse into table children
+                }
+            }
 
             // [公式修复] 忽略 KaTeX 辅助元素
             if (n.classList && (n.classList.contains('katex-mathml') || n.classList.contains('katex-html'))) return;

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name              [ALL SERVERS] GOLDEN VERSION | Скрипт для Кураторов Форума [Для ПК]
 // @namespace         https://forum.blackrussia.online
-// @version           1.0.7
+// @version           1.0.8
 // @author            Dany_Forbs from ORANGE
 // @connection        https://vk.com/kwaazzi
 // @updateversion     Создан 28.10.2025
@@ -9,7 +9,7 @@
 // @include           https://forum.blackrussia.online/threads/
 // @license           MIT
 // @icon              https://i.postimg.cc/tRx0hF8P/01fdde7ae0d9dd957948e83fc946ff29.jpg
-// @description       Скрипт, который подходит для всех серверов, предназначен для быстрой реакции кураторов форума в различных разделах. Он разработан с учётом размеров экрана ПК. Золотая версия - по истине премиальный стиль.
+// @description       Скрипт, который подходит для всех серверов, предназначен для быстрой реакции кураторов форума в различных разделах. Он разработан с учётом размеров экрана ПК. Золотая версия - по истине премиальный стиль. Также в скрипт встроен счётчик слов в РПБ.
 // @downloadURL https://update.greasyfork.org/scripts/553916/%5BALL%20SERVERS%5D%20GOLDEN%20VERSION%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%5B%D0%94%D0%BB%D1%8F%20%D0%9F%D0%9A%5D.user.js
 // @updateURL https://update.greasyfork.org/scripts/553916/%5BALL%20SERVERS%5D%20GOLDEN%20VERSION%20%7C%20%D0%A1%D0%BA%D1%80%D0%B8%D0%BF%D1%82%20%D0%B4%D0%BB%D1%8F%20%D0%9A%D1%83%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%BE%D0%B2%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC%D0%B0%20%5B%D0%94%D0%BB%D1%8F%20%D0%9F%D0%9A%5D.meta.js
 // ==/UserScript==

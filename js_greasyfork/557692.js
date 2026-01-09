@@ -2,9 +2,9 @@
 // @name         Cookie Clicker Ultimate Automation
 // @name:zh-TW   餅乾點點樂全自動掛機輔助 (Cookie Clicker)
 // @name:zh-CN   餅乾點點樂全自動掛機輔助 (Cookie Clicker)
-// @version      9.1.2.1
+// @version      9.1.3.1
 // @description  Automated clicker, auto-buy, auto-harvest, garden manager (5 slots), stock market, season manager, Santa evolver, Smart Sugar Lump harvester, Dragon Aura management, and the new Gambler feature.
-// @description:zh-TW 全功能自動掛機腳本 v9.1.2.1 UI Crash Fix
+// @description:zh-TW 全功能自動掛機腳本 v9.1.3.1 Safe Restart Protocol
 // @author       You & AI Architect
 // @match        https://wws.justnainai.com/*
 // @match        https://orteil.dashnet.org/cookieclicker/*
@@ -22,6 +22,13 @@
 
 /*
 變更日誌 (Changelog):
+v9.1.3.1 UI Event Fix (2026):
+  - [UI Fix] Garden Protection: 修復花園側邊欄嵌入式「開/鎖」按鈕點擊無反應的問題，改為直接調用核心邏輯 (Direct Call)，不再依賴大面板事件傳遞。
+v9.1.3 Safe Restart Protocol (2026):
+  - [Security] Core: 實作安全重啟協議，系統忙碌 (Godzamok/Combat) 時自動推遲重啟，防止存檔損毀。
+  - [Architecture] Logic: 導入狀態快取 (State Caching)，分離邏輯運算與 UI 渲染。
+  - [Protocol] AHK: 標題前綴標準化為 [✅SAFE] 或 [⛔BUSY] 供外部自動化識別。
+  - [Fix] Godzamok: 修正變異恢復期 (mutationRestoreTimer) 判定，確保戒嚴期間不中斷。
 v9.1.2.1 UI Crash Fix (2026):
   - [Critical Fix] UI: 變數名 `style` 衝突修復，解決 "Unexpected identifier" 導致的 UI 初始化失敗。
 v9.1.2 Virtual Lock Hardening (2026):
@@ -37,17 +44,6 @@ v9.1.0 UI & Logic Overhaul (2026):
   - [Feature] Garden: 新增多汁女王甜菜 (JQB) 保護協議，成熟自動收割糖塊，其餘時間絕對豁免。
   - [UI Enhancement] Garden Protection: 側邊欄與大面板新增「突變管理」獨立開關。
   - [UI] Settings: 新增外部鏈結區塊。
-v9.0.1.2 Hotfix (2026):
-  - [Critical Fix] Stock Broker: 將經紀人購買方式改為 DOM 模擬點擊，解決 API `M.buyBroker` 不存在導致的崩潰問題。
-v9.0.1.1 Hotfix (2026):
-  - [Critical Fix] Stock Broker: 修復股市經紀人購買 API 錯誤 (`M.buyBroker`)，解決上一版本功能崩潰問題。
-  - [Algorithm] Stock Market: 實裝動態門檻演算法 (Dynamic Thresholds)，依據經紀人數量動態調整買賣係數。
-v9.0.1 Optimization (2026):
-  - [Algorithm] Stock Market: 導入動態門檻演算法基礎。
-v9.0.0 Feature Update (2026):
-  - [Feature] Stock Broker: 新增自動僱用股市經紀人功能 (Auto-Hire Broker)，降低交易手續費。
-  - [Security] Stock Logic: 全面重構股市邏輯，導入憲法級 isFarming 檢查與 SavingMode 分級鎖定。
-  - [UI] Control Panel: 進階頁籤新增經紀人開關。
 */
 
 (function() {
@@ -104,6 +100,10 @@ v9.0.0 Feature Update (2026):
             BuyStrategy: GM_getValue('buyStrategy', 'smart'),
             BuyIntervalMs: (GM_getValue('buyIntervalHours', 0) * 3600 + GM_getValue('buyIntervalMinutes', 0) * 60 + GM_getValue('buyIntervalSeconds', 10)) * 1000,
             RestartIntervalMs: (GM_getValue('restartIntervalHours', 1) * 3600 + GM_getValue('restartIntervalMinutes', 0) * 60 + GM_getValue('restartIntervalSeconds', 0)) * 1000,
+            
+            // [v9.1.3] 安全重啟協議設定
+            RestartDelayOnBusy: 30000, // 當系統忙碌時，推遲自動重啟的時間 (ms)
+
             MaxWizardTowers: 800,
             SugarLumpGoal: 100,
 
@@ -175,6 +175,10 @@ v9.0.0 Feature Update (2026):
     // 運行時計時器與緩存
     const Runtime = {
         Cache: { BigCookie: null },
+        // [v9.1.3] 系統狀態快取
+        SystemStatus: {
+            isBusy: false // 快取狀態：是否適合重啟/存檔
+        },
         Timers: {
             NextBuy: 0,
             NextRestart: 0,
@@ -776,7 +780,7 @@ v9.0.0 Feature Update (2026):
                         color: white; padding: 15px; font-weight: bold; font-size: 18px;
                         cursor: move; display: flex; justify-content: space-between; align-items: center;
                     ">
-                        <span>🍪 控制面板 v9.1.2.1</span>
+                        <span>🍪 控制面板 v9.1.3.1</span>
                         <div class="cc-close-btn" id="main-panel-close">✕</div>
                     </div>
                     <div id="global-status-bar" style="
@@ -2773,15 +2777,25 @@ v9.0.0 Feature Update (2026):
             this.updateEmbeddedVisibility();
         },
 
-        bindEmbeddedEvents: function() {
+			bindEmbeddedEvents: function() {
             const self = this;
 
             $('#btn-embed-restore').click(() => {
                 this.restore();
             });
 
+            // [v9.1.3.1] 改為直接調用 toggle，修復點擊無反應的問題
             $('#btn-embed-toggle-lock').click(() => {
-                $('#chk-spending-lock').prop('checked', !Config.Flags.SpendingLocked).trigger('change');
+                const newState = !Config.Flags.SpendingLocked;
+                
+                // 1. 直接執行核心切換 (不依賴 Checkbox 事件)
+                self.toggle(newState);
+                
+                // 2. 立即更新自身按鈕外觀 (紅/綠)
+                self.updateEmbeddedState();
+                
+                // 3. 反向同步大面板的 Checkbox 狀態 (視覺同步)
+                $('#chk-spending-lock').prop('checked', newState);
             });
             
             // [v9.1.0] Embedded Mutation Toggle
@@ -3081,6 +3095,24 @@ v9.0.0 Feature Update (2026):
     // 2. 核心邏輯模組 (Business Logic)
     // ═══════════════════════════════════════════════════════════════
     const Logic = {
+        // [v9.1.3] 系統狀態檢查
+        checkBusyState: function() {
+            // 1. Godzamok 檢查 (憲法級防護)
+            // isActive: 正在執行買賣 (資金變動中)
+            // mutationRestoreTimer: 戒嚴恢復期 (變異開關暫時關閉中) -> 最關鍵檢查點！
+            if (Runtime.GodzamokState.isActive || Runtime.GodzamokState.mutationRestoreTimer !== null) {
+                return true;
+            }
+
+            // 2. 戰鬥狀態檢查 (保護大 Buff)
+            // 若處於 Dragonflight, Click Frenzy 等狀態，視為忙碌，不應重啟
+            if (Logic.isCombatState()) {
+                return true;
+            }
+
+            return false;
+        },
+
         // [v8.9.2] 戰鬥狀態判定：區分「爆發增益」與「一般狀態」
         // 目的：在 Dragonflight, Cursed Finger, Cookie Storm 等高負載/高收益期間，暫停低優先級後勤
         isCombatState: function() {
@@ -3422,7 +3454,7 @@ v9.0.0 Feature Update (2026):
             }
         },
 
-        GodzamokCombo: {
+GodzamokCombo: {
             // [v8.8.8] 戒嚴協議助手
             enforceMartialLaw: function() {
                 const R = Runtime.GodzamokState;
@@ -3438,6 +3470,10 @@ v9.0.0 Feature Update (2026):
                 if (R.mutationRestoreTimer) {
                     clearTimeout(R.mutationRestoreTimer);
                     R.mutationRestoreTimer = null;
+                    // [PM Hotfix] 若使用者在冷卻期間手動開啟了突變，這裡必須更新記憶
+                    if (Config.Flags.GardenMutation) {
+                        R.wasMutationEnabled = true;
+                    }
                 } else {
                     if (Config.Flags.GardenMutation) {
                         R.wasMutationEnabled = true;
@@ -4599,6 +4635,11 @@ v9.0.0 Feature Update (2026):
 
         updateTitle: function() {
             if (typeof Game === 'undefined') return;
+
+            // [v9.1.3] AHK 通訊協議：只讀取 Runtime 快取，不進行運算
+            const isBusy = Runtime.SystemStatus.isBusy;
+            const signalStatus = isBusy ? "⛔BUSY" : "✅SAFE";
+
             let totalMult = 1;
             let isWorthClicking = false;
             if (Game.buffs) {
@@ -4617,7 +4658,9 @@ v9.0.0 Feature Update (2026):
             }
             const signal = isWorthClicking ? "⚡ATTACK" : "💤IDLE";
             const displayMult = totalMult > 1000 ? (totalMult/1000).toFixed(1) + 'k' : Math.round(totalMult);
-            document.title = `[${signal}|${displayMult}x|${coords}] ${Runtime.OriginalTitle}`;
+            
+            // 格式: [✅SAFE][⚡ATTACK|15.5k|100,200] OriginalTitle
+            document.title = `[${signalStatus}][${signal}|${displayMult}x|${coords}] ${Runtime.OriginalTitle}`;
         }
     };
 
@@ -4663,7 +4706,7 @@ v9.0.0 Feature Update (2026):
         },
 
         init: function() {
-            Logger.success('Core', 'Cookie Clicker Ultimate v9.1.2.1 Loading...');
+            Logger.success('Core', 'Cookie Clicker Ultimate v9.1.3 Loading...');
 
             Runtime.Timers.GardenWarmup = Date.now() + 10000;
             Logger.log('Core', '[花園保護] 暖機模式啟動：暫停操作 10 秒');
@@ -4844,6 +4887,10 @@ v9.0.0 Feature Update (2026):
             // [Loop 3] Heartbeat (慢速/DOM/維護)
             this.heartbeatTimer = setInterval(() => {
                 const now = Date.now();
+                
+                // [v9.1.3] 狀態快取更新 (每秒一次)
+                Runtime.SystemStatus.isBusy = Logic.checkBusyState();
+
                 // ✅ 正確順序（不可更改）：
                 Logic.Season.update(now);   // 1. 設定 `isFarming` 狀態
                 Logic.Wrinkler.update(now); // 2. 執行皺紋蟲策略
@@ -4916,6 +4963,18 @@ v9.0.0 Feature Update (2026):
                     UI.createRightControls();
                 }
 
+                // 自動重啟檢查
+                if (now >= Runtime.Timers.NextRestart) {
+                    // 檢查快取狀態
+                    if (!Runtime.SystemStatus.isBusy) {
+                        Core.performRestart();
+                    } else {
+                        // 忙碌中，推遲重啟
+                        if (Math.random() < 0.1) Logger.warn('Core', `系統忙碌中 (Godzamok/Combat)，推遲自動重啟 ${Config.Settings.RestartDelayOnBusy/1000}秒`);
+                        Runtime.Timers.NextRestart = now + Config.Settings.RestartDelayOnBusy;
+                    }
+                }
+                
                 if (Config.Flags.ShowCountdown) {
                     $('#txt-rst').text(UI.formatMs(Math.max(0, Runtime.Timers.NextRestart - now)));
                     $('#txt-buy').text(Config.Flags.Buy ? UI.formatMs(Math.max(0, Runtime.Timers.NextBuy - now)) : '--:--');
@@ -4933,7 +4992,7 @@ v9.0.0 Feature Update (2026):
             if (interval < 60000) interval = 60000;
             Runtime.Timers.NextRestart = Date.now() + interval;
             if(this.restartTimer) clearTimeout(this.restartTimer);
-            this.restartTimer = setTimeout(() => this.performRestart(), interval);
+            // v9.1.3: 取消了 setTimeout 的直接重啟，改由 Heartbeat 檢查
         },
 
         performRestart: function() {
@@ -4944,7 +5003,7 @@ v9.0.0 Feature Update (2026):
 
             if (this.heartbeatTimer) clearInterval(this.heartbeatTimer);
 
-            setTimeout(() => {
+setTimeout(() => {
                 window.close();
                 document.body.innerHTML = `
                     <div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2147483647 !important;font-family:sans-serif;">

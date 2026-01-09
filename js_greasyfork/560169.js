@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pokechill EN-CN
 // @namespace    https://play-pokechill.github.io/
-// @version      2.2.0
+// @version      2.3.0
 // @description  Pokechill 全页面离线简体中文汉化
 // @author       GPT-DiamondMoo
 // @license      MIT
@@ -68,7 +68,7 @@
         [/^Power doubles if the user is (\w+), (\w+) or (\w+)/i, '自身$1、$2或$3时威力翻倍'],
         [/^Power doubles if the target is (\w+)/i, '目标$1时威力翻倍'],
         [/^Power randomly varies from x(\d+) to x(\d+)/i, '威力在$1倍到$2倍之间随机变化'],
-        [/^Multiplies by (\d+\.?\d*)x the power of moves with less than (\d+) power/i, '威力低于$2的招式威力乘以$1倍'],
+        [/^Multiplies by (\d+\.?\d*)x the power of moves with less than (\d+) power/i, '威力小于等于$2的招式威力乘以$1倍'],
         [/^Multiplies the power of moves by x(\d+\.?\d*) when the opposite Pokemon shares a type/i, '目标与自身属性相同时，招式威力乘以$1倍'],
         [/^"([^"]+)"-related moves have their power multiplied by x([\d.]+)\s*\(([^)]+)\)/i, '"$1"类招式威力乘以$2倍($3)'],
         [/^Multiplies Same-Type-Attack-Bonus by x(\d+\.?\d*)/i, '属性一致加成乘以$1倍'],
@@ -98,7 +98,7 @@
         [/^When held: Increases the damage dealt by (.+) by x(\d+)/i, '$1持有时：造成的伤害乘以$2'],
         [/^When held: Increases the weight of (.+) item drops by (\d+\.?\d*)%. Works always for everyone regardless of the holder/i, '持有时：$1物品掉落的权重提高$2%。无论由谁携带，效果始终对所有人生效。'],
         [/^When held: Increases the weight of (.+) pokemon by (\d+\.?\d*)%. Works always for everyone regardless of the holder/i, '持有时：$1宝可梦出现的权重提高$2%。无论由谁携带，效果始终对所有人生效。'],
-        [/^When held: Increases the chance of encountering a wild (.+) pokemon by (\d+\.?\d*)%/i, '持有时：提升野生$1宝可梦遭遇率$2%'],
+        [/^When held: Increases the chance of encountering a wild (.+) pokemon by (\d+\.?\d*)%. Works always for everyone regardless of the holder/i, '持有时：提升野生$1宝可梦遭遇率$2%。无论由谁携带，效果始终对所有人生效。'],
         [/^When held: Increases the duration of /i, '持有时：持有者引发'],
         [/^ weather by (\d+) turns/i, '的持续时间提升$1回合'],
         [/^When held: Increases the experience gained by the pokemon by (\d+)%/i, '持有时：持有者获得的经验值提升$1%'],
@@ -137,7 +137,7 @@
         [/^Perform the (\w+) move of the oponent, at (\w+) the power/i, '施放对手的$1个招式，威力变为原来的$2'],
         [/^Perform the (\w+) move of the oponent. Attacks x(\d+\.?\d*) faster than usual/i, '施放对手的$1个招式，进攻速度为变慢为原来的$2倍'],
         [/^Changes the weather to /i, '将天气变为'],
-        [/^Super-effective against (\w+)-types/i, '对$1属性效果绝佳'],//"Freeze Dry": "冷冻干燥",代码里写释放比平常慢1.5倍，但是描述中没有写，推测为复制了忘记改
+        [/^Super-effective against (\w+)-types/i, '对$1属性效果绝佳'],
         [/^Power doubles if the target is /i, '威力翻倍若目标状态效果处于'],
         [/^Grants immunity to /i, '免疫'],
         [/^Grants immunity to (\w+)-type moves/i, '免疫$1属性招式'],
@@ -155,7 +155,174 @@
         [/^Re-?rolls the Pokemon Ability/i, '随机重置一只宝可梦的特性'],
         [/^Unlocks the Pokemon Hidden Ability/i, '解锁隐藏特性'],
         [/^Warning, (.+) Power Cost! Only (\d+) out of (\d+) maximum IV's per stat will be inherited!/i, '警告：能量消耗$1！每项能力值最高仅可继承$2星的个体值！'],
+        [/^Increases the (.+) by x(\d+\.?\d*), but prevents them from switching/i, '$1乘以$2，但会被禁止交替'],
+        [/^Can't do that right now/i, '现在无法执行该操作'],
+        [/^Try to improve your Pokemon further:/i, '尝试进一步强化你的宝可梦：'],
+        [/^Get better type-matching moves/i, '获取更合适的属性克制招式'],
+        [/^Get better moves that correctly match your stat distribution \(Physical\/Special\)/i, '获取更符合你能力值分配（物理/特殊）的优质招式'],
+        [/^Use Stat Up moves that match your moves/i, '使用与招式搭配的能力提升类招式'],
+        [/^Unlock a Hidden Ability/i, '解锁隐藏特性'],
+        [/^Get a better Ability/i, '获取更优秀的特性'],
+        [/^Modify stats with Genetics/i, '通过遗传调整能力值'],
+        [/^/i, ''],
 
+
+        //指南
+        // 查看详情指南
+        [/^Right click\/long press on most elements can give further information\. You can furhter right click\/long press on information within information\.$/i,
+         '右键单击/长按大多数元素可查看更多信息。还可以对信息中的内容进一步右键单击/长按查看。'],
+        [/^Some elements that can be inspected include areas, trainers, moves, status effects, wild pokemon, team pokemon and items$/i,
+         '可查看详情的元素包括区域、训练家、招式、状态效果、野生宝可梦、队伍宝可梦和道具'],
+
+        // 能力值指南
+        [/^Each species of Pokémon share the same base stats that determine the actual stats of a Pokémon at a given level$/i,
+         '每一种宝可梦都有相同的种族值，这些种族值决定了宝可梦在特定等级下的实际能力值'],
+        [/^Stats determine how much damage they deal and receive \( see Battle: Moves\)\. The speed stat determines how fast a Pokemon executes a move$/i,
+         '能力值决定宝可梦造成和承受的伤害（见 对战：招式）。速度值决定宝可梦执行招式的快慢'],
+        [/^Individual Values, or IV'?s, multiply base stats, and can be increased by getting multiple copies of Pokemon$/i,
+         '个体值会加成种族值，可通过获取多只相同宝可梦来提升'],
+        [/^Depending on their base stats, a Division will be asigned to them\. You might use this Division letter to quickly assess which Pokemon can perform better on the short term$/i,
+         '根据种族值，宝可梦会被分配到相应评级。你可以通过评级字母（由低到高：D C B A S SS SSS）快速判断哪些宝可梦在短期内表现更出色。'],
+
+        // 特性指南
+        [/^Abilities are traits that a Pokemon can have\. While they are randomised, some abilities can only appear on specific typings\. Abilities are sorted in three categories; (.+)$/i,
+         '特性是宝可梦拥有的特质。特性随机生成，但部分特性仅特定属性的宝可梦可拥有。特性品质分为$1'],
+        [/^Hidden abilities are innate species-dependant traits that need to be unlocked with an Ability Capsule\. Once unlocked, their effect will permanently be active alongside their other ability$/i,
+         '隐藏特性是宝可梦天生的物种专属特质，需使用特性胶囊解锁。解锁后，其效果将与其他特性永久同时生效'],
+
+        // 经验值指南
+        [/^Pokemon gain experience by defeating foes, and share a portion of it among the team\. This will also be the case even if the team Pokemon are defeated$/i,
+         '宝可梦通过击败敌方获得经验值，且会与队伍中的其他宝可梦分享部分经验值。即使队伍中的宝可梦被击败，也能获得经验值'],
+        [/^Experience gain is proportional to the level difference\. A level difference of \+-(\d+) levels will net the same amount, while more than (\d+) levels of difference will greatly increase the amount received\.$/i,
+         '经验值获取量与等级差成正比。等级差在±$1级以内获得的经验值相同，超过$2级则获得的经验值会大幅增加'],
+        [/^A Pokemon (\d+) levels higher will not yield any experience$/i,
+         '击败比自身高$1级以上的宝可梦将无法获得经验值'],
+
+        // 招式指南
+        [/^Moves are learnt every (\d+) levels\. Moves can be switched by right click\/long press on a team pokemon$/i,
+         '宝可梦每$1级可学习新招式。右键单击/长按队伍中的宝可梦可切换招式'],
+        [/^Damaging moves are divided into (.+) and (.+) moves$/i,
+         '进攻招式分为$1攻击招式和$2攻击招式'],
+        [/^The category of the move determines whether the move'?s damage depends on the user'?s (.+) or (.+) stat and the target'?s (.+) or (.+)$/i,
+         '招式的类别决定其伤害计算依赖使用者的$1/$2能力值，以及目标的$3/$4能力值'],
+        [/^Some Pokemon might have Signature Moves\. Signature Moves are species-dependant moves that a Pokemon learn at level (\d+)\. Signature Moves can'?t be inherited through genetics$/i,
+         '某些宝可梦可能拥有招牌技。招牌技是特定种类宝可梦的专属的招式，特定种类宝可梦在$1级时习得。招牌技无法通过遗传获得。'],
+
+        // 属性一致加成指南
+        [/^If a Pokemon uses a damaging move that has the same type as one of that Pokemon'?s types, the move'?s damage is increased by x(\d+(?:\.\d+)?)$/i,
+         '如果宝可梦使用的进攻招式与自身其中一个属性相同，该招式的伤害将提升至$1倍'],
+        [/^This is known as same-type attack bonus, or STAB$/i,
+         '这就是属性一致加成'],
+
+        // 战斗疲劳指南
+        [/^Pokemon lose a very small fraction of their maximum health when attacking\. This damage can be mitigated by a sum of the HP, Defense and Special Defense of the Pokemon, meaning bulkier Pokemon can battle for longer$/i,
+         '宝可梦在攻击时会损失极小比例的最大生命值。该伤害可通过宝可梦的生命值、防御和特防之和来抵消，这意味着体格更健壮的宝可梦能持续战斗更久。'],
+
+        // 状态效果指南
+        [/^Certain moves inflict status effects such as $/i,
+         '部分招式会对目标施加状态效果，如'],
+        [/^You can further check their effects by right click\/long press$/i,
+         '右键单击/长按可查看这些状态的具体效果'],
+        [/^Status Effects, like temporal stat changes, will count down with turns\. You can only apply one Status Effect at a time$/i,
+         '状态效果与临时能力变化一样，会随回合数递减。同一时间内只会受到一种状态效果影响'],
+
+        // 天气指南
+        [/^Certain moves can change the weather to altered ones such as $/i,
+         '部分招式可将天气改变为'],
+        [/^You can further check their effects by right click\/long press$/i,
+         '右键单击/长按可查看这些天气的具体效果'],
+        [/^Altered weathers will last for (\d+) turns, and only can be changed after (\d+)$/i,
+         '特殊天气将持续$1回合，$2回合后才可再次更改'],
+
+        // 闪光宝可梦指南
+        [/^At a rate of (\d+)\/(\d+), Pokemon can be shiny\. These odds can be boosted through different means$/i,
+         '宝可梦出现闪光的概率为$1/$2，可通过多种方式提升该概率'],
+        [/^Shiny Pokemon deal (\d+)% more damage\. The visual distinction can be toggled from their move menu\. This won'?t affect the damage bonus they get$/i,
+         '闪光宝可梦造成的伤害提升$1%。可在招式菜单中切换是否显示闪光视觉特效，这不会影响其伤害加成'],
+        [/^Shiny Pokemon do not carry over their evolutions\. Instead, genetics must be used$/i,
+         '闪光宝可梦的进化形态不会继承闪光属性，需通过遗传系统获得闪光进化型'],
+
+        // 遗传快捷指南
+        [/Genetics allows you to modify a Pokemon beyond what is considered normal for the species, here is a quick overview of what you can achieve with operations:/i,
+         '遗传培育允许你对宝可梦进行超越其物种常规限制的调整，以下是可通过各类操作实现的功能概览：'],
+        [/Shiny Mutation:\s*You can inherit the shiny mutation, with a (\d+)% chance, to members of the same family\. You can also attempt to spread a new shiny mutation by using a shiny sample/i,
+         '闪光变异：可以使用闪光的样本宝可梦基于兼容性的概率传播新的闪光变异；也可以以 $1% 的成功率将闪光变异继承给同一进化链的宿主宝可梦。'],
+        [/IV Boosting:\s*Simply by doing any operation, regardless of the compatibility, the IV'?s of the host will attempt to increase\. Useful for Pokemon with little to no IV'?s/i,
+         '个体值提升：只要进行任意一次操作，无论兼容性如何，宿主的个体值都会尝试提升。适用于个体值较低或几乎没有个体值的宝可梦。'],
+        [/IV Inheriting:\s*An advanced alternative to the previous\. You can inherit IV'?s from a species to another depending on factors such as compatibility or genetic-aiding items used/i,
+         '个体值继承：这是前者的进阶版本。根据兼容性或所使用的遗传辅助道具等因素，你可以将一个宝可梦的个体值继承给另一个宝可梦。'],
+        [/Move Relearn:\s*When completing an operation, all but the four selected moves of the host will be reset, meaning you can attempt to get stronger moves with each operation/i,
+         '招式重置：完成一次操作后，宿主宝可梦除携带的四个招式外，其余招式都会被重置，使你可以在每次操作后尝试获取更强力的招式。'],
+        [/Move Inheriting:\s*An advanced alternative to the previous, you can inherit moves from the sample that would otherwise not be available to you through learning/i,
+         '招式继承：这是前者的进阶版本。宿主宝可梦可以从样本宝可梦身上继承原本无法通过学习获得的招式，样本宝可梦的所有技能均有概率继承（无需携带）。'],
+        [/Ability Relearn:\s*When completing an operation, your ability will reset, unless you use an (.+)\. This can be used to get more useful abilities in the process/i,
+         '特性重置：完成操作后，宿主宝可梦的特性将被重置，除非使用了$1。该机制可用于在过程中获取更有用的特性。'],
+        [/Ability Inheriting:\s*An advanced alternative to the previous\. Using a (.+), you can swap abilities with the sample, getting access to otherwise-impossible combinations/i,
+         '特性继承：这是前者的进阶版本。使用$1后，宿主宝可梦与样本宝可梦交换特性，从而获得无法自然获取的特性。'],
+
+        // 遗传兼容性指南
+        [/^Compatibility determines how similar the sample is to the host\. This influences various parameters such as the chances of inherit, or shiny mutations \(only if the sample is shiny\)$/i,
+         '兼容性决定样本宝可梦与宿主宝可梦的相似程度，会影响遗传概率、闪光突变（仅当样本宝可梦为闪光宝可梦时）等多个参数'],
+        [/^Sharing one type with the sample will yield one level of compatibility, whereas sharing two types will increase it by two levels\.$/i,
+         '样本宝可梦与宿主宝可梦共享一种属性可获得1级兼容性，共享两种属性可获得2级兼容性'],
+        [/^Additionally, if the sample is of the same evolutive line as the host, it will recieve maximum compatibility$/i,
+         '此外，若样本宝可梦与宿主宝可梦属于同一进化链，将获得最高等级兼容性'],
+
+        // 遗传能量消耗指南
+        [/^Power cost determines how taxing it is to modify the host\. This influences the time to complete the operation$/i,
+         '能量消耗决定修改宿主的难度，会影响操作完成的时间'],
+        [/^This is determined by the division of the host\. A higher division will exponentially increase the time required to modify the Pokemon$/i,
+         '能量消耗由宿主宝可梦的评级决定，评级越高，操作完成所需的时间将呈指数级增加'],
+
+
+        // 指引
+        // 螺旋塔指引
+        [/Spiraling Tower/i,
+         '螺旋塔'],
+        [/The Spiraling Tower is an infinitely-scaling challenge in which every Pokemon defeated will increase the difficulty\. Type Immunities inside this challenge will be instead converted to resistances/i,
+         '螺旋塔是一项无限递增的挑战，每击败一只宝可梦，难度便会随之提升。此挑战中属性免疫效果将转化为属性抗性。'],
+        [/Every time you enter the tower, you will start from floor (\d+), but you can try as many times as you'd like/i,
+         '每次进入塔楼时，你都将从$1层开始挑战，但可尝试任意次数。'],
+        [/Your highest reached floor will be saved, and reset when the league rotation changes\. You will be rewarded for every new highest floor reached at the end of the battle/i,
+         '你的最高抵达层数将被记录，并在联盟轮换时重置。每当刷新最高层数后，战斗结束时你都将获得奖励。'],
+
+        // 战斗区域指引
+        [/^Defeat increasingly difficult trainers and carve yourself a path of fame! You may unlock additional areas to explore as your progress/i,
+         '击败难度逐步提升的训练师，闯出属于你的名声之路！随着你的进度推进，你还将解锁更多可探索的区域。'],
+        // 对战开拓区指引
+        [/The Battle Frontier houses different types of challenges under a specific division restriction that rotates every (.+)\. Trainers fought here will reset every (.+)/i,
+         '对战开拓区包含多种挑战，设有特定分组限制，每$1轮换一次。此处遭遇的训练家每$2重置'],
+
+        // 旷野地带指引
+        [/All Pokemon in Wild Areas might be caught by defeating them\. Wild Areas rotate every (.+), so be sure to check out what can be caught today!/i,
+         '旷野地带内的所有宝可梦均可通过击败捕获。旷野地带每$1轮换，记得查看轮换后可捕获的宝可梦！'],
+
+        // 迷宫指引
+        [/Pokemon in Dungeons can't be caught, but they can drop useful items and EXP\. Dungeons rotate every (.+) aswell/i,
+         '迷宫中的宝可梦无法捕获，但会掉落实用道具和经验值。迷宫同样每$1轮换'],
+
+        // 活动指引
+        [/Events might house both items and Pokemon to get\. Events marked with a skull signify powerful foes that usually require an item to catch \(The item wont be consumed if failed to defeat\)\. All Events rotate every (.+)\./i,
+         '活动中可获取道具与宝可梦。带有骷髅标记的活动代表强大敌方，通常需要特定道具才能捕获（若未击败敌方，道具不会消耗）。所有活动每$1轮换一次'],
+
+        // 遗传指引
+        [/With genetics, you can modify the parameters of a level (\d+) Pokemon \(the host\) and influence them based on another Pokemon \(the sample\)/i,
+         '通过遗传培育，你可以修改$1级宝可梦（宿主 左）的参数，并以另一只宝可梦（样本 右）为基础进行调整'],
+        [/Doing so, the level of the host will reset back to (\d+) while keeping all 4 of its currently selected moves, aswell as re-rolling its ability and a chance to increase its IV'?s/i,
+         '操作后，宿主宝可梦等级将重置为$1，但会保留当前携带的4个招式，同时重新随机特性，并有概率提升个体值'],
+        [/Genetics can also be influenced by using genetic-aiding items, which you can use at the end of the operation/i,
+         '遗传培育还可通过使用遗传辅助道具强化效果，你可在操作结束时使用该类道具'],
+        [/You can find more information about the specifics of genetics in the guide section/i,
+         '有关遗传培育的详细说明，可在指南板块查询'],
+
+        // 训练指引
+        [/Challenge your Pokemon against waves of foes in order to get stronger\. You will naturally have typing advantage against Pokemon fought against, and their level will scale to yours\. Type Immunities inside training will be instead converted to resistances/i,
+         '让你的宝可梦迎战一波又一波的敌人以变得更强。你将自然拥有对战宝可梦的属性优势，其等级也会随你的等级进行调整。在训练中，属性免疫将被转换为抗性。'],
+        [/Failing a training will result in no gains/i,
+         '训练失败将不会获得任何收益'],
+
+        // 宝可商店指引
+        [/^You can buy items here with Bottle Caps. Yeah/i, '可使用瓶盖在此处购买道具。就是这样～'],
 
     ];
 
@@ -853,7 +1020,7 @@
         "Vivillon": "彩粉蝶",
         "Litleo": "小狮狮",
         "Pyroar": "火炎狮",
-        "Flabébé": "花蓓蓓",
+        "Flabebe": "花蓓蓓",
         "Floette": "花叶蒂",
         "Florges": "花洁夫人",
         "Skiddo": "坐骑小羊",
@@ -956,7 +1123,7 @@
         "Sandygast": "沙丘娃",
         "Palossand": "噬沙堡爷",
         "Pyukumuku": "拳海参",
-        "Type: Null": "属性：空",
+        "Type Null": "属性空",
         "Silvally": "银伴战兽",
         "Minior": "小陨星",
         "Komala": "树枕尾熊",
@@ -1218,34 +1385,41 @@
         'Oricorio Pau': '花舞鸟 呼拉呼拉',
         'Oricorio Sensu': '花舞鸟 轻盈轻盈',
         //多丽米亚
-        "Furfrou Heart": "多丽米亚 心形造型",
-        "Furfrou Star": "多丽米亚 星形造型",
-        "Furfrou Diamond": "多丽米亚 菱形造型",
-        "Furfrou Debutante": "多丽米亚 淑女造型",
-        "Furfrou Matron": "多丽米亚 贵妇造型",
-        "Furfrou Dandy": "多丽米亚 绅士造型",
-        "Furfrou Reine": "多丽米亚 女王造型",
-        "Furfrou Kabuki": "多丽米亚 歌舞伎造型",
-        "Furfrou Pharaoh": "多丽米亚 国王造型",
+        "Furfrou Heart": "心形 多丽米亚",
+        "Furfrou Star": "星形 多丽米亚",
+        "Furfrou Diamond": "菱形 多丽米亚",
+        "Furfrou Debutante": "淑女 多丽米亚",
+        "Furfrou Matron": "贵妇 多丽米亚",
+        "Furfrou Dandy": "绅士 多丽米亚",
+        "Furfrou Reine": "女王 多丽米亚",
+        "Furfrou Kabuki": "歌舞伎 多丽米亚",
+        "Furfrou Pharaoh": "国王 多丽米亚",
         //鬃岩狼人
-        "Lycanroc Midday": "鬃岩狼人 白昼的样子",
-        "Lycanroc Midnight": "鬃岩狼人 黑夜的样子",
-        "Lycanroc Dusk": "鬃岩狼人 黄昏的样子",
+        "Lycanroc Midday": "白昼 鬃岩狼人",
+        "Lycanroc Midnight": "黑夜 鬃岩狼人",
+        "Lycanroc Dusk": "黄昏 鬃岩狼人",
         //未知图腾
         "Unown Exclamation":"未知图腾 !",
         "Unown Question":"未知图腾 ?",
         //洛托姆
-        "Rotom Heat": "加热洛托姆",
-        "Rotom Wash": "清洗洛托姆",
-        "Rotom Frost": "结冰洛托姆",
-        "Rotom Fan": "旋转洛托姆",
-        "Rotom Mow": "切割洛托姆",
+        "Rotom Heat": "加热 洛托姆",
+        "Rotom Wash": "清洗 洛托姆",
+        "Rotom Frost": "结冰 洛托姆",
+        "Rotom Fan": "旋转 洛托姆",
+        "Rotom Mow": "切割 洛托姆",
         //皮卡丘
-        "Pikachu PopStar": "偶像皮卡丘",
-        "Pikachu PhD": "博士皮卡丘",
-        "Pikachu Libre": "面罩摔角手皮卡丘",
-        "Pikachu Belle": "贵妇皮卡丘",
-        "Pikachu RockStar": "硬摇滚皮卡丘",
+        "Pikachu PopStar": "偶像 皮卡丘",
+        "Pikachu PhD": "博士 皮卡丘",
+        "Pikachu Libre": "面罩摔角手 皮卡丘",
+        "Pikachu Belle": "贵妇 皮卡丘",
+        "Pikachu RockStar": "硬摇滚 皮卡丘",
+        //鲤鱼王
+        "Magikarp Koi": "锦鲤 鲤鱼王",
+        "Magikarp Regal": "富豪 鲤鱼王",
+        "Magikarp Sakura": "樱花 鲤鱼王",
+        "Magikarp Skelly": "骷髅 鲤鱼王",
+        "Magikarp Soar": "腾跃 鲤鱼王",
+        "Magikarp Tiger": "老虎 鲤鱼王",
 
         //自创特性
         "Hydratation": "湿润之躯", // 拼写错误，官方正确拼写为 Hydration
@@ -2190,7 +2364,7 @@
         "Parabolic Charge": "抛物面充电",
         "Forest Curse": "森林咒术",
         "Petal Blizzard": "落英缤纷",
-        "Freeze Dry": "冷冻干燥",//代码里写释放比平常慢1.5倍，但是描述中没有写
+        "Freeze Dry": "冷冻干燥",
         "Disarming Voice": "魅惑之声",
         "Parting Shot": "抛下狠话",
         "Topsy Turvy": "颠倒",
@@ -2554,7 +2728,7 @@
         "Malignant Chain": "邪毒锁链",
         "Nihil Light": "归无之光",
 
-        //
+        //未有官方译名
         "Fog":"起雾",
 
         // 野外区域
@@ -2668,7 +2842,9 @@
         "Giovanni":"坂木",
         // 开拓区
         "division and below only":"仅限评级及以下",
-        "Ultra":"究极",
+        "little cup":"低级联赛",
+        "Great":"超级",
+        "Ultra":"高级",
         "League":"联盟",
         "VS":"对战",
         "Frontier":"开拓区",
@@ -2701,7 +2877,7 @@
         "Iota":"约塔",
         "Roark":"罗克",
         "Nessa":"妮莎",
-        "Lt Surge":"马志士",
+        "LtSurge":"马志士",
         "Erika":"艾莉嘉",
         "Roxie":"罗克西",
         "Sabrina":"小霞",
@@ -2751,26 +2927,114 @@
         "Alder":"阿戴克",
         "Geeta":"奇巴纳",
 
+        // 超进化石
+        "Gardevoirite": "沙奈朵进化石",
+        "Ampharosite": "电龙进化石",
+        "Venusaurite": "妙蛙花进化石",
+        "Charizardite": "喷火龙进化石",
+        "Blastoisinite": "水箭龟进化石",
+        "Mewtwonite": "超梦进化石",
+        "Blazikenite": "火焰鸡进化石",
+        "Medichamite": "恰雷姆进化石",
+        "Houndoominite": "黑鲁加进化石",
+        "Aggronite": "波士可多拉进化石",
+        "Banettite": "诅咒娃娃进化石",
+        "Tyranitarite": "班基拉斯进化石",
+        "Scizorite": "巨钳螳螂进化石",
+        "Pinsirite": "凯罗斯进化石",
+        "Aerodactylite": "化石翼龙进化石",
+        "Lucarionite": "路卡利欧进化石",
+        "Abomasite": "暴雪王进化石",
+        "Kangaskhanite": "袋兽进化石",
+        "Gyaradosite": "暴鲤龙进化石",
+        "Absolite": "阿勃梭鲁进化石",
+        "Alakazite": "胡地进化石",
+        "Heracronite": "赫拉克罗斯进化石",
+        "Mawilite": "大嘴娃进化石",
+        "Manectite": "雷电兽进化石",
+        "Garchompite": "烈咬陆鲨进化石",
+        "Latiasite": "拉帝亚斯进化石",
+        "Latiosite": "拉帝欧斯进化石",
+        "Swampertite": "巨沼怪进化石",
+        "Sceptilite": "蜥蜴王进化石",
+        "Sablenite": "勾魂眼进化石",
+        "Altarianite": "七夕青鸟进化石",
+        "Galladite": "艾路雷朵进化石",
+        "Audinite": "差不多娃娃进化石",
+        "Metagrossite": "巨金怪进化石",
+        "Sharpedonite": "巨牙鲨进化石",
+        "Slowbronite": "呆壳兽进化石",
+        "Steelixite": "大钢蛇进化石",
+        "Pidgeotite": "大比鸟进化石",
+        "Glalitite": "冰鬼护进化石",
+        "Diancite": "蒂安希进化石",
+        "Prison Bottle": "惩戒之壶",
+        "Mega Cuff": "超级护腕",
+        "Cameruptite": "喷火驼进化石",
+        "Lopunnite": "长耳兔进化石",
+        "Salamencite": "暴飞龙进化石",
+        "Beedrillite": "大针蜂进化石",
+        "Clefablite": "皮可西进化石",
+        "Victreebelite": "大食花进化石",
+        "Starminite": "宝石海星进化石",
+        "Dragoninite": "快龙进化石",
+        "Meganiumite": "大竺葵进化石",
+        "Feraligite": "大力鳄进化石",
+        "Skarmorite": "盔甲鸟进化石",
+        "Froslassite": "雪妖女进化石",
+        "Heatranite": "席多蓝恩进化石",
+        "Darkranite": "达克莱伊进化石",
+        "Emboarite": "炎武王进化石",
+        "Excadrite": "龙头地鼠进化石",
+        "Scolipite": "蜈蚣王进化石",
+        "Scraftinite": "头巾混混进化石",
+        "Eelektrossite": "麻麻鳗鱼王进化石",
+        "Chandelurite": "水晶灯火灵进化石",
+        "Chesnaughtite": "布里卡隆进化石",
+        "Delphoxite": "妖火红狐进化石",
+        "Greninjite": "甲贺忍蛙进化石",
+        "Pyroarite": "火炎狮进化石",
+        "Floettite": "花叶蒂进化石",
+        "Malamarite": "乌贼王进化石",
+        "Barbaracite": "龟足巨铠进化石",
+        "Dragalgite": "毒藻龙进化石",
+        "Hawluchanite": "摔角鹰人进化石",
+        "Zygardite": "基格尔德进化石",
+        "Drampanite": "老翁龙进化石",
+        "Zeraorite": "捷拉奥拉进化石",
+        "Falinksite": "列阵兵进化石",
+        "Chimechite": "风铃铃进化石",
+        "Staraptite": "姆克鹰进化石",
+        "Golurkite": "泥偶巨人进化石",
+        "Meowsticite": "超能妙喵进化石",
+        "Crabominite": "好胜毛蟹进化石",
+        "Golisopite": "具甲武者进化石",
+        "Magearnite": "玛机雅娜进化石",
+        "Scovillainite": "狠辣椒进化石",
+        "Baxcalibrite": "戟脊龙进化石",
+        "Tatsugirinite": "米立龙进化石",
+        "Glimmoranite": "晶光花进化石",
+        "Raichunite": "雷丘进化石",
         // 持有道具
         "Exchange":"兑换",
         "Black Belt":"黑带",
         "Black Glasses":"黑色眼镜",
         "Charcoal":"木炭",
-        "Dragon Fang":"龙鳞",
+        "Dragon Fang":"龙之牙",
         "Fairy Feather":"妖精之羽",
-        "Hard Stone":"坚硬石头",
+        "Hard Stone":"硬石头",
         "Magnet":"磁铁",
-        "Metal Coat":"金属涂层",
+        "Metal Coat":"金属膜",
         "Miracle Seed":"奇迹种子",
         "Mystic Water":"神秘水滴",
         "Never Melt Ice":"不融冰",
-        "Poison Barb":"毒刺",
-        "Sharp Beak":"尖锐鸟嘴",
+        "Poison Barb":"毒针",
+        "Sharp Beak":"锐利鸟嘴",
         "Silk Scarf":"丝绸围巾",
-        "Silver Powder":"银色粉末",
+        "Silver Powder":"银粉",
         "Soft Sand":"柔软沙子",
-        "Spell Tag":"诅咒标签",
-        "Twisted Spoon":"扭曲汤匙",
+        "Spell Tag":"咒术之符",
+        "Twisted Spoon":"弯曲的汤匙",
         // 树果
         "Occa Berry":"火之果",
         "Passho Berry":"水之果",
@@ -2789,34 +3053,35 @@
         "Colbur Berry":"恶之果",
         "Babiri Berry":"钢之果",
         // 特殊道具
-        "Luck Incense":"幸运熏香",
-        "Pure Incense":"纯净熏香",
+        "Luck Incense":"幸运薰香",
+        "Pure Incense":"洁净薰香",
         "Lucky Egg":"幸运蛋",
-        "Shiny Charm":"闪光护身符",
+        "Shiny Charm":"闪耀护符",
         "Damp Rock":"潮湿岩石",
         "Heat Rock":"炽热岩石",
         "Icy Rock":"冰冻岩石",
-        "Smooth Rock":"光滑岩石",
+        "Smooth Rock":"沙沙岩石",
         "Flame Orb":"火焰宝珠",
         "Toxic Orb":"剧毒宝珠",
-        "Choice Band":"专爱围巾",
-        "Choice Specs":"专爱眼镜",
+        "Choice Band":"讲究头带",
+        "Choice Specs":"讲究眼镜",
         "Life Orb":"生命宝珠",
         // 进化石
         "Water Stone":"水之石",
         "Thunder Stone":"雷之石",
-        "Sun Stone":"太阳石",
-        "Link Stone":"链接石",
+        "Sun Stone":"日之石",
+        "Link Stone":"联系石",
         "Oval Stone":"浑圆之石",
         "Moon Stone":"月之石",
         "Leaf Stone":"叶之石",
         "Ice Stone":"冰之石",
         "Fire Stone":"火之石",
         "Dusk Stone":"暗之石",
-        "Dawn Stone":"光之石",
-        "Shiny Stone":"光辉石",
-        "Odd Rock":"奇异岩石",
+        "Dawn Stone":"觉醒之石",
+        "Shiny Stone":"光之石",
+        "Odd Rock":"楔石",
         // 消耗道具
+        "autoRefightTicket":"自动重战券",
         "Rare Candy":"神奇糖果",
         "Ability Patch":"特性补丁",
         "Ability Capsule":"特性胶囊",
@@ -2836,57 +3101,12 @@
         "Power Bracer":"力量护腕-物攻",
         "Power Lens":"力量镜片-特攻",
         "Power Weight":"力量负重-生命",
-        "Destiny Knot":"命运之结",
+        "Destiny Knot":"红线",
         // 特殊持有道具
         "Eviolite":"进化奇石",
         "Light Clay":"光之黏土",
-        "Mental Herb":"精神香草",
-        // 超进化石
-        "Glalitite":"冰鬼护进化石",
-        "Absolite":"阿勃梭鲁进化石",
-        "Aerodactylite":"化石翼龙进化石",
-        "Aggronite":"波士可多拉进化石",
-        "Alakazite":"胡地进化石",
-        "Altarianite":"七夕青鸟进化石",
-        "Ampharosite":"电龙进化石",
-        "Audinite":"差不多娃娃进化石",
-        "Banettite":"梦妖魔进化石",
-        "Beedrillite":"大针蜂进化石",
-        "Blastoisinite":"水箭龟进化石",
-        "Blazikenite":"火焰鸡进化石",
-        "Cameruptite":"喷火驼进化石",
-        "Charizardite X":"喷火龙进化石X",
-        "Charizardite Y":"喷火龙进化石Y",
-        "Diancite":"蒂安希进化石",
-        "Galladite":"艾路雷朵进化石",
-        "Garchompite":"烈咬陆鲨进化石",
-        "Gardevoirite":"沙奈朵进化石",
-        "Gengarite":"耿鬼进化石",
-        "Gyaradosite":"暴鲤龙进化石",
-        "Heracronite":"赫拉克罗斯进化石",
-        "Houndoominite":"黑鲁加进化石",
-        "Kangaskhanite":"袋兽进化石",
-        "Lopunnite":"长耳兔进化石",
-        "Lucarionite":"路卡利欧进化石",
-        "Manectite":"雷电兽进化石",
-        "Mawilite":"大嘴娃进化石",
-        "Medichamite":"恰雷姆进化石",
-        "Metagrossite":"巨金怪进化石",
-        "Mewtwonite X":"超梦进化石X",
-        "Mewtwonite Y":"超梦进化石Y",
-        "Pidgeotite":"比雕进化石",
-        "Pinsirite":"赫拉克罗斯进化石",
-        "Sablenite":"勾魂眼进化石",
-        "Abomasite":"暴雪王进化石",
-        "Salamencite":"暴飞龙进化石",
-        "Sceptilite":"蜥蜴王进化石",
-        "Scizorite":"巨钳螳螂进化石",
-        "Sharpedonite":"巨牙鲨进化石",
-        "Slowbronite":"呆壳兽进化石",
-        "Steelixite":"大钢蛇进化石",
-        "Swampertite":"巨沼怪进化石",
-        "Tyranitarite":"班吉拉斯进化石",
-        "Venusaurite":"妙蛙花进化石",
+        "Mental Herb":"心灵香草",
+
         // 事件道具
         "Thunderous Rock":"雷电岩石",
         "Fiery Rock":"火焰岩石",
@@ -2903,7 +3123,7 @@
         "Wisdom Petal":"智慧花瓣",
         "Willpower Feather":"意志力羽毛",
         // 其他道具
-        "Mystery Egg":"神秘蛋",
+        "Mystery Egg":"神奇蛋",
         "Tm Dummy":"学习机",
         "TM's":"学习机",
         "Tm":" ",
@@ -2948,84 +3168,33 @@
         "Smile Ribbon":"欢笑奖章",
         "Awarded very rarely for spending a lot of time together":"极少数情况下授予，用于表彰长时间相处。", //1/100000
 
-        //螺旋塔
-        "Spiraling Tower":"螺旋塔",
-        "The Spiraling Tower is an infinitely-scaling challenge in which every Pokemon defeated will increase the difficulty. Type Immunities inside this challenge will be instead converted to resistances":"螺旋塔是一项无限递增的挑战，每击败一只宝可梦，难度便会随之提升。此挑战中属性免疫效果将转化为属性抗性。",
-        "Every time you enter the tower, you will start from floor 1, but you can try as many times as you'd like":"每次进入塔楼时，你都将从1层开始挑战，但可尝试任意次数。",
-        "Your highest reached floor will be saved, and reset when the league rotation changes. You will be rewarded for every new highest floor reached at the end of the battle":"你的最高抵达层数将被记录，并在联盟轮换时重置。每当刷新最高层数后，战斗结束时你都将获得奖励。",
-        "The Battle Frontier houses different types of challenges under a specific division restriction that rotates every three days. Trainers fought here will reset every day":"对战开拓区包含多种挑战，设有特定分组限制，每三天轮换一次。此处遭遇的训练家每日重置",
-        "All Pokemon in Wild Areas might be caught by defeating them. Wild Areas rotate every day, so be sure to check out what can be caught today!":"野生区域内的所有宝可梦均可通过击败捕获。野生区域每日轮换，记得查看今日可捕获的宝可梦！",
-        "Pokemon in Dungeons can't be caught, but they can drop useful items and EXP. Dungeons rotate every day aswell":"地牢中的宝可梦无法捕获，但会掉落实用道具和经验值。地牢同样每日轮换",
-        "Events might house both items and Pokemon to get. Events marked with a skull signify powerful foes that usually require an item to catch (The item wont be consumed if failed to defeat). All Events rotate every three days.":"活动中可获取道具与宝可梦。带有骷髅标记的活动代表强大敌方，通常需要特定道具才能捕获（若未击败敌方，道具不会消耗）。所有活动每三天轮换一次",
-        "With genetics, you can modify the parameters of a level 100 Pokemon (the host) and influence them based on another Pokemon (the sample)":"通过遗传培育，你可以修改100级宝可梦（宿主）的参数，并以另一只宝可梦（样本）为基础进行调整",
-        "Doing so, the level of the host will reset back to 1 while keeping all 4 of its currently selected moves, aswell as re-rolling its ability and a chance to increase its IV's":"操作后，宿主等级将重置为1，但会保留当前选中的4个招式，同时重新随机特性，并有机会提升个体值",
-        "Genetics can also be influenced by using genetic-aiding items, which you can use at the end of the operation":"遗传培育还可通过使用遗传辅助道具强化效果，你可在操作结束时使用该类道具",
-        "You can find more information about the specifics of genetics in the guide section":"有关遗传培育的详细说明，可在指南板块查询",
-
-        // 查看详情指南
-        "Right click/long press on most elements can give further information. You can furhter right click/long press on information within information.":"右键单击/长按大多数元素可查看更多信息。还可以对信息中的内容进一步右键单击/长按查看。",
-        "Some elements that can be inspected include areas, trainers, moves, status effects, wild pokemon, team pokemon and items":"可查看详情的元素包括区域、训练家、招式、状态效果、野生宝可梦、队伍宝可梦和道具",
-        // 能力值指南
-        "Each species of Pokémon share the same base stats that determine the actual stats of a Pokémon at a given level":"每一种宝可梦都有相同的种族值，这些种族值决定了宝可梦在特定等级下的实际能力值",
-        "Stats determine how much damage they deal and receive ( see Battle: Moves). The speed stat determines how fast a Pokemon executes a move":"能力值决定宝可梦造成和承受的伤害（见对战：招式）。速度值决定宝可梦执行招式的快慢",
-        "Individual Values, or IV's, multiply base stats, and can be increased by getting multiple copies of Pokemon":"个体值会加成种族值，可通过获取多只相同宝可梦来提升",
-        "Depending on their base stats, a Division will be asigned to them. You might use this Division letter to quickly assess which Pokemon can perform better on the short term":"根据种族值，宝可梦会被分配到相应评级。你可以通过评级字母快速判断哪些宝可梦在短期内表现更出色。",
-        // 特性指南
-        "Abilities are traits that a Pokemon can have. While they are randomised, some abilities can only appear on specific typings. Abilities are sorted in three categories; common, uncommon and rare":"特性是宝可梦拥有的特质。特性随机生成，但部分特性仅特定属性的宝可梦可拥有。特性分为普通、稀有和罕见三类",
-        "Hidden abilities are innate species-dependant traits that need to be unlocked with an Ability Capsule. Once unlocked, their effect will permanently be active alongside their other ability":"隐藏特性是宝可梦天生的物种专属特质，需使用特性胶囊解锁。解锁后，其效果将与其他特性永久同时生效",
-        // 经验值指南
-        "Pokemon gain experience by defeating foes, and share a portion of it among the team. This will also be the case even if the team Pokemon are defeated":"宝可梦通过击败敌方获得经验值，且会与队伍中的其他宝可梦分享部分经验值。即使队伍中的宝可梦被击败，也能获得经验值",
-        "Experience gain is proportional to the level difference. A level difference of +-5 levels will net the same amount, while more than 5 levels of difference will greatly increase the amount received.":"经验值获取量与等级差成正比。等级差在±5级以内获得的经验值相同，超过5级则获得的经验值会大幅增加",
-        "A Pokemon 10 levels higher will not yield any experience":"击败比自身高10级以上的宝可梦将无法获得经验值",
-        // 招式指南
-        "Moves are learnt every 7 levels. Moves can be switched by right click/long press on a team pokemon":"宝可梦每7级可学习新招式。右键单击/长按队伍中的宝可梦可切换招式",
-        "Damaging moves are divided into physical and special moves":"进攻招式分为物理攻击招式和特殊攻击招式两类",
-        "The category of the move determines whether the move's damage depends on the user's Attack or Special Attack stat and the target's Defense or Special Defense":"招式的类别决定其伤害计算依赖使用者的物攻/特攻能力值，以及目标的防御/特防能力值",
-        "Some Pokemon might have Signature Moves. Signature Moves are species-dependant moves that a Pokemon learn at level 100. Signature Moves can't be inherited through genetics":"某些宝可梦可能拥有招牌技。招牌技是特定种类宝可梦的专属的招式，特定种类宝可梦在100级时习得。招牌技无法通过遗传获得。",
-
-        // 属性一致加成指南
-        "If a Pokemon uses a damaging move that has the same type as one of that Pokemon's types, the move's damage is increased by x1.5":"如果宝可梦使用的进攻招式与自身其中一个属性相同，该招式的伤害将提升至1.5倍",
-        "This is known as same-type attack bonus, or STAB":"这就是属性一致加成",
-        // 战斗疲劳指南
-        "Pokemon lose a very small fraction of their maximum health when attacking. This damage can be mitigated by a sum of the HP, Defense and Special Defense of the Pokemon, meaning bulkier Pokemon can battle for longer":"宝可梦在攻击时会损失极小比例的最大生命值。该伤害可通过宝可梦的生命值、防御和特防之和来抵消，这意味着体格更健壮的宝可梦能持续战斗更久。",
-        // 状态效果指南
-        "Certain moves inflict status effects such as":"部分招式会对目标施加状态效果，如",
-        "You can further check their effects by right click/long press":"右键单击/长按可查看这些状态的具体效果",
-        "Status Effects, like temporal stat changes, will count down with turns. You can only apply one Status Effect at a time":"状态效果与临时能力变化一样，会随回合数递减。同一时间内只会受到一种状态效果影响",
-        // 天气指南
-        "Certain moves can change the weather to altered ones such as":"部分招式可将天气改变为",
-        "You can further check their effects by right click/long press":"右键单击/长按可查看这些天气的具体效果",
-        "Altered weathers will last for 15 turns, and only can be changed after 30":"特殊天气将持续15回合，30回合后才可再次更改",
-        // 闪光宝可梦指南
-        "At a rate of 1/400, Pokemon can be shiny. These odds can be boosted through different means":"宝可梦出现闪光的概率为1/400，可通过多种方式提升该概率",
-        "Shiny Pokemon deal 15% more damage. The visual distinction can be toggled from their move menu. This wont affect the damage bonus they get":"闪光宝可梦造成的伤害提升15%。可在招式菜单中切换是否显示闪光视觉特效，这不会影响其伤害加成",
-        "Shiny Pokemon do not carry over their evolutions. Instead, genetics must be used":"闪光宝可梦的进化形态不会继承闪光属性，需通过遗传系统获得闪光进化型",
-        // 遗传兼容性指南
-        "Compatibility determines how similar the sample is to the host. This influences various parameters such as the chances of inherit, or shiny mutations (only if the sample is shiny)":"兼容性决定样本与宿主的相似程度，会影响遗传概率、闪光突变（仅当样本为闪光宝可梦时）等多个参数",
-        "Sharing one type with the sample will yield one level of compatibility, whereas sharing two types will increase it by two levels.":"与样本共享一种属性可获得1级兼容性，共享两种属性可获得2级兼容性",
-        "Additionally, if the sample is of the same evolutive line as the host, it will recieve maximum compatibility":"此外，若样本与宿主属于同一进化链，将获得最高等级兼容性",
-        // 遗传能量消耗指南
-        "Power cost determines how taxing it is to modify the host. This influences the time to complete the operation":"能量消耗决定修改宿主的难度，会影响操作完成的时间",
-        "This is determined by the division of the host. A higher division will exponentially increase the time required to modify the Pokemon":"能量消耗由宿主宝可梦的评级决定，评级越高，修改宝可梦所需的时间将呈指数级增加",
-
-        //新手指引
-        "Howdy! I have been assigned to show the ropes":"你好！我被指派来带你熟悉流程。",
-        "Let's start by getting new pokemon shall we? Select \"Travel\" on the top left menu":"让我们先从获得新的宝可梦开始吧？请在左上角菜单中选择“旅行”",
-        "You can right click/long tap almost everything on the screen for more info! You can also do this within the info itself too. Try going into the first Wild Area to start catching Pokemon":"你几乎可以对屏幕上的任何内容右键点击或长按以获取更多信息！在信息界面中同样可以这样操作。试着进入第一个野外区域，开始捕捉宝可梦吧。",
-        "ight click/long tap a pokemon in your team to set their moves, you can also do this while in battle. If you got any held items, you can also assign them here":"右键点击或长按你队伍中的宝可梦即可设置其招式，你也可以在战斗中进行此操作。如果你获得了可携带的道具，也可以在这里进行分配。",
-        "Once you are ready, press Save and Go! at the top of the screen":"准备就绪后，点击屏幕顶部的“保存并出发！”按钮。",
-        "Your team will automatically attack in a set pattern, even while you tab out or close the browser! You can right click/long press on moves or pokemon to see their stats aswell. Once you have more Pokemon in your team, you will be able to switch them arround in a fight":"你的队伍将按照既定模式自动进行，即使你切换到其他标签页或关闭浏览器也会继续进行！你可以右键点击或长按招式或宝可梦来查看它们的属性。当队伍中拥有更多宝可梦后，你将能够在战斗中切换它们。",
-        "You can check a more in-depth explanation about stats and battle mechanics in the Guide menu. For now, I will take a break... Enjoy your stay!":"你可以在“指南”菜单中查看有关属性和战斗机制的更详细说明。现在，我先休息一下……祝你游戏愉快！",
-
         //神秘礼物 临时 2026.1.1奖品
         "Long Press/Right click the present below to receive a gift Spinda!":"长按/右键点击下方礼物即可获得闪光晃晃斑",
         "It will be shiny and carrying a Souvenir Ribbon":"它将闪闪发光并携带回忆奖章",
         "You have until January 15 to claim":"领取截止日期为2026年1月15日",
 
+        //新手指引
+        "Howdy! I have been assigned to show the ropes"
+        :"你好！我被指派来带你熟悉流程。",
+        "Let's start by getting new pokemon shall we? Select \"Travel\" on the top left menu"
+        :"让我们先从获得新的宝可梦开始吧？请在左上角菜单中选择“旅行”",
+        "You can right click/long tap almost everything on the screen for more info! You can also do this within the info itself too. Try going into the first Wild Area to start catching Pokemon"
+        :"你几乎可以对屏幕上的任何内容右键点击或长按以获取更多信息！在信息界面中同样可以这样操作。试着进入第一个野外区域，开始捕捉宝可梦吧。",
+        "Right click/long tap a pokemon in your team to set their moves, you can also do this while in battle. If you got any held items, you can also assign them here"
+        :"右键点击或长按你队伍中的宝可梦即可设置其招式，你也可以在战斗中进行此操作。如果你获得了可携带的道具，也可以在这里进行分配。",
+        "Once you are ready, press Save and Go! at the top of the screen"
+        :"准备就绪后，点击屏幕顶部的“保存并出发！”按钮。",
+        "Your team will automatically attack in a set pattern, even while you tab out or close the browser! You can right click/long press on moves or pokemon to see their stats aswell. Once you have more Pokemon in your team, you will be able to switch them arround in a fight"
+        :"你的队伍将按照既定模式自动进行，即使你切换到其他标签页或关闭浏览器也会继续进行！你可以右键点击或长按招式或宝可梦来查看它们的属性。当队伍中拥有更多宝可梦后，你将能够在战斗中切换它们。",
+        "You can check a more in-depth explanation about stats and battle mechanics in the Guide menu. For now, I will take a break... Enjoy your stay!"
+        :"你可以在“指南”菜单中查看有关属性和战斗机制的更详细说明。现在，我先休息一下……祝你游戏愉快！",
 
+        //鸣谢
         "Made by Duck":"由Duck制作",
-        "Pokemon and trainer sprites by Pokemon Showdown (Including artists: Beliot419, kyledove, Gnomowladny, Brumirage and ZacWeavile. Go check their work. Now.)":"宝可梦与训练家立绘来自Pokemon Showdown（包含画师：Beliot419、kyledove、Gnomowladny、Brumirage及ZacWeavile。快去看看他们的作品吧！）",
-        "All characters and related assets featured in this game are the exclusive property of Nintendo, Creatures Inc., and The Pokémon Company, and are used here strictly for non-commercial purposes.":"本游戏中所有角色及相关资产均为任天堂、Creatures Inc.及宝可梦公司的专有财产，此处仅用于非商业用途",
+        "Pokemon and trainer sprites by Pokemon Showdown (Including artists: Beliot419, kyledove, Gnomowladny, Brumirage and ZacWeavile. Go check their work. Now.)"
+        :"宝可梦与训练家立绘来自Pokemon Showdown（包含画师：Beliot419、kyledove、Gnomowladny、Brumirage及ZacWeavile。快去看看他们的作品吧！）",
+        "All characters and related assets featured in this game are the exclusive property of Nintendo, Creatures Inc., and The Pokémon Company, and are used here strictly for non-commercial purposes."
+        :"本游戏中所有角色及相关资产均为任天堂、Creatures Inc.及宝可梦公司的专有财产，此处仅用于非商业用途",
 
         //遗传界面
         "Are you sure you want to abort the operation":"你确定要结束操作吗",
@@ -3033,6 +3202,7 @@
         "Nothing but time will be lost":"除了时间，别无损失",
         "Select a sample Pokemon":"选择一只样本宝可梦",
         "Select a host Pokemon":"选择一只宿主宝可梦",
+
         "Select a Pokemon to use the":"选择一只宝可梦使用",
         "Select a Pokemon to teach":"选择一只宝可梦教学",
         "Select a Pokemon to add to the team":"选择一只宝可梦加入队伍",
@@ -3047,12 +3217,9 @@
         "Left = Defensive, Right = Offensive":"左侧为防御，右侧为进攻。",
         "Auto-Build":"自动构筑",
 
-        //训练指引
-        "Challenge your Pokemon against waves of foes in order to get stronger. You will naturally have typing advantadge against Pokemon fought against, and their level will scale to yours. Type Immunities inside training will be instead converted to resistances":"让你的宝可梦迎战一波又一波的敌人以变得更强。你将自然拥有对战宝可梦的属性优势，其等级也会随你的等级进行调整。此挑战中属性免疫效果将转化为属性抗性。",
-        "Failing a training will result in no gains":"训练失败将不会获得任何收益",
-
         "Game Guide":"游戏指南",
         "Guide":"指南",
+        "Quick Guide":"快捷指南",
         "Inspecting":"检查",
         "Wild Areas":"旷野地带",
         "Wild Area":"旷野地带",
@@ -3114,8 +3281,7 @@
         "type":"属性",
         "level":"等级",
         "Select a Pokemon to add to the team":"选择一只宝可梦加入队伍",
-        "Poke-Mart":"宝可梦商店",
-        "You can buy items here with Bottle Caps. Yeah":"可使用瓶盖在此处购买道具。就是这样～",
+        "Poke-Mart":"宝可商店",
         "How many will you buy":"你想要买多少",
         "Cant afford":"无法购买",
         "You dont have enough Bottle Caps to purchase this":"你没有足够的瓶盖去购买",
@@ -3145,6 +3311,7 @@
         "if afflicted with a status effect":"如果受到状态效果的影响",
         "Obtained in the Battle Frontier. Can be exchanged in the Poke-Mart":"在对战开拓区获得。可在宝可梦商店兑换。",
         "Obtained when acquiring an exceeding number of items. Can be exchanged in the Poke-Mart":"获得数量超过规定数量的物品后即可获得。可在宝可梦商店兑换。",
+        "Can be used to automatically refight battles. Cannot refight while the browser is closed. Consumed once a battle is won":"可用于自动重新挑战战斗。浏览器关闭时无法进行重复挑战。每次赢得一场战斗后将消耗一次。",
         "Increases the level of a Pokemon by 1":"使宝可梦等级提升1级",
         "Re-rolls the ability of a Pokemon":"随机重置一只宝可梦的特性",
         "Evolve certain kinds of Pokemon (Must be level":"进化特定种类的宝可梦(必须达到",
@@ -3152,7 +3319,6 @@
         "Genetics-aiding item:":"遗传辅助道具：",
         "Swaps the ability of the Pokemon with the sample. Can only be used with at least one level of compatibility":"将宿主宝可梦的特性与样本宝可梦的特性互相交换。至少具备一级兼容性才能使用。",
         "Ensures the Pokemon will retain its original ability":"确保宿主宝可梦保留原有特性",
-
         "Can be used to catch event Pokemon. Expires after event finishes":"可用于捕捉活动宝可梦。活动结束后失效。",
         "in bag":"持有",
         "Teach the move":"教学招式",
@@ -3241,6 +3407,7 @@
         "disabled":"关闭",
         "Credits":"鸣谢",
         "Wipe":"清除",
+        "Hide non-new Pokemon got in summary":"战斗结算中隐藏无提升宝可梦",
         "Time to complete operation":"完成时间",
         "for shiny mutation":"闪光概率",
         "to inherit a move from the sample":"宿主继承样本招式概率",
@@ -3323,11 +3490,59 @@
         "high":"高",
         "very high":"非常高",
         "extreme Power":"超级高",
+        "Auto":"自动",
+        "Refight":"重战",
+        "Expand Lore":"展开世界观",
+        "is active":"已激活",
+        "tickets remaining":"剩余",
+        "Click to disable it":"点击以禁用",
+        "explore":"探索",
+        "ticket":"券",
+        "tickets":"券",
+        "left":"剩余",
+        "day":"天",
+        "days":"天",
+        "every":"每",
+        "hours":"小时",
+        "hour":"小时",
+        "minute":"分钟",
+        "minutes":"分钟",
+
+        //数字
+        "one": "一",
+        "two": "二",
+        "three": "三",
+        "four": "四",
+        "five": "五",
+        "six": "六",
+        "seven": "七",
+        "eight": "八",
+        "nine": "九",
+        "ten": "十",
+        "eleven": "十一",
+        "twelve": "十二",
+        "thirteen": "十三",
+        "fourteen": "十四",
+        "fifteen": "十五",
+        "sixteen": "十六",
+        "seventeen": "十七",
+        "eighteen": "十八",
+        "nineteen": "十九",
+        "twenty": "二十",
+        "thirty": "三十",
+        "forty": "四十",
+        "fifty": "五十",
+        "sixty": "六十",
+        "seventy": "七十",
+        "eighty": "八十",
+        "ninety": "九十",
 
         // 形态
         "M.":"Mega",
         "Aln.":"阿罗拉",
+        "Gal.":"迦勒尔",
         "Hsn.":"洗翠",
+        "Pal.":"帕底亚",
     };
 
     function buildTrie(dict) {

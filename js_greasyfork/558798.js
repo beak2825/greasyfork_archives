@@ -3,7 +3,7 @@
 // @namespace    Tampermonkey Scripts
 // @match        *://www.youtube.com/*
 // @grant        none
-// @version      1.6.2
+// @version      1.6.3
 // @author       
 // @description  长按快捷键快速倍速播放（Z/Ctrl 2倍速，右方向键 3倍速）。视频控制栏添加倍速切换按钮，支持自定义倍速设置。YouTube 链接强制新标签页打开。
 // @license      MIT
@@ -26,7 +26,7 @@
         SEEK_SECONDS: 5,
 
         // 新标签页相关配置
-        YOUTUBE_LINK_PATTERNS: ['/watch', '/channel', '/user', '/playlist', '/shorts'],
+        YOUTUBE_LINK_PATTERNS: ['/watch', '/channel', '/user', '/@', '/playlist', '/shorts'],
         ENABLE_NEW_TAB_LINKS: true,
         ENABLE_AUTO_PAUSE_VIDEO: true,
 
@@ -195,6 +195,17 @@
             return anchor.id === 'thumbnail' ||
                 anchor.classList.contains('yt-simple-endpoint') ||
                 anchor.closest('ytd-thumbnail');
+        },
+
+        // 检查是否在稍后观看界面
+        isWatchLaterPage() {
+            const url = window.location.href;
+            return url.includes('list=WL') || url.includes('watch_later');
+        },
+
+        // 检查是否是博主名称链接
+        isChannelLink(href) {
+            return href.includes('/channel') || href.includes('/user') || href.includes('/@');
         },
 
         handleLinkClick(event) {

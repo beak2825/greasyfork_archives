@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name LDC OAuth 美化
 // @namespace github.com/hmjz100
-// @version 1.0.0
+// @version 1.0.1
 // @description 美化 LINUX DO/IDC Flare Connect 的认证页面
 // @author Hmjz100
 // @license AGPL-3.0-or-later
@@ -127,9 +127,8 @@ let css = `
 		margin-top: 1rem!important;
 	}
 	
-	body .bg-white.p-6.rounded-lg:has(>p>a.text-blue-500) {
+	body .bg-white.p-6.rounded-lg:not(.mb-4):has(>p>a.text-blue-500) {
 		text-align: center;
-		
 	}
 	
 	h1, p {
@@ -141,7 +140,7 @@ let css = `
 	
 	p {
 		font-size: 1.1rem;
-		line-height: 2rem;
+		line-height: 1.5rem;
 	}
 `;
 if (typeof GM_addStyle !== "undefined") {

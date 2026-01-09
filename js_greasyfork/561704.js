@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         小水书
 // @namespace    http://tampermonkey.net/
-// @version      1.1.11
+// @version      1.1.28
 // @description  瀑布流排版，自动提取帖子正文图片作为封面，内置设置面板
 // @author       十一世纪，codex
 // @match        https://shuiyuan.sjtu.edu.cn/*
@@ -62,7 +62,7 @@
     if (window.__xhsShuiyuanLoaded) return;
     window.__xhsShuiyuanLoaded = true;
 
-    const VERSION = '1.1.11';
+    const VERSION = '1.1.28';
 
     /* ============================================
      * 0. 早期防闪烁逻辑
@@ -89,6 +89,7 @@
                 path === '/' ||
                 path.startsWith('/latest') ||
                 path.startsWith('/top') ||
+                path.startsWith('/hot') ||
                 path.startsWith('/categories') ||
                 path.startsWith('/tag/') ||
                 path.startsWith('/c/');
@@ -144,12 +145,16 @@
             showStatViews: true,
             stickerEnabled: true, // 封面贴纸（置顶/精华/热议…；关注话题可优先显示未读）
             showUnreadPosts: true, // 跟踪/关注话题显示未读数（也可用于覆盖贴纸）
-            darkMode: 'auto', 
+            darkMode: 'auto', // 深色模式：auto(跟随站点/系统)/dark/light
             cardStagger: true, // 错落布局
             columnCount: 4, // 列数（桌面端基准）
             metaLayout: 'spacious', // 元信息布局：compact(紧凑单行)/spacious(宽松两行)
             authorDisplay: 'full', // 贴主展示：full/avatar/name
             pillScale: 1.00, // 分类/标签 pill 的大小缩放（1.00=原始）
+            pillOpacity: 1.00, // 分类/标签 pill 的背景不透明度倍率（仅影响封面左上角 pill；1.00=默认）
+            topicReplyCards: false, // 帖子页回复卡片化：将楼层包装为更“卡片”的视觉层级
+            topicReplyCardsBodyPaddingLeft: 14, // 帖子页回复卡片化：正文区域左侧留白（px）
+            coverPillsEnabled: true, // 封面左上角分类/标签 pill
             cacheEnabled: true, // 跨页面缓存
             cacheTtlMinutes: 20160, // 缓存有效期（分钟）- 14天
             cacheMaxEntries: 300, // 缓存条目上限
@@ -161,6 +166,14 @@
             rateCooldownSeconds: 3, // 遇到 429 的冷却秒数（与 Retry-After 取较大值）
             rateAutoTune: true, // 遇到 429 自动放慢，成功后缓慢恢复
             debugMode: true, // 调试模式（仅用于排查问题）
+            settingsIconStyle: 'shuiyuan', // 设置按钮图标：shuiyuan/xhsText/grid
+            settingsIconSize: 20, // 设置按钮图标大小（px）
+            settingsIconXhsText: '小水书', // xhsText 样式文案
+            settingsIconTextScale: 1.25, // xhsText 字体缩放（影响留白）
+            settingsIconGradientTop: '#33CCFF',
+            settingsIconGradientBottom: '#0066CC',
+            settingsIconGridColor: '#B5B5B5', // grid 样式 SVG 配色（使用 currentColor）
+            settingsIconGearColor: '#BDBDBD', // “设置齿轮”SVG 配色（使用 fill 直写颜色）
             panelCollapsed: { layout: false, stats: false, cache: false, images: false, advanced: true, theme: false } // 设置面板折叠状态
         },
         themes: {
@@ -178,12 +191,42 @@
                 cfg.columnCount = Math.min(8, Math.max(2, parseInt(cfg.columnCount, 10) || this.defaults.columnCount));
                 cfg.metaLayout = (cfg.metaLayout === 'spacious' || cfg.metaLayout === 'compact') ? cfg.metaLayout : this.defaults.metaLayout;
                 cfg.statsAlign = (cfg.statsAlign === 'left' || cfg.statsAlign === 'right' || cfg.statsAlign === 'justify') ? cfg.statsAlign : this.defaults.statsAlign;
+                cfg.darkMode = (cfg.darkMode === 'auto' || cfg.darkMode === 'dark' || cfg.darkMode === 'light') ? cfg.darkMode : this.defaults.darkMode;
                 cfg.authorDisplay = (cfg.authorDisplay === 'full' || cfg.authorDisplay === 'avatar' || cfg.authorDisplay === 'name') ? cfg.authorDisplay : this.defaults.authorDisplay;
                 cfg.pillScale = (() => {
                     const n = parseFloat(cfg.pillScale);
                     if (!Number.isFinite(n)) return this.defaults.pillScale;
-                    return Math.min(1.8, Math.max(0.85, n));
+                    return Math.min(5, Math.max(0.5, n));
                 })();
+                cfg.pillOpacity = (() => {
+                    const n = parseFloat(cfg.pillOpacity);
+                    if (!Number.isFinite(n)) return this.defaults.pillOpacity;
+                    return Math.min(1, Math.max(0.2, n));
+                })();
+                cfg.topicReplyCards = (typeof cfg.topicReplyCards === 'boolean') ? cfg.topicReplyCards : this.defaults.topicReplyCards;
+                cfg.topicReplyCardsBodyPaddingLeft = (() => {
+                    const n = parseInt(cfg.topicReplyCardsBodyPaddingLeft, 10);
+                    if (!Number.isFinite(n)) return this.defaults.topicReplyCardsBodyPaddingLeft;
+                    return Math.min(80, Math.max(0, n));
+                })();
+                cfg.coverPillsEnabled = (typeof cfg.coverPillsEnabled === 'boolean') ? cfg.coverPillsEnabled : this.defaults.coverPillsEnabled;
+                cfg.settingsIconStyle = (cfg.settingsIconStyle === 'shuiyuan' || cfg.settingsIconStyle === 'xhsText' || cfg.settingsIconStyle === 'grid') ? cfg.settingsIconStyle : this.defaults.settingsIconStyle;
+                cfg.settingsIconSize = (() => {
+                    const n = parseInt(cfg.settingsIconSize, 10);
+                    if (!Number.isFinite(n)) return this.defaults.settingsIconSize;
+                    return Math.min(36, Math.max(14, n));
+                })();
+                cfg.settingsIconXhsText = String(cfg.settingsIconXhsText || this.defaults.settingsIconXhsText || '小水书').trim().slice(0, 6) || '小水书';
+                cfg.settingsIconTextScale = (() => {
+                    const n = parseFloat(cfg.settingsIconTextScale);
+                    if (!Number.isFinite(n)) return this.defaults.settingsIconTextScale;
+                    return Math.min(1.8, Math.max(0.8, n));
+                })();
+                const isHex = (s) => /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(String(s || '').trim());
+                cfg.settingsIconGradientTop = isHex(cfg.settingsIconGradientTop) ? String(cfg.settingsIconGradientTop).trim() : this.defaults.settingsIconGradientTop;
+                cfg.settingsIconGradientBottom = isHex(cfg.settingsIconGradientBottom) ? String(cfg.settingsIconGradientBottom).trim() : this.defaults.settingsIconGradientBottom;
+                cfg.settingsIconGridColor = isHex(cfg.settingsIconGridColor) ? String(cfg.settingsIconGridColor).trim() : this.defaults.settingsIconGridColor;
+                cfg.settingsIconGearColor = isHex(cfg.settingsIconGearColor) ? String(cfg.settingsIconGearColor).trim() : this.defaults.settingsIconGearColor;
                 cfg.cacheTtlMinutes = Math.min(14 * 24 * 60, Math.max(1, parseInt(cfg.cacheTtlMinutes, 10) || this.defaults.cacheTtlMinutes));
                 cfg.cacheMaxEntries = Math.min(5000, Math.max(50, parseInt(cfg.cacheMaxEntries, 10) || this.defaults.cacheMaxEntries));
                 cfg.cacheEnabled = Boolean(cfg.cacheEnabled);
@@ -247,6 +290,58 @@
      * 2. 工具模块
      * ============================================ */
     const Utils = {
+        getCssVar(name) {
+            const k = String(name || '').trim();
+            if (!k) return '';
+            try {
+                return getComputedStyle(document.documentElement).getPropertyValue(k).trim();
+            } catch {
+                return '';
+            }
+        },
+        parseCssColorToRgb(color) {
+            const s = String(color || '').trim();
+            if (!s) return null;
+            // #rgb / #rrggbb
+            const hex3 = /^#([0-9a-f]{3})$/i.exec(s);
+            if (hex3) {
+                const h = hex3[1];
+                const r = parseInt(h[0] + h[0], 16);
+                const g = parseInt(h[1] + h[1], 16);
+                const b = parseInt(h[2] + h[2], 16);
+                return { r, g, b };
+            }
+            const hex6 = /^#([0-9a-f]{6})$/i.exec(s);
+            if (hex6) {
+                const h = hex6[1];
+                const r = parseInt(h.slice(0, 2), 16);
+                const g = parseInt(h.slice(2, 4), 16);
+                const b = parseInt(h.slice(4, 6), 16);
+                return { r, g, b };
+            }
+            // rgb()/rgba()
+            const rgb = /^rgba?\(([^)]+)\)$/i.exec(s);
+            if (rgb) {
+                const parts = rgb[1].split(',').map((v) => parseFloat(v.trim()));
+                if (parts.length >= 3 && parts.every((v) => Number.isFinite(v))) {
+                    const r = Math.min(255, Math.max(0, parts[0]));
+                    const g = Math.min(255, Math.max(0, parts[1]));
+                    const b = Math.min(255, Math.max(0, parts[2]));
+                    return { r, g, b };
+                }
+            }
+            return null;
+        },
+        relativeLuminance(rgb) {
+            const toLin = (c) => {
+                const v = (Number(c) || 0) / 255;
+                return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+            };
+            const r = toLin(rgb?.r);
+            const g = toLin(rgb?.g);
+            const b = toLin(rgb?.b);
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        },
         hexToRgb(hex) {
             const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
             return r ? `${parseInt(r[1], 16)}, ${parseInt(r[2], 16)}, ${parseInt(r[3], 16)}` : '200, 16, 46';
@@ -349,6 +444,16 @@
             const c = Config.get();
             if (c.darkMode === 'dark') return true;
             if (c.darkMode === 'light') return false;
+            // Discourse 允许独立于系统切换主题：优先从站点 CSS 变量推断
+            try {
+                const bg = this.getCssVar('--secondary') || this.getCssVar('--header_background');
+                const rgb = this.parseCssColorToRgb(bg);
+                if (rgb) {
+                    const lum = this.relativeLuminance(rgb);
+                    // 背景亮度较低 => 深色主题
+                    if (Number.isFinite(lum)) return lum < 0.45;
+                }
+            } catch {}
             return window.matchMedia?.('(prefers-color-scheme: dark)').matches;
         },
         escapeHtml(str) {
@@ -411,7 +516,7 @@
             const slug = this.parsePrimaryCategorySlug(categoryHref);
             const bySlug = {
                 // 常见 top-level slug -> emoji（允许不全，未知则不显示）
-                'shuiyuan-portal': '📰',   // 水源广场
+                'shuiyuan-portal': '🌊',   // 水源广场
                 'campus-life': '🏫',       // 校园生活
                 'life-experience': '🧭',   // 人生经验
                 'sjtu-study': '📚',        // 学在交大
@@ -450,9 +555,14 @@
             return path === '/' ||
                 path.startsWith('/latest') ||
                 path.startsWith('/top') ||
+                path.startsWith('/hot') ||
                 path.startsWith('/categories') ||
                 path.startsWith('/tag/') ||
                 path.startsWith('/c/');
+        },
+        isTopicPath() {
+            const path = window.location.pathname;
+            return path.startsWith('/t/');
         },
         seededRandom(seed) {
             // 简单的字符串哈希转随机数
@@ -481,27 +591,38 @@
         injectBase() {
             if (document.getElementById(this.baseId)) return;
             const css = `
-                /* 悬浮按钮 */
-                .xhs-float-btn {
+                /* 设置按钮：优先放到顶部导航（搜索按钮左侧），找不到则用右下角悬浮 */
+                .xhs-float-btn { cursor: pointer; color: var(--xhs-settings-icon-color, var(--xhs-c, #C8102E)); }
+                .xhs-float-btn.xhs-float-fixed {
                     position: fixed;
                     bottom: 20px;
+                    bottom: max(16px, env(safe-area-inset-bottom));
                     right: 20px;
+                    right: max(16px, env(safe-area-inset-right));
+                    left: auto !important;
+                    inset-inline-start: auto !important;
+                    inset-inline-end: max(16px, env(safe-area-inset-right));
                     width: 48px;
                     height: 48px;
                     background: #fff;
                     border-radius: 50%;
                     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                    cursor: pointer;
                     z-index: 99999;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     transition: transform 0.2s;
                     border: 2px solid var(--xhs-c, #C8102E);
+                    --xhs-settings-icon-size: 28px;
                 }
-                .xhs-float-btn:hover { transform: scale(1.1); }
-                .xhs-float-btn img { width: 28px; height: 28px; object-fit: contain; }
-                .xhs-float-btn .xhs-float-btn-fallback {
+                body.xhs-dark .xhs-float-btn.xhs-float-fixed {
+                    background: rgba(18,18,18,0.92);
+                    box-shadow: 0 10px 28px rgba(0,0,0,0.55);
+                }
+                .xhs-float-btn.xhs-float-fixed:hover { transform: scale(1.1); }
+                .xhs-float-btn.xhs-float-fixed img,
+                .xhs-float-btn.xhs-float-fixed svg { width: var(--xhs-settings-icon-size, 28px); height: var(--xhs-settings-icon-size, 28px); object-fit: contain; display: block; }
+                .xhs-float-btn.xhs-float-fixed .xhs-float-btn-fallback {
                     width: 28px;
                     height: 28px;
                     display: flex;
@@ -510,6 +631,11 @@
                     font-size: 20px;
                     color: var(--xhs-c, #C8102E);
                 }
+                .xhs-settings-dropdown { display: flex; align-items: center; }
+                .xhs-float-btn.xhs-float-header { --xhs-settings-icon-size: 20px; }
+                .xhs-float-btn.xhs-float-header img,
+                .xhs-float-btn.xhs-float-header svg { width: var(--xhs-settings-icon-size, 20px); height: var(--xhs-settings-icon-size, 20px); object-fit: contain; border-radius: 6px; display: block; }
+                .xhs-float-btn.xhs-float-header .xhs-float-btn-fallback { font-size: 16px; color: var(--xhs-c, #C8102E); }
 
                 /* 设置面板 */
                 .xhs-panel-overlay {
@@ -535,6 +661,11 @@
                     flex-direction: column !important;
                 }
                 .xhs-panel.show { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+                body.xhs-dark .xhs-panel {
+                    background: rgba(18,18,18,0.94);
+                    border: 1px solid rgba(255,255,255,0.12);
+                    box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+                }
                 
                 .xhs-panel-header {
                     padding: 16px 20px; background: var(--xhs-c); color: #fff;
@@ -562,8 +693,10 @@
                     font-size: 14px;
                     color: #333;
                 }
+                body.xhs-dark .xhs-row { color: rgba(255,255,255,0.92); }
                 .xhs-row > div:first-child { min-width: 0; }
                 .xhs-desc { font-size: 12px; color: #999; margin-top: 3px; line-height: 1.2; }
+                body.xhs-dark .xhs-desc { color: rgba(255,255,255,0.62); }
                 .xhs-section {
                     background: rgba(255,255,255,0.92);
                     border: 1px solid rgba(0,0,0,0.06);
@@ -663,6 +796,15 @@
                     cursor: pointer; border: 2px solid transparent; position: relative;
                 }
                 .xhs-color-item.active { border-color: #333; transform: scale(1.1); }
+
+                .xhs-gradients { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 8px; }
+                .xhs-gradient-item {
+                    width: 100%; padding-bottom: 100%; border-radius: 50%;
+                    cursor: pointer; border: 2px solid transparent; position: relative;
+                    background: linear-gradient(180deg, var(--gt, #33CCFF), var(--gb, #0066CC));
+                }
+                .xhs-gradient-item.active { border-color: #333; transform: scale(1.1); }
+                body.xhs-dark .xhs-gradient-item.active { border-color: rgba(255,255,255,0.75); }
                 
                 /* 移动端适配面板 */
                 @media(max-width: 600px) {
@@ -681,24 +823,40 @@
             const c = cfg.themeColor;
             const rgb = Utils.hexToRgb(c);
             const isDark = Utils.isDarkMode();
+            // 深色主题下尽量对齐 Discourse 自身配色，避免“站点已是深色但脚本仍按浅色渲染”导致观感割裂
+            const discourseVars = {
+                secondary: Utils.getCssVar('--secondary'),
+                secondaryHigh: Utils.getCssVar('--secondary-high'),
+                secondaryVeryHigh: Utils.getCssVar('--secondary-very-high'),
+                primary: Utils.getCssVar('--primary'),
+                primaryMedium: Utils.getCssVar('--primary-medium')
+            };
+            const xhsBg = isDark ? (discourseVars.secondary || '#1a1a1a') : '#f4f6f8';
+            const xhsCardBg = isDark ? (discourseVars.secondaryVeryHigh || discourseVars.secondaryHigh || '#2d2d2d') : '#fff';
+            const xhsText = isDark ? (discourseVars.primary || '#eee') : '#333';
+            const xhsTextSub = isDark ? (discourseVars.primaryMedium || '#aaa') : '#666';
             const colsDesktop = cfg.columnCount;
             const cols1400 = Math.min(colsDesktop, 4);
             const cols1100 = Math.min(colsDesktop, 3);
             const cols800 = Math.min(colsDesktop, 2);
             const pillScale = Number(cfg.pillScale) || 1.20;
-            
+            const pillOpacity = Math.min(1, Math.max(0.2, Number(cfg.pillOpacity) || 1));
+            const topicCardsBodyPaddingLeft = Number(cfg.topicReplyCardsBodyPaddingLeft);
+            const topicCardsBodyPaddingLeftPx = Math.min(80, Math.max(0, Number.isFinite(topicCardsBodyPaddingLeft) ? topicCardsBodyPaddingLeft : 14));
+             
             document.body.classList.toggle('xhs-dark', isDark);
 
             const css = `
                 :root {
                     --xhs-c: ${c};
                     --xhs-rgb: ${rgb};
-                    --xhs-bg: ${isDark ? '#1a1a1a' : '#f4f6f8'};
-                    --xhs-card-bg: ${isDark ? '#2d2d2d' : '#fff'};
-                    --xhs-text: ${isDark ? '#eee' : '#333'};
-                    --xhs-text-sub: ${isDark ? '#aaa' : '#666'};
+                    --xhs-bg: ${xhsBg};
+                    --xhs-card-bg: ${xhsCardBg};
+                    --xhs-text: ${xhsText};
+                    --xhs-text-sub: ${xhsTextSub};
                     --xhs-cols: ${colsDesktop};
                     --xhs-pill-scale: ${pillScale};
+                    --xhs-pill-alpha: ${pillOpacity};
                 }
 
                 body.xhs-on { background: var(--xhs-bg) !important; }
@@ -734,12 +892,13 @@
                 .xhs-card {
                     break-inside: avoid; background: var(--xhs-card-bg);
                     border-radius: 12px; margin-bottom: 0;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+                    box-shadow: ${isDark ? '0 6px 22px rgba(0,0,0,0.40)' : '0 2px 8px rgba(0,0,0,0.04)'};
+                    border: 1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'};
                     overflow: hidden; position: relative;
                     transition: transform 0.2s, box-shadow 0.2s;
                     display: flex; flex-direction: column;
                 }
-                .xhs-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); z-index: 2; }
+                .xhs-card:hover { transform: translateY(-4px); box-shadow: ${isDark ? '0 10px 30px rgba(0,0,0,0.55)' : '0 8px 20px rgba(0,0,0,0.10)'}; z-index: 2; }
                 .xhs-card.xhs-refresh-highlight {
                     box-shadow: 0 0 0 3px rgba(var(--xhs-rgb), 0.30), 0 14px 34px rgba(0,0,0,0.12) !important;
                 }
@@ -1116,7 +1275,7 @@
                 }
                 .xhs-cat-pill {
                     pointer-events: auto;
-                    background: rgba(255,255,255,0.95);
+                    background: rgba(255,255,255, calc(0.95 * var(--xhs-pill-alpha, 1)));
                     backdrop-filter: blur(4px);
                     color: var(--xhs-c);
                     font-size: calc(10px * var(--xhs-pill-scale, 1));
@@ -1127,11 +1286,11 @@
                 }
                 .xhs-tag-pill {
                     pointer-events: auto;
-                    background: rgba(0,0,0,0.18);
-                    border: 1px solid rgba(0,0,0,0.10);
+                    background: rgba(0,0,0, calc(0.18 * var(--xhs-pill-alpha, 1)));
+                    border: 1px solid rgba(0,0,0, calc(0.10 * var(--xhs-pill-alpha, 1)));
                     -webkit-backdrop-filter: blur(4px);
                     backdrop-filter: blur(4px);
-                    color: rgba(0,0,0,0.78);
+                    color: rgba(0,0,0,0.82);
                     font-size: calc(10px * var(--xhs-pill-scale, 1));
                     padding: calc(3px * var(--xhs-pill-scale, 1)) calc(8px * var(--xhs-pill-scale, 1));
                     border-radius: 999px;
@@ -1140,13 +1299,16 @@
                     box-shadow: 0 2px 6px rgba(0,0,0,0.10);
                 }
                 body.xhs-dark .xhs-cat-pill {
-                    background: rgba(0,0,0,0.65);
+                    background: rgba(0,0,0, calc(0.68 * var(--xhs-pill-alpha, 1)));
+                    border: 1px solid rgba(255,255,255, calc(0.12 * var(--xhs-pill-alpha, 1)));
                     color: #fff;
                 }
                 body.xhs-dark .xhs-tag-pill {
-                    background: rgba(255,255,255,0.22);
-                    border: 1px solid rgba(255,255,255,0.16);
-                    color: rgba(255,255,255,0.86);
+                    /* 深色主题下：用更深的底色保证在“白色/浅色封面”上也能看清 */
+                    background: rgba(0,0,0, calc(0.52 * var(--xhs-pill-alpha, 1)));
+                    border: 1px solid rgba(255,255,255, calc(0.14 * var(--xhs-pill-alpha, 1)));
+                    color: rgba(255,255,255,0.92);
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.65);
                 }
 
                 /* 外链标识（topic-featured-link） */
@@ -1190,6 +1352,23 @@
                 body[data-xhs-show-stats="0"] .xhs-stats,
                 body[data-xhs-show-stats="0"] .xhs-last-activity { display: none !important; }
                 
+                /* 帖子页：回复卡片化（仅在 /t/... 生效） */
+                body.xhs-topic-cards .topic-post {
+                    box-sizing: border-box;
+                    width: min(980px, calc(100% - 16px));
+                    margin: 14px auto;
+                    background: var(--xhs-card-bg);
+                    border: 1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'};
+                    border-radius: 16px;
+                    box-shadow: ${isDark ? '0 10px 34px rgba(0,0,0,0.45)' : '0 8px 22px rgba(0,0,0,0.07)'};
+                    overflow: hidden;
+                }
+                /* Discourse 的 sticky avatar 在卡片化时会导致“头像列”相对正文上移/下移，视觉上难以与 meta 对齐：卡片化下禁用 sticky */
+                body.xhs-topic-cards .topic-post .post__row { align-items: flex-start; }
+                body.xhs-topic-cards .topic-post .topic-avatar { padding-left: 14px; position: static !important; top: auto !important; }
+                body.xhs-topic-cards .topic-post .topic-body { padding-top: 0 !important; padding-left: ${topicCardsBodyPaddingLeftPx}px; padding-right: 14px; }
+                body.xhs-topic-cards .topic-post .topic-meta-data { padding-top: 10px; }
+
                 /* 暗色模式特定调整 */
                 ${isDark ? `
                     .xhs-tag { background: rgba(0,0,0,0.7); color: #fff; }
@@ -1269,6 +1448,7 @@
             if (path === '/') return `/latest.json${search}`;
             if (path.startsWith('/latest')) return `/latest.json${search}`;
             if (path.startsWith('/top')) return `${path}.json${search}`;
+            if (path.startsWith('/hot')) return `${path}.json${search}`;
             if (path.startsWith('/categories')) return `/categories.json${search}`;
             if (path.startsWith('/tag/')) return `${path}.json${search}`;
             if (path.startsWith('/c/')) return `${path}.json${search}`;
@@ -1331,9 +1511,19 @@
                         const img = t.image_url || t.thumbnail_url || null;
                         const likes = typeof t.like_count === 'number' ? t.like_count : 0;
                         const views = typeof t.views === 'number' ? t.views : 0;
-                        const replyCount = typeof t.reply_count === 'number' ? t.reply_count : 0;
                         const postsCount = typeof t.posts_count === 'number' ? t.posts_count : 0;
                         const highestPostNumber = typeof t.highest_post_number === 'number' ? t.highest_post_number : 0;
+                        let replyCount = typeof t.reply_count === 'number' ? t.reply_count : 0;
+                        // 为了保持与列表页展示一致，优先回退到 posts_count/highest_post_number 推断。
+                        try {
+                            const expectedFromPosts = (postsCount > 0) ? Math.max(0, postsCount - 1) : null;
+                            const expectedFromHighest = (highestPostNumber > 0) ? Math.max(0, highestPostNumber - 1) : null;
+                            const expected = (expectedFromPosts !== null) ? expectedFromPosts : expectedFromHighest;
+                            if (expected !== null) {
+                                const cur = Number(replyCount) || 0;
+                                if (Math.abs(expected - cur) > 1) replyCount = expected;
+                            }
+                        } catch {}
                         const unreadPosts = typeof t.unread_posts === 'number' ? t.unread_posts : 0;
                         const newPosts = typeof t.new_posts === 'number' ? t.new_posts : 0;
                         const lastReadPostNumber = typeof t.last_read_post_number === 'number' ? t.last_read_post_number : 0;
@@ -1713,6 +1903,26 @@
 
             const likeEl = el.querySelector('.xhs-like-count');
             if (likeEl) likeEl.textContent = Utils.formatStatCount(merged.likes ?? 0);
+
+            // 统计：views / replies（移动端列表 DOM 常缺失 views，这里用 list.json 补齐；同时避免大数显示 0）
+            try {
+                const views = typeof meta?.views === 'number' ? meta.views : null;
+                const replyCount = typeof meta?.replyCount === 'number' ? meta.replyCount : null;
+                if (views !== null && views >= 0) el.dataset.viewNum = String(views);
+                if (replyCount !== null && replyCount >= 0) el.dataset.replyNum = String(replyCount);
+
+                const repliesLink = el.querySelector('.xhs-replies-link');
+                if (repliesLink && replyCount !== null) {
+                    const replyNum = Utils.parseCount(replyCount);
+                    repliesLink.textContent = `💬 ${Utils.formatStatCount(replyNum)}`;
+                    repliesLink.setAttribute('aria-label', `${String(replyNum)} 条回复，跳转到第一个帖子`);
+                }
+                const viewsEl = el.querySelector('.xhs-views');
+                if (viewsEl && views !== null) {
+                    const viewNum = Utils.parseCount(views);
+                    viewsEl.textContent = `👁️ ${Utils.formatStatCount(viewNum)}`;
+                }
+            } catch {}
             
             // 作者信息（移动端列表常见：DOM 里拿不到头像/用户名，这里用 list.json 补齐）
             try {
@@ -2177,7 +2387,7 @@
             
             // 更新点赞数
             const likeEl = el.querySelector('.xhs-like-count');
-            if (likeEl) likeEl.textContent = String(merged.likes ?? 0);
+            if (likeEl) likeEl.textContent = Utils.formatStatCount(merged.likes ?? 0);
             this.updateStickerForCard(el, merged.likes ?? 0);
 
             // 如果有图，替换封面
@@ -2326,6 +2536,7 @@
             const title = titleLink?.textContent?.trim() || '';
             const href = titleLink?.href || titleLink?.getAttribute?.('href') || '';
             const tid = row.dataset.topicId || Utils.extractTopicIdFromUrl(href);
+            const listMeta = this.listTopicMeta.get(String(tid));
             const category = row.querySelector('.badge-category__name')?.textContent || '';
             const featuredLink = row.querySelector('a.topic-featured-link')?.href || '';
             const categoryHref = row.querySelector('.badge-category__wrapper')?.getAttribute('href') ||
@@ -2347,8 +2558,10 @@
             const avatar = avatarImg?.getAttribute?.('src') || avatarImg?.src || '';
             const user = userCard || (avatarImg?.getAttribute?.('title') || '') || 'SJTUer';
             const userHref = userCard ? `/u/${encodeURIComponent(userCard)}` : '';
-            const views = row.querySelector('.views .number')?.textContent || '0';
-            const replies = row.querySelector('.posts .number')?.textContent || '0';
+            const viewsEl = row.querySelector('.views .number');
+            const postsEl = row.querySelector('.posts .number');
+            const views = viewsEl?.textContent || '0';
+            const replies = postsEl?.textContent || '0';
             const lastActivityEl =
                 row.querySelector('td.last-posted .relative-date, .last-posted .relative-date') ||
                 row.querySelector('td.activity .relative-date, .activity .relative-date') ||
@@ -2371,8 +2584,12 @@
                     featuredDomain = new URL(featuredLink).hostname;
                 } catch {}
             }
-            const replyNum = Utils.parseCount(replies);
-            const viewNum = Utils.parseCount(views);
+            const replyFromDom = Utils.parseCount(replies);
+            const viewFromDom = Utils.parseCount(views);
+            const listReply = (typeof listMeta?.replyCount === 'number') ? listMeta.replyCount : null;
+            const listViews = (typeof listMeta?.views === 'number') ? listMeta.views : null;
+            const replyNum = (replyFromDom > 0) ? replyFromDom : (listReply !== null ? listReply : replyFromDom);
+            const viewNum = (viewFromDom > 0) ? viewFromDom : (listViews !== null ? listViews : viewFromDom);
             const repliesDisplay = Utils.formatStatCount(replyNum);
             const viewsDisplay = Utils.formatStatCount(viewNum);
 
@@ -2404,8 +2621,9 @@
             const primaryEmoji = Utils.getPrimaryCategoryEmoji(categoryHref, category);
             const categoryLabel = category ? (primaryEmoji ? `${primaryEmoji} ${category}` : category) : '';
             const watermarkEmoji = (primaryEmoji || (emoji ? emoji : '✦')).trim();
-            const tagPillsHtml = tagNames.slice(0, 4).map((t) => `<span class="xhs-tag-pill" data-tag-name="${Utils.escapeHtml(t)}" title="跳转到标签：${Utils.escapeHtml(t)}">#${Utils.escapeHtml(t)}</span>`).join('');
-            const extraTags = tagNames.length > 4 ? `+${tagNames.length - 4}` : '';
+            const showCoverPills = Boolean(cfg.coverPillsEnabled);
+            const tagPillsHtml = showCoverPills ? tagNames.slice(0, 4).map((t) => `<span class="xhs-tag-pill" data-tag-name="${Utils.escapeHtml(t)}" title="跳转到标签：${Utils.escapeHtml(t)}">#${Utils.escapeHtml(t)}</span>`).join('') : '';
+            const extraTags = showCoverPills && tagNames.length > 4 ? `+${tagNames.length - 4}` : '';
             const decoLayersHtml = this._generateTextCoverLayers(tid, watermarkEmoji);
             const unreadDisplay = unreadText || Utils.formatNumber(unreadNum);
             let stickerText = '';
@@ -2439,7 +2657,7 @@
                         ${emoji ? `<div class="xhs-emoji-icon">${emoji}</div>` : ''}
                         <div class="xhs-text-excerpt ${useDropcap ? 'dropcap' : ''}">${processedExcerpt}</div>
                     </div>
-                    ${(categoryLabel || tagPillsHtml) ? `
+                    ${(showCoverPills && (categoryLabel || tagPillsHtml)) ? `
                         <div class="xhs-category-bar">
                             ${categoryLabel ? `<span class="xhs-cat-pill" data-category-href="${Utils.escapeHtml(categoryHref || '')}" title="跳转到分类">${Utils.escapeHtml(categoryLabel)}</span>` : ''}
                             ${tagPillsHtml}
@@ -2824,6 +3042,9 @@
 
             // 应用配置
             this.applyConfig();
+            // 观察 Discourse SPA 可能的 header 重渲染，确保设置按钮尽量固定在顶栏
+            this.startHeaderObserver();
+            this.startHeaderEnsureLoop();
             
             // 路由监听（减少轮询）
             const onRouteChanged = Utils.debounce(() => this.checkPage(), 80);
@@ -2873,6 +3094,14 @@
         pendingRenderRetryTimer: null,
         pendingRenderRetryCount: 0,
         restoredForKey: '',
+        headerBtnRetryTimer: null,
+        headerBtnRetryCount: 0,
+        headerBtnFirstAttemptAt: 0,
+        headerObserver: null,
+        headerObserverTimer: null,
+        headerBtnLastEnsureAt: 0,
+        headerEnsureInterval: null,
+        headerEnsureStartedAt: 0,
 
         tryRenderListPage() {
             const cfg = Config.get();
@@ -2956,17 +3185,96 @@
             if (location.href === this.lastUrl) return;
             this.lastUrl = location.href;
 
+            // SPA 路由切换时，顶部导航可能被重渲染：确保设置按钮仍在“搜索”左侧
+            try { this.createFloatBtn(); } catch {}
+            try { this.startHeaderObserver(); } catch {}
+            try { this.startHeaderEnsureLoop(); } catch {}
+
             document.body.classList.remove('xhs-on');
             document.body.classList.remove('xhs-active');
             this.pendingRenderRetryCount = 0;
             clearTimeout(this.pendingRenderRetryTimer);
             this.pendingRenderRetryTimer = null;
+            this.headerBtnRetryCount = 0;
+            clearTimeout(this.headerBtnRetryTimer);
+            this.headerBtnRetryTimer = null;
+            clearTimeout(this.headerObserverTimer);
+            this.headerObserverTimer = null;
             if (!Utils.isListLikePath()) this.restoredForKey = '';
 
             if (Config.get().enabled) {
                 // 只要是“列表类路径”，就尝试渲染；内部会等 rows 出现再真正生效。
                 this.tryRenderListPage();
             }
+            // 帖子页增强样式依赖 body class，这里在路由切换时也同步刷新一次
+            try { this.applyTopicEnhance(); } catch {}
+        },
+
+        applyTopicEnhance() {
+            const cfg = Config.get();
+            const ok = Boolean(cfg.enabled && Utils.isTopicPath());
+            document.body.classList.remove('xhs-topic-reading');
+            document.body.classList.toggle('xhs-topic-cards', ok && Boolean(cfg.topicReplyCards));
+        },
+
+        startHeaderObserver() {
+            try { this.headerObserver?.disconnect?.(); } catch {}
+            this.headerObserver = null;
+            clearTimeout(this.headerObserverTimer);
+            this.headerObserverTimer = null;
+
+            const attach = () => {
+                try { this.headerObserver?.disconnect?.(); } catch {}
+                this.headerObserver = null;
+                const body = document.body;
+                if (!body) {
+                    this.headerObserverTimer = setTimeout(attach, 250);
+                    return;
+                }
+
+                const ensure = Utils.debounce(() => {
+                    try {
+                        const now = Date.now();
+                        if (now - (this.headerBtnLastEnsureAt || 0) < 250) return;
+                        this.headerBtnLastEnsureAt = now;
+                        const headerUl =
+                            document.querySelector('ul.d-header-icons') ||
+                            document.querySelector('.d-header-icons');
+                        if (!headerUl || headerUl.tagName !== 'UL') return;
+                        const inHeader = Boolean(document.querySelector('.d-header #xhs-settings-button'));
+                        if (!inHeader) this.createFloatBtn();
+                    } catch {}
+                }, 160);
+
+                this.headerObserver = new MutationObserver(() => ensure());
+                this.headerObserver.observe(body, { childList: true, subtree: true });
+                ensure();
+            };
+
+            attach();
+        },
+
+        startHeaderEnsureLoop() {
+            try { clearInterval(this.headerEnsureInterval); } catch {}
+            this.headerEnsureInterval = null;
+            this.headerEnsureStartedAt = Date.now();
+
+            this.headerEnsureInterval = setInterval(() => {
+                try {
+                    const started = this.headerEnsureStartedAt || 0;
+                    if (started && (Date.now() - started) > 30000) {
+                        clearInterval(this.headerEnsureInterval);
+                        this.headerEnsureInterval = null;
+                        return;
+                    }
+                    const headerUl =
+                        document.querySelector('ul.d-header-icons') ||
+                        document.querySelector('.d-header-icons');
+                    if (!headerUl || headerUl.tagName !== 'UL') return;
+                    const inHeader = Boolean(document.querySelector('.d-header #xhs-settings-button'));
+                    if (!inHeader) this.createFloatBtn();
+                } catch {}
+            }, 800);
         },
 
         applyConfig() {
@@ -2982,6 +3290,9 @@
             document.body.dataset.xhsStatLikes = (cfg.showStats && cfg.showStatLikes) ? '1' : '0';
             document.body.dataset.xhsStatReplies = (cfg.showStats && cfg.showStatReplies) ? '1' : '0';
             document.body.dataset.xhsStatViews = (cfg.showStats && cfg.showStatViews) ? '1' : '0';
+            try { this.applyTopicEnhance(); } catch {}
+            // 设置按钮可能需要根据图标配置刷新
+            try { this.createFloatBtn(); } catch {}
             
             if (cfg.enabled) {
                 document.body.classList.remove('xhs-on');
@@ -3055,20 +3366,107 @@
         },
 
         createFloatBtn() {
-            const btn = document.createElement('div');
-            btn.className = 'xhs-float-btn';
+            // 防止多次快速调用导致重复 schedule
+            clearTimeout(this.headerBtnRetryTimer);
+            this.headerBtnRetryTimer = null;
+            try { this.headerBtnLastEnsureAt = Date.now(); } catch {}
+            if (!this.headerBtnFirstAttemptAt) this.headerBtnFirstAttemptAt = Date.now();
+
+            // 先清理旧按钮（避免 SPA 重渲染/回退导致重复）
+            try { document.querySelector('.xhs-settings-dropdown')?.remove?.(); } catch {}
+            try { document.querySelector('.xhs-float-btn.xhs-float-fixed')?.remove?.(); } catch {}
+            try { document.querySelector('.xhs-float-btn.xhs-float-header')?.closest?.('li')?.remove?.(); } catch {}
+
+            const cfg = Config.get();
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'btn no-text btn-icon icon btn-flat xhs-float-btn xhs-float-header';
+            btn.id = 'xhs-settings-button';
             btn.title = '小水书设置';
-            // 使用水源Logo
-            const iconUrl = 'https://shuiyuan.sjtu.edu.cn/uploads/default/original/4X/3/6/7/367cb152ca2cc40f1cf3e7ede4ff8069727167cc_2_180x180.png';
-            btn.innerHTML = `<img src="${iconUrl}" alt="设置" />`;
-            const iconImg = btn.querySelector('img');
-            iconImg.onerror = () => {
-                btn.innerHTML = `<span class="xhs-float-btn-fallback">⚙️</span>`;
-            };
-            btn.onclick = (e) => {
-                e.preventDefault?.();
+            btn.setAttribute('aria-label', '小水书设置');
+            try { btn.style.setProperty('--xhs-settings-icon-size', `${Number(cfg.settingsIconSize) || 20}px`); } catch {}
+            if (cfg.settingsIconStyle === 'xhsText') {
+                const t = Utils.escapeHtml(cfg.settingsIconXhsText || '小水书');
+                const c1 = Utils.escapeHtml(cfg.settingsIconGradientTop || '#33CCFF');
+                const c2 = Utils.escapeHtml(cfg.settingsIconGradientBottom || '#0066CC');
+                const scale = Number(cfg.settingsIconTextScale) || 1.0;
+                const gid = `xhsWaterGradient_${Math.random().toString(36).slice(2)}`;
+                const fontSize = Math.round(560 * scale);
+                const strokeWidth = Math.max(10, Math.round(22 * scale));
+                const letterSpacing = Math.round(-22 * scale);
+                btn.innerHTML = `
+                    <svg viewBox="0 0 1699 1024" aria-hidden="true" focusable="false">
+                      <defs>
+                        <linearGradient id="${gid}" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stop-color="${c1}" stop-opacity="1"></stop>
+                          <stop offset="100%" stop-color="${c2}" stop-opacity="1"></stop>
+                        </linearGradient>
+                      </defs>
+                      <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle"
+                        font-size="${fontSize}" font-weight="900"
+                        font-family="'PingFang SC','Heiti SC','Microsoft YaHei','Arial Black',sans-serif"
+                        fill="url(#${gid})" letter-spacing="${letterSpacing}"
+                        stroke="url(#${gid})" stroke-width="${strokeWidth}" stroke-linejoin="round"
+                      >${t}</text>
+                    </svg>
+                `;
+            } else if (cfg.settingsIconStyle === 'grid') {
+                const gridColor = Utils.escapeHtml(String(cfg.settingsIconGridColor || '#B5B5B5'));
+                try { btn.style.setProperty('--xhs-settings-icon-color', gridColor); } catch {}
+                btn.innerHTML = `
+                    <svg viewBox="0 0 1024 1024" aria-hidden="true" focusable="false">
+                      <path d="M870.4 32.023273c49.477818 0 89.6 40.075636 89.6 89.6v780.753454a89.6 89.6 0 0 1-89.6 89.6H153.6a89.6 89.6 0 0 1-89.6-89.6V121.623273c0-49.524364 40.122182-89.6 89.6-89.6h716.8zM239.662545 121.483636L153.6 121.576727v780.8h86.062545V121.483636z m630.737455 0.046546h-57.623273v176.034909a97.140364 97.140364 0 0 1-139.636363 87.365818l-7.726546-4.235636-33.419636-20.200728a44.823273 44.823273 0 0 0-40.634182-2.932363l-5.492364 2.792727-34.350545 20.48A98.071273 98.071273 0 0 1 403.549091 305.431273l-0.372364-8.843637-0.046545-175.010909H329.262545v780.8H870.4V121.623273z m-358.353455 601.506909l192 0.232727a44.823273 44.823273 0 0 1 5.12 89.274182l-5.21309 0.325818-192-0.232727a44.823273 44.823273 0 0 1 0.09309-89.6z m0-159.883636l192 0.186181a44.823273 44.823273 0 0 1 5.12 89.320728l-5.21309 0.279272-192-0.186181a44.823273 44.823273 0 0 1 0.09309-89.6z m211.130182-441.669819h-230.4v175.104a8.471273 8.471273 0 0 0 10.333091 8.285091l2.513455-1.024 34.397091-20.48a134.423273 134.423273 0 0 1 129.675636-4.328727l8.610909 4.794182 33.419636 20.154182a7.540364 7.540364 0 0 0 11.077819-4.049455l0.372363-2.373818V121.483636z" fill="${gridColor}"></path>
+                    </svg>
+                `;
+            } else {
+                const gearColor = Utils.escapeHtml(String(cfg.settingsIconGearColor || '#BDBDBD'));
+                btn.innerHTML = `
+                    <svg viewBox="0 0 1024 1024" aria-hidden="true" focusable="false">
+                      <path d="M512 320c-105.9 0-192 86.1-192 192s86.1 192 192 192 192-86.1 192-192-86.1-192-192-192z m0 298.7c-58.8 0-106.7-47.9-106.7-106.7S453.2 405.3 512 405.3 618.7 453.2 618.7 512 570.8 618.7 512 618.7z" fill="${gearColor}"></path>
+                      <path d="M901.6 514.6l42.5-73.7c15.9-27.5 18.7-60.4 7.8-90.3-17.7-48.7-43.4-93.8-76.2-134.1-20.4-25.1-50.6-39.4-83-39.4h-86L662.9 101c-16.1-28-43.8-47-76-52.2-48.6-8-99.9-8.2-149.5-0.3-32.3 5.1-60.1 24.2-76.3 52.3L317.2 177h-87.5c-32.4 0-62.6 14.4-83 39.5-32.3 39.8-57.7 84.1-75.4 131.7-11.2 30.1-8.4 63.2 7.6 91l43.5 75.4L80 588c-16.1 28-18.8 61.5-7.2 91.8 18.6 48.9 45.3 94.1 79.2 134.2 20.5 24.2 50.3 38.1 81.9 38.1h83.3l40.9 70.7c16 27.7 43.5 46.7 75.5 52.1 25.5 4.3 51.5 6.5 77.6 6.5 27.1 0 54.4-2.4 81-7 31.1-5.5 58.1-24.4 74-51.9l40.6-70.3h81.8c31.6 0 61.4-13.9 81.9-38.1 34.5-40.8 61.4-86.7 80-136.5 11.3-30.2 8.5-63.5-7.5-91.2l-41.4-71.8z m-86.2 21.3l53.6 93c3.2 5.6 3.8 12.4 1.5 18.7-15.2 40.5-37.1 78-65.2 111.3-4.2 5-10.3 7.9-16.7 7.9H682.1c-15.2 0-29.3 8.1-37 21.3l-52.9 91.7c-3.2 5.6-8.6 9.4-14.8 10.5-42.7 7.5-87.2 7.6-129.6 0.5-6.8-1.1-12.5-5-15.8-10.6L378.8 788c-7.6-13.2-21.7-21.3-36.9-21.3h-108c-6.4 0-12.5-2.9-16.7-7.8-27.7-32.8-49.5-69.7-64.7-109.6-2.4-6.2-1.9-13.1 1.4-18.7l54.6-94.7c7.6-13.2 7.6-29.4 0-42.6l-55.8-96.7c-3.2-5.6-3.8-12.4-1.5-18.6 14.5-38.9 35.2-75.1 61.7-107.6 4.1-5.1 10.2-8 16.8-8h112.1c15.2 0 29.4-8.1 37-21.4l56.2-97.6c3.3-5.7 9-9.6 15.8-10.7 40.6-6.5 82.7-6.3 122.3 0.2 6.8 1.1 12.5 5 15.8 10.7L645 241c7.6 13.2 21.7 21.4 37 21.4h110.7c6.5 0 12.7 2.9 16.8 8 26.8 32.9 47.7 69.7 62.2 109.4 2.2 6.2 1.7 12.9-1.5 18.5l-54.9 95c-7.5 13.1-7.5 29.4 0.1 42.6z" fill="${gearColor}"></path>
+                    </svg>
+                `;
+            }
+            btn.addEventListener('click', (e) => {
+                try { e.preventDefault?.(); } catch {}
                 App.openSettingsPanel();
-            };
+            }, true);
+
+            // 优先插入到顶部导航：放在搜索按钮（magnifying-glass）左侧
+            const searchLi =
+                document.querySelector('.d-header-icons li.header-dropdown-toggle.search-dropdown') ||
+                document.querySelector('#search-button')?.closest?.('li');
+            const headerUl =
+                document.querySelector('ul.d-header-icons') ||
+                document.querySelector('.d-header-icons');
+            if (headerUl && headerUl.tagName === 'UL') {
+                const li = document.createElement('li');
+                li.className = 'header-dropdown-toggle xhs-settings-dropdown';
+                li.appendChild(btn);
+                try {
+                    if (searchLi && searchLi.parentElement === headerUl) headerUl.insertBefore(li, searchLi);
+                    else headerUl.appendChild(li);
+                    this.headerBtnRetryCount = 0;
+                    this.headerBtnFirstAttemptAt = 0;
+                    return;
+                } catch {}
+            }
+
+            // Discourse SPA 里 header/icons 可能晚于脚本初始化渲染：
+            // 默认先不显示右下角按钮，避免首屏闪现；若长时间仍无法插入顶栏，再兜底显示悬浮按钮。
+            this.headerBtnRetryCount += 1;
+            if (this.headerBtnRetryCount <= 40) {
+                this.headerBtnRetryTimer = setTimeout(() => {
+                    try { this.createFloatBtn(); } catch {}
+                }, this.headerBtnRetryCount <= 16 ? 250 : 600);
+            }
+
+            const elapsed = Date.now() - (this.headerBtnFirstAttemptAt || Date.now());
+            const shouldFallbackFixed = elapsed > 2500 && this.headerBtnRetryCount > 10;
+            if (!shouldFallbackFixed) return;
+            btn.classList.remove('xhs-float-header');
+            btn.classList.add('xhs-float-fixed');
             document.body.appendChild(btn);
         },
 
@@ -3089,6 +3487,13 @@
                     try { return panel.querySelector('.xhs-panel-body')?.scrollTop || 0; } catch { return 0; }
                 })();
                 const cfg = Config.get();
+                const showXhsText = cfg.settingsIconStyle === 'xhsText';
+                const showGrid = cfg.settingsIconStyle === 'grid';
+                const showShuiyuan = cfg.settingsIconStyle === 'shuiyuan';
+                const showSvgIconColor = showGrid || showShuiyuan;
+                const svgIconColorKey = showGrid ? 'settingsIconGridColor' : 'settingsIconGearColor';
+                const svgIconColorDesc = showGrid ? '仅“书”样式生效' : '仅“设置齿轮”样式生效';
+                const svgIconColorPresetDesc = showGrid ? '仅“书”样式生效' : '一键套用（仍可继续微调）';
                 panel.innerHTML = `
                     <div class="xhs-panel-header">
                         <span>小水书 v${VERSION}</span>
@@ -3145,8 +3550,38 @@
                                     <div>Pill 大小</div>
                                     <div class="xhs-desc">分类/标签 pill 的缩放（1.00=原始）</div>
                                 </div>
-                                <input class="xhs-input" type="number" min="0.85" max="1.80" step="0.05" value="${cfg.pillScale}" data-input="pillScale" />
+                                <input class="xhs-input" type="number" min="0.5" max="5.0" step="0.05" value="${cfg.pillScale}" data-input="pillScale" />
                             </div>
+                            <div class="xhs-row">
+                                <div>
+                                    <div>Pill 不透明度</div>
+                                    <div class="xhs-desc">封面左上角 pill 的背景不透明度倍率（越大越清晰；0.2–1.0）</div>
+                                </div>
+                                <input class="xhs-input" type="number" min="0.2" max="1.0" step="0.05" value="${cfg.pillOpacity}" data-input="pillOpacity" />
+                            </div>
+                            <div class="xhs-row">
+                                <div>
+                                    <div>封面左上角 Pill</div>
+                                    <div class="xhs-desc">分类/标签 pill（仅影响封面左上角展示）</div>
+                                </div>
+                                <div class="xhs-switch ${cfg.coverPillsEnabled?'on':''}" data-key="coverPillsEnabled"></div>
+                            </div>
+                            <div class="xhs-row">
+                                <div>
+                                    <div>帖子页回复卡片化</div>
+                                    <div class="xhs-desc">把每层回复包装成更“卡片”的层级（仅 /t/... 生效）</div>
+                                </div>
+                                <div class="xhs-switch ${cfg.topicReplyCards?'on':''}" data-key="topicReplyCards"></div>
+                            </div>
+                            ${cfg.topicReplyCards ? `
+                                <div class="xhs-row">
+                                    <div>
+                                        <div>回复卡片左侧缩进</div>
+                                        <div class="xhs-desc">调整正文区域左侧留白（px）</div>
+                                    </div>
+                                    <input class="xhs-input" type="number" min="0" max="80" step="1" value="${cfg.topicReplyCardsBodyPaddingLeft}" data-input="topicReplyCardsBodyPaddingLeft" />
+                                </div>
+                            ` : ''}
                             </div>
                         </div>
 
@@ -3318,6 +3753,123 @@
                         <div class="xhs-section ${cfg.panelCollapsed?.theme ? 'xhs-collapsed' : ''}" data-section="theme">
                             <div class="xhs-section-title" data-section-title="theme">主题</div>
                             <div class="xhs-section-body">
+                            <div class="xhs-row">
+                                <div>
+                                    <div>深色模式</div>
+                                    <div class="xhs-desc">自动：跟随水源主题；也可强制深色/浅色</div>
+                                </div>
+                                <select class="xhs-input" data-select="darkMode">
+                                    <option value="auto" ${cfg.darkMode === 'auto' ? 'selected' : ''}>自动</option>
+                                    <option value="dark" ${cfg.darkMode === 'dark' ? 'selected' : ''}>强制深色</option>
+                                    <option value="light" ${cfg.darkMode === 'light' ? 'selected' : ''}>强制浅色</option>
+                                </select>
+                            </div>
+                            <div class="xhs-row">
+                                <div>
+                                    <div>设置按钮图标样式</div>
+                                    <div class="xhs-desc">设置齿轮 / 书 / “小水书”渐变字</div>
+                                </div>
+                                <select class="xhs-input" data-select="settingsIconStyle">
+                                    <option value="shuiyuan" ${cfg.settingsIconStyle === 'shuiyuan' ? 'selected' : ''}>设置齿轮</option>
+                                    <option value="grid" ${cfg.settingsIconStyle === 'grid' ? 'selected' : ''}>书</option>
+                                    <option value="xhsText" ${cfg.settingsIconStyle === 'xhsText' ? 'selected' : ''}>小水书渐变字</option>
+                                </select>
+                            </div>
+                            <div class="xhs-row">
+                                <div>
+                                    <div>图标大小</div>
+                                    <div class="xhs-desc">影响顶部/悬浮按钮的图标尺寸（px）</div>
+                                </div>
+                                <input class="xhs-input" type="number" min="14" max="36" step="1" value="${cfg.settingsIconSize}" data-input="settingsIconSize" />
+                            </div>
+                            ${showSvgIconColor ? `
+                                <div class="xhs-row">
+                                    <div>
+                                        <div>SVG 配色</div>
+                                        <div class="xhs-desc">${svgIconColorDesc}</div>
+                                    </div>
+                                    <input class="xhs-input" type="color" value="${cfg[svgIconColorKey]}" data-input="${svgIconColorKey}" />
+                                </div>
+                                <div class="xhs-row">
+                                    <div>
+                                        <div>SVG 配色预设</div>
+                                        <div class="xhs-desc">${svgIconColorPresetDesc}</div>
+                                    </div>
+                                    <div style="flex: 0 0 auto; width: 88px;"></div>
+                                </div>
+                                <div class="xhs-gradients">
+                                    ${[
+                                        { name: '灰', color: '#B5B5B5' },
+                                        { name: '深灰', color: '#595959' },
+                                        { name: '交大红', color: '#C8102E' },
+                                        { name: '水源蓝', color: '#0085CA' },
+                                        { name: '清新绿', color: '#52c41a' },
+                                        { name: '神秘紫', color: '#722ed1' },
+                                    ].map((g) => `
+                                        <div class="xhs-gradient-item ${(cfg[svgIconColorKey]===g.color) ? 'active' : ''}"
+                                             style="--gt:${g.color}; --gb:${g.color};"
+                                             title="${g.name}"
+                                             data-svg-color-key="${svgIconColorKey}"
+                                             data-svg-color="${g.color}"></div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                            ${showXhsText ? `
+                                <div class="xhs-row">
+                                    <div>
+                                        <div>渐变字大小</div>
+                                        <div class="xhs-desc">调大可减少留白</div>
+                                    </div>
+                                    <input class="xhs-input" type="number" min="0.50" max="5" step="0.05" value="${cfg.settingsIconTextScale}" data-input="settingsIconTextScale" />
+                                </div>
+                                <div class="xhs-row">
+                                    <div>
+                                        <div>“小水书”文案</div>
+                                        <div class="xhs-desc">建议不超过 6 个字</div>
+                                    </div>
+                                    <input class="xhs-input" type="text" value="${Utils.escapeHtml(cfg.settingsIconXhsText || '小水书')}" data-input="settingsIconXhsText" />
+                                </div>
+                                <div class="xhs-row">
+                                    <div>
+                                        <div>Logo 渐变色</div>
+                                        <div class="xhs-desc">仅影响“渐变字”图标</div>
+                                    </div>
+                                    <div style="display:flex; gap:8px; align-items:center;">
+                                        <input class="xhs-input" type="color" value="${cfg.settingsIconGradientTop}" data-input="settingsIconGradientTop" />
+                                        <input class="xhs-input" type="color" value="${cfg.settingsIconGradientBottom}" data-input="settingsIconGradientBottom" />
+                                    </div>
+                                </div>
+                                <div class="xhs-row">
+                                    <div>
+                                        <div>Logo 渐变预设</div>
+                                        <div class="xhs-desc">一键套用（仍可继续微调）</div>
+                                    </div>
+                                    <div style="flex: 0 0 auto; width: 88px;"></div>
+                                </div>
+                                <div class="xhs-gradients">
+                                    ${[
+                                        { name: '水源蓝', top: '#33CCFF', bottom: '#0066CC' },
+                                        { name: '交大红', top: '#ff4d4f', bottom: '#C8102E' },
+                                        { name: '紫粉', top: '#9254de', bottom: '#eb2f96' },
+                                        { name: '青绿', top: '#36cfc9', bottom: '#52c41a' },
+                                        { name: '日落', top: '#fa541c', bottom: '#faad14' },
+                                        { name: '银灰', top: '#d9d9d9', bottom: '#8c8c8c' },
+                                    ].map((g) => `
+                                        <div class="xhs-gradient-item ${(cfg.settingsIconGradientTop===g.top && cfg.settingsIconGradientBottom===g.bottom) ? 'active' : ''}"
+                                             style="--gt:${g.top}; --gb:${g.bottom};"
+                                             title="${g.name}"
+                                             data-grad-top="${g.top}"
+                                             data-grad-bottom="${g.bottom}"></div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                            <div class="xhs-row">
+                                <div>
+                                    <div>主题色预设</div>
+                                    <div class="xhs-desc">影响卡片/高亮/边框等（不是 Logo 渐变）</div>
+                                </div>
+                                <div style="flex: 0 0 auto; width: 88px;"></div>
+                            </div>
                             <div class="xhs-colors">
                                 ${Object.entries(Config.themes).map(([k,v]) => `
                                     <div class="xhs-color-item ${cfg.themeColor===v?'active':''}" 
@@ -3368,7 +3920,10 @@
                     input.onchange = () => {
                         const k = input.getAttribute('data-input');
                         const raw = input.value;
-                        const v = (k === 'imgCropBaseRatio' || k === 'pillScale') ? parseFloat(raw) : parseInt(raw, 10);
+                        const isFloat = (k === 'imgCropBaseRatio' || k === 'pillScale' || k === 'pillOpacity' || k === 'settingsIconTextScale');
+                        const isText = (k === 'settingsIconXhsText');
+                        const isColor = (k === 'settingsIconGradientTop' || k === 'settingsIconGradientBottom' || k === 'settingsIconGridColor' || k === 'settingsIconGearColor');
+                        const v = isText || isColor ? String(raw || '').trim() : (isFloat ? parseFloat(raw) : parseInt(raw, 10));
                         Config.set(k, v);
                         render();
                         App.applyConfig();
@@ -3391,9 +3946,30 @@
                         Styles.injectTheme();
                     };
                 });
+                panel.querySelectorAll('.xhs-gradient-item[data-grad-top][data-grad-bottom]').forEach((item) => {
+                    item.onclick = () => {
+                        const top = item.getAttribute('data-grad-top') || '';
+                        const bottom = item.getAttribute('data-grad-bottom') || '';
+                        if (!top || !bottom) return;
+                        Config.set('settingsIconGradientTop', top);
+                        Config.set('settingsIconGradientBottom', bottom);
+                        render();
+                        App.applyConfig();
+                    };
+                });
+                panel.querySelectorAll('.xhs-gradient-item[data-svg-color-key][data-svg-color]').forEach((item) => {
+                    item.onclick = () => {
+                        const k = item.getAttribute('data-svg-color-key') || '';
+                        const c = item.getAttribute('data-svg-color') || '';
+                        if (!k || !c) return;
+                        Config.set(k, c);
+                        render();
+                        App.applyConfig();
+                    };
+                });
                 panel.querySelector('[data-action="clearCache"]')?.addEventListener('click', () => {
                     if (!confirm('清空跨页面缓存（封面/点赞）并刷新页面？')) return;
-                    try { GM_setValue('xhs_topic_cache_v1', '{}'); } catch {}
+                    try { GM_setValue('xhs_topic_cache_v1', '{}'); } catch {}   
                     try { Grid.persistentCache = null; } catch {}
                     try { Grid.cache?.clear?.(); } catch {}
                     try { location.reload(); } catch {}

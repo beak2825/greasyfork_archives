@@ -2,7 +2,7 @@
 // @name        RTT Integration
 // @description Integrate RTT with other sources
 // @match       https://www.realtimetrains.co.uk/service/*/detailed
-// @version 0.0.1.20251224132707
+// @version 0.0.1.20260105152729
 // @namespace https://greasyfork.org/users/1526162
 // @downloadURL https://update.greasyfork.org/scripts/552690/RTT%20Integration.user.js
 // @updateURL https://update.greasyfork.org/scripts/552690/RTT%20Integration.meta.js
@@ -26,17 +26,10 @@
 
     let button = document.createElement("a")
     button.setAttribute("class","button secondary hollow")
-    button.setAttribute("href","https://railchecker.app/service/" + year + "-" + month + "-" + day + "/" + serviceId + "/")
+    button.setAttribute("href","https://timetables-beta.trainsplit.com/times.aspx?uid=" + serviceId + "&date=" + year + month + day)
     button.setAttribute("target","_blank")
     button.setAttribute("style","margin:5px;")
-    let text  = document.createTextNode("Open RailChecker")
-
-    let button2 = document.createElement("a")
-    button2.setAttribute("class","button secondary hollow")
-    button2.setAttribute("href","https://trains.gaelan.me/stations/BTH/train/" + year + month + day + RIDend + "?")
-    //button2.setAttribute("href","https://railchecker.app/service/" + year + "-" + month + "-" + day + "/" + serviceId + "/")
-    button2.setAttribute("target","_blank")
-    let text2  = document.createTextNode("Open Gaelan Darwin")
+    let text  = document.createTextNode("Open Darwin")
 
     let button3 = document.createElement("a")
     button3.setAttribute("class","button secondary hollow")
@@ -54,9 +47,6 @@
 
     button.appendChild(text)
     buttonDiv.appendChild(button)
-
-    button2.appendChild(text2)
-    buttonDiv.appendChild(button2)
 
     button3.appendChild(text3)
     buttonDiv.appendChild(button3)

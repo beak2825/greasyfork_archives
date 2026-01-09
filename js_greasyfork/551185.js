@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         OC Highlighter
 // @namespace    http://tampermonkey.net/
-// @version      1.6
+// @version      1.8
 // @description  Highlight organised crimes based on a predefined list (green = wanted, red = not wanted)
 // @author       GreenDragon89
 // @match        https://www.torn.com/factions.php?step=your*
@@ -16,7 +16,8 @@
     const preferredCrimes = [
         "Mob Mentality", 
         "Pet Project",
-        "Cash Me If You Can",
+        "Best Of The Lot",
+        "Smoke and Wing Mirrors",
         "Market Forces",
         "Snow Blind",
         "Stage Fright",

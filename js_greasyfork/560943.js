@@ -1,16 +1,17 @@
 // ==UserScript==
-// @name         Autodarts.io Match Analytics
+// @name         Autodarts – MatchInsights
 // @namespace    http://tampermonkey.net/
-// @version      0.14.56
-// @description  Dieses Userscript erweitert autodarts.io um erweiterte Analyse-Funktionen für deine Matches.
-// @author       ThunderB   
+// @version      0.14.115
+// @author       ThunderB
+// @license      All Rights Reserved
+// @description  Holt aus deiner Historie neue Innsights für dein Spiel!
 // @match        https://play.autodarts.io/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @grant        GM_openInTab
 // @connect      api.autodarts.io
-// @downloadURL https://update.greasyfork.org/scripts/560943/Autodartsio%20Match%20Analytics.user.js
-// @updateURL https://update.greasyfork.org/scripts/560943/Autodartsio%20Match%20Analytics.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/560943/Autodarts%20%E2%80%93%20MatchInsights.user.js
+// @updateURL https://update.greasyfork.org/scripts/560943/Autodarts%20%E2%80%93%20MatchInsights.meta.js
 // ==/UserScript==
 
 (function () {
@@ -244,7 +245,7 @@
     const SCRIPT_VERSION =
           (typeof GM_info !== "undefined" && GM_info && GM_info.script && GM_info.script.version) ? GM_info.script.version :
     (typeof GM !== "undefined" && GM && GM.info && GM.info.script && GM.info.script.version) ? GM.info.script.version :
-    "0.14.54";
+    "0.14.115";
     // =========================
     // Settings
     // =========================
@@ -260,10 +261,26 @@
     // Zeit-Tracker (Tab 3)
     const TIME_WEEKLY_GOAL_DEFAULT_HOURS = 5; // Default Ziel: 5h / Woche
     const TIME_TREND_MAX_WEEKS = 52; // Max. Wochen im Chart (bei ALL/Y1)
+
+
+    // Training (Defaults beim Hinzufügen einer Aktivität im Trainingsplan; LEGS/Sessions)
+    const TRAIN_DEF_LEGS_ATC = 1;
+    const TRAIN_DEF_LEGS_COUNTUP = 1;
+    const TRAIN_DEF_LEGS_CRICKET = 1;
+    const TRAIN_DEF_LEGS_RANDOM_CHECKOUT = 1;
+    const TRAIN_DEF_LEGS_SEGMENT_TRAINING = 6;
+    const TRAIN_DEF_LEGS_X01_BOT = 2;
+    const TRAIN_DEF_LEGS_X01_HUMAN = 2;
+
+
+    // Training (Wochenauswahl im Trainings-Tab; Default-Bereich in Wochen)
+    const TRAIN_WEEK_LOOKBACK_WEEKS_DEFAULT = 4;
+    const TRAIN_WEEK_LOOKAHEAD_WEEKS_DEFAULT = 4;
 // =========================
 // UI Config (v0.14.19) – nur UI/UX (Auto-Save in localStorage)
 // =========================
 const AD_EXT_LS_KEY_CFG = "ad_ext_cfg";
+const AD_EXT_LS_KEY_CFG_SECTIONS = "ad_ext_cfg_sections";
 
 // Defaults entsprechen den bestehenden CONST-Settings (werden in diesem Schritt noch NICHT überall genutzt)
 const AD_EXT_DEFAULT_CFG = Object.freeze({
@@ -276,6 +293,15 @@ const AD_EXT_DEFAULT_CFG = Object.freeze({
   HIGH_OUT_MIN,
   TIME_WEEKLY_GOAL_DEFAULT_HOURS,
   TIME_TREND_MAX_WEEKS,
+  TRAIN_DEF_LEGS_ATC,
+  TRAIN_DEF_LEGS_COUNTUP,
+  TRAIN_DEF_LEGS_CRICKET,
+  TRAIN_DEF_LEGS_RANDOM_CHECKOUT,
+  TRAIN_DEF_LEGS_SEGMENT_TRAINING,
+  TRAIN_DEF_LEGS_X01_BOT,
+  TRAIN_DEF_LEGS_X01_HUMAN,
+  TRAIN_WEEK_LOOKBACK_WEEKS_DEFAULT,
+  TRAIN_WEEK_LOOKAHEAD_WEEKS_DEFAULT,
 });
 
 let AD_EXT_CFG_CACHE = null;
@@ -333,6 +359,15 @@ const AD_EXT_CFG_FIELDS = [
   { key: "HIGH_OUT_MIN", min: 1, max: 170 },
   { key: "TIME_WEEKLY_GOAL_DEFAULT_HOURS", min: 0, max: 40 },
   { key: "TIME_TREND_MAX_WEEKS", min: 4, max: 260 },
+  { key: "TRAIN_DEF_LEGS_ATC", min: 1, max: 999 },
+  { key: "TRAIN_DEF_LEGS_COUNTUP", min: 1, max: 999 },
+  { key: "TRAIN_DEF_LEGS_CRICKET", min: 1, max: 999 },
+  { key: "TRAIN_DEF_LEGS_RANDOM_CHECKOUT", min: 1, max: 999 },
+  { key: "TRAIN_DEF_LEGS_SEGMENT_TRAINING", min: 1, max: 999 },
+  { key: "TRAIN_DEF_LEGS_X01_BOT", min: 1, max: 999 },
+  { key: "TRAIN_DEF_LEGS_X01_HUMAN", min: 1, max: 999 },
+  { key: "TRAIN_WEEK_LOOKBACK_WEEKS_DEFAULT", min: 0, max: 260 },
+  { key: "TRAIN_WEEK_LOOKAHEAD_WEEKS_DEFAULT", min: 0, max: 260 },
 ];
 
 
@@ -1370,6 +1405,8 @@ const AD_EXT_CFG_FIELDS = [
         return null;
     }
 
+    const DEBUG_ATC_COUNT = false; // 0.14.82 debug: infer ATC legs/games count
+
     function extractOtherTrainingModeSessionsFromRows(rows) {
         const out = [];
         const seen = new Set();
@@ -1404,15 +1441,37 @@ const AD_EXT_CFG_FIELDS = [
             if (seen.has(sig)) continue;
             seen.add(sig);
 
-            out.push({
-                matchId,
-                activityKey: key,
-                variant,
-                createdAt,
-                finishedAt,
-                dayKey,
-                durationSec,
-            });
+                        let count = 1;
+                        if (key === "RANDOM_CHECKOUT" || key === "ATC" || key === "COUNTUP" || key === "CRICKET") {
+                            const a = Number(payload?.totalLegs);
+                            if (Number.isFinite(a) && a > 0) count = a;
+                            else if (Array.isArray(payload?.legStats) && payload.legStats.length > 0) count = payload.legStats.length;
+                            else if (Array.isArray(payload?.games) && payload.games.length > 0) count = payload.games.length;
+                            else count = 1;
+
+                            if (DEBUG_ATC_COUNT && (key === "ATC" || key === "COUNTUP" || key === "CRICKET")) {
+                                try {
+                                    console.debug("[AD Ext][ATC count]", {
+                                        matchId,
+                                        variant,
+                                        totalLegs: payload?.totalLegs,
+                                        legStatsLen: Array.isArray(payload?.legStats) ? payload.legStats.length : 0,
+                                        gamesLen: Array.isArray(payload?.games) ? payload.games.length : 0,
+                                        count,
+                                    });
+                                } catch {}
+                            }
+                        }
+                        out.push({
+                            matchId,
+                            activityKey: key,
+                            variant,
+                            createdAt,
+                            finishedAt,
+                            dayKey,
+                            durationSec,
+                            count,
+                        });
         }
 
         return out;
@@ -2098,6 +2157,11 @@ const AD_EXT_CFG_FIELDS = [
         .ad-ext-grid-x01 .ad-ext-chart-svg { height: 220px; }
       }
 
+      /* Training Insights: Analysis Row (Weak doubles + Mini charts) (0.14.111) */
+      .ad-ext-train-insights-analysis { margin-top: 12px; }
+      .ad-ext-train-insights-miniCharts { display:flex; flex-direction:column; gap: 12px; }
+      .ad-ext-train-insights-analysis .ad-ext-mini-canvas { width: 100%; height: 180px; display:block; }
+
       .ad-ext-table { width: 100%; border-collapse: collapse; font-size: var(--ad-table-font-size); margin: 0; }
       .ad-ext-table th {
         padding: 12px 10px;
@@ -2118,6 +2182,9 @@ const AD_EXT_CFG_FIELDS = [
 
 
       .ad-ext-table-value-right { text-align: right !important; font-weight: 900; font-variant-numeric: tabular-nums; }
+      .ad-ext-table-num-right { text-align: right !important; font-variant-numeric: tabular-nums; }
+      .ad-ext-table-nowrap { white-space: nowrap !important; }
+
       .ad-ext-table--fixed { table-layout: fixed; }
 
       /* Top10 Tabellen (Hall of Fame):
@@ -2546,6 +2613,39 @@ const AD_EXT_CFG_FIELDS = [
     border-top: 1px solid rgba(255,255,255,0.12);
     font-weight: 950;
   }
+
+  /* Training-Tab: Trainingsdaten Tabelle – Accordion Details (0.14.59) */
+  #ad-ext-view-training .ad-train-main tr.ad-ext-train-row { cursor: pointer; }
+  #ad-ext-view-training .ad-train-main .ad-ext-rowexp { display:inline-block; width:16px; opacity:.8; margin-right:6px; }
+  #ad-ext-view-training .ad-train-main tr.ad-ext-train-row-details td { padding: 10px 12px; }
+  #ad-ext-view-training .ad-train-main .ad-ext-train-details-box {
+    background: rgba(0,0,0,0.18);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 12px;
+    padding: 10px 12px;
+    text-align: left;
+  }
+  #ad-ext-view-training .ad-train-main .ad-ext-train-details-summary { font-weight: 900; margin-bottom: 8px; }
+  #ad-ext-view-training .ad-train-main .ad-ext-train-details-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  #ad-ext-view-training .ad-train-main .ad-ext-train-details-table th,
+  #ad-ext-view-training .ad-train-main .ad-ext-train-details-table td { padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: left; }
+  #ad-ext-view-training .ad-train-main .ad-ext-train-details-table thead th { font-weight: 900; opacity: 0.9; }
+
+  .ad-ext-train-row-details, .ad-ext-train-row-details * { text-align:left; }
+  .ad-ext-train-row-details table th, .ad-ext-train-row-details table td { text-align:left; }
+  #ad-ext-view-training .ad-train-main .ad-ext-train-details-perf { font-size: 11px; opacity: 0.82; margin: 0 0 8px; font-weight: 800; line-height: 1.25; }
+
+  /* Training-Tab: Charts unter der Tabelle */
+  #ad-ext-view-training .ad-ext-train-charts { display:flex; gap:12px; flex-wrap:wrap; margin: 0 0 12px; }
+  #ad-ext-view-training .ad-ext-train-charts .ad-ext-card { flex: 1 1 320px; min-width: 260px; }
+  #ad-ext-view-training .ad-ext-train-chart-title { font-weight: 900; margin: 0 0 8px; }
+  #ad-ext-view-training svg.ad-ext-train-chart--placeholder { border: 1px dashed rgba(255,255,255,0.18); border-radius: 12px; background: rgba(0,0,0,0.10); }
+
+  /* Training-Tab: Donut (Trainingsfortschritt) -> Tabellenzeilen markieren (0.14.79) */
+  tr.ad-ext-train-row.ad-ext-tp-dim { opacity: .35; }
+  tr.ad-ext-train-row.ad-ext-tp-mark { outline: 2px solid rgba(255,255,255,.18); outline-offset: -2px; background: rgba(140,190,255,.10); }
+  tr.ad-ext-train-row.ad-ext-ts-dim { opacity: .35; }
+  tr.ad-ext-train-row.ad-ext-ts-mark { outline: 2px solid rgba(255,255,255,.18); outline-offset: -2px; background: rgba(140,190,255,.10); }
 
   .ad-ext-plan-perfline{
     margin-top: 4px;
@@ -3064,7 +3164,11 @@ const AD_EXT_CFG_FIELDS = [
   border:1px solid rgba(255,255,255,.15);
   background: rgba(0,0,0,.15);
   opacity:.7;
+  cursor:pointer;
 }
+.ad-ext-btn:hover:not(:disabled){ opacity:.9; }
+.ad-ext-btn--secondary{ opacity:.85; }
+.ad-ext-btn--secondary:hover:not(:disabled){ opacity:1; }
 .ad-ext-btn:disabled{ cursor:not-allowed; opacity:.45; }
 
 
@@ -3091,6 +3195,22 @@ const AD_EXT_CFG_FIELDS = [
   justify-content:space-between;
   margin-bottom: 8px;
 }
+
+
+/* Config Sections: Collapse Toggle (v0.14.100) */
+.ad-ext-cfg-section.is-collapsed .ad-ext-cfg-section-body{ display:none; }
+
+.ad-ext-cfg-section-toggle {
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(0,0,0,.10);
+    border-radius: 10px;
+    padding: 2px 10px;
+    line-height: 1.2;
+    font-weight: 900;
+    cursor: pointer;
+    opacity: .85;
+}
+.ad-ext-cfg-section-toggle:hover { opacity: 1; background: rgba(255,255,255,.06); }
 .ad-ext-cfg-section-title{
   font-weight: 700;
   letter-spacing: .2px;
@@ -3164,6 +3284,21 @@ const AD_EXT_CFG_FIELDS = [
       .ad-train-layout[data-train-view="PLAN"] { grid-template-columns: 1fr !important; }
       .ad-train-layout[data-train-view="PLAN"] .ad-train-side { width:auto; max-width:none; }
 
+      .ad-train-insights { display:none; }
+      .ad-train-segfokus { display:none; }
+
+
+      .ad-train-layout[data-train-view="INSIGHTS"] .ad-train-main { display:none !important; }
+      .ad-train-layout[data-train-view="INSIGHTS"] .ad-train-side { display:none !important; }
+      .ad-train-layout[data-train-view="INSIGHTS"] .ad-train-insights { display:block; }
+      .ad-train-layout[data-train-view="INSIGHTS"] { grid-template-columns: 1fr !important; }
+
+      .ad-train-layout[data-train-view="SEGFOCUS"] .ad-train-main { display:none !important; }
+      .ad-train-layout[data-train-view="SEGFOCUS"] .ad-train-side { display:none !important; }
+      .ad-train-layout[data-train-view="SEGFOCUS"] .ad-train-insights { display:none !important; }
+      .ad-train-layout[data-train-view="SEGFOCUS"] .ad-train-segfokus { display:block; }
+      .ad-train-layout[data-train-view="SEGFOCUS"] { grid-template-columns: 1fr !important; }
+
       .ad-train-side {
         border-radius: 18px;
         border: 1px solid rgba(255,255,255,.08);
@@ -3175,16 +3310,66 @@ const AD_EXT_CFG_FIELDS = [
       .ad-train-side-title { font-weight: 700; opacity: .95; }
       .ad-train-side-sub { font-size: 12px; opacity: .7; margin-top: 2px; }
 
-      .ad-train-side-head-actions { display:flex; gap: 8px; align-items:center; }
+      .ad-train-side-head-actions { display:flex; gap: 8px; align-items:center; flex-wrap: wrap; }
 
-      .ad-train-side-close {
-        border: 1px solid rgba(255,255,255,.15);
-        background: rgba(0,0,0,.10);
-        color: inherit;
-        border-radius: 10px;
-        padding: 6px 10px;
-        cursor: pointer;
-      }
+/* Training: Plan-Sidebar Actions Menu (Hamburger) (0.14.91) */
+.ad-plan-menu { position: relative; display: inline-flex; align-items: center; }
+.ad-plan-menu-btn {
+  /* Button „≡“ soll wie Drawer-Close wirken */
+  min-width: 38px;
+  padding: 6px 10px;
+  line-height: 1;
+  font-weight: 900;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(0,0,0,.10);
+  border-radius: 10px;
+}
+.ad-plan-menu-btn:hover { background: rgba(255,255,255,.06); }
+
+.ad-plan-menu-dropdown{
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 240px;
+
+  /* === Drawer Look === */
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(15,15,15,.96);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 2000;
+  box-shadow: 0 10px 24px rgba(0,0,0,.35);
+}
+.ad-plan-menu-dropdown[hidden]{ display:none !important; }
+
+.ad-plan-menu-dropdown .ad-ext-btn{
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+
+  padding: 10px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(0,0,0,.10);
+
+  font-size: 13px;
+  opacity: .95;
+}
+.ad-plan-menu-dropdown .ad-ext-btn:hover{
+  background: rgba(255,255,255,.04);
+  opacity: 1;
+}
+.ad-plan-menu-dropdown .ad-ext-btn:disabled,
+.ad-plan-menu-dropdown .ad-ext-btn[disabled]{
+  opacity: .45;
+  cursor: not-allowed;
+}
 
       .ad-train-side-placeholder { font-size: 13px; opacity: .85; display:flex; flex-direction:column; gap: 8px; }
 
@@ -3256,7 +3441,7 @@ const AD_EXT_CFG_FIELDS = [
       .ad-plan-table .ad-plan-row {
         display: grid;
         justify-content: stretch;
-        grid-template-columns: 1.35fr 0.75fr 0.55fr 0.55fr;
+        grid-template-columns: 1.35fr 0.75fr;
         gap: 8px;
         align-items: center;
         padding: 10px 10px;
@@ -3279,7 +3464,7 @@ const AD_EXT_CFG_FIELDS = [
 
       .ad-plan-pill {
         justify-self: end;
-        min-width: 76px;
+        min-width: 86px;
         text-align: right;
         padding: 6px 10px;
         border-radius: 12px;
@@ -3292,12 +3477,14 @@ const AD_EXT_CFG_FIELDS = [
       .ad-plan-input { width: 86px; text-align:right; padding: 6px 10px; border-radius: 12px; border:1px solid rgba(255,255,255,.16); background: rgba(0,0,0,.14); color: inherit; }
 
 
-      .ad-plan-activity { display:flex; flex-direction:column; gap: 2px; }
+      .ad-plan-activity { display:flex; align-items:center; gap: 8px; min-width:0; }
+      .ad-plan-activity-main { display:flex; flex-direction:column; gap: 2px; min-width:0; }
+      .ad-plan-activity-name { display:block; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
       .ad-plan-perf { font-size: 12px; opacity: .65; }
 
       @media(max-width: 520px){
         .ad-plan-table { overflow-x: auto; }
-        .ad-plan-table .ad-plan-row { min-width: 520px; font-size: 12px; }
+        .ad-plan-table .ad-plan-row { min-width: 420px; font-size: 12px; }
       }
 
       .ad-plan-actions {
@@ -3323,7 +3510,7 @@ const AD_EXT_CFG_FIELDS = [
       .ad-ext-btn--primary:hover{ opacity: 1; }
 
       .ad-plan-activityline{ display:flex; align-items:center; justify-content:space-between; gap: 8px; }
-      .ad-plan-activityline .ad-plan-activity{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      .ad-plan-activityline .ad-plan-activity{ min-width:0; }
       .ad-plan-mini-actions{ display:flex; gap: 6px; flex-shrink:0; }
 
       .ad-plan-perfline{
@@ -3583,14 +3770,13 @@ const AD_EXT_CFG_FIELDS = [
         <div id="ad-ext-dashboard-wrap">
 
         <div class="ad-ext-subnav">
-          <button id="ad-ext-subnav-segment" type="button" class="ad-ext-subnav-btn ad-ext-subnav-btn--active">Segment Training</button>
-          <button id="ad-ext-subnav-x01" type="button" class="ad-ext-subnav-btn">X01 Liga</button>
+          <button id="ad-ext-subnav-x01" type="button" class="ad-ext-subnav-btn ad-ext-subnav-btn--active">X01 Liga</button>
           <button id="ad-ext-subnav-time" type="button" class="ad-ext-subnav-btn">Zeit Tracker</button>
           <button id="ad-ext-subnav-training" type="button" class="ad-ext-subnav-btn">Training</button>
           <button id="ad-ext-subnav-masterhof" type="button" class="ad-ext-subnav-btn">Gesamt Hall Of Fame</button>
         </div>
 
-        <div id="ad-ext-view-segment">
+        <div id="ad-ext-view-segment" style="display:none;">
           <div class="ad-ext-section-title">Segment Training</div>
 
           <div class="ad-ext-filters">
@@ -3712,7 +3898,7 @@ const AD_EXT_CFG_FIELDS = [
 
                   </div>
 
-        <div id="ad-ext-view-x01" style="display:none;">
+        <div id="ad-ext-view-x01">
 
           <div class="ad-ext-filters">
                       <div class="ad-ext-filter-block">
@@ -4058,17 +4244,9 @@ const AD_EXT_CFG_FIELDS = [
                 <div class="ad-ext-segcontrol" id="ad-ext-train-view">
                   <button type="button" class="ad-ext-segbtn" data-view="DATA">Trainingsdaten</button>
                   <button type="button" class="ad-ext-segbtn" data-view="PLAN">Trainingsplan</button>
+                  <button type="button" class="ad-ext-segbtn" data-view="INSIGHTS">Erkenntnisse</button>
+                  <button type="button" class="ad-ext-segbtn" data-view="SEGFOCUS">Segment-Fokus</button>
                 </div>
-
-                <div class="ad-ext-segcontrol" id="ad-ext-plan-basis">
-                  <button type="button" class="ad-ext-segbtn" data-basis="TIME">Zeit</button>
-                  <button type="button" class="ad-ext-segbtn" data-basis="SESS">Sessions</button>
-                </div>
-
-                <label class="ad-ext-check">
-                  <input id="ad-ext-plan-showperf" class="ad-ext-check-input" type="checkbox" />
-                  <span>Leistung anzeigen</span>
-                </label>
               </div>
             </div>
           </div>
@@ -4085,6 +4263,10 @@ const AD_EXT_CFG_FIELDS = [
                   <div class="ad-ext-kpi-value" id="ad-ext-train-kpi-ist">—</div>
                 </div>
                 <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">Trainingszeit</div>
+                  <div class="ad-ext-kpi-value" id="ad-ext-train-kpi-time">—</div>
+                </div>
+                <div class="ad-ext-kpi-tile">
                   <div class="ad-ext-kpi-title">Fortschritt</div>
                   <div class="ad-ext-kpi-value" id="ad-ext-train-kpi-progress">—</div>
                   <div class="ad-ext-progress">
@@ -4098,27 +4280,124 @@ const AD_EXT_CFG_FIELDS = [
                   <table class="ad-ext-table ad-ext-table--compact ad-ext-table--fixed">
                     <colgroup>
                       <col />
-                      <col style="width: 140px;" />
-                      <col style="width: 140px;" />
-                      <col style="width: 260px;" />
+                      <col style="width: 160px;" />
+                      <col style="width: 160px;" />
+                      <col style="width: 160px;" />
+                      <col style="width: 240px;" />
                     </colgroup>
                     <thead>
                       <tr>
                         <th>Aktivität</th>
-                        <th>Soll</th>
-                        <th>Ist</th>
+                        <th class="ad-ext-table-num-right">Soll</th>
+                        <th class="ad-ext-table-num-right">Ist</th>
+                        <th class="ad-ext-table-num-right ad-ext-table-nowrap">Zeit</th>
                         <th>Fortschritt</th>
                       </tr>
                     </thead>
                     <tbody id="ad-ext-plan-main-body">
-                      <tr><td colspan="4" class="ad-ext-muted">–</td></tr>
+                      <tr><td colspan="5" class="ad-ext-muted">–</td></tr>
                     </tbody>
                   </table>
                 </div>
               </div>
 
+              <div class="ad-ext-train-charts" id="ad-ext-train-charts">
+                <div class="ad-ext-card">
+                  <div class="ad-ext-train-chart-title">Trainingsfortschritt</div>
+                  <svg id="ad-ext-train-chart-sollist" class="ad-ext-chart-svg" viewBox="0 0 520 220" role="img" aria-label="Trainingsfortschritt"></svg>
+                  <div id="ad-ext-train-legend-sollist" class="ad-ext-legend" style="margin-top:8px;"></div>
+                </div>
+                <div class="ad-ext-card">
+                  <div class="ad-ext-train-chart-title">Trainingssortschritt</div>
+                  <svg id="ad-ext-train-chart-placeholder" class="ad-ext-chart-svg ad-ext-train-chart--placeholder" viewBox="0 0 520 220" role="img" aria-label="Trainingssortschritt"></svg>
+                  <div id="ad-ext-train-legend-soll" class="ad-ext-legend" style="margin-top:8px;"></div>
+                </div>
+              </div>
+
 
             </div>
+
+            <div class="ad-train-insights" id="adTrainInsights">
+              <div class="ad-ext-kpi-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr));">
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">Planerfüllungsgrad</div>
+                  <div class="ad-ext-kpi-value" id="adExtInsightsKpiPlanFulfill">—</div>
+                  <div class="ad-ext-kpi-sub" id="adExtInsightsKpiPlanFulfillSub">—</div>
+                </div>
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">Ø Trainingsdauer / Woche</div>
+                  <div class="ad-ext-kpi-value" id="adExtInsightsKpiAvgWeekDur">—</div>
+                  <div class="ad-ext-kpi-sub" id="adExtInsightsKpiAvgWeekDurSub">—</div>
+                </div>
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">TRAININGSTAGE / WOCHE</div>
+                  <div class="ad-ext-kpi-value" id="adExtInsightsKpiDaysPerWeek">—</div>
+                  <div class="ad-ext-kpi-sub" id="adExtInsightsKpiDaysPerWeekSub">—</div>
+                </div>
+                <div class="ad-ext-kpi-tile">
+                  <div class="ad-ext-kpi-title">TRAININGSMIX-INDEX</div>
+                  <div class="ad-ext-kpi-value" id="adExtInsightsKpiTmi">—</div>
+                  <div class="ad-ext-kpi-sub" id="adExtInsightsKpiTmiSub">—</div>
+                </div>
+              </div>
+              <div class="ad-ext-grid-2 ad-ext-train-insights-analysis">
+                <div class="ad-ext-card" style="padding:0;">
+                  <div style="padding:12px 14px 8px;">
+                    <div class="ad-ext-section-title" style="margin:0;">Schwache Doppel (Segment Training)</div>
+                  </div>
+                  <table class="ad-ext-table ad-ext-table--fixed">
+                    <colgroup>
+                      <col style="width:72px;">
+                      <col style="width:84px;">
+                      <col style="width:70px;">
+                      <col style="width:70px;">
+                      <col style="width:70px;">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>Doppel</th>
+                        <th class="ad-ext-table-value-right">Sessions</th>
+                        <th class="ad-ext-table-value-right">Darts</th>
+                        <th class="ad-ext-table-value-right">Hits</th>
+                        <th class="ad-ext-table-value-right">Hit %</th>
+                      </tr>
+                    </thead>
+                    <tbody id="ad-ext-insights-weakdoubles-body">
+                      <tr><td colspan="5" style="opacity:.7; padding:10px 12px;">—</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="ad-ext-train-insights-miniCharts">
+                  <div class="ad-ext-card" style="padding:0;">
+                    <div style="padding:12px 14px 8px;">
+                      <div class="ad-ext-section-title" style="margin:0;">AVG Verlauf (X01)</div>
+                    </div>
+                    <div style="padding:0 14px 14px;">
+                      <canvas id="ad-ext-insights-mini-avg" class="ad-ext-mini-canvas" width="520" height="180"></canvas>
+                    </div>
+                  </div>
+                  <div class="ad-ext-card" style="padding:0;">
+                    <div style="padding:12px 14px 8px;">
+                      <div class="ad-ext-section-title" style="margin:0;">Platzhalter 1</div>
+                    </div>
+                    <div style="padding:0 14px 14px;">
+                      <canvas id="ad-ext-insights-mini-p2" class="ad-ext-mini-canvas" width="520" height="180"></canvas>
+                    </div>
+                  </div>
+                  <div class="ad-ext-card" style="padding:0;">
+                    <div style="padding:12px 14px 8px;">
+                      <div class="ad-ext-section-title" style="margin:0;">Platzhalter 2</div>
+                    </div>
+                    <div style="padding:0 14px 14px;">
+                      <canvas id="ad-ext-insights-mini-p3" class="ad-ext-mini-canvas" width="520" height="180"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="ad-train-segfokus" id="ad-ext-train-segfokus"></div>
 
             <aside class="ad-train-side" data-open="0">
               <div class="ad-train-side-head">
@@ -4126,9 +4405,16 @@ const AD_EXT_CFG_FIELDS = [
                   <div class="ad-train-side-title">Trainingsplan</div>
 </div>
                 <div class="ad-train-side-head-actions">
-                  <button id="adPlanAddActivityBtn" class="ad-ext-btn ad-ext-btn--primary" type="button">+ Aktivität</button>
+                  <div class="ad-plan-menu" id="adPlanMenu">
+                    <button id="adPlanMenuBtn" class="ad-ext-btn ad-ext-btn--secondary ad-plan-menu-btn" type="button" title="Plan-Aktionen" aria-label="Plan-Aktionen" aria-haspopup="menu" aria-expanded="false">≡</button>
+                    <div id="adPlanMenuDropdown" class="ad-plan-menu-dropdown" hidden>
+                      <button id="adPlanAddActivityBtn" class="ad-ext-btn ad-ext-btn--primary" type="button">+ Aktivität</button>
                   <button id="adPlanCopyPrevWeekBtn" class="ad-ext-btn ad-ext-btn--secondary" type="button">Vorwoche kopieren</button>
-                  <button type="button" class="ad-train-side-close" id="adTrainPlanClose">✕</button>
+                  <button id="adPlanResetWeekBtn" class="ad-ext-btn ad-ext-btn--danger" type="button">Woche zurücksetzen</button>
+                  <button id="adPlanSavePlanBtn" class="ad-ext-btn ad-ext-btn--secondary" type="button" title="Trainingsplan speichern (kommt im nächsten Schritt)">Plan speichern</button>
+                  <button id="adPlanLoadPlanBtn" class="ad-ext-btn ad-ext-btn--secondary" type="button" title="Trainingsplan laden (kommt im nächsten Schritt)">Plan laden</button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -4141,13 +4427,11 @@ const AD_EXT_CFG_FIELDS = [
                   </div>
                 </div>
 
-                <div class="ad-plan-summary" id="adPlanSummary">
-                  <div class="ad-plan-summary-item"><span>Gesamt Soll</span><strong id="adPlanSumTarget">7h</strong></div>
-                  <div class="ad-plan-summary-item"><span>Ist</span><strong id="adPlanSumActual">0min</strong></div>
-                  <div class="ad-plan-summary-item"><span>Fortschritt</span><strong id="adPlanSumProgress">0%</strong></div>
+                <div class="ad-plan-summary" id="adPlanSummary" hidden>
+                  <div class="ad-plan-summary-item"><span>Gesamt Soll</span><strong id="adPlanSumTarget">0 LEGS</strong></div>
                 </div>
 
-                
+
 
                 <div class="ad-plan-table" id="adPlanTable">
                   <!-- rows injected by renderPlanTable() -->
@@ -4290,7 +4574,7 @@ const AD_EXT_CFG_FIELDS = [
 <!-- Kachel 4: Einstellungen -->
 <section class="ad-ext-card ad-ext-card--config">
   <header class="ad-ext-card-head">
-    <div class="ad-ext-card-title">Einstellungen</div>
+    <div class="ad-ext-card-title">Modus-Einstellungen</div>
     <button id="adExtCfgReset" class="ad-ext-btn ad-ext-btn--danger" type="button">Auf Standard zurücksetzen</button>
   </header>
   <div class="ad-ext-card-body">
@@ -4397,6 +4681,89 @@ const AD_EXT_CFG_FIELDS = [
         </div>
         <input class="ad-ext-cfg-input" type="number" id="cfg_TIME_TREND_MAX_WEEKS" min="4" max="260" step="1"/>
       </div>
+      </div>
+    </div>
+
+
+    <div class="ad-ext-cfg-section">
+      <div class="ad-ext-cfg-section-head">
+        <div class="ad-ext-cfg-section-title">Training</div>
+      </div>
+      <div class="ad-ext-cfg-section-body">
+
+      <div class="ad-ext-cfg-row">
+        <div class="ad-ext-cfg-row-left">
+          <div class="ad-ext-cfg-label">Default LEGS (ATC)</div>
+          <div class="ad-ext-cfg-help">Standard-Sollwert beim Hinzufügen einer Aktivität im Trainingsplan.</div>
+        </div>
+        <input class="ad-ext-cfg-input" type="number" id="cfg_TRAIN_DEF_LEGS_ATC" min="1" max="999" step="1"/>
+      </div>
+
+      <div class="ad-ext-cfg-row">
+        <div class="ad-ext-cfg-row-left">
+          <div class="ad-ext-cfg-label">Default LEGS (Countup)</div>
+          <div class="ad-ext-cfg-help">Standard-Sollwert beim Hinzufügen einer Aktivität im Trainingsplan.</div>
+        </div>
+        <input class="ad-ext-cfg-input" type="number" id="cfg_TRAIN_DEF_LEGS_COUNTUP" min="1" max="999" step="1"/>
+      </div>
+
+      <div class="ad-ext-cfg-row">
+        <div class="ad-ext-cfg-row-left">
+          <div class="ad-ext-cfg-label">Default LEGS (Cricket)</div>
+          <div class="ad-ext-cfg-help">Standard-Sollwert beim Hinzufügen einer Aktivität im Trainingsplan.</div>
+        </div>
+        <input class="ad-ext-cfg-input" type="number" id="cfg_TRAIN_DEF_LEGS_CRICKET" min="1" max="999" step="1"/>
+      </div>
+
+      <div class="ad-ext-cfg-row">
+        <div class="ad-ext-cfg-row-left">
+          <div class="ad-ext-cfg-label">Default LEGS (Random Checkout)</div>
+          <div class="ad-ext-cfg-help">Standard-Sollwert beim Hinzufügen einer Aktivität im Trainingsplan.</div>
+        </div>
+        <input class="ad-ext-cfg-input" type="number" id="cfg_TRAIN_DEF_LEGS_RANDOM_CHECKOUT" min="1" max="999" step="1"/>
+      </div>
+
+      <div class="ad-ext-cfg-row">
+        <div class="ad-ext-cfg-row-left">
+          <div class="ad-ext-cfg-label">Default LEGS (Segment Training)</div>
+          <div class="ad-ext-cfg-help">Standard-Sollwert beim Hinzufügen einer Aktivität im Trainingsplan.</div>
+        </div>
+        <input class="ad-ext-cfg-input" type="number" id="cfg_TRAIN_DEF_LEGS_SEGMENT_TRAINING" min="1" max="999" step="1"/>
+      </div>
+
+      <div class="ad-ext-cfg-row">
+        <div class="ad-ext-cfg-row-left">
+          <div class="ad-ext-cfg-label">Default LEGS (X01 vs Bot)</div>
+          <div class="ad-ext-cfg-help">Standard-Sollwert beim Hinzufügen einer Aktivität im Trainingsplan.</div>
+        </div>
+        <input class="ad-ext-cfg-input" type="number" id="cfg_TRAIN_DEF_LEGS_X01_BOT" min="1" max="999" step="1"/>
+      </div>
+
+      <div class="ad-ext-cfg-row">
+        <div class="ad-ext-cfg-row-left">
+          <div class="ad-ext-cfg-label">Default LEGS (X01 vs Human)</div>
+          <div class="ad-ext-cfg-help">Standard-Sollwert beim Hinzufügen einer Aktivität im Trainingsplan.</div>
+        </div>
+        <input class="ad-ext-cfg-input" type="number" id="cfg_TRAIN_DEF_LEGS_X01_HUMAN" min="1" max="999" step="1"/>
+      </div>
+
+
+      <div class="ad-ext-cfg-row">
+        <div class="ad-ext-cfg-row-left">
+          <div class="ad-ext-cfg-label">Wochenfilter Vergangenheit (Training)</div>
+          <div class="ad-ext-cfg-help">Wie viele Wochen der Trainings-Wochenfilter in die Vergangenheit anzeigen soll.</div>
+        </div>
+        <input type="number" class="ad-ext-cfg-input" id="cfg_TRAIN_WEEK_LOOKBACK_WEEKS_DEFAULT" min="0" max="260" step="1"/>
+      </div>
+
+      <div class="ad-ext-cfg-row">
+        <div class="ad-ext-cfg-row-left">
+          <div class="ad-ext-cfg-label">Wochenfilter Zukunft (Training)</div>
+          <div class="ad-ext-cfg-help">Wie viele Wochen der Trainings-Wochenfilter in die Zukunft anzeigen soll.</div>
+        </div>
+        <input type="number" class="ad-ext-cfg-input" id="cfg_TRAIN_WEEK_LOOKAHEAD_WEEKS_DEFAULT" min="0" max="260" step="1"/>
+      </div>
+
       </div>
     </div>
 
@@ -8428,6 +8795,93 @@ const AD_EXT_CFG_FIELDS = [
         }
     }
 
+    function renderWeakDoubles(panel, tbodyEl, fromWeekKey, toWeekKey) {
+        const tbody = tbodyEl || (panel ? panel.querySelector("#ad-ext-insights-weakdoubles-body") : null);
+        if (!tbody) return;
+
+        if (!cache || !cache.loaded) {
+            tbody.innerHTML = `<tr><td colspan="5" style="opacity:.7; padding:10px 12px;">—</td></tr>`;
+            return;
+        }
+
+        const isDoubleTarget = (raw) => {
+            const t = String(raw || "").trim().toUpperCase();
+            if (t === "DB" || t === "D25") return true;
+            return /^D(?:[1-9]|1\d|20)$/.test(t);
+        };
+
+        let rows = Array.isArray(cache.sessions) ? cache.sessions.slice() : [];
+
+        // Date filter: use Training Insights week window (fromWeekKey..toWeekKey)
+        const fromWk = String(fromWeekKey || "");
+        const toWk = String(toWeekKey || "");
+        const toEndExcl = (() => {
+            const dt = parseDayKeyToLocalDate(toWk);
+            return dt ? dayKeyFromLocalDate(addDaysLocal(dt, 7)) : "";
+        })();
+
+        if (fromWk || toWk) {
+            rows = rows.filter((s) => {
+                const dk = s.dayKey || (s.dayKey = (parseIsoDateToDayKey(s.createdAt) || parseIsoDateToDayKey(s.finishedAt)));
+                const x = String(dk || "");
+                if (!x) return false;
+                if (fromWk && x < fromWk) return false;
+                if (toEndExcl && x >= toEndExcl) return false;
+                return true;
+            });
+        }
+
+        // Mode filter: Segment Training – Double
+        rows = rows.filter((s) => {
+            const mode = String(s.mode || "").toLowerCase();
+            const tgt = String(s.target || "").trim().toUpperCase();
+            return mode.startsWith("double") || tgt.startsWith("D") || tgt === "DB" || tgt === "D25";
+        });
+
+        const agg = new Map();
+        for (const s of rows) {
+            const tgt = String(s.target || "").trim().toUpperCase();
+            if (!isDoubleTarget(tgt)) continue;
+            if (!agg.has(tgt)) agg.set(tgt, { target: tgt, sessions: 0, darts: 0, hits: 0 });
+            const rec = agg.get(tgt);
+            rec.sessions += 1;
+            rec.darts += Number(s.darts) || 0;
+            rec.hits += Number(s.hits) || 0;
+        }
+
+        const items = Array.from(agg.values()).map((r) => {
+            const hitPct = (Number(r.darts) || 0) > 0 ? (Number(r.hits) || 0) / (Number(r.darts) || 1) : NaN;
+            return { ...r, hitPct };
+        });
+
+        items.sort((a, b) => {
+            const ap = Number.isFinite(a.hitPct) ? a.hitPct : 1;
+            const bp = Number.isFinite(b.hitPct) ? b.hitPct : 1;
+            if (ap !== bp) return ap - bp;
+            if ((Number(b.darts) || 0) !== (Number(a.darts) || 0)) return (Number(b.darts) || 0) - (Number(a.darts) || 0);
+            return String(a.target).localeCompare(String(b.target));
+        });
+
+        const top = items.slice(0, 10);
+        if (!top.length) {
+            tbody.innerHTML = `<tr><td colspan="5" style="opacity:.7; padding:10px 12px;">Keine Daten im Zeitraum.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = top.map((r) => {
+            const pctTxt = Number.isFinite(r.hitPct) ? `${(r.hitPct * 100).toFixed(1)}%` : "—";
+            return `
+          <tr>
+            <td style="font-weight:900;">${escapeHtml(r.target)}</td>
+            <td class="ad-ext-table-value-right">${fmtInt(r.sessions)}</td>
+            <td class="ad-ext-table-value-right">${fmtInt(r.darts)}</td>
+            <td class="ad-ext-table-value-right">${fmtInt(r.hits)}</td>
+            <td class="ad-ext-table-value-right">${pctTxt}</td>
+          </tr>
+        `;
+        }).join("");
+    }
+
     function renderX01(panel) {
         syncX01SubPanels(panel);
         const activeSubPanel = String(cache.filtersX01.subPanel || "liga").toLowerCase();
@@ -8456,7 +8910,7 @@ const AD_EXT_CFG_FIELDS = [
             if (cTrend) drawEmpty(cTrend, "Lade…");
             if (trendLegend) trendLegend.innerHTML = "";
             renderX01Kpis(panel, [], null);
-            return;
+return;
         }
 
         // we build filters in this order:
@@ -8562,7 +9016,7 @@ const AD_EXT_CFG_FIELDS = [
             if (trendLegend) trendLegend.innerHTML = "";
             cache._x01_layouts = { legdiff: { bars: [] }, wl: { bars: [] }, trend: null };
             renderX01Kpis(panel, filteredMatches, cache.filtersX01.kpiSelectedKey || null);
-            return;
+return;
         }
 
         const leagueBase = computeLeagueTable(filteredMatches);
@@ -8608,8 +9062,7 @@ const AD_EXT_CFG_FIELDS = [
         }
         renderX01Kpis(panel, filteredMatches, selectedKey);
         renderTopTables(panel, filteredMatches);
-
-        if (body) {
+if (body) {
             if (!leagueTable.length) {
                 body.innerHTML = `<tr><td colspan="12" style="opacity:.7; padding:10px 12px;">Keine X01 Matches im aktuellen Filter</td></tr>`;
             } else {
@@ -9370,27 +9823,23 @@ const AD_EXT_CFG_FIELDS = [
     function computeTrainingWeeksAsc() {
         const timeEntries = buildTrainingTimeEntriesAll();
 
-        // Range: ab erster Woche mit Daten (sonst W12)
-        const now = new Date();
-        const thisWeek = startOfWeekMonday(now);
+        const lookbackWeeks = Math.max(0, Math.min(260, Math.round(Number(
+            AD_getSetting("TRAIN_WEEK_LOOKBACK_WEEKS_DEFAULT", TRAIN_WEEK_LOOKBACK_WEEKS_DEFAULT)
+        ) || 0)));
 
-        let minKey = null;
-        for (const e of (timeEntries || [])) {
-            const dk = e?.dayKey;
-            if (!dk) continue;
-            if (minKey === null || dk < minKey) minKey = dk;
-        }
+        const lookaheadWeeks = Math.max(0, Math.min(260, Math.round(Number(
+            AD_getSetting("TRAIN_WEEK_LOOKAHEAD_WEEKS_DEFAULT", TRAIN_WEEK_LOOKAHEAD_WEEKS_DEFAULT)
+        ) || 0)));
 
-        const minDate = minKey ? parseDayKeyToLocalDate(minKey) : null;
-        const fromWeek = minDate ? startOfWeekMonday(minDate) : addDaysLocal(thisWeek, -7 * 11);
+        const thisWeek = startOfWeekMonday(new Date());
+        const fromWeek = addDaysLocal(thisWeek, -7 * lookbackWeeks);
 
-        const FUTURE_WEEKS = 12;
         // buildWeekSeriesMax() behandelt "to" als end-exklusiv (intern wird 1 Tag abgezogen),
         // daher +1 Woche, damit die letzte Zukunftswoche sauber eingeschlossen ist.
-        const to = addDaysLocal(thisWeek, 7 * (FUTURE_WEEKS + 1));
+        const to = addDaysLocal(thisWeek, 7 * (lookaheadWeeks + 1));
 
-        const rangeInfo = { from: fromWeek, to };
-        const weekKeys = buildWeekSeriesMax(rangeInfo, 260);
+        const maxWeeks = Math.min(260, lookbackWeeks + lookaheadWeeks + 2); // 2 = current + end
+        const weekKeys = buildWeekSeriesMax({ from: fromWeek, to }, maxWeeks);
         return aggregateTimeWeeks(timeEntries, weekKeys);
     }
 
@@ -9399,9 +9848,498 @@ const AD_EXT_CFG_FIELDS = [
         const weeksAsc = computeTrainingWeeksAsc();
         cache._training_weeksAsc = weeksAsc;
         renderTrainingPlan(panel, weeksAsc);
+
+        // Training Subview: Segment-Fokus (DOM-move + render, ohne eigenen Haupt-Tab)
+        try {
+            const layout = panel.querySelector(".ad-train-layout");
+            const tv = String(layout?.dataset?.trainView || "").toUpperCase();
+            if (tv === "SEGFOCUS") {
+                const wrap = panel.querySelector("#ad-ext-train-segfokus");
+                const segPanel = panel.querySelector("#ad-ext-view-segment");
+                if (wrap && segPanel && segPanel.parentElement !== wrap) wrap.appendChild(segPanel);
+                try { if (segPanel) segPanel.style.display = ""; } catch {}
+                try { if (cache?.loaded) renderSegmentTraining(panel, cache.sessions, cache.filters, cache.meta); } catch {}
+            }
+        } catch {}
     }
 
-    function aggregateTrainingActualsForWeek(weekKey) {
+    function renderInsights(panel) {
+        if (!panel) return;
+
+        const kpiFulfill = panel.querySelector("#adExtInsightsKpiPlanFulfill");
+        const kpiFulfillSub = panel.querySelector("#adExtInsightsKpiPlanFulfillSub");
+        const kpiAvgDur = panel.querySelector("#adExtInsightsKpiAvgWeekDur");
+        const kpiAvgDurSub = panel.querySelector("#adExtInsightsKpiAvgWeekDurSub");
+        const kpiDays = panel.querySelector("#adExtInsightsKpiDaysPerWeek");
+        const kpiDaysSub = panel.querySelector("#adExtInsightsKpiDaysPerWeekSub");
+        const kpiTmi = panel.querySelector("#adExtInsightsKpiTmi");
+        const kpiTmiSub = panel.querySelector("#adExtInsightsKpiTmiSub");
+
+        const tmiTile = kpiTmi?.closest(".ad-ext-kpi-tile");
+
+        const setTxt = (el, v) => { try { if (el) el.textContent = String(v ?? ""); } catch {} };
+
+        const fmtPct1 = (p) => {
+            const n = Number(p);
+            if (!Number.isFinite(n)) return "—";
+            return `${(Math.round(n * 10) / 10).toFixed(1)}%`;
+        };
+
+        const fmtNum1 = (v) => {
+            const n = Number(v);
+            if (!Number.isFinite(n)) return "—";
+            return (Math.round(n * 10) / 10).toFixed(1);
+        };
+
+        const fmtIdx2 = (v) => {
+            const n = Number(v);
+            if (!Number.isFinite(n)) return "—";
+            return (Math.round(n * 100) / 100).toFixed(2).replace(".", ",");
+        };
+
+        const tmiLabel = (v) => {
+            const x = Number(v);
+            if (!Number.isFinite(x)) return "—";
+            if (x <= 0.0001) return "Du spielst immer dasselbe Training";
+            if (x < 0.40) return "Leichte Variation";
+            if (x < 0.70) return "Ausgewogener Mix";
+            return "Sehr abwechslungsreich";
+        };
+
+        const normalizeTargetLocal = (raw) =>
+            String(raw || "").trim().toUpperCase().replace(/\s+/g, "");
+
+        let weeksAsc = [];
+        try {
+            const w = computeTrainingWeeksAsc();
+            weeksAsc = Array.isArray(w) ? w : [];
+        } catch {
+            weeksAsc = [];
+        }
+
+        const thisMonday = startOfWeekMonday(new Date());
+        const thisWeekKey = thisMonday ? dayKeyFromLocalDate(thisMonday) : "";
+
+        // Erkenntnisse: nicht in die Zukunft rechnen (nur Wochen bis inkl. aktueller Woche)
+        try {
+            weeksAsc = (weeksAsc || []).filter((w) => String(w?.weekKey || w || "") <= String(thisWeekKey));
+        } catch {}
+
+        // Basis (für TMI Gewichtung) – aktuell sessions-only UI, aber robust halten
+        let basis = "SESS";
+        try { basis = normalizePlanBasis(loadTrainingPlanState()?.basis); } catch {}
+        const isSessionsMode = basis === "SESS";
+
+        // KPI 1: Planerfüllungsgrad (Ø über Wochen mit PlanGoal>0)
+        let sumPct = 0;
+        let cntPct = 0;
+        let thisWeekPct = null;
+        let thisWeekOvertrained = false;
+        let anyOvertrained = false;
+
+        const overtrainingTip = "Hinweis: Übertraining! Für die Statistik wird IST = SOLL gewertet.";
+
+        for (const w of (weeksAsc || [])) {
+            const weekKey = String(w?.weekKey || w || "");
+            if (!weekKey) continue;
+
+            const weekId = weekIdFromWeekKey(weekKey);
+            const plan = weekId ? loadWeekPlan(weekId) : null;
+            const itemsRaw = (plan && Array.isArray(plan.planItems)) ? plan.planItems : [];
+            const items = sanitizePlanItemsForStorage(itemsRaw);
+
+            // Nur Plan-Items mit Ziel > 0 (basis-abhängig)
+            const planned = (items || []).filter((it) => {
+                if (isSessionsMode) return clampSessions(Number(it?.targetSessions) || 0) > 0;
+                return clampMinutes(Number(it?.targetMinutes) || 0) > 0;
+            });
+
+            let planGoalWeek = 0;
+            for (const it of planned) {
+                const g = isSessionsMode ? clampSessions(Number(it?.targetSessions) || 0) : clampMinutes(Number(it?.targetMinutes) || 0);
+                if (g > 0) planGoalWeek += g;
+            }
+            planGoalWeek = Math.max(0, Math.round(planGoalWeek));
+            if (!(planGoalWeek > 0)) {
+                if (weekKey === thisWeekKey) thisWeekPct = null;
+                continue;
+            }
+
+            let agg = null;
+            try { agg = aggregateTrainingActualsForWeek(weekKey); } catch { agg = null; }
+            const byActivity = agg?.byActivity || new Map();
+            const stTargets = agg?.stTargets || new Map();
+
+            let actualWeekRaw = 0;
+            let creditedWeek = 0;
+
+            // Deckelung pro Plan-Item (wie Trainingsdaten-Tabelle)
+            for (const it of planned) {
+                const type = String(it?.type || "").trim() || "CUSTOM";
+                const trackerKey = PLANITEM_TYPE_TO_TRACKER_KEY[type] || type;
+
+                const goalItem = isSessionsMode ? clampSessions(Number(it?.targetSessions) || 0) : clampMinutes(Number(it?.targetMinutes) || 0);
+
+                let sec = 0;
+                let cnt = 0;
+
+                // Ist-Werte: Standard = nach Aktivität
+                try {
+                    const rec = (byActivity && byActivity.get) ? (byActivity.get(trackerKey) || { sec: 0, count: 0 }) : { sec: 0, count: 0 };
+                    sec = Number(rec?.sec || 0) || 0;
+                    cnt = Number(rec?.count || 0) || 0;
+                } catch { sec = 0; cnt = 0; }
+
+                // Sonderfall: Segment Training mit Targets -> Summe über Targets
+                if (type === "SEGMENT_TRAINING") {
+                    const targets = it?.params?.targets;
+                    if (Array.isArray(targets) && targets.length && stTargets && stTargets.get) {
+                        let secSum = 0;
+                        let cntSum = 0;
+                        for (const t of targets) {
+                            const k = String(t || "").trim();
+                            if (!k) continue;
+                            const a = stTargets.get(k) || { sec: 0, count: 0 };
+                            secSum += Number(a?.sec || 0) || 0;
+                            cntSum += Number(a?.count || 0) || 0;
+                        }
+                        sec = secSum;
+                        cnt = cntSum;
+                    }
+                }
+
+                const actualItem = isSessionsMode ? Math.round(cnt || 0) : toIntMinutes(sec);
+                const creditedItem = Math.min(actualItem, goalItem);
+
+                actualWeekRaw += actualItem;
+                creditedWeek += creditedItem;
+            }
+
+            actualWeekRaw = Math.max(0, Math.round(actualWeekRaw));
+            creditedWeek = Math.max(0, Math.round(creditedWeek));
+
+            const pctWeek = (creditedWeek / planGoalWeek) * 100;
+
+            const overtrainedWeek = actualWeekRaw > creditedWeek + 1e-9;
+            if (overtrainedWeek) anyOvertrained = true;
+
+            if (Number.isFinite(pctWeek)) {
+                sumPct += pctWeek;
+                cntPct += 1;
+            }
+
+            if (weekKey === thisWeekKey) {
+                thisWeekPct = pctWeek;
+                thisWeekOvertrained = overtrainedWeek;
+            }
+
+            try {
+                console.debug("[insights fulfill]", { weekKey, planGoalWeek, actualWeekRaw, creditedWeek, pctWeek, overtrainedWeek });
+            } catch {}
+        }
+
+        const avgPct = (cntPct > 0) ? (sumPct / cntPct) : null;
+
+        setTxt(kpiFulfill, (avgPct === null) ? "—" : fmtPct1(avgPct));
+        try { if (kpiFulfill) kpiFulfill.title = ""; } catch {}
+
+        setTxt(kpiFulfillSub, `Diese Woche: ${(thisWeekPct === null) ? "—" : fmtPct1(thisWeekPct)}`);
+        try { if (kpiFulfillSub) kpiFulfillSub.title = ""; } catch {}
+
+        // KPI 2: Durchschnittliche Trainingsdauer pro Woche
+        let sumSec = 0;
+        let cntSec = 0;
+        let thisWeekSec = null;
+
+        for (const w of (weeksAsc || [])) {
+            const weekKey = String(w?.weekKey || w || "");
+            if (!weekKey) continue;
+
+            const weekId = weekIdFromWeekKey(weekKey);
+            const plan = weekId ? loadWeekPlan(weekId) : null;
+            const itemsRaw = (plan && Array.isArray(plan.planItems)) ? plan.planItems : [];
+            const items = sanitizePlanItemsForStorage(itemsRaw);
+
+            // Nur Wochen mit Plan-Items (Ziel > 0)
+            const planned = (items || []).filter((it) => {
+                if (isSessionsMode) return clampSessions(Number(it?.targetSessions) || 0) > 0;
+                return clampMinutes(Number(it?.targetMinutes) || 0) > 0;
+            });
+            if (!planned.length) {
+                if (weekKey === thisWeekKey) thisWeekSec = null;
+                continue;
+            }
+
+            let agg = null;
+            try { agg = aggregateTrainingActualsForWeek(weekKey); } catch { agg = null; }
+            const byActivity = agg?.byActivity || new Map();
+            const stTargets = agg?.stTargets || new Map();
+
+            let secSumWeek = 0;
+
+            // Summe: exakt wie Trainingsdaten-Tabelle (Plan-Items addieren)
+            for (const it of planned) {
+                const type = String(it?.type || "").trim() || "CUSTOM";
+                const trackerKey = PLANITEM_TYPE_TO_TRACKER_KEY[type] || type;
+
+                let sec = 0;
+
+                // Ist-Werte: Standard = nach Aktivität
+                try {
+                    const rec = (byActivity && byActivity.get) ? (byActivity.get(trackerKey) || { sec: 0, count: 0 }) : { sec: 0, count: 0 };
+                    sec = Number(rec?.sec || 0) || 0;
+                } catch { sec = 0; }
+
+                // Sonderfall: Segment Training mit Targets -> Summe über Targets
+                if (type === "SEGMENT_TRAINING") {
+                    const targets = it?.params?.targets;
+                    if (Array.isArray(targets) && targets.length && stTargets && stTargets.get) {
+                        let secSum = 0;
+                        for (const t of targets) {
+                            const k = String(t || "").trim();
+                            if (!k) continue;
+                            const a = stTargets.get(k) || { sec: 0, count: 0 };
+                            secSum += Number(a?.sec || 0) || 0;
+                        }
+                        sec = secSum;
+                    }
+                }
+
+                secSumWeek += Number(sec) || 0;
+            }
+
+            secSumWeek = Math.max(0, Number(secSumWeek) || 0);
+
+            if (weekKey === thisWeekKey) thisWeekSec = secSumWeek > 0 ? secSumWeek : null;
+
+            if (Number.isFinite(secSumWeek) && secSumWeek > 0) {
+                sumSec += secSumWeek;
+                cntSec += 1;
+            }
+        }
+
+        const avgSec = (cntSec > 0) ? (sumSec / cntSec) : null;
+
+        setTxt(kpiAvgDur, (avgSec === null) ? "—" : fmtHours(avgSec));
+        setTxt(kpiAvgDurSub, `Diese Woche: ${(thisWeekSec === null) ? "—" : fmtHours(thisWeekSec)}`);
+
+
+
+        // KPI 3: Trainingstage / Woche (unique local days mit Aktivitäten)
+        let sumDays = 0;
+        let cntDays = 0;
+        let thisWeekDays = null;
+
+        try {
+            const allowedWeeks = new Set((weeksAsc || []).map(w => String(w?.weekKey || "")).filter(Boolean));
+            const daysByWeek = new Map();
+            for (const wk of allowedWeeks) daysByWeek.set(wk, new Set());
+
+            const timeEntries = buildTrainingTimeEntriesAll();
+            for (const e of (timeEntries || [])) {
+                const dk = String(e?.dayKey || "").trim();
+                if (!dk) continue;
+                const d = parseDayKeyToLocalDate(dk);
+                if (!d) continue;
+                const wk = weekKeyFromDate(d);
+                if (!wk || !daysByWeek.has(wk)) continue;
+                daysByWeek.get(wk).add(dk);
+            }
+
+            for (const wk of allowedWeeks) {
+                const n = daysByWeek.get(wk)?.size || 0;
+                if (wk === thisWeekKey) thisWeekDays = n > 0 ? n : null;
+                if (n > 0) {
+                    sumDays += n;
+                    cntDays += 1;
+                }
+            }
+        } catch {}
+
+        const avgDays = (cntDays > 0) ? (sumDays / cntDays) : null;
+        setTxt(kpiDays, (avgDays === null) ? "—" : fmtNum1(avgDays));
+        setTxt(kpiDaysSub, `Diese Woche: ${(thisWeekDays === null) ? "—" : (String(thisWeekDays) + " Tage")}`);
+
+        // KPI 4: Trainingsmix-Index (TMI) – Ø über Wochen mit n>0 geplanten Items
+        try {
+        let sumTmi = 0;
+        let cntTmi = 0;
+        let thisWeekTmi = null;
+
+        const weightFromRec = (rec) => {
+            if (!rec) return 0;
+            if (isSessionsMode) return Math.max(0, Math.round(Number(rec?.count || 0) || 0));
+            return Math.max(0, Number(rec?.sec || 0) || 0);
+        };
+
+        const weightFromTargetRec = (rec) => {
+            if (!rec) return 0;
+            if (isSessionsMode) return Math.max(0, Math.round(Number(rec?.count || 0) || 0));
+            return Math.max(0, Number(rec?.sec || 0) || 0);
+        };
+
+        for (const w of (weeksAsc || [])) {
+            const weekKey = String(w?.weekKey || "");
+            if (!weekKey) continue;
+
+            const weekId = weekIdFromWeekKey(weekKey);
+            const plan = weekId ? loadWeekPlan(weekId) : null;
+            const itemsRaw = (plan && Array.isArray(plan.planItems)) ? plan.planItems : [];
+            const items = sanitizePlanItemsForStorage(itemsRaw);
+
+            const planned = (items || []).filter((it) => {
+                const t = String(it?.type || "");
+                if (isSessionsMode) return clampSessions(Number(it?.targetSessions) || 0) > 0;
+                return clampMinutes(Number(it?.targetMinutes) || 0) > 0;
+            });
+
+            const n = planned.length;
+            if (n === 0) {
+                if (weekKey === thisWeekKey) thisWeekTmi = null;
+                continue;
+            }
+
+            let agg = null;
+            try { agg = aggregateTrainingActualsForWeek(weekKey); } catch { agg = null; }
+            const byActivity = agg?.byActivity || new Map();
+            const stTargets = agg?.stTargets || new Map();
+
+            // Total weights per tracker key
+            const totalByKey = new Map();
+            try {
+                for (const [k, rec] of (byActivity?.entries?.() || [])) {
+                    totalByKey.set(String(k), weightFromRec(rec));
+                }
+            } catch {}
+
+            // Build weights for planned items
+            const weights = [];
+            const byKeyIdxs = new Map();
+            const usedByKey = new Map(); // key -> sum weights already assigned (z.B. ST via Targets)
+
+            const addUsed = (key, w) => {
+                const k = String(key || "");
+                if (!k) return;
+                usedByKey.set(k, (Number(usedByKey.get(k) || 0) || 0) + (Number(w) || 0));
+            };
+
+            for (const it of planned) {
+                const type = String(it?.type || "").trim();
+                const trackerKey = String(PLANITEM_TYPE_TO_TRACKER_KEY[type] || type).trim();
+
+                // Segment Training: wenn Targets vorhanden, Gewicht über Targets berechnen (präziser)
+                if (type === "SEGMENT_TRAINING" && Array.isArray(it?.params?.targets) && it.params.targets.length) {
+                    let wSum = 0;
+                    for (const t of it.params.targets) {
+                        const k = normalizeTargetLocal(t);
+                        const rec = stTargets.get(k) || stTargets.get(String(t || "").trim()) || { sec: 0, count: 0 };
+                        wSum += weightFromTargetRec(rec);
+                    }
+                    weights.push({ key: trackerKey, weight: Math.max(0, wSum), source: "targets" });
+                    addUsed(trackerKey, wSum);
+                } else {
+                    const idx = weights.length;
+                    weights.push({ key: trackerKey, weight: null, source: "byActivity" });
+                    if (!byKeyIdxs.has(trackerKey)) byKeyIdxs.set(trackerKey, []);
+                    byKeyIdxs.get(trackerKey).push(idx);
+                }
+            }
+
+            // Distribute shared byActivity weights among duplicates (und ggf. Rest bei ST)
+            for (const [key, idxs] of byKeyIdxs.entries()) {
+                const total = Number(totalByKey.get(key) || 0) || 0;
+                const used = Number(usedByKey.get(key) || 0) || 0;
+                const eff = (key === "SEGMENT_TRAINING") ? Math.max(0, total - used) : total;
+                const per = idxs.length ? (eff / idxs.length) : 0;
+                for (const i of idxs) weights[i].weight = Math.max(0, per);
+            }
+
+            let totalWeight = 0;
+            for (const wi of weights) totalWeight += Number(wi?.weight || 0) || 0;
+
+            const uniform = 1 / n;
+            let tmi = 0;
+
+            if (totalWeight > 0) {
+                let sumAbs = 0;
+                for (const wi of weights) {
+                    const p = (Number(wi?.weight || 0) || 0) / totalWeight;
+                    sumAbs += Math.abs(p - uniform);
+                }
+                tmi = 1 - (sumAbs / 2);
+            } else {
+                // n>0 aber keine Ist-Daten -> sichtbar 0.0
+                tmi = 0;
+            }
+
+            if (!Number.isFinite(tmi)) tmi = 0;
+            tmi = Math.max(0, Math.min(1, tmi));
+
+            sumTmi += tmi;
+            cntTmi += 1;
+            if (weekKey === thisWeekKey) thisWeekTmi = tmi;
+        }
+
+        const avgTmi = (cntTmi > 0) ? (sumTmi / cntTmi) : null;
+
+        setTxt(kpiTmi, (avgTmi === null) ? "—" : fmtIdx2(avgTmi));
+        setTxt(kpiTmiSub, `Diese Woche: ${(thisWeekTmi === null) ? "—" : fmtIdx2(thisWeekTmi)}`);
+
+        try { if (tmiTile) tmiTile.dataset.tmiAvg = String(avgTmi ?? ""); } catch {}
+
+        if (tmiTile && !tmiTile.dataset.tipWired) {
+            tmiTile.dataset.tipWired = "1";
+
+            tmiTile.addEventListener("mouseenter", (ev) => {
+                const v = Number(tmiTile.dataset.tmiAvg);
+                const cur = Number.isFinite(v) ? fmtIdx2(v) : "—";
+                const lab = Number.isFinite(v) ? tmiLabel(v) : "—";
+
+                const html = `
+      <div class="ad-ext-tooltip-title">Trainingsmix-Index (TMI)</div>
+      <div class="ad-ext-tooltip-line">Aktuell: <b>${cur}</b> – ${lab}</div>
+      <div class="ad-ext-tooltip-recline" style="margin-top:8px">
+        0,00: Du spielst immer dasselbe Training<br/>
+        0,20–0,40: Leichte Variation<br/>
+        0,40–0,70: Ausgewogener Mix<br/>
+        0,70–1,00: Sehr abwechslungsreich
+      </div>
+    `;
+                tooltipShow(ev, html);
+            });
+            tmiTile.addEventListener("mousemove", (ev) => tooltipMove(ev));
+            tmiTile.addEventListener("mouseleave", () => tooltipHide());
+        }
+        } catch (e) {
+            try { console.warn("[AD Ext][INSIGHTS] KPI4 TMI failed", e); } catch {}
+            setTxt(kpiTmi, "—");
+            setTxt(kpiTmiSub, "Diese Woche: —");
+        }
+
+
+        // Insights: Analysis (Weak doubles + Mini charts) (0.14.111)
+        try {
+            const weakBody = panel.querySelector("#ad-ext-insights-weakdoubles-body");
+            if (weakBody) {
+                const fromKey = String((weeksAsc && weeksAsc[0] && weeksAsc[0].weekKey) || "");
+                const toKey = String(thisWeekKey || "");
+                if (!cache || !cache.loaded || !fromKey || !toKey) {
+                    weakBody.innerHTML = `<tr><td colspan="5" style="opacity:.7; padding:10px 12px;">—</td></tr>`;
+                } else {
+                    try { renderWeakDoubles(panel, weakBody, fromKey, toKey); } catch {}
+                }
+            }
+
+            const cMiniAvg = panel.querySelector("#ad-ext-insights-mini-avg");
+            const cMiniP2 = panel.querySelector("#ad-ext-insights-mini-p2");
+            const cMiniP3 = panel.querySelector("#ad-ext-insights-mini-p3");
+            if (cMiniAvg) drawEmpty(cMiniAvg, "Platzhalter");
+            if (cMiniP2) drawEmpty(cMiniP2, "Platzhalter");
+            if (cMiniP3) drawEmpty(cMiniP3, "Platzhalter");
+        } catch {}
+
+}
+function aggregateTrainingActualsForWeek(weekKey) {
         const wk = weekRangeFromWeekKey(weekKey);
         if (!wk) {
             return { wk: null, byActivity: new Map(), stTargets: new Map() };
@@ -9426,7 +10364,9 @@ const AD_EXT_CFG_FIELDS = [
 
         // Segment Training (sessions already extracted)
         for (const s of (cache.sessions || [])) {
-            const dk = s.dayKey || parseIsoDateToDayKey(s.createdAt) || parseIsoDateToDayKey(s.finishedAt);
+            const dk = s.dayKey || (s.dayKey =
+                parseIsoDateToDayKey(s.createdAt) || parseIsoDateToDayKey(s.finishedAt)
+            );
             if (!inWeek(dk)) continue;
 
             const dSec = Number(s.durationSec) || 0;
@@ -9445,23 +10385,30 @@ const AD_EXT_CFG_FIELDS = [
 
         // X01 Matches (already extracted)
         for (const m of (cache.x01Matches || [])) {
-            const dk = m.dayKey || parseIsoDateToDayKey(m.createdAt) || parseIsoDateToDayKey(m.finishedAt);
+            const dk = m.dayKey || (m.dayKey =
+                parseIsoDateToDayKey(m.createdAt) || parseIsoDateToDayKey(m.finishedAt)
+            );
             if (!inWeek(dk)) continue;
 
             const dSec = Number(m.durationSec) || 0;
             const kind = classifyX01MatchKind(m);
-            add(kind === "BOT" ? "X01_BOT" : "X01_HUMAN", dSec, 1);
+            const legs = Number(m.totalLegs) ||
+                (Array.isArray(m.legsWon) ? m.legsWon.reduce((a, b) => a + (Number(b || 0) || 0), 0) : 0) ||
+                1;
+            add(kind === "BOT" ? "X01_BOT" : "X01_HUMAN", dSec, legs);
         }
 
         // Other training modes (best-effort extraction)
         for (const s of (cache.otherTrainingSessions || [])) {
-            const dk = s.dayKey || parseIsoDateToDayKey(s.createdAt) || parseIsoDateToDayKey(s.finishedAt);
+            const dk = s.dayKey || (s.dayKey =
+                parseIsoDateToDayKey(s.createdAt) || parseIsoDateToDayKey(s.finishedAt)
+            );
             if (!inWeek(dk)) continue;
 
             const key = String(s.activityKey || "").trim();
             if (!key) continue;
 
-            add(key, Number(s.durationSec) || 0, 1);
+            add(key, Number(s.durationSec) || 0, Number(s.count) || 1);
         }
 
         return { wk, byActivity, stTargets };
@@ -9526,7 +10473,7 @@ const AD_EXT_CFG_FIELDS = [
         return (Math.round(n * 10) / 10).toFixed(1);
     }
 
-    
+
     /**
      * Aggregiert Ist-Minuten für eine Woche aus dem vorhandenen Tracker (IndexedDB Cache).
      * Wichtig: UI darf den Tracker NICHT direkt zusammenrechnen – nur über diese Funktion.
@@ -9622,16 +10569,456 @@ const AD_EXT_CFG_FIELDS = [
         return out;
     }
 
+
+    // =========================
+    // Training-Tab: Donut (Trainingsfortschritt) -> Tabellenfilter (0.14.79)
+    // =========================
+    function applyTrainingProgressFilter(panel, filterKey) {
+        try {
+            if (!panel) return { marked: 0, dimmed: 0 };
+
+            const svg = panel.querySelector("#ad-ext-train-chart-sollist");
+            const rows = panel.querySelectorAll('#ad-ext-plan-main-body tr.ad-ext-train-row');
+            const key = String(filterKey || "");
+
+            let marked = 0;
+            let dimmed = 0;
+
+            if (!key) {
+                for (const r of rows) {
+                    r.classList.remove("ad-ext-tp-dim", "ad-ext-tp-mark");
+                }
+                if (svg) {
+                    svg.dataset.adExtTpFilter = "";
+                    const paths = svg.querySelectorAll('path.recharts-sector');
+                    for (const p of paths) {
+                        try { p.style.opacity = "1"; } catch {}
+                    }
+                }
+                return { marked, dimmed };
+            }
+
+            for (const r of rows) {
+                const st = String(r?.dataset?.status || "");
+                if (!st) {
+                    r.classList.remove("ad-ext-tp-dim", "ad-ext-tp-mark");
+                    continue;
+                }
+                if (st === key) {
+                    r.classList.add("ad-ext-tp-mark");
+                    r.classList.remove("ad-ext-tp-dim");
+                    marked++;
+                } else {
+                    r.classList.add("ad-ext-tp-dim");
+                    r.classList.remove("ad-ext-tp-mark");
+                    dimmed++;
+                }
+            }
+
+            if (svg) {
+                svg.dataset.adExtTpFilter = key;
+                const paths = svg.querySelectorAll('path.recharts-sector');
+                for (let i = 0; i < paths.length; i++) {
+                    const p = paths[i];
+                    const itemIdx = Number(p.getAttribute("data-recharts-item-index") || p.getAttribute("data-ad-slice") || "NaN");
+                    const fk = (itemIdx === 0) ? "reached" : ((itemIdx === 1) ? "open" : "");
+                    const isActive = fk && fk === key;
+                    try { p.style.opacity = isActive ? "1" : "0.35"; } catch {}
+                }
+            }
+            return { marked, dimmed };
+        } catch {
+            return { marked: 0, dimmed: 0 };
+        }
+    }
+
+    // =========================
+    // Training-Tab: Donut (Trainings-SOLL) -> Tabellenfilter (0.14.86)
+    // =========================
+    function applyTrainingSollSplitFilter(panel, planType) {
+        try {
+            if (!panel) return { marked: 0, dimmed: 0 };
+
+            const svg = panel.querySelector("#ad-ext-train-chart-placeholder");
+            const rows = panel.querySelectorAll('#ad-ext-plan-main-body tr.ad-ext-train-row');
+            const key = String(planType || "");
+
+            let marked = 0;
+            let dimmed = 0;
+
+            if (!key) {
+                for (const r of rows) {
+                    r.classList.remove("ad-ext-ts-dim", "ad-ext-ts-mark");
+                }
+                if (svg) {
+                    const paths = svg.querySelectorAll('path.recharts-sector');
+                    for (const p of paths) {
+                        try { p.style.opacity = "1"; } catch {}
+                    }
+                }
+                return { marked, dimmed };
+            }
+
+            for (const r of rows) {
+                const pt = String(r?.dataset?.planType || r?.getAttribute?.("data-plan-type") || "");
+                if (!pt) {
+                    r.classList.remove("ad-ext-ts-dim", "ad-ext-ts-mark");
+                    continue;
+                }
+                if (pt === key) {
+                    r.classList.add("ad-ext-ts-mark");
+                    r.classList.remove("ad-ext-ts-dim");
+                    marked++;
+                } else {
+                    r.classList.add("ad-ext-ts-dim");
+                    r.classList.remove("ad-ext-ts-mark");
+                    dimmed++;
+                }
+            }
+
+            if (svg) {
+                const paths = svg.querySelectorAll('path.recharts-sector');
+                for (const p of paths) {
+                    const pt = String(p?.dataset?.adSollType || p?.getAttribute?.("data-ad-soll-type") || "");
+                    const isActive = pt && pt === key;
+                    try { p.style.opacity = isActive ? "1" : "0.35"; } catch {}
+                }
+            }
+
+            try { console.debug("[AD Ext][TS] filter =", key, "marked =", marked, "dimmed =", dimmed); } catch {}
+
+            return { marked, dimmed };
+        } catch {
+            return { marked: 0, dimmed: 0 };
+        }
+    }
+
+    // =========================
+    // Training-Tab: Tabelle -> Donut (Trainings-SOLL) filter (0.14.87)
+    // =========================
+    function ensureTrainingSollSplitTableWiring(panel) {
+        try {
+            if (!panel) return;
+
+            const tbody = panel.querySelector("#ad-ext-plan-main-body");
+            if (!tbody) return;
+
+            if (String(tbody.dataset.adExtTsWired || "") === "1") return;
+            tbody.dataset.adExtTsWired = "1";
+
+            tbody.addEventListener("click", (ev) => {
+                try {
+                    // a) nur echte Aktivitätszeilen
+                    const tr = ev?.target?.closest ? ev.target.closest("tr.ad-ext-train-row") : null;
+                    if (!tr) return;
+
+                    // b) NICHT triggern, wenn man auf Expand/Plus oder Buttons klickt
+                    if (ev?.target?.closest?.("button, a")) return;
+                    if (ev?.target?.closest?.(".ad-ext-rowexp, .ad-ext-train-expand, .ad-ext-expander")) return;
+
+                    // c) planType ermitteln
+                    const pt = String(tr.dataset.planType || tr.getAttribute("data-plan-type") || "").trim();
+                    if (!pt) return;
+
+                    // d) toggle wie beim Chart
+                    const svg2 = panel.querySelector("#ad-ext-train-chart-placeholder");
+                    const cur = String(svg2?.dataset?.adExtTsFilter || "");
+                    const next = (cur === pt) ? "" : pt;
+
+                    if (svg2) svg2.dataset.adExtTsFilter = next;
+
+                    // e) reuse bestehende Funktion
+                    applyTrainingSollSplitFilter(panel, next);
+
+                    try { console.debug("[AD Ext][TS] filter (table)", { pt, next }); } catch {}
+                } catch {}
+            }, false);
+        } catch {}
+    }
+
+
+
+
+
+
+    // =========================
+    // Training-Tab: Charts unter Tabelle (Erreicht vs Offen)
+    // =========================
+    function renderTrainingProgressCharts(panel, totalGoal, totalCredited, totalIst, viewMode) {
+        if (!panel) return;
+
+        const svg = panel.querySelector("#ad-ext-train-chart-sollist");
+        const legend = panel.querySelector("#ad-ext-train-legend-sollist");
+
+        const g = Math.max(0, Number(totalGoal) || 0);
+        const c = Math.min(g, Math.max(0, Number(totalCredited) || 0));
+        const open = Math.max(0, g - c);
+        const i = Math.max(0, Number(totalIst) || 0);
+
+        const unitTxt = (String(viewMode || "").toLowerCase() === "time") ? "min" : "Sessions";
+        const fmtVal = (v) => {
+            const n = Math.max(0, Math.round(Number(v) || 0));
+            return (unitTxt === "min") ? `${n}min` : `${n} ${unitTxt}`;
+        };
+
+        if (svg) {
+            const items = [
+                { label: "Erreicht", value: c, color: "rgba(96, 222, 132, 0.95)" },
+                { label: "Offen", value: open, color: "rgba(255, 84, 84, 0.95)" },
+            ];
+
+            drawDonutSvg(svg, items, {
+                style: "outline",
+                gapDeg: 7,
+                strokeWidth: 2,
+                outlineFillAlpha: 0.20,
+                rInnerFactor: 0.78,
+                showCenterText: false,
+                holeFill: false,
+            });
+
+            // Donut -> Tabelle: Klick auf Slices markiert offene/erreichte Aktivitäten (0.14.79)
+            try {
+                const clearTpFilter = (ev, source) => {
+                    try { ev?.preventDefault?.(); ev?.stopPropagation?.(); } catch {}
+                    const cur = String(svg.dataset.adExtTpFilter || "");
+                    if (!cur) return;
+                    svg.dataset.adExtTpFilter = "";
+                    const res = applyTrainingProgressFilter(panel, "");
+                    try { console.debug("[AD Ext][TP] filter =", "", "marked =", res.marked, "dimmed =", res.dimmed, "src=", source); } catch {}
+                };
+
+                const paths = svg.querySelectorAll('path.recharts-sector');
+                for (let idx = 0; idx < paths.length; idx++) {
+                    const p = paths[idx];
+                    const itemIdx = Number(p.getAttribute("data-recharts-item-index") || p.getAttribute("data-ad-slice") || "NaN");
+                    const filterKey = (itemIdx === 0) ? "reached" : ((itemIdx === 1) ? "open" : "");
+                    if (!filterKey) continue;
+                    p.dataset.adSlice = filterKey;
+                    try { p.style.cursor = "pointer"; } catch {}
+                    p.onclick = (ev) => {
+                        try { ev.preventDefault(); ev.stopPropagation(); } catch {}
+                        const cur = String(svg.dataset.adExtTpFilter || "");
+                        const next = (cur === filterKey) ? "" : filterKey;
+                        svg.dataset.adExtTpFilter = next;
+                        const res = applyTrainingProgressFilter(panel, next);
+                        try { console.debug("[AD Ext][TP] filter =", next, "marked =", res.marked, "dimmed =", res.dimmed); } catch {}
+                    };
+                }
+
+                // Klick ins leere Donut-SVG => Filter AUS (0.14.80)
+                try {
+                    svg.onclick = (ev) => {
+                        try {
+                            const hit = ev?.target?.closest?.('path.recharts-sector');
+                            if (hit) return; // slice click handled separately
+                            clearTpFilter(ev, "svg");
+                        } catch {}
+                    };
+                } catch {}
+
+                // Klick in Legend / freie Card-Fläche => Filter AUS (0.14.81)
+                try {
+                    if (legend) {
+                        legend.onclick = (ev) => clearTpFilter(ev, "legend");
+                    }
+                } catch {}
+                try {
+                    const card = svg.closest?.('.ad-ext-card');
+                    if (card) {
+                        card.onclick = (ev) => {
+                            try {
+                                // Ignore real slice clicks (handled above)
+                                if (ev?.target?.closest?.('path.recharts-sector')) return;
+                                // SVG/Legend handle their own "empty click" and stopPropagation
+                                if (ev?.target?.closest?.('#ad-ext-train-chart-sollist')) return;
+                                if (ev?.target?.closest?.('#ad-ext-train-legend-sollist')) return;
+                                clearTpFilter(ev, "card");
+                            } catch {}
+                        };
+                    }
+                } catch {}
+
+                // Restore current filter on rerender (no log)
+                const cur = String(svg.dataset.adExtTpFilter || "");
+                if (cur) applyTrainingProgressFilter(panel, cur);
+            } catch {}
+
+            if (legend) {
+                const extra = (g > 0 && i > g)
+                    ? `<div class="ad-ext-muted" style="margin-top:6px;">Überschuss: ${escapeHtml(fmtVal(i - g))}</div>`
+                    : "";
+
+                legend.innerHTML = items.map((it) => {
+                    const pct = (g > 0) ? (Number(it.value) * 100) / g : null;
+                    const pctTxt = (pct === null) ? "—" : `${pct.toFixed(1)}%`;
+                    return `
+      <div class="ad-ext-legend-item" style="cursor:default;">
+        <span class="ad-ext-dot" style="background:${escapeHtml(it.color)};"></span>
+        <span style="font-weight:900;">${escapeHtml(it.label)}</span>
+        <span style="opacity:.78; font-weight:800;">${escapeHtml(fmtVal(it.value))} (${escapeHtml(pctTxt)})</span>
+      </div>
+    `;
+                }).join("") + extra;
+            }
+        }
+
+    // Trainings-SOLL Donut (right slot) – Gruppierung nach Aktivität (0.14.85)
+    const ph = panel.querySelector("#ad-ext-train-chart-placeholder");
+    const phLegend = panel.querySelector("#ad-ext-train-legend-soll");
+    if (ph) {
+        // kein Platzhalter-Styling mehr
+        try { ph.classList.remove("ad-ext-train-chart--placeholder"); } catch {}
+        try { ph.onclick = null; } catch {}
+
+        // Basis: bereits gerenderte Trainingsdaten-Tabelle
+        const rows2 = panel.querySelectorAll('#ad-ext-plan-main-body tr.ad-ext-train-row');
+        const sums = new Map();
+
+        for (const r of rows2) {
+            const type = String(r?.dataset?.planType || r?.getAttribute?.("data-plan-type") || "").trim();
+            if (!type) continue;
+
+            const goalNum = Number(r?.dataset?.goal ?? r?.getAttribute?.("data-goal") ?? 0) || 0;
+            if (!(goalNum > 0)) continue;
+
+            let rec = sums.get(type);
+            if (!rec) {
+                let lab = type;
+
+                // bevorzugt: sichtbarer Label-Text aus der Tabelle (ohne leading "+")
+                try {
+                    const td0 = r.querySelector("td");
+                    if (td0) {
+                        const raw = String(td0.textContent || "").trim();
+                        const cleaned = raw.replace(/^\+\s*/, "").trim();
+                        if (cleaned) lab = cleaned;
+                    }
+                } catch {}
+
+                // fallback: Template-Label (falls vorhanden)
+                try {
+                    if ((lab === type || !lab) && typeof PLAN_ACTIVITY_TEMPLATES !== "undefined" && Array.isArray(PLAN_ACTIVITY_TEMPLATES)) {
+                        const tpl = PLAN_ACTIVITY_TEMPLATES.find(t => String(t?.type || "").trim() === type);
+                        const tl = tpl?.label || tpl?.name;
+                        if (tl) lab = String(tl);
+                    }
+                } catch {}
+
+                rec = { type, label: lab || type, value: 0 };
+                sums.set(type, rec);
+            }
+
+            rec.value += goalNum;
+        }
+
+        const base = Array.from(sums.values()).filter(x => (Number(x?.value) || 0) > 0);
+
+        const items2 = base.map((x, idx) => ({
+            label: String(x.label || x.type || ""),
+            value: Math.max(0, Math.round(Number(x.value) || 0)),
+            color: PALETTE[idx % PALETTE.length],
+            extra: { planType: String(x.type || "") }
+        }));
+
+        // Donut render (gleiches SVG-Format wie links)
+        drawDonutSvg(ph, items2, {
+            style: "outline",
+            gapDeg: 7,
+            strokeWidth: 2,
+            outlineFillAlpha: 0.20,
+            rInnerFactor: 0.78,
+            showCenterText: false,
+            holeFill: false,
+        });
+
+                // Interaktion: Slice klickt => Tabellenfilter nach planType (0.14.86)
+        try {
+            const paths2 = ph.querySelectorAll('path.recharts-sector');
+            for (const p of paths2) {
+                const itemIdx = Number(p.getAttribute("data-recharts-item-index") || p.getAttribute("data-ad-slice") || "NaN");
+                const ptRaw = (Number.isFinite(itemIdx) && itemIdx >= 0) ? (items2[itemIdx]?.extra?.planType || "") : "";
+                const pt = String(ptRaw || "").trim();
+
+                p.dataset.adSollType = pt;
+                try { p.setAttribute("data-ad-soll-type", pt); } catch {}
+
+                try { p.style.cursor = pt ? "pointer" : "default"; } catch {}
+
+                try {
+                    p.onclick = (ev) => {
+                        try { ev?.preventDefault?.(); } catch {}
+                        try { ev?.stopPropagation?.(); } catch {}
+
+                        const cur = String(ph.dataset.adExtTsFilter || "");
+                        const next = (pt && cur === pt) ? "" : pt;
+                        ph.dataset.adExtTsFilter = next;
+                        applyTrainingSollSplitFilter(panel, next);
+                    };
+                } catch {}
+            }
+        } catch {}
+
+        // Klick in leere Fläche im Donut-SVG => Filter AUS (0.14.86)
+        try {
+            ph.onclick = (ev) => {
+                try {
+                    if (ev?.target?.closest?.('path.recharts-sector')) return;
+                    ph.dataset.adExtTsFilter = "";
+                    applyTrainingSollSplitFilter(panel, "");
+                } catch {}
+            };
+        } catch {}
+
+        // Klick in Legend => Filter AUS (0.14.86)
+        try {
+            if (phLegend) {
+                phLegend.onclick = (ev) => {
+                    try { ev?.preventDefault?.(); } catch {}
+                    try { ev?.stopPropagation?.(); } catch {}
+                    ph.dataset.adExtTsFilter = "";
+                    applyTrainingSollSplitFilter(panel, "");
+                };
+            }
+        } catch {}
+// Legende (minimal, wie links)
+        if (phLegend) {
+            const total2 = items2.reduce((a, x) => a + (Number(x?.value) || 0), 0);
+            const valTxt2 = (v) => {
+                const n = Math.max(0, Math.round(Number(v) || 0));
+                return (unitTxt === "min") ? `${n} min` : `${n} Sessions`;
+            };
+
+            if (!items2.length || !total2) {
+                phLegend.innerHTML = `<div class="ad-ext-muted">Keine Daten</div>`;
+            } else {
+                phLegend.innerHTML = items2.map((it) => {
+                    const pct = total2 ? (Number(it.value) * 100) / total2 : 0;
+                    return `
+  <div class="ad-ext-legend-item" style="cursor:default;">
+    <span class="ad-ext-dot" style="background:${escapeHtml(it.color)};"></span>
+    <span style="font-weight:900;">${escapeHtml(it.label)}</span>
+    <span style="opacity:.78; font-weight:800;">${escapeHtml(valTxt2(it.value))} (${escapeHtml(pct.toFixed(1))}%)</span>
+  </div>
+`;
+                }).join("");
+            }
+        }
+
+        // Restore current TS filter on rerender (0.14.86)
+        const cur = String(ph.dataset.adExtTsFilter || "");
+        if (cur) applyTrainingSollSplitFilter(panel, cur);
+    }
+    }
+
 function renderTrainingPlan(panel, weeksAsc) {
         if (!panel) return;
 
         cache.trainingPlan = cache.trainingPlan || loadTrainingPlanState();
         const st = cache.trainingPlan;
 
-        const basis = normalizePlanBasis(st.basis);
-        st.basis = basis;
-
-        const showPerf = !!planTabShowPerf;
+        const basis = "SESS"; // sessions-only UI (0.14.75)
+            st.basis = "SESS";
 
         const mainBody = panel.querySelector("#ad-ext-plan-main-body");
         const weekLabel = panel.querySelector("#ad-ext-plan-week-label");
@@ -9640,9 +11027,6 @@ function renderTrainingPlan(panel, weeksAsc) {
         if (weekLabel) { try { weekLabel.style.display = "none"; } catch {} }
         if (weekSub) { try { weekSub.style.display = "none"; } catch {} }
         const basisWrap = panel.querySelector("#ad-ext-plan-basis");
-        const chkPerf = panel.querySelector("#ad-ext-plan-showperf");
-
-        if (chkPerf) chkPerf.checked = showPerf;
 
         // active state for segmented control
         if (basisWrap) {
@@ -9710,17 +11094,6 @@ function renderTrainingPlan(panel, weeksAsc) {
 
         const { byActivity, stTargets } = aggregateTrainingActualsForWeek(selWeekKey);
 
-        // Optional (0.14.32): Performance nur anzeigen, wenn Tracker sie bereits liefert.
-        // Kein Neuberechnen aus Hits/Darts o.ä.
-        let perfAgg = null;
-        if (showPerf) {
-            const wkStart2 = parseDayKeyToLocalDate(selWeekKey);
-            if (wkStart2) {
-                const wkEnd2 = addDaysLocal(wkStart2, 7);
-                perfAgg = getTrackerAggregationForWeek({ start: wkStart2, end: wkEnd2 });
-            }
-        }
-
 
         const goals = (st.goals && st.goals[basis]) ? st.goals[basis] : {};
         const goalFor = (k) => Number(goals?.[k] ?? 0);
@@ -9746,13 +11119,17 @@ function renderTrainingPlan(panel, weeksAsc) {
         };
 
         const progressCell = (istVal, goalVal) => {
-            const ratio = goalVal > 0 ? (istVal / goalVal) : 0;
-            const pctTxt = goalVal > 0 ? `${Math.round(ratio * 100)}%` : "–";
-            const pctRaw = Number.isFinite(ratio) ? (ratio * 100) : 0;
             const hasGoal = goalVal > 0;
+            const ratio = hasGoal ? (istVal / goalVal) : 0;
+
+            const pctNum = hasGoal
+                ? Math.max(0, Math.min(100, (Number.isFinite(ratio) ? ratio : 0) * 100))
+                : 0;
+            const pctShow = hasGoal ? (Math.round(pctNum * 10) / 10) : 0;
+            const pctTxt = hasGoal ? `${pctShow.toFixed(1)}%` : "–";
 
             return `
-              <div class="ad-ext-plan-progresswrap" data-pct="${pctRaw}" data-has-goal="${hasGoal ? 1 : 0}" style="display:flex;flex-direction:column;gap:4px;">
+              <div class="ad-ext-plan-progresswrap" data-pct="${pctNum}" data-has-goal="${hasGoal ? 1 : 0}" style="display:flex;flex-direction:column;gap:4px;">
                 <div class="ad-ext-plan-pct">${pctTxt}</div>
               </div>
             `;
@@ -9769,6 +11146,8 @@ function renderTrainingPlan(panel, weeksAsc) {
 
             let totalGoal = 0;
             let totalIst = 0;
+            let totalCredited = 0;
+            let totalTimeSec = 0;
 
             const fmtGoal = (v) => {
                 if (viewMode === "time") return `${clampMinutes(v)}min`;
@@ -9780,12 +11159,6 @@ function renderTrainingPlan(panel, weeksAsc) {
                 return String(Math.max(0, Math.round(Number(v) || 0)));
             };
 
-            const perfLineFor = (trackerKey) => {
-                if (!showPerf) return "";
-                const perf = perfAgg?.performanceByActivity?.[trackerKey] || null;
-                return `<div class="ad-ext-plan-perfline"><span>Trefferquote: ${escapeHtml(fmtHitRateMaybe(perf?.hitRate))}</span><span>Hits/min: ${escapeHtml(fmtHitsPerMinMaybe(perf?.hitsPerMin))}</span></div>`;
-            };
-
             if (!wp || items.length === 0) {
                 rows.push(`
             <tr>
@@ -9793,8 +11166,9 @@ function renderTrainingPlan(panel, weeksAsc) {
                 Kein Trainingsplan für diese Woche angelegt
                 <div class="ad-ext-muted" style="margin-top:4px;">Rechts im Trainingsplan-Panel über <span style="font-weight:900;">+ Aktivität</span> anlegen.</div>
               </td>
-              <td>—</td>
-              <td>—</td>
+              <td class="ad-ext-table-num-right">—</td>
+              <td class="ad-ext-table-num-right">—</td>
+              <td class="ad-ext-table-num-right ad-ext-table-nowrap" title="—">—</td>
               <td class="ad-ext-muted">—</td>
             </tr>
           `);
@@ -9836,51 +11210,93 @@ function renderTrainingPlan(panel, weeksAsc) {
                     }
 
                     const ist = (viewMode === "time") ? toIntMinutes(sec) : Math.round(cnt || 0);
+                    const istNum = Math.max(0, Math.round(Number(ist) || 0));
+                    const overtrainedRow = (Number(istNum) || 0) > (Number(goal) || 0) + 1e-9;
+                    const istTxt = (viewMode === "time") ? `${overtrainedRow ? "⚠️ " : ""}${istNum}min` : `${overtrainedRow ? " ⚠️" : ""}${istNum}`;
+                    try { if (overtrainedRow) console.debug("[trainingsdaten row]", { activityKey: trackerKey, goal, istRaw: istNum, istCredited: Math.min(istNum, goal), overtrained: overtrainedRow }); } catch {}
+
+                    // Donut->Tabelle Filter (Trainingsfortschritt): Zeilen-Status (0.14.79)
+                    const credited = Math.min(ist, goal);
+                    const status = (goal > 0 && credited >= goal) ? "reached" : ((goal > 0) ? "open" : "");
 
                     totalGoal += goal;
                     totalIst += ist;
+                    totalCredited += credited;
+
+                    const timeTxt = fmtHours(Number(sec) || 0);
+
+                    totalTimeSec += Number(sec) || 0;
 
                     rows.push(`
-            <tr>
-              <td style="font-weight:950;">${escapeHtml(lab)}${perfLineFor(trackerKey)}</td>
-              <td style="font-weight:950; opacity:.9;">${escapeHtml(fmtGoal(goal))}</td>
-              <td style="font-weight:950;">${escapeHtml(fmtIstVal(ist))}</td>
+            <tr class="ad-ext-train-row" data-tracker-key="${escapeHtml(trackerKey)}" data-plan-type="${escapeHtml(type)}" data-plan-item-id="${escapeHtml(String(it?.id || ""))}" data-goal="${escapeHtml(String(goal))}" data-ist="${escapeHtml(String(ist))}" data-credited="${escapeHtml(String(credited))}" data-status="${escapeHtml(status)}">
+              <td style="font-weight:950;" title="${escapeHtml(lab)}"><span class="ad-ext-rowexp">+</span>${escapeHtml(lab)}</td>
+              <td class="ad-ext-table-num-right" style="font-weight:950; opacity:.9;">${escapeHtml(fmtGoal(goal))}</td>
+              <td class="ad-ext-table-num-right" style="font-weight:950;"${overtrainedRow ? ' title="Hinweis: Übertraining! Für die Statistik wird IST = SOLL gewertet."' : ""}>${escapeHtml(istTxt)}</td>
+              <td class="ad-ext-table-num-right ad-ext-table-nowrap" style="font-weight:950; opacity:.9;" title="${escapeHtml(timeTxt)}">${escapeHtml(timeTxt)}</td>
               <td>${progressCell(ist, goal)}</td>
             </tr>
           `);
                 }
             }
 
+
             // total row
             const totalGoalTxt = (viewMode === "time") ? `${Math.round(totalGoal)}min` : String(Math.round(totalGoal));
-            const totalIstTxt = (viewMode === "time") ? `${Math.round(totalIst)}min` : String(Math.round(totalIst));
+            const totalIstRawTxt = (viewMode === "time") ? `${Math.round(totalIst)}min` : String(Math.round(totalIst));
+            const totalCreditedTxt = (viewMode === "time") ? `${Math.round(totalCredited)}min` : String(Math.round(totalCredited));
+            const overtrainingTip = "Hinweis: Übertraining! Für die Statistik wird IST = SOLL gewertet.";
+            const istSumRaw = Number(totalIst) || 0;
+            const creditedSum = Number(totalCredited) || 0;
+            const overtrained = istSumRaw > creditedSum + 1e-9;
+            const totalIstTxt = totalCreditedTxt;
 
             // KPI tiles (Training-View) – UI only (no wiring changes)
+            const goalNum = Number(totalGoal) || 0;
+            const istNum = Number(totalIst) || 0;
+            const creditedNum = Number(totalCredited) || 0;
+            const hasGoal = goalNum > 0;
+            const pctNumRaw = hasGoal ? ((creditedNum / goalNum) * 100) : NaN;
+            const pct = Number.isFinite(pctNumRaw) ? Math.max(0, Math.min(100, pctNumRaw)) : 0;
+
+            // gesamte Trainingszeit der Woche (unabhängig vom Plan)
+            let totalWeekSec = 0;
+            try {
+                for (const rec of (byActivity?.values?.() || [])) {
+                    totalWeekSec += Number(rec?.sec || 0) || 0;
+                }
+            } catch {}
+
             try {
                 const kpiSollEl = panel.querySelector("#ad-ext-train-kpi-soll");
                 const kpiIstEl = panel.querySelector("#ad-ext-train-kpi-ist");
+                const kpiTimeEl = panel.querySelector("#ad-ext-train-kpi-time");
                 const kpiProgEl = panel.querySelector("#ad-ext-train-kpi-progress");
                 const kpiBarEl = panel.querySelector("#ad-ext-train-kpi-progressbar");
 
                 if (kpiSollEl) kpiSollEl.textContent = String(totalGoalTxt || "—");
-                if (kpiIstEl) kpiIstEl.textContent = String(totalIstTxt || "—");
+                if (kpiIstEl) {
+                    kpiIstEl.textContent = String(totalIstTxt || "—");
+                    kpiIstEl.title = "";
+                }
+                if (kpiTimeEl) kpiTimeEl.textContent = String(fmtHours(Number(totalWeekSec) || 0) || "—");
 
-                const goalNum = Number(totalGoal) || 0;
-                const istNum = Number(totalIst) || 0;
-                const hasGoal = goalNum > 0;
-                const pctRaw = hasGoal ? Math.round((istNum / goalNum) * 100) : NaN;
-                const pct = Number.isFinite(pctRaw) ? Math.max(0, Math.min(100, pctRaw)) : 0;
-
-                if (kpiProgEl) kpiProgEl.textContent = hasGoal ? `${pct}%` : "—";
+                if (kpiProgEl) kpiProgEl.textContent = hasGoal ? `${pct.toFixed(1)}%` : "—";
                 if (kpiBarEl && kpiBarEl.style) kpiBarEl.style.width = `${pct}%`;
             } catch {}
+
+            try {
+                console.debug("[trainingsdaten sums]", { selWeekKey, totalGoal, istSumRaw, creditedSum });
+            } catch {}
+
+            const totalTimeTxt = fmtHours(Number(totalTimeSec) || 0);
 
             rows.push(`
           <tr class="ad-ext-row-total">
             <td style="font-weight:950;">Gesamt</td>
-            <td style="font-weight:950; opacity:.9;">${escapeHtml(totalGoalTxt)}</td>
-            <td style="font-weight:950;">${escapeHtml(totalIstTxt)}</td>
-            <td>${progressCell(totalIst, totalGoal)}</td>
+            <td class="ad-ext-table-num-right" style="font-weight:950; opacity:.9;">${escapeHtml(totalGoalTxt)}</td>
+            <td class="ad-ext-table-num-right" style="font-weight:950;">${escapeHtml(totalIstTxt)}</td>
+            <td class="ad-ext-table-num-right ad-ext-table-nowrap" style="font-weight:950; opacity:.9;" title="${escapeHtml(totalTimeTxt)}">${escapeHtml(totalTimeTxt)}</td>
+            <td>${progressCell(totalCredited, totalGoal)}</td>
           </tr>
         `);
 
@@ -9893,9 +11309,15 @@ function renderTrainingPlan(panel, weeksAsc) {
                 wrap.appendChild(createProgressBarDom(pct, hasGoal));
             }
 
+            // Charts (optional): Erreicht vs Offen (Fortschritt, nicht substituierbar)
+            try { renderTrainingProgressCharts(panel, totalGoal, totalCredited, totalIst, viewMode); } catch {}
+            // Tabelle -> SOLL Donut: Klick auf Aktivitätszeile toggelt SOLL-Filter (0.14.87)
+            try { ensureTrainingSollSplitTableWiring(panel); } catch {}
+
+
         }
 
-        
+
     }
 
 
@@ -10724,8 +12146,7 @@ function renderTrainingPlan(panel, weeksAsc) {
     ];
 
     const TRAINING_PLAN_DEFAULT = {
-        basis: "TIME", // TIME | SESS
-        showPerf: false,
+        basis: "SESS", // TIME | SESS
         selectedWeekKey: null,
         goals: {
             TIME: { // hours per week
@@ -10791,12 +12212,12 @@ function renderTrainingPlan(panel, weeksAsc) {
             const raw = localStorage.getItem(TRAINING_PLAN_STORAGE_KEY);
             if (!raw) {
                 const s = deepMergeDefaults(TRAINING_PLAN_DEFAULT, null);
-                s.basis = normalizePlanBasis(s.basis);
+                s.basis = "SESS";
                 return s;
             }
             const parsed = JSON.parse(raw);
             const merged = deepMergeDefaults(TRAINING_PLAN_DEFAULT, parsed);
-            merged.basis = normalizePlanBasis(merged.basis);
+            merged.basis = "SESS";
 
             // sanitize numbers
             for (const k of TRAINING_ACTIVITIES.map(a => a.key)) {
@@ -10815,19 +12236,20 @@ function renderTrainingPlan(panel, weeksAsc) {
             }
 
             merged.selectedWeekKey = merged.selectedWeekKey || null;
-            merged.showPerf = !!merged.showPerf;
-
+            try { delete merged.showPerf; } catch (e) {}
             return merged;
         } catch {
             const s = deepMergeDefaults(TRAINING_PLAN_DEFAULT, null);
-            s.basis = normalizePlanBasis(s.basis);
+            s.basis = "SESS";
             return s;
         }
     }
 
     function saveTrainingPlanState(state) {
         try {
-            localStorage.setItem(TRAINING_PLAN_STORAGE_KEY, JSON.stringify(state));
+            const s = (state && typeof state === "object") ? { ...state } : state;
+            if (s && typeof s === "object") { try { delete s.showPerf; } catch (e) {} }
+            localStorage.setItem(TRAINING_PLAN_STORAGE_KEY, JSON.stringify(s));
         } catch (e) {
             console.warn("[AD Ext] saveTrainingPlanState failed:", e);
         }
@@ -10994,7 +12416,7 @@ function renderTrainingPlan(panel, weeksAsc) {
         if (tarBody) tarBody.innerHTML = `<tr><td colspan="5" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
         if (x01Body) x01Body.innerHTML = `<tr><td colspan="12" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
         if (timeBody) timeBody.innerHTML = `<tr><td colspan="7" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
-        if (planMainBody) planMainBody.innerHTML = `<tr><td colspan="4" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
+        if (planMainBody) planMainBody.innerHTML = `<tr><td colspan="5" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
         if (planFocusBody) planFocusBody.innerHTML = `<tr><td colspan="6" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
 
         try {
@@ -11145,7 +12567,7 @@ function renderTrainingPlan(panel, weeksAsc) {
         }
     }
 
-    
+
         // Training Plan Sidebar – Week Plans (0.14.34)
 // - weekMode + planItems werden pro ISO-Woche lokal gespeichert (LocalStorage)
     const WEEK_PLAN_STORAGE_PREFIX = "autodarts.segmentDash.plan.";
@@ -11211,11 +12633,31 @@ function renderTrainingPlan(panel, weeksAsc) {
         try {
             const obj = JSON.parse(raw);
             if (!obj || typeof obj !== "object") return null;
+            const rawMode = String(obj.weekMode || "");
+            const isLegacyTime = (rawMode === "time");
 
-            const weekMode = normalizeWeekMode(obj.weekMode);
-            const planItems = Array.isArray(obj.planItems) ? obj.planItems : [];
+            // Sanitize planItems robust (IDs, strings, params etc.)
+            let planItems = sanitizePlanItemsForStorage(Array.isArray(obj.planItems) ? obj.planItems : []);
 
-            return { schemaVersion: 1, weekId: id, weekMode, planItems };
+            // 0.14.75: UI unterstützt nur noch Sessions/Legs.
+            // Legacy-Migration: weekMode "time" -> "sessions" + best-effort Conversion der Ziele.
+            if (isLegacyTime) {
+                const denom = Number(PLAN_SESSION_MINUTES) || 30;
+                planItems = planItems.map((it) => {
+                    const minutes = clampMinutes(Number(it?.targetMinutes) || 0);
+                    const sess = minutes > 0 ? clampSessions(Math.max(1, Math.round(minutes / denom))) : 0;
+                    return { ...it, targetSessions: sess };
+                });
+
+                // Persistiere Migration, damit "time" nicht wieder auftaucht
+                try {
+                    const migrated = { schemaVersion: 1, weekId: id, weekMode: "sessions", planItems };
+                    localStorage.setItem(key, JSON.stringify(migrated));
+                } catch {}
+            }
+
+            // Immer sessions nach außen
+            return { schemaVersion: 1, weekId: id, weekMode: "sessions", planItems };
         } catch (e) {
             // Robustheit: Parse-Fehler -> null
             return null;
@@ -11361,9 +12803,7 @@ let params = (src.params && typeof src.params === "object") ? { ...src.params } 
 
     // UI Controls (Sidebar)
     let planWeek = weekKeyFromDate(new Date()) || "";
-    let weekMode = "time"; // "time" | "sessions"
-    let planShowPerf = false; // RAM only (nicht gespeichert)
-    let planTabShowPerf = false; // RAM only (nicht gespeichert)
+    let weekMode = "sessions"; // "time" | "sessions" (UI: sessions only since 0.14.75)
 
     // Drawer state (RAM)
     let planDrawerOpen = false;
@@ -11413,6 +12853,10 @@ let params = (src.params && typeof src.params === "object") ? { ...src.params } 
             font-weight: 900; opacity: .7; padding: 0 2px; line-height: 1;
           }
           .ad-plan-chip-x:hover { opacity: 1; }
+          .ad-plan-chip-handle { cursor: grab; opacity: .7; user-select:none; }
+          .ad-plan-chip-handle:hover { opacity: 1; }
+          .ad-plan-chip.ad-dragging { opacity: .5; }
+          .ad-plan-chip.ad-drop-target { outline: 2px dashed rgba(255,255,255,0.25); outline-offset: -2px; }
           .ad-plan-muted { opacity: .7; font-size: 12px; }
           .ad-plan-error { margin-top: 6px; font-size: 12px; color: #b00020; }
 
@@ -11512,17 +12956,50 @@ let params = (src.params && typeof src.params === "object") ? { ...src.params } 
         return `${base} (${maxN + 1})`;
     }
 
+
+    // Training-Defaults (LEGS/Sessions) aus Settings pro PlanType (0.14.94)
+
+    function getDefaultSessionsForPlanType(type) {
+
+        const t = String(type || "").trim().toUpperCase();
+
+        let v = 1;
+
+        if (t === "ATC") v = AD_getSetting("TRAIN_DEF_LEGS_ATC", TRAIN_DEF_LEGS_ATC);
+
+        else if (t === "COUNTUP") v = AD_getSetting("TRAIN_DEF_LEGS_COUNTUP", TRAIN_DEF_LEGS_COUNTUP);
+
+        else if (t === "CRICKET") v = AD_getSetting("TRAIN_DEF_LEGS_CRICKET", TRAIN_DEF_LEGS_CRICKET);
+
+        else if (t === "RANDOM_CHECKOUT") v = AD_getSetting("TRAIN_DEF_LEGS_RANDOM_CHECKOUT", TRAIN_DEF_LEGS_RANDOM_CHECKOUT);
+
+        else if (t === "SEGMENT_TRAINING") v = AD_getSetting("TRAIN_DEF_LEGS_SEGMENT_TRAINING", TRAIN_DEF_LEGS_SEGMENT_TRAINING);
+
+        else if (t === "X01_BOT") v = AD_getSetting("TRAIN_DEF_LEGS_X01_BOT", TRAIN_DEF_LEGS_X01_BOT);
+
+        else if (t === "X01_HUMAN") v = AD_getSetting("TRAIN_DEF_LEGS_X01_HUMAN", TRAIN_DEF_LEGS_X01_HUMAN);
+
+
+        // Safety: always >= 1 and clamped
+
+        return clampSessions(Math.max(1, Number(v) || 0));
+
+    }
+
+
     function createPlanItemFromTemplate(tpl, items) {
         const t = tpl || {};
         const base = String(t.name || "").trim() || "Aktivität";
         const type = String(t.type || base).trim() || "CUSTOM";
 
+
+        const sessions = getDefaultSessionsForPlanType(type);
         const it = {
             id: makePlanId(),
             type,
             name: nextUniqueName(base, items),
-            targetMinutes: clampMinutes(Number(t.defaultMinutes) || 0),
-            targetSessions: 1
+            targetMinutes: clampMinutes(sessions * PLAN_SESSION_MINUTES),
+            targetSessions: sessions
         };
 
         // Step 2: Segment Training bekommt params.targets (initial leer)
@@ -11549,10 +13026,65 @@ let params = (src.params && typeof src.params === "object") ? { ...src.params } 
 function wireTrainingPlanSidebarScaffold(panel) {
         if (!panel) return;
 
-        // Persisted view: DATA | PLAN
+
+        // Plan-Sidebar: Aktionen ins Hamburger-Menü (0.14.91)
+        try {
+            const menuBtn = panel.querySelector("#adPlanMenuBtn");
+            const menuDd = panel.querySelector("#adPlanMenuDropdown");
+            const menuWrap = panel.querySelector("#adPlanMenu");
+            if (menuBtn && menuDd && menuWrap) {
+                // default: closed
+                try { menuDd.hidden = true; } catch {}
+                try { menuBtn.setAttribute("aria-expanded", "false"); } catch {}
+
+                if (menuBtn.dataset.adExtPlanMenuWired !== "1") {
+                    menuBtn.dataset.adExtPlanMenuWired = "1";
+                    menuBtn.addEventListener("click", (ev) => {
+                        try {
+                            ev.preventDefault();
+                            ev.stopPropagation();
+                            const open = !menuDd.hidden;
+                            menuDd.hidden = open;
+                            try { menuBtn.setAttribute("aria-expanded", open ? "false" : "true"); } catch {}
+                        } catch {}
+                    });
+                }
+
+                if (!window.__adExtPlanMenuGlobalWired) {
+                    window.__adExtPlanMenuGlobalWired = true;
+
+                    document.addEventListener("click", (ev) => {
+                        try {
+                            const dd = document.querySelector("#adPlanMenuDropdown");
+                            const btn = document.querySelector("#adPlanMenuBtn");
+                            const wrap = document.querySelector("#adPlanMenu");
+                            if (!dd || !btn || !wrap) return;
+                            if (dd.hidden) return;
+                            if (wrap.contains(ev.target)) return;
+                            dd.hidden = true;
+                            try { btn.setAttribute("aria-expanded", "false"); } catch {}
+                        } catch {}
+                    }, true);
+
+                    document.addEventListener("keydown", (ev) => {
+                        try {
+                            if (ev.key !== "Escape") return;
+                            const dd = document.querySelector("#adPlanMenuDropdown");
+                            const btn = document.querySelector("#adPlanMenuBtn");
+                            if (!dd || dd.hidden) return;
+                            dd.hidden = true;
+                            try { btn?.setAttribute("aria-expanded", "false"); } catch {}
+                        } catch {}
+                    }, true);
+                }
+            }
+        } catch {}
+        // Persisted view: DATA | PLAN | INSIGHTS | SEGFOCUS
         try {
             const raw = String(localStorage.getItem(AD_EXT_TRAIN_VIEW_LS_KEY) || trainView || "DATA").toUpperCase();
-            trainView = (raw === "PLAN") ? "PLAN" : "DATA";
+            trainView = (raw === "PLAN") ? "PLAN" : (raw === "INSIGHTS") ? "INSIGHTS"
+                : (raw === "SEGFOCUS" || raw === "SEGFOKUS" || raw === "SEGMENT_FOCUS") ? "SEGFOCUS"
+                : "DATA";
         } catch {
             trainView = trainView || "DATA";
         }
@@ -11561,17 +13093,42 @@ function wireTrainingPlanSidebarScaffold(panel) {
         const layout = panel.querySelector(".ad-train-layout");
         const side = panel.querySelector(".ad-train-side");
         const main = panel.querySelector(".ad-train-main");
-        const btnClose = panel.querySelector("#adTrainPlanClose");
-        const trainViewRoot = panel.querySelector("#ad-ext-view-training");
+        const segfocus = panel.querySelector("#ad-ext-train-segfokus");
+const trainViewRoot = panel.querySelector("#ad-ext-view-training");
 
         if (!tabs || !layout || !side || !main) return;
+
+        // Insights warmup (v0.14.107): KPIs vorberechnen ohne View-Wechsel
+        let _insightsWarmupT = null;
+        const warmupInsights = () => {
+            try { if (_insightsWarmupT) clearTimeout(_insightsWarmupT); } catch {}
+            _insightsWarmupT = setTimeout(() => {
+                try {
+                    if (!panel || !panel.isConnected) return;
+                    if (!cache?.loaded) return;
+                    renderInsights(panel);
+                } catch {}
+            }, 0);
+        };
+
+        const ensureSegFocusMounted = () => {
+            try {
+                const wrap = segfocus || panel.querySelector("#ad-ext-train-segfokus");
+                const segPanel = panel.querySelector("#ad-ext-view-segment");
+                if (!wrap || !segPanel) return;
+                if (segPanel.parentElement !== wrap) wrap.appendChild(segPanel);
+                try { segPanel.style.display = ""; } catch {}
+            } catch {}
+        };
+
         // Re-render helper: Trainingsdaten-Panel neu zeichnen (Plan frisch aus Storage lesen)
         const rerenderTrainingMain = () => {
             try {
                 if (!cache?.loaded) return;
-                const weeks = cache._training_weeksAsc || computeTrainingWeeksAsc();
+                const weeks = computeTrainingWeeksAsc();
                 cache._training_weeksAsc = weeks;
                 renderTrainingPlan(panel, weeks);
+                warmupInsights();
             } catch {}
         };
 
@@ -11593,7 +13150,8 @@ function wireTrainingPlanSidebarScaffold(panel) {
         }
 
         function setTrainView(view) {
-            trainView = (String(view || "").toUpperCase() === "PLAN") ? "PLAN" : "DATA";
+            const v = String(view || "").toUpperCase();
+            trainView = (v === "PLAN") ? "PLAN" : (v === "INSIGHTS") ? "INSIGHTS" : (v === "SEGFOCUS" || v === "SEGFOKUS" || v === "SEGMENT_FOCUS") ? "SEGFOCUS" : "DATA";
             try { localStorage.setItem(AD_EXT_TRAIN_VIEW_LS_KEY, trainView); } catch {}
 
             layout.dataset.trainView = trainView;
@@ -11616,6 +13174,11 @@ function wireTrainingPlanSidebarScaffold(panel) {
             // Beim Umschalten immer Trainingsdaten neu berechnen (Plan aus Storage)
             if (trainView === "DATA") {
                 rerenderTrainingMain();
+            } else if (trainView === "INSIGHTS") {
+                try { renderInsights(panel); } catch {}
+            } else if (trainView === "SEGFOCUS") {
+                try { ensureSegFocusMounted(); } catch {}
+                try { if (cache?.loaded) renderSegmentTraining(panel, cache.sessions, cache.filters, cache.meta); } catch {}
             }
         }
 
@@ -11629,17 +13192,6 @@ function wireTrainingPlanSidebarScaffold(panel) {
             // Mouse-click: kein dauerhafter Focus-Ring
             if (ev.detail && ev.detail > 0) { try { btn.blur(); } catch {} }
         };
-
-        // Close-X im Plan → zurück zu Trainingsdaten
-        if (btnClose) {
-            btnClose.onclick = (ev) => {
-                ev?.preventDefault?.();
-                ev?.stopPropagation?.();
-                setTrainView("DATA");
-                if (ev?.detail && ev.detail > 0) { try { btnClose.blur(); } catch {} }
-            };
-        }
-
         // Initial sync (wichtig nach SPA-Re-render)
         setTrainView(trainView);
     }
@@ -11659,7 +13211,12 @@ function wireTrainingPlanSidebarScaffold(panel) {
 const btnAdd = side.querySelector("#adPlanAddActivityBtn");
         const btnCopyPrevWeek = side.querySelector("#adPlanCopyPrevWeekBtn");
 
-        const statusEl = side.querySelector("#adPlanStatus");
+        const btnResetWeek = side.querySelector("#adPlanResetWeekBtn");
+
+
+        const btnSavePlan = side.querySelector("#adPlanSavePlanBtn");
+        const btnLoadPlan = side.querySelector("#adPlanLoadPlanBtn");
+const statusEl = side.querySelector("#adPlanStatus");
         const sumTarget = side.querySelector("#adPlanSumTarget");
         const sumActual = side.querySelector("#adPlanSumActual");
         const sumProgress = side.querySelector("#adPlanSumProgress");
@@ -11673,7 +13230,7 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
         const drawerSearch = panel.querySelector("#adPlanDrawerSearch");
         const drawerList = panel.querySelector("#adPlanDrawerList");
 
-        if (!statusEl || !sumTarget || !sumActual || !sumProgress || !table || !activeWeekInfo) return;
+        if (!statusEl || !sumTarget || !table || !activeWeekInfo) return;
 
         // Step 2: Detailbereich unterhalb der Liste (Plan-Items)
         let details = side.querySelector("#adPlanDetails");
@@ -11812,13 +13369,6 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
 
             renderPlanDetails();
         }
-        // 0.14.41: Performance wird global im Hauptpanel gesteuert (nur Anzeige in Sidebar)
-        if (chk) {
-            if (chk) chk.disabled = true;
-            if (chk) chk.title = "Global im Hauptpanel steuern";
-            if (chk) chk.checked = !!planTabShowPerf;
-        }
-        planShowPerf = !!planTabShowPerf;
         function setStatusTemp(msg) {
             if (!statusEl) return;
             statusEl.textContent = String(msg || "");
@@ -11952,15 +13502,11 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
 
 
         function getSidebarViewMode() {
+            // UI: seit 0.14.75 nur noch Sessions/Legs. Time bleibt intern als Fallback erhalten.
             try { cache.trainingPlan = cache.trainingPlan || loadTrainingPlanState(); } catch {}
             const st = cache.trainingPlan || {};
-            const basis = normalizePlanBasis(st.basis);
-            st.basis = basis;
-            return (basis === "SESS") ? "sessions" : "time";
-        }
-
-        function getSidebarShowPerf() {
-            return !!planTabShowPerf;
+            st.basis = "SESS";
+            return "sessions";
         }
 
         function syncModeButtons() {
@@ -11990,13 +13536,13 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
             const loaded = loadWeekPlan(weekId);
 
             if (loaded) {
-                weekMode = normalizeWeekMode(loaded.weekMode);
+                weekMode = "sessions"; // UI: sessions-only (0.14.75)
                 planItems = sanitizePlanItemsForStorage(loaded.planItems);
                 _adPlanActiveWeekHasStoredPlan = true;
             } else {
                 // 0.14.42: Keine Auto-Templates/Auto-Speicherung mehr.
                 // Neue Wochen starten leer, bis der User aktiv etwas anlegt (z. B. +Aktivität).
-                weekMode = normalizeWeekMode(getSidebarViewMode());
+                weekMode = "sessions"; // UI: sessions-only (0.14.75)
                 planItems = [];
                 _adPlanActiveWeekHasStoredPlan = false;
             }
@@ -12056,9 +13602,23 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
             return true;
         }
 
+        function fmtWeekLabel(wkKey) {
+            try {
+                const r = weekRangeFromWeekKey(wkKey);
+                const isoYear = Number(r?.isoYear) || 0;
+                const week = String(r?.week ?? "").padStart(2, "0");
+                const s = dayKeyToGerman(r?.startKey);
+                const e = dayKeyToGerman(r?.endKey);
+                const sShort = String(s || "").replace(/\.\d{4}$/, ".");
+                const eShort = String(e || "").replace(/\.\d{4}$/, ".");
+                if (isoYear && week && sShort && eShort) return `KW ${week}/${isoYear} (${sShort}–${eShort})`;
+            } catch (e) { /* ignore */ }
+            return String(wkKey || "");
+        }
+
         function isPlanEmptyForCopy() {
             const arr = Array.isArray(planItems) ? planItems : [];
-            return !arr.length;
+            return (!arr.length) || isDefaultTemplatePlan(arr);
         }
 
         function syncCopyPrevWeekButton() {
@@ -12072,7 +13632,23 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
                 : (can ? "Übernimmt den Plan der Vorwoche" : "Aktuelle Woche hat bereits einen Plan");
         }
 
-        function copyPrevWeekPlanIntoCurrent() {
+
+
+        function syncResetWeekButton() {
+            if (!btnResetWeek) return;
+            const wkKey = ensureSidebarSelectedWeekKey();
+            const weekId = weekIdFromWeekKey(wkKey);
+
+            const arr = Array.isArray(planItems) ? planItems : [];
+            const isVirgin = (arr.length === 0) && (_adPlanActiveWeekHasStoredPlan === false) && (_adPlanDirty === false);
+
+            const can = !!weekId && !isVirgin;
+            btnResetWeek.disabled = !can;
+            btnResetWeek.title = !weekId
+                ? "Keine Woche gewählt"
+                : (can ? `Löscht den Trainingsplan dieser Woche (${fmtWeekLabel(wkKey)})` : "Woche ist bereits leer");
+        }
+function copyPrevWeekPlanIntoCurrent() {
             const wkKey = ensureSidebarSelectedWeekKey();
             const curWeekId = weekIdFromWeekKey(wkKey);
 
@@ -12084,6 +13660,7 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
             if (!isPlanEmptyForCopy()) {
                 setStatusTemp("Aktuelle Woche hat bereits einen Plan.");
                 syncCopyPrevWeekButton();
+            syncResetWeekButton();
                 return;
             }
 
@@ -12155,6 +13732,50 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
         }
 
 
+        function resetCurrentWeekPlan() {
+            const wkKey = ensureSidebarSelectedWeekKey();
+            const weekId = weekIdFromWeekKey(wkKey);
+
+            if (!weekId) {
+                setStatusTemp("Keine Woche gewählt.");
+                return;
+            }
+
+            const arr = Array.isArray(planItems) ? planItems : [];
+            const isVirgin = (arr.length === 0) && (_adPlanActiveWeekHasStoredPlan === false) && (_adPlanDirty === false);
+
+            if (isVirgin) {
+                setStatusTemp("Woche ist bereits leer.");
+                syncCopyPrevWeekButton();
+                syncResetWeekButton();
+                return;
+            }
+
+            if (!confirm(`${fmtWeekLabel(wkKey)} wirklich zurücksetzen? (Trainingsplan wird gelöscht)`)) return;
+
+            // Pending Auto-Save stoppen, ohne zu flushen/speichern
+            if (_adPlanSaveTimer) {
+                clearTimeout(_adPlanSaveTimer);
+                _adPlanSaveTimer = null;
+            }
+
+            // Dirty-State zurücksetzen, damit nichts gespeichert wird
+            _adPlanDirty = false;
+            _adPlanLastSavedWeekId = null;
+            _adPlanLastSavedJson = null;
+
+            // Storage-Key löschen
+            deleteWeekPlan(weekId);
+
+            // UI/Memory neu laden (leer)
+            ensureSidebarWeekPlanLoaded(true);
+            renderAll();
+            setStatusTemp("Woche zurückgesetzt.");
+        }
+
+
+
+
                 function getItemActualMinutes(it, agg) {
             const type = String(it?.type || "");
             if (type === "SEGMENT_TRAINING") {
@@ -12205,45 +13826,44 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
             const items = Array.isArray(planItems) ? planItems : [];
             let goal = 0;
             let ist = 0;
+            let credited = 0;
 
             if (getSidebarViewMode() === "sessions") {
                 for (const it of items) {
-                    goal += getTargetSessions(it);
-                    ist += getItemActualSessions(it, agg);
+                    const g = getTargetSessions(it);
+                    const a = getItemActualSessions(it, agg);
+                    goal += g;
+                    ist += a;
+                    credited += Math.min(a, g);
                 }
             } else {
                 for (const it of items) {
                     const g = clampMinutes(Number(it?.targetMinutes));
+                    const a = getItemActualMinutes(it, agg);
                     goal += g;
-                    ist += getItemActualMinutes(it, agg);
+                    ist += a;
+                    credited += Math.min(a, g);
                 }
             }
 
-            const pct = getProgressPct(ist, goal);
-            return { goal, ist, progressPct: pct };
+            const pct = getProgressPct(credited, goal);
+            return { goal, ist, credited, progressPct: pct };
         }
 
 
-        
+
         function renderSummary() {
             const agg = getTrackerAggForSelectedWeek();
             const totals = computeSidebarTotals(agg);
 
             if (getSidebarViewMode() === "sessions") {
-                sumTarget.textContent = String(Math.round(totals.goal));
-                sumActual.textContent = String(Math.round(totals.ist));
+                sumTarget.textContent = `${Math.round(totals.goal)} LEGS`;
             } else {
+                // legacy fallback
                 sumTarget.textContent = `${Math.round(totals.goal)}min`;
-                sumActual.textContent = `${Math.round(totals.ist)}min`;
             }
-
-            sumProgress.textContent = `${Math.round(totals.progressPct)}%`;
         }
-
-
-        
-        
-        function renderPlanTable() {
+function renderPlanTable() {
             if (!table) return;
 
             const isSessions = getSidebarViewMode() === "sessions";
@@ -12254,9 +13874,7 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
             const head = `
               <div class="ad-plan-row ad-plan-row--head">
                 <div>Aktivität</div>
-                <div class="ad-plan-cell-right">Soll</div>
-                <div class="ad-plan-cell-right">Ist</div>
-                <div class="ad-plan-cell-right">Fortschritt</div>
+                <div>Soll</div>
               </div>
             `;
 
@@ -12266,47 +13884,38 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
                 ? items.map((it) => {
                 const id = String(it?.id || "");
                 const name = String(it?.name || "");
-                const typeKey = String(it?.type || "");
-                const perf = agg?.performanceByActivity?.[typeKey] || null;
-                const perfLine = (planShowPerf === true)
-                    ? `<div class="ad-plan-perfline"><span>Trefferquote: ${escapeHtml(fmtHitRateMaybe(perf?.hitRate))}</span><span>Hits/min: ${escapeHtml(fmtHitsPerMinMaybe(perf?.hitsPerMin))}</span></div>`
-                    : "";
                 const selected = String(selectedPlanItemId || "") === id;
 
                 const soll = isSessions ? getTargetSessions(it) : clampMinutes(Number(it?.targetMinutes));
-                const inputValue = isSessions
-                    ? String(soll)
-                    : String(soll);
-
-                const ist = isSessions ? getItemActualSessions(it, agg) : getItemActualMinutes(it, agg);
-                const istLabel = isSessions ? String(Math.round(ist)) : `${Math.round(ist)}min`;
-                const progress = getProgressPct(ist, soll);
+                const inputValue = String(soll);
 
                 const step = isSessions ? "1" : "5";
                 const max = isSessions ? String(PLAN_TARGET_MAX_SESSIONS) : String(PLAN_TARGET_MAX_MINUTES);
                 const inputmode = "numeric";
                 const pattern = "[0-9]*";
-                const unit = isSessions ? "" : "min";
+                const unit = isSessions ? "LEGS" : "min";
 
                 return `
                   <div class="ad-plan-row${selected ? " ad-plan-row--selected" : ""}" data-plan-item-id="${escapeHtml(id)}" role="button" tabindex="0" aria-selected="${selected ? "true" : "false"}">
                     <div>
                       <div class="ad-plan-activityline">
-                        <div class="ad-plan-activity"><span class="ad-plan-drag-handle" title="Ziehen zum Sortieren" aria-hidden="true" draggable="true">≡</span><span class="ad-plan-activity-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span></div>
+                        <div class="ad-plan-activity">
+                          <span class="ad-plan-drag-handle" title="Ziehen zum Sortieren" aria-hidden="true" draggable="true">≡</span>
+                          <div class="ad-plan-activity-main">
+                            <span class="ad-plan-activity-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span>
+                          </div>
+                        </div>
                         <div class="ad-plan-mini-actions">
                           <button type="button" class="ad-plan-mini-btn" data-action="dup" data-id="${escapeHtml(id)}" title="Duplizieren">⎘</button>
                           <button type="button" class="ad-plan-mini-btn ad-plan-mini-btn--danger" data-action="del" data-id="${escapeHtml(id)}" title="Löschen">🗑</button>
                         </div>
                       </div>
-                      ${perfLine}
                     </div>
                     <div class="ad-plan-input-wrap">
                       <input class="ad-plan-input" data-id="${escapeHtml(id)}" type="number" value="${escapeHtml(String(inputValue))}"
                         step="${escapeHtml(step)}" min="0" max="${escapeHtml(max)}" inputmode="${escapeHtml(inputmode)}" pattern="${escapeHtml(pattern)}" />
                       <span class="ad-plan-unit">${escapeHtml(unit)}</span>
                     </div>
-                    <div class="ad-plan-cell-right">${escapeHtml(istLabel)}</div>
-                    <div class="ad-plan-cell-right">${escapeHtml(String(Math.round(progress)))}%</div>
                   </div>
                 `;
             }).join("")
@@ -12317,32 +13926,22 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
                       <div class="ad-plan-muted" style="margin-top:4px;">Klicke auf <span style="font-weight:900;">+ Aktivität</span>.</div>
                     </div>
                     <div class="ad-plan-cell-right">—</div>
-                    <div class="ad-plan-cell-right">—</div>
-                    <div class="ad-plan-cell-right">—</div>
                   </div>
                 `;
-
-            const totalSoll = isSessions
-                ? String(Math.round(totals.goal))
-                : `${Math.round(totals.goal)}min`;
-            const totalIst = isSessions
-                ? String(Math.round(totals.ist))
-                : `${Math.round(totals.ist)}min`;
+            const totalVal = Math.round(totals.goal);
+            const totalUnit = isSessions ? "LEGS" : "min";
 
             const foot = `
               <div class="ad-plan-row ad-plan-row--foot">
                 <div>Gesamt</div>
-                <div class="ad-plan-pill" id="adPlanTotalSoll">${escapeHtml(totalSoll)}</div>
-                <div class="ad-plan-cell-right">${escapeHtml(totalIst)}</div>
-                <div class="ad-plan-cell-right">${escapeHtml(String(Math.round(totals.progressPct)))}%</div>
+                <div class="ad-plan-input-wrap">
+                  <span class="ad-plan-pill" id="adPlanTotalSoll">${escapeHtml(String(totalVal))}</span>
+                  <span class="ad-plan-unit" id="adPlanTotalSollUnit">${escapeHtml(totalUnit)}</span>
+                </div>
               </div>
             `;
-
-            table.innerHTML = head + rows + foot;
+table.innerHTML = head + rows + foot;
         }
-
-
-
 function renderPlanDetails() {
             if (!details) return;
 
@@ -12367,13 +13966,13 @@ function renderPlanDetails() {
             const typeLabel = getTypeLabel(type);
             const name = String(it?.name || "");
             const isSeg = type === "SEGMENT_TRAINING";
-            const showPerfCols = isSeg && (planShowPerf === true);
             const targets = (isSeg && it?.params && Array.isArray(it.params.targets)) ? it.params.targets : [];
 
             const chipsHtml = isSeg
                 ? (targets.length
                     ? targets.map((t) => `
-                        <span class="ad-plan-chip">
+                        <span class="ad-plan-chip" data-target="${escapeHtml(String(t))}">
+                          <span class="ad-plan-chip-handle" draggable="true" title="Ziehen zum Sortieren" aria-label="Target verschieben">≡</span>
                           <span class="ad-plan-chip-text">${escapeHtml(String(t))}</span>
                           <button type="button" class="ad-plan-chip-x" data-remove-target="${escapeHtml(String(t))}" title="Entfernen" aria-label="Target entfernen">×</button>
                         </span>
@@ -12402,68 +14001,11 @@ function renderPlanDetails() {
                     `
                   )
                 : "";
-
-            const agg = getTrackerAggForSelectedWeek();
-
-            const isSessionsMode = getSidebarViewMode() === "sessions";
-            const segIstLabel = isSessionsMode ? "Ist (Sessions)" : "Ist (min)";
-            const hasSegSess = !!(agg && agg.segmentTargetsSessions && typeof agg.segmentTargetsSessions === "object");
-
-            const tableRowsHtml = isSeg && targets.length
-                ? targets.map((t) => {
-                    const tt = normalizeTarget(t);
-
-                    // Ist pro Target: entweder Minuten (time) oder Sessions (sessions)
-                    let istCell = "—";
-                    if (isSessionsMode) {
-                        if (hasSegSess) {
-                            const v = Number(agg?.segmentTargetsSessions?.[tt] ?? agg?.segmentTargetsSessions?.[t] ?? 0) || 0;
-                            istCell = String(Math.round(v));
-                        } else {
-                            // nicht verfügbar → bewusst "—"
-                            istCell = "—";
-                        }
-                    } else {
-                        const istTargetMin = Number(agg?.segmentTargetsMinutes?.[tt] ?? agg?.segmentTargetsMinutes?.[t] ?? 0) || 0;
-                        istCell = `${Math.round(istTargetMin)}min`;
-                    }
-
-                    const perfT = showPerfCols ? (agg?.performanceBySegmentTarget?.[tt] ?? agg?.performanceBySegmentTarget?.[t] ?? null) : null;
-                    const perfCells = showPerfCols
-                        ? `<td class="ad-plan-cell-right">${escapeHtml(fmtHitRateMaybe(perfT?.hitRate))}</td><td class="ad-plan-cell-right">${escapeHtml(fmtHitsPerMinMaybe(perfT?.hitsPerMin))}</td>`
-                        : "";
-                    return `
-                    <tr>
-                      <td>${escapeHtml(String(tt))}</td>
-                      <td class="ad-plan-cell-right">${escapeHtml(String(istCell))}</td>
-                      ${perfCells}
-                    </tr>
-                  `;
-                }).join("")
-                : "";
-
-
             const segBody = isSeg ? `
               <div class="ad-plan-details-section">
                 <div class="ad-plan-details-section-title">Targets</div>
                 <div class="ad-plan-chip-row">${chipsHtml}</div>
                 <div class="ad-plan-target-add">${addUiHtml}</div>
-
-                <div class="ad-plan-details-section-title" style="margin-top:10px;">Targets (Ist)</div>
-                <div class="ad-plan-target-table-wrap">
-                  <table class="ad-plan-target-table">
-                    <thead>
-                      <tr>
-                        <th>Target</th>
-                        <th class="ad-plan-cell-right">${escapeHtml(segIstLabel)}</th>
-                        ${showPerfCols ? `<th class="ad-plan-cell-right">Trefferquote</th><th class="ad-plan-cell-right">Hits/min</th>` : ``}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      ${tableRowsHtml || `<tr><td colspan="${showPerfCols ? 4 : 2}" class="ad-plan-muted">—</td></tr>`}
-                    </tbody>
-                  </table>
-                </div>
             ` : `
               <div class="ad-plan-details-section">
                 <div class="ad-plan-muted">Keine Details für diesen Modus (kommt später).</div>
@@ -12501,13 +14043,10 @@ function renderPlanDetails() {
 
         function renderAll() {
             ensureSidebarWeekPlanLoaded(false);
-
-            // Sidebar folgt globalen Controls (Hauptpanel)
-            planShowPerf = getSidebarShowPerf();
-            if (chk) chk.checked = !!planShowPerf;
             syncModeButtons();
 
             syncCopyPrevWeekButton();
+            syncResetWeekButton();
             renderSummary();
             renderPlanTable();
             renderPlanDetails();
@@ -12547,7 +14086,8 @@ function renderPlanDetails() {
             drawerList.innerHTML = filtered.map((t) => {
                 const type = String(t?.type || "");
                 const name = String(t?.name || "");
-                const h = `${clampMinutes(Number(t?.defaultMinutes) || 0)}min`;
+                const defSess = getDefaultSessionsForPlanType(type);
+                const h = `${defSess} LEGS`;
 
                 return `
                   <div class="ad-plan-drawer-item" data-template="${escapeHtml(type)}" role="button" tabindex="0">
@@ -12567,7 +14107,7 @@ function renderPlanDetails() {
 
             // 0.14.42: Wenn für die Woche noch kein Plan existiert, wird er erst bei der ersten User-Aktion angelegt.
             if (!_adPlanActiveWeekHasStoredPlan && (!Array.isArray(planItems) || planItems.length === 0)) {
-                weekMode = normalizeWeekMode(getSidebarViewMode());
+                weekMode = "sessions"; // UI: sessions-only (0.14.75)
             }
 
             const item = createPlanItemFromTemplate(t, planItems);
@@ -12662,7 +14202,202 @@ function renderPlanDetails() {
         if (btnCopyPrevWeek) {
             btnCopyPrevWeek.onclick = () => copyPrevWeekPlanIntoCurrent();
         }
-        // Helper: Fokus auf Soll-Input (nach Render), abhängig vom weekMode
+
+        // Bind: "Woche zurücksetzen"
+        if (btnResetWeek) {
+            btnResetWeek.onclick = () => resetCurrentWeekPlan();
+        }
+
+        // -------------------------------------------------------------------
+        // Import / Export: Plan speichern & laden (0.14.75)
+        // -------------------------------------------------------------------
+        function buildExportFilenameFromWeekKey(wkKey) {
+            try {
+                const r = weekRangeFromWeekKey(wkKey);
+                const y = Number(r?.isoYear);
+                const w = String(r?.week ?? "").padStart(2, "0");
+                if (Number.isFinite(y) && w) return `trainingplan-KW${w}-${y}.json`;
+            } catch {}
+            return "trainingplan.json";
+        }
+
+        function triggerTextDownload(filename, text, mime = "application/json") {
+            try {
+                const blob = new Blob([String(text ?? "")], { type: mime + ";charset=utf-8" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = String(filename || "download.json");
+                a.style.display = "none";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setTimeout(() => { try { URL.revokeObjectURL(url); } catch {} }, 0);
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        function pickJsonFile(cb) {
+            try {
+                const inp = document.createElement("input");
+                inp.type = "file";
+                inp.accept = "application/json,.json";
+                inp.style.display = "none";
+                document.body.appendChild(inp);
+                inp.onchange = () => {
+                    try {
+                        const f = inp.files && inp.files[0];
+                        inp.remove();
+                        if (!f) return;
+                        cb && cb(f);
+                    } catch (e) {
+                        try { inp.remove(); } catch {}
+                    }
+                };
+                inp.click();
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        function sanitizeImportedPlanItem(src) {
+            const it = (src && typeof src === "object") ? src : {};
+            const type = String(it.type || "CUSTOM").trim() || "CUSTOM";
+            const name = String(it.name || "").trim() || type;
+            const targetMinutes = clampMinutes(Number(it.targetMinutes) || 0);
+            let targetSessions = 1;
+            if ("targetSessions" in it) {
+                const n = Number(it.targetSessions);
+                targetSessions = Number.isFinite(n) ? clampSessions(n) : 1;
+            }
+
+            let params = (it.params && typeof it.params === "object") ? { ...it.params } : undefined;
+            if (params && Array.isArray(params.targets)) {
+                const seen = new Set();
+                const out = [];
+                for (const raw of params.targets) {
+                    const t = normalizeTarget(raw);
+                    if (!t) continue;
+                    if (seen.has(t)) continue;
+                    seen.add(t);
+                    out.push(t);
+                }
+                params = { ...params, targets: out };
+            }
+
+            if (type === "SEGMENT_TRAINING") {
+                const p = params ? { ...params } : {};
+                if (!Array.isArray(p.targets)) p.targets = [];
+                params = p;
+            }
+
+            const out = { id: makePlanId(), type, name, targetMinutes, targetSessions };
+            if (params && typeof params === "object" && Object.keys(params).length) out.params = params;
+            return out;
+        }
+
+        // Bind: "Plan speichern" (Export)
+        if (btnSavePlan) {
+            btnSavePlan.onclick = () => {
+                try {
+                    const wkKey = ensureSidebarSelectedWeekKey();
+                    const weekId = weekIdFromWeekKey(wkKey);
+                    if (!wkKey || !weekId) return setStatusTemp("Keine Woche gewählt.");
+
+                    ensureSidebarWeekPlanLoaded(false);
+
+                    const exportObj = {
+                        kind: "autodarts-segmentdash-trainingplan",
+                        schemaVersion: 1,
+                        exportedAt: new Date().toISOString(),
+                        weekMode: normalizeWeekMode(weekMode),
+                        planItems: sanitizePlanItemsForStorage(planItems),
+                    };
+
+                    const json = JSON.stringify(exportObj, null, 2);
+                    triggerTextDownload(buildExportFilenameFromWeekKey(wkKey), json, "application/json");
+                    setStatusTemp("Plan exportiert.");
+                } catch (e) {
+                    setStatusTemp("Export fehlgeschlagen.");
+                }
+            };
+        }
+
+        // Bind: "Plan laden" (Import)
+        if (btnLoadPlan) {
+            btnLoadPlan.onclick = () => {
+                try {
+                    const wkKey = ensureSidebarSelectedWeekKey();
+                    const weekId = weekIdFromWeekKey(wkKey);
+                    if (!wkKey || !weekId) return setStatusTemp("Keine Woche gewählt.");
+
+                    if (!confirm("Plan laden? Aktueller Wochenplan wird überschrieben.")) return;
+
+                    pickJsonFile((file) => {
+                        const reader = new FileReader();
+                        reader.onerror = () => setStatusTemp("Datei konnte nicht gelesen werden.");
+                        reader.onload = () => {
+                            let obj = null;
+                            try {
+                                obj = JSON.parse(String(reader.result ?? ""));
+                            } catch (e) {
+                                setStatusTemp("Ungültige Plan-Datei.");
+                                return;
+                            }
+
+                            const kind = String(obj?.kind || "");
+                            const ver = Number(obj?.schemaVersion);
+                            const wm = String(obj?.weekMode || "");
+                            const itemsIn = Array.isArray(obj?.planItems) ? obj.planItems : null;
+
+                            if (kind !== "autodarts-segmentdash-trainingplan" || ver !== 1 || !itemsIn || (wm !== "time" && wm !== "sessions")) {
+                                setStatusTemp("Ungültige Plan-Datei.");
+                                return;
+                            }
+
+                            try {
+                                // Ensure sidebar state ready
+                                ensureSidebarWeekPlanLoaded(false);
+
+                                // Replace in-memory plan
+                                weekMode = "sessions"; // UI: sessions-only (0.14.75)
+                                planItems = itemsIn.map(sanitizeImportedPlanItem);
+                                if (wm === "time") {
+                                    const denom = Number(PLAN_SESSION_MINUTES) || 30;
+                                    planItems = planItems.map((it) => {
+                                        const minutes = clampMinutes(Number(it?.targetMinutes) || 0);
+                                        const sess = minutes > 0 ? clampSessions(Math.max(1, Math.round(minutes / denom))) : 0;
+                                        return { ...it, targetSessions: sess };
+                                    });
+                                }
+                                selectedPlanItemId = planItems.length ? String(planItems[0].id || "") : null;
+                                targetAddOpen = false;
+                                targetAddValue = "";
+                                targetAddError = "";
+
+                                // Stop pending autosave & force-save now
+                                if (_adPlanSaveTimer) { try { clearTimeout(_adPlanSaveTimer); } catch {} _adPlanSaveTimer = null; }
+                                _adPlanLastSavedWeekId = null;
+                                _adPlanLastSavedJson = null;
+                                _adPlanDirty = true;
+                                _adPlanActiveWeekId = weekId;
+                                flushSaveCurrentWeekPlan();
+
+                                renderAll();
+                                setStatusTemp("Plan geladen.");
+                            } catch (e) {
+                                setStatusTemp("Import fehlgeschlagen.");
+                            }
+                        };
+                        reader.readAsText(file);
+                    });
+                } catch (e) {
+                    setStatusTemp("Import fehlgeschlagen.");
+                }
+            };
+        }
+// Helper: Fokus auf Soll-Input (nach Render), abhängig vom weekMode
         function focusPlanValueInput(id) {
             const sId = String(id || "");
             if (!sId) return;
@@ -12776,8 +14511,22 @@ function clearPlanDragStyles() {
     _adPlanDropTargetEl = null;
 }
 
+let _adPlanTargetDragged = null;
+let _adPlanTargetDraggedEl = null;
+let _adPlanTargetDropEl = null;
+
+function clearTargetDragStyles() {
+    try { _adPlanTargetDraggedEl?.classList?.remove("ad-dragging"); } catch {}
+    try { _adPlanTargetDropEl?.classList?.remove("ad-drop-target"); } catch {}
+    _adPlanTargetDragged = null;
+    _adPlanTargetDraggedEl = null;
+    _adPlanTargetDropEl = null;
+}
+
+
+
         // Table events: change Soll + row actions
-        
+
         // Table events: change Soll + row actions
         table.oninput = (ev) => {
             const t = ev && ev.target;
@@ -12803,29 +14552,14 @@ function clearPlanDragStyles() {
                 // normalize visible input (UI-only)
                 if (String(v) !== String(raw)) t.value = String(v);
 
-                // Update row computed cells (Ist/Progress) without re-render (keeps input focus)
-                const rowEl = table.querySelector(`.ad-plan-row[data-plan-item-id="${cssEscapeAttrValue(id)}"]`);
-                if (rowEl) {
-                    const it2 = planItems[idx];
-                    const ist = getItemActualSessions(it2, agg);
-                    const soll = getTargetSessions(it2);
-                    const pct = getProgressPct(ist, soll);
-                    const cells = rowEl.querySelectorAll(".ad-plan-cell-right");
-                    if (cells && cells[0]) cells[0].textContent = String(Math.round(ist));
-                    if (cells && cells[1]) cells[1].textContent = `${Math.round(pct)}%`;
-                }
-
-                // Update footer totals
+                // Update footer total (Soll)
                 const totals = computeSidebarTotals(agg);
-                const totalEl = side.querySelector("#adPlanTotalSoll");
-                if (totalEl) totalEl.textContent = String(Math.round(totals.goal));
-                const foot = table.querySelector(".ad-plan-row--foot");
-                if (foot) {
-                    const cells = foot.querySelectorAll(".ad-plan-cell-right");
-                    if (cells && cells[0]) cells[0].textContent = String(Math.round(totals.ist));
-                    if (cells && cells[1]) cells[1].textContent = `${Math.round(totals.progressPct)}%`;
-                }
-            } else {
+                const totalValEl = side.querySelector("#adPlanTotalSoll");
+                const totalUnitEl = side.querySelector("#adPlanTotalSollUnit");
+                if (totalValEl) totalValEl.textContent = String(Math.round(totals.goal));
+                if (totalUnitEl) totalUnitEl.textContent = isSessions ? "LEGS" : "min";
+} else {
+                // legacy fallback
                 const mins = clampMinutes(parseInt(cleaned, 10) || 0);
 
                 planItems = planItems.slice();
@@ -12834,31 +14568,15 @@ function clearPlanDragStyles() {
                 // normalize visible input (UI-only)
                 if (String(mins) !== String(raw)) t.value = String(mins);
 
-                // Update row computed cells (Ist/Progress) without re-render (keeps input focus)
-                const rowEl = table.querySelector(`.ad-plan-row[data-plan-item-id="${cssEscapeAttrValue(id)}"]`);
-                if (rowEl) {
-                    const it2 = planItems[idx];
-                    const istMin = getItemActualMinutes(it2, agg);
-                    const pct = getProgressPct(istMin, Math.max(0, Math.round(Number(it2?.targetMinutes) || 0)));
-                    const cells = rowEl.querySelectorAll(".ad-plan-cell-right");
-                    if (cells && cells[0]) cells[0].textContent = `${Math.round(istMin)}min`;
-                    if (cells && cells[1]) cells[1].textContent = `${Math.round(pct)}%`;
-                }
-
-                // Update footer totals
+                // Update footer total (Soll)
                 const totals = computeSidebarTotals(agg);
-                const totalEl = side.querySelector("#adPlanTotalSoll");
-                if (totalEl) totalEl.textContent = `${Math.round(totals.goal)}min`;
-                const foot = table.querySelector(".ad-plan-row--foot");
-                if (foot) {
-                    const cells = foot.querySelectorAll(".ad-plan-cell-right");
-                    if (cells && cells[0]) cells[0].textContent = `${Math.round(totals.ist)}min`;
-                    if (cells && cells[1]) cells[1].textContent = `${Math.round(totals.progressPct)}%`;
-                }
-            }
+                const totalValEl = side.querySelector("#adPlanTotalSoll");
+                const totalUnitEl = side.querySelector("#adPlanTotalSollUnit");
+                if (totalValEl) totalValEl.textContent = String(Math.round(totals.goal));
+                if (totalUnitEl) totalUnitEl.textContent = isSessions ? "LEGS" : "min";
+}
 
             scheduleSaveCurrentWeekPlan();
-
             renderSummary();
         };
 
@@ -13116,6 +14834,106 @@ table.ondragend = () => {
                     }
                 }
             };
+
+            // Drag & Drop: Segment Targets (Details only) (0.14.90)
+            details.ondragstart = (ev) => {
+                const t = ev && ev.target;
+                const handle = t && t.closest ? t.closest(".ad-plan-chip-handle") : null;
+
+                // Drag startet nur über Handle
+                if (!handle) return;
+
+                const chip = handle && handle.closest ? handle.closest('.ad-plan-chip[data-target]') : null;
+                if (!chip) return;
+
+                const target = String(chip.dataset.target || "");
+                if (!target) return;
+
+                _adPlanTargetDragged = target;
+                _adPlanTargetDraggedEl = chip;
+                try { chip.classList.add("ad-dragging"); } catch {}
+
+                try {
+                    if (ev.dataTransfer) {
+                        ev.dataTransfer.setData("text/plain", target);
+                        ev.dataTransfer.effectAllowed = "move";
+                    }
+                } catch {}
+            };
+
+            details.ondragover = (ev) => {
+                if (!_adPlanTargetDragged) return;
+
+                const t = ev && ev.target;
+                const chip = t && t.closest ? t.closest('.ad-plan-chip[data-target]') : null;
+
+                ev.preventDefault(); // allow drop
+
+                try {
+                    if (ev.dataTransfer) ev.dataTransfer.dropEffect = "move";
+                } catch {}
+
+                if (!chip || chip === _adPlanTargetDraggedEl) return;
+
+                if (_adPlanTargetDropEl && _adPlanTargetDropEl !== chip) {
+                    try { _adPlanTargetDropEl.classList.remove("ad-drop-target"); } catch {}
+                }
+                _adPlanTargetDropEl = chip;
+                try { chip.classList.add("ad-drop-target"); } catch {}
+            };
+
+            details.ondrop = (ev) => {
+                if (!_adPlanTargetDragged) return;
+
+                ev.preventDefault();
+
+                const t = ev && ev.target;
+                const targetChip = t && t.closest ? t.closest('.ad-plan-chip[data-target]') : null;
+
+                const draggedTarget = (() => {
+                    try {
+                        const v = ev?.dataTransfer?.getData?.("text/plain");
+                        return String(v || _adPlanTargetDragged || "");
+                    } catch {
+                        return String(_adPlanTargetDragged || "");
+                    }
+                })();
+
+                const id = String(selectedPlanItemId || "");
+                const it = getPlanItemById(id);
+
+                if (!targetChip || !draggedTarget || !it || String(it.type || "") !== "SEGMENT_TRAINING" || !it.params || !Array.isArray(it.params.targets)) {
+                    clearTargetDragStyles();
+                    return;
+                }
+
+                const targets = it.params.targets;
+                const from = targets.findIndex(x => normalizeTarget(x) === normalizeTarget(draggedTarget));
+                const to = targets.findIndex(x => normalizeTarget(x) === normalizeTarget(String(targetChip.dataset.target || "")));
+
+                if (from < 0 || to < 0 || from === to) {
+                    clearTargetDragStyles();
+                    return;
+                }
+
+                updatePlanItemById(id, (cur) => {
+                    const p = cur && cur.params ? { ...cur.params } : {};
+                    const arr = Array.isArray(p.targets) ? p.targets.slice() : [];
+                    p.targets = arrayMove(arr, from, to);
+                    return { ...cur, params: p };
+                });
+
+                scheduleSaveCurrentWeekPlan();
+                flushSaveCurrentWeekPlan();
+                renderPlanDetails();
+
+                clearTargetDragStyles();
+            };
+
+            details.ondragend = () => {
+                clearTargetDragStyles();
+            };
+
         }
 
         // Drawer wiring
@@ -13219,8 +15037,8 @@ function wireTrainingPlanInteractions(panel) {
             cache.trainingPlan = cache.trainingPlan || loadTrainingPlanState();
             const st = cache.trainingPlan;
 
-            const basis = normalizePlanBasis(st.basis);
-            st.basis = basis;
+            const basis = "SESS"; // sessions-only UI (0.14.75)
+            st.basis = "SESS";
 
             const raw = String(input.value || "");
             let v = parseFlexibleNumberInput(raw);
@@ -13313,13 +15131,6 @@ function wireTrainingPlanInteractions(panel) {
                 rerenderPlanSidebar();
                 return;
             }
-
-            if (t && t.id === "ad-ext-plan-showperf" && inTrainingView(t)) {
-                planTabShowPerf = !!t.checked;
-                rerenderPlan();
-                rerenderPlanSidebar();
-                return;
-            }
         });
 
         // inputs (debounced save)
@@ -13359,6 +15170,390 @@ function wireTrainingPlanInteractions(panel) {
                 inp.blur();
             }
         });
+
+        // Trainingsdaten-Table: Accordion "Ist"-Details pro Aktivität (0.14.59)
+        const planTbody = panel.querySelector("#ad-ext-plan-main-body");
+        if (planTbody && !planTbody.__adExtTrainDetailsWired) {
+            planTbody.__adExtTrainDetailsWired = true;
+
+            // Detail-Render: robuste Numerik/Quoten (0.14.59)
+            const getMaybeNum = (rec, keys) => {
+                for (const k of (keys || [])) {
+                    const v = rec?.[k];
+                    const n = Number(v);
+                    if (Number.isFinite(n)) return n;
+                }
+                return null;
+            };
+            const getNum = (rec, keys) => {
+                const v = getMaybeNum(rec, keys);
+                return (v === null) ? 0 : v;
+            };
+
+            const fmtPctMaybe01 = (pct) => {
+                const n = Number(pct);
+                if (!Number.isFinite(n)) return "—";
+                const r = Math.round(n * 10) / 10;
+                return `${r.toFixed(1).replace(/\.0$/, "")}%`;
+            };
+
+            const fmtNumMaybe01 = (val) => {
+                const n = Number(val);
+                if (!Number.isFinite(n)) return "—";
+                const r = Math.round(n * 10) / 10;
+                return r.toFixed(1).replace(/\.0$/, "");
+            };
+
+            const computePerfTexts = (rec) => {
+                // Trefferquote
+                const hrPref = getMaybeNum(rec, ["hitRatePct", "hitRate", "hitRatePercent", "hitRatePercentage"]);
+                let hrPct = null;
+                if (hrPref !== null) {
+                    hrPct = (hrPref <= 1.0) ? (hrPref * 100) : hrPref;
+                } else {
+                    const hits = getMaybeNum(rec, ["hits", "hit", "hitCount", "totalHits"]);
+                    const attempts = getMaybeNum(rec, ["attempts", "throws", "totalThrows", "darts", "total"]);
+                    if (attempts !== null && attempts > 0 && hits !== null) hrPct = (hits / attempts) * 100;
+                }
+
+                // Hits/min
+                const hpmPref = getMaybeNum(rec, ["hitsPerMin", "hitsPerMinute", "hpm", "hitsMin"]);
+                let hpm = null;
+                if (hpmPref !== null) {
+                    hpm = hpmPref;
+                } else {
+                    const hits = getMaybeNum(rec, ["hits", "hit", "hitCount", "totalHits"]);
+                    const sec = getMaybeNum(rec, ["sec", "seconds", "durationSec"]);
+                    if (sec !== null && sec > 0 && hits !== null) hpm = hits / (sec / 60);
+                }
+
+                // Checkout-Quote
+                const coPref = getMaybeNum(rec, ["checkoutRatePct", "checkoutRate", "checkoutRatePercent", "checkoutRatePercentage"]);
+                let coPct = null;
+                if (coPref !== null) {
+                    coPct = (coPref <= 1.0) ? (coPref * 100) : coPref;
+                } else {
+                    const coMade = getMaybeNum(rec, ["checkoutHits", "checkouts", "checkoutMade", "coHits"]);
+                    const coChances = getMaybeNum(rec, ["checkoutAttempts", "checkoutChances", "coAttempts", "coOpps"]);
+                    if (coChances !== null && coChances > 0 && coMade !== null) coPct = (coMade / coChances) * 100;
+                }
+
+                return {
+                    hitRate: (hrPct === null) ? "—" : fmtPctMaybe01(hrPct),
+                    hitsPerMin: (hpm === null) ? "—" : fmtNumMaybe01(hpm),
+                    checkoutRate: (coPct === null) ? "—" : fmtPctMaybe01(coPct),
+                };
+            };
+
+            const closeAll = () => {
+                try {
+                    planTbody.querySelectorAll("tr.ad-ext-train-row-details").forEach((r) => r.remove());
+                    planTbody.querySelectorAll("tr.ad-ext-train-row .ad-ext-rowexp").forEach((s) => { s.textContent = "+"; });
+                } catch {}
+            };
+
+            planTbody.addEventListener("click", (e) => {
+                const tr = e?.target?.closest ? e.target.closest("tr.ad-ext-train-row") : null;
+                if (!tr || !planTbody.contains(tr)) return;
+
+                const next = tr.nextElementSibling;
+                const isOpen = !!(next && next.classList && next.classList.contains("ad-ext-train-row-details"));
+
+                if (isOpen) {
+                    try { next.remove(); } catch {}
+                    const icon = tr.querySelector(".ad-ext-rowexp");
+                    if (icon) icon.textContent = "+";
+                    return;
+                }
+
+                closeAll();
+
+                const trackerKey = String(tr.getAttribute("data-tracker-key") || tr.dataset?.trackerKey || "").trim();
+                const planType = String(tr.getAttribute("data-plan-type") || tr.dataset?.planType || "").trim();
+                const planItemId = String(tr.getAttribute("data-plan-item-id") || tr.dataset?.planItemId || "").trim();
+
+                const weeks = cache._training_weeksAsc || computeTrainingWeeksAsc();
+                cache._training_weeksAsc = weeks;
+                const selWeekKey2 = ensurePlanSelectedWeekKey(weeks);
+
+                // Segment Training: bei mehreren PlanItems pro Woche Details pro Zeile (0.14.69)
+                let pitThisRow = null;
+                let stTargetsThisItem = null;
+                if (planItemId) {
+                    try {
+                        const weekId2 = weekIdFromWeekKey(selWeekKey2);
+                        const wp2 = loadWeekPlan(weekId2);
+                        const its2 =
+                          Array.isArray(wp2?.planItems) ? wp2.planItems :
+                          (Array.isArray(wp2?.items) ? wp2.items :
+                          (Array.isArray(wp2) ? wp2 : []));
+                        pitThisRow = its2.find(x => String(x?.id || "") === planItemId) || null;
+
+                        if (planType === "SEGMENT_TRAINING") {
+                            const raw = pitThisRow?.params?.targets;
+                            if (Array.isArray(raw) && raw.length) {
+                                const seen = new Set();
+                                const out = [];
+                                for (const t of raw) {
+                                    const k = String(t || "").trim().toUpperCase().replace(/\s+/g, "");
+                                    if (!k) continue;
+                                    if (seen.has(k)) continue;
+                                    seen.add(k);
+                                    out.push(k);
+                                }
+                                if (out.length) stTargetsThisItem = out;
+                            }
+                        }
+                    } catch {}
+                }
+
+                const agg = aggregateTrainingActualsForWeek(selWeekKey2);
+                const byActivity2 = agg?.byActivity;
+                const stTargets2 = agg?.stTargets;
+
+                let rec = (byActivity2 && byActivity2.get) ? (byActivity2.get(trackerKey) || { sec: 0, count: 0 }) : { sec: 0, count: 0 };
+
+                // Segment Training: Ist-Werte pro PlanItem (Targets) statt globaler Activity-Summe (0.14.69)
+                if (planType === "SEGMENT_TRAINING" && Array.isArray(stTargetsThisItem) && stTargetsThisItem.length && stTargets2 && stTargets2.get) {
+                    try {
+                        let secSum = 0;
+                        let cntSum = 0;
+                        for (const t0 of stTargetsThisItem) {
+                            const t = String(t0 || "").trim();
+                            if (!t) continue;
+                            const a = stTargets2.get(t) || { sec: 0, count: 0 };
+                            secSum += Number(a?.sec || 0) || 0;
+                            cntSum += Number(a?.count || 0) || 0;
+                        }
+                        rec = { sec: secSum, count: cntSum };
+                    } catch {}
+                }
+                const min = toIntMinutes(rec?.sec);
+                const sess = Math.max(0, Math.round(Number(rec?.count || 0) || 0));
+
+                const isX01 = (planType === "X01_BOT" || planType === "X01_HUMAN" || trackerKey === "X01_BOT" || trackerKey === "X01_HUMAN");
+
+
+                let perfRec = rec;
+                if (!isX01 && planType === "SEGMENT_TRAINING") {
+                    // Fallback: Segment-Targets liefern Hits/Darts → für Gesamt-Perf nutzen (wenn im Activity-Rec nicht vorhanden)
+                    try {
+                        const hasHits = getMaybeNum(rec, ["hits", "hit", "hitCount", "totalHits"]) !== null;
+                        const hasAtt = getMaybeNum(rec, ["attempts", "throws", "totalThrows", "darts", "total"]) !== null;
+                        const hasHr = getMaybeNum(rec, ["hitRatePct", "hitRate", "hitRatePercent", "hitRatePercentage"]) !== null;
+                        const hasHpm = getMaybeNum(rec, ["hitsPerMin", "hitsPerMinute", "hpm", "hitsMin"]) !== null;
+
+                        if (!hasHits || !hasAtt || (!hasHr && !hasHpm)) {
+                            let sumHits = 0, sumDarts = 0, any = false;
+
+                            if (Array.isArray(stTargetsThisItem) && stTargetsThisItem.length && stTargets2 && stTargets2.get) {
+                                for (const target0 of stTargetsThisItem) {
+                                    const t = String(target0 || "").trim();
+                                    if (!t || t === "DRandom" || t === "SRandom") continue;
+                                    const r = stTargets2.get(t);
+                                    if (!r) continue;
+                                    any = true;
+                                    sumHits += getNum(r, ["hits", "hit", "hitCount", "totalHits"]);
+                                    sumDarts += getNum(r, ["darts", "attempts", "throws", "totalThrows", "total"]);
+                                }
+                            } else if (stTargets2 && stTargets2.forEach) {
+                                stTargets2.forEach((r, target) => {
+                                    const t = String(target || "").trim();
+                                    if (!t || t === "DRandom" || t === "SRandom") return;
+                                    any = true;
+                                    sumHits += getNum(r, ["hits", "hit", "hitCount", "totalHits"]);
+                                    sumDarts += getNum(r, ["darts", "attempts", "throws", "totalThrows", "total"]);
+                                });
+                            }
+
+                            if (any) {
+                                perfRec = Object.assign({}, rec);
+                                if (getMaybeNum(perfRec, ["hits", "hit", "hitCount", "totalHits"]) === null) perfRec.hits = sumHits;
+                                if (getMaybeNum(perfRec, ["attempts", "throws", "totalThrows", "darts", "total"]) === null) perfRec.darts = sumDarts;
+                            }
+                        }
+                    } catch {}
+                }
+
+                let inner = "";
+                if (isX01) {
+                    const legs = Math.max(0, Math.round(Number(rec?.count || 0) || 0));
+                    inner = `<div class="ad-ext-train-details-summary">Ist gesamt: ${escapeHtml(String(min))}min · ${escapeHtml(String(legs))} Legs</div>`;
+
+                    // X01 Ist-Details: Matches/Won/Lost/Checkout (0.14.60)
+                    try {
+                        const wk2 = agg?.wk || weekRangeFromWeekKey(selWeekKey2);
+                        const inWeek2 = (dk) => {
+                            const s = String(dk || "");
+                            return s && wk2 && s >= wk2.startKey && s <= wk2.endKey;
+                        };
+
+                        const wantBot = (planType === "X01_BOT" || trackerKey === "X01_BOT");
+                        const wantKind = wantBot ? "BOT" : "HUMAN";
+                        const meKey = cache?._x01_context?.effectivePlayerKey || null;
+
+                        let matchCount = 0;
+                        let sumWon = 0;
+                        let sumLost = 0;
+                        let coOpp = 0;
+                        let coHit = 0;
+
+                        for (const m of (cache.x01Matches || [])) {
+                            if (!m) continue;
+                            const dk = m.dayKey || parseIsoDateToDayKey(m.createdAt) || parseIsoDateToDayKey(m.finishedAt);
+                            if (!inWeek2(dk)) continue;
+
+                            const kind = classifyX01MatchKind(m);
+                            if (wantKind === "BOT") {
+                                if (kind !== "BOT") continue;
+                            } else {
+                                if (kind === "BOT") continue;
+                            }
+
+                            const players = Array.isArray(m.players) ? m.players : [];
+
+                            let meIdx = -1;
+                            if (meKey) {
+                                const i = players.findIndex(p => String(p?.key || "") === String(meKey));
+                                if (i >= 0) meIdx = Number.isFinite(Number(players[i]?.index)) ? Number(players[i].index) : i;
+                            }
+
+                            if (meIdx < 0 && wantKind === "BOT" && players.length) {
+                                const i = players.findIndex(p => !isBotLikePlayerName(p?.name));
+                                if (i >= 0) meIdx = Number.isFinite(Number(players[i]?.index)) ? Number(players[i].index) : i;
+                            }
+
+                            if (meIdx < 0) meIdx = 0;
+
+                            const totalLegs = Number(m.totalLegs) ||
+                                (Array.isArray(m.legsWon) ? m.legsWon.reduce((a, b) => a + (Number(b || 0) || 0), 0) : 0) ||
+                                0;
+
+                            const legsWon = Number(m.legsWon?.[meIdx] || 0) || 0;
+                            const legsLost = Math.max(0, totalLegs - legsWon);
+
+                            matchCount += 1;
+                            sumWon += legsWon;
+                            sumLost += legsLost;
+
+                            const psArr = asArray(m.perPlayerStats || m.playersStats || m.playerStats);
+                            let st = psArr?.[meIdx] || null;
+                            if (!st && psArr?.length) {
+                                const mePlayerKey = players?.[meIdx]?.key || null;
+                                if (mePlayerKey) {
+                                    st = psArr.find(s => (s?.playerKey && s.playerKey === mePlayerKey) || (s?.key && s.key === mePlayerKey) || (s?.id && s.id === mePlayerKey)) || null;
+                                }
+                            }
+
+                            coOpp += Number(st?.checkouts) || 0;
+                            coHit += Number(st?.checkoutsHit) || 0;
+                        }
+
+                        const coPct = (coOpp > 0) ? ((coHit / coOpp) * 100) : null;
+                        const coTxt = (coPct === null) ? "—" : `${(Math.round(coPct * 10) / 10).toFixed(1).replace(/\.0$/, "")}%`;
+
+                        inner += `
+                          <div style="margin: 8px 0 6px; font-weight: 900; opacity: 0.92;">X01 (Ist)</div>
+                          <table class="ad-ext-train-details-table">
+                            <thead><tr>
+                              <th>Min</th>
+                              <th>Sessions</th>
+                              <th>Gewonnen</th>
+                              <th>Verloren</th>
+                              <th>Checkout</th>
+                            </tr></thead>
+                            <tbody><tr>
+                              <td>${escapeHtml(String(min))}</td>
+                              <td>${escapeHtml(String(legs))}</td>
+                              <td>${escapeHtml(String(sumWon))}</td>
+                              <td>${escapeHtml(String(sumLost))}</td>
+                              <td>${escapeHtml(String(coTxt))}</td>
+                            </tr></tbody>
+                          </table>
+                        `;
+                    } catch (err) {
+                        inner += `<div class="ad-ext-muted" style="opacity:.78;">Keine X01 Details für diese Woche.</div>`;
+                    }
+                } else {
+                    const perf = computePerfTexts(perfRec);
+                    inner = `<div class="ad-ext-train-details-summary">Ist gesamt: ${escapeHtml(String(min))}min · ${escapeHtml(String(sess))} Sessions</div>`
+                        + `<div class="ad-ext-train-details-perf">Leistung: Trefferquote ${escapeHtml(perf.hitRate)} · Hits/min ${escapeHtml(perf.hitsPerMin)} · Checkout ${escapeHtml(perf.checkoutRate)}</div>`;
+                }
+
+                if (planType === "SEGMENT_TRAINING") {
+                    const tRows = [];
+                    const hasPlanTargets = !!(Array.isArray(stTargetsThisItem) && stTargetsThisItem.length && stTargets2 && stTargets2.get);
+                    try {
+                        if (hasPlanTargets) {
+                            for (const target0 of stTargetsThisItem) {
+                                const t = String(target0 || "").trim();
+                                if (!t || t === "DRandom" || t === "SRandom") continue;
+                                const r = stTargets2.get(t) || { sec: 0, count: 0, hits: 0, darts: 0 };
+                                const m = toIntMinutes(r?.sec);
+                                const c = Math.max(0, Math.round(Number(r?.count || 0) || 0));
+                                const p = computePerfTexts(r);
+                                tRows.push({ target: t, min: m, sess: c, perf: p });
+                            }
+                        } else if (stTargets2 && stTargets2.forEach) {
+                            stTargets2.forEach((r, target) => {
+                                const t = String(target || "").trim();
+                                if (!t || t === "DRandom" || t === "SRandom") return;
+                                const m = toIntMinutes(r?.sec);
+                                const c = Math.max(0, Math.round(Number(r?.count || 0) || 0));
+                                if (m <= 0 && c <= 0) return;
+                                const p = computePerfTexts(r);
+                                tRows.push({ target: t, min: m, sess: c, perf: p });
+                            });
+                        }
+                    } catch {}
+
+                    if (!hasPlanTargets) {
+                        tRows.sort((a, b) => (b.min - a.min) || (b.sess - a.sess) || String(a.target).localeCompare(String(b.target)));
+                    }
+
+if (!tRows.length) {
+                        inner += `<div class="ad-ext-muted" style="opacity:.78;">Keine Segment-Details für diese Woche.</div>`;
+                    } else {
+                        inner += `
+                          <div style="font-weight:900; margin: 6px 0 6px;">Targets (Ist)</div>
+                          <table class="ad-ext-train-details-table">
+                            <thead><tr>
+                              <th>Target</th>
+                              <th>Min</th>
+                              <th>Sessions</th>
+                              <th>Trefferquote</th>
+                              <th>Hits/min</th>
+                              <th>Checkout</th>
+                            </tr></thead>
+                            <tbody>
+                              ${tRows.map(r => `
+                                <tr>
+                                  <td>${escapeHtml(r.target)}</td>
+                                  <td>${escapeHtml(String(r.min))}</td>
+                                  <td>${escapeHtml(String(r.sess))}</td>
+                                  <td>${escapeHtml(String(r?.perf?.hitRate ?? "—"))}</td>
+                                  <td>${escapeHtml(String(r?.perf?.hitsPerMin ?? "—"))}</td>
+                                  <td>${escapeHtml(String(r?.perf?.checkoutRate ?? "—"))}</td>
+                                </tr>
+                              `).join("")}
+                            </tbody>
+                          </table>
+                        `;
+                    }
+                }
+
+                const colCount = Math.max(1, (tr.children && tr.children.length) ? tr.children.length : 4);
+
+                const detailsTr = document.createElement("tr");
+                detailsTr.className = "ad-ext-train-row-details";
+                detailsTr.innerHTML = `<td colspan="${colCount}"><div class="ad-ext-train-details-box">${inner}</div></td>`;
+
+                tr.insertAdjacentElement("afterend", detailsTr);
+
+                const icon = tr.querySelector(".ad-ext-rowexp");
+                if (icon) icon.textContent = "–";
+            });
+        }
     }
 
     function wireSegmentFilters(panel) {
@@ -13647,6 +15842,9 @@ function wireTrainingPlanInteractions(panel) {
     let AD_EXT_settingsMenuDocWired = false;
     let AD_EXT_settingsMenuRefs = null;
 
+    let AD_EXT_settingsPageDocWired = false;
+    let AD_EXT_settingsPageRefs = null;
+
     function AD_EXT_wireSettingsMenu(panel) {
         const root = panel?.querySelector?.(".ad-ext-root");
         if (!root) return;
@@ -13926,6 +16124,15 @@ function AD_EXT_wireSettingsPageToggle(panel) {
         } else {
             try { consoles?.undock?.(); } catch (e) { console.warn("[AD Ext] undocking failed:", e); }
             try { delete root.dataset.adExtSettingsPageOpen; } catch {}
+
+            // Training Tab sofort aktualisieren, wenn Training gerade aktiv ist
+            try {
+                const sub = String(localStorage.getItem("ad_ext_subview") || "").toLowerCase();
+                if (sub === "training" && cache?.loaded) {
+                    cache._training_weeksAsc = null; // optional, aber sauber
+                    renderTrainingTab(panel);
+                }
+            } catch {}
         }
 
         btn.setAttribute("aria-pressed", isOpen ? "true" : "false");
@@ -13935,6 +16142,21 @@ function AD_EXT_wireSettingsPageToggle(panel) {
         // Tooltip weg, falls offen
         try { tooltipHide(); } catch {}
     };
+
+    // Global ESC handler: schließt Settings nur wenn offen
+    AD_EXT_settingsPageRefs = { page, apply };
+    if (!AD_EXT_settingsPageDocWired) {
+        AD_EXT_settingsPageDocWired = true;
+        document.addEventListener("keydown", (ev) => {
+            const refs = AD_EXT_settingsPageRefs;
+            if (!refs?.page || refs.page.hidden) return; // nur wenn Settings sichtbar
+            if (ev.key !== "Escape") return;
+            ev.preventDefault();
+            ev.stopPropagation();
+            try { refs.apply(false); } catch {}
+        }, true);
+    }
+
 
     const isOpenNow = () => !page.hidden;
 
@@ -13979,7 +16201,73 @@ function AD_EXT_wireConfigCard(panel) {
     const statusEl = page.querySelector("#adExtCfgStatus");
     const resetBtn = page.querySelector("#adExtCfgReset");
 
-    const setStatus = (() => {
+
+
+    // Section collapse toggles (UI only) (v0.14.100)
+    const loadCfgSectionState = () => {
+        try {
+            const raw = localStorage.getItem(AD_EXT_LS_KEY_CFG_SECTIONS);
+            if (!raw) return {};
+            const obj = JSON.parse(raw);
+            return (obj && typeof obj === "object" && !Array.isArray(obj)) ? obj : {};
+        } catch { return {}; }
+    };
+
+    const saveCfgSectionState = (obj) => {
+        try { localStorage.setItem(AD_EXT_LS_KEY_CFG_SECTIONS, JSON.stringify(obj || {})); } catch {}
+    };
+
+    const ensureCfgSectionToggles = () => {
+        const sections = Array.from(page.querySelectorAll(".ad-ext-cfg-section"));
+        const state = loadCfgSectionState();
+
+        const normalizeTitleToId = (title) => {
+            const t0 = String(title || "").trim().toLowerCase();
+            const t1 = t0.replace(/\s+/g, "-");
+            const t2 = t1.replace(/[^a-z0-9-]/g, "");
+            return "cfgsec_" + (t2 || "unknown");
+        };
+
+        for (const sec of sections) {
+            const head = sec.querySelector(".ad-ext-cfg-section-head");
+            if (!head) continue;
+
+            const titleEl = sec.querySelector(".ad-ext-cfg-section-title");
+            const id = normalizeTitleToId(titleEl?.textContent || "");
+            try { sec.dataset.cfgSecId = id; } catch {}
+
+            let btn = head.querySelector(".ad-ext-cfg-section-toggle");
+            if (!btn) {
+                btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "ad-ext-cfg-section-toggle";
+                btn.setAttribute("aria-label", "Sektion ein-/ausklappen");
+                head.appendChild(btn);
+
+                btn.addEventListener("click", (ev) => {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+
+                    const collapsedNow = sec.classList.toggle("is-collapsed");
+                    btn.textContent = collapsedNow ? "+" : "−";
+                    btn.setAttribute("aria-expanded", collapsedNow ? "false" : "true");
+
+                    state[id] = collapsedNow ? 1 : 0;
+                    saveCfgSectionState(state);
+                });
+            }
+
+            const collapsed = (state?.[id] ?? 1) === 1;
+            if (collapsed) sec.classList.add("is-collapsed");
+            else sec.classList.remove("is-collapsed");
+
+            btn.textContent = collapsed ? "+" : "−";
+            btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
+        }
+    };
+
+    ensureCfgSectionToggles();
+const setStatus = (() => {
         let t = null;
         return (msg, ms = 2000) => {
             try { if (t) clearTimeout(t); } catch {}
@@ -14302,40 +16590,35 @@ function AD_EXT_wireTableScrollObserver(panel) {
             await refreshAll(panel);
         });
 
-        const btnSeg = panel.querySelector("#ad-ext-subnav-segment");
         const btnX01 = panel.querySelector("#ad-ext-subnav-x01");
         const btnTime = panel.querySelector("#ad-ext-subnav-time");
         const btnTraining = panel.querySelector("#ad-ext-subnav-training");
         const btnMasterHof = panel.querySelector("#ad-ext-subnav-masterhof");
 
-        const viewSeg = panel.querySelector("#ad-ext-view-segment");
         const viewX01 = panel.querySelector("#ad-ext-view-x01");
         const viewTime = panel.querySelector("#ad-ext-view-time");
         const viewTraining = panel.querySelector("#ad-ext-view-training");
         const viewMasterHof = panel.querySelector("#ad-ext-view-masterhof");
 
         function setSubView(which) {
-            const w = (String(which || localStorage.getItem("ad_ext_subview") || "segment")).toLowerCase();
+            let w = (String(which || localStorage.getItem("ad_ext_subview") || "x01")).toLowerCase();
+            if (w === "segment") w = "x01";
             localStorage.setItem("ad_ext_subview", w);
 
-            const isSeg = w === "segment";
             const isX01 = w === "x01";
             const isTime = w === "time";
             const isTraining = w === "training";
             const isMasterHof = (w === "masterhof" || w === "master_hof" || w === "master");
 
-            if (!(isSeg || isX01 || isTime || isTraining || isMasterHof)) {
-                return setSubView("segment");
+            if (!(isX01 || isTime || isTraining || isMasterHof)) {
+                return setSubView("x01");
             }
 
-
-            if (viewSeg) viewSeg.style.display = isSeg ? "" : "none";
             if (viewX01) viewX01.style.display = isX01 ? "" : "none";
             if (viewTime) viewTime.style.display = isTime ? "" : "none";
             if (viewTraining) viewTraining.style.display = isTraining ? "" : "none";
             if (viewMasterHof) viewMasterHof.style.display = isMasterHof ? "" : "none";
 
-            btnSeg?.classList.toggle("ad-ext-subnav-btn--active", isSeg);
             btnX01?.classList.toggle("ad-ext-subnav-btn--active", isX01);
             btnTime?.classList.toggle("ad-ext-subnav-btn--active", isTime);
             btnTraining?.classList.toggle("ad-ext-subnav-btn--active", isTraining);
@@ -14346,20 +16629,18 @@ function AD_EXT_wireTableScrollObserver(panel) {
                 return;
             }
 
-            if (isSeg) renderSegmentTraining(panel, cache.sessions, cache.filters, cache.meta);
             if (isX01) renderX01(panel);
             if (isTime) renderTimeTab(panel);
             if (isTraining) renderTrainingTab(panel);
             renderMasterHallOfFame(panel);
         }
 
-        btnSeg?.addEventListener("click", () => setSubView("segment"));
         btnX01?.addEventListener("click", () => setSubView("x01"));
         btnTime?.addEventListener("click", () => setSubView("time"));
         btnTraining?.addEventListener("click", () => setSubView("training"));
         btnMasterHof?.addEventListener("click", () => setSubView("masterhof"));
 
-        setSubView(localStorage.getItem("ad_ext_subview") || "segment");
+        setSubView(localStorage.getItem("ad_ext_subview") || "x01");
         wireSegmentFilters(panel);
         wireSegmentInteractions(panel);
         wireX01Filters(panel);
@@ -14441,8 +16722,20 @@ function AD_EXT_wireTableScrollObserver(panel) {
     // Observer
     // =========================
     function startObserver() {
+        let wasInStats = false;
+        try { wasInStats = location.pathname.startsWith("/statistics"); } catch { wasInStats = false; }
+
         const obs = new MutationObserver(() => {
-            if (!location.pathname.startsWith("/statistics")) return;
+            let isInStats = false;
+            try { isInStats = location.pathname.startsWith("/statistics"); } catch { isInStats = false; }
+
+            // Reset default landing view when leaving /statistics
+            if (wasInStats && !isInStats) {
+                try { localStorage.setItem("ad_ext_subview", "x01"); } catch {}
+            }
+            wasInStats = isInStats;
+
+            if (!isInStats) return;
             addExtendedStatsTabIfPossible();
         });
         obs.observe(document.body, { childList: true, subtree: true });
@@ -14965,10 +17258,17 @@ const ui = {
   const syncAutoEl = panel.querySelector("#adExtSyncAuto");
   const syncStatusEl = panel.querySelector("#adExtSyncStatus");
 
+  let _lastSyncStatus = null;
   const setSyncStatus = (txt) => {
-    try { if (syncStatusEl) syncStatusEl.textContent = String(txt ?? ""); } catch {}
+    try {
+      if (!syncStatusEl) return;
+      const s = String(txt ?? "");
+      if (!s.trim()) return;                 // NICHT löschen/blank setzen
+      if (_lastSyncStatus === s) return;     // keine unnötigen Updates
+      _lastSyncStatus = s;
+      syncStatusEl.textContent = s;
+    } catch {}
   };
-
   function AD_syncUpdateMeta() {
     const lastAt = (() => {
       try {
@@ -15137,7 +17437,8 @@ syncMetaEl.textContent = daysLabel
         if (!m || m.sessionId !== sessionId) return;
 
         if (m.type === "status") {
-          try { statusCb(String(m.text || "")); } catch {}
+          const t = String(m.text ?? "");
+          if (t.trim()) { try { statusCb(t); } catch {} }
           return;
         }
 

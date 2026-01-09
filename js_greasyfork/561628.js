@@ -418,28 +418,127 @@
         dropdown.className = 'layout-dropdown';
 
         const options = [
-            { label: 'List',         value: 'list',    icon: Utils.LAYOUT_ICONS.list },
-            { label: 'Grid',         value: 'grid',    icon: Utils.LAYOUT_ICONS.grid }
+            { label: 'List', value: 'list', icon: Utils.LAYOUT_ICONS.list },
+            { label: 'Grid', value: 'grid', icon: Utils.LAYOUT_ICONS.grid, hasColumns: true } // ★追加フラグ
         ];
 
         options.forEach(opt => {
             const item = document.createElement('div');
             item.className = 'layout-option';
-            if (opt.value === currentMode) item.classList.add('active');
-            item.innerHTML = `${opt.icon} <span>${opt.label}</span>`;
+            item.style.display = 'flex';
+            item.style.justifyContent = 'space-between';
+            item.style.alignItems = 'center';
+            item.style.position = 'relative'; // サブメニューの位置基準
             
+            if (opt.value === currentMode) item.classList.add('active');
+            
+            // 左側: アイコンとラベル
+            const labelSpan = document.createElement('span');
+            labelSpan.innerHTML = `${opt.icon} <span style="margin-left:8px">${opt.label}</span>`;
+            labelSpan.style.display = 'flex';
+            labelSpan.style.alignItems = 'center';
+            item.appendChild(labelSpan);
+
+            // ★変更: グリッドの場合の列数選択UI (数値表示 + サブメニュー)
+            if (opt.hasColumns) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'grid-col-wrapper';
+
+                // 現在の設定値
+                const currentCols = Storage.loadSettings().gridColumns || 4;
+
+                // 数値表示部分 (縦棒含む)
+                const valDisplay = document.createElement('div');
+                valDisplay.className = 'grid-current-val';
+                valDisplay.textContent = currentCols;
+                wrapper.appendChild(valDisplay);
+
+                // サブメニュー
+                const submenu = document.createElement('div');
+                submenu.className = 'grid-submenu';
+
+                // 1〜5の選択肢生成
+                for (let i = 1; i <= 5; i++) {
+                    const subItem = document.createElement('div');
+                    subItem.className = 'grid-submenu-item';
+                    subItem.textContent = i;
+                    subItem.dataset.val = i; // CSSでの制御用
+                    if (i === currentCols) subItem.classList.add('active');
+
+                    // クリックイベント
+                    subItem.addEventListener('click', (e) => {
+                        e.stopPropagation(); // 親への伝播を止める
+
+                        // 1. ロジック適用と保存
+                        Logic.changeGridColumns(i);
+                        
+                        // 2. UI更新
+                        valDisplay.textContent = i;
+                        submenu.querySelectorAll('.grid-submenu-item').forEach(el => el.classList.remove('active'));
+                        subItem.classList.add('active');
+
+                        // 3. モード切替 (もしグリッドじゃなければ)
+                        if (!item.classList.contains('active')) {
+                            triggerBtn.innerHTML = opt.icon;
+                            dropdown.querySelectorAll('.layout-option').forEach(el => el.classList.remove('active'));
+                            item.classList.add('active');
+                            Logic.applyLayout(opt.value);
+                        }
+
+                        // 4. 全てのメニューを閉じる
+                        submenu.classList.remove('show');
+                        dropdown.classList.remove('show');
+                    });
+
+                    submenu.appendChild(subItem);
+                }
+                wrapper.appendChild(submenu);
+                
+                // ★追加: スマホ対応 (タップで開閉トグル)
+                valDisplay.addEventListener('click', (e) => {
+                    e.stopPropagation(); // 親のレイアウト切替を阻止
+                    submenu.classList.toggle('show');
+                });
+
+                // マウスオーバーでサブメニュー表示 (一度開いたら閉じない)
+                // ★変更: マウスオーバーでサブメニュー表示 (PC用)
+                // ホバー操作が可能なデバイスでのみ mouseenter イベントを登録する
+                if (window.matchMedia('(hover: hover)').matches) {
+                    valDisplay.addEventListener('mouseenter', () => {
+                        submenu.classList.add('show');
+                    });
+                }
+
+                // ※「マウスを離しても非表示にならない」は、mouseleaveイベントを設定しないことで実現
+                // 閉じるのは「数字クリック」または「ドキュメント全体のクリック(既存)」で行う
+
+                item.appendChild(wrapper);
+            }
+            
+            // 項目全体のクリックイベント (レイアウト切替)
             item.addEventListener('click', (e) => {
+                // サブメニュー内をクリックした場合は反応させない
+                if (e.target.closest('.grid-submenu')) return;
+
                 e.stopPropagation();
-                // Update UI
                 triggerBtn.innerHTML = opt.icon;
                 dropdown.querySelectorAll('.layout-option').forEach(el => el.classList.remove('active'));
                 item.classList.add('active');
                 dropdown.classList.remove('show');
                 
-                // Apply Logic
+                // サブメニューも閉じる
+                const openSubmenu = item.querySelector('.grid-submenu');
+                if (openSubmenu) openSubmenu.classList.remove('show');
+                
                 Logic.applyLayout(opt.value);
             });
             dropdown.appendChild(item);
+        });
+
+        // ドキュメントクリックでサブメニューも閉じるように追加
+        document.addEventListener('click', () => {
+            dropdown.classList.remove('show');
+            document.querySelectorAll('.grid-submenu').forEach(el => el.classList.remove('show'));
         });
 
         triggerBtn.addEventListener('click', (e) => {
@@ -447,27 +546,97 @@
             dropdown.classList.toggle('show');
         });
 
-        document.addEventListener('click', () => {
-            dropdown.classList.remove('show');
-        });
-
         wrapper.appendChild(triggerBtn);
         wrapper.appendChild(dropdown);
         container.appendChild(wrapper);
     }
 
-    // グローバル公開に追加
-    window.HitomiFilterUI = {
-        // ...
-        // ...
-    };
+    // ★変更: サムネイルサイズ変更スライダーの生成 (範囲調整・中央1.0固定・表示削除)
+    function createThumbnailSlider(targetList) {
+        if (!targetList) return;
+        if (document.querySelector('.thumbnail-slider-wrapper')) return;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'thumbnail-slider-wrapper';
+        
+        const label = document.createElement('span');
+        label.className = 'thumbnail-slider-label';
+        label.textContent = 'Page Size';
+        
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.className = 'thumbnail-slider';
+        
+        // ★変更: 内部的には -1 ～ 1 の範囲で動かす
+        // -1 = 0.5倍, 0 = 1.0倍, 1 = 3.4倍
+        slider.min = '-1';
+        slider.max = '1';
+        slider.step = '0.001'; // 滑らかに動かすため細かく
+        
+        // 初期値設定
+        const settings = Storage.loadSettings();
+        let currentScale = settings.thumbnailScale || 1.0;
+        
+        // ★変更: 現在の倍率からスライダー位置(-1~1)への逆変換
+        if (currentScale < 1.0) {
+            // 0.5 ～ 1.0 の範囲 -> log2で計算 (0.5のとき-1, 1のとき0)
+            slider.value = Math.log2(currentScale);
+        } else {
+            // 1.0 ～ 3.4 の範囲 -> 対数で正規化 (1のとき0, 3.4のとき1)
+            slider.value = Math.log(currentScale) / Math.log(3.4);
+        }
+        
+        // ※倍率表示(valDisplay)の生成コードは削除しました
+        
+        // イベントリスナー
+        slider.addEventListener('input', (e) => {
+            let val = parseFloat(e.target.value);
+            
+            // ★追加: 吸着処理 (中央 0 付近に来たら 0 に固定する)
+            // 範囲は -1 ～ 1 なので、±0.05 程度を吸着範囲とする
+            if (Math.abs(val) < 0.05) {
+                val = 0;
+                slider.value = 0; // スライダーのつまみも視覚的に中央へ移動させる
+            }
+
+            let scale;
+
+            // スライダー位置(-1~1)から倍率への変換
+            if (val < 0) {
+                // 負の領域: 2^val (例: -1 -> 0.5)
+                scale = Math.pow(2, val);
+            } else {
+                // 正の領域: 3.4^val (例: 1 -> 3.4)
+                scale = Math.pow(3.4, val);
+            }
+            
+            // 0.1刻みに丸める
+            scale = Math.round(scale * 10) / 10;
+            
+            // 最小値ガード
+            if (scale < 0.5) scale = 0.5;
+
+            Logic.applyThumbnailScale(scale);
+            
+            if (Storage.updateThumbnailScale) {
+                Storage.updateThumbnailScale(scale);
+            }
+        });
+        
+        wrapper.appendChild(label);
+        wrapper.appendChild(slider);
+        // wrapper.appendChild(valDisplay); ← 削除
+        
+        targetList.parentNode.insertBefore(wrapper, targetList);
+    }
 
     // グローバル公開
     window.HitomiFilterUI = {
         createTypeButtons,
         createToolButtons,
+        openConfigModal,
         createLayoutButton, // 追加
-        openConfigModal
+        createThumbnailSlider // ★追加
     };
 
 })(window);

@@ -5,7 +5,7 @@
 // @namespace    lunzhiPenxil
 // @repository   https://github.com/lunzhiPenxil/WoDBeautify
 // @license      AGPL3
-// @version      2026.1.6.2
+// @version      2026.1.8.2
 // @include      http*://*.world-of-dungeons.org/*
 // @grant        GM_addStyle
 // @grant        GM_getValue
@@ -22,7 +22,9 @@
         enableBaseTransition: true,
         enableLinkUnderline: true,
         enableLeftMenu: true,
-        enableTopMenu: true
+        enableTopMenu: true,
+        enableCenterTable: true,
+        enableCenterHints: true
     };
 
     // 加载设置
@@ -96,7 +98,9 @@
             enableBaseTransition: '基础特效',
             enableLinkUnderline: '超链接下划线特效',
             enableLeftMenu: '左侧菜单特效',
-            enableTopMenu: '顶部菜单栏现代化'
+            enableTopMenu: '顶部菜单栏现代化',
+            enableCenterTable: '表格交互现代化',
+            enableCenterHints: '底部提示框现代化'
         };
         return labels[key] || key;
     }
@@ -464,6 +468,151 @@
                 display: block !important;
                 height: 21px;
             }
+
+            .page_bg_with_image {
+                background-attachment: fixed;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+            }
+        `,
+
+        centerTable: /*css*/ `
+            /* == 游戏表格优化 == */
+            table.content_table > * > :is(
+                tr.content_table_header,
+                tr.content_table_filter_row,
+                tr.header,
+                tr.row0,
+                tr.row1
+            ) {
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                transition: all 300ms;
+                transition-timing-function: cubic-bezier(0, 0, 1, 1);
+            }
+            
+            table.content_table > * > :is(
+                tr.header,
+                tr.row0,
+                tr.row1
+            ):hover {
+                transition-timing-function: cubic-bezier(0, 1, 0, 1);
+            }
+
+            table.content_table > * > tr.row0 {
+                background-color: #10101080;
+            }
+
+            table.content_table > * > tr.row1 {
+                background-color: #30303080;
+            }
+
+            table.content_table > * > :is(
+                tr.content_table_header,
+                tr.content_table_filter_row,
+                tr.header
+            ) {
+                background-color: #40404080;
+            }
+
+            table.content_table > * > :is(
+                tr.row0,
+                tr.row1
+            ):hover {
+                background-color: #000000a0;
+            }
+
+            .table_hl,
+            .table_hl_sorted {
+                background-color: #40404000;
+            }
+
+            /* == 论坛表格优化 == */
+            TABLE.boardmain {
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                background-color: #60606000;
+            }
+
+            TABLE.boardmain * {
+                transition: all 300ms;
+            }
+
+            TR.boardhead {
+                background-color: #80808080;
+            }
+
+            TR.boardcategory {
+                background-color: #40404080;
+            }
+
+            TR.boardcategory > TD {
+                background-color: #10101080;
+            }
+
+            TR.boardcategory {
+                background-color: #00000000;
+            }
+
+            TR.boardforum,
+            TR.boardcon1,
+            TR.boardcon2 {
+                background-color: #40404080;
+            }
+
+            TR.boardforum:hover,
+            TR.boardcon1:hover,
+            TR.boardcon2:hover {
+                background-color: #404040e0;
+            }
+
+            TD.boardcon1 {
+                background-color: #00000080;
+            }
+
+            TD.boardcon1:hover {
+                background-color: #000000e0;
+            }
+
+            TD.boardcon2 {
+                background-color: #40404080;
+            }
+
+            TD.boardcon2:hover {
+                background-color: #404040e0;
+            }
+
+            .search_container {
+                background-color: #10101080;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                transition: all 300ms;
+            }
+
+            .search_container * {
+                transition: all 300ms;
+            }
+        `,
+
+        centerHints: /*css*/ `
+            .hints > .background {
+                background: #ffdba1c0 !important;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                transition: all 300ms;
+            }
+
+            .hints:hover > .background {
+                background: #ffdba1 !important;
+            }
+
+            .hints > :is(
+                .border-left,
+                .border-right
+            ) {
+                background: none !important;
+            }
         `
     };
 
@@ -480,9 +629,9 @@
             const pos = -i * itemHeight - 1;
             const nextPos = i === itemCount ? -1 : pos - itemHeight;
             css += `${(startPercent).toFixed(2)}% { transform: translateY(${pos}px); }`;
-            css += `${(endPercent - 0.01).toFixed(2)}% { transform: translateY(${nextPos}px); }`;
+            css += `${(endPercent).toFixed(2)}% { transform: translateY(${nextPos}px); }`;
         }
-        css += `100% { transform: translateY(20px); }}`;
+        css += `}`;
         css += /*css*/ `
             #gadgettable-top .gadget.ticker .gadget_body {
                 animation: ticker-dynamic ${totalTime}s linear infinite;
@@ -516,6 +665,14 @@
         
         if (settings.enableTopMenu) {
             css += cssFragments.topMenu;
+        }
+        
+        if (settings.enableCenterTable) {
+            css += cssFragments.centerTable;
+        }
+        
+        if (settings.enableCenterHints) {
+            css += cssFragments.centerHints;
         }
         
         // 移除旧的样式

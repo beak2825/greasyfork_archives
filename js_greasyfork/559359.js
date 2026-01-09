@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          Popmundo Auto Offer 👔
 // @namespace     http://tampermonkey.net/
-// @version       2.6.4
+// @version       2.6.5
 // @description   Offer selected items one by one with smooth UI, base-type group multi-select, robust sync, and compact controls on ItemsOffered (manual + loop: Stop offering, Accept + Pay, Accept gift). Delay between offers survives page reloads.
 // @author        anon
 // @match         https://*.popmundo.com/World/Popmundo.aspx/Character/OfferItem/*
@@ -72,6 +72,24 @@
             #autoOfferTriggerBtn:disabled { background:#ffc107!important; cursor:default; }
             #autoOfferTriggerBtn.done { background:#4CAF50!important; }
             #autoOfferStatus { margin-bottom:10px; padding:8px; background:#f1f8ff; border-radius:6px; color:#333; font-size:0.9rem; text-align:center; transition:background 0.3s ease,color 0.3s ease; }
+
+            /* Group checkbox indeterminate state */
+            .group-item-checkbox:indeterminate {
+                background-color: #42a5f5;
+                border-color: #42a5f5;
+                position: relative;
+            }
+
+            .group-item-checkbox:indeterminate::before {
+                content: "—";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: white;
+                font-weight: bold;
+                font-size: 14px;
+            }
 
             /* Compact ItemsOffered Panel - Bottom Right */
             #giftControlsPanel {
@@ -188,12 +206,16 @@
         selectAllCheckbox.id = 'selectAllItems';
         selectAllCheckbox.addEventListener('change', e => {
             document.querySelectorAll('.offer-item-checkbox').forEach(cb => cb.checked = e.target.checked);
-            document.querySelectorAll('.group-item-checkbox').forEach(cb => cb.checked = e.target.checked);
+            document.querySelectorAll('.group-item-checkbox').forEach(cb => {
+                cb.checked = e.target.checked;
+                cb.indeterminate = false;
+            });
         });
         selectAllLabel.appendChild(selectAllCheckbox);
         selectAllLabel.appendChild(document.createTextNode('Select/Deselect All'));
         listContainer.appendChild(selectAllLabel);
 
+        // Create groups
         const groups = {};
         itemOptions.forEach(option => {
             const fullText = option.textContent.trim();
@@ -202,6 +224,10 @@
             groups[baseName].push(option.value);
         });
 
+        // Store group references globally
+        window.groupCheckboxes = {};
+
+        // Create group checkboxes
         Object.keys(groups).forEach(baseName => {
             if (groups[baseName].length > 1) {
                 const groupLabel = document.createElement('label');
@@ -209,20 +235,32 @@
                 const groupCheckbox = document.createElement('input');
                 groupCheckbox.type = 'checkbox';
                 groupCheckbox.className = 'group-item-checkbox';
+                groupCheckbox.dataset.groupName = baseName;
                 groupCheckbox.dataset.ids = JSON.stringify(groups[baseName]);
+                
+                // Store reference
+                window.groupCheckboxes[baseName] = groupCheckbox;
+                
                 groupCheckbox.addEventListener('change', e => {
                     const ids = JSON.parse(groupCheckbox.dataset.ids);
                     ids.forEach(id => {
                         const cb = document.getElementById(`item-cb-${id}`);
                         if (cb) cb.checked = e.target.checked;
                     });
+                    // Update group state after change
+                    updateGroupCheckboxState(baseName);
                 });
+                
                 groupLabel.appendChild(groupCheckbox);
                 groupLabel.appendChild(document.createTextNode(`Group: ${baseName} [x${groups[baseName].length}]`));
                 listContainer.appendChild(groupLabel);
+                
+                // Initialize group state
+                updateGroupCheckboxState(baseName);
             }
         });
 
+        // Create individual item checkboxes
         itemOptions.forEach(option => {
             const label = document.createElement('label');
             const checkbox = document.createElement('input');
@@ -230,6 +268,18 @@
             checkbox.value = option.value;
             checkbox.id = `item-cb-${option.value}`;
             checkbox.className = 'offer-item-checkbox';
+            
+            // Find which group this item belongs to
+            const fullText = option.textContent.trim();
+            const baseName = fullText.split('(')[0].trim();
+            
+            checkbox.addEventListener('change', () => {
+                // Update the group state when individual items change
+                if (groups[baseName] && groups[baseName].length > 1) {
+                    updateGroupCheckboxState(baseName);
+                }
+            });
+            
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(option.textContent));
             listContainer.appendChild(label);
@@ -237,6 +287,24 @@
 
         parent.insertBefore(listContainer, ddl.parentNode);
         createTriggerButton(listContainer);
+    }
+
+    // Function to update group checkbox state based on its items
+    function updateGroupCheckboxState(groupName) {
+        const groupCheckbox = window.groupCheckboxes?.[groupName];
+        if (!groupCheckbox) return;
+        
+        const ids = JSON.parse(groupCheckbox.dataset.ids);
+        const checkboxes = ids.map(id => document.getElementById(`item-cb-${id}`)).filter(cb => cb);
+        
+        if (checkboxes.length === 0) return;
+        
+        const allChecked = checkboxes.every(cb => cb.checked);
+        const anyChecked = checkboxes.some(cb => cb.checked);
+        
+        // Use indeterminate state for partial selection
+        groupCheckbox.indeterminate = anyChecked && !allChecked;
+        groupCheckbox.checked = allChecked;
     }
 
     function createTriggerButton(attachPoint) {

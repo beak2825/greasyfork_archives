@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         第一师范学院成绩自动填报助手
 // @namespace    http://tampermonkey.net/
-// @version      3.4
+// @version      3.5
 // @description  自动识别成绩类型，支持灵活的Excel列顺序和行顺序，模板包含已填报数据
 // @author       SoyaBean
 // @match        http://jwgl.hnfnu.edu.cn:9080/eams/teach/grade/course/teacher!inputGA.action*
@@ -497,6 +497,8 @@
             return;
         }
 
+        // 清空已有excelDate
+        excelData = null
         // 如果还没有读取Excel数据，先读取
         if (!excelData) {
             try {

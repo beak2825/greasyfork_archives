@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Pink Blue Map
-// @version      1.0
+// @version      1.1
 // @description  Toggle OBN / Nameless TT in torn map
 // @author       Luke [1993031]
 // @match        https://www.torn.com/city.php*
@@ -21,7 +21,7 @@
     ];
 
     const pinkPaths = [
-        "FUB","WUB","GUB","ZUB","BUB","AUB","CUB","UUB","DUB",
+        "FUB","WUB","GUB","ZUB","BUB","AUB","CUB","UUB","DUB", "ITB",
         "VUB","TUB","BTB","ZTB","ATB","YTB","IAA","JAA","EAA","DAA","UVB","RVB","SVB","OVB","MTB","NUB","CAA","OUB","TVB","NDG","KCG","DTB","HAA","ETB"
     ];
 

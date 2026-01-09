@@ -2,7 +2,7 @@
 // @name                Banana Prompt Quicker
 // @namespace           gemini.script
 // @tag                 entertainment
-// @version             1.4.11
+// @version             1.4.12
 // @description         Prompts quicker is ALL you 🍌 need - UserScript版
 // @author              Glidea
 // @author              Johnbi
@@ -34,7 +34,6 @@
 // @connect             gist.githubusercontent.com
 // @connect             googleusercontent.com
 // @connect             *
-// @require             https://update.greasyfork.org/scripts/559574/Gemini%20NanoBanana%20Watermark%20Remover.user.js
 // @resource            flash_mode.png https://pub-fb208db39987498a80d330d9899cd52b.r2.dev/flash_mode.png
 // @source              https://github.com/bxb100/Scripts/tree/main/banana-prompt-quicker
 // @homepage            https://github.com/bxb100/Scripts/tree/main/banana-prompt-quicker

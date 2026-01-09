@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name          FF14物价查询补充-Universalis+Wiki
 // @namespace     FF14-Universalis-CN-L10n
-// @version       1.2.0
+// @version       1.2.1
 // @description   Universalis 新版本物品搜索补全；FF14 灰机Wiki 物品页增加物价链接。
 // @author        桀桀大王@红茶川
 // @match         https://ff14.huijiwiki.com/wiki/*
@@ -127,7 +127,7 @@
                                 }));
                                 data.Results.unshift(...supp);
                                 if (data.Pagination) data.Pagination.ResultsTotal += supp.length;
-                                return new Response(JSON.stringify(data), { status: 200, headers: nativeRes.headers });
+                                return new Response(JSON.stringify(data), { status: 200, statusText: 'OK',headers: nativeRes.headers });
                             }
                             return nativeRes;
                         } catch (e) { return _origFetch(...args); }
@@ -168,7 +168,7 @@
                 .gt-supp { color: #e67e22 !important; font-weight: 700; font-size: 0.8em !important; }
                 .gt-supp::after { content: '➜'; font-size: 2.2em; vertical-align: middle; margin-left: 2px; }
             `;
-            document.head.appendChild(css);
+            (document.head || document.documentElement).appendChild(css);
         },
 
         // DOM 观察器：标记补全项样式并修复详情页图标丢失
@@ -223,6 +223,7 @@
     const CoreWiki = {
         init() {
             const target = document.getElementById('mw-content-text') || document.body;
+            if (!target || !target.nodeType) return;
             if (document.readyState !== 'loading') this.process(target);
 
             const obs = new MutationObserver(() => this.process(target));
@@ -239,7 +240,7 @@
                 .uni-link-box a { color: #77d1ff !important; text-decoration: none !important; }
                 .uni-icon { width: 16px; height: 16px; vertical-align: middle; }
             `;
-            document.head.appendChild(css);
+            (document.head || document.documentElement).appendChild(css);
         },
 
         process(target) {
@@ -289,8 +290,10 @@
 
     function dispatchRoute() {
         const host = location.hostname;
-        if (STATE.uni && host.includes('universalis.app')) CoreUniversalis.init();
-        else if (STATE.wiki && host.includes('huijiwiki.com')) CoreWiki.init();
+        if (STATE.uni && host.includes('universalis.app'))
+            document.head ? CoreUniversalis.init() : window.addEventListener('DOMContentLoaded', () => CoreUniversalis.init());
+        else if (STATE.wiki && host.includes('huijiwiki.com'))
+            document.body ? CoreWiki.init() : window.addEventListener('DOMContentLoaded', () => CoreWiki.init());
     }
 
     initMenu();

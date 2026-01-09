@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         收藏插件
 // @namespace    https://www.milkywayidle.com/
-// @version      1.2
-// @description  商品收藏功能，Alt+点击收藏，按角色ID区分收藏内容，仅市场列表收藏强化装备时联动+0，修复模糊匹配bug,合并强化的懒鬼按钮，加宽界面
+// @version      1.42
+// @description  商品收藏功能，Alt+点击收藏，按角色ID区分收藏内容，仅市场列表收藏强化装备时联动+0，修复模糊匹配bug,合并强化的懒鬼按钮，加宽界面，添加+号检测提醒
 // @author       baozhi
 // @match        https://www.milkywayidle.com/*
 // @match        https://test.milkywayidle.com/*
@@ -155,6 +155,18 @@
         }
 
         return favoritesByCharacter;
+    }
+
+    // 获取头部信息监控开关状态
+    function getHeaderMonitorEnabled() {
+        const characterKey = getCharacterKey('mwc_header_monitor_enabled');
+        return GM_getValue(characterKey, true); // 默认开启
+    }
+
+    // 保存头部信息监控开关状态
+    function saveHeaderMonitorEnabled(enabled) {
+        const characterKey = getCharacterKey('mwc_header_monitor_enabled');
+        GM_setValue(characterKey, enabled);
     }
 
     // 严格检查是否为市场列表容器（仅市场列表触发模糊匹配）
@@ -401,6 +413,77 @@
             border-left: 3px solid var(--color-orange-400);
             background: var(--color-midnight-600);
         }
+
+        /* 修改：简化的高亮提醒样式 - 应用到操作容器 */
+        .Header_myActions__3rlBU.highlight-alert {
+            border: 3px solid #ff0000 !important;
+            border-radius: 8px !important;
+            animation: alertPulse 1.5s infinite alternate !important;
+            background: rgba(255, 0, 0, 0.08) !important;
+            margin: 5px 0 !important;
+            position: relative !important;
+            z-index: 1000 !important;
+            overflow: visible !important;
+        }
+
+        /* 简化提示文字样式 */
+        .Header_myActions__3rlBU.highlight-alert::before {
+            content: "⚠️ 无强化等级！" !important;
+            color: #ff0000 !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
+            text-align: center !important;
+            margin: 0 !important;
+            white-space: nowrap !important;
+            width: 100% !important;
+            display: block !important;
+            padding: 4px 0 !important;
+            background: rgba(255, 0, 0, 0.1) !important;
+            border-radius: 4px 4px 0 0 !important;
+        }
+
+        /* 高亮时放大停止按钮 */
+        .Header_myActions__3rlBU.highlight-alert .Button_button__1Fe9z.Button_warning__1-AMI.Button_fullWidth__17pVU.Button_small__3fqC7 {
+            padding: 15px 30px !important;
+            font-size: 18px !important;
+            height: 50px !important;
+            min-width: 120px !important;
+            border-radius: 8px !important;
+            background: linear-gradient(135deg, #ff0000, #ff4500) !important;
+            border: 2px solid #ff0000 !important;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5) !important;
+            font-weight: bold !important;
+            transition: all 0.3s ease !important;
+            margin-top: 5px !important;
+            transform: scale(1.1) !important;
+        }
+
+        /* 停止按钮悬停效果 */
+        .Header_myActions__3rlBU.highlight-alert .Button_button__1Fe9z.Button_warning__1-AMI.Button_fullWidth__17pVU.Button_small__3fqC7:hover {
+            transform: scale(1.15) !important;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.7) !important;
+            background: linear-gradient(135deg, #ff4500, #ff0000) !important;
+        }
+
+        @keyframes alertPulse {
+            0% {
+                border-color: #ff0000;
+                background: rgba(255, 0, 0, 0.08);
+            }
+            50% {
+                border-color: #ff4500;
+                background: rgba(255, 0, 0, 0.15);
+            }
+            100% {
+                border-color: #ff0000;
+                background: rgba(255, 0, 0, 0.08);
+            }
+        }
+
+        /* 正常的停止按钮样式 */
+        .Button_button__1Fe9z.Button_warning__1-AMI.Button_fullWidth__17pVU.Button_small__3fqC7 {
+            transition: all 0.3s ease !important;
+        }
     `);
 
     // 设置面板
@@ -409,6 +492,7 @@
 
         const favorites = getFavorites();
         const marketEnhanceEnabled = getMarketFavoriteEnhanceHighlight();
+        const headerMonitorEnabled = getHeaderMonitorEnabled();
         const allCharactersFavorites = getAllCharactersFavorites();
         const settings = document.createElement('div');
         settings.className = 'mwc-settings';
@@ -440,8 +524,18 @@
                     <label for="market-enhance-toggle">
                         🛒 收藏强化装备时联动收藏市场
                     </label>
-                    <span class="mwc-toggle-status" id="toggle-status">
+                    <span class="mwc-toggle-status" id="market-enhance-status">
                         ${marketEnhanceEnabled ? '已开启' : '已关闭'}
+                    </span>
+                </div>
+
+                <div class="mwc-toggle">
+                    <input type="checkbox" id="header-monitor-toggle" ${headerMonitorEnabled ? 'checked' : ''}>
+                    <label for="header-monitor-toggle">
+                        🔔 无强化等级提醒与停止按钮放大
+                    </label>
+                    <span class="mwc-toggle-status" id="header-monitor-status">
+                        ${headerMonitorEnabled ? '已开启' : '已关闭'}
                     </span>
                 </div>
 
@@ -481,14 +575,31 @@
 
         document.body.appendChild(settings);
 
-        // 开关事件
-        const toggle = settings.querySelector('#market-enhance-toggle');
-        const status = settings.querySelector('#toggle-status');
-        toggle.addEventListener('change', () => {
-            const enabled = toggle.checked;
+        // 市场联动开关事件
+        const marketToggle = settings.querySelector('#market-enhance-toggle');
+        const marketStatus = settings.querySelector('#market-enhance-status');
+        marketToggle.addEventListener('change', () => {
+            const enabled = marketToggle.checked;
             saveMarketFavoriteEnhanceHighlight(enabled);
-            status.textContent = enabled ? '已开启' : '已关闭';
+            marketStatus.textContent = enabled ? '已开启' : '已关闭';
             throttledMarkFavorites();
+        });
+
+        // 头部监控开关事件
+        const headerToggle = settings.querySelector('#header-monitor-toggle');
+        const headerStatus = settings.querySelector('#header-monitor-status');
+        headerToggle.addEventListener('change', () => {
+            const enabled = headerToggle.checked;
+            saveHeaderMonitorEnabled(enabled);
+            headerStatus.textContent = enabled ? '已开启' : '已关闭';
+
+            // 如果关闭监控，立即移除所有高亮样式
+            if (!enabled) {
+                const actionContainers = document.querySelectorAll('.Header_myActions__3rlBU.highlight-alert');
+                actionContainers.forEach(container => {
+                    container.classList.remove('highlight-alert');
+                });
+            }
         });
 
         // 关闭事件
@@ -624,10 +735,86 @@
         window.addEventListener('load', main);
     }
 
-
-
     // 初始化相关localStorage替换
     (async function initMWISettings() {
+        // =================== 通用工具函数 ===================
+        // 统一的React输入触发函数
+        function reactInputTrigger(inputElem, value) {
+            if (!inputElem) return;
+
+            const lastValue = inputElem.value;
+            inputElem.value = value;
+
+            // 触发标准输入事件
+            const event = new Event("input", { bubbles: true });
+            event.simulated = true;
+
+            // 更新React内部值跟踪器
+            if (inputElem._valueTracker) {
+                inputElem._valueTracker.setValue(lastValue);
+            }
+
+            // 使用原生属性设置器确保DOM更新
+            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+                window.HTMLInputElement.prototype, "value"
+            ).set;
+            if (nativeInputValueSetter) {
+                nativeInputValueSetter.call(inputElem, value);
+            }
+
+            inputElem.dispatchEvent(event);
+        }
+
+        // 统一的输入模拟函数
+        function simulateInput(inputSelector, value) {
+            let inputElement = document.querySelector(inputSelector);
+            if (!inputElement) return;
+
+            // 激活输入框
+            inputElement.focus();
+
+            // 清空输入框
+            setTimeout(() => {
+                inputElement.value = '';
+                inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+                inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+
+                // 设置新值
+                setTimeout(() => {
+                    const valueStr = String(value);
+                    reactInputTrigger(inputElement, valueStr);
+                    inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+
+                    // 模拟失去焦点
+                    setTimeout(() => {
+                        inputElement.dispatchEvent(new Event('blur', { bubbles: true }));
+                    }, 50);
+                }, 30);
+            }, 30);
+        }
+
+        // 统一的按钮创建函数
+        function createButton(id, text, value, onClick) {
+            const btn = document.createElement('button');
+            btn.id = id;
+            btn.textContent = text;
+            btn.style.background = 'rgb(69,71,113)';
+            btn.style.color = '#fff';
+            btn.style.border = 'none';
+            btn.style.borderRadius = '4px';
+            btn.style.padding = '4px 10px';
+            btn.style.fontSize = '14px';
+            btn.style.cursor = 'pointer';
+            btn.style.transition = 'background-color 0.2s';
+
+            btn.onmouseenter = () => btn.style.backgroundColor = 'rgb(89,91,133)';
+            btn.onmouseleave = () => btn.style.backgroundColor = 'rgb(69,71,113)';
+            btn.onclick = onClick;
+
+            return btn;
+        }
+
+        // =================== 功能函数 ===================
         // 在技能详情面板添加按钮
         function addButtonsToSkillActionDetail() {
             const target = document.querySelector('div.SkillActionDetail_notes__2je2F > div');
@@ -639,132 +826,18 @@
             btnContainer.style.display = 'flex';
             btnContainer.style.gap = '8px';
 
-            // 模拟输入的通用函数
-            function simulateInput(value) {
-                // 尝试多种选择器确保找到输入框
-                let inputElement = document.querySelector('div.EnhancingPanel_skillActionDetailContainer__1pV1w > div > div > div.SkillActionDetail_inputs__2tnEq > div.SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl > div.SkillActionDetail_input__1G-kE > div > input');
-                if (!inputElement) {
-                    inputElement = document.querySelector('input.SkillActionDetail_input__1G-kE');
-                }
-                if (!inputElement) return;
+            // 创建按钮的函数，使用统一的模拟输入
+            const createSkillButton = (id, text, value) => {
+                return createButton(id, text, value, () => {
+                    simulateInput('div.EnhancingPanel_skillActionDetailContainer__1pV1w > div > div > div.SkillActionDetail_inputs__2tnEq > div.SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl > div.SkillActionDetail_input__1G-kE > div > input', value);
+                });
+            };
 
-                // 激活输入框
-                inputElement.focus();
-
-                // 确保输入框被激活的延迟
-                setTimeout(() => {
-                    // 先模拟用户按下删除键清除内容
-                    inputElement.dispatchEvent(new KeyboardEvent('keydown', {
-                        key: 'Delete',
-                        code: 'Delete',
-                        which: 46,
-                        keyCode: 46,
-                        bubbles: true,
-                        cancelable: true
-                    }));
-                    inputElement.value = '';
-                    inputElement.dispatchEvent(new KeyboardEvent('keyup', {
-                        key: 'Delete',
-                        code: 'Delete',
-                        which: 46,
-                        keyCode: 46,
-                        bubbles: true,
-                        cancelable: true
-                    }));
-                    // 触发输入事件以确认清空操作
-                    inputElement.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-                    inputElement.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-
-                    // 稍长延迟确保清空操作完成
-                    setTimeout(() => {
-                        const valueStr = String(value);
-                        // 根据位数选择不同的处理函数
-                        if (valueStr.length > 1) {
-                            handleMultiDigitInput(inputElement, valueStr);
-                        } else {
-                            handleSingleDigitInput(inputElement, valueStr);
-                        }
-                    }, 100);
-                }, 100);
-            }
-
-            // React输入触发工具函数
-            function reactInputTriggerHack(inputElem, value) {
-                let lastValue = inputElem.value;
-                inputElem.value = value;
-                let event = new Event("input", { bubbles: true });
-                event.simulated = true;
-                let tracker = inputElem._valueTracker;
-                if (tracker) {
-                    tracker.setValue(lastValue);
-                }
-                inputElem.dispatchEvent(event);
-            }
-
-            // 模拟输入值并触发React更新
-            function simulateReactInput(inputElement, text) {
-                // 先清空输入框
-                const emptyValue = '';
-                reactInputTriggerHack(inputElement, emptyValue);
-                inputElement.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-
-                // 延迟后设置实际值
-                setTimeout(() => {
-                    reactInputTriggerHack(inputElement, text);
-                    inputElement.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-                }, 50);
-            }
-
-            // 处理单数字输入 (使用React触发方式)
-            function handleSingleDigitInput(inputElement, digit) {
-                setTimeout(() => {
-                    simulateReactInput(inputElement, digit);
-
-                    // 输入完成后直接模拟失去焦点事件
-                    setTimeout(() => {
-                        inputElement.dispatchEvent(new Event('blur', { bubbles: true, cancelable: true }));
-                    }, 150); // 给输入操作一些时间完成
-                }, 50);
-            }
-
-            // 处理多数字输入 (使用React触发方式)
-            function handleMultiDigitInput(inputElement, value) {
-                setTimeout(() => {
-                    simulateReactInput(inputElement, value);
-
-                    // 输入完成后直接模拟失去焦点事件
-                    setTimeout(() => {
-                        inputElement.dispatchEvent(new Event('blur', { bubbles: true, cancelable: true }));
-                    }, 150); // 给输入操作一些时间完成
-                }, 50);
-            }
-
-            // 创建按钮的通用函数
-            function createButton(id, text, value) {
-                const btn = document.createElement('button');
-                btn.id = id;
-                btn.textContent = text;
-                btn.style.background = 'rgb(69,71,113)';
-                btn.style.color = '#fff';
-                btn.style.border = 'none';
-                btn.style.borderRadius = '4px';
-                btn.style.padding = '4px 10px';
-                btn.style.fontSize = '14px';
-                btn.onclick = function () { simulateInput(value); };
-                return btn;
-            }
-
-            // 按钮1
-            const btn1 = createButton('mwiSkillButton1', '+5', 5);
-
-            // 按钮2
-            const btn2 = createButton('mwiSkillButton2', '+7', 7);
-
-            // 按钮3
-            const btn3 = createButton('mwiSkillButton3', '+10', 10);
-
-            // 按钮4
-            const btn4 = createButton('mwiSkillButton3', '+8', 8);
+            // 创建按钮
+            const btn1 = createSkillButton('mwiSkillButton1', '+5', 5);
+            const btn2 = createSkillButton('mwiSkillButton2', '+7', 7);
+            const btn3 = createSkillButton('mwiSkillButton4', '+10', 10);
+            const btn4 = createSkillButton('mwiSkillButton3', '+8', 8);
 
             // 添加按钮到容器
             btnContainer.appendChild(btn1);
@@ -776,9 +849,6 @@
             target.parentNode.insertBefore(btnContainer, target.nextSibling);
         }
 
-        // 以下为包子创意发挥，内容由AI生成，请仔细甄别，如有雷同纯属巧合
-
-
         // 在技能详情面板添加第二个输入框（保护最小等级）的快速按钮
         function addButtonsToSkillProtectionLevel() {
             // 找到保护最小等级输入框容器
@@ -787,7 +857,6 @@
 
             // 定位保护最小等级输入框
             const protectionInputElement = targetContainer.querySelector('input.Input_input__2-t98');
-
             if (!protectionInputElement) return;
 
             // 创建按钮容器
@@ -806,171 +875,27 @@
             label.style.marginRight = '8px';
             btnContainer.appendChild(label);
 
-            // 模拟输入的通用函数（针对特定输入框）
-            function simulateProtectionInput(inputElement, value) {
-                if (!inputElement) return;
-
-
-                // 激活输入框
-                inputElement.focus();
-
-                // 确保输入框被激活的延迟
-                setTimeout(() => {
-                    // 先模拟用户按下删除键清除内容
-                    inputElement.dispatchEvent(new KeyboardEvent('keydown', {
-                        key: 'Delete',
-                        code: 'Delete',
-                        which: 46,
-                        keyCode: 46,
-                        bubbles: true,
-                        cancelable: true
-                    }));
-
-                    // 清空输入框值
-                    inputElement.value = '';
-
-                    inputElement.dispatchEvent(new KeyboardEvent('keyup', {
-                        key: 'Delete',
-                        code: 'Delete',
-                        which: 46,
-                        keyCode: 46,
-                        bubbles: true,
-                        cancelable: true
-                    }));
-
-                    // 触发输入事件以确认清空操作
-                    inputElement.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-                    inputElement.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-
-                    // 稍长延迟确保清空操作完成
-                    setTimeout(() => {
-                        const valueStr = String(value);
-
-                        // 根据位数选择不同的处理函数
-                        if (valueStr.length > 1) {
-                            handleMultiDigitProtectionInput(inputElement, valueStr);
-                        } else {
-                            handleSingleDigitProtectionInput(inputElement, valueStr);
-                        }
-                    }, 100);
-                }, 100);
-            }
-
-            // React输入触发工具函数（针对特定输入框）
-            function reactProtectionInputTriggerHack(inputElem, value) {
-                let lastValue = inputElem.value;
-                inputElem.value = value;
-                let event = new Event("input", { bubbles: true });
-                event.simulated = true;
-
-                // 访问React内部的值跟踪器
-                if (inputElem._valueTracker) {
-                    inputElem._valueTracker.setValue(lastValue);
-                }
-
-                // 设置React内部属性
-                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-                    window.HTMLInputElement.prototype, "value"
-                ).set;
-
-                if (nativeInputValueSetter) {
-                    nativeInputValueSetter.call(inputElem, value);
-                }
-
-                inputElem.dispatchEvent(event);
-            }
-
-            // 模拟输入值并触发React更新（针对特定输入框）
-            function simulateReactProtectionInput(inputElement, text) {
-
-                // 先清空输入框
-                reactProtectionInputTriggerHack(inputElement, '');
-                inputElement.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-
-                // 延迟后设置实际值
-                setTimeout(() => {
-                    reactProtectionInputTriggerHack(inputElement, text);
-                    inputElement.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-
-                    // 额外触发一次blur确保更新生效
-                    setTimeout(() => {
-                        inputElement.dispatchEvent(new Event('blur', { bubbles: true, cancelable: true }));
-                    }, 50);
-                }, 50);
-            }
-
-            // 处理单数字输入（针对特定输入框）
-            function handleSingleDigitProtectionInput(inputElement, digit) {
-
-                setTimeout(() => {
-                    simulateReactProtectionInput(inputElement, digit);
-
-                    // 输入完成后模拟失去焦点事件以触发验证和更新
-                    setTimeout(() => {
-                        inputElement.dispatchEvent(new Event('blur', { bubbles: true, cancelable: true }));
-                    }, 150);
-                }, 50);
-            }
-
-            // 处理多数字输入（针对特定输入框）
-            function handleMultiDigitProtectionInput(inputElement, value) {
-
-                setTimeout(() => {
-                    simulateReactProtectionInput(inputElement, value);
-
-                    // 输入完成后模拟失去焦点事件
-                    setTimeout(() => {
-                        inputElement.dispatchEvent(new Event('blur', { bubbles: true, cancelable: true }));
-                    }, 150);
-                }, 50);
-            }
-
-            // 创建保护等级按钮的通用函数
-            function createProtectionButton(id, text, value, title) {
-                const btn = document.createElement('button');
-                btn.id = id;
-                btn.textContent = text;
-                btn.title = title || `快速设置为${value}`;
-                btn.style.background = 'rgb(69,71,113)';
-                btn.style.color = '#fff';
-                btn.style.border = 'none';
-                btn.style.borderRadius = '4px';
-                btn.style.padding = '4px 12px';
-                btn.style.fontSize = '13px';
-                btn.style.cursor = 'pointer';
-                btn.style.transition = 'background-color 0.2s';
-
-                // 悬停效果
-                btn.onmouseenter = function () {
-                    this.style.backgroundColor = 'rgb(89,91,133)';
-                };
-                btn.onmouseleave = function () {
-                    this.style.backgroundColor = 'rgb(69,71,113)';
-                };
-
-                btn.onclick = function (e) {
+            // 创建保护等级按钮的函数，使用统一的模拟输入
+            const createProtectionButton = (id, text, value, title) => {
+                return createButton(id, text, value, (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // 关键修改：每次点击都重新尝试查找当前有效的输入框
-                    const currentInput = document.querySelector('.SkillActionDetail_protectionMinLevelInputContainer__1HSzb input.Input_input__2-t98');
-                    if (currentInput) {
-                        simulateProtectionInput(currentInput, value);
-                    }
-                };
+                    simulateInput('.SkillActionDetail_protectionMinLevelInputContainer__1HSzb input.Input_input__2-t98', value);
+                });
+            };
 
-                return btn;
-            }
-
-            // 创建三个按钮：+2、+5、+6、+8
+            // 创建按钮：+2、+5、+6、+7、+8
             const btn2 = createProtectionButton('mwiProtectionButton2', '+2', 2, '设置保护起始等级为2');
             const btn5 = createProtectionButton('mwiProtectionButton5', '+5', 5, '设置保护起始等级为5');
             const btn6 = createProtectionButton('mwiProtectionButton6', '+6', 6, '设置保护起始等级为6');
+            const btn7 = createProtectionButton('mwiProtectionButton7', '+7', 7, '设置保护起始等级为7');
             const btn8 = createProtectionButton('mwiProtectionButton8', '+8', 8, '设置保护起始等级为8');
 
             // 添加按钮到容器
             btnContainer.appendChild(btn2);
             btnContainer.appendChild(btn5);
             btnContainer.appendChild(btn6);
+            btnContainer.appendChild(btn7);
             btnContainer.appendChild(btn8);
 
             // 在目标容器后面添加按钮容器
@@ -979,9 +904,7 @@
             } else {
                 targetContainer.parentNode.appendChild(btnContainer);
             }
-
         }
-
 
         // 用于调整强化界面整体宽度的函数
         function widenEnhancementContainer() {
@@ -995,66 +918,73 @@
 
             // 核心CSS：放宽外层容器及内部布局
             styleEl.textContent = `
-        /* 【重点】放宽最外层容器 */
-        .EnhancingPanel_enhancingAction__2GJtD {
-            min-width: 750px !important;   /* 默认宽度，可根据需要增加 */
-            max-width: 1200px !important;  /* 最大宽度限制 */
-            width: auto !important;
-        }
-        .AlchemyPanel_alchemyAction__THez7 {
-            min-width: 750px !important;   /* 默认宽度，可根据需要增加 */
-            max-width: 1200px !important;  /* 最大宽度限制 */
-            width: auto !important;
-        }
+                /* 【重点】放宽最外层容器 */
+                .EnhancingPanel_enhancingAction__2GJtD {
+                    min-width: 750px !important;   /* 默认宽度，可根据需要增加 */
+                    max-width: 1200px !important;  /* 最大宽度限制 */
+                    width: auto !important;
+                }
+                .AlchemyPanel_alchemyAction__THez7 {
+                    min-width: 750px !important;   /* 默认宽度，可根据需要增加 */
+                    max-width: 1200px !important;  /* 最大宽度限制 */
+                    width: auto !important;
+                }
 
+                /* 可选：如果游戏有最大宽度限制，可能需要一并放宽 */
+                .GamePage_middlePanel__uDts7,
+                .GamePage_mainPanel__2njyb > div {
+                    max-width: none !important;
+                }
 
-        /* 可选：如果游戏有最大宽度限制，可能需要一并放宽 */
-        .GamePage_middlePanel__uDts7,
-        .GamePage_mainPanel__2njyb > div {
-            max-width: none !important;
-        }
+                /* 确保内部技能详情容器能利用新增的空间 */
+                .EnhancingPanel_skillActionDetailContainer__1pV1w {
+                    width: 100% !important;
+                    max-width: none !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                }
 
-        /* 确保内部技能详情容器能利用新增的空间 */
-        .EnhancingPanel_skillActionDetailContainer__1pV1w {
-            width: 100% !important;
-            max-width: none !important;
-            display: flex !important;
-            flex-direction: column !important;
-        }
+                /* 调整内部的主内容区域，使其并排显示 */
+                .SkillActionDetail_skillActionDetail__1jHU4 {
+                    display: flex !important;
+                    flex-wrap: nowrap !important;
+                    gap: 20px !important;
+                    justify-content: space-between !important;
+                    width: 100% !important;
+                }
 
-        /* 调整内部的主内容区域，使其并排显示 */
-        .SkillActionDetail_skillActionDetail__1jHU4 {
-            display: flex !important;
-            flex-wrap: nowrap !important;
-            gap: 20px !important;
-            justify-content: space-between !important;
-            width: 100% !important;
-        }
+                /* 加宽强化选择面板 */
+                .SkillActionDetail_inputs__2tnEq {
+                    flex: 1 1 auto !important;
+                    min-width: 290px !important; /* 可根据喜好调整 */
+                    overflow: visible !important;
+                }
 
-        /* 加宽强化选择面板 */
-        .SkillActionDetail_inputs__2tnEq {
-            flex: 1 1 auto !important;
-            min-width: 290px !important; /* 可根据喜好调整 */
-            overflow: visible !important;
-        }
+                /* 放大停止按钮 */
+                .SkillActionDetail_actionContainer__22yYX button.Button_button__1Fe9z.Button_warning__1-AMI {
+                    padding: 20px 40px !important;
+                    font-size: 20px !important;
+                    height: 60px !important;
+                    border-radius: 10px !important;
+                }
 
-        /* 加宽信息面板 */
-        .SkillActionDetail_info__3umoI {
-            flex: 1 1 auto !important;
-            min-width: 280px !important; /* 可根据喜好调整 */
-            overflow: visible !important;
-        }
+                /* 加宽信息面板 */
+                .SkillActionDetail_info__3umoI {
+                    flex: 1 1 auto !important;
+                    min-width: 280px !important; /* 可根据喜好调整 */
+                    overflow: visible !important;
+                }
 
-        /* 加宽并美化你的自定义强化数据面板 */
-        #enhancementParentContainer {
-            flex: 0 0 auto !important;
-            min-width: 280px !important; /* 可根据喜好调整 */
-            padding: 12px 16px !important;
-            border-left: 3px solid #444 !important;
-            background-color: rgba(40, 40, 60, 0.7) !important;
-            border-radius: 8px !important;
-        }
-    `;
+                /* 加宽并美化你的自定义强化数据面板 */
+                #enhancementParentContainer {
+                    flex: 0 0 auto !important;
+                    min-width: 280px !important; /* 可根据喜好调整 */
+                    padding: 12px 16px !important;
+                    border-left: 3px solid #444 !important;
+                    background-color: rgba(40, 40, 60, 0.7) !important;
+                    border-radius: 8px !important;
+                }
+            `;
         }
 
         // 为两个输入框添加+/-按钮的完整方案
@@ -1065,100 +995,100 @@
                 const styleEl = document.createElement('style');
                 styleEl.id = styleId;
                 styleEl.textContent = `
-            /* 通用：两个输入框容器都使用flex布局 */
-            .SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl,
-            .SkillActionDetail_protectionMinLevelInputContainer__1HSzb {
-                display: flex !important;
-                align-items: center !important;
-                justify-content: space-between !important;
-                gap: 8px !important;
-                min-height: 40px !important;
-                width: 100% !important;
-                margin-bottom: 8px !important; /* 增加间距避免拥挤 */
-            }
+                    /* 通用：两个输入框容器都使用flex布局 */
+                    .SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl,
+                    .SkillActionDetail_protectionMinLevelInputContainer__1HSzb {
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: space-between !important;
+                        gap: 8px !important;
+                        min-height: 40px !important;
+                        width: 100% !important;
+                        margin-bottom: 8px !important; /* 增加间距避免拥挤 */
+                    }
 
-            /* 标签区域 - 固定宽度 */
-            .SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl .SkillActionDetail_label__1mGQJ,
-            .SkillActionDetail_protectionMinLevelInputContainer__1HSzb .SkillActionDetail_label__1mGQJ {
-                flex: 0 0 auto !important;
-                min-width: 90px !important; /* "保护起始等级"较长，需要更宽 */
-                text-align: left !important;
-                white-space: nowrap !important;
-                font-size: 13px !important;
-            }
+                    /* 标签区域 - 固定宽度 */
+                    .SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl .SkillActionDetail_label__1mGQJ,
+                    .SkillActionDetail_protectionMinLevelInputContainer__1HSzb .SkillActionDetail_label__1mGQJ {
+                        flex: 0 0 auto !important;
+                        min-width: 90px !important; /* "保护起始等级"较长，需要更宽 */
+                        text-align: left !important;
+                        white-space: nowrap !important;
+                        font-size: 13px !important;
+                    }
 
-            /* 针对目标等级标签单独调整 */
-            .SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl .SkillActionDetail_label__1mGQJ {
-                min-width: 90px !important; /* "目标等级"较短 */
-            }
+                    /* 针对目标等级标签单独调整 */
+                    .SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl .SkillActionDetail_label__1mGQJ {
+                        min-width: 90px !important; /* "目标等级"较短 */
+                    }
 
-            /* 输入框区域 - 占据主要空间，不被挤压 */
-            .SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl .SkillActionDetail_input__1G-kE,
-            .SkillActionDetail_protectionMinLevelInputContainer__1HSzb .SkillActionDetail_input__1G-kE {
-                flex: 1 1 auto !important;
-                min-width: 100px !important; /* 比之前稍小，为按钮留空间 */
-                max-width: 140px !important;
-            }
+                    /* 输入框区域 - 占据主要空间，不被挤压 */
+                    .SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl .SkillActionDetail_input__1G-kE,
+                    .SkillActionDetail_protectionMinLevelInputContainer__1HSzb .SkillActionDetail_input__1G-kE {
+                        flex: 1 1 auto !important;
+                        min-width: 100px !important; /* 比之前稍小，为按钮留空间 */
+                        max-width: 140px !important;
+                    }
 
-            /* 确保输入框本身占满容器 */
-            .SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl .Input_inputContainer__22GnD,
-            .SkillActionDetail_protectionMinLevelInputContainer__1HSzb .Input_inputContainer__22GnD {
-                width: 100% !important;
-                max-width: 100% !important;
-            }
+                    /* 确保输入框本身占满容器 */
+                    .SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl .Input_inputContainer__22GnD,
+                    .SkillActionDetail_protectionMinLevelInputContainer__1HSzb .Input_inputContainer__22GnD {
+                        width: 100% !important;
+                        max-width: 100% !important;
+                    }
 
-            /* 按钮容器通用样式 */
-            .mwi-level-btn-container {
-                flex: 0 0 auto !important;
-                display: flex !important;
-                gap: 3px !important;
-                margin-left: 6px !important;
-            }
+                    /* 按钮容器通用样式 */
+                    .mwi-level-btn-container {
+                        flex: 0 0 auto !important;
+                        display: flex !important;
+                        gap: 3px !important;
+                        margin-left: 6px !important;
+                    }
 
-            /* 按钮基础样式 */
-            .mwi-level-btn {
-                flex: 0 0 auto !important;
-                width: 26px !important;
-                height: 24px !important;
-                background: rgb(69, 71, 113) !important;
-                color: white !important;
-                border: none !important;
-                border-radius: 3px !important;
-                font-size: 15px !important;
-                font-weight: bold !important;
-                cursor: pointer !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                padding: 0 !important;
-                transition: background-color 0.15s !important;
-                user-select: none !important;
-                line-height: 1 !important;
-            }
+                    /* 按钮基础样式 */
+                    .mwi-level-btn {
+                        flex: 0 0 auto !important;
+                        width: 26px !important;
+                        height: 24px !important;
+                        background: rgb(69, 71, 113) !important;
+                        color: white !important;
+                        border: none !important;
+                        border-radius: 3px !important;
+                        font-size: 15px !important;
+                        font-weight: bold !important;
+                        cursor: pointer !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        padding: 0 !important;
+                        transition: background-color 0.15s !important;
+                        user-select: none !important;
+                        line-height: 1 !important;
+                    }
 
-            /* 按钮悬停效果 */
-            .mwi-level-btn:hover {
-                background: rgb(89, 91, 143) !important;
-            }
+                    /* 按钮悬停效果 */
+                    .mwi-level-btn:hover {
+                        background: rgb(89, 91, 143) !important;
+                    }
 
-            .mwi-level-btn:active {
-                background: rgb(59, 61, 103) !important;
-            }
+                    .mwi-level-btn:active {
+                        background: rgb(59, 61, 103) !important;
+                    }
 
-            /* 减号按钮特殊样式 */
-            .mwi-level-btn.minus {
-                font-size: 17px !important;
-                padding-bottom: 1px !important;
-            }
+                    /* 减号按钮特殊样式 */
+                    .mwi-level-btn.minus {
+                        font-size: 17px !important;
+                        padding-bottom: 1px !important;
+                    }
 
-            /* 禁用状态（达到边界时） */
-            .mwi-level-btn.disabled {
-                background: rgb(50, 52, 90) !important;
-                color: #888 !important;
-                cursor: not-allowed !important;
-                opacity: 0.7 !important;
-            }
-        `;
+                    /* 禁用状态（达到边界时） */
+                    .mwi-level-btn.disabled {
+                        background: rgb(50, 52, 90) !important;
+                        color: #888 !important;
+                        cursor: not-allowed !important;
+                        opacity: 0.7 !important;
+                    }
+                `;
                 document.head.appendChild(styleEl);
             }
 
@@ -1180,7 +1110,7 @@
 
         }
 
-        // === 2. 为目标等级输入框添加按钮（如果不存在） ===
+        // === 为目标等级输入框添加按钮（如果不存在） ===
         function addButtonsToInput(config) {
             const { containerSelector, btnContainerId, inputSelector, label } = config;
 
@@ -1189,7 +1119,6 @@
 
             const inputElement = container.querySelector(inputSelector);
             if (!inputElement) {
-                console.warn(`未找到${label}输入框`);
                 return;
             }
 
@@ -1343,53 +1272,27 @@
             container.appendChild(btnContainer);
 
         }
-        // === 4. 初始化函数（动态检测面板） ===
+
+        // 简单的初始化函数，只在需要时添加按钮，不创建额外的观察器
         function initDualLevelButtons() {
-            // 立即尝试添加
+            // 立即尝试添加一次
             setTimeout(addLevelButtonsForBothInputs, 1000);
-
-            // 使用观察器监听面板动态加载
-            const observer = new MutationObserver(() => {
-                // 检查两个容器是否都存在
-                const targetContainer = document.querySelector('.SkillActionDetail_enhancingMaxLevelInputContainer__1VCWl');
-                const protectionContainer = document.querySelector('.SkillActionDetail_protectionMinLevelInputContainer__1HSzb');
-
-                if (targetContainer && protectionContainer) {
-                    // 检查是否已添加按钮
-                    const targetHasBtns = targetContainer.querySelector('.mwi-level-btn-container');
-                    const protectionHasBtns = protectionContainer.querySelector('.mwi-level-btn-container');
-
-                    if (!targetHasBtns || !protectionHasBtns) {
-                        setTimeout(addLevelButtonsForBothInputs, 100);
-                    }
-                }
-            });
-
-            observer.observe(document.body, {
-                childList: true,
-                subtree: true,
-                attributes: true,
-                attributeFilter: ['style', 'class']
-            });
-
         }
 
-
-        // 监听技能详情面板的显示/隐藏，动态添加/移除按钮
+        // 监听技能详情面板的变化，统一处理所有按钮添加逻辑
         function observeSkillPanelChanges() {
             const skillPanelObserver = new MutationObserver((mutations) => {
                 // 检查技能详情面板是否显示
                 const skillDetailPanel = document.querySelector('.EnhancingPanel_skillActionDetailContainer__1pV1w');
 
                 if (skillDetailPanel && skillDetailPanel.style.display !== 'none') {
-                    // 面板显示时，确保按钮存在
+                    // 面板显示时，确保所有按钮都存在
                     setTimeout(() => {
                         addButtonsToSkillActionDetail();
                         addButtonsToSkillProtectionLevel();
-                        initDualLevelButtons();
-                    }, 300);
+                        addLevelButtonsForBothInputs();
+                    }, 150);
                 }
-
             });
 
             skillPanelObserver.observe(document.body, {
@@ -1399,17 +1302,119 @@
             });
         }
 
+        // =================== 头部信息监听功能 ===================
+        function monitorHeaderInfo() {
+            // 目标元素选择器
+            const targetSelector = 'div.Header_displayName__1hN09';
 
+            // 检查目标元素的内容是否包含+号
+            function checkHeaderContent() {
+                const headerMonitorEnabled = getHeaderMonitorEnabled();
 
+                // 如果监控功能关闭，移除可能存在的样式并返回
+                if (!headerMonitorEnabled) {
+                    const actionContainers = document.querySelectorAll('.Header_myActions__3rlBU.highlight-alert');
+                    actionContainers.forEach(container => {
+                        container.classList.remove('highlight-alert');
+                    });
+                    return;
+                }
+
+                const targetElement = document.querySelector(targetSelector);
+                const actionContainer = document.querySelector('.Header_myActions__3rlBU');
+
+                if (targetElement && actionContainer) {
+                    const content = targetElement.textContent || targetElement.innerText;
+                    const hasPlusSign = content.includes('+');
+
+                    console.log('监控到头部信息:', content, '包含+号:', hasPlusSign);
+
+                    if (!hasPlusSign) {
+                        // 没有+号，添加高亮提醒
+                        actionContainer.classList.add('highlight-alert');
+                    } else {
+                        // 有+号，移除高亮提醒
+                        actionContainer.classList.remove('highlight-alert');
+                    }
+                }
+            }
+
+            // 初始检查
+            setTimeout(checkHeaderContent, 1000);
+
+            // 使用MutationObserver监听目标元素的变化
+            let observer = null;
+
+            function setupObserver() {
+                const targetNode = document.querySelector(targetSelector);
+
+                if (targetNode && !observer) {
+                    observer = new MutationObserver(function(mutations) {
+                        mutations.forEach(function(mutation) {
+                            if (mutation.type === 'characterData' || mutation.type === 'childList') {
+                                checkHeaderContent();
+                            }
+                        });
+                    });
+
+                    // 配置观察选项
+                    const config = {
+                        characterData: true,
+                        childList: true,
+                        subtree: true
+                    };
+
+                    // 开始观察目标节点
+                    observer.observe(targetNode, config);
+                    console.log('已开始监控头部信息变化');
+                }
+            }
+
+            // 初始设置观察器
+            setTimeout(setupObserver, 1500);
+
+            // 如果目标元素是延迟加载的，也需要监听DOM变化
+            const domObserver = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeType === 1) { // 元素节点
+                                if (node.matches?.(targetSelector) || node.querySelector?.(targetSelector)) {
+                                    setupObserver();
+                                    checkHeaderContent();
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+            // 开始观察整个文档
+            domObserver.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+
+            // 定期检查，确保不会漏掉变化
+            setInterval(checkHeaderContent, 5000);
+
+            // 监听页面可见性变化，当页面重新显示时检查
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    setTimeout(checkHeaderContent, 500);
+                }
+            });
+        }
 
         // 页面加载后或面板出现时调用
         setTimeout(() => {
             widenEnhancementContainer();
             observeSkillPanelChanges();
             initDualLevelButtons();
-        }, 2000); // 延迟确保游戏界面加载完成
 
-
+            // 启动头部信息监听
+            setTimeout(monitorHeaderInfo, 2000);
+        }, 1000); // 延迟确保游戏界面加载完成
 
     })();
 })();

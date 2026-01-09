@@ -2,7 +2,7 @@
 // @name         Milovana: Sidebar
 // @namespace    wompi72
 // @author       wompi72
-// @version      1.0.5
+// @version      1.0.8
 // @description  Milovana Sidebar
 // @match        *://milovana.com/*
 // @grant        none
@@ -14,6 +14,7 @@
 
 // TODO add sessions history
 // {orgasm type, edges, duration (auto start/or manual star)}
+// TODO Add navigation for eos tease, download script and make searchable dropdown from pages keys
 
 'use strict';
 const STORAGE_PREFIX = 'mv_sidebar_';
@@ -62,6 +63,28 @@ const pageData = getPageData();
 
 console.log(pageData);
 
+function isEmpty(value) {
+    if (Array.isArray(value) && value.length === 0) return true;
+    return value === null || value === undefined || value == "";
+}
+function pop(obj, key) {
+    const value = obj[key];
+    delete obj[key];
+    return value;
+}
+function formatLocalNumericDateTime(date) {
+    return date.toLocaleString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+function teaseUrl(teaseId) {
+    return `https://milovana.com/webteases/showtease.php?id=${teaseId}`;
+}
+
 const STORAGE = {
     SIDEBAR_COLLAPSED: `${STORAGE_PREFIX}_collapsed`,
     VOLUME: `${STORAGE_PREFIX}_volume`,
@@ -86,7 +109,8 @@ const STORAGE = {
     TIMERS: `${STORAGE_PREFIX}_${pageData.id}_timers`,
     OVERLAY_SIDEBAR: `${STORAGE_PREFIX}_overlay_sidebar`,
     OVERLAY_EOS: `${STORAGE_PREFIX}_overlay_sidebar_eos`,
-    
+    CURRENT_SESSION: `${STORAGE_PREFIX}_current_session`,
+    PAST_SESSIONS: `${STORAGE_PREFIX}_past_sessions`,
 }
 
 class Sidebar {
@@ -267,6 +291,42 @@ class Sidebar {
         return checkbox;
     }
 
+    addDropdown(options, callback, parent, label = null, classes = []) {
+        const container = document.createElement('div');
+        container.classList.add('flex-row');
+
+        if (label) {
+            const labelEl = document.createElement('label');
+            labelEl.textContent = label;
+            labelEl.classList.add('auto-margin-height');
+            container.appendChild(labelEl);
+        }
+
+        const select = document.createElement('select');
+        classes.forEach(cls => select.classList.add(cls));
+
+        options.forEach(opt => {
+            const optionEl = document.createElement('option');
+
+            if (typeof opt === 'object') {
+                optionEl.value = opt.value;
+                optionEl.textContent = opt.label;
+            } else {
+                optionEl.value = opt;
+                optionEl.textContent = opt;
+            }
+
+            select.appendChild(optionEl);
+        });
+
+        select.addEventListener('change', callback);
+
+        container.appendChild(select);
+        parent.appendChild(container);
+
+        return select;
+    }
+
     addNumberInput(placeholder, parent, classes = [], callback = null) {
         const input = document.createElement('input');
         input.type = 'number';
@@ -323,6 +383,7 @@ class Sidebar {
         parent.appendChild(container);
         return slider;
     }
+
 }
 
 const sidebar = new Sidebar();
@@ -628,6 +689,10 @@ class EdgeCounter {
         localStorage.setItem(STORAGE.EDGE_TOTAL, this.totalCount);
         this.updateDisplay();
 
+        try {
+            session.count("edge")
+        } catch {}
+
         if (this.cooldownActive.checked) {
             if (this.pauseMetronomeCheckbox.checked && metronome.isRunning) {
                 this._restartMetronome = true;
@@ -774,9 +839,11 @@ class Metronome {
 
     start() {
         this.isRunning = true;
-        this.toggleBtn.textContent = 'Stop';
         this.bpmUpdatePending = false;
+        this.toggleBtn.textContent = 'Stop';
         this.startBeat();
+
+        if (this.timerInterval) clearInterval(this.timerInterval);
         this.timerInterval = setInterval(() => {
             this.totalSeconds++;
             this.updateDisplay();
@@ -789,7 +856,9 @@ class Metronome {
         this.bpmUpdatePending = false;
         this.toggleBtn.textContent = 'Start';
         clearInterval(this.bpmInterval);
+        this.bpmInterval = null;
         clearInterval(this.timerInterval);
+        this.bpmInterval = null;
     }
 
     reset() {
@@ -807,6 +876,10 @@ class Metronome {
 
         this.bpmInterval = setInterval(() => {
             this.beatCount++;
+
+            try {
+                session.count("strokes")
+            } catch {}
             this.updateDisplay();
             sound.playSound(440, 0.05, 'sine', 0.5);
             this.checkTargets();
@@ -1075,14 +1148,176 @@ class Timers {
     }
 }
 
+class Sessions {
+
+    constructor() {
+        this.currentSession = JSON.parse(localStorage.getItem(STORAGE.CURRENT_SESSION) || '{"active": false}');
+        this.pastSessions = JSON.parse(localStorage.getItem(STORAGE.PAST_SESSIONS) || '[]');
+    }
+
+    addSection() {
+        this.content = sidebar.addSection("sessions", "Sessions", ["flex-column", "full-width"]);
+
+        this.includeNotes = sidebar.addCheckbox("Include Notes", () => {}, this.content)
+
+        const controlRow = document.createElement('div');
+        controlRow.classList.add(...['flex-row']);
+        this.content.appendChild(controlRow);
+
+        this.startButton = sidebar.addButton("Start", () => {
+            this.currentSession = {active: true, startTime: Date.now(), tease: pageData.title, teaseId: pageData.id};
+            this.startButton.innerText = 'ReStart';
+            this.updateCurrentSession();
+        }, controlRow);
+
+        if (this.isActive()) {
+            this.startButton.innerText = 'ReStart';
+        }
+
+        this.orgasmType = sidebar.addDropdown(  [
+            { value: 'Orgasm', label: 'Orgasm' },
+            { value: 'Ruined', label: 'Ruined' },
+            { value: 'Denied', label: 'Denied' }
+        ], () => {}, controlRow);
+        sidebar.addButton("End", () => {
+            delete this.currentSession["active"];
+
+            this.currentSession.endTime = Date.now();
+            this.currentSession.type = this.orgasmType.value;
+            if (this.includeNotes.checked) {
+                this.currentSession.notes = localStorage.getItem(STORAGE.NOTES) || ''
+            }
+            if (this.currentSession.teaseId === undefined) {
+                this.currentSession.teaseId = pageData.id;
+                this.currentSession.tease = pageData.title;
+            }
+
+            this.pastSessions.unshift(this.currentSession);
+            localStorage.setItem(STORAGE.PAST_SESSIONS, JSON.stringify(this.pastSessions));
+            localStorage.removeItem(STORAGE.CURRENT_SESSION);
+            this.currentSession = {active: false};
+            this.startButton.innerText = 'Start';
+            this.displaySessionData();
+        }, controlRow);
+
+        this.display = sidebar.addText("", this.content, ["sessions-display"])
+        this.displaySessionData();
+    }
+
+    displaySessionData() {
+        let displayString = '';
+        const now = Date.now();
+        const sessionsCopy = JSON.parse(JSON.stringify(this.pastSessions));
+        for (const session of sessionsCopy) {
+            delete session["active"];
+            const endTime = new Date(pop(session, "endTime"));
+            const endType = pop(session, "type");
+            displayString += `<b>${endType} (${formatLocalNumericDateTime(endTime)})</b></br>`;
+            displayString += `${this.formatDuration(endTime, now)} ago</br>`;
+
+
+            const startTime = pop(session, "startTime");
+            if (startTime !== undefined) {
+                displayString += `Duration ${this.formatDuration(new Date(startTime), endTime)}</br>`;
+            }
+
+            const notes = pop(session, "notes");
+            for (const [key, value] of Object.entries(session)) {
+                if (key === "teaseId" && !isEmpty(value)) {
+                    displayString += `${key}: <a href="${teaseUrl(value)}">${value}</a></br>`;
+                } else {
+                    displayString += `${key}: ${value}</br>`;
+                }
+            }
+
+            if (!isEmpty(notes)) {
+                displayString += `
+                    <details>
+                      <summary>Notes</summary>
+                      ${notes.replace("\n", "</br>")}
+                    </details></br>`;
+            }
+
+
+            displayString += `</br>`;
+        }
+
+        this.display.innerHTML = displayString;
+    }
+
+    updateCurrentSession() {
+        localStorage.setItem(STORAGE.CURRENT_SESSION, JSON.stringify(this.currentSession));
+    }
+
+    count(key, value=1) {
+        if (!this.currentSession.active) return;
+
+        this.currentSession[key] = (this.currentSession[key] || 0) + value;
+        this.updateCurrentSession();
+    }
+
+    isActive() {
+        return this.currentSession.active;
+    }
+
+    formatDuration(start, end) {
+        let diffMs = Math.abs(end - start);
+        let diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+        const months = Math.floor(diffDays / 30);
+        diffDays %= 30;
+
+        const weeks = Math.floor(diffDays / 7);
+        const days = diffDays % 7;
+
+        if (months > 0) {
+            return buildResult([
+                [months, "month"],
+                [diffDays, "day"]
+            ]);
+        }
+
+        if (weeks > 0) {
+            return buildResult([
+                [weeks, "week"],
+                [days, "day"]
+            ]);
+        }
+        const hours = Math.floor(diffMs / (1000 * 60 * 60));
+        const minutes = Math.floor(diffMs / (1000 * 60));
+        const seconds = Math.floor(diffMs / 1000);
+
+
+        function buildResult(units) {
+            return units
+                .filter(([value]) => value > 0)
+                .slice(0, 2)
+                .map(([value, label]) =>
+                    `${value} ${label}${value !== 1 ? "s" : ""}`
+                )
+                .join(", ");
+        }
+
+        return buildResult([
+            [diffDays, "day"],
+            [hours % 24, "hour"],
+            [minutes % 60, "minute"],
+            [seconds % 60, "second"]
+        ]);
+    }
+}
+
 const settings = new Settings();
+const session = new Sessions();
+
 new TextTeasePageNavigation();
 const metronome = new Metronome();
 new EdgeCounter();
 new RNG();
 new Stopwatch()
-new Notes();
+const notes = new Notes();
 new Timers();
+session.addSection();
 settings.addSection();
 sound.addOptions();
 settings.addSectionContent();
@@ -1091,6 +1326,7 @@ settings.addSectionContent();
 window.pageData = pageData;
 window.TEASE_TYPES = TEASE_TYPES;
 window.sidebar = sidebar;
+window.sessions = session;
 
 if (pageData.type !== TEASE_TYPES.none) {
 
@@ -1203,6 +1439,7 @@ body.mv-sidebar-dynamic-tease-size #csl {
 }
 
 #mv-sidebar button,
+#mv-sidebar select,
 .icon-btn  {
     min-width: 4rem;
     background-color: var(--mv-btn-bg);
@@ -1308,6 +1545,14 @@ body.mv-sidebar-dynamic-tease-size #csl {
 }
 .width-100 {
     width: 100%;
+}
+#mv-sidebar .sessions-display {
+  border: 1px solid var(--mv-btn-bg);
+  border-radius: 4px;
+
+  max-height: 150px;
+  overflow-y: scroll;
+  padding: .1rem .5rem;
 }
 
 `;

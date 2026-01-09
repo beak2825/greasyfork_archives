@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         LIMS 레포트 자동 생성기
 // @namespace    http://tampermonkey.net/
-// @version      1.6.3
-// @description  [v1.6.3: Quiet Mode 추가 - 불필요한 로그 제거] [v1.6.2: 기존 레포트 감지 개선 - 성공 alert 감지로 대기 시간 단축] [v1.6.1: 실패한 작업을 완료로 카운트하던 버그 수정 - 성공/실패 분리 추적] [v1.6: ExomeWorkForm 페이지 지원 추가, 모든 페이지에서 PDF 열기 기능 제거 (생성만)]
+// @version      1.6.5
+// @description  LIMS JOB NO별 상세 페이지 병렬 오픈 및 레포트 자동 생성 도구 (팝업 차단 회피 및 절대 경로 지원)
 // @author       김재형
 // @match        https://lims3.macrogen.com/ngs/sample/retrieveQcWorkForm.do*
 // @match        https://lims3.macrogen.com/ngs/library/retrieveProductWorkForm.do*
@@ -32,11 +32,22 @@
 // @grant        GM_getValue
 // @grant        GM_deleteValue
 // @grant        GM_addValueChangeListener
+// @grant        GM_openInTab
 // @grant        unsafeWindow
 // @run-at       document-idle
 // @downloadURL https://update.greasyfork.org/scripts/555108/LIMS%20%EB%A0%88%ED%8F%AC%ED%8A%B8%20%EC%9E%90%EB%8F%99%20%EC%83%9D%EC%84%B1%EA%B8%B0.user.js
 // @updateURL https://update.greasyfork.org/scripts/555108/LIMS%20%EB%A0%88%ED%8F%AC%ED%8A%B8%20%EC%9E%90%EB%8F%99%20%EC%83%9D%EC%84%B1%EA%B8%B0.meta.js
 // ==/UserScript==
+
+/**
+ * [변경 이력]
+ * v1.6.5: GM_openInTab 사용 시 상대 경로가 확장 프로그램 경로로 오인되는 문제 해결 (절대 경로 적용)
+ * v1.6.4: 브라우저 팝업 차단 회피를 위해 GM_openInTab 도입 및 탭 오픈 간격(500ms) 조정
+ * v1.6.3: Quiet Mode 적용 - 불필요한 콘솔 로그 제거
+ * v1.6.2: 기존 레포트 감지 로직 개선 - 성공 alert 훅을 통한 대기 시간 단축
+ * v1.6.1: 실패 작업을 완료로 카운트하던 버그 수정 (성공/실패 분리 추적)
+ * v1.6  : ExomeWorkForm 지원 추가 및 PDF 자동 열기 기능 제거 (생성 집중)
+ */
 
 (function () {
     'use strict';
@@ -658,14 +669,15 @@ HNW251105S001Q001"></textarea>
                         const jobNo = jobNoRaw ? String(jobNoRaw).trim() : '';
 
                         if (jobNo === targetJobNo) {
-                            // Detail 페이지 URL 생성
+                            // Detail 페이지 URL 생성 (GM_openInTab 사용을 위해 절대 경로로 생성)
+                            const origin = window.location.origin;
                             const urlParams = new URLSearchParams(window.location.search);
                             const menuCd = urlParams.get('menuCd') || 'NGS110301'; // 기본값
                             let detailUrl = '';
-                            if (isSampleQcPage) detailUrl = `/ngs/sample/retrieveQcWorkDetailForm.do?workNo=${jobNo}&menuCd=${menuCd}`;
-                            else if (isLibraryProductPage) detailUrl = `/ngs/library/retrieveProductWorkDetailForm.do?workNo=${jobNo}&menuCd=${menuCd}`;
-                            else if (isLibraryQcPage) detailUrl = `/ngs/library/retrieveQcWorkDetailForm.do?workNo=${jobNo}&menuCd=${menuCd}`;
-                            else if (isLibraryExomePage) detailUrl = `/ngs/library/retrieveExomeWorkDetailForm.do?workNo=${jobNo}&menuCd=${menuCd}`;
+                            if (isSampleQcPage) detailUrl = `${origin}/ngs/sample/retrieveQcWorkDetailForm.do?workNo=${jobNo}&menuCd=${menuCd}`;
+                            else if (isLibraryProductPage) detailUrl = `${origin}/ngs/library/retrieveProductWorkDetailForm.do?workNo=${jobNo}&menuCd=${menuCd}`;
+                            else if (isLibraryQcPage) detailUrl = `${origin}/ngs/library/retrieveQcWorkDetailForm.do?workNo=${jobNo}&menuCd=${menuCd}`;
+                            else if (isLibraryExomePage) detailUrl = `${origin}/ngs/library/retrieveExomeWorkDetailForm.do?workNo=${jobNo}&menuCd=${menuCd}`;
 
                             jobDetails.push({ jobNo: jobNo, row: row, url: detailUrl });
                             log(`[LIMS Report Auto] Found: ${jobNo}`);
@@ -710,12 +722,23 @@ HNW251105S001Q001"></textarea>
                 updateProgress(0, jobDetails.length, 'Stage A: 탭 열기 및 레포트 생성 시작...');
                 showNotification('Stage A: 레포트 생성', `${jobDetails.length}개 상세 페이지에서 병렬로 레포트를 생성합니다.`);
 
-                // Stage A: 모든 상세 탭 병렬로 열기
-                log(`[LIMS Report Auto] (Stage A) 모든 상세 탭 병렬 열기 (${jobDetails.length}개)...`);
-                jobDetails.forEach((job, i) => {
+                // Stage A: 모든 상세 탭 병렬 열기 (팝업 차단 방지를 위해 약간의 간격을 두고 GM_openInTab 사용)
+                log(`[LIMS Report Auto] (Stage A) 모든 상세 탭 열기 시작 (${jobDetails.length}개)...`);
+                for (let i = 0; i < jobDetails.length; i++) {
+                    const job = jobDetails[i];
                     log(`[LIMS Report Auto] 상세 탭 ${i + 1}/${jobDetails.length} 열기: ${job.jobNo}`);
-                    window.open(job.url, '_blank');
-                });
+
+                    try {
+                        // GM_openInTab은 브라우저의 팝업 차단을 회피하며, active: false를 통해 백그라운드에서 열기 가능
+                        GM_openInTab(job.url, { active: false, insert: true, setParent: true });
+                    } catch (e) {
+                        console.error('[LIMS Report Auto] GM_openInTab 실패, window.open 폴백 사용:', e);
+                        window.open(job.url, '_blank');
+                    }
+
+                    // 탭 사이에 0.5초 간격을 두어 "탕탕탕" 순차적으로 열리게 함
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
 
                 // 모든 탭 로딩 대기 후 빠른 순차 클릭
                 log("[LIMS Report Auto] (Stage A-2) 모든 탭 로딩 대기 후 빠른 순차 클릭...");

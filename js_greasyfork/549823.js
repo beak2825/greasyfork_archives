@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JavBus
 // @namespace    http://tampermonkey.net/
-// @version      0.12
+// @version      0.13
 // @description  样式优化，便捷操作
 // @author       ssnangua
 // @match        https://www.javbus.com/*
@@ -20,10 +20,32 @@
   /**********************************************/
 
   if (document.querySelector("#waterfall")) {
-    const keywords = /巨尻|美尻|尻振|尻|杭打ち騎乗位|杭打|騎乗位|騎乗|淫語|淫らな言/g;
+    const $items = [...document.querySelectorAll("#waterfall>.item")];
 
+    $items.forEach(($item) => {
+      // 信息区域点击无效化
+      $item.querySelector(".photo-info").onclick = (e) => {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      };
+
+      // 番号点击本地搜索
+      const $dates = $item.querySelectorAll("date");
+      if ($dates.length > 1) {
+        const $id = $dates[0];
+        $id.dataset.es = $id.textContent.trim();
+        $id.onclick = (e) => {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          window.open(`es:${e.target.dataset.es}`);
+        };
+      }
+    });
+
+    const keywords =
+      /巨尻|美尻|尻振|尻|杭打ち騎乗位|杭打|騎乗位|騎乗|淫語|淫らな言/g;
     function matchKeywords() {
-      const items = [...document.querySelectorAll("#waterfall>.item")].map(($item) => {
+      $items.map(($item) => {
         if ($item.tags) return;
         const title = $item.querySelector(".x-title").textContent.trim();
         const tags = [...new Set(title.match(keywords))];
@@ -50,6 +72,25 @@
     }
 
     GM_addStyle(`
+      .movie-box {
+        -webkit-user-drag: none;
+        & .photo-info {
+          cursor: auto;
+          & .x-btn {
+            cursor: default;
+          }
+          & [title] {
+            user-select: text;
+          }
+          & [data-es] {
+            cursor: pointer;
+            &:hover {
+              text-decoration: underline !important;
+            }
+          }
+        }
+      }
+
       .movie-box.has-kw {
         background: pink;
       }
@@ -93,10 +134,14 @@
       title: document.querySelector("h3")?.textContent,
     };
     document.querySelectorAll(".info>p").forEach(($p) => {
-      let [keyKey, value] = $p.textContent.split(":").map((text) => text.trim());
+      let [keyKey, value] = $p.textContent
+        .split(":")
+        .map((text) => text.trim());
       const key = keyMap[keyKey];
       if (key === "genre" || key === "idols") {
-        value = [...$p.nextElementSibling.querySelectorAll("a")].map(($a) => $a.textContent).filter(Boolean);
+        value = [...$p.nextElementSibling.querySelectorAll("a")]
+          .map(($a) => $a.textContent)
+          .filter(Boolean);
       }
       if (key) info[key] = value;
 
@@ -104,9 +149,19 @@
         const $idActions = document.createElement("div");
         $p.appendChild($idActions);
         $idActions.appendChild(createCopyButton(value));
-        $idActions.appendChild(createButton("移花宫", () => window.open(`https://yhg007.com/search-${value}-0-0-1.html`)));
-        $idActions.appendChild(createButton("移花宫-U", () => window.open(`https://yhg007.com/search-${value}-U-0-0-1.html`)));
-        $idActions.appendChild(createButton("ES", () => window.open(`es:${value}`)));
+        $idActions.appendChild(
+          createButton("移花宫", () =>
+            window.open(`https://yhg007.com/search-${value}-0-0-1.html`)
+          )
+        );
+        $idActions.appendChild(
+          createButton("移花宫-U", () =>
+            window.open(`https://yhg007.com/search-${value}-U-0-0-1.html`)
+          )
+        );
+        $idActions.appendChild(
+          createButton("ES", () => window.open(`es:${value}`))
+        );
       }
     });
     // console.log(info);
@@ -115,7 +170,11 @@
     $titleActions.style.marginLeft = "5px";
     document.querySelector("h3").appendChild($titleActions);
     $titleActions.appendChild(createCopyButton(info.title));
-    $titleActions.appendChild(createButton("图片", () => window.open(`https://www.google.co.jp/search?tbm=isch&q=${info.title}`)));
+    $titleActions.appendChild(
+      createButton("图片", () =>
+        window.open(`https://www.google.co.jp/search?tbm=isch&q=${info.title}`)
+      )
+    );
 
     function createButton(label, onClick) {
       const $button = document.createElement("button");

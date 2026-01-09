@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         enhanced variantdb
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      1.2.4
+// @version      1.2.7
 // @description  Intelligente Filterfunktion mit UND/ODER-Logik, dynamische ID-Ausgabe, Sortierung und Buttons für mass-image, Artikel-Ersetzer und Vergleiche
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/kalif/variantdb*
@@ -15,6 +15,16 @@
 
 (function() {
     'use strict';
+
+    // Prüfe ob wir auf der richtigen Seite sind
+    if (!window.location.href.startsWith('https://opus.geizhals.at/kalif/variantdb')) {
+        return;
+    }
+
+    // Prüfe ob wir in einem iframe sind und nicht laufen sollen
+    if (window.self !== window.top) {
+        return;
+    }
 
     const sortStates = new Map();
 
@@ -103,12 +113,7 @@
         buttons.forEach(btn => {
             const baseText = btn.getAttribute('data-button-text');
             if (baseText) {
-                const allArticles = articles.length;
-                if (count < allArticles && count > 0) {
-                    btn.textContent = `${baseText} (${count})`;
-                } else {
-                    btn.textContent = baseText;
-                }
+                btn.textContent = `${baseText} (${count})`;
             }
         });
     }
@@ -255,7 +260,16 @@
             masterCheckboxContainer.appendChild(idSortButton);
             masterCheckboxContainer.appendChild(descSortButton);
 
-            table.parentNode.insertBefore(masterCheckboxContainer, table);
+            try {
+                table.parentNode.insertBefore(masterCheckboxContainer, table);
+            } catch (e) {
+                // Fallback: append to parent if insertBefore fails
+                try {
+                    table.parentNode.appendChild(masterCheckboxContainer);
+                } catch (e2) {
+                    // Silent fail - DOM structure may have changed
+                }
+            }
 
             // Master-Checkbox Event-Listener
             checkbox.addEventListener('change', function() {
@@ -265,9 +279,18 @@
                     const rowCheckbox = row.querySelector('td:nth-child(2) input[type="checkbox"]');
                     if (rowCheckbox) {
                         if (row.style.display !== 'none') {
-                            rowCheckbox.checked = shouldCheck;
+                            // Prüfe den aktuellen Status
+                            const isCurrentlyChecked = rowCheckbox.checked;
+
+                            // Klicke nur wenn sich der Status ändern soll
+                            if (isCurrentlyChecked !== shouldCheck) {
+                                rowCheckbox.click();
+                            }
                         } else {
-                            rowCheckbox.checked = false;
+                            // Versteckte Zeilen: unchecken falls checked
+                            if (rowCheckbox.checked) {
+                                rowCheckbox.click();
+                            }
                         }
                     }
                 });
@@ -276,7 +299,7 @@
                     rows.forEach((row) => {
                         const rowCheckbox = row.querySelector('td:nth-child(2) input[type="checkbox"]');
                         if (rowCheckbox && row.style.display === 'none' && rowCheckbox.checked) {
-                            rowCheckbox.checked = false;
+                            rowCheckbox.click();
                         }
                     });
                 }, 0);
@@ -389,7 +412,7 @@
                 alert('Es muss mindestens ein Artikel ausgewählt sein.');
                 return;
             }
-            const url = 'https://opus.geizhals.at/kalif/artikel/mass-image#' + ids.map(id => `id=${id}`).join('&');
+            const url = 'https://opus.geizhals.at/kalif/artikel/mass-image?' + ids.map(id => `artikel=${id}`).join('&');
             window.open(url, '_blank');
         });
         copyButton.parentNode.insertBefore(massImageButton, copyButton.nextSibling);
@@ -524,8 +547,10 @@
             if (!table) return;
 
             copyButton.setAttribute('data-variant-enhanced', 'true');
-            copyButton.setAttribute('data-button-text', copyButton.textContent);
-            copyButton.style.width = '220px';
+            // Ändere Button-Text
+            copyButton.textContent = 'Artikel-ID(s) kopieren';
+            copyButton.setAttribute('data-button-text', 'Artikel-ID(s) kopieren');
+            copyButton.style.width = '240px';
             copyButton.style.whiteSpace = 'nowrap';
 
             addFilterField(table);

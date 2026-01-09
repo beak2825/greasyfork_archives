@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         pterclub-auto-wof
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  猫站大转盘小助手，感谢源作者昙花 https://greasyfork.org/zh-CN/scripts/561489-pterclub-auto-wof
 // @author       昙花&VicQ
 // @match        https://pterclub.net/wof.php*
@@ -160,7 +160,9 @@
         if (!pending) return;
 
         const currentKarma = getCatFoodSpins();
-        const diff = currentKarma - pending.beforeKarma;
+
+        let diff = Math.round(currentKarma - pending.beforeKarma);
+
         const rankStr = pending.rank;
 
         let spinResult = { rankKey: '', isItem: false, prizeName: '', detailStr: '', upload: 0, karma: 0 };
@@ -191,11 +193,12 @@
             spinResult.upload = 1.0;
             spinResult.detailStr = '1.0GB上传';
         } else {
-            const gainedKarmaRaw = diff + cost;
+            let gainedKarmaRaw = Math.round(diff + cost);
+
             if (gainedKarmaRaw > 5000) {
                 spinResult.karma = gainedKarmaRaw;
                 spinResult.isItem = false;
-                spinResult.detailStr = `${Math.floor(gainedKarmaRaw).toLocaleString()}猫粮`;
+                spinResult.detailStr = `${spinResult.karma.toLocaleString()}猫粮`;
             } else {
                 spinResult.isItem = true;
                 spinResult.karma = 0;
@@ -207,7 +210,11 @@
         }
 
         const updateObj = (obj) => {
-            obj.total += 1; obj.spent += cost; obj.wonKarma += spinResult.karma; obj.wonUpload += spinResult.upload;
+            obj.total += 1;
+            obj.spent += cost;
+            obj.wonKarma = Math.round(obj.wonKarma + spinResult.karma);
+            obj.wonUpload = parseFloat((obj.wonUpload + spinResult.upload).toFixed(1));
+
             if (spinResult.rankKey === 'miss') {
                  obj.miss = (obj.miss || 0) + 1;
                  if (!obj.logs.miss) obj.logs.miss = [];
@@ -484,7 +491,7 @@
             const data = isSession ? statsSession : statsTotal;
             const spins = Math.floor(getCatFoodSpins() / 2000);
 
-            const netKarma = data.wonKarma - data.spent;
+            const netKarma = Math.round(data.wonKarma - data.spent);
             const netClass = netKarma >= 0 ? `color:${THEME.colorWin}` : `color:${THEME.colorLoss}`;
             const netPrefix = netKarma > 0 ? '+' : '';
 
@@ -512,7 +519,7 @@
                             <span>消耗:</span> <span style="font-weight:600; color:#333;">${data.spent}</span>
                         </div>
                         <div style="display:flex; justify-content:space-between; color:#999;">
-                            <span>猫粮:</span> <span style="font-weight:600; color:#e67e22;">${data.wonKarma}</span>
+                            <span>猫粮:</span> <span style="font-weight:600; color:#e67e22;">${Math.round(data.wonKarma)}</span>
                         </div>
                         <div style="display:flex; justify-content:space-between; color:#999;">
                             <span>上传:</span> <span style="font-weight:600; color:#3498db;">${data.wonUpload} G</span>
@@ -660,7 +667,7 @@
 
                         if (!hasPrize && missCount === 0) detailsHtml += `<div style="color:#ccc; font-size:10px; margin-top:2px; font-style:italic;">无记录</div>`;
 
-                        const bNet = (batch.wonKarma||0) - (batch.spent||0);
+                        const bNet = Math.round((batch.wonKarma||0) - (batch.spent||0));
                         const bNetClass = bNet>=0 ? THEME.colorWin : THEME.colorLoss;
 
                         let bItemsHtml = '';

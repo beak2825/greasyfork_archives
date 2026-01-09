@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Auto Fill v6.7
 // @namespace    http://tampermonkey.net/
-// @version      6.7.123
+// @version      6.7.2611.1
 // @description  Auto isi + submit massal harapan ekonomi ke BOS POLRI. Mode auto/manual, anti-duplikat, resume, countdown. Gunakan secara bertanggung jawab.
 // @author       Jae + AI
 // @match        https://bos.polri.go.id/laporan/dds-warga*
@@ -158,11 +158,11 @@
 
     const mulaiCountdown = () => {
         const ov = document.createElement('div');
-        ov.innerHTML = `<div style="position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:99999999;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+        ov.innerHTML = `<div style="position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:99999999;display:flex;align-items:center;justify-content:center;cursor:default;">
             <div style="background:#fff;padding:50px 80px;border-radius:30px;text-align:center;">
                 <h2 style="margin:0 0 20px;font-size:36px;color:#27ae60;">Terkirim!</h2>
                 <div id="cdx" style="font-size:90px;font-weight:900;color:#27ae60;">30</div>
-                <p style="margin:10px 0 0;font-size:16px;color:#555;">Klik untuk skip</p>
+                <p style="margin:10px 0 0;font-size:16px;color:#555;">${tersisa.length} tersisa</p>
             </div>
         </div>`;
         document.body.appendChild(ov);
@@ -176,7 +176,6 @@
                 location.href = 'https://bos.polri.go.id/laporan/dds-warga/create';
             }
         }, 1000);
-        ov.onclick = () => { clearInterval(t); ov.remove(); location.href = 'https://bos.polri.go.id/laporan/dds-warga/create'; };
     };
 
     // === PANEL ===

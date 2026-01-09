@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FA手机查看原图优化
 // @namespace    Lecrp.com
-// @version      2.0
+// @version      2.1
 // @description  FA-手机查看原图时的操作优化，原逻辑不变，长按图片变为自定义查看结构
 // @author       jcjyids
 // @match        https://www.furaffinity.net/view/*
@@ -60,14 +60,19 @@
             const touch = e.touches[0];
             startPos = { x: touch.clientX, y: touch.clientY };
 
-            // 300ms 预加载
             preloadTimer = setTimeout(() => {
                 ensureOverlayCreated();
+
+                const ratio = el.naturalWidth / el.naturalHeight;
+                if (ratio > 0) {
+                    const expectedHeight = window.innerWidth / ratio;
+                    contentImg.style.height = `${expectedHeight}px`;
+                }
+
                 const fullSrc = el.getAttribute('data-fullview-src');
                 if (contentImg.src !== fullSrc) contentImg.src = fullSrc;
             }, PRELOAD_MS);
 
-            // 500ms 正式打开
             timer = setTimeout(() => {
                 showOverlay();
             }, LONG_PRESS_MS);
@@ -87,9 +92,9 @@
         function cancelTrigger() {
             clearTimeout(timer);
             clearTimeout(preloadTimer);
-            // 如果容器还没显示就松手了，清空 src 节省流量
             if (overlay && overlay.style.display !== 'block') {
                 contentImg.src = '';
+                contentImg.style.height = 'auto';
             }
         }
     }
@@ -123,6 +128,8 @@
         bottomSpacer = document.createElement('div');
         contentImg = document.createElement('img');
         Object.assign(contentImg.style, { display: 'block', width: '100vw', height: 'auto' });
+
+        contentImg.onload = () => { contentImg.style.height = 'auto'; };
         contentImg.addEventListener('click', handleImgClick);
 
         overlay.append(topSpacer, contentImg, bottomSpacer);
@@ -134,18 +141,16 @@
             overlay.requestFullscreen().catch(() => {});
         }
 
-        // 核心：基于当前物理视口高度计算固定像素值
+        //基于当前真实的物理视口高度进行 px 定格
         const currentH = window.innerHeight;
         const offsetPx = currentH * PADDING_RATIO;
 
-        // 同步赋值，确保物理对齐
         topSpacer.style.height = `${offsetPx}px`;
         bottomSpacer.style.height = `${offsetPx}px`;
 
         overlay.style.visibility = 'hidden';
         overlay.style.display = 'block';
 
-        // 设置滚动条位置
         overlay.scrollTop = offsetPx;
 
         overlay.style.visibility = 'visible';
@@ -175,6 +180,7 @@
             }
             overlay.style.display = 'none';
             contentImg.src = '';
+            contentImg.style.height = 'auto';
             lastTapTime = 0;
         }
     }

@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Jira - Custom script specific for work usecase
 // @namespace    http://tampermonkey.net/
-// @version      8.0
+// @version      8.2.1
 // @description  Changes jira display for custom label styling and caches labels in local storage for swimlane view. Includes a settings panel.
-// @author       Roy (aangepast door Gemini)
+// @author       Roy
 // @match        https://jira.onderwijstransparant.nl/*
 // @grant        none
 // @downloadURL https://update.greasyfork.org/scripts/551248/Jira%20-%20Custom%20script%20specific%20for%20work%20usecase.user.js
@@ -13,9 +13,100 @@
 (function() {
     'use strict';
 
+    const SCRIPT_VERSION = '8.2.1';
+    const PATCH_NOTES = [
+        {
+            version: '8.2.1',
+            title: 'Visuele uitleg en nieuwe labels',
+            date: '2026-01-09',
+            changes: [
+                'Nieuw label "hotfix": Tickets krijgen een 🔥 lozenge en vallen op in backlog en swimlane.',
+                'Nieuw label "geen-punten": story point bolletje wordt vervangen door een ✕ om aan te geven dat er bewust geen inschatting is.',
+                'Nieuw label "onduidelijk-punten": story point bolletje toont een ? wanneer de scope nog onbekend is.',
+                'Instellingenscherm opgesplitst met visuele uitleg en directe patchnotes-link.',
+                'Bugtickets zonder punten tonen automatisch een ✕, met een instelling om dit gedrag te beheren.'
+            ]
+        }
+    ];
+
     // Voorkom dat het script in iframes draait (zoals de comment editor)
     if (window.top !== window.self) {
         return;
+    }
+
+    function setupUpdateModal() {
+        const versionKey = `jiraUpdateSeen-${SCRIPT_VERSION}`;
+        if (document.getElementById('jira-update-modal')) {
+            return {
+                open: () => {
+                    document.getElementById('jira-update-overlay').style.display = 'block';
+                    document.getElementById('jira-update-modal').style.display = 'block';
+                },
+                shouldShowOnLoad: localStorage.getItem(versionKey) !== 'true'
+            };
+        }
+
+        const overlay = document.createElement('div');
+        overlay.id = 'jira-update-overlay';
+        const modal = document.createElement('div');
+        modal.id = 'jira-update-modal';
+
+        const notesMarkup = PATCH_NOTES.map((note, index) => {
+            const listItems = note.changes.map(change => `<li>${change}</li>`).join('');
+            return `
+                <section class="jira-update-note ${index === 0 ? 'is-latest' : ''}">
+                    <h4>${note.version} - ${note.title}</h4>
+                    <small style="color:#5f6b7c;">${note.date}</small>
+                    <ul>${listItems}</ul>
+                </section>
+            `;
+        }).join('');
+
+        modal.innerHTML = `
+            <div class="jira-update-header">
+                <h3>Wat is er nieuw (${PATCH_NOTES[0].version})</h3>
+                <button type="button" id="jira-update-close-btn" aria-label="Sluiten">×</button>
+            </div>
+            <div class="jira-update-content">
+                ${notesMarkup}
+            </div>
+            <div class="jira-update-actions">
+                <button type="button" id="jira-update-done-btn">Gelezen</button>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+        document.body.appendChild(modal);
+
+        const hideModal = (markSeen = false) => {
+            modal.style.display = 'none';
+            overlay.style.display = 'none';
+            if (markSeen) {
+                try {
+                    localStorage.setItem(versionKey, 'true');
+                } catch (e) {
+                    console.warn('Patchnotes voorkeur kon niet opgeslagen worden:', e);
+                }
+            }
+        };
+
+        modal.querySelector('#jira-update-close-btn').addEventListener('click', () => hideModal(false));
+        modal.querySelector('#jira-update-done-btn').addEventListener('click', () => hideModal(true));
+        overlay.addEventListener('click', (event) => {
+            if (event.target === overlay) {
+                hideModal(false);
+            }
+        });
+
+        const openModal = () => {
+            overlay.style.display = 'block';
+            modal.style.display = 'block';
+        };
+
+        return {
+            open: openModal,
+            shouldShowOnLoad: localStorage.getItem(versionKey) !== 'true'
+        };
     }
 
     // --- INSTELLINGEN BEHEER ---
@@ -33,6 +124,7 @@
             setDefaultRegion: false,
             showPriority: false,
             treatSDAsBug: false,
+            markBugWithoutPoints: true,
         };
         try {
             const savedSettings = localStorage.getItem('jiraCustomScriptSettings');
@@ -70,12 +162,53 @@
         } catch (e) { console.error('Fout bij het opslaan van de Jira label-cache:', e); }
     }
 
+    function getStoryPointBadge(card) {
+        return card.querySelector('.ghx-statistic-badge[title="Story Points"], .ghx-end [title="Story Points"]');
+    }
+
+    function applyStoryPointMarker(card, marker) {
+        const badge = getStoryPointBadge(card);
+        if (!badge) return;
+        const alreadyOverridden = badge.classList.contains('ghx-storypoint-override');
+
+        if (marker) {
+            if (!alreadyOverridden) {
+                badge.dataset.storyPointOriginal = badge.textContent.trim();
+            }
+            badge.textContent = marker;
+            badge.classList.add('ghx-storypoint-override');
+        } else if (alreadyOverridden) {
+            const originalValue = badge.dataset.storyPointOriginal ?? '';
+            badge.textContent = originalValue;
+            delete badge.dataset.storyPointOriginal;
+            badge.classList.remove('ghx-storypoint-override');
+        }
+    }
+
+    function isStoryPointFieldEmpty(badge) {
+        if (!badge) return true;
+        const baseValue = (badge.classList.contains('ghx-storypoint-override') && badge.dataset.storyPointOriginal !== undefined)
+            ? badge.dataset.storyPointOriginal
+            : badge.textContent;
+        const normalized = (baseValue || '').replace(/[\s\u00A0\u2007\u200B\uFEFF]/g, '').replace(/[\u2013\u2014-]/g, '');
+        return normalized.length === 0;
+    }
+
+    function shouldAutoMarkBugWithoutPoints(card, typeSpan, settings) {
+        if (!settings.markBugWithoutPoints || !typeSpan) return false;
+        const issueType = (typeSpan.title || '').toLowerCase();
+        if (issueType !== 'bug') return false;
+        const badge = getStoryPointBadge(card);
+        if (!badge) return false;
+        return isStoryPointFieldEmpty(badge);
+    }
+
     // --- UI INJECTIE (INSTELLINGEN-PANEEL) ---
 
     /**
      * Creëert en injecteert de UI voor het instellingenpaneel en de knop om het te openen.
      */
-    function setupSettingsUI() {
+    function setupSettingsUI(openUpdateNotes) {
         if (document.getElementById('jira-custom-settings-modal')) return; // Voorkom dubbel injecteren
 
         const modal = document.createElement('div');
@@ -84,7 +217,7 @@
             display: 'none', position: 'fixed', zIndex: '1001', left: '50%', top: '50%',
             transform: 'translate(-50%, -50%)', backgroundColor: '#f5f5f5', padding: '25px',
             border: '1px solid #ccc', borderRadius: '8px', boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-            minWidth: '400px'
+            minWidth: '400px', maxWidth: '720px', maxHeight: '85vh', overflowY: 'auto'
         });
 
         const overlay = document.createElement('div');
@@ -100,39 +233,174 @@
 
         const currentSettings = loadSettings();
         modal.innerHTML = `
-            <h3 style="margin-top: 0; border-bottom: 1px solid #ddd; padding-bottom: 10px;">Script Instellingen</h3>
-            <div>
-                <label style="display: flex; align-items: center; cursor: pointer; padding: 8px 0;">
-                    <input type="checkbox" id="setting-highlight-bugs" ${currentSettings.highlightBugs ? 'checked' : ''}>
-                    <span style="margin-left: 8px;">Bugs een rode achtergrond geven</span>
-                </label>
-                 <label style="display: flex; align-items: center; cursor: pointer; padding: 8px 0;">
-                    <input type="checkbox" id="setting-treat-sd-as-bug" ${currentSettings.treatSDAsBug ? 'checked' : ''}>
-                    <span style="margin-left: 8px;">'SD Ondersteuning' als bug markeren</span>
-                </label>
-                 <label style="display: flex; align-items: center; cursor: pointer; padding: 8px 0;">
-                    <input type="checkbox" id="setting-show-priority" ${currentSettings.showPriority ? 'checked' : ''}>
-                    <span style="margin-left: 8px;">Prioriteit-icoon tonen</span>
-                </label>
-                <label style="display: flex; align-items: center; cursor: pointer; padding: 8px 0;">
-                    <input type="checkbox" id="setting-set-billable" ${currentSettings.setBillableToNo ? 'checked' : ''}>
-                    <span style="margin-left: 8px;">'Facturabel' standaard op "No" zetten (bij aanmaken)</span>
-                </label>
-                 <label style="display: flex; align-items: center; cursor: pointer; padding: 8px 0;">
-                    <input type="checkbox" id="setting-default-region" ${currentSettings.setDefaultRegion ? 'checked' : ''}>
-                    <span style="margin-left: 8px;">Standaard regio op "ALG" zetten</span>
-                </label>
-                <label style="display: flex; align-items: center; cursor: pointer; padding: 8px 0;">
-                    <input type="checkbox" id="setting-default-component" ${currentSettings.setDefaultComponent ? 'checked' : ''}>
-                    <span style="margin-left: 8px;">Standaard component instellen:</span>
-                </label>
-                <select id="setting-component-choice" style="margin-left: 30px; padding: 4px;" ${!currentSettings.setDefaultComponent ? 'disabled' : ''}>
-                    <option value="OT Software" ${currentSettings.defaultComponent === 'OT Software' ? 'selected' : ''}>OT Software</option>
-                    <option value="OT Producten" ${currentSettings.defaultComponent === 'OT Producten' ? 'selected' : ''}>OT Producten</option>
-                </select>
+            <div class="jira-settings-section">
+                <h3>Script Instellingen</h3>
+                <p style="margin: 0 0 10px 0; color: #5f6b7c; font-size: 13px;">Personaliseer hoe labels, waarschuwingen en standaardvelden werken.</p>
+                <div class="jira-settings-grid">
+                    <label>
+                        <input type="checkbox" id="setting-highlight-bugs" ${currentSettings.highlightBugs ? 'checked' : ''}>
+                        <span>Bugs een rode achtergrond geven</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="setting-treat-sd-as-bug" ${currentSettings.treatSDAsBug ? 'checked' : ''}>
+                        <span>'SD Ondersteuning' als bug markeren</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="setting-bug-empty-points" ${currentSettings.markBugWithoutPoints ? 'checked' : ''}>
+                        <span>Bugs zonder punten tonen als ✕</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="setting-show-priority" ${currentSettings.showPriority ? 'checked' : ''}>
+                        <span>Prioriteit-icoon tonen</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="setting-set-billable" ${currentSettings.setBillableToNo ? 'checked' : ''}>
+                        <span>'Facturabel' standaard op "No" zetten (bij aanmaken)</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="setting-default-region" ${currentSettings.setDefaultRegion ? 'checked' : ''}>
+                        <span>Standaard regio op "ALG" zetten</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="setting-default-component" ${currentSettings.setDefaultComponent ? 'checked' : ''}>
+                        <span>Standaard component instellen</span>
+                    </label>
+                    <select id="setting-component-choice" style="margin-left: 24px; padding: 4px;" ${!currentSettings.setDefaultComponent ? 'disabled' : ''}>
+                        <option value="OT Software" ${currentSettings.defaultComponent === 'OT Software' ? 'selected' : ''}>OT Software</option>
+                        <option value="OT Producten" ${currentSettings.defaultComponent === 'OT Producten' ? 'selected' : ''}>OT Producten</option>
+                    </select>
+                </div>
+                <div class="jira-settings-explain">
+                    <h4 style="margin: 0 0 6px 0;">Wat doet elke instelling?</h4>
+                    <ul style="list-style: none; padding-left: 0; margin: 0;">
+                        <li><strong>Bugs highlight</strong> Geeft alle bugs (en optioneel SD) een zachte rode achtergrond in board en swimlane.</li>
+                        <li><strong>'SD Ondersteuning' als bug</strong> Laat SD tickets dezelfde styling erven als echte bugs.</li>
+                        <li><strong>Bugtickets zonder punten</strong> Laat bug-issues zonder story points toch een ✕ tonen zodat refinement zichtbaarder blijft.</li>
+                        <li><strong>Prioriteit tonen</strong> Houd het Jira-prioriteitsicoon zichtbaar.</li>
+                        <li><strong>Facturabel naar "No"</strong> Zet het veld tijdens issue creatie automatisch naar "No" zodat je het niet vergeet.</li>
+                        <li><strong>Regio standaard ALG</strong> Vult het regioveld bij verplichte issues alvast voor je in.</li>
+                        <li><strong>Component auto-select</strong> Activeer en kies hieronder welk component er automatisch gekozen wordt.</li>
+                    </ul>
+                </div>
+                <div class="jira-settings-actions">
+                    <button id="save-settings-btn" style="background-color: #0052cc; color: white;">Opslaan en sluiten</button>
+                    <button type="button" id="view-update-notes-link">Bekijk patchnotes (${PATCH_NOTES[0].version})</button>
+                </div>
             </div>
-            <div style="margin-top: 20px; text-align: right;">
-                <button id="save-settings-btn" style="padding: 8px 16px; border: none; background-color: #0052cc; color: white; border-radius: 3px; cursor: pointer;">Opslaan en sluiten</button>
+            <div class="jira-feature-guide">
+                <h4>Label gids</h4>
+                <p style="margin: 0 0 12px 0; color: #54617a; font-size: 13px;">Voer onderstaande labelnamen exact in op tickets. Het script past de vormgeving automatisch aan.</p>
+                 <p style="margin: 0 0 12px 0; color: #54617a; font-size: 13px;"><b>Let op: </b> Het is helaas niet mogelijk om vanuit de swimlanes de labels in te laden. Je moet de backlog openen voordat labels in de swimlane aangepast worden.</p>
+
+                <div class="jira-label-guide">
+                    <div class="jira-label-row">
+                        <div class="jira-label-preview">
+                            <span class="jira-label-code">divider</span>
+                            <div class="jira-divider-preview">Visuele scheiding op het board</div>
+                        </div>
+                        <div>
+                            <div class="jira-label-title">Divider kaart</div>
+                            <p style="margin: 0;">Gebruik dit label om een dragbare scheidingskaart te maken die uitsluitend een titel toont. Handig om swimlanes logisch te verdelen.</p>
+                        </div>
+                    </div>
+                    <div class="jira-label-row">
+                        <div class="jira-label-preview">
+                            <span class="jira-label-code">deadline:01-01-2026</span>
+                            <span class="aui-label" style="background-color:#deebff;border-color:#b3d4ff;color:#0747a6;">📅 Deadline 01-01-2026</span>
+                        </div>
+                        <div>
+                            <div class="jira-label-title">Deadline lozenge</div>
+                            <p style="margin: 0;">Elke labelwaarde die begint met <strong>deadline:</strong> krijgt automatisch een blauwe 📅 lozenge bij de kaarttitel en in swimlanes.</p>
+                        </div>
+                    </div>
+                    <div class="jira-label-row">
+                        <div class="jira-label-preview">
+                            <span class="jira-label-code">urgent</span>
+                            <span class="aui-label" style="background-color:#d04437;color:#fff;border-color:#d04437;">urgent</span>
+                        </div>
+                        <div>
+                            <div class="jira-label-title">Urgente tickets</div>
+                            <p style="margin: 0;">De <strong>urgent</strong> tag kleurt fel rood om direct te tonen dat het ticket voorrang moet krijgen.</p>
+                        </div>
+                    </div>
+                    <div class="jira-label-row">
+                        <div class="jira-label-preview">
+                            <span class="jira-label-code">on-hold</span>
+                            <span class="aui-label" style="background:#fff;border:1px solid #dfe1e6;">🛑 On Hold</span>
+                        </div>
+                        <div>
+                            <div class="jira-label-title">On Hold indicator</div>
+                            <p style="margin: 0;">Voeg <strong>on-hold</strong> toe als het ticket tijdelijk stil ligt. De kaart krijgt een duidelijke 🛑 badge en wordt iets uitgegrijsd.</p>
+                        </div>
+                    </div>
+                    <div class="jira-label-row">
+                        <div class="jira-label-preview">
+                            <span class="jira-label-code">small</span>
+                            <span class="jira-label-code">medium</span>
+                            <span class="jira-label-code">large</span>
+                            <div class="jira-size-preview">
+                                <span class="jira-size-icon">S</span>
+                                <span class="jira-size-icon">M</span>
+                                <span class="jira-size-icon">L</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="jira-label-title">Grootte badges</div>
+                            <p style="margin: 0;">De labels <strong>small</strong>, <strong>medium</strong> en <strong>large</strong> tonen een compact S/M/L bolletje aan de rechterkant van de kaart.</p>
+                        </div>
+                    </div>
+                    <div class="jira-label-row">
+                        <div class="jira-label-preview">
+                            <span class="jira-label-code">onderzoek</span>
+                            <span class="aui-label" style="border:1px solid #3572b0;color:#0a3d80; display:flex; align-items:center; gap:4px;">🔍 Onderzoek</span>
+                        </div>
+                        <div>
+                            <div class="jira-label-title">Onderzoek</div>
+                            <p style="margin: 0;">Gebruik <strong>onderzoek</strong> wanneer een kaart puur verkennend is. Het label krijgt een blauw randje en vergrootglas.</p>
+                        </div>
+                    </div>
+                    <div class="jira-label-row">
+                        <div class="jira-label-preview">
+                            <span class="jira-label-code">tijdskritisch</span>
+                            <span class="aui-label ghx-time-critical-label">⏰ Tijdskritisch</span>
+                        </div>
+                        <div>
+                            <div class="jira-label-title">Tijdskritisch</div>
+                            <p style="margin: 0;">Met <strong>tijdskritisch</strong> verschijnt een feloranje lozenge zodat iedereen direct ziet dat er haast bij is.</p>
+                        </div>
+                    </div>
+                    <div class="jira-label-row">
+                        <div class="jira-label-preview">
+                            <span class="jira-label-code">hotfix</span>
+                            <span class="aui-label ghx-hotfix-label">🔥 Hotfix</span>
+                        </div>
+                        <div>
+                            <div class="jira-label-title">Hotfix</div>
+                            <p style="margin: 0;">Het label <strong>hotfix</strong> toont een vuur-icoon naast de sleutel en in swimlanes zodat het onmiddellijk herkenbaar is.</p>
+                        </div>
+                    </div>
+                    <div class="jira-label-row">
+                        <div class="jira-label-preview">
+                            <span class="jira-label-code">geen-punten</span>
+                            <span class="jira-story-badge">✕</span>
+                        </div>
+                        <div>
+                            <div class="jira-label-title">Geen storypoints</div>
+                            <p style="margin: 0;">Laat het label <strong>geen-punten</strong> achter als je bewust geen inschatting wilt geven. Het story point bolletje toont een ✕.</p>
+                        </div>
+                    </div>
+                    <div class="jira-label-row">
+                        <div class="jira-label-preview">
+                            <span class="jira-label-code">onduidelijk-punten</span>
+                            <span class="jira-story-badge">?</span>
+                        </div>
+                        <div>
+                            <div class="jira-label-title">Scope onduidelijk</div>
+                            <p style="margin: 0;">Gebruik <strong>onduidelijk-punten</strong> wanneer de scope nog niet helder is. Het story point bolletje toont dan een vraagteken.</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="jira-label-note">Labels zijn hoofdletterongevoelig. De weergave past zich automatisch aan in backlog, swimlanes en parent headers.</p>
             </div>
         `;
 
@@ -161,6 +429,15 @@
         });
 
 
+        const updateLink = document.getElementById('view-update-notes-link');
+        if (updateLink && typeof openUpdateNotes === 'function') {
+            updateLink.addEventListener('click', () => {
+                modal.style.display = 'none';
+                overlay.style.display = 'none';
+                openUpdateNotes();
+            });
+        }
+
         document.getElementById('save-settings-btn').addEventListener('click', () => {
             const newSettings = {
                 highlightBugs: document.getElementById('setting-highlight-bugs').checked,
@@ -170,6 +447,7 @@
                 setDefaultRegion: document.getElementById('setting-default-region').checked,
                 showPriority: document.getElementById('setting-show-priority').checked,
                 treatSDAsBug: document.getElementById('setting-treat-sd-as-bug').checked,
+                markBugWithoutPoints: document.getElementById('setting-bug-empty-points').checked,
             };
             saveSettings(newSettings);
             modal.style.display = 'none';
@@ -201,6 +479,9 @@
             .ghx-issue-compact.ghx-divider .ghx-grabber, .ghx-issue-compact.ghx-divider .ghx-end, .ghx-issue-compact.ghx-divider .ghx-plan-extra-fields { display: none !important; }
             .ghx-issue-compact.ghx-divider .ghx-row { display: block !important; text-align: center; }
             .aui-label.ghx-time-critical-label { background-color: #ff5722; color: white; border-color: #e64a19; display: flex; align-items: center; gap: 5px; font-weight: bold; border-radius: 3px; }
+            /* Hotfix label styling */
+            .aui-label.ghx-hotfix-label { background-color: #ff4500; color: white; border-color: #cc3700; display: flex; align-items: center; gap: 5px; font-weight: bold; border-radius: 3px; box-shadow: 0 0 5px rgba(255, 69, 0, 0.4); }
+
             .ghx-cached-labels { margin-top: 5px; padding-left: 28px; display: flex; flex-wrap: wrap; gap: 5px; }
 
             /* --- NIEUWE STIJLEN VOOR SWIMLANE HEADERS --- */
@@ -224,7 +505,228 @@
             .ghx-status-indicator-bar { height: 3px; width: 100%; background-color: #fff; border: 1px solid #ccc; box-sizing: border-box; }
             .ghx-issue-compact.status-inprogress .ghx-status-indicator-bar:nth-child(-n+1) { background-color: #59afe1; border-color: #59afe1; }
             .ghx-issue-compact.status-test .ghx-status-indicator-bar:nth-child(-n+2) { background-color: #f6c342; border-color: #f6c342; }
-            .ghx-issue-compact.status-done .ghx-status-indicator-bar, .ghx-issue-compact.status-closed .ghx-status-indicator-bar { background-color: #8eb021; border-color: #8eb021; }
+           .ghx-issue-compact.status-done .ghx-status-indicator-bar, .ghx-issue-compact.status-closed .ghx-status-indicator-bar { background-color: #8eb021; border-color: #8eb021; }
+            .ghx-storypoint-override {
+                font-weight: bold;
+                font-size: 14px;
+            }
+
+            #jira-custom-settings-modal {
+                max-width: 720px;
+                max-height: 85vh;
+                overflow-y: auto;
+                color: #172b4d;
+                font-family: 'Segoe UI', Arial, sans-serif;
+            }
+            #jira-custom-settings-modal h3,
+            #jira-custom-settings-modal h4 {
+                margin-top: 0;
+            }
+            .jira-settings-section {
+                background: #fff;
+                border: 1px solid #dde0e6;
+                border-radius: 6px;
+                padding: 16px 20px;
+                margin-bottom: 16px;
+            }
+            .jira-settings-grid label {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 6px 0;
+                cursor: pointer;
+            }
+            .jira-settings-explain {
+                margin-top: 12px;
+                border-top: 1px solid #edf0f6;
+                padding-top: 12px;
+                font-size: 13px;
+                color: #4a5c78;
+            }
+            .jira-settings-explain li {
+                margin-bottom: 4px;
+            }
+            .jira-settings-explain strong {
+                display: inline-block;
+                min-width: 170px;
+            }
+            .jira-settings-actions {
+                display: flex;
+                justify-content: space-between;
+                gap: 12px;
+                flex-wrap: wrap;
+                margin-top: 16px;
+            }
+            .jira-settings-actions button {
+                border: none;
+                border-radius: 4px;
+                padding: 8px 16px;
+                cursor: pointer;
+            }
+            .jira-feature-guide {
+                background: linear-gradient(135deg, #f4f7ff 0%, #ffffff 100%);
+                border: 1px solid #d4ddf7;
+                border-radius: 6px;
+                padding: 16px 20px;
+                box-shadow: inset 0 1px 6px rgba(103, 126, 198, 0.15);
+            }
+            .jira-label-guide {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 12px;
+            }
+            .jira-label-row {
+                display: flex;
+                gap: 12px;
+                border: 1px solid #d7def1;
+                border-radius: 6px;
+                padding: 10px 14px;
+                background: #fff;
+                box-shadow: 0 1px 4px rgba(37, 56, 88, 0.05);
+            }
+            .jira-label-preview {
+                min-width: 150px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                align-items: center;
+                justify-content: flex-start;
+            }
+            .jira-label-title {
+                font-weight: 600;
+                margin-bottom: 4px;
+            }
+            .jira-label-code {
+                font-family: Consolas, 'Courier New', monospace;
+                background: #f1f3f8;
+                border: 1px solid #ccd4e4;
+                border-radius: 4px;
+                padding: 0 6px;
+                font-size: 12px;
+                margin-right: 6px;
+            }
+            .jira-divider-preview {
+                padding: 4px 0;
+                width: 100%;
+                border-top: 1px dashed #97a0bf;
+                text-align: center;
+                font-size: 12px;
+                color: #6b778c;
+                font-style: italic;
+            }
+            .jira-size-preview {
+                display: flex;
+                gap: 6px;
+            }
+            .jira-size-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                background: #f5f6fa;
+                border: 1px solid #cbd2e6;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                color: #344563;
+            }
+            .jira-story-badge {
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                border: 1px solid #b8c5d6;
+                background: #f4f6fb;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 600;
+                color: #253858;
+            }
+            .jira-label-note {
+                margin-top: 12px;
+                font-size: 12px;
+                color: #566074;
+            }
+            #jira-update-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.55);
+                z-index: 1002;
+            }
+            #jira-update-modal {
+                display: none;
+                position: fixed;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: min(520px, 90vw);
+                background: #ffffff;
+                border-radius: 10px;
+                box-shadow: 0 18px 45px rgba(0,0,0,0.25);
+                padding: 20px 24px;
+                font-family: 'Segoe UI', Arial, sans-serif;
+                z-index: 1003;
+            }
+            .jira-update-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+            }
+            .jira-update-header h3 { margin: 0; }
+            .jira-update-header button {
+                background: transparent;
+                border: none;
+                font-size: 20px;
+                cursor: pointer;
+            }
+            .jira-update-note {
+                border: 1px solid #e3e9ff;
+                border-radius: 6px;
+                padding: 12px;
+                margin-bottom: 12px;
+                background: #fefefe;
+            }
+            .jira-update-note.is-latest {
+                border-color: #3f51b5;
+                box-shadow: 0 4px 12px rgba(63, 81, 181, 0.15);
+                background: #f5f7ff;
+            }
+            .jira-update-note h4 {
+                margin: 0 0 4px 0;
+                font-size: 15px;
+            }
+            .jira-update-note ul {
+                margin: 6px 0 0 18px;
+                padding: 0;
+            }
+            .jira-update-note li {
+                font-size: 13px;
+                line-height: 1.4;
+                margin-bottom: 4px;
+            }
+            .jira-update-actions {
+                text-align: right;
+            }
+            .jira-update-actions button {
+                padding: 8px 16px;
+                border: none;
+                border-radius: 4px;
+                background: #0052cc;
+                color: #fff;
+                cursor: pointer;
+            }
+            #view-update-notes-link {
+                background: transparent;
+                border: none;
+                color: #0052cc;
+                cursor: pointer;
+                text-decoration: underline;
+                font-size: 13px;
+                padding: 0;
+            }
         `;
 
         if (settings.highlightBugs) {
@@ -251,7 +753,6 @@
 
     const labelActions = {
         'divider': { type: 'custom', handler: function(card) { if (card.classList.contains('ghx-divider')) return false; card.classList.add('ghx-divider'); const summary = card.querySelector('.ghx-summary'); if (summary) { summary.style.opacity = '1'; const inner = summary.querySelector('.ghx-inner'); if (inner && inner.dataset.originalTitle) { inner.innerHTML = inner.dataset.originalTitle; } } card.querySelectorAll('.ghx-plan-extra-fields, .ghx-end.ghx-row').forEach(el => el.remove()); return false; } },
-        'p048': { type: 'style', styles: { backgroundColor: '#f79232', color: '#fff', borderColor: '#f79232' } },
         'urgent': { type: 'style', styles: { backgroundColor: '#d04437', color: 'white', borderColor: '#d04437' } },
         'on-hold': { type: 'custom', handler: function(card) { if (card.querySelector('.on-hold-label')) return false; const onHoldLabel = document.createElement('span'); onHoldLabel.textContent = `🛑 On Hold`; onHoldLabel.className = 'aui-label on-hold-label'; Object.assign(onHoldLabel.style, { marginLeft: '5px', flexShrink: '0' }); const keyElement = card.querySelector('.ghx-key'); const summaryElement = card.querySelector('.ghx-summary'); if (keyElement) keyElement.insertAdjacentElement('afterend', onHoldLabel); if (summaryElement) summaryElement.style.opacity = '0.6'; return false; } },
         'small': { type: 'custom', handler: function(card, labelText, rightContainer) { if (!card.querySelector('.size-icon-s')) { const icon = createSizeIcon('S'); icon.classList.add('size-icon-s'); rightContainer.appendChild(icon); } return false; } },
@@ -259,6 +760,9 @@
         'large': { type: 'custom', handler: function(card, labelText, rightContainer) { if (!card.querySelector('.size-icon-l')) { const icon = createSizeIcon('L'); icon.classList.add('size-icon-l'); rightContainer.appendChild(icon); } return false; } },
         'onderzoek': { type: 'custom', handler: function(card, labelText, rightContainer) { if (card.querySelector('.research-label')) return false; const researchLabel = document.createElement('span'); researchLabel.className = 'aui-label research-label'; researchLabel.innerHTML = '🔍 Onderzoek'; Object.assign(researchLabel.style, { borderColor: '#3572b0', display: 'flex', alignItems: 'center', gap: '4px' }); rightContainer.appendChild(researchLabel); return false; } },
         'tijdskritisch': { type: 'custom', handler: function(card, labelText, rightContainer) { if (card.querySelector('.ghx-time-critical-label')) return false; const timeCriticalLabel = document.createElement('span'); timeCriticalLabel.className = 'aui-label ghx-time-critical-label'; timeCriticalLabel.innerHTML = '⏰ Tijdskritisch'; rightContainer.appendChild(timeCriticalLabel); return false; } },
+        'hotfix': { type: 'custom', handler: function(card, labelText, rightContainer) { if (card.querySelector('.ghx-hotfix-label')) return false; const hotfixLabel = document.createElement('span'); hotfixLabel.className = 'aui-label ghx-hotfix-label'; hotfixLabel.innerHTML = '🔥 Hotfix'; rightContainer.appendChild(hotfixLabel); return false; } },
+        'geen-punten': { type: 'storypoint', marker: '✕' },
+        'onduidelijk-punten': { type: 'storypoint', marker: '?' },
     };
 
     function processSingleCard(card, settings) {
@@ -274,10 +778,11 @@
         }
 
         const typeSpan = card.querySelector('.ghx-type');
+        const typeName = typeSpan ? (typeSpan.title || '').toLowerCase() : '';
+        const isBugType = typeName === 'bug';
+        const isSDType = typeName === 'sd ondersteuning';
         if (settings.highlightBugs) {
-            const isBug = typeSpan && typeSpan.title.toLowerCase() === 'bug';
-            const isSDAsBug = settings.treatSDAsBug && typeSpan && typeSpan.title.toLowerCase() === 'sd ondersteuning';
-            if (isBug || isSDAsBug) {
+            if (isBugType || (settings.treatSDAsBug && isSDType)) {
                 card.classList.add('ghx-bug-card');
             } else {
                 card.classList.remove('ghx-bug-card');
@@ -308,6 +813,7 @@
         Object.assign(otherFieldsSubContainer.style, { display: 'flex', alignItems: 'center', gap: '5px' });
         const elementsToProcess = [];
         const containersToRemove = [];
+    let storyPointMarker = null;
         card.querySelectorAll('.ghx-plan-extra-fields, .ghx-issue-content > .ghx-end.ghx-row').forEach(container => { elementsToProcess.push(...container.children); containersToRemove.push(container); });
         const statusField = elementsToProcess.find(field => field.matches('span[data-tooltip^="Status:"]'));
         if (statusField) { const statusText = (statusField.dataset.tooltip || '').replace('Status:', '').trim().toLowerCase(); const statusClasses = ['status-open', 'status-reopened', 'status-inprogress', 'status-test', 'status-closed', 'status-done']; card.classList.remove(...statusClasses); const statusMap = { 'open': { class: 'status-open', name: 'Open' }, 'reopened': { class: 'status-reopened', name: 'Reopened' }, 'in progress': { class: 'status-inprogress', name: 'In Progress' }, 'test': { class: 'status-test', name: 'Test' }, 'closed': { class: 'status-closed', name: 'Closed' }, 'done': { class: 'status-done', name: 'Done' } }; if (statusMap[statusText]) { card.classList.add(statusMap[statusText].class); const progressIndicator = document.createElement('div'); progressIndicator.className = 'ghx-status-indicator'; progressIndicator.title = `Status: ${statusMap[statusText].name}`; for (let i = 0; i < 3; i++) { const bar = document.createElement('div'); bar.className = 'ghx-status-indicator-bar'; progressIndicator.appendChild(bar); } if(typeSpan) typeSpan.insertAdjacentElement('afterend', progressIndicator); } }
@@ -348,6 +854,9 @@
                     if (action.handler(card, label, targetContainer) === false) {
                         addToRightAsDefault = false;
                     }
+                } else if (action?.type === 'storypoint') {
+                    storyPointMarker = action.marker;
+                    addToRightAsDefault = false;
                 }
                 if (addToRightAsDefault) {
                     const lozenge = document.createElement('span');
@@ -365,6 +874,10 @@
         if (titleCategorySubContainer.hasChildNodes()) masterRightContainer.appendChild(titleCategorySubContainer);
         if (otherFieldsSubContainer.hasChildNodes()) masterRightContainer.appendChild(otherFieldsSubContainer);
         if (masterRightContainer.hasChildNodes()) { mainRow.appendChild(masterRightContainer); }
+        if (!storyPointMarker && shouldAutoMarkBugWithoutPoints(card, typeSpan, settings)) {
+            storyPointMarker = '✕';
+        }
+        applyStoryPointMarker(card, storyPointMarker);
         card.classList.add('ghx-layout-processed');
     }
 
@@ -377,10 +890,11 @@
             if (!issueKey) return;
 
             const typeSpan = card.querySelector('.ghx-type');
+            const typeName = typeSpan ? (typeSpan.title || '').toLowerCase() : '';
+            const isBugType = typeName === 'bug';
+            const isSDType = typeName === 'sd ondersteuning';
             if (settings.highlightBugs) {
-                const isBug = typeSpan && typeSpan.title.toLowerCase() === 'bug';
-                const isSDAsBug = settings.treatSDAsBug && typeSpan && typeSpan.title.toLowerCase() === 'sd ondersteuning';
-                if (isBug || isSDAsBug) {
+                if (isBugType || (settings.treatSDAsBug && isSDType)) {
                     card.classList.add('ghx-bug-card');
                 } else {
                     card.classList.remove('ghx-bug-card');
@@ -389,8 +903,9 @@
                 card.classList.remove('ghx-bug-card');
             }
 
-
             const cachedLabels = labelCache[issueKey];
+            let storyPointMarker = null;
+
             if (cachedLabels && Array.isArray(cachedLabels) && cachedLabels.length > 0) {
                 let labelContainer = card.querySelector('.ghx-cached-labels');
                 if (!labelContainer) {
@@ -404,7 +919,6 @@
                     const labelLower = label.toLowerCase();
                     if (labelLower === 'divider') return;
 
-                    // Handel 'deadline:' labels af in swimlane
                     if (labelLower.startsWith('deadline:')) {
                         const deadlineText = label.substring('deadline:'.length).trim();
                         const lozenge = document.createElement('span');
@@ -416,20 +930,31 @@
                             color: '#0747A6'
                         });
                         labelContainer.appendChild(lozenge);
-                        return; // Ga naar het volgende label
+                        return;
                     }
 
                     const action = labelActions[labelLower];
+                    if (action?.type === 'storypoint') {
+                        storyPointMarker = action.marker;
+                        return;
+                    }
                     const lozenge = document.createElement('span');
                     lozenge.className = 'aui-label';
                     lozenge.textContent = label;
                     if (action?.type === 'style') { Object.assign(lozenge.style, action.styles); }
                     if (labelLower === 'tijdskritisch') { lozenge.className = 'aui-label ghx-time-critical-label'; lozenge.innerHTML = '⏰ Tijdskritisch'; }
+                    else if (labelLower === 'hotfix') { lozenge.className = 'aui-label ghx-hotfix-label'; lozenge.innerHTML = '🔥 Hotfix'; }
                     else if (labelLower === 'onderzoek') { lozenge.innerHTML = '🔍 Onderzoek'; }
                     else if (labelLower === 'on-hold') { lozenge.textContent = '🛑 On Hold'; card.style.opacity = '0.7'; }
                     labelContainer.appendChild(lozenge);
                 });
             }
+
+            if (!storyPointMarker && shouldAutoMarkBugWithoutPoints(card, typeSpan, settings)) {
+                storyPointMarker = '✕';
+            }
+
+            applyStoryPointMarker(card, storyPointMarker);
             card.classList.add('ghx-swimlane-processed');
         });
     }
@@ -474,7 +999,7 @@
             cachedLabels.forEach(label => {
                 const labelLower = label.toLowerCase();
                 // Sla labels over die we niet als tekst willen tonen in de header (zoals 'divider' of maten)
-                if (labelLower === 'divider' || ['small', 'medium', 'large'].includes(labelLower)) {
+                if (labelLower === 'divider' || ['small', 'medium', 'large', 'geen-punten', 'onduidelijk-punten'].includes(labelLower)) {
                     return;
                 }
 
@@ -492,6 +1017,9 @@
                 if (labelLower === 'tijdskritisch') {
                     lozenge.className = 'aui-label ghx-time-critical-label';
                     lozenge.innerHTML = '⏰ Tijdskritisch';
+                } else if (labelLower === 'hotfix') {
+                    lozenge.className = 'aui-label ghx-hotfix-label';
+                    lozenge.innerHTML = '🔥 Hotfix';
                 } else if (labelLower === 'onderzoek') {
                     lozenge.innerHTML = '🔍 Onderzoek';
                 } else if (labelLower === 'on-hold') {
@@ -604,7 +1132,11 @@
     // --- Script Initialisatie ---
     const currentSettings = loadSettings();
     injectCustomStyles(currentSettings);
-    setupSettingsUI();
+    const updateModalController = setupUpdateModal();
+    setupSettingsUI(updateModalController ? updateModalController.open : undefined);
+    if (updateModalController && updateModalController.shouldShowOnLoad) {
+        updateModalController.open();
+    }
 
     const observer = new MutationObserver(() => {
         clearTimeout(observer.timeout);

@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         多平台右侧导航面板增强版
+// @name         站内导航面板
 // @namespace    http://tampermonkey.net/
-// @version      5.5
-// @description  在右侧显示知乎、B站、豆瓣、X(推特)、Pixiv、微博、Reddit和YouTube的独立导航面板
+// @version      5.6
+// @description  在右侧显示知乎、B站、豆瓣、X(推特)、Pixiv、微博、Reddit、YouTube、FS1和Jable的独立导航面板
 // @author       You
 // @match        https://*.zhihu.com/*
 // @match        https://*.bilibili.com/*
@@ -12,14 +12,16 @@
 // @match        https://*.weibo.com/*
 // @match        https://*.reddit.com/*
 // @match        https://*.youtube.com/*
+// @match        https://*.fs1.app/*
+// @match        https://*.jable.tv/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
-// @downloadURL https://update.greasyfork.org/scripts/548905/%E5%A4%9A%E5%B9%B3%E5%8F%B0%E5%8F%B3%E4%BE%A7%E5%AF%BC%E8%88%AA%E9%9D%A2%E6%9D%BF%E5%A2%9E%E5%BC%BA%E7%89%88.user.js
-// @updateURL https://update.greasyfork.org/scripts/548905/%E5%A4%9A%E5%B9%B3%E5%8F%B0%E5%8F%B3%E4%BE%A7%E5%AF%BC%E8%88%AA%E9%9D%A2%E6%9D%BF%E5%A2%9E%E5%BC%BA%E7%89%88.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/548905/%E7%AB%99%E5%86%85%E5%AF%BC%E8%88%AA%E9%9D%A2%E6%9D%BF.user.js
+// @updateURL https://update.greasyfork.org/scripts/548905/%E7%AB%99%E5%86%85%E5%AF%BC%E8%88%AA%E9%9D%A2%E6%9D%BF.meta.js
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
     // 平台数据定义
@@ -63,6 +65,20 @@
             name: 'YouTube',
             users: [],
             color: '#ff0000'
+        },
+        fs1: {
+            name: 'FS1',
+            users: [],
+            color: '#ff6b6b',
+            storageKey: 'fs1jable_users', // 与jable共享存储
+            mirrorSite: 'jable.tv'
+        },
+        jable: {
+            name: 'Jable',
+            users: [],
+            color: '#ff6b6b',
+            storageKey: 'fs1jable_users', // 与fs1共享存储
+            mirrorSite: 'fs1.app'
         }
     };
 
@@ -84,10 +100,39 @@
         currentPlatform = 'reddit';
     } else if (currentHost.includes('youtube.com')) {
         currentPlatform = 'youtube';
+    } else if (currentHost.includes('fs1.app')) {
+        currentPlatform = 'fs1';
+    } else if (currentHost.includes('jable.tv')) {
+        currentPlatform = 'jable';
     }
 
     // 从存储中获取用户列表或使用初始列表
-    const platformUsers = GM_getValue(`${currentPlatform}_users`, platformData[currentPlatform].users);
+    // 对于镜像站点(fs1和jable),使用共享的存储键
+    const storageKey = platformData[currentPlatform].storageKey || `${currentPlatform}_users`;
+    const platformUsers = GM_getValue(storageKey, platformData[currentPlatform].users);
+
+    // URL转换函数 - 用于镜像站点
+    function convertUrlForCurrentSite(url) {
+        const currentPlatformData = platformData[currentPlatform];
+        if (!currentPlatformData.mirrorSite) {
+            return url; // 非镜像站点,直接返回原URL
+        }
+
+        try {
+            const urlObj = new URL(url);
+            const currentDomain = window.location.hostname;
+
+            // 如果URL来自镜像站点,转换为当前站点的域名
+            if (urlObj.hostname === currentPlatformData.mirrorSite) {
+                urlObj.hostname = currentDomain;
+                return urlObj.href;
+            }
+
+            return url;
+        } catch (e) {
+            return url; // URL解析失败,返回原URL
+        }
+    }
 
     // 创建主容器
     const container = document.createElement('div');
@@ -304,14 +349,22 @@
 
     // 渲染面板函数
     function renderPanel() {
-        // 移除旧的面板容器（如果存在）
+        // 检查旧面板是否展开
         const oldPanel = document.getElementById('panel-container');
+        const wasExpanded = oldPanel && oldPanel.style.right === '0px';
+
+        // 移除旧的面板容器（如果存在）
         if (oldPanel) oldPanel.remove();
 
         // 创建面板容器
         const panelContainer = document.createElement('div');
         panelContainer.id = 'panel-container';
         container.appendChild(panelContainer);
+
+        // 如果之前是展开状态，保持展开
+        if (wasExpanded) {
+            panelContainer.style.right = '0';
+        }
 
         // 添加标题和关闭按钮
         const header = document.createElement('div');
@@ -345,7 +398,7 @@
 
             const button = document.createElement('a');
             button.className = 'user-button';
-            button.href = user.url;
+            button.href = convertUrlForCurrentSite(user.url); // 转换镜像站点URL
             button.target = '_blank';
             button.textContent = user.name;
             buttonWrapper.appendChild(button);
@@ -361,7 +414,7 @@
                     const index = platformUsers.findIndex(u => u.name === user.name && u.url === user.url);
                     if (index !== -1) {
                         platformUsers.splice(index, 1);
-                        GM_setValue(`${currentPlatform}_users`, platformUsers);
+                        GM_setValue(storageKey, platformUsers);
                         renderPanel();
                     }
                 }
@@ -399,12 +452,8 @@
 
             if (name && url) {
                 platformUsers.push({ name, url });
-                GM_setValue(`${currentPlatform}_users`, platformUsers);
+                GM_setValue(storageKey, platformUsers);
                 renderPanel();
-
-                // 修复：添加后保持面板展开状态
-                panelContainer.style.right = '0';
-                expandButton.style.display = 'none';
             }
         };
         buttonContainer.appendChild(addButton);
@@ -421,12 +470,8 @@
 
             if (name && url) {
                 platformUsers.push({ name, url });
-                GM_setValue(`${currentPlatform}_users`, platformUsers);
+                GM_setValue(storageKey, platformUsers);
                 renderPanel();
-
-                // 修复：收藏后保持面板展开状态
-                panelContainer.style.right = '0';
-                expandButton.style.display = 'none';
             }
         };
         buttonContainer.appendChild(collectButton);

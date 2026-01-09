@@ -1800,7 +1800,16 @@ class BrowseController {
                 downloadLocationLabel: '📁 下载位置',
                 downloadLocationTip: '保存的文件会下载到浏览器默认下载文件夹',
                 downloadLocationHint: '💡 如需更改位置，请在浏览器设置中开启"下载前询问保存位置"',
-                downloadLocationPath: '默认路径：下载文件夹'
+                downloadLocationPath: '默认路径：下载文件夹',
+                // CloudFlare 5秒盾相关
+                cfBypassLabel: '🛡️ CF 5秒盾',
+                cfBypassTip: '当 CloudFlare 5秒盾检测失败时，自动跳转到 challenge 页面',
+                cfBypassEnabled: 'CF 5秒盾自动跳转已启用',
+                cfBypassDisabled: 'CF 5秒盾自动跳转已禁用',
+                cfBypassDetected: '🛡️ 检测到 CF 验证失败，正在跳转...',
+                cfBypassManual: '🛡️ 手动触发 CF 验证',
+                cfBypassManualTip: '手动跳转到 CloudFlare challenge 页面',
+                cfBypassAlreadyOnChallenge: '已在 Challenge 页面，无需跳转'
             },
             en: {
                 panelTitle: '📚 Linux.do Helper',
@@ -2016,7 +2025,16 @@ class BrowseController {
                 downloadLocationLabel: '📁 Download Location',
                 downloadLocationTip: 'Saved files will be downloaded to browser default download folder',
                 downloadLocationHint: '💡 To change location, enable "Ask where to save" in browser settings',
-                downloadLocationPath: 'Default: Downloads folder'
+                downloadLocationPath: 'Default: Downloads folder',
+                // CloudFlare bypass related
+                cfBypassLabel: '🛡️ CF Bypass',
+                cfBypassTip: 'Auto redirect to challenge page when CloudFlare protection fails',
+                cfBypassEnabled: 'CF bypass auto redirect enabled',
+                cfBypassDisabled: 'CF bypass auto redirect disabled',
+                cfBypassDetected: '🛡️ CF verification failed, redirecting...',
+                cfBypassManual: '🛡️ Manual CF Verify',
+                cfBypassManualTip: 'Manually redirect to CloudFlare challenge page',
+                cfBypassAlreadyOnChallenge: 'Already on Challenge page, no redirect needed'
             }
         };
 
@@ -2122,6 +2140,9 @@ class BrowseController {
         this.likeFilterMode = Storage.get('likeFilterMode', 'off'); // 'off' | 'threshold' | 'probability'
         this.likeMinThreshold = Storage.get('likeMinThreshold', 5); // 最低点赞数阈值
 
+        // 新增：CloudFlare 5秒盾自动跳转功能
+        this.cfBypassEnabled = Storage.get('cfBypassEnabled', true); // 默认开启
+
         this.likedTopics = Storage.get('likedTopics', []);
         this.quickLikedFloors = Storage.get('quickLikedFloors', {}); // 记录快速点赞过的楼层 {topicId: [floor1, floor2...]}
         this.panelMinimized = Storage.get('panelMinimized', false);
@@ -2199,6 +2220,11 @@ class BrowseController {
 
         // 应用保存的主题配色
         this.applyThemeColor();
+
+        // 初始化 CloudFlare 5秒盾自动跳转功能（仅在 linux.do 上启用）
+        if (CURRENT_DOMAIN === 'linux.do') {
+            this.initCloudFlareBypass();
+        }
     }
 
     // 应用主题配色
@@ -4654,6 +4680,40 @@ class BrowseController {
             `;
             tab6Content.appendChild(downloadSection);
 
+            // CloudFlare 5秒盾设置区域（仅 linux.do 显示）
+            if (CURRENT_DOMAIN === 'linux.do') {
+                const cfBypassSection = document.createElement("div");
+                cfBypassSection.className = "tab-sub-section";
+                cfBypassSection.innerHTML = `<div class="tab-sub-title">${this.t('cfBypassLabel')}</div>`;
+
+                // CF bypass 开关
+                const cfBypassRow = this.createToggleRow(
+                    this.t('cfBypassTip'),
+                    this.cfBypassEnabled,
+                    (checked) => {
+                        this.cfBypassEnabled = checked;
+                        Storage.set('cfBypassEnabled', this.cfBypassEnabled);
+                        this.showNotification(checked ? this.t('cfBypassEnabled') : this.t('cfBypassDisabled'));
+                        // 如果启用，立即初始化
+                        if (checked) {
+                            this.initCloudFlareBypass();
+                        }
+                    }
+                );
+                cfBypassSection.appendChild(cfBypassRow);
+
+                // 手动触发按钮
+                const manualCfBtn = document.createElement("button");
+                manualCfBtn.className = "reveal-users-btn";
+                manualCfBtn.style.cssText = 'margin-top: 8px;';
+                manualCfBtn.innerHTML = `🛡️ ${this.t('cfBypassManual')}`;
+                manualCfBtn.title = this.t('cfBypassManualTip');
+                manualCfBtn.addEventListener('click', () => this.manualTriggerCF());
+                cfBypassSection.appendChild(manualCfBtn);
+
+                tab6Content.appendChild(cfBypassSection);
+            }
+
             // 捐赠打赏区域
             const donateSection = document.createElement("div");
             donateSection.className = "tab-sub-section";
@@ -4953,6 +5013,40 @@ class BrowseController {
                 </div>
             `;
             this.settingsPluginSectionContent.appendChild(collapseDownloadSection);
+
+            // CloudFlare 5秒盾设置区域（折叠模式，仅 linux.do 显示）
+            if (CURRENT_DOMAIN === 'linux.do') {
+                const collapseCfBypassSection = document.createElement("div");
+                collapseCfBypassSection.style.cssText = 'margin-bottom: 12px; padding-top: 8px; border-top: 1px dashed rgba(255,255,255,0.15);';
+                collapseCfBypassSection.innerHTML = `<div style="font-size: 11px; color: rgba(255,255,255,0.7); margin-bottom: 6px;">${this.t('cfBypassLabel')}</div>`;
+
+                // CF bypass 开关
+                const cfBypassRow2 = this.createToggleRow(
+                    this.t('cfBypassTip'),
+                    this.cfBypassEnabled,
+                    (checked) => {
+                        this.cfBypassEnabled = checked;
+                        Storage.set('cfBypassEnabled', this.cfBypassEnabled);
+                        this.showNotification(checked ? this.t('cfBypassEnabled') : this.t('cfBypassDisabled'));
+                        // 如果启用，立即初始化
+                        if (checked) {
+                            this.initCloudFlareBypass();
+                        }
+                    }
+                );
+                collapseCfBypassSection.appendChild(cfBypassRow2);
+
+                // 手动触发按钮（折叠模式）
+                const manualCfBtn2 = document.createElement("button");
+                manualCfBtn2.className = "reveal-users-btn";
+                manualCfBtn2.style.cssText = 'margin-top: 8px;';
+                manualCfBtn2.innerHTML = `🛡️ ${this.t('cfBypassManual')}`;
+                manualCfBtn2.title = this.t('cfBypassManualTip');
+                manualCfBtn2.addEventListener('click', () => this.manualTriggerCF());
+                collapseCfBypassSection.appendChild(manualCfBtn2);
+
+                this.settingsPluginSectionContent.appendChild(collapseCfBypassSection);
+            }
 
             // 捐赠打赏区域（折叠模式）
             const collapseDonateSection = document.createElement("div");
@@ -6373,6 +6467,55 @@ class BrowseController {
             this.ipRateLimitCheckInterval = null;
             console.log('[IP限流] 恢复检测定时器已停止');
         }
+    }
+
+    // ========== CloudFlare 5秒盾自动跳转功能 ==========
+
+    CF_BYPASS_CONFIG = {
+        ERROR_TEXTS: ['403 error', '该回应是很久以前创建的', 'reaction was created too long ago', '我们无法加载该话题'],
+        DIALOG_SELECTOR: '.dialog-body',
+        CHALLENGE_PATH: '/challenge'
+    };
+
+    isChallengePage() {
+        return window.location.pathname.startsWith(this.CF_BYPASS_CONFIG.CHALLENGE_PATH);
+    }
+
+    isChallengeFailure() {
+        if (this.isChallengePage()) return false;
+        const el = document.querySelector(this.CF_BYPASS_CONFIG.DIALOG_SELECTOR);
+        if (!el) return false;
+        const text = el.innerText || '';
+        return this.CF_BYPASS_CONFIG.ERROR_TEXTS.some(t => text.includes(t));
+    }
+
+    redirectToChallenge() {
+        if (this.isChallengePage()) return;
+        const url = `${this.CF_BYPASS_CONFIG.CHALLENGE_PATH}?redirect=${encodeURIComponent(window.location.href)}`;
+        this.showNotification(this.t('cfBypassDetected'));
+        window.location.href = url;
+    }
+
+    checkAndRedirectCF() {
+        if (!this.cfBypassEnabled) return;
+        if (this.isChallengeFailure()) this.redirectToChallenge();
+    }
+
+    initCloudFlareBypass() {
+        if (!this.cfBypassEnabled) return;
+        this.checkAndRedirectCF();
+        const observer = new MutationObserver(() => this.checkAndRedirectCF());
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    manualTriggerCF() {
+        if (this.isChallengePage()) {
+            this.showNotification(this.t('cfBypassAlreadyOnChallenge'));
+            return;
+        }
+        this.showNotification(this.t('cfBypassManual'));
+        const url = `${this.CF_BYPASS_CONFIG.CHALLENGE_PATH}?redirect=${encodeURIComponent(window.location.href)}`;
+        window.location.href = url;
     }
 
     updateClearCooldownButton() {

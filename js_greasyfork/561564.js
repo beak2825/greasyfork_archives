@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         "Your turn" sound - enhanced
 // @namespace    http://tampermonkey.net/
-// @version      0.5.0.3
+// @version      0.6.0.1
 // @description  Звук `ваш ход`. Не срабатывает в цепочке ходов своих существ. Громкость регулировать на 16 строке. Активация по прозрачной кнопке слева сверху.
 // @author       Something begins
 // @license      bumfuck licensing
@@ -14,6 +14,7 @@
 // @updateURL https://update.greasyfork.org/scripts/561564/%22Your%20turn%22%20sound%20-%20enhanced.meta.js
 // ==/UserScript==
 
+const NICKNAME = "YEET";
 // СНИЗУ МОЖНО МЕНЯТЬ ГРОМКОСТЬ от 0.1 до 1 (можно до ~2, но возможны искажения)
 const volume = 1;
 const ctx = new AudioContext();
@@ -52,35 +53,44 @@ btn.addEventListener('click', async () => {
     } catch (e) {
     }
 });
+function isAuto(){
+    for (let i = log_lines.length - 1; i > 0; i--){
+        if (!log_lines[i].includes(NICKNAME)) continue;
+        if (log_lines[i].includes("переходит под автоматическое управление")) return true;
+        if (log_lines[i].includes("возвращается под контроль персонажа")) return false;
+    }
+    return false;
+}
+function isTargetTurn(curTurn = 0){
+    return stage.pole.obj[heroes[stage.pole.obj[atb[curTurn]].owner]]?.nametxt === NICKNAME;
+}
 
+function isNotifyCreature() {
+    if (atb[0] === lastATB) return false;
+    lastATB = atb[0];
+
+    if (isTargetTurn()){
+        if (!lastActive && lastActive !== undefined) {
+            lastActive = true;
+            return true;
+        }
+    } else {
+        lastActive = false;
+    }
+
+    return false;
+}
 let settings_interval = setInterval(() => {
     if (Object.keys(unsafeWindow.stage.pole.obj).length !== 0) {
         clearInterval(settings_interval)
-        if (battle_ended || !playero) throw new Error("finished");
+        if (battle_ended) throw new Error("finished");
         document.querySelector(".toolbar_TopLeft").append(btn);
-
     }
 }, 300);
 
- ;
+;
 let lastATB, played, lastActive;
-function conditionMet() {
-    if (atb[0] === lastATB) {
-        if (played) return false;
-        else {
-            if (activeobj) {
-                if (lastActive) return false;
-                played = true;
-                lastActive = true;
-                return true;
-            }
-            else {lastActive = false; return false};
-        }
-    }
-    lastATB = atb[0];
-    played = false;
-    return false;
-}
+
 function playMildTone() {
     const o = ctx.createOscillator();
     const g = ctx.createGain();
@@ -108,8 +118,10 @@ function canPlay(ms = 600) {
     return true;
 }
 
-setInterval(() => {
-    if (!fast_battle_off && unlocked && conditionMet() && canPlay() ) {
+const monitoringInterval = setInterval(() => {
+    if (battle_ended) clearInterval(monitoringInterval);
+    if (isAuto()) return;
+    if (unlocked && isNotifyCreature() && canPlay()) {
         playMildTone();
     }
-}, 100);
+}, 200);

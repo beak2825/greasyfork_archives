@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         NodeSeek 热榜插件
 // @namespace    http://nodeseek.com/
-// @version      1.0
+// @version      1.1
 // @description  Nodeseek 侧边栏热榜
 // @author       https://www.nodeseek.com/space/10539
 // @match        https://www.nodeseek.com/*
 // @grant        GM_addStyle
-// @license MIT
+// @license      MIT
 // @downloadURL https://update.greasyfork.org/scripts/560065/NodeSeek%20%E7%83%AD%E6%A6%9C%E6%8F%92%E4%BB%B6.user.js
 // @updateURL https://update.greasyfork.org/scripts/560065/NodeSeek%20%E7%83%AD%E6%A6%9C%E6%8F%92%E4%BB%B6.meta.js
 // ==/UserScript==
@@ -34,6 +34,7 @@
             overflow: hidden;
             border: 1px solid var(--border-color);
             position: relative;
+            box-sizing: border-box;
         }
         .hot-header-row {
             display: flex;
@@ -59,6 +60,15 @@
             color: var(--text-color);
             z-index: 1;
         }
+        .hot-title a {
+            color: inherit;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .hot-title a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
         .hot-refresh-btn {
             position: absolute;
             right: 12px;
@@ -83,14 +93,15 @@
             animation: spin 1s linear infinite;
             transform-origin: center center;
         }
-        .hot-tabs-container { padding: 8px 12px; }
+        .hot-tabs-container { padding: 8px 12px; box-sizing: border-box; }
         .hot-tabs-track {
             position: relative;
             background-color: var(--bg-color-grey);
             border-radius: 8px;
             padding: 3px;
             display: flex;
-            height: 30px;
+            height: 40px;
+            box-sizing: border-box;
         }
         .hot-tab-slider {
             position: absolute;
@@ -103,18 +114,21 @@
             box-shadow: 0 1px 2px rgba(0,0,0,0.08);
             transition: transform 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);
             z-index: 1;
+            box-sizing: border-box;
         }
         .hot-tab-item {
             flex: 1;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 13px;
             font-weight: 500;
             color: var(--text-color-secondary);
             cursor: pointer;
             z-index: 2;
-            line-height: 24px;
             transition: color 0.2s;
             user-select: none;
+            position: relative;
         }
         .hot-tab-item.active { color: var(--text-color); font-weight: 700; }
         .slider-pos-0 { transform: translateX(0%); }
@@ -191,7 +205,7 @@
             opacity: 0.8;
             display: flex;
         }
-        .hot-loading-container .hot-loading-icon svg {
+        .hot-loading-container .hot-loading-icon.spinning svg {
              animation: spin 1s linear infinite;
              transform-origin: center center;
              display: block;
@@ -263,7 +277,23 @@
     function updateFooterStatus(status, timestamp = 0) {
         if (!UI.refreshBtn || !UI.updateTime) return;
         
-        status === 'loading' ? UI.refreshBtn.classList.add('status-loading') : UI.refreshBtn.classList.remove('status-loading');
+        const iconSvg = UI.refreshBtn.querySelector('svg');
+
+        if (status === 'loading') {
+            UI.refreshBtn.classList.add('status-loading');
+        } else {
+            if (UI.refreshBtn.classList.contains('status-loading')) {
+                if (document.hidden) {
+                    UI.refreshBtn.classList.remove('status-loading');
+                } else if (iconSvg) {
+                    iconSvg.addEventListener('animationiteration', () => {
+                        UI.refreshBtn.classList.remove('status-loading');
+                    }, { once: true });
+                } else {
+                    UI.refreshBtn.classList.remove('status-loading');
+                }
+            }
+        }
 
         UI.updateTime.classList.remove('status-error');
         if (status === 'error') {
@@ -279,9 +309,11 @@
 
         if (!posts || posts.length === 0) {
             const isError = posts === null;
+            const spinClass = isError ? '' : 'spinning';
+            
             UI.listUl.innerHTML = `
                 <div class="hot-loading-container">
-                    <div class="hot-loading-icon">${isError ? ICONS.error : ICONS.loading}</div>
+                    <div class="hot-loading-icon ${spinClass}">${isError ? ICONS.error : ICONS.loading}</div>
                     <span class="hot-loading-text">${isError ? '获取失败，请重试' : '暂无数据'}</span>
                 </div>`;
             if (UI.toggleBtn) UI.toggleBtn.style.display = 'none';
@@ -320,7 +352,7 @@
         if (UI.listUl) {
             UI.listUl.innerHTML = `
                 <div class="hot-loading-container">
-                    <div class="hot-loading-icon">${ICONS.loading}</div>
+                    <div class="hot-loading-icon spinning">${ICONS.loading}</div>
                     <span class="hot-loading-text">正在更新...</span>
                 </div>
             `;
@@ -341,6 +373,7 @@
         renderLoading(); 
         
         const data = await fetchData(state.tabKeys[index]);
+        
         state.isLoading = false;
         
         if (data && data.posts) {
@@ -365,7 +398,7 @@
                     ${ICONS.realFire}
                 </div>
                 <div class="hot-title">
-                    <span>NodeSeek 热榜</span>
+                    <a href="https://bimg.eu.org" target="_blank">NodeSeek 热榜</a>
                 </div>
                 <div class="hot-refresh-btn" id="hot-refresh-btn" title="点击刷新">
                     ${ICONS.refresh}
@@ -422,12 +455,6 @@
         });
 
         switchTab(0);
-        
-        setInterval(() => {
-            if (!document.hidden && !state.isLoading) {
-                switchTab(state.currentTab);
-            }
-        }, CONFIG.refreshInterval);
     }
 
     initPanel();

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TMN Mobile-All-in-One Script
 // @namespace    http://tampermonkey.net/
-// @version      1.6.13
+// @version      1.8.1
 // @description  Revised version with countdown fix and GTA/Crimes integration
 // @author       Pap
 // @license      MIT
@@ -34,19 +34,15 @@
     const TMN_CAPTCHA_KEY = GM_getValue('TMN_CAPTCHA_KEY', '');
     const TMN_PIC = 'Katana';
     const defaultPage = '/authenticated/default.aspx';
-    const iFramePages = [ 'crimes.aspx', 'playerproperty.aspx?p=g&cleanup', 'jail.aspx', 'travel.aspx?d=', 'trade.aspx?autoarbitrage', 'credits.aspx?autoheal' ];
+    const iFramePages = [ 'crimes.aspx', 'playerproperty.aspx?p=g&cleanup', 'jail.aspx', 'travel.aspx?d=', 'trade.aspx?autoarbitrage', 'credits.aspx?autoheal', 'ocads.aspx?add' ];
 
     GM_registerMenuCommand('Clear all data', () => {
-        GM_setValue("TMN_ACTIVE_ARBITRAGE_OFFERS", '');
-        GM_setValue("TMN_ARBITRAGE_INPUTS", '');
+        if (!window.confirm('Clear all data?')) return;
+        GM_setValue("TMN_ARBITRAGE_INPUTS", '{}');
         GM_setValue("TMN_AUTO_OC_PREF", '');
-        GM_setValue("TMN_BOOZE_TIME", '');
         //GM_setValue("TMN_CAPTCHA_KEY", '');
         GM_setValue("TMN_CAR_PREF", '');
-        GM_setValue("TMN_CRIME_TIME", '');
         GM_setValue("TMN_EXPERIENCE", '');
-        GM_setValue("TMN_FLIGHT_TIME", '');
-        GM_setValue("TMN_GTA_TIME", '');
         GM_setValue("TMN_LAST_NEW_MAIL", '');
         GM_setValue("TMN_LEAD_OC_TYPE", '');
         GM_setValue("TMN_NEXT_DTM", '');
@@ -60,10 +56,30 @@
         GM_setValue("TMN_OVERLAY_MINIMIZED", '');
         GM_setValue("TMN_OVERLAY_OC_SECTION_MINIMIZED", '');
         //GM_setValue("TMN_PASSWORD", '');
-        GM_setValue("TMN_PLAYER", '');
-        GM_setValue("TMN_SCRIPT_STATES", '');
+        GM_setValue("TMN_PLAYER", '{}');
+        GM_setValue("TMN_SCRIPT_STATES", '{}');
         GM_setValue("TMN_SENTENCE_LENGTH", '');
-        GM_setValue("TMN_LEAD_OC_INPUTS", '');
+
+        // GM_setValue('TMN_ARBITRAGE_INPUTS', '{}');
+        // GM_setValue('TMN_AUTO_OC_PREF', '');
+        // GM_setValue('TMN_BF_TOKEN', '');
+        // //GM_setValue('TMN_CAPTCHA_KEY', '');
+        // GM_setValue('TMN_EXPERIENCE', '');
+        // GM_setValue('TMN_LAST_NEW_MAIL', '');
+        // GM_setValue('TMN_LAST_SYDNEY_SPAWN_TIME', '');
+        // GM_setValue('TMN_NEXT_BOOZE', '');
+        // GM_setValue('TMN_NEXT_CRIME', '');
+        // GM_setValue('TMN_NEXT_DTM', '');
+        // GM_setValue('TMN_NEXT_FLIGHT', '');
+        // GM_setValue('TMN_NEXT_GTA', '');
+        // GM_setValue('TMN_NEXT_JET_FLIGHT', '');
+        // GM_setValue('TMN_NEXT_OC', '');
+        // GM_setValue('TMN_OC_INPUTS', '');
+        // GM_setValue('TMN_OVERLAY_MINIMIZED_STATES', '{}');
+        // //GM_setValue('TMN_PASSWORD', '');
+        // GM_setValue('TMN_PLAYER', '{}');
+        // GM_setValue('TMN_SCRIPT_STATES', '{}');
+        // GM_setValue('TMN_SENTENCE_LENGTH', '');
     });
 
     if (!page.endsWith('trade.aspx')) {
@@ -81,6 +97,7 @@
     if (page.endsWith('crimes.aspx?p=b')) BoozeScript();
     if (page.includes('mailbox.aspx') && page.includes('autoaccept')) AcceptInvites();
     if (page.endsWith('organizedcrime.aspx') || page.includes('organizedcrime.aspx?act=') || page.includes('store.aspx?p=w') ) OCScript();
+    if (page.endsWith('ocads.aspx?add')) AddToClassifieds();
     if (page.includes('organizedcrime.aspx?p=dtm')) DTMScript();
     if (page.includes('trade.aspx?autoarbitrage')) AutoArbitrage();
     if (page.includes('playerproperty.aspx?a=')) AutoBank();
@@ -121,34 +138,41 @@
                 'Spawn Camp Bullets': false
             };
 
+            const defaultOverlaySectionStates = {
+                overlay: true,
+                account: true,
+                oc: true,
+                arbitrage: true
+            };
+
+            const defaultOCInputs = {
+                AutoOCPref: false,
+                SpecificLeaderNames: '',
+                PositionPref: false,
+                LeaderInputs: {
+                    Type: false,
+                    'Transporter': '',
+                    'Weapon Master': '',
+                    'Explosive Expert': ''
+                },
+                CarPref: false,
+                AddToClassifieds: false
+            };
+
             // Load saved values
             const savedScriptStates = Object.assign({}, defaultScriptStates, JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}')));
             GM_setValue('TMN_SCRIPT_STATES', JSON.stringify(savedScriptStates));
 
-            const overlayMinimized = GM_getValue('TMN_OVERLAY_MINIMIZED', false);
-            const accountSectionMinimized = GM_getValue('TMN_OVERLAY_ACCOUNT_SECTION_MINIMIZED', false);
-            const ocSectionMinimized = GM_getValue('TMN_OVERLAY_OC_SECTION_MINIMIZED', false);
-            const arbitrageSectionMinimized  = GM_getValue('TMN_OVERLAY_ARBITRAGE_SECTION_MINIMIZED', false);
+            const savedOverlaySectionsMinimized = Object.assign({}, defaultOverlaySectionStates, JSON.parse(GM_getValue('TMN_OVERLAY_SECTIONS_MINIMIZED', '{}')));
             const savedUsername = JSON.parse(GM_getValue('TMN_PLAYER', '{}'))?.name || '';
             const savedPassword = GM_getValue('TMN_PASSWORD', '');
             const savedCaptchaKey = GM_getValue('TMN_CAPTCHA_KEY', '');
-            const savedAutoOCPref = GM_getValue('TMN_AUTO_OC_PREF', '');
-            const savedLeadOCInputs = JSON.parse(GM_getValue('TMN_LEAD_OC_INPUTS', '{}'));
-            const savedSpecificLeaderNames = GM_getValue('TMN_OC_LEADER_NAMES', '');
-            const savedPosition = GM_getValue('TMN_OC_POSITION', '');
-            const savedCarPref = GM_getValue('TMN_CAR_PREF', '');
+            
+            const savedAccountInputs = JSON.parse(GM_getValue('TMN_ACCOUNT_INPUTS', '{}'));
+            const savedOCInputs = Object.assign({}, defaultOCInputs, JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}')));
             const savedArbitrageInputs = JSON.parse(GM_getValue('TMN_ARBITRAGE_INPUTS', '{}'));
+
             const offsetRight = $('.personalbtn').css('display') === 'inline-block' ? '67px' : '16px';
-
-            // ---------------- OVERLAY CONTAINER ----------------
-            const $overlay = $('<div>', { id: 'tmn-overlay' }).css({
-                position: 'fixed', top: '10px', right: offsetRight, zIndex: 99999,
-                background: 'rgba(20,28,40,0.96)', color: '#eee', fontFamily: 'monospace',
-                fontSize: '14px', lineHeight: '1.7', padding: '16px 22px', borderRadius: '11px',
-                boxShadow: '0 2px 14px #0008', maxWidth: '290px', maxHeight: '90vh',
-                textAlign: 'left', boxSizing: 'border-box', overflowY: 'auto'
-            });
-
             $('<style>').text(`
                 #tmn-overlay::-webkit-scrollbar { width: 10px; }
                 #tmn-overlay::-webkit-scrollbar-track { background: #1c1f26; border-radius: 11px; }
@@ -156,7 +180,7 @@
                 #tmn-overlay::-webkit-scrollbar-thumb:hover { background-color: #666; }
                 #tmn-overlay input:not([type="checkbox"]), .overlay-menu {
                     width: 100%;
-                    /*max-width: 230px;*/
+                    /*max-width: 240px;*/
                     box-sizing: border-box;
                 }
 
@@ -164,30 +188,95 @@
                     color: yellow;
                     font-weight: bold;
                 }
+                
+                // /* ---------- BASE ---------- */
+                // #tmn-overlay-section {
+                //     background: linear-gradient(180deg, #141c28, #101621);
+                //     border: 1px solid #222;
+                // }
+
+                // /* Section container */
+                // #tmn-overlay-section > .section-content > div[id$='-section'] {
+                //     padding: 10px 12px;
+                //     margin: 10px 0;
+                //     border-radius: 8px;
+                //     background: rgba(255,255,255,0.02);
+                // }
+
+                // /* Headers */
+                // .section-header {
+                //     padding-bottom: 6px;
+                //     margin-bottom: 6px;
+                //     border-bottom: 2px solid transparent;
+                // }
+
+                // /* ---------- ACCOUNT ---------- */
+                // #tmn-account-section {
+                //     border-left: 4px solid #e03131;
+                // }
+                // #tmn-account-section .section-header {
+                //     border-bottom-color: #e03131;
+                // }
+                // #tmn-account-section b {
+                //     color: #ffa8a8;
+                // }
+
+                // /* ---------- OC ---------- */
+                // #tmn-oc-section {
+                //     border-left: 4px solid #9c36b5;
+                // }
+                // #tmn-oc-section .section-header {
+                //     border-bottom-color: #9c36b5;
+                // }
+                // #tmn-oc-section b {
+                //     color: #eebefa;
+                // }
+
+                // /* ---------- ARBITRAGE ---------- */
+                // #tmn-arbitrage-section {
+                //     border-left: 4px solid #2f9e44;
+                // }
+                // #tmn-arbitrage-section .section-header {
+                //     border-bottom-color: #2f9e44;
+                // }
+                // #tmn-arbitrage-section b {
+                //     color: #b2f2bb;
+                // }
+
+                // /* ---------- SCRIPT DROPDOWN ---------- */
+                // #script-dropdown {
+                //     border-left: 4px solid #f08c00;
+                //     padding-left: 8px;
+                // }
                 `).appendTo('head');
 
-            // ---------------- HEADER ----------------
-            const $header = $('<div>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center' })
-            .html('<b>TMN All-in-One Config</b>');
-            const $toggleBtn = $('<button>', { id: 'tmn-toggle-btn', text: overlayMinimized ? '+' : '–' }).css({
+            // ---------------- OVERLAY SECTION ----------------
+            const $overlaySection = $('<div>', { id: 'tmn-overlay-section' }).css({
+                position: 'fixed', top: '10px', right: offsetRight, zIndex: 99999,
+                background: 'rgba(20,28,40,0.96)', color: '#eee', fontFamily: 'monospace',
+                fontSize: '14px', lineHeight: '1.7', padding: '16px 22px', borderRadius: '11px',
+                boxShadow: '0 2px 14px #0008', maxWidth: '290px', maxHeight: '90vh',
+                textAlign: 'left', boxSizing: 'border-box'/*, overflowY: 'auto'*/
+            });
+            const $overlaySectionHeader = $('<div>', { class: 'section-header' }).html('<b>TMN All-in-One Config</b>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 0, paddingBottom: 0 });
+            const $overlaySectionToggleBtn = $('<button>', { id: 'tmn-toggle-btn', text: savedOverlaySectionsMinimized['overlay'] ? '+' : '−' }).css({
                 background: 'none', border: 'none', color: '#eee', fontSize: '16px', cursor: 'pointer', marginLeft: '10px'
             });
-            $header.append($toggleBtn);
+            $overlaySectionHeader.append($overlaySectionToggleBtn);
 
-            const $content = $('<div>', { id: 'tmn-overlay-content' }).css({ position: 'relative', display: overlayMinimized ? 'none' : 'block', marginTop: '8px' });
+            const $overlaySectionContent = $('<div>', { class: 'section-content' }).css({ position: 'relative', display: savedOverlaySectionsMinimized['overlay'] ? 'none' : 'block', marginTop: '8px' });
 
             // ---------------- ACCOUNT SECTION ----------------
             const $accountSection = $('<div>', { id: 'tmn-account-section' });
-            const $accountSectionHeader = $('<div>').html('<b>Account Settings</b>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center' });
-            const $accountSectionToggleBtn = $('<button>', { id: 'tmn-account-section-toggle-btn', text: accountSectionMinimized ? '+' : '–' }).css({
+            const $accountSectionHeader = $('<div>', { class: 'section-header' }).html('<b>Account Settings</b>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center' });
+            const $accountSectionToggleBtn = $('<button>', { id: 'tmn-account-section-toggle-btn', text: savedOverlaySectionsMinimized['account'] ? '+' : '−' }).css({
                 background: 'none', border: 'none', color: '#eee', fontSize: '16px', cursor: 'pointer', marginLeft: '10px'
             });
             $accountSectionHeader.append($accountSectionToggleBtn);
 
-            const $accountSectionContent = $('<div>', { class: 'section-content' }).css({ marginTop: '8px', display: accountSectionMinimized ? 'none' : 'block' });
+            const $accountSectionContent = $('<div>', { class: 'section-content' }).css({ display: savedOverlaySectionsMinimized['account'] ? 'none' : 'block', marginTop: '8px' });
 
             const $usernameLabel = $('<label>', { html: `Username: <span style='color: #AA0000; font-weight: bold;'>${savedUsername}</span>` }).css({ display: 'block', margin: '6px 0 0 0', padding: 0 });
-
             const $passwordLabel = $('<label>', { text: 'Password:' }).css({ display: 'block', margin: '6px 0 0 0', padding: 0 });
             const $passwordInput = $('<input>', { type: 'password', id: 'password-input' }).val(savedPassword).css({
                 background: '#2a2f3a', color: '#eee', border: '1px solid #444', borderRadius: '6px',
@@ -197,10 +286,10 @@
             });
 
             const $togglePasswordButton = $('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#ccc" viewBox="0 0 24 24"><path d="M12 5c-7.633 0-11 7-11 7s3.367 7 11 7 11-7 11-7-3.367-7-11-7zm0 12c-2.761 0-5-2.239-5-5 s2.239-5 5-5 5 2.239 5 5-2.239 5-5 5zm0-8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"/></svg>')
-            .css({ position: 'absolute', right: '8px', top: '55%', transform: 'translateY(-50%)', cursor: 'pointer' })
-            .on('click', function () {
-                const currentType = $passwordInput.attr('type');
-                $passwordInput.attr('type', currentType === 'password' ? 'text' : 'password');
+                .css({ position: 'absolute', right: '8px', top: '55%', transform: 'translateY(-50%)', cursor: 'pointer' })
+                .on('click', function () {
+                    const currentType = $passwordInput.attr('type');
+                    $passwordInput.attr('type', currentType === 'password' ? 'text' : 'password');
             });
 
             const $passwordWrapper = $('<div>').css({ position: 'relative', display: 'inline-block', width: '100%' }).append($passwordInput, $togglePasswordButton);
@@ -218,18 +307,18 @@
 
             // ---------------- OC SETTINGS ----------------
             const $ocSection = $('<div>', { id: 'tmn-oc-section' }).css({ display: savedScriptStates['OC'] ? 'block' : 'none' });
-            const $ocSectionHeader = $('<div>').html('<b>OC Settings</b>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center' });
-            const $ocSectionToggleBtn = $('<button>', { id: 'tmn-oc-section-toggle-btn', text: ocSectionMinimized ? '+' : '–' }).css({
+            const $ocSectionHeader = $('<div>', { class: 'section-header' }).html('<b>OC Settings</b>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center' });
+            const $ocSectionToggleBtn = $('<button>', { id: 'tmn-oc-section-toggle-btn', text: savedOverlaySectionsMinimized['oc'] ? '+' : '−' }).css({
                 background: 'none', border: 'none', color: '#eee', fontSize: '16px', cursor: 'pointer', marginLeft: '10px'
             });
             $ocSectionHeader.append($ocSectionToggleBtn);
 
-            const $ocSectionContent = $('<div>', { class: 'section-content' }).css({ marginTop: '8px', display: ocSectionMinimized ? 'none' : 'block' });
+            const $ocSectionContent = $('<div>', { class: 'section-content' }).css({ marginTop: '8px', display: savedOverlaySectionsMinimized['oc'] ? 'none' : 'block' });
 
             // Auto OC Dropdown
             const $autoOCLabel = $('<label>', { html: 'Auto OC:' }).css({ display: 'block', margin: '6px 0 0 0', padding: 0 });
             const $autoOCDropdown = $('<div>').css({ position: 'relative' });
-            const $autoOCToggle = $('<div>', { text: savedAutoOCPref ? savedAutoOCPref + ' ▼' : 'Select OC Type ▼' }).css({
+            const $autoOCToggle = $('<div>', { text: savedOCInputs['AutoOCPref'] ? savedOCInputs['AutoOCPref'] + ' ▼' : 'Select OC Type ▼' }).css({
                 background: '#2a2f3a', padding: '6px', borderRadius: '6px', cursor: 'pointer', border: '1px solid #444'
             });
             const $autoOCMenu = $('<div>', { class: 'overlay-menu' }).css({ display: 'none', position: 'absolute', background: '#1c1f26', border: '1px solid #444', padding: '8px', borderRadius: '6px', zIndex: 100000 });
@@ -239,19 +328,19 @@
             $autoOCDropdown.append($autoOCToggle, $autoOCMenu);
 
             // Specific Leader Names
-            const $leaderNamesLabel = $('<label>', { text: 'Leader(s):' }).css({ display: savedAutoOCPref === 'Auto Accept Specific' ? 'block' : 'none', margin: '12px 0 0 0', padding: 0 });
-            const $leaderNamesInput = $('<input>', { type: 'text' }).val(savedSpecificLeaderNames).css({
+            const $leaderNamesLabel = $('<label>', { text: 'Leader(s):' }).css({ display: savedOCInputs['AutoOCPref'] === 'Auto Accept Specific' ? 'block' : 'none', margin: '12px 0 0 0', padding: 0 });
+            const $leaderNamesInput = $('<input>', { type: 'text' }).val(savedOCInputs['SpecificLeaderNames'] ).css({
                 background: '#2a2f3a', color: '#eee', border: '1px solid #444', borderRadius: '6px',
                 padding: '6px', fontFamily: 'monospace', fontSize: '14px', margin: '4px 0 0 0',
-                display: savedAutoOCPref === 'Auto Accept Specific' ? 'block' : 'none'
+                display: savedOCInputs['AutoOCPref'] === 'Auto Accept Specific' ? 'block' : 'none'
             }).on('input', function () {
                 GM_setValue('TMN_OC_LEADER_NAMES', $(this).val());
             });
 
             // Position Dropdown
-            const $positionLabel = $('<label>', { html: 'OC Position:' }).css({ display: (savedAutoOCPref === 'Auto Accept Any' || savedAutoOCPref === 'Auto Accept Specific') ? 'block' : 'none', margin: '12px 0 0 0', padding: 0 });
-            const $positionDropdown = $('<div>').css({ position: 'relative', display: (savedAutoOCPref === 'Auto Accept Any' || savedAutoOCPref === 'Auto Accept Specific') ? 'block' : 'none' });
-            const $positionToggle = $('<div>', { text: savedPosition ? savedPosition + ' ▼' : 'Select Position ▼' }).css({
+            const $positionLabel = $('<label>', { html: 'OC Position:' }).css({ display: (savedOCInputs['AutoOCPref'] === 'Auto Accept Any' || savedOCInputs['AutoOCPref'] === 'Auto Accept Specific') ? 'block' : 'none', margin: '12px 0 0 0', padding: 0 });
+            const $positionDropdown = $('<div>').css({ position: 'relative', display: (savedOCInputs['AutoOCPref'] === 'Auto Accept Any' || savedOCInputs['AutoOCPref'] === 'Auto Accept Specific') ? 'block' : 'none' });
+            const $positionToggle = $('<div>', { text: savedOCInputs['PositionPref'] ? savedOCInputs['PositionPref'] + ' ▼' : 'Select Position ▼' }).css({
                 background: '#2a2f3a', padding: '6px', borderRadius: '6px', cursor: 'pointer', border: '1px solid #444'
             });
             const $positionMenu = $('<div>', { class: 'overlay-menu' }).css({ display: 'none', position: 'absolute', background: '#1c1f26', border: '1px solid #444', padding: '8px', borderRadius: '6px', zIndex: 100000 });
@@ -261,9 +350,9 @@
             $positionDropdown.append($positionToggle, $positionMenu);
 
             // Lead OC Type Dropdown
-            const $ocTypeLabel = $('<label>', { html: 'OC Type:' }).css({ display: savedAutoOCPref === 'Lead OC' ? 'block' : 'none', margin: '12px 0 0 0', padding: 0 });
-            const $ocTypeDropdown = $('<div>').css({ marginposition: 'relative', display: savedAutoOCPref === 'Lead OC' ? 'block' : 'none' });
-            const $ocTypeToggle = $('<div>', { text: savedLeadOCInputs['Type'] ? savedLeadOCInputs['Type'] + ' ▼' : 'Select OC Type ▼' }).css({
+            const $ocTypeLabel = $('<label>', { html: 'OC Type:' }).css({ display: savedOCInputs['AutoOCPref'] === 'Lead OC' ? 'block' : 'none', margin: '12px 0 0 0', padding: 0 });
+            const $ocTypeDropdown = $('<div>').css({ marginposition: 'relative', display: savedOCInputs['AutoOCPref'] === 'Lead OC' ? 'block' : 'none' });
+            const $ocTypeToggle = $('<div>', { text: savedOCInputs['LeaderInputs']['Type'] ? savedOCInputs['LeaderInputs']['Type'] + ' ▼' : 'Select OC Type ▼' }).css({
                 background: '#2a2f3a', padding: '6px', borderRadius: '6px', cursor: 'pointer', border: '1px solid #444'
             });
             const $ocTypeMenu = $('<div>', { class: 'overlay-menu' }).css({ display: 'none', position: 'absolute', background: '#1c1f26', border: '1px solid #444', padding: '8px', borderRadius: '6px', zIndex: 100000 });
@@ -273,26 +362,26 @@
             $ocTypeDropdown.append($ocTypeToggle, $ocTypeMenu);
 
             // Leader Inputs
-            const $leaderInputs = $('<div>').css({ marginTop: '12px', display: savedAutoOCPref === 'Lead OC' ? 'block' : 'none' });
+            const $leaderInputs = $('<div>').css({ marginTop: '12px', display: savedOCInputs['AutoOCPref'] === 'Lead OC' ? 'block' : 'none' });
             ['Transporter', 'Weapon Master', 'Explosive Expert'].forEach(role => {
                 const key = role.toLowerCase().replace(/ /g, '');
                 const $wrapper = $('<div>').css({ marginBottom: '8px' });
                 const $label = $('<label>', { text: role + ':' }).css({ display: 'block', padding: 0, margin: 0 });
-                const $input = $('<input>', { type: 'text' }).val(savedLeadOCInputs[key] || '').css({
+                const $input = $('<input>', { type: 'text' }).val(savedOCInputs['LeaderInputs'][key] || '').css({
                     background: '#2a2f3a', color: '#eee', border: '1px solid #444', borderRadius: '6px',
                     padding: '6px', fontFamily: 'monospace', fontSize: '14px'
                 }).on('input', function () {
-                    savedLeadOCInputs[key] = $(this).val();
-                    GM_setValue('TMN_LEAD_OC_INPUTS', JSON.stringify(savedLeadOCInputs));
+                    savedOCInputs['LeaderInputs'][key] = $(this).val();
+                    GM_setValue('TMN_OC_INPUTS', JSON.stringify(savedOCInputs));
                 });
                 $wrapper.append($label, $input);
                 $leaderInputs.append($wrapper);
             });
 
             // Car Preference Dropdown
-            const $carPrefLabel = $('<label>', { html: 'Car Preference:' }).css({ display: ((savedPosition === 'TP' || savedPosition === 'Any') && (savedAutoOCPref === 'Auto Accept Any' || savedAutoOCPref === 'Auto Accept Specific')) ? 'block' : 'none', margin: '12px 0 0 0', padding: 0 });
-            const $carDropdown = $('<div>').css({ position: 'relative', display: ((savedPosition === 'TP' || savedPosition === 'Any') && (savedAutoOCPref === 'Auto Accept Any' || savedAutoOCPref === 'Auto Accept Specific')) ? 'block' : 'none' });
-            const $carToggle = $('<div>', { text: savedCarPref ? savedCarPref + ' ▼' : 'Select Car ▼' }).css({
+            const $carPrefLabel = $('<label>', { html: 'Car Preference:' }).css({ display: ((savedOCInputs['PositionPref'] === 'TP' || savedOCInputs['PositionPref'] === 'Any') && (savedOCInputs['AutoOCPref'] === 'Auto Accept Any' || savedOCInputs['AutoOCPref'] === 'Auto Accept Specific')) ? 'block' : 'none', margin: '12px 0 0 0', padding: 0 });
+            const $carDropdown = $('<div>').css({ position: 'relative', display: ((savedOCInputs['PositionPref'] === 'TP' || savedOCInputs['PositionPref'] === 'Any') && (savedOCInputs['AutoOCPref'] === 'Auto Accept Any' || savedOCInputs['AutoOCPref'] === 'Auto Accept Specific')) ? 'block' : 'none' });
+            const $carToggle = $('<div>', { text: savedOCInputs['CarPref'] ? savedOCInputs['CarPref'] + ' ▼' : 'Select Car ▼' }).css({
                 background: '#2a2f3a', padding: '6px', borderRadius: '6px', cursor: 'pointer', border: '1px solid #444'
             });
             const $carMenu = $('<div>', { class: 'overlay-menu' }).css({ display: 'none', position: 'absolute', background: '#1c1f26', border: '1px solid #444', padding: '8px', borderRadius: '6px', zIndex: 100000 });
@@ -301,19 +390,22 @@
             });
             $carDropdown.append($carToggle, $carMenu);
 
+            const $addToClassifiedsCheckbox = $('<input>', { type: 'checkbox', checked: savedOCInputs['AddToClassifieds'] }).css({ marginTop: '16px' });
+            const $addToClassifiedsLabel = $('<label>').css({ display: savedOCInputs['AutoOCPref'] !== 'Lead OC' ? 'block' : 'none', margin: 0, padding: 0, fontSize: '16px' }).append($addToClassifiedsCheckbox, ' Add to classifieds');
+
             // Append OC section
-            $ocSectionContent.append($autoOCLabel, $autoOCDropdown, $leaderNamesLabel, $leaderNamesInput, $positionLabel, $positionDropdown, $ocTypeLabel, $ocTypeDropdown, $leaderInputs, $carPrefLabel, $carDropdown);
+            $ocSectionContent.append($autoOCLabel, $autoOCDropdown, $leaderNamesLabel, $leaderNamesInput, $positionLabel, $positionDropdown, $ocTypeLabel, $ocTypeDropdown, $leaderInputs, $carPrefLabel, $carDropdown, $addToClassifiedsLabel);
             $ocSection.append($ocSectionHeader, $ocSectionContent);
 
             // ---------------- ARBITRAGE SECTION ----------------
             const $arbitrageSection = $('<div>', { id: 'tmn-arbitrage-section' }).css({ display: savedScriptStates['Auto Arbitrage'] ? 'block' : 'none' });
-            const $arbitrageSectionHeader = $('<div>').html('<b>Arbitrage Settings</b>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center' });
-            const $arbitrageSectionToggleBtn = $('<button>', { id: 'tmn-arbitrage-section-toggle-btn', text: arbitrageSectionMinimized ? '+' : '–' }).css({
+            const $arbitrageSectionHeader = $('<div>', { class: 'section-header' }).html('<b>Arbitrage Settings</b>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center' });
+            const $arbitrageSectionToggleBtn = $('<button>', { id: 'tmn-arbitrage-section-toggle-btn', text: savedOverlaySectionsMinimized['arbitrage'] ? '+' : '−' }).css({
                 background: 'none', border: 'none', color: '#eee', fontSize: '16px', cursor: 'pointer', marginLeft: '10px'
             });
             $arbitrageSectionHeader.append($arbitrageSectionToggleBtn);
 
-            const $arbitrageSectionContent = $('<div>', { class: 'section-content' }).css({ marginTop: '8px', display: arbitrageSectionMinimized ? 'none' : 'block' });
+            const $arbitrageSectionContent = $('<div>', { class: 'section-content' }).css({ marginTop: '8px', display: savedOverlaySectionsMinimized['arbitrage'] ? 'none' : 'block' });
 
             const $moneyOnHandLabel = $('<label>', { text: 'Money on Hand ($):' }).css({ display: 'block', margin: '12px 0 0 0', padding: 0 });
             const $moneyOnHandInput = $('<input>', { type: 'number' }).val(savedArbitrageInputs['MoneyOnHand']).css({
@@ -341,7 +433,7 @@
                 GM_setValue('TMN_ARBITRAGE_INPUTS', JSON.stringify(savedArbitrageInputs));
             });
 
-            const $buyCreditsWrapper = $('<div>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px', maxWidth: '230px' }).append($buyCreditsPriceInput, $buyCreditsQuantityInput);
+            const $buyCreditsWrapper = $('<div>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px', maxWidth: '240px' }).append($buyCreditsPriceInput, $buyCreditsQuantityInput);
 
             const $sellCreditsLabel = $('<label>', { text: 'Sell Credits ($ / #):' }).css({ display: 'block', margin: '12px 0 0 0', padding: 0 });
             const $sellCreditsPriceInput = $('<input>', { type: 'number' }).val(savedArbitrageInputs['SellCreditsPrice']).css({
@@ -360,7 +452,7 @@
                 GM_setValue('TMN_ARBITRAGE_INPUTS', JSON.stringify(savedArbitrageInputs));
             });
 
-            const $sellCreditsWrapper = $('<div>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px', maxWidth: '230px' }).append($sellCreditsPriceInput, $sellCreditsQuantityInput);
+            const $sellCreditsWrapper = $('<div>').css({ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px', maxWidth: '240px' }).append($sellCreditsPriceInput, $sellCreditsQuantityInput);
 
             // Append Arbitrage section
             $arbitrageSectionContent.append($moneyOnHandLabel, $moneyOnHandInput, $buyCreditsLabel, $buyCreditsWrapper, $sellCreditsLabel, $sellCreditsWrapper);
@@ -368,7 +460,7 @@
 
             // ---------------- SCRIPT TOGGLES ----------------
             const $scriptLabel = $('<label>', { html: 'Enabled Scripts:' }).css({ margin: '12px 0 0 0', padding: 0 })
-            const $scriptDropdown = $('<div>', { id: 'script-dropdown' })/*.css({ position: 'relative' })*/;
+            const $scriptDropdown = $('<div>', { id: 'script-dropdown' }).css({ width: '240px' });
             const $scriptToggle = $('<div>', { text: 'Select Scripts ▼' }).css({
                 background: '#2a2f3a', padding: '6px', borderRadius: '6px', cursor: 'pointer', border: '1px solid #444'
             });
@@ -382,37 +474,28 @@
             $scriptDropdown.append($scriptToggle, $scriptMenu);
 
             // Append all sections
-            $content.append('<hr>', $accountSection, '<hr>', $ocSection, `<hr style='display: ${savedScriptStates['OC'] ? 'block' : 'none'}'>`, $arbitrageSection, `<hr style='display: ${savedScriptStates['Auto Arbitrage'] ? 'block' : 'none'}'>`, $scriptLabel, $scriptDropdown);
-            $overlay.append($header, $content);
-            $('body').append($overlay);
+            $overlaySectionContent.append('<hr>', $accountSection, '<hr>', $ocSection, `<hr style='display: ${savedScriptStates['OC'] ? 'block' : 'none'}'>`, $arbitrageSection, `<hr style='display: ${savedScriptStates['Auto Arbitrage'] ? 'block' : 'none'}'>`, $scriptLabel, $scriptDropdown);
+            $overlaySection.append($overlaySectionHeader, $overlaySectionContent);
+            $('body').append($overlaySection);
 
             // ---------------- EVENT HANDLERS ----------------
-            // Toggle main overlay
-            $('#tmn-toggle-btn').on('click', function () {
-                const $content = $('#tmn-overlay-content');
-                const isHidden = $content.css('display') === 'none';
-                $content.css('display', isHidden ? 'block' : 'none');
-                GM_setValue('TMN_OVERLAY_MINIMIZED', !isHidden);
-                $(this).text(isHidden ? '–' : '+');
-            });
-
             // Toggle section
-            $(`[id$='-section-toggle-btn']`).on('click', function () {
-                const $section = $(this).parent().parent();
-                let gmValue = `TMN_OVERLAY_${$section.prop('id').split('tmn-')[1].split('-')[0].toUpperCase()}_SECTION_MINIMIZED`;
-                let $content = $section.find('.section-content');
+            $(`[id$='-toggle-btn']`).on('click', function () {
+                let $section = $(this).parent().parent();
+                let $content = $section.find('.section-content').eq(0);
                 let isHidden = $content.css('display') === 'none';
                 $content.css('display', isHidden ? 'block' : 'none');
-                GM_setValue(gmValue, !isHidden);
-                $(this).text(isHidden ? '–' : '+');
+                savedOverlaySectionsMinimized[`${$section.prop('id').split('tmn-')[1].split('-')[0]}`] = !isHidden;
+                GM_setValue('TMN_OVERLAY_SECTIONS_MINIMIZED', JSON.stringify(savedOverlaySectionsMinimized));
+                $(this).text(isHidden ? '−' : '+');
 
-                const $otherSections = $(`[id$='-section`).not($section);
+                const $otherSections = $(`[id$='-section`).not(`#tmn-overlay-section, #${$section.attr('id')}`);
                 $otherSections.each(function() {
                     const $this = $(this);
-                    gmValue = `TMN_OVERLAY_${$this.prop('id').split('tmn-')[1].split('-')[0].toUpperCase()}_SECTION_MINIMIZED`;
                     $content = $this.find('.section-content');
                     $content.css('display', 'none');
-                    GM_setValue(gmValue, true);
+                    savedOverlaySectionsMinimized[`${$this.prop('id').split('tmn-')[1].split('-')[0]}`] = true;
+                    GM_setValue('TMN_OVERLAY_SECTIONS_MINIMIZED', JSON.stringify(savedOverlaySectionsMinimized));
                     $this.find('button').text('+');
                 });
             });
@@ -477,44 +560,6 @@
             $carToggle.on('click', function () { toggleMenu($carToggle, $carMenu); });
             $scriptToggle.on('click', function () { toggleMenu($scriptToggle, $scriptMenu); });
 
-            // Close menus and restore overflow
-            /*$(document).on('click', function (e) {
-                if (!$(e.target).closest('#tmn-overlay').length) {
-                    $('[#tmn-overlay][id$="Menu"]').hide();
-                    $('#tmn-overlay').css('overflow-y', 'auto');
-                }
-            });*/
-
-            // $(`[id$='-toggle']`).on('click', function () {
-            //     alert();
-            //     const $menu = $(this).next();
-            //     const toggleOffset = $(this).parent().offset();
-            //     const menuHeight = $menu.outerHeight();
-            //     const viewportHeight = $(window).height();
-            //     const overlayHeight = $('#tmn-overlay').height();
-            //     const toggleHeight = $(this).outerHeight();
-            //     const spaceBelow = viewportHeight - (toggleOffset.top + toggleHeight);
-            //     const spaceAbove = toggleOffset.top;
-            //     const $overlay = $('#tmn-overlay');
-
-            //     CloseAllMenus($menu[0]);
-            //     if (spaceBelow < menuHeight) {
-            //         $menu.css({
-            //             maxHeight: `${spaceAbove}px`,
-            //             top: 'auto',
-            //             bottom: `${toggleHeight}px`
-            //         });
-            //     } else {
-            //         //$overlay.css({ overflowY: 'unset' });
-            //         $menu.css({
-            //             maxHeight: 'unset',
-            //             bottom: 'auto'
-            //         });
-            //     }
-
-            //     $menu.toggle();
-            // });
-
             function CloseAllMenus(except) {
                 $(`[class$='overlay-menu']`).each((i, menu) => {
                     if (menu !== except[0]) $(menu).hide();
@@ -526,10 +571,12 @@
             $autoOCMenu.find('div').on('click', function () {
                 const value = $(this).data('value') || $(this).text();
                 $autoOCToggle.text(value + ' ▼');
-                GM_setValue('TMN_AUTO_OC_PREF', value);
+                savedOCInputs['AutoOCPref'] = value;
+                GM_setValue('TMN_OC_INPUTS', JSON.stringify(savedOCInputs));
                 $autoOCMenu.hide();
 
                 // Update visibility based on selection
+                const position = $positionToggle.text();
                 $leaderNamesLabel.css('display', value === 'Auto Accept Specific' ? 'block' : 'none');
                 $leaderNamesInput.css('display', value === 'Auto Accept Specific' ? 'block' : 'none');
                 $positionLabel.css('display', (value === 'Auto Accept Any' || value === 'Auto Accept Specific') ? 'block' : 'none');
@@ -537,28 +584,22 @@
                 $ocTypeLabel.css('display', value === 'Lead OC' ? 'block' : 'none');
                 $ocTypeDropdown.css('display', value === 'Lead OC' ? 'block' : 'none');
                 $leaderInputs.css('display', value === 'Lead OC' ? 'block' : 'none');
-
-                // Hide car dropdown if Lead OC
-                if (value === 'Lead OC') {
-                    $carPrefLabel.hide();
-                    $carDropdown.hide();
-                } else {
-                    const posText = $positionToggle.text();
-                    $carPrefLabel.css('display', (posText.includes('TP') || posText.includes('Any')) ? 'block' : 'none');
-                    $carDropdown.css('display', (posText.includes('TP') || posText.includes('Any')) ? 'block' : 'none');
-                }
+                $carPrefLabel.css( 'display', value === 'Lead OC' ? 'none' : (posText.includes('TP') || posText.includes('Any')) ? 'block' : 'none');
+                $carDropdown.css( 'display', value === 'Lead OC' ? 'none' : (posText.includes('TP') || posText.includes('Any')) ? 'block' : 'none');
+                $addToClassifiedsLabel.css( 'display', value === 'Lead OC' ? 'none' : 'block');
             });
 
             // Position selection logic
             $positionMenu.find('div').on('click', function () {
                 const value = $(this).data('value') || $(this).text();
-                $carPrefLabel.css({ display: ((value === 'TP' || value === 'Any') && (savedAutoOCPref === 'Auto Accept Any' || savedAutoOCPref === 'Auto Accept Specific')) ? 'block' : 'none' });
+                $carPrefLabel.css({ display: ((value === 'TP' || value === 'Any') && (savedOCInputs['AutoOCPref'] === 'Auto Accept Any' || savedOCInputs['AutoOCPref'] === 'Auto Accept Specific')) ? 'block' : 'none' });
                 $positionToggle.text(value + ' ▼');
-                GM_setValue('TMN_OC_POSITION', value);
+                savedOCInputs['PositionPref'] = value;
+                GM_setValue('TMN_OC_INPUTS', JSON.stringify(savedOCInputs));
                 $positionMenu.hide();
 
                 // Show car dropdown if TP or Any and Auto OC is not Lead OC
-                if ((value === 'TP' || value === 'Any') && (savedAutoOCPref === 'Auto Accept Any' || savedAutoOCPref === 'Auto Accept Specific')) {
+                if ((value === 'TP' || value === 'Any') && (savedOCInputs['AutoOCPref'] === 'Auto Accept Any' || savedOCInputs['AutoOCPref'] === 'Auto Accept Specific')) {
                     $carDropdown.show();
                 } else {
                     $carDropdown.hide();
@@ -569,8 +610,8 @@
             $ocTypeMenu.find('div').on('click', function () {
                 const value = $(this).data('value') || $(this).text();
                 $ocTypeToggle.text(value + ' ▼');
-                savedLeadOCInputs['Type'] = value;
-                GM_setValue('TMN_LEAD_OC_INPUTS', JSON.stringify(savedLeadOCInputs));
+                savedOCInputs['LeaderInputs']['Type'] = value;
+                GM_setValue('TMN_OC_INPUTS', JSON.stringify(savedOCInputs));
                 $ocTypeMenu.hide();
             });
 
@@ -578,8 +619,14 @@
             $carMenu.find('div').on('click', function () {
                 const value = $(this).data('value') || $(this).text();
                 $carToggle.text(value + ' ▼');
-                GM_setValue('TMN_CAR_PREF', value);
+                savedOCInputs['CarPref'] = value;
+                GM_setValue('TMN_OC_INPUTS', JSON.stringify(savedOCInputs));
                 $carMenu.hide();
+            });
+
+            $addToClassifiedsCheckbox.on('change', function () {
+                savedOCInputs['AddToClassifieds'] = $(this).is(':checked');
+                GM_setValue('TMN_OC_INPUTS', JSON.stringify(savedOCInputs));
             });
 
             // Script toggles
@@ -942,6 +989,7 @@
         const fetchedPage = await FetchPage('statistics.aspx?p=p');
         // Extract times from the table
         const rows = fetchedPage.find('#ctl00_main_gvTimers tr');
+        const now = Date.now();
         let lastOC, lastDTM, lastCrime, lastGTA, lastTravel;
 
         rows.each((i, row) => {
@@ -972,10 +1020,10 @@
         // Apply offsets
         const nextOC = lastOC + 6 * 60 * 60 * 1000;
         const nextDTM = lastDTM + 2 * 60 * 60 * 1000;
-        if (!(GM_getValue('TMN_NEXT_OC') === Infinity && Date.now() > nextOC)) {
+        if (!(GM_getValue('TMN_NEXT_OC') === Infinity && now > nextOC)) {
             GM_setValue('TMN_NEXT_OC', nextOC);
         }
-        if (!(GM_getValue('TMN_NEXT_DTM') === Infinity && Date.now() > nextDTM)) {
+        if (!(GM_getValue('TMN_NEXT_DTM') === Infinity && now > nextDTM)) {
             GM_setValue('TMN_NEXT_DTM', nextDTM);
         }
         GM_setValue('TMN_NEXT_CRIME', lastCrime + 2 * 60 * 1000);
@@ -1138,6 +1186,11 @@
         const loginBtn = $('#ctl00_main_btnLogin')[0];
         const errMsg = $('#ctl00_main_lblMsg')[0];
         const msg = errMsg?.textContent.trim() || '';
+
+        if (window.self != window.top) {
+            window.top.location.href = 'https://www.tmn2010.net/login.aspx';
+        }
+
         let manuallyEntering = false;
         $('iframe[src*="recaptcha/api2/anchor"]').on('focus', () => {
             manuallyEntering = true;
@@ -1226,90 +1279,101 @@
     async function MainSetup() {
         const now = Date.now();
         const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
+        const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
         let fetchedPage = await FetchPage('players.aspx');
-
-        const TMN_PLAYER = fetchedPage.find('a[style="color: #AA0000; font-weight: bold; "]')?.text();
-        const TMN_PLAYER_PROFILE = fetchedPage.find('a[style="color: #AA0000; font-weight: bold; "]')?.prop('href');
+        const playerLink = fetchedPage.find('a[style="color: #AA0000; font-weight: bold; "]');
+        const TMN_PLAYER = playerLink.text();
+        const TMN_PLAYER_PROFILE = playerLink.prop('href');
         GM_setValue('TMN_PLAYER', JSON.stringify({name: TMN_PLAYER, profile: TMN_PLAYER_PROFILE}));
         const currentCity = $('#ctl00_userInfo_lblcity').text().trim();
+        let checkingMailbox = false;
 
-        if (!isMobile()) {
+        await GetNextTimers();
+        /*const lnm = JSON.parse(GM_getValue('TMN_LAST_NEW_MAIL', '{}'));
+        lnm.id = 355676;
+        GM_setValue('TMN_LAST_NEW_MAIL', JSON.stringify(lnm));*/
+
+        if (isMobile()) {
+            if (page.includes(defaultPage)) {
+                if (savedScriptStates['Auto Arbitrage']) location.href = 'trade.aspx?autoarbitrage';
+                else GoNextAction();
+            } else {
+                /* ----------- ON JAIL PAGE ----------- */
+                CheckMailbox();
+                setInterval( CheckMailbox, 5000);
+            }
+        } else {
+            // Reload page every 5 min incase it hangs
+            setTimeout(() => { location.href = defaultPage }, 5 * 60000);
+
             if (!document.referrer.includes('trade.aspx?autoarbitrage') && savedScriptStates['Auto Arbitrage']) {
                 SetupContentFrame('trade.aspx?autoarbitrage');
-                Log('Doing auto-arbitrage...');
             } else {
                 window.matchMedia('(orientation: landscape)').addEventListener('change', SetupMainContentFrame);
                 SetupMainContentFrame();
+                CheckMailbox();
+                setInterval( CheckMailbox, 5000);
             }
         }
 
-        await GetNextTimers();
+        const isAvailableForOC = now > GM_getValue('TMN_NEXT_OC', Infinity);
+        if (savedOCInputs['AddToClassifieds'] && isAvailableForOC) {
+            const playerName = JSON.parse(GM_getValue('TMN_PLAYER', '{}')).name;
+            const fetchedPage = await FetchPage('ocads.aspx');
+            const isAddedToClassifieds = fetchedPage.find('#ctl00_main_revOC a').filter(function () { return $(this).text().trim() === playerName }).length;
+            if (!isAddedToClassifieds) {
+                if (isMobile()) location.href = 'ocads.aspx?add';
+                else SetupContentFrame('ocads.aspx?add');
+            }
+        }
+
         if (savedScriptStates['Spawn Camp Bullets']) {
             SpawnCampBullets();
             setInterval( SpawnCampBullets, 5000 );
         }
 
-        const AutoBankTime = GM_getValue('TMN_AUTO_BANK_TIME', 0);
-        if (now > AutoBankTime && savedScriptStates['Auto Bank']) {
-            const amount = 49999999;
-            location.href = `playerproperty.aspx?a=${amount}`;
-            return;
-        }
-
-        const nextFlight = GM_getValue('TMN_NEXT_FLIGHT');
-        if (nextFlight > now) {
-            if (!$('#console:contains("precedence")').length) {
-                Log(`Next Flight: ${new Date(nextFlight).toLocaleTimeString('en-NZ', {
-                    hour: 'numeric',
-                    minute: '2-digit',
-                    hour12: true
-                })}`);
-            }
-        } else if ((savedScriptStates['Auto Travel'])) {
-            const fetchedPage = await FetchPage('statistics.aspx');
-            const hotCity = decodeURIComponent(fetchedPage.find("td:first-child span:contains('Swords')").nextAll("span[id^='City']").text().trim());
-            if (currentCity != hotCity) {
-                if (isMobile()) location.href = `travel.aspx?d=${hotCity}`
-                else SetupContentFrame(`travel.aspx?d=${hotCity}`);
-            }
-        }
-
-        /*const lnm = JSON.parse(GM_getValue('TMN_LAST_NEW_MAIL', '{}'));
-        lnm.id = 355676;
-        GM_setValue('TMN_LAST_NEW_MAIL', JSON.stringify(lnm));*/
-        // Check mailbox
-        let checkingMailbox = false;
-        await CheckMailbox();
-        if (isMobile()) {
-            if (savedScriptStates['Auto Arbitrage'] && page.includes(defaultPage)) {
-                location.href = 'trade.aspx?autoarbitrage';
-            }
-            else if (page.includes(defaultPage)) {
-                GoNextAction();
+        if (savedScriptStates['Auto Bank']) {
+            const AutoBankTime = GM_getValue('TMN_AUTO_BANK_TIME', 0);
+            if (now > AutoBankTime) {
+                const amount = 49999999;
+                location.href = `playerproperty.aspx?a=${amount}`;
                 return;
             }
         }
-        setInterval( CheckMailbox, 5000);
 
-        // Reload page every 5 min incase it hangs
-        setTimeout(() => { location.href = defaultPage }, 5 * 60000);
+        if (savedScriptStates['Auto Travel']) {
+            const nextFlight = GM_getValue('TMN_NEXT_FLIGHT');
+            if (nextFlight > now) {
+                const higherPrecedenceLogPresent = $('#console:contains("precedence")').length;
+                const nextFlightTime = new Date(nextFlight).toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', hour12: true });
+                if (!higherPrecedenceLogPresent) Log(`Next Flight: ${nextFlightTime}`);
+            } else {
+                const fetchedPage = await FetchPage('statistics.aspx');
+                const hotCity = decodeURIComponent(fetchedPage.find("td:first-child span:contains('Swords')").nextAll("span[id^='City']").text().trim());
+                if (currentCity != hotCity) {
+                    if (isMobile()) location.href = `travel.aspx?d=${hotCity}`
+                    else SetupContentFrame(`travel.aspx?d=${hotCity}`);
+                }
+            }
+        }
+
         async function CheckMailbox() {
             if (checkingMailbox) return;
             checkingMailbox = true;
             try {
                 const fetchedPage = await FetchPage('mailbox.aspx');
-                const receivedMail = fetchedPage.find('#ctl00_main_gridMail .nomobile').map((n, e) => {
+                // const newMail = fetchedPage.find('#ctl00_main_gridMail .nomobile').map((n, e) => {
+                const newMail = fetchedPage.find('#ctl00_main_gridMail .unreadmail .nomobile').map((n, e) => {
                     const lines = $(e).text().split('\n').map(line => line.trim()).filter(line => line);
                     const author = lines[0];
                     const subject = lines[1];
                     const time = lines[2];
                     const link = $(e).find(`a[href*='mailbox']`).attr('href');
                     const id = link.split('id=')[1];
-                    const unread = $(e).closest('.unreadmail').length;
-                    return { author, subject, time, link, id, unread }
+                    return { author, subject, time, link, id }
                 }).get().reverse();
                 // Process each mail sequentially to avoid race conditions
-                for (const mail of receivedMail) {
+                for (const mail of newMail) {
                     await ProcessMail(mail);
                 }
             } finally {
@@ -1319,33 +1383,30 @@
         }
 
         async function ProcessMail(mail) {
-            const now = Date.now();
-            const timeDiff = now - ConvertToLocalTime(mail.time);
-
             const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
-            const savedAutoOCPref = GM_getValue('TMN_AUTO_OC_PREF', '');
-            const savedSpecificLeaderNames = GM_getValue('TMN_OC_LEADER_NAMES', '').replaceAll(' ', '').toLowerCase().split(';');
-            const savedPosition = GM_getValue('TMN_OC_POSITION', '');
+            const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
             const lastNewMail = JSON.parse(GM_getValue('TMN_LAST_NEW_MAIL', '{}'));
 
             // return if old mail
             if (mail.id > lastNewMail.id || !lastNewMail.id) {
                 GM_setValue('TMN_LAST_NEW_MAIL', JSON.stringify(mail));
                 // ✅ 1. NEW MAIL NOTIFICATION
-                if (mail.author !== TMN_PLAYER) {
+                if (mail.author !== TMN_PLAYER) { 
                     Notify(`New message from ${mail.author}\n${mail.subject}`);
-                    return;
+                    return; 
                 }
 
                 // ✅ 2. TRADE NOTIFICATIONS
                 if (mail.author === TMN_PLAYER &&
-                    mail.subject === 'Trade Notification' &&
-                    mail.unread) {
+                    mail.subject === 'Trade Notification') {
 
                     const fetchedPage = await FetchPage(mail.link);
                     const mailContent = fetchedPage.find('.GridRow').text().trim().split('\n').at(-1).trim();
                     await Notify(`${mail.author} - ${mail.subject}\n${mailContent}`);
-                    if (savedScriptStates['Auto Arbitrage']) location.href = defaultPage;
+                    if (savedScriptStates['Auto Arbitrage']) {
+                        if (isMobile()) location.href = 'trade.aspx?autoarbitrage';
+                        else SetupContentFrame('trade.aspx?autoarbitrage');
+                    }
                     return;
                 }
 
@@ -1371,18 +1432,18 @@
                     const inviteLocation = match[4]?.trim() || match[2]?.trim();
 
                     // ✅ OC auto-accept logic
-                    if (ocType && savedScriptStates.OC && savedAutoOCPref !== 'Lead OC') {
-                        const leaderOK = savedAutoOCPref === 'Auto Accept Any' ||
-                              savedSpecificLeaderNames.includes(leader.toLowerCase());
+                    if (ocType && savedScriptStates.OC && savedOCInputs['AutoOCPref'] !== 'Lead OC') {
+                        const leaderOK = savedOCInputs['AutoOCPref'] === 'Auto Accept Any' ||
+                              savedOCInputs['SpecificLeaderNames'] .includes(leader.toLowerCase());
 
                         const positionOK =
-                              savedPosition === 'Any' ||
-                              (savedPosition !== 'TP' && position !== 'Transporter') ||
-                              (savedPosition === 'TP' && position === 'Transporter');
+                              savedOCInputs['PositionPref'] === 'Any' ||
+                              (savedOCInputs['PositionPref'] !== 'TP' && position !== 'Transporter') ||
+                              (savedOCInputs['PositionPref'] === 'TP' && position === 'Transporter');
 
                         if (leaderOK && positionOK && inviteLocation.includes(currentCity)) {
                             await Notify(`${mail.author} - OC Invite\n${leader} invited you as ${position} to ${ocType}`);
-                            location.href = `${mail.link}&autoAccept`;
+                            LogCountdown(3000, 1000, 'Accepting invite ', () => { location.href = `${mail.link}&autoAccept` });
                             return;
                         } else if (!inviteLocation.includes(currentCity)){
                             Notify(`${mail.author} - ${mail.subject}\nCan't accept invite to ${leader}'s OC as it's in a different city.`);
@@ -1393,7 +1454,7 @@
                     // ✅ DTM auto-accept logic
                     if (savedScriptStates.DTM && inviteLocation.includes(currentCity)) {
                         await Notify(`${mail.author} - DTM Invite\n${leader} invited you to DTM`);
-                        location.href = `${mail.link}&autoAccept`;
+                        LogCountdown(3000, 1000, 'Accepting invite ', () => { location.href = `${mail.link}&autoAccept` });
                         return;
                     } else if (!inviteLocation.includes(currentCity)){
                         Notify(`${mail.author} - DTM Invite\nCan't accept invite to ${leader}'s DTM as it's in a different city.`);
@@ -1404,14 +1465,18 @@
                 // Rest
                 if (mail.author === TMN_PLAYER) {
                     if (mail.subject === 'Organized Crime Notification') {
+                        FetchPage(mail.link);
                         Notify(`${mail.author}\nOC Complete`);
-                        return;
+                    } else if (mail.subject === 'Drugs Transportation Mission') {
+                        FetchPage(mail.link);
+                        Notify(`${mail.author}\nDTM Complete`);
                     } else if (mail.subject === "You've witnessed a murder!") {
                         const fetchedPage = await FetchPage(mail.link);
                         const mailContent = fetchedPage.find('.GridRow').text().trim().split('\n').at(-1).trim();
                         Notify(`${mail.author} - ${mail.subject}\n${mailContent}`);
+                    } else {
+                        Notify(`${mail.author}\n${mail.subject}`);
                     }
-                    else Notify(`${mail.author}\n${mail.subject}`); return;
                 }
             }
         }
@@ -1507,12 +1572,13 @@
         const nextGTA = GM_getValue('TMN_NEXT_GTA', 0);
         const now = Date.now();
         const campingBullets = savedScriptStates['Spawn Camp Bullets'];
-        const NEXT_SYDNEY_SPAWN_TIME = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
-        const sydneyBFSpawningShortly = NEXT_SYDNEY_SPAWN_TIME - now <= 120000;
+        const nextSydneySpawnTime = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
+        const sydneyBFSpawningShortly = nextSydneySpawnTime - now > 0 && nextSydneySpawnTime - now <= 2.5 * 60000;
+        const waitingForSpawningBullets = campingBullets && sydneyBFSpawningShortly;
 
-        if (now > nextBooze && savedScriptStates.Booze && !(campingBullets && sydneyBFSpawningShortly)) location.href = 'crimes.aspx?p=b'
-        else if (now > nextCrime && savedScriptStates.Crimes && !(campingBullets && sydneyBFSpawningShortly)) location.href = 'crimes.aspx'
-        else if (now > nextGTA && savedScriptStates.GTA && !(campingBullets && sydneyBFSpawningShortly)) location.href = 'crimes.aspx?p=g'
+        if (now > nextBooze && savedScriptStates.Booze && !waitingForSpawningBullets) location.href = 'crimes.aspx?p=b'
+        else if (now > nextCrime && savedScriptStates.Crimes && !waitingForSpawningBullets) location.href = 'crimes.aspx'
+        else if (now > nextGTA && savedScriptStates.GTA && !waitingForSpawningBullets) location.href = 'crimes.aspx?p=g'
         else if (!location.href.includes('jail.aspx')) location.href = 'jail.aspx';
     }
 
@@ -1537,6 +1603,14 @@
             }
         }
 
+        const now = Date.now();
+        const campingBullets = savedScriptStates['Spawn Camp Bullets'];
+        const nextSydneySpawnTime = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
+        const sydneyBFSpawningShortly = nextSydneySpawnTime - now > 0 && nextSydneySpawnTime - now <= 120000;
+        const waitingForSpawningBullets = campingBullets && sydneyBFSpawningShortly;
+
+        if (waitingForSpawningBullets && !isMobile()) return;
+
         const sentenceLength = parseInt(GM_getValue('TMN_SENTENCE_LENGTH', '')) || 0;
         const lblMsg = $('#ctl00_lblMsg').text();
         if (lblMsg.includes('failed') || lblMsg.includes('You cannot load')) {
@@ -1557,13 +1631,12 @@
         let nextBoozeTime = parseInt(GM_getValue('TMN_NEXT_BOOZE', 0), 10);
         let nextCrimeTime = parseInt(GM_getValue('TMN_NEXT_CRIME', 0), 10);
         let nextGTATime = parseInt(GM_getValue('TMN_NEXT_GTA', 0), 10);
-        const now = Date.now();
 
         if ((savedScriptStates.Crimes && now > nextCrimeTime) || (savedScriptStates.GTA && now > nextGTATime) || (savedScriptStates.Booze && now > nextBoozeTime)) {
             const nextTime = Math.min(Math.min(nextCrimeTime, nextGTATime), nextBoozeTime);
             const nextAction = nextTime == nextCrimeTime ? 'crimes' : nextTime == nextGTATime ? 'GTA' : 'booze';
-            Log(`Pausing jail script to do ${nextAction}`);
-
+            if (waitingForSpawningBullets) Log('Pausing crimes. Waiting for bullets to spawn.');
+            else Log(`Pausing jail script to do ${nextAction}`);
 
             const checkTimers = setInterval(() => {
                 nextBoozeTime = parseInt(GM_getValue('TMN_NEXT_BOOZE', 0), 10);
@@ -1571,6 +1644,7 @@
                 nextGTATime = parseInt(GM_getValue('TMN_NEXT_GTA', 0), 10);
 
                 if (isMobile()) {
+                    clearInterval(checkTimers);
                     GoNextAction();
                 } else if (now < nextCrimeTime && now < nextGTATime && now < nextBoozeTime) {
                     clearInterval(checkTimers);
@@ -1602,7 +1676,7 @@
                 const randomButton = buttons.eq(Math.floor(Math.random() * buttons.length))[0];
                 randomButton.click();
             } else {
-                location.href = location.href.replace('#', '');
+                location.href = location.href;
             }
         }
     }
@@ -1620,10 +1694,7 @@
         }
 
         if (window.self == window.top) {
-            /*if (scriptCheck && location.href.includes('scriptCheck')) {
-                UniversalCaptchaSolve();
-                return;
-            } else */if (document.referrer?.includes('scriptCheck')) {
+            if (document.referrer?.includes('scriptCheck')) {
                 setTimeout(() => { location.href = defaultPage }, 500);
                 return;
             } else if (!isMobile()) return;
@@ -1631,10 +1702,11 @@
 
         const now = Date.now();
         const campingBullets = savedScriptStates['Spawn Camp Bullets'];
-        const NEXT_SYDNEY_SPAWN_TIME = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
-        const sydneyBFSpawningShortly = NEXT_SYDNEY_SPAWN_TIME - now <= 120000;
+        const nextSydneySpawnTime = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
+        const sydneyBFSpawningShortly = nextSydneySpawnTime - now > 0 && nextSydneySpawnTime - now <= 120000;
+        const waitingForSpawningBullets = campingBullets && sydneyBFSpawningShortly;
 
-        if (campingBullets && sydneyBFSpawningShortly && !isMobile) return;
+        if (waitingForSpawningBullets && !isMobile()) return;
 
         const lblMsg = $('#ctl00_lblMsg').text() || $('#ctl00_main_lblResult').text();
         const consoleMsg = window.top.$('#console').text();
@@ -1672,10 +1744,11 @@
 
         const now = Date.now();
         const campingBullets = savedScriptStates['Spawn Camp Bullets'];
-        const NEXT_SYDNEY_SPAWN_TIME = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
-        const sydneyBFSpawningShortly = NEXT_SYDNEY_SPAWN_TIME - now <= 120000;
+        const nextSydneySpawnTime = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
+        const sydneyBFSpawningShortly = nextSydneySpawnTime - now > 0 && nextSydneySpawnTime - now <= 120000;
+        const waitingForSpawningBullets = campingBullets && sydneyBFSpawningShortly;
 
-        if (campingBullets && sydneyBFSpawningShortly && !isMobile) return;
+        if (waitingForSpawningBullets && !isMobile()) return;
 
         const lblMsg = $('#ctl00_lblMsg').text();
         const lblResult = $('#ctl00_main_lblResult').text();
@@ -1713,7 +1786,6 @@
         if (sqlScriptCheck) {
             const message = `SQL Script Check\n${$('#ctl00_main_pnlMessage').text().replace(/\s*\n\s*/g, ' ').replace(/\s+/g, ' ').replace('Important message ', '').trim()}`;
             Notify(message);
-            //window.top.location.href = 'crimes.aspx?scriptCheck';
             return;
         } else if (scriptCheck) {
             window.top.location.href = 'crimes.aspx?scriptCheck';
@@ -1729,12 +1801,6 @@
         }
 
         const now = Date.now();
-        const campingBullets = savedScriptStates['Spawn Camp Bullets'];
-        const NEXT_SYDNEY_SPAWN_TIME = GM_getValue('TMN_LAST_SYDNEY_SPAWN_TIME', Infinity) + 120 * 60000;
-        const sydneyBFSpawningShortly = NEXT_SYDNEY_SPAWN_TIME - now <= 120000;
-
-        if (campingBullets && sydneyBFSpawningShortly && !isMobile) return;
-
         const lblMsg = $('#ctl00_lblMsg').text();
         const lblResult = $('#ctl00_main_lblResult').text();
         const consoleMsg = window.top.$('#console').text();
@@ -1749,9 +1815,9 @@
             return;
         } else if (lblResult.includes('seconds')) {
             const seconds = lblResult.split('Still ')[1].split(' seconds')[0];
+            GM_setValue('TMN_NEXT_BOOZE', now + seconds * 1000);
             if (consoleMsg.includes('booze')) Log('');
             if (isMobile()) {
-                GM_setValue('TMN_NEXT_BOOZE', Date.now() + seconds * 1000);
                 GoNextAction();
             }
             else CrimesCountdown('Booze');
@@ -1810,19 +1876,14 @@
         //https://www.tmn2010.net/authenticated/organizedcrime.aspx?act=accept&ocid=3288&pos=WeaponMaster
         const TMN_PLAYER = JSON.parse(GM_getValue('TMN_PLAYER', '')).name;
         const savedScriptStates = JSON.parse(GM_getValue('TMN_SCRIPT_STATES', '{}'));
-        const savedAutoOCPref = GM_getValue('TMN_AUTO_OC_PREF', '');
-        const savedLeadOCType = GM_getValue('TMN_LEAD_OC_TYPE', '');
-        const savedLeadOCInputs = JSON.parse(GM_getValue('TMN_LEAD_OC_INPUTS', '{}'));
-        const savedSpecificLeaderNames = GM_getValue('TMN_OC_LEADER_NAMES', '');
-        const savedPosition = GM_getValue('TMN_OC_POSITION', '');
-        const savedCarPref = GM_getValue('TMN_CAR_PREF', '');
-        const startOCBtn = savedLeadOCType === 'National Bank' ? $('#ctl00_main_btnStartOCRobBank') : savedLeadOCType === 'Casino' ? $('#ctl00_main_btnStartOCRobCasino') : $('#ctl00_main_btnStartOCRobArmoury');
+        const savedOCInputs = JSON.parse(GM_getValue('TMN_OC_INPUTS', '{}'));
+        const startOCBtn = savedOCInputs['LeaderInputs']['Type'] === 'National Bank' ? $('#ctl00_main_btnStartOCRobBank') : savedOCInputs['LeaderInputs']['Type'] === 'Casino' ? $('#ctl00_main_btnStartOCRobCasino') : $('#ctl00_main_btnStartOCRobArmoury');
         const lblMsg = $('#ctl00_lblMsg');
         if (!savedScriptStates.OC) return;
 
         if (lblMsg.text().includes('jail')) {
             return;
-        } else if (savedAutoOCPref == 'Lead OC' && startOCBtn[0]) {
+        } else if (savedOCInputs['AutoOCPref'] == 'Lead OC' && startOCBtn[0]) {
             //ctl00_main_btnStartOCRobBank ctl00_main_btnStartOCRobCasino ctl00_main_btnStartOCRobArmoury
             LogCountdown(5000, 1000, 'Starting OC', () => startOCBtn.click());
         } else if (location.href.includes('store')) {
@@ -1842,11 +1903,8 @@
             const curCity = $('#ctl00_userInfo_lblcity').text().trim();
             // const position = location.href.split('pos=')[1]; //2 Transporter 3 WeaponMaster 4 ExplosiveExpert
             const position = $playerRow.index();
-            /*if (curCity != 'London') {
-                LogCountdown(3000, 1000, 'Returning to home', () => { location.href = defaultPage });
-            } else */
             if (amReady) {
-                if (savedAutoOCPref == 'Lead OC') {
+                if (savedOCInputs['AutoOCPref'] == 'Lead OC') {
                     if ($('#ctl00_main_btnCommitOC').length) {
                         LogCountdown(3000, 1000, 'Committing OC', () => $('#ctl00_main_btnCommitOC')?.click());
                         return;
@@ -1857,14 +1915,14 @@
                 } else {
                     LogCountdown(3000, 1000, 'Returning to home', () => { location.href = defaultPage });
                 }
-            } else if (position == '1' && savedAutoOCPref == 'Lead OC') {
+            } else if (position == '1' && savedOCInputs['AutoOCPref'] == 'Lead OC') {
                 const $nameBox = $('#ctl00_main_txtinvitename');
                 const $roleList = $('#ctl00_main_roleslist');
                 const $inviteBtn = $('#ctl00_main_btninvite');
                 if ($nameBox && $roleList && $inviteBtn) {
-                    const TP = savedLeadOCInputs.transporter;
-                    const WM = savedLeadOCInputs.weaponmaster;
-                    const EE = savedLeadOCInputs.explosiveexpert;
+                    const TP = savedOCInputs['LeaderInputs']['Transporter'];
+                    const WM = savedOCInputs['LeaderInputs']['Weapon Master'];
+                    const EE = savedOCInputs['LeaderInputs']['Explosive Expert'];
 
                     const isOpen = sel => (($(sel)?.text() || '').toLowerCase().includes('open'));
                     const tryInvite = (name, roleValue, statusSel) => {
@@ -1893,18 +1951,18 @@
                 let carToUse;
                 const carsList = $('#ctl00_main_carslist');
                 carsList.children().map((n, e) => {
-                    if (!savedCarPref.includes('Worst')) {
-                        if (e.textContent.includes(savedCarPref)) {
+                    if (!savedOCInputs['CarPref'].includes('Worst')) {
+                        if (e.textContent.includes(savedOCInputs['CarPref'])) {
                             carToUse = e.value;
                         }
-                    } else if (savedCarPref == 'Worst-to-Best') {
+                    } else if (savedOCInputs['CarPref'] == 'Worst-to-Best') {
                         if (e.textContent.includes('Audi RS6') && !carToUse) {
                             carToUse = e.value;
                             return;
                         } else if (e.textContent.includes('Bentley Arnage') && !carToUse) {
                             carToUse = e.value;
                         }
-                    } else if (savedCarPref == 'Best-to-Worst') {
+                    } else if (savedOCInputs['CarPref'] == 'Best-to-Worst') {
                         if (e.textContent.includes('Bentley Arnage')) {
                             carToUse = e.value;
                         } else if (e.textContent.includes('Audi RS6') && !carToUse) {
@@ -1991,6 +2049,17 @@
         }
     }
 
+    function AddToClassifieds() {
+        const lblMsg = $('#ctl00_lblMsg');
+        const addBtn = $('#ctl00_main_btnAddOC');
+        if (lblMsg.text() == '') addBtn.click()
+        else if (lblMsg.text().includes('It seems like you are unavailable to OC right now.')) LogCountdown(5000, 1000, 'Retrying ', () => { addBtn.click() })
+        else {
+            if (isMobile()) GoNextAction()
+            else window.top.location.href = defaultPage;
+        }
+    }
+
     async function AutoArbitrage() {
         Log('Doing auto-arbitrage...');
         // Brief pause to wait for money to update
@@ -2048,8 +2117,6 @@
             } else {
                 // Max money offers
                 // End arbitrage
-                const savedArbitrageOffers = JSON.stringify({ 'activeCreditOffers': activeCreditOffers, 'activeMoneyOffers': activeMoneyOffers });
-                GM_setValue('TMN_ACTIVE_ARBITRAGE_OFFERS', savedArbitrageOffers);
                 if (isMobile()) location.href = 'jail.aspx'
                 else window.top.location.href = defaultPage;
             }
@@ -2062,8 +2129,6 @@
             LogCountdown(3000, 1000, 'Creating credit offer', () => { $postButton.click() });
         } else {
             // end arbitrage
-            const savedArbitrageOffers = JSON.stringify({ 'activeCreditOffers': activeCreditOffers, 'activeMoneyOffers': activeMoneyOffers });
-            GM_setValue('TMN_ACTIVE_ARBITRAGE_OFFERS', savedArbitrageOffers);
             if (isMobile()) location.href = 'jail.aspx'
             else window.top.location.href = defaultPage;
         }
@@ -2117,10 +2182,10 @@
             $(`label:contains(${destination})`).click();
             flyBtn.click();
         } else if (nextFlight) {
-            GM_setValue('TMN_FLIGHT_TIME', GetAvailableTime(lblMsg) - 0 * 60000);
+            GM_setValue('TMN_NEXT_FLIGHT', GetAvailableTime(lblMsg) - 0 * 60000);
             window.top.location.href = defaultPage;
         } else if (welcomeMsg.includes('Welcome')/* || lblMsg.includes('travel again')*/) {
-            GM_setValue('TMN_FLIGHT_TIME', Date.now() + 45 * 60000);
+            GM_setValue('TMN_NEXT_FLIGHT', Date.now() + 45 * 60000);
             setTimeout(() => { window.top.location.href = defaultPage }, 500);
         } else {
             $(`label:contains(${destination})`).click();
@@ -2285,7 +2350,7 @@
 
         if (hasFlown && document.referrer.includes("travel")) {
             window.top.location.href = "store.aspx?p=b";
-        } else if (!location.href.includes('travel') && !lblMsg.includes('jail')) {
+        } else if (!location.href.includes('travel')) {
             const fetchedPage = await FetchPage('forum.aspx');
             const shouts = fetchedPage.find("#ctl00_main_pnlShoutBoxContent").children().toArray().reverse(); // reverse to start from the end
 
@@ -2308,7 +2373,7 @@
                 const isWithinOneMinute = diffMs <= 60000 * 1;
 
                 if (!isWithinOneMinute) {
-                    if (LAST_SYDNEY_SPAWN_TIME == Infinity || LAST_SYDNEY_SPAWN_TIME == {} || now > NEXT_SYDNEY_SPAWN_TIME) {
+                    if (LAST_SYDNEY_SPAWN_TIME == Infinity || now.getTime() > NEXT_SYDNEY_SPAWN_TIME) {
                         if (text.includes('Sydney') && text.includes('FMJ')) {
                             Log('Last Sydney BF spawn time updated.');
                             GM_setValue('TMN_LAST_SYDNEY_SPAWN_TIME', shoutDate.getTime());
@@ -2318,7 +2383,7 @@
                     } else break;
                 }
 
-                if (regex.test(text)) {
+                if (regex.test(text) && !lblMsg.includes('jail')) {
                     // const utterance = new SpeechSynthesisUtterance("Alert");
                     // window.speechSynthesis.speak(utterance);
                     const destCity = text.split("System: ")[1].split(" -")[0];
@@ -2417,7 +2482,7 @@
         const table = document.querySelector('#ctl00_main_pnlMoneyOffers table');
         if (!table) return
         // Insert header cell
-        const headerRow = table.querySelector('tr');
+        let headerRow = table.querySelector('tr');
         const perCreditHeader = document.createElement('td');
         perCreditHeader.style.textAlign = 'center';
         perCreditHeader.textContent = 'Per Unit';
@@ -2441,41 +2506,79 @@
             td.textContent = `$${perCredit}`;
             row.insertBefore(td, cells[4]); // after Return
         });
-
+        
         // Find the credits offers table
         const creditTable = document.querySelector('#ctl00_main_pnlCreditOffers table');
         if (!creditTable) return;
 
-        // Insert header cell
-        const headerRow2 = creditTable.querySelector('tr');
-        const perCreditHeader2 = document.createElement('td');
-        perCreditHeader2.style.textAlign = 'center';
-        perCreditHeader2.textContent = 'Per Unit';
-        headerRow2.insertBefore(perCreditHeader2, headerRow2.children[4]); // after Return
+        // Insert/replace header cell after "Return"
+        headerRow = creditTable.querySelector('tr');
+        if (!headerRow) return;
 
-        // Process each row
+        const headerCellIndexAfterReturn = 4; // after Return column
+        let perUnitHeader = headerRow.children[headerCellIndexAfterReturn - 1];
+        if (!perUnitHeader || perUnitHeader.textContent.trim() !== 'Per Unit') {
+            const newHeader = document.createElement('td');
+            newHeader.style.textAlign = 'center';
+            newHeader.textContent = 'Per Unit';
+            headerRow.insertBefore(newHeader, headerRow.children[headerCellIndexAfterReturn]);
+        } else {
+            perUnitHeader.textContent = 'Per Unit';
+        }
+
+        // Helper: parse integer with commas
+        const parseIntSafe = (str) => {
+            const m = String(str).match(/(\d[\d,]*)/);
+            if (!m) return NaN;
+            return parseInt(m[1].replace(/,/g, ''), 10);
+        };
+
+        // Process each data row
         [...creditTable.querySelectorAll('tr')].slice(1).forEach(row => {
             const cells = row.children;
+            if (cells.length < 5) return;
 
             // Offer = “10 Credits”
             const offerCredits = parseFloat(
                 cells[2].textContent.replace(/[^\d]/g, '')
             );
 
-            // Return = “$11,000,000”
-            const returnMoney = parseFloat(
-                cells[3].textContent.replace(/[$,]/g, '')
-            );
+            const returnText = cells[3].textContent.trim();
 
-            const perCredit = (!isNaN(offerCredits) && !isNaN(returnMoney) && offerCredits > 0)
-            ? Math.round(returnMoney / offerCredits).toLocaleString()
-            : '';
-
+            // Detect bullets: e.g. “20000 FMJ Bullets”
+            const isBullets = /bullets/i.test(returnText);
             const td = document.createElement('td');
             td.style.textAlign = 'center';
-            td.textContent = `$${perCredit}`;
-            row.insertBefore(td, cells[4]); // after Return
+
+            if (isBullets) {
+                const bulletCount = parseIntSafe(returnText); // e.g., 20000
+                if (!isNaN(offerCredits) && !isNaN(bulletCount) && offerCredits > 0 && bulletCount > 0) {
+                    // credits per 1000 bullets = (offerCredits * 1000) / bulletCount
+                    const creditsPerThousand = (offerCredits * 1000) / bulletCount;
+                    // Show up to 2 decimals but trim trailing zeros for neatness
+                    let display = creditsPerThousand.toFixed(2);
+                    display = display.replace(/\.?0+$/, ''); // remove trailing zeros
+                    td.textContent = `${display} cr / k`;
+                } else {
+                    td.textContent = '';
+                }
+            } else {
+                // Cash case: Return = “$11,000,000”
+                const returnMoney = parseFloat(
+                    returnText.replace(/[$,]/g, '')
+                );
+
+                const perCredit = (!isNaN(offerCredits) && !isNaN(returnMoney) && offerCredits > 0)
+                    ? Math.round(returnMoney / offerCredits).toLocaleString()
+                    : '';
+
+                td.textContent = perCredit ? `$${perCredit}` : '';
+            }
+
+            // Insert the computed cell after Return (before the existing Per Unit/Date cells)
+            row.insertBefore(td, cells[4]); // position aligned with header
         });
+
 
 
         $('[id$="btnTrade"]').each(function() {

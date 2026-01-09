@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         enhanced mass-image
 // @namespace    https://greasyfork.org/de/users/1516523-martink
-// @version      1.0.9
+// @version      1.1.0
 // @description  Fügt "Gallery Mode" toggle in mass-image hinzu.
 // @author       Martin Kaiser
 // @match        https://opus.geizhals.at/kalif/artikel/mass-image*
@@ -78,38 +78,6 @@
     const baseHeight = 250;
     const imageGap = 20;
     const containerPadding = 20;
-
-    function addArticleIdLinks() {
-        try {
-            const products = document.querySelectorAll('.bg-white.p-1');
-            products.forEach(product => {
-                try {
-                    const titleElement = product.querySelector('strong');
-                    if (!titleElement || titleElement.querySelector('.article-id-link')) return;
-
-                    const ghLink = product.querySelector('a[href*="geizhals.eu"]');
-                    if (!ghLink) return;
-
-                    const match = ghLink.href.match(/geizhals\.eu\/(\d+)/);
-                    if (!match) return;
-
-                    const articleId = match[1];
-                    const idLink = document.createElement('a');
-                    idLink.href = `https://opus.geizhals.at/kalif/artikel?id=${articleId}`;
-                    idLink.textContent = articleId + ' ';
-                    idLink.className = 'article-id-link';
-                    idLink.style.cssText = 'text-decoration: none; color: #0d6efd; font-weight: normal;';
-                    idLink.target = '_blank';
-
-                    titleElement.insertBefore(idLink, titleElement.firstChild);
-                } catch (e) {
-                    // Silent fail for individual product
-                }
-            });
-        } catch (e) {
-            // Silent fail
-        }
-    }
 
     function createHoverZoomOverlay() {
         try {
@@ -1200,7 +1168,6 @@
                 }
             });
 
-            addArticleIdLinks();
             setupImageHoverZoom();
             setupImageClickHandlers();
         } catch (e) {
@@ -1258,14 +1225,12 @@
                 document.addEventListener('DOMContentLoaded', () => {
                     try {
                         createToggleButton();
-                        addArticleIdLinks();
                     } catch (e) {
                         // Silent fail
                     }
                 });
             } else {
                 createToggleButton();
-                addArticleIdLinks();
             }
 
             const observer = new MutationObserver(function(mutations) {
@@ -1273,7 +1238,6 @@
                     if (!document.getElementById('gallery-mode-toggle')) {
                         createToggleButton();
                     }
-                    addArticleIdLinks();
                 } catch (e) {
                     // Silent fail
                 }

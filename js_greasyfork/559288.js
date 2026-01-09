@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Name Changer
 // @namespace    http://tampermonkey.net/
-// @version      4.6
+// @version      4.9.2
 // @description  Universal name/text replacement with separate rules for general pages vs. specific character/artist/locale pages + item replacements
 // @author       You
 // @match        https://*.popmundo.com/*
@@ -40,6 +40,12 @@
     { find: /Baby Sjoukema/g, replace: 'Mimi Tsuki 月' },
     { find: /Baby Waite/g, replace: 'Nana Tsuki 月' },
     { find: /Tomie Xie/g, replace: 'Tomie Ito 富江' },
+    { find: /JiaYan Xie/g, replace: 'Ryuzen 月影' },
+    { find: /Alina Burrell/g, replace: 'Poppy Pixx' },
+    { find: /Ruth Kemp/g, replace: 'Juniper Pixx' },
+    { find: /Ruby Hamm/g, replace: 'Ivy Pixx' },
+    { find: /Nova Burrell/g, replace: 'Nik Pixx' },
+    { find: /Kâni Yeşilyurt/g, replace: 'Yuu Izumi 左' },
   ];
 
   // ===========================================================================
@@ -309,7 +315,28 @@
     '3602175': [ // Ruby
       { find: /🌸 25.01/g, replace: 'tu sens la pluie ? 🌧️' },
       { find: /Reserved/g, replace: 'Fabulous' },
-    ]
+    ],
+    '3609829': [ // Alina's page
+      { find: /Alina/g, replace: 'Poppy' },
+    ],
+    '3614576': [ // Ruth's page
+      { find: /Ruth/g, replace: 'Juniper' },
+    ],
+    '3580037': [ // Ruby's page
+      { find: /Ruby/g, replace: 'Ivy' },
+    ],
+    '3602135': [ // Nova's page
+      { find: /Nova/g, replace: 'Nik' },
+    ],
+    '3602139': [ // Nova's page
+      { find: /beneath the noise./g, replace: 'all goes quiet in the end — silentia' },
+    ],
+    '3350835': [ // Kâni's page
+      { find: /Kâni/g, replace: 'Yuu' },
+      { find: /00.1/g, replace: 'in fine, omnia silescunt.' },
+      { find: /\d+\s*years\s*old/gi, replace: '18 years old' },
+      { find: /Yuu is located/g, replace: 'Yuu is also known as "注". Yuu is located' },
+    ],
   };
 
   // ===========================================================================
@@ -323,7 +350,6 @@
     ],
     // ID-specific item replacements
     '2887796': [
-      { find: /Jeans/g, replace: 'Balenciaga Shorts © 1917' },
       { find: /T-Shirt \(BarbapapaZ\)/g, replace: 'T-Shirt (RIIZE & Realise)' },
       { find: /Popmundo T-Shirt/g, replace: 'T-Shirt ─ 河井瑠花' },
       { find: /Maldición de McCracken/g, replace: 'Signed by Park Wonbin' },

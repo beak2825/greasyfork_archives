@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Ask First Highlighter
 // @license      MIT
-// @version      2.7
+// @version      2.10
 // @description  Highlights authors with an ask first policy
 // @author       sunkitten_shash
 // @require      http://code.jquery.com/jquery-3.5.1.min.js
@@ -56,6 +56,7 @@ const ASK_FIRST_USERS = [
   "unexploreduniverse",
   "fizzyren",
   "Wordsmith57",
+  "piana",
 ];
 const HIGHLIGHT_COLOR = "#f6b26b";
 const user_regex =

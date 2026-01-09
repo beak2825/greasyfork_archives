@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         RetroGameTalk - Toggle User Extras
+// @name         RGT - Toggle user details
 // @namespace    https://retrogametalk.com/
-// @version      1.0
-// @description  Toggle dos detalhes do usuário com banners compactos quadrados e centralizados
+// @version      0.3
+// @description  Adds a toggle button that allows hiding or showing user extras (details) on RetroGameTalk (RGT).
 // @match        https://retrogametalk.com/*
 // @grant        none
-// @downloadURL https://update.greasyfork.org/scripts/561505/RetroGameTalk%20-%20Toggle%20User%20Extras.user.js
-// @updateURL https://update.greasyfork.org/scripts/561505/RetroGameTalk%20-%20Toggle%20User%20Extras.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561505/RGT%20-%20Toggle%20user%20details.user.js
+// @updateURL https://update.greasyfork.org/scripts/561505/RGT%20-%20Toggle%20user%20details.meta.js
 // ==/UserScript==
 
 (function () {
