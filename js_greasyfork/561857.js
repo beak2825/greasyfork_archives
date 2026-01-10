@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Likes 下载器
 // @namespace    https://github.com/K4F7/x-like-downloader
-// @version      2.1.20
+// @version      2.1.27
 // @description  下载 X (Twitter) 点赞列表中的图片、GIF和视频
 // @author       You
 // @icon         https://abs.twimg.com/favicons/twitter.3.ico
@@ -589,6 +589,10 @@
         }
         if (input) return !!input.checked;
         return GM_getValue(def.key, def.defaultValue);
+    }
+
+    function getAutoPause() {
+        return getSetting(SETTING_DEFS.autoPause);
     }
 
     function bindSetting(panel, def) {
@@ -1247,6 +1251,11 @@
         scanBtn.textContent = '扫描中...';
         downloadBtn.style.display = 'none';
 
+        if (mode === 'marker') {
+            updateStatus('正在回到页面顶部...', 0);
+            await ensureTopBeforeTask(scanOptions.autoPause);
+        }
+
         updateStatus(statusText, 0);
         updateForegroundWarning();
 
@@ -1382,9 +1391,7 @@
 
         const preloadTarget = mode === 'full' && !resumePoint && Number.isFinite(limit) && limit > 0
             ? limit + preloadBuffer
-            : mode === 'marker'
-                ? preloadBuffer
-                : 0;
+            : 0;
         if (preloadTarget > 0) {
             await preloadWindowBeforeScan(preloadTarget, autoPause);
         }
@@ -1402,8 +1409,10 @@
                 if (mode === 'marker' && savedMarker) {
                     const isMarker = isMarkerTweet(tweet, savedMarker);
                     if (isMarker) {
-                        console.log('[XLD] ✓✓✓ 找到标记点！停止扫描 ✓✓✓');
-                        reachedMarker = true;
+                        if (isMarkerReached(tweet)) {
+                            console.log('[XLD] ✓✓✓ 找到标记点！停止扫描 ✓✓✓');
+                            reachedMarker = true;
+                        }
                         break;
                     }
                 }
@@ -1906,6 +1915,76 @@
 
     function isResumeTweet(tweet, resumePoint) {
         return isMatchTweet(tweet, resumePoint);
+    }
+
+    function isMarkerReached(tweet) {
+        if (!tweet) return false;
+        const rect = tweet.getBoundingClientRect();
+        const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+        return rect.top <= viewHeight * 0.9;
+    }
+
+    function getFirstVisibleTweetId() {
+        const tweets = document.querySelectorAll('[data-testid="tweet"]');
+        let bestTweet = null;
+        let bestTop = Infinity;
+
+        for (const tweet of tweets) {
+            const rect = tweet.getBoundingClientRect();
+            if (rect.bottom <= 0) continue;
+            if (rect.top < bestTop) {
+                bestTop = rect.top;
+                bestTweet = tweet;
+            }
+        }
+
+        return bestTweet ? extractTweetId(bestTweet) : null;
+    }
+
+    async function scrollToTopIfNeeded(autoPause) {
+        await waitForForegroundIfNeeded(autoPause);
+
+        if (window.scrollY <= 0) return;
+
+        window.scrollTo(0, 0);
+
+        let attempts = 0;
+        while (window.scrollY > 0 && attempts < 10) {
+            await waitForForegroundIfNeeded(autoPause);
+            await sleep(120);
+            window.scrollTo(0, 0);
+            attempts++;
+        }
+    }
+
+    async function ensureTopBeforeTask(autoPause) {
+        const beforeScroll = window.scrollY;
+        const beforeId = getFirstVisibleTweetId();
+
+        await scrollToTopIfNeeded(autoPause);
+
+        if (beforeScroll <= 0 && window.scrollY <= 0) return;
+
+        let stableCount = 0;
+        let lastId = null;
+
+        for (let attempt = 0; attempt < 12; attempt++) {
+            await waitForForegroundIfNeeded(autoPause);
+            await sleep(140);
+            const currentId = getFirstVisibleTweetId();
+
+            if (currentId && currentId === lastId) {
+                stableCount++;
+            } else {
+                stableCount = 0;
+            }
+
+            lastId = currentId;
+
+            if (window.scrollY <= 0 && currentId && currentId !== beforeId && stableCount >= 1) {
+                break;
+            }
+        }
     }
 
     async function downloadAll() {

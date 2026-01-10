@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         元元大王直播间弹幕布局
-// @version      1.1
-// @description  1、自适应弹幕布局，避免本直播间画面被弹幕遮挡；2、弹幕画板可拖移。
+// @version      1.3
+// @description  1、自适应弹幕布局；2、弹幕画板可拖移；3、PK视图变化时刷新画面
 // @match        https://live.douyin.com/*
 // @match        https://www.douyin.com/follow/live/*
 // @match        https://www.douyin.com/root/live/*
@@ -16,8 +16,9 @@
 (function () {
     'use strict';
 
-    const ElCanvasDanmakuStyleID = 'linkmic-dynamic-style';
-    const ElVideoStyleID = 'video-style';
+    const ElCanvasDanmakuStyleID = 'el-canvas-danmaku-style';
+    const ElVideoStyleID = 'el-video-style';
+    const ElLinkMicLayoutStyleID = 'el-linkmic-style';
 
     let ElCanvasDanmaku, ElLinkMicLayoutContainer
     // positions computed by `evaluateLayout`
@@ -60,9 +61,14 @@
         applyStyle(ElVideoStyleID, `video[autoplay] { left: ${left}%; top: ${top}%; }`)
     }
 
+    function moveLinkMicLayout(left, top) {
+        console.log(`DYLIVELAYOUT: moveLinkMicLayout ${left}, ${top}`)
+        applyStyle(ElLinkMicLayoutStyleID, `#LinkMicLayout { left: ${left}%; top: ${top}%; }`)
+    }
+
     function moveCanvasDanmaku(left, top) {
-        console.log(`DYLIVELAYOUT: moveCanvasDanmaku ${left}, ${top}`)
-        applyStyle(ElCanvasDanmakuStyleID, `div.CanvasDanmakuPlugin { position: relative; left: ${left}%; top: ${top}%; }`)
+        // console.log(`DYLIVELAYOUT: moveCanvasDanmaku ${left}, ${top}`)
+        applyStyle(ElCanvasDanmakuStyleID, `div.CanvasDanmakuPlugin { left: ${left}%; top: ${top}%; }`)
     }
 
     function evaluateLayout(e) {
@@ -86,7 +92,7 @@
         if (target && e1 != target)
             return moveCanvasDanmaku(0, 100);
 
-        let leftPercent, widthPercent;
+        let leftPercent, widthPercent, heightPercent;
         videoLeft = 0;
         danmakuLeft = 0;
 
@@ -94,6 +100,7 @@
         if (target) {
             leftPercent = parsePercent(target.style.left);
             widthPercent = parsePercent(target.style.width);
+            heightPercent = parsePercent(target.style.height);
 
             if (leftPercent === null || widthPercent === null)
                 return moveCanvasDanmaku(0, 100);
@@ -102,8 +109,17 @@
             if (pkLayoutContainer && pkLayoutContainer.style && pkLayoutContainer.style.width) {
                 let pkLayoutWidth = parsePercent(pkLayoutContainer.style.width)
                 if (!(pkLayoutWidth === null)) {
-                    leftPercent += (100 - pkLayoutWidth) / 2
-                    widthPercent *= pkLayoutWidth / 100
+                    let blank = (100 - pkLayoutWidth) / 2
+
+                    /*if (near(heightPercent, 100, 1) && pkLayoutWidth >= 1) {
+                        leftPercent += blank + blank / 2
+                        widthPercent *= pkLayoutWidth / 100
+                        videoLeft = blank / 2
+                    } else {*/
+                        leftPercent += blank
+                        widthPercent *= pkLayoutWidth / 100
+                        videoLeft = 0
+                    //}
                 }
             }
         }
@@ -137,22 +153,34 @@
 
         moveCanvasDanmaku(danmakuLeft, danmakuTop);
         moveVideo(videoLeft, 0);
+        moveLinkMicLayout(videoLeft, 0);
     }
 
-    function delayedEvaluateLayout() { setTimeout(evaluateLayout, 500); }
+    let LAST_REFRESH=0, LAST_SEATS_COUNT=0
+
+    function onLinkMicLayoutChange() {
+        evaluateLayout();
+        setTimeout(evaluateLayout, 800);
+
+        let count = getLinkMicLayoutContainer().querySelectorAll(':scope div.LGzZT73_').length;
+        let now = Date.now();
+
+        if (count != LAST_SEATS_COUNT && now - LAST_REFRESH > 1*60*1000) {
+            const button = document.querySelector('div.douyin-player-controls-left > slot[data-index="1"] > div > div:has(svg)')
+            if (button) {
+                button.click();
+                LAST_REFRESH = now
+                console.log('DYLIVELAYOUT: refreshed at ', now)
+            }
+        }
+        LAST_SEATS_COUNT = count;
+    }
 
     function makeDanmakuDraggable() {
-        const container = getLinkMicLayoutContainer();
+        const refcontainer = document.querySelector('#LinkMicBackgroundLayout');
         const danmaku = getCanvasDanmaku();
         if (!danmaku) return;
 
-        // Ensure correct positioning context
-        //const cs = getComputedStyle(container);
-        //if (cs.position === 'static') {
-          //  container.style.position = 'relative';
-        //}
-
-        //danmaku.style.position = 'absolute';
         danmaku.style.cursor = 'move';
         danmaku.style.userSelect = 'none';
 
@@ -167,7 +195,7 @@
         function onDown(e) {
             dragging = true;
 
-            const rect = container.getBoundingClientRect();
+            const rect = refcontainer.getBoundingClientRect();
             const dmRect = danmaku.getBoundingClientRect();
 
             const ev = e.touches ? e.touches[0] : e;
@@ -179,13 +207,13 @@
             startTop  = percent(dmRect.top  - rect.top,  rect.height);
 
             e.preventDefault();
-            console.log("DYLIVELAYOUT: Mose down")
+            // console.log("DYLIVELAYOUT: Mose down", startLeft)
         }
 
         function onMove(e) {
             if (!dragging) return;
 
-            const rect = container.getBoundingClientRect();
+            const rect = refcontainer.getBoundingClientRect();
             const ev = e.touches ? e.touches[0] : e;
 
             const dx = ev.clientX - startX;
@@ -193,6 +221,7 @@
 
             let left = startLeft + percent(dx, rect.width);
             let top  = startTop  + percent(dy, rect.height);
+            // console.log("DYLIVELAYOUT: Mose move", left)
 
             if (near(top, 0, 1))
                 top = 0
@@ -247,7 +276,7 @@
         const container = getLinkMicLayoutContainer();
         if (!container) return;
 
-        mutationObserver = new MutationObserver(evaluateLayout);
+        mutationObserver = new MutationObserver(onLinkMicLayoutChange);
         mutationObserver.observe(container, { childList: true, subtree: true, attributes: true });
 
         window.addEventListener('resize', evaluateLayout);

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Character Enhancer Pro
 // @namespace    http://tampermonkey.net/
-// @version      6.9.2
+// @version      6.9.6
 // @description  Complete character page enhancements: VIP visuals, talkboxes, achievement remapping, cash/star quality/points overrides, health/mood bars
 // @author       You
 // @match        https://*.popmundo.com/World/Popmundo.aspx/Character*
@@ -63,7 +63,7 @@
         "3247354",
         "3613365",
         "3602175",
-        "3616012"
+        "3616012",
     ]);
 
     function convertHealthMoodBars(root = document) {
@@ -86,8 +86,8 @@
     // ===========================================================================
 
     const vipCharacterIds = [
-        '3620479', '3620400', '3609829', '3616694', '3581055', 
-        '3552119', '3613832', '3552255', '3617745', '3613365', '3580776', 
+        '3620479', '3620400', '3609829', '3581055',
+        '3552119', '3613832', '3552255', '3617745', '3613365', '3580776',
         '3616012',
     ];
 
@@ -98,7 +98,6 @@
         '3555337': "hitting every note ─ music is my life.",
         '3558887': "walking on clouds ─ surreal but real.",
         '3609829': "williams ♡ /off.",
-        '3616694': "uhhh, blows kisses ₊˚⊹♡",
         '3613832': "erase me ─ ass.",
         '3552119': "fvck my luck, sugoi...",
         '3552255': "kawaii on purpose ⸝⸝.ᐟ⋆",
@@ -122,14 +121,14 @@
         '3614576': "kinda dead inside but the outfit slays",
         '3613871': "smiles in lowercase ツ",
         '3616012': "manifest me. /off",
+        // uhhh, blows kisses ₊˚⊹♡" //
         // ⠀★ ⠀ misty’s mom⠀ ⠀/ ⠀ ⠀pienso en tu mira, lili
+        // ⠀★ ⠀ yuu’s baby⠀ ⠀/ ⠀ ⠀pienso en tu mira, lili
         //too glam to give a damn
         // drama? i am the whole season, babe.
         // don’t text me, manifest me ✩
         // you wish u sparkled like this ✩₊˚
         // all goes quiet in the end — silentia"
-
-
     };
 
     const vipStarHTML = `<a href="/Shop/Popmundo.aspx/VIPInfo" title="VIP member."><img src="/Static/Icons/VIPNameStar.png" class="lmargin5" style="vertical-align: top;"></a>`;
@@ -215,21 +214,21 @@
         '3571876': { 'Achievement_317': 'Achievement_38', 'Achievement_441': 'Achievement_137', 'Achievement_439': 'Achievement_17' },
         '3572401': { 'Achievement_298': 'Achievement_238', 'Achievement_317': 'Achievement_20', 'Achievement_239': 'Achievement_380' },
         '3613832': { 'Achievement_426': 'Achievement_31', 'Achievement_226': 'Achievement_228', 'Achievement_208': 'Achievement_352' },
-        '3247354': { 'Achievement_317': 'Achievement_317', 'Achievement_27': 'Achievement_337', 'Achievement_11': 'Achievement_331' },
+        '3247354': { 'Achievement_317': 'Achievement_234', 'Achievement_27': 'Achievement_121', 'Achievement_11': 'Achievement_228' },
         '3613365': { 'Achievement_219': 'Achievement_330', 'Achievement_279': 'Achievement_137', 'Achievement_284': 'Achievement_332' },
         '3580776': { 'Achievement_363': 'Achievement_121', 'Achievement_291': 'Achievement_35', 'Achievement_358': 'Achievement_48' },
         '3581055': { 'Achievement_363': 'Achievement_332', 'Achievement_291': 'Achievement_129', 'Achievement_358': 'Achievement_125' },
-        '3602175': { 'Achievement_177': 'Achievement_391', 'Achievement_291': 'Achievement_96', 'Achievement_358': 'Achievement_48' },
+        '3602175': { 'Achievement_181': 'Achievement_391', 'Achievement_291': 'Achievement_96', 'Achievement_359': 'Achievement_48' },
         '3580037': { 'Achievement_443': 'Achievement_82', 'Achievement_299': 'Achievement_129', 'Achievement_319': 'Achievement_143' },
         '3609829': { 'Achievement_443': 'Achievement_31', 'Achievement_317': 'Achievement_125', 'Achievement_300': 'Achievement_117' },
         '3614576': { 'Achievement_207': 'Achievement_331', 'Achievement_74': 'Achievement_235', 'Achievement_443': 'Achievement_227' },
-        '3616694': { 'Achievement_443': 'Achievement_443', 'Achievement_238': 'Achievement_238', 'Achievement_297': 'Achievement_332' },
         '3613871': { 'Achievement_443': 'Achievement_181', 'Achievement_299': 'Achievement_368', 'Achievement_287': 'Achievement_332' },
         '3577905': { 'Achievement_331': 'Achievement_290', 'Achievement_247': 'Achievement_129', 'Achievement_51': 'Achievement_264' },
         '3616012': { 'Achievement_428': 'Achievement_290', 'Achievement_340': 'Achievement_285', 'Achievement_80': 'Achievement_330' },
         '3579423': { 'Achievement_238': 'Achievement_404', 'Achievement_357': 'Achievement_238', 'Achievement_315': 'Achievement_400' },
         '3602139': { 'Achievement_359': 'Achievement_227', 'Achievement_428': 'Achievement_82', 'Achievement_429': 'Achievement_362' },
         '3350835': { 'Achievement_115': 'Achievement_129', 'Achievement_291': 'Achievement_95', 'Achievement_24': 'Achievement_272' },
+
     };
 
     const genericReplacements = {
@@ -249,7 +248,7 @@
     // 🌟 Star Quality override
     const starQualityValues = {
         '2887796': 100, '3620479': 100, '3620400': 95, '3602139': 100, '3350835':95,
-        '3247354': 95, '3581055': 95, '3580776': 95, '3602175': 95, '3570776':95
+        '3247354': 95, '3581055': 95, '3580776': 95, '3602175': 95, '3570776':95, '3613462':95
     };
 
     // 📈 Achievement Points override

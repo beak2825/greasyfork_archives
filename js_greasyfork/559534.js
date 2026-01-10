@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ✈️ Travel HUD Mini (Colour Coded + Points Value)
 // @namespace    http://tampermonkey.net/
-// @version      3.3.0
+// @version      3.3.1
 // @description  Compact travel points tracker with colour coding, flags, API key setup, and points value estimation.
 // @match        https://www.torn.com/*
 // @grant        GM_addStyle
@@ -630,7 +630,7 @@ GM_addStyle(`
     border-color: rgba(255, 160, 160, 0.2);
 }
 
-/* Local count */
+/* Local count - NOW SHOWING REMAINING */
 #${PANEL_ID} .r span:nth-child(2) {
     color: #7fff7f;
     background: rgba(127, 255, 127, 0.08);
@@ -1304,12 +1304,20 @@ async function render() {
                               groupName === 'Prehistoric' ? 'PREHIST' : 'FLOWERS';
             html += `<div class="t">${groupTitle}</div>`;
             
-            // Add rows with colour coding
+            // Calculate remaining for each item in the set
+            const itemRemaining = {};
+            Object.keys(group.items).forEach(key => {
+                const shortCode = group.items[key].s;
+                const localCount = inventory[key] || 0;
+                itemRemaining[shortCode] = localCount - sets; // Remaining after sets
+            });
+            
+            // Add rows with colour coding (showing only remaining)
             Object.entries(group.items).forEach(([name, data]) => {
-                const localCount = inventory[name] || 0;
                 const abroadCount = abroad[name] || 0;
                 const statusClass = getStatusClass(name, abroadCount);
                 const rgb = hexToRgb(data.color);
+                const remaining = itemRemaining[data.s];
                 
                 html += `
                 <div class="r" style="
@@ -1319,7 +1327,7 @@ async function render() {
                     --item-b: ${rgb.b};
                 ">
                     <span>${data.s}</span>
-                    <span>${localCount}</span>
+                    <span>${remaining}</span>
                     <span class="${statusClass}">${abroadCount}</span>
                     <span>${data.loc}</span>
                 </div>`;

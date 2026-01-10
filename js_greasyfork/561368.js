@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Stellar Blade Wplace Tool
 // @namespace    http://tampermonkey.net/
-// @version      1.1
-// @description  Overlay tool for Stellar Blade drawings on Wplace.live
+// @version      1.2
+// @description  JSON Config + Custom Overlay Delete + Region Status System (Chunks Disabled)
 // @author       luke77_7
 // @match        https://wplace.live/*
 // @license      MIT
@@ -18,15 +18,13 @@
 // 🆕 GITHUB JSON CONFIGURATION
 // ============================================
 const GITHUB_CONFIG = {
-  JSON_URL: 'https://raw.githubusercontent.com/kwbr1/Nk-SB-ov/refs/heads/main/overlays.json',
+  JSON_URL: 'https://raw.githubusercontent.com/SEU_USER/SEU_REPO/main/overlays.json',
   CACHE_DURATION: 5 * 60 * 1000, // 5 minutos
   FALLBACK_CHECK_INTERVAL: 60 * 1000 // 1 minuto
 };
 
-// Base overlays
 let baseOverlays = [];
 
-// Regions
 let REGIONS = {};
 
 const REGION = {
@@ -88,6 +86,7 @@ async function loadConfigFromGitHub(forceRefresh = false) {
     const cachedTimestamp = loadFromStorage(STORAGE_KEYS.JSON_TIMESTAMP, 0);
     const now = Date.now();
 
+    // Verifica se precisa atualizar
     if (!forceRefresh && (now - cachedTimestamp) < GITHUB_CONFIG.CACHE_DURATION) {
       const cached = loadFromStorage(STORAGE_KEYS.JSON_CACHE, null);
       if (cached) {
@@ -110,6 +109,7 @@ async function loadConfigFromGitHub(forceRefresh = false) {
 
     const config = await response.json();
 
+    // Valida estrutura
     if (!config.overlays || !Array.isArray(config.overlays)) {
       throw new Error('Invalid JSON structure: missing overlays array');
     }
@@ -117,6 +117,7 @@ async function loadConfigFromGitHub(forceRefresh = false) {
       throw new Error('Invalid JSON structure: missing regions object');
     }
 
+    // Salva cache
     saveToStorage(STORAGE_KEYS.JSON_CACHE, config);
     saveToStorage(STORAGE_KEYS.JSON_TIMESTAMP, now);
 
@@ -126,12 +127,14 @@ async function loadConfigFromGitHub(forceRefresh = false) {
   } catch (error) {
     console.error('❌ Error loading config from GitHub:', error);
 
+    // Tenta usar cache antigo
     const cached = loadFromStorage(STORAGE_KEYS.JSON_CACHE, null);
     if (cached) {
       console.warn('⚠️ Using old cached config due to fetch error');
       return cached;
     }
 
+    // Fallback vazio
     console.warn('⚠️ No cache available, using empty config');
     return {
       overlays: [],
@@ -364,6 +367,9 @@ function navigateToRegion(regionKey) {
   }
 }
 
+// ============================================
+// OPTIMIZED WEB WORKER POOL (SEM COLOR COUNT!)
+// ============================================
 class WorkerPool {
   constructor(size = PERFORMANCE_CONFIG.MAX_WORKER_POOL) {
     this.size = size;
@@ -398,7 +404,7 @@ class WorkerPool {
 
               if (!samePixel) {
                 wrongPixels++;
-
+                
                 resultData[i] = overlayData[i];
                 resultData[i+1] = overlayData[i+1];
                 resultData[i+2] = overlayData[i+2];
@@ -827,7 +833,7 @@ let pixelCounter, percentageCounter;
 let overlayBoundingBoxes = [];
 let clickCount = 0;
 
-const OVERLAY_MODES = ["overlay", "original", "chunks"];
+const OVERLAY_MODES = ["overlay", "original"];
 
 let maxCacheSize = PERFORMANCE_CONFIG.MAX_CACHE_SIZE;
 const overlayChunkMap = new Map();
@@ -1127,6 +1133,9 @@ function updateChunkInPixelWindow() {
   }
 }
 
+// ============================================
+// OPTIMIZED FETCH INTERCEPTION (SEM COLOR COUNTING!)
+// ============================================
 const originalFetch = window.fetch;
 window.fetch = new Proxy(originalFetch, {
   apply: async function(target, thisArg, argList) {
@@ -1331,7 +1340,8 @@ window.fetch = new Proxy(originalFetch, {
           return target.apply(thisArg, argList);
         }
       }
-    } else if (overlayMode === "chunks") {
+    }
+    else if (overlayMode === "chunks") {
       if (url.hostname === "backend.wplace.live" && url.pathname.startsWith("/files/")) {
         try {
           const parts = url.pathname.split("/");
@@ -1662,30 +1672,24 @@ async function deleteCustomOverlay(customId, overlayName) {
   try {
     console.log(`🗑️ Deleting custom overlay: ${overlayName} (${customId})`);
 
-    // Remove from IndexedDB
     await customOverlayDB.deleteImage(customId);
 
-    // Remove from localStorage
     const savedOverlays = loadFromStorage(STORAGE_KEYS.CUSTOM_OVERLAYS, []);
     const filtered = savedOverlays.filter(o => o.id !== customId);
     saveToStorage(STORAGE_KEYS.CUSTOM_OVERLAYS, filtered);
 
-    // Remove from baseOverlays array
     const baseIndex = baseOverlays.findIndex(o => o.customId === customId);
     if (baseIndex > -1) {
       baseOverlays.splice(baseIndex, 1);
     }
 
-    // Remove from overlays array
     overlays = overlays.filter(o => o.customId !== customId);
 
-    // Update caches and UI
     updateRegionChunksFromLoadedOverlays();
     calculateOverlayBoundingBoxes();
     buildOverlayChunkMap();
     updateCacheSize();
 
-    // Rebuild UI
     updateMenuWithCustomOverlays();
 
     console.log(`✅ Custom overlay "${overlayName}" deleted successfully!`);
@@ -1805,6 +1809,9 @@ async function loadCustomOverlaysFromStorage() {
   }
 }
 
+// ============================================
+// 🆕 initializeOverlays() - LOADS FROM GITHUB JSON!
+// ============================================
 async function initializeOverlays() {
   console.log('🚀 Starting overlay loading (JSON Config Mode)...');
 
@@ -1815,15 +1822,11 @@ async function initializeOverlays() {
     console.warn('⚠️ IndexedDB not available:', error);
   }
 
-  // 🆕 Load config from GitHub
   const config = await loadConfigFromGitHub();
-
-  // Populate baseOverlays from JSON
+  
   baseOverlays = config.overlays || [];
-
-  // Populate REGIONS from JSON
   REGIONS = config.regions || {};
-
+  
   console.log(`📋 Loaded from JSON: ${baseOverlays.length} overlays, ${Object.keys(REGIONS).length} regions`);
 
   calculateRegionChunks();
@@ -2237,6 +2240,7 @@ function openUploadModal(chunkX, chunkY, pixelX, pixelY) {
   setTimeout(() => nameInput.focus(), 100);
 }
 
+// ============================================
 // 🆕 createUI() - WITH REGION COLORS & DELETE BUTTON!
 // ============================================
 function createUI() {
@@ -2369,11 +2373,10 @@ function createUI() {
   `;
   document.head.appendChild(scrollbarStyle);
 
-  // 🆕 Sort regions: "in progress" (red) first, then "completed" (green)
   const regionEntries = Object.entries(REGIONS).sort((a, b) => {
     const progressA = a[1].progress || "completed";
     const progressB = b[1].progress || "completed";
-
+    
     if (progressA === "in progress" && progressB !== "in progress") return -1;
     if (progressA !== "in progress" && progressB === "in progress") return 1;
     return 0;
@@ -2384,13 +2387,12 @@ function createUI() {
     item.className = "menu-item";
     item.dataset.value = `region:${key}`;
     item.textContent = region.name;
-
-    // 🆕 Apply color based on progress status
+    
     const progress = region.progress || "completed";
     const textColor = progress === "in progress" ? "#ff5252" : "#4CAF50";
     const hoverBg = progress === "in progress" ? "rgba(255, 82, 82, 0.3)" : "rgba(76, 175, 80, 0.3)";
     const selectedBg = progress === "in progress" ? "rgba(255, 82, 82, 0.5)" : "rgba(76, 175, 80, 0.5)";
-
+    
     item.style.cssText = `
       padding: 10px 12px; font-size: 12px; color: ${textColor}; cursor: pointer;
       transition: all 0.2s ease; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -2467,7 +2469,6 @@ function createUI() {
 
     item.appendChild(textSpan);
 
-    // 🆕 Add delete button for custom overlays
     if (overlay.isCustom && overlay.customId) {
       const deleteBtn = document.createElement("button");
       deleteBtn.textContent = "🗑️";
@@ -2541,8 +2542,8 @@ function createUI() {
     line-height: 1.4; background: rgba(255, 255, 255, 0.02); border-radius: 6px; padding: 8px;
   `;
   userInfoSection.innerHTML = `
-    <div style="color: #4CAF50; font-weight: bold;">⚡ DOT v16.7.0</div>
-    <div style="color: #888; font-size: 9px; margin-top: 2px;">JSON Config + Delete System</div>
+    <div style="color: #4CAF50; font-weight: bold;">⚡ DOT v16.7.1</div>
+    <div style="color: #888; font-size: 9px; margin-top: 2px;">Chunks Disabled</div>
   `;
   panelContent.appendChild(userInfoSection);
 
@@ -2557,16 +2558,21 @@ function createModeToggleButton() {
   button.id = "mode-toggle-button";
 
   overlayMode = loadFromStorage(STORAGE_KEYS.OVERLAY_MODE, "original");
+  
+  if (overlayMode === "chunks") {
+    overlayMode = "original";
+    saveToStorage(STORAGE_KEYS.OVERLAY_MODE, overlayMode);
+  }
 
-  button.textContent = overlayMode === "overlay" ? "🎨 Overlay" : overlayMode === "original" ? "🖼️ Original" : "🗺️ Chunks";
+  button.textContent = overlayMode === "overlay" ? "🎨 Overlay" : "🖼️ Original";
   button.title = "Click to toggle modes (or press O twice)";
 
   Object.assign(button.style, {
     position: "fixed", top: "110px", right: "8px", zIndex: "10000",
     padding: "10px 16px", fontSize: "14px", fontWeight: "600",
-    background: overlayMode === "overlay" ? "linear-gradient(135deg, #4CAF50, #45a049)" :
-                overlayMode === "original" ? "linear-gradient(135deg, #2196F3, #1976D2)" :
-                "linear-gradient(135deg, #FF9800, #F57C00)",
+    background: overlayMode === "overlay" ? 
+                "linear-gradient(135deg, #4CAF50, #45a049)" :
+                "linear-gradient(135deg, #2196F3, #1976D2)",
     color: "white", border: "none", borderRadius: "8px", cursor: "pointer",
     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)", transition: "all 0.3s ease",
     fontFamily: "Arial, sans-serif", backdropFilter: "blur(10px)"
@@ -2604,12 +2610,19 @@ function updateModeButtonText() {
   if (!button) return;
 
   const modeConfig = {
-    overlay: { text: "🎨 Overlay", background: "linear-gradient(135deg, #4CAF50, #45a049)", description: "Overlay Mode Active" },
-    original: { text: "🖼️ Original", background: "linear-gradient(135deg, #2196F3, #1976D2)", description: "Original Mode Active" },
-    chunks: { text: "🗺️ Chunks", background: "linear-gradient(135deg, #FF9800, #F57C00)", description: "Chunks Mode Active" }
+    overlay: { 
+      text: "🎨 Overlay", 
+      background: "linear-gradient(135deg, #4CAF50, #45a049)", 
+      description: "Overlay Mode Active" 
+    },
+    original: { 
+      text: "🖼️ Original", 
+      background: "linear-gradient(135deg, #2196F3, #1976D2)", 
+      description: "Original Mode Active" 
+    }
   };
 
-  const config = modeConfig[overlayMode];
+  const config = modeConfig[overlayMode] || modeConfig.original;
   button.textContent = config.text;
   button.style.background = config.background;
   button.title = `${config.description} - Click to toggle`;
@@ -2706,7 +2719,8 @@ document.addEventListener('click', (event) => {
 }, true);
 
 async function initialize() {
-  console.log('🚀 Starting Stellar Blade Wplace Tool v16.7.0...');
+  console.log('🚀 Starting Stellar Blade Wplace Tool v16.7.1...');
+  console.log('⚡ Chunks mode DISABLED - Only Overlay/Original toggle available');
   console.log('🆕 Features: JSON Config from GitHub + Custom Overlay Delete + Region Status Colors');
   console.log(`⚙️ GitHub JSON URL: ${GITHUB_CONFIG.JSON_URL}`);
   console.log(`⚙️ Configuration:
@@ -2748,9 +2762,9 @@ async function initialize() {
     }
   }, 10000);
 
-  console.log('✅ Stellar Blade Wplace Tool v16.7.0 initialized!');
-  console.log('📌 Press "O" twice OR click button to toggle modes');
-  console.log('🗑️ Custom overlays can now be deleted!');
+  console.log('✅ Stellar Blade Wplace Tool v16.7.1 initialized!');
+  console.log('📌 Press "O" twice OR click button to toggle Overlay/Original modes');
+  console.log('🗑️ Custom overlays can be deleted with trash button');
   console.log('🌐 Overlays & Regions loaded from GitHub JSON');
   console.log(`📊 Performance Stats:
     - LRU Cache: ${decompactCache.size}/${PERFORMANCE_CONFIG.DECOMPACT_CACHE_SIZE}

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Autodarts – MatchInsights
 // @namespace    http://tampermonkey.net/
-// @version      0.14.115
+// @version      0.14.127
 // @author       ThunderB
 // @license      All Rights Reserved
 // @description  Holt aus deiner Historie neue Innsights für dein Spiel!
@@ -207,9 +207,9 @@
                     post({
                         type: "status",
                         text:
-                            `BG Collect page=${page}\n` +
-                            `onPage=${ids.size} | new=${newOnPage} | total=${collected.size}\n` +
-                            `pagesVisited=${pagesVisited}`
+                        `BG Collect page=${page}\n` +
+                        `onPage=${ids.size} | new=${newOnPage} | total=${collected.size}\n` +
+                        `pagesVisited=${pagesVisited}`
                     });
 
                     if (newOnPage === 0) {
@@ -245,7 +245,7 @@
     const SCRIPT_VERSION =
           (typeof GM_info !== "undefined" && GM_info && GM_info.script && GM_info.script.version) ? GM_info.script.version :
     (typeof GM !== "undefined" && GM && GM.info && GM.info.script && GM.info.script.version) ? GM.info.script.version :
-    "0.14.115";
+    "0.14.127";
     // =========================
     // Settings
     // =========================
@@ -276,99 +276,99 @@
     // Training (Wochenauswahl im Trainings-Tab; Default-Bereich in Wochen)
     const TRAIN_WEEK_LOOKBACK_WEEKS_DEFAULT = 4;
     const TRAIN_WEEK_LOOKAHEAD_WEEKS_DEFAULT = 4;
-// =========================
-// UI Config (v0.14.19) – nur UI/UX (Auto-Save in localStorage)
-// =========================
-const AD_EXT_LS_KEY_CFG = "ad_ext_cfg";
-const AD_EXT_LS_KEY_CFG_SECTIONS = "ad_ext_cfg_sections";
+    // =========================
+    // UI Config (v0.14.19) – nur UI/UX (Auto-Save in localStorage)
+    // =========================
+    const AD_EXT_LS_KEY_CFG = "ad_ext_cfg";
+    const AD_EXT_LS_KEY_CFG_SECTIONS = "ad_ext_cfg_sections";
 
-// Defaults entsprechen den bestehenden CONST-Settings (werden in diesem Schritt noch NICHT überall genutzt)
-const AD_EXT_DEFAULT_CFG = Object.freeze({
-  MIN_MATCHES_X01,
-  MIN_TOTAL_LEGS_X01,
-  MIN_LEGS_PLAYED_PLAYER_FILTER,
-  MASTER_HOF_MIN_OPPONENT_MATCHES,
-  AVG_TREND_MAX_PLAYERS,
-  AVG_TREND_MAX_LEGS,
-  HIGH_OUT_MIN,
-  TIME_WEEKLY_GOAL_DEFAULT_HOURS,
-  TIME_TREND_MAX_WEEKS,
-  TRAIN_DEF_LEGS_ATC,
-  TRAIN_DEF_LEGS_COUNTUP,
-  TRAIN_DEF_LEGS_CRICKET,
-  TRAIN_DEF_LEGS_RANDOM_CHECKOUT,
-  TRAIN_DEF_LEGS_SEGMENT_TRAINING,
-  TRAIN_DEF_LEGS_X01_BOT,
-  TRAIN_DEF_LEGS_X01_HUMAN,
-  TRAIN_WEEK_LOOKBACK_WEEKS_DEFAULT,
-  TRAIN_WEEK_LOOKAHEAD_WEEKS_DEFAULT,
-});
+    // Defaults entsprechen den bestehenden CONST-Settings (werden in diesem Schritt noch NICHT überall genutzt)
+    const AD_EXT_DEFAULT_CFG = Object.freeze({
+        MIN_MATCHES_X01,
+        MIN_TOTAL_LEGS_X01,
+        MIN_LEGS_PLAYED_PLAYER_FILTER,
+        MASTER_HOF_MIN_OPPONENT_MATCHES,
+        AVG_TREND_MAX_PLAYERS,
+        AVG_TREND_MAX_LEGS,
+        HIGH_OUT_MIN,
+        TIME_WEEKLY_GOAL_DEFAULT_HOURS,
+        TIME_TREND_MAX_WEEKS,
+        TRAIN_DEF_LEGS_ATC,
+        TRAIN_DEF_LEGS_COUNTUP,
+        TRAIN_DEF_LEGS_CRICKET,
+        TRAIN_DEF_LEGS_RANDOM_CHECKOUT,
+        TRAIN_DEF_LEGS_SEGMENT_TRAINING,
+        TRAIN_DEF_LEGS_X01_BOT,
+        TRAIN_DEF_LEGS_X01_HUMAN,
+        TRAIN_WEEK_LOOKBACK_WEEKS_DEFAULT,
+        TRAIN_WEEK_LOOKAHEAD_WEEKS_DEFAULT,
+    });
 
-let AD_EXT_CFG_CACHE = null;
+    let AD_EXT_CFG_CACHE = null;
 
-function AD_loadCfg() {
-  if (AD_EXT_CFG_CACHE) return AD_EXT_CFG_CACHE;
-  let saved = {};
-  try {
-    const raw = localStorage.getItem(AD_EXT_LS_KEY_CFG);
-    if (raw) saved = JSON.parse(raw) || {};
-  } catch { saved = {}; }
+    function AD_loadCfg() {
+        if (AD_EXT_CFG_CACHE) return AD_EXT_CFG_CACHE;
+        let saved = {};
+        try {
+            const raw = localStorage.getItem(AD_EXT_LS_KEY_CFG);
+            if (raw) saved = JSON.parse(raw) || {};
+        } catch { saved = {}; }
 
-  const merged = { ...AD_EXT_DEFAULT_CFG };
-  for (const k of Object.keys(AD_EXT_DEFAULT_CFG)) {
-    const v = saved?.[k];
-    if (typeof v === "number" && Number.isFinite(v)) merged[k] = v;
-  }
-  AD_EXT_CFG_CACHE = merged;
-  return AD_EXT_CFG_CACHE;
-}
+        const merged = { ...AD_EXT_DEFAULT_CFG };
+        for (const k of Object.keys(AD_EXT_DEFAULT_CFG)) {
+            const v = saved?.[k];
+            if (typeof v === "number" && Number.isFinite(v)) merged[k] = v;
+        }
+        AD_EXT_CFG_CACHE = merged;
+        return AD_EXT_CFG_CACHE;
+    }
 
-function AD_saveCfg(cfg) {
-  const merged = { ...AD_EXT_DEFAULT_CFG, ...(cfg || {}) };
-  AD_EXT_CFG_CACHE = merged;
-  try { localStorage.setItem(AD_EXT_LS_KEY_CFG, JSON.stringify(merged)); return true; } catch { return false; }
-}
+    function AD_saveCfg(cfg) {
+        const merged = { ...AD_EXT_DEFAULT_CFG, ...(cfg || {}) };
+        AD_EXT_CFG_CACHE = merged;
+        try { localStorage.setItem(AD_EXT_LS_KEY_CFG, JSON.stringify(merged)); return true; } catch { return false; }
+    }
 
-function AD_clearCfg() {
-  try { localStorage.removeItem(AD_EXT_LS_KEY_CFG); } catch {}
-  AD_EXT_CFG_CACHE = null;
-}
+    function AD_clearCfg() {
+        try { localStorage.removeItem(AD_EXT_LS_KEY_CFG); } catch {}
+        AD_EXT_CFG_CACHE = null;
+    }
 
-// Zentraler Accessor (wird später die CONSTs ersetzen)
-function AD_getSetting(key, defaultValue) {
-  try {
-    const cfg = AD_loadCfg();
-    return (cfg && Object.prototype.hasOwnProperty.call(cfg, key)) ? cfg[key] : defaultValue;
-  } catch { return defaultValue; }
-}
+    // Zentraler Accessor (wird später die CONSTs ersetzen)
+    function AD_getSetting(key, defaultValue) {
+        try {
+            const cfg = AD_loadCfg();
+            return (cfg && Object.prototype.hasOwnProperty.call(cfg, key)) ? cfg[key] : defaultValue;
+        } catch { return defaultValue; }
+    }
 
-function AD_setSetting(key, value) {
-  const cfg = AD_loadCfg();
-  cfg[key] = value;
-  AD_saveCfg(cfg);
-  return value;
-}
+    function AD_setSetting(key, value) {
+        const cfg = AD_loadCfg();
+        cfg[key] = value;
+        AD_saveCfg(cfg);
+        return value;
+    }
 
-const AD_EXT_CFG_FIELDS = [
-  { key: "MIN_MATCHES_X01", min: 1, max: 200 },
-  { key: "MIN_TOTAL_LEGS_X01", min: 1, max: 500 },
-  { key: "MIN_LEGS_PLAYED_PLAYER_FILTER", min: 0, max: 500 },
-  { key: "MASTER_HOF_MIN_OPPONENT_MATCHES", min: 0, max: 200 },
-  { key: "AVG_TREND_MAX_PLAYERS", min: 1, max: 20 },
-  { key: "AVG_TREND_MAX_LEGS", min: 10, max: 300 },
-  { key: "HIGH_OUT_MIN", min: 1, max: 170 },
-  { key: "TIME_WEEKLY_GOAL_DEFAULT_HOURS", min: 0, max: 40 },
-  { key: "TIME_TREND_MAX_WEEKS", min: 4, max: 260 },
-  { key: "TRAIN_DEF_LEGS_ATC", min: 1, max: 999 },
-  { key: "TRAIN_DEF_LEGS_COUNTUP", min: 1, max: 999 },
-  { key: "TRAIN_DEF_LEGS_CRICKET", min: 1, max: 999 },
-  { key: "TRAIN_DEF_LEGS_RANDOM_CHECKOUT", min: 1, max: 999 },
-  { key: "TRAIN_DEF_LEGS_SEGMENT_TRAINING", min: 1, max: 999 },
-  { key: "TRAIN_DEF_LEGS_X01_BOT", min: 1, max: 999 },
-  { key: "TRAIN_DEF_LEGS_X01_HUMAN", min: 1, max: 999 },
-  { key: "TRAIN_WEEK_LOOKBACK_WEEKS_DEFAULT", min: 0, max: 260 },
-  { key: "TRAIN_WEEK_LOOKAHEAD_WEEKS_DEFAULT", min: 0, max: 260 },
-];
+    const AD_EXT_CFG_FIELDS = [
+        { key: "MIN_MATCHES_X01", min: 1, max: 200 },
+        { key: "MIN_TOTAL_LEGS_X01", min: 1, max: 500 },
+        { key: "MIN_LEGS_PLAYED_PLAYER_FILTER", min: 0, max: 500 },
+        { key: "MASTER_HOF_MIN_OPPONENT_MATCHES", min: 0, max: 200 },
+        { key: "AVG_TREND_MAX_PLAYERS", min: 1, max: 20 },
+        { key: "AVG_TREND_MAX_LEGS", min: 10, max: 300 },
+        { key: "HIGH_OUT_MIN", min: 1, max: 170 },
+        { key: "TIME_WEEKLY_GOAL_DEFAULT_HOURS", min: 0, max: 40 },
+        { key: "TIME_TREND_MAX_WEEKS", min: 4, max: 260 },
+        { key: "TRAIN_DEF_LEGS_ATC", min: 1, max: 999 },
+        { key: "TRAIN_DEF_LEGS_COUNTUP", min: 1, max: 999 },
+        { key: "TRAIN_DEF_LEGS_CRICKET", min: 1, max: 999 },
+        { key: "TRAIN_DEF_LEGS_RANDOM_CHECKOUT", min: 1, max: 999 },
+        { key: "TRAIN_DEF_LEGS_SEGMENT_TRAINING", min: 1, max: 999 },
+        { key: "TRAIN_DEF_LEGS_X01_BOT", min: 1, max: 999 },
+        { key: "TRAIN_DEF_LEGS_X01_HUMAN", min: 1, max: 999 },
+        { key: "TRAIN_WEEK_LOOKBACK_WEEKS_DEFAULT", min: 0, max: 260 },
+        { key: "TRAIN_WEEK_LOOKAHEAD_WEEKS_DEFAULT", min: 0, max: 260 },
+    ];
 
 
     // =========================
@@ -1441,37 +1441,134 @@ const AD_EXT_CFG_FIELDS = [
             if (seen.has(sig)) continue;
             seen.add(sig);
 
-                        let count = 1;
-                        if (key === "RANDOM_CHECKOUT" || key === "ATC" || key === "COUNTUP" || key === "CRICKET") {
-                            const a = Number(payload?.totalLegs);
-                            if (Number.isFinite(a) && a > 0) count = a;
-                            else if (Array.isArray(payload?.legStats) && payload.legStats.length > 0) count = payload.legStats.length;
-                            else if (Array.isArray(payload?.games) && payload.games.length > 0) count = payload.games.length;
-                            else count = 1;
+            let count = 1;
+            if (key === "RANDOM_CHECKOUT" || key === "ATC" || key === "COUNTUP" || key === "CRICKET") {
+                const a = Number(payload?.totalLegs);
+                if (Number.isFinite(a) && a > 0) count = a;
+                else if (Array.isArray(payload?.legStats) && payload.legStats.length > 0) count = payload.legStats.length;
+                else if (Array.isArray(payload?.games) && payload.games.length > 0) count = payload.games.length;
+                else count = 1;
 
-                            if (DEBUG_ATC_COUNT && (key === "ATC" || key === "COUNTUP" || key === "CRICKET")) {
-                                try {
-                                    console.debug("[AD Ext][ATC count]", {
-                                        matchId,
-                                        variant,
-                                        totalLegs: payload?.totalLegs,
-                                        legStatsLen: Array.isArray(payload?.legStats) ? payload.legStats.length : 0,
-                                        gamesLen: Array.isArray(payload?.games) ? payload.games.length : 0,
-                                        count,
-                                    });
-                                } catch {}
-                            }
-                        }
-                        out.push({
+                if (DEBUG_ATC_COUNT && (key === "ATC" || key === "COUNTUP" || key === "CRICKET")) {
+                    try {
+                        console.debug("[AD Ext][ATC count]", {
                             matchId,
-                            activityKey: key,
                             variant,
-                            createdAt,
-                            finishedAt,
-                            dayKey,
-                            durationSec,
+                            totalLegs: payload?.totalLegs,
+                            legStatsLen: Array.isArray(payload?.legStats) ? payload.legStats.length : 0,
+                            gamesLen: Array.isArray(payload?.games) ? payload.games.length : 0,
                             count,
                         });
+                    } catch {}
+                }
+            }
+            let hits = 0, darts = 0;
+            if (key === "ATC") {
+                const getNumAny = (obj, keys) => {
+                    if (!obj) return 0;
+                    for (const k of keys) {
+                        const v = obj?.[k];
+                        if (Array.isArray(v)) return v.length;
+                        const n = Number(v);
+                        if (Number.isFinite(n)) return n;
+                    }
+                    return 0;
+                };
+                const addFrom = (obj) => {
+                    if (!obj || typeof obj !== "object") return;
+                    hits += getNumAny(obj, ["hits", "hit", "hitCount", "hit_count", "totalHits", "successfulHits", "successHits"]);
+                    darts += getNumAny(obj, ["darts", "dartsThrown", "darts_thrown", "throws", "throwsThrown", "attempts", "totalDarts", "totalThrows"]);
+                };
+                const addLegStats = (legStats) => {
+                    if (!Array.isArray(legStats) || !legStats.length) return;
+                    for (const st of legStats) {
+                        addFrom(st);
+                        const ss = st?.stats;
+                        if (Array.isArray(ss)) {
+                            for (const s of ss) addFrom(s);
+                        } else {
+                            addFrom(ss);
+                        }
+                    }
+                };
+                try {
+                    addLegStats(payload?.legStats);
+                } catch {}
+                if (!(darts > 0)) {
+                    try { addFrom(payload?.stats); addFrom(payload); } catch {}
+                }
+                if (!(darts > 0)) {
+                    try {
+                        const games = payload?.games;
+                        if (Array.isArray(games) && games.length) {
+                            for (const g of games) {
+                                addFrom(g);
+                                addFrom(g?.stats);
+                                addLegStats(g?.legStats);
+                                darts += getNumAny(g?.settings, ["throws", "darts", "dartsThrown"]);
+                            }
+                        }
+                    } catch {}
+                }
+                // last fallback: raw throws/darts arrays
+                if (!(darts > 0)) {
+                    try {
+                        const arr =
+                              (Array.isArray(payload?.throws) && payload.throws) ||
+                              (Array.isArray(payload?.darts) && payload.darts) ||
+                              (Array.isArray(payload?.dartsThrown) && payload.dartsThrown) ||
+                              (Array.isArray(payload?.attempts) && payload.attempts) ||
+                              null;
+                        if (arr && arr.length) {
+                            darts += arr.length;
+                            for (const it of arr) {
+                                if (it === true || it === 1) { hits += 1; continue; }
+                                if (it && typeof it === "object") {
+                                    const h = it.hit ?? it.success ?? it.isHit ?? it.isSuccess ?? it.ok;
+                                    if (h === true || h === 1) hits += 1;
+                                }
+                            }
+                        }
+                    } catch {}
+                }
+                hits = (Number.isFinite(hits) ? Math.max(0, hits) : 0);
+                darts = (Number.isFinite(darts) ? Math.max(0, darts) : 0);
+
+                if (DEBUG_ATC_COUNT) {
+                    try {
+                        console.debug("[AD Ext][ATC hit%]", {
+                            matchId,
+                            variant,
+                            count,
+                            hits,
+                            darts,
+                            hitPct: darts ? (hits / darts * 100) : null,
+                            legStatsType: typeof payload?.legStats,
+                            sampleLeg0: payload?.legStats?.[0],
+                            sampleLeg0Stats0: payload?.legStats?.[0]?.stats?.[0],
+                        });
+                        if ((Number(count) || 0) > 0 && darts === 0) {
+                            console.debug("[AD Ext][ATC] ATC darts still 0 - extraction failed", { matchId, variant, count });
+                        }
+                    } catch {}
+                }
+            }
+
+            const obj = {
+                matchId,
+                activityKey: key,
+                variant,
+                createdAt,
+                finishedAt,
+                dayKey,
+                durationSec,
+                count,
+            };
+            if (key === "ATC") {
+                obj.hits = hits;
+                obj.darts = darts;
+            }
+            out.push(obj);
         }
 
         return out;
@@ -2159,8 +2256,28 @@ const AD_EXT_CFG_FIELDS = [
 
       /* Training Insights: Analysis Row (Weak doubles + Mini charts) (0.14.111) */
       .ad-ext-train-insights-analysis { margin-top: 12px; }
+      .ad-ext-train-insights-leftcol { display:flex; flex-direction:column; gap: 12px; }
+      .ad-ext-train-insights-leftcol .ad-ext-insights-left-fill { flex: 1 1 auto; }
       .ad-ext-train-insights-miniCharts { display:flex; flex-direction:column; gap: 12px; }
       .ad-ext-train-insights-analysis .ad-ext-mini-canvas { width: 100%; height: 180px; display:block; }
+      .ad-ext-canvas-tooltip {
+        position: absolute;
+        display: none;
+        pointer-events: none;
+        padding: 6px 8px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(0,0,0,0.78);
+        font-size: 12px;
+        line-height: 1.2;
+        font-weight: 800;
+        white-space: nowrap;
+        z-index: 3000;
+        transform: translate(-50%, -120%);
+        box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+      }
+
+
 
       .ad-ext-table { width: 100%; border-collapse: collapse; font-size: var(--ad-table-font-size); margin: 0; }
       .ad-ext-table th {
@@ -2536,6 +2653,7 @@ const AD_EXT_CFG_FIELDS = [
   }
   .ad-ext-dot--st { background: rgba(0,150,255,0.85); }
   .ad-ext-dot--x01 { background: rgba(0,200,160,0.85); }
+  .ad-ext-dot--oth { background: rgba(200,140,255,0.85); }
   .ad-ext-dot--goal { background: rgba(255,200,0,0.85); }
 
 
@@ -3286,6 +3404,8 @@ const AD_EXT_CFG_FIELDS = [
 
       .ad-train-insights { display:none; }
       .ad-train-segfokus { display:none; }
+      .ad-train-chromo { display:none; }
+
 
 
       .ad-train-layout[data-train-view="INSIGHTS"] .ad-train-main { display:none !important; }
@@ -3298,6 +3418,14 @@ const AD_EXT_CFG_FIELDS = [
       .ad-train-layout[data-train-view="SEGFOCUS"] .ad-train-insights { display:none !important; }
       .ad-train-layout[data-train-view="SEGFOCUS"] .ad-train-segfokus { display:block; }
       .ad-train-layout[data-train-view="SEGFOCUS"] { grid-template-columns: 1fr !important; }
+
+      .ad-train-layout[data-train-view="CHROMO"] .ad-train-chromo { display:block; }
+      .ad-train-layout[data-train-view="CHROMO"] .ad-train-main,
+      .ad-train-layout[data-train-view="CHROMO"] .ad-train-side,
+      .ad-train-layout[data-train-view="CHROMO"] .ad-train-insights,
+      .ad-train-layout[data-train-view="CHROMO"] .ad-train-segfokus { display:none !important; }
+      .ad-train-layout[data-train-view="CHROMO"] { grid-template-columns: 1fr !important; }
+
 
       .ad-train-side {
         border-radius: 18px;
@@ -3771,7 +3899,6 @@ const AD_EXT_CFG_FIELDS = [
 
         <div class="ad-ext-subnav">
           <button id="ad-ext-subnav-x01" type="button" class="ad-ext-subnav-btn ad-ext-subnav-btn--active">X01 Liga</button>
-          <button id="ad-ext-subnav-time" type="button" class="ad-ext-subnav-btn">Zeit Tracker</button>
           <button id="ad-ext-subnav-training" type="button" class="ad-ext-subnav-btn">Training</button>
           <button id="ad-ext-subnav-masterhof" type="button" class="ad-ext-subnav-btn">Gesamt Hall Of Fame</button>
         </div>
@@ -4132,9 +4259,8 @@ const AD_EXT_CFG_FIELDS = [
             <div class="ad-ext-filter">
               <div class="ad-ext-filter-label">Modus</div>
               <select id="ad-ext-time-mode" class="ad-ext-select">
-                <option value="ALL" selected>Alles</option>
-                <option value="ST">Segment Training</option>
-                <option value="X01">X01 Liga</option>
+                                <option value="ALL" selected>Alles</option>
+
               </select>
             </div>
 
@@ -4151,22 +4277,14 @@ const AD_EXT_CFG_FIELDS = [
                 <option value="ALL">Gesamt</option>
               </select>
             </div>
-
-            <div class="ad-ext-filter">
-              <div class="ad-ext-filter-label">Ziel (h/Woche)</div>
-              <input id="ad-ext-time-goal" class="ad-ext-input" type="number" min="0" step="0.5" value="5" />
-            </div>
-          </div>
+</div>
 
           <div class="ad-ext-kpi-grid">
             <div class="ad-ext-kpi-tile">
               <div class="ad-ext-kpi-title">Diese Woche</div>
               <div id="ad-ext-time-kpi-thisweek" class="ad-ext-kpi-value">–</div>
               <div id="ad-ext-time-kpi-thisweek-sub" class="ad-ext-kpi-sub">–</div>
-              <div class="ad-ext-progress">
-                <div id="ad-ext-time-progress" class="ad-ext-progress-bar" style="width:0%;"></div>
-              </div>
-            </div>
+</div>
 
             <div class="ad-ext-kpi-tile">
               <div class="ad-ext-kpi-title">Im Zeitraum</div>
@@ -4192,10 +4310,13 @@ const AD_EXT_CFG_FIELDS = [
               <div class="ad-ext-card-title">Wochenverlauf</div>
               <canvas id="ad-ext-time-chart" class="ad-ext-chart-canvas" width="1200" height="280"></canvas>
               <div class="ad-ext-legend">
-                <div class="ad-ext-legend-item"><span class="ad-ext-dot ad-ext-dot--st"></span><span>Segment Training</span></div>
-                <div class="ad-ext-legend-item"><span class="ad-ext-dot ad-ext-dot--x01"></span><span>X01 Liga</span></div>
-                <div class="ad-ext-legend-item"><span class="ad-ext-dot ad-ext-dot--goal"></span><span>Ziel/Woche</span></div>
-              </div>
+                <div class="ad-ext-legend-item"><span class="ad-ext-dot" style="background:rgba(200,140,255,0.85);"></span><span>ATC</span></div>
+                <div class="ad-ext-legend-item"><span class="ad-ext-dot" style="background:rgba(255,200,0,0.85);"></span><span>CountUp</span></div>
+                <div class="ad-ext-legend-item"><span class="ad-ext-dot" style="background:rgba(255,90,90,0.85);"></span><span>Cricket</span></div>
+                <div class="ad-ext-legend-item"><span class="ad-ext-dot" style="background:rgba(255,140,0,0.85);"></span><span>Random Checkout</span></div>
+                <div class="ad-ext-legend-item"><span class="ad-ext-dot" style="background:rgba(0,150,255,0.85);"></span><span>Segment Training</span></div>
+                <div class="ad-ext-legend-item"><span class="ad-ext-dot" style="background:rgba(0,200,160,0.85);"></span><span>X01 vs Bot</span></div>
+</div>
             </div>
 
             <div class="ad-ext-card">
@@ -4214,14 +4335,17 @@ const AD_EXT_CFG_FIELDS = [
                     <th style="width: 70px;">KW</th>
                     <th style="width: 200px;">Zeitraum</th>
                     <th style="width: 120px;">Gesamt</th>
+                    <th style="width: 120px;">ATC</th>
+                    <th style="width: 120px;">CountUp</th>
+                    <th style="width: 120px;">Cricket</th>
+                    <th style="width: 160px;">Random Checkout</th>
                     <th style="width: 120px;">Segment</th>
-                    <th style="width: 120px;">X01</th>
+                    <th style="width: 120px;">X01 vs Bot</th>
                     <th style="width: 90px;">Sessions</th>
-                    <th style="width: 90px;">Matches</th>
                   </tr>
                 </thead>
                 <tbody id="ad-ext-time-week-body">
-                  <tr><td colspan="7" class="ad-ext-muted">–</td></tr>
+                  <tr><td colspan="10" class="ad-ext-muted">–</td></tr>
                 </tbody>
               </table>
             </div>
@@ -4246,6 +4370,7 @@ const AD_EXT_CFG_FIELDS = [
                   <button type="button" class="ad-ext-segbtn" data-view="PLAN">Trainingsplan</button>
                   <button type="button" class="ad-ext-segbtn" data-view="INSIGHTS">Erkenntnisse</button>
                   <button type="button" class="ad-ext-segbtn" data-view="SEGFOCUS">Segment-Fokus</button>
+            <button type="button" class="ad-ext-segbtn" data-view="CHROMO">Chrono-Tracker</button>
                 </div>
               </div>
             </div>
@@ -4263,7 +4388,7 @@ const AD_EXT_CFG_FIELDS = [
                   <div class="ad-ext-kpi-value" id="ad-ext-train-kpi-ist">—</div>
                 </div>
                 <div class="ad-ext-kpi-tile">
-                  <div class="ad-ext-kpi-title">Trainingszeit</div>
+                  <div class="ad-ext-kpi-title" title="Summe aller Trainingszeiten der Woche (inkl. Einheiten außerhalb des Plans bzw. außerhalb der geplanten Segment-Targets).">Trainingszeit (Gesamt)</div>
                   <div class="ad-ext-kpi-value" id="ad-ext-train-kpi-time">—</div>
                 </div>
                 <div class="ad-ext-kpi-tile">
@@ -4341,36 +4466,44 @@ const AD_EXT_CFG_FIELDS = [
                 </div>
               </div>
               <div class="ad-ext-grid-2 ad-ext-train-insights-analysis">
-                <div class="ad-ext-card" style="padding:0;">
-                  <div style="padding:12px 14px 8px;">
-                    <div class="ad-ext-section-title" style="margin:0;">Schwache Doppel (Segment Training)</div>
+                <div class="ad-ext-train-insights-leftcol">
+                  <div class="ad-ext-card" style="padding:0;">
+                                    <div style="padding:12px 14px 8px;">
+                                      <div class="ad-ext-section-title" style="margin:0;">Schwache Doppel (Segment Training)</div>
+                                    </div>
+                                    <table class="ad-ext-table ad-ext-table--fixed">
+                                      <colgroup>
+                                        <col style="width:72px;">
+                                        <col style="width:84px;">
+                                        <col style="width:70px;">
+                                        <col style="width:70px;">
+                                        <col style="width:70px;">
+                                      </colgroup>
+                                      <thead>
+                                        <tr>
+                                          <th>Doppel</th>
+                                          <th class="ad-ext-table-value-right">Sessions</th>
+                                          <th class="ad-ext-table-value-right">Darts</th>
+                                          <th class="ad-ext-table-value-right">Hits</th>
+                                          <th class="ad-ext-table-value-right">Hit %</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id="ad-ext-insights-weakdoubles-body">
+                                        <tr><td colspan="5" style="opacity:.7; padding:10px 12px;">—</td></tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                  <div class="ad-ext-card ad-ext-insights-left-fill" style="padding:0;">
+                    <div style="padding:12px 14px 8px;">
+                      <div class="ad-ext-section-title" style="margin:0;">Platzhalter</div>
+                    </div>
+                    <div style="padding:0 14px 14px; opacity:.75;">Platzhalter</div>
                   </div>
-                  <table class="ad-ext-table ad-ext-table--fixed">
-                    <colgroup>
-                      <col style="width:72px;">
-                      <col style="width:84px;">
-                      <col style="width:70px;">
-                      <col style="width:70px;">
-                      <col style="width:70px;">
-                    </colgroup>
-                    <thead>
-                      <tr>
-                        <th>Doppel</th>
-                        <th class="ad-ext-table-value-right">Sessions</th>
-                        <th class="ad-ext-table-value-right">Darts</th>
-                        <th class="ad-ext-table-value-right">Hits</th>
-                        <th class="ad-ext-table-value-right">Hit %</th>
-                      </tr>
-                    </thead>
-                    <tbody id="ad-ext-insights-weakdoubles-body">
-                      <tr><td colspan="5" style="opacity:.7; padding:10px 12px;">—</td></tr>
-                    </tbody>
-                  </table>
                 </div>
                 <div class="ad-ext-train-insights-miniCharts">
                   <div class="ad-ext-card" style="padding:0;">
                     <div style="padding:12px 14px 8px;">
-                      <div class="ad-ext-section-title" style="margin:0;">AVG Verlauf (X01)</div>
+                      <div class="ad-ext-section-title" style="margin:0;">Around the Clock (ATC) Fortschritt</div>
                     </div>
                     <div style="padding:0 14px 14px;">
                       <canvas id="ad-ext-insights-mini-avg" class="ad-ext-mini-canvas" width="520" height="180"></canvas>
@@ -4398,6 +4531,7 @@ const AD_EXT_CFG_FIELDS = [
             </div>
 
             <div class="ad-train-segfokus" id="ad-ext-train-segfokus"></div>
+          <div class="ad-train-chromo" id="ad-ext-train-chromo"></div>
 
             <aside class="ad-train-side" data-open="0">
               <div class="ad-train-side-head">
@@ -4797,6 +4931,199 @@ const AD_EXT_CFG_FIELDS = [
         ctx.font = "800 14px system-ui, -apple-system, Segoe UI, Roboto";
         ctx.fillText(text || "Keine Daten", 16, 30);
     }
+
+    function drawAtcWeeklyTrend(canvas, weeksAsc, thisWeekKey) {
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const weeks = Array.isArray(weeksAsc) ? weeksAsc : [];
+        const maxShow = 16; // 12–16 Wochen (wir nehmen 16 als Obergrenze)
+        const slice = weeks.slice(Math.max(0, weeks.length - maxShow));
+
+        const labels = [];
+        const vals = [];
+        const hasVals = [];
+        for (const w of slice) {
+            const wk = String(w?.weekKey || "");
+            if (!wk) continue;
+
+            let v = NaN;
+            let has = false;
+            try {
+                const agg = aggregateTrainingActualsForWeek(wk);
+                const rec = agg?.byActivity?.get ? agg.byActivity.get("ATC") : null;
+                const darts = Number(rec?.darts ?? 0) || 0;
+                const hits = Number(rec?.hits ?? 0) || 0;
+                v = (darts > 0) ? Number(((hits / darts) * 100).toFixed(1)) : NaN;
+                v = Number.isFinite(v) ? Math.max(0, Math.min(100, v)) : NaN;
+                has = (darts > 0);
+            } catch {}
+
+            vals.push(v);
+            hasVals.push(!!has);
+
+            const kw = (w && w.kw != null) ? String(w.kw).padStart(2, "0") : "";
+            labels.push(kw ? `KW ${kw}` : wk);
+        }
+
+        const hasData = vals.some((x) => Number.isFinite(x));
+        if (!vals.length || !hasData) {
+            try { canvas.__adExtAtcPoints = []; } catch {}
+            drawEmpty(canvas, "Keine Daten");
+            return;
+        }
+
+        clearCanvas(ctx, canvas.width, canvas.height);
+
+        const W = canvas.width, H = canvas.height;
+        const padL = 44, padR = 10, padT = 14, padB = 28;
+        const plotW = W - padL - padR;
+        const plotH = H - padT - padB;
+
+        const step = 20;
+
+
+        const yMax = 100;
+
+        // Grid (Y)
+        ctx.save();
+        ctx.font = "11px system-ui, -apple-system, Segoe UI, Roboto";
+        ctx.fillStyle = "rgba(255,255,255,0.65)";
+        ctx.strokeStyle = "rgba(255,255,255,0.10)";
+        ctx.lineWidth = 1;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+
+        for (let yVal = 0; yVal <= yMax + 0.0001; yVal += step) {
+            const y = padT + plotH - (yVal / yMax) * plotH;
+            ctx.beginPath();
+            ctx.moveTo(padL, y);
+            ctx.lineTo(padL + plotW, y);
+            ctx.stroke();
+            ctx.fillText(String(Math.round(yVal)) + "%", 8, y);
+        }
+
+        // X axis
+        ctx.strokeStyle = "rgba(255,255,255,0.22)";
+        ctx.beginPath();
+        ctx.moveTo(padL, padT + plotH);
+        ctx.lineTo(padL + plotW, padT + plotH);
+        ctx.stroke();
+
+        const n = vals.length;
+        const xStep = (n <= 1) ? 0 : (plotW / (n - 1));
+        const xPos = (i) => padL + i * xStep;
+        const yPos = (v) => padT + plotH - (v / yMax) * plotH;
+
+        // X labels
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        const showEvery = (n > 12) ? 2 : 1;
+        for (let i = 0; i < n; i += showEvery) {
+            const lab = labels[i] || "";
+            ctx.fillText(lab, xPos(i), padT + plotH + 8);
+        }
+
+        // Line
+        const col = PALETTE[0] || "#7dd3fc";
+        ctx.strokeStyle = col;
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+        let started = false;
+        for (let i = 0; i < n; i++) {
+            const vv = vals[i];
+            if (!Number.isFinite(vv)) { continue; }
+            const x = xPos(i);
+            const y = yPos(vv);
+            if (!started) { ctx.moveTo(x, y); started = true; }
+            else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+
+        const points = [];
+        // Points
+        ctx.fillStyle = col;
+        for (let i = 0; i < n; i++) {
+            const vv = vals[i];
+            if (!Number.isFinite(vv)) continue;
+            const x = xPos(i);
+            const y = yPos(vv);
+            ctx.beginPath();
+            ctx.arc(x, y, 3, 0, Math.PI * 2);
+            ctx.fill();
+            try { points.push({ i, x, y, label: labels[i], value: (Number.isFinite(vv) ? (Number(vv).toFixed(1) + "%") : "—"), raw: vv }); } catch {}
+        }
+
+
+        try { canvas.__adExtAtcPoints = points; } catch {}
+
+        // Tooltip: show KW + Hit% when hovering a point (canvas)
+        try {
+            if (!canvas.dataset.adExtAtcTipWired) {
+                canvas.dataset.adExtAtcTipWired = "1";
+                const parent = canvas.parentElement;
+                if (parent) {
+                    try {
+                        const cs = window.getComputedStyle(parent);
+                        if (cs && cs.position === "static") parent.style.position = "relative";
+                    } catch {}
+                    const tip = document.createElement("div");
+                    tip.className = "ad-ext-canvas-tooltip";
+                    tip.style.display = "none";
+                    parent.appendChild(tip);
+                    try { canvas.__adExtAtcTipEl = tip; } catch {}
+
+                    const hide = () => { try { tip.style.display = "none"; } catch {} };
+                    canvas.addEventListener("mouseleave", hide);
+                    canvas.addEventListener("mousemove", (ev) => {
+                        try {
+                            const pts = canvas.__adExtAtcPoints || [];
+                            if (!pts || !pts.length) { hide(); return; }
+
+                            const rect = canvas.getBoundingClientRect();
+                            if (!rect || !rect.width || !rect.height) { hide(); return; }
+
+                            const mx = (ev.clientX - rect.left) * (canvas.width / rect.width);
+                            const my = (ev.clientY - rect.top) * (canvas.height / rect.height);
+
+                            let best = null;
+                            let bestD2 = 1e18;
+                            for (const p of pts) {
+                                const dx = mx - p.x;
+                                const dy = my - p.y;
+                                const d2 = dx * dx + dy * dy;
+                                if (d2 < bestD2) { bestD2 = d2; best = p; }
+                            }
+                            const r = 8;
+                            if (!best || bestD2 > r * r) { hide(); return; }
+
+                            const sx = rect.width / canvas.width;
+                            const sy = rect.height / canvas.height;
+                            const xCss = best.x * sx;
+                            const yCss = best.y * sy;
+
+                            let ox = 0, oy = 0;
+                            try {
+                                const pr = parent.getBoundingClientRect();
+                                ox = rect.left - pr.left;
+                                oy = rect.top - pr.top;
+                            } catch {}
+
+                            tip.textContent = `${best.label}: ${best.value}`;
+                            tip.style.left = `${Math.round(ox + xCss)}px`;
+                            tip.style.top = `${Math.round(oy + yCss)}px`;
+                            tip.style.display = "block";
+                        } catch { hide(); }
+                    });
+                }
+            }
+        } catch {}
+        ctx.restore();
+    }
+
 
     // =========================
     // SVG helpers (charts)
@@ -8203,7 +8530,7 @@ const AD_EXT_CFG_FIELDS = [
       </div>
     `;
 
-    const mkLinesCard = (title, subtitle, linesHtml) => `
+        const mkLinesCard = (title, subtitle, linesHtml) => `
       <div class="ad-ext-card" style="padding:12px; height:100%; min-height:148px; display:flex; flex-direction:column;">
         <div class="ad-ext-card-title" style="margin:0 0 4px 0;">${title}</div>
         <div style="opacity:.72; font-size:12px; margin-bottom:10px;">${subtitle}</div>
@@ -8213,7 +8540,7 @@ const AD_EXT_CFG_FIELDS = [
       </div>
     `;
 
-    const line = (emoji, textLeft, isBold) => `
+        const line = (emoji, textLeft, isBold) => `
       <div style="display:flex; align-items:center; gap:10px;">
         <div style="font-size:16px; line-height:1;">${emoji}</div>
         <div style="font-weight:${isBold ? 900 : 400}; font-size:13px;">
@@ -8222,12 +8549,12 @@ const AD_EXT_CFG_FIELDS = [
       </div>
     `;
 
-    // Hall of Fame: Hover tooltip on player rows (date + "Spiel ansehen")
-    const lineTip = (emoji, textLeft, isBold, rec, kind) => {
-        const owner = `hof:${kind}:${String(rec?.playerKey || "")}:${String(rec?.matchId || "")}`;
-        const dateIso = String(rec?.dateIso || "");
-        const matchId = rec?.matchId ? String(rec.matchId) : "";
-        return `
+        // Hall of Fame: Hover tooltip on player rows (date + "Spiel ansehen")
+        const lineTip = (emoji, textLeft, isBold, rec, kind) => {
+            const owner = `hof:${kind}:${String(rec?.playerKey || "")}:${String(rec?.matchId || "")}`;
+            const dateIso = String(rec?.dateIso || "");
+            const matchId = rec?.matchId ? String(rec.matchId) : "";
+            return `
           <div class="ad-ext-hof-tip" data-hof-owner="${escapeHtml(owner)}" data-hof-date="${escapeHtml(dateIso)}" data-hof-match="${escapeHtml(matchId)}"
                style="display:flex; align-items:center; gap:10px; cursor:default;">
             <div style="font-size:16px; line-height:1;">${emoji}</div>
@@ -8238,392 +8565,392 @@ const AD_EXT_CFG_FIELDS = [
         `;
     };
 
-    const ensureTooltipOpenMatchDelegate = () => {
-        const tipEl = tooltip();
-        if (!tipEl) return;
-        if (tipEl.dataset.adExtOpenMatchWired === "1") return;
-        tipEl.dataset.adExtOpenMatchWired = "1";
-        tipEl.addEventListener("click", (ev) => {
-            const btn = ev.target?.closest?.("[data-ad-open-match]");
-            if (!btn) return;
-            const matchId = btn.getAttribute("data-ad-open-match");
-            if (!matchId) return;
-            ev.preventDefault();
-            ev.stopPropagation();
-            try {
-                window.open(MATCH_URL_PREFIX + encodeURIComponent(String(matchId)), "_blank", "noopener");
-            } catch (e) { }
-            tooltipHide();
-        });
-    };
-
-    const wireHofTooltips = (rootEl) => {
-        ensureTooltipOpenMatchDelegate();
-        if (!rootEl) return;
-
-        const tipEl = tooltip();
-        const st = cache._hofTipState || (cache._hofTipState = { overAnchor: false, overTip: false, hideT: null });
-
-        const scheduleHide = (owner) => {
-            if (st.hideT) clearTimeout(st.hideT);
-            st.hideT = setTimeout(() => {
-                const curOwner = String(tooltip()?.dataset?.pinnedOwner || "");
-                if (curOwner !== String(owner || "")) return;
-                if (!st.overAnchor && !st.overTip) tooltipHide();
-            }, 110);
+        const ensureTooltipOpenMatchDelegate = () => {
+            const tipEl = tooltip();
+            if (!tipEl) return;
+            if (tipEl.dataset.adExtOpenMatchWired === "1") return;
+            tipEl.dataset.adExtOpenMatchWired = "1";
+            tipEl.addEventListener("click", (ev) => {
+                const btn = ev.target?.closest?.("[data-ad-open-match]");
+                if (!btn) return;
+                const matchId = btn.getAttribute("data-ad-open-match");
+                if (!matchId) return;
+                ev.preventDefault();
+                ev.stopPropagation();
+                try {
+                    window.open(MATCH_URL_PREFIX + encodeURIComponent(String(matchId)), "_blank", "noopener");
+                } catch (e) { }
+                tooltipHide();
+            });
         };
 
-        if (tipEl && tipEl.dataset.adExtHofTipWired !== "1") {
-            tipEl.dataset.adExtHofTipWired = "1";
-            tipEl.addEventListener("mouseenter", () => {
-                const owner = String(tipEl.dataset.pinnedOwner || "");
-                if (!owner.startsWith("hof:")) return;
-                st.overTip = true;
-                if (st.hideT) { clearTimeout(st.hideT); st.hideT = null; }
-            });
-            tipEl.addEventListener("mouseleave", () => {
-                const owner = String(tipEl.dataset.pinnedOwner || "");
-                if (!owner.startsWith("hof:")) return;
-                st.overTip = false;
-                scheduleHide(owner);
-            });
-        }
+        const wireHofTooltips = (rootEl) => {
+            ensureTooltipOpenMatchDelegate();
+            if (!rootEl) return;
 
-        rootEl.querySelectorAll(".ad-ext-hof-tip").forEach(el => {
-            if (el.dataset.hofWired === "1") return;
-            el.dataset.hofWired = "1";
+            const tipEl = tooltip();
+            const st = cache._hofTipState || (cache._hofTipState = { overAnchor: false, overTip: false, hideT: null });
 
-            const owner = String(el.getAttribute("data-hof-owner") || "");
-            const dateIso = String(el.getAttribute("data-hof-date") || "");
-            const matchId = String(el.getAttribute("data-hof-match") || "");
+            const scheduleHide = (owner) => {
+                if (st.hideT) clearTimeout(st.hideT);
+                st.hideT = setTimeout(() => {
+                    const curOwner = String(tooltip()?.dataset?.pinnedOwner || "");
+                    if (curOwner !== String(owner || "")) return;
+                    if (!st.overAnchor && !st.overTip) tooltipHide();
+                }, 110);
+            };
 
-            const show = () => {
-                st.overAnchor = true;
-                if (st.hideT) { clearTimeout(st.hideT); st.hideT = null; }
+            if (tipEl && tipEl.dataset.adExtHofTipWired !== "1") {
+                tipEl.dataset.adExtHofTipWired = "1";
+                tipEl.addEventListener("mouseenter", () => {
+                    const owner = String(tipEl.dataset.pinnedOwner || "");
+                    if (!owner.startsWith("hof:")) return;
+                    st.overTip = true;
+                    if (st.hideT) { clearTimeout(st.hideT); st.hideT = null; }
+                });
+                tipEl.addEventListener("mouseleave", () => {
+                    const owner = String(tipEl.dataset.pinnedOwner || "");
+                    if (!owner.startsWith("hof:")) return;
+                    st.overTip = false;
+                    scheduleHide(owner);
+                });
+            }
 
-                const dateStr = dateIso ? germanDateFromIso(dateIso) : "—";
-                const btn = matchId
-                ? `<button type="button" class="ad-ext-view-btn" data-ad-open-match="${escapeHtml(matchId)}">Spiel ansehen</button>`
+            rootEl.querySelectorAll(".ad-ext-hof-tip").forEach(el => {
+                if (el.dataset.hofWired === "1") return;
+                el.dataset.hofWired = "1";
+
+                const owner = String(el.getAttribute("data-hof-owner") || "");
+                const dateIso = String(el.getAttribute("data-hof-date") || "");
+                const matchId = String(el.getAttribute("data-hof-match") || "");
+
+                const show = () => {
+                    st.overAnchor = true;
+                    if (st.hideT) { clearTimeout(st.hideT); st.hideT = null; }
+
+                    const dateStr = dateIso ? germanDateFromIso(dateIso) : "—";
+                    const btn = matchId
+                    ? `<button type="button" class="ad-ext-view-btn" data-ad-open-match="${escapeHtml(matchId)}">Spiel ansehen</button>`
                     : "";
 
-                const html = `
+                    const html = `
                   <div class="ad-ext-tooltip-record">
                     <div class="ad-ext-tooltip-recline">🏆 Rekord am <span class="ad-ext-tooltip-date">${escapeHtml(dateStr)}</span></div>
                     ${btn ? `<div class="ad-ext-tooltip-actions">${btn}</div>` : ``}
                   </div>
                 `;
 
-                tooltipShow(null, html, { interactive: true, pinned: true, pinnedOwner: owner || "hof:unknown" });
-                tooltipMoveToRect(el.getBoundingClientRect());
+                    tooltipShow(null, html, { interactive: true, pinned: true, pinnedOwner: owner || "hof:unknown" });
+                    tooltipMoveToRect(el.getBoundingClientRect());
+                };
+
+                el.addEventListener("mouseenter", show);
+                el.addEventListener("mouseleave", () => {
+                    st.overAnchor = false;
+                    scheduleHide(owner);
+                });
+            });
+        };
+        // MOST GAME-WINS (Top 1-3)
+        const mostWinsCard = (() => {
+            const top1 = winsRowsF[0] || null;
+            if (!top1) return emptyCard("MOST GAME-WINS", "Meiste Siege aller Zeiten", "Keine Daten für diese Combo");
+
+            const top2 = winsRowsF[1] || null;
+            const top3 = winsRowsF[2] || null;
+
+            const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.wins)}`, true);
+            const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.wins)}`, false) : "";
+            const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.wins)}`, false) : "";
+
+            return mkLinesCard(
+                "MOST GAME-WINS",
+                `Meiste Siege aller Zeiten`,
+                `${l1}${l2 || ""}${l3 || ""}`
+        );
+    })();
+
+        // BEST AVERAGE IN A GAME (Top 1-3 players)
+        const bestAvgCard = (() => {
+            const top1 = bestAvgRowsF[0] || null;
+            if (!top1) return emptyCard("BEST AVERAGE IN A GAME", "Bester Average in einem Spiel", "Keine Daten für diese Combo");
+
+            const top2 = bestAvgRowsF[1] || null;
+            const top3 = bestAvgRowsF[2] || null;
+
+            const l1 = lineTip("🥇", `${escapeHtml(top1.playerName)} — ${escapeHtml(fmtDecComma(top1.bestAvg, 2))}`, true, top1, "avg");
+            const l2 = top2 ? lineTip("🥈", `${escapeHtml(top2.playerName)} — ${escapeHtml(fmtDecComma(top2.bestAvg, 2))}`, false, top2, "avg") : "";
+            const l3 = top3 ? lineTip("🥉", `${escapeHtml(top3.playerName)} — ${escapeHtml(fmtDecComma(top3.bestAvg, 2))}`, false, top3, "avg") : "";
+
+            return mkLinesCard(
+                "BEST AVERAGE IN A GAME",
+                "Bester Average in einem Spiel",
+                `${l1}${l2 || ""}${l3 || ""}`
+        );
+        })();
+
+        // BEST FIRST-9-AVERAGE IN A GAME (Top 1-3 players)
+        const bestF9Card = (() => {
+            const top1 = bestF9RowsF[0] || null;
+            if (!top1) return emptyCard("BEST FIRST-9-AVERAGE IN A GAME", "Bester Average mit den ersten 9 Darts", "Keine Daten für diese Combo");
+
+            const top2 = bestF9RowsF[1] || null;
+            const top3 = bestF9RowsF[2] || null;
+
+            const l1 = lineTip("🥇", `${escapeHtml(top1.playerName)} — ${escapeHtml(fmtDecComma(top1.bestF9Avg, 2))}`, true, top1, "f9");
+            const l2 = top2 ? lineTip("🥈", `${escapeHtml(top2.playerName)} — ${escapeHtml(fmtDecComma(top2.bestF9Avg, 2))}`, false, top2, "f9") : "";
+            const l3 = top3 ? lineTip("🥉", `${escapeHtml(top3.playerName)} — ${escapeHtml(fmtDecComma(top3.bestF9Avg, 2))}`, false, top3, "f9") : "";
+
+            return mkLinesCard(
+                "BEST FIRST-9-AVERAGE IN A GAME",
+                "Bester Average mit den ersten 9 Darts",
+                `${l1}${l2 || ""}${l3 || ""}`
+        );
+        })();
+
+
+        // MOST LEG WINS (Top 1-3)
+        const mostLegWinsCard = (() => {
+            const top1 = legWinsRowsF[0] || null;
+            if (!top1) return emptyCard("MOST LEG WINS", "Meiste Leg Siege aller Zeiten", "Keine Daten für diese Combo");
+
+            const top2 = legWinsRowsF[1] || null;
+            const top3 = legWinsRowsF[2] || null;
+
+            const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.legWins)}`, true);
+            const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.legWins)}`, false) : "";
+            const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.legWins)}`, false) : "";
+
+            return mkLinesCard(
+                "MOST LEG WINS",
+                `Meiste Leg Siege aller Zeiten`,
+                `${l1}${l2 || ""}${l3 || ""}`
+        );
+        })();
+
+        // BEST AVERAGE IN A LEG (Top 1-3)
+        const bestAvgLegCard = (() => {
+            const top1 = bestLegAvgRowsF[0] || null;
+            if (!top1) return emptyCard("BEST AVERAGE IN A LEG", "Bester Average in einem Leg", "Keine Daten für diese Combo");
+
+            const top2 = bestLegAvgRowsF[1] || null;
+            const top3 = bestLegAvgRowsF[2] || null;
+
+            const l1 = lineTip("🥇", `${escapeHtml(top1.playerName)} — ${escapeHtml(fmtDecComma(top1.bestLegAvg, 2))}`, true, top1, "legavg");
+            const l2 = top2 ? lineTip("🥈", `${escapeHtml(top2.playerName)} — ${escapeHtml(fmtDecComma(top2.bestLegAvg, 2))}`, false, top2, "legavg") : "";
+            const l3 = top3 ? lineTip("🥉", `${escapeHtml(top3.playerName)} — ${escapeHtml(fmtDecComma(top3.bestLegAvg, 2))}`, false, top3, "legavg") : "";
+
+            return mkLinesCard(
+                "BEST AVERAGE IN A LEG",
+                "Bester Average in einem Leg",
+                `${l1}${l2 || ""}${l3 || ""}`
+        );
+        })();
+
+        // BEST FIRST-9-AVERAGE IN A LEG (Top 1-3)
+        const bestF9LegCard = (() => {
+            const top1 = bestLegF9RowsF[0] || null;
+            if (!top1) return emptyCard("BEST FIRST-9-AVERAGE IN A LEG", "Bester Average mit den ersten 9 Darts in einem Leg", "Keine Daten für diese Combo");
+
+            const top2 = bestLegF9RowsF[1] || null;
+            const top3 = bestLegF9RowsF[2] || null;
+
+            const l1 = lineTip("🥇", `${escapeHtml(top1.playerName)} — ${escapeHtml(fmtDecComma(top1.bestLegF9Avg, 2))}`, true, top1, "legf9");
+            const l2 = top2 ? lineTip("🥈", `${escapeHtml(top2.playerName)} — ${escapeHtml(fmtDecComma(top2.bestLegF9Avg, 2))}`, false, top2, "legf9") : "";
+            const l3 = top3 ? lineTip("🥉", `${escapeHtml(top3.playerName)} — ${escapeHtml(fmtDecComma(top3.bestLegF9Avg, 2))}`, false, top3, "legf9") : "";
+
+            return mkLinesCard(
+                "BEST FIRST-9-AVERAGE IN A LEG",
+                "Bester Average mit den ersten 9 Darts in einem Leg",
+                `${l1}${l2 || ""}${l3 || ""}`
+        );
+        })();
+
+        // BEST HIGH OUT (Top 1-3)
+        const bestHighOutCard = (() => {
+            const top1 = bestHighOutRowsF[0] || null;
+            if (!top1) return emptyCard("BEST HIGH OUT", "Höchster High Out in einem Spiel", "Keine Daten für diese Combo");
+
+            const top2 = bestHighOutRowsF[1] || null;
+            const top3 = bestHighOutRowsF[2] || null;
+
+            const l1 = lineTip("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.bestHighOut)}`, true, top1, "ho");
+            const l2 = top2 ? lineTip("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.bestHighOut)}`, false, top2, "ho") : "";
+            const l3 = top3 ? lineTip("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.bestHighOut)}`, false, top3, "ho") : "";
+
+            return mkLinesCard(
+                "BEST HIGH OUT",
+                "Höchster High Out in einem Spiel",
+                `${l1}${l2 || ""}${l3 || ""}`
+    );
+    })();
+
+        // NUMBER OF HIGH OUTS (Top 1-3)
+        const highOutsCountCard = (() => {
+            const top1 = highOutCountRowsF[0] || null;
+            if (!top1) return emptyCard("NUMBER OF HIGH OUTS", `Anzahl der High Outs aller Zeiten`, "Keine Daten für diese Combo");
+
+            const top2 = highOutCountRowsF[1] || null;
+            const top3 = highOutCountRowsF[2] || null;
+
+            const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.highOuts)}`, true);
+            const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.highOuts)}`, false) : "";
+            const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.highOuts)}`, false) : "";
+
+            return mkLinesCard(
+                "NUMBER OF HIGH OUTS",
+                `Anzahl der High Outs aller Zeiten`,
+                `${l1}${l2 || ""}${l3 || ""}`
+    );
+        })();
+
+        // BEST CHECKOUT QUOTE IN % (Top 1-3)
+        const bestCheckoutQuotaCard = (() => {
+            const top1 = bestCheckoutRowsF[0] || null;
+            if (!top1) return emptyCard("BEST CHECKOUT QUOTE IN %", "Beste Checkoutquote in einem Match", "Keine Daten für diese Combo");
+
+            const top2 = bestCheckoutRowsF[1] || null;
+            const top3 = bestCheckoutRowsF[2] || null;
+
+            const fmtLine = (r) => {
+                const pct = (Number(r?.bestCoRatio) || 0) * 100;
+                const pctTxt = Number.isFinite(pct) ? fmtDecComma(pct, 1) : "—";
+                return `${escapeHtml(r.playerName)} — ${escapeHtml(pctTxt)}`;
             };
 
-            el.addEventListener("mouseenter", show);
-            el.addEventListener("mouseleave", () => {
-                st.overAnchor = false;
-                scheduleHide(owner);
-            });
-        });
-    };
-    // MOST GAME-WINS (Top 1-3)
-    const mostWinsCard = (() => {
-        const top1 = winsRowsF[0] || null;
-        if (!top1) return emptyCard("MOST GAME-WINS", "Meiste Siege aller Zeiten", "Keine Daten für diese Combo");
+            const l1 = lineTip("🥇", fmtLine(top1), true, top1, "coq");
+            const l2 = top2 ? lineTip("🥈", fmtLine(top2), false, top2, "coq") : "";
+            const l3 = top3 ? lineTip("🥉", fmtLine(top3), false, top3, "coq") : "";
 
-        const top2 = winsRowsF[1] || null;
-        const top3 = winsRowsF[2] || null;
-
-        const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.wins)}`, true);
-        const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.wins)}`, false) : "";
-        const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.wins)}`, false) : "";
-
-        return mkLinesCard(
-            "MOST GAME-WINS",
-            `Meiste Siege aller Zeiten`,
-            `${l1}${l2 || ""}${l3 || ""}`
-        );
-    })();
-
-    // BEST AVERAGE IN A GAME (Top 1-3 players)
-    const bestAvgCard = (() => {
-        const top1 = bestAvgRowsF[0] || null;
-        if (!top1) return emptyCard("BEST AVERAGE IN A GAME", "Bester Average in einem Spiel", "Keine Daten für diese Combo");
-
-        const top2 = bestAvgRowsF[1] || null;
-        const top3 = bestAvgRowsF[2] || null;
-
-        const l1 = lineTip("🥇", `${escapeHtml(top1.playerName)} — ${escapeHtml(fmtDecComma(top1.bestAvg, 2))}`, true, top1, "avg");
-        const l2 = top2 ? lineTip("🥈", `${escapeHtml(top2.playerName)} — ${escapeHtml(fmtDecComma(top2.bestAvg, 2))}`, false, top2, "avg") : "";
-        const l3 = top3 ? lineTip("🥉", `${escapeHtml(top3.playerName)} — ${escapeHtml(fmtDecComma(top3.bestAvg, 2))}`, false, top3, "avg") : "";
-
-        return mkLinesCard(
-            "BEST AVERAGE IN A GAME",
-            "Bester Average in einem Spiel",
-            `${l1}${l2 || ""}${l3 || ""}`
-        );
-    })();
-
-    // BEST FIRST-9-AVERAGE IN A GAME (Top 1-3 players)
-    const bestF9Card = (() => {
-        const top1 = bestF9RowsF[0] || null;
-        if (!top1) return emptyCard("BEST FIRST-9-AVERAGE IN A GAME", "Bester Average mit den ersten 9 Darts", "Keine Daten für diese Combo");
-
-        const top2 = bestF9RowsF[1] || null;
-        const top3 = bestF9RowsF[2] || null;
-
-        const l1 = lineTip("🥇", `${escapeHtml(top1.playerName)} — ${escapeHtml(fmtDecComma(top1.bestF9Avg, 2))}`, true, top1, "f9");
-        const l2 = top2 ? lineTip("🥈", `${escapeHtml(top2.playerName)} — ${escapeHtml(fmtDecComma(top2.bestF9Avg, 2))}`, false, top2, "f9") : "";
-        const l3 = top3 ? lineTip("🥉", `${escapeHtml(top3.playerName)} — ${escapeHtml(fmtDecComma(top3.bestF9Avg, 2))}`, false, top3, "f9") : "";
-
-        return mkLinesCard(
-            "BEST FIRST-9-AVERAGE IN A GAME",
-            "Bester Average mit den ersten 9 Darts",
-            `${l1}${l2 || ""}${l3 || ""}`
-        );
-    })();
-
-
-    // MOST LEG WINS (Top 1-3)
-    const mostLegWinsCard = (() => {
-        const top1 = legWinsRowsF[0] || null;
-        if (!top1) return emptyCard("MOST LEG WINS", "Meiste Leg Siege aller Zeiten", "Keine Daten für diese Combo");
-
-        const top2 = legWinsRowsF[1] || null;
-        const top3 = legWinsRowsF[2] || null;
-
-        const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.legWins)}`, true);
-        const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.legWins)}`, false) : "";
-        const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.legWins)}`, false) : "";
-
-        return mkLinesCard(
-            "MOST LEG WINS",
-            `Meiste Leg Siege aller Zeiten`,
-            `${l1}${l2 || ""}${l3 || ""}`
-        );
-    })();
-
-    // BEST AVERAGE IN A LEG (Top 1-3)
-    const bestAvgLegCard = (() => {
-        const top1 = bestLegAvgRowsF[0] || null;
-        if (!top1) return emptyCard("BEST AVERAGE IN A LEG", "Bester Average in einem Leg", "Keine Daten für diese Combo");
-
-        const top2 = bestLegAvgRowsF[1] || null;
-        const top3 = bestLegAvgRowsF[2] || null;
-
-        const l1 = lineTip("🥇", `${escapeHtml(top1.playerName)} — ${escapeHtml(fmtDecComma(top1.bestLegAvg, 2))}`, true, top1, "legavg");
-        const l2 = top2 ? lineTip("🥈", `${escapeHtml(top2.playerName)} — ${escapeHtml(fmtDecComma(top2.bestLegAvg, 2))}`, false, top2, "legavg") : "";
-        const l3 = top3 ? lineTip("🥉", `${escapeHtml(top3.playerName)} — ${escapeHtml(fmtDecComma(top3.bestLegAvg, 2))}`, false, top3, "legavg") : "";
-
-        return mkLinesCard(
-            "BEST AVERAGE IN A LEG",
-            "Bester Average in einem Leg",
-            `${l1}${l2 || ""}${l3 || ""}`
-        );
-    })();
-
-    // BEST FIRST-9-AVERAGE IN A LEG (Top 1-3)
-    const bestF9LegCard = (() => {
-        const top1 = bestLegF9RowsF[0] || null;
-        if (!top1) return emptyCard("BEST FIRST-9-AVERAGE IN A LEG", "Bester Average mit den ersten 9 Darts in einem Leg", "Keine Daten für diese Combo");
-
-        const top2 = bestLegF9RowsF[1] || null;
-        const top3 = bestLegF9RowsF[2] || null;
-
-        const l1 = lineTip("🥇", `${escapeHtml(top1.playerName)} — ${escapeHtml(fmtDecComma(top1.bestLegF9Avg, 2))}`, true, top1, "legf9");
-        const l2 = top2 ? lineTip("🥈", `${escapeHtml(top2.playerName)} — ${escapeHtml(fmtDecComma(top2.bestLegF9Avg, 2))}`, false, top2, "legf9") : "";
-        const l3 = top3 ? lineTip("🥉", `${escapeHtml(top3.playerName)} — ${escapeHtml(fmtDecComma(top3.bestLegF9Avg, 2))}`, false, top3, "legf9") : "";
-
-        return mkLinesCard(
-            "BEST FIRST-9-AVERAGE IN A LEG",
-            "Bester Average mit den ersten 9 Darts in einem Leg",
-            `${l1}${l2 || ""}${l3 || ""}`
-        );
-    })();
-
-    // BEST HIGH OUT (Top 1-3)
-    const bestHighOutCard = (() => {
-        const top1 = bestHighOutRowsF[0] || null;
-        if (!top1) return emptyCard("BEST HIGH OUT", "Höchster High Out in einem Spiel", "Keine Daten für diese Combo");
-
-        const top2 = bestHighOutRowsF[1] || null;
-        const top3 = bestHighOutRowsF[2] || null;
-
-        const l1 = lineTip("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.bestHighOut)}`, true, top1, "ho");
-        const l2 = top2 ? lineTip("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.bestHighOut)}`, false, top2, "ho") : "";
-        const l3 = top3 ? lineTip("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.bestHighOut)}`, false, top3, "ho") : "";
-
-        return mkLinesCard(
-            "BEST HIGH OUT",
-            "Höchster High Out in einem Spiel",
-            `${l1}${l2 || ""}${l3 || ""}`
+            return mkLinesCard(
+                "BEST CHECKOUT QUOTE IN %",
+                "Beste Checkoutquote in einem Match",
+                `${l1}${l2 || ""}${l3 || ""}`
     );
-    })();
-
-    // NUMBER OF HIGH OUTS (Top 1-3)
-    const highOutsCountCard = (() => {
-        const top1 = highOutCountRowsF[0] || null;
-        if (!top1) return emptyCard("NUMBER OF HIGH OUTS", `Anzahl der High Outs aller Zeiten`, "Keine Daten für diese Combo");
-
-        const top2 = highOutCountRowsF[1] || null;
-        const top3 = highOutCountRowsF[2] || null;
-
-        const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.highOuts)}`, true);
-        const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.highOuts)}`, false) : "";
-        const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.highOuts)}`, false) : "";
-
-        return mkLinesCard(
-            "NUMBER OF HIGH OUTS",
-            `Anzahl der High Outs aller Zeiten`,
-            `${l1}${l2 || ""}${l3 || ""}`
-    );
-    })();
-
-    // BEST CHECKOUT QUOTE IN % (Top 1-3)
-    const bestCheckoutQuotaCard = (() => {
-        const top1 = bestCheckoutRowsF[0] || null;
-        if (!top1) return emptyCard("BEST CHECKOUT QUOTE IN %", "Beste Checkoutquote in einem Match", "Keine Daten für diese Combo");
-
-        const top2 = bestCheckoutRowsF[1] || null;
-        const top3 = bestCheckoutRowsF[2] || null;
-
-        const fmtLine = (r) => {
-            const pct = (Number(r?.bestCoRatio) || 0) * 100;
-            const pctTxt = Number.isFinite(pct) ? fmtDecComma(pct, 1) : "—";
-            return `${escapeHtml(r.playerName)} — ${escapeHtml(pctTxt)}`;
-        };
-
-        const l1 = lineTip("🥇", fmtLine(top1), true, top1, "coq");
-        const l2 = top2 ? lineTip("🥈", fmtLine(top2), false, top2, "coq") : "";
-        const l3 = top3 ? lineTip("🥉", fmtLine(top3), false, top3, "coq") : "";
-
-        return mkLinesCard(
-            "BEST CHECKOUT QUOTE IN %",
-            "Beste Checkoutquote in einem Match",
-            `${l1}${l2 || ""}${l3 || ""}`
-    );
-    })();
+        })();
 
 
 
-    // NUMBER OF 60+ (Top 1-3)
-    const n60Card = (() => {
-        const top1 = score60RowsF[0] || null;
-        if (!top1) return emptyCard("NUMBER OF 60+", `Anzahl der geworfenen 60+ (60–99) aller Zeiten`, "Keine Daten für diese Combo");
+        // NUMBER OF 60+ (Top 1-3)
+        const n60Card = (() => {
+            const top1 = score60RowsF[0] || null;
+            if (!top1) return emptyCard("NUMBER OF 60+", `Anzahl der geworfenen 60+ (60–99) aller Zeiten`, "Keine Daten für diese Combo");
 
-        const top2 = score60RowsF[1] || null;
-        const top3 = score60RowsF[2] || null;
+            const top2 = score60RowsF[1] || null;
+            const top3 = score60RowsF[2] || null;
 
-        const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.count)}`, true);
-        const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.count)}`, false) : "";
-        const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.count)}`, false) : "";
+            const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.count)}`, true);
+            const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.count)}`, false) : "";
+            const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.count)}`, false) : "";
 
-        return mkLinesCard(
-            "NUMBER OF 60+",
-            `Anzahl der geworfenen 60+ (60–99) aller Zeiten`,
-            `${l1}${l2 || ""}${l3 || ""}`
+            return mkLinesCard(
+                "NUMBER OF 60+",
+                `Anzahl der geworfenen 60+ (60–99) aller Zeiten`,
+                `${l1}${l2 || ""}${l3 || ""}`
         );
     })();
 
-    // NUMBER OF 100+ (Top 1-3)
-    const n100Card = (() => {
-        const top1 = score100RowsF[0] || null;
-        if (!top1) return emptyCard("NUMBER OF 100+", `Anzahl der geworfenen 100+ (100–139) aller Zeiten`, "Keine Daten für diese Combo");
+        // NUMBER OF 100+ (Top 1-3)
+        const n100Card = (() => {
+            const top1 = score100RowsF[0] || null;
+            if (!top1) return emptyCard("NUMBER OF 100+", `Anzahl der geworfenen 100+ (100–139) aller Zeiten`, "Keine Daten für diese Combo");
 
-        const top2 = score100RowsF[1] || null;
-        const top3 = score100RowsF[2] || null;
+            const top2 = score100RowsF[1] || null;
+            const top3 = score100RowsF[2] || null;
 
-        const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.count)}`, true);
-        const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.count)}`, false) : "";
-        const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.count)}`, false) : "";
+            const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.count)}`, true);
+            const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.count)}`, false) : "";
+            const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.count)}`, false) : "";
 
-        return mkLinesCard(
-            "NUMBER OF 100+",
-            `Anzahl der geworfenen 100+ (100–139) aller Zeiten`,
-            `${l1}${l2 || ""}${l3 || ""}`
+            return mkLinesCard(
+                "NUMBER OF 100+",
+                `Anzahl der geworfenen 100+ (100–139) aller Zeiten`,
+                `${l1}${l2 || ""}${l3 || ""}`
         );
-    })();
+        })();
 
-    // NUMBER OF 140+ (Top 1-3)
-    const n140Card = (() => {
-        const top1 = score140RowsF[0] || null;
-        if (!top1) return emptyCard("NUMBER OF 140+", `Anzahl der geworfenen 140+ (140–169) aller Zeiten`, "Keine Daten für diese Combo");
+        // NUMBER OF 140+ (Top 1-3)
+        const n140Card = (() => {
+            const top1 = score140RowsF[0] || null;
+            if (!top1) return emptyCard("NUMBER OF 140+", `Anzahl der geworfenen 140+ (140–169) aller Zeiten`, "Keine Daten für diese Combo");
 
-        const top2 = score140RowsF[1] || null;
-        const top3 = score140RowsF[2] || null;
+            const top2 = score140RowsF[1] || null;
+            const top3 = score140RowsF[2] || null;
 
-        const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.count)}`, true);
-        const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.count)}`, false) : "";
-        const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.count)}`, false) : "";
+            const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.count)}`, true);
+            const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.count)}`, false) : "";
+            const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.count)}`, false) : "";
 
-        return mkLinesCard(
-            "NUMBER OF 140+",
-            `Anzahl der geworfenen 140+ (140–169) aller Zeiten`,
-            `${l1}${l2 || ""}${l3 || ""}`
+            return mkLinesCard(
+                "NUMBER OF 140+",
+                `Anzahl der geworfenen 140+ (140–169) aller Zeiten`,
+                `${l1}${l2 || ""}${l3 || ""}`
         );
-    })();
+        })();
 
-    // NUMBERS OF 170+ (Top 1-3)
-    const n170Card = (() => {
-        const top1 = score170RowsF[0] || null;
-        if (!top1) return emptyCard("NUMBERS OF 170+", `Anzahl der geworfenen 170+ (170–179) aller Zeiten`, "Keine Daten für diese Combo");
+        // NUMBERS OF 170+ (Top 1-3)
+        const n170Card = (() => {
+            const top1 = score170RowsF[0] || null;
+            if (!top1) return emptyCard("NUMBERS OF 170+", `Anzahl der geworfenen 170+ (170–179) aller Zeiten`, "Keine Daten für diese Combo");
 
-        const top2 = score170RowsF[1] || null;
-        const top3 = score170RowsF[2] || null;
+            const top2 = score170RowsF[1] || null;
+            const top3 = score170RowsF[2] || null;
 
-        const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.count)}`, true);
-        const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.count)}`, false) : "";
-        const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.count)}`, false) : "";
+            const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.count)}`, true);
+            const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.count)}`, false) : "";
+            const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.count)}`, false) : "";
 
-        return mkLinesCard(
-            "NUMBERS OF 170+",
-            `Anzahl der geworfenen 170+ (170–179) aller Zeiten`,
-            `${l1}${l2 || ""}${l3 || ""}`
+            return mkLinesCard(
+                "NUMBERS OF 170+",
+                `Anzahl der geworfenen 170+ (170–179) aller Zeiten`,
+                `${l1}${l2 || ""}${l3 || ""}`
         );
-    })();
+        })();
 
-    // NUMBERS OF 180 (Top 1-3)
-    const n180Card = (() => {
-        const top1 = score180RowsF[0] || null;
-        if (!top1) return emptyCard("NUMBERS OF 180", `Anzahl der geworfenen 180 aller Zeiten`, "Keine Daten für diese Combo");
+        // NUMBERS OF 180 (Top 1-3)
+        const n180Card = (() => {
+            const top1 = score180RowsF[0] || null;
+            if (!top1) return emptyCard("NUMBERS OF 180", `Anzahl der geworfenen 180 aller Zeiten`, "Keine Daten für diese Combo");
 
-        const top2 = score180RowsF[1] || null;
-        const top3 = score180RowsF[2] || null;
+            const top2 = score180RowsF[1] || null;
+            const top3 = score180RowsF[2] || null;
 
-        const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.count)}`, true);
-        const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.count)}`, false) : "";
-        const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.count)}`, false) : "";
+            const l1 = line("🥇", `${escapeHtml(top1.playerName)} — ${fmtInt(top1.count)}`, true);
+            const l2 = top2 ? line("🥈", `${escapeHtml(top2.playerName)} — ${fmtInt(top2.count)}`, false) : "";
+            const l3 = top3 ? line("🥉", `${escapeHtml(top3.playerName)} — ${fmtInt(top3.count)}`, false) : "";
 
-        return mkLinesCard(
-            "NUMBERS OF 180",
-            `Anzahl der geworfenen 180 aller Zeiten`,
-            `${l1}${l2 || ""}${l3 || ""}`
+            return mkLinesCard(
+                "NUMBERS OF 180",
+                `Anzahl der geworfenen 180 aller Zeiten`,
+                `${l1}${l2 || ""}${l3 || ""}`
         );
-    })();
+        })();
 
-    // LONGEST & SHORTEST GAME (Combo, Top 1/Top 1)
-    const longestShortestGameCard = (() => {
-        const recLong = longestGameRec || null;
-        const recShort = shortestGameRec || null;
+        // LONGEST & SHORTEST GAME (Combo, Top 1/Top 1)
+        const longestShortestGameCard = (() => {
+            const recLong = longestGameRec || null;
+            const recShort = shortestGameRec || null;
 
-        if (!recLong && !recShort) {
-            return emptyCard("LONGEST & SHORTEST GAME", "Wie lange ging das längste / kürzeste Spiel?", "Keine Daten für diese Combo");
-        }
-
-        const fmtMin = (sec) => {
-            const v = (Number(sec) || 0) / 60;
-            if (!Number.isFinite(v) || v <= 0) return "—";
-            const r = Math.round(v * 10) / 10;
-            return fmtDecComma(r, 1).replace(/,0$/, "");
-        };
-
-        const mkNum = (rec, kind) => {
-            const value = rec ? fmtMin(rec.durationSec) : "—";
-            if (!rec || !rec.matchId) {
-                return `<span style="font-weight:900; font-size:24px; line-height:1;">${escapeHtml(value)}</span>`;
+            if (!recLong && !recShort) {
+                return emptyCard("LONGEST & SHORTEST GAME", "Wie lange ging das längste / kürzeste Spiel?", "Keine Daten für diese Combo");
             }
-            const owner = `hof:${kind}::${String(rec.matchId || "")}`;
-            const dateIso = String(rec.dateIso || "");
-            const matchId = String(rec.matchId || "");
-            return `
+
+            const fmtMin = (sec) => {
+                const v = (Number(sec) || 0) / 60;
+                if (!Number.isFinite(v) || v <= 0) return "—";
+                const r = Math.round(v * 10) / 10;
+                return fmtDecComma(r, 1).replace(/,0$/, "");
+            };
+
+            const mkNum = (rec, kind) => {
+                const value = rec ? fmtMin(rec.durationSec) : "—";
+                if (!rec || !rec.matchId) {
+                    return `<span style="font-weight:900; font-size:24px; line-height:1;">${escapeHtml(value)}</span>`;
+                }
+                const owner = `hof:${kind}::${String(rec.matchId || "")}`;
+                const dateIso = String(rec.dateIso || "");
+                const matchId = String(rec.matchId || "");
+                return `
               <span class="ad-ext-hof-tip"
                     data-hof-owner="${escapeHtml(owner)}"
                     data-hof-date="${escapeHtml(dateIso)}"
@@ -8649,7 +8976,7 @@ const AD_EXT_CFG_FIELDS = [
         );
     })();
 
-    root.innerHTML = `
+        root.innerHTML = `
       <div class="ad-ext-kpi-grid ad-ext-kpi-grid--x01 ad-ext-hof-grid" style="margin-top:0;">
         <div>${mostWinsCard}</div>
         <div>${bestAvgCard}</div>
@@ -8674,8 +9001,8 @@ const AD_EXT_CFG_FIELDS = [
     `;
 
 
-    wireHofTooltips(root);
-}
+        wireHofTooltips(root);
+    }
 
     function applySelectedRowHighlightAll
     (panel) {
@@ -8910,7 +9237,7 @@ const AD_EXT_CFG_FIELDS = [
             if (cTrend) drawEmpty(cTrend, "Lade…");
             if (trendLegend) trendLegend.innerHTML = "";
             renderX01Kpis(panel, [], null);
-return;
+            return;
         }
 
         // we build filters in this order:
@@ -9016,7 +9343,7 @@ return;
             if (trendLegend) trendLegend.innerHTML = "";
             cache._x01_layouts = { legdiff: { bars: [] }, wl: { bars: [] }, trend: null };
             renderX01Kpis(panel, filteredMatches, cache.filtersX01.kpiSelectedKey || null);
-return;
+            return;
         }
 
         const leagueBase = computeLeagueTable(filteredMatches);
@@ -9062,7 +9389,7 @@ return;
         }
         renderX01Kpis(panel, filteredMatches, selectedKey);
         renderTopTables(panel, filteredMatches);
-if (body) {
+        if (body) {
             if (!leagueTable.length) {
                 body.innerHTML = `<tr><td colspan="12" style="opacity:.7; padding:10px 12px;">Keine X01 Matches im aktuellen Filter</td></tr>`;
             } else {
@@ -9113,7 +9440,7 @@ if (body) {
           `;
                 }).join("");
             }
-        }
+}
 
         updateX01LeagueSortIndicators(panel);
 
@@ -9146,8 +9473,7 @@ if (body) {
     // ---------------------------------------------------------------------------
     // Zeit-Tracker (Tab 3)
     // ---------------------------------------------------------------------------
-
-    function buildTimeEntries(sessions, x01Matches) {
+    function buildTimeEntries(sessions, x01Matches, otherTrainingSessions) {
         const out = [];
 
         // Segment Training Sessions
@@ -9156,26 +9482,54 @@ if (body) {
             const dur = Number(s?.durationSec || 0);
             if (!dayKey) continue;
             out.push({
-                type: "ST",
+                type: "SEGMENT_TRAINING",
                 dayKey,
                 durationSec: Number.isFinite(dur) ? Math.max(0, dur) : 0,
+                count: 1,
             });
         }
 
-        // X01 Matches
+        // X01 Matches (nur X01 vs Bot)
         for (const m of (x01Matches || [])) {
+            if (!m) continue;
+            if (classifyX01MatchKind(m) !== "BOT") continue;
+
             const dayKey = parseIsoDateToDayKey(m?.dateIso || m?.finishedAt || m?.createdAt);
             const dur = Number(m?.durationSec || 0);
             if (!dayKey) continue;
             out.push({
-                type: "X01",
+                type: "X01_BOT",
                 dayKey,
                 durationSec: Number.isFinite(dur) ? Math.max(0, dur) : 0,
+                count: 1,
+            });
+        }
+
+        // Other training sessions (ATC / CountUp / Cricket / Random Checkout ...)
+        for (const s of (otherTrainingSessions || [])) {
+            const dayKey = s?.dayKey || parseIsoDateToDayKey(s?.createdAt) || parseIsoDateToDayKey(s?.finishedAt);
+            if (!dayKey) continue;
+
+            const type = String(s?.activityKey || "").toUpperCase().trim();
+            if (!type) continue;
+            if (type === "X01" || type === "X01_LIGA" || type === "X01_HUMAN") continue;
+
+            const dur = Number(s?.durationSec || 0);
+            let cnt = Number(s?.count || 0);
+            if (!Number.isFinite(cnt) || cnt <= 0) cnt = 1;
+            cnt = Math.round(cnt);
+
+            out.push({
+                type,
+                dayKey,
+                durationSec: Number.isFinite(dur) ? Math.max(0, dur) : 0,
+                count: cnt,
             });
         }
 
         return out;
     }
+
 
     function clamp01(x) {
         if (!Number.isFinite(x)) return 0;
@@ -9270,17 +9624,65 @@ if (body) {
         }
         return series;
     }
+    function timeTrackerKeysOrdered() {
+        // Order = TRAINING_ACTIVITIES, but without X01_HUMAN (Liga)
+        return (TRAINING_ACTIVITIES || [])
+            .filter(a => String(a?.key || "").trim() !== "X01_HUMAN")
+            .map(a => String(a.key));
+    }
+
+    const TIME_TRACKER_RGB = {
+        ATC: [200, 140, 255],
+        COUNTUP: [255, 200, 0],
+        CRICKET: [255, 90, 90],
+        RANDOM_CHECKOUT: [255, 140, 0],
+        SEGMENT_TRAINING: [0, 150, 255],
+        X01_BOT: [0, 200, 160],
+    };
+
+    function timeTrackerRgb(key) {
+        const k = String(key || "").toUpperCase().trim();
+        const c = TIME_TRACKER_RGB[k];
+        return Array.isArray(c) ? c : [200, 140, 255];
+    }
+
+    function timeTrackerColor(key, alpha = 0.85) {
+        const c = timeTrackerRgb(key);
+        const a = Number(alpha);
+        const aa = Number.isFinite(a) ? Math.max(0, Math.min(1, a)) : 0.85;
+        return `rgba(${c[0]},${c[1]},${c[2]},${aa})`;
+    }
+
+    function timeTrackerStroke(key) {
+        const c = timeTrackerRgb(key);
+        return `rgb(${c[0]},${c[1]},${c[2]})`;
+    }
 
     function aggregateTimeWeeks(timeEntries, weekKeys) {
+        const keys = timeTrackerKeysOrdered();
         const map = new Map();
+
         for (const wk of (weekKeys || [])) {
+            const byKeySec = new Map();
+            const byKeyCount = new Map();
+            for (const k of keys) {
+                byKeySec.set(k, 0);
+                byKeyCount.set(k, 0);
+            }
             map.set(wk, {
                 weekKey: wk,
                 totalSec: 0,
+                totalCount: 0,
+                byKeySec,
+                byKeyCount,
+
+                // legacy fields (robust fallback)
                 stSec: 0,
                 x01Sec: 0,
+                otherSec: 0,
                 stCount: 0,
                 x01Count: 0,
+                otherCount: 0,
             });
         }
 
@@ -9291,22 +9693,66 @@ if (body) {
             if (!wk || !map.has(wk)) continue;
 
             const slot = map.get(wk);
-            const sec = Number(e.durationSec || 0);
+
+            const secRaw = Number(e?.durationSec || 0);
+            const sec = Number.isFinite(secRaw) ? Math.max(0, secRaw) : 0;
+
+            const tRaw = String(e?.type || "").toUpperCase().trim();
+            let t = tRaw;
+            if (t === "ST") t = "SEGMENT_TRAINING";
+            if (t === "X01") t = "X01_BOT";
+
+            // Liga / Mensch immer ignorieren
+            if (t === "X01_LIGA" || t === "X01_HUMAN") continue;
+
+            const cntRaw = Number(e?.count);
+            let countInc = Number.isFinite(cntRaw) ? Math.round(cntRaw) : 1;
+            if (!Number.isFinite(countInc) || countInc <= 0) countInc = 1;
 
             slot.totalSec += sec;
-            if (e.type === "ST") {
-                slot.stSec += sec;
-                slot.stCount += 1;
-            } else if (e.type === "X01") {
-                slot.x01Sec += sec;
-                slot.x01Count += 1;
-            }
+            slot.totalCount += countInc;
+
+            if (!slot.byKeySec.has(t)) slot.byKeySec.set(t, 0);
+            slot.byKeySec.set(t, Number(slot.byKeySec.get(t) || 0) + sec);
+
+            if (!slot.byKeyCount.has(t)) slot.byKeyCount.set(t, 0);
+            slot.byKeyCount.set(t, Number(slot.byKeyCount.get(t) || 0) + countInc);
         }
 
-        // enrich with KW + range
+        // derive legacy fields + enrich with KW + range
         const out = [];
         for (const wk of (weekKeys || [])) {
             const slot = map.get(wk);
+
+            const st = Number(slot?.byKeySec?.get?.("SEGMENT_TRAINING") || 0) || 0;
+            const x01 = Number(slot?.byKeySec?.get?.("X01_BOT") || 0) || 0;
+
+            let other = 0;
+            try {
+                for (const [k, v] of (slot?.byKeySec?.entries?.() || [])) {
+                    const kk = String(k || "").toUpperCase().trim();
+                    if (kk === "SEGMENT_TRAINING" || kk === "X01_BOT" || kk === "X01_HUMAN") continue;
+                    other += Number(v || 0) || 0;
+                }
+            } catch {}
+
+            slot.stSec = st;
+            slot.x01Sec = x01;
+            slot.otherSec = other;
+
+            slot.stCount = Number(slot?.byKeyCount?.get?.("SEGMENT_TRAINING") || 0) || 0;
+            slot.x01Count = Number(slot?.byKeyCount?.get?.("X01_BOT") || 0) || 0;
+
+            let otherCount = 0;
+            try {
+                for (const [k, v] of (slot?.byKeyCount?.entries?.() || [])) {
+                    const kk = String(k || "").toUpperCase().trim();
+                    if (kk === "SEGMENT_TRAINING" || kk === "X01_BOT" || kk === "X01_HUMAN") continue;
+                    otherCount += Number(v || 0) || 0;
+                }
+            } catch {}
+            slot.otherCount = otherCount;
+
             const info = weekRangeFromWeekKey(wk);
             if (info) {
                 slot.isoYear = info.isoYear;
@@ -9317,12 +9763,12 @@ if (body) {
                 slot.kw = "";
                 slot.rangeLabel = wk;
             }
+
             out.push(slot);
         }
         return out;
     }
-
-    function drawWeeklyTimeStacked(canvas, weeksAsc, goalHours) {
+function drawWeeklyTimeStacked(canvas, weeksAsc) {
         if (!canvas) return null;
         const ctx = canvas.getContext("2d");
         const W = canvas.width || 1200;
@@ -9338,12 +9784,10 @@ if (body) {
         const chartW = W - padL - padR;
         const chartH = H - padT - padB;
 
-        const goalSec = Math.max(0, normalizeGoalHours(goalHours)) * 3600;
+        const keys = timeTrackerKeysOrdered();
 
         let maxSec = 0;
         for (const w of (weeksAsc || [])) maxSec = Math.max(maxSec, Number(w?.totalSec || 0));
-        maxSec = Math.max(maxSec, goalSec);
-
         const maxY = Math.max(1, maxSec * 1.15);
 
         const yOf = (sec) => padT + chartH - (sec / maxY) * chartH;
@@ -9365,19 +9809,6 @@ if (body) {
             ctx.fillText(fmtHours(v), 8, y);
         }
 
-        // goal line
-        if (goalSec > 0) {
-            const y = yOf(goalSec);
-            ctx.save();
-            ctx.setLineDash([6, 4]);
-            ctx.strokeStyle = "rgba(255,200,0,0.70)";
-            ctx.beginPath();
-            ctx.moveTo(padL, y);
-            ctx.lineTo(padL + chartW, y);
-            ctx.stroke();
-            ctx.restore();
-        }
-
         const n = (weeksAsc || []).length;
         const gap = n > 30 ? 3 : 6;
         const barW = n > 0 ? Math.max(6, Math.floor((chartW - gap * (n - 1)) / n)) : 0;
@@ -9385,37 +9816,42 @@ if (body) {
         const bars = [];
         let x = padL;
 
+        const secOf = (w, key) => {
+            try {
+                if (w?.byKeySec?.get) return Number(w.byKeySec.get(key) || 0) || 0;
+            } catch {}
+            // legacy fallback
+            const k = String(key || "").toUpperCase().trim();
+            if (k === "SEGMENT_TRAINING") return Number(w?.stSec || 0) || 0;
+            if (k === "X01_BOT") return Number(w?.x01Sec || 0) || 0;
+            if (k === "OTHER") return Number(w?.otherSec || 0) || 0;
+            return 0;
+        };
+
         for (let i = 0; i < n; i++) {
             const w = weeksAsc[i];
             const total = Number(w?.totalSec || 0);
-            const st = Number(w?.stSec || 0);
-            const x01 = Number(w?.x01Sec || 0);
 
             const yBase = padT + chartH;
 
-            const hST = (st / maxY) * chartH;
-            const hX01 = (x01 / maxY) * chartH;
+            let yTop = yBase;
+
+            // Stacks in TRAINING_ACTIVITIES order (max ~6 Segmente)
+            for (const k of keys) {
+                const sec = secOf(w, k);
+                const h = (sec / maxY) * chartH;
+                if (h > 0.5) {
+                    ctx.fillStyle = timeTrackerColor(k, 0.16);
+                    ctx.fillRect(x, yTop - h, barW, h);
+
+                    ctx.strokeStyle = timeTrackerStroke(k);
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(x + 0.5, yTop - h + 0.5, barW, h);
+                    yTop -= h;
+                }
+            }
+
             const hTotal = (total / maxY) * chartH;
-
-            // Segment Training (unten)
-            if (hST > 0.5) {
-                ctx.fillStyle = "rgba(0,150,255,0.16)";
-                ctx.fillRect(x, yBase - hST, barW, hST);
-
-                ctx.strokeStyle = "rgb(0,150,255)";
-                ctx.lineWidth = 1;
-                ctx.strokeRect(x + 0.5, yBase - hST + 0.5, barW, hST);
-            }
-
-            // X01 (oben auf ST)
-            if (hX01 > 0.5) {
-                ctx.fillStyle = "rgba(0,200,160,0.16)";
-                ctx.fillRect(x, yBase - hST - hX01, barW, hX01);
-
-                ctx.strokeStyle = "rgb(0,200,160)";
-                ctx.lineWidth = 1;
-                ctx.strokeRect(x + 0.5, yBase - hST - hX01 + 0.5, barW, hX01);
-            }
 
             // outline (gesamt)
             ctx.strokeStyle = "rgba(255,255,255,0.10)";
@@ -9454,9 +9890,7 @@ if (body) {
 
         return { bars, yOf };
     }
-
-
-    function renderMasterHallOfFame(panel) {
+function renderMasterHallOfFame(panel) {
         const view = panel.querySelector("#ad-ext-view-masterhof");
         if (!view) return;
 
@@ -9591,9 +10025,6 @@ if (body) {
             playerKeyAllowSet: masterAllowSet,
         });
     }
-
-
-
     function renderTimeTab(panel) {
         if (!panel) return;
 
@@ -9601,18 +10032,46 @@ if (body) {
         const f = cache.filtersTime || {
             mode: "ALL",
             range: "W12",
-            goalHours: TIME_WEEKLY_GOAL_DEFAULT_HOURS,
         };
 
-        const goalHours = normalizeGoalHours(f.goalHours);
+        // Backward-compat + sanitize (alte Werte / ungültige Keys)
+        {
+            const rawMode = String(f.mode || "ALL");
+            let m2 = rawMode.toUpperCase().trim();
+
+            if (m2 === "X01" || m2 === "X01_LIGA") m2 = "X01_BOT";
+            if (m2 === "ST") m2 = "SEGMENT_TRAINING";
+            if (m2 === "X01_HUMAN") m2 = "ALL";
+
+            const allowed = new Set(["ALL", ...TRAINING_ACTIVITIES.filter(a => a.key !== "X01_HUMAN").map(a => a.key)]);
+            if (!allowed.has(m2)) m2 = "ALL";
+
+            if (m2 !== rawMode) {
+                f.mode = m2;
+                cache.filtersTime = f;
+                try { localStorage.setItem("ad_ext_time_mode", m2); } catch {}
+            }
+        }
+
+        const labelByKey = new Map((TRAINING_ACTIVITIES || []).map(a => [String(a.key), String(a.label || a.key)]));
+        const modeLabel = (k) => (k === "ALL") ? "Alles" : (labelByKey.get(String(k)) || String(k || ""));
+
+        const keysAll = timeTrackerKeysOrdered();
 
         // sync inputs (once loaded)
         const selMode = panel.querySelector("#ad-ext-time-mode");
         const selRange = panel.querySelector("#ad-ext-time-range");
-        const inpGoal = panel.querySelector("#ad-ext-time-goal");
-        if (selMode && selMode.value !== f.mode) selMode.value = f.mode;
+
+        if (selMode) {
+            const modeOptions = [
+                { value: "ALL", label: "Alles", selected: f.mode === "ALL" },
+                ...TRAINING_ACTIVITIES
+                    .filter(a => a.key !== "X01_HUMAN")
+                    .map(a => ({ value: a.key, label: a.label, selected: f.mode === a.key })),
+            ];
+            setSelectOptions(selMode, modeOptions, false);
+        }
         if (selRange && selRange.value !== f.range) selRange.value = f.range;
-        if (inpGoal && Number(inpGoal.value) !== goalHours) inpGoal.value = String(goalHours);
 
         const kThis = panel.querySelector("#ad-ext-time-kpi-thisweek");
         const kThisSub = panel.querySelector("#ad-ext-time-kpi-thisweek-sub");
@@ -9622,16 +10081,27 @@ if (body) {
         const kAvgSub = panel.querySelector("#ad-ext-time-kpi-avg-sub");
         const kBest = panel.querySelector("#ad-ext-time-kpi-best");
         const kBestSub = panel.querySelector("#ad-ext-time-kpi-best-sub");
-        const progress = panel.querySelector("#ad-ext-time-progress");
         const tbody = panel.querySelector("#ad-ext-time-week-body");
         const share = panel.querySelector("#ad-ext-time-share");
 
-        const timeEntriesAll = cache.timeEntries || buildTimeEntries(cache.sessions || [], cache.x01Matches || []);
+        const timeEntriesAll = buildTimeEntries(
+            cache.sessions || [],
+            cache.x01Matches || [],
+            cache.otherTrainingSessions || []
+        );
 
         // Mode filter
+        const matchMode = (e) => {
+            const tRaw = String(e?.type || "").toUpperCase().trim();
+            let t = tRaw;
+            if (t === "ST") t = "SEGMENT_TRAINING";
+            if (t === "X01") t = "X01_BOT";
+            return t === String(f.mode || "").toUpperCase().trim();
+        };
+
         const timeEntriesMode = (f.mode === "ALL")
-        ? timeEntriesAll
-        : timeEntriesAll.filter((e) => e.type === f.mode);
+            ? timeEntriesAll
+            : timeEntriesAll.filter(matchMode);
 
         const rangeInfo = resolveTimeRange(f.range, timeEntriesMode);
         const timeEntries = filterTimeEntriesByRange(timeEntriesMode, rangeInfo);
@@ -9639,18 +10109,53 @@ if (body) {
         const weekKeys = buildWeekSeries(rangeInfo);
         const weeksAsc = aggregateTimeWeeks(timeEntries, weekKeys);
         cache._time_weeksAsc = weeksAsc;
+
         cache.trainingPlan = cache.trainingPlan || loadTrainingPlanState();
         const selWeekKeyPlan = String(cache.trainingPlan?.selectedWeekKey || "");
 
-        // KPIs
-        const thisWeekKey = weekKeyFromDate(new Date());
-        const thisWeek = weeksAsc.find((w) => w.weekKey === thisWeekKey) || {
-            totalSec: 0, stSec: 0, x01Sec: 0, stCount: 0, x01Count: 0, kw: "", rangeLabel: "",
+        const secOf = (w, key) => {
+            try { if (w?.byKeySec?.get) return Number(w.byKeySec.get(key) || 0) || 0; } catch {}
+            return 0;
+        };
+        const cntOf = (w, key) => {
+            try { if (w?.byKeyCount?.get) return Number(w.byKeyCount.get(key) || 0) || 0; } catch {}
+            return 0;
         };
 
+        const blankWeek = () => {
+            const byKeySec = new Map();
+            const byKeyCount = new Map();
+            for (const k of keysAll) {
+                byKeySec.set(k, 0);
+                byKeyCount.set(k, 0);
+            }
+            return {
+                weekKey: "",
+                totalSec: 0,
+                totalCount: 0,
+                byKeySec,
+                byKeyCount,
+                kw: "",
+                isoYear: "",
+                rangeLabel: "",
+            };
+        };
+
+        // KPIs
+        const thisWeekKey = weekKeyFromDate(new Date());
+        const thisWeek = weeksAsc.find((w) => w.weekKey === thisWeekKey) || blankWeek();
+
         const rangeTotal = weeksAsc.reduce((a, w) => a + (Number(w.totalSec || 0)), 0);
-        const rangeST = weeksAsc.reduce((a, w) => a + (Number(w.stSec || 0)), 0);
-        const rangeX01 = weeksAsc.reduce((a, w) => a + (Number(w.x01Sec || 0)), 0);
+        const rangeTotalCount = weeksAsc.reduce((a, w) => a + (Number(w.totalCount || 0)), 0);
+
+        const rangeByKeySec = new Map(keysAll.map(k => [k, 0]));
+        const rangeByKeyCount = new Map(keysAll.map(k => [k, 0]));
+        for (const w of (weeksAsc || [])) {
+            for (const k of keysAll) {
+                rangeByKeySec.set(k, Number(rangeByKeySec.get(k) || 0) + secOf(w, k));
+                rangeByKeyCount.set(k, Number(rangeByKeyCount.get(k) || 0) + cntOf(w, k));
+            }
+        }
 
         const weeksCount = Math.max(1, weeksAsc.length);
         const avgSec = rangeTotal / weeksCount;
@@ -9660,19 +10165,32 @@ if (body) {
             if (!best || (Number(w.totalSec || 0) > Number(best.totalSec || 0))) best = w;
         }
 
-        const goalSec = goalHours * 3600;
-        const pct = goalSec > 0 ? clamp01((Number(thisWeek.totalSec || 0)) / goalSec) : 0;
+        const partsByKey = (getVal) => {
+            const parts = [];
+            for (const k of keysAll) {
+                const v = Number(getVal(k) || 0) || 0;
+                if (v > 0) parts.push(`${modeLabel(k)} ${fmtHours(v)}`);
+            }
+            return parts.length ? parts.join(" · ") : "—";
+        };
+
+        const subAllWeek = (w) => partsByKey((k) => secOf(w, k));
+        const subAllRange = () => partsByKey((k) => rangeByKeySec.get(k));
+
+        const countLabel = (k) => (String(k || "").toUpperCase().trim() === "X01_BOT") ? "Matches" : "Sessions";
+        const subModeCount = (count) => `${fmtInt(Number(count || 0))} ${countLabel(f.mode)}`;
 
         if (kThis) kThis.textContent = fmtHours(Number(thisWeek.totalSec || 0));
-        if (kThisSub) {
-            const gTxt = goalSec > 0 ? `Ziel: ${goalHours}h · ${(pct * 100).toFixed(0)}%` : "Ziel: –";
-            const bTxt = `Segment ${fmtHours(Number(thisWeek.stSec || 0))} · X01 ${fmtHours(Number(thisWeek.x01Sec || 0))}`;
-            kThisSub.textContent = `${gTxt} · ${bTxt}`;
-        }
-        if (progress) progress.style.width = `${(pct * 100).toFixed(0)}%`;
+        if (kThisSub) kThisSub.textContent = (f.mode === "ALL") ? subAllWeek(thisWeek) : `${modeLabel(f.mode)} · ${subModeCount(thisWeek.totalCount || 0)}`;
 
         if (kRange) kRange.textContent = fmtHours(rangeTotal);
-        if (kRangeSub) kRangeSub.textContent = `Segment ${fmtHours(rangeST)} · X01 ${fmtHours(rangeX01)}`;
+        if (kRangeSub) {
+            if (f.mode === "ALL") {
+                kRangeSub.textContent = subAllRange();
+            } else {
+                kRangeSub.textContent = `${modeLabel(f.mode)} · ${subModeCount(rangeTotalCount)}`;
+            }
+        }
 
         if (kAvg) kAvg.textContent = fmtHours(avgSec);
         if (kAvgSub) kAvgSub.textContent = `${weeksCount} Wochen`;
@@ -9684,12 +10202,25 @@ if (body) {
             kBestSub.textContent = `${kw}${year} · ${best?.rangeLabel || ""}`;
         }
 
-        // Donut (Anteile) – Vorlage aus "Segment Training" (Outline-Ring mit Gap)
+        // Donut (Anteile)
         const donut = panel.querySelector("#ad-ext-time-donut");
-        const donutItems = [
-            { label: "Segment Training", value: rangeST, color: "rgba(0,150,255,0.85)" },
-            { label: "X01 Liga", value: rangeX01, color: "rgba(0,200,160,0.85)" },
-        ];
+
+        let donutItems = [];
+        if (f.mode === "ALL") {
+            donutItems = keysAll
+                .map((k) => ({
+                    label: modeLabel(k),
+                    value: Number(rangeByKeySec.get(k) || 0) || 0,
+                    color: timeTrackerColor(k, 0.85),
+                }))
+                .filter((it) => (Number(it?.value) || 0) > 0);
+        } else {
+            donutItems = [{
+                label: modeLabel(f.mode),
+                value: rangeTotal,
+                color: timeTrackerColor(f.mode, 0.85),
+            }];
+        }
 
         cache._time_layouts = cache._time_layouts || {};
         cache._time_layouts.donut = drawDonutSvg(donut, donutItems, {
@@ -9725,50 +10256,55 @@ if (body) {
             }
         }
 
-    // Weekly chart
-    const chart = panel.querySelector("#ad-ext-time-chart");
-    cache._time_layouts.weekChart = drawWeeklyTimeStacked(chart, weeksAsc, goalHours);
+        // Weekly chart
+        const chart = panel.querySelector("#ad-ext-time-chart");
+        cache._time_layouts.weekChart = drawWeeklyTimeStacked(chart, weeksAsc);
 
-    // Table (desc)
-    if (tbody) {
-        const weeksDesc = [...weeksAsc].reverse();
-        if (weeksDesc.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="ad-ext-muted">Keine Daten im Zeitraum.</td></tr>`;
-        } else {
-            tbody.innerHTML = weeksDesc
-                .map((w) => {
-                const kw = w.kw ? `KW ${w.kw}` : "–";
-                const wk = String(w?.weekKey || "");
-                const isSel = wk && wk === String(selWeekKeyPlan || "");
-                const cls = isSel ? "ad-ext-row--selected" : "";
-                const data = wk ? `data-week-key="${escapeHtml(wk)}"` : "";
-                return `<tr ${data} class="${cls}">
+        // Table (desc)
+        if (tbody) {
+            const weeksDesc = [...weeksAsc].reverse();
+            if (weeksDesc.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="ad-ext-muted">Keine Daten im Zeitraum.</td></tr>`;
+            } else {
+                tbody.innerHTML = weeksDesc
+                    .map((w) => {
+                        const kw = w.kw ? `KW ${w.kw}` : "–";
+                        const wk = String(w?.weekKey || "");
+                        const isSel = wk && wk === String(selWeekKeyPlan || "");
+                        const cls = isSel ? "ad-ext-row--selected" : "";
+                        const data = wk ? `data-week-key="${escapeHtml(wk)}"` : "";
+
+                        const atc = secOf(w, "ATC");
+                        const cu = secOf(w, "COUNTUP");
+                        const cr = secOf(w, "CRICKET");
+                        const rc = secOf(w, "RANDOM_CHECKOUT");
+                        const st = secOf(w, "SEGMENT_TRAINING");
+                        const x01 = secOf(w, "X01_BOT");
+
+                        return `<tr ${data} class="${cls}">
               <td>${kw}</td>
               <td>${w.rangeLabel || "–"}</td>
               <td>${fmtHours(w.totalSec || 0)}</td>
-              <td>${fmtHours(w.stSec || 0)}</td>
-              <td>${fmtHours(w.x01Sec || 0)}</td>
-              <td>${Number(w.stCount || 0)}</td>
-              <td>${Number(w.x01Count || 0)}</td>
+              <td>${fmtHours(atc)}</td>
+              <td>${fmtHours(cu)}</td>
+              <td>${fmtHours(cr)}</td>
+              <td>${fmtHours(rc)}</td>
+              <td>${fmtHours(st)}</td>
+              <td>${fmtHours(x01)}</td>
+              <td>${fmtInt(Number(w.totalCount || 0))}</td>
             </tr>`;
-                })
+                    })
                     .join("");
             }
         }
 
-
-    // Source label oben rechts (wie bei Segment/X01)
-    setSourceLabel(
-        panel,
-        `Datenquelle: ${cache.meta?.sourceText || "IndexedDB"} (${cache.meta?.totalRows ?? "?"} Matches, ${fmtInt(cache.meta?.segmentSessions ?? 0)} Segment Sessions, ${fmtInt(cache.meta?.x01Matches ?? 0)} X01 Matches)`
+        // Source label oben rechts (wie bei Segment/X01)
+        setSourceLabel(
+            panel,
+            `Datenquelle: ${cache.meta?.sourceText || "IndexedDB"} (${cache.meta?.totalRows ?? "?"} Matches, ${fmtInt(cache.meta?.segmentSessions ?? 0)} Segment Sessions, ${fmtInt(cache.meta?.x01Matches ?? 0)} X01 Matches)`
         );
-
-}
-
-
-
-
-    // ---------------------------------------------------------------------------
+    }
+// ---------------------------------------------------------------------------
     // Training (Tab 4)
     // ---------------------------------------------------------------------------
 
@@ -9849,10 +10385,23 @@ if (body) {
         cache._training_weeksAsc = weeksAsc;
         renderTrainingPlan(panel, weeksAsc);
 
-        // Training Subview: Segment-Fokus (DOM-move + render, ohne eigenen Haupt-Tab)
+        // Training Subview: Segment-Fokus / Chromo-Tracker (DOM-move + render, ohne eigenen Haupt-Tab)
         try {
             const layout = panel.querySelector(".ad-train-layout");
             const tv = String(layout?.dataset?.trainView || "").toUpperCase();
+            // INSIGHTS: Wenn beim Laden bereits „Erkenntnisse“ aktiv ist, jetzt mit echten Daten füllen
+            if (tv === "INSIGHTS") {
+                try { renderInsights(panel); } catch {}
+            }
+
+
+            // CHROMO: Zeit-Tracker wurde in den Trainings-Subview „Chromo-Tracker“ umgezogen
+            if (tv === "CHROMO") {
+                try { mountTimeIntoTrainChromo(panel); } catch {}
+                try { if (cache?.loaded) renderTimeTab(panel); } catch {}
+            }
+
+            // SEGFOCUS: Segment-Training Panel in Training-Subview anzeigen
             if (tv === "SEGFOCUS") {
                 const wrap = panel.querySelector("#ad-ext-train-segfokus");
                 const segPanel = panel.querySelector("#ad-ext-view-segment");
@@ -9862,6 +10411,27 @@ if (body) {
             }
         } catch {}
     }
+
+    function mountTimeIntoTrainChromo(panel) {
+        try {
+            const wrap = panel?.querySelector?.("#ad-ext-train-chromo");
+            const timeView = panel?.querySelector?.("#ad-ext-view-time");
+            if (!wrap || !timeView) return;
+
+            // Move existing DOM (no duplicates / no cloned IDs)
+            if (timeView.parentElement !== wrap) wrap.appendChild(timeView);
+
+            // Neutralize legacy inline display:none from the old top-tab view
+            try { timeView.style.display = ""; } catch {}
+
+            // Align title with the new training subview label
+            try {
+                const t = timeView.querySelector(".ad-ext-section-title");
+                if (t) t.textContent = "Chromo-Tracker";
+            } catch {}
+        } catch {}
+    }
+
 
     function renderInsights(panel) {
         if (!panel) return;
@@ -9907,7 +10477,7 @@ if (body) {
         };
 
         const normalizeTargetLocal = (raw) =>
-            String(raw || "").trim().toUpperCase().replace(/\s+/g, "");
+        String(raw || "").trim().toUpperCase().replace(/\s+/g, "");
 
         let weeksAsc = [];
         try {
@@ -10162,140 +10732,140 @@ if (body) {
 
         // KPI 4: Trainingsmix-Index (TMI) – Ø über Wochen mit n>0 geplanten Items
         try {
-        let sumTmi = 0;
-        let cntTmi = 0;
-        let thisWeekTmi = null;
+            let sumTmi = 0;
+            let cntTmi = 0;
+            let thisWeekTmi = null;
 
-        const weightFromRec = (rec) => {
-            if (!rec) return 0;
-            if (isSessionsMode) return Math.max(0, Math.round(Number(rec?.count || 0) || 0));
-            return Math.max(0, Number(rec?.sec || 0) || 0);
-        };
-
-        const weightFromTargetRec = (rec) => {
-            if (!rec) return 0;
-            if (isSessionsMode) return Math.max(0, Math.round(Number(rec?.count || 0) || 0));
-            return Math.max(0, Number(rec?.sec || 0) || 0);
-        };
-
-        for (const w of (weeksAsc || [])) {
-            const weekKey = String(w?.weekKey || "");
-            if (!weekKey) continue;
-
-            const weekId = weekIdFromWeekKey(weekKey);
-            const plan = weekId ? loadWeekPlan(weekId) : null;
-            const itemsRaw = (plan && Array.isArray(plan.planItems)) ? plan.planItems : [];
-            const items = sanitizePlanItemsForStorage(itemsRaw);
-
-            const planned = (items || []).filter((it) => {
-                const t = String(it?.type || "");
-                if (isSessionsMode) return clampSessions(Number(it?.targetSessions) || 0) > 0;
-                return clampMinutes(Number(it?.targetMinutes) || 0) > 0;
-            });
-
-            const n = planned.length;
-            if (n === 0) {
-                if (weekKey === thisWeekKey) thisWeekTmi = null;
-                continue;
-            }
-
-            let agg = null;
-            try { agg = aggregateTrainingActualsForWeek(weekKey); } catch { agg = null; }
-            const byActivity = agg?.byActivity || new Map();
-            const stTargets = agg?.stTargets || new Map();
-
-            // Total weights per tracker key
-            const totalByKey = new Map();
-            try {
-                for (const [k, rec] of (byActivity?.entries?.() || [])) {
-                    totalByKey.set(String(k), weightFromRec(rec));
-                }
-            } catch {}
-
-            // Build weights for planned items
-            const weights = [];
-            const byKeyIdxs = new Map();
-            const usedByKey = new Map(); // key -> sum weights already assigned (z.B. ST via Targets)
-
-            const addUsed = (key, w) => {
-                const k = String(key || "");
-                if (!k) return;
-                usedByKey.set(k, (Number(usedByKey.get(k) || 0) || 0) + (Number(w) || 0));
+            const weightFromRec = (rec) => {
+                if (!rec) return 0;
+                if (isSessionsMode) return Math.max(0, Math.round(Number(rec?.count || 0) || 0));
+                return Math.max(0, Number(rec?.sec || 0) || 0);
             };
 
-            for (const it of planned) {
-                const type = String(it?.type || "").trim();
-                const trackerKey = String(PLANITEM_TYPE_TO_TRACKER_KEY[type] || type).trim();
+            const weightFromTargetRec = (rec) => {
+                if (!rec) return 0;
+                if (isSessionsMode) return Math.max(0, Math.round(Number(rec?.count || 0) || 0));
+                return Math.max(0, Number(rec?.sec || 0) || 0);
+            };
 
-                // Segment Training: wenn Targets vorhanden, Gewicht über Targets berechnen (präziser)
-                if (type === "SEGMENT_TRAINING" && Array.isArray(it?.params?.targets) && it.params.targets.length) {
-                    let wSum = 0;
-                    for (const t of it.params.targets) {
-                        const k = normalizeTargetLocal(t);
-                        const rec = stTargets.get(k) || stTargets.get(String(t || "").trim()) || { sec: 0, count: 0 };
-                        wSum += weightFromTargetRec(rec);
+            for (const w of (weeksAsc || [])) {
+                const weekKey = String(w?.weekKey || "");
+                if (!weekKey) continue;
+
+                const weekId = weekIdFromWeekKey(weekKey);
+                const plan = weekId ? loadWeekPlan(weekId) : null;
+                const itemsRaw = (plan && Array.isArray(plan.planItems)) ? plan.planItems : [];
+                const items = sanitizePlanItemsForStorage(itemsRaw);
+
+                const planned = (items || []).filter((it) => {
+                    const t = String(it?.type || "");
+                    if (isSessionsMode) return clampSessions(Number(it?.targetSessions) || 0) > 0;
+                    return clampMinutes(Number(it?.targetMinutes) || 0) > 0;
+                });
+
+                const n = planned.length;
+                if (n === 0) {
+                    if (weekKey === thisWeekKey) thisWeekTmi = null;
+                    continue;
+                }
+
+                let agg = null;
+                try { agg = aggregateTrainingActualsForWeek(weekKey); } catch { agg = null; }
+                const byActivity = agg?.byActivity || new Map();
+                const stTargets = agg?.stTargets || new Map();
+
+                // Total weights per tracker key
+                const totalByKey = new Map();
+                try {
+                    for (const [k, rec] of (byActivity?.entries?.() || [])) {
+                        totalByKey.set(String(k), weightFromRec(rec));
                     }
-                    weights.push({ key: trackerKey, weight: Math.max(0, wSum), source: "targets" });
-                    addUsed(trackerKey, wSum);
+                } catch {}
+
+                // Build weights for planned items
+                const weights = [];
+                const byKeyIdxs = new Map();
+                const usedByKey = new Map(); // key -> sum weights already assigned (z.B. ST via Targets)
+
+                const addUsed = (key, w) => {
+                    const k = String(key || "");
+                    if (!k) return;
+                    usedByKey.set(k, (Number(usedByKey.get(k) || 0) || 0) + (Number(w) || 0));
+                };
+
+                for (const it of planned) {
+                    const type = String(it?.type || "").trim();
+                    const trackerKey = String(PLANITEM_TYPE_TO_TRACKER_KEY[type] || type).trim();
+
+                    // Segment Training: wenn Targets vorhanden, Gewicht über Targets berechnen (präziser)
+                    if (type === "SEGMENT_TRAINING" && Array.isArray(it?.params?.targets) && it.params.targets.length) {
+                        let wSum = 0;
+                        for (const t of it.params.targets) {
+                            const k = normalizeTargetLocal(t);
+                            const rec = stTargets.get(k) || stTargets.get(String(t || "").trim()) || { sec: 0, count: 0 };
+                            wSum += weightFromTargetRec(rec);
+                        }
+                        weights.push({ key: trackerKey, weight: Math.max(0, wSum), source: "targets" });
+                        addUsed(trackerKey, wSum);
+                    } else {
+                        const idx = weights.length;
+                        weights.push({ key: trackerKey, weight: null, source: "byActivity" });
+                        if (!byKeyIdxs.has(trackerKey)) byKeyIdxs.set(trackerKey, []);
+                        byKeyIdxs.get(trackerKey).push(idx);
+                    }
+                }
+
+                // Distribute shared byActivity weights among duplicates (und ggf. Rest bei ST)
+                for (const [key, idxs] of byKeyIdxs.entries()) {
+                    const total = Number(totalByKey.get(key) || 0) || 0;
+                    const used = Number(usedByKey.get(key) || 0) || 0;
+                    const eff = (key === "SEGMENT_TRAINING") ? Math.max(0, total - used) : total;
+                    const per = idxs.length ? (eff / idxs.length) : 0;
+                    for (const i of idxs) weights[i].weight = Math.max(0, per);
+                }
+
+                let totalWeight = 0;
+                for (const wi of weights) totalWeight += Number(wi?.weight || 0) || 0;
+
+                const uniform = 1 / n;
+                let tmi = 0;
+
+                if (totalWeight > 0) {
+                    let sumAbs = 0;
+                    for (const wi of weights) {
+                        const p = (Number(wi?.weight || 0) || 0) / totalWeight;
+                        sumAbs += Math.abs(p - uniform);
+                    }
+                    tmi = 1 - (sumAbs / 2);
                 } else {
-                    const idx = weights.length;
-                    weights.push({ key: trackerKey, weight: null, source: "byActivity" });
-                    if (!byKeyIdxs.has(trackerKey)) byKeyIdxs.set(trackerKey, []);
-                    byKeyIdxs.get(trackerKey).push(idx);
+                    // n>0 aber keine Ist-Daten -> sichtbar 0.0
+                    tmi = 0;
                 }
+
+                if (!Number.isFinite(tmi)) tmi = 0;
+                tmi = Math.max(0, Math.min(1, tmi));
+
+                sumTmi += tmi;
+                cntTmi += 1;
+                if (weekKey === thisWeekKey) thisWeekTmi = tmi;
             }
 
-            // Distribute shared byActivity weights among duplicates (und ggf. Rest bei ST)
-            for (const [key, idxs] of byKeyIdxs.entries()) {
-                const total = Number(totalByKey.get(key) || 0) || 0;
-                const used = Number(usedByKey.get(key) || 0) || 0;
-                const eff = (key === "SEGMENT_TRAINING") ? Math.max(0, total - used) : total;
-                const per = idxs.length ? (eff / idxs.length) : 0;
-                for (const i of idxs) weights[i].weight = Math.max(0, per);
-            }
+            const avgTmi = (cntTmi > 0) ? (sumTmi / cntTmi) : null;
 
-            let totalWeight = 0;
-            for (const wi of weights) totalWeight += Number(wi?.weight || 0) || 0;
+            setTxt(kpiTmi, (avgTmi === null) ? "—" : fmtIdx2(avgTmi));
+            setTxt(kpiTmiSub, `Diese Woche: ${(thisWeekTmi === null) ? "—" : fmtIdx2(thisWeekTmi)}`);
 
-            const uniform = 1 / n;
-            let tmi = 0;
+            try { if (tmiTile) tmiTile.dataset.tmiAvg = String(avgTmi ?? ""); } catch {}
 
-            if (totalWeight > 0) {
-                let sumAbs = 0;
-                for (const wi of weights) {
-                    const p = (Number(wi?.weight || 0) || 0) / totalWeight;
-                    sumAbs += Math.abs(p - uniform);
-                }
-                tmi = 1 - (sumAbs / 2);
-            } else {
-                // n>0 aber keine Ist-Daten -> sichtbar 0.0
-                tmi = 0;
-            }
+            if (tmiTile && !tmiTile.dataset.tipWired) {
+                tmiTile.dataset.tipWired = "1";
 
-            if (!Number.isFinite(tmi)) tmi = 0;
-            tmi = Math.max(0, Math.min(1, tmi));
+                tmiTile.addEventListener("mouseenter", (ev) => {
+                    const v = Number(tmiTile.dataset.tmiAvg);
+                    const cur = Number.isFinite(v) ? fmtIdx2(v) : "—";
+                    const lab = Number.isFinite(v) ? tmiLabel(v) : "—";
 
-            sumTmi += tmi;
-            cntTmi += 1;
-            if (weekKey === thisWeekKey) thisWeekTmi = tmi;
-        }
-
-        const avgTmi = (cntTmi > 0) ? (sumTmi / cntTmi) : null;
-
-        setTxt(kpiTmi, (avgTmi === null) ? "—" : fmtIdx2(avgTmi));
-        setTxt(kpiTmiSub, `Diese Woche: ${(thisWeekTmi === null) ? "—" : fmtIdx2(thisWeekTmi)}`);
-
-        try { if (tmiTile) tmiTile.dataset.tmiAvg = String(avgTmi ?? ""); } catch {}
-
-        if (tmiTile && !tmiTile.dataset.tipWired) {
-            tmiTile.dataset.tipWired = "1";
-
-            tmiTile.addEventListener("mouseenter", (ev) => {
-                const v = Number(tmiTile.dataset.tmiAvg);
-                const cur = Number.isFinite(v) ? fmtIdx2(v) : "—";
-                const lab = Number.isFinite(v) ? tmiLabel(v) : "—";
-
-                const html = `
+                    const html = `
       <div class="ad-ext-tooltip-title">Trainingsmix-Index (TMI)</div>
       <div class="ad-ext-tooltip-line">Aktuell: <b>${cur}</b> – ${lab}</div>
       <div class="ad-ext-tooltip-recline" style="margin-top:8px">
@@ -10333,13 +10903,13 @@ if (body) {
             const cMiniAvg = panel.querySelector("#ad-ext-insights-mini-avg");
             const cMiniP2 = panel.querySelector("#ad-ext-insights-mini-p2");
             const cMiniP3 = panel.querySelector("#ad-ext-insights-mini-p3");
-            if (cMiniAvg) drawEmpty(cMiniAvg, "Platzhalter");
+            if (cMiniAvg) drawAtcWeeklyTrend(cMiniAvg, weeksAsc, thisWeekKey);
             if (cMiniP2) drawEmpty(cMiniP2, "Platzhalter");
             if (cMiniP3) drawEmpty(cMiniP3, "Platzhalter");
         } catch {}
 
-}
-function aggregateTrainingActualsForWeek(weekKey) {
+    }
+    function aggregateTrainingActualsForWeek(weekKey) {
         const wk = weekRangeFromWeekKey(weekKey);
         if (!wk) {
             return { wk: null, byActivity: new Map(), stTargets: new Map() };
@@ -10351,22 +10921,26 @@ function aggregateTrainingActualsForWeek(weekKey) {
         };
 
         const byActivity = new Map();
-        for (const a of TRAINING_ACTIVITIES) byActivity.set(a.key, { sec: 0, count: 0 });
+        for (const a of TRAINING_ACTIVITIES) byActivity.set(a.key, { sec: 0, count: 0, hits: 0, darts: 0 });
 
         const stTargets = new Map(); // target -> {sec,count,hits,darts}
 
-        const add = (key, sec, cnt) => {
-            if (!byActivity.has(key)) byActivity.set(key, { sec: 0, count: 0 });
+        const add = (key, sec, cnt, hits = 0, darts = 0) => {
+            if (!byActivity.has(key)) byActivity.set(key, { sec: 0, count: 0, hits: 0, darts: 0 });
             const obj = byActivity.get(key);
+            if (obj.hits === undefined) obj.hits = 0;
+            if (obj.darts === undefined) obj.darts = 0;
             obj.sec += Number(sec) || 0;
             obj.count += Number(cnt) || 0;
+            obj.hits += Number(hits) || 0;
+            obj.darts += Number(darts) || 0;
         };
 
         // Segment Training (sessions already extracted)
         for (const s of (cache.sessions || [])) {
             const dk = s.dayKey || (s.dayKey =
-                parseIsoDateToDayKey(s.createdAt) || parseIsoDateToDayKey(s.finishedAt)
-            );
+                                    parseIsoDateToDayKey(s.createdAt) || parseIsoDateToDayKey(s.finishedAt)
+                                   );
             if (!inWeek(dk)) continue;
 
             const dSec = Number(s.durationSec) || 0;
@@ -10386,29 +10960,33 @@ function aggregateTrainingActualsForWeek(weekKey) {
         // X01 Matches (already extracted)
         for (const m of (cache.x01Matches || [])) {
             const dk = m.dayKey || (m.dayKey =
-                parseIsoDateToDayKey(m.createdAt) || parseIsoDateToDayKey(m.finishedAt)
-            );
+                                    parseIsoDateToDayKey(m.createdAt) || parseIsoDateToDayKey(m.finishedAt)
+                                   );
             if (!inWeek(dk)) continue;
 
             const dSec = Number(m.durationSec) || 0;
             const kind = classifyX01MatchKind(m);
             const legs = Number(m.totalLegs) ||
-                (Array.isArray(m.legsWon) ? m.legsWon.reduce((a, b) => a + (Number(b || 0) || 0), 0) : 0) ||
-                1;
+                  (Array.isArray(m.legsWon) ? m.legsWon.reduce((a, b) => a + (Number(b || 0) || 0), 0) : 0) ||
+                  1;
             add(kind === "BOT" ? "X01_BOT" : "X01_HUMAN", dSec, legs);
         }
 
         // Other training modes (best-effort extraction)
         for (const s of (cache.otherTrainingSessions || [])) {
             const dk = s.dayKey || (s.dayKey =
-                parseIsoDateToDayKey(s.createdAt) || parseIsoDateToDayKey(s.finishedAt)
-            );
+                                    parseIsoDateToDayKey(s.createdAt) || parseIsoDateToDayKey(s.finishedAt)
+                                   );
             if (!inWeek(dk)) continue;
 
             const key = String(s.activityKey || "").trim();
             if (!key) continue;
 
-            add(key, Number(s.durationSec) || 0, Number(s.count) || 1);
+            if (key === "ATC") {
+                add(key, Number(s.durationSec) || 0, Number(s.count) || 1, Number(s.hits) || 0, Number(s.darts) || 0);
+            } else {
+                add(key, Number(s.durationSec) || 0, Number(s.count) || 1);
+            }
         }
 
         return { wk, byActivity, stTargets };
@@ -10556,10 +11134,10 @@ function aggregateTrainingActualsForWeek(weekKey) {
                 }
             });
 
-        // 0.14.33: segmentTargetsSessions nur setzen, wenn keine Mehrfach-Targets erkannt wurden
-        if (!segTargetsSessionsAmbiguous) {
-            out.segmentTargetsSessions = segTargetsSessions;
-        }
+            // 0.14.33: segmentTargetsSessions nur setzen, wenn keine Mehrfach-Targets erkannt wurden
+            if (!segTargetsSessionsAmbiguous) {
+                out.segmentTargetsSessions = segTargetsSessions;
+            }
 
         }
 
@@ -10846,7 +11424,7 @@ function aggregateTrainingActualsForWeek(weekKey) {
 
             if (legend) {
                 const extra = (g > 0 && i > g)
-                    ? `<div class="ad-ext-muted" style="margin-top:6px;">Überschuss: ${escapeHtml(fmtVal(i - g))}</div>`
+                ? `<div class="ad-ext-muted" style="margin-top:6px;">Überschuss: ${escapeHtml(fmtVal(i - g))}</div>`
                     : "";
 
                 legend.innerHTML = items.map((it) => {
@@ -10863,138 +11441,138 @@ function aggregateTrainingActualsForWeek(weekKey) {
             }
         }
 
-    // Trainings-SOLL Donut (right slot) – Gruppierung nach Aktivität (0.14.85)
-    const ph = panel.querySelector("#ad-ext-train-chart-placeholder");
-    const phLegend = panel.querySelector("#ad-ext-train-legend-soll");
-    if (ph) {
-        // kein Platzhalter-Styling mehr
-        try { ph.classList.remove("ad-ext-train-chart--placeholder"); } catch {}
-        try { ph.onclick = null; } catch {}
+        // Trainings-SOLL Donut (right slot) – Gruppierung nach Aktivität (0.14.85)
+        const ph = panel.querySelector("#ad-ext-train-chart-placeholder");
+        const phLegend = panel.querySelector("#ad-ext-train-legend-soll");
+        if (ph) {
+            // kein Platzhalter-Styling mehr
+            try { ph.classList.remove("ad-ext-train-chart--placeholder"); } catch {}
+            try { ph.onclick = null; } catch {}
 
-        // Basis: bereits gerenderte Trainingsdaten-Tabelle
-        const rows2 = panel.querySelectorAll('#ad-ext-plan-main-body tr.ad-ext-train-row');
-        const sums = new Map();
+            // Basis: bereits gerenderte Trainingsdaten-Tabelle
+            const rows2 = panel.querySelectorAll('#ad-ext-plan-main-body tr.ad-ext-train-row');
+            const sums = new Map();
 
-        for (const r of rows2) {
-            const type = String(r?.dataset?.planType || r?.getAttribute?.("data-plan-type") || "").trim();
-            if (!type) continue;
+            for (const r of rows2) {
+                const type = String(r?.dataset?.planType || r?.getAttribute?.("data-plan-type") || "").trim();
+                if (!type) continue;
 
-            const goalNum = Number(r?.dataset?.goal ?? r?.getAttribute?.("data-goal") ?? 0) || 0;
-            if (!(goalNum > 0)) continue;
+                const goalNum = Number(r?.dataset?.goal ?? r?.getAttribute?.("data-goal") ?? 0) || 0;
+                if (!(goalNum > 0)) continue;
 
-            let rec = sums.get(type);
-            if (!rec) {
-                let lab = type;
+                let rec = sums.get(type);
+                if (!rec) {
+                    let lab = type;
 
-                // bevorzugt: sichtbarer Label-Text aus der Tabelle (ohne leading "+")
-                try {
-                    const td0 = r.querySelector("td");
-                    if (td0) {
-                        const raw = String(td0.textContent || "").trim();
-                        const cleaned = raw.replace(/^\+\s*/, "").trim();
-                        if (cleaned) lab = cleaned;
-                    }
-                } catch {}
+                    // bevorzugt: sichtbarer Label-Text aus der Tabelle (ohne leading "+")
+                    try {
+                        const td0 = r.querySelector("td");
+                        if (td0) {
+                            const raw = String(td0.textContent || "").trim();
+                            const cleaned = raw.replace(/^\+\s*/, "").trim();
+                            if (cleaned) lab = cleaned;
+                        }
+                    } catch {}
 
-                // fallback: Template-Label (falls vorhanden)
-                try {
-                    if ((lab === type || !lab) && typeof PLAN_ACTIVITY_TEMPLATES !== "undefined" && Array.isArray(PLAN_ACTIVITY_TEMPLATES)) {
-                        const tpl = PLAN_ACTIVITY_TEMPLATES.find(t => String(t?.type || "").trim() === type);
-                        const tl = tpl?.label || tpl?.name;
-                        if (tl) lab = String(tl);
-                    }
-                } catch {}
+                    // fallback: Template-Label (falls vorhanden)
+                    try {
+                        if ((lab === type || !lab) && typeof PLAN_ACTIVITY_TEMPLATES !== "undefined" && Array.isArray(PLAN_ACTIVITY_TEMPLATES)) {
+                            const tpl = PLAN_ACTIVITY_TEMPLATES.find(t => String(t?.type || "").trim() === type);
+                            const tl = tpl?.label || tpl?.name;
+                            if (tl) lab = String(tl);
+                        }
+                    } catch {}
 
-                rec = { type, label: lab || type, value: 0 };
-                sums.set(type, rec);
+                    rec = { type, label: lab || type, value: 0 };
+                    sums.set(type, rec);
+                }
+
+                rec.value += goalNum;
             }
 
-            rec.value += goalNum;
-        }
+            const base = Array.from(sums.values()).filter(x => (Number(x?.value) || 0) > 0);
 
-        const base = Array.from(sums.values()).filter(x => (Number(x?.value) || 0) > 0);
+            const items2 = base.map((x, idx) => ({
+                label: String(x.label || x.type || ""),
+                value: Math.max(0, Math.round(Number(x.value) || 0)),
+                color: PALETTE[idx % PALETTE.length],
+                extra: { planType: String(x.type || "") }
+            }));
 
-        const items2 = base.map((x, idx) => ({
-            label: String(x.label || x.type || ""),
-            value: Math.max(0, Math.round(Number(x.value) || 0)),
-            color: PALETTE[idx % PALETTE.length],
-            extra: { planType: String(x.type || "") }
-        }));
+            // Donut render (gleiches SVG-Format wie links)
+            drawDonutSvg(ph, items2, {
+                style: "outline",
+                gapDeg: 7,
+                strokeWidth: 2,
+                outlineFillAlpha: 0.20,
+                rInnerFactor: 0.78,
+                showCenterText: false,
+                holeFill: false,
+            });
 
-        // Donut render (gleiches SVG-Format wie links)
-        drawDonutSvg(ph, items2, {
-            style: "outline",
-            gapDeg: 7,
-            strokeWidth: 2,
-            outlineFillAlpha: 0.20,
-            rInnerFactor: 0.78,
-            showCenterText: false,
-            holeFill: false,
-        });
+            // Interaktion: Slice klickt => Tabellenfilter nach planType (0.14.86)
+            try {
+                const paths2 = ph.querySelectorAll('path.recharts-sector');
+                for (const p of paths2) {
+                    const itemIdx = Number(p.getAttribute("data-recharts-item-index") || p.getAttribute("data-ad-slice") || "NaN");
+                    const ptRaw = (Number.isFinite(itemIdx) && itemIdx >= 0) ? (items2[itemIdx]?.extra?.planType || "") : "";
+                    const pt = String(ptRaw || "").trim();
 
-                // Interaktion: Slice klickt => Tabellenfilter nach planType (0.14.86)
-        try {
-            const paths2 = ph.querySelectorAll('path.recharts-sector');
-            for (const p of paths2) {
-                const itemIdx = Number(p.getAttribute("data-recharts-item-index") || p.getAttribute("data-ad-slice") || "NaN");
-                const ptRaw = (Number.isFinite(itemIdx) && itemIdx >= 0) ? (items2[itemIdx]?.extra?.planType || "") : "";
-                const pt = String(ptRaw || "").trim();
+                    p.dataset.adSollType = pt;
+                    try { p.setAttribute("data-ad-soll-type", pt); } catch {}
 
-                p.dataset.adSollType = pt;
-                try { p.setAttribute("data-ad-soll-type", pt); } catch {}
+                    try { p.style.cursor = pt ? "pointer" : "default"; } catch {}
 
-                try { p.style.cursor = pt ? "pointer" : "default"; } catch {}
+                    try {
+                        p.onclick = (ev) => {
+                            try { ev?.preventDefault?.(); } catch {}
+                            try { ev?.stopPropagation?.(); } catch {}
 
-                try {
-                    p.onclick = (ev) => {
+                            const cur = String(ph.dataset.adExtTsFilter || "");
+                            const next = (pt && cur === pt) ? "" : pt;
+                            ph.dataset.adExtTsFilter = next;
+                            applyTrainingSollSplitFilter(panel, next);
+                        };
+                    } catch {}
+                }
+            } catch {}
+
+            // Klick in leere Fläche im Donut-SVG => Filter AUS (0.14.86)
+            try {
+                ph.onclick = (ev) => {
+                    try {
+                        if (ev?.target?.closest?.('path.recharts-sector')) return;
+                        ph.dataset.adExtTsFilter = "";
+                        applyTrainingSollSplitFilter(panel, "");
+                    } catch {}
+                };
+            } catch {}
+
+            // Klick in Legend => Filter AUS (0.14.86)
+            try {
+                if (phLegend) {
+                    phLegend.onclick = (ev) => {
                         try { ev?.preventDefault?.(); } catch {}
                         try { ev?.stopPropagation?.(); } catch {}
-
-                        const cur = String(ph.dataset.adExtTsFilter || "");
-                        const next = (pt && cur === pt) ? "" : pt;
-                        ph.dataset.adExtTsFilter = next;
-                        applyTrainingSollSplitFilter(panel, next);
+                        ph.dataset.adExtTsFilter = "";
+                        applyTrainingSollSplitFilter(panel, "");
                     };
-                } catch {}
-            }
-        } catch {}
-
-        // Klick in leere Fläche im Donut-SVG => Filter AUS (0.14.86)
-        try {
-            ph.onclick = (ev) => {
-                try {
-                    if (ev?.target?.closest?.('path.recharts-sector')) return;
-                    ph.dataset.adExtTsFilter = "";
-                    applyTrainingSollSplitFilter(panel, "");
-                } catch {}
-            };
-        } catch {}
-
-        // Klick in Legend => Filter AUS (0.14.86)
-        try {
+                }
+            } catch {}
+            // Legende (minimal, wie links)
             if (phLegend) {
-                phLegend.onclick = (ev) => {
-                    try { ev?.preventDefault?.(); } catch {}
-                    try { ev?.stopPropagation?.(); } catch {}
-                    ph.dataset.adExtTsFilter = "";
-                    applyTrainingSollSplitFilter(panel, "");
+                const total2 = items2.reduce((a, x) => a + (Number(x?.value) || 0), 0);
+                const valTxt2 = (v) => {
+                    const n = Math.max(0, Math.round(Number(v) || 0));
+                    return (unitTxt === "min") ? `${n} min` : `${n} Sessions`;
                 };
-            }
-        } catch {}
-// Legende (minimal, wie links)
-        if (phLegend) {
-            const total2 = items2.reduce((a, x) => a + (Number(x?.value) || 0), 0);
-            const valTxt2 = (v) => {
-                const n = Math.max(0, Math.round(Number(v) || 0));
-                return (unitTxt === "min") ? `${n} min` : `${n} Sessions`;
-            };
 
-            if (!items2.length || !total2) {
-                phLegend.innerHTML = `<div class="ad-ext-muted">Keine Daten</div>`;
-            } else {
-                phLegend.innerHTML = items2.map((it) => {
-                    const pct = total2 ? (Number(it.value) * 100) / total2 : 0;
-                    return `
+                if (!items2.length || !total2) {
+                    phLegend.innerHTML = `<div class="ad-ext-muted">Keine Daten</div>`;
+                } else {
+                    phLegend.innerHTML = items2.map((it) => {
+                        const pct = total2 ? (Number(it.value) * 100) / total2 : 0;
+                        return `
   <div class="ad-ext-legend-item" style="cursor:default;">
     <span class="ad-ext-dot" style="background:${escapeHtml(it.color)};"></span>
     <span style="font-weight:900;">${escapeHtml(it.label)}</span>
@@ -11011,14 +11589,14 @@ function aggregateTrainingActualsForWeek(weekKey) {
     }
     }
 
-function renderTrainingPlan(panel, weeksAsc) {
+    function renderTrainingPlan(panel, weeksAsc) {
         if (!panel) return;
 
         cache.trainingPlan = cache.trainingPlan || loadTrainingPlanState();
         const st = cache.trainingPlan;
 
         const basis = "SESS"; // sessions-only UI (0.14.75)
-            st.basis = "SESS";
+        st.basis = "SESS";
 
         const mainBody = panel.querySelector("#ad-ext-plan-main-body");
         const weekLabel = panel.querySelector("#ad-ext-plan-week-label");
@@ -11123,8 +11701,8 @@ function renderTrainingPlan(panel, weeksAsc) {
             const ratio = hasGoal ? (istVal / goalVal) : 0;
 
             const pctNum = hasGoal
-                ? Math.max(0, Math.min(100, (Number.isFinite(ratio) ? ratio : 0) * 100))
-                : 0;
+            ? Math.max(0, Math.min(100, (Number.isFinite(ratio) ? ratio : 0) * 100))
+            : 0;
             const pctShow = hasGoal ? (Math.round(pctNum * 10) / 10) : 0;
             const pctTxt = hasGoal ? `${pctShow.toFixed(1)}%` : "–";
 
@@ -11135,32 +11713,32 @@ function renderTrainingPlan(panel, weeksAsc) {
             `;
         };
 
-        if (mainBody) {
-            const rows = [];
+    if (mainBody) {
+        const rows = [];
 
-            const weekId = selWeekKey ? weekIdFromWeekKey(selWeekKey) : "";
-            const wp = weekId ? loadWeekPlan(weekId) : null;
+        const weekId = selWeekKey ? weekIdFromWeekKey(selWeekKey) : "";
+        const wp = weekId ? loadWeekPlan(weekId) : null;
 
-            const viewMode = (basis === "SESS") ? "sessions" : "time";
-            const items = (wp && Array.isArray(wp.planItems)) ? sanitizePlanItemsForStorage(wp.planItems) : [];
+        const viewMode = (basis === "SESS") ? "sessions" : "time";
+        const items = (wp && Array.isArray(wp.planItems)) ? sanitizePlanItemsForStorage(wp.planItems) : [];
 
-            let totalGoal = 0;
-            let totalIst = 0;
-            let totalCredited = 0;
-            let totalTimeSec = 0;
+        let totalGoal = 0;
+        let totalIst = 0;
+        let totalCredited = 0;
+        let totalTimeSec = 0;
 
-            const fmtGoal = (v) => {
-                if (viewMode === "time") return `${clampMinutes(v)}min`;
-                return String(clampSessions(v));
-            };
+        const fmtGoal = (v) => {
+            if (viewMode === "time") return `${clampMinutes(v)}min`;
+            return String(clampSessions(v));
+        };
 
-            const fmtIstVal = (v) => {
-                if (viewMode === "time") return `${Math.max(0, Math.round(Number(v) || 0))}min`;
-                return String(Math.max(0, Math.round(Number(v) || 0)));
-            };
+        const fmtIstVal = (v) => {
+            if (viewMode === "time") return `${Math.max(0, Math.round(Number(v) || 0))}min`;
+            return String(Math.max(0, Math.round(Number(v) || 0)));
+        };
 
-            if (!wp || items.length === 0) {
-                rows.push(`
+        if (!wp || items.length === 0) {
+            rows.push(`
             <tr>
               <td style="font-weight:950;">
                 Kein Trainingsplan für diese Woche angelegt
@@ -11168,7 +11746,7 @@ function renderTrainingPlan(panel, weeksAsc) {
               </td>
               <td class="ad-ext-table-num-right">—</td>
               <td class="ad-ext-table-num-right">—</td>
-              <td class="ad-ext-table-num-right ad-ext-table-nowrap" title="—">—</td>
+              <td class="ad-ext-table-num-right ad-ext-table-nowrap">—</td>
               <td class="ad-ext-muted">—</td>
             </tr>
           `);
@@ -11232,7 +11810,7 @@ function renderTrainingPlan(panel, weeksAsc) {
               <td style="font-weight:950;" title="${escapeHtml(lab)}"><span class="ad-ext-rowexp">+</span>${escapeHtml(lab)}</td>
               <td class="ad-ext-table-num-right" style="font-weight:950; opacity:.9;">${escapeHtml(fmtGoal(goal))}</td>
               <td class="ad-ext-table-num-right" style="font-weight:950;"${overtrainedRow ? ' title="Hinweis: Übertraining! Für die Statistik wird IST = SOLL gewertet."' : ""}>${escapeHtml(istTxt)}</td>
-              <td class="ad-ext-table-num-right ad-ext-table-nowrap" style="font-weight:950; opacity:.9;" title="${escapeHtml(timeTxt)}">${escapeHtml(timeTxt)}</td>
+              <td class="ad-ext-table-num-right ad-ext-table-nowrap" style="font-weight:950; opacity:.9;">${escapeHtml(timeTxt)}</td>
               <td>${progressCell(ist, goal)}</td>
             </tr>
           `);
@@ -11280,6 +11858,26 @@ function renderTrainingPlan(panel, weeksAsc) {
                 }
                 if (kpiTimeEl) kpiTimeEl.textContent = String(fmtHours(Number(totalWeekSec) || 0) || "—");
 
+                // Tooltip: Trainingszeit (Gesamt) – auf gesamter KPI-Kachel
+                try {
+                    const timeTile = kpiTimeEl?.closest(".ad-ext-kpi-tile");
+                    if (timeTile) {
+                        const tip = "Summe aller Trainingszeiten der Woche (inkl. Einheiten außerhalb des Plans).";
+                        const applyTitleDeep = (el, text) => {
+                            if (!el) return;
+                            const t = String(text || "");
+                            try { el.title = t; } catch {}
+                            try { el.style.cursor = "default"; } catch {}
+                            try {
+                                for (const node of el.querySelectorAll("*")) {
+                                    try { node.title = t; } catch {}
+                                    try { node.style.cursor = "default"; } catch {}
+                                }
+                            } catch {}
+                        };
+                        applyTitleDeep(timeTile, tip);
+                    }
+                } catch {}
                 if (kpiProgEl) kpiProgEl.textContent = hasGoal ? `${pct.toFixed(1)}%` : "—";
                 if (kpiBarEl && kpiBarEl.style) kpiBarEl.style.width = `${pct}%`;
             } catch {}
@@ -11292,10 +11890,10 @@ function renderTrainingPlan(panel, weeksAsc) {
 
             rows.push(`
           <tr class="ad-ext-row-total">
-            <td style="font-weight:950;">Gesamt</td>
+            <td style="font-weight:950;">Gesamt (Plan)</td>
             <td class="ad-ext-table-num-right" style="font-weight:950; opacity:.9;">${escapeHtml(totalGoalTxt)}</td>
             <td class="ad-ext-table-num-right" style="font-weight:950;">${escapeHtml(totalIstTxt)}</td>
-            <td class="ad-ext-table-num-right ad-ext-table-nowrap" style="font-weight:950; opacity:.9;" title="${escapeHtml(totalTimeTxt)}">${escapeHtml(totalTimeTxt)}</td>
+            <td class="ad-ext-table-num-right ad-ext-table-nowrap" style="font-weight:950; opacity:.9;">${escapeHtml(totalTimeTxt)}</td>
             <td>${progressCell(totalCredited, totalGoal)}</td>
           </tr>
         `);
@@ -11318,7 +11916,7 @@ function renderTrainingPlan(panel, weeksAsc) {
         }
 
 
-    }
+}
 
 
     function wireSegmentInteractions(panel) {
@@ -11787,15 +12385,15 @@ function renderTrainingPlan(panel, weeksAsc) {
               <div class="ad-ext-tooltip-title">GAMES AVERAGE</div>
               <div style="opacity:.75; padding-top:4px;">Keine Daten</div>
             `;
-        } else {
-            const lineup = rec.lineup || "—";
-            const dateStr = rec.dateIso ? germanDateFromIso(rec.dateIso) : "—";
-            const avgStr = Number.isFinite(rec.avg) ? fmtDecComma(rec.avg, 2) : "—";
-            const btn = rec.matchId
-            ? `<button type="button" class="ad-ext-view-btn ad-ext-view-btn--xs" data-ad-open-match="${escapeHtml(String(rec.matchId))}">Zum Spiel</button>`
+                } else {
+                    const lineup = rec.lineup || "—";
+                    const dateStr = rec.dateIso ? germanDateFromIso(rec.dateIso) : "—";
+                    const avgStr = Number.isFinite(rec.avg) ? fmtDecComma(rec.avg, 2) : "—";
+                    const btn = rec.matchId
+                    ? `<button type="button" class="ad-ext-view-btn ad-ext-view-btn--xs" data-ad-open-match="${escapeHtml(String(rec.matchId))}">Zum Spiel</button>`
               : "";
 
-            html = `
+                    html = `
               <div class="ad-ext-tooltip-record">
                 <div class="ad-ext-tooltip-lineup ad-ext-tooltip-lineup--wrap">${escapeHtml(lineup)}</div>
                 <div class="ad-ext-tooltip-recline">🏆 Rekord am <span class="ad-ext-tooltip-date">${escapeHtml(dateStr)}</span></div>
@@ -11805,43 +12403,43 @@ function renderTrainingPlan(panel, weeksAsc) {
             `;
         }
 
-        tooltipShow(null, html, { interactive: true, pinned: true, pinnedOwner: "x01avg" });
-        tooltipMoveToRect(tile.getBoundingClientRect());
-    };
+                tooltipShow(null, html, { interactive: true, pinned: true, pinnedOwner: "x01avg" });
+                tooltipMoveToRect(tile.getBoundingClientRect());
+            };
 
-    tile.addEventListener("mouseenter", () => {
-        overTile = true;
-        show();
-    });
-    tile.addEventListener("mouseleave", () => {
-        overTile = false;
-        scheduleHide();
-    });
+            tile.addEventListener("mouseenter", () => {
+                overTile = true;
+                show();
+            });
+            tile.addEventListener("mouseleave", () => {
+                overTile = false;
+                scheduleHide();
+            });
 
-    // Keep tooltip open when moving onto it (only for pinned tooltip owner)
-    tipEl.addEventListener("mouseenter", () => {
-        if (tipEl.dataset.pinnedOwner !== "x01avg") return;
-        overTip = true;
-    });
-    tipEl.addEventListener("mouseleave", () => {
-        if (tipEl.dataset.pinnedOwner !== "x01avg") return;
-        overTip = false;
-        scheduleHide();
-    });
-    // Auto-refresh tooltip when filters rerender KPI (so record follows current filter)
-    if (avgVal && tile.dataset.adExtAvgRecObs !== "1") {
-        tile.dataset.adExtAvgRecObs = "1";
-        const mo = new MutationObserver(() => {
-            const el = tooltip();
-            if (el.style.display === "none") return;
-            if (el.dataset.pinnedOwner !== "x01avg") return;
-            if (!(overTile || overTip)) return;
-            show();
-        });
-        mo.observe(avgVal, { childList: true, characterData: true, subtree: true });
-    }
+            // Keep tooltip open when moving onto it (only for pinned tooltip owner)
+            tipEl.addEventListener("mouseenter", () => {
+                if (tipEl.dataset.pinnedOwner !== "x01avg") return;
+                overTip = true;
+            });
+            tipEl.addEventListener("mouseleave", () => {
+                if (tipEl.dataset.pinnedOwner !== "x01avg") return;
+                overTip = false;
+                scheduleHide();
+            });
+            // Auto-refresh tooltip when filters rerender KPI (so record follows current filter)
+            if (avgVal && tile.dataset.adExtAvgRecObs !== "1") {
+                tile.dataset.adExtAvgRecObs = "1";
+                const mo = new MutationObserver(() => {
+                    const el = tooltip();
+                    if (el.style.display === "none") return;
+                    if (el.dataset.pinnedOwner !== "x01avg") return;
+                    if (!(overTile || overTip)) return;
+                    show();
+                });
+                mo.observe(avgVal, { childList: true, characterData: true, subtree: true });
+            }
 
-})();
+        })();
 
 
 
@@ -11901,15 +12499,15 @@ function renderTrainingPlan(panel, weeksAsc) {
               <div class="ad-ext-tooltip-title">First 9 Average</div>
               <div style="opacity:.75; padding-top:4px;">Keine Daten</div>
             `;
-        } else {
-            const lineup = rec.lineup || "—";
-            const dateStr = rec.dateIso ? germanDateFromIso(rec.dateIso) : "—";
-            const f9Str = Number.isFinite(rec.f9Avg) ? fmtDecComma(rec.f9Avg, 2) : "—";
-            const btn = rec.matchId
-            ? `<button type="button" class="ad-ext-view-btn ad-ext-view-btn--xs" data-ad-open-match="${escapeHtml(String(rec.matchId))}">Zum Spiel</button>`
+                } else {
+                    const lineup = rec.lineup || "—";
+                    const dateStr = rec.dateIso ? germanDateFromIso(rec.dateIso) : "—";
+                    const f9Str = Number.isFinite(rec.f9Avg) ? fmtDecComma(rec.f9Avg, 2) : "—";
+                    const btn = rec.matchId
+                    ? `<button type="button" class="ad-ext-view-btn ad-ext-view-btn--xs" data-ad-open-match="${escapeHtml(String(rec.matchId))}">Zum Spiel</button>`
               : "";
 
-            html = `
+                    html = `
               <div class="ad-ext-tooltip-record">
                 <div class="ad-ext-tooltip-lineup ad-ext-tooltip-lineup--wrap">${escapeHtml(lineup)}</div>
                 <div class="ad-ext-tooltip-recline">🏆 Rekord am <span class="ad-ext-tooltip-date">${escapeHtml(dateStr)}</span></div>
@@ -11919,43 +12517,43 @@ function renderTrainingPlan(panel, weeksAsc) {
             `;
         }
 
-        tooltipShow(null, html, { interactive: true, pinned: true, pinnedOwner: "x01f9" });
-        tooltipMoveToRect(tile.getBoundingClientRect());
-    };
+                tooltipShow(null, html, { interactive: true, pinned: true, pinnedOwner: "x01f9" });
+                tooltipMoveToRect(tile.getBoundingClientRect());
+            };
 
-    tile.addEventListener("mouseenter", () => {
-        overTile = true;
-        show();
-    });
-    tile.addEventListener("mouseleave", () => {
-        overTile = false;
-        scheduleHide();
-    });
+            tile.addEventListener("mouseenter", () => {
+                overTile = true;
+                show();
+            });
+            tile.addEventListener("mouseleave", () => {
+                overTile = false;
+                scheduleHide();
+            });
 
-    tipEl.addEventListener("mouseenter", () => {
-        if (tipEl.dataset.pinnedOwner !== "x01f9") return;
-        overTip = true;
-    });
-    tipEl.addEventListener("mouseleave", () => {
-        if (tipEl.dataset.pinnedOwner !== "x01f9") return;
-        overTip = false;
-        scheduleHide();
-    });
+            tipEl.addEventListener("mouseenter", () => {
+                if (tipEl.dataset.pinnedOwner !== "x01f9") return;
+                overTip = true;
+            });
+            tipEl.addEventListener("mouseleave", () => {
+                if (tipEl.dataset.pinnedOwner !== "x01f9") return;
+                overTip = false;
+                scheduleHide();
+            });
 
-    // Auto-refresh tooltip when filters rerender KPI
-    if (f9Val && tile.dataset.adExtF9RecObs !== "1") {
-        tile.dataset.adExtF9RecObs = "1";
-        const mo = new MutationObserver(() => {
-            const el = tooltip();
-            if (el.style.display === "none") return;
-            if (el.dataset.pinnedOwner !== "x01f9") return;
-            if (!(overTile || overTip)) return;
-            show();
-        });
-        mo.observe(f9Val, { childList: true, characterData: true, subtree: true });
-    }
+            // Auto-refresh tooltip when filters rerender KPI
+            if (f9Val && tile.dataset.adExtF9RecObs !== "1") {
+                tile.dataset.adExtF9RecObs = "1";
+                const mo = new MutationObserver(() => {
+                    const el = tooltip();
+                    if (el.style.display === "none") return;
+                    if (el.dataset.pinnedOwner !== "x01f9") return;
+                    if (!(overTile || overTip)) return;
+                    show();
+                });
+                mo.observe(f9Val, { childList: true, characterData: true, subtree: true });
+            }
 
-})();
+        })();
 
 
         x01Panel.addEventListener("click", (ev) => {
@@ -12360,10 +12958,17 @@ function renderTrainingPlan(panel, weeksAsc) {
 
         // Tab 3: Zeit-Tracker
         filtersTime: {
-            mode: localStorage.getItem("ad_ext_time_mode") || "ALL",
+            mode: (() => {
+                const raw = localStorage.getItem("ad_ext_time_mode") || "ALL";
+                const m = String(raw || "").toUpperCase().trim();
+                if (m === "X01" || m === "X01_LIGA") return "X01_BOT";
+                if (m === "ST") return "SEGMENT_TRAINING";
+                if (m === "X01_HUMAN") return "ALL";
+                const allowed = new Set(["ALL", ...TRAINING_ACTIVITIES.filter(a => a.key !== "X01_HUMAN").map(a => a.key)]);
+                return allowed.has(m) ? m : "ALL";
+            })(),
             range: localStorage.getItem("ad_ext_time_range") || "W12",
-            goalHours: Number(localStorage.getItem("ad_ext_time_goalHours") || TIME_WEEKLY_GOAL_DEFAULT_HOURS) || TIME_WEEKLY_GOAL_DEFAULT_HOURS,
-        },
+},
         timeEntries: [],
         _time_layouts: null,
         _st_layouts: null,
@@ -12399,7 +13004,7 @@ function renderTrainingPlan(panel, weeksAsc) {
         cache.otherTrainingSessions = otherTrainingSessions;
 
         // Zeit-Tracker: abgeleitete Einträge (für Wochen-Aggregation)
-        cache.timeEntries = buildTimeEntries(sessions, x01Matches);
+        cache.timeEntries = buildTimeEntries(sessions, x01Matches, otherTrainingSessions);
 
         cache.loaded = true;
     }
@@ -12415,7 +13020,7 @@ function renderTrainingPlan(panel, weeksAsc) {
         if (dayBody) dayBody.innerHTML = `<tr><td colspan="5" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
         if (tarBody) tarBody.innerHTML = `<tr><td colspan="5" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
         if (x01Body) x01Body.innerHTML = `<tr><td colspan="12" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
-        if (timeBody) timeBody.innerHTML = `<tr><td colspan="7" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
+        if (timeBody) timeBody.innerHTML = `<tr><td colspan="10" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
         if (planMainBody) planMainBody.innerHTML = `<tr><td colspan="5" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
         if (planFocusBody) planFocusBody.innerHTML = `<tr><td colspan="6" style="opacity:.7; padding:10px 12px;">Lade…</td></tr>`;
 
@@ -12454,7 +13059,6 @@ function renderTrainingPlan(panel, weeksAsc) {
     function wireTimeFilters(panel) {
         const selMode = panel.querySelector("#ad-ext-time-mode");
         const selRange = panel.querySelector("#ad-ext-time-range");
-        const inpGoal = panel.querySelector("#ad-ext-time-goal");
 
         if (selMode) {
             selMode.addEventListener("change", () => {
@@ -12471,42 +13075,48 @@ function renderTrainingPlan(panel, weeksAsc) {
                 renderTimeTab(panel);
             });
         }
-
-        const applyGoal = () => {
-            const v = normalizeGoalHours(inpGoal?.value);
-            cache.filtersTime.goalHours = v;
-            localStorage.setItem("ad_ext_time_goalHours", String(v));
-            renderTimeTab(panel);
-        };
-
-        if (inpGoal) {
-            inpGoal.addEventListener("change", applyGoal);
-            inpGoal.addEventListener("blur", applyGoal);
-            inpGoal.addEventListener("keydown", (e) => {
-                if (e.key === "Enter") applyGoal();
-            });
-        }
     }
 
     function wireTimeInteractions(panel) {
         const chart = panel.querySelector("#ad-ext-time-chart");
         const donut = panel.querySelector("#ad-ext-time-donut");
 
+        const labelByKey = new Map((TRAINING_ACTIVITIES || []).map(a => [String(a.key), String(a.label || a.key)]));
+        const modeLabel = (k) => labelByKey.get(String(k)) || String(k || "");
+        const keys = timeTrackerKeysOrdered();
+
+        const secOf = (w, key) => {
+            try { if (w?.byKeySec?.get) return Number(w.byKeySec.get(key) || 0) || 0; } catch {}
+            return 0;
+        };
+        const cntOf = (w, key) => {
+            try { if (w?.byKeyCount?.get) return Number(w.byKeyCount.get(key) || 0) || 0; } catch {}
+            return 0;
+        };
+        const countLabel = (k) => (String(k || "").toUpperCase().trim() === "X01_BOT") ? "Matches" : "Sessions";
+
         const barHtml = (w) => {
             const kw = w?.kw ? `KW ${w.kw}${w.isoYear ? "/" + w.isoYear : ""}` : "Woche";
             const range = w?.rangeLabel || "";
             const total = fmtHours(Number(w?.totalSec || 0));
-            const st = fmtHours(Number(w?.stSec || 0));
-            const x01 = fmtHours(Number(w?.x01Sec || 0));
-            const sc = Number(w?.stCount || 0);
-            const mc = Number(w?.x01Count || 0);
+
+            const lines = [];
+            for (const k of keys) {
+                const sec = secOf(w, k);
+                const cnt = cntOf(w, k);
+                if (sec <= 0 && cnt <= 0) continue;
+
+                const dot = timeTrackerColor(k, 0.85);
+                const cntTxt = (Number(cnt) > 0) ? ` <span style="opacity:.75">(${fmtInt(cnt)} ${countLabel(k)})</span>` : "";
+                lines.push(`<div><span class="ad-ext-dot" style="background:${escapeHtml(dot)}; margin-right:6px;"></span><b>${escapeHtml(modeLabel(k))}:</b> ${fmtHours(sec)}${cntTxt}</div>`);
+            }
+            if (!lines.length) lines.push(`<div class="ad-ext-muted">Keine Daten</div>`);
 
             return `
         <div style="font-weight:650; margin-bottom:6px;">${kw}</div>
         <div style="opacity:.85; margin-bottom:6px;">${range}</div>
         <div><b>Gesamt:</b> ${total}</div>
-        <div><b>Segment:</b> ${st} <span style="opacity:.75">(${sc} Sessions)</span></div>
-        <div><b>X01:</b> ${x01} <span style="opacity:.75">(${mc} Matches)</span></div>
+        ${lines.join("")}
       `;
         };
 
@@ -12568,8 +13178,8 @@ function renderTrainingPlan(panel, weeksAsc) {
     }
 
 
-        // Training Plan Sidebar – Week Plans (0.14.34)
-// - weekMode + planItems werden pro ISO-Woche lokal gespeichert (LocalStorage)
+    // Training Plan Sidebar – Week Plans (0.14.34)
+    // - weekMode + planItems werden pro ISO-Woche lokal gespeichert (LocalStorage)
     const WEEK_PLAN_STORAGE_PREFIX = "autodarts.segmentDash.plan.";
 
     /**
@@ -12615,7 +13225,7 @@ function renderTrainingPlan(panel, weeksAsc) {
         return `${py}-W${String(Math.max(1, Math.round(pw))).padStart(2, "0")}`;
     }
 
-        function normalizeWeekMode(m) {
+    function normalizeWeekMode(m) {
         return (String(m || "") === "sessions") ? "sessions" : "time";
     }
 
@@ -12680,7 +13290,7 @@ function renderTrainingPlan(panel, weeksAsc) {
             targetSessions = Number.isFinite(n) ? clampSessions(n) : 1;
         }
 
-let params = (src.params && typeof src.params === "object") ? { ...src.params } : undefined;
+        let params = (src.params && typeof src.params === "object") ? { ...src.params } : undefined;
 
         // Migration / Defaults: Segment Training braucht params.targets (Array)
         if (type === "SEGMENT_TRAINING") {
@@ -13023,7 +13633,7 @@ let params = (src.params && typeof src.params === "object") ? { ...src.params } 
     // Start-State: wird beim Laden der Sidebar ggf. durch den gespeicherten Wochenplan überschrieben
     let planItems = [];
 
-function wireTrainingPlanSidebarScaffold(panel) {
+    function wireTrainingPlanSidebarScaffold(panel) {
         if (!panel) return;
 
 
@@ -13079,12 +13689,13 @@ function wireTrainingPlanSidebarScaffold(panel) {
                 }
             }
         } catch {}
-        // Persisted view: DATA | PLAN | INSIGHTS | SEGFOCUS
+        // Persisted view: DATA | PLAN | INSIGHTS | SEGFOCUS | CHROMO
         try {
             const raw = String(localStorage.getItem(AD_EXT_TRAIN_VIEW_LS_KEY) || trainView || "DATA").toUpperCase();
             trainView = (raw === "PLAN") ? "PLAN" : (raw === "INSIGHTS") ? "INSIGHTS"
-                : (raw === "SEGFOCUS" || raw === "SEGFOKUS" || raw === "SEGMENT_FOCUS") ? "SEGFOCUS"
-                : "DATA";
+            : (raw === "SEGFOCUS" || raw === "SEGFOKUS" || raw === "SEGMENT_FOCUS") ? "SEGFOCUS"
+            : (raw === "CHROMO" || raw === "CHROMOTRACKER" || raw === "CHROMO_TRACKER") ? "CHROMO"
+            : "DATA";
         } catch {
             trainView = trainView || "DATA";
         }
@@ -13094,7 +13705,7 @@ function wireTrainingPlanSidebarScaffold(panel) {
         const side = panel.querySelector(".ad-train-side");
         const main = panel.querySelector(".ad-train-main");
         const segfocus = panel.querySelector("#ad-ext-train-segfokus");
-const trainViewRoot = panel.querySelector("#ad-ext-view-training");
+        const trainViewRoot = panel.querySelector("#ad-ext-view-training");
 
         if (!tabs || !layout || !side || !main) return;
 
@@ -13151,7 +13762,10 @@ const trainViewRoot = panel.querySelector("#ad-ext-view-training");
 
         function setTrainView(view) {
             const v = String(view || "").toUpperCase();
-            trainView = (v === "PLAN") ? "PLAN" : (v === "INSIGHTS") ? "INSIGHTS" : (v === "SEGFOCUS" || v === "SEGFOKUS" || v === "SEGMENT_FOCUS") ? "SEGFOCUS" : "DATA";
+            trainView = (v === "PLAN") ? "PLAN" : (v === "INSIGHTS") ? "INSIGHTS"
+            : (v === "SEGFOCUS" || v === "SEGFOKUS" || v === "SEGMENT_FOCUS") ? "SEGFOCUS"
+            : (v === "CHROMO" || v === "CHROMOTRACKER" || v === "CHROMO_TRACKER") ? "CHROMO"
+            : "DATA";
             try { localStorage.setItem(AD_EXT_TRAIN_VIEW_LS_KEY, trainView); } catch {}
 
             layout.dataset.trainView = trainView;
@@ -13176,6 +13790,10 @@ const trainViewRoot = panel.querySelector("#ad-ext-view-training");
                 rerenderTrainingMain();
             } else if (trainView === "INSIGHTS") {
                 try { renderInsights(panel); } catch {}
+            } else if (trainView === "CHROMO") {
+                // Zeit-Tracker im Training-Subview „Chromo-Tracker“
+                try { mountTimeIntoTrainChromo(panel); } catch {}
+                try { if (cache?.loaded) renderTimeTab(panel); } catch {}
             } else if (trainView === "SEGFOCUS") {
                 try { ensureSegFocusMounted(); } catch {}
                 try { if (cache?.loaded) renderSegmentTraining(panel, cache.sessions, cache.filters, cache.meta); } catch {}
@@ -13198,7 +13816,7 @@ const trainViewRoot = panel.querySelector("#ad-ext-view-training");
 
 
 
-        function wireTrainingPlanSidebarControls(panel) {
+    function wireTrainingPlanSidebarControls(panel) {
         if (!panel) return;
 
         const side = panel.querySelector(".ad-train-side");
@@ -13208,7 +13826,7 @@ const trainViewRoot = panel.querySelector("#ad-ext-view-training");
         const btnTime = side.querySelector("#adPlanModeTime");
         const btnSessions = side.querySelector("#adPlanModeSessions");
         const chk = side.querySelector("#adPlanShowPerf");
-const btnAdd = side.querySelector("#adPlanAddActivityBtn");
+        const btnAdd = side.querySelector("#adPlanAddActivityBtn");
         const btnCopyPrevWeek = side.querySelector("#adPlanCopyPrevWeekBtn");
 
         const btnResetWeek = side.querySelector("#adPlanResetWeekBtn");
@@ -13216,7 +13834,7 @@ const btnAdd = side.querySelector("#adPlanAddActivityBtn");
 
         const btnSavePlan = side.querySelector("#adPlanSavePlanBtn");
         const btnLoadPlan = side.querySelector("#adPlanLoadPlanBtn");
-const statusEl = side.querySelector("#adPlanStatus");
+        const statusEl = side.querySelector("#adPlanStatus");
         const sumTarget = side.querySelector("#adPlanSumTarget");
         const sumActual = side.querySelector("#adPlanSumActual");
         const sumProgress = side.querySelector("#adPlanSumProgress");
@@ -13629,7 +14247,7 @@ const statusEl = side.querySelector("#adPlanStatus");
             btnCopyPrevWeek.disabled = !can;
             btnCopyPrevWeek.title = !weekId
                 ? "Keine Woche gewählt"
-                : (can ? "Übernimmt den Plan der Vorwoche" : "Aktuelle Woche hat bereits einen Plan");
+            : (can ? "Übernimmt den Plan der Vorwoche" : "Aktuelle Woche hat bereits einen Plan");
         }
 
 
@@ -13646,9 +14264,9 @@ const statusEl = side.querySelector("#adPlanStatus");
             btnResetWeek.disabled = !can;
             btnResetWeek.title = !weekId
                 ? "Keine Woche gewählt"
-                : (can ? `Löscht den Trainingsplan dieser Woche (${fmtWeekLabel(wkKey)})` : "Woche ist bereits leer");
+            : (can ? `Löscht den Trainingsplan dieser Woche (${fmtWeekLabel(wkKey)})` : "Woche ist bereits leer");
         }
-function copyPrevWeekPlanIntoCurrent() {
+        function copyPrevWeekPlanIntoCurrent() {
             const wkKey = ensureSidebarSelectedWeekKey();
             const curWeekId = weekIdFromWeekKey(wkKey);
 
@@ -13660,7 +14278,7 @@ function copyPrevWeekPlanIntoCurrent() {
             if (!isPlanEmptyForCopy()) {
                 setStatusTemp("Aktuelle Woche hat bereits einen Plan.");
                 syncCopyPrevWeekButton();
-            syncResetWeekButton();
+                syncResetWeekButton();
                 return;
             }
 
@@ -13776,7 +14394,7 @@ function copyPrevWeekPlanIntoCurrent() {
 
 
 
-                function getItemActualMinutes(it, agg) {
+        function getItemActualMinutes(it, agg) {
             const type = String(it?.type || "");
             if (type === "SEGMENT_TRAINING") {
                 const targets = it?.params && Array.isArray(it.params.targets) ? it.params.targets : [];
@@ -13863,7 +14481,7 @@ function copyPrevWeekPlanIntoCurrent() {
                 sumTarget.textContent = `${Math.round(totals.goal)}min`;
             }
         }
-function renderPlanTable() {
+        function renderPlanTable() {
             if (!table) return;
 
             const isSessions = getSidebarViewMode() === "sessions";
@@ -13878,24 +14496,24 @@ function renderPlanTable() {
               </div>
             `;
 
-            const items = Array.isArray(planItems) ? planItems : [];
+    const items = Array.isArray(planItems) ? planItems : [];
 
-            const rows = items.length
-                ? items.map((it) => {
-                const id = String(it?.id || "");
-                const name = String(it?.name || "");
-                const selected = String(selectedPlanItemId || "") === id;
+    const rows = items.length
+    ? items.map((it) => {
+        const id = String(it?.id || "");
+        const name = String(it?.name || "");
+        const selected = String(selectedPlanItemId || "") === id;
 
-                const soll = isSessions ? getTargetSessions(it) : clampMinutes(Number(it?.targetMinutes));
-                const inputValue = String(soll);
+        const soll = isSessions ? getTargetSessions(it) : clampMinutes(Number(it?.targetMinutes));
+        const inputValue = String(soll);
 
-                const step = isSessions ? "1" : "5";
-                const max = isSessions ? String(PLAN_TARGET_MAX_SESSIONS) : String(PLAN_TARGET_MAX_MINUTES);
-                const inputmode = "numeric";
-                const pattern = "[0-9]*";
-                const unit = isSessions ? "LEGS" : "min";
+        const step = isSessions ? "1" : "5";
+        const max = isSessions ? String(PLAN_TARGET_MAX_SESSIONS) : String(PLAN_TARGET_MAX_MINUTES);
+        const inputmode = "numeric";
+        const pattern = "[0-9]*";
+        const unit = isSessions ? "LEGS" : "min";
 
-                return `
+        return `
                   <div class="ad-plan-row${selected ? " ad-plan-row--selected" : ""}" data-plan-item-id="${escapeHtml(id)}" role="button" tabindex="0" aria-selected="${selected ? "true" : "false"}">
                     <div>
                       <div class="ad-plan-activityline">
@@ -13918,8 +14536,8 @@ function renderPlanTable() {
                     </div>
                   </div>
                 `;
-            }).join("")
-              : `
+                }).join("")
+            : `
                   <div class="ad-plan-row ad-plan-row--empty">
                     <div style="font-weight:850;">
                       Kein Trainingsplan angelegt
@@ -13928,10 +14546,10 @@ function renderPlanTable() {
                     <div class="ad-plan-cell-right">—</div>
                   </div>
                 `;
-            const totalVal = Math.round(totals.goal);
-            const totalUnit = isSessions ? "LEGS" : "min";
+    const totalVal = Math.round(totals.goal);
+    const totalUnit = isSessions ? "LEGS" : "min";
 
-            const foot = `
+    const foot = `
               <div class="ad-plan-row ad-plan-row--foot">
                 <div>Gesamt</div>
                 <div class="ad-plan-input-wrap">
@@ -13940,16 +14558,16 @@ function renderPlanTable() {
                 </div>
               </div>
             `;
-table.innerHTML = head + rows + foot;
-        }
-function renderPlanDetails() {
-            if (!details) return;
+    table.innerHTML = head + rows + foot;
+}
+            function renderPlanDetails() {
+                if (!details) return;
 
-            const id = String(selectedPlanItemId || "");
-            const it = getPlanItemById(id);
+                const id = String(selectedPlanItemId || "");
+                const it = getPlanItemById(id);
 
-            if (!it) {
-                details.innerHTML = `
+                if (!it) {
+                    details.innerHTML = `
                   <div class="ad-plan-details-card">
                     <div class="ad-plan-details-head">
                       <div>
@@ -13962,32 +14580,32 @@ function renderPlanDetails() {
                 return;
             }
 
-            const type = String(it?.type || "");
-            const typeLabel = getTypeLabel(type);
-            const name = String(it?.name || "");
-            const isSeg = type === "SEGMENT_TRAINING";
-            const targets = (isSeg && it?.params && Array.isArray(it.params.targets)) ? it.params.targets : [];
+    const type = String(it?.type || "");
+    const typeLabel = getTypeLabel(type);
+    const name = String(it?.name || "");
+    const isSeg = type === "SEGMENT_TRAINING";
+    const targets = (isSeg && it?.params && Array.isArray(it.params.targets)) ? it.params.targets : [];
 
-            const chipsHtml = isSeg
-                ? (targets.length
-                    ? targets.map((t) => `
+    const chipsHtml = isSeg
+    ? (targets.length
+       ? targets.map((t) => `
                         <span class="ad-plan-chip" data-target="${escapeHtml(String(t))}">
                           <span class="ad-plan-chip-handle" draggable="true" title="Ziehen zum Sortieren" aria-label="Target verschieben">≡</span>
                           <span class="ad-plan-chip-text">${escapeHtml(String(t))}</span>
                           <button type="button" class="ad-plan-chip-x" data-remove-target="${escapeHtml(String(t))}" title="Entfernen" aria-label="Target entfernen">×</button>
                         </span>
                       `).join("")
-                    : `<div class="ad-plan-muted">Noch keine Targets. Füge unten welche hinzu.</div>`
+                   : `<div class="ad-plan-muted">Noch keine Targets. Füge unten welche hinzu.</div>`
                   )
+            : "";
+
+    const datalistHtml = isSeg
+    ? `<datalist id="adPlanTargetSuggestions">${ALL_DART_TARGETS.map(t => `<option value="${escapeHtml(t)}"></option>`).join("")}</datalist>`
                 : "";
 
-            const datalistHtml = isSeg
-                ? `<datalist id="adPlanTargetSuggestions">${ALL_DART_TARGETS.map(t => `<option value="${escapeHtml(t)}"></option>`).join("")}</datalist>`
-                : "";
-
-            const addUiHtml = isSeg
-                ? (!targetAddOpen
-                    ? `<button type="button" class="ad-ext-btn ad-ext-btn--secondary" data-action="open-add-target">+ Target hinzufügen</button>`
+    const addUiHtml = isSeg
+    ? (!targetAddOpen
+       ? `<button type="button" class="ad-ext-btn ad-ext-btn--secondary" data-action="open-add-target">+ Target hinzufügen</button>`
                     : `
                       <div class="ad-plan-target-add-row">
                         <input id="adPlanTargetInput" class="ad-plan-target-input" type="text"
@@ -14000,8 +14618,8 @@ function renderPlanDetails() {
                       ${datalistHtml}
                     `
                   )
-                : "";
-            const segBody = isSeg ? `
+            : "";
+    const segBody = isSeg ? `
               <div class="ad-plan-details-section">
                 <div class="ad-plan-details-section-title">Targets</div>
                 <div class="ad-plan-chip-row">${chipsHtml}</div>
@@ -14012,7 +14630,7 @@ function renderPlanDetails() {
               </div>
             `;
 
-            details.innerHTML = `
+    details.innerHTML = `
               <div class="ad-plan-details-card">
                 <div class="ad-plan-details-head">
                   <div>
@@ -14031,65 +14649,65 @@ function renderPlanDetails() {
               </div>
             `;
 
-            // Fokus, wenn Add-Target offen
-            if (targetAddOpen) {
-                setTimeout(() => {
-                    const inp = details.querySelector("#adPlanTargetInput");
-                    if (inp && inp.focus) inp.focus();
-                }, 0);
-            }
-        }
+    // Fokus, wenn Add-Target offen
+    if (targetAddOpen) {
+        setTimeout(() => {
+            const inp = details.querySelector("#adPlanTargetInput");
+            if (inp && inp.focus) inp.focus();
+        }, 0);
+    }
+}
 
 
-        function renderAll() {
-            ensureSidebarWeekPlanLoaded(false);
-            syncModeButtons();
+            function renderAll() {
+                ensureSidebarWeekPlanLoaded(false);
+                syncModeButtons();
 
-            syncCopyPrevWeekButton();
-            syncResetWeekButton();
-            renderSummary();
-            renderPlanTable();
-            renderPlanDetails();
-        }
-
-        // Drawer helpers
-        function setDrawerOpen(open) {
-            planDrawerOpen = !!open;
-
-            if (overlay) overlay.hidden = !planDrawerOpen;
-            if (drawer) {
-                drawer.dataset.open = planDrawerOpen ? "1" : "0";
-                drawer.setAttribute("aria-hidden", planDrawerOpen ? "false" : "true");
+                syncCopyPrevWeekButton();
+                syncResetWeekButton();
+                renderSummary();
+                renderPlanTable();
+                renderPlanDetails();
             }
 
-            if (planDrawerOpen) {
-                if (drawerSearch) drawerSearch.value = planDrawerSearch || "";
-                renderDrawerList();
-                try { drawerSearch?.focus?.(); } catch {}
-            }
-        }
+            // Drawer helpers
+            function setDrawerOpen(open) {
+                planDrawerOpen = !!open;
 
-        function renderDrawerList() {
-            if (!drawerList) return;
+                if (overlay) overlay.hidden = !planDrawerOpen;
+                if (drawer) {
+                    drawer.dataset.open = planDrawerOpen ? "1" : "0";
+                    drawer.setAttribute("aria-hidden", planDrawerOpen ? "false" : "true");
+                }
 
-            const q = String(planDrawerSearch || "").trim().toLowerCase();
-            const filtered = PLAN_ACTIVITY_TEMPLATES.filter(t => {
-                const n = String(t?.name || "").toLowerCase();
-                return !q || n.includes(q);
-            });
-
-            if (!filtered.length) {
-                drawerList.innerHTML = `<div class="ad-plan-drawer-empty">Keine Treffer.</div>`;
-                return;
+                if (planDrawerOpen) {
+                    if (drawerSearch) drawerSearch.value = planDrawerSearch || "";
+                    renderDrawerList();
+                    try { drawerSearch?.focus?.(); } catch {}
+                }
             }
 
-            drawerList.innerHTML = filtered.map((t) => {
-                const type = String(t?.type || "");
-                const name = String(t?.name || "");
-                const defSess = getDefaultSessionsForPlanType(type);
-                const h = `${defSess} LEGS`;
+            function renderDrawerList() {
+                if (!drawerList) return;
 
-                return `
+                const q = String(planDrawerSearch || "").trim().toLowerCase();
+                const filtered = PLAN_ACTIVITY_TEMPLATES.filter(t => {
+                    const n = String(t?.name || "").toLowerCase();
+                    return !q || n.includes(q);
+                });
+
+                if (!filtered.length) {
+                    drawerList.innerHTML = `<div class="ad-plan-drawer-empty">Keine Treffer.</div>`;
+                    return;
+                }
+
+                drawerList.innerHTML = filtered.map((t) => {
+                    const type = String(t?.type || "");
+                    const name = String(t?.name || "");
+                    const defSess = getDefaultSessionsForPlanType(type);
+                    const h = `${defSess} LEGS`;
+
+                    return `
                   <div class="ad-plan-drawer-item" data-template="${escapeHtml(type)}" role="button" tabindex="0">
                     <div class="ad-plan-drawer-item-left">
                       <div class="ad-plan-drawer-item-name">${escapeHtml(name)}</div>
@@ -14101,897 +14719,897 @@ function renderPlanDetails() {
             }).join("");
         }
 
-        function addTemplateByType(type) {
-            const t = PLAN_ACTIVITY_TEMPLATES.find(x => String(x?.type || "") === String(type || ""));
-            if (!t) return;
-
-            // 0.14.42: Wenn für die Woche noch kein Plan existiert, wird er erst bei der ersten User-Aktion angelegt.
-            if (!_adPlanActiveWeekHasStoredPlan && (!Array.isArray(planItems) || planItems.length === 0)) {
-                weekMode = "sessions"; // UI: sessions-only (0.14.75)
-            }
-
-            const item = createPlanItemFromTemplate(t, planItems);
-            planItems = Array.isArray(planItems) ? planItems.slice() : [];
-            planItems.push(item);
-
-            // Step 2: neu hinzugefügtes Item selektieren
-            selectedPlanItemId = String(item.id || "") || null;
-            targetAddOpen = false; targetAddValue = ""; targetAddError = "";
-
-            scheduleSaveCurrentWeekPlan();
-            renderAll();
-            setDrawerOpen(false);
-            focusPlanValueInput(selectedPlanItemId);
-            setStatusTemp(`Hinzugefügt: ${item.name}`);
-        }
-
-        function duplicateItemById(id) {
-            const idx = (Array.isArray(planItems) ? planItems : []).findIndex(x => String(x?.id || "") === String(id || ""));
-            if (idx < 0) return;
-
-            const src = planItems[idx];
-            const base = stripNameSuffix(src?.name);
-
-            const srcParams = (src && src.params) ? { ...src.params } : undefined;
-            if (srcParams && Array.isArray(srcParams.targets)) srcParams.targets = srcParams.targets.slice();
-
-            const copy = {
-                id: makePlanId(),
-                type: String(src?.type || "CUSTOM"),
-                name: nextUniqueName(base, planItems),
-                targetMinutes: clampMinutes(Number(src?.targetMinutes)),
-                targetSessions: (Number.isFinite(Number(src?.targetSessions)) ? clampSessions(Number(src?.targetSessions)) : 1),
-                params: srcParams
-            };
-
-            // Step 2: Segment Training immer params.targets haben
-            if (String(copy.type || "") === "SEGMENT_TRAINING") {
-                const p = copy.params ? { ...copy.params } : {};
-                if (!Array.isArray(p.targets)) p.targets = [];
-                copy.params = p;
-            }
-
-            planItems = planItems.slice();
-            planItems.splice(idx + 1, 0, copy);
-
-            // Step 2: Duplikat selektieren
-            selectedPlanItemId = String(copy.id || "") || null;
-            targetAddOpen = false; targetAddValue = ""; targetAddError = "";
-
-            scheduleSaveCurrentWeekPlan();
-            renderAll();
-            focusPlanValueInput(selectedPlanItemId);
-            setStatusTemp("Dupliziert.");
-        }
-
-        function deleteItemById(id) {
-            const arr = Array.isArray(planItems) ? planItems : [];
-            const sId = String(id || "");
-            const idx = arr.findIndex(x => String(x?.id || "") === sId);
-            if (idx < 0) return;
-
-            const next = arr.filter(x => String(x?.id || "") !== sId);
-            planItems = next;
-
-            // Step 2: Wenn selektiertes Item gelöscht wird -> nächstes, sonst vorheriges, sonst null
-            if (String(selectedPlanItemId || "") === sId) {
-                const pick = next[idx] || next[idx - 1] || null;
-                selectedPlanItemId = pick ? String(pick.id || "") : null;
-                targetAddOpen = false; targetAddValue = ""; targetAddError = "";
-            }
-
-            scheduleSaveCurrentWeekPlan();
-            renderAll();
-            setStatusTemp("Gelöscht.");
-        }
-
-        // Initial render (Week-Pläne sind pro Woche gespeichert)
-        refreshSidebarWeekOptions();
-        ensureSidebarWeekPlanLoaded(true);
-
-        statusEl.textContent = "Bereit.";
-        renderAll();
-
-// Bind: "+ Aktivität"
-        if (btnAdd) {
-            btnAdd.onclick = () => setDrawerOpen(true);
-        }
-
-
-        // Bind: "Vorwoche kopieren"
-        if (btnCopyPrevWeek) {
-            btnCopyPrevWeek.onclick = () => copyPrevWeekPlanIntoCurrent();
-        }
-
-        // Bind: "Woche zurücksetzen"
-        if (btnResetWeek) {
-            btnResetWeek.onclick = () => resetCurrentWeekPlan();
-        }
-
-        // -------------------------------------------------------------------
-        // Import / Export: Plan speichern & laden (0.14.75)
-        // -------------------------------------------------------------------
-        function buildExportFilenameFromWeekKey(wkKey) {
-            try {
-                const r = weekRangeFromWeekKey(wkKey);
-                const y = Number(r?.isoYear);
-                const w = String(r?.week ?? "").padStart(2, "0");
-                if (Number.isFinite(y) && w) return `trainingplan-KW${w}-${y}.json`;
-            } catch {}
-            return "trainingplan.json";
-        }
-
-        function triggerTextDownload(filename, text, mime = "application/json") {
-            try {
-                const blob = new Blob([String(text ?? "")], { type: mime + ";charset=utf-8" });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = String(filename || "download.json");
-                a.style.display = "none";
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                setTimeout(() => { try { URL.revokeObjectURL(url); } catch {} }, 0);
-            } catch (e) {
-                // ignore
-            }
-        }
-
-        function pickJsonFile(cb) {
-            try {
-                const inp = document.createElement("input");
-                inp.type = "file";
-                inp.accept = "application/json,.json";
-                inp.style.display = "none";
-                document.body.appendChild(inp);
-                inp.onchange = () => {
-                    try {
-                        const f = inp.files && inp.files[0];
-                        inp.remove();
-                        if (!f) return;
-                        cb && cb(f);
-                    } catch (e) {
-                        try { inp.remove(); } catch {}
-                    }
-                };
-                inp.click();
-            } catch (e) {
-                // ignore
-            }
-        }
-
-        function sanitizeImportedPlanItem(src) {
-            const it = (src && typeof src === "object") ? src : {};
-            const type = String(it.type || "CUSTOM").trim() || "CUSTOM";
-            const name = String(it.name || "").trim() || type;
-            const targetMinutes = clampMinutes(Number(it.targetMinutes) || 0);
-            let targetSessions = 1;
-            if ("targetSessions" in it) {
-                const n = Number(it.targetSessions);
-                targetSessions = Number.isFinite(n) ? clampSessions(n) : 1;
-            }
-
-            let params = (it.params && typeof it.params === "object") ? { ...it.params } : undefined;
-            if (params && Array.isArray(params.targets)) {
-                const seen = new Set();
-                const out = [];
-                for (const raw of params.targets) {
-                    const t = normalizeTarget(raw);
-                    if (!t) continue;
-                    if (seen.has(t)) continue;
-                    seen.add(t);
-                    out.push(t);
-                }
-                params = { ...params, targets: out };
-            }
-
-            if (type === "SEGMENT_TRAINING") {
-                const p = params ? { ...params } : {};
-                if (!Array.isArray(p.targets)) p.targets = [];
-                params = p;
-            }
-
-            const out = { id: makePlanId(), type, name, targetMinutes, targetSessions };
-            if (params && typeof params === "object" && Object.keys(params).length) out.params = params;
-            return out;
-        }
-
-        // Bind: "Plan speichern" (Export)
-        if (btnSavePlan) {
-            btnSavePlan.onclick = () => {
-                try {
-                    const wkKey = ensureSidebarSelectedWeekKey();
-                    const weekId = weekIdFromWeekKey(wkKey);
-                    if (!wkKey || !weekId) return setStatusTemp("Keine Woche gewählt.");
-
-                    ensureSidebarWeekPlanLoaded(false);
-
-                    const exportObj = {
-                        kind: "autodarts-segmentdash-trainingplan",
-                        schemaVersion: 1,
-                        exportedAt: new Date().toISOString(),
-                        weekMode: normalizeWeekMode(weekMode),
-                        planItems: sanitizePlanItemsForStorage(planItems),
-                    };
-
-                    const json = JSON.stringify(exportObj, null, 2);
-                    triggerTextDownload(buildExportFilenameFromWeekKey(wkKey), json, "application/json");
-                    setStatusTemp("Plan exportiert.");
-                } catch (e) {
-                    setStatusTemp("Export fehlgeschlagen.");
-                }
-            };
-        }
-
-        // Bind: "Plan laden" (Import)
-        if (btnLoadPlan) {
-            btnLoadPlan.onclick = () => {
-                try {
-                    const wkKey = ensureSidebarSelectedWeekKey();
-                    const weekId = weekIdFromWeekKey(wkKey);
-                    if (!wkKey || !weekId) return setStatusTemp("Keine Woche gewählt.");
-
-                    if (!confirm("Plan laden? Aktueller Wochenplan wird überschrieben.")) return;
-
-                    pickJsonFile((file) => {
-                        const reader = new FileReader();
-                        reader.onerror = () => setStatusTemp("Datei konnte nicht gelesen werden.");
-                        reader.onload = () => {
-                            let obj = null;
-                            try {
-                                obj = JSON.parse(String(reader.result ?? ""));
-                            } catch (e) {
-                                setStatusTemp("Ungültige Plan-Datei.");
-                                return;
-                            }
-
-                            const kind = String(obj?.kind || "");
-                            const ver = Number(obj?.schemaVersion);
-                            const wm = String(obj?.weekMode || "");
-                            const itemsIn = Array.isArray(obj?.planItems) ? obj.planItems : null;
-
-                            if (kind !== "autodarts-segmentdash-trainingplan" || ver !== 1 || !itemsIn || (wm !== "time" && wm !== "sessions")) {
-                                setStatusTemp("Ungültige Plan-Datei.");
-                                return;
-                            }
-
-                            try {
-                                // Ensure sidebar state ready
-                                ensureSidebarWeekPlanLoaded(false);
-
-                                // Replace in-memory plan
-                                weekMode = "sessions"; // UI: sessions-only (0.14.75)
-                                planItems = itemsIn.map(sanitizeImportedPlanItem);
-                                if (wm === "time") {
-                                    const denom = Number(PLAN_SESSION_MINUTES) || 30;
-                                    planItems = planItems.map((it) => {
-                                        const minutes = clampMinutes(Number(it?.targetMinutes) || 0);
-                                        const sess = minutes > 0 ? clampSessions(Math.max(1, Math.round(minutes / denom))) : 0;
-                                        return { ...it, targetSessions: sess };
-                                    });
-                                }
-                                selectedPlanItemId = planItems.length ? String(planItems[0].id || "") : null;
-                                targetAddOpen = false;
-                                targetAddValue = "";
-                                targetAddError = "";
-
-                                // Stop pending autosave & force-save now
-                                if (_adPlanSaveTimer) { try { clearTimeout(_adPlanSaveTimer); } catch {} _adPlanSaveTimer = null; }
-                                _adPlanLastSavedWeekId = null;
-                                _adPlanLastSavedJson = null;
-                                _adPlanDirty = true;
-                                _adPlanActiveWeekId = weekId;
-                                flushSaveCurrentWeekPlan();
-
-                                renderAll();
-                                setStatusTemp("Plan geladen.");
-                            } catch (e) {
-                                setStatusTemp("Import fehlgeschlagen.");
-                            }
-                        };
-                        reader.readAsText(file);
-                    });
-                } catch (e) {
-                    setStatusTemp("Import fehlgeschlagen.");
-                }
-            };
-        }
-// Helper: Fokus auf Soll-Input (nach Render), abhängig vom weekMode
-        function focusPlanValueInput(id) {
-            const sId = String(id || "");
-            if (!sId) return;
-            setTimeout(() => {
-                try {
-                    const sel = `input.ad-plan-input[data-id="${cssEscapeAttrValue(sId)}"]`;
-                    const inp = table.querySelector(sel);
-                    if (inp && inp.focus) {
-                        inp.focus();
-                        if (inp.select) inp.select();
-                    }
-                } catch (e) { /* no-op */ }
-            }, 0);
-        }
-
-        // Helper: sanfte Konvertierung beim Umschalten (nur wenn Zielwert fehlt/0 ist)
-        function assistConvertTargetsForMode(nextMode) {
-            const nm = String(nextMode || "");
-            const items = Array.isArray(planItems) ? planItems : [];
-            if (!items.length) return;
-
-            let any = false;
-            const next = items.map((it) => {
-                if (!it) return it;
-
-                let changed = false;
-
-                const rawM = Number(it?.targetMinutes);
-                let minutes = clampMinutes(rawM);
-                if (!Number.isFinite(rawM) || minutes !== rawM) changed = true;
-
-                const rawS = Number(it?.targetSessions);
-                let sessions = clampSessions(rawS);
-                if (Number.isFinite(rawS) && sessions !== rawS) changed = true;
-
-                if (nm === "sessions") {
-                    if (!Number.isFinite(rawS) || rawS <= 0) {
-                        // 30 min pro Session (Heuristik)
-                        sessions = clampSessions(Math.max(1, Math.round(minutes / PLAN_SESSION_MINUTES)));
-                        changed = true;
-                    }
-                    // in sessions-mode legen wir targetSessions immer an
-                    if (changed) {
-                        any = true;
-                        return { ...it, targetMinutes: minutes, targetSessions: sessions };
-                    }
-                    return it;
-                }
-
-                if (nm === "time") {
-                    if (!Number.isFinite(rawM) || rawM <= 0) {
-                        minutes = clampMinutes(sessions * PLAN_SESSION_MINUTES);
-                        changed = true;
-                    }
-                    if (changed) {
-                        any = true;
-                        const out = { ...it, targetMinutes: minutes };
-                        // targetSessions nur clamped zurückschreiben, wenn es existiert
-                        if ("targetSessions" in (it || {}) || Number.isFinite(rawS)) out.targetSessions = sessions;
-                        return out;
-                    }
-                    return it;
-                }
-
-                return it;
-            });
-
-            if (any) planItems = next;
-        };
-
-        // 0.14.41: Sidebar folgt globalen Controls (Hauptpanel) – Controls nur Anzeige
-        try {
-            if (btnTime) btnTime.disabled = true;
-            if (btnSessions) btnSessions.disabled = true;
-            if (chk) chk.disabled = true;
-        } catch {}
-        try { if (btnTime) btnTime.onclick = null; } catch {}
-        try { if (btnSessions) btnSessions.onclick = null; } catch {}
-        try { if (chk) chk.onchange = null; } catch {}
-
-
-
-// -------------------------------------------------------------------
-// Drag & Drop Sorting (0.14.46)
-// -------------------------------------------------------------------
-function arrayMove(arr, from, to) {
-    const a = (Array.isArray(arr) ? arr : []).slice();
-    if (from < 0 || to < 0 || from >= a.length || to >= a.length) return a;
-    const [x] = a.splice(from, 1);
-    a.splice(to, 0, x);
-    return a;
-}
-
-function rerenderMainTrainingPlan() {
-    try {
-        const weeks = cache._training_weeksAsc || computeTrainingWeeksAsc();
-        cache._training_weeksAsc = weeks;
-        renderTrainingPlan(panel, weeks);
-    } catch {}
-}
-
-let _adPlanDraggedId = null;
-let _adPlanDraggedRowEl = null;
-let _adPlanDropTargetEl = null;
-
-function clearPlanDragStyles() {
-    try { _adPlanDraggedRowEl?.classList?.remove("ad-dragging"); } catch {}
-    try { _adPlanDropTargetEl?.classList?.remove("ad-drop-target"); } catch {}
-    _adPlanDraggedId = null;
-    _adPlanDraggedRowEl = null;
-    _adPlanDropTargetEl = null;
-}
-
-let _adPlanTargetDragged = null;
-let _adPlanTargetDraggedEl = null;
-let _adPlanTargetDropEl = null;
-
-function clearTargetDragStyles() {
-    try { _adPlanTargetDraggedEl?.classList?.remove("ad-dragging"); } catch {}
-    try { _adPlanTargetDropEl?.classList?.remove("ad-drop-target"); } catch {}
-    _adPlanTargetDragged = null;
-    _adPlanTargetDraggedEl = null;
-    _adPlanTargetDropEl = null;
-}
-
-
-
-        // Table events: change Soll + row actions
-
-        // Table events: change Soll + row actions
-        table.oninput = (ev) => {
-            const t = ev && ev.target;
-            if (!t || !t.classList || !t.classList.contains("ad-plan-input")) return;
-
-            const id = String(t.dataset.id || "");
-            if (!id) return;
-
-            const raw = String(t.value ?? "").trim();
-            const cleaned = raw.replace(/\s+/g, "").replace(",", ".");
-
-            const idx = planItems.findIndex(x => String(x?.id || "") === id);
-            if (idx < 0) return;
-
-            const agg = getTrackerAggForSelectedWeek();
-
-            if (getSidebarViewMode() === "sessions") {
-                const v = clampSessions(Number(cleaned));
-
-                planItems = planItems.slice();
-                planItems[idx] = { ...planItems[idx], targetSessions: v };
-
-                // normalize visible input (UI-only)
-                if (String(v) !== String(raw)) t.value = String(v);
-
-                // Update footer total (Soll)
-                const totals = computeSidebarTotals(agg);
-                const totalValEl = side.querySelector("#adPlanTotalSoll");
-                const totalUnitEl = side.querySelector("#adPlanTotalSollUnit");
-                if (totalValEl) totalValEl.textContent = String(Math.round(totals.goal));
-                if (totalUnitEl) totalUnitEl.textContent = isSessions ? "LEGS" : "min";
-} else {
-                // legacy fallback
-                const mins = clampMinutes(parseInt(cleaned, 10) || 0);
-
-                planItems = planItems.slice();
-                planItems[idx] = { ...planItems[idx], targetMinutes: mins };
-
-                // normalize visible input (UI-only)
-                if (String(mins) !== String(raw)) t.value = String(mins);
-
-                // Update footer total (Soll)
-                const totals = computeSidebarTotals(agg);
-                const totalValEl = side.querySelector("#adPlanTotalSoll");
-                const totalUnitEl = side.querySelector("#adPlanTotalSollUnit");
-                if (totalValEl) totalValEl.textContent = String(Math.round(totals.goal));
-                if (totalUnitEl) totalUnitEl.textContent = isSessions ? "LEGS" : "min";
-}
-
-            scheduleSaveCurrentWeekPlan();
-            renderSummary();
-        };
-
-table.onclick = (ev) => {
-            const btn = ev && ev.target && ev.target.closest ? ev.target.closest("button[data-action]") : null;
-
-            // Row actions
-            if (btn) {
-                const action = String(btn.getAttribute("data-action") || "");
-                const id = String(btn.getAttribute("data-id") || "");
-                if (!id) return;
-
-                if (action === "dup") { duplicateItemById(id); return; }
-                if (action === "del") { deleteItemById(id); return; }
-                return;
-            }
-
-            // Step 2: Row selection (click anywhere on the row)
-            const row = ev && ev.target && ev.target.closest ? ev.target.closest('.ad-plan-row[data-plan-item-id]') : null;
-            if (!row) return;
-
-            const id = String(row.getAttribute("data-plan-item-id") || "");
-            if (!id) return;
-
-            setSelectedPlanItemId(id);
-        };
-
-
-// Drag & Drop (Event Delegation on table)
-table.ondragstart = (ev) => {
-    const t = ev && ev.target;
-    // Don't start a drag from inputs/buttons
-    if (t && t.closest && t.closest("input,button,textarea,select")) return;
-
-    const handle = t && t.closest ? t.closest('.ad-plan-drag-handle') : null;
-
-    // Drag & Drop nur über Handle starten
-    if (!handle) return;
-
-    const row = handle && handle.closest ? handle.closest('.ad-plan-row[data-plan-item-id]') : null;
-    if (!row) return;
-
-    const id = String(row.getAttribute("data-plan-item-id") || "");
-    if (!id) return;
-
-    _adPlanDraggedId = id;
-    _adPlanDraggedRowEl = row;
-    try { row.classList.add("ad-dragging"); } catch {}
-
-    try {
-        if (ev.dataTransfer) {
-            ev.dataTransfer.setData("text/plain", id);
-            ev.dataTransfer.effectAllowed = "move";
-        }
-    } catch {}
-};
-
-table.ondragover = (ev) => {
-    if (!_adPlanDraggedId) return;
-
-    const t = ev && ev.target;
-    const row = t && t.closest ? t.closest('.ad-plan-row[data-plan-item-id]') : null;
-    if (!row) return;
-
-    ev.preventDefault(); // allow drop
-
-    const id = String(row.getAttribute("data-plan-item-id") || "");
-    if (!id || id === _adPlanDraggedId) return;
-
-    try {
-        if (ev.dataTransfer) ev.dataTransfer.dropEffect = "move";
-    } catch {}
-
-    if (_adPlanDropTargetEl && _adPlanDropTargetEl !== row) {
-        try { _adPlanDropTargetEl.classList.remove("ad-drop-target"); } catch {}
-    }
-    _adPlanDropTargetEl = row;
-    try { row.classList.add("ad-drop-target"); } catch {}
-};
-
-table.ondrop = (ev) => {
-    if (!_adPlanDraggedId) return;
-
-    ev.preventDefault();
-
-    const t = ev && ev.target;
-    const row = t && t.closest ? t.closest('.ad-plan-row[data-plan-item-id]') : null;
-
-    const draggedId = (() => {
-        try {
-            const v = ev?.dataTransfer?.getData?.("text/plain");
-            return String(v || _adPlanDraggedId || "");
-        } catch {
-            return String(_adPlanDraggedId || "");
-        }
-    })();
-
-    const targetId = row ? String(row.getAttribute("data-plan-item-id") || "") : "";
-    if (!draggedId || !targetId || draggedId === targetId) {
-        clearPlanDragStyles();
-        return;
-    }
-
-    const items = Array.isArray(planItems) ? planItems : [];
-    const from = items.findIndex(x => String(x?.id || "") === draggedId);
-    const to = items.findIndex(x => String(x?.id || "") === targetId);
-    if (from < 0 || to < 0 || from === to) {
-        clearPlanDragStyles();
-        return;
-    }
-
-    planItems = arrayMove(items, from, to);
-
-    // Save immediately (so main panel reflects order right away)
-    scheduleSaveCurrentWeekPlan();
-    flushSaveCurrentWeekPlan();
-
-    clearPlanDragStyles();
-
-    // Re-render: sidebar + main panel
-    try { cache._planSidebarRerender?.(); } catch {}
-    rerenderMainTrainingPlan();
-};
-
-table.ondragend = () => {
-    clearPlanDragStyles();
-};
-
-
-
-        // Step 2: Details events (Name + Segment Targets)
-        if (details) {
-            details.oninput = (ev) => {
-                const t = ev && ev.target;
+            function addTemplateByType(type) {
+                const t = PLAN_ACTIVITY_TEMPLATES.find(x => String(x?.type || "") === String(type || ""));
                 if (!t) return;
 
-                // Name edit
-                if (t.id === "adPlanDetailName") {
-                    const id = String(t.getAttribute("data-id") || "");
-                    const value = String(t.value ?? "");
-
-                    updatePlanItemById(id, (cur) => ({ ...cur, name: value }));
-
-                    // Update name in table without full re-render (better UX)
-                    const row = table.querySelector(`.ad-plan-row[data-plan-item-id="${cssEscapeAttrValue(id)}"]`);
-                    const span = row ? row.querySelector(".ad-plan-activity-name") : null;
-                    if (span) {
-                        span.textContent = value;
-                        span.setAttribute("title", value);
-                    }
-                    return;
+                // 0.14.42: Wenn für die Woche noch kein Plan existiert, wird er erst bei der ersten User-Aktion angelegt.
+                if (!_adPlanActiveWeekHasStoredPlan && (!Array.isArray(planItems) || planItems.length === 0)) {
+                    weekMode = "sessions"; // UI: sessions-only (0.14.75)
                 }
 
-                // Target input (live)
-                if (t.id === "adPlanTargetInput") {
-                    targetAddValue = String(t.value ?? "");
-                    if (targetAddError) {
-                        targetAddError = "";
-                        renderPlanDetails();
-                    }
-                    return;
+                const item = createPlanItemFromTemplate(t, planItems);
+                planItems = Array.isArray(planItems) ? planItems.slice() : [];
+                planItems.push(item);
+
+                // Step 2: neu hinzugefügtes Item selektieren
+                selectedPlanItemId = String(item.id || "") || null;
+                targetAddOpen = false; targetAddValue = ""; targetAddError = "";
+
+                scheduleSaveCurrentWeekPlan();
+                renderAll();
+                setDrawerOpen(false);
+                focusPlanValueInput(selectedPlanItemId);
+                setStatusTemp(`Hinzugefügt: ${item.name}`);
+            }
+
+            function duplicateItemById(id) {
+                const idx = (Array.isArray(planItems) ? planItems : []).findIndex(x => String(x?.id || "") === String(id || ""));
+                if (idx < 0) return;
+
+                const src = planItems[idx];
+                const base = stripNameSuffix(src?.name);
+
+                const srcParams = (src && src.params) ? { ...src.params } : undefined;
+                if (srcParams && Array.isArray(srcParams.targets)) srcParams.targets = srcParams.targets.slice();
+
+                const copy = {
+                    id: makePlanId(),
+                    type: String(src?.type || "CUSTOM"),
+                    name: nextUniqueName(base, planItems),
+                    targetMinutes: clampMinutes(Number(src?.targetMinutes)),
+                    targetSessions: (Number.isFinite(Number(src?.targetSessions)) ? clampSessions(Number(src?.targetSessions)) : 1),
+                    params: srcParams
+                };
+
+                // Step 2: Segment Training immer params.targets haben
+                if (String(copy.type || "") === "SEGMENT_TRAINING") {
+                    const p = copy.params ? { ...copy.params } : {};
+                    if (!Array.isArray(p.targets)) p.targets = [];
+                    copy.params = p;
                 }
+
+                planItems = planItems.slice();
+                planItems.splice(idx + 1, 0, copy);
+
+                // Step 2: Duplikat selektieren
+                selectedPlanItemId = String(copy.id || "") || null;
+                targetAddOpen = false; targetAddValue = ""; targetAddError = "";
+
+                scheduleSaveCurrentWeekPlan();
+                renderAll();
+                focusPlanValueInput(selectedPlanItemId);
+                setStatusTemp("Dupliziert.");
+            }
+
+            function deleteItemById(id) {
+                const arr = Array.isArray(planItems) ? planItems : [];
+                const sId = String(id || "");
+                const idx = arr.findIndex(x => String(x?.id || "") === sId);
+                if (idx < 0) return;
+
+                const next = arr.filter(x => String(x?.id || "") !== sId);
+                planItems = next;
+
+                // Step 2: Wenn selektiertes Item gelöscht wird -> nächstes, sonst vorheriges, sonst null
+                if (String(selectedPlanItemId || "") === sId) {
+                    const pick = next[idx] || next[idx - 1] || null;
+                    selectedPlanItemId = pick ? String(pick.id || "") : null;
+                    targetAddOpen = false; targetAddValue = ""; targetAddError = "";
+                }
+
+                scheduleSaveCurrentWeekPlan();
+                renderAll();
+                setStatusTemp("Gelöscht.");
+            }
+
+            // Initial render (Week-Pläne sind pro Woche gespeichert)
+            refreshSidebarWeekOptions();
+            ensureSidebarWeekPlanLoaded(true);
+
+            statusEl.textContent = "Bereit.";
+            renderAll();
+
+            // Bind: "+ Aktivität"
+            if (btnAdd) {
+                btnAdd.onclick = () => setDrawerOpen(true);
+            }
+
+
+            // Bind: "Vorwoche kopieren"
+            if (btnCopyPrevWeek) {
+                btnCopyPrevWeek.onclick = () => copyPrevWeekPlanIntoCurrent();
+            }
+
+            // Bind: "Woche zurücksetzen"
+            if (btnResetWeek) {
+                btnResetWeek.onclick = () => resetCurrentWeekPlan();
+            }
+
+            // -------------------------------------------------------------------
+            // Import / Export: Plan speichern & laden (0.14.75)
+            // -------------------------------------------------------------------
+            function buildExportFilenameFromWeekKey(wkKey) {
+                try {
+                    const r = weekRangeFromWeekKey(wkKey);
+                    const y = Number(r?.isoYear);
+                    const w = String(r?.week ?? "").padStart(2, "0");
+                    if (Number.isFinite(y) && w) return `trainingplan-KW${w}-${y}.json`;
+                } catch {}
+                return "trainingplan.json";
+            }
+
+            function triggerTextDownload(filename, text, mime = "application/json") {
+                try {
+                    const blob = new Blob([String(text ?? "")], { type: mime + ";charset=utf-8" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = String(filename || "download.json");
+                    a.style.display = "none";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    setTimeout(() => { try { URL.revokeObjectURL(url); } catch {} }, 0);
+                } catch (e) {
+                    // ignore
+                }
+            }
+
+            function pickJsonFile(cb) {
+                try {
+                    const inp = document.createElement("input");
+                    inp.type = "file";
+                    inp.accept = "application/json,.json";
+                    inp.style.display = "none";
+                    document.body.appendChild(inp);
+                    inp.onchange = () => {
+                        try {
+                            const f = inp.files && inp.files[0];
+                            inp.remove();
+                            if (!f) return;
+                            cb && cb(f);
+                        } catch (e) {
+                            try { inp.remove(); } catch {}
+                        }
+                    };
+                    inp.click();
+                } catch (e) {
+                    // ignore
+                }
+            }
+
+            function sanitizeImportedPlanItem(src) {
+                const it = (src && typeof src === "object") ? src : {};
+                const type = String(it.type || "CUSTOM").trim() || "CUSTOM";
+                const name = String(it.name || "").trim() || type;
+                const targetMinutes = clampMinutes(Number(it.targetMinutes) || 0);
+                let targetSessions = 1;
+                if ("targetSessions" in it) {
+                    const n = Number(it.targetSessions);
+                    targetSessions = Number.isFinite(n) ? clampSessions(n) : 1;
+                }
+
+                let params = (it.params && typeof it.params === "object") ? { ...it.params } : undefined;
+                if (params && Array.isArray(params.targets)) {
+                    const seen = new Set();
+                    const out = [];
+                    for (const raw of params.targets) {
+                        const t = normalizeTarget(raw);
+                        if (!t) continue;
+                        if (seen.has(t)) continue;
+                        seen.add(t);
+                        out.push(t);
+                    }
+                    params = { ...params, targets: out };
+                }
+
+                if (type === "SEGMENT_TRAINING") {
+                    const p = params ? { ...params } : {};
+                    if (!Array.isArray(p.targets)) p.targets = [];
+                    params = p;
+                }
+
+                const out = { id: makePlanId(), type, name, targetMinutes, targetSessions };
+                if (params && typeof params === "object" && Object.keys(params).length) out.params = params;
+                return out;
+            }
+
+            // Bind: "Plan speichern" (Export)
+            if (btnSavePlan) {
+                btnSavePlan.onclick = () => {
+                    try {
+                        const wkKey = ensureSidebarSelectedWeekKey();
+                        const weekId = weekIdFromWeekKey(wkKey);
+                        if (!wkKey || !weekId) return setStatusTemp("Keine Woche gewählt.");
+
+                        ensureSidebarWeekPlanLoaded(false);
+
+                        const exportObj = {
+                            kind: "autodarts-segmentdash-trainingplan",
+                            schemaVersion: 1,
+                            exportedAt: new Date().toISOString(),
+                            weekMode: normalizeWeekMode(weekMode),
+                            planItems: sanitizePlanItemsForStorage(planItems),
+                        };
+
+                        const json = JSON.stringify(exportObj, null, 2);
+                        triggerTextDownload(buildExportFilenameFromWeekKey(wkKey), json, "application/json");
+                        setStatusTemp("Plan exportiert.");
+                    } catch (e) {
+                        setStatusTemp("Export fehlgeschlagen.");
+                    }
+                };
+            }
+
+            // Bind: "Plan laden" (Import)
+            if (btnLoadPlan) {
+                btnLoadPlan.onclick = () => {
+                    try {
+                        const wkKey = ensureSidebarSelectedWeekKey();
+                        const weekId = weekIdFromWeekKey(wkKey);
+                        if (!wkKey || !weekId) return setStatusTemp("Keine Woche gewählt.");
+
+                        if (!confirm("Plan laden? Aktueller Wochenplan wird überschrieben.")) return;
+
+                        pickJsonFile((file) => {
+                            const reader = new FileReader();
+                            reader.onerror = () => setStatusTemp("Datei konnte nicht gelesen werden.");
+                            reader.onload = () => {
+                                let obj = null;
+                                try {
+                                    obj = JSON.parse(String(reader.result ?? ""));
+                                } catch (e) {
+                                    setStatusTemp("Ungültige Plan-Datei.");
+                                    return;
+                                }
+
+                                const kind = String(obj?.kind || "");
+                                const ver = Number(obj?.schemaVersion);
+                                const wm = String(obj?.weekMode || "");
+                                const itemsIn = Array.isArray(obj?.planItems) ? obj.planItems : null;
+
+                                if (kind !== "autodarts-segmentdash-trainingplan" || ver !== 1 || !itemsIn || (wm !== "time" && wm !== "sessions")) {
+                                    setStatusTemp("Ungültige Plan-Datei.");
+                                    return;
+                                }
+
+                                try {
+                                    // Ensure sidebar state ready
+                                    ensureSidebarWeekPlanLoaded(false);
+
+                                    // Replace in-memory plan
+                                    weekMode = "sessions"; // UI: sessions-only (0.14.75)
+                                    planItems = itemsIn.map(sanitizeImportedPlanItem);
+                                    if (wm === "time") {
+                                        const denom = Number(PLAN_SESSION_MINUTES) || 30;
+                                        planItems = planItems.map((it) => {
+                                            const minutes = clampMinutes(Number(it?.targetMinutes) || 0);
+                                            const sess = minutes > 0 ? clampSessions(Math.max(1, Math.round(minutes / denom))) : 0;
+                                            return { ...it, targetSessions: sess };
+                                        });
+                                    }
+                                    selectedPlanItemId = planItems.length ? String(planItems[0].id || "") : null;
+                                    targetAddOpen = false;
+                                    targetAddValue = "";
+                                    targetAddError = "";
+
+                                    // Stop pending autosave & force-save now
+                                    if (_adPlanSaveTimer) { try { clearTimeout(_adPlanSaveTimer); } catch {} _adPlanSaveTimer = null; }
+                                    _adPlanLastSavedWeekId = null;
+                                    _adPlanLastSavedJson = null;
+                                    _adPlanDirty = true;
+                                    _adPlanActiveWeekId = weekId;
+                                    flushSaveCurrentWeekPlan();
+
+                                    renderAll();
+                                    setStatusTemp("Plan geladen.");
+                                } catch (e) {
+                                    setStatusTemp("Import fehlgeschlagen.");
+                                }
+                            };
+                            reader.readAsText(file);
+                        });
+                    } catch (e) {
+                        setStatusTemp("Import fehlgeschlagen.");
+                    }
+                };
+            }
+            // Helper: Fokus auf Soll-Input (nach Render), abhängig vom weekMode
+            function focusPlanValueInput(id) {
+                const sId = String(id || "");
+                if (!sId) return;
+                setTimeout(() => {
+                    try {
+                        const sel = `input.ad-plan-input[data-id="${cssEscapeAttrValue(sId)}"]`;
+                        const inp = table.querySelector(sel);
+                        if (inp && inp.focus) {
+                            inp.focus();
+                            if (inp.select) inp.select();
+                        }
+                    } catch (e) { /* no-op */ }
+                }, 0);
+            }
+
+            // Helper: sanfte Konvertierung beim Umschalten (nur wenn Zielwert fehlt/0 ist)
+            function assistConvertTargetsForMode(nextMode) {
+                const nm = String(nextMode || "");
+                const items = Array.isArray(planItems) ? planItems : [];
+                if (!items.length) return;
+
+                let any = false;
+                const next = items.map((it) => {
+                    if (!it) return it;
+
+                    let changed = false;
+
+                    const rawM = Number(it?.targetMinutes);
+                    let minutes = clampMinutes(rawM);
+                    if (!Number.isFinite(rawM) || minutes !== rawM) changed = true;
+
+                    const rawS = Number(it?.targetSessions);
+                    let sessions = clampSessions(rawS);
+                    if (Number.isFinite(rawS) && sessions !== rawS) changed = true;
+
+                    if (nm === "sessions") {
+                        if (!Number.isFinite(rawS) || rawS <= 0) {
+                            // 30 min pro Session (Heuristik)
+                            sessions = clampSessions(Math.max(1, Math.round(minutes / PLAN_SESSION_MINUTES)));
+                            changed = true;
+                        }
+                        // in sessions-mode legen wir targetSessions immer an
+                        if (changed) {
+                            any = true;
+                            return { ...it, targetMinutes: minutes, targetSessions: sessions };
+                        }
+                        return it;
+                    }
+
+                    if (nm === "time") {
+                        if (!Number.isFinite(rawM) || rawM <= 0) {
+                            minutes = clampMinutes(sessions * PLAN_SESSION_MINUTES);
+                            changed = true;
+                        }
+                        if (changed) {
+                            any = true;
+                            const out = { ...it, targetMinutes: minutes };
+                            // targetSessions nur clamped zurückschreiben, wenn es existiert
+                            if ("targetSessions" in (it || {}) || Number.isFinite(rawS)) out.targetSessions = sessions;
+                            return out;
+                        }
+                        return it;
+                    }
+
+                    return it;
+                });
+
+                if (any) planItems = next;
             };
 
-            details.onclick = (ev) => {
-                const removeBtn = ev && ev.target && ev.target.closest ? ev.target.closest("button[data-remove-target]") : null;
-                if (removeBtn) {
-                    const rawTarget = String(removeBtn.getAttribute("data-remove-target") || "");
-                    const id = String(selectedPlanItemId || "");
-                    if (!id || !rawTarget) return;
+            // 0.14.41: Sidebar folgt globalen Controls (Hauptpanel) – Controls nur Anzeige
+            try {
+                if (btnTime) btnTime.disabled = true;
+                if (btnSessions) btnSessions.disabled = true;
+                if (chk) chk.disabled = true;
+            } catch {}
+            try { if (btnTime) btnTime.onclick = null; } catch {}
+            try { if (btnSessions) btnSessions.onclick = null; } catch {}
+            try { if (chk) chk.onchange = null; } catch {}
 
-                    const it = getPlanItemById(id);
-                    if (!it || String(it.type || "") !== "SEGMENT_TRAINING") return;
 
-                    updatePlanItemById(id, (cur) => {
-                        const p = cur && cur.params ? { ...cur.params } : {};
-                        const arr = Array.isArray(p.targets) ? p.targets.slice() : [];
-                        const norm = normalizeTarget(rawTarget);
-                        p.targets = arr.filter(x => normalizeTarget(x) !== norm);
-                        return { ...cur, params: p };
-                    });
 
-                    renderAll();
-                    return;
+            // -------------------------------------------------------------------
+            // Drag & Drop Sorting (0.14.46)
+            // -------------------------------------------------------------------
+            function arrayMove(arr, from, to) {
+                const a = (Array.isArray(arr) ? arr : []).slice();
+                if (from < 0 || to < 0 || from >= a.length || to >= a.length) return a;
+                const [x] = a.splice(from, 1);
+                a.splice(to, 0, x);
+                return a;
+            }
+
+            function rerenderMainTrainingPlan() {
+                try {
+                    const weeks = cache._training_weeksAsc || computeTrainingWeeksAsc();
+                    cache._training_weeksAsc = weeks;
+                    renderTrainingPlan(panel, weeks);
+                } catch {}
+            }
+
+            let _adPlanDraggedId = null;
+            let _adPlanDraggedRowEl = null;
+            let _adPlanDropTargetEl = null;
+
+            function clearPlanDragStyles() {
+                try { _adPlanDraggedRowEl?.classList?.remove("ad-dragging"); } catch {}
+                try { _adPlanDropTargetEl?.classList?.remove("ad-drop-target"); } catch {}
+                _adPlanDraggedId = null;
+                _adPlanDraggedRowEl = null;
+                _adPlanDropTargetEl = null;
+            }
+
+            let _adPlanTargetDragged = null;
+            let _adPlanTargetDraggedEl = null;
+            let _adPlanTargetDropEl = null;
+
+            function clearTargetDragStyles() {
+                try { _adPlanTargetDraggedEl?.classList?.remove("ad-dragging"); } catch {}
+                try { _adPlanTargetDropEl?.classList?.remove("ad-drop-target"); } catch {}
+                _adPlanTargetDragged = null;
+                _adPlanTargetDraggedEl = null;
+                _adPlanTargetDropEl = null;
+            }
+
+
+
+            // Table events: change Soll + row actions
+
+            // Table events: change Soll + row actions
+            table.oninput = (ev) => {
+                const t = ev && ev.target;
+                if (!t || !t.classList || !t.classList.contains("ad-plan-input")) return;
+
+                const id = String(t.dataset.id || "");
+                if (!id) return;
+
+                const raw = String(t.value ?? "").trim();
+                const cleaned = raw.replace(/\s+/g, "").replace(",", ".");
+
+                const idx = planItems.findIndex(x => String(x?.id || "") === id);
+                if (idx < 0) return;
+
+                const agg = getTrackerAggForSelectedWeek();
+
+                if (getSidebarViewMode() === "sessions") {
+                    const v = clampSessions(Number(cleaned));
+
+                    planItems = planItems.slice();
+                    planItems[idx] = { ...planItems[idx], targetSessions: v };
+
+                    // normalize visible input (UI-only)
+                    if (String(v) !== String(raw)) t.value = String(v);
+
+                    // Update footer total (Soll)
+                    const totals = computeSidebarTotals(agg);
+                    const totalValEl = side.querySelector("#adPlanTotalSoll");
+                    const totalUnitEl = side.querySelector("#adPlanTotalSollUnit");
+                    if (totalValEl) totalValEl.textContent = String(Math.round(totals.goal));
+                    if (totalUnitEl) totalUnitEl.textContent = isSessions ? "LEGS" : "min";
+                } else {
+                    // legacy fallback
+                    const mins = clampMinutes(parseInt(cleaned, 10) || 0);
+
+                    planItems = planItems.slice();
+                    planItems[idx] = { ...planItems[idx], targetMinutes: mins };
+
+                    // normalize visible input (UI-only)
+                    if (String(mins) !== String(raw)) t.value = String(mins);
+
+                    // Update footer total (Soll)
+                    const totals = computeSidebarTotals(agg);
+                    const totalValEl = side.querySelector("#adPlanTotalSoll");
+                    const totalUnitEl = side.querySelector("#adPlanTotalSollUnit");
+                    if (totalValEl) totalValEl.textContent = String(Math.round(totals.goal));
+                    if (totalUnitEl) totalUnitEl.textContent = isSessions ? "LEGS" : "min";
                 }
 
+                scheduleSaveCurrentWeekPlan();
+                renderSummary();
+            };
+
+            table.onclick = (ev) => {
                 const btn = ev && ev.target && ev.target.closest ? ev.target.closest("button[data-action]") : null;
-                if (!btn) return;
 
-                const action = String(btn.getAttribute("data-action") || "");
-                const id = String(selectedPlanItemId || "");
-                const it = getPlanItemById(id);
+                // Row actions
+                if (btn) {
+                    const action = String(btn.getAttribute("data-action") || "");
+                    const id = String(btn.getAttribute("data-id") || "");
+                    if (!id) return;
 
-                if (action === "open-add-target") {
-                    targetAddOpen = true;
-                    targetAddValue = "";
-                    targetAddError = "";
-                    renderPlanDetails();
+                    if (action === "dup") { duplicateItemById(id); return; }
+                    if (action === "del") { deleteItemById(id); return; }
                     return;
                 }
 
-                if (action === "cancel-add-target") {
-                    targetAddOpen = false;
-                    targetAddValue = "";
-                    targetAddError = "";
-                    renderPlanDetails();
+                // Step 2: Row selection (click anywhere on the row)
+                const row = ev && ev.target && ev.target.closest ? ev.target.closest('.ad-plan-row[data-plan-item-id]') : null;
+                if (!row) return;
+
+                const id = String(row.getAttribute("data-plan-item-id") || "");
+                if (!id) return;
+
+                setSelectedPlanItemId(id);
+            };
+
+
+            // Drag & Drop (Event Delegation on table)
+            table.ondragstart = (ev) => {
+                const t = ev && ev.target;
+                // Don't start a drag from inputs/buttons
+                if (t && t.closest && t.closest("input,button,textarea,select")) return;
+
+                const handle = t && t.closest ? t.closest('.ad-plan-drag-handle') : null;
+
+                // Drag & Drop nur über Handle starten
+                if (!handle) return;
+
+                const row = handle && handle.closest ? handle.closest('.ad-plan-row[data-plan-item-id]') : null;
+                if (!row) return;
+
+                const id = String(row.getAttribute("data-plan-item-id") || "");
+                if (!id) return;
+
+                _adPlanDraggedId = id;
+                _adPlanDraggedRowEl = row;
+                try { row.classList.add("ad-dragging"); } catch {}
+
+                try {
+                    if (ev.dataTransfer) {
+                        ev.dataTransfer.setData("text/plain", id);
+                        ev.dataTransfer.effectAllowed = "move";
+                    }
+                } catch {}
+            };
+
+            table.ondragover = (ev) => {
+                if (!_adPlanDraggedId) return;
+
+                const t = ev && ev.target;
+                const row = t && t.closest ? t.closest('.ad-plan-row[data-plan-item-id]') : null;
+                if (!row) return;
+
+                ev.preventDefault(); // allow drop
+
+                const id = String(row.getAttribute("data-plan-item-id") || "");
+                if (!id || id === _adPlanDraggedId) return;
+
+                try {
+                    if (ev.dataTransfer) ev.dataTransfer.dropEffect = "move";
+                } catch {}
+
+                if (_adPlanDropTargetEl && _adPlanDropTargetEl !== row) {
+                    try { _adPlanDropTargetEl.classList.remove("ad-drop-target"); } catch {}
+                }
+                _adPlanDropTargetEl = row;
+                try { row.classList.add("ad-drop-target"); } catch {}
+            };
+
+            table.ondrop = (ev) => {
+                if (!_adPlanDraggedId) return;
+
+                ev.preventDefault();
+
+                const t = ev && ev.target;
+                const row = t && t.closest ? t.closest('.ad-plan-row[data-plan-item-id]') : null;
+
+                const draggedId = (() => {
+                    try {
+                        const v = ev?.dataTransfer?.getData?.("text/plain");
+                        return String(v || _adPlanDraggedId || "");
+                    } catch {
+                        return String(_adPlanDraggedId || "");
+                    }
+                })();
+
+                const targetId = row ? String(row.getAttribute("data-plan-item-id") || "") : "";
+                if (!draggedId || !targetId || draggedId === targetId) {
+                    clearPlanDragStyles();
                     return;
                 }
 
-                if (action === "confirm-add-target") {
-                    if (!it || String(it.type || "") !== "SEGMENT_TRAINING") return;
+                const items = Array.isArray(planItems) ? planItems : [];
+                const from = items.findIndex(x => String(x?.id || "") === draggedId);
+                const to = items.findIndex(x => String(x?.id || "") === targetId);
+                if (from < 0 || to < 0 || from === to) {
+                    clearPlanDragStyles();
+                    return;
+                }
 
-                    const existing = (it.params && Array.isArray(it.params.targets)) ? it.params.targets : [];
-                    const res = validateTarget(targetAddValue, existing);
+                planItems = arrayMove(items, from, to);
 
-                    if (!res.ok) {
-                        targetAddError = String(res.error || "Ungültig.");
+                // Save immediately (so main panel reflects order right away)
+                scheduleSaveCurrentWeekPlan();
+                flushSaveCurrentWeekPlan();
+
+                clearPlanDragStyles();
+
+                // Re-render: sidebar + main panel
+                try { cache._planSidebarRerender?.(); } catch {}
+                rerenderMainTrainingPlan();
+            };
+
+            table.ondragend = () => {
+                clearPlanDragStyles();
+            };
+
+
+
+            // Step 2: Details events (Name + Segment Targets)
+            if (details) {
+                details.oninput = (ev) => {
+                    const t = ev && ev.target;
+                    if (!t) return;
+
+                    // Name edit
+                    if (t.id === "adPlanDetailName") {
+                        const id = String(t.getAttribute("data-id") || "");
+                        const value = String(t.value ?? "");
+
+                        updatePlanItemById(id, (cur) => ({ ...cur, name: value }));
+
+                        // Update name in table without full re-render (better UX)
+                        const row = table.querySelector(`.ad-plan-row[data-plan-item-id="${cssEscapeAttrValue(id)}"]`);
+                        const span = row ? row.querySelector(".ad-plan-activity-name") : null;
+                        if (span) {
+                            span.textContent = value;
+                            span.setAttribute("title", value);
+                        }
+                        return;
+                    }
+
+                    // Target input (live)
+                    if (t.id === "adPlanTargetInput") {
+                        targetAddValue = String(t.value ?? "");
+                        if (targetAddError) {
+                            targetAddError = "";
+                            renderPlanDetails();
+                        }
+                        return;
+                    }
+                };
+
+                details.onclick = (ev) => {
+                    const removeBtn = ev && ev.target && ev.target.closest ? ev.target.closest("button[data-remove-target]") : null;
+                    if (removeBtn) {
+                        const rawTarget = String(removeBtn.getAttribute("data-remove-target") || "");
+                        const id = String(selectedPlanItemId || "");
+                        if (!id || !rawTarget) return;
+
+                        const it = getPlanItemById(id);
+                        if (!it || String(it.type || "") !== "SEGMENT_TRAINING") return;
+
+                        updatePlanItemById(id, (cur) => {
+                            const p = cur && cur.params ? { ...cur.params } : {};
+                            const arr = Array.isArray(p.targets) ? p.targets.slice() : [];
+                            const norm = normalizeTarget(rawTarget);
+                            p.targets = arr.filter(x => normalizeTarget(x) !== norm);
+                            return { ...cur, params: p };
+                        });
+
+                        renderAll();
+                        return;
+                    }
+
+                    const btn = ev && ev.target && ev.target.closest ? ev.target.closest("button[data-action]") : null;
+                    if (!btn) return;
+
+                    const action = String(btn.getAttribute("data-action") || "");
+                    const id = String(selectedPlanItemId || "");
+                    const it = getPlanItemById(id);
+
+                    if (action === "open-add-target") {
+                        targetAddOpen = true;
+                        targetAddValue = "";
+                        targetAddError = "";
                         renderPlanDetails();
+                        return;
+                    }
+
+                    if (action === "cancel-add-target") {
+                        targetAddOpen = false;
+                        targetAddValue = "";
+                        targetAddError = "";
+                        renderPlanDetails();
+                        return;
+                    }
+
+                    if (action === "confirm-add-target") {
+                        if (!it || String(it.type || "") !== "SEGMENT_TRAINING") return;
+
+                        const existing = (it.params && Array.isArray(it.params.targets)) ? it.params.targets : [];
+                        const res = validateTarget(targetAddValue, existing);
+
+                        if (!res.ok) {
+                            targetAddError = String(res.error || "Ungültig.");
+                            renderPlanDetails();
+                            return;
+                        }
+
+                        updatePlanItemById(id, (cur) => {
+                            const p = cur && cur.params ? { ...cur.params } : {};
+                            const arr = Array.isArray(p.targets) ? p.targets.slice() : [];
+                            arr.push(res.value);
+                            p.targets = arr;
+                            return { ...cur, params: p };
+                        });
+
+                        targetAddOpen = false;
+                        targetAddValue = "";
+                        targetAddError = "";
+                        renderAll();
+                        setStatusTemp(`Target hinzugefügt: ${res.value}`);
+                        return;
+                    }
+                };
+
+                details.onkeydown = (ev) => {
+                    const t = ev && ev.target;
+                    if (!t) return;
+
+                    if (t.id === "adPlanTargetInput") {
+                        if (ev.key === "Enter") {
+                            ev.preventDefault();
+                            const btn = details.querySelector('button[data-action="confirm-add-target"]');
+                            if (btn && btn.click) btn.click();
+                        }
+                        if (ev.key === "Escape") {
+                            ev.preventDefault();
+                            targetAddOpen = false;
+                            targetAddValue = "";
+                            targetAddError = "";
+                            renderPlanDetails();
+                        }
+                    }
+                };
+
+                // Drag & Drop: Segment Targets (Details only) (0.14.90)
+                details.ondragstart = (ev) => {
+                    const t = ev && ev.target;
+                    const handle = t && t.closest ? t.closest(".ad-plan-chip-handle") : null;
+
+                    // Drag startet nur über Handle
+                    if (!handle) return;
+
+                    const chip = handle && handle.closest ? handle.closest('.ad-plan-chip[data-target]') : null;
+                    if (!chip) return;
+
+                    const target = String(chip.dataset.target || "");
+                    if (!target) return;
+
+                    _adPlanTargetDragged = target;
+                    _adPlanTargetDraggedEl = chip;
+                    try { chip.classList.add("ad-dragging"); } catch {}
+
+                    try {
+                        if (ev.dataTransfer) {
+                            ev.dataTransfer.setData("text/plain", target);
+                            ev.dataTransfer.effectAllowed = "move";
+                        }
+                    } catch {}
+                };
+
+                details.ondragover = (ev) => {
+                    if (!_adPlanTargetDragged) return;
+
+                    const t = ev && ev.target;
+                    const chip = t && t.closest ? t.closest('.ad-plan-chip[data-target]') : null;
+
+                    ev.preventDefault(); // allow drop
+
+                    try {
+                        if (ev.dataTransfer) ev.dataTransfer.dropEffect = "move";
+                    } catch {}
+
+                    if (!chip || chip === _adPlanTargetDraggedEl) return;
+
+                    if (_adPlanTargetDropEl && _adPlanTargetDropEl !== chip) {
+                        try { _adPlanTargetDropEl.classList.remove("ad-drop-target"); } catch {}
+                    }
+                    _adPlanTargetDropEl = chip;
+                    try { chip.classList.add("ad-drop-target"); } catch {}
+                };
+
+                details.ondrop = (ev) => {
+                    if (!_adPlanTargetDragged) return;
+
+                    ev.preventDefault();
+
+                    const t = ev && ev.target;
+                    const targetChip = t && t.closest ? t.closest('.ad-plan-chip[data-target]') : null;
+
+                    const draggedTarget = (() => {
+                        try {
+                            const v = ev?.dataTransfer?.getData?.("text/plain");
+                            return String(v || _adPlanTargetDragged || "");
+                        } catch {
+                            return String(_adPlanTargetDragged || "");
+                        }
+                    })();
+
+                    const id = String(selectedPlanItemId || "");
+                    const it = getPlanItemById(id);
+
+                    if (!targetChip || !draggedTarget || !it || String(it.type || "") !== "SEGMENT_TRAINING" || !it.params || !Array.isArray(it.params.targets)) {
+                        clearTargetDragStyles();
+                        return;
+                    }
+
+                    const targets = it.params.targets;
+                    const from = targets.findIndex(x => normalizeTarget(x) === normalizeTarget(draggedTarget));
+                    const to = targets.findIndex(x => normalizeTarget(x) === normalizeTarget(String(targetChip.dataset.target || "")));
+
+                    if (from < 0 || to < 0 || from === to) {
+                        clearTargetDragStyles();
                         return;
                     }
 
                     updatePlanItemById(id, (cur) => {
                         const p = cur && cur.params ? { ...cur.params } : {};
                         const arr = Array.isArray(p.targets) ? p.targets.slice() : [];
-                        arr.push(res.value);
-                        p.targets = arr;
+                        p.targets = arrayMove(arr, from, to);
                         return { ...cur, params: p };
                     });
 
-                    targetAddOpen = false;
-                    targetAddValue = "";
-                    targetAddError = "";
-                    renderAll();
-                    setStatusTemp(`Target hinzugefügt: ${res.value}`);
-                    return;
-                }
-            };
+                    scheduleSaveCurrentWeekPlan();
+                    flushSaveCurrentWeekPlan();
+                    renderPlanDetails();
 
-            details.onkeydown = (ev) => {
-                const t = ev && ev.target;
-                if (!t) return;
+                    clearTargetDragStyles();
+                };
 
-                if (t.id === "adPlanTargetInput") {
-                    if (ev.key === "Enter") {
+                details.ondragend = () => {
+                    clearTargetDragStyles();
+                };
+
+            }
+
+            // Drawer wiring
+            if (overlay) overlay.onclick = () => setDrawerOpen(false);
+            if (drawerClose) drawerClose.onclick = () => setDrawerOpen(false);
+
+            if (drawerSearch) {
+                drawerSearch.oninput = () => {
+                    planDrawerSearch = String(drawerSearch.value || "");
+                    renderDrawerList();
+                };
+            }
+
+            if (drawerList) {
+                drawerList.onclick = (ev) => {
+                    const addBtn = ev && ev.target && ev.target.closest ? ev.target.closest("button[data-template-add]") : null;
+                    if (addBtn) {
                         ev.preventDefault();
-                        const btn = details.querySelector('button[data-action="confirm-add-target"]');
-                        if (btn && btn.click) btn.click();
+                        ev.stopPropagation();
+                        addTemplateByType(addBtn.getAttribute("data-template-add"));
+                        return;
                     }
+
+                    const item = ev && ev.target && ev.target.closest ? ev.target.closest("[data-template]") : null;
+                    if (item) {
+                        addTemplateByType(item.getAttribute("data-template"));
+                    }
+                };
+
+                drawerList.onkeydown = (ev) => {
+                    if (!ev || ev.key !== "Enter") return;
+                    const item = ev.target && ev.target.closest ? ev.target.closest("[data-template]") : null;
+                    if (item) addTemplateByType(item.getAttribute("data-template"));
+                };
+            }
+
+            // Escape closes drawer (avoid duplicate global listeners by storing a flag on panel)
+            if (!panel.__adPlanDrawerKeyHandler) {
+                panel.__adPlanDrawerKeyHandler = true;
+                panel.addEventListener("keydown", (ev) => {
+                    if (!planDrawerOpen) return;
                     if (ev.key === "Escape") {
                         ev.preventDefault();
-                        targetAddOpen = false;
-                        targetAddValue = "";
-                        targetAddError = "";
-                        renderPlanDetails();
+                        setDrawerOpen(false);
                     }
-                }
-            };
-
-            // Drag & Drop: Segment Targets (Details only) (0.14.90)
-            details.ondragstart = (ev) => {
-                const t = ev && ev.target;
-                const handle = t && t.closest ? t.closest(".ad-plan-chip-handle") : null;
-
-                // Drag startet nur über Handle
-                if (!handle) return;
-
-                const chip = handle && handle.closest ? handle.closest('.ad-plan-chip[data-target]') : null;
-                if (!chip) return;
-
-                const target = String(chip.dataset.target || "");
-                if (!target) return;
-
-                _adPlanTargetDragged = target;
-                _adPlanTargetDraggedEl = chip;
-                try { chip.classList.add("ad-dragging"); } catch {}
-
-                try {
-                    if (ev.dataTransfer) {
-                        ev.dataTransfer.setData("text/plain", target);
-                        ev.dataTransfer.effectAllowed = "move";
-                    }
-                } catch {}
-            };
-
-            details.ondragover = (ev) => {
-                if (!_adPlanTargetDragged) return;
-
-                const t = ev && ev.target;
-                const chip = t && t.closest ? t.closest('.ad-plan-chip[data-target]') : null;
-
-                ev.preventDefault(); // allow drop
-
-                try {
-                    if (ev.dataTransfer) ev.dataTransfer.dropEffect = "move";
-                } catch {}
-
-                if (!chip || chip === _adPlanTargetDraggedEl) return;
-
-                if (_adPlanTargetDropEl && _adPlanTargetDropEl !== chip) {
-                    try { _adPlanTargetDropEl.classList.remove("ad-drop-target"); } catch {}
-                }
-                _adPlanTargetDropEl = chip;
-                try { chip.classList.add("ad-drop-target"); } catch {}
-            };
-
-            details.ondrop = (ev) => {
-                if (!_adPlanTargetDragged) return;
-
-                ev.preventDefault();
-
-                const t = ev && ev.target;
-                const targetChip = t && t.closest ? t.closest('.ad-plan-chip[data-target]') : null;
-
-                const draggedTarget = (() => {
-                    try {
-                        const v = ev?.dataTransfer?.getData?.("text/plain");
-                        return String(v || _adPlanTargetDragged || "");
-                    } catch {
-                        return String(_adPlanTargetDragged || "");
-                    }
-                })();
-
-                const id = String(selectedPlanItemId || "");
-                const it = getPlanItemById(id);
-
-                if (!targetChip || !draggedTarget || !it || String(it.type || "") !== "SEGMENT_TRAINING" || !it.params || !Array.isArray(it.params.targets)) {
-                    clearTargetDragStyles();
-                    return;
-                }
-
-                const targets = it.params.targets;
-                const from = targets.findIndex(x => normalizeTarget(x) === normalizeTarget(draggedTarget));
-                const to = targets.findIndex(x => normalizeTarget(x) === normalizeTarget(String(targetChip.dataset.target || "")));
-
-                if (from < 0 || to < 0 || from === to) {
-                    clearTargetDragStyles();
-                    return;
-                }
-
-                updatePlanItemById(id, (cur) => {
-                    const p = cur && cur.params ? { ...cur.params } : {};
-                    const arr = Array.isArray(p.targets) ? p.targets.slice() : [];
-                    p.targets = arrayMove(arr, from, to);
-                    return { ...cur, params: p };
                 });
+            }
 
-                scheduleSaveCurrentWeekPlan();
-                flushSaveCurrentWeekPlan();
-                renderPlanDetails();
+            // expose for refreshAll(): Tracker reload → Sidebar aktualisieren
+            cache._planSidebarRefreshWeeks = refreshSidebarWeekOptions;
+            cache._planSidebarRerender = () => { refreshSidebarWeekOptions(); renderAll(); };
 
-                clearTargetDragStyles();
-            };
-
-            details.ondragend = () => {
-                clearTargetDragStyles();
-            };
-
+            // Ensure drawer reflects current RAM state after SPA re-wires
+            setDrawerOpen(planDrawerOpen);
         }
 
-        // Drawer wiring
-        if (overlay) overlay.onclick = () => setDrawerOpen(false);
-        if (drawerClose) drawerClose.onclick = () => setDrawerOpen(false);
 
-        if (drawerSearch) {
-            drawerSearch.oninput = () => {
-                planDrawerSearch = String(drawerSearch.value || "");
-                renderDrawerList();
-            };
-        }
-
-        if (drawerList) {
-            drawerList.onclick = (ev) => {
-                const addBtn = ev && ev.target && ev.target.closest ? ev.target.closest("button[data-template-add]") : null;
-                if (addBtn) {
-                    ev.preventDefault();
-                    ev.stopPropagation();
-                    addTemplateByType(addBtn.getAttribute("data-template-add"));
-                    return;
-                }
-
-                const item = ev && ev.target && ev.target.closest ? ev.target.closest("[data-template]") : null;
-                if (item) {
-                    addTemplateByType(item.getAttribute("data-template"));
-                }
-            };
-
-            drawerList.onkeydown = (ev) => {
-                if (!ev || ev.key !== "Enter") return;
-                const item = ev.target && ev.target.closest ? ev.target.closest("[data-template]") : null;
-                if (item) addTemplateByType(item.getAttribute("data-template"));
-            };
-        }
-
-        // Escape closes drawer (avoid duplicate global listeners by storing a flag on panel)
-        if (!panel.__adPlanDrawerKeyHandler) {
-            panel.__adPlanDrawerKeyHandler = true;
-            panel.addEventListener("keydown", (ev) => {
-                if (!planDrawerOpen) return;
-                if (ev.key === "Escape") {
-                    ev.preventDefault();
-                    setDrawerOpen(false);
-                }
-            });
-        }
-
-        // expose for refreshAll(): Tracker reload → Sidebar aktualisieren
-        cache._planSidebarRefreshWeeks = refreshSidebarWeekOptions;
-        cache._planSidebarRerender = () => { refreshSidebarWeekOptions(); renderAll(); };
-
-        // Ensure drawer reflects current RAM state after SPA re-wires
-        setDrawerOpen(planDrawerOpen);
-    }
-
-
-function wireTrainingPlanInteractions(panel) {
+    function wireTrainingPlanInteractions(panel) {
         if (!panel) return;
 
         const inTimeView = (el) => !!(el && el.closest && el.closest("#ad-ext-view-time"));
@@ -15284,9 +15902,9 @@ function wireTrainingPlanInteractions(panel) {
                         const weekId2 = weekIdFromWeekKey(selWeekKey2);
                         const wp2 = loadWeekPlan(weekId2);
                         const its2 =
-                          Array.isArray(wp2?.planItems) ? wp2.planItems :
-                          (Array.isArray(wp2?.items) ? wp2.items :
-                          (Array.isArray(wp2) ? wp2 : []));
+                              Array.isArray(wp2?.planItems) ? wp2.planItems :
+                        (Array.isArray(wp2?.items) ? wp2.items :
+                         (Array.isArray(wp2) ? wp2 : []));
                         pitThisRow = its2.find(x => String(x?.id || "") === planItemId) || null;
 
                         if (planType === "SEGMENT_TRAINING") {
@@ -15426,8 +16044,8 @@ function wireTrainingPlanInteractions(panel) {
                             if (meIdx < 0) meIdx = 0;
 
                             const totalLegs = Number(m.totalLegs) ||
-                                (Array.isArray(m.legsWon) ? m.legsWon.reduce((a, b) => a + (Number(b || 0) || 0), 0) : 0) ||
-                                0;
+                                  (Array.isArray(m.legsWon) ? m.legsWon.reduce((a, b) => a + (Number(b || 0) || 0), 0) : 0) ||
+                                  0;
 
                             const legsWon = Number(m.legsWon?.[meIdx] || 0) || 0;
                             const legsLost = Math.max(0, totalLegs - legsWon);
@@ -15511,7 +16129,7 @@ function wireTrainingPlanInteractions(panel) {
                         tRows.sort((a, b) => (b.min - a.min) || (b.sess - a.sess) || String(a.target).localeCompare(String(b.target)));
                     }
 
-if (!tRows.length) {
+                    if (!tRows.length) {
                         inner += `<div class="ad-ext-muted" style="opacity:.78;">Keine Segment-Details für diese Woche.</div>`;
                     } else {
                         inner += `
@@ -15554,7 +16172,7 @@ if (!tRows.length) {
                 if (icon) icon.textContent = "–";
             });
         }
-    }
+}
 
     function wireSegmentFilters(panel) {
         const selType = panel.querySelector("#ad-ext-filter-segtype");
@@ -15999,343 +16617,343 @@ if (!tRows.length) {
 
 
 
-// =========================
-// Settings "Seite" (Platzhalter) – Toggle Button rechts oben
-// =========================
+    // =========================
+    // Settings "Seite" (Platzhalter) – Toggle Button rechts oben
+    // =========================
 
-function AD_EXT_wireSettingsPageConsoles(panel) {
-    const root = panel?.querySelector?.(".ad-ext-root");
-    if (!root) return null;
+    function AD_EXT_wireSettingsPageConsoles(panel) {
+        const root = panel?.querySelector?.(".ad-ext-root");
+        if (!root) return null;
 
-    if (root.__adExtSettingsPageConsoles) return root.__adExtSettingsPageConsoles;
+        if (root.__adExtSettingsPageConsoles) return root.__adExtSettingsPageConsoles;
 
-    const page = root.querySelector("#ad-ext-settings-page");
-    const viewerSlot = page?.querySelector?.("#ad-ext-settings-slot-viewer");
-    const importerSlot = page?.querySelector?.("#ad-ext-settings-slot-importer");
+        const page = root.querySelector("#ad-ext-settings-page");
+        const viewerSlot = page?.querySelector?.("#ad-ext-settings-slot-viewer");
+        const importerSlot = page?.querySelector?.("#ad-ext-settings-slot-importer");
 
-    const state = {
-        root,
-        page,
-        viewerSlot,
-        importerSlot,
-        docked: false,
-        menu: null,
-        api: null,
-    };
+        const state = {
+            root,
+            page,
+            viewerSlot,
+            importerSlot,
+            docked: false,
+            menu: null,
+            api: null,
+        };
 
-    const restoreTo = (el, parent, nextSibling) => {
-        if (!el || !parent) return;
-        try {
-            if (nextSibling && nextSibling.parentNode === parent) parent.insertBefore(el, nextSibling);
-            else parent.appendChild(el);
-        } catch {
-            try { parent.appendChild(el); } catch {}
-        }
-    };
-
-    state.dock = () => {
-        if (state.docked) return;
-        state.docked = true;
-
-        // Importer-Konsole (API Panel) -> Slot B
-        try {
-            if (!state.importerSlot) return;
-
-            const apiPanel = document.getElementById("adApiPanel");
-            if (!apiPanel) {
-                state.importerSlot.innerHTML = '<div class="ad-ext-muted">API‑Panel noch nicht verfügbar. (Importer noch nicht geladen.)</div>';
-                return;
-            }
-
-            state.api = {
-                el: apiPanel,
-                parent: apiPanel.parentNode,
-                nextSibling: apiPanel.nextSibling,
-            };
-
-            apiPanel.classList.add("adApiPanel--embedded");
-            try { apiPanel.style.display = ""; } catch {}
-
-            state.importerSlot.innerHTML = "";
-            state.importerSlot.appendChild(apiPanel);
-        } catch (e) {
-            console.warn("[AD Ext] Importer-Konsole docking failed:", e);
-        }
-    };
-
-    state.undock = () => {
-        if (!state.docked) return;
-        state.docked = false;
-
-
-        // API Panel bleibt dauerhaft im Settings-Slot (kein Floating-Terminal mehr)
-        try {
-            // no-op
-        } catch (e) {
-            console.warn("[AD Ext] Importer-Konsole undocking noop failed:", e);
-        } finally {
-            state.api = null;
-        }
-    };
-
-    root.__adExtSettingsPageConsoles = state;
-    return state;
-}
-
-function AD_EXT_wireSettingsPageToggle(panel) {
-    const root = panel?.querySelector?.(".ad-ext-root");
-    if (!root) return;
-
-    const btn = root.querySelector("#ad-ext-settings-btn");
-    const dash = root.querySelector("#ad-ext-dashboard-wrap");
-    const page = root.querySelector("#ad-ext-settings-page");
-    if (!btn || !dash || !page) return;
-
-    // de-dupe
-    if (root.dataset.adExtSettingsPageWired === "1") return;
-    root.dataset.adExtSettingsPageWired = "1";
-
-    const iconEl = btn.querySelector(".ad-ext-icon");
-    try { if (iconEl) iconEl.textContent = "⚙"; } catch {}
-    const consoles = AD_EXT_wireSettingsPageConsoles(panel);
-    const closeBtn = page.querySelector("#ad-ext-settings-close");
-
-    const closeDropdownMenuIfOpen = () => {
-        // Falls das Dropdown offen ist, schließen (damit es nicht "über" der Seite hängt)
-        const menu = root.querySelector("#ad-ext-settings-menu");
-        const gear = root.querySelector("#ad-ext-settings-btn");
-        if (menu && !menu.hidden) {
-            menu.hidden = true;
-            gear?.setAttribute("aria-expanded", "false");
-        }
-        // Falls die globale Ref existiert, auch darüber schließen (sauber)
-        try { AD_EXT_settingsMenuRefs?.closeMenu?.(); } catch {}
-    };
-
-    const apply = (open) => {
-        const isOpen = !!open;
-        dash.hidden = isOpen;
-        page.hidden = !isOpen;
-
-        // Settings-Seite offen? -> Consoles docken und Dropdown-Autoclose deaktivieren
-        if (isOpen) {
-            root.dataset.adExtSettingsPageOpen = "1";
-            try { consoles?.dock?.(); } catch (e) { console.warn("[AD Ext] docking failed:", e); }
-        } else {
-            try { consoles?.undock?.(); } catch (e) { console.warn("[AD Ext] undocking failed:", e); }
-            try { delete root.dataset.adExtSettingsPageOpen; } catch {}
-
-            // Training Tab sofort aktualisieren, wenn Training gerade aktiv ist
+        const restoreTo = (el, parent, nextSibling) => {
+            if (!el || !parent) return;
             try {
-                const sub = String(localStorage.getItem("ad_ext_subview") || "").toLowerCase();
-                if (sub === "training" && cache?.loaded) {
-                    cache._training_weeksAsc = null; // optional, aber sauber
-                    renderTrainingTab(panel);
+                if (nextSibling && nextSibling.parentNode === parent) parent.insertBefore(el, nextSibling);
+                else parent.appendChild(el);
+            } catch {
+                try { parent.appendChild(el); } catch {}
+            }
+        };
+
+        state.dock = () => {
+            if (state.docked) return;
+            state.docked = true;
+
+            // Importer-Konsole (API Panel) -> Slot B
+            try {
+                if (!state.importerSlot) return;
+
+                const apiPanel = document.getElementById("adApiPanel");
+                if (!apiPanel) {
+                    state.importerSlot.innerHTML = '<div class="ad-ext-muted">API‑Panel noch nicht verfügbar. (Importer noch nicht geladen.)</div>';
+                    return;
                 }
-            } catch {}
-        }
 
-        btn.setAttribute("aria-pressed", isOpen ? "true" : "false");
-        btn.title = isOpen ? "Einstellungen schließen" : "Einstellungen";
-        if (iconEl) iconEl.textContent = "⚙";
+                state.api = {
+                    el: apiPanel,
+                    parent: apiPanel.parentNode,
+                    nextSibling: apiPanel.nextSibling,
+                };
 
-        // Tooltip weg, falls offen
-        try { tooltipHide(); } catch {}
-    };
+                apiPanel.classList.add("adApiPanel--embedded");
+                try { apiPanel.style.display = ""; } catch {}
 
-    // Global ESC handler: schließt Settings nur wenn offen
-    AD_EXT_settingsPageRefs = { page, apply };
-    if (!AD_EXT_settingsPageDocWired) {
-        AD_EXT_settingsPageDocWired = true;
-        document.addEventListener("keydown", (ev) => {
-            const refs = AD_EXT_settingsPageRefs;
-            if (!refs?.page || refs.page.hidden) return; // nur wenn Settings sichtbar
-            if (ev.key !== "Escape") return;
-            ev.preventDefault();
-            ev.stopPropagation();
-            try { refs.apply(false); } catch {}
-        }, true);
+                state.importerSlot.innerHTML = "";
+                state.importerSlot.appendChild(apiPanel);
+            } catch (e) {
+                console.warn("[AD Ext] Importer-Konsole docking failed:", e);
+            }
+        };
+
+        state.undock = () => {
+            if (!state.docked) return;
+            state.docked = false;
+
+
+            // API Panel bleibt dauerhaft im Settings-Slot (kein Floating-Terminal mehr)
+            try {
+                // no-op
+            } catch (e) {
+                console.warn("[AD Ext] Importer-Konsole undocking noop failed:", e);
+            } finally {
+                state.api = null;
+            }
+        };
+
+        root.__adExtSettingsPageConsoles = state;
+        return state;
     }
 
+    function AD_EXT_wireSettingsPageToggle(panel) {
+        const root = panel?.querySelector?.(".ad-ext-root");
+        if (!root) return;
 
-    const isOpenNow = () => !page.hidden;
+        const btn = root.querySelector("#ad-ext-settings-btn");
+        const dash = root.querySelector("#ad-ext-dashboard-wrap");
+        const page = root.querySelector("#ad-ext-settings-page");
+        if (!btn || !dash || !page) return;
 
-    // Default: Dashboard sichtbar
-    apply(false);
+        // de-dupe
+        if (root.dataset.adExtSettingsPageWired === "1") return;
+        root.dataset.adExtSettingsPageWired = "1";
 
-    // Close-Button (✕) in Settings-Header
-    if (closeBtn && closeBtn.dataset.adExtWired !== "1") {
-        closeBtn.dataset.adExtWired = "1";
-        closeBtn.addEventListener("click", (ev) => {
+        const iconEl = btn.querySelector(".ad-ext-icon");
+        try { if (iconEl) iconEl.textContent = "⚙"; } catch {}
+        const consoles = AD_EXT_wireSettingsPageConsoles(panel);
+        const closeBtn = page.querySelector("#ad-ext-settings-close");
+
+        const closeDropdownMenuIfOpen = () => {
+            // Falls das Dropdown offen ist, schließen (damit es nicht "über" der Seite hängt)
+            const menu = root.querySelector("#ad-ext-settings-menu");
+            const gear = root.querySelector("#ad-ext-settings-btn");
+            if (menu && !menu.hidden) {
+                menu.hidden = true;
+                gear?.setAttribute("aria-expanded", "false");
+            }
+            // Falls die globale Ref existiert, auch darüber schließen (sauber)
+            try { AD_EXT_settingsMenuRefs?.closeMenu?.(); } catch {}
+        };
+
+        const apply = (open) => {
+            const isOpen = !!open;
+            dash.hidden = isOpen;
+            page.hidden = !isOpen;
+
+            // Settings-Seite offen? -> Consoles docken und Dropdown-Autoclose deaktivieren
+            if (isOpen) {
+                root.dataset.adExtSettingsPageOpen = "1";
+                try { consoles?.dock?.(); } catch (e) { console.warn("[AD Ext] docking failed:", e); }
+            } else {
+                try { consoles?.undock?.(); } catch (e) { console.warn("[AD Ext] undocking failed:", e); }
+                try { delete root.dataset.adExtSettingsPageOpen; } catch {}
+
+                // Training Tab sofort aktualisieren, wenn Training gerade aktiv ist
+                try {
+                    const sub = String(localStorage.getItem("ad_ext_subview") || "").toLowerCase();
+                    if (sub === "training" && cache?.loaded) {
+                        cache._training_weeksAsc = null; // optional, aber sauber
+                        renderTrainingTab(panel);
+                    }
+                } catch {}
+            }
+
+            btn.setAttribute("aria-pressed", isOpen ? "true" : "false");
+            btn.title = isOpen ? "Einstellungen schließen" : "Einstellungen";
+            if (iconEl) iconEl.textContent = "⚙";
+
+            // Tooltip weg, falls offen
+            try { tooltipHide(); } catch {}
+        };
+
+        // Global ESC handler: schließt Settings nur wenn offen
+        AD_EXT_settingsPageRefs = { page, apply };
+        if (!AD_EXT_settingsPageDocWired) {
+            AD_EXT_settingsPageDocWired = true;
+            document.addEventListener("keydown", (ev) => {
+                const refs = AD_EXT_settingsPageRefs;
+                if (!refs?.page || refs.page.hidden) return; // nur wenn Settings sichtbar
+                if (ev.key !== "Escape") return;
+                ev.preventDefault();
+                ev.stopPropagation();
+                try { refs.apply(false); } catch {}
+            }, true);
+        }
+
+
+        const isOpenNow = () => !page.hidden;
+
+        // Default: Dashboard sichtbar
+        apply(false);
+
+        // Close-Button (✕) in Settings-Header
+        if (closeBtn && closeBtn.dataset.adExtWired !== "1") {
+            closeBtn.dataset.adExtWired = "1";
+            closeBtn.addEventListener("click", (ev) => {
+                ev.preventDefault();
+                ev.stopPropagation();
+                closeDropdownMenuIfOpen();
+                apply(false);
+                try { closeBtn.blur(); } catch {}
+                try { btn.blur(); } catch {}
+            });
+        }
+
+        btn.addEventListener("click", (ev) => {
+            if (ev.shiftKey) return;
             ev.preventDefault();
             ev.stopPropagation();
             closeDropdownMenuIfOpen();
-            apply(false);
-            try { closeBtn.blur(); } catch {}
-            try { btn.blur(); } catch {}
+            apply(!isOpenNow());
+            // Mouse-click: kein dauerhafter Focus-Ring
+            if (ev.detail && ev.detail > 0) { try { btn.blur(); } catch {} }
         });
     }
 
-    btn.addEventListener("click", (ev) => {
-        if (ev.shiftKey) return;
-        ev.preventDefault();
-        ev.stopPropagation();
-        closeDropdownMenuIfOpen();
-        apply(!isOpenNow());
-        // Mouse-click: kein dauerhafter Focus-Ring
-        if (ev.detail && ev.detail > 0) { try { btn.blur(); } catch {} }
-    });
-}
+    function AD_EXT_wireConfigCard(panel) {
+        const root = panel?.querySelector?.(".ad-ext-root");
+        if (!root) return;
 
-function AD_EXT_wireConfigCard(panel) {
-    const root = panel?.querySelector?.(".ad-ext-root");
-    if (!root) return;
+        const page = root.querySelector("#ad-ext-settings-page");
+        if (!page) return;
 
-    const page = root.querySelector("#ad-ext-settings-page");
-    if (!page) return;
+        // de-dupe
+        if (page.dataset.adExtCfgWired === "1") return;
+        page.dataset.adExtCfgWired = "1";
 
-    // de-dupe
-    if (page.dataset.adExtCfgWired === "1") return;
-    page.dataset.adExtCfgWired = "1";
-
-    const statusEl = page.querySelector("#adExtCfgStatus");
-    const resetBtn = page.querySelector("#adExtCfgReset");
+        const statusEl = page.querySelector("#adExtCfgStatus");
+        const resetBtn = page.querySelector("#adExtCfgReset");
 
 
 
-    // Section collapse toggles (UI only) (v0.14.100)
-    const loadCfgSectionState = () => {
-        try {
-            const raw = localStorage.getItem(AD_EXT_LS_KEY_CFG_SECTIONS);
-            if (!raw) return {};
-            const obj = JSON.parse(raw);
-            return (obj && typeof obj === "object" && !Array.isArray(obj)) ? obj : {};
-        } catch { return {}; }
-    };
-
-    const saveCfgSectionState = (obj) => {
-        try { localStorage.setItem(AD_EXT_LS_KEY_CFG_SECTIONS, JSON.stringify(obj || {})); } catch {}
-    };
-
-    const ensureCfgSectionToggles = () => {
-        const sections = Array.from(page.querySelectorAll(".ad-ext-cfg-section"));
-        const state = loadCfgSectionState();
-
-        const normalizeTitleToId = (title) => {
-            const t0 = String(title || "").trim().toLowerCase();
-            const t1 = t0.replace(/\s+/g, "-");
-            const t2 = t1.replace(/[^a-z0-9-]/g, "");
-            return "cfgsec_" + (t2 || "unknown");
+        // Section collapse toggles (UI only) (v0.14.100)
+        const loadCfgSectionState = () => {
+            try {
+                const raw = localStorage.getItem(AD_EXT_LS_KEY_CFG_SECTIONS);
+                if (!raw) return {};
+                const obj = JSON.parse(raw);
+                return (obj && typeof obj === "object" && !Array.isArray(obj)) ? obj : {};
+            } catch { return {}; }
         };
 
-        for (const sec of sections) {
-            const head = sec.querySelector(".ad-ext-cfg-section-head");
-            if (!head) continue;
+        const saveCfgSectionState = (obj) => {
+            try { localStorage.setItem(AD_EXT_LS_KEY_CFG_SECTIONS, JSON.stringify(obj || {})); } catch {}
+        };
 
-            const titleEl = sec.querySelector(".ad-ext-cfg-section-title");
-            const id = normalizeTitleToId(titleEl?.textContent || "");
-            try { sec.dataset.cfgSecId = id; } catch {}
+        const ensureCfgSectionToggles = () => {
+            const sections = Array.from(page.querySelectorAll(".ad-ext-cfg-section"));
+            const state = loadCfgSectionState();
 
-            let btn = head.querySelector(".ad-ext-cfg-section-toggle");
-            if (!btn) {
-                btn = document.createElement("button");
-                btn.type = "button";
-                btn.className = "ad-ext-cfg-section-toggle";
-                btn.setAttribute("aria-label", "Sektion ein-/ausklappen");
-                head.appendChild(btn);
+            const normalizeTitleToId = (title) => {
+                const t0 = String(title || "").trim().toLowerCase();
+                const t1 = t0.replace(/\s+/g, "-");
+                const t2 = t1.replace(/[^a-z0-9-]/g, "");
+                return "cfgsec_" + (t2 || "unknown");
+            };
 
-                btn.addEventListener("click", (ev) => {
-                    ev.preventDefault();
-                    ev.stopPropagation();
+            for (const sec of sections) {
+                const head = sec.querySelector(".ad-ext-cfg-section-head");
+                if (!head) continue;
 
-                    const collapsedNow = sec.classList.toggle("is-collapsed");
-                    btn.textContent = collapsedNow ? "+" : "−";
-                    btn.setAttribute("aria-expanded", collapsedNow ? "false" : "true");
+                const titleEl = sec.querySelector(".ad-ext-cfg-section-title");
+                const id = normalizeTitleToId(titleEl?.textContent || "");
+                try { sec.dataset.cfgSecId = id; } catch {}
 
-                    state[id] = collapsedNow ? 1 : 0;
-                    saveCfgSectionState(state);
-                });
-            }
+                let btn = head.querySelector(".ad-ext-cfg-section-toggle");
+                if (!btn) {
+                    btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "ad-ext-cfg-section-toggle";
+                    btn.setAttribute("aria-label", "Sektion ein-/ausklappen");
+                    head.appendChild(btn);
 
-            const collapsed = (state?.[id] ?? 1) === 1;
-            if (collapsed) sec.classList.add("is-collapsed");
-            else sec.classList.remove("is-collapsed");
+                    btn.addEventListener("click", (ev) => {
+                        ev.preventDefault();
+                        ev.stopPropagation();
 
-            btn.textContent = collapsed ? "+" : "−";
-            btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
-        }
-    };
+                        const collapsedNow = sec.classList.toggle("is-collapsed");
+                        btn.textContent = collapsedNow ? "+" : "−";
+                        btn.setAttribute("aria-expanded", collapsedNow ? "false" : "true");
 
-    ensureCfgSectionToggles();
-const setStatus = (() => {
-        let t = null;
-        return (msg, ms = 2000) => {
-            try { if (t) clearTimeout(t); } catch {}
-            if (statusEl) statusEl.textContent = msg;
-            if (ms > 0) {
-                t = setTimeout(() => { try { if (statusEl) statusEl.textContent = "Bereit."; } catch {} }, ms);
+                        state[id] = collapsedNow ? 1 : 0;
+                        saveCfgSectionState(state);
+                    });
+                }
+
+                const collapsed = (state?.[id] ?? 1) === 1;
+                if (collapsed) sec.classList.add("is-collapsed");
+                else sec.classList.remove("is-collapsed");
+
+                btn.textContent = collapsed ? "+" : "−";
+                btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
             }
         };
-    })();
 
-    const applyCfgToUI = (cfg) => {
+        ensureCfgSectionToggles();
+        const setStatus = (() => {
+            let t = null;
+            return (msg, ms = 2000) => {
+                try { if (t) clearTimeout(t); } catch {}
+                if (statusEl) statusEl.textContent = msg;
+                if (ms > 0) {
+                    t = setTimeout(() => { try { if (statusEl) statusEl.textContent = "Bereit."; } catch {} }, ms);
+                }
+            };
+        })();
+
+        const applyCfgToUI = (cfg) => {
+            for (const f of AD_EXT_CFG_FIELDS) {
+                const el = page.querySelector(`#cfg_${f.key}`);
+                if (!el) continue;
+                const v = cfg?.[f.key];
+                const dv = AD_EXT_DEFAULT_CFG?.[f.key];
+                const out = (typeof v === "number" && Number.isFinite(v)) ? v : dv;
+                try { el.value = String(out); } catch {}
+            }
+        };
+        const commitField = (key, el, { min, max }) => {
+            const raw = (el?.value ?? "").toString().trim();
+            const n = parseInt(raw, 10);
+            if (!Number.isFinite(n)) {
+                setStatus("Ungültiger Wert", 2000);
+                applyCfgToUI(AD_loadCfg());
+                return;
+            }
+            const clamped = Math.min(max, Math.max(min, n));
+            const wasClamped = (clamped !== n);
+            try { if (String(clamped) !== String(el.value)) el.value = String(clamped); } catch {}
+
+            AD_setSetting(key, clamped);
+
+            if (wasClamped) {
+                let msg = `Wert wurde auf ${clamped} begrenzt.`;
+                if (clamped === min) msg = `Wert wurde auf ${clamped} begrenzt. Minimum ist ${min}.`;
+                else if (clamped === max) msg = `Wert wurde auf ${clamped} begrenzt. Maximum ist ${max}.`;
+                setStatus(msg, 2000);
+            } else {
+                setStatus("Gespeichert.", 2000);
+            }
+        };
+
+        // initial load
+        applyCfgToUI(AD_loadCfg());
+
+        // wire inputs
         for (const f of AD_EXT_CFG_FIELDS) {
             const el = page.querySelector(`#cfg_${f.key}`);
             if (!el) continue;
-            const v = cfg?.[f.key];
-            const dv = AD_EXT_DEFAULT_CFG?.[f.key];
-            const out = (typeof v === "number" && Number.isFinite(v)) ? v : dv;
-            try { el.value = String(out); } catch {}
+            const handler = () => commitField(f.key, el, f);
+            el.addEventListener("change", handler);
+            el.addEventListener("blur", handler);
         }
-    };
-    const commitField = (key, el, { min, max }) => {
-        const raw = (el?.value ?? "").toString().trim();
-        const n = parseInt(raw, 10);
-        if (!Number.isFinite(n)) {
-            setStatus("Ungültiger Wert", 2000);
+
+        // reset
+        resetBtn?.addEventListener?.("click", () => {
+            const ok = confirm("Alle Einstellungen auf Standard zurücksetzen?");
+            if (!ok) return;
+            AD_clearCfg();
             applyCfgToUI(AD_loadCfg());
-            return;
-        }
-        const clamped = Math.min(max, Math.max(min, n));
-        const wasClamped = (clamped !== n);
-        try { if (String(clamped) !== String(el.value)) el.value = String(clamped); } catch {}
-
-        AD_setSetting(key, clamped);
-
-        if (wasClamped) {
-            let msg = `Wert wurde auf ${clamped} begrenzt.`;
-            if (clamped === min) msg = `Wert wurde auf ${clamped} begrenzt. Minimum ist ${min}.`;
-            else if (clamped === max) msg = `Wert wurde auf ${clamped} begrenzt. Maximum ist ${max}.`;
-            setStatus(msg, 2000);
-        } else {
-            setStatus("Gespeichert.", 2000);
-        }
-    };
-
-    // initial load
-    applyCfgToUI(AD_loadCfg());
-
-    // wire inputs
-    for (const f of AD_EXT_CFG_FIELDS) {
-        const el = page.querySelector(`#cfg_${f.key}`);
-        if (!el) continue;
-        const handler = () => commitField(f.key, el, f);
-        el.addEventListener("change", handler);
-        el.addEventListener("blur", handler);
+            setStatus("Zurückgesetzt.", 2000);
+        });
     }
 
-    // reset
-    resetBtn?.addEventListener?.("click", () => {
-        const ok = confirm("Alle Einstellungen auf Standard zurücksetzen?");
-        if (!ok) return;
-        AD_clearCfg();
-        applyCfgToUI(AD_loadCfg());
-        setStatus("Zurückgesetzt.", 2000);
-    });
-}
 
-
-function AD_EXT_wireTableScrollObserver(panel) {
+    function AD_EXT_wireTableScrollObserver(panel) {
         const root = panel?.querySelector?.(".ad-ext-root");
         if (!root) return;
         if (root.dataset.adExtTableScrollObs === "1") return;
@@ -16591,36 +17209,47 @@ function AD_EXT_wireTableScrollObserver(panel) {
         });
 
         const btnX01 = panel.querySelector("#ad-ext-subnav-x01");
-        const btnTime = panel.querySelector("#ad-ext-subnav-time");
         const btnTraining = panel.querySelector("#ad-ext-subnav-training");
         const btnMasterHof = panel.querySelector("#ad-ext-subnav-masterhof");
 
         const viewX01 = panel.querySelector("#ad-ext-view-x01");
-        const viewTime = panel.querySelector("#ad-ext-view-time");
         const viewTraining = panel.querySelector("#ad-ext-view-training");
         const viewMasterHof = panel.querySelector("#ad-ext-view-masterhof");
+
+        // Zeit-Tracker wird als Trainings-Subview „Chromo-Tracker“ gemountet
+        mountTimeIntoTrainChromo(panel);
+
 
         function setSubView(which) {
             let w = (String(which || localStorage.getItem("ad_ext_subview") || "x01")).toLowerCase();
             if (w === "segment") w = "x01";
-            localStorage.setItem("ad_ext_subview", w);
+
+            // Backward-Compat: altes Subview "time" -> Training / Chromo-Tracker
+            if (w === "time") {
+                w = "training";
+                try { localStorage.setItem(AD_EXT_TRAIN_VIEW_LS_KEY, "CHROMO"); } catch {}
+                // Best-effort sofortiger State, falls Training schon gerendert wird
+                try {
+                    const layout = panel.querySelector(".ad-train-layout");
+                    if (layout && !layout.dataset.trainView) layout.dataset.trainView = "CHROMO";
+                } catch {}
+            }
+
+            try { localStorage.setItem("ad_ext_subview", w); } catch {}
 
             const isX01 = w === "x01";
-            const isTime = w === "time";
             const isTraining = w === "training";
             const isMasterHof = (w === "masterhof" || w === "master_hof" || w === "master");
 
-            if (!(isX01 || isTime || isTraining || isMasterHof)) {
+            if (!(isX01 || isTraining || isMasterHof)) {
                 return setSubView("x01");
             }
 
             if (viewX01) viewX01.style.display = isX01 ? "" : "none";
-            if (viewTime) viewTime.style.display = isTime ? "" : "none";
             if (viewTraining) viewTraining.style.display = isTraining ? "" : "none";
             if (viewMasterHof) viewMasterHof.style.display = isMasterHof ? "" : "none";
 
             btnX01?.classList.toggle("ad-ext-subnav-btn--active", isX01);
-            btnTime?.classList.toggle("ad-ext-subnav-btn--active", isTime);
             btnTraining?.classList.toggle("ad-ext-subnav-btn--active", isTraining);
             btnMasterHof?.classList.toggle("ad-ext-subnav-btn--active", isMasterHof);
 
@@ -16630,13 +17259,11 @@ function AD_EXT_wireTableScrollObserver(panel) {
             }
 
             if (isX01) renderX01(panel);
-            if (isTime) renderTimeTab(panel);
             if (isTraining) renderTrainingTab(panel);
             renderMasterHallOfFame(panel);
         }
 
         btnX01?.addEventListener("click", () => setSubView("x01"));
-        btnTime?.addEventListener("click", () => setSubView("time"));
         btnTraining?.addEventListener("click", () => setSubView("training"));
         btnMasterHof?.addEventListener("click", () => setSubView("masterhof"));
 
@@ -16749,239 +17376,239 @@ function AD_EXT_wireTableScrollObserver(panel) {
 // =========================
 
 (function () {
-  "use strict";
+    "use strict";
 
-  // -------------------- Config --------------------
-  const LOG_PREFIX = "[AD-API]";
-  const API_HOST = "https://api.autodarts.io";
+    // -------------------- Config --------------------
+    const LOG_PREFIX = "[AD-API]";
+    const API_HOST = "https://api.autodarts.io";
 
-  const DB_NAME = "autodarts_cache";
-  const DB_VERSION = 1;
+    const DB_NAME = "autodarts_cache";
+    const DB_VERSION = 1;
 
-  // /stats (history) ist praktisch immutable -> kein TTL nötig
-  // /state (live) ändert sich -> wir cachen nur kurz, um Spam zu vermeiden
-  const LIVE_STATE_TTL_MS = 10_000;
+    // /stats (history) ist praktisch immutable -> kein TTL nötig
+    // /state (live) ändert sich -> wir cachen nur kurz, um Spam zu vermeiden
+    const LIVE_STATE_TTL_MS = 10_000;
 
-  // -------------------- Auto-Import (History) --------------------
-  // Auto-Import lädt automatisch /stats, sobald Autodarts nach Spielende auf
-  // /history/matches/<MATCH_ID> navigiert. Einstellungen werden in localStorage gespeichert.
-  const AD_AUTOIMPORT_DEFAULT_ENABLED = true;
-  const AD_AUTOIMPORT_DEFAULT_ONLY_IF_NOT_CACHED = true;
-  const AD_LS_KEY_AUTOIMPORT_ENABLED = "ad_api_autoImport_history";
-  const AD_LS_KEY_AUTOIMPORT_ONLY_IF_NOT_CACHED = "ad_api_autoImport_onlyIfNotCached";
-
-
-
-  // UI (Konsole/Panel) kann über den Viewer ein-/ausgeblendet werden.
-  // Der Tracker (Auto-Import + Cache) läuft weiter, auch wenn das Panel versteckt ist.
-  // Gesteuert über:
-  //   - CustomEvent: "ad-importer-ui-visibility"  (gleiches Tab)
-  //   - localStorage["ad_importer_ui_visible"]    (Tabs/Script-Grenzen)
-  const AD_IMPORTER_UI_DEFAULT_VISIBLE = true;
-  const AD_LS_KEY_IMPORTER_UI_VISIBLE = "ad_importer_ui_visible";
-  const AD_IMPORTER_UI_VISIBILITY_EVENT = "ad-importer-ui-visibility";
-  // 0.14.05: Panel immer sichtbar
-  try { localStorage.setItem(AD_LS_KEY_IMPORTER_UI_VISIBLE, "1"); } catch {}
-
-const AD_AUTOIMPORT_DEBOUNCE_MS = 550; // 300–800ms (SPA kann schnell mehrfach "navigieren")
-  const AD_STATS_RETRY_DELAYS_MS = [1000, 2000, 4000]; // 2–3 Retries mit Backoff
-  const AD_LS_CACHE_UPDATED_KEY = "ad_cache_updated"; // Marker für Viewer/andere Tabs
+    // -------------------- Auto-Import (History) --------------------
+    // Auto-Import lädt automatisch /stats, sobald Autodarts nach Spielende auf
+    // /history/matches/<MATCH_ID> navigiert. Einstellungen werden in localStorage gespeichert.
+    const AD_AUTOIMPORT_DEFAULT_ENABLED = true;
+    const AD_AUTOIMPORT_DEFAULT_ONLY_IF_NOT_CACHED = true;
+    const AD_LS_KEY_AUTOIMPORT_ENABLED = "ad_api_autoImport_history";
+    const AD_LS_KEY_AUTOIMPORT_ONLY_IF_NOT_CACHED = "ad_api_autoImport_onlyIfNotCached";
 
 
-  // -------------------- Logging --------------------
-  const log = (...a) => console.debug(LOG_PREFIX, ...a);
-  const warn = (...a) => console.warn(LOG_PREFIX, ...a);
-  const err = (...a) => console.error(LOG_PREFIX, ...a);
 
-  // -------------------- Route / MatchId --------------------
-  function getMatchContextFromPath(pathname) {
-    // /history/matches/<uuid>
-    // /matches/<uuid>
-    const m = pathname.match(
-      /\/(?:history\/matches|matches)\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i
-    );
+    // UI (Konsole/Panel) kann über den Viewer ein-/ausgeblendet werden.
+    // Der Tracker (Auto-Import + Cache) läuft weiter, auch wenn das Panel versteckt ist.
+    // Gesteuert über:
+    //   - CustomEvent: "ad-importer-ui-visibility"  (gleiches Tab)
+    //   - localStorage["ad_importer_ui_visible"]    (Tabs/Script-Grenzen)
+    const AD_IMPORTER_UI_DEFAULT_VISIBLE = true;
+    const AD_LS_KEY_IMPORTER_UI_VISIBLE = "ad_importer_ui_visible";
+    const AD_IMPORTER_UI_VISIBILITY_EVENT = "ad-importer-ui-visibility";
+    // 0.14.05: Panel immer sichtbar
+    try { localStorage.setItem(AD_LS_KEY_IMPORTER_UI_VISIBLE, "1"); } catch {}
 
-    const matchId = m ? m[1] : null;
-    const isLive = /^\/matches\//i.test(pathname);
-    const isHistory = /^\/history\/matches\//i.test(pathname);
+    const AD_AUTOIMPORT_DEBOUNCE_MS = 550; // 300–800ms (SPA kann schnell mehrfach "navigieren")
+    const AD_STATS_RETRY_DELAYS_MS = [1000, 2000, 4000]; // 2–3 Retries mit Backoff
+    const AD_LS_CACHE_UPDATED_KEY = "ad_cache_updated"; // Marker für Viewer/andere Tabs
 
-    return {
-      matchId,
-      route: matchId ? (isLive ? "live" : (isHistory ? "history" : "unknown")) : "none",
-      isLive: !!(matchId && isLive),
-      isHistory: !!(matchId && isHistory),
-    };
-  }
 
-  // -------------------- GM request helper --------------------
-  function gmRequestJson(method, url) {
-    return new Promise((resolve, reject) => {
-      GM_xmlhttpRequest({
-        method,
-        url,
-        withCredentials: true,
-        timeout: 30_000,
-        headers: { Accept: "application/json" },
-        onload: (resp) => {
-          const text = resp.responseText || "";
-          log("HTTP", resp.status, url);
+    // -------------------- Logging --------------------
+    const log = (...a) => console.debug(LOG_PREFIX, ...a);
+    const warn = (...a) => console.warn(LOG_PREFIX, ...a);
+    const err = (...a) => console.error(LOG_PREFIX, ...a);
 
-          let json = null;
-          try { json = text ? JSON.parse(text) : null; } catch { /* ignore */ }
+    // -------------------- Route / MatchId --------------------
+    function getMatchContextFromPath(pathname) {
+        // /history/matches/<uuid>
+        // /matches/<uuid>
+        const m = pathname.match(
+            /\/(?:history\/matches|matches)\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i
+        );
 
-          if (resp.status < 200 || resp.status >= 300) {
-            warn("Nicht OK:", resp.status, resp.statusText);
-            warn("Antwort (erste 300 Zeichen):", text.slice(0, 300));
-            const e = new Error(`HTTP ${resp.status} ${resp.statusText}`);
-            e.status = resp.status;
-            e.body = json ?? text;
-            reject(e);
-            return;
-          }
+        const matchId = m ? m[1] : null;
+        const isLive = /^\/matches\//i.test(pathname);
+        const isHistory = /^\/history\/matches\//i.test(pathname);
 
-          resolve(json);
-        },
-        onerror: (e) => reject(e),
-        ontimeout: () => reject(new Error("Request timeout")),
-      });
-    });
-  }
-
-  // -------------------- IndexedDB (auto-create) --------------------
-  function openDb() {
-    return new Promise((resolve, reject) => {
-      const req = indexedDB.open(DB_NAME, DB_VERSION);
-
-      req.onupgradeneeded = () => {
-        const db = req.result;
-
-        // Store für /stats (History)
-        if (!db.objectStoreNames.contains("match_stats")) {
-          const s = db.createObjectStore("match_stats", { keyPath: "matchId" });
-          s.createIndex("fetchedAt", "fetchedAt", { unique: false });
-        }
-
-        // Store für /state (Live)
-        if (!db.objectStoreNames.contains("match_state")) {
-          const s = db.createObjectStore("match_state", { keyPath: "matchId" });
-          s.createIndex("fetchedAt", "fetchedAt", { unique: false });
-        }
-
-        // Optional: meta
-        if (!db.objectStoreNames.contains("meta")) {
-          db.createObjectStore("meta", { keyPath: "key" });
-        }
-      };
-
-      req.onblocked = () => {
-        warn("DB upgrade blocked – schließe andere Autodarts-Tabs (falls offen).");
-      };
-
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error);
-    });
-  }
-
-  function idbGet(db, storeName, key) {
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(storeName, "readonly");
-      const store = tx.objectStore(storeName);
-      const req = store.get(key);
-      req.onsuccess = () => resolve(req.result ?? null);
-      req.onerror = () => reject(req.error);
-    });
-  }
-
-  function idbPut(db, storeName, value) {
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(storeName, "readwrite");
-      const store = tx.objectStore(storeName);
-      const req = store.put(value);
-      req.onsuccess = () => resolve(true);
-      req.onerror = () => reject(req.error);
-    });
-  }
-
-  function idbDelete(db, storeName, key) {
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(storeName, "readwrite");
-      const store = tx.objectStore(storeName);
-      const req = store.delete(key);
-      req.onsuccess = () => resolve(true);
-      req.onerror = () => reject(req.error);
-    });
-  }
-
-  function idbClearStore(db, storeName) {
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(storeName, "readwrite");
-      const store = tx.objectStore(storeName);
-      const req = store.clear();
-      req.onsuccess = () => resolve(true);
-      req.onerror = () => reject(req.error);
-    });
-  }
-
-  function deleteDatabase() {
-    return new Promise((resolve, reject) => {
-      const req = indexedDB.deleteDatabase(DB_NAME);
-      req.onsuccess = () => resolve(true);
-      req.onerror = () => reject(req.error);
-      req.onblocked = () => warn("deleteDatabase blocked – schließe andere Autodarts-Tabs (falls offen).");
-    });
-  }
-
-  // -------------------- Cache-aware loaders --------------------
-  async function getStatsCached(matchId, { force = false } = {}) {
-    const db = await openDb();
-
-    if (!force) {
-      const cached = await idbGet(db, "match_stats", matchId);
-      if (cached?.stats) {
-        return { data: cached.stats, source: "cache", fetchedAt: cached.fetchedAt ?? null };
-      }
+        return {
+            matchId,
+            route: matchId ? (isLive ? "live" : (isHistory ? "history" : "unknown")) : "none",
+            isLive: !!(matchId && isLive),
+            isHistory: !!(matchId && isHistory),
+        };
     }
 
-    const url = `${API_HOST}/as/v0/matches/${encodeURIComponent(matchId)}/stats`;
-    const stats = await gmRequestJson("GET", url);
+    // -------------------- GM request helper --------------------
+    function gmRequestJson(method, url) {
+        return new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+                method,
+                url,
+                withCredentials: true,
+                timeout: 30_000,
+                headers: { Accept: "application/json" },
+                onload: (resp) => {
+                    const text = resp.responseText || "";
+                    log("HTTP", resp.status, url);
 
-    const fetchedAt = Date.now();
+                    let json = null;
+                    try { json = text ? JSON.parse(text) : null; } catch { /* ignore */ }
 
-    await idbPut(db, "match_stats", {
-      matchId,
-      fetchedAt,
-      stats,
-    });
+                    if (resp.status < 200 || resp.status >= 300) {
+                        warn("Nicht OK:", resp.status, resp.statusText);
+                        warn("Antwort (erste 300 Zeichen):", text.slice(0, 300));
+                        const e = new Error(`HTTP ${resp.status} ${resp.statusText}`);
+                        e.status = resp.status;
+                        e.body = json ?? text;
+                        reject(e);
+                        return;
+                    }
 
-    return { data: stats, source: "api", fetchedAt };
-  }
-
-  async function getStateCached(matchId, { force = false } = {}) {
-    const db = await openDb();
-
-    if (!force) {
-      const cached = await idbGet(db, "match_state", matchId);
-      const age = cached?.fetchedAt ? (Date.now() - cached.fetchedAt) : Infinity;
-
-      if (cached?.state && age <= LIVE_STATE_TTL_MS) {
-        return { data: cached.state, source: "cache", fetchedAt: cached.fetchedAt ?? null, ageMs: age };
-      }
+                    resolve(json);
+                },
+                onerror: (e) => reject(e),
+                ontimeout: () => reject(new Error("Request timeout")),
+            });
+        });
     }
 
-    const url = `${API_HOST}/gs/v0/matches/${encodeURIComponent(matchId)}/state`;
-    const st = await gmRequestJson("GET", url);
+    // -------------------- IndexedDB (auto-create) --------------------
+    function openDb() {
+        return new Promise((resolve, reject) => {
+            const req = indexedDB.open(DB_NAME, DB_VERSION);
 
-    await idbPut(db, "match_state", {
-      matchId,
-      fetchedAt: Date.now(),
-      state: st,
-    });
+            req.onupgradeneeded = () => {
+                const db = req.result;
 
-    return { data: st, source: "api", fetchedAt: Date.now(), ageMs: 0 };
-  }
+                // Store für /stats (History)
+                if (!db.objectStoreNames.contains("match_stats")) {
+                    const s = db.createObjectStore("match_stats", { keyPath: "matchId" });
+                    s.createIndex("fetchedAt", "fetchedAt", { unique: false });
+                }
 
-  // -------------------- UI --------------------
-      GM_addStyle(`
+                // Store für /state (Live)
+                if (!db.objectStoreNames.contains("match_state")) {
+                    const s = db.createObjectStore("match_state", { keyPath: "matchId" });
+                    s.createIndex("fetchedAt", "fetchedAt", { unique: false });
+                }
+
+                // Optional: meta
+                if (!db.objectStoreNames.contains("meta")) {
+                    db.createObjectStore("meta", { keyPath: "key" });
+                }
+            };
+
+            req.onblocked = () => {
+                warn("DB upgrade blocked – schließe andere Autodarts-Tabs (falls offen).");
+            };
+
+            req.onsuccess = () => resolve(req.result);
+            req.onerror = () => reject(req.error);
+        });
+    }
+
+    function idbGet(db, storeName, key) {
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(storeName, "readonly");
+            const store = tx.objectStore(storeName);
+            const req = store.get(key);
+            req.onsuccess = () => resolve(req.result ?? null);
+            req.onerror = () => reject(req.error);
+        });
+    }
+
+    function idbPut(db, storeName, value) {
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(storeName, "readwrite");
+            const store = tx.objectStore(storeName);
+            const req = store.put(value);
+            req.onsuccess = () => resolve(true);
+            req.onerror = () => reject(req.error);
+        });
+    }
+
+    function idbDelete(db, storeName, key) {
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(storeName, "readwrite");
+            const store = tx.objectStore(storeName);
+            const req = store.delete(key);
+            req.onsuccess = () => resolve(true);
+            req.onerror = () => reject(req.error);
+        });
+    }
+
+    function idbClearStore(db, storeName) {
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(storeName, "readwrite");
+            const store = tx.objectStore(storeName);
+            const req = store.clear();
+            req.onsuccess = () => resolve(true);
+            req.onerror = () => reject(req.error);
+        });
+    }
+
+    function deleteDatabase() {
+        return new Promise((resolve, reject) => {
+            const req = indexedDB.deleteDatabase(DB_NAME);
+            req.onsuccess = () => resolve(true);
+            req.onerror = () => reject(req.error);
+            req.onblocked = () => warn("deleteDatabase blocked – schließe andere Autodarts-Tabs (falls offen).");
+        });
+    }
+
+    // -------------------- Cache-aware loaders --------------------
+    async function getStatsCached(matchId, { force = false } = {}) {
+        const db = await openDb();
+
+        if (!force) {
+            const cached = await idbGet(db, "match_stats", matchId);
+            if (cached?.stats) {
+                return { data: cached.stats, source: "cache", fetchedAt: cached.fetchedAt ?? null };
+            }
+        }
+
+        const url = `${API_HOST}/as/v0/matches/${encodeURIComponent(matchId)}/stats`;
+        const stats = await gmRequestJson("GET", url);
+
+        const fetchedAt = Date.now();
+
+        await idbPut(db, "match_stats", {
+            matchId,
+            fetchedAt,
+            stats,
+        });
+
+        return { data: stats, source: "api", fetchedAt };
+    }
+
+    async function getStateCached(matchId, { force = false } = {}) {
+        const db = await openDb();
+
+        if (!force) {
+            const cached = await idbGet(db, "match_state", matchId);
+            const age = cached?.fetchedAt ? (Date.now() - cached.fetchedAt) : Infinity;
+
+            if (cached?.state && age <= LIVE_STATE_TTL_MS) {
+                return { data: cached.state, source: "cache", fetchedAt: cached.fetchedAt ?? null, ageMs: age };
+            }
+        }
+
+        const url = `${API_HOST}/gs/v0/matches/${encodeURIComponent(matchId)}/state`;
+        const st = await gmRequestJson("GET", url);
+
+        await idbPut(db, "match_state", {
+            matchId,
+            fetchedAt: Date.now(),
+            state: st,
+        });
+
+        return { data: st, source: "api", fetchedAt: Date.now(), ageMs: 0 };
+    }
+
+    // -------------------- UI --------------------
+    GM_addStyle(`
     /* NOTE: UI ist ausschließlich im Settings-Panel eingebettet (kein Floating-Terminal). */
     #adApiPanel,
     #adApiPanel.adApiPanel--embedded{
@@ -17063,7 +17690,7 @@ const AD_AUTOIMPORT_DEBOUNCE_MS = 550; // 300–800ms (SPA kann schnell mehrfach
     .ad-importer-status.bad{ color: #ffb4b4; }
   `);
 
-GM_addStyle(`
+    GM_addStyle(`
   /* Sync Block (UI-only placeholder) */
   .ad-ext-sync{
     margin-top: 14px;
@@ -17156,12 +17783,12 @@ GM_addStyle(`
 
 
 
-const ui = {
-    matchId: null,
-    route: "none",
-  };
-  const panel = document.createElement("div");
-  panel.id = "adApiPanel";
+    const ui = {
+        matchId: null,
+        route: "none",
+    };
+    const panel = document.createElement("div");
+    panel.id = "adApiPanel";
     panel.innerHTML = `
     <div id="ad-importer-settings" class="ad-importer-settings">
       <div class="ad-importer-row ad-importer-row--opts">
@@ -17226,588 +17853,588 @@ const ui = {
     </div>
   `;
 
-// Panel darf nie als Floating-Terminal erscheinen → default hidden + embedded
-  panel.classList.add("adApiPanel--embedded");
-  try { panel.style.display = "none"; } catch {}
-  document.body.appendChild(panel);
-  const statusEl = panel.querySelector("#adStatus");
+    // Panel darf nie als Floating-Terminal erscheinen → default hidden + embedded
+    panel.classList.add("adApiPanel--embedded");
+    try { panel.style.display = "none"; } catch {}
+    document.body.appendChild(panel);
+    const statusEl = panel.querySelector("#adStatus");
 
-  const optAutoImport = panel.querySelector("#adOptAutoImport");
-  const optOnlyIfNotCached = panel.querySelector("#adOptOnlyIfNotCached");
-  const btnResetDb = panel.querySelector("#btnResetDb");
+    const optAutoImport = panel.querySelector("#adOptAutoImport");
+    const optOnlyIfNotCached = panel.querySelector("#adOptOnlyIfNotCached");
+    const btnResetDb = panel.querySelector("#btnResetDb");
 
 
-  // -------------------- Sync (headless) --------------------
-  const AD_LS_KEY_SYNC_LAST_RUN_AT = "ad_sync_lastRunAt";
-  const AD_LS_KEY_SYNC_LAST_DAYS = "ad_sync_lastDays";
-  const AD_LS_KEY_SYNC_AUTO_ENABLED = "ad_sync_auto_enabled";
-  const AD_LS_KEY_SYNC_LAST_AUTO_ATTEMPT_AT = "ad_sync_lastAutoAttemptAt";
+    // -------------------- Sync (headless) --------------------
+    const AD_LS_KEY_SYNC_LAST_RUN_AT = "ad_sync_lastRunAt";
+    const AD_LS_KEY_SYNC_LAST_DAYS = "ad_sync_lastDays";
+    const AD_LS_KEY_SYNC_AUTO_ENABLED = "ad_sync_auto_enabled";
+    const AD_LS_KEY_SYNC_LAST_AUTO_ATTEMPT_AT = "ad_sync_lastAutoAttemptAt";
 
-  function AD_uuidv7ToMs(uuid) {
-    // uuid wie '019b664e-3662-78f9-9a0e-af7700f39165'
-    // 1) remove dashes -> first 12 hex -> parseInt base16 -> ms
-    const hex = String(uuid).replace(/-/g, "").slice(0, 12);
-    const ms = parseInt(hex, 16);
-    return Number.isFinite(ms) ? ms : NaN;
-  }
-
-  const syncMetaEl = panel.querySelector("#ad-ext-sync-meta");
-  const syncRangeEl = panel.querySelector("#adExtSyncRange");
-  const syncStartBtn = panel.querySelector("#adExtSyncStart");
-  const syncOnlyMissingEl = panel.querySelector("#adExtSyncOnlyMissing");
-  const syncAutoEl = panel.querySelector("#adExtSyncAuto");
-  const syncStatusEl = panel.querySelector("#adExtSyncStatus");
-
-  let _lastSyncStatus = null;
-  const setSyncStatus = (txt) => {
-    try {
-      if (!syncStatusEl) return;
-      const s = String(txt ?? "");
-      if (!s.trim()) return;                 // NICHT löschen/blank setzen
-      if (_lastSyncStatus === s) return;     // keine unnötigen Updates
-      _lastSyncStatus = s;
-      syncStatusEl.textContent = s;
-    } catch {}
-  };
-  function AD_syncUpdateMeta() {
-    const lastAt = (() => {
-      try {
-        const raw = localStorage.getItem(AD_LS_KEY_SYNC_LAST_RUN_AT);
-        const n = Number(raw);
-        return Number.isFinite(n) ? n : null;
-      } catch { return null; }
-    })();
-
-    const lastDays = (() => {
-      try {
-        const raw = localStorage.getItem(AD_LS_KEY_SYNC_LAST_DAYS);
-        const n = Number(raw);
-        return Number.isFinite(n) ? n : null;
-      } catch { return null; }
-    })();
-
-    if (!syncMetaEl) return;
-
-    if (!lastAt) {
-      syncMetaEl.textContent = "(noch nie synchronisiert)";
-      return;
+    function AD_uuidv7ToMs(uuid) {
+        // uuid wie '019b664e-3662-78f9-9a0e-af7700f39165'
+        // 1) remove dashes -> first 12 hex -> parseInt base16 -> ms
+        const hex = String(uuid).replace(/-/g, "").slice(0, 12);
+        const ms = parseInt(hex, 16);
+        return Number.isFinite(ms) ? ms : NaN;
     }
 
-    const d = new Date(lastAt);
-    const pad = (n) => String(n).padStart(2, "0");
-    const stamp = `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${String(d.getFullYear()).slice(-2)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    const days = Number.isFinite(lastDays) ? Math.max(0, Math.trunc(lastDays)) : null;
-const daysLabel = (days == null) ? null : (days === 1 ? "1 Tag" : `${days} Tage`);
-syncMetaEl.textContent = daysLabel
-  ? `(letztes Mal: ${stamp} · Zeitraum: ${daysLabel})`
+    const syncMetaEl = panel.querySelector("#ad-ext-sync-meta");
+    const syncRangeEl = panel.querySelector("#adExtSyncRange");
+    const syncStartBtn = panel.querySelector("#adExtSyncStart");
+    const syncOnlyMissingEl = panel.querySelector("#adExtSyncOnlyMissing");
+    const syncAutoEl = panel.querySelector("#adExtSyncAuto");
+    const syncStatusEl = panel.querySelector("#adExtSyncStatus");
+
+    let _lastSyncStatus = null;
+    const setSyncStatus = (txt) => {
+        try {
+            if (!syncStatusEl) return;
+            const s = String(txt ?? "");
+            if (!s.trim()) return;                 // NICHT löschen/blank setzen
+            if (_lastSyncStatus === s) return;     // keine unnötigen Updates
+            _lastSyncStatus = s;
+            syncStatusEl.textContent = s;
+        } catch {}
+    };
+    function AD_syncUpdateMeta() {
+        const lastAt = (() => {
+            try {
+                const raw = localStorage.getItem(AD_LS_KEY_SYNC_LAST_RUN_AT);
+                const n = Number(raw);
+                return Number.isFinite(n) ? n : null;
+            } catch { return null; }
+        })();
+
+        const lastDays = (() => {
+            try {
+                const raw = localStorage.getItem(AD_LS_KEY_SYNC_LAST_DAYS);
+                const n = Number(raw);
+                return Number.isFinite(n) ? n : null;
+            } catch { return null; }
+        })();
+
+        if (!syncMetaEl) return;
+
+        if (!lastAt) {
+            syncMetaEl.textContent = "(noch nie synchronisiert)";
+            return;
+        }
+
+        const d = new Date(lastAt);
+        const pad = (n) => String(n).padStart(2, "0");
+        const stamp = `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${String(d.getFullYear()).slice(-2)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        const days = Number.isFinite(lastDays) ? Math.max(0, Math.trunc(lastDays)) : null;
+        const daysLabel = (days == null) ? null : (days === 1 ? "1 Tag" : `${days} Tage`);
+        syncMetaEl.textContent = daysLabel
+            ? `(letztes Mal: ${stamp} · Zeitraum: ${daysLabel})`
   : `(letztes Mal: ${stamp})`;
   }
 
-  // Enable Sync UI (v0.14.19)
-  try { if (syncStartBtn) syncStartBtn.disabled = false; } catch {}
-  try { if (syncOnlyMissingEl) syncOnlyMissingEl.disabled = false; } catch {}
-  try { if (syncAutoEl) syncAutoEl.disabled = false; } catch {}
+    // Enable Sync UI (v0.14.19)
+    try { if (syncStartBtn) syncStartBtn.disabled = false; } catch {}
+    try { if (syncOnlyMissingEl) syncOnlyMissingEl.disabled = false; } catch {}
+    try { if (syncAutoEl) syncAutoEl.disabled = false; } catch {}
 
-  // Restore + wire Sync UI prefs (range + auto-sync)
-  (function AD_syncInitUiPrefs() {
-    // Range select: restore last value or default=7 days
-    try {
-      let n = Number(localStorage.getItem(AD_LS_KEY_SYNC_LAST_DAYS));
-      const allowed = new Set(
-        Array.from(syncRangeEl?.options || []).map((o) => String(o?.value || ""))
-      );
-      if (!Number.isFinite(n) || !allowed.has(String(n))) n = 7;
-      if (syncRangeEl) syncRangeEl.value = String(n);
-    } catch {
-      try { if (syncRangeEl) syncRangeEl.value = "7"; } catch {}
-    }
-
-    // Auto-sync checkbox: default OFF
-    try {
-      const v = localStorage.getItem(AD_LS_KEY_SYNC_AUTO_ENABLED);
-      if (syncAutoEl) syncAutoEl.checked = (v === "1");
-    } catch {}
-
-    // Persist changes
-    try {
-      syncAutoEl?.addEventListener?.("change", () => {
+    // Restore + wire Sync UI prefs (range + auto-sync)
+    (function AD_syncInitUiPrefs() {
+        // Range select: restore last value or default=7 days
         try {
-          localStorage.setItem(AD_LS_KEY_SYNC_AUTO_ENABLED, syncAutoEl.checked ? "1" : "0");
+            let n = Number(localStorage.getItem(AD_LS_KEY_SYNC_LAST_DAYS));
+            const allowed = new Set(
+                Array.from(syncRangeEl?.options || []).map((o) => String(o?.value || ""))
+            );
+            if (!Number.isFinite(n) || !allowed.has(String(n))) n = 7;
+            if (syncRangeEl) syncRangeEl.value = String(n);
+        } catch {
+            try { if (syncRangeEl) syncRangeEl.value = "7"; } catch {}
+        }
+
+        // Auto-sync checkbox: default OFF
+        try {
+            const v = localStorage.getItem(AD_LS_KEY_SYNC_AUTO_ENABLED);
+            if (syncAutoEl) syncAutoEl.checked = (v === "1");
         } catch {}
-      });
-    } catch {}
 
-    try {
-      syncRangeEl?.addEventListener?.("change", () => {
-        try { localStorage.setItem(AD_LS_KEY_SYNC_LAST_DAYS, String(syncRangeEl.value || "7")); } catch {}
-        AD_syncUpdateMeta();
-      });
-    } catch {}
-  })();
-
-  AD_syncUpdateMeta();
-  setSyncStatus("Bereit.");
-
-
-  const AD_SYNC_COLLECTOR_IFRAME_ID = "ad-sync-collector-iframe";
-
-  function AD_syncGetOrCreateCollectorIframe() {
-    let frame = document.getElementById(AD_SYNC_COLLECTOR_IFRAME_ID);
-    if (frame) return frame;
-
-    frame = document.createElement("iframe");
-    frame.id = AD_SYNC_COLLECTOR_IFRAME_ID;
-    frame.setAttribute("aria-hidden", "true");
-    frame.setAttribute("tabindex", "-1");
-    frame.style.cssText = [
-      "position: fixed",
-      "width: 1px",
-      "height: 1px",
-      "left: -9999px",
-      "top: -9999px",
-      "opacity: 0",
-      "pointer-events: none",
-      "border: 0"
-    ].join(";");
-
-    try { document.body.appendChild(frame); } catch {}
-    return frame;
-  }
-
-  async function AD_syncCollectIdsInBackgroundTab({ startPage = 0, maxPages = 2000, stopSignal, statusCb }) {
-    statusCb = statusCb || (() => {});
-
-    // BroadcastChannel + session correlation (reuse bulk BG collector)
-    const sessionId = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-
-    let bc = null;
-    try { if (typeof BroadcastChannel !== "undefined") bc = new BroadcastChannel("ad_bulk"); } catch { bc = null; }
-
-    if (!bc) {
-      const e = new Error("BroadcastChannel nicht verfügbar");
-      e.code = "BC_UNAVAILABLE";
-      throw e;
-    }
-
-    const openTabFn =
-      (typeof GM_openInTab === "function") ? GM_openInTab :
-      (typeof GM !== "undefined" && typeof GM.openInTab === "function") ? GM.openInTab :
-      null;
-
-    if (!openTabFn) {
-      const e = new Error("GM_openInTab nicht verfügbar");
-      e.code = "GM_openInTab_MISSING";
-      throw e;
-    }
-
-    const u = new URL("/history/matches", location.origin);
-    u.searchParams.set("page", String(startPage));
-    u.searchParams.set("ad_bulk_bg", "1");
-    u.searchParams.set("ad_bulk_session", sessionId);
-    u.searchParams.set("ad_bulk_maxPages", String(maxPages));
-    // Use same timings as Bulk (if available)
-    try { if (typeof AD_BULK_SETTINGS !== "undefined") u.searchParams.set("ad_bulk_waitRenderMs", String(AD_BULK_SETTINGS.waitRenderMs)); } catch {}
-    try { if (typeof AD_BULK_SETTINGS !== "undefined") u.searchParams.set("ad_bulk_settleMs", String(AD_BULK_SETTINGS.settleMs)); } catch {}
-
-    statusCb("iFrame blockiert → Sammeln läuft im Hintergrund…");
-
-    const tab = openTabFn(u.pathname + u.search + u.hash, { active: false, insert: true, setParent: true });
-
-    return await new Promise((resolve, reject) => {
-      let done = false;
-
-      const cleanup = () => {
-        if (done) return;
-        done = true;
-        try { bc.close(); } catch {}
-        try { tab?.close?.(); } catch {}
-      };
-
-      const stopTimer = setInterval(() => {
-        if (!stopSignal?.stopped) return;
-        try { bc.postMessage({ type: "stop", sessionId }); } catch {}
-        cleanup();
-        const e = new Error("Stopped");
-        e.code = "STOPPED";
-        reject(e);
-      }, 200);
-
-      const onMsg = (ev) => {
-        const m = ev?.data || {};
-        if (!m || m.sessionId !== sessionId) return;
-
-        if (m.type === "status") {
-          const t = String(m.text ?? "");
-          if (t.trim()) { try { statusCb(t); } catch {} }
-          return;
-        }
-
-        if (m.type === "done" || m.type === "stopped") {
-          clearInterval(stopTimer);
-          cleanup();
-          resolve((m.ids || []).map(String));
-          return;
-        }
-
-        if (m.type === "error") {
-          clearInterval(stopTimer);
-          cleanup();
-          const e = new Error(String(m.text || "BG collector error"));
-          e.code = "BG_ERROR";
-          reject(e);
-        }
-      };
-
-      try { bc.addEventListener("message", onMsg); } catch { bc.onmessage = onMsg; }
-    });
-  }
-
-  async function AD_syncCollectIdsWithinDays({ days, stopSignal, statusCb }) {
-    statusCb = statusCb || (() => {});
-    stopSignal = stopSignal || { stopped: false };
-
-    const d = Number(days);
-    const cutoffMs = Date.now() - d * 24 * 60 * 60 * 1000;
-
-    const maxPages = Math.min(
-      (typeof AD_BULK_SETTINGS !== "undefined" ? (AD_BULK_SETTINGS.maxPagesSafety || 5000) : 5000),
-      2000
-    );
-
-    const isIframeCode = (c) => (c === "IFRAME_BLOCKED" || c === "IFRAME_TIMEOUT" || c === "IFRAME_LOAD_ERROR");
-
-    const collectViaIframe = async () => {
-      const frame = AD_syncGetOrCreateCollectorIframe();
-      const seenIds = new Set();
-      const inRangeIds = new Set();
-
-      const startUrl = AD_bulkMakeHistoryListUrlForPage(0, { ad_bulk_iframe: "1" });
-      statusCb("Sammle Matches… (Seite 0)");
-
-      await AD_bulkLoadCollectorIframe(frame, startUrl, stopSignal);
-
-      if (stopSignal.stopped) return [];
-
-      // Wait initial render
-      await AD_bulkWaitUntil(() => {
-        const doc = frame.contentDocument;
-        if (!doc) return false;
-        const ids = AD_bulkCollectMatchIdsFromDoc(doc);
-        if (ids.size > 0) return true;
-        const root = doc.querySelector("main") || doc.querySelector('[role="main"]') || doc.querySelector("#root") || doc.body;
-        return String(root?.textContent || "").trim().length > 0;
-      }, Math.max((AD_BULK_SETTINGS?.waitRenderMs || 8000), 15000), stopSignal);
-
-      if (stopSignal.stopped) return [];
-
-      await AD_bulkSleep(AD_BULK_SETTINGS?.settleMs || 250);
-
-      let page = 0;
-
-      // Page 0 already loaded
-      let currentIds = AD_bulkCollectMatchIdsFromDoc(frame.contentDocument);
-      let currentSig = AD_bulkSigOfIds(currentIds);
-
-      for (let i = 0; i < maxPages && !stopSignal.stopped; i++) {
-        const idsOnPage = currentIds;
-
-        if (idsOnPage.size === 0) {
-          statusCb(`Sammle Matches… Seite ${page} | leer`);
-          break;
-        }
-
-        let newCount = 0;
-        let minTsOnPage = Infinity;
-        let hasFiniteTs = false;
-
-        for (const id of idsOnPage) {
-          const s = String(id);
-          if (seenIds.has(s)) continue;
-          seenIds.add(s);
-          newCount++;
-
-          const ts = AD_uuidv7ToMs(s);
-          if (Number.isFinite(ts)) {
-            hasFiniteTs = true;
-            if (ts >= cutoffMs) inRangeIds.add(s);
-            if (ts < minTsOnPage) minTsOnPage = ts;
-          } else {
-            // Unklarer Timestamp → lieber nicht verlieren
-            inRangeIds.add(s);
-          }
-        }
-
-        statusCb(`Sammle Matches… Seite ${page} | neu: ${newCount} | gefunden: ${inRangeIds.size}`);
-
-        // Early-stop: wir sind am Rand/älter (nach Verarbeitung dieser Seite!)
-        if (hasFiniteTs && Number.isFinite(minTsOnPage) && minTsOnPage < cutoffMs) break;
-
-        if (page !== 0 && newCount === 0) break;
-
-        // Next page
-        const prevSig = currentSig;
-        const nextPage = page + 1;
-        const url = AD_bulkMakeHistoryListUrlForPage(nextPage, { ad_bulk_iframe: "1" });
-        AD_bulkSpaNavigateInFrame(frame, url);
-        const r = await AD_bulkWaitForNewPageContentInDoc(frame.contentDocument, prevSig, stopSignal);
-
-        if (r?.ids?.size === 0) break;
-        if (r?.sig && r.sig === prevSig) break;
-
-        currentIds = r.ids;
-        currentSig = r.sig;
-        page = nextPage;
-      }
-
-      const arr = Array.from(inRangeIds);
-      arr.sort((a, b) => {
-        const ta = AD_uuidv7ToMs(a);
-        const tb = AD_uuidv7ToMs(b);
-        if (Number.isFinite(ta) && Number.isFinite(tb)) return tb - ta;
-        return String(a).localeCompare(String(b));
-      });
-      return arr;
-    };
-
-    try {
-      return await collectViaIframe();
-    } catch (e) {
-      if (stopSignal?.stopped) throw e;
-
-      const code = String(e?.code || "");
-      if (!isIframeCode(code)) throw e;
-
-      // Optional fallback (vorhanden aus Bulk)
-      const all = await AD_syncCollectIdsInBackgroundTab({ startPage: 0, maxPages, stopSignal, statusCb });
-      if (stopSignal?.stopped) return [];
-
-      const inRange = new Set();
-      for (const id of all) {
-        const ts = AD_uuidv7ToMs(id);
-        if (Number.isFinite(ts)) {
-          if (ts >= cutoffMs) inRange.add(id);
-        } else {
-          inRange.add(id);
-        }
-      }
-
-      const arr = Array.from(inRange);
-      arr.sort((a, b) => {
-        const ta = AD_uuidv7ToMs(a);
-        const tb = AD_uuidv7ToMs(b);
-        if (Number.isFinite(ta) && Number.isFinite(tb)) return tb - ta;
-        return String(a).localeCompare(String(b));
-      });
-      return arr;
-    }
-  }
-
-  async function AD_syncImportStats(ids, { onlyMissing, stopSignal, statusCb, days }) {
-    statusCb = statusCb || (() => {});
-    stopSignal = stopSignal || { stopped: false };
-
-    const db = await openDb();
-
-    let cachedKeys = new Set();
-    let todo = (ids || []).map(String);
-
-    if (onlyMissing) {
-      statusCb("Prüfe Cache…");
-      cachedKeys = await AD_bulkIdbGetAllKeys(db);
-      todo = todo.filter(id => !cachedKeys.has(id));
-    }
-
-    const cachedCount = (ids.length - todo.length);
-    statusCb(`Synchronisiere… Gesamt: ${ids.length} | im Cache: ${cachedCount} | zu laden: ${todo.length}`);
-
-    let done = 0, ok = 0, failed = 0;
-    let lastOkMatchId = null;
-    let lastOkFetchedAt = null;
-
-    let idx = 0;
-
-    async function worker() {
-      while (!stopSignal.stopped) {
-        const my = idx++;
-        if (my >= todo.length) return;
-
-        const matchId = todo[my];
+        // Persist changes
         try {
-          const res = await AD_bulkFetchAndCacheStatsWithRetry(db, matchId, stopSignal);
-          ok++;
-          lastOkMatchId = matchId;
-          lastOkFetchedAt = res?.fetchedAt || Date.now();
-        } catch (e) {
-          if (stopSignal.stopped) return;
-          failed++;
-        } finally {
-          done++;
-          statusCb(`Import: ${done}/${todo.length} | OK: ${ok} | Fehler: ${failed}`);
-          await AD_bulkSleep(AD_BULK_SETTINGS?.delayMs || 200);
+            syncAutoEl?.addEventListener?.("change", () => {
+                try {
+                    localStorage.setItem(AD_LS_KEY_SYNC_AUTO_ENABLED, syncAutoEl.checked ? "1" : "0");
+                } catch {}
+            });
+        } catch {}
+
+        try {
+            syncRangeEl?.addEventListener?.("change", () => {
+                try { localStorage.setItem(AD_LS_KEY_SYNC_LAST_DAYS, String(syncRangeEl.value || "7")); } catch {}
+                AD_syncUpdateMeta();
+            });
+        } catch {}
+    })();
+
+    AD_syncUpdateMeta();
+    setSyncStatus("Bereit.");
+
+
+    const AD_SYNC_COLLECTOR_IFRAME_ID = "ad-sync-collector-iframe";
+
+    function AD_syncGetOrCreateCollectorIframe() {
+        let frame = document.getElementById(AD_SYNC_COLLECTOR_IFRAME_ID);
+        if (frame) return frame;
+
+        frame = document.createElement("iframe");
+        frame.id = AD_SYNC_COLLECTOR_IFRAME_ID;
+        frame.setAttribute("aria-hidden", "true");
+        frame.setAttribute("tabindex", "-1");
+        frame.style.cssText = [
+            "position: fixed",
+            "width: 1px",
+            "height: 1px",
+            "left: -9999px",
+            "top: -9999px",
+            "opacity: 0",
+            "pointer-events: none",
+            "border: 0"
+        ].join(";");
+
+        try { document.body.appendChild(frame); } catch {}
+        return frame;
+    }
+
+    async function AD_syncCollectIdsInBackgroundTab({ startPage = 0, maxPages = 2000, stopSignal, statusCb }) {
+        statusCb = statusCb || (() => {});
+
+        // BroadcastChannel + session correlation (reuse bulk BG collector)
+        const sessionId = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+        let bc = null;
+        try { if (typeof BroadcastChannel !== "undefined") bc = new BroadcastChannel("ad_bulk"); } catch { bc = null; }
+
+        if (!bc) {
+            const e = new Error("BroadcastChannel nicht verfügbar");
+            e.code = "BC_UNAVAILABLE";
+            throw e;
         }
-      }
-    }
 
-    const conc = AD_BULK_SETTINGS?.concurrency || 3;
-    await Promise.allSettled(Array.from({ length: conc }, () => worker()));
+        const openTabFn =
+              (typeof GM_openInTab === "function") ? GM_openInTab :
+        (typeof GM !== "undefined" && typeof GM.openInTab === "function") ? GM.openInTab :
+        null;
 
-    if (lastOkMatchId) {
-      try { AD_notifyCacheUpdated(lastOkMatchId, lastOkFetchedAt || Date.now()); } catch {}
-    }
-
-    if (stopSignal.stopped) {
-      statusCb(`Abgebrochen. OK: ${ok} | Fehler: ${failed}`);
-      return { ok, failed, done, total: todo.length, lastOkMatchId, lastOkFetchedAt };
-    }
-
-    statusCb(`Fertig. OK: ${ok} | Fehler: ${failed} | Neu geladen: ${ok} | Zeitraum: ${days} Tage`);
-    return { ok, failed, done, total: todo.length, lastOkMatchId, lastOkFetchedAt };
-  }
-
-  let AD_syncRunning = false;
-
-  const AD_SYNC_AUTO_OLD_MS = 20 * 60 * 60 * 1000; // 20h
-  const AD_SYNC_AUTO_GUARD_MS = 10 * 60 * 1000;    // 10min anti-loop
-
-  function AD_syncMaybeAutoStart(reason) {
-    try {
-      if (!location.pathname.startsWith("/statistics")) return;
-
-      const autoEnabled = (() => {
-        try { return localStorage.getItem(AD_LS_KEY_SYNC_AUTO_ENABLED) === "1"; } catch { return false; }
-      })();
-      if (!autoEnabled) return;
-
-      if (AD_syncRunning) return;
-
-      // UI ready?
-      if (!syncStartBtn || !syncRangeEl) return;
-      try { if (syncStartBtn.disabled) return; } catch {}
-
-      // Prevent overlap with Bulk (shared collectors/importer settings)
-      try {
-        if (typeof bulkState !== "undefined" && bulkState?.running) return;
-      } catch {}
-
-      // Prefer: block while auto-import is in-flight (API load)
-      try {
-        if (typeof AD_autoImportInFlight !== "undefined" && AD_autoImportInFlight?.size > 0) return;
-      } catch {}
-
-      const now = Date.now();
-
-      // Anti-loop: if we already attempted within last 10 minutes, don't try again
-      try {
-        const lastAttempt = Number(localStorage.getItem(AD_LS_KEY_SYNC_LAST_AUTO_ATTEMPT_AT));
-        if (Number.isFinite(lastAttempt) && (now - lastAttempt) < AD_SYNC_AUTO_GUARD_MS) return;
-      } catch {}
-
-      // "Old" if never ran or older than 20 hours
-      let lastRunAt = NaN;
-      try { lastRunAt = Number(localStorage.getItem(AD_LS_KEY_SYNC_LAST_RUN_AT)); } catch {}
-      const isOld = (!Number.isFinite(lastRunAt) || (now - lastRunAt) > AD_SYNC_AUTO_OLD_MS);
-      if (!isOld) return;
-
-      // Mark attempt immediately (guard against SPA/interval loops)
-      try { localStorage.setItem(AD_LS_KEY_SYNC_LAST_AUTO_ATTEMPT_AT, String(now)); } catch {}
-
-      setSyncStatus("Auto-Synchronisation wird gestartet…");
-
-      // Start via the same code path as manual click
-      try { syncStartBtn.click(); } catch {}
-    } catch {}
-  }
-
-
-  try {
-    syncStartBtn?.addEventListener?.("click", async () => {
-      if (AD_syncRunning) return;
-
-      // Prevent accidental overlap with Bulk (shared collectors/importer settings)
-      try {
-        if (typeof bulkState !== "undefined" && bulkState?.running) {
-          setSyncStatus("Bulk läuft bereits – bitte warten.");
-          return;
+        if (!openTabFn) {
+            const e = new Error("GM_openInTab nicht verfügbar");
+            e.code = "GM_openInTab_MISSING";
+            throw e;
         }
-      } catch {}
 
-      AD_syncRunning = true;
+        const u = new URL("/history/matches", location.origin);
+        u.searchParams.set("page", String(startPage));
+        u.searchParams.set("ad_bulk_bg", "1");
+        u.searchParams.set("ad_bulk_session", sessionId);
+        u.searchParams.set("ad_bulk_maxPages", String(maxPages));
+        // Use same timings as Bulk (if available)
+        try { if (typeof AD_BULK_SETTINGS !== "undefined") u.searchParams.set("ad_bulk_waitRenderMs", String(AD_BULK_SETTINGS.waitRenderMs)); } catch {}
+        try { if (typeof AD_BULK_SETTINGS !== "undefined") u.searchParams.set("ad_bulk_settleMs", String(AD_BULK_SETTINGS.settleMs)); } catch {}
 
-      const days = Number(syncRangeEl?.value || 30);
-      const onlyMissing = !!syncOnlyMissingEl?.checked;
-      const stopSignal = { stopped: false };
+        statusCb("iFrame blockiert → Sammeln läuft im Hintergrund…");
 
-      try {
-        try { if (syncStartBtn) syncStartBtn.disabled = true; } catch {}
-        try { if (syncRangeEl) syncRangeEl.disabled = true; } catch {}
-        try { if (syncOnlyMissingEl) syncOnlyMissingEl.disabled = true; } catch {}
-        try { if (syncAutoEl) syncAutoEl.disabled = true; } catch {}
+        const tab = openTabFn(u.pathname + u.search + u.hash, { active: false, insert: true, setParent: true });
 
-        setSyncStatus("Initialisiere…");
+        return await new Promise((resolve, reject) => {
+            let done = false;
 
-        const ids = await AD_syncCollectIdsWithinDays({
-          days,
-          stopSignal,
-          statusCb: setSyncStatus
+            const cleanup = () => {
+                if (done) return;
+                done = true;
+                try { bc.close(); } catch {}
+                try { tab?.close?.(); } catch {}
+            };
+
+            const stopTimer = setInterval(() => {
+                if (!stopSignal?.stopped) return;
+                try { bc.postMessage({ type: "stop", sessionId }); } catch {}
+                cleanup();
+                const e = new Error("Stopped");
+                e.code = "STOPPED";
+                reject(e);
+            }, 200);
+
+            const onMsg = (ev) => {
+                const m = ev?.data || {};
+                if (!m || m.sessionId !== sessionId) return;
+
+                if (m.type === "status") {
+                    const t = String(m.text ?? "");
+                    if (t.trim()) { try { statusCb(t); } catch {} }
+                    return;
+                }
+
+                if (m.type === "done" || m.type === "stopped") {
+                    clearInterval(stopTimer);
+                    cleanup();
+                    resolve((m.ids || []).map(String));
+                    return;
+                }
+
+                if (m.type === "error") {
+                    clearInterval(stopTimer);
+                    cleanup();
+                    const e = new Error(String(m.text || "BG collector error"));
+                    e.code = "BG_ERROR";
+                    reject(e);
+                }
+            };
+
+            try { bc.addEventListener("message", onMsg); } catch { bc.onmessage = onMsg; }
         });
+    }
+
+    async function AD_syncCollectIdsWithinDays({ days, stopSignal, statusCb }) {
+        statusCb = statusCb || (() => {});
+        stopSignal = stopSignal || { stopped: false };
+
+        const d = Number(days);
+        const cutoffMs = Date.now() - d * 24 * 60 * 60 * 1000;
+
+        const maxPages = Math.min(
+            (typeof AD_BULK_SETTINGS !== "undefined" ? (AD_BULK_SETTINGS.maxPagesSafety || 5000) : 5000),
+            2000
+        );
+
+        const isIframeCode = (c) => (c === "IFRAME_BLOCKED" || c === "IFRAME_TIMEOUT" || c === "IFRAME_LOAD_ERROR");
+
+        const collectViaIframe = async () => {
+            const frame = AD_syncGetOrCreateCollectorIframe();
+            const seenIds = new Set();
+            const inRangeIds = new Set();
+
+            const startUrl = AD_bulkMakeHistoryListUrlForPage(0, { ad_bulk_iframe: "1" });
+            statusCb("Sammle Matches… (Seite 0)");
+
+            await AD_bulkLoadCollectorIframe(frame, startUrl, stopSignal);
+
+            if (stopSignal.stopped) return [];
+
+            // Wait initial render
+            await AD_bulkWaitUntil(() => {
+                const doc = frame.contentDocument;
+                if (!doc) return false;
+                const ids = AD_bulkCollectMatchIdsFromDoc(doc);
+                if (ids.size > 0) return true;
+                const root = doc.querySelector("main") || doc.querySelector('[role="main"]') || doc.querySelector("#root") || doc.body;
+                return String(root?.textContent || "").trim().length > 0;
+            }, Math.max((AD_BULK_SETTINGS?.waitRenderMs || 8000), 15000), stopSignal);
+
+            if (stopSignal.stopped) return [];
+
+            await AD_bulkSleep(AD_BULK_SETTINGS?.settleMs || 250);
+
+            let page = 0;
+
+            // Page 0 already loaded
+            let currentIds = AD_bulkCollectMatchIdsFromDoc(frame.contentDocument);
+            let currentSig = AD_bulkSigOfIds(currentIds);
+
+            for (let i = 0; i < maxPages && !stopSignal.stopped; i++) {
+                const idsOnPage = currentIds;
+
+                if (idsOnPage.size === 0) {
+                    statusCb(`Sammle Matches… Seite ${page} | leer`);
+                    break;
+                }
+
+                let newCount = 0;
+                let minTsOnPage = Infinity;
+                let hasFiniteTs = false;
+
+                for (const id of idsOnPage) {
+                    const s = String(id);
+                    if (seenIds.has(s)) continue;
+                    seenIds.add(s);
+                    newCount++;
+
+                    const ts = AD_uuidv7ToMs(s);
+                    if (Number.isFinite(ts)) {
+                        hasFiniteTs = true;
+                        if (ts >= cutoffMs) inRangeIds.add(s);
+                        if (ts < minTsOnPage) minTsOnPage = ts;
+                    } else {
+                        // Unklarer Timestamp → lieber nicht verlieren
+                        inRangeIds.add(s);
+                    }
+                }
+
+                statusCb(`Sammle Matches… Seite ${page} | neu: ${newCount} | gefunden: ${inRangeIds.size}`);
+
+                // Early-stop: wir sind am Rand/älter (nach Verarbeitung dieser Seite!)
+                if (hasFiniteTs && Number.isFinite(minTsOnPage) && minTsOnPage < cutoffMs) break;
+
+                if (page !== 0 && newCount === 0) break;
+
+                // Next page
+                const prevSig = currentSig;
+                const nextPage = page + 1;
+                const url = AD_bulkMakeHistoryListUrlForPage(nextPage, { ad_bulk_iframe: "1" });
+                AD_bulkSpaNavigateInFrame(frame, url);
+                const r = await AD_bulkWaitForNewPageContentInDoc(frame.contentDocument, prevSig, stopSignal);
+
+                if (r?.ids?.size === 0) break;
+                if (r?.sig && r.sig === prevSig) break;
+
+                currentIds = r.ids;
+                currentSig = r.sig;
+                page = nextPage;
+            }
+
+            const arr = Array.from(inRangeIds);
+            arr.sort((a, b) => {
+                const ta = AD_uuidv7ToMs(a);
+                const tb = AD_uuidv7ToMs(b);
+                if (Number.isFinite(ta) && Number.isFinite(tb)) return tb - ta;
+                return String(a).localeCompare(String(b));
+            });
+            return arr;
+        };
+
+        try {
+            return await collectViaIframe();
+        } catch (e) {
+            if (stopSignal?.stopped) throw e;
+
+            const code = String(e?.code || "");
+            if (!isIframeCode(code)) throw e;
+
+            // Optional fallback (vorhanden aus Bulk)
+            const all = await AD_syncCollectIdsInBackgroundTab({ startPage: 0, maxPages, stopSignal, statusCb });
+            if (stopSignal?.stopped) return [];
+
+            const inRange = new Set();
+            for (const id of all) {
+                const ts = AD_uuidv7ToMs(id);
+                if (Number.isFinite(ts)) {
+                    if (ts >= cutoffMs) inRange.add(id);
+                } else {
+                    inRange.add(id);
+                }
+            }
+
+            const arr = Array.from(inRange);
+            arr.sort((a, b) => {
+                const ta = AD_uuidv7ToMs(a);
+                const tb = AD_uuidv7ToMs(b);
+                if (Number.isFinite(ta) && Number.isFinite(tb)) return tb - ta;
+                return String(a).localeCompare(String(b));
+            });
+            return arr;
+        }
+    }
+
+    async function AD_syncImportStats(ids, { onlyMissing, stopSignal, statusCb, days }) {
+        statusCb = statusCb || (() => {});
+        stopSignal = stopSignal || { stopped: false };
+
+        const db = await openDb();
+
+        let cachedKeys = new Set();
+        let todo = (ids || []).map(String);
+
+        if (onlyMissing) {
+            statusCb("Prüfe Cache…");
+            cachedKeys = await AD_bulkIdbGetAllKeys(db);
+            todo = todo.filter(id => !cachedKeys.has(id));
+        }
+
+        const cachedCount = (ids.length - todo.length);
+        statusCb(`Synchronisiere… Gesamt: ${ids.length} | im Cache: ${cachedCount} | zu laden: ${todo.length}`);
+
+        let done = 0, ok = 0, failed = 0;
+        let lastOkMatchId = null;
+        let lastOkFetchedAt = null;
+
+        let idx = 0;
+
+        async function worker() {
+            while (!stopSignal.stopped) {
+                const my = idx++;
+                if (my >= todo.length) return;
+
+                const matchId = todo[my];
+                try {
+                    const res = await AD_bulkFetchAndCacheStatsWithRetry(db, matchId, stopSignal);
+                    ok++;
+                    lastOkMatchId = matchId;
+                    lastOkFetchedAt = res?.fetchedAt || Date.now();
+                } catch (e) {
+                    if (stopSignal.stopped) return;
+                    failed++;
+                } finally {
+                    done++;
+                    statusCb(`Import: ${done}/${todo.length} | OK: ${ok} | Fehler: ${failed}`);
+                    await AD_bulkSleep(AD_BULK_SETTINGS?.delayMs || 200);
+                }
+            }
+        }
+
+        const conc = AD_BULK_SETTINGS?.concurrency || 3;
+        await Promise.allSettled(Array.from({ length: conc }, () => worker()));
+
+        if (lastOkMatchId) {
+            try { AD_notifyCacheUpdated(lastOkMatchId, lastOkFetchedAt || Date.now()); } catch {}
+        }
 
         if (stopSignal.stopped) {
-          setSyncStatus("Abgebrochen.");
-          return;
+            statusCb(`Abgebrochen. OK: ${ok} | Fehler: ${failed}`);
+            return { ok, failed, done, total: todo.length, lastOkMatchId, lastOkFetchedAt };
         }
 
-        if (!ids || ids.length === 0) {
-          setSyncStatus("Keine Matches im Zeitraum gefunden.");
-          return;
-        }
+        statusCb(`Fertig. OK: ${ok} | Fehler: ${failed} | Neu geladen: ${ok} | Zeitraum: ${days} Tage`);
+        return { ok, failed, done, total: todo.length, lastOkMatchId, lastOkFetchedAt };
+    }
 
-        setSyncStatus(`Gefunden (Zeitraum): ${ids.length}. Importiere…`);
+    let AD_syncRunning = false;
 
-        await AD_syncImportStats(ids, {
-          onlyMissing,
-          stopSignal,
-          statusCb: setSyncStatus,
-          days
-        });
+    const AD_SYNC_AUTO_OLD_MS = 20 * 60 * 60 * 1000; // 20h
+    const AD_SYNC_AUTO_GUARD_MS = 10 * 60 * 1000;    // 10min anti-loop
 
+    function AD_syncMaybeAutoStart(reason) {
         try {
-          localStorage.setItem(AD_LS_KEY_SYNC_LAST_RUN_AT, String(Date.now()));
-          localStorage.setItem(AD_LS_KEY_SYNC_LAST_DAYS, String(days));
+            if (!location.pathname.startsWith("/statistics")) return;
+
+            const autoEnabled = (() => {
+                try { return localStorage.getItem(AD_LS_KEY_SYNC_AUTO_ENABLED) === "1"; } catch { return false; }
+            })();
+            if (!autoEnabled) return;
+
+            if (AD_syncRunning) return;
+
+            // UI ready?
+            if (!syncStartBtn || !syncRangeEl) return;
+            try { if (syncStartBtn.disabled) return; } catch {}
+
+            // Prevent overlap with Bulk (shared collectors/importer settings)
+            try {
+                if (typeof bulkState !== "undefined" && bulkState?.running) return;
+            } catch {}
+
+            // Prefer: block while auto-import is in-flight (API load)
+            try {
+                if (typeof AD_autoImportInFlight !== "undefined" && AD_autoImportInFlight?.size > 0) return;
+            } catch {}
+
+            const now = Date.now();
+
+            // Anti-loop: if we already attempted within last 10 minutes, don't try again
+            try {
+                const lastAttempt = Number(localStorage.getItem(AD_LS_KEY_SYNC_LAST_AUTO_ATTEMPT_AT));
+                if (Number.isFinite(lastAttempt) && (now - lastAttempt) < AD_SYNC_AUTO_GUARD_MS) return;
+            } catch {}
+
+            // "Old" if never ran or older than 20 hours
+            let lastRunAt = NaN;
+            try { lastRunAt = Number(localStorage.getItem(AD_LS_KEY_SYNC_LAST_RUN_AT)); } catch {}
+            const isOld = (!Number.isFinite(lastRunAt) || (now - lastRunAt) > AD_SYNC_AUTO_OLD_MS);
+            if (!isOld) return;
+
+            // Mark attempt immediately (guard against SPA/interval loops)
+            try { localStorage.setItem(AD_LS_KEY_SYNC_LAST_AUTO_ATTEMPT_AT, String(now)); } catch {}
+
+            setSyncStatus("Auto-Synchronisation wird gestartet…");
+
+            // Start via the same code path as manual click
+            try { syncStartBtn.click(); } catch {}
         } catch {}
-        AD_syncUpdateMeta();
-      } catch (e) {
-        const msg = String(e?.message || e);
-        setSyncStatus(`Fehler: ${msg}`);
-      } finally {
-        AD_syncRunning = false;
-        try { if (syncStartBtn) syncStartBtn.disabled = false; } catch {}
-        try { if (syncRangeEl) syncRangeEl.disabled = false; } catch {}
-        try { if (syncOnlyMissingEl) syncOnlyMissingEl.disabled = false; } catch {}
-        try { if (syncAutoEl) syncAutoEl.disabled = false; } catch {}
-      }
-    });
-  } catch {}
+    }
 
 
-  // -------------------- Bulk Import (paged, robust, kein Overlay) --------------------
+    try {
+        syncStartBtn?.addEventListener?.("click", async () => {
+            if (AD_syncRunning) return;
 
-  const AD_BULK_SETTINGS = {
-    // Import
-    concurrency: 3,
-    delayMs: 200,
-    maxRetries: 3,
-    retryBaseDelayMs: 800,
+            // Prevent accidental overlap with Bulk (shared collectors/importer settings)
+            try {
+                if (typeof bulkState !== "undefined" && bulkState?.running) {
+                    setSyncStatus("Bulk läuft bereits – bitte warten.");
+                    return;
+                }
+            } catch {}
 
-    // Collect
-    startPageDefault: 0,
-    waitRenderMs: 8000,
-    settleMs: 250,
-    stopOnEmptyPage: true,
-    stopOnRepeatPage: true,
-    maxPagesSafety: 5000
-  };
+            AD_syncRunning = true;
 
-  GM_addStyle(`
+            const days = Number(syncRangeEl?.value || 30);
+            const onlyMissing = !!syncOnlyMissingEl?.checked;
+            const stopSignal = { stopped: false };
+
+            try {
+                try { if (syncStartBtn) syncStartBtn.disabled = true; } catch {}
+                try { if (syncRangeEl) syncRangeEl.disabled = true; } catch {}
+                try { if (syncOnlyMissingEl) syncOnlyMissingEl.disabled = true; } catch {}
+                try { if (syncAutoEl) syncAutoEl.disabled = true; } catch {}
+
+                setSyncStatus("Initialisiere…");
+
+                const ids = await AD_syncCollectIdsWithinDays({
+                    days,
+                    stopSignal,
+                    statusCb: setSyncStatus
+                });
+
+                if (stopSignal.stopped) {
+                    setSyncStatus("Abgebrochen.");
+                    return;
+                }
+
+                if (!ids || ids.length === 0) {
+                    setSyncStatus("Keine Matches im Zeitraum gefunden.");
+                    return;
+                }
+
+                setSyncStatus(`Gefunden (Zeitraum): ${ids.length}. Importiere…`);
+
+                await AD_syncImportStats(ids, {
+                    onlyMissing,
+                    stopSignal,
+                    statusCb: setSyncStatus,
+                    days
+                });
+
+                try {
+                    localStorage.setItem(AD_LS_KEY_SYNC_LAST_RUN_AT, String(Date.now()));
+                    localStorage.setItem(AD_LS_KEY_SYNC_LAST_DAYS, String(days));
+                } catch {}
+                AD_syncUpdateMeta();
+            } catch (e) {
+                const msg = String(e?.message || e);
+                setSyncStatus(`Fehler: ${msg}`);
+            } finally {
+                AD_syncRunning = false;
+                try { if (syncStartBtn) syncStartBtn.disabled = false; } catch {}
+                try { if (syncRangeEl) syncRangeEl.disabled = false; } catch {}
+                try { if (syncOnlyMissingEl) syncOnlyMissingEl.disabled = false; } catch {}
+                try { if (syncAutoEl) syncAutoEl.disabled = false; } catch {}
+            }
+        });
+    } catch {}
+
+
+    // -------------------- Bulk Import (paged, robust, kein Overlay) --------------------
+
+    const AD_BULK_SETTINGS = {
+        // Import
+        concurrency: 3,
+        delayMs: 200,
+        maxRetries: 3,
+        retryBaseDelayMs: 800,
+
+        // Collect
+        startPageDefault: 0,
+        waitRenderMs: 8000,
+        settleMs: 250,
+        stopOnEmptyPage: true,
+        stopOnRepeatPage: true,
+        maxPagesSafety: 5000
+    };
+
+    GM_addStyle(`
   /* Bulk Panel (embedded / inline) */
   #adBulkPanel{ font: 12px/1.35 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; display:flex; flex-direction:column; min-height:0; height:100%; }
 
@@ -17962,21 +18589,21 @@ syncMetaEl.textContent = daysLabel
   }
 `);
 
-const bulkState = {
-    collectedIds: [],
-    matchesFound: 0,
-    pagesChecked: 0,
-    running: null, // null | "collect" | "import"
-    stopSignal: { stopped: false },
-    // (v0.14.13) UI sofort neutralisieren, wenn Stop geklickt wird (ohne Run-State zu verändern)
-    uiResetOnStop: false,
-    importMeta: { total: 0, cached: 0, toFetch: 0, done: 0, ok: 0, failed: 0 }
-  };
+    const bulkState = {
+        collectedIds: [],
+        matchesFound: 0,
+        pagesChecked: 0,
+        running: null, // null | "collect" | "import"
+        stopSignal: { stopped: false },
+        // (v0.14.13) UI sofort neutralisieren, wenn Stop geklickt wird (ohne Run-State zu verändern)
+        uiResetOnStop: false,
+        importMeta: { total: 0, cached: 0, toFetch: 0, done: 0, ok: 0, failed: 0 }
+    };
 
-  const bulkPanel = document.createElement("div");
-  bulkPanel.id = "adBulkPanel";
-  bulkPanel.classList.add("adBulkPanel--embedded");
-  bulkPanel.innerHTML = `
+    const bulkPanel = document.createElement("div");
+    bulkPanel.id = "adBulkPanel";
+    bulkPanel.classList.add("adBulkPanel--embedded");
+    bulkPanel.innerHTML = `
   <div class="ad-bulk-top">
     <div class="ad-bulk-runstate">
       <span class="ad-bulk-running-dot" aria-hidden="true"></span>
@@ -18008,1682 +18635,1682 @@ const bulkState = {
   </div>
 `;
 
-try { bulkPanel.style.display = "none"; } catch {}
-  document.body.appendChild(bulkPanel);
+    try { bulkPanel.style.display = "none"; } catch {}
+    document.body.appendChild(bulkPanel);
 
-  const bulkStatusEl = bulkPanel.querySelector("#adBulkStatus");
-  const bulkPhaseEl = bulkPanel.querySelector("#adBulkPhase");
-  const bulkMetaEl = bulkPanel.querySelector("#adBulkMeta");
-  const bulkProgressWrapEl = bulkPanel.querySelector("#adBulkProgressWrap");
-  const bulkProgressBarEl = bulkPanel.querySelector("#adBulkProgressBar");
+    const bulkStatusEl = bulkPanel.querySelector("#adBulkStatus");
+    const bulkPhaseEl = bulkPanel.querySelector("#adBulkPhase");
+    const bulkMetaEl = bulkPanel.querySelector("#adBulkMeta");
+    const bulkProgressWrapEl = bulkPanel.querySelector("#adBulkProgressWrap");
+    const bulkProgressBarEl = bulkPanel.querySelector("#adBulkProgressBar");
 
-  const btnBulkRunAll = bulkPanel.querySelector("#adBulkRunAll");
-  const btnBulkStop = bulkPanel.querySelector("#adBulkStop");
+    const btnBulkRunAll = bulkPanel.querySelector("#adBulkRunAll");
+    const btnBulkStop = bulkPanel.querySelector("#adBulkStop");
 
-  const bulkLogBodyEl = bulkPanel.querySelector("#adBulkLogBody");
-  const bulkLogListEl = bulkPanel.querySelector("#adBulkLogList");
-  const btnBulkLogCopy = bulkPanel.querySelector("#adBulkLogCopy");
-  const btnBulkLogClear = bulkPanel.querySelector("#adBulkLogClear");
+    const bulkLogBodyEl = bulkPanel.querySelector("#adBulkLogBody");
+    const bulkLogListEl = bulkPanel.querySelector("#adBulkLogList");
+    const btnBulkLogCopy = bulkPanel.querySelector("#adBulkLogCopy");
+    const btnBulkLogClear = bulkPanel.querySelector("#adBulkLogClear");
 
-// -------------------- Protokoll (Ringpuffer) --------------------
-const bulkLog = [];
-const BULK_LOG_MAX = 200;
-const BULK_LOG_VISIBLE = 8;
+    // -------------------- Protokoll (Ringpuffer) --------------------
+    const bulkLog = [];
+    const BULK_LOG_MAX = 200;
+    const BULK_LOG_VISIBLE = 8;
 
-const bulkLogUi = {
-  lastCollectPage: null,
-  lastImportDone: null,
-  lastImportLogAt: 0,
-  lastQueueSig: null
-};
+    const bulkLogUi = {
+        lastCollectPage: null,
+        lastImportDone: null,
+        lastImportLogAt: 0,
+        lastQueueSig: null
+    };
 
-function AD_bulkFmtHms(d) {
-  const pad = (n) => String(n).padStart(2, "0");
-  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-}
-
-function AD_bulkLogIcon(type) {
-  switch (String(type || "").toLowerCase()) {
-    case "ok": return "✅";
-    case "warn": return "⚠️";
-    case "error": return "❌";
-    default: return "ℹ️";
-  }
-}
-
-function bulkLogPush(type, msg) {
-  const entry = { ts: new Date(), type: String(type || "info"), msg: String(msg || "") };
-  bulkLog.push(entry);
-  while (bulkLog.length > BULK_LOG_MAX) bulkLog.shift();
-  renderBulkLog();
-}
-
-function renderBulkLog() {
-  if (!bulkLogListEl) return;
-
-  const items = bulkLog.slice(-BULK_LOG_VISIBLE);
-
-  // Simple auto-scroll to bottom (good enough, max 8 visible lines)
-  const shouldScroll = true;
-
-  try { bulkLogListEl.innerHTML = ""; } catch {}
-
-  const frag = document.createDocumentFragment();
-  for (const it of items) {
-    const line = document.createElement("div");
-    line.className = "ad-bulk-log-line";
-    const ts = AD_bulkFmtHms(it.ts);
-    const icon = AD_bulkLogIcon(it.type);
-    line.textContent = `[${ts}] ${icon} ${it.msg}`;
-    frag.appendChild(line);
-  }
-  bulkLogListEl.appendChild(frag);
-
-  if (shouldScroll && bulkLogBodyEl) {
-    try { bulkLogBodyEl.scrollTop = bulkLogBodyEl.scrollHeight; } catch {}
-  }
-}
-
-function AD_bulkLogToText() {
-  return bulkLog.map(it => {
-    const ts = AD_bulkFmtHms(it.ts);
-    const icon = AD_bulkLogIcon(it.type);
-    return `[${ts}] ${icon} ${it.msg}`;
-  }).join("\n");
-}
-
-async function AD_bulkCopyText(text) {
-  const t = String(text || "");
-  try {
-    if (navigator?.clipboard?.writeText) {
-      await navigator.clipboard.writeText(t);
-      return true;
-    }
-  } catch {}
-
-  // Fallback
-  try {
-    const ta = document.createElement("textarea");
-    ta.value = t;
-    ta.style.position = "fixed";
-    ta.style.left = "-9999px";
-    ta.style.top = "0";
-    document.body.appendChild(ta);
-    ta.focus();
-    ta.select();
-    const ok = document.execCommand("copy");
-    ta.remove();
-    return !!ok;
-  } catch {
-    return false;
-  }
-}
-
-btnBulkLogCopy?.addEventListener("click", async () => {
-  const ok = await AD_bulkCopyText(AD_bulkLogToText());
-  bulkLogPush(ok ? "ok" : "warn", ok ? "Protokoll kopiert." : "Kopieren nicht möglich.");
-});
-
-btnBulkLogClear?.addEventListener("click", () => {
-    bulkLog.length = 0;
-    renderBulkLog();
-  });
-  function AD_bulkClamp(n, min, max) {
-    const v = Number(n);
-    if (!Number.isFinite(v)) return min;
-    return Math.max(min, Math.min(max, v));
-  }
-
-  function AD_bulkSetPhase(t) {
-    if (!bulkPhaseEl) return;
-    const s = String(t ?? "").trim();
-    bulkPhaseEl.textContent = s || "Bereit.";
-  }
-
-  function AD_bulkSetProgress(pct) {
-    if (!bulkProgressBarEl) return;
-    const p = AD_bulkClamp(pct, 0, 100);
-
-    // In collect mode we use indeterminate CSS – do not override with determinate widths
-    const isInd = !!bulkProgressWrapEl?.classList?.contains?.("is-indeterminate");
-    if (isInd) {
-      try { bulkProgressBarEl.style.opacity = "1"; } catch {}
-      return;
+    function AD_bulkFmtHms(d) {
+        const pad = (n) => String(n).padStart(2, "0");
+        return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
     }
 
-    bulkProgressBarEl.style.width = `${p}%`;
-
-    // Avoid tiny "rest pixel" at 0%
-    try { bulkProgressBarEl.style.opacity = (p <= 0 ? "0" : "1"); } catch {}
-
-    // Ensure determinate mode is clean
-    try { bulkProgressBarEl.style.animation = "none"; } catch {}
-    try { bulkProgressBarEl.style.transform = "translateX(0)"; } catch {}
-
-    try { bulkProgressWrapEl?.setAttribute?.("aria-valuenow", String(Math.round(p))); } catch {}
-  }
-
-function AD_bulkUpdatePagesChecked(n) {
-  const v = parseInt(String(n ?? ""), 10);
-  if (!Number.isFinite(v) || v < 0) return;
-  bulkState.pagesChecked = v;
-}
-
-function AD_bulkUpdateImportMeta(patch) {
-  try { bulkState.importMeta = { ...bulkState.importMeta, ...(patch || {}) }; } catch {}
-}
-
-function AD_bulkMaybeLogFromStatus(s) {
-  const txt = String(s || "");
-
-  // (v0.14.13) Wenn Stop geklickt wurde und UI bereits zurückgesetzt ist,
-  // keine alten Meta-Updates (Matches/Progress) mehr aus Status-Text ableiten.
-  if (bulkState?.uiResetOnStop && bulkState?.stopSignal?.stopped) {
-    if (/Stop angefordert/i.test(txt)) {
-      bulkLogPush("warn", "Abbruch angefordert.");
-    }
-    return;
-  }
-
-  // Stop
-  if (/Stop angefordert/i.test(txt)) {
-    bulkLogPush("warn", "Abbruch angefordert.");
-    return;
-  }
-
-  // Collect progress (iframe + bg-tab share the same payload, bg has "BG " prefix)
-  let m = txt.match(/(?:BG\s*)?Collect page=(\d+)[\s\S]*?new=(\d+)[\s\S]*?total=(\d+)[\s\S]*?pagesVisited=(\d+)/i);
-  if (m) {
-    const page = parseInt(m[1], 10);
-    const neu = parseInt(m[2], 10);
-    const total = parseInt(m[3], 10);
-    const pages = parseInt(m[4], 10);
-
-    if (Number.isFinite(total)) AD_bulkUpdateFoundMatches(total);
-    if (Number.isFinite(pages)) AD_bulkUpdatePagesChecked(pages);
-
-    if (bulkLogUi.lastCollectPage !== page) {
-      bulkLogUi.lastCollectPage = page;
-      bulkLogPush("info", `Seite ${page}: +${Number.isFinite(neu) ? neu : 0} neu (gesamt ${Number.isFinite(total) ? total : "?"}) · Seiten geprüft: ${Number.isFinite(pages) ? pages : "?"}`);
-    }
-    return;
-  }
-
-  // Collect done / aborted
-  m = txt.match(/(?:BG\s*)?Collect (fertig|abgebrochen)\.[\s\S]*?IDs(?:\sbisher)?\s*[:=]\s*(\d+)/i);
-  if (m) {
-    const kind = String(m[1] || "").toLowerCase();
-    const n = parseInt(m[2], 10);
-    if (Number.isFinite(n)) AD_bulkUpdateFoundMatches(n);
-
-    bulkLogPush(kind === "fertig" ? "ok" : "warn", `${kind === "fertig" ? "Sammeln beendet" : "Sammeln abgebrochen"}. Matches gefunden: ${Number.isFinite(n) ? n : "?"}`);
-    return;
-  }
-
-  // Collect stop reason (empty/repeat/no-new)
-  m = txt.match(/(?:BG\s*)?Collect stop:[\s\S]*?Total IDs=(\d+)/i);
-  if (m) {
-    const n = parseInt(m[1], 10);
-    if (Number.isFinite(n)) AD_bulkUpdateFoundMatches(n);
-    bulkLogPush("ok", `Sammeln beendet. Matches gefunden: ${Number.isFinite(n) ? n : "?"}`);
-    return;
-  }
-
-  // Collector fallback / errors
-  m = txt.match(/iFrame Collector fehlgeschlagen\s*\(([^)]+)\)/i);
-  if (m) {
-    bulkLogPush("warn", `Collector-Fallback: ${String(m[1] || "").trim()}`);
-    return;
-  }
-
-  m = txt.match(/(?:BG\s*)?Collect Fehler:\s*(.*)/i);
-  if (m) {
-    bulkLogPush("error", `Sammeln fehlgeschlagen: ${String(m[1] || "").trim()}`);
-    return;
-  }
-
-  // Import queue meta
-  m = txt.match(/Queue:\s*total=(\d+)\s*\|\s*cached=(\d+)\s*\|\s*toFetch=(\d+)/i);
-  if (m) {
-    const total = parseInt(m[1], 10);
-    const cached = parseInt(m[2], 10);
-    const toFetch = parseInt(m[3], 10);
-
-    if (Number.isFinite(total)) AD_bulkUpdateFoundMatches(total);
-    AD_bulkUpdateImportMeta({ total, cached, toFetch, done: 0, ok: 0, failed: 0 });
-
-    const sig = `${total}|${cached}|${toFetch}`;
-    if (bulkLogUi.lastQueueSig !== sig) {
-      bulkLogUi.lastQueueSig = sig;
-      bulkLogPush("info", `Warteschlange: Gesamt ${Number.isFinite(total) ? total : "?"} | Im Cache: ${Number.isFinite(cached) ? cached : "?"} | Noch zu laden: ${Number.isFinite(toFetch) ? toFetch : "?"}`);
+    function AD_bulkLogIcon(type) {
+        switch (String(type || "").toLowerCase()) {
+            case "ok": return "✅";
+            case "warn": return "⚠️";
+            case "error": return "❌";
+            default: return "ℹ️";
+        }
     }
 
-    if (Number.isFinite(toFetch) && toFetch === 0) {
-      AD_bulkSetProgress(100);
-      bulkLogPush("ok", "Alles bereits im Cache – kein Import nötig.");
-    }
-    return;
-  }
-
-  // Import progress
-  m = txt.match(/Import:\s*done=(\d+)\s*\/\s*(\d+)\s*\|\s*ok=(\d+)\s*\|\s*failed=(\d+)\s*\|\s*cached=(\d+)/i);
-  if (m) {
-    const done = parseInt(m[1], 10);
-    const total = parseInt(m[2], 10);
-    const ok = parseInt(m[3], 10);
-    const failed = parseInt(m[4], 10);
-    const cached = parseInt(m[5], 10);
-
-    AD_bulkUpdateImportMeta({ done, ok, failed, cached, toFetch: total });
-
-    if (Number.isFinite(done) && Number.isFinite(total) && total > 0) {
-      AD_bulkSetProgress((done / total) * 100);
+    function bulkLogPush(type, msg) {
+        const entry = { ts: new Date(), type: String(type || "info"), msg: String(msg || "") };
+        bulkLog.push(entry);
+        while (bulkLog.length > BULK_LOG_MAX) bulkLog.shift();
+        renderBulkLog();
     }
 
-    const remaining = (Number.isFinite(total) && Number.isFinite(done)) ? Math.max(0, total - done) : null;
+    function renderBulkLog() {
+        if (!bulkLogListEl) return;
 
-    const now = Date.now();
-    const doneChanged = (bulkLogUi.lastImportDone !== done);
-    const shouldLog =
-      doneChanged &&
-      (done === 0 || done === 1 || done === total || (Number.isFinite(done) && done % 10 === 0) || (now - bulkLogUi.lastImportLogAt) > 1000);
+        const items = bulkLog.slice(-BULK_LOG_VISIBLE);
 
-    if (shouldLog) {
-      bulkLogUi.lastImportDone = done;
-      bulkLogUi.lastImportLogAt = now;
+        // Simple auto-scroll to bottom (good enough, max 8 visible lines)
+        const shouldScroll = true;
 
-      bulkLogPush(
-        "info",
-        `Import: ${Number.isFinite(done) ? done : "?"}/${Number.isFinite(total) ? total : "?"} | OK: ${Number.isFinite(ok) ? ok : "?"} | Fehler: ${Number.isFinite(failed) ? failed : "?"} | Im Cache: ${Number.isFinite(cached) ? cached : "?"} | Noch zu laden: ${remaining == null ? "?" : remaining}`
+        try { bulkLogListEl.innerHTML = ""; } catch {}
+
+        const frag = document.createDocumentFragment();
+        for (const it of items) {
+            const line = document.createElement("div");
+            line.className = "ad-bulk-log-line";
+            const ts = AD_bulkFmtHms(it.ts);
+            const icon = AD_bulkLogIcon(it.type);
+            line.textContent = `[${ts}] ${icon} ${it.msg}`;
+            frag.appendChild(line);
+        }
+        bulkLogListEl.appendChild(frag);
+
+        if (shouldScroll && bulkLogBodyEl) {
+            try { bulkLogBodyEl.scrollTop = bulkLogBodyEl.scrollHeight; } catch {}
+        }
+    }
+
+    function AD_bulkLogToText() {
+        return bulkLog.map(it => {
+            const ts = AD_bulkFmtHms(it.ts);
+            const icon = AD_bulkLogIcon(it.type);
+            return `[${ts}] ${icon} ${it.msg}`;
+        }).join("\n");
+    }
+
+    async function AD_bulkCopyText(text) {
+        const t = String(text || "");
+        try {
+            if (navigator?.clipboard?.writeText) {
+                await navigator.clipboard.writeText(t);
+                return true;
+            }
+        } catch {}
+
+        // Fallback
+        try {
+            const ta = document.createElement("textarea");
+            ta.value = t;
+            ta.style.position = "fixed";
+            ta.style.left = "-9999px";
+            ta.style.top = "0";
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            const ok = document.execCommand("copy");
+            ta.remove();
+            return !!ok;
+        } catch {
+            return false;
+        }
+    }
+
+    btnBulkLogCopy?.addEventListener("click", async () => {
+        const ok = await AD_bulkCopyText(AD_bulkLogToText());
+        bulkLogPush(ok ? "ok" : "warn", ok ? "Protokoll kopiert." : "Kopieren nicht möglich.");
+    });
+
+    btnBulkLogClear?.addEventListener("click", () => {
+        bulkLog.length = 0;
+        renderBulkLog();
+    });
+    function AD_bulkClamp(n, min, max) {
+        const v = Number(n);
+        if (!Number.isFinite(v)) return min;
+        return Math.max(min, Math.min(max, v));
+    }
+
+    function AD_bulkSetPhase(t) {
+        if (!bulkPhaseEl) return;
+        const s = String(t ?? "").trim();
+        bulkPhaseEl.textContent = s || "Bereit.";
+    }
+
+    function AD_bulkSetProgress(pct) {
+        if (!bulkProgressBarEl) return;
+        const p = AD_bulkClamp(pct, 0, 100);
+
+        // In collect mode we use indeterminate CSS – do not override with determinate widths
+        const isInd = !!bulkProgressWrapEl?.classList?.contains?.("is-indeterminate");
+        if (isInd) {
+            try { bulkProgressBarEl.style.opacity = "1"; } catch {}
+            return;
+        }
+
+        bulkProgressBarEl.style.width = `${p}%`;
+
+        // Avoid tiny "rest pixel" at 0%
+        try { bulkProgressBarEl.style.opacity = (p <= 0 ? "0" : "1"); } catch {}
+
+        // Ensure determinate mode is clean
+        try { bulkProgressBarEl.style.animation = "none"; } catch {}
+        try { bulkProgressBarEl.style.transform = "translateX(0)"; } catch {}
+
+        try { bulkProgressWrapEl?.setAttribute?.("aria-valuenow", String(Math.round(p))); } catch {}
+    }
+
+    function AD_bulkUpdatePagesChecked(n) {
+        const v = parseInt(String(n ?? ""), 10);
+        if (!Number.isFinite(v) || v < 0) return;
+        bulkState.pagesChecked = v;
+    }
+
+    function AD_bulkUpdateImportMeta(patch) {
+        try { bulkState.importMeta = { ...bulkState.importMeta, ...(patch || {}) }; } catch {}
+    }
+
+    function AD_bulkMaybeLogFromStatus(s) {
+        const txt = String(s || "");
+
+        // (v0.14.13) Wenn Stop geklickt wurde und UI bereits zurückgesetzt ist,
+        // keine alten Meta-Updates (Matches/Progress) mehr aus Status-Text ableiten.
+        if (bulkState?.uiResetOnStop && bulkState?.stopSignal?.stopped) {
+            if (/Stop angefordert/i.test(txt)) {
+                bulkLogPush("warn", "Abbruch angefordert.");
+            }
+            return;
+        }
+
+        // Stop
+        if (/Stop angefordert/i.test(txt)) {
+            bulkLogPush("warn", "Abbruch angefordert.");
+            return;
+        }
+
+        // Collect progress (iframe + bg-tab share the same payload, bg has "BG " prefix)
+        let m = txt.match(/(?:BG\s*)?Collect page=(\d+)[\s\S]*?new=(\d+)[\s\S]*?total=(\d+)[\s\S]*?pagesVisited=(\d+)/i);
+        if (m) {
+            const page = parseInt(m[1], 10);
+            const neu = parseInt(m[2], 10);
+            const total = parseInt(m[3], 10);
+            const pages = parseInt(m[4], 10);
+
+            if (Number.isFinite(total)) AD_bulkUpdateFoundMatches(total);
+            if (Number.isFinite(pages)) AD_bulkUpdatePagesChecked(pages);
+
+            if (bulkLogUi.lastCollectPage !== page) {
+                bulkLogUi.lastCollectPage = page;
+                bulkLogPush("info", `Seite ${page}: +${Number.isFinite(neu) ? neu : 0} neu (gesamt ${Number.isFinite(total) ? total : "?"}) · Seiten geprüft: ${Number.isFinite(pages) ? pages : "?"}`);
+            }
+            return;
+        }
+
+        // Collect done / aborted
+        m = txt.match(/(?:BG\s*)?Collect (fertig|abgebrochen)\.[\s\S]*?IDs(?:\sbisher)?\s*[:=]\s*(\d+)/i);
+        if (m) {
+            const kind = String(m[1] || "").toLowerCase();
+            const n = parseInt(m[2], 10);
+            if (Number.isFinite(n)) AD_bulkUpdateFoundMatches(n);
+
+            bulkLogPush(kind === "fertig" ? "ok" : "warn", `${kind === "fertig" ? "Sammeln beendet" : "Sammeln abgebrochen"}. Matches gefunden: ${Number.isFinite(n) ? n : "?"}`);
+            return;
+        }
+
+        // Collect stop reason (empty/repeat/no-new)
+        m = txt.match(/(?:BG\s*)?Collect stop:[\s\S]*?Total IDs=(\d+)/i);
+        if (m) {
+            const n = parseInt(m[1], 10);
+            if (Number.isFinite(n)) AD_bulkUpdateFoundMatches(n);
+            bulkLogPush("ok", `Sammeln beendet. Matches gefunden: ${Number.isFinite(n) ? n : "?"}`);
+            return;
+        }
+
+        // Collector fallback / errors
+        m = txt.match(/iFrame Collector fehlgeschlagen\s*\(([^)]+)\)/i);
+        if (m) {
+            bulkLogPush("warn", `Collector-Fallback: ${String(m[1] || "").trim()}`);
+            return;
+        }
+
+        m = txt.match(/(?:BG\s*)?Collect Fehler:\s*(.*)/i);
+        if (m) {
+            bulkLogPush("error", `Sammeln fehlgeschlagen: ${String(m[1] || "").trim()}`);
+            return;
+        }
+
+        // Import queue meta
+        m = txt.match(/Queue:\s*total=(\d+)\s*\|\s*cached=(\d+)\s*\|\s*toFetch=(\d+)/i);
+        if (m) {
+            const total = parseInt(m[1], 10);
+            const cached = parseInt(m[2], 10);
+            const toFetch = parseInt(m[3], 10);
+
+            if (Number.isFinite(total)) AD_bulkUpdateFoundMatches(total);
+            AD_bulkUpdateImportMeta({ total, cached, toFetch, done: 0, ok: 0, failed: 0 });
+
+            const sig = `${total}|${cached}|${toFetch}`;
+            if (bulkLogUi.lastQueueSig !== sig) {
+                bulkLogUi.lastQueueSig = sig;
+                bulkLogPush("info", `Warteschlange: Gesamt ${Number.isFinite(total) ? total : "?"} | Im Cache: ${Number.isFinite(cached) ? cached : "?"} | Noch zu laden: ${Number.isFinite(toFetch) ? toFetch : "?"}`);
+            }
+
+            if (Number.isFinite(toFetch) && toFetch === 0) {
+                AD_bulkSetProgress(100);
+                bulkLogPush("ok", "Alles bereits im Cache – kein Import nötig.");
+            }
+            return;
+        }
+
+        // Import progress
+        m = txt.match(/Import:\s*done=(\d+)\s*\/\s*(\d+)\s*\|\s*ok=(\d+)\s*\|\s*failed=(\d+)\s*\|\s*cached=(\d+)/i);
+        if (m) {
+            const done = parseInt(m[1], 10);
+            const total = parseInt(m[2], 10);
+            const ok = parseInt(m[3], 10);
+            const failed = parseInt(m[4], 10);
+            const cached = parseInt(m[5], 10);
+
+            AD_bulkUpdateImportMeta({ done, ok, failed, cached, toFetch: total });
+
+            if (Number.isFinite(done) && Number.isFinite(total) && total > 0) {
+                AD_bulkSetProgress((done / total) * 100);
+            }
+
+            const remaining = (Number.isFinite(total) && Number.isFinite(done)) ? Math.max(0, total - done) : null;
+
+            const now = Date.now();
+            const doneChanged = (bulkLogUi.lastImportDone !== done);
+            const shouldLog =
+                  doneChanged &&
+                  (done === 0 || done === 1 || done === total || (Number.isFinite(done) && done % 10 === 0) || (now - bulkLogUi.lastImportLogAt) > 1000);
+
+            if (shouldLog) {
+                bulkLogUi.lastImportDone = done;
+                bulkLogUi.lastImportLogAt = now;
+
+                bulkLogPush(
+                    "info",
+                    `Import: ${Number.isFinite(done) ? done : "?"}/${Number.isFinite(total) ? total : "?"} | OK: ${Number.isFinite(ok) ? ok : "?"} | Fehler: ${Number.isFinite(failed) ? failed : "?"} | Im Cache: ${Number.isFinite(cached) ? cached : "?"} | Noch zu laden: ${remaining == null ? "?" : remaining}`
       );
     }
-    return;
+      return;
   }
 
-  // Import summary (Status block after queue run)
-  const first = (txt.split("\n")[0] || "").trim();
-  if (/^(Fertig\.|Abgebrochen\.)/i.test(first) && /(toFetch=|cached=|ok=|failed=)/i.test(txt)) {
-    const total = parseInt((txt.match(/total=(\d+)/i) || [])[1], 10);
-    const toFetch = parseInt((txt.match(/toFetch=(\d+)/i) || [])[1], 10);
-    const ok = parseInt((txt.match(/ok=(\d+)/i) || [])[1], 10);
-    const failed = parseInt((txt.match(/failed=(\d+)/i) || [])[1], 10);
-    const cached = parseInt((txt.match(/cached=(\d+)/i) || [])[1], 10);
+    // Import summary (Status block after queue run)
+    const first = (txt.split("\n")[0] || "").trim();
+    if (/^(Fertig\.|Abgebrochen\.)/i.test(first) && /(toFetch=|cached=|ok=|failed=)/i.test(txt)) {
+        const total = parseInt((txt.match(/total=(\d+)/i) || [])[1], 10);
+        const toFetch = parseInt((txt.match(/toFetch=(\d+)/i) || [])[1], 10);
+        const ok = parseInt((txt.match(/ok=(\d+)/i) || [])[1], 10);
+        const failed = parseInt((txt.match(/failed=(\d+)/i) || [])[1], 10);
+        const cached = parseInt((txt.match(/cached=(\d+)/i) || [])[1], 10);
 
-    if (Number.isFinite(total)) AD_bulkUpdateFoundMatches(total);
-    AD_bulkUpdateImportMeta({ total, cached, toFetch, ok, failed });
+        if (Number.isFinite(total)) AD_bulkUpdateFoundMatches(total);
+        AD_bulkUpdateImportMeta({ total, cached, toFetch, ok, failed });
 
-    const aborted = /^Abgebrochen\./i.test(first);
-    if (!aborted) AD_bulkSetProgress(100);
+        const aborted = /^Abgebrochen\./i.test(first);
+        if (!aborted) AD_bulkSetProgress(100);
 
-    bulkLogPush(
-      aborted ? "warn" : "ok",
-      `${aborted ? "Abgebrochen" : "Fertig"}. Gesamt: ${Number.isFinite(total) ? total : "?"} | Neu geladen: ${Number.isFinite(toFetch) ? toFetch : "?"} | Im Cache: ${Number.isFinite(cached) ? cached : "?"} | OK: ${Number.isFinite(ok) ? ok : "?"} | Fehler: ${Number.isFinite(failed) ? failed : "?"}`
+        bulkLogPush(
+            aborted ? "warn" : "ok",
+            `${aborted ? "Abgebrochen" : "Fertig"}. Gesamt: ${Number.isFinite(total) ? total : "?"} | Neu geladen: ${Number.isFinite(toFetch) ? toFetch : "?"} | Im Cache: ${Number.isFinite(cached) ? cached : "?"} | OK: ${Number.isFinite(ok) ? ok : "?"} | Fehler: ${Number.isFinite(failed) ? failed : "?"}`
     );
-    return;
-  }
+        return;
+    }
 
-  // Import error
-  m = txt.match(/Import Fehler:\s*(.*)/i);
-  if (m) {
-    bulkLogPush("error", `Import fehlgeschlagen: ${String(m[1] || "").trim()}`);
-    return;
-  }
+    // Import error
+    m = txt.match(/Import Fehler:\s*(.*)/i);
+    if (m) {
+        bulkLogPush("error", `Import fehlgeschlagen: ${String(m[1] || "").trim()}`);
+        return;
+    }
 }
 
-function AD_bulkSetStatus(t) {
-  const s = String(t ?? "");
-  if (bulkStatusEl) bulkStatusEl.textContent = s;
+    function AD_bulkSetStatus(t) {
+        const s = String(t ?? "");
+        if (bulkStatusEl) bulkStatusEl.textContent = s;
 
-  // Keep progress mode in sync (safety net)
-  try { AD_bulkSetProgressMode(bulkState.running); } catch {}
+        // Keep progress mode in sync (safety net)
+        try { AD_bulkSetProgressMode(bulkState.running); } catch {}
 
-  // Derive log/meta/progress updates from existing status stream
-  try { AD_bulkMaybeLogFromStatus(s); } catch {}
+        // Derive log/meta/progress updates from existing status stream
+        try { AD_bulkMaybeLogFromStatus(s); } catch {}
 
-  // Phase label (stable German)
-  if (!bulkState.running) {
-    AD_bulkSetPhase("Bereit.");
-  } else if (bulkState.running === "collect") {
-    AD_bulkSetPhase("Sammle Match-IDs…");
-  } else if (bulkState.running === "import") {
-    AD_bulkSetPhase("Importiere Statistiken…");
-  }
+        // Phase label (stable German)
+        if (!bulkState.running) {
+            AD_bulkSetPhase("Bereit.");
+        } else if (bulkState.running === "collect") {
+            AD_bulkSetPhase("Sammle Match-IDs…");
+        } else if (bulkState.running === "import") {
+            AD_bulkSetPhase("Importiere Statistiken…");
+        }
 
-  // (v0.14.13) Nach Stop-Klick: Anzeige neutral halten (Progress/Matches/Phase)
-  if (bulkState?.uiResetOnStop && bulkState?.stopSignal?.stopped) {
-    AD_bulkSetPhase("Bereit.");
-    AD_bulkSetMeta("Matches gefunden: 0");
-    try { AD_bulkSetProgress(0); } catch {}
-  }
+        // (v0.14.13) Nach Stop-Klick: Anzeige neutral halten (Progress/Matches/Phase)
+        if (bulkState?.uiResetOnStop && bulkState?.stopSignal?.stopped) {
+            AD_bulkSetPhase("Bereit.");
+            AD_bulkSetMeta("Matches gefunden: 0");
+            try { AD_bulkSetProgress(0); } catch {}
+        }
 
-  // Terminal lines may override briefly
-  const first = (s.split("\n")[0] || "").trim();
-  if (/^(Abgebrochen\.|Fertig\.|Import Fehler)/i.test(first)) {
-    AD_bulkSetPhase(first);
-  } else if (/^(?:BG\s*)?Collect Fehler/i.test(first)) {
-    AD_bulkSetPhase("Sammeln fehlgeschlagen.");
-  }
-}
+        // Terminal lines may override briefly
+        const first = (s.split("\n")[0] || "").trim();
+        if (/^(Abgebrochen\.|Fertig\.|Import Fehler)/i.test(first)) {
+            AD_bulkSetPhase(first);
+        } else if (/^(?:BG\s*)?Collect Fehler/i.test(first)) {
+            AD_bulkSetPhase("Sammeln fehlgeschlagen.");
+        }
+    }
 
-function AD_bulkSetMeta(t) {
-    if (bulkMetaEl) bulkMetaEl.textContent = String(t ?? "");
-  }
+    function AD_bulkSetMeta(t) {
+        if (bulkMetaEl) bulkMetaEl.textContent = String(t ?? "");
+    }
 
-  function AD_bulkIsHistoryListPage() {
-    const p = String(location.pathname || "");
-    return /^\/history\/matches\/?$/i.test(p);
-  }
+    function AD_bulkIsHistoryListPage() {
+        const p = String(location.pathname || "");
+        return /^\/history\/matches\/?$/i.test(p);
+    }
 
-  function AD_bulkSleep(ms) {
-    return new Promise(r => setTimeout(r, ms));
-  }
+    function AD_bulkSleep(ms) {
+        return new Promise(r => setTimeout(r, ms));
+    }
 
-  function AD_bulkSetProgressMode(mode) {
-  const m = String(mode || "");
-  const isCollect = (m === "collect");
-  const isImport = (m === "import");
+    function AD_bulkSetProgressMode(mode) {
+        const m = String(mode || "");
+        const isCollect = (m === "collect");
+        const isImport = (m === "import");
 
-  try { bulkProgressWrapEl?.classList?.toggle?.("is-indeterminate", isCollect); } catch {}
+        try { bulkProgressWrapEl?.classList?.toggle?.("is-indeterminate", isCollect); } catch {}
 
-  if (!bulkProgressBarEl) return;
+        if (!bulkProgressBarEl) return;
 
-  if (isCollect) {
-    // Let CSS indeterminate take over
-    try { bulkProgressBarEl.style.opacity = "1"; } catch {}
-    try { bulkProgressBarEl.style.width = ""; } catch {}
-    try { bulkProgressBarEl.style.animation = ""; } catch {}
-    try { bulkProgressBarEl.style.transform = ""; } catch {}
-    try { bulkProgressWrapEl?.removeAttribute?.("aria-valuenow"); } catch {}
-    return;
-  }
+        if (isCollect) {
+            // Let CSS indeterminate take over
+            try { bulkProgressBarEl.style.opacity = "1"; } catch {}
+            try { bulkProgressBarEl.style.width = ""; } catch {}
+            try { bulkProgressBarEl.style.animation = ""; } catch {}
+            try { bulkProgressBarEl.style.transform = ""; } catch {}
+            try { bulkProgressWrapEl?.removeAttribute?.("aria-valuenow"); } catch {}
+            return;
+        }
 
-  // Ensure no indeterminate artifacts remain
-  try { bulkProgressBarEl.style.animation = "none"; } catch {}
-  try { bulkProgressBarEl.style.transform = "translateX(0)"; } catch {}
+        // Ensure no indeterminate artifacts remain
+        try { bulkProgressBarEl.style.animation = "none"; } catch {}
+        try { bulkProgressBarEl.style.transform = "translateX(0)"; } catch {}
 
-  if (isImport) {
-    try { bulkProgressBarEl.style.opacity = "1"; } catch {}
-    try {
-      const cur = String(bulkProgressBarEl.style.width || "").trim();
-      if (!cur) bulkProgressBarEl.style.width = "0%";
-    } catch {}
-    return;
-  }
+        if (isImport) {
+            try { bulkProgressBarEl.style.opacity = "1"; } catch {}
+            try {
+                const cur = String(bulkProgressBarEl.style.width || "").trim();
+                if (!cur) bulkProgressBarEl.style.width = "0%";
+            } catch {}
+            return;
+        }
 
-  // Idle: hide bar completely (no "rest pixel")
-  try { bulkProgressBarEl.style.width = "0%"; } catch {}
-  try { bulkProgressBarEl.style.opacity = "0"; } catch {}
-  try { bulkProgressWrapEl?.removeAttribute?.("aria-valuenow"); } catch {}
-}
+        // Idle: hide bar completely (no "rest pixel")
+        try { bulkProgressBarEl.style.width = "0%"; } catch {}
+        try { bulkProgressBarEl.style.opacity = "0"; } catch {}
+        try { bulkProgressWrapEl?.removeAttribute?.("aria-valuenow"); } catch {}
+    }
 
-function AD_bulkUpdateMeta() {
-  const n = Number(bulkState.matchesFound || 0);
-  AD_bulkSetMeta(`Matches gefunden: ${Number.isFinite(n) ? n : 0}`);
-}
+    function AD_bulkUpdateMeta() {
+        const n = Number(bulkState.matchesFound || 0);
+        AD_bulkSetMeta(`Matches gefunden: ${Number.isFinite(n) ? n : 0}`);
+    }
 
-function AD_bulkUpdateUi() {
-  const running = bulkState.running;
-  const uiReset = !!(bulkState?.uiResetOnStop && bulkState?.stopSignal?.stopped);
+    function AD_bulkUpdateUi() {
+        const running = bulkState.running;
+        const uiReset = !!(bulkState?.uiResetOnStop && bulkState?.stopSignal?.stopped);
 
-  try { bulkPanel.dataset.running = running || "none"; } catch {}
+        try { bulkPanel.dataset.running = running || "none"; } catch {}
 
-  // Primary
-  if (btnBulkRunAll) btnBulkRunAll.disabled = !!running;
-  if (btnBulkStop) btnBulkStop.disabled = !running;
+        // Primary
+        if (btnBulkRunAll) btnBulkRunAll.disabled = !!running;
+        if (btnBulkStop) btnBulkStop.disabled = !running;
 
-  // Phase + Meta
-  if (uiReset) {
-    AD_bulkSetPhase("Bereit.");
-    AD_bulkSetMeta("Matches gefunden: 0");
-  } else {
-    if (!running) AD_bulkSetPhase("Bereit.");
-    if (running === "collect") AD_bulkSetPhase("Sammle Match-IDs…");
-    if (running === "import") AD_bulkSetPhase("Importiere Statistiken…");
-    AD_bulkUpdateMeta();
-  }
+        // Phase + Meta
+        if (uiReset) {
+            AD_bulkSetPhase("Bereit.");
+            AD_bulkSetMeta("Matches gefunden: 0");
+        } else {
+            if (!running) AD_bulkSetPhase("Bereit.");
+            if (running === "collect") AD_bulkSetPhase("Sammle Match-IDs…");
+            if (running === "import") AD_bulkSetPhase("Importiere Statistiken…");
+            AD_bulkUpdateMeta();
+        }
 
-  // Progress bar mode
-  AD_bulkSetProgressMode(uiReset ? null : running);
+        // Progress bar mode
+        AD_bulkSetProgressMode(uiReset ? null : running);
 
-  if (uiReset) {
-    try { bulkProgressWrapEl?.classList?.remove?.("is-indeterminate"); } catch {}
-    try { bulkProgressWrapEl?.removeAttribute?.("aria-valuenow"); } catch {}
-    try { if (bulkProgressBarEl) bulkProgressBarEl.style.width = "0%"; } catch {}
-  }
+        if (uiReset) {
+            try { bulkProgressWrapEl?.classList?.remove?.("is-indeterminate"); } catch {}
+            try { bulkProgressWrapEl?.removeAttribute?.("aria-valuenow"); } catch {}
+            try { if (bulkProgressBarEl) bulkProgressBarEl.style.width = "0%"; } catch {}
+        }
 
-  if (running === "import") {
-    // Determinate
-    try { bulkProgressWrapEl?.classList?.remove?.("is-indeterminate"); } catch {}
-    try {
-      const cur = String(bulkProgressBarEl?.style?.width || "").trim();
-      if (!cur) AD_bulkSetProgress(0);
-    } catch {}
-  }
+        if (running === "import") {
+            // Determinate
+            try { bulkProgressWrapEl?.classList?.remove?.("is-indeterminate"); } catch {}
+            try {
+                const cur = String(bulkProgressBarEl?.style?.width || "").trim();
+                if (!cur) AD_bulkSetProgress(0);
+            } catch {}
+        }
 
-  if (!running) {
-    try { bulkProgressWrapEl?.classList?.remove?.("is-indeterminate"); } catch {}
-    try { bulkProgressWrapEl?.removeAttribute?.("aria-valuenow"); } catch {}
-    try { if (bulkProgressBarEl) bulkProgressBarEl.style.width = "0%"; } catch {}
-  }
-}
+        if (!running) {
+            try { bulkProgressWrapEl?.classList?.remove?.("is-indeterminate"); } catch {}
+            try { bulkProgressWrapEl?.removeAttribute?.("aria-valuenow"); } catch {}
+            try { if (bulkProgressBarEl) bulkProgressBarEl.style.width = "0%"; } catch {}
+        }
+    }
 
 
-  // -------------------- Panel Docking --------------------
+    // -------------------- Panel Docking --------------------
     function AD_bulkEnsureHistorySlot() {
-    // disabled (v0.14.10): History inline slot removed (no DOM injection on /history/matches)
-    return null;
-  }
+        // disabled (v0.14.10): History inline slot removed (no DOM injection on /history/matches)
+        return null;
+    }
 
 
     function AD_attachBulkPanelMaybe(reason) {
-    try {
-      // Settings Slot only (v0.14.10): Bulk UI is exclusively embedded in /statistics Settings.
-      const slotSettings = document.getElementById("ad-ext-settings-slot-bulk");
-      if (slotSettings) {
-        if (bulkPanel.parentNode !== slotSettings) {
-          try { slotSettings.innerHTML = ""; } catch {}
-          slotSettings.appendChild(bulkPanel);
+        try {
+            // Settings Slot only (v0.14.10): Bulk UI is exclusively embedded in /statistics Settings.
+            const slotSettings = document.getElementById("ad-ext-settings-slot-bulk");
+            if (slotSettings) {
+                if (bulkPanel.parentNode !== slotSettings) {
+                    try { slotSettings.innerHTML = ""; } catch {}
+                    slotSettings.appendChild(bulkPanel);
+                }
+                bulkPanel.style.display = "";
+                return;
+            }
+
+            // Outside Settings: keep hidden (never dock to /history/matches or any other page)
+            if (!bulkPanel.isConnected) {
+                try { document.body.appendChild(bulkPanel); } catch {}
+            }
+            bulkPanel.style.display = "none";
+        } catch (e) {
+            console.warn(LOG_PREFIX, "Bulk docking failed:", reason, e);
+            try { bulkPanel.style.display = "none"; } catch {}
         }
-        bulkPanel.style.display = "";
-        return;
-      }
-
-      // Outside Settings: keep hidden (never dock to /history/matches or any other page)
-      if (!bulkPanel.isConnected) {
-        try { document.body.appendChild(bulkPanel); } catch {}
-      }
-      bulkPanel.style.display = "none";
-    } catch (e) {
-      console.warn(LOG_PREFIX, "Bulk docking failed:", reason, e);
-      try { bulkPanel.style.display = "none"; } catch {}
     }
-  }
 
 
-  // -------------------- Collect IDs (paged) --------------------
-  const AD_BULK_UUID_RE = /\/history\/matches\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i;
+    // -------------------- Collect IDs (paged) --------------------
+    const AD_BULK_UUID_RE = /\/history\/matches\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i;
 
     function AD_bulkCollectMatchIdsFromDoc(doc) {
-    const ids = new Set();
+        const ids = new Set();
 
-    const sel = [
-      'a[href*="/history/matches/"]',
-      '[data-href*="/history/matches/"]',
-      '[to*="/history/matches/"]'
-    ].join(",");
+        const sel = [
+            'a[href*="/history/matches/"]',
+            '[data-href*="/history/matches/"]',
+            '[to*="/history/matches/"]'
+        ].join(",");
 
-    for (const el of (doc?.querySelectorAll?.(sel) || [])) {
-      const candidates = [
-        el.getAttribute?.("href"),
-        el.getAttribute?.("data-href"),
-        el.getAttribute?.("to"),
-        el.href,
-        el.dataset?.href
-      ];
+        for (const el of (doc?.querySelectorAll?.(sel) || [])) {
+            const candidates = [
+                el.getAttribute?.("href"),
+                el.getAttribute?.("data-href"),
+                el.getAttribute?.("to"),
+                el.href,
+                el.dataset?.href
+            ];
 
-      for (const c of candidates) {
-        const s = String(c || "");
-        const m = s.match(AD_BULK_UUID_RE);
-        if (m && m[1]) ids.add(String(m[1]));
-      }
+            for (const c of candidates) {
+                const s = String(c || "");
+                const m = s.match(AD_BULK_UUID_RE);
+                if (m && m[1]) ids.add(String(m[1]));
+            }
+        }
+
+        return ids;
     }
 
-    return ids;
-  }
-
-  function AD_bulkCollectMatchIdsFromDom() {
-    return AD_bulkCollectMatchIdsFromDoc(document);
-  }
-
-
-  function AD_bulkGetPageParam() {
-    try {
-      const u = new URL(location.href);
-      const raw = u.searchParams.get("page");
-      const n = parseInt(String(raw ?? ""), 10);
-      if (Number.isFinite(n) && n >= 0) return n;
-      return AD_BULK_SETTINGS.startPageDefault;
-    } catch {
-      return AD_BULK_SETTINGS.startPageDefault;
+    function AD_bulkCollectMatchIdsFromDom() {
+        return AD_bulkCollectMatchIdsFromDoc(document);
     }
-  }
 
-  function AD_bulkMakeUrlForPage(page) {
-    const u = new URL(location.href);
-    u.searchParams.set("page", String(page));
-    return u.pathname + u.search + u.hash;
-  }
 
-  function AD_bulkSigOfIds(ids) {
-    const arr = Array.from(ids);
-    arr.sort();
-    return arr.slice(0, 10).join("|");
-  }
-
-  function AD_bulkSpaNavigateTo(url) {
-    try { history.pushState({}, "", url); } catch {
-      try { location.href = url; } catch {}
-      return;
+    function AD_bulkGetPageParam() {
+        try {
+            const u = new URL(location.href);
+            const raw = u.searchParams.get("page");
+            const n = parseInt(String(raw ?? ""), 10);
+            if (Number.isFinite(n) && n >= 0) return n;
+            return AD_BULK_SETTINGS.startPageDefault;
+        } catch {
+            return AD_BULK_SETTINGS.startPageDefault;
+        }
     }
-    try { window.dispatchEvent(new PopStateEvent("popstate")); } catch {
-      try { window.dispatchEvent(new Event("popstate")); } catch {}
+
+    function AD_bulkMakeUrlForPage(page) {
+        const u = new URL(location.href);
+        u.searchParams.set("page", String(page));
+        return u.pathname + u.search + u.hash;
     }
-  }
+
+    function AD_bulkSigOfIds(ids) {
+        const arr = Array.from(ids);
+        arr.sort();
+        return arr.slice(0, 10).join("|");
+    }
+
+    function AD_bulkSpaNavigateTo(url) {
+        try { history.pushState({}, "", url); } catch {
+            try { location.href = url; } catch {}
+            return;
+        }
+        try { window.dispatchEvent(new PopStateEvent("popstate")); } catch {
+            try { window.dispatchEvent(new Event("popstate")); } catch {}
+        }
+    }
 
     async function AD_bulkWaitForNewPageContentInDoc(doc, prevPageSig, stopSignal) {
-    const t0 = Date.now();
-    while (!stopSignal.stopped && (Date.now() - t0) < AD_BULK_SETTINGS.waitRenderMs) {
-      const ids = AD_bulkCollectMatchIdsFromDoc(doc);
-      const sig = AD_bulkSigOfIds(ids);
+        const t0 = Date.now();
+        while (!stopSignal.stopped && (Date.now() - t0) < AD_BULK_SETTINGS.waitRenderMs) {
+            const ids = AD_bulkCollectMatchIdsFromDoc(doc);
+            const sig = AD_bulkSigOfIds(ids);
 
-      if (ids.size > 0 && sig !== prevPageSig) {
-        await AD_bulkSleep(AD_BULK_SETTINGS.settleMs);
-        return { ids, sig, changed: true };
-      }
+            if (ids.size > 0 && sig !== prevPageSig) {
+                await AD_bulkSleep(AD_BULK_SETTINGS.settleMs);
+                return { ids, sig, changed: true };
+            }
 
-      await AD_bulkSleep(200);
+            await AD_bulkSleep(200);
+        }
+
+        const ids = AD_bulkCollectMatchIdsFromDoc(doc);
+        return { ids, sig: AD_bulkSigOfIds(ids), changed: false };
     }
 
-    const ids = AD_bulkCollectMatchIdsFromDoc(doc);
-    return { ids, sig: AD_bulkSigOfIds(ids), changed: false };
-  }
-
-  async function AD_bulkWaitForNewPageContent(prevPageSig, stopSignal) {
-    return AD_bulkWaitForNewPageContentInDoc(document, prevPageSig, stopSignal);
-  }
+    async function AD_bulkWaitForNewPageContent(prevPageSig, stopSignal) {
+        return AD_bulkWaitForNewPageContentInDoc(document, prevPageSig, stopSignal);
+    }
 
 
     // -------------------- Headless Collect (iFrame primary) --------------------
-  const AD_BULK_BC_NAME = "ad_bulk";
-  const AD_BULK_COLLECTOR_IFRAME_ID = "ad-bulk-collector-iframe";
+    const AD_BULK_BC_NAME = "ad_bulk";
+    const AD_BULK_COLLECTOR_IFRAME_ID = "ad-bulk-collector-iframe";
 
-  // Runtime handle (used for Stop in background-tab mode)
-  const bulkRuntime = {
-    mode: null, // null | "iframe" | "bg"
-    sessionId: null,
-    bc: null,
-    tab: null
-  };
+    // Runtime handle (used for Stop in background-tab mode)
+    const bulkRuntime = {
+        mode: null, // null | "iframe" | "bg"
+        sessionId: null,
+        bc: null,
+        tab: null
+    };
 
-  function AD_bulkRuntimeClear() {
-    bulkRuntime.mode = null;
-    bulkRuntime.sessionId = null;
-    try { bulkRuntime.bc?.close?.(); } catch {}
-    bulkRuntime.bc = null;
-    try { bulkRuntime.tab?.close?.(); } catch {}
-    bulkRuntime.tab = null;
-  }
-
-  async function AD_bulkWaitUntil(fn, timeoutMs, stopSignal, intervalMs = 200) {
-    const t0 = Date.now();
-    while (!stopSignal?.stopped && (Date.now() - t0) < timeoutMs) {
-      let ok = false;
-      try { ok = !!fn(); } catch { ok = false; }
-      if (ok) return true;
-      await AD_bulkSleep(intervalMs);
-    }
-    return false;
-  }
-
-  function AD_bulkMakeHistoryListUrlForPage(page, extraParams) {
-    const u = new URL("/history/matches", location.origin);
-    u.searchParams.set("page", String(page));
-    for (const [k, v] of Object.entries(extraParams || {})) {
-      if (v == null) continue;
-      u.searchParams.set(String(k), String(v));
-    }
-    return u.pathname + u.search + u.hash;
-  }
-
-  function AD_bulkGetOrCreateCollectorIframe() {
-    let frame = document.getElementById(AD_BULK_COLLECTOR_IFRAME_ID);
-    if (frame) return frame;
-
-    frame = document.createElement("iframe");
-    frame.id = AD_BULK_COLLECTOR_IFRAME_ID;
-    frame.setAttribute("aria-hidden", "true");
-    frame.setAttribute("tabindex", "-1");
-    frame.style.cssText = [
-      "position: fixed",
-      "width: 1px",
-      "height: 1px",
-      "left: -9999px",
-      "top: -9999px",
-      "opacity: 0",
-      "pointer-events: none",
-      "border: 0"
-    ].join(";");
-
-    try { document.body.appendChild(frame); } catch {}
-    return frame;
-  }
-
-  async function AD_bulkLoadCollectorIframe(frame, url, stopSignal) {
-    if (stopSignal?.stopped) return false;
-
-    const timeoutMs = Math.max(15000, AD_BULK_SETTINGS.waitRenderMs);
-
-    // Force reload if same src
-    try {
-      const cur = String(frame.getAttribute("src") || frame.src || "");
-      if (cur && cur.endsWith(url)) {
-        try { frame.src = "about:blank"; } catch {}
-        await AD_bulkSleep(50);
-      }
-    } catch {}
-
-    await new Promise((resolve, reject) => {
-      let done = false;
-      const t = setTimeout(() => {
-        if (done) return;
-        done = true;
-        cleanup();
-        const e = new Error("iFrame load timeout");
-        e.code = "IFRAME_TIMEOUT";
-        reject(e);
-      }, timeoutMs);
-
-      function cleanup() {
-        try { clearTimeout(t); } catch {}
-        try { frame.removeEventListener("load", onLoad); } catch {}
-        try { frame.removeEventListener("error", onErr); } catch {}
-      }
-
-      function onLoad() {
-        if (done) return;
-        done = true;
-        cleanup();
-        resolve(true);
-      }
-
-      function onErr() {
-        if (done) return;
-        done = true;
-        cleanup();
-        const e = new Error("iFrame load error");
-        e.code = "IFRAME_LOAD_ERROR";
-        reject(e);
-      }
-
-      try {
-        frame.addEventListener("load", onLoad);
-        frame.addEventListener("error", onErr);
-      } catch {}
-
-      try { frame.setAttribute("src", url); frame.src = url; } catch (e) {
-        done = true;
-        cleanup();
-        reject(e);
-      }
-    });
-
-    if (stopSignal?.stopped) return false;
-
-    // Check same-origin access
-    try {
-      const doc = frame.contentDocument;
-      const win = frame.contentWindow;
-      if (!doc || !win) {
-        const e = new Error("iFrame doc/window unavailable");
-        e.code = "IFRAME_BLOCKED";
-        throw e;
-      }
-      // Accessing location.href can throw when blocked
-      void win.location.href;
-    } catch (e) {
-      const err = new Error("iFrame blocked (X-Frame-Options/CSP?)");
-      err.code = "IFRAME_BLOCKED";
-      err.cause = e;
-      throw err;
-    }
-
-    return true;
-  }
-
-  function AD_bulkSpaNavigateInFrame(frame, url) {
-    const win = frame?.contentWindow;
-    if (!win) {
-      const e = new Error("Frame window unavailable");
-      e.code = "IFRAME_BLOCKED";
-      throw e;
-    }
-
-    try { win.history.pushState({}, "", url); } catch {
-      try { win.location.href = url; } catch {}
-      return;
-    }
-
-    try { win.dispatchEvent(new win.PopStateEvent("popstate")); } catch {
-      try { win.dispatchEvent(new win.Event("popstate")); } catch {}
-    }
-  }
-
-  async function AD_bulkCollectIdsHeadless({ startPage = 0, maxPages = AD_BULK_SETTINGS.maxPagesSafety, stopSignal, statusCb }) {
-    bulkRuntime.mode = "iframe";
-    statusCb = statusCb || (() => {});
-
-    const collected = new Set();
-    const frame = AD_bulkGetOrCreateCollectorIframe();
-
-    const startUrl = AD_bulkMakeHistoryListUrlForPage(startPage, { ad_bulk_iframe: "1" });
-
-    statusCb(`Collect (headless) lade iFrame…\n${startUrl}`);
-
-    await AD_bulkLoadCollectorIframe(frame, startUrl, stopSignal);
-
-    if (stopSignal?.stopped) return [];
-
-    // Wait until the SPA rendered something useful (IDs or at least mounted content)
-    await AD_bulkWaitUntil(() => {
-      const d = frame.contentDocument;
-      if (!d) return false;
-      const ids = AD_bulkCollectMatchIdsFromDoc(d);
-      if (ids.size > 0) return true;
-      const root = d.querySelector("main") || d.querySelector('[role="main"]') || d.querySelector("#root") || d.body;
-      const t = String(root?.textContent || "").trim();
-      return (t.length > 0);
-    }, Math.max(AD_BULK_SETTINGS.waitRenderMs, 15000), stopSignal);
-
-    if (stopSignal?.stopped) return [];
-
-    await AD_bulkSleep(AD_BULK_SETTINGS.settleMs);
-
-    let page = startPage;
-    let prevPageSig = null;
-    let pagesVisited = 0;
-
-    const firstIds = AD_bulkCollectMatchIdsFromDoc(frame.contentDocument);
-    const firstSig = AD_bulkSigOfIds(firstIds);
-
-    for (const id of firstIds) collected.add(id);
-    prevPageSig = firstSig;
-    pagesVisited++;
-
-    statusCb(`Collect start page=${page}\nonPage=${firstIds.size} | total=${collected.size}`);
-
-    if (AD_BULK_SETTINGS.stopOnEmptyPage && firstIds.size === 0) {
-      const out = Array.from(collected);
-      out.sort();
-      return out;
-    }
-
-    for (let i = 0; i < maxPages && !stopSignal?.stopped; i++) {
-      const nextPage = page + 1;
-      const url = AD_bulkMakeHistoryListUrlForPage(nextPage, { ad_bulk_iframe: "1" });
-
-      AD_bulkSpaNavigateInFrame(frame, url);
-
-      const { ids, sig } = await AD_bulkWaitForNewPageContentInDoc(frame.contentDocument, prevPageSig, stopSignal);
-
-      if (AD_BULK_SETTINGS.stopOnEmptyPage && ids.size === 0) {
-        statusCb(`Collect stop: page=${nextPage} leer.\nTotal IDs=${collected.size}`);
-        break;
-      }
-
-      if (AD_BULK_SETTINGS.stopOnRepeatPage && sig === prevPageSig) {
-        statusCb(`Collect stop: page=${nextPage} wiederholt letzte Seite.\nTotal IDs=${collected.size}`);
-        break;
-      }
-
-      const before = collected.size;
-      for (const id of ids) collected.add(id);
-      const newOnPage = collected.size - before;
-
-      pagesVisited++;
-      page = nextPage;
-      prevPageSig = sig;
-
-      statusCb(
-        `Collect page=${page}\n` +
-        `onPage=${ids.size} | new=${newOnPage} | total=${collected.size}\n` +
-        `pagesVisited=${pagesVisited}`
-      );
-
-      if (newOnPage === 0) {
-        statusCb(`Collect stop: page=${page} brachte keine neuen IDs.\nTotal IDs=${collected.size}`);
-        break;
-      }
-    }
-
-    const out = Array.from(collected);
-    out.sort();
-    return out;
-  }
-
-  async function AD_bulkCollectIdsInBackgroundTab({ startPage = 0, maxPages = AD_BULK_SETTINGS.maxPagesSafety, stopSignal, statusCb }) {
-    statusCb = statusCb || (() => {});
-    bulkRuntime.mode = "bg";
-
-    // BroadcastChannel + session correlation
-    const sessionId = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-    bulkRuntime.sessionId = sessionId;
-
-    let bc = null;
-    try {
-      if (typeof BroadcastChannel !== "undefined") bc = new BroadcastChannel(AD_BULK_BC_NAME);
-    } catch { bc = null; }
-
-    if (!bc) {
-      const e = new Error("BroadcastChannel not available");
-      e.code = "BC_UNAVAILABLE";
-      throw e;
-    }
-
-    bulkRuntime.bc = bc;
-
-    const openTabFn =
-      (typeof GM_openInTab === "function") ? GM_openInTab :
-      (typeof GM !== "undefined" && typeof GM.openInTab === "function") ? GM.openInTab :
-      null;
-
-    if (!openTabFn) {
-      const e = new Error("GM_openInTab not available");
-      e.code = "GM_openInTab_MISSING";
-      throw e;
-    }
-
-    const u = new URL("/history/matches", location.origin);
-    u.searchParams.set("page", String(startPage));
-    u.searchParams.set("ad_bulk_bg", "1");
-    u.searchParams.set("ad_bulk_session", sessionId);
-    u.searchParams.set("ad_bulk_maxPages", String(maxPages));
-    u.searchParams.set("ad_bulk_waitRenderMs", String(AD_BULK_SETTINGS.waitRenderMs));
-    u.searchParams.set("ad_bulk_settleMs", String(AD_BULK_SETTINGS.settleMs));
-
-    statusCb("iFrame blockiert → Collect läuft im Hintergrund (Tab bleibt unsichtbar)…");
-
-    const tab = openTabFn(u.pathname + u.search + u.hash, { active: false, insert: true, setParent: true });
-    bulkRuntime.tab = tab;
-
-    return await new Promise((resolve, reject) => {
-      let done = false;
-
-      const cleanup = () => {
-        if (done) return;
-        done = true;
-        try { bc.close(); } catch {}
-        try { tab?.close?.(); } catch {}
-        bulkRuntime.bc = null;
-        bulkRuntime.tab = null;
+    function AD_bulkRuntimeClear() {
+        bulkRuntime.mode = null;
         bulkRuntime.sessionId = null;
-        bulkRuntime.mode = null;
-      };
-
-      const stopTimer = setInterval(() => {
-        if (!stopSignal?.stopped) return;
-        try { bc.postMessage({ type: "stop", sessionId }); } catch {}
-        cleanup();
-        const e = new Error("Stopped");
-        e.code = "STOPPED";
-        reject(e);
-      }, 200);
-
-      const onMsg = (ev) => {
-        const m = ev?.data || {};
-        if (!m || m.sessionId !== sessionId) return;
-
-        if (m.type === "status") {
-          statusCb(String(m.text || ""));
-          return;
-        }
-
-        if (m.type === "done") {
-          try { statusCb(String(m.text || "")); } catch {}
-          clearInterval(stopTimer);
-          cleanup();
-          resolve((m.ids || []).map(String));
-          return;
-        }
-
-        if (m.type === "stopped") {
-          try { statusCb(String(m.text || "")); } catch {}
-          clearInterval(stopTimer);
-          cleanup();
-          const ids = (m.ids || []).map(String);
-          resolve(ids);
-          return;
-        }
-
-        if (m.type === "error") {
-          clearInterval(stopTimer);
-          cleanup();
-          const e = new Error(String(m.text || "BG collector error"));
-          e.code = "BG_ERROR";
-          reject(e);
-        }
-      };
-
-      try { bc.addEventListener("message", onMsg); } catch {
-        bc.onmessage = onMsg;
-      }
-    });
-  }
-
-  async function AD_bulkCollectIdsSmart({ startPage = AD_BULK_SETTINGS.startPageDefault, maxPages = AD_BULK_SETTINGS.maxPagesSafety, stopSignal, statusCb }) {
-    statusCb = statusCb || (() => {});
-
-    const isIframeCode = (c) => (c === "IFRAME_BLOCKED" || c === "IFRAME_TIMEOUT" || c === "IFRAME_LOAD_ERROR");
-
-    try {
-      return await AD_bulkCollectIdsHeadless({ startPage, maxPages, stopSignal, statusCb });
-    } catch (e) {
-      if (stopSignal?.stopped) throw e;
-
-      let code = String(e?.code || "");
-      if (code && !isIframeCode(code)) {
-        // Not an iframe-related failure → surface it
-        throw e;
-      }
-
-      // (v0.14.13) iFrame-Collect einmal kurz retryen, bevor BG-Tab Fallback startet.
-      if (!stopSignal?.stopped && isIframeCode(code)) {
-        try {
-          bulkLogPush("warn", "Collector Retry…");
-        } catch {}
-        try {
-          statusCb(`Collector Retry… (${code || "unknown"})`);
-        } catch {}
-
-        // Force a fresh iframe attempt
-        try {
-          const f = document.getElementById(AD_BULK_COLLECTOR_IFRAME_ID);
-          if (f) f.src = "about:blank";
-        } catch {}
-        await AD_bulkSleep(100);
-
-        const oldWait = AD_BULK_SETTINGS.waitRenderMs;
-        const oldSettle = AD_BULK_SETTINGS.settleMs;
-        // "kurz" – second attempt with tighter timings, then restore.
-        try {
-          AD_BULK_SETTINGS.waitRenderMs = Math.min(oldWait, 3500);
-          AD_BULK_SETTINGS.settleMs = Math.min(oldSettle, 150);
-          return await AD_bulkCollectIdsHeadless({ startPage, maxPages, stopSignal, statusCb });
-        } catch (e2) {
-          e = e2;
-          code = String(e?.code || code || "");
-        } finally {
-          AD_BULK_SETTINGS.waitRenderMs = oldWait;
-          AD_BULK_SETTINGS.settleMs = oldSettle;
-        }
-      }
-
-      // Fallback: background tab collector
-      statusCb(`iFrame Collector fehlgeschlagen (${code || "unknown"}). Fallback…`);
-      try {
-        return await AD_bulkCollectIdsInBackgroundTab({ startPage, maxPages, stopSignal, statusCb });
-      } catch (fbErr) {
-        // Visible feedback + release UI early (safety)
-        try { bulkLogPush("error", `Fallback fehlgeschlagen: ${fbErr?.message || fbErr}`); } catch {}
-        try { bulkState.running = null; } catch {}
-        try { AD_bulkRuntimeClear(); } catch {}
-        try { AD_bulkUpdateUi(); } catch {}
-        throw fbErr;
-      }
-    } finally {
-      if (bulkRuntime.mode === "iframe") {
-        // keep iframe for reuse, but clear mode
-        bulkRuntime.mode = null;
-      }
+        try { bulkRuntime.bc?.close?.(); } catch {}
+        bulkRuntime.bc = null;
+        try { bulkRuntime.tab?.close?.(); } catch {}
+        bulkRuntime.tab = null;
     }
-  }
 
-async function AD_bulkCollectAllPages(statusCb, stopSignal) {
-    const collected = new Set();
+    async function AD_bulkWaitUntil(fn, timeoutMs, stopSignal, intervalMs = 200) {
+        const t0 = Date.now();
+        while (!stopSignal?.stopped && (Date.now() - t0) < timeoutMs) {
+            let ok = false;
+            try { ok = !!fn(); } catch { ok = false; }
+            if (ok) return true;
+            await AD_bulkSleep(intervalMs);
+        }
+        return false;
+    }
 
-    let page = AD_bulkGetPageParam();
-    let prevPageSig = null;
-    let pagesVisited = 0;
+    function AD_bulkMakeHistoryListUrlForPage(page, extraParams) {
+        const u = new URL("/history/matches", location.origin);
+        u.searchParams.set("page", String(page));
+        for (const [k, v] of Object.entries(extraParams || {})) {
+            if (v == null) continue;
+            u.searchParams.set(String(k), String(v));
+        }
+        return u.pathname + u.search + u.hash;
+    }
 
-    const firstIds = AD_bulkCollectMatchIdsFromDom();
-    const firstSig = AD_bulkSigOfIds(firstIds);
+    function AD_bulkGetOrCreateCollectorIframe() {
+        let frame = document.getElementById(AD_BULK_COLLECTOR_IFRAME_ID);
+        if (frame) return frame;
 
-    for (const id of firstIds) collected.add(id);
-    prevPageSig = firstSig;
-    pagesVisited++;
+        frame = document.createElement("iframe");
+        frame.id = AD_BULK_COLLECTOR_IFRAME_ID;
+        frame.setAttribute("aria-hidden", "true");
+        frame.setAttribute("tabindex", "-1");
+        frame.style.cssText = [
+            "position: fixed",
+            "width: 1px",
+            "height: 1px",
+            "left: -9999px",
+            "top: -9999px",
+            "opacity: 0",
+            "pointer-events: none",
+            "border: 0"
+        ].join(";");
 
-    statusCb(`Collect start page=${page}\nonPage=${firstIds.size} | total=${collected.size}`);
+        try { document.body.appendChild(frame); } catch {}
+        return frame;
+    }
 
-    if (AD_BULK_SETTINGS.stopOnEmptyPage && firstIds.size === 0) return collected;
+    async function AD_bulkLoadCollectorIframe(frame, url, stopSignal) {
+        if (stopSignal?.stopped) return false;
 
-    for (let i = 0; i < AD_BULK_SETTINGS.maxPagesSafety && !stopSignal.stopped; i++) {
-      const nextPage = page + 1;
-      const url = AD_bulkMakeUrlForPage(nextPage);
+        const timeoutMs = Math.max(15000, AD_BULK_SETTINGS.waitRenderMs);
 
-      AD_bulkSpaNavigateTo(url);
+        // Force reload if same src
+        try {
+            const cur = String(frame.getAttribute("src") || frame.src || "");
+            if (cur && cur.endsWith(url)) {
+                try { frame.src = "about:blank"; } catch {}
+                await AD_bulkSleep(50);
+            }
+        } catch {}
 
-      const { ids, sig } = await AD_bulkWaitForNewPageContent(prevPageSig, stopSignal);
+        await new Promise((resolve, reject) => {
+            let done = false;
+            const t = setTimeout(() => {
+                if (done) return;
+                done = true;
+                cleanup();
+                const e = new Error("iFrame load timeout");
+                e.code = "IFRAME_TIMEOUT";
+                reject(e);
+            }, timeoutMs);
 
-      if (AD_BULK_SETTINGS.stopOnEmptyPage && ids.size === 0) {
-        statusCb(`Collect stop: page=${nextPage} leer.\nTotal IDs=${collected.size}`);
-        break;
-      }
+            function cleanup() {
+                try { clearTimeout(t); } catch {}
+                try { frame.removeEventListener("load", onLoad); } catch {}
+                try { frame.removeEventListener("error", onErr); } catch {}
+            }
 
-      if (AD_BULK_SETTINGS.stopOnRepeatPage && sig === prevPageSig) {
-        statusCb(`Collect stop: page=${nextPage} wiederholt letzte Seite.\nTotal IDs=${collected.size}`);
-        break;
-      }
+            function onLoad() {
+                if (done) return;
+                done = true;
+                cleanup();
+                resolve(true);
+            }
 
-      const before = collected.size;
-      for (const id of ids) collected.add(id);
-      const newOnPage = collected.size - before;
+            function onErr() {
+                if (done) return;
+                done = true;
+                cleanup();
+                const e = new Error("iFrame load error");
+                e.code = "IFRAME_LOAD_ERROR";
+                reject(e);
+            }
 
-      pagesVisited++;
-      page = nextPage;
-      prevPageSig = sig;
+            try {
+                frame.addEventListener("load", onLoad);
+                frame.addEventListener("error", onErr);
+            } catch {}
 
-      statusCb(
-        `Collect page=${page}\n` +
-        `onPage=${ids.size} | new=${newOnPage} | total=${collected.size}\n` +
-        `pagesVisited=${pagesVisited}`
+            try { frame.setAttribute("src", url); frame.src = url; } catch (e) {
+                done = true;
+                cleanup();
+                reject(e);
+            }
+        });
+
+        if (stopSignal?.stopped) return false;
+
+        // Check same-origin access
+        try {
+            const doc = frame.contentDocument;
+            const win = frame.contentWindow;
+            if (!doc || !win) {
+                const e = new Error("iFrame doc/window unavailable");
+                e.code = "IFRAME_BLOCKED";
+                throw e;
+            }
+            // Accessing location.href can throw when blocked
+            void win.location.href;
+        } catch (e) {
+            const err = new Error("iFrame blocked (X-Frame-Options/CSP?)");
+            err.code = "IFRAME_BLOCKED";
+            err.cause = e;
+            throw err;
+        }
+
+        return true;
+    }
+
+    function AD_bulkSpaNavigateInFrame(frame, url) {
+        const win = frame?.contentWindow;
+        if (!win) {
+            const e = new Error("Frame window unavailable");
+            e.code = "IFRAME_BLOCKED";
+            throw e;
+        }
+
+        try { win.history.pushState({}, "", url); } catch {
+            try { win.location.href = url; } catch {}
+            return;
+        }
+
+        try { win.dispatchEvent(new win.PopStateEvent("popstate")); } catch {
+            try { win.dispatchEvent(new win.Event("popstate")); } catch {}
+        }
+    }
+
+    async function AD_bulkCollectIdsHeadless({ startPage = 0, maxPages = AD_BULK_SETTINGS.maxPagesSafety, stopSignal, statusCb }) {
+        bulkRuntime.mode = "iframe";
+        statusCb = statusCb || (() => {});
+
+        const collected = new Set();
+        const frame = AD_bulkGetOrCreateCollectorIframe();
+
+        const startUrl = AD_bulkMakeHistoryListUrlForPage(startPage, { ad_bulk_iframe: "1" });
+
+        statusCb(`Collect (headless) lade iFrame…\n${startUrl}`);
+
+        await AD_bulkLoadCollectorIframe(frame, startUrl, stopSignal);
+
+        if (stopSignal?.stopped) return [];
+
+        // Wait until the SPA rendered something useful (IDs or at least mounted content)
+        await AD_bulkWaitUntil(() => {
+            const d = frame.contentDocument;
+            if (!d) return false;
+            const ids = AD_bulkCollectMatchIdsFromDoc(d);
+            if (ids.size > 0) return true;
+            const root = d.querySelector("main") || d.querySelector('[role="main"]') || d.querySelector("#root") || d.body;
+            const t = String(root?.textContent || "").trim();
+            return (t.length > 0);
+        }, Math.max(AD_BULK_SETTINGS.waitRenderMs, 15000), stopSignal);
+
+        if (stopSignal?.stopped) return [];
+
+        await AD_bulkSleep(AD_BULK_SETTINGS.settleMs);
+
+        let page = startPage;
+        let prevPageSig = null;
+        let pagesVisited = 0;
+
+        const firstIds = AD_bulkCollectMatchIdsFromDoc(frame.contentDocument);
+        const firstSig = AD_bulkSigOfIds(firstIds);
+
+        for (const id of firstIds) collected.add(id);
+        prevPageSig = firstSig;
+        pagesVisited++;
+
+        statusCb(`Collect start page=${page}\nonPage=${firstIds.size} | total=${collected.size}`);
+
+        if (AD_BULK_SETTINGS.stopOnEmptyPage && firstIds.size === 0) {
+            const out = Array.from(collected);
+            out.sort();
+            return out;
+        }
+
+        for (let i = 0; i < maxPages && !stopSignal?.stopped; i++) {
+            const nextPage = page + 1;
+            const url = AD_bulkMakeHistoryListUrlForPage(nextPage, { ad_bulk_iframe: "1" });
+
+            AD_bulkSpaNavigateInFrame(frame, url);
+
+            const { ids, sig } = await AD_bulkWaitForNewPageContentInDoc(frame.contentDocument, prevPageSig, stopSignal);
+
+            if (AD_BULK_SETTINGS.stopOnEmptyPage && ids.size === 0) {
+                statusCb(`Collect stop: page=${nextPage} leer.\nTotal IDs=${collected.size}`);
+                break;
+            }
+
+            if (AD_BULK_SETTINGS.stopOnRepeatPage && sig === prevPageSig) {
+                statusCb(`Collect stop: page=${nextPage} wiederholt letzte Seite.\nTotal IDs=${collected.size}`);
+                break;
+            }
+
+            const before = collected.size;
+            for (const id of ids) collected.add(id);
+            const newOnPage = collected.size - before;
+
+            pagesVisited++;
+            page = nextPage;
+            prevPageSig = sig;
+
+            statusCb(
+                `Collect page=${page}\n` +
+                `onPage=${ids.size} | new=${newOnPage} | total=${collected.size}\n` +
+                `pagesVisited=${pagesVisited}`
       );
 
-      if (newOnPage === 0) {
-        statusCb(`Collect stop: page=${page} brachte keine neuen IDs.\nTotal IDs=${collected.size}`);
-        break;
-      }
+            if (newOnPage === 0) {
+                statusCb(`Collect stop: page=${page} brachte keine neuen IDs.\nTotal IDs=${collected.size}`);
+                break;
+            }
+        }
+
+        const out = Array.from(collected);
+        out.sort();
+        return out;
+    }
+
+    async function AD_bulkCollectIdsInBackgroundTab({ startPage = 0, maxPages = AD_BULK_SETTINGS.maxPagesSafety, stopSignal, statusCb }) {
+        statusCb = statusCb || (() => {});
+        bulkRuntime.mode = "bg";
+
+        // BroadcastChannel + session correlation
+        const sessionId = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        bulkRuntime.sessionId = sessionId;
+
+        let bc = null;
+        try {
+            if (typeof BroadcastChannel !== "undefined") bc = new BroadcastChannel(AD_BULK_BC_NAME);
+        } catch { bc = null; }
+
+        if (!bc) {
+            const e = new Error("BroadcastChannel not available");
+            e.code = "BC_UNAVAILABLE";
+            throw e;
+        }
+
+        bulkRuntime.bc = bc;
+
+        const openTabFn =
+              (typeof GM_openInTab === "function") ? GM_openInTab :
+        (typeof GM !== "undefined" && typeof GM.openInTab === "function") ? GM.openInTab :
+        null;
+
+        if (!openTabFn) {
+            const e = new Error("GM_openInTab not available");
+            e.code = "GM_openInTab_MISSING";
+            throw e;
+        }
+
+        const u = new URL("/history/matches", location.origin);
+        u.searchParams.set("page", String(startPage));
+        u.searchParams.set("ad_bulk_bg", "1");
+        u.searchParams.set("ad_bulk_session", sessionId);
+        u.searchParams.set("ad_bulk_maxPages", String(maxPages));
+        u.searchParams.set("ad_bulk_waitRenderMs", String(AD_BULK_SETTINGS.waitRenderMs));
+        u.searchParams.set("ad_bulk_settleMs", String(AD_BULK_SETTINGS.settleMs));
+
+        statusCb("iFrame blockiert → Collect läuft im Hintergrund (Tab bleibt unsichtbar)…");
+
+        const tab = openTabFn(u.pathname + u.search + u.hash, { active: false, insert: true, setParent: true });
+        bulkRuntime.tab = tab;
+
+        return await new Promise((resolve, reject) => {
+            let done = false;
+
+            const cleanup = () => {
+                if (done) return;
+                done = true;
+                try { bc.close(); } catch {}
+                try { tab?.close?.(); } catch {}
+                bulkRuntime.bc = null;
+                bulkRuntime.tab = null;
+                bulkRuntime.sessionId = null;
+                bulkRuntime.mode = null;
+            };
+
+            const stopTimer = setInterval(() => {
+                if (!stopSignal?.stopped) return;
+                try { bc.postMessage({ type: "stop", sessionId }); } catch {}
+                cleanup();
+                const e = new Error("Stopped");
+                e.code = "STOPPED";
+                reject(e);
+            }, 200);
+
+            const onMsg = (ev) => {
+                const m = ev?.data || {};
+                if (!m || m.sessionId !== sessionId) return;
+
+                if (m.type === "status") {
+                    statusCb(String(m.text || ""));
+                    return;
+                }
+
+                if (m.type === "done") {
+                    try { statusCb(String(m.text || "")); } catch {}
+                    clearInterval(stopTimer);
+                    cleanup();
+                    resolve((m.ids || []).map(String));
+                    return;
+                }
+
+                if (m.type === "stopped") {
+                    try { statusCb(String(m.text || "")); } catch {}
+                    clearInterval(stopTimer);
+                    cleanup();
+                    const ids = (m.ids || []).map(String);
+                    resolve(ids);
+                    return;
+                }
+
+                if (m.type === "error") {
+                    clearInterval(stopTimer);
+                    cleanup();
+                    const e = new Error(String(m.text || "BG collector error"));
+                    e.code = "BG_ERROR";
+                    reject(e);
+                }
+            };
+
+            try { bc.addEventListener("message", onMsg); } catch {
+                bc.onmessage = onMsg;
+            }
+        });
+    }
+
+    async function AD_bulkCollectIdsSmart({ startPage = AD_BULK_SETTINGS.startPageDefault, maxPages = AD_BULK_SETTINGS.maxPagesSafety, stopSignal, statusCb }) {
+        statusCb = statusCb || (() => {});
+
+        const isIframeCode = (c) => (c === "IFRAME_BLOCKED" || c === "IFRAME_TIMEOUT" || c === "IFRAME_LOAD_ERROR");
+
+        try {
+            return await AD_bulkCollectIdsHeadless({ startPage, maxPages, stopSignal, statusCb });
+        } catch (e) {
+            if (stopSignal?.stopped) throw e;
+
+            let code = String(e?.code || "");
+            if (code && !isIframeCode(code)) {
+                // Not an iframe-related failure → surface it
+                throw e;
+            }
+
+            // (v0.14.13) iFrame-Collect einmal kurz retryen, bevor BG-Tab Fallback startet.
+            if (!stopSignal?.stopped && isIframeCode(code)) {
+                try {
+                    bulkLogPush("warn", "Collector Retry…");
+                } catch {}
+                try {
+                    statusCb(`Collector Retry… (${code || "unknown"})`);
+                } catch {}
+
+                // Force a fresh iframe attempt
+                try {
+                    const f = document.getElementById(AD_BULK_COLLECTOR_IFRAME_ID);
+                    if (f) f.src = "about:blank";
+                } catch {}
+                await AD_bulkSleep(100);
+
+                const oldWait = AD_BULK_SETTINGS.waitRenderMs;
+                const oldSettle = AD_BULK_SETTINGS.settleMs;
+                // "kurz" – second attempt with tighter timings, then restore.
+                try {
+                    AD_BULK_SETTINGS.waitRenderMs = Math.min(oldWait, 3500);
+                    AD_BULK_SETTINGS.settleMs = Math.min(oldSettle, 150);
+                    return await AD_bulkCollectIdsHeadless({ startPage, maxPages, stopSignal, statusCb });
+                } catch (e2) {
+                    e = e2;
+                    code = String(e?.code || code || "");
+                } finally {
+                    AD_BULK_SETTINGS.waitRenderMs = oldWait;
+                    AD_BULK_SETTINGS.settleMs = oldSettle;
+                }
+            }
+
+            // Fallback: background tab collector
+            statusCb(`iFrame Collector fehlgeschlagen (${code || "unknown"}). Fallback…`);
+            try {
+                return await AD_bulkCollectIdsInBackgroundTab({ startPage, maxPages, stopSignal, statusCb });
+            } catch (fbErr) {
+                // Visible feedback + release UI early (safety)
+                try { bulkLogPush("error", `Fallback fehlgeschlagen: ${fbErr?.message || fbErr}`); } catch {}
+                try { bulkState.running = null; } catch {}
+                try { AD_bulkRuntimeClear(); } catch {}
+                try { AD_bulkUpdateUi(); } catch {}
+                throw fbErr;
+            }
+        } finally {
+            if (bulkRuntime.mode === "iframe") {
+                // keep iframe for reuse, but clear mode
+                bulkRuntime.mode = null;
+            }
+        }
+    }
+
+    async function AD_bulkCollectAllPages(statusCb, stopSignal) {
+        const collected = new Set();
+
+        let page = AD_bulkGetPageParam();
+        let prevPageSig = null;
+        let pagesVisited = 0;
+
+        const firstIds = AD_bulkCollectMatchIdsFromDom();
+        const firstSig = AD_bulkSigOfIds(firstIds);
+
+        for (const id of firstIds) collected.add(id);
+        prevPageSig = firstSig;
+        pagesVisited++;
+
+        statusCb(`Collect start page=${page}\nonPage=${firstIds.size} | total=${collected.size}`);
+
+        if (AD_BULK_SETTINGS.stopOnEmptyPage && firstIds.size === 0) return collected;
+
+        for (let i = 0; i < AD_BULK_SETTINGS.maxPagesSafety && !stopSignal.stopped; i++) {
+            const nextPage = page + 1;
+            const url = AD_bulkMakeUrlForPage(nextPage);
+
+            AD_bulkSpaNavigateTo(url);
+
+            const { ids, sig } = await AD_bulkWaitForNewPageContent(prevPageSig, stopSignal);
+
+            if (AD_BULK_SETTINGS.stopOnEmptyPage && ids.size === 0) {
+                statusCb(`Collect stop: page=${nextPage} leer.\nTotal IDs=${collected.size}`);
+                break;
+            }
+
+            if (AD_BULK_SETTINGS.stopOnRepeatPage && sig === prevPageSig) {
+                statusCb(`Collect stop: page=${nextPage} wiederholt letzte Seite.\nTotal IDs=${collected.size}`);
+                break;
+            }
+
+            const before = collected.size;
+            for (const id of ids) collected.add(id);
+            const newOnPage = collected.size - before;
+
+            pagesVisited++;
+            page = nextPage;
+            prevPageSig = sig;
+
+            statusCb(
+                `Collect page=${page}\n` +
+                `onPage=${ids.size} | new=${newOnPage} | total=${collected.size}\n` +
+                `pagesVisited=${pagesVisited}`
+      );
+
+        if (newOnPage === 0) {
+            statusCb(`Collect stop: page=${page} brachte keine neuen IDs.\nTotal IDs=${collected.size}`);
+            break;
+        }
     }
 
     return collected;
-  }
+}
 
-  // -------------------- Import queue --------------------
+    // -------------------- Import queue --------------------
 
-  async function AD_bulkIdbGetAllKeys(db) {
-    return new Promise((resolve, reject) => {
-      try {
-        const tx = db.transaction("match_stats", "readonly");
-        const store = tx.objectStore("match_stats");
-        const req = store.getAllKeys();
-        req.onsuccess = () => resolve(new Set((req.result || []).map(String)));
-        req.onerror = () => reject(req.error);
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
-
-  async function AD_bulkFetchAndCacheStatsOnceOnDb(db, matchId) {
-    const url = `${API_HOST}/as/v0/matches/${encodeURIComponent(matchId)}/stats`;
-    const stats = await gmRequestJson("GET", url);
-
-    if (!stats || (typeof stats === "object" && !Array.isArray(stats) && Object.keys(stats).length === 0)) {
-      const e = new Error("Empty stats payload");
-      e.status = 0;
-      throw e;
+    async function AD_bulkIdbGetAllKeys(db) {
+        return new Promise((resolve, reject) => {
+            try {
+                const tx = db.transaction("match_stats", "readonly");
+                const store = tx.objectStore("match_stats");
+                const req = store.getAllKeys();
+                req.onsuccess = () => resolve(new Set((req.result || []).map(String)));
+                req.onerror = () => reject(req.error);
+            } catch (e) {
+                reject(e);
+            }
+        });
     }
 
-    const fetchedAt = Date.now();
-    await idbPut(db, "match_stats", { matchId, fetchedAt, stats });
-    return { stats, fetchedAt };
-  }
+    async function AD_bulkFetchAndCacheStatsOnceOnDb(db, matchId) {
+        const url = `${API_HOST}/as/v0/matches/${encodeURIComponent(matchId)}/stats`;
+        const stats = await gmRequestJson("GET", url);
 
-  function AD_bulkIsRetryableError(e) {
-    const st = Number(e?.status || 0);
-    if (st === 404) return false;
-    if (st === 0) return true; // network / empty stats treated as retryable
-    if (st === 408 || st === 425 || st === 429) return true;
-    if (st >= 500 && st <= 599) return true;
-    return true; // default retry for unknown
-  }
-
-  async function AD_bulkFetchAndCacheStatsWithRetry(db, matchId, stopSignal) {
-    let lastErr = null;
-    for (let attempt = 0; attempt <= AD_BULK_SETTINGS.maxRetries; attempt++) {
-      if (stopSignal.stopped) {
-        const e = new Error("Stopped");
-        e.status = 0;
-        throw e;
-      }
-
-      try {
-        return await AD_bulkFetchAndCacheStatsOnceOnDb(db, matchId);
-      } catch (e) {
-        lastErr = e;
-        const retryable = AD_bulkIsRetryableError(e);
-        if (!retryable || attempt >= AD_BULK_SETTINGS.maxRetries) throw e;
-
-        const wait = AD_BULK_SETTINGS.retryBaseDelayMs * Math.pow(2, attempt);
-        await AD_bulkSleep(wait);
-      }
-    }
-    throw lastErr || new Error("Retry failed");
-  }
-
-  async function AD_bulkRunQueue({ ids, cachedKeys, db, statusCb, stopSignal }) {
-    const todo = ids.filter(id => !cachedKeys.has(id));
-
-    let done = 0, ok = 0, failed = 0;
-    let lastOkMatchId = null;
-    let lastOkFetchedAt = null;
-
-    const cached = ids.length - todo.length;
-    statusCb(`Queue: total=${ids.length} | cached=${cached} | toFetch=${todo.length}`);
-
-    let idx = 0;
-    async function worker(n) {
-      while (!stopSignal.stopped) {
-        const my = idx++;
-        if (my >= todo.length) return;
-
-        const matchId = todo[my];
-        try {
-          const res = await AD_bulkFetchAndCacheStatsWithRetry(db, matchId, stopSignal);
-          ok++;
-          lastOkMatchId = matchId;
-          lastOkFetchedAt = res?.fetchedAt || Date.now();
-        } catch (e) {
-          if (stopSignal.stopped) return;
-          failed++;
-          try { warn(`Bulk worker ${n} failed for ${matchId}:`, e?.status || e); } catch {}
-        } finally {
-          done++;
-          statusCb(`Import: done=${done}/${todo.length} | ok=${ok} | failed=${failed} | cached=${cached}`);
-          await AD_bulkSleep(AD_BULK_SETTINGS.delayMs);
+        if (!stats || (typeof stats === "object" && !Array.isArray(stats) && Object.keys(stats).length === 0)) {
+            const e = new Error("Empty stats payload");
+            e.status = 0;
+            throw e;
         }
-      }
+
+        const fetchedAt = Date.now();
+        await idbPut(db, "match_stats", { matchId, fetchedAt, stats });
+        return { stats, fetchedAt };
     }
 
-    await Promise.allSettled(Array.from({ length: AD_BULK_SETTINGS.concurrency }, (_, i) => worker(i + 1)));
-    return { total: ids.length, toFetch: todo.length, ok, failed, cached, lastOkMatchId, lastOkFetchedAt };
-  }
+    function AD_bulkIsRetryableError(e) {
+        const st = Number(e?.status || 0);
+        if (st === 404) return false;
+        if (st === 0) return true; // network / empty stats treated as retryable
+        if (st === 408 || st === 425 || st === 429) return true;
+        if (st >= 500 && st <= 599) return true;
+        return true; // default retry for unknown
+    }
 
-  // (v0.14.10) Collect läuft headless (kein sichtbares Navigieren zur History-Liste).
+    async function AD_bulkFetchAndCacheStatsWithRetry(db, matchId, stopSignal) {
+        let lastErr = null;
+        for (let attempt = 0; attempt <= AD_BULK_SETTINGS.maxRetries; attempt++) {
+            if (stopSignal.stopped) {
+                const e = new Error("Stopped");
+                e.status = 0;
+                throw e;
+            }
 
-  // -------------------- Button Wiring --------------------
+            try {
+                return await AD_bulkFetchAndCacheStatsOnceOnDb(db, matchId);
+            } catch (e) {
+                lastErr = e;
+                const retryable = AD_bulkIsRetryableError(e);
+                if (!retryable || attempt >= AD_BULK_SETTINGS.maxRetries) throw e;
+
+                const wait = AD_BULK_SETTINGS.retryBaseDelayMs * Math.pow(2, attempt);
+                await AD_bulkSleep(wait);
+            }
+        }
+        throw lastErr || new Error("Retry failed");
+    }
+
+    async function AD_bulkRunQueue({ ids, cachedKeys, db, statusCb, stopSignal }) {
+        const todo = ids.filter(id => !cachedKeys.has(id));
+
+        let done = 0, ok = 0, failed = 0;
+        let lastOkMatchId = null;
+        let lastOkFetchedAt = null;
+
+        const cached = ids.length - todo.length;
+        statusCb(`Queue: total=${ids.length} | cached=${cached} | toFetch=${todo.length}`);
+
+        let idx = 0;
+        async function worker(n) {
+            while (!stopSignal.stopped) {
+                const my = idx++;
+                if (my >= todo.length) return;
+
+                const matchId = todo[my];
+                try {
+                    const res = await AD_bulkFetchAndCacheStatsWithRetry(db, matchId, stopSignal);
+                    ok++;
+                    lastOkMatchId = matchId;
+                    lastOkFetchedAt = res?.fetchedAt || Date.now();
+                } catch (e) {
+                    if (stopSignal.stopped) return;
+                    failed++;
+                    try { warn(`Bulk worker ${n} failed for ${matchId}:`, e?.status || e); } catch {}
+                } finally {
+                    done++;
+                    statusCb(`Import: done=${done}/${todo.length} | ok=${ok} | failed=${failed} | cached=${cached}`);
+                    await AD_bulkSleep(AD_BULK_SETTINGS.delayMs);
+                }
+            }
+        }
+
+        await Promise.allSettled(Array.from({ length: AD_BULK_SETTINGS.concurrency }, (_, i) => worker(i + 1)));
+        return { total: ids.length, toFetch: todo.length, ok, failed, cached, lastOkMatchId, lastOkFetchedAt };
+    }
+
+    // (v0.14.10) Collect läuft headless (kein sichtbares Navigieren zur History-Liste).
+
+    // -------------------- Button Wiring --------------------
 
     btnBulkStop?.addEventListener("click", () => {
-    if (!bulkState.running) return;
+        if (!bulkState.running) return;
 
-    bulkState.stopSignal.stopped = true;
-    if (btnBulkStop) btnBulkStop.disabled = true;
+        bulkState.stopSignal.stopped = true;
+        if (btnBulkStop) btnBulkStop.disabled = true;
 
-    // (v0.14.13) Sofortiges UI-Reset beim Stop-Klick (ohne auf finally zu warten)
-    bulkState.uiResetOnStop = true;
-    bulkState.matchesFound = 0;
-    bulkState.collectedIds = [];
-    bulkState.pagesChecked = 0;
-    bulkState.importMeta = { total: 0, cached: 0, toFetch: 0, done: 0, ok: 0, failed: 0 };
-    AD_bulkSetProgress(0);
-    AD_bulkSetPhase("Bereit.");
-    AD_bulkSetMeta("Matches gefunden: 0");
-    AD_bulkUpdateUi();
-    try { bulkLogPush("warn", "Abbruch – Anzeige zurückgesetzt."); } catch {}
-
-    // Stop background-tab collector if active
-    try {
-      if (bulkRuntime?.mode === "bg" && bulkRuntime.bc && bulkRuntime.sessionId) {
-        bulkRuntime.bc.postMessage({ type: "stop", sessionId: bulkRuntime.sessionId });
-      }
-      try { bulkRuntime?.tab?.close?.(); } catch {}
-    } catch {}
-
-    // Best-effort: halt iframe activity
-    try {
-      if (bulkRuntime?.mode === "iframe") {
-        const f = document.getElementById(AD_BULK_COLLECTOR_IFRAME_ID);
-        if (f) f.src = "about:blank";
-      }
-    } catch {}
-
-    AD_bulkSetStatus("Stop angefordert…");
-  });
-  btnBulkRunAll?.addEventListener("click", async () => {
-    if (bulkState.running) return;
-
-    // (v0.14.13) Sofortiges Feedback: klick greift auch wenn async init verzögert
-    try { bulkLogPush("info", "Start: Sammeln & Import initialisiert…"); } catch {}
-    try { if (btnBulkRunAll) btnBulkRunAll.disabled = true; } catch {}
-    bulkState.uiResetOnStop = false;
-
-    // One-click flow: Collect → Import
-    bulkState.running = "collect";
-    bulkState.stopSignal = { stopped: false };
-    bulkState.collectedIds = [];
-    bulkState.matchesFound = 0;
-    bulkState.pagesChecked = 0;
-    bulkState.importMeta = { total: 0, cached: 0, toFetch: 0, done: 0, ok: 0, failed: 0 };
-    bulkLogUi.lastCollectPage = null;
-    bulkLogUi.lastImportDone = null;
-    bulkLogUi.lastImportLogAt = 0;
-    bulkLogUi.lastQueueSig = null;
-
-    AD_bulkUpdateUi();
-    bulkLogPush("info", "Sammle Match-IDs…");
-
-    try {
-      // -------- Collect --------
-      try {
-        AD_bulkSetStatus("Sammle Match-IDs…");
-        const ids = await AD_bulkCollectIdsSmart({
-          startPage: AD_BULK_SETTINGS.startPageDefault,
-          maxPages: AD_BULK_SETTINGS.maxPagesSafety,
-          stopSignal: bulkState.stopSignal,
-          statusCb: AD_bulkSetStatus
-        });
-
-        // Normalize
-        const uniq = Array.from(new Set((ids || []).map(String)));
-        uniq.sort();
-        bulkState.collectedIds = uniq;
-        bulkState.matchesFound = uniq.length;
-
-        if (bulkState.stopSignal.stopped) {
-          AD_bulkSetStatus(`Abgebrochen.\nMatches gefunden: ${bulkState.collectedIds.length}`);
-          return;
-        }
-
-        if (!bulkState.collectedIds.length) {
-          AD_bulkSetStatus("Sammeln beendet.\nMatches gefunden: 0");
-          return;
-        }
-
-        AD_bulkSetStatus(`Matches gefunden: ${bulkState.collectedIds.length}. Starte Import…`);
-      } catch (e) {
-        const code = String(e?.code || "");
-        if (bulkState.stopSignal.stopped || code === "STOPPED") {
-          AD_bulkSetStatus(`Abgebrochen.
-Matches gefunden: ${bulkState.collectedIds.length}`);
-        } else {
-          AD_bulkSetStatus(`Sammeln Fehler: ${e?.message || e}`);
-        }
-        return;
-      } finally {
-        // Ensure collector runtime is cleaned before import
-        try { AD_bulkRuntimeClear(); } catch {}
-      }
-
-      // -------- Import --------
-      bulkState.running = "import";
-      bulkLogPush("info", "Importiere Statistiken…");
-      AD_bulkSetProgress(0);
-      AD_bulkUpdateUi();
-
-      try {
-        AD_bulkSetStatus("Öffne IndexedDB…");
-        const db = await openDb();
-
-        AD_bulkSetStatus("Lese Cache-Keys…");
-        const cached = await AD_bulkIdbGetAllKeys(db);
-
-        const res = await AD_bulkRunQueue({
-          ids: bulkState.collectedIds,
-          cachedKeys: cached,
-          db,
-          statusCb: AD_bulkSetStatus,
-          stopSignal: bulkState.stopSignal
-        });
-
-        const aborted = bulkState.stopSignal.stopped;
-
-        AD_bulkSetStatus(
-          `${aborted ? "Abgebrochen." : "Fertig."}\n` +
-          `total=${res.total}\n` +
-          `toFetch=${res.toFetch}\n` +
-          `ok=${res.ok}\n` +
-          `failed=${res.failed}\n` +
-          `cached=${res.cached}`
-        );
-
-        // Optional: Cache update signal
-        if (res?.lastOkMatchId) {
-          try { AD_notifyCacheUpdated(res.lastOkMatchId, res?.lastOkFetchedAt || Date.now()); } catch {}
-        }
-      } catch (e) {
-        AD_bulkSetStatus(`Import Fehler: ${e?.message || e}`);
-      }
-    } finally {
-      const wasStopped = !!bulkState.stopSignal?.stopped;
-      bulkState.running = null;
-      bulkState.stopSignal = { stopped: false };
-      try { AD_bulkRuntimeClear(); } catch {}
-
-      // (v0.14.13) Safety net: nach Stop keine alten Meta-Werte hängen lassen
-      if (wasStopped) {
+        // (v0.14.13) Sofortiges UI-Reset beim Stop-Klick (ohne auf finally zu warten)
+        bulkState.uiResetOnStop = true;
         bulkState.matchesFound = 0;
         bulkState.collectedIds = [];
         bulkState.pagesChecked = 0;
         bulkState.importMeta = { total: 0, cached: 0, toFetch: 0, done: 0, ok: 0, failed: 0 };
-        try { AD_bulkSetProgress(0); } catch {}
-        try { AD_bulkSetPhase("Bereit."); } catch {}
-        try { AD_bulkSetMeta("Matches gefunden: 0"); } catch {}
-      }
+        AD_bulkSetProgress(0);
+        AD_bulkSetPhase("Bereit.");
+        AD_bulkSetMeta("Matches gefunden: 0");
+        AD_bulkUpdateUi();
+        try { bulkLogPush("warn", "Abbruch – Anzeige zurückgesetzt."); } catch {}
 
-      bulkState.uiResetOnStop = false;
-      AD_bulkUpdateUi();
-    }
-  });
+        // Stop background-tab collector if active
+        try {
+            if (bulkRuntime?.mode === "bg" && bulkRuntime.bc && bulkRuntime.sessionId) {
+                bulkRuntime.bc.postMessage({ type: "stop", sessionId: bulkRuntime.sessionId });
+            }
+            try { bulkRuntime?.tab?.close?.(); } catch {}
+        } catch {}
 
+        // Best-effort: halt iframe activity
+        try {
+            if (bulkRuntime?.mode === "iframe") {
+                const f = document.getElementById(AD_BULK_COLLECTOR_IFRAME_ID);
+                if (f) f.src = "about:blank";
+            }
+        } catch {}
 
-  // Initial UI state
-  AD_bulkUpdateUi();
+        AD_bulkSetStatus("Stop angefordert…");
+    });
+    btnBulkRunAll?.addEventListener("click", async () => {
+        if (bulkState.running) return;
 
-  // -------------------- Settings (localStorage) --------------------
-  function AD_readBool(key, defVal) {
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw == null) return !!defVal;
-      if (raw === "1" || raw === "true" || raw === "yes" || raw === "on") return true;
-      if (raw === "0" || raw === "false" || raw === "no" || raw === "off") return false;
-      return !!defVal;
-    } catch {
-      return !!defVal;
-    }
-  }
+        // (v0.14.13) Sofortiges Feedback: klick greift auch wenn async init verzögert
+        try { bulkLogPush("info", "Start: Sammeln & Import initialisiert…"); } catch {}
+        try { if (btnBulkRunAll) btnBulkRunAll.disabled = true; } catch {}
+        bulkState.uiResetOnStop = false;
 
-  function AD_writeBool(key, val) {
-    try { localStorage.setItem(key, val ? "1" : "0"); } catch {}
-  }
+        // One-click flow: Collect → Import
+        bulkState.running = "collect";
+        bulkState.stopSignal = { stopped: false };
+        bulkState.collectedIds = [];
+        bulkState.matchesFound = 0;
+        bulkState.pagesChecked = 0;
+        bulkState.importMeta = { total: 0, cached: 0, toFetch: 0, done: 0, ok: 0, failed: 0 };
+        bulkLogUi.lastCollectPage = null;
+        bulkLogUi.lastImportDone = null;
+        bulkLogUi.lastImportLogAt = 0;
+        bulkLogUi.lastQueueSig = null;
 
-  // Default: an (auto-import) + nur wenn nicht im Cache
-  if (optAutoImport) optAutoImport.checked = AD_readBool(AD_LS_KEY_AUTOIMPORT_ENABLED, AD_AUTOIMPORT_DEFAULT_ENABLED);
-  if (optOnlyIfNotCached) optOnlyIfNotCached.checked = AD_readBool(AD_LS_KEY_AUTOIMPORT_ONLY_IF_NOT_CACHED, AD_AUTOIMPORT_DEFAULT_ONLY_IF_NOT_CACHED);
+        AD_bulkUpdateUi();
+        bulkLogPush("info", "Sammle Match-IDs…");
 
-  optAutoImport?.addEventListener("change", () => AD_writeBool(AD_LS_KEY_AUTOIMPORT_ENABLED, !!optAutoImport.checked));
-  optOnlyIfNotCached?.addEventListener("change", () => AD_writeBool(AD_LS_KEY_AUTOIMPORT_ONLY_IF_NOT_CACHED, !!optOnlyIfNotCached.checked));
+        try {
+            // -------- Collect --------
+            try {
+                AD_bulkSetStatus("Sammle Match-IDs…");
+                const ids = await AD_bulkCollectIdsSmart({
+                    startPage: AD_BULK_SETTINGS.startPageDefault,
+                    maxPages: AD_BULK_SETTINGS.maxPagesSafety,
+                    stopSignal: bulkState.stopSignal,
+                    statusCb: AD_bulkSetStatus
+                });
 
+                // Normalize
+                const uniq = Array.from(new Set((ids || []).map(String)));
+                uniq.sort();
+                bulkState.collectedIds = uniq;
+                bulkState.matchesFound = uniq.length;
 
-  // -------------------- UI attach/visibility (kein Floating Overlay) --------------------
-  function AD_attachApiPanelMaybe(reason) {
-    try {
-      const slot = document.getElementById("ad-ext-settings-slot-importer");
+                if (bulkState.stopSignal.stopped) {
+                    AD_bulkSetStatus(`Abgebrochen.\nMatches gefunden: ${bulkState.collectedIds.length}`);
+                    return;
+                }
 
-      if (slot) {
-        if (panel.parentNode !== slot) {
-          // Slot kann Placeholder enthalten → reinigen
-          try { slot.innerHTML = ""; } catch {}
-          slot.appendChild(panel);
+                if (!bulkState.collectedIds.length) {
+                    AD_bulkSetStatus("Sammeln beendet.\nMatches gefunden: 0");
+                    return;
+                }
+
+                AD_bulkSetStatus(`Matches gefunden: ${bulkState.collectedIds.length}. Starte Import…`);
+            } catch (e) {
+                const code = String(e?.code || "");
+                if (bulkState.stopSignal.stopped || code === "STOPPED") {
+                    AD_bulkSetStatus(`Abgebrochen.
+Matches gefunden: ${bulkState.collectedIds.length}`);
+                } else {
+                    AD_bulkSetStatus(`Sammeln Fehler: ${e?.message || e}`);
+                }
+                return;
+            } finally {
+                // Ensure collector runtime is cleaned before import
+                try { AD_bulkRuntimeClear(); } catch {}
+            }
+
+            // -------- Import --------
+            bulkState.running = "import";
+            bulkLogPush("info", "Importiere Statistiken…");
+            AD_bulkSetProgress(0);
+            AD_bulkUpdateUi();
+
+            try {
+                AD_bulkSetStatus("Öffne IndexedDB…");
+                const db = await openDb();
+
+                AD_bulkSetStatus("Lese Cache-Keys…");
+                const cached = await AD_bulkIdbGetAllKeys(db);
+
+                const res = await AD_bulkRunQueue({
+                    ids: bulkState.collectedIds,
+                    cachedKeys: cached,
+                    db,
+                    statusCb: AD_bulkSetStatus,
+                    stopSignal: bulkState.stopSignal
+                });
+
+                const aborted = bulkState.stopSignal.stopped;
+
+                AD_bulkSetStatus(
+                    `${aborted ? "Abgebrochen." : "Fertig."}\n` +
+                    `total=${res.total}\n` +
+                    `toFetch=${res.toFetch}\n` +
+                    `ok=${res.ok}\n` +
+                    `failed=${res.failed}\n` +
+                    `cached=${res.cached}`
+        );
+
+                // Optional: Cache update signal
+                if (res?.lastOkMatchId) {
+                    try { AD_notifyCacheUpdated(res.lastOkMatchId, res?.lastOkFetchedAt || Date.now()); } catch {}
+                }
+            } catch (e) {
+                AD_bulkSetStatus(`Import Fehler: ${e?.message || e}`);
+            }
+        } finally {
+            const wasStopped = !!bulkState.stopSignal?.stopped;
+            bulkState.running = null;
+            bulkState.stopSignal = { stopped: false };
+            try { AD_bulkRuntimeClear(); } catch {}
+
+            // (v0.14.13) Safety net: nach Stop keine alten Meta-Werte hängen lassen
+            if (wasStopped) {
+                bulkState.matchesFound = 0;
+                bulkState.collectedIds = [];
+                bulkState.pagesChecked = 0;
+                bulkState.importMeta = { total: 0, cached: 0, toFetch: 0, done: 0, ok: 0, failed: 0 };
+                try { AD_bulkSetProgress(0); } catch {}
+                try { AD_bulkSetPhase("Bereit."); } catch {}
+                try { AD_bulkSetMeta("Matches gefunden: 0"); } catch {}
+            }
+
+            bulkState.uiResetOnStop = false;
+            AD_bulkUpdateUi();
         }
-        panel.classList.add("adApiPanel--embedded");
-        panel.style.display = "";
-      } else {
-        // außerhalb der Settings-Seite: Panel verstecken (Tracker läuft weiter)
-        if (!panel.isConnected) {
-          try { document.body.appendChild(panel); } catch {}
+    });
+
+
+    // Initial UI state
+    AD_bulkUpdateUi();
+
+    // -------------------- Settings (localStorage) --------------------
+    function AD_readBool(key, defVal) {
+        try {
+            const raw = localStorage.getItem(key);
+            if (raw == null) return !!defVal;
+            if (raw === "1" || raw === "true" || raw === "yes" || raw === "on") return true;
+            if (raw === "0" || raw === "false" || raw === "no" || raw === "off") return false;
+            return !!defVal;
+        } catch {
+            return !!defVal;
         }
-        panel.classList.add("adApiPanel--embedded");
-        panel.style.display = "none";
-      }
-    } catch (e) {
-      console.warn(LOG_PREFIX, "UI attach/visibility failed:", reason, e);
-      try { panel.style.display = "none"; } catch {}
     }
-  }
 
-  // Legacy Hook: Viewer kann (historisch) Visibility togglen – UI bleibt aber ausschließlich im Settings-Panel sichtbar.
-  function AD_applyPanelVisibility(reason) {
-    AD_attachApiPanelMaybe(reason || "applyPanelVisibility");
-  }
-
-  // Initial anwenden
-  AD_applyPanelVisibility("init");
-
-  // Same-Tab: Viewer dispatcht ein CustomEvent, damit es sofort wirkt
-  window.addEventListener(AD_IMPORTER_UI_VISIBILITY_EVENT, (ev) => {
-    try {
-      const visible = !!ev?.detail?.visible;
-      AD_writeBool(AD_LS_KEY_IMPORTER_UI_VISIBLE, visible);
-      AD_applyPanelVisibility();
-      console.debug("[AD API] UI visibility set via event:", visible);
-    } catch (e) {
-      console.warn("[AD API] UI visibility event failed:", e);
+    function AD_writeBool(key, val) {
+        try { localStorage.setItem(key, val ? "1" : "0"); } catch {}
     }
-  });
 
-  // Cross-Tab/Script-Grenzen: localStorage storage-event (kommt nur in ANDEREN Tabs)
-  window.addEventListener("storage", (e) => {
-    if (e && e.key === AD_LS_KEY_IMPORTER_UI_VISIBLE) {
-      AD_applyPanelVisibility();
-      console.debug("[AD API] UI visibility updated via storage.");
+    // Default: an (auto-import) + nur wenn nicht im Cache
+    if (optAutoImport) optAutoImport.checked = AD_readBool(AD_LS_KEY_AUTOIMPORT_ENABLED, AD_AUTOIMPORT_DEFAULT_ENABLED);
+    if (optOnlyIfNotCached) optOnlyIfNotCached.checked = AD_readBool(AD_LS_KEY_AUTOIMPORT_ONLY_IF_NOT_CACHED, AD_AUTOIMPORT_DEFAULT_ONLY_IF_NOT_CACHED);
+
+    optAutoImport?.addEventListener("change", () => AD_writeBool(AD_LS_KEY_AUTOIMPORT_ENABLED, !!optAutoImport.checked));
+    optOnlyIfNotCached?.addEventListener("change", () => AD_writeBool(AD_LS_KEY_AUTOIMPORT_ONLY_IF_NOT_CACHED, !!optOnlyIfNotCached.checked));
+
+
+    // -------------------- UI attach/visibility (kein Floating Overlay) --------------------
+    function AD_attachApiPanelMaybe(reason) {
+        try {
+            const slot = document.getElementById("ad-ext-settings-slot-importer");
+
+            if (slot) {
+                if (panel.parentNode !== slot) {
+                    // Slot kann Placeholder enthalten → reinigen
+                    try { slot.innerHTML = ""; } catch {}
+                    slot.appendChild(panel);
+                }
+                panel.classList.add("adApiPanel--embedded");
+                panel.style.display = "";
+            } else {
+                // außerhalb der Settings-Seite: Panel verstecken (Tracker läuft weiter)
+                if (!panel.isConnected) {
+                    try { document.body.appendChild(panel); } catch {}
+                }
+                panel.classList.add("adApiPanel--embedded");
+                panel.style.display = "none";
+            }
+        } catch (e) {
+            console.warn(LOG_PREFIX, "UI attach/visibility failed:", reason, e);
+            try { panel.style.display = "none"; } catch {}
+        }
     }
-  });
+
+    // Legacy Hook: Viewer kann (historisch) Visibility togglen – UI bleibt aber ausschließlich im Settings-Panel sichtbar.
+    function AD_applyPanelVisibility(reason) {
+        AD_attachApiPanelMaybe(reason || "applyPanelVisibility");
+    }
+
+    // Initial anwenden
+    AD_applyPanelVisibility("init");
+
+    // Same-Tab: Viewer dispatcht ein CustomEvent, damit es sofort wirkt
+    window.addEventListener(AD_IMPORTER_UI_VISIBILITY_EVENT, (ev) => {
+        try {
+            const visible = !!ev?.detail?.visible;
+            AD_writeBool(AD_LS_KEY_IMPORTER_UI_VISIBLE, visible);
+            AD_applyPanelVisibility();
+            console.debug("[AD API] UI visibility set via event:", visible);
+        } catch (e) {
+            console.warn("[AD API] UI visibility event failed:", e);
+        }
+    });
+
+    // Cross-Tab/Script-Grenzen: localStorage storage-event (kommt nur in ANDEREN Tabs)
+    window.addEventListener("storage", (e) => {
+        if (e && e.key === AD_LS_KEY_IMPORTER_UI_VISIBLE) {
+            AD_applyPanelVisibility();
+            console.debug("[AD API] UI visibility updated via storage.");
+        }
+    });
 
 
     function setStatus(text, ok = true) {
-    statusEl.textContent = text;
-    statusEl.classList.toggle("ok", ok);
-    statusEl.classList.toggle("bad", !ok);
-  }
-
-  function renderContext(ctx) {
-    ui.matchId = ctx.matchId;
-    ui.route = ctx.route;
-
-    // Im Settings-Panel (Statistics) gibt es keine Match-ID → neutraler Status.
-    if (!ctx.matchId) {
-      // Nur "Bereit." zurücksetzen, wenn noch kein sinnvoller Status da ist.
-      const t = (statusEl.textContent || "").trim();
-      if (!t || t.startsWith("Öffne ein Match")) setStatus("Bereit.", true);
-      return;
+        statusEl.textContent = text;
+        statusEl.classList.toggle("ok", ok);
+        statusEl.classList.toggle("bad", !ok);
     }
 
-    // Kurzer Info-Status (Auto-Import/Cache läuft ggf. im Hintergrund)
-    setStatus(`Match erkannt (${ctx.route}).`, true);
-  }
+    function renderContext(ctx) {
+        ui.matchId = ctx.matchId;
+        ui.route = ctx.route;
 
-  async function actionResetDb() {
-    const msg = "⚠️ Achtung: Dadurch wird der komplette lokale Cache (IndexedDB) gelöscht. Statistiken müssen danach neu geladen werden. Fortfahren?";
-    const ok = (() => { try { return window.confirm(msg); } catch { return false; } })();
-    if (!ok) {
-      setStatus("Abgebrochen.", true);
-      return;
-    }
-
-    try {
-      if (btnResetDb) btnResetDb.disabled = true;
-      setStatus("Reset läuft…", true);
-      await deleteDatabase();
-      setStatus("DB zurückgesetzt.", true);
-    } catch (e) {
-      err("Reset DB failed:", e);
-      setStatus("Fehler: Konnte DB nicht löschen (siehe Konsole).", false);
-    } finally {
-      try { if (btnResetDb) btnResetDb.disabled = false; } catch {}
-    }
-  }
-
-  // Wire minimal UI
-  btnResetDb?.addEventListener("click", actionResetDb);
-
-
-  // -------------------- Auto-Import Logic --------------------
-  // Ziel: Wenn Autodarts nach Match-Ende auf /history/matches/<MATCH_ID> navigiert,
-  // automatisch /stats holen + cachen + Viewer informieren.
-  //
-  // Viewer-Sync:
-  //  - CustomEvent "ad-cache-updated" (gleicher Tab / gleiches Fenster)
-  //  - localStorage Marker "ad_cache_updated" (damit es auch über Tabs/Scripts geht)
-  function AD_notifyCacheUpdated(matchId, fetchedAt) {
-    try {
-      window.dispatchEvent(new CustomEvent("ad-cache-updated", { detail: { matchId, fetchedAt } }));
-    } catch {}
-    // Marker für andere Tabs/Scripts: Viewer hört auf "storage" Event und liest diesen Key.
-    try {
-      localStorage.setItem(AD_LS_CACHE_UPDATED_KEY, JSON.stringify({ matchId, fetchedAt }));
-    } catch {}
-  }
-
-  const AD_autoImportInFlight = new Set(); // matchId
-  let AD_lastAutoImportedMatchId = null;
-  let AD_autoImportDebounceT = null;
-
-  function AD_sleep(ms) {
-    return new Promise((r) => setTimeout(r, ms));
-  }
-
-  async function AD_hasStatsInCache(matchId) {
-    try {
-      const db = await openDb();
-      const rec = await idbGet(db, "match_stats", matchId);
-      return !!(rec && rec.stats);
-    } catch (e) {
-      // im Zweifel: "nicht im Cache" → lieber importieren
-      warn("Cache-check failed:", e?.message || e);
-      return false;
-    }
-  }
-
-  async function AD_fetchAndCacheStatsOnce(matchId) {
-    const db = await openDb();
-    const url = `${API_HOST}/as/v0/matches/${encodeURIComponent(matchId)}/stats`;
-    const stats = await gmRequestJson("GET", url);
-
-    // Treat "empty object" as not ready (kommt manchmal kurz nach Match-Ende)
-    if (!stats || (typeof stats === "object" && !Array.isArray(stats) && Object.keys(stats).length === 0)) {
-      const e = new Error("Empty stats payload");
-      e.status = 0;
-      throw e;
-    }
-
-    const fetchedAt = Date.now();
-    await idbPut(db, "match_stats", { matchId, fetchedAt, stats });
-    return { stats, fetchedAt };
-  }
-
-  async function AD_importStatsWithRetry(matchId, { force = false } = {}) {
-    if (!matchId) return { ok: false, skipped: true, reason: "no-matchId" };
-
-    // Optional: nur auf History-Matches auto-importen
-    if (ui.route !== "history") return { ok: false, skipped: true, reason: "not-history" };
-
-    if (!force && optOnlyIfNotCached?.checked) {
-      const has = await AD_hasStatsInCache(matchId);
-      if (has) {
-        console.debug(LOG_PREFIX, "Auto-import skipped (already cached):", matchId);
-        return { ok: false, skipped: true, reason: "cached" };
-      }
-    }
-
-    // Dedupe / In-flight Lock
-    if (!force) {
-      if (AD_autoImportInFlight.has(matchId)) return { ok: false, skipped: true, reason: "in-flight" };
-      if (AD_lastAutoImportedMatchId === matchId) return { ok: false, skipped: true, reason: "already-imported" };
-    }
-
-    AD_autoImportInFlight.add(matchId);
-
-    try {
-      const isForceText = force ? " (force)" : "";
-      console.debug(LOG_PREFIX, `Auto-import start${isForceText}:`, matchId);
-
-      // Wenn option "Nur wenn nicht im Cache" AUS ist, skippen wir trotzdem nicht automatisch.
-      // Das ist bewusst für Debug/Manuelles Reimporten pro neuem Match.
-      const delays = Array.isArray(AD_STATS_RETRY_DELAYS_MS) ? AD_STATS_RETRY_DELAYS_MS : [1000, 2000, 4000];
-
-      let lastErr = null;
-      for (let attempt = 0; attempt <= delays.length; attempt++) {
-        try {
-          if (attempt > 0) {
-            const waitMs = delays[Math.min(attempt - 1, delays.length - 1)] || 1000;
-            console.debug(LOG_PREFIX, `Retry ${attempt}/${delays.length} in ${waitMs}ms…`, matchId);
-            setStatus(`Auto-import: Retry ${attempt}/${delays.length} (${Math.round(waitMs/1000)}s)…`, false);
-            await AD_sleep(waitMs);
-
-            // Wenn user inzwischen weg navigiert ist und wir nicht "force" sind → sauber abbrechen.
-            if (!force && ui.matchId !== matchId) {
-              console.debug(LOG_PREFIX, "Auto-import aborted (navigated away):", matchId);
-              return { ok: false, skipped: true, reason: "navigated-away" };
-            }
-          }
-
-          setStatus(`Auto-import: Lade /stats${force ? " (force)" : ""}…`, true);
-          const { stats, fetchedAt } = await AD_fetchAndCacheStatsOnce(matchId);
-
-          AD_lastAutoImportedMatchId = matchId;
-
-          setStatus(`Auto-import OK: /stats gecached (${new Date(fetchedAt).toLocaleTimeString()})`, true);
-          AD_notifyCacheUpdated(matchId, fetchedAt);
-
-          return { ok: true, matchId, fetchedAt, stats };
-        } catch (e) {
-          lastErr = e;
-          const status = e?.status;
-          const msg = e?.message || String(e);
-
-          // Live-Match: /stats nicht erlaubt
-          const apiMsg = (e?.body?.error?.message) ? e.body.error.message : "";
-          if (status === 400 && String(apiMsg).toLowerCase().includes("live stats not supported")) {
-            warn("Auto-import: Live stats not supported – skip.", matchId);
-            return { ok: false, skipped: true, reason: "live-not-supported" };
-          }
-
-          // letzte Runde? → raus
-          if (attempt >= delays.length) break;
-
-          // sonst: retry (404/500/timeout/empty)
-          console.warn(LOG_PREFIX, "Auto-import failed (will retry):", matchId, status || "", msg);
+        // Im Settings-Panel (Statistics) gibt es keine Match-ID → neutraler Status.
+        if (!ctx.matchId) {
+            // Nur "Bereit." zurücksetzen, wenn noch kein sinnvoller Status da ist.
+            const t = (statusEl.textContent || "").trim();
+            if (!t || t.startsWith("Öffne ein Match")) setStatus("Bereit.", true);
+            return;
         }
-      }
 
-      // final error
-      err("Auto-import endgültig fehlgeschlagen:", matchId, lastErr);
-      setStatus(`Auto-import FEHLER: ${lastErr?.message || lastErr}`, false);
-      return { ok: false, skipped: false, error: lastErr };
-    } finally {
-      AD_autoImportInFlight.delete(matchId);
+        // Kurzer Info-Status (Auto-Import/Cache läuft ggf. im Hintergrund)
+        setStatus(`Match erkannt (${ctx.route}).`, true);
     }
-  }
 
-  function AD_scheduleAutoImport(matchId, reason) {
-    if (!optAutoImport?.checked) return;
-    if (!matchId) return;
-    if (ui.route !== "history") return;
+    async function actionResetDb() {
+        const msg = "⚠️ Achtung: Dadurch wird der komplette lokale Cache (IndexedDB) gelöscht. Statistiken müssen danach neu geladen werden. Fortfahren?";
+        const ok = (() => { try { return window.confirm(msg); } catch { return false; } })();
+        if (!ok) {
+            setStatus("Abgebrochen.", true);
+            return;
+        }
 
-    if (AD_autoImportDebounceT) clearTimeout(AD_autoImportDebounceT);
-    AD_autoImportDebounceT = setTimeout(() => {
-      AD_autoImportDebounceT = null;
-      AD_importStatsWithRetry(matchId, { force: false }).catch((e) => {
-        err("Auto-import uncaught error:", e);
-      });
-    }, AD_AUTOIMPORT_DEBOUNCE_MS);
-
-    console.debug(LOG_PREFIX, "Auto-import scheduled:", matchId, "reason:", reason);
-  }
-
-  // -------------------- SPA Navigation Hook --------------------
-  function handleUrlChange(reason) {
-    // Panel nur im Settings-Panel sichtbar halten (nie als Overlay)
-    try { AD_attachApiPanelMaybe(reason); } catch {}
-    try { AD_attachBulkPanelMaybe(reason); } catch {}
-    try { AD_syncMaybeAutoStart(reason); } catch {}
-
-
-    const ctx = getMatchContextFromPath(location.pathname);
-    const changed = (ctx.matchId !== ui.matchId) || (ctx.route !== ui.route);
-
-    if (!changed) return;
-
-    log("URL change:", reason, location.href);
-    renderContext(ctx);
-
-    // Auto-Import nur für History-Match-Seiten (nach Match-Ende)
-    if (ctx?.isHistory && ctx?.matchId) {
-      AD_scheduleAutoImport(ctx.matchId, reason);
+        try {
+            if (btnResetDb) btnResetDb.disabled = true;
+            setStatus("Reset läuft…", true);
+            await deleteDatabase();
+            setStatus("DB zurückgesetzt.", true);
+        } catch (e) {
+            err("Reset DB failed:", e);
+            setStatus("Fehler: Konnte DB nicht löschen (siehe Konsole).", false);
+        } finally {
+            try { if (btnResetDb) btnResetDb.disabled = false; } catch {}
+        }
     }
-  }
 
-  function hookHistoryMethods() {
-    const _pushState = history.pushState;
-    const _replaceState = history.replaceState;
+    // Wire minimal UI
+    btnResetDb?.addEventListener("click", actionResetDb);
 
-    history.pushState = function (...args) {
-      const ret = _pushState.apply(this, args);
-      handleUrlChange("pushState");
-      return ret;
-    };
 
-    history.replaceState = function (...args) {
-      const ret = _replaceState.apply(this, args);
-      handleUrlChange("replaceState");
-      return ret;
-    };
+    // -------------------- Auto-Import Logic --------------------
+    // Ziel: Wenn Autodarts nach Match-Ende auf /history/matches/<MATCH_ID> navigiert,
+    // automatisch /stats holen + cachen + Viewer informieren.
+    //
+    // Viewer-Sync:
+    //  - CustomEvent "ad-cache-updated" (gleicher Tab / gleiches Fenster)
+    //  - localStorage Marker "ad_cache_updated" (damit es auch über Tabs/Scripts geht)
+    function AD_notifyCacheUpdated(matchId, fetchedAt) {
+        try {
+            window.dispatchEvent(new CustomEvent("ad-cache-updated", { detail: { matchId, fetchedAt } }));
+        } catch {}
+        // Marker für andere Tabs/Scripts: Viewer hört auf "storage" Event und liest diesen Key.
+        try {
+            localStorage.setItem(AD_LS_CACHE_UPDATED_KEY, JSON.stringify({ matchId, fetchedAt }));
+        } catch {}
+    }
 
-    window.addEventListener("popstate", () => handleUrlChange("popstate"));
-  }
+    const AD_autoImportInFlight = new Set(); // matchId
+    let AD_lastAutoImportedMatchId = null;
+    let AD_autoImportDebounceT = null;
 
-  hookHistoryMethods();
-  handleUrlChange("init");
+    function AD_sleep(ms) {
+        return new Promise((r) => setTimeout(r, ms));
+    }
 
-  // Fallback falls intern anders navigiert wird
-  setInterval(() => handleUrlChange("interval"), 800);
+    async function AD_hasStatsInCache(matchId) {
+        try {
+            const db = await openDb();
+            const rec = await idbGet(db, "match_stats", matchId);
+            return !!(rec && rec.stats);
+        } catch (e) {
+            // im Zweifel: "nicht im Cache" → lieber importieren
+            warn("Cache-check failed:", e?.message || e);
+            return false;
+        }
+    }
+
+    async function AD_fetchAndCacheStatsOnce(matchId) {
+        const db = await openDb();
+        const url = `${API_HOST}/as/v0/matches/${encodeURIComponent(matchId)}/stats`;
+        const stats = await gmRequestJson("GET", url);
+
+        // Treat "empty object" as not ready (kommt manchmal kurz nach Match-Ende)
+        if (!stats || (typeof stats === "object" && !Array.isArray(stats) && Object.keys(stats).length === 0)) {
+            const e = new Error("Empty stats payload");
+            e.status = 0;
+            throw e;
+        }
+
+        const fetchedAt = Date.now();
+        await idbPut(db, "match_stats", { matchId, fetchedAt, stats });
+        return { stats, fetchedAt };
+    }
+
+    async function AD_importStatsWithRetry(matchId, { force = false } = {}) {
+        if (!matchId) return { ok: false, skipped: true, reason: "no-matchId" };
+
+        // Optional: nur auf History-Matches auto-importen
+        if (ui.route !== "history") return { ok: false, skipped: true, reason: "not-history" };
+
+        if (!force && optOnlyIfNotCached?.checked) {
+            const has = await AD_hasStatsInCache(matchId);
+            if (has) {
+                console.debug(LOG_PREFIX, "Auto-import skipped (already cached):", matchId);
+                return { ok: false, skipped: true, reason: "cached" };
+            }
+        }
+
+        // Dedupe / In-flight Lock
+        if (!force) {
+            if (AD_autoImportInFlight.has(matchId)) return { ok: false, skipped: true, reason: "in-flight" };
+            if (AD_lastAutoImportedMatchId === matchId) return { ok: false, skipped: true, reason: "already-imported" };
+        }
+
+        AD_autoImportInFlight.add(matchId);
+
+        try {
+            const isForceText = force ? " (force)" : "";
+            console.debug(LOG_PREFIX, `Auto-import start${isForceText}:`, matchId);
+
+            // Wenn option "Nur wenn nicht im Cache" AUS ist, skippen wir trotzdem nicht automatisch.
+            // Das ist bewusst für Debug/Manuelles Reimporten pro neuem Match.
+            const delays = Array.isArray(AD_STATS_RETRY_DELAYS_MS) ? AD_STATS_RETRY_DELAYS_MS : [1000, 2000, 4000];
+
+            let lastErr = null;
+            for (let attempt = 0; attempt <= delays.length; attempt++) {
+                try {
+                    if (attempt > 0) {
+                        const waitMs = delays[Math.min(attempt - 1, delays.length - 1)] || 1000;
+                        console.debug(LOG_PREFIX, `Retry ${attempt}/${delays.length} in ${waitMs}ms…`, matchId);
+                        setStatus(`Auto-import: Retry ${attempt}/${delays.length} (${Math.round(waitMs/1000)}s)…`, false);
+                        await AD_sleep(waitMs);
+
+                        // Wenn user inzwischen weg navigiert ist und wir nicht "force" sind → sauber abbrechen.
+                        if (!force && ui.matchId !== matchId) {
+                            console.debug(LOG_PREFIX, "Auto-import aborted (navigated away):", matchId);
+                            return { ok: false, skipped: true, reason: "navigated-away" };
+                        }
+                    }
+
+                    setStatus(`Auto-import: Lade /stats${force ? " (force)" : ""}…`, true);
+                    const { stats, fetchedAt } = await AD_fetchAndCacheStatsOnce(matchId);
+
+                    AD_lastAutoImportedMatchId = matchId;
+
+                    setStatus(`Auto-import OK: /stats gecached (${new Date(fetchedAt).toLocaleTimeString()})`, true);
+                    AD_notifyCacheUpdated(matchId, fetchedAt);
+
+                    return { ok: true, matchId, fetchedAt, stats };
+                } catch (e) {
+                    lastErr = e;
+                    const status = e?.status;
+                    const msg = e?.message || String(e);
+
+                    // Live-Match: /stats nicht erlaubt
+                    const apiMsg = (e?.body?.error?.message) ? e.body.error.message : "";
+                    if (status === 400 && String(apiMsg).toLowerCase().includes("live stats not supported")) {
+                        warn("Auto-import: Live stats not supported – skip.", matchId);
+                        return { ok: false, skipped: true, reason: "live-not-supported" };
+                    }
+
+                    // letzte Runde? → raus
+                    if (attempt >= delays.length) break;
+
+                    // sonst: retry (404/500/timeout/empty)
+                    console.warn(LOG_PREFIX, "Auto-import failed (will retry):", matchId, status || "", msg);
+                }
+            }
+
+            // final error
+            err("Auto-import endgültig fehlgeschlagen:", matchId, lastErr);
+            setStatus(`Auto-import FEHLER: ${lastErr?.message || lastErr}`, false);
+            return { ok: false, skipped: false, error: lastErr };
+        } finally {
+            AD_autoImportInFlight.delete(matchId);
+        }
+    }
+
+    function AD_scheduleAutoImport(matchId, reason) {
+        if (!optAutoImport?.checked) return;
+        if (!matchId) return;
+        if (ui.route !== "history") return;
+
+        if (AD_autoImportDebounceT) clearTimeout(AD_autoImportDebounceT);
+        AD_autoImportDebounceT = setTimeout(() => {
+            AD_autoImportDebounceT = null;
+            AD_importStatsWithRetry(matchId, { force: false }).catch((e) => {
+                err("Auto-import uncaught error:", e);
+            });
+        }, AD_AUTOIMPORT_DEBOUNCE_MS);
+
+        console.debug(LOG_PREFIX, "Auto-import scheduled:", matchId, "reason:", reason);
+    }
+
+    // -------------------- SPA Navigation Hook --------------------
+    function handleUrlChange(reason) {
+        // Panel nur im Settings-Panel sichtbar halten (nie als Overlay)
+        try { AD_attachApiPanelMaybe(reason); } catch {}
+        try { AD_attachBulkPanelMaybe(reason); } catch {}
+        try { AD_syncMaybeAutoStart(reason); } catch {}
+
+
+        const ctx = getMatchContextFromPath(location.pathname);
+        const changed = (ctx.matchId !== ui.matchId) || (ctx.route !== ui.route);
+
+        if (!changed) return;
+
+        log("URL change:", reason, location.href);
+        renderContext(ctx);
+
+        // Auto-Import nur für History-Match-Seiten (nach Match-Ende)
+        if (ctx?.isHistory && ctx?.matchId) {
+            AD_scheduleAutoImport(ctx.matchId, reason);
+        }
+    }
+
+    function hookHistoryMethods() {
+        const _pushState = history.pushState;
+        const _replaceState = history.replaceState;
+
+        history.pushState = function (...args) {
+            const ret = _pushState.apply(this, args);
+            handleUrlChange("pushState");
+            return ret;
+        };
+
+        history.replaceState = function (...args) {
+            const ret = _replaceState.apply(this, args);
+            handleUrlChange("replaceState");
+            return ret;
+        };
+
+        window.addEventListener("popstate", () => handleUrlChange("popstate"));
+    }
+
+    hookHistoryMethods();
+    handleUrlChange("init");
+
+    // Fallback falls intern anders navigiert wird
+    setInterval(() => handleUrlChange("interval"), 800);
 
 })();

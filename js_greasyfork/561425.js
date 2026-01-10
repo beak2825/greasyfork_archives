@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torrent Mod Toolkit
 // @namespace    http://tampermonkey.net/
-// @version      1.2.1.6
+// @version      1.2.1.10
 // @description  Common actions for torrent mods
 // @icon         https://raw.githubusercontent.com/xzin-CoRK/torrent-mod-toolkit/refs/heads/main/hammer.png
 // @author       xzin
@@ -10,8 +10,10 @@
 // @match        https://*/details.php*
 // @match        https://*/torrents.php*
 // @match        https://*/details*
-// @connect      mediainfo.okami.icu
-// @connect      gitea.okami.icu
+// @exclude      https://redacted.sh/*
+// @exclude      https://gazellegames.net/*
+// @exclude      https://orpheus.network/*
+// @connect      *
 // @grant        GM_setClipboard
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
@@ -27,7 +29,7 @@
 (function () {
     "use strict";
 
-    const version = "1.2.1.6";
+    const version = "1.2.1.10";
 
     var mediainfo;
     var uniqueId;
@@ -36,6 +38,8 @@
     var home_tracker_link;
     var isHidden = false;
     var activeTemplate = null;
+    var currentResolution = null;
+    var currentReleaseGroup = null;
 
     const ATH_SEARCH_URL = "https://aither.cc/torrents?imdbId=";
     const AVISTAZ_SEARCH_URL = "https://avistaz.to/movies?search=&imdb=";
@@ -64,6 +68,70 @@
     const CONFIG_URL = "https://gitea.okami.icu/Dooky/Toolkitconfig/raw/branch/main/config.json";
 
     const CONFIG_CACHE_DURATION = 24 * 60 * 60 * 1000;
+
+    const TRACKER_CONFIGS = {
+        'BLU': {
+            name: 'Blutopia',
+            searchUrl: BLU_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|Forgot your password|Service Unavailable/,
+            matchRegex: /torrent-search--list__overview/,
+            seedingRegex: /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
+            positiveMatch: true,
+            idType: 'imdb'
+        },
+        'ATH': {
+            name: 'Aither',
+            searchUrl: ATH_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|Forgot your password/,
+            matchRegex: /torrent-search--list__overview/,
+            seedingRegex: /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
+            positiveMatch: true,
+            idType: 'imdb'
+        },
+        'BHD': {
+            name: 'Beyond-HD',
+            searchUrl: BHD_SEARCH_URL,
+            loggedOutRegex: /FORGET PASSWORD/,
+            matchRegex: />N\/A</,
+            seedingRegex: /<i class="fal fa-seedling" title="Seeding"/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'PTP': {
+            name: 'PassThePopcorn',
+            searchUrl: PTP_SEARCH_URL,
+            loggedOutRegex: /Forgot your password|Cloudflare/,
+            matchRegex: /No torrents found/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'BTN': {
+            name: 'BroadcastTheNet',
+            searchUrl: BTN_SEARCH_URL,
+            loggedOutRegex: /Lost your password\?|Service Temporarily Unavailable/,
+            matchRegex: /action=download/,
+            seedingRegex: /tor_highlight_seed/,
+            positiveMatch: true,
+            idType: 'tvdb'
+        },
+        'HDB': {
+            name: 'HDBits',
+            searchUrl: HDB_SEARCH_URL,
+            loggedOutRegex: /You appear to have cookies disabled./,
+            matchRegex: /Nothing here!/,
+            positiveMatch: false,
+            idType: 'imdb'
+        },
+        'LST': {
+            name: 'LST.gg',
+            searchUrl: LST_SEARCH_URL,
+            loggedOutRegex: /Cloudflare|Ray ID|Forgot your password/,
+            matchRegex: /torrent-search--list__overview/,
+            seedingRegex: /fa-arrow-circle-up|torrent-activity-indicator--seeding/,
+            positiveMatch: true,
+            idType: 'imdb'
+        }
+    };
 
     let homeTrackerConfig = [
         {
@@ -330,6 +398,9 @@
             "PTP": PTP_SEARCH_URL,
             "BTN": BTN_SEARCH_URL,
             "HDB": HDB_SEARCH_URL,
+            "LST": LST_SEARCH_URL,
+            "BLU": BLU_SEARCH_URL,
+            "BHD": BHD_SEARCH_URL,
             "SRRDB": SRRDB_SEARCH_URL
         };
 
@@ -374,7 +445,7 @@
     function extractTorrentTitle(releaseGroup = null) {
         // For title-based trackers, skip filename extraction and use page title instead
         const isTitleBased = releaseGroup && needsTitleSearch(releaseGroup);
-        
+
         if (!isTitleBased && file_structure) {
             const firstFilename = file_structure.split('\n')[0].trim();
             if (firstFilename) {
@@ -540,6 +611,195 @@
         }, duration);
     }
 
+    function extractResolutionFromTitle() {
+        let title = document.querySelector("h1.torrent__name");
+        if (!title) {
+            title = document.querySelector("h1") ||
+                    document.querySelector(".torrent-title h1") ||
+                    document.querySelector("h2.torrent__name") ||
+                    document.querySelector("h2");
+        }
+        if (!title) return null;
+
+        const titleText = (title.innerText || title.textContent || "").trim();
+        const resolutionMatch = titleText.match(/\b(2160p|1080p|1080i|720p|576p|480p)\b/i);
+        return resolutionMatch ? resolutionMatch[1] : null;
+    }
+
+    function checkTrackerAvailability(trackerCode, searchId, resolution = null, releaseGroup = null) {
+        return new Promise((resolve) => {
+            const config = TRACKER_CONFIGS[trackerCode];
+            if (!config) {
+                console.warn(`[TMT] No config found for tracker: ${trackerCode}`);
+                resolve('error');
+                return;
+            }
+
+            const searchUrl = config.searchUrl + searchId;
+            const timeout = 15000;
+
+            console.log(`[TMT] Checking ${trackerCode} at: ${searchUrl}`);
+
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: searchUrl,
+                timeout: timeout,
+                onload: function(response) {
+                    console.log(`[TMT] ${trackerCode} response status: ${response.status}`);
+
+                    if (config.loggedOutRegex && response.responseText.match(config.loggedOutRegex)) {
+                        console.log(`[TMT] ${trackerCode}: logged_out`);
+                        resolve('logged_out');
+                        return;
+                    }
+                    if (response.status >= 500 || (response.status >= 400 && response.status !== 403)) {
+                        console.log(`[TMT] ${trackerCode}: error (HTTP ${response.status})`);
+                        resolve('error');
+                        return;
+                    }
+                    if (config.seedingRegex && response.responseText.match(config.seedingRegex)) {
+                        console.log(`[TMT] ${trackerCode}: seeding`);
+                        resolve('seeding');
+                        return;
+                    }
+
+                    // Check for basic match first
+                    const matchFound = response.responseText.match(config.matchRegex);
+                    const isPositiveMatch = config.positiveMatch || false;
+
+                    // If basic match indicates "missing", return immediately
+                    if (isPositiveMatch && !matchFound) {
+                        console.log(`[TMT] ${trackerCode}: missing (no basic match)`);
+                        resolve('missing');
+                        return;
+                    }
+                    if (!isPositiveMatch && matchFound) {
+                        console.log(`[TMT] ${trackerCode}: missing (negative match found)`);
+                        resolve('missing');
+                        return;
+                    }
+
+                    // If we have resolution or release group filters, check for them in the response
+                    if (resolution || releaseGroup) {
+                        let filterMatched = true;
+
+                        if (resolution) {
+                            const resolutionRegex = new RegExp(resolution.replace('p', '[pi]'), 'i');
+                            if (!response.responseText.match(resolutionRegex)) {
+                                console.log(`[TMT] ${trackerCode}: missing (resolution ${resolution} not found)`);
+                                filterMatched = false;
+                            }
+                        }
+
+                        if (releaseGroup && filterMatched) {
+                            const releaseGroupRegex = new RegExp(`[-\\s]${releaseGroup.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?:[\\s<]|$)`, 'i');
+                            if (!response.responseText.match(releaseGroupRegex)) {
+                                console.log(`[TMT] ${trackerCode}: missing (release group ${releaseGroup} not found)`);
+                                filterMatched = false;
+                            }
+                        }
+
+                        if (!filterMatched) {
+                            resolve('missing');
+                            return;
+                        }
+                    }
+
+                    const result = isPositiveMatch ? (matchFound ? 'found' : 'missing') : (matchFound ? 'missing' : 'found');
+                    console.log(`[TMT] ${trackerCode}: ${result} (positive=${isPositiveMatch}, match=${!!matchFound})`);
+                    resolve(result);
+                },
+                onerror: function(error) {
+                    console.error(`[TMT] ${trackerCode} request error:`, error);
+                    resolve('error');
+                },
+                ontimeout: function() {
+                    console.warn(`[TMT] ${trackerCode} request timeout`);
+                    resolve('error');
+                }
+            });
+        });
+    }
+
+    function applyTrackerState(buttonId, state) {
+        const button = document.getElementById(buttonId);
+        if (!button) return;
+        const img = button.querySelector('img');
+        if (!img) return;
+        img.classList.remove('tracker-found', 'tracker-seeding', 'tracker-loading');
+        button.style.display = '';
+        switch(state) {
+            case 'found':
+                img.classList.add('tracker-found');
+                break;
+            case 'seeding':
+                img.classList.add('tracker-seeding');
+                break;
+            case 'missing':
+            case 'logged_out':
+            case 'error':
+                button.style.display = 'none';
+                break;
+            case 'loading':
+                img.classList.add('tracker-loading');
+                break;
+        }
+    }
+
+    async function checkAllTrackers() {
+        if (!imdbId) {
+            showToast('No IMDb ID found');
+            return;
+        }
+        const loadButton = document.getElementById('tmt-load-links');
+        if (loadButton) {
+            loadButton.disabled = true;
+            loadButton.textContent = 'Checking...';
+        }
+        const tvdbId = extractTVDB();
+
+        // Extract resolution and release group from current page
+        const useResolutionFilter = document.getElementById('tmt-filter-resolution')?.checked || false;
+        const useReleaseGroupFilter = document.getElementById('tmt-filter-release-group')?.checked || false;
+
+        const resolution = useResolutionFilter ? (currentResolution || extractResolutionFromTitle()) : null;
+        const releaseGroup = useReleaseGroupFilter ? currentReleaseGroup : null;
+
+        console.log(`[TMT] Checking with filters: resolution=${resolution}, releaseGroup=${releaseGroup}`);
+
+        const trackerButtons = {
+            'BLU': { buttonId: 'bluButton', id: imdbId },
+            'ATH': { buttonId: 'athButton', id: imdbId },
+            'BHD': { buttonId: 'bhdButton', id: imdbId },
+            'PTP': { buttonId: 'ptpButton', id: imdbId },
+            'BTN': { buttonId: 'btnButton', id: tvdbId },
+            'HDB': { buttonId: 'hdbButton', id: imdbId },
+            'LST': { buttonId: 'lstButton', id: imdbId }
+        };
+        Object.values(trackerButtons).forEach(tracker => {
+            applyTrackerState(tracker.buttonId, 'loading');
+        });
+        let delay = 0;
+        for (const [code, tracker] of Object.entries(trackerButtons)) {
+            setTimeout(async () => {
+                if (!tracker.id) {
+                    applyTrackerState(tracker.buttonId, 'error');
+                    return;
+                }
+                const state = await checkTrackerAvailability(code, tracker.id, resolution, releaseGroup);
+                applyTrackerState(tracker.buttonId, state);
+            }, delay);
+            delay += 500;
+        }
+        setTimeout(() => {
+            if (loadButton) {
+                loadButton.disabled = false;
+                loadButton.textContent = 'Load Links';
+            }
+            showToast('Tracker check complete');
+        }, delay + 2000);
+    }
+
     function filterMkvFilenames(fileStructure) {
         if (!fileStructure) return null;
         const lines = fileStructure.split('\n')
@@ -573,6 +833,18 @@
 
         if (titleElement) {
             fullTitle = (titleElement.innerText || titleElement.textContent || "").trim();
+        } else if (window.location.hostname === 'beyond-hd.me') {
+            // BHD specific: title is in table row with Name
+            const nameRow = Array.from(document.querySelectorAll('tr.dotborder')).find(row => {
+                const firstTd = row.querySelector('td:first-child');
+                return firstTd && firstTd.textContent.trim() === 'Name';
+            });
+            if (nameRow) {
+                const titleTd = nameRow.querySelector('td:nth-child(2)');
+                if (titleTd) {
+                    fullTitle = titleTd.textContent.trim();
+                }
+            }
         } else {
             const pageTitle = document.title || "";
             const titleMatch = pageTitle.match(/^(.+?)\s*::/);
@@ -891,25 +1163,31 @@
         const hdbUrl = getSearchUrlByCode("HDB") || HDB_SEARCH_URL;
         const bluUrl = getSearchUrlByCode("BLU") || BLU_SEARCH_URL;
         const bhdUrl = getSearchUrlByCode("BHD") || BHD_SEARCH_URL;
+        const lstUrl = getSearchUrlByCode("LST") || LST_SEARCH_URL;
         const srrdbUrl = getSearchUrlByCode("SRRDB") || SRRDB_SEARCH_URL;
 
         const tvdbId = extractTVDB();
 
         toolkitDiv.innerHTML = `
-        <div class="header">${CONFIG_URL ? `<a href="#" id="tmt-refresh-config" title="Force refresh config from external source"><img width="20" height="20" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAE/SURBVDhPvdSxSxxREMfxj3ELm1RqY9AmsfKsrMQ0gXQ22ulfcH/Gcn9CWnsRK68RtBZ7SZfYWZpGG+Hg8Gxm5TnsniKSLwzsm3m/Yd6b2ccHM5MdiUVsYSXWN7jEv7TvVXoYYoxJsnHEelnURR+jlkTZRtjP4kw/ia5RYzesDt8kjv0tJyjpFZU9YoAqbwpfje85kBkWlQ1ycAo/sZmdi0UDrjsqa2Mdd7jNx98pqqvLwBSWYowa3V8sfIpgM2fwu/juosIplgvfKk5m8Qvb+BKB+biT82hOGxM8RKc3wneEQzhIozLB8Ut9J3Wh2WmcFc6KwAXmXupaqYqZHEdjn/mMK/yJI7+FQVHEMAfFHX4t1j86xqeKZI+RbIS1vCmzF4Jpv15j/SzOzOO+pVHZRm9J1rCGk/c8X//tgX03Tz/1cLHeVV33AAAAAElFTkSuQmCC" /></a>` : ''}<div class="center"><b>Torrent Mod Toolkit v` + version + `</b></div><button id="toggleToolkitBtn">▼</button></div>
+        <div class="header">${CONFIG_URL ? `<a href="#" id="tmt-refresh-config" title="Force refresh config from external source"><img width="20" height="20" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAE/SURBVDhPvdSxSxxREMfxj3ELm1RqY9AmsfKsrMQ0gXQ22ulfcH/Gcn9CWnsRK68RtBZ7SZfYWZpGG+Hg8Gxm5TnsniKSLwzsm3m/Yd6b2ccHM5MdiUVsYSXWN7jEv7TvVXoYYoxJsnHEelnURR+jlkTZRtjP4kw/ia5RYzesDt8kjv0tJyjpFZU9YoAqbwpfje85kBkWlQ1ycAo/sZmdi0UDrjsqa2Mdd7jNx98pqqvLwBSWYowa3V8sfIpgM2fwu/juosIplgvfKk5m8Qvb+BKB+biT82hOGxM8RKc3wneEQzhIozLB8Ut9J3Wh2WmcFc6KwAXmXupaqYqZHEdjn/mMK/yJI7+FQVHEMAfFHX4t1j86xqeKZI+RbIS1vCmzF4Jpv15j/SzOzOO+pVHZRm9J1rCGk/c8X//tgX03Tz/1cLHeVV33AAAAAElFTkSuQmCC" /></a>` : ''}<button id="tmt-load-links" title="Check tracker availability">Load Links</button><div class="center"><b>Torrent Mod Toolkit v` + version + `</b></div><button id="toggleToolkitBtn">▼</button></div>
         <div class="body">
         <div class="center pad">
           <a href="${athUrl + imdbId}" id="athButton" target="_blank"><img width="20" height="20" title="ATH" src="data:image/png;base64,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" /></a>
-          <a href="${ptpUrl + imdbId}" target="_blank"><img width="20" height="20" title="PTP" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA5CAMAAAC7xnO3AAAAV1BMVEUAAAD///9oiM2CacFm5Mj/jGb842dn3auC3X/z82j/uWZw14xudcRwbsBmpdz83GZm4NBq26KP4Hrm9Wr/rmdmr91u2ZNmntln5L/902b/l2Zt1otnseEVRKmYAAAAeUlEQVRIx+3WtwqAMBCAYU2zpNlii+//nAZFCDooSIaQ+5fjhm89LoNCl7u+TpCvM8kopUNda81YVfVu78rS8rEtCkJI4/ZNKYSQkBJjfJerk4sv+SHnUxo1/ZMCJEiQIKOV8pKPe8s8aa317q3x7m2SxfUnxCWhAO24CSsei22B/wAAAABJRU5ErkJggg==" /></a>
-          <a href="${btnUrl + tvdbId}" target="_blank"><img width="20" height="20" title="BTN" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAJFBMVEUAAAAKfKcLodkJcJcKnNEKlMoKd6AKirsKc5wKhbQJkMQKga5GWjbDAAAAAXRSTlMAQObYZgAAAWJJREFUOMul0D1PwzAQBmCn0JSPJadKUImlsmCnyh9AkbsjlAjBVBbPZcrAAgvK2DVi6YIQmdj957DfxrGtBJbekNzdYzsXs72C8+H+iPP5X3AzCIdCDMP4H7jtH68fJ0VhIJhAzwPYYoRgHq6haTRwf2gOmJQlwG0ZdbBm7LLbYvIs0589LsuNXpXpsCDEcq6hrje7SnTzC7PmVCkDI13OLSCLiH4A9gZyfRIzoFTSnpy1kN+Zd0wEuBL5ElDgKgArHI2Ge7MjKUNomk8LrzjisWla+EJ9UFUdbBnu7tvCtQNc0QvqOE1XSO5xaQ6YlGwYEA6iuv4I4cHcJqBeh4BGH8a2oZQKYGIbF0qVPkQadgkR+fBMdI4k1pB40JURBVsigF1y5sCrYindlkhK+eTlMgnyNmZmFaH/3m1AWZlYEE2ReCPOKsQb4en/bOpFwoYFfRdT21+g7O9JWD8oTYntEb/z/32K0Kt3+AAAAABJRU5ErkJggg==" /></a>
-          <a href="${hdbUrl + imdbId}" target="_blank"><img width="20" height="20" title="HDB" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEVPZHWjt8exxNNfdIV1ipuNorP+/v7Y3+RqcToTAAAA4ElEQVQoz6XITW6DMBCG4ZF8AkjcrkEh2RpNLgA22RvhsEZqZy6QmOt3DKpUWVlUyuufT3qgzvoHVFlQVOmU6W4fFFmvoJYpZep6Az+z9z5WMxFx4T3okrXW8VnS5UKLQJg5BB+fMvqTdIAwsg4hNmNyajYIvxDO3xncBaaR1nWl08jTNN2XAYaeUk3PgxtuAq5n51w8yQzutrg/IPPxlcH5IdDtsA0dHdiOr2jjoWNrZ3mAHaO9xmNLa6QHCrRsEeOhJeIGEQGzXoAyZn8qLYJSYIxRW2AUSOkzkNrl/X4ALOVfoodI6RkAAAAASUVORK5CYII=" /></a>
-          <a href="${bluUrl + imdbId}" target="_blank"><img width="20" height="20" title="BLU" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAABc90AaMX+//8AVcJElNyDtui51vILVXb+AAAAAXRSTlMAQObYZgAAAklJREFUSMeV1U1z2jAQBmBygHMkTLjWio3PoALXRrWdKx+GXksx+JzYcf5+d+uPXTuCmb6TyUyGR+uVNhaDXoabwd1shfLvfDwUQiilbhY5CQSQp1vlG6B8e3kC9Bi+nAAVoeVNpGmEu+HdtZmlraBeBcU5rwgovylPibVOlQpDxXrd8gJ7rZfGPRxkqExT48SAqyHe9Jp9XswOxTcADwy8IiiUZ/zsc+0A+NEFco9gCUu9MAf4pYLM9Rp+sLZnBb7Wf2AfCYK9TvrAOc60llA7VZAoQ7Bh5yCfPgKtHQDvCLw47YGodMZav0GVuUHRB06W4CYwywrgI34DGNVTenOdcwWqcQQSftGsZOmKDvCOpgOCFFAF6oO4dIAsX3ogShUHcYEqJ+AFDgfyl+iDi0HQ/r9+uII/ot6k8muAT+gC72o6YFqdFQE4RszsH3gQMnvhYGUMdoDDbEDZA8dEcVD3KCJdJzkZG5AwTJqW5RGubuMRoCZlQGBh+Ds+rEeVE1iHPeCuPDHVLO8cjGD1tKQWWZv0dsvjKeBg0QUoRMxBoboA43OQWoDA7q8Q3E1iA/DBMoQ8A1AdsG2HXUwuh12MA6crCEH77id7nCVUsgExhoV5mWnvrOcE2C0Y6Lk6p9EamvjOZkUXwOS6k+P5z6WJrokViNAVr8txobzQVODx603qr/NENXEHTUb8llJtbJe5s18ZumVt4nlh6LK3ibiwredbUbSBXk4cPP7XlxqJBkzgj5uC1tsCgA7QGgSDexkKuFzvi/4B/QXy6uI0Y3ArsgAAAABJRU5ErkJggg==" /></a>
-          <a href="${bhdUrl + imdbId}" target="_blank"><img width="20" height="20" title="BHD" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUAAAAmaMr9/f+On/YhYNjYAAAAAXRSTlMAQObYZgAAAQxJREFUOMuF1M3NgkAQBmA5WIL9UIIHBhIPfPevBIxlUAIHh3DkbBUWISWYmBj3ndl3lTXOQeXJzk/iLBsLkXKTRCHyLhKCz1vAngcsPg7wyM6hYoYFezKHGcyRJLJQpFByClZFzfqKqhHaHhBrHmZ8R+gMYpP/wdo4LJOBd9Wz9wU0Or5DrWrgY6j6ZIC76iWBv0Vf8XCo1aI3aPCIMmFyZITOgA4wRWgBc4SGJQAochZALDIQUKRPoM7CDNghxaH6AocsDIAtYFwAe0Cnc6tTCqPIYlD4H9kGKAHH18cNEEY9cacADCwMo1rBaulWa/lrkysuP0uwKi8mYX3F8peQOV8uMo/kXwYU+/UEaSw57h3Xy84AAAAASUVORK5CYII=" /></a>
+          <a href="${ptpUrl + imdbId}" id="ptpButton" target="_blank"><img width="20" height="20" title="PTP" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAA5CAMAAAC7xnO3AAAAV1BMVEUAAAD///9oiM2CacFm5Mj/jGb842dn3auC3X/z82j/uWZw14xudcRwbsBmpdz83GZm4NBq26KP4Hrm9Wr/rmdmr91u2ZNmntln5L/902b/l2Zt1otnseEVRKmYAAAAeUlEQVRIx+3WtwqAMBCAYU2zpNlii+//nAZFCDooSIaQ+5fjhm89LoNCl7u+TpCvM8kopUNda81YVfVu78rS8rEtCkJI4/ZNKYSQkBJjfJerk4sv+SHnUxo1/ZMCJEiQIKOV8pKPe8s8aa317q3x7m2SxfUnxCWhAO24CSsei22B/wAAAABJRU5ErkJggg==" /></a>
+          <a href="${btnUrl + tvdbId}" id="btnButton" target="_blank"><img width="20" height="20" title="BTN" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAJFBMVEUAAAAKfKcLodkJcJcKnNEKlMoKd6AKirsKc5wKhbQJkMQKga5GWjbDAAAAAXRSTlMAQObYZgAAAWJJREFUOMul0D1PwzAQBmCn0JSPJadKUImlsmCnyh9AkbsjlAjBVBbPZcrAAgvK2DVi6YIQmdj957DfxrGtBJbekNzdYzsXs72C8+H+iPP5X3AzCIdCDMP4H7jtH68fJ0VhIJhAzwPYYoRgHq6haTRwf2gOmJQlwG0ZdbBm7LLbYvIs0589LsuNXpXpsCDEcq6hrje7SnTzC7PmVCkDI13OLSCLiH4A9gZyfRIzoFTSnpy1kN+Zd0wEuBL5ElDgKgArHI2Ge7MjKUNomk8LrzjisWla+EJ9UFUdbBnu7tvCtQNc0QvqOE1XSO5xaQ6YlGwYEA6iuv4I4cHcJqBeh4BGH8a2oZQKYGIbF0qVPkQadgkR+fBMdI4k1pB40JURBVsigF1y5sCrYindlkhK+eTlMgnyNmZmFaH/3m1AWZlYEE2ReCPOKsQb4en/bOpFwoYFfRdT21+g7O9JWD8oTYntEb/z/32K0Kt3+AAAAABJRU5ErkJggg==" /></a>
+          <a href="${hdbUrl + imdbId}" id="hdbButton" target="_blank"><img width="20" height="20" title="HDB" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAGFBMVEVPZHWjt8exxNNfdIV1ipuNorP+/v7Y3+RqcToTAAAA4ElEQVQoz6XITW6DMBCG4ZF8AkjcrkEh2RpNLgA22RvhsEZqZy6QmOt3DKpUWVlUyuufT3qgzvoHVFlQVOmU6W4fFFmvoJYpZep6Az+z9z5WMxFx4T3okrXW8VnS5UKLQJg5BB+fMvqTdIAwsg4hNmNyajYIvxDO3xncBaaR1nWl08jTNN2XAYaeUk3PgxtuAq5n51w8yQzutrg/IPPxlcH5IdDtsA0dHdiOr2jjoWNrZ3mAHaO9xmNLa6QHCrRsEeOhJeIGEQGzXoAyZn8qLYJSYIxRW2AUSOkzkNrl/X4ALOVfoodI6RkAAAAASUVORK5CYII=" /></a>
+          <a href="${lstUrl + imdbId}" id="lstButton" target="_blank"><img width="20" height="20" title="LST" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAgMAAAAqbBEUAAAACVBMVEUAAAAAAAD///+D3c/SAAAAAXRSTlMAQObYZgAAAKlJREFUKM990rERgzAMBVCnYISk8DQZgQJR0KfxPmwQF9aUkZSzv/8dBwXwsCRzlpJfD5G3Pfo79HRsYwFLyx8roiwOUR6HKItjRAqSZFzI9wqMBVg9HxVyFdm1iap+U24iRZVwDmjH4TglbhdogBWoMxTYrdqAlBliSUABPn0lx69EzuaoBN8n8LKvh/rOhvkMCDfnlgA6+Nv+oI3cYG49hoLHhQeJRuwHxie7qwtJseAAAAAASUVORK5CYII=" /></a>
+          <a href="${bluUrl + imdbId}" id="bluButton" target="_blank"><img width="20" height="20" title="BLU" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAGFBMVEUAAAABc90AaMX+//8AVcJElNyDtui51vILVXb+AAAAAXRSTlMAQObYZgAAAklJREFUSMeV1U1z2jAQBmBygHMkTLjWio3PoALXRrWdKx+GXksx+JzYcf5+d+uPXTuCmb6TyUyGR+uVNhaDXoabwd1shfLvfDwUQiilbhY5CQSQp1vlG6B8e3kC9Bi+nAAVoeVNpGmEu+HdtZmlraBeBcU5rwgovylPibVOlQpDxXrd8gJ7rZfGPRxkqExT48SAqyHe9Jp9XswOxTcADwy8IiiUZ/zsc+0A+NEFco9gCUu9MAf4pYLM9Rp+sLZnBb7Wf2AfCYK9TvrAOc60llA7VZAoQ7Bh5yCfPgKtHQDvCLw47YGodMZav0GVuUHRB06W4CYwywrgI34DGNVTenOdcwWqcQQSftGsZOmKDvCOpgOCFFAF6oO4dIAsX3ogShUHcYEqJ+AFDgfyl+iDi0HQ/r9+uII/ot6k8muAT+gC72o6YFqdFQE4RszsH3gQMnvhYGUMdoDDbEDZA8dEcVD3KCJdJzkZG5AwTJqW5RGubuMRoCZlQGBh+Ds+rEeVE1iHPeCuPDHVLO8cjGD1tKQWWZv0dsvjKeBg0QUoRMxBoboA43OQWoDA7q8Q3E1iA/DBMoQ8A1AdsG2HXUwuh12MA6crCEH77id7nCVUsgExhoV5mWnvrOcE2C0Y6Lk6p9EamvjOZkUXwOS6k+P5z6WJrokViNAVr8txobzQVODx603qr/NENXEHTUb8llJtbJe5s18ZumVt4nlh6LK3ibiwredbUbSBXk4cPP7XlxqJBkzgj5uC1tsCgA7QGgSDexkKuFzvi/4B/QXy6uI0Y3ArsgAAAABJRU5ErkJggg==" /></a>
+          <a href="${bhdUrl + imdbId}" id="bhdButton" target="_blank"><img width="20" height="20" title="BHD" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAgMAAADXB5lNAAAADFBMVEUAAAAmaMr9/f+On/YhYNjYAAAAAXRSTlMAQObYZgAAAQxJREFUOMuF1M3NgkAQBmA5WIL9UIIHBhIPfPevBIxlUAIHh3DkbBUWISWYmBj3ndl3lTXOQeXJzk/iLBsLkXKTRCHyLhKCz1vAngcsPg7wyM6hYoYFezKHGcyRJLJQpFByClZFzfqKqhHaHhBrHmZ8R+gMYpP/wdo4LJOBd9Wz9wU0Or5DrWrgY6j6ZIC76iWBv0Vf8XCo1aI3aPCIMmFyZITOgA4wRWgBc4SGJQAochZALDIQUKRPoM7CDNghxaH6AocsDIAtYFwAe0Cnc6tTCqPIYlD4H9kGKAHH18cNEEY9cacADCwMo1rBaulWa/lrkysuP0uwKi8mYX3F8peQOV8uMo/kXwYU+/UEaSw57h3Xy84AAAAASUVORK5CYII=" /></a>
           <a href="${ANIMEBYTES_SEARCH_URL}" target="_blank"><img width="20" height="20" title="AB" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAAElBMVEUAAADtEGrwLXzzXJr3ibb5r827H5vkAAAAAXRSTlMAQObYZgAAAWZJREFUSMeFld1xhDAMhNc/945MCjgzKQCSBiAVXPpvJheMkS3L431iTp9XK3EeIGWXFT39PAFHb33q9RgAHPSvoNbpbQC6tLf185jNQOOxEU0ADGXNIvvleuT6ybN8OsIOMsaWT2ykW6QDAqC1MgjgFjKnT4YNQKmcfj23lDbdpohF5goIKE6xWxPTlIEeSo9YDe3aHmIrPoptWuIhALGt5x1rrV59FSLyEG2OcE/+qghTLNNfDx2LHVYDEDmlEYDoMXUAx8ChAsjAR94KOiFmRDGm2GbIAGRKCaxdIM/bmzMDUxeIeZxavxIIIwfqjEn307PztmD0lCQAGcK1AK2dv5QlrUdkwFPWS+tARZxJvRml264YUJkncIISsMQEN6gvBhMrHo4qsSFLAmYEuBGAOALMCMAQOEaAGwEwIwBDwLaVpQKwyfrsSqDdVgAE4KOoM6B4zLyd6uMubkADAPvXsnz7qusfG/ZZ3SUO5DgAAAAASUVORK5CYII=" /></a>
           <a href="${srrdbUrl + imdbId}" target="_blank"><img width="20" height="20" title="srrDB" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAC7u7v///+ZzP/Mmf+Z/5n/mZn//2b/mWaMjIxymL6Ycr5yvnK+cnK+vky+ckxUcY1xVI1nZ2dUjVSNVFSNjTiNVDi2juC+AAAABHRSTlN9PL4AffGBGQAAAMlJREFUWMPtlzcOwzAQBElLVKZy/v9DjXVBLK5Q4StkyJxygJ3uCNAk1qRfY2xi7CtV8LLGpCqw1/EJ7ENFDDvcOTXEdMIdY02MRwhgzwU47LkAhz0XQqASwDUCuFoQAzHwtIDqmPTnrOBJga0viX6Dm9ucaGe4pSuIbgkB7LkAhz0X4LDnQgiUArhcAFcIYiAGnhZQHJPunH/oRbo/sHpH+BXOu4xw/jKAPRfgsOfCZcAJ4DJBDMTAPwR0x6Q/53u/rkb9+VZ//9+xTWbto7vDzQAAAABJRU5ErkJggg==" /></a>
           <a href="${OMG_SEARCH_URL}" target="_blank"><img width="20" height="20" title="OMG" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAItSURBVDhP7ZQ5b9wwEIW/ISVK8q609toGDOQA4gAGfHRp0uT/d2nSB46DOMfa68XKuiVOinXWF5LCSZlHEMS84XvDYoZyfHikKvwzmFuzp7g+1piHxF0Iei9eFX9scheGtei+GBS9J1ZEV+djjnUh8/uKD/lf8Z9fLUdHR6riKWyJJEArxF2M9RZFqWyJJopXSOoI8YYyLrHpKu9rJagCki4CBDk4PtB+syMaxfh2IIwdaqH6XOLHnmSaoI1igwCbGK5mCybPMtqrDucc6j3xJCY/W2KvAuT1231tw5ZwHqJ4rAlpNhqmB1OWs5z+U0coIcYYejew+26H0/en7Fzu0mkLBoZwYOtkk8sPlxjZEWRusHuW6E2MOwiIi4jBDBRfronjiGargSmEvaX8WrL9apvedkhiiJ47AJYXOdnhBKMKgQSIGObnc+q6Ay90ZY/TEFUlyC3aKqpQz2oWxQJ34qikoMwrqr6ibweGuseE1yF+rPgfA2mZUp/W1K4mnAQoEEQOMYahH1AUYy1plFF8KxiNRtAoEREb2wn52TXGzz2T3QyZGobS47KQbD9l9vECUjAvhS7tsHuWLusIppY2b5CF0OYd3ijjw5T8e85Gk6zappeOIfNICt11z3AxkMQJ7oWjKAucddRVTbQRUy1LkjhBxgIC2ivFecm4HxEQrAxvm1RBQW4aVR9Nzyqnq0u33J3f5d4si8rajBvxw7Xm9XbfxR8/h6fgv+Hf4ycOpP6O76NlNwAAAABJRU5ErkJggg==" /></a>
         </div>
         <div><span class="uid">UID: ${uniqueId ? uniqueId : ''}</span></div>
+        <div class="tmt-filters">
+            <label class="tmt-filter-label"><input type="checkbox" id="tmt-filter-resolution"> Filter by resolution</label>
+            <label class="tmt-filter-label"><input type="checkbox" id="tmt-filter-release-group"> Filter by release group</label>
+        </div>
         ` + mediainfoButtonHtml + `
         ` + uniqueIdButtonHtml + `
         ` + fileStructureButtonHtml + `
@@ -1067,6 +1345,13 @@
                 storeDataForForceLoad();
             });
         });
+
+        const loadLinksButton = document.getElementById('tmt-load-links');
+        if (loadLinksButton) {
+            loadLinksButton.addEventListener('click', () => {
+                checkAllTrackers();
+            });
+        }
     }
 
     /* ---------------------------------------------------------------------
@@ -1221,9 +1506,6 @@
                 return null;
             },
             extractTorrentType: () => {
-                if (!window.location.hostname.includes('aither.cc')) {
-                    return null;
-                }
                 const tvIcon = document.querySelector("i.fa-tv, i.torrent-icon[title*='TV'], i.torrent-icon[title*='Show']");
                 if (tvIcon) {
                     return 'tv';
@@ -1232,12 +1514,18 @@
                 if (movieIcon) {
                     return 'movie';
                 }
-                const typeText = document.body.innerText || document.body.textContent || '';
-                if (/TV[- ]?Show|Series/i.test(typeText)) {
-                    return 'tv';
+                let title = document.querySelector("h1.torrent__name");
+                if (!title) {
+                    title = document.querySelector("h1") ||
+                            document.querySelector(".torrent-title h1") ||
+                            document.querySelector("h2.torrent__name") ||
+                            document.querySelector("h2");
                 }
-                if (/Movie|Film/i.test(typeText)) {
-                    return 'movie';
+                if (title) {
+                    const titleText = (title.innerText || title.textContent || "").trim();
+                    if (/\bS\d{1,2}(?:E\d{1,2})?\b/i.test(titleText)) {
+                        return 'tv';
+                    }
                 }
                 const url = window.location.href.toLowerCase();
                 if (url.includes('/tv') || url.includes('/series')) {
@@ -1245,6 +1533,16 @@
                 }
                 if (url.includes('/movie') || url.includes('/film')) {
                     return 'movie';
+                }
+                const typeElements = document.querySelectorAll('li.meta__type, div.torrent-info__type, span.type');
+                for (const el of typeElements) {
+                    const text = (el.innerText || el.textContent || '').toLowerCase();
+                    if (text.includes('tv') || text.includes('series') || text.includes('episode')) {
+                        return 'tv';
+                    }
+                    if (text.includes('movie') || text.includes('film')) {
+                        return 'movie';
+                    }
                 }
 
                 return null;
@@ -1954,7 +2252,7 @@
             extractFileStructure: () => {
                 const isCHDBits = window.location.hostname.includes('ptchdbits.co');
                 const isPTerClub = window.location.hostname.includes('pterclub.net');
-                
+
                 if (isCHDBits) {
                     const descriptionDiv = document.querySelector("div#kdescr, div[id='kdescr']");
                     const codeMain = document.querySelector("div.hide div.codemain") ||
@@ -2085,7 +2383,7 @@
                         return mediainfoMatch ? mediainfoMatch[0].trim() : blockquoteText;
                     }
                 }
-                
+
                 for (const mediainfoTable of allMediainfoTables) {
                     const blockquote = mediainfoTable.closest('blockquote.spoiler');
                     if (blockquote) {
@@ -2144,10 +2442,10 @@
                     visibleTorrentRow = document.querySelector(`tr.Table-row:not(.u-hidden)`);
                 }
                 if (!visibleTorrentRow) return null;
-                
+
                 const mediainfoEl = visibleTorrentRow.querySelector('pre.MediaInfoText');
                 if (!mediainfoEl) return null;
-                
+
                 const text = mediainfoEl.textContent.trim();
                 if (text.includes('General') || text.includes('Unique ID')) {
                     const match = text.match(/General[\s\S]*?$/);
@@ -2171,12 +2469,12 @@
                             return (clone.textContent || clone.innerText || "").trim();
                         })
                         .filter(f => f && /\.(mkv|mp4|avi|m4v|m2ts|ts|vob|iso)$/i.test(f));
-                    
+
                     if (filenames.length > 0) {
                         return filenames.join("\n");
                     }
                 }
-                
+
                 const fileListDiv = visibleTorrentRow.querySelector('div.TorrentDetail-fileList');
                 if (fileListDiv) {
                     const fileNameDivsInList = fileListDiv.querySelectorAll('div.TorrentDetailfileList-fileName');
@@ -2189,13 +2487,13 @@
                                 return (clone.textContent || clone.innerText || "").trim();
                             })
                             .filter(f => f && /\.(mkv|mp4|avi|m4v|m2ts|ts|vob|iso)$/i.test(f));
-                        
+
                         if (filenames.length > 0) {
                             return filenames.join("\n");
                         }
                     }
                 }
-                
+
                 const mediainfoRow = visibleTorrentRow.querySelector('div.is-mediainfo');
                 if (mediainfoRow) {
                     const detailsDiv = mediainfoRow.querySelector('div');
@@ -2207,7 +2505,7 @@
                         }
                     }
                 }
-                
+
                 const mediainfoEl = visibleTorrentRow.querySelector('pre.MediaInfoText');
                 if (mediainfoEl) {
                     const mediainfoText = mediainfoEl.textContent.trim();
@@ -2219,7 +2517,7 @@
                         }
                     }
                 }
-                
+
                 return null;
             },
             extractIMDB: () => {
@@ -2240,10 +2538,10 @@
                     visibleTorrentRow = document.querySelector(`tr.Table-row:not(.u-hidden)`);
                 }
                 if (!visibleTorrentRow) return null;
-                
+
                 const titleCell = visibleTorrentRow.querySelector('td.TableTorrent-cellName, td.Table-cell');
                 if (!titleCell) return null;
-                
+
                 const titleText = titleCell.textContent || titleCell.innerText || "";
                 const match = titleText.match(/[-.]([A-Za-z0-9]+)(\.mkv|\.mp4|\.avi)?$/);
                 return match ? match[1] : null;
@@ -2295,6 +2593,11 @@
         imdbId = activeTemplate.extractIMDB();
         const release_group = activeTemplate.extractReleaseGroup();
         const torrentType = activeTemplate.extractTorrentType ? activeTemplate.extractTorrentType() : null;
+
+        // Extract resolution and release group for filtering
+        currentResolution = extractResolutionFromTitle();
+        currentReleaseGroup = release_group;
+
         buildHomeTrackerLink();
         // Auto-store data only for Aither when page loads
         const isAither = window.location.hostname.includes('aither.cc');
@@ -2478,7 +2781,7 @@
                     </div>
                 </div>
                 <div style="margin-top: 5px;">
-                    <button id="btnMediainfoDiff">Mediainfo Diff</button>
+                    <button id="btnMediainfoCompare">Mediainfo Compare</button>
                 </div>
             </div>
         `;
@@ -2491,29 +2794,24 @@
             display.remove();
         });
 
-        document.getElementById("btnMediainfoDiff").addEventListener("click", () => {
+        document.getElementById("btnMediainfoCompare").addEventListener("click", () => {
             const storedMediainfo = (searchData.mediainfo && searchData.mediainfo !== "null") ? searchData.mediainfo : "";
             let currentMediainfo = mediainfo || "";
             if (!currentMediainfo && activeTemplate && activeTemplate.extractMediainfo) {
                 currentMediainfo = activeTemplate.extractMediainfo() || "";
             }
 
-            const body = `mediainfo=${encodeURIComponent(storedMediainfo)}&mediainfo=${encodeURIComponent(currentMediainfo)}`;
+            const boundary = '----WebKitFormBoundary' + Math.random().toString(36).substr(2);
+            const body = `--${boundary}\r\nContent-Disposition: form-data; name="mediainfo"\r\n\r\n${storedMediainfo}\r\n--${boundary}\r\nContent-Disposition: form-data; name="mediainfo"\r\n\r\n${currentMediainfo}\r\n--${boundary}--\r\n`;
 
             GM_xmlhttpRequest({
                 method: "POST",
-                url: 'https://mediainfo.okami.icu/diff/create',
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
+                url: 'https://mediainfo.okami.icu/api/compare',
+                headers: { "Content-Type": "multipart/form-data; boundary=" + boundary },
                 data: body,
-                responseType: "text",
-                onload: function(response) {
-                    const html = response.responseText;
-                    const doc = new DOMParser().parseFromString(html, "text/html");
-                    const meta = doc.querySelector('meta[property="og:url"]');
-                    const diffUrl = meta ? meta.getAttribute("content") : response.finalUrl;
-                    if (diffUrl) window.open(diffUrl, "_blank");
+                onload: (response) => {
+                    const data = JSON.parse(response.responseText);
+                    if (data.url) window.open(data.url, "_blank");
                 }
             });
         });
@@ -2831,6 +3129,67 @@
             word-wrap: break-word;
             line-height: 1.56;
             max-width: 100%;
+        }
+
+
+        #tmt-load-links {
+            padding: 2px 8px;
+            margin-left: 5px;
+            cursor: pointer;
+            background-color: #F5C518;
+            color: #000;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        #tmt-load-links:hover {
+            background-color: #FFD700;
+        }
+
+        #tmt-load-links:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .tracker-found {
+            border: 2px solid rgb(0, 220, 0) !important;
+            border-radius: 3px;
+        }
+
+        .tracker-seeding {
+            border: 2px solid rgb(0, 220, 220) !important;
+            border-radius: 3px;
+        }
+
+        .tracker-loading {
+            opacity: 0.6;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .tmt-filters {
+            margin: 6px 0;
+            padding: 4px 0;
+            font-size: 12px;
+        }
+
+        .tmt-filter-label {
+            display: block;
+            margin: 3px 0;
+            cursor: pointer;
+            color: #fff !important;
+        }
+
+        .tmt-filter-label input[type="checkbox"] {
+            margin-right: 6px;
+            cursor: pointer;
         }
 
         #tmt-stored-data-display .uid {

@@ -1,24 +1,24 @@
 // ==UserScript==
 // @name         爱奇艺、优酷视频、腾讯视频全网VIP解析，跳过广告
 // @namespace    junchangxiaolucky0106
-// @version      1.1.2
+// @version      1.1.4
 // @description  爱奇艺、优酷视频、腾讯视频全网VIP解析
 // @author       junchangxiaolucky0106
 // @match        https://*.iqiyi.com/v_*
 // @match        https://*.bilibili.com/*
+// @match        https://m.youku.com/a*
+// @match        https://*.tudou.com/*
 // @match        https://v.youku.com/*
 // @match        https://v.youku.com/pad_show*
+// @match        https://www.le.com/*
 // @match        https://vip.pptv.com/show/*
 // @match        https://v.youku.com/v_*
 // @match        https://v.yinyuetai.com/playlist/*
 // @match        https://music.163.com/*
-// @match        https://m.youku.com/a*
-// @match        https://*.tudou.com/*
 // @match        https://*.mgtv.com/*
 // @match        https://film.sohu.com/*
 // @match        *://blog.csdn.net/*/article/details/*
 // @match        *://*.blog.csdn.net/article/details/*
-// @match        https://www.le.com/*
 // @match        https://yparse.ik9.*/*
 // @match        https://v.yinyuetai.com/video/*
 // @match        https://*.fun.tv/vplay/*
@@ -407,7 +407,7 @@
     // 20250426006ccgg
 
     var videoUrl = window.location.href;
-    var version = "20260106gg001";
+    var version = "20260110gg002";
 
     // 20250310005bbff , 202500501aabbcc
 
@@ -2574,7 +2574,7 @@
             var newVideoUrl = window.location.href;
             //alert(newVideoUrl);
 			
-			window.open('http://47.101.38.188/myvideoop.html?version=' + version + '&type=' + elem.id + '&url=' + encodeURIComponent(newVideoUrl));
+			window.open('http://47.101.38.188/myvideo.html?version=' + version + '&type=' + elem.id + '&url=' + encodeURIComponent(newVideoUrl));
 
             if (elem.id) {
                 //if (elem.id == 'jkgueirwe11' || elem.id == 'JX') {

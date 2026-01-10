@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         星穹云游戏防离线
+// @name         星穹云游戏防离线(默认模式)
 // @namespace    starRailAwaysOnline
 // @version      3.3
 // @description  每10秒抖动鼠标，避免离线检测
@@ -9,8 +9,8 @@
 // @license      MIT
 // @grant        none
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=sr.mihoyo.com
-// @downloadURL https://update.greasyfork.org/scripts/561720/%E6%98%9F%E7%A9%B9%E4%BA%91%E6%B8%B8%E6%88%8F%E9%98%B2%E7%A6%BB%E7%BA%BF.user.js
-// @updateURL https://update.greasyfork.org/scripts/561720/%E6%98%9F%E7%A9%B9%E4%BA%91%E6%B8%B8%E6%88%8F%E9%98%B2%E7%A6%BB%E7%BA%BF.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561720/%E6%98%9F%E7%A9%B9%E4%BA%91%E6%B8%B8%E6%88%8F%E9%98%B2%E7%A6%BB%E7%BA%BF%28%E9%BB%98%E8%AE%A4%E6%A8%A1%E5%BC%8F%29.user.js
+// @updateURL https://update.greasyfork.org/scripts/561720/%E6%98%9F%E7%A9%B9%E4%BA%91%E6%B8%B8%E6%88%8F%E9%98%B2%E7%A6%BB%E7%BA%BF%28%E9%BB%98%E8%AE%A4%E6%A8%A1%E5%BC%8F%29.meta.js
 // ==/UserScript==
 
 (function() {

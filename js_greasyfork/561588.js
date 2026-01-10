@@ -9,22 +9,36 @@
 (function(window) {
     'use strict';
 
-    const STORAGE_KEY = 'hitomi_filter_settings_v5';
+    const STORAGE_KEY = 'hitomi_filter_settings_v6';
+    
+    // ★追加: メモリキャッシュ用変数
+    let cachedSettings = null;
 
     const DEFAULT_SETTINGS = {
         syncMode: true,
-        layoutMode: 'list', // 追加: 'list', 'grid'
-        gridColumns: 4, // ★追加: デフォルトのグリッド列数
-        thumbnailScale: 1.0, // ★追加: サムネイル倍率 (デフォルト1倍)
         excludeList: [
             'tag:anthology',
             'male:shota',
-            'male:yaoi',
-            'male:cuntboy',
             'male:urethra_insertion',
             'female:futanari',
             'female:dickgirl_on_female',
-            'female:scat'
+            'female:yuri',
+            'female:scat',
+            'female:anal_intercourse',
+            'female:pregnant',
+            'female:tentacles',
+        ],
+        strongBlockList: [
+            'male:cuntboy',
+            'male:yaoi',
+            'male:males_only',
+            'male:insect',
+            'female:insect',
+            'female:bestiality',
+            'female:amputee',
+            'female:vore',
+            'female:guro',
+            'female:eggs',
         ],
         externalSites: [
             { label: 'Hitomi', url: 'https://hitomi.la/search.html?%query%', spaceReplacement: '%20' },
@@ -41,12 +55,43 @@
             imageset: 'neutral',
             anime: 'neutral',
             japanese: false,
-            seriesFilter: false,
             activeExclusions: []
+        },
+        ui: {
+            seriesFilter: false,
+            layoutMode: 'list',
+            gridColumns: 4,
+            thumbnailScale: 1.0,
+            strongBlockEnabled: true // ★追加: デフォルトON
         }
     };
 
+    // ★追加: 別タブでの変更を検知してキャッシュを更新する (同期機能の維持)
+    if (typeof GM_addValueChangeListener !== 'undefined') {
+        GM_addValueChangeListener(STORAGE_KEY, (name, oldVal, newVal, remote) => {
+            if (remote) { // 他のタブで変更された場合のみ
+                console.log('[Storage] Sync from other tab');
+                try {
+                    cachedSettings = JSON.parse(newVal);
+                } catch (e) {
+                    cachedSettings = null; // エラー時はキャッシュ破棄して次回リロードさせる
+                }
+            }
+        });
+    }
+
     function loadSettings() {
+        // エラーオブジェクトを生成し、そのスタックトレース（呼び出し履歴の文字列）を取得
+        // const stack = new Error().stack;
+        // const callerLine = stack.split('\n')[2].trim();
+        // console.log('[Storage] loadSettings called from:', callerLine);
+
+        // ★変更: キャッシュがあればそれを返す (高速化)
+        if (cachedSettings) {
+            // console.log('[Storage] Load from Cache', cachedSettings); // デバッグ用
+            return cachedSettings;
+        }
+
         try {
             const json = GM_getValue(STORAGE_KEY, null);
             let settings;
@@ -58,6 +103,8 @@
                     ...DEFAULT_SETTINGS,
                     ...saved,
                     states: { ...DEFAULT_SETTINGS.states, ...(saved.states || {}) },
+                    // ★追加: uiオブジェクトのマージ
+                    ui: { ...DEFAULT_SETTINGS.ui, ...(saved.ui || {}) },
                     excludeList: saved.excludeList || DEFAULT_SETTINGS.excludeList,
                     externalSites: (saved.externalSites || DEFAULT_SETTINGS.externalSites).map(site => ({
                         ...site,
@@ -65,6 +112,8 @@
                     }))
                 };
             }
+            // ★追加: 読み込んだ内容をキャッシュする
+            cachedSettings = settings;
             console.log('[Storage] Load:', settings);
             return settings;
         } catch (e) {
@@ -76,6 +125,8 @@
     function _save(settings) {
         try {
             console.log('[Storage] Save:', settings);
+            // ★追加: 保存時にキャッシュも更新する
+            cachedSettings = settings;
             GM_setValue(STORAGE_KEY, JSON.stringify(settings));
         } catch (e) {
             console.error('Hitomi Filter Storage: Save error', e);
@@ -99,10 +150,19 @@
         _save(settings);
     }
 
-    function updateConfig(newExcludeList, newExternalSites) {
+    // ★変更: strongBlockEnabled も受け取るように引数を追加
+    function updateConfig(newExcludeList, newStrongBlockList, newExternalSites, newStrongBlockEnabled) {
         const settings = loadSettings();
         if(newExcludeList) settings.excludeList = newExcludeList;
+        if(newStrongBlockList) settings.strongBlockList = newStrongBlockList;
         if(newExternalSites) settings.externalSites = newExternalSites;
+        
+        // ★追加: UI設定だがConfig画面で管理するためここで保存
+        if(newStrongBlockEnabled !== undefined) {
+            if (!settings.ui) settings.ui = {};
+            settings.ui.strongBlockEnabled = newStrongBlockEnabled;
+        }
+        
         _save(settings);
     }
 
@@ -112,24 +172,13 @@
         _save(settings);
     }
 
-    // Storage-5.0.js 内に追加
-    function updateLayoutMode(mode) {
+    // ★新規追加: UI設定を保存する汎用関数
+    function updateUI(key, value) {
         const settings = loadSettings();
-        settings.layoutMode = mode;
-        _save(settings);
-    }
-
-    // ★追加: グリッド列数を保存する関数
-    function updateGridColumns(cols) {
-        const settings = loadSettings();
-        settings.gridColumns = parseInt(cols, 10);
-        _save(settings);
-    }
-
-    // ★追加: サムネイル倍率を保存する関数
-    function updateThumbnailScale(scale) {
-        const settings = loadSettings();
-        settings.thumbnailScale = parseFloat(scale);
+        if (!settings.syncMode) return; // Sync OFFなら保存しない
+        
+        if (!settings.ui) settings.ui = {};
+        settings.ui[key] = value;
         _save(settings);
     }
 
@@ -139,9 +188,7 @@
         updateAllStates,
         updateConfig,
         setSyncMode,
-        updateLayoutMode, // 追加
-        updateGridColumns, // ★追加
-        updateThumbnailScale, // ★追加
+        updateUI, // ★追加
         defaults: DEFAULT_SETTINGS
     };
 })(window);

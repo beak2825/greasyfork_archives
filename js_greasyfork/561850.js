@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         salesDrive_send_to_print
 // @namespace    http://tampermonkey.net/
-// @version      1.02
+// @version      1.03
 // @description  Відправка замовлення на пошту при статусі "В друці"
 // @author       LanNet
 // @match        https://e-oboi.salesdrive.me/ua/index.html?formId=1*
@@ -1081,15 +1081,26 @@
                         await changeOrderStatusToVDruci(statusBadge, row);
                     }
                     
+                    // Інвалідуємо кеш статусу замовлення, щоб перезавантажити актуальні дані
+                    sentOrdersCache = null;
+                    sentOrdersCacheTime = 0;
+                    
+                    // Чекаємо трохи, щоб сервер встиг оновити JSON файл
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // Перевіряємо статус замовлення після відправки
+                    if (orderData.orderNumber) {
+                        const updatedStatus = await checkOrderStatus(orderData.orderNumber);
+                        orderStatus.isSent = updatedStatus.isSent;
+                        console.log('✅ Статус замовлення оновлено після відправки:', updatedStatus);
+                    }
+                    
                     button.textContent = 'Відправлено';
                     button.style.backgroundColor = '#37a3df';
                     button.style.borderColor = '#37a3df';
                     button.disabled = false; // Дозволяємо повторну відправку
                     button.style.cursor = 'pointer';
                     button.style.opacity = '1';
-                    
-                    // Оновлюємо статус
-                    orderStatus.isSent = true;
                     
                     // Формуємо повідомлення про вкладення
                     let successMessage = 'Email успішно відправлено на виробництво!';
@@ -1386,22 +1397,67 @@
             await new Promise(resolve => setTimeout(resolve, 300));
             
             const conditions = checkAllConditions();
-            const shouldShow = conditions.hasFile && conditions.statusOk && conditions.senderOk;
             
-            console.log('🔍 checkAndUpdateButton: файл=', conditions.hasFile, 'статус=', conditions.statusOk, 'відправник=', conditions.senderOk, 'показувати=', shouldShow);
+            // Отримуємо номер замовлення для перевірки статусу
+            const orderElement = document.querySelector('h1.left.ng-binding.ng-scope');
+            let orderNumber = '';
+            if (orderElement) {
+                const orderText = orderElement.textContent || '';
+                const orderNumberMatch = orderText.match(/\d+/);
+                if (orderNumberMatch) {
+                    orderNumber = orderNumberMatch[0];
+                }
+            }
+            
+            // Перевіряємо статус замовлення
+            let orderStatus = { isSent: false };
+            if (orderNumber) {
+                orderStatus = await checkOrderStatus(orderNumber);
+            }
+            
+            // Показуємо кнопку, якщо всі умови виконані АБО замовлення вже відправлене
+            const shouldShow = (conditions.hasFile && conditions.statusOk && conditions.senderOk) || orderStatus.isSent;
+            
+            console.log('🔍 checkAndUpdateButton: файл=', conditions.hasFile, 'статус=', conditions.statusOk, 'відправник=', conditions.senderOk, 'відправлено=', orderStatus.isSent, 'показувати=', shouldShow);
             
             const existingButton = document.querySelector('.send-to-print-btn');
             const printFormGroup = document.getElementById('send-to-print-form-group');
             
             if (shouldShow) {
-                // Всі умови виконані - показуємо кнопку
-                console.log('✅ Всі умови виконані, показуємо кнопку');
+                // Всі умови виконані або замовлення вже відправлене - показуємо кнопку
+                console.log('✅ Умови виконані або замовлення відправлене, показуємо кнопку');
                 if (printFormGroup) {
                     printFormGroup.style.display = '';
                 }
                 if (!existingButton && !isProcessingDetailsPage) {
                     detailsPageProcessed = false;
                     await processOrderDetailsPage();
+                } else if (existingButton) {
+                    // Оновлюємо існуючу кнопку, якщо замовлення вже відправлене
+                    if (orderStatus.isSent) {
+                        existingButton.textContent = 'Відправлено';
+                        existingButton.style.backgroundColor = '#37a3df';
+                        existingButton.style.borderColor = '#37a3df';
+                        existingButton.style.color = '#fff';
+                        existingButton.disabled = false;
+                        existingButton.style.cursor = 'pointer';
+                        existingButton.style.opacity = '1';
+                        if (orderStatus.sentDate) {
+                            existingButton.title = `Відправлено: ${orderStatus.sentDate}`;
+                        }
+                    } else {
+                        // Якщо не відправлене, перевіряємо умови
+                        if (conditions.hasFile && conditions.statusOk && conditions.senderOk) {
+                            existingButton.textContent = 'Подати';
+                            existingButton.style.backgroundColor = '#b9b9b9';
+                            existingButton.style.borderColor = '#b9b9b9';
+                            existingButton.style.color = '#fff';
+                            existingButton.disabled = false;
+                            existingButton.style.cursor = 'pointer';
+                            existingButton.style.opacity = '1';
+                            existingButton.title = '';
+                        }
+                    }
                 }
             } else {
                 // Умови не виконані - ховаємо кнопку
@@ -1891,6 +1947,20 @@
                         await changeOrderStatusToVDruci(statusBadge, null);
                     }
                     
+                    // Інвалідуємо кеш статусу замовлення, щоб перезавантажити актуальні дані
+                    sentOrdersCache = null;
+                    sentOrdersCacheTime = 0;
+                    
+                    // Чекаємо трохи, щоб сервер встиг оновити JSON файл
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // Перевіряємо статус замовлення після відправки
+                    if (orderData.orderNumber) {
+                        const updatedStatus = await checkOrderStatus(orderData.orderNumber);
+                        orderStatus.isSent = updatedStatus.isSent;
+                        console.log('✅ Статус замовлення оновлено після відправки:', updatedStatus);
+                    }
+                    
                     button.textContent = 'Відправлено';
                     button.style.backgroundColor = '#37a3df';
                     button.style.borderColor = '#37a3df';
@@ -1898,7 +1968,11 @@
                     button.style.cursor = 'pointer';
                     button.style.opacity = '1';
                     
-                    orderStatus.isSent = true;
+                    // Оновлюємо кнопку через checkAndUpdateButton для сторінки деталей
+                    if (typeof window.checkAndUpdateButton === 'function') {
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        await window.checkAndUpdateButton();
+                    }
                     
                     let successMessage = 'Email успішно відправлено на виробництво!';
                     if (orderData.ttnPdfFileName) {

@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Custom and nearest Torn events
 // @namespace    http://tampermonkey.net/
-// @version      2.0.1
-// @description  Description
+// @version      2.0.2
+// @description  See the time until next event. Create and follow custom events
 // @author       ljovcheg  [3191064] 
-// @license MIT
+// @license      MIT
 // @grant        GM_addStyle
 // @run-at       document-idle
 // @grant        GM_setValue
@@ -12,8 +12,9 @@
 // @grant        GM_deleteValue
 // @grant        GM_xmlhttpRequest
 // @match        https://www.torn.com/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
+// @icon         https://cte.tornscripts.co.za/cte_500.png
 // @connect      https://tornscripts.co.za
+// @connect      torn.com
 
 
 // @downloadURL https://update.greasyfork.org/scripts/560816/Custom%20and%20nearest%20Torn%20events.user.js
@@ -22,7 +23,7 @@
 
 (function () {
     'use strict';
-    const SCRIPT_VERSION = '2.0.1';
+    const SCRIPT_VERSION = '2.0.2';
     if (typeof GM_info !== 'undefined' &&
         GM_info &&
         GM_info.script &&
@@ -331,16 +332,17 @@
         $(".cte_settings_holder").remove();
 
         let cte_settings_holder = $('<div>', {
+            id: 'cte_settings',
             class: `cte_settings_holder`,
             html: `
                 <div class="cte_title">Custom and nearest Torn events | ${SCRIPT_VERSION}</div>
                 API key: <button class="cte_apiKey_button cte_apiKey"> </button>
                
-                <!--<button class="cte_fetch_button"><i class="fa-solid fa-rotate"></i></button>-->
+                <button class="cte_fetch_button"><i class="fa-solid fa-rotate"></i></button>
 
                 <!--<button class="cte_gatherdata_button">gather data</button>-->
                 <div style="padding: 10px 0;">
-                    Use limited key. Or click here to generate custom (torn calendar, user calendar) api key
+                    Use limited key. Or <a href="https://www.torn.com/preferences.php#tab=api?step=addNewKey&title=Custom_Torn_Events&user=basic,calendar&torn=calendar" target="self">click here to generate custom</a> (torn calendar, user basic and calendar) api key
                 </div>
                 <div>
                     <input type="checkbox" id="cte_participiate_checkbox" name="cte_participiate_checkbox" ${(SETTINGS.participateCTE) ? 'checked' : ''} />
@@ -359,7 +361,7 @@
         function displayApiKey(div) {
             let key = '';
             if (SETTINGS.apiKey === null || SETTINGS.apiKey === '' || !SETTINGS.apiKey) {
-                key = 'Api key not set';
+                key = 'Click here to set API key';
             } else {
                 key = "************" + SETTINGS.apiKey.slice(12);
             }
@@ -462,7 +464,7 @@
                 <button class='cteData_header cteData_header_addHost'><i class="fa-solid fa-plus"></i> Hosted events</button>
                 <ul class="cte_hostedEvents_holder"></ul>
                 
-                <button style="margin-top:20px"class='cteData_header cteData_header_addWatch'><i class="fa-solid fa-plus"></i> Watched events</button>
+                <button style="margin-top:20px"class='cteData_header cteData_header_addWatch'><i class="fa-solid fa-plus"></i> Fallowing events</button>
                 <ul class="cte_watchEvents_holder"></ul>             
             `
         }).appendTo($('.cte_settings_holder'));
@@ -573,7 +575,7 @@
 
             let html = `
                 <div class="cte_row">
-                    <div class="cte_col">${event.title}</div>
+                    <div class="cte_col cte_col_title">${event.title}</div>
                     <div class="cte_col">${eventStatus}</div>
                     <div class="cte_col cte_col_controls">
                         ${(controls)}
@@ -712,6 +714,7 @@
         });
 
         $(".cteHost_save").on("click", async function (e) {
+
             const eventNameInput = $("#cteHost_inputEventName").val();
             const eventIconInput = $(".cteHost_eventIcon").attr('class').split(' ').pop();
             const eventStartInput = (timeStampManipulation($("#cteHost_inputEventStart").val(), 'tounix'));
@@ -785,16 +788,11 @@
         let answer = await CTE_fetch({ action: "addwatch", id: id });
         let success = false;
         if (answer.success === true) {
-            message('SUCCESS -- answer ---');
-            message(answer);
-
 
             let cteData = await CTE_fetch();
             SETTINGS.hostedEvents = cteData.hostedEvents ?? [];
             SETTINGS.watchEvents = cteData.watchEvents ?? [];
             saveSettings();
-            message("--- answer 2 ---")
-            message(cteData);
 
             success = true;
 
@@ -805,8 +803,6 @@
             message(answer);
         }
 
-        message("--- settings before gather ---");
-        message(SETTINGS);
 
         gatherData();
 
@@ -951,9 +947,10 @@
                 let id = unixToID(start);
 
                 let activeDates = getDatesBetween(start, end);
-                message(activeDates)
+                //message(activeDates)
                 for (let d = 0; d < activeDates.length; d++) {
-                    let div = $(`[id*="${activeDates[d]}"]`).first();
+                    //let div = $(`[id*="${activeDates[d]}"]`).first();
+                    let div = $(`[id="active-date-${activeDates[d]}"]`).first();
                     if (div.length === 0) continue;
 
                     //let numberWrapper = div.find(`[class*="numberWrapper"]`);
@@ -962,7 +959,22 @@
                     //numberWrapper.css('color', 'red')
                     if (!div.hasClass('cte_calendar_active')) {
                         div.addClass('cte_calendar_active');
+
+                        let eventData = [
+                            {
+                                name: event.title,
+                                start: event.start,
+                                end: event.end
+                            }
+                        ]
+
+                        div.attr('cte-event-data', JSON.stringify(eventData));
+
+                        /*
                         div.attr('cte-event-name', event.title);
+                        div.attr('cte-event-start', event.start);
+                        div.attr('cte-event-end', event.end);
+                        */
 
                         div.on("click", function (e) {
                             /*
@@ -975,29 +987,35 @@
                             $(".cte_calendar_event_info").remove();
 
                             e.stopPropagation();
-                            let attr = $(this).attr("cte-event-name").split(";").join('\n');
-                            alert(`Custom events:\n${attr}`)
-                            /*
-                            message(this);
-                            let pos = $(this).position();
+                            let eventData = JSON.parse(div.attr('cte-event-data')) || []; // $(this).attr("cte-event-name").split(";").join('\n');
+                            if (eventData.length === 0) return;
 
-                            let holder = $('<div>', {
-                                class: 'cte_calendar_event_info',
-
-                                html: 'loading data...'
-                            }).appendTo($(".calendar-container"));
-
-                            /*
-                            let left = pos.left - 158;
-                            if (left < 0) left = 0;
-
-                            holder.css('left', `${left}px`)
-                            */
+                            let output = ``;
+                            for (let i = 0; i < eventData.length; i++) {
+                                let event = eventData[i]
+                                output += `
+                                    ${event.name}
+                                    ${unixSecondsToGMT(event.start)}-${unixSecondsToGMT(event.end)}\n
+                                `
+                            };
+                            alert(output)
                         });
                     } else {
                         div.addClass('cte_calendar_active_overlap');
-                        let oldattr = div.attr('cte-event-name')
-                        div.attr('cte-event-name', `${oldattr};${event.title}`);
+                        let eventData = JSON.parse(div.attr('cte-event-data')) || [];
+                        eventData.push({
+                            name: event.title,
+                            start: event.start,
+                            end: event.end
+                        });
+                        div.attr('cte-event-data', JSON.stringify(eventData));
+                        /*
+                        let oldName = div.attr('cte-event-name');
+                        let oldStart = div.attr('cte-event-start');
+                        let oldEnd = div.attr('cte-event-end');
+                        div.attr('cte-event-name', `${oldName};${event.title}`);
+                        div.attr('cte-event-start', `${oldStart};${event.start}`);
+                        */
                     }
 
                 }
@@ -1256,7 +1274,7 @@
             const cteData = await CTE_fetch();
             if (cteData.success === true) {
                 message("success");
-                message(cteData)
+                //message(cteData)
                 SETTINGS.hostedEvents = cteData.hostedEvents ?? [];
                 SETTINGS.watchEvents = cteData.watchEvents ?? [];
             } else {
@@ -1369,16 +1387,23 @@
 
         // Future events (start in the future)
         const futureCandidates = nonPast.filter(e => e.start > now);
-
+        let firstCandidate = false;
         for (const e of futureCandidates) {
             // Only consider overlaps with ONGOING events
             const overlapsOngoing = ongoing_events.some(ongoing =>
                 ongoing.start <= e.start && e.start <= ongoing.end
                 // equivalently: e.start <= ongoing.end (since ongoing.start <= now < e.start)
             );
+            if (overlapsOngoing) {
+                if (!firstCandidate) {
+                    overlapping_events.push(e);
+                    firstCandidate = true; //TODO maybe remove it
+                }
+            } else {
 
-            if (overlapsOngoing) overlapping_events.push(e);
-            else future_events.push(e);
+                future_events.push(e);
+
+            }
         }
 
         // Sort each category by start time
@@ -1404,7 +1429,6 @@
     }
 
     function saveSettings() {
-        //message("SAVING SETTINGS", SETTINGS)
         GM_setValue(STORAGE_NAME, SETTINGS);
     }
     function message(msg, error = false) {
@@ -1432,6 +1456,7 @@
 
 
     async function sha256(str) {
+        if (str.trim().length === 0) return "";
         const buf = new TextEncoder().encode(str);
         const hash = await crypto.subtle.digest("SHA-256", buf);
         return [...new Uint8Array(hash)]
@@ -1484,6 +1509,7 @@
     async function CTE_fetch(data = {}) {
         //let url = `https://level5.ee/warehouse/torn/cte/index.php`;
         let url = `https://cte.tornscripts.co.za/`;
+
 
         let shaKey = await sha256(SETTINGS.apiKey)
 
@@ -1740,7 +1766,14 @@
             border-radius: 4px;
             color: rgba(255, 255, 255, 0.8);
         }
-       
+        .cte_settings_holder a{
+            color: #3d84a8 !important;
+            text-decoration: underline;
+        }
+        .cte_settings_holder a:hover{
+            color: #fff !important;
+            text-decoration: none;
+        }
         .cte_button_blue{
             background-color: #3d84a8 !important;
         }
@@ -1768,6 +1801,11 @@
             border-radius: 5px;
             margin-bottom: 2px;
         }
+        .cteData_event:hover{
+        background-color: rgba(255, 255, 255, 0.15);
+        }
+
+       
 
         .cte_col_controls{
              flex-direction: row-reverse !important;
@@ -1846,6 +1884,9 @@
             flex: 0 0 100%;
             width: 100%;
         }
+        .cte_col_title{
+            font-weight: bold;
+        }
 
         .cteHost_save, .cteHost_close{
             width: 100%;
@@ -1858,10 +1899,18 @@
         @media (max-width: 768px) {
             .cte_row {
                 flex-direction: column;
+                gap: 10px;
             }
-                .cte_col {
-                    width: 100%;
-                }
+            .cte_col {
+                width: 100%;
+            }
+            .cte_col_controls{
+                justify-content: space-around;
+                padding: 10px 0;
+                background-color: rgba(0, 0, 0, 0.2);
+                border-radius: 5px;
+            }
+            }
         }
 
 

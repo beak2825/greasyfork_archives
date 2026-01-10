@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Bilibili 专栏侧栏美化
+// @name         Bilibili 专栏文章侧栏美化
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
-// @description  完美适配新旧版！大屏自动固定(点击锁定无影响)，窄屏自动变为侧滑抽屉(可锁定常驻)；屏蔽原生通知；视觉统一胶囊风格。
+// @version      1.1.2
+// @description  Bilibili 专栏文章侧栏美化，完美适配新旧版页面。新版侧栏位置微调；旧版侧栏增强目录点击交互体验。
 // @author       Gemini Thought Partner
 // @match        https://www.bilibili.com/read/*
 // @match        https://www.bilibili.com/cv/*
@@ -13,8 +13,8 @@
 // @grant        GM_getValue
 // @license      MIT
 // @run-at       document-end
-// @downloadURL https://update.greasyfork.org/scripts/561885/Bilibili%20%E4%B8%93%E6%A0%8F%E4%BE%A7%E6%A0%8F%E7%BE%8E%E5%8C%96.user.js
-// @updateURL https://update.greasyfork.org/scripts/561885/Bilibili%20%E4%B8%93%E6%A0%8F%E4%BE%A7%E6%A0%8F%E7%BE%8E%E5%8C%96.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561885/Bilibili%20%E4%B8%93%E6%A0%8F%E6%96%87%E7%AB%A0%E4%BE%A7%E6%A0%8F%E7%BE%8E%E5%8C%96.user.js
+// @updateURL https://update.greasyfork.org/scripts/561885/Bilibili%20%E4%B8%93%E6%A0%8F%E6%96%87%E7%AB%A0%E4%BE%A7%E6%A0%8F%E7%BE%8E%E5%8C%96.meta.js
 // ==/UserScript==
 
 (function () {
@@ -23,32 +23,39 @@
   // ==========================================
   // 第一章：全局定义
   // ==========================================
-  const IS_NEW_PAGE = location.href.indexOf('/opus/') > -1;
-  const IS_OLD_PAGE = location.href.indexOf('/read/') > -1 || location.href.indexOf('/cv/') > -1;
+  const IS_NEW_PAGE = location.href.indexOf("/opus/") > -1;
+  const IS_OLD_PAGE =
+    location.href.indexOf("/read/") > -1 || location.href.indexOf("/cv/") > -1;
 
   const ICONS = {
     full: '<svg viewBox="0 0 24 24"><path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    exitFull: '<svg viewBox="0 0 24 24"><path d="M4 14h6v6M10 14L3 21M20 10h-6V4M14 10l7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    arrowRight: '<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    exitFull:
+      '<svg viewBox="0 0 24 24"><path d="M4 14h6v6M10 14L3 21M20 10h-6V4M14 10l7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    arrowRight:
+      '<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     lock: '<svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-9-2c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm4.5 9.77v1.73a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.73a2.002 2.002 0 0 1-.55-3.32 2 2 0 0 1 2.65 0 2.002 2.002 0 0 1-.55 3.32z" fill="currentColor"/></svg>',
-    close: '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line></svg>',
-    oldVer: '<svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" fill="currentColor"/></svg>',
-    newVerSparkle: '<svg viewBox="0 0 1024 1024" width="24" height="24"><path d="M512 0l128 384 384 128-384 128-128 384-128-384-384-128 384-128z" fill="currentColor"></path></svg>',
-    toTop: '<svg viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z" fill="currentColor"/></svg>'
+    close:
+      '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line></svg>',
+    oldVer:
+      '<svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" fill="currentColor"/></svg>',
+    newVerSparkle:
+      '<svg viewBox="0 0 1024 1024" width="24" height="24"><path d="M512 0l128 384 384 128-384 128-128 384-128-384-384-128 384-128z" fill="currentColor"></path></svg>',
+    toTop:
+      '<svg viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z" fill="currentColor"/></svg>',
   };
 
   // ==========================================
   // 第二章：新版页面引擎 (Opus)
   // ==========================================
   function runNewPageLogic() {
-      const cssNew = `
+    const cssNew = `
         html, body { overflow-x: hidden !important; width: 100% !important; max-width: none !important; }
 
         /* --- 侧栏容器基础样式 --- */
         .right-sidebar-wrap {
             display: block !important; visibility: visible !important;
             position: fixed !important;
-            bottom: 60px !important;
+            bottom: 90px !important;
             top: auto !important;
             margin: 0 !important;
             width: 50px !important; height: auto !important;
@@ -165,161 +172,201 @@
         #gm-catalog-backdrop.gm-active { display: block !important; }
         body.gm-immersive-mode .bili-popup, body.gm-immersive-mode .coin-popup, body.gm-immersive-mode .toast-wrap, body.gm-immersive-mode .opus-collection:not([style*="display: none"]), body.gm-immersive-mode .collection-m-popover:not([style*="display: none"]) { zoom: 1.11111 !important; }
       `;
-      GM_addStyle(cssNew);
+    GM_addStyle(cssNew);
 
-      // --- 功能函数 ---
-      function moveCatalogButton() {
-          const toolbar = document.querySelector(".side-toolbar");
-          const catalogBtn = document.querySelector(".opus-catalog-btn") || document.querySelector(".catalog");
-          if (toolbar && catalogBtn && catalogBtn.parentElement !== toolbar) { toolbar.appendChild(catalogBtn); }
+    // --- 功能函数 ---
+    function moveCatalogButton() {
+      const toolbar = document.querySelector(".side-toolbar");
+      const catalogBtn =
+        document.querySelector(".opus-catalog-btn") ||
+        document.querySelector(".catalog");
+      if (toolbar && catalogBtn && catalogBtn.parentElement !== toolbar) {
+        toolbar.appendChild(catalogBtn);
       }
+    }
 
-      function performSmartZoom() {
-        const content = document.querySelector(".opus-module-content") || document.querySelector(".article-holder") || document.querySelector(".opus-detail");
-        if (!content) return;
-        const target = document.querySelector(".opus-detail") || content;
-        target.style.zoom = "0.9";
-        window.scrollTo({ left: 0, top: window.scrollY, behavior: "auto" });
-        const contentW = content.offsetWidth;
-        if (!contentW || contentW < 100) return;
-        const sidebarSpace = 120;
-        const viewportW = (window.innerWidth - sidebarSpace) / 0.9;
-        let scale = viewportW / contentW;
-        if (scale < 1.1) scale = 1.25;
-        if (scale > 2.8) scale = 2.8;
-        target.style.zoom = scale;
+    function performSmartZoom() {
+      const content =
+        document.querySelector(".opus-module-content") ||
+        document.querySelector(".article-holder") ||
+        document.querySelector(".opus-detail");
+      if (!content) return;
+      const target = document.querySelector(".opus-detail") || content;
+      target.style.zoom = "0.9";
+      window.scrollTo({ left: 0, top: window.scrollY, behavior: "auto" });
+      const contentW = content.offsetWidth;
+      if (!contentW || contentW < 100) return;
+      const sidebarSpace = 120;
+      const viewportW = (window.innerWidth - sidebarSpace) / 0.9;
+      let scale = viewportW / contentW;
+      if (scale < 1.1) scale = 1.25;
+      if (scale > 2.8) scale = 2.8;
+      target.style.zoom = scale;
+    }
+
+    function toggleImmersive() {
+      const btn = document.getElementById("gm-immersive-btn");
+      const content =
+        document.querySelector(".article-holder") ||
+        document.querySelector(".opus-detail");
+      const target = document.querySelector(".opus-detail") || content;
+      if (document.body.classList.contains("gm-immersive-mode")) {
+        document.body.classList.remove("gm-immersive-mode");
+        document.body.style.zoom = "";
+        if (btn) btn.innerHTML = ICONS.full;
+        if (target) target.style.zoom = "";
+        GM_setValue("immersiveMode", false);
+      } else {
+        document.body.classList.add("gm-immersive-mode");
+        document.body.style.zoom = "0.9";
+        if (btn) btn.innerHTML = ICONS.exitFull;
+        requestAnimationFrame(() => {
+          performSmartZoom();
+        });
       }
+    }
 
-      function toggleImmersive() {
-        const btn = document.getElementById("gm-immersive-btn");
-        const content = document.querySelector(".article-holder") || document.querySelector(".opus-detail");
-        const target = document.querySelector(".opus-detail") || content;
-        if (document.body.classList.contains("gm-immersive-mode")) {
-          document.body.classList.remove("gm-immersive-mode");
-          document.body.style.zoom = "";
-          if (btn) btn.innerHTML = ICONS.full;
-          if (target) target.style.zoom = "";
-          GM_setValue("immersiveMode", false);
-        } else {
-          document.body.classList.add("gm-immersive-mode");
-          document.body.style.zoom = "0.9";
-          if (btn) btn.innerHTML = ICONS.exitFull;
-          requestAnimationFrame(() => { performSmartZoom(); });
-        }
-      }
-
-      function initSidebarInteraction() {
-        const wrap = document.querySelector(".right-sidebar-wrap");
-        if (!wrap) return;
-        let trigger = document.getElementById("gm-sidebar-trigger");
-        if (!trigger) {
-          trigger = document.createElement("div");
-          trigger.id = "gm-sidebar-trigger";
-          document.body.appendChild(trigger);
-          trigger.addEventListener("mouseenter", () => {
-            if (wrap.classList.contains("gm-collapsed")) { wrap.classList.add("gm-hover-show"); }
-          });
-        }
-        if (!document.getElementById("gm-collapse-btn")) {
-          const container = document.querySelector(".side-toolbar");
-          if (container) {
-            const btn = document.createElement("div");
-            btn.id = "gm-collapse-btn";
-            btn.innerHTML = ICONS.lock; btn.title = "锁定/解锁自动收起";
-
-            // 点击锁定按钮逻辑
-            btn.onclick = () => {
-              if (wrap.classList.contains("gm-locked")) {
-                // 解锁 -> 恢复自动收起
-                wrap.classList.remove("gm-locked");
-                wrap.classList.add("gm-collapsed"); // 恢复收起状态
-                wrap.classList.remove("gm-hover-show"); // 移除悬停显示
-                trigger.style.display = "block"; // 启用感应
-                btn.innerHTML = ICONS.lock;
-                btn.title = "锁定侧边栏";
-                btn.style.color = "";
-              } else {
-                // 锁定 -> 常驻显示
-                wrap.classList.add("gm-locked");
-                wrap.classList.remove("gm-collapsed");
-                trigger.style.display = "none"; // 禁用感应
-                btn.innerHTML = ICONS.arrowRight;
-                btn.title = "收起侧边栏";
-                btn.style.color = "#00aeec";
-              }
-            };
-            container.appendChild(btn);
-          }
-        }
-        // 初始化状态：窄屏下默认收起
-        if (!wrap.classList.contains("gm-init-done")) {
-          wrap.classList.add("gm-collapsed");
-          wrap.classList.add("gm-init-done");
-          if (trigger) trigger.style.display = "block";
-        }
-        wrap.addEventListener("mouseleave", () => {
-          const catalog = document.querySelector(".opus-collection") || document.querySelector(".collection-m-popover");
-          const isCatalogOpen = catalog && catalog.style.display !== "none";
-          // 只有在没锁定且目录没打开的情况下才收回
-          if (!wrap.classList.contains("gm-locked") && !isCatalogOpen) {
-              wrap.classList.remove("gm-hover-show");
+    function initSidebarInteraction() {
+      const wrap = document.querySelector(".right-sidebar-wrap");
+      if (!wrap) return;
+      let trigger = document.getElementById("gm-sidebar-trigger");
+      if (!trigger) {
+        trigger = document.createElement("div");
+        trigger.id = "gm-sidebar-trigger";
+        document.body.appendChild(trigger);
+        trigger.addEventListener("mouseenter", () => {
+          if (wrap.classList.contains("gm-collapsed")) {
+            wrap.classList.add("gm-hover-show");
           }
         });
       }
+      if (!document.getElementById("gm-collapse-btn")) {
+        const container = document.querySelector(".side-toolbar");
+        if (container) {
+          const btn = document.createElement("div");
+          btn.id = "gm-collapse-btn";
+          btn.innerHTML = ICONS.lock;
+          btn.title = "锁定/解锁自动收起";
 
-      function injectSwitchButton() {
-          const container = document.querySelector(".side-toolbar__box") || document.querySelector(".side-toolbar");
-          if (!container) return;
-          if (document.getElementById('gm-btn-switch')) return;
-          const btn = document.createElement('div');
-          btn.id = 'gm-btn-switch';
-          btn.className = 'side-toolbar__action';
-          btn.innerHTML = ICONS.oldVer + '<div style="font-size:12px;margin-top:-2px;">旧版</div>';
-          btn.title = "切换到旧版布局";
+          // 点击锁定按钮逻辑
           btn.onclick = () => {
-              const nativeBtns = document.querySelectorAll('.side-toolbar__btn');
-              for (let native of nativeBtns) {
-                  if (native.innerText.includes('旧版')) { native.click(); return; }
-              }
-              showToast('未找到旧版入口');
+            if (wrap.classList.contains("gm-locked")) {
+              // 解锁 -> 恢复自动收起
+              wrap.classList.remove("gm-locked");
+              wrap.classList.add("gm-collapsed"); // 恢复收起状态
+              wrap.classList.remove("gm-hover-show"); // 移除悬停显示
+              trigger.style.display = "block"; // 启用感应
+              btn.innerHTML = ICONS.lock;
+              btn.title = "锁定侧边栏";
+              btn.style.color = "";
+            } else {
+              // 锁定 -> 常驻显示
+              wrap.classList.add("gm-locked");
+              wrap.classList.remove("gm-collapsed");
+              trigger.style.display = "none"; // 禁用感应
+              btn.innerHTML = ICONS.arrowRight;
+              btn.title = "收起侧边栏";
+              btn.style.color = "#00aeec";
+            }
           };
           container.appendChild(btn);
-      }
-
-      function injectElements() {
-        const container = document.querySelector(".side-toolbar__box") || document.querySelector(".side-toolbar");
-        if (!container) return;
-        const sidebar = document.querySelector(".right-sidebar-wrap");
-        if (sidebar && sidebar.parentElement !== document.body) document.body.appendChild(sidebar);
-        moveCatalogButton(); initSidebarInteraction(); initCatalogEnhancer(); initGlobalClickObserver(); injectSwitchButton();
-        if (!document.getElementById("gm-immersive-btn")) {
-          const btn = document.createElement("div");
-          btn.id = "gm-immersive-btn";
-          btn.className = "side-toolbar__action";
-          btn.innerHTML = ICONS.full; btn.title = "铺满/还原";
-          btn.onclick = toggleImmersive;
-          btn.style.minHeight = "36px"; btn.style.justifyContent = "center";
-          container.appendChild(btn);
         }
       }
-
-      const observer = new MutationObserver(() => { injectElements(); });
-      observer.observe(document.body, { childList: true, subtree: true });
-      window.addEventListener("resize", () => {
-        if (document.body.classList.contains("gm-immersive-mode")) {
-          clearTimeout(resizeTimer); resizeTimer = setTimeout(performSmartZoom, 100);
+      // 初始化状态：窄屏下默认收起
+      if (!wrap.classList.contains("gm-init-done")) {
+        wrap.classList.add("gm-collapsed");
+        wrap.classList.add("gm-init-done");
+        if (trigger) trigger.style.display = "block";
+      }
+      wrap.addEventListener("mouseleave", () => {
+        const catalog =
+          document.querySelector(".opus-collection") ||
+          document.querySelector(".collection-m-popover");
+        const isCatalogOpen = catalog && catalog.style.display !== "none";
+        // 只有在没锁定且目录没打开的情况下才收回
+        if (!wrap.classList.contains("gm-locked") && !isCatalogOpen) {
+          wrap.classList.remove("gm-hover-show");
         }
       });
-      setTimeout(() => { injectElements(); initCatalogEnhancer(); }, 1000);
+    }
+
+    function injectSwitchButton() {
+      const container =
+        document.querySelector(".side-toolbar__box") ||
+        document.querySelector(".side-toolbar");
+      if (!container) return;
+      if (document.getElementById("gm-btn-switch")) return;
+      const btn = document.createElement("div");
+      btn.id = "gm-btn-switch";
+      btn.className = "side-toolbar__action";
+      btn.innerHTML =
+        ICONS.oldVer +
+        '<div style="font-size:12px;margin-top:-2px;">旧版</div>';
+      btn.title = "切换到旧版布局";
+      btn.onclick = () => {
+        const nativeBtns = document.querySelectorAll(".side-toolbar__btn");
+        for (let native of nativeBtns) {
+          if (native.innerText.includes("旧版")) {
+            native.click();
+            return;
+          }
+        }
+        showToast("未找到旧版入口");
+      };
+      container.appendChild(btn);
+    }
+
+    function injectElements() {
+      const container =
+        document.querySelector(".side-toolbar__box") ||
+        document.querySelector(".side-toolbar");
+      if (!container) return;
+      const sidebar = document.querySelector(".right-sidebar-wrap");
+      if (sidebar && sidebar.parentElement !== document.body)
+        document.body.appendChild(sidebar);
+      moveCatalogButton();
+      initSidebarInteraction();
+      initCatalogEnhancer();
+      initGlobalClickObserver();
+      injectSwitchButton();
+      if (!document.getElementById("gm-immersive-btn")) {
+        const btn = document.createElement("div");
+        btn.id = "gm-immersive-btn";
+        btn.className = "side-toolbar__action";
+        btn.innerHTML = ICONS.full;
+        btn.title = "铺满/还原";
+        btn.onclick = toggleImmersive;
+        btn.style.minHeight = "36px";
+        btn.style.justifyContent = "center";
+        container.appendChild(btn);
+      }
+    }
+
+    const observer = new MutationObserver(() => {
+      injectElements();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("resize", () => {
+      if (document.body.classList.contains("gm-immersive-mode")) {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(performSmartZoom, 100);
+      }
+    });
+    setTimeout(() => {
+      injectElements();
+      initCatalogEnhancer();
+    }, 1000);
   }
 
   // ==========================================
-  // 第三章：旧版页面引擎 (Read/CV)
+  // PART B: 旧版页面 (Read/CV) - 470px 黄金版
   // ==========================================
   function runOldPageLogic() {
-      const cssOld = `
-        /* 1. 胶囊化侧栏 */
-        .right-side-bar {
+    const cssOld = `
+        html, body { overflow-x: hidden !important; }
+        ::-webkit-scrollbar:horizontal { height: 0 !important; display: none !important; }
+
+        html body .right-side-bar {
             top: 70% !important; bottom: auto !important; transform: translateY(-50%) !important;
             transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s !important;
             zoom: 1 !important; overflow: visible !important;
@@ -328,21 +375,48 @@
             padding: 8px 0 !important; width: 46px !important;
             display: flex !important; flex-direction: column !important; align-items: center !important; gap: 2px !important;
         }
-        .right-side-bar .to-top { display: none !important; }
-        .right-side-bar .side-toolbar { display: contents !important; }
 
-        /* 2. 按钮排序 */
-        .side-toolbar .toolbar-item:nth-child(1) { order: 10 !important; } /* 赞 */
-        .side-toolbar .toolbar-item:nth-child(2) { order: 20 !important; } /* 币 */
-        .side-toolbar .toolbar-item:nth-child(3) { order: 30 !important; } /* 藏 */
-        .right-side-bar .catalog { order: 40 !important; margin: 0 !important; position: relative !important; } /* 目录 */
-        .side-toolbar .toolbar-item:nth-child(4) { order: 50 !important; } /* 评 */
-        #gm-btn-switch-new { order: 60 !important; } /* 新版 */
-        #gm-btn-totop { order: 70 !important; } /* 顶部 */
-        #gm-lock-btn { order: 80 !important; margin-top: 6px !important; border-top: 1px solid #f6f6f6 !important; padding-top: 4px !important; } /* 锁 */
+        /* 【宽屏模式 > 1300px】：470px 黄金间距 */
+        @media screen and (min-width: 1301px) {
+            html body .right-side-bar {
+                left: 50% !important;
+                margin-left: 470px !important; /* 用户亲测值 */
+                right: auto !important;
+                opacity: 1 !important;
+            }
+            html body .right-side-bar.gm-catalog-open {
+                right: auto !important;
+            }
+        }
 
-        /* 3. 按钮透明化 */
-        .gm-added-btn, .right-side-bar .catalog, .side-toolbar .toolbar-item {
+        /* 窄屏模式 (<=1300px)：侧滑抽屉 */
+        @media screen and (max-width: 1300px) {
+            html body .right-side-bar {
+                position: fixed !important; right: -40px !important; width: 46px !important; z-index: 99999 !important; opacity: 0.2 !important;
+                left: auto !important; margin-left: 0 !important;
+            }
+            html body .right-side-bar:hover,
+            html body .right-side-bar.gm-locked,
+            html body .right-side-bar.gm-catalog-open {
+                right: 0 !important;
+                opacity: 1 !important;
+            }
+        }
+
+        html body .right-side-bar .to-top { display: none !important; }
+        html body .right-side-bar .side-toolbar { display: contents !important; }
+        .side-toolbar .toolbar-item:nth-child(1) { order: 10 !important; }
+        .side-toolbar .toolbar-item:nth-child(2) { order: 20 !important; }
+        .side-toolbar .toolbar-item:nth-child(3) { order: 30 !important; }
+        .right-side-bar .catalog { order: 40 !important; margin: 0 !important; position: relative !important; }
+        .side-toolbar .toolbar-item:nth-child(4) { order: 50 !important; }
+        #gm-btn-switch-new { order: 60 !important; }
+        #gm-btn-totop { order: 70 !important; }
+        #gm-lock-btn { order: 80 !important; margin-top: 6px !important; border-top: 1px solid #f6f6f6 !important; padding-top: 4px !important; }
+
+        html body .gm-added-btn,
+        html body .right-side-bar .catalog,
+        html body .side-toolbar .toolbar-item {
             width: 36px !important; min-height: 36px !important; margin: 2px 0 !important;
             display: flex !important; flex-direction: column !important; justify-content: center !important; align-items: center !important;
             cursor: pointer !important; color: #61666d !important;
@@ -350,7 +424,9 @@
             border: none !important; box-shadow: none !important; border-radius: 6px !important;
             transition: all 0.2s !important; box-sizing: border-box !important; padding: 0 !important;
         }
-        .gm-added-btn:hover, .right-side-bar .catalog:hover, .side-toolbar .toolbar-item:hover {
+        html body .gm-added-btn:hover,
+        html body .right-side-bar .catalog:hover,
+        html body .side-toolbar .toolbar-item:hover {
             color: #00aeec !important; background-color: #f1f2f3 !important;
         }
         .gm-added-btn svg { width: 24px; height: 24px; margin-bottom: 0px; display: block; }
@@ -360,146 +436,236 @@
         }
         .right-side-bar .catalog .iconfont { margin-bottom: 2px !important; font-size: 24px !important; }
 
-        /* 4. 目录面板 (底部对齐) */
-        .catalog-panel {
-            position: absolute !important; right: 60px !important; top: auto !important; bottom: 0 !important;
-            transform: none !important; max-height: 60vh !important; overflow-y: auto !important;
-            scrollbar-width: thin; border-radius: 8px; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        /* 目录面板：悬浮卡片样式 + 隐形桥梁 */
+        html body .catalog-panel {
+            position: absolute !important; right: 52px !important; top: auto !important;
+            bottom: 15px !important; /* 悬浮底部 */
+            transform: none !important; max-height: 60vh !important;
+            overflow-x: hidden !important; overflow-y: auto !important;
+            scrollbar-width: thin; border-radius: 8px; background: #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 1px solid #e3e5e7 !important;
+            display: flex !important; flex-direction: column !important;
+            border-right: none !important; margin-right: 0 !important; background-clip: border-box !important;
+        }
+        html body .catalog-panel::after {
+            content: "" !important; display: block !important; position: absolute !important;
+            right: -15px !important; top: 0 !important; bottom: 0 !important; width: 20px !important;
+            background: transparent !important; z-index: 10 !important;
+        }
+        html body .catalog-panel::before, html body .catalog-panel::after,
+        html body .right-side-bar .catalog::before, html body .right-side-bar .catalog::after {
+            display: none !important; content: none !important; border: none !important;
+        }
+        html body .catalog-panel ul, html body .catalog-panel li, html body .catalog-panel .catalog-item {
+            display: flex !important; align-items: center !important; width: 100% !important;
+            box-sizing: border-box !important; margin: 0 !important;
         }
 
-        /* 5. 侧滑抽屉 (窄屏 < 1300px) */
-        @media screen and (max-width: 1300px) {
-            .right-side-bar {
-                position: fixed !important; right: -40px !important; width: 46px !important; z-index: 99999 !important; opacity: 0.2 !important;
-            }
-            /* 窄屏下：悬停 或 锁定 时显示 */
-            .right-side-bar:hover, .right-side-bar.gm-locked { right: 0 !important; opacity: 1 !important; }
-        }
-
-        /* 大屏 > 1300px：强制显示，不允许半透明或隐藏 (为了体验一致性，虽然旧版本身也是常驻的，但防止CSS干扰) */
-        @media screen and (min-width: 1301px) {
-            .right-side-bar { right: auto !important; opacity: 1 !important; }
-        }
+        .toast-wrap, .bili-toast, .link-toast, div[class*="toast"] { display: none !important; }
+        .coin-popup, .bili-popup { display: flex !important; }
       `;
-      GM_addStyle(cssOld);
+    GM_addStyle(cssOld);
 
-      function injectButtons() {
-          const toolbar = document.querySelector(".side-toolbar");
-          if (!toolbar) return;
-          const container = document.querySelector(".right-side-bar");
+    // --- 状态监听 (State Monitor) ---
+    function initCatalogStateMonitor() {
+      const container = document.querySelector(".right-side-bar");
+      if (!container) return;
+      const observer = new MutationObserver(() => {
+        const panel = container.querySelector(".catalog-panel");
+        if (panel) {
+          if (!container.classList.contains("gm-catalog-open"))
+            container.classList.add("gm-catalog-open");
+        } else {
+          if (container.classList.contains("gm-catalog-open"))
+            container.classList.remove("gm-catalog-open");
+        }
+      });
+      observer.observe(container, { childList: true, subtree: true });
+    }
 
-          if (!document.getElementById("gm-btn-switch-new")) {
-              const btnNew = document.createElement("div");
-              btnNew.id = "gm-btn-switch-new";
-              btnNew.className = "gm-added-btn";
-              btnNew.innerHTML = ICONS.newVerSparkle + '<span class="gm-btn-text">新版</span>';
-              btnNew.title = "切换回新版布局";
-              btnNew.onclick = () => {
-                  const url = new URL(window.location.href);
-                  url.searchParams.delete('opus_fallback');
-                  window.location.href = url.href;
-              };
-              toolbar.appendChild(btnNew);
+    // --- 事件劫持 (Event Hijacking) ---
+    function hijackCatalogEvents() {
+      const container = document.querySelector(".right-side-bar");
+      if (!container) return;
+      const nativeCatalog = container.querySelector(".catalog");
+      if (!nativeCatalog || nativeCatalog.dataset.gmHijacked) return;
+      nativeCatalog.dataset.gmHijacked = "true";
+
+      const blockNative = (e) => {
+        if (e.isTrusted) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+        }
+      };
+      nativeCatalog.addEventListener("mouseenter", blockNative, true);
+      nativeCatalog.addEventListener("mouseleave", blockNative, true);
+      nativeCatalog.addEventListener("mouseover", blockNative, true);
+      nativeCatalog.addEventListener("mouseout", blockNative, true);
+
+      nativeCatalog.addEventListener("click", (e) => {
+        const panel = container.querySelector(".catalog-panel");
+        if (panel) {
+          nativeCatalog.dispatchEvent(
+            new MouseEvent("mouseleave", { bubbles: true, cancelable: true })
+          );
+        } else {
+          nativeCatalog.dispatchEvent(
+            new MouseEvent("mouseenter", { bubbles: true, cancelable: true })
+          );
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        const panel = container.querySelector(".catalog-panel");
+        if (
+          panel &&
+          !panel.contains(e.target) &&
+          !nativeCatalog.contains(e.target)
+        ) {
+          nativeCatalog.dispatchEvent(
+            new MouseEvent("mouseleave", { bubbles: true, cancelable: true })
+          );
+        }
+      });
+    }
+
+    function injectButtons() {
+      const toolbar = document.querySelector(".side-toolbar");
+      if (!toolbar) return;
+      const container = document.querySelector(".right-side-bar");
+
+      if (!document.getElementById("gm-btn-switch-new")) {
+        const btnNew = document.createElement("div");
+        btnNew.id = "gm-btn-switch-new";
+        btnNew.className = "gm-added-btn";
+        btnNew.innerHTML =
+          ICONS.newVerSparkle + '<span class="gm-btn-text">新版</span>';
+        btnNew.title = "切换回新版布局";
+        btnNew.onclick = () => {
+          const url = new URL(window.location.href);
+          url.searchParams.delete("opus_fallback");
+          window.location.href = url.href;
+        };
+        toolbar.appendChild(btnNew);
+      }
+      if (!document.getElementById("gm-btn-totop")) {
+        const btnTop = document.createElement("div");
+        btnTop.id = "gm-btn-totop";
+        btnTop.className = "gm-added-btn";
+        btnTop.innerHTML =
+          ICONS.toTop + '<span class="gm-btn-text">顶部</span>';
+        btnTop.onclick = () => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        };
+        toolbar.appendChild(btnTop);
+      }
+      if (!document.getElementById("gm-lock-btn") && container) {
+        const lockBtn = document.createElement("div");
+        lockBtn.id = "gm-lock-btn";
+        lockBtn.className = "gm-added-btn";
+        lockBtn.innerHTML = ICONS.lock;
+        lockBtn.title = "锁定侧边栏(仅窄屏有效)";
+        lockBtn.onclick = () => {
+          if (container.classList.contains("gm-locked")) {
+            container.classList.remove("gm-locked");
+            lockBtn.innerHTML = ICONS.lock;
+            lockBtn.style.color = "";
+          } else {
+            container.classList.add("gm-locked");
+            lockBtn.innerHTML = ICONS.arrowRight;
+            lockBtn.style.color = "#00aeec";
           }
-
-          if (!document.getElementById("gm-btn-totop")) {
-              const btnTop = document.createElement("div");
-              btnTop.id = "gm-btn-totop";
-              btnTop.className = "gm-added-btn";
-              btnTop.innerHTML = ICONS.toTop + '<span class="gm-btn-text">顶部</span>';
-              btnTop.title = "回到顶部";
-              btnTop.onclick = () => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-              };
-              toolbar.appendChild(btnTop);
-          }
-
-          // 旧版锁定按钮逻辑 (窄屏才有效)
-          if (!document.getElementById("gm-lock-btn") && container) {
-              const lockBtn = document.createElement("div");
-              lockBtn.id = "gm-lock-btn";
-              lockBtn.className = "gm-added-btn";
-              lockBtn.innerHTML = ICONS.lock;
-              lockBtn.title = "锁定侧边栏(仅窄屏有效)";
-
-              lockBtn.onclick = () => {
-                  if (container.classList.contains("gm-locked")) {
-                      container.classList.remove("gm-locked");
-                      lockBtn.innerHTML = ICONS.lock;
-                      lockBtn.style.color = "";
-                  } else {
-                      container.classList.add("gm-locked");
-                      lockBtn.innerHTML = ICONS.arrowRight;
-                      lockBtn.style.color = "#00aeec";
-                  }
-              };
-              toolbar.appendChild(lockBtn);
-          }
+        };
+        toolbar.appendChild(lockBtn);
       }
 
-      const observer = new MutationObserver(() => { injectButtons(); });
-      observer.observe(document.body, { childList: true, subtree: true });
-      setTimeout(injectButtons, 1000);
+      hijackCatalogEvents();
+      initCatalogStateMonitor();
+    }
+
+    const observer = new MutationObserver(() => {
+      injectButtons();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    setTimeout(injectButtons, 1000);
   }
 
   // ==========================================
-  // 第四章：公共辅助 (Helpers)
+  // 第四章：公共辅助
   // ==========================================
   let resizeTimer;
   let toastTimer = null;
 
   function showToast(msg) {
-      let toast = document.getElementById('gm-custom-toast');
-      if (!toast) {
-          const style = `
+    let toast = document.getElementById("gm-custom-toast");
+    if (!toast) {
+      const style = `
             #gm-custom-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
             background: #ffffff !important; color: #505050 !important; border: 1px solid #e3e5e7 !important; border-radius: 8px !important;
             box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important; padding: 12px 24px; font-size: 14px; font-weight: bold;
             z-index: 2147483647; opacity: 0; visibility: hidden; pointer-events: none; transition: all 0.25s; }
             #gm-custom-toast.gm-show { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
           `;
-          GM_addStyle(style);
-          toast = document.createElement('div');
-          toast.id = 'gm-custom-toast';
-          document.body.appendChild(toast);
-      }
-      toast.innerText = msg;
-      requestAnimationFrame(() => toast.classList.add('gm-show'));
-      if (toastTimer) clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove('gm-show'), 2000);
+      GM_addStyle(style);
+      toast = document.createElement("div");
+      toast.id = "gm-custom-toast";
+      document.body.appendChild(toast);
+    }
+    toast.innerText = msg;
+    requestAnimationFrame(() => toast.classList.add("gm-show"));
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("gm-show"), 2000);
   }
 
   function initGlobalClickObserver() {
-      if (!IS_NEW_PAGE) return;
-      document.addEventListener('click', (e) => {
-          const wrap = document.querySelector(".right-sidebar-wrap");
-          const popup = document.querySelector(".opus-collection") || document.querySelector(".collection-m-popover");
-          if (!wrap) return;
-          const clickedInside = (wrap.contains(e.target)) || (popup && popup.contains(e.target));
-          if (!clickedInside) {
-              if (popup && popup.style.display !== 'none') {
-                  const btn = document.querySelector(".side-toolbar__action.collection") || document.querySelector(".catalog");
-                  if (btn) btn.click();
-                  popup.style.display = 'none';
-              }
-              if (wrap.classList.contains("gm-collapsed")) {
-                  wrap.classList.remove("gm-hover-show");
-                  wrap.classList.remove("gm-catalog-open");
-              }
+    document.addEventListener("click", (e) => {
+      if (IS_NEW_PAGE) {
+        const wrap = document.querySelector(".right-sidebar-wrap");
+        const popup =
+          document.querySelector(".opus-collection") ||
+          document.querySelector(".collection-m-popover");
+        if (!wrap) return;
+        const clickedInside =
+          wrap.contains(e.target) || (popup && popup.contains(e.target));
+        if (!clickedInside) {
+          if (popup && popup.style.display !== "none") {
+            const btn =
+              document.querySelector(".side-toolbar__action.collection") ||
+              document.querySelector(".catalog");
+            if (btn) btn.click();
+            popup.style.display = "none";
           }
-      });
+          if (wrap.classList.contains("gm-collapsed")) {
+            wrap.classList.remove("gm-hover-show");
+            wrap.classList.remove("gm-catalog-open");
+          }
+        }
+      }
+    });
   }
 
+  // (新版专用)
   function forceCloseCatalog() {
-    const catalogBtn = document.querySelector(".side-toolbar__action.collection") || document.querySelector(".catalog") || document.querySelector(".m-catalog");
+    const catalogBtn =
+      document.querySelector(".side-toolbar__action.collection") ||
+      document.querySelector(".catalog") ||
+      document.querySelector(".m-catalog");
     if (catalogBtn) catalogBtn.click();
-    const popup = document.querySelector(".opus-collection") || document.querySelector(".collection-m-popover");
+    const popup =
+      document.querySelector(".opus-collection") ||
+      document.querySelector(".collection-m-popover");
     if (popup) popup.style.display = "none";
-    document.getElementById("gm-catalog-backdrop").classList.remove("gm-active");
+    document
+      .getElementById("gm-catalog-backdrop")
+      .classList.remove("gm-active");
     const wrap = document.querySelector(".right-sidebar-wrap");
-    if(wrap) { wrap.classList.remove("gm-catalog-open"); wrap.classList.remove("gm-hover-show"); }
+    if (wrap) {
+      wrap.classList.remove("gm-catalog-open");
+      wrap.classList.remove("gm-hover-show");
+    }
   }
 
+  // (新版专用)
   function initCatalogEnhancer() {
     if (!IS_NEW_PAGE) return;
     let backdrop = document.getElementById("gm-catalog-backdrop");
@@ -514,29 +680,39 @@
       mutations.forEach((mutation) => {
         if (mutation.addedNodes.length) {
           mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === 1 && node.classList && node.classList.contains("opus-collection__header")) {
+            if (
+              node.nodeType === 1 &&
+              node.classList &&
+              node.classList.contains("opus-collection__header")
+            ) {
               const popup = node.parentElement;
               if (popup) {
                 if (!node.querySelector("#gm-catalog-close")) {
                   const closeBtn = document.createElement("div");
                   closeBtn.id = "gm-catalog-close";
                   closeBtn.innerHTML = ICONS.close;
-                  closeBtn.onclick = (e) => { e.stopPropagation(); forceCloseCatalog(); };
+                  closeBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    forceCloseCatalog();
+                  };
                   node.appendChild(closeBtn);
                 }
                 const styleObserver = new MutationObserver(() => {
                   if (popup.style.display !== "none") {
                     backdrop.classList.add("gm-active");
-                    if(wrap) wrap.classList.add("gm-catalog-open");
+                    if (wrap) wrap.classList.add("gm-catalog-open");
                   } else {
                     backdrop.classList.remove("gm-active");
-                    if(wrap) wrap.classList.remove("gm-catalog-open");
+                    if (wrap) wrap.classList.remove("gm-catalog-open");
                   }
                 });
-                styleObserver.observe(popup, { attributes: true, attributeFilter: ["style"] });
+                styleObserver.observe(popup, {
+                  attributes: true,
+                  attributeFilter: ["style"],
+                });
                 if (popup.style.display !== "none") {
                   backdrop.classList.add("gm-active");
-                  if(wrap) wrap.classList.add("gm-catalog-open");
+                  if (wrap) wrap.classList.add("gm-catalog-open");
                 }
               }
             }
@@ -549,40 +725,48 @@
 
   function initInterceptor() {
     const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.addedNodes.length) {
-                mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === 1) {
-                        const cls = (node.className || '').toString();
-                        const txt = node.innerText || '';
+      mutations.forEach((mutation) => {
+        if (mutation.addedNodes.length) {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1) {
+              const cls = (node.className || "").toString();
+              const txt = node.innerText || "";
 
-                        // 拦截新版通用Toast
-                        if (IS_NEW_PAGE && cls.includes('toast') && !cls.includes('popup')) {
-                            if (txt.includes('硬币') || txt.includes('币')) return;
-                            if (txt.length > 0 && txt.length < 50) {
-                                showToast(txt);
-                                node.style.display = 'none';
-                            }
-                        }
-                    }
-                });
+              // 拦截新版通用Toast
+              if (
+                IS_NEW_PAGE &&
+                cls.includes("toast") &&
+                !cls.includes("popup")
+              ) {
+                if (txt.includes("硬币") || txt.includes("币")) return;
+                if (txt.length > 0 && txt.length < 50) {
+                  showToast(txt);
+                  node.style.display = "none";
+                }
+              }
             }
-        });
+          });
+        }
+      });
     });
-    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
   }
 
   // ==========================================
-  // 第五章：程序入口 (Main Entry)
+  // 第五章：程序入口
   // ==========================================
   initInterceptor();
+  initGlobalClickObserver();
 
   if (IS_NEW_PAGE) {
-      console.log('Bili Sidebar: Opus Mode');
-      runNewPageLogic();
+    console.log("Bili Sidebar: Opus Mode");
+    runNewPageLogic();
   } else if (IS_OLD_PAGE) {
-      console.log('Bili Sidebar: Read/CV Mode');
-      runOldPageLogic();
+    console.log("Bili Sidebar: Read/CV Mode");
+    runOldPageLogic();
   }
-
 })();

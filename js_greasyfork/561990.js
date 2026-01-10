@@ -3,8 +3,8 @@
 // @namespace qingxian
 // @author 人间百般事哪个最清闲
 // @copyright 人间百般事哪个最清闲
-// @version 1.0.0
-// @description B站直播间自动发送弹幕
+// @version 1.0.1
+// @description B站直播间自动定时发送弹幕.支持多条轮播.可拖拽面板
 // @grant GM_addStyle
 // @grant GM_addElement
 // @include https://live.bilibili.com/*
@@ -16,33 +16,21 @@
 // @downloadURL https://update.greasyfork.org/scripts/561990/B%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E5%BC%B9%E5%B9%95%E5%8F%91%E9%80%81.user.js
 // @updateURL https://update.greasyfork.org/scripts/561990/B%E7%AB%99%E7%9B%B4%E6%92%AD%E9%97%B4%E5%BC%B9%E5%B9%95%E5%8F%91%E9%80%81.meta.js
 // ==/UserScript==
-;(function () {
-  ;('use strict')
+(function () {
+  'use strict'
   console.log('B站直播间弹幕发送:脚本启动')
-  // 发送间隔
   let interval = 3500
-  // 控制面板
   let control
-  // 标题
   let title
-  // 计数
   let count
-  // 输入框
   let input
-  // 发送按钮
   let btn
-  // 拖动
   let isDragging = false
-  // 位置
   let startX, startY, startLeft, startTop
-  // 发送状态
   let sending = false
-  // 文本框
   let chatInput
-  // 发送按钮
   let sendButton
   function init() {
-    // 创建控制面板
     control = document.createElement('div')
     control.style.position = 'fixed'
     control.style.top = '80px'
@@ -51,16 +39,16 @@
     control.style.height = '150px'
     control.style.zIndex = '9999999'
     control.style.borderRadius = '10px'
-    control.style.boxShadow = '0 0 10px rgba(173, 216, 230, 0.8)'
+    control.style.boxShadow = '0 0 10px 4px rgba(64, 158, 255, 0.7)'
     control.style.margin = '0'
     control.style.padding = '0'
     control.style.borderRadius = '6px'
     control.style.backgroundColor = '#ffffff'
     document.body.appendChild(control)
-    // title
     title = document.createElement('p')
     title.innerText = '弹幕发送'
     title.style.backgroundColor = '#dfdfdf'
+    title.style.backgroundColor = '#409EFF'
     title.style.color = '#000000'
     title.style.fontWeight = '600'
     title.style.alignContent = 'center'
@@ -70,10 +58,9 @@
     title.style.padding = '0'
     title.style.paddingLeft = '8px'
     title.style.borderRadius = '6px 6px 0 0'
-    title.style.boxShadow = '0 0 10px rgba(173, 216, 230, 0.8)'
+    title.style.boxShadow = '0 0 10px 4px rgba(64, 158, 255, 0.7)'
     title.style.cursor = 'grab'
     control.appendChild(title)
-    // title鼠标按下
     title.addEventListener('mousedown', e => {
       title.style.cursor = 'grabbing'
       isDragging = true
@@ -84,7 +71,6 @@
       document.addEventListener('mousemove', onMouseMove)
       document.addEventListener('mouseup', onMouseUp)
     })
-    // 计数
     count = document.createElement('p')
     count.innerText = '已点击: 0 次'
     count.style.color = 'black'
@@ -96,10 +82,10 @@
     count.style.paddingLeft = '8px'
     count.style.fontSize = '12px'
     control.appendChild(count)
-    // 输入框
     input = document.createElement('input')
+    input.disabled = true
     input.placeholder = '请输入要发送内容,多条用 ; 隔开'
-    input.value = '1;2;3;4;5'
+    input.value = '正在初始化,请稍后...'
     input.style.width = 'calc(100% - 24px)'
     input.style.height = '24px'
     input.style.padding = '0'
@@ -110,19 +96,21 @@
     input.style.border = '1px #dcdfe6 solid'
     input.style.outline = 'none'
     input.addEventListener('focus', () => {
-      input.style.border = '2px #409EFF solid' // 设置激活时的边框
+      input.style.border = '2px #409EFF solid'
       input.style.width = 'calc(100% - 26px)'
     })
     input.addEventListener('blur', () => {
-      input.style.border = '1px #dcdfe6 solid' // 失去焦点时恢复默认
+      input.style.border = '1px #dcdfe6 solid'
       input.style.width = 'calc(100% - 24px)'
     })
     control.appendChild(input)
-    // 发送按钮
     btn = document.createElement('button')
+    btn.disabled = true
+    btn.style.cursor = 'not-allowed'
+    btn.style.pointerEvents = 'none'
     btn.innerText = '发送'
     btn.style.margin = '4px 0 0 8px'
-    btn.style.backgroundColor = '#409EFF'
+    btn.style.backgroundColor = '#efefef'
     btn.style.borderRadius = '5px'
     btn.style.outline = 'none'
     btn.style.border = 'none'
@@ -132,26 +120,19 @@
     btn.style.padding = '4px 8px'
     btn.style.cursor = 'pointer'
     control.appendChild(btn)
-    // 按钮点击
     btn.addEventListener('click', sendMsg)
   }
-  // 消息定时器
   let msgInterval
-  // 发送消息
   function sendMsg() {
-    // 非发送状态
     if (!sending) {
       if (input.value) {
-        // 发送消息
         console.log('开始发送消息')
         let msgCount = 0
         sending = true
         btn.innerText = '停止'
-        // 处理文本
         const arr = input.value.split(';')
         let index = 0
         function toSend() {
-          // 模拟点击输入框、输入文本和触发 input 事件
           chatInput.focus()
           chatInput.value = arr[index]
           chatInput.dispatchEvent(new Event('input', { bubbles: true }))
@@ -161,7 +142,6 @@
           } else {
             index++
           }
-          // 模拟鼠标事件序列：mousedown -> mouseup -> click
           simulateMouseEvent(sendButton, 'mousedown')
           simulateMouseEvent(sendButton, 'mouseup')
           simulateMouseEvent(sendButton, 'click')
@@ -176,24 +156,20 @@
       } else {
         let position = 0
         let count = 0
-        // 改变边框颜色提示错误
         input.style.border = '2px solid red'
-        // 开始抖动，每 50ms 改变一次位置
         const interval = setInterval(() => {
-          position = position === 0 ? 5 : 0 // 让 input 左右移动
+          position = position === 0 ? 5 : 0
           input.style.transform = `translateX(${position}px)`
           count++
           if (count > 10) {
-            // 10 次抖动后停止
             clearInterval(interval)
-            input.style.transform = 'translateX(0)' // 归位
-            input.style.border = '1px #dcdfe6 solid' // 恢复原边框
+            input.style.transform = 'translateX(0)'
+            input.style.border = '1px #dcdfe6 solid'
           }
         }, 50)
       }
     } else {
       console.log('取消发送消息')
-      // 取消发送
       if (msgInterval) {
         clearInterval(msgInterval)
       }
@@ -202,7 +178,6 @@
       btn.innerText = '发送'
     }
   }
-  // 封装模拟鼠标事件
   function simulateMouseEvent(element, eventType) {
     const event = new MouseEvent(eventType, {
       bubbles: true,
@@ -218,13 +193,13 @@
     control.style.left = startLeft + dx + 'px'
     control.style.top = startTop + dy + 'px'
   }
-  // 鼠标抬起移动
   function onMouseUp() {
     title.style.cursor = 'grab'
     isDragging = false
     document.removeEventListener('mousemove', onMouseMove)
     document.removeEventListener('mouseup', onMouseUp)
   }
+  init()
   let checkExist = setTimeout(() => {
     chatInput = document.querySelector('textarea.chat-input.border-box')
     sendButton = document.querySelector(
@@ -232,10 +207,20 @@
     )
     if (chatInput && sendButton) {
       console.log('✔️ 找到输入框和发送按钮！')
-      clearTimeout(checkExist) // 找到后停止轮询
-      init()
+      input.value = '初始化成功'
+      let enableBtn = setTimeout(() => {
+        input.value = '1;2;3;4;5'
+        input.disabled = false
+        btn.style.cursor = 'default'
+        btn.style.pointerEvents = 'auto'
+        btn.style.backgroundColor = '#409EFF'
+        btn.disabled = false
+        clearTimeout(enableBtn)
+      }, 2000)
+      clearTimeout(checkExist)
     } else {
       console.log('❌ 未找到找输入框和按钮...')
     }
-  }, 10000) // 10秒后启动
+  }, 10000)
 })()
+

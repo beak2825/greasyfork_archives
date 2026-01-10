@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Torn Racing Filter (Standalone)
 // @namespace    https://torn.com/
-// @version      1.0.2
+// @version      1.0.3
 // @description  Adds filters to Custom Races list (hide protected/incompatible/paid/full, time, laps, drivers, track, name) and shows statistics.
-// @match        https://www.torn.com/*
+// @match        https://www.torn.com/page.php?sid=racing*
 // @run-at       document-idle
 // @grant        GM_getValue
 // @grant        GM_setValue

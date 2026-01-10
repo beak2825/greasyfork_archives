@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TORN: Attack Assist Requesting DEV
 // @namespace    dekleinekobini.private.attack-assist-requesting--dev
-// @version      1.0.7
+// @version      1.0.9
 // @author       DeKleineKobini [2114440]
 // @description  Request assists for your attacks.
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=torn.com
@@ -234,8 +234,9 @@ SETTINGS_PANEL_CLASS: "settings-panel___",
   const _BUTTON_COLOR_PENDING = BUTTON_COLOR_PENDING;
   const _BUTTON_COLOR_SUCCESS = BUTTON_COLOR_SUCCESS;
   const _BUTTON_COLOR_FAILURE = BUTTON_COLOR_FAILURE;
-  const stylesString = "#attack-assist-panel {\n    position: fixed;\n    width: 140px;\n    background-color: rgba(0, 0, 0, 0.8);\n    color: #fff;\n    padding: 10px;\n    border-radius: 8px;\n    z-index: 899999;\n    display: flex;\n    flex-direction: column;\n    gap: 8px;\n    user-select: none;\n}\n\n@media (max-width: 599px) {\n    #attack-assist-panel {\n        top: 196px;\n        left: calc(((100% - 386px) / 2) + (386px - 160px - 5px));\n        right: auto;\n    }\n}\n\n@media (min-width: 600px) and (max-width: 784px) {\n    #attack-assist-panel {\n        top: 196px;\n        left: calc(((100% - 578px) / 2) + (578px - 160px - 5px));\n        right: auto;\n    }\n}\n\n@media (min-width: 785px) and (max-width: 1319px) {\n    #attack-assist-panel {\n        top: 90px;\n        left: calc(((100% - 976px) / 2) + 130px);\n        right: auto;\n    }\n}\n\n@media (min-width: 1320px) {\n    #attack-assist-panel {\n        top: 132px;\n        left: calc(50% + 976px/2 + 10px);\n        right: auto;\n    }\n\n    :has(.tt-ff-scouter-attack) #attack-assist-panel {\n        top: 144px;\n    }\n}\n\n#attack-assist-panel.collapsed > :not(.assist-request-title-container) {\n    display: none;\n}\n\n.assist-request-title-container {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    gap: 5px;\n    margin-bottom: 5px;\n    cursor: move;\n}\n\n#attack-assist-panel.collapsed .assist-request-title-container {\n    margin-bottom: 0;\n}\n\n.assist-request-title {\n    font-weight: bold;\n    text-align: center;\n    flex-grow: 1;\n}\n\n.assist-request-icon {\n    width: 12px;\n    height: 12px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    opacity: 0.7;\n}\n\n.assist-request-icon:hover {\n    opacity: 1;\n}\n\n.assist-error-message {\n    display: block;\n    padding: 8px;\n    margin-bottom: 4px;\n    background-color: rgba(170, 0, 0, 0.2);\n    border: 1px solid #aa0000;\n    border-radius: 4px;\n    color: #ff6666;\n    font-size: 12px;\n    text-align: center;\n}\n\n.quantity-container {\n    display: flex;\n    align-items: center;\n    gap: 5px;\n}\n\n.quantity-input {\n    width: 100%;\n    padding: 2px;\n    border-radius: 4px;\n    border: 1px solid #555;\n    background-color: #222;\n    color: #fff;\n}\n\n.assist-button {\n    padding: 8px;\n    cursor: pointer;\n    background-color: #444;\n    color: white;\n    border: 1px solid #666;\n    border-radius: 4px;\n    text-align: center;\n    font-weight: bold;\n}\n\n.assist-button:hover:not(:disabled) {\n    background-color: #555;\n}\n\n.assist-button:disabled {\n    cursor: not-allowed;\n    opacity: 0.7;\n}\n";
+  const stylesString = "#attack-assist-panel {\n    position: absolute;\n    width: 140px;\n    background-color: rgba(0, 0, 0, 0.8);\n    color: #fff;\n    padding: 10px;\n    border-radius: 8px;\n    z-index: 899999;\n    display: flex;\n    flex-direction: column;\n    gap: 8px;\n    user-select: none;\n}\n\n@media (max-width: 599px) {\n    #attack-assist-panel {\n        top: 196px;\n        left: calc(((100% - 386px) / 2) + (386px - 160px - 5px));\n        right: auto;\n    }\n}\n\n@media (min-width: 600px) and (max-width: 784px) {\n    #attack-assist-panel {\n        top: 196px;\n        left: calc(((100% - 578px) / 2) + (578px - 160px - 5px));\n        right: auto;\n    }\n}\n\n@media (min-width: 785px) and (max-width: 1319px) {\n    #attack-assist-panel {\n        top: 90px;\n        left: calc(((100% - 976px) / 2) + 130px);\n        right: auto;\n    }\n}\n\n@media (min-width: 1320px) {\n    #attack-assist-panel {\n        top: 132px;\n        left: calc(50% + 976px / 2 + 10px);\n        right: auto;\n    }\n\n    :has(.tt-ff-scouter-attack) #attack-assist-panel {\n        top: 144px;\n    }\n}\n\n#attack-assist-panel.collapsed > :not(.assist-request-title-container) {\n    display: none;\n}\n\n.assist-request-title-container {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n    gap: 5px;\n    margin-bottom: 5px;\n    cursor: move;\n}\n\n#attack-assist-panel.collapsed .assist-request-title-container {\n    margin-bottom: 0;\n}\n\n.assist-request-title {\n    font-weight: bold;\n    text-align: center;\n    flex-grow: 1;\n}\n\n.assist-request-icon {\n    width: 12px;\n    height: 12px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    opacity: 0.7;\n}\n\n.assist-request-icon:hover {\n    opacity: 1;\n}\n\n.assist-error-message {\n    display: block;\n    padding: 8px;\n    margin-bottom: 4px;\n    background-color: rgba(170, 0, 0, 0.2);\n    border: 1px solid #aa0000;\n    border-radius: 4px;\n    color: #ff6666;\n    font-size: 12px;\n    text-align: center;\n}\n\n.quantity-container {\n    display: flex;\n    align-items: center;\n    gap: 5px;\n}\n\n.quantity-input {\n    width: 100%;\n    padding: 2px;\n    border-radius: 4px;\n    border: 1px solid #555;\n    background-color: #222;\n    color: #fff;\n}\n\n.assist-button {\n    padding: 8px;\n    cursor: pointer;\n    background-color: #444;\n    color: white;\n    border: 1px solid #666;\n    border-radius: 4px;\n    text-align: center;\n    font-weight: bold;\n}\n\n.assist-button:hover:not(:disabled) {\n    background-color: #555;\n}\n\n.assist-button:disabled {\n    cursor: not-allowed;\n    opacity: 0.7;\n}\n";
   async function main() {
+    if (new URL(window.location.href).searchParams.get("sid") !== "attack") return;
     if (typeof GM_registerMenuCommand === "function") {
       GM_registerMenuCommand("Reset Request Location", resetLocation);
     }
@@ -340,8 +341,8 @@ Please check the location and try again.`);
     titleContainer.appendChild(resetIcon);
     setupDragging(container, titleContainer, title);
     document.body.appendChild(container);
-    ensureInViewport(container);
-    window.addEventListener("resize", () => ensureInViewport(container));
+    ensureInPageDimensions(container);
+    window.addEventListener("resize", () => ensureInPageDimensions(container));
     return container;
   }
   function createPanel(buttons, location2) {
@@ -447,22 +448,12 @@ Please check the location and try again.`);
     };
     GM_setValue(PANEL_STATE_KEY, state);
   }
-  function ensureInViewport(container) {
+  function ensureInPageDimensions(container) {
     const rect = container.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-    let newTop = rect.top;
-    let newLeft = rect.left;
-    if (rect.right > viewportWidth) {
-      newLeft = Math.max(viewportWidth - rect.width, 0);
-    }
-    if (rect.bottom > viewportHeight) {
-      newTop = Math.min(viewportHeight - rect.height, 0);
-    }
-    if (rect.top !== newTop || rect.left !== newLeft) {
-      container.style.top = `${newTop}px`;
-      container.style.left = `${newLeft}px`;
-      container.style.right = "auto";
+    const containerWidth = document.querySelector("#mainContainer").clientWidth;
+    if (rect.left >= containerWidth - 50) {
+      container.style.left = "";
+      container.style.right = "";
       saveState(container);
     }
   }

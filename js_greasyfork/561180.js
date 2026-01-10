@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Bazaar Helper GOAT
-// @author       srsbsns
-// @version      7.7
-// @description  Automatically insert $1 prices or your chosen % discount on market value!
-// @match        https://www.torn.com/*
+// @name         Bazaar Helper GOAT - Bulk Edition
+// @author       srsbsns & Gemini & Claude
+// @version      10.3
+// @description  Added MV percentage display on Manage page
+// @match        https://www.torn.com/bazaar*
 // @run-at       document-end
 // @grant        GM_addStyle
 // @grant        GM_getValue
@@ -11,10 +11,11 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest
 // @connect      api.torn.com
+// @connect      weav3r.dev
 // @license      MIT
 // @namespace damorale ft srsbsns
-// @downloadURL https://update.greasyfork.org/scripts/561180/Bazaar%20Helper%20GOAT.user.js
-// @updateURL https://update.greasyfork.org/scripts/561180/Bazaar%20Helper%20GOAT.meta.js
+// @downloadURL https://update.greasyfork.org/scripts/561180/Bazaar%20Helper%20GOAT%20-%20Bulk%20Edition.user.js
+// @updateURL https://update.greasyfork.org/scripts/561180/Bazaar%20Helper%20GOAT%20-%20Bulk%20Edition.meta.js
 // ==/UserScript==
 
 (() => {
@@ -25,11 +26,16 @@
     rounding: 'torn.rounding',
     cat:      'torn.items.catalog',
     catTs:    'torn.items.catalog.ts',
-    blockIds: 'torn.items.blockIds'
+    blockIds: 'torn.items.blockIds',
+    marketDiscount: 'torn.marketDiscount',
+    undercutPos: 'torn.undercutPos'
   };
 
   let cat = null;
   let busy = false;
+  let lastFocusedInput = null;
+  let currentBazaarStock = null;
+  let lastStockFetch = 0;
 
   const getApiKey = () => GM_getValue(S.apiKey,'');
   const setApiKey = v => GM_setValue(S.apiKey, String(v||'').trim());
@@ -39,6 +45,18 @@
     return (isFinite(n)&&n>0)?n:95;
   };
   const setSellPct = n => GM_setValue(S.pct, Number(n)||95);
+
+  const getMarketDiscount = () => {
+    const n = Number(GM_getValue(S.marketDiscount,1));
+    return (isFinite(n)&&n>=0)?n:1;
+  };
+  const setMarketDiscount = n => GM_setValue(S.marketDiscount, Number(n)||1);
+
+  const getUndercutPos = () => {
+    const n = parseInt(GM_getValue(S.undercutPos, 1));
+    return (n >= 1 && n <= 5) ? n : 1;
+  };
+  const setUndercutPos = n => GM_setValue(S.undercutPos, parseInt(n) || 1);
 
   const getRounding = () => {
     const v = GM_getValue(S.rounding,'nearest');
@@ -68,33 +86,39 @@
     if (v!==null) setRounding(v.toLowerCase());
   });
 
-  GM_registerMenuCommand('Refresh MV/Shop now (force)', async () => {
-    try {
-      cat = await fetchCatalog(true);
-      annotate(true);
-      alert('MV/Shop refreshed from API.');
-    } catch (e){
-      alert('Refresh failed: ' + (e?.message||e));
+  GM_registerMenuCommand('Set market undercut amount ($)', () => {
+    const v = prompt('Enter dollar amount to undercut lowest market price:', getMarketDiscount());
+    if (v!==null){
+      const num = Number(v);
+      if (num >= 0) {
+        setMarketDiscount(num);
+        alert('Saved market undercut: $' + num);
+      }
     }
   });
 
-  GM_registerMenuCommand('Set Do-Not-Sell item IDs (comma/space separated)', () => {
-    const current = GM_getValue(S.blockIds,'');
-    const v = prompt('Enter item IDs you never want to sell (comma/space/newline separated):', current);
-    if (v!==null){
-      GM_setValue(S.blockIds, String(v).trim());
-      annotate(true);
-      alert('Saved Do-Not-Sell list.');
+  GM_registerMenuCommand('Set undercut position (1-5)', () => {
+    const v = prompt('Enter which listing to undercut (1=lowest, 2=second, etc.):', getUndercutPos());
+    if (v !== null) {
+      const num = parseInt(v);
+      if (num >= 1 && num <= 5) {
+        setUndercutPos(num);
+        alert('Saved undercut position: ' + num);
+      }
     }
+  });
+
+  GM_registerMenuCommand('Reset price popup position', () => {
+    GM_setValue('jp.popup.position', null);
+    alert('Popup position reset. It will reposition near items on next open.');
   });
 
   // ---- Styles ----
   GM_addStyle(`
-    /* Percentage input - fixed position top right (stays when scrolling) */
     .jp-pct-box {
       position: fixed !important;
       top: 135px !important;
-      right: 20px !important;
+      right: 80px !important;
       display: inline-flex;
       align-items: center;
       gap: 5px;
@@ -103,157 +127,263 @@
       border-radius: 4px;
       border: 1px solid #666;
       z-index: 10000;
-      white-space: nowrap;
     }
-    .jp-pct-box label {
-      color: #ddd;
-      font-size: 12px;
-      font-weight: 500;
-    }
-    .jp-pct-box input {
-      width: 50px;
-      padding: 3px 6px;
-      font-size: 12px;
-      border: 1px solid #777;
-      border-radius: 3px;
-      background: #2a2a2a;
-      color: #fff;
-      text-align: center;
-      font-weight: 500;
-    }
+    .jp-pct-box label { color: #ddd; font-size: 12px; }
+    .jp-pct-box input { width: 50px; background: #2a2a2a; color: #fff; border: 1px solid #777; text-align: center; }
 
-    /* Select all checkboxes - fixed position */
-    .jp-select-all-row {
+    .jp-action-row {
       position: fixed !important;
       top: 170px !important;
-      right: 20px !important;
+      right: 5px !important;
       display: flex;
-      gap: 10px;
+      gap: 4px;
       align-items: center;
-      padding: 6px 10px;
       background: rgba(40,40,40,0.95);
+      padding: 6px;
       border-radius: 4px;
-      border: 1px solid #555;
+      border: 1px solid #666;
       z-index: 10000;
     }
-    .jp-select-all-cb {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .jp-select-all-cb label {
-      color: #bbb;
-      font-size: 11px;
-      font-weight: 500;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .jp-select-all-cb input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-    }
 
-    /* Update button for Manage page */
-    .jp-update-btn {
-      position: fixed !important;
-      top: 170px !important;
-      right: 20px !important;
-      padding: 8px 16px;
-      background: linear-gradient(135deg, #2e7d32, #388e3c);
+    .jp-action-btn {
+      padding: 8px 12px;
       color: #fff;
-      border: 1px solid #4caf50;
+      border: none;
       border-radius: 4px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
-      z-index: 10000;
-      transition: all 0.2s;
+    }
+
+    .jp-apply-pct-btn { background: linear-gradient(135deg, #1565c0, #1976d2); }
+    .jp-apply-dollar-btn { background: linear-gradient(135deg, #c2185b, #d81b60); }
+    .jp-apply-market-btn { background: linear-gradient(135deg, #e65100, #f57c00); }
+
+    .jp-checkbox-wrap {
+      display: inline-flex;
+      align-items: center;
+      vertical-align: middle;
+      position: relative;
+      z-index: 10;
+      gap: 0px;
+    }
+
+    /* Manage page - now positioned AFTER input-money-group */
+    .jp-checkbox-wrap-manage {
+      margin-left: 1px;
+      margin-right: 0px;
+      gap: 0px;
+      display: inline-flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+/* Reduce height of price input on Manage page */
+[data-testid="legacy-money-input"] {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+    /* Tighten spacing in price container on Manage page */
+    [data-testid="legacy-money-input"] {
+      padding-left: 5px !important;
+      padding-right: 5px !important;
+    }
+
+    .input-money-group {
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+      margin-right: 0px !important;
+    }
+/* Tighten spacing in price container on Manage page */
+[data-testid="legacy-money-input"] {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+.input-money-group {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  margin-right: -15px !important;  /* Change this to a negative value */
+}
+div[class*="DoKP7"] {
+  padding-right: 0px !important;
+}
+    /* Add page - position after price input on the right */
+    .jp-checkbox-wrap-add {
+      margin-left: -20px;
+      margin-right: 0px;
+    }
+
+    .jp-item-checkbox {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .jp-price-icon-btn {
+      width: 24px;
+      height: 24px;
+      margin-left: 1px;
+      background: #2a2a2a;
+      color: #ffde00;
+      border: 1px solid #666;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
+      transition: background 0.2s;
+    }
+    .jp-price-icon-btn:hover {
+      background: #3a3a3a;
+    }
+
+    .jp-select-all-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 5px;
+      border-right: 1px solid #555;
+      padding-right: 8px;
+    }
+    .jp-select-all-wrap label { font-size: 9px; color: #aaa; font-weight: bold; }
+
+    .bazaar-item, li[class*="item"], div[class*="row_"] {
+       min-height: auto !important;
+    }
+
+    .jpx { margin-left: 8px; color: #fff; background: #c62828; padding: 2px 6px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+    .jp-blocked-row { box-shadow: inset 0 0 5px rgba(198,40,40,0.4); }
+
+    /* Price Popup Styles */
+    .jp-price-popup {
+      position: fixed;
+      background: rgba(26, 26, 26, 0.98);
+      border: 2px solid #666;
+      border-radius: 8px;
+      padding: 15px;
+      z-index: 100000;
+      display: none;
+      min-width: 280px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.9);
+    }
+
+    .jp-price-header {
+      font-weight: bold;
+      color: #ffde00;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #444;
+      font-size: 13px;
+      padding-right: 30px;
+    }
+
+    .jp-stock-banner {
+      background: #2a2a2a;
+      color: #ffde00;
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .jp-price-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+    }
+
+    .jp-price-table th {
+      background: #222;
+      color: #888;
+      font-size: 10px;
+      text-transform: uppercase;
+      padding: 8px 4px;
+      border-bottom: 1px solid #444;
+      font-weight: bold;
+    }
+
+    .jp-price-table td {
+      padding: 10px 6px;
+      text-align: center;
+      border-bottom: 1px solid #333;
+      cursor: pointer;
+      font-size: 11px;
+      transition: background 0.2s;
+    }
+
+    .jp-price-table td:hover {
+      background: #333;
+    }
+
+    .jp-price-table .market-col {
+      color: #7cfc00;
+      font-weight: bold;
+      border-right: 1px solid #333;
+    }
+
+    .jp-price-table .bazaar-col {
+      color: #00aaff;
+      font-weight: bold;
+    }
+
+    .jp-qty-label {
+      color: #888;
+      font-size: 9px;
+      margin-right: 4px;
+    }
+
+    .jp-popup-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      color: #888;
+      font-size: 20px;
+      font-weight: bold;
+      line-height: 1;
+      padding: 5px;
+    }
+
+    .jp-popup-close:hover {
+      color: #fff;
+    }
+
+    /* Price percentage badge on Manage page */
+    .jp-price-pct {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left: 5px;
       white-space: nowrap;
     }
-    .jp-update-btn:hover {
-      background: linear-gradient(135deg, #388e3c, #43a047);
-      transform: scale(1.05);
-    }
-    .jp-update-btn:active {
-      transform: scale(0.95);
+
+    .jp-price-pct.positive {
+      color: #7cfc00;
     }
 
-    /* Auto checkbox columns with color coding */
-    .jp-auto-cbs {
-      display: inline-flex;
-      gap: 6px;
-      margin-left: 8px;
-      vertical-align: middle;
-    }
-    .jp-auto-cb {
-      display: inline-block;
+    .jp-price-pct.negative {
+      color: #ff4444;
     }
 
-    /* Blue checkboxes for Auto % */
-    .jp-auto-cb-pct input[type="checkbox"] {
-      width: 15px;
-      height: 15px;
-      cursor: pointer;
-      vertical-align: middle;
-      accent-color: #1e90ff;
+    .jp-price-pct.neutral {
+      color: #aaa;
     }
-
-    /* Rainbow checkboxes for $1 */
-    .jp-auto-cb-dollar input[type="checkbox"] {
-      width: 15px;
-      height: 15px;
-      cursor: pointer;
-      vertical-align: middle;
-      accent-color: #ff1493;
-      filter: hue-rotate(0deg);
-      animation: rainbow-shift 3s linear infinite;
-    }
-
-    @keyframes rainbow-shift {
-      0% { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
-
-    /* NPC warning */
-    .jp-npc-warn {
-      display: inline-block;
-      margin-left: 6px;
-      font-size: 11px;
-      color: #e53935;
-      font-weight: 500;
-      vertical-align: middle;
-    }
-
-    /* Do-Not-Sell */
-    .jpx {
-      display: inline-block;
-      margin-left: 8px;
-      padding: 2px 8px;
-      border-radius: 10px;
-      font: 12px/18px system-ui,sans-serif;
-      color: #fff;
-      background: #c62828;
-      border: 1px solid rgba(255,255,255,.25);
-      cursor: pointer;
-      user-select: none;
-      font-weight: 700;
-    }
-    .jpx:hover { filter: brightness(1.08); }
-    .jp-blocked-row { box-shadow: 0 0 0 2px rgba(198,40,40,.65) inset !important; border-radius: 8px; }
+  /* Left-align price text in all input-money-group inputs */
+.input-money-group input.input-money {
+  text-align: left !important;
+  padding-left: 8px !important;
+}
   `);
 
-  // ---- Page helpers ----
   const onBazaar = () => /\/bazaar\.php$/i.test(location.pathname);
   const onManage = () => onBazaar() && /^#\/manage\b/i.test(location.hash||'');
   const onAdd    = () => onBazaar() && /^#\/add\b/i.test(location.hash||'');
-
-  const selPriceInputs = [
-    'div.input-money-group input.input-money[type="text"]',
-    'div.input-money-group input.input-money:not([type])',
-    'input.input-money[type="text"]',
-    'input[class*="price" i][type="text"]'
-  ].join(',');
+  const selPriceInputs = 'input.input-money, input[class*="price" i]';
 
   const sanitize = s => String(s||'').replace(/\(x?\d+\)$/i,'').replace(/\s+/g,' ').trim().toLowerCase();
   const num = v => Number(String(v ?? '').replace(/[^0-9.-]/g,'')) || 0;
@@ -265,20 +395,17 @@
     return Math.round(n);
   }
 
-  // ---- JSON helpers ----
   const JGet = (k) => { try{ const v=GM_getValue(k,null); return v?JSON.parse(v):null; }catch{return null;} };
   const JSet = (k,o) => GM_setValue(k, JSON.stringify(o||null));
 
-  // ---- API ----
   async function xfetch(url){
     return new Promise((resolve,reject)=>{
       GM_xmlhttpRequest({
         method:'GET', url,
         onload:r=>{
           try{
-            if (r.status!==200) return reject(new Error('HTTP '+r.status));
             const j = JSON.parse(r.responseText);
-            if (j?.error) return reject(new Error(j.error.error_desc||'API error'));
+            if (j?.error) return reject(new Error(j.error.error_desc));
             resolve(j);
           }catch(e){reject(e);}
         },
@@ -290,486 +417,638 @@
   async function fetchCatalog(force=false){
     const cached = JGet(S.cat), ts = GM_getValue(S.catTs,0);
     if (!force && cached && (Date.now()-ts) < 12*3600*1000) return cached;
-
     const key = getApiKey();
-    if (!key) return {};
-
+    if (!key) return {byId:{}, byName:{}};
     const data = await xfetch(`${BASE}/torn/?selections=items&key=${encodeURIComponent(key)}`);
     const items = data.items || {};
     const out = { byId:{}, byName:{} };
-
     for (const id in items){
-      const it = items[id]||{};
-      const name=(it.name||'').trim();
-      if (!name) continue;
-
-      const rec = { id:Number(id), name, mv:Number(it.market_value)||0, sell:Number(it.sell_price)||0 };
+      const it = items[id];
+      const rec = { id:Number(id), name:it.name, mv:Number(it.market_value)||0, sell:Number(it.sell_price)||0 };
       out.byId[rec.id]=rec;
-      const k=sanitize(name);
-      if (!out.byName[k]) out.byName[k]=rec;
+      out.byName[sanitize(it.name)]=rec;
     }
-
     JSet(S.cat,out);
     GM_setValue(S.catTs,Date.now());
     return out;
   }
 
-  // ---- Item resolution (FULL VERSION FROM ORIGINAL) ----
-  function firstFromSrcset(val){ if(!val) return ''; return String(val).split(',')[0].trim().split(/\s+/)[0]||''; }
-  function nameFromFile(url){
-    try{
-      const u=decodeURIComponent(url);
-      const f=(u.split('/').pop()||'').split('?')[0];
-      return f.replace(/\.(png|jpg|jpeg|webp)$/i,'').replace(/[_-]+/g,' ').trim();
-    }catch{return '';}
-  }
-  function lookupByName(raw,catObj){ return catObj.byName[sanitize(raw)]||null; }
+  async function fetchMarketPrice(itemId){
+    const key = getApiKey();
+    if (!key) return null;
+    const data = await xfetch(`${BASE}/v2/market/${itemId}?selections=itemmarket&key=${encodeURIComponent(key)}`);
+    const listings = data.itemmarket?.listings || data.itemmarket || [];
 
-  function resolveItemForPriceInput(input, catObj){
-    const row = input.closest('.bazaar-item, .item-row, .item, .info-cont, li, tr, .row, .table-row, [class*="row"], [class*="list"], [class*="entry"]') || input.parentElement;
-    let id=null;
+    // Get the price at the specified position
+    const position = getUndercutPos();
+    const targetIndex = Math.min(position - 1, listings.length - 1);
 
-    const idHolder = row?.querySelector?.('[data-item-id],[data-itemid],[data-item],[data-id]');
-    if (idHolder){
-      for (const a of ['data-item-id','data-itemid','data-item','data-id']){
-        const v=Number(idHolder.getAttribute(a));
-        if (v>0){ id=v; break; }
-      }
+    if (Array.isArray(listings) && listings.length > 0) {
+      return Number(listings[targetIndex].price || listings[targetIndex].cost);
     }
-    if (!id){
-      const a = row?.querySelector?.('a[href*="itemID="],a[href*="item.php"],a[href*="items.php"]');
-      if (a){
-        const m=a.href.match(/[?&#]itemID=(\d+)/)||a.href.match(/[?&#]item=(\d+)/);
-        if (m) id=Number(m[1]);
-      }
-    }
-    if (!id){
-      const media=[...(row?.querySelectorAll?.('img[src*="/images/"], source[srcset*="/images/"]')||[])];
-      for (const el of media){
-        const maybe=Number(el.dataset?.itemId||el.dataset?.id||el.getAttribute?.('data-id'));
-        if (maybe>0){ id=maybe; break; }
-      }
-      if (!id){
-        for (const el of media){
-          const nmAttr=(el.getAttribute?.('alt')||el.getAttribute?.('title')||el.getAttribute?.('aria-label')||'').trim();
-          if (nmAttr){ const nm=lookupByName(nmAttr,catObj); if (nm) return nm; }
-        }
-      }
-      if (!id){
-        for (const el of media){
-          const u=firstFromSrcset(el.currentSrc||el.src||el.getAttribute?.('srcset')||el.getAttribute?.('src')||'');
-          if (!u) continue;
-          const m=u.match(/\/items\/(\d+)\//)||u.match(/\/items\/(\d+)\./)||u.match(/\/(\d+)\.(png|jpg|jpeg|webp)/i);
-          if (m){ id=Number(m[1]); break; }
-          const nf=nameFromFile(u); if (nf){ const nm=lookupByName(nf,catObj); if (nm) return nm; }
-        }
-      }
-    }
-
-    if (id && catObj.byId[id]) return catObj.byId[id];
-
-    const label = row?.querySelector?.('.name, .item-name, .title, .name-wrap, [class*="name"], h4, h5, a, [title], [aria-label], .desc, .info, .line, .details');
-    const texts=new Set();
-    const push=s=>{ if(s){ const t=String(s).trim(); if(t && t.length<=64) texts.add(t); } };
-    if (label){ push(label.textContent); push(label.getAttribute?.('title')); push(label.getAttribute?.('aria-label')); }
-    row?.querySelectorAll?.('h4,h5,a,span,div,[title],[aria-label]')?.forEach(el=>{ push(el.textContent); push(el.getAttribute?.('title')); push(el.getAttribute?.('aria-label')); });
-    for (const t of texts){ const nm=lookupByName(t,catObj); if (nm) return nm; }
-
     return null;
   }
 
-  // ---- Price apply ----
+  async function fetchBazaarStock(force = false) {
+    const key = getApiKey();
+    if (!key) return null;
+
+    // Cache for 15 seconds
+    if (!force && currentBazaarStock && (Date.now() - lastStockFetch) < 15000) {
+      return currentBazaarStock;
+    }
+
+    try {
+      const data = await xfetch(`${BASE}/user/?selections=bazaar&key=${encodeURIComponent(key)}`);
+      currentBazaarStock = {};
+
+      // Handle both array and object formats
+      const bazaarItems = Array.isArray(data.bazaar) ? data.bazaar : Object.values(data.bazaar || {});
+
+      bazaarItems.forEach(item => {
+        const id = item.ID || item.item_id;
+        currentBazaarStock[id] = {
+          quantity: item.quantity,
+          price: item.price
+        };
+      });
+
+      lastStockFetch = Date.now();
+      return currentBazaarStock;
+    } catch(e) {
+      console.error('Failed to fetch bazaar stock:', e);
+      return null;
+    }
+  }
+
+  function resolveItemForPriceInput(input, catObj){
+    const row = input.closest('li, [class*="row"], .bazaar-item, .item-li, [class*="item"]');
+    if (!row) return null;
+
+    // 1. Try to find ID in image URLs first (most reliable)
+    const img = row.querySelector('img[src*="items/"], img[src*="/images/items/"]');
+    if (img) {
+        const match = img.src.match(/items\/(\d+)/);
+        if (match && catObj.byId[match[1]]) {
+          console.log('Found item by image:', match[1], catObj.byId[match[1]]);
+          return catObj.byId[match[1]];
+        }
+    }
+
+    // 2. Try to find ID in data attributes
+    const idHolder = row.querySelector('[data-item-id],[data-itemid],[data-item],[data-id]');
+    if (idHolder) {
+        let id = idHolder.getAttribute('data-item-id') || idHolder.getAttribute('data-itemid') || idHolder.getAttribute('data-item') || idHolder.getAttribute('data-id');
+        if (id && catObj.byId[id]) {
+          console.log('Found item by data attr:', id, catObj.byId[id]);
+          return catObj.byId[id];
+        }
+    }
+
+    // 3. Try to find by Name (looking for bold tags or specific class names)
+    const nameEl = row.querySelector('.name, .item-name, .title, b, [class*="name"]');
+    if (nameEl) {
+        const cleaned = sanitize(nameEl.textContent);
+        if (catObj.byName[cleaned]) {
+          console.log('Found item by name:', cleaned, catObj.byName[cleaned]);
+          return catObj.byName[cleaned];
+        }
+    }
+
+    console.log('Could not resolve item for row:', row);
+    return null;
+  }
+
   function applyPrice(input, price){
     if (!input) return;
-
-    // Use native setter if available
     const nativeSet = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
-    if (nativeSet) {
-      nativeSet.call(input, String(price));
+    nativeSet ? nativeSet.call(input, String(price)) : (input.value = String(price));
+    input.dispatchEvent(new Event('input', {bubbles: true}));
+    input.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+
+  function updateNpcWarning(priceInput, item){
+    if (!item || !priceInput) return;
+    const price = num(priceInput.value);
+    if (price > 0 && price < item.sell && price !== 1) {
+      priceInput.style.color = '#ff4444';
+      priceInput.style.fontWeight = '700';
     } else {
-      input.value = String(price);
-    }
-
-    input.dispatchEvent(new Event('input',{bubbles:true}));
-    input.dispatchEvent(new Event('change',{bubbles:true}));
-
-    // Also update hidden price input if exists
-    const hidden=input.closest('.input-money-group')?.querySelector('input[name="price"]');
-    if (hidden){
-      if (nativeSet) {
-        nativeSet.call(hidden, String(price));
-      } else {
-        hidden.value = String(price);
-      }
-      hidden.dispatchEvent(new Event('input',{bubbles:true}));
-      hidden.dispatchEvent(new Event('change',{bubbles:true}));
+      priceInput.style.color = '';
+      priceInput.style.fontWeight = '';
     }
   }
 
-  // ---- Create % input (fixed position, no DOM manipulation) ----
-  function createPctInput(){
-    if (document.querySelector('.jp-pct-box')) return;
-    if (!onBazaar()) return;
-    // Only show on Add or Manage pages
-    if (!onAdd() && !onManage()) return;
+  function getTargetInputs() {
+    const checked = document.querySelectorAll('.jp-item-checkbox:checked');
+    if (checked.length > 0) {
+        return Array.from(checked).map(cb => cb.closest('li, [class*="row"], .bazaar-item, .item-li').querySelector(selPriceInputs)).filter(i => i);
+    }
+    return lastFocusedInput ? [lastFocusedInput] : [];
+  }
 
-    const box = document.createElement('div');
-    box.className = 'jp-pct-box';
+  // Global click handler setup flag
+  let globalClickHandlerSetup = false;
+  let isDragging = false;
+  let dragOffset = { x: 0, y: 0 };
 
-    const label = document.createElement('label');
-    label.textContent = '%';
+  // Save and load popup position
+  const getPopupPosition = () => {
+    const saved = GM_getValue('jp.popup.position', null);
+    return saved ? JSON.parse(saved) : null;
+  };
 
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.min = '1';
-    input.max = '150';
-    input.value = getSellPct();
+  const savePopupPosition = (top, left) => {
+    GM_setValue('jp.popup.position', JSON.stringify({ top, left }));
+  };
 
-    input.addEventListener('change', () => {
-      const val = Number(input.value);
-      if (val > 0 && val <= 200) {
-        setSellPct(val);
-        document.querySelectorAll('.jp-auto-cb-pct input:checked').forEach(cb => {
-          const row = cb.closest('li, [class*="item"]');
-          const priceInput = row?.querySelector(selPriceInputs);
-          if (priceInput && cat) {
-            const item = resolveItemForPriceInput(priceInput, cat);
-            if (item) {
-              const price = dollars(item.mv * (val / 100));
-              applyPrice(priceInput, price);
-              updateNpcWarning(priceInput, item);
+  // Make popup draggable
+  function makePopupDraggable(popup) {
+    const header = popup.querySelector('.jp-price-header');
+    if (!header) return;
+
+    header.style.cursor = 'move';
+    header.style.userSelect = 'none';
+
+    const startDrag = (e) => {
+      if (e.target.classList.contains('jp-popup-close')) return;
+
+      isDragging = true;
+      const touch = e.type === 'touchstart' ? e.touches[0] : e;
+      dragOffset.x = touch.clientX - popup.offsetLeft;
+      dragOffset.y = touch.clientY - popup.offsetTop;
+
+      popup.style.transition = 'none';
+
+      if (e.type === 'mousedown') {
+        document.addEventListener('mousemove', doDrag);
+        document.addEventListener('mouseup', stopDrag);
+      } else {
+        document.addEventListener('touchmove', doDrag, { passive: false });
+        document.addEventListener('touchend', stopDrag);
+      }
+
+      e.preventDefault();
+    };
+
+    const doDrag = (e) => {
+      if (!isDragging) return;
+
+      const touch = e.type === 'touchmove' ? e.touches[0] : e;
+      const newLeft = touch.clientX - dragOffset.x;
+      const newTop = touch.clientY - dragOffset.y;
+
+      // Keep popup within viewport
+      const maxLeft = window.innerWidth - popup.offsetWidth;
+      const maxTop = window.innerHeight - popup.offsetHeight;
+
+      popup.style.left = Math.max(0, Math.min(newLeft, maxLeft)) + 'px';
+      popup.style.top = Math.max(0, Math.min(newTop, maxTop)) + 'px';
+
+      if (e.type === 'touchmove') e.preventDefault();
+    };
+
+    const stopDrag = () => {
+      if (isDragging) {
+        isDragging = false;
+        savePopupPosition(popup.style.top, popup.style.left);
+        popup.style.transition = '';
+
+        document.removeEventListener('mousemove', doDrag);
+        document.removeEventListener('mouseup', stopDrag);
+        document.removeEventListener('touchmove', doDrag);
+        document.removeEventListener('touchend', stopDrag);
+      }
+    };
+
+    header.addEventListener('mousedown', startDrag);
+    header.addEventListener('touchstart', startDrag);
+  }
+
+  async function showPricePopup(input, row) {
+    try {
+      if (!cat) cat = await fetchCatalog();
+      const item = resolveItemForPriceInput(input, cat);
+      if (!item?.id) {
+        console.log('No item found for price input');
+        return;
+      }
+
+      console.log('Opening popup for item:', item.name, item.id);
+
+      // Create or get popup
+      let popup = document.querySelector('.jp-price-popup');
+      let isNewPopup = false;
+
+      if (!popup) {
+        popup = document.createElement('div');
+        popup.className = 'jp-price-popup';
+        document.body.appendChild(popup);
+        isNewPopup = true;
+      }
+
+      // Position popup - use saved position if available, otherwise position near button
+      const savedPos = getPopupPosition();
+      if (savedPos) {
+        popup.style.top = savedPos.top;
+        popup.style.left = savedPos.left;
+      } else {
+        const rect = row.getBoundingClientRect();
+        popup.style.top = Math.max(10, rect.top + window.scrollY - 50) + 'px';
+        popup.style.left = Math.max(10, rect.left + window.scrollX - 340) + 'px';
+      }
+
+      popup.style.display = 'block';
+
+      // Show loading state
+      popup.innerHTML = `
+        <span class="jp-popup-close">&times;</span>
+        <div class="jp-price-header">${item.name}</div>
+        <div class="jp-stock-banner">Loading stock info...</div>
+        <table class="jp-price-table">
+          <thead>
+            <tr>
+              <th>Item Market</th>
+              <th>Bazaar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="market-col">Loading...</td><td class="bazaar-col">Loading...</td></tr>
+            <tr><td class="market-col">Loading...</td><td class="bazaar-col">Loading...</td></tr>
+            <tr><td class="market-col">Loading...</td><td class="bazaar-col">Loading...</td></tr>
+            <tr><td class="market-col">Loading...</td><td class="bazaar-col">Loading...</td></tr>
+            <tr><td class="market-col">Loading...</td><td class="bazaar-col">Loading...</td></tr>
+          </tbody>
+        </table>
+      `;
+
+      // Make popup draggable
+      makePopupDraggable(popup);
+
+      // Close button handler
+      const closeBtn = popup.querySelector('.jp-popup-close');
+      closeBtn.onclick = function(e) {
+        e.stopPropagation();
+        popup.style.display = 'none';
+      };
+
+      // Setup global click handler only once
+      if (!globalClickHandlerSetup) {
+        globalClickHandlerSetup = true;
+        document.addEventListener('click', function(e) {
+          const popup = document.querySelector('.jp-price-popup');
+          if (popup && popup.style.display === 'block') {
+            if (!popup.contains(e.target) && !e.target.classList.contains('jp-price-icon-btn')) {
+              popup.style.display = 'none';
             }
           }
-        });
+        }, true);
       }
-    });
 
-    box.appendChild(label);
-    box.appendChild(input);
-    document.body.appendChild(box);
+      // Fetch stock info
+      try {
+        const stock = await fetchBazaarStock();
+        const stockBanner = popup.querySelector('.jp-stock-banner');
+        if (stock && stock[item.id]) {
+          stockBanner.textContent = `On Bazaar: ${stock[item.id].quantity.toLocaleString()} @ $${stock[item.id].price.toLocaleString()}`;
+        } else {
+          stockBanner.textContent = 'On Bazaar: 0 (Not listed)';
+        }
+      } catch(e) {
+        console.error('Failed to fetch stock:', e);
+      }
+
+      // Helper function to apply price with undercut
+      const applyPriceWithUndercut = function(price) {
+        const undercut = getMarketDiscount();
+        const final = Math.max(1, price - undercut);
+        applyPrice(input, final);
+        updateNpcWarning(input, item);
+
+        // Also fill quantity on Add page only
+        if (onAdd()) {
+          const qtyText = row.querySelector('[class*="amount"], .amount, .count')?.textContent;
+          if (qtyText) {
+            const qty = qtyText.replace(/[^0-9]/g, '');
+            const qtyInput = row.querySelector('input[name="amount"], input[placeholder*="Qty" i], input[placeholder*="Amount" i]');
+            if (qtyInput && qty) {
+              applyPrice(qtyInput, qty);
+            }
+          }
+        }
+
+        popup.style.display = 'none';
+      };
+
+      // Fetch Item Market prices
+      try {
+        const marketData = await xfetch(`${BASE}/v2/market/${item.id}?selections=itemmarket&key=${encodeURIComponent(getApiKey())}`);
+        const marketListings = marketData.itemmarket?.listings || [];
+
+        const rows = popup.querySelectorAll('.jp-price-table tbody tr');
+        marketListings.slice(0, 5).forEach((listing, i) => {
+          if (rows[i]) {
+            const cell = rows[i].querySelector('.market-col');
+            cell.innerHTML = `<span class="jp-qty-label">${listing.amount?.toLocaleString() || '?'} x</span>$${listing.price?.toLocaleString() || '?'}`;
+            cell.style.cursor = 'pointer';
+            cell.onclick = function(e) {
+              e.stopPropagation();
+              applyPriceWithUndercut(listing.price);
+            };
+          }
+        });
+      } catch(e) {
+        console.error('Failed to fetch market prices:', e);
+      }
+
+      // Fetch Bazaar prices (from external API)
+      try {
+        const bazaarData = await xfetch(`https://weav3r.dev/api/marketplace/${item.id}`);
+        const bazaarListings = bazaarData.listings || [];
+
+        const rows = popup.querySelectorAll('.jp-price-table tbody tr');
+        bazaarListings.slice(0, 5).forEach((listing, i) => {
+          if (rows[i]) {
+            const cell = rows[i].querySelector('.bazaar-col');
+            cell.innerHTML = `<span class="jp-qty-label">${listing.quantity?.toLocaleString() || '?'} x</span>$${listing.price?.toLocaleString() || '?'}`;
+            cell.style.cursor = 'pointer';
+            cell.onclick = function(e) {
+              e.stopPropagation();
+              applyPriceWithUndercut(listing.price);
+            };
+          }
+        });
+      } catch(e) {
+        console.error('Failed to fetch bazaar prices:', e);
+      }
+    } catch(error) {
+      console.error('Error in showPricePopup:', error);
+    }
   }
 
-  // ---- Create select-all checkboxes (fixed position) - ADD PAGE ONLY ----
-  function createSelectAllRow(){
-    if (document.querySelector('.jp-select-all-row')) return;
-    if (!onAdd()) return; // Only show on add page
-    if (onManage()) return; // Never show on manage page
+  function createActionRow(){
+    if (document.querySelector('.jp-action-row')) return;
+    if (!onAdd() && !onManage()) return;
 
     const row = document.createElement('div');
-    row.className = 'jp-select-all-row';
+    row.className = 'jp-action-row';
 
-    // Auto % column
-    const cbPct = document.createElement('span');
-    cbPct.className = 'jp-select-all-cb';
-
-    const inputPct = document.createElement('input');
-    inputPct.type = 'checkbox';
-    inputPct.id = 'jp-select-all-pct';
-
-    const labelPct = document.createElement('label');
-    labelPct.htmlFor = 'jp-select-all-pct';
-    labelPct.textContent = 'All %';
-
-    inputPct.addEventListener('change', () => {
-      const checked = inputPct.checked;
-      if (checked) {
-        const dollarCb = document.getElementById('jp-select-all-dollar');
-        if (dollarCb) dollarCb.checked = false;
-      }
-      document.querySelectorAll('.jp-auto-cb-pct input').forEach(cb => {
-        if (cb.checked !== checked) {
-          cb.checked = checked;
-          cb.dispatchEvent(new Event('change'));
-        }
-      });
+    const selectAllWrap = document.createElement('div');
+    selectAllWrap.className = 'jp-select-all-wrap';
+    const saCb = document.createElement('input');
+    saCb.type = 'checkbox';
+    saCb.id = 'jp-master-toggle';
+    saCb.addEventListener('change', (e) => {
+        document.querySelectorAll('.jp-item-checkbox').forEach(cb => cb.checked = e.target.checked);
     });
+    const saLb = document.createElement('label');
+    saLb.textContent = 'ALL';
+    selectAllWrap.append(saCb, saLb);
+    row.appendChild(selectAllWrap);
 
-    cbPct.appendChild(inputPct);
-    cbPct.appendChild(labelPct);
+    const btnPct = document.createElement('button');
+    btnPct.className = 'jp-action-btn jp-apply-pct-btn';
+    btnPct.textContent = '% MV';
+    btnPct.onclick = async () => {
+        const targets = getTargetInputs();
+        if (!targets.length) return;
+        if (!cat) cat = await fetchCatalog();
+        targets.forEach(input => {
+            const item = resolveItemForPriceInput(input, cat);
+            if (item?.mv) {
+              applyPrice(input, dollars(item.mv * (getSellPct()/100)));
+              updateNpcWarning(input, item);
+            }
+        });
+    };
 
-    // $1 column
-    const cbDollar = document.createElement('span');
-    cbDollar.className = 'jp-select-all-cb';
+    const btnDollar = document.createElement('button');
+    btnDollar.className = 'jp-action-btn jp-apply-dollar-btn';
+    btnDollar.textContent = '$1';
+    btnDollar.onclick = () => {
+        getTargetInputs().forEach(input => {
+            applyPrice(input, 1);
+            if (cat) updateNpcWarning(input, resolveItemForPriceInput(input, cat));
 
-    const inputDollar = document.createElement('input');
-    inputDollar.type = 'checkbox';
-    inputDollar.id = 'jp-select-all-dollar';
+            // Only on Add page: set quantity to 1
+            if (onAdd()) {
+                const row = input.closest('li, [class*="row"], .bazaar-item, .item-li');
+                if (row) {
+                    const qtyInput = row.querySelector('input[name="amount"], input[placeholder*="Qty" i]');
+                    if (qtyInput) {
+                        applyPrice(qtyInput, 1);
+                    }
+                }
+            }
+        });
+    };
 
-    const labelDollar = document.createElement('label');
-    labelDollar.htmlFor = 'jp-select-all-dollar';
-    labelDollar.textContent = 'All $1';
+    const btnMarket = document.createElement('button');
+    btnMarket.className = 'jp-action-btn jp-apply-market-btn';
+    btnMarket.textContent = 'Beat';
+    btnMarket.onclick = async () => {
+        const targets = getTargetInputs();
+        if (!targets.length) return;
+        btnMarket.disabled = true;
+        btnMarket.textContent = '...';
+        if (!cat) cat = await fetchCatalog();
 
-    inputDollar.addEventListener('change', () => {
-      const checked = inputDollar.checked;
-      if (checked) {
-        const pctCb = document.getElementById('jp-select-all-pct');
-        if (pctCb) pctCb.checked = false;
-      }
-      document.querySelectorAll('.jp-auto-cb-dollar input').forEach(cb => {
-        if (cb.checked !== checked) {
-          cb.checked = checked;
-          cb.dispatchEvent(new Event('change'));
+        for (const input of targets) {
+            const item = resolveItemForPriceInput(input, cat);
+            if (item?.id) {
+                const low = await fetchMarketPrice(item.id);
+                if (low) {
+                    applyPrice(input, Math.max(1, low - getMarketDiscount()));
+                    updateNpcWarning(input, item);
+                }
+            }
         }
-      });
-    });
+        btnMarket.disabled = false;
+        btnMarket.textContent = 'Beat';
+    };
 
-    cbDollar.appendChild(inputDollar);
-    cbDollar.appendChild(labelDollar);
-
-    row.appendChild(cbPct);
-    row.appendChild(cbDollar);
+    row.append(btnPct, btnDollar, btnMarket);
     document.body.appendChild(row);
   }
 
-  // ---- Create Update button for Manage page ONLY ----
-  function createUpdateButton(){
-    if (document.querySelector('.jp-update-btn')) return;
-    if (onAdd()) return; // Never show on add page
-    if (!onManage()) return; // Only show on manage page
+  function createPctInput(){
+    if (document.querySelector('.jp-pct-box') || (!onAdd() && !onManage())) return;
+    const box = document.createElement('div');
+    box.className = 'jp-pct-box';
+    box.innerHTML = `<label>%</label><input type="number" value="${getSellPct()}">`;
+    box.querySelector('input').onchange = (e) => setSellPct(e.target.value);
+    document.body.appendChild(box);
+  }
 
-    const btn = document.createElement('button');
-    btn.className = 'jp-update-btn';
-    btn.textContent = 'Update Prices';
-    btn.title = 'Update all prices above $1 to current market value %';
+  function ensureCheckboxes() {
+    const inputs = document.querySelectorAll(selPriceInputs);
+    const isAddPage = onAdd();
 
-    btn.addEventListener('click', async () => {
-      try {
-        if (!cat) cat = await fetchCatalog(false);
+    inputs.forEach(input => {
+        const row = input.closest('li, [class*="row"], .bazaar-item, .item-li');
+        if (row && !row.querySelector('.jp-checkbox-wrap')) {
+            const wrap = document.createElement('div');
+            wrap.className = isAddPage ? 'jp-checkbox-wrap jp-checkbox-wrap-add' : 'jp-checkbox-wrap jp-checkbox-wrap-manage';
 
-        const inputs = document.querySelectorAll(selPriceInputs);
-        let updated = 0;
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.className = 'jp-item-checkbox';
+            wrap.appendChild(cb);
 
-        for (const input of inputs) {
-          try {
-            if (!input.offsetParent) continue;
+            // Price icon button - NOW on BOTH Add and Manage pages
+            const priceBtn = document.createElement('button');
+            priceBtn.className = 'jp-price-icon-btn';
+            priceBtn.innerHTML = '$';
+            wrap.appendChild(priceBtn);
 
-            const currentPrice = num(input.value);
-            // Skip $1 items (intentional hot sales)
-            if (currentPrice <= 1) continue;
+            // Add click handler for price button
+            priceBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('$ button clicked, opening popup...');
+                showPricePopup(input, row);
+            });
 
-            const item = resolveItemForPriceInput(input, cat);
-            if (!item || !item.mv) continue;
+            if (isAddPage) {
+                // On Add page: place checkbox wrap AFTER the price input
+                input.parentElement.insertBefore(wrap, input.nextSibling);
 
-            const newPrice = dollars(item.mv * (getSellPct() / 100));
-            if (newPrice > 1) {
-              applyPrice(input, newPrice); // Use proper applyPrice function
-              updated++;
+                // Add double-click handler to quantity input (Add page only)
+                const qtyInput = row.querySelector('input[name="amount"], input[placeholder*="Qty" i], input[placeholder*="Amount" i]');
+                if (qtyInput && !qtyInput.classList.contains('jp-qty-dblclick-added')) {
+                    qtyInput.classList.add('jp-qty-dblclick-added');
+                    qtyInput.addEventListener('dblclick', (e) => {
+                        e.preventDefault();
+                        const amountText = row.querySelector('[class*="amount"], .amount, .count')?.textContent;
+                        if (amountText) {
+                            const maxQty = amountText.replace(/[^0-9]/g, '');
+                            if (maxQty) {
+                                applyPrice(qtyInput, maxQty);
+                                // Visual feedback - flash the input
+                                qtyInput.style.background = '#2a5a2a';
+                                setTimeout(() => {
+                                    qtyInput.style.background = '';
+                                }, 200);
+                            }
+                        }
+                    });
+                }
+            } else {
+                // On Manage page: place after the input-money-group container
+                const moneyGroup = input.closest('.input-money-group, [class*="input-money-group"]');
+                if (moneyGroup && moneyGroup.parentElement) {
+                    moneyGroup.parentElement.insertBefore(wrap, moneyGroup.nextSibling);
+                } else {
+                    // Fallback: place after price input
+                    input.parentElement.insertBefore(wrap, input.nextSibling);
+                }
             }
-          } catch (e) {
-            console.error('Error updating item:', e);
-          }
         }
-
-        if (updated > 0) {
-          btn.textContent = `Updated ${updated}!`;
-          setTimeout(() => {
-            btn.textContent = 'Update Prices';
-          }, 2000);
-        } else {
-          btn.textContent = 'No updates';
-          setTimeout(() => {
-            btn.textContent = 'Update Prices';
-          }, 2000);
-        }
-      } catch (e) {
-        console.error('Update prices error:', e);
-        btn.textContent = 'Error!';
-        setTimeout(() => {
-          btn.textContent = 'Update Prices';
-        }, 2000);
-      }
     });
-
-    document.body.appendChild(btn);
   }
 
-  // ---- Auto checkboxes (two columns: Auto % and $1) ----
-  function attachCheckboxes(priceInput, item){
-    if (!onAdd() || !item) return;
-    if (priceInput.dataset.jpCb === '1') return;
+  async function annotate(){
+    if (!onBazaar() || busy) return;
+    busy = true;
+    try {
+        if (!cat) cat = await fetchCatalog();
+        createPctInput();
+        createActionRow();
+        ensureCheckboxes();
 
-    const container = document.createElement('span');
-    container.className = 'jp-auto-cbs';
-
-    // First checkbox: Auto % pricing
-    const cbPct = document.createElement('span');
-    cbPct.className = 'jp-auto-cb jp-auto-cb-pct';
-    const inputPct = document.createElement('input');
-    inputPct.type = 'checkbox';
-
-    inputPct.addEventListener('change', () => {
-      if (inputPct.checked) {
-        // Uncheck $1 checkbox
-        const dollarCb = container.querySelector('.jp-auto-cb-dollar input');
-        if (dollarCb) dollarCb.checked = false;
-
-        // Apply % price
-        const price = dollars(item.mv * (getSellPct() / 100));
-        applyPrice(priceInput, price);
-      }
-      updateNpcWarning(priceInput, item);
-    });
-
-    cbPct.appendChild(inputPct);
-
-    // Second checkbox: $1 pricing
-    const cbDollar = document.createElement('span');
-    cbDollar.className = 'jp-auto-cb jp-auto-cb-dollar';
-    const inputDollar = document.createElement('input');
-    inputDollar.type = 'checkbox';
-
-    inputDollar.addEventListener('change', () => {
-      if (inputDollar.checked) {
-        // Uncheck Auto % checkbox
-        inputPct.checked = false;
-
-        // Apply $1 price
-        applyPrice(priceInput, 1);
-      } else {
-        // If unchecked and price is $1, clear it
-        if (num(priceInput.value) === 1) {
-          applyPrice(priceInput, '');
-        }
-      }
-      updateNpcWarning(priceInput, item);
-    });
-
-    cbDollar.appendChild(inputDollar);
-
-    container.appendChild(cbPct);
-    container.appendChild(cbDollar);
-
-    priceInput.insertAdjacentElement('afterend', container);
-    priceInput.dataset.jpCb = '1';
-  }
-
-  // ---- NPC warning ----
-  function updateNpcWarning(priceInput, item){
-    if (!item) return;
-
-    const existing = priceInput.parentElement?.querySelector('.jp-npc-warn');
-    if (existing) existing.remove();
-
-    const price = num(priceInput.value);
-
-    // Don't show warning if price is $1 (intentional hot sale)
-    if (price === 1) return;
-
-    if (price > 0 && price < item.sell) {
-      const warn = document.createElement('span');
-      warn.className = 'jp-npc-warn';
-      warn.textContent = `NPC: $${item.sell.toLocaleString()}`;
-
-      const cbContainer = priceInput.parentElement?.querySelector('.jp-auto-cbs');
-      if (cbContainer) cbContainer.insertAdjacentElement('afterend', warn);
-      else priceInput.insertAdjacentElement('afterend', warn);
-    }
-  }
-
-  // ---- Do-Not-Sell ----
-  function attachBlockChip(priceInput, item){
-    if (!onAdd() || !item) return;
-    if (priceInput.dataset.jpx === '1') return;
-
-    const blocked = getBlockedSet();
-    if (!blocked.has(item.id)) return;
-
-    const chip = document.createElement('span');
-    chip.className = 'jpx';
-    chip.textContent = '✖';
-    chip.title = `Do-Not-Sell: ${item.name}`;
-
-    chip.addEventListener('click', () => {
-      alert(`This item is marked Do-Not-Sell: ${item.name}`);
-    });
-
-    priceInput.insertAdjacentElement('afterend', chip);
-
-    const row = priceInput.closest('li, [class*="item"]');
-    row?.classList?.add('jp-blocked-row');
-
-    priceInput.dataset.jpx = '1';
-  }
-
-  // ---- Annotate ----
-  async function annotate(force=false){
-    if (!onBazaar()) return;
-    if (busy && !force) return;
-    busy=true;
-
-    try{
-      if (!cat) cat = await fetchCatalog(false);
-
-      createPctInput();
-
-      // Add page only
-      if (onAdd()) {
-        createSelectAllRow();
-
-        const inputs = document.querySelectorAll(selPriceInputs);
         const blocked = getBlockedSet();
-
-        inputs.forEach(input => {
-          try {
-            if (!input.offsetParent) return;
+        document.querySelectorAll(selPriceInputs).forEach(input => {
             const item = resolveItemForPriceInput(input, cat);
-            if (!item) return;
+            if (item) {
+                updateNpcWarning(input, item);
 
-            attachCheckboxes(input, item);
-            updateNpcWarning(input, item);
-            if (blocked.has(item.id)) attachBlockChip(input, item);
-          } catch (e) {
-            console.error('Error processing input:', e);
-          }
+                // Add percentage badge on Manage page
+                if (onManage()) {
+                    addPricePctBadge(input, item);
+                }
+
+                if (blocked.has(item.id) && !input.parentElement.querySelector('.jpx')) {
+                    const span = document.createElement('span');
+                    span.className = 'jpx'; span.textContent = '✖';
+                    input.after(span);
+                    input.closest('li, [class*="row"]')?.classList.add('jp-blocked-row');
+                }
+            }
         });
-      }
-
-      // Manage page only
-      if (onManage()) {
-        createUpdateButton();
-      }
-
-    } catch (e) {
-      console.error('Annotate error:', e);
-    } finally {
-      busy = false;
-    }
+    } finally { busy = false; }
   }
 
-  // ---- Live updates ----
-  document.addEventListener('input', async (e) => {
-    const el = e.target;
-    if (!el || el.tagName !== 'INPUT' || !el.classList.contains('input-money')) return;
-    if (!onBazaar()) return;
+  function addPricePctBadge(priceInput, item) {
+    const row = priceInput.closest('li, [class*="row"], .bazaar-item, .item-li');
+    if (!row) return;
 
-    if (!cat) cat = await fetchCatalog(false);
-    const item = resolveItemForPriceInput(el, cat);
-    if (item) updateNpcWarning(el, item);
+    // Find the bonuses div
+    const bonusesDiv = row.querySelector('[class*="bonuses___"]');
+    if (!bonusesDiv) return;
+
+    // Don't add if already exists
+    if (bonusesDiv.querySelector('.jp-price-pct')) return;
+
+    const currentPrice = num(priceInput.value);
+if (!currentPrice || !item.mv || currentPrice === 1) return;
+
+    // Calculate percentage difference from MV
+    const pctDiff = ((currentPrice - item.mv) / item.mv) * 100;
+    const pctRounded = Math.round(pctDiff);
+
+    // Create badge
+    const badge = document.createElement('span');
+    badge.className = 'jp-price-pct';
+
+    // Determine color based on percentage
+    if (pctRounded > 0) {
+      badge.classList.add('negative'); // Above MV = red
+      badge.innerHTML = `▲${pctRounded}%`;
+    } else if (pctRounded < 0) {
+      badge.classList.add('positive'); // Below MV = green
+      badge.innerHTML = `▼${Math.abs(pctRounded)}%`;
+    } else {
+      badge.classList.add('neutral');
+      badge.innerHTML = `●0%`;
+    }
+
+    // Insert into bonuses div
+    bonusesDiv.appendChild(badge);
+
+    // Update badge when price changes
+    priceInput.addEventListener('input', () => {
+      const newPrice = num(priceInput.value);
+      if (!newPrice) return;
+
+      const newPct = ((newPrice - item.mv) / item.mv) * 100;
+      const newRounded = Math.round(newPct);
+
+      badge.className = 'jp-price-pct';
+
+      if (newRounded > 0) {
+        badge.classList.add('negative');
+        badge.innerHTML = `▲${newRounded}%`;
+      } else if (newRounded < 0) {
+        badge.classList.add('positive');
+        badge.innerHTML = `▼${Math.abs(newRounded)}%`;
+      } else {
+        badge.classList.add('neutral');
+        badge.innerHTML = `●0%`;
+      }
+    });
+  }
+
+  document.addEventListener('focus', (e) => {
+    if (e.target.classList?.contains('input-money')) lastFocusedInput = e.target;
   }, true);
 
-  // ---- Observer ----
-  let timeout = null;
-  const mo = new MutationObserver(() => {
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(() => annotate(), 200);
-  });
+  const mo = new MutationObserver(() => annotate());
   mo.observe(document.documentElement, {childList:true, subtree:true});
 
   window.addEventListener('hashchange', () => {
-    // Clean up elements when on wrong pages
-    if (!onAdd() && !onManage()) {
-      // On main bazaar or other player's bazaar - remove all elements
+      document.querySelector('.jp-action-row')?.remove();
       document.querySelector('.jp-pct-box')?.remove();
-      document.querySelector('.jp-select-all-row')?.remove();
-      document.querySelector('.jp-update-btn')?.remove();
-    } else if (onAdd()) {
-      // On add page - remove manage elements
-      document.querySelector('.jp-update-btn')?.remove();
-    } else if (onManage()) {
-      // On manage page - remove add elements
-      document.querySelector('.jp-select-all-row')?.remove();
-    }
-    setTimeout(() => annotate(true), 300);
+      annotate();
   });
 
   setTimeout(() => annotate(), 800);

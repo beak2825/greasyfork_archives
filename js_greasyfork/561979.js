@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Yeni Konular Parlasın
 // @namespace    ---
-// @version      1.0
+// @version      1.1
 // @description  Technopat + DonanımArşivi + Techolay için yeni konuları vurgulama
 // @author		 XanthiN
 // @match        https://forum.donanimarsivi.com/forumlar/*
-// @match        https://www.technopat.net/sosyal/*
-// @match        https://techolay.net/sosyal/*
+// @match        https://www.technopat.net/sosyal/bolum/*
+// @match        https://techolay.net/sosyal/bolum/*
 // @run-at       document-idle
 // @grant        none
 // @license      MIT
@@ -19,7 +19,7 @@
 
     const a = 4 * 60 * 60;
     const b = 24 * 60 * 60;
-    //const c = 48 * 60 * 60;
+    const c = 48 * 60 * 60;
     const now = Math.floor(Date.now() / 1000);
     const host = location.hostname;
 
@@ -51,18 +51,16 @@
 
         if (tarih <= a) {
             item.style.boxShadow =
-                'inset 0 0 0 9999px rgba(255, 0, 0, 0.3)';
+                'inset 0 0 0 9999px rgba(0, 255, 0, 0.3)';
         }
         else if (tarih <= b) {
             item.style.boxShadow =
-                'inset 0 0 0 9999px rgba(255, 50, 0, 0.15)';
+                'inset 0 0 0 9999px rgba(0, 255, 0, 0.15)';
         }
-        /*
         else if (tarih <= c) {
             item.style.boxShadow =
-                'inset 0 0 0 9999px rgba(255, 100, 0, 0.075)';
+                'inset 0 0 0 9999px rgba(0, 255, 0, 0.075)';
         }
-        */
     });
 
 })();

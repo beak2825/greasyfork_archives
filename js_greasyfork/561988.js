@@ -2,7 +2,7 @@
 // @name         中国人民大学 (RUC)  人大研究生系统自动评教助手 - 随机评语/高分一键填报
 // @namespace    https://github.com/AntiO2/RUC-Evaluation-Helper
 // @version      1.0
-// @description  【2026最新版】人大研究生评教 专门为中国人民大学 (RUC) 研究生系统设计的自动评教脚本。一键高分打分，自动填写收获、优点、改进三个维度的开放题，内置150条高质量随机评语，告别重复，提升效率。
+// @description  【2026最新版】专门为中国人民大学 (RUC) 研究生系统设计的自动评教脚本。一键高分打分，自动填写收获、优点、改进三个维度的开放题，内置150条高质量随机评语，告别重复，提升效率。
 // @author       AntiO2
 // @match        *://yjs2.ruc.edu.cn/*
 // @match        *://*.ruc.edu.cn/*

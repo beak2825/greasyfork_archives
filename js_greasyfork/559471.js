@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Wnacg下载按钮恢复
 // @namespace    http://tampermonkey.net/
-// @version      1.9
+// @version      2.0
 // @description  给浏览器无法单独放行广告拦截的，恢复下载按钮。
 // @author       Aloazny
 // @match        *://*.99xmh.*/*
@@ -76,7 +76,7 @@
 
     function blockAds() {
         if (isDownloadPage()) return;
-        ['#btimgid1', '#btmad1', 'script[src$="/js/jads.js"] + ins[id]', 'iframe[width="300"][height="250"]', 'iframe[src*="/herebyad"]', 'iframe[src*="/HereByAD"]', 'div[style*="z-index: 9999"][style*="justify-content: center;"]:not([class]):not([id])', 'a[href][target="_blank"] > img[src*="t4"][src*=".ru/data/t/"]'].forEach(s => document.querySelectorAll(s).forEach(e => e.remove()));
+        ['#btimgid1', '#btmad1', 'script[src$="/js/jads.js"] + ins[id]', 'iframe[width="300"][height="250"]', 'iframe[src*="/smartpop/"]', 'iframe[src*="/herebyad"]', 'iframe[src*="/HereByAD"]', 'div[style*="z-index: 9999"][style*="justify-content: center;"]:not([class]):not([id])', 'a[href][target="_blank"] > img[src*="t4"][src*=".ru/data/t/"]'].forEach(s => document.querySelectorAll(s).forEach(e => e.remove()));
         const killPatterns = [
             /view[_-]?booster\.js/i,
             /\/bn\.js($|\?|#)/i,
@@ -107,20 +107,20 @@
             ['createFixedBottomBannerWithClose', 'addImageAd', 'loadNewPopupAd', 'loadScriptDynamically', 'nbnsfxdm', 'fanwt'].forEach(fn => {
                 try {
                     Object.defineProperty(window, fn, {
-                        value: function() {},
-                        writable: false,
+                        get: () => () => {},
+                        set: () => {},
                         configurable: false
-                    });
-                } catch (e) {}
+                    })
+                } catch {}
             });
         }
         disableAdFunctions();
         const originalOpen = window.open;
-        window.open = function(url, target, features) {
+        window.open = function(url, target, ...features) {
             if (url && !url.includes('wnacg')) {
                 return null;
             }
-            return originalOpen.call(this, url, target, features);
+            return originalOpen.call(this, url, target, ...features);
         };
     }
 

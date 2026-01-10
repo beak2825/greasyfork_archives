@@ -152,6 +152,9 @@
     }
 
     function restoreSearchFromStates(settings) {
+        // settings が渡されていなければロードする (フォールバック)
+        settings = settings || Storage.loadSettings();
+
         const inputField = document.getElementById('query-input');
         if (!inputField) return;
         const states = settings.states;
@@ -261,7 +264,9 @@
         return a;
     }
 
-    function addExternalSearchButtons() {
+    function addExternalSearchButtons(settings) {
+        settings = settings || Storage.loadSettings(); // ★変更: 引数 settings を追加
+
         const currentSites = Storage.loadSettings().externalSites;
         const appendLinks = (targetElement, queryText) => {
             if (!queryText) return;
@@ -287,49 +292,95 @@
     //  Layout Logic (New)
     // -------------------------------------------------------------------------
 
+    // ★追加: 実行中の状態を保持する変数
+    let runtimeLayoutMode = 'list';
+    let runtimeGridColumns = 4;
+
+    // ★追加: 初期化用 (Mainのinitから呼ぶ)
+    function initLayout(settings) {
+        settings = settings || Storage.loadSettings();
+        
+        // ★修正: 同期モードがONのときだけストレージの値をロードする
+        if (settings.syncMode) {
+            runtimeLayoutMode = (settings.ui && settings.ui.layoutMode) || 'list';
+            runtimeGridColumns = (settings.ui && settings.ui.gridColumns) || 4;
+        } else {
+            // 同期OFFならデフォルト値（リスト、4列）で初期化
+            runtimeLayoutMode = 'list';
+            runtimeGridColumns = 4;
+        }
+        
+        // 適用
+        reapplyCurrentLayout();
+    }
+
+    // ★変更: ユーザー操作によるレイアウト変更
     function applyLayout(mode) {
+        // ランタイム値を更新
+        runtimeLayoutMode = mode;
+        
+        // 適用
+        reapplyCurrentLayout();
+
+        // 保存 (Storage側でSyncチェックが入る)
+        if (Storage.updateUI) {
+            Storage.updateUI('layoutMode', mode);
+        }
+    }
+
+    // ★追加: 現在のランタイム設定をDOMに適用する (MutationObserverからも使う)
+    function reapplyCurrentLayout() {
         const container = document.querySelector('.gallery-content');
         if (!container) return;
 
+        // クラスのリセットと適用
         container.classList.remove('layout-grid');
-
-        if (mode === 'grid') {
+        if (runtimeLayoutMode === 'grid') {
             container.classList.add('layout-grid');
-            // グリッドモードになったら列数を適用
+            // グリッド列数の適用
             applyGridColumns();
         }
-
-        if (Storage.updateLayoutMode) {
-            Storage.updateLayoutMode(mode);
-        }
     }
 
-    // ★変更: ターゲットを「消えゆくgallery-content」から「不滅のdocumentElement」に変更
-    function applyGridColumns() {
-        const settings = Storage.loadSettings();
-        const cols = settings.gridColumns || 4;
+    // ★変更: グリッド列数の適用 (ランタイム値 vs ストレージ値の判断)
+    function applyGridColumns(settings) {
+        settings = settings || Storage.loadSettings();
         
-        // <html>タグにCSS変数をセットする。
-        // これにより、gallery-contentがHitomiによって書き換えられても、
-        // 設定値は維持され、自動的に継承される。
-        document.documentElement.style.setProperty('--grid-cols', String(cols));
+        // 同期ONならストレージの値を正としてランタイムを更新
+        // 同期OFFならランタイム値を維持（何もしない）
+        if (settings.syncMode) {
+            runtimeGridColumns = (settings.ui && settings.ui.gridColumns) || 4;
+        }
+        
+        // CSS変数をセット (常に runtimeGridColumns を使う)
+        document.documentElement.style.setProperty('--grid-cols', String(runtimeGridColumns));
     }
 
+    // ★変更: ユーザー操作による列数変更
     function changeGridColumns(cols) {
         const val = parseInt(cols, 10);
         
-        // 永続化
-        if (Storage.updateGridColumns) {
-            Storage.updateGridColumns(val);
-        }
+        // ランタイム値を更新
+        runtimeGridColumns = val;
         
-        // 即時反映 (applyGridColumnsを呼ぶだけでOK)
-        applyGridColumns();
+        // 即時反映
+        document.documentElement.style.setProperty('--grid-cols', String(val));
+        
+        // 保存 (Storage側でSyncチェックが入る)
+        if (Storage.updateUI) {
+            Storage.updateUI('gridColumns', val);
+        }
+    }
+
+    // ★追加: 同期OFF切り替え時のリセット
+    function resetLayoutSettings() {
+        runtimeLayoutMode = 'list';
+        reapplyCurrentLayout();
     }
 
     // ★変更: ブラックリストに含まれるタグをハイライト＆先頭へ移動＆強制表示する関数
-    function highlightExcludedTags() {
-        const settings = Storage.loadSettings();
+    function highlightExcludedTags(settings) {
+        settings = settings || Storage.loadSettings();
         const excludeList = settings.excludeList;
         if (!excludeList || excludeList.length === 0) return;
 
@@ -377,51 +428,146 @@
         });
     }
 
+    // ★新規追加: 強力なブラックリスト適用関数 (要素ごと削除/非表示)
+    function applyStrongBlock(settings) {
+        settings = settings || Storage.loadSettings();
+        
+        // ★追加: 無効化されている場合は、クラスを削除して終了
+        const isEnabled = (settings.ui && settings.ui.strongBlockEnabled !== undefined) 
+                          ? settings.ui.strongBlockEnabled 
+                          : true; // デフォルトtrue
+
+        if (!isEnabled) {
+            document.querySelectorAll('.htf-hidden-strong').forEach(el => {
+                el.classList.remove('htf-hidden-strong');
+            });
+            return;
+        }
+
+        const blockList = settings.strongBlockList;
+        
+        // リストが空でも、過去に非表示にしたものを再表示するために処理は続行する
+        const blockSet = new Set(blockList || []);
+        
+        const galleries = document.querySelectorAll('.gallery-content > div');
+
+        galleries.forEach(gallery => {
+            // タグ情報の取得 (highlightExcludedTagsと同様のロジック)
+            const ul = gallery.querySelector('.relatedtags ul');
+            let shouldHide = false;
+
+            if (ul && blockSet.size > 0) {
+                const links = ul.querySelectorAll('a');
+                for (const a of links) {
+                    const href = decodeURIComponent(a.getAttribute('href'));
+                    const match = href.match(/\/tag\/(.+)-all\.html/);
+                    if (match) {
+                        const tagName = match[1];
+                        const tagNameUnderscored = tagName.replace(/ /g, '_');
+                        
+                        // マッチするか確認
+                        if (blockSet.has(tagName) || 
+                            blockSet.has(tagNameUnderscored) || 
+                            blockSet.has(`tag:${tagName}`) || 
+                            blockSet.has(`tag:${tagNameUnderscored}`)) {
+                            shouldHide = true;
+                            break; // 1つでもヒットすれば非表示確定
+                        }
+                    }
+                }
+            }
+
+            // クラスの着脱で表示/非表示を切り替え
+            if (shouldHide) {
+                gallery.classList.add('htf-hidden-strong');
+            } else {
+                gallery.classList.remove('htf-hidden-strong');
+            }
+        });
+    }
+
     // -------------------------------------------------------------------------
     //  Thumbnail Resizer Logic (Detail Page)
     // -------------------------------------------------------------------------
 
-    // 初期化: 元のサイズを記録し、保存された倍率を適用する
-    function initThumbnailResizer() {
+    // ★追加: 実行中の倍率を保持する変数 (初期値 1.0)
+    // これにより、同期OFF中に操作した一時的な値を維持できる
+    let runtimeScale = 1.0;
+
+    function initThumbnailResizer(settings) {
         const containers = document.querySelectorAll('.thumbnail-container');
         if (containers.length === 0) return;
         
         containers.forEach(div => {
-            // 既に記録済みならスキップ
             if (div.dataset.origW) return;
-            
-            // HTMLのstyle属性から元のサイズを取得 (例: width: 96.5px)
             const wStr = div.style.width;
             const hStr = div.style.height;
-            
             if (wStr && hStr) {
                 div.dataset.origW = parseFloat(wStr);
                 div.dataset.origH = parseFloat(hStr);
             }
         });
         
-        // 保存された設定を適用
-        const settings = Storage.loadSettings();
-        const scale = settings.thumbnailScale || 1.0;
-        applyThumbnailScale(scale);
+        settings = settings || Storage.loadSettings();
+        
+        // ★修正: 適用する倍率の決定ロジック
+        let targetScale;
+        
+        if (settings.syncMode) {
+            // 同期ON: ストレージの設定値を優先し、ランタイム値もそれに更新する
+            // (OFF -> ON の復元時や、リロード時に保存値を適用するため)
+            targetScale = (settings.ui && settings.ui.thumbnailScale) || 1.0;
+            runtimeScale = targetScale; 
+        } else {
+            // 同期OFF: ストレージの値は無視し、現在のランタイム値を維持する
+            // (これにより、MutationObserverで再描画されても、操作中の値が勝手に戻らなくなる)
+            targetScale = runtimeScale;
+        }
+        
+        applyThumbnailScale(targetScale);
+        syncThumbnailSliderUI(targetScale);
     }
 
-    // 倍率を適用する関数
     function applyThumbnailScale(scale) {
+        // ★追加: 適用された値をランタイム値として記憶
+        runtimeScale = parseFloat(scale);
+
         const containers = document.querySelectorAll('.thumbnail-container');
         containers.forEach(div => {
             const w = parseFloat(div.dataset.origW);
             const h = parseFloat(div.dataset.origH);
             
             if (!isNaN(w) && !isNaN(h)) {
-                // 元の比率を維持したまま倍率を掛ける
                 div.style.width = (w * scale) + 'px';
                 div.style.height = (h * scale) + 'px';
             }
         });
     }
 
-    // グローバル公開に追加
+    function syncThumbnailSliderUI(scale) {
+        const slider = document.querySelector('.thumbnail-slider');
+        const valDisplay = document.querySelector('.thumbnail-scale-val');
+        
+        if (slider) {
+            let val;
+            if (scale < 1.0) {
+                val = Math.log2(scale);
+            } else {
+                val = Math.log(scale) / Math.log(3.4);
+            }
+            slider.value = val;
+        }
+        // valDisplay (倍率表示) は削除済みの仕様なら不要ですが、もし残っているならここで更新
+    }
+
+    // ★修正: リセット時はランタイム値も1.0に戻す
+    function resetThumbnailSlider() {
+        runtimeScale = 1.0;
+        applyThumbnailScale(1.0);
+        syncThumbnailSliderUI(1.0);
+    }
+
+    // グローバル公開
     window.HitomiFilterLogic = {
         toggleState,
         toggleLanguage,
@@ -438,10 +584,15 @@
         addExternalSearchButtons,
         applyLayout,
         changeGridColumns,
-        applyGridColumns, // ★追加: Mainスクリプトから呼べるようにする
-        highlightExcludedTags, // ★追加
-        initThumbnailResizer, // ★追加
-        applyThumbnailScale   // ★追加
+        applyGridColumns,
+        highlightExcludedTags,
+        applyStrongBlock, // ★追加
+        initThumbnailResizer,
+        applyThumbnailScale,
+        syncThumbnailSliderUI,
+        resetThumbnailSlider,
+        initLayout,           // ★追加
+        reapplyCurrentLayout, // ★追加
+        resetLayoutSettings   // ★追加
     };
-    
 })(window);

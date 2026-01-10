@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Hanime按钮添加
 // @namespace    https://www.tampermonkey.net/
-// @version      1.7
+// @version      1.9
 // @description  添加镜像网站的Hanime缺失的搜索框和评论浮动切换按钮。
 // @author       Grok && Aloazny
 // @match        https://www.hanime1-me.icu/*
@@ -164,10 +164,10 @@
             'script[async="true"][src]',
             'script[src*="view_booster"], script[src*="/on.js"], script[src*="/bn.js"]',
             'script[src*="/eda437"], script[src*="orbsrv.com"]',
-            '#btimgid1, #btmad1, #more-related-ad, #ad-wrapper, #bottom-ads',
+            '#btimgid1, #btmad1, #mobile-ad, #more-related-ad, #ad-wrapper, #bottom-ads',
             'iframe[src*="/HereByAD"], iframe[src*="/herebyad"], iframe[style*="z-index: 2147483647;"], iframe[width="300"][height="250"]',
-            'iframe[src*="horribletrainer.com"], iframe[src*="orbsrv"], iframe[class="▶"], iframe[src*="exoclick"]',
-            'ins[data-zoneid], div[class="▶"], [class*="juicyads"]',
+            'iframe[src*="horribletrainer.com"], iframe[src*="orbsrv"], iframe[class="▶"], iframe[src*="exoclick"], iframe[src*="/smartpop/"]',
+            'ins[data-zoneid], div[class="▶"], [class*="exoclick"], [class*="juicyads"]',
             'div.hidden-md.hidden-lg[style*="display: inline-block; overflow-y: hidden;"]'
         ];
 
@@ -195,11 +195,11 @@
         };
 
         const originalOpen = window.open;
-        window.open = function(url, target, features) {
+        window.open = function(url, target, ...features) {
             if (url && !url.includes('hanime')) {
                 return null;
             }
-            return originalOpen.call(this, url, target, features);
+            return originalOpen.call(this, url, target, ...features);
         };
 
         document.addEventListener('click', function(e) {

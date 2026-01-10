@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Resolucion inteligente GDriveLatinoHD - Sistema Intuitivo
 // @namespace    Violentmonkey Scripts
-// @version      1.0
+// @version      1.1
 // @description  Sistema intuitivo de filtrado por capas: Resolución → Calidad
 // @match        *://gdrivelatinohd.net/*
 // @grant        none
@@ -601,7 +601,7 @@ resoluciones.forEach(regla => {
     const container = document.createElement('div');
 
     const titulo = document.createElement('h4');
-    titulo.textContent = 'Orden de Resolución (arrastra para cambiar prioridad)';
+    titulo.textContent = 'Orden de Resolución (usa flechas para cambiar prioridad)';
     titulo.style.cssText = `
       margin: 0 0 15px 0;
       font-size: 14px;
@@ -628,66 +628,13 @@ resoluciones.forEach(regla => {
       margin-bottom: 15px;
     `;
 
+    // Crear contenedor para los items
     configGlobal.ordenResoluciones.forEach((claveRes, index) => {
       const resolucion = gruposResolucion.find(r => r.clave === claveRes);
       if (!resolucion) return;
 
-      const item = document.createElement('div');
-      item.dataset.resolucion = claveRes;
-      item.draggable = true;
-      item.style.cssText = `
-        display: flex;
-        align-items: center;
-        padding: 12px;
-        margin-bottom: 8px;
-        background: #2a2a2a;
-        border: 1px solid #555;
-        border-radius: 8px;
-        cursor: move;
-        user-select: none;
-        transition: all 0.2s ease;
-      `;
-
-      const numero = document.createElement('div');
-      numero.textContent = index + 1;
-      numero.style.cssText = `
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #444;
-        color: white;
-        border-radius: 50%;
-        font-weight: bold;
-        font-size: 13px;
-        margin-right: 12px;
-      `;
-
-      const nombre = document.createElement('span');
-      nombre.textContent = resolucion.nombre;
-      nombre.style.cssText = `
-        flex: 1;
-        color: white;
-        font-weight: 500;
-        font-size: 14px;
-      `;
-
-      const desc = document.createElement('span');
-      desc.textContent = resolucion.descripcion;
-      desc.style.cssText = `
-        font-size: 11px;
-        color: #888;
-        margin-left: 10px;
-      `;
-
-      item.appendChild(numero);
-      item.appendChild(nombre);
-      item.appendChild(desc);
+      const item = crearItemResolucion(resolucion, index);
       lista.appendChild(item);
-
-      // Eventos de arrastre
-      agregarEventosArrastre(item, claveRes, 'resoluciones');
     });
 
     container.appendChild(titulo);
@@ -720,11 +667,169 @@ resoluciones.forEach(regla => {
     return container;
   }
 
+  function crearItemResolucion(resolucion, index) {
+    const item = document.createElement('div');
+    item.dataset.resolucion = resolucion.clave;
+    item.style.cssText = `
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      margin-bottom: 8px;
+      background: #2a2a2a;
+      border: 1px solid #555;
+      border-radius: 8px;
+      user-select: none;
+      transition: all 0.2s ease;
+    `;
+
+    // Número de posición
+    const numero = document.createElement('div');
+    numero.textContent = index + 1;
+    numero.style.cssText = `
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #444;
+      color: white;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 13px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    `;
+
+    // Contenedor de información
+    const infoContainer = document.createElement('div');
+    infoContainer.style.cssText = `
+      flex: 1;
+      min-width: 0;
+    `;
+
+    const nombre = document.createElement('div');
+    nombre.textContent = resolucion.nombre;
+    nombre.style.cssText = `
+      color: white;
+      font-weight: 500;
+      font-size: 14px;
+      margin-bottom: 4px;
+    `;
+
+    const desc = document.createElement('div');
+    desc.textContent = resolucion.descripcion;
+    desc.style.cssText = `
+      font-size: 11px;
+      color: #888;
+    `;
+
+    infoContainer.appendChild(nombre);
+    infoContainer.appendChild(desc);
+
+    // Contenedor de flechas
+    const flechasContainer = document.createElement('div');
+    flechasContainer.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-left: 10px;
+      flex-shrink: 0;
+    `;
+
+    // Flecha arriba (solo mostrar si no es el primero)
+    if (index > 0) {
+      const flechaArriba = document.createElement('button');
+      flechaArriba.innerHTML = '↑';
+      flechaArriba.title = 'Subir prioridad';
+      flechaArriba.style.cssText = `
+        width: 30px;
+        height: 25px;
+        background: #444;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      `;
+
+      flechaArriba.addEventListener('mouseenter', () => {
+        flechaArriba.style.background = '#555';
+      });
+
+      flechaArriba.addEventListener('mouseleave', () => {
+        flechaArriba.style.background = '#444';
+      });
+
+      flechaArriba.addEventListener('click', (e) => {
+        e.stopPropagation();
+        moverResolucionArriba(resolucion.clave);
+      });
+
+      flechasContainer.appendChild(flechaArriba);
+    } else {
+      // Espaciador para mantener alineación
+      const espaciador = document.createElement('div');
+      espaciador.style.cssText = 'width: 30px; height: 25px;';
+      flechasContainer.appendChild(espaciador);
+    }
+
+    // Flecha abajo (solo mostrar si no es el último)
+    if (index < configGlobal.ordenResoluciones.length - 1) {
+      const flechaAbajo = document.createElement('button');
+      flechaAbajo.innerHTML = '↓';
+      flechaAbajo.title = 'Bajar prioridad';
+      flechaAbajo.style.cssText = `
+        width: 30px;
+        height: 25px;
+        background: #444;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      `;
+
+      flechaAbajo.addEventListener('mouseenter', () => {
+        flechaAbajo.style.background = '#555';
+      });
+
+      flechaAbajo.addEventListener('mouseleave', () => {
+        flechaAbajo.style.background = '#444';
+      });
+
+      flechaAbajo.addEventListener('click', (e) => {
+        e.stopPropagation();
+        moverResolucionAbajo(resolucion.clave);
+      });
+
+      flechasContainer.appendChild(flechaAbajo);
+    } else {
+      // Espaciador para mantener alineación
+      const espaciador = document.createElement('div');
+      espaciador.style.cssText = 'width: 30px; height: 25px;';
+      flechasContainer.appendChild(espaciador);
+    }
+
+    item.appendChild(numero);
+    item.appendChild(infoContainer);
+    item.appendChild(flechasContainer);
+
+    return item;
+  }
+
   function crearContenidoCalidades() {
     const container = document.createElement('div');
 
     const titulo = document.createElement('h4');
-    titulo.textContent = 'Orden de Calidad (arrastra para cambiar prioridad)';
+    titulo.textContent = 'Orden de Calidad (usa flechas para cambiar prioridad)';
     titulo.style.cssText = `
       margin: 0 0 15px 0;
       font-size: 14px;
@@ -751,70 +856,13 @@ resoluciones.forEach(regla => {
       margin-bottom: 15px;
     `;
 
-    // Crear items ordenables
+    // Crear contenedor para los items
     configGlobal.ordenCalidades.forEach((claveGrupo, index) => {
       const grupo = gruposCalidad.find(g => g.clave === claveGrupo);
       if (!grupo) return;
 
-      const item = document.createElement('div');
-      item.dataset.grupo = claveGrupo;
-      item.draggable = true;
-      item.style.cssText = `
-        display: flex;
-        align-items: center;
-        padding: 12px;
-        margin-bottom: 8px;
-        background: #2a2a2a;
-        border: 1px solid #555;
-        border-radius: 8px;
-        cursor: move;
-        user-select: none;
-        transition: all 0.2s ease;
-      `;
-
-      // Número de prioridad
-      const numero = document.createElement('div');
-      numero.textContent = index + 1;
-      numero.style.cssText = `
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #444;
-        color: white;
-        border-radius: 50%;
-        font-weight: bold;
-        font-size: 13px;
-        margin-right: 12px;
-      `;
-
-      // Nombre con color
-      const nombre = document.createElement('span');
-      nombre.textContent = grupo.nombre;
-      nombre.style.cssText = `
-        flex: 1;
-        color: ${grupo.color};
-        font-weight: 500;
-        font-size: 14px;
-      `;
-
-      // Descripción
-      const desc = document.createElement('span');
-      desc.textContent = grupo.descripcion;
-      desc.style.cssText = `
-        font-size: 11px;
-        color: #888;
-        margin-left: 10px;
-      `;
-
-      item.appendChild(numero);
-      item.appendChild(nombre);
-      item.appendChild(desc);
+      const item = crearItemCalidad(grupo, index);
       lista.appendChild(item);
-
-      // Eventos de arrastre
-      agregarEventosArrastre(item, claveGrupo, 'calidades');
     });
 
     container.appendChild(titulo);
@@ -848,6 +896,164 @@ resoluciones.forEach(regla => {
     return container;
   }
 
+  function crearItemCalidad(grupo, index) {
+    const item = document.createElement('div');
+    item.dataset.grupo = grupo.clave;
+    item.style.cssText = `
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      margin-bottom: 8px;
+      background: #2a2a2a;
+      border: 1px solid #555;
+      border-radius: 8px;
+      user-select: none;
+      transition: all 0.2s ease;
+    `;
+
+    // Número de posición
+    const numero = document.createElement('div');
+    numero.textContent = index + 1;
+    numero.style.cssText = `
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #444;
+      color: white;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 13px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    `;
+
+    // Contenedor de información
+    const infoContainer = document.createElement('div');
+    infoContainer.style.cssText = `
+      flex: 1;
+      min-width: 0;
+    `;
+
+    const nombre = document.createElement('div');
+    nombre.textContent = grupo.nombre;
+    nombre.style.cssText = `
+      color: ${grupo.color};
+      font-weight: 500;
+      font-size: 14px;
+      margin-bottom: 4px;
+    `;
+
+    const desc = document.createElement('div');
+    desc.textContent = grupo.descripcion;
+    desc.style.cssText = `
+      font-size: 11px;
+      color: #888;
+    `;
+
+    infoContainer.appendChild(nombre);
+    infoContainer.appendChild(desc);
+
+    // Contenedor de flechas
+    const flechasContainer = document.createElement('div');
+    flechasContainer.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-left: 10px;
+      flex-shrink: 0;
+    `;
+
+    // Flecha arriba (solo mostrar si no es el primero)
+    if (index > 0) {
+      const flechaArriba = document.createElement('button');
+      flechaArriba.innerHTML = '↑';
+      flechaArriba.title = 'Subir prioridad';
+      flechaArriba.style.cssText = `
+        width: 30px;
+        height: 25px;
+        background: #444;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      `;
+
+      flechaArriba.addEventListener('mouseenter', () => {
+        flechaArriba.style.background = '#555';
+      });
+
+      flechaArriba.addEventListener('mouseleave', () => {
+        flechaArriba.style.background = '#444';
+      });
+
+      flechaArriba.addEventListener('click', (e) => {
+        e.stopPropagation();
+        moverCalidadArriba(grupo.clave);
+      });
+
+      flechasContainer.appendChild(flechaArriba);
+    } else {
+      // Espaciador para mantener alineación
+      const espaciador = document.createElement('div');
+      espaciador.style.cssText = 'width: 30px; height: 25px;';
+      flechasContainer.appendChild(espaciador);
+    }
+
+    // Flecha abajo (solo mostrar si no es el último)
+    if (index < configGlobal.ordenCalidades.length - 1) {
+      const flechaAbajo = document.createElement('button');
+      flechaAbajo.innerHTML = '↓';
+      flechaAbajo.title = 'Bajar prioridad';
+      flechaAbajo.style.cssText = `
+        width: 30px;
+        height: 25px;
+        background: #444;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+      `;
+
+      flechaAbajo.addEventListener('mouseenter', () => {
+        flechaAbajo.style.background = '#555';
+      });
+
+      flechaAbajo.addEventListener('mouseleave', () => {
+        flechaAbajo.style.background = '#444';
+      });
+
+      flechaAbajo.addEventListener('click', (e) => {
+        e.stopPropagation();
+        moverCalidadAbajo(grupo.clave);
+      });
+
+      flechasContainer.appendChild(flechaAbajo);
+    } else {
+      // Espaciador para mantener alineación
+      const espaciador = document.createElement('div');
+      espaciador.style.cssText = 'width: 30px; height: 25px;';
+      flechasContainer.appendChild(espaciador);
+    }
+
+    item.appendChild(numero);
+    item.appendChild(infoContainer);
+    item.appendChild(flechasContainer);
+
+    return item;
+  }
+
   function crearContenidoInstrucciones() {
     const container = document.createElement('div');
 
@@ -879,9 +1085,16 @@ resoluciones.forEach(regla => {
         <li>Dentro de esa resolución, selecciona la mejor calidad</li>
       </ul>
 
+      <p style="margin: 0 0 10px 0;"><strong>⬆️⬇️ Cómo usar las flechas:</strong></p>
+      <ul style="margin: 0 0 10px 0; padding-left: 20px;">
+        <li>Usa las flechas <strong>↑</strong> y <strong>↓</strong> para cambiar el orden de prioridad</li>
+        <li>Las flechas solo aparecen cuando el movimiento es posible</li>
+        <li>El número indica la posición actual (1 = máxima prioridad)</li>
+      </ul>
+
       <p style="margin: 0 0 10px 0;"><strong>⚙️ Configuración básica:</strong></p>
       <ul style="margin: 0 0 10px 0; padding-left: 20px;">
-        <li><strong>Resoluciones:</strong> Ordena de mayor a menor prioridad (arrastra los elementos)</li>
+        <li><strong>Resoluciones:</strong> Ordena de mayor a menor prioridad</li>
         <li><strong>Calidades:</strong> Define qué tipo de fuente prefieres dentro de cada resolución</li>
         <li><strong>SDR > HDR:</strong> Prioriza versiones con <strong>"SDR" en el nombre</strong> sobre HDR</li>
         <li><strong>Ver Todo:</strong> Muestra todas las opciones sin atenuar para comparar</li>
@@ -893,14 +1106,6 @@ resoluciones.forEach(regla => {
         <li>Ejemplo: "WEB-DL 1080p SDR" tendrá prioridad sobre "WEB-DL 1080p HDR10"</li>
         <li>Las versiones sin etiqueta (ej: "WEB-DL 1080p") no tendrán prioridad sobre HDR</li>
         <li><strong>Útil para:</strong> Hardware que no soporta bien HDR o cuando prefieres versiones SDR explícitas</li>
-      </ul>
-
-      <p style="margin: 0 0 10px 0;"><strong>🔧 Situaciones especiales:</strong></p>
-      <ul style="margin: 0 0 10px 0; padding-left: 20px;">
-        <li><strong>Películas con múltiples versiones:</strong> El script agrupa por título y selecciona la mejor combinación</li>
-        <li><strong>Versiones HDR/SDR:</strong> "SDR > HDR" solo prioriza versiones con etiqueta SDR explícita</li>
-        <li><strong>Comparación:</strong> Usa "Ver Todo" para ver todas las opciones disponibles</li>
-        <li><strong>Reinicio:</strong> Cada pestaña tiene botón para restaurar valores por defecto</li>
       </ul>
 
       <p style="margin: 0; font-size: 11px; color: #aaa; border-top: 1px solid #444; padding-top: 10px;">
@@ -915,6 +1120,59 @@ resoluciones.forEach(regla => {
     return container;
   }
 
+  // FUNCIONES PARA MOVER ELEMENTOS CON FLECHAS
+  function moverResolucionArriba(claveRes) {
+    const index = configGlobal.ordenResoluciones.indexOf(claveRes);
+    if (index > 0) {
+      // Intercambiar con el elemento anterior
+      [configGlobal.ordenResoluciones[index - 1], configGlobal.ordenResoluciones[index]] =
+      [configGlobal.ordenResoluciones[index], configGlobal.ordenResoluciones[index - 1]];
+
+      guardarConfiguracion();
+      actualizarListaResoluciones();
+      resaltarYAtenuar();
+    }
+  }
+
+  function moverResolucionAbajo(claveRes) {
+    const index = configGlobal.ordenResoluciones.indexOf(claveRes);
+    if (index < configGlobal.ordenResoluciones.length - 1) {
+      // Intercambiar con el elemento siguiente
+      [configGlobal.ordenResoluciones[index], configGlobal.ordenResoluciones[index + 1]] =
+      [configGlobal.ordenResoluciones[index + 1], configGlobal.ordenResoluciones[index]];
+
+      guardarConfiguracion();
+      actualizarListaResoluciones();
+      resaltarYAtenuar();
+    }
+  }
+
+  function moverCalidadArriba(claveGrupo) {
+    const index = configGlobal.ordenCalidades.indexOf(claveGrupo);
+    if (index > 0) {
+      // Intercambiar con el elemento anterior
+      [configGlobal.ordenCalidades[index - 1], configGlobal.ordenCalidades[index]] =
+      [configGlobal.ordenCalidades[index], configGlobal.ordenCalidades[index - 1]];
+
+      guardarConfiguracion();
+      actualizarListaCalidades();
+      resaltarYAtenuar();
+    }
+  }
+
+  function moverCalidadAbajo(claveGrupo) {
+    const index = configGlobal.ordenCalidades.indexOf(claveGrupo);
+    if (index < configGlobal.ordenCalidades.length - 1) {
+      // Intercambiar con el elemento siguiente
+      [configGlobal.ordenCalidades[index], configGlobal.ordenCalidades[index + 1]] =
+      [configGlobal.ordenCalidades[index + 1], configGlobal.ordenCalidades[index]];
+
+      guardarConfiguracion();
+      actualizarListaCalidades();
+      resaltarYAtenuar();
+    }
+  }
+
   function actualizarListaResoluciones() {
     const lista = document.getElementById('listaResoluciones');
     if (!lista) return;
@@ -927,62 +1185,8 @@ resoluciones.forEach(regla => {
       const resolucion = gruposResolucion.find(r => r.clave === claveRes);
       if (!resolucion) return;
 
-      const item = document.createElement('div');
-      item.dataset.resolucion = claveRes;
-      item.draggable = true;
-      item.style.cssText = `
-        display: flex;
-        align-items: center;
-        padding: 12px;
-        margin-bottom: 8px;
-        background: #2a2a2a;
-        border: 1px solid #555;
-        border-radius: 8px;
-        cursor: move;
-        user-select: none;
-        transition: all 0.2s ease;
-      `;
-
-      const numero = document.createElement('div');
-      numero.textContent = index + 1;
-      numero.style.cssText = `
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #444;
-        color: white;
-        border-radius: 50%;
-        font-weight: bold;
-        font-size: 13px;
-        margin-right: 12px;
-      `;
-
-      const nombre = document.createElement('span');
-      nombre.textContent = resolucion.nombre;
-      nombre.style.cssText = `
-        flex: 1;
-        color: white;
-        font-weight: 500;
-        font-size: 14px;
-      `;
-
-      const desc = document.createElement('span');
-      desc.textContent = resolucion.descripcion;
-      desc.style.cssText = `
-        font-size: 11px;
-        color: #888;
-        margin-left: 10px;
-      `;
-
-      item.appendChild(numero);
-      item.appendChild(nombre);
-      item.appendChild(desc);
+      const item = crearItemResolucion(resolucion, index);
       lista.appendChild(item);
-
-      // Añadir eventos de arrastre
-      agregarEventosArrastre(item, claveRes, 'resoluciones');
     });
   }
 
@@ -998,122 +1202,8 @@ resoluciones.forEach(regla => {
       const grupo = gruposCalidad.find(g => g.clave === claveGrupo);
       if (!grupo) return;
 
-      const item = document.createElement('div');
-      item.dataset.grupo = claveGrupo;
-      item.draggable = true;
-      item.style.cssText = `
-        display: flex;
-        align-items: center;
-        padding: 12px;
-        margin-bottom: 8px;
-        background: #2a2a2a;
-        border: 1px solid #555;
-        border-radius: 8px;
-        cursor: move;
-        user-select: none;
-        transition: all 0.2s ease;
-      `;
-
-      // Número de prioridad
-      const numero = document.createElement('div');
-      numero.textContent = index + 1;
-      numero.style.cssText = `
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #444;
-        color: white;
-        border-radius: 50%;
-        font-weight: bold;
-        font-size: 13px;
-        margin-right: 12px;
-      `;
-
-      // Nombre con color
-      const nombre = document.createElement('span');
-      nombre.textContent = grupo.nombre;
-      nombre.style.cssText = `
-        flex: 1;
-        color: ${grupo.color};
-        font-weight: 500;
-        font-size: 14px;
-      `;
-
-      // Descripción
-      const desc = document.createElement('span');
-      desc.textContent = grupo.descripcion;
-      desc.style.cssText = `
-        font-size: 11px;
-        color: #888;
-        margin-left: 10px;
-      `;
-
-      item.appendChild(numero);
-      item.appendChild(nombre);
-      item.appendChild(desc);
+      const item = crearItemCalidad(grupo, index);
       lista.appendChild(item);
-
-      // Añadir eventos de arrastre
-      agregarEventosArrastre(item, claveGrupo, 'calidades');
-    });
-  }
-
-  // Función auxiliar para eventos de arrastre
-  function agregarEventosArrastre(item, clave, tipo) {
-    item.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', clave);
-      e.dataTransfer.setData('tipo', tipo);
-      item.style.opacity = '0.5';
-    });
-
-    item.addEventListener('dragend', () => {
-      item.style.opacity = '1';
-    });
-
-    item.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      item.style.background = '#3a3a3a';
-    });
-
-    item.addEventListener('dragleave', () => {
-      item.style.background = '#2a2a2a';
-    });
-
-    item.addEventListener('drop', (e) => {
-      e.preventDefault();
-      item.style.background = '#2a2a2a';
-
-      const draggedClave = e.dataTransfer.getData('text/plain');
-      const draggedTipo = e.dataTransfer.getData('tipo');
-
-      if (draggedClave && draggedClave !== clave && draggedTipo === tipo) {
-        let arrayOrden;
-        if (tipo === 'calidades') {
-          arrayOrden = configGlobal.ordenCalidades;
-        } else {
-          arrayOrden = configGlobal.ordenResoluciones;
-        }
-
-        const oldIndex = arrayOrden.indexOf(draggedClave);
-        const newIndex = arrayOrden.indexOf(clave);
-
-        if (oldIndex > -1 && newIndex > -1) {
-          arrayOrden.splice(oldIndex, 1);
-          arrayOrden.splice(newIndex, 0, draggedClave);
-          guardarConfiguracion();
-
-          // Actualizar la lista correspondiente
-          if (tipo === 'calidades') {
-            actualizarListaCalidades();
-          } else {
-            actualizarListaResoluciones();
-          }
-
-          resaltarYAtenuar();
-        }
-      }
     });
   }
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PP Replacer 🪮
 // @namespace    http://tampermonkey.net/
-// @version      2.3.6
+// @version      2.3.7
 // @description  Instant image replacement for Popmundo. Works on Tampermonkey and Violentmonkey (Mobile).
 // @author       Gemini
 // @match        https://*.popmundo.com/*
@@ -38,7 +38,7 @@
 
         /* kitti */
         .avatar.pointer.idTrigger[style*="https://i.imgur.com/Hn5ojCP.png"] {
-          background: url("https://i.imgur.com/Hn5ojCP.png") no-repeat !important;
+          background: url("http://i.imgur.com/cBIu8ZU.png") no-repeat !important;
           background-size: cover !important;
         }
 
@@ -53,6 +53,7 @@
           background: url("https://i.imgur.com/EtkRmfU.jpeg") no-repeat !important;
           background-size: cover !important;
         }
+
 
 
         /* --- CORTIS --- */

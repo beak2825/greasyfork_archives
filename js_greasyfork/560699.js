@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Torn Trade Helper (Tracker Import)
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.4
 // @description  Scrape Torn trade page, aggregate added items, show panel and POST to Tracker backend to import trades
 // @author       ---
 // @match        https://www.torn.com/trade.php*
@@ -86,31 +86,46 @@
         return Array.from(containers.length ? containers : [document.body]);
     }
 
-    // UI panel
-    const panel = document.createElement('div');
-    panel.id = 'torn-trade-helper-panel';
-    panel.style.cssText = 'position:fixed;right:12px;top:80px;z-index:2147483647;background:rgba(18,18,20,0.95);color:#fff;padding:10px;border-radius:8px;font-family:Arial, sans-serif;min-width:260px;max-width:360px;box-shadow:0 8px 30px rgba(0,0,0,0.6);';
-    panel.innerHTML = `
-        <div style="position:relative;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <strong style="font-size:14px;">Trade Helper</strong>
-            <div style="display:flex;gap:6px;align-items:center">
-                <!-- header-embedded toggle moved out of panel; see insertHeaderToggle() -->
-                <button id="tth-settings-btn" style="background:#333;border:1px solid #444;color:#fff;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:12px;">Settings</button>
-                <button id="tth-collapse-btn" style="background:#222;border:1px solid #444;color:#fff;padding:4px 8px;border-radius:4px;cursor:pointer;">Close</button>
+    // UI panel - reuse existing panel if present to avoid duplicate panels
+    let panel = document.getElementById('torn-trade-helper-panel');
+    if (!panel) {
+        panel = document.createElement('div');
+        panel.id = 'torn-trade-helper-panel';
+        panel.style.cssText = 'position:fixed;right:12px;top:80px;z-index:2147483647;background:rgba(18,18,20,0.95);color:#fff;padding:10px;border-radius:8px;font-family:Arial, sans-serif;min-width:260px;max-width:360px;box-shadow:0 8px 30px rgba(0,0,0,0.6);';
+        panel.innerHTML = `
+            <div style="position:relative;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <strong style="font-size:14px;">Trade Helper</strong>
+                <div style="display:flex;gap:6px;align-items:center">
+                    <!-- header-embedded toggle moved out of panel; see insertHeaderToggle() -->
+                    <button id="tth-settings-btn" style="background:#333;border:1px solid #444;color:#fff;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:12px;">Settings</button>
+                    <button id="tth-collapse-btn" style="background:#222;border:1px solid #444;color:#fff;padding:4px 8px;border-radius:4px;cursor:pointer;">Close</button>
+                </div>
             </div>
-        </div>
-        <div id="tth-body" style="font-size:13px;line-height:1.2;color:#ddd;max-height:320px;overflow:auto;padding-bottom:6px;">Waiting for trade items...</div>
-        <div style="display:flex;gap:8px;margin-top:8px;">
-            <button id="tth-copy" style="flex:1;padding:8px;background:#28a745;border:none;border-radius:6px;color:#fff;cursor:pointer;">Copy Receipt</button>
-            <button id="tth-clear" style="padding:8px;background:#6c757d;border:none;border-radius:6px;color:#fff;cursor:pointer;">Clear</button>
-        </div>
-    `;
-    document.body.appendChild(panel);
+            <div id="tth-body" style="font-size:13px;line-height:1.2;color:#ddd;max-height:320px;overflow:auto;padding-bottom:6px;">Waiting for trade items...</div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+                <button id="tth-copy" style="flex:1;padding:8px;background:#28a745;border:none;border-radius:6px;color:#fff;cursor:pointer;">Copy Receipt</button>
+                <button id="tth-clear" style="padding:8px;background:#6c757d;border:none;border-radius:6px;color:#fff;cursor:pointer;">Clear</button>
+            </div>
+        `;
+        document.body.appendChild(panel);
+    }
 
     const bodyEl = panel.querySelector('#tth-body');
     const importBtn = panel.querySelector('#tth-copy');
     const clearBtn = panel.querySelector('#tth-clear');
     const collapseBtn = panel.querySelector('#tth-collapse-btn');
+
+    // Delegated copy button handler inside the panel
+    panel.addEventListener('click', (ev) => {
+        try {
+            const btn = ev.target.closest && ev.target.closest('.tth-copy-btn');
+            if (btn) {
+                const v = btn.getAttribute('data-val');
+                if (typeof window.tthCopy === 'function') window.tthCopy(JSON.parse(v));
+                else tthCopy(JSON.parse(v));
+            }
+        } catch (e) { /* ignore */ }
+    });
 
     // Observer management so we can pause work when user collapses/hides
     let observers = [];
@@ -453,15 +468,48 @@
 
     function formatMoney(n){ return '$' + (n || 0).toLocaleString(); }
 
+    function tthCopy(val){
+        try{
+            let out = '';
+            if (val === null || val === undefined) out = '';
+            else if (typeof val === 'number') out = val.toLocaleString();
+            else if (typeof val === 'string') {
+                // strip leading $ and surrounding whitespace
+                out = val.replace(/^\s*\$/,'').trim();
+            } else {
+                out = String(val);
+            }
+
+            if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(out).catch(e=>console.warn('tth copy failed', e));
+            }
+            const ta = document.createElement('textarea'); ta.value = out; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+        }catch(e){ console.warn('tth copy error', e); }
+    }
+    // expose to window for inline onclick handlers
+    try{ window.tthCopy = tthCopy; }catch(e){ /* ignore */ }
+
     async function refreshPanelWithPrices(){
         if (!aggregated.items.length){ updatePanel(); return; }
         const { rows, grandTotal, grandMarket, error } = await buildDisplayData();
         const header = `<div style="margin-bottom:6px;color:#9bf;font-size:12px;">Seller: <strong>${escapeHtml(aggregated.seller || 'Unknown')}</strong>${aggregated.timestamp? ' • '+escapeHtml(aggregated.timestamp):''}</div>`;
         const bodyRows = rows.map(r=>{
             const warn = r.adjusted_unit === null ? '<span style="color:#ffc107;margin-left:6px;">⚠️ missing</span>' : '';
-            return `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,0.04);"><div style="flex:1">${escapeHtml(r.qty+'x '+r.name)} ${warn}</div><div style="text-align:right;min-width:160px">${formatMoney(r.total)}<div style="font-size:11px;color:#9ae;">(${formatMoney(r.adjusted_unit||0)}) • MV ${formatMoney(r.base_unit||0)}</div></div></div>`;
+            const tot = r.total || 0;
+            const unit = r.adjusted_unit || 0;
+            const mv = r.base_unit || 0;
+            return `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,0.04);">
+                        <div style="flex:1">${escapeHtml(r.qty+'x '+r.name)} ${warn}</div>
+                        <div style="text-align:right;min-width:160px">
+                            ${formatMoney(tot)} <button class="tth-copy-btn" data-val=${JSON.stringify(tot)} title="Copy total" style="margin-left:6px;font-size:12px;padding:2px 6px;">📋</button>
+                            <div style="font-size:11px;color:#9ae;">(${formatMoney(unit)}) <button class="tth-copy-btn" data-val=${JSON.stringify(unit)} title="Copy unit price" style="margin-left:6px;font-size:11px;padding:2px 6px;">📋</button> • MV ${formatMoney(mv)} <button class="tth-copy-btn" data-val=${JSON.stringify(mv)} title="Copy market value" style="margin-left:6px;font-size:11px;padding:2px 6px;">📋</button></div>
+                        </div>
+                    </div>`;
         }).join('');
-        const totals = `<div style="margin-top:8px;border-top:1px solid rgba(255,255,255,0.04);padding-top:8px;color:#ddd;font-size:13px;"><div style="display:flex;justify-content:space-between;"><div>Value Total</div><div>${formatMoney(grandTotal)}</div></div><div style="display:flex;justify-content:space-between;margin-top:4px;"><div>Market Value Total</div><div>${formatMoney(grandMarket)}</div></div></div>`;
+        const totals = `<div style="margin-top:8px;border-top:1px solid rgba(255,255,255,0.04);padding-top:8px;color:#ddd;font-size:13px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;"><div>Value Total</div><div>${formatMoney(grandTotal)} <button class=\"tth-copy-btn\" data-val=${JSON.stringify(grandTotal)} title=\"Copy total value\" style=\"margin-left:8px;font-size:12px;padding:4px 6px;\">📋</button></div></div>
+                            <div style="display:flex;justify-content:space-between;margin-top:4px;align-items:center;"><div>Market Value Total</div><div>${formatMoney(grandMarket)} <button class=\"tth-copy-btn\" data-val=${JSON.stringify(grandMarket)} title=\"Copy market value total\" style=\"margin-left:8px;font-size:12px;padding:4px 6px;\">📋</button></div></div>
+                        </div>`;
         let errHtml = '';
         if (error) errHtml = `<div style="color:#ffc107;margin-top:8px;font-size:12px;">⚠️ Pricelist fetch error: ${escapeHtml(String(error))}</div>`;
         bodyEl.innerHTML = header + bodyRows + totals + errHtml;
@@ -493,18 +541,28 @@
             if (!logged) { throw new Error('Authentication failed. Please configure valid admin credentials in Settings.'); }
             const { rows, grandTotal } = await buildDisplayData();
             // build trade items for server
-            const tradeItems = rows.map(r => ({
-                name: r.name,
-                extra_name: '',
-                item_id: null,
-                quantity: Number(r.qty),
-                remaining_qty: Number(r.qty),
-                purchase_price: r.adjusted_unit ? r.adjusted_unit * r.qty : 0,
-                expected_price: r.adjusted_unit ? r.adjusted_unit * r.qty : 0,
-                sold_price: null,
-                paid_out: false,
-                needs_config: !r.found
-            }));
+            const tradeItems = rows.map(r => {
+                const purchasePrice = r.adjusted_unit ? r.adjusted_unit : 0;
+                // Calculate expected price: (purchase_price * (1 + profit%)) / (1 - market_fee%)
+                // Since we don't have the config here, we'll use defaults or try to fetch it if we had an endpoint
+                // For now, let's use the standard 5% fee and 0% markup as a baseline, 
+                // or just pass what the dashboard expects
+                const marketFee = 5; 
+                const expectedPriceUnit = Math.ceil(purchasePrice / (1 - marketFee / 100));
+
+                return {
+                    name: r.name,
+                    extra_name: '',
+                    item_id: null,
+                    quantity: Number(r.qty),
+                    remaining_qty: Number(r.qty),
+                    purchase_price: purchasePrice * r.qty,
+                    expected_price: expectedPriceUnit * r.qty,
+                    sold_price: null,
+                    paid_out: false,
+                    needs_config: !r.found
+                };
+            });
 
             const tradeId = `import_${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
             // Determine timestamp to send to backend.

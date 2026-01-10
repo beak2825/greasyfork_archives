@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name bilibili视频下载
 // @namespace https://gitee.com/u2222223/greasyfork_scripts/raw/master/bilibili/index.js
-// @version 5.1.0
-// @description 2026新脚本，长期维护。下载哔哩哔哩视频，支持4K/1080P/720P多画质。
+// @version 2026.01.10
+// @description 下载哔哩哔哩视频，支持4K/1080P/720P多画质。
 // @icon https://www.bilibili.com/favicon.ico
 // @match *://*.bilibili.com/*
 // @match *://dajiaoniu.site/* 
@@ -13,6 +13,8 @@
 // @connect bilibili.com
 // @connect bilivideo.com
 // @connect bilivideo.cn
+// @connect *
+// @connect localhost
 // @grant        GM_addElement
 // @grant        GM_addStyle
 // @grant        GM_addValueChangeListener
@@ -98,12 +100,6 @@
                 const name_en = urlParams.get('name_en');
                 if (!name_en) {
                     return;
-                }
-                if (!GM.info.script.namespace.includes(name_en)) {
-                    console.log(`当前：${name_en}, 拒绝：${GM.info.script.namespace}`)
-                    return;
-                } else {
-                    console.log(`当前：${name_en}, 允许：${GM.info.script.namespace}`)
                 }
             }  
         } catch (e) { }
@@ -694,7 +690,6 @@
     }
     (function () {
     'use strict';
-    // =============================================================================================================
     let timeId = setInterval(() => {
         if (typeof unsafeWindow !== 'undefined') {
             // 组装最小集 GM 能力并暴露到全局
@@ -772,527 +767,242 @@
         return;
     }
 
-    // 添加自定义样式
-    GM_addStyle(`
-        #url-jump-container {
-            position: fixed;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: red;
-            color: white;
-            border: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+    const ConfigManager = {
+        defaultConfig: {
+            shortcut: 'alt+s',
+            autoDownload: 1,
+            downloadWindow: 1,
+            autoDownloadBestVideo: 0,
+            autoDownloadBestAudio: 0
+        },
+        get() {
+            return { ...this.defaultConfig, ...GM_getValue('scriptConfig', {}) };
+        },
+        set(newConfig) {
+            GM_setValue('scriptConfig', { ...this.get(), ...newConfig });
         }
-        #url-jump-btn {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #url-jump-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        #url-jump-btn::after {
-            content: "⇓";
-            font-weight: bold;
-        }
-        #drag-handle {
-            cursor: move;
-        }
-        #drag-handle::after {
-            content: "☰"; /* 汉堡菜单图标，表示可拖动 */
-            font-size: 14px;
-            line-height: 1;
-        }
-        #drag-handle:hover {
-            background-color: #666666;
-            cursor: grab; /* 悬停时的抓取光标 */
-        }
-        #drag-handle:active {
-            cursor: grabbing; /* 按住时的抓取中光标 */
-        }
-        #toolsBox {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            right: -24px;
-            display: flex;
-            gap: 4px;
-            display: flex;
-            flex-direction: column;
-        }
-        #toolsBox > div{
-            width: 20px;
-            height: 20px;
-            background: #444444;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 1000001;
-            border: 2px solid gray;
-        }
-        #toolsBox > div:hover {
-            background-color: #666666;
-        }
-        #settings-btn::after {
-            content: "⚙️";
-            font-size: 14px;
-            line-height: 1;
-        }
-        #buyPointsBtn::after {
-            content: "💰"; /* 金钱/购买的图标 */
-            font-size: 14px;
-            line-height: 1;
-        }
-        #contactDevBtn::after {
-            content: "💬"; /* 对话气泡图标 */
-            font-size: 14px;
-            line-height: 1;
-        }
-        #settings-modal{
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 1000002;
-            width: 300px;
-            user-select: none;
-        }
-    `);
-    const uiWrapper = document.createElement('div');
-    const uiHtmlContent = `
-        <div id="url-jump-container">
-            <button id="url-jump-btn" title="点击获取当前页面资源"></button>
-            <div id="toolsBox">
-                <div id="drag-handle" title="拖动移动位置"></div>
-                <div id="settings-btn" title="设置"></div>
-                <div id="buyPointsBtn" title="开通会员/积分"></div>
-                <div id="contactDevBtn" title="联系开发者"></div>
-            </div>
-        </div>
-        <div id="settings-modal">
-            <div style="margin-bottom: 20px; font-weight: bold;font-size: 16px;">设置</div>
-            <div style="margin-bottom: 14px;">
-                <label style="display: block; margin-bottom: 6px;">快捷键:</label>
-                <select id="shortcut" style="width: 100%; padding: 6px;">
-                    <option value="ctrl+s">Ctrl + S</option>
-                    <option value="alt+s">Alt + S</option>
-                </select>
-            </div>
-            <div style="margin-bottom: 14px;">
-                <label style="display: block; margin-bottom: 6px;">只找到1个资源时，自动下载:</label>
-                <select id="autoDownload" style="width: 100%; padding: 6px;">
-                <option value="1">是</option>
-                <option value="0">否</option>
-                </select>
-            </div>
-            <div style="margin-bottom: 14px;">
-                <label style="display: block; margin-bottom: 6px;">下载窗口位置</label>
-                <select id="downloadWindow" style="width: 100%; padding: 6px;">
-                    <option value="1">本页面</option>
-                    <option value="0">新标签栏</option>
-                </select>
-            </div>
-            <div style="margin-bottom: 14px;">
-                <label style="display: block; margin-bottom: 6px;">自动下载最好的视频</label>
-                <select id="autoDownloadBestVideo" style="width: 100%; padding: 6px;">
-                    <option value="1">是</option>
-                    <option value="0">否</option>
-                </select>
-            </div>
-            <div style="margin-bottom: 14px;">
-                <label style="display: block; margin-bottom: 6px;">自动下载最好的音频</label>
-                <select id="autoDownloadBestAudio" style="width: 100%; padding: 6px;">
-                    <option value="1">是</option>
-                    <option value="0">否</option>
-                </select>
-            </div>
-            <div style="text-align: right;">
-                <button id="settings-save" style="padding: 5px 10px; cursor: pointer;">保存</button>
-                <button id="settings-cancel" style="padding: 5px 10px; cursor: pointer; margin-left: 6px;">取消</button>
-            </div>
-        </div>
-    `;
-
-    // 解决 TrustedHTML 报错问题
-    if (window.trustedTypes && window.trustedTypes.createPolicy) {
-        try {
-            // 使用全局变量防止重复创建同名策略导致报错
-            if (!window._dajn_ui_policy) {
-                window._dajn_ui_policy = window.trustedTypes.createPolicy('da_jiao_niu_ui_policy', {
-                    createHTML: (string) => string
-                });
-            }
-            uiWrapper.innerHTML = window._dajn_ui_policy.createHTML(uiHtmlContent);
-        } catch (e) {
-            // 如果策略创建被CSP禁止，尝试直接赋值
-            console.warn('TrustedTypes policy creation failed, fallback to raw assignment:', e);
-            uiWrapper.innerHTML = uiHtmlContent;
-        }
-    } else {
-        uiWrapper.innerHTML = uiHtmlContent;
-    }
-
-    document.body.appendChild(uiWrapper);
-
-    const container = document.getElementById('url-jump-container');
-    const jumpBtn = document.getElementById('url-jump-btn');
-    const dragHandle = document.getElementById('drag-handle');
-    const settingsBtn = document.getElementById('settings-btn');
-    const settingsModal = document.getElementById('settings-modal');
-
-    // 添加按钮点击事件
-    document.getElementById('buyPointsBtn').addEventListener('click', () => {
-        window.open(`${host}/Download/buy_points.html`, '_blank');
-    });
-
-    document.getElementById('contactDevBtn').addEventListener('click', () => {
-        window.open('https://origin.dajiaoniu.site/Niu/config/get-qq-number', '_blank');
-    });
-
-    // 添加一些基本样式
-    GM_addStyle(`
-        #toolsBox button {
-            background: #fff;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            padding: 5px 10px;
-            cursor: pointer;
-            margin-left: 5px;
-        }
-        #toolsBox button:hover {
-            background: #f0f0f0;
-        }
-    `);
-
-    // 默认配置
-    const defaultConfig = {
-        // 打开大角牛助手的快捷键
-        shortcut: 'ctrl+s',
-        // 只有一个资源时自动获取
-        autoDownload: 1,
-        // 大角牛助手的打开方式
-        downloadWindow: 1,
-        // 是否自动下载最好的视频
-        autoDownloadBestVideo: 0,
-        // 是否自动下载最好的音频
-        autoDownloadBestAudio: 0
     };
-
-    // 读取配置
-    function getScriptConfig() {
-        // 读取存储的配置
-        const storedConfig = GM_getValue('scriptConfig', {});
-        // 合并默认配置
-        return { ...defaultConfig, ...storedConfig };
+    let host = 'https://dajiaoniu.site';
+    if (GM_info && GM_info.script && GM_info.script.name.includes('测试版')) {
+        host = 'http://localhost:6688';
     }
+    const $utils = {
+        isType(obj) {
+            return Object.prototype.toString.call(obj).replace(/^\[object (.+)\]$/, '$1').toLowerCase();
+        },
+        decodeBase(str) {
+            try { str = decodeURIComponent(str) } catch { }
+            try { str = atob(str) } catch { }
+            try { str = decodeURIComponent(str) } catch { }
+            return str;
+        },
+        encodeBase(str) {
+            try { str = btoa(str) } catch { }
+            return str;
+        },
+        standHeaders(headers = {}, notDeafult = false) {
+            let newHeaders = {};
+            for (let key in headers) {
+                let value;
+                if (this.isType(headers[key]) === "object") value = JSON.stringify(headers[key]);
+                else value = String(headers[key]);
+                newHeaders[key.toLowerCase().split("-").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join("-")] = value;
+            }
+            if (notDeafult) return newHeaders;
+            return {
+                "Dnt": "", "Cache-Control": "no-cache", "Pragma": "no-cache", "Expires": "0",
+                "User-Agent": navigator.userAgent,
+                "Origin": location.origin,
+                "Referer": `${location.origin}/`,
+                ...newHeaders
+            };
+        },
 
-    // 保存配置
-    function setScriptConfig(newConfig) {
-        const currentConfig = getScriptConfig();
-        const mergedConfig = { ...currentConfig, ...newConfig };
-        GM_setValue('scriptConfig', mergedConfig);
-    }
+        xmlHttpRequest(option) {
+            let xmlHttpRequest = (typeof GM_xmlhttpRequest === "function") ? GM_xmlhttpRequest : (typeof GM?.xmlHttpRequest === "function") ? GM.xmlHttpRequest : null;
+            if (!xmlHttpRequest || this.isType(xmlHttpRequest) !== "function") throw new Error("GreaseMonkey 兼容 XMLHttpRequest 不可用。");
+            return xmlHttpRequest({ withCredentials: true, ...option });
+        },
 
-    // 显示配置
-    settingsBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const config = getScriptConfig();
-        document.getElementById('shortcut').value = config.shortcut;
-        document.getElementById('autoDownload').value = config.autoDownload;
-        document.getElementById('downloadWindow').value = config.downloadWindow;
-        document.getElementById('autoDownloadBestVideo').value = config.autoDownloadBestVideo;
-        document.getElementById('autoDownloadBestAudio').value = config.autoDownloadBestAudio;
-        settingsModal.style.display = 'block';
-    });
+        async post(url, data, headers, type = "json") {
+            let _data = data;
+            if (this.isType(data) === "object" || this.isType(data) === "array") {
+                data = JSON.stringify(data);
+            } else if (this.isType(data) === "urlsearchparams") {
+                _data = Object.fromEntries(data);
+            }
+            headers = this.standHeaders(headers);
+            headers = { "Accept": "application/json;charset=utf-8", ...headers };
 
-    document.getElementById('settings-save').addEventListener('click', () => {
-        setScriptConfig({
-            shortcut: document.getElementById('shortcut').value,
-            autoDownload: document.getElementById('autoDownload').value,
-            downloadWindow: document.getElementById('downloadWindow').value,
-            autoDownloadBestVideo: document.getElementById('autoDownloadBestVideo').value,
-            autoDownloadBestAudio: document.getElementById('autoDownloadBestAudio').value,
-        });
-        settingsModal.style.display = 'none';
-        alert('设置已保存');
-    });
-
-    document.getElementById('settings-cancel').addEventListener('click', () => {
-        settingsModal.style.display = 'none';
-    });
-
-    // 从本地存储获取上次位置，没有则使用默认位置
-    const savedPosition = GM_getValue('buttonPosition', {
-        right: '5%',
-        bottom: '5%'
-    });
-    const host = `https://dajiaoniu.site`
-    // const host = `http://localhost:6688`
-    container.style.right = savedPosition.right;
-    container.style.bottom = savedPosition.bottom;
-    let newWindow = null;
-    jumpBtn.addEventListener('click', async function () {
-        let config = getScriptConfig();
-        let urlParams = {
-            config,
-            url: window.location.href,
-            name_en: `bilibili`,
-        }
-        // let targetUrl = `https://www.baidu.com`;
-        let targetUrl = `${host}/Download/index.html`;
-        // let targetUrl = `http://127.0.0.1:5500/public/Download/index.html`;
-        try {
-            if (urlParams.url.includes("douyin")) {
-                let videoInfo = null;
-                try {
-                    videoInfo = await extractVideoInfo();
-                    if (videoInfo && videoInfo.d) {
-                        urlParams.x = videoInfo.d;
-                    }
-                } catch (e) {
-                    alert(`请截图联系开发者，抖音视频信息提取失败${e}`);
-                    return;
-                }
-            } else if (urlParams.url.includes("music.youtube")) {
-                // 获取url中的v参数
-                const urls = new URLSearchParams(window.location.search);
-                const videoId = urls.get('v');
-                if (videoId) {
-                    urlParams.url = `https://www.youtube.com/watch?v=${videoId}`;
-                } else {
-                    alert("请检查是否有播放的音乐？")
-                    return;
-                }
-            } else if (urlParams.url.includes("tiktok")) {
-                if (!localStorage.oldTiktoUser) {
-                    const result = confirm("用户您好，本软件将复制视频链接，用于解析视频，请允许软件读取剪贴板。");
-                    if (!result) {
-                        alert("异常");
-                        return;
-                    }
-                }
-                // 有视频id的页面
-                if (urlParams.url.includes("/video/")) {
-                    console.log(`有视频ID，无需处理`)
-                } else {
-                    // 有分享按钮的页面
-                    try {
-                        let videos = document.getElementsByTagName("video");
-                        // 如果没有2个视频，则返回（当前可能不是视频）
-                        if (videos.length < 2) {
-                            alert("当前页面可能不是视频页面");
+            return new Promise((resolve, reject) => {
+                this.xmlHttpRequest({
+                    url, headers, data,
+                    method: "POST", responseType: type,
+                    onload: (res) => {
+                        if (type === "blob") {
+                            resolve(res);
                             return;
                         }
-                        let tiktokNowVideo = videos[0];
-                        const articleElement = tiktokNowVideo.closest('article');
-                        let scBtn = articleElement.querySelector('button[aria-label^="添加到收藏"], button[aria-label*="添加到收藏"]');
-                        if (!scBtn) {
-                            // 如果没有收藏按钮，则返回，当前可能是直播
-                            alert("当前页面可能是直播页面");
-                            return
-                        }
-                        articleElement.querySelector('button[aria-label^="分享视频"], button[aria-label*="分享视频"]').click();
-                        for (let i = 0; i < 40; i++) {
-                            if (document.querySelector('[data-e2e="share-copy"]')) {
-                                document.querySelector('[data-e2e="share-copy"]').click()
-                                break;
-                            }
-                            await sleep(100);
-                        }
-                        const copyUrl = await readClipboardTextCompat();
-                        if (copyUrl) {
-                            urlParams.url = copyUrl;
-                        } else {
-                            new Error(`获取剪贴板内容失败`);
-                        }
-                    } catch (e) {
-                        alert(`tiktok视频信息提取失败${e}`);
-                        return;
-                    }
-                }
-                localStorage.oldTiktoUser = '1';
-            } else if (getWp()) {
-                let { selectedList, encrypted } = getSelectFile();
-                if (selectedList.length > 0) {
-                    urlParams.x = encrypted;
-                } else {
-                    alert("请选择文件");
-                    return;
-                }
-            }
-        } catch (e) {
-            alert(`跳转失败${e}`);
-            return;
-        }
-        targetUrl += `?${objToUrlParams(urlParams)}`;
+                        let responseDecode = res.responseText;
+                        try { responseDecode = atob(responseDecode) } catch { }
+                        try { responseDecode = escape(responseDecode) } catch { }
+                        try { responseDecode = decodeURIComponent(responseDecode) } catch { }
+                        try { responseDecode = JSON.parse(responseDecode) } catch { }
 
-        const windowName = 'dajiaoniu_download_window';
-
-        let features = '';
-        if (config.downloadWindow === '1' || config.downloadWindow === 1) {
-            const screenWidth = window.screen.width;
-            const screenHeight = window.screen.height;
-            const windowWidth = screenWidth * 0.7;  // 窗口宽度
-            const windowHeight = screenHeight * 0.7; // 窗口高度
-            const left = (screenWidth - windowWidth) / 2;
-            const top = (screenHeight - windowHeight) / 2;
-            features = `width=${windowWidth},height=${windowHeight},left=${left},top=${top},resizable=yes,scrollbars=yes,status=yes`;
-        }
-        // 根据配置决定打开方式：命名窗口用于复用，_blank 打开新标签
-        if (config.downloadWindow === '1' || config.downloadWindow === 1) {
-            window.open(targetUrl, windowName, features);
-        } else {
-            window.open(targetUrl, '_blank');
-        }
-    });
-    document.addEventListener('keydown', (e) => {
-        const currentShortcut = getScriptConfig().shortcut;
-        let matched = false;
-
-        if (currentShortcut === 'ctrl+s') {
-            if (e.ctrlKey && e.key.toLowerCase() === 's') matched = true;
-        } else if (currentShortcut === 'alt+s') {
-            if (e.altKey && e.key.toLowerCase() === 's') matched = true;
-        }
-
-        if (matched) {
-            e.preventDefault(); // 必须阻止默认行为（避免弹出保存对话框）
-            e.stopPropagation(); // 阻止事件冒泡（增强防冲突）
-            jumpBtn.click(); // 手动触发点击事件
-        }
-    });
-    let isDragging = false;
-    let offsetX, offsetY;
-
-    dragHandle.addEventListener('mousedown', function (e) {
-        isDragging = true;
-        const rect = container.getBoundingClientRect();
-        offsetX = e.clientX - rect.left;
-        offsetY = e.clientY - rect.top;
-        e.stopPropagation();
-        e.preventDefault();
-    });
-
-    document.addEventListener('mousemove', function (e) {
-        if (!isDragging) return;
-        const rightPx = window.innerWidth - e.clientX - (container.offsetWidth - offsetX);
-        const bottomPx = window.innerHeight - e.clientY - (container.offsetHeight - offsetY);
-        const rightPct = Math.max(0, Math.min(100, (Math.max(0, rightPx) / window.innerWidth) * 100));
-        const bottomPct = Math.max(0, Math.min(100, (Math.max(0, bottomPx) / window.innerHeight) * 100));
-        container.style.right = rightPct.toFixed(2) + '%';
-        container.style.bottom = bottomPct.toFixed(2) + '%';
-    });
-
-    document.addEventListener('mouseup', function () {
-        if (isDragging) {
-            isDragging = false;
-
-            // 保存当前位置到本地存储
-            GM_setValue('buttonPosition', {
-                right: container.style.right,
-                bottom: container.style.bottom
-            });
-        }
-    });
-
-    function extractVideoInfo() {
-        return new Promise((resolve) => {
-            let video = document.querySelector('video[autoplay="true"]');
-            if (!video) {
-                video = document.querySelector('video[autoplay]');
-            }
-            if (!video) {
-                const videos = document.querySelectorAll('video');
-                for (let v of videos) {
-                    if (v.autoplay) {
-                        video = v;
-                        break;
-                    }
-                }
-            }
-
-            if (!video) {
-                resolve(null);
-                return;
-            }
-            video.src = "";
-            const playerContainer = video.closest('.playerContainer');
-            let title = "";
-
-            if (playerContainer) {
-                const titleElem = playerContainer.querySelector('.title') || document.title;
-                if (titleElem) {
-                    title = titleElem.innerText || titleElem.textContent;
-                }
-            }
-            title = title ? title.trim() : document.title;
-            let checkCount = 0;
-            const maxChecks = 50;
-            const intervalTime = 100;
-
-            const timer = setInterval(() => {
-                checkCount++;
-                const sources = video.querySelectorAll('source');
-                const srcs = [];
-
-                sources.forEach(source => {
-                    if (source.src) {
-                        srcs.push(source.src);
+                        if (responseDecode === res.responseText) responseDecode = null;
+                        if (this.isType(res.response) === "object") responseDecode = res.response;
+                        resolve(responseDecode ?? res.response ?? res.responseText);
+                    },
+                    onerror: (error) => {
+                        reject(error);
                     }
                 });
-                if (srcs.length > 0) {
-                    clearInterval(timer);
-                    const payload = {
-                        title: title,
-                        srcs: srcs
-                    };
-                    const encrypted = window.btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-                    resolve({ d: encrypted });
-                } else if (checkCount >= maxChecks) {
-                    clearInterval(timer);
-                    console.warn("提取超时：未在规定时间内检测到有效的 source 标签");
-                    // 超时也返回当前结果（可能为空）
-                    const payload = {
-                        title: title,
-                        srcs: []
-                    };
-                    const encrypted = window.btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-                    resolve({ d: encrypted });
-                }
-            }, intervalTime);
-        });
-    };
+            });
+        },
 
-    const base = {
+        async get(url, headers, type = "json") {
+            headers = this.standHeaders(headers);
+            return new Promise((resolve, reject) => {
+                this.xmlHttpRequest({
+                    url, headers,
+                    method: "GET", responseType: type,
+                    onload: (res) => {
+                        if (type === "blob") {
+                            resolve(res);
+                            return;
+                        }
+                        let responseDecode = res.responseText;
+                        try { responseDecode = JSON.parse(responseDecode) } catch { }
+
+                        if (responseDecode === res.responseText) responseDecode = null;
+                        if (this.isType(res.response) === "object") responseDecode = res.response;
+                        resolve(responseDecode ?? res.response ?? res.responseText);
+                    },
+                    onerror: (error) => {
+                        reject(error);
+                    }
+                });
+            });
+        },
+
+        async head(url, headers, usingGET) {
+            headers = this.standHeaders(headers);
+            return new Promise((resolve, reject) => {
+                var method = usingGET ? "Get" : "Head";
+                this.xmlHttpRequest({
+                    method: method.toUpperCase(),
+                    url, headers,
+                    onload: (res) => {
+                        let head = {};
+                        res.responseHeaders.trim().split("\r\n").forEach(line => {
+                            var parts = line.split(": ");
+                            if (parts.length >= 2) {
+                                var key = parts[0].toLowerCase();
+                                var value = parts.slice(1).join(": ");
+                                head[key] = value;
+                            }
+                        });
+                        res.responseHeaders = this.standHeaders(head, true);
+
+                        if (!usingGET && !res.responseHeaders.hasOwnProperty("Range") && !(res?.status >= 200 && res?.status < 400)) {
+                            this.head(res.finalUrl, { ...headers, Range: "bytes=0-0" }, true).then(resolve).catch(reject);
+                            return;
+                        }
+                        resolve(res);
+                    },
+                    onerror: reject
+                });
+            });
+        },
+
+        getFinalUrl(url, headers = {}, usingGET = false, returnURL = true) {
+            return new Promise(async (resolve, reject) => {
+                var res = await this.head(url, headers, usingGET).catch(reject);
+                if (!res?.finalUrl) return reject(res);
+                if (res?.status >= 300 && res?.status < 400) {
+                    this.getFinalUrl(res.finalUrl, headers, usingGET, returnURL).then(resolve).catch(reject);
+                    return;
+                }
+                if (returnURL) return resolve(res.finalUrl);
+                else return resolve(res);
+            });
+        },
+
+        stringify(obj) {
+            let str = "";
+            for (let key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    let value = obj[key];
+                    if (Array.isArray(value)) {
+                        for (let i = 0; i < value.length; i++) {
+                            str += encodeURIComponent(key) + "=" + encodeURIComponent(value[i]) + "&";
+                        }
+                    } else {
+                        str += encodeURIComponent(key) + "=" + encodeURIComponent(value) + "&";
+                    }
+                }
+            }
+            return str.slice(0, -1);
+        },
+
+        // Helper Functions
+        sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        },
+        toast(msg, duration = 3000) {
+            const div = document.createElement('div');
+            div.innerText = msg;
+            div.style.position = 'fixed';
+            div.style.top = '20px';
+            div.style.left = '50%';
+            div.style.transform = 'translateX(-50%)';
+            div.style.zIndex = '10000';
+            div.style.padding = '10px 20px';
+            div.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            div.style.color = '#fff';
+            div.style.borderRadius = '5px';
+            div.style.fontSize = '14px';
+            div.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
+            div.style.transition = 'opacity 0.3s';
+            document.body.appendChild(div);
+
+            setTimeout(() => {
+                div.style.opacity = '0';
+                setTimeout(() => document.body.removeChild(div), 300);
+            }, duration);
+        },
+        getCookie(name) {
+            let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            return match ? match[2] : "";
+        },
+        utob(str) {
+            const u = String.fromCharCode;
+            return str.replace(/[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g, (t) => {
+                if (t.length < 2) {
+                    let e = t.charCodeAt(0);
+                    return e < 128 ? t : e < 2048 ? u(192 | e >>> 6) + u(128 | 63 & e) : u(224 | e >>> 12 & 15) + u(128 | e >>> 6 & 63) + u(128 | 63 & e);
+                }
+                e = 65536 + 1024 * (t.charCodeAt(0) - 55296) + (t.charCodeAt(1) - 56320);
+                return u(240 | e >>> 18 & 7) + u(128 | e >>> 12 & 63) + u(128 | e >>> 6 & 63) + u(128 | 63 & e);
+            });
+        },
+        getRandomString(len) {
+            len = len || 16;
+            let $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+            let maxPos = $chars.length;
+            let pwd = '';
+            for (let i = 0; i < len; i++) {
+                pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+            }
+            return pwd;
+        },
         findReact(dom, traverseUp = 0) {
-            const key = Object.keys(dom).find(key => {
+            let key = Object.keys(dom).find(key => {
                 return key.startsWith("__reactFiber$")
                     || key.startsWith("__reactInternalInstance$");
             });
-            const domFiber = dom[key];
+            let domFiber = dom[key];
             if (domFiber == null) return null;
-
             if (domFiber._currentElement) {
                 let compFiber = domFiber._currentElement._owner;
                 for (let i = 0; i < traverseUp; i++) {
@@ -1300,10 +1010,9 @@
                 }
                 return compFiber._instance;
             }
-
-            const GetCompFiber = fiber => {
+            let GetCompFiber = fiber => {
                 let parentFiber = fiber.return;
-                while (typeof parentFiber.type == "string") {
+                while (this.isType(parentFiber.type) == "string") {
                     parentFiber = parentFiber.return;
                 }
                 return parentFiber;
@@ -1314,233 +1023,587 @@
             }
             return compFiber.stateNode || compFiber;
         },
-    }
-    const controlswp = {
-        baidu: {
-            getSelectedList() {
-                try {
-                    return require('system-core:context/context.js').instanceForSystem.list.getSelected();
-                } catch (e) {
-                    return document.querySelector('.wp-s-core-pan').__vue__.selectedList;
+
+        isPlainObjectSimple(value) {
+            return Object.prototype.toString.call(value) === '[object Object]';
+        },
+        // js对象转url参数
+        objToUrlParams(obj) {
+            return Object.keys(obj).map(key => `${key}=${$utils.isPlainObjectSimple(obj[key]) ? encodeURIComponent(JSON.stringify(obj[key])) : encodeURIComponent(obj[key])}`).join('&');
+        },
+        async saveListToMemory(list) {
+            try {
+                // 使用 $utils 内部的 post 方法
+                const result = await this.post(`${host}/memory/save`, { data: list }, {
+                    'Content-Type': 'application/json'
+                });
+
+                // 返回 key
+                if (result && result.key) {
+                    return result.key;
+                } else {
+                    throw new Error('保存失败或未返回有效的key');
+                }
+            } catch (error) {
+                console.error('保存 selectedList 失败:', error);
+                this.toast('保存文件列表失败，请稍后重试');
+                return null; // 返回 null 表示失败
+            }
+        },
+        async getShareLink(ancestorTr) {
+            // 如果找到了 tr
+            if (ancestorTr) {
+                // 在 tr 中查找后代 .u-icon-share 元素
+                const shareIcon = ancestorTr.querySelector('.u-icon-share');
+
+                if (shareIcon) {
+                    shareIcon.click();
+                    await $utils.sleep(1000);
+                    document.querySelector(".wp-share-file__link-create-ubtn").click()
+                    await $utils.sleep(1000);
+                    document.querySelector("div.wp-s-share-hoc > div > div > div.u-dialog__header > button").click()
+                    const link_txt = document.querySelector(".copy-link-text").innerText;
+                    return link_txt;
+                } else {
+                    console.log('未在当前行找到 .u-icon-share 元素。');
                 }
             }
         },
-        ali: {
-            getSelectedList() {
-                try {
-                    let selectedList = [];
-                    let reactDom = document.querySelector(pan.dom.list);
-                    let reactObj = base.findReact(reactDom, 1);
-                    let props = reactObj.pendingProps;
-                    if (props) {
-                        let fileList = props.dataSource || [];
-                        let selectedKeys = props.selectedKeys.split(',');
-                        fileList.forEach((val) => {
-                            if (selectedKeys.includes(val.fileId)) {
-                                selectedList.push(val);
-                            }
-                        });
-                    }
-                    return selectedList;
-                } catch (e) {
-                    return [];
+        extractVideoInfo() {
+            return new Promise((resolve) => {
+                let video = document.querySelector('video[autoplay="true"]');
+                if (!video) {
+                    video = document.querySelector('video[autoplay]');
                 }
-            }
-        },
-        tianyi: {
-            getSelectedList() {
-                try {
-                    return document.querySelector(".c-file-list").__vue__.selectedList;
-                } catch (e) {
-                    return [document.querySelector(".info-detail").__vue__.fileDetail];
-                }
-            }
-        },
-        xunlei: {
-            getSelectedList() {
-                try {
-                    let doms = document.querySelectorAll('.SourceListItem__item--XxpOC');
-                    let selectedList = [];
-                    for (let dom of doms) {
-                        let domVue = dom.__vue__;
-                        if (domVue.selected.includes(domVue.info.id)) {
-                            selectedList.push(domVue.info);
+                if (!video) {
+                    const videos = document.querySelectorAll('video');
+                    for (let v of videos) {
+                        if (v.autoplay) {
+                            video = v;
+                            break;
                         }
                     }
-                    return selectedList;
-                } catch (e) {
-                    return [];
                 }
-            },
-        },
-        quark: {
-            getSelectedList() {
-                try {
-                    let selectedList = [];
-                    let reactDom = document.getElementsByClassName('file-list')[0];
-                    let reactObj = base.findReact(reactDom);
-                    let props = reactObj.props;
-                    if (props) {
-                        let fileList = props.list || [];
-                        let selectedKeys = props.selectedRowKeys || [];
-                        fileList.forEach((val) => {
-                            if (selectedKeys.includes(val.fid)) {
-                                selectedList.push(val);
-                            }
-                        });
+
+                if (!video) {
+                    resolve(null);
+                    return;
+                }
+                video.src = "";
+                const playerContainer = video.closest('.playerContainer');
+                let title = "";
+
+                if (playerContainer) {
+                    const titleElem = playerContainer.querySelector('.title') || document.title;
+                    if (titleElem) {
+                        title = titleElem.innerText || titleElem.textContent;
                     }
-                    return selectedList;
-                } catch (e) {
-                    return [];
                 }
-            }
+                title = title ? title.trim() : document.title;
+                let checkCount = 0;
+                const maxChecks = 50;
+                const intervalTime = 100;
+
+                const timer = setInterval(() => {
+                    checkCount++;
+                    const sources = video.querySelectorAll('source');
+                    const srcs = [];
+
+                    sources.forEach(source => {
+                        if (source.src) {
+                            srcs.push(source.src);
+                        }
+                    });
+                    if (srcs.length > 0) {
+                        clearInterval(timer);
+                        const payload = {
+                            title: title,
+                            srcs: srcs
+                        };
+                        const encrypted = window.btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+                        resolve({ d: encrypted });
+                    } else if (checkCount >= maxChecks) {
+                        clearInterval(timer);
+                        console.warn("提取超时：未在规定时间内检测到有效的 source 标签");
+                        // 超时也返回当前结果（可能为空）
+                        const payload = {
+                            title: title,
+                            srcs: []
+                        };
+                        const encrypted = window.btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+                        resolve({ d: encrypted });
+                    }
+                }, intervalTime);
+            });
         },
-        yidong: {
-            getSelectedList() {
-                try {
-                    return document.querySelector(".main_file_list").__vue__.selectList.map(val => val.item);
-                } catch (e) {
-                    let vueDom = document.querySelector(".home-page").__vue__;
-                    let fileList = vueDom._computedWatchers.fileList.value;
-                    let dirList = vueDom._computedWatchers.dirList.value;
-                    let selectedFileIndex = vueDom.selectedFile;
-                    let selectedDirIndex = vueDom.selectedDir;
-                    let selectFileList = fileList.filter((v, i) => {
-                        return selectedFileIndex.includes(i);
-                    });
-                    let selectDirList = dirList.filter((v, i) => {
-                        return selectedDirIndex.includes(i);
-                    });
-                    return [...selectFileList, ...selectDirList];
+
+        async readClipboardTextCompat(options = {}) {
+            const timeout = typeof options.timeout === 'number' ? options.timeout : 8000;
+            // 1. 优先使用标准 API
+            try {
+                if (navigator.clipboard && typeof navigator.clipboard.readText === 'function') {
+                    const txt = await navigator.clipboard.readText();
+                    if (txt && txt.length) return txt;
                 }
-            },
+            } catch (e) { }
+            try {
+                if (navigator.clipboard && typeof navigator.clipboard.read === 'function') {
+                    const items = await navigator.clipboard.read();
+                    for (const item of items || []) {
+                        if (item.types && item.types.includes('text/plain')) {
+                            const blob = await item.getType('text/plain');
+                            const txt = await blob.text();
+                            if (txt && txt.length) return txt;
+                        }
+                        if (item.types && item.types.includes('text/html')) {
+                            const blob = await item.getType('text/html');
+                            const html = await blob.text();
+                            if (html && html.length) return html;
+                        }
+                    }
+                }
+            } catch (e) { }
+            // 3. IE 旧接口
+            try {
+                if (window.clipboardData && typeof window.clipboardData.getData === 'function') {
+                    const txt = window.clipboardData.getData('Text');
+                    if (txt && txt.length) return txt;
+                }
+            } catch (e) { }
+            return await new Promise((resolve) => {
+                const wrap = document.createElement('div');
+                wrap.style.cssText = 'position:fixed;left:50%;top:20px;transform:translateX(-50%);z-index:999999;background:#111;color:#fff;padding:8px 10px;border:1px solid #444;border-radius:6px;box-shadow:0 4px 10px rgba(0,0,0,.3);display:flex;gap:8px;align-items:center;';
+                const tip = document.createElement('span');
+                tip.textContent = '请按 Ctrl+V 粘贴内容到输入框';
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = '在此粘贴';
+                input.style.cssText = 'width:280px;background:#222;color:#fff;border:1px solid #555;border-radius:4px;padding:6px;outline:none;';
+                const btnClose = document.createElement('button');
+                btnClose.textContent = '关闭';
+                btnClose.style.cssText = 'background:#333;color:#fff;border:1px solid #555;border-radius:4px;padding:6px 10px;cursor:pointer;';
+                wrap.appendChild(tip);
+                wrap.appendChild(input);
+                wrap.appendChild(btnClose);
+                document.body.appendChild(wrap);
+
+                let done = false;
+                const cleanup = () => {
+                    if (wrap && wrap.parentNode) wrap.parentNode.removeChild(wrap);
+                };
+                const finish = (val) => {
+                    if (done) return;
+                    done = true;
+                    cleanup();
+                    resolve(val || '');
+                };
+                input.addEventListener('paste', (ev) => {
+                    try {
+                        const cd = ev.clipboardData || window.clipboardData;
+                        let txt = '';
+                        if (cd) {
+                            txt = cd.getData && cd.getData('text/plain') || cd.getData && cd.getData('Text') || '';
+                        }
+                        if (!txt) {
+                            setTimeout(() => finish(input.value || ''), 0);
+                        } else {
+                            ev.preventDefault();
+                            input.value = txt;
+                            finish(txt);
+                        }
+                    } catch (e) {
+                        setTimeout(() => finish(input.value || ''), 0);
+                    }
+                });
+                btnClose.addEventListener('click', () => finish(input.value || ''));
+                input.focus();
+                // 超时自动结束
+                setTimeout(() => finish(input.value || ''), timeout);
+            });
         }
     };
-    function getWp() {
-        return false;
-        let name = null
-        if (/(pan|yun).baidu.com/.test(location.host)) {
-            name = 'baidu';
-        } else if (/openapi.baidu.com\/oauth/.test(location.href)) {
-            name = 'baidu';
-        } else if (/www.(aliyundrive|alipan).com/.test(location.host)) {
-            name = 'ali';
-        } else if (/cloud.189.cn/.test(location.host)) {
-            name = 'tianyi';
-        } else if (/pan.xunlei.com/.test(location.host)) {
-            name = 'xunlei';
-        } else if (/pan.quark.cn/.test(location.host)) {
-            name = 'quark';
-        } else if (/(yun|caiyun).139.com/.test(location.host)) {
-            name = 'yidong';
-        }
-        return name
-    }
-    function getSelectFile() {
-        let selectListArr = controlswp[getWp()].getSelectedList();
-        const encrypted = encodeURIComponent(JSON.stringify(selectListArr.map(item => ({
-            fid: item.fid,
-            name: item.file_name,
-        }))));
-        return {
-            selectedList: selectListArr,
-            encrypted: encrypted,
-        };
-    }
-    // js对象转url参数，注意有中文，兼容性好些，属性值可能是对象
-    function objToUrlParams(obj) {
-        return Object.keys(obj).map(key => `${key}=${isPlainObjectSimple(obj[key]) ? encodeURIComponent(JSON.stringify(obj[key])) : encodeURIComponent(obj[key])}`).join('&');
-    }
-    function isPlainObjectSimple(value) {
-        return Object.prototype.toString.call(value) === '[object Object]';
-    }
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
 
-    async function readClipboardTextCompat(options = {}) {
-        const timeout = typeof options.timeout === 'number' ? options.timeout : 8000;
-        // 1. 优先使用标准 API
-        try {
-            if (navigator.clipboard && typeof navigator.clipboard.readText === 'function') {
-                const txt = await navigator.clipboard.readText();
-                if (txt && txt.length) return txt;
+    const handlers = {
+        async douyin(urlParams) {
+            try {
+                const videoInfo = await $utils.extractVideoInfo();
+                if (videoInfo?.d) {
+                    urlParams.x = videoInfo.d;
+                }
+            } catch (e) {
+                alert(`请截图联系开发者，抖音视频信息提取失败${e}`);
+                throw e;
             }
-        } catch (e) { }
-        try {
-            if (navigator.clipboard && typeof navigator.clipboard.read === 'function') {
-                const items = await navigator.clipboard.read();
-                for (const item of items || []) {
-                    if (item.types && item.types.includes('text/plain')) {
-                        const blob = await item.getType('text/plain');
-                        const txt = await blob.text();
-                        if (txt && txt.length) return txt;
-                    }
-                    if (item.types && item.types.includes('text/html')) {
-                        const blob = await item.getType('text/html');
-                        const html = await blob.text();
-                        if (html && html.length) return html;
-                    }
+        },
+        async music_youtube(urlParams) {
+            const videoId = new URLSearchParams(window.location.search).get('v');
+            if (videoId) {
+                urlParams.url = `https://www.youtube.com/watch?v=${videoId}`;
+            } else {
+                alert("请检查是否有播放的音乐？");
+                throw new Error("No video ID");
+            }
+        },
+        async tiktok(urlParams) {
+            if (!localStorage.oldTiktoUser) {
+                if (!confirm("用户您好，本软件将复制视频链接，用于解析视频，请允许软件读取剪贴板。")) {
+                    alert("异常");
+                    throw new Error("User denied");
                 }
             }
-        } catch (e) { }
-        // 3. IE 旧接口
-        try {
-            if (window.clipboardData && typeof window.clipboardData.getData === 'function') {
-                const txt = window.clipboardData.getData('Text');
-                if (txt && txt.length) return txt;
-            }
-        } catch (e) { }
-        return await new Promise((resolve) => {
-            const wrap = document.createElement('div');
-            wrap.style.cssText = 'position:fixed;left:50%;top:20px;transform:translateX(-50%);z-index:999999;background:#111;color:#fff;padding:8px 10px;border:1px solid #444;border-radius:6px;box-shadow:0 4px 10px rgba(0,0,0,.3);display:flex;gap:8px;align-items:center;';
-            const tip = document.createElement('span');
-            tip.textContent = '请按 Ctrl+V 粘贴内容到输入框';
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.placeholder = '在此粘贴';
-            input.style.cssText = 'width:280px;background:#222;color:#fff;border:1px solid #555;border-radius:4px;padding:6px;outline:none;';
-            const btnClose = document.createElement('button');
-            btnClose.textContent = '关闭';
-            btnClose.style.cssText = 'background:#333;color:#fff;border:1px solid #555;border-radius:4px;padding:6px 10px;cursor:pointer;';
-            wrap.appendChild(tip);
-            wrap.appendChild(input);
-            wrap.appendChild(btnClose);
-            document.body.appendChild(wrap);
 
-            let done = false;
-            const cleanup = () => {
-                if (wrap && wrap.parentNode) wrap.parentNode.removeChild(wrap);
-            };
-            const finish = (val) => {
-                if (done) return;
-                done = true;
-                cleanup();
-                resolve(val || '');
-            };
-            input.addEventListener('paste', (ev) => {
+            if (urlParams.url.includes("/video/")) {
+                console.log(`有视频ID，无需处理`);
+            } else {
                 try {
-                    const cd = ev.clipboardData || window.clipboardData;
-                    let txt = '';
-                    if (cd) {
-                        txt = cd.getData && cd.getData('text/plain') || cd.getData && cd.getData('Text') || '';
+                    const videos = document.getElementsByTagName("video");
+                    if (videos.length < 2) {
+                        alert("当前页面可能不是视频页面");
+                        throw new Error("Not a video page");
                     }
-                    if (!txt) {
-                        setTimeout(() => finish(input.value || ''), 0);
+
+                    const tiktokNowVideo = videos[0];
+                    const articleElement = tiktokNowVideo.closest('article');
+                    const scBtn = articleElement.querySelector('button[aria-label^="添加到收藏"], button[aria-label*="添加到收藏"]');
+
+                    if (!scBtn) {
+                        alert("当前页面可能是直播页面");
+                        throw new Error("Live stream page");
+                    }
+
+                    articleElement.querySelector('button[aria-label^="分享视频"], button[aria-label*="分享视频"]').click();
+
+                    let copyBtn = null;
+                    for (let i = 0; i < 40; i++) {
+                        copyBtn = document.querySelector('[data-e2e="share-copy"]');
+                        if (copyBtn) break;
+                        await $utils.sleep(100);
+                    }
+
+                    if (copyBtn) {
+                        copyBtn.click();
+                        const copyUrl = await $utils.readClipboardTextCompat();
+                        if (copyUrl) {
+                            urlParams.url = copyUrl;
+                        } else {
+                            throw new Error(`获取剪贴板内容失败`);
+                        }
                     } else {
-                        ev.preventDefault();
-                        input.value = txt;
-                        finish(txt);
+                        throw new Error("Share copy button not found");
                     }
+
                 } catch (e) {
-                    setTimeout(() => finish(input.value || ''), 0);
+                    alert(`tiktok视频信息提取失败${e}`);
+                    throw e;
+                }
+            }
+            localStorage.oldTiktoUser = '1';
+        },
+        async bdwp(urlParams) {
+            // const getSelected = () => {
+            //     let List, selectList;
+            //     try {
+            //         List = require("system-core:context/context.js").instanceForSystem.list;
+            //         selectList = List.getSelected();
+            //         return selectList;
+            //     } catch (e) { }
+            //     try {
+            //         List = document.querySelector(".wp-s-core-pan");
+            //         if (List && List.__vue__.selectedList) {
+            //             selectList = List.__vue__.selectedList;
+            //             return selectList;
+            //         }
+            //     } catch (e) { }
+            //     try {
+            //         List = document.querySelector(".file-list");
+            //         if (List && List.__vue__.allFileList) {
+            //             selectList = List.__vue__.allFileList.filter(function (item) { return !!item.selected; });
+            //             return selectList;
+            //         }
+            //     } catch (e) { }
+            //     return [];
+            // }
+            // const extractFullPanLink = (text) => {
+            //     const regex = /https:\/\/(pan|yun)\.baidu\.com\/s\/[^\s]+/;
+            //     const match = text.match(regex);
+            //     return match ? match[0] : null;
+            // }
+            // const selectedList = getSelected();
+            // for (let i = 0; i < selectedList.length; i++) {
+            //     let id = selectedList[i].fs_id;
+            //     const targetElement = document.querySelector(`[data-id="${id}"]`);
+            //     let shareLink = await $utils.getShareLink(targetElement);
+            //     if (!shareLink) {
+            //         $utils.toast(`第${i + 1}个文件，获取分享链接失败`);
+            //         continue;
+            //     }
+            //     let panLink = extractFullPanLink(shareLink);
+            //     selectedList[i].panLink = panLink;
+            // }
+
+            // const savedId = await $utils.saveListToMemory(selectedList);
+
+            // if (!savedId) {
+            //     return; // 中断操作
+            // }
+            // urlParams.x = savedId;
+        }
+    };
+
+    const UIManager = {
+        init() {
+            this.injectStyles();
+            this.injectHTML();
+            this.initElements();
+            this.restorePosition();
+            this.bindEvents();
+            this.initDrag();
+        },
+
+        injectStyles() {
+            GM_addStyle(`
+                #url-jump-container { position: fixed; width: 50px; height: 50px; border-radius: 50%; background-color: red; color: white; border: none; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); z-index: 9999; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+                #url-jump-btn { width: 100%; height: 100%; border-radius: 50%; background: transparent; border: none; color: white; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+                #url-jump-btn:hover { background-color: rgba(255, 255, 255, 0.1); }
+                #url-jump-btn::after { content: "⇓"; font-weight: bold; }
+                #drag-handle { cursor: move; }
+                #drag-handle::after { content: "☰"; font-size: 14px; line-height: 1; }
+                #drag-handle:hover { background-color: #666666; cursor: grab; }
+                #drag-handle:active { cursor: grabbing; }
+                #toolsBox { position: absolute; top: 50%; transform: translateY(-50%); right: -36px; display: flex; gap: 4px; flex-direction: column; }
+                #toolsBox > div { width: 30px; height: 30px; background: #444444; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000001; border: 2px solid gray; }
+                #toolsBox > div:hover { background-color: #666666; }
+                #settings-btn::after { content: "⚙️"; font-size: 14px; line-height: 1; }
+                #buyPointsBtn::after { content: "💰"; font-size: 14px; line-height: 1; }
+                #contactDevBtn::after { content: "💬"; font-size: 14px; line-height: 1; }
+                #settings-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 420px; background-color: #282c34; border: 1px solid #444; border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,0.4); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #abb2bf; z-index: 1000002; }
+                 .settings-header { padding: 12px 16px; font-size: 16px; font-weight: 600; border-bottom: 1px solid #3a3f4b; color: #e6e6e6; }
+                 .settings-body { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+                 .setting-item { display: flex; justify-content: space-between; align-items: center; }
+                 .setting-item label { font-size: 14px; margin-right: 10px; }
+                 .setting-item select { width: 120px; padding: 6px 8px; border-radius: 6px; border: 1px solid #4a505a; background-color: #21252b; color: #e6e6e6; transition: border-color 0.2s, box-shadow 0.2s; }
+                 .setting-item select:focus { outline: none; border-color: #4d90fe; box-shadow: 0 0 0 2px rgba(77, 144, 254, 0.2); }
+                 .settings-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 16px; border-top: 1px solid #3a3f4b; background-color: #21252b; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
+                 .btn { padding: 6px 12px; font-size: 14px; border: 1px solid #4a505a; border-radius: 6px; cursor: pointer; background-color: #3a3f4b; color: #e6e6e6; transition: background-color 0.2s, border-color 0.2s; }
+                 .btn:hover { background-color: #4a505a; }
+                 .btn.btn-primary { background-color: #4d90fe; color: #fff; border-color: #4d90fe; }
+                 .btn.btn-primary:hover { background-color: #357ae8; border-color: #357ae8; }
+                #toolsBox button { background: #fff; border: 1px solid #ccc; border-radius: 3px; padding: 5px 10px; cursor: pointer; margin-left: 5px; }
+                #toolsBox button:hover { background: #f0f0f0; }
+                #toast { visibility: hidden; min-width: 250px; margin-left: -125px; background-color: #333; color: #fff; text-align: center; border-radius: 2px; padding: 16px; position: fixed; z-index: 10002; left: 50%; bottom: 30px; font-size: 17px; }
+                #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+                @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+                @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+                `);
+        },
+
+        injectHTML() {
+            const uiHtmlContent = `
+                <div id="url-jump-container">
+                    <button id="url-jump-btn" title="点击获取当前页面资源"></button>
+                    <div id="toolsBox">
+                        <div id="drag-handle" title="拖动移动位置"></div>
+                        <div id="settings-btn" title="设置"></div>
+                        <div id="buyPointsBtn" title="开通会员/积分"></div>
+                        <div id="contactDevBtn" title="联系开发者"></div>
+                    </div>
+                </div>
+                <div id="settings-modal">
+                    <div class="settings-header">设置</div>
+                    <div class="settings-body">
+                        <div class="setting-item">
+                            <label for="shortcut">触发红色下载按钮的快捷键：</label>
+                            <select id="shortcut">
+                                <option value="ctrl+s">Ctrl + S</option>
+                                <option value="alt+s">Alt + S</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label for="downloadWindow">下载窗口的位置：</label>
+                            <select id="downloadWindow">
+                                <option value="1">本页面</option>
+                                <option value="0">新标签栏</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label for="autoDownload">只找到1个资源时，自动获取：</label>
+                            <select id="autoDownload">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label for="autoDownloadBestVideo">自动下载最好的视频：</label>
+                            <select id="autoDownloadBestVideo">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label for="autoDownloadBestAudio">自动下载最好的音频：</label>
+                            <select id="autoDownloadBestAudio">
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="settings-footer">
+                        <button id="settings-save" class="btn btn-primary">保存</button>
+                        <button id="settings-cancel" class="btn">取消</button>
+                    </div>
+                </div>
+                <div id="toast"></div>
+`;
+            const uiWrapper = document.createElement('div');
+            if (window.trustedTypes?.createPolicy) {
+                try {
+                    if (!window._dajn_ui_policy) {
+                        window._dajn_ui_policy = window.trustedTypes.createPolicy('da_jiao_niu_ui_policy', { createHTML: s => s });
+                    }
+                    uiWrapper.innerHTML = window._dajn_ui_policy.createHTML(uiHtmlContent);
+                } catch (e) {
+                    uiWrapper.innerHTML = uiHtmlContent;
+                }
+            } else {
+                uiWrapper.innerHTML = uiHtmlContent;
+            }
+            document.body.appendChild(uiWrapper);
+        },
+
+        initElements() {
+            this.container = document.getElementById('url-jump-container');
+            this.jumpBtn = document.getElementById('url-jump-btn');
+            this.dragHandle = document.getElementById('drag-handle');
+            this.settingsBtn = document.getElementById('settings-btn');
+            this.settingsModal = document.getElementById('settings-modal');
+            this.toast = document.getElementById('toast');
+        },
+
+        restorePosition() {
+            const pos = GM_getValue('buttonPosition', { right: '10%', bottom: '10%' });
+            let r = parseFloat(pos.right), b = parseFloat(pos.bottom);
+            if (isNaN(r) || r < 0 || r > 90) r = 5;
+            if (isNaN(b) || b < 0 || b > 90) b = 5;
+            this.container.style.right = r + '%';
+            this.container.style.bottom = b + '%';
+        },
+
+        bindEvents() {
+            this.settingsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const config = ConfigManager.get();
+                document.getElementById('shortcut').value = config.shortcut;
+                document.getElementById('autoDownload').value = config.autoDownload;
+                document.getElementById('downloadWindow').value = config.downloadWindow;
+                document.getElementById('autoDownloadBestVideo').value = config.autoDownloadBestVideo;
+                document.getElementById('autoDownloadBestAudio').value = config.autoDownloadBestAudio;
+                this.settingsModal.style.display = 'block';
+            });
+
+            document.getElementById('settings-save').addEventListener('click', () => {
+                ConfigManager.set({
+                    shortcut: document.getElementById('shortcut').value,
+                    autoDownload: document.getElementById('autoDownload').value,
+                    downloadWindow: document.getElementById('downloadWindow').value,
+                    autoDownloadBestVideo: document.getElementById('autoDownloadBestVideo').value,
+                    autoDownloadBestAudio: document.getElementById('autoDownloadBestAudio').value,
+                });
+                this.settingsModal.style.display = 'none';
+                $utils.toast('设置已保存');
+            });
+
+            document.getElementById('settings-cancel').addEventListener('click', () => {
+                this.settingsModal.style.display = 'none';
+            });
+
+            document.getElementById('buyPointsBtn').addEventListener('click', () => window.open(`${host}/Download/buy_points.html`, '_blank'));
+            document.getElementById('contactDevBtn').addEventListener('click', () => window.open('https://origin.dajiaoniu.site/Niu/config/get-qq-number', '_blank'));
+            this.jumpBtn.addEventListener('click', async () => {
+                const config = ConfigManager.get();
+                const urlParams = { config, url: window.location.href, name_en: `bilibili` };
+
+                try {
+                    if (urlParams.url.includes("douyin")) await handlers.douyin(urlParams);
+                    else if (urlParams.url.includes("music.youtube")) await handlers.music_youtube(urlParams);
+                    else if (urlParams.url.includes("tiktok")) await handlers.tiktok(urlParams);
+                    else if (urlParams.url.includes("pan.baidu.com") || urlParams.url.includes("pan.baidu.com")) await handlers.bdwp(urlParams);
+                } catch (e) {
+                    alert(e.message);
+                    return;
+                }
+
+                const finalUrl = `${host}/Download/index.html?${$utils.objToUrlParams(urlParams)}`;
+                const features = `width=${screen.width * 0.7},height=${screen.height * 0.7},left=${(screen.width * 0.3) / 2},top=${(screen.height * 0.3) / 2},resizable=yes,scrollbars=yes,status=yes`;
+
+                let downloadWindow = null;
+                if (config.downloadWindow == 1) {
+                    downloadWindow = window.open(finalUrl, 'dajiaoniu_download_window', features);
+                } else {
+                    downloadWindow = window.open(finalUrl, '_blank');
+                };
+                if (!downloadWindow) {
+                    $utils.toast('下载弹窗被浏览器拦截，请在地址栏右侧允许本站点的弹窗。', 10 * 1000);
                 }
             });
-            btnClose.addEventListener('click', () => finish(input.value || ''));
-            input.focus();
-            // 超时自动结束
-            setTimeout(() => finish(input.value || ''), timeout);
-        });
-    }
+
+            document.addEventListener('keydown', (e) => {
+                const shortcut = ConfigManager.get().shortcut;
+                if ((shortcut === 'ctrl+s' && e.ctrlKey && e.key.toLowerCase() === 's') ||
+                    (shortcut === 'alt+s' && e.altKey && e.key.toLowerCase() === 's')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.jumpBtn.click();
+                }
+            });
+        },
+
+        initDrag() {
+            let isDragging = false, offsetX, offsetY;
+            const dragConstraints = { minRight: 0, maxRight: 0, minBottom: 0, maxBottom: 0 };
+
+            this.dragHandle.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                const rect = this.container.getBoundingClientRect();
+                offsetX = e.clientX - rect.left;
+                offsetY = e.clientY - rect.top;
+
+                const toolsBox = document.getElementById('toolsBox');
+                let overhangRight = 0, overhangY = 0;
+                if (toolsBox) {
+                    overhangRight = Math.max(0, -parseFloat(getComputedStyle(toolsBox).right || 0));
+                    overhangY = Math.max(0, (toolsBox.offsetHeight - this.container.offsetHeight) / 2);
+                }
+
+                dragConstraints.minRight = overhangRight;
+                dragConstraints.maxRight = window.innerWidth - this.container.offsetWidth;
+                dragConstraints.minBottom = overhangY;
+                dragConstraints.maxBottom = window.innerHeight - this.container.offsetHeight - overhangY;
+
+                e.stopPropagation();
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                let rightPx = window.innerWidth - e.clientX - (this.container.offsetWidth - offsetX);
+                let bottomPx = window.innerHeight - e.clientY - (this.container.offsetHeight - offsetY);
+
+                rightPx = Math.max(dragConstraints.minRight, Math.min(rightPx, dragConstraints.maxRight));
+                bottomPx = Math.max(dragConstraints.minBottom, Math.min(bottomPx, dragConstraints.maxBottom));
+
+                this.container.style.right = (rightPx / window.innerWidth * 100).toFixed(2) + '%';
+                this.container.style.bottom = (bottomPx / window.innerHeight * 100).toFixed(2) + '%';
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    GM_setValue('buttonPosition', { right: this.container.style.right, bottom: this.container.style.bottom });
+                }
+            });
+        }
+    };
+
+    UIManager.init();
 })();
 })({}, {});

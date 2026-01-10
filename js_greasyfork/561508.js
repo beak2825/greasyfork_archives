@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Arson bang for buck custom underko
 // @namespace    custom.Para_Thenics.torn.com
-// @version      0.0.3
+// @version      0.0.4
 // @description  Display profit per nerve and how to perform
 // @author       Para_Thenics, auboli77
 // @match        https://www.torn.com/page.php?sid=crimes*
@@ -74,552 +74,341 @@
   };
 
   const ARSON_SCENARIOS = [
+    {name: "A Black Mark", payout: 210000, ignition: "lighter", materials: {gasoline: 2}, stoke: {lighter: 1}},
+    {name: "A Black Mark", payout: 210000, ignition: "flamethrower", materials: {gasoline: 1}, stoke: {flamethrower: 1}},
+    {name: "A Burnt Child Dreads the Fire", payout: 190000, ignition: "lighter", materials: {kerosene: 2}, stoke: {methaneTank: 1}},
+    {name: "A Burnt Child Dreads the Fire", payout: 235000, ignition: "flamethrower", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
+    {name: "A Dirty Job", payout: 30000, ignition: "lighter", materials: {gasoline: 2}},
+    {name: "A Dirty Job", payout: 32000, ignition: "flamethrower", materials: {gasoline: 1}},
     {name: "A Fungus Among Us", payout: 38000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "A Fungus Among Us", payout: 34000, ignition: "flamethrower", materials: {gasoline: 1}},
-
+    {name: "A Hot Lead", payout: 22000, ignition: "flamethrower", materials: {gasoline: 1}},
+    {name: "A Mug's Game", payout: 55000, ignition: "molotovCocktail", materials: {gasoline: 2}},
+    {name: "A Mug's Game", payout: 55000, ignition: "flamethrower", materials: {gasoline: 2}},
     {name: "A Problem Shared", payout: 180000, ignition: "lighter", materials: {gasoline: 6}, stoke: {gasoline: 1}},
     {name: "A Problem Shared", payout: 180000, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}},
-
-    {name: "All Mouth and Trousers", payout: 81000, ignition: "lighter", materials: {gasoline: 3}, evidence: {diamondRing: 1}},
-
-    {name: "Arson Around", payout: 110000, ignition: "lighter", materials: {gasoline: 2}, evidence: {toothbrush: 1}},
-    {name: "Arson Around", payout: 110000, ignition: "flamethrower", materials: {gasoline: 2}, evidence: {toothbrush: 1}, stoke: {flamethrower: 1}},
-
+    {name: "A Rash Decision", payout: 11000, ignition: "lighter", materials: {gasoline: 1}},
+    {name: "A Treat for the Tricked", payout: 71000, ignition: "flamethrower", materials: {gasoline: 1}, evidence: {kabukiMask: 1}},
+    {name: "All Mouth and Trousers", payout: 51000, ignition: "lighter", materials: {gasoline: 2}, evidence: {diamondRing: 1}},
+    {name: "All Mouth and Trousers", payout: 56000, ignition: "flamethrower", materials: {gasoline: 2}, evidence: {diamondRing: 1}},
+    {name: "Always Read the Label", payout: 170000, ignition: "flamethrower", materials: {gasoline: 5}, stoke: {flamethrower: 1}},
+    {name: "Anon Starter", payout: 1200, ignition: "lighter", materials: {gasoline: 1}},
+    {name: "Anon Starter", payout: 31000, ignition: "flamethrower", materials: {gasoline: 1}},
+    {name: "Apart of the Problem", payout: 280000, ignition: "lighter", materials: {gasoline: 6}},
+    {name: "Apart of the Problem", payout: 280000, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}},
+    {name: "Ash or Credit?", payout: 180000, ignition: "flamethrower", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
+    {name: "Ashes to Ancestors", payout: 90000, ignition: "lighter", materials: {gasoline: 4}, stoke: {gasoline: 1}},
+    {name: "Ashes to Ancestors", payout: 90000, ignition: "flamethrower", materials: {gasoline: 5}},
+    {name: "Back, Sack, and Crack", payout: 300000, ignition: "flamethrower", materials: {hydrogenTank: 2}},
+    {name: "Baewatch", payout: 13000, ignition: "flamethrower", materials: {gasoline: 1}},
+    {name: "Bagged and Tagged", payout: 1600, ignition: "flamethrower", materials: {gasoline: 1}},
+    {name: "Bald Faced Destruction", payout: 230000, ignition: "lighter", materials: {gasoline: 4}, evidence: {rawIvory: 1}},
+    {name: "Bald Faced Destruction", payout: 240000, ignition: "flamethrower", materials: {gasoline: 2}, evidence: {rawIvory: 1}},
+    {name: "Bang For Your Buck", payout: 21000, ignition: "lighter", materials: {gasoline: 2}, evidence: {grenade: 1}},
+    {name: "Bang For Your Buck", payout: 44000, ignition: "flamethrower", materials: {gasoline: 1}, evidence: {grenade: 1}},
+    {name: "Banking on It", payout: 120000, ignition: "lighter", materials: {gasoline: 3}, evidence: {stapler: 1}},
+    {name: "Banking on It", payout: 200000, ignition: "flamethrower", materials: {gasoline: 3}, evidence: {stapler: 1}},
+    {name: "Beach Bum", payout: 20000, ignition: "lighter", materials: {gasoline: 1}, stoke: {gasoline: 1}},
+    {name: "Beach Bum", payout: 19000, ignition: "flamethrower", materials: {gasoline: 1}},
+    {name: "Beat the Odds", payout: 330000, ignition: "flamethrower", materials: {gasoline: 4}},
     {name: "Beggars Can't be Choosers", payout: 480000, ignition: "flamethrower", materials: {gasoline: 5, thermite: 2}},
-
-    {name: "Blown to High Heaven", payout: 0, ignition: "lighter"},
-
+    {name: "Beyond Repair", payout: 93500, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}},
+    {name: "Blaze of Glory", payout: 110000, ignition: "flamethrower", materials: {gasoline: 2}, stoke: {flamethrower: 1}, evidence: {toothbrush: 1}},
     {name: "Body of Evidence", payout: 105000, ignition: "lighter", materials: {gasoline: 6}},
     {name: "Body of Evidence", payout: 105000, ignition: "flamethrower", materials: {gasoline: 5}},
-
     {name: "Bone of Contention", payout: 43000, ignition: "lighter", materials: {gasoline: 1}, dampen: {blanket: 1}},
-
     {name: "Boom Industry", payout: 130000, ignition: "lighter", materials: {gasoline: 5}},
     {name: "Boom Industry", payout: 100000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Boxing Clever", payout: 335000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Bright Spark", payout: 290000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 2}},
-
-    {name: "Bugging Me", payout: 0, ignition: "lighter"},
-
-    {name: "Bummed Out", payout: 0, ignition: "lighter"},
-
     {name: "Burn After Screening", payout: 99000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Burn After Screening", payout: 53000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Burn Notice", payout: 175000, ignition: "lighter", materials: {gasoline: 4}, stoke: {gasoline: 3}},
     {name: "Burn Notice", payout: 175000, ignition: "flamethrower", materials: {gasoline: 5}, stoke: {flamethrower: 1}},
-
     {name: "Burn Rubber", payout: 50000, ignition: "lighter", materials: {gasoline: 2}, evidence: {mayanStatue: 1}},
     {name: "Burn Rubber", payout: 67000, ignition: "flamethrower", materials: {gasoline: 2}, evidence: {mayanStatue: 1}},
-
     {name: "Burn the Deck", payout: 57000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Burn the Deck", payout: 96000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Burned by Stupidity", payout: 32000, ignition: "lighter", materials: {kerosene: 1}},
-
     {name: "Burned Cookies", payout: 81000, ignition: "lighter", materials: {diesel: 2, magnesiumShavings: 2}, stoke: {diesel: 1}},
-
-    {name: "Burning Ambition", payout: 0, ignition: "lighter"},
     {name: "Burning Ambition", payout: 46000, ignition: "flamethrower", materials: {gasoline: 2}},
-
-    {name: "Burning Calories", payout: 84000, ignition: "lighter", materials: {gasoline: 4}, notes: "Try 5 gasoline"},
+    {name: "Burning Calories", payout: 84000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Burning Calories", payout: 100000, ignition: "flamethrower", materials: {gasoline: 4}},
-
     {name: "Burning Liability", payout: 160000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 2}},
-
     {name: "Burning Memory", payout: 32000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Burning Memory", payout: 32000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Burning Through Cash", payout: 58000, ignition: "lighter", materials: {oxygenTank: 1}},
-    {name: "Burning Through Cash", payout: 100000, ignition: "flamethrower", materials: {hydrogenTank: 1}, notes: "Negative profit"},
-
-    {name: "Burnt Ends", payout: 170000, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}, notes: "Stoke flamethrower uncertain"},
-
+    {name: "Burning Through Cash", payout: 100000, ignition: "flamethrower", materials: {hydrogenTank: 1}},
+    {name: "Burnt Ends", payout: 170000, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}},
     {name: "Burn up the Dancefloor", payout: 150000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Burn up the Dancefloor", payout: 175000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Cache and Burn", payout: 490000, ignition: "flamethrower", materials: {kerosene: 4}},
-
     {name: "Camera Tricks", payout: 115000, ignition: "lighter", materials: {gasoline: 5}, stoke: {gasoline: 1}},
     {name: "Camera Tricks", payout: 115000, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}},
-
     {name: "Carrying a Torch", payout: 44500, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Chance of Redemption", payout: 90000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Chance of Redemption", payout: 59000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Charcoal Sketch", payout: 49000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Charcoal Sketch", payout: 39000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Chasing Targets", payout: 24000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Checking Out", payout: 280000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
     {name: "Child's Play", payout: 23000, ignition: "lighter", materials: {gasoline: 2}},
     {name: "Child's Play", payout: 23000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Claim to Flame", payout: 33500, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Clean Sweep", payout: 150000, ignition: "lighter", materials: {gasoline: 5}, stoke: {diesel: 1}},
     {name: "Clean Sweep", payout: 150000, ignition: "flamethrower", materials: {gasoline: 3}, stoke: {flamethrower: 1}},
-
     {name: "Cleansed Through Fire", payout: 46000, ignition: "flamethrower", materials: {diesel: 1}},
-
     {name: "Clinical Exposure", payout: 170000, ignition: "lighter", materials: {gasoline: 1}, evidence: {opium: 1}},
-    {name: "Clinical Exposure", payout: 290000, ignition: "flamethrower", materials: {gasoline: 1}, evidence: {opium: 1}, stoke: {blanket: 1}, notes: "Try lighter, stoke blanket uncertain"},
-
     {name: "Cold Brew Reality", payout: 150000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 2}},
-
     {name: "Cold Feet", payout: 100000, ignition: "lighter", materials: {gasoline: 6}, stoke: {diesel: 1}},
-    {name: "Cold Feet", payout: 120000, ignition: "flamethrower", materials: {gasoline: 5}, stoke: {flamethrower: 1}, notes: "Try 4 gas"},
-
+    {name: "Cold Feet", payout: 120000, ignition: "flamethrower", materials: {gasoline: 5}, stoke: {flamethrower: 1}},
     {name: "Cook it Rare", payout: 340000, ignition: "lighter", materials: {kerosene: 3}},
-
     {name: "Cooked and Burned", payout: 70000, ignition: "lighter", materials: {gasoline: 3}, evidence: {ammonia: 1}},
     {name: "Cooked and Burned", payout: 73000, ignition: "flamethrower", materials: {gasoline: 2}, evidence: {ammonia: 1}},
-
     {name: "Cooking the Books", payout: 22000, ignition: "lighter", materials: {gasoline: 2}},
     {name: "Cooking the Books", payout: 25000, ignition: "flamethrower", materials: {gasoline: 1}},
-
-    {name: "Cooking Time", payout: 0, ignition: "lighter"},
-
     {name: "Cop Some Heat", payout: 19000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Crafty Devil", payout: 100000, ignition: "lighter", materials: {gasoline: 1}},
-    {name: "Crafty Devil", payout: 100000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Crisp Bills", payout: 35000, ignition: "lighter", materials: {gasoline: 2}},
     {name: "Crisp Bills", payout: 39000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Curtain Call", payout: 57000, ignition: "lighter", materials: {gasoline: 1}},
-
     {name: "Cut Corners", payout: 230000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
-    {name: "Cut to the Chase", payout: 0, ignition: "lighter"},
-
     {name: "Daddy's Girl", payout: 240000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 2}},
-
     {name: "Damned If You Don't", payout: 74000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Dead Giveaway", payout: 29000, ignition: "lighter", materials: {kerosene: 1}},
-
     {name: "Dine and Dash", payout: 95000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
-    {name: "Dirty Money", payout: 240000, ignition: "lighter", materials: {kerosene: 1, hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
+    {name: "Dirty Money", payout: 240000, ignition: "lighter", materials: {hydrogenTank: 1, kerosene: 1}, stoke: {hydrogenTank: 1}},
     {name: "Disco Inferno", payout: 48000, ignition: "lighter", materials: {hydrogenTank: 1}},
-
     {name: "Don't Hate the Player", payout: 20000, ignition: "lighter", materials: {gasoline: 2}},
     {name: "Don't Hate the Player", payout: 32000, ignition: "flamethrower", materials: {gasoline: 2}},
-
-    {name: "Doxing Clever", payout: 0, ignition: "lighter", notes: "Needs thermite"},
-
     {name: "Eight Lives", payout: 4200, ignition: "lighter", materials: {gasoline: 1}},
     {name: "Eight Lives", payout: 6000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Emotional Wreck", payout: 140000, ignition: "lighter", materials: {gasoline: 6}},
     {name: "Emotional Wreck", payout: 140000, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}},
-
     {name: "End of the Line", payout: 100000, ignition: "lighter", materials: {gasoline: 5}},
     {name: "End of the Line", payout: 78000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Faction Fiction", payout: 64500, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Faction Fiction", payout: 64500, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Family Feud", payout: 8000, ignition: "lighter", materials: {gasoline: 2}},
     {name: "Family Feud", payout: 20000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Fan the Flames", payout: 33000, ignition: "lighter", materials: {hydrogenTank: 1}},
-
     {name: "Fight Fire With Fire", payout: 81000, ignition: "lighter", materials: {gasoline: 2}},
-
     {name: "Final Cut", payout: 150000, ignition: "lighter", materials: {gasoline: 4}},
-    {name: "Final Cut", payout: 150000, ignition: "flamethrower", materials: {gasoline: 4}, notes: "Try 3"},
-
+    {name: "Final Cut", payout: 150000, ignition: "flamethrower", materials: {gasoline: 4}},
     {name: "Final Markdown", payout: 49000, ignition: "flamethrower", materials: {gasoline: 2}},
-
-    {name: "Finish Line", payout: 0, ignition: "lighter"},
-
     {name: "Fire and Brimstone", payout: 125000, ignition: "lighter", materials: {gasoline: 1}},
-
     {name: "Fire Burn and Cauldron Bubble", payout: 170000, ignition: "lighter", materials: {gasoline: 5}},
     {name: "Fire Burn and Cauldron Bubble", payout: 170000, ignition: "flamethrower", materials: {gasoline: 4}},
-
     {name: "Fire in the Belly", payout: 17000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Fire Kills 99.9% of Bacteria", payout: 305000, ignition: "lighter", materials: {hydrogenTank: 1}},
-
     {name: "Fire Sale", payout: 110000, ignition: "lighter", materials: {methaneTank: 1}},
-
     {name: "Flame and Fortune", payout: 680000, ignition: "flamethrower", materials: {kerosene: 3}},
-
     {name: "Follow the Leader", payout: 69000, ignition: "flamethrower", materials: {hydrogenTank: 1}},
-
     {name: "For Closure", payout: 22000, ignition: "lighter", materials: {gasoline: 2}},
     {name: "For Closure", payout: 16000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Foul Play", payout: 120000, ignition: "lighter", materials: {gasoline: 5}},
     {name: "Foul Play", payout: 120000, ignition: "flamethrower", materials: {gasoline: 4}},
-
     {name: "From the Ashes", payout: 120000, ignition: "lighter", materials: {gasoline: 5}},
     {name: "From the Ashes", payout: 170000, ignition: "flamethrower", materials: {gasoline: 4}},
-
-    {name: "Gay Frogs", payout: 41000, ignition: "lighter", materials: {gasoline: 4}, notes: "Try 3 gasoline"},
+    {name: "Gay Frogs", payout: 41000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Gay Frogs", payout: 34000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Gentrifried", payout: 230000, ignition: "flamethrower", materials: {gasoline: 2}, stoke: {potassiumNitrate: 2}},
-
     {name: "Get Wrecked", payout: 90000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Get Wrecked", payout: 84000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Going Viral", payout: 190000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Going Viral", payout: 190000, ignition: "flamethrower", materials: {gasoline: 4}},
-
     {name: "Green With Envy", payout: 120000, ignition: "lighter", materials: {gasoline: 6}},
     {name: "Green With Envy", payout: 120000, ignition: "flamethrower", materials: {gasoline: 4}},
-
     {name: "Gym'll Fix It", payout: 62000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Gym'll Fix It", payout: 52000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Hair Today...", payout: 93000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
     {name: "Heat the Rich", payout: 34000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Heat the Rich", payout: 40000, ignition: "flamethrower", materials: {gasoline: 2}},
-
-    {name: "Hell Fire", payout: 0, ignition: "lighter"},
-
     {name: "Hide and Seek", payout: 33000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Hide and Seek", payout: 33000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "High Time", payout: 4300, ignition: "lighter", materials: {gasoline: 1}},
     {name: "High Time", payout: 10000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Hire and Fire", payout: 49000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Hire and Fire", payout: 57000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Hold Fire", payout: 110000, ignition: "lighter", materials: {gasoline: 1}},
-
     {name: "Holy Smokes", payout: 56500, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Home and Dry", payout: 35000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Home and Dry", payout: 49000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Hostile Takeover", payout: 290000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Hot Dinners", payout: 55000, ignition: "flamethrower", materials: {diesel: 1}},
-
     {name: "Hot Dog", payout: 38000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Hot Dog", payout: 30500, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Hot Gossip", payout: 62000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Hot Gossip", payout: 62000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Hot Off the Press", payout: 18000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Hot on the Trail", payout: 390000, ignition: "lighter", materials: {gasoline: 2}},
-
     {name: "Hot out of the Gate", payout: 53000, ignition: "lighter", materials: {gasoline: 2}, evidence: {goldTooth: 1}},
     {name: "Hot out of the Gate", payout: 96000, ignition: "flamethrower", materials: {gasoline: 2}, evidence: {goldTooth: 1}},
-
     {name: "Hot Profit", payout: 84000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Hot Profit", payout: 57500, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Hot Pursuit", payout: 28000, ignition: "lighter", materials: {gasoline: 2}},
     {name: "Hot Pursuit", payout: 50000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Hot Trend", payout: 54000, ignition: "lighter", materials: {kerosene: 1}},
-
-    {name: "Hot Under the Collar", payout: 0, ignition: "lighter"},
-
     {name: "House Edge", payout: 130000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "House of Cards", payout: 610000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 2}},
-
     {name: "Igniting Curiosity", payout: 100000, ignition: "lighter", materials: {gasoline: 3}, evidence: {sumoDoll: 1}},
     {name: "Igniting Curiosity", payout: 100000, ignition: "flamethrower", materials: {gasoline: 2}, evidence: {sumoDoll: 1}},
-
-    {name: "Improving the Odds", payout: 0, ignition: "lighter"},
-
     {name: "In Your Debt", payout: 33000, ignition: "lighter", materials: {kerosene: 1}},
-
     {name: "Insert Coin to Continue", payout: 120000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
     {name: "It Cuts Both Ways", payout: 19000, ignition: "lighter", materials: {gasoline: 2}},
     {name: "It Cuts Both Ways", payout: 20500, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "It's a Write Off", payout: 225000, ignition: "lighter", materials: {gasoline: 3}},
-
     {name: "It's Not All White", payout: 140000, ignition: "flamethrower", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
     {name: "Kindling Spirits", payout: 64000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Kindling Spirits", payout: 43000, ignition: "flamethrower", materials: {gasoline: 4}},
-
     {name: "Landmark Decision", payout: 280000, ignition: "flamethrower", materials: {gasoline: 6}},
-
     {name: "Last Lyft Home", payout: 52000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Letter of the Law", payout: 1000, ignition: "lighter", materials: {kerosene: 1}},
     {name: "Letter of the Law", payout: 360000, ignition: "flamethrower", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 2}},
-
     {name: "Light Fingered", payout: 165000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Light Fingered", payout: 165000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Like for Like", payout: 110000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
     {name: "Liquor on the Back Row", payout: 37000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Liquor on the Back Row", payout: 50000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Local Concerns", payout: 20000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Local Concerns", payout: 30000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Lock, Stock, and Barrel", payout: 210000, ignition: "flamethrower", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
     {name: "Long Pig", payout: 130000, ignition: "lighter", materials: {gasoline: 2}},
-
     {name: "Loud and Clear", payout: 195000, ignition: "lighter", materials: {gasoline: 2}},
-
     {name: "Lover's Quarrel", payout: 39000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Low Rent", payout: 120000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-    
     {name: "Make a Killing", payout: 345000, ignition: "flamethrower", materials: {gasoline: 1, kerosene: 2}},
-
     {name: "Marked for Salvation", payout: 30000, ignition: "lighter", materials: {hydrogenTank: 1}},
     {name: "Marked for Salvation", payout: 80000, ignition: "flamethrower", materials: {kerosene: 1}},
-
-    {name: "Mallrats", payout: 410000, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}, notes: "Stoke flamethrower uncertain"},
-
+    {name: "Mallrats", payout: 410000, ignition: "flamethrower", materials: {gasoline: 4}, stoke: {flamethrower: 1}},
     {name: "Marx & Sparks", payout: 140000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Marx & Sparks", payout: 125000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Medium Rare", payout: 395000, ignition: "flamethrower", materials: {diesel: 3}},
-
     {name: "Mental Block", payout: 580000, ignition: "flamethrower", materials: {gasoline: 5, thermite: 2}},
-
     {name: "Milk Milk, Lemonade", payout: 155000, ignition: "lighter", materials: {gasoline: 1}},
-
     {name: "Muscling In", payout: 90500, ignition: "flamethrower", materials: {gasoline: 2}, evidence: {syringe: 1}},
-
     {name: "Naked Aggression", payout: 31500, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Naked Aggression", payout: 31500, ignition: "flamethrower", materials: {gasoline: 2}, stoke: {flamethrower: 1}},
-
     {name: "Needles to Say", payout: 23000, ignition: "lighter", materials: {gasoline: 2}},
     {name: "Needles to Say", payout: 39000, ignition: "flamethrower", materials: {gasoline: 1}},
-
+    {name: "Not a Leg to Stand on", payout: 150000, ignition: "lighter", materials: {gasoline: 6}},
     {name: "Not a Leg to Stand on", payout: 125000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Off the Market", payout: 30000, ignition: "lighter", materials: {kerosene: 1}},
     {name: "Off the Market", payout: 155000, ignition: "flamethrower", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
     {name: "Oh God, Yes", payout: 17500, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Old School", payout: 62000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Old School", payout: 62500, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "On Fire at the Box Office", payout: 10000, ignition: "lighter", materials: {hydrogenTank: 1}},
     {name: "On Fire at the Box Office", payout: 14000, ignition: "flamethrower", materials: {hydrogenTank: 1}},
-
     {name: "One Rotten Apple", payout: 180000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "One Rotten Apple", payout: 180000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Open House", payout: 64000, ignition: "lighter", materials: {gasoline: 1}},
-
     {name: "Out in the Wash", payout: 235000, ignition: "lighter", materials: {gasoline: 3}},
-    {name: "Out in the Wash", payout: 235000, ignition: "flamethrower", materials: {gasoline: 3}, notes: "Try 2 gasoline"},
-
+    {name: "Out in the Wash", payout: 235000, ignition: "flamethrower", materials: {gasoline: 3}},
     {name: "Out with a Bang", payout: 42000, ignition: "lighter", materials: {gasoline: 1}, dampen: {blanket: 1}},
-
     {name: "Party Pooper", payout: 58000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Party Pooper", payout: 62000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Pest Control", payout: 16000, ignition: "lighter", materials: {hydrogenTank: 1}},
-
     {name: "Piggy in the Middle", payout: 73000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Piggy in the Middle", payout: 104000, ignition: "flamethrower", materials: {gasoline: 2}},
-
-    {name: "Plane and Simple", payout: 0, ignition: "lighter"},
-
     {name: "Planted", payout: 120000, ignition: "lighter", materials: {gasoline: 1}, evidence: {peleCharm: 1}},
-
     {name: "Playing With Fire", payout: 210000, ignition: "lighter", materials: {gasoline: 2}},
-
     {name: "Point of No Return", payout: 90000, ignition: "lighter", materials: {gasoline: 1, thermite: 1}, stoke: {magnesiumShavings: 2}},
-
     {name: "Political Firestorm", payout: 22000, ignition: "lighter", materials: {gasoline: 2}},
     {name: "Political Firestorm", payout: 40000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Pyro for Pornos", payout: 65000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Raising Hell", payout: 170000, ignition: "lighter", materials: {gasoline: 6}},
     {name: "Raising Hell", payout: 170000, ignition: "flamethrower", materials: {gasoline: 3}, stoke: {flamethrower: 1}},
-
     {name: "Raze the Roof", payout: 90000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
     {name: "Raze the Steaks", payout: 250000, ignition: "flamethrower", materials: {gasoline: 5}},
-
     {name: "Read the Room", payout: 125000, ignition: "lighter", materials: {gasoline: 5}},
     {name: "Read the Room", payout: 125000, ignition: "flamethrower", materials: {gasoline: 4}},
-
     {name: "Remote Possibility", payout: 102500, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Rest in Peace", payout: 20500, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Ring of Fire", payout: 160000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
     {name: "Risky Business", payout: 50000, ignition: "lighter", materials: {kerosene: 1}},
-
-    {name: "Roast Beef", payout: 0, ignition: "lighter"},
-
     {name: "Rock the Boat", payout: 325000, ignition: "lighter", materials: {diesel: 1}},
-
     {name: "Searing Irony", payout: 160000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Second Hand Smoke", payout: 37000, ignition: "lighter", materials: {kerosene: 1}},
-
     {name: "See No Evil", payout: 52000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "See No Evil", payout: 71000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Set 'Em Straight", payout: 310000, ignition: "flamethrower", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
     {name: "Shaky Investment", payout: 80000, ignition: "flamethrower", materials: {hydrogenTank: 1}},
-
     {name: "Shielded from the Truth", payout: 8900, ignition: "lighter", materials: {gasoline: 1}},
     {name: "Shielded from the Truth", payout: 16000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Short Shelf Life", payout: 415000, ignition: "flamethrower", materials: {gasoline: 2}},
-
-    {name: "Sky High Prices", payout: 0, ignition: "lighter", evidence: {glitterBomb: 1}},
-
     {name: "Smoke on the Water", payout: 4200, ignition: "lighter", materials: {gasoline: 1}},
     {name: "Smoke on the Water", payout: 8600, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Smoke Out", payout: 10000, ignition: "lighter", materials: {gasoline: 1}, evidence: {cannabis: 1}},
     {name: "Smoke Out", payout: 21000, ignition: "flamethrower", materials: {gasoline: 1}, evidence: {cannabis: 1}},
-
     {name: "Smoke Signals", payout: 120000, ignition: "flamethrower", materials: {diesel: 2, magnesiumShavings: 1}},
-
     {name: "Smoke Without Fire", payout: 200000, ignition: "lighter", materials: {gasoline: 2}},
-
-    {name: "Smoldering Resentment", payout: 0, ignition: "lighter"},
     {name: "Smoldering Resentment", payout: 10000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Sofa King Cheap", payout: 120000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
     {name: "Specter of Destruction", payout: 74000, ignition: "lighter", materials: {gasoline: 1}, evidence: {elephantStatue: 1}},
-
-    {name: "Spirit Level", payout: 0, ignition: "flamethrower", materials: {gasoline: 2, diesel: 1}},
-
     {name: "Stick to the Script", payout: 160000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 2}},
-
     {name: "Stink to High Heaven", payout: 41000, ignition: "lighter", materials: {kerosene: 1}},
-
-    {name: "Stop, Drop and Lol", payout: 0, ignition: "lighter"},
-
     {name: "Strike While it's Hot", payout: 265000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 2}},
-
     {name: "Stroke of Fortune", payout: 120000, ignition: "lighter", materials: {gasoline: 6}},
     {name: "Stroke of Fortune", payout: 120000, ignition: "flamethrower", materials: {gasoline: 3}, stoke: {flamethrower: 1}},
-
     {name: "Supermarket Sweep", payout: 265000, ignition: "lighter", materials: {gasoline: 5}, stoke: {lighter: 1}},
     {name: "Supermarket Sweep", payout: 265000, ignition: "flamethrower", materials: {gasoline: 5}},
-
     {name: "Swansong", payout: 27000, ignition: "lighter", materials: {kerosene: 1}},
-
     {name: "Taking out the Trash", payout: 110000, ignition: "flamethrower", materials: {gasoline: 3}, evidence: {hardDrive: 1}},
-
     {name: "That Place Is History", payout: 90000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "That Place Is History", payout: 118500, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "The Ashes of Empire", payout: 78000, ignition: "lighter", materials: {gasoline: 1}},
-    {name: "The Ashes of Empire", payout: 195000, ignition: "flamethrower", materials: {gasoline: 1}, dampen: {blanket: 1}, notes: "Dampen blanket uncertain"},
-
+    {name: "The Ashes of Empire", payout: 195000, ignition: "flamethrower", materials: {gasoline: 1}, dampen: {blacket: 1}},
     {name: "The Bad Samaritan", payout: 22000, ignition: "flamethrower", materials: {gasoline: 2}, stoke: {flamethrower: 1}},
-
-    {name: "The Bolted Horse", payout: 0, ignition: "lighter"},
-
     {name: "The Declaration of Inebrience", payout: 115000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "The Declaration of Inebrience", payout: 115000, ignition: "flamethrower", materials: {gasoline: 3}},
-
-    {name: "The Devil's in the Details", payout: 73000, ignition: "lighter", materials: {diesel: 3}, notes: "Negative profit"},
+    {name: "The Devil's in the Details", payout: 73000, ignition: "lighter", materials: {diesel: 3}},
     {name: "The Devil's in the Details", payout: 130000, ignition: "flamethrower", materials: {diesel: 1}, stoke: {potassiumNitrate: 1}},
-
     {name: "The Empyre Strikes Back", payout: 49000, ignition: "lighter", materials: {gasoline: 5}},
     {name: "The Empyre Strikes Back", payout: 49000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "The Fire Chief", payout: 130000, ignition: "lighter", materials: {gasoline: 6}},
     {name: "The Fire Chief", payout: 140000, ignition: "flamethrower", materials: {gasoline: 3}, stoke: {flamethrower: 1}},
-
     {name: "The Fried Piper", payout: 270000, ignition: "lighter", materials: {hydrogenTank: 1}},
-
     {name: "The Grass Ain't Greener", payout: 85000, ignition: "lighter", materials: {gasoline: 4}, stoke: {diesel: 1}},
     {name: "The Grass Ain't Greener", payout: 85000, ignition: "flamethrower", materials: {gasoline: 4}},
-
     {name: "The Male Gaze", payout: 130000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "The Male Gaze", payout: 110000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "The Midnight Oil", payout: 63000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "The Midnight Oil", payout: 75000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "The Plane Truth", payout: 38000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "The Plane Truth", payout: 25000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "The Savage Beast", payout: 170000, ignition: "lighter", materials: {gasoline: 3}},
-
     {name: "The Smoking Gun", payout: 470000, ignition: "lighter", materials: {kerosene: 4}},
-
     {name: "The Waiting Game", payout: 120000, ignition: "lighter", materials: {gasoline: 1}},
-
     {name: "Third-Degree Burn", payout: 25500, ignition: "lighter", materials: {gasoline: 2}},
     {name: "Third-Degree Burn", payout: 29000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "To the Manor Scorned", payout: 75500, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Totally Armless", payout: 44000, ignition: "lighter", materials: {kerosene: 2}},
     {name: "Totally Armless", payout: 35000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Turn up the Heat", payout: 90000, ignition: "lighter", materials: {gasoline: 4}, evidence: {compass: 1}},
     {name: "Turn up the Heat", payout: 76000, ignition: "flamethrower", materials: {gasoline: 2}, evidence: {compass: 1}},
-
     {name: "Twisted Firestarter", payout: 32000, ignition: "lighter", materials: {gasoline: 3}},
     {name: "Twisted Firestarter", payout: 23000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Uber Heats", payout: 78000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Uber Heats", payout: 59000, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Under the Table", payout: 385000, ignition: "flamethrower", materials: {gasoline: 2}, stoke: {flamethrower: 1}},
-
     {name: "Unpopular Mechanics", payout: 4500, ignition: "lighter", materials: {gasoline: 1}},
     {name: "Unpopular Mechanics", payout: 8600, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Unspilled Beans", payout: 41000, ignition: "lighter", materials: {kerosene: 1}},
-
     {name: "Visions of the Savory", payout: 70000, ignition: "lighter", materials: {gasoline: 3}, evidence: {familyPhoto: 1}},
     {name: "Visions of the Savory", payout: 110000, ignition: "flamethrower", materials: {gasoline: 3}, evidence: {familyPhoto: 1}},
-
     {name: "Waist Not, Want Not", payout: 54000, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Wedded to the Lie", payout: 81000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Wedded to the Lie", payout: 69000, ignition: "flamethrower", materials: {gasoline: 3}},
-
-    {name: "Wet Behind the Ears", payout: 0, ignition: "lighter", materials: {gasoline: 2}},
-    {name: "Wet Behind the Ears", payout: 0, ignition: "flamethrower", materials: {gasoline: 1}},
-
     {name: "Where There's a Will", payout: 23000, ignition: "lighter", materials: {gasoline: 2}},
     {name: "Where There's a Will", payout: 52000, ignition: "flamethrower", materials: {gasoline: 3}},
-
     {name: "Whiskey Business", payout: 90000, ignition: "lighter", materials: {hydrogenTank: 1}, stoke: {hydrogenTank: 1}},
-
-    {name: "Wired for War", payout: 410000, ignition: "flamethrower", materials: {gasoline: 6}, stoke: {hydrogenTank: 2, flamethrower: 1}, notes: "To confirm"},
-
+    {name: "Wired for War", payout: 410000, ignition: "flamethrower", materials: {gasoline: 6}, stoke: {flamethrower: 1, hydrogenTank: 2}},
     {name: "Womb With a View", payout: 95000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Womb With a View", payout: 78500, ignition: "flamethrower", materials: {gasoline: 2}},
-
     {name: "Workplace Burnout", payout: 100000, ignition: "lighter", materials: {gasoline: 4}},
     {name: "Workplace Burnout", payout: 73000, ignition: "flamethrower", materials: {gasoline: 2}},
-
-    {name: "You're Fired!", payout: 150000, ignition: "lighter", materials: {gasoline: 4}, evidence: {lipstick: 1}}
+    {name: "You're Fired!", payout: 150000, ignition: "lighter", materials: {gasoline: 4}, evidence: {lipstick: 1}},
   ];
 
   const LOCAL_STORAGE_KEYS = {
@@ -1166,7 +955,7 @@
           profitSpan.style.marginLeft = "8px";
           profitSpan.style.fontWeight = "normal";
           profitSpan.style.fontSize = "10px";
-          profitSpan.textContent = `(${(profitPerNerve / 1000).toFixed(1)}K PN)`;
+          profitSpan.textContent = `${(profitPerNerve / 1000).toFixed(1)}K`;
           hoverTarget.appendChild(profitSpan);
         }
       }
